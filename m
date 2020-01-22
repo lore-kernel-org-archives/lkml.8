@@ -2,67 +2,70 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E175C33CAF
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 20:10:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 710C7C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 20:10:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED5B624656
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 20:10:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4948824656
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 20:10:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RZBppbOR"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q25Hz6GQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727453AbgAVUKb (ORCPT
+        id S1729043AbgAVUKe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 15:10:31 -0500
-Received: from mail-wr1-f41.google.com ([209.85.221.41]:37358 "EHLO
-        mail-wr1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725827AbgAVUKa (ORCPT
+        Wed, 22 Jan 2020 15:10:34 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:39601 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725827AbgAVUKd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 15:10:30 -0500
-Received: by mail-wr1-f41.google.com with SMTP id w15so476091wru.4;
-        Wed, 22 Jan 2020 12:10:29 -0800 (PST)
+        Wed, 22 Jan 2020 15:10:33 -0500
+Received: by mail-wr1-f68.google.com with SMTP id y11so464990wrt.6;
+        Wed, 22 Jan 2020 12:10:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:subject:date:message-id:mime-version
+        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
          :content-transfer-encoding;
-        bh=X5K7uHa4XAr0Wm5LtbVFErRG4o0kd+uyDX5OfrAJGdE=;
-        b=RZBppbORZFblq4QdGqKTDSfp1yOWfgAyPPLiQTM52MTxYYS2cGbgm2KjgGzSw0krTP
-         Dwby7Ip3ELev10NjJMU20USbx4LU+/MxX8+kgYQ/anY8EWW/wHSKVZLlj1zKXkE86MyH
-         iHod0cOoR5GypjirmClQ7eHqSOEnu2asvnP8I8b3cDMcnpRUW7H/AuX0l4TWMUjEQi1p
-         K6xwhIIg4jaHIVzHU0ozjCpQx4T3VgK1LI5vfvONTLGZyMq5IlJxPDclRx14JUi3e4hs
-         j1kWDzPiZvQXw8lLkXI6BGjJ6ldkCUS/zvlqHjrDC1UffQk7w+hoo6etlrI1S6ixw/NP
-         SmRg==
+        bh=hcH8umdVIE2TtHHLAnmoCtzkhig9VpAjEEvADfZ26RY=;
+        b=Q25Hz6GQv/7lUw2ybU3ObDg0msOsR9Te4br75QFKWGPB15jKi6yKGh7ObcO6Jk9X4L
+         fUMYHREY7S8/TCj/eezx8jIZoe++KfZT3g+DhGFNbRXqPbbUgBkM3md4wYx04cQYHMpj
+         KJEfgHHx5AY0R6VgyddvkV9PqVXdrCtdgziQLtaeILHWa5L1WoDgwscihGBhImB2TyQ2
+         cHdnSBkj/3hkn04+hraCZIkScAQkn7+MzOK5xjYMkYnpZJmecJ/0Zes6PSy5fB9q2O1i
+         sfY9tsJQ9GXxfUcSXkJNrDC2eOmS2Uor2foxPr+v2LJgBL8EUsr0ZxTFOrmauaTmCyA4
+         GwVw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=X5K7uHa4XAr0Wm5LtbVFErRG4o0kd+uyDX5OfrAJGdE=;
-        b=fvaAQgchONB4jIN3Oh1p32gf5srmb9bw0o7/Sp+NcckqxTw3BqmylPKxKqWPYCnyXc
-         p0RoLzgd3DnFLkanZBBSvY27LRNA21CkoGxBEC7oyIb0CHQ1toYOy41S3gO3SurC+nnL
-         yAuLrCYmZcGEeVkQ3++bAEkPiw08aig3qwmEWdzdj0F+unz7zKI6s1ENQRvDKZTYX9jy
-         IPNxdcLdP6yIPV2D2WlbOVhnU9TfmKSaFQwevmzuZalivPBrEM5qEO8nysXDhnJdXMBr
-         pDFMgmNdXKeQWszjkm2iy62OEVLmk3YVR3xaDZuobAc8Cwkld9yYPRGHE8Lch9ZYTnWo
-         IZTQ==
-X-Gm-Message-State: APjAAAUhqygCVriwpQN0Y0DWELUtYsCyX4LN8DVYE9IL+kdD1a+u9hbf
-        7IqwvBj3PUUXkFCXsD9c/6I=
-X-Google-Smtp-Source: APXvYqzT5e/aJu3CpSVeJviSTWAX8Xwv2LwjexGVpLLOsxlat+WS68oNlbW+77p7ttY3yhQYeymhaw==
-X-Received: by 2002:a5d:6901:: with SMTP id t1mr12387309wru.94.1579723828405;
-        Wed, 22 Jan 2020 12:10:28 -0800 (PST)
+        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=hcH8umdVIE2TtHHLAnmoCtzkhig9VpAjEEvADfZ26RY=;
+        b=osJGFleXhF3b0W1eygx6x20+HYQFyKGdy9hVmC/uopHx7s+7cPDjMbUIeK+xuqKZb2
+         Rm4juam93G/6YGkilw+dtxIxnDuWbCp84w5sEYbpnREPjzahIpCRHe80rFPCOhniYacr
+         8/2jhFe9UDUellXW4XTUkH0TxJ0WxpJ2Cdo5P757rRdpLfN++65LKYP7cOSWzP3ag5TO
+         a86Sme3XfzdpaOQEbVkSY9QFolQ91F/2oWg0wWZnbZbTREmlf8xdlLYXl/jUqgl27Fci
+         jTqBS3dl2ag9XUjgP4cvx15Ql6UMkG/jq3wwxXJtbVa/TeD/Y5YBSYBRp6DUuKQrwZPz
+         Yz1Q==
+X-Gm-Message-State: APjAAAXkj8ZEwfp7ihOTiv1w6+txXQSGmTzGCjUWOPyTGEHF1YWrsuj2
+        sA4kJxBFHtfHGN81Uihomqk=
+X-Google-Smtp-Source: APXvYqwarkclAwysywh+NrobAmEO0FL9LXl2LaIDX7hegIfak2WVIEylImm6j6nTxYuKXo4+JAgf+Q==
+X-Received: by 2002:adf:fa12:: with SMTP id m18mr12808699wrr.309.1579723831548;
+        Wed, 22 Jan 2020 12:10:31 -0800 (PST)
 Received: from localhost.localdomain ([109.126.145.157])
-        by smtp.gmail.com with ESMTPSA id b16sm5058310wmj.39.2020.01.22.12.10.22
+        by smtp.gmail.com with ESMTPSA id b16sm5058310wmj.39.2020.01.22.12.10.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Jan 2020 12:10:27 -0800 (PST)
+        Wed, 22 Jan 2020 12:10:31 -0800 (PST)
 From:   Pavel Begunkov <asml.silence@gmail.com>
 To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 0/2] IOSQE_ASYNC patches
-Date:   Wed, 22 Jan 2020 23:09:34 +0300
-Message-Id: <cover.1579723710.git.asml.silence@gmail.com>
+Subject: [PATCH 1/2] io_uring: prep req when do IOSQE_ASYNC
+Date:   Wed, 22 Jan 2020 23:09:35 +0300
+Message-Id: <278b05e5245d6b7878e105b5de0ad78ceab8c87b.1579723710.git.asml.silence@gmail.com>
 X-Mailer: git-send-email 2.24.0
+In-Reply-To: <cover.1579723710.git.asml.silence@gmail.com>
+References: <cover.1579723710.git.asml.silence@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -70,20 +73,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are 2 problems addressed:
-1. it never calls *_prep() when going through IOSQE_ASYNC path.
-2. non-head linked reqs ignore IOSQE_ASYNC.
+Whenever IOSQE_ASYNC is set, requests will be punted to async without
+getting into io_issue_req() and without proper preparation done (e.g.
+io_req_defer_prep()). Hence they will be left uninitialised.
 
-Also, there could be yet another problem, when we bypass io_issue_req()
-and going straight to async.
+Prepare them before punting.
 
-Pavel Begunkov (2):
-  io_uring: prep req when do IOSQE_ASYNC
-  io_uring: honor IOSQE_ASYNC for linked reqs
+Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
+---
+ fs/io_uring.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
- fs/io_uring.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
-
+diff --git a/fs/io_uring.c b/fs/io_uring.c
+index 09503d1e9e45..cdbc711ae5fd 100644
+--- a/fs/io_uring.c
++++ b/fs/io_uring.c
+@@ -4558,11 +4558,15 @@ static void io_queue_sqe(struct io_kiocb *req, const struct io_uring_sqe *sqe)
+ 	ret = io_req_defer(req, sqe);
+ 	if (ret) {
+ 		if (ret != -EIOCBQUEUED) {
++fail_req:
+ 			io_cqring_add_event(req, ret);
+ 			req_set_fail_links(req);
+ 			io_double_put_req(req);
+ 		}
+ 	} else if (req->flags & REQ_F_FORCE_ASYNC) {
++		ret = io_req_defer_prep(req, sqe);
++		if (unlikely(ret < 0))
++			goto fail_req;
+ 		/*
+ 		 * Never try inline submit of IOSQE_ASYNC is set, go straight
+ 		 * to async execution.
 -- 
 2.24.0
 
