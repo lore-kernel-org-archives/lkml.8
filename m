@@ -2,88 +2,196 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C4A2C3F68F
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 10:53:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED1A6C33CB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 10:54:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63CD42467F
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 10:53:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA9342467F
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 10:54:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FntQREJz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728900AbgAVKx5 (ORCPT
+        id S1729045AbgAVKyS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 05:53:57 -0500
-Received: from foss.arm.com ([217.140.110.172]:54976 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725911AbgAVKx5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 05:53:57 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4EA3A1FB;
-        Wed, 22 Jan 2020 02:53:56 -0800 (PST)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B947A3F52E;
-        Wed, 22 Jan 2020 02:53:55 -0800 (PST)
-Date:   Wed, 22 Jan 2020 10:53:50 +0000
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Andrew Murray <andrew.murray@arm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH] MAINTAINERS: Update my email address
-Message-ID: <20200122105350.GA29807@e121166-lin.cambridge.arm.com>
-References: <20200122101831.47628-1-andrew.murray@arm.com>
+        Wed, 22 Jan 2020 05:54:18 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:23080 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725911AbgAVKyS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 05:54:18 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579690457;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+        bh=HL4q4SIdwn4qNJd2TxvNKQGhoO2vFjD6maGgkbz3AS8=;
+        b=FntQREJz3rc9ffO9SCXTNxkA3HV4ZDsKO3v2w4LpZXEmUCo4/isN1kiwveYfsqLhAjoHUH
+        SDix6QF6vtxGstMukrYZw1DyNSXVsfxHPeYTpDUuouMvrpG/tqRN3sV9To59WDASdXxTB1
+        C8GbvBIseirbjpb3qbUDQrdVgedblK0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-7-UAATY0T1PPWaBzJPkA2sFg-1; Wed, 22 Jan 2020 05:54:13 -0500
+X-MC-Unique: UAATY0T1PPWaBzJPkA2sFg-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4CA0C1800D78;
+        Wed, 22 Jan 2020 10:54:10 +0000 (UTC)
+Received: from [10.36.117.205] (ovpn-117-205.ams2.redhat.com [10.36.117.205])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 5287C85740;
+        Wed, 22 Jan 2020 10:54:06 +0000 (UTC)
+Subject: Re: [PATCH RFC v1] mm: is_mem_section_removable() overhaul
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux MM <linux-mm@kvack.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Leonardo Bras <leonardo@linux.ibm.com>,
+        Nathan Lynch <nathanl@linux.ibm.com>,
+        Allison Randal <allison@lohutok.net>,
+        Nathan Fontenot <nfont@linux.vnet.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        lantianyu1986@gmail.com,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
+References: <20200117145233.GB19428@dhcp22.suse.cz>
+ <65606e2e-1cf7-de3b-10b1-33653cb41a52@redhat.com>
+ <20200117152947.GK19428@dhcp22.suse.cz>
+ <CAPcyv4hHHzdPp4SQ0sePzx7XEvD7U_B+vZDT00O6VbFY8kJqjw@mail.gmail.com>
+ <25a94f61-46a1-59a6-6b54-8cc6b35790d2@redhat.com>
+ <CAPcyv4jvmYRbX9i+1_LvHoTDGABadHbYH3NVkqczKsQ4fsf74g@mail.gmail.com>
+ <20200120074816.GG18451@dhcp22.suse.cz>
+ <a5f0bd8d-de5e-9f27-5c94-7746a3d20a95@redhat.com>
+ <20200121120714.GJ29276@dhcp22.suse.cz>
+ <a29b49b9-28ad-44fa-6c0b-90cd43902f29@redhat.com>
+ <20200122104230.GU29276@dhcp22.suse.cz>
+From:   David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+Organization: Red Hat GmbH
+Message-ID: <98b6c208-b4dd-9052-43f6-543068c649cc@redhat.com>
+Date:   Wed, 22 Jan 2020 11:54:05 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200122101831.47628-1-andrew.murray@arm.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200122104230.GU29276@dhcp22.suse.cz>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 22, 2020 at 10:18:31AM +0000, Andrew Murray wrote:
-> I will lose access to my @arm.com email address next week, so
-> let's update the MAINTAINERS file and map it correctly in
-> .mailmap
-> 
-> Signed-off-by: Andrew Murray <andrew.murray@arm.com>
-> ---
->  .mailmap    | 2 ++
->  MAINTAINERS | 2 +-
->  2 files changed, 3 insertions(+), 1 deletion(-)
+On 22.01.20 11:42, Michal Hocko wrote:
+> On Wed 22-01-20 11:39:08, David Hildenbrand wrote:
+>>>>> Really, the interface is flawed and should have never been merged i=
+n the
+>>>>> first place. We cannot simply remove it altogether I am afraid so l=
+et's
+>>>>> at least remove the bogus code and pretend that the world is a bett=
+er
+>>>>> place where everything is removable except the reality sucks...
+>>>>
+>>>> As I expressed already, the interface works as designed/documented a=
+nd
+>>>> has been used like that for years.
+>>>
+>>> It seems we do differ in the usefulness though. Using a crappy interf=
+ace
+>>> for years doesn't make it less crappy. I do realize we cannot remove =
+the
+>>> interface but we can remove issues with the implementation and I dare=
+ to
+>>> say that most existing users wouldn't really notice.
+>>
+>> Well, at least powerpc-utils (why this interface was introduced) will
+>> notice a) performance wise and b) because more logging output will be
+>> generated (obviously non-offlineable blocks will be tried to offline).
+>=20
+> I would really appreciate some specific example for a real usecase. I a=
+m
+> not familiar with powerpc-utils worklflows myself.
+>=20
 
-Applied to pci/misc, thanks.
+Not an expert myself:
 
-Lorenzo
+https://github.com/ibm-power-utilities/powerpc-utils
 
-> diff --git a/.mailmap b/.mailmap
-> index d9d5c80252f9..f332b79c2e85 100644
-> --- a/.mailmap
-> +++ b/.mailmap
-> @@ -27,6 +27,8 @@ Andi Shyti <andi@etezian.org> <andi.shyti@samsung.com>
->  Andreas Herrmann <aherrman@de.ibm.com>
->  Andrey Ryabinin <ryabinin.a.a@gmail.com> <a.ryabinin@samsung.com>
->  Andrew Morton <akpm@linux-foundation.org>
-> +Andrew Murray <amurray@thegoodpenguin.co.uk> <andrew.murray@arm.com>
-> +Andrew Murray <amurray@thegoodpenguin.co.uk> <amurray@embedded-bits.co.uk>
->  Andrew Vasquez <andrew.vasquez@qlogic.com>
->  Andy Adamson <andros@citi.umich.edu>
->  Antoine Tenart <antoine.tenart@free-electrons.com>
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index cf6ccca6e61c..4326bddef572 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -12779,7 +12779,7 @@ F:	arch/x86/kernel/early-quirks.c
->  
->  PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS
->  M:	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> -R:	Andrew Murray <andrew.murray@arm.com>
-> +R:	Andrew Murray <amurray@thegoodpenguin.co.uk>
->  L:	linux-pci@vger.kernel.org
->  Q:	http://patchwork.ozlabs.org/project/linux-pci/list/
->  T:	git git://git.kernel.org/pub/scm/linux/kernel/git/lpieralisi/pci.git/
-> -- 
-> 2.21.0
-> 
+-> src/drmgr/drslot_chrp_mem.c
+
+On request to remove some memory it will
+
+a) Read "->removable" of all memory blocks ("lmb")
+b) Check if the request can be fulfilled using the removable blocks
+c) Try to offline the memory blocks by trying to offline it. If that
+succeeded, trigger removeal of it using some hypervisor hooks.
+
+Interestingly, with "AMS ballooning", it will already consider the
+"removable" information useless (most probably, because of
+non-migratable balloon pages that can be offlined - I assume the powerpc
+code that I converted to proper balloon compaction just recently). a)
+and b) is skipped.
+
+Returning "yes" on all blocks will make them handle it just like if "AMS
+ballooning" is active. So any memory block will be tried. Should work
+but will be slower if no ballooning is active.
+
+--=20
+Thanks,
+
+David / dhildenb
+
