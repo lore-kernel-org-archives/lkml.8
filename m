@@ -2,63 +2,64 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B5EBC32771
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 21:28:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAC79C33CAF
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 21:29:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A16A21835
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 21:28:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E89821835
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 21:29:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="QS/qOUvd"
+	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="TP5mJnA7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729276AbgAVV2x (ORCPT
+        id S1729247AbgAVV3M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 16:28:53 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:44184 "EHLO
+        Wed, 22 Jan 2020 16:29:12 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:38211 "EHLO
         mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729251AbgAVV2w (ORCPT
+        with ESMTP id S1729251AbgAVV3K (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 16:28:52 -0500
-Received: by mail-lj1-f194.google.com with SMTP id q8so679374ljj.11
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jan 2020 13:28:51 -0800 (PST)
+        Wed, 22 Jan 2020 16:29:10 -0500
+Received: by mail-lj1-f194.google.com with SMTP id w1so723872ljh.5
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jan 2020 13:29:08 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=USiqOlQcAGwAU4lLldkez+ILA+mr5UwSGgb0G/ckznI=;
-        b=QS/qOUvdayAU3GPaH8DxPbsbrNRZDZgVX+N4uafont01yWgzRvNuaFkQixghM4fGLg
-         9QPae3sdC8aYt6XfPuKVLoGF3M3eLlanCkm7mOTAim8uX1TjswA7LDLLQU14TffVzWdL
-         Gy9J9dPV8pMcDKfo7PBT20X86WJTDcuCysfZzYiyO8iVVUDKmXXQ13+YWtnAV8YsOto3
-         3Ty31Pi58oev8GCNTTYg+MQWArZpl218/1U4l+ULrfBMQSKpN5zG0Cig5Syq7cV4Xzcb
-         +acWuAjXOi/UTiHtnm0IyK6exGOs32jN8dCIv/3RCJnZy70o6IozMJs4uAFIHKeXAuLW
-         +jjQ==
+        bh=znKmNqKr9gQDPfmrmtDejwJ1HslDiuzLboL4qUqmh40=;
+        b=TP5mJnA7Gm0zdUG0OehnvyJWts/xMVo/mJxSurXzDTUcBQIzgsR1ns3H1p5rCpwp/o
+         o5WEcw4A9HNc0n06O9ImPfjXjQS6Nxh19LC0d4tgDt1Av2slE1y47OS6cviu0l1oIqGb
+         nh2EDlHL5wynTTB5yhFbFZDoa5TkK67zq9GykjlOT7s5XEF58dYNcPell0+CauOKp+XT
+         nLFr9NOTwYPXWpaLNMfgFzqUgIZQ4EPNmzDpdQRueK1UtfBk0Xs1bWMty7FyANkkTdvm
+         VpHNDh0cBO2f65tpkygyfW6HPpO5AJZ4qHWFD4baSKueZohLmEzK207pMLwN5wsHnsWU
+         4+wg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=USiqOlQcAGwAU4lLldkez+ILA+mr5UwSGgb0G/ckznI=;
-        b=umsaehnlwGyFQiT5aVde2l+nzBMheMZKE0s8tm3uA2mAScxTVNtAHonbw5MzYGbjg5
-         8VhRl89+ezpoqiTf3Fpe2346WtTQUVn/0yPRBto9ooW3cD6FHmJ0xyixukyD0ZJY8ObC
-         NNkj5XXBQ7UZeTOc72yQswmMSIc4BHTF5id3OJSXrg1vqVzMXVQ6SypqZPk8NmX9byvJ
-         DVKG3nCvR83YIVz1NXIy11igioFoMi3a8HE72qTKRERkXoGfdswlMYL7J/hS1LRGlN2V
-         fqH8TOtq3ena5gHpDdpeYUe4R8NJSLWSmYS9yCTvO4Bv2md7NjWHL8FEi0lDAYvq546W
-         SB4g==
-X-Gm-Message-State: APjAAAW9ypcWHgTUCGL5GaXHONfD24GlHu+KGfsmVrkvhqcm2Xq19EpU
-        m7+ffE9q/+9GN1LKnHILe9UoNiRxhERhCEdk0tmr
-X-Google-Smtp-Source: APXvYqxv+HwClvqbjPOmF70g6vWAGoqQq5nvKaKJ9i+5808mWnhq6PoDHjQ2dbc6K34/pUaYI6i8SCPyRPmgc0tTqfs=
-X-Received: by 2002:a2e:870b:: with SMTP id m11mr20501589lji.93.1579728530781;
- Wed, 22 Jan 2020 13:28:50 -0800 (PST)
+        bh=znKmNqKr9gQDPfmrmtDejwJ1HslDiuzLboL4qUqmh40=;
+        b=QJfoOMh7srOhkGg6WcGfOPtMDFKKJZtlah69hIQgI/ZTcMrtHucSc3RdDVl3SyrSCt
+         qL5PsDsakmtwA8y8mK6rkV7cOncoZdGix49i3i8P/kbbmq3tF/6Zt6AWr+yNTcsyccaJ
+         8lZggz/MZLTxbjHn0w/PaX7ahXCPjNvF/01xsvop4AuxPWkhzIYTeT11ec7eOlpuNJWF
+         D46KawE9p1RxBfOPe1IMREqjCL80sV86dQVpYQxJQWsyJtExSYi5ZjMc0J1nQAdtQ5e9
+         74birIvaYTtOTel3QLT6ET1A1EF6xbUdrrWre12f0ggzVhnvVYqV9SXr7iBbYbuiosgC
+         V/wg==
+X-Gm-Message-State: APjAAAV7Yw3xWgp+lhoy+eW5Knfw0G/S+n1DkVwiKBUWoE9ANuGpnBS0
+        wfHHHkI5PSLbevk53rk/5fchlPRFxCCLKVWPK9tR
+X-Google-Smtp-Source: APXvYqwNba8ProlqYi+98kL7VZ17yOmxtTEHhSWsRlLym5CCBD8UqFSuw3B9hkfCZhhRvoe+Scem/yZ0v/+v52re61A=
+X-Received: by 2002:a2e:9196:: with SMTP id f22mr21784742ljg.18.1579728548032;
+ Wed, 22 Jan 2020 13:29:08 -0800 (PST)
 MIME-Version: 1.0
-References: <cover.1577736799.git.rgb@redhat.com> <7d7933d742fdf4a94c84b791906a450b16f2e81f.1577736799.git.rgb@redhat.com>
-In-Reply-To: <7d7933d742fdf4a94c84b791906a450b16f2e81f.1577736799.git.rgb@redhat.com>
+References: <cover.1577736799.git.rgb@redhat.com> <2954ed671a7622ddf3abdb8854dbba2ad13e9f33.1577736799.git.rgb@redhat.com>
+In-Reply-To: <2954ed671a7622ddf3abdb8854dbba2ad13e9f33.1577736799.git.rgb@redhat.com>
 From:   Paul Moore <paul@paul-moore.com>
-Date:   Wed, 22 Jan 2020 16:28:39 -0500
-Message-ID: <CAHC9VhSuwJGryfrBfzxG01zwb-O_7dbjS0x0a3w-XjcNuYSAcg@mail.gmail.com>
-Subject: Re: [PATCH ghak90 V8 07/16] audit: add contid support for signalling
- the audit daemon
+Date:   Wed, 22 Jan 2020 16:28:57 -0500
+Message-ID: <CAHC9VhRw3Fj9-hi+Vj8JJb_GXM4B9N5hRXa9H6aQkuuFqJJ15w@mail.gmail.com>
+Subject: Re: [PATCH ghak90 V8 11/16] audit: add support for containerid to
+ network namespaces
 To:     Richard Guy Briggs <rgb@redhat.com>
 Cc:     containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
         Linux-Audit Mailing List <linux-audit@redhat.com>,
@@ -75,53 +76,194 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 31, 2019 at 2:50 PM Richard Guy Briggs <rgb@redhat.com> wrote:
+On Tue, Dec 31, 2019 at 2:51 PM Richard Guy Briggs <rgb@redhat.com> wrote:
 >
-> Add audit container identifier support to the action of signalling the
-> audit daemon.
+> This also adds support to qualify NETFILTER_PKT records.
 >
-> Since this would need to add an element to the audit_sig_info struct,
-> a new record type AUDIT_SIGNAL_INFO2 was created with a new
-> audit_sig_info2 struct.  Corresponding support is required in the
-> userspace code to reflect the new record request and reply type.
-> An older userspace won't break since it won't know to request this
-> record type.
+> Audit events could happen in a network namespace outside of a task
+> context due to packets received from the net that trigger an auditing
+> rule prior to being associated with a running task.  The network
+> namespace could be in use by multiple containers by association to the
+> tasks in that network namespace.  We still want a way to attribute
+> these events to any potential containers.  Keep a list per network
+> namespace to track these audit container identifiiers.
 >
+> Add/increment the audit container identifier on:
+> - initial setting of the audit container identifier via /proc
+> - clone/fork call that inherits an audit container identifier
+> - unshare call that inherits an audit container identifier
+> - setns call that inherits an audit container identifier
+> Delete/decrement the audit container identifier on:
+> - an inherited audit container identifier dropped when child set
+> - process exit
+> - unshare call that drops a net namespace
+> - setns call that drops a net namespace
+>
+> Add audit container identifier auxiliary record(s) to NETFILTER_PKT
+> event standalone records.  Iterate through all potential audit container
+> identifiers associated with a network namespace.
+>
+> Please see the github audit kernel issue for contid net support:
+>   https://github.com/linux-audit/audit-kernel/issues/92
+> Please see the github audit testsuiite issue for the test case:
+>   https://github.com/linux-audit/audit-testsuite/issues/64
+> Please see the github audit wiki for the feature overview:
+>   https://github.com/linux-audit/audit-kernel/wiki/RFE-Audit-Container-ID
 > Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
+> Acked-by: Neil Horman <nhorman@tuxdriver.com>
+> Reviewed-by: Ondrej Mosnacek <omosnace@redhat.com>
 > ---
->  include/linux/audit.h       |  7 +++++++
->  include/uapi/linux/audit.h  |  1 +
->  kernel/audit.c              | 35 +++++++++++++++++++++++++++++++++++
->  kernel/audit.h              |  1 +
->  security/selinux/nlmsgtab.c |  1 +
->  5 files changed, 45 insertions(+)
+>  include/linux/audit.h    |  24 +++++++++
+>  kernel/audit.c           | 132 ++++++++++++++++++++++++++++++++++++++++++++++-
+>  kernel/nsproxy.c         |   4 ++
+>  net/netfilter/nft_log.c  |  11 +++-
+>  net/netfilter/xt_AUDIT.c |  11 +++-
+>  5 files changed, 176 insertions(+), 6 deletions(-)
 
 ...
 
+> diff --git a/include/linux/audit.h b/include/linux/audit.h
+> index 5531d37a4226..ed8d5b74758d 100644
+> --- a/include/linux/audit.h
+> +++ b/include/linux/audit.h
+> @@ -12,6 +12,7 @@
+>  #include <linux/sched.h>
+>  #include <linux/ptrace.h>
+>  #include <uapi/linux/audit.h>
+> +#include <linux/refcount.h>
+>
+>  #define AUDIT_INO_UNSET ((unsigned long)-1)
+>  #define AUDIT_DEV_UNSET ((dev_t)-1)
+> @@ -121,6 +122,13 @@ struct audit_task_info {
+>
+>  extern struct audit_task_info init_struct_audit;
+>
+> +struct audit_contobj_netns {
+> +       struct list_head        list;
+> +       u64                     id;
+
+Since we now track audit container IDs in their own structure, why not
+link directly to the audit container ID object (and bump the
+refcount)?
+
+> +       refcount_t              refcount;
+> +       struct rcu_head         rcu;
+> +};
+> +
+>  extern int is_audit_feature_set(int which);
+>
+>  extern int __init audit_register_class(int class, unsigned *list);
+> @@ -225,6 +233,12 @@ static inline u64 audit_get_contid(struct task_struct *tsk)
+>  }
+>
+>  extern void audit_log_container_id(struct audit_context *context, u64 contid);
+> +extern void audit_netns_contid_add(struct net *net, u64 contid);
+> +extern void audit_netns_contid_del(struct net *net, u64 contid);
+> +extern void audit_switch_task_namespaces(struct nsproxy *ns,
+> +                                        struct task_struct *p);
+> +extern void audit_log_netns_contid_list(struct net *net,
+> +                                       struct audit_context *context);
+>
+>  extern u32 audit_enabled;
+>
+> @@ -297,6 +311,16 @@ static inline u64 audit_get_contid(struct task_struct *tsk)
+>
+>  static inline void audit_log_container_id(struct audit_context *context, u64 contid)
+>  { }
+> +static inline void audit_netns_contid_add(struct net *net, u64 contid)
+> +{ }
+> +static inline void audit_netns_contid_del(struct net *net, u64 contid)
+> +{ }
+> +static inline void audit_switch_task_namespaces(struct nsproxy *ns,
+> +                                               struct task_struct *p)
+> +{ }
+> +static inline void audit_log_netns_contid_list(struct net *net,
+> +                                              struct audit_context *context)
+> +{ }
+>
+>  #define audit_enabled AUDIT_OFF
+>
 > diff --git a/kernel/audit.c b/kernel/audit.c
-> index 0871c3e5d6df..51159c94041c 100644
+> index d4e6eafe5644..f7a8d3288ca0 100644
 > --- a/kernel/audit.c
 > +++ b/kernel/audit.c
-> @@ -126,6 +126,14 @@ struct auditd_connection {
->  kuid_t         audit_sig_uid = INVALID_UID;
->  pid_t          audit_sig_pid = -1;
->  u32            audit_sig_sid = 0;
-> +/* Since the signal information is stored in the record buffer at the
-> + * time of the signal, but not retrieved until later, there is a chance
-> + * that the last process in the container could terminate before the
-> + * signal record is delivered.  In this circumstance, there is a chance
-> + * the orchestrator could reuse the audit container identifier, causing
-> + * an overlap of audit records that refer to the same audit container
-> + * identifier, but a different container instance.  */
-> +u64            audit_sig_cid = AUDIT_CID_UNSET;
+> @@ -59,6 +59,7 @@
+>  #include <linux/freezer.h>
+>  #include <linux/pid_namespace.h>
+>  #include <net/netns/generic.h>
+> +#include <net/net_namespace.h>
+>
+>  #include "audit.h"
+>
+> @@ -86,9 +87,13 @@
+>  /**
+>   * struct audit_net - audit private network namespace data
+>   * @sk: communication socket
+> + * @contid_list: audit container identifier list
+> + * @contid_list_lock audit container identifier list lock
+>   */
+>  struct audit_net {
+>         struct sock *sk;
+> +       struct list_head contid_list;
+> +       spinlock_t contid_list_lock;
+>  };
+>
+>  /**
+> @@ -305,8 +310,11 @@ struct audit_task_info init_struct_audit = {
+>  void audit_free(struct task_struct *tsk)
+>  {
+>         struct audit_task_info *info = tsk->audit;
+> +       struct nsproxy *ns = tsk->nsproxy;
+>
+>         audit_free_syscall(tsk);
+> +       if (ns)
+> +               audit_netns_contid_del(ns->net_ns, audit_get_contid(tsk));
+>         /* Freeing the audit_task_info struct must be performed after
+>          * audit_log_exit() due to need for loginuid and sessionid.
+>          */
+> @@ -409,6 +417,120 @@ static struct sock *audit_get_sk(const struct net *net)
+>         return aunet->sk;
+>  }
+>
+> +void audit_netns_contid_add(struct net *net, u64 contid)
+> +{
+> +       struct audit_net *aunet;
+> +       struct list_head *contid_list;
+> +       struct audit_contobj_netns *cont;
+> +
+> +       if (!net)
+> +               return;
+> +       if (!audit_contid_valid(contid))
+> +               return;
+> +       aunet = net_generic(net, audit_net_id);
+> +       if (!aunet)
+> +               return;
+> +       contid_list = &aunet->contid_list;
+> +       rcu_read_lock();
+> +       list_for_each_entry_rcu(cont, contid_list, list)
+> +               if (cont->id == contid) {
+> +                       spin_lock(&aunet->contid_list_lock);
+> +                       refcount_inc(&cont->refcount);
+> +                       spin_unlock(&aunet->contid_list_lock);
+> +                       goto out;
+> +               }
+> +       cont = kmalloc(sizeof(*cont), GFP_ATOMIC);
+> +       if (cont) {
+> +               INIT_LIST_HEAD(&cont->list);
+> +               cont->id = contid;
+> +               refcount_set(&cont->refcount, 1);
+> +               spin_lock(&aunet->contid_list_lock);
+> +               list_add_rcu(&cont->list, contid_list);
+> +               spin_unlock(&aunet->contid_list_lock);
+> +       }
+> +out:
+> +       rcu_read_unlock();
+> +}
 
-I believe we could prevent the case mentioned above by taking an
-additional reference to the audit container ID object when the signal
-information is collected, dropping it only after the signal
-information is collected by userspace or another process signals the
-audit daemon.  Yes, it would block that audit container ID from being
-reused immediately, but since we are talking about one number out of
-2^64 that seems like a reasonable tradeoff.
+See my comments about refcount_t, spinlocks, and list manipulation
+races from earlier in the patchset; the same thing applies to the
+function above.
+
 
 --
 paul moore
