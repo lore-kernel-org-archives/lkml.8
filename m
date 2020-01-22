@@ -2,149 +2,180 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71672C33CB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 12:34:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4A08C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 12:34:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4115724683
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 12:34:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579696445;
-	bh=YkMbe5GpP4VDjIwVHsoJprcnaVZrqN9ErPnnX3+2jro=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=0ZtP8LUVXgA5PhqlN7D1nz6oNSzuuApm3A7jm2y88aZsEi0DVXK4QVHKwY2pKImkX
-	 7L1Wb6cbpp7FnaEDKxDp3eO9EWbtlmreH9XZTnWrmlLhlzFnncz6/PXWkBWnCsGtt/
-	 jJFSLOzdXd1CWNL+pWyjrlRFOzioevxWCaa5ZiCY=
+	by mail.kernel.org (Postfix) with ESMTP id 880012467A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 12:34:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FwwQRJcq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729049AbgAVMeE (ORCPT
+        id S1729186AbgAVMen (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 07:34:04 -0500
-Received: from foss.arm.com ([217.140.110.172]:55834 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726204AbgAVMeE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 07:34:04 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4ECCE328;
-        Wed, 22 Jan 2020 04:34:03 -0800 (PST)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C34943F52E;
-        Wed, 22 Jan 2020 04:34:02 -0800 (PST)
-Date:   Wed, 22 Jan 2020 12:34:01 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Wen Su <Wen.Su@mediatek.com>
-Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        devicetree@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-kernel@lists.infradead.org, wsd_upstream@mediatek.com
-Subject: Re: [RESEND 3/4] regulator: mt6359: Add support for MT6359 regulator
-Message-ID: <20200122123401.GD3833@sirena.org.uk>
-References: <1579506450-21830-1-git-send-email-Wen.Su@mediatek.com>
- <1579506450-21830-4-git-send-email-Wen.Su@mediatek.com>
- <20200120190427.GO6852@sirena.org.uk>
- <1579659806.6612.12.camel@mtkswgap22>
+        Wed, 22 Jan 2020 07:34:43 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:37455 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728981AbgAVMen (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 07:34:43 -0500
+Received: by mail-wr1-f68.google.com with SMTP id w15so7109692wru.4
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jan 2020 04:34:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=2GhRGBXZ61sShjbspHfKcYEQZWltM3X6lSFo674t7to=;
+        b=FwwQRJcqKeYK89XfK/oqpBjkHe/ET6/B3wFHE96E1Fv3USCGYrXz9UWnYqIIpb5LZl
+         3lao0QZ5pbKC9hTFCkWQpXIlGmbZn9zxuC45CJxLz0BYfpmQ7/wh7a8uQQ34mpwT9iwY
+         HUpqTyFvG/+ob791WuSKlYbkXJSC5pwZPfWl/yyLx3TUHGLnbxk4CUNgCDfXlkGphLSF
+         fKtM7fuQBc4UZ7JbUhGLuGCVOx3N/QP8cmt4s9w/4V9aFcOjHlqsFUXc/udsPrYW2N4J
+         dBgkK00wbTZVqv0kfRSOenAE5uIDp/JdvVdFVCdRN31LkQgcjg4NXB33kakpPDRqhJR8
+         EgTQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=2GhRGBXZ61sShjbspHfKcYEQZWltM3X6lSFo674t7to=;
+        b=nFIgNVmmYuI95UtLCQHTOFBhXL+aUMtfvZHaqFrgphEkZAOZWkEmTojxnH1RDG1zKV
+         GlmIWB+VIdr2+PLvzB54KABMMg7LIk8F6t1fczFC5Nful7lMRmk2fF0Nb5YwZvEXISZb
+         EGpLMbb4jinsJt61bBd7Poe6otsdFB5CDdq1JwryX5m3yPRk5cyKOCoxYjAsGo9dv+Yg
+         5su9UIuJr1fwMnOXgDSZfxM9x5IIhEXFTPvK0Bla5jiPuMbIKb4olpsaxX0ESjV/9I1S
+         rCzALKvAVgh5qCTbMmzBAeLqlZ/pCfwVWvWdjL4gAD7gZ7wTf4ifW59hNtbjHVEovrNl
+         lCtw==
+X-Gm-Message-State: APjAAAXhf/fU5dWpzoRKE3RYMT7EYC8TbgqOwolKtMN15c9IGFceBwUj
+        VrsEIW1AD05pRUlsz5U8BOfmz8zTa/I=
+X-Google-Smtp-Source: APXvYqyByoPvWV0lN8iAWU7bNGHwXyB94LMbplyJgmq9E//WLFRbgrouqlRAp+2Y9VbNJ+oLcMjDBQ==
+X-Received: by 2002:a05:6000:cb:: with SMTP id q11mr11101981wrx.14.1579696481402;
+        Wed, 22 Jan 2020 04:34:41 -0800 (PST)
+Received: from dell ([2.27.35.227])
+        by smtp.gmail.com with ESMTPSA id h8sm60333141wrx.63.2020.01.22.04.34.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 22 Jan 2020 04:34:40 -0800 (PST)
+Date:   Wed, 22 Jan 2020 12:34:54 +0000
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Zha Qipeng <qipeng.zha@intel.com>,
+        "David E . Box" <david.e.box@linux.intel.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Mark Brown <broonie@kernel.org>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 37/38] platform/x86: intel_pmc_ipc: Convert to MFD
+Message-ID: <20200122123454.GL15507@dell>
+References: <20200121160114.60007-1-mika.westerberg@linux.intel.com>
+ <20200121160114.60007-38-mika.westerberg@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="rqzD5py0kzyFAOWN"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <1579659806.6612.12.camel@mtkswgap22>
-X-Cookie: Sorry.  Nice try.
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200121160114.60007-38-mika.westerberg@linux.intel.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, 21 Jan 2020, Mika Westerberg wrote:
 
---rqzD5py0kzyFAOWN
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> This driver only creates a bunch of platform devices sharing resources
+> belonging to the PMC device. This is pretty much what MFD subsystem is
+> for so move the driver there, renaming it to intel_pmc_bxt.c which
+> should be more clear what it is.
+> 
+> MFD subsystem provides nice helper APIs for subdevice creation so
+> convert the driver to use those. Unfortunately the ACPI device includes
+> separate resources for most of the subdevices so we cannot simply call
+> mfd_add_devices() to create all of them but instead we need to call it
+> separately for each device.
+> 
+> The new MFD driver continues to expose two sysfs attributes that allow
+> userspace to send IPC commands to the PMC/SCU to avoid breaking any
+> existing applications that may use these. Generally this is bad idea so
+> document this in the ABI documentation.
+> 
+> Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> ---
+>  .../ABI/obsolete/sysfs-driver-intel_pmc_bxt   |  22 +
+>  arch/x86/include/asm/intel_pmc_ipc.h          |  47 --
+>  arch/x86/include/asm/intel_telemetry.h        |   1 +
+>  drivers/mfd/Kconfig                           |  16 +-
+>  drivers/mfd/Makefile                          |   1 +
+>  drivers/mfd/intel_pmc_bxt.c                   | 496 ++++++++++++++
+>  drivers/platform/x86/Kconfig                  |  16 +-
+>  drivers/platform/x86/Makefile                 |   1 -
+>  drivers/platform/x86/intel_pmc_ipc.c          | 645 ------------------
+>  .../platform/x86/intel_telemetry_debugfs.c    |  12 +-
+>  drivers/platform/x86/intel_telemetry_pltdrv.c |   2 +
+>  drivers/usb/typec/tcpm/Kconfig                |   2 +-
+>  include/linux/mfd/intel_pmc_bxt.h             |  21 +
+>  13 files changed, 572 insertions(+), 710 deletions(-)
+>  create mode 100644 Documentation/ABI/obsolete/sysfs-driver-intel_pmc_bxt
+>  delete mode 100644 arch/x86/include/asm/intel_pmc_ipc.h
+>  create mode 100644 drivers/mfd/intel_pmc_bxt.c
+>  delete mode 100644 drivers/platform/x86/intel_pmc_ipc.c
+>  create mode 100644 include/linux/mfd/intel_pmc_bxt.h
 
-On Wed, Jan 22, 2020 at 10:23:26AM +0800, Wen Su wrote:
-> On Mon, 2020-01-20 at 19:04 +0000, Mark Brown wrote:
+[...]
 
-> > This looks like you should be using regulator_list_voltage_table() and
-> > associated functions, probably map_voltage_ascend() or _iterate() and
-> > just a simple set_voltage_sel_regmap().
+> +static int intel_pmc_probe(struct platform_device *pdev)
+> +{
+> +	struct intel_scu_ipc_pdata pdata = {};
+> +	struct intel_pmc_dev *pmc;
+> +	int ret;
+> +
+> +	pmc = devm_kzalloc(&pdev->dev, sizeof(*pmc), GFP_KERNEL);
+> +	if (!pmc)
+> +		return -ENOMEM;
+> +
+> +	pmc->dev = &pdev->dev;
+> +	spin_lock_init(&pmc->gcr_lock);
+> +
+> +	ret = intel_pmc_get_resources(pdev, pmc, &pdata);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "Failed to request resources\n");
+> +		return ret;
+> +	}
+> +
+> +	pmc->scu = devm_intel_scu_ipc_register(&pdev->dev, &pdata);
+> +	if (IS_ERR(pmc->scu))
+> +		return PTR_ERR(pmc->scu);
 
-> Thanks for your suggestion.
-> Currently it's using regulator_list_voltage_table() and
-> regulator_map_voltage_iterate() as below:
+*_register is better than *_probe.  If it was called that (or maybe
+*_init) initially I may have missed the issue altogether ...
 
-> The reason to use mt6359_set_voltage_sel() is to convert selector value
-> to hardware register index value:
-> 	idx =3D pvol[selector];
+However, I still think it the SCU IPC *device* needs to be a device
+driver and abide by the rules, ensuring it uses the device driver
+model/API.  As such, it should be registered and probed as a device.
 
-The whole idea behind regulator_list_voltage_table() is that it does the
-selector to voltage conversion for you, you shouldn't need to do any
-additional mapping.
+If you require something from it you should call into it (perhaps
+using a register function like above), but that should be done *after*
+the device has been bound and probed.
 
-> To avoid using mt6359_set_voltage_sel(), the *_voltages array need to be
-> filled with zeros as below:=20
-> Current:
-> static const u32 vemc_voltages[] =3D {
-> 	2900000, 3000000, 3300000,
-> };
-> static const u32 vemc_idx[] =3D {
-> 	10, 11, 13,
-> };
+> +	platform_set_drvdata(pdev, pmc);
+> +
+> +	ret = intel_pmc_create_devices(pmc);
+> +	if (ret)
+> +		dev_err(&pdev->dev, "Failed to create PMC devices\n");
+> +
+> +	return ret;
+> +}
 
-> change to:
-> static const u32 vxo22_voltages[] =3D {
-> 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2900000, 3000000, 0, 3300000,
-> };
-
-That's fine, the table is small and it only needs to be iterated in
-contexts where we're doing I2C I/O.  If it's really a problem introduce
-generic helpers for this rather than open coding.
-
-> > > +	switch (mode) {
-> > > +	case REGULATOR_MODE_FAST:
-> > > +		if (curr_mode =3D=3D REGULATOR_MODE_IDLE) {
-> > > +			WARN_ON(1);
-> > > +			dev_notice(&rdev->dev,
-> > > +				   "BUCK %s is LP mode, can't FPWM\n",
-> > > +				   rdev->desc->name);
-> > > +			return -EIO;
-
-> > I'd expect the device to go out of low power mode then into force PWM
-> > mode if it has to do that rather than reject the operation.
-
-> The device low power mode may control by hardware pad, so that the
-> reason to reject the operation is the device low power mode can not go
-> out by software.
-
-If this is being forced by hardware you need to check for that directly
-rather than just rejecting it without even trying (but hopefully the
-user set their constraints such that this doesn't happen).
-
-> Another scenario is one user set the device to low power mode, we think
-> it's not suitable to change device mode to _FAST mode by another user.
-
-It's not your driver's problem to worry about arbitrating between higher
-level users, let the framework deal with that (and notice that we have
-no code in kernel that actually sets the mode directly at runtime).
-That way we will have consistent behaviour between devices rather than
-devices trying to enforce their own policies.
-
---rqzD5py0kzyFAOWN
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl4oQTgACgkQJNaLcl1U
-h9D4Ygf+Nziq8bZrmbOIKqexjp2v9TvNwy09gwUlAJs9KJ9MjXFHTprK96JdeRLn
-qfl46x/Qb1TgrDRaFus46RApEELBHLOJ8MjMIz0MSlaVeJqyHwn46vTild91pSl3
-6vHfkJKRFHx3Ix2wudcdRcvpGn/HHGCydNn8+mLDOR9GDaZCOn2aOq2LVTU01izu
-7ulyEaYk3jIE86BfISfoXXGZ8eyHYaSynQia91odZsZD4J6W9IaGXFms9MORVIbm
-Ii3wwPwOufroxvff+6HOucaYbNN6UpVbKsvxJ4f0S9U5+T77RgDDdv6Jp6jv/Kjx
-jzkOyueUpjLzFBvhEKl52FhmXf74Vg==
-=ZzAE
------END PGP SIGNATURE-----
-
---rqzD5py0kzyFAOWN--
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
