@@ -7,51 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D561C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:30:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3B2BC33CB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:30:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 573572465B
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:30:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76E6924672
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:30:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579685433;
-	bh=UCKobPn342Tm1h3qKa42QQhbL/sGxOKXjHDfs8QOOeE=;
+	s=default; t=1579685434;
+	bh=FsfF4NfcdYAvMcZURswP/E6Pd7la1YZs0Ix6zZrUEiU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=l5vUw2EDacCadyHXNvpvTNNmTFWmEo3lts8WJe6NzRgqpZNXnL3vmcGpTu+8NgVqg
-	 8d1c9Gs6YBFK5W/IH/ZgI3FsUbfkJv297bG3wkjHVq/AiPc59jqweQEKwZKS+82hYn
-	 /ylVap1iaqmvj/JXBGh0Bb8fQtvTNaifa/9UoW/A=
+	b=W48R6IczP0j2/xqcr2URFUlyKmtli0GGZDeLKlbJXdkojuEW4BIatPvurmjSJ+Sla
+	 nQHF60lXHugxbQDTpmKJ16eixuvgj4G1b+zOw0VLMUwwpWM8mhjjAzBhpIzjyh2YeM
+	 SM4chndS3uqFm/WI0YZihXSD6qyUSqiM5B5KlPMU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729163AbgAVJab (ORCPT
+        id S1729219AbgAVJad (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 04:30:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41906 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 04:30:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41984 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725911AbgAVJa3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 04:30:29 -0500
+        id S1725911AbgAVJab (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 04:30:31 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 966552465B;
-        Wed, 22 Jan 2020 09:30:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 064802467A;
+        Wed, 22 Jan 2020 09:30:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579685429;
-        bh=UCKobPn342Tm1h3qKa42QQhbL/sGxOKXjHDfs8QOOeE=;
+        s=default; t=1579685431;
+        bh=FsfF4NfcdYAvMcZURswP/E6Pd7la1YZs0Ix6zZrUEiU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IJQTyCqjE/lRe3GnAdxO/3ZwR3YESo1V4Mz7hs3eLxAS0hA/0j5iIKQqAa5Sfh8NJ
-         uXJY9M8PBeFqq2dIJ679jiv1OBZVZR8f20uN6kHKjFP7fGWrOlJYOCGZb8Y5nt9F3p
-         y/u4IZXaYMNzCnYdN8mcmOkZZ56iMkpp0fNmzx+A=
+        b=WO9OmUR4H0JNQcXu/vkpceApO2JZPz/JiZtB8cntHu5dZu6eMD4mkaYm8lnWC0nlG
+         qb2k4h9ohrKz4M6/yv1CkIhukTqDJSNxEtoUeQLRp8DRdwbEwiOw37jtcqw6YopfCv
+         wqR6hLwA+3rYgOZIToLzLtsIcdwi1LVmguW5+B7o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Igor Redko <redkoi@virtuozzo.com>,
-        "Denis V. Lunev" <den@openvz.org>,
-        Roman Kagan <rkagan@virtuozzo.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org, Juergen Gross <jgross@suse.com>,
         Ben Hutchings <ben.hutchings@codethink.co.uk>
-Subject: [PATCH 4.4 11/76] mm/page_alloc.c: calculate available memory in a separate function
-Date:   Wed, 22 Jan 2020 10:28:27 +0100
-Message-Id: <20200122092752.743062030@linuxfoundation.org>
+Subject: [PATCH 4.4 12/76] xen: let alloc_xenballooned_pages() fail if not enough memory free
+Date:   Wed, 22 Jan 2020 10:28:28 +0100
+Message-Id: <20200122092752.831204783@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200122092751.587775548@linuxfoundation.org>
 References: <20200122092751.587775548@linuxfoundation.org>
@@ -64,152 +59,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Igor Redko <redkoi@virtuozzo.com>
+From: Juergen Gross <jgross@suse.com>
 
-commit d02bd27bd33dd7e8d22594cd568b81be0cb584cd upstream.
+commit a1078e821b605813b63bf6bca414a85f804d5c66 upstream.
 
-Add a new field, VIRTIO_BALLOON_S_AVAIL, to virtio_balloon memory
-statistics protocol, corresponding to 'Available' in /proc/meminfo.
+Instead of trying to allocate pages with GFP_USER in
+add_ballooned_pages() check the available free memory via
+si_mem_available(). GFP_USER is far less limiting memory exhaustion
+than the test via si_mem_available().
 
-It indicates to the hypervisor how big the balloon can be inflated
-without pushing the guest system to swap.  This metric would be very
-useful in VM orchestration software to improve memory management of
-different VMs under overcommit.
+This will avoid dom0 running out of memory due to excessive foreign
+page mappings especially on ARM and on x86 in PVH mode, as those don't
+have a pre-ballooned area which can be used for foreign mappings.
 
-This patch (of 2):
+As the normal ballooning suffers from the same problem don't balloon
+down more than si_mem_available() pages in one iteration. At the same
+time limit the default maximum number of retries.
 
-Factor out calculation of the available memory counter into a separate
-exportable function, in order to be able to use it in other parts of the
-kernel.
+This is part of XSA-300.
 
-In particular, it appears a relevant metric to report to the hypervisor
-via virtio-balloon statistics interface (in a followup patch).
-
-Signed-off-by: Igor Redko <redkoi@virtuozzo.com>
-Signed-off-by: Denis V. Lunev <den@openvz.org>
-Reviewed-by: Roman Kagan <rkagan@virtuozzo.com>
-Cc: Michael S. Tsirkin <mst@redhat.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-[bwh: Backported to 4.4 as dependency of commit a1078e821b60
- "xen: let alloc_xenballooned_pages() fail if not enough memory free"]
+Signed-off-by: Juergen Gross <jgross@suse.com>
 Signed-off-by: Ben Hutchings <ben.hutchings@codethink.co.uk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- fs/proc/meminfo.c  |   31 +------------------------------
- include/linux/mm.h |    1 +
- mm/page_alloc.c    |   43 +++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 45 insertions(+), 30 deletions(-)
+ drivers/xen/balloon.c |   16 +++++++++++++---
+ 1 file changed, 13 insertions(+), 3 deletions(-)
 
---- a/fs/proc/meminfo.c
-+++ b/fs/proc/meminfo.c
-@@ -29,10 +29,7 @@ static int meminfo_proc_show(struct seq_
- 	unsigned long committed;
- 	long cached;
- 	long available;
--	unsigned long pagecache;
--	unsigned long wmark_low = 0;
- 	unsigned long pages[NR_LRU_LISTS];
--	struct zone *zone;
- 	int lru;
+--- a/drivers/xen/balloon.c
++++ b/drivers/xen/balloon.c
+@@ -584,8 +584,15 @@ static void balloon_process(struct work_
+ 				state = reserve_additional_memory();
+ 		}
  
- /*
-@@ -51,33 +48,7 @@ static int meminfo_proc_show(struct seq_
- 	for (lru = LRU_BASE; lru < NR_LRU_LISTS; lru++)
- 		pages[lru] = global_page_state(NR_LRU_BASE + lru);
+-		if (credit < 0)
+-			state = decrease_reservation(-credit, GFP_BALLOON);
++		if (credit < 0) {
++			long n_pages;
++
++			n_pages = min(-credit, si_mem_available());
++			state = decrease_reservation(n_pages, GFP_BALLOON);
++			if (state == BP_DONE && n_pages != -credit &&
++			    n_pages < totalreserve_pages)
++				state = BP_EAGAIN;
++		}
  
--	for_each_zone(zone)
--		wmark_low += zone->watermark[WMARK_LOW];
--
--	/*
--	 * Estimate the amount of memory available for userspace allocations,
--	 * without causing swapping.
--	 */
--	available = i.freeram - totalreserve_pages;
--
--	/*
--	 * Not all the page cache can be freed, otherwise the system will
--	 * start swapping. Assume at least half of the page cache, or the
--	 * low watermark worth of cache, needs to stay.
--	 */
--	pagecache = pages[LRU_ACTIVE_FILE] + pages[LRU_INACTIVE_FILE];
--	pagecache -= min(pagecache / 2, wmark_low);
--	available += pagecache;
--
--	/*
--	 * Part of the reclaimable slab consists of items that are in use,
--	 * and cannot be freed. Cap this estimate at the low watermark.
--	 */
--	available += global_page_state(NR_SLAB_RECLAIMABLE) -
--		     min(global_page_state(NR_SLAB_RECLAIMABLE) / 2, wmark_low);
--
--	if (available < 0)
--		available = 0;
-+	available = si_mem_available();
+ 		state = update_schedule(state);
  
- 	/*
- 	 * Tagged format, for easy grepping and expansion.
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -1802,6 +1802,7 @@ extern int __meminit init_per_zone_wmark
- extern void mem_init(void);
- extern void __init mmap_init(void);
- extern void show_mem(unsigned int flags);
-+extern long si_mem_available(void);
- extern void si_meminfo(struct sysinfo * val);
- extern void si_meminfo_node(struct sysinfo *val, int nid);
+@@ -624,6 +631,9 @@ static int add_ballooned_pages(int nr_pa
+ 		}
+ 	}
  
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -3650,6 +3650,49 @@ static inline void show_node(struct zone
- 		printk("Node %d ", zone_to_nid(zone));
- }
++	if (si_mem_available() < nr_pages)
++		return -ENOMEM;
++
+ 	st = decrease_reservation(nr_pages, GFP_USER);
+ 	if (st != BP_DONE)
+ 		return -ENOMEM;
+@@ -747,7 +757,7 @@ static int __init balloon_init(void)
+ 	balloon_stats.schedule_delay = 1;
+ 	balloon_stats.max_schedule_delay = 32;
+ 	balloon_stats.retry_count = 1;
+-	balloon_stats.max_retry_count = RETRY_UNLIMITED;
++	balloon_stats.max_retry_count = 4;
  
-+long si_mem_available(void)
-+{
-+	long available;
-+	unsigned long pagecache;
-+	unsigned long wmark_low = 0;
-+	unsigned long pages[NR_LRU_LISTS];
-+	struct zone *zone;
-+	int lru;
-+
-+	for (lru = LRU_BASE; lru < NR_LRU_LISTS; lru++)
-+		pages[lru] = global_page_state(NR_LRU_BASE + lru);
-+
-+	for_each_zone(zone)
-+		wmark_low += zone->watermark[WMARK_LOW];
-+
-+	/*
-+	 * Estimate the amount of memory available for userspace allocations,
-+	 * without causing swapping.
-+	 */
-+	available = global_page_state(NR_FREE_PAGES) - totalreserve_pages;
-+
-+	/*
-+	 * Not all the page cache can be freed, otherwise the system will
-+	 * start swapping. Assume at least half of the page cache, or the
-+	 * low watermark worth of cache, needs to stay.
-+	 */
-+	pagecache = pages[LRU_ACTIVE_FILE] + pages[LRU_INACTIVE_FILE];
-+	pagecache -= min(pagecache / 2, wmark_low);
-+	available += pagecache;
-+
-+	/*
-+	 * Part of the reclaimable slab consists of items that are in use,
-+	 * and cannot be freed. Cap this estimate at the low watermark.
-+	 */
-+	available += global_page_state(NR_SLAB_RECLAIMABLE) -
-+		     min(global_page_state(NR_SLAB_RECLAIMABLE) / 2, wmark_low);
-+
-+	if (available < 0)
-+		available = 0;
-+	return available;
-+}
-+EXPORT_SYMBOL_GPL(si_mem_available);
-+
- void si_meminfo(struct sysinfo *val)
- {
- 	val->totalram = totalram_pages;
+ #ifdef CONFIG_XEN_BALLOON_MEMORY_HOTPLUG
+ 	set_online_page_callback(&xen_online_page);
 
 
