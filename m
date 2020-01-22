@@ -2,110 +2,118 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48FE3C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 19:22:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15A77C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 19:29:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15BFC24656
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 19:22:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FKteuqhg"
+	by mail.kernel.org (Postfix) with ESMTP id E77E9217F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 19:29:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728928AbgAVTWx (ORCPT
+        id S1726584AbgAVT3R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 14:22:53 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:38441 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725884AbgAVTWw (ORCPT
+        Wed, 22 Jan 2020 14:29:17 -0500
+Received: from charlotte.tuxdriver.com ([70.61.120.58]:46775 "EHLO
+        smtp.tuxdriver.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725928AbgAVT3Q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 14:22:52 -0500
-Received: by mail-wm1-f66.google.com with SMTP id u2so266845wmc.3
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jan 2020 11:22:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=xWpBHT4hqMde43eyJwKJtDhZYAonZRKx3iAocjQUyYo=;
-        b=FKteuqhg5IqrDdKVJUufetZplTyyIq1xOfIAB6ZhlcoAH82hqhzC1zPZG2O1j95Pke
-         kudDVShcKHguDFB5zWZ97aa+vPOmu1FPqii65xvZ6RNlyuEIrpr72s2jo7mFmuaEgT19
-         Vnw5kdo9TvOplFc1H2IrQSsTchWIBTFu70WIyw8xufiucG2keaVlBFd5XssvZA4RLBUY
-         oXNSE0pqYQ9g8FlNr88uIJlX3zqdyQrqBDgNOEipKe8u8DJkfIdINunBXHZ5KpWKWP+F
-         bHlDfNXtspy/u8qc5zsO5D40d8j7mlvk5/i87z38kCeEKuW1dro6HgCDEH4niM+Z+kTD
-         lVAA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=xWpBHT4hqMde43eyJwKJtDhZYAonZRKx3iAocjQUyYo=;
-        b=SpB6Qt3krXG58WoVAeMBYjMQo29btXmaxlqrMMrGDFBgk8rbTCL5u2golIxf2gMhKy
-         lePwZaSTnT0sn10rSOdNMUZe9mXAPBoLi43zJKfDN3BDKAVLYyYk+33oVZC935vDKw4f
-         V9QCrbQLt1OVTsORXdL+4vQ83OddpnzQwqu8jht4NjVFsY+0L1oEvrW/BY5C7cTuDoxP
-         Flavoynz/f5CEsFjCVoyOxb4GQ/5UEL7uRqs8FrCBVB54DZTlVIb14x7mlmIUCXd9rB7
-         rMcd7C7jvuJcQhSTL36hT6YUVz/coRVOxKW8zblFXoWHwwadMvKYZYcV6wfyM2Nns6Ud
-         nW7Q==
-X-Gm-Message-State: APjAAAWUDgdGX3iJ9erj7IxnDujAgzDhmbZUBJE6I4QnCVpH5vj9kzPl
-        T+mjKTMq5uB4itVQuDAU5IkDnNOlqlXtvDQQcJSySg==
-X-Google-Smtp-Source: APXvYqwRW+EwzVj5UEPQoOlpO6wziKAlvxhI+CJC5G6xAtmvKCWwe6S4Vibgd8gpmiqNy43iw1yV/iqL2dF22WnIZHU=
-X-Received: by 2002:a7b:c4cc:: with SMTP id g12mr4766627wmk.68.1579720970736;
- Wed, 22 Jan 2020 11:22:50 -0800 (PST)
+        Wed, 22 Jan 2020 14:29:16 -0500
+Received: from [62.209.224.147] (helo=localhost)
+        by smtp.tuxdriver.com with esmtpsa (TLSv1:AES256-SHA:256)
+        (Exim 4.63)
+        (envelope-from <nhorman@tuxdriver.com>)
+        id 1iuLgR-0005vX-EF; Wed, 22 Jan 2020 14:29:06 -0500
+Date:   Wed, 22 Jan 2020 14:28:56 -0500
+From:   Neil Horman <nhorman@tuxdriver.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     l00520965 <liuchao173@huawei.com>, linfeilong@huawei.com,
+        hushiyuan@huawei.com, linux-kernel@vger.kernel.org,
+        PJ Waskiewicz <peter.waskiewicz.jr@intel.com>
+Subject: Re: [RFC] irq: Skip printing irq when desc->action is null even if
+ any_count is not zero
+Message-ID: <20200122192856.GA2852@localhost.localdomain>
+References: <20200121130959.22589-1-liuchao173@huawei.com>
+ <87k15jek6v.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-References: <20200122191430.4888-1-cai@lca.pw> <CAKv+Gu_snhTpsM4cjZ38UhH02v151NW4cJdQu9QVqCWu4rFVZw@mail.gmail.com>
-In-Reply-To: <CAKv+Gu_snhTpsM4cjZ38UhH02v151NW4cJdQu9QVqCWu4rFVZw@mail.gmail.com>
-From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date:   Wed, 22 Jan 2020 20:22:40 +0100
-Message-ID: <CAKv+Gu9R40uywfPkq02AGtKAWqvq+63EEOrhGJf5_gY1xfHkNQ@mail.gmail.com>
-Subject: Re: [PATCH -next] efi/libstub/x86: fix an EFI server boot failure
-To:     Qian Cai <cai@lca.pw>, Ingo Molnar <mingo@redhat.com>
-Cc:     Ard Biesheuvel <ardb@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87k15jek6v.fsf@nanos.tec.linutronix.de>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 22 Jan 2020 at 20:17, Ard Biesheuvel <ard.biesheuvel@linaro.org> wrote:
->
-> On Wed, 22 Jan 2020 at 20:15, Qian Cai <cai@lca.pw> wrote:
-> >
-> > x86_64 EFI systems are unable to boot due to a typo in the recent commit.
-> >
-> > EFI config tables not found.
-> >  -- System halted
-> >
-> > Fixes: 796eb8d26a57 ("efi/libstub/x86: Use const attribute for efi_is_64bit()")
-> > Signed-off-by: Qian Cai <cai@lca.pw>
-> > ---
-> >  arch/x86/boot/compressed/eboot.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/arch/x86/boot/compressed/eboot.c b/arch/x86/boot/compressed/eboot.c
-> > index 82e26d0ff075..287393d725f0 100644
-> > --- a/arch/x86/boot/compressed/eboot.c
-> > +++ b/arch/x86/boot/compressed/eboot.c
-> > @@ -32,7 +32,7 @@ __attribute_const__ bool efi_is_64bit(void)
-> >  {
-> >         if (IS_ENABLED(CONFIG_EFI_MIXED))
-> >                 return efi_is64;
-> > -       return IS_ENABLED(CONFIG_X64_64);
-> > +       return IS_ENABLED(CONFIG_X86_64);
-> >  }
-> >
-> >  static efi_status_t
->
-> Apologies for the breakage - your fix is obviously correct. But I did
-> test this code, so I am curious why I didn't see this problem. Are you
-> booting via GRUB or from the UEFI shell? Can you share your .config
-> please?
+On Wed, Jan 22, 2020 at 01:42:48PM +0100, Thomas Gleixner wrote:
+> Chao,
+> 
+> l00520965 <liuchao173@huawei.com> writes:
+> 
+> > When desc->action is empty, there is no need to print out the irq and its'
+> > count in each cpu. The desc is not alloced in request_irq or freed in
+> > free_irq.
+> 
+> request/free_irq() never allocate/free irq descriptors. 
+> 
+> > So some PCI devices, such as rtl8139, uses request_irq and free_irq,
+> 
+> All PCI devices use some variant of request_irq()/free_irq(). The
+> interrupt descriptors are allocated by the underlying PCI
+> machinery. They are only allocated/freed when the device driver is
+> loaded/removed.
+> 
+> And this property exists for _ALL_ interrupts independent of PCI.
+> 
+> > which only modify the action of desc. So /proc/interrupts could be
+> > like this:
+> 
+> I think you want to explain:
+> 
+>   If an interrupt is released via free_irq() without removing the
+>   underlying irq descriptor, the interrupt count of the irq descriptor
+>   is not reset. /proc/interrupt shows such interrupts with an empty
+>   action handler name:
+>   
+> >            CPU0       CPU1
+> >  38:         46          0     GICv3  36 Level     ehci_hcd:usb1
+> >  39:         66          0     GICv3  37 Level
+> 
+>   irqbalance fails to detect that this interrupt is not longer in use
+>   and parses the last word in the line 'Level' as the action handler
+>   name.
+> 
+> > Irqbalance gets the list of interrupts according to /proc/interrupts. In
+> > this case, irqbalance does not remove the interrupt from the balance list,
+> > and the last string in this line,which is Level, is used as irq_name.
+> 
+> Right, this is historic behaviour and I don't know how irqbalance dealt
+> with that in the past 20+ years. At least I haven't seen any complaints.
+> 
+> I'm not opposed to suppress the output, but I really want the opinion of
+> the irqbalance maintainers on that.
+> 
+Actually, irqbalance ignores the trailing irq name (or it should at
+least), so you should be able to drop that portion of /proc/irqbalance,
+though I cant speak for any other users of it.
 
-Hmm, I guess it is simply the absence of CONFIG_EFI_MIXED=y ...
-
-Acked-by: Ard Biesheuvel <ardb@kernel.org>
-
-Ingo, Thomas, could you drop this into efi/core directly please? Thanks.
+> > Or we can clear desc->kstat_irqs in each cpu in free_irq when
+> > desc->action is null?
+> 
+> No, we can't. The historic behaviour is that the total interrupt count
+> for a device is maintained independent of the number of
+> request/free_irq() pairs.
+> 
+> > Signed-off-by: LiuChao <liuchao173@huawei.com>
+> > Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
+> 
+> I really can't remember that I have reviewed this patch already. Please
+> don't add tags which claim that some one has reviewed or acked your
+> patch unless you really got that Reviewed-by or Acked-by from that
+> person.
+> 
+> Thanks,
+> 
+>         tglx
+> 
