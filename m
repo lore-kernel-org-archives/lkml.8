@@ -2,500 +2,148 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64FABC33CB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 19:43:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C1F0C3F68F
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 19:43:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A62024655
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 19:43:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579722219;
-	bh=/Ua+khTHRLFJkYxcbo2k3X2dChtfZ8Z/kBR1YoppL4k=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=YBpfzzxi4TSkQz62nsJBqyBBzrMeYSn2BRinLtJcM6f8oBPdkP6UbLoiEgcRvsJgI
-	 r1iUtSWOArNdA1rhT48Wwy0q9Gb6aYJ5dwRJLkU9DVLizyqFbh54xDy5UGvKcTdlCY
-	 5Bmgyb52s1ugji/LbYmYaPYGsD1bxQSD+GWqwjwA=
+	by mail.kernel.org (Postfix) with ESMTP id EA5B02465A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 19:43:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="A+p7OrQu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728809AbgAVTni (ORCPT
+        id S1728992AbgAVTnn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 14:43:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41116 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725827AbgAVTnh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 14:43:37 -0500
-Received: from mail-il1-f177.google.com (mail-il1-f177.google.com [209.85.166.177])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Wed, 22 Jan 2020 14:43:43 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:47775 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725827AbgAVTnn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 14:43:43 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579722222;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=5tEuUkKDhsAj/8wgfLzijJY2JLpoVThoT94FD+ztjuA=;
+        b=A+p7OrQuEDOIxnUhG2PVzrTcN7HejjrFr2bfUKM19ByTXP9QZQK4tmsHRKcpL6Xq6TkKg2
+        URS99DxuU7hlb/NedvG5q8hZBARH/34XPPTxcNL34/yJhM1jNRh1hsK6H/652+aHOgxsto
+        bS+OjOs7H0HNx5olP/fnAzayGRdVXZo=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-149-nKyCzFggNiS1Ck3kiyDaKg-1; Wed, 22 Jan 2020 14:43:38 -0500
+X-MC-Unique: nKyCzFggNiS1Ck3kiyDaKg-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2BBB52465A;
-        Wed, 22 Jan 2020 19:43:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579722216;
-        bh=/Ua+khTHRLFJkYxcbo2k3X2dChtfZ8Z/kBR1YoppL4k=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=DpHWez4zxEvBSO01zDRKItxoFTDmBmcUNCcgVk1JYWuxzAa3xtd2YvIqv1bu9hd4i
-         LENbuh375qHZXszYAovhvnW4kAlQhRVe2u9SkP+9ugiqHav/KZTzYSI2Hx1NOwqCuu
-         PgXdwCCE29+SIYZlYr5vz2e16pQnW9QWZ7B2IvR8=
-Received: by mail-il1-f177.google.com with SMTP id v69so312402ili.10;
-        Wed, 22 Jan 2020 11:43:36 -0800 (PST)
-X-Gm-Message-State: APjAAAX9lqT5PGm8wd+tkU5tlHoKgSlTve8vswwYP9117tI/DP7XDGhD
-        LTGAk0PK7pOIxVVWgbkjAujxFq8f4VaoXBM4I8Y=
-X-Google-Smtp-Source: APXvYqzwc/yVAzjlWFhrFcFPTOaYD/VgricIpT13Nkwu5z3PVRHTlkt+a+uMd9yoiU0KR55VFLQs9mV52hxhkUKO660=
-X-Received: by 2002:a92:3611:: with SMTP id d17mr9709535ila.264.1579722215511;
- Wed, 22 Jan 2020 11:43:35 -0800 (PST)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C9547803776;
+        Wed, 22 Jan 2020 19:43:35 +0000 (UTC)
+Received: from malachite.bss.redhat.com (dhcp-10-20-1-90.bss.redhat.com [10.20.1.90])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id BB5C219C5B;
+        Wed, 22 Jan 2020 19:43:31 +0000 (UTC)
+From:   Lyude Paul <lyude@redhat.com>
+To:     dri-devel@lists.freedesktop.org
+Cc:     Sean Paul <sean@poorly.run>, Wayne Lin <Wayne.Lin@amd.com>,
+        =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
+        <ville.syrjala@linux.intel.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 1/2] drm/dp_mst: Fix clearing payload state on topology disable
+Date:   Wed, 22 Jan 2020 14:43:20 -0500
+Message-Id: <20200122194321.14953-1-lyude@redhat.com>
 MIME-Version: 1.0
-References: <1579675994-7001-1-git-send-email-light.hsieh@mediatek.com> <1579675994-7001-5-git-send-email-light.hsieh@mediatek.com>
-In-Reply-To: <1579675994-7001-5-git-send-email-light.hsieh@mediatek.com>
-From:   Sean Wang <sean.wang@kernel.org>
-Date:   Wed, 22 Jan 2020 11:43:24 -0800
-X-Gmail-Original-Message-ID: <CAGp9Lzpu4ZhzTr+POQ=wAQSgpAqOK7cX=W2XshhQHaFBsNPMrA@mail.gmail.com>
-Message-ID: <CAGp9Lzpu4ZhzTr+POQ=wAQSgpAqOK7cX=W2XshhQHaFBsNPMrA@mail.gmail.com>
-Subject: Re: [PATCH v8 5/6] pinctrl: mediatek: Backward compatible to previous
- Mediatek's bias-pull usage
-To:     Light Hsieh <light.hsieh@mediatek.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>, kuohong.wang@mediatek.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 21, 2020 at 10:53 PM <light.hsieh@mediatek.com> wrote:
->
-> From: Light Hsieh <light.hsieh@mediatek.com>
->
-> Refine mtk_pinconf_set()/mtk_pinconf_get() for backward compatibility to
-> previous MediaTek's bias-pull usage.
-> In PINCTRL_MTK that use pinctrl-mtk-common.c, bias-pull setting for pins
-> with 2 pull resistors can be specified as value for bias-pull-up and
-> bias-pull-down. For example:
->     bias-pull-up = <MTK_PUPD_SET_R1R0_00>;
->     bias-pull-up = <MTK_PUPD_SET_R1R0_01>;
->     bias-pull-up = <MTK_PUPD_SET_R1R0_10>;
->     bias-pull-up = <MTK_PUPD_SET_R1R0_11>;
->     bias-pull-down = <MTK_PUPD_SET_R1R0_00>;
->     bias-pull-down = <MTK_PUPD_SET_R1R0_01>;
->     bias-pull-down = <MTK_PUPD_SET_R1R0_10>;
->     bias-pull-down = <MTK_PUPD_SET_R1R0_11>;
->
-> On the other hand, PINCTRL_MTK_PARIS use customized properties
-> "mediatek,pull-up-adv" and "mediatek,pull-down-adv" to specify bias-pull
-> setting for pins with 2 pull resistors.
-> This introduce in-compatibility in device tree and increase porting
-> effort to MediaTek's customer that had already used PINCTRL_MTK version.
-> Besides, if customers are not aware of this change and still write devicetree
-> for PINCTRL_MTK version, they may encounter runtime failure with pinctrl and
-> spent time to debug.
->
-> This patch adds backward compatible to previous MediaTek's bias-pull usage
-> so that Mediatek's customer need not use a new devicetree property name.
-> The rationale is that: changing driver implementation had better leave
-> interface unchanged.
->
-> Signed-off-by: Light Hsieh <light.hsieh@mediatek.com>
+The issues caused by:
 
-Acked-by: Sean Wang <sean.wang@kernel.org>
+64e62bdf04ab ("drm/dp_mst: Remove VCPI while disabling topology mgr")
 
-> ---
->  drivers/pinctrl/mediatek/pinctrl-mt6765.c        |   6 +-
->  drivers/pinctrl/mediatek/pinctrl-mt8183.c        |   6 +-
->  drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c | 221 +++++++++++++++++++++++
->  drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.h |  11 ++
->  drivers/pinctrl/mediatek/pinctrl-paris.c         |  49 +++--
->  5 files changed, 265 insertions(+), 28 deletions(-)
->
-> diff --git a/drivers/pinctrl/mediatek/pinctrl-mt6765.c b/drivers/pinctrl/mediatek/pinctrl-mt6765.c
-> index 7fae397..905dae8c 100644
-> --- a/drivers/pinctrl/mediatek/pinctrl-mt6765.c
-> +++ b/drivers/pinctrl/mediatek/pinctrl-mt6765.c
-> @@ -1072,10 +1072,8 @@
->         .gpio_m = 0,
->         .base_names = mt6765_pinctrl_register_base_names,
->         .nbase_names = ARRAY_SIZE(mt6765_pinctrl_register_base_names),
-> -       .bias_disable_set = mtk_pinconf_bias_disable_set,
-> -       .bias_disable_get = mtk_pinconf_bias_disable_get,
-> -       .bias_set = mtk_pinconf_bias_set,
-> -       .bias_get = mtk_pinconf_bias_get,
-> +       .bias_set_combo = mtk_pinconf_bias_set_combo,
-> +       .bias_get_combo = mtk_pinconf_bias_get_combo,
->         .drive_set = mtk_pinconf_drive_set_raw,
->         .drive_get = mtk_pinconf_drive_get_raw,
->         .adv_pull_get = mtk_pinconf_adv_pull_get,
-> diff --git a/drivers/pinctrl/mediatek/pinctrl-mt8183.c b/drivers/pinctrl/mediatek/pinctrl-mt8183.c
-> index 4eca818..6031833 100644
-> --- a/drivers/pinctrl/mediatek/pinctrl-mt8183.c
-> +++ b/drivers/pinctrl/mediatek/pinctrl-mt8183.c
-> @@ -556,10 +556,8 @@
->         .gpio_m = 0,
->         .base_names = mt8183_pinctrl_register_base_names,
->         .nbase_names = ARRAY_SIZE(mt8183_pinctrl_register_base_names),
-> -       .bias_disable_set = mtk_pinconf_bias_disable_set_rev1,
-> -       .bias_disable_get = mtk_pinconf_bias_disable_get_rev1,
-> -       .bias_set = mtk_pinconf_bias_set_rev1,
-> -       .bias_get = mtk_pinconf_bias_get_rev1,
-> +       .bias_set_combo = mtk_pinconf_bias_set_combo,
-> +       .bias_get_combo = mtk_pinconf_bias_get_combo,
->         .drive_set = mtk_pinconf_drive_set_rev1,
->         .drive_get = mtk_pinconf_drive_get_rev1,
->         .adv_pull_get = mtk_pinconf_adv_pull_get,
-> diff --git a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
-> index 2247eae..1da9425 100644
-> --- a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
-> +++ b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
-> @@ -6,6 +6,7 @@
->   *
->   */
->
-> +#include <dt-bindings/pinctrl/mt65xx.h>
->  #include <linux/device.h>
->  #include <linux/err.h>
->  #include <linux/gpio/driver.h>
-> @@ -517,6 +518,226 @@ int mtk_pinconf_bias_get_rev1(struct mtk_pinctrl *hw,
->         return 0;
->  }
->
-> +/* Combo for the following pull register type:
-> + * 1. PU + PD
-> + * 2. PULLSEL + PULLEN
-> + * 3. PUPD + R0 + R1
-> + */
-> +static int mtk_pinconf_bias_set_pu_pd(struct mtk_pinctrl *hw,
-> +                               const struct mtk_pin_desc *desc,
-> +                               u32 pullup, u32 arg)
-> +{
-> +       int err, pu, pd;
-> +
-> +       if (arg == MTK_DISABLE) {
-> +               pu = 0;
-> +               pd = 0;
-> +       } else if ((arg == MTK_ENABLE) && pullup) {
-> +               pu = 1;
-> +               pd = 0;
-> +       } else if ((arg == MTK_ENABLE) && !pullup) {
-> +               pu = 0;
-> +               pd = 1;
-> +       } else {
-> +               err = -EINVAL;
-> +               goto out;
-> +       }
-> +
-> +       err = mtk_hw_set_value(hw, desc, PINCTRL_PIN_REG_PU, pu);
-> +       if (err)
-> +               goto out;
-> +
-> +       err = mtk_hw_set_value(hw, desc, PINCTRL_PIN_REG_PD, pd);
-> +
-> +out:
-> +       return err;
-> +}
-> +
-> +static int mtk_pinconf_bias_set_pullsel_pullen(struct mtk_pinctrl *hw,
-> +                               const struct mtk_pin_desc *desc,
-> +                               u32 pullup, u32 arg)
-> +{
-> +       int err, enable;
-> +
-> +       if (arg == MTK_DISABLE)
-> +               enable = 0;
-> +       else if (arg == MTK_ENABLE)
-> +               enable = 1;
-> +       else {
-> +               err = -EINVAL;
-> +               goto out;
-> +       }
-> +
-> +       err = mtk_hw_set_value(hw, desc, PINCTRL_PIN_REG_PULLEN, enable);
-> +       if (err)
-> +               goto out;
-> +
-> +       err = mtk_hw_set_value(hw, desc, PINCTRL_PIN_REG_PULLSEL, pullup);
-> +
-> +out:
-> +       return err;
-> +}
-> +
-> +static int mtk_pinconf_bias_set_pupd_r1_r0(struct mtk_pinctrl *hw,
-> +                               const struct mtk_pin_desc *desc,
-> +                               u32 pullup, u32 arg)
-> +{
-> +       int err, r0, r1;
-> +
-> +       if ((arg == MTK_DISABLE) || (arg == MTK_PUPD_SET_R1R0_00)) {
-> +               pullup = 0;
-> +               r0 = 0;
-> +               r1 = 0;
-> +       } else if (arg == MTK_PUPD_SET_R1R0_01) {
-> +               r0 = 1;
-> +               r1 = 0;
-> +       } else if (arg == MTK_PUPD_SET_R1R0_10) {
-> +               r0 = 0;
-> +               r1 = 1;
-> +       } else if (arg == MTK_PUPD_SET_R1R0_11) {
-> +               r0 = 1;
-> +               r1 = 1;
-> +       } else {
-> +               err = -EINVAL;
-> +               goto out;
-> +       }
-> +
-> +       /* MTK HW PUPD bit: 1 for pull-down, 0 for pull-up */
-> +       err = mtk_hw_set_value(hw, desc, PINCTRL_PIN_REG_PUPD, !pullup);
-> +       if (err)
-> +               goto out;
-> +
-> +       err = mtk_hw_set_value(hw, desc, PINCTRL_PIN_REG_R0, r0);
-> +       if (err)
-> +               goto out;
-> +
-> +       err = mtk_hw_set_value(hw, desc, PINCTRL_PIN_REG_R1, r1);
-> +
-> +out:
-> +       return err;
-> +}
-> +
-> +static int mtk_pinconf_bias_get_pu_pd(struct mtk_pinctrl *hw,
-> +                               const struct mtk_pin_desc *desc,
-> +                               u32 *pullup, u32 *enable)
-> +{
-> +       int err, pu, pd;
-> +
-> +       err = mtk_hw_get_value(hw, desc, PINCTRL_PIN_REG_PU, &pu);
-> +       if (err)
-> +               goto out;
-> +
-> +       err = mtk_hw_get_value(hw, desc, PINCTRL_PIN_REG_PD, &pd);
-> +       if (err)
-> +               goto out;
-> +
-> +       if (pu == 0 && pd == 0) {
-> +               *pullup = 0;
-> +               *enable = MTK_DISABLE;
-> +       } else if (pu == 1 && pd == 0) {
-> +               *pullup = 1;
-> +               *enable = MTK_ENABLE;
-> +       } else if (pu == 0 && pd == 1) {
-> +               *pullup = 0;
-> +               *enable = MTK_ENABLE;
-> +       } else
-> +               err = -EINVAL;
-> +
-> +out:
-> +       return err;
-> +}
-> +
-> +static int mtk_pinconf_bias_get_pullsel_pullen(struct mtk_pinctrl *hw,
-> +                               const struct mtk_pin_desc *desc,
-> +                               u32 *pullup, u32 *enable)
-> +{
-> +       int err;
-> +
-> +       err = mtk_hw_get_value(hw, desc, PINCTRL_PIN_REG_PULLSEL, pullup);
-> +       if (err)
-> +               goto out;
-> +
-> +       err = mtk_hw_get_value(hw, desc, PINCTRL_PIN_REG_PULLEN, enable);
-> +
-> +out:
-> +       return err;
-> +}
-> +
-> +static int mtk_pinconf_bias_get_pupd_r1_r0(struct mtk_pinctrl *hw,
-> +                               const struct mtk_pin_desc *desc,
-> +                               u32 *pullup, u32 *enable)
-> +{
-> +       int err, r0, r1;
-> +
-> +       err = mtk_hw_get_value(hw, desc, PINCTRL_PIN_REG_PUPD, pullup);
-> +       if (err)
-> +               goto out;
-> +       /* MTK HW PUPD bit: 1 for pull-down, 0 for pull-up */
-> +       *pullup = !(*pullup);
-> +
-> +       err = mtk_hw_get_value(hw, desc, PINCTRL_PIN_REG_R0, &r0);
-> +       if (err)
-> +               goto out;
-> +
-> +       err = mtk_hw_get_value(hw, desc, PINCTRL_PIN_REG_R1, &r1);
-> +       if (err)
-> +               goto out;
-> +
-> +       if ((r1 == 0) && (r0 == 0))
-> +               *enable = MTK_PUPD_SET_R1R0_00;
-> +       else if ((r1 == 0) && (r0 == 1))
-> +               *enable = MTK_PUPD_SET_R1R0_01;
-> +       else if ((r1 == 1) && (r0 == 0))
-> +               *enable = MTK_PUPD_SET_R1R0_10;
-> +       else if ((r1 == 1) && (r0 == 1))
-> +               *enable = MTK_PUPD_SET_R1R0_11;
-> +       else
-> +               err = -EINVAL;
-> +
-> +out:
-> +       return err;
-> +}
-> +
-> +int mtk_pinconf_bias_set_combo(struct mtk_pinctrl *hw,
-> +                               const struct mtk_pin_desc *desc,
-> +                               u32 pullup, u32 arg)
-> +{
-> +       int err;
-> +
-> +       err = mtk_pinconf_bias_set_pu_pd(hw, desc, pullup, arg);
-> +       if (!err)
-> +               goto out;
-> +
-> +       err = mtk_pinconf_bias_set_pullsel_pullen(hw, desc, pullup, arg);
-> +       if (!err)
-> +               goto out;
-> +
-> +       err = mtk_pinconf_bias_set_pupd_r1_r0(hw, desc, pullup, arg);
-> +
-> +out:
-> +       return err;
-> +}
-> +
-> +int mtk_pinconf_bias_get_combo(struct mtk_pinctrl *hw,
-> +                             const struct mtk_pin_desc *desc,
-> +                             u32 *pullup, u32 *enable)
-> +{
-> +       int err;
-> +
-> +       err = mtk_pinconf_bias_get_pu_pd(hw, desc, pullup, enable);
-> +       if (!err)
-> +               goto out;
-> +
-> +       err = mtk_pinconf_bias_get_pullsel_pullen(hw, desc, pullup, enable);
-> +       if (!err)
-> +               goto out;
-> +
-> +       err = mtk_pinconf_bias_get_pupd_r1_r0(hw, desc, pullup, enable);
-> +
-> +out:
-> +       return err;
-> +}
-> +
->  /* Revision 0 */
->  int mtk_pinconf_drive_set(struct mtk_pinctrl *hw,
->                           const struct mtk_pin_desc *desc, u32 arg)
-> diff --git a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.h b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.h
-> index 75d0e07..27df087 100644
-> --- a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.h
-> +++ b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.h
-> @@ -216,6 +216,11 @@ struct mtk_pin_soc {
->         int (*bias_get)(struct mtk_pinctrl *hw,
->                         const struct mtk_pin_desc *desc, bool pullup, int *res);
->
-> +       int (*bias_set_combo)(struct mtk_pinctrl *hw,
-> +                       const struct mtk_pin_desc *desc, u32 pullup, u32 arg);
-> +       int (*bias_get_combo)(struct mtk_pinctrl *hw,
-> +                       const struct mtk_pin_desc *desc, u32 *pullup, u32 *arg);
-> +
->         int (*drive_set)(struct mtk_pinctrl *hw,
->                          const struct mtk_pin_desc *desc, u32 arg);
->         int (*drive_get)(struct mtk_pinctrl *hw,
-> @@ -277,6 +282,12 @@ int mtk_pinconf_bias_set_rev1(struct mtk_pinctrl *hw,
->  int mtk_pinconf_bias_get_rev1(struct mtk_pinctrl *hw,
->                               const struct mtk_pin_desc *desc, bool pullup,
->                               int *res);
-> +int mtk_pinconf_bias_set_combo(struct mtk_pinctrl *hw,
-> +                               const struct mtk_pin_desc *desc,
-> +                               u32 pullup, u32 enable);
-> +int mtk_pinconf_bias_get_combo(struct mtk_pinctrl *hw,
-> +                             const struct mtk_pin_desc *desc,
-> +                             u32 *pullup, u32 *enable);
->
->  int mtk_pinconf_drive_set(struct mtk_pinctrl *hw,
->                           const struct mtk_pin_desc *desc, u32 arg);
-> diff --git a/drivers/pinctrl/mediatek/pinctrl-paris.c b/drivers/pinctrl/mediatek/pinctrl-paris.c
-> index d09a726..115ebc1 100644
-> --- a/drivers/pinctrl/mediatek/pinctrl-paris.c
-> +++ b/drivers/pinctrl/mediatek/pinctrl-paris.c
-> @@ -78,7 +78,7 @@ static int mtk_pinconf_get(struct pinctrl_dev *pctldev,
->  {
->         struct mtk_pinctrl *hw = pinctrl_dev_get_drvdata(pctldev);
->         u32 param = pinconf_to_config_param(*config);
-> -       int err, reg, ret = 1;
-> +       int pullup, err, reg, ret = 1;
->         const struct mtk_pin_desc *desc;
->
->         if (pin >= hw->soc->npins) {
-> @@ -89,22 +89,31 @@ static int mtk_pinconf_get(struct pinctrl_dev *pctldev,
->
->         switch (param) {
->         case PIN_CONFIG_BIAS_DISABLE:
-> -               if (hw->soc->bias_disable_get)
-> -                       err = hw->soc->bias_disable_get(hw, desc, &ret);
-> -               else
-> -                       err = -ENOTSUPP;
-> -               break;
->         case PIN_CONFIG_BIAS_PULL_UP:
-> -               if (hw->soc->bias_get)
-> -                       err = hw->soc->bias_get(hw, desc, 1, &ret);
-> -               else
-> -                       err = -ENOTSUPP;
-> -               break;
->         case PIN_CONFIG_BIAS_PULL_DOWN:
-> -               if (hw->soc->bias_get)
-> -                       err = hw->soc->bias_get(hw, desc, 0, &ret);
-> -               else
-> +               if (hw->soc->bias_get_combo) {
-> +                       err = hw->soc->bias_get_combo(hw, desc, &pullup, &ret);
-> +                       if (err)
-> +                               goto out;
-> +                       if (param == PIN_CONFIG_BIAS_DISABLE) {
-> +                               if (ret == MTK_PUPD_SET_R1R0_00)
-> +                                       ret = MTK_DISABLE;
-> +                       } else if (param == PIN_CONFIG_BIAS_PULL_UP) {
-> +                               /* When desire to get pull-up value, return
-> +                                *  error if current setting is pull-down
-> +                                */
-> +                               if (!pullup)
-> +                                       err = -EINVAL;
-> +                       } else if (param == PIN_CONFIG_BIAS_PULL_DOWN) {
-> +                               /* When desire to get pull-down value, return
-> +                                *  error if current setting is pull-up
-> +                                */
-> +                               if (pullup)
-> +                                       err = -EINVAL;
-> +                       }
-> +               } else {
->                         err = -ENOTSUPP;
-> +               }
->                 break;
->         case PIN_CONFIG_SLEW_RATE:
->                 err = mtk_hw_get_value(hw, desc, PINCTRL_PIN_REG_SR, &ret);
-> @@ -196,20 +205,20 @@ static int mtk_pinconf_set(struct pinctrl_dev *pctldev, unsigned int pin,
->
->         switch ((u32)param) {
->         case PIN_CONFIG_BIAS_DISABLE:
-> -               if (hw->soc->bias_disable_set)
-> -                       err = hw->soc->bias_disable_set(hw, desc);
-> +               if (hw->soc->bias_set_combo)
-> +                       err = hw->soc->bias_set_combo(hw, desc, 0, MTK_DISABLE);
->                 else
->                         err = -ENOTSUPP;
->                 break;
->         case PIN_CONFIG_BIAS_PULL_UP:
-> -               if (hw->soc->bias_set)
-> -                       err = hw->soc->bias_set(hw, desc, 1);
-> +               if (hw->soc->bias_set_combo)
-> +                       err = hw->soc->bias_set_combo(hw, desc, 1, arg);
->                 else
->                         err = -ENOTSUPP;
->                 break;
->         case PIN_CONFIG_BIAS_PULL_DOWN:
-> -               if (hw->soc->bias_set)
-> -                       err = hw->soc->bias_set(hw, desc, 0);
-> +               if (hw->soc->bias_set_combo)
-> +                       err = hw->soc->bias_set_combo(hw, desc, 0, arg);
->                 else
->                         err = -ENOTSUPP;
->                 break;
-> --
-> 1.8.1.1.dirty
+Prompted me to take a closer look at how we clear the payload state in
+general when disabling the topology, and it turns out there's actually
+two subtle issues here.
+
+The first is that we're not grabbing &mgr.payload_lock when clearing the
+payloads in drm_dp_mst_topology_mgr_set_mst(). Seeing as the canonical
+lock order is &mgr.payload_lock -> &mgr.lock (because we always want
+&mgr.lock to be the inner-most lock so topology validation always
+works), this makes perfect sense. It also means that -technically- there
+could be racing between someone calling
+drm_dp_mst_topology_mgr_set_mst() to disable the topology, along with a
+modeset occurring that's modifying the payload state at the same time.
+
+The second is the more obvious issue that Wayne Lin discovered, that
+we're not clearing proposed_payloads when disabling the topology.
+
+I actually can't see any obvious places where the racing caused by the
+first issue would break something, and it could be that some of our
+higher-level locks already prevent this by happenstance, but better safe
+then sorry. So, let's make it so that drm_dp_mst_topology_mgr_set_mst()
+first grabs &mgr.payload_lock followed by &mgr.lock so that we never
+race when modifying the payload state. Then, we also clear
+proposed_payloads to fix the original issue of enabling a new topology
+with a dirty payload state. This doesn't clear any of the drm_dp_vcpi
+structures, but those are getting destroyed along with the ports anyway.
+
+Changes since v1:
+* Use sizeof(mgr->payloads[0])/sizeof(mgr->proposed_vcpis[0]) instead -
+  vsyrjala
+
+Cc: Sean Paul <sean@poorly.run>
+Cc: Wayne Lin <Wayne.Lin@amd.com>
+Cc: Ville Syrj=C3=A4l=C3=A4 <ville.syrjala@linux.intel.com>
+Signed-off-by: Lyude Paul <lyude@redhat.com>
+---
+ drivers/gpu/drm/drm_dp_mst_topology.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/gpu/drm/drm_dp_mst_topology.c b/drivers/gpu/drm/drm_=
+dp_mst_topology.c
+index 3649e82b963d..23cf46bfef74 100644
+--- a/drivers/gpu/drm/drm_dp_mst_topology.c
++++ b/drivers/gpu/drm/drm_dp_mst_topology.c
+@@ -3501,6 +3501,7 @@ int drm_dp_mst_topology_mgr_set_mst(struct drm_dp_m=
+st_topology_mgr *mgr, bool ms
+ 	int ret =3D 0;
+ 	struct drm_dp_mst_branch *mstb =3D NULL;
+=20
++	mutex_lock(&mgr->payload_lock);
+ 	mutex_lock(&mgr->lock);
+ 	if (mst_state =3D=3D mgr->mst_state)
+ 		goto out_unlock;
+@@ -3559,7 +3560,10 @@ int drm_dp_mst_topology_mgr_set_mst(struct drm_dp_=
+mst_topology_mgr *mgr, bool ms
+ 		/* this can fail if the device is gone */
+ 		drm_dp_dpcd_writeb(mgr->aux, DP_MSTM_CTRL, 0);
+ 		ret =3D 0;
+-		memset(mgr->payloads, 0, mgr->max_payloads * sizeof(struct drm_dp_payl=
+oad));
++		memset(mgr->payloads, 0,
++		       mgr->max_payloads * sizeof(mgr->payloads[0]));
++		memset(mgr->proposed_vcpis, 0,
++		       mgr->max_payloads * sizeof(mgr->proposed_vcpis[0]));
+ 		mgr->payload_mask =3D 0;
+ 		set_bit(0, &mgr->payload_mask);
+ 		mgr->vcpi_mask =3D 0;
+@@ -3568,6 +3572,7 @@ int drm_dp_mst_topology_mgr_set_mst(struct drm_dp_m=
+st_topology_mgr *mgr, bool ms
+=20
+ out_unlock:
+ 	mutex_unlock(&mgr->lock);
++	mutex_unlock(&mgr->payload_lock);
+ 	if (mstb)
+ 		drm_dp_mst_topology_put_mstb(mstb);
+ 	return ret;
+--=20
+2.24.1
+
