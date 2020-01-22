@@ -2,118 +2,125 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20B14C32771
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 06:37:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7E38C33CB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 06:37:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3F332465B
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 06:37:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E99F24655
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 06:37:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="YILkfm0T"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="GaDZf7co"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726207AbgAVGhR (ORCPT
+        id S1727022AbgAVGhe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 01:37:17 -0500
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:36479 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725924AbgAVGhR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 01:37:17 -0500
-Received: by mail-pg1-f195.google.com with SMTP id k3so2929539pgc.3
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jan 2020 22:37:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=7AXcKF6W8asLiClFXriJEBFPGRWX3uOGSn/zkbdHVsU=;
-        b=YILkfm0TuU5vkyLd8nIqBpXHopTRzgWr2SZQipfwrFiezbx0jrz9MRs4EVDQQe3sRu
-         huwpVi9oNtyYwMeVWc8XbUvBIua5mYWXdUBJ3YibtNYf+iOEhbbW27p1/kGr2QOAG0YG
-         IkN9GgHGnY3Kf1WLSxIphLSKL1Nog1G7+A+sk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=7AXcKF6W8asLiClFXriJEBFPGRWX3uOGSn/zkbdHVsU=;
-        b=PwXjW7qM57ZTtrlPGIlpftRqx/diuKMLRUACJ7BbNmALDdZ6ZHUtN2Se7sCpQXJjrR
-         ECnO/GAgecSmj1nJ0LRGYh4FDQZa08gCVEnXe5oef3A8g6kyEFmEeazME/wWA72Vmw91
-         J7CSJ1boqNBc+2kO8lX1fl15bf/TPVtUF9jwtd/ALegaHSlS7DsDQP/0WCR0CnatpJNr
-         +TET9dQekyR+gmaeYP02uzJGBQ1+ZawwiS29DLp8B96lo+BnvNCN7L4+NevrIAFUXvVR
-         8KYNd9zC9WDiNraeL+QS5AleDYsqe39sbbVgcuaysYU21goH9W/8gMKnkppmZhU+gC7C
-         XAfg==
-X-Gm-Message-State: APjAAAW1cs1ZeDxtZn3hM9g7uan4zYmTFWzU5bQjQ7rLWIN4e4rZ66s/
-        q7QzbGS46fTwyGkLimuiivQS4A==
-X-Google-Smtp-Source: APXvYqyssvAQGz/3NU7TC27DYPmZKShf5Lm0ap0tEDqlQdVSpPwNuztzlwCwNHbPP8JH1fJW04hw0Q==
-X-Received: by 2002:a65:4d0b:: with SMTP id i11mr10025106pgt.340.1579675036728;
-        Tue, 21 Jan 2020 22:37:16 -0800 (PST)
-Received: from localhost ([2401:fa00:8f:203:5bbb:c872:f2b1:f53b])
-        by smtp.gmail.com with ESMTPSA id i9sm46704101pfk.24.2020.01.21.22.37.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Jan 2020 22:37:15 -0800 (PST)
-Date:   Wed, 22 Jan 2020 15:37:14 +0900
-From:   Sergey Senozhatsky <senozhatsky@chromium.org>
-To:     Hans Verkuil <hverkuil@xs4all.nl>
-Cc:     Sergey Senozhatsky <senozhatsky@chromium.org>,
-        Hans Verkuil <hans.verkuil@cisco.com>,
-        Tomasz Figa <tfiga@chromium.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Sakari Ailus <sakari.ailus@iki.fi>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Pawel Osciak <posciak@chromium.org>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC][PATCH 12/15] videobuf2: add begin/end cpu_access callbacks
- to dma-sg
-Message-ID: <20200122063714.GA14881@google.com>
-References: <20191217032034.54897-1-senozhatsky@chromium.org>
- <20191217032034.54897-13-senozhatsky@chromium.org>
- <1c5198dc-db4e-47d6-0d8b-259fbbb6372f@xs4all.nl>
+        Wed, 22 Jan 2020 01:37:34 -0500
+Received: from ozlabs.org ([203.11.71.1]:51439 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725884AbgAVGhd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 01:37:33 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 482bLK6kSpz9sRG;
+        Wed, 22 Jan 2020 17:37:29 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1579675051;
+        bh=ETg15+iGHEsGo+l6iowSowBndnR1UCVpO6tb+L7AJVk=;
+        h=Date:From:To:Cc:Subject:From;
+        b=GaDZf7co1bwcH2u2Su8dgDynRu8sib78OYljKmxetGA9TApSdiEiOtWxNkYFe+R+Y
+         BMovZpsLcXX74hQVfb3Bj+xpJeYA+2u+Vlg39Xb+falIv7fjjIOUny9oH2FscHXkR8
+         bvbyNf0X9o8hBmdg37iAZJomMRiYALpEkBaf9gOt8B0Ijo4DZr4F6Rk8YpQqRHMHly
+         AuJ6KmvPiEeQhd22WSddh0aE3oPd255M2Gc3eCe/alsMNuS6lIbQmcvr0vOne+qptf
+         fZe4h05XJ1s9suFVdqVQla6EacWCj/PmrdgGvDth/a7i7nZ2wiLPBl0sYpDMT3UzcO
+         jWu2rgmTooIEA==
+Date:   Wed, 22 Jan 2020 17:37:26 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@elte.hu>, "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Steven Price <steven.price@arm.com>
+Subject: linux-next: manual merge of the akpm tree with the tip tree
+Message-ID: <20200122173726.3d57753b@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1c5198dc-db4e-47d6-0d8b-259fbbb6372f@xs4all.nl>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: multipart/signed; boundary="Sig_//hEE_DZ5W0rtXA/9gic9+Yb";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On (20/01/10 11:13), Hans Verkuil wrote:
-> On 12/17/19 4:20 AM, Sergey Senozhatsky wrote:
-> > Provide begin_cpu_access() and end_cpu_access() dma_buf_ops
-> > callbacks for cache synchronisation on exported buffers.
-> > 
-> > Signed-off-by: Sergey Senozhatsky <senozhatsky@chromium.org>
-> > ---
-> >  .../media/common/videobuf2/videobuf2-dma-sg.c | 22 +++++++++++++++++++
-> >  1 file changed, 22 insertions(+)
-> > 
-> > diff --git a/drivers/media/common/videobuf2/videobuf2-dma-sg.c b/drivers/media/common/videobuf2/videobuf2-dma-sg.c
-> > index 6db60e9d5183..bfc99a0cb7b9 100644
-> > --- a/drivers/media/common/videobuf2/videobuf2-dma-sg.c
-> > +++ b/drivers/media/common/videobuf2/videobuf2-dma-sg.c
-> > @@ -470,6 +470,26 @@ static void vb2_dma_sg_dmabuf_ops_release(struct dma_buf *dbuf)
-> >  	vb2_dma_sg_put(dbuf->priv);
-> >  }
-> >  
-> 
-> There is no corresponding vb2_sg_buffer_consistent function here.
-> 
-> Looking more closely I see that vb2_dma_sg_alloc doesn't pass the dma_attrs
-> argument to dma_map_sg_attrs, thus V4L2_FLAG_MEMORY_NON_CONSISTENT has no
-> effect on dma-sg buffers.
-> 
-> Is there a reason why dma_attrs isn't passed on to dma_map_sg_attrs()?
+--Sig_//hEE_DZ5W0rtXA/9gic9+Yb
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Laziness.
+Hi all,
 
-> I suspect it was just laziness in the past, and that it should be wired
-> up, just as for dma-contig.
+Today's linux-next merge of the akpm tree got a conflict in:
 
-OK, I can include it into v2.
+  arch/x86/platform/efi/efi_64.c
 
-	-ss
+between commit:
+
+  1f299fad1e31 ("efi/x86: Limit EFI old memory map to SGI UV machines")
+
+from the tip tree and patch:
+
+  "x86: mm+efi: convert ptdump_walk_pgd_level() to take a mm_struct"
+
+from the akpm tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc arch/x86/platform/efi/efi_64.c
+index e2accfe636bd,515eab388b56..000000000000
+--- a/arch/x86/platform/efi/efi_64.c
++++ b/arch/x86/platform/efi/efi_64.c
+@@@ -470,10 -606,10 +470,10 @@@ void __init efi_runtime_update_mappings
+  void __init efi_dump_pagetable(void)
+  {
+  #ifdef CONFIG_EFI_PGT_DUMP
+ -	if (efi_enabled(EFI_OLD_MEMMAP))
+ +	if (efi_have_uv1_memmap())
+- 		ptdump_walk_pgd_level(NULL, swapper_pg_dir);
++ 		ptdump_walk_pgd_level(NULL, &init_mm);
+  	else
+- 		ptdump_walk_pgd_level(NULL, efi_mm.pgd);
++ 		ptdump_walk_pgd_level(NULL, &efi_mm);
+  #endif
+  }
+ =20
+
+--Sig_//hEE_DZ5W0rtXA/9gic9+Yb
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl4n7aYACgkQAVBC80lX
+0GzZ5Af6Ajw8JwhTrqCuBO//bZrwnAOiy4N+T2myaGW0SKWZ2GMCJfKgF7P/75Ko
+NJ2WRu5UyNyPVRESDzXNWeEwXaXutCMUamU2i8PDk8DR9VSJFTJXYtQ4Q9W+YeeJ
+UagYV6E29Wgz8WkhOGlpO1yyOKrr8txMV1/qrTWGuEsRCih4uRLwTUS04wmOBIzP
+Vr1VqI+16KxEhaPnJgxZVNTS1N467ACh6fDai/IOGf15A5qaGjpzjMNieUYHOiD+
+Vu8QC201KYoed6xKbA+UM13WwZWg8s4MxMUAx9GUCRA+jKgf78jHn2xlCm42xz+X
+OpVKpJpspXa+tZMYZRZoBqUK6DX2vA==
+=Dp2j
+-----END PGP SIGNATURE-----
+
+--Sig_//hEE_DZ5W0rtXA/9gic9+Yb--
