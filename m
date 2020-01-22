@@ -2,56 +2,57 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 393B2C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:54:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43CCAC33CB8
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:54:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D8992465A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:54:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E3F424693
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:54:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579686891;
-	bh=/wEpG8+rGRpvPsJpHqetDWHO0F3KN8BmiHNTL9nb+Jo=;
+	s=default; t=1579686895;
+	bh=h75wv1ygov80rZ4QFyPJPfICGEtZEMxnledRf1EoPfs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JSpDpg0BEMr3mKdOr/zYOzQuvIifwgvr3I0nOsNO+PGCq6OD2pssAiyUrIMk3IxXx
-	 sQoErsZG+ds1tud3zMDoBghzkRAMpjHyHkhTydN4SHOaUI8jU+MC1acpdXnfaYaEs0
-	 C3kanSUoQ4lMUO1CGBJhsoDKf5FNBv/Bjwoqdmbw=
+	b=Wk7jGUayhvLV3X+Nay4m6wHMEXbx18bB5fM39a7rHNtytPa/KeEN6q0W2iBLJSXai
+	 G+LGtlElhMJVkT32Kn9FsLv0CQx0z+quxNka+igBmhHGgCyzIX+1qI8Zi8rBFBtxpJ
+	 6GB1P/A/JgO505ubAZlSHcRjsjVonul9s4TPBut8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731039AbgAVJyu (ORCPT
+        id S1730625AbgAVJdh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 04:54:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47688 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 04:33:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47456 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729585AbgAVJdl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 04:33:41 -0500
+        id S1729971AbgAVJde (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 04:33:34 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8A6532467E;
-        Wed, 22 Jan 2020 09:33:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 37E5524672;
+        Wed, 22 Jan 2020 09:33:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579685621;
-        bh=/wEpG8+rGRpvPsJpHqetDWHO0F3KN8BmiHNTL9nb+Jo=;
+        s=default; t=1579685613;
+        bh=h75wv1ygov80rZ4QFyPJPfICGEtZEMxnledRf1EoPfs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QodqYnY+2fPX8Uspac2Nxf1YtNGIpnDhROKwz3/IYOv63sP2kLqLp2A64sl1Yvq0I
-         dY5AvnfZW4tbFdj93YWTb+I562q56WAJDjY+Bbp/ueKTA+v/5+52hW+mg/7dH5Ecok
-         jR4DFJSF6BZ04OrXGVr2jLdoJtATaBh9YaMmTrUI=
+        b=ERQGTl1SR7zWIreeEfwdnM8U/1ieORs965aPDUbpEhAHzqtXcdH4xwG1rtC8foBWi
+         AXy0iMxY2zyiWZVt9kDsVEqA1RrlbHS3T4hOERFT57AdyGM3C7pFFCIKLJnEBWTez4
+         4mkq+NoiXNbinX+4IH0kjsXQS56ymzxxBxsXuTLs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dedy Lansky <dlansky@codeaurora.org>,
-        Johannes Berg <johannes.berg@intel.com>,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>
-Subject: [PATCH 4.9 12/97] cfg80211/mac80211: make ieee80211_send_layer2_update a public function
-Date:   Wed, 22 Jan 2020 10:28:16 +0100
-Message-Id: <20200122092757.795990590@linuxfoundation.org>
+        stable@vger.kernel.org, Fabian Henneke <fabian.henneke@gmail.com>,
+        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 01/97] hidraw: Return EPOLLOUT from hidraw_poll
+Date:   Wed, 22 Jan 2020 10:28:05 +0100
+Message-Id: <20200122092755.916344554@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200122092755.678349497@linuxfoundation.org>
 References: <20200122092755.678349497@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -60,168 +61,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dedy Lansky <dlansky@codeaurora.org>
+From: Fabian Henneke <fabian.henneke@gmail.com>
 
-commit 30ca1aa536211f5ac3de0173513a7a99a98a97f3 upstream.
+[ Upstream commit 378b80370aa1fe50f9c48a3ac8af3e416e73b89f ]
 
-Make ieee80211_send_layer2_update() a common function so other drivers
-can re-use it.
+Always return EPOLLOUT from hidraw_poll when a device is connected.
+This is safe since writes are always possible (but will always block).
 
-Signed-off-by: Dedy Lansky <dlansky@codeaurora.org>
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
-[bwh: Backported to 4.9 as dependency of commit 3e493173b784
- "mac80211: Do not send Layer 2 Update frame before authorization":
- - Retain type-casting of skb_put() return value
- - Adjust context]
-Signed-off-by: Ben Hutchings <ben.hutchings@codethink.co.uk>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+hidraw does not support non-blocking writes and instead always calls
+blocking backend functions on write requests. Hence, so far, a call to
+poll never returned EPOLLOUT, which confuses tools like socat.
+
+Signed-off-by: Fabian Henneke <fabian.henneke@gmail.com>
+In-reply-to: <CA+hv5qkyis03CgYTWeWX9cr0my-d2Oe+aZo+mjmWRXgjrGqyrw@mail.gmail.com>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/net/cfg80211.h |   11 +++++++++++
- net/mac80211/cfg.c     |   48 ++----------------------------------------------
- net/wireless/util.c    |   45 +++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 58 insertions(+), 46 deletions(-)
+ drivers/hid/hidraw.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/include/net/cfg80211.h
-+++ b/include/net/cfg80211.h
-@@ -4182,6 +4182,17 @@ const u8 *cfg80211_find_vendor_ie(unsign
- 				  const u8 *ies, int len);
+diff --git a/drivers/hid/hidraw.c b/drivers/hid/hidraw.c
+index 750c16897130..225456c1a39a 100644
+--- a/drivers/hid/hidraw.c
++++ b/drivers/hid/hidraw.c
+@@ -260,7 +260,7 @@ static unsigned int hidraw_poll(struct file *file, poll_table *wait)
  
- /**
-+ * cfg80211_send_layer2_update - send layer 2 update frame
-+ *
-+ * @dev: network device
-+ * @addr: STA MAC address
-+ *
-+ * Wireless drivers can use this function to update forwarding tables in bridge
-+ * devices upon STA association.
-+ */
-+void cfg80211_send_layer2_update(struct net_device *dev, const u8 *addr);
-+
-+/**
-  * DOC: Regulatory enforcement infrastructure
-  *
-  * TODO
---- a/net/mac80211/cfg.c
-+++ b/net/mac80211/cfg.c
-@@ -1048,50 +1048,6 @@ static int ieee80211_stop_ap(struct wiph
+ 	poll_wait(file, &list->hidraw->wait, wait);
+ 	if (list->head != list->tail)
+-		return POLLIN | POLLRDNORM;
++		return POLLIN | POLLRDNORM | POLLOUT;
+ 	if (!list->hidraw->exist)
+ 		return POLLERR | POLLHUP;
  	return 0;
- }
- 
--/* Layer 2 Update frame (802.2 Type 1 LLC XID Update response) */
--struct iapp_layer2_update {
--	u8 da[ETH_ALEN];	/* broadcast */
--	u8 sa[ETH_ALEN];	/* STA addr */
--	__be16 len;		/* 6 */
--	u8 dsap;		/* 0 */
--	u8 ssap;		/* 0 */
--	u8 control;
--	u8 xid_info[3];
--} __packed;
--
--static void ieee80211_send_layer2_update(struct sta_info *sta)
--{
--	struct iapp_layer2_update *msg;
--	struct sk_buff *skb;
--
--	/* Send Level 2 Update Frame to update forwarding tables in layer 2
--	 * bridge devices */
--
--	skb = dev_alloc_skb(sizeof(*msg));
--	if (!skb)
--		return;
--	msg = (struct iapp_layer2_update *)skb_put(skb, sizeof(*msg));
--
--	/* 802.2 Type 1 Logical Link Control (LLC) Exchange Identifier (XID)
--	 * Update response frame; IEEE Std 802.2-1998, 5.4.1.2.1 */
--
--	eth_broadcast_addr(msg->da);
--	memcpy(msg->sa, sta->sta.addr, ETH_ALEN);
--	msg->len = htons(6);
--	msg->dsap = 0;
--	msg->ssap = 0x01;	/* NULL LSAP, CR Bit: Response */
--	msg->control = 0xaf;	/* XID response lsb.1111F101.
--				 * F=0 (no poll command; unsolicited frame) */
--	msg->xid_info[0] = 0x81;	/* XID format identifier */
--	msg->xid_info[1] = 1;	/* LLC types/classes: Type 1 LLC */
--	msg->xid_info[2] = 0;	/* XID sender's receive window size (RW) */
--
--	skb->dev = sta->sdata->dev;
--	skb->protocol = eth_type_trans(skb, sta->sdata->dev);
--	memset(skb->cb, 0, sizeof(skb->cb));
--	netif_rx_ni(skb);
--}
--
- static int sta_apply_auth_flags(struct ieee80211_local *local,
- 				struct sta_info *sta,
- 				u32 mask, u32 set)
-@@ -1455,7 +1411,7 @@ static int ieee80211_add_station(struct
- 	}
- 
- 	if (layer2_update)
--		ieee80211_send_layer2_update(sta);
-+		cfg80211_send_layer2_update(sta->sdata->dev, sta->sta.addr);
- 
- 	rcu_read_unlock();
- 
-@@ -1565,7 +1521,7 @@ static int ieee80211_change_station(stru
- 				atomic_inc(&sta->sdata->bss->num_mcast_sta);
- 		}
- 
--		ieee80211_send_layer2_update(sta);
-+		cfg80211_send_layer2_update(sta->sdata->dev, sta->sta.addr);
- 	}
- 
- 	err = sta_apply_parameters(local, sta, params);
---- a/net/wireless/util.c
-+++ b/net/wireless/util.c
-@@ -1794,3 +1794,48 @@ EXPORT_SYMBOL(rfc1042_header);
- const unsigned char bridge_tunnel_header[] __aligned(2) =
- 	{ 0xaa, 0xaa, 0x03, 0x00, 0x00, 0xf8 };
- EXPORT_SYMBOL(bridge_tunnel_header);
-+
-+/* Layer 2 Update frame (802.2 Type 1 LLC XID Update response) */
-+struct iapp_layer2_update {
-+	u8 da[ETH_ALEN];	/* broadcast */
-+	u8 sa[ETH_ALEN];	/* STA addr */
-+	__be16 len;		/* 6 */
-+	u8 dsap;		/* 0 */
-+	u8 ssap;		/* 0 */
-+	u8 control;
-+	u8 xid_info[3];
-+} __packed;
-+
-+void cfg80211_send_layer2_update(struct net_device *dev, const u8 *addr)
-+{
-+	struct iapp_layer2_update *msg;
-+	struct sk_buff *skb;
-+
-+	/* Send Level 2 Update Frame to update forwarding tables in layer 2
-+	 * bridge devices */
-+
-+	skb = dev_alloc_skb(sizeof(*msg));
-+	if (!skb)
-+		return;
-+	msg = (struct iapp_layer2_update *)skb_put(skb, sizeof(*msg));
-+
-+	/* 802.2 Type 1 Logical Link Control (LLC) Exchange Identifier (XID)
-+	 * Update response frame; IEEE Std 802.2-1998, 5.4.1.2.1 */
-+
-+	eth_broadcast_addr(msg->da);
-+	ether_addr_copy(msg->sa, addr);
-+	msg->len = htons(6);
-+	msg->dsap = 0;
-+	msg->ssap = 0x01;	/* NULL LSAP, CR Bit: Response */
-+	msg->control = 0xaf;	/* XID response lsb.1111F101.
-+				 * F=0 (no poll command; unsolicited frame) */
-+	msg->xid_info[0] = 0x81;	/* XID format identifier */
-+	msg->xid_info[1] = 1;	/* LLC types/classes: Type 1 LLC */
-+	msg->xid_info[2] = 0;	/* XID sender's receive window size (RW) */
-+
-+	skb->dev = dev;
-+	skb->protocol = eth_type_trans(skb, dev);
-+	memset(skb->cb, 0, sizeof(skb->cb));
-+	netif_rx_ni(skb);
-+}
-+EXPORT_SYMBOL(cfg80211_send_layer2_update);
+-- 
+2.20.1
+
 
 
