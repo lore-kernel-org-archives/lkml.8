@@ -7,32 +7,32 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6A24C32771
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 21:22:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E65C9C32771
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 21:22:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9478524676
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 21:22:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE30C24676
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 21:22:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579728141;
-	bh=cFGfaKhA+IiWTsxqov07/bhKt2//AwbKA900uWHv4Mg=;
+	s=default; t=1579728143;
+	bh=Pj6xDpixlGCXbNX+j+u5+AVjcRQciY2xAcvBvaCCio8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mM7kGPlurl1SnPahkdq/KXAMn1KGcL5yCRurT9FZB7/RPa35XvZ5VHtUdmf3k6nbk
-	 SCb2k5ODZh9NpxQY66swZUEBMNxGAiwDGO6prbaKHHibyLE3Yb+J2WmG04ssontEQt
-	 7q7VymBNxJtT46/gN8ciEMcQTbxyLcbIBpk2GQVM=
+	b=EFBHUsMJYTdPZQOAOZXn4pPKNbtaaUFnxXUFXTtVTP5bhriQzMtlpz6pE417acYBO
+	 KXDIKRM6hrpPHHpmXLrH2UFThtVHhs7XavSzy2ruxRVFn/lgJ21mXyw3zU3E1zAdfQ
+	 xoKnmY2J6MwoPU84+7FZ9eZBaP5tGHbcfSqKZtJQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729393AbgAVVWU (ORCPT
+        id S1729416AbgAVVWX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 16:22:20 -0500
-Received: from foss.arm.com ([217.140.110.172]:32772 "EHLO foss.arm.com"
+        Wed, 22 Jan 2020 16:22:23 -0500
+Received: from foss.arm.com ([217.140.110.172]:32800 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729299AbgAVVWS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 16:22:18 -0500
+        id S1729299AbgAVVWV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 16:22:21 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B3B7513D5;
-        Wed, 22 Jan 2020 13:22:17 -0800 (PST)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F3CD213FD;
+        Wed, 22 Jan 2020 13:22:20 -0800 (PST)
 Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D3EDF3F52E;
-        Wed, 22 Jan 2020 13:22:16 -0800 (PST)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 659203F52E;
+        Wed, 22 Jan 2020 13:22:19 -0800 (PST)
 From:   Mark Brown <broonie@kernel.org>
 To:     Catalin Marinas <catalin.marinas@arm.com>,
         Will Deacon <will@kernel.org>
@@ -58,9 +58,9 @@ Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
         linux-arch@vger.kernel.org, linux-fsdevel@vger.kernel.org,
         Dave Martin <Dave.Martin@arm.com>,
         Mark Brown <broonie@kernel.org>
-Subject: [PATCH v5 09/12] arm64: traps: Shuffle code to eliminate forward declarations
-Date:   Wed, 22 Jan 2020 21:21:41 +0000
-Message-Id: <20200122212144.6409-10-broonie@kernel.org>
+Subject: [PATCH v5 10/12] arm64: BTI: Reset BTYPE when skipping emulated instructions
+Date:   Wed, 22 Jan 2020 21:21:42 +0000
+Message-Id: <20200122212144.6409-11-broonie@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200122212144.6409-1-broonie@kernel.org>
 References: <20200122212144.6409-1-broonie@kernel.org>
@@ -73,144 +73,33 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Dave Martin <Dave.Martin@arm.com>
 
-Hoist the IT state handling code earlier in traps.c, to avoid
-accumulating forward declarations.
+Since normal execution of any non-branch instruction resets the
+PSTATE BTYPE field to 0, so do the same thing when emulating a
+trapped instruction.
 
-No functional change.
+Branches don't trap directly, so we should never need to assign a
+non-zero value to BTYPE here.
 
 Signed-off-by: Dave Martin <Dave.Martin@arm.com>
-Acked-by: Catalin Marinas <catalin.marinas@arm.com>
+Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- arch/arm64/kernel/traps.c | 101 ++++++++++++++++++--------------------
- 1 file changed, 49 insertions(+), 52 deletions(-)
+ arch/arm64/kernel/traps.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
 diff --git a/arch/arm64/kernel/traps.c b/arch/arm64/kernel/traps.c
-index d42f0693623a..4fa8b92b8624 100644
+index 4fa8b92b8624..be71e5ef9ae0 100644
 --- a/arch/arm64/kernel/traps.c
 +++ b/arch/arm64/kernel/traps.c
-@@ -269,7 +269,55 @@ void arm64_notify_die(const char *str, struct pt_regs *regs,
- 	}
- }
+@@ -332,6 +332,8 @@ void arm64_skip_faulting_instruction(struct pt_regs *regs, unsigned long size)
  
--static void advance_itstate(struct pt_regs *regs);
-+#ifdef CONFIG_COMPAT
-+#define PSTATE_IT_1_0_SHIFT	25
-+#define PSTATE_IT_1_0_MASK	(0x3 << PSTATE_IT_1_0_SHIFT)
-+#define PSTATE_IT_7_2_SHIFT	10
-+#define PSTATE_IT_7_2_MASK	(0x3f << PSTATE_IT_7_2_SHIFT)
-+
-+static u32 compat_get_it_state(struct pt_regs *regs)
-+{
-+	u32 it, pstate = regs->pstate;
-+
-+	it  = (pstate & PSTATE_IT_1_0_MASK) >> PSTATE_IT_1_0_SHIFT;
-+	it |= ((pstate & PSTATE_IT_7_2_MASK) >> PSTATE_IT_7_2_SHIFT) << 2;
-+
-+	return it;
-+}
-+
-+static void compat_set_it_state(struct pt_regs *regs, u32 it)
-+{
-+	u32 pstate_it;
-+
-+	pstate_it  = (it << PSTATE_IT_1_0_SHIFT) & PSTATE_IT_1_0_MASK;
-+	pstate_it |= ((it >> 2) << PSTATE_IT_7_2_SHIFT) & PSTATE_IT_7_2_MASK;
-+
-+	regs->pstate &= ~PSR_AA32_IT_MASK;
-+	regs->pstate |= pstate_it;
-+}
-+
-+static void advance_itstate(struct pt_regs *regs)
-+{
-+	u32 it;
-+
-+	/* ARM mode */
-+	if (!(regs->pstate & PSR_AA32_T_BIT) ||
-+	    !(regs->pstate & PSR_AA32_IT_MASK))
-+		return;
-+
-+	it  = compat_get_it_state(regs);
-+
-+	/*
-+	 * If this is the last instruction of the block, wipe the IT
-+	 * state. Otherwise advance it.
-+	 */
-+	if (!(it & 7))
-+		it = 0;
+ 	if (compat_user_mode(regs))
+ 		advance_itstate(regs);
 +	else
-+		it = (it & 0xe0) | ((it << 1) & 0x1f);
-+
-+	compat_set_it_state(regs, it);
-+}
- 
- void arm64_skip_faulting_instruction(struct pt_regs *regs, unsigned long size)
- {
-@@ -575,34 +623,6 @@ static const struct sys64_hook sys64_hooks[] = {
- 	{},
- };
- 
--
--#ifdef CONFIG_COMPAT
--#define PSTATE_IT_1_0_SHIFT	25
--#define PSTATE_IT_1_0_MASK	(0x3 << PSTATE_IT_1_0_SHIFT)
--#define PSTATE_IT_7_2_SHIFT	10
--#define PSTATE_IT_7_2_MASK	(0x3f << PSTATE_IT_7_2_SHIFT)
--
--static u32 compat_get_it_state(struct pt_regs *regs)
--{
--	u32 it, pstate = regs->pstate;
--
--	it  = (pstate & PSTATE_IT_1_0_MASK) >> PSTATE_IT_1_0_SHIFT;
--	it |= ((pstate & PSTATE_IT_7_2_MASK) >> PSTATE_IT_7_2_SHIFT) << 2;
--
--	return it;
--}
--
--static void compat_set_it_state(struct pt_regs *regs, u32 it)
--{
--	u32 pstate_it;
--
--	pstate_it  = (it << PSTATE_IT_1_0_SHIFT) & PSTATE_IT_1_0_MASK;
--	pstate_it |= ((it >> 2) << PSTATE_IT_7_2_SHIFT) & PSTATE_IT_7_2_MASK;
--
--	regs->pstate &= ~PSR_AA32_IT_MASK;
--	regs->pstate |= pstate_it;
--}
--
- static bool cp15_cond_valid(unsigned int esr, struct pt_regs *regs)
- {
- 	int cond;
-@@ -623,29 +643,6 @@ static bool cp15_cond_valid(unsigned int esr, struct pt_regs *regs)
- 	return aarch32_opcode_cond_checks[cond](regs->pstate);
++		regs->pstate &= ~PSR_BTYPE_MASK;
  }
  
--static void advance_itstate(struct pt_regs *regs)
--{
--	u32 it;
--
--	/* ARM mode */
--	if (!(regs->pstate & PSR_AA32_T_BIT) ||
--	    !(regs->pstate & PSR_AA32_IT_MASK))
--		return;
--
--	it  = compat_get_it_state(regs);
--
--	/*
--	 * If this is the last instruction of the block, wipe the IT
--	 * state. Otherwise advance it.
--	 */
--	if (!(it & 7))
--		it = 0;
--	else
--		it = (it & 0xe0) | ((it << 1) & 0x1f);
--
--	compat_set_it_state(regs, it);
--}
--
- static void compat_cntfrq_read_handler(unsigned int esr, struct pt_regs *regs)
- {
- 	int reg = (esr & ESR_ELx_CP15_32_ISS_RT_MASK) >> ESR_ELx_CP15_32_ISS_RT_SHIFT;
+ static LIST_HEAD(undef_hook);
 -- 
 2.20.1
 
