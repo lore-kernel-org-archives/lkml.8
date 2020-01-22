@@ -7,50 +7,53 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 349FFC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:44:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCDCEC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:44:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B8272468E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:44:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8AF7D2468C
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:44:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579686269;
-	bh=gEMbZSf7gz/38fyK2S0QNO50FzA33PkIo6Ay1nYgqT0=;
+	s=default; t=1579686272;
+	bh=WXqow2Q5kJyEZxVqPMNEHF7RhyCD/SsnKIZuMpVzlp4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ub25q5hhWGUMGnBc7t+OygDsurqE2thZ6AU/WT3Hre4EvYXrhqVjNiFAeOby7HtNv
-	 X/WRcBE7xvpZhxal1i/1z29iKYZ3bWwVAf9WiUZsHmP2Xkq2NJMnP87SKnlee2vf4R
-	 Up22LB4x8DelzXhudOYn6wnhufh3zVrhvzK8RFYM=
+	b=g7DrFnApQSRkWyTCuqR6eDoLE5zUDud1EW9UwstQPwfTBTr4HS6tmD9trerQWla2m
+	 G/rG6H1EADIJ+YM06B0XOoD/P1f144DjWklELxzMOQ/pjSEclQv023LfqSqnJtiD1W
+	 hKfbl1qOXWSLEvMybYKNZjd8C2PzyMZ4VjjrFcdU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388045AbgAVJo2 (ORCPT
+        id S2388048AbgAVJoc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 04:44:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37496 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 04:44:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37658 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387776AbgAVJoX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 04:44:23 -0500
+        id S2387737AbgAVJo3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 04:44:29 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C9BA52468B;
-        Wed, 22 Jan 2020 09:44:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E8B0D2467B;
+        Wed, 22 Jan 2020 09:44:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579686263;
-        bh=gEMbZSf7gz/38fyK2S0QNO50FzA33PkIo6Ay1nYgqT0=;
+        s=default; t=1579686268;
+        bh=WXqow2Q5kJyEZxVqPMNEHF7RhyCD/SsnKIZuMpVzlp4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DycamOghaO5tOni2q2frO4wY1bwON5mcQx4ubgFpau2LrdbtLlVjvrXPZPyemXkj2
-         WS39eBtVkKyE2UVjQjaLd9L/4ZaNAFyZLEIlrD8lkeHtiphGA6OVfl+alydLvJKuG/
-         6+891UYq+xhPUC5NpsLtAuR6KcR0mf6TbypY7L2A=
+        b=sX0l3ha0HjGvA3BBnvMi3onsrvUcJWjxo8QljGoxsvdIFc1j/8g1DGh2XlSkue+cT
+         JTNnie7MckyuH/LupjNgqKVM8otAxG5ngRaaZjbT+VByiD37DQO+w1VKseMYLgYs/N
+         NLxxgw+aAGw1kz2ijk6Dpz7vtPyYF20TnibGETDg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eddie James <eajames@linux.ibm.com>,
-        Guenter Roeck <linux@roeck-us.net>
-Subject: [PATCH 4.19 103/103] hwmon: (pmbus/ibm-cffps) Switch LEDs to blocking brightness call
-Date:   Wed, 22 Jan 2020 10:29:59 +0100
-Message-Id: <20200122092817.056849882@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Kevin Hilman <khilman@baylibre.com>
+Subject: [PATCH 5.4 001/222] ARM: dts: meson8: fix the size of the PMU registers
+Date:   Wed, 22 Jan 2020 10:26:27 +0100
+Message-Id: <20200122092833.441430663@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200122092803.587683021@linuxfoundation.org>
-References: <20200122092803.587683021@linuxfoundation.org>
+In-Reply-To: <20200122092833.339495161@linuxfoundation.org>
+References: <20200122092833.339495161@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -59,58 +62,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eddie James <eajames@linux.ibm.com>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 
-commit 9861ff954c7e83e2f738ce16fbe15f8a1e121771 upstream.
+commit 46c9585ed4af688ff1be6d4e76d7ed2f04de4fba upstream.
 
-Since i2c_smbus functions can sleep, the brightness setting function
-for this driver must be the blocking version to avoid scheduling while
-atomic.
+The PMU registers are at least 0x18 bytes wide. Meson8b already uses a
+size of 0x18. The structure of the PMU registers on Meson8 and Meson8b
+is similar but not identical.
 
-Signed-off-by: Eddie James <eajames@linux.ibm.com>
-Link: https://lore.kernel.org/r/20191106200106.29519-2-eajames@linux.ibm.com
-Fixes: ef9e1cdf419a3 ("hwmon: (pmbus/cffps) Add led class device for power supply fault led")
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Meson8 and Meson8b have the following registers in common (starting at
+AOBUS + 0xe0):
+  #define AO_RTI_PWR_A9_CNTL0 0xe0 (0x38 << 2)
+  #define AO_RTI_PWR_A9_CNTL1 0xe4 (0x39 << 2)
+  #define AO_RTI_GEN_PWR_SLEEP0 0xe8 (0x3a << 2)
+  #define AO_RTI_GEN_PWR_ISO0 0x4c (0x3b << 2)
+
+Meson8b additionally has these three registers:
+  #define AO_RTI_GEN_PWR_ACK0 0xf0 (0x3c << 2)
+  #define AO_RTI_PWR_A9_MEM_PD0 0xf4 (0x3d << 2)
+  #define AO_RTI_PWR_A9_MEM_PD1 0xf8 (0x3e << 2)
+
+Thus we can assume that the register size of the PMU IP blocks is
+identical on both SoCs (and Meson8 just contains some reserved registers
+in that area) because the CEC registers start right after the PMU
+(AO_RTI_*) registers at AOBUS + 0x100 (0x40 << 2).
+
+The upcoming power domain driver will need to read and write the
+AO_RTI_GEN_PWR_SLEEP0 and AO_RTI_GEN_PWR_ISO0 registers, so the updated
+size is needed for that driver to work.
+
+Fixes: 4a5a27116b447d ("ARM: dts: meson8: add support for booting the secondary CPU cores")
+Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Signed-off-by: Kevin Hilman <khilman@baylibre.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/hwmon/pmbus/ibm-cffps.c |   10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+ arch/arm/boot/dts/meson8.dtsi |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/hwmon/pmbus/ibm-cffps.c
-+++ b/drivers/hwmon/pmbus/ibm-cffps.c
-@@ -269,8 +269,8 @@ static int ibm_cffps_read_word_data(stru
- 	return rc;
- }
+--- a/arch/arm/boot/dts/meson8.dtsi
++++ b/arch/arm/boot/dts/meson8.dtsi
+@@ -253,7 +253,7 @@
+ &aobus {
+ 	pmu: pmu@e0 {
+ 		compatible = "amlogic,meson8-pmu", "syscon";
+-		reg = <0xe0 0x8>;
++		reg = <0xe0 0x18>;
+ 	};
  
--static void ibm_cffps_led_brightness_set(struct led_classdev *led_cdev,
--					 enum led_brightness brightness)
-+static int ibm_cffps_led_brightness_set(struct led_classdev *led_cdev,
-+					enum led_brightness brightness)
- {
- 	int rc;
- 	struct ibm_cffps *psu = container_of(led_cdev, struct ibm_cffps, led);
-@@ -286,9 +286,11 @@ static void ibm_cffps_led_brightness_set
- 	rc = i2c_smbus_write_byte_data(psu->client, CFFPS_SYS_CONFIG_CMD,
- 				       psu->led_state);
- 	if (rc < 0)
--		return;
-+		return rc;
- 
- 	led_cdev->brightness = brightness;
-+
-+	return 0;
- }
- 
- static int ibm_cffps_led_blink_set(struct led_classdev *led_cdev,
-@@ -324,7 +326,7 @@ static void ibm_cffps_create_led_class(s
- 		 client->addr);
- 	psu->led.name = psu->led_name;
- 	psu->led.max_brightness = LED_FULL;
--	psu->led.brightness_set = ibm_cffps_led_brightness_set;
-+	psu->led.brightness_set_blocking = ibm_cffps_led_brightness_set;
- 	psu->led.blink_set = ibm_cffps_led_blink_set;
- 
- 	rc = devm_led_classdev_register(dev, &psu->led);
+ 	pinctrl_aobus: pinctrl@84 {
 
 
