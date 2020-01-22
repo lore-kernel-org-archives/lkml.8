@@ -2,54 +2,52 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 598C7C33CAF
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:52:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D7E4C33CB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:52:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 278EA2467B
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:52:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6AFA520704
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:52:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579686731;
-	bh=4G1bl+B1LB5qunalYRtT9DKmA9QL2r8v0aWeztvtY9c=;
+	s=default; t=1579686735;
+	bh=1tcWBKbHwODMcpHBvb0yrTax8IjC2JFD9olAldecZLI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bano3K5luGvErv2ziXu4ssp96GdBCNKDvq5bKIiyf/I69ZoEUzbIFZPCOaNy8n/9N
-	 DxKvwtC2EeFnM8UZiixQ3DTDfgCCntDBKMDzUCXjj7Z5U92waNIwpYMf3P6iYYvZgM
-	 RIjloTDAvWPOzcmYGE4AymiKOzBx8ZIjpiYOMro8=
+	b=qAd3oiZEcne3kwIC6OAfnQ+RQI9u6DpUVRFQ141GGBG14IG/g9NA1Xh9ZbWzKRLpm
+	 mWDlebDa4qohf9bckSGnIwd6DcrRDyccyE4IRQHxvfkkwRE0L0LqsccEyr3QZGWbfH
+	 aIPX+nb4qbT/pSa+m2hrp7t569qUeeHotrH5sLnY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731214AbgAVJwK (ORCPT
+        id S1729715AbgAVJg3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 04:52:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52102 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 04:36:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51808 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729537AbgAVJgf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 04:36:35 -0500
+        id S1731035AbgAVJgU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 04:36:20 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2362620704;
-        Wed, 22 Jan 2020 09:36:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 601152467A;
+        Wed, 22 Jan 2020 09:36:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579685794;
-        bh=4G1bl+B1LB5qunalYRtT9DKmA9QL2r8v0aWeztvtY9c=;
+        s=default; t=1579685779;
+        bh=1tcWBKbHwODMcpHBvb0yrTax8IjC2JFD9olAldecZLI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HqkqxQJlz5FqL1Fg9rNMB8NHxIfjELWAXRJe/0twGkI8TgiEGsahRYsNudPpzB6gG
-         tcdlmC/UYOYO4vFAZLtcwEgDJrREdWPtH+k62Ng7CEwb3KKgiYVTAMMZ/XwREcDkaZ
-         UyBke/gNV4/E6tO6i0MtVueo9LNtHsWcbR7W0dIw=
+        b=WeNR49sI7zdTzPk2q9PPMEmsO/uBYSvF6U1WE47jKCqbwDv82u00tAODLYHMX4FD6
+         ZpxVpE1uV2G2mwg690VNx6KsyxvTmOvJAZ047UbWNZKum4UrkBLf0RcfFijxuNiSC5
+         5wKF+zuFyJ+F/S7ekqhsRaXAY2hWQ7pllbHAcPZA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        Jurgen Van Ham <juvanham@gmail.com>,
-        Matteo Croce <mcroce@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Meng Li <Meng.Li@windriver.com>,
+        Dinh Nguyen <dinguyen@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 81/97] macvlan: use skb_reset_mac_header() in macvlan_queue_xmit()
-Date:   Wed, 22 Jan 2020 10:29:25 +0100
-Message-Id: <20200122092809.361448368@linuxfoundation.org>
+Subject: [PATCH 4.9 76/97] arm64: dts: agilex/stratix10: fix pmu interrupt numbers
+Date:   Wed, 22 Jan 2020 10:29:20 +0100
+Message-Id: <20200122092808.561812289@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200122092755.678349497@linuxfoundation.org>
 References: <20200122092755.678349497@linuxfoundation.org>
@@ -62,49 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Dinh Nguyen <dinguyen@kernel.org>
 
-[ Upstream commit 1712b2fff8c682d145c7889d2290696647d82dab ]
+[ Upstream commit 210de0e996aee8e360ccc9e173fe7f0a7ed2f695 ]
 
-I missed the fact that macvlan_broadcast() can be used both
-in RX and TX.
+Fix up the correct interrupt numbers for the PMU unit on Agilex
+and Stratix10.
 
-skb_eth_hdr() makes only sense in TX paths, so we can not
-use it blindly in macvlan_broadcast()
-
-Fixes: 96cc4b69581d ("macvlan: do not assume mac_header is set in macvlan_broadcast()")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: Jurgen Van Ham <juvanham@gmail.com>
-Tested-by: Matteo Croce <mcroce@redhat.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 78cd6a9d8e15 ("arm64: dts: Add base stratix 10 dtsi")
+Cc: linux-stable <stable@vger.kernel.org>
+Reported-by: Meng Li <Meng.Li@windriver.com>
+Signed-off-by: Dinh Nguyen <dinguyen@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/macvlan.c |    5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
---- a/drivers/net/macvlan.c
-+++ b/drivers/net/macvlan.c
-@@ -234,7 +234,7 @@ static void macvlan_broadcast(struct sk_
- 			      struct net_device *src,
- 			      enum macvlan_mode mode)
- {
--	const struct ethhdr *eth = skb_eth_hdr(skb);
-+	const struct ethhdr *eth = eth_hdr(skb);
- 	const struct macvlan_dev *vlan;
- 	struct sk_buff *nskb;
- 	unsigned int i;
-@@ -487,10 +487,11 @@ static int macvlan_queue_xmit(struct sk_
- 	const struct macvlan_dev *dest;
+diff --git a/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi b/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
+index e79f3defe002..c2ad4f97cef0 100644
+--- a/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
++++ b/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
+@@ -56,10 +56,10 @@
  
- 	if (vlan->mode == MACVLAN_MODE_BRIDGE) {
--		const struct ethhdr *eth = (void *)skb->data;
-+		const struct ethhdr *eth = skb_eth_hdr(skb);
- 
- 		/* send to other bridge ports directly */
- 		if (is_multicast_ether_addr(eth->h_dest)) {
-+			skb_reset_mac_header(skb);
- 			macvlan_broadcast(skb, port, dev, MACVLAN_MODE_BRIDGE);
- 			goto xmit_world;
- 		}
+ 	pmu {
+ 		compatible = "arm,armv8-pmuv3";
+-		interrupts = <0 120 8>,
+-			     <0 121 8>,
+-			     <0 122 8>,
+-			     <0 123 8>;
++		interrupts = <0 170 4>,
++			     <0 171 4>,
++			     <0 172 4>,
++			     <0 173 4>;
+ 		interrupt-affinity = <&cpu0>,
+ 				     <&cpu1>,
+ 				     <&cpu2>,
+-- 
+2.20.1
+
 
 
