@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59CDBC33CB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:30:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38821C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:31:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1ED002071E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:30:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06F4A24673
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:31:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579685459;
-	bh=53AOoU1G7jey+hqH9owKJVKmsYlL8quByNMFxxxTPxw=;
+	s=default; t=1579685463;
+	bh=1sZwyDzsZStdE1HgfxdQMDQY0KfdLKvbmwsdZjONnM4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DhP6m+AZTF+CKmj4If79OsHBgs1hdEDJDjdwTYgXvNGQ9eqf9+SC6Z1G6B0ByBCEK
-	 KHnq3fqooHOBKPnbjAX1Ar9iACRI3yubDl57ExqtHeeVqpFUMdO53oSPbK+1zvuWv/
-	 8MLfAAwb7uyvp+0iaV0zOVLvwVpsAHS8eLzYSDrw=
+	b=okPhVqtdaRnc4uWyxN40E6C9UrRvCviKzVXVMLNdeFYk+pvGXUJ7N6fcibcCdmgcW
+	 MPsM4wPLlf6WNDw+OMCoBVJlEl5kYwIlPR3b/G97A6peGHxmy3rS5l0GHXLN2Oo19Q
+	 syq/MzIDAtQPNDHMDcdUrgjZQ7+5ijmmV4JHicQw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729456AbgAVJa6 (ORCPT
+        id S1729476AbgAVJbB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 04:30:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42618 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 04:31:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42662 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729418AbgAVJay (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 04:30:54 -0500
+        id S1729437AbgAVJa4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 04:30:56 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5E4A524672;
-        Wed, 22 Jan 2020 09:30:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C2AFD2071E;
+        Wed, 22 Jan 2020 09:30:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579685453;
-        bh=53AOoU1G7jey+hqH9owKJVKmsYlL8quByNMFxxxTPxw=;
+        s=default; t=1579685456;
+        bh=1sZwyDzsZStdE1HgfxdQMDQY0KfdLKvbmwsdZjONnM4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=w2wyqve+EsMHp2+ysisWX4U6LgVCX3I9u7DI3NL8aVMeIk/K2GHOAMGH5mMm3Q9vU
-         irrPLMDvdqetMnbPlgRYeO2sVagkVC3Dh+qOEnK0T7glX10tc/fMdirC0sIBH+Cu/a
-         b6G7s6C7KxfQZBWuIvIhmY8bNLF5K2UFv7YeIxwM=
+        b=0vbg6gL36Uwe3YfcXOEXWgy68g1d8fZZcIcSVXRxOqWpH7grdthjjKpgOAMD/oBTQ
+         yro/HRvW8BMh1nZhdneKxtZAJ+CB7U1E54wUAyTB8cRlqDfr4RyG8fTS5ldXVWVLHB
+         f1NcyeRaDrwz5LNgA/8Rv7D7FNQbGAsUwTASgBko=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH 4.4 20/76] gpio: Fix error message on out-of-range GPIO in lookup table
-Date:   Wed, 22 Jan 2020 10:28:36 +0100
-Message-Id: <20200122092753.687226381@linuxfoundation.org>
+        stable@vger.kernel.org, Taehee Yoo <ap420073@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.4 21/76] hsr: reset network header when supervision frame is created
+Date:   Wed, 22 Jan 2020 10:28:37 +0100
+Message-Id: <20200122092753.778521511@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200122092751.587775548@linuxfoundation.org>
 References: <20200122092751.587775548@linuxfoundation.org>
@@ -60,46 +59,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+From: Taehee Yoo <ap420073@gmail.com>
 
-commit d935bd50dd14a7714cbdba9a76435dbb56edb1ae upstream.
+commit 3ed0a1d563903bdb4b4c36c58c4d9c1bcb23a6e6 upstream.
 
-When a GPIO offset in a lookup table is out-of-range, the printed error
-message (1) does not include the actual out-of-range value, and (2)
-contains an off-by-one error in the upper bound.
+The supervision frame is L2 frame.
+When supervision frame is created, hsr module doesn't set network header.
+If tap routine is enabled, dev_queue_xmit_nit() is called and it checks
+network_header. If network_header pointer wasn't set(or invalid),
+it resets network_header and warns.
+In order to avoid unnecessary warning message, resetting network_header
+is needed.
 
-Avoid user confusion by also printing the actual GPIO offset, and
-correcting the upper bound of the range.
-While at it, use "%u" for unsigned int.
+Test commands:
+    ip netns add nst
+    ip link add veth0 type veth peer name veth1
+    ip link add veth2 type veth peer name veth3
+    ip link set veth1 netns nst
+    ip link set veth3 netns nst
+    ip link set veth0 up
+    ip link set veth2 up
+    ip link add hsr0 type hsr slave1 veth0 slave2 veth2
+    ip a a 192.168.100.1/24 dev hsr0
+    ip link set hsr0 up
+    ip netns exec nst ip link set veth1 up
+    ip netns exec nst ip link set veth3 up
+    ip netns exec nst ip link add hsr1 type hsr slave1 veth1 slave2 veth3
+    ip netns exec nst ip a a 192.168.100.2/24 dev hsr1
+    ip netns exec nst ip link set hsr1 up
+    tcpdump -nei veth0
 
-Sample impact:
+Splat looks like:
+[  175.852292][    C3] protocol 88fb is buggy, dev veth0
 
-    -requested GPIO 0 is out of range [0..32] for chip e6052000.gpio
-    +requested GPIO 0 (45) is out of range [0..31] for chip e6052000.gpio
-
-Fixes: 2a3cf6a3599e9015 ("gpiolib: return -ENOENT if no GPIO mapping exists")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Link: https://lore.kernel.org/r/20191127095919.4214-1-geert+renesas@glider.be
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Fixes: f421436a591d ("net/hsr: Add support for the High-availability Seamless Redundancy protocol (HSRv0)")
+Signed-off-by: Taehee Yoo <ap420073@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpio/gpiolib.c |    5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ net/hsr/hsr_device.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -1949,8 +1949,9 @@ static struct gpio_desc *gpiod_find(stru
+--- a/net/hsr/hsr_device.c
++++ b/net/hsr/hsr_device.c
+@@ -289,6 +289,8 @@ static void send_hsr_supervision_frame(s
+ 			    skb->dev->dev_addr, skb->len) <= 0)
+ 		goto out;
+ 	skb_reset_mac_header(skb);
++	skb_reset_network_header(skb);
++	skb_reset_transport_header(skb);
  
- 		if (chip->ngpio <= p->chip_hwnum) {
- 			dev_err(dev,
--				"requested GPIO %d is out of range [0..%d] for chip %s\n",
--				idx, chip->ngpio, chip->label);
-+				"requested GPIO %u (%u) is out of range [0..%u] for chip %s\n",
-+				idx, p->chip_hwnum, chip->ngpio - 1,
-+				chip->label);
- 			return ERR_PTR(-EINVAL);
- 		}
+ 	hsr_stag = (typeof(hsr_stag)) skb_put(skb, sizeof(*hsr_stag));
  
 
 
