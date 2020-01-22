@@ -2,185 +2,240 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF490C33CAF
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 19:40:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58D1AC33CB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 19:40:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B65124655
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 19:40:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LeYeH8PJ"
+	by mail.kernel.org (Postfix) with ESMTP id 3539124656
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 19:40:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579722036;
+	bh=I3teCKf41lP38KMQNsBxxI2JMwPoZieKq5xCCRmpZbQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=vbfvX1w9nmW0u/hz2e2T5uvZsCVXPnpqVdRk3KTEtISaeIS+i0DBMxJyfbO2UwdYy
+	 UuvRP2r36lDZGObpY84MmO7AVSgFYmsInI5ZuJcBTmZkWSDxJ73IVWqvVuoms/4m9Q
+	 JfACvQYx719KfgRYsSD4vS58r0p1c/ZrRYmxYkuQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726780AbgAVTkL (ORCPT
+        id S1728139AbgAVTkf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 14:40:11 -0500
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:40497 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726205AbgAVTkL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 14:40:11 -0500
-Received: by mail-pj1-f65.google.com with SMTP id bg7so402852pjb.5
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jan 2020 11:40:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=HtkbmR8fmtnktqo3yHC3XtDswDNTkwK2QM7gBaKydjo=;
-        b=LeYeH8PJOdf0UULN0/CxInW7FJi07Sm9Up0Ar6Q60ZzC2HZAIMmrlzUhhT49ZV4HhR
-         uHk+Rhe04vMUWG4wKoDXHqHfvHYhuSkur3fvP9ubsuO7qrTOroxwHjtZ2gtI08bYl1+e
-         RfCnHgW20nX0aRlZYfzwOZcGnpWo83M5+lS82TrsmEoGqv6koy/K3QgZIZ7PqPib4weT
-         MVY0zuhLIqcehSAkwrBcjtGCfeecyudS5Ae6UkO6DfnkUrznAiCTJ+InoYHt7MLXQySb
-         cQKPgu8cE9uivRq5C1dm6MGOHSmr8lMw+zRLs3mK7QaWn0mItWF3h426tUKW65vXygO0
-         JZmQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=HtkbmR8fmtnktqo3yHC3XtDswDNTkwK2QM7gBaKydjo=;
-        b=l6Z3g4IoD8X4kU2M+UK01Cl0U+73H9XOA4xuUjnFyi7Q6GPM8t6r6X3RNf/fQXg6BS
-         V76P8tVxXsTVQNf7e/kLybGM3JRQxh/GuuIciYOOk9dHKVGCBhh1o18k4isjL/Fm7rxe
-         IqbnawgEsnkKI3pYTgGNCbT9EVVgII0GL4XP/iTMUzL1GVMDu6yaV0O9UUThd00tejvR
-         Xy6hx1dNuMnTApk+vGyuMottpllRud/2giVLrGQDCNyoxjso1p6sE8QNiPqTeSGjNqFU
-         AB6vEkkBrL2rimDN3TxVSSd1kSEsvJVqRncNb/bz0kKd9Vw954Smdu8dFFTmO+OyOX9g
-         GVYg==
-X-Gm-Message-State: APjAAAX1jQ7Jce1CIj70hfP8V6Xsu+7tpQhmTkTC4fvzvxD4JxFemaih
-        uVNbf2qWPj7yqqRHUBlQa6+pag==
-X-Google-Smtp-Source: APXvYqy6Xx25rSNmn3eFN/R4xRV4MH8bPvbJcz7qvBnLurst5BIrH6pj/V2mfhcUMR5YRqEXSf7fOQ==
-X-Received: by 2002:a17:902:9042:: with SMTP id w2mr12495147plz.269.1579722009787;
-        Wed, 22 Jan 2020 11:40:09 -0800 (PST)
-Received: from ripper (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id w8sm45848542pfn.186.2020.01.22.11.40.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Jan 2020 11:40:09 -0800 (PST)
-Date:   Wed, 22 Jan 2020 11:39:36 -0800
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ohad Ben-Cohen <ohad@wizery.com>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-        Sibi Sankar <sibis@codeaurora.org>,
-        Rishabh Bhatnagar <rishabhb@codeaurora.org>
-Subject: Re: [PATCH v2 7/8] remoteproc: qcom: q6v5: Add common panic handler
-Message-ID: <20200122193936.GB3261042@ripper>
-References: <20191227053215.423811-1-bjorn.andersson@linaro.org>
- <20191227053215.423811-8-bjorn.andersson@linaro.org>
- <20200110212806.GD11555@xps15>
+        Wed, 22 Jan 2020 14:40:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36918 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726103AbgAVTkf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 14:40:35 -0500
+Received: from mail-io1-f47.google.com (mail-io1-f47.google.com [209.85.166.47])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id ED1432465A;
+        Wed, 22 Jan 2020 19:40:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579722034;
+        bh=I3teCKf41lP38KMQNsBxxI2JMwPoZieKq5xCCRmpZbQ=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=T/meyFNs0x2NyU4io1GwIRdQYju4lFfJ8kTVgxkNwazAVqQYaGA1dDJigw0c8oVwG
+         43K1901Un1lQMDvrVYsg7VP2HI4ZwxrX1uE/7vNPRp24IdsE1ZeO5fTwrmqWWBjEmA
+         NLu9gD9wF+GMa54UdLTW3yFX+F4/svJ68CZf3gSw=
+Received: by mail-io1-f47.google.com with SMTP id z193so514057iof.1;
+        Wed, 22 Jan 2020 11:40:33 -0800 (PST)
+X-Gm-Message-State: APjAAAUFvLGUrk2Lsmb3QWTmtJclVl+pls4E/wl8dftAsIATCkXtPAqq
+        aDZR3nT6l44eH9q0AwNfI8YbC2S7wLdiiQpZ+r8=
+X-Google-Smtp-Source: APXvYqxqe7QNclBhEk+9YkjlIpvsr1YD1RWaWjX9rBV7ifqkcke9QWlPnpq6UBmwlFzuEDWombaYJpCrfBZeTIBQo6A=
+X-Received: by 2002:a6b:e711:: with SMTP id b17mr7897849ioh.307.1579722033348;
+ Wed, 22 Jan 2020 11:40:33 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200110212806.GD11555@xps15>
+References: <1579675994-7001-1-git-send-email-light.hsieh@mediatek.com>
+In-Reply-To: <1579675994-7001-1-git-send-email-light.hsieh@mediatek.com>
+From:   Sean Wang <sean.wang@kernel.org>
+Date:   Wed, 22 Jan 2020 11:40:22 -0800
+X-Gmail-Original-Message-ID: <CAGp9LzqT_mncGPD5wh0rtc62vd0ak+tm22TgX1eUGeesY33zDg@mail.gmail.com>
+Message-ID: <CAGp9LzqT_mncGPD5wh0rtc62vd0ak+tm22TgX1eUGeesY33zDg@mail.gmail.com>
+Subject: Re: [PATCH v8 1/6] pinctrl: mediatek: Check gpio pin number and use
+ binary search in mtk_hw_pin_field_lookup()
+To:     Light Hsieh <light.hsieh@mediatek.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>, kuohong.wang@mediatek.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 10 Jan 13:28 PST 2020, Mathieu Poirier wrote:
+On Tue, Jan 21, 2020 at 10:53 PM <light.hsieh@mediatek.com> wrote:
+>
+> From: Light Hsieh <light.hsieh@mediatek.com>
+>
+> 1. Check if gpio pin number is in valid range to prevent from get invalid
+>    pointer 'desc' in the following code:
+>         desc = (const struct mtk_pin_desc *)&hw->soc->pins[gpio];
+>
+> 2. Improve  mtk_hw_pin_field_lookup()
+> 2.1 Modify mtk_hw_pin_field_lookup() to use binary search for accelerating
+>      search.
+> 2.2 Correct message after the following check fail:
+>     if (hw->soc->reg_cal && hw->soc->reg_cal[field].range) {
+>                 rc = &hw->soc->reg_cal[field];
+>     The original message is:
+>         "Not support field %d for pin %d (%s)\n"
+>     However, the check is on soc chip level, not on pin level yet.
+>     So the message is corrected as:
+>         "Not support field %d for this soc\n"
+>
+> Signed-off-by: Light Hsieh <light.hsieh@mediatek.com>
 
-> On Thu, Dec 26, 2019 at 09:32:14PM -0800, Bjorn Andersson wrote:
-> > Add a common panic handler that invokes a stop request and sleep enough
-> > to let the remoteproc flush it's caches etc in order to aid post mortem
-> > debugging.
-> > 
-> > Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> > ---
-> > 
-> > Changes since v1:
-> > - None
-> > 
-> >  drivers/remoteproc/qcom_q6v5.c | 19 +++++++++++++++++++
-> >  drivers/remoteproc/qcom_q6v5.h |  1 +
-> >  2 files changed, 20 insertions(+)
-> > 
-> > diff --git a/drivers/remoteproc/qcom_q6v5.c b/drivers/remoteproc/qcom_q6v5.c
-> > index cb0f4a0be032..17167c980e02 100644
-> > --- a/drivers/remoteproc/qcom_q6v5.c
-> > +++ b/drivers/remoteproc/qcom_q6v5.c
-> > @@ -6,6 +6,7 @@
-> >   * Copyright (C) 2014 Sony Mobile Communications AB
-> >   * Copyright (c) 2012-2013, The Linux Foundation. All rights reserved.
-> >   */
-> > +#include <linux/delay.h>
-> >  #include <linux/kernel.h>
-> >  #include <linux/platform_device.h>
-> >  #include <linux/interrupt.h>
-> > @@ -15,6 +16,8 @@
-> >  #include <linux/remoteproc.h>
-> >  #include "qcom_q6v5.h"
-> >  
-> > +#define Q6V5_PANIC_DELAY_MS	200
-> > +
-> >  /**
-> >   * qcom_q6v5_prepare() - reinitialize the qcom_q6v5 context before start
-> >   * @q6v5:	reference to qcom_q6v5 context to be reinitialized
-> > @@ -162,6 +165,22 @@ int qcom_q6v5_request_stop(struct qcom_q6v5 *q6v5)
-> >  }
-> >  EXPORT_SYMBOL_GPL(qcom_q6v5_request_stop);
-> >  
-> > +/**
-> > + * qcom_q6v5_panic() - panic handler to invoke a stop on the remote
-> > + * @q6v5:	reference to qcom_q6v5 context
-> > + *
-> > + * Set the stop bit and sleep in order to allow the remote processor to flush
-> > + * its caches etc for post mortem debugging.
-> > + */
-> > +void qcom_q6v5_panic(struct qcom_q6v5 *q6v5)
-> > +{
-> > +	qcom_smem_state_update_bits(q6v5->state,
-> > +				    BIT(q6v5->stop_bit), BIT(q6v5->stop_bit));
-> > +
-> > +	mdelay(Q6V5_PANIC_DELAY_MS);
-> 
-> I really wonder if the delay should be part of the remoteproc core and
-> configurable via device tree.  Wanting the remote processor to flush its caches
-> is likely something other vendors will want when dealing with a kernel panic.
-> It would be nice to see if other people have an opinion on this topic.  If not
-> then we can keep the delay here and move it to the core if need be.
-> 
+Acked-by: Sean Wang <sean.wang@kernel.org>
 
-I gave this some more thought and what we're trying to achieve is to
-signal the remote processors about the panic and then give them time to
-react, but per the proposal (and Qualcomm downstream iirc) we will do
-this for each remote processor, one by one.
-
-So in the typical case of a Qualcomm platform with 4-5 remoteprocs we'll
-end up giving the first one a whole second to react and the last one
-"only" 200ms.
-
-Moving the delay to the core by iterating over rproc_list calling
-panic() and then delaying would be cleaner imo.
-
-It might be nice to make this configurable in DT, but I agree that it
-would be nice to hear from others if this would be useful.
-
-Regards,
-Bjorn
-
-> Thanks,
-> Mathieu
-> 
-> > +}
-> > +EXPORT_SYMBOL_GPL(qcom_q6v5_panic);
-> > +
-> >  /**
-> >   * qcom_q6v5_init() - initializer of the q6v5 common struct
-> >   * @q6v5:	handle to be initialized
-> > diff --git a/drivers/remoteproc/qcom_q6v5.h b/drivers/remoteproc/qcom_q6v5.h
-> > index 7ac92c1e0f49..c37e6fd063e4 100644
-> > --- a/drivers/remoteproc/qcom_q6v5.h
-> > +++ b/drivers/remoteproc/qcom_q6v5.h
-> > @@ -42,5 +42,6 @@ int qcom_q6v5_prepare(struct qcom_q6v5 *q6v5);
-> >  int qcom_q6v5_unprepare(struct qcom_q6v5 *q6v5);
-> >  int qcom_q6v5_request_stop(struct qcom_q6v5 *q6v5);
-> >  int qcom_q6v5_wait_for_start(struct qcom_q6v5 *q6v5, int timeout);
-> > +void qcom_q6v5_panic(struct qcom_q6v5 *q6v5);
-> >  
-> >  #endif
-> > -- 
-> > 2.24.0
-> > 
+> ---
+>  drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c | 27 ++++++++++++++++++------
+>  drivers/pinctrl/mediatek/pinctrl-paris.c         | 25 ++++++++++++++++++++++
+>  2 files changed, 46 insertions(+), 6 deletions(-)
+>
+> diff --git a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
+> index 20e1c89..d63e05e 100644
+> --- a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
+> +++ b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
+> @@ -68,32 +68,44 @@ static int mtk_hw_pin_field_lookup(struct mtk_pinctrl *hw,
+>  {
+>         const struct mtk_pin_field_calc *c, *e;
+>         const struct mtk_pin_reg_calc *rc;
+> +       int start = 0, end, check;
+> +       bool found = false;
+>         u32 bits;
+>
+>         if (hw->soc->reg_cal && hw->soc->reg_cal[field].range) {
+>                 rc = &hw->soc->reg_cal[field];
+>         } else {
+>                 dev_dbg(hw->dev,
+> -                       "Not support field %d for pin %d (%s)\n",
+> -                       field, desc->number, desc->name);
+> +                       "Not support field %d for this soc\n", field);
+>                 return -ENOTSUPP;
+>         }
+>
+> +       end = rc->nranges - 1;
+>         c = rc->range;
+>         e = c + rc->nranges;
+>
+> -       while (c < e) {
+> -               if (desc->number >= c->s_pin && desc->number <= c->e_pin)
+> +       while (start <= end) {
+> +               check = (start + end) >> 1;
+> +               if (desc->number >= rc->range[check].s_pin
+> +                && desc->number <= rc->range[check].e_pin) {
+> +                       found = true;
+> +                       break;
+> +               } else if (start == end)
+>                         break;
+> -               c++;
+> +               else if (desc->number < rc->range[check].s_pin)
+> +                       end = check - 1;
+> +               else
+> +                       start = check + 1;
+>         }
+>
+> -       if (c >= e) {
+> +       if (!found) {
+>                 dev_dbg(hw->dev, "Not support field %d for pin = %d (%s)\n",
+>                         field, desc->number, desc->name);
+>                 return -ENOTSUPP;
+>         }
+>
+> +       c = rc->range + check;
+> +
+>         if (c->i_base > hw->nbase - 1) {
+>                 dev_err(hw->dev,
+>                         "Invalid base for field %d for pin = %d (%s)\n",
+> @@ -182,6 +194,9 @@ int mtk_hw_set_value(struct mtk_pinctrl *hw, const struct mtk_pin_desc *desc,
+>         if (err)
+>                 return err;
+>
+> +       if (value < 0 || value > pf.mask)
+> +               return -EINVAL;
+> +
+>         if (!pf.next)
+>                 mtk_rmw(hw, pf.index, pf.offset, pf.mask << pf.bitpos,
+>                         (value & pf.mask) << pf.bitpos);
+> diff --git a/drivers/pinctrl/mediatek/pinctrl-paris.c b/drivers/pinctrl/mediatek/pinctrl-paris.c
+> index 923264d..3e13ae7 100644
+> --- a/drivers/pinctrl/mediatek/pinctrl-paris.c
+> +++ b/drivers/pinctrl/mediatek/pinctrl-paris.c
+> @@ -81,6 +81,8 @@ static int mtk_pinconf_get(struct pinctrl_dev *pctldev,
+>         int val, val2, err, reg, ret = 1;
+>         const struct mtk_pin_desc *desc;
+>
+> +       if (pin >= hw->soc->npins)
+> +               return -EINVAL;
+>         desc = (const struct mtk_pin_desc *)&hw->soc->pins[pin];
+>
+>         switch (param) {
+> @@ -206,6 +208,10 @@ static int mtk_pinconf_set(struct pinctrl_dev *pctldev, unsigned int pin,
+>         int err = 0;
+>         u32 reg;
+>
+> +       if (pin >= hw->soc->npins) {
+> +               err = -EINVAL;
+> +               goto err;
+> +       }
+>         desc = (const struct mtk_pin_desc *)&hw->soc->pins[pin];
+>
+>         switch ((u32)param) {
+> @@ -693,6 +699,9 @@ static int mtk_gpio_get_direction(struct gpio_chip *chip, unsigned int gpio)
+>         const struct mtk_pin_desc *desc;
+>         int value, err;
+>
+> +       if (gpio > hw->soc->npins)
+> +               return -EINVAL;
+> +
+>         desc = (const struct mtk_pin_desc *)&hw->soc->pins[gpio];
+>
+>         err = mtk_hw_get_value(hw, desc, PINCTRL_PIN_REG_DIR, &value);
+> @@ -708,6 +717,9 @@ static int mtk_gpio_get(struct gpio_chip *chip, unsigned int gpio)
+>         const struct mtk_pin_desc *desc;
+>         int value, err;
+>
+> +       if (gpio > hw->soc->npins)
+> +               return -EINVAL;
+> +
+>         desc = (const struct mtk_pin_desc *)&hw->soc->pins[gpio];
+>
+>         err = mtk_hw_get_value(hw, desc, PINCTRL_PIN_REG_DI, &value);
+> @@ -722,6 +734,9 @@ static void mtk_gpio_set(struct gpio_chip *chip, unsigned int gpio, int value)
+>         struct mtk_pinctrl *hw = gpiochip_get_data(chip);
+>         const struct mtk_pin_desc *desc;
+>
+> +       if (gpio > hw->soc->npins)
+> +               return;
+> +
+>         desc = (const struct mtk_pin_desc *)&hw->soc->pins[gpio];
+>
+>         mtk_hw_set_value(hw, desc, PINCTRL_PIN_REG_DO, !!value);
+> @@ -729,12 +744,22 @@ static void mtk_gpio_set(struct gpio_chip *chip, unsigned int gpio, int value)
+>
+>  static int mtk_gpio_direction_input(struct gpio_chip *chip, unsigned int gpio)
+>  {
+> +       struct mtk_pinctrl *hw = gpiochip_get_data(chip);
+> +
+> +       if (gpio > hw->soc->npins)
+> +               return -EINVAL;
+> +
+>         return pinctrl_gpio_direction_input(chip->base + gpio);
+>  }
+>
+>  static int mtk_gpio_direction_output(struct gpio_chip *chip, unsigned int gpio,
+>                                      int value)
+>  {
+> +       struct mtk_pinctrl *hw = gpiochip_get_data(chip);
+> +
+> +       if (gpio > hw->soc->npins)
+> +               return -EINVAL;
+> +
+>         mtk_gpio_set(chip, gpio, value);
+>
+>         return pinctrl_gpio_direction_output(chip->base + gpio);
+> --
+> 1.8.1.1.dirty
