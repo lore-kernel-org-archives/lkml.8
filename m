@@ -5,48 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-5.7 required=3.0 tests=DATE_IN_PAST_03_06,
 	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FCD2C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:21:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDC7DC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:21:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03140205F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:21:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 864BB2467C
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:21:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579699296;
-	bh=inz4iGpYzZzdomoER5ImFavsOr5AO2IFv16WVKV7xGM=;
+	s=default; t=1579699301;
+	bh=3NHg/j5Ylm3/V5vjjW3y4fiKoJeTEfYhg0I3kxwap98=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TSChcYxjbn1++5Mg6BbdvKELPGQKiKjZbnqA1agH+kF1tuwxkG6JHhxuiXTTTyVzi
-	 2xpFGp4NLtSCOHDUAgfxoR1foW0GqzSZNW/IMGSB2xMOWUBc+PXNtTvH4DQh7fNljU
-	 ajzaFhMXRLpFowbS26IcJTv0rD02wRrmIDM47rwI=
+	b=DSyj9i1ug33yIHW+TuThpBOfE3WAFJ9A6QIYHP+0hPmvW4CyWq1sFdQFckwdpIKlS
+	 vaiTAUcHJHoUFd3PCyehfZjQ4Ez1U9qG/btPSn2d8cxx29HJpfx7GBybFOtofUDAwi
+	 pu3m+QhhFiXejaPOFU5GjeTMLhsnf8oeh16tday0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730312AbgAVNVf (ORCPT
+        id S1730323AbgAVNVk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 08:21:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38646 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 08:21:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38818 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729742AbgAVNVb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 08:21:31 -0500
+        id S1729777AbgAVNVi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 08:21:38 -0500
 Received: from localhost (unknown [84.241.205.26])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8B05F2467B;
-        Wed, 22 Jan 2020 13:21:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2AE6C205F4;
+        Wed, 22 Jan 2020 13:21:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579699291;
-        bh=inz4iGpYzZzdomoER5ImFavsOr5AO2IFv16WVKV7xGM=;
+        s=default; t=1579699297;
+        bh=3NHg/j5Ylm3/V5vjjW3y4fiKoJeTEfYhg0I3kxwap98=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tu56DCNDfLY6nR2qijoYCse190OTh673oNeAr+t9qln3rNNkwuwwfaGwELDK+6kua
-         MgjHYMQ5wd0zGXGW6XLF/4hEk4/RHOYzJlf6oKctsrw8Hkv6PsyaUrMKhX7vqFgwn6
-         p675DSxWDvmXDevrL3/I5/QaAYrMj/m+EX7eje4U=
+        b=fSeRLtTWRevxLz15q0kwRpRKaoZB0Brr7MykJsOxbZ63FK5Et0Qp8CVhJnj4vfC0H
+         XHtnoA/4VdGykoTk/aVQ3gcveIJmvIsX8UU+sIJHbsyLanb1Lt1033M7TliwZaHLYC
+         RV5Hif8A9xivKAbnj2XQ7ALSctAz+FPMOfw8ohb8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Jose Abreu <Jose.Abreu@synopsys.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 099/222] net: stmmac: 16KB buffer must be 16 byte aligned
-Date:   Wed, 22 Jan 2020 10:28:05 +0100
-Message-Id: <20200122092840.827601529@linuxfoundation.org>
+Subject: [PATCH 5.4 100/222] net: stmmac: Enable 16KB buffer size
+Date:   Wed, 22 Jan 2020 10:28:06 +0100
+Message-Id: <20200122092840.900104446@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200122092833.339495161@linuxfoundation.org>
 References: <20200122092833.339495161@linuxfoundation.org>
@@ -61,9 +61,10 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Jose Abreu <Jose.Abreu@synopsys.com>
 
-commit 8605131747e7e1fd8f6c9f97a00287aae2b2c640 upstream.
+commit b2f3a481c4cd62f78391b836b64c0a6e72b503d2 upstream.
 
-The 16KB RX Buffer must also be 16 byte aligned. Fix it.
+XGMAC supports maximum MTU that can go to 16KB. Lets add this check in
+the calculation of RX buffer size.
 
 Fixes: 7ac6653a085b ("stmmac: Move the STMicroelectronics driver")
 Signed-off-by: Jose Abreu <Jose.Abreu@synopsys.com>
@@ -71,22 +72,21 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/ethernet/stmicro/stmmac/common.h |    5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/stmicro/stmmac/stmmac_main.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/drivers/net/ethernet/stmicro/stmmac/common.h
-+++ b/drivers/net/ethernet/stmicro/stmmac/common.h
-@@ -364,9 +364,8 @@ struct dma_features {
- 	unsigned int arpoffsel;
- };
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+@@ -1108,7 +1108,9 @@ static int stmmac_set_bfsize(int mtu, in
+ {
+ 	int ret = bufsize;
  
--/* GMAC TX FIFO is 8K, Rx FIFO is 16K */
--#define BUF_SIZE_16KiB 16384
--/* RX Buffer size must be < 8191 and multiple of 4/8/16 bytes */
-+/* RX Buffer size must be multiple of 4/8/16 bytes */
-+#define BUF_SIZE_16KiB 16368
- #define BUF_SIZE_8KiB 8188
- #define BUF_SIZE_4KiB 4096
- #define BUF_SIZE_2KiB 2048
+-	if (mtu >= BUF_SIZE_4KiB)
++	if (mtu >= BUF_SIZE_8KiB)
++		ret = BUF_SIZE_16KiB;
++	else if (mtu >= BUF_SIZE_4KiB)
+ 		ret = BUF_SIZE_8KiB;
+ 	else if (mtu >= BUF_SIZE_2KiB)
+ 		ret = BUF_SIZE_4KiB;
 
 
