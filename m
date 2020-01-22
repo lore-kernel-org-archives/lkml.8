@@ -2,129 +2,235 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41732C33CAF
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 19:09:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52BD3C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 19:09:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 206E12467A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 19:09:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579720148;
-	bh=SF82HcEZFZ0i+y/moyJ5f2m5rvBDb1vcPQtK9Lh3P0c=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=zfQCUHYc0dV9H/w+g0B9SBv4rharT60zw9srH89myUWqELAGf/UdVac5AAbu4aNlH
-	 3UxmQE4BiJSPw3FwGgUEhSoq7pkEVriaKWlS8fNFCqWWxhAU0MIEog+qM8E5WelOX0
-	 q+qb9A6c2Vy3TicUwIuBS3kHpBstEtbzyR8blvJY=
+	by mail.kernel.org (Postfix) with ESMTP id 37FA824673
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 19:09:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728797AbgAVTJH (ORCPT
+        id S1728939AbgAVTJO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 14:09:07 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:38041 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725884AbgAVTJH (ORCPT
+        Wed, 22 Jan 2020 14:09:14 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:36468 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728809AbgAVTJN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 14:09:07 -0500
-Received: by mail-wr1-f66.google.com with SMTP id y17so283746wrh.5
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jan 2020 11:09:06 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=jDrouBSrTch1oRjGKu1kF0MMLpGbHzjzsyn2ncqxth4=;
-        b=pI5r8bF6dNG0uxYTSCzx34d5ZsAwoIs+p5NbHvIJuJGtEBn5Fk8KhWxX1bbGeOV8Sk
-         zwL0e5Hcxnwa2tZSRo5x/wQ+lxyoBypXsKwSibl7vhXDpvuqInt7MtiC2Ham0hAibODr
-         A3pfdUWOXgyr9SVVK+veP+0UeriRozlNFmOc2W1/kmQmSkZzVdtsMSwukGDm7jrhbsdQ
-         yKiTPnwiJG76pMVd/uFurHYbE3g0sy+hMOtPj6B1x+ix/tZr/WieEgwnEvmdhvdPmRs1
-         dk6n2FxNqhjeZO9UNb8ucdcPR8DwqQ9LD4hIHXFOPDXdhlJoDPi2N+dsEKL4uiJaL6f7
-         W+9g==
-X-Gm-Message-State: APjAAAV5obcmtgTYOwydFCIUmSddJoU4RuWGLestNJSIzWv96Y2P2u5e
-        1wSkBBgTeYLKA2dCPcRnRBk=
-X-Google-Smtp-Source: APXvYqzMXEKmV9WZyNBUnEiqdP7WtvzjVGR6C9yz/OiUdoKzI0eFO2vOshMLGfSUDVyLMFtEMLdlbg==
-X-Received: by 2002:adf:e290:: with SMTP id v16mr13251085wri.16.1579720145425;
-        Wed, 22 Jan 2020 11:09:05 -0800 (PST)
-Received: from localhost (ip-37-188-226-95.eurotel.cz. [37.188.226.95])
-        by smtp.gmail.com with ESMTPSA id x11sm5147651wmg.46.2020.01.22.11.09.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Jan 2020 11:09:04 -0800 (PST)
-Date:   Wed, 22 Jan 2020 20:09:03 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux MM <linux-mm@kvack.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Leonardo Bras <leonardo@linux.ibm.com>,
-        Nathan Lynch <nathanl@linux.ibm.com>,
-        Allison Randal <allison@lohutok.net>,
-        Nathan Fontenot <nfont@linux.vnet.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        lantianyu1986@gmail.com,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
-Subject: Re: [PATCH RFC v1] mm: is_mem_section_removable() overhaul
-Message-ID: <20200122190903.GD29276@dhcp22.suse.cz>
-References: <a5f0bd8d-de5e-9f27-5c94-7746a3d20a95@redhat.com>
- <20200121120714.GJ29276@dhcp22.suse.cz>
- <a29b49b9-28ad-44fa-6c0b-90cd43902f29@redhat.com>
- <20200122104230.GU29276@dhcp22.suse.cz>
- <98b6c208-b4dd-9052-43f6-543068c649cc@redhat.com>
- <816ddd66-c90b-76f1-f4a0-72fe41263edd@redhat.com>
- <20200122164618.GY29276@dhcp22.suse.cz>
- <626d344e-8243-c161-cd07-ed1276eba73d@redhat.com>
- <20200122183809.GB29276@dhcp22.suse.cz>
- <f35cbe9e-b8bf-127e-698f-d08972d30614@redhat.com>
+        Wed, 22 Jan 2020 14:09:13 -0500
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: ezequiel)
+        with ESMTPSA id 57FAF28FD19
+From:   Ezequiel Garcia <ezequiel@collabora.com>
+To:     Sandy Huang <hjc@rock-chips.com>,
+        =?UTF-8?q?Heiko=20St=C3=BCbner?= <heiko@sntech.de>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>
+Cc:     linux-rockchip@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        kernel@collabora.com, Douglas Anderson <dianders@chromium.org>,
+        Tomasz Figa <tfiga@chromium.org>,
+        Mark Yao <mark.yao@rock-chips.com>,
+        Ezequiel Garcia <ezequiel@collabora.com>
+Subject: [PATCH] drm/rockchip: Add GEM create ioctl support
+Date:   Wed, 22 Jan 2020 16:08:55 -0300
+Message-Id: <20200122190855.20385-1-ezequiel@collabora.com>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f35cbe9e-b8bf-127e-698f-d08972d30614@redhat.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 22-01-20 19:46:15, David Hildenbrand wrote:
-> On 22.01.20 19:38, Michal Hocko wrote:
-[...]
-> > How exactly is check + offline more optimal then offline which makes
-> > check as its first step? I will get to your later points after this is
-> > clarified.
-> 
-> Scanning (almost) lockless is more efficient than bouncing back and
-> forth with the device_hotplug_lock, mem_hotplug_lock, cpu_hotplug_lock
-> and zone locks - as far as I understand.
+From: Mark Yao <mark.yao@rock-chips.com>
 
-All but the zone lock shouldn't be really contended and as such
-shouldn't cause any troubles. zone->lock really depends on the page
-allocator usage of course. But as soon as we have a contention then it
-is just more likely that the result is less reliable.
+Add driver-specific GEM create/offset ioctls, to allow users
+to create objects of arbitrary size.
 
-I would be also really curious about how much actual time could be saved
-by this - some real numbers - because hotplug operations shouldn't
-happen so often that this would stand out. At least that is my
-understanding.
+These are required to allocate buffers to be shared with
+video decoder block, with hardware-specific needs such as
+macroblock alignment and extra room for motion vectors.
 
-> And as far as I understood, that was the whole reason of the original
-> commit.
+Signed-off-by: Mark Yao <mark.yao@rock-chips.com>
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
+---
+ drivers/gpu/drm/rockchip/rockchip_drm_drv.c | 11 ++++
+ drivers/gpu/drm/rockchip/rockchip_drm_gem.c | 21 +++++++
+ drivers/gpu/drm/rockchip/rockchip_drm_gem.h | 13 +++++
+ include/uapi/drm/rockchip_drm.h             | 61 +++++++++++++++++++++
+ 4 files changed, 106 insertions(+)
+ create mode 100644 include/uapi/drm/rockchip_drm.h
 
-Well, I have my doubts but it might be just me and I might be wrong. My
-experience from a large part of the memory hotplug functionality is that
-it was driven by a good intention but without a due diligence to think
-behind the most obvious usecase. Having a removable flag on the memblock
-sounds like a neat idea of course. But an inherently racy flag is just
-borderline useful.
-
-Anyway, I will stop at this moment and wait for real usecases.
-
-Thanks!
+diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_drv.c b/drivers/gpu/drm/rockchip/rockchip_drm_drv.c
+index ca12a35483f9..bd35a0b1aa5a 100644
+--- a/drivers/gpu/drm/rockchip/rockchip_drm_drv.c
++++ b/drivers/gpu/drm/rockchip/rockchip_drm_drv.c
+@@ -22,6 +22,7 @@
+ #include <drm/drm_of.h>
+ #include <drm/drm_probe_helper.h>
+ #include <drm/drm_vblank.h>
++#include <drm/rockchip_drm.h>
+ 
+ #include "rockchip_drm_drv.h"
+ #include "rockchip_drm_fb.h"
+@@ -206,6 +207,14 @@ static void rockchip_drm_unbind(struct device *dev)
+ 	drm_dev_put(drm_dev);
+ }
+ 
++static const struct drm_ioctl_desc rockchip_ioctls[] = {
++	DRM_IOCTL_DEF_DRV(ROCKCHIP_GEM_CREATE, rockchip_gem_create_ioctl,
++			  DRM_UNLOCKED | DRM_AUTH),
++	DRM_IOCTL_DEF_DRV(ROCKCHIP_GEM_MAP_OFFSET,
++			  rockchip_gem_map_offset_ioctl,
++			  DRM_UNLOCKED | DRM_AUTH),
++};
++
+ static const struct file_operations rockchip_drm_driver_fops = {
+ 	.owner = THIS_MODULE,
+ 	.open = drm_open,
+@@ -230,6 +239,8 @@ static struct drm_driver rockchip_drm_driver = {
+ 	.gem_prime_vmap		= rockchip_gem_prime_vmap,
+ 	.gem_prime_vunmap	= rockchip_gem_prime_vunmap,
+ 	.gem_prime_mmap		= rockchip_gem_mmap_buf,
++	.ioctls			= rockchip_ioctls,
++	.num_ioctls		= ARRAY_SIZE(rockchip_ioctls),
+ 	.fops			= &rockchip_drm_driver_fops,
+ 	.name	= DRIVER_NAME,
+ 	.desc	= DRIVER_DESC,
+diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_gem.c b/drivers/gpu/drm/rockchip/rockchip_drm_gem.c
+index 0d1884684dcb..315fa67d5668 100644
+--- a/drivers/gpu/drm/rockchip/rockchip_drm_gem.c
++++ b/drivers/gpu/drm/rockchip/rockchip_drm_gem.c
+@@ -12,6 +12,7 @@
+ #include <drm/drm_gem.h>
+ #include <drm/drm_prime.h>
+ #include <drm/drm_vma_manager.h>
++#include <drm/rockchip_drm.h>
+ 
+ #include "rockchip_drm_drv.h"
+ #include "rockchip_drm_gem.h"
+@@ -428,6 +429,26 @@ int rockchip_gem_dumb_create(struct drm_file *file_priv,
+ 	return PTR_ERR_OR_ZERO(rk_obj);
+ }
+ 
++int rockchip_gem_map_offset_ioctl(struct drm_device *drm, void *data,
++				  struct drm_file *file_priv)
++{
++	struct drm_rockchip_gem_map_off *args = data;
++
++	return drm_gem_dumb_map_offset(file_priv, drm, args->handle,
++				       &args->offset);
++}
++
++int rockchip_gem_create_ioctl(struct drm_device *dev, void *data,
++			      struct drm_file *file_priv)
++{
++	struct drm_rockchip_gem_create *args = data;
++	struct rockchip_gem_object *rk_obj;
++
++	rk_obj = rockchip_gem_create_with_handle(file_priv, dev, args->size,
++						 &args->handle);
++	return PTR_ERR_OR_ZERO(rk_obj);
++}
++
+ /*
+  * Allocate a sg_table for this GEM object.
+  * Note: Both the table's contents, and the sg_table itself must be freed by
+diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_gem.h b/drivers/gpu/drm/rockchip/rockchip_drm_gem.h
+index 7ffc541bea07..87fe58b05bf6 100644
+--- a/drivers/gpu/drm/rockchip/rockchip_drm_gem.h
++++ b/drivers/gpu/drm/rockchip/rockchip_drm_gem.h
+@@ -50,4 +50,17 @@ void rockchip_gem_free_object(struct drm_gem_object *obj);
+ int rockchip_gem_dumb_create(struct drm_file *file_priv,
+ 			     struct drm_device *dev,
+ 			     struct drm_mode_create_dumb *args);
++
++/*
++ * request gem object creation and buffer allocation as the size
++ * that it is calculated with framebuffer information such as width,
++ * height and bpp.
++ */
++int rockchip_gem_create_ioctl(struct drm_device *dev, void *data,
++			      struct drm_file *file_priv);
++
++/* get buffer offset to map to user space. */
++int rockchip_gem_map_offset_ioctl(struct drm_device *dev, void *data,
++				  struct drm_file *file_priv);
++
+ #endif /* _ROCKCHIP_DRM_GEM_H */
+diff --git a/include/uapi/drm/rockchip_drm.h b/include/uapi/drm/rockchip_drm.h
+new file mode 100644
+index 000000000000..3185f72f36b9
+--- /dev/null
++++ b/include/uapi/drm/rockchip_drm.h
+@@ -0,0 +1,61 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++
++/*
++ * Copyright (c) Fuzhou Rockchip Electronics Co.Ltd
++ * Authors:
++ *       Mark Yao <yzq@rock-chips.com>
++ *
++ * base on exynos_drm.h
++ */
++
++#ifndef _ROCKCHIP_DRM_H
++#define _ROCKCHIP_DRM_H
++
++#include <drm/drm.h>
++
++#if defined(__cplusplus)
++extern "C" {
++#endif
++
++/**
++ * User-desired buffer creation information structure.
++ *
++ * @size: user-desired memory allocation size.
++ * @flags: user request for setting memory type or cache attributes.
++ * @handle: returned a handle to created gem object.
++ *     - this handle will be set by gem module of kernel side.
++ */
++struct drm_rockchip_gem_create {
++	uint64_t size;
++	uint32_t flags;
++	uint32_t handle;
++};
++
++/**
++ * A structure for getting buffer offset.
++ *
++ * @handle: a pointer to gem object created.
++ * @pad: just padding to be 64-bit aligned.
++ * @offset: relatived offset value of the memory region allocated.
++ *     - this value should be set by user.
++ */
++struct drm_rockchip_gem_map_off {
++	uint32_t handle;
++	uint32_t pad;
++	uint64_t offset;
++};
++
++#define DRM_ROCKCHIP_GEM_CREATE		0x00
++#define DRM_ROCKCHIP_GEM_MAP_OFFSET	0x01
++
++#define DRM_IOCTL_ROCKCHIP_GEM_CREATE	DRM_IOWR(DRM_COMMAND_BASE + \
++		DRM_ROCKCHIP_GEM_CREATE, struct drm_rockchip_gem_create)
++
++#define DRM_IOCTL_ROCKCHIP_GEM_MAP_OFFSET	DRM_IOWR(DRM_COMMAND_BASE + \
++		DRM_ROCKCHIP_GEM_MAP_OFFSET, struct drm_rockchip_gem_map_off)
++
++#if defined(__cplusplus)
++}
++#endif
++
++#endif /* _ROCKCHIP_DRM_H */
 -- 
-Michal Hocko
-SUSE Labs
+2.25.0
+
