@@ -2,98 +2,99 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A5C5C33CB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:25:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0330DC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:30:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2103420704
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:25:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="QWf4OAlw"
+	by mail.kernel.org (Postfix) with ESMTP id C829524673
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:30:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579685429;
+	bh=o7W4D99RUUOyMLnHzoKuvSoaHllAdLOWgJ1kmK1ffgo=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=jFT25Tmx9rQq/qe4wDm9tBgiDJHkdfU3ZjeuE/iXS8KBEyq/yx5MF5+m//f/QTTd/
+	 5OANWT8GjfBCaX2dQZ3fMVfF44gT7wquhkW+7jTccyWUaXqSMEdSbI2jFccD2RM3Z9
+	 n4i6Z33TVtoldtcNM6SKmzBQkULX3nENnOZxwfJU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729049AbgAVJZi (ORCPT
+        id S1729126AbgAVJa1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 04:25:38 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:34835 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725911AbgAVJZi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 04:25:38 -0500
-Received: by mail-wm1-f67.google.com with SMTP id p17so6367987wmb.0
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jan 2020 01:25:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=jl1D3AmziTwVaydKZMicfuuKx92SzNFy1wg6z3sQOu8=;
-        b=QWf4OAlw4HblNZpibCzinKXmVcQxe2T3DfOdm82fH1kR0Jy8WNv+EvTlK7H9S+2b5V
-         6n4s6TI9j+qvwWD89eXAY4eDuqw5rfoI8xRW5t31OQdI02Em/Jcng6UEPc/Z7fBvmWcy
-         1HHC/4EpUgA5szvKHBynZhxUgdzdnCq0Hv5rmbgcg9W+GrFcsTx5iiM3xUZ8FX/7KVNW
-         Qpe4pt8y82X9eT/OV+GaI9zSNq3fnqGpIaD20d3czbeOC6wukZGh9xua5d/u33wq4D4I
-         thyksjj+mUNYd5z3wbuon9IKV+KzAGO9j9s2bSQCd3h/9FILqKaTfW9QTjUTCS9/eQpp
-         wtZw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=jl1D3AmziTwVaydKZMicfuuKx92SzNFy1wg6z3sQOu8=;
-        b=XACu0Ozm2KrPuYkwvn0Gm2Le/E42F5vOqU8WSSKKST4l+vTpFjd0xoKMS8OgHRqn6r
-         uwKTl1kjj+bNSQv5TJCGBX9vA0mru/beTj2a5m5J8iyOtEIJ7pky5CGg4fBajjO4I9Ow
-         0At+lftoXsVjRP3S7+Z9+J8cLbCJmziM1Aa21JU1Xa4nLfmLLqaKBDjtdRBynghiIYLF
-         FYCSrMF7kN46NH4W2Wll2qFKE+bELFhW+EXuA3JzP3TSjbznW2q2SVqEpUuJ4DTaQp7f
-         RH8zkeKtf2Ft2sXwEYUnH54lTzeVcNnx9FVvS/8j3lOWm1LQBloL9hkUFcV/zwW/+AUY
-         AVzg==
-X-Gm-Message-State: APjAAAUdk4ZjMSk7Eqjaj7dUtg4Y8YC4jRwZ1315f3y+xw7D+b4OrBdB
-        kEDpga0Vyz3aCP+Tzq3FfgWNkw==
-X-Google-Smtp-Source: APXvYqzbK5xmg3Q8pvvBxsVKUN7iX5VNKCEhjLiLQ4URYMDIPnu2V9Aj/FpSlwqF5Jr7ga/yDdQT5g==
-X-Received: by 2002:a7b:c08d:: with SMTP id r13mr2021190wmh.104.1579685135848;
-        Wed, 22 Jan 2020 01:25:35 -0800 (PST)
-Received: from starbuck.baylibre.local (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.googlemail.com with ESMTPSA id g25sm4134125wmh.3.2020.01.22.01.25.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Jan 2020 01:25:35 -0800 (PST)
-From:   Jerome Brunet <jbrunet@baylibre.com>
-To:     Philipp Zabel <p.zabel@pengutronix.de>
-Cc:     Jerome Brunet <jbrunet@baylibre.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] dt-bindings: reset: meson: add gxl internal dac reset
-Date:   Wed, 22 Jan 2020 10:25:26 +0100
-Message-Id: <20200122092526.2436421-1-jbrunet@baylibre.com>
-X-Mailer: git-send-email 2.24.1
+        Wed, 22 Jan 2020 04:30:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41760 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725911AbgAVJa1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 04:30:27 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B449A2465B;
+        Wed, 22 Jan 2020 09:30:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579685424;
+        bh=o7W4D99RUUOyMLnHzoKuvSoaHllAdLOWgJ1kmK1ffgo=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=StnE7Ex89OkxZuT7I5GeNgWUueUpR4p8POxXnP02aCjX/CxjOfiDmM/Al5lvaFWwR
+         8rACNQXGhNuE54Ifo7C4imrv957CJQJqiN9O6yQuWcJo4kcX4YzRewj4sGUIRTa5g7
+         B0FsgoVx3VkU6/SEKTQWyj2APzGw8syEz2nQ1U4A=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Fabian Henneke <fabian.henneke@gmail.com>,
+        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 01/76] hidraw: Return EPOLLOUT from hidraw_poll
+Date:   Wed, 22 Jan 2020 10:28:17 +0100
+Message-Id: <20200122092751.885292472@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200122092751.587775548@linuxfoundation.org>
+References: <20200122092751.587775548@linuxfoundation.org>
+User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
-X-Patchwork-Bot: notify
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the reset line of the internal DAC found on the amlogic gxl SoC family
+From: Fabian Henneke <fabian.henneke@gmail.com>
 
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+[ Upstream commit 378b80370aa1fe50f9c48a3ac8af3e416e73b89f ]
+
+Always return EPOLLOUT from hidraw_poll when a device is connected.
+This is safe since writes are always possible (but will always block).
+
+hidraw does not support non-blocking writes and instead always calls
+blocking backend functions on write requests. Hence, so far, a call to
+poll never returned EPOLLOUT, which confuses tools like socat.
+
+Signed-off-by: Fabian Henneke <fabian.henneke@gmail.com>
+In-reply-to: <CA+hv5qkyis03CgYTWeWX9cr0my-d2Oe+aZo+mjmWRXgjrGqyrw@mail.gmail.com>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/dt-bindings/reset/amlogic,meson-gxbb-reset.h | 2 +-
+ drivers/hid/hidraw.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/dt-bindings/reset/amlogic,meson-gxbb-reset.h b/include/dt-bindings/reset/amlogic,meson-gxbb-reset.h
-index ea5058618863..883bfd3bcbad 100644
---- a/include/dt-bindings/reset/amlogic,meson-gxbb-reset.h
-+++ b/include/dt-bindings/reset/amlogic,meson-gxbb-reset.h
-@@ -69,7 +69,7 @@
- #define RESET_SYS_CPU_L2		58
- #define RESET_SYS_CPU_P			59
- #define RESET_SYS_CPU_MBIST		60
--/*					61	*/
-+#define RESET_ACODEC			61
- /*					62	*/
- /*					63	*/
- /*	RESET2					*/
+diff --git a/drivers/hid/hidraw.c b/drivers/hid/hidraw.c
+index 627a24d3ea7c..27d2f5a48a11 100644
+--- a/drivers/hid/hidraw.c
++++ b/drivers/hid/hidraw.c
+@@ -265,7 +265,7 @@ static unsigned int hidraw_poll(struct file *file, poll_table *wait)
+ 
+ 	poll_wait(file, &list->hidraw->wait, wait);
+ 	if (list->head != list->tail)
+-		return POLLIN | POLLRDNORM;
++		return POLLIN | POLLRDNORM | POLLOUT;
+ 	if (!list->hidraw->exist)
+ 		return POLLERR | POLLHUP;
+ 	return 0;
 -- 
-2.24.1
+2.20.1
+
+
 
