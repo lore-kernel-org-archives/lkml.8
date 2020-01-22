@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92128C33CB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:54:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10C24C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:54:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6028C2467B
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:54:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8D6220704
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:54:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579686851;
-	bh=P7rZRElKkOwxcczbNkXYkerQ7t32gQFeDOJWyqJPqGo=;
+	s=default; t=1579686857;
+	bh=RxIrU/zfa6nfjaeKBL0jW5hX9UTQfpuhha/8PEm6QtQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bxbYWsol5FiOYIsQxsJs0FHGGQoBQPXjVtBSUV8f3tikRyfvcH4sCyuewMG4Mn+QW
-	 VJSRO+A3nPhQngYoa46QNOhaboG7gb0UQoGrqqx6nqLDeCzaAXsYlKCXPXfPot6okH
-	 ocBQvqjt2ujgY8T4lZsiQxF6n9jeO+fpO1fEab04=
+	b=Xvxm1UlH/Iewl45H5+YkQQVrIe7a7/qmuG6oxY28X+7o9QsNhkZCuTUWzq+7f8vEX
+	 FVO/vJMJNK0PJbioUV+RSB7599hMFSXTMU+fQcX1YHmJzyr8r+iButX4TF2gQKF270
+	 wbQmBsCoOm6I9Tf0TkfE61EysXo2Vo4wDr3ezhKs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730835AbgAVJe2 (ORCPT
+        id S1730748AbgAVJyR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 04:34:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48886 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 04:54:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48802 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730206AbgAVJeY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 04:34:24 -0500
+        id S1730783AbgAVJeV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 04:34:21 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A505B2467C;
-        Wed, 22 Jan 2020 09:34:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 37D7A24673;
+        Wed, 22 Jan 2020 09:34:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579685663;
-        bh=P7rZRElKkOwxcczbNkXYkerQ7t32gQFeDOJWyqJPqGo=;
+        s=default; t=1579685660;
+        bh=RxIrU/zfa6nfjaeKBL0jW5hX9UTQfpuhha/8PEm6QtQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nxVGqquZOiOJvHJ0BtmXr6+18KP8LpDVdmGvORTmXhQAGjEUVoaq0SnytdwZJiVXx
-         /sdZ2EJmmMFHmrUzerXym1TgGtYuoy4bK4Zs2eSYWoIbypxkMN/W0X9q8HOVnofoH0
-         mrXIdZYSokiOjhOcVzlF6n5K1vXd5O4nyH0FBxQc=
+        b=eyJ31xRwZhuh80Es+PaookxB+FTCFYxfJPO8Tn33MaM2lT9JMXM8s7LOvvyIvNONx
+         gouahZlbZ+inP7KvYKnxAvZVkH6EQYjLAg73gKwT39qeU60lLdFuCJ8THeoaHsccoR
+         rBV0jn+bwCc4PmYp0ERlXE0zXyIl9JtFqrLPOXn4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH 4.9 29/97] iio: imu: adis16480: assign bias value only if operation succeeded
-Date:   Wed, 22 Jan 2020 10:28:33 +0100
-Message-Id: <20200122092801.018446040@linuxfoundation.org>
+        stable@vger.kernel.org, Jian-Hong Pan <jian-hong@endlessm.com>,
+        Daniel Drake <drake@endlessm.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH 4.9 28/97] platform/x86: asus-wmi: Fix keyboard brightness cannot be set to 0
+Date:   Wed, 22 Jan 2020 10:28:32 +0100
+Message-Id: <20200122092800.804912185@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200122092755.678349497@linuxfoundation.org>
 References: <20200122092755.678349497@linuxfoundation.org>
@@ -60,45 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexandru Ardelean <alexandru.ardelean@analog.com>
+From: Jian-Hong Pan <jian-hong@endlessm.com>
 
-commit 9b742763d9d4195e823ae6ece760c9ed0500c1dc upstream.
+commit 176a7fca81c5090a7240664e3002c106d296bf31 upstream.
 
-This was found only after the whole thing with the inline functions, but
-the compiler actually found something. The value of the `bias` (in
-adis16480_get_calibbias()) should only be set if the read operation was
-successful.
+Some of ASUS laptops like UX431FL keyboard backlight cannot be set to
+brightness 0. According to ASUS' information, the brightness should be
+0x80 ~ 0x83. This patch fixes it by following the logic.
 
-No actual known problem occurs as users of this function all
-ultimately check the return value.  Hence probably not stable material.
-
-Fixes: 2f3abe6cbb6c9 ("iio:imu: Add support for the ADIS16480 and similar IMUs")
-Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Fixes: e9809c0b9670 ("asus-wmi: add keyboard backlight support")
+Signed-off-by: Jian-Hong Pan <jian-hong@endlessm.com>
+Reviewed-by: Daniel Drake <drake@endlessm.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/iio/imu/adis16480.c |    6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/platform/x86/asus-wmi.c |    8 +-------
+ 1 file changed, 1 insertion(+), 7 deletions(-)
 
---- a/drivers/iio/imu/adis16480.c
-+++ b/drivers/iio/imu/adis16480.c
-@@ -372,12 +372,14 @@ static int adis16480_get_calibbias(struc
- 	case IIO_MAGN:
- 	case IIO_PRESSURE:
- 		ret = adis_read_reg_16(&st->adis, reg, &val16);
--		*bias = sign_extend32(val16, 15);
-+		if (ret == 0)
-+			*bias = sign_extend32(val16, 15);
- 		break;
- 	case IIO_ANGL_VEL:
- 	case IIO_ACCEL:
- 		ret = adis_read_reg_32(&st->adis, reg, &val32);
--		*bias = sign_extend32(val32, 31);
-+		if (ret == 0)
-+			*bias = sign_extend32(val32, 31);
- 		break;
- 	default:
- 			ret = -EINVAL;
+--- a/drivers/platform/x86/asus-wmi.c
++++ b/drivers/platform/x86/asus-wmi.c
+@@ -461,13 +461,7 @@ static void kbd_led_update(struct work_s
+ 
+ 	asus = container_of(work, struct asus_wmi, kbd_led_work);
+ 
+-	/*
+-	 * bits 0-2: level
+-	 * bit 7: light on/off
+-	 */
+-	if (asus->kbd_led_wk > 0)
+-		ctrl_param = 0x80 | (asus->kbd_led_wk & 0x7F);
+-
++	ctrl_param = 0x80 | (asus->kbd_led_wk & 0x7F);
+ 	asus_wmi_set_devstate(ASUS_WMI_DEVID_KBD_BACKLIGHT, ctrl_param, NULL);
+ }
+ 
 
 
