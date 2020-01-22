@@ -2,180 +2,181 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAE29C3F68F
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 02:05:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B092C33CAF
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 02:05:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C312D217F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 02:05:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579658726;
-	bh=yVncP2cRerLjCSUEq2+nxA2AX8UnlN8vHXhFAI+A+pQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=TSgmcIeD1Q9MVHXEj9mXIpREK+AgSNlHp2lmgnovXakwSkSftIf9U9N0iLSUqqcLp
-	 m/ltW1KnV7Dg5JiRsHxxl1DTOnM4zYr/8zrLD1CfAI3n/hC87ESKxinBgktOXwQAL8
-	 ngLKH9KSWYGNMRotQPG5OgdM6AJtQv8UPSJvy4/w=
+	by mail.kernel.org (Postfix) with ESMTP id 625722465A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 02:05:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="en+8NfQn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729031AbgAVCF0 (ORCPT
+        id S1729061AbgAVCF6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 21:05:26 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:43622 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726396AbgAVCFZ (ORCPT
+        Tue, 21 Jan 2020 21:05:58 -0500
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:34128 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726780AbgAVCF6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 21:05:25 -0500
-Received: by mail-ot1-f67.google.com with SMTP id p8so4871052oth.10;
-        Tue, 21 Jan 2020 18:05:25 -0800 (PST)
+        Tue, 21 Jan 2020 21:05:58 -0500
+Received: by mail-pl1-f194.google.com with SMTP id c9so2218050plo.1
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jan 2020 18:05:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Vu0P+TqydFlkgIras7hArFCb2ZMbDqBdR1PlF/mHkkk=;
+        b=en+8NfQnj4d/v6++rQTMh+iPxXPOddhceEF9O29VgX2zAafqp+1/oeqPPQaTZe8NhR
+         yDkezigSS7KDcdzSjepQ5NwS7JK6oM1dB9thLNtTDgrPgv1y/rhjkSvE/6yljqsWPXeY
+         kb/Y0GUpyaj/Vm9Wrcf3pMuvLhkIKsbJ9uA/U=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=5KDHhB97+OZpmUZ0CpohOMTK6dCD2tSEOncivv/7Pgw=;
-        b=rMZ8ifBZCC7FE/9t0VWrOMqucWkutK3wl805i/MprW6qPf4rbmxMOzrTlYh1N6nQsC
-         /XH7qX3AEszhYJT5V6clhq9QxXlO9JknVYBMVeTdHOojnUmz+4NGW4/dDRqqqd54qujU
-         MdXT6tLZ9lwDgW0XLMGWj7Bw6chXKqcY7I5vlgBKCjnmFyN9P8fKTEOZhTXsu63RJw6t
-         UdBNXCpdMH6FMa2LeS1oVX+AQC69egaCo0wZk7lCkVkoqILKqcAOTz4EyDiITPdpr6Sm
-         3xDqiHbHrFJVsEJwVFGJs70N+lOv8VBDYUUeZy6VnAFemHaamJr5DwGBrkDSbNvlpN/t
-         oOuA==
-X-Gm-Message-State: APjAAAWjHEMOkwFhC5UJWGAlf7Usu5oVaIpso3PZaMChQnm+8s8Lp1te
-        agd6CI2vOccDVkhmoUk0Bw==
-X-Google-Smtp-Source: APXvYqzkfbpLEJGKkcLHIHyxBnU94Fou1ccxpuM+pfV/pzRrIsQMB2bPSHSJROq5isXH9ct8XAs62w==
-X-Received: by 2002:a9d:7a97:: with SMTP id l23mr6087185otn.34.1579658724729;
-        Tue, 21 Jan 2020 18:05:24 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id n22sm14452502otj.36.2020.01.21.18.05.23
+        bh=Vu0P+TqydFlkgIras7hArFCb2ZMbDqBdR1PlF/mHkkk=;
+        b=RI6O/dIQbjP0x70RbAuGXKpPIhOdKkxDLyo+wLhMMf1Ts2M+68AO+qjVWeO8cGc2TZ
+         Rqf+KznVEF7pflcL/BoGZ6rex3wvlviA7+DyLWpIqH3/2+Q50koStaBvgE4c1wH+/P04
+         GOBSDdfZa0p5mt6GVJ/nI+yiHAGDNZqA5x2Qwx8Ra/45bohlLfK+P/cWi61KsaVUBG1i
+         GnLL3pEbMnybkj2TWPu7DogRRNqf44zo8nD10DvNc8nDGhCpQ8dyj5R6PJ8zxbFCQ+Rq
+         cHmzg0fWRIb8MeeIFYvJU9515lFXf2mj3B8Ldc6dWQIRKdYCA3etOCQ4sDh/Cf6M0cVX
+         WytA==
+X-Gm-Message-State: APjAAAWN91stNEqhklnNft0vV3AX9edMSqRxJA4QvOsVZp4HS7JlIFhx
+        PY64EZAIlC0zYP8S+ia54sfrMA==
+X-Google-Smtp-Source: APXvYqyDzAJuDLiodwgaecqWrmIJKuV7weT5y48qgIvs0u7QpPVK52mU8JY8LIYW2h6XesYynn0Thw==
+X-Received: by 2002:a17:90a:da03:: with SMTP id e3mr269720pjv.100.1579658757856;
+        Tue, 21 Jan 2020 18:05:57 -0800 (PST)
+Received: from localhost ([2401:fa00:8f:203:5bbb:c872:f2b1:f53b])
+        by smtp.gmail.com with ESMTPSA id h11sm41882131pgv.38.2020.01.21.18.05.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Jan 2020 18:05:23 -0800 (PST)
-Received: (nullmailer pid 29799 invoked by uid 1000);
-        Wed, 22 Jan 2020 02:05:23 -0000
-Date:   Tue, 21 Jan 2020 20:05:23 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
-Cc:     netdev@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, davem@davemloft.net, andrew@lunn.ch,
-        f.fainelli@gmail.com, hkallweit1@gmail.com
-Subject: Re: [PATCH 4/4] dt-bindings: net: adin: document 1588 TX/RX SOP
- bindings
-Message-ID: <20200122020523.GA22232@bogus>
-References: <20200116091454.16032-1-alexandru.ardelean@analog.com>
- <20200116091454.16032-5-alexandru.ardelean@analog.com>
+        Tue, 21 Jan 2020 18:05:57 -0800 (PST)
+Date:   Wed, 22 Jan 2020 11:05:55 +0900
+From:   Sergey Senozhatsky <senozhatsky@chromium.org>
+To:     Hans Verkuil <hverkuil@xs4all.nl>
+Cc:     Sergey Senozhatsky <senozhatsky@chromium.org>,
+        Hans Verkuil <hans.verkuil@cisco.com>,
+        Tomasz Figa <tfiga@chromium.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Sakari Ailus <sakari.ailus@iki.fi>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Pawel Osciak <posciak@chromium.org>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC][PATCH 04/15] videobuf2: add queue memory consistency
+ parameter
+Message-ID: <20200122020555.GD149602@google.com>
+References: <20191217032034.54897-1-senozhatsky@chromium.org>
+ <20191217032034.54897-5-senozhatsky@chromium.org>
+ <77ddd5cd-affc-ad0f-829d-d624f9798055@xs4all.nl>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200116091454.16032-5-alexandru.ardelean@analog.com>
+In-Reply-To: <77ddd5cd-affc-ad0f-829d-d624f9798055@xs4all.nl>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 16, 2020 at 11:14:54AM +0200, Alexandru Ardelean wrote:
-> This change documents the device-tree bindings for the TX/RX indication of
-> IEEE 1588 packets.
-> 
-> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-> ---
->  .../devicetree/bindings/net/adi,adin.yaml     | 60 +++++++++++++++++++
->  1 file changed, 60 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/net/adi,adin.yaml b/Documentation/devicetree/bindings/net/adi,adin.yaml
-> index d95cc691a65f..eb56f35309e0 100644
-> --- a/Documentation/devicetree/bindings/net/adi,adin.yaml
-> +++ b/Documentation/devicetree/bindings/net/adi,adin.yaml
-> @@ -36,6 +36,60 @@ properties:
->      enum: [ 4, 8, 12, 16, 20, 24 ]
->      default: 8
->  
-> +  adi,1588-rx-sop-delays-cycles:
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#definitions/uint8-array
-> +      - items:
-> +          - minItems: 3
-> +            maxItems: 3
+On (20/01/10 10:47), Hans Verkuil wrote:
+> On 12/17/19 4:20 AM, Sergey Senozhatsky wrote:
+> > Preparations for future V4L2_FLAG_MEMORY_NON_CONSISTENT support.
+> >
+> > Extend vb2_core_reqbufs() with queue memory consistency flag.
+> > API permits queue's consistency attribute adjustment only if
+> > the queue has no allocated buffers, not busy, and does not have
+> > buffers waiting to be de-queued.
+>
+> Actually, you can call vb2_core_reqbufs() when buffers are allocated:
+> it will free the old buffers, then allocate the new ones.
+> So drop the 'has no allocated buffers' bit.
 
-You can split up the description into constraints something like this 
-(and minItems/maxItems becomes implied):
+Well, the wording, basically, follows the existing vb2_core_reqbufs()
+behavior "queue memory type"-wise. What I'm trying to say:
 
-items:
-  - description: delay for 10BASE-T
-  - description: delay for 100BASE-T
-  - description: delay for 1000BASE-T
+[..]
+int vb2_core_reqbufs(struct vb2_queue *q, enum vb2_memory memory,
+		bool consistent_mem, unsigned int *count)
+{
+	unsigned int num_buffers, allocated_buffers, num_planes = 0;
+	unsigned plane_sizes[VB2_MAX_PLANES] = { };
+	unsigned int i;
+	int ret;
 
-> +    description: |
-> +      Enables Start Packet detection (SOP) for received IEEE 1588 time stamp
-> +      controls, and configures the number of cycles (of the MII RX_CLK clock)
-> +      to delay the indication of RX SOP frames for 10/100/1000 BASE-T links.
-> +      The first element (in the array) configures the delay for 10BASE-T,
-> +      the second for 100BASE-T, and the third for 1000BASE-T.
-> +
-> +  adi,1588-rx-sop-pin-name:
-> +    description: |
-> +      This option must be used in together with 'adi,1588-rx-sop-delays-cycles'
-> +      to specify which physical pin should be used to signal the MAC that
-> +      the PHY is currently processing an IEEE 1588 timestamp control packet.
-> +      The driver will report an error if the value of this property is the
-> +      same as 'adi,1588-tx-sop-pin-name'
-> +    enum:
-> +      - gp_clk
-> +      - link_st
-> +      - int_n
-> +      - led_0
-> +
-> +  adi,1588-tx-sop-delays-ns:
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#definitions/uint8-array
-> +      - items:
-> +          - minItems: 3
-> +            maxItems: 3
+	if (q->streaming) {
+		dprintk(1, "streaming active\n");
+		return -EBUSY;
+	}
 
-This should be:
+	if (q->waiting_in_dqbuf && *count) {
+		dprintk(1, "another dup()ped fd is waiting for a buffer\n");
+		return -EBUSY;
+	}
 
-      - minItems: 3
-        maxItems: 3
-        items:
-          multipleOf: 8
+	if (*count == 0 || q->num_buffers != 0 ||
+	    (q->memory != VB2_MEMORY_UNKNOWN && q->memory != memory)) {
+		/*
+		 * We already have buffers allocated, so first check if they
+		 * are not in use and can be freed.
+		 */
+		mutex_lock(&q->mmap_lock);
+		if (debug && q->memory == VB2_MEMORY_MMAP &&
+		    __buffers_in_use(q))
+			dprintk(1, "memory in use, orphaning buffers\n");
 
-> +    description: |
-> +      Enables Start Packet detection (SOP) for IEEE 1588 time stamp controls,
-> +      and configures the number of nano-seconds to delay the indication of
-> +      TX frames for 10/100/1000 BASE-T links.
-> +      The first element (in the array) configures the delay for 10BASE-T,
-> +      the second for 100BASE-T, and the third for 1000BASE-T.
-> +      The delays must be multiples of 8 ns (i.e. 8, 16, 24, etc).
-> +
-> +  adi,1588-tx-sop-pin-name:
-> +    description: |
-> +      This option must be used in together with 'adi,1588-tx-sop-delays-ns'
-> +      to specify which physical pin should be used to signal the MAC that
-> +      the PHY is currently processing an IEEE 1588 timestamp control packet
-> +      on the TX path.
-> +      The driver will report an error if the value of this property is the
-> +      same as 'adi,1588-rx-sop-pin-name'
-> +    enum:
-> +      - gp_clk
-> +      - link_st
-> +      - int_n
-> +      - led_0
-> +
->  examples:
->    - |
->      ethernet {
-> @@ -62,5 +116,11 @@ examples:
->              reg = <1>;
->  
->              adi,fifo-depth-bits = <16>;
-> +
-> +            adi,1588-rx-sop-delays-cycles = [ 00 00 00 ];
-> +            adi,1588-rx-sop-pin-name = "int_n";
-> +
-> +            adi,1588-tx-sop-delays-ns = [ 00 08 10 ];
-> +            adi,1588-tx-sop-pin-name = "led_0";
->          };
->      };
-> -- 
-> 2.20.1
-> 
+		/*
+		 * Call queue_cancel to clean up any buffers in the
+		 * QUEUED state which is possible if buffers were prepared or
+		 * queued without ever calling STREAMON.
+		 */
+		__vb2_queue_cancel(q);
+		ret = __vb2_queue_free(q, q->num_buffers);
+		mutex_unlock(&q->mmap_lock);
+		if (ret)
+			return ret;
+
+		/*
+		 * In case of REQBUFS(0) return immediately without calling
+		 * driver's queue_setup() callback and allocating resources.
+		 */
+		if (*count == 0)
+			return 0;
+	}
+
+	/*
+	 * Make sure the requested values and current defaults are sane.
+	 */
+	WARN_ON(q->min_buffers_needed > VB2_MAX_FRAME);
+	num_buffers = max_t(unsigned int, *count, q->min_buffers_needed);
+	num_buffers = min_t(unsigned int, num_buffers, VB2_MAX_FRAME);
+	memset(q->alloc_devs, 0, sizeof(q->alloc_devs));
+	q->memory = memory;
++	__set_queue_consistency(q, consistent_mem);
+
+[..]
+
+So we set/change queue consistency attribute when we set/change
+queue memory type. Is there a use case for more flexibility when
+it comes to queue consistency?
+
+> > If user-space attempts to allocate a buffer with consistency
+> > requirements which don't match queue's consistency model such
+> > allocation requests will be failed.
+>
+> Is this last paragraph right? I don't see any code for that.
+
+Yeah, this was more about the general direction. The actual code
+was added later in the series.
+
+> BTW, a general comment about patches 4-6: I prefer if you changes
+> this to two patches: one that adds videobuf2-core.c support for
+> this for reqbufs and create_bufs, then another that wires up the
+> new V4L2 flag in videobuf2-v4l2.c.
+
+I'll take a look.
+
+	-ss
