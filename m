@@ -2,32 +2,33 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FC2EC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:10:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 876BFC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:10:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3659324655
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:10:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61D4024672
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:10:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729255AbgAVJKf (ORCPT
+        id S1729267AbgAVJKn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 04:10:35 -0500
+        Wed, 22 Jan 2020 04:10:43 -0500
 Received: from mga12.intel.com ([192.55.52.136]:54325 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729163AbgAVJKd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 04:10:33 -0500
+        id S1729093AbgAVJKh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 04:10:37 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Jan 2020 01:10:33 -0800
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Jan 2020 01:10:37 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,349,1574150400"; 
-   d="scan'208";a="244990527"
+   d="scan'208";a="244990551"
 Received: from unknown (HELO bong5-HP-Z440.png.intel.com) ([10.221.118.166])
-  by orsmga002.jf.intel.com with ESMTP; 22 Jan 2020 01:10:29 -0800
+  by orsmga002.jf.intel.com with ESMTP; 22 Jan 2020 01:10:33 -0800
 From:   Ong Boon Leong <boon.leong.ong@intel.com>
 To:     netdev@vger.kernel.org
 Cc:     Tan Tee Min <tee.min.tan@intel.com>,
@@ -42,9 +43,9 @@ Cc:     Tan Tee Min <tee.min.tan@intel.com>,
         Alexandru Ardelean <alexandru.ardelean@analog.com>,
         linux-stm32@st-md-mailman.stormreply.com,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH net v3 4/5] net: stmmac: xgmac: fix missing IFF_MULTICAST checki in dwxgmac2_set_filter
-Date:   Wed, 22 Jan 2020 17:09:35 +0800
-Message-Id: <20200122090936.28555-5-boon.leong.ong@intel.com>
+Subject: [PATCH net v3 5/5] net: stmmac: update pci platform data to use phy_interface
+Date:   Wed, 22 Jan 2020 17:09:36 +0800
+Message-Id: <20200122090936.28555-6-boon.leong.ong@intel.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200122090936.28555-1-boon.leong.ong@intel.com>
 References: <20200122090936.28555-1-boon.leong.ong@intel.com>
@@ -53,34 +54,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Tan, Tee Min" <tee.min.tan@intel.com>
+From: Voon Weifeng <weifeng.voon@intel.com>
 
-Without checking for IFF_MULTICAST flag, it is wrong to assume multicast
-filtering is always enabled. By checking against IFF_MULTICAST, now
-the driver behaves correctly when the multicast support is toggled by below
-command:-
-  ip link set <devname> multicast off|on
+The recent patch to support passive mode converter did not take care the
+phy interface configuration in PCI platform data. Hence, converting all
+the PCI platform data from plat->interface to plat->phy_interface as the
+default mode is meant for PHY.
 
-Fixes: 0efedbf11f07a ("net: stmmac: xgmac: Fix XGMAC selftests")
-Signed-off-by: Tan, Tee Min <tee.min.tan@intel.com>
+Fixes: 0060c8783330 ("net: stmmac: implement support for passive mode converters via dt")
+Signed-off-by: Voon Weifeng <weifeng.voon@intel.com>
+Tested-by: Tan, Tee Min <tee.min.tan@intel.com>
 Signed-off-by: Ong Boon Leong <boon.leong.ong@intel.com>
 ---
- drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c | 14 ++++++++------
+ 1 file changed, 8 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
-index 082f5ee9e525..13a153386c18 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
-@@ -458,7 +458,7 @@ static void dwxgmac2_set_filter(struct mac_device_info *hw,
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c
+index 8237dbc3e991..d2bc04dedd7c 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c
+@@ -96,7 +96,7 @@ static int stmmac_default_data(struct pci_dev *pdev,
  
- 		for (i = 0; i < XGMAC_MAX_HASH_TABLE; i++)
- 			writel(~0x0, ioaddr + XGMAC_HASH_TABLE(i));
--	} else if (!netdev_mc_empty(dev)) {
-+	} else if (!netdev_mc_empty(dev) && (dev->flags & IFF_MULTICAST)) {
- 		struct netdev_hw_addr *ha;
+ 	plat->bus_id = 1;
+ 	plat->phy_addr = 0;
+-	plat->interface = PHY_INTERFACE_MODE_GMII;
++	plat->phy_interface = PHY_INTERFACE_MODE_GMII;
  
- 		value |= XGMAC_FILTER_HMC;
+ 	plat->dma_cfg->pbl = 32;
+ 	plat->dma_cfg->pblx8 = true;
+@@ -220,7 +220,8 @@ static int ehl_sgmii_data(struct pci_dev *pdev,
+ {
+ 	plat->bus_id = 1;
+ 	plat->phy_addr = 0;
+-	plat->interface = PHY_INTERFACE_MODE_SGMII;
++	plat->phy_interface = PHY_INTERFACE_MODE_SGMII;
++
+ 	return ehl_common_data(pdev, plat);
+ }
+ 
+@@ -233,7 +234,8 @@ static int ehl_rgmii_data(struct pci_dev *pdev,
+ {
+ 	plat->bus_id = 1;
+ 	plat->phy_addr = 0;
+-	plat->interface = PHY_INTERFACE_MODE_RGMII;
++	plat->phy_interface = PHY_INTERFACE_MODE_RGMII;
++
+ 	return ehl_common_data(pdev, plat);
+ }
+ 
+@@ -261,7 +263,7 @@ static int tgl_sgmii_data(struct pci_dev *pdev,
+ {
+ 	plat->bus_id = 1;
+ 	plat->phy_addr = 0;
+-	plat->interface = PHY_INTERFACE_MODE_SGMII;
++	plat->phy_interface = PHY_INTERFACE_MODE_SGMII;
+ 	return tgl_common_data(pdev, plat);
+ }
+ 
+@@ -361,7 +363,7 @@ static int quark_default_data(struct pci_dev *pdev,
+ 
+ 	plat->bus_id = pci_dev_id(pdev);
+ 	plat->phy_addr = ret;
+-	plat->interface = PHY_INTERFACE_MODE_RMII;
++	plat->phy_interface = PHY_INTERFACE_MODE_RMII;
+ 
+ 	plat->dma_cfg->pbl = 16;
+ 	plat->dma_cfg->pblx8 = true;
+@@ -418,7 +420,7 @@ static int snps_gmac5_default_data(struct pci_dev *pdev,
+ 
+ 	plat->bus_id = 1;
+ 	plat->phy_addr = -1;
+-	plat->interface = PHY_INTERFACE_MODE_GMII;
++	plat->phy_interface = PHY_INTERFACE_MODE_GMII;
+ 
+ 	plat->dma_cfg->pbl = 32;
+ 	plat->dma_cfg->pblx8 = true;
 -- 
 2.17.1
 
