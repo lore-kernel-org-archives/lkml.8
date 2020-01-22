@@ -2,196 +2,270 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9160FC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 16:29:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AC09C33CB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 16:32:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5AB3F2465B
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 16:29:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47B5424656
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 16:32:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cwa1JWuM"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ieKGAsUH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728779AbgAVQ34 (ORCPT
+        id S1726191AbgAVQcP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 11:29:56 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:50110 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725933AbgAVQ34 (ORCPT
+        Wed, 22 Jan 2020 11:32:15 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:34125 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725911AbgAVQcO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 11:29:56 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579710594;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=6BGjEFlP6pk9AzCr9C2dlngFIJXwo7QBelNQ/yQKuPQ=;
-        b=cwa1JWuMrCAM5NDJpwhSG0BYLpnsC640/w8+kbhR13gXDUEc79gxK2TK2Asec8/VbVXjxr
-        iVX4fcUTs55PowdFOpy+Gq/hVPvghQ5WkmcZHtedjZGPzlSVU+INmVBJzOv4PAapKAV+VY
-        LqsBN2tLur6zRsZ9Jo9YZWAn9cNNzmQ=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-28-XBCFuCzgMlaWSxM5GmZaKw-1; Wed, 22 Jan 2020 11:29:52 -0500
-X-MC-Unique: XBCFuCzgMlaWSxM5GmZaKw-1
-Received: by mail-wr1-f70.google.com with SMTP id t3so22729wrm.23
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jan 2020 08:29:52 -0800 (PST)
+        Wed, 22 Jan 2020 11:32:14 -0500
+Received: by mail-lj1-f193.google.com with SMTP id z22so7558913ljg.1
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jan 2020 08:32:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=PV8voRyQaKVLzunXykRLPQ9F83D+RbA3gYFSv9pmXAs=;
+        b=ieKGAsUH1Qx8N0SSZyT5j0U3Eh5CCd33MNXNrbarwrPwi7Q5sbcMWpX9mg573OXAfg
+         vm+C1WnkiUpGsnIbRNLhcuy2We+C6UxDex0lznJSw1aNdFYI+B63NdGTnvzaPIurCXg2
+         90rdONLYvhDmLw9NHpOw9Zt0QwhO8Jgv0tu3AacrUOLXnacucXAGxfU/uOzoAq0MzZu+
+         KQuZJJ5cHGvNBwwPj9JsI0SRFefgtG+Oo30drIJCw2MnfC9CymN/Bbzp02S/oRb1H63C
+         IauFzh8+T7NZhRWrn0pUh0QcyjLFsVYmNZUAVa8XNkODataAOpbgboOQdPNqHyMJ1XQi
+         TqLQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=6BGjEFlP6pk9AzCr9C2dlngFIJXwo7QBelNQ/yQKuPQ=;
-        b=q5TeOU2YpMAbp6uYQG6U6HRqsTH1uBWCuMxBJcfOPCmdlosxbikCIOTlk/X/JZX8ef
-         WlP0C54e0zJQrLlCOrIYa28uIu8PyvyXvVlVAX1NMBvk2x0vGhoElwf1sBvvIn1OtC9o
-         uWSPuL9vRTARHjJyxzcYWiHC1hjh6smU4LQInBHOfjtiNt06w1L/HvOFaSXS2OCHxLUk
-         rQa3dAYZgsfvXVm3/XXCIel5UHeUsv1GYzvPwv6WUeYzj1nJBFqN9rvRUVgbJsH5XYpD
-         +qKUtPSUZHfC9JOXFl6ocm8H4RH5LcTafD3K7c6Bhi5dxvMzIPHh0XegZkFM0l+Fy7KM
-         iZeQ==
-X-Gm-Message-State: APjAAAVU6LSl9vmJb6A0HCCu2SyyG0Gri9h3wyaCUJVSeZzRTL8p4kMb
-        o+NWXfpGlON0dHUraNK82AatZhFVkYMSaklTIFlqet+PPsuLH2XrRqyXF5XFMwFI7PeY4/dOpHD
-        3Swbv+VV6a+HfgHuNy3CoZp6z
-X-Received: by 2002:a1c:4d18:: with SMTP id o24mr3757538wmh.35.1579710591504;
-        Wed, 22 Jan 2020 08:29:51 -0800 (PST)
-X-Google-Smtp-Source: APXvYqxJ9K+QUU3PyMuDPQmAXoLfW9PNaH+1/vdD5DvvoouU9WHRc25Mbc4JtVXKf0S7RK9ZS+ZKmg==
-X-Received: by 2002:a1c:4d18:: with SMTP id o24mr3757517wmh.35.1579710591259;
-        Wed, 22 Jan 2020 08:29:51 -0800 (PST)
-Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id v3sm57516171wru.32.2020.01.22.08.29.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Jan 2020 08:29:50 -0800 (PST)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
-        Jim Mattson <jmattson@google.com>,
-        linux-kernel@vger.kernel.org, Liran Alon <liran.alon@oracle.com>,
-        Roman Kagan <rkagan@virtuozzo.com>
-Subject: Re: [PATCH RFC 2/3] x86/kvm/hyper-v: move VMX controls sanitization out of nested_enable_evmcs()
-In-Reply-To: <20200122155108.GA7201@linux.intel.com>
-References: <20200115171014.56405-1-vkuznets@redhat.com> <20200115171014.56405-3-vkuznets@redhat.com> <6c4bdb57-08fb-2c2d-9234-b7efffeb72ed@redhat.com> <20200122054724.GD18513@linux.intel.com> <9c126d75-225b-3b1b-d97a-bcec1f189e02@redhat.com> <87eevrsf3s.fsf@vitty.brq.redhat.com> <20200122155108.GA7201@linux.intel.com>
-Date:   Wed, 22 Jan 2020 17:29:49 +0100
-Message-ID: <87blqvsbcy.fsf@vitty.brq.redhat.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=PV8voRyQaKVLzunXykRLPQ9F83D+RbA3gYFSv9pmXAs=;
+        b=f9lyfSqLhtHvlpG94XPlqOu3im3ch7JZZ6kBqKzdZ6E5WClyYjD6HIHuc9CfO/G91e
+         ioh1pi7olUlMZiOU+ofuN8SzeuLRKxZQnYsINxclDULj7H2oScu9HjWAHDCJJzzSvrRS
+         n5/EyoXL3of/jF6Fa87ZvhIwxJTiskOVL8r79YaQG5TS/M2iF1j0PfpfJLKRG+bTLszY
+         rT0YeYhzU1V9a0S2LlTCJNuJKbWtuTtm98X/7nKgX1iyOXlnbowsiOkHp5MUVJopn1I0
+         qyt0Rll70S1JWdyfOxpAn+gmvXYt6/ZUMa2fpxo45/BbIGLlsuAhfe4xGf7vMCmPpTwr
+         NuYw==
+X-Gm-Message-State: APjAAAV8MH0p29ty9iuzYjYtL1EE3eEhcAHIBE1ehbQ6pSU5JTc5AJz4
+        KKkp/8zBjJ2xFTmhLXdcZK2+u6Ac51Rm2n9fhMJWEQ==
+X-Google-Smtp-Source: APXvYqznREp7kxVYFSgA3ER2nyvAzXRFyv8qqEMkjHz0eKkTwYx6a2A7bxOk0hN+zZMNknEaQcE6OAy1s6zyjUHghOo=
+X-Received: by 2002:a2e:94c8:: with SMTP id r8mr20507532ljh.28.1579710731473;
+ Wed, 22 Jan 2020 08:32:11 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20200117212705.57436-1-abhishekpandit@chromium.org>
+ <20200117132623.RFC.1.I797e2f4cb824299043e771f3ab9cef86ee09f4db@changeid>
+ <ACAE240C-345B-43F9-B6C8-8967AF436CE9@holtmann.org> <CANFp7mVjR9X=UjPZ5puX1z87NAeOBpvvQM8ASjijKAHz2+Uq8Q@mail.gmail.com>
+In-Reply-To: <CANFp7mVjR9X=UjPZ5puX1z87NAeOBpvvQM8ASjijKAHz2+Uq8Q@mail.gmail.com>
+From:   Alain Michaud <alainmichaud@google.com>
+Date:   Wed, 22 Jan 2020 11:32:00 -0500
+Message-ID: <CALWDO_Vp7YedFsxL=Sc4wj8ibghkwmWy5+8LGgspnoH3tMuL4Q@mail.gmail.com>
+Subject: Re: [RFC PATCH 1/2] Bluetooth: Add mgmt op set_wake_capable
+To:     Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+Cc:     Marcel Holtmann <marcel@holtmann.org>,
+        Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+        Alain Michaud <alainm@chromium.org>,
+        Bluez mailing list <linux-bluetooth@vger.kernel.org>,
+        chromeos-bluetooth-upstreaming@chromium.org,
+        "David S. Miller" <davem@davemloft.net>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        netdev <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sean Christopherson <sean.j.christopherson@intel.com> writes:
+On Tue, Jan 21, 2020 at 6:31 PM Abhishek Pandit-Subedi
+<abhishekpandit@chromium.org> wrote:
+>
+> On Tue, Jan 21, 2020 at 8:35 AM Marcel Holtmann <marcel@holtmann.org> wro=
+te:
+> >
+> > Hi Abhishek,
+> >
+> > > When the system is suspended, only some connected Bluetooth devices
+> > > cause user input that should wake the system (mostly HID devices). Ad=
+d
+> > > a list to keep track of devices that can wake the system and add
+> > > a management API to let userspace tell the kernel whether a device is
+> > > wake capable or not.
+> > >
+> > > Signed-off-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+> > > ---
+> > >
+> > > include/net/bluetooth/hci_core.h |  1 +
+> > > include/net/bluetooth/mgmt.h     |  7 ++++++
+> > > net/bluetooth/hci_core.c         |  1 +
+> > > net/bluetooth/mgmt.c             | 42 +++++++++++++++++++++++++++++++=
++
+> > > 4 files changed, 51 insertions(+)
+> > >
+> > > diff --git a/include/net/bluetooth/hci_core.h b/include/net/bluetooth=
+/hci_core.h
+> > > index 89ecf0a80aa1..ce4bebcb0265 100644
+> > > --- a/include/net/bluetooth/hci_core.h
+> > > +++ b/include/net/bluetooth/hci_core.h
+> > > @@ -394,6 +394,7 @@ struct hci_dev {
+> > >       struct list_head        mgmt_pending;
+> > >       struct list_head        blacklist;
+> > >       struct list_head        whitelist;
+> > > +     struct list_head        wakeable;
+> > >       struct list_head        uuids;
+> > >       struct list_head        link_keys;
+> > >       struct list_head        long_term_keys;
+> > > diff --git a/include/net/bluetooth/mgmt.h b/include/net/bluetooth/mgm=
+t.h
+> > > index a90666af05bd..283ba5320bdb 100644
+> > > --- a/include/net/bluetooth/mgmt.h
+> > > +++ b/include/net/bluetooth/mgmt.h
+> > > @@ -671,6 +671,13 @@ struct mgmt_cp_set_blocked_keys {
+> > > } __packed;
+> > > #define MGMT_OP_SET_BLOCKED_KEYS_SIZE 2
+> > >
+> > > +#define MGMT_OP_SET_WAKE_CAPABLE     0x0047
+> > > +#define MGMT_SET_WAKE_CAPABLE_SIZE   8
+> > > +struct mgmt_cp_set_wake_capable {
+> > > +     struct mgmt_addr_info addr;
+> > > +     u8 wake_capable;
+> > > +} __packed;
+> > > +
+> >
+> > please also send a patch for doc/mgmt-api.txt describing these opcodes.=
+ I would also like to have the discussion if it might be better to add an e=
+xtra Action parameter to Add Device. We want to differentiate between allow=
+ incoming connection that allows to wakeup and the one that doesn=E2=80=99t=
+.
+> >
+> > Another option is to create an Add Extended Device command. Main reason=
+ here is that I don=E2=80=99t want to end up in the situation where you hav=
+e to add a device and then send another 10 commands to set its features.
+>
+> Sent an email for doc/mgmt-api.txt. I think adding this to "Add
+> Device" would be acceptable. However, it is possible for "wake
+> capable" to be modified at runtime so it might be more appropriate on
+> some sort of Set Connection Parameters type command.
+Agreed, a generic property mechanism seems appropriate.  However, I
+would advise against overloading Add_Device as Abhishek indicated.
+Wake capability (or many other types of device featuers) may only be
+discovered (or enabled by a user) after the device has already been
+added.
 
-> On Wed, Jan 22, 2020 at 04:08:55PM +0100, Vitaly Kuznetsov wrote:
->> Paolo Bonzini <pbonzini@redhat.com> writes:
->> 
->> > On 22/01/20 06:47, Sean Christopherson wrote:
->> >>> Yes, it most likely is and it would be nice if Microsoft fixed it, but I
->> >>> guess we're stuck with it for existing Windows versions.  Well, for one
->> >>> we found a bug in Hyper-V and not the converse. :)
->> >>>
->> >>> There is a problem with this approach, in that we're stuck with it
->> >>> forever due to live migration.  But I guess if in the future eVMCS v2
->> >>> adds an apic_address field we can limit the hack to eVMCS v1.  Another
->> >>> possibility is to use the quirks mechanism but it's overkill for now.
->> >>>
->> >>> Unless there are objections, I plan to apply these patches.
->> >> Doesn't applying this patch contradict your earlier opinion?  This patch
->> >> would still hide the affected controls from the guest because the host
->> >> controls enlightened_vmcs_enabled.
->> >
->> > It does.  Unfortunately the key sentence is "we're stuck with it for
->> > existing Windows versions". :(
 >
-> Ah, I didn't understand what "it" referred to :-)
+> >
+> > > #define MGMT_EV_CMD_COMPLETE          0x0001
+> > > struct mgmt_ev_cmd_complete {
+> > >       __le16  opcode;
+> > > diff --git a/net/bluetooth/hci_core.c b/net/bluetooth/hci_core.c
+> > > index 1ca7508b6ca7..7057b9b65173 100644
+> > > --- a/net/bluetooth/hci_core.c
+> > > +++ b/net/bluetooth/hci_core.c
+> > > @@ -3299,6 +3299,7 @@ struct hci_dev *hci_alloc_dev(void)
+> > >       INIT_LIST_HEAD(&hdev->mgmt_pending);
+> > >       INIT_LIST_HEAD(&hdev->blacklist);
+> > >       INIT_LIST_HEAD(&hdev->whitelist);
+> > > +     INIT_LIST_HEAD(&hdev->wakeable);
+> > >       INIT_LIST_HEAD(&hdev->uuids);
+> > >       INIT_LIST_HEAD(&hdev->link_keys);
+> > >       INIT_LIST_HEAD(&hdev->long_term_keys);
+> > > diff --git a/net/bluetooth/mgmt.c b/net/bluetooth/mgmt.c
+> > > index 0dc610faab70..95092130f16c 100644
+> > > --- a/net/bluetooth/mgmt.c
+> > > +++ b/net/bluetooth/mgmt.c
+> > > @@ -106,7 +106,10 @@ static const u16 mgmt_commands[] =3D {
+> > >       MGMT_OP_START_LIMITED_DISCOVERY,
+> > >       MGMT_OP_READ_EXT_INFO,
+> > >       MGMT_OP_SET_APPEARANCE,
+> > > +     MGMT_OP_GET_PHY_CONFIGURATION,
+> > > +     MGMT_OP_SET_PHY_CONFIGURATION,
+> >
+> > These are unrelated to this patch.
 >
->> >> Rather than update vmx->nested.msrs or filter vmx_get_msr(), what about
->> >> manually adding eVMCS consistency checks on the disallowed bits and handle
->> >> SECONDARY_EXEC_VIRTUALIZE_APIC_ACCESSES as a one-off case by simply
->> >> clearing it from the eVMCS?  Or alternatively, squashing all the disallowed
->> >> bits.
->> >
->> > Hmm, that is also a possibility.  It's a very hacky one, but I guess
->> > adding APIC virtualization to eVMCS would require bumping the version to
->> > 2.  Vitaly, what do you think?
->> 
->> As I already replied to Sean I like the idea to filter out unsupported
->> controls from eVMCS but unfortunately it doesn't work: Hyper-V actually
->> expects APIC virtualization to work when it enables
->> SECONDARY_EXEC_VIRTUALIZE_APIC_ACCESSES (I have no idea how without
->> apic_access_addr field but). I checked and at least Hyper-V 2016 doesn't
->> boot (when >1 vCPU).
+> They weren't there on tip last time I rebased. Should I create a new
+> patch for this?
 >
-> Nice.
->
-> I still don't see what we gain from applying this patch.  Once eVMCS is
-> enabled by userspace, which presumably happens before the guest is launched,
-> the guest will see the eVMCS-unfriendly controls as being unsupported, both
-> for eVMCS and regular VMCS.  AFAICT, we're adding a fairly ugly hack to KVM
-> just so that KVM can lie to userspace about what controls will be exposed to
-> the guest.
->
-> Can we extend the API to use cap->args[1] to control whether or not the
-> unsupported controls are removed from vmx->nested.msrs?  Userspace could
-> pass '1' to leave the controls untouched and then surgically hide the
-> controls that the guest is too dumb to know it shouldn't use by writing the
-> appropriate MSRs.  Assuming existing userspace is expected/required to zero
-> out args[1..3], this would be fully backwards compatible.
-
-Yes, in case we're back to the idea to filter things out in QEMU we can
-do this. What I don't like is that every other userspace which decides
-to enable eVMCS will have to perform the exact same surgery as in case
-it sets allow_unsupported_controls=0 it'll have to know (hardcode) the
-filtering (or KVM_SET_MSRS will fail) and in case it opts for
-allow_unsupported_controls=1 Windows guests just won't boot without the
-filtering.
-
-It seems to be 1:1, eVMCSv1 requires the filter.
-
->
->
-> diff --git a/arch/x86/kvm/vmx/evmcs.c b/arch/x86/kvm/vmx/evmcs.c
-> index 72359709cdc1..241a769be738 100644
-> --- a/arch/x86/kvm/vmx/evmcs.c
-> +++ b/arch/x86/kvm/vmx/evmcs.c
-> @@ -346,8 +346,8 @@ uint16_t nested_get_evmcs_version(struct kvm_vcpu *vcpu)
->         return 0;
->  }
->
-> -int nested_enable_evmcs(struct kvm_vcpu *vcpu,
-> -                       uint16_t *vmcs_version)
-> +int nested_enable_evmcs(struct kvm_vcpu *vcpu, uint16_t *vmcs_version,
-> +                       bool allow_unsupported_controls)
-
-Personally, I'd call it 'keep_unsupported_controls'.
-
->  {
->         struct vcpu_vmx *vmx = to_vmx(vcpu);
->         bool evmcs_already_enabled = vmx->nested.enlightened_vmcs_enabled;
-> @@ -358,7 +358,7 @@ int nested_enable_evmcs(struct kvm_vcpu *vcpu,
->                 *vmcs_version = nested_get_evmcs_version(vcpu);
->
->         /* We don't support disabling the feature for simplicity. */
-> -       if (evmcs_already_enabled)
-> +       if (evmcs_already_enabled || allow_unsupported_controls)
->                 return 0;
->
->         vmx->nested.msrs.pinbased_ctls_high &= ~EVMCS1_UNSUPPORTED_PINCTRL;
-> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> index 0cccc52e2d0a..5e1b8d51277b 100644
-> --- a/arch/x86/kvm/x86.c
-> +++ b/arch/x86/kvm/x86.c
-> @@ -4005,7 +4005,8 @@ static int kvm_vcpu_ioctl_enable_cap(struct kvm_vcpu *vcpu,
->         case KVM_CAP_HYPERV_ENLIGHTENED_VMCS:
->                 if (!kvm_x86_ops->nested_enable_evmcs)
->                         return -ENOTTY;
-> -               r = kvm_x86_ops->nested_enable_evmcs(vcpu, &vmcs_version);
-> +               r = kvm_x86_ops->nested_enable_evmcs(vcpu, &vmcs_version,
-> +                                                    cap->args[1]);
->                 if (!r) {
->                         user_ptr = (void __user *)(uintptr_t)cap->args[0];
->                         if (copy_to_user(user_ptr, &vmcs_version,
->
-
--- 
-Vitaly
-
+> >
+> > >       MGMT_OP_SET_BLOCKED_KEYS,
+> > > +     MGMT_OP_SET_WAKE_CAPABLE,
+> > > };
+> > >
+> > > static const u16 mgmt_events[] =3D {
+> > > @@ -4663,6 +4666,37 @@ static int set_fast_connectable(struct sock *s=
+k, struct hci_dev *hdev,
+> > >       return err;
+> > > }
+> > >
+> > > +static int set_wake_capable(struct sock *sk, struct hci_dev *hdev, v=
+oid *data,
+> > > +                         u16 len)
+> > > +{
+> > > +     int err;
+> > > +     u8 status;
+> > > +     struct mgmt_cp_set_wake_capable *cp =3D data;
+> > > +     u8 addr_type =3D cp->addr.type =3D=3D BDADDR_BREDR ?
+> > > +                            cp->addr.type :
+> > > +                            le_addr_type(cp->addr.type);
+> > > +
+> > > +     BT_DBG("Set wake capable %pMR (type 0x%x) =3D 0x%x\n", &cp->add=
+r.bdaddr,
+> > > +            addr_type, cp->wake_capable);
+> > > +
+> > > +     if (cp->wake_capable)
+> > > +             err =3D hci_bdaddr_list_add(&hdev->wakeable, &cp->addr.=
+bdaddr,
+> > > +                                       addr_type);
+> > > +     else
+> > > +             err =3D hci_bdaddr_list_del(&hdev->wakeable, &cp->addr.=
+bdaddr,
+> > > +                                       addr_type);
+> > > +
+> > > +     if (!err || err =3D=3D -EEXIST || err =3D=3D -ENOENT)
+> > > +             status =3D MGMT_STATUS_SUCCESS;
+> > > +     else
+> > > +             status =3D MGMT_STATUS_FAILED;
+> > > +
+> > > +     err =3D mgmt_cmd_complete(sk, hdev->id, MGMT_OP_SET_WAKE_CAPABL=
+E, status,
+> > > +                             cp, sizeof(*cp));
+> > > +
+> > > +     return err;
+> > > +}
+> > > +
+> > > static void set_bredr_complete(struct hci_dev *hdev, u8 status, u16 o=
+pcode)
+> > > {
+> > >       struct mgmt_pending_cmd *cmd;
+> > > @@ -5791,6 +5825,13 @@ static int remove_device(struct sock *sk, stru=
+ct hci_dev *hdev,
+> > >                       err =3D hci_bdaddr_list_del(&hdev->whitelist,
+> > >                                                 &cp->addr.bdaddr,
+> > >                                                 cp->addr.type);
+> > > +
+> > > +                     /* Don't check result since it either succeeds =
+or device
+> > > +                      * wasn't there (not wakeable or invalid params=
+ as
+> > > +                      * covered by deleting from whitelist).
+> > > +                      */
+> > > +                     hci_bdaddr_list_del(&hdev->wakeable, &cp->addr.=
+bdaddr,
+> > > +                                         cp->addr.type);
+> > >                       if (err) {
+> > >                               err =3D mgmt_cmd_complete(sk, hdev->id,
+> > >                                                       MGMT_OP_REMOVE_=
+DEVICE,
+> > > @@ -6990,6 +7031,7 @@ static const struct hci_mgmt_handler mgmt_handl=
+ers[] =3D {
+> > >       { set_phy_configuration,   MGMT_SET_PHY_CONFIGURATION_SIZE },
+> > >       { set_blocked_keys,        MGMT_OP_SET_BLOCKED_KEYS_SIZE,
+> > >                                               HCI_MGMT_VAR_LEN },
+> > > +     { set_wake_capable,        MGMT_SET_WAKE_CAPABLE_SIZE },
+> > > };
+> > >
+> >
+> > Regards
+> >
+> > Marcel
+> >
