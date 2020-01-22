@@ -1,127 +1,146 @@
-Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D303FC3F68F
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 23:57:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D7B5C33CAF
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 00:01:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B515F20704
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 23:57:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E235421734
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 00:01:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728708AbgAUX5Y (ORCPT
+        id S1728655AbgAVABD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 18:57:24 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:36365 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725876AbgAUX5X (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 18:57:23 -0500
-Received: from localhost ([127.0.0.1] helo=vostro.local)
-        by Galois.linutronix.de with esmtp (Exim 4.80)
-        (envelope-from <john.ogness@linutronix.de>)
-        id 1iu3O9-0006uj-7Y; Wed, 22 Jan 2020 00:56:53 +0100
-From:   John Ogness <john.ogness@linutronix.de>
-To:     Eugeniu Rosca <erosca@de.adit-jv.com>
-Cc:     <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Andrew Gabbasov <andrew_gabbasov@mentor.com>,
-        Sanjeev Chugh <sanjeev_chugh@mentor.com>,
-        Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Daniel Wang <wonderfly@google.com>,
-        Dean Jenkins <dean_jenkins@mentor.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Dirk Behme <dirk.behme@de.bosch.com>,
-        Alan Cox <gnomes@lxorguk.ukuu.org.uk>,
-        Jiri Slaby <jslaby@suse.com>,
-        Peter Feiner <pfeiner@google.com>,
-        <linux-serial@vger.kernel.org>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Eugeniu Rosca <roscaeugeniu@gmail.com>
-Subject: Re: [RFC PATCH v1 00/25] printk: new implementation
-References: <20190212143003.48446-1-john.ogness@linutronix.de>
-        <20200120230522.GA23636@lxhi-065.adit-jv.com>
-Date:   Wed, 22 Jan 2020 00:56:48 +0100
-In-Reply-To: <20200120230522.GA23636@lxhi-065.adit-jv.com> (Eugeniu Rosca's
-        message of "Tue, 21 Jan 2020 00:05:22 +0100")
-Message-ID: <87v9p4mkhr.fsf@linutronix.de>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/23.4 (gnu/linux)
+        Tue, 21 Jan 2020 19:01:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51930 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726780AbgAVABC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jan 2020 19:01:02 -0500
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 231DC21734;
+        Wed, 22 Jan 2020 00:01:01 +0000 (UTC)
+Date:   Tue, 21 Jan 2020 19:00:59 -0500
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Cong Wang <xiyou.wangcong@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+        Jens Axboe <axboe@kernel.dk>
+Subject: Re: [Patch v2] block: introduce block_rq_error tracepoint
+Message-ID: <20200121190059.7ae9f7a9@gandalf.local.home>
+In-Reply-To: <20200120222618.1456-1-xiyou.wangcong@gmail.com>
+References: <20200120222618.1456-1-xiyou.wangcong@gmail.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Eugeniu,
+On Mon, 20 Jan 2020 14:26:18 -0800
+Cong Wang <xiyou.wangcong@gmail.com> wrote:
 
-On 2020-01-21, Eugeniu Rosca <erosca@de.adit-jv.com> wrote:
-> This [1] is a fairly old thread, but I only recently stumbled upon it,
-> while co-investigating below audio distortions [2] on R-Car3 ARM64
-> boards, which can be reproduced by stressing [3] the serial console.
->
-> The investigation started a few months ago, when users reported audio
-> drops during the first seconds of system startup. Only after a few
-> weeks it became clear (thanks to some people in Cc) that the
-> distortions were contributed by the above-average serial console load
-> during the early boot. Once understood, we were able to come up with a
-> synthetic test [2-3].
->
-> I thought it would be interesting to share below reproduction matrix,
-> in order to contrast vanilla to linux-rt-devel [4], as well as to
-> compare various preemption models.
+> ---
+>  block/blk-core.c             |  4 +++-
+>  include/trace/events/block.h | 43 ++++++++++++++++++++++++++++++++++++
+>  2 files changed, 46 insertions(+), 1 deletion(-)
+> 
+> diff --git a/block/blk-core.c b/block/blk-core.c
+> index 089e890ab208..0c7ad70d06be 100644
+> --- a/block/blk-core.c
+> +++ b/block/blk-core.c
+> @@ -1450,8 +1450,10 @@ bool blk_update_request(struct request *req, blk_status_t error,
+>  #endif
 >  
->                            | Ser.console  Ser.console
->                            | stressed     at rest or disabled
->       --------------------------------------------
->       v5.5-rc6 (PREEMPT=y) | distorted    clean
->     v5.4.5-rt3 (PREEMPT=y) | distorted    clean
->  v5.4.5-rt3 (PREEMPT_RT=y) | clean        clean
->
-> My feeling is that the results probably do not surprise linux-rt
-> people.
->
-> My first question is, should there be any improvement in the case of
-> v5.4.5-rt3 (PREEMPT=y), which I do not sense? I would expect so, based
-> on the cover letter of this series (pointing out the advantages of the
-> redesigned printk mechanism).
+>  	if (unlikely(error && !blk_rq_is_passthrough(req) &&
+> -		     !(req->rq_flags & RQF_QUIET)))
+> +		     !(req->rq_flags & RQF_QUIET))) {
+> +		trace_block_rq_error(req, blk_status_to_errno(error), nr_bytes);
+>  		print_req_error(req, error, __func__);
+> +	}
+>  
+>  	blk_account_io_completion(req, nr_bytes);
+>  
+> diff --git a/include/trace/events/block.h b/include/trace/events/block.h
+> index 81b43f5bdf23..37e99be19536 100644
+> --- a/include/trace/events/block.h
+> +++ b/include/trace/events/block.h
+> @@ -145,6 +145,49 @@ TRACE_EVENT(block_rq_complete,
+>  		  __entry->nr_sector, __entry->error)
+>  );
+>  
+> +/**
+> + * block_rq_error - block IO operation error reported by device driver
+> + * @rq: block operations request
+> + * @error: status code
+> + * @nr_bytes: number of completed bytes
+> + *
+> + * The block_rq_error tracepoint event indicates that some portion
+> + * of operation request has failed as reported by the device driver.
+> + */
+> +TRACE_EVENT(block_rq_error,
+> +
+> +	TP_PROTO(struct request *rq, int error, unsigned int nr_bytes),
+> +
+> +	TP_ARGS(rq, error, nr_bytes),
+> +
+> +	TP_STRUCT__entry(
+> +		__field(  dev_t,	dev			)
+> +		__dynamic_array( char,  name,	DISK_NAME_LEN	)
 
-The problem you are reporting is not the problem that the printk rework
-is trying to solve.
+Hmm, looks like I need to go and do a clean up of the kernel, and
+educate people on how to use dynamic arrays :-/
 
-In your chart, v5.4.5-rt3 (PREEMPT_RT=y) is the only configuration that
-is _not_ disabling hardware interrupts during UART activity. I would
-guess your problem is due to interrupts being disabled for unacceptable
-lengths of time. You need a low-latency system, so PREEMPT_RT=y _is_ the
-correct (and only) solution if a verbose serial console is a must.
+The "len" field of a __dynamic_array() is to be a function to determine
+the length needed for each instance of an event. By having a constant
+there, it will be the same for every events, plus the meta data to hold
+the "dynamic" part of the array. This would be much better to simple
+use __array() instead.
 
-The printk rework focusses on making printk non-interfering by
-decoupling console printing from printk() callers. However, the console
-printing itself will still do just as much interrupt disabling as
-before. That is driver-related, not printk-related.
+But as you use "__assign_str()" below, then it's expected that name is
+a nul terminated string. In which case, you want to define this as:
 
-> And the other question is, how would you, generally speaking, tackle
-> the problem, given that backporting the linux-rt patches is *not* an
-> option and enabling serial console is a must?
+		__string( name, rq->rq_disk ? rq->rq_disk->disk_name : "?"  )
 
-The linux-rt patches (which include this printk rework) *are* being
-ported to mainline now. My recommendation is to continue using the
-linux-rt patches (with PREEMPT_RT=y) until PREEMPT_RT is available
-mainline.
 
-John Ogness
+> +		__field(  sector_t,	sector			)
+> +		__field(  unsigned int,	nr_sector		)
+> +		__field(  int,		error			)
+> +		__array(  char,		rwbs,	RWBS_LEN	)
+> +		__dynamic_array( char,	cmd,	1		)
 
-> [1] https://lore.kernel.org/lkml/20190212143003.48446-1-john.ogness@linutronix.de/
-> [2] H3ULCB> speaker-test -f24_LE -c2 -t wav -Dplughw:rcarsound -b 4000
->     https://vocaroo.com/9NV98mMgdjX
-> [3] https://github.com/erosca/linux/tree/stress-serial
-> [4] https://git.kernel.org/pub/scm/linux/kernel/git/rt/linux-rt-devel.git/
+Not sure what you are doing with cmd. It appears to be always hard
+coded as an empty string?
+
+-- Steve
+
+
+> +	),
+> +
+> +	TP_fast_assign(
+> +		__entry->dev	   = rq->rq_disk ? disk_devt(rq->rq_disk) : 0;
+> +		__assign_str(name,   rq->rq_disk ? rq->rq_disk->disk_name : "?");
+> +		__entry->sector    = blk_rq_pos(rq);
+> +		__entry->nr_sector = nr_bytes >> 9;
+> +		__entry->error     = error;
+> +
+> +		blk_fill_rwbs(__entry->rwbs, rq->cmd_flags, nr_bytes);
+> +		__get_str(cmd)[0] = '\0';
+> +	),
+> +
+> +	TP_printk("%d,%d %s %s (%s) %llu + %u [%d]",
+> +		  MAJOR(__entry->dev), MINOR(__entry->dev),
+> +		  __get_str(name), __entry->rwbs, __get_str(cmd),
+> +		  (unsigned long long)__entry->sector,
+> +		  __entry->nr_sector, __entry->error)
+> +);
+> +
+>  DECLARE_EVENT_CLASS(block_rq,
+>  
+>  	TP_PROTO(struct request_queue *q, struct request *rq),
+
