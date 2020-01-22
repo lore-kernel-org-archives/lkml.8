@@ -2,195 +2,138 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0F95C33CAF
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 14:47:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 447CDC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 14:47:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B23F62467A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 14:47:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gYR8w1cp"
+	by mail.kernel.org (Postfix) with ESMTP id 193612465B
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 14:47:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579704469;
+	bh=iGhKZwakJs42H/3vv6PL/lPNZYOMCVLzVyr9jWnb1Ws=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=giENbveBWKFbZrVJe3Ujw/mAPVqh+XsdmaWJlqBWU38Dg69KahPV33yPJANTdinVx
+	 sH/tN3cYP7AgpnMtKFJ9T1GQGD6wd1nSPSsSJAC3RPXNRQQmr1bTscc2P0BM+2y9PI
+	 ntetBD8cRSiacfCiIWTzuayQUCYJ8fD33Xb0B+8Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726231AbgAVOrM (ORCPT
+        id S1727893AbgAVOrs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 09:47:12 -0500
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:34819 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725802AbgAVOrL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 09:47:11 -0500
-Received: by mail-pj1-f67.google.com with SMTP id s7so3720960pjc.0;
-        Wed, 22 Jan 2020 06:47:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=ADCjuEPw44EETM4S2srrF1oIcsWNqgJFd7MKFaEnfRk=;
-        b=gYR8w1cpyQX/IIWcvWuIFRNpl7JWcIhtMDjoFDUaa4ALknxMr+KQ7DT89oArVh6c16
-         Fsb91OXQ+KCfkXYlZa5JaEYwR4QOJofxcK6Gy+6eFogGWy5svS0c5WA59xmNLeOeHe5f
-         5+KYxEuBPay5d/ZLaqnxyaqNNjOmwjjF+0cZNhJX8blAYXMcJR3COexd452nZETb1bEX
-         aYAYUTSqAQixgk2ZSdIqTDcNA0hhaLxOZebiT+rciVm31KqNWIZ0ZF8o6TgBcT+dsavK
-         fZ/nin+3VqRir198VSZCw/Ys9UZvMTP8z7TqQGezSqeoVmCtGZjcYs4DMBchvkduRFyd
-         3mbg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ADCjuEPw44EETM4S2srrF1oIcsWNqgJFd7MKFaEnfRk=;
-        b=nzmHdx2+Zu3BXAxUPmlp0p4+kIWCJg+35WJAwSlmuOHi3ZWJ2tzWk8HIw27PYLVZSd
-         NLI0enrfBrZdoxof7Wfjf/O9mdWMzzKxennw0rGc287RsmjMOCh2OAmtByq5NPG5kK7v
-         Vy8/3Uukz59u5o8lJd/E/MMPl5WqWhqYaf0D5uLUEWHHWnnnMoJO9DrFzjehNsETov4R
-         vPPlzE0gZG8dXo7bez3aKN2moaWkbBF62U8IRold3yLUMIXlE/ORpCVtq/rPHliwoOpf
-         BsLc4Qy4hptRePWQBqiqtqYHUPKl1AwtJMESTW+SJyrRSJWbZxa0X28tVJOuiYuC1fQd
-         eXVw==
-X-Gm-Message-State: APjAAAUSvTGEk2S1EgRjn9R17nBOGRiiD7x45LjGUaFyPE/5laJoKedU
-        nMDY0hniTPro/4OmrzXlaVU=
-X-Google-Smtp-Source: APXvYqxnhGFSwqsi3SgX4c9AnxtNRP2F88B4HNzAuqta4TdusNteHhtYs2grK58U/8NAVg+1EGE+2A==
-X-Received: by 2002:a17:90a:d783:: with SMTP id z3mr3349203pju.3.1579704430653;
-        Wed, 22 Jan 2020 06:47:10 -0800 (PST)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id l2sm3653107pjt.31.2020.01.22.06.47.08
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 22 Jan 2020 06:47:09 -0800 (PST)
-Subject: Re: [PATCH v4 2/2] hwmon: (adt7475) Added attenuator bypass support
-To:     Logan Shaw <logan.shaw@alliedtelesis.co.nz>, jdelvare@suse.com,
-        robh+dt@kernel.org
-Cc:     linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, Joshua.Scott@alliedtelesis.co.nz,
-        Chris.Packham@alliedtelesis.co.nz
-References: <20200120001703.9927-1-logan.shaw@alliedtelesis.co.nz>
- <20200120001703.9927-3-logan.shaw@alliedtelesis.co.nz>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <f6d272b9-9099-8407-0dd3-ea6cbcb1a39b@roeck-us.net>
-Date:   Wed, 22 Jan 2020 06:47:07 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Wed, 22 Jan 2020 09:47:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33900 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725802AbgAVOrs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 09:47:48 -0500
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AB3D921835;
+        Wed, 22 Jan 2020 14:47:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579704467;
+        bh=iGhKZwakJs42H/3vv6PL/lPNZYOMCVLzVyr9jWnb1Ws=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=gQ0JHEXzVtt1qhRCk7weZHxDeTz1iI4eishO7/If3CCQJJcwBErXGhMrn5kGcUASH
+         0jw9DGc+GKyc6OcKhnHxpQVW28nXOl28Fl7GbJaCuk6jlvcXD1mVkFgyUOlOxCgyBc
+         sNJd8qXtB8jihGAArNSchUHslZq1fMViU8NxU3Qc=
+Date:   Wed, 22 Jan 2020 14:47:42 +0000
+From:   Will Deacon <will@kernel.org>
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     Nick Desaulniers <ndesaulniers@google.com>,
+        Julien Thierry <jthierry@redhat.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Peter Zijlstra <peterz@infradead.org>, raphael.gault@arm.com,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Subject: Re: [RFC v5 00/57] objtool: Add support for arm64
+Message-ID: <20200122144741.GA16622@willie-the-truck>
+References: <20200109160300.26150-1-jthierry@redhat.com>
+ <20200112084258.GA44004@ubuntu-x2-xlarge-x86>
+ <d5bf34f0-22cc-ba46-41b4-96a52d7acfa4@redhat.com>
+ <20200121103101.GE11154@willie-the-truck>
+ <CAKwvOd=_PqQWUvd_WZRpEr+T==3w6LpsHKBz3E9ybaQ0javVkw@mail.gmail.com>
+ <20200121180632.GA13592@willie-the-truck>
+ <20200121183009.253yh6aehvnvxoew@treble>
 MIME-Version: 1.0
-In-Reply-To: <20200120001703.9927-3-logan.shaw@alliedtelesis.co.nz>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200121183009.253yh6aehvnvxoew@treble>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/19/20 4:17 PM, Logan Shaw wrote:
-> Added a new file documenting the adt7475 devicetree and added the four
-> new properties to it.
+On Tue, Jan 21, 2020 at 12:30:09PM -0600, Josh Poimboeuf wrote:
+> On Tue, Jan 21, 2020 at 06:06:34PM +0000, Will Deacon wrote:
+> > On Tue, Jan 21, 2020 at 09:08:29AM -0800, Nick Desaulniers wrote:
+> > > On Tue, Jan 21, 2020 at 2:31 AM Will Deacon <will@kernel.org> wrote:
+> > > >
+> > > > On Mon, Jan 13, 2020 at 07:57:48AM +0000, Julien Thierry wrote:
+> > > > > On 1/12/20 8:42 AM, Nathan Chancellor wrote:
+> > > > > > The 0day bot reported a couple of issues with clang with this series;
+> > > > > > the full report is available here (clang reports are only sent to our
+> > > > > > mailing lists for manual triage for the time being):
+> > > > > >
+> > > > > > https://groups.google.com/d/msg/clang-built-linux/MJbl_xPxawg/mWjgDgZgBwAJ
+> > > > > >
+> > > > >
+> > > > > Thanks, I'll have a look at those.
+> > > > >
+> > > > > > The first obvious issue is that this series appears to depend on a GCC
+> > > > > > plugin? I'll be quite honest, objtool and everything it does is rather
+> > > > > > over my head but I see this warning during configuration (allyesconfig):
+> > > > > >
+> > > > > > WARNING: unmet direct dependencies detected for GCC_PLUGIN_SWITCH_TABLES
+> > > > > >    Depends on [n]: GCC_PLUGINS [=n] && ARM64 [=y]
+> > > > > >      Selected by [y]:
+> > > > > >        - ARM64 [=y] && STACK_VALIDATION [=y]
+> > > > > >
+> > > > > > Followed by the actual error:
+> > > > > >
+> > > > > > error: unable to load plugin
+> > > > > > './scripts/gcc-plugins/arm64_switch_table_detection_plugin.so':
+> > > > > > './scripts/gcc-plugins/arm64_switch_table_detection_plugin.so: cannot
+> > > > > > open shared object file: No such file or directory'
+> > > > > >
+> > > > > > If this plugin is absolutely necessary and can't be implemented in
+> > > > > > another way so that clang can be used, seems like STACK_VALIDATION
+> > > > > > should only be selected on ARM64 when CONFIG_CC_IS_GCC is not zero.
+> > > > > >
+> > > > >
+> > > > > So currently the plugin is necessary for proper validation. One option can
+> > > > > be to just let objtool output false positives on files containing jump
+> > > > > tables when the plugin cannot be used. But overall I guess it makes more
+> > > > > sense to disable stack validation for non-gcc builds, for now.
+> > > >
+> > > > Alternatively, could we add '-fno-jump-tables' to the KBUILD_CFLAGS if
+> > > > STACK_VALIDATION is selected but we're not using GCC? Is that sufficient
+> > > > to prevent generation of these things?
+> > > 
+> > > Surely we wouldn't want to replace jump tables with long chains of
+> > > comparisons just because objtool couldn't validate jump tables without
+> > > a GCC plugin for aarch64 for some reason, right?  objtool validation
+> > > is valuable, but tying runtime performance to a GCC plugin used for
+> > > validation seems bad.
+> > 
+> > I'm only suggesting it if STACK_VALIDATION is selected. It's off by default,
+> > and lives in Kconfig.debug. I'd prefer that to "cross your fingers are do
+> > nothing differently", which is what the other option seems to be.
 > 
-> Signed-off-by: Logan Shaw <logan.shaw@alliedtelesis.co.nz>
-
-Please fix the reported errors.
-
-Guenter
-
-> ---
-> ---
->   .../devicetree/bindings/hwmon/adt7475.yaml    | 90 +++++++++++++++++++
->   1 file changed, 90 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/hwmon/adt7475.yaml
+> I don't know what the right answer is here, but keep in mind that
+> objtool is on by default for x86, so don't be surprised if that
+> eventually happens to arch64 too.
 > 
-> diff --git a/Documentation/devicetree/bindings/hwmon/adt7475.yaml b/Documentation/devicetree/bindings/hwmon/adt7475.yaml
-> new file mode 100644
-> index 000000000000..f2427de9991e
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/hwmon/adt7475.yaml
-> @@ -0,0 +1,90 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/adt7475.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: ADT7475 hwmon sensor
-> +
-> +maintainers:
-> +  - Jean Delvare <jdelvare@suse.com>
-> +
-> +description: |
-> +  The ADT7473, ADT7475, ADT7476, and ADT7490 are thermal monitors and multiple
-> +  PWN fan controllers.
-> +
-> +  They support monitoring and controlling up to four fans (the ADT7490 can only
-> +  control up to three). They support reading a single on chip temperature
-> +  sensor and two off chip temperature sensors (the ADT7490 additionally
-> +  supports measuring up to three current external temperature sensors with
-> +  series resistance cancellation (SRC)).
-> +
-> +  Datasheets:
-> +  https://www.onsemi.com/pub/Collateral/ADT7473-D.PDF
-> +  https://www.onsemi.com/pub/Collateral/ADT7475-D.PDF
-> +  https://www.onsemi.com/pub/Collateral/ADT7476-D.PDF
-> +  https://www.onsemi.com/pub/Collateral/ADT7490-D.PDF
-> +
-> +  Description taken from omsemiconductors specification sheets, with minor
-> +  rephrasing.
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - adi,adt7473
-> +      - adi,adt7475
-> +      - adi,adt7476
-> +      - adi,adt7490
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  bypass-attenuator-in0:
-> +    description: |
-> +      Configures bypassing the individual voltage input
-> +      attenuator, on in0. This is supported on the ADT7476 and ADT7490.
-> +      If set to a non-zero integer the attenuator is bypassed, if set to
-> +      zero the attenuator is not bypassed. If the property is absent then
-> +      the config register is not modified.
-> +    maxItems: 1
-> +
-> +  bypass-attenuator-in1:
-> +    description: |
-> +      Configures bypassing the individual voltage input
-> +      attenuator, on in1. This is supported on the ADT7473, ADT7475,
-> +      ADT7476 and ADT7490. If set to a non-zero integer the attenuator
-> +      is bypassed, if set to zero the attenuator is not bypassed. If the
-> +      property is absent then the config register is not modified.
-> +    maxItems: 1
-> +
-> +  bypass-attenuator-in3:
-> +    description: |
-> +      Configures bypassing the individual voltage input
-> +      attenuator, on in3. This is supported on the ADT7476 and ADT7490.
-> +      If set to a non-zero integer the attenuator is bypassed, if set to
-> +      zero the attenuator is not bypassed. If the property is absent then
-> +      the config register is not modified.
-> +    maxItems: 1
-> +
-> +  bypass-attenuator-in4:
-> +    description: |
-> +      Configures bypassing the individual voltage input
-> +      attenuator, on in4. This is supported on the ADT7476 and ADT7490.
-> +      If set to a non-zero integer the attenuator is bypassed, if set to
-> +      zero the attenuator is not bypassed. If the property is absent then
-> +      the config register is not modified.
-> +    maxItems: 1
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +
-> +examples:
-> +  - |
-> +    hwmon@2e {
-> +      compatible = "adi,adt7476";
-> +      reg = <0x2e>;
-> +      bypass-attenuator-in0 = <1>;
-> +      bypass-attenuator-in1 = <0>;
-> +    };
-> +...
-> 
+> Short term it might be ok to disable jump tables with objtool enabled,
+> or to disable objtool when clang is in use, but long term we'll need to
+> figure out a better solution.
 
+Oh, absolutely. No objection from me fixing this properly in the long
+term. I just don't want to be in a situation where STACK_VALIDATION is
+silently ignored in the meantime.
+
+Will
