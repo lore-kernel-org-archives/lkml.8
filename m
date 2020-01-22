@@ -2,182 +2,139 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
+	USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 449B6C32771
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 22:27:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A468C32771
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 22:39:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08DB12465A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 22:27:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3291A2253D
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 22:39:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="K0ohNbHM"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IXrqbHxa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729012AbgAVW1A (ORCPT
+        id S1726135AbgAVWjA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 17:27:00 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:37505 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728709AbgAVW0x (ORCPT
+        Wed, 22 Jan 2020 17:39:00 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:35528 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725884AbgAVWi7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 17:26:53 -0500
-Received: by mail-pf1-f195.google.com with SMTP id p14so508405pfn.4
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jan 2020 14:26:53 -0800 (PST)
+        Wed, 22 Jan 2020 17:38:59 -0500
+Received: by mail-wm1-f68.google.com with SMTP id p17so463095wmb.0
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jan 2020 14:38:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=swWbt3aJL3q8h4lz+/4twKGtWH3pxZbO2/WppH1VqRE=;
-        b=K0ohNbHMOAsVb4M6Ck8cIf3BM8XchMabhMit1TMM4M9rA7DOOGd/sgBcVKqk4Dkfyl
-         MzkiSn6mrkDn4Rzo4C7qixNHdL/CFF78glRDZyCApSy9ECeubN35sr+56Jowj5rwc1qX
-         P0nCx7C1QsIOrrIqxRuZIJCWeIkHckFcMN5GGbk1NVw9Y/JbCuMS4i3CzwgBPRDfpjcq
-         SBIyfImGz9ImHeT0LopgirqAnevkSzpfLi+UMd7UT0MkGdqNkR32HmrLKL2wP3KNBLbp
-         aDB8LJZb1z0/CHBTLZbYRBbK4qL9hHXMe7uTtYP/yX1g1i8LefORegdQRnX/eR1YsnR8
-         UbNA==
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=QkDSz8x5W+EtQ/vfgEsUN/LxFH8F/pT9uJozD32J7dA=;
+        b=IXrqbHxaSH6LIsTRrByoakvUT4ycJoIMoY6Z5KDajxWCMKzAMYzlYrHIPQVInQ31Cc
+         hLZFPeSW2GBLkf+p/RpW5kWHsCIbSK7bB8xv8tiOkivKaKEGkhCyJ75jB8JRBkNkIbGP
+         k3mFOm5QfxqmoC0KpNts3qsfYU4zpu8zhzsbaIkzHelVXADiJkzk7bGhkMK2dMrY+HRz
+         mD0h6GCgw4PbsgybPqws0eR9+AYQEIs0pUOSw7yaL9SQjCKlPGjv3Hx3Ds7eWlqlRFTn
+         WXUQStL49CcjikzbacKifKPR0pQoz6fdfTkG4R+plQFrf0aqR0Y6X/NROyEjQnPHH+Hh
+         p9pA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=swWbt3aJL3q8h4lz+/4twKGtWH3pxZbO2/WppH1VqRE=;
-        b=XHkRBEli5ooBPmtZkk5pYT8kQmKhLOrODfFZd7O5QwVkvPt4H+LO+D3QwHUVILmeZy
-         a2UlUTzKwy7nKWnVmD7LK0HL7k2AcO0U9WJYIcscg08LlULwimnP4mSdLpUHApBHbLSU
-         UZaJ9rppr/Jv9no7/QtaASCCzUR4pOiOB1GWqu88LMJdSs2BjaQDw8J0Jxccba7K1VUh
-         Ft1LMzKEm4YV6/SpQhG3LDGXG0zO3Vxkp61uzRtSMx6n6k0MKzCehaMuYAPL7P9x4lSH
-         cN27cXstYxR3dFfoUz0O9t8qdGnCblW6Q8EwUK6Jm745VGFyTN/LcgXCVXGzCC5s4K2e
-         ZRmw==
-X-Gm-Message-State: APjAAAWmwCqsZREv9+Q8igIPNi4PM9tYeE3pUS4E8PBxZpqjwdeaDzKe
-        2dvk6VL5K9pfskNPcVxEUtRWEWXqhlg=
-X-Google-Smtp-Source: APXvYqxjWJnBDQWDLfs492qyC8m1YgOMNGISqY5eu6Q4wsVKzbqlsokkc0qtDmoQD/wqOD4EOckAOw==
-X-Received: by 2002:a62:3892:: with SMTP id f140mr4552209pfa.190.1579732012776;
-        Wed, 22 Jan 2020 14:26:52 -0800 (PST)
-Received: from localhost.localdomain ([2601:1c2:680:1319:692:26ff:feda:3a81])
-        by smtp.gmail.com with ESMTPSA id a28sm47793509pfh.119.2020.01.22.14.26.51
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=QkDSz8x5W+EtQ/vfgEsUN/LxFH8F/pT9uJozD32J7dA=;
+        b=uUCFGHN5SPWCzTGuUn+InkBjJ6F8rJacBiB25yELkYSOJqRtCUHWncTqkI5tnLLzF8
+         8CGuIJqNxKjXiDvDN+7Y90DOHSX6kiaikxR5ThlGV1B5nVQDaXYV/JzxSDx/As9pyTG0
+         D3aJMWNdz0cHga8542QO/6akGAQvqzqskSoSGNpu8wbbthC4pgoXcJ/OgEpp3QqhOWoe
+         TK7F8FWG0F0wgarKjzsbSNUdo46TSABSKUIJKuwYa2aXvOcKs0aLiz/LNr5YK07BJPQF
+         dPdQ4sBdhK/GBo+sqgZJnD2250IUJyszaxBULgco8p6bQk3vHK8fmdfCqjK/LBAnQBvO
+         qy0w==
+X-Gm-Message-State: APjAAAXu6U4oLr6EjNygWgfm9hkO3J5WYaBm1wVOUF0+vUqKcQiQc3GN
+        y+HCQKhPEAQSHI/xFDcqbWx8Iw==
+X-Google-Smtp-Source: APXvYqyoCoQ0IRz23QahQS5yWYxX98xL3q+dJYPdqBMbTn2rGqt51NFmnVzex3VBep4kDjDHBm/QbA==
+X-Received: by 2002:a1c:dfd6:: with SMTP id w205mr284452wmg.151.1579732738033;
+        Wed, 22 Jan 2020 14:38:58 -0800 (PST)
+Received: from google.com ([100.105.32.75])
+        by smtp.gmail.com with ESMTPSA id h17sm392268wrs.18.2020.01.22.14.38.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Jan 2020 14:26:52 -0800 (PST)
-From:   John Stultz <john.stultz@linaro.org>
-To:     lkml <linux-kernel@vger.kernel.org>
-Cc:     Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>,
-        Felipe Balbi <felipe.balbi@linux.intel.com>,
-        Yang Fei <fei.yang@intel.com>,
-        Thinh Nguyen <thinhn@synopsys.com>,
-        Tejas Joglekar <tejas.joglekar@synopsys.com>,
-        Andrzej Pietrasiewicz <andrzej.p@collabora.com>,
-        Jack Pham <jackp@codeaurora.org>, Todd Kjos <tkjos@google.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Linux USB List <linux-usb@vger.kernel.org>,
-        stable <stable@vger.kernel.org>,
-        John Stultz <john.stultz@linaro.org>
-Subject: [RFC][PATCH 2/2] usb: dwc3: gadget: Correct the logic for finding last SG entry
-Date:   Wed, 22 Jan 2020 22:26:45 +0000
-Message-Id: <20200122222645.38805-3-john.stultz@linaro.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200122222645.38805-1-john.stultz@linaro.org>
-References: <20200122222645.38805-1-john.stultz@linaro.org>
+        Wed, 22 Jan 2020 14:38:57 -0800 (PST)
+Date:   Wed, 22 Jan 2020 23:38:51 +0100
+From:   Marco Elver <elver@google.com>
+To:     Qian Cai <cai@lca.pw>
+Cc:     Will Deacon <will@kernel.org>, mingo@redhat.com,
+        peterz@infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] locking/osq_lock: fix a data race in osq_wait_next
+Message-ID: <20200122223851.GA45602@google.com>
+References: <20200122165938.GA16974@willie-the-truck>
+ <A5114711-B8DE-48DA-AFD0-62128AC08270@lca.pw>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <A5114711-B8DE-48DA-AFD0-62128AC08270@lca.pw>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
 
-As a process of preparing TRBs usb_gadget_map_request_by_dev() is
-called from dwc3_prepare_trbs() for mapping the request. This will
-call dma_map_sg() if req->num_sgs are greater than 0. dma_map_sg()
-will map the sg entries in sglist and return the number of mapped SGs.
-As a part of mapping, some sg entries having contigous memory may be
-merged together into a single sg (when IOMMU used). So, the number of
-mapped sg entries may not be equal to the number of orginal sg entries
-in the request (req->num_sgs).
 
-As a part of preparing the TRBs, dwc3_prepare_one_trb_sg() iterates over
-the sg entries present in the sglist and calls sg_is_last() to identify
-whether the sg entry is last and set IOC bit for the last sg entry. The
-sg_is_last() determines last sg if SG_END is set in sg->page_link. When
-IOMMU used, dma_map_sg() merges 2 or more sgs into a single sg and it
-doesn't retain the page_link properties. Because of this reason the
-sg_is_last() may not find SG_END and thus resulting in IOC bit never
-getting set.
+On Wed, 22 Jan 2020, Qian Cai wrote:
 
-For example:
+>=20
+>=20
+> > On Jan 22, 2020, at 11:59 AM, Will Deacon <will@kernel.org> wrote:
+> >=20
+> > I don't understand this; 'next' is a local variable.
+> >=20
+> > Not keen on the onslaught of random "add a READ_ONCE() to shut the
+> > sanitiser up" patches we're going to get from kcsan :(
+>=20
+> My fault. I suspect it is node->next. I=E2=80=99ll do a bit more testing =
+to confirm.
 
-Consider a request having 8 sg entries with each entry having a length of
-4096 bytes. Assume that sg1 & sg2, sg3 & sg4, sg5 & sg6, sg7 & sg8 are
-having contigous memory regions.
+If possible, decode and get the line numbers. I have observed a data
+race in osq_lock before, however, this is the only one I have recently
+seen in osq_lock:
 
-Before calling dma_map_sg():
-            sg1-->sg2-->sg3-->sg4-->sg6-->sg7-->sg8
-dma_length: 4K    4K    4K    4K    4K    4K    4K
-SG_END:     False False False False False False True
-num_sgs = 8
-num_mapped_sgs = 0
+read to 0xffff88812c12d3d4 of 4 bytes by task 23304 on cpu 0:
+=C2=A0osq_lock+0x170/0x2f0 kernel/locking/osq_lock.c:143
 
-The dma_map_sg() merges sg1 & sg2 memory regions into sg1->dma_address.
-Similarly sg3 & sg4 into sg2->dma_address, sg5 & sg6 into the
-sg3->dma_address and sg6 & sg8 into sg4->dma_address. Here the memory
-regions are merged but the page_link properties like SG_END are not
-retained into the merged sgs.
+	while (!READ_ONCE(node->locked)) {
+		/*
+		 * If we need to reschedule bail... so we can block.
+		 * Use vcpu_is_preempted() to avoid waiting for a preempted
+		 * lock holder:
+		 */
+-->		if (need_resched() || vcpu_is_preempted(node_cpu(node->prev)))
+			goto unqueue;
 
-After calling dma_map_sg();
-            sg1-->sg2-->sg3-->sg4-->sg6-->sg7-->sg8
-dma_length: 8K    8K    8K    8K    0K    0K     0K
-SG_END:     False False False False False False True
-num_sgs = 8
-num_mapped_sgs = 4
+		cpu_relax();
+	}
 
-After calling dma_map_sg(), sg1,sg2,sg3,sg4 are having dma_length of
-8096 bytes each and remaining sg4,sg5,sg6,sg7 are having 0 bytes of
-dma_length.
+where
 
-After dma_map_sg() is performed dma_perpare_trb_sg() iterates on all sg
-entries and sets IOC bit only for the sg8 (since sg_is_last() returns true
-only for sg8). But after calling dma_map_sg() the valid data are present
-only till sg4 and the IOC bit should be set for sg4 TRB only (which is not
-happening in the present code)
+	static inline int node_cpu(struct optimistic_spin_node *node)
+	{
+-->		return node->cpu - 1;
+	}
 
-The above mentioned issue can be fixed by determining last sg based on the
-req->num_queued_sgs instead of sg_is_last(). If (req->num_queued_sgs + 1)
-is equal to req->num_mapped_sgs, then this sg is the last sg. In the above
-example, the dwc3 driver has already queued 3 sgs (upto sg3), so the
-num_queued_sgs = 3. On preparing the next sg (i.e sg4), check for last sg
-(num_queued_sgs + 1) == num_mapped_sgs becomes true. So, the driver sets
-IOC bit for sg4. This patch does the same.
 
-At a practical level, this patch resolves USB transfer stalls
-seen with adb on dwc3 based db845c, pixel3 and other qcom
-hardware after functionfs gadget added scatter-gather support
-around v4.20.
+write to 0xffff88812c12d3d4 of 4 bytes by task 23334 on cpu 1:
+ osq_lock+0x89/0x2f0 kernel/locking/osq_lock.c:99
 
-Cc: Felipe Balbi <felipe.balbi@linux.intel.com>
-Cc: Yang Fei <fei.yang@intel.com>
-Cc: Thinh Nguyen <thinhn@synopsys.com>
-Cc: Tejas Joglekar <tejas.joglekar@synopsys.com>
-Cc: Andrzej Pietrasiewicz <andrzej.p@collabora.com>
-Cc: Jack Pham <jackp@codeaurora.org>
-Cc: Todd Kjos <tkjos@google.com>
-Cc: Greg KH <gregkh@linuxfoundation.org>
-Cc: Linux USB List <linux-usb@vger.kernel.org>
-Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
-[jstultz: Add note to end of commit message on specific issue this resovles]
-Signed-off-by: John Stultz <john.stultz@linaro.org>
----
- drivers/usb/dwc3/gadget.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+	bool osq_lock(struct optimistic_spin_queue *lock)
+	{
+		struct optimistic_spin_node *node =3D this_cpu_ptr(&osq_node);
+		struct optimistic_spin_node *prev, *next;
+		int curr =3D encode_cpu(smp_processor_id());
+		int old;
 
-diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c
-index 1edce3bbb55c..30a80bc97cfe 100644
---- a/drivers/usb/dwc3/gadget.c
-+++ b/drivers/usb/dwc3/gadget.c
-@@ -1068,7 +1068,7 @@ static void dwc3_prepare_one_trb_sg(struct dwc3_ep *dep,
- 		unsigned int rem = length % maxp;
- 		unsigned chain = true;
- 
--		if (sg_is_last(s))
-+		if ((req->num_queued_sgs + 1) == req->request.num_mapped_sgs)
- 			chain = false;
- 
- 		if (rem && usb_endpoint_dir_out(dep->endpoint.desc) && !chain) {
--- 
-2.17.1
+		node->locked =3D 0;
+		node->next =3D NULL;
+-->		node->cpu =3D curr;
 
+
+Thanks,
+-- Marco
