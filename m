@@ -2,111 +2,131 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AE1CC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 18:15:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 306B9C33CB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 18:15:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62BB32465B
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 18:15:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D0552465A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 18:15:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="cP2hgEdx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728609AbgAVSO7 (ORCPT
+        id S1728842AbgAVSP1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 13:14:59 -0500
-Received: from mga05.intel.com ([192.55.52.43]:59306 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725802AbgAVSO7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 13:14:59 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Jan 2020 10:14:58 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,350,1574150400"; 
-   d="scan'208";a="229442235"
-Received: from ray.jf.intel.com (HELO [10.7.201.139]) ([10.7.201.139])
-  by orsmga006.jf.intel.com with ESMTP; 22 Jan 2020 10:14:58 -0800
-Subject: Re: [PATCH 0/3] [RFC] x86: start the MPX removal process
-To:     Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org, luto@kernel.org
-References: <20190705175317.1B3C9C52@viggo.jf.intel.com>
- <20200122130913.GA20584@zn.tnic>
-From:   Dave Hansen <dave.hansen@intel.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-Message-ID: <26980d2a-def2-6069-1687-5066f90eb749@intel.com>
-Date:   Wed, 22 Jan 2020 10:14:58 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 22 Jan 2020 13:15:27 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:35238 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725802AbgAVSP0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 13:15:26 -0500
+Received: by mail-pg1-f194.google.com with SMTP id l24so3944009pgk.2
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jan 2020 10:15:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=message-id:mime-version:content-transfer-encoding:in-reply-to
+         :references:cc:to:subject:from:user-agent:date;
+        bh=EmAL7GOGgg6j/HkDxl1w5C2l3eFXSyhiQn5oFiHpD5k=;
+        b=cP2hgEdxOQ9YgVB61df2wiAknqcv9EPRfHGP55UvZ9LcMKNeUKRg11pEdDuLKa7uKq
+         7W9BR+9VfrOtDYhpOtccn5PB9BRdX0HBttlwmUvjGCF+wZk4fkx0EjxTvnVuYBc11hKR
+         aIcIC0yf9E5ZAW5WF3JOFsFpaaZllMBeLp9NE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:mime-version
+         :content-transfer-encoding:in-reply-to:references:cc:to:subject:from
+         :user-agent:date;
+        bh=EmAL7GOGgg6j/HkDxl1w5C2l3eFXSyhiQn5oFiHpD5k=;
+        b=VeoRg7D4huMQmarsPnBNtssa5Zx+TFdmIsn/+Ei2hC0KArOCmDGkU+1YcKtY+wH0rE
+         NK+tDMx3GfVT23PGVzLBSchDvQymVHqF0v4QpEMTTlRfYaHSgp4MVo9jxqjmULUh+Iwf
+         623EFUD0yTHtYSA9qG7wbfocUPJlZct3J/0f39y4lIYwI1AVpwYwk0Hfespri4IAYb+4
+         7ps32I3uD4hCCabSdfOUwndaTcI/kKnxpjWlh8SIwabfgvBmWl4nm7fY8lhjLW/skTar
+         2Nr27NliyRmfE5pHeegaB7H5T9tjOJxPD81fdE/3YzVAo0JeS0pMrzt3sIDU/fnQxa/L
+         TJYg==
+X-Gm-Message-State: APjAAAVCNeCvBcoQilkmjOfyllZp7FkDO5UYv6uQRwry7x1QxxDwq8xV
+        AnlkqDRfW5vCfg7lteaCIFMfchDxQY4cSw==
+X-Google-Smtp-Source: APXvYqz9jd4ioW9dlzxeuYifq9XXJ4OQ4M+uOnbxPOrkGpP5ZFA0OAI40utZ8lasT5ilCWI+xQHVmw==
+X-Received: by 2002:a63:220b:: with SMTP id i11mr12176884pgi.50.1579716925591;
+        Wed, 22 Jan 2020 10:15:25 -0800 (PST)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id w20sm48106220pfi.86.2020.01.22.10.15.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 22 Jan 2020 10:15:24 -0800 (PST)
+Message-ID: <5e28913c.1c69fb81.8a690.7308@mx.google.com>
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-In-Reply-To: <20200122130913.GA20584@zn.tnic>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <9158a0d87f6493977455179202cd86165437f5f6.camel@9elements.com>
+References: <20191128125100.14291-1-patrick.rudolph@9elements.com> <20191128125100.14291-2-patrick.rudolph@9elements.com> <CAODwPW8Koy1BvKGJU6PKexYx+PNE+WY7+m69gcxT689vBy+AoQ@mail.gmail.com> <9158a0d87f6493977455179202cd86165437f5f6.camel@9elements.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Allison Randal <allison@lohutok.net>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        Samuel Holland <samuel@sholland.org>
+To:     Julius Werner <jwerner@chromium.org>, patrick.rudolph@9elements.com
+Subject: Re: [PATCH v3 1/2] firmware: google: Expose CBMEM over sysfs
+From:   Stephen Boyd <swboyd@chromium.org>
+User-Agent: alot/0.8.1
+Date:   Wed, 22 Jan 2020 10:15:23 -0800
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/22/20 5:09 AM, Borislav Petkov wrote:
-> On Fri, Jul 05, 2019 at 10:53:17AM -0700, Dave Hansen wrote:
->> This series is also available here, and will get some additional 0day
->> testing to ensure no funkiness:
->>
->> 	git://git.kernel.org/pub/scm/linux/kernel/git/daveh/x86-mpx.git mpx-remove-201907
->>
->> While there's no rocket science in here, this is probably not ready
->> to be pulled until 0day has the weekend to churn on it.
-> And whoops, half a year passed. :-)
-> > Should we try removing it again? This time I won't stop until it's gone.
+Quoting patrick.rudolph@9elements.com (2019-12-19 23:12:22)
+> On Mon, 2019-12-09 at 22:54 -0800, Julius Werner wrote:
+> > > +static int cbmem_probe(struct coreboot_device *cdev)
+> > > +{
+> > > +       struct device *dev =3D &cdev->dev;
+> > > +       struct cb_priv *priv;
+> > > +       int err;
+> > > +
+> > > +       priv =3D kzalloc(sizeof(*priv), GFP_KERNEL);
+> > > +       if (!priv)
+> > > +               return -ENOMEM;
+> > > +
+> > > +       memcpy(&priv->entry, &cdev->cbmem_entry, sizeof(priv-
+> > > >entry));
+> > > +
+> > > +       priv->remap =3D memremap(priv->entry.address,
+> > > +                              priv->entry.entry_size,
+> > > MEMREMAP_WB);
+> >=20
+> > We've just been discussing some problems with CBMEM areas and memory
+> > mapping types in Chrome OS. CBMEM is not guaranteed to be page-
+> > aligned
+> > (at least not the "small" entries), but the kernel can only assign
+> > memory attributes for a page at a time (and refuses to map the same
+> > area twice with two different memory types, for good reason). So if
+> > CBMEM entries sharing a page are mapped as writeback by one driver
+> > but
+> > uncached by the other, things break.
+> >=20
+> > There are some CBMEM entries that need to be mapped uncached (e.g.
+> > the
+> > ACPI UCSI table, which isn't even handled by anything using this
+> > CBMEM
+> > code) and others for which it would make more sense (e.g. the memory
+> > console, where firmware may add more lines at runtime), but I don't
+> > think there are any regions that really *need* to be writeback. None
+> > of the stuff accessing these areas should access them often enough
+> > that caching matters, and I think it's generally more common to map
+> > firmware memory areas as uncached anyway. So how about we standardize
+> > on mapping it all uncached to avoid any attribute clashes? (That
+> > would
+> > mean changing the existing VPD and memconsole drivers to use
+> > ioremap(), too.)
+>=20
+> I wasn't aware that CBMEM is used for DMA as there's no such concept in
+> coreboot yet. For me it looks like the UCSI is regular DRAM mapped as
+> WB accessed by the ACPI interpreter.
+> I'll prepare a new patch-set using ioremap in all drivers that access
+> CBMEM.
+>=20
 
-Here's an updated tree:
+We shouldn't use ioremap() here as this isn't I/O memory. It's just
+regular memory that wants be mapped with some particular set of
+attributes, hence the use of memremap().
 
-https://git.kernel.org/pub/scm/linux/kernel/git/daveh/x86-mpx.git/log/?h=mpx-remove-202001
-
-Very lightly tested.
