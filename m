@@ -2,145 +2,125 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D7B5C33CAF
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 00:01:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8986BC33CAF
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 00:01:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E235421734
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 00:01:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 610592465B
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 00:01:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chrisdown.name header.i=@chrisdown.name header.b="bV93vL/4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728655AbgAVABD (ORCPT
+        id S1728894AbgAVABP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 19:01:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51930 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726780AbgAVABC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 19:01:02 -0500
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 231DC21734;
-        Wed, 22 Jan 2020 00:01:01 +0000 (UTC)
-Date:   Tue, 21 Jan 2020 19:00:59 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Cong Wang <xiyou.wangcong@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
-        Jens Axboe <axboe@kernel.dk>
-Subject: Re: [Patch v2] block: introduce block_rq_error tracepoint
-Message-ID: <20200121190059.7ae9f7a9@gandalf.local.home>
-In-Reply-To: <20200120222618.1456-1-xiyou.wangcong@gmail.com>
-References: <20200120222618.1456-1-xiyou.wangcong@gmail.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Tue, 21 Jan 2020 19:01:15 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:33583 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728665AbgAVABO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jan 2020 19:01:14 -0500
+Received: by mail-wr1-f65.google.com with SMTP id b6so5435893wrq.0
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jan 2020 16:01:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chrisdown.name; s=google;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
+        bh=OHaBdf9m1dDSgiWgOEcClSMTZD84LoHiqTmQD6cEaTs=;
+        b=bV93vL/4fDzGXFO2JCLe7XSiny5jsOXP+1mc/RM3P5+9LAEdfRZ4M2qFZguvwNb7Xg
+         9F1VYmZZ0XO1/g/fAbDib/KRX8L3WacCqQvO4UFl28J2h5N0x8RjEjQsbICjFSJoWwur
+         dwzrNK6ji2knC+Pl++t+qqjSspXviqg+HIn8s=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=OHaBdf9m1dDSgiWgOEcClSMTZD84LoHiqTmQD6cEaTs=;
+        b=f+Es6abNr9xLu/FE5BVN5mquTMVIgqvcoM0PQdrY/bLXN3pCVHJIIcd+aeDJ2RtODR
+         kZr8Qz7XSuva+QXcOwId13hZLK/o4h9aMCLCSyVG+WGWODs5SyCt9INaratWocn9uTFi
+         IFjNTDQrqIbiBA5XDADlcDXUlw7MYlf3f+DyE2CvS+3s0sLXNP+52Lg/5mayusQhb/rN
+         tK/4cVFqo2M4yDlBlt2qtcoNTnqAISxgFoUWRZzmEcjlgkWIFgNhSDGYlD3PHLn6Bin9
+         5CgnCI2gcVuM+rv9iA9WYs7oySTTGKDoDRVDYB1+hRxZertZdK+aPQih/0r/lxGXFscp
+         odRg==
+X-Gm-Message-State: APjAAAXOGZGdIIS6ZmBg86CsEjMAk7eNp2PptKItztON0Z3IIPqn1JOY
+        tax73KOUbyjYOSHgrbt07Kk25w==
+X-Google-Smtp-Source: APXvYqzLfa6mB53r67UDMjQCKejKBIn+YrmuY3wys2gdKrsrsMSEhdOHpEKYG/W3HLJzNJrxjyoBgQ==
+X-Received: by 2002:a5d:5234:: with SMTP id i20mr7998319wra.403.1579651271992;
+        Tue, 21 Jan 2020 16:01:11 -0800 (PST)
+Received: from localhost ([2620:10d:c092:180::1:58ec])
+        by smtp.gmail.com with ESMTPSA id n3sm1341159wmc.27.2020.01.21.16.01.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Jan 2020 16:01:11 -0800 (PST)
+Date:   Wed, 22 Jan 2020 00:01:10 +0000
+From:   Chris Down <chris@chrisdown.name>
+To:     bpf@vger.kernel.org, netdev@vger.kernel.org
+Cc:     Stanislav Fomichev <sdf@google.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        linux-kernel@vger.kernel.org, kernel-team@fb.com
+Subject: [PATCH v2] bpf: btf: Always output invariant hit in pahole DWARF to
+ BTF transform
+Message-ID: <20200122000110.GA310073@chrisdown.name>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 20 Jan 2020 14:26:18 -0800
-Cong Wang <xiyou.wangcong@gmail.com> wrote:
+When trying to compile with CONFIG_DEBUG_INFO_BTF enabled, I got this
+error:
 
-> ---
->  block/blk-core.c             |  4 +++-
->  include/trace/events/block.h | 43 ++++++++++++++++++++++++++++++++++++
->  2 files changed, 46 insertions(+), 1 deletion(-)
-> 
-> diff --git a/block/blk-core.c b/block/blk-core.c
-> index 089e890ab208..0c7ad70d06be 100644
-> --- a/block/blk-core.c
-> +++ b/block/blk-core.c
-> @@ -1450,8 +1450,10 @@ bool blk_update_request(struct request *req, blk_status_t error,
->  #endif
->  
->  	if (unlikely(error && !blk_rq_is_passthrough(req) &&
-> -		     !(req->rq_flags & RQF_QUIET)))
-> +		     !(req->rq_flags & RQF_QUIET))) {
-> +		trace_block_rq_error(req, blk_status_to_errno(error), nr_bytes);
->  		print_req_error(req, error, __func__);
-> +	}
->  
->  	blk_account_io_completion(req, nr_bytes);
->  
-> diff --git a/include/trace/events/block.h b/include/trace/events/block.h
-> index 81b43f5bdf23..37e99be19536 100644
-> --- a/include/trace/events/block.h
-> +++ b/include/trace/events/block.h
-> @@ -145,6 +145,49 @@ TRACE_EVENT(block_rq_complete,
->  		  __entry->nr_sector, __entry->error)
->  );
->  
-> +/**
-> + * block_rq_error - block IO operation error reported by device driver
-> + * @rq: block operations request
-> + * @error: status code
-> + * @nr_bytes: number of completed bytes
-> + *
-> + * The block_rq_error tracepoint event indicates that some portion
-> + * of operation request has failed as reported by the device driver.
-> + */
-> +TRACE_EVENT(block_rq_error,
-> +
-> +	TP_PROTO(struct request *rq, int error, unsigned int nr_bytes),
-> +
-> +	TP_ARGS(rq, error, nr_bytes),
-> +
-> +	TP_STRUCT__entry(
-> +		__field(  dev_t,	dev			)
-> +		__dynamic_array( char,  name,	DISK_NAME_LEN	)
+    % make -s
+    Failed to generate BTF for vmlinux
+    Try to disable CONFIG_DEBUG_INFO_BTF
+    make[3]: *** [vmlinux] Error 1
 
-Hmm, looks like I need to go and do a clean up of the kernel, and
-educate people on how to use dynamic arrays :-/
+Compiling again without -s shows the true error (that pahole is
+missing), but since this is fatal, we should show the error
+unconditionally on stderr as well, not silence it using the `info`
+function. With this patch:
 
-The "len" field of a __dynamic_array() is to be a function to determine
-the length needed for each instance of an event. By having a constant
-there, it will be the same for every events, plus the meta data to hold
-the "dynamic" part of the array. This would be much better to simple
-use __array() instead.
+    % make -s
+    BTF: .tmp_vmlinux.btf: pahole (pahole) is not available
+    Failed to generate BTF for vmlinux
+    Try to disable CONFIG_DEBUG_INFO_BTF
+    make[3]: *** [vmlinux] Error 1
 
-But as you use "__assign_str()" below, then it's expected that name is
-a nul terminated string. In which case, you want to define this as:
+Signed-off-by: Chris Down <chris@chrisdown.name>
+Cc: Stanislav Fomichev <sdf@google.com>
+Cc: Andrii Nakryiko <andriin@fb.com>
+Cc: John Fastabend <john.fastabend@gmail.com>
+Cc: linux-kernel@vger.kernel.org
+Cc: netdev@vger.kernel.org
+Cc: bpf@vger.kernel.org
+Cc: kernel-team@fb.com
+---
+ scripts/link-vmlinux.sh | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-		__string( name, rq->rq_disk ? rq->rq_disk->disk_name : "?"  )
-
-
-> +		__field(  sector_t,	sector			)
-> +		__field(  unsigned int,	nr_sector		)
-> +		__field(  int,		error			)
-> +		__array(  char,		rwbs,	RWBS_LEN	)
-> +		__dynamic_array( char,	cmd,	1		)
-
-Not sure what you are doing with cmd. It appears to be always hard
-coded as an empty string?
-
--- Steve
-
-
-> +	),
-> +
-> +	TP_fast_assign(
-> +		__entry->dev	   = rq->rq_disk ? disk_devt(rq->rq_disk) : 0;
-> +		__assign_str(name,   rq->rq_disk ? rq->rq_disk->disk_name : "?");
-> +		__entry->sector    = blk_rq_pos(rq);
-> +		__entry->nr_sector = nr_bytes >> 9;
-> +		__entry->error     = error;
-> +
-> +		blk_fill_rwbs(__entry->rwbs, rq->cmd_flags, nr_bytes);
-> +		__get_str(cmd)[0] = '\0';
-> +	),
-> +
-> +	TP_printk("%d,%d %s %s (%s) %llu + %u [%d]",
-> +		  MAJOR(__entry->dev), MINOR(__entry->dev),
-> +		  __get_str(name), __entry->rwbs, __get_str(cmd),
-> +		  (unsigned long long)__entry->sector,
-> +		  __entry->nr_sector, __entry->error)
-> +);
-> +
->  DECLARE_EVENT_CLASS(block_rq,
->  
->  	TP_PROTO(struct request_queue *q, struct request *rq),
+diff --git a/scripts/link-vmlinux.sh b/scripts/link-vmlinux.sh
+index c287ad9b3a67..bbe9be2bf5ff 100755
+--- a/scripts/link-vmlinux.sh
++++ b/scripts/link-vmlinux.sh
+@@ -108,13 +108,13 @@ gen_btf()
+ 	local bin_arch
+ 
+ 	if ! [ -x "$(command -v ${PAHOLE})" ]; then
+-		info "BTF" "${1}: pahole (${PAHOLE}) is not available"
++		echo >&2 "BTF: ${1}: pahole (${PAHOLE}) is not available"
+ 		return 1
+ 	fi
+ 
+ 	pahole_ver=$(${PAHOLE} --version | sed -E 's/v([0-9]+)\.([0-9]+)/\1\2/')
+ 	if [ "${pahole_ver}" -lt "113" ]; then
+-		info "BTF" "${1}: pahole version $(${PAHOLE} --version) is too old, need at least v1.13"
++		echo >&2 "BTF: ${1}: pahole version $(${PAHOLE} --version) is too old, need at least v1.13"
+ 		return 1
+ 	fi
+ 
+-- 
+2.25.0
 
