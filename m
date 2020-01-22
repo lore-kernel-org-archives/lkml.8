@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-5.7 required=3.0 tests=DATE_IN_PAST_03_06,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0852CC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:19:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCB53C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:19:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C13AC2467A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:19:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 925412071E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:19:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579699186;
-	bh=gmGK9lkkptqNYlJQsr4NkvPPXlub+fNWnEWdTp6g9Gc=;
+	s=default; t=1579699189;
+	bh=OqS0djFMGGqZYBB2JfUKE7TZ6+E61kresY4EHwo8+Uk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Lw3tpq4UbFpsQ+ETJBkl/wPSfFz/e+xmCgiOrXj/DIw+gNywih2h2oW30MH1TYOeN
-	 kz9+lUu1ZVkgg3bDwnQsydzTnUVJGaxKJ4wEtAz2XhlUosQWgL6QmeJha76ATOQno2
-	 lMzbflBOEyyZuDQArqwzSy76CCo7mKGFzspXYYXM=
+	b=VCdfN35PKgHANO56/A1SHyfKU7zlt6IoMbYfL1q6130nobWBmfnsTscNI1DwtE02a
+	 kBqFbbSa86vCTbu5RCsBREI18WYQTi81l//55Wcg4DzUJFtR68raYVXsjEt9C8tbzw
+	 +jkFoa0tXCupDfz6uAPgccuPp7pIsT74XCdqma3c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729789AbgAVNTp (ORCPT
+        id S1729662AbgAVNT1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 08:19:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35656 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 08:19:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35316 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728811AbgAVNTl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 08:19:41 -0500
+        id S1728816AbgAVNTZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 08:19:25 -0500
 Received: from localhost (unknown [84.241.205.26])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DE3A62467E;
-        Wed, 22 Jan 2020 13:19:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 107182071E;
+        Wed, 22 Jan 2020 13:19:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579699180;
-        bh=gmGK9lkkptqNYlJQsr4NkvPPXlub+fNWnEWdTp6g9Gc=;
+        s=default; t=1579699164;
+        bh=OqS0djFMGGqZYBB2JfUKE7TZ6+E61kresY4EHwo8+Uk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fgrJwao8olqlDMXBKaCdaBt9khykdLigSkIWDWx96U1zLmHACW4pBLXPNIKfYHZ7t
-         o2eU2ZAjFu88gJFVoKkqwjrfgJNDTSat6uoS8Uqxcuprgej7ShP0cpBFWxCgUCxJOH
-         I7PFLc8WJh4oV0o68AWVTVTI50JBDKPoPZjmM89Y=
+        b=muN3PhnUcT8A1xuW3YJS+BJ8bLiO4gzTaEHY6jvU98s87y2VViJxStCQBp2hqH9Et
+         1IB5guzqaZFqWj83ojf0KGpCIIr5yWFDsZVp+AwBl1yv9F0RIq7uF9o0gSHw6CjZm1
+         T0pIpIr6nijbu/EOhTi65AiGChXsod/5P/8SKOZY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
-        Waiman Long <longman@redhat.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>
-Subject: [PATCH 5.4 064/222] locking/rwsem: Fix kernel crash when spinning on RWSEM_OWNER_UNKNOWN
-Date:   Wed, 22 Jan 2020 10:27:30 +0100
-Message-Id: <20200122092838.302318765@linuxfoundation.org>
+        stable@vger.kernel.org, Keiya Nobuta <nobuta.keiya@fujitsu.com>,
+        Alan Stern <stern@rowland.harvard.edu>
+Subject: [PATCH 5.4 060/222] usb: core: hub: Improved device recognition on remote wakeup
+Date:   Wed, 22 Jan 2020 10:27:26 +0100
+Message-Id: <20200122092838.013538193@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200122092833.339495161@linuxfoundation.org>
 References: <20200122092833.339495161@linuxfoundation.org>
@@ -60,44 +59,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Waiman Long <longman@redhat.com>
+From: Keiya Nobuta <nobuta.keiya@fujitsu.com>
 
-commit 39e7234f00bc93613c086ae42d852d5f4147120a upstream.
+commit 9c06ac4c83df6d6fbdbf7488fbad822b4002ba19 upstream.
 
-The commit 91d2a812dfb9 ("locking/rwsem: Make handoff writer
-optimistically spin on owner") will allow a recently woken up waiting
-writer to spin on the owner. Unfortunately, if the owner happens to be
-RWSEM_OWNER_UNKNOWN, the code will incorrectly spin on it leading to a
-kernel crash. This is fixed by passing the proper non-spinnable bits
-to rwsem_spin_on_owner() so that RWSEM_OWNER_UNKNOWN will be treated
-as a non-spinnable target.
+If hub_activate() is called before D+ has stabilized after remote
+wakeup, the following situation might occur:
 
-Fixes: 91d2a812dfb9 ("locking/rwsem: Make handoff writer optimistically spin on owner")
+         __      ___________________
+        /  \    /
+D+   __/    \__/
 
-Reported-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Waiman Long <longman@redhat.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Tested-by: Christoph Hellwig <hch@lst.de>
-Cc: stable@vger.kernel.org
-Link: https://lkml.kernel.org/r/20200115154336.8679-1-longman@redhat.com
+Hub  _______________________________
+          |  ^   ^           ^
+          |  |   |           |
+Host _____v__|___|___________|______
+          |  |   |           |
+          |  |   |           \-- Interrupt Transfer (*3)
+          |  |    \-- ClearPortFeature (*2)
+          |   \-- GetPortStatus (*1)
+          \-- Host detects remote wakeup
+
+- D+ goes high, Host starts running by remote wakeup
+- D+ is not stable, goes low
+- Host requests GetPortStatus at (*1) and gets the following hub status:
+  - Current Connect Status bit is 0
+  - Connect Status Change bit is 1
+- D+ stabilizes, goes high
+- Host requests ClearPortFeature and thus Connect Status Change bit is
+  cleared at (*2)
+- After waiting 100 ms, Host starts the Interrupt Transfer at (*3)
+- Since the Connect Status Change bit is 0, Hub returns NAK.
+
+In this case, port_event() is not called in hub_event() and Host cannot
+recognize device. To solve this issue, flag change_bits even if only
+Connect Status Change bit is 1 when got in the first GetPortStatus.
+
+This issue occurs rarely because it only if D+ changes during a very
+short time between GetPortStatus and ClearPortFeature. However, it is
+fatal if it occurs in embedded system.
+
+Signed-off-by: Keiya Nobuta <nobuta.keiya@fujitsu.com>
+Cc: stable <stable@vger.kernel.org>
+Acked-by: Alan Stern <stern@rowland.harvard.edu>
+Link: https://lore.kernel.org/r/20200109051448.28150-1-nobuta.keiya@fujitsu.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/locking/rwsem.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/usb/core/hub.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/kernel/locking/rwsem.c
-+++ b/kernel/locking/rwsem.c
-@@ -1226,8 +1226,8 @@ wait:
- 		 * In this case, we attempt to acquire the lock again
- 		 * without sleeping.
- 		 */
--		if ((wstate == WRITER_HANDOFF) &&
--		    (rwsem_spin_on_owner(sem, 0) == OWNER_NULL))
-+		if (wstate == WRITER_HANDOFF &&
-+		    rwsem_spin_on_owner(sem, RWSEM_NONSPINNABLE) == OWNER_NULL)
- 			goto trylock_again;
- 
- 		/* Block until there are no active lockers. */
+--- a/drivers/usb/core/hub.c
++++ b/drivers/usb/core/hub.c
+@@ -1191,6 +1191,7 @@ static void hub_activate(struct usb_hub
+ 			 * PORT_OVER_CURRENT is not. So check for any of them.
+ 			 */
+ 			if (udev || (portstatus & USB_PORT_STAT_CONNECTION) ||
++			    (portchange & USB_PORT_STAT_C_CONNECTION) ||
+ 			    (portstatus & USB_PORT_STAT_OVERCURRENT) ||
+ 			    (portchange & USB_PORT_STAT_C_OVERCURRENT))
+ 				set_bit(port1, hub->change_bits);
 
 
