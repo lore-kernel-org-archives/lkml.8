@@ -2,126 +2,81 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78745C32771
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 05:54:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 603E0C3F68F
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 05:57:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B72D24656
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 05:54:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="o5rFThfo"
+	by mail.kernel.org (Postfix) with ESMTP id 3777B24656
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 05:57:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726054AbgAVFyv (ORCPT
+        id S1725975AbgAVF5q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 00:54:51 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:58092 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725836AbgAVFyv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 00:54:51 -0500
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00M5rvl1087261;
-        Wed, 22 Jan 2020 05:53:57 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=e6pHO7NEB3W4WnE5j5+BYXSgYe4ZpmpURv9HvAXPRpU=;
- b=o5rFThfoiO98VhbQP3sPOxizJ0igXge2GQs5zmrRgcvg4+JcSuI6yG/s/yMrZzu+Alaa
- /mEkCbb5bOGV1k3inEoZW9ZL2322bUgXxgGIh4LLedo1jB7Sh9shraXlFyGk7ZDIgsB4
- 1Yq1aTM1RfecFlhXA200lNA0CYyIdE3BtI+Tmmy2hNTo1Zq8mltiXR6YAw2WUIV6pflM
- mETKqkQdhUToY5clAokaWsSmp7g+69t3FzWOP7BL8X/JK7uGD48RiqcO9Bk3B4/g67uk
- rCi0fce4O3hftP64FV8GvBwJvig1dRLKpWVRk4zKvrcNxWtWve+g7V50+Kb8dlFlMRTB YA== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2120.oracle.com with ESMTP id 2xksyq9fp0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 22 Jan 2020 05:53:57 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00M5n6fP170077;
-        Wed, 22 Jan 2020 05:53:23 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3020.oracle.com with ESMTP id 2xnpejpf0m-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 22 Jan 2020 05:53:23 +0000
-Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 00M5rMD1006144;
-        Wed, 22 Jan 2020 05:53:22 GMT
-Received: from kadam (/129.205.23.165)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 21 Jan 2020 21:53:22 -0800
-Date:   Wed, 22 Jan 2020 08:53:15 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     syzbot <syzbot+0c147ca7bd4352547635@syzkaller.appspotmail.com>,
-        linux-kernel@vger.kernel.org, mingo@redhat.com,
-        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Subject: Re: WARNING in tracing_func_proto
-Message-ID: <20200122055314.GD1847@kadam>
-References: <0000000000001b2259059c654421@google.com>
- <20200121180255.1c98b54c@gandalf.local.home>
+        Wed, 22 Jan 2020 00:57:46 -0500
+Received: from helcar.hmeau.com ([216.24.177.18]:48864 "EHLO deadmen.hmeau.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725796AbgAVF5q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 00:57:46 -0500
+Received: from gondobar.mordor.me.apana.org.au ([192.168.128.4] helo=gondobar)
+        by deadmen.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
+        id 1iu91L-0002IE-9Z; Wed, 22 Jan 2020 13:57:43 +0800
+Received: from herbert by gondobar with local (Exim 4.89)
+        (envelope-from <herbert@gondor.apana.org.au>)
+        id 1iu91K-0002uz-7T; Wed, 22 Jan 2020 13:57:42 +0800
+Date:   Wed, 22 Jan 2020 13:57:42 +0800
+From:   Herbert Xu <herbert@gondor.apana.org.au>
+To:     Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
+Cc:     davem@davemloft.net, linux-crypto@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/6] crypto: sm2 - introduce OSCCA SM2 asymmetric cipher
+ algorithm
+Message-ID: <20200122055742.x3lruabxmv6elnuu@gondor.apana.org.au>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200121180255.1c98b54c@gandalf.local.home>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9507 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-2001220051
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9507 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-2001220052
+In-Reply-To: <20200121095718.52404-4-tianjia.zhang@linux.alibaba.com>
+X-Newsgroups: apana.lists.os.linux.cryptoapi,apana.lists.os.linux.kernel
+Organization: Core
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 21, 2020 at 06:02:55PM -0500, Steven Rostedt wrote:
-> On Fri, 17 Jan 2020 23:47:11 -0800
-> syzbot <syzbot+0c147ca7bd4352547635@syzkaller.appspotmail.com> wrote:
+Tianjia Zhang <tianjia.zhang@linux.alibaba.com> wrote:
+> This new module implement the SM2 public key algorithm. It was
+> published by State Encryption Management Bureau, China.
+> List of specifications for SM2 elliptic curve public key cryptography:
 > 
-> > Hello,
-> > 
-> > syzbot found the following crash on:
-> > 
-> > HEAD commit:    428cd523 sfc/ethtool_common: Make some function to static
-> > git tree:       net-next
-> > console output: https://syzkaller.appspot.com/x/log.txt?x=10483421e00000
-> > kernel config:  https://syzkaller.appspot.com/x/.config?x=66d8660c57ff3c98
-> > dashboard link: https://syzkaller.appspot.com/bug?extid=0c147ca7bd4352547635
-> > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> > 
-> > Unfortunately, I don't have any reproducer for this crash yet.
-> > 
-> > IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> > Reported-by: syzbot+0c147ca7bd4352547635@syzkaller.appspotmail.com
-> > 
-> > ------------[ cut here ]------------
-> > Could not allocate percpu trace_printk buffer
-> > WARNING: CPU: 1 PID: 11733 at kernel/trace/trace.c:3112 alloc_percpu_trace_buffer kernel/trace/trace.c:3112 [inline]
-> > WARNING: CPU: 1 PID: 11733 at kernel/trace/trace.c:3112 trace_printk_init_buffers+0x5b/0x60 kernel/trace/trace.c:3126
-> > Kernel panic - not syncing: panic_on_warn set ...
+> * GM/T 0003.1-2012
+> * GM/T 0003.2-2012
+> * GM/T 0003.3-2012
+> * GM/T 0003.4-2012
+> * GM/T 0003.5-2012
 > 
-> So it failed to allocate memory for the buffer (must be running low on
-> memory, or allocated a really big buffer?), and that triggered a
-> warning. As you have "panic_on_warn" set, the warning triggered the
-> panic.
+> IETF: https://tools.ietf.org/html/draft-shen-sm2-ecdsa-02
+> oscca: http://www.oscca.gov.cn/sca/xxgk/2010-12/17/content_1002386.shtml
+> scctc: http://www.gmbz.org.cn/main/bzlb.html
 > 
-> The only solution to this that I can see is to remove the WARN_ON and
-> replace it with a pr_warn() message. There's a lot of WARN_ON()s in the
-> kernel that need this conversion too, and I will postpone this change
-> to that effort.
-> 
+> Signed-off-by: Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
+> ---
+> crypto/Kconfig         |   17 +
+> crypto/Makefile        |   10 +
+> crypto/sm2.c           | 1073 ++++++++++++++++++++++++++++++++++++++++
+> crypto/sm2privkey.asn1 |    5 +
+> crypto/sm2pubkey.asn1  |    3 +
+> 5 files changed, 1108 insertions(+)
+> create mode 100644 crypto/sm2.c
+> create mode 100644 crypto/sm2privkey.asn1
+> create mode 100644 crypto/sm2pubkey.asn1
 
-I bet the syzbot folk have changed to lot of WARN_ON()s.  Maybe they
-just comment them out on their local tree?
+We don't add algorithms unless they have a kernel user.  Who is
+going to use this within the kernel?
 
-regards,
-dan carpenter
+Cheers,
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
