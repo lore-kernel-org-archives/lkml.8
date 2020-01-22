@@ -5,50 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-5.7 required=3.0 tests=DATE_IN_PAST_03_06,
 	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E97ECC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:24:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABE42C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:24:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE17C2468D
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:24:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82DF22468C
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:24:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579699494;
-	bh=1YzfcHjs92uvAFnhEsI/u9hRXryDJjS0n+AS3ZKt7l4=;
+	s=default; t=1579699496;
+	bh=AXzGzg7aB76QJhArJB3cCflXRp9u84Qf07aZ4biO7Uk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OUNoV56vnsPzArd1yOau/2PM8wjK8UGp676Uu2rMXdxSck4LJwU9aAKT4IEnV5beW
-	 EWIm1+XKgUGqY2PaxF5nkioWhh4c8h/xP1eDGJYA8CojYwX5Eq2YOH1Wlt7PEbuM3C
-	 eHFnr3HPpSswL4rVgGQfLgxthcHg2bWc/N1lAzfw=
+	b=d8PNhLFe2DpMzrqaMhd9XqKx5LPZTWIBbvLYrCRPfSi0wujcb23qh2c9mVnH28kTI
+	 4tl558dLFGdtDs3v6+UqCfsN7bEBspB6A0VbtwLqeM14EoIpCvH4ccpB7pqdoa1Z2Y
+	 yJB21EHkdOb1T5f3ygMQx3m+Kd1xFV1zbTRQZASs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731078AbgAVNYx (ORCPT
+        id S1730492AbgAVNYw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 08:24:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44166 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 08:24:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44074 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730589AbgAVNYv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 08:24:51 -0500
+        id S1730109AbgAVNYs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 08:24:48 -0500
 Received: from localhost (unknown [84.241.205.26])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0D6D424697;
-        Wed, 22 Jan 2020 13:24:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9A23424688;
+        Wed, 22 Jan 2020 13:24:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579699490;
-        bh=1YzfcHjs92uvAFnhEsI/u9hRXryDJjS0n+AS3ZKt7l4=;
+        s=default; t=1579699487;
+        bh=AXzGzg7aB76QJhArJB3cCflXRp9u84Qf07aZ4biO7Uk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=afGH3CTAh4hIVJUmOnkCLubYuv9uOU3kl4pTQ5gh6XYhiaCTizAKAEzuwJKm4oRm6
-         CbHiDREuGTtXtvK2w3A8NgtZLyLY+meTgLMITMQRyGeUfSw5bHose5sXkW+VdZaVgc
-         Dg4mtRycxo6vxCWQ1KWazedNQmjaCaGWqz5BG0Lg=
+        b=0jgSovNa2tRsD9uXPWp068r8BRPKqgMGKf1rHY8lCLyLEyvqcKudnYa0KRpd6fBbA
+         6JvJ4wnVk0ik68Jk3rQx7enW/d364Vmsfkbe2wCE7Yr5+1Yli3sba6dABkRbze3FE9
+         gyAO4TLUKySzsbktuAqe3hrWdHPQ0wiSVkswEeAE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Petr Machata <petrm@mellanox.com>,
+        stable@vger.kernel.org, Ido Schimmel <idosch@mellanox.com>,
+        Shalom Toledo <shalomt@mellanox.com>,
         Jiri Pirko <jiri@mellanox.com>,
-        Ido Schimmel <idosch@mellanox.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 162/222] mlxsw: spectrum: Wipe xstats.backlog of down ports
-Date:   Wed, 22 Jan 2020 10:29:08 +0100
-Message-Id: <20200122092845.313521947@linuxfoundation.org>
+Subject: [PATCH 5.4 161/222] mlxsw: spectrum: Do not modify cloned SKBs during xmit
+Date:   Wed, 22 Jan 2020 10:29:07 +0100
+Message-Id: <20200122092845.242283226@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200122092833.339495161@linuxfoundation.org>
 References: <20200122092833.339495161@linuxfoundation.org>
@@ -61,67 +61,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Petr Machata <petrm@mellanox.com>
+From: Ido Schimmel <idosch@mellanox.com>
 
-commit ca7609ff3680c51d6c29897f3117aa2ad904f92a upstream.
+commit 2da51ce75d86ab1f7770ac1391a9a1697ddaa60c upstream.
 
-Per-port counter cache used by Qdiscs is updated periodically, unless the
-port is down. The fact that the cache is not updated for down ports is no
-problem for most counters, which are relative in nature. However, backlog
-is absolute in nature, and if there is a non-zero value in the cache around
-the time that the port goes down, that value just stays there. This value
-then leaks to offloaded Qdiscs that report non-zero backlog even if
-there (obviously) is no traffic.
+The driver needs to prepend a Tx header to each packet it is
+transmitting. The header includes information such as the egress port
+and traffic class.
 
-The HW does not keep backlog of a downed port, so do likewise: as the port
-goes down, wipe the backlog value from xstats.
+The addition of the header requires the driver to modify the SKB's
+header and therefore it must not be shared. Otherwise, we risk hitting
+various race conditions.
 
-Fixes: 075ab8adaf4e ("mlxsw: spectrum: Collect tclass related stats periodically")
-Signed-off-by: Petr Machata <petrm@mellanox.com>
-Acked-by: Jiri Pirko <jiri@mellanox.com>
+For example, when a packet is flooded (cloned) by the bridge driver to
+two switch ports swp1 and swp2:
+
+t0 - mlxsw_sp_port_xmit() is called for swp1. Tx header is prepended with
+     swp1's port number
+t1 - mlxsw_sp_port_xmit() is called for swp2. Tx header is prepended with
+     swp2's port number, overwriting swp1's port number
+t2 - The device processes data buffer from t0. Packet is transmitted via
+     swp2
+t3 - The device processes data buffer from t1. Packet is transmitted via
+     swp2
+
+Usually, the device is fast enough and transmits the packet before its
+Tx header is overwritten, but this is not the case in emulated
+environments.
+
+Fix this by making sure the SKB's header is writable by calling
+skb_cow_head(). Since the function ensures we have headroom to push the
+Tx header, the check further in the function can be removed.
+
+v2:
+* Use skb_cow_head() instead of skb_unshare() as suggested by Jakub
+* Remove unnecessary check regarding headroom
+
+Fixes: 56ade8fe3fe1 ("mlxsw: spectrum: Add initial support for Spectrum ASIC")
 Signed-off-by: Ido Schimmel <idosch@mellanox.com>
+Reported-by: Shalom Toledo <shalomt@mellanox.com>
+Acked-by: Jiri Pirko <jiri@mellanox.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/ethernet/mellanox/mlxsw/spectrum.c |   13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ drivers/net/ethernet/mellanox/mlxsw/spectrum.c |   18 ++++++------------
+ 1 file changed, 6 insertions(+), 12 deletions(-)
 
 --- a/drivers/net/ethernet/mellanox/mlxsw/spectrum.c
 +++ b/drivers/net/ethernet/mellanox/mlxsw/spectrum.c
-@@ -1161,6 +1161,9 @@ static void update_stats_cache(struct wo
- 			     periodic_hw_stats.update_dw.work);
+@@ -812,23 +812,17 @@ static netdev_tx_t mlxsw_sp_port_xmit(st
+ 	u64 len;
+ 	int err;
  
- 	if (!netif_carrier_ok(mlxsw_sp_port->dev))
-+		/* Note: mlxsw_sp_port_down_wipe_counters() clears the cache as
-+		 * necessary when port goes down.
-+		 */
- 		goto out;
- 
- 	mlxsw_sp_port_get_hw_stats(mlxsw_sp_port->dev,
-@@ -4170,6 +4173,15 @@ static int mlxsw_sp_port_unsplit(struct
- 	return 0;
- }
- 
-+static void
-+mlxsw_sp_port_down_wipe_counters(struct mlxsw_sp_port *mlxsw_sp_port)
-+{
-+	int i;
++	if (skb_cow_head(skb, MLXSW_TXHDR_LEN)) {
++		this_cpu_inc(mlxsw_sp_port->pcpu_stats->tx_dropped);
++		dev_kfree_skb_any(skb);
++		return NETDEV_TX_OK;
++	}
 +
-+	for (i = 0; i < TC_MAX_QUEUE; i++)
-+		mlxsw_sp_port->periodic_hw_stats.xstats.backlog[i] = 0;
-+}
-+
- static void mlxsw_sp_pude_event_func(const struct mlxsw_reg_info *reg,
- 				     char *pude_pl, void *priv)
- {
-@@ -4191,6 +4203,7 @@ static void mlxsw_sp_pude_event_func(con
- 	} else {
- 		netdev_info(mlxsw_sp_port->dev, "link down\n");
- 		netif_carrier_off(mlxsw_sp_port->dev);
-+		mlxsw_sp_port_down_wipe_counters(mlxsw_sp_port);
- 	}
- }
+ 	memset(skb->cb, 0, sizeof(struct mlxsw_skb_cb));
  
+ 	if (mlxsw_core_skb_transmit_busy(mlxsw_sp->core, &tx_info))
+ 		return NETDEV_TX_BUSY;
+ 
+-	if (unlikely(skb_headroom(skb) < MLXSW_TXHDR_LEN)) {
+-		struct sk_buff *skb_orig = skb;
+-
+-		skb = skb_realloc_headroom(skb, MLXSW_TXHDR_LEN);
+-		if (!skb) {
+-			this_cpu_inc(mlxsw_sp_port->pcpu_stats->tx_dropped);
+-			dev_kfree_skb_any(skb_orig);
+-			return NETDEV_TX_OK;
+-		}
+-		dev_consume_skb_any(skb_orig);
+-	}
+-
+ 	if (eth_skb_pad(skb)) {
+ 		this_cpu_inc(mlxsw_sp_port->pcpu_stats->tx_dropped);
+ 		return NETDEV_TX_OK;
 
 
