@@ -5,49 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-5.7 required=3.0 tests=DATE_IN_PAST_03_06,
 	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B515BC33CB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:23:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39B09C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:23:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FCE224688
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:23:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0AE2424692
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:23:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579699426;
-	bh=lCuu7sL1e/H2b4/0FmtQ9bkOCclElc5kZCwTiINyETA=;
+	s=default; t=1579699431;
+	bh=Bw8ZGxJXZ1WFo1MtttC8xFlL7eSGqbHYNSdsB62/luU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VnlOOYoBxEUnOejsU0lcW8gZjnuycaFT4JvzZ0TEX+Ze6rzk0+rEqjLk9MbyWSPsW
-	 Ct/DqOVMW10C1jTR4KsjuglSmNBUmyU64rmHE9CLnHCz7D6IRURvP5ocSIEbbMNnLt
-	 rjnfI36CR4UJxvR4li/shOsADE1hlq1udZmIa8j8=
+	b=zEkiW6P3Nd+Y9uKHbhbsfMqkM6PDsRVXswivRj+6r6U6vefOQOc5Qeei79tg3HF7Q
+	 jSfVsFb4FiFr8L0VuMRzkeEKUMoSS+bpjMeIKmgX4tAiWRVdhecM/Qu/izbvWOCCyk
+	 4njRppUl64R+XrY03FHpDIVhaKxcAFqWEaXo5mCs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730493AbgAVNXp (ORCPT
+        id S1730129AbgAVNXt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 08:23:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42064 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 08:23:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42144 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730782AbgAVNXl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 08:23:41 -0500
+        id S1730350AbgAVNXo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 08:23:44 -0500
 Received: from localhost (unknown [84.241.205.26])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1CC46205F4;
-        Wed, 22 Jan 2020 13:23:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 44EFB2467B;
+        Wed, 22 Jan 2020 13:23:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579699420;
-        bh=lCuu7sL1e/H2b4/0FmtQ9bkOCclElc5kZCwTiINyETA=;
+        s=default; t=1579699423;
+        bh=Bw8ZGxJXZ1WFo1MtttC8xFlL7eSGqbHYNSdsB62/luU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=p4u92QJ31H6LN0R8oUacs+f3ib3n9EkZ7B/65G/u30mYTkporCgJTwGgDLrKlC2Dr
-         Ok824KjtYcfyVUdeBU8gMBGeE8SD2cZnAy1n9XO2pqtOP3qCdBkfs2sYETCwk6xB3S
-         VW240ovV9ZKLkIq/6tPy0UtRcifae4np+D1X4Z0c=
+        b=mVqcjz2CoOwW0aSDzWo3tBqNH9vEeUE4sG8fGxixm08+mVFbeEhYOIgDm8Q8JKj2e
+         oVMoZ18E3mHBNpMsR4Lnmu+q6mN105+iQXF2hEqfWDDfz9npybnQuvBbWdbE65sojR
+         63l5cpsMZnOQssTN6DLyt4j4YKOeAM33HkCvJDII=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, John Fastabend <john.fastabend@gmail.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Song Liu <songliubraving@fb.com>
-Subject: [PATCH 5.4 112/222] bpf: Sockmap/tls, msg_push_data may leave end mark in place
-Date:   Wed, 22 Jan 2020 10:28:18 +0100
-Message-Id: <20200122092841.753381385@linuxfoundation.org>
+        stable@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>,
+        Alexander Lobakin <alobakin@dlink.ru>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.4 139/222] net: dsa: tag_qca: fix doubled Tx statistics
+Date:   Wed, 22 Jan 2020 10:28:45 +0100
+Message-Id: <20200122092843.689580438@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200122092833.339495161@linuxfoundation.org>
 References: <20200122092833.339495161@linuxfoundation.org>
@@ -60,41 +61,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: John Fastabend <john.fastabend@gmail.com>
+From: Alexander Lobakin <alobakin@dlink.ru>
 
-commit cf21e9ba1eb86c9333ca5b05b2f1cc94021bcaef upstream.
+[ Upstream commit bd5874da57edd001b35cf28ae737779498c16a56 ]
 
-Leaving an incorrect end mark in place when passing to crypto
-layer will cause crypto layer to stop processing data before
-all data is encrypted. To fix clear the end mark on push
-data instead of expecting users of the helper to clear the
-mark value after the fact.
+DSA subsystem takes care of netdev statistics since commit 4ed70ce9f01c
+("net: dsa: Refactor transmit path to eliminate duplication"), so
+any accounting inside tagger callbacks is redundant and can lead to
+messing up the stats.
+This bug is present in Qualcomm tagger since day 0.
 
-This happens when we push data into the middle of a skmsg and
-have room for it so we don't do a set of copies that already
-clear the end flag.
-
-Fixes: 6fff607e2f14b ("bpf: sk_msg program helper bpf_msg_push_data")
-Signed-off-by: John Fastabend <john.fastabend@gmail.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Acked-by: Song Liu <songliubraving@fb.com>
-Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/bpf/20200111061206.8028-6-john.fastabend@gmail.com
+Fixes: cafdc45c949b ("net-next: dsa: add Qualcomm tag RX/TX handler")
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Signed-off-by: Alexander Lobakin <alobakin@dlink.ru>
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- net/core/filter.c |    1 +
- 1 file changed, 1 insertion(+)
+ net/dsa/tag_qca.c |    3 ---
+ 1 file changed, 3 deletions(-)
 
---- a/net/core/filter.c
-+++ b/net/core/filter.c
-@@ -2415,6 +2415,7 @@ BPF_CALL_4(bpf_msg_push_data, struct sk_
+--- a/net/dsa/tag_qca.c
++++ b/net/dsa/tag_qca.c
+@@ -33,9 +33,6 @@ static struct sk_buff *qca_tag_xmit(stru
+ 	struct dsa_port *dp = dsa_slave_to_port(dev);
+ 	u16 *phdr, hdr;
  
- 		sk_msg_iter_var_next(i);
- 		sg_unmark_end(psge);
-+		sg_unmark_end(&rsge);
- 		sk_msg_iter_next(msg, end);
- 	}
+-	dev->stats.tx_packets++;
+-	dev->stats.tx_bytes += skb->len;
+-
+ 	if (skb_cow_head(skb, 0) < 0)
+ 		return NULL;
  
 
 
