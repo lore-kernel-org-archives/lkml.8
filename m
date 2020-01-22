@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B51EFC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:46:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB6A4C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:46:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8078C2467C
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:46:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 984742468A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:46:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579686403;
-	bh=yUzz3pdxXKQpwQTWqhRKVlEnaLWaycXtq8Of/BB7q7c=;
+	s=default; t=1579686408;
+	bh=SpDzbbOwicUHa4Zm+r4y/NZKqNvo4lpUqQrWehgGjZg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Bqem+0wS31Zktg2lgpYjV8C+/QJ0IBPAgd69WkZ4emQyvNk0JHSwbZH1zd1LHdZlG
-	 le1wjalc8HyQ9HxydcTZADitMqsJX5BQ4VbkBDFO38RAC/p58qQjD0lS3tOnXawn0c
-	 VagZua/J4lpwB/e3GcSoxhdzk7CEExUEvzvz3u+I=
+	b=Jf6RLuAFNMA4ynTG1GeapCJMOCdHZHliqWHh9dZy7Mgw/c0UH6qV2fnFxiN1V8y1z
+	 nbB85zTZnimRW1jbf+43PTa2JPVIVxQDUqVfDsuMsG7zsC+8MPpT7X3hlhLYAjYSiT
+	 V+WKi0P1EtwqkRpN1fD+3e5kbmnrxKGiA9i5fbOo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730990AbgAVJqm (ORCPT
+        id S1731268AbgAVJqr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 04:46:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35788 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 04:46:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35726 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387855AbgAVJnU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 04:43:20 -0500
+        id S2387513AbgAVJnR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 04:43:17 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1AF6E24680;
-        Wed, 22 Jan 2020 09:43:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AB4F224689;
+        Wed, 22 Jan 2020 09:43:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579686199;
-        bh=yUzz3pdxXKQpwQTWqhRKVlEnaLWaycXtq8Of/BB7q7c=;
+        s=default; t=1579686197;
+        bh=SpDzbbOwicUHa4Zm+r4y/NZKqNvo4lpUqQrWehgGjZg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ont4lVIJqDUJBcHHT/WxhO9rYdxazBL3m+v/TbD8S8gV0k/zTYradtcFfiT1mbLnv
-         fUauznOMtdsXnBRuw2iOnVZGDhkbJ2QLi+csWlcUvz9o2AbfIlPnaCmYP7prUa30YD
-         SQaOn0iRxiPVq4iiK4/RL2g23JQnjZWVLRnCYOe0=
+        b=ONzDCBBE1d8sX5MX2Mi5xhA7RSCfTVmtbrY4yZuszxsVc3px3zjAEl6/kHQxlM34y
+         plcfhW2cby7SiY8m4gw+feDRJdQJA3lxc608WVsOacmc6ht0lS4kzzQXjTKZrnOhqE
+         PoruTBw5WZAwRUjPp7MsPA7jUTKxAHXMLGeZY46k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        syzbot+e8a797964a4180eb57d5@syzkaller.appspotmail.com,
-        syzbot+34b582cf32c1db008f8e@syzkaller.appspotmail.com,
-        Johannes Berg <johannes.berg@intel.com>
-Subject: [PATCH 4.19 084/103] cfg80211: check for set_wiphy_params
-Date:   Wed, 22 Jan 2020 10:29:40 +0100
-Message-Id: <20200122092815.181496714@linuxfoundation.org>
+        Christian Hewitt <christianshewitt@gmail.com>,
+        Kevin Hilman <khilman@baylibre.com>
+Subject: [PATCH 4.19 083/103] arm64: dts: meson-gxl-s905x-khadas-vim: fix gpio-keys-polled node
+Date:   Wed, 22 Jan 2020 10:29:39 +0100
+Message-Id: <20200122092815.061520037@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200122092803.587683021@linuxfoundation.org>
 References: <20200122092803.587683021@linuxfoundation.org>
@@ -61,37 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johannes Berg <johannes.berg@intel.com>
+From: Christian Hewitt <christianshewitt@gmail.com>
 
-commit 24953de0a5e31dcca7e82c8a3c79abc2dfe8fb6e upstream.
+commit d5f6fa904ecbadbb8e9fa6302b0fc165bec0559a upstream.
 
-Check if set_wiphy_params is assigned and return an error if not,
-some drivers (e.g. virt_wifi where syzbot reported it) don't have
-it.
+Fix DTC warnings:
 
-Reported-by: syzbot+e8a797964a4180eb57d5@syzkaller.appspotmail.com
-Reported-by: syzbot+34b582cf32c1db008f8e@syzkaller.appspotmail.com
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
-Link: https://lore.kernel.org/r/20200113125358.ac07f276efff.Ibd85ee1b12e47b9efb00a2adc5cd3fac50da791a@changeid
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+arch/arm/dts/meson-gxl-s905x-khadas-vim.dtb: Warning (avoid_unnecessary_addr_size):
+   /gpio-keys-polled: unnecessary #address-cells/#size-cells
+      without "ranges" or child "reg" property
+
+Fixes: e15d2774b8c0 ("ARM64: dts: meson-gxl: add support for the Khadas VIM board")
+Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
+Reviewed-by: Kevin Hilman <khilman@baylibre.com>
+Signed-off-by: Kevin Hilman <khilman@baylibre.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/wireless/rdev-ops.h |    4 ++++
- 1 file changed, 4 insertions(+)
+ arch/arm64/boot/dts/amlogic/meson-gxl-s905x-khadas-vim.dts |    4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
---- a/net/wireless/rdev-ops.h
-+++ b/net/wireless/rdev-ops.h
-@@ -537,6 +537,10 @@ static inline int
- rdev_set_wiphy_params(struct cfg80211_registered_device *rdev, u32 changed)
- {
- 	int ret;
-+
-+	if (!rdev->ops->set_wiphy_params)
-+		return -EOPNOTSUPP;
-+
- 	trace_rdev_set_wiphy_params(&rdev->wiphy, changed);
- 	ret = rdev->ops->set_wiphy_params(&rdev->wiphy, changed);
- 	trace_rdev_return_int(&rdev->wiphy, ret);
+--- a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-khadas-vim.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-khadas-vim.dts
+@@ -33,11 +33,9 @@
+ 
+ 	gpio-keys-polled {
+ 		compatible = "gpio-keys-polled";
+-		#address-cells = <1>;
+-		#size-cells = <0>;
+ 		poll-interval = <100>;
+ 
+-		button@0 {
++		power-button {
+ 			label = "power";
+ 			linux,code = <KEY_POWER>;
+ 			gpios = <&gpio_ao GPIOAO_2 GPIO_ACTIVE_LOW>;
 
 
