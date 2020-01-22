@@ -2,80 +2,127 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07732C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 08:57:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0FFDC33CB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 08:58:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF12D24672
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 08:57:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C83B124673
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 08:58:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579683461;
-	bh=BO71Ig/atLd53yrlotlahFJmi4U33jJcXrA6eU31LNI=;
+	s=default; t=1579683493;
+	bh=L5+TjZZJ8+VeycRrVHojzkOrux+l43ihduPe3QgHk4I=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=NxDNQYuxblLctgmovIa/sMt+VBOj6l8rb+5IDaNVNruNZDMEBeidPqC7GSq11JB/a
-	 elDpG3VQ9bKiU/FLZSwnIQQ5LL1O+tf5tAXKVuWguLEAfZG1pbDlJCw+yZsPI2zm/y
-	 ASbKmmY3Mh4yHfjIhAdPD2Z2OqQeBc6+j11pmI4o=
+	b=q5R7bqsKR6dDv/OLl9zAeO5o1ndiKkh03qDbFhzPwZNN6uZV0cv4C47rGxM7HnmuN
+	 SJeUwWzSXjgcShjK6lAQHXZo5EVZ+PScAayUDoeYSRC8P8BmD/qjNK/wLEN/R3EtLN
+	 adpsUsskUXtixiqOnYbC+7hIvWeXJAGqtkIAvkMc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729021AbgAVI5l (ORCPT
+        id S1729066AbgAVI6N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 03:57:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51230 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 03:58:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51542 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725862AbgAVI5k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 03:57:40 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        id S1725862AbgAVI6M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 03:58:12 -0500
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9A58D2253D;
-        Wed, 22 Jan 2020 08:57:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C78BA2253D;
+        Wed, 22 Jan 2020 08:58:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579683460;
-        bh=BO71Ig/atLd53yrlotlahFJmi4U33jJcXrA6eU31LNI=;
+        s=default; t=1579683491;
+        bh=L5+TjZZJ8+VeycRrVHojzkOrux+l43ihduPe3QgHk4I=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=deLMlOvVGt6KXrxBOrsAoTZHWciDMV7Sz2wzzQJppb0jnvG7vHH+E0IzQD9Kbx22n
-         kgNN3WCX1AD0FMlNy7YxshX7m2I4nWnelN1/qT3vSyqhxNMKl9BOvQxghskC/9bBIK
-         MpW5chD0AJHbi+kSoOotLENcW3gOicEgOla/kSDk=
-Date:   Wed, 22 Jan 2020 09:57:37 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     "T.Kohada" <Kohada.Tetsuhiro@dc.mitsubishielectric.co.jp>
-Cc:     Mori.Takahiro@ab.mitsubishielectric.co.jp,
-        motai.hirotaka@aj.mitsubishielectric.co.jp,
-        Valdis Kletnieks <valdis.kletnieks@vt.edu>,
-        linux-fsdevel@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] staging: exfat: remove fs_func struct.
-Message-ID: <20200122085737.GA2511011@kroah.com>
-References: <20200117062046.20491-1-Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp>
+        b=qzre03S/wypM/ojjE4jxh/az4YA+uF3N3B0tXUW1xMhb/EAJwvqdbCZ1dGM0tuD5E
+         5PJWxjJED3ew6MQGmXNLCYLb2e8IUxWsbz1tvqeapgNHuaZjFtPgkhFXKvCmx0RajU
+         b3hrQsdu4bvqu65ESrJAFwm5wbjUe6qu+tfgOSrY=
+Date:   Wed, 22 Jan 2020 08:58:06 +0000
+From:   Will Deacon <will@kernel.org>
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     Andrey Konovalov <andreyknvl@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-media@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Kostya Serebryany <kcc@google.com>,
+        stable <stable@vger.kernel.org>
+Subject: Re: [PATCH RESEND RESEND] media: uvc: Avoid cyclic entity chains due
+ to malformed USB descriptors
+Message-ID: <20200122085805.GA15537@willie-the-truck>
+References: <20191108154838.21487-1-will@kernel.org>
+ <20191108155503.GB15731@pendragon.ideasonboard.com>
+ <20191216121651.GA12947@willie-the-truck>
+ <CAAeHK+xdVmEFtK78bWd2Odn0uBynqnt5UT9jZJFvqGL=_9NU2w@mail.gmail.com>
+ <20191218114137.GA15505@willie-the-truck>
+ <20191218122324.GB17086@kroah.com>
+ <CAAeHK+xyv-x6ejwcqNAn=5eKoBYPkJsN=SgJLHJ1ey=6v+YyyA@mail.gmail.com>
+ <20191218165153.GC17876@pendragon.ideasonboard.com>
+ <20200121190142.GB13592@willie-the-truck>
+ <20200121225305.GL5003@pendragon.ideasonboard.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200117062046.20491-1-Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp>
+In-Reply-To: <20200121225305.GL5003@pendragon.ideasonboard.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 17, 2020 at 03:20:46PM +0900, T.Kohada wrote:
-> Remove 'fs_func struct' and change indirect calls to direct calls.
+On Wed, Jan 22, 2020 at 12:53:05AM +0200, Laurent Pinchart wrote:
+> On Tue, Jan 21, 2020 at 07:01:42PM +0000, Will Deacon wrote:
+> > On Wed, Dec 18, 2019 at 06:51:53PM +0200, Laurent Pinchart wrote:
+> > > On Wed, Dec 18, 2019 at 01:46:00PM +0100, Andrey Konovalov wrote:
+> > > > On Wed, Dec 18, 2019 at 1:23 PM Greg Kroah-Hartman wrote:
+> > > > > On Wed, Dec 18, 2019 at 11:41:38AM +0000, Will Deacon wrote:
+> > > > >> On Mon, Dec 16, 2019 at 02:17:52PM +0100, Andrey Konovalov wrote:
+> > > > >>> On Mon, Dec 16, 2019 at 1:16 PM Will Deacon <will@kernel.org> wrote:
+> > > > >>>> On Fri, Nov 08, 2019 at 05:55:03PM +0200, Laurent Pinchart wrote:
+> > > > >>>>> Thank you for the patch.
+> > > > >>>>>
+> > > > >>>>> I'm sorry for the delay, and will have to ask you to be a bit more
+> > > > >>>>> patient I'm afraid. I will leave tomorrow for a week without computer
+> > > > >>>>> access and will only be able to go through my backlog when I will be
+> > > > >>>>> back on the 17th.
+> > > > >>>>
+> > > > >>>> Gentle reminder on this, now you've been back a month ;)
+> > > > >>>
+> > > > >>> I think we now have a reproducer for this issue that syzbot just reported:
+> > > > >>>
+> > > > >>> https://syzkaller.appspot.com/bug?extid=0a5c96772a9b26f2a876
+> > > > >>>
+> > > > >>> You can try you patch on it :)
+> > > > >>
+> > > > >> Oh wow, I *really* like the raw USB gadget thingy you have to reproduce
+> > > > >> these! I also really like that this patch fixes the issue. Logs below.
+> > > > 
+> > > > Thanks! An easier way to test the patch would be to issue a syz test
+> > > > command, but I'm glad you managed to set up raw gadget manually and it
+> > > > worked for you.
+> > > > 
+> > > > >
+> > > > > Ok, that's a good poke for me to go review that raw gadget code to see
+> > > > > if it can be merged upstream :)
+> > > > 
+> > > > Looking forward to it! =)
+> > > 
+> > > Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> > > 
+> > > and merged in my tree. I'm so sorry for the way too long delay.
+> > 
+> > Please can you send this upstream and/or put it in linux-next? I can't see
+> > it anywhere at the moment :(
 > 
-> The following issues are described in exfat's TODO.
-> > Create helper function for exfat_set_entry_time () and
-> > exfat_set_entry_type () because it's sort of ugly to be calling the same functionn directly and other code calling through  the fs_func struc ponters ...
-> 
-> The fs_func struct was used for switching the helper functions of fat16/fat32/exfat.
-> Now, it has lost the role of switching, just making the code less readable.
-> 
-> Signed-off-by: T.Kohada <Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp>
+> I've now sent the pull request.
 
-We need a "full" name here, not just an abbreviation, use what you would
-for a document.
+Thanks, Laurent.
 
-Also the patch does not apply to the linux-next tree at all, so I can't
-take it.  Please rebase and resend.
+> Seems I failed the schedule from A to Z with this patch. I'm extremely
+> sorry :-(
 
-thanks,
+Well, at least you were consistent ;)
 
-greg k-h
+Will
