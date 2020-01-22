@@ -2,53 +2,54 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95203C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:36:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0956C33CB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:37:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 688182467E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:36:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76A812467E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:37:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579685816;
-	bh=6iiW+6cKKI/kGdLzzH3K+plX8sGlQdE7VetFRoAKqLA=;
+	s=default; t=1579685820;
+	bh=U01ImcXiMVQ+6F1rV4sEe5fLN+vVgVK5/h8301HQ7L4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=w9skwBm5jHG5WnUGH7KuScwO6IYCCnaQDqRzLg6e6Efjf35yFrI504eouUZk8OiwS
-	 7r7M/ctUroxCdY3ugF30G6MK3PiTfc/ZxpsTuVRQ5RY4tpTIAUWQozxXaNkAB1Yt9P
-	 PBkjqt9HMKFGJ73uZ0reDKe/23t4xsF9cIvMvZ+U=
+	b=cFBemdXDJnKDcytQxp/l2kCYflzqOlcb5SsOTQilNKEdv00/DvPYkCEk+Fsbo9gR6
+	 6Mz/zgTQfeVcj28pEAjx1b3+g/HUqc2TO95sD4d46VMrRbmX6HUT1qIPIfD3ynZ8HV
+	 Fb/2k/xYAigQSzJNkNtql8NhUQjiMNnVPPtj8uPs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732125AbgAVJgz (ORCPT
+        id S1732273AbgAVJg7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 04:36:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52448 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 04:36:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52604 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730573AbgAVJgu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 04:36:50 -0500
+        id S1729827AbgAVJgy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 04:36:54 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9FFA72467B;
-        Wed, 22 Jan 2020 09:36:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B0A8324686;
+        Wed, 22 Jan 2020 09:36:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579685809;
-        bh=6iiW+6cKKI/kGdLzzH3K+plX8sGlQdE7VetFRoAKqLA=;
+        s=default; t=1579685814;
+        bh=U01ImcXiMVQ+6F1rV4sEe5fLN+vVgVK5/h8301HQ7L4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ov7ws+feAI/zu8PTU0wUrc6YFDx+I3lAxLQVtQwjjc6Pgj7zXmS8zGjEswHIejqD9
-         S7Wvf5xP5deZV+jsNvAASM8BWzhSk4kKqAcDkthJM5eOoUrjMSufMIJWe0ko9gCE17
-         HR/NcXgevyu3sjrstahKCihOBUaajMLp834hMwds=
+        b=QYCE2cm+/wxyIufUJkBqRsEgsNJnxiNvWBztYJlUg0VLTUZUFf7kkWCUpcwhmQgOp
+         pKXoa+dtPNRde1gp5h3iw1inY2hU5nKZ9owivAmbnqabqt8Z0yM2UIhlXUdl0Nm3G3
+         /FrAf0u/hJOLjeVkmUUn5FdMy0266r2Bw19Jb7Uw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Juergen Gross <jgross@suse.com>,
-        =?UTF-8?q?Roger=20Pau=20Monn=C3=A9?= <roger.pau@citrix.com>
-Subject: [PATCH 4.9 87/97] xen/blkfront: Adjust indentation in xlvbd_alloc_gendisk
-Date:   Wed, 22 Jan 2020 10:29:31 +0100
-Message-Id: <20200122092810.259748100@linuxfoundation.org>
+        stable@vger.kernel.org, Jari Ruusu <jari.ruusu@gmail.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Luis Chamberlain <mcgrof@kernel.org>, stable@kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.9 54/97] Fix built-in early-load Intel microcode alignment
+Date:   Wed, 22 Jan 2020 10:28:58 +0100
+Message-Id: <20200122092805.117049806@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200122092755.678349497@linuxfoundation.org>
 References: <20200122092755.678349497@linuxfoundation.org>
@@ -61,51 +62,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: Jari Ruusu <jari.ruusu@gmail.com>
 
-commit 589b72894f53124a39d1bb3c0cecaf9dcabac417 upstream.
+commit f5ae2ea6347a308cfe91f53b53682ce635497d0d upstream.
 
-Clang warns:
+Intel Software Developer's Manual, volume 3, chapter 9.11.6 says:
 
-../drivers/block/xen-blkfront.c:1117:4: warning: misleading indentation;
-statement is not part of the previous 'if' [-Wmisleading-indentation]
-                nr_parts = PARTS_PER_DISK;
-                ^
-../drivers/block/xen-blkfront.c:1115:3: note: previous statement is here
-                if (err)
-                ^
+ "Note that the microcode update must be aligned on a 16-byte boundary
+  and the size of the microcode update must be 1-KByte granular"
 
-This is because there is a space at the beginning of this line; remove
-it so that the indentation is consistent according to the Linux kernel
-coding style and clang no longer warns.
+When early-load Intel microcode is loaded from initramfs, userspace tool
+'iucode_tool' has already 16-byte aligned those microcode bits in that
+initramfs image.  Image that was created something like this:
 
-While we are here, the previous line has some trailing whitespace; clean
-that up as well.
+ iucode_tool --write-earlyfw=FOO.cpio microcode-files...
 
-Fixes: c80a420995e7 ("xen-blkfront: handle Xen major numbers other than XENVBD")
-Link: https://github.com/ClangBuiltLinux/linux/issues/791
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Reviewed-by: Juergen Gross <jgross@suse.com>
-Acked-by: Roger Pau Monné <roger.pau@citrix.com>
-Signed-off-by: Juergen Gross <jgross@suse.com>
+However, when early-load Intel microcode is loaded from built-in
+firmware BLOB using CONFIG_EXTRA_FIRMWARE= kernel config option, that
+16-byte alignment is not guaranteed.
+
+Fix this by forcing all built-in firmware BLOBs to 16-byte alignment.
+
+[ If we end up having other firmware with much bigger alignment
+  requirements, we might need to introduce some method for the firmware
+  to specify it, this is the minimal "just increase the alignment a bit
+  to account for this one special case" patch    - Linus ]
+
+Signed-off-by: Jari Ruusu <jari.ruusu@gmail.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Fenghua Yu <fenghua.yu@intel.com>
+Cc: Luis Chamberlain <mcgrof@kernel.org>
+Cc: stable@kernel.org
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/block/xen-blkfront.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ firmware/Makefile |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/block/xen-blkfront.c
-+++ b/drivers/block/xen-blkfront.c
-@@ -1104,8 +1104,8 @@ static int xlvbd_alloc_gendisk(blkif_sec
- 	if (!VDEV_IS_EXTENDED(info->vdevice)) {
- 		err = xen_translate_vdev(info->vdevice, &minor, &offset);
- 		if (err)
--			return err;		
-- 		nr_parts = PARTS_PER_DISK;
-+			return err;
-+		nr_parts = PARTS_PER_DISK;
- 	} else {
- 		minor = BLKIF_MINOR_EXT(info->vdevice);
- 		nr_parts = PARTS_PER_EXT_DISK;
+--- a/firmware/Makefile
++++ b/firmware/Makefile
+@@ -156,7 +156,7 @@ quiet_cmd_fwbin = MK_FW   $@
+ 		  PROGBITS=$(if $(CONFIG_ARM),%,@)progbits;		     \
+ 		  echo "/* Generated by firmware/Makefile */"		> $@;\
+ 		  echo "    .section .rodata"				>>$@;\
+-		  echo "    .p2align $${ASM_ALIGN}"			>>$@;\
++		  echo "    .p2align 4"					>>$@;\
+ 		  echo "_fw_$${FWSTR}_bin:"				>>$@;\
+ 		  echo "    .incbin \"$(2)\""				>>$@;\
+ 		  echo "_fw_end:"					>>$@;\
 
 
