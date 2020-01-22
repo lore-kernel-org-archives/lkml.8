@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A7EFC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:43:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B911DC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:43:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F19E424689
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:43:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FBBE24680
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:43:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579686204;
-	bh=i10MW2+Qu7Z85NJhBoA491SH3xqli0eWFNlGQUOlvgA=;
+	s=default; t=1579686208;
+	bh=LkO3dcfFqR8zgnPUcvR0C9jzGSFEbVchWHd+/lnipPE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1c/nemx9YxY+leBvHZEMP+XteKdeGyncwZb2eoUuZ6EbiWNML/4xSAwmMuIpL6dbU
-	 XToJ/043wZu5z87wQLEzypD59QYqTA3hj4KSVz+3jlPNc02c2UTvgogyQBgn/KSXQU
-	 TIA/KlIMFnZ/mwQQi/QFuMq1mmtRwGs1f0IHwVBY=
+	b=O5ll/4FqD4dNOQZnNxw+OecKd5QCWWv9PpSkpC33eYuQIn3ZErnaUFdAV6PpeGF04
+	 48FGn7IUY6ghFUx9QLImMA7gVgpPVYqUzSrCapGfG2jsXuU6ujY3sb6zeqW3TTtZmy
+	 L+5M9MM2CNb7yzzPFI6N/U8Mb79tkoovq85wBAk0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387565AbgAVJnX (ORCPT
+        id S2387878AbgAVJn1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 04:43:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35564 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 04:43:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35848 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387842AbgAVJnM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 04:43:12 -0500
+        id S2387860AbgAVJnX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 04:43:23 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D89CF24689;
-        Wed, 22 Jan 2020 09:43:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7DE9024686;
+        Wed, 22 Jan 2020 09:43:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579686192;
-        bh=i10MW2+Qu7Z85NJhBoA491SH3xqli0eWFNlGQUOlvgA=;
+        s=default; t=1579686202;
+        bh=LkO3dcfFqR8zgnPUcvR0C9jzGSFEbVchWHd+/lnipPE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xAfw69nA9TowUTnqQj3n1j1mr3zN6PQbJXGmm24Pu0uTYjVpaZNebJl7epJzl6kcr
-         sC5IW990SJTXXMl/EBD4/hK6W1GEo2b2suxkW58okyxmPpa/eWDgMPSYDRPedM8UeI
-         1wVffIB+lq4bxfGIYiVPVj8r6MWQoRqZSlLHc/go=
+        b=Lv32bus3TboY4Su6ic5KFEYFZrktMDn2VZpymLwgKqHpV7EPoLSTM15bdPk4YVda8
+         1IAS+Pns+MFnqiOwDgw2cW/+/D6SIAOLULhfl9WlENPGSGq0MjmiCY4JvDl+cXWZ1B
+         03y18StzYRA1gA1X52PWcfCjo9vJGQoCmiG5/qYs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Palmer Dabbelt <palmer@sifive.com>
-Subject: [PATCH 4.19 081/103] irqchip: Place CONFIG_SIFIVE_PLIC into the menu
-Date:   Wed, 22 Jan 2020 10:29:37 +0100
-Message-Id: <20200122092814.885385201@linuxfoundation.org>
+        stable@vger.kernel.org, syzbot <syzkaller@googlegroups.com>,
+        Eric Dumazet <edumazet@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: [PATCH 4.19 085/103] tick/sched: Annotate lockless access to last_jiffies_update
+Date:   Wed, 22 Jan 2020 10:29:41 +0100
+Message-Id: <20200122092815.270309700@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200122092803.587683021@linuxfoundation.org>
 References: <20200122092803.587683021@linuxfoundation.org>
@@ -61,41 +60,120 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jonathan Neuschäfer <j.neuschaefer@gmx.net>
+From: Eric Dumazet <edumazet@google.com>
 
-commit 0149385537e6d36f535fcd83cfcabf83a32f0836 upstream.
+commit de95a991bb72e009f47e0c4bbc90fc5f594588d5 upstream.
 
-Somehow CONFIG_SIFIVE_PLIC ended up outside of the "IRQ chip support"
-menu.
+syzbot (KCSAN) reported a data-race in tick_do_update_jiffies64():
 
-Fixes: 8237f8bc4f6e ("irqchip: add a SiFive PLIC driver")
-Signed-off-by: Jonathan Neuschäfer <j.neuschaefer@gmx.net>
-Signed-off-by: Marc Zyngier <maz@kernel.org>
-Reviewed-by: Palmer Dabbelt <palmer@sifive.com>
-Acked-by: Palmer Dabbelt <palmer@sifive.com>
-Link: https://lore.kernel.org/r/20191002144452.10178-1-j.neuschaefer@gmx.net
+BUG: KCSAN: data-race in tick_do_update_jiffies64 / tick_do_update_jiffies64
+
+write to 0xffffffff8603d008 of 8 bytes by interrupt on cpu 1:
+ tick_do_update_jiffies64+0x100/0x250 kernel/time/tick-sched.c:73
+ tick_sched_do_timer+0xd4/0xe0 kernel/time/tick-sched.c:138
+ tick_sched_timer+0x43/0xe0 kernel/time/tick-sched.c:1292
+ __run_hrtimer kernel/time/hrtimer.c:1514 [inline]
+ __hrtimer_run_queues+0x274/0x5f0 kernel/time/hrtimer.c:1576
+ hrtimer_interrupt+0x22a/0x480 kernel/time/hrtimer.c:1638
+ local_apic_timer_interrupt arch/x86/kernel/apic/apic.c:1110 [inline]
+ smp_apic_timer_interrupt+0xdc/0x280 arch/x86/kernel/apic/apic.c:1135
+ apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:830
+ arch_local_irq_restore arch/x86/include/asm/paravirt.h:756 [inline]
+ kcsan_setup_watchpoint+0x1d4/0x460 kernel/kcsan/core.c:436
+ check_access kernel/kcsan/core.c:466 [inline]
+ __tsan_read1 kernel/kcsan/core.c:593 [inline]
+ __tsan_read1+0xc2/0x100 kernel/kcsan/core.c:593
+ kallsyms_expand_symbol.constprop.0+0x70/0x160 kernel/kallsyms.c:79
+ kallsyms_lookup_name+0x7f/0x120 kernel/kallsyms.c:170
+ insert_report_filterlist kernel/kcsan/debugfs.c:155 [inline]
+ debugfs_write+0x14b/0x2d0 kernel/kcsan/debugfs.c:256
+ full_proxy_write+0xbd/0x100 fs/debugfs/file.c:225
+ __vfs_write+0x67/0xc0 fs/read_write.c:494
+ vfs_write fs/read_write.c:558 [inline]
+ vfs_write+0x18a/0x390 fs/read_write.c:542
+ ksys_write+0xd5/0x1b0 fs/read_write.c:611
+ __do_sys_write fs/read_write.c:623 [inline]
+ __se_sys_write fs/read_write.c:620 [inline]
+ __x64_sys_write+0x4c/0x60 fs/read_write.c:620
+ do_syscall_64+0xcc/0x370 arch/x86/entry/common.c:290
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+read to 0xffffffff8603d008 of 8 bytes by task 0 on cpu 0:
+ tick_do_update_jiffies64+0x2b/0x250 kernel/time/tick-sched.c:62
+ tick_nohz_update_jiffies kernel/time/tick-sched.c:505 [inline]
+ tick_nohz_irq_enter kernel/time/tick-sched.c:1257 [inline]
+ tick_irq_enter+0x139/0x1c0 kernel/time/tick-sched.c:1274
+ irq_enter+0x4f/0x60 kernel/softirq.c:354
+ entering_irq arch/x86/include/asm/apic.h:517 [inline]
+ entering_ack_irq arch/x86/include/asm/apic.h:523 [inline]
+ smp_apic_timer_interrupt+0x55/0x280 arch/x86/kernel/apic/apic.c:1133
+ apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:830
+ native_safe_halt+0xe/0x10 arch/x86/include/asm/irqflags.h:60
+ arch_cpu_idle+0xa/0x10 arch/x86/kernel/process.c:571
+ default_idle_call+0x1e/0x40 kernel/sched/idle.c:94
+ cpuidle_idle_call kernel/sched/idle.c:154 [inline]
+ do_idle+0x1af/0x280 kernel/sched/idle.c:263
+ cpu_startup_entry+0x1b/0x20 kernel/sched/idle.c:355
+ rest_init+0xec/0xf6 init/main.c:452
+ arch_call_rest_init+0x17/0x37
+ start_kernel+0x838/0x85e init/main.c:786
+ x86_64_start_reservations+0x29/0x2b arch/x86/kernel/head64.c:490
+ x86_64_start_kernel+0x72/0x76 arch/x86/kernel/head64.c:471
+ secondary_startup_64+0xa4/0xb0 arch/x86/kernel/head_64.S:241
+
+Reported by Kernel Concurrency Sanitizer on:
+CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.4.0-rc7+ #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+
+Use READ_ONCE() and WRITE_ONCE() to annotate this expected race.
+
+Reported-by: syzbot <syzkaller@googlegroups.com>
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lore.kernel.org/r/20191205045619.204946-1-edumazet@google.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/irqchip/Kconfig |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ kernel/time/tick-sched.c |   14 +++++++++-----
+ 1 file changed, 9 insertions(+), 5 deletions(-)
 
---- a/drivers/irqchip/Kconfig
-+++ b/drivers/irqchip/Kconfig
-@@ -371,8 +371,6 @@ config QCOM_PDC
- 	  Power Domain Controller driver to manage and configure wakeup
- 	  IRQs for Qualcomm Technologies Inc (QTI) mobile chips.
+--- a/kernel/time/tick-sched.c
++++ b/kernel/time/tick-sched.c
+@@ -61,8 +61,9 @@ static void tick_do_update_jiffies64(kti
  
--endmenu
--
- config SIFIVE_PLIC
- 	bool "SiFive Platform-Level Interrupt Controller"
- 	depends on RISCV
-@@ -384,3 +382,5 @@ config SIFIVE_PLIC
- 	   interrupt sources are subordinate to the PLIC.
+ 	/*
+ 	 * Do a quick check without holding jiffies_lock:
++	 * The READ_ONCE() pairs with two updates done later in this function.
+ 	 */
+-	delta = ktime_sub(now, last_jiffies_update);
++	delta = ktime_sub(now, READ_ONCE(last_jiffies_update));
+ 	if (delta < tick_period)
+ 		return;
  
- 	   If you don't know what to do here, say Y.
-+
-+endmenu
+@@ -73,8 +74,9 @@ static void tick_do_update_jiffies64(kti
+ 	if (delta >= tick_period) {
+ 
+ 		delta = ktime_sub(delta, tick_period);
+-		last_jiffies_update = ktime_add(last_jiffies_update,
+-						tick_period);
++		/* Pairs with the lockless read in this function. */
++		WRITE_ONCE(last_jiffies_update,
++			   ktime_add(last_jiffies_update, tick_period));
+ 
+ 		/* Slow path for long timeouts */
+ 		if (unlikely(delta >= tick_period)) {
+@@ -82,8 +84,10 @@ static void tick_do_update_jiffies64(kti
+ 
+ 			ticks = ktime_divns(delta, incr);
+ 
+-			last_jiffies_update = ktime_add_ns(last_jiffies_update,
+-							   incr * ticks);
++			/* Pairs with the lockless read in this function. */
++			WRITE_ONCE(last_jiffies_update,
++				   ktime_add_ns(last_jiffies_update,
++						incr * ticks));
+ 		}
+ 		do_timer(++ticks);
+ 
 
 
