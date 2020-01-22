@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB3B2C33CAF
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:41:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C8EFC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:42:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF19224687
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:41:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 661F124687
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:42:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579686118;
-	bh=5KGiFtPDCtBNnlUpwuwCkTLUluovlgdstuOfe64TrN0=;
+	s=default; t=1579686121;
+	bh=jBO8c3HZQlw8vC1oXpZ3tYukt12CxJcPFqFl1KXNQiU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1GDdsteYD7fUtxos11uNGRjGtqQ2X+34CJh8qnGA7o9x7bTyDBPk4QunHFN+80H7w
-	 t8fEhUdMO78BW/f+CxgjTohdUNtNzVrqO4z5v5mkOzBbZYqaJm+UvYUSTilVEln0m8
-	 Ox3kTs6i3D6i0I7N7CJIdJ1iUmf0KL55xbvbqXec=
+	b=BqixVFLXtBxhiIyNEuxnpfaeOsVsFkigSe+1nvzkk2ZybFk17KwPlxAEOsScbr+hF
+	 67/v86/NmXEbF1RCGwWtQvhIBcqEiCxqByacd/nYy+Dpj1JIR9zj8c6Ys6j5AIDeP3
+	 oTtpLq87rPICxjV36TaLTg7mUbsZBmglvUm41vFY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387495AbgAVJl5 (ORCPT
+        id S2387660AbgAVJmA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 04:41:57 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33276 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 04:42:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33360 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387624AbgAVJlu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 04:41:50 -0500
+        id S2387632AbgAVJlw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 04:41:52 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 12E1B2467B;
-        Wed, 22 Jan 2020 09:41:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 756D524686;
+        Wed, 22 Jan 2020 09:41:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579686109;
-        bh=5KGiFtPDCtBNnlUpwuwCkTLUluovlgdstuOfe64TrN0=;
+        s=default; t=1579686111;
+        bh=jBO8c3HZQlw8vC1oXpZ3tYukt12CxJcPFqFl1KXNQiU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JqxmtY+ldXtHWWjliep7jkBTe0NEd/yVRmzkgx50ZCL8wmDHY0Lv4RCEA7yq355XI
-         mYrooXZOQNm+HCXAjzyYKThvUnXNnI7RRCX0vK5XykvFbhK8fFn8BUEqz9wkPy/V9Z
-         j10x6r51XEDXCV8MNL68i4cPn0ZdvdORkgrWYEr0=
+        b=RmSMPECnlrj5BeZzdruvafhKFBCSZLBaBagQOVmr+mDMMxAjFRsBMMCqxmzrYHEP7
+         6m2SCX6Y/8II5awy3CVnxbbXblTo4GNMDKuA3Pn4EfPaaxodL4J+LcdT2GuLHSiSdH
+         EvVqP7p+lSY3hQF4WYbWpdrtJoC+EailDQn8NTUo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Fabio Estevam <fabio.estevam@nxp.com>,
-        Jacopo Mondi <jacopo@jmondi.org>,
-        =?UTF-8?q?Daniel=20D=C3=ADaz?= <daniel.diaz@linaro.org>,
+        stable@vger.kernel.org, Jacopo Mondi <jacopo@jmondi.org>,
+        Michael Trimarchi <michael@amarulasolutions.com>,
+        Jagan Teki <jagan@amarulasolutions.com>,
         Shawn Guo <shawnguo@kernel.org>
-Subject: [PATCH 4.19 047/103] ARM: dts: imx6qdl: Add Engicam i.Core 1.5 MX6
-Date:   Wed, 22 Jan 2020 10:29:03 +0100
-Message-Id: <20200122092810.874280626@linuxfoundation.org>
+Subject: [PATCH 4.19 048/103] ARM: dts: imx6q-icore-mipi: Use 1.5 version of i.Core MX6DL
+Date:   Wed, 22 Jan 2020 10:29:04 +0100
+Message-Id: <20200122092811.032334820@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200122092803.587683021@linuxfoundation.org>
 References: <20200122092803.587683021@linuxfoundation.org>
@@ -61,64 +61,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jacopo Mondi <jacopo@jmondi.org>
+From: Jagan Teki <jagan@amarulasolutions.com>
 
-commit 37c045d25e90038682b845de0a1db43c8301694d upstream.
+commit 4a132f60808ae3a751e107a373f8572012352d3c upstream.
 
-The 1.5 version of Engicam's i.Core MX6 CPU module features a different clock
-provider for the ethernet's PHY interface. Adjust the FEC ptp clock to
-reference CLK_ENET_REF clock source, and set SION bit of
-MX6QDL_PAD_GPIO_16__ENET_REF_CLK to adjust the input path of that pin.
+The EDIMM STARTER KIT i.Core 1.5 MIPI Evaluation is based on
+the 1.5 version of the i.Core MX6 cpu module. The 1.5 version
+differs from the original one for a few details, including the
+ethernet PHY interface clock provider.
 
-The newly introduced imx6ql-icore-1.5.dtsi allows to collect in a single
-place differences between version '1.0' and '1.5' of the module.
+With this commit, the ethernet interface works properly:
+SMSC LAN8710/LAN8720 2188000.ethernet-1:00: attached PHY driver
 
-Reviewed-by: Fabio Estevam <fabio.estevam@nxp.com>
-Signed-off-by: Jacopo Mondi <jacopo@jmondi.org>
-Cc: Daniel Díaz <daniel.diaz@linaro.org>
+While before using the 1.5 version, ethernet failed to startup
+do to un-clocked PHY interface:
+fec 2188000.ethernet eth0: could not attach to PHY
+
+Similar fix has merged for i.Core MX6Q but missed to update for DL.
+
+Fixes: a8039f2dd089 ("ARM: dts: imx6dl: Add Engicam i.CoreM6 1.5 Quad/Dual MIPI starter kit support")
+Cc: Jacopo Mondi <jacopo@jmondi.org>
+Signed-off-by: Michael Trimarchi <michael@amarulasolutions.com>
+Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
 Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm/boot/dts/imx6qdl-icore-1.5.dtsi |   34 +++++++++++++++++++++++++++++++
- 1 file changed, 34 insertions(+)
+ arch/arm/boot/dts/imx6dl-icore-mipi.dts |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- /dev/null
-+++ b/arch/arm/boot/dts/imx6qdl-icore-1.5.dtsi
-@@ -0,0 +1,34 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * Copyright (C) 2018 Jacopo Mondi <jacopo@jmondi.org>
-+ */
-+
-+#include "imx6qdl-icore.dtsi"
-+
-+&iomuxc {
-+	pinctrl_enet: enetgrp {
-+		fsl,pins = <
-+			MX6QDL_PAD_ENET_CRS_DV__ENET_RX_EN	0x1b0b0
-+			MX6QDL_PAD_GPIO_16__ENET_REF_CLK	0x4001b0b0
-+			MX6QDL_PAD_ENET_TX_EN__ENET_TX_EN	0x1b0b0
-+			MX6QDL_PAD_ENET_RXD1__ENET_RX_DATA1	0x1b0b0
-+			MX6QDL_PAD_ENET_RXD0__ENET_RX_DATA0	0x1b0b0
-+			MX6QDL_PAD_ENET_TXD1__ENET_TX_DATA1	0x1b0b0
-+			MX6QDL_PAD_ENET_TXD0__ENET_TX_DATA0	0x1b0b0
-+			MX6QDL_PAD_ENET_MDC__ENET_MDC		0x1b0b0
-+			MX6QDL_PAD_ENET_MDIO__ENET_MDIO		0x1b0b0
-+			MX6QDL_PAD_GPIO_17__GPIO7_IO12		0x1b0b0
-+		>;
-+	};
-+};
-+
-+&fec {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_enet>;
-+	phy-reset-gpios = <&gpio7 12 GPIO_ACTIVE_LOW>;
-+	clocks = <&clks IMX6QDL_CLK_ENET>,
-+		 <&clks IMX6QDL_CLK_ENET>,
-+		 <&clks IMX6QDL_CLK_ENET_REF>;
-+	phy-mode = "rmii";
-+	status = "okay";
-+};
+--- a/arch/arm/boot/dts/imx6dl-icore-mipi.dts
++++ b/arch/arm/boot/dts/imx6dl-icore-mipi.dts
+@@ -8,7 +8,7 @@
+ /dts-v1/;
+ 
+ #include "imx6dl.dtsi"
+-#include "imx6qdl-icore.dtsi"
++#include "imx6qdl-icore-1.5.dtsi"
+ 
+ / {
+ 	model = "Engicam i.CoreM6 DualLite/Solo MIPI Starter Kit";
 
 
