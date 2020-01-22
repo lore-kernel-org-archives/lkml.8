@@ -2,98 +2,118 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7429BC33CB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 12:23:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AF6AC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 12:27:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53D2724655
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 12:23:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32EEA2467A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 12:27:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=stwm.de header.i=@stwm.de header.b="CPdDXJK9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729134AbgAVMXP (ORCPT
+        id S1729047AbgAVM1k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 07:23:15 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:20814 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729017AbgAVMXO (ORCPT
+        Wed, 22 Jan 2020 07:27:40 -0500
+Received: from dresden.studentenwerk.mhn.de ([141.84.225.229]:45332 "EHLO
+        email.studentenwerk.mhn.de" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726204AbgAVM1k (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 07:23:14 -0500
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00MCMN4S135850
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jan 2020 07:23:14 -0500
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2xnnn7kx4r-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jan 2020 07:23:13 -0500
-Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Wed, 22 Jan 2020 12:23:12 -0000
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 22 Jan 2020 12:23:09 -0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 00MCN8YR20512960
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 22 Jan 2020 12:23:08 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B925FAE053;
-        Wed, 22 Jan 2020 12:23:08 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1B48CAE04D;
-        Wed, 22 Jan 2020 12:23:08 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.85.146.245])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed, 22 Jan 2020 12:23:07 +0000 (GMT)
-Subject: Re: [PATCH] IMA: Turn IMA_MEASURE_ASYMMETRIC_KEYS off by default
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     James Bottomley <James.Bottomley@HansenPartnership.com>,
-        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        linux-integrity@vger.kernel.org
-Cc:     sashal@kernel.org, linux-kernel@vger.kernel.org
-Date:   Wed, 22 Jan 2020 07:23:07 -0500
-In-Reply-To: <1579636351.3390.35.camel@HansenPartnership.com>
-References: <20200121171302.4935-1-nramas@linux.microsoft.com>
-         <1579628090.3390.28.camel@HansenPartnership.com>
-         <1579634035.5125.311.camel@linux.ibm.com>
-         <1579636351.3390.35.camel@HansenPartnership.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 20012212-4275-0000-0000-00000399E783
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20012212-4276-0000-0000-000038ADF27D
-Message-Id: <1579695787.5182.29.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-01-17_05:2020-01-16,2020-01-17 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 mlxlogscore=999
- spamscore=0 impostorscore=0 phishscore=0 priorityscore=1501 bulkscore=0
- suspectscore=0 lowpriorityscore=0 clxscore=1015 mlxscore=0 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-1910280000
- definitions=main-2001220114
+        Wed, 22 Jan 2020 07:27:40 -0500
+Received: from mailhub.studentenwerk.mhn.de (mailhub.studentenwerk.mhn.de [127.0.0.1])
+        by email.studentenwerk.mhn.de (Postfix) with ESMTPS id 482l6K5Dl1zRhSK;
+        Wed, 22 Jan 2020 13:27:37 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stwm.de; s=stwm-20170627;
+        t=1579696057;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=3yyTXS3QHlZFKWQCRy2IPfL2mJkRYpgCmXeGUd95d0A=;
+        b=CPdDXJK9EXCNdRmqaWImfulhz3++nnh6MRf0i4NzGKUf/Zoa51pjQ19Y/blcTAkZI/pEd+
+        V4CDOSe4WmaRQ3k/lbC+z1toZI7wiU270KFgKn8OcEuYiUS0AsVYQlINf7MtJm/etKT40a
+        yqmrLT3nwNqw8XRX1MQhu0aEdRTXyf7SyEq1B3wnyDa1Ghb2djkSG5DKP3Wsj6mNs97urq
+        JCIgF58WV/jZNDApvUyd7UXRREErSGPDfYuQpuF6my3aRNkMnug6XUd2PoRdJ+4HCruvd1
+        Wg9KpxXPA3ICUIlegvphbe5UONL8n+OEBaFUeig+5B1VV3RL+qaYz/qyRDMS9Q==
+From:   Wolfgang Walter <linux@stwm.de>
+To:     David Miller <davem@davemloft.net>
+Cc:     xiaofeng.yan2012@gmail.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, ap420073@gmail.com,
+        yanxiaofeng7@jd.com
+Subject: Re: [PATCH v2] hsr: Fix a compilation error
+Date:   Wed, 22 Jan 2020 13:27:37 +0100
+Message-ID: <2043688.Di36XlgKKK@stwm.de>
+User-Agent: KMail/4.14.3 (Linux/5.0.6-050006-generic; KDE/4.14.13; x86_64; ; )
+In-Reply-To: <20200120.132136.1992070505971817725.davem@davemloft.net>
+References: <20200120062639.3074-1-xiaofeng.yan2012@gmail.com> <20200120.132136.1992070505971817725.davem@davemloft.net>
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="iso-8859-1"
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=stwm.de;
+        s=stwm-20170627; t=1579696057;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=3yyTXS3QHlZFKWQCRy2IPfL2mJkRYpgCmXeGUd95d0A=;
+        b=Pf7f1T2KBNogpymp/mfj3AibMqnxHtp7kuDcgMg59x97g7CmS5iz1Q5Ptalj3ljDzsqMpl
+        zlemrpmE6jtjH8dpFsckEwn364pxthjhLkJY5VVKjGaDnWpFhnjjExm1hXZ8dkM3f4RBxD
+        w0ZwCxr1/QVCkJJUrknZCAPZ2ZFcqN1kLQiPfcwCuVlwssbMI2UZRe2b08EnUUxS043+ZM
+        Pq0/G9+CO4lYIZhzH6Rx4kK4fcsQ2rxKegHO5StHaCdWxsrRBjjkmLDdX8niXLqqaiWO3z
+        /gTgkI6CImCo+HAEPm7CpzSi0aEKx2YQlA4BxuYSPGb7i7cAtVwddO/rEYe5CA==
+ARC-Seal: i=1; s=stwm-20170627; d=stwm.de; t=1579696057; a=rsa-sha256;
+        cv=none;
+        b=PYD20WI5OY+X/YqOle3ZO4dhKE9rkc9e0Ya/7H8dkFEi0zGl/myiZ1+3NzLc/I6Ex3FXb9
+        zshzNCFGw3RL4Y6iGYM1LP84GHm6/x/ezVzC33BKMthzHQKAzsgoADGGfamJC4YVYCl/Kj
+        V96jvuv6TByI24uwhbyE8+i0AQQ8xD7sUB8a3fjiiWx22vUhwhxEcErgrsvc+qz/P38SyJ
+        yB0kuTmTm4+3pTChKzdbrzKItiESq9fqsK5lQ0exwdQ+1zhNy3ug/G+ind9cL4xzkBSNub
+        VHMxqtsSzSJwTEEJyeuz02XCsIxT1FdWIecYnZ9I7UYfJtlxuglcw35l1OqlPg==
+ARC-Authentication-Results: i=1;
+        email.studentenwerk.mhn.de;
+        none
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-01-21 at 11:52 -0800, James Bottomley wrote:
-> On Tue, 2020-01-21 at 14:13 -0500, Mimi Zohar wrote:
+Am Montag, 20. Januar 2020, 13:21:36 schrieb David Miller:
+> From: "xiaofeng.yan" <xiaofeng.yan2012@gmail.com>
+> Date: Mon, 20 Jan 2020 14:26:39 +0800
+>=20
+> > From: "xiaofeng.yan" <yanxiaofeng7@jd.com>
+> >=20
+> > A compliation error happen when building branch 5.5-rc7
+> >=20
+> > In file included from net/hsr/hsr_main.c:12:0:
+> > net/hsr/hsr_main.h:194:20: error: two or more data types in declara=
+tion
+> > specifiers>=20
+> >  static inline void void hsr_debugfs_rename(struct net_device *dev)=
 
-> > This change permits disabling queueing certificates.  Whether the
-> > default should be "disabled" is a separate question.  I'm open to
-> > comments/suggestions.
-> 
-> I'm just giving the general rule of thumb for boolean config options. 
-> If it's default Y there likely shouldn't be a config option and if it's
-> default N the feature should likely not be in the kernel at all.
+> >=20
+> > So Removed one void.
+> >=20
+> > Fixes: 4c2d5e33dcd3 ("hsr: rename debugfs file when interface name =
+is
+> > changed") Signed-off-by: xiaofeng.yan <yanxiaofeng7@jd.com>
+> > Acked-by: Taehee Yoo <ap420073@gmail.com>
+>=20
+> Applied, thank you.
 
-Thanks, James.  I'll keep this in mind when debating about defining a
-new Kconfig option.
+This seems to be the same fix as the fix from Arnd Bergmann:
 
-Mimi
+=09https://lkml.org/lkml/2020/1/7/876
 
+which was applied to net-next:
+
+https://git.kernel.org/pub/scm/linux/kernel/git/netdev/net-next.git/com=
+mit/?id=3Db9ae51273655a72a12fba730843fd72fb132735a
+
+Regards,
+--=20
+Wolfgang Walter
+Studentenwerk M=FCnchen
+Anstalt des =F6ffentlichen Rechts
