@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D042C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:50:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56DC2C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:50:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA7972467B
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:50:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 279C62467B
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:50:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579686601;
-	bh=P+15TQf4p8PgRDquc4qBLe74dlyOXsfLeByMgiv4dSM=;
+	s=default; t=1579686607;
+	bh=5+aN8LnHZLKcM+Ov72cMOGdccVnhGxIcDkOjPOrNlEM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hH0Eofszfi8RAu1+zY/iROjwa7AqUkHQG3Fje+wx/EGge8Xnb0asA4E+l55vFwD3N
-	 XzZXZx9pnI+uaGb7tnxCkHukDTjMq3aYNTGHTTsUk5H3kp+L0ziFlEDPE5Jpsl2Mty
-	 IWL2+oUeg7VDwAZdGRNlMqTESI88VaohJYXBCzc0=
+	b=19OTFGGCOGjccYZOpxO3KfbSCi7g15r2HHDau7pvO8orq2bAEwSIedLtNF5gsyDEy
+	 VOIOuDdaZTEv3nbbH+arGlw7rUiQfBIBqmgkSSwBDACnU7aZKd9gviCFfjsWpZJzGu
+	 MK2ym/wDMgjsAKPhqTnleKFlOCH+pl+3KKWK5yqo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729971AbgAVJuA (ORCPT
+        id S1730492AbgAVJuG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 04:50:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56628 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 04:50:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56060 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732375AbgAVJjL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 04:39:11 -0500
+        id S1733125AbgAVJiy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 04:38:54 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 874C924683;
-        Wed, 22 Jan 2020 09:39:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5757E2467B;
+        Wed, 22 Jan 2020 09:38:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579685951;
-        bh=P+15TQf4p8PgRDquc4qBLe74dlyOXsfLeByMgiv4dSM=;
+        s=default; t=1579685933;
+        bh=5+aN8LnHZLKcM+Ov72cMOGdccVnhGxIcDkOjPOrNlEM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dCsaZ9uWE1m8gdMzDSCdUNRhgR72Esb2uUxHxVqhWGJ5v6FCHa9A0ULZda+XV842U
-         R2ZzmmG0MlFbOp31XmQhvWist8WxC7y3r9FW2B46HHQ8McogeHXLN4rOmRNL9bSLF1
-         Njnze2TSSBnJNjVy3Yb+b8A46B21/5IQI+W06Fog=
+        b=cqZsZ651kqRR2W8MAYzSryhD92xV7uNXKOegNuSmOVcvl7gejLxJvRakgyqxQK7DL
+         UGrBZe2fiN8EHvPqEV+1XmJPVjE4kAGY284DZyC95v12H+1HAP2osuF9HtG36Kt9zx
+         b6RdOdweJ8GAaeKChvyfTrQQ522GgTs7kwbyI83Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, hayeswang <hayeswang@realtek.com>,
-        Johan Hovold <johan@kernel.org>,
+        stable@vger.kernel.org, Mohammed Gamal <mgamal@redhat.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 48/65] r8152: add missing endpoint sanity check
-Date:   Wed, 22 Jan 2020 10:29:33 +0100
-Message-Id: <20200122092758.061703243@linuxfoundation.org>
+Subject: [PATCH 4.14 42/65] hv_netvsc: Fix memory leak when removing rndis device
+Date:   Wed, 22 Jan 2020 10:29:27 +0100
+Message-Id: <20200122092757.036260646@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200122092750.976732974@linuxfoundation.org>
 References: <20200122092750.976732974@linuxfoundation.org>
@@ -60,35 +60,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+From: Mohammed Gamal <mgamal@redhat.com>
 
-[ Upstream commit 86f3f4cd53707ceeec079b83205c8d3c756eca93 ]
+[ Upstream commit 536dc5df2808efbefc5acee334d3c4f701790ec0 ]
 
-Add missing endpoint sanity check to probe in order to prevent a
-NULL-pointer dereference (or slab out-of-bounds access) when retrieving
-the interrupt-endpoint bInterval on ndo_open() in case a device lacks
-the expected endpoints.
+kmemleak detects the following memory leak when hot removing
+a network device:
 
-Fixes: 40a82917b1d3 ("net/usb/r8152: enable interrupt transfer")
-Cc: hayeswang <hayeswang@realtek.com>
-Signed-off-by: Johan Hovold <johan@kernel.org>
+unreferenced object 0xffff888083f63600 (size 256):
+  comm "kworker/0:1", pid 12, jiffies 4294831717 (age 1113.676s)
+  hex dump (first 32 bytes):
+    00 40 c7 33 80 88 ff ff 00 00 00 00 10 00 00 00  .@.3............
+    00 00 00 00 ad 4e ad de ff ff ff ff 00 00 00 00  .....N..........
+  backtrace:
+    [<00000000d4a8f5be>] rndis_filter_device_add+0x117/0x11c0 [hv_netvsc]
+    [<000000009c02d75b>] netvsc_probe+0x5e7/0xbf0 [hv_netvsc]
+    [<00000000ddafce23>] vmbus_probe+0x74/0x170 [hv_vmbus]
+    [<00000000046e64f1>] really_probe+0x22f/0xb50
+    [<000000005cc35eb7>] driver_probe_device+0x25e/0x370
+    [<0000000043c642b2>] bus_for_each_drv+0x11f/0x1b0
+    [<000000005e3d09f0>] __device_attach+0x1c6/0x2f0
+    [<00000000a72c362f>] bus_probe_device+0x1a6/0x260
+    [<0000000008478399>] device_add+0x10a3/0x18e0
+    [<00000000cf07b48c>] vmbus_device_register+0xe7/0x1e0 [hv_vmbus]
+    [<00000000d46cf032>] vmbus_add_channel_work+0x8ab/0x1770 [hv_vmbus]
+    [<000000002c94bb64>] process_one_work+0x919/0x17d0
+    [<0000000096de6781>] worker_thread+0x87/0xb40
+    [<00000000fbe7397e>] kthread+0x333/0x3f0
+    [<000000004f844269>] ret_from_fork+0x3a/0x50
+
+rndis_filter_device_add() allocates an instance of struct rndis_device
+which never gets deallocated as rndis_filter_device_remove() sets
+net_device->extension which points to the rndis_device struct to NULL,
+leaving the rndis_device dangling.
+
+Since net_device->extension is eventually freed in free_netvsc_device(),
+we refrain from setting it to NULL inside rndis_filter_device_remove()
+
+Signed-off-by: Mohammed Gamal <mgamal@redhat.com>
+Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/usb/r8152.c |    3 +++
- 1 file changed, 3 insertions(+)
+ drivers/net/hyperv/rndis_filter.c |    2 --
+ 1 file changed, 2 deletions(-)
 
---- a/drivers/net/usb/r8152.c
-+++ b/drivers/net/usb/r8152.c
-@@ -5158,6 +5158,9 @@ static int rtl8152_probe(struct usb_inte
- 		return -ENODEV;
- 	}
+--- a/drivers/net/hyperv/rndis_filter.c
++++ b/drivers/net/hyperv/rndis_filter.c
+@@ -1331,8 +1331,6 @@ void rndis_filter_device_remove(struct h
+ 	/* Halt and release the rndis device */
+ 	rndis_filter_halt_device(rndis_dev);
  
-+	if (intf->cur_altsetting->desc.bNumEndpoints < 3)
-+		return -ENODEV;
-+
- 	usb_reset_device(udev);
- 	netdev = alloc_etherdev(sizeof(struct r8152));
- 	if (!netdev) {
+-	net_dev->extension = NULL;
+-
+ 	netvsc_device_remove(dev);
+ }
+ 
 
 
