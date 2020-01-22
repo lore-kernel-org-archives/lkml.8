@@ -2,102 +2,118 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=DATE_IN_PAST_03_06,
+	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C9EAC33CB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:18:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8F74C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:18:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C72B2467E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:18:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CA4B2467F
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:18:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579699102;
+	bh=3JLCLRkSYS0RorDnWGU+Xzdr3ilyL6KOkC6l7RNd9RE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=BOzXVDwOVVbgp204oIxnBH9Apbh7HCcbwddVb06uaxIOEhSBrsIVOayYJMOunghuE
+	 Yfaklhy1boxj+mbNcypPtKMkWA6tXet/xDKTk31+S14Mkx6HoREutCQ0K4HhGvmekg
+	 B+nLQyxAKVX2gxdXzSIvVRtxxC0RlW1XnPDkPDcY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729160AbgAVNSQ (ORCPT
+        id S1729273AbgAVNSV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 08:18:16 -0500
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:33688 "EHLO
-        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729113AbgAVNSP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 08:18:15 -0500
-Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00MD1uDQ000326;
-        Wed, 22 Jan 2020 08:18:04 -0500
-Received: from nwd2mta4.analog.com ([137.71.173.58])
-        by mx0a-00128a01.pphosted.com with ESMTP id 2xkytaanr6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 22 Jan 2020 08:18:03 -0500
-Received: from SCSQMBX11.ad.analog.com (scsqmbx11.ad.analog.com [10.77.17.10])
-        by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 00MDI2vv056044
-        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
-        Wed, 22 Jan 2020 08:18:02 -0500
-Received: from ASHBMBX9.ad.analog.com (10.64.17.10) by SCSQMBX11.ad.analog.com
- (10.77.17.10) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1779.2; Wed, 22 Jan
- 2020 05:18:00 -0800
-Received: from zeus.spd.analog.com (10.64.82.11) by ASHBMBX9.ad.analog.com
- (10.64.17.10) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
- Transport; Wed, 22 Jan 2020 08:18:00 -0500
-Received: from saturn.ad.analog.com ([10.48.65.124])
-        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 00MDHqPr026060;
-        Wed, 22 Jan 2020 08:17:57 -0500
-From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
-To:     <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <ekigwana@gmail.com>, <jic23@kernel.org>, <lars@metafoo.de>,
-        <robh+dt@kernel.org>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>
-Subject: [PATCH v2 3/3] MAINTAINERS: add entry for ADF4360 PLL driver
-Date:   Wed, 22 Jan 2020 15:20:04 +0200
-Message-ID: <20200122132004.4621-3-alexandru.ardelean@analog.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200122132004.4621-1-alexandru.ardelean@analog.com>
-References: <20200122132004.4621-1-alexandru.ardelean@analog.com>
+        Wed, 22 Jan 2020 08:18:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33976 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729190AbgAVNSS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 08:18:18 -0500
+Received: from localhost (unknown [84.241.205.26])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 75CA72467A;
+        Wed, 22 Jan 2020 13:18:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579699098;
+        bh=3JLCLRkSYS0RorDnWGU+Xzdr3ilyL6KOkC6l7RNd9RE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=1l4bAKZnDlyT1MumWqD1H242C7YINzrLjJqeJhEkJ5E5XZBWL4l5VYdbD8IcXYusf
+         GIbrfPqv4PWIEmN8WAIBoEil+CfF5kv45gSdME3JevfeGgG0nNzMKxgWyJTj9MQC1Z
+         qDEXfpWGkZR2viZWLmyABtNP0ZKK6oB1C0UyLTuk=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Ondrej Holy <oholy@redhat.com>,
+        Miklos Szeredi <mszeredi@redhat.com>
+Subject: [PATCH 5.4 032/222] fuse: fix fuse_send_readpages() in the syncronous read case
+Date:   Wed, 22 Jan 2020 10:26:58 +0100
+Message-Id: <20200122092835.775601334@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200122092833.339495161@linuxfoundation.org>
+References: <20200122092833.339495161@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-ADIRoutedOnPrem: True
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-01-17_05:2020-01-16,2020-01-17 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- bulkscore=0 phishscore=0 mlxlogscore=995 mlxscore=0 suspectscore=0
- impostorscore=0 spamscore=0 malwarescore=0 adultscore=0 priorityscore=1501
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-2001220119
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Edward Kigwana <ekigwana@gmail.com>
+From: Miklos Szeredi <mszeredi@redhat.com>
 
-Add entry in the MAINTAINERS file for the ADF4360 PLL driver.
+commit 7df1e988c723a066754090b22d047c3225342152 upstream.
 
-Signed-off-by: Edward Kigwana <ekigwana@gmail.com>
-Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+Buffered read in fuse normally goes via:
+
+ -> generic_file_buffered_read()
+   -> fuse_readpages()
+     -> fuse_send_readpages()
+       ->fuse_simple_request() [called since v5.4]
+
+In the case of a read request, fuse_simple_request() will return a
+non-negative bytecount on success or a negative error value.  A positive
+bytecount was taken to be an error and the PG_error flag set on the page.
+This resulted in generic_file_buffered_read() falling back to ->readpage(),
+which would repeat the read request and succeed.  Because of the repeated
+read succeeding the bug was not detected with regression tests or other use
+cases.
+
+The FTP module in GVFS however fails the second read due to the
+non-seekable nature of FTP downloads.
+
+Fix by checking and ignoring positive return value from
+fuse_simple_request().
+
+Reported-by: Ondrej Holy <oholy@redhat.com>
+Link: https://gitlab.gnome.org/GNOME/gvfs/issues/441
+Fixes: 134831e36bbd ("fuse: convert readpages to simple api")
+Cc: <stable@vger.kernel.org> # v5.4
+Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- MAINTAINERS | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ fs/fuse/file.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index e699fe378e71..d7a404084ad9 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -462,6 +462,14 @@ ADDRESS SPACE LAYOUT RANDOMIZATION (ASLR)
- M:	Jiri Kosina <jikos@kernel.org>
- S:	Maintained
+--- a/fs/fuse/file.c
++++ b/fs/fuse/file.c
+@@ -882,6 +882,7 @@ static void fuse_send_readpages(struct f
+ 	struct fuse_args_pages *ap = &ia->ap;
+ 	loff_t pos = page_offset(ap->pages[0]);
+ 	size_t count = ap->num_pages << PAGE_SHIFT;
++	ssize_t res;
+ 	int err;
  
-+ADF4360 PLL DRIVER
-+M:	Edward Kigwana <ekigwana@gmail.com>
-+W:	http://ez.analog.com/community/linux-device-drivers
-+L:	linux-iio@vger.kernel.org
-+S:	Maintained
-+F:	Documentation/devicetree/bindings/iio/frequency/adi,adf4360.yaml
-+F:	drivers/iio/frequency/adf4360.c
-+
- ADF7242 IEEE 802.15.4 RADIO DRIVER
- M:	Michael Hennerich <michael.hennerich@analog.com>
- W:	https://wiki.analog.com/ADF7242
--- 
-2.20.1
+ 	ap->args.out_pages = true;
+@@ -896,7 +897,8 @@ static void fuse_send_readpages(struct f
+ 		if (!err)
+ 			return;
+ 	} else {
+-		err = fuse_simple_request(fc, &ap->args);
++		res = fuse_simple_request(fc, &ap->args);
++		err = res < 0 ? res : 0;
+ 	}
+ 	fuse_readpages_end(fc, &ap->args, err);
+ }
+
 
