@@ -2,93 +2,234 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54CBBC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:56:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AEBFC33CB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:57:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 284612465A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:56:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="HsXlNynE"
+	by mail.kernel.org (Postfix) with ESMTP id CAFD42467B
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:57:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579687021;
+	bh=cC+9O5YDt/lCYQMzn0i8CoBgS6pNxmd8P+WvNxY83AI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=ZqK1WXj19N8W82mCb4L3qRDzHy17jMSx95exWuzafminyfOdjNSwCqDxd4fwfYkEr
+	 CbtfzFnV5KIvvCQZakUUzjeSQVsc/B69s0zZGuU2iO8OPXf1WZxAliJEuMTSscP2/q
+	 cSzX8HZjKceU4+OiI7bBHlG3JjtYyF6Bmpg3OgAY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731185AbgAVJ4q (ORCPT
+        id S1729797AbgAVJbh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 04:56:46 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:52700 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730479AbgAVJ4l (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 04:56:41 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=mn6+IrA1OMHHWbypsNWVR2N6HpOhrjkcIFslmxed/eo=; b=HsXlNynEa7rAEPUuseLjSSMDy
-        Q2ZIa+JF/SWMm8NTGS8kjTYTm7k0lmwRA2N26GdpaTOKT7x6Rl74bbquaC31sEv1UEuVdTeoACjpE
-        haJLzgbT37Mo4QRNy5zwDjdV2PVjIiJD8NA5dTQzxG9CxVJjPsTgT85KxGpC3f1ErrKC+g93uNeCb
-        fMuc+IqdAHHLniSmW61yM4llntPLgFo+BhqrJ2PXXNxJVoEUBE4qmEH5qhabFL0skPb+Q4VfLPqiW
-        uvadfmJBWkox6SFdYK2MSEmSql0HHYH9azJA1+tZSF5HROGmtQK6z/OpK1WAz7jom9SSmk3lhOCzq
-        6UpyNdydA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iuCkL-00026Y-Ic; Wed, 22 Jan 2020 09:56:26 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        Wed, 22 Jan 2020 04:31:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43688 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729692AbgAVJbc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 04:31:32 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 6C2543060D3;
-        Wed, 22 Jan 2020 10:54:43 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id EE68D20983E31; Wed, 22 Jan 2020 10:56:22 +0100 (CET)
-Date:   Wed, 22 Jan 2020 10:56:22 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Alex Kogan <alex.kogan@oracle.com>
-Cc:     linux@armlinux.org.uk, mingo@redhat.com, will.deacon@arm.com,
-        arnd@arndb.de, longman@redhat.com, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        tglx@linutronix.de, bp@alien8.de, hpa@zytor.com, x86@kernel.org,
-        guohanjun@huawei.com, jglauber@marvell.com,
-        steven.sistare@oracle.com, daniel.m.jordan@oracle.com,
-        dave.dice@oracle.com
-Subject: Re: [PATCH v8 5/5] locking/qspinlock: Introduce the shuffle
- reduction optimization into CNA
-Message-ID: <20200122095622.GS14914@hirez.programming.kicks-ass.net>
-References: <20191230194042.67789-1-alex.kogan@oracle.com>
- <20191230194042.67789-6-alex.kogan@oracle.com>
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7CD7F2467A;
+        Wed, 22 Jan 2020 09:31:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579685491;
+        bh=cC+9O5YDt/lCYQMzn0i8CoBgS6pNxmd8P+WvNxY83AI=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Re8tzbG6A6i/zm/US+xtR9Pp6kSFBxWLKa3QmQEbOakR1qpH7MD2+CyJ/JbZshrHY
+         qdZuovMSsAeq2lxg5amzeiTyuHUcsxenqyMq6FaK5s2YAhfGimMgeRKl5prtDkb5IU
+         wSDQ8+Fx/2+mxXvXqM/dAmI5s/yJrHwE3oetdqwQ=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
+        Christian Lamparter <chunkeey@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        syzbot+200d4bb11b23d929335f@syzkaller.appspotmail.com
+Subject: [PATCH 4.4 08/76] p54usb: Fix race between disconnect and firmware loading
+Date:   Wed, 22 Jan 2020 10:28:24 +0100
+Message-Id: <20200122092752.433884919@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200122092751.587775548@linuxfoundation.org>
+References: <20200122092751.587775548@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191230194042.67789-6-alex.kogan@oracle.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 30, 2019 at 02:40:42PM -0500, Alex Kogan wrote:
-> @@ -251,8 +281,11 @@ __always_inline u32 cna_pre_scan(struct qspinlock *lock,
->  	struct cna_node *cn = (struct cna_node *)node;
->  
->  	cn->pre_scan_result =
-> -		cn->intra_count == intra_node_handoff_threshold ?
-> -			FLUSH_SECONDARY_QUEUE : cna_scan_main_queue(node, node);
-> +		(node->locked <= 1 && probably(SHUFFLE_REDUCTION_PROB_ARG)) ?
-> +			PASS_LOCK_IMMEDIATELY :
-> +			cn->intra_count == intra_node_handoff_threshold ?
-> +				FLUSH_SECONDARY_QUEUE :
-> +				cna_scan_main_queue(node, node);
->  
->  	return 0;
->  }
+From: Alan Stern <stern@rowland.harvard.edu>
 
-Let me just, once again, remind people that the Linux Kernel is not part
-of the Obfuscated C code contest.
+commit 6e41e2257f1094acc37618bf6c856115374c6922 upstream.
 
-> Reviewed-by: Steve Sistare <steven.sistare@oracle.com>
+The syzbot fuzzer found a bug in the p54 USB wireless driver.  The
+issue involves a race between disconnect and the firmware-loader
+callback routine, and it has several aspects.
 
-Seriously, in what universe is that actually readable code? Steve quick,
-say what it does.
+One big problem is that when the firmware can't be loaded, the
+callback routine tries to unbind the driver from the USB _device_ (by
+calling device_release_driver) instead of from the USB _interface_ to
+which it is actually bound (by calling usb_driver_release_interface).
+
+The race involves access to the private data structure.  The driver's
+disconnect handler waits for a completion that is signalled by the
+firmware-loader callback routine.  As soon as the completion is
+signalled, you have to assume that the private data structure may have
+been deallocated by the disconnect handler -- even if the firmware was
+loaded without errors.  However, the callback routine does access the
+private data several times after that point.
+
+Another problem is that, in order to ensure that the USB device
+structure hasn't been freed when the callback routine runs, the driver
+takes a reference to it.  This isn't good enough any more, because now
+that the callback routine calls usb_driver_release_interface, it has
+to ensure that the interface structure hasn't been freed.
+
+Finally, the driver takes an unnecessary reference to the USB device
+structure in the probe function and drops the reference in the
+disconnect handler.  This extra reference doesn't accomplish anything,
+because the USB core already guarantees that a device structure won't
+be deallocated while a driver is still bound to any of its interfaces.
+
+To fix these problems, this patch makes the following changes:
+
+	Call usb_driver_release_interface() rather than
+	device_release_driver().
+
+	Don't signal the completion until after the important
+	information has been copied out of the private data structure,
+	and don't refer to the private data at all thereafter.
+
+	Lock udev (the interface's parent) before unbinding the driver
+	instead of locking udev->parent.
+
+	During the firmware loading process, take a reference to the
+	USB interface instead of the USB device.
+
+	Don't take an unnecessary reference to the device during probe
+	(and then don't drop it during disconnect).
+
+Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
+Reported-and-tested-by: syzbot+200d4bb11b23d929335f@syzkaller.appspotmail.com
+Acked-by: Christian Lamparter <chunkeey@gmail.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+[bwh: Backported to 4.4: adjust filename]
+Signed-off-by: Ben Hutchings <ben.hutchings@codethink.co.uk>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ drivers/net/wireless/p54/p54usb.c |   43 +++++++++++++++-----------------------
+ 1 file changed, 18 insertions(+), 25 deletions(-)
+
+--- a/drivers/net/wireless/p54/p54usb.c
++++ b/drivers/net/wireless/p54/p54usb.c
+@@ -33,6 +33,8 @@ MODULE_ALIAS("prism54usb");
+ MODULE_FIRMWARE("isl3886usb");
+ MODULE_FIRMWARE("isl3887usb");
+ 
++static struct usb_driver p54u_driver;
++
+ /*
+  * Note:
+  *
+@@ -921,9 +923,9 @@ static void p54u_load_firmware_cb(const
+ {
+ 	struct p54u_priv *priv = context;
+ 	struct usb_device *udev = priv->udev;
++	struct usb_interface *intf = priv->intf;
+ 	int err;
+ 
+-	complete(&priv->fw_wait_load);
+ 	if (firmware) {
+ 		priv->fw = firmware;
+ 		err = p54u_start_ops(priv);
+@@ -932,26 +934,22 @@ static void p54u_load_firmware_cb(const
+ 		dev_err(&udev->dev, "Firmware not found.\n");
+ 	}
+ 
+-	if (err) {
+-		struct device *parent = priv->udev->dev.parent;
+-
+-		dev_err(&udev->dev, "failed to initialize device (%d)\n", err);
+-
+-		if (parent)
+-			device_lock(parent);
++	complete(&priv->fw_wait_load);
++	/*
++	 * At this point p54u_disconnect may have already freed
++	 * the "priv" context. Do not use it anymore!
++	 */
++	priv = NULL;
+ 
+-		device_release_driver(&udev->dev);
+-		/*
+-		 * At this point p54u_disconnect has already freed
+-		 * the "priv" context. Do not use it anymore!
+-		 */
+-		priv = NULL;
++	if (err) {
++		dev_err(&intf->dev, "failed to initialize device (%d)\n", err);
+ 
+-		if (parent)
+-			device_unlock(parent);
++		usb_lock_device(udev);
++		usb_driver_release_interface(&p54u_driver, intf);
++		usb_unlock_device(udev);
+ 	}
+ 
+-	usb_put_dev(udev);
++	usb_put_intf(intf);
+ }
+ 
+ static int p54u_load_firmware(struct ieee80211_hw *dev,
+@@ -972,14 +970,14 @@ static int p54u_load_firmware(struct iee
+ 	dev_info(&priv->udev->dev, "Loading firmware file %s\n",
+ 	       p54u_fwlist[i].fw);
+ 
+-	usb_get_dev(udev);
++	usb_get_intf(intf);
+ 	err = request_firmware_nowait(THIS_MODULE, 1, p54u_fwlist[i].fw,
+ 				      device, GFP_KERNEL, priv,
+ 				      p54u_load_firmware_cb);
+ 	if (err) {
+ 		dev_err(&priv->udev->dev, "(p54usb) cannot load firmware %s "
+ 					  "(%d)!\n", p54u_fwlist[i].fw, err);
+-		usb_put_dev(udev);
++		usb_put_intf(intf);
+ 	}
+ 
+ 	return err;
+@@ -1011,8 +1009,6 @@ static int p54u_probe(struct usb_interfa
+ 	skb_queue_head_init(&priv->rx_queue);
+ 	init_usb_anchor(&priv->submitted);
+ 
+-	usb_get_dev(udev);
+-
+ 	/* really lazy and simple way of figuring out if we're a 3887 */
+ 	/* TODO: should just stick the identification in the device table */
+ 	i = intf->altsetting->desc.bNumEndpoints;
+@@ -1053,10 +1049,8 @@ static int p54u_probe(struct usb_interfa
+ 		priv->upload_fw = p54u_upload_firmware_net2280;
+ 	}
+ 	err = p54u_load_firmware(dev, intf);
+-	if (err) {
+-		usb_put_dev(udev);
++	if (err)
+ 		p54_free_common(dev);
+-	}
+ 	return err;
+ }
+ 
+@@ -1072,7 +1066,6 @@ static void p54u_disconnect(struct usb_i
+ 	wait_for_completion(&priv->fw_wait_load);
+ 	p54_unregister_common(dev);
+ 
+-	usb_put_dev(interface_to_usbdev(intf));
+ 	release_firmware(priv->fw);
+ 	p54_free_common(dev);
+ }
+
+
