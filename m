@@ -2,186 +2,137 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URI_HEX
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 314F8C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:40:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51E30C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:40:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04D052468B
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:40:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 259B924684
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:40:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579686013;
-	bh=k2bF29vbO4gdaC0R6XuDL1eqr9ESgfDtamKRRnvdJSU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=il+gUE45Uky2oGOQSH7/lwdpoE8dY/TIfcImWglLE64/6Ah2xaJ1sN//fXDj+oFPO
-	 8Z3iMc/a5AcxLhprbheqTNJjBogmOJVrkhKHiuF1jLU/Kp62yDl9H0dLjssVbR6Xrp
-	 x9qfOwbUbwAO5ovMoJbPbXGHpzkl//gFM/P2znes=
+	s=default; t=1579686016;
+	bh=6peGELComVwPJobIqCDWWvnmKmDPtlCrb3OFIpVkbPg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=TxFpF1MsZ9kF9qpNc/KKEIquqHfStQdZOm1IkQuj0B7hZSAfwllPgpNWDAc4dirYf
+	 K68eRZkK5eqvN6aQcVGuMVij0DFs/G558v3TxY2t0EbZ8wmgCDwskJBM2zSaMOPoaC
+	 imqMfAm9c53QhSmy3+7IgMX8rHvViAIQYgbKI8rM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732862AbgAVJkM (ORCPT
+        id S1731399AbgAVJkP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 04:40:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58680 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 04:40:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58752 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387405AbgAVJkI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 04:40:08 -0500
-Received: from localhost (unknown [122.178.236.243])
+        id S1732879AbgAVJkK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 04:40:10 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1B55C24684;
-        Wed, 22 Jan 2020 09:40:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F1AE524686;
+        Wed, 22 Jan 2020 09:40:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579686007;
-        bh=k2bF29vbO4gdaC0R6XuDL1eqr9ESgfDtamKRRnvdJSU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=HVrFrHiw4x2TulvgoJcp0AK51hGJ3DGtBt28CAp3cmmMAYFgRKuS5J3YwayzbRy05
-         nzPk9BYdzU60kzXXVG84/dfEF6+bPNg7PsZQK/oUqsbmyWmI1+Pf9izkflwW7eFpBh
-         oYw9Le46eQc2a6BLizw4/WCsfD88dRi6bcRlQxD8=
-Date:   Wed, 22 Jan 2020 15:10:02 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        s=default; t=1579686009;
+        bh=6peGELComVwPJobIqCDWWvnmKmDPtlCrb3OFIpVkbPg=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=EIefOkZaC+qqRYB4NLF94tbvQWbpLbCnS1PUZW/V6y2TZgovw/b15oKggxNE8GbJp
+         9zrAwtth7mVwSIc9IQAWPkuUQUGIf9dV9r98/lRfFmwZW8MEHj2ojXDW6FatrRiWXi
+         2fjyIkM42bfDdbEZ1puKjX5elTXh9DtIPqZvyX1g=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        "Willhalm, Thomas" <thomas.willhalm@intel.com>,
         Dan Williams <dan.j.williams@intel.com>,
-        dmaengine@vger.kernel.org,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] dmaengine: Create symlinks between DMA channels and
- slaves
-Message-ID: <20200122094002.GS2841@vkoul-mobl>
-References: <20200117153056.31363-1-geert+renesas@glider.be>
- <d2b669e7-a5d4-20ec-5b54-103b71df7407@ti.com>
- <CAMuHMdVzQCWvH-LJ9ME5dRyafudZBHQLaJQzkSCPnughv_q2aA@mail.gmail.com>
- <1cdc4f71-f365-8c9e-4634-408c59e6a3f9@ti.com>
- <CAMuHMdU=-Eo29=DQmq96OegdYAvW7Vw9PpgNWSTfjDWVF5jd-A@mail.gmail.com>
- <f7bbb132-1278-7030-7f40-b89733bcbd83@ti.com>
- <CAMuHMdXDiwTomiKp8Kaw0NvMNpg78-M88F0mNTWBOz5MLE4LtQ@mail.gmail.com>
+        "Bruggeman, Otto G" <otto.g.bruggeman@intel.com>,
+        "Aneesh Kumar K . V" <aneesh.kumar@linux.vnet.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.14 26/65] mm/shmem.c: thp, shmem: fix conflict of above-47bit hint address and PMD alignment
+Date:   Wed, 22 Jan 2020 10:29:11 +0100
+Message-Id: <20200122092754.541271857@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200122092750.976732974@linuxfoundation.org>
+References: <20200122092750.976732974@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdXDiwTomiKp8Kaw0NvMNpg78-M88F0mNTWBOz5MLE4LtQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hey Geert,
+From: Kirill A. Shutemov <kirill@shutemov.name>
 
-On 21-01-20, 21:22, Geert Uytterhoeven wrote:
-> On Mon, Jan 20, 2020 at 1:06 PM Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
-> > On 20/01/2020 12.51, Geert Uytterhoeven wrote:
-> > > On Mon, Jan 20, 2020 at 11:16 AM Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
-> > >> On 20/01/2020 11.01, Geert Uytterhoeven wrote:
-> > >>> On Fri, Jan 17, 2020 at 9:08 PM Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
-> > >>>> On 1/17/20 5:30 PM, Geert Uytterhoeven wrote:
-> > >>>>> Currently it is not easy to find out which DMA channels are in use, and
-> > >>>>> which slave devices are using which channels.
-> > >>>>>
-> > >>>>> Fix this by creating two symlinks between the DMA channel and the actual
-> > >>>>> slave device when a channel is requested:
-> > >>>>>   1. A "slave" symlink from DMA channel to slave device,
-> > >>>>
-> > >>>> Have you considered similar link name as on the slave device:
-> > >>>> slave:<name>
-> > >>>>
-> > >>>> That way it would be easier to grasp which channel is used for what
-> > >>>> purpose by only looking under /sys/class/dma/ and no need to check the
-> > >>>> slave device.
-> > >>>
-> > >>> Would this really provide more information?
-> > >>> The device name is already provided in the target of the symlink:
-> > >>>
-> > >>> root@koelsch:~# readlink
-> > >>> /sys/devices/platform/soc/e6720000.dma-controller/dma/dma1chan2/slave
-> > >>> ../../../ee140000.sd
-> > >>
-> > >> e6720000.dma-controller/dma/dma1chan2/slave -> ../../../ee140000.sd
-> > >> e6720000.dma-controller/dma/dma1chan3/slave -> ../../../ee140000.sd
-> > >>
-> > >> It is hard to tell which one is the tx and RX channel without looking
-> > >> under the ee140000.sd:
-> > >>
-> > >> ee140000.sd/dma:rx -> ../e6720000.dma-controller/dma/dma1chan3
-> > >> ee140000.sd/dma:tx -> ../e6720000.dma-controller/dma/dma1chan2
-> > >
-> > > Oh, you meant the name of the channel, not the name of the device.
-> > > My mistake.
-> > >
-> > > As this name is a property of the slave device, not of the DMA channel,
-> > > I don't think it belongs under dma*chan*.
-> >
-> > Right, but it gives me only half the information I need to be a link useful.
-> > I know that device X is using two channels but I need to check the
-> > device X's directory to know which channel is used for what purpose.
+commit 991589974d9c9ecb24ee3799ec8c415c730598a2 upstream.
 
-I gave the patch a spin on my board, I like some things and I dont like
-few things :)
+Shmem/tmpfs tries to provide THP-friendly mappings if huge pages are
+enabled.  But it doesn't work well with above-47bit hint address.
 
-Having name of slaves is a good thing, but i had to resort to search of
-channels, the controller I have has 18 channels and only 4 were in use,
-so took a bit of time to find things.
+Normally, the kernel doesn't create userspace mappings above 47-bit,
+even if the machine allows this (such as with 5-level paging on x86-64).
+Not all user space is ready to handle wide addresses.  It's known that
+at least some JIT compilers use higher bits in pointers to encode their
+information.
 
-Start with /sys/class/dma/ to find the controller node
-then from controller node find the channels with slave
-and then get to the clients!
+Userspace can ask for allocation from full address space by specifying
+hint address (with or without MAP_FIXED) above 47-bits.  If the
+application doesn't need a particular address, but wants to allocate
+from whole address space it can specify -1 as a hint address.
 
-So i would say it is better than what we have today, but we could do
-better :)
+Unfortunately, this trick breaks THP alignment in shmem/tmp:
+shmem_get_unmapped_area() would not try to allocate PMD-aligned area if
+*any* hint address specified.
 
-> >
-> > >> Another option would be to not have symlinks, but a debugfs file where
-> > >> this information can be extracted and would only compiled if debugfs is
-> > >> enabled.
-> > >
-> > > Like /proc/interrupts?
-> >
-> > More like /sys/kernel/debug/gpio
-> >
-> > > That brings the complexity of traversing all channels etc.
-> >
-> > Sure, but only when the file is read.
-> > You can add
-> > #ifdef CONFIG_DEBUG_FS
-> > #endif
-> >
-> > around the slave_device and name in struct dma_chan {}
-> >
-> > and when user reads the file you print out something like this:
-> > cat /sys/kernel/debug/dmaengine
-> >
-> > e6700000.dma-controller:
-> > dma0chan0               e6e20000.spi:tx
-> > dma0chan1               e6e20000.spi:rx
-> > dma0chan2               ee100000.sd:tx
-> > dma0chan3               ee100000.sd:rx
-> > ...
-> > dma0chan14              non slave
-> > ...
-> >
-> > e6720000.dma-controller:
-> > dma1chan0               e6b10000.spi:tx
-> > dma1chan1               e6b10000.spi:rx
-> > ...
+This can be fixed by requesting the aligned area if the we failed to
+allocated at user-specified hint address.  The request with inflated
+length will also take the user-specified hint address.  This way we will
+not lose an allocation request from the full address space.
 
-I like the idea of adding this in debugfs and giving more info, I would
-actually love to add bytes_transferred and few more info (descriptors
-submitted etc) to it...
+[kirill@shutemov.name: fold in a fixup]
+  Link: http://lkml.kernel.org/r/20191223231309.t6bh5hkbmokihpfu@box
+Link: http://lkml.kernel.org/r/20191220142548.7118-3-kirill.shutemov@linux.intel.com
+Fixes: b569bab78d8d ("x86/mm: Prepare to expose larger address space to userspace")
+Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+Cc: "Willhalm, Thomas" <thomas.willhalm@intel.com>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: "Bruggeman, Otto G" <otto.g.bruggeman@intel.com>
+Cc: "Aneesh Kumar K . V" <aneesh.kumar@linux.vnet.ibm.com>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-> > This way we will have all the information in one place, easy to look up
-> > and you don't need to manage symlinks dynamically, just check all
-> > channels if they have slave_device/name when they are in_use (in_use w/o
-> > slave_device is 'non slave')
-> >
-> > Some drivers are requesting and releasing the DMA channel per transfer
-> > or when they are opened/closed or other variations.
-> >
-> > > What do other people think?
-> 
-> Vinod: do you have some guidance for your minions? ;-)
+---
+ mm/shmem.c |    7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
+
+--- a/mm/shmem.c
++++ b/mm/shmem.c
+@@ -2052,9 +2052,10 @@ unsigned long shmem_get_unmapped_area(st
+ 	/*
+ 	 * Our priority is to support MAP_SHARED mapped hugely;
+ 	 * and support MAP_PRIVATE mapped hugely too, until it is COWed.
+-	 * But if caller specified an address hint, respect that as before.
++	 * But if caller specified an address hint and we allocated area there
++	 * successfully, respect that as before.
+ 	 */
+-	if (uaddr)
++	if (uaddr == addr)
+ 		return addr;
+ 
+ 	if (shmem_huge != SHMEM_HUGE_FORCE) {
+@@ -2088,7 +2089,7 @@ unsigned long shmem_get_unmapped_area(st
+ 	if (inflated_len < len)
+ 		return addr;
+ 
+-	inflated_addr = get_area(NULL, 0, inflated_len, 0, flags);
++	inflated_addr = get_area(NULL, uaddr, inflated_len, 0, flags);
+ 	if (IS_ERR_VALUE(inflated_addr))
+ 		return addr;
+ 	if (inflated_addr & ~PAGE_MASK)
 
 
-That said, I am not against merging this patch while we add more
-(debugfs)... So do my minions agree or they have better ideas :-)
-
--- 
-~Vinod
