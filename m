@@ -2,177 +2,101 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B87CCC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 17:03:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98758C33CB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 17:05:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DFDB24656
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 17:03:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BA0D21569
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 17:05:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YngsELv1"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MiEOeaY9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729085AbgAVRDg (ORCPT
+        id S1729094AbgAVRFA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 12:03:36 -0500
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:38110 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728901AbgAVRDe (ORCPT
+        Wed, 22 Jan 2020 12:05:00 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:39387 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725883AbgAVRFA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 12:03:34 -0500
-Received: by mail-lf1-f66.google.com with SMTP id r14so167542lfm.5
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jan 2020 09:03:33 -0800 (PST)
+        Wed, 22 Jan 2020 12:05:00 -0500
+Received: by mail-pf1-f195.google.com with SMTP id q10so132304pfs.6;
+        Wed, 22 Jan 2020 09:05:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=zM+sYNfN68/VlMHBQ28OqftNF6xyw8Hnnx+TFdLsACk=;
-        b=YngsELv1j2RQ0Pv9zae+M720BMjOkELwpWeRg3c+s3lZovhBORsoZy2y/4p6hxw8fZ
-         8Ec80r27bcCippPbe6fyRQYUEalliO+qqoxv0Xv/74zVHsu5NdhRl5DeseVsI3JVYvCj
-         BWtPy83jor2v6kn/6wYSvAQ2do464r2qKn4T0ui8bGaJzaRTBnc1OHkENK/s1rR3w3IH
-         40jTkTXcsYe14e6y/EbfiQoP0/BjibXht1iq3/n+dhZD08YeNIMDV7snggWYsBePUClm
-         5jE8mHjcDEMDuJ3179r1ihmJBdgUBRy3GWS7gLJXyoO9tg9ZTUIpSSZRz/82RjCrGLbY
-         6cuQ==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=8QgKyiW0upu1Q+szE5cYtvDG9vOJuAl1OpeZnvTZVEo=;
+        b=MiEOeaY9kdqB8tM2DEWTmU6WQEOBSN25csdV/dunSwN65KQayZ2vpbrRRSl12K9Jgu
+         HXf86q8yhkgvpyxzQ5wvyyn6bbcqkAulGpMpU/x0X9OEwvxQRnihQCZOWHI3CoQhC/ab
+         Qf5TsiHtNaSsqETuS5UXb+TdCqQgkf503b7rxEQhdKHvgCOcLym5G6AHto0rAdM74tw5
+         QY1Uhxu9oMMLGRK9JBBN0WZIb2ls96L3wyHnj8n2t3JXNHSA8inI7gO6utTzlMBtm4l7
+         H6YkYUWIHGzE2v9EyeUqismEmgPBQgYIWLMGp/VPvN8ivEl7lsopgw6o90oAxdUYzHzN
+         3/dQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=zM+sYNfN68/VlMHBQ28OqftNF6xyw8Hnnx+TFdLsACk=;
-        b=BxUy80yJJyJI2gdQddAaV7hhdlCJJN9r0y63qDxeHxf+fRqTxyaAk84yF2e40acozN
-         Sl+PU9yKQAR8IMB/W54BIQEbMcLFxOhHmfHoz+P8zjMHtLZAT1Szg8vlhGBBWdvvc+4g
-         1xa9iCbGnn/8MynD4vjlsW/XhdkIR4eT+1xxgK6Z5M+63B4hNaNWm3U1EiSI6nHLeHvn
-         mEMEeFXm4ZaANZvTIPFELekKxp94TZ0VsltwHzE3s17eOeOEvPoDws5aEyJyqq2Faqr9
-         SP2lk2Zpm1QIRS87a3AqYWO+7mrI0YCYX0bLevey4bAYBIs4PP3S7jHyDTTdFRm7rMSm
-         D9DA==
-X-Gm-Message-State: APjAAAVb4PtiL3ZH31Zcw3oFp4EbxrkamwsIsFttbzrL+qNZWDnB/0yh
-        yECahD+YJai4YqvpS0G4gPQ9qaGnA7ryK2S9pOSZNg==
-X-Google-Smtp-Source: APXvYqzzit4eCBkk59mE0XMjvsu19Ne34Er8Ak0RDXpP1K30LgYouyYzJTPnA3czMddxdbn1/jz6SIY9PKXwY89NeT8=
-X-Received: by 2002:ac2:4adc:: with SMTP id m28mr2340757lfp.26.1579712612116;
- Wed, 22 Jan 2020 09:03:32 -0800 (PST)
-MIME-Version: 1.0
-References: <20200122092803.587683021@linuxfoundation.org>
-In-Reply-To: <20200122092803.587683021@linuxfoundation.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Wed, 22 Jan 2020 22:33:20 +0530
-Message-ID: <CA+G9fYv+9iscZ+Xp85Gh=JbXhtPBOO5uigLuWsn8_7zOOvqdiA@mail.gmail.com>
-Subject: Re: [PATCH 4.19 000/103] 4.19.98-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        lkft-triage@lists.linaro.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        linux- stable <stable@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=8QgKyiW0upu1Q+szE5cYtvDG9vOJuAl1OpeZnvTZVEo=;
+        b=KAOsoFGSNaTYkd8fEzR9P6eb8qXeH2xRpqVwB4pPxg0/Ezagda1jfDfFBc/Xjw9bez
+         1jRfRtjH0XayymcKjTmSwRcuhkXirCHcWAJNjuJoZB/mG6iuVfUyB20RTzewyPGUB5Js
+         mA6oMnS929BLZd8qh5aqc5YkWw09VokUUQLL/FWrOGKDUbdE10tNoMnIENeGrxp6gB4m
+         +jaaO+WeW7/e6t4kgdbhNu9q8cWAeV8K+7m+WUwgpOXbtGQ86HT9xEyu7AWJlDnNqmIA
+         2+ur0bAn+SKcyiMbdsfRgpWLL22U7EQDk/udVZcW3vObq7n/slnTVJFAm3dYn64WB/+t
+         V2UA==
+X-Gm-Message-State: APjAAAVoA8GgdoV6sgOm1rDSuxBmZXrW7V8GTFKLRrbhlv9elp7PT8Fr
+        dvKsq6uOZQTl1Nf/GGWQ1Q==
+X-Google-Smtp-Source: APXvYqyX/P9oePdmnshAVZLFNwM9QuwuiD9JHWbvwEAoCgBTDQkKNh07krpp1ELPjLALfeQDppTOig==
+X-Received: by 2002:aa7:96f9:: with SMTP id i25mr3471919pfq.161.1579712699709;
+        Wed, 22 Jan 2020 09:04:59 -0800 (PST)
+Received: from madhuparna-HP-Notebook.nitk.ac.in ([2402:3a80:1eee:fc60:1df1:6c1a:3227:9ec0])
+        by smtp.gmail.com with ESMTPSA id b42sm4001350pjc.27.2020.01.22.09.04.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 22 Jan 2020 09:04:59 -0800 (PST)
+From:   madhuparnabhowmik10@gmail.com
+To:     jeyu@kernel.org
+Cc:     linux-kernel@vger.kernel.org, joel@joelfernandes.org,
+        frextrite@gmail.com, rcu@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org, paulmck@kernel.org,
+        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+Subject: [PATCH] module.h: Annotate mod_kallsyms with __rcu
+Date:   Wed, 22 Jan 2020 22:34:47 +0530
+Message-Id: <20200122170447.20539-1-madhuparnabhowmik10@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 22 Jan 2020 at 15:13, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 4.19.98 release.
-> There are 103 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Fri, 24 Jan 2020 09:25:24 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
-4.19.98-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-4.19.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
+This patch fixes the following sparse errors:
 
-Summary
-------------------------------------------------------------------------
+kernel/module.c:3623:9: error: incompatible types in comparison expression
+kernel/module.c:4060:41: error: incompatible types in comparison expression
+kernel/module.c:4203:28: error: incompatible types in comparison expression
+kernel/module.c:4225:41: error: incompatible types in comparison expression
 
-kernel: 4.19.98-rc1
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-4.19.y
-git commit: 0ed30079b15d245f5a148a4ff156dff23d9569df
-git describe: v4.19.97-104-g0ed30079b15d
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.19-oe/bu=
-ild/v4.19.97-104-g0ed30079b15d
+Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+---
+ include/linux/module.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/include/linux/module.h b/include/linux/module.h
+index bd165ba68617..dfdc8863e26a 100644
+--- a/include/linux/module.h
++++ b/include/linux/module.h
+@@ -429,7 +429,7 @@ struct module {
+ 
+ #ifdef CONFIG_KALLSYMS
+ 	/* Protected by RCU and/or module_mutex: use rcu_dereference() */
+-	struct mod_kallsyms *kallsyms;
++	struct mod_kallsyms __rcu *kallsyms;
+ 	struct mod_kallsyms core_kallsyms;
+ 
+ 	/* Section attributes */
+-- 
+2.17.1
 
-No regressions (compared to build v4.19.97)
-
-
-No fixes (compared to build v4.19.97)
-
-Ran 18532 total tests in the following environments and test suites.
-
-Environments
---------------
-- dragonboard-410c - arm64
-- hi6220-hikey - arm64
-- i386
-- juno-r2 - arm64
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15 - arm
-- x86_64
-
-Test Suites
------------
-* build
-* install-android-platform-tools-r2600
-* kselftest
-* libhugetlbfs
-* linux-log-parser
-* ltp-commands-tests
-* ltp-containers-tests
-* ltp-cve-tests
-* ltp-dio-tests
-* ltp-fs-tests
-* ltp-hugetlb-tests
-* ltp-io-tests
-* ltp-ipc-tests
-* ltp-math-tests
-* ltp-mm-tests
-* ltp-sched-tests
-* spectre-meltdown-checker-test
-* ltp-filecaps-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-securebits-tests
-* network-basic-tests
-* perf
-* kvm-unit-tests
-* ltp-cap_bounds-tests
-* ltp-cpuhotplug-tests
-* ltp-fcntl-locktests-tests
-* ltp-open-posix-tests
-* ltp-syscalls-tests
-* v4l2-compliance
-* kselftest-vsyscall-mode-native
-* kselftest-vsyscall-mode-none
-* ssuite
-
---=20
-Linaro LKFT
-https://lkft.linaro.org
