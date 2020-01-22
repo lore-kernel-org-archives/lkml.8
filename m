@@ -2,175 +2,118 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50BD9C32771
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 06:36:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20B14C32771
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 06:37:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16ED324655
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 06:36:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3F332465B
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 06:37:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QYJXMx2Y"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="YILkfm0T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726078AbgAVGgg (ORCPT
+        id S1726207AbgAVGhR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 01:36:36 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:21967 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725805AbgAVGgf (ORCPT
+        Wed, 22 Jan 2020 01:37:17 -0500
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:36479 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725924AbgAVGhR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 01:36:35 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579674994;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=1AgtjhKHd4/5av8ia9uDpc8Nq+RQASbmRf/YcZZFxw0=;
-        b=QYJXMx2YSaxyYhDL6QAe2rLHrxcOmYZyfQNnz9WbczYnVWu+ZcWAIRSnHXui2pwRovAf0Y
-        1L1TOOLqftjlJndi+fCEuy5mVyAIYCFiEjL0LxRF4Sj+s1p0fruttDaaeb1vtWZaTxnInl
-        gWTX51D8+/0pqIVSr27xwILKNekjckA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-429-BXbVLD1vPGycxmPEZeguXQ-1; Wed, 22 Jan 2020 01:36:33 -0500
-X-MC-Unique: BXbVLD1vPGycxmPEZeguXQ-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 305F11005502;
-        Wed, 22 Jan 2020 06:36:30 +0000 (UTC)
-Received: from [10.72.12.103] (ovpn-12-103.pek2.redhat.com [10.72.12.103])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id A0F3D60BE0;
-        Wed, 22 Jan 2020 06:36:12 +0000 (UTC)
-Subject: Re: [PATCH 3/5] vDPA: introduce vDPA bus
-To:     Shahaf Shuler <shahafs@mellanox.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     Jason Gunthorpe <jgg@mellanox.com>,
-        Rob Miller <rob.miller@broadcom.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>,
-        Netdev <netdev@vger.kernel.org>,
-        "Bie, Tiwei" <tiwei.bie@intel.com>,
-        "maxime.coquelin@redhat.com" <maxime.coquelin@redhat.com>,
-        "Liang, Cunming" <cunming.liang@intel.com>,
-        "Wang, Zhihong" <zhihong.wang@intel.com>,
-        "Wang, Xiao W" <xiao.w.wang@intel.com>,
-        "haotian.wang@sifive.com" <haotian.wang@sifive.com>,
-        "Zhu, Lingshan" <lingshan.zhu@intel.com>,
-        "eperezma@redhat.com" <eperezma@redhat.com>,
-        "lulu@redhat.com" <lulu@redhat.com>,
-        Parav Pandit <parav@mellanox.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        "stefanha@redhat.com" <stefanha@redhat.com>,
-        "rdunlap@infradead.org" <rdunlap@infradead.org>,
-        "hch@infradead.org" <hch@infradead.org>,
-        Ariel Adam <aadam@redhat.com>, Jiri Pirko <jiri@mellanox.com>,
-        "hanand@xilinx.com" <hanand@xilinx.com>,
-        "mhabets@solarflare.com" <mhabets@solarflare.com>
-References: <20200116124231.20253-4-jasowang@redhat.com>
- <20200117070324-mutt-send-email-mst@kernel.org>
- <239b042c-2d9e-0eec-a1ef-b03b7e2c5419@redhat.com>
- <CAJPjb1+fG9L3=iKbV4Vn13VwaeDZZdcfBPvarogF_Nzhk+FnKg@mail.gmail.com>
- <AM0PR0502MB379553984D0D55FDE25426F6C3330@AM0PR0502MB3795.eurprd05.prod.outlook.com>
- <d69918ca-8af4-44b2-9652-633530d4c113@redhat.com>
- <20200120174933.GB3891@mellanox.com>
- <2a324cec-2863-58f4-c58a-2414ee32c930@redhat.com>
- <20200121004047-mutt-send-email-mst@kernel.org>
- <b9ad744e-c4cd-82f9-f56a-1ecc185e9cd7@redhat.com>
- <20200121031506-mutt-send-email-mst@kernel.org>
- <028ed448-a948-79d9-f224-c325029b17ab@redhat.com>
- <AM0PR0502MB37956A8D6690B190EEA713A5C30D0@AM0PR0502MB3795.eurprd05.prod.outlook.com>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <d0f5e232-0649-4863-4b8d-13875d1a9e26@redhat.com>
-Date:   Wed, 22 Jan 2020 14:36:10 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 22 Jan 2020 01:37:17 -0500
+Received: by mail-pg1-f195.google.com with SMTP id k3so2929539pgc.3
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jan 2020 22:37:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=7AXcKF6W8asLiClFXriJEBFPGRWX3uOGSn/zkbdHVsU=;
+        b=YILkfm0TuU5vkyLd8nIqBpXHopTRzgWr2SZQipfwrFiezbx0jrz9MRs4EVDQQe3sRu
+         huwpVi9oNtyYwMeVWc8XbUvBIua5mYWXdUBJ3YibtNYf+iOEhbbW27p1/kGr2QOAG0YG
+         IkN9GgHGnY3Kf1WLSxIphLSKL1Nog1G7+A+sk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=7AXcKF6W8asLiClFXriJEBFPGRWX3uOGSn/zkbdHVsU=;
+        b=PwXjW7qM57ZTtrlPGIlpftRqx/diuKMLRUACJ7BbNmALDdZ6ZHUtN2Se7sCpQXJjrR
+         ECnO/GAgecSmj1nJ0LRGYh4FDQZa08gCVEnXe5oef3A8g6kyEFmEeazME/wWA72Vmw91
+         J7CSJ1boqNBc+2kO8lX1fl15bf/TPVtUF9jwtd/ALegaHSlS7DsDQP/0WCR0CnatpJNr
+         +TET9dQekyR+gmaeYP02uzJGBQ1+ZawwiS29DLp8B96lo+BnvNCN7L4+NevrIAFUXvVR
+         8KYNd9zC9WDiNraeL+QS5AleDYsqe39sbbVgcuaysYU21goH9W/8gMKnkppmZhU+gC7C
+         XAfg==
+X-Gm-Message-State: APjAAAW1cs1ZeDxtZn3hM9g7uan4zYmTFWzU5bQjQ7rLWIN4e4rZ66s/
+        q7QzbGS46fTwyGkLimuiivQS4A==
+X-Google-Smtp-Source: APXvYqyssvAQGz/3NU7TC27DYPmZKShf5Lm0ap0tEDqlQdVSpPwNuztzlwCwNHbPP8JH1fJW04hw0Q==
+X-Received: by 2002:a65:4d0b:: with SMTP id i11mr10025106pgt.340.1579675036728;
+        Tue, 21 Jan 2020 22:37:16 -0800 (PST)
+Received: from localhost ([2401:fa00:8f:203:5bbb:c872:f2b1:f53b])
+        by smtp.gmail.com with ESMTPSA id i9sm46704101pfk.24.2020.01.21.22.37.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Jan 2020 22:37:15 -0800 (PST)
+Date:   Wed, 22 Jan 2020 15:37:14 +0900
+From:   Sergey Senozhatsky <senozhatsky@chromium.org>
+To:     Hans Verkuil <hverkuil@xs4all.nl>
+Cc:     Sergey Senozhatsky <senozhatsky@chromium.org>,
+        Hans Verkuil <hans.verkuil@cisco.com>,
+        Tomasz Figa <tfiga@chromium.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Sakari Ailus <sakari.ailus@iki.fi>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Pawel Osciak <posciak@chromium.org>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC][PATCH 12/15] videobuf2: add begin/end cpu_access callbacks
+ to dma-sg
+Message-ID: <20200122063714.GA14881@google.com>
+References: <20191217032034.54897-1-senozhatsky@chromium.org>
+ <20191217032034.54897-13-senozhatsky@chromium.org>
+ <1c5198dc-db4e-47d6-0d8b-259fbbb6372f@xs4all.nl>
 MIME-Version: 1.0
-In-Reply-To: <AM0PR0502MB37956A8D6690B190EEA713A5C30D0@AM0PR0502MB3795.eurprd05.prod.outlook.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1c5198dc-db4e-47d6-0d8b-259fbbb6372f@xs4all.nl>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On (20/01/10 11:13), Hans Verkuil wrote:
+> On 12/17/19 4:20 AM, Sergey Senozhatsky wrote:
+> > Provide begin_cpu_access() and end_cpu_access() dma_buf_ops
+> > callbacks for cache synchronisation on exported buffers.
+> > 
+> > Signed-off-by: Sergey Senozhatsky <senozhatsky@chromium.org>
+> > ---
+> >  .../media/common/videobuf2/videobuf2-dma-sg.c | 22 +++++++++++++++++++
+> >  1 file changed, 22 insertions(+)
+> > 
+> > diff --git a/drivers/media/common/videobuf2/videobuf2-dma-sg.c b/drivers/media/common/videobuf2/videobuf2-dma-sg.c
+> > index 6db60e9d5183..bfc99a0cb7b9 100644
+> > --- a/drivers/media/common/videobuf2/videobuf2-dma-sg.c
+> > +++ b/drivers/media/common/videobuf2/videobuf2-dma-sg.c
+> > @@ -470,6 +470,26 @@ static void vb2_dma_sg_dmabuf_ops_release(struct dma_buf *dbuf)
+> >  	vb2_dma_sg_put(dbuf->priv);
+> >  }
+> >  
+> 
+> There is no corresponding vb2_sg_buffer_consistent function here.
+> 
+> Looking more closely I see that vb2_dma_sg_alloc doesn't pass the dma_attrs
+> argument to dma_map_sg_attrs, thus V4L2_FLAG_MEMORY_NON_CONSISTENT has no
+> effect on dma-sg buffers.
+> 
+> Is there a reason why dma_attrs isn't passed on to dma_map_sg_attrs()?
 
-On 2020/1/21 =E4=B8=8B=E5=8D=887:09, Shahaf Shuler wrote:
-> Tuesday, January 21, 2020 10:35 AM, Jason Wang:
->> Subject: Re: [PATCH 3/5] vDPA: introduce vDPA bus
->>
->>
->> On 2020/1/21 =E4=B8=8B=E5=8D=884:15, Michael S. Tsirkin wrote:
->>> On Tue, Jan 21, 2020 at 04:00:38PM +0800, Jason Wang wrote:
->>>> On 2020/1/21 =E4=B8=8B=E5=8D=881:47, Michael S. Tsirkin wrote:
->>>>> On Tue, Jan 21, 2020 at 12:00:57PM +0800, Jason Wang wrote:
->>>>>> On 2020/1/21 =E4=B8=8A=E5=8D=881:49, Jason Gunthorpe wrote:
->>>>>>> On Mon, Jan 20, 2020 at 04:43:53PM +0800, Jason Wang wrote:
->>>>>>>> This is similar to the design of platform IOMMU part of
->>>>>>>> vhost-vdpa. We decide to send diffs to platform IOMMU there. If
->>>>>>>> it's ok to do that in driver, we can replace set_map with increm=
-ental
->> API like map()/unmap().
->>>>>>>> Then driver need to maintain rbtree itself.
->>>>>>> I think we really need to see two modes, one where there is a
->>>>>>> fixed translation without dynamic vIOMMU driven changes and one
->>>>>>> that supports vIOMMU.
->>>>>> I think in this case, you meant the method proposed by Shahaf that
->>>>>> sends diffs of "fixed translation" to device?
->>>>>>
->>>>>> It would be kind of tricky to deal with the following case for exa=
-mple:
->>>>>>
->>>>>> old map [4G, 16G) new map [4G, 8G)
->>>>>>
->>>>>> If we do
->>>>>>
->>>>>> 1) flush [4G, 16G)
->>>>>> 2) add [4G, 8G)
->>>>>>
->>>>>> There could be a window between 1) and 2).
->>>>>>
->>>>>> It requires the IOMMU that can do
->>>>>>
->>>>>> 1) remove [8G, 16G)
->>>>>> 2) flush [8G, 16G)
->>>>>> 3) change [4G, 8G)
->>>>>>
->>>>>> ....
->>>>> Basically what I had in mind is something like qemu memory api
->>>>>
->>>>> 0. begin
->>>>> 1. remove [8G, 16G)
->>>>> 2. add [4G, 8G)
->>>>> 3. commit
->>>> This sounds more flexible e.g driver may choose to implement static
->>>> mapping one through commit. But a question here, it looks to me this
->>>> still requires the DMA to be synced with at least commit here.
->>>> Otherwise device may get DMA fault? Or device is expected to be paus=
-ed
->> DMA during begin?
->>>> Thanks
->>> For example, commit might switch one set of tables for another,
->>> without need to pause DMA.
->> Yes, I think that works but need confirmation from Shahaf or Jason.
->  From my side, as I wrote, I would like to see the suggested function p=
-rototype along w/ the definition of the expectation from driver upon call=
-ing those.
-> It is not 100% clear to me what should be the outcome of remove/flush/c=
-hange/commit
+Laziness.
 
+> I suspect it was just laziness in the past, and that it should be wired
+> up, just as for dma-contig.
 
-Right, I can do this in next version after the discussion is converged.
+OK, I can include it into v2.
 
-Thanks
-
-
->
-
+	-ss
