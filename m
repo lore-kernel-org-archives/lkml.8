@@ -2,109 +2,98 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFF4EC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 12:20:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7429BC33CB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 12:23:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C1812467F
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 12:20:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53D2724655
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 12:23:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729130AbgAVMUE (ORCPT
+        id S1729134AbgAVMXP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 07:20:04 -0500
-Received: from foss.arm.com ([217.140.110.172]:55764 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728900AbgAVMUD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 07:20:03 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0BB71328;
-        Wed, 22 Jan 2020 04:20:03 -0800 (PST)
-Received: from e119884-lin.cambridge.arm.com (e119884-lin.cambridge.arm.com [10.1.196.72])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E5EA33F52E;
-        Wed, 22 Jan 2020 04:20:01 -0800 (PST)
-From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
-To:     thierry.reding@gmail.com, airlied@linux.ie, daniel@ffwll.ch,
-        jonathanh@nvidia.com
-Cc:     dri-devel@lists.freedesktop.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org, vincenzo.frascino@arm.com
-Subject: [PATCH] drm: tegra: Fix warning in PM ops
-Date:   Wed, 22 Jan 2020 12:19:51 +0000
-Message-Id: <20200122121951.52639-1-vincenzo.frascino@arm.com>
-X-Mailer: git-send-email 2.25.0
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+        Wed, 22 Jan 2020 07:23:15 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:20814 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729017AbgAVMXO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 07:23:14 -0500
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00MCMN4S135850
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jan 2020 07:23:14 -0500
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2xnnn7kx4r-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jan 2020 07:23:13 -0500
+Received: from localhost
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Wed, 22 Jan 2020 12:23:12 -0000
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 22 Jan 2020 12:23:09 -0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 00MCN8YR20512960
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 22 Jan 2020 12:23:08 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B925FAE053;
+        Wed, 22 Jan 2020 12:23:08 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1B48CAE04D;
+        Wed, 22 Jan 2020 12:23:08 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.85.146.245])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed, 22 Jan 2020 12:23:07 +0000 (GMT)
+Subject: Re: [PATCH] IMA: Turn IMA_MEASURE_ASYMMETRIC_KEYS off by default
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     James Bottomley <James.Bottomley@HansenPartnership.com>,
+        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        linux-integrity@vger.kernel.org
+Cc:     sashal@kernel.org, linux-kernel@vger.kernel.org
+Date:   Wed, 22 Jan 2020 07:23:07 -0500
+In-Reply-To: <1579636351.3390.35.camel@HansenPartnership.com>
+References: <20200121171302.4935-1-nramas@linux.microsoft.com>
+         <1579628090.3390.28.camel@HansenPartnership.com>
+         <1579634035.5125.311.camel@linux.ibm.com>
+         <1579636351.3390.35.camel@HansenPartnership.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 20012212-4275-0000-0000-00000399E783
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20012212-4276-0000-0000-000038ADF27D
+Message-Id: <1579695787.5182.29.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-01-17_05:2020-01-16,2020-01-17 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 mlxlogscore=999
+ spamscore=0 impostorscore=0 phishscore=0 priorityscore=1501 bulkscore=0
+ suspectscore=0 lowpriorityscore=0 clxscore=1015 mlxscore=0 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-1910280000
+ definitions=main-2001220114
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The tegra driver can be compiled without CONFIG_PM_SLEEP enabled.
-In this case the compilation triggers the warning below:
+On Tue, 2020-01-21 at 11:52 -0800, James Bottomley wrote:
+> On Tue, 2020-01-21 at 14:13 -0500, Mimi Zohar wrote:
 
-drivers/gpu/drm/tegra/sor.c:3984:12: warning: ‘tegra_sor_resume’
-defined but not used [-Wunused-function]
- 3984 | static int tegra_sor_resume(struct device *dev)
-      |            ^~~~~~~~~~~~~~~~
-drivers/gpu/drm/tegra/sor.c:3970:12: warning: ‘tegra_sor_suspend’
-defined but not used [-Wunused-function]
- 3970 | static int tegra_sor_suspend(struct device *dev)
-      |            ^~~~~~~~~~~~~~~~~
+> > This change permits disabling queueing certificates.  Whether the
+> > default should be "disabled" is a separate question.  I'm open to
+> > comments/suggestions.
+> 
+> I'm just giving the general rule of thumb for boolean config options. 
+> If it's default Y there likely shouldn't be a config option and if it's
+> default N the feature should likely not be in the kernel at all.
 
-Fix the warning adding __maybe_unused to the PM functions.
+Thanks, James.  I'll keep this in mind when debating about defining a
+new Kconfig option.
 
-Cc: Thierry Reding <thierry.reding@gmail.com>
-Cc: David Airlie <airlied@linux.ie>
-Cc: Daniel Vetter <daniel@ffwll.ch>
-Cc: Jonathan Hunter <jonathanh@nvidia.com>
-Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
----
- drivers/gpu/drm/tegra/sor.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/gpu/drm/tegra/sor.c b/drivers/gpu/drm/tegra/sor.c
-index a68d3b36b972..69b9ebee7486 100644
---- a/drivers/gpu/drm/tegra/sor.c
-+++ b/drivers/gpu/drm/tegra/sor.c
-@@ -3912,7 +3912,7 @@ static int tegra_sor_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
--static int tegra_sor_runtime_suspend(struct device *dev)
-+static int __maybe_unused tegra_sor_runtime_suspend(struct device *dev)
- {
- 	struct tegra_sor *sor = dev_get_drvdata(dev);
- 	int err;
-@@ -3934,7 +3934,7 @@ static int tegra_sor_runtime_suspend(struct device *dev)
- 	return 0;
- }
- 
--static int tegra_sor_runtime_resume(struct device *dev)
-+static int __maybe_unused tegra_sor_runtime_resume(struct device *dev)
- {
- 	struct tegra_sor *sor = dev_get_drvdata(dev);
- 	int err;
-@@ -3967,7 +3967,7 @@ static int tegra_sor_runtime_resume(struct device *dev)
- 	return 0;
- }
- 
--static int tegra_sor_suspend(struct device *dev)
-+static int __maybe_unused tegra_sor_suspend(struct device *dev)
- {
- 	struct tegra_sor *sor = dev_get_drvdata(dev);
- 	int err;
-@@ -3981,7 +3981,7 @@ static int tegra_sor_suspend(struct device *dev)
- 	return 0;
- }
- 
--static int tegra_sor_resume(struct device *dev)
-+static int __maybe_unused tegra_sor_resume(struct device *dev)
- {
- 	struct tegra_sor *sor = dev_get_drvdata(dev);
- 	int err;
--- 
-2.25.0
+Mimi
 
