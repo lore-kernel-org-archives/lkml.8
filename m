@@ -2,107 +2,128 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3142AC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 01:10:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75AF9C33CAF
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 01:11:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EEED621835
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 01:10:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C62321835
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 01:11:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Mmry9Gvl"
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="ZH9YqKI6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728901AbgAVBKW (ORCPT
+        id S1728984AbgAVBLL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 20:10:22 -0500
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:38245 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728609AbgAVBKV (ORCPT
+        Tue, 21 Jan 2020 20:11:11 -0500
+Received: from mail.efficios.com ([167.114.26.124]:50896 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728750AbgAVBLL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 20:10:21 -0500
-Received: by mail-qk1-f193.google.com with SMTP id k6so4840472qki.5
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jan 2020 17:10:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=xJlf2/Q3PLDs4Iy9IzlLnbg2vHNS9/Vku/zAI8tTziE=;
-        b=Mmry9GvlhlntsQSvbDZVmMoDG5lU4GJCc27XfWAYDZ/lnobx+nIJQdYLgCeXEqaBeK
-         n9AgklRW3wFgJHxEfqWog3HzCCIRaDivo9P8iwuIdJgdVr/9wg7FlFou32oR2JRqpAQN
-         fwNJruI1shHUR2WGX0HBtVrdp+SFEZ9FKZV8o3pKm97Ky9mrIZ7lNme5Qi+JNOc35HkQ
-         zauDJ+tPUhwToTJI5Sn5xncV/jm3vS7vfe+9F+yFvmopvVjVOaUD09i4xoCUq4DK4I+9
-         D2j+GfKtuJik1hCrc54L7OxYwGSlei30wQ2WraU4m/2uIQMQm/jSatE0nnk5Ik3loLBA
-         NewA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=xJlf2/Q3PLDs4Iy9IzlLnbg2vHNS9/Vku/zAI8tTziE=;
-        b=Ngq62qpkjNudIN0ew9K9NUYJ6UXXUutjKEhQdJw44nOsYfp9E4MYG1oaBCwwp0TL0R
-         xPeeCd1AwZguqYXGvnDRdbPMUFT1AdL7fLCu6V3fzRLpHwaOVAr4ntGC2SFpBXIWccpo
-         ERML1bml6dIs1dIXfekKRZFMKzu+Cziu3hCIXQ0FCK9b4MgeKNTg4SJWfQDxlZCxa3ON
-         OHiAwrn1Un4WmvMVwTKrG9VoT/npQCHc0wmoB69jrAk7RGOhHrGFEZUAzzFJf9cMHJ30
-         thhA0hKey++fnKgN2ZVf3YLi1EIP9cZnCPyNFSOg10VfYSoWD1L9alcE4qAbnwJuZaDO
-         7vrA==
-X-Gm-Message-State: APjAAAUsVnlBiCy0G8XVeQrDF4rG4gckBFXkOHPiRDuUn3jjYqjzDwsK
-        5pxcecbc2TvhVkcUXSscGXV8AQgb
-X-Google-Smtp-Source: APXvYqzr/MJ68zm1cKuACrXdA98dWLtk0o/JCWnXKRkiyoQbk92Xuo9MQCdvm8jr/fRt6Jus9+lh8g==
-X-Received: by 2002:a37:4d10:: with SMTP id a16mr7533403qkb.325.1579655420606;
-        Tue, 21 Jan 2020 17:10:20 -0800 (PST)
-Received: from localhost (198-0-15-102-static.hfc.comcastbusiness.net. [198.0.15.102])
-        by smtp.gmail.com with ESMTPSA id h13sm973846qtu.23.2020.01.21.17.10.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Jan 2020 17:10:20 -0800 (PST)
-Date:   Tue, 21 Jan 2020 17:10:18 -0800
-From:   Yury Norov <yury.norov@gmail.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Alex Shi <alex.shi@linux.alibaba.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        William Breathitt Gray <vilhelm.gray@gmail.com>,
-        "Tobin C. Harding" <tobin@kernel.org>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] lib/bitmap: remove expect_eq_u32_array
-Message-ID: <20200122011018.GA14737@yury-thinkpad>
-References: <1579595625-250942-1-git-send-email-alex.shi@linux.alibaba.com>
- <20200121132050.GT32742@smile.fi.intel.com>
+        Tue, 21 Jan 2020 20:11:11 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id 38908255E0E;
+        Tue, 21 Jan 2020 20:11:09 -0500 (EST)
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id MslKScO_bmKG; Tue, 21 Jan 2020 20:11:08 -0500 (EST)
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id C556F255E0D;
+        Tue, 21 Jan 2020 20:11:08 -0500 (EST)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com C556F255E0D
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1579655468;
+        bh=vJKDkNMK/FLSt2eC6/LRNCYWIf1IG5FTD/IjIMMwFWI=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=ZH9YqKI6GFgaRAoZ444GxKdwL/g6G6lPnJs8S+WG5C/fFq4reVEF2QAr9eO3czO+B
+         /z/rwFgmA+AT+tVFx3mvExOYCe57kJTPL+hdJ+17zT737Ck0h1bXoJK8v8Wu3gc6ni
+         P4YZ3cq1QZ9h4lCGHah18RDVcrAwo+XP3wofldu7lTYVSlgkfDS2Yvx6Y9mmCsAggq
+         +pKhZ1zNjq8D2LP6PsqCwrDFURxBc9/7xgAQVqDHDssdtH4kOE2sQ0K76PPAND3Qh0
+         Ss/E0ov2hlz72LTLHu+8ULw8qe+gKw6SiSY9EQGYPsmK+9mBVpGWTBCZ4BiD8qeRfi
+         zDYysctLP5wmQ==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id bp3r5mOtDFmO; Tue, 21 Jan 2020 20:11:08 -0500 (EST)
+Received: from mail03.efficios.com (mail03.efficios.com [167.114.26.124])
+        by mail.efficios.com (Postfix) with ESMTP id A92BB255A59;
+        Tue, 21 Jan 2020 20:11:08 -0500 (EST)
+Date:   Tue, 21 Jan 2020 20:11:08 -0500 (EST)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     Chris Lameter <cl@linux.com>
+Cc:     Jann Horn <jannh@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Joel Fernandes <joelaf@google.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Dave Watson <davejwatson@fb.com>,
+        Will Deacon <will.deacon@arm.com>, shuah <shuah@kernel.org>,
+        Andi Kleen <andi@firstfloor.org>,
+        linux-kselftest <linux-kselftest@vger.kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Russell King <linux@arm.linux.org.uk>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        Paul <paulmck@linux.vnet.ibm.com>, Paul Turner <pjt@google.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Josh Triplett <josh@joshtriplett.org>,
+        rostedt <rostedt@goodmis.org>, Ben Maurer <bmaurer@fb.com>,
+        linux-api <linux-api@vger.kernel.org>,
+        Andy Lutomirski <luto@amacapital.net>
+Message-ID: <1648013936.596672.1579655468604.JavaMail.zimbra@efficios.com>
+In-Reply-To: <alpine.DEB.2.21.2001212141590.1231@www.lameter.com>
+References: <20200121160312.26545-1-mathieu.desnoyers@efficios.com> <CAG48ez2bQdoT9y7HkyU06DTazysUDdPdJe+gyV-NxgQA7JWQVQ@mail.gmail.com> <430172781.596271.1579636021412.JavaMail.zimbra@efficios.com> <CAG48ez2Z5CesMfandNK+S32Rrgp_QGQHqQ1Fpd5-YTsCWGfHeg@mail.gmail.com> <2049164886.596497.1579641536619.JavaMail.zimbra@efficios.com> <alpine.DEB.2.21.2001212141590.1231@www.lameter.com>
+Subject: Re: [RFC PATCH v1] pin_on_cpu: Introduce thread CPU pinning system
+ call
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200121132050.GT32742@smile.fi.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [167.114.26.124]
+X-Mailer: Zimbra 8.8.15_GA_3895 (ZimbraWebClient - FF72 (Linux)/8.8.15_GA_3895)
+Thread-Topic: pin_on_cpu: Introduce thread CPU pinning system call
+Thread-Index: 5iCm1hRPFgMRFMEqWj/joD1uPFSiZA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 21, 2020 at 03:20:50PM +0200, Andy Shevchenko wrote:
-> On Tue, Jan 21, 2020 at 04:33:45PM +0800, Alex Shi wrote:
-> > expect_eq_u32_array isn't used from commit 3aa56885e516 ("bitmap:
-> > replace bitmap_{from,to}_u32array").
-> > And EXP2_IN_BITS are never used. so better to remove them.
-> 
-> I think better "fix" will be to add test cases.
-> See the commit message in the
-> 
-> commit 3aa56885e51683a19c8aa71739fd279b3f501cd7
-> Author: Yury Norov <ynorov@caviumnetworks.com>
-> Date:   Tue Feb 6 15:38:06 2018 -0800
-> 
->     bitmap: replace bitmap_{from,to}_u32array
-> 
-> -- 
-> With Best Regards,
-> Andy Shevchenko
- 
-On the other hand, it's almost 2 years gone since the commit you
-mentioned, and nobody used the check_eq_u32_array(). So I think
-it's long enough to consider the function useless.
+----- On Jan 21, 2020, at 4:44 PM, Chris Lameter cl@linux.com wrote:
 
-This function is the last example of 2 lengths in input, so I'd
-prefer to remove it. However, removing check_eq_u32_array() should
-be synchronized with underlying __check_eq_u32_array().
+> These scenarios are all pretty complex and will be difficult to understand
+> for the user of these APIs.
+> 
+> I think the easiest solution (and most comprehensible) is for the user
+> space process that does per cpu operations to get some sort of signal. If
+> its not able to handle that then terminate it. The code makes a basic
+> assumption after all that the process is running on a specific cpu. If
+> this is no longer the case then its better to abort if the process cannot
+> handle moving to a different processor.
 
-Yury
+The point of pin_on_cpu() is to allow threads to access per-cpu data
+structures belonging to a given CPU even if they cannot run on that
+CPU (because it is offline).
+
+I am not sure what scenario your signal delivery proposal aims to cover.
+
+Just to try to put this into the context of a specific scenario to see
+if I understand your point, is the following what you have in mind ?
+
+1. Thread A issues pin_on_cpu(5),
+2. Thread B issues sched_setaffinity removing cpu 5 from thread A's
+   affinity mask,
+3. Noticing that it would generate an invalid combination, rather than
+   failing sched_setaffinity, it would send a SIGSEGV (or other) signal
+   to thread A.
+
+Or so you have something entirely different in mind ?
+
+Thanks,
+
+Mathieu
+
+-- 
+Mathieu Desnoyers
+EfficiOS Inc.
+http://www.efficios.com
