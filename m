@@ -2,128 +2,133 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6A78C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 11:06:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F032DC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 11:08:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C26302467A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 11:06:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB1442467A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 11:08:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="JYbQkjC2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729019AbgAVLGc (ORCPT
+        id S1729047AbgAVLIr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 06:06:32 -0500
-Received: from mail.wangsu.com ([123.103.51.227]:44552 "EHLO wangsu.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725911AbgAVLGb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 06:06:31 -0500
-Received: from 137.localdomain (unknown [59.61.78.232])
-        by app2 (Coremail) with SMTP id 4zNnewBnh2uxLChe+KUOAA--.844S2;
-        Wed, 22 Jan 2020 19:06:26 +0800 (CST)
-From:   Pengcheng Yang <yangpc@wangsu.com>
-To:     akpm@linux-foundation.org, gregkh@linuxfoundation.org,
-        jannh@google.com, viro@zeniv.linux.org.uk
-Cc:     linux-kernel@vger.kernel.org, Pengcheng Yang <yangpc@wangsu.com>
-Subject: [PATCH RESEND] kernel/relay.c: fix read_pos error when multiple readers
-Date:   Wed, 22 Jan 2020 19:06:15 +0800
-Message-Id: <1579691175-28949-1-git-send-email-yangpc@wangsu.com>
-X-Mailer: git-send-email 1.8.3.1
-X-CM-TRANSID: 4zNnewBnh2uxLChe+KUOAA--.844S2
-X-Coremail-Antispam: 1UD129KBjvJXoWxZrW3tw15WrWktFy8XF1xAFb_yoW5Xry8pr
-        Z0kayrAr4vqa4fuFyrKF4kXFyfG34fXF40vrW8W3WxZr9rGrs5AFWrGa4YqryUJw1ktw4U
-        Kw4j9wn7tr40yFJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUgS1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l8cAvFVAK
-        0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVWDJVCq3wA2z4
-        x0Y4vE2Ix0cI8IcVCY1x0267AKxVWxJr0_GcWl84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2
-        z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4
-        xG64xvF2IEw4CE5I8CrVC2j2WlYx0E74AGY7Cv6cx26r48McvjeVCFs4IE7xkEbVWUJVW8
-        JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc2xSY4AK67AK6r4kMx
-        AIw28IcxkI7VAKI48JMxAIw28IcVCjz48v1sIEY20_Gr4l4I8I3I0E4IkC6x0Yz7v_Jr0_
-        Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17
-        CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0
-        I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWrZr1j6s0DMIIF0x
-        vEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2Kfnx
-        nUUI43ZEXa7VU04CJPUUUUU==
-X-CM-SenderInfo: p1dqw1nf6zt0xjvxhudrp/
+        Wed, 22 Jan 2020 06:08:47 -0500
+Received: from mx0a-001ae601.pphosted.com ([67.231.149.25]:61634 "EHLO
+        mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725911AbgAVLIr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 06:08:47 -0500
+Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
+        by mx0a-001ae601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00MB3ZfA027915;
+        Wed, 22 Jan 2020 05:08:44 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references : mime-version :
+ content-type; s=PODMain02222019;
+ bh=Wfwz0JBha5yb+vEJD1AnM22AO8M2TkTcB/GNhCOoR1M=;
+ b=JYbQkjC2m1RA/XQFYNd89kiqKjg7hmxFwFMCUKV7PVz6xutq1HgmNzExKNZh6/ToaxHi
+ eFDY//alxYLV/TVe4YerQn9a7vUqMvjiOGIPu1+teDFC/NhHOvXYxVpvXQBVDEQlIlBG
+ QFXuDwaKo19KG5flpzOGuN69jCrXD8qCF3FFuhBwOqGpEkaJTtHdlR8ICAOP8k8CpZso
+ 0X4srNgsga45C2gnKx3666XCfrebE6Im/rdl44JDF4ZTdd7GAsnTX/MzPpNRSYxOGt1f
+ 2Nw1liVO90nv94ypi0cZwIw5r66EmVeLvdP8S08kCJo2gAcixDokM5LF7EWZI6kWXPwc SQ== 
+Authentication-Results: ppops.net;
+        spf=fail smtp.mailfrom=ckeepax@opensource.cirrus.com
+Received: from ediex01.ad.cirrus.com ([5.172.152.52])
+        by mx0a-001ae601.pphosted.com with ESMTP id 2xm0a8wd1p-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Wed, 22 Jan 2020 05:08:44 -0600
+Received: from EDIEX01.ad.cirrus.com (198.61.84.80) by EDIEX01.ad.cirrus.com
+ (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Wed, 22 Jan
+ 2020 11:08:42 +0000
+Received: from ediswmail.ad.cirrus.com (198.61.86.93) by EDIEX01.ad.cirrus.com
+ (198.61.84.80) with Microsoft SMTP Server id 15.1.1591.10 via Frontend
+ Transport; Wed, 22 Jan 2020 11:08:42 +0000
+Received: from algalon.ad.cirrus.com (algalon.ad.cirrus.com [198.90.251.122])
+        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id 2538F2AB;
+        Wed, 22 Jan 2020 11:08:42 +0000 (UTC)
+From:   Charles Keepax <ckeepax@opensource.cirrus.com>
+To:     <broonie@kernel.org>, <lee.jones@linaro.org>
+CC:     <lgirdwood@gmail.com>, <linux-kernel@vger.kernel.org>,
+        <patches@opensource.cirrus.com>
+Subject: [PATCH RESEND 2/2] mfd: madera: Improve handling of regulator unbinding
+Date:   Wed, 22 Jan 2020 11:08:42 +0000
+Message-ID: <20200122110842.10702-2-ckeepax@opensource.cirrus.com>
+X-Mailer: git-send-email 2.11.0
+In-Reply-To: <20200122110842.10702-1-ckeepax@opensource.cirrus.com>
+References: <20200122110842.10702-1-ckeepax@opensource.cirrus.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Proofpoint-SPF-Result: fail
+X-Proofpoint-SPF-Record: v=spf1 include:spf-001ae601.pphosted.com include:spf.protection.outlook.com
+ -all
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxscore=0 suspectscore=0
+ bulkscore=0 priorityscore=1501 impostorscore=0 mlxlogscore=680
+ phishscore=0 malwarescore=0 adultscore=0 lowpriorityscore=0 clxscore=1015
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-1910280000
+ definitions=main-2001220101
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When reading, read_pos should start with bytes_consumed,
-not file->f_pos. Because when there is more than one reader,
-the read_pos corresponding to file->f_pos may have been consumed,
-which will cause the data that has been consumed to be read
-and the bytes_consumed update error.
+The current unbinding process for Madera has some issues. The trouble
+is runtime PM is disabled as the first step of the process, but
+some of the drivers release IRQs causing regmap IRQ to issue a
+runtime get which fails. To allow runtime PM to remain enabled during
+mfd_remove_devices, the DCVDD regulator must remain available. In
+the case of external DCVDD's this is simple, the regulator can simply
+be disabled/put after the call to mfd_remove_devices. However, in
+the case of an internally supplied DCVDD the regulator needs to be
+released after all the MFD children, except for the regulator child
+itself, have been removed. This is achieved by having the regulator
+driver itself do the disable/put, as it is the last driver removed from
+the MFD.
 
-Signed-off-by: Pengcheng Yang <yangpc@wangsu.com>
+Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
 ---
- kernel/relay.c | 17 +++++++----------
- 1 file changed, 7 insertions(+), 10 deletions(-)
+ drivers/mfd/madera-core.c | 20 ++++++++++++--------
+ 1 file changed, 12 insertions(+), 8 deletions(-)
 
-diff --git a/kernel/relay.c b/kernel/relay.c
-index ade14fb..07ee1a7 100644
---- a/kernel/relay.c
-+++ b/kernel/relay.c
-@@ -991,14 +991,14 @@ static void relay_file_read_consume(struct rchan_buf *buf,
- /*
-  *	relay_file_read_avail - boolean, are there unconsumed bytes available?
-  */
--static int relay_file_read_avail(struct rchan_buf *buf, size_t read_pos)
-+static int relay_file_read_avail(struct rchan_buf *buf)
- {
- 	size_t subbuf_size = buf->chan->subbuf_size;
- 	size_t n_subbufs = buf->chan->n_subbufs;
- 	size_t produced = buf->subbufs_produced;
- 	size_t consumed = buf->subbufs_consumed;
+diff --git a/drivers/mfd/madera-core.c b/drivers/mfd/madera-core.c
+index a8cfadc1fc01e..5170b55836fc1 100644
+--- a/drivers/mfd/madera-core.c
++++ b/drivers/mfd/madera-core.c
+@@ -730,18 +730,22 @@ int madera_dev_exit(struct madera *madera)
+ 	/* Prevent any IRQs being serviced while we clean up */
+ 	disable_irq(madera->irq);
  
--	relay_file_read_consume(buf, read_pos, 0);
-+	relay_file_read_consume(buf, 0, 0);
+-	/*
+-	 * DCVDD could be supplied by a child node, we must disable it before
+-	 * removing the children, and prevent PM runtime from turning it back on
+-	 */
++	pm_runtime_get_sync(madera->dev);
++
++	mfd_remove_devices(madera->dev);
++
+ 	pm_runtime_disable(madera->dev);
  
- 	consumed = buf->subbufs_consumed;
+-	clk_disable_unprepare(madera->mclk[MADERA_MCLK2].clk);
++	if (!madera->internal_dcvdd) {
++		regulator_disable(madera->dcvdd);
++		regulator_put(madera->dcvdd);
++	}
  
-@@ -1059,23 +1059,20 @@ static size_t relay_file_read_subbuf_avail(size_t read_pos,
+-	regulator_disable(madera->dcvdd);
+-	regulator_put(madera->dcvdd);
++	pm_runtime_set_suspended(madera->dev);
++	pm_runtime_put_noidle(madera->dev);
++
++	clk_disable_unprepare(madera->mclk[MADERA_MCLK2].clk);
  
- /**
-  *	relay_file_read_start_pos - find the first available byte to read
-- *	@read_pos: file read position
-  *	@buf: relay channel buffer
-  *
-- *	If the @read_pos is in the middle of padding, return the
-+ *	If the read_pos is in the middle of padding, return the
-  *	position of the first actually available byte, otherwise
-  *	return the original value.
-  */
--static size_t relay_file_read_start_pos(size_t read_pos,
--					struct rchan_buf *buf)
-+static size_t relay_file_read_start_pos(struct rchan_buf *buf)
- {
- 	size_t read_subbuf, padding, padding_start, padding_end;
- 	size_t subbuf_size = buf->chan->subbuf_size;
- 	size_t n_subbufs = buf->chan->n_subbufs;
- 	size_t consumed = buf->subbufs_consumed % n_subbufs;
-+	size_t read_pos = consumed * subbuf_size + buf->bytes_consumed;
+-	mfd_remove_devices(madera->dev);
+ 	madera_enable_hard_reset(madera);
  
--	if (!read_pos)
--		read_pos = consumed * subbuf_size + buf->bytes_consumed;
- 	read_subbuf = read_pos / subbuf_size;
- 	padding = buf->padding[read_subbuf];
- 	padding_start = (read_subbuf + 1) * subbuf_size - padding;
-@@ -1131,10 +1128,10 @@ static ssize_t relay_file_read(struct file *filp,
- 	do {
- 		void *from;
- 
--		if (!relay_file_read_avail(buf, *ppos))
-+		if (!relay_file_read_avail(buf))
- 			break;
- 
--		read_start = relay_file_read_start_pos(*ppos, buf);
-+		read_start = relay_file_read_start_pos(buf);
- 		avail = relay_file_read_subbuf_avail(read_start, buf);
- 		if (!avail)
- 			break;
+ 	regulator_bulk_disable(madera->num_core_supplies,
 -- 
-1.8.3.1
+2.11.0
 
