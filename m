@@ -2,249 +2,164 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B7BAC33CAF
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 19:52:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F071C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 19:54:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65B1521835
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 19:52:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFD3F21835
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 19:54:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="STDrf55Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729017AbgAVTwM (ORCPT
+        id S1726227AbgAVTyv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 14:52:12 -0500
-Received: from mga14.intel.com ([192.55.52.115]:9767 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726005AbgAVTwM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 14:52:12 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Jan 2020 11:52:11 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,350,1574150400"; 
-   d="scan'208";a="400111763"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by orsmga005.jf.intel.com with ESMTP; 22 Jan 2020 11:52:10 -0800
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1iuM2s-000H63-0f; Thu, 23 Jan 2020 03:52:10 +0800
-Date:   Thu, 23 Jan 2020 03:51:43 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     "x86-ml" <x86@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [tip:efi/core] BUILD SUCCESS
- 0779221e7166c6865555bb6d29bf6af76fc316bd
-Message-ID: <5e28a7cf.opqtVaXcy/+hP344%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        Wed, 22 Jan 2020 14:54:51 -0500
+Received: from mail-yb1-f193.google.com ([209.85.219.193]:45114 "EHLO
+        mail-yb1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725928AbgAVTyu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 14:54:50 -0500
+Received: by mail-yb1-f193.google.com with SMTP id x191so406910ybg.12;
+        Wed, 22 Jan 2020 11:54:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=EZR9vaas7bAWCxVDL5nyN/PGL7NvMxgw0YZinV/QQGA=;
+        b=STDrf55YeSKcIvivvP9GGXphgttIjmMcsAq2dtZZNykIhI21PqqNwooXhESYh0ISYU
+         VQR3IQ3xG1EFqOObWcXw9roFCfhG8zaKOiF62htrLmZJr/sF+klLScqOCSOAwTklDjXS
+         YMRK9/oNYZuaVk5eiHTEERYe7GnWsSV2oeF1S5HKqlSJoFTaEGxX12I4Yb7/vShf3tGe
+         wndIO1zgFdEOqu/DiVL+gbMopirtVAeDB1XBSIKblqmEroqjTxLMKfUVglR8pY1mOp2c
+         JlDidRGNJVapaK4qS43h38sq5te/d1CoeKzix+kK4N1S02smKfs3hIVSRYMxEVhq42n7
+         K61w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=EZR9vaas7bAWCxVDL5nyN/PGL7NvMxgw0YZinV/QQGA=;
+        b=qY9LRbG+TM/Vt8Uou/MvWjm5JE17ykjbEzHsJyAnVgMcF5WsLZFQi2pZC7G4SSRSZC
+         2qRGHCv0TApiUdNMdm/T1/iR+yYEvXTFLvS1/JuF3Uaz7Z3w714kDfkRMnqsP/F1BYJz
+         +ffGBI4Rks7SS6tnj+D1lrQ3MsB2SKnzCrqkQg5iFFzGbFql2z8Ef+GBbKPjuCW251Kv
+         ZSsDrW8UVz4W5QdE9Cua6BfTfvQ/2N4ncLLbmY8H83i4i6U2e8nS6sbxI8ScMK6F/C7S
+         YsjSs7kJF5I25bSeJvspfsqHBHUGB9o3ekQnruspE0FTmH+gjDttv5g+zDj4hKjBeuwS
+         aohA==
+X-Gm-Message-State: APjAAAWIQawJozanw6vY8bbWVtmHFormP11k+aHPabOXthZ0l6AtvrEy
+        8MBGumSfAH9swM6s2N1aBtg=
+X-Google-Smtp-Source: APXvYqyq+UEB3+spdW2Kvy7L6rcMhfSHa13OsuxvZpznj9Wa4u4jONePJl+D0ReYUqQC3td62GVg2A==
+X-Received: by 2002:a25:d9d3:: with SMTP id q202mr8847541ybg.276.1579722889490;
+        Wed, 22 Jan 2020 11:54:49 -0800 (PST)
+Received: from [192.168.1.46] (c-73-88-245-53.hsd1.tn.comcast.net. [73.88.245.53])
+        by smtp.gmail.com with ESMTPSA id p62sm18690989ywc.44.2020.01.22.11.54.48
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 22 Jan 2020 11:54:49 -0800 (PST)
+Subject: Re: [RFC PATCH 3/3] scripts: Use -B dtc option to generate dtb build
+ information.
+From:   Frank Rowand <frowand.list@gmail.com>
+To:     Alexandre Torgue <alexandre.torgue@st.com>, robh+dt@kernel.org,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        david@gibson.dropbear.id.au, sjg@chromium.org
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-kbuild@vger.kernel.org, devicetree-compiler@vger.kernel.org
+References: <20200113181625.3130-1-alexandre.torgue@st.com>
+ <20200113181625.3130-4-alexandre.torgue@st.com>
+ <bc5a94e3-389e-7ef4-5d14-1f7ab30a0826@gmail.com>
+Message-ID: <0b2fbafb-0de0-ae1c-08c7-95e52f46ca43@gmail.com>
+Date:   Wed, 22 Jan 2020 13:54:48 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+In-Reply-To: <bc5a94e3-389e-7ef4-5d14-1f7ab30a0826@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  efi/core
-branch HEAD: 0779221e7166c6865555bb6d29bf6af76fc316bd  efi/x86: Disallow efi=old_map in mixed mode
+On 1/17/20 1:20 PM, Frank Rowand wrote:
+> On 1/13/20 12:16 PM, Alexandre Torgue wrote:
+>> This commit adds a new script to create a string in tmp file with
+>> some information (date, linux version, user). This file is then used by
+>> dtc with -B option to append dts file with a new property.
+>> During kernel boot it will then be possible to printout DTB build
+>> information (date, linux version used, user).
+>>
+>> Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
+>>
+>> diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
+>> index 3fa32f83b2d7..6a98eac1e56d 100644
+>> --- a/scripts/Makefile.lib
+>> +++ b/scripts/Makefile.lib
+>> @@ -235,6 +235,7 @@ quiet_cmd_gzip = GZIP    $@
+>>  # DTC
+>>  # ---------------------------------------------------------------------------
+>>  DTC ?= $(objtree)/scripts/dtc/dtc
+>> +DTB_GEN_INFO ?= $(objtree)/scripts/gen_dtb_build_info
+>>  
+>>  # Disable noisy checks by default
+>>  ifeq ($(findstring 1,$(KBUILD_EXTRA_WARN)),)
+>> @@ -275,11 +276,13 @@ $(obj)/%.dtb.S: $(obj)/%.dtb FORCE
+>>  
+>>  quiet_cmd_dtc = DTC     $@
+>>  cmd_dtc = mkdir -p $(dir ${dtc-tmp}) ; \
+>> -	$(HOSTCC) -E $(dtc_cpp_flags) -x assembler-with-cpp -o $(dtc-tmp) $< ; \
+>> -	$(DTC) -O $(2) -o $@ -b 0 \
+>> +       $(DTB_GEN_INFO) $(@).info ;\
+>> +       $(HOSTCC) -E $(dtc_cpp_flags) -x assembler-with-cpp -o $(dtc-tmp) $< ; \
+>> +       $(DTC) -O $(2) -o $@ -b 0 -B $(@).info\
+>>  		$(addprefix -i,$(dir $<) $(DTC_INCLUDE)) $(DTC_FLAGS) \
+>> -		-d $(depfile).dtc.tmp $(dtc-tmp) ; \
+>> -	cat $(depfile).pre.tmp $(depfile).dtc.tmp > $(depfile)
+>> +               -d $(depfile).dtc.tmp $(dtc-tmp) ; \
+>> +       rm $(@).info ; \
+>> +       cat $(depfile).pre.tmp $(depfile).dtc.tmp > $(depfile)
+>>  
+>>  $(obj)/%.dtb: $(src)/%.dts $(DTC) FORCE
+>>  	$(call if_changed_dep,dtc,dtb)
+>> diff --git a/scripts/gen_dtb_build_info b/scripts/gen_dtb_build_info
+>> new file mode 100755
+>> index 000000000000..30cf7506b9d5
+>> --- /dev/null
+>> +++ b/scripts/gen_dtb_build_info
+>> @@ -0,0 +1,11 @@
+>> +#!/bin/sh
+>> +# SPDX-License-Identifier: GPL-2.0
+>> +
+>> +DTB_TARGET=$@
+>> +COMPILE_BY=$(whoami | sed 's/\\/\\\\/')
+>> +
+>> +touch $DTB_TARGET
+>> +
+>> +{
+>> +  echo From Linux $KERNELRELEASE by $COMPILE_BY the $(date).
 
-elapsed time: 674m
+A nit, the trailing period is not needed.  Not a big deal one way
+or the other.
 
-configs tested: 186
-configs skipped: 0
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+>> +} > $DTB_TARGET
+>>
+> 
+> This specific set of information does not seem to me to be sufficient
+> to be of much use.  In my previous attempt to capture build time
+> information into the DTB I included more information that this,
+> which I felt provided more of the information that would be valuable
+> to a developer (or testing person) in a development environment,
+> test environment, or on an end user system.  The exact set of
+> information is easy to bike shed over, but one could explain what
+> information might be useful and why (I did not provide that explanation
+> in my patch series, but in retrospect should have).
 
-um                                  defconfig
-um                             i386_defconfig
-um                           x86_64_defconfig
-x86_64                              fedora-25
-x86_64                                  kexec
-x86_64                                    lkp
-x86_64                                   rhel
-x86_64                               rhel-7.6
-h8300                    h8300h-sim_defconfig
-x86_64               randconfig-a001-20200122
-x86_64               randconfig-a002-20200122
-x86_64               randconfig-a003-20200122
-i386                 randconfig-a001-20200122
-i386                 randconfig-a002-20200122
-i386                 randconfig-a003-20200122
-alpha                randconfig-a001-20200122
-m68k                 randconfig-a001-20200122
-mips                 randconfig-a001-20200122
-nds32                randconfig-a001-20200122
-parisc               randconfig-a001-20200122
-riscv                randconfig-a001-20200122
-h8300                     edosk2674_defconfig
-h8300                       h8s-sim_defconfig
-m68k                             allmodconfig
-m68k                       m5475evb_defconfig
-m68k                          multi_defconfig
-m68k                           sun3_defconfig
-csky                 randconfig-a001-20200122
-openrisc             randconfig-a001-20200122
-s390                 randconfig-a001-20200122
-sh                   randconfig-a001-20200122
-xtensa               randconfig-a001-20200122
-sparc                            allyesconfig
-sparc                               defconfig
-sparc64                          allmodconfig
-sparc64                           allnoconfig
-sparc64                          allyesconfig
-sparc64                             defconfig
-ia64                             alldefconfig
-ia64                             allmodconfig
-ia64                              allnoconfig
-ia64                             allyesconfig
-ia64                                defconfig
-s390                             alldefconfig
-s390                             allmodconfig
-s390                              allnoconfig
-s390                             allyesconfig
-s390                          debug_defconfig
-s390                                defconfig
-s390                       zfcpdump_defconfig
-arc                  randconfig-a001-20200123
-arm                  randconfig-a001-20200123
-arm64                randconfig-a001-20200123
-ia64                 randconfig-a001-20200123
-powerpc              randconfig-a001-20200123
-sparc                randconfig-a001-20200123
-x86_64               randconfig-g001-20200122
-x86_64               randconfig-g002-20200122
-x86_64               randconfig-g003-20200122
-i386                 randconfig-g001-20200122
-i386                 randconfig-g002-20200122
-i386                 randconfig-g003-20200122
-i386                                defconfig
-parisc                            allnoconfig
-parisc                            allyesonfig
-parisc                         b180_defconfig
-parisc                        c3000_defconfig
-parisc                              defconfig
-alpha                               defconfig
-csky                                defconfig
-nds32                             allnoconfig
-nds32                               defconfig
-arm                              allmodconfig
-arm                               allnoconfig
-arm                              allyesconfig
-arm                         at91_dt_defconfig
-arm                           efm32_defconfig
-arm                          exynos_defconfig
-arm                        multi_v5_defconfig
-arm                        multi_v7_defconfig
-arm                        shmobile_defconfig
-arm                           sunxi_defconfig
-arm64                            allmodconfig
-arm64                             allnoconfig
-arm64                            allyesconfig
-arm64                               defconfig
-x86_64               randconfig-c001-20200122
-x86_64               randconfig-c002-20200122
-x86_64               randconfig-c003-20200122
-i386                 randconfig-c001-20200122
-i386                 randconfig-c002-20200122
-i386                 randconfig-c003-20200122
-microblaze                      mmu_defconfig
-c6x                  randconfig-a001-20200122
-h8300                randconfig-a001-20200122
-microblaze           randconfig-a001-20200122
-nios2                randconfig-a001-20200122
-sparc64              randconfig-a001-20200122
-x86_64               randconfig-d001-20200122
-x86_64               randconfig-d002-20200122
-x86_64               randconfig-d003-20200122
-i386                 randconfig-d001-20200122
-i386                 randconfig-d002-20200122
-i386                 randconfig-d003-20200122
-mips                           32r2_defconfig
-mips                         64r6el_defconfig
-mips                             allmodconfig
-mips                              allnoconfig
-mips                             allyesconfig
-mips                      fuloong2e_defconfig
-mips                      malta_kvm_defconfig
-x86_64               randconfig-b001-20200122
-x86_64               randconfig-b002-20200122
-x86_64               randconfig-b003-20200122
-i386                 randconfig-b001-20200122
-i386                 randconfig-b002-20200122
-i386                 randconfig-b003-20200122
-i386                             alldefconfig
-i386                              allnoconfig
-i386                             allyesconfig
-c6x                              allyesconfig
-c6x                        evmc6678_defconfig
-nios2                         10m50_defconfig
-nios2                         3c120_defconfig
-openrisc                    or1ksim_defconfig
-openrisc                 simple_smp_defconfig
-xtensa                       common_defconfig
-xtensa                          iss_defconfig
-riscv                            allmodconfig
-arc                  randconfig-a001-20200122
-arm                  randconfig-a001-20200122
-arm64                randconfig-a001-20200122
-ia64                 randconfig-a001-20200122
-powerpc              randconfig-a001-20200122
-sparc                randconfig-a001-20200122
-arc                              allyesconfig
-arc                                 defconfig
-microblaze                    nommu_defconfig
-powerpc                           allnoconfig
-powerpc                             defconfig
-powerpc                       ppc64_defconfig
-powerpc                          rhel-kconfig
-riscv                             allnoconfig
-riscv                            allyesconfig
-riscv                               defconfig
-riscv                    nommu_virt_defconfig
-riscv                          rv32_defconfig
-x86_64               randconfig-h001-20200122
-x86_64               randconfig-h002-20200122
-x86_64               randconfig-h003-20200122
-i386                 randconfig-h001-20200122
-i386                 randconfig-h002-20200122
-i386                 randconfig-h003-20200122
-sh                               allmodconfig
-sh                                allnoconfig
-sh                          rsk7269_defconfig
-sh                  sh7785lcr_32bit_defconfig
-sh                            titan_defconfig
-alpha                randconfig-a001-20200123
-m68k                 randconfig-a001-20200123
-mips                 randconfig-a001-20200123
-nds32                randconfig-a001-20200123
-parisc               randconfig-a001-20200123
-riscv                randconfig-a001-20200123
-x86_64               randconfig-b001-20200123
-x86_64               randconfig-b002-20200123
-x86_64               randconfig-b003-20200123
-i386                 randconfig-b001-20200123
-i386                 randconfig-b002-20200123
-i386                 randconfig-b003-20200123
-x86_64               randconfig-e001-20200122
-x86_64               randconfig-e002-20200122
-x86_64               randconfig-e003-20200122
-i386                 randconfig-e001-20200122
-i386                 randconfig-e002-20200122
-i386                 randconfig-e003-20200122
-csky                 randconfig-a001-20200123
-openrisc             randconfig-a001-20200123
-s390                 randconfig-a001-20200123
-sh                   randconfig-a001-20200123
-xtensa               randconfig-a001-20200123
-c6x                  randconfig-a001-20200123
-h8300                randconfig-a001-20200123
-microblaze           randconfig-a001-20200123
-nios2                randconfig-a001-20200123
-sparc64              randconfig-a001-20200123
-
----
-0-DAY kernel test infrastructure                 Open Source Technology Center
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org Intel Corporation
+On reflection, this information is sufficient.  My concern was that a
+unique version number was not provided.  But the unique version number
+_is_ provided by the date, which is hh:mm:ss, so sufficient if the
+dtb is not compiled more often than once per second.  So good enough
+for the debugging environment.
