@@ -2,98 +2,115 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CC52C33CAF
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 17:27:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 221B2C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 17:28:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18F022465A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 17:27:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579714028;
-	bh=EX0+I6dyirdMjWxr9MIssWyHmCGela91rfZhzH27bJI=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=0IfyR5RJh8fY3FGtb96TVTVUimQ0yvs9qD1MBlTVdB31xNv1oF3IMGei5fsSzgMqf
-	 cd126Z/HPGvNyXpYPSFAfgKU6Ui5dsmkmYYUVY/Jn61gRh5mi/8AR7/3zmsuTJZ5FF
-	 wiHOLBOSuZIKeRCBu+AsKwvwyA148ZWqDI9xOhuQ=
+	by mail.kernel.org (Postfix) with ESMTP id EFEC22465A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 17:28:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729021AbgAVR1D (ORCPT
+        id S1728831AbgAVR2C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 12:27:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58056 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725924AbgAVR1D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 12:27:03 -0500
-Received: from localhost.localdomain (unknown [194.230.155.229])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 51E7B2465A;
-        Wed, 22 Jan 2020 17:27:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579714022;
-        bh=EX0+I6dyirdMjWxr9MIssWyHmCGela91rfZhzH27bJI=;
-        h=From:To:Cc:Subject:Date:From;
-        b=uNKJuz/xgJtyaiKDYxe67Gt1Y8aBDTo+neAvz1Exsh9dwal6414SpNP5d3yPkVkb6
-         Y4u5Dj9r6D6IYYUnAiBK2rzuwd0R3gjBfFvEef6dMsoNrC4LE44J2p/ZHPH/mdEsCx
-         4OPmr04T68DVeKiOPDGfW+T3T1vrshM5gGEY0Ftc=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>,
-        arm@kernel.org, soc@kernel.org
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Kukjin Kim <kgene@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [GIT PULL] ARM: mach: s3c/exynos for v5.6, part 2
-Date:   Wed, 22 Jan 2020 18:26:49 +0100
-Message-Id: <20200122172649.3143-1-krzk@kernel.org>
-X-Mailer: git-send-email 2.17.1
+        Wed, 22 Jan 2020 12:28:02 -0500
+Received: from smtprelay0082.hostedemail.com ([216.40.44.82]:55850 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725883AbgAVR2B (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 12:28:01 -0500
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay08.hostedemail.com (Postfix) with ESMTP id 897D6182CED34;
+        Wed, 22 Jan 2020 17:28:00 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: actor69_b97d50fdc604
+X-Filterd-Recvd-Size: 2878
+Received: from XPS-9350.home (unknown [47.151.135.224])
+        (Authenticated sender: joe@perches.com)
+        by omf11.hostedemail.com (Postfix) with ESMTPA;
+        Wed, 22 Jan 2020 17:27:59 +0000 (UTC)
+Message-ID: <e9de2dda118caca92e2cf678cccf76fa097cb734.camel@perches.com>
+Subject: Re: [PATCH V2] checkpatch: fix minor typo and mixed space+tab in
+ indentation
+From:   Joe Perches <joe@perches.com>
+To:     Antonio Borneo <borneo.antonio@gmail.com>,
+        Andy Whitcroft <apw@canonical.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org
+Date:   Wed, 22 Jan 2020 09:26:58 -0800
+In-Reply-To: <20200122163852.124417-2-borneo.antonio@gmail.com>
+References: <20190508122721.7513-3-borneo.antonio@gmail.com>
+         <20200122163852.124417-2-borneo.antonio@gmail.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.34.1-2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Wed, 2020-01-22 at 17:38 +0100, Antonio Borneo wrote:
+> Fix spelling of "concatenation".
+> Don't use tab after space in indentation.
+> 
+> Signed-off-by: Antonio Borneo <borneo.antonio@gmail.com>
 
-On top of previous pull request. Last minute changes.
+I've no objection to any of these 3 patches.
+Andrew, might you pick them up please?
 
+https://lore.kernel.org/patchwork/patch/1183806/
+https://lore.kernel.org/patchwork/patch/1183805/
+https://lore.kernel.org/patchwork/patch/1183804/
 
-Best regards,
-Krzysztof
+> ---
+> 
+> v1 -> v2
+> 	rebased
+> 
+> ---
+>  scripts/checkpatch.pl | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+> index 30da08d9646a..4c1be774b0ed 100755
+> --- a/scripts/checkpatch.pl
+> +++ b/scripts/checkpatch.pl
+> @@ -4582,7 +4582,7 @@ sub process {
+>  					    ($op eq '>' &&
+>  					     $ca =~ /<\S+\@\S+$/))
+>  					{
+> -					    	$ok = 1;
+> +						$ok = 1;
+>  					}
+>  
+>  					# for asm volatile statements
+> @@ -4917,7 +4917,7 @@ sub process {
+>  			# conditional.
+>  			substr($s, 0, length($c), '');
+>  			$s =~ s/\n.*//g;
+> -			$s =~ s/$;//g; 	# Remove any comments
+> +			$s =~ s/$;//g;	# Remove any comments
+>  			if (length($c) && $s !~ /^\s*{?\s*\\*\s*$/ &&
+>  			    $c !~ /}\s*while\s*/)
+>  			{
+> @@ -4956,7 +4956,7 @@ sub process {
+>  # if and else should not have general statements after it
+>  		if ($line =~ /^.\s*(?:}\s*)?else\b(.*)/) {
+>  			my $s = $1;
+> -			$s =~ s/$;//g; 	# Remove any comments
+> +			$s =~ s/$;//g;	# Remove any comments
+>  			if ($s !~ /^\s*(?:\sif|(?:{|)\s*\\?\s*$)/) {
+>  				ERROR("TRAILING_STATEMENTS",
+>  				      "trailing statements should be on next line\n" . $herecurr);
+> @@ -5132,7 +5132,7 @@ sub process {
+>  			{
+>  			}
+>  
+> -			# Flatten any obvious string concatentation.
+> +			# Flatten any obvious string concatenation.
+>  			while ($dstat =~ s/($String)\s*$Ident/$1/ ||
+>  			       $dstat =~ s/$Ident\s*($String)/$1/)
+>  			{
 
-
-The following changes since commit 45984f0c70ccc03e09f97ee5d0749396547b6594:
-
-  ARM: samsung: Rename Samsung and Exynos to lowercase (2020-01-07 20:44:22 +0100)
-
-are available in the Git repository at:
-
-  https://git.kernel.org/pub/scm/linux/kernel/git/krzk/linux.git tags/samsung-soc-5.6-2
-
-for you to fetch changes up to af15a11b9046722f831588eff8fc423d28a1df44:
-
-  ARM: s3c64xx: Drop unneeded select of TIMER_OF (2020-01-21 20:58:03 +0100)
-
-----------------------------------------------------------------
-Samsung mach/soc changes for v5.6, part 2
-
-1. Switch from legacy to atomic pwm API in rx1950 (s3c24xx),
-2. Cleanups of unneeded selects in Kconfig.
-
-----------------------------------------------------------------
-Geert Uytterhoeven (2):
-      ARM: exynos: Drop unneeded select of MIGHT_HAVE_CACHE_L2X0
-      ARM: s3c64xx: Drop unneeded select of TIMER_OF
-
-Uwe Kleine-König (1):
-      ARM: s3c24xx: Switch to atomic pwm API in rx1950
-
- arch/arm/mach-exynos/Kconfig        |  1 -
- arch/arm/mach-s3c24xx/mach-rx1950.c | 19 ++++++++++++-------
- arch/arm/mach-s3c64xx/Kconfig       |  1 -
- 3 files changed, 12 insertions(+), 9 deletions(-)
