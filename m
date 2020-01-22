@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-5.7 required=3.0 tests=DATE_IN_PAST_03_06,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37A8BC33CB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:28:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BA3AC33CAF
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:28:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04AB120678
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:28:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41905205F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:28:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579699685;
-	bh=xDfirEVkKa3S5RImQWGG1TGOLnNlHUP/nL7HMGpbgog=;
+	s=default; t=1579699687;
+	bh=26Ag4a84Mxj1MhMUUa7Ze9eS9NWvIpZnvhk2RsY/vXI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nq4sVDBmZuAdCZVjH9RZ7gfXzUZ0rhdRH00TkYTxnCfaceLCOdAWDS85OLaJGg1RU
-	 oXfUJ5eluZOT3rALHOuN/VgO+/SizNd9YD0qlXyI7X6Z0teO922K2XElmy/hw9DVWM
-	 Yga8He3hx8j8k4Gwagma3EfARDAE95pa+S+kTb4c=
+	b=a0uII2640B7AMOXtnVETnwlbgyOnyBC+cGtC1dk1tE82q5tVa0PBY2DzMjgL6EVvm
+	 923mMo6m2n/aTuNIV11xt9YpCB+yKPrOR0nIyvo5VR1NPqlM+rEv4eAUo+hZanU4uV
+	 1bnAcHycAAmGrwSIaAWKnqInnUcL/mspBIjK7PEg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726219AbgAVN2E (ORCPT
+        id S1732125AbgAVN2G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 08:28:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49912 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 08:28:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50012 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729085AbgAVN2C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 08:28:02 -0500
+        id S1726061AbgAVN2F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 08:28:05 -0500
 Received: from localhost (unknown [84.241.205.26])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 07029205F4;
-        Wed, 22 Jan 2020 13:28:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2C2A0205F4;
+        Wed, 22 Jan 2020 13:28:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579699681;
-        bh=xDfirEVkKa3S5RImQWGG1TGOLnNlHUP/nL7HMGpbgog=;
+        s=default; t=1579699684;
+        bh=26Ag4a84Mxj1MhMUUa7Ze9eS9NWvIpZnvhk2RsY/vXI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wn+Zg1xJ3NZ/FSWiePjz+bbcapMuWo590O2ujagrliZ8nDoDfAHXIUKVb8/WJgBCB
-         Xm7ouWrqB1cyycs6LCCTe+rhXdWDDXrvTSucT8lEckUcqf9y7dGwVFz5UDVjmnpcAL
-         yMwk6SmNOyCDxxdq+08dXUWthhxcqKX4LwiBIV64=
+        b=Y/YdqlYaOpPZ2yX77ez8VnX7xeSA9NmgPgj8GCzV2Ose9MpQquacKkn+nIBvbqAsT
+         6epKaISnqHBKqSs0sRVVI+oL6jX3jrQ8dF/Oig+x3FkGKJ4Xd84pdMOOglgFpbDHEn
+         sYN4FdRfzQkD0TsNOVkpfwD3b4eXenPr8gDmSf+k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andre Przywara <andre.przywara@arm.com>,
-        Liviu Dudau <liviu.dudau@arm.com>,
-        Sudeep Holla <sudeep.holla@arm.com>
-Subject: [PATCH 5.4 190/222] arm64: dts: juno: Fix UART frequency
-Date:   Wed, 22 Jan 2020 10:29:36 +0100
-Message-Id: <20200122092847.285024823@linuxfoundation.org>
+        stable@vger.kernel.org, Baolin Wang <baolin.wang@linaro.org>,
+        Stephen Boyd <sboyd@kernel.org>
+Subject: [PATCH 5.4 217/222] clk: sprd: Use IS_ERR() to validate the return value of syscon_regmap_lookup_by_phandle()
+Date:   Wed, 22 Jan 2020 10:30:03 +0100
+Message-Id: <20200122092849.228738922@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200122092833.339495161@linuxfoundation.org>
 References: <20200122092833.339495161@linuxfoundation.org>
@@ -60,50 +59,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andre Przywara <andre.przywara@arm.com>
+From: Baolin Wang <baolin.wang@linaro.org>
 
-commit 39a1a8941b27c37f79508426e27a2ec29829d66c upstream.
+commit 9629dbdabd1983ef53f125336e1d62d77b1620f9 upstream.
 
-Older versions of the Juno *SoC* TRM [1] recommended that the UART clock
-source should be 7.2738 MHz, whereas the *system* TRM [2] stated a more
-correct value of 7.3728 MHz. Somehow the wrong value managed to end up in
-our DT.
+The syscon_regmap_lookup_by_phandle() will never return NULL, thus use
+IS_ERR() to validate the return value instead of IS_ERR_OR_NULL().
 
-Doing a prime factorisation, a modulo divide by 115200 and trying
-to buy a 7.2738 MHz crystal at your favourite electronics dealer suggest
-that the old value was actually a typo. The actual UART clock is driven
-by a PLL, configured via a parameter in some board.txt file in the
-firmware, which reads 7.37 MHz (sic!).
-
-Fix this to correct the baud rate divisor calculation on the Juno board.
-
-[1] http://infocenter.arm.com/help/topic/com.arm.doc.ddi0515b.b/DDI0515B_b_juno_arm_development_platform_soc_trm.pdf
-[2] http://infocenter.arm.com/help/topic/com.arm.doc.100113_0000_07_en/arm_versatile_express_juno_development_platform_(v2m_juno)_technical_reference_manual_100113_0000_07_en.pdf
-
-Fixes: 71f867ec130e ("arm64: Add Juno board device tree.")
-Signed-off-by: Andre Przywara <andre.przywara@arm.com>
-Acked-by: Liviu Dudau <liviu.dudau@arm.com>
-Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+Fixes: d41f59fd92f2 ("clk: sprd: Add common infrastructure")
+Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+Link: https://lkml.kernel.org/r/1995139bee5248ff3e9d46dc715968f212cfc4cc.1570520268.git.baolin.wang@linaro.org
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm64/boot/dts/arm/juno-clocks.dtsi |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/clk/sprd/common.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/arm64/boot/dts/arm/juno-clocks.dtsi
-+++ b/arch/arm64/boot/dts/arm/juno-clocks.dtsi
-@@ -8,10 +8,10 @@
-  */
- / {
- 	/* SoC fixed clocks */
--	soc_uartclk: refclk7273800hz {
-+	soc_uartclk: refclk7372800hz {
- 		compatible = "fixed-clock";
- 		#clock-cells = <0>;
--		clock-frequency = <7273800>;
-+		clock-frequency = <7372800>;
- 		clock-output-names = "juno:uartclk";
- 	};
+--- a/drivers/clk/sprd/common.c
++++ b/drivers/clk/sprd/common.c
+@@ -46,7 +46,7 @@ int sprd_clk_regmap_init(struct platform
  
+ 	if (of_find_property(node, "sprd,syscon", NULL)) {
+ 		regmap = syscon_regmap_lookup_by_phandle(node, "sprd,syscon");
+-		if (IS_ERR_OR_NULL(regmap)) {
++		if (IS_ERR(regmap)) {
+ 			pr_err("%s: failed to get syscon regmap\n", __func__);
+ 			return PTR_ERR(regmap);
+ 		}
 
 
