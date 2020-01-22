@@ -7,54 +7,47 @@ X-Spam-Status: No, score=-5.7 required=3.0 tests=DATE_IN_PAST_03_06,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BCAAC33CB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:19:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0852CC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:19:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 00B4A24688
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:19:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C13AC2467A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:19:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579699182;
-	bh=5o1iS8b4oMfFF/foWqXLudFQPQzd0UBvLxrLI1zM6qc=;
+	s=default; t=1579699186;
+	bh=gmGK9lkkptqNYlJQsr4NkvPPXlub+fNWnEWdTp6g9Gc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iYXL9n6n/FcDaxbQM2xkdFcMcSnmG6HxmylbbETm2gHGC8Qo9xx4bve7R7g+IC5/Y
-	 IyF1FXZTKr40jjqP6vPxrdCask88/T1jvlboU/0ZbaKd/pwhGayaUTwhtYVuqfzerw
-	 P8armPbQ1joMHVc3nadE+wt1SKoe66o9fw24dpUU=
+	b=Lw3tpq4UbFpsQ+ETJBkl/wPSfFz/e+xmCgiOrXj/DIw+gNywih2h2oW30MH1TYOeN
+	 kz9+lUu1ZVkgg3bDwnQsydzTnUVJGaxKJ4wEtAz2XhlUosQWgL6QmeJha76ATOQno2
+	 lMzbflBOEyyZuDQArqwzSy76CCo7mKGFzspXYYXM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729751AbgAVNTi (ORCPT
+        id S1729789AbgAVNTp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 08:19:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35512 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 08:19:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35656 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727816AbgAVNTf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 08:19:35 -0500
+        id S1728811AbgAVNTl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 08:19:41 -0500
 Received: from localhost (unknown [84.241.205.26])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 947BA2071E;
-        Wed, 22 Jan 2020 13:19:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DE3A62467E;
+        Wed, 22 Jan 2020 13:19:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579699174;
-        bh=5o1iS8b4oMfFF/foWqXLudFQPQzd0UBvLxrLI1zM6qc=;
+        s=default; t=1579699180;
+        bh=gmGK9lkkptqNYlJQsr4NkvPPXlub+fNWnEWdTp6g9Gc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=i5Om6LrIafW4pybBgUmn4ARnG99OQ/xcZnc0vMI16cfE8Y2QTSHbXaxZdcSD+JkQE
-         K2r4VJgbZO/unNqiVdo9F5S8XZ3kiXoVR2qQVOmF54/bP0m+qOhWc92nyG85cfguj6
-         yjdp9CK89E64HVFzBkEtyegZ4pKpnMTKMQ4HELLU=
+        b=fgrJwao8olqlDMXBKaCdaBt9khykdLigSkIWDWx96U1zLmHACW4pBLXPNIKfYHZ7t
+         o2eU2ZAjFu88gJFVoKkqwjrfgJNDTSat6uoS8Uqxcuprgej7ShP0cpBFWxCgUCxJOH
+         I7PFLc8WJh4oV0o68AWVTVTI50JBDKPoPZjmM89Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qian Cai <cai@lca.pw>,
-        Borislav Petkov <bp@suse.de>,
-        Reinette Chatre <reinette.chatre@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        john.stultz@linaro.org, sboyd@kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>, tj@kernel.org,
-        Tony Luck <tony.luck@intel.com>,
-        Vikas Shivappa <vikas.shivappa@linux.intel.com>,
-        x86-ml <x86@kernel.org>
-Subject: [PATCH 5.4 062/222] x86/resctrl: Fix an imbalance in domain_remove_cpu()
-Date:   Wed, 22 Jan 2020 10:27:28 +0100
-Message-Id: <20200122092838.159130044@linuxfoundation.org>
+        stable@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
+        Waiman Long <longman@redhat.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>
+Subject: [PATCH 5.4 064/222] locking/rwsem: Fix kernel crash when spinning on RWSEM_OWNER_UNKNOWN
+Date:   Wed, 22 Jan 2020 10:27:30 +0100
+Message-Id: <20200122092838.302318765@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200122092833.339495161@linuxfoundation.org>
 References: <20200122092833.339495161@linuxfoundation.org>
@@ -67,75 +60,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qian Cai <cai@lca.pw>
+From: Waiman Long <longman@redhat.com>
 
-commit e278af89f1ba0a9ef20947db6afc2c9afa37e85b upstream.
+commit 39e7234f00bc93613c086ae42d852d5f4147120a upstream.
 
-A system that supports resource monitoring may have multiple resources
-while not all of these resources are capable of monitoring. Monitoring
-related state is initialized only for resources that are capable of
-monitoring and correspondingly this state should subsequently only be
-removed from these resources that are capable of monitoring.
+The commit 91d2a812dfb9 ("locking/rwsem: Make handoff writer
+optimistically spin on owner") will allow a recently woken up waiting
+writer to spin on the owner. Unfortunately, if the owner happens to be
+RWSEM_OWNER_UNKNOWN, the code will incorrectly spin on it leading to a
+kernel crash. This is fixed by passing the proper non-spinnable bits
+to rwsem_spin_on_owner() so that RWSEM_OWNER_UNKNOWN will be treated
+as a non-spinnable target.
 
-domain_add_cpu() calls domain_setup_mon_state() only when r->mon_capable
-is true where it will initialize d->mbm_over. However,
-domain_remove_cpu() calls cancel_delayed_work(&d->mbm_over) without
-checking r->mon_capable resulting in an attempt to cancel d->mbm_over on
-all resources, even those that never initialized d->mbm_over because
-they are not capable of monitoring. Hence, it triggers a debugobjects
-warning when offlining CPUs because those timer debugobjects are never
-initialized:
+Fixes: 91d2a812dfb9 ("locking/rwsem: Make handoff writer optimistically spin on owner")
 
-  ODEBUG: assert_init not available (active state 0) object type:
-  timer_list hint: 0x0
-  WARNING: CPU: 143 PID: 789 at lib/debugobjects.c:484
-  debug_print_object
-  Hardware name: HP Synergy 680 Gen9/Synergy 680 Gen9 Compute Module, BIOS I40 05/23/2018
-  RIP: 0010:debug_print_object
-  Call Trace:
-  debug_object_assert_init
-  del_timer
-  try_to_grab_pending
-  cancel_delayed_work
-  resctrl_offline_cpu
-  cpuhp_invoke_callback
-  cpuhp_thread_fun
-  smpboot_thread_fn
-  kthread
-  ret_from_fork
-
-Fixes: e33026831bdb ("x86/intel_rdt/mbm: Handle counter overflow")
-Signed-off-by: Qian Cai <cai@lca.pw>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Acked-by: Reinette Chatre <reinette.chatre@intel.com>
-Cc: Fenghua Yu <fenghua.yu@intel.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: john.stultz@linaro.org
-Cc: sboyd@kernel.org
-Cc: <stable@vger.kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: tj@kernel.org
-Cc: Tony Luck <tony.luck@intel.com>
-Cc: Vikas Shivappa <vikas.shivappa@linux.intel.com>
-Cc: x86-ml <x86@kernel.org>
-Link: https://lkml.kernel.org/r/20191211033042.2188-1-cai@lca.pw
+Reported-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Waiman Long <longman@redhat.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Tested-by: Christoph Hellwig <hch@lst.de>
+Cc: stable@vger.kernel.org
+Link: https://lkml.kernel.org/r/20200115154336.8679-1-longman@redhat.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kernel/cpu/resctrl/core.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/locking/rwsem.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/arch/x86/kernel/cpu/resctrl/core.c
-+++ b/arch/x86/kernel/cpu/resctrl/core.c
-@@ -618,7 +618,7 @@ static void domain_remove_cpu(int cpu, s
- 		if (static_branch_unlikely(&rdt_mon_enable_key))
- 			rmdir_mondata_subdir_allrdtgrp(r, d->id);
- 		list_del(&d->list);
--		if (is_mbm_enabled())
-+		if (r->mon_capable && is_mbm_enabled())
- 			cancel_delayed_work(&d->mbm_over);
- 		if (is_llc_occupancy_enabled() &&  has_busy_rmid(r, d)) {
- 			/*
+--- a/kernel/locking/rwsem.c
++++ b/kernel/locking/rwsem.c
+@@ -1226,8 +1226,8 @@ wait:
+ 		 * In this case, we attempt to acquire the lock again
+ 		 * without sleeping.
+ 		 */
+-		if ((wstate == WRITER_HANDOFF) &&
+-		    (rwsem_spin_on_owner(sem, 0) == OWNER_NULL))
++		if (wstate == WRITER_HANDOFF &&
++		    rwsem_spin_on_owner(sem, RWSEM_NONSPINNABLE) == OWNER_NULL)
+ 			goto trylock_again;
+ 
+ 		/* Block until there are no active lockers. */
 
 
