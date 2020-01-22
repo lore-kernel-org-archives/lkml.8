@@ -2,117 +2,151 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5800FC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 00:36:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01CDEC33CAF
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 00:37:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 343732253D
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 00:36:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C455B24656
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 00:37:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="DDz18igm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728913AbgAVAgl (ORCPT
+        id S1728927AbgAVAho (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 19:36:41 -0500
-Received: from mga04.intel.com ([192.55.52.120]:19225 "EHLO mga04.intel.com"
+        Tue, 21 Jan 2020 19:37:44 -0500
+Received: from ozlabs.org ([203.11.71.1]:36297 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726876AbgAVAgk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 19:36:40 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Jan 2020 16:36:40 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,347,1574150400"; 
-   d="scan'208";a="250443555"
-Received: from richard.sh.intel.com (HELO localhost) ([10.239.159.54])
-  by fmsmga004.fm.intel.com with ESMTP; 21 Jan 2020 16:36:39 -0800
-Date:   Wed, 22 Jan 2020 08:36:50 +0800
-From:   Wei Yang <richardw.yang@linux.intel.com>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Wei Yang <richardw.yang@linux.intel.com>,
-        akpm@linux-foundation.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, yang.shi@linux.alibaba.com
-Subject: Re: [PATCH 1/8] mm/migrate.c: skip node check if done in last round
-Message-ID: <20200122003650.GA11409@richard>
-Reply-To: Wei Yang <richardw.yang@linux.intel.com>
-References: <20200119030636.11899-1-richardw.yang@linux.intel.com>
- <20200119030636.11899-2-richardw.yang@linux.intel.com>
- <20200120093646.GL18451@dhcp22.suse.cz>
- <20200120222540.GA32314@richard>
- <20200121084205.GD29276@dhcp22.suse.cz>
+        id S1726970AbgAVAhn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jan 2020 19:37:43 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 482RM46tSvz9sRG;
+        Wed, 22 Jan 2020 11:37:35 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1579653461;
+        bh=PJKoeTUvZRzpyMSjdbuqjPU1o/xVBju6xZV9Su82U4I=;
+        h=Date:From:To:Cc:Subject:From;
+        b=DDz18igmUVSn515Aej90Gx/ujacrBQr1pEcvCH05DJCJwjmhp7HfRi2cgwMV5HHCv
+         EQRM6C9dMOEkQf70YVIArOilurLNRcPk2SrxjrrcjGcGQHU+z4rkvhvv8kNs6z4Eur
+         fvueZ3ogcWcW6nzl/9KZDhSCWWy+19hOwy2zftvpbsLnYfkxBCKxRKGCzKwLV9s6aP
+         DGW3pG1tVVRLtaleJ9oDc9cXqpJmqVBqNLbMb45/Bd6BS1u1nbrc36OgYAqmYEsYGe
+         zRXHDAG2nKcSAo418EjsbJfdYZoH7Z9U8o9kGhDI+Bmh+IwYWMS83Wc68Tdwx41c53
+         att7JtWEr8CNw==
+Date:   Wed, 22 Jan 2020 11:37:31 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Dave Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Intel Graphics <intel-gfx@lists.freedesktop.org>,
+        DRI <dri-devel@lists.freedesktop.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Matthew Auld <matthew.auld@intel.com>
+Subject: linux-next: manual merge of the drm tree with the drm-intel-fixes
+ tree
+Message-ID: <20200122113731.4566ffda@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200121084205.GD29276@dhcp22.suse.cz>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: multipart/signed; boundary="Sig_/Y+gwNNIz3WOk7KKp./fX9p.";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 21, 2020 at 09:42:05AM +0100, Michal Hocko wrote:
->On Tue 21-01-20 06:25:40, Wei Yang wrote:
->> On Mon, Jan 20, 2020 at 10:36:46AM +0100, Michal Hocko wrote:
->> >On Sun 19-01-20 11:06:29, Wei Yang wrote:
->> >> Before move page to target node, we would check if the node id is valid.
->> >> In case we would try to move pages to the same target node, it is not
->> >> necessary to do the check each time.
->> >> 
->> >> This patch tries to skip the check if the node has been checked.
->> >> 
->> >> Signed-off-by: Wei Yang <richardw.yang@linux.intel.com>
->> >> ---
->> >>  mm/migrate.c | 19 +++++++++++--------
->> >>  1 file changed, 11 insertions(+), 8 deletions(-)
->> >> 
->> >> diff --git a/mm/migrate.c b/mm/migrate.c
->> >> index 430fdccc733e..ba7cf4fa43a0 100644
->> >> --- a/mm/migrate.c
->> >> +++ b/mm/migrate.c
->> >> @@ -1612,15 +1612,18 @@ static int do_pages_move(struct mm_struct *mm, nodemask_t task_nodes,
->> >>  			goto out_flush;
->> >>  		addr = (unsigned long)untagged_addr(p);
->> >>  
->> >> -		err = -ENODEV;
->> >> -		if (node < 0 || node >= MAX_NUMNODES)
->> >> -			goto out_flush;
->> >> -		if (!node_state(node, N_MEMORY))
->> >> -			goto out_flush;
->> >> +		/* Check node if it is not checked. */
->> >> +		if (current_node == NUMA_NO_NODE || node != current_node) {
->> >> +			err = -ENODEV;
->> >> +			if (node < 0 || node >= MAX_NUMNODES)
->> >> +				goto out_flush;
->> >> +			if (!node_state(node, N_MEMORY))
->> >> +				goto out_flush;
->> >
->> >This makes the code harder to read IMHO. The original code checks the
->> >valid node first and it doesn't conflate that with the node caching
->> >logic which your change does.
->> >
->> 
->> I am sorry, would you mind showing me an example about the conflate in my
->> change? I don't get it.
->
->NUMA_NO_NODE is the iteration logic, right? It resets the batching node.
->Node check read from the userspace is an input sanitization. Do not put
->those two into the same checks. More clear now?
+--Sig_/Y+gwNNIz3WOk7KKp./fX9p.
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Yes, I see your point.
+Hi all,
 
-Can we think like this:
+Today's linux-next merge of the drm tree got a conflict in:
 
-  On each iteration, we do an input sanitization?
+  drivers/gpu/drm/i915/i915_gem_gtt.c
 
-Well, this is a trivial one. If you don't like it, I would remove this.
+between commit:
 
->-- 
->Michal Hocko
->SUSE Labs
+  ecc4d2a52df6 ("drm/i915/userptr: fix size calculation")
 
--- 
-Wei Yang
-Help you, Help me
+from the drm-intel-fixes tree and commit:
+
+  2c86e55d2ab5 ("drm/i915/gtt: split up i915_gem_gtt")
+
+from the drm tree.
+
+I fixed it up (I used the latter version of the file and applied teh
+following merge fix patch) and can carry the fix as necessary. This is
+now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your
+tree is submitted for merging.  You may also want to consider
+cooperating with the maintainer of the conflicting tree to minimise any
+particularly complex conflicts.
+
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+Date: Wed, 22 Jan 2020 11:33:32 +1100
+Subject: [PATCH] fix up for "drm/i915/userptr: fix size calculation"
+
+Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+---
+ drivers/gpu/drm/i915/gt/gen6_ppgtt.c | 1 +
+ drivers/gpu/drm/i915/gt/gen8_ppgtt.c | 1 +
+ 2 files changed, 2 insertions(+)
+
+diff --git a/drivers/gpu/drm/i915/gt/gen6_ppgtt.c b/drivers/gpu/drm/i915/gt=
+/gen6_ppgtt.c
+index f10b2c41571c..f4fec7eb4064 100644
+--- a/drivers/gpu/drm/i915/gt/gen6_ppgtt.c
++++ b/drivers/gpu/drm/i915/gt/gen6_ppgtt.c
+@@ -131,6 +131,7 @@ static void gen6_ppgtt_insert_entries(struct i915_addre=
+ss_space *vm,
+=20
+ 	vaddr =3D kmap_atomic_px(i915_pt_entry(pd, act_pt));
+ 	do {
++		GEM_BUG_ON(iter.sg->length < I915_GTT_PAGE_SIZE);
+ 		vaddr[act_pte] =3D pte_encode | GEN6_PTE_ADDR_ENCODE(iter.dma);
+=20
+ 		iter.dma +=3D I915_GTT_PAGE_SIZE;
+diff --git a/drivers/gpu/drm/i915/gt/gen8_ppgtt.c b/drivers/gpu/drm/i915/gt=
+/gen8_ppgtt.c
+index 077b8f7cf6cb..4d1de2d97d5c 100644
+--- a/drivers/gpu/drm/i915/gt/gen8_ppgtt.c
++++ b/drivers/gpu/drm/i915/gt/gen8_ppgtt.c
+@@ -379,6 +379,7 @@ gen8_ppgtt_insert_pte(struct i915_ppgtt *ppgtt,
+ 	pd =3D i915_pd_entry(pdp, gen8_pd_index(idx, 2));
+ 	vaddr =3D kmap_atomic_px(i915_pt_entry(pd, gen8_pd_index(idx, 1)));
+ 	do {
++		GEM_BUG_ON(iter->sg->length < I915_GTT_PAGE_SIZE);
+ 		vaddr[gen8_pd_index(idx, 0)] =3D pte_encode | iter->dma;
+=20
+ 		iter->dma +=3D I915_GTT_PAGE_SIZE;
+--=20
+2.24.0
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/Y+gwNNIz3WOk7KKp./fX9p.
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl4nmUsACgkQAVBC80lX
+0GyF+AgAntdfWyi+nWURGuUwXk/YgnDc0blPdAG4t5WCRt1+nMpn6MbILg3Tj3hX
+crgqIf/d0wuINZOzejwOF1ITIRDVfefqy2WzCAPfhnp3xEhcQViZy7dzjj7ywEYD
+LL27MO4rFnXObNpm/a1ShFZBPaU4Rzapug32308BQQlLLwX1X6fWaq4UiQJd3OK2
+sJrbqfbgBVRWsPhWi4MlfqVsKFQXOCTTN5To69sPHtggtWVTdLT7ezT6NZ+aulLz
+rm3mhaf7bX6dpyRp7lpwg8yJ2As4BqbKm7lKg1P+91qCeja+Z/41E44AmUWgTZVg
+MF54Hk2pkeMNc1wgSl4UwOvmUZ8x0g==
+=jspa
+-----END PGP SIGNATURE-----
+
+--Sig_/Y+gwNNIz3WOk7KKp./fX9p.--
