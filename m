@@ -2,86 +2,108 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDD8DC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:36:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94C2AC33CB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:36:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A755124125
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:36:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579700184;
-	bh=pT+FhKqL+xwq8TFC25pdySbjxEKNna4NUMwXPcYjpr0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=nnUtLx7fjIj3wTC5NfGyL+ErmmXV7A7lEyA5Exr1YJ1NLRc3OxFInSPa/6ySy/rDN
-	 Es2JDCYTBm9h9WCPfdYVI5FMRM8nh544i8PSvJ9C1gxedHWAPjwvdJLF9S9B+EPsV6
-	 JAoH9fCr6k86EqfL6JRZgWpePQ0gqvgYeHsfOD4Q=
+	by mail.kernel.org (Postfix) with ESMTP id 640E52071E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:36:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P69vDtf9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728925AbgAVNgX (ORCPT
+        id S1729137AbgAVNg1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 08:36:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59190 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725802AbgAVNgX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 08:36:23 -0500
-Received: from localhost (unknown [84.241.205.26])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1898820704;
-        Wed, 22 Jan 2020 13:36:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579700183;
-        bh=pT+FhKqL+xwq8TFC25pdySbjxEKNna4NUMwXPcYjpr0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=kKyDmfZVH1R0wDI6Gy24BoJ/RMMCc8Y6MOmjxx5dU7QOwf0PQI//+R4wF+aJccoyv
-         +hpmyczUGJGP6hkBd6WwliNjT5rqnWDO+I1svdzMOP2I1oT/JbPf47AmVWQygt9SJ/
-         NsT65SL0fw794cf/kzK4EL74m2zN/clm5evD+2io=
-Date:   Wed, 22 Jan 2020 14:36:19 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Zha Qipeng <qipeng.zha@intel.com>,
-        "David E . Box" <david.e.box@linux.intel.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Mark Brown <broonie@kernel.org>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 11/38] platform/x86: intel_scu_ipc: Drop
- intel_scu_ipc_raw_command()
-Message-ID: <20200122133619.GB4963@kroah.com>
-References: <20200121160114.60007-1-mika.westerberg@linux.intel.com>
- <20200121160114.60007-12-mika.westerberg@linux.intel.com>
+        Wed, 22 Jan 2020 08:36:27 -0500
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:46253 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725802AbgAVNgZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 08:36:25 -0500
+Received: by mail-ed1-f66.google.com with SMTP id m8so6621743edi.13;
+        Wed, 22 Jan 2020 05:36:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=rPi4ROFzsj9v9Yx3fg182Uf1p3zkTl0Xvf77j31SJxw=;
+        b=P69vDtf91B4HM/O3oFsfX2/LVUJ7YL0ol/zXhScdV8CW5lSOrViPcy7tmLzS+YfaZa
+         Dq0qRlPCYfhg1cHeUuKEystP04xuF9APw1yeTnbApLPGPozh2/BQRWInCGMRZsdrkNbN
+         ZUggkMe8zTZBy50n2xvLaywK4GZUsAYaX7Fn8ZKwe1YcH7SuV0rn8khurmzl/B1U8cSM
+         VIMUuaOxfVH4eohvY6vf0Vz8SiErqehjuvp+Kf0ItQOBngf/mkKaBaD1WRyLMhVesHWk
+         jc00XmmKdh4oZmWL/plV/ujY4knFUyDIdAQERWtSw8V6Uitr3twcDIeyoSVhA+/rpfC0
+         wSOA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=rPi4ROFzsj9v9Yx3fg182Uf1p3zkTl0Xvf77j31SJxw=;
+        b=E5MNgcreRNEzSkhKBgOK2BJK4afJfV7wlcirGl2TzRsQOpXmFw8zCQpnr4N2L1jmwY
+         k5dXtPfA1I4r6TUzse5PXMnCqr4rTG+DFkKsM3Lv9u56QoogVY/a+Nn5MA7Twx0B9ieh
+         byqILnWo4O4FR7EoMjz9M85cMCIqH4tBHh42RN7MmLV4vpknEgposCjXIgXss5gbKF2z
+         sYYoUtvCF3lnWlYP+kz/gpnWuiMn7FBLlitJnmw4H/FAB3IFYuXlf3vz46OdK68x7CIG
+         UHv2pCZ5tBoHeUsXB++pcgGDi4THD7IfB3tMgY6AvtwUDaCGEtRDVsx8qvtGZ5LE03zP
+         n50A==
+X-Gm-Message-State: APjAAAXDXjdUde3oBFhLanv7ixOLRVSUZuoMlkrCBGDkx0Zm7SymiO62
+        CrFug8ZROn+DbyudyLjotf5X03vjK+k8gqTlKfU=
+X-Google-Smtp-Source: APXvYqybpwJk49J6SOt3Kqbx+6+Q1Nsz5SCFEvvBnm/8ce9xFmLSeYtDL4RduJx+fNImMpRWBAtjAZgnAPncZErPaG0=
+X-Received: by 2002:a17:906:3195:: with SMTP id 21mr2569283ejy.207.1579700183507;
+ Wed, 22 Jan 2020 05:36:23 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200121160114.60007-12-mika.westerberg@linux.intel.com>
+References: <cover.1578560282.git.benchuanggli@gmail.com> <CACT4zj9B8BSebZgf5-nc3zGYhsAGQ6gTRvfFf9r1DBB_mpRtHA@mail.gmail.com>
+ <CAPDyKFpVN1w7sRbcSAOezVYAkq0pq6kCFo0gjT3TO4FVqDCe=A@mail.gmail.com>
+In-Reply-To: <CAPDyKFpVN1w7sRbcSAOezVYAkq0pq6kCFo0gjT3TO4FVqDCe=A@mail.gmail.com>
+From:   Ben Chuang <benchuanggli@gmail.com>
+Date:   Wed, 22 Jan 2020 21:36:11 +0800
+Message-ID: <CACT4zj9ecfB==BhN7fm=0AmK3Y08ey4_7SYXeAtUg-3fcGhL-w@mail.gmail.com>
+Subject: Re: [RFC PATCH v2 0/6] Add support UHS-II for GL9755
+To:     Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     Adrian Hunter <adrian.hunter@intel.com>,
+        linux-mmc <linux-mmc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        greg.tu@genesyslogic.com.tw,
+        Ben Chuang <ben.chuang@genesyslogic.com.tw>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 21, 2020 at 07:00:47PM +0300, Mika Westerberg wrote:
-> There is no user for this function so we can drop it from the driver.
-> 
-> Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> ---
->  arch/x86/include/asm/intel_scu_ipc.h |  2 -
->  drivers/platform/x86/intel_scu_ipc.c | 63 ----------------------------
->  2 files changed, 65 deletions(-)
+On Tue, Jan 21, 2020 at 8:02 PM Ulf Hansson <ulf.hansson@linaro.org> wrote:
+>
+> On Tue, 21 Jan 2020 at 10:37, Ben Chuang <benchuanggli@gmail.com> wrote:
+> >
+> > Hi Uffe and Adrian,
+> >
+> > On Thu, Jan 9, 2020 at 5:13 PM Ben Chuang <benchuanggli@gmail.com> wrote:
+> > >
+> > > Hi Uffe and Adrian,
+> > >
+> > > These patches support UHS-II and fix GL9755 UHS-II compatibility.
+> > >
+> > > The parts of UHS-II are based on [1][2] and porting to Linux 5.5-rc5.
+> > > I have seen that Uffe comment that splitting the UHS-II parts into smaller
+> > > patches. Other than splitting into small patches, could you give me some
+> > > suggestions for refactoring/splitting files?
+> > >
+> > > Best regards,
+> > > Ben
+> >
+> > Gentle Ping, Any comments?
+>
+> I coming to this, but I need some additional time. In any case, thanks
+> for posting this and for pinging!
+>
+Thank you for taking the time and pinging back quickly. :-)
+I will wait patiently for the next reply.
 
-These first 11 patches are fine, why didn't you just submit them as
-cleanups/fixes and then build on them with the rest?  Having to wade
-through 38-patch series is a pain...
+> [...]
+>
+> Kind regards
+> Uffe
 
-thanks,
-
-greg k-h
+Best regards,
+Ben
