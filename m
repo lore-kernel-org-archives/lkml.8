@@ -2,96 +2,109 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1548C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 12:15:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFF4EC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 12:20:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B133224699
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 12:15:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C1812467F
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 12:20:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729339AbgAVMP4 (ORCPT
+        id S1729130AbgAVMUE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 07:15:56 -0500
-Received: from mx2.suse.de ([195.135.220.15]:33218 "EHLO mx2.suse.de"
+        Wed, 22 Jan 2020 07:20:04 -0500
+Received: from foss.arm.com ([217.140.110.172]:55764 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729299AbgAVMPx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 07:15:53 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 550A8B259;
-        Wed, 22 Jan 2020 12:15:51 +0000 (UTC)
-Date:   Wed, 22 Jan 2020 13:15:49 +0100 (CET)
-From:   Miroslav Benes <mbenes@suse.cz>
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-cc:     Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Jessica Yu <jeyu@kernel.org>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, mhiramat@kernel.org,
-        bristot@redhat.com, jbaron@akamai.com,
-        torvalds@linux-foundation.org, tglx@linutronix.de,
-        mingo@kernel.org, namit@vmware.com, hpa@zytor.com, luto@kernel.org,
-        ard.biesheuvel@linaro.org, live-patching@vger.kernel.org,
-        Randy Dunlap <rdunlap@infradead.org>
-Subject: Re: [PATCH v3 5/6] x86/ftrace: Use text_poke()
-In-Reply-To: <20200121161045.dhihqibnpyrk2lsu@treble>
-Message-ID: <alpine.LSU.2.21.2001221312030.15957@pobox.suse.cz>
-References: <20191015135634.GK2328@hirez.programming.kicks-ass.net> <alpine.LSU.2.21.1910151611000.13169@pobox.suse.cz> <88bab814-ea24-ece9-2bc0-7a1e10a62f12@redhat.com> <20191015153120.GA21580@linux-8ccs> <7e9c7dd1-809e-f130-26a3-3d3328477437@redhat.com>
- <20191015182705.1aeec284@gandalf.local.home> <20191016074217.GL2328@hirez.programming.kicks-ass.net> <20191021150549.bitgqifqk2tbd3aj@treble> <20200120165039.6hohicj5o52gdghu@treble> <alpine.LSU.2.21.2001210922060.6036@pobox.suse.cz>
- <20200121161045.dhihqibnpyrk2lsu@treble>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+        id S1728900AbgAVMUD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 07:20:03 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0BB71328;
+        Wed, 22 Jan 2020 04:20:03 -0800 (PST)
+Received: from e119884-lin.cambridge.arm.com (e119884-lin.cambridge.arm.com [10.1.196.72])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E5EA33F52E;
+        Wed, 22 Jan 2020 04:20:01 -0800 (PST)
+From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
+To:     thierry.reding@gmail.com, airlied@linux.ie, daniel@ffwll.ch,
+        jonathanh@nvidia.com
+Cc:     dri-devel@lists.freedesktop.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org, vincenzo.frascino@arm.com
+Subject: [PATCH] drm: tegra: Fix warning in PM ops
+Date:   Wed, 22 Jan 2020 12:19:51 +0000
+Message-Id: <20200122121951.52639-1-vincenzo.frascino@arm.com>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 21 Jan 2020, Josh Poimboeuf wrote:
+The tegra driver can be compiled without CONFIG_PM_SLEEP enabled.
+In this case the compilation triggers the warning below:
 
-> On Tue, Jan 21, 2020 at 09:35:28AM +0100, Miroslav Benes wrote:
-> > On Mon, 20 Jan 2020, Josh Poimboeuf wrote:
-> > 
-> > > On Mon, Oct 21, 2019 at 10:05:49AM -0500, Josh Poimboeuf wrote:
-> > > > On Wed, Oct 16, 2019 at 09:42:17AM +0200, Peter Zijlstra wrote:
-> > > > > > which are not compatible with livepatching. GCC upstream now has
-> > > > > > -flive-patching option, which disables all those interfering optimizations.
-> > > > > 
-> > > > > Which, IIRC, has a significant performance impact and should thus really
-> > > > > not be used...
-> > > > > 
-> > > > > If distros ship that crap, I'm going to laugh at them the next time they
-> > > > > want a single digit performance improvement because *important*.
-> > > > 
-> > > > I have a crazy plan to try to use objtool to detect function changes at
-> > > > a binary level, which would hopefully allow us to drop this flag.
-> > > > 
-> > > > But regardless, I wonder if we enabled this flag prematurely.  We still
-> > > > don't have a reasonable way to use it for creating source-based live
-> > > > patches upstream, and it should really be optional for CONFIG_LIVEPATCH,
-> > > > since kpatch-build doesn't need it.
-> > > 
-> > > I also just discovered that -flive-patching is responsible for all those
-> > > "unreachable instruction" objtool warnings which Randy has been
-> > > dutifully bugging me about over the last several months.  For some
-> > > reason it subtly breaks GCC implicit noreturn detection for local
-> > > functions.
-> > 
-> > Ugh, that is unfortunate. Have you reported it?
-> 
-> Not yet (but I plan to).
+drivers/gpu/drm/tegra/sor.c:3984:12: warning: ‘tegra_sor_resume’
+defined but not used [-Wunused-function]
+ 3984 | static int tegra_sor_resume(struct device *dev)
+      |            ^~~~~~~~~~~~~~~~
+drivers/gpu/drm/tegra/sor.c:3970:12: warning: ‘tegra_sor_suspend’
+defined but not used [-Wunused-function]
+ 3970 | static int tegra_sor_suspend(struct device *dev)
+      |            ^~~~~~~~~~~~~~~~~
 
-My findings so far...
+Fix the warning adding __maybe_unused to the PM functions.
 
-I bisected through GCC options which -flive-patching disables and 
--fno-ipa-pure-const is the culprit. I got no warnings without the option 
-with my config.
+Cc: Thierry Reding <thierry.reding@gmail.com>
+Cc: David Airlie <airlied@linux.ie>
+Cc: Daniel Vetter <daniel@ffwll.ch>
+Cc: Jonathan Hunter <jonathanh@nvidia.com>
+Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
+---
+ drivers/gpu/drm/tegra/sor.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-Then I found out allmodconfig was ok even with -flive-patching. 
-CONFIG_GCOV is the difference. CONFIG_GCOV=y seems to make the warnings go 
-away here.
+diff --git a/drivers/gpu/drm/tegra/sor.c b/drivers/gpu/drm/tegra/sor.c
+index a68d3b36b972..69b9ebee7486 100644
+--- a/drivers/gpu/drm/tegra/sor.c
++++ b/drivers/gpu/drm/tegra/sor.c
+@@ -3912,7 +3912,7 @@ static int tegra_sor_remove(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
+-static int tegra_sor_runtime_suspend(struct device *dev)
++static int __maybe_unused tegra_sor_runtime_suspend(struct device *dev)
+ {
+ 	struct tegra_sor *sor = dev_get_drvdata(dev);
+ 	int err;
+@@ -3934,7 +3934,7 @@ static int tegra_sor_runtime_suspend(struct device *dev)
+ 	return 0;
+ }
+ 
+-static int tegra_sor_runtime_resume(struct device *dev)
++static int __maybe_unused tegra_sor_runtime_resume(struct device *dev)
+ {
+ 	struct tegra_sor *sor = dev_get_drvdata(dev);
+ 	int err;
+@@ -3967,7 +3967,7 @@ static int tegra_sor_runtime_resume(struct device *dev)
+ 	return 0;
+ }
+ 
+-static int tegra_sor_suspend(struct device *dev)
++static int __maybe_unused tegra_sor_suspend(struct device *dev)
+ {
+ 	struct tegra_sor *sor = dev_get_drvdata(dev);
+ 	int err;
+@@ -3981,7 +3981,7 @@ static int tegra_sor_suspend(struct device *dev)
+ 	return 0;
+ }
+ 
+-static int tegra_sor_resume(struct device *dev)
++static int __maybe_unused tegra_sor_resume(struct device *dev)
+ {
+ 	struct tegra_sor *sor = dev_get_drvdata(dev);
+ 	int err;
+-- 
+2.25.0
 
-/me goes staring
