@@ -2,52 +2,53 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E1D6C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:39:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 214F4C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:39:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 447CE24680
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:39:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEB4924685
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:39:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579685957;
-	bh=2XKmY0c9D7XUVpX17QA59ql3z4kAvoi44sZGTwYqWqk=;
+	s=default; t=1579685960;
+	bh=qoMCuMQpvnOIkcYaIt6WZ54nxWK5b5EAI4RuxSYfFYw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=B9zkrFBw1iQ2lMNF1kbER3izbSkhfMrSGNLT12R9pFrECcgDila5Js3+J9eYn/Vm0
-	 BbfoO9bLm8lhBz4XvYXlyeTPEws96WoNEN6KsKynnMrArxHyGm7ayOxTUGkEfnJeGQ
-	 A885C87jywAIhAqom0cKBPWVzeY3RvqrJIq2gcNw=
+	b=QlA8o3BEvvU2hKa/hK368Zu1ZPmYGXkCyhPpAEAafV/NPx+tuUiBjFBssFLNWRG9U
+	 q9bVbhpYHheCPxJQA9Gl4yZWvp2WQdwCNPKu+6dqo6SXUFrlHlxRxW21dW5nZhs4S6
+	 CA6qNP7LLJKCBZNrsBzLLHNdmGaRC5W+JR6zVVCc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733175AbgAVJjQ (ORCPT
+        id S1732913AbgAVJjT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 04:39:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56676 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 04:39:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56768 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733142AbgAVJjO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 04:39:14 -0500
+        id S1732372AbgAVJjQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 04:39:16 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EF32724680;
-        Wed, 22 Jan 2020 09:39:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5CB5824683;
+        Wed, 22 Jan 2020 09:39:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579685953;
-        bh=2XKmY0c9D7XUVpX17QA59ql3z4kAvoi44sZGTwYqWqk=;
+        s=default; t=1579685955;
+        bh=qoMCuMQpvnOIkcYaIt6WZ54nxWK5b5EAI4RuxSYfFYw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sn/5f3vtqAFyLGNalD7YsteaneAI9mEQZYmYXXnz1OWytuehSE1ofIQpAtjnz/II/
-         gX71Ht12eLVQlN6C9FaOYQTDJgY0LUQl6evO9ROILnOUGGvsV8E85MmxgXoK7vDi9r
-         cSQ6CZ9CT8xfdNh1XGY3g/dxy3hDjIaYqVsJ5wEw=
+        b=cTnQJE3gA6uDESWTq+cz2FITCq48N1lCE7ANRJEfz2oddRAmSmc2jXr9pLpxCEXrN
+         EiiFe75VbHzUjTXG4UoWIusHZ6NOpnkFt7ZOMCJuqm0GWotEMpk1svcdaLoI9kYgh1
+         jNjr3ENwwi9o4dMkNPXJ80z9B6NXsnre42wTBj+Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pengcheng Yang <yangpc@wangsu.com>,
-        Neal Cardwell <ncardwell@google.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 49/65] tcp: fix marked lost packets not being retransmitted
-Date:   Wed, 22 Jan 2020 10:29:34 +0100
-Message-Id: <20200122092758.260941988@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Juergen Gross <jgross@suse.com>,
+        =?UTF-8?q?Roger=20Pau=20Monn=C3=A9?= <roger.pau@citrix.com>
+Subject: [PATCH 4.14 50/65] xen/blkfront: Adjust indentation in xlvbd_alloc_gendisk
+Date:   Wed, 22 Jan 2020 10:29:35 +0100
+Message-Id: <20200122092758.425246199@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200122092750.976732974@linuxfoundation.org>
 References: <20200122092750.976732974@linuxfoundation.org>
@@ -60,83 +61,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pengcheng Yang <yangpc@wangsu.com>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-[ Upstream commit e176b1ba476cf36f723cfcc7a9e57f3cb47dec70 ]
+commit 589b72894f53124a39d1bb3c0cecaf9dcabac417 upstream.
 
-When the packet pointed to by retransmit_skb_hint is unlinked by ACK,
-retransmit_skb_hint will be set to NULL in tcp_clean_rtx_queue().
-If packet loss is detected at this time, retransmit_skb_hint will be set
-to point to the current packet loss in tcp_verify_retransmit_hint(),
-then the packets that were previously marked lost but not retransmitted
-due to the restriction of cwnd will be skipped and cannot be
-retransmitted.
+Clang warns:
 
-To fix this, when retransmit_skb_hint is NULL, retransmit_skb_hint can
-be reset only after all marked lost packets are retransmitted
-(retrans_out >= lost_out), otherwise we need to traverse from
-tcp_rtx_queue_head in tcp_xmit_retransmit_queue().
+../drivers/block/xen-blkfront.c:1117:4: warning: misleading indentation;
+statement is not part of the previous 'if' [-Wmisleading-indentation]
+                nr_parts = PARTS_PER_DISK;
+                ^
+../drivers/block/xen-blkfront.c:1115:3: note: previous statement is here
+                if (err)
+                ^
 
-Packetdrill to demonstrate:
+This is because there is a space at the beginning of this line; remove
+it so that the indentation is consistent according to the Linux kernel
+coding style and clang no longer warns.
 
-// Disable RACK and set max_reordering to keep things simple
-    0 `sysctl -q net.ipv4.tcp_recovery=0`
-   +0 `sysctl -q net.ipv4.tcp_max_reordering=3`
+While we are here, the previous line has some trailing whitespace; clean
+that up as well.
 
-// Establish a connection
-   +0 socket(..., SOCK_STREAM, IPPROTO_TCP) = 3
-   +0 setsockopt(3, SOL_SOCKET, SO_REUSEADDR, [1], 4) = 0
-   +0 bind(3, ..., ...) = 0
-   +0 listen(3, 1) = 0
-
-  +.1 < S 0:0(0) win 32792 <mss 1000,sackOK,nop,nop,nop,wscale 7>
-   +0 > S. 0:0(0) ack 1 <...>
- +.01 < . 1:1(0) ack 1 win 257
-   +0 accept(3, ..., ...) = 4
-
-// Send 8 data segments
-   +0 write(4, ..., 8000) = 8000
-   +0 > P. 1:8001(8000) ack 1
-
-// Enter recovery and 1:3001 is marked lost
- +.01 < . 1:1(0) ack 1 win 257 <sack 3001:4001,nop,nop>
-   +0 < . 1:1(0) ack 1 win 257 <sack 5001:6001 3001:4001,nop,nop>
-   +0 < . 1:1(0) ack 1 win 257 <sack 5001:7001 3001:4001,nop,nop>
-
-// Retransmit 1:1001, now retransmit_skb_hint points to 1001:2001
-   +0 > . 1:1001(1000) ack 1
-
-// 1001:2001 was ACKed causing retransmit_skb_hint to be set to NULL
- +.01 < . 1:1(0) ack 2001 win 257 <sack 5001:8001 3001:4001,nop,nop>
-// Now retransmit_skb_hint points to 4001:5001 which is now marked lost
-
-// BUG: 2001:3001 was not retransmitted
-   +0 > . 2001:3001(1000) ack 1
-
-Signed-off-by: Pengcheng Yang <yangpc@wangsu.com>
-Acked-by: Neal Cardwell <ncardwell@google.com>
-Tested-by: Neal Cardwell <ncardwell@google.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: c80a420995e7 ("xen-blkfront: handle Xen major numbers other than XENVBD")
+Link: https://github.com/ClangBuiltLinux/linux/issues/791
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Reviewed-by: Juergen Gross <jgross@suse.com>
+Acked-by: Roger Pau Monné <roger.pau@citrix.com>
+Signed-off-by: Juergen Gross <jgross@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/ipv4/tcp_input.c |    7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
 
---- a/net/ipv4/tcp_input.c
-+++ b/net/ipv4/tcp_input.c
-@@ -932,9 +932,10 @@ static void tcp_update_reordering(struct
- /* This must be called before lost_out is incremented */
- static void tcp_verify_retransmit_hint(struct tcp_sock *tp, struct sk_buff *skb)
- {
--	if (!tp->retransmit_skb_hint ||
--	    before(TCP_SKB_CB(skb)->seq,
--		   TCP_SKB_CB(tp->retransmit_skb_hint)->seq))
-+	if ((!tp->retransmit_skb_hint && tp->retrans_out >= tp->lost_out) ||
-+	    (tp->retransmit_skb_hint &&
-+	     before(TCP_SKB_CB(skb)->seq,
-+		    TCP_SKB_CB(tp->retransmit_skb_hint)->seq)))
- 		tp->retransmit_skb_hint = skb;
- }
- 
+---
+ drivers/block/xen-blkfront.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+--- a/drivers/block/xen-blkfront.c
++++ b/drivers/block/xen-blkfront.c
+@@ -1115,8 +1115,8 @@ static int xlvbd_alloc_gendisk(blkif_sec
+ 	if (!VDEV_IS_EXTENDED(info->vdevice)) {
+ 		err = xen_translate_vdev(info->vdevice, &minor, &offset);
+ 		if (err)
+-			return err;		
+- 		nr_parts = PARTS_PER_DISK;
++			return err;
++		nr_parts = PARTS_PER_DISK;
+ 	} else {
+ 		minor = BLKIF_MINOR_EXT(info->vdevice);
+ 		nr_parts = PARTS_PER_EXT_DISK;
 
 
