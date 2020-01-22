@@ -2,127 +2,74 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61888C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 19:33:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02272C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 19:33:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3084424656
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 19:33:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="YRxBn3Rb"
+	by mail.kernel.org (Postfix) with ESMTP id CC71920704
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 19:33:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728057AbgAVTdL (ORCPT
+        id S1728928AbgAVTd3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 14:33:11 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:41800 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725884AbgAVTdL (ORCPT
+        Wed, 22 Jan 2020 14:33:29 -0500
+Received: from shards.monkeyblade.net ([23.128.96.9]:50494 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725884AbgAVTd2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 14:33:11 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=kcpRCIsS+8zPHI9N27JqUU0XiwisZ8cI+0KOaDjpraE=; b=YRxBn3Rbvezdzr+TsmjTNiO/Q
-        tGEMNhUpWdydXTRrbh6/NlD7o6FOOKpo7CWlNb4M+OltymMa4moglgAvP96Y7V9BrGKYOhn8WBcg1
-        gDs4V24iN7Hc3LVZs0iv0Cw3O2ZH4SJxX9ewjH17PoYrOXEjZgAU9kAjzimYsfqnxW1vLeTlZGGOq
-        kYyBCUVbrLaxpbrMh5tWzkOIttVg8tGOeAlau2bM7b+o3Zv23e3ZqoIDCIxp166Paz2BwHhFbWeTA
-        FcO4tiMz4gM4HUmd1nVUwjfihan2fy7zx6x5CXGqGoEChKLHyxH97tcEHEhlrAQLgZAHUHZMbQ8Bj
-        C2Y5mitYw==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iuLkQ-0003aF-Li; Wed, 22 Jan 2020 19:33:06 +0000
-Date:   Wed, 22 Jan 2020 11:33:06 -0800
-From:   Matthew Wilcox <willy@infradead.org>
-To:     David Howells <dhowells@redhat.com>
-Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RFC][PATCH] iov_iter: Add ITER_MAPPING
-Message-ID: <20200122193306.GB4675@bombadil.infradead.org>
-References: <3577430.1579705075@warthog.procyon.org.uk>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3577430.1579705075@warthog.procyon.org.uk>
+        Wed, 22 Jan 2020 14:33:28 -0500
+Received: from localhost (unknown [62.209.224.147])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 525DD15A14973;
+        Wed, 22 Jan 2020 11:32:53 -0800 (PST)
+Date:   Wed, 22 Jan 2020 20:32:52 +0100 (CET)
+Message-Id: <20200122.203252.1974816529601154217.davem@davemloft.net>
+To:     rpalethorpe@suse.com
+Cc:     linux-can@vger.kernel.org,
+        syzbot+017e491ae13c0068598a@syzkaller.appspotmail.com,
+        wg@grandegger.com, mkl@pengutronix.de, tylerwhall@gmail.com,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        syzkaller@googlegroups.com
+Subject: Re: [PATCH v3] can, slip: Protect tty->disc_data in write_wakeup
+ and close with RCU
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200121134258.18013-1-rpalethorpe@suse.com>
+References: <20200121134258.18013-1-rpalethorpe@suse.com>
+X-Mailer: Mew version 6.8 on Emacs 26.3
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Wed, 22 Jan 2020 11:33:27 -0800 (PST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 22, 2020 at 02:57:55PM +0000, David Howells wrote:
-> An alternative could be to have an "ITER_ARRAY" that just has the page
-> pointers and not the offset/length info.  This decreases the redundancy and
-> increases the max payload-per-array-page to 2M.
+From: Richard Palethorpe <rpalethorpe@suse.com>
+Date: Tue, 21 Jan 2020 14:42:58 +0100
 
-We could also have an ITER_XARRAY which you just pass &mapping->i_pages
-to.  I don't think you use any other part of the mapping, so that would
-be a more generic version that is equally efficient.
+> write_wakeup can happen in parallel with close/hangup where tty->disc_data
+> is set to NULL and the netdevice is freed thus also freeing
+> disc_data. write_wakeup accesses disc_data so we must prevent close from
+> freeing the netdev while write_wakeup has a non-NULL view of
+> tty->disc_data.
+> 
+> We also need to make sure that accesses to disc_data are atomic. Which can
+> all be done with RCU.
+> 
+> This problem was found by Syzkaller on SLCAN, but the same issue is
+> reproducible with the SLIP line discipline using an LTP test based on the
+> Syzkaller reproducer.
+> 
+> A fix which didn't use RCU was posted by Hillf Danton.
+> 
+> Fixes: 661f7fda21b1 ("slip: Fix deadlock in write_wakeup")
+> Fixes: a8e83b17536a ("slcan: Port write_wakeup deadlock fix from slip")
+> Reported-by: syzbot+017e491ae13c0068598a@syzkaller.appspotmail.com
+> Signed-off-by: Richard Palethorpe <rpalethorpe@suse.com>
 
-> +	rcu_read_lock();						\
-> +	for (page = xas_load(&xas); page; page = xas_next(&xas)) {	\
-> +		if (xas_retry(&xas, page))				\
-> +			continue;					\
-> +		if (xa_is_value(page))					\
-> +			break;						\
-
-Do you also want to check for !page?  That would be a bug in the caller.
-
-> +		if (PageCompound(page))					\
-> +			break;						\
-
-It's perfectly legal to have compound pages in the page cache.  Call
-find_subpage(page, xas.xa_index) unconditionally.
-
-> +		if (page_to_pgoff(page) != xas.xa_index)		\
-> +			break;						\
-
-... and you can ditch this if the pages are pinned as find_subpage()
-will bug in this case.
-
-> +		__v.bv_page = page;					\
-> +		offset = (i->mapping_start + skip) & ~PAGE_MASK;	\
-> +		seg = PAGE_SIZE - offset;			\
-> +		__v.bv_offset = offset;				\
-> +		__v.bv_len = min(n, seg);			\
-> +		(void)(STEP);					\
-> +		n -= __v.bv_len;				\
-> +		skip += __v.bv_len;				\
-
-Do we want STEP to be called with PAGE_SIZE chunks, or if they have a
-THP, can we have it called with larger than a PAGE_SIZE chunk?
-
-> +#define iterate_all_kinds(i, n, v, I, B, K, M) {		\
->  	if (likely(n)) {					\
->  		size_t skip = i->iov_offset;			\
->  		if (unlikely(i->type & ITER_BVEC)) {		\
-> @@ -86,6 +119,9 @@
->  			struct kvec v;				\
->  			iterate_kvec(i, n, v, kvec, skip, (K))	\
->  		} else if (unlikely(i->type & ITER_DISCARD)) {	\
-> +		} else if (unlikely(i->type & ITER_MAPPING)) {	\
-> +			struct bio_vec v;			\
-> +			iterate_mapping(i, n, v, skip, (M));	\
-
-bio_vec?
-
-> -#define iterate_and_advance(i, n, v, I, B, K) {			\
-> +#define iterate_and_advance(i, n, v, I, B, K, M) {		\
->  	if (unlikely(i->count < n))				\
->  		n = i->count;					\
->  	if (i->count) {						\
-> @@ -119,6 +155,9 @@
->  			i->kvec = kvec;				\
->  		} else if (unlikely(i->type & ITER_DISCARD)) {	\
->  			skip += n;				\
-> +		} else if (unlikely(i->type & ITER_MAPPING)) {	\
-> +			struct bio_vec v;			\
-> +			iterate_mapping(i, n, v, skip, (M))	\
-
-again?
-
+Applied and queued up for -stable, thanks.
