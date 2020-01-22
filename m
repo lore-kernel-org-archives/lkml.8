@@ -2,258 +2,174 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=DATE_IN_PAST_03_06,
-	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41F1FC33CB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:28:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B89ADC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:28:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E3A42467A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:28:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579699733;
-	bh=TGuXL6s+0RJa0Y2azBHFW2QmuRBKDpL1QqTQOuHqbrY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BE6+oPkJOucFsjUqGP768bLVQmmWidPx3OXl25xEp5df/QwahwxbCUW0dfmvECYv6
-	 ZCplALAJoiLRKU+p33UcIq1AjUyBUnug8EK/KtHjJPqmTCbMKvkC+IicaG7LGcTeuZ
-	 pcXJuYo/E6nTII+pQ+JHxiKIXuGYVFoHdsc9xcWE=
+	by mail.kernel.org (Postfix) with ESMTP id 8526520678
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:28:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="GDoX0rS0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732283AbgAVN2k (ORCPT
+        id S1731750AbgAVN2y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 08:28:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50990 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729113AbgAVN2h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 08:28:37 -0500
-Received: from localhost (unknown [84.241.205.26])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BB5AF24125;
-        Wed, 22 Jan 2020 13:28:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579699716;
-        bh=TGuXL6s+0RJa0Y2azBHFW2QmuRBKDpL1QqTQOuHqbrY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pl8Uzpk5yPtolsKN+4Ut6O48GLGD5Dwm0UgCwuuGMW4YIhDEoiK2kBUweRHcR5iRp
-         2Ld75h1zUXCuhCUf4UEertHmxa4LK870iTkYZe+Xoo2OeUmgFakuRv95UFta0x/zUr
-         Hj9G5wwzwXZsCFXhhoPWhUjh3OIlnHgsWs5meB88=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>
-Subject: [PATCH 5.4 195/222] mtd: cfi_cmdset_0002: fix delayed error detection on HyperFlash
-Date:   Wed, 22 Jan 2020 10:29:41 +0100
-Message-Id: <20200122092847.677954139@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200122092833.339495161@linuxfoundation.org>
-References: <20200122092833.339495161@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Wed, 22 Jan 2020 08:28:54 -0500
+Received: from smtp-fw-6002.amazon.com ([52.95.49.90]:13019 "EHLO
+        smtp-fw-6002.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729106AbgAVN2w (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 08:28:52 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1579699731; x=1611235731;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   mime-version;
+  bh=ey5rjg4mda5FhTLJWi1oq6Krp59ycus1HT0dQ739AXY=;
+  b=GDoX0rS0g7Bgl6Msw+ER+sczNg11mIxNhIIYX2OcdQEpLOoIH5oon+ID
+   mOLxlRE0DzfUe1VUAhAb/QVp4oXlHuPUXllsXcsJ/KvwlSiEUYsT2Y0UQ
+   /Aoasn2KzNWIldjo6GmBGAaxyduXuwc8z+rnak0owxHU/F+g3RkY6v+sh
+   E=;
+IronPort-SDR: HiUJIsusC/kKMOyUWLsjcfATwG4l6ckaqzbkN0XGdVQ/Dqilutw6gaCaKrUGvqQUEBjxqcR0Cr
+ G5ccOjyeb07g==
+X-IronPort-AV: E=Sophos;i="5.70,350,1574121600"; 
+   d="scan'208";a="12762489"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1e-62350142.us-east-1.amazon.com) ([10.43.8.6])
+  by smtp-border-fw-out-6002.iad6.amazon.com with ESMTP; 22 Jan 2020 13:28:50 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
+        by email-inbound-relay-1e-62350142.us-east-1.amazon.com (Postfix) with ESMTPS id A1B3CA2210;
+        Wed, 22 Jan 2020 13:28:44 +0000 (UTC)
+Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
+ EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
+ id 15.0.1236.3; Wed, 22 Jan 2020 13:28:43 +0000
+Received: from u886c93fd17d25d.ant.amazon.com (10.43.161.16) by
+ EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Wed, 22 Jan 2020 13:28:35 +0000
+From:   SeongJae Park <sjpark@amazon.com>
+To:     Michal Hocko <mhocko@kernel.org>
+CC:     SeongJae Park <sjpark@amazon.com>,
+        Minchan Kim <minchan@kernel.org>, <sspatil@google.com>,
+        <kirill@shutemov.name>, <akpm@linux-foundation.org>,
+        <linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
+        <linux-api@vger.kernel.org>, <oleksandr@redhat.com>,
+        <surenb@google.com>, <timmurray@google.com>, <dancol@google.com>,
+        <sonnyrao@google.com>, <bgeffon@google.com>, <hannes@cmpxchg.org>,
+        <shakeelb@google.com>, <joaodias@google.com>,
+        <ktkhai@virtuozzo.com>, <christian.brauner@ubuntu.com>,
+        <sjpark@amazon.de>
+Subject: Re: Re: Re: [PATCH v2 2/5] mm: introduce external memory hinting API
+Date:   Wed, 22 Jan 2020 14:28:20 +0100
+Message-ID: <20200122132820.29180-1-sjpark@amazon.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200122100233.GT29276@dhcp22.suse.cz> (raw)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.43.161.16]
+X-ClientProxiedBy: EX13D08UWB001.ant.amazon.com (10.43.161.104) To
+ EX13D31EUA001.ant.amazon.com (10.43.165.15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+On Wed, 22 Jan 2020 11:02:33 +0100 Michal Hocko <mhocko@kernel.org> wrote:
 
-commit c15995695ea971253ea9507f6732c8cd35384e01 upstream.
+> On Wed 22-01-20 10:36:24, SeongJae Park wrote:
+> > On Wed, 22 Jan 2020 09:28:53 +0100 Michal Hocko <mhocko@kernel.org> wrote:
+> > 
+> > > On Tue 21-01-20 10:32:12, Minchan Kim wrote:
+> > > > On Mon, Jan 20, 2020 at 08:58:25AM +0100, Michal Hocko wrote:
+> > > [...]
+> > > > > The interface really has to be robust to future potential usecases.
+> > > > 
+> > > > I do understand your concern but for me, it's chicken and egg problem.
+> > > > We usually do best effort to make something perfect as far as possible
+> > > > but we also don't do over-engineering without real usecase from the
+> > > > beginning.
+> > > > 
+> > > > I already told you how we could synchronize among processes and potential
+> > > > way to be extended Daniel suggested(That's why current API has extra field
+> > > > for the cookie) even though we don't need it right now.
+> > > 
+> > > If you can synchronize with the target task then you do not need a
+> > > remote interface. Just use ptrace and you are done with it.
+> > > 
+> > > > If you want to suggest the other way, please explain why your idea is
+> > > > better and why we need it at this moment.
+> > > 
+> > > I believe I have explained my concerns and why they matter. All you are
+> > > saying is that you do not care because your particular usecase doesn't
+> > > care. And that is a first signal of a future disaster when we end up
+> > > with a broken and unfixable interface we have to maintain for ever.
+> > > 
+> > > I will not go as far as to nack this but you should seriously think
+> > > about other potential usecases and how they would work and what we are
+> > > going to do when a first non-cooperative userspace memory management
+> > > usecase materializes.
+> > 
+> > Beside of the specific environment of Android, I think there are many ways to
+> > know the address space layout and access patterns of other processes.  The
+> > idle_page_tracking might be an example that widelay available.
+> > 
+> > Of course, the information might not strictly correct due to the timing issue,
+> > but could be still worth to be used under some extreme situations, such as
+> > memory pressure or fragmentation.  For the same reason, ptrace() would not be
+> > sufficient, as we have no perfect control, but only some level of control that
+> > would be useful under specific situations.
+> 
+> I am not sure I see your point. I am talking about races where a remote
+> task is operating on a completely different object because the one it
+> checked for has been unmapped and new one mapped over it. Memory
+> pressure or a fragmentation will not change the object itself. Sure the
+> memory might be reclaimed but that should be completely OK unless I am
+> missing something.
 
-The commit 4844ef80305d ("mtd: cfi_cmdset_0002: Add support for polling
-status register") added checking for the status register error bits into
-chip_good() to only return 1 if these bits are 0s.  Unfortunately, this
-means that polling using chip_good() always reaches a timeout condition
-when erase or program failure bits are set. Let's fully delegate the task
-of determining the error conditions to cfi_check_err_status() and make
-chip_good() only look for the Device Ready/Busy condition.
+Thank you for pointing out your concerns in more detail.  I was assuming a case
+using MADV_PAGEOUT or MADV_HUGEPAGE like hints under access frequency
+monitoring for better performance under memory pressure or fragmentation,
+respectively.  Under the race, such hints might incur some performance
+degradation, but no critical problem such as SEGV.  I previously implemented
+such optimization for research purpose and it was worthy.  Nonetheless, it was
+just a research purpose hack.
 
-Fixes: 4844ef80305d ("mtd: cfi_cmdset_0002: Add support for polling status register")
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+MADV_FREE like hints might result in SEGV and thus of course should be avoided.
+But, to my perspective, the 4 hints madvise_process() is currently supporting
+(COLD, PAGEOUT, MERGEABLE, UNMERGEABLE) are not too risky even under the race.
+That's why I said the incorrect information could be worth to be used under
+some extreme situations.
 
----
- drivers/mtd/chips/cfi_cmdset_0002.c |   58 ++++++++++++++++++++----------------
- 1 file changed, 33 insertions(+), 25 deletions(-)
+> 
+> > I assume the users of this systemcall would understand the tradeoff and make
+> > decisions.
+> 
+> I disagree. My experience tells me that users tend to squeeze the
+> maximum and beyond and hope they get what they want.
+> 
+> > Also, as the users already have the right to do the tradeoff, I
+> > think it's fair.  In other words, I think the caller has both the power and the
+> > responsibility to deal with the time-to-check-time-to-react problem.
+> > 
+> > Nonetheless, I also agree this is important concern and the patch would be
+> > better if it adds more detailed documentation regarding this issue.
+> 
+> If there is _really_ a strong consensus that the racy interface is
+> reasonable then it absolutely has to be described with a clearly state
+> that those races might result in hard to predict behavior unless all
+> tasks sharing the address space are blocked between the check and the
+> madvise call.
 
---- a/drivers/mtd/chips/cfi_cmdset_0002.c
-+++ b/drivers/mtd/chips/cfi_cmdset_0002.c
-@@ -123,14 +123,14 @@ static int cfi_use_status_reg(struct cfi
- 		(extp->SoftwareFeatures & poll_mask) == CFI_POLL_STATUS_REG;
- }
- 
--static void cfi_check_err_status(struct map_info *map, struct flchip *chip,
--				 unsigned long adr)
-+static int cfi_check_err_status(struct map_info *map, struct flchip *chip,
-+				unsigned long adr)
- {
- 	struct cfi_private *cfi = map->fldrv_priv;
- 	map_word status;
- 
- 	if (!cfi_use_status_reg(cfi))
--		return;
-+		return 0;
- 
- 	cfi_send_gen_cmd(0x70, cfi->addr_unlock1, chip->start, map, cfi,
- 			 cfi->device_type, NULL);
-@@ -138,7 +138,7 @@ static void cfi_check_err_status(struct
- 
- 	/* The error bits are invalid while the chip's busy */
- 	if (!map_word_bitsset(map, status, CMD(CFI_SR_DRB)))
--		return;
-+		return 0;
- 
- 	if (map_word_bitsset(map, status, CMD(0x3a))) {
- 		unsigned long chipstatus = MERGESTATUS(status);
-@@ -155,7 +155,12 @@ static void cfi_check_err_status(struct
- 		if (chipstatus & CFI_SR_SLSB)
- 			pr_err("%s sector write protected, status %lx\n",
- 			       map->name, chipstatus);
-+
-+		/* Erase/Program status bits are set on the operation failure */
-+		if (chipstatus & (CFI_SR_ESB | CFI_SR_PSB))
-+			return 1;
- 	}
-+	return 0;
- }
- 
- /* #define DEBUG_CFI_FEATURES */
-@@ -852,20 +857,16 @@ static int __xipram chip_good(struct map
- 
- 	if (cfi_use_status_reg(cfi)) {
- 		map_word ready = CMD(CFI_SR_DRB);
--		map_word err = CMD(CFI_SR_PSB | CFI_SR_ESB);
-+
- 		/*
- 		 * For chips that support status register, check device
--		 * ready bit and Erase/Program status bit to know if
--		 * operation succeeded.
-+		 * ready bit
- 		 */
- 		cfi_send_gen_cmd(0x70, cfi->addr_unlock1, chip->start, map, cfi,
- 				 cfi->device_type, NULL);
- 		curd = map_read(map, addr);
- 
--		if (map_word_andequal(map, curd, ready, ready))
--			return !map_word_bitsset(map, curd, err);
--
--		return 0;
-+		return map_word_andequal(map, curd, ready, ready);
- 	}
- 
- 	oldd = map_read(map, addr);
-@@ -1703,8 +1704,11 @@ static int __xipram do_write_oneword_onc
- 			break;
- 		}
- 
--		if (chip_good(map, chip, adr, datum))
-+		if (chip_good(map, chip, adr, datum)) {
-+			if (cfi_check_err_status(map, chip, adr))
-+				ret = -EIO;
- 			break;
-+		}
- 
- 		/* Latency issues. Drop the lock, wait a while and retry */
- 		UDELAY(map, chip, adr, 1);
-@@ -1777,7 +1781,6 @@ static int __xipram do_write_oneword_ret
- 	ret = do_write_oneword_once(map, chip, adr, datum, mode, cfi);
- 	if (ret) {
- 		/* reset on all failures. */
--		cfi_check_err_status(map, chip, adr);
- 		map_write(map, CMD(0xF0), chip->start);
- 		/* FIXME - should have reset delay before continuing */
- 
-@@ -1974,12 +1977,17 @@ static int __xipram do_write_buffer_wait
- 		 */
- 		if (time_after(jiffies, timeo) &&
- 		    !chip_good(map, chip, adr, datum)) {
-+			pr_err("MTD %s(): software timeout, address:0x%.8lx.\n",
-+			       __func__, adr);
- 			ret = -EIO;
- 			break;
- 		}
- 
--		if (chip_good(map, chip, adr, datum))
-+		if (chip_good(map, chip, adr, datum)) {
-+			if (cfi_check_err_status(map, chip, adr))
-+				ret = -EIO;
- 			break;
-+		}
- 
- 		/* Latency issues. Drop the lock, wait a while and retry */
- 		UDELAY(map, chip, adr, 1);
-@@ -2075,12 +2083,8 @@ static int __xipram do_write_buffer(stru
- 				chip->word_write_time);
- 
- 	ret = do_write_buffer_wait(map, chip, adr, datum);
--	if (ret) {
--		cfi_check_err_status(map, chip, adr);
-+	if (ret)
- 		do_write_buffer_reset(map, chip, cfi);
--		pr_err("MTD %s(): software timeout, address:0x%.8lx.\n",
--		       __func__, adr);
--	}
- 
- 	xip_enable(map, chip, adr);
- 
-@@ -2275,9 +2279,9 @@ retry:
- 		udelay(1);
- 	}
- 
--	if (!chip_good(map, chip, adr, datum)) {
-+	if (!chip_good(map, chip, adr, datum) ||
-+	    cfi_check_err_status(map, chip, adr)) {
- 		/* reset on all failures. */
--		cfi_check_err_status(map, chip, adr);
- 		map_write(map, CMD(0xF0), chip->start);
- 		/* FIXME - should have reset delay before continuing */
- 
-@@ -2471,8 +2475,11 @@ static int __xipram do_erase_chip(struct
- 			chip->erase_suspended = 0;
- 		}
- 
--		if (chip_good(map, chip, adr, map_word_ff(map)))
-+		if (chip_good(map, chip, adr, map_word_ff(map))) {
-+			if (cfi_check_err_status(map, chip, adr))
-+				ret = -EIO;
- 			break;
-+		}
- 
- 		if (time_after(jiffies, timeo)) {
- 			printk(KERN_WARNING "MTD %s(): software timeout\n",
-@@ -2487,7 +2494,6 @@ static int __xipram do_erase_chip(struct
- 	/* Did we succeed? */
- 	if (ret) {
- 		/* reset on all failures. */
--		cfi_check_err_status(map, chip, adr);
- 		map_write(map, CMD(0xF0), chip->start);
- 		/* FIXME - should have reset delay before continuing */
- 
-@@ -2568,8 +2574,11 @@ static int __xipram do_erase_oneblock(st
- 			chip->erase_suspended = 0;
- 		}
- 
--		if (chip_good(map, chip, adr, map_word_ff(map)))
-+		if (chip_good(map, chip, adr, map_word_ff(map))) {
-+			if (cfi_check_err_status(map, chip, adr))
-+				ret = -EIO;
- 			break;
-+		}
- 
- 		if (time_after(jiffies, timeo)) {
- 			printk(KERN_WARNING "MTD %s(): software timeout\n",
-@@ -2584,7 +2593,6 @@ static int __xipram do_erase_oneblock(st
- 	/* Did we succeed? */
- 	if (ret) {
- 		/* reset on all failures. */
--		cfi_check_err_status(map, chip, adr);
- 		map_write(map, CMD(0xF0), chip->start);
- 		/* FIXME - should have reset delay before continuing */
- 
+So, it's still too risky to simply believe users to do the things well on their
+responsibility, but a strong real consensus on needs and clear description
+might justify this.  I also agreed.
 
 
+Thanks,
+SeongJae Park
+
+> -- 
+> Michal Hocko
+> SUSE Labs
+> 
