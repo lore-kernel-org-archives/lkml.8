@@ -2,133 +2,80 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0E0AC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 10:17:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 115A1C33CB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 10:18:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8780A2467F
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 10:17:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC90B2467F
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 10:18:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729440AbgAVKRO (ORCPT
+        id S1729160AbgAVKSl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 05:17:14 -0500
-Received: from www62.your-server.de ([213.133.104.62]:50544 "EHLO
-        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726191AbgAVKRO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 05:17:14 -0500
-Received: from sslproxy03.your-server.de ([88.198.220.132])
-        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89_1)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1iuD4J-00074X-Mm; Wed, 22 Jan 2020 11:17:03 +0100
-Received: from [2001:1620:665:0:5795:5b0a:e5d5:5944] (helo=linux-3.fritz.box)
-        by sslproxy03.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1iuD4J-000GIS-BX; Wed, 22 Jan 2020 11:17:03 +0100
-Subject: Re: [PATCH v3] [net]: Fix skb->csum update in
- inet_proto_csum_replace16().
-To:     Praveen Chaudhary <praveen5582@gmail.com>, fw@strlen.de,
-        pablo@netfilter.org, davem@davemloft.net, kadlec@netfilter.org,
-        netfilter-devel@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Zhenggen Xu <zxu@linkedin.com>,
-        Andy Stracner <astracner@linkedin.com>
-References: <1573080729-3102-1-git-send-email-pchaudhary@linkedin.com>
- <1573080729-3102-2-git-send-email-pchaudhary@linkedin.com>
-From:   Daniel Borkmann <daniel@iogearbox.net>
-Message-ID: <16d56ee6-53bc-1124-3700-bc0a78f927d6@iogearbox.net>
-Date:   Wed, 22 Jan 2020 11:17:02 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Wed, 22 Jan 2020 05:18:41 -0500
+Received: from foss.arm.com ([217.140.110.172]:54452 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728890AbgAVKSk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 05:18:40 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6A0DC1FB;
+        Wed, 22 Jan 2020 02:18:40 -0800 (PST)
+Received: from e119886-lin.cambridge.arm.com (unknown [10.37.6.20])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8BCE43F68E;
+        Wed, 22 Jan 2020 02:18:39 -0800 (PST)
+From:   Andrew Murray <andrew.murray@arm.com>
+To:     lorenzo.pieralisi@arm.com
+Cc:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: [PATCH] MAINTAINERS: Update my email address
+Date:   Wed, 22 Jan 2020 10:18:31 +0000
+Message-Id: <20200122101831.47628-1-andrew.murray@arm.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-In-Reply-To: <1573080729-3102-2-git-send-email-pchaudhary@linkedin.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Authenticated-Sender: daniel@iogearbox.net
-X-Virus-Scanned: Clear (ClamAV 0.101.4/25702/Tue Jan 21 12:39:19 2020)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/6/19 11:52 PM, Praveen Chaudhary wrote:
-> skb->csum is updated incorrectly, when manipulation for NF_NAT_MANIP_SRC\DST
-> is done on IPV6 packet.
-> 
-> Fix:
-> No need to update skb->csum in function inet_proto_csum_replace16(), even if
-> skb->ip_summed == CHECKSUM_COMPLETE, because change in L4 header checksum field
-> and change in IPV6 header cancels each other for skb->csum calculation.
-> 
-> Signed-off-by: Praveen Chaudhary <pchaudhary@linkedin.com>
-> Signed-off-by: Zhenggen Xu <zxu@linkedin.com>
-> Signed-off-by: Andy Stracner <astracner@linkedin.com>
-> 
-> Reviewed-by: Florian Westphal <fw@strlen.de>
-> ---
-> Changes in V2.
-> 1.) Updating diff as per email discussion with Florian Westphal.
->      Since inet_proto_csum_replace16() does incorrect calculation
->      for skb->csum in all cases.
-> 2.) Change in Commmit logs.
-> ---
-> 
-> ---
-> Changes in V3.
-> Addressing Pablo`s Suggesion.
-> 1.) Updated Subject and description
-> 2.) Added full documentation of function.
-> ---
-> ---
->   net/core/utils.c | 18 +++++++++++++++---
->   1 file changed, 15 insertions(+), 3 deletions(-)
-> 
-> diff --git a/net/core/utils.c b/net/core/utils.c
-> index 6b6e51d..af3b5cb 100644
-> --- a/net/core/utils.c
-> +++ b/net/core/utils.c
-> @@ -438,6 +438,21 @@ void inet_proto_csum_replace4(__sum16 *sum, struct sk_buff *skb,
->   }
->   EXPORT_SYMBOL(inet_proto_csum_replace4);
->   
-> +/**
-> + * inet_proto_csum_replace16 - update L4 header checksum field as per the
-> + * update in IPv6 Header. Note, there is no need to update skb->csum in this
-> + * function, even if skb->ip_summed == CHECKSUM_COMPLETE, because change in L4
-> + * header checksum field and change in IPV6 header cancels each other for
-> + * skb->csum calculation.
-> + *
-> + * @sum: L4 header checksum field
-> + * @skb: sk_buff for the packet
-> + * @from: old IPv6 address
-> + * @to: new IPv6 address
-> + * @pseudohdr: True if L4 header checksum includes pseudoheader
-> + *
-> + * Return void
-> + */
->   void inet_proto_csum_replace16(__sum16 *sum, struct sk_buff *skb,
->   			       const __be32 *from, const __be32 *to,
->   			       bool pseudohdr)
-> @@ -449,9 +464,6 @@ void inet_proto_csum_replace16(__sum16 *sum, struct sk_buff *skb,
->   	if (skb->ip_summed != CHECKSUM_PARTIAL) {
->   		*sum = csum_fold(csum_partial(diff, sizeof(diff),
->   				 ~csum_unfold(*sum)));
-> -		if (skb->ip_summed == CHECKSUM_COMPLETE && pseudohdr)
-> -			skb->csum = ~csum_partial(diff, sizeof(diff),
-> -						  ~skb->csum);
+I will lose access to my @arm.com email address next week, so
+let's update the MAINTAINERS file and map it correctly in
+.mailmap
 
-What is the technical rationale in removing this here but not in any of the
-other inet_proto_csum_replace*() functions? You changelog has zero analysis
-on why here but not elsewhere this change would be needed?
+Signed-off-by: Andrew Murray <andrew.murray@arm.com>
+---
+ .mailmap    | 2 ++
+ MAINTAINERS | 2 +-
+ 2 files changed, 3 insertions(+), 1 deletion(-)
 
->   	} else if (pseudohdr)
->   		*sum = ~csum_fold(csum_partial(diff, sizeof(diff),
->   				  csum_unfold(*sum)));
-> 
+diff --git a/.mailmap b/.mailmap
+index d9d5c80252f9..f332b79c2e85 100644
+--- a/.mailmap
++++ b/.mailmap
+@@ -27,6 +27,8 @@ Andi Shyti <andi@etezian.org> <andi.shyti@samsung.com>
+ Andreas Herrmann <aherrman@de.ibm.com>
+ Andrey Ryabinin <ryabinin.a.a@gmail.com> <a.ryabinin@samsung.com>
+ Andrew Morton <akpm@linux-foundation.org>
++Andrew Murray <amurray@thegoodpenguin.co.uk> <andrew.murray@arm.com>
++Andrew Murray <amurray@thegoodpenguin.co.uk> <amurray@embedded-bits.co.uk>
+ Andrew Vasquez <andrew.vasquez@qlogic.com>
+ Andy Adamson <andros@citi.umich.edu>
+ Antoine Tenart <antoine.tenart@free-electrons.com>
+diff --git a/MAINTAINERS b/MAINTAINERS
+index cf6ccca6e61c..4326bddef572 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -12779,7 +12779,7 @@ F:	arch/x86/kernel/early-quirks.c
+ 
+ PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS
+ M:	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+-R:	Andrew Murray <andrew.murray@arm.com>
++R:	Andrew Murray <amurray@thegoodpenguin.co.uk>
+ L:	linux-pci@vger.kernel.org
+ Q:	http://patchwork.ozlabs.org/project/linux-pci/list/
+ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/lpieralisi/pci.git/
+-- 
+2.21.0
 
