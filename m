@@ -2,210 +2,82 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D171C3F68F
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 02:03:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84FA3C33CAF
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 02:05:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04B32217F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 02:03:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51E55217F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 02:05:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="mXRfAoPG"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="q9DH0ZSb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728931AbgAVCDh (ORCPT
+        id S1728842AbgAVCFL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 21:03:37 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:40078 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726780AbgAVCDh (ORCPT
+        Tue, 21 Jan 2020 21:05:11 -0500
+Received: from mailgw01.mediatek.com ([210.61.82.183]:57986 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726396AbgAVCFL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 21:03:37 -0500
-Received: by mail-pf1-f194.google.com with SMTP id q8so2490886pfh.7
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jan 2020 18:03:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=e7FwBWIW8IGtpE9uyvgf8eUHJH2AGbivzVpzVQ32h1g=;
-        b=mXRfAoPG6gsQGH8Kykj/OE9p6Y3BEqyAjZ36/fFGQmG0goZBr5FysQSt/5rc08WUp2
-         uA0Exk/eK3fFyHtQgYEMULf/p5OJIVxBazrY8JkDMQ+X6QpTOQFq4axKKEcegoXE76FD
-         Q3tf5ceTt+0b/GotcgOVVqnyua/QyCM4ZY3nk6vYlpNFpjEK6H8yRRFy3sHEoc3rE/HQ
-         rbDY9LV6tzK2Sbz33tRTXgwN+ayvNAsmI7fCigbSnLSgnmBQoQwAqhOwx9OwOF0qjR69
-         m3cGhcoddJPZWj1VBN//5dToYRb8N4T6rfZ4Lu0uuDvwOU8vFzIdaNN5wIOTzaiaV5Tn
-         Ofjw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=e7FwBWIW8IGtpE9uyvgf8eUHJH2AGbivzVpzVQ32h1g=;
-        b=UrdZcZBm0bI9a4RIfAZaXG6Ad+5xKxE6baMxWfpUoItSOW/yUgYH3/0KCHllbRLUbw
-         socPr6kRqqGd8f7jPiBTtWrKCaepQDqefVb0jRw0UI4YcF7bp2a/qxVLZvri0PshCNSE
-         jTKYQw0JAy9glGVPyeEpeOo3c8UII32c+NhcVu/YbY+Wx+wiv8V8QDkndhSvcoCEzIzG
-         iM1uR5QHUcxkaWpbJdUXS7oNyYcEf8s5zugahGJARGW6MHNcz3TGG4RBEuAbXvArx+f1
-         GS4ZXxcVrzECs9o6uNkpgcAHCZX8nKLNSX860/C2w7SkuJpK3HJt2K84zyqKWXoYuZzP
-         Zw8g==
-X-Gm-Message-State: APjAAAVyIinmH+zd/bkHfQeihctGZphr9VAcEP9Bg1jT1xR8nnSkPwaH
-        0OeeA2ALpCxUzxhfj+4YoJOaDw==
-X-Google-Smtp-Source: APXvYqxtLnnOkMqzi99/d09pO1vOn30qGYYwyeZzbV4j3PrOvgJUDqmYarLWlLl55hSUd2jARYLtGg==
-X-Received: by 2002:a62:2a49:: with SMTP id q70mr444040pfq.170.1579658616244;
-        Tue, 21 Jan 2020 18:03:36 -0800 (PST)
-Received: from [192.168.1.188] ([66.219.217.145])
-        by smtp.gmail.com with ESMTPSA id q12sm43794842pfh.158.2020.01.21.18.03.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 21 Jan 2020 18:03:35 -0800 (PST)
-Subject: Re: [PATCH 3/3] io_uring: add splice(2) support
-To:     Pavel Begunkov <asml.silence@gmail.com>, io-uring@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Cc:     Alexander Viro <viro@zeniv.linux.org.uk>
-References: <cover.1579649589.git.asml.silence@gmail.com>
- <8bfd9a57bf42cfc10ee7195969058d6da277deed.1579649589.git.asml.silence@gmail.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <6d43b9d7-209a-2bbf-e2c2-e125e84b46ab@kernel.dk>
-Date:   Tue, 21 Jan 2020 19:03:33 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Tue, 21 Jan 2020 21:05:11 -0500
+X-UUID: 42c461833bd64446be7d75ab67df0a0e-20200122
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=0FaXYKQ4jfEqR8ee1u10dSXTtk9iSDJYo/sKCwcXsic=;
+        b=q9DH0ZSbcDqjoExb4cUgo7cvvLvESqFvS44H8cbklone7QavrEyd6xA1oxeOzfOY1dFFpaUFORNLTRIjtZ2R9F+EdOAYQo3COdGL0sw9cg62AHg7/D1MwlIOx4h/CI6DuAa5trcSkSbELF24ZPRFlfRucanCXn+pc2AyiIlCIsQ=;
+X-UUID: 42c461833bd64446be7d75ab67df0a0e-20200122
+Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw01.mediatek.com
+        (envelope-from <wen.su@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1956093877; Wed, 22 Jan 2020 10:05:02 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Wed, 22 Jan 2020 10:04:20 +0800
+Received: from [172.21.77.33] (172.21.77.33) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Wed, 22 Jan 2020 10:04:38 +0800
+Message-ID: <1579658700.6612.1.camel@mtkswgap22>
+Subject: Re: [RESEND 1/4] dt-bindings: regulator: Add document for MT6359
+ regulator
+From:   Wen Su <Wen.Su@mediatek.com>
+To:     Lee Jones <lee.jones@linaro.org>
+CC:     Rob Herring <robh+dt@kernel.org>, Mark Brown <broonie@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        "Liam Girdwood" <lgirdwood@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        <linux-arm-kernel@lists.infradead.org>, <wsd_upstream@mediatek.com>
+Date:   Wed, 22 Jan 2020 10:05:00 +0800
+In-Reply-To: <20200120084355.GW15507@dell>
+References: <1579506450-21830-1-git-send-email-Wen.Su@mediatek.com>
+         <1579506450-21830-2-git-send-email-Wen.Su@mediatek.com>
+         <20200120084355.GW15507@dell>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
 MIME-Version: 1.0
-In-Reply-To: <8bfd9a57bf42cfc10ee7195969058d6da277deed.1579649589.git.asml.silence@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/21/20 5:05 PM, Pavel Begunkov wrote:
-> @@ -373,6 +374,15 @@ struct io_rw {
->  	u64				len;
->  };
->  
-> +struct io_splice {
-> +	struct file			*file_in;
-> +	struct file			*file_out;
-> +	loff_t __user			*off_in;
-> +	loff_t __user			*off_out;
-> +	u64				len;
-> +	unsigned int			flags;
-> +};
-> +
->  struct io_connect {
->  	struct file			*file;
->  	struct sockaddr __user		*addr;
-
-Probably just make that len u32 as per previous email.
-
-> @@ -719,6 +730,11 @@ static const struct io_op_def io_op_defs[] = {
->  		.needs_file		= 1,
->  		.fd_non_neg		= 1,
->  	},
-> +	[IORING_OP_SPLICE] = {
-> +		.needs_file		= 1,
-> +		.hash_reg_file		= 1,
-> +		.unbound_nonreg_file	= 1,
-> +	}
->  };
->  
->  static void io_wq_submit_work(struct io_wq_work **workptr);
-
-I probably want to queue up a reservation for the EPOLL_CTL that I
-haven't included yet, but which has been tested. But that's easily
-manageable, so no biggy on my end.
-
-> +static bool io_splice_punt(struct file *file)
-> +{
-> +	if (get_pipe_info(file))
-> +		return false;
-> +	if (!io_file_supports_async(file))
-> +		return true;
-> +	return !(file->f_mode & O_NONBLOCK);
-> +}
-> +
-> +static int io_splice(struct io_kiocb *req, struct io_kiocb **nxt,
-> +		     bool force_nonblock)
-> +{
-> +	struct io_splice* sp = &req->splice;
-> +	struct file *in = sp->file_in;
-> +	struct file *out = sp->file_out;
-> +	unsigned int flags = sp->flags;
-> +	long ret;
-> +
-> +	if (force_nonblock) {
-> +		if (io_splice_punt(in) || io_splice_punt(out)) {
-> +			req->flags |= REQ_F_MUST_PUNT;
-> +			return -EAGAIN;
-> +		}
-> +		flags |= SPLICE_F_NONBLOCK;
-> +	}
-> +
-> +	ret = do_splice(in, sp->off_in, out, sp->off_out, sp->len, flags);
-> +	if (force_nonblock && ret == -EAGAIN)
-> +		return -EAGAIN;
-> +
-> +	io_put_file(req->ctx, out, (flags & IOSQE_SPLICE_FIXED_OUT));
-> +	io_cqring_add_event(req, ret);
-> +	if (ret != sp->len)
-> +		req_set_fail_links(req);
-> +	io_put_req_find_next(req, nxt);
-> +	return 0;
-> +}
-
-This looks good. And this is why the put_file() needs to take separate
-arguments...
-
-> diff --git a/include/uapi/linux/io_uring.h b/include/uapi/linux/io_uring.h
-> index 57d05cc5e271..f234b13e7ed3 100644
-> --- a/include/uapi/linux/io_uring.h
-> +++ b/include/uapi/linux/io_uring.h
-> @@ -23,8 +23,14 @@ struct io_uring_sqe {
->  		__u64	off;	/* offset into file */
->  		__u64	addr2;
->  	};
-> -	__u64	addr;		/* pointer to buffer or iovecs */
-> -	__u32	len;		/* buffer size or number of iovecs */
-> +	union {
-> +		__u64	addr;		/* pointer to buffer or iovecs */
-> +		__u64	off_out;
-> +	};
-> +	union {
-> +		__u32	len;	/* buffer size or number of iovecs */
-> +		__s32	fd_out;
-> +	};
->  	union {
->  		__kernel_rwf_t	rw_flags;
->  		__u32		fsync_flags;
-> @@ -37,10 +43,12 @@ struct io_uring_sqe {
->  		__u32		open_flags;
->  		__u32		statx_flags;
->  		__u32		fadvise_advice;
-> +		__u32		splice_flags;
->  	};
->  	__u64	user_data;	/* data to be passed back at completion time */
->  	union {
->  		__u16	buf_index;	/* index into fixed buffers, if used */
-> +		__u64	splice_len;
->  		__u64	__pad2[3];
->  	};
->  };
-
-Not a huge fan of this, also mean splice can't ever used fixed buffers.
-Hmm...
-
-> @@ -67,6 +75,9 @@ enum {
->  /* always go async */
->  #define IOSQE_ASYNC		(1U << IOSQE_ASYNC_BIT)
->  
-> +/* op custom flags */
-> +#define IOSQE_SPLICE_FIXED_OUT	(1U << 16)
-> +
-
-I don't think it's unreasonable to say that if you specify
-IOSQE_FIXED_FILE, then both are fixed. If not, then none of them are.
-What do you think?
-
--- 
-Jens Axboe
+SGkgSm9uZXMsDQpPbiBNb24sIDIwMjAtMDEtMjAgYXQgMDg6NDMgKzAwMDAsIExlZSBKb25lcyB3
+cm90ZToNCj4gT24gTW9uLCAyMCBKYW4gMjAyMCwgV2VuIFN1IHdyb3RlOg0KPiANCj4gPiBGcm9t
+OiBXZW4gU3UgPHdlbi5zdUBtZWRpYXRlay5jb20+DQo+ID4gDQo+ID4gYWRkIGR0LWJpbmRpbmcg
+ZG9jdW1lbnQgZm9yIE1lZGlhVGVrIE1UNjM1OSBQTUlDDQo+ID4gDQo+ID4gUmV2aWV3ZWQtYnk6
+IFJvYiBIZXJyaW5nIDxyb2JoQGtlcm5lbC5vcmc+DQo+ID4gU2lnbmVkLW9mZi1ieTogV2VuIFN1
+IDx3ZW4uc3VAbWVkaWF0ZWsuY29tPg0KPiANCj4gVGhlc2UgYXJlIGluIHRoZSB3cm9uZyBvcmRl
+ci4gIFRhZ3Mgc2hvdWxkIGRlc2NyaWJlIGhpc3RvcnksIHRodXMNCj4gc2hvdWxkIGJlIGluIGNo
+cm9ub2xvZ2ljYWwgb3JkZXIuICBGb3IgaW5zdGFuY2UsIHRoZSBvcmRlcmluZyB5b3UgdXNlZA0K
+PiBkZXNjcmliZXMgUm9iIHJldmlld2luZyB0aGUgcGF0Y2ggKmJlZm9yZSogeW91IHNlbnQgaXQs
+IHdoaWNoIGlzIG5vdA0KPiBwb3NzaWJsZS4NCj4gDQoNClRoYW5rcyBmb3IgeW91ciBjb21tZW50
+Lg0KSSB3aWxsIGZpeCBpdCBpbiB0aGUgbmV4dCBwYXRjaC4NCj4gPiAtLS0NCj4gPiAgLi4uL2Jp
+bmRpbmdzL3JlZ3VsYXRvci9tdDYzNTktcmVndWxhdG9yLnR4dCAgICAgICAgfCA1OSArKysrKysr
+KysrKysrKysrKysrKysrDQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCA1OSBpbnNlcnRpb25zKCspDQo+
+ID4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
+cmVndWxhdG9yL210NjM1OS1yZWd1bGF0b3IudHh0DQo+IA0KDQo=
 
