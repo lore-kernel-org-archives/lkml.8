@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05687C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:45:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A87EC33CB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:45:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD9092467B
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:45:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32C2924689
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:45:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579686330;
-	bh=4mPE/gzMo7xTmp0JuJIxY5d1q1UzA0qYxFBlXRGY944=;
+	s=default; t=1579686339;
+	bh=gN4JcD8jiWYvaNbwjwMs/E5Rs5MyBH6hQnzaG2lWjdU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=H3OKIaFaCf5GmqND+s+ghP0aE05QjFnF+QekkL1BblAmUcPQrUaaRj+K0lpvtBZMj
-	 jrEZLQ5fYUZlHWh56leTsIyhtCiONevn/U5a1nMBDJ+dyEa4bLfmADAWpSTi0McOO5
-	 ji8K6kndF56fYV0rvBVHKwb+Edz6FrSU1CYBAf04=
+	b=FVHwekQ75lOtSK5nXTtWnPHVeN/ZnIuTsMCVry85MNJpX2tyB7bw+WwLQTNXuUHqN
+	 mgTLCtrPT+dTx7LXd8JQrl+1fc/gqGoMdy+p7nPBofRM8iGis4PTa10VwAIYZ4W0j3
+	 ui8f8t7lLYDW/f1cfSdTiVBITVOR1ALMHHoKvcxQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730012AbgAVJpa (ORCPT
+        id S2388089AbgAVJoo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 04:45:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38584 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 04:44:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37976 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387932AbgAVJo4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 04:44:56 -0500
+        id S2388070AbgAVJoi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 04:44:38 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 507122467B;
-        Wed, 22 Jan 2020 09:44:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A69C62468D;
+        Wed, 22 Jan 2020 09:44:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579686295;
-        bh=4mPE/gzMo7xTmp0JuJIxY5d1q1UzA0qYxFBlXRGY944=;
+        s=default; t=1579686278;
+        bh=gN4JcD8jiWYvaNbwjwMs/E5Rs5MyBH6hQnzaG2lWjdU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=C6EBXgl4qjZ0Y8EbH7k70+IgL26hTtmVqTqWvrj995voGor6HtmkeZ56EG4xnyD28
-         ypztZUk1w5ICTYaGS787Z/Iwp9VJwemm7dpt1/euUUdtLTdv04MOIrKniV6xdoK2hA
-         wMqHlPjMfdS2nUx6Da/c+AcMN+fJKHdKrumVJPvY=
+        b=Hg7M35rjmL9Fc3ly2PaWgbkdeZY49hqmDua7frX0XhOyDqDzA4R7IEok8bCs/DNrM
+         9oZGzhAs5alvQUEgfl2cp6p0Iu8XLM6Tddr7vxqsLb+s2s2wDWD102jJZdGyUTe7jl
+         INPS+7QycrZE+cPyWt0fw4ODV/eLNncndL26hBFQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Rob Clark <robdclark@gmail.com>,
-        Georgi Djakov <georgi.djakov@linaro.org>,
-        Stephen Boyd <sboyd@kernel.org>
-Subject: [PATCH 5.4 002/222] clk: qcom: gcc-sdm845: Add missing flag to votable GDSCs
-Date:   Wed, 22 Jan 2020 10:26:28 +0100
-Message-Id: <20200122092833.515642549@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Stephan Gerhold <stephan@gerhold.net>,
+        Mark Brown <broonie@kernel.org>
+Subject: [PATCH 5.4 013/222] ASoC: msm8916-wcd-digital: Reset RX interpolation path after use
+Date:   Wed, 22 Jan 2020 10:26:39 +0100
+Message-Id: <20200122092834.328837212@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200122092833.339495161@linuxfoundation.org>
 References: <20200122092833.339495161@linuxfoundation.org>
@@ -60,96 +61,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Georgi Djakov <georgi.djakov@linaro.org>
+From: Stephan Gerhold <stephan@gerhold.net>
 
-commit 5e82548e26ef62e257dc2ff37c11acb5eb72728e upstream.
+commit 85578bbd642f65065039b1765ebe1a867d5435b0 upstream.
 
-On sdm845 devices, during boot we see the following warnings (unless we
-have added 'pd_ignore_unused' to the kernel command line):
-	hlos1_vote_mmnoc_mmu_tbu_sf_gdsc status stuck at 'on'
-	hlos1_vote_mmnoc_mmu_tbu_hf1_gdsc status stuck at 'on'
-	hlos1_vote_mmnoc_mmu_tbu_hf0_gdsc status stuck at 'on'
-	hlos1_vote_aggre_noc_mmu_tbu2_gdsc status stuck at 'on'
-	hlos1_vote_aggre_noc_mmu_tbu1_gdsc status stuck at 'on'
-	hlos1_vote_aggre_noc_mmu_pcie_tbu_gdsc status stuck at 'on'
-	hlos1_vote_aggre_noc_mmu_audio_tbu_gdsc status stuck at 'on'
+For some reason, attempting to route audio through QDSP6 on MSM8916
+causes the RX interpolation path to get "stuck" after playing audio
+a few times. In this situation, the analog codec part is still working,
+but the RX path in the digital codec stops working, so you only hear
+the analog parts powering up. After a reboot everything works again.
 
-As the name of these GDSCs suggests, they are "votable" and in downstream
-DT, they all have the property "qcom,no-status-check-on-disable", which
-means that we should not poll the status bit when we disable them.
+So far I was not able to reproduce the problem when using lpass-cpu.
 
-Luckily the VOTABLE flag already exists and it does exactly what we need,
-so let's make use of it to make the warnings disappear.
+The downstream kernel driver avoids this by resetting the RX
+interpolation path after use. In mainline we do something similar
+for the TX decimator (LPASS_CDC_CLK_TX_RESET_B1_CTL), but the
+interpolator reset (LPASS_CDC_CLK_RX_RESET_CTL) got lost when the
+msm8916-wcd driver was split into analog and digital.
 
-Fixes: 06391eddb60a ("clk: qcom: Add Global Clock controller (GCC) driver for SDM845")
-Reported-by: Rob Clark <robdclark@gmail.com>
-Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
-Link: https://lkml.kernel.org/r/20191126153437.11808-1-georgi.djakov@linaro.org
-Tested-by: Rob Clark <robdclark@gmail.com>
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+Fix this problem by adding the reset to
+msm8916_wcd_digital_enable_interpolator().
+
+Fixes: 150db8c5afa1 ("ASoC: codecs: Add msm8916-wcd digital codec")
+Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
+Link: https://lore.kernel.org/r/20200105102753.83108-1-stephan@gerhold.net
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/clk/qcom/gcc-sdm845.c |    7 +++++++
- 1 file changed, 7 insertions(+)
+ sound/soc/codecs/msm8916-wcd-digital.c |    6 ++++++
+ 1 file changed, 6 insertions(+)
 
---- a/drivers/clk/qcom/gcc-sdm845.c
-+++ b/drivers/clk/qcom/gcc-sdm845.c
-@@ -3255,6 +3255,7 @@ static struct gdsc hlos1_vote_aggre_noc_
- 		.name = "hlos1_vote_aggre_noc_mmu_audio_tbu_gdsc",
- 	},
- 	.pwrsts = PWRSTS_OFF_ON,
-+	.flags = VOTABLE,
- };
- 
- static struct gdsc hlos1_vote_aggre_noc_mmu_pcie_tbu_gdsc = {
-@@ -3263,6 +3264,7 @@ static struct gdsc hlos1_vote_aggre_noc_
- 		.name = "hlos1_vote_aggre_noc_mmu_pcie_tbu_gdsc",
- 	},
- 	.pwrsts = PWRSTS_OFF_ON,
-+	.flags = VOTABLE,
- };
- 
- static struct gdsc hlos1_vote_aggre_noc_mmu_tbu1_gdsc = {
-@@ -3271,6 +3273,7 @@ static struct gdsc hlos1_vote_aggre_noc_
- 		.name = "hlos1_vote_aggre_noc_mmu_tbu1_gdsc",
- 	},
- 	.pwrsts = PWRSTS_OFF_ON,
-+	.flags = VOTABLE,
- };
- 
- static struct gdsc hlos1_vote_aggre_noc_mmu_tbu2_gdsc = {
-@@ -3279,6 +3282,7 @@ static struct gdsc hlos1_vote_aggre_noc_
- 		.name = "hlos1_vote_aggre_noc_mmu_tbu2_gdsc",
- 	},
- 	.pwrsts = PWRSTS_OFF_ON,
-+	.flags = VOTABLE,
- };
- 
- static struct gdsc hlos1_vote_mmnoc_mmu_tbu_hf0_gdsc = {
-@@ -3287,6 +3291,7 @@ static struct gdsc hlos1_vote_mmnoc_mmu_
- 		.name = "hlos1_vote_mmnoc_mmu_tbu_hf0_gdsc",
- 	},
- 	.pwrsts = PWRSTS_OFF_ON,
-+	.flags = VOTABLE,
- };
- 
- static struct gdsc hlos1_vote_mmnoc_mmu_tbu_hf1_gdsc = {
-@@ -3295,6 +3300,7 @@ static struct gdsc hlos1_vote_mmnoc_mmu_
- 		.name = "hlos1_vote_mmnoc_mmu_tbu_hf1_gdsc",
- 	},
- 	.pwrsts = PWRSTS_OFF_ON,
-+	.flags = VOTABLE,
- };
- 
- static struct gdsc hlos1_vote_mmnoc_mmu_tbu_sf_gdsc = {
-@@ -3303,6 +3309,7 @@ static struct gdsc hlos1_vote_mmnoc_mmu_
- 		.name = "hlos1_vote_mmnoc_mmu_tbu_sf_gdsc",
- 	},
- 	.pwrsts = PWRSTS_OFF_ON,
-+	.flags = VOTABLE,
- };
- 
- static struct clk_regmap *gcc_sdm845_clocks[] = {
+--- a/sound/soc/codecs/msm8916-wcd-digital.c
++++ b/sound/soc/codecs/msm8916-wcd-digital.c
+@@ -586,6 +586,12 @@ static int msm8916_wcd_digital_enable_in
+ 		snd_soc_component_write(component, rx_gain_reg[w->shift],
+ 			      snd_soc_component_read32(component, rx_gain_reg[w->shift]));
+ 		break;
++	case SND_SOC_DAPM_POST_PMD:
++		snd_soc_component_update_bits(component, LPASS_CDC_CLK_RX_RESET_CTL,
++					      1 << w->shift, 1 << w->shift);
++		snd_soc_component_update_bits(component, LPASS_CDC_CLK_RX_RESET_CTL,
++					      1 << w->shift, 0x0);
++		break;
+ 	}
+ 	return 0;
+ }
 
 
