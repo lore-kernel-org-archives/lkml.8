@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BE4FC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:42:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A75A2C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:42:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F261F24689
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:42:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6ED742467B
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:42:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579686173;
-	bh=NJH0x6mrZKdduu+9oqEYWb28XwjUZRK5hBaz8Far3hA=;
+	s=default; t=1579686177;
+	bh=RR+nFKij4VabaC5YVhm66/fxmKNHMt8p/paFyJe6+2g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=swR9MtXHyl7dvbesr2TQyMyJtRNFnZnLpK4r2TvemdgNon4401uJQjc4J7PJPjEpZ
-	 yLIAo6qfitDkL2TtMiSq1C0SdmlGrZOhbpOAnR1cmyabQbnhHdG+lsvVk2NDLaKYTm
-	 h+b+9lsTLRD0dkr26KUh0Aps95vdNiSoAEFDlOAw=
+	b=qW5C29PbJr9rZCnwGuyuHyjKTMi+kGTv+g0PniwlmuIU7deXHknnT+nq44qaMBNgU
+	 mzfm9fMWukW/PChkdlI/odoxgxD0oVmuxM9p1mT5Kmmb0hzwbaJ6uTHGrhk9SsMFOy
+	 tI0uErYKB1elzv14V1yNJ+RL6hPxFdgQVSp+pT+g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387798AbgAVJmv (ORCPT
+        id S2387801AbgAVJm4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 04:42:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34846 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 04:42:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34892 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387786AbgAVJms (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 04:42:48 -0500
+        id S1733105AbgAVJmv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 04:42:51 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5EA9824686;
-        Wed, 22 Jan 2020 09:42:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C77772467B;
+        Wed, 22 Jan 2020 09:42:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579686167;
-        bh=NJH0x6mrZKdduu+9oqEYWb28XwjUZRK5hBaz8Far3hA=;
+        s=default; t=1579686170;
+        bh=RR+nFKij4VabaC5YVhm66/fxmKNHMt8p/paFyJe6+2g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fPTrc2cXouMs/ZCz/JWK4xURhpFkFYKQrp4ODihSS5BODAKfD3GmugV4fYWYEhm7O
-         uk3+gEsKb0e+kHiAPiWxzTlwUp7hfHso4Woav0cGpJI4XzfDaWgfvprvSYrAlDBHpn
-         rWlhWrv9i8MYOmOH5YAtB/PpsDgtKovrkrB7I3BE=
+        b=WM85pIwpnElUY2EzTgTf/V7wPQz4SH+hQLrxV99ZR2VaVDQ+NOUCHZNtg7j2USl91
+         F1oc288JvcgPX8oau2FkT8SpxgeXxSjIZY7SSEl1BUWdRTdRmiTqm8HGsCeqaGVT8j
+         iCsc/OSyVAAJoJlwHB03aYI27yLN7wSV3MfgubBc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
+        stable@vger.kernel.org, Antti Laakso <antti.laakso@intel.com>,
+        Vladis Dronov <vdronov@redhat.com>,
+        Richard Cochran <richardcochran@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 072/103] net/wan/fsl_ucc_hdlc: fix out of bounds write on array utdm_info
-Date:   Wed, 22 Jan 2020 10:29:28 +0100
-Message-Id: <20200122092814.159493424@linuxfoundation.org>
+Subject: [PATCH 4.19 073/103] ptp: free ptp device pin descriptors properly
+Date:   Wed, 22 Jan 2020 10:29:29 +0100
+Message-Id: <20200122092814.232958966@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200122092803.587683021@linuxfoundation.org>
 References: <20200122092803.587683021@linuxfoundation.org>
@@ -59,35 +61,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Vladis Dronov <vdronov@redhat.com>
 
-[ Upstream commit ddf420390526ede3b9ff559ac89f58cb59d9db2f ]
+[ Upstream commit 75718584cb3c64e6269109d4d54f888ac5a5fd15 ]
 
-Array utdm_info is declared as an array of MAX_HDLC_NUM (4) elements
-however up to UCC_MAX_NUM (8) elements are potentially being written
-to it.  Currently we have an array out-of-bounds write error on the
-last 4 elements. Fix this by making utdm_info UCC_MAX_NUM elements in
-size.
+There is a bug in ptp_clock_unregister(), where ptp_cleanup_pin_groups()
+first frees ptp->pin_{,dev_}attr, but then posix_clock_unregister() needs
+them to destroy a related sysfs device.
 
-Addresses-Coverity: ("Out-of-bounds write")
-Fixes: c19b6d246a35 ("drivers/net: support hdlc function for QE-UCC")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
+These functions can not be just swapped, as posix_clock_unregister() frees
+ptp which is needed in the ptp_cleanup_pin_groups(). Fix this by calling
+ptp_cleanup_pin_groups() in ptp_clock_release(), right before ptp is freed.
+
+This makes this patch fix an UAF bug in a patch which fixes an UAF bug.
+
+Reported-by: Antti Laakso <antti.laakso@intel.com>
+Fixes: a33121e5487b ("ptp: fix the race between the release of ptp_clock and cdev")
+Link: https://lore.kernel.org/netdev/3d2bd09735dbdaf003585ca376b7c1e5b69a19bd.camel@intel.com/
+Signed-off-by: Vladis Dronov <vdronov@redhat.com>
+Acked-by: Richard Cochran <richardcochran@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/wan/fsl_ucc_hdlc.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/ptp/ptp_clock.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/net/wan/fsl_ucc_hdlc.c
-+++ b/drivers/net/wan/fsl_ucc_hdlc.c
-@@ -76,7 +76,7 @@ static struct ucc_tdm_info utdm_primary_
- 	},
- };
- 
--static struct ucc_tdm_info utdm_info[MAX_HDLC_NUM];
-+static struct ucc_tdm_info utdm_info[UCC_MAX_NUM];
- 
- static int uhdlc_init(struct ucc_hdlc_private *priv)
+--- a/drivers/ptp/ptp_clock.c
++++ b/drivers/ptp/ptp_clock.c
+@@ -179,6 +179,7 @@ static void ptp_clock_release(struct dev
  {
+ 	struct ptp_clock *ptp = container_of(dev, struct ptp_clock, dev);
+ 
++	ptp_cleanup_pin_groups(ptp);
+ 	mutex_destroy(&ptp->tsevq_mux);
+ 	mutex_destroy(&ptp->pincfg_mux);
+ 	ida_simple_remove(&ptp_clocks_map, ptp->index);
+@@ -315,9 +316,8 @@ int ptp_clock_unregister(struct ptp_cloc
+ 	if (ptp->pps_source)
+ 		pps_unregister_source(ptp->pps_source);
+ 
+-	ptp_cleanup_pin_groups(ptp);
+-
+ 	posix_clock_unregister(&ptp->clock);
++
+ 	return 0;
+ }
+ EXPORT_SYMBOL(ptp_clock_unregister);
 
 
