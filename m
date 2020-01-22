@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29DA8C33CAF
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:49:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 611AEC33CB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:49:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E77F82467C
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:49:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33B262468C
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:49:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579686562;
-	bh=8RETVQuAXn2HyyP19HzJkh3vyAlFaWvJzhqQrOIOj0I=;
+	s=default; t=1579686565;
+	bh=4wZbYFNTr0SRfrRjKvqb0dHa2GAEiUJgedttLIvQc1s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lRwDF7gGjL4ClqRaa0DnVSUhxv6lZJLsntuNHMBgh5DbdZMBoiHm+v1LrpNt73Hot
-	 Uv0/+6f3P0hh6G/19irHXdzeH/V+9wGLPyhKxjjx1kHohccP8hi1gEJh22a4ITf96l
-	 ZEEUug4MWPl6ciB7/AIr4qZeZn9s5/jEFUaRaEZk=
+	b=H8M7u06EqQhcUT218xoQa7qhVBl8j5u89yeZcQl180js6ST6NeJld1AqIwJ7R19XO
+	 xQO3rygQMeFGuMhKE+oVnyK/sfzrlHnI6ucy5CskimOv9i1KWRZJKR+ZoKWjyFBsyg
+	 Adqmi0Fenuku2x7blTGRDyEr9yjLpjMekHU/EYjM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733115AbgAVJkE (ORCPT
+        id S1733304AbgAVJkD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 04:40:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58448 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 04:40:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58382 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733093AbgAVJkA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 04:40:00 -0500
+        id S1733104AbgAVJj6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 04:39:58 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 41EF724684;
-        Wed, 22 Jan 2020 09:39:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CD32924698;
+        Wed, 22 Jan 2020 09:39:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579685999;
-        bh=8RETVQuAXn2HyyP19HzJkh3vyAlFaWvJzhqQrOIOj0I=;
+        s=default; t=1579685997;
+        bh=4wZbYFNTr0SRfrRjKvqb0dHa2GAEiUJgedttLIvQc1s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ee+8nND/zhhqPbdoSG4T6N43ACwHqO4yU6Twn6Akadd+OcPFMYMjXd37Qf/EhLv89
-         pm5LB3Pje26i+UBaK4H/zXQkpeYFypQabEpJaq0PZ43v2z3aXNQRWjTrTwL04K+U0y
-         qMmcV0M0jtBb6UsmGkJG4GNdZaTRu+BScOPiIBiY=
+        b=eYYYQeTvQxAxKZoiUB2RneZo5LLQXnrzPokn/6bYpEsR3zj6ph1bi1rzFmtY20QIy
+         hN2jByxhuYhlXJ2QGlPxW/mU6mfcwndYGqh7amhNGRwz20+Wi6eh1dArBeWnGGDqKi
+         k4CRNkMsJ1DxoswbYnbYiX4ZoYUxd8GZhjqWjC8Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>,
+        stable@vger.kernel.org, John Ogness <john.ogness@linutronix.de>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Johan Hovold <johan@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 32/65] USB: serial: io_edgeport: handle unbound ports on URB completion
-Date:   Wed, 22 Jan 2020 10:29:17 +0100
-Message-Id: <20200122092755.401719162@linuxfoundation.org>
+Subject: [PATCH 4.14 31/65] USB: serial: io_edgeport: use irqsave() in USBs complete callback
+Date:   Wed, 22 Jan 2020 10:29:16 +0100
+Message-Id: <20200122092755.237700655@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200122092750.976732974@linuxfoundation.org>
 References: <20200122092750.976732974@linuxfoundation.org>
@@ -59,47 +61,97 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+From: John Ogness <john.ogness@linutronix.de>
 
-[ Upstream commit e37d1aeda737a20b1846a91a3da3f8b0f00cf690 ]
+[ Upstream commit dd1fae527612543e560e84f2eba4f6ef2006ac55 ]
 
-Check for NULL port data in the shared interrupt and bulk completion
-callbacks to avoid dereferencing a NULL pointer in case a device sends
-data for a port device which isn't bound to a driver (e.g. due to a
-malicious device having unexpected endpoints or after an allocation
-failure on port probe).
+The USB completion callback does not disable interrupts while acquiring
+the lock. We want to remove the local_irq_disable() invocation from
+__usb_hcd_giveback_urb() and therefore it is required for the callback
+handler to disable the interrupts while acquiring the lock.
+The callback may be invoked either in IRQ or BH context depending on the
+USB host controller.
+Use the _irqsave() variant of the locking primitives.
 
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Cc: stable <stable@vger.kernel.org>
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: John Ogness <john.ogness@linutronix.de>
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Signed-off-by: Johan Hovold <johan@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/serial/io_edgeport.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/usb/serial/io_edgeport.c | 17 +++++++++++------
+ 1 file changed, 11 insertions(+), 6 deletions(-)
 
 diff --git a/drivers/usb/serial/io_edgeport.c b/drivers/usb/serial/io_edgeport.c
-index 8810de817095..3705b64ab948 100644
+index 467870f504a5..8810de817095 100644
 --- a/drivers/usb/serial/io_edgeport.c
 +++ b/drivers/usb/serial/io_edgeport.c
-@@ -720,7 +720,7 @@ static void edge_interrupt_callback(struct urb *urb)
- 			if (txCredits) {
+@@ -652,6 +652,7 @@ static void edge_interrupt_callback(struct urb *urb)
+ 	struct usb_serial_port *port;
+ 	unsigned char *data = urb->transfer_buffer;
+ 	int length = urb->actual_length;
++	unsigned long flags;
+ 	int bytes_avail;
+ 	int position;
+ 	int txCredits;
+@@ -683,7 +684,7 @@ static void edge_interrupt_callback(struct urb *urb)
+ 		if (length > 1) {
+ 			bytes_avail = data[0] | (data[1] << 8);
+ 			if (bytes_avail) {
+-				spin_lock(&edge_serial->es_lock);
++				spin_lock_irqsave(&edge_serial->es_lock, flags);
+ 				edge_serial->rxBytesAvail += bytes_avail;
+ 				dev_dbg(dev,
+ 					"%s - bytes_avail=%d, rxBytesAvail=%d, read_in_progress=%d\n",
+@@ -706,7 +707,8 @@ static void edge_interrupt_callback(struct urb *urb)
+ 						edge_serial->read_in_progress = false;
+ 					}
+ 				}
+-				spin_unlock(&edge_serial->es_lock);
++				spin_unlock_irqrestore(&edge_serial->es_lock,
++						       flags);
+ 			}
+ 		}
+ 		/* grab the txcredits for the ports if available */
+@@ -719,9 +721,11 @@ static void edge_interrupt_callback(struct urb *urb)
  				port = edge_serial->serial->port[portNumber];
  				edge_port = usb_get_serial_port_data(port);
--				if (edge_port->open) {
-+				if (edge_port && edge_port->open) {
- 					spin_lock_irqsave(&edge_port->ep_lock,
- 							  flags);
+ 				if (edge_port->open) {
+-					spin_lock(&edge_port->ep_lock);
++					spin_lock_irqsave(&edge_port->ep_lock,
++							  flags);
  					edge_port->txCredits += txCredits;
-@@ -1847,7 +1847,7 @@ static void process_rcvd_data(struct edgeport_serial *edge_serial,
- 			if (rxLen && edge_serial->rxPort < serial->num_ports) {
- 				port = serial->port[edge_serial->rxPort];
- 				edge_port = usb_get_serial_port_data(port);
--				if (edge_port->open) {
-+				if (edge_port && edge_port->open) {
- 					dev_dbg(dev, "%s - Sending %d bytes to TTY for port %d\n",
- 						__func__, rxLen,
- 						edge_serial->rxPort);
+-					spin_unlock(&edge_port->ep_lock);
++					spin_unlock_irqrestore(&edge_port->ep_lock,
++							       flags);
+ 					dev_dbg(dev, "%s - txcredits for port%d = %d\n",
+ 						__func__, portNumber,
+ 						edge_port->txCredits);
+@@ -762,6 +766,7 @@ static void edge_bulk_in_callback(struct urb *urb)
+ 	int			retval;
+ 	__u16			raw_data_length;
+ 	int status = urb->status;
++	unsigned long flags;
+ 
+ 	if (status) {
+ 		dev_dbg(&urb->dev->dev, "%s - nonzero read bulk status received: %d\n",
+@@ -781,7 +786,7 @@ static void edge_bulk_in_callback(struct urb *urb)
+ 
+ 	usb_serial_debug_data(dev, __func__, raw_data_length, data);
+ 
+-	spin_lock(&edge_serial->es_lock);
++	spin_lock_irqsave(&edge_serial->es_lock, flags);
+ 
+ 	/* decrement our rxBytes available by the number that we just got */
+ 	edge_serial->rxBytesAvail -= raw_data_length;
+@@ -805,7 +810,7 @@ static void edge_bulk_in_callback(struct urb *urb)
+ 		edge_serial->read_in_progress = false;
+ 	}
+ 
+-	spin_unlock(&edge_serial->es_lock);
++	spin_unlock_irqrestore(&edge_serial->es_lock, flags);
+ }
+ 
+ 
 -- 
 2.20.1
 
