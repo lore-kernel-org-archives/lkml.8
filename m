@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5582C33CB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 08:02:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C282AC33CB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 08:02:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CC4C24655
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 08:02:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 905832467B
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 08:02:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="EfO9tSj7"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="H8JS9PL6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729199AbgAVICU (ORCPT
+        id S1729174AbgAVICS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 03:02:20 -0500
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:33134 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729085AbgAVICL (ORCPT
+        Wed, 22 Jan 2020 03:02:18 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:39232 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726077AbgAVICP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 03:02:11 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00M81nxc100955;
-        Wed, 22 Jan 2020 02:01:49 -0600
+        Wed, 22 Jan 2020 03:02:15 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00M8216g096402;
+        Wed, 22 Jan 2020 02:02:01 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1579680109;
-        bh=QEfHc54Sq3cSMEDsHEl0ZkK03ez70ajlWEziFOuth0s=;
+        s=ti-com-17Q1; t=1579680121;
+        bh=L5WORfa0XWhVNa/Scr/I2SAMSorVTSS3dl2PznqchpI=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=EfO9tSj7GDP5hTZLOndOZttkXugBuJEfedDzVvAjwzrES7ihJTzt5lRUOMljZm2+M
-         sVHnYei65s+/1YJfdH7U7Ah0wBLjrljQMFFrdnOvPSd5V8qq0oMnB25jiFOvkNvVIJ
-         lsh5Zvvs5EqbF95d5rGbfWpVgGYcD2kCtj5AJGyc=
-Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00M81ng8079140
+        b=H8JS9PL6gMPY+fTx+VqgqFwqovJSeQX5q0Pmqy9hU7Y6bbOm5S3g8aljL9yyaLG4s
+         M76aqGADTnD/DhmUIIbqWH8T+3HiuvbokXjGzkT8mCiA1vV6+u6g/UoNmi6XBGACeU
+         AI9pNZRF9TGPkGS/g4U6eMb9vhStCE0mQwfFvpRE=
+Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00M821Ro096714
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 22 Jan 2020 02:01:49 -0600
-Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+        Wed, 22 Jan 2020 02:02:01 -0600
+Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 22
- Jan 2020 02:01:49 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ Jan 2020 02:01:58 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Wed, 22 Jan 2020 02:01:49 -0600
+ Frontend Transport; Wed, 22 Jan 2020 02:01:58 -0600
 Received: from a0230074-OptiPlex-7010.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00M81ctn007984;
-        Wed, 22 Jan 2020 02:01:44 -0600
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00M81ctp007984;
+        Wed, 22 Jan 2020 02:01:54 -0600
 From:   Faiz Abbas <faiz_abbas@ti.com>
 To:     <linux-arm-kernel@lists.infradead.org>,
         <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
@@ -56,9 +56,9 @@ CC:     <catalin.marinas@arm.com>, <mark.rutland@arm.com>,
         <robh+dt@kernel.org>, <davem@davemloft.net>, <mkl@pengutronix.de>,
         <wg@grandegger.com>, <sriram.dash@samsung.com>, <dmurphy@ti.com>,
         <faiz_abbas@ti.com>, <nm@ti.com>, <t-kristo@ti.com>
-Subject: [PATCH 1/3] dt-bindings: net: can: m_can: Add Documentation for stb-gpios
-Date:   Wed, 22 Jan 2020 13:33:08 +0530
-Message-ID: <20200122080310.24653-2-faiz_abbas@ti.com>
+Subject: [PATCH 3/3] arm64: defconfig: Add Support for Bosch M_CAN controllers
+Date:   Wed, 22 Jan 2020 13:33:10 +0530
+Message-ID: <20200122080310.24653-4-faiz_abbas@ti.com>
 X-Mailer: git-send-email 2.19.2
 In-Reply-To: <20200122080310.24653-1-faiz_abbas@ti.com>
 References: <20200122080310.24653-1-faiz_abbas@ti.com>
@@ -71,29 +71,27 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The CAN transceiver on some boards has an STB pin which is
-used to control its standby mode. Add an optional property
-stb-gpios to toggle the same.
+Enable configs for supporting Bosch M_CAN controllers.
 
 Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
-Signed-off-by: Sekhar Nori <nsekhar@ti.com>
 ---
- Documentation/devicetree/bindings/net/can/m_can.txt | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/arm64/configs/defconfig | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/net/can/m_can.txt b/Documentation/devicetree/bindings/net/can/m_can.txt
-index ed614383af9c..cc8ba3f7a2aa 100644
---- a/Documentation/devicetree/bindings/net/can/m_can.txt
-+++ b/Documentation/devicetree/bindings/net/can/m_can.txt
-@@ -48,6 +48,8 @@ Optional Subnode:
- 			  that can be used for CAN/CAN-FD modes. See
- 			  Documentation/devicetree/bindings/net/can/can-transceiver.txt
- 			  for details.
-+stb-gpios		: gpio node to toggle the STB (standby) signal on the transceiver
-+
- Example:
- SoC dtsi:
- m_can1: can@20e8000 {
+diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+index 458bddeba89c..9d2ea46cc4ae 100644
+--- a/arch/arm64/configs/defconfig
++++ b/arch/arm64/configs/defconfig
+@@ -159,6 +159,9 @@ CONFIG_QRTR=m
+ CONFIG_QRTR_SMD=m
+ CONFIG_QRTR_TUN=m
+ CONFIG_BPF_JIT=y
++CONFIG_CAN=m
++CONFIG_CAN_M_CAN=m
++CONFIG_CAN_M_CAN_PLATFORM=m
+ CONFIG_BT=m
+ CONFIG_BT_HIDP=m
+ # CONFIG_BT_HS is not set
 -- 
 2.19.2
 
