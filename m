@@ -2,119 +2,186 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 604ACC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 15:09:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8839C33CB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 15:10:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22CBF24656
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 15:09:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Mr9+gK5h"
+	by mail.kernel.org (Postfix) with ESMTP id C8BED24687
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 15:10:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726099AbgAVPJC (ORCPT
+        id S1726170AbgAVPKc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 10:09:02 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:58732 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725827AbgAVPJC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 10:09:02 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579705740;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=Gs0hLkIZ3duxwFToMJ4ktrx5qsitsIbBNuQxZL9XjEY=;
-        b=Mr9+gK5hSg9yTm41pnynNNIdaSwz6xJ5yYaVRJFLe4q+qjovgkqZaq/VO0UQ6iGhDouP1s
-        nlP937HXra9yi8mj/ZrfkcEyshbFq1X4qLMdLDjrkUkpLoDOizqUBvdnhzU5I7eqNweqBx
-        IKBbsbk97WER33G9QE9yzndi9LFdVnk=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-425-xZi_QI4QMsG_aIDs96DT_A-1; Wed, 22 Jan 2020 10:08:58 -0500
-X-MC-Unique: xZi_QI4QMsG_aIDs96DT_A-1
-Received: by mail-wr1-f72.google.com with SMTP id k18so3214209wrw.9
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jan 2020 07:08:58 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=Gs0hLkIZ3duxwFToMJ4ktrx5qsitsIbBNuQxZL9XjEY=;
-        b=X1CsPCgQIcsQ/eZL8OujjNFk0gDAXOnROhsDwgn8tyjTx/FxyBJGCD9gMFjxK+Zh6p
-         UcmCBPNyJDoewyBgtDErB2hCW3eXpltrv/SixsvDPwjMg9pXFkKTH8PCpEYsZX8MW7Ms
-         8ScHsXbSOPXoEP/gH73UZyQHSZMcOf5z0HXbyue/TK2cxI2w1nDt2WozPrygfb3S5VcG
-         AzK/KrTd5Tmt8oXleYkRyR4vxDBDBbJI5Ma9UWLiXeuQNEbE62/+fDzRU99CHpNv++Qe
-         1FjE1nqf0ebfjbY5KWv7jTn5QuXp102xMeLsCFaqwMHTaJtqHZD17jzAoTxFyIGbO/cj
-         /FIQ==
-X-Gm-Message-State: APjAAAWFBv/7ep7+7USwUIYUhW1xpxipYKF/vpt0+ieiiobNhKb8c6NX
-        kkGnBt0WNNh8lBQ1j96UkHa9FYLBVBJpo4zti1y966EOOKZh7IKupFD7uCmV3kGKEGRVH5GFYJb
-        Zglu5cv1cqrD1DPC7v5wfLdif
-X-Received: by 2002:a1c:61c1:: with SMTP id v184mr3600985wmb.160.1579705737469;
-        Wed, 22 Jan 2020 07:08:57 -0800 (PST)
-X-Google-Smtp-Source: APXvYqxxHQQ7M+5VlXhyTxrA6AqZnQ80yqWJgIp5dIPVzFm5/1K8pZKKmyUgPXC6mh2/XwH9oKiihw==
-X-Received: by 2002:a1c:61c1:: with SMTP id v184mr3600962wmb.160.1579705737142;
-        Wed, 22 Jan 2020 07:08:57 -0800 (PST)
-Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id b128sm4353614wmb.25.2020.01.22.07.08.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Jan 2020 07:08:56 -0800 (PST)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     kvm@vger.kernel.org, Jim Mattson <jmattson@google.com>,
-        linux-kernel@vger.kernel.org, Liran Alon <liran.alon@oracle.com>,
-        Roman Kagan <rkagan@virtuozzo.com>
-Subject: Re: [PATCH RFC 2/3] x86/kvm/hyper-v: move VMX controls sanitization out of nested_enable_evmcs()
-In-Reply-To: <9c126d75-225b-3b1b-d97a-bcec1f189e02@redhat.com>
-References: <20200115171014.56405-1-vkuznets@redhat.com> <20200115171014.56405-3-vkuznets@redhat.com> <6c4bdb57-08fb-2c2d-9234-b7efffeb72ed@redhat.com> <20200122054724.GD18513@linux.intel.com> <9c126d75-225b-3b1b-d97a-bcec1f189e02@redhat.com>
-Date:   Wed, 22 Jan 2020 16:08:55 +0100
-Message-ID: <87eevrsf3s.fsf@vitty.brq.redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain
+        Wed, 22 Jan 2020 10:10:32 -0500
+Received: from mx2.suse.de ([195.135.220.15]:39378 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725836AbgAVPKb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 10:10:31 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 616B1ACC2;
+        Wed, 22 Jan 2020 15:10:28 +0000 (UTC)
+From:   Giovanni Gherdovich <ggherdovich@suse.cz>
+To:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Borislav Petkov <bp@suse.de>, Len Brown <lenb@kernel.org>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>
+Cc:     x86@kernel.org, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Matt Fleming <matt@codeblueprint.co.uk>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Paul Turner <pjt@google.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Quentin Perret <qperret@qperret.net>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Doug Smythies <dsmythies@telus.net>,
+        Ionela Voinescu <ionela.voinescu@arm.com>,
+        Giovanni Gherdovich <ggherdovich@suse.cz>
+Subject: [PATCH v5 0/6] Add support for frequency invariance for (some) x86
+Date:   Wed, 22 Jan 2020 16:16:11 +0100
+Message-Id: <20200122151617.531-1-ggherdovich@suse.cz>
+X-Mailer: git-send-email 2.16.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Paolo Bonzini <pbonzini@redhat.com> writes:
+v4 at https://lore.kernel.org/lkml/20191113124654.18122-1-ggherdovich@suse.cz/
 
-> On 22/01/20 06:47, Sean Christopherson wrote:
->>> Yes, it most likely is and it would be nice if Microsoft fixed it, but I
->>> guess we're stuck with it for existing Windows versions.  Well, for one
->>> we found a bug in Hyper-V and not the converse. :)
->>>
->>> There is a problem with this approach, in that we're stuck with it
->>> forever due to live migration.  But I guess if in the future eVMCS v2
->>> adds an apic_address field we can limit the hack to eVMCS v1.  Another
->>> possibility is to use the quirks mechanism but it's overkill for now.
->>>
->>> Unless there are objections, I plan to apply these patches.
->> Doesn't applying this patch contradict your earlier opinion?  This patch
->> would still hide the affected controls from the guest because the host
->> controls enlightened_vmcs_enabled.
->
-> It does.  Unfortunately the key sentence is "we're stuck with it for
-> existing Windows versions". :(
->
->> Rather than update vmx->nested.msrs or filter vmx_get_msr(), what about
->> manually adding eVMCS consistency checks on the disallowed bits and handle
->> SECONDARY_EXEC_VIRTUALIZE_APIC_ACCESSES as a one-off case by simply
->> clearing it from the eVMCS?  Or alternatively, squashing all the disallowed
->> bits.
->
-> Hmm, that is also a possibility.  It's a very hacky one, but I guess
-> adding APIC virtualization to eVMCS would require bumping the version to
-> 2.  Vitaly, what do you think?
+Changes wrt v4:
 
-As I already replied to Sean I like the idea to filter out unsupported
-controls from eVMCS but unfortunately it doesn't work: Hyper-V actually
-expects APIC virtualization to work when it enables
-SECONDARY_EXEC_VIRTUALIZE_APIC_ACCESSES (I have no idea how without
-apic_access_addr field but). I checked and at least Hyper-V 2016 doesn't
-boot (when >1 vCPU).
+- Removing conditional access in the function arch_scale_freq_capacity()
+  and initialize arch_freq_scale to 1024 to account for when freq
+  invariance isn't enabled (Ionela V.)
+- In case the max frequency can't be read in MSRs, do not enable frequency
+  invariance at all (Ionela V., Peter Z.).
+- Renames: 
+    variables:
+      arch_cpu_freq  -> arch_freq_scale
+      arch_max_freq  -> arch_max_freq_ratio
+      ... and others
+    functions:
+      init_scale_freq  -> init_counter_refs
+      set_cpu_max_freq -> init_freq_invariance
+      {core,skx,knl...}_set_cpu_max_freq  -> {core,skx,knl...}_set_max_freq_ratio
+      ... and others
+- Use the same function for parsing SKX and GLM registers (Peter Z.)
+- Pass a parameter to the function parsing KNL registers (Peter Z.)
+- Fix a bug whereby refs to [am]perf were initialized only on cpu #0
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Cover Letter from v4:
+
+v3 at https://lore.kernel.org/lkml/20191111180549.12166-1-ggherdovich@suse.cz/
+
+Changes wrt v3:
+
+- Add definition of function set_arch_max_freq if !CONFIG_SMP
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Cover Letter from v3:
+
+v2 at https://lore.kernel.org/lkml/20191002122926.385-1-ggherdovich@suse.cz/
+
+Changes wrt v2:
+
+- Removing the tick_disable mechanism. Frequency scale-invariance isn't
+  just about helping schedutil choose better frequencies, but also
+  providing the scheduler load balancer with better metrics. All users of
+  PELT signals benefit from this feature. The tick_disable patch disabled
+  frequency invariant calculation when a specific driver is in use
+  (intel_pstate in active mode).
+
+- static_branch_enable(&arch_scale_freq_key) is now called earlier, right
+  after we learn that X86_FEATURE_APERFMPERF is available. Previously Peter
+  Z. commented "if we can't tell the max_freq we don't want to use the
+  invariant stuff.". I've decided to do it differently: if we can't tell
+  the max_freq, then it's because the CPU encodes max_freq in MSRs in a way
+  this patch doesn't understand, and we assume max_p is the max_freq which
+  seems like a safe bet. As a reminder, max_freq=max_p is encoded by
+  setting arch_max_freq=1024 as default value. I'm open to feedback.
+
+- Refactoring the switch case statement in set_cpu_max_freq() as Rafael
+  W. Now the first patch doesn't hint at what the following patch will
+  bring along.
+
+- Handling the case were turbo is disabled at runtime and a _PPC ACPI
+  notification is issued, as requested by Rafael W. This happens eg. when
+  some laptop model is disconnected from AC. (Patch #6)
+
+- Handling all Intel x86_64 micro-arches.
+
+- A note for Srinivas P., who expressed concern for Atoms: on Atom CPUs the
+  max_freq is set to the highest turbo level, as a power-efficiency
+  oriented measure. In this way the ratio curr_freq/max_freq tends to be
+  lower, PELT signals are consequently lower, and schedutil doesn't push
+  too hard on speed. (Patches #4 and #5).
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Cover Letter from v2:
+
+v1 at https://lore.kernel.org/lkml/20190909024216.5942-1-ggherdovich@suse.cz/
+
+Changes wrt v1:
+
+- add x86-specific implementation of arch_scale_freq_invariant() using a
+  static key that checks for the availability of APERF and MPERF
+- refer to GOLDMONT_D instead of GOLDMONT_X, according to recent rename
+- set arch_cpu_freq to 1024 from x86_arch_scale_freq_tick_disable() to prevent
+  PELT from being fed stale data
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Cover Letter from v1:
+
+This is a resend with of Peter Zijlstra's patch to support frequency
+scale-invariance on x86 from May 2018 [see 1]. I've added some modifications
+and included performance test results. If Peter doesn't mind, I'm slapping my
+name on it :)
+
+The changes from Peter's original implementation are:
+
+1) normalizing against the 4-cores turbo level instead or 1-core turbo
+2) removing the run-time search for when the above value isn't found in the
+   various Intel MSRs -- the base frequency value is taken in that case.
+
+The section "4. KNOWN LIMITATIONS" in the first patch commit message addresses
+the reason why this approach was dropped back in 2018, and explains that the
+performance gains outweight that issue.
+
+The second patch from Srinivas is taken verbatim from the May 2018 submission
+as it still applies.
+
+I apologies for the length of patch #1 commit message; I've made a table of
+contents with summaries of each section that should make easier to skim
+through the content.
+
+This submission incorporates the feedback and requests for additional tests
+received during the presentation made at OSPM 2019 in Pisa three months ago.
+
+[1] https://lore.kernel.org/lkml/20180516044911.28797-2-srinivas.pandruvada@linux.intel.com/
+
+Giovanni Gherdovich (6):
+  x86,sched: Add support for frequency invariance
+  x86,sched: Add support for frequency invariance on SKYLAKE_X
+  x86,sched: Add support for frequency invariance on XEON_PHI_KNL/KNM
+  x86,sched: Add support for frequency invariance on ATOM_GOLDMONT*
+  x86,sched: Add support for frequency invariance on ATOM
+  x86: intel_pstate: handle runtime turbo disablement/enablement in
+    freq. invariance
+
+ arch/x86/include/asm/topology.h |  25 ++++
+ arch/x86/kernel/smpboot.c       | 290 +++++++++++++++++++++++++++++++++++++++-
+ drivers/cpufreq/intel_pstate.c  |   1 +
+ kernel/sched/core.c             |   1 +
+ kernel/sched/sched.h            |   7 +
+ 5 files changed, 323 insertions(+), 1 deletion(-)
 
 -- 
-Vitaly
+2.16.4
 
