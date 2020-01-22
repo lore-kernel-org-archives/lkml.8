@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D088C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:37:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FD85C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:37:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E525224680
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:37:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C11224680
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:37:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579685832;
-	bh=Gvw4IBVvTbh7LJegV1H9BhU7bNh5YLZ2sWO/BXanA6g=;
+	s=default; t=1579685835;
+	bh=W9cz76K6G3A7OXUcQY9ITKI5mon3C73Evum/aVcaGgU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZC+jKJypmyNxkOAByxlj3oSpt3HNLaWBLF4OKeJn+cHG3gg9vKPjh5HKWT19RJv2o
-	 6wR6TTvpZ1Kl+nrsO0aNIQcMtGFZDjxI3SbVLlLUt08jOEj+z6xwFzlGP5JkM2y8x1
-	 11tSBXoiTi1RaGZVsgOh/ALcbzm60fZoQJks2kmI=
+	b=nqnOGjCQTpnyBwA1hI1UWF0oyCl8zzD1qnzJFMQXr4+u1yd2eatl+dyiWMCVl0uVY
+	 T+90kE5zgNKwLn9Mspz4b2m3h4ts3SA9vvyh14qLEgDvRsXFoZTUtdpcYTo35y8tot
+	 QkL1hNlMEKQUeBktdLyyzJ6LXkgEYpvBKZMc4h7I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730991AbgAVJhK (ORCPT
+        id S1730959AbgAVJhO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 04:37:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52916 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 04:37:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53140 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732370AbgAVJhE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 04:37:04 -0500
+        id S1731608AbgAVJhL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 04:37:11 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 49C222467B;
-        Wed, 22 Jan 2020 09:37:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4FD492467E;
+        Wed, 22 Jan 2020 09:37:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579685823;
-        bh=Gvw4IBVvTbh7LJegV1H9BhU7bNh5YLZ2sWO/BXanA6g=;
+        s=default; t=1579685830;
+        bh=W9cz76K6G3A7OXUcQY9ITKI5mon3C73Evum/aVcaGgU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=o6651WkTnrZpaSPvJjdNQ2JRqp1vFLdfWNz/xMAxP6mqq1c/wOtzt/MXgW9xF/lcQ
-         lgOzZ80/9E66YLTFQM4C0fzHfKroWWSGSBG+rrwGdpwHsdmcIY8N7ACJcDvxuJ2RlX
-         ZexS5Av93Ruhq2HOkMgdr+oAHU8smY+s7k1/LxLw=
+        b=Zz+qXVxHiScpCXGZ3Jm/BAlGmZjRAmh34C/S0MlF0ZZy5r0N9Wc3TbRqhrs7Che4o
+         6T+H7hC78AVbsrw/Cq4TXmkmEIppB9R7kxGS1CbVFpuDWmZp4aW4dtx4LzRIJqXEzU
+         qVVyCpNzUZplGMcWj2ziXk7t/DZtB9VArXLtkE0A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Martin Jansen <martin.jansen@opticon.com>,
-        Johan Hovold <johan@kernel.org>
-Subject: [PATCH 4.9 58/97] USB: serial: opticon: fix control-message timeouts
-Date:   Wed, 22 Jan 2020 10:29:02 +0100
-Message-Id: <20200122092805.754146924@linuxfoundation.org>
+        stable@vger.kernel.org, Michael Brunnbauer <brunni@netestate.de>,
+        Jeff Mahoney <jeffm@suse.com>, Jan Kara <jack@suse.cz>
+Subject: [PATCH 4.9 90/97] reiserfs: fix handling of -EOPNOTSUPP in reiserfs_for_each_xattr
+Date:   Wed, 22 Jan 2020 10:29:34 +0100
+Message-Id: <20200122092810.637420476@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200122092755.678349497@linuxfoundation.org>
 References: <20200122092755.678349497@linuxfoundation.org>
@@ -59,39 +59,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+From: Jeff Mahoney <jeffm@suse.com>
 
-commit 5e28055f340275a8616eee88ef19186631b4d136 upstream.
+commit 394440d469413fa9b74f88a11f144d76017221f2 upstream.
 
-The driver was issuing synchronous uninterruptible control requests
-without using a timeout. This could lead to the driver hanging
-on open() or tiocmset() due to a malfunctioning (or malicious) device
-until the device is physically disconnected.
+Commit 60e4cf67a58 (reiserfs: fix extended attributes on the root
+directory) introduced a regression open_xa_root started returning
+-EOPNOTSUPP but it was not handled properly in reiserfs_for_each_xattr.
 
-The USB upper limit of five seconds per request should be more than
-enough.
+When the reiserfs module is built without CONFIG_REISERFS_FS_XATTR,
+deleting an inode would result in a warning and chowning an inode
+would also result in a warning and then fail to complete.
 
-Fixes: 309a057932ab ("USB: opticon: add rts and cts support")
-Cc: stable <stable@vger.kernel.org>     # 2.6.39
-Cc: Martin Jansen <martin.jansen@opticon.com>
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Johan Hovold <johan@kernel.org>
+With CONFIG_REISERFS_FS_XATTR enabled, the xattr root would always be
+present for read-write operations.
+
+This commit handles -EOPNOSUPP in the same way -ENODATA is handled.
+
+Fixes: 60e4cf67a582 ("reiserfs: fix extended attributes on the root directory")
+CC: stable@vger.kernel.org	# Commit 60e4cf67a58 was picked up by stable
+Link: https://lore.kernel.org/r/20200115180059.6935-1-jeffm@suse.com
+Reported-by: Michael Brunnbauer <brunni@netestate.de>
+Signed-off-by: Jeff Mahoney <jeffm@suse.com>
+Signed-off-by: Jan Kara <jack@suse.cz>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/serial/opticon.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/reiserfs/xattr.c |    8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
---- a/drivers/usb/serial/opticon.c
-+++ b/drivers/usb/serial/opticon.c
-@@ -116,7 +116,7 @@ static int send_control_msg(struct usb_s
- 	retval = usb_control_msg(serial->dev, usb_sndctrlpipe(serial->dev, 0),
- 				requesttype,
- 				USB_DIR_OUT|USB_TYPE_VENDOR|USB_RECIP_INTERFACE,
--				0, 0, buffer, 1, 0);
-+				0, 0, buffer, 1, USB_CTRL_SET_TIMEOUT);
- 	kfree(buffer);
- 
- 	if (retval < 0)
+--- a/fs/reiserfs/xattr.c
++++ b/fs/reiserfs/xattr.c
+@@ -318,8 +318,12 @@ static int reiserfs_for_each_xattr(struc
+ out_dir:
+ 	dput(dir);
+ out:
+-	/* -ENODATA isn't an error */
+-	if (err == -ENODATA)
++	/*
++	 * -ENODATA: this object doesn't have any xattrs
++	 * -EOPNOTSUPP: this file system doesn't have xattrs enabled on disk.
++	 * Neither are errors
++	 */
++	if (err == -ENODATA || err == -EOPNOTSUPP)
+ 		err = 0;
+ 	return err;
+ }
 
 
