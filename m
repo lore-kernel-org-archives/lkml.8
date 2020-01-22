@@ -3,202 +3,170 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8B7AC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 18:28:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA15BC3F68F
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 18:31:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE48D24125
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 18:28:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBE0C2465A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 18:31:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hdEtixhH"
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="u0FpVPQr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728709AbgAVS2P (ORCPT
+        id S1726590AbgAVSbS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 13:28:15 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:39757 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725924AbgAVS2P (ORCPT
+        Wed, 22 Jan 2020 13:31:18 -0500
+Received: from mail-qv1-f65.google.com ([209.85.219.65]:43077 "EHLO
+        mail-qv1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725836AbgAVSbR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 13:28:15 -0500
-Received: by mail-oi1-f194.google.com with SMTP id z2so332755oih.6
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jan 2020 10:28:14 -0800 (PST)
+        Wed, 22 Jan 2020 13:31:17 -0500
+Received: by mail-qv1-f65.google.com with SMTP id p2so210706qvo.10
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jan 2020 10:31:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/nmCPb+XXCVt5KhfGb/8H7zZgYObjRj8769ul8BOa2o=;
-        b=hdEtixhHfOZuWMp0/X6AY8Ms4a/2ls0PXttrGni4Z/DBE8LLDiXkABZ0PJ58/gV3Au
-         /H0Vjqh2uiHmAwmKNvHB15NHTXKz5eQ1qKrd9tYQvGzi+a+kjDkILD3xOWwcjoG5Zn2F
-         mUSZ7B5yHXHdC3euPJ5fOXA1O6ILZ8Qvf4v3/TSKND60QxAmvIE2w2uLIquwDjxWPZD7
-         9AIp/qQcEJDRQPYzU5F/lhOgJCi5Lc7w4EQjdRgCfEGDu0m/mgZAzQO3fcY9AQ0+NpXA
-         H6wwuQKh5/qXBUB4sW5JgHSqkbsChQBpEsh+TgajyWylfp6QxvaI213QqIEgTYUE6kES
-         GgkQ==
+        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=KsSmCaLhw2eH8Ck1bfIH7ogc6/ppRHUB+hk51YkiZzE=;
+        b=u0FpVPQrv4MeJj0uTvYpr+Sr33hV6aI1K+Gy8Mixj42CY52n6sZTaMWDIYtZSSCP24
+         mk9AQBCjBEZZe/npyXvADUGSV7Bm/VG+E0ISXV7nQTLQINJU53OZm0CsA7WB6ZEmjmRK
+         pO0ElN1AQ3/y67SssU92eOrzZRg0MKD3ME3UblFkLpoa73KGxdADtGQrWy9scDLLZEn1
+         cBQjulW+4DY/St0t8MIpZkDxNDNaQ6UYuWCw+oUB3dFEwi8KBcScjaWaD0a22oqbJREl
+         xzWXKZUcI7ERm13Gre8OHCeZmsTaUtphwjUy+FCbkLULIvv3cbrV+hnaYWW+HYDN+Tso
+         qRHw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/nmCPb+XXCVt5KhfGb/8H7zZgYObjRj8769ul8BOa2o=;
-        b=Ax8ohbKKUOHqEWHNB5q9jTg/yAP1x8EUEeTZmZEqrNuuQ5B3R80Kxgc3H+hhkH2dXE
-         8ihHzhMd5D1esRPfzIzHmpLh7s7dzYoYFmVbe9an7+K4W3XOpQSY7/j1bF+GU5RcckxT
-         pb7/DlCbjYAgCZ7eKM24eCcnkOW3vCWDFOOmFkY5NwoyMobHPXDwZ5nnp2v4H8+61dMa
-         FfxLo7cmvJcr5BVTGxbviHP2e8vBvnjB2hFACmC7qDHD+jq6oWhegfnk2oc4d0v2f+P7
-         DvamaqsaW54osflWFSidsmuemuz96FjJNpfCIH/XoSMlzzE4wSVmShiw9ge7n9eoGfre
-         6OkQ==
-X-Gm-Message-State: APjAAAUODsYUSJv99fSkuRp7GGjP133xSeOCKlyJiR/NpU6oD/eELhZp
-        ZPDI1yVol/wO+K2m3tJBmXYWW8YBMqDtbO8+sjqYdQ==
-X-Google-Smtp-Source: APXvYqzSW3nTaM3W/BugRvoJ65EPdnrE0AXnH4fjjOZ+G8Qyw5uBexwDzoPs/jd+hW+LN2XWrUZOYIeT7Ac7gpkLWDE=
-X-Received: by 2002:aca:c551:: with SMTP id v78mr7775111oif.161.1579717694073;
- Wed, 22 Jan 2020 10:28:14 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=KsSmCaLhw2eH8Ck1bfIH7ogc6/ppRHUB+hk51YkiZzE=;
+        b=Eu+HKIsmfTyT5ueaIzq2JwzJ78e88CBWHpnisZVa9sfHxLvcYLxSpG8ojNsMCyZuJz
+         EJUaBx89GsC/yXLYUBOtGAvjuLgdLyM52aVCdY8+1x5j/V1A5trDcYtK94ifGD94rSH+
+         RSqk07N9KI9XXJYQ3KQ7OuWm5TThm1RUYllbWG5IsqVn/slaQC3XJi4RRc+sNnxKCcoc
+         JzNI1fCS+W6/N3DYVZV4DLP3jDYMZwXMAIcepvsF7hroc57/PWZ6Lqt1xdZruzdd4l/X
+         AWxNvBw9YQ0S5cwjA0d6fyZZcYYvRL221UA1zRmkCRYMaFG3foKL8ekCJ+iMVxx2VEJ7
+         y/bA==
+X-Gm-Message-State: APjAAAUAhWWi50TkkIkG6QA9/1DVZh5GVdyasmkUATIty6LV1G778Py4
+        usONVcksN6Ymql10QLjbN/c2cQ==
+X-Google-Smtp-Source: APXvYqxy5nz3O1ZcaVlvpMPrQvwHVVq/hD6LsggY1jWvqsQCA/JvE8PXN7YnabEslIy3Dhx0ZUE6xg==
+X-Received: by 2002:a05:6214:982:: with SMTP id dt2mr11565088qvb.174.1579717875415;
+        Wed, 22 Jan 2020 10:31:15 -0800 (PST)
+Received: from localhost ([2620:10d:c091:500::3:203c])
+        by smtp.gmail.com with ESMTPSA id x3sm21488705qts.35.2020.01.22.10.31.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 22 Jan 2020 10:31:14 -0800 (PST)
+Date:   Wed, 22 Jan 2020 13:31:13 -0500
+From:   Johannes Weiner <hannes@cmpxchg.org>
+To:     Alex Shi <alex.shi@linux.alibaba.com>
+Cc:     cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, akpm@linux-foundation.org,
+        mgorman@techsingularity.net, tj@kernel.org, hughd@google.com,
+        khlebnikov@yandex-team.ru, daniel.m.jordan@oracle.com,
+        yang.shi@linux.alibaba.com, willy@infradead.org,
+        shakeelb@google.com, Michal Hocko <mhocko@kernel.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Roman Gushchin <guro@fb.com>,
+        Chris Down <chris@chrisdown.name>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vlastimil Babka <vbabka@suse.cz>, Qian Cai <cai@lca.pw>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        David Rientjes <rientjes@google.com>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        swkhack <swkhack@gmail.com>,
+        "Potyra, Stefan" <Stefan.Potyra@elektrobit.com>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Colin Ian King <colin.king@canonical.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Peng Fan <peng.fan@nxp.com>,
+        Nikolay Borisov <nborisov@suse.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>,
+        Yafang Shao <laoar.shao@gmail.com>
+Subject: Re: [PATCH v8 03/10] mm/lru: replace pgdat lru_lock with lruvec lock
+Message-ID: <20200122183113.GA98452@cmpxchg.org>
+References: <1579143909-156105-1-git-send-email-alex.shi@linux.alibaba.com>
+ <1579143909-156105-4-git-send-email-alex.shi@linux.alibaba.com>
+ <20200116215222.GA64230@cmpxchg.org>
+ <9ee80b68-a78f-714a-c727-1f6d2b4f87ea@linux.alibaba.com>
+ <20200121160005.GA69293@cmpxchg.org>
+ <0bd0a561-93cc-11b6-1eae-24b450b0f033@linux.alibaba.com>
 MIME-Version: 1.0
-References: <20191212014233.32799-1-john.stultz@linaro.org>
- <20191212014233.32799-8-john.stultz@linaro.org> <20191218163738.GA12358@bogus>
- <CALAqxLU=KPJoPKHP14BWcLYJdBoK8DC5+7hRtqCvE2-HZHWxZA@mail.gmail.com> <CAL_Jsq+9uSMfpQZxmfJX4Y4R_xwkK413SqNZ3x6XpKpMvWA56Q@mail.gmail.com>
-In-Reply-To: <CAL_Jsq+9uSMfpQZxmfJX4Y4R_xwkK413SqNZ3x6XpKpMvWA56Q@mail.gmail.com>
-From:   John Stultz <john.stultz@linaro.org>
-Date:   Wed, 22 Jan 2020 10:28:03 -0800
-Message-ID: <CALAqxLVgyyDmoKAxrKp-GvkBZ4hfbMgEBThPeVmJ7EZ6GzLjFw@mail.gmail.com>
-Subject: Re: [PATCH v7 7/8] dt-bindings: misc: Add bindings for HiSilicon usb
- hub and data role switch functionality on HiKey960
-To:     Rob Herring <robh@kernel.org>
-Cc:     lkml <linux-kernel@vger.kernel.org>, Yu Chen <chenyu56@huawei.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        ShuFan Lee <shufan_lee@richtek.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Jun Li <lijun.kernel@gmail.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Guillaume Gardet <Guillaume.Gardet@arm.com>,
-        Jack Pham <jackp@codeaurora.org>,
-        Linux USB List <linux-usb@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0bd0a561-93cc-11b6-1eae-24b450b0f033@linux.alibaba.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-(Sorry for the slow reply. The holidays and other priorities struck
-and I'm only now just getting back to this!)
+On Wed, Jan 22, 2020 at 08:01:29PM +0800, Alex Shi wrote:
+> Yes I understand isolatation would exclusive by PageLRU, but forgive my
+> stupid, I didn't figure out how a new page lruvec adding could be blocked.
 
-On Wed, Dec 18, 2019 at 11:57 AM Rob Herring <robh@kernel.org> wrote:
-> On Wed, Dec 18, 2019 at 11:21 AM John Stultz <john.stultz@linaro.org> wrote:
-> > On Wed, Dec 18, 2019 at 8:37 AM Rob Herring <robh@kernel.org> wrote:
-> > > As a whole this is HiSilicon specific, but really it is not. It's really
-> > > just a hub, a mux, and connectors for which we have bindings for. I
-> > > think you need to model the actual hub in DT. We have 2 ways already to
-> > > describe hubs in DT: a I2C device or USB device.
-> > >
-> > > AIUI, the board looks something like this:
-> > >
-> > > ctrl -> mux --> hub -> type-a connector
-> > >             +-> type-c connector
-> > >
-> > > If the hub I2C is not used, then you could do something like this:
-> > >
-> > > ctrl {
-> > >     mux-controls = <&usb_gpio_mux>;
-> > >     connector@0 {
-> > >         // type C connector binding
-> > >     };
-> > >     hub@1 {
-> > >         // USB device binding
-> > >     };
-> > > };
-> >
-> > I can't say I totally grok all this, but I'll go digging to try to
-> > better understand it.
-> > I don't believe there is any I2C involved here, so I'll try the
-> > approach you outline above.
->
-> Well, it is there in the schematics.
+I don't see why we would need this. Can you elaborate where you think
+this is a problem?
 
-Fair point. Though at least for the USB5734 hub, I don't believe we've
-made use of the i2c on it (at least that I can see).  From the
-existing driver, the control is basically just 3 GPIOs:  type-c power,
-hub power, and the mux/switch.
+If compaction races with charging for example, compaction doesn't need
+to prevent a new page from being added to an lruvec. PageLRU is only
+set after page->mem_cgroup is updated, so there are two race outcomes:
 
-Trying to get my head around your suggestion:
-ctrl {
-    mux-controls = <&usb_gpio_mux>;
-    connector@0 {
-        // type C connector binding
-    };
-    hub@1 {
-        // USB device binding
-    };
-};
+1) TestClearPageLRU() fails. That means the page isn't (fully) created
+yet and cannot be migrated. We goto isolate_fail before even trying to
+lock the lruvec.
 
-The usb_gpio_mux would be the gpio mux switch.
+2) TestClearPageLRU() succeeds. That means the page was fully created
+and page->mem_cgroup has been set up. Anybody who now wants to change
+page->mem_cgroup needs PageLRU, but we have it, so lruvec is stable.
 
-For the "type C connector binding", that would probably be the rt1711h
-type-c chip.
+I.e. cgroup charging does this:
 
-For the "USB device binding" that would be a yet to be implemented
-USB5734 hub driver, I'm guessing?
+	page->mem_cgroup = new_group
 
-Though I'm not sure I understand how the hub driver gets a signal to
-power-on/power-off its gpio-regulator from the mux state?  I'm maybe
-still missing some details on the mux infrastructure.
+	lock(pgdat->lru_lock)
+	SetPageLRU()
+	add_page_to_lru_list()
+	unlock(pgdat->lru_lock)
 
-> > > The only new bindings you really need are adding 'mux-controls' to the
-> > > USB host controller and the hub binding (we already have a few).
+and compaction currently does this:
 
-So this is a little confusing to me. Why is the host controller
-involved?  It seems to me all of this is down-stream of the
-controller, and it's just taking whatever the switch gives it.
+	lock(pgdat->lru_lock)
+	if (!PageLRU())
+		goto isolate_fail
+	// __isolate_lru_page:
+	if (!get_page_unless_zero())
+		goto isolate_fail
+	ClearPageLRU()
+	del_page_from_lru_list()
+	unlock(pgdat->lru_lock)
 
-I think the switch needs to be signalled from the rt1711h type-c
-connector (when it detects the cable and determines the role). That
-said, I'm not sure how it would think to control the mux in that case
-(as that's pretty special case for this specific hardware). That's why
-we're using the role notifier intermediary trick in the current code.
+We can replace charging with this:
 
-So I guess we could still have the roll notifier intermediary driver
-which then controls the mux?
+	page->mem_cgroup = new_group
 
-I know that's more a driver implementation detail and not really
-hardware description, :) but I'm just trying to figure out how it's
-going to come together and actually work.
+	lock(lruvec->lru_lock)
+	add_page_to_lru_list()
+	unlock(lruvec->lru_lock)
 
-> > Is the idea to extend the rt1711h and
-> > dwc3 drivers further to support the mux/hub bit (this part is fairly
-> > foggy to me), completely removing the need for the misc driver?
->
-> I imagine that you need some driver to determine the state of the mux.
-> Perhaps a usb-mux driver which is instantiated by the host controller
-> driver when it sees a mux-controls property. Sorry, haven't looked at
-> the driver side of this at all.
->
-> > I did take an attempt at something similar with an earlier iteration
-> > of the patch set, where I was trying to move the vbus-gpio as a
-> > gpio-regulator to be controlled by the rt1711h/tpcm core, but that
-> > approach didn't work properly and Hans suggested I just go back to the
-> > approach submitted here:
-> >   https://lkml.org/lkml/2019/10/22/42
->
-> I don't see why that would matter. If you need to sense the Vbus
-> state, then you do need a GPIO typically. But for an enable line, it's
-> just another level of abstraction.
+	SetPageLRU()
 
-My concern is that I suspect the issue we had then was that the order
-and the timing that we switch the 3 GPIOs ends up being important. In
-the current implementation we can adjust them linearly together, where
-as when I took a stab at having the vbus gpio was modeled as a
-regulator and controlled independently by the rt1711h, the typec state
-machine would get confused as I'm guessing the mux/switch wasn't where
-it expected it to be when it wanted to change the state of the type-c
-vbus.
+and the compaction sequence with something like this:
 
-Thoughts?
+	if (!get_page_unless_zero())
+		goto isolate_fail
 
-Thanks again for the review and feedback. And sorry to let so much
-time (and mental context) pass.
--john
+	if (!TestClearPageLRU())
+		goto isolate_fail_put
+
+	// We got PageLRU, so charging is complete and nobody
+	// can modify page->mem_cgroup until we set it again.
+
+	lruvec = mem_cgroup_page_lruvec(page, pgdat)
+	lock(lruvec->lru_lock)
+	del_page_from_lru_list()
+	unlock(lruvec->lru_lock)
+
