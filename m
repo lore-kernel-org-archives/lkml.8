@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-3.4 required=3.0 tests=DATE_IN_PAST_03_06,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,TVD_SUBJ_WIPE_DEBT,
 	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82F4CC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:21:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F84EC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:21:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59A1624688
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:21:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CC552467B
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:21:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579699282;
-	bh=zv2m0+Msco86uDoLUfkHwd61ijlq3Gp5aGpEuK8/KFo=;
+	s=default; t=1579699286;
+	bh=d8J1rWYqCKOvPSRzitqd/4NBLdFjcxJDpnPfWLXGoZ8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tQYmrKU06K2BKA+fvc9jmjVeTuz3LayUX0kx82ydCJcy8os7C8uCpQDRKVF0xKi28
-	 b0HrVT04tfqTdgd1Mb1iO2Uy/U9UIu+wyhQ0tAyx9U+KQ51r6f1B+DM1bQjyLlzwyg
-	 eCCbxjiU16nUtmjr8y/P6Kj5Dxa45IxYiw0kSpMI=
+	b=xNXzH7o4b3PtnDZebW9LQ7PYDo1ssGL2kR/EDkU03PxjWaZyqkE/vMWTlm/QVqmTK
+	 V8dcNUgMwc2mZyLTUutB5b40di0ozuvTEaJ/DVFOea/JHVeBJ60IdDnbAfE1uvFyn7
+	 G5gNJGGUteMF9SdcHIfJ424AH4a6Ix9SFEg7+z6o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730249AbgAVNVV (ORCPT
+        id S1730260AbgAVNVZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 08:21:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38150 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 08:21:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38252 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730200AbgAVNVS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 08:21:18 -0500
+        id S1729727AbgAVNVW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 08:21:22 -0500
 Received: from localhost (unknown [84.241.205.26])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B49382467B;
-        Wed, 22 Jan 2020 13:21:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 147DC205F4;
+        Wed, 22 Jan 2020 13:21:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579699278;
-        bh=zv2m0+Msco86uDoLUfkHwd61ijlq3Gp5aGpEuK8/KFo=;
+        s=default; t=1579699281;
+        bh=d8J1rWYqCKOvPSRzitqd/4NBLdFjcxJDpnPfWLXGoZ8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tbxdBUB779zn4AbOv4PA4y9VWUnymF+kfmL2i3kfleppXqtNi8P+70F/zBuyqXWNn
-         XmezljB0pCUTJ4E2ajUUixMsFZADZggI1XkQqg3kKtRKDqq5p91xWB8Zg7DHk4hiOC
-         +AT6hafRtGXOoDS0u3PQwVslUtpLwmgiiBjQE4w4=
+        b=ao65z1uO9U3LXki1KIzAI1dPDoLiOSDKuM1pEMJD9jwquAZBMsZwcVU0rpLj9qpFF
+         0N6J5kcvzCvT3dMxjMNBf0L67J38MjNxTa/FgaA6i4N32W++XA0O80OaKS0pKiETkT
+         IbMiLZOTbnrsF7S56TwJ1h+5Zi4vM7kBYcrnE36I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Anson Huang <Anson.Huang@nxp.com>,
         Shawn Guo <shawnguo@kernel.org>
-Subject: [PATCH 5.4 095/222] ARM: dts: imx6sl-evk: Remove incorrect power supply assignment
-Date:   Wed, 22 Jan 2020 10:28:01 +0100
-Message-Id: <20200122092840.541921944@linuxfoundation.org>
+Subject: [PATCH 5.4 096/222] ARM: dts: imx6sll-evk: Remove incorrect power supply assignment
+Date:   Wed, 22 Jan 2020 10:28:02 +0100
+Message-Id: <20200122092840.615035986@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200122092833.339495161@linuxfoundation.org>
 References: <20200122092833.339495161@linuxfoundation.org>
@@ -61,7 +61,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Anson Huang <Anson.Huang@nxp.com>
 
-commit b4eb9ef0e29cd28c6fd684e0ab77bda824acb20e upstream.
+commit 3479b2843c78ffb60247f522226ba68f93aee355 upstream.
 
 The vdd3p0 LDO's input should be from external USB VBUS directly, NOT
 PMIC's power supply, the vdd3p0 LDO's target output voltage can be
@@ -71,27 +71,27 @@ than the LDO target output voltage, it will return fail and skip the LDO
 voltage adjustment, so remove the power supply assignment for vdd3p0 to
 avoid such scenario.
 
-Fixes: 3feea8805d6f ("ARM: dts: imx6sl-evk: Assign corresponding power supply for LDOs")
+Fixes: 96a9169cf621 ("ARM: dts: imx6sll-evk: Assign corresponding power supply for vdd3p0")
 Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm/boot/dts/imx6sl-evk.dts |    4 ----
+ arch/arm/boot/dts/imx6sll-evk.dts |    4 ----
  1 file changed, 4 deletions(-)
 
---- a/arch/arm/boot/dts/imx6sl-evk.dts
-+++ b/arch/arm/boot/dts/imx6sl-evk.dts
-@@ -584,10 +584,6 @@
- 	vin-supply = <&sw2_reg>;
+--- a/arch/arm/boot/dts/imx6sll-evk.dts
++++ b/arch/arm/boot/dts/imx6sll-evk.dts
+@@ -265,10 +265,6 @@
+ 	status = "okay";
  };
  
--&reg_vdd3p0 {
+-&reg_3p0 {
 -	vin-supply = <&sw2_reg>;
 -};
 -
- &reg_vdd2p5 {
- 	vin-supply = <&sw2_reg>;
+ &snvs_poweroff {
+ 	status = "okay";
  };
 
 
