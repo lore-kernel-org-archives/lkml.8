@@ -4,48 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0232C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:37:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BCA4C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:37:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6B842467B
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:37:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D6B82467E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:37:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579685871;
-	bh=o64mhM6k92BdbsbuxILfR/eSSMZ+l+VfMkricKBtRHI=;
+	s=default; t=1579685874;
+	bh=GPdTpONVAoS5bRlpiLav4WH2cZTWfYVCNy9oGRHurC0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ms82FfTxqF0qiCjqmUPqGpCyTEnAKo9nxrmwcP5/YMDA9RcMDYerRvAj9WUxwuNRM
-	 1169Jg663d0HaY2KYUGckrOoiBgii/1LBnMF7iSvvQxH/pYQ4QZaUqn3biOBvzt1ck
-	 trUrbpGmeTHKAT4ETxa58zraq6uwyNh9gKf+ypuY=
+	b=sg7mNT/ladxl/udWup77F3F16LvsLRuiI80QeSzVC+1jAfsM9CmBBilRQBl9U1g8e
+	 nOeXnVue+FfodjqFm7PaGRwDm62CLA+zgcypsDlCIjHUYLJ0VMo+nNOkNqb3DH84+7
+	 E3oKgObt8neDlda+mNg0GxdGcaQeLzRzqy9Nw7FQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732741AbgAVJhu (ORCPT
+        id S1732206AbgAVJhx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 04:37:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54012 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 04:37:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54086 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732686AbgAVJhs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 04:37:48 -0500
+        id S1732725AbgAVJhu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 04:37:50 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2B82824683;
-        Wed, 22 Jan 2020 09:37:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 94BC624692;
+        Wed, 22 Jan 2020 09:37:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579685867;
-        bh=o64mhM6k92BdbsbuxILfR/eSSMZ+l+VfMkricKBtRHI=;
+        s=default; t=1579685870;
+        bh=GPdTpONVAoS5bRlpiLav4WH2cZTWfYVCNy9oGRHurC0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=onZ+YLyOj8Psh3jRElsjzoGBFdAR0ZN2v7HudV4Z4N9WDwnfMvfV3NPIJALOBTg8D
-         S2o1m53XOs3hLgpCJlEG3f2qcMSipnvsqgsXmPHszQckIkVdA74wGKIi4Zzgeko6HL
-         d5qRUhcoWzA49uprff1JfgfHATYNi3ebflWzd7fM=
+        b=Hne3rMUqnhYdobmZrVwcWgTwBlEY/ZwzoilVJMQwbkrxgQpbmAIIr2l8RlcG5Brwi
+         V62U9V8d02xUjSf6QlLGq67n4ZOrAoXMdQHb6o0sbxpkXjXuluwDk4eti+82AdBG1i
+         hcfOgRIkngOxLb2ROVnuYrqyzaqcnJHZWXHnVyLg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Johan Hovold <johan@kernel.org>
-Subject: [PATCH 4.14 15/65] USB: serial: io_edgeport: add missing active-port sanity check
-Date:   Wed, 22 Jan 2020 10:29:00 +0100
-Message-Id: <20200122092753.268216419@linuxfoundation.org>
+Subject: [PATCH 4.14 16/65] USB: serial: keyspan: handle unbound ports
+Date:   Wed, 22 Jan 2020 10:29:01 +0100
+Message-Id: <20200122092753.412168453@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200122092750.976732974@linuxfoundation.org>
 References: <20200122092750.976732974@linuxfoundation.org>
@@ -60,13 +60,14 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Johan Hovold <johan@kernel.org>
 
-commit 1568c58d11a7c851bd09341aeefd6a1c308ac40d upstream.
+commit 3018dd3fa114b13261e9599ddb5656ef97a1fa17 upstream.
 
-The driver receives the active port number from the device, but never
-made sure that the port number was valid. This could lead to a
-NULL-pointer dereference or memory corruption in case a device sends
-data for an invalid port.
+Check for NULL port data in the control URB completion handlers to avoid
+dereferencing a NULL pointer in the unlikely case where a port device
+isn't bound to a driver (e.g. after an allocation failure on port
+probe()).
 
+Fixes: 0ca1268e109a ("USB Serial Keyspan: add support for USA-49WG & USA-28XG")
 Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
 Cc: stable <stable@vger.kernel.org>
 Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
@@ -74,51 +75,28 @@ Signed-off-by: Johan Hovold <johan@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/serial/io_edgeport.c |   12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
+ drivers/usb/serial/keyspan.c |    4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/drivers/usb/serial/io_edgeport.c
-+++ b/drivers/usb/serial/io_edgeport.c
-@@ -1733,7 +1733,8 @@ static void edge_break(struct tty_struct
- static void process_rcvd_data(struct edgeport_serial *edge_serial,
- 				unsigned char *buffer, __u16 bufferLength)
- {
--	struct device *dev = &edge_serial->serial->dev->dev;
-+	struct usb_serial *serial = edge_serial->serial;
-+	struct device *dev = &serial->dev->dev;
- 	struct usb_serial_port *port;
- 	struct edgeport_port *edge_port;
- 	__u16 lastBufferLength;
-@@ -1838,9 +1839,8 @@ static void process_rcvd_data(struct edg
+--- a/drivers/usb/serial/keyspan.c
++++ b/drivers/usb/serial/keyspan.c
+@@ -1062,6 +1062,8 @@ static void	usa49_glocont_callback(struc
+ 	for (i = 0; i < serial->num_ports; ++i) {
+ 		port = serial->port[i];
+ 		p_priv = usb_get_serial_port_data(port);
++		if (!p_priv)
++			continue;
  
- 			/* spit this data back into the tty driver if this
- 			   port is open */
--			if (rxLen) {
--				port = edge_serial->serial->port[
--							edge_serial->rxPort];
-+			if (rxLen && edge_serial->rxPort < serial->num_ports) {
-+				port = serial->port[edge_serial->rxPort];
- 				edge_port = usb_get_serial_port_data(port);
- 				if (edge_port->open) {
- 					dev_dbg(dev, "%s - Sending %d bytes to TTY for port %d\n",
-@@ -1850,8 +1850,8 @@ static void process_rcvd_data(struct edg
- 							rxLen);
- 					edge_port->port->icount.rx += rxLen;
- 				}
--				buffer += rxLen;
- 			}
-+			buffer += rxLen;
- 			break;
+ 		if (p_priv->resend_cont) {
+ 			dev_dbg(&port->dev, "%s - sending setup\n", __func__);
+@@ -1463,6 +1465,8 @@ static void usa67_glocont_callback(struc
+ 	for (i = 0; i < serial->num_ports; ++i) {
+ 		port = serial->port[i];
+ 		p_priv = usb_get_serial_port_data(port);
++		if (!p_priv)
++			continue;
  
- 		case EXPECT_HDR3:	/* Expect 3rd byte of status header */
-@@ -1886,6 +1886,8 @@ static void process_rcvd_status(struct e
- 	__u8 code = edge_serial->rxStatusCode;
- 
- 	/* switch the port pointer to the one being currently talked about */
-+	if (edge_serial->rxPort >= edge_serial->serial->num_ports)
-+		return;
- 	port = edge_serial->serial->port[edge_serial->rxPort];
- 	edge_port = usb_get_serial_port_data(port);
- 	if (edge_port == NULL) {
+ 		if (p_priv->resend_cont) {
+ 			dev_dbg(&port->dev, "%s - sending setup\n", __func__);
 
 
