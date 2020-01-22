@@ -2,145 +2,81 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CB67C33CB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 10:02:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0879C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 10:03:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D741424689
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 10:02:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579687358;
-	bh=bXJa9/ehI557VR02VAEfl87szjCN/9Bu7RzNrVVWWwY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=KtfVtPyJOdcHdWFDF0aUbAfze7bMsTiC7VdoBx8KYmh2crrjNY5E+SPyQM3QK4Uwl
-	 OB93ZHUKaSdacMVxRqSfH4kNhXQWFOpvjZ+rqO77fLo3+fsTO3gkwoP0i1ANYmqf3v
-	 GEKgB/azwlJjJE6gkwm8XhIHgBicJarjGVDc08r8=
+	by mail.kernel.org (Postfix) with ESMTP id 8D45A2467B
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 10:03:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729239AbgAVKCi (ORCPT
+        id S1729304AbgAVKD4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 05:02:38 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:36623 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726077AbgAVKCh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 05:02:37 -0500
-Received: by mail-wr1-f66.google.com with SMTP id z3so6597601wru.3;
-        Wed, 22 Jan 2020 02:02:36 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=H8XhF6Ngu9Vwt38nvy+ftPac/fSxaXbICn0o+rbDDDg=;
-        b=nI+RS735fyKg8/2KcWbPJLMNJ3J5BbmsJx4UeILp9BOSZswOb0R2mqhYNyByuhyOxs
-         iaenu4Yv1EigRIm+ch4egx2Y7So8RSb0X5HG73hGj81yoUjXmVkiyBrMq0Kk6nCd917B
-         hvYUY83MZ3u55kzhnk0L3Ri5t46mnSr4le9z5BkzY0HDs7J71BhwlOQDlDSLO53DNStx
-         Tzo8w7cxgH7YKhi7b2NPwsiXY6zY4CaW0rySrVQ1DGofzEpY4K2+rdLxKAarZ+WIE2f7
-         U6MWiYzMrA853R3uR7oi70ZMEF3eGE7yeofBLCdarz+SB9XaDypIVEZMD9g5ZvivBjaB
-         HOVQ==
-X-Gm-Message-State: APjAAAW6seqcZ/bDfu/VoCpIeUnE3o/uvXFcB3zTUvlRci9p6zaI3mae
-        2EuHelREFeaYgomn5qLYvAQ=
-X-Google-Smtp-Source: APXvYqyT2NvfPYkTXHh62H4Ev4LdAPB2JSAFEoO2hSMYIIxwxdO8P1N2iIb/ahPKYIZS3HNKi6gS0A==
-X-Received: by 2002:adf:dd52:: with SMTP id u18mr10148805wrm.131.1579687355474;
-        Wed, 22 Jan 2020 02:02:35 -0800 (PST)
-Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
-        by smtp.gmail.com with ESMTPSA id q3sm3128551wmc.47.2020.01.22.02.02.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Jan 2020 02:02:34 -0800 (PST)
-Date:   Wed, 22 Jan 2020 11:02:33 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     SeongJae Park <sjpark@amazon.com>
-Cc:     Minchan Kim <minchan@kernel.org>, sspatil@google.com,
-        kirill@shutemov.name, akpm@linux-foundation.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-api@vger.kernel.org, oleksandr@redhat.com, surenb@google.com,
-        timmurray@google.com, dancol@google.com, sonnyrao@google.com,
-        bgeffon@google.com, hannes@cmpxchg.org, shakeelb@google.com,
-        joaodias@google.com, ktkhai@virtuozzo.com,
-        christian.brauner@ubuntu.com, sjpark@amazon.de
-Subject: Re: Re: [PATCH v2 2/5] mm: introduce external memory hinting API
-Message-ID: <20200122100233.GT29276@dhcp22.suse.cz>
-References: <20200122082853.GS29276@dhcp22.suse.cz>
- <20200122093624.14799-1-sjpark@amazon.com>
+        Wed, 22 Jan 2020 05:03:56 -0500
+Received: from foss.arm.com ([217.140.110.172]:54282 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729047AbgAVKD4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 05:03:56 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BEA221FB;
+        Wed, 22 Jan 2020 02:03:53 -0800 (PST)
+Received: from e119884-lin.cambridge.arm.com (e119884-lin.cambridge.arm.com [10.1.196.72])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 17FD73F68E;
+        Wed, 22 Jan 2020 02:03:52 -0800 (PST)
+From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
+To:     masahiroy@kernel.org
+Cc:     linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
+        vincenzo.frascino@arm.com
+Subject: [PATCH] kconfig: Sanitize make randconfig generated .config
+Date:   Wed, 22 Jan 2020 10:03:44 +0000
+Message-Id: <20200122100344.50751-1-vincenzo.frascino@arm.com>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200122093624.14799-1-sjpark@amazon.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 22-01-20 10:36:24, SeongJae Park wrote:
-> On Wed, 22 Jan 2020 09:28:53 +0100 Michal Hocko <mhocko@kernel.org> wrote:
-> 
-> > On Tue 21-01-20 10:32:12, Minchan Kim wrote:
-> > > On Mon, Jan 20, 2020 at 08:58:25AM +0100, Michal Hocko wrote:
-> > [...]
-> > > > The interface really has to be robust to future potential usecases.
-> > > 
-> > > I do understand your concern but for me, it's chicken and egg problem.
-> > > We usually do best effort to make something perfect as far as possible
-> > > but we also don't do over-engineering without real usecase from the
-> > > beginning.
-> > > 
-> > > I already told you how we could synchronize among processes and potential
-> > > way to be extended Daniel suggested(That's why current API has extra field
-> > > for the cookie) even though we don't need it right now.
-> > 
-> > If you can synchronize with the target task then you do not need a
-> > remote interface. Just use ptrace and you are done with it.
-> > 
-> > > If you want to suggest the other way, please explain why your idea is
-> > > better and why we need it at this moment.
-> > 
-> > I believe I have explained my concerns and why they matter. All you are
-> > saying is that you do not care because your particular usecase doesn't
-> > care. And that is a first signal of a future disaster when we end up
-> > with a broken and unfixable interface we have to maintain for ever.
-> > 
-> > I will not go as far as to nack this but you should seriously think
-> > about other potential usecases and how they would work and what we are
-> > going to do when a first non-cooperative userspace memory management
-> > usecase materializes.
-> 
-> Beside of the specific environment of Android, I think there are many ways to
-> know the address space layout and access patterns of other processes.  The
-> idle_page_tracking might be an example that widelay available.
-> 
-> Of course, the information might not strictly correct due to the timing issue,
-> but could be still worth to be used under some extreme situations, such as
-> memory pressure or fragmentation.  For the same reason, ptrace() would not be
-> sufficient, as we have no perfect control, but only some level of control that
-> would be useful under specific situations.
+"make randconfig" calculates the probability of a tristate option (yes,
+mod, no) based on srand()/rand() and can be fed with a seed.
+At the last step of randconfig some option are chosen randomly and their
+tristate set based on similar mechanism.
+After this passage the resulting .config is not sanitized, hence it
+might result in an inconsistent set of options being selected.
 
-I am not sure I see your point. I am talking about races where a remote
-task is operating on a completely different object because the one it
-checked for has been unmapped and new one mapped over it. Memory
-pressure or a fragmentation will not change the object itself. Sure the
-memory might be reclaimed but that should be completely OK unless I am
-missing something.
+This was noticed on arm64 using KCONFIG_SEED=0x40C5E904. During
+randomize_choice_values() CONFIG_BIG_ENDIAN is enabled. Since CONFIG_EFI
+was enabled at a previous step, and depends on !CONFIG_BIG_ENDIAN the
+resulting .config is inconsistent.
 
-> I assume the users of this systemcall would understand the tradeoff and make
-> decisions.
+Fix the issue making sure that randconfig sanitizes the generated
+.config as a last step.
 
-I disagree. My experience tells me that users tend to squeeze the
-maximum and beyond and hope they get what they want.
+Cc: Masahiro Yamada <masahiroy@kernel.org>
+Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
+---
+ scripts/kconfig/conf.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-> Also, as the users already have the right to do the tradeoff, I
-> think it's fair.  In other words, I think the caller has both the power and the
-> responsibility to deal with the time-to-check-time-to-react problem.
-> 
-> Nonetheless, I also agree this is important concern and the patch would be
-> better if it adds more detailed documentation regarding this issue.
-
-If there is _really_ a strong consensus that the racy interface is
-reasonable then it absolutely has to be described with a clearly state
-that those races might result in hard to predict behavior unless all
-tasks sharing the address space are blocked between the check and the
-madvise call.
+diff --git a/scripts/kconfig/conf.c b/scripts/kconfig/conf.c
+index 1f89bf1558ce..c0fcaa4e9762 100644
+--- a/scripts/kconfig/conf.c
++++ b/scripts/kconfig/conf.c
+@@ -654,6 +654,11 @@ int main(int ac, char **av)
+ 	case randconfig:
+ 		/* Really nothing to do in this loop */
+ 		while (conf_set_all_new_symbols(def_random)) ;
++		/*
++		 * .config at this point might contain
++		 * incompatible options. Sanitize it.
++		 */
++		sym_clear_all_valid();
+ 		break;
+ 	case defconfig:
+ 		conf_set_all_new_symbols(def_default);
 -- 
-Michal Hocko
-SUSE Labs
+2.25.0
+
