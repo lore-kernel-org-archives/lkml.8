@@ -7,45 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9522C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:51:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F874C33CB8
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:51:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77D1B2467B
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:51:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42AB32468F
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:51:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579686705;
-	bh=VduW93Y0Qt9OjW9JLQTSDDgaDytptO9GJJ+sjcxCw08=;
+	s=default; t=1579686711;
+	bh=0oVE52zL6GJ9e+7w58+ti/f/AmU2UEGHs4+W8Fw55n0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gmF/d7+6ZtrZwIvOS6mLLYJIBD1QcQYQLZxWMO4eP5/mfa6jl/IvoOVeDUn/vtMIZ
-	 3pKF5gOdw6ib7Dfocr/5ve4X/XvRyV9WukO1dMYQO2XfowhZWq31NUkxzN/VEEoXJK
-	 leYMcaKpS4LinmjBGjAYWNexH2g/Stj+MtxTjWrY=
+	b=YibgHyWSLZ78odFqElm9X+yQpPUj3LFqPFP9Ke2bQuToelNDrIxTAWZvXaF0Hn8uT
+	 RkmFg2PKnqODRUlvB1Z8Xi1wNTVjR8d3nmclsfbz+UCB3f/t+apZmg4XTWOKtDprdY
+	 zPtkn81Vf30Hofwvf4DybYbSg+xzC5Tr15Ww/GYM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732814AbgAVJvo (ORCPT
+        id S1732306AbgAVJhD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 04:51:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52970 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 04:37:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52778 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732387AbgAVJhG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 04:37:06 -0500
+        id S1732274AbgAVJg7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 04:36:59 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A46052467E;
-        Wed, 22 Jan 2020 09:37:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 80A3924687;
+        Wed, 22 Jan 2020 09:36:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579685826;
-        bh=VduW93Y0Qt9OjW9JLQTSDDgaDytptO9GJJ+sjcxCw08=;
+        s=default; t=1579685819;
+        bh=0oVE52zL6GJ9e+7w58+ti/f/AmU2UEGHs4+W8Fw55n0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2JTWW9wEv2YediYJURlmiN+Of+57kcB0nIi/uvy8zZvfIJA55I7GABMh9vM5EiO+p
-         uWuCGnCBRM+UERqt+4pNzelUixONhP9iBHrTMhm3uTNxkk7+Y6BwFWLsrBjLaiQxIX
-         COVugq82lNx/dXD7GlV3eL+BxV3P1YVBc6IiJHVc=
+        b=CaHBeMvyrEkN65/lC4fcZKDZ6UkLcOy8dRTKRumsuCLqqV/XU33K67gDE1zzV2FuQ
+         De3v2FpQj/CS/K0zx4Zk9Kba2lYuA9ZRCBj76twTY8n3gbmgiyYFSfspSaVBWAcZ7l
+         E3Ul/SSFEnAjEovlqFdRQ2GhxAmcOAkQDBzvjJNo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>
-Subject: [PATCH 4.9 59/97] USB: serial: suppress driver bind attributes
-Date:   Wed, 22 Jan 2020 10:29:03 +0100
-Message-Id: <20200122092805.915683644@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?Lars=20M=C3=B6llendorf?= <lars.moellendorf@plating.de>,
+        Lars-Peter Clausen <lars@metafoo.de>, Stable@vger.kernel.org,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: [PATCH 4.9 56/97] iio: buffer: align the size of scan bytes to size of the largest element
+Date:   Wed, 22 Jan 2020 10:29:00 +0100
+Message-Id: <20200122092805.443292933@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200122092755.678349497@linuxfoundation.org>
 References: <20200122092755.678349497@linuxfoundation.org>
@@ -58,41 +61,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+From: Lars Möllendorf <lars.moellendorf@plating.de>
 
-commit fdb838efa31e1ed9a13ae6ad0b64e30fdbd00570 upstream.
+commit 883f616530692d81cb70f8a32d85c0d2afc05f69 upstream.
 
-USB-serial drivers must not be unbound from their ports before the
-corresponding USB driver is unbound from the parent interface so
-suppress the bind and unbind attributes.
+Previous versions of `iio_compute_scan_bytes` only aligned each element
+to its own length (i.e. its own natural alignment). Because multiple
+consecutive sets of scan elements are buffered this does not work in
+case the computed scan bytes do not align with the natural alignment of
+the first scan element in the set.
 
-Unbinding a serial driver while it's port is open is a sure way to
-trigger a crash as any driver state is released on unbind while port
-hangup is handled on the parent USB interface level. Drivers for
-multiport devices where ports share a resource such as an interrupt
-endpoint also generally cannot handle individual ports going away.
+This commit fixes this by aligning the scan bytes to the natural
+alignment of the largest scan element in the set.
 
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Cc: stable <stable@vger.kernel.org>
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Johan Hovold <johan@kernel.org>
+Fixes: 959d2952d124 ("staging:iio: make iio_sw_buffer_preenable much more general.")
+Signed-off-by: Lars Möllendorf <lars.moellendorf@plating.de>
+Reviewed-by: Lars-Peter Clausen <lars@metafoo.de>
+Cc: <Stable@vger.kernel.org>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/serial/usb-serial.c |    3 +++
- 1 file changed, 3 insertions(+)
+ drivers/iio/industrialio-buffer.c |    6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
---- a/drivers/usb/serial/usb-serial.c
-+++ b/drivers/usb/serial/usb-serial.c
-@@ -1351,6 +1351,9 @@ static int usb_serial_register(struct us
- 		return -EINVAL;
+--- a/drivers/iio/industrialio-buffer.c
++++ b/drivers/iio/industrialio-buffer.c
+@@ -546,7 +546,7 @@ static int iio_compute_scan_bytes(struct
+ 				const unsigned long *mask, bool timestamp)
+ {
+ 	unsigned bytes = 0;
+-	int length, i;
++	int length, i, largest = 0;
+ 
+ 	/* How much space will the demuxed element take? */
+ 	for_each_set_bit(i, mask,
+@@ -554,13 +554,17 @@ static int iio_compute_scan_bytes(struct
+ 		length = iio_storage_bytes_for_si(indio_dev, i);
+ 		bytes = ALIGN(bytes, length);
+ 		bytes += length;
++		largest = max(largest, length);
  	}
  
-+	/* Prevent individual ports from being unbound. */
-+	driver->driver.suppress_bind_attrs = true;
+ 	if (timestamp) {
+ 		length = iio_storage_bytes_for_timestamp(indio_dev);
+ 		bytes = ALIGN(bytes, length);
+ 		bytes += length;
++		largest = max(largest, length);
+ 	}
 +
- 	usb_serial_operations_init(driver);
++	bytes = ALIGN(bytes, largest);
+ 	return bytes;
+ }
  
- 	/* Add this device to our list of devices */
 
 
