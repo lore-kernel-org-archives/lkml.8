@@ -7,49 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1469C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:50:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33B9CC33CB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:50:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A69602467C
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:50:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01CF32467C
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:50:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579686608;
-	bh=gOoqDapAgWemltSr8xNI+gVi5z+jdsz65BF+ESTxLRo=;
+	s=default; t=1579686615;
+	bh=DtwRVVqTyZbpxbz99B6ySyjw+czejKuHgMCK2ACEiqE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ayIojQtw9UEEV+CAhaMTxLowBXSQgZB0sLw4JkKSnhFFOOcgLa4wMPOoM93dI/rCY
-	 mqblJVX1nwdIVwJ6AEaHgOjYdwJ4bhoo6+DmPX3M4uVnvNefZq2OG2eLrh4EGhQ9tu
-	 74Dd8I0Ekl8bPfn5mSDvXCkDyK/iharIr35x8fM4=
+	b=Me3rPjAgGVnmbIlC5+rlHfMpcIwXY8O7DkXSAObdMFIApC5O/scImqwuwOn4YJVVT
+	 JTdvvptoss93VO/XpncBmSrQwMeD6TKvuqm0zOjYsRIT4VbYK2VBW/wb7z+UXtTCcF
+	 D571W4WvQ5iT/E4RbSmIpFaUbvI8HDvELMFYtwGM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731404AbgAVJuH (ORCPT
+        id S1733110AbgAVJit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 04:50:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55976 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 04:38:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55620 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732216AbgAVJiw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 04:38:52 -0500
+        id S1731921AbgAVJij (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 04:38:39 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EAC682467F;
-        Wed, 22 Jan 2020 09:38:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 94AF424680;
+        Wed, 22 Jan 2020 09:38:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579685931;
-        bh=gOoqDapAgWemltSr8xNI+gVi5z+jdsz65BF+ESTxLRo=;
+        s=default; t=1579685919;
+        bh=DtwRVVqTyZbpxbz99B6ySyjw+czejKuHgMCK2ACEiqE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=j+7MicaACCjkAQO1uSZP3P3QyD+NETLlOuYqLM4bnhAaXENhRd+gOeBboaqP7iOxn
-         GyTabsLLO8+F9uc9EyoHuz1ZYmO5KoCYf/4B5/Cg9ck4Ye9cHQTL90SIxeeBYzZBDq
-         1nNB3ua/Uxk6bEqdMrkF5gYQq58NCFxeWWWOnhBI=
+        b=K0pvfT1rJDBBGbUKrG5+mk4ohwNvJBjx6FKP6ZPFx5UFUVHM1JWasHCIDtHrndJe2
+         CpS3W50B2yaHpGVtxpioEv0cPhQSm6cTcEY7+h+NoczMOBp9Wn9K3dReqmpQdDL3KI
+         3NDvnewSbvMoxCjCQ2zs0qLjSWgK3HOU1iwFsyoU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        Jurgen Van Ham <juvanham@gmail.com>,
-        Matteo Croce <mcroce@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 41/65] macvlan: use skb_reset_mac_header() in macvlan_queue_xmit()
-Date:   Wed, 22 Jan 2020 10:29:26 +0100
-Message-Id: <20200122092756.869503775@linuxfoundation.org>
+        stable@vger.kernel.org, Felix Fietkau <nbd@nbd.name>,
+        Johannes Berg <johannes.berg@intel.com>
+Subject: [PATCH 4.14 36/65] cfg80211: fix page refcount issue in A-MSDU decap
+Date:   Wed, 22 Jan 2020 10:29:21 +0100
+Message-Id: <20200122092756.021562257@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200122092750.976732974@linuxfoundation.org>
 References: <20200122092750.976732974@linuxfoundation.org>
@@ -62,49 +59,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Felix Fietkau <nbd@nbd.name>
 
-[ Upstream commit 1712b2fff8c682d145c7889d2290696647d82dab ]
+commit 81c044fc3bdc5b7be967cd3682528ea94b58c06a upstream.
 
-I missed the fact that macvlan_broadcast() can be used both
-in RX and TX.
+The fragments attached to a skb can be part of a compound page. In that case,
+page_ref_inc will increment the refcount for the wrong page. Fix this by
+using get_page instead, which calls page_ref_inc on the compound head and
+also checks for overflow.
 
-skb_eth_hdr() makes only sense in TX paths, so we can not
-use it blindly in macvlan_broadcast()
+Fixes: 2b67f944f88c ("cfg80211: reuse existing page fragments in A-MSDU rx")
+Cc: stable@vger.kernel.org
+Signed-off-by: Felix Fietkau <nbd@nbd.name>
+Link: https://lore.kernel.org/r/20200113182107.20461-1-nbd@nbd.name
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Fixes: 96cc4b69581d ("macvlan: do not assume mac_header is set in macvlan_broadcast()")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: Jurgen Van Ham <juvanham@gmail.com>
-Tested-by: Matteo Croce <mcroce@redhat.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/macvlan.c |    5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ net/wireless/util.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/net/macvlan.c
-+++ b/drivers/net/macvlan.c
-@@ -263,7 +263,7 @@ static void macvlan_broadcast(struct sk_
- 			      struct net_device *src,
- 			      enum macvlan_mode mode)
- {
--	const struct ethhdr *eth = skb_eth_hdr(skb);
-+	const struct ethhdr *eth = eth_hdr(skb);
- 	const struct macvlan_dev *vlan;
- 	struct sk_buff *nskb;
- 	unsigned int i;
-@@ -515,10 +515,11 @@ static int macvlan_queue_xmit(struct sk_
- 	const struct macvlan_dev *dest;
+--- a/net/wireless/util.c
++++ b/net/wireless/util.c
+@@ -652,7 +652,7 @@ __frame_add_frag(struct sk_buff *skb, st
+ 	struct skb_shared_info *sh = skb_shinfo(skb);
+ 	int page_offset;
  
- 	if (vlan->mode == MACVLAN_MODE_BRIDGE) {
--		const struct ethhdr *eth = (void *)skb->data;
-+		const struct ethhdr *eth = skb_eth_hdr(skb);
- 
- 		/* send to other bridge ports directly */
- 		if (is_multicast_ether_addr(eth->h_dest)) {
-+			skb_reset_mac_header(skb);
- 			macvlan_broadcast(skb, port, dev, MACVLAN_MODE_BRIDGE);
- 			goto xmit_world;
- 		}
+-	page_ref_inc(page);
++	get_page(page);
+ 	page_offset = ptr - page_address(page);
+ 	skb_add_rx_frag(skb, sh->nr_frags, page, page_offset, len, size);
+ }
 
 
