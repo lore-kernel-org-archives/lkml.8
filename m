@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-5.7 required=3.0 tests=DATE_IN_PAST_03_06,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34FABC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:26:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3146C33CB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:26:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0087C2467F
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:26:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7864F2467F
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:26:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579699588;
-	bh=Q7t6sfTX9dJl8KPxGs9eW4J5qsuJ70qm/uUg4A9JZ0c=;
+	s=default; t=1579699590;
+	bh=8QijUBSXZsydj3NB/meNkcDErESmAxv0joTQ/EXXFJs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YyY1082QBg9pt3gs+X1gkKwZQhGaYRCdtx64SpnuIMvsnhe11+ws2WNFfKu18jcQJ
-	 nPV90LLisi1rUCdrOD1lLb84CBvugT3cE8LDci/YwHosyamTxeTS8So1dzhB9/8kb2
-	 AKrJfijLt3Z+fXDN6XoLO0NGTekqUEBku4OCl+HI=
+	b=lOg1IbklvDzv+8J6l2EmSDbtWolhWmBDWszcHCPF1YQtGBydZcB13HkaA4DKlPv8g
+	 SGCtBv3aZ0j3mPGP/SewOo7EYmaKoBYxfQ3kcwj1bMmnra+uGO25qMSKysftjBuiFl
+	 GPUgGVgzlRUFNiERAckLHtGCW2KM2ipsZCUQAD5I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731225AbgAVN01 (ORCPT
+        id S1731615AbgAVN03 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 08:26:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47050 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 08:26:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47240 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730845AbgAVN0V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 08:26:21 -0500
+        id S1730958AbgAVN02 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 08:26:28 -0500
 Received: from localhost (unknown [84.241.205.26])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7CAFE2467B;
-        Wed, 22 Jan 2020 13:26:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DB53B2467B;
+        Wed, 22 Jan 2020 13:26:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579699581;
-        bh=Q7t6sfTX9dJl8KPxGs9eW4J5qsuJ70qm/uUg4A9JZ0c=;
+        s=default; t=1579699587;
+        bh=8QijUBSXZsydj3NB/meNkcDErESmAxv0joTQ/EXXFJs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=W7C+5VVmq8iVcLc3q7LFCmMeTk7w5twnavw8wmoPkPVb6ERg+CTcklSMPEfAoNX2O
-         cDTnMHsDp9i5R4KQ6pQ3C4A7WArHY2S5tEquyw5xDT1oP0fORW4uFjnmDJbWBKIha6
-         cVGReFpEiwythJ/TPIjmSZIByoYc419cMk3/uZYE=
+        b=lSCzDVB1MRIgcOqsjZMWaFbqk3768K75TQPJGoQbTub/1fezSWs1DjHJVWOuxf5J6
+         4zQ1tN8yKGmfC4NeJf0KBqo1phDwJIUBhLs2VvilkUl8RxejchtflpxyuZ61PhIMFr
+         DtC246SeELPaj2/nTs9K1/om22EIBx3CbBZyetec=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Shengjiu Wang <shengjiu.wang@nxp.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        Shawn Guo <shawnguo@kernel.org>
-Subject: [PATCH 5.4 185/222] arm64: dts: imx8mm-evk: Assigned clocks for audio plls
-Date:   Wed, 22 Jan 2020 10:29:31 +0100
-Message-Id: <20200122092846.933959096@linuxfoundation.org>
+        stable@vger.kernel.org, Marc Smith <msmith626@gmail.com>,
+        Michael Chan <michael.chan@broadcom.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.4 151/222] bnxt_en: Do not treat DSN (Digital Serial Number) read failure as fatal.
+Date:   Wed, 22 Jan 2020 10:28:57 +0100
+Message-Id: <20200122092844.536923917@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200122092833.339495161@linuxfoundation.org>
 References: <20200122092833.339495161@linuxfoundation.org>
@@ -60,60 +60,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: S.j. Wang <shengjiu.wang@nxp.com>
+From: Michael Chan <michael.chan@broadcom.com>
 
-commit e8b395b23643ca26e62a3081130d895e198c6154 upstream.
+[ Upstream commit d061b2411d5f3d6272187ab734ce0640827fca13 ]
 
-Assign clocks and clock-rates for audio plls, that audio
-drivers can utilize them.
+DSN read can fail, for example on a kdump kernel without PCIe extended
+config space support.  If DSN read fails, don't set the
+BNXT_FLAG_DSN_VALID flag and continue loading.  Check the flag
+to see if the stored DSN is valid before using it.  Only VF reps
+creation should fail without valid DSN.
 
-Add dai-tdm-slot-num and dai-tdm-slot-width for sound-wm8524,
-that sai driver can generate correct bit clock.
-
-Fixes: 13f3b9fdef6c ("arm64: dts: imx8mm-evk: Enable audio codec wm8524")
-Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
-Reviewed-by: Daniel Baluta <daniel.baluta@nxp.com>
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+Fixes: 03213a996531 ("bnxt: move bp->switch_id initialization to PF probe")
+Reported-by: Marc Smith <msmith626@gmail.com>
+Signed-off-by: Michael Chan <michael.chan@broadcom.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- arch/arm64/boot/dts/freescale/imx8mm-evk.dts |    2 ++
- arch/arm64/boot/dts/freescale/imx8mm.dtsi    |    8 ++++++--
- 2 files changed, 8 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/broadcom/bnxt/bnxt.c     |    7 +++----
+ drivers/net/ethernet/broadcom/bnxt/bnxt.h     |    1 +
+ drivers/net/ethernet/broadcom/bnxt/bnxt_vfr.c |    3 +++
+ 3 files changed, 7 insertions(+), 4 deletions(-)
 
---- a/arch/arm64/boot/dts/freescale/imx8mm-evk.dts
-+++ b/arch/arm64/boot/dts/freescale/imx8mm-evk.dts
-@@ -62,6 +62,8 @@
+--- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
++++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
+@@ -11299,7 +11299,7 @@ int bnxt_get_port_parent_id(struct net_d
+ 		return -EOPNOTSUPP;
  
- 		cpudai: simple-audio-card,cpu {
- 			sound-dai = <&sai3>;
-+			dai-tdm-slot-num = <2>;
-+			dai-tdm-slot-width = <32>;
- 		};
+ 	/* The PF and it's VF-reps only support the switchdev framework */
+-	if (!BNXT_PF(bp))
++	if (!BNXT_PF(bp) || !(bp->flags & BNXT_FLAG_DSN_VALID))
+ 		return -EOPNOTSUPP;
  
- 		simple-audio-card,codec {
---- a/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-@@ -479,14 +479,18 @@
- 						<&clk IMX8MM_CLK_AUDIO_AHB>,
- 						<&clk IMX8MM_CLK_IPG_AUDIO_ROOT>,
- 						<&clk IMX8MM_SYS_PLL3>,
--						<&clk IMX8MM_VIDEO_PLL1>;
-+						<&clk IMX8MM_VIDEO_PLL1>,
-+						<&clk IMX8MM_AUDIO_PLL1>,
-+						<&clk IMX8MM_AUDIO_PLL2>;
- 				assigned-clock-parents = <&clk IMX8MM_SYS_PLL3_OUT>,
- 							 <&clk IMX8MM_SYS_PLL1_800M>;
- 				assigned-clock-rates = <0>,
- 							<400000000>,
- 							<400000000>,
- 							<750000000>,
--							<594000000>;
-+							<594000000>,
-+							<393216000>,
-+							<361267200>;
- 			};
+ 	ppid->id_len = sizeof(bp->switch_id);
+@@ -11691,6 +11691,7 @@ static int bnxt_pcie_dsn_get(struct bnxt
+ 	put_unaligned_le32(dw, &dsn[0]);
+ 	pci_read_config_dword(pdev, pos + 4, &dw);
+ 	put_unaligned_le32(dw, &dsn[4]);
++	bp->flags |= BNXT_FLAG_DSN_VALID;
+ 	return 0;
+ }
  
- 			src: reset-controller@30390000 {
+@@ -11802,9 +11803,7 @@ static int bnxt_init_one(struct pci_dev
+ 
+ 	if (BNXT_PF(bp)) {
+ 		/* Read the adapter's DSN to use as the eswitch switch_id */
+-		rc = bnxt_pcie_dsn_get(bp, bp->switch_id);
+-		if (rc)
+-			goto init_err_pci_clean;
++		bnxt_pcie_dsn_get(bp, bp->switch_id);
+ 	}
+ 
+ 	/* MTU range: 60 - FW defined max */
+--- a/drivers/net/ethernet/broadcom/bnxt/bnxt.h
++++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.h
+@@ -1510,6 +1510,7 @@ struct bnxt {
+ 	#define BNXT_FLAG_NO_AGG_RINGS	0x20000
+ 	#define BNXT_FLAG_RX_PAGE_MODE	0x40000
+ 	#define BNXT_FLAG_MULTI_HOST	0x100000
++	#define BNXT_FLAG_DSN_VALID	0x200000
+ 	#define BNXT_FLAG_DOUBLE_DB	0x400000
+ 	#define BNXT_FLAG_CHIP_NITRO_A0	0x1000000
+ 	#define BNXT_FLAG_DIM		0x2000000
+--- a/drivers/net/ethernet/broadcom/bnxt/bnxt_vfr.c
++++ b/drivers/net/ethernet/broadcom/bnxt/bnxt_vfr.c
+@@ -398,6 +398,9 @@ static int bnxt_vf_reps_create(struct bn
+ 	struct net_device *dev;
+ 	int rc, i;
+ 
++	if (!(bp->flags & BNXT_FLAG_DSN_VALID))
++		return -ENODEV;
++
+ 	bp->vf_reps = kcalloc(num_vfs, sizeof(vf_rep), GFP_KERNEL);
+ 	if (!bp->vf_reps)
+ 		return -ENOMEM;
 
 
