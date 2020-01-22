@@ -2,69 +2,81 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2E00C33CAF
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 18:56:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 278B8C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 18:56:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79E912465A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 18:56:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E72242467C
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 18:56:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fS4TJ86U"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZjOwjoD/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728853AbgAVS4R (ORCPT
+        id S1729014AbgAVS4T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 13:56:17 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:50789 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725884AbgAVS4Q (ORCPT
+        Wed, 22 Jan 2020 13:56:19 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:44691 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727453AbgAVS4R (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 13:56:16 -0500
-Received: by mail-wm1-f67.google.com with SMTP id a5so213837wmb.0
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jan 2020 10:56:13 -0800 (PST)
+        Wed, 22 Jan 2020 13:56:17 -0500
+Received: by mail-wr1-f66.google.com with SMTP id q10so198853wrm.11
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jan 2020 10:56:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=bzlb1RNJacHtUYCuYqwuP7wS2PSTXuiA30zpoldeYRk=;
-        b=fS4TJ86UvRY2S+1xKKBWUiezqeWqQB35cOx93DhWPMXjoV1z6VWk+MAsoVAGPfc1Gr
-         ylCBDBbzdNdfuSzpDbfsJdenPQh8vO99ITPBIV7v0q9pbhy8+O8vZsxZqJDVBZZ9KDf5
-         VVedzf0r1qM/KDSn+GD6Aqv70DWHw41aGKIck55mpIq6i++qwRiyPdvb6XV6BOCYcMaC
-         yMsfQzMEHQKz8GqqOV2s6O+4QSrPuDYE4UQ+sKXndB9S1K/jIWaFj6vUm2K/32RsxeWl
-         1BzcYO6pW65aCzsDSGcDrkUhuotz7i2Kg04NZUIfDi61bSbO8VumN/ywOW6ADH8pr2OS
-         rmFw==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=nTFFco0gWzvhgT9KdZyGts1IZHmn3ADc6A60yVAjcjA=;
+        b=ZjOwjoD/cbr8k9Xxhx4R424gVxquYdps7mK8cA1ImTsO9C/5XEoHLhc9oIJ/0NnwfN
+         wTt7x7B690bbXFdBMyaS/sTUbZwa5ltfOsqNamE2j3oBHYZ4dUxK92M5BusLEuIwL1hn
+         2O4zsqmdan6atXOV5E5zNZ/72+vXJ89uljeEARootP88cc+OnUdItnegGSiUJgdj4hPG
+         YznZ2+lqLOPUGKHreflRZP44P2b7YDP01rysqoosjBNm5d2ooZc0mOU3mzJuh+qKR/a4
+         cZPDWHgboh+qq2kumSFMh9wbqtf8083/kgpHYGDmSFUaz3A4ry0eDY8GPwTajiGH46Ss
+         pJdQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=bzlb1RNJacHtUYCuYqwuP7wS2PSTXuiA30zpoldeYRk=;
-        b=Rm0//rK8c+w3JydL07GPtPdiJLb8EBgaUHz57SUGI0Yroe2fvdfIICmcnV79znPPyt
-         /6ABHsb9FGs2nH7/kYYDGqkbfSTDkFYk3l0kC4Xpav+3rrEfgC6jV+obkrUWIYL/QZpZ
-         Dwsm2YzO/lYAIMQSREFZxRSw8zlGqGBz1A7AC9Uj9Bnd8wkwpHR5h3O9yWmIEuA5mewh
-         HzosK+N+zl1EXXDif3kuFqnD9I+EwS0x3XuzaOD9oEqdty8ygpohzkx2tgrTnLagkLUL
-         2h66Brtqdp5QdtUnS0pGV53CdSXvkj7JSiTujifgNf8zcxBeD0CbQdIhml45GfRfJh4q
-         eDsQ==
-X-Gm-Message-State: APjAAAUiJzJwlHJ1ILobcdK5QtSGfHfsbRcH5BqKXvBEwvg+o3unfuMW
-        0is2RkN0WS4fw1U0YyV/mYCXsA==
-X-Google-Smtp-Source: APXvYqwr7zfPeZMdgSWPAsBZljn8ewVSiCdp3jsPhpI/n54/F6r8dRZSGwBb81uc8oZnO0zSYV5AlA==
-X-Received: by 2002:a1c:1b44:: with SMTP id b65mr4300734wmb.11.1579719373155;
-        Wed, 22 Jan 2020 10:56:13 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=nTFFco0gWzvhgT9KdZyGts1IZHmn3ADc6A60yVAjcjA=;
+        b=qCNlFZdgzXQKkjC0toEubjgIth22gznh4qYyS/c0b1vjHtE+M2cVD7NoPom/TbYcLR
+         mv5iL8zvaHFWP6EhsH+j7IfkACTP5wTOGnrr4rwvNaWyJ1INRg+T59SFWOYlEkXncGrU
+         cZHntjiLdJiNVWOtrUiyOzn7BdFbfPkaKykapPp6O6/uMVeGXiWi/pNebL4yqyJfV+S3
+         hlapvafIlGlaS0uec1DBEcuCqc6x82nP6grgXGBObs41ToFEuAOVm0iqgrvF9ZlUFW2C
+         LuVhDdPcYAP8loc+9BFC8JY04FSyi6oaQMaTCdo9FzUgjInRiaoQ8OBWMa0ZZZhN84qQ
+         Dr3g==
+X-Gm-Message-State: APjAAAX/M+UKvFII/+CId8tGdC+g4/ysmuKV6MbTTdf7TGbm6JY3zaZV
+        Rw7lV62gk3NuakqJF5nMqRMz8A==
+X-Google-Smtp-Source: APXvYqwVhDR6TNqyPyw33lUIfgRMKQbwdR7UjTpAY2sMV4OM0YaexsUdbeSvGVxj8DKbPYlm+ZHB1A==
+X-Received: by 2002:adf:ce87:: with SMTP id r7mr12595169wrn.245.1579719375614;
+        Wed, 22 Jan 2020 10:56:15 -0800 (PST)
 Received: from localhost.localdomain ([176.61.57.127])
-        by smtp.gmail.com with ESMTPSA id q15sm58590390wrr.11.2020.01.22.10.56.12
+        by smtp.gmail.com with ESMTPSA id q15sm58590390wrr.11.2020.01.22.10.56.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Jan 2020 10:56:12 -0800 (PST)
+        Wed, 22 Jan 2020 10:56:15 -0800 (PST)
 From:   Bryan O'Donoghue <bryan.odonoghue@linaro.org>
 To:     linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
         gregkh@linuxfoundation.org, jackp@codeaurora.org, balbi@kernel.org,
         bjorn.andersson@linaro.org
 Cc:     linux-kernel@vger.kernel.org,
+        Sriharsha Allenki <sallenki@codeaurora.org>,
+        Anu Ramanathan <anur@codeaurora.org>,
+        Shawn Guo <shawn.guo@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Jorge Ramirez-Ortiz <jorge.ramirez.ortiz@gmail.com>,
+        devicetree@vger.kernel.org,
         Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-Subject: [PATCH v3 00/19] Enable Qualcomm QCS 404 HS/SS USB
-Date:   Wed, 22 Jan 2020 18:55:51 +0000
-Message-Id: <20200122185610.131930-1-bryan.odonoghue@linaro.org>
+Subject: [PATCH v3 02/19] dt-bindings: phy: Add Qualcomm Synopsys Hi-Speed USB PHY binding
+Date:   Wed, 22 Jan 2020 18:55:53 +0000
+Message-Id: <20200122185610.131930-3-bryan.odonoghue@linaro.org>
 X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200122185610.131930-1-bryan.odonoghue@linaro.org>
+References: <20200122185610.131930-1-bryan.odonoghue@linaro.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -72,122 +84,115 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-V1:
-This series enables the Primary and Secondary USB controllers on the
-QCS404, associated PHYs, role-switching and DTS descriptions.
+From: Sriharsha Allenki <sallenki@codeaurora.org>
 
-The series takes in a number of patches worked on by a number of people
-over the past few years from downstream, through to previous upstream
-submissions for both of these interfaces. Additional work has been done to
-enable USB role-switching.
+Adds bindings for QCS404 USB PHY supporting Low-Speed, Full-Speed and
+Hi-Speed USB connectivity on Qualcomm chipsets.
 
-1. USB SS
-   - extcon has been dropped in favour of gpio-usb-conn as discussed and
-     agreed previously by Jorge, Bjorn, Stephen Boyd and Jack Pham [1].
+[bod: Converted to YAML. Changed name dropping snps, 28nm components]
 
-   - Regulator API has been updated following suggestions from Bjorn.
-   
-   - Sanitzation of the DT compatible name - dropped "snps" entirely
-     from the name - it made almost no sense to me and doesn't appear
-     consistent with similar naming conventions for Snopsys based IP.
-
-2. USB HS
-   - Regulator API changes here.
-   - Dropped "snps" from the namespace for similar reasons as above.
-   - Dropped "28nm" from the namespace, looked superfluous.
-   - Changed "High-Speed" to "Hi-Speed".
-   - [2]
-
-3. DWC3 Role switching
-   - At the time usb-gpio-conn was discussed it was mentioned that
-     role-switching was absent from the DWC3 driver.
-   - John Stultz has some patches in-flight for that, that I've included in
-     this series for completeness.
-   - Adds my SoB to relevant patches.
-   - Drops gerrit ChangeId.
-
-4. DWC3 usb-gpio-conn
-   Needs to be a child node of the DWC3 driver so some code and DT binding
-   is required for that.
-
-5. QCOM-DWC3
-   Since we are role-switching with an external PMIC supplying VBUS we want
-   to skip past toggling VBUS from QCOM-DWC3 controlled registers, so a
-   patch is added to the qcom-dwc3 driver to do that.
-
-References:
-
-1: USB SS PHY for Qualcomm's QCS404
-https://lwn.net/ml/devicetree/20190207111734.24171-1-jorge.ramirez-ortiz@linaro.org/
-
-2: Add Synopsys High-Speed USB PHY driver for Qualcomm SoCs
-https://lore.kernel.org/linux-arm-msm/20181127100722.9993-3-shawn.guo@linaro.org/
-
-https://www.spinics.net/lists/linux-usb/msg190003.html
-
-V2:
-- Fixes yaml error - Rob's YAML robot
-- Exclusive control of reset in PHY drivers - Philipp Zabel
-
-V3:
-- Fixes typo generating YAML warning - Rob's YAML robot
-
-Bjorn Andersson (1):
-  arm64: dts: qcom: qcs404: Add USB devices and PHYs
-
-Bryan O'Donoghue (10):
-  dt-bindings: usb: dwc3: Add a gpio-usb-connector description
-  usb: dwc3: qcom: Override VBUS when using gpio_usb_connector
-  usb: dwc3: Add support for usb-conn-gpio connectors
-  arm64: dts: qcom: qcs404-evb: Define VBUS detect pin
-  arm64: dts: qcom: qcs404-evb: Define VBUS boost pin
-  arm64: dts: qcom: qcs404-evb: Define USB ID pin
-  arm64: dts: qcom: qcs404-evb: Describe external VBUS regulator
-  arm64: dts: qcom: qcs404-evb: Raise vreg_l12_3p3 minimum voltage
-  arm64: dts: qcom: qcs404-evb: Enable secondary USB controller
-  arm64: dts: qcom: qcs404-evb: Enable primary USB controller
-
-John Stultz (2):
-  dt-bindings: usb: generic: Add role-switch-default-mode binding
-  usb: dwc3: Add support for role-switch-default-mode binding
-
-Jorge Ramirez-Ortiz (3):
-  dt-bindings: phy: remove qcom-dwc3-usb-phy
-  dt-bindings: Add Qualcomm USB SuperSpeed PHY bindings
-  phy: qualcomm: usb: Add SuperSpeed PHY driver
-
-Shawn Guo (1):
-  phy: qualcomm: Add Synopsys Hi-Speed USB PHY driver
-
-Sriharsha Allenki (1):
-  dt-bindings: phy: Add Qualcomm Synopsys Hi-Speed USB PHY binding
-
-Yu Chen (1):
-  usb: dwc3: Registering a role switch in the DRD code.
-
- .../bindings/phy/intel,lgm-emmc-phy.yaml      |  56 ---
- .../bindings/phy/qcom,qcs404-usb-hs.yaml      |  77 ++++
- .../devicetree/bindings/phy/qcom,usb-ss.yaml  |  75 ++++
- .../bindings/phy/qcom-dwc3-usb-phy.txt        |  37 --
- .../devicetree/bindings/usb/dwc3.txt          |  11 +
- .../devicetree/bindings/usb/generic.txt       |   6 +
- arch/arm64/boot/dts/qcom/qcs404-evb.dtsi      |  90 +++-
- arch/arm64/boot/dts/qcom/qcs404.dtsi          | 100 +++++
- drivers/phy/qualcomm/Kconfig                  |  21 +
- drivers/phy/qualcomm/Makefile                 |   2 +
- drivers/phy/qualcomm/phy-qcom-qcs404-usb-hs.c | 415 ++++++++++++++++++
- drivers/phy/qualcomm/phy-qcom-usb-ss.c        | 246 +++++++++++
- drivers/usb/dwc3/core.h                       |   6 +
- drivers/usb/dwc3/drd.c                        | 123 +++++-
- drivers/usb/dwc3/dwc3-qcom.c                  |  17 +-
- 15 files changed, 1184 insertions(+), 98 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/phy/intel,lgm-emmc-phy.yaml
+Signed-off-by: Sriharsha Allenki <sallenki@codeaurora.org>
+Signed-off-by: Anu Ramanathan <anur@codeaurora.org>
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Signed-off-by: Shawn Guo <shawn.guo@linaro.org>
+Cc: Andy Gross <agross@kernel.org>
+Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Jorge Ramirez-Ortiz <jorge.ramirez.ortiz@gmail.com>
+Cc: linux-arm-msm@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+---
+ .../bindings/phy/qcom,qcs404-usb-hs.yaml      | 77 +++++++++++++++++++
+ 1 file changed, 77 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/phy/qcom,qcs404-usb-hs.yaml
- create mode 100644 Documentation/devicetree/bindings/phy/qcom,usb-ss.yaml
- delete mode 100644 Documentation/devicetree/bindings/phy/qcom-dwc3-usb-phy.txt
- create mode 100644 drivers/phy/qualcomm/phy-qcom-qcs404-usb-hs.c
- create mode 100644 drivers/phy/qualcomm/phy-qcom-usb-ss.c
 
+diff --git a/Documentation/devicetree/bindings/phy/qcom,qcs404-usb-hs.yaml b/Documentation/devicetree/bindings/phy/qcom,qcs404-usb-hs.yaml
+new file mode 100644
+index 000000000000..d71beb822ae2
+--- /dev/null
++++ b/Documentation/devicetree/bindings/phy/qcom,qcs404-usb-hs.yaml
+@@ -0,0 +1,77 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: "http://devicetree.org/schemas/phy/qcom,qcs404-usb-hs.yaml#"
++$schema: "http://devicetree.org/meta-schemas/core.yaml#"
++
++title: Qualcomm Synopsys QCS-404 High-Speed PHY
++
++maintainers:
++  - Bryan O'Donoghue <bryan.odonoghue@linaro.org>
++
++description: |
++  Qualcomm QCS-404 Low-Speed, Full-Speed, Hi-Speed USB PHY
++
++properties:
++  compatible:
++    enum:
++      - qcom,qcs404-usb-hsphy
++
++  reg:
++    maxItems: 1
++    description: USB PHY base address and length of the register map.
++
++  "#phy-cells":
++    const: 0
++    description: Should be 0. See phy/phy-bindings.txt for details.
++
++  clocks:
++    minItems: 3
++    maxItems: 3
++    description: phandles to rpmcc ref clock, PHY AHB clock, rentention clock.
++
++  clock-names:
++    items:
++      - const: ref
++      - const: phy
++      - const: sleep
++
++  resets:
++    items:
++      - description: PHY core reset
++      - description: POR reset
++
++  reset-names:
++    items:
++      - const: phy
++      - const: por
++
++  vdd-supply:
++    maxItems: 1
++    description: phandle to the regulator VDD supply node.
++
++  vdda1p8-supply:
++    maxItems: 1
++    description: phandle to the regulator 1.8V supply node.
++
++  vdda3p3-supply:
++    maxItems: 1
++    description: phandle to the regulator 3.3V supply node.
++
++examples:
++  - |
++    #include <dt-bindings/clock/qcom,gcc-qcs404.h>
++    #include <dt-bindings/clock/qcom,rpmcc.h>
++    usb2_phy_prim: phy@7a000 {
++        compatible = "qcom,qcs404-usb-hsphy";
++        reg = <0x0007a000 0x200>;
++        #phy-cells = <0>;
++        clocks = <&rpmcc RPM_SMD_LN_BB_CLK>,
++                 <&gcc GCC_USB_HS_PHY_CFG_AHB_CLK>,
++                 <&gcc GCC_USB2A_PHY_SLEEP_CLK>;
++        clock-names = "ref", "phy", "sleep";
++        resets = <&gcc GCC_USB_HS_PHY_CFG_AHB_BCR>,
++                 <&gcc GCC_USB2A_PHY_BCR>;
++        reset-names = "phy", "por";
++    };
++...
 -- 
 2.25.0
 
