@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 110BAC33CB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:41:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F56DC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:41:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1B952467B
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:41:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 361AC24686
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:41:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579686072;
-	bh=DczAF+vKmAN+mWw+pcMpCxaJ1uY3iuKd2RO+aTQcOQA=;
+	s=default; t=1579686077;
+	bh=ot8hwp/8hLHyv9MugBNFzAVIWfg9WE2OdwpixT40Vds=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AsdoQgvjBwHZ1Jlw/tO7mwzfHSpzJ6QbIk+EpScGgEh5y/+vUwdAD9xiRuZxDfiJa
-	 P40t+FcLpSWKjHMhqBDFiUK3m7Bt3wlfLLDzStt3wBtMalFXGwL9xkbg+21vhU7tmS
-	 fBsmsOML2TnKBJ3qKb7VX1Nq1Rx1vQAToQstxlTo=
+	b=NFQZ9CfSxu1IY/4U8KB61DiBWP2z9FXBG48HnI7Q7hviy9dJ6VLBMXzHTdbVXlS7+
+	 e8EhKtrB9H8j8XO+3gxxcRu/QM7GKXdwrpHzWsVtkwCgdh+TjV6kWA/s0DOc3nKoPr
+	 oitkYVJwWpDEzAx+ifhMGO8QtBDSInZwHRhFmcK8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387525AbgAVJlM (ORCPT
+        id S2387545AbgAVJlP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 04:41:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60230 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 04:41:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60440 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387478AbgAVJlB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 04:41:01 -0500
+        id S2387512AbgAVJlJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 04:41:09 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8C92B24688;
-        Wed, 22 Jan 2020 09:41:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C600D2467B;
+        Wed, 22 Jan 2020 09:41:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579686061;
-        bh=DczAF+vKmAN+mWw+pcMpCxaJ1uY3iuKd2RO+aTQcOQA=;
+        s=default; t=1579686068;
+        bh=ot8hwp/8hLHyv9MugBNFzAVIWfg9WE2OdwpixT40Vds=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=W6Z4GqqOuhSa4zSzy+ovRT70X2wT9q+HFKKfy3npxjTbFIulNn9MLqeeTApWT6Eso
-         z4BUy+Md6uEFx0gVQGJ7K1ovxWfpXtREi5ZM24dp3iK7sgMxSQ8P4mFIbb2b8v2TFk
-         DEkuL6zZJbhTcYDkZp8WsCJyySUjsu0WMKlh9N5E=
+        b=x409G7Y6aLPzwaap795B30+wmxvsMB4/GkaK6OircKlGQ/M6Ud7usYU8f16oGKbU5
+         aAtwVlgmTlnNbpxJLsKgT4TAZmmJ10FT7qdPZ+4qZZNUG/suETdQTce5vr7xygBJ6R
+         AA5VeqA921J+/mXBtOFk4i9fBfRXiHIlJGBgNiiM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Stephan Gerhold <stephan@gerhold.net>,
-        Mark Brown <broonie@kernel.org>
-Subject: [PATCH 4.19 020/103] ASoC: msm8916-wcd-analog: Fix selected events for MIC BIAS External1
-Date:   Wed, 22 Jan 2020 10:28:36 +0100
-Message-Id: <20200122092806.751557932@linuxfoundation.org>
+        stable@vger.kernel.org, Oleg Nesterov <oleg@redhat.com>,
+        Eric Paris <eparis@redhat.com>,
+        Kees Cook <keescook@chromium.org>,
+        Serge Hallyn <serge@hallyn.com>, Jann Horn <jannh@google.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>
+Subject: [PATCH 4.19 031/103] ptrace: reintroduce usage of subjective credentials in ptrace_has_cap()
+Date:   Wed, 22 Jan 2020 10:28:47 +0100
+Message-Id: <20200122092808.505127306@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200122092803.587683021@linuxfoundation.org>
 References: <20200122092803.587683021@linuxfoundation.org>
@@ -61,44 +62,100 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stephan Gerhold <stephan@gerhold.net>
+From: Christian Brauner <christian.brauner@ubuntu.com>
 
-commit e0beec88397b163c7c4ea6fcfb67e8e07a2671dc upstream.
+commit 6b3ad6649a4c75504edeba242d3fd36b3096a57f upstream.
 
-MIC BIAS External1 sets pm8916_wcd_analog_enable_micbias_ext1()
-as event handler, which ends up in pm8916_wcd_analog_enable_micbias_ext().
+Commit 69f594a38967 ("ptrace: do not audit capability check when outputing /proc/pid/stat")
+introduced the ability to opt out of audit messages for accesses to various
+proc files since they are not violations of policy.  While doing so it
+somehow switched the check from ns_capable() to
+has_ns_capability{_noaudit}(). That means it switched from checking the
+subjective credentials of the task to using the objective credentials. This
+is wrong since. ptrace_has_cap() is currently only used in
+ptrace_may_access() And is used to check whether the calling task (subject)
+has the CAP_SYS_PTRACE capability in the provided user namespace to operate
+on the target task (object). According to the cred.h comments this would
+mean the subjective credentials of the calling task need to be used.
+This switches ptrace_has_cap() to use security_capable(). Because we only
+call ptrace_has_cap() in ptrace_may_access() and in there we already have a
+stable reference to the calling task's creds under rcu_read_lock() there's
+no need to go through another series of dereferences and rcu locking done
+in ns_capable{_noaudit}().
 
-But pm8916_wcd_analog_enable_micbias_ext() only handles the POST_PMU
-event, which is not specified in the event flags for MIC BIAS External1.
-This means that the code in the event handler is never actually run.
+As one example where this might be particularly problematic, Jann pointed
+out that in combination with the upcoming IORING_OP_OPENAT feature, this
+bug might allow unprivileged users to bypass the capability checks while
+asynchronously opening files like /proc/*/mem, because the capability
+checks for this would be performed against kernel credentials.
 
-Set SND_SOC_DAPM_POST_PMU as the only event for the handler to fix this.
+To illustrate on the former point about this being exploitable: When
+io_uring creates a new context it records the subjective credentials of the
+caller. Later on, when it starts to do work it creates a kernel thread and
+registers a callback. The callback runs with kernel creds for
+ktask->real_cred and ktask->cred. To prevent this from becoming a
+full-blown 0-day io_uring will call override_cred() and override
+ktask->cred with the subjective credentials of the creator of the io_uring
+instance. With ptrace_has_cap() currently looking at ktask->real_cred this
+override will be ineffective and the caller will be able to open arbitray
+proc files as mentioned above.
+Luckily, this is currently not exploitable but will turn into a 0-day once
+IORING_OP_OPENAT{2} land in v5.6. Fix it now!
 
-Fixes: 585e881e5b9e ("ASoC: codecs: Add msm8916-wcd analog codec")
-Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
-Link: https://lore.kernel.org/r/20200111164006.43074-2-stephan@gerhold.net
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Cc: Oleg Nesterov <oleg@redhat.com>
+Cc: Eric Paris <eparis@redhat.com>
+Cc: stable@vger.kernel.org
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Reviewed-by: Serge Hallyn <serge@hallyn.com>
+Reviewed-by: Jann Horn <jannh@google.com>
+Fixes: 69f594a38967 ("ptrace: do not audit capability check when outputing /proc/pid/stat")
+Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/soc/codecs/msm8916-wcd-analog.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ kernel/ptrace.c |   15 ++++++++++-----
+ 1 file changed, 10 insertions(+), 5 deletions(-)
 
---- a/sound/soc/codecs/msm8916-wcd-analog.c
-+++ b/sound/soc/codecs/msm8916-wcd-analog.c
-@@ -885,10 +885,10 @@ static const struct snd_soc_dapm_widget
+--- a/kernel/ptrace.c
++++ b/kernel/ptrace.c
+@@ -258,12 +258,17 @@ static int ptrace_check_attach(struct ta
+ 	return ret;
+ }
  
- 	SND_SOC_DAPM_SUPPLY("MIC BIAS External1", CDC_A_MICB_1_EN, 7, 0,
- 			    pm8916_wcd_analog_enable_micbias_ext1,
--			    SND_SOC_DAPM_PRE_PMU | SND_SOC_DAPM_POST_PMD),
-+			    SND_SOC_DAPM_POST_PMU),
- 	SND_SOC_DAPM_SUPPLY("MIC BIAS External2", CDC_A_MICB_2_EN, 7, 0,
- 			    pm8916_wcd_analog_enable_micbias_ext2,
--			    SND_SOC_DAPM_POST_PMU | SND_SOC_DAPM_POST_PMD),
-+			    SND_SOC_DAPM_POST_PMU),
+-static int ptrace_has_cap(struct user_namespace *ns, unsigned int mode)
++static bool ptrace_has_cap(const struct cred *cred, struct user_namespace *ns,
++			   unsigned int mode)
+ {
++	int ret;
++
+ 	if (mode & PTRACE_MODE_NOAUDIT)
+-		return has_ns_capability_noaudit(current, ns, CAP_SYS_PTRACE);
++		ret = security_capable(cred, ns, CAP_SYS_PTRACE, CAP_OPT_NOAUDIT);
+ 	else
+-		return has_ns_capability(current, ns, CAP_SYS_PTRACE);
++		ret = security_capable(cred, ns, CAP_SYS_PTRACE, CAP_OPT_NONE);
++
++	return ret == 0;
+ }
  
- 	SND_SOC_DAPM_ADC_E("ADC1", NULL, CDC_A_TX_1_EN, 7, 0,
- 			   pm8916_wcd_analog_enable_adc,
+ /* Returns 0 on success, -errno on denial. */
+@@ -315,7 +320,7 @@ static int __ptrace_may_access(struct ta
+ 	    gid_eq(caller_gid, tcred->sgid) &&
+ 	    gid_eq(caller_gid, tcred->gid))
+ 		goto ok;
+-	if (ptrace_has_cap(tcred->user_ns, mode))
++	if (ptrace_has_cap(cred, tcred->user_ns, mode))
+ 		goto ok;
+ 	rcu_read_unlock();
+ 	return -EPERM;
+@@ -334,7 +339,7 @@ ok:
+ 	mm = task->mm;
+ 	if (mm &&
+ 	    ((get_dumpable(mm) != SUID_DUMP_USER) &&
+-	     !ptrace_has_cap(mm->user_ns, mode)))
++	     !ptrace_has_cap(cred, mm->user_ns, mode)))
+ 	    return -EPERM;
+ 
+ 	return security_ptrace_access_check(task, mode);
 
 
