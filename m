@@ -5,54 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-5.7 required=3.0 tests=DATE_IN_PAST_03_06,
 	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75BD5C33CAF
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:30:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B3D2C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:30:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E0A5205F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:30:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0CDD205F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:30:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579699837;
-	bh=l8E9WhQUYdRFLvGLz94bVCMxZ6KMHAl9UrG+udAtBWw=;
+	s=default; t=1579699851;
+	bh=jhYhNXYSQxDA8+pS7YjeAPEndnmHw6INZ+Q9N6cpRkw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JxlenuOtLJFTxr01gd70UucwaTX7sPRBci24Ioh2j4WR5bO/fjLu/+v8JTs775CpC
-	 1CmLT0OE9aa9KZT+BJ2+5uJ4l3pTuSgMygFNj+8heWw/OQzM/tmYO4HRtx3vI+PIxN
-	 NR6YCKvLiTKQ7mTdky5BkKAVuXghBn6iNgrxdwM4=
+	b=kVN7LvhbSoBJCJuthJ0L7At1kAx0QESABDz3lw5d11p95Zcrl065GbTjp1gX/06Io
+	 ePoxJ3xPnlgTBpglfXx1plC22aQ1dowLW/p5zaQlgDFuJerTzgttpNx0PJ/Y5LmhYa
+	 aUNtVbsh5j9dAmVsAGan/JZhtH1y3gxmQK2uSF1s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729306AbgAVNWY (ORCPT
+        id S1729505AbgAVNVj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 08:22:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39874 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 08:21:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38744 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729992AbgAVNWU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 08:22:20 -0500
+        id S1730305AbgAVNVe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 08:21:34 -0500
 Received: from localhost (unknown [84.241.205.26])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D145B24688;
-        Wed, 22 Jan 2020 13:22:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A49B82467C;
+        Wed, 22 Jan 2020 13:21:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579699339;
-        bh=l8E9WhQUYdRFLvGLz94bVCMxZ6KMHAl9UrG+udAtBWw=;
+        s=default; t=1579699294;
+        bh=jhYhNXYSQxDA8+pS7YjeAPEndnmHw6INZ+Q9N6cpRkw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ajVoK6n8gGZI6FN+7AFZCCWPAYkXuNtaxovb68ZEV5Gj0xNws99jHOCCYIiuVNyha
-         fO+E+uXwx/VRToDX8G8kZT9KOPhBxrWUao7dmMqi6j3/Z8zj7TCFl2SY0R9ood1Dso
-         n0qkx+quMIU0sHdeJxF78S8Adp2u5AxC5fdkdeJg=
+        b=xGbxiDJG+2ituwU1CFzprqy7sn5X0PHEJZZMmx08EiyBnMyhZTnaVbGGY5UsvnUqz
+         0OcFWD+N31X0GTWqGZUlZcEzyLXej/GIgCbU69NK4T3QD54b4b/oPm6x/ktfbdZV4p
+         3/C2ehslWHTD+5AG4s5lQU4+Bxyc0DIT+qat7hws=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        "Willhalm, Thomas" <thomas.willhalm@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        "Bruggeman, Otto G" <otto.g.bruggeman@intel.com>,
-        "Aneesh Kumar K . V" <aneesh.kumar@linux.vnet.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.4 078/222] mm/shmem.c: thp, shmem: fix conflict of above-47bit hint address and PMD alignment
-Date:   Wed, 22 Jan 2020 10:27:44 +0100
-Message-Id: <20200122092839.299021330@linuxfoundation.org>
+        stable@vger.kernel.org, Philipp Rudo <prudo@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>
+Subject: [PATCH 5.4 073/222] s390/setup: Fix secure ipl message
+Date:   Wed, 22 Jan 2020 10:27:39 +0100
+Message-Id: <20200122092838.945601820@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200122092833.339495161@linuxfoundation.org>
 References: <20200122092833.339495161@linuxfoundation.org>
@@ -65,74 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kirill A. Shutemov <kirill@shutemov.name>
+From: Philipp Rudo <prudo@linux.ibm.com>
 
-commit 991589974d9c9ecb24ee3799ec8c415c730598a2 upstream.
+commit 40260b01d029ba374637838213af500e03305326 upstream.
 
-Shmem/tmpfs tries to provide THP-friendly mappings if huge pages are
-enabled.  But it doesn't work well with above-47bit hint address.
+The new machine loader on z15 always creates an IPL Report block and
+thus sets the IPL_PL_FLAG_IPLSR even when secure boot is disabled. This
+causes the wrong message being printed at boot. Fix this by checking for
+IPL_PL_FLAG_SIPL instead.
 
-Normally, the kernel doesn't create userspace mappings above 47-bit,
-even if the machine allows this (such as with 5-level paging on x86-64).
-Not all user space is ready to handle wide addresses.  It's known that
-at least some JIT compilers use higher bits in pointers to encode their
-information.
-
-Userspace can ask for allocation from full address space by specifying
-hint address (with or without MAP_FIXED) above 47-bits.  If the
-application doesn't need a particular address, but wants to allocate
-from whole address space it can specify -1 as a hint address.
-
-Unfortunately, this trick breaks THP alignment in shmem/tmp:
-shmem_get_unmapped_area() would not try to allocate PMD-aligned area if
-*any* hint address specified.
-
-This can be fixed by requesting the aligned area if the we failed to
-allocated at user-specified hint address.  The request with inflated
-length will also take the user-specified hint address.  This way we will
-not lose an allocation request from the full address space.
-
-[kirill@shutemov.name: fold in a fixup]
-  Link: http://lkml.kernel.org/r/20191223231309.t6bh5hkbmokihpfu@box
-Link: http://lkml.kernel.org/r/20191220142548.7118-3-kirill.shutemov@linux.intel.com
-Fixes: b569bab78d8d ("x86/mm: Prepare to expose larger address space to userspace")
-Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-Cc: "Willhalm, Thomas" <thomas.willhalm@intel.com>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: "Bruggeman, Otto G" <otto.g.bruggeman@intel.com>
-Cc: "Aneesh Kumar K . V" <aneesh.kumar@linux.vnet.ibm.com>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: 9641b8cc733f ("s390/ipl: read IPL report at early boot")
+Signed-off-by: Philipp Rudo <prudo@linux.ibm.com>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- mm/shmem.c |    7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ arch/s390/kernel/setup.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/mm/shmem.c
-+++ b/mm/shmem.c
-@@ -2106,9 +2106,10 @@ unsigned long shmem_get_unmapped_area(st
- 	/*
- 	 * Our priority is to support MAP_SHARED mapped hugely;
- 	 * and support MAP_PRIVATE mapped hugely too, until it is COWed.
--	 * But if caller specified an address hint, respect that as before.
-+	 * But if caller specified an address hint and we allocated area there
-+	 * successfully, respect that as before.
- 	 */
--	if (uaddr)
-+	if (uaddr == addr)
- 		return addr;
+--- a/arch/s390/kernel/setup.c
++++ b/arch/s390/kernel/setup.c
+@@ -1059,7 +1059,7 @@ static void __init log_component_list(vo
  
- 	if (shmem_huge != SHMEM_HUGE_FORCE) {
-@@ -2142,7 +2143,7 @@ unsigned long shmem_get_unmapped_area(st
- 	if (inflated_len < len)
- 		return addr;
- 
--	inflated_addr = get_area(NULL, 0, inflated_len, 0, flags);
-+	inflated_addr = get_area(NULL, uaddr, inflated_len, 0, flags);
- 	if (IS_ERR_VALUE(inflated_addr))
- 		return addr;
- 	if (inflated_addr & ~PAGE_MASK)
+ 	if (!early_ipl_comp_list_addr)
+ 		return;
+-	if (ipl_block.hdr.flags & IPL_PL_FLAG_IPLSR)
++	if (ipl_block.hdr.flags & IPL_PL_FLAG_SIPL)
+ 		pr_info("Linux is running with Secure-IPL enabled\n");
+ 	else
+ 		pr_info("Linux is running with Secure-IPL disabled\n");
 
 
