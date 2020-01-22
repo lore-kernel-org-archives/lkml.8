@@ -2,61 +2,79 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44F6AC33CAF
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 10:16:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 447F5C33CAF
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 10:16:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 209DB2467F
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 10:16:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1968E2467F
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 10:16:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729585AbgAVKQE (ORCPT
+        id S1729232AbgAVKQ3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 05:16:04 -0500
-Received: from helcar.hmeau.com ([216.24.177.18]:39218 "EHLO deadmen.hmeau.com"
+        Wed, 22 Jan 2020 05:16:29 -0500
+Received: from mx2.suse.de ([195.135.220.15]:58942 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729148AbgAVKQE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 05:16:04 -0500
-Received: from gondobar.mordor.me.apana.org.au ([192.168.128.4] helo=gondobar)
-        by deadmen.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
-        id 1iuD3J-0000cu-By; Wed, 22 Jan 2020 18:16:01 +0800
-Received: from herbert by gondobar with local (Exim 4.89)
-        (envelope-from <herbert@gondor.apana.org.au>)
-        id 1iuD3I-000459-0M; Wed, 22 Jan 2020 18:16:00 +0800
-Date:   Wed, 22 Jan 2020 18:15:59 +0800
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     Horia =?utf-8?Q?Geant=C4=83?= <horia.geanta@nxp.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Aymen Sghaier <aymen.sghaier@nxp.com>,
-        linux-crypto@vger.kernel.org, NXP Linux Team <linux-imx@nxp.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] crypto: caam - add support for i.MX8M Plus
-Message-ID: <20200122101559.52noysnozzhtzvnj@gondor.apana.org.au>
-References: <20200117143513.7652-1-horia.geanta@nxp.com>
+        id S1726004AbgAVKQ3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 05:16:29 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 3AFFFB2FA;
+        Wed, 22 Jan 2020 10:16:27 +0000 (UTC)
+Date:   Wed, 22 Jan 2020 11:16:25 +0100
+From:   Jean Delvare <jdelvare@suse.de>
+To:     Luca Ceresoli <luca@lucaceresoli.net>
+Cc:     linux-doc@vger.kernel.org, linux-i2c@vger.kernel.org,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Peter Rosin <peda@axentia.se>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 23/26] docs: i2c: old-module-parameters: fix internal
+ hyperlink
+Message-ID: <20200122111625.6685b606@endymion>
+In-Reply-To: <20200105225012.11701-23-luca@lucaceresoli.net>
+References: <20200105224006.10321-1-luca@lucaceresoli.net>
+        <20200105225012.11701-1-luca@lucaceresoli.net>
+        <20200105225012.11701-23-luca@lucaceresoli.net>
+Organization: SUSE Linux
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-suse-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200117143513.7652-1-horia.geanta@nxp.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 17, 2020 at 04:35:13PM +0200, Horia Geantă wrote:
-> Add support for the crypto engine used in i.mx8mp (i.MX 8M "Plus"),
-> which is very similar to the one used in i.mx8mq, i.mx8mm, i.mx8mn.
+On Sun,  5 Jan 2020 23:50:09 +0100, Luca Ceresoli wrote:
+> Use ReST syntax so that a proper hyperlink is generated.
 > 
-> Signed-off-by: Horia Geantă <horia.geanta@nxp.com>
+> Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
 > ---
->  drivers/crypto/caam/ctrl.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
+>  Documentation/i2c/old-module-parameters.rst | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/i2c/old-module-parameters.rst b/Documentation/i2c/old-module-parameters.rst
+> index 78a6950e5763..0503d2f0b127 100644
+> --- a/Documentation/i2c/old-module-parameters.rst
+> +++ b/Documentation/i2c/old-module-parameters.rst
+> @@ -12,8 +12,7 @@ address), "force" (to forcibly attach the driver to a given device) and
+>  With the conversion of the I2C subsystem to the standard device driver
+>  binding model, it became clear that these per-module parameters were no
+>  longer needed, and that a centralized implementation was possible. The new,
+> -sysfs-based interface is described in the documentation file
+> -"instantiating-devices", section "Method 4: Instantiate from user-space".
+> +sysfs-based interface is described in :doc:`instantiating-devices`.
 
-Patch applied.  Thanks.
+I object to removing the reference to the section. I think this is
+saving the reader some time so it is valuable.
+
+>  
+>  Below is a mapping from the old module parameters to the new interface.
+>  
+
+Reviewed-by: Jean Delvare <jdelvare@suse.de>
+
 -- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+Jean Delvare
+SUSE L3 Support
