@@ -2,149 +2,107 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26127C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 01:06:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3142AC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 01:10:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5DBA21835
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 01:06:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEED621835
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 01:10:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="f9X20gY0"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Mmry9Gvl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728984AbgAVBGl (ORCPT
+        id S1728901AbgAVBKW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 20:06:41 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:56613 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728609AbgAVBGk (ORCPT
+        Tue, 21 Jan 2020 20:10:22 -0500
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:38245 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728609AbgAVBKV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 20:06:40 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579655199;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=viOBq0Oy9N+6NbeXzcqoYU7boYVlTm9ZppUHXuFh0Mo=;
-        b=f9X20gY0vEDC2cfQs+LqQjBXyVrFlIQasXZi2Xie4XVIJn7zgF02bX0KpjWmvjykHRDcHD
-        FcMh9SL7EK6Njj2R75bZBeS0trTherFo5fuzghb7QvymbtpHDtHjM/2TfIo7Ss60SCXCQ/
-        kpinLq2YGC0TQy8btw5ETfjw+KPBQnE=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-163-zW94sMSePQK3sgoIck_AWw-1; Tue, 21 Jan 2020 20:06:37 -0500
-X-MC-Unique: zW94sMSePQK3sgoIck_AWw-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3676C107ACC4;
-        Wed, 22 Jan 2020 01:06:36 +0000 (UTC)
-Received: from [10.10.120.159] (ovpn-120-159.rdu2.redhat.com [10.10.120.159])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 0CEA360BE0;
-        Wed, 22 Jan 2020 01:06:34 +0000 (UTC)
-Subject: Re: [v2] nbd: fix potential NULL pointer fault in nbd_genl_disconnect
-To:     Josef Bacik <josef@toxicpanda.com>, Sun Ke <sunke32@huawei.com>,
-        axboe@kernel.dk
-References: <20200120124549.27648-1-sunke32@huawei.com>
- <8bb961fe-3412-9c3c-ad9b-54d446e90bf0@toxicpanda.com>
-Cc:     linux-block@vger.kernel.org, nbd@other.debian.org,
-        linux-kernel@vger.kernel.org
-From:   Mike Christie <mchristi@redhat.com>
-Message-ID: <5E27A01A.3040600@redhat.com>
-Date:   Tue, 21 Jan 2020 19:06:34 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
- Thunderbird/38.6.0
+        Tue, 21 Jan 2020 20:10:21 -0500
+Received: by mail-qk1-f193.google.com with SMTP id k6so4840472qki.5
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jan 2020 17:10:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=xJlf2/Q3PLDs4Iy9IzlLnbg2vHNS9/Vku/zAI8tTziE=;
+        b=Mmry9GvlhlntsQSvbDZVmMoDG5lU4GJCc27XfWAYDZ/lnobx+nIJQdYLgCeXEqaBeK
+         n9AgklRW3wFgJHxEfqWog3HzCCIRaDivo9P8iwuIdJgdVr/9wg7FlFou32oR2JRqpAQN
+         fwNJruI1shHUR2WGX0HBtVrdp+SFEZ9FKZV8o3pKm97Ky9mrIZ7lNme5Qi+JNOc35HkQ
+         zauDJ+tPUhwToTJI5Sn5xncV/jm3vS7vfe+9F+yFvmopvVjVOaUD09i4xoCUq4DK4I+9
+         D2j+GfKtuJik1hCrc54L7OxYwGSlei30wQ2WraU4m/2uIQMQm/jSatE0nnk5Ik3loLBA
+         NewA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=xJlf2/Q3PLDs4Iy9IzlLnbg2vHNS9/Vku/zAI8tTziE=;
+        b=Ngq62qpkjNudIN0ew9K9NUYJ6UXXUutjKEhQdJw44nOsYfp9E4MYG1oaBCwwp0TL0R
+         xPeeCd1AwZguqYXGvnDRdbPMUFT1AdL7fLCu6V3fzRLpHwaOVAr4ntGC2SFpBXIWccpo
+         ERML1bml6dIs1dIXfekKRZFMKzu+Cziu3hCIXQ0FCK9b4MgeKNTg4SJWfQDxlZCxa3ON
+         OHiAwrn1Un4WmvMVwTKrG9VoT/npQCHc0wmoB69jrAk7RGOhHrGFEZUAzzFJf9cMHJ30
+         thhA0hKey++fnKgN2ZVf3YLi1EIP9cZnCPyNFSOg10VfYSoWD1L9alcE4qAbnwJuZaDO
+         7vrA==
+X-Gm-Message-State: APjAAAUsVnlBiCy0G8XVeQrDF4rG4gckBFXkOHPiRDuUn3jjYqjzDwsK
+        5pxcecbc2TvhVkcUXSscGXV8AQgb
+X-Google-Smtp-Source: APXvYqzr/MJ68zm1cKuACrXdA98dWLtk0o/JCWnXKRkiyoQbk92Xuo9MQCdvm8jr/fRt6Jus9+lh8g==
+X-Received: by 2002:a37:4d10:: with SMTP id a16mr7533403qkb.325.1579655420606;
+        Tue, 21 Jan 2020 17:10:20 -0800 (PST)
+Received: from localhost (198-0-15-102-static.hfc.comcastbusiness.net. [198.0.15.102])
+        by smtp.gmail.com with ESMTPSA id h13sm973846qtu.23.2020.01.21.17.10.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Jan 2020 17:10:20 -0800 (PST)
+Date:   Tue, 21 Jan 2020 17:10:18 -0800
+From:   Yury Norov <yury.norov@gmail.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Alex Shi <alex.shi@linux.alibaba.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        William Breathitt Gray <vilhelm.gray@gmail.com>,
+        "Tobin C. Harding" <tobin@kernel.org>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] lib/bitmap: remove expect_eq_u32_array
+Message-ID: <20200122011018.GA14737@yury-thinkpad>
+References: <1579595625-250942-1-git-send-email-alex.shi@linux.alibaba.com>
+ <20200121132050.GT32742@smile.fi.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <8bb961fe-3412-9c3c-ad9b-54d446e90bf0@toxicpanda.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200121132050.GT32742@smile.fi.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 01/21/2020 08:09 AM, Josef Bacik wrote:
-> On 1/20/20 7:45 AM, Sun Ke wrote:
->> Open /dev/nbdX first, the config_refs will be 1 and
->> the pointers in nbd_device are still null. Disconnect
->> /dev/nbdX, then reference a null recv_workq. The
->> protection by config_refs in nbd_genl_disconnect is useless.
->>
->> To fix it, just add a check for a non null task_recv in
->> nbd_genl_disconnect.
->>
->> Signed-off-by: Sun Ke <sunke32@huawei.com>
->> ---
->> v1 -> v2:
->>
->> add an omitted mutex_unlock.
->> ---
->>   drivers/block/nbd.c | 4 ++++
->>   1 file changed, 4 insertions(+)
->>
->> diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
->> index b4607dd96185..668bc9cb92ed 100644
->> --- a/drivers/block/nbd.c
->> +++ b/drivers/block/nbd.c
->> @@ -2008,6 +2008,10 @@ static int nbd_genl_disconnect(struct sk_buff
->> *skb, struct genl_info *info)
->>                  index);
->>           return -EINVAL;
->>       }
->> +    if (!nbd->task_recv) {
->> +        mutex_unlock(&nbd_index_mutex);
->> +        return -EINVAL;
->> +    }
->>       if (!refcount_inc_not_zero(&nbd->refs)) {
->>           mutex_unlock(&nbd_index_mutex);
->>           printk(KERN_ERR "nbd: device at index %d is going down\n",
->>
+On Tue, Jan 21, 2020 at 03:20:50PM +0200, Andy Shevchenko wrote:
+> On Tue, Jan 21, 2020 at 04:33:45PM +0800, Alex Shi wrote:
+> > expect_eq_u32_array isn't used from commit 3aa56885e516 ("bitmap:
+> > replace bitmap_{from,to}_u32array").
+> > And EXP2_IN_BITS are never used. so better to remove them.
 > 
-> This doesn't even really protect us, we need to have the
-> nbd->config_lock held here to make sure it's ok.  The IOCTL path is safe
-> because it creates the device on open so it's sure to exist by the time
-> we get to the disconnect, we don't have that for genl_disconnect.  So
-> I'd add the config_mutex before getting the config_ref, and then do the
-> check, something like
+> I think better "fix" will be to add test cases.
+> See the commit message in the
 > 
-> mutex_lock(&nbd->config_lock);
-> if (!refcount_inc_not_zero(&nbd->refs)) {
-> }
-> if (!nbd->recv_workq) {
-> }
-> mutex_unlock(&nbd->config_lock);
+> commit 3aa56885e51683a19c8aa71739fd279b3f501cd7
+> Author: Yury Norov <ynorov@caviumnetworks.com>
+> Date:   Tue Feb 6 15:38:06 2018 -0800
 > 
+>     bitmap: replace bitmap_{from,to}_u32array
+> 
+> -- 
+> With Best Regards,
+> Andy Shevchenko
+ 
+On the other hand, it's almost 2 years gone since the commit you
+mentioned, and nobody used the check_eq_u32_array(). So I think
+it's long enough to consider the function useless.
 
-We will be doing a mix of checks/behavior. Maybe we want to settle on one?
+This function is the last example of 2 lengths in input, so I'd
+prefer to remove it. However, removing check_eq_u32_array() should
+be synchronized with underlying __check_eq_u32_array().
 
-It seems the code, before my patch, would let you do a open() then do a
-nbd_genl_disconnect. This function would then try to cleanup what it
-could and return success.
-
-To keep the current behavior/style in nbd_disconnect_and_put would you
-want to do:
-
-nbd_disconnect_and_put()
-
-....
-
-if (nbd->task_recv)
-       flush_workqueue(nbd->recv_workq);
-
-?
-
-Alternatively, I think if we want to make it so calling
-nbd_genl_disconnect is not allowed on a device that we have not done a
-successful nbd_genl_connect/nbd_start_device call on then we want to add
-the new state bit to indicate nbd_start_device was successful.
-
-Or, we could stick to one variable that gets set at start and always use
-that to indicate nbd_start_device was called ok. For example, for
-nbd_genl_reconfigure we already check if task_recv is set to check if
-nbd_start_device was called successfully.
-
-
+Yury
