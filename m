@@ -2,181 +2,76 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B092C33CAF
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 02:05:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BB14C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 02:06:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 625722465A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 02:05:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="en+8NfQn"
+	by mail.kernel.org (Postfix) with ESMTP id 594E8217F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 02:06:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729061AbgAVCF6 (ORCPT
+        id S1729083AbgAVCGS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 21:05:58 -0500
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:34128 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726780AbgAVCF6 (ORCPT
+        Tue, 21 Jan 2020 21:06:18 -0500
+Received: from out30-42.freemail.mail.aliyun.com ([115.124.30.42]:36040 "EHLO
+        out30-42.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726780AbgAVCGS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 21:05:58 -0500
-Received: by mail-pl1-f194.google.com with SMTP id c9so2218050plo.1
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jan 2020 18:05:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Vu0P+TqydFlkgIras7hArFCb2ZMbDqBdR1PlF/mHkkk=;
-        b=en+8NfQnj4d/v6++rQTMh+iPxXPOddhceEF9O29VgX2zAafqp+1/oeqPPQaTZe8NhR
-         yDkezigSS7KDcdzSjepQ5NwS7JK6oM1dB9thLNtTDgrPgv1y/rhjkSvE/6yljqsWPXeY
-         kb/Y0GUpyaj/Vm9Wrcf3pMuvLhkIKsbJ9uA/U=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Vu0P+TqydFlkgIras7hArFCb2ZMbDqBdR1PlF/mHkkk=;
-        b=RI6O/dIQbjP0x70RbAuGXKpPIhOdKkxDLyo+wLhMMf1Ts2M+68AO+qjVWeO8cGc2TZ
-         Rqf+KznVEF7pflcL/BoGZ6rex3wvlviA7+DyLWpIqH3/2+Q50koStaBvgE4c1wH+/P04
-         GOBSDdfZa0p5mt6GVJ/nI+yiHAGDNZqA5x2Qwx8Ra/45bohlLfK+P/cWi61KsaVUBG1i
-         GnLL3pEbMnybkj2TWPu7DogRRNqf44zo8nD10DvNc8nDGhCpQ8dyj5R6PJ8zxbFCQ+Rq
-         cHmzg0fWRIb8MeeIFYvJU9515lFXf2mj3B8Ldc6dWQIRKdYCA3etOCQ4sDh/Cf6M0cVX
-         WytA==
-X-Gm-Message-State: APjAAAWN91stNEqhklnNft0vV3AX9edMSqRxJA4QvOsVZp4HS7JlIFhx
-        PY64EZAIlC0zYP8S+ia54sfrMA==
-X-Google-Smtp-Source: APXvYqyDzAJuDLiodwgaecqWrmIJKuV7weT5y48qgIvs0u7QpPVK52mU8JY8LIYW2h6XesYynn0Thw==
-X-Received: by 2002:a17:90a:da03:: with SMTP id e3mr269720pjv.100.1579658757856;
-        Tue, 21 Jan 2020 18:05:57 -0800 (PST)
-Received: from localhost ([2401:fa00:8f:203:5bbb:c872:f2b1:f53b])
-        by smtp.gmail.com with ESMTPSA id h11sm41882131pgv.38.2020.01.21.18.05.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Jan 2020 18:05:57 -0800 (PST)
-Date:   Wed, 22 Jan 2020 11:05:55 +0900
-From:   Sergey Senozhatsky <senozhatsky@chromium.org>
-To:     Hans Verkuil <hverkuil@xs4all.nl>
-Cc:     Sergey Senozhatsky <senozhatsky@chromium.org>,
-        Hans Verkuil <hans.verkuil@cisco.com>,
-        Tomasz Figa <tfiga@chromium.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Sakari Ailus <sakari.ailus@iki.fi>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Pawel Osciak <posciak@chromium.org>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC][PATCH 04/15] videobuf2: add queue memory consistency
- parameter
-Message-ID: <20200122020555.GD149602@google.com>
-References: <20191217032034.54897-1-senozhatsky@chromium.org>
- <20191217032034.54897-5-senozhatsky@chromium.org>
- <77ddd5cd-affc-ad0f-829d-d624f9798055@xs4all.nl>
+        Tue, 21 Jan 2020 21:06:18 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R661e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04452;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=3;SR=0;TI=SMTPD_---0ToJoNIc_1579658775;
+Received: from IT-FVFX43SYHV2H.local(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0ToJoNIc_1579658775)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Wed, 22 Jan 2020 10:06:16 +0800
+Subject: Re: [PATCH v1] lib/test_bitmap: Make use of EXP2_IN_BITS
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org
+References: <20200121151847.75223-1-andriy.shevchenko@linux.intel.com>
+From:   Alex Shi <alex.shi@linux.alibaba.com>
+Message-ID: <550c4e28-4826-dfef-9b8a-1d4290f52ff8@linux.alibaba.com>
+Date:   Wed, 22 Jan 2020 10:06:15 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <77ddd5cd-affc-ad0f-829d-d624f9798055@xs4all.nl>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200121151847.75223-1-andriy.shevchenko@linux.intel.com>
+Content-Type: text/plain; charset=gbk
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On (20/01/10 10:47), Hans Verkuil wrote:
-> On 12/17/19 4:20 AM, Sergey Senozhatsky wrote:
-> > Preparations for future V4L2_FLAG_MEMORY_NON_CONSISTENT support.
-> >
-> > Extend vb2_core_reqbufs() with queue memory consistency flag.
-> > API permits queue's consistency attribute adjustment only if
-> > the queue has no allocated buffers, not busy, and does not have
-> > buffers waiting to be de-queued.
->
-> Actually, you can call vb2_core_reqbufs() when buffers are allocated:
-> it will free the old buffers, then allocate the new ones.
-> So drop the 'has no allocated buffers' bit.
 
-Well, the wording, basically, follows the existing vb2_core_reqbufs()
-behavior "queue memory type"-wise. What I'm trying to say:
 
-[..]
-int vb2_core_reqbufs(struct vb2_queue *q, enum vb2_memory memory,
-		bool consistent_mem, unsigned int *count)
-{
-	unsigned int num_buffers, allocated_buffers, num_planes = 0;
-	unsigned plane_sizes[VB2_MAX_PLANES] = { };
-	unsigned int i;
-	int ret;
+ÔÚ 2020/1/21 ÏÂÎç11:18, Andy Shevchenko Ð´µÀ:
+> The commit 30544ed5de43 ("lib/bitmap: introduce bitmap_replace() helper")
+> introduced some new test cases to the test_bitmap.c module. Among these
+> it also introduced an (unused) definition. Let's make use of EXP2_IN_BITS.
+> 
+> Reported-by: Alex Shi <alex.shi@linux.alibaba.com>
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> ---
+>  lib/test_bitmap.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/lib/test_bitmap.c b/lib/test_bitmap.c
+> index 61ed71c1daba..6b13150667f5 100644
+> --- a/lib/test_bitmap.c
+> +++ b/lib/test_bitmap.c
+> @@ -278,6 +278,8 @@ static void __init test_replace(void)
+>  	unsigned int nlongs = DIV_ROUND_UP(nbits, BITS_PER_LONG);
+>  	DECLARE_BITMAP(bmap, 1024);
+>  
+> +	BUILD_BUG_ON(EXP2_IN_BITS < nbits * 2);
+> +
+>  	bitmap_zero(bmap, 1024);
+>  	bitmap_replace(bmap, &exp2[0 * nlongs], &exp2[1 * nlongs], exp2_to_exp3_mask, nbits);
+>  	expect_eq_bitmap(bmap, exp3_0_1, nbits);
+> 
 
-	if (q->streaming) {
-		dprintk(1, "streaming active\n");
-		return -EBUSY;
-	}
+It looks nice. :)
 
-	if (q->waiting_in_dqbuf && *count) {
-		dprintk(1, "another dup()ped fd is waiting for a buffer\n");
-		return -EBUSY;
-	}
-
-	if (*count == 0 || q->num_buffers != 0 ||
-	    (q->memory != VB2_MEMORY_UNKNOWN && q->memory != memory)) {
-		/*
-		 * We already have buffers allocated, so first check if they
-		 * are not in use and can be freed.
-		 */
-		mutex_lock(&q->mmap_lock);
-		if (debug && q->memory == VB2_MEMORY_MMAP &&
-		    __buffers_in_use(q))
-			dprintk(1, "memory in use, orphaning buffers\n");
-
-		/*
-		 * Call queue_cancel to clean up any buffers in the
-		 * QUEUED state which is possible if buffers were prepared or
-		 * queued without ever calling STREAMON.
-		 */
-		__vb2_queue_cancel(q);
-		ret = __vb2_queue_free(q, q->num_buffers);
-		mutex_unlock(&q->mmap_lock);
-		if (ret)
-			return ret;
-
-		/*
-		 * In case of REQBUFS(0) return immediately without calling
-		 * driver's queue_setup() callback and allocating resources.
-		 */
-		if (*count == 0)
-			return 0;
-	}
-
-	/*
-	 * Make sure the requested values and current defaults are sane.
-	 */
-	WARN_ON(q->min_buffers_needed > VB2_MAX_FRAME);
-	num_buffers = max_t(unsigned int, *count, q->min_buffers_needed);
-	num_buffers = min_t(unsigned int, num_buffers, VB2_MAX_FRAME);
-	memset(q->alloc_devs, 0, sizeof(q->alloc_devs));
-	q->memory = memory;
-+	__set_queue_consistency(q, consistent_mem);
-
-[..]
-
-So we set/change queue consistency attribute when we set/change
-queue memory type. Is there a use case for more flexibility when
-it comes to queue consistency?
-
-> > If user-space attempts to allocate a buffer with consistency
-> > requirements which don't match queue's consistency model such
-> > allocation requests will be failed.
->
-> Is this last paragraph right? I don't see any code for that.
-
-Yeah, this was more about the general direction. The actual code
-was added later in the series.
-
-> BTW, a general comment about patches 4-6: I prefer if you changes
-> this to two patches: one that adds videobuf2-core.c support for
-> this for reqbufs and create_bufs, then another that wires up the
-> new V4L2 flag in videobuf2-v4l2.c.
-
-I'll take a look.
-
-	-ss
+Reviewed-by: Alex Shi <alex.shi@linux.alibaba.com>
