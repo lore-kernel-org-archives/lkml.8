@@ -2,98 +2,118 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1803BC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:11:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AA32C33CB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:12:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D413920678
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:11:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0142D24685
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:12:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579698713;
-	bh=mZc0NGPAXZJkVTI/bbC5WVbWXROtKNEPpGlUFTsNwFY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=GLxd1HRUSDBKgaerj8UPfuGsFJkqKzCQcB1sqY22QiE8EisBbuLRGgBRs1b07qj+u
-	 hGaP5MNaRvSTuIdbUi4A/YzY+gO6vYHzzdXpvAzRWuPnThLugPinNSmPmH2s9IsbQg
-	 JsORsE+RguVwKSLFoqu8b4HzsvJM2nVyQYd6Xvtg=
+	s=default; t=1579698778;
+	bh=rF36Oz7wXrvLS/QAc8njrTJvSrYg9SsTB5g+8LbuheA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=dT0OTMCDV5hPR4hCB51eBetkeu6iqHZ1Rn0OicY6hTZ8G5LO20sVqqLsU8vtiCxN4
+	 azpVaPiN6xG5lqQQOphzjNj8V3KhWhyShxfFNxVd97FU+8EyxvcqZjKwvyvoJm3DbA
+	 7YOGhJ/MA1SruC5xCScEXP0dzko0wB76E6E7ujSo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729159AbgAVNLx (ORCPT
+        id S1729165AbgAVNM5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 08:11:53 -0500
-Received: from foss.arm.com ([217.140.110.172]:56150 "EHLO foss.arm.com"
+        Wed, 22 Jan 2020 08:12:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59898 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726204AbgAVNLw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 08:11:52 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 02BF5328;
-        Wed, 22 Jan 2020 05:11:52 -0800 (PST)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 753053F52E;
-        Wed, 22 Jan 2020 05:11:51 -0800 (PST)
-Date:   Wed, 22 Jan 2020 13:11:49 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Charles Keepax <ckeepax@opensource.cirrus.com>
-Cc:     lee.jones@linaro.org, lgirdwood@gmail.com,
-        linux-kernel@vger.kernel.org, patches@opensource.cirrus.com
-Subject: Re: [PATCH RESEND 1/2] regulator: arizona-ldo1: Improve handling of
- regulator unbinding
-Message-ID: <20200122131149.GE3833@sirena.org.uk>
-References: <20200122110842.10702-1-ckeepax@opensource.cirrus.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="6Vw0j8UKbyX0bfpA"
-Content-Disposition: inline
-In-Reply-To: <20200122110842.10702-1-ckeepax@opensource.cirrus.com>
-X-Cookie: Sorry.  Nice try.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        id S1727022AbgAVNM5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 08:12:57 -0500
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8585B20678;
+        Wed, 22 Jan 2020 13:12:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579698776;
+        bh=rF36Oz7wXrvLS/QAc8njrTJvSrYg9SsTB5g+8LbuheA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=LZC22PoSaj/z5pRc6iN1xz6R0PhJMSUaC9G+vHh3R1q1i31rZRmlNd26EvmG8YbT+
+         KQlSs1Wux++EWx0OR5ypDezuXdhpFHiAr9BThDa/CwiA5qR56fvkViSL7nRHNtLAjC
+         fjoVvVN7PinQsm1wfBu/t0uPvgWpuQF6uTWJFMC8=
+Date:   Wed, 22 Jan 2020 22:12:40 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Brendan Gregg <brendan.d.gregg@gmail.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>, bpf@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        "David S . Miller" <davem@davemloft.net>, paulmck@kernel.org,
+        joel@joelfernandes.org,
+        "Naveen N . Rao" <naveen.n.rao@linux.ibm.com>,
+        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>
+Subject: Re: [RFT PATCH 04/13] kprobes: Make optimizer delay to 1 second
+Message-Id: <20200122221240.cef447446785f46862fee97a@kernel.org>
+In-Reply-To: <20200122071115.28e3c763@gandalf.local.home>
+References: <157918584866.29301.6941815715391411338.stgit@devnote2>
+        <157918589199.29301.4419459150054220408.stgit@devnote2>
+        <20200121192905.0f001c61@gandalf.local.home>
+        <20200122162317.0299cf722dd618147d97e89c@kernel.org>
+        <20200122071115.28e3c763@gandalf.local.home>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, 22 Jan 2020 07:11:15 -0500
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
---6Vw0j8UKbyX0bfpA
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> On Wed, 22 Jan 2020 16:23:17 +0900
+> Masami Hiramatsu <mhiramat@kernel.org> wrote:
+> 
+> > On Tue, 21 Jan 2020 19:29:05 -0500
+> > Steven Rostedt <rostedt@goodmis.org> wrote:
+> > 
+> > > On Thu, 16 Jan 2020 23:44:52 +0900
+> > > Masami Hiramatsu <mhiramat@kernel.org> wrote:
+> > >   
+> > > > Since the 5 jiffies delay for the optimizer is too
+> > > > short to wait for other probes, make it longer,
+> > > > like 1 second.  
+> > > 
+> > > Hi Masami,
+> > > 
+> > > Can you explain more *why* 5 jiffies is too short.  
+> > 
+> > Yes, I had introduced this 5 jiffies delay for multiple probe registration
+> > and unregistration like systemtap, which will use array-based interface to
+> > register/unregister. In that case, 5 jiffies will be enough for the delay
+> > to wait for other kprobe registration/unregsitration.
+> > 
+> > However, since perf and ftrace register/unregister probes one-by-one with
+> > RCU synchronization interval, the optimizer will be started before
+> > finishing to register/unregister all probes.
+> > And the optimizer locks kprobe_mutex a while -- RCU-tasks synchronization.
+> > Since the kprobe_mutex is also involved in disabling kprobes, this also
+> > stops probe-event disabling.
+> > 
+> > Maybe 5 jiffies is enough for adding/removing a few probe events, but
+> > not enough for dozens of probe events.
+> > 
+> 
+> Perhaps we should have a mechanism that can detect new probes being
+> added, and just continue to delay the optimization, instead of having
+> some arbitrary delay.
 
-On Wed, Jan 22, 2020 at 11:08:41AM +0000, Charles Keepax wrote:
+Yes, that is what [03/13] does :) 
+Anyway, it seems that the RCU-synchronization takes more than 5 jiffies.
+And in that case, [03/13] still doesn't work. That's why I added this patch
+after that.
 
-> The current unbinding process for Madera has some issues. The trouble
-> is runtime PM is disabled as the first step of the process, but
+Thank you,
 
-Why not just leave runtime PM active until all the subdevices are gone?
-This is a really bad hack and it's going to be fragile.
-
-> +static int madera_ldo1_remove(struct platform_device *pdev)
-> +{
-> +	struct madera *madera = dev_get_drvdata(pdev->dev.parent);
-> +
-> +	if (madera->internal_dcvdd) {
-> +		regulator_disable(madera->dcvdd);
-> +		regulator_put(madera->dcvdd);
-> +	}
-
-This is going to break bisection since it will result in double
-disables, it'd be fine to do the MFD change first since that'd just
-leak a reference to enable on a regulator which is about to be discarded
-entirely anyway but this reordering (and whatever other changes you've
-done since v1) means you add a double free.
-
---6Vw0j8UKbyX0bfpA
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl4oShUACgkQJNaLcl1U
-h9CRBQf+Ijrft01UkH7p9btVXS1AKfXkd5ggu68R37BbucUWTIqSN6lVCWzodHCJ
-g7SWU1KfNIypcFQKb6AN03jTYgeJJeT0JdTgalYcw9wFcIRqWkiiqJGPAIp0k+K3
-aGTM+KVt69FqwZxsfMqEQllViB0pMu9OU8kPWmv9dzYnnVzbEzY1qawwjqclW4Fy
-X/GHdpG46obSpswt6y+AQYm1rYAY64OxWTV5SvFW6ocTQzNgj8QWo6dwE5YA8a/B
-DRk6PDVCp2bZTlvB0QsMLNs65xEW7U1o+hImyDVmFxyzbr3Yx2Et+WLZs3cAdwjb
-J6bEwkJK24RNMxXPBtfJW0P7fio/Sg==
-=K55M
------END PGP SIGNATURE-----
-
---6Vw0j8UKbyX0bfpA--
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
