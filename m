@@ -4,56 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14AD5C33CB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:42:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F74DC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:42:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DCF3224684
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:42:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A17024684
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:42:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579686134;
-	bh=eoX59fLjM2SRPxKMb6/ZkmgdRhP7HL/zBS9pFqPsnfg=;
+	s=default; t=1579686140;
+	bh=P4BITB953pc9Zi4u61h9J8Co5S+Xeh3jJJKspwO/i+U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mryIgfaZuLpAvw2DjXzGEItEsIUsjh96S/PyWQrRYxXOU1KG6T7Ygv8g6TzAPSImc
-	 XwgesKBY66F1AakxEb2CBsZhLPdqvL+0oWWzppe5hMz1JplFwGq/tB9HUMXbEvpv1M
-	 m5tGOu8pTs7qS7Jb+n2bSyp2mAAiiU3M4odcpVls=
+	b=QaCZJu8UT7VNs+AgoBo2fvbrU+scxPQIBdWsiMIWoSJ7CoFwpOJds4Zj6AvBdvekw
+	 5LDJiyKkAEx0GrmnKixbSX2b11yONSK3Ax6/V41Lz4JgPelXYWm/Chg8C2AAneZGdI
+	 aV4+XqiwJGeESilhOC448DHZJMjBCqW5YP8W/AMM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387688AbgAVJmN (ORCPT
+        id S2387695AbgAVJmR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 04:42:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33792 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 04:42:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33828 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387675AbgAVJmH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 04:42:07 -0500
+        id S1733219AbgAVJmJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 04:42:09 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C746C24686;
-        Wed, 22 Jan 2020 09:42:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 354CE24686;
+        Wed, 22 Jan 2020 09:42:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579686126;
-        bh=eoX59fLjM2SRPxKMb6/ZkmgdRhP7HL/zBS9pFqPsnfg=;
+        s=default; t=1579686128;
+        bh=P4BITB953pc9Zi4u61h9J8Co5S+Xeh3jJJKspwO/i+U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=peGSW4AfjKQ8dZLdnijTKNn4HUf5cyjpLxSeVcE6o51/Er/T/lSThnlQKijveTFKQ
-         f3nfbrrJS3/fsnZ6L6Ta8fG6T/jJsE638QZk2yzwojcF9Ip6Yf4p4+SeslflNIKO2D
-         mfLjc35whTsCh8YPbG/23s6n3dU2fBOCL5mLV53w=
+        b=xPo6vNbFs5389M56EJHE5zDaqoMAc31y0vqXPRoCA3Qrz9DUDEp/skreap2UaqQX/
+         GYwogkeavyfWy23XyWkSYc/7Kx6XQDdjtGSIQdpbQg4+pNxJrUbw+5MM5buQ5PETPj
+         29ZfACamotB4Ha1poxaQowRdIIP4n7yaQLiVBiQY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Thomas Willhalm <thomas.willhalm@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        "Aneesh Kumar K . V" <aneesh.kumar@linux.vnet.ibm.com>,
-        "Bruggeman, Otto G" <otto.g.bruggeman@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org, Meng Li <Meng.Li@windriver.com>,
+        Dinh Nguyen <dinguyen@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 053/103] mm/huge_memory.c: thp: fix conflict of above-47bit hint address and PMD alignment
-Date:   Wed, 22 Jan 2020 10:29:09 +0100
-Message-Id: <20200122092811.664061994@linuxfoundation.org>
+Subject: [PATCH 4.19 054/103] arm64: dts: agilex/stratix10: fix pmu interrupt numbers
+Date:   Wed, 22 Jan 2020 10:29:10 +0100
+Message-Id: <20200122092811.810664924@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200122092803.587683021@linuxfoundation.org>
 References: <20200122092803.587683021@linuxfoundation.org>
@@ -66,136 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kirill A. Shutemov <kirill@shutemov.name>
+From: Dinh Nguyen <dinguyen@kernel.org>
 
-[ Upstream commit 97d3d0f9a1cf132c63c0b8b8bd497b8a56283dd9 ]
+[ Upstream commit 210de0e996aee8e360ccc9e173fe7f0a7ed2f695 ]
 
-Patch series "Fix two above-47bit hint address vs.  THP bugs".
+Fix up the correct interrupt numbers for the PMU unit on Agilex
+and Stratix10.
 
-The two get_unmapped_area() implementations have to be fixed to provide
-THP-friendly mappings if above-47bit hint address is specified.
-
-This patch (of 2):
-
-Filesystems use thp_get_unmapped_area() to provide THP-friendly
-mappings.  For DAX in particular.
-
-Normally, the kernel doesn't create userspace mappings above 47-bit,
-even if the machine allows this (such as with 5-level paging on x86-64).
-Not all user space is ready to handle wide addresses.  It's known that
-at least some JIT compilers use higher bits in pointers to encode their
-information.
-
-Userspace can ask for allocation from full address space by specifying
-hint address (with or without MAP_FIXED) above 47-bits.  If the
-application doesn't need a particular address, but wants to allocate
-from whole address space it can specify -1 as a hint address.
-
-Unfortunately, this trick breaks thp_get_unmapped_area(): the function
-would not try to allocate PMD-aligned area if *any* hint address
-specified.
-
-Modify the routine to handle it correctly:
-
- - Try to allocate the space at the specified hint address with length
-   padding required for PMD alignment.
- - If failed, retry without length padding (but with the same hint
-   address);
- - If the returned address matches the hint address return it.
- - Otherwise, align the address as required for THP and return.
-
-The user specified hint address is passed down to get_unmapped_area() so
-above-47bit hint address will be taken into account without breaking
-alignment requirements.
-
-Link: http://lkml.kernel.org/r/20191220142548.7118-2-kirill.shutemov@linux.intel.com
-Fixes: b569bab78d8d ("x86/mm: Prepare to expose larger address space to userspace")
-Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-Reported-by: Thomas Willhalm <thomas.willhalm@intel.com>
-Tested-by: Dan Williams <dan.j.williams@intel.com>
-Cc: "Aneesh Kumar K . V" <aneesh.kumar@linux.vnet.ibm.com>
-Cc: "Bruggeman, Otto G" <otto.g.bruggeman@intel.com>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: 78cd6a9d8e15 ("arm64: dts: Add base stratix 10 dtsi")
+Cc: linux-stable <stable@vger.kernel.org>
+Reported-by: Meng Li <Meng.Li@windriver.com>
+Signed-off-by: Dinh Nguyen <dinguyen@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/huge_memory.c | 38 ++++++++++++++++++++++++--------------
- 1 file changed, 24 insertions(+), 14 deletions(-)
+ arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-index 950466876625..5bb93cf18009 100644
---- a/mm/huge_memory.c
-+++ b/mm/huge_memory.c
-@@ -509,13 +509,13 @@ void prep_transhuge_page(struct page *page)
- 	set_compound_page_dtor(page, TRANSHUGE_PAGE_DTOR);
- }
+diff --git a/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi b/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
+index 9a1ea8a46405..85fffe03b96b 100644
+--- a/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
++++ b/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
+@@ -59,10 +59,10 @@
  
--static unsigned long __thp_get_unmapped_area(struct file *filp, unsigned long len,
-+static unsigned long __thp_get_unmapped_area(struct file *filp,
-+		unsigned long addr, unsigned long len,
- 		loff_t off, unsigned long flags, unsigned long size)
- {
--	unsigned long addr;
- 	loff_t off_end = off + len;
- 	loff_t off_align = round_up(off, size);
--	unsigned long len_pad;
-+	unsigned long len_pad, ret;
- 
- 	if (off_end <= off_align || (off_end - off_align) < size)
- 		return 0;
-@@ -524,30 +524,40 @@ static unsigned long __thp_get_unmapped_area(struct file *filp, unsigned long le
- 	if (len_pad < len || (off + len_pad) < off)
- 		return 0;
- 
--	addr = current->mm->get_unmapped_area(filp, 0, len_pad,
-+	ret = current->mm->get_unmapped_area(filp, addr, len_pad,
- 					      off >> PAGE_SHIFT, flags);
--	if (IS_ERR_VALUE(addr))
-+
-+	/*
-+	 * The failure might be due to length padding. The caller will retry
-+	 * without the padding.
-+	 */
-+	if (IS_ERR_VALUE(ret))
- 		return 0;
- 
--	addr += (off - addr) & (size - 1);
--	return addr;
-+	/*
-+	 * Do not try to align to THP boundary if allocation at the address
-+	 * hint succeeds.
-+	 */
-+	if (ret == addr)
-+		return addr;
-+
-+	ret += (off - ret) & (size - 1);
-+	return ret;
- }
- 
- unsigned long thp_get_unmapped_area(struct file *filp, unsigned long addr,
- 		unsigned long len, unsigned long pgoff, unsigned long flags)
- {
-+	unsigned long ret;
- 	loff_t off = (loff_t)pgoff << PAGE_SHIFT;
- 
--	if (addr)
--		goto out;
- 	if (!IS_DAX(filp->f_mapping->host) || !IS_ENABLED(CONFIG_FS_DAX_PMD))
- 		goto out;
- 
--	addr = __thp_get_unmapped_area(filp, len, off, flags, PMD_SIZE);
--	if (addr)
--		return addr;
--
-- out:
-+	ret = __thp_get_unmapped_area(filp, addr, len, off, flags, PMD_SIZE);
-+	if (ret)
-+		return ret;
-+out:
- 	return current->mm->get_unmapped_area(filp, addr, len, pgoff, flags);
- }
- EXPORT_SYMBOL_GPL(thp_get_unmapped_area);
+ 	pmu {
+ 		compatible = "arm,armv8-pmuv3";
+-		interrupts = <0 120 8>,
+-			     <0 121 8>,
+-			     <0 122 8>,
+-			     <0 123 8>;
++		interrupts = <0 170 4>,
++			     <0 171 4>,
++			     <0 172 4>,
++			     <0 173 4>;
+ 		interrupt-affinity = <&cpu0>,
+ 				     <&cpu1>,
+ 				     <&cpu2>,
 -- 
 2.20.1
 
