@@ -2,94 +2,208 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60BCFC33CB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 11:45:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34FC5C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 11:45:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E7C321734
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 11:45:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F230920678
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 11:45:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SUl/bopx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729196AbgAVLpN (ORCPT
+        id S1729281AbgAVLpp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 06:45:13 -0500
-Received: from mx2.suse.de ([195.135.220.15]:47366 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726094AbgAVLpN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 06:45:13 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 2775BAC81;
-        Wed, 22 Jan 2020 11:45:11 +0000 (UTC)
-Date:   Wed, 22 Jan 2020 12:45:09 +0100
-From:   Jean Delvare <jdelvare@suse.de>
-To:     Luca Ceresoli <luca@lucaceresoli.net>
-Cc:     linux-doc@vger.kernel.org, linux-i2c@vger.kernel.org,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Peter Rosin <peda@axentia.se>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 25/26] docs: i2c: old-module-parameters: use monospace
- for filenames
-Message-ID: <20200122124509.3ec8a3a3@endymion>
-In-Reply-To: <20200106074654.13842-1-luca@lucaceresoli.net>
-References: <20200105224006.10321-1-luca@lucaceresoli.net>
-        <20200106074654.13842-1-luca@lucaceresoli.net>
-Organization: SUSE Linux
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-suse-linux-gnu)
+        Wed, 22 Jan 2020 06:45:45 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:37807 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726094AbgAVLpo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 06:45:44 -0500
+Received: by mail-lj1-f193.google.com with SMTP id o13so6438822ljg.4
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jan 2020 03:45:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Y5u9m/mXXv3qGtttJOr+ZQn1NxnHC+oWL5hWs/7rdpQ=;
+        b=SUl/bopx2bJT7lmPLWd3o6amTlItaE15S5QUQfpwhG6UqVhYZ2Jg2lvsdxAxz/6qC9
+         Ich5ivJBKveIjiwnfrUDkpXtD/imTj/icyVWY8pSc1Rwvly1XEFvO++i/UqDXwN+babS
+         9RCM/fSTAK0LsLdHswNo3m4uFnjF9XLoLLIsbSAzdhZUylVamYpnfBh3vdMOyB70VR8Z
+         Amw8oBRcU/K9bIdyzw97J0CAuwdFIA4Jzz1wejySdc+kLIhuwDoU04KPhg7MAdLmSvf2
+         AFX8yOIOTYA3NR+XYKUSWizt04FzuJcoi1ZJeJwmg9i7GnHqYozyO3DA7e4xvN8DWcKB
+         pvYQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Y5u9m/mXXv3qGtttJOr+ZQn1NxnHC+oWL5hWs/7rdpQ=;
+        b=CLPNNxoxBhXJwGeAs113FLuf76GtbXX07LAn2ou6NfoTb2AAxts6qU3wNuTk7zg56R
+         gKRC9YKKnf9tFE4t2GHMjbo2aL0J62ExXmp0UPy2kwVGVuJwvByMhjrrBK7LC+mRHm7O
+         I4aJdNE1TFBtvDXmZvw1eEPrgrSfSLnedee+e0i58kOeLDp3pZRqubz/j8e1lO0K/7T/
+         qgjT4DJvMrTIVZjhSRQnv70cau/A3fie75fv8ndmX3T90Cou0b86p6Pe1F99RZwCbbvu
+         pBFpOtKIjelAh2k7Pbmz8KLWe4yOH2B7dqnsJnjxhW4h1zE9UDTvnUV/vlTl4EV5nIJd
+         tQ7w==
+X-Gm-Message-State: APjAAAVUPI1YdPjAT6Tks4aJD7OJF9w4oCXGlY84DoO+HBiSxnXbN5ls
+        WjqU3izlgfR03aiCvA7bBU60VOj4YbSMXJv6DWTXlg==
+X-Google-Smtp-Source: APXvYqxepdt1nLuP0XWlvF18+vx5QEljXf8IakWWWuD2ONWwD2IDzKv7dxNfcNDOYiBfRJoQtOTepLrUdy4OOP5K0r0=
+X-Received: by 2002:a2e:8698:: with SMTP id l24mr18861072lji.94.1579693541815;
+ Wed, 22 Jan 2020 03:45:41 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20200115035920.54451-1-alex.kogan@oracle.com>
+In-Reply-To: <20200115035920.54451-1-alex.kogan@oracle.com>
+From:   Lihao Liang <lihaoliang@google.com>
+Date:   Wed, 22 Jan 2020 11:45:30 +0000
+Message-ID: <CAC4j=Y8rCeTX9oKKbh+dCdTP8Ud4hW1ybu+iE7t_nxMSYBOR5w@mail.gmail.com>
+Subject: Re: [PATCH v9 0/5] Add NUMA-awareness to qspinlock
+To:     Alex Kogan <alex.kogan@oracle.com>
+Cc:     linux@armlinux.org.uk, peterz@infradead.org, mingo@redhat.com,
+        will.deacon@arm.com, arnd@arndb.de, longman@redhat.com,
+        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, tglx@linutronix.de, bp@alien8.de,
+        hpa@zytor.com, x86@kernel.org, guohanjun@huawei.com,
+        jglauber@marvell.com, dave.dice@oracle.com,
+        steven.sistare@oracle.com, daniel.m.jordan@oracle.com,
+        Will Deacon <will@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon,  6 Jan 2020 08:46:54 +0100, Luca Ceresoli wrote:
-> Use a monospace (literal) formatting for better readability of filenames.
+Hi Alex,
 
-This description and the subject are confusing. The strings you are
-formatting are not filenames. They may be visible as sysfs attributes
-and thus correspond to a filename, but primarily they are module
-parameters and I2C client names.
+On Wed, Jan 22, 2020 at 10:28 AM Alex Kogan <alex.kogan@oracle.com> wrote:
+>
+> Summary
+> -------
+>
+> Lock throughput can be increased by handing a lock to a waiter on the
+> same NUMA node as the lock holder, provided care is taken to avoid
+> starvation of waiters on other NUMA nodes. This patch introduces CNA
+> (compact NUMA-aware lock) as the slow path for qspinlock. It is
+> enabled through a configuration option (NUMA_AWARE_SPINLOCKS).
+>
 
-> 
-> Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
-> ---
->  Documentation/i2c/old-module-parameters.rst | 10 +++++-----
->  1 file changed, 5 insertions(+), 5 deletions(-)
-> 
-> diff --git a/Documentation/i2c/old-module-parameters.rst b/Documentation/i2c/old-module-parameters.rst
-> index 80fb117883fd..fdc470a5f999 100644
-> --- a/Documentation/i2c/old-module-parameters.rst
-> +++ b/Documentation/i2c/old-module-parameters.rst
-> @@ -10,9 +10,9 @@ I2C device driver binding control from user-space
->  Up to kernel 2.6.32, many I2C drivers used helper macros provided by
->  <linux/i2c.h> which created standard module parameters to let the user
->  control how the driver would probe I2C buses and attach to devices. These
-> -parameters were known as "probe" (to let the driver probe for an extra
-> -address), "force" (to forcibly attach the driver to a given device) and
-> -"ignore" (to prevent a driver from probing a given address).
-> +parameters were known as ``probe`` (to let the driver probe for an extra
-> +address), ``force`` (to forcibly attach the driver to a given device) and
-> +``ignore`` (to prevent a driver from probing a given address).
->  
->  With the conversion of the I2C subsystem to the standard device driver
->  binding model, it became clear that these per-module parameters were no
-> @@ -46,8 +46,8 @@ New method (sysfs interface)::
->    # echo dummy 0x2f > /sys/bus/i2c/devices/i2c-1/new_device
->    # modprobe <driver>
->  
-> -Of course, it is important to instantiate the "dummy" device before loading
-> +Of course, it is important to instantiate the ``dummy`` device before loading
->  the driver. The dummy device will be handled by i2c-core itself, preventing
->  other drivers from binding to it later on. If there is a real device at the
->  problematic address, and you want another driver to bind to it, then simply
-> -pass the name of the device in question instead of "dummy".
-> +pass the name of the device in question instead of ``dummy``.
+Thanks for your patches. The experimental results look promising!
 
-Reviewed-by: Jean Delvare <jdelvare@suse.de>
+I understand that the new CNA qspinlock uses randomization to achieve
+long-term fairness, and provides the numa_spinlock_threshold parameter
+for users to tune. As Linux runs extremely diverse workloads, it is not
+clear how randomization affects its fairness, and how users with
+different requirements are supposed to tune this parameter.
 
--- 
-Jean Delvare
-SUSE L3 Support
+To this end, Will and I consider it beneficial to be able to answer the
+following question:
+
+With different values of numa_spinlock_threshold and
+SHUFFLE_REDUCTION_PROB_ARG, how long do threads running on different
+sockets have to wait to acquire the lock? This is particularly relevant
+in high contention situations when new threads keep arriving on the same
+socket as the lock holder.
+
+In this email, I try to provide some formal analysis to address this
+question. Let's assume the probability for the lock to stay on the
+same socket is *at least* p, which corresponds to the probability for
+the function probably(unsigned int num_bits) in the patch to return *false*,
+where SHUFFLE_REDUCTION_PROB_ARG is passed as the value of num_bits to the
+function.
+
+I noticed that the default value of p in the patch is 1/2^7 = 0.01, which is
+somewhat counter-intuitive to me. If we switch sockets 99 times out of 100,
+then fairness should be obvious. What I expected is a (much) higher value of
+p, which would likely result in better performance, while having some degree
+of fairness guarantee. Have you run some experiments by setting a lower
+SHUFFLE_REDUCTION_PROB_ARG instead of the default value 7? It would be very
+helpful to know the performance numbers.
+
+Now let's do some analysis:
+
+1. What is the probability P for the first thread on a different socket to
+acquire the lock after *at most* N consecutive local lock handovers?
+
+Note: N corresponds to the variable intra_node_handoff_threshold in the
+patch, which is set to value 1 << numa_spinlock_threshold. Default value
+is 1 << 16 = 64K.
+
+Assuming mutual independence [1], we have P is equal to 1 - p^N, where p^N is
+the probability of N consecutive threads running on the socket where the lock
+was most recently acquired.
+
+If p is 0.99, the probabilities of switching to a different socket after
+N local lock handovers are as follows:
+
+63.4% (N = 100)
+86.6% (N = 200)
+99.3% (N = 500)
+99.996% (N = 1000)
+99.99999999999933% (N =  64K)
+
+2. We can ask the same question as above for the k-th thread on a different
+socket from the lock holder. That is, what is the probability P for the k-th
+thread on a different socket to acquire the lock after *at most* N
+consecutive local lock handovers, assuming all these k threads in the queue
+are running on different sockets (the worst case scenario). The analysis is
+as follows (the case when k = 1 reduces to Question 1 above):
+
+The total probability P is the sum of Pi for i = 0, 1, ..., N, where Pi is
+the probability of having i *total* local lock handovers before the k-th
+thread on a different socket can acquire the lock.
+
+Pi can be calculated using formula Pi =  B_i_k * (p^i) * (1 - p)^k, where
+
+-- B_i_k is the number of ways to put i balls into k buckets, representing
+all possible ways the i local handovers occurred in k different sockets.
+B_i_k is a multiset number and equal to (i + k - 1)! / (i! * (k-1)!) [2]
+
+-- p^i is the probability of i local lock handovers
+
+-- (1 - p)^k is the probability of k socket switchings
+
+I've written a simple Python script to calculate the value of P.
+Let's look at some concrete examples and numbers.
+
+When p = 0.99, k = 3 (e.g. a 4-socket system), P is equal to:
+
+8.5%   (N = 100)
+33.2% (N = 200)
+87.9% (N = 500)
+99.7% (N = 1000)
+99.99999999999937% (N = 64K)
+
+When p = 0.99, k = 7 (e.g. an 8-socket system), the values of P are:
+
+0.01% (N = 100)
+0.52% (N = 200)
+24.7% (N = 500)
+87.5% (N = 1000)
+99.3% (N = 1500)
+99.99999999999871% (N = 64K)
+
+I think this mathematical analysis would help users better understand the
+fairness property of the CNA qspinlock. One can use it to plot a graph with
+different values of p and N to tune the qspinlock for different platforms
+and workloads.
+
+Based on the analysis above, it may be useful to have
+SHUFFLE_REDUCTION_PROB_ARG as a tunable parameter as well. Setting
+SHUFFLE_REDUCTION_PROB_ARG to a lower value results in a higher value of p,
+which would likely increase the performance. Then we can set
+intra_node_handoff_threshold to have a bounded degree of fairness.
+For instance, a user may want P to be around 90% for N = 100 on a 8-core
+system. So they can set p = 0.9 and intra_node_handoff_threshold = ~150,
+based on our analysis that P =  91.9% for N = 100, and 99.99% for N = 200,
+when k = 7.
+
+I hope this helps and please let me know if you have any comments or
+if you spot any mistakes in our analysis.
+
+Best,
+Lihao.
+
+References:
+[1] https://en.wikipedia.org/wiki/Independence_(probability_theory)#More_than_two_events
+[2] Theorem 2, https://en.wikipedia.org/wiki/Stars_and_bars_(combinatorics)
