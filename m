@@ -2,176 +2,106 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B670AC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 14:22:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47016C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 14:24:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84E642465B
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 14:22:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1BC33217F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 14:24:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RFA64HBb"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gOnNFqhw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728978AbgAVOWm (ORCPT
+        id S1726885AbgAVOYm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 09:22:42 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:39357 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726061AbgAVOWj (ORCPT
+        Wed, 22 Jan 2020 09:24:42 -0500
+Received: from mail-qv1-f66.google.com ([209.85.219.66]:34133 "EHLO
+        mail-qv1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725870AbgAVOYm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 09:22:39 -0500
-Received: by mail-wr1-f67.google.com with SMTP id y11so7455567wrt.6;
-        Wed, 22 Jan 2020 06:22:38 -0800 (PST)
+        Wed, 22 Jan 2020 09:24:42 -0500
+Received: by mail-qv1-f66.google.com with SMTP id o18so3303206qvf.1
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jan 2020 06:24:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=esYJabAjEgQ+OJupE3wTIjAvn1sA/T0ZDbrjIrXhr+k=;
-        b=RFA64HBbUjHV2WGXea+HfIKNhwiDb4fasmwxzaPEWlT+vjBhAM8FVXI3+LEVeWUKvJ
-         q1Xy0N9hOSr1efO/HbT7XJeUFGosw7090YKpsDLS8ULmvKLRa33EYOoSO8NaRyiQVznU
-         PXr+XkB6rZCP1FyIfM/FZ57CF7xC0fSXB5Tve1kOn9Z7A0LOMdQzvG9C0gsV2z3hoYex
-         Vz0KS8qZIjMMj7D1LZx0x6KnStU/SqS4gSfdzu3CWy2xnsseSzzgGTf5CBr83PCdjybF
-         9iwWTTK90hiZcIh77RWd9J8zZ2NuX2T/jH95KaLZJFr75jp7ki8RsI+uci9DBoWjQJrr
-         03wA==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=9EOtDPRsqZedtcudRq1AD81ej0463sWnMh8/49dqlNI=;
+        b=gOnNFqhwLwiLzMgC2iShGAQOPeyOgZL6M67kZxnUPLtwbIaho7nblhnskv9aZtcHJC
+         UbdDJ8DBenTeZBYGTEJCJ6rvtDAmM7f4EJV1wjm4D64QlO6hTs1TodffanUYHxOaqtE+
+         KR9q6tcY6RYsomsindbVHCimHLSTwauxeB2gY7oP+fUy96x4Ge8JujEyyHLZabkEoyhi
+         +wedyI2nVngEW2MTqfCf9H2gyQ0Zq6Oj6FhRcaTJMiFJ7RemR5lTVUsvV2VTKA5lwN+5
+         tn/Oc8B5ok6sSH28fek83bSfh7oavvwVc+OyyNyY52Sn4OU7bugAA9ypUrUBm79Oj6WQ
+         2KYg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :in-reply-to:references;
-        bh=esYJabAjEgQ+OJupE3wTIjAvn1sA/T0ZDbrjIrXhr+k=;
-        b=t0ztN2Gp6U7xHV22F7XKnc3WkM25jyYVHsB1iBHI2b64idwS11oqvq1GnP/hueCqf0
-         6t4CUfUqvRqju+WtIiu/+TieeF92Lqb57yOP35gq3lKhlQZPzsjhbj11fw2B7qUb+eBZ
-         HQ8vyRz0pGEQ3GfffN6bppGRkReJDX0/4+YlHOjY4h7u8tuanYnjtbZ/z1sK6OA6DkUm
-         WuZOADmekN1UPPnbtToVY9VIUIsuA0zTVBroA55O3FDmePTaV6t5x3QDmJ82CqogHKA2
-         IuriqkqPyJDYKqs2i9FGrBMq4rqlKYEe84dE0YdWahhsRWCj7zPU9aNsSV0KmY+Yqtk2
-         VZLA==
-X-Gm-Message-State: APjAAAXLXBACtvYuNoehdyqCGEcVvFWtYV5ncnBWNSAoiQrkIfv94iB5
-        1Co5l4+fjf6DTmZgnduRPDX5QPKw
-X-Google-Smtp-Source: APXvYqzS3Ld2f5YX9vXRWxiASD+S6dfNkhQTU9CMja25hxOIQ2dZCWYWh/87OWuz7uMEg7TCSMu8og==
-X-Received: by 2002:a5d:608a:: with SMTP id w10mr10943148wrt.136.1579702957407;
-        Wed, 22 Jan 2020 06:22:37 -0800 (PST)
-Received: from 640k.localdomain ([93.56.166.5])
-        by smtp.gmail.com with ESMTPSA id x11sm4172282wmg.46.2020.01.22.06.22.36
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 22 Jan 2020 06:22:36 -0800 (PST)
-From:   Paolo Bonzini <pbonzini@redhat.com>
-To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Cc:     mtosatti@redhat.com, stable@vger.kernel.org
-Subject: [PATCH 1/2] KVM: x86: reorganize pvclock_gtod_data members
-Date:   Wed, 22 Jan 2020 15:22:32 +0100
-Message-Id: <1579702953-24184-2-git-send-email-pbonzini@redhat.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1579702953-24184-1-git-send-email-pbonzini@redhat.com>
-References: <1579702953-24184-1-git-send-email-pbonzini@redhat.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9EOtDPRsqZedtcudRq1AD81ej0463sWnMh8/49dqlNI=;
+        b=jhnLDBhowGnCEOSADeQGQCqiVE++BrjWsbJjhsgYOdBTub0Ke7gHulvqKrsJt6wMY8
+         BWZqhwpYE1aWlPbHye/cfS46z1LKyC98FfjS/DNGzexJ2C4FuARwjQwaumtINZBzX6TI
+         KjYPHG5VIOSUU/OlpJ0bX/XRI201ytuoHIGbSN0eWhiccp5bEu9Soa1eKyIOUzvSlGr1
+         6aE6f1z6gkA3miDnuOTRz++ME1AXDb87EuaviOyx4Kpb72q+q43okA2eVPu3n6JHb1Qe
+         W8+xtzOE7g4wO4awVyDxBm3Fv8849HFxhOKnpwVYRrMqjup8uhtwBr1+2jed1X6F4NpJ
+         dfnA==
+X-Gm-Message-State: APjAAAVGjvQ6+JGxvdFdALXpHFs69wKvzS9alJ9+vDOg96t4ypaT5aFs
+        m4PmqHyKtc5ch7ePbe04YyPuILd0vgjspfHQFXASXg==
+X-Google-Smtp-Source: APXvYqyr3UHmh9dEw4tsZ5jCd1wIGOCJ1jSpzdVLE5X9QzWaQId3N5ZsjbTR56ZpOPYQR/BtwhB/EGj0xC3hlNIuq6w=
+X-Received: by 2002:a0c:c351:: with SMTP id j17mr10856301qvi.80.1579703080516;
+ Wed, 22 Jan 2020 06:24:40 -0800 (PST)
+MIME-Version: 1.0
+References: <000000000000951cea059cba579b@google.com>
+In-Reply-To: <000000000000951cea059cba579b@google.com>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Wed, 22 Jan 2020 15:24:27 +0100
+Message-ID: <CACT4Y+YJmVWFEhdWCtF391EM6qN5OBGTBFLuK4tLL61RiQr+MQ@mail.gmail.com>
+Subject: Re: linux-next build error (7)
+To:     syzbot <syzbot+dc92421ed22129134c0f@syzkaller.appspotmail.com>,
+        steven.price@arm.com, Andrew Morton <akpm@linux-foundation.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Ard Biesheuvel <ardb@kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We will need a copy of tk->offs_boot in the next patch.  Store it and
-cleanup the struct: instead of storing tk->tkr_xxx.base with the tk->offs_boot
-included, store the raw value in struct pvclock_clock and sum tk->offs_boot
-in do_monotonic_raw and do_realtime.   tk->tkr_xxx.xtime_nsec also moves
-to struct pvclock_clock.
+On Wed, Jan 22, 2020 at 2:17 PM syzbot
+<syzbot+dc92421ed22129134c0f@syzkaller.appspotmail.com> wrote:
+>
+> Hello,
+>
+> syzbot found the following crash on:
+>
+> HEAD commit:    ba0b4dfd Add linux-next specific files for 20200122
+> git tree:       linux-next
+> console output: https://syzkaller.appspot.com/x/log.txt?x=17caa985e00000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=7b604c617a6b217c
+> dashboard link: https://syzkaller.appspot.com/bug?extid=dc92421ed22129134c0f
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+>
+> Unfortunately, I don't have any reproducer for this crash yet.
+>
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+dc92421ed22129134c0f@syzkaller.appspotmail.com
+>
+> /syzkaller/managers/upstream-linux-next-kasan-gce-root/kernel/arch/x86/platform/efi/efi_64.c:560: undefined reference to `__efi64_thunk'
+> /syzkaller/managers/upstream-linux-next-kasan-gce-root/kernel/arch/x86/platform/efi/efi_64.c:902: undefined reference to `efi_uv1_memmap_phys_prolog'
+> /syzkaller/managers/upstream-linux-next-kasan-gce-root/kernel/arch/x86/platform/efi/efi_64.c:921: undefined reference to `efi_uv1_memmap_phys_epilog'
 
-While at it, fix a (usually harmless) typo in do_monotonic_raw, which
-was using gtod->clock.shift instead of gtod->raw_clock.shift.
+There are 2 recent commits in linux-next touching this file:
 
-Fixes: 53fafdbb8b21f ("KVM: x86: switch KVMCLOCK base to monotonic raw clock")
-Cc: stable@vger.kernel.org
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
----
- arch/x86/kvm/x86.c | 29 ++++++++++++-----------------
- 1 file changed, 12 insertions(+), 17 deletions(-)
+commit 6616face70e25c80420539075a943ac1bc9b990c
+Date:   Wed Jan 22 09:12:37 2020 +1100
+    x86: mm+efi: convert ptdump_walk_pgd_level() to take a mm_struct
 
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 89621025577a..1b4273cce63c 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -1532,6 +1532,8 @@ struct pvclock_clock {
- 	u64 mask;
- 	u32 mult;
- 	u32 shift;
-+	u64 base_cycles;
-+	u64 offset;
- };
- 
- struct pvclock_gtod_data {
-@@ -1540,11 +1542,8 @@ struct pvclock_gtod_data {
- 	struct pvclock_clock clock; /* extract of a clocksource struct */
- 	struct pvclock_clock raw_clock; /* extract of a clocksource struct */
- 
--	u64		boot_ns_raw;
--	u64		boot_ns;
--	u64		nsec_base;
-+	ktime_t		offs_boot;
- 	u64		wall_time_sec;
--	u64		monotonic_raw_nsec;
- };
- 
- static struct pvclock_gtod_data pvclock_gtod_data;
-@@ -1552,10 +1551,6 @@ struct pvclock_gtod_data {
- static void update_pvclock_gtod(struct timekeeper *tk)
- {
- 	struct pvclock_gtod_data *vdata = &pvclock_gtod_data;
--	u64 boot_ns, boot_ns_raw;
--
--	boot_ns = ktime_to_ns(ktime_add(tk->tkr_mono.base, tk->offs_boot));
--	boot_ns_raw = ktime_to_ns(ktime_add(tk->tkr_raw.base, tk->offs_boot));
- 
- 	write_seqcount_begin(&vdata->seq);
- 
-@@ -1565,20 +1560,20 @@ static void update_pvclock_gtod(struct timekeeper *tk)
- 	vdata->clock.mask		= tk->tkr_mono.mask;
- 	vdata->clock.mult		= tk->tkr_mono.mult;
- 	vdata->clock.shift		= tk->tkr_mono.shift;
-+	vdata->clock.base_cycles	= tk->tkr_mono.xtime_nsec;
-+	vdata->clock.offset		= tk->tkr_mono.base;
- 
- 	vdata->raw_clock.vclock_mode	= tk->tkr_raw.clock->archdata.vclock_mode;
- 	vdata->raw_clock.cycle_last	= tk->tkr_raw.cycle_last;
- 	vdata->raw_clock.mask		= tk->tkr_raw.mask;
- 	vdata->raw_clock.mult		= tk->tkr_raw.mult;
- 	vdata->raw_clock.shift		= tk->tkr_raw.shift;
--
--	vdata->boot_ns			= boot_ns;
--	vdata->nsec_base		= tk->tkr_mono.xtime_nsec;
-+	vdata->raw_clock.base_cycles	= tk->tkr_raw.xtime_nsec;
-+	vdata->raw_clock.offset		= tk->tkr_raw.base;
- 
- 	vdata->wall_time_sec            = tk->xtime_sec;
- 
--	vdata->boot_ns_raw		= boot_ns_raw;
--	vdata->monotonic_raw_nsec	= tk->tkr_raw.xtime_nsec;
-+	vdata->offs_boot		= tk->offs_boot;
- 
- 	write_seqcount_end(&vdata->seq);
- }
-@@ -2048,10 +2043,10 @@ static int do_monotonic_raw(s64 *t, u64 *tsc_timestamp)
- 
- 	do {
- 		seq = read_seqcount_begin(&gtod->seq);
--		ns = gtod->monotonic_raw_nsec;
-+		ns = gtod->raw_clock.base_cycles;
- 		ns += vgettsc(&gtod->raw_clock, tsc_timestamp, &mode);
--		ns >>= gtod->clock.shift;
--		ns += gtod->boot_ns_raw;
-+		ns >>= gtod->raw_clock.shift;
-+		ns += ktime_to_ns(ktime_add(gtod->raw_clock.offset, gtod->offs_boot));
- 	} while (unlikely(read_seqcount_retry(&gtod->seq, seq)));
- 	*t = ns;
- 
-@@ -2068,7 +2063,7 @@ static int do_realtime(struct timespec64 *ts, u64 *tsc_timestamp)
- 	do {
- 		seq = read_seqcount_begin(&gtod->seq);
- 		ts->tv_sec = gtod->wall_time_sec;
--		ns = gtod->nsec_base;
-+		ns = gtod->clock.base_cycles;
- 		ns += vgettsc(&gtod->clock, tsc_timestamp, &mode);
- 		ns >>= gtod->clock.shift;
- 	} while (unlikely(read_seqcount_retry(&gtod->seq, seq)));
--- 
-1.8.3.1
+commit 3cc028619e284188cdde652631e1c3c5a83692b9
+Date:   Sat Jan 18 17:57:03 2020 +0100
+    efi/x86: avoid KASAN false positives when accessing the 1: 1 mapping
 
-
+Not sure which one is this. But linux-next is build broken.
