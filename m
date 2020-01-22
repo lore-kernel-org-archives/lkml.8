@@ -4,77 +4,131 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 447F5C33CAF
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 10:16:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0E0AC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 10:17:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1968E2467F
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 10:16:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8780A2467F
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 10:17:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729232AbgAVKQ3 (ORCPT
+        id S1729440AbgAVKRO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 05:16:29 -0500
-Received: from mx2.suse.de ([195.135.220.15]:58942 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726004AbgAVKQ3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 05:16:29 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 3AFFFB2FA;
-        Wed, 22 Jan 2020 10:16:27 +0000 (UTC)
-Date:   Wed, 22 Jan 2020 11:16:25 +0100
-From:   Jean Delvare <jdelvare@suse.de>
-To:     Luca Ceresoli <luca@lucaceresoli.net>
-Cc:     linux-doc@vger.kernel.org, linux-i2c@vger.kernel.org,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Peter Rosin <peda@axentia.se>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 23/26] docs: i2c: old-module-parameters: fix internal
- hyperlink
-Message-ID: <20200122111625.6685b606@endymion>
-In-Reply-To: <20200105225012.11701-23-luca@lucaceresoli.net>
-References: <20200105224006.10321-1-luca@lucaceresoli.net>
-        <20200105225012.11701-1-luca@lucaceresoli.net>
-        <20200105225012.11701-23-luca@lucaceresoli.net>
-Organization: SUSE Linux
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-suse-linux-gnu)
+        Wed, 22 Jan 2020 05:17:14 -0500
+Received: from www62.your-server.de ([213.133.104.62]:50544 "EHLO
+        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726191AbgAVKRO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 05:17:14 -0500
+Received: from sslproxy03.your-server.de ([88.198.220.132])
+        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89_1)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1iuD4J-00074X-Mm; Wed, 22 Jan 2020 11:17:03 +0100
+Received: from [2001:1620:665:0:5795:5b0a:e5d5:5944] (helo=linux-3.fritz.box)
+        by sslproxy03.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1iuD4J-000GIS-BX; Wed, 22 Jan 2020 11:17:03 +0100
+Subject: Re: [PATCH v3] [net]: Fix skb->csum update in
+ inet_proto_csum_replace16().
+To:     Praveen Chaudhary <praveen5582@gmail.com>, fw@strlen.de,
+        pablo@netfilter.org, davem@davemloft.net, kadlec@netfilter.org,
+        netfilter-devel@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Zhenggen Xu <zxu@linkedin.com>,
+        Andy Stracner <astracner@linkedin.com>
+References: <1573080729-3102-1-git-send-email-pchaudhary@linkedin.com>
+ <1573080729-3102-2-git-send-email-pchaudhary@linkedin.com>
+From:   Daniel Borkmann <daniel@iogearbox.net>
+Message-ID: <16d56ee6-53bc-1124-3700-bc0a78f927d6@iogearbox.net>
+Date:   Wed, 22 Jan 2020 11:17:02 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <1573080729-3102-2-git-send-email-pchaudhary@linkedin.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Authenticated-Sender: daniel@iogearbox.net
+X-Virus-Scanned: Clear (ClamAV 0.101.4/25702/Tue Jan 21 12:39:19 2020)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun,  5 Jan 2020 23:50:09 +0100, Luca Ceresoli wrote:
-> Use ReST syntax so that a proper hyperlink is generated.
+On 11/6/19 11:52 PM, Praveen Chaudhary wrote:
+> skb->csum is updated incorrectly, when manipulation for NF_NAT_MANIP_SRC\DST
+> is done on IPV6 packet.
 > 
-> Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
+> Fix:
+> No need to update skb->csum in function inet_proto_csum_replace16(), even if
+> skb->ip_summed == CHECKSUM_COMPLETE, because change in L4 header checksum field
+> and change in IPV6 header cancels each other for skb->csum calculation.
+> 
+> Signed-off-by: Praveen Chaudhary <pchaudhary@linkedin.com>
+> Signed-off-by: Zhenggen Xu <zxu@linkedin.com>
+> Signed-off-by: Andy Stracner <astracner@linkedin.com>
+> 
+> Reviewed-by: Florian Westphal <fw@strlen.de>
 > ---
->  Documentation/i2c/old-module-parameters.rst | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
+> Changes in V2.
+> 1.) Updating diff as per email discussion with Florian Westphal.
+>      Since inet_proto_csum_replace16() does incorrect calculation
+>      for skb->csum in all cases.
+> 2.) Change in Commmit logs.
+> ---
 > 
-> diff --git a/Documentation/i2c/old-module-parameters.rst b/Documentation/i2c/old-module-parameters.rst
-> index 78a6950e5763..0503d2f0b127 100644
-> --- a/Documentation/i2c/old-module-parameters.rst
-> +++ b/Documentation/i2c/old-module-parameters.rst
-> @@ -12,8 +12,7 @@ address), "force" (to forcibly attach the driver to a given device) and
->  With the conversion of the I2C subsystem to the standard device driver
->  binding model, it became clear that these per-module parameters were no
->  longer needed, and that a centralized implementation was possible. The new,
-> -sysfs-based interface is described in the documentation file
-> -"instantiating-devices", section "Method 4: Instantiate from user-space".
-> +sysfs-based interface is described in :doc:`instantiating-devices`.
+> ---
+> Changes in V3.
+> Addressing Pablo`s Suggesion.
+> 1.) Updated Subject and description
+> 2.) Added full documentation of function.
+> ---
+> ---
+>   net/core/utils.c | 18 +++++++++++++++---
+>   1 file changed, 15 insertions(+), 3 deletions(-)
+> 
+> diff --git a/net/core/utils.c b/net/core/utils.c
+> index 6b6e51d..af3b5cb 100644
+> --- a/net/core/utils.c
+> +++ b/net/core/utils.c
+> @@ -438,6 +438,21 @@ void inet_proto_csum_replace4(__sum16 *sum, struct sk_buff *skb,
+>   }
+>   EXPORT_SYMBOL(inet_proto_csum_replace4);
+>   
+> +/**
+> + * inet_proto_csum_replace16 - update L4 header checksum field as per the
+> + * update in IPv6 Header. Note, there is no need to update skb->csum in this
+> + * function, even if skb->ip_summed == CHECKSUM_COMPLETE, because change in L4
+> + * header checksum field and change in IPV6 header cancels each other for
+> + * skb->csum calculation.
+> + *
+> + * @sum: L4 header checksum field
+> + * @skb: sk_buff for the packet
+> + * @from: old IPv6 address
+> + * @to: new IPv6 address
+> + * @pseudohdr: True if L4 header checksum includes pseudoheader
+> + *
+> + * Return void
+> + */
+>   void inet_proto_csum_replace16(__sum16 *sum, struct sk_buff *skb,
+>   			       const __be32 *from, const __be32 *to,
+>   			       bool pseudohdr)
+> @@ -449,9 +464,6 @@ void inet_proto_csum_replace16(__sum16 *sum, struct sk_buff *skb,
+>   	if (skb->ip_summed != CHECKSUM_PARTIAL) {
+>   		*sum = csum_fold(csum_partial(diff, sizeof(diff),
+>   				 ~csum_unfold(*sum)));
+> -		if (skb->ip_summed == CHECKSUM_COMPLETE && pseudohdr)
+> -			skb->csum = ~csum_partial(diff, sizeof(diff),
+> -						  ~skb->csum);
 
-I object to removing the reference to the section. I think this is
-saving the reader some time so it is valuable.
+What is the technical rationale in removing this here but not in any of the
+other inet_proto_csum_replace*() functions? You changelog has zero analysis
+on why here but not elsewhere this change would be needed?
 
->  
->  Below is a mapping from the old module parameters to the new interface.
->  
+>   	} else if (pseudohdr)
+>   		*sum = ~csum_fold(csum_partial(diff, sizeof(diff),
+>   				  csum_unfold(*sum)));
+> 
 
-Reviewed-by: Jean Delvare <jdelvare@suse.de>
-
--- 
-Jean Delvare
-SUSE L3 Support
