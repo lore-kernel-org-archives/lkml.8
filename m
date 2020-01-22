@@ -7,64 +7,64 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8063C33CAF
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 10:05:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3399C33CBA
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 10:05:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9180424683
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 10:05:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79E6B2467B
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 10:05:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="v+JqGgoJ"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="TyTQ1Gmd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729433AbgAVKFA (ORCPT
+        id S1729497AbgAVKFI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 05:05:00 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:35471 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729281AbgAVKE5 (ORCPT
+        Wed, 22 Jan 2020 05:05:08 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:33579 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729367AbgAVKE6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 05:04:57 -0500
-Received: by mail-wr1-f68.google.com with SMTP id g17so6598536wro.2
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jan 2020 02:04:56 -0800 (PST)
+        Wed, 22 Jan 2020 05:04:58 -0500
+Received: by mail-wm1-f67.google.com with SMTP id d139so4027929wmd.0
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jan 2020 02:04:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=Yw/4NLYEuxJ4fKq4pCM6ugotTNyG68OGT/ZIT0URmH4=;
-        b=v+JqGgoJMtQE0pUX58ConDISFTmQqt6UPkNAzux0NzKoSfnD0mJKZd9bbeiH3o0I+g
-         9DQ1pWa3AuGN7EmtAkOnbWmwHuTYsTVf+s1BMzs4wer644CfyoyS0kwhXDz5bP9Ug+/X
-         iYdz2mRqESoQP3J9VE6u707i7BYGsUtNyqtNgPA204jK18X7JZAO9ue26q14GWFYfC87
-         towBTY8iUOCx8G2xwTz7P6G2+kxoxIH4V5QXvcpOegxQA2FZ841nR2KC9XK26LshiX1H
-         XmS/vkDvMvtuB8X+FfKduw0rlawm9n9/pPW2liRlgF/ed39P308pq9v/4QTS3UW5dGBU
-         rv1Q==
+        bh=syU5/1zsk41J9XenYExkcSrSf1m75wNu2Uxs4S6RkBs=;
+        b=TyTQ1Gmd71wvmjv/+74mGmrCiZ9C/3z1DIhBcwGsT4wOpNk3c9j3RmUkn/5S2OEmdX
+         mn3gnUi3moCZvi0AQzLrek4FMn1ZXHqqeq61v1Ir7gV+o/bRfu/KNw62LBaFK6pZqjQE
+         1cjNz6d+C0kUyauNMUcIjtX1oVOYvMTJlNy5RDNDQnspoHV3cc5dHU/r82VR/citD3rC
+         eFDhRlYZxmMVWEealCj8PDi4LD+5ydSXAWcS07QbeTnnwjY01VW0P6G0DDYL+fyUAWXY
+         i4OJW/Y6aBeg7EZ+uB1jed/lYXR1OH6a46ihmTvQmrq1l34r5USIN4sr9o9Ihv+4E3K9
+         saEg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=Yw/4NLYEuxJ4fKq4pCM6ugotTNyG68OGT/ZIT0URmH4=;
-        b=AYVSIlwZD5n3wNJtKmQdtUlcC+8G9YOTm9foAPPljydzx2SlVa+sb+WSYkqooEZHYM
-         tntkA2gRJy2DFC7F3DVenjS/rpyzc2WZ4eDJKTN3HMi5gzj7z1tHqYVlseiurYBIbIY+
-         g6knv0rRRpJQy5h/MdSZU2r1Ld0WxnQ5HiHS+6FYJJVZe8A2WqFERxB6j14PCP2I5nMb
-         twH/hpNaIXqVhaZ7cLFdvlgpj8EoGyJKbGy6byMbCt/l1tiq34cB6Ku1QoFvdbh4pM0D
-         PFUUkXrNmEh26h4l3IJDj6uJpq7OkYCsxOWDuJWavnG4XaN1I4M/oIBrmwhWduYjmgEM
-         ptVw==
-X-Gm-Message-State: APjAAAWkRNFs73biSd86WRBvhaatDJTvW2JkxB7nr3SDfhH4YuWgxCfi
-        7WBthkqMJlD8h1XVIhfh45kGKw==
-X-Google-Smtp-Source: APXvYqwJXta7jmEApeIzjvflSF8Ln/f2IlsILY2IcIhiWwi7NvQ9mp+urqVjtg/E7wk5iecmCBOj/g==
-X-Received: by 2002:adf:8297:: with SMTP id 23mr9875680wrc.379.1579687495519;
-        Wed, 22 Jan 2020 02:04:55 -0800 (PST)
+        bh=syU5/1zsk41J9XenYExkcSrSf1m75wNu2Uxs4S6RkBs=;
+        b=FWG1sfH1U59uItql59waSuHYIL9cu5xkErMKC/dh79VDjaAcIWGB6OKUiCxPERMiiW
+         z7L+VNepetBfPmG05D5rzx66enZeTU0Plj1wjb6CV0qYduF1LbQLWs8KA/Wf9Li5jGuw
+         ug7frqOi8yrNB/Tl+XVGeNyPncExUaA0E9tpmxEYvGlOTh0iXk+iIVS1f2X9MsuQ7uPe
+         e0DuFwIltGF2/nlX/MegQ5rWWnagNwZkoKm3KaRHmeS2iVD8lTlWFDyUdePGmnHIZ7pr
+         bs86azctduywnbCVd07cpi32yCb3jUI1h29VbxCmrpGFwUzQIZrFdfCMxVe0PqPY198/
+         Z9zw==
+X-Gm-Message-State: APjAAAXl1caqG+xZ1FL9V98TbAorAI5V7gw0ZLaXi2fZpobquHDZG4DL
+        1YKm06HJt55PpQwNX9TmDNl6Q5cgmAY=
+X-Google-Smtp-Source: APXvYqyIn4WjUP6H8iMUfBYz19dJwcFjkd+OuUywWtqSbuXPCcYhZDLdw3dWOmUzestdyp3FZqtlPA==
+X-Received: by 2002:a1c:3dc3:: with SMTP id k186mr2176455wma.95.1579687496806;
+        Wed, 22 Jan 2020 02:04:56 -0800 (PST)
 Received: from starbuck.baylibre.local (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.googlemail.com with ESMTPSA id l3sm52237648wrt.29.2020.01.22.02.04.54
+        by smtp.googlemail.com with ESMTPSA id l3sm52237648wrt.29.2020.01.22.02.04.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Jan 2020 02:04:54 -0800 (PST)
+        Wed, 22 Jan 2020 02:04:56 -0800 (PST)
 From:   Jerome Brunet <jbrunet@baylibre.com>
 To:     Neil Armstrong <narmstrong@baylibre.com>, linux-clk@vger.kernel.org
 Cc:     Jerome Brunet <jbrunet@baylibre.com>,
         Kevin Hilman <khilman@baylibre.com>,
         linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 1/3] dt-bindings: clk: meson: add the gxl internal dac gate
-Date:   Wed, 22 Jan 2020 11:04:49 +0100
-Message-Id: <20200122100451.2443153-2-jbrunet@baylibre.com>
+Subject: [PATCH 2/3] clk: meson: gxbb: add the gxl internal dac gate
+Date:   Wed, 22 Jan 2020 11:04:50 +0100
+Message-Id: <20200122100451.2443153-3-jbrunet@baylibre.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200122100451.2443153-1-jbrunet@baylibre.com>
 References: <20200122100451.2443153-1-jbrunet@baylibre.com>
@@ -76,24 +76,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the gxl ACODEC clock id to the gxbb clock controller bindings
+Add the ACODEC clock gate to the gxl clk controller driver
 
 Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
 ---
- include/dt-bindings/clock/gxbb-clkc.h | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/clk/meson/gxbb.c | 3 +++
+ drivers/clk/meson/gxbb.h | 2 +-
+ 2 files changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/include/dt-bindings/clock/gxbb-clkc.h b/include/dt-bindings/clock/gxbb-clkc.h
-index db0763e96173..4073eb7a9da1 100644
---- a/include/dt-bindings/clock/gxbb-clkc.h
-+++ b/include/dt-bindings/clock/gxbb-clkc.h
-@@ -146,5 +146,6 @@
- #define CLKID_CTS_VDAC		201
- #define CLKID_HDMI_TX		202
- #define CLKID_HDMI		205
-+#define CLKID_ACODEC		206
+diff --git a/drivers/clk/meson/gxbb.c b/drivers/clk/meson/gxbb.c
+index 1f9c056e684c..47916c4f1700 100644
+--- a/drivers/clk/meson/gxbb.c
++++ b/drivers/clk/meson/gxbb.c
+@@ -2613,6 +2613,7 @@ static MESON_GATE(gxbb_assist_misc, HHI_GCLK_MPEG0, 23);
+ static MESON_GATE(gxbb_emmc_a, HHI_GCLK_MPEG0, 24);
+ static MESON_GATE(gxbb_emmc_b, HHI_GCLK_MPEG0, 25);
+ static MESON_GATE(gxbb_emmc_c, HHI_GCLK_MPEG0, 26);
++static MESON_GATE(gxl_acodec, HHI_GCLK_MPEG0, 28);
+ static MESON_GATE(gxbb_spi, HHI_GCLK_MPEG0, 30);
  
- #endif /* __GXBB_CLKC_H */
+ static MESON_GATE(gxbb_i2s_spdif, HHI_GCLK_MPEG1, 2);
+@@ -3100,6 +3101,7 @@ static struct clk_hw_onecell_data gxl_hw_onecell_data = {
+ 		[CLKID_HDMI_SEL]	    = &gxbb_hdmi_sel.hw,
+ 		[CLKID_HDMI_DIV]	    = &gxbb_hdmi_div.hw,
+ 		[CLKID_HDMI]		    = &gxbb_hdmi.hw,
++		[CLKID_ACODEC]		    = &gxl_acodec.hw,
+ 		[NR_CLKS]		    = NULL,
+ 	},
+ 	.num = NR_CLKS,
+@@ -3491,6 +3493,7 @@ static struct clk_regmap *const gxl_clk_regmaps[] = {
+ 	&gxl_hdmi_pll_od,
+ 	&gxl_hdmi_pll_od2,
+ 	&gxl_hdmi_pll_dco,
++	&gxl_acodec,
+ };
+ 
+ static const struct meson_eeclkc_data gxbb_clkc_data = {
+diff --git a/drivers/clk/meson/gxbb.h b/drivers/clk/meson/gxbb.h
+index b53584fe66cf..1ee8cb7e2f5a 100644
+--- a/drivers/clk/meson/gxbb.h
++++ b/drivers/clk/meson/gxbb.h
+@@ -188,7 +188,7 @@
+ #define CLKID_HDMI_SEL		  203
+ #define CLKID_HDMI_DIV		  204
+ 
+-#define NR_CLKS			  206
++#define NR_CLKS			  207
+ 
+ /* include the CLKIDs that have been made part of the DT binding */
+ #include <dt-bindings/clock/gxbb-clkc.h>
 -- 
 2.24.1
 
