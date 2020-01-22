@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D25EAC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:47:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0A35C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:47:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA71E2468A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:47:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 860BF2468A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:47:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579686438;
-	bh=vHUg67buj3r9p7/SuoC+0nK7+Jt1NwydcxrhjrQZDqI=;
+	s=default; t=1579686441;
+	bh=29OjniStbKL9NpsfLJ8lSC2pv5L4DmGmImaeT/VOcWI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ne6bawdZ+/JPib71S7mpO7lQl0yK+NOqW6FkIuOjbpaFxJZm8xQBMKOlYKurPfpUU
-	 VJHhN/BkKaVBwsMCAWJL/ry5kOjsdgVHQ+/tqljeBvm6f61Ud8MDfQ9DuHIXN2kOpl
-	 hp5IGymAKWqKpYT8U8pcAhP4bqxkaeujRmlylyh0=
+	b=MwxlciG3607oUEUuPXgBOrNUgXRhpOPs6ybV5sBqlNeJCqeytxKS5myHKAoPqX5lE
+	 s9hIq3Ec3DFvX9mwIzyYGwcyNJGEtQhrfWG7qopyDf840UZLUFP6EKppy2beYXf35a
+	 KyJWnM+VZj7/Y7HzprPK8Hvij5ryI/nHnenqbzug=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733197AbgAVJmc (ORCPT
+        id S1732490AbgAVJrU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 04:42:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34152 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 04:47:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34422 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387701AbgAVJmV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 04:42:21 -0500
+        id S2387729AbgAVJmb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 04:42:31 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6B43B24689;
-        Wed, 22 Jan 2020 09:42:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1702724684;
+        Wed, 22 Jan 2020 09:42:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579686140;
-        bh=vHUg67buj3r9p7/SuoC+0nK7+Jt1NwydcxrhjrQZDqI=;
+        s=default; t=1579686150;
+        bh=29OjniStbKL9NpsfLJ8lSC2pv5L4DmGmImaeT/VOcWI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=N40CKS0/J6kQBkAmGgCY8Jcj+mgvoXX0W78tojfM5jcsvZtZd0yirytkkUxS+VmKP
-         aB94L4jcrnQ1v0fAogpAamrHegs/r2KY/PTLwjGQ7TIvB6eF5ocJPGUzKCZrOhZiRr
-         bGmXkqXFTTnhd3U7sC6rGzJYEXlpCa785rTrY4uo=
+        b=Kev92afff7pgz+LkCabJlJ1OsNilDtq9tYDCVkOFcIKAziziu0fdpGZYES8B6ns95
+         jCqQVsLnVUcZE2pgPLchn3HOgnpRsryJy0OkoegpStbP2M2ymwXZRmzwSks23xzEDM
+         p1aljD1kUeiavQVHeSFjsE3DahKbuX+LgFSoHKO4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        syzbot+2b2ef983f973e5c40943@syzkaller.appspotmail.com,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.19 024/103] ALSA: seq: Fix racy access for queue timer in proc read
-Date:   Wed, 22 Jan 2020 10:28:40 +0100
-Message-Id: <20200122092807.412847495@linuxfoundation.org>
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Ming Lei <ming.lei@redhat.com>,
+        Mikulas Patocka <mpatocka@redhat.com>,
+        Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 4.19 028/103] block: fix an integer overflow in logical block size
+Date:   Wed, 22 Jan 2020 10:28:44 +0100
+Message-Id: <20200122092808.067998762@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200122092803.587683021@linuxfoundation.org>
 References: <20200122092803.587683021@linuxfoundation.org>
@@ -60,54 +62,116 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Mikulas Patocka <mpatocka@redhat.com>
 
-commit 60adcfde92fa40fcb2dbf7cc52f9b096e0cd109a upstream.
+commit ad6bf88a6c19a39fb3b0045d78ea880325dfcf15 upstream.
 
-snd_seq_info_timer_read() reads the information of the timer assigned
-for each queue, but it's done in a racy way which may lead to UAF as
-spotted by syzkaller.
+Logical block size has type unsigned short. That means that it can be at
+most 32768. However, there are architectures that can run with 64k pages
+(for example arm64) and on these architectures, it may be possible to
+create block devices with 64k block size.
 
-This patch applies the missing q->timer_mutex lock while accessing the
-timer object as well as a slight code change to adapt the standard
-coding style.
+For exmaple (run this on an architecture with 64k pages):
 
-Reported-by: syzbot+2b2ef983f973e5c40943@syzkaller.appspotmail.com
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200115203733.26530-1-tiwai@suse.de
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Mount will fail with this error because it tries to read the superblock using 2-sector
+access:
+  device-mapper: writecache: I/O is not aligned, sector 2, size 1024, block size 65536
+  EXT4-fs (dm-0): unable to read superblock
+
+This patch changes the logical block size from unsigned short to unsigned
+int to avoid the overflow.
+
+Cc: stable@vger.kernel.org
+Reviewed-by: Martin K. Petersen <martin.petersen@oracle.com>
+Reviewed-by: Ming Lei <ming.lei@redhat.com>
+Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/core/seq/seq_timer.c |   14 +++++++++-----
- 1 file changed, 9 insertions(+), 5 deletions(-)
+ block/blk-settings.c            |    2 +-
+ drivers/md/dm-snap-persistent.c |    2 +-
+ drivers/md/raid0.c              |    2 +-
+ include/linux/blkdev.h          |    8 ++++----
+ 4 files changed, 7 insertions(+), 7 deletions(-)
 
---- a/sound/core/seq/seq_timer.c
-+++ b/sound/core/seq/seq_timer.c
-@@ -480,15 +480,19 @@ void snd_seq_info_timer_read(struct snd_
- 		q = queueptr(idx);
- 		if (q == NULL)
- 			continue;
--		if ((tmr = q->timer) == NULL ||
--		    (ti = tmr->timeri) == NULL) {
--			queuefree(q);
--			continue;
--		}
-+		mutex_lock(&q->timer_mutex);
-+		tmr = q->timer;
-+		if (!tmr)
-+			goto unlock;
-+		ti = tmr->timeri;
-+		if (!ti)
-+			goto unlock;
- 		snd_iprintf(buffer, "Timer for queue %i : %s\n", q->queue, ti->timer->name);
- 		resolution = snd_timer_resolution(ti) * tmr->ticks;
- 		snd_iprintf(buffer, "  Period time : %lu.%09lu\n", resolution / 1000000000, resolution % 1000000000);
- 		snd_iprintf(buffer, "  Skew : %u / %u\n", tmr->skew, tmr->skew_base);
-+unlock:
-+		mutex_unlock(&q->timer_mutex);
- 		queuefree(q);
-  	}
+--- a/block/blk-settings.c
++++ b/block/blk-settings.c
+@@ -379,7 +379,7 @@ EXPORT_SYMBOL(blk_queue_max_segment_size
+  *   storage device can address.  The default of 512 covers most
+  *   hardware.
+  **/
+-void blk_queue_logical_block_size(struct request_queue *q, unsigned short size)
++void blk_queue_logical_block_size(struct request_queue *q, unsigned int size)
+ {
+ 	q->limits.logical_block_size = size;
+ 
+--- a/drivers/md/dm-snap-persistent.c
++++ b/drivers/md/dm-snap-persistent.c
+@@ -17,7 +17,7 @@
+ #include <linux/dm-bufio.h>
+ 
+ #define DM_MSG_PREFIX "persistent snapshot"
+-#define DM_CHUNK_SIZE_DEFAULT_SECTORS 32	/* 16KB */
++#define DM_CHUNK_SIZE_DEFAULT_SECTORS 32U	/* 16KB */
+ 
+ #define DM_PREFETCH_CHUNKS		12
+ 
+--- a/drivers/md/raid0.c
++++ b/drivers/md/raid0.c
+@@ -94,7 +94,7 @@ static int create_strip_zones(struct mdd
+ 	char b[BDEVNAME_SIZE];
+ 	char b2[BDEVNAME_SIZE];
+ 	struct r0conf *conf = kzalloc(sizeof(*conf), GFP_KERNEL);
+-	unsigned short blksize = 512;
++	unsigned blksize = 512;
+ 
+ 	*private_conf = ERR_PTR(-ENOMEM);
+ 	if (!conf)
+--- a/include/linux/blkdev.h
++++ b/include/linux/blkdev.h
+@@ -372,6 +372,7 @@ struct queue_limits {
+ 	unsigned int		max_sectors;
+ 	unsigned int		max_segment_size;
+ 	unsigned int		physical_block_size;
++	unsigned int		logical_block_size;
+ 	unsigned int		alignment_offset;
+ 	unsigned int		io_min;
+ 	unsigned int		io_opt;
+@@ -382,7 +383,6 @@ struct queue_limits {
+ 	unsigned int		discard_granularity;
+ 	unsigned int		discard_alignment;
+ 
+-	unsigned short		logical_block_size;
+ 	unsigned short		max_segments;
+ 	unsigned short		max_integrity_segments;
+ 	unsigned short		max_discard_segments;
+@@ -1212,7 +1212,7 @@ extern void blk_queue_max_write_same_sec
+ 		unsigned int max_write_same_sectors);
+ extern void blk_queue_max_write_zeroes_sectors(struct request_queue *q,
+ 		unsigned int max_write_same_sectors);
+-extern void blk_queue_logical_block_size(struct request_queue *, unsigned short);
++extern void blk_queue_logical_block_size(struct request_queue *, unsigned int);
+ extern void blk_queue_physical_block_size(struct request_queue *, unsigned int);
+ extern void blk_queue_alignment_offset(struct request_queue *q,
+ 				       unsigned int alignment);
+@@ -1473,7 +1473,7 @@ static inline unsigned int queue_max_seg
+ 	return q->limits.max_segment_size;
+ }
+ 
+-static inline unsigned short queue_logical_block_size(struct request_queue *q)
++static inline unsigned queue_logical_block_size(struct request_queue *q)
+ {
+ 	int retval = 512;
+ 
+@@ -1483,7 +1483,7 @@ static inline unsigned short queue_logic
+ 	return retval;
+ }
+ 
+-static inline unsigned short bdev_logical_block_size(struct block_device *bdev)
++static inline unsigned int bdev_logical_block_size(struct block_device *bdev)
+ {
+ 	return queue_logical_block_size(bdev_get_queue(bdev));
  }
 
 
