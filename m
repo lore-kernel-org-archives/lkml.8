@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-5.7 required=3.0 tests=DATE_IN_PAST_03_06,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42BEBC33CB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:29:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ED74C33CB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:29:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 078C920678
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:29:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1692024125
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:29:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579699788;
-	bh=SpDzbbOwicUHa4Zm+r4y/NZKqNvo4lpUqQrWehgGjZg=;
+	s=default; t=1579699799;
+	bh=8u5bBSZvcbj5TDvKR7jmKt4eiSeLil8Ogw8aRHcZKuk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jvBu2I0yKZLeFlVgz+lA6HPXTGVyO/GESZWy/aNBeCLNJ0WqX4jOm8njKzocDEAdw
-	 9Nc6fCtNd9ZGFmWArtPqjMKwCPPC8Nufc8+wbWebznaJi12Mg0uAX1bvln6KxyBndl
-	 zirQFoIG6eTJcZ6paZLWAtHwhFEaD8RdHYU+ki4E=
+	b=je4MlLPoyhE9wVkyD3NaICzq6s0jtQHEc+gqi5+inKdm4x4Zvt0PZ+rDA5+/C5luI
+	 /V8zHja8O2FPRqAp+ZsBXVKLtv3K7RKLl2KkftXGpsitJV05NvJeFGyAjm0R3fc6Vg
+	 jx8JMvTegtJ+UBMIw4lTSk9gT80IZVz+PJPeFvrw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731448AbgAVN0C (ORCPT
+        id S1731104AbgAVNY6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 08:26:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46412 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 08:24:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44238 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729774AbgAVNZ7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 08:25:59 -0500
+        id S1730589AbgAVNYz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 08:24:55 -0500
 Received: from localhost (unknown [84.241.205.26])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A15F92467E;
-        Wed, 22 Jan 2020 13:25:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4EE9024688;
+        Wed, 22 Jan 2020 13:24:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579699557;
-        bh=SpDzbbOwicUHa4Zm+r4y/NZKqNvo4lpUqQrWehgGjZg=;
+        s=default; t=1579699493;
+        bh=8u5bBSZvcbj5TDvKR7jmKt4eiSeLil8Ogw8aRHcZKuk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=b49UKK4Zvd9Ly8KK8QKhFG7QKLDSmXyBJvCIWpoxvfsl50DtCty7S7/1ZQ/IN8n0z
-         elFOvc0UYzCP7NXn/7/QQ5dv8bi95519gQ5LHa0aZ6Jj61qAyhxV4s8ZrOqPjZEXs1
-         Z01deUI3PTESrllwhiQ+rAjZ3iSe18xOxJvKhMhY=
+        b=HrEgr8eUCOf0oh1O8jyZYUBvcH0lPJV2qyao26OCblvpzc6rAJFPWKTrNhVPM4F/C
+         cV+JgtC8BcrKAAmYZr0BlxGwF/GFb22vZobPUVwxVXslOlWCrOPGLqYaxcxzXAj32q
+         XkHtSkvIUFjWaKNcZwufLW6fmJzaU1Xcfvi5Vd0I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Christian Hewitt <christianshewitt@gmail.com>,
-        Kevin Hilman <khilman@baylibre.com>
-Subject: [PATCH 5.4 178/222] arm64: dts: meson-gxl-s905x-khadas-vim: fix gpio-keys-polled node
-Date:   Wed, 22 Jan 2020 10:29:24 +0100
-Message-Id: <20200122092846.441350088@linuxfoundation.org>
+        stable@vger.kernel.org, Petr Machata <petrm@mellanox.com>,
+        Jiri Pirko <jiri@mellanox.com>,
+        Ido Schimmel <idosch@mellanox.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.4 163/222] mlxsw: spectrum_qdisc: Include MC TCs in Qdisc counters
+Date:   Wed, 22 Jan 2020 10:29:09 +0100
+Message-Id: <20200122092845.384279560@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200122092833.339495161@linuxfoundation.org>
 References: <20200122092833.339495161@linuxfoundation.org>
@@ -60,40 +61,109 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christian Hewitt <christianshewitt@gmail.com>
+From: Petr Machata <petrm@mellanox.com>
 
-commit d5f6fa904ecbadbb8e9fa6302b0fc165bec0559a upstream.
+commit 85005b82e59fa7bb7388b12594ab2067bf73d66c upstream.
 
-Fix DTC warnings:
+mlxsw configures Spectrum in such a way that BUM traffic is passed not
+through its nominal traffic class TC, but through its MC counterpart TC+8.
+However, when collecting statistics, Qdiscs only look at the nominal TC and
+ignore the MC TC.
 
-arch/arm/dts/meson-gxl-s905x-khadas-vim.dtb: Warning (avoid_unnecessary_addr_size):
-   /gpio-keys-polled: unnecessary #address-cells/#size-cells
-      without "ranges" or child "reg" property
+Add two helpers to compute the value for logical TC from the constituents,
+one for backlog, the other for tail drops. Use them throughout instead of
+going through the xstats pointer directly.
 
-Fixes: e15d2774b8c0 ("ARM64: dts: meson-gxl: add support for the Khadas VIM board")
-Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
-Reviewed-by: Kevin Hilman <khilman@baylibre.com>
-Signed-off-by: Kevin Hilman <khilman@baylibre.com>
+Counters for TX bytes and packets are deduced from packet priority
+counters, and therefore already include BUM traffic. wred_drop counter is
+irrelevant on MC TCs, because RED is not enabled on them.
+
+Fixes: 7b8195306694 ("mlxsw: spectrum: Configure MC-aware mode on mlxsw ports")
+Signed-off-by: Petr Machata <petrm@mellanox.com>
+Acked-by: Jiri Pirko <jiri@mellanox.com>
+Signed-off-by: Ido Schimmel <idosch@mellanox.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm64/boot/dts/amlogic/meson-gxl-s905x-khadas-vim.dts |    4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ drivers/net/ethernet/mellanox/mlxsw/spectrum_qdisc.c |   30 ++++++++++++++-----
+ 1 file changed, 23 insertions(+), 7 deletions(-)
 
---- a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-khadas-vim.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-khadas-vim.dts
-@@ -33,11 +33,9 @@
+--- a/drivers/net/ethernet/mellanox/mlxsw/spectrum_qdisc.c
++++ b/drivers/net/ethernet/mellanox/mlxsw/spectrum_qdisc.c
+@@ -195,6 +195,20 @@ mlxsw_sp_qdisc_get_xstats(struct mlxsw_s
+ 	return -EOPNOTSUPP;
+ }
  
- 	gpio-keys-polled {
- 		compatible = "gpio-keys-polled";
--		#address-cells = <1>;
--		#size-cells = <0>;
- 		poll-interval = <100>;
++static u64
++mlxsw_sp_xstats_backlog(struct mlxsw_sp_port_xstats *xstats, int tclass_num)
++{
++	return xstats->backlog[tclass_num] +
++	       xstats->backlog[tclass_num + 8];
++}
++
++static u64
++mlxsw_sp_xstats_tail_drop(struct mlxsw_sp_port_xstats *xstats, int tclass_num)
++{
++	return xstats->tail_drop[tclass_num] +
++	       xstats->tail_drop[tclass_num + 8];
++}
++
+ static void
+ mlxsw_sp_qdisc_bstats_per_priority_get(struct mlxsw_sp_port_xstats *xstats,
+ 				       u8 prio_bitmap, u64 *tx_packets,
+@@ -269,7 +283,7 @@ mlxsw_sp_setup_tc_qdisc_red_clean_stats(
+ 					       &stats_base->tx_bytes);
+ 	red_base->prob_mark = xstats->ecn;
+ 	red_base->prob_drop = xstats->wred_drop[tclass_num];
+-	red_base->pdrop = xstats->tail_drop[tclass_num];
++	red_base->pdrop = mlxsw_sp_xstats_tail_drop(xstats, tclass_num);
  
--		button@0 {
-+		power-button {
- 			label = "power";
- 			linux,code = <KEY_POWER>;
- 			gpios = <&gpio_ao GPIOAO_2 GPIO_ACTIVE_LOW>;
+ 	stats_base->overlimits = red_base->prob_drop + red_base->prob_mark;
+ 	stats_base->drops = red_base->prob_drop + red_base->pdrop;
+@@ -369,7 +383,8 @@ mlxsw_sp_qdisc_get_red_xstats(struct mlx
+ 
+ 	early_drops = xstats->wred_drop[tclass_num] - xstats_base->prob_drop;
+ 	marks = xstats->ecn - xstats_base->prob_mark;
+-	pdrops = xstats->tail_drop[tclass_num] - xstats_base->pdrop;
++	pdrops = mlxsw_sp_xstats_tail_drop(xstats, tclass_num) -
++		 xstats_base->pdrop;
+ 
+ 	res->pdrop += pdrops;
+ 	res->prob_drop += early_drops;
+@@ -402,9 +417,10 @@ mlxsw_sp_qdisc_get_red_stats(struct mlxs
+ 
+ 	overlimits = xstats->wred_drop[tclass_num] + xstats->ecn -
+ 		     stats_base->overlimits;
+-	drops = xstats->wred_drop[tclass_num] + xstats->tail_drop[tclass_num] -
++	drops = xstats->wred_drop[tclass_num] +
++		mlxsw_sp_xstats_tail_drop(xstats, tclass_num) -
+ 		stats_base->drops;
+-	backlog = xstats->backlog[tclass_num];
++	backlog = mlxsw_sp_xstats_backlog(xstats, tclass_num);
+ 
+ 	_bstats_update(stats_ptr->bstats, tx_bytes, tx_packets);
+ 	stats_ptr->qstats->overlimits += overlimits;
+@@ -575,9 +591,9 @@ mlxsw_sp_qdisc_get_prio_stats(struct mlx
+ 	tx_packets = stats->tx_packets - stats_base->tx_packets;
+ 
+ 	for (i = 0; i < IEEE_8021QAZ_MAX_TCS; i++) {
+-		drops += xstats->tail_drop[i];
++		drops += mlxsw_sp_xstats_tail_drop(xstats, i);
+ 		drops += xstats->wred_drop[i];
+-		backlog += xstats->backlog[i];
++		backlog += mlxsw_sp_xstats_backlog(xstats, i);
+ 	}
+ 	drops = drops - stats_base->drops;
+ 
+@@ -613,7 +629,7 @@ mlxsw_sp_setup_tc_qdisc_prio_clean_stats
+ 
+ 	stats_base->drops = 0;
+ 	for (i = 0; i < IEEE_8021QAZ_MAX_TCS; i++) {
+-		stats_base->drops += xstats->tail_drop[i];
++		stats_base->drops += mlxsw_sp_xstats_tail_drop(xstats, i);
+ 		stats_base->drops += xstats->wred_drop[i];
+ 	}
+ 
 
 
