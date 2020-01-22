@@ -2,267 +2,534 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE41DC33CAF
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 06:47:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05125C32771
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 06:48:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA6D924672
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 06:47:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC26124673
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 06:48:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=monstr-eu.20150623.gappssmtp.com header.i=@monstr-eu.20150623.gappssmtp.com header.b="y3SDRICU"
+	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="ImJx4iMe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726054AbgAVGrt (ORCPT
+        id S1726219AbgAVGsN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 01:47:49 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:37677 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725862AbgAVGrt (ORCPT
+        Wed, 22 Jan 2020 01:48:13 -0500
+Received: from esa2.microchip.iphmx.com ([68.232.149.84]:25042 "EHLO
+        esa2.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725862AbgAVGsN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 01:47:49 -0500
-Received: by mail-wm1-f67.google.com with SMTP id f129so5927522wmf.2
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jan 2020 22:47:46 -0800 (PST)
+        Wed, 22 Jan 2020 01:48:13 -0500
+Received-SPF: Pass (esa2.microchip.iphmx.com: domain of
+  Tudor.Ambarus@microchip.com designates 198.175.253.82 as
+  permitted sender) identity=mailfrom;
+  client-ip=198.175.253.82; receiver=esa2.microchip.iphmx.com;
+  envelope-from="Tudor.Ambarus@microchip.com";
+  x-sender="Tudor.Ambarus@microchip.com";
+  x-conformance=spf_only; x-record-type="v=spf1";
+  x-record-text="v=spf1 mx a:ushub1.microchip.com
+  a:smtpout.microchip.com -exists:%{i}.spf.microchip.iphmx.com
+  include:servers.mcsv.net include:mktomail.com
+  include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa2.microchip.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@email.microchip.com) identity=helo;
+  client-ip=198.175.253.82; receiver=esa2.microchip.iphmx.com;
+  envelope-from="Tudor.Ambarus@microchip.com";
+  x-sender="postmaster@email.microchip.com";
+  x-conformance=spf_only
+Authentication-Results: esa2.microchip.iphmx.com; spf=Pass smtp.mailfrom=Tudor.Ambarus@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dkim=pass (signature verified) header.i=@microchiptechnology.onmicrosoft.com; dmarc=pass (p=none dis=none) d=microchip.com
+IronPort-SDR: bztLMLlSpC2DQPPBBhJNpfXuVSfs7OiDnET7emPXEUFLdG6bm3PhqdIHfqS0RgTpXyK+mj92fs
+ y/xlZDtHhOgLdzf3aJBD/G5SoHlawdPl6qm6oXW8iFQEtAvOZGApPhtW9R2cs5XS6z/N7EIEAw
+ hd6UiMiCeJHep58F+NqVo/knQwsWoBe7uSgrzWxS7Ep8rtq6UA/Mzt+33Wqg7BDPWNpHUbyZWg
+ jA+FUKpiJe4l0ec8RcM5zgpatPplgv4ocHt70Uehh10mfbOZnMP3Xned1eE8iBYgk9HQbuWuCL
+ KrA=
+X-IronPort-AV: E=Sophos;i="5.70,348,1574146800"; 
+   d="scan'208";a="63364374"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 21 Jan 2020 23:48:11 -0700
+Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Tue, 21 Jan 2020 23:48:10 -0700
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (10.10.215.89) by
+ email.microchip.com (10.10.87.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5 via Frontend
+ Transport; Tue, 21 Jan 2020 23:48:11 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=jIWpnxN4/N8rDAdtCvFvYH65FS2L5OA85vUIKKPM8dfNj0hNNsAW56GgC8gea+A0xUnsMCtLaebvx1stEdynpGd1jlCultAYi3LwWy2tGHJBVDT5XpyxzBNKOpGwa1e/sfEQer5qtp/cmLOGTDNT3Xo5UaQjS9HnyIVZwQKXSD55UHj10fuNIdSQWE3rBkBxpu57PQF33fLx27g/tJXfFvevhLpZ5d544BR1Xxk+qdMTg7fLdg9ZBPsRjW0ARTDjsZJNg7Ix7dog/kZeN6/CUx3EvlJ4Co62NUxwm4VOxb9Wo0DBNkpvWyE/u5BEIToWuIGveoFsfTGb/RPmofPMPQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=n9pqcxz0WMvwb7LzkxpKDFG/Ps/X1r68VOboBJMkuV4=;
+ b=WLISHLncnxVLNyclDOHkTML6zOCtNzbScouqFWRilxLRSPQi+VTOQl8E8CmueniCLZKf5BSomMADt50gQv7j9PI7bsoyqEl2Xpwky0+kf2Wynd9sz0tzkGH79HGMRSlcukNXeXBfX50AyNvTD9tm9Ocd8Fh1iaiiCAW1p7OFusTFGMeq7nSiErUpmaDfPwlO1cpXybNtCqX4Df09Y/TFg2r33DbiiKezFufkdZoN+JI6u8wcmKr+KTfuWTKNhwv4DCOQEQh0L6pYqP2fkXX23bRbztP1xfasyTDZ4gEghI4cLZw+ltMbZUt2XVuOttFqJIt9RvliusDrcAHM+pVP0A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microchip.com; dmarc=pass action=none
+ header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=monstr-eu.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to;
-        bh=RlZojd1SiUbb/OeinLf3J4JHQYZOcdIDU8W+cj9iulk=;
-        b=y3SDRICUNCTGVEfhGZo3blD0LEuV77fDMIPVvItjjaewXSwlnd2aurAbs4B6f2ZfO9
-         noTpfd/TLhRPe73LaqAlVAlUpe9wyusPNWjzu6vJFZa2BynslasKCb7iA/W6a0OtVXEb
-         YxA0s37yA5jB/OS9ued6UM66oYP0dbwc47AWnfGEFj34PV7BBCI0X7qn8Y7f4e2k3c88
-         WOx8BMTixv+0jHe4TSUTmJYaLdx+0xE9RP3llvtF4/XJKNvYwpb6AqmKUOikzdnec5Bx
-         i5iCXi2jcxrUBOHnA0Gzz3mt7fRahb+yu5yXcDkPoIYs2Ti6M32/nnTIP7g7e4wRI1D0
-         7u2Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to;
-        bh=RlZojd1SiUbb/OeinLf3J4JHQYZOcdIDU8W+cj9iulk=;
-        b=FbPinxU58ktHUKiy4yGfmcu5Vq0tK1r8N4LTOq1Efstb6D/mN0/ANOqAzxjEh5rO7J
-         nC0uzst+jf1DUTmlXWxtMudKfNQNlFwosjkN8bc+0ohRwmHw9O+B4HETQWnPPd75w3+Y
-         jsIR56FX9nhD06O/G2bIjF0b6G8cYs4frE+O2v3C61ks6f89tpyFzUAuK2w0CMzZIyCK
-         yZEyFHkabZrgENbpRJmWJ37yMUovD9rga+95hM1M7Fbtt9TuL/nJEQu6zAcoAco1DdQf
-         L6AhYV0LI0YAY212OgwQLEblcdIvtNqpXfH2S//K/T8T334bQ0JJ+SuG2EwrP/AaGSF3
-         6kUg==
-X-Gm-Message-State: APjAAAVHGSp4+WJAb4fWVunNk1nYL/YY/80r9+nvsfc+MESfRdpoYDj5
-        F9YPILNFDBmfbCkG5rf60k1e9Q==
-X-Google-Smtp-Source: APXvYqxE0JBWhtarBcJMiWajDjZfirf67dUMAGz9LTC5QD8210pTuLsvsl7JRG+MChOSyTnzZODhrQ==
-X-Received: by 2002:a7b:cf08:: with SMTP id l8mr1124469wmg.169.1579675665355;
-        Tue, 21 Jan 2020 22:47:45 -0800 (PST)
-Received: from [173.194.76.108] ([149.199.62.130])
-        by smtp.gmail.com with ESMTPSA id q19sm2532169wmc.12.2020.01.21.22.47.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 21 Jan 2020 22:47:44 -0800 (PST)
-Subject: Re: [PATCH v2 1/2] asm-generic: Make dma-contiguous.h a mandatory
- include/asm header
-To:     Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Simek <michal.simek@xilinx.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        git@xilinx.com, Christoph Hellwig <hch@lst.de>,
-        Christoph Hellwig <hch@infradead.org>,
-        Paul Burton <paulburton@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
-        linux-mips@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        "open list:SIFIVE DRIVERS" <linux-riscv@lists.infradead.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Palmer Dabbelt <palmer@dabbelt.com>, X86 ML <x86@kernel.org>,
-        Guo Ren <guoren@kernel.org>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Wesley Terpstra <wesley@sifive.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Max Filippov <jcmvbkbc@gmail.com>,
-        linux-xtensa@linux-xtensa.org, "H. Peter Anvin" <hpa@zytor.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Will Deacon <will@kernel.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Deepa Dinamani <deepa.kernel@gmail.com>,
-        Chris Zankel <chris@zankel.net>,
-        Ingo Molnar <mingo@redhat.com>,
-        Waiman Long <longman@redhat.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        James Hogan <jhogan@kernel.org>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>
-References: <cover.1579248206.git.michal.simek@xilinx.com>
- <0274919c5e3b134df19d943f99cb7e84e5135ccd.1579248206.git.michal.simek@xilinx.com>
- <CAK7LNARdiTxajZcXH0g7t6nEis-1ebv7Ta6wBdgGgS6O29O7+A@mail.gmail.com>
-From:   Michal Simek <monstr@monstr.eu>
-Autocrypt: addr=monstr@monstr.eu; keydata=
- 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
- 0Z1MQlmNcq2bhOMzTxuXX2NDzUZs4aqEyZQ=
-Message-ID: <5dac2fdd-6e4e-dd16-a149-fbdd8117ac1c@monstr.eu>
-Date:   Wed, 22 Jan 2020 07:47:27 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+ d=microchiptechnology.onmicrosoft.com;
+ s=selector2-microchiptechnology-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=n9pqcxz0WMvwb7LzkxpKDFG/Ps/X1r68VOboBJMkuV4=;
+ b=ImJx4iMeJyFe4cyKzPfRMlVjQt0MG79bdxMFeXwvIOkM7dmJApInFx8PvV/Q+kcciWpCyeq5VHZwhGgo+uUFq08XuLV6G5hVdvS/Z8ZacvM/39pm0vrTu1gxRz9cfPBsuX0vBNgs5gplr18FIERRBWrC7jjRO9pBxkzHD1AoXlU=
+Received: from MN2PR11MB4448.namprd11.prod.outlook.com (52.135.39.157) by
+ MN2PR11MB3550.namprd11.prod.outlook.com (20.178.251.149) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2644.20; Wed, 22 Jan 2020 06:48:08 +0000
+Received: from MN2PR11MB4448.namprd11.prod.outlook.com
+ ([fe80::3c8f:7a55:cbd:adfb]) by MN2PR11MB4448.namprd11.prod.outlook.com
+ ([fe80::3c8f:7a55:cbd:adfb%5]) with mapi id 15.20.2644.027; Wed, 22 Jan 2020
+ 06:48:07 +0000
+From:   <Tudor.Ambarus@microchip.com>
+To:     <michael@walle.cc>
+CC:     <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <richard@nod.at>, <vigneshr@ti.com>, <miquel.raynal@bootlin.com>
+Subject: Re: [PATCH] mtd: spi-nor: Add support for w25qNNjwim
+Thread-Topic: [PATCH] mtd: spi-nor: Add support for w25qNNjwim
+Thread-Index: AQHVzpf32dqEzZAPf0S4HyMwJjELNQ==
+Date:   Wed, 22 Jan 2020 06:48:07 +0000
+Message-ID: <2088283.tnVAhDz6N7@192.168.0.113>
+References: <20200103223423.14025-1-michael@walle.cc>
+ <5476415.ab72jjm3fZ@192.168.0.113>
+ <1e78fbe87c0d6dc19a27210551b02af4@walle.cc>
+In-Reply-To: <1e78fbe87c0d6dc19a27210551b02af4@walle.cc>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [94.177.32.156]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 1f03162e-219f-4418-5fc8-08d79f0709ff
+x-ms-traffictypediagnostic: MN2PR11MB3550:
+x-microsoft-antispam-prvs: <MN2PR11MB35505AA2FBB9C631D11E4351F00C0@MN2PR11MB3550.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4502;
+x-forefront-prvs: 029097202E
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(39860400002)(396003)(366004)(376002)(346002)(199004)(189003)(53546011)(6506007)(81166006)(8676002)(81156014)(30864003)(64756008)(66556008)(9686003)(26005)(71200400001)(186003)(6486002)(86362001)(478600001)(66476007)(4326008)(8936002)(6512007)(66446008)(66946007)(76116006)(5660300002)(91956017)(54906003)(14286002)(2906002)(6916009)(316002)(39026012);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR11MB3550;H:MN2PR11MB4448.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: microchip.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: gzIWlJ+GaeqdJ+y+4naPwkV3X9teZLBXzUCYSvMKaJmOfDHqLCmOgemZ3jhCD6oK9qUWwdx1q+URGrAb7EXkQJGkIRPcWGj4h/lDpajyzUhk+4BCT1woWfOhP7lpfXHNxUgbwki416jLrBR/4RL/p4O/npvuA/JOWNBT7oKY/BJior5ZB3TKMZg/FDzkULB1inLnOJ0J4ZHnyVJFoW2DBerQB9J/R6HRvV+efgInCKKNnkDcH1V9D6CfWXM6jNRzsyLzxBMi623W61k8bcTP1KFL2evZgP6l1xbB0E0+PO1S436maN0w8FXWwsy0RdQQh01pT+KoQ0wOQMyi/RitFEjFpXwTnq98EOtO3TyvnadnFdMvAPgtATRi5AJcuRJLjFYidApI+fR1pNToyzmV3IZGp5qlalWSuTb9+YQnz6PxmwAyMqbv6xl65A+ByFBpIFq3RejF3w/N03583VaaFwtqeqcpWhkFrl4p5I97mY+xWLcZ3bTXgnGKYzbAxL5u
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <E12EC0405ADE6640AFB20FDCB6748AAA@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-In-Reply-To: <CAK7LNARdiTxajZcXH0g7t6nEis-1ebv7Ta6wBdgGgS6O29O7+A@mail.gmail.com>
-Content-Type: multipart/signed; micalg=pgp-sha1;
- protocol="application/pgp-signature";
- boundary="2dbNcSDggiI5dxMnAV22UCPQ9muiAKI4S"
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1f03162e-219f-4418-5fc8-08d79f0709ff
+X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Jan 2020 06:48:07.5044
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Lav8fMisMM2fLvr+BOJWZuv4Lu52slgsswRl0MjUu/8I0+mg4TWqv3t4ne8l80dtVzDKULeNw2VVUYsoaOqYfreHSOOgzHwS3KmGw69/O8k=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR11MB3550
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---2dbNcSDggiI5dxMnAV22UCPQ9muiAKI4S
-Content-Type: multipart/mixed; boundary="FbunjY3XOg7TLNQEYAVrl68e0gK20Tj5W";
- protected-headers="v1"
-From: Michal Simek <monstr@monstr.eu>
-To: Masahiro Yamada <masahiroy@kernel.org>,
- Michal Simek <michal.simek@xilinx.com>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, git@xilinx.com,
- Christoph Hellwig <hch@lst.de>, Christoph Hellwig <hch@infradead.org>,
- Paul Burton <paulburton@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
- Borislav Petkov <bp@alien8.de>, linux-mips@vger.kernel.org,
- Thomas Gleixner <tglx@linutronix.de>,
- Catalin Marinas <catalin.marinas@arm.com>,
- "open list:SIFIVE DRIVERS" <linux-riscv@lists.infradead.org>,
- linux-arch <linux-arch@vger.kernel.org>,
- linux-s390 <linux-s390@vger.kernel.org>, Palmer Dabbelt
- <palmer@dabbelt.com>, X86 ML <x86@kernel.org>, Guo Ren <guoren@kernel.org>,
- Kate Stewart <kstewart@linuxfoundation.org>,
- Wesley Terpstra <wesley@sifive.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Ralf Baechle <ralf@linux-mips.org>, Paul Walmsley
- <paul.walmsley@sifive.com>, Max Filippov <jcmvbkbc@gmail.com>,
- linux-xtensa@linux-xtensa.org, "H. Peter Anvin" <hpa@zytor.com>,
- "Peter Zijlstra (Intel)" <peterz@infradead.org>,
- Will Deacon <will@kernel.org>, Christian Borntraeger
- <borntraeger@de.ibm.com>, Deepa Dinamani <deepa.kernel@gmail.com>,
- Chris Zankel <chris@zankel.net>, Ingo Molnar <mingo@redhat.com>,
- Waiman Long <longman@redhat.com>,
- linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
- Albert Ou <aou@eecs.berkeley.edu>, Vasily Gorbik <gor@linux.ibm.com>,
- James Hogan <jhogan@kernel.org>, Heiko Carstens <heiko.carstens@de.ibm.com>
-Message-ID: <5dac2fdd-6e4e-dd16-a149-fbdd8117ac1c@monstr.eu>
-Subject: Re: [PATCH v2 1/2] asm-generic: Make dma-contiguous.h a mandatory
- include/asm header
-References: <cover.1579248206.git.michal.simek@xilinx.com>
- <0274919c5e3b134df19d943f99cb7e84e5135ccd.1579248206.git.michal.simek@xilinx.com>
- <CAK7LNARdiTxajZcXH0g7t6nEis-1ebv7Ta6wBdgGgS6O29O7+A@mail.gmail.com>
-In-Reply-To: <CAK7LNARdiTxajZcXH0g7t6nEis-1ebv7Ta6wBdgGgS6O29O7+A@mail.gmail.com>
+Hi, Michael,
 
---FbunjY3XOg7TLNQEYAVrl68e0gK20Tj5W
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-
-On 21. 01. 20 16:43, Masahiro Yamada wrote:
-> Hi.
+On Wednesday, January 22, 2020 1:28:52 AM EET Michael Walle wrote:
+> EXTERNAL EMAIL: Do not click links or open attachments unless you know th=
+e
+> content is safe
 >=20
-> On Fri, Jan 17, 2020 at 5:03 PM Michal Simek <michal.simek@xilinx.com> =
-wrote:
->>
->> dma-continuguous.h is generic for all architectures except arm32 which=
- has
->> its own version.
+> Hi Tudor,
 >=20
+> Am 2020-01-21 19:40, schrieb Tudor.Ambarus@microchip.com:
+> > Hi, Michael,
+> >=20
+> > On Monday, January 20, 2020 5:55:55 PM EET Michael Walle wrote:
+> >> EXTERNAL EMAIL: Do not click links or open attachments unless you know
+> >> the
+> >> content is safe
+> >>=20
+> >> Hi Tudor,
+> >>=20
+> >> Am 2020-01-20 12:03, schrieb Tudor.Ambarus@microchip.com:
+> >> > On Monday, January 20, 2020 12:24:25 AM EET Michael Walle wrote:
+> >> >> EXTERNAL EMAIL: Do not click links or open attachments unless you k=
+now
+> >> >> the
+> >> >> content is safe
+> >> >>=20
+> >> >> Hi Tudor,
+> >> >=20
+> >> > Hi, Michael,
+> >> >=20
+> >> >> >> Am 2020-01-13 11:07, schrieb Michael Walle:
+> >> >> >> >>> Btw. is renaming the flashes also considered a backwards
+> >> >> >> >>> incomaptible
+> >> >> >> >>> change?
+> >> >> >> >>=20
+> >> >> >> >> No, we can fix the names.
+> >> >> >> >>=20
+> >> >> >> >>> And can there be two flashes with the same name? Because IMH=
+O
+> >> >> >> >>> it
+> >> >> >> >>> would
+> >> >> >> >>> be
+> >> >> >> >>=20
+> >> >> >> >> I would prefer that we don't. Why would you have two differen=
+t
+> >> >> >> >> jedec-ids with
+> >> >> >> >> the same name?
+> >> >> >> >=20
+> >> >> >> > Because as pointed out in the Winbond example you cannot
+> >> >> >> > distiguish
+> >> >> >> > between
+> >> >> >> > W25Q32DW and W25Q32JWIQ; and in the Macronix example between
+> >> >> >> > MX25L8005
+> >> >> >> > and
+> >> >> >> > MX25L8006E. Thus my reasoning was to show only the common part=
+,
+> >> >> >> > ie
+> >> >> >> > W25Q32
+> >> >> >> > or MX25L80 which should be the same for this particular ID. Li=
+ke
+> >> >> >> > I
+> >> >> >> > said, I'd
+> >> >> >> > prefer showing an ambiguous name instead of a wrong one. But t=
+hen
+> >> >> >> > you
+> >> >> >> > may
+> >> >> >> > have different IDs with the same ambiguous name.
+> >> >> >>=20
+> >> >> >> Another solution would be to have the device tree provide a hint
+> >> >> >> for
+> >> >> >> the
+> >> >> >> actual flash chip. There would be multiple entries in the
+> >> >> >> spi_nor_ids
+> >> >> >> with the
+> >> >> >> same flash id. By default the first one is used (keeping the
+> >> >> >> current
+> >> >> >> behaviour). If there is for example
+> >> >> >>=20
+> >> >> >>    compatible =3D "jedec,spi-nor", "w25q32jwq";
+> >> >> >>=20
+> >> >> >> the flash_info for the w25q32jwq will be chosen.
+> >> >> >=20
+> >> >> > This won't work for plug-able flashes. You will influence the nam=
+e
+> >> >> > in
+> >> >> > dt to be
+> >> >> > chosen as w25q32jwq, and if you change w25q32jwq with w25q32dw yo=
+u
+> >> >> > will
+> >> >> > end up
+> >> >> > with a wrong name for w25q32dw, thus the same problem.
+> >> >>=20
+> >> >> No, because then the device tree is wrong and doesn't fit the
+> >> >> hardware.
+> >> >> You'd
+> >> >> have to some instance which could change the device tree node, like
+> >> >> the
+> >> >> bootloader or some device tree overlay for plugable flashes. We sho=
+uld
+> >> >> try to
+> >> >> solve the actual problem at hand first..
+> >> >>=20
+> >> >> It is just not possible to autodetect the SPI flash, just because
+> >> >> the vendors reuse the same IDs for flashes with different features
+> >> >> (and
+> >> >> the
+> >> >> SFDP is likely not enough). Therefore, you need to have a hint in s=
+ome
+> >> >> place
+> >> >> to use the flash properly.
+> >> >>=20
+> >> >> > If the flashes are identical but differ just in terms of name, we
+> >> >> > can
+> >> >> > rename
+> >> >> > the flash to "w25q32jwq (w25q32dw)". I haven't studied the
+> >> >> > differences
+> >> >> > between
+> >> >> > these flashes; if you want to fix them, send a patch and I'll try=
+ to
+> >> >> > help.
+> >> >>=20
+> >> >> It is not only the name, here are two examples which differ in
+> >> >>=20
+> >> >> functionality:
+> >> >>   (1) mx25l8005 doesn't support dual/quad mode. mx25l8006e supports
+> >> >>=20
+> >> >> dual/quad
+> >> >>=20
+> >> >>       mode
+> >> >>  =20
+> >> >>   (2) mx25u3235f doesn't support TB bit, mx25u3232e has a TB bit.
+> >> >>=20
+> >> >> well.. to repeat myself, the mx25l25635_post_bfpt_fixups is a third
+> >> >=20
+> >> > sorry if this exhausted you.
+> >>=20
+> >> TBH, this is no fun (and I'm doing this on my spare time because I
+> >> like
+> >=20
+> > It's not my fault that you're not having fun when someone disagrees
+> > with you.
 >=20
+> The reason is not the disagreement, but how you're (not) answering my
+> arguments.
+> Like in the other thread, the question about the uselessness of the
+> flash_lock
+> and flash_unlock tools with SPI-NOR and the (IMHO) bad behaviour when
+> the user
+
+The flash unlock at probe was a bad decision, but we can't be backward=20
+compatible. kconfig or module param will solve the problem without breaking=
+=20
+backward compatibility.
+
+> actually uses flash_lock. Please, don't take this personally, I'll buy
+> you a
+> beer at FOSDEM :p back to the technical stuff.
+
+I don't take this personally, but I think the discussion went in a wrong=20
+direction, and I feel that we waste time on theoretical problems.
+
 >=20
-> Currently, <asm/dma-contiguous.h> is present
-> for only architectures that select HAVE_DMA_CONTIGUOUS.
+> >> open source). I guess our opinions differ waaay too much. I don't
+> >=20
+> > Up to a point, yes, our opinions differ. I'm not rejecting your
+> > suggestion, I
+> > just say that we should implement it as a last resort, when there's
+> > nothing
+> > auto-detectable at run-time that can differentiate between two flashes
+> > that
+> > share the same id.
+> >=20
+> >> really like band-aid fixes; eg. with vague information "it seems that
+> >> the F version adveritses support for Fast Read 4-4-4", what about
+> >> other
+> >=20
+> > We can update the comment to clear the incertitude: "The F version
+> > advertises
+> > support for Fast Read 4-4-4""
+> >=20
+> >> flashes with that idcode and this property. This might break at any
+> >> time
+> >> or with anyone trying support for other flashes with that ID.
+> >=20
+> > The jedec-id should be unique in the first place, manufacturers that
+> > use the
+> > same jedec-id for different flavors of flashes are doing a bad thing. A
+> > third
+> > flash with the same jedec-id is unlikely to happen.
 >=20
-> After this commit, the other architectures will end
-> up with generating the unused header.
+> MX25U3232F, MX25U3235F, MX25U3273F, MX25U3235E all use the same 0x2c2536
+> identification. And these are only the active ones. I bet there are a
+> bunch of older 32MBit flashes.
 >=20
-> That would not be a big deal, but
-> it could be mentioned in the commit message?
+> MX25U6432F, MX25U6472F, MX25U6433F, MX25U6435F, MX25U6473F all use the
+> same 0x2c2537 id.
+>=20
+> W25Q32JW-IQ, W25Q32DW, W25Q32FW all use the same 0x156016 id.
+>=20
+> btw. thats why I argued to just have MX25U32 or W25Q32 as a name for the
+> flashes.
+>=20
+> >> That's what I've meant with first come first serve, I'm lucky now that
+> >> there was no flash with the same jedec id as the W25Q32JW.
+> >>=20
+> >> To add the MX25U3232F I could check the JEDEC revision (or the BFPT
+> >> length) because it differers from the MX25U3235F. But I don't feel
+> >> well
+> >=20
+> > I prefer this because it's auto-detectable. If you don't feel well
+> > doing it,
+> > don't do it.
+>=20
+> ok, I'll do so for the MX25U3232F support.
+>=20
+> >> doing that. Who says Macronix won't update their description for the
+> >> MX25U3235F to the new revision.. FYI the Winbond guys apparently use
+> >> the
+> >=20
+> > You are raising theoretical problems. We can fix this when we will
+> > encounter
+> > it.
+> >=20
+> >> first OTP region to store the JEDEC data, which is clever because they
+> >> can update it during production.
+> >=20
+> > If you say so.
+> >=20
+> >> >> example.
+> >> >=20
+> >> > Flash auto-detection is nice and we should preserve it if possible. =
+I
+> >> > would
+> >> > prefer having a post bfpt fixup than giving a hint about the flash i=
+n
+> >> > the
+> >> > compatible.
+> >>=20
+> >> see above.
+> >>=20
+> >> > The flashes that you mention are quite old and I don't know if it
+> >> > is worth to harm the auto-detection for them. A compromise has to be
+> >> > made.
+> >>=20
+> >> so you'd drop support for them? because SFDP is never read if there is
+> >> no
+> >> DUAL_READ or QUAD_READ flag.
+> >=20
+> > mx25l8006e  defines bfpt, while mx25l8005 doesn't. We can differentiate
+> > these
+> > too.
+> >=20
+> >> > You can gain traction in your endeavor if you have such a flash and
+> >> > there's
+> >> > nothing auto-detectable that differentiates it from some other flash
+> >> > that
+> >> > shares the sama jedec-id.
+> >> >=20
+> >> > If you have such a flash and you care about it, send a patch and I'l=
+l
+> >> > try to
+> >> > help.
+> >>=20
+> >> Given my reasoning above.. well maybe in the future. The Macronix
+> >> would
+> >=20
+> > ok
+> >=20
+> >> be
+> >> a second source candidate. For now we are using the Winbond flash.
+> >>=20
+> >> I would rather like to have the flash protection topic and OTP support
+> >> sorted out, because that is something we are actually using.
+> >=20
+> > You can speed up the process by reviewing/testing the BP3 support. In
+> > turn,
+> > maybe Jungseung will review your OTP patches.
+> >=20
+> > To sum up: the flash auto-detection (with capabilities) greatly ease
+> > the
+> > device tree node description and it allows us to plug and play
+> > different
+> > manufacturer flashes using the same dtb. I have a connector on one of
+> > my
+> > boards, to which I connect different types of flashes (assuming they
+> > have
+> > similar frequency and modes). So I would always prefer to have a post
+> > bfpt
+> > hook to differentiate between flashes which share the same jedec-id,
+> > than
+> > compromising the generic compatible.
+>=20
+> and making assumptions which are true for the flashes you currently know
+> about.
 
-I have not a problem with mentioning it but not sure if this was done in
-past.
+I don't want to introduce code which I don't know if it will ever be used.
 
-Thanks,
-Michal
+> > Of course, if there's nothing auto-
+> > detectable that can differentiate between the flashes, then your idea
+> > can be
+> > implemented, but I would do this as a last resort.
+> >=20
+> > There's also the idea of compromise. The jedec-id should be unique in
+> > the
+> > first place, manufacturers that use the same jedec-id for different
+> > flavors of
+> > flashes are taking a wrong design decision. Do I want to cripple the
+> > generic
+> > compatible just for an old flash with a bad jedec-id? I don't know yet.
+> > Also,
+> > the flashes that share the same id are quite old, and if nobody
+> > screamed about
+> > this until now, it's fine by me.
+>=20
+> See above, the assumption that newer flashes have differnet jedec-ids is
+> wrong.
+>=20
+> > You raised some theoretical questions, you
+> > don't really use the macronix flashes, what I say is that we should
+> > consider
+> > fixing them when it's actually required. And that the extension of the
+> > compatible should be done as a last resort, as of now it has more
+> > disadvantages than advantages.
+>=20
+> Well what are the disadvantages? I don't argue against the
+> autodetection. I
+
+- generic compatible eases the use. I don't have to check the dtb each time=
+ I=20
+change a plug-able flash, to see if I gave a wrong hint for the flash in th=
+e=20
+extended compatible
+- people will prefer to use the extended compatible instead of trying to au=
+to-
+detect the differences at run-time (it's easier, but wrong).
+
+> argue to have a mechanism _already_ in place when the autodetection
+> fails.
+> If you don't specify the hint, everything stays the same.
+>=20
+> We could have the advantages of both worlds, have a generic "w25q32"
+> which tries
+> its best for autodetection and a specific "w25q32fw" which could can be
+> hinted.
+> Same for like "mx25u32" and "mx25u3232f", "mx25u3235f" etc.
+>=20
+
+If you possess 2 flashes that we can't correctly detect at run-time and you=
+=20
+care to fix them, then your suggestion has a good change to be implemented.=
+ I=20
+will not introduce code that is not used, in the hope that it will be used.=
+ No=20
+compatible extension if we have a way to auto-detect the flash.
+
+Cheers,
+ta
+
+>=20
+> > Cheers,
+> > ta
+> >=20
+> >> -michael
+> >>=20
+> >> >> -michael
+> >> >>=20
+> >> >> > Cheers,
+> >> >> > ta
+> >> >> >=20
+> >> >> >> I know this will conflict with the new rule that there should on=
+ly
+> >> >> >> be
+> >> >> >>=20
+> >> >> >>    compatible =3D "jedec,spi-nor";
+> >> >> >>=20
+> >> >> >> without the actual flash chip. But it seems that it is not alway=
+s
+> >> >> >> possible
+> >> >> >> to just use the jedec id to match the correct chip.
+> >> >> >>=20
+> >> >> >> Also see for example mx25l25635_post_bfpt_fixups() which tries t=
+o
+> >> >> >> figure
+> >> >> >> out different behaviour by looking at "some" SFDP data. In this
+> >> >> >> case
+> >> >> >> we
+> >> >> >> might have been lucky, but I fear that this won't work in all ca=
+ses
+> >> >> >> and
+> >> >> >> for older flashes it won't work at all.
+> >> >> >>=20
+> >> >> >> BTW I do not suggest to add the strings to the the
+> >> >> >> spi_nor_dev_ids[].
+> >> >> >>=20
+> >> >> >> I guess that would be a less invasive way to fix different flash=
+es
+> >> >> >> with
+> >> >> >> same jedec ids.
+> >> >> >>=20
+> >> >> >> -michael
 
 
---=20
-Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
-w: www.monstr.eu p: +42-0-721842854
-Maintainer of Linux kernel - Xilinx Microblaze
-Maintainer of Linux kernel - Xilinx Zynq ARM and ZynqMP ARM64 SoCs
-U-Boot custodian - Xilinx Microblaze/Zynq/ZynqMP/Versal SoCs
 
-
-
---FbunjY3XOg7TLNQEYAVrl68e0gK20Tj5W--
-
---2dbNcSDggiI5dxMnAV22UCPQ9muiAKI4S
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EARECAB0WIQQbPNTMvXmYlBPRwx7KSWXLKUoMIQUCXifv/wAKCRDKSWXLKUoM
-IVUkAJ9gJ/92v49cM3s26jCgIZyQ1BDZJwCggrGUMIoHH0J6KEp9UuM3wHKXoAo=
-=zquH
------END PGP SIGNATURE-----
-
---2dbNcSDggiI5dxMnAV22UCPQ9muiAKI4S--
