@@ -2,156 +2,220 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6432EC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 03:08:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68C75C33CAF
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 03:11:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F69524656
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 03:08:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F9A524673
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 03:11:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579662531;
-	bh=oTNgMfzgiFlWv+o+FtS0H6iJQyTPuY25XfjA6TFiIek=;
+	s=default; t=1579662716;
+	bh=168pA64HEbetD9f/z70bdtfpiqV9+iRntEM22Vq2LHE=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=WoSeRTFDuYKtyy9e5sWVvuT4p/ZcW54LKqrnkkakpNOKlznx7hQCrIRKwVrfMSn36
-	 AFei/vaEAY1oB40xpPafsoZ7GgXHKVx+TNhmqiGbbiO1MSD+Xt+g7C/EKb5zfOwbRj
-	 FE1azMyV4vi8n3HF0F5WFXxum7zXmeWudaI59b/E=
+	b=xFsskhQ6AoCHg9TESwgbecn4OXv+KP2eTbP1OFQJxosm2fOcQ6BbQO+ziLBUba2B0
+	 OPGHBcv22iLFOWtQvAEWBNcrfUFYBdGyUf4VVPIyjv3gLFHlKNgxkxAAU3LQFqXDdn
+	 W15hs6R1yBiKDSQS/zF75wm9gz7Yy4/dYlkEcnGY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729121AbgAVDIu (ORCPT
+        id S1729137AbgAVDLz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 22:08:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40062 "EHLO mail.kernel.org"
+        Tue, 21 Jan 2020 22:11:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40688 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728779AbgAVDIu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 22:08:50 -0500
+        id S1728779AbgAVDLz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jan 2020 22:11:55 -0500
 Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3717024655;
-        Wed, 22 Jan 2020 03:08:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5F18F24655;
+        Wed, 22 Jan 2020 03:11:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579662529;
-        bh=oTNgMfzgiFlWv+o+FtS0H6iJQyTPuY25XfjA6TFiIek=;
+        s=default; t=1579662714;
+        bh=168pA64HEbetD9f/z70bdtfpiqV9+iRntEM22Vq2LHE=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=Yxrl8wBG4h/s6p7tA2xfOe/gOsohzh7z0E4xk9RQV4kQQc0W4kdb2NAM1i5bfaJ47
-         510X+shvdbbMEguELULpTScXHPcuB2UvBOaheDSzlnxfs6HUmniZ5NusdCISyuX6lI
-         ZL2+hhSYgV+UXF3He7kqB1wKdWx2CIeWRVESCyE4=
-Date:   Wed, 22 Jan 2020 12:08:43 +0900
+        b=Jrjus4z8Fm4wJhfueCssN1I6PmCkeZqH56yEvPiRotKE7I+NCOQ9L2IOqzTrh8/y5
+         o56ZepsPqazCXlJVLuZuazE2h0Dn53hC+85vzYnoXbhcA4irBqqd9bj4MCCJB2gb64
+         wW9CYN01ctRBEFnHJrnUiuG60+vGqPeRXgMdy5s4=
+Date:   Wed, 22 Jan 2020 12:11:49 +0900
 From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
-        "Naveen N . Rao" <naveen.n.rao@linux.ibm.com>,
-        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Toke =?UTF-8?B?SMO4aWxhbmQtSsO4cmdlbnNlbg==?= 
-        <thoiland@redhat.com>, Jean-Tsung Hsiao <jhsiao@redhat.com>,
-        Jesper Dangaard Brouer <brouer@redhat.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] tracing/uprobe: Fix to make trace_uprobe_filter
- alignment safe
-Message-Id: <20200122120843.493c7bd2718371af25787206@kernel.org>
-In-Reply-To: <20200121105055.6a8b097e@gandalf.local.home>
-References: <20200120124022.GA14897@hirez.programming.kicks-ass.net>
-        <157959277950.16074.9855390705890955393.stgit@devnote2>
-        <20200121105055.6a8b097e@gandalf.local.home>
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Masami Hiramatsu <mhiramat@redhat.com>,
+        X86 ML <x86@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: linux-next: Tree for Oct 14 (insn_decoder_test)
+Message-Id: <20200122121149.5f0090760c8c51651eca88de@kernel.org>
+In-Reply-To: <aab93029-158a-5554-9976-b20aa48fef1d@infradead.org>
+References: <20191014174707.469f596f@canb.auug.org.au>
+        <2d83682b-6206-4992-63cc-342d61641c0a@infradead.org>
+        <20191023144916.2cbd0ea16363b4cd4574f5ad@kernel.org>
+        <3fe0f2d7-eab6-8224-bc48-ef513c7ce8e3@infradead.org>
+        <aab93029-158a-5554-9976-b20aa48fef1d@infradead.org>
 X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-2022-JP
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 21 Jan 2020 10:50:55 -0500
-Steven Rostedt <rostedt@goodmis.org> wrote:
+On Tue, 21 Jan 2020 07:43:16 -0800
+Randy Dunlap <rdunlap@infradead.org> wrote:
 
-> On Tue, 21 Jan 2020 16:46:19 +0900
-> Masami Hiramatsu <mhiramat@kernel.org> wrote:
+> [adding x86 people]
 > 
-> > Commit 99c9a923e97a ("tracing/uprobe: Fix double perf_event
-> > linking on multiprobe uprobe") moved trace_uprobe_filter on
-> > trace_probe_event. However, since it introduced a flexible
-> > data structure with char array and type casting, the
-> > alignment of trace_uprobe_filter can be broken.
+> I am still seeing this insn_decoder warning in linux-next.
+> 
+> Can we get this patch applied, please?
+> 
+> Masami, you might need to resend it...
+
+OK, I'll resend it.
+
+Thank you for pinging!
+
+> 
+> thanks.
+> 
+> 
+> On 11/27/19 4:04 PM, Randy Dunlap wrote:
+> > On 10/22/19 10:49 PM, Masami Hiramatsu wrote:
+> >> Hi,
+> >>
+> >> On Mon, 14 Oct 2019 08:30:02 -0700
+> >> Randy Dunlap <rdunlap@infradead.org> wrote:
+> >>
+> >>> On 10/13/19 11:47 PM, Stephen Rothwell wrote:
+> >>>> Hi all,
+> >>>>
+> >>>> Changes since 20191011:
+> >>>>
+> >>>
+> >>> on x86_64:
+> >>>
+> >>>   HOSTCC  arch/x86/tools/insn_decoder_test
+> >>>   HOSTCC  arch/x86/tools/insn_sanity
+> >>>   TEST    posttest
+> >>> arch/x86/tools/insn_decoder_test: warning: Found an x86 instruction decoder bug, please report this.
+> >>> arch/x86/tools/insn_decoder_test: warning: ffffffff81000bf1:	f7 0b 00 01 08 00    	testl  $0x80100,(%rbx)
+> >>> arch/x86/tools/insn_decoder_test: warning: objdump says 6 bytes, but insn_get_length() says 2
+> >>> arch/x86/tools/insn_decoder_test: warning: Decoded and checked 11913894 instructions with 1 failures
+> >>>   TEST    posttest
+> >>> arch/x86/tools/insn_sanity: Success: decoded and checked 1000000 random instructions with 0 errors (seed:0x871ce29c)
+> >>
+> >> Hmm, curious.
+> >>
+> >> x86-opcode-map.txt said,
+> >> f7: Grp3_2 Ev (1A)
+> >>
+> >> and "0x0b" is 00001011b, Group encoding bits are 5,4,3 (reg field),
+> >> so group index is 001.
+> >>
+> >> GrpTable: Grp3_2
+> >> 0: TEST Ev,Iz
+> >> 1:
+> >>
+> >> Hmm, "f7 0b" is not assigned to any instruction... (testl should be f7 03)
+> >>
+> >> I've checked Intel SDM May 2019 version(*), but the Opcode Map (Table A-6. Opecode
+> >> Extensions for One- and Two-byte Opecodes by Group Number) showed the group index
+> >> 001 is still blank. I've also checked that Table B-13 (General Purpose Instruction
+> >>  Formats and Encodings for Non-64-Bit Modes (Note that this has no REX prefix)) but
+> >> I couldn't find "f7 0b".
+> >>
+> >> At last, I found that on AMD64 Architecture Programmer's Manual Volume 3, Appendix A.2
+> >> Table A-6. ModRM.reg Extensions for the Primary Opcode Map(**), which shows that both
+> >> f7 + reg=000 and f7 + reg=001 are same. So only on AMD64, it is officially available
+> >> instruction.
+> >>
+> >> (*) https://software.intel.com/sites/default/files/managed/a4/60/325383-sdm-vol-2abcd.pdf
+> >> (**) https://www.amd.com/system/files/TechDocs/24594.pdf
+> >>
+> >> OK, so this should be fixed with below patch.
+> >>
+> >> ------
+> >> >From b3f45b86df25be59fcf417730ab4c69c6310eaad Mon Sep 17 00:00:00 2001
+> >> From: Masami Hiramatsu <mhiramat@kernel.org>
+> >> Date: Wed, 23 Oct 2019 14:45:35 +0900
+> >> Subject: [PATCH] x86/decoder: Add TEST opcode to Group3-2
+> >>
+> >> Add TEST opcode to Group3-2 reg=001b as same as Group3-1 does.
+> >>
+> >> Commit 12a78d43de76 ("x86/decoder: Add new TEST instruction pattern")
+> >> added a TEST opcode assignment to f6 XX/001/XXX (Group 3-1), but not
+> >> added f7 XX/001/XXX (Group 3-2). Actually these TEST opcode is not
+> >> described in Intel SDM Vol2, but described in AMD64 Architecture
+> >> Programmer's Manual Vol.3, Appendix A.2 Table A-6. ModRM.reg
+> >> Extensions for the Primary Opcode Map.
+> >>
+> >> Without this fix, Randy found a warning by insn_decoder_test related
+> >> to this issue as below.
+> >>
+> >>   HOSTCC  arch/x86/tools/insn_decoder_test
+> >>   HOSTCC  arch/x86/tools/insn_sanity
+> >>   TEST    posttest
+> >> arch/x86/tools/insn_decoder_test: warning: Found an x86 instruction decoder bug, please report this.
+> >> arch/x86/tools/insn_decoder_test: warning: ffffffff81000bf1:	f7 0b 00 01 08 00    	testl  $0x80100,(%rbx)
+> >> arch/x86/tools/insn_decoder_test: warning: objdump says 6 bytes, but insn_get_length() says 2
+> >> arch/x86/tools/insn_decoder_test: warning: Decoded and checked 11913894 instructions with 1 failures
+> >>   TEST    posttest
+> >> arch/x86/tools/insn_sanity: Success: decoded and checked 1000000 random instructions with 0 errors (seed:0x871ce29c)
+> >>
+> >> To fix this error, add TEST opcode according to AMD64 APM Vol.3.
+> >>
+> >> Reported-by: Randy Dunlap <rdunlap@infradead.org>
+> >> Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
 > > 
-> > This changes the type of the array to trace_uprobe_filter
-> > data strucure to fix it.
+> > Acked-by: Randy Dunlap <rdunlap@infradead.org>
+> > Tested-by: Randy Dunlap <rdunlap@infradead.org>
 > > 
-> > Fixes: 99c9a923e97a ("tracing/uprobe: Fix double perf_event linking on multiprobe uprobe")
-> > Suggested-by: Peter Zijlstra <peterz@infradead.org>
-> > Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-> > ---
-> >  kernel/trace/trace_kprobe.c |    2 +-
-> >  kernel/trace/trace_probe.c  |    9 ++++++---
-> >  kernel/trace/trace_probe.h  |   10 ++++++++--
-> >  kernel/trace/trace_uprobe.c |   29 +++++++----------------------
-> >  4 files changed, 22 insertions(+), 28 deletions(-)
+> > Thanks.
+> > 
+> >> ---
+> >>  arch/x86/lib/x86-opcode-map.txt       | 2 +-
+> >>  tools/arch/x86/lib/x86-opcode-map.txt | 2 +-
+> >>  2 files changed, 2 insertions(+), 2 deletions(-)
+> >>
+> >> diff --git a/arch/x86/lib/x86-opcode-map.txt b/arch/x86/lib/x86-opcode-map.txt
+> >> index e0b85930dd77..4635ce298d1d 100644
+> >> --- a/arch/x86/lib/x86-opcode-map.txt
+> >> +++ b/arch/x86/lib/x86-opcode-map.txt
+> >> @@ -907,7 +907,7 @@ EndTable
+> >>  
+> >>  GrpTable: Grp3_2
+> >>  0: TEST Ev,Iz
+> >> -1:
+> >> +1: TEST Ev,Iz
+> >>  2: NOT Ev
+> >>  3: NEG Ev
+> >>  4: MUL rAX,Ev
+> >> diff --git a/tools/arch/x86/lib/x86-opcode-map.txt b/tools/arch/x86/lib/x86-opcode-map.txt
+> >> index e0b85930dd77..4635ce298d1d 100644
+> >> --- a/tools/arch/x86/lib/x86-opcode-map.txt
+> >> +++ b/tools/arch/x86/lib/x86-opcode-map.txt
+> >> @@ -907,7 +907,7 @@ EndTable
+> >>  
+> >>  GrpTable: Grp3_2
+> >>  0: TEST Ev,Iz
+> >> -1:
+> >> +1: TEST Ev,Iz
+> >>  2: NOT Ev
+> >>  3: NEG Ev
+> >>  4: MUL rAX,Ev
+> >>
+> > 
+> > 
 > 
 > 
-> I hit the following build error with this:
-
-Hmm, I missed something... let me check and update it.
-
-Thank you,
-
-> 
-> /work/git/linux-trace.git/kernel/trace/trace_uprobe.c: In function ‘alloc_trace_uprobe’:
-> /work/git/linux-trace.git/kernel/trace/trace_uprobe.c:355:39: error: ‘tu->tp.event’ is a pointer; did you mean to use ‘->’?
->   init_trace_uprobe_filter(tu->tp.event.filter);
->                                        ^
->                                        ->
-> In file included from /work/git/linux-trace.git/arch/x86/include/asm/bug.h:83,
->                  from /work/git/linux-trace.git/include/linux/bug.h:5,
->                  from /work/git/linux-trace.git/arch/x86/include/asm/paravirt.h:15,
->                  from /work/git/linux-trace.git/arch/x86/include/asm/irqflags.h:72,
->                  from /work/git/linux-trace.git/include/linux/irqflags.h:16,
->                  from /work/git/linux-trace.git/include/linux/rcupdate.h:26,
->                  from /work/git/linux-trace.git/include/linux/rbtree.h:22,
->                  from /work/git/linux-trace.git/include/linux/key.h:15,
->                  from /work/git/linux-trace.git/include/linux/security.h:26,
->                  from /work/git/linux-trace.git/kernel/trace/trace_uprobe.c:10:
-> /work/git/linux-trace.git/kernel/trace/trace_uprobe.c: In function ‘__probe_event_disable’:
-> /work/git/linux-trace.git/kernel/trace/trace_uprobe.c:1064:46: error: ‘tu->tp.event’ is a pointer; did you mean to use ‘->’?
->   WARN_ON(!uprobe_filter_is_empty(tu->tp.event.filter));
->                                               ^
-> /work/git/linux-trace.git/include/asm-generic/bug.h:113:25: note: in definition of macro ‘WARN_ON’
->   int __ret_warn_on = !!(condition);    \
->                          ^~~~~~~~~
-> /work/git/linux-trace.git/kernel/trace/trace_uprobe.c: In function ‘probe_event_enable’:
-> /work/git/linux-trace.git/kernel/trace/trace_uprobe.c:1105:46: error: ‘tu->tp.event’ is a pointer; did you mean to use ‘->’?
->   WARN_ON(!uprobe_filter_is_empty(tu->tp.event.filter));
->                                               ^
-> /work/git/linux-trace.git/include/asm-generic/bug.h:113:25: note: in definition of macro ‘WARN_ON’
->   int __ret_warn_on = !!(condition);    \
->                          ^~~~~~~~~
-> /work/git/linux-trace.git/kernel/trace/trace_uprobe.c: In function ‘uprobe_perf_close’:
-> /work/git/linux-trace.git/kernel/trace/trace_uprobe.c:1269:45: error: ‘tu->tp.event’ is a pointer; did you mean to use ‘->’?
->   if (trace_uprobe_filter_remove(tu->tp.event.filter, event))
->                                              ^
->                                              ->
-> /work/git/linux-trace.git/kernel/trace/trace_uprobe.c: In function ‘uprobe_perf_open’:
-> /work/git/linux-trace.git/kernel/trace/trace_uprobe.c:1294:42: error: ‘tu->tp.event’ is a pointer; did you mean to use ‘->’?
->   if (trace_uprobe_filter_add(tu->tp.event.filter, event))
->                                           ^
->                                           ->
-> /work/git/linux-trace.git/kernel/trace/trace_uprobe.c: In function ‘uprobe_perf_filter’:
-> /work/git/linux-trace.git/kernel/trace/trace_uprobe.c:1316:23: error: ‘tu->tp.event’ is a pointer; did you mean to use ‘->’?
->   filter = tu->tp.event.filter;
->                        ^
->                        ->
-> make[3]: *** [/work/git/linux-trace.git/scripts/Makefile.build:266: kernel/trace/trace_uprobe.o] Error 1
-> make[3]: *** Waiting for unfinished jobs....
-> 
-> 
-> Config attached.
-> 
-> -- Steve
+> -- 
+> ~Randy
+> Reported-by: Randy Dunlap <rdunlap@infradead.org>
 
 
 -- 
