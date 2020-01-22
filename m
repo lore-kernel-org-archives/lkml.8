@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17D65C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:41:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 110BAC33CB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:41:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF2EB24688
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:41:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1B952467B
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:41:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579686064;
-	bh=8tE/D4mz4jFGF0L2PYaXFgqEex6xw+gmIOcsNkew/uQ=;
+	s=default; t=1579686072;
+	bh=DczAF+vKmAN+mWw+pcMpCxaJ1uY3iuKd2RO+aTQcOQA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uQbmu87wg5kNU/r87PtosNHfC7P0PA05I0WztsHA1rNcQfUYVYBOQbQfVzXjaW9h0
-	 ggtWJruIeCj0XJEvM6bSKlLtpt2gb4LHRyKFfzWEjtmh5jqjP6TuwV6DTqyGSIK2TO
-	 8pjH37Iil1G+01fffsYZ+tfRjBPKdUGsELErOJY8=
+	b=AsdoQgvjBwHZ1Jlw/tO7mwzfHSpzJ6QbIk+EpScGgEh5y/+vUwdAD9xiRuZxDfiJa
+	 P40t+FcLpSWKjHMhqBDFiUK3m7Bt3wlfLLDzStt3wBtMalFXGwL9xkbg+21vhU7tmS
+	 fBsmsOML2TnKBJ3qKb7VX1Nq1Rx1vQAToQstxlTo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387504AbgAVJlD (ORCPT
+        id S2387525AbgAVJlM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 04:41:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59918 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 04:41:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60230 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733260AbgAVJkt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 04:40:49 -0500
+        id S2387478AbgAVJlB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 04:41:01 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 196A424684;
-        Wed, 22 Jan 2020 09:40:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8C92B24688;
+        Wed, 22 Jan 2020 09:41:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579686048;
-        bh=8tE/D4mz4jFGF0L2PYaXFgqEex6xw+gmIOcsNkew/uQ=;
+        s=default; t=1579686061;
+        bh=DczAF+vKmAN+mWw+pcMpCxaJ1uY3iuKd2RO+aTQcOQA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tdGLb7/q5eRCY3O3E//uXfl6tjDVDqtyinvoYMg2aMtkScbwja/gxFqBMzMb0jMiF
-         MPCPbinPWJ3JbjMnlmnnLXsGY8iElfGn19nK/Hc3ImAYujirwSqO3qqcRYcs88u55Z
-         7NlqR5dzI32S/clT3KJOgmt2Jbj0sEp4JHxKoJMM=
+        b=W6Z4GqqOuhSa4zSzy+ovRT70X2wT9q+HFKKfy3npxjTbFIulNn9MLqeeTApWT6Eso
+         z4BUy+Md6uEFx0gVQGJ7K1ovxWfpXtREi5ZM24dp3iK7sgMxSQ8P4mFIbb2b8v2TFk
+         DEkuL6zZJbhTcYDkZp8WsCJyySUjsu0WMKlh9N5E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -46,9 +46,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
         Stephan Gerhold <stephan@gerhold.net>,
         Mark Brown <broonie@kernel.org>
-Subject: [PATCH 4.19 006/103] ASoC: msm8916-wcd-digital: Reset RX interpolation path after use
-Date:   Wed, 22 Jan 2020 10:28:22 +0100
-Message-Id: <20200122092804.628145113@linuxfoundation.org>
+Subject: [PATCH 4.19 020/103] ASoC: msm8916-wcd-analog: Fix selected events for MIC BIAS External1
+Date:   Wed, 22 Jan 2020 10:28:36 +0100
+Message-Id: <20200122092806.751557932@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200122092803.587683021@linuxfoundation.org>
 References: <20200122092803.587683021@linuxfoundation.org>
@@ -63,50 +63,42 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Stephan Gerhold <stephan@gerhold.net>
 
-commit 85578bbd642f65065039b1765ebe1a867d5435b0 upstream.
+commit e0beec88397b163c7c4ea6fcfb67e8e07a2671dc upstream.
 
-For some reason, attempting to route audio through QDSP6 on MSM8916
-causes the RX interpolation path to get "stuck" after playing audio
-a few times. In this situation, the analog codec part is still working,
-but the RX path in the digital codec stops working, so you only hear
-the analog parts powering up. After a reboot everything works again.
+MIC BIAS External1 sets pm8916_wcd_analog_enable_micbias_ext1()
+as event handler, which ends up in pm8916_wcd_analog_enable_micbias_ext().
 
-So far I was not able to reproduce the problem when using lpass-cpu.
+But pm8916_wcd_analog_enable_micbias_ext() only handles the POST_PMU
+event, which is not specified in the event flags for MIC BIAS External1.
+This means that the code in the event handler is never actually run.
 
-The downstream kernel driver avoids this by resetting the RX
-interpolation path after use. In mainline we do something similar
-for the TX decimator (LPASS_CDC_CLK_TX_RESET_B1_CTL), but the
-interpolator reset (LPASS_CDC_CLK_RX_RESET_CTL) got lost when the
-msm8916-wcd driver was split into analog and digital.
+Set SND_SOC_DAPM_POST_PMU as the only event for the handler to fix this.
 
-Fix this problem by adding the reset to
-msm8916_wcd_digital_enable_interpolator().
-
-Fixes: 150db8c5afa1 ("ASoC: codecs: Add msm8916-wcd digital codec")
+Fixes: 585e881e5b9e ("ASoC: codecs: Add msm8916-wcd analog codec")
 Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
-Link: https://lore.kernel.org/r/20200105102753.83108-1-stephan@gerhold.net
+Link: https://lore.kernel.org/r/20200111164006.43074-2-stephan@gerhold.net
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/soc/codecs/msm8916-wcd-digital.c |    6 ++++++
- 1 file changed, 6 insertions(+)
+ sound/soc/codecs/msm8916-wcd-analog.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/sound/soc/codecs/msm8916-wcd-digital.c
-+++ b/sound/soc/codecs/msm8916-wcd-digital.c
-@@ -357,6 +357,12 @@ static int msm8916_wcd_digital_enable_in
- 		snd_soc_component_write(component, rx_gain_reg[w->shift],
- 			      snd_soc_component_read32(component, rx_gain_reg[w->shift]));
- 		break;
-+	case SND_SOC_DAPM_POST_PMD:
-+		snd_soc_component_update_bits(component, LPASS_CDC_CLK_RX_RESET_CTL,
-+					      1 << w->shift, 1 << w->shift);
-+		snd_soc_component_update_bits(component, LPASS_CDC_CLK_RX_RESET_CTL,
-+					      1 << w->shift, 0x0);
-+		break;
- 	}
- 	return 0;
- }
+--- a/sound/soc/codecs/msm8916-wcd-analog.c
++++ b/sound/soc/codecs/msm8916-wcd-analog.c
+@@ -885,10 +885,10 @@ static const struct snd_soc_dapm_widget
+ 
+ 	SND_SOC_DAPM_SUPPLY("MIC BIAS External1", CDC_A_MICB_1_EN, 7, 0,
+ 			    pm8916_wcd_analog_enable_micbias_ext1,
+-			    SND_SOC_DAPM_PRE_PMU | SND_SOC_DAPM_POST_PMD),
++			    SND_SOC_DAPM_POST_PMU),
+ 	SND_SOC_DAPM_SUPPLY("MIC BIAS External2", CDC_A_MICB_2_EN, 7, 0,
+ 			    pm8916_wcd_analog_enable_micbias_ext2,
+-			    SND_SOC_DAPM_POST_PMU | SND_SOC_DAPM_POST_PMD),
++			    SND_SOC_DAPM_POST_PMU),
+ 
+ 	SND_SOC_DAPM_ADC_E("ADC1", NULL, CDC_A_TX_1_EN, 7, 0,
+ 			   pm8916_wcd_analog_enable_adc,
 
 
