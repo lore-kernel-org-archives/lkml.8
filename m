@@ -4,56 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09CE4C3F68F
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:51:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8631C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:51:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C809B20704
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:51:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8AD702467B
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:51:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579686660;
-	bh=o5ENOhAOLvVXmvZAAxOD8ynA2Hhx+mzchRgQvihpNNg=;
+	s=default; t=1579686666;
+	bh=MRAv4DjXurDeigszhhQyqJaSn3RD9dJlhVII68vR4vE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rtBAp9pF5x4NMjC6lWh8VsV39PmPo11M39sh/rGYHPXb/PaBiHxyFDpBqX+w7OJk2
-	 pbD0c36NE+iLi+hMkBTUCJhFBT1F7JP7wPqj79CwTavKdq6x7MbILDjvsP9Pngx9/j
-	 AsmrN1XnRS79qt4oW+rrAFI8WbHBbfB0c4/2aA5E=
+	b=Qo4kBi6QiK8btHvV9p8y7OREYy9UZi5A5TemjRElFXxQ2HRXYzERTnF3MtreGYwv7
+	 1UAmvPe57k0YkEsNA3nzG+cz7gWWwK/jzbArtvDFM0jpmFOkJuqUlW6e8GRgKdSddp
+	 lxRmplQNZLub1VaFs+BEbTQqaPgzJQo554IMiizs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731919AbgAVJhh (ORCPT
+        id S1731307AbgAVJvF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 04:37:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53702 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 04:51:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53660 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729563AbgAVJhd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 04:37:33 -0500
+        id S1732568AbgAVJha (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 04:37:30 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5AD8B2467E;
-        Wed, 22 Jan 2020 09:37:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EF5F92467E;
+        Wed, 22 Jan 2020 09:37:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579685852;
-        bh=o5ENOhAOLvVXmvZAAxOD8ynA2Hhx+mzchRgQvihpNNg=;
+        s=default; t=1579685850;
+        bh=MRAv4DjXurDeigszhhQyqJaSn3RD9dJlhVII68vR4vE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cujbSJXizy7dLwcGCYJfOZzywb9Cfqbu+iwHBmVYgeKfxuzjHRtgYfhuiwtTzSiSN
-         hMX5W0J3fwFKInq+BPMUQ1aiDiUQ91KVqDPrBrJRxBcnXgy7XD5oSbDOrKbnYIuQDY
-         9DQGjAWhJbArjQFh45IvX0QWAaBB458BWcEg28sU=
+        b=fLPmnUyWj7o9Z98HLXfpsdtgKPZ2ufi7LY366c3SZg3tRhnOuiFp9LauoG/aw/reZ
+         m9EUS8NNQX7ickDkHcSn7p6HoTia/9TYIQUcX+Bc2LVAQDOesIK2TGPvepucrHwKx2
+         zzJk07PXjffoDiZPLVVlaDr70e2sLOCwenvxYQU0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Kevin Hilman <khilman@baylibre.com>
-Subject: [PATCH 4.14 01/65] dt-bindings: reset: meson8b: fix duplicate reset IDs
-Date:   Wed, 22 Jan 2020 10:28:46 +0100
-Message-Id: <20200122092751.887956791@linuxfoundation.org>
+        syzbot+e8a797964a4180eb57d5@syzkaller.appspotmail.com,
+        syzbot+34b582cf32c1db008f8e@syzkaller.appspotmail.com,
+        Johannes Berg <johannes.berg@intel.com>
+Subject: [PATCH 4.9 89/97] cfg80211: check for set_wiphy_params
+Date:   Wed, 22 Jan 2020 10:29:33 +0100
+Message-Id: <20200122092810.521430774@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200122092750.976732974@linuxfoundation.org>
-References: <20200122092750.976732974@linuxfoundation.org>
+In-Reply-To: <20200122092755.678349497@linuxfoundation.org>
+References: <20200122092755.678349497@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -62,42 +61,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+From: Johannes Berg <johannes.berg@intel.com>
 
-commit 4881873f4cc1460f63d85fa81363d56be328ccdc upstream.
+commit 24953de0a5e31dcca7e82c8a3c79abc2dfe8fb6e upstream.
 
-According to the public S805 datasheet the RESET2 register uses the
-following bits for the PIC_DC, PSC and NAND reset lines:
-- PIC_DC is at bit 3 (meaning: RESET_VD_RMEM + 3)
-- PSC is at bit 4 (meaning: RESET_VD_RMEM + 4)
-- NAND is at bit 5 (meaning: RESET_VD_RMEM + 4)
+Check if set_wiphy_params is assigned and return an error if not,
+some drivers (e.g. virt_wifi where syzbot reported it) don't have
+it.
 
-Update the reset IDs of these three reset lines so they don't conflict
-with PIC_DC and map to the actual hardware reset lines.
-
-Fixes: 79795e20a184eb ("dt-bindings: reset: Add bindings for the Meson SoC Reset Controller")
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Signed-off-by: Kevin Hilman <khilman@baylibre.com>
+Reported-by: syzbot+e8a797964a4180eb57d5@syzkaller.appspotmail.com
+Reported-by: syzbot+34b582cf32c1db008f8e@syzkaller.appspotmail.com
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Link: https://lore.kernel.org/r/20200113125358.ac07f276efff.Ibd85ee1b12e47b9efb00a2adc5cd3fac50da791a@changeid
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/dt-bindings/reset/amlogic,meson8b-reset.h |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ net/wireless/rdev-ops.h |    4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/include/dt-bindings/reset/amlogic,meson8b-reset.h
-+++ b/include/dt-bindings/reset/amlogic,meson8b-reset.h
-@@ -95,9 +95,9 @@
- #define RESET_VD_RMEM			64
- #define RESET_AUDIN			65
- #define RESET_DBLK			66
--#define RESET_PIC_DC			66
--#define RESET_PSC			66
--#define RESET_NAND			66
-+#define RESET_PIC_DC			67
-+#define RESET_PSC			68
-+#define RESET_NAND			69
- #define RESET_GE2D			70
- #define RESET_PARSER_REG		71
- #define RESET_PARSER_FETCH		72
+--- a/net/wireless/rdev-ops.h
++++ b/net/wireless/rdev-ops.h
+@@ -525,6 +525,10 @@ static inline int
+ rdev_set_wiphy_params(struct cfg80211_registered_device *rdev, u32 changed)
+ {
+ 	int ret;
++
++	if (!rdev->ops->set_wiphy_params)
++		return -EOPNOTSUPP;
++
+ 	trace_rdev_set_wiphy_params(&rdev->wiphy, changed);
+ 	ret = rdev->ops->set_wiphy_params(&rdev->wiphy, changed);
+ 	trace_rdev_return_int(&rdev->wiphy, ret);
 
 
