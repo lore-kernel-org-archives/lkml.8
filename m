@@ -2,125 +2,135 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8986BC33CAF
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 00:01:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C82EC33CAF
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 00:06:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 610592465B
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 00:01:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 144FE2070C
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 00:06:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chrisdown.name header.i=@chrisdown.name header.b="bV93vL/4"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NkUmJmAS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728894AbgAVABP (ORCPT
+        id S1728901AbgAVAGG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 19:01:15 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:33583 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728665AbgAVABO (ORCPT
+        Tue, 21 Jan 2020 19:06:06 -0500
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:41721 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726876AbgAVAGF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 19:01:14 -0500
-Received: by mail-wr1-f65.google.com with SMTP id b6so5435893wrq.0
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jan 2020 16:01:12 -0800 (PST)
+        Tue, 21 Jan 2020 19:06:05 -0500
+Received: by mail-qk1-f195.google.com with SMTP id x129so4690564qke.8;
+        Tue, 21 Jan 2020 16:06:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chrisdown.name; s=google;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
-        bh=OHaBdf9m1dDSgiWgOEcClSMTZD84LoHiqTmQD6cEaTs=;
-        b=bV93vL/4fDzGXFO2JCLe7XSiny5jsOXP+1mc/RM3P5+9LAEdfRZ4M2qFZguvwNb7Xg
-         9F1VYmZZ0XO1/g/fAbDib/KRX8L3WacCqQvO4UFl28J2h5N0x8RjEjQsbICjFSJoWwur
-         dwzrNK6ji2knC+Pl++t+qqjSspXviqg+HIn8s=
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=dLQ+QI++eCjlyAt/BPhwKj9mJwMzoHkPG5/0tL6ZnQU=;
+        b=NkUmJmAS/2iCKF4LmTItJ92DYd5DIifuu7d47SeBDHxG7VcscD/iFZprmsKSaYsPGW
+         IGj/AWfp0fFt1lPWNoFcMyuOMcbRapp8qLEdY/3BY5naJqorz2dkOBsccg9wHs+k6zq5
+         wuXwAG2pIPFJuWwMf5ORAS68nKz7eJkVuFhvd09Xi6AK7Bgt1JyaEc7kbyi2ub023Jqq
+         2zmBYQWZR8B7y+l1uM2TuqblpMTtpPSmEjacnV4eW1nxbNxi2Ceh7EX2aBmmOrwFvUSW
+         emH3tQ6H+XZYSpxgEJ3aWMrJL7dLtfPGTKPRjlJJDEGn2A+slUOEHMrkhMsdUNTyKj9P
+         LK5w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=OHaBdf9m1dDSgiWgOEcClSMTZD84LoHiqTmQD6cEaTs=;
-        b=f+Es6abNr9xLu/FE5BVN5mquTMVIgqvcoM0PQdrY/bLXN3pCVHJIIcd+aeDJ2RtODR
-         kZr8Qz7XSuva+QXcOwId13hZLK/o4h9aMCLCSyVG+WGWODs5SyCt9INaratWocn9uTFi
-         IFjNTDQrqIbiBA5XDADlcDXUlw7MYlf3f+DyE2CvS+3s0sLXNP+52Lg/5mayusQhb/rN
-         tK/4cVFqo2M4yDlBlt2qtcoNTnqAISxgFoUWRZzmEcjlgkWIFgNhSDGYlD3PHLn6Bin9
-         5CgnCI2gcVuM+rv9iA9WYs7oySTTGKDoDRVDYB1+hRxZertZdK+aPQih/0r/lxGXFscp
-         odRg==
-X-Gm-Message-State: APjAAAXOGZGdIIS6ZmBg86CsEjMAk7eNp2PptKItztON0Z3IIPqn1JOY
-        tax73KOUbyjYOSHgrbt07Kk25w==
-X-Google-Smtp-Source: APXvYqzLfa6mB53r67UDMjQCKejKBIn+YrmuY3wys2gdKrsrsMSEhdOHpEKYG/W3HLJzNJrxjyoBgQ==
-X-Received: by 2002:a5d:5234:: with SMTP id i20mr7998319wra.403.1579651271992;
-        Tue, 21 Jan 2020 16:01:11 -0800 (PST)
-Received: from localhost ([2620:10d:c092:180::1:58ec])
-        by smtp.gmail.com with ESMTPSA id n3sm1341159wmc.27.2020.01.21.16.01.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Jan 2020 16:01:11 -0800 (PST)
-Date:   Wed, 22 Jan 2020 00:01:10 +0000
-From:   Chris Down <chris@chrisdown.name>
-To:     bpf@vger.kernel.org, netdev@vger.kernel.org
-Cc:     Stanislav Fomichev <sdf@google.com>,
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=dLQ+QI++eCjlyAt/BPhwKj9mJwMzoHkPG5/0tL6ZnQU=;
+        b=da9y9qF8QAVUEt3Wfc8koNG79psGjERwt7gcMxM/fxPKTphyJDxJjfHcRLFJEU3D7R
+         +1vawcziaXU9I5urlLFk/QxOSjT4vtmmcSIS//+7Fuz5eoS4MeAvYmolC/aM6pabKxn/
+         PgJa3TB/2P/DJmZ7XJ8E8IkDnaS1MUI7BGz8o7fyI5vjKZW9GqiddJY/OCmKcNPMgpC5
+         YOamN27NrLfZnCqotD6L2vXbDFOewFCg4Nx+Ndo+/tNzftwJngzp7a7ZOTg/sDk2D9Tp
+         66dAu1u1IuoF0ENFKupPWtKq8AtSZDyQSPS335s6HwagXjzO+tIj5oNxHNGKxGn7PAhX
+         nu9g==
+X-Gm-Message-State: APjAAAUoavMcQGB9HkP0cscmA1JodQKZEZkEoYFhAIeT7Al0yC4Xkpai
+        LGVWiP1Tc4CmPmXrQCUQ9s86ZL6ZhODcU+JBabd8Wg==
+X-Google-Smtp-Source: APXvYqzJ8OTfF01CvmYbMSUlDK0hU2AW4rw/a991qNolBkJLBm7yY/VmVPA6ZpEmHTyJ6GmmwIKrLdrsZCX0CLdBXFk=
+X-Received: by 2002:a05:620a:5ae:: with SMTP id q14mr7456752qkq.437.1579651564807;
+ Tue, 21 Jan 2020 16:06:04 -0800 (PST)
+MIME-Version: 1.0
+References: <20200122000110.GA310073@chrisdown.name>
+In-Reply-To: <20200122000110.GA310073@chrisdown.name>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Tue, 21 Jan 2020 16:05:53 -0800
+Message-ID: <CAEf4BzZnOFfw102XiG4yJNTR63fT-_QHFU7QSu2apvrz=i_TWQ@mail.gmail.com>
+Subject: Re: [PATCH v2] bpf: btf: Always output invariant hit in pahole DWARF
+ to BTF transform
+To:     Chris Down <chris@chrisdown.name>
+Cc:     bpf <bpf@vger.kernel.org>, Networking <netdev@vger.kernel.org>,
+        Stanislav Fomichev <sdf@google.com>,
         Andrii Nakryiko <andriin@fb.com>,
         John Fastabend <john.fastabend@gmail.com>,
-        linux-kernel@vger.kernel.org, kernel-team@fb.com
-Subject: [PATCH v2] bpf: btf: Always output invariant hit in pahole DWARF to
- BTF transform
-Message-ID: <20200122000110.GA310073@chrisdown.name>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+        open list <linux-kernel@vger.kernel.org>,
+        Kernel Team <kernel-team@fb.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When trying to compile with CONFIG_DEBUG_INFO_BTF enabled, I got this
-error:
+On Tue, Jan 21, 2020 at 4:01 PM Chris Down <chris@chrisdown.name> wrote:
+>
+> When trying to compile with CONFIG_DEBUG_INFO_BTF enabled, I got this
+> error:
+>
+>     % make -s
+>     Failed to generate BTF for vmlinux
+>     Try to disable CONFIG_DEBUG_INFO_BTF
+>     make[3]: *** [vmlinux] Error 1
+>
+> Compiling again without -s shows the true error (that pahole is
+> missing), but since this is fatal, we should show the error
+> unconditionally on stderr as well, not silence it using the `info`
+> function. With this patch:
+>
+>     % make -s
+>     BTF: .tmp_vmlinux.btf: pahole (pahole) is not available
+>     Failed to generate BTF for vmlinux
+>     Try to disable CONFIG_DEBUG_INFO_BTF
+>     make[3]: *** [vmlinux] Error 1
+>
+> Signed-off-by: Chris Down <chris@chrisdown.name>
+> Cc: Stanislav Fomichev <sdf@google.com>
+> Cc: Andrii Nakryiko <andriin@fb.com>
+> Cc: John Fastabend <john.fastabend@gmail.com>
+> Cc: linux-kernel@vger.kernel.org
+> Cc: netdev@vger.kernel.org
+> Cc: bpf@vger.kernel.org
+> Cc: kernel-team@fb.com
+> ---
+>  scripts/link-vmlinux.sh | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
 
-    % make -s
-    Failed to generate BTF for vmlinux
-    Try to disable CONFIG_DEBUG_INFO_BTF
-    make[3]: *** [vmlinux] Error 1
+Looks great, thanks!
 
-Compiling again without -s shows the true error (that pahole is
-missing), but since this is fatal, we should show the error
-unconditionally on stderr as well, not silence it using the `info`
-function. With this patch:
+Acked-by: Andrii Nakryiko <andriin@fb.com>
 
-    % make -s
-    BTF: .tmp_vmlinux.btf: pahole (pahole) is not available
-    Failed to generate BTF for vmlinux
-    Try to disable CONFIG_DEBUG_INFO_BTF
-    make[3]: *** [vmlinux] Error 1
-
-Signed-off-by: Chris Down <chris@chrisdown.name>
-Cc: Stanislav Fomichev <sdf@google.com>
-Cc: Andrii Nakryiko <andriin@fb.com>
-Cc: John Fastabend <john.fastabend@gmail.com>
-Cc: linux-kernel@vger.kernel.org
-Cc: netdev@vger.kernel.org
-Cc: bpf@vger.kernel.org
-Cc: kernel-team@fb.com
----
- scripts/link-vmlinux.sh | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/scripts/link-vmlinux.sh b/scripts/link-vmlinux.sh
-index c287ad9b3a67..bbe9be2bf5ff 100755
---- a/scripts/link-vmlinux.sh
-+++ b/scripts/link-vmlinux.sh
-@@ -108,13 +108,13 @@ gen_btf()
- 	local bin_arch
- 
- 	if ! [ -x "$(command -v ${PAHOLE})" ]; then
--		info "BTF" "${1}: pahole (${PAHOLE}) is not available"
-+		echo >&2 "BTF: ${1}: pahole (${PAHOLE}) is not available"
- 		return 1
- 	fi
- 
- 	pahole_ver=$(${PAHOLE} --version | sed -E 's/v([0-9]+)\.([0-9]+)/\1\2/')
- 	if [ "${pahole_ver}" -lt "113" ]; then
--		info "BTF" "${1}: pahole version $(${PAHOLE} --version) is too old, need at least v1.13"
-+		echo >&2 "BTF: ${1}: pahole version $(${PAHOLE} --version) is too old, need at least v1.13"
- 		return 1
- 	fi
- 
--- 
-2.25.0
-
+> diff --git a/scripts/link-vmlinux.sh b/scripts/link-vmlinux.sh
+> index c287ad9b3a67..bbe9be2bf5ff 100755
+> --- a/scripts/link-vmlinux.sh
+> +++ b/scripts/link-vmlinux.sh
+> @@ -108,13 +108,13 @@ gen_btf()
+>         local bin_arch
+>
+>         if ! [ -x "$(command -v ${PAHOLE})" ]; then
+> -               info "BTF" "${1}: pahole (${PAHOLE}) is not available"
+> +               echo >&2 "BTF: ${1}: pahole (${PAHOLE}) is not available"
+>                 return 1
+>         fi
+>
+>         pahole_ver=$(${PAHOLE} --version | sed -E 's/v([0-9]+)\.([0-9]+)/\1\2/')
+>         if [ "${pahole_ver}" -lt "113" ]; then
+> -               info "BTF" "${1}: pahole version $(${PAHOLE} --version) is too old, need at least v1.13"
+> +               echo >&2 "BTF: ${1}: pahole version $(${PAHOLE} --version) is too old, need at least v1.13"
+>                 return 1
+>         fi
+>
+> --
+> 2.25.0
+>
