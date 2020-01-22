@@ -2,230 +2,352 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43908C33CAF
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 18:05:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D298AC33CB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 18:07:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1777A21734
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 18:05:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A82B321835
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 18:07:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="ODGmuBec"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kGPOl54o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728655AbgAVSFX (ORCPT
+        id S1726207AbgAVSHo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 13:05:23 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:50837 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725924AbgAVSFW (ORCPT
+        Wed, 22 Jan 2020 13:07:44 -0500
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:39778 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725802AbgAVSHo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 13:05:22 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1579716321; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=WxyUq/fOXMoja6H80ccUY0Bk7aZe/VMF8qFNHaq2Rv0=;
- b=ODGmuBec76UNPu5ZbT8IAlww2m5vNBvFOnP4HQWPnr82mnBZMX3PKwbdZ27+l+XcK33xjDTg
- dnYFcU8v1+ZOxDenl6KrBw7iUbeepRzhtKyJ5Mn0tyAdX4XCr53ZDbjoApZUA2qo1Ezp2UIu
- 42dMLo19pLF77Ldt5oLvm745PFY=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e288ed8.7f9dcec340d8-smtp-out-n01;
- Wed, 22 Jan 2020 18:05:12 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id C740FC4479C; Wed, 22 Jan 2020 18:05:12 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: sibis)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id AA1D9C433CB;
-        Wed, 22 Jan 2020 18:05:11 +0000 (UTC)
+        Wed, 22 Jan 2020 13:07:44 -0500
+Received: by mail-pj1-f66.google.com with SMTP id e11so252452pjt.4;
+        Wed, 22 Jan 2020 10:07:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=xnYwfJLFCQxsjI1sT9QdJcHNTqeM4du5eFaTToGMU+8=;
+        b=kGPOl54oA2TuU75A3iKGE9rcyaChNzibQL/64g/2z2vY9ieEWaeed5ahEXX830Yy5T
+         JNeeBEEcoBseL7c9bj3BV+fXiwXCZMmOiicqsr+0vtiI0ClwdGmU7Sd1P8Ol2fjjbj9X
+         qw0D73RLHVUgRkakOOcaol/QFM0jxM9pKrHUPZc22jNEmpY2jffnJEKfwql37lxi+s2X
+         40JZdfMKmCgpSSWXegBMXF6m6xlQ3xpPjI/DT25HyX4i7vzUoOqWgexb9sBOQBjn6i6m
+         dNO/0h9nDQieSZPpeGCHH90zTWrc7Bb8LOEMBvFNdDBShuKkyGNGLiFLTdYB4Vhaa+BW
+         UH1Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=xnYwfJLFCQxsjI1sT9QdJcHNTqeM4du5eFaTToGMU+8=;
+        b=A8aPk0rLFgALxslTL6LDXIhVcKrqjWgrDhKT1IkytyAeK97oqptffM+dyMdpNqOwJu
+         zI4o5pqOeah/bplyiHh8OdG9OTOfol2t7sM1dM0CA+2lyg8d/tMqnP/UTbFrSR4I+Z6b
+         IWiFxHJnLNTHio2j0Cgn8yY66st4mdSzwo0TNnroUrLCrx2YKvLPuhhRa9UwIsvNNmNx
+         9GXi/6DCiXP6/gQf2O4THArTRhtn7caV9h4phgmlra92OALzg3tZPVxwbVi1+IwIijpu
+         aCM2vcVYE7/pPomWQJns1yJ2XSAkarsX86fLRCmTWDLcTT70DOCnKcPiwbi2bvbaNpw7
+         mTnw==
+X-Gm-Message-State: APjAAAWdi9q4hwrrueM0IRe3KLJmaG3v2We0WsQ3JbRJu3AFeqoQU22g
+        waN07U8dqbW8/T7RBGq51ao=
+X-Google-Smtp-Source: APXvYqw0BypvPkRJD1EPiNCHWXS+Pr47S3XTG3EQZREVbjIePmSLII34dzU/0qUhHko64ynouc6bpQ==
+X-Received: by 2002:a17:90a:1b66:: with SMTP id q93mr4528301pjq.102.1579716463489;
+        Wed, 22 Jan 2020 10:07:43 -0800 (PST)
+Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
+        by smtp.gmail.com with ESMTPSA id v4sm49728956pgo.63.2020.01.22.10.07.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 22 Jan 2020 10:07:43 -0800 (PST)
+Date:   Wed, 22 Jan 2020 10:07:41 -0800
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Thomas Bogendoerfer <tbogendoerfer@suse.de>
+Cc:     linux-kernel@vger.kernel.org, linux-input@vger.kernel.org
+Subject: Re: [PATCH v2] Input: add IOC3 serio driver
+Message-ID: <20200122180741.GA184237@dtor-ws>
+References: <20200122135220.22354-1-tbogendoerfer@suse.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Wed, 22 Jan 2020 23:35:11 +0530
-From:   Sibi Sankar <sibis@codeaurora.org>
-To:     Evan Green <evgreen@chromium.org>
-Cc:     Georgi Djakov <georgi.djakov@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        David Dai <daidavid1@codeaurora.org>,
-        Saravana Kannan <saravanak@google.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH v4 2/4] interconnect: qcom: Add OSM L3 interconnect
- provider support
-In-Reply-To: <CAE=gft6NMD7+Bt0ab8tnb8r2DjPkb2si7+0-R+f=SYk2YMCX0A@mail.gmail.com>
-References: <20200109211215.18930-1-sibis@codeaurora.org>
- <20200109211215.18930-3-sibis@codeaurora.org>
- <CAE=gft7ZUTiGrvsaqfrVv-bH3w75as7G1UJRn3aJs3ECqodpQg@mail.gmail.com>
- <dad8936ba4444c3377d777cbbb879dc3@codeaurora.org>
- <03f83755-bdcc-dc39-0eae-08414751be57@linaro.org>
- <CAE=gft6NMD7+Bt0ab8tnb8r2DjPkb2si7+0-R+f=SYk2YMCX0A@mail.gmail.com>
-Message-ID: <169aa5fbe68fb7163166d1789bbf1761@codeaurora.org>
-X-Sender: sibis@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200122135220.22354-1-tbogendoerfer@suse.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-01-22 22:18, Evan Green wrote:
-> On Wed, Jan 22, 2020 at 12:20 AM Georgi Djakov 
-> <georgi.djakov@linaro.org> wrote:
->> 
->> On 1/22/20 08:45, Sibi Sankar wrote:
->> > Hey Evan,
->> >
->> > Thanks for the review!
->> >
->> > On 2020-01-22 03:03, Evan Green wrote:
->> >> On Thu, Jan 9, 2020 at 1:12 PM Sibi Sankar <sibis@codeaurora.org> wrote:
->> >>>
->> >>> On some Qualcomm SoCs, Operating State Manager (OSM) controls the
->> >>> resources of scaling L3 caches. Add a driver to handle bandwidth
->> >>> requests to OSM L3 from CPU on SDM845 SoCs.
->> >>>
->> >>> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
->> >>> ---
->> >>>  drivers/interconnect/qcom/Kconfig  |   7 +
->> >>>  drivers/interconnect/qcom/Makefile |   2 +
->> >>>  drivers/interconnect/qcom/osm-l3.c | 267 +++++++++++++++++++++++++++++
->> >>>  3 files changed, 276 insertions(+)
->> >>>  create mode 100644 drivers/interconnect/qcom/osm-l3.c
->> >>>
->> >>> diff --git a/drivers/interconnect/qcom/Kconfig
->> >>> b/drivers/interconnect/qcom/Kconfig
->> >>> index a9bbbdf7400f9..b94d28e7bf700 100644
->> >>> --- a/drivers/interconnect/qcom/Kconfig
->> >>> +++ b/drivers/interconnect/qcom/Kconfig
->> >>> @@ -14,6 +14,13 @@ config INTERCONNECT_QCOM_MSM8974
->> >>>          This is a driver for the Qualcomm Network-on-Chip on msm8974-based
->> >>>          platforms.
->> >>>
->> >>> +config INTERCONNECT_QCOM_OSM_L3
->> >>> +       tristate "Qualcomm OSM L3 interconnect driver"
->> >>> +       depends on INTERCONNECT_QCOM || COMPILE_TEST
->> >>> +       help
->> >>> +         Say y here to support the Operating State Manager (OSM) interconnect
->> >>> +         driver which controls the scaling of L3 caches on Qualcomm SoCs.
->> >>> +
->> >>>  config INTERCONNECT_QCOM_QCS404
->> >>>         tristate "Qualcomm QCS404 interconnect driver"
->> >>>         depends on INTERCONNECT_QCOM
->> >>> diff --git a/drivers/interconnect/qcom/Makefile
->> >>> b/drivers/interconnect/qcom/Makefile
->> >>> index 55ec3c5c89dbd..89fecbd1257c7 100644
->> >>> --- a/drivers/interconnect/qcom/Makefile
->> >>> +++ b/drivers/interconnect/qcom/Makefile
->> >>> @@ -1,5 +1,6 @@
->> >>>  # SPDX-License-Identifier: GPL-2.0
->> >>>
->> >>> +icc-osm-l3-objs                                := osm-l3.o
->> >>>  qnoc-msm8974-objs                      := msm8974.o
->> >>>  qnoc-qcs404-objs                       := qcs404.o
->> >>>  qnoc-sc7180-objs                       := sc7180.o
->> >>> @@ -12,6 +13,7 @@ icc-smd-rpm-objs                      := smd-rpm.o
->> >>>  obj-$(CONFIG_INTERCONNECT_QCOM_BCM_VOTER) += icc-bcm-voter.o
->> >>>  obj-$(CONFIG_INTERCONNECT_QCOM_MSM8916) += qnoc-msm8916.o
->> >>>  obj-$(CONFIG_INTERCONNECT_QCOM_MSM8974) += qnoc-msm8974.o
->> >>> +obj-$(CONFIG_INTERCONNECT_QCOM_OSM_L3) += icc-osm-l3.o
->> >>>  obj-$(CONFIG_INTERCONNECT_QCOM_QCS404) += qnoc-qcs404.o
->> >>>  obj-$(CONFIG_INTERCONNECT_QCOM_RPMH) += icc-rpmh.o
->> >>>  obj-$(CONFIG_INTERCONNECT_QCOM_SC7180) += qnoc-sc7180.o
->> >>> diff --git a/drivers/interconnect/qcom/osm-l3.c
->> >>> b/drivers/interconnect/qcom/osm-l3.c
->> >>> new file mode 100644
->> >>> index 0000000000000..7fde53c70081e
->> >>> --- /dev/null
->> >>> +++ b/drivers/interconnect/qcom/osm-l3.c
->> >>> @@ -0,0 +1,267 @@
->> >>> +// SPDX-License-Identifier: GPL-2.0
->> >>> +/*
->> >>> + * Copyright (c) 2019, The Linux Foundation. All rights reserved.
->> >>> + *
->> >>> + */
->> >>> +
->> >>> +#include <dt-bindings/interconnect/qcom,osm-l3.h>
->> >>> +#include <linux/bitfield.h>
->> >>> +#include <linux/clk.h>
->> >>> +#include <linux/interconnect-provider.h>
->> >>> +#include <linux/io.h>
->> >>> +#include <linux/kernel.h>
->> >>> +#include <linux/module.h>
->> >>> +#include <linux/of_device.h>
->> >>> +#include <linux/of_platform.h>
->> >>> +#include <linux/platform_device.h>
->> >>> +
->> >>> +#define LUT_MAX_ENTRIES                        40U
->> >>> +#define LUT_SRC                                GENMASK(31, 30)
->> >>> +#define LUT_L_VAL                      GENMASK(7, 0)
->> >>> +#define LUT_ROW_SIZE                   32
->> >>> +#define CLK_HW_DIV                     2
->> >>> +
->> >>> +/* Register offsets */
->> >>> +#define REG_ENABLE                     0x0
->> >>> +#define REG_FREQ_LUT                   0x110
->> >>> +#define REG_PERF_STATE                 0x920
->> >>> +
->> >>> +#define OSM_L3_MAX_LINKS               1
->> >>> +#define SDM845_MAX_RSC_NODES           130
->> >>
->> >> I'm nervous this define is going to fall out of date with
->> >> qcom,sdm845.h. I'm worried someone will end up adding a few more nodes
->> >> that were always there but previously hidden from Linux. Can we put
->> >> this define in include/dt-bindings/interconnect/qcom,sdm845.h, so at
->> >> least when that happens they'll come face to face with this define?
->> >> The same comment goes for the SC7180 define in patch 4.
->> >
->> > Yeah both solution require manual
->> > intervention how about we just go
->> > with what I proposed below.
->> >
->> >>
->> >> On second thought, this trick only works once. Are we sure there
->> >> aren't going to be other drivers that might want to tag on
->> >> interconnect nodes as well? How about instead we just add the enum
->> >> values below in qcom,sdm845.h as defines?
->> >
->> > Georgi/Evan,
->> > Since qcom,sdm845.h is specific to
->> > bindings shouldn't I just create a
->> > .h file with all the enums so that
->> > it can used across all icc providers
->> > on SDM845?
->> 
->> This sounds good to me, unless Evan has any objections.
+On Wed, Jan 22, 2020 at 02:52:20PM +0100, Thomas Bogendoerfer wrote:
+> This patch adds a platform driver for supporting keyboard and mouse
+> interface of SGI IOC3 chips.
 > 
-> So is this a new .h file with all the node numbers from qcom,sdm845.h
-> and your new couple of nodes here? That would be fine with me.
+> Signed-off-by: Thomas Bogendoerfer <tbogendoerfer@suse.de>
+
+Applied, thank you.
+
+> ---
+> Changes in v2:
+>  - track that serio is started before pushing data to it
 > 
-> Or is it a .h file with only your two new node numbers? My worry there
-> is when there are two or three other drivers like this one, it will be
-> difficult to follow the total order of nodes as "base provider', "L3
-> driver", "new driver 1", "new driver 2".... any thoughts on how we
-> might address that?
-
-the relative provider numbers from
-qcom,sdm845.h have no useful meaning
-for other icc providers. However the
-enum defined in the sdm845.c which are
-the node ids are needed and should be
-sufficient to add/link to any icc node
-across icc providers. So introducing a
-sdm845.h with all the enumbs global node
-ids is what I am proposing to do.
-
-> -Evan
+>  drivers/input/serio/Kconfig   |  10 ++
+>  drivers/input/serio/Makefile  |   1 +
+>  drivers/input/serio/ioc3kbd.c | 214 ++++++++++++++++++++++++++++++++++
+>  3 files changed, 225 insertions(+)
+>  create mode 100644 drivers/input/serio/ioc3kbd.c
+> 
+> diff --git a/drivers/input/serio/Kconfig b/drivers/input/serio/Kconfig
+> index f3e18f8ef9ca..373a1646019e 100644
+> --- a/drivers/input/serio/Kconfig
+> +++ b/drivers/input/serio/Kconfig
+> @@ -165,6 +165,16 @@ config SERIO_MACEPS2
+>  	  To compile this driver as a module, choose M here: the
+>  	  module will be called maceps2.
+>  
+> +config SERIO_SGI_IOC3
+> +	tristate "SGI IOC3 PS/2 controller"
+> +	depends on SGI_MFD_IOC3
+> +	help
+> +	  Say Y here if you have an SGI Onyx2, SGI Octane or IOC3 PCI card
+> +	  and you want to attach and use a keyboard, mouse, or both.
+> +
+> +	  To compile this driver as a module, choose M here: the
+> +	  module will be called ioc3kbd.
+> +
+>  config SERIO_LIBPS2
+>  	tristate "PS/2 driver library"
+>  	depends on SERIO_I8042 || SERIO_I8042=n
+> diff --git a/drivers/input/serio/Makefile b/drivers/input/serio/Makefile
+> index 67950a5ccb3f..6d97bad7b844 100644
+> --- a/drivers/input/serio/Makefile
+> +++ b/drivers/input/serio/Makefile
+> @@ -20,6 +20,7 @@ obj-$(CONFIG_HIL_MLC)		+= hp_sdc_mlc.o hil_mlc.o
+>  obj-$(CONFIG_SERIO_PCIPS2)	+= pcips2.o
+>  obj-$(CONFIG_SERIO_PS2MULT)	+= ps2mult.o
+>  obj-$(CONFIG_SERIO_MACEPS2)	+= maceps2.o
+> +obj-$(CONFIG_SERIO_SGI_IOC3)	+= ioc3kbd.o
+>  obj-$(CONFIG_SERIO_LIBPS2)	+= libps2.o
+>  obj-$(CONFIG_SERIO_RAW)		+= serio_raw.o
+>  obj-$(CONFIG_SERIO_AMS_DELTA)	+= ams_delta_serio.o
+> diff --git a/drivers/input/serio/ioc3kbd.c b/drivers/input/serio/ioc3kbd.c
+> new file mode 100644
+> index 000000000000..3decbaff40cc
+> --- /dev/null
+> +++ b/drivers/input/serio/ioc3kbd.c
+> @@ -0,0 +1,214 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * SGI IOC3 PS/2 controller driver for linux
+> + *
+> + * Copyright (C) 2019 Thomas Bogendoerfer <tbogendoerfer@suse.de>
+> + *
+> + * Based on code Copyright (C) 2005 Stanislaw Skowronek <skylark@unaligned.org>
+> + *               Copyright (C) 2009 Johannes Dickgreber <tanzy@gmx.de>
+> + */
+> +
+> +#include <linux/delay.h>
+> +#include <linux/init.h>
+> +#include <linux/io.h>
+> +#include <linux/serio.h>
+> +#include <linux/module.h>
+> +#include <linux/platform_device.h>
+> +
+> +#include <asm/sn/ioc3.h>
+> +
+> +struct ioc3kbd_data {
+> +	struct ioc3_serioregs __iomem *regs;
+> +	struct serio *kbd, *aux;
+> +	bool kbd_exists, aux_exists;
+> +	int irq;
+> +};
+> +
+> +static int ioc3kbd_wait(struct ioc3_serioregs __iomem *regs, u32 mask)
+> +{
+> +	unsigned long timeout = 0;
+> +
+> +	while ((readl(&regs->km_csr) & mask) && (timeout < 250)) {
+> +		udelay(50);
+> +		timeout++;
+> +	}
+> +	return (timeout >= 250) ? -ETIMEDOUT : 0;
+> +}
+> +
+> +static int ioc3kbd_write(struct serio *dev, u8 val)
+> +{
+> +	struct ioc3kbd_data *d = dev->port_data;
+> +	int ret;
+> +
+> +	ret = ioc3kbd_wait(d->regs, KM_CSR_K_WRT_PEND);
+> +	if (ret)
+> +		return ret;
+> +
+> +	writel(val, &d->regs->k_wd);
+> +
+> +	return 0;
+> +}
+> +
+> +static int ioc3kbd_start(struct serio *dev)
+> +{
+> +	struct ioc3kbd_data *d = dev->port_data;
+> +
+> +	d->kbd_exists = true;
+> +	return 0;
+> +}
+> +
+> +static void ioc3kbd_stop(struct serio *dev)
+> +{
+> +	struct ioc3kbd_data *d = dev->port_data;
+> +
+> +	d->kbd_exists = false;
+> +}
+> +
+> +static int ioc3aux_write(struct serio *dev, u8 val)
+> +{
+> +	struct ioc3kbd_data *d = dev->port_data;
+> +	int ret;
+> +
+> +	ret = ioc3kbd_wait(d->regs, KM_CSR_M_WRT_PEND);
+> +	if (ret)
+> +		return ret;
+> +
+> +	writel(val, &d->regs->m_wd);
+> +
+> +	return 0;
+> +}
+> +
+> +static int ioc3aux_start(struct serio *dev)
+> +{
+> +	struct ioc3kbd_data *d = dev->port_data;
+> +
+> +	d->aux_exists = true;
+> +	return 0;
+> +}
+> +
+> +static void ioc3aux_stop(struct serio *dev)
+> +{
+> +	struct ioc3kbd_data *d = dev->port_data;
+> +
+> +	d->aux_exists = false;
+> +}
+> +
+> +static void ioc3kbd_process_data(struct serio *dev, u32 data)
+> +{
+> +	if (data & KM_RD_VALID_0)
+> +		serio_interrupt(dev, (data >> KM_RD_DATA_0_SHIFT) & 0xff, 0);
+> +	if (data & KM_RD_VALID_1)
+> +		serio_interrupt(dev, (data >> KM_RD_DATA_1_SHIFT) & 0xff, 0);
+> +	if (data & KM_RD_VALID_2)
+> +		serio_interrupt(dev, (data >> KM_RD_DATA_2_SHIFT) & 0xff, 0);
+> +}
+> +
+> +static irqreturn_t ioc3kbd_intr(int itq, void *dev_id)
+> +{
+> +	struct ioc3kbd_data *d = dev_id;
+> +	u32 data_k, data_m;
+> +
+> +	data_k = readl(&d->regs->k_rd);
+> +	if (d->kbd_exists)
+> +		ioc3kbd_process_data(d->kbd, data_k);
+> +
+> +	data_m = readl(&d->regs->m_rd);
+> +	if (d->aux_exists)
+> +		ioc3kbd_process_data(d->aux, data_m);
+> +
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +static int ioc3kbd_probe(struct platform_device *pdev)
+> +{
+> +	struct ioc3_serioregs __iomem *regs;
+> +	struct device *dev = &pdev->dev;
+> +	struct ioc3kbd_data *d;
+> +	struct serio *sk, *sa;
+> +	int irq, ret;
+> +
+> +	regs = devm_platform_ioremap_resource(pdev, 0);
+> +	if (IS_ERR(regs))
+> +		return PTR_ERR(regs);
+> +
+> +	irq = platform_get_irq(pdev, 0);
+> +	if (irq < 0)
+> +		return -ENXIO;
+> +
+> +	d = devm_kzalloc(dev, sizeof(*d), GFP_KERNEL);
+> +	if (!d)
+> +		return -ENOMEM;
+> +
+> +	sk = kzalloc(sizeof(*sk), GFP_KERNEL);
+> +	if (!sk)
+> +		return -ENOMEM;
+> +
+> +	sa = kzalloc(sizeof(*sa), GFP_KERNEL);
+> +	if (!sa) {
+> +		kfree(sk);
+> +		return -ENOMEM;
+> +	}
+> +
+> +	sk->id.type = SERIO_8042;
+> +	sk->write = ioc3kbd_write;
+> +	sk->start = ioc3kbd_start;
+> +	sk->stop = ioc3kbd_stop;
+> +	snprintf(sk->name, sizeof(sk->name), "IOC3 keyboard %d", pdev->id);
+> +	snprintf(sk->phys, sizeof(sk->phys), "ioc3/serio%dkbd", pdev->id);
+> +	sk->port_data = d;
+> +	sk->dev.parent = dev;
+> +
+> +	sa->id.type = SERIO_8042;
+> +	sa->write = ioc3aux_write;
+> +	sa->start = ioc3aux_start;
+> +	sa->stop = ioc3aux_stop;
+> +	snprintf(sa->name, sizeof(sa->name), "IOC3 auxiliary %d", pdev->id);
+> +	snprintf(sa->phys, sizeof(sa->phys), "ioc3/serio%daux", pdev->id);
+> +	sa->port_data = d;
+> +	sa->dev.parent = dev;
+> +
+> +	d->regs = regs;
+> +	d->kbd = sk;
+> +	d->aux = sa;
+> +	d->irq = irq;
+> +
+> +	platform_set_drvdata(pdev, d);
+> +	serio_register_port(d->kbd);
+> +	serio_register_port(d->aux);
+> +
+> +	ret = request_irq(irq, ioc3kbd_intr, IRQF_SHARED, "ioc3-kbd", d);
+> +	if (ret) {
+> +		dev_err(dev, "could not request IRQ %d\n", irq);
+> +		serio_unregister_port(d->kbd);
+> +		serio_unregister_port(d->aux);
+> +		return ret;
+> +	}
+> +
+> +	/* enable ports */
+> +	writel(KM_CSR_K_CLAMP_3 | KM_CSR_M_CLAMP_3, &regs->km_csr);
+> +
+> +	return 0;
+> +}
+> +
+> +static int ioc3kbd_remove(struct platform_device *pdev)
+> +{
+> +	struct ioc3kbd_data *d = platform_get_drvdata(pdev);
+> +
+> +	free_irq(d->irq, d);
+> +	serio_unregister_port(d->kbd);
+> +	serio_unregister_port(d->aux);
+> +	return 0;
+> +}
+> +
+> +static struct platform_driver ioc3kbd_driver = {
+> +	.probe          = ioc3kbd_probe,
+> +	.remove         = ioc3kbd_remove,
+> +	.driver = {
+> +		.name = "ioc3-kbd",
+> +	},
+> +};
+> +module_platform_driver(ioc3kbd_driver);
+> +
+> +MODULE_AUTHOR("Thomas Bogendoerfer <tbogendoerfer@suse.de>");
+> +MODULE_DESCRIPTION("SGI IOC3 serio driver");
+> +MODULE_LICENSE("GPL");
+> -- 
+> 2.24.1
+> 
 
 -- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project.
+Dmitry
