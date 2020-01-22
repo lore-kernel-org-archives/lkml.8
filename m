@@ -5,47 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-5.7 required=3.0 tests=DATE_IN_PAST_03_06,
 	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93DEBC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:18:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C42B0C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:19:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69F6D20678
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:18:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9797F205F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:19:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579699137;
-	bh=GEucGcrwQrno+kOd+yLphpF5a5JKjHODK4tOdIVlcto=;
+	s=default; t=1579699141;
+	bh=qFu7OqLxiAfjXgCPK2D2NL2a2kSle7lyuguriALwEBI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eJvZCm4ZcDU5dTAr8K5IS8mSuLoZAulMsFbqANuseKppR42IAN1+PUR8g2cOqHXHh
-	 45O/VkcOwZEoocspCvKCVMB+Y6fP/cfgjSEJifbMs0LU5Dq7TqzV0KBw46zTAZpD/Q
-	 1hsH4TtMUcaSAjDep6DYWD7DFLrnHPNtztsYMj90=
+	b=2T55sVZuBKCTmE7/c7cm6+hi3P7z9G9ldaw068lk0nnfl+NKN2X1tiyTRMZyktHu8
+	 zxPjodgStAm9MbYBBF+qGXs8nn+kxDq74LSIVLrFttIhpKPJLFHYeL71wjykaczyLU
+	 K2aHc6aSailHxUtHccNCwIhaoDfQp8y+gidbvEfQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726234AbgAVNS4 (ORCPT
+        id S1727453AbgAVNTA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 08:18:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34572 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 08:19:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34656 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729441AbgAVNSu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 08:18:50 -0500
+        id S1725924AbgAVNSx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 08:18:53 -0500
 Received: from localhost (unknown [84.241.205.26])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C5A06205F4;
-        Wed, 22 Jan 2020 13:18:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E39AA205F4;
+        Wed, 22 Jan 2020 13:18:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579699129;
-        bh=GEucGcrwQrno+kOd+yLphpF5a5JKjHODK4tOdIVlcto=;
+        s=default; t=1579699132;
+        bh=qFu7OqLxiAfjXgCPK2D2NL2a2kSle7lyuguriALwEBI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CQn0JdGlm4NmcT8LetH2qELFDDcHk4o2BL0c+6GGsv7FIBSVxiLyepfZhH9rZOaBf
-         Lnj0WrgtcJyFXA02jCqIXV3b6U16/MwnqDe4N0Rp1CbMFgFwa0Q5VFjlsfN+Kw5bCk
-         774cerD9131yLXZjC0FHzeKVyaw7bLPKHiBAF8Zc=
+        b=daqRY0ALQ0zTZqWQqfNUG8tg0r6WEcVQKZZfF7He1v71WNRvgFQnT0Uahfl53JVzx
+         2mKQc9I1AAxtZs8Kb4vjgb3hXdw5CTyk/zjNUpnHyhvokx0aYMteNfB+OsNsnqYeVf
+         7EaSC+vAU9jWYTnFxaJ8OC2ruOIs2wlcSJfitF08=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>
-Subject: [PATCH 5.4 050/222] USB: serial: io_edgeport: add missing active-port sanity check
-Date:   Wed, 22 Jan 2020 10:27:16 +0100
-Message-Id: <20200122092837.188355759@linuxfoundation.org>
+        stable@vger.kernel.org, Stefan Metzmacher <metze@samba.org>,
+        Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 5.4 033/222] io_uring: only allow submit from owning task
+Date:   Wed, 22 Jan 2020 10:26:59 +0100
+Message-Id: <20200122092835.852416399@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200122092833.339495161@linuxfoundation.org>
 References: <20200122092833.339495161@linuxfoundation.org>
@@ -58,67 +59,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+From: Jens Axboe <axboe@kernel.dk>
 
-commit 1568c58d11a7c851bd09341aeefd6a1c308ac40d upstream.
+commit 44d282796f81eb1debc1d7cb53245b4cb3214cb5 upstream.
 
-The driver receives the active port number from the device, but never
-made sure that the port number was valid. This could lead to a
-NULL-pointer dereference or memory corruption in case a device sends
-data for an invalid port.
+If the credentials or the mm doesn't match, don't allow the task to
+submit anything on behalf of this ring. The task that owns the ring can
+pass the file descriptor to another task, but we don't want to allow
+that task to submit an SQE that then assumes the ring mm and creds if
+it needs to go async.
 
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Cc: stable <stable@vger.kernel.org>
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Johan Hovold <johan@kernel.org>
+Cc: stable@vger.kernel.org
+Suggested-by: Stefan Metzmacher <metze@samba.org>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
----
- drivers/usb/serial/io_edgeport.c |   12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
 
---- a/drivers/usb/serial/io_edgeport.c
-+++ b/drivers/usb/serial/io_edgeport.c
-@@ -1725,7 +1725,8 @@ static void edge_break(struct tty_struct
- static void process_rcvd_data(struct edgeport_serial *edge_serial,
- 				unsigned char *buffer, __u16 bufferLength)
- {
--	struct device *dev = &edge_serial->serial->dev->dev;
-+	struct usb_serial *serial = edge_serial->serial;
-+	struct device *dev = &serial->dev->dev;
- 	struct usb_serial_port *port;
- 	struct edgeport_port *edge_port;
- 	__u16 lastBufferLength;
-@@ -1821,9 +1822,8 @@ static void process_rcvd_data(struct edg
+---
+ fs/io_uring.c |    6 ++++++
+ 1 file changed, 6 insertions(+)
+
+--- a/fs/io_uring.c
++++ b/fs/io_uring.c
+@@ -3716,6 +3716,12 @@ SYSCALL_DEFINE6(io_uring_enter, unsigned
+ 			wake_up(&ctx->sqo_wait);
+ 		submitted = to_submit;
+ 	} else if (to_submit) {
++		if (current->mm != ctx->sqo_mm ||
++		    current_cred() != ctx->creds) {
++			ret = -EPERM;
++			goto out;
++		}
++
+ 		to_submit = min(to_submit, ctx->sq_entries);
  
- 			/* spit this data back into the tty driver if this
- 			   port is open */
--			if (rxLen) {
--				port = edge_serial->serial->port[
--							edge_serial->rxPort];
-+			if (rxLen && edge_serial->rxPort < serial->num_ports) {
-+				port = serial->port[edge_serial->rxPort];
- 				edge_port = usb_get_serial_port_data(port);
- 				if (edge_port && edge_port->open) {
- 					dev_dbg(dev, "%s - Sending %d bytes to TTY for port %d\n",
-@@ -1833,8 +1833,8 @@ static void process_rcvd_data(struct edg
- 							rxLen);
- 					edge_port->port->icount.rx += rxLen;
- 				}
--				buffer += rxLen;
- 			}
-+			buffer += rxLen;
- 			break;
- 
- 		case EXPECT_HDR3:	/* Expect 3rd byte of status header */
-@@ -1869,6 +1869,8 @@ static void process_rcvd_status(struct e
- 	__u8 code = edge_serial->rxStatusCode;
- 
- 	/* switch the port pointer to the one being currently talked about */
-+	if (edge_serial->rxPort >= edge_serial->serial->num_ports)
-+		return;
- 	port = edge_serial->serial->port[edge_serial->rxPort];
- 	edge_port = usb_get_serial_port_data(port);
- 	if (edge_port == NULL) {
+ 		mutex_lock(&ctx->uring_lock);
 
 
