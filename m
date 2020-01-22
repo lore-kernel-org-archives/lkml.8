@@ -7,68 +7,65 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F032DC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 11:08:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2443BC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 11:08:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB1442467A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 11:08:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDFDC2468E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 11:08:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="JYbQkjC2"
+	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="dLJA13JK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729047AbgAVLIr (ORCPT
+        id S1729140AbgAVLIv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 06:08:47 -0500
-Received: from mx0a-001ae601.pphosted.com ([67.231.149.25]:61634 "EHLO
-        mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725911AbgAVLIr (ORCPT
+        Wed, 22 Jan 2020 06:08:51 -0500
+Received: from mx0b-001ae601.pphosted.com ([67.231.152.168]:4700 "EHLO
+        mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726049AbgAVLIr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 22 Jan 2020 06:08:47 -0500
-Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
-        by mx0a-001ae601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00MB3ZfA027915;
+Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
+        by mx0b-001ae601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00MB1Rpm005799;
         Wed, 22 Jan 2020 05:08:44 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-type; s=PODMain02222019;
- bh=Wfwz0JBha5yb+vEJD1AnM22AO8M2TkTcB/GNhCOoR1M=;
- b=JYbQkjC2m1RA/XQFYNd89kiqKjg7hmxFwFMCUKV7PVz6xutq1HgmNzExKNZh6/ToaxHi
- eFDY//alxYLV/TVe4YerQn9a7vUqMvjiOGIPu1+teDFC/NhHOvXYxVpvXQBVDEQlIlBG
- QFXuDwaKo19KG5flpzOGuN69jCrXD8qCF3FFuhBwOqGpEkaJTtHdlR8ICAOP8k8CpZso
- 0X4srNgsga45C2gnKx3666XCfrebE6Im/rdl44JDF4ZTdd7GAsnTX/MzPpNRSYxOGt1f
- 2Nw1liVO90nv94ypi0cZwIw5r66EmVeLvdP8S08kCJo2gAcixDokM5LF7EWZI6kWXPwc SQ== 
+ subject : date : message-id : mime-version : content-type;
+ s=PODMain02222019; bh=x1yMu7o79Jw/xPDHt66WPliG8dBpE+NmweeSPNWuINM=;
+ b=dLJA13JKuUutxwMq3nAVV73TC1THZRwtRXzt7bRxcZhPZXi8icAj6FNPtn+oXDeyAOBY
+ bt0fDqH3QOgq7TuQidoHWsazn0pccEctLCbfw708VDwjtXJKFZ2Ut7Hee71zkf9YAwFN
+ WyGuRcfoIliNP7RcS833ytRuoxq2HYyAn/9nhn0WoqixiDtnCLDrEYN8bFq/XlFSU8e3
+ 7zXoctj47BU0i21tQ3CxAqQpDQ7gWgYnhkDzPx6g3POQARnIu6E+2JvigGMqIBQOHPQ+
+ mg3pej0S17kPLis2ofRa5sN12g+O43cHlATvhSWdyos/OE3LgJSSgPI5P83q6PQStqyC Wg== 
 Authentication-Results: ppops.net;
         spf=fail smtp.mailfrom=ckeepax@opensource.cirrus.com
-Received: from ediex01.ad.cirrus.com ([5.172.152.52])
-        by mx0a-001ae601.pphosted.com with ESMTP id 2xm0a8wd1p-1
+Received: from ediex02.ad.cirrus.com ([5.172.152.52])
+        by mx0b-001ae601.pphosted.com with ESMTP id 2xm00ed9h6-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
         Wed, 22 Jan 2020 05:08:44 -0600
-Received: from EDIEX01.ad.cirrus.com (198.61.84.80) by EDIEX01.ad.cirrus.com
- (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
+Received: from EDIEX01.ad.cirrus.com (198.61.84.80) by EDIEX02.ad.cirrus.com
+ (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Wed, 22 Jan
  2020 11:08:42 +0000
 Received: from ediswmail.ad.cirrus.com (198.61.86.93) by EDIEX01.ad.cirrus.com
  (198.61.84.80) with Microsoft SMTP Server id 15.1.1591.10 via Frontend
  Transport; Wed, 22 Jan 2020 11:08:42 +0000
 Received: from algalon.ad.cirrus.com (algalon.ad.cirrus.com [198.90.251.122])
-        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id 2538F2AB;
+        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id 178F82C8;
         Wed, 22 Jan 2020 11:08:42 +0000 (UTC)
 From:   Charles Keepax <ckeepax@opensource.cirrus.com>
 To:     <broonie@kernel.org>, <lee.jones@linaro.org>
 CC:     <lgirdwood@gmail.com>, <linux-kernel@vger.kernel.org>,
         <patches@opensource.cirrus.com>
-Subject: [PATCH RESEND 2/2] mfd: madera: Improve handling of regulator unbinding
-Date:   Wed, 22 Jan 2020 11:08:42 +0000
-Message-ID: <20200122110842.10702-2-ckeepax@opensource.cirrus.com>
+Subject: [PATCH RESEND 1/2] regulator: arizona-ldo1: Improve handling of regulator unbinding
+Date:   Wed, 22 Jan 2020 11:08:41 +0000
+Message-ID: <20200122110842.10702-1-ckeepax@opensource.cirrus.com>
 X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20200122110842.10702-1-ckeepax@opensource.cirrus.com>
-References: <20200122110842.10702-1-ckeepax@opensource.cirrus.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-Proofpoint-SPF-Result: fail
 X-Proofpoint-SPF-Record: v=spf1 include:spf-001ae601.pphosted.com include:spf.protection.outlook.com
  -all
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxscore=0 suspectscore=0
- bulkscore=0 priorityscore=1501 impostorscore=0 mlxlogscore=680
- phishscore=0 malwarescore=0 adultscore=0 lowpriorityscore=0 clxscore=1015
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 impostorscore=0
+ clxscore=1015 priorityscore=1501 malwarescore=0 mlxscore=0 mlxlogscore=561
+ phishscore=0 spamscore=0 bulkscore=2 adultscore=0 lowpriorityscore=2
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-1910280000
  definitions=main-2001220101
 Sender: linux-kernel-owner@vger.kernel.org
@@ -91,44 +88,41 @@ the MFD.
 
 Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
 ---
- drivers/mfd/madera-core.c | 20 ++++++++++++--------
- 1 file changed, 12 insertions(+), 8 deletions(-)
+ drivers/regulator/arizona-ldo1.c | 14 +++++++++++++-
+ 1 file changed, 13 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/mfd/madera-core.c b/drivers/mfd/madera-core.c
-index a8cfadc1fc01e..5170b55836fc1 100644
---- a/drivers/mfd/madera-core.c
-+++ b/drivers/mfd/madera-core.c
-@@ -730,18 +730,22 @@ int madera_dev_exit(struct madera *madera)
- 	/* Prevent any IRQs being serviced while we clean up */
- 	disable_irq(madera->irq);
+diff --git a/drivers/regulator/arizona-ldo1.c b/drivers/regulator/arizona-ldo1.c
+index 1a3d7b720f5e0..83dd37dbfe07b 100644
+--- a/drivers/regulator/arizona-ldo1.c
++++ b/drivers/regulator/arizona-ldo1.c
+@@ -375,6 +375,18 @@ static int madera_ldo1_probe(struct platform_device *pdev)
+ 	return 0;
+ }
  
--	/*
--	 * DCVDD could be supplied by a child node, we must disable it before
--	 * removing the children, and prevent PM runtime from turning it back on
--	 */
-+	pm_runtime_get_sync(madera->dev);
++static int madera_ldo1_remove(struct platform_device *pdev)
++{
++	struct madera *madera = dev_get_drvdata(pdev->dev.parent);
 +
-+	mfd_remove_devices(madera->dev);
-+
- 	pm_runtime_disable(madera->dev);
- 
--	clk_disable_unprepare(madera->mclk[MADERA_MCLK2].clk);
-+	if (!madera->internal_dcvdd) {
++	if (madera->internal_dcvdd) {
 +		regulator_disable(madera->dcvdd);
 +		regulator_put(madera->dcvdd);
 +	}
- 
--	regulator_disable(madera->dcvdd);
--	regulator_put(madera->dcvdd);
-+	pm_runtime_set_suspended(madera->dev);
-+	pm_runtime_put_noidle(madera->dev);
 +
-+	clk_disable_unprepare(madera->mclk[MADERA_MCLK2].clk);
++	return arizona_ldo1_remove(pdev);
++}
++
+ static struct platform_driver arizona_ldo1_driver = {
+ 	.probe = arizona_ldo1_probe,
+ 	.remove = arizona_ldo1_remove,
+@@ -385,7 +397,7 @@ static struct platform_driver arizona_ldo1_driver = {
  
--	mfd_remove_devices(madera->dev);
- 	madera_enable_hard_reset(madera);
- 
- 	regulator_bulk_disable(madera->num_core_supplies,
+ static struct platform_driver madera_ldo1_driver = {
+ 	.probe = madera_ldo1_probe,
+-	.remove = arizona_ldo1_remove,
++	.remove = madera_ldo1_remove,
+ 	.driver		= {
+ 		.name	= "madera-ldo1",
+ 	},
 -- 
 2.11.0
 
