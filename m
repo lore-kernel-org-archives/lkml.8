@@ -7,50 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2D61C33CB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:46:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48C78C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:46:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CDE124689
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:46:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 197B72468A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:46:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579686360;
-	bh=+hd9Udz4Ps2z/wojx+W9QEsplHHxx6M6mA/RYUNdHLs=;
+	s=default; t=1579686363;
+	bh=ww7v8HP4bT2dIJ+PNYY4ouiv91+eJiffjJuPz+myJbw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2wOscIz5tquUjZISzmeSRU+6dqVhQV3jxB29yJq1TfMJX0O8edlCpst+vNTKvx1kK
-	 gnJJqnX7AhONZAS3S6gbifHrcPt5aKUJ7ZiykTgFgvglzjLrNJ+ZdscaUbaU385uz3
-	 A6iU4QNatG9eiN936/eAjYzEfrEkMghtlkQS1Lis=
+	b=jmJlLPQt644Cyk84Y+couEs/Cs7CIFKFMmD3qjqNF4CSwA2BKzwyqcdMFKA4EIOFC
+	 s5oy14jtcg9E11VKVT9hbU8gB66oZSmY963+pDpx2P2mcEG9L+UOIElSKX2eXm4v+s
+	 hcmjAUao13WFeEZoMRVs48D/yVDQB834QTEqKd+U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388015AbgAVJoQ (ORCPT
+        id S2387811AbgAVJoH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 04:44:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37252 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 04:44:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36914 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731225AbgAVJoO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 04:44:14 -0500
+        id S2387975AbgAVJoB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 04:44:01 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 17DF22468A;
-        Wed, 22 Jan 2020 09:44:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DD4CB2468B;
+        Wed, 22 Jan 2020 09:44:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579686253;
-        bh=+hd9Udz4Ps2z/wojx+W9QEsplHHxx6M6mA/RYUNdHLs=;
+        s=default; t=1579686241;
+        bh=ww7v8HP4bT2dIJ+PNYY4ouiv91+eJiffjJuPz+myJbw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ajOy6+4eJVxR+P6lTS5v/R/eND6ZcQL5obHcNGbdgBeAYBrn9oKWZMWHniQG6TlOg
-         7o7eVA4zomJQbhqqIUYD5ca8m073AHNhGbD8hEPtYBcExAfCb9xEfnhd0UvangGB6/
-         MAGraOaZaBxEgxwY0Nea2bFCphR6T4kgP4mmM2Fw=
+        b=YmvdfF81D2qLVK/zSs9QpRpWR0mj7g9uDvjmMYT4RossqaTGZagVF9VLPCqJKCthH
+         HRSH1T8Wzqcn0dXHTAC/Z5q9C6H9G8YfTvfbuXVh7x60UHnEtonLOIxmx1QZVW8DxG
+         phfALHAUYSREFXiYrLe6cd6j2ZcPWi0E+6e6TMQ8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
-        Hannes Reinecke <hare@suse.com>,
-        Douglas Gilbert <dgilbert@interlog.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH 4.19 099/103] scsi: core: scsi_trace: Use get_unaligned_be*()
-Date:   Wed, 22 Jan 2020 10:29:55 +0100
-Message-Id: <20200122092816.588352071@linuxfoundation.org>
+        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>,
+        Jakub Kicinski <kuba@kernel.org>
+Subject: [PATCH 4.19 065/103] NFC: pn533: fix bulk-message timeout
+Date:   Wed, 22 Jan 2020 10:29:21 +0100
+Message-Id: <20200122092813.490088519@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200122092803.587683021@linuxfoundation.org>
 References: <20200122092803.587683021@linuxfoundation.org>
@@ -63,206 +59,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bart Van Assche <bvanassche@acm.org>
+From: Johan Hovold <johan@kernel.org>
 
-commit b1335f5b0486f61fb66b123b40f8e7a98e49605d upstream.
+commit a112adafcb47760feff959ee1ecd10b74d2c5467 upstream.
 
-This patch fixes an unintended sign extension on left shifts. From Colin
-King: "Shifting a u8 left will cause the value to be promoted to an
-integer. If the top bit of the u8 is set then the following conversion to
-an u64 will sign extend the value causing the upper 32 bits to be set in
-the result."
+The driver was doing a synchronous uninterruptible bulk-transfer without
+using a timeout. This could lead to the driver hanging on probe due to a
+malfunctioning (or malicious) device until the device is physically
+disconnected. While sleeping in probe the driver prevents other devices
+connected to the same hub from being added to (or removed from) the bus.
 
-Fix this by using get_unaligned_be*() instead.
+An arbitrary limit of five seconds should be more than enough.
 
-Fixes: bf8162354233 ("[SCSI] add scsi trace core functions and put trace points")
-Cc: Christoph Hellwig <hch@lst.de>
-Cc: Hannes Reinecke <hare@suse.com>
-Cc: Douglas Gilbert <dgilbert@interlog.com>
-Link: https://lore.kernel.org/r/20191101211447.187151-1-bvanassche@acm.org
-Reported-by: Colin Ian King <colin.king@canonical.com>
-Signed-off-by: Bart Van Assche <bvanassche@acm.org>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Fixes: dbafc28955fa ("NFC: pn533: don't send USB data off of the stack")
+Signed-off-by: Johan Hovold <johan@kernel.org>
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/scsi/scsi_trace.c |  103 ++++++++++++----------------------------------
- 1 file changed, 28 insertions(+), 75 deletions(-)
+ drivers/nfc/pn533/usb.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/scsi/scsi_trace.c
-+++ b/drivers/scsi/scsi_trace.c
-@@ -21,7 +21,7 @@
- #include <trace/events/scsi.h>
+--- a/drivers/nfc/pn533/usb.c
++++ b/drivers/nfc/pn533/usb.c
+@@ -403,7 +403,7 @@ static int pn533_acr122_poweron_rdr(stru
+ 		       cmd, sizeof(cmd), false);
  
- #define SERVICE_ACTION16(cdb) (cdb[1] & 0x1f)
--#define SERVICE_ACTION32(cdb) ((cdb[8] << 8) | cdb[9])
-+#define SERVICE_ACTION32(cdb) (get_unaligned_be16(&cdb[8]))
- 
- static const char *
- scsi_trace_misc(struct trace_seq *, unsigned char *, int);
-@@ -51,17 +51,12 @@ static const char *
- scsi_trace_rw10(struct trace_seq *p, unsigned char *cdb, int len)
- {
- 	const char *ret = trace_seq_buffer_ptr(p);
--	sector_t lba = 0, txlen = 0;
-+	u32 lba, txlen;
- 
--	lba |= (cdb[2] << 24);
--	lba |= (cdb[3] << 16);
--	lba |= (cdb[4] << 8);
--	lba |=  cdb[5];
--	txlen |= (cdb[7] << 8);
--	txlen |=  cdb[8];
-+	lba = get_unaligned_be32(&cdb[2]);
-+	txlen = get_unaligned_be16(&cdb[7]);
- 
--	trace_seq_printf(p, "lba=%llu txlen=%llu protect=%u",
--			 (unsigned long long)lba, (unsigned long long)txlen,
-+	trace_seq_printf(p, "lba=%u txlen=%u protect=%u", lba, txlen,
- 			 cdb[1] >> 5);
- 
- 	if (cdb[0] == WRITE_SAME)
-@@ -76,19 +71,12 @@ static const char *
- scsi_trace_rw12(struct trace_seq *p, unsigned char *cdb, int len)
- {
- 	const char *ret = trace_seq_buffer_ptr(p);
--	sector_t lba = 0, txlen = 0;
-+	u32 lba, txlen;
- 
--	lba |= (cdb[2] << 24);
--	lba |= (cdb[3] << 16);
--	lba |= (cdb[4] << 8);
--	lba |=  cdb[5];
--	txlen |= (cdb[6] << 24);
--	txlen |= (cdb[7] << 16);
--	txlen |= (cdb[8] << 8);
--	txlen |=  cdb[9];
-+	lba = get_unaligned_be32(&cdb[2]);
-+	txlen = get_unaligned_be32(&cdb[6]);
- 
--	trace_seq_printf(p, "lba=%llu txlen=%llu protect=%u",
--			 (unsigned long long)lba, (unsigned long long)txlen,
-+	trace_seq_printf(p, "lba=%u txlen=%u protect=%u", lba, txlen,
- 			 cdb[1] >> 5);
- 	trace_seq_putc(p, 0);
- 
-@@ -99,23 +87,13 @@ static const char *
- scsi_trace_rw16(struct trace_seq *p, unsigned char *cdb, int len)
- {
- 	const char *ret = trace_seq_buffer_ptr(p);
--	sector_t lba = 0, txlen = 0;
-+	u64 lba;
-+	u32 txlen;
- 
--	lba |= ((u64)cdb[2] << 56);
--	lba |= ((u64)cdb[3] << 48);
--	lba |= ((u64)cdb[4] << 40);
--	lba |= ((u64)cdb[5] << 32);
--	lba |= (cdb[6] << 24);
--	lba |= (cdb[7] << 16);
--	lba |= (cdb[8] << 8);
--	lba |=  cdb[9];
--	txlen |= (cdb[10] << 24);
--	txlen |= (cdb[11] << 16);
--	txlen |= (cdb[12] << 8);
--	txlen |=  cdb[13];
-+	lba = get_unaligned_be64(&cdb[2]);
-+	txlen = get_unaligned_be32(&cdb[10]);
- 
--	trace_seq_printf(p, "lba=%llu txlen=%llu protect=%u",
--			 (unsigned long long)lba, (unsigned long long)txlen,
-+	trace_seq_printf(p, "lba=%llu txlen=%u protect=%u", lba, txlen,
- 			 cdb[1] >> 5);
- 
- 	if (cdb[0] == WRITE_SAME_16)
-@@ -130,8 +108,8 @@ static const char *
- scsi_trace_rw32(struct trace_seq *p, unsigned char *cdb, int len)
- {
- 	const char *ret = trace_seq_buffer_ptr(p), *cmd;
--	sector_t lba = 0, txlen = 0;
--	u32 ei_lbrt = 0;
-+	u64 lba;
-+	u32 ei_lbrt, txlen;
- 
- 	switch (SERVICE_ACTION32(cdb)) {
- 	case READ_32:
-@@ -151,26 +129,12 @@ scsi_trace_rw32(struct trace_seq *p, uns
- 		goto out;
- 	}
- 
--	lba |= ((u64)cdb[12] << 56);
--	lba |= ((u64)cdb[13] << 48);
--	lba |= ((u64)cdb[14] << 40);
--	lba |= ((u64)cdb[15] << 32);
--	lba |= (cdb[16] << 24);
--	lba |= (cdb[17] << 16);
--	lba |= (cdb[18] << 8);
--	lba |=  cdb[19];
--	ei_lbrt |= (cdb[20] << 24);
--	ei_lbrt |= (cdb[21] << 16);
--	ei_lbrt |= (cdb[22] << 8);
--	ei_lbrt |=  cdb[23];
--	txlen |= (cdb[28] << 24);
--	txlen |= (cdb[29] << 16);
--	txlen |= (cdb[30] << 8);
--	txlen |=  cdb[31];
--
--	trace_seq_printf(p, "%s_32 lba=%llu txlen=%llu protect=%u ei_lbrt=%u",
--			 cmd, (unsigned long long)lba,
--			 (unsigned long long)txlen, cdb[10] >> 5, ei_lbrt);
-+	lba = get_unaligned_be64(&cdb[12]);
-+	ei_lbrt = get_unaligned_be32(&cdb[20]);
-+	txlen = get_unaligned_be32(&cdb[28]);
-+
-+	trace_seq_printf(p, "%s_32 lba=%llu txlen=%u protect=%u ei_lbrt=%u",
-+			 cmd, lba, txlen, cdb[10] >> 5, ei_lbrt);
- 
- 	if (SERVICE_ACTION32(cdb) == WRITE_SAME_32)
- 		trace_seq_printf(p, " unmap=%u", cdb[10] >> 3 & 1);
-@@ -185,7 +149,7 @@ static const char *
- scsi_trace_unmap(struct trace_seq *p, unsigned char *cdb, int len)
- {
- 	const char *ret = trace_seq_buffer_ptr(p);
--	unsigned int regions = cdb[7] << 8 | cdb[8];
-+	unsigned int regions = get_unaligned_be16(&cdb[7]);
- 
- 	trace_seq_printf(p, "regions=%u", (regions - 8) / 16);
- 	trace_seq_putc(p, 0);
-@@ -197,8 +161,8 @@ static const char *
- scsi_trace_service_action_in(struct trace_seq *p, unsigned char *cdb, int len)
- {
- 	const char *ret = trace_seq_buffer_ptr(p), *cmd;
--	sector_t lba = 0;
--	u32 alloc_len = 0;
-+	u64 lba;
-+	u32 alloc_len;
- 
- 	switch (SERVICE_ACTION16(cdb)) {
- 	case SAI_READ_CAPACITY_16:
-@@ -212,21 +176,10 @@ scsi_trace_service_action_in(struct trac
- 		goto out;
- 	}
- 
--	lba |= ((u64)cdb[2] << 56);
--	lba |= ((u64)cdb[3] << 48);
--	lba |= ((u64)cdb[4] << 40);
--	lba |= ((u64)cdb[5] << 32);
--	lba |= (cdb[6] << 24);
--	lba |= (cdb[7] << 16);
--	lba |= (cdb[8] << 8);
--	lba |=  cdb[9];
--	alloc_len |= (cdb[10] << 24);
--	alloc_len |= (cdb[11] << 16);
--	alloc_len |= (cdb[12] << 8);
--	alloc_len |=  cdb[13];
-+	lba = get_unaligned_be64(&cdb[2]);
-+	alloc_len = get_unaligned_be32(&cdb[10]);
- 
--	trace_seq_printf(p, "%s lba=%llu alloc_len=%u", cmd,
--			 (unsigned long long)lba, alloc_len);
-+	trace_seq_printf(p, "%s lba=%llu alloc_len=%u", cmd, lba, alloc_len);
- 
- out:
- 	trace_seq_putc(p, 0);
+ 	rc = usb_bulk_msg(phy->udev, phy->out_urb->pipe, buffer, sizeof(cmd),
+-			  &transferred, 0);
++			  &transferred, 5000);
+ 	kfree(buffer);
+ 	if (rc || (transferred != sizeof(cmd))) {
+ 		nfc_err(&phy->udev->dev,
 
 
