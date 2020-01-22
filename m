@@ -2,79 +2,117 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABFF6C33CB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:17:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88BF9C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:18:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8291824655
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:17:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64DE424655
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:18:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729180AbgAVJRl (ORCPT
+        id S1729212AbgAVJSO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 04:17:41 -0500
-Received: from szxga06-in.huawei.com ([45.249.212.32]:60720 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726049AbgAVJRl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 04:17:41 -0500
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id AEB42BAE94895711F33B;
-        Wed, 22 Jan 2020 17:17:39 +0800 (CST)
-Received: from localhost.localdomain.localdomain (10.175.113.25) by
- DGGEMS406-HUB.china.huawei.com (10.3.19.206) with Microsoft SMTP Server id
- 14.3.439.0; Wed, 22 Jan 2020 17:17:32 +0800
-From:   Hongbo Yao <yaohongbo@huawei.com>
-To:     <jens.wiklander@linaro.org>, <Rijo-john.Thomas@amd.com>
-CC:     <yaohongbo@huawei.com>, <chenzhou10@huawei.com>,
-        <tee-dev@lists.linaro.org>, <linux-kernel@vger.kernel.org>,
-        <Devaraj.Rangasamy@amd.com>, <herbert@gondor.apana.org.au>,
-        <linux-crypto@vger.kernel.org>
-Subject: [PATCH RESEND -next] tee: amdtee: amdtee depends on CRYPTO_DEV_CCP_DD
-Date:   Wed, 22 Jan 2020 17:12:38 +0800
-Message-ID: <20200122091238.65484-1-yaohongbo@huawei.com>
-X-Mailer: git-send-email 2.20.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.113.25]
-X-CFilter-Loop: Reflected
+        Wed, 22 Jan 2020 04:18:14 -0500
+Received: from mga02.intel.com ([134.134.136.20]:11326 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725911AbgAVJSO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 04:18:14 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Jan 2020 01:18:13 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,349,1574150400"; 
+   d="scan'208";a="244993465"
+Received: from sgsxdev004.isng.intel.com (HELO localhost) ([10.226.88.13])
+  by orsmga002.jf.intel.com with ESMTP; 22 Jan 2020 01:18:11 -0800
+From:   "Ramuthevar,Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+To:     linux-kernel@vger.kernel.org, broonie@kernel.org,
+        linux-spi@vger.kernel.org, vigneshr@ti.com
+Cc:     robh+dt@kernel.org, dan.carpenter@oracle.com,
+        cheol.yong.kim@intel.com, qi-ming.wu@intel.com,
+        "Ramuthevar,Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Subject: [PATCH v7 0/2] spi: cadence-quadpsi: Add support for the Cadence QSPI controller
+Date:   Wed, 22 Jan 2020 17:18:07 +0800
+Message-Id: <20200122091809.43069-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If CRYPTO_DEV_CCP_DD=m and AMDTEE=y, the following error is seen
-while building call.c or core.c
+Add support for the Cadence QSPI controller. This controller is
+present in the Intel Lightning Mountain(LGM) SoCs, Altera and TI SoCs.
+This driver has been tested on the Intel LGM SoCs.
 
-drivers/tee/amdtee/call.o: In function `handle_unload_ta':
-call.c:(.text+0x35f): undefined reference to `psp_tee_process_cmd'
-drivers/tee/amdtee/core.o: In function `amdtee_driver_init':
-core.c:(.init.text+0xf): undefined reference to `psp_check_tee_status
+This driver does not support generic SPI and also the implementation
+only supports spi-mem interface to replace the existing driver in
+mtd/spi-nor/cadence-quadspi.c, the existing driver only support SPI-NOR
+flash memory.
 
-Fix the config dependency for AMDTEE here.
+Thanks Vignesh for the review, modify, test and confirm the patch 
+which is based on spi-mem based cadence driver working on TI's platform.
+after few changes started working on Intel's platform as well.
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Fixes: 757cc3e9ff ("tee: add AMD-TEE driver")
-Signed-off-by: Hongbo Yao <yaohongbo@huawei.com>
-Reviewed-by: Rijo Thomas <Rijo-john.Thomas@amd.com>
----
- drivers/tee/amdtee/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+changes from v6:
+ -- Add the Signed-off-by Vignesh in commit message
+ -- bus_num, num_chipselect added to avoid the garbage bus number
+    during the probe and spi_register.
+ -- master mode bits updated 
+ -- address sequence is different from TI and Intel SoC Ip handling
+    so modified as per Intel and differentiating by use_dac_mode variable.
+ -- dummy cycles also different b/w two platforms, so keeping separate check
+ -- checkpatch errors which are intentional left as is for better readability
 
-diff --git a/drivers/tee/amdtee/Kconfig b/drivers/tee/amdtee/Kconfig
-index 4e32b6413b41..191f9715fa9a 100644
---- a/drivers/tee/amdtee/Kconfig
-+++ b/drivers/tee/amdtee/Kconfig
-@@ -3,6 +3,6 @@
- config AMDTEE
- 	tristate "AMD-TEE"
- 	default m
--	depends on CRYPTO_DEV_SP_PSP
-+	depends on CRYPTO_DEV_SP_PSP && CRYPTO_DEV_CCP_DD
- 	help
- 	  This implements AMD's Trusted Execution Environment (TEE) driver.
+changes from v5:
+ -- kbuild test robot warnings fixed
+ -- Add Reported-By: Dan Carpenter <dan.carpenter@oracle.com>
+
+changes from v4:
+ -- kbuild test robot warnings fixed
+ -- Add Reborted-by: tag
+
+changes from v3:
+spi-cadence-quadspi.c
+ -- static to all functions wrt to local to the file.
+ -- Prefix cqspi_ and make the function static
+ -- cmd_ops, data_ops and dummy_ops dropped
+ -- addr_ops kept since it is required for address calculation.
+ -- devm_ used for supported functions , removed legacy API's
+ -- removed "indirect" name from functions
+ -- replaced by master->mode_bits = SPI_RX_QUAD | SPI_TX_DUAL | SPI_RX_DUAL | SPI_RX_OCTAL;
+    as per Vignesh susggestion
+ -- removed free functions since devm_ handles automatically.
+ -- dropped all unused Macros
+
+YAML file update:
+ -- cadence,qspi.yaml file name replace by cdns,qspi-nor.yaml
+ -- compatible string updated as per Vignesh suggestion
+ -- for single entry, removed descriptions
+ -- removed optional parameters
+  Build Result:
+   linux$ make DT_SCHEMA_FILES=Documentation/devicetree/bindings/spi/cdns,qspi-nor.yaml dt_binding_check
+    CHKDT   Documentation/devicetree/bindings/spi/cdns,qspi-nor.yaml
+    SCHEMA  Documentation/devicetree/bindings/processed-schema.yaml
+    DTC     Documentation/devicetree/bindings/spi/cdns,qspi-nor.example.dt.yaml
+    CHECK   Documentation/devicetree/bindings/spi/cdns,qspi-nor.example.dt.yaml
+
+Ramuthevar Vadivel Murugan (2):
+  dt-bindings: spi: Add schema for Cadence QSPI Controller driver
+  spi: cadence-quadpsi: Add support for the Cadence QSPI controller
+
+ .../devicetree/bindings/spi/cdns,qspi-nor.yaml     |  147 ++
+ drivers/spi/Kconfig                                |    8 +
+ drivers/spi/Makefile                               |    1 +
+ drivers/spi/spi-cadence-quadspi.c                  | 1563 ++++++++++++++++++++
+ 4 files changed, 1719 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/spi/cdns,qspi-nor.yaml
+ create mode 100644 drivers/spi/spi-cadence-quadspi.c
+
 -- 
-2.20.1
+2.11.0
 
