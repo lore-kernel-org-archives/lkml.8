@@ -2,149 +2,174 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB373C33CB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 16:08:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F38DC33CAF
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 16:09:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFF3D2467E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 16:08:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="c0znPXb8"
+	by mail.kernel.org (Postfix) with ESMTP id E93AB2465B
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 16:09:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729113AbgAVQIm (ORCPT
+        id S1729134AbgAVQJK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 11:08:42 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:44196 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728609AbgAVQIl (ORCPT
+        Wed, 22 Jan 2020 11:09:10 -0500
+Received: from mail-io1-f71.google.com ([209.85.166.71]:40140 "EHLO
+        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725868AbgAVQJK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 11:08:41 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=b27aDBY4y/7/Q6nm414arkj4keuFN7/ZdwTBl4SydLg=; b=c0znPXb8/MVKdiAmIXi2H2dtb
-        VhINTEL9zM48Q+iEMmYPfSxCWAQWJhY1kfdLnAVX+t3i+gY09dDNwr/AF5HAQfGibXUcqZ7T01Ovg
-        t/l2baN3AGIkuL4r/CtHKyTFnU7s16ASxTXK3Zob3nacfBhJhcP9Adk3/6orhtxk7Y4Wo39xt4RMx
-        br5/iJJ+TR9MPWYsbis1lnE378k6hac7wi096v1molBwvcva2ztUUAUk8r4UdebYkr8L8VH7HD/xC
-        Tx4ew3ySHhsbmQWo7GEVdIKiTP8N615mfPqU9y+jxOE41GNmfDQWmoZFLqnWVPCZaYX9LT23YPW79
-        4/soRaf9g==;
-Received: from [2601:1c0:6280:3f0::ed68]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iuIYX-0007T4-6F; Wed, 22 Jan 2020 16:08:37 +0000
-Subject: Re: [PATCH v1 06/11] Documentation: pstore/blk: blkoops: create
- document for pstore_blk
-To:     liaoweixiong <liaoweixiong@allwinnertech.com>,
-        Kees Cook <keescook@chromium.org>,
-        Anton Vorontsov <anton@enomsg.org>,
-        Colin Cross <ccross@android.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mtd@lists.infradead.org
-References: <1579482233-2672-1-git-send-email-liaoweixiong@allwinnertech.com>
- <1579482233-2672-7-git-send-email-liaoweixiong@allwinnertech.com>
- <b9cd734b-8bb1-5e26-a7ed-fbc79ab2d958@infradead.org>
- <c87bdf3a-f129-a2a7-40b2-2220f79b505a@allwinnertech.com>
- <40d7f57a-119e-e51f-99a5-63e85ab5ab91@infradead.org>
- <3337f687-a668-c058-178b-a1438641c519@allwinnertech.com>
- <597e2b49-667a-490e-91b6-641ca25401d8@infradead.org>
- <6d94b9d5-abef-db5e-1c80-00ea8c1b0003@allwinnertech.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <325251e8-79e6-ed07-f5e0-b8c149757766@infradead.org>
-Date:   Wed, 22 Jan 2020 08:08:35 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Wed, 22 Jan 2020 11:09:10 -0500
+Received: by mail-io1-f71.google.com with SMTP id e200so6170iof.7
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jan 2020 08:09:09 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=GI2UC+EvXROYNmjkTcEuNtASvZJIsELjrqLPTni5rAA=;
+        b=XvQOo9X9EaWEVbYspmg6myiC21YdC/dtp4kZ6+WyL6fnhv46f45ZzOioX7PR0vnd3V
+         TtZn81cPJJPtFZIf6E75GrKOp0lhGi2oKTCoio0nm3sTiym9r48rZqlpu5ptKbwWv4C6
+         1maEjhwXn/QkQK05ntLqPQEgIfr300DiPmyhnjJHK8UmAM3yN4drO6SL23tUQBck2R8e
+         5qBceuTgWKNkVaEJqB+ZYMEonRx2NXAsKbiM+8lmLoRZI107yBJ+S5jWFq+HFVVxG1Dx
+         +GUGC5Wh0gda9gsn4s6/SQ8e6hDE2tf6g6kNxczTfN3SqKhQdhLr0ufodVSv881V1/cW
+         x1hw==
+X-Gm-Message-State: APjAAAWevZKYkg60+3gMuBbC+cDxEei8aVGSV/74mno5N/rOXQvXoE1w
+        UkOVQ/XmZFXqMai2WQNO7n8z3ZSjtonn9CbH3ra1Y+VbFqOs
+X-Google-Smtp-Source: APXvYqwy96Pw21+yzNQcbf6JHU7+E1XD4Vfq/3emwqiLloiSvNJ1sFs3swAMB/QgCSwXx5GSnMq/N+CNpQ4nTzKOfrQXkwPIOX0N
 MIME-Version: 1.0
-In-Reply-To: <6d94b9d5-abef-db5e-1c80-00ea8c1b0003@allwinnertech.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a05:6e02:10d1:: with SMTP id s17mr8898273ilj.198.1579709349585;
+ Wed, 22 Jan 2020 08:09:09 -0800 (PST)
+Date:   Wed, 22 Jan 2020 08:09:09 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000a16ad7059cbcbe43@google.com>
+Subject: WARNING in bpf_warn_invalid_xdp_action
+From:   syzbot <syzbot+8ce4113dadc4789fac74@syzkaller.appspotmail.com>
+To:     andriin@fb.com, ast@kernel.org, bpf@vger.kernel.org,
+        daniel@iogearbox.net, davem@davemloft.net, hawk@kernel.org,
+        john.fastabend@gmail.com, kafai@fb.com, kuba@kernel.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        songliubraving@fb.com, syzkaller-bugs@googlegroups.com, yhs@fb.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/22/20 7:01 AM, liaoweixiong wrote:
-> On 2020/1/21 下午11:34, Randy Dunlap wrote:
->> On 1/21/20 12:19 AM, liaoweixiong wrote:
->>> hi Randy Dunlap,
->>>
->>> On 2020/1/21 2:36 PM, Randy Dunlap wrote:
->>>> On 1/20/20 9:23 PM, liaoweixiong wrote:
->>>>> hi Randy Dunlap,
->>>>>
->>>>> On 2020/1/21 PM12:13, Randy Dunlap wrote:
->>>>>> Hi,
->>>>>>
->>>>>> I have some documentation comments for you:
->>>>>>
->>>>>>
->>>>>> On 1/19/20 5:03 PM, WeiXiong Liao wrote:
->>>>>>> The document, at Documentation/admin-guide/pstore-block.rst, tells us
->>>>>>> how to use pstore/blk and blkoops.
->>>>>>>
->>>>>>> Signed-off-by: WeiXiong Liao <liaoweixiong@allwinnertech.com>
->>>>>>> ---
->>>>>>>    Documentation/admin-guide/pstore-block.rst | 278 +++++++++++++++++++++++++++++
->>>>>>>    MAINTAINERS                                |   1 +
->>>>>>>    fs/pstore/Kconfig                          |   2 +
->>>>>>>    3 files changed, 281 insertions(+)
->>>>>>>    create mode 100644 Documentation/admin-guide/pstore-block.rst
->>>>>>>
->>>>>>> diff --git a/Documentation/admin-guide/pstore-block.rst b/Documentation/admin-guide/pstore-block.rst
->>>>>>> new file mode 100644
->>>>>>> index 000000000000..58418d429c55
->>>>>>> --- /dev/null
->>>>>>> +++ b/Documentation/admin-guide/pstore-block.rst
+Hello,
 
->>>>>>> +Compression and header
->>>>>>> +----------------------
->>>>>>> +
->>>>>>> +Block device is large enough for uncompressed dmesg data. Actually we do not
->>>>>>> +recommend data compression because pstore/blk will insert some information into
->>>>>>> +the first line of dmesg data. For example::
->>>>>>> +
->>>>>>> +        Panic: Total 16 times
->>>>>>> +
->>>>>>> +It means that it's the 16th times panic log since the first booting. Sometimes
->>>>>>
->>>>>>                                  time of a panic log since ...
->>>>>>
->>>>>
->>>>> Should it be like this?
->>>>> It means the time of a panic log since the first booting.
->>>>
->>>> That sounds like clock time, not the number of instances or occurrences.
->>>>
->>>
->>> It is an oops/panic counter too. How about this?
->>>
->>> It means that it's OOPS/PANIC for the 16th time since the first booting.
->>
->>                                                    since the last booting {or boot}.
->>
-> 
-> Not the last booting but the first booting. This is the number of
-> triggers since the first time the system was installed.
+syzbot found the following crash on:
 
-OK, so it's a persistent counter.
-Thanks for the clarification.
+HEAD commit:    d0f41851 net, ip_tunnel: fix namespaces move
+git tree:       net
+console output: https://syzkaller.appspot.com/x/log.txt?x=10e94d85e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=d9290aeb7e6cf1c4
+dashboard link: https://syzkaller.appspot.com/bug?extid=8ce4113dadc4789fac74
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11f99369e00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=13d85601e00000
 
--- 
-~Randy
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+8ce4113dadc4789fac74@syzkaller.appspotmail.com
 
+------------[ cut here ]------------
+Illegal XDP return value 4294967274, expect packet loss!
+WARNING: CPU: 0 PID: 9780 at net/core/filter.c:6918 bpf_warn_invalid_xdp_action net/core/filter.c:6918 [inline]
+WARNING: CPU: 0 PID: 9780 at net/core/filter.c:6918 bpf_warn_invalid_xdp_action+0x77/0x90 net/core/filter.c:6914
+Kernel panic - not syncing: panic_on_warn set ...
+CPU: 0 PID: 9780 Comm: syz-executor429 Not tainted 5.5.0-rc6-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ <IRQ>
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x197/0x210 lib/dump_stack.c:118
+ panic+0x2e3/0x75c kernel/panic.c:221
+ __warn.cold+0x2f/0x3e kernel/panic.c:582
+ report_bug+0x289/0x300 lib/bug.c:195
+ fixup_bug arch/x86/kernel/traps.c:174 [inline]
+ fixup_bug arch/x86/kernel/traps.c:169 [inline]
+ do_error_trap+0x11b/0x200 arch/x86/kernel/traps.c:267
+ do_invalid_op+0x37/0x50 arch/x86/kernel/traps.c:286
+ invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1027
+RIP: 0010:bpf_warn_invalid_xdp_action net/core/filter.c:6918 [inline]
+RIP: 0010:bpf_warn_invalid_xdp_action+0x77/0x90 net/core/filter.c:6914
+Code: 00 f9 d6 88 41 83 fc 04 48 c7 c6 40 f9 d6 88 4c 0f 46 ee e8 2b 9e 49 fb 44 89 e2 48 c7 c7 80 f9 d6 88 4c 89 ee e8 18 4e 1a fb <0f> 0b e8 12 9e 49 fb 5b 41 5c 41 5d 5d c3 90 66 2e 0f 1f 84 00 00
+RSP: 0018:ffffc900000079a8 EFLAGS: 00010286
+RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000000
+RDX: 0000000000000100 RSI: ffffffff815e5326 RDI: fffff52000000f27
+RBP: ffffc900000079c0 R08: ffff88809ff963c0 R09: ffffed1015d045c9
+R10: ffffed1015d045c8 R11: ffff8880ae822e43 R12: 00000000ffffffea
+R13: ffffffff88d6f900 R14: ffff8880927ea110 R15: ffff88809e257180
+ netif_receive_generic_xdp net/core/dev.c:4564 [inline]
+ do_xdp_generic.part.0+0xebb/0x1790 net/core/dev.c:4613
+ do_xdp_generic net/core/dev.c:4985 [inline]
+ __netif_receive_skb_core+0x68b/0x30b0 net/core/dev.c:4985
+ __netif_receive_skb_one_core+0xa8/0x1a0 net/core/dev.c:5148
+ __netif_receive_skb+0x2c/0x1d0 net/core/dev.c:5264
+ process_backlog+0x206/0x750 net/core/dev.c:6095
+ napi_poll net/core/dev.c:6532 [inline]
+ net_rx_action+0x508/0x1120 net/core/dev.c:6600
+ __do_softirq+0x262/0x98c kernel/softirq.c:292
+ invoke_softirq kernel/softirq.c:373 [inline]
+ irq_exit+0x19b/0x1e0 kernel/softirq.c:413
+ exiting_irq arch/x86/include/asm/apic.h:536 [inline]
+ smp_apic_timer_interrupt+0x1a3/0x610 arch/x86/kernel/apic/apic.c:1137
+ apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:829
+ </IRQ>
+RIP: 0010:arch_local_irq_restore arch/x86/include/asm/paravirt.h:752 [inline]
+RIP: 0010:console_unlock+0xbb8/0xf00 kernel/printk/printk.c:2481
+Code: 93 89 48 c1 e8 03 42 80 3c 30 00 0f 85 e4 02 00 00 48 83 3d c1 43 35 08 00 0f 84 91 01 00 00 e8 3e 05 17 00 48 8b 7d 98 57 9d <0f> 1f 44 00 00 e9 6d ff ff ff e8 29 05 17 00 48 8b 7d 08 c7 05 1b
+RSP: 0018:ffffc90001f26b38 EFLAGS: 00000293 ORIG_RAX: ffffffffffffff13
+RAX: ffff88809ff963c0 RBX: 0000000000000200 RCX: 0000000000000006
+RDX: 0000000000000000 RSI: ffffffff815defe2 RDI: 0000000000000293
+RBP: ffffc90001f26bc0 R08: 1ffffffff165e79c R09: fffffbfff165e79d
+R10: fffffbfff165e79c R11: ffffffff8b2f3ce7 R12: 0000000000000000
+R13: ffffffff84b35860 R14: dffffc0000000000 R15: ffffffff8a0fc990
+ vprintk_emit+0x2a0/0x700 kernel/printk/printk.c:1996
+ vprintk_default+0x28/0x30 kernel/printk/printk.c:2023
+ vprintk_func+0x7e/0x189 kernel/printk/printk_safe.c:386
+ printk+0xba/0xed kernel/printk/printk.c:2056
+ validate_nla lib/nlattr.c:178 [inline]
+ __nla_validate_parse.cold+0x4d/0x60 lib/nlattr.c:381
+ __nla_parse+0x43/0x60 lib/nlattr.c:478
+ nla_parse_nested_deprecated include/net/netlink.h:1166 [inline]
+ do_setlink+0x2ca2/0x3720 net/core/rtnetlink.c:2773
+ rtnl_group_changelink net/core/rtnetlink.c:3089 [inline]
+ __rtnl_newlink+0xdd2/0x1790 net/core/rtnetlink.c:3243
+ rtnl_newlink+0x69/0xa0 net/core/rtnetlink.c:3363
+ rtnetlink_rcv_msg+0x45e/0xaf0 net/core/rtnetlink.c:5424
+ netlink_rcv_skb+0x177/0x450 net/netlink/af_netlink.c:2477
+ rtnetlink_rcv+0x1d/0x30 net/core/rtnetlink.c:5442
+ netlink_unicast_kernel net/netlink/af_netlink.c:1302 [inline]
+ netlink_unicast+0x58c/0x7d0 net/netlink/af_netlink.c:1328
+ netlink_sendmsg+0x91c/0xea0 net/netlink/af_netlink.c:1917
+ sock_sendmsg_nosec net/socket.c:639 [inline]
+ sock_sendmsg+0xd7/0x130 net/socket.c:659
+ ____sys_sendmsg+0x753/0x880 net/socket.c:2330
+ ___sys_sendmsg+0x100/0x170 net/socket.c:2384
+ __sys_sendmsg+0x105/0x1d0 net/socket.c:2417
+ __do_sys_sendmsg net/socket.c:2426 [inline]
+ __se_sys_sendmsg net/socket.c:2424 [inline]
+ __x64_sys_sendmsg+0x78/0xb0 net/socket.c:2424
+ do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x442af9
+Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 7b 10 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007ffd3ded00a8 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000442af9
+RDX: 0000000000000000 RSI: 0000000020000140 RDI: 0000000000000003
+RBP: 00007ffd3ded00c0 R08: 0000000001bbbbbb R09: 0000000001bbbbbb
+R10: 0000000001bbbbbb R11: 0000000000000246 R12: 0000000000000000
+R13: 0000000000404090 R14: 0000000000000000 R15: 0000000000000000
+Kernel Offset: disabled
+Rebooting in 86400 seconds..
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
