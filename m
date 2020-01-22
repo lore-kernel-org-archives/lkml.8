@@ -2,116 +2,168 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB9B9C32771
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 21:13:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F366C3F68F
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 21:21:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9735C2465B
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 21:13:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="g9lGQdwg"
+	by mail.kernel.org (Postfix) with ESMTP id 3091A2467B
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 21:21:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579728112;
+	bh=jtkeVL+dzYqgDzBb0dzTHUyhGrhDJbgTR5/0KtOfGtI=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=dwT7uMQ1Iak/Z921ilny8Rm29zk06eOSG5P905AJE3+2il7xwBsS7H8TKss9o9v+C
+	 fQFoqhwpmWh4S0nRVQoncAZOQdxDQxL3ygK8rlkUW8c7RuTC+i4J2+AAOZHxWnidED
+	 IVC+soUs4lzCqxVg5cW5/Ql5YtpIxfzj0kIG5tRo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729154AbgAVVNe (ORCPT
+        id S1729146AbgAVVVv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 16:13:34 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:36193 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727590AbgAVVNe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 16:13:34 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579727613;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=gAFkHZvXgFbOOmInMzD/oyrNf29uWQKgC8OYdhvTl4w=;
-        b=g9lGQdwgm/x1mfFpIsDrwwLXJQprbTKpcoQCKks6is30jZAesOw0gkrMHBhrT45oYzdztQ
-        /jFsoadguRQWvTpzYC+ksaILLMrjh+WZ27mv+AjnasxIGyK6GggDM4VDh7LBHbYPgwtEGt
-        m9rGj0vepF3ZQfHpeV/WPrTL8dLAwrQ=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-26-zFjepyucMk2m4lwMXX13wA-1; Wed, 22 Jan 2020 16:13:29 -0500
-X-MC-Unique: zFjepyucMk2m4lwMXX13wA-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1B17DDBAB;
-        Wed, 22 Jan 2020 21:13:28 +0000 (UTC)
-Received: from ovpn-120-231.rdu2.redhat.com (ovpn-120-231.rdu2.redhat.com [10.10.120.231])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 3E0691001B03;
-        Wed, 22 Jan 2020 21:13:27 +0000 (UTC)
-Message-ID: <801c5fbbd93e126b8eef7ab0e53550479059a34c.camel@redhat.com>
-Subject: Re: [PATCH RT] sched: migrate_enable: Busy loop until the migration
- request is completed
-From:   Scott Wood <swood@redhat.com>
-To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        linux-rt-users <linux-rt-users@vger.kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Date:   Wed, 22 Jan 2020 15:13:26 -0600
-In-Reply-To: <20191213081428.mw6bqjg6m7djwhby@linutronix.de>
-References: <20191212112717.2tzoqbe3xeknoyvs@linutronix.de>
-         <30ab713901ef0e1f23c1ca387373788a4a73639f.camel@redhat.com>
-         <20191213081428.mw6bqjg6m7djwhby@linutronix.de>
-Organization: Red Hat
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+        Wed, 22 Jan 2020 16:21:51 -0500
+Received: from foss.arm.com ([217.140.110.172]:60730 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727590AbgAVVVu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 16:21:50 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2C69231B;
+        Wed, 22 Jan 2020 13:21:50 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9F3353F52E;
+        Wed, 22 Jan 2020 13:21:49 -0800 (PST)
+From:   Mark Brown <broonie@kernel.org>
+To:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        Paul Elliott <paul.elliott@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Yu-cheng Yu <yu-cheng.yu@intel.com>,
+        Amit Kachhap <amit.kachhap@arm.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Szabolcs Nagy <szabolcs.nagy@arm.com>,
+        "H . J . Lu " <hjl.tools@gmail.com>,
+        Andrew Jones <drjones@redhat.com>,
+        Kees Cook <keescook@chromium.org>,
+        Arnd Bergmann <arnd@arndb.de>, Jann Horn <jannh@google.com>,
+        Richard Henderson <richard.henderson@linaro.org>,
+        =?UTF-8?q?Kristina=20Mart=C5=A1enko?= <kristina.martsenko@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Florian Weimer <fweimer@redhat.com>,
+        Sudakshina Das <sudi.das@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Mark Brown <broonie@kernel.org>
+Subject: [PATCH v5 00/12] arm64: ARMv8.5-A: Branch Target Identification support
+Date:   Wed, 22 Jan 2020 21:21:32 +0000
+Message-Id: <20200122212144.6409-1-broonie@kernel.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2019-12-13 at 09:14 +0100, Sebastian Andrzej Siewior wrote:
-> On 2019-12-13 00:44:22 [-0600], Scott Wood wrote:
-> > > @@ -8239,7 +8239,10 @@ void migrate_enable(void)
-> > >  		stop_one_cpu_nowait(task_cpu(p), migration_cpu_stop,
-> > >  				    &arg, &work);
-> > >  		__schedule(true);
-> > > -		WARN_ON_ONCE(!arg.done && !work.disabled);
-> > > +		if (!work.disabled) {
-> > > +			while (!arg.done)
-> > > +				cpu_relax();
-> > > +		}
-> >=20
-> > We should enable preemption while spinning -- besides the general
-> > badness
-> > of spinning with it disabled, there could be deadlock scenarios if
-> > multiple CPUs are spinning in such a loop.  Long term maybe have a wa=
-y
-> > to
-> > dequeue the no-longer-needed work instead of waiting.
->=20
-> Hmm. My plan was to use per-CPU memory and spin before the request is
-> enqueued if the previous isn't done yet (which should not happen=E2=84=A2=
-).
+This series implements support for ARMv8.5-A Branch Target
+Identification (BTI), which is a control flow integrity protection
+feature introduced as part of the ARMv8.5-A extensions.
 
-Either it can't happen (and thus no need to spin) or it can, and we need =
-to
-worry about deadlocks if we're spinning with preemption disabled.  In fac=
-t a
-deadlock is guaranteed if we're spinning with preemption disabled on the =
-cpu
-that's supposed to be running the stopper we're waiting on.
+Changes:
 
-I think you're right that it can't happen though (as long as we queue it
-before enabling preemption, the stopper will be runnable and nothing else
-can run on the cpu before the queue gets drained), so we can just make it=
- a=20
-warning.  I'm testing a patch now.
+v5:
+ - Changed a bunch of -EIO to -ENOEXEC in the ELF parsing code.
+ - Move PSR_BTYPE defines to UAPI.
+ - Use compat_user_mode() rather than open coding.
+ - Fix a typo s/BYTPE/BTYPE/ in syscall.c
+v4:
+ - Dropped patch fixing existing documentation as it has already been merged.
+ - Convert WARN_ON() to WARN_ON_ONCE() in "ELF: Add ELF program property
+   parsing support".
+ - Added display of guarded pages to ptdump.
+ - Updated for conversion of exception handling from assembler to C.
 
-> Then we could remove __schedule() here and rely on preempt_enable()
-> doing that.
+Notes:
+ * GCC 9 can compile backwards-compatible BTI-enabled code with
+   -mbranch-protection=bti or -mbranch-protection=standard.
 
-We could do that regardless.
+ * Binutils trunk supports the new ELF note, but this wasn't in a release
+   the last time I posted this series.  (The situation _might_ have changed
+   in the meantime...)
 
--Scott
+   Creation of a BTI-enabled binary requires _everything_ linked in to
+   be BTI-enabled.  For now ld --force-bti can be used to override this,
+   but some things may break until the required C library support is in
+   place.
 
+   There is no straightforward way to mark a .s file as BTI-enabled:
+   scraping the output from gcc -S works as a quick hack for now.
+
+   readelf -n can be used to examing the program properties in an ELF
+   file.
+
+ * Runtime mmap() and mprotect() can be used to enable BTI on a
+   page-by-page basis using the new PROT_BTI, but the code in the
+   affected pages still needs to be written or compiled to contain the
+   appopriate BTI landing pads.
+
+
+Dave Martin (11):
+  ELF: UAPI and Kconfig additions for ELF program properties
+  ELF: Add ELF program property parsing support
+  mm: Reserve asm-generic prot flag 0x10 for arch use
+  arm64: Basic Branch Target Identification support
+  elf: Allow arch to tweak initial mmap prot flags
+  arm64: elf: Enable BTI at exec based on ELF program properties
+  arm64: BTI: Decode BYTPE bits when printing PSTATE
+  arm64: unify native/compat instruction skipping
+  arm64: traps: Shuffle code to eliminate forward declarations
+  arm64: BTI: Reset BTYPE when skipping emulated instructions
+  KVM: arm64: BTI: Reset BTYPE when skipping emulated instructions
+
+Mark Brown (1):
+  arm64: mm: Display guarded pages in ptdump
+
+ Documentation/arm64/cpu-feature-registers.rst |   2 +
+ Documentation/arm64/elf_hwcaps.rst            |   4 +
+ arch/arm64/Kconfig                            |  29 ++++
+ arch/arm64/include/asm/cpucaps.h              |   3 +-
+ arch/arm64/include/asm/cpufeature.h           |   6 +
+ arch/arm64/include/asm/elf.h                  |  50 ++++++
+ arch/arm64/include/asm/esr.h                  |   2 +-
+ arch/arm64/include/asm/exception.h            |   1 +
+ arch/arm64/include/asm/hwcap.h                |   1 +
+ arch/arm64/include/asm/kvm_emulate.h          |   6 +-
+ arch/arm64/include/asm/mman.h                 |  37 +++++
+ arch/arm64/include/asm/pgtable-hwdef.h        |   1 +
+ arch/arm64/include/asm/pgtable.h              |   2 +-
+ arch/arm64/include/asm/ptrace.h               |   1 +
+ arch/arm64/include/asm/sysreg.h               |   4 +
+ arch/arm64/include/uapi/asm/hwcap.h           |   1 +
+ arch/arm64/include/uapi/asm/mman.h            |   9 ++
+ arch/arm64/include/uapi/asm/ptrace.h          |   9 ++
+ arch/arm64/kernel/cpufeature.c                |  33 ++++
+ arch/arm64/kernel/cpuinfo.c                   |   1 +
+ arch/arm64/kernel/entry-common.c              |  11 ++
+ arch/arm64/kernel/process.c                   |  36 ++++-
+ arch/arm64/kernel/ptrace.c                    |   2 +-
+ arch/arm64/kernel/signal.c                    |  16 ++
+ arch/arm64/kernel/syscall.c                   |  18 +++
+ arch/arm64/kernel/traps.c                     | 127 +++++++--------
+ arch/arm64/mm/dump.c                          |   5 +
+ fs/Kconfig.binfmt                             |   6 +
+ fs/binfmt_elf.c                               | 145 +++++++++++++++++-
+ fs/compat_binfmt_elf.c                        |   4 +
+ include/linux/elf.h                           |  43 ++++++
+ include/linux/mm.h                            |   3 +
+ include/uapi/asm-generic/mman-common.h        |   1 +
+ include/uapi/linux/elf.h                      |  11 ++
+ 34 files changed, 555 insertions(+), 75 deletions(-)
+ create mode 100644 arch/arm64/include/asm/mman.h
+ create mode 100644 arch/arm64/include/uapi/asm/mman.h
+
+-- 
+2.20.1
 
