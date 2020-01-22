@@ -2,82 +2,180 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=ham
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84FA3C33CAF
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 02:05:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAE29C3F68F
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 02:05:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51E55217F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 02:05:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="q9DH0ZSb"
+	by mail.kernel.org (Postfix) with ESMTP id C312D217F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 02:05:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579658726;
+	bh=yVncP2cRerLjCSUEq2+nxA2AX8UnlN8vHXhFAI+A+pQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=TSgmcIeD1Q9MVHXEj9mXIpREK+AgSNlHp2lmgnovXakwSkSftIf9U9N0iLSUqqcLp
+	 m/ltW1KnV7Dg5JiRsHxxl1DTOnM4zYr/8zrLD1CfAI3n/hC87ESKxinBgktOXwQAL8
+	 ngLKH9KSWYGNMRotQPG5OgdM6AJtQv8UPSJvy4/w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728842AbgAVCFL (ORCPT
+        id S1729031AbgAVCF0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 21:05:11 -0500
-Received: from mailgw01.mediatek.com ([210.61.82.183]:57986 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726396AbgAVCFL (ORCPT
+        Tue, 21 Jan 2020 21:05:26 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:43622 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726396AbgAVCFZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 21:05:11 -0500
-X-UUID: 42c461833bd64446be7d75ab67df0a0e-20200122
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=0FaXYKQ4jfEqR8ee1u10dSXTtk9iSDJYo/sKCwcXsic=;
-        b=q9DH0ZSbcDqjoExb4cUgo7cvvLvESqFvS44H8cbklone7QavrEyd6xA1oxeOzfOY1dFFpaUFORNLTRIjtZ2R9F+EdOAYQo3COdGL0sw9cg62AHg7/D1MwlIOx4h/CI6DuAa5trcSkSbELF24ZPRFlfRucanCXn+pc2AyiIlCIsQ=;
-X-UUID: 42c461833bd64446be7d75ab67df0a0e-20200122
-Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw01.mediatek.com
-        (envelope-from <wen.su@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1956093877; Wed, 22 Jan 2020 10:05:02 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Wed, 22 Jan 2020 10:04:20 +0800
-Received: from [172.21.77.33] (172.21.77.33) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Wed, 22 Jan 2020 10:04:38 +0800
-Message-ID: <1579658700.6612.1.camel@mtkswgap22>
-Subject: Re: [RESEND 1/4] dt-bindings: regulator: Add document for MT6359
- regulator
-From:   Wen Su <Wen.Su@mediatek.com>
-To:     Lee Jones <lee.jones@linaro.org>
-CC:     Rob Herring <robh+dt@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        "Liam Girdwood" <lgirdwood@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        <linux-arm-kernel@lists.infradead.org>, <wsd_upstream@mediatek.com>
-Date:   Wed, 22 Jan 2020 10:05:00 +0800
-In-Reply-To: <20200120084355.GW15507@dell>
-References: <1579506450-21830-1-git-send-email-Wen.Su@mediatek.com>
-         <1579506450-21830-2-git-send-email-Wen.Su@mediatek.com>
-         <20200120084355.GW15507@dell>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
+        Tue, 21 Jan 2020 21:05:25 -0500
+Received: by mail-ot1-f67.google.com with SMTP id p8so4871052oth.10;
+        Tue, 21 Jan 2020 18:05:25 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=5KDHhB97+OZpmUZ0CpohOMTK6dCD2tSEOncivv/7Pgw=;
+        b=rMZ8ifBZCC7FE/9t0VWrOMqucWkutK3wl805i/MprW6qPf4rbmxMOzrTlYh1N6nQsC
+         /XH7qX3AEszhYJT5V6clhq9QxXlO9JknVYBMVeTdHOojnUmz+4NGW4/dDRqqqd54qujU
+         MdXT6tLZ9lwDgW0XLMGWj7Bw6chXKqcY7I5vlgBKCjnmFyN9P8fKTEOZhTXsu63RJw6t
+         UdBNXCpdMH6FMa2LeS1oVX+AQC69egaCo0wZk7lCkVkoqILKqcAOTz4EyDiITPdpr6Sm
+         3xDqiHbHrFJVsEJwVFGJs70N+lOv8VBDYUUeZy6VnAFemHaamJr5DwGBrkDSbNvlpN/t
+         oOuA==
+X-Gm-Message-State: APjAAAWjHEMOkwFhC5UJWGAlf7Usu5oVaIpso3PZaMChQnm+8s8Lp1te
+        agd6CI2vOccDVkhmoUk0Bw==
+X-Google-Smtp-Source: APXvYqzkfbpLEJGKkcLHIHyxBnU94Fou1ccxpuM+pfV/pzRrIsQMB2bPSHSJROq5isXH9ct8XAs62w==
+X-Received: by 2002:a9d:7a97:: with SMTP id l23mr6087185otn.34.1579658724729;
+        Tue, 21 Jan 2020 18:05:24 -0800 (PST)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id n22sm14452502otj.36.2020.01.21.18.05.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Jan 2020 18:05:23 -0800 (PST)
+Received: (nullmailer pid 29799 invoked by uid 1000);
+        Wed, 22 Jan 2020 02:05:23 -0000
+Date:   Tue, 21 Jan 2020 20:05:23 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
+Cc:     netdev@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, davem@davemloft.net, andrew@lunn.ch,
+        f.fainelli@gmail.com, hkallweit1@gmail.com
+Subject: Re: [PATCH 4/4] dt-bindings: net: adin: document 1588 TX/RX SOP
+ bindings
+Message-ID: <20200122020523.GA22232@bogus>
+References: <20200116091454.16032-1-alexandru.ardelean@analog.com>
+ <20200116091454.16032-5-alexandru.ardelean@analog.com>
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200116091454.16032-5-alexandru.ardelean@analog.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgSm9uZXMsDQpPbiBNb24sIDIwMjAtMDEtMjAgYXQgMDg6NDMgKzAwMDAsIExlZSBKb25lcyB3
-cm90ZToNCj4gT24gTW9uLCAyMCBKYW4gMjAyMCwgV2VuIFN1IHdyb3RlOg0KPiANCj4gPiBGcm9t
-OiBXZW4gU3UgPHdlbi5zdUBtZWRpYXRlay5jb20+DQo+ID4gDQo+ID4gYWRkIGR0LWJpbmRpbmcg
-ZG9jdW1lbnQgZm9yIE1lZGlhVGVrIE1UNjM1OSBQTUlDDQo+ID4gDQo+ID4gUmV2aWV3ZWQtYnk6
-IFJvYiBIZXJyaW5nIDxyb2JoQGtlcm5lbC5vcmc+DQo+ID4gU2lnbmVkLW9mZi1ieTogV2VuIFN1
-IDx3ZW4uc3VAbWVkaWF0ZWsuY29tPg0KPiANCj4gVGhlc2UgYXJlIGluIHRoZSB3cm9uZyBvcmRl
-ci4gIFRhZ3Mgc2hvdWxkIGRlc2NyaWJlIGhpc3RvcnksIHRodXMNCj4gc2hvdWxkIGJlIGluIGNo
-cm9ub2xvZ2ljYWwgb3JkZXIuICBGb3IgaW5zdGFuY2UsIHRoZSBvcmRlcmluZyB5b3UgdXNlZA0K
-PiBkZXNjcmliZXMgUm9iIHJldmlld2luZyB0aGUgcGF0Y2ggKmJlZm9yZSogeW91IHNlbnQgaXQs
-IHdoaWNoIGlzIG5vdA0KPiBwb3NzaWJsZS4NCj4gDQoNClRoYW5rcyBmb3IgeW91ciBjb21tZW50
-Lg0KSSB3aWxsIGZpeCBpdCBpbiB0aGUgbmV4dCBwYXRjaC4NCj4gPiAtLS0NCj4gPiAgLi4uL2Jp
-bmRpbmdzL3JlZ3VsYXRvci9tdDYzNTktcmVndWxhdG9yLnR4dCAgICAgICAgfCA1OSArKysrKysr
-KysrKysrKysrKysrKysrDQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCA1OSBpbnNlcnRpb25zKCspDQo+
-ID4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
-cmVndWxhdG9yL210NjM1OS1yZWd1bGF0b3IudHh0DQo+IA0KDQo=
+On Thu, Jan 16, 2020 at 11:14:54AM +0200, Alexandru Ardelean wrote:
+> This change documents the device-tree bindings for the TX/RX indication of
+> IEEE 1588 packets.
+> 
+> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+> ---
+>  .../devicetree/bindings/net/adi,adin.yaml     | 60 +++++++++++++++++++
+>  1 file changed, 60 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/net/adi,adin.yaml b/Documentation/devicetree/bindings/net/adi,adin.yaml
+> index d95cc691a65f..eb56f35309e0 100644
+> --- a/Documentation/devicetree/bindings/net/adi,adin.yaml
+> +++ b/Documentation/devicetree/bindings/net/adi,adin.yaml
+> @@ -36,6 +36,60 @@ properties:
+>      enum: [ 4, 8, 12, 16, 20, 24 ]
+>      default: 8
+>  
+> +  adi,1588-rx-sop-delays-cycles:
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#definitions/uint8-array
+> +      - items:
+> +          - minItems: 3
+> +            maxItems: 3
 
+You can split up the description into constraints something like this 
+(and minItems/maxItems becomes implied):
+
+items:
+  - description: delay for 10BASE-T
+  - description: delay for 100BASE-T
+  - description: delay for 1000BASE-T
+
+> +    description: |
+> +      Enables Start Packet detection (SOP) for received IEEE 1588 time stamp
+> +      controls, and configures the number of cycles (of the MII RX_CLK clock)
+> +      to delay the indication of RX SOP frames for 10/100/1000 BASE-T links.
+> +      The first element (in the array) configures the delay for 10BASE-T,
+> +      the second for 100BASE-T, and the third for 1000BASE-T.
+> +
+> +  adi,1588-rx-sop-pin-name:
+> +    description: |
+> +      This option must be used in together with 'adi,1588-rx-sop-delays-cycles'
+> +      to specify which physical pin should be used to signal the MAC that
+> +      the PHY is currently processing an IEEE 1588 timestamp control packet.
+> +      The driver will report an error if the value of this property is the
+> +      same as 'adi,1588-tx-sop-pin-name'
+> +    enum:
+> +      - gp_clk
+> +      - link_st
+> +      - int_n
+> +      - led_0
+> +
+> +  adi,1588-tx-sop-delays-ns:
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#definitions/uint8-array
+> +      - items:
+> +          - minItems: 3
+> +            maxItems: 3
+
+This should be:
+
+      - minItems: 3
+        maxItems: 3
+        items:
+          multipleOf: 8
+
+> +    description: |
+> +      Enables Start Packet detection (SOP) for IEEE 1588 time stamp controls,
+> +      and configures the number of nano-seconds to delay the indication of
+> +      TX frames for 10/100/1000 BASE-T links.
+> +      The first element (in the array) configures the delay for 10BASE-T,
+> +      the second for 100BASE-T, and the third for 1000BASE-T.
+> +      The delays must be multiples of 8 ns (i.e. 8, 16, 24, etc).
+> +
+> +  adi,1588-tx-sop-pin-name:
+> +    description: |
+> +      This option must be used in together with 'adi,1588-tx-sop-delays-ns'
+> +      to specify which physical pin should be used to signal the MAC that
+> +      the PHY is currently processing an IEEE 1588 timestamp control packet
+> +      on the TX path.
+> +      The driver will report an error if the value of this property is the
+> +      same as 'adi,1588-rx-sop-pin-name'
+> +    enum:
+> +      - gp_clk
+> +      - link_st
+> +      - int_n
+> +      - led_0
+> +
+>  examples:
+>    - |
+>      ethernet {
+> @@ -62,5 +116,11 @@ examples:
+>              reg = <1>;
+>  
+>              adi,fifo-depth-bits = <16>;
+> +
+> +            adi,1588-rx-sop-delays-cycles = [ 00 00 00 ];
+> +            adi,1588-rx-sop-pin-name = "int_n";
+> +
+> +            adi,1588-tx-sop-delays-ns = [ 00 08 10 ];
+> +            adi,1588-tx-sop-pin-name = "led_0";
+>          };
+>      };
+> -- 
+> 2.20.1
+> 
