@@ -7,51 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A09A6C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:32:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62B64C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:32:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 728582467E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:32:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A76524684
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:32:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579685552;
-	bh=Ei0WUn/7hawY4OURlT4CiEtiWn271M8zq9cHlqLxs1A=;
+	s=default; t=1579685555;
+	bh=oF1Vd0LhvbDGRClAC3BFqvWOM1Wrvqh27WydgE6GlvU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=myme6rMr4y96Gk3hfiDKXt6oXR0KnpHJWvGa+WsxzF3I9KTYIk4VWTI6CEivitl7Z
-	 dW6yTIS0VlFtoGY+iu0KX3ZBZLIqY4/JMsdZocHfHfpYldQRhdLAILi2lb32DSA8nK
-	 zNFYvubiwh90Qh+evC2Qv5UBQsfAOHGdKo9dwnjk=
+	b=dvfyHDeeopC6mVwlrcVs/ExoBWM+KPCYN+6qkMcummabZi2QDUJ1MXpG3vHqxMbCS
+	 MVVzaGdSX0EGOit/hqZ6HKAlWcYAOhEkW5/NjGH7bc04EuarQdkmP/S4S01e1aU2km
+	 lyfgm4WSe4Y+c9SSAOZUUQLGSgZBbgUHGmbeAvlg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730129AbgAVJcb (ORCPT
+        id S1730151AbgAVJce (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 04:32:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45334 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 04:32:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45434 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730117AbgAVJc2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 04:32:28 -0500
+        id S1730126AbgAVJcb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 04:32:31 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 52CC52467A;
-        Wed, 22 Jan 2020 09:32:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BDEBD24672;
+        Wed, 22 Jan 2020 09:32:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579685547;
-        bh=Ei0WUn/7hawY4OURlT4CiEtiWn271M8zq9cHlqLxs1A=;
+        s=default; t=1579685550;
+        bh=oF1Vd0LhvbDGRClAC3BFqvWOM1Wrvqh27WydgE6GlvU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=n6Jw0FOf767NAUbnnn0SkYJYTRRLwOeU9yeCtpjTv/7h7711MjtFuoRu1LSSUGrXZ
-         bWpjlOcAqCjIddug08um1UjusyBxLKiL+Z0IFvh/qO08wUrA/BHzvR2cSsFc8j8TPN
-         /zuRU3dzlLZOgKkEvHgY7g2t6A+4AK0IWPieGHUM=
+        b=ZNvAXD6Zjlohn8bapG4ByVhAafI/slWN4LXQG7ribtg8VQFhPD2O+BNoetIKsjsBn
+         V1vt3Vv3M8MWQcKXrz6eTb8ZAEikY5Hrl9Fe/xYgAsAsz/KgIuLYTX40OnCIjm0Yyl
+         KaRjPhdD/V4gN6iptuTy5AwLjR7t+yPC07AkB0rU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hiral Patel <hiralpat@cisco.com>,
-        Suma Ramars <sramars@cisco.com>,
-        Tom Tucker <tom@opengridcomputing.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "Ewan D. Milne" <emilne@redhat.com>,
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
         "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 58/76] scsi: fnic: use kernels %pM format option to print MAC
-Date:   Wed, 22 Jan 2020 10:29:14 +0100
-Message-Id: <20200122092759.764337340@linuxfoundation.org>
+Subject: [PATCH 4.4 59/76] scsi: fnic: fix invalid stack access
+Date:   Wed, 22 Jan 2020 10:29:15 +0100
+Message-Id: <20200122092759.957956924@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200122092751.587775548@linuxfoundation.org>
 References: <20200122092751.587775548@linuxfoundation.org>
@@ -64,51 +60,124 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit 36fe90b0f0bdc9d030e88ba2153f3c8d6b6a5964 ]
+[ Upstream commit 42ec15ceaea74b5f7a621fc6686cbf69ca66c4cf ]
 
-Instead of supplying each byte through stack let's use %pM specifier.
+gcc -O3 warns that some local variables are not properly initialized:
 
-Cc: Hiral Patel <hiralpat@cisco.com>
-Cc: Suma Ramars <sramars@cisco.com>
-Acked-by: Tom Tucker <tom@opengridcomputing.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Reviewed-by: Ewan D. Milne <emilne@redhat.com>
+drivers/scsi/fnic/vnic_dev.c: In function 'fnic_dev_hang_notify':
+drivers/scsi/fnic/vnic_dev.c:511:16: error: 'a0' is used uninitialized in this function [-Werror=uninitialized]
+  vdev->args[0] = *a0;
+  ~~~~~~~~~~~~~~^~~~~
+drivers/scsi/fnic/vnic_dev.c:691:6: note: 'a0' was declared here
+  u64 a0, a1;
+      ^~
+drivers/scsi/fnic/vnic_dev.c:512:16: error: 'a1' is used uninitialized in this function [-Werror=uninitialized]
+  vdev->args[1] = *a1;
+  ~~~~~~~~~~~~~~^~~~~
+drivers/scsi/fnic/vnic_dev.c:691:10: note: 'a1' was declared here
+  u64 a0, a1;
+          ^~
+drivers/scsi/fnic/vnic_dev.c: In function 'fnic_dev_mac_addr':
+drivers/scsi/fnic/vnic_dev.c:512:16: error: 'a1' is used uninitialized in this function [-Werror=uninitialized]
+  vdev->args[1] = *a1;
+  ~~~~~~~~~~~~~~^~~~~
+drivers/scsi/fnic/vnic_dev.c:698:10: note: 'a1' was declared here
+  u64 a0, a1;
+          ^~
+
+Apparently the code relies on the local variables occupying adjacent memory
+locations in the same order, but this is of course not guaranteed.
+
+Use an array of two u64 variables where needed to make it work correctly.
+
+I suspect there is also an endianness bug here, but have not digged in deep
+enough to be sure.
+
+Fixes: 5df6d737dd4b ("[SCSI] fnic: Add new Cisco PCI-Express FCoE HBA")
+Fixes: mmtom ("init/Kconfig: enable -O3 for all arches")
+Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/r/20200107201602.4096790-1-arnd@arndb.de
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/fnic/vnic_dev.c | 10 ++--------
- 1 file changed, 2 insertions(+), 8 deletions(-)
+ drivers/scsi/fnic/vnic_dev.c | 20 ++++++++++----------
+ 1 file changed, 10 insertions(+), 10 deletions(-)
 
 diff --git a/drivers/scsi/fnic/vnic_dev.c b/drivers/scsi/fnic/vnic_dev.c
-index 9795d6f3e197..ba69d6112fa1 100644
+index ba69d6112fa1..c5b89a003d2a 100644
 --- a/drivers/scsi/fnic/vnic_dev.c
 +++ b/drivers/scsi/fnic/vnic_dev.c
-@@ -499,10 +499,7 @@ void vnic_dev_add_addr(struct vnic_dev *vdev, u8 *addr)
+@@ -445,26 +445,26 @@ int vnic_dev_soft_reset_done(struct vnic_dev *vdev, int *done)
  
- 	err = vnic_dev_cmd(vdev, CMD_ADDR_ADD, &a0, &a1, wait);
+ int vnic_dev_hang_notify(struct vnic_dev *vdev)
+ {
+-	u64 a0, a1;
++	u64 a0 = 0, a1 = 0;
+ 	int wait = 1000;
+ 	return vnic_dev_cmd(vdev, CMD_HANG_NOTIFY, &a0, &a1, wait);
+ }
+ 
+ int vnic_dev_mac_addr(struct vnic_dev *vdev, u8 *mac_addr)
+ {
+-	u64 a0, a1;
++	u64 a[2] = {};
+ 	int wait = 1000;
+ 	int err, i;
+ 
+ 	for (i = 0; i < ETH_ALEN; i++)
+ 		mac_addr[i] = 0;
+ 
+-	err = vnic_dev_cmd(vdev, CMD_MAC_ADDR, &a0, &a1, wait);
++	err = vnic_dev_cmd(vdev, CMD_MAC_ADDR, &a[0], &a[1], wait);
  	if (err)
--		printk(KERN_ERR
--			"Can't add addr [%02x:%02x:%02x:%02x:%02x:%02x], %d\n",
--			addr[0], addr[1], addr[2], addr[3], addr[4], addr[5],
--			err);
-+		pr_err("Can't add addr [%pM], %d\n", addr, err);
+ 		return err;
+ 
+ 	for (i = 0; i < ETH_ALEN; i++)
+-		mac_addr[i] = ((u8 *)&a0)[i];
++		mac_addr[i] = ((u8 *)&a)[i];
+ 
+ 	return 0;
+ }
+@@ -489,30 +489,30 @@ void vnic_dev_packet_filter(struct vnic_dev *vdev, int directed, int multicast,
+ 
+ void vnic_dev_add_addr(struct vnic_dev *vdev, u8 *addr)
+ {
+-	u64 a0 = 0, a1 = 0;
++	u64 a[2] = {};
+ 	int wait = 1000;
+ 	int err;
+ 	int i;
+ 
+ 	for (i = 0; i < ETH_ALEN; i++)
+-		((u8 *)&a0)[i] = addr[i];
++		((u8 *)&a)[i] = addr[i];
+ 
+-	err = vnic_dev_cmd(vdev, CMD_ADDR_ADD, &a0, &a1, wait);
++	err = vnic_dev_cmd(vdev, CMD_ADDR_ADD, &a[0], &a[1], wait);
+ 	if (err)
+ 		pr_err("Can't add addr [%pM], %d\n", addr, err);
  }
  
  void vnic_dev_del_addr(struct vnic_dev *vdev, u8 *addr)
-@@ -517,10 +514,7 @@ void vnic_dev_del_addr(struct vnic_dev *vdev, u8 *addr)
+ {
+-	u64 a0 = 0, a1 = 0;
++	u64 a[2] = {};
+ 	int wait = 1000;
+ 	int err;
+ 	int i;
  
- 	err = vnic_dev_cmd(vdev, CMD_ADDR_DEL, &a0, &a1, wait);
+ 	for (i = 0; i < ETH_ALEN; i++)
+-		((u8 *)&a0)[i] = addr[i];
++		((u8 *)&a)[i] = addr[i];
+ 
+-	err = vnic_dev_cmd(vdev, CMD_ADDR_DEL, &a0, &a1, wait);
++	err = vnic_dev_cmd(vdev, CMD_ADDR_DEL, &a[0], &a[1], wait);
  	if (err)
--		printk(KERN_ERR
--			"Can't del addr [%02x:%02x:%02x:%02x:%02x:%02x], %d\n",
--			addr[0], addr[1], addr[2], addr[3], addr[4], addr[5],
--			err);
-+		pr_err("Can't del addr [%pM], %d\n", addr, err);
+ 		pr_err("Can't del addr [%pM], %d\n", addr, err);
  }
- 
- int vnic_dev_notify_set(struct vnic_dev *vdev, u16 intr)
 -- 
 2.20.1
 
