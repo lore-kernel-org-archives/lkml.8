@@ -2,224 +2,319 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD892C33CAA
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 02:39:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7606C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 02:40:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9A86217F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 02:39:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD4E7217F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 02:40:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nKJTMzQ8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729061AbgAVCjg (ORCPT
+        id S1729085AbgAVCkz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 21:39:36 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:2914 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728842AbgAVCjf (ORCPT
+        Tue, 21 Jan 2020 21:40:55 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:35631 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728809AbgAVCky (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 21:39:35 -0500
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00M2bBG4132258
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jan 2020 21:39:34 -0500
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2xp5yed2cv-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jan 2020 21:39:34 -0500
-Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Wed, 22 Jan 2020 02:39:32 -0000
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 22 Jan 2020 02:39:29 -0000
-Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 00M2dSiO62914734
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 22 Jan 2020 02:39:28 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 261C142042;
-        Wed, 22 Jan 2020 02:39:28 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 70AEA4203F;
-        Wed, 22 Jan 2020 02:39:27 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.80.198.160])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed, 22 Jan 2020 02:39:27 +0000 (GMT)
-Subject: Re: [PATCH] IMA: Use delayed work to free queued keys
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        linux-integrity@vger.kernel.org
-Cc:     sashal@kernel.org, linux-kernel@vger.kernel.org
-Date:   Tue, 21 Jan 2020 21:39:26 -0500
-In-Reply-To: <20200121172829.15152-1-nramas@linux.microsoft.com>
-References: <20200121172829.15152-1-nramas@linux.microsoft.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 20012202-4275-0000-0000-00000399C202
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20012202-4276-0000-0000-000038ADCBDD
-Message-Id: <1579660766.5182.7.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-01-17_05:2020-01-16,2020-01-17 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 clxscore=1015
- priorityscore=1501 lowpriorityscore=0 phishscore=0 malwarescore=0
- mlxscore=0 suspectscore=2 spamscore=0 bulkscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-2001220019
+        Tue, 21 Jan 2020 21:40:54 -0500
+Received: by mail-wr1-f66.google.com with SMTP id g17so5664425wro.2;
+        Tue, 21 Jan 2020 18:40:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=to:cc:references:from:autocrypt:subject:message-id:date:user-agent
+         :mime-version:in-reply-to;
+        bh=uv0JVeWuLnuWw4cunSWaOie7iTDt8ewQ9xGZK29HPCQ=;
+        b=nKJTMzQ8dCY5d69TPFux8eXp6u0o0piQex4UF8NYQVeOyd8wsb8AfTVZ44s33hgAsO
+         oGawd/ciu9wZ2YP/sTrV9eQTbUnE0iZo2TKn8dxrgahfHZwYkf4ncJ+ih+CB0RgwhhzK
+         pazeyZHyJYWI+y17b8UwesMVaJfEipi8ziwx5oJlw3V3QrO/YxePH1P/3zAXUTeV9VlR
+         rrVqI/PJjRDZT9mAt21q5s9yWvrsEZ7fJo30v1RWJh7I5+7IH9B9jekC5mezbNUG7VZ+
+         prQ0bI7zNERrPbweQ1VluagA5g7+16wrdoUJP6p9rY31v/Umh7VvplJB2SIHfJ0R5eo+
+         P3sg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:to:cc:references:from:autocrypt:subject
+         :message-id:date:user-agent:mime-version:in-reply-to;
+        bh=uv0JVeWuLnuWw4cunSWaOie7iTDt8ewQ9xGZK29HPCQ=;
+        b=l5ipPsqhKNyv1YjIRIGgw9Xgi9B1UfxA58R61m/7xxScIThBhK4rOgy1+3gFB170Fz
+         ehZSU34OJPwdusTmcnS/TsuGVvebzBC0fpUOGO7NJ3zh5iTGGnp5YHXshyiZ8k4AiYgR
+         GRmY5wERUi3PusdK596SQASjIs6FMam2Ux1eMmEU4mqpaJyIjsOJGZdZKZSPH6df3ghd
+         aodv7y2UD4l55CIn3BUGL4Tgb0gpeLdVpSc37HaY9fZO8oaEyDuXCvwy5KPkoi8ej48i
+         pw0KyCOqP+bOUDHhOhOVRS5bHCQ73XmWlkLNWbzMVucblDAa78JHbQozDfcUAKnwvA4/
+         lJoA==
+X-Gm-Message-State: APjAAAWKni9O7B9B922BdOxjerffvLZA633S1zZXr85TFH4hnI8HhG2w
+        0X4z//uKJDeMdtudmsJcRuhZG4sY
+X-Google-Smtp-Source: APXvYqzKteRCkpqRYp5HvcnHloYJ4tQULLMXpq5zFig228mEiIVnqlx7uGGpZY+eA+XZ8Rxng29qZg==
+X-Received: by 2002:a5d:6a52:: with SMTP id t18mr8246539wrw.391.1579660850866;
+        Tue, 21 Jan 2020 18:40:50 -0800 (PST)
+Received: from [192.168.43.234] ([109.126.145.157])
+        by smtp.gmail.com with ESMTPSA id s65sm1905292wmf.48.2020.01.21.18.40.49
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 21 Jan 2020 18:40:50 -0800 (PST)
+To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>
+References: <cover.1579649589.git.asml.silence@gmail.com>
+ <8bfd9a57bf42cfc10ee7195969058d6da277deed.1579649589.git.asml.silence@gmail.com>
+ <6d43b9d7-209a-2bbf-e2c2-e125e84b46ab@kernel.dk>
+From:   Pavel Begunkov <asml.silence@gmail.com>
+Autocrypt: addr=asml.silence@gmail.com; prefer-encrypt=mutual; keydata=
+ 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 bA==
+Subject: Re: [PATCH 3/3] io_uring: add splice(2) support
+Message-ID: <14499431-0409-5d57-9b08-aff95b9d2160@gmail.com>
+Date:   Wed, 22 Jan 2020 05:40:10 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
+MIME-Version: 1.0
+In-Reply-To: <6d43b9d7-209a-2bbf-e2c2-e125e84b46ab@kernel.dk>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="lXivEkH9QzUixuS26PH3THlvzjFl094n7"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Lackshmi,
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--lXivEkH9QzUixuS26PH3THlvzjFl094n7
+Content-Type: multipart/mixed; boundary="jyfqLxBUjXdw9UVZPL2uP1KgdFvKUCEdd";
+ protected-headers="v1"
+From: Pavel Begunkov <asml.silence@gmail.com>
+To: Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>
+Message-ID: <14499431-0409-5d57-9b08-aff95b9d2160@gmail.com>
+Subject: Re: [PATCH 3/3] io_uring: add splice(2) support
+References: <cover.1579649589.git.asml.silence@gmail.com>
+ <8bfd9a57bf42cfc10ee7195969058d6da277deed.1579649589.git.asml.silence@gmail.com>
+ <6d43b9d7-209a-2bbf-e2c2-e125e84b46ab@kernel.dk>
+In-Reply-To: <6d43b9d7-209a-2bbf-e2c2-e125e84b46ab@kernel.dk>
 
-In the subject line and the patch description please refer to the
-construct as "delayed workqueue" or even abbreviated as "delayed wq",
-even though the struct itself is named "delayed_work.
+--jyfqLxBUjXdw9UVZPL2uP1KgdFvKUCEdd
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, 2020-01-21 at 09:28 -0800, Lakshmi Ramasubramanian wrote:
-> A timer is used to free queued keys if a custom IMA policy is not
+On 22/01/2020 05:03, Jens Axboe wrote:
+> On 1/21/20 5:05 PM, Pavel Begunkov wrote:
+>> @@ -373,6 +374,15 @@ struct io_rw {
+>>  	u64				len;
+>>  };
+>> =20
+>> +struct io_splice {
+>> +	struct file			*file_in;
+>> +	struct file			*file_out;
+>> +	loff_t __user			*off_in;
+>> +	loff_t __user			*off_out;
+>> +	u64				len;
+>> +	unsigned int			flags;
+>> +};
+>> +
+>>  struct io_connect {
+>>  	struct file			*file;
+>>  	struct sockaddr __user		*addr;
+>=20
+> Probably just make that len u32 as per previous email.
 
-^to free the queued keys,
+Right, I don't want to have multiple types and names for it myself.
 
-> loaded within 5 minutes after IMA subsystem is initialized. Timer
+>=20
+>> @@ -719,6 +730,11 @@ static const struct io_op_def io_op_defs[] =3D {
+>>  		.needs_file		=3D 1,
+>>  		.fd_non_neg		=3D 1,
+>>  	},
+>> +	[IORING_OP_SPLICE] =3D {
+>> +		.needs_file		=3D 1,
+>> +		.hash_reg_file		=3D 1,
+>> +		.unbound_nonreg_file	=3D 1,
+>> +	}
+>>  };
+>> =20
+>>  static void io_wq_submit_work(struct io_wq_work **workptr);
+>=20
+> I probably want to queue up a reservation for the EPOLL_CTL that I
+> haven't included yet, but which has been tested. But that's easily
+> manageable, so no biggy on my end.
 
-^after the IMA subsystem
-^The timer handler
+I didn't quite get it. Do you mean collision of opcode numbers?
 
-> handler is called in interrupt context. Due to this a spinlock has
-> to be used to synchronize access to critical section. A mutex cannot
-> be used since a mutex can sleep.
-> 
-> This patch uses a delayed work to free queued keys. Since a delayed
-> work handler is called in process context a mutex can be used.
-> 
-> Signed-off-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-> Fixes: 8f5d2d06f217 ("IMA: Defined timer to free queued keys")
+>=20
+>> +static bool io_splice_punt(struct file *file)
+>> +{
+>> +	if (get_pipe_info(file))
+>> +		return false;
+>> +	if (!io_file_supports_async(file))
+>> +		return true;
+>> +	return !(file->f_mode & O_NONBLOCK);
+>> +}
+>> +
+>> +static int io_splice(struct io_kiocb *req, struct io_kiocb **nxt,
+>> +		     bool force_nonblock)
+>> +{
+>> +	struct io_splice* sp =3D &req->splice;
+>> +	struct file *in =3D sp->file_in;
+>> +	struct file *out =3D sp->file_out;
+>> +	unsigned int flags =3D sp->flags;
+>> +	long ret;
+>> +
+>> +	if (force_nonblock) {
+>> +		if (io_splice_punt(in) || io_splice_punt(out)) {
+>> +			req->flags |=3D REQ_F_MUST_PUNT;
+>> +			return -EAGAIN;
+>> +		}
+>> +		flags |=3D SPLICE_F_NONBLOCK;
+>> +	}
+>> +
+>> +	ret =3D do_splice(in, sp->off_in, out, sp->off_out, sp->len, flags);=
 
-Thank you.  This is definitely better.
+>> +	if (force_nonblock && ret =3D=3D -EAGAIN)
+>> +		return -EAGAIN;
+>> +
+>> +	io_put_file(req->ctx, out, (flags & IOSQE_SPLICE_FIXED_OUT));
+>> +	io_cqring_add_event(req, ret);
+>> +	if (ret !=3D sp->len)
+>> +		req_set_fail_links(req);
+>> +	io_put_req_find_next(req, nxt);
+>> +	return 0;
+>> +}
+>=20
+> This looks good. And this is why the put_file() needs to take separate
+> arguments...
+>=20
+>> diff --git a/include/uapi/linux/io_uring.h b/include/uapi/linux/io_uri=
+ng.h
+>> index 57d05cc5e271..f234b13e7ed3 100644
+>> --- a/include/uapi/linux/io_uring.h
+>> +++ b/include/uapi/linux/io_uring.h
+>> @@ -23,8 +23,14 @@ struct io_uring_sqe {
+>>  		__u64	off;	/* offset into file */
+>>  		__u64	addr2;
+>>  	};
+>> -	__u64	addr;		/* pointer to buffer or iovecs */
+>> -	__u32	len;		/* buffer size or number of iovecs */
+>> +	union {
+>> +		__u64	addr;		/* pointer to buffer or iovecs */
+>> +		__u64	off_out;
+>> +	};
+>> +	union {
+>> +		__u32	len;	/* buffer size or number of iovecs */
+>> +		__s32	fd_out;
+>> +	};
+>>  	union {
+>>  		__kernel_rwf_t	rw_flags;
+>>  		__u32		fsync_flags;
+>> @@ -37,10 +43,12 @@ struct io_uring_sqe {
+>>  		__u32		open_flags;
+>>  		__u32		statx_flags;
+>>  		__u32		fadvise_advice;
+>> +		__u32		splice_flags;
+>>  	};
+>>  	__u64	user_data;	/* data to be passed back at completion time */
+>>  	union {
+>>  		__u16	buf_index;	/* index into fixed buffers, if used */
+>> +		__u64	splice_len;
+>>  		__u64	__pad2[3];
+>>  	};
+>>  };
+>=20
+> Not a huge fan of this, also mean splice can't ever used fixed buffers.=
 
-Mimi
+> Hmm...
 
-> ---
->  security/integrity/ima/ima_asymmetric_keys.c | 33 ++++++++++----------
->  1 file changed, 16 insertions(+), 17 deletions(-)
-> 
-> diff --git a/security/integrity/ima/ima_asymmetric_keys.c b/security/integrity/ima/ima_asymmetric_keys.c
-> index 381f51708e7b..fa1bdd54a9ff 100644
-> --- a/security/integrity/ima/ima_asymmetric_keys.c
-> +++ b/security/integrity/ima/ima_asymmetric_keys.c
-> @@ -11,7 +11,7 @@
->  
->  #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
->  
-> -#include <linux/timer.h>
-> +#include <linux/workqueue.h>
->  #include <keys/asymmetric-type.h>
->  #include "ima.h"
->  
-> @@ -24,37 +24,37 @@ static bool ima_process_keys;
->  /*
->   * To synchronize access to the list of keys that need to be measured
->   */
-> -static DEFINE_SPINLOCK(ima_keys_lock);
-> +static DEFINE_MUTEX(ima_keys_lock);
->  static LIST_HEAD(ima_keys);
->  
->  /*
->   * If custom IMA policy is not loaded then keys queued up
-> - * for measurement should be freed. This timer is used
-> + * for measurement should be freed. This worker is used
->   * for handling this scenario.
->   */
->  static long ima_key_queue_timeout = 300000; /* 5 Minutes */
-> -static struct timer_list ima_key_queue_timer;
-> +static void ima_keys_handler(struct work_struct *work);
-> +static DECLARE_DELAYED_WORK(ima_keys_delayed_work, ima_keys_handler);
->  static bool timer_expired;
->  
->  /*
-> - * This timer callback function frees keys that may still be
-> + * This worker function frees keys that may still be
->   * queued up in case custom IMA policy was not loaded.
->   */
-> -static void ima_timer_handler(struct timer_list *timer)
-> +static void ima_keys_handler(struct work_struct *work)
->  {
->  	timer_expired = true;
->  	ima_process_queued_keys();
->  }
->  
->  /*
-> - * This function sets up a timer to free queued keys in case
-> + * This function sets up a worker to free queued keys in case
->   * custom IMA policy was never loaded.
->   */
->  void ima_init_key_queue(void)
->  {
-> -	timer_setup(&ima_key_queue_timer, ima_timer_handler, 0);
-> -	mod_timer(&ima_key_queue_timer,
-> -		  jiffies + msecs_to_jiffies(ima_key_queue_timeout));
-> +	schedule_delayed_work(&ima_keys_delayed_work,
-> +			      msecs_to_jiffies(ima_key_queue_timeout));
->  }
->  
->  static void ima_free_key_entry(struct ima_key_entry *entry)
-> @@ -103,18 +103,17 @@ static bool ima_queue_key(struct key *keyring, const void *payload,
->  {
->  	bool queued = false;
->  	struct ima_key_entry *entry;
-> -	unsigned long flags;
->  
->  	entry = ima_alloc_key_entry(keyring, payload, payload_len);
->  	if (!entry)
->  		return false;
->  
-> -	spin_lock_irqsave(&ima_keys_lock, flags);
-> +	mutex_lock(&ima_keys_lock);
->  	if (!ima_process_keys) {
->  		list_add_tail(&entry->list, &ima_keys);
->  		queued = true;
->  	}
-> -	spin_unlock_irqrestore(&ima_keys_lock, flags);
-> +	mutex_unlock(&ima_keys_lock);
->  
->  	if (!queued)
->  		ima_free_key_entry(entry);
-> @@ -132,7 +131,6 @@ void ima_process_queued_keys(void)
->  {
->  	struct ima_key_entry *entry, *tmp;
->  	bool process = false;
-> -	unsigned long flags;
->  
->  	if (ima_process_keys)
->  		return;
-> @@ -143,17 +141,18 @@ void ima_process_queued_keys(void)
->  	 * First one setting the ima_process_keys flag to true will
->  	 * process the queued keys.
->  	 */
-> -	spin_lock_irqsave(&ima_keys_lock, flags);
-> +	mutex_lock(&ima_keys_lock);
->  	if (!ima_process_keys) {
->  		ima_process_keys = true;
->  		process = true;
->  	}
-> -	spin_unlock_irqrestore(&ima_keys_lock, flags);
-> +	mutex_unlock(&ima_keys_lock);
->  
->  	if (!process)
->  		return;
->  
-> -	del_timer(&ima_key_queue_timer);
-> +	if (!timer_expired)
-> +		cancel_delayed_work_sync(&ima_keys_delayed_work);
->  
->  	list_for_each_entry_safe(entry, tmp, &ima_keys, list) {
->  		if (!timer_expired)
+But it's not like splice() ever uses user buffers. Isn't it? vmsplice doe=
+s, but
+that's another opcode.
 
+>=20
+>> @@ -67,6 +75,9 @@ enum {
+>>  /* always go async */
+>>  #define IOSQE_ASYNC		(1U << IOSQE_ASYNC_BIT)
+>> =20
+>> +/* op custom flags */
+>> +#define IOSQE_SPLICE_FIXED_OUT	(1U << 16)
+>> +
+>=20
+> I don't think it's unreasonable to say that if you specify
+> IOSQE_FIXED_FILE, then both are fixed. If not, then none of them are.
+> What do you think?
+>=20
+
+It's plausible to register only one end for splicing, e.g. splice from
+short-lived sockets to pre-registered buffers-pipes. And it's clearer do =
+it now.
+
+--=20
+Pavel Begunkov
+
+
+--jyfqLxBUjXdw9UVZPL2uP1KgdFvKUCEdd--
+
+--lXivEkH9QzUixuS26PH3THlvzjFl094n7
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEE+6JuPTjTbx479o3OWt5b1Glr+6UFAl4ntgoACgkQWt5b1Glr
++6X8dg/+Orms56JFFtoCVVv0W3CPexJGtgCppXvNQbOxs2PjFPPXaAyRRith3psO
+PbDsp6l3lOhbbNhiBjijXy1JZ9gAniioDX42iXmenv/Jo97EaD140yU9ZFpzSV/S
+QDQidsk9aG+f6/ELIZN4C4z/h39DAe0ZyelG/XZHnO0ynGOSaNA+FEMW9P3rYH4f
+UKxpj/70GBJ3/mzVWx1unzyniyOIPgl+t+1sm6HRNc1nc2Ke6tbq9z0I1DgicsnO
+lPd/R0EuCVNoE/6hdOqNbJIQZPoJz+Y0yFYz0jb/U8kB6XBqqhUMy57pMmpcK0Vh
+Yre+gy4wI6mu6JzxQQqiuldfWZA0c7FxH0I/zYuZw+epnggOB2OaTXfTynVDLSDh
+/b0kEnkzy5mf+saNa8pEjtGVUsuakLMNpjNj1CltANub1UKWujNtHg9JYL5saRHJ
+DHmMQCHSO3IC4prbrmQCk1uqsBU0rB6MaG/Qte/QzPEUgnAwfDlOT3+AHoiOmHC8
++jjR3E436GAyA3FtbyerHqT2RatjSg8/oaHw8zaZEQOS63syIYJpIY/r96ATrdF0
+L5uywKAN1uhYtULQZwjSVsnXeeR89o4TzUoARI2o2wWzuDlwQFNz4/NoDZwPyzZk
+dqr7NOwxSHOc0Xqi95ZgWWdrFZ2/pvQaZp0R4qVVHpJG4Y81rxM=
+=JLeC
+-----END PGP SIGNATURE-----
+
+--lXivEkH9QzUixuS26PH3THlvzjFl094n7--
