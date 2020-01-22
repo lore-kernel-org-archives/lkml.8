@@ -6,93 +6,64 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2225C32771
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 05:47:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52583C3F68F
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 05:51:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB82421835
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 05:47:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2961B2465B
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 05:51:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726081AbgAVFrZ (ORCPT
+        id S1725946AbgAVFvR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 00:47:25 -0500
-Received: from mga02.intel.com ([134.134.136.20]:27602 "EHLO mga02.intel.com"
+        Wed, 22 Jan 2020 00:51:17 -0500
+Received: from helcar.hmeau.com ([216.24.177.18]:48298 "EHLO deadmen.hmeau.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725796AbgAVFrZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 00:47:25 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Jan 2020 21:47:24 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,348,1574150400"; 
-   d="scan'208";a="221136424"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by fmsmga007.fm.intel.com with ESMTP; 21 Jan 2020 21:47:24 -0800
-Date:   Tue, 21 Jan 2020 21:47:24 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>, kvm@vger.kernel.org,
-        Jim Mattson <jmattson@google.com>,
-        linux-kernel@vger.kernel.org, Liran Alon <liran.alon@oracle.com>,
-        Roman Kagan <rkagan@virtuozzo.com>
-Subject: Re: [PATCH RFC 2/3] x86/kvm/hyper-v: move VMX controls sanitization
- out of nested_enable_evmcs()
-Message-ID: <20200122054724.GD18513@linux.intel.com>
-References: <20200115171014.56405-1-vkuznets@redhat.com>
- <20200115171014.56405-3-vkuznets@redhat.com>
- <6c4bdb57-08fb-2c2d-9234-b7efffeb72ed@redhat.com>
+        id S1725836AbgAVFvR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 00:51:17 -0500
+Received: from gondobar.mordor.me.apana.org.au ([192.168.128.4] helo=gondobar)
+        by deadmen.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
+        id 1iu8v5-0002Ax-IE; Wed, 22 Jan 2020 13:51:15 +0800
+Received: from herbert by gondobar with local (Exim 4.89)
+        (envelope-from <herbert@gondor.apana.org.au>)
+        id 1iu8v1-0002uN-Mr; Wed, 22 Jan 2020 13:51:11 +0800
+Date:   Wed, 22 Jan 2020 13:51:11 +0800
+From:   Herbert Xu <herbert@gondor.apana.org.au>
+To:     monstr@monstr.eu
+Cc:     Kalyani Akula <kalyania@xilinx.com>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        git <git@xilinx.com>, Harsh Jain <harshj@xilinx.com>,
+        Sarat Chand Savitala <saratcha@xilinx.com>,
+        Mohan Marutirao Dhanawade <mohand@xilinx.com>
+Subject: Re: [PATCH V4 0/4] Add Xilinx's ZynqMP AES-GCM driver support
+Message-ID: <20200122055111.azr7zzhredywyusx@gondor.apana.org.au>
+References: <1574235842-7930-1-git-send-email-kalyani.akula@xilinx.com>
+ <BN7PR02MB51241CCD25BD1269B4394D9AAF320@BN7PR02MB5124.namprd02.prod.outlook.com>
+ <20200120075559.kra4dqdphbbnid5h@gondor.apana.org.au>
+ <1abdf222-9517-976e-b3d3-bfc1c92c4663@seznam.cz>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <6c4bdb57-08fb-2c2d-9234-b7efffeb72ed@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <1abdf222-9517-976e-b3d3-bfc1c92c4663@seznam.cz>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jan 19, 2020 at 09:54:44AM +0100, Paolo Bonzini wrote:
-> On 15/01/20 18:10, Vitaly Kuznetsov wrote:
-> > With fine grained VMX feature enablement QEMU>=4.2 tries to do KVM_SET_MSRS
-> > with default (matching CPU model) values and in case eVMCS is also enabled,
-> > fails.
-> > 
-> > It would be possible to drop VMX feature filtering completely and make
-> > this a guest's responsibility: if it decides to use eVMCS it should know
-> > which fields are available and which are not. Hyper-V mostly complies to
-> > this, however, there is at least one problematic control:
-> > SECONDARY_EXEC_VIRTUALIZE_APIC_ACCESSES
-> > which Hyper-V enables. As there is no 'apic_addr_field' in eVMCS, we
-> > fail to handle this properly in KVM. It is unclear how this is supposed
-> > to work, genuine Hyper-V doesn't expose the control so it is possible that
-> > this is just a bug (in Hyper-V).
+On Tue, Jan 21, 2020 at 10:26:07AM +0100, Michal Simek wrote:
+>
+> All these drivers which requires firmware interface extension can be
+> added via your tree or I can take them via arm-soc tree with your ack.
 > 
-> Yes, it most likely is and it would be nice if Microsoft fixed it, but I
-> guess we're stuck with it for existing Windows versions.  Well, for one
-> we found a bug in Hyper-V and not the converse. :)
-> 
-> There is a problem with this approach, in that we're stuck with it
-> forever due to live migration.  But I guess if in the future eVMCS v2
-> adds an apic_address field we can limit the hack to eVMCS v1.  Another
-> possibility is to use the quirks mechanism but it's overkill for now.
-> 
-> Unless there are objections, I plan to apply these patches.
+> It is really up to you. I am happy to just ack patches out of crypto and
+> feel free to take them via your tree.
+> Or please let me know when you are done with review and I will take them.
 
-Doesn't applying this patch contradict your earlier opinion?  This patch
-would still hide the affected controls from the guest because the host
-controls enlightened_vmcs_enabled.
+Thanks Michal. If you could ack them once they've been resubmitted
+then I can just take them via the cryptodev tree.
 
-On Sat, Jan 18, 2020 at 10:42:31PM +0100, Paolo Bonzini wrote:
-> IMHO the features should stay available in case the guest chooses not to
-> use eVMCS.  A guest that uses eVMCS should know which features it cannot
-> use and not enable them.
-
-Makes sense, wasn't thinking about the scenario where the guest doesn't
-support eVMCS or doesn't want to use it for whatever reason.
-
-Rather than update vmx->nested.msrs or filter vmx_get_msr(), what about
-manually adding eVMCS consistency checks on the disallowed bits and handle
-SECONDARY_EXEC_VIRTUALIZE_APIC_ACCESSES as a one-off case by simply
-clearing it from the eVMCS?  Or alternatively, squashing all the disallowed
-bits.
+Thanks,
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
