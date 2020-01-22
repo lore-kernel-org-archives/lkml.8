@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B85EC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:48:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B2CBC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:48:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40AB12468D
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:48:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E93632468D
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:48:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579686532;
-	bh=BIESPlAn6ULQtQt/OSEJWfZLiOh1u+NRyAmVtFMibJk=;
+	s=default; t=1579686539;
+	bh=o5ENOhAOLvVXmvZAAxOD8ynA2Hhx+mzchRgQvihpNNg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ULrxBedaCs+XqsC01oJceRcp4asGt2SLHwjDGBVEC3jkpwdt8qRNl3YSVyS4wXjLh
-	 AddfM1/UqmSik+X+zW9Un/rt3v4jFbjrA2y03e2ADhmcKcYY1DElZkzKHpE40TfOK6
-	 Z1Qv9GF98codI4zkpEfrVT6C971MDeGqnUZdcwho=
+	b=MMwjkS0d2O7xGRAJmIXyHOejtxI8l/5GwUHhRNL0lCWuwxiNeDib9/TAM248Aenn/
+	 MpVcLe1TPY+sT5PfpJO/WVXWhPo65mwAhABx4Ry7rIvD+AdQKh9+GXi78wYlry2SCg
+	 YXtJbJMQ1luFL57ptd85nAN8PIMQSKNTwutGWuO0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387404AbgAVJsv (ORCPT
+        id S2387430AbgAVJs6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 04:48:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59970 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 04:48:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59676 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387484AbgAVJkv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 04:40:51 -0500
+        id S2387470AbgAVJkm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 04:40:42 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8F69024680;
-        Wed, 22 Jan 2020 09:40:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D82602467B;
+        Wed, 22 Jan 2020 09:40:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579686051;
-        bh=BIESPlAn6ULQtQt/OSEJWfZLiOh1u+NRyAmVtFMibJk=;
+        s=default; t=1579686041;
+        bh=o5ENOhAOLvVXmvZAAxOD8ynA2Hhx+mzchRgQvihpNNg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wLL8x2ANWvmeToo2b5kAgrGtlTIqXXNaV2go0uPBJMPQ0IqLhRoMFG7pp4s+tlheb
-         qna+3Vby1M77HeO8fb/hk0Onh9hFKEXtkGTw5k/H1Y9GLQXWZC1x8v+4ZKNvmvrqJI
-         8u5KWaONgZiGejnlN7Xg+Czdu2JQC9RwqwBEKQXY=
+        b=M22pXMQc6bElc/ClEJ2LAcebJwdHyBsaFXhE36vOIuGbUJI5xvGE/8UUG0CrMh6gT
+         ap4MwhWRK3No33SdKLh/ums02NmO9a6AqCUk6fz1FZY8AEDLcbxk77kHNCOo3yj0yh
+         XsTW8/TIufoM+tVY5c6cdSOILXAqmNZVdjkYdOek=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        =?UTF-8?q?Lars=20M=C3=B6llendorf?= <lars.moellendorf@plating.de>,
-        Lars-Peter Clausen <lars@metafoo.de>, Stable@vger.kernel.org,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH 4.19 007/103] iio: buffer: align the size of scan bytes to size of the largest element
-Date:   Wed, 22 Jan 2020 10:28:23 +0100
-Message-Id: <20200122092804.773353867@linuxfoundation.org>
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Kevin Hilman <khilman@baylibre.com>
+Subject: [PATCH 4.19 003/103] dt-bindings: reset: meson8b: fix duplicate reset IDs
+Date:   Wed, 22 Jan 2020 10:28:19 +0100
+Message-Id: <20200122092804.144652552@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200122092803.587683021@linuxfoundation.org>
 References: <20200122092803.587683021@linuxfoundation.org>
@@ -61,58 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lars Möllendorf <lars.moellendorf@plating.de>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 
-commit 883f616530692d81cb70f8a32d85c0d2afc05f69 upstream.
+commit 4881873f4cc1460f63d85fa81363d56be328ccdc upstream.
 
-Previous versions of `iio_compute_scan_bytes` only aligned each element
-to its own length (i.e. its own natural alignment). Because multiple
-consecutive sets of scan elements are buffered this does not work in
-case the computed scan bytes do not align with the natural alignment of
-the first scan element in the set.
+According to the public S805 datasheet the RESET2 register uses the
+following bits for the PIC_DC, PSC and NAND reset lines:
+- PIC_DC is at bit 3 (meaning: RESET_VD_RMEM + 3)
+- PSC is at bit 4 (meaning: RESET_VD_RMEM + 4)
+- NAND is at bit 5 (meaning: RESET_VD_RMEM + 4)
 
-This commit fixes this by aligning the scan bytes to the natural
-alignment of the largest scan element in the set.
+Update the reset IDs of these three reset lines so they don't conflict
+with PIC_DC and map to the actual hardware reset lines.
 
-Fixes: 959d2952d124 ("staging:iio: make iio_sw_buffer_preenable much more general.")
-Signed-off-by: Lars Möllendorf <lars.moellendorf@plating.de>
-Reviewed-by: Lars-Peter Clausen <lars@metafoo.de>
-Cc: <Stable@vger.kernel.org>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Fixes: 79795e20a184eb ("dt-bindings: reset: Add bindings for the Meson SoC Reset Controller")
+Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Signed-off-by: Kevin Hilman <khilman@baylibre.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/iio/industrialio-buffer.c |    6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ include/dt-bindings/reset/amlogic,meson8b-reset.h |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/drivers/iio/industrialio-buffer.c
-+++ b/drivers/iio/industrialio-buffer.c
-@@ -570,7 +570,7 @@ static int iio_compute_scan_bytes(struct
- 				const unsigned long *mask, bool timestamp)
- {
- 	unsigned bytes = 0;
--	int length, i;
-+	int length, i, largest = 0;
- 
- 	/* How much space will the demuxed element take? */
- 	for_each_set_bit(i, mask,
-@@ -578,13 +578,17 @@ static int iio_compute_scan_bytes(struct
- 		length = iio_storage_bytes_for_si(indio_dev, i);
- 		bytes = ALIGN(bytes, length);
- 		bytes += length;
-+		largest = max(largest, length);
- 	}
- 
- 	if (timestamp) {
- 		length = iio_storage_bytes_for_timestamp(indio_dev);
- 		bytes = ALIGN(bytes, length);
- 		bytes += length;
-+		largest = max(largest, length);
- 	}
-+
-+	bytes = ALIGN(bytes, largest);
- 	return bytes;
- }
- 
+--- a/include/dt-bindings/reset/amlogic,meson8b-reset.h
++++ b/include/dt-bindings/reset/amlogic,meson8b-reset.h
+@@ -95,9 +95,9 @@
+ #define RESET_VD_RMEM			64
+ #define RESET_AUDIN			65
+ #define RESET_DBLK			66
+-#define RESET_PIC_DC			66
+-#define RESET_PSC			66
+-#define RESET_NAND			66
++#define RESET_PIC_DC			67
++#define RESET_PSC			68
++#define RESET_NAND			69
+ #define RESET_GE2D			70
+ #define RESET_PARSER_REG		71
+ #define RESET_PARSER_FETCH		72
 
 
