@@ -2,124 +2,103 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EB08C33CB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 22:07:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6320C33CB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 22:10:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 355CC21835
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 22:07:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D3F221835
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 22:10:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gtZOmaZS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726590AbgAVWHT (ORCPT
+        id S1726234AbgAVWKI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 17:07:19 -0500
-Received: from relay9-d.mail.gandi.net ([217.70.183.199]:58607 "EHLO
-        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725911AbgAVWHS (ORCPT
+        Wed, 22 Jan 2020 17:10:08 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:41150 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725884AbgAVWKH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 17:07:18 -0500
-X-Originating-IP: 90.65.92.102
-Received: from localhost (lfbn-lyo-1-1913-102.w90-65.abo.wanadoo.fr [90.65.92.102])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id 084E2FF806;
-        Wed, 22 Jan 2020 22:07:15 +0000 (UTC)
-Date:   Wed, 22 Jan 2020 23:07:15 +0100
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Michael McCormick <michael.mccormick@enatel.net>
-Cc:     a.zummo@towertech.it, linux-rtc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] rtc: pcf85063: Add pcf85063 clkout control to common
- clock framework
-Message-ID: <20200122220715.GB3392@piout.net>
-References: <20190902043727.GA24684@michael-Latitude-5590>
+        Wed, 22 Jan 2020 17:10:07 -0500
+Received: by mail-oi1-f194.google.com with SMTP id i1so969362oie.8;
+        Wed, 22 Jan 2020 14:10:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=tzE/usQUC+/qHervq9qIJkerRx4RijErGd72FUWsdgM=;
+        b=gtZOmaZSaQA1RT0gYAY3tpH2TX8tqCQrvkx0lHqwRJqlYa9AUwawy8ZprbPbfwpvsG
+         6rakUY0G3Vkv8cHjk1tshjNXUrlLZ4cvEtrK8AhoQmRCk+v00Mtcd+55QW8dAssRccah
+         D0gdYwfGpTQSMeXo3ynX2P4ZzxinEJfasyaKk3p8mjZKFEDwxgvE5kjBzjlSG5E7eGw3
+         wo72JBSn+hFrMQTjT8P9HN7M7U7q/LbR7hn054GnIkawXrCXbzDwsKai2wV7rz9f1tw/
+         cGIJJw9I9s0fzWGdQcJuxzN7xkjjJWSSTM1lkGW1wWMugV9OLR6sv/xWf/1xUDL/RvRo
+         fKVA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=tzE/usQUC+/qHervq9qIJkerRx4RijErGd72FUWsdgM=;
+        b=AOj5mmawQsZ5Ynn9bSh2uY9fvh3s4hTGD+m8mIZFPolHEGrueUI0fS3uJlxNsB1Aqi
+         C5omgYQsPRcvBGnZFZVW8V+QBOUJZFCHJvzdpYZR7gdyQ4oJqrKJVD/syemajHIe+VnL
+         ciK9WkP479WwLfixvrem/vUOGU8eEDoMU3V2JQ+WTOMSZxwSAW6eV1newlsxXxvExry0
+         k4KmiE/1BuFTVOrBYODxbkAqedtcN9/bte+KXKX0hVi9go3kD7XoRg1iQh34Ue+EpVw4
+         4lgInSqHkWxBknGKLPolB6CvGNMYQ0pMmp8JQ533LDzLMkTj7hv1W0or8COr9OH+nFjy
+         wQQQ==
+X-Gm-Message-State: APjAAAUfGCXCM7CEuyATlO0j2NzlETNxh3tjG4w+WaYwQRz5l8c9O5Dy
+        hj3G5MhQBm4szpGbDkdrJhXD3dJG49CBJTaMA8hgRwSKFT0=
+X-Google-Smtp-Source: APXvYqzLaIvFXXa9sDzzeC+7Der05z+2y7PvAqMVLAjIHy8ILzkiBB98xdRD6ZfV72sFmE1yONU6J0ZcD+whAVa6nj8=
+X-Received: by 2002:aca:1011:: with SMTP id 17mr8450834oiq.72.1579731006685;
+ Wed, 22 Jan 2020 14:10:06 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190902043727.GA24684@michael-Latitude-5590>
+References: <0000000000006370ef059cabac14@google.com> <50239085-ff0f-f797-99af-1a0e58bc5e2e@gmail.com>
+ <CAM_iQpXqh1ucVST199c72V22zLPujZy-54p=c5ar=Q9bWNq7OA@mail.gmail.com> <7056f971-8fae-ce88-7e9a-7983e4f57bb2@gmail.com>
+In-Reply-To: <7056f971-8fae-ce88-7e9a-7983e4f57bb2@gmail.com>
+From:   Cong Wang <xiyou.wangcong@gmail.com>
+Date:   Wed, 22 Jan 2020 14:09:55 -0800
+Message-ID: <CAM_iQpWw_pP0zm8VgRoYgeMu=b8v8ECmXAcfSC8WGraQ8CNk+Q@mail.gmail.com>
+Subject: Re: KASAN: slab-out-of-bounds Read in __nla_put_nohdr
+To:     Eric Dumazet <eric.dumazet@gmail.com>
+Cc:     syzbot <syzbot+5af9a90dad568aa9f611@syzkaller.appspotmail.com>,
+        David Miller <davem@davemloft.net>,
+        Jamal Hadi Salim <jhs@mojatatu.com>,
+        Jiri Pirko <jiri@resnulli.us>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux Kernel Network Developers <netdev@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Wed, Jan 22, 2020 at 12:33 PM Eric Dumazet <eric.dumazet@gmail.com> wrote:
+>
+>
+>
+> On 1/22/20 12:27 PM, Cong Wang wrote:
+> > On Tue, Jan 21, 2020 at 11:55 AM Eric Dumazet <eric.dumazet@gmail.com> wrote:
+> >> em_nbyte_change() sets
+> >> em->datalen = sizeof(*nbyte) + nbyte->len;
+> >>
+> >> But later tcf_em_validate() overwrites em->datalen with the user provide value (em->datalen = data_len; )
+> >> which can be bigger than the allocated (kmemdup) space in em_nbyte_change()
+> >>
+> >> Should net/sched/em_nbyte.c() provide a dump() handler to avoid this issue ?
+> >
+> > I think for those who implement ->change() we should leave
+> > ->datalen untouched to respect their choices. I don't see why
+> > we have to set it twice.
+> >
+> >
+>
+> Agreed, but we need to audit them to make sure all of them are setting ->datalen
+>
 
-I'm sorry for the very late review, please Cc me on RTC patches.
+I audited all of them, either sets ->datalen in ->change() or just
+implements a ops->datalen. I will send the patch out once passed
+syzbot test.
 
-It seems the patch has been mangled and tabs became spaces. Also, a few
-alignments are off.
-
-On 02/09/2019 16:37:27+1200, Michael McCormick wrote:
-> Signed-off-by: Michael McCormick <michael.mccormick@enatel.net>
-> ---
->  drivers/rtc/rtc-pcf85063.c | 153 +++++++++++++++++++++++++++++++++++++
->  1 file changed, 153 insertions(+)
-> 
-> diff --git a/drivers/rtc/rtc-pcf85063.c b/drivers/rtc/rtc-pcf85063.c
-> index 1afa6d9fa9fb..f47d3a6b997d 100644
-> --- a/drivers/rtc/rtc-pcf85063.c
-> +++ b/drivers/rtc/rtc-pcf85063.c
-> @@ -9,6 +9,7 @@
->   * Copyright (C) 2019 Micro Crystal AG
->   * Author: Alexandre Belloni <alexandre.belloni@bootlin.com>
->   */
-> +#include <linux/clk-provider.h>
->  #include <linux/i2c.h>
->  #include <linux/bcd.h>
->  #include <linux/rtc.h>
-> @@ -44,6 +45,16 @@
->  #define PCF85063_OFFSET_STEP0          4340
->  #define PCF85063_OFFSET_STEP1          4069
-> 
-> +#define PCF85063_REG_CLKO_F_MASK       0x07 /* frequency mask */
-> +#define PCF85063_REG_CLKO_F_32768HZ    0x00
-> +#define PCF85063_REG_CLKO_F_16384HZ    0x01
-> +#define PCF85063_REG_CLKO_F_8192HZ     0x02
-> +#define PCF85063_REG_CLKO_F_4096HZ     0x03
-> +#define PCF85063_REG_CLKO_F_2048HZ     0x04
-> +#define PCF85063_REG_CLKO_F_1024HZ     0x05
-> +#define PCF85063_REG_CLKO_F_1HZ                0x06
-
-Most of those defines are not used, I don't think they are necessary.
-
-> +static int pcf85063_clkout_control(struct clk_hw *hw, bool enable)
-> +{
-> +       struct pcf85063 *pcf85063 = clkout_hw_to_pcf85063(hw);
-> +       unsigned char buf;
-> +
-> +       if (enable)
-> +               buf = PCF85063_REG_CLKO_F_32768HZ;
-
-This doesn't work properly if the clock was already enabled and had a
-proper rate already set. I think you need to read out the currently set
-rate and update PCF85063_REG_CTRL2 only if PCF85063_REG_CLKO_F_OFF is
-set.
-
-> +       else
-> +               buf = PCF85063_REG_CLKO_F_OFF;
-> +
-> +       return regmap_update_bits(pcf85063->regmap, PCF85063_REG_CTRL2,
-> +                                 PCF85063_REG_CLKO_F_MASK, buf);
-> +}
-> +
-> +static struct clk *pcf85063_clkout_register_clk(struct pcf85063 *pcf85063)
-> +{
-> +       struct clk *clk;
-> +       struct clk_init_data init;
-> +       int ret;
-> +
-> +       /* disable the clkout output */
-> +       ret = regmap_update_bits(pcf85063->regmap, PCF85063_REG_CTRL2,
-> +                                PCF85063_REG_CLKO_F_MASK, PCF85063_REG_CLKO_F_OFF);
-
-This has to be left to the common clock framework to figure that nothing
-is using this clock and disable it. I guess this is the whole point of
-this patch but you can't hardcode it here because this will introduce a
-glitch for all the actual users of the clock.
-
-
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Thanks.
