@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16E41C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:46:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFAA0C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:46:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF5182467B
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:46:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8B8A2467B
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:46:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579686387;
-	bh=GV0cVfM3rOwlCRUBvizdFqhrMkxgQw+dIKL/KIt5lXI=;
+	s=default; t=1579686394;
+	bh=h9wDXmwEsFdoPohpB5Y3eEkycsp8x/x34bOnIPfQ6gw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ALwI31ZIpiAPyM8vZ0KVCkywVX/AFNpS8Zm4eBQTcwRcmvLJvJYQ841dIuF7yrY0e
-	 RJdxnVLpbJaNfk5bF6DjBM9iHbHTxYBxGCMUPk/W2uxIEtHqHTbzJJYJEz0FtjK76k
-	 1dzK114porRQmk65OtL8PN//uxxVJqA+H8clEMwg=
+	b=L/0mvrKnIEkgS/c4zaiNP69vBAhlb5EAzwYAdK6kXyy4bpsmjhb9pVwp37GkB5F+Z
+	 FBQXonRlmQ+ROUfEQkf29QcwO7aXdSgRoYvnhvC3ADLBDeySRdBACAcCeR5ICcFmdr
+	 NnM8mlpsaPyeHyxhZYDOENyXBfbvl2KB2BXQ3daw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387905AbgAVJnh (ORCPT
+        id S2387866AbgAVJnZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 04:43:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36084 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 04:43:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35636 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387691AbgAVJnc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 04:43:32 -0500
+        id S2387852AbgAVJnP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 04:43:15 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 475D724686;
-        Wed, 22 Jan 2020 09:43:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 426E124680;
+        Wed, 22 Jan 2020 09:43:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579686211;
-        bh=GV0cVfM3rOwlCRUBvizdFqhrMkxgQw+dIKL/KIt5lXI=;
+        s=default; t=1579686194;
+        bh=h9wDXmwEsFdoPohpB5Y3eEkycsp8x/x34bOnIPfQ6gw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sWgVx+VgHJWWYFc+kv82LAHhf+fhjbvN41WQo9uaYRBU7Du+zigoRIZnZeJPTFGQA
-         DAVB2LIQUv3uGK3mln4aarR9BhrK2qz1KsBI04Kanv3eeyBI9ppbMkC2MgEhWeoJWp
-         E7MGAw4tulvFM3OkYT+WZPe1OW94QAVrwqV1gdds=
+        b=Ar5GX2OlQGLPGgRWHV5PUE0ru9txdHWQaqfWBzWXcnAl6jvdCv0xaf73A1iVNV+xh
+         yIp6HmMMIrT9Z9RryRLUfxldXWJR+fUcq1qfdCANu4yz3GAV8iDqeWQR51oBHqB+oj
+         sY0LN5EHdQ+kqPQZCpiGqfeVUoiDP/t574jm07d4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Angelo Dureghello <angelo.dureghello@timesys.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH 4.19 088/103] mtd: devices: fix mchp23k256 read and write
-Date:   Wed, 22 Jan 2020 10:29:44 +0100
-Message-Id: <20200122092815.524815562@linuxfoundation.org>
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Kalle Valo <kvalo@codeaurora.org>
+Subject: [PATCH 4.19 082/103] cw1200: Fix a signedness bug in cw1200_load_firmware()
+Date:   Wed, 22 Jan 2020 10:29:38 +0100
+Message-Id: <20200122092814.970803207@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200122092803.587683021@linuxfoundation.org>
 References: <20200122092803.587683021@linuxfoundation.org>
@@ -61,96 +59,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Angelo Dureghello <angelo.dureghello@timesys.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-commit 14f89e088155314d311e4d4dd9f2b4ccaeef92b2 upstream.
+commit 4a50d454502f1401171ff061a5424583f91266db upstream.
 
-Due to the use of sizeof(), command size set for the spi transfer
-was wrong. Driver was sending and receiving always 1 byte less
-and especially on write, it was hanging.
+The "priv->hw_type" is an enum and in this context GCC will treat it
+as an unsigned int so the error handling will never trigger.
 
-echo -n -e "\\x1\\x2\\x3\\x4" > /dev/mtd1
-
-And read part too now works as expected.
-
-hexdump -C -n16 /dev/mtd1
-00000000  01 02 03 04 ab f3 ad c2  ab e3 f4 36 dd 38 04 15
-00000010
-
-Fixes: 4379075a870b ("mtd: mchp23k256: Add support for mchp23lcv1024")
-Signed-off-by: Angelo Dureghello <angelo.dureghello@timesys.com>
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+Fixes: a910e4a94f69 ("cw1200: add driver for the ST-E CW1100 & CW1200 WLAN chipsets")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/mtd/devices/mchp23k256.c |   20 ++++++++++++--------
- 1 file changed, 12 insertions(+), 8 deletions(-)
+ drivers/net/wireless/st/cw1200/fwio.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/drivers/mtd/devices/mchp23k256.c
-+++ b/drivers/mtd/devices/mchp23k256.c
-@@ -68,15 +68,17 @@ static int mchp23k256_write(struct mtd_i
- 	struct spi_transfer transfer[2] = {};
- 	struct spi_message message;
- 	unsigned char command[MAX_CMD_SIZE];
--	int ret;
-+	int ret, cmd_len;
+--- a/drivers/net/wireless/st/cw1200/fwio.c
++++ b/drivers/net/wireless/st/cw1200/fwio.c
+@@ -323,12 +323,12 @@ int cw1200_load_firmware(struct cw1200_c
+ 		goto out;
+ 	}
  
- 	spi_message_init(&message);
+-	priv->hw_type = cw1200_get_hw_type(val32, &major_revision);
+-	if (priv->hw_type < 0) {
++	ret = cw1200_get_hw_type(val32, &major_revision);
++	if (ret < 0) {
+ 		pr_err("Can't deduce hardware type.\n");
+-		ret = -ENOTSUPP;
+ 		goto out;
+ 	}
++	priv->hw_type = ret;
  
-+	cmd_len = mchp23k256_cmdsz(flash);
-+
- 	command[0] = MCHP23K256_CMD_WRITE;
- 	mchp23k256_addr2cmd(flash, to, command);
- 
- 	transfer[0].tx_buf = command;
--	transfer[0].len = mchp23k256_cmdsz(flash);
-+	transfer[0].len = cmd_len;
- 	spi_message_add_tail(&transfer[0], &message);
- 
- 	transfer[1].tx_buf = buf;
-@@ -92,8 +94,8 @@ static int mchp23k256_write(struct mtd_i
- 	if (ret)
- 		return ret;
- 
--	if (retlen && message.actual_length > sizeof(command))
--		*retlen += message.actual_length - sizeof(command);
-+	if (retlen && message.actual_length > cmd_len)
-+		*retlen += message.actual_length - cmd_len;
- 
- 	return 0;
- }
-@@ -105,16 +107,18 @@ static int mchp23k256_read(struct mtd_in
- 	struct spi_transfer transfer[2] = {};
- 	struct spi_message message;
- 	unsigned char command[MAX_CMD_SIZE];
--	int ret;
-+	int ret, cmd_len;
- 
- 	spi_message_init(&message);
- 
-+	cmd_len = mchp23k256_cmdsz(flash);
-+
- 	memset(&transfer, 0, sizeof(transfer));
- 	command[0] = MCHP23K256_CMD_READ;
- 	mchp23k256_addr2cmd(flash, from, command);
- 
- 	transfer[0].tx_buf = command;
--	transfer[0].len = mchp23k256_cmdsz(flash);
-+	transfer[0].len = cmd_len;
- 	spi_message_add_tail(&transfer[0], &message);
- 
- 	transfer[1].rx_buf = buf;
-@@ -130,8 +134,8 @@ static int mchp23k256_read(struct mtd_in
- 	if (ret)
- 		return ret;
- 
--	if (retlen && message.actual_length > sizeof(command))
--		*retlen += message.actual_length - sizeof(command);
-+	if (retlen && message.actual_length > cmd_len)
-+		*retlen += message.actual_length - cmd_len;
- 
- 	return 0;
- }
+ 	/* Set DPLL Reg value, and read back to confirm writes work */
+ 	ret = cw1200_reg_write_32(priv, ST90TDS_TSET_GEN_R_W_REG_ID,
 
 
