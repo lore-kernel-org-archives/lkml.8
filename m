@@ -7,47 +7,50 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC881C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:32:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12EC6C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:32:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E7972467B
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:32:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D218224672
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:32:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579685570;
-	bh=MJ9fE1EUKx/z8Nw9yIwKG7TAB3DTDh8CO5gV/glkYsc=;
+	s=default; t=1579685573;
+	bh=UQ5VAOVQ+FVHhGXA0WA7/9hntlL6iFc09BvrShyOi6I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fauC8D391b53P4niLGzxbInhSCunKz/1j2KjF/jMX78kJVV/xjebL98L+SidrBgkf
-	 DyPjegJjskAenT1oaDL1PffRdCdOdV5cHCdtPGVM593OZtD6roZB0BS9PmZftFnK1e
-	 1YEa80GE+OK4XOr02e+AFp/EhYAyNc6rKlFPer4Y=
+	b=OnUc7QZueObpxOobDgR9f/nc1EKm8NTxDvmfYzpK/mHxqoqCpYoSm4hherPtnVgiD
+	 IxaBLGfwbeaoLDIe9zBASHxxLNoZg4F+klgGKSx0GdYBkNZTcl9ZFQrxQFt/rg3gZ1
+	 CY+GJkkts/ppVuSKJ70MUMqbUhb0xpk/qD4DOJkw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730234AbgAVJct (ORCPT
+        id S1730260AbgAVJcw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 04:32:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45970 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 04:32:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46006 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729247AbgAVJcs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 04:32:48 -0500
+        id S1729247AbgAVJcu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 04:32:50 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AE61824672;
-        Wed, 22 Jan 2020 09:32:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 26EBE2071E;
+        Wed, 22 Jan 2020 09:32:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579685567;
-        bh=MJ9fE1EUKx/z8Nw9yIwKG7TAB3DTDh8CO5gV/glkYsc=;
+        s=default; t=1579685569;
+        bh=UQ5VAOVQ+FVHhGXA0WA7/9hntlL6iFc09BvrShyOi6I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=av8Lh31pY9xVjo3xH1tUWhZvge8yur9PIsHA+H+PCLki4HbuoRFNset19Egq9owqr
-         l6/Xb2uJo1DD4wLmVleSGAdGQpeBsiMpaR85xaBcaTcSbSwJxqxRx6VxUPTzoCF5D1
-         xIXCFez4JMGcwSs6e4kk9B4VIx0gOrwvHusxofTY=
+        b=ZoQsZ4LDRsDsJC+VZfJLdE+zAHJhVBnPEHyFR8v4koD1+8oq1s7mGyK/AidQc3EtD
+         7+yMrzsdCubPXw9lMDPMnVJnVvUF9kE1tKjORn6K9I37bRr8Mz3pyx4HhABGDSWNhD
+         9qW+NQ6hzbFrs8Z68eoQYdxSoC/r3wruGPjY3SCY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pengcheng Yang <yangpc@wangsu.com>,
-        Neal Cardwell <ncardwell@google.com>,
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        RENARD Pierre-Francois <pfrenard@gmail.com>,
+        Stefan Wahren <stefan.wahren@i2se.com>,
+        Woojung Huh <woojung.huh@microchip.com>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 65/76] tcp: fix marked lost packets not being retransmitted
-Date:   Wed, 22 Jan 2020 10:29:21 +0100
-Message-Id: <20200122092801.225054629@linuxfoundation.org>
+Subject: [PATCH 4.4 66/76] net: usb: lan78xx: limit size of local TSO packets
+Date:   Wed, 22 Jan 2020 10:29:22 +0100
+Message-Id: <20200122092801.422221341@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200122092751.587775548@linuxfoundation.org>
 References: <20200122092751.587775548@linuxfoundation.org>
@@ -60,83 +63,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pengcheng Yang <yangpc@wangsu.com>
+From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit e176b1ba476cf36f723cfcc7a9e57f3cb47dec70 ]
+[ Upstream commit f8d7408a4d7f60f8b2df0f81decdc882dd9c20dc ]
 
-When the packet pointed to by retransmit_skb_hint is unlinked by ACK,
-retransmit_skb_hint will be set to NULL in tcp_clean_rtx_queue().
-If packet loss is detected at this time, retransmit_skb_hint will be set
-to point to the current packet loss in tcp_verify_retransmit_hint(),
-then the packets that were previously marked lost but not retransmitted
-due to the restriction of cwnd will be skipped and cannot be
-retransmitted.
+lan78xx_tx_bh() makes sure to not exceed MAX_SINGLE_PACKET_SIZE
+bytes in the aggregated packets it builds, but does
+nothing to prevent large GSO packets being submitted.
 
-To fix this, when retransmit_skb_hint is NULL, retransmit_skb_hint can
-be reset only after all marked lost packets are retransmitted
-(retrans_out >= lost_out), otherwise we need to traverse from
-tcp_rtx_queue_head in tcp_xmit_retransmit_queue().
+Pierre-Francois reported various hangs when/if TSO is enabled.
 
-Packetdrill to demonstrate:
+For localy generated packets, we can use netif_set_gso_max_size()
+to limit the size of TSO packets.
 
-// Disable RACK and set max_reordering to keep things simple
-    0 `sysctl -q net.ipv4.tcp_recovery=0`
-   +0 `sysctl -q net.ipv4.tcp_max_reordering=3`
+Note that forwarded packets could still hit the issue,
+so a complete fix might require implementing .ndo_features_check
+for this driver, forcing a software segmentation if the size
+of the TSO packet exceeds MAX_SINGLE_PACKET_SIZE.
 
-// Establish a connection
-   +0 socket(..., SOCK_STREAM, IPPROTO_TCP) = 3
-   +0 setsockopt(3, SOL_SOCKET, SO_REUSEADDR, [1], 4) = 0
-   +0 bind(3, ..., ...) = 0
-   +0 listen(3, 1) = 0
-
-  +.1 < S 0:0(0) win 32792 <mss 1000,sackOK,nop,nop,nop,wscale 7>
-   +0 > S. 0:0(0) ack 1 <...>
- +.01 < . 1:1(0) ack 1 win 257
-   +0 accept(3, ..., ...) = 4
-
-// Send 8 data segments
-   +0 write(4, ..., 8000) = 8000
-   +0 > P. 1:8001(8000) ack 1
-
-// Enter recovery and 1:3001 is marked lost
- +.01 < . 1:1(0) ack 1 win 257 <sack 3001:4001,nop,nop>
-   +0 < . 1:1(0) ack 1 win 257 <sack 5001:6001 3001:4001,nop,nop>
-   +0 < . 1:1(0) ack 1 win 257 <sack 5001:7001 3001:4001,nop,nop>
-
-// Retransmit 1:1001, now retransmit_skb_hint points to 1001:2001
-   +0 > . 1:1001(1000) ack 1
-
-// 1001:2001 was ACKed causing retransmit_skb_hint to be set to NULL
- +.01 < . 1:1(0) ack 2001 win 257 <sack 5001:8001 3001:4001,nop,nop>
-// Now retransmit_skb_hint points to 4001:5001 which is now marked lost
-
-// BUG: 2001:3001 was not retransmitted
-   +0 > . 2001:3001(1000) ack 1
-
-Signed-off-by: Pengcheng Yang <yangpc@wangsu.com>
-Acked-by: Neal Cardwell <ncardwell@google.com>
-Tested-by: Neal Cardwell <ncardwell@google.com>
+Fixes: 55d7de9de6c3 ("Microchip's LAN7800 family USB 2/3 to 10/100/1000 Ethernet device driver")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Reported-by: RENARD Pierre-Francois <pfrenard@gmail.com>
+Tested-by: RENARD Pierre-Francois <pfrenard@gmail.com>
+Cc: Stefan Wahren <stefan.wahren@i2se.com>
+Cc: Woojung Huh <woojung.huh@microchip.com>
+Cc: Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/ipv4/tcp_input.c |    7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ drivers/net/usb/lan78xx.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/net/ipv4/tcp_input.c
-+++ b/net/ipv4/tcp_input.c
-@@ -895,9 +895,10 @@ static void tcp_update_reordering(struct
- /* This must be called before lost_out is incremented */
- static void tcp_verify_retransmit_hint(struct tcp_sock *tp, struct sk_buff *skb)
- {
--	if (!tp->retransmit_skb_hint ||
--	    before(TCP_SKB_CB(skb)->seq,
--		   TCP_SKB_CB(tp->retransmit_skb_hint)->seq))
-+	if ((!tp->retransmit_skb_hint && tp->retrans_out >= tp->lost_out) ||
-+	    (tp->retransmit_skb_hint &&
-+	     before(TCP_SKB_CB(skb)->seq,
-+		    TCP_SKB_CB(tp->retransmit_skb_hint)->seq)))
- 		tp->retransmit_skb_hint = skb;
+--- a/drivers/net/usb/lan78xx.c
++++ b/drivers/net/usb/lan78xx.c
+@@ -2961,6 +2961,7 @@ static int lan78xx_probe(struct usb_inte
  
- 	if (!tp->lost_out ||
+ 	if (netdev->mtu > (dev->hard_mtu - netdev->hard_header_len))
+ 		netdev->mtu = dev->hard_mtu - netdev->hard_header_len;
++	netif_set_gso_max_size(netdev, MAX_SINGLE_PACKET_SIZE - MAX_HEADER);
+ 
+ 	dev->ep_blkin = (intf->cur_altsetting)->endpoint + 0;
+ 	dev->ep_blkout = (intf->cur_altsetting)->endpoint + 1;
 
 
