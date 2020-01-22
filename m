@@ -7,45 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B880EC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:37:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD771C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:37:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82E3F2467E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:37:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9097724683
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:37:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579685876;
-	bh=uhZOXfEgUVaxst/qSwstVCoU4ELf0vVVov0AgutJGmg=;
+	s=default; t=1579685879;
+	bh=zaYJ2yYnkIPpR/nxOzLlloLcX9c1tGE1ScxMW6b+25s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ve/hmPrOJq1Q7/tnnCz/6VAmR8SaRaNUlWj82ayxcy2leXGTFNVQriAxlXUbNunZi
-	 27J5TNXgGgj4cPuTPM7MrUKVl/xbbEmPL6c3ydCDc/xXyQLu8u9A205uKl3p834odg
-	 brM+jt6qBOWmQ+APYov42A2jmbVHhOcViygYyo/s=
+	b=BIBVlycR/AFnIexieh6JAswpr9DZgABI6p5qLA1jhtTbYIPz9a62v5upN3X2WSVvR
+	 P6bpnrkhkikrombN3YnJhlk7KfJuZDgZm+qX/TdRY6E+c6NW/zBQgegugWBNv+TuYK
+	 rOFTtYl+CLJjQA3VBSYhD3S1RSNrOvm3oJ9cu8n4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732782AbgAVJhz (ORCPT
+        id S1732790AbgAVJh6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 04:37:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54142 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 04:37:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54214 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731330AbgAVJhx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 04:37:53 -0500
+        id S1731453AbgAVJhz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 04:37:55 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 059B42467B;
-        Wed, 22 Jan 2020 09:37:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6818F2467B;
+        Wed, 22 Jan 2020 09:37:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579685872;
-        bh=uhZOXfEgUVaxst/qSwstVCoU4ELf0vVVov0AgutJGmg=;
+        s=default; t=1579685874;
+        bh=zaYJ2yYnkIPpR/nxOzLlloLcX9c1tGE1ScxMW6b+25s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rk/c2z7893NR2j89TLbJJmKHyJRoEcwyi6K5+vmJt536+/D6Ie8HOG3AuGjORngFa
-         s4qU+4AHcDrdiXcaAfQXeML79L/j2ejbj5Y+EFo/oixLGTWwbglForj1T862kjCjKx
-         LeZsZ8MJ/voQYwZgqId8Wau8LAbgRaBanhcZUggQ=
+        b=hAyIxv/4YxpHsxTLrwgU/514EZVCjd7ufSpzfjU0OTIpJXC9pzLcfR28LlFaxhBAq
+         aZXSk8SK7pURVEAEcexoIOz4+C8eE4b/7BadccX3JJVWDwP9qNfRJLcBchXdkUKa8f
+         jlg1A6+b5kTFRAiDpyHZxPUzVC/Schk7fK6MJElc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>
-Subject: [PATCH 4.14 17/65] USB: serial: quatech2: handle unbound ports
-Date:   Wed, 22 Jan 2020 10:29:02 +0100
-Message-Id: <20200122092753.508347592@linuxfoundation.org>
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 4.14 18/65] scsi: fnic: fix invalid stack access
+Date:   Wed, 22 Jan 2020 10:29:03 +0100
+Message-Id: <20200122092753.652944512@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200122092750.976732974@linuxfoundation.org>
 References: <20200122092750.976732974@linuxfoundation.org>
@@ -58,52 +59,122 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+From: Arnd Bergmann <arnd@arndb.de>
 
-commit 9715a43eea77e42678a1002623f2d9a78f5b81a1 upstream.
+commit 42ec15ceaea74b5f7a621fc6686cbf69ca66c4cf upstream.
 
-Check for NULL port data in the modem- and line-status handlers to avoid
-dereferencing a NULL pointer in the unlikely case where a port device
-isn't bound to a driver (e.g. after an allocation failure on port
-probe).
+gcc -O3 warns that some local variables are not properly initialized:
 
-Note that the other (stubbed) event handlers qt2_process_xmit_empty()
-and qt2_process_flush() would need similar sanity checks in case they
-are ever implemented.
+drivers/scsi/fnic/vnic_dev.c: In function 'fnic_dev_hang_notify':
+drivers/scsi/fnic/vnic_dev.c:511:16: error: 'a0' is used uninitialized in this function [-Werror=uninitialized]
+  vdev->args[0] = *a0;
+  ~~~~~~~~~~~~~~^~~~~
+drivers/scsi/fnic/vnic_dev.c:691:6: note: 'a0' was declared here
+  u64 a0, a1;
+      ^~
+drivers/scsi/fnic/vnic_dev.c:512:16: error: 'a1' is used uninitialized in this function [-Werror=uninitialized]
+  vdev->args[1] = *a1;
+  ~~~~~~~~~~~~~~^~~~~
+drivers/scsi/fnic/vnic_dev.c:691:10: note: 'a1' was declared here
+  u64 a0, a1;
+          ^~
+drivers/scsi/fnic/vnic_dev.c: In function 'fnic_dev_mac_addr':
+drivers/scsi/fnic/vnic_dev.c:512:16: error: 'a1' is used uninitialized in this function [-Werror=uninitialized]
+  vdev->args[1] = *a1;
+  ~~~~~~~~~~~~~~^~~~~
+drivers/scsi/fnic/vnic_dev.c:698:10: note: 'a1' was declared here
+  u64 a0, a1;
+          ^~
 
-Fixes: f7a33e608d9a ("USB: serial: add quatech2 usb to serial driver")
-Cc: stable <stable@vger.kernel.org>     # 3.5
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Johan Hovold <johan@kernel.org>
+Apparently the code relies on the local variables occupying adjacent memory
+locations in the same order, but this is of course not guaranteed.
+
+Use an array of two u64 variables where needed to make it work correctly.
+
+I suspect there is also an endianness bug here, but have not digged in deep
+enough to be sure.
+
+Fixes: 5df6d737dd4b ("[SCSI] fnic: Add new Cisco PCI-Express FCoE HBA")
+Fixes: mmtom ("init/Kconfig: enable -O3 for all arches")
+Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/r/20200107201602.4096790-1-arnd@arndb.de
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/serial/quatech2.c |    6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/scsi/fnic/vnic_dev.c |   20 ++++++++++----------
+ 1 file changed, 10 insertions(+), 10 deletions(-)
 
---- a/drivers/usb/serial/quatech2.c
-+++ b/drivers/usb/serial/quatech2.c
-@@ -867,7 +867,10 @@ static void qt2_update_msr(struct usb_se
- 	u8 newMSR = (u8) *ch;
- 	unsigned long flags;
+--- a/drivers/scsi/fnic/vnic_dev.c
++++ b/drivers/scsi/fnic/vnic_dev.c
+@@ -445,26 +445,26 @@ int vnic_dev_soft_reset_done(struct vnic
  
-+	/* May be called from qt2_process_read_urb() for an unbound port. */
- 	port_priv = usb_get_serial_port_data(port);
-+	if (!port_priv)
-+		return;
+ int vnic_dev_hang_notify(struct vnic_dev *vdev)
+ {
+-	u64 a0, a1;
++	u64 a0 = 0, a1 = 0;
+ 	int wait = 1000;
+ 	return vnic_dev_cmd(vdev, CMD_HANG_NOTIFY, &a0, &a1, wait);
+ }
  
- 	spin_lock_irqsave(&port_priv->lock, flags);
- 	port_priv->shadowMSR = newMSR;
-@@ -895,7 +898,10 @@ static void qt2_update_lsr(struct usb_se
- 	unsigned long flags;
- 	u8 newLSR = (u8) *ch;
+ int vnic_dev_mac_addr(struct vnic_dev *vdev, u8 *mac_addr)
+ {
+-	u64 a0, a1;
++	u64 a[2] = {};
+ 	int wait = 1000;
+ 	int err, i;
  
-+	/* May be called from qt2_process_read_urb() for an unbound port. */
- 	port_priv = usb_get_serial_port_data(port);
-+	if (!port_priv)
-+		return;
+ 	for (i = 0; i < ETH_ALEN; i++)
+ 		mac_addr[i] = 0;
  
- 	if (newLSR & UART_LSR_BI)
- 		newLSR &= (u8) (UART_LSR_OE | UART_LSR_BI);
+-	err = vnic_dev_cmd(vdev, CMD_MAC_ADDR, &a0, &a1, wait);
++	err = vnic_dev_cmd(vdev, CMD_MAC_ADDR, &a[0], &a[1], wait);
+ 	if (err)
+ 		return err;
+ 
+ 	for (i = 0; i < ETH_ALEN; i++)
+-		mac_addr[i] = ((u8 *)&a0)[i];
++		mac_addr[i] = ((u8 *)&a)[i];
+ 
+ 	return 0;
+ }
+@@ -489,30 +489,30 @@ void vnic_dev_packet_filter(struct vnic_
+ 
+ void vnic_dev_add_addr(struct vnic_dev *vdev, u8 *addr)
+ {
+-	u64 a0 = 0, a1 = 0;
++	u64 a[2] = {};
+ 	int wait = 1000;
+ 	int err;
+ 	int i;
+ 
+ 	for (i = 0; i < ETH_ALEN; i++)
+-		((u8 *)&a0)[i] = addr[i];
++		((u8 *)&a)[i] = addr[i];
+ 
+-	err = vnic_dev_cmd(vdev, CMD_ADDR_ADD, &a0, &a1, wait);
++	err = vnic_dev_cmd(vdev, CMD_ADDR_ADD, &a[0], &a[1], wait);
+ 	if (err)
+ 		pr_err("Can't add addr [%pM], %d\n", addr, err);
+ }
+ 
+ void vnic_dev_del_addr(struct vnic_dev *vdev, u8 *addr)
+ {
+-	u64 a0 = 0, a1 = 0;
++	u64 a[2] = {};
+ 	int wait = 1000;
+ 	int err;
+ 	int i;
+ 
+ 	for (i = 0; i < ETH_ALEN; i++)
+-		((u8 *)&a0)[i] = addr[i];
++		((u8 *)&a)[i] = addr[i];
+ 
+-	err = vnic_dev_cmd(vdev, CMD_ADDR_DEL, &a0, &a1, wait);
++	err = vnic_dev_cmd(vdev, CMD_ADDR_DEL, &a[0], &a[1], wait);
+ 	if (err)
+ 		pr_err("Can't del addr [%pM], %d\n", addr, err);
+ }
 
 
