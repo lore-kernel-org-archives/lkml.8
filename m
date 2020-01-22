@@ -7,32 +7,32 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE6FAC33CAF
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 21:22:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97E66C32771
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 21:22:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BED6824676
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 21:22:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64E5F24683
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 21:22:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579728133;
-	bh=zkpHdWcXO34+7X7bABMdil7MWpVFg/71aEeIwSFduTs=;
+	s=default; t=1579728135;
+	bh=KhRJnmY/YKS5LGvcBOmb5oE4xWwW2wrwrTDUlBbnSPQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KUh2h90ClKeSOCmrg2kbGuqLcl6PpbITAxnqrpcaCwdIqPTB1G5wPDSw6VsBGfLhK
-	 pcjB0WlbUGBzRAqqeaem7o1KJ6zl6QexcwQLNnQ/XjJWqVAGCKG5X0eWhe3g0skH1x
-	 C5PfE+rTb5Kwhk4VbboJEnZVJ5Qhqavq8Lrl16ts=
+	b=if5Y4/8t99wJM5iCs1fWxu/6VnbsF+Tw0RtvYwJbSsN5g8JAKm1fQhXJomPtv8EiA
+	 UMNHTBNHjbyn94eELB1Wpt6ai4Gz4oddeyBOBDRiKR72oarnYAGs7CkVUr0lAW15Ep
+	 8SiwuLzbW/yv+mv3jzNq0wSbOWVDa4EZxVwYbo20=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729325AbgAVVWM (ORCPT
+        id S1729345AbgAVVWO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 16:22:12 -0500
-Received: from foss.arm.com ([217.140.110.172]:60876 "EHLO foss.arm.com"
+        Wed, 22 Jan 2020 16:22:14 -0500
+Received: from foss.arm.com ([217.140.110.172]:60946 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725928AbgAVVWF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 16:22:05 -0500
+        id S1729299AbgAVVWL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 16:22:11 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EDFB911B3;
-        Wed, 22 Jan 2020 13:22:04 -0800 (PST)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 14D2B1396;
+        Wed, 22 Jan 2020 13:22:11 -0800 (PST)
 Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 478993F52E;
-        Wed, 22 Jan 2020 13:22:04 -0800 (PST)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E9CBC3F52E;
+        Wed, 22 Jan 2020 13:22:09 -0800 (PST)
 From:   Mark Brown <broonie@kernel.org>
 To:     Catalin Marinas <catalin.marinas@arm.com>,
         Will Deacon <will@kernel.org>
@@ -58,9 +58,9 @@ Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
         linux-arch@vger.kernel.org, linux-fsdevel@vger.kernel.org,
         Dave Martin <Dave.Martin@arm.com>,
         Mark Brown <broonie@kernel.org>
-Subject: [PATCH v5 05/12] elf: Allow arch to tweak initial mmap prot flags
-Date:   Wed, 22 Jan 2020 21:21:37 +0000
-Message-Id: <20200122212144.6409-6-broonie@kernel.org>
+Subject: [PATCH v5 07/12] arm64: BTI: Decode BYTPE bits when printing PSTATE
+Date:   Wed, 22 Jan 2020 21:21:39 +0000
+Message-Id: <20200122212144.6409-8-broonie@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200122212144.6409-1-broonie@kernel.org>
 References: <20200122212144.6409-1-broonie@kernel.org>
@@ -73,127 +73,70 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Dave Martin <Dave.Martin@arm.com>
 
-An arch may want to tweak the mmap prot flags for an
-ELFexecutable's initial mappings.  For example, arm64 is going to
-need to add PROT_BTI for executable pages in an ELF process whose
-executable is marked as using Branch Target Identification (an
-ARMv8.5-A control flow integrity feature).
+The current code to print PSTATE symbolically when generating
+backtraces etc., does not include the BYTPE field used by Branch
+Target Identification.
 
-So that this can be done in a generic way, add a hook
-arch_elf_adjust_prot() to modify the prot flags as desired: arches
-can select CONFIG_HAVE_ELF_PROT and implement their own backend
-where necessary.
+So, decode BYTPE and print it too.
 
-By default, leave the prot flags unchanged.
+In the interests of human-readability, print the classes of BTI
+matched.  The symbolic notation, BYTPE (PSTATE[11:10]) and
+permitted classes of subsequent instruction are:
+
+    -- (BTYPE=0b00): any insn
+    jc (BTYPE=0b01): BTI jc, BTI j, BTI c, PACIxSP
+    -c (BYTPE=0b10): BTI jc, BTI c, PACIxSP
+    j- (BTYPE=0b11): BTI jc, BTI j
 
 Signed-off-by: Dave Martin <Dave.Martin@arm.com>
-Reviewed-by: Kees Cook <keescook@chromium.org>
+Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- fs/Kconfig.binfmt   |  3 +++
- fs/binfmt_elf.c     | 18 ++++++++++++------
- include/linux/elf.h | 12 ++++++++++++
- 3 files changed, 27 insertions(+), 6 deletions(-)
+ arch/arm64/kernel/process.c | 17 +++++++++++++++--
+ 1 file changed, 15 insertions(+), 2 deletions(-)
 
-diff --git a/fs/Kconfig.binfmt b/fs/Kconfig.binfmt
-index d2cfe0729a73..2358368319b8 100644
---- a/fs/Kconfig.binfmt
-+++ b/fs/Kconfig.binfmt
-@@ -36,6 +36,9 @@ config COMPAT_BINFMT_ELF
- config ARCH_BINFMT_ELF_STATE
- 	bool
- 
-+config ARCH_HAVE_ELF_PROT
-+	bool
-+
- config ARCH_USE_GNU_PROPERTY
- 	bool
- 
-diff --git a/fs/binfmt_elf.c b/fs/binfmt_elf.c
-index 00edfc36a584..65e221b17495 100644
---- a/fs/binfmt_elf.c
-+++ b/fs/binfmt_elf.c
-@@ -541,7 +541,8 @@ static inline int arch_check_elf(struct elfhdr *ehdr, bool has_interp,
- 
- #endif /* !CONFIG_ARCH_BINFMT_ELF_STATE */
- 
--static inline int make_prot(u32 p_flags)
-+static inline int make_prot(u32 p_flags, struct arch_elf_state *arch_state,
-+			    bool has_interp, bool is_interp)
- {
- 	int prot = 0;
- 
-@@ -551,7 +552,8 @@ static inline int make_prot(u32 p_flags)
- 		prot |= PROT_WRITE;
- 	if (p_flags & PF_X)
- 		prot |= PROT_EXEC;
--	return prot;
-+
-+	return arch_elf_adjust_prot(prot, arch_state, has_interp, is_interp);
+diff --git a/arch/arm64/kernel/process.c b/arch/arm64/kernel/process.c
+index 37c508f409ac..e8eb70cd3fa0 100644
+--- a/arch/arm64/kernel/process.c
++++ b/arch/arm64/kernel/process.c
+@@ -211,6 +211,15 @@ void machine_restart(char *cmd)
+ 	while (1);
  }
  
- /* This is much more generalized than the library routine read function,
-@@ -561,7 +563,8 @@ static inline int make_prot(u32 p_flags)
- 
- static unsigned long load_elf_interp(struct elfhdr *interp_elf_ex,
- 		struct file *interpreter,
--		unsigned long no_base, struct elf_phdr *interp_elf_phdata)
-+		unsigned long no_base, struct elf_phdr *interp_elf_phdata,
-+		struct arch_elf_state *arch_state)
- {
- 	struct elf_phdr *eppnt;
- 	unsigned long load_addr = 0;
-@@ -593,7 +596,8 @@ static unsigned long load_elf_interp(struct elfhdr *interp_elf_ex,
- 	for (i = 0; i < interp_elf_ex->e_phnum; i++, eppnt++) {
- 		if (eppnt->p_type == PT_LOAD) {
- 			int elf_type = MAP_PRIVATE | MAP_DENYWRITE;
--			int elf_prot = make_prot(eppnt->p_flags);
-+			int elf_prot = make_prot(eppnt->p_flags, arch_state,
-+						 true, true);
- 			unsigned long vaddr = 0;
- 			unsigned long k, map_addr;
- 
-@@ -1039,7 +1043,8 @@ static int load_elf_binary(struct linux_binprm *bprm)
- 			}
- 		}
- 
--		elf_prot = make_prot(elf_ppnt->p_flags);
-+		elf_prot = make_prot(elf_ppnt->p_flags, &arch_state,
-+				     !!interpreter, false);
- 
- 		elf_flags = MAP_PRIVATE | MAP_DENYWRITE | MAP_EXECUTABLE;
- 
-@@ -1182,7 +1187,8 @@ static int load_elf_binary(struct linux_binprm *bprm)
- 	if (interpreter) {
- 		elf_entry = load_elf_interp(&loc->interp_elf_ex,
- 					    interpreter,
--					    load_bias, interp_elf_phdata);
-+					    load_bias, interp_elf_phdata,
-+					    &arch_state);
- 		if (!IS_ERR((void *)elf_entry)) {
- 			/*
- 			 * load_elf_interp() returns relocation
-diff --git a/include/linux/elf.h b/include/linux/elf.h
-index 7bdc6da160c7..1b6e8955c597 100644
---- a/include/linux/elf.h
-+++ b/include/linux/elf.h
-@@ -83,4 +83,16 @@ extern int arch_parse_elf_property(u32 type, const void *data, size_t datasz,
- 				   bool compat, struct arch_elf_state *arch);
- #endif
- 
-+#ifdef CONFIG_ARCH_HAVE_ELF_PROT
-+int arch_elf_adjust_prot(int prot, const struct arch_elf_state *state,
-+			 bool has_interp, bool is_interp);
-+#else
-+static inline int arch_elf_adjust_prot(int prot,
-+				       const struct arch_elf_state *state,
-+				       bool has_interp, bool is_interp)
-+{
-+	return prot;
-+}
-+#endif
++#define bstr(suffix, str) [PSR_BTYPE_ ## suffix >> PSR_BTYPE_SHIFT] = str
++static const char *const btypes[] = {
++	bstr(NONE, "--"),
++	bstr(  JC, "jc"),
++	bstr(   C, "-c"),
++	bstr(  J , "j-")
++};
++#undef bstr
 +
- #endif /* _LINUX_ELF_H */
+ static void print_pstate(struct pt_regs *regs)
+ {
+ 	u64 pstate = regs->pstate;
+@@ -229,7 +238,10 @@ static void print_pstate(struct pt_regs *regs)
+ 			pstate & PSR_AA32_I_BIT ? 'I' : 'i',
+ 			pstate & PSR_AA32_F_BIT ? 'F' : 'f');
+ 	} else {
+-		printk("pstate: %08llx (%c%c%c%c %c%c%c%c %cPAN %cUAO)\n",
++		const char *btype_str = btypes[(pstate & PSR_BTYPE_MASK) >>
++					       PSR_BTYPE_SHIFT];
++
++		printk("pstate: %08llx (%c%c%c%c %c%c%c%c %cPAN %cUAO BTYPE=%s)\n",
+ 			pstate,
+ 			pstate & PSR_N_BIT ? 'N' : 'n',
+ 			pstate & PSR_Z_BIT ? 'Z' : 'z',
+@@ -240,7 +252,8 @@ static void print_pstate(struct pt_regs *regs)
+ 			pstate & PSR_I_BIT ? 'I' : 'i',
+ 			pstate & PSR_F_BIT ? 'F' : 'f',
+ 			pstate & PSR_PAN_BIT ? '+' : '-',
+-			pstate & PSR_UAO_BIT ? '+' : '-');
++			pstate & PSR_UAO_BIT ? '+' : '-',
++			btype_str);
+ 	}
+ }
+ 
 -- 
 2.20.1
 
