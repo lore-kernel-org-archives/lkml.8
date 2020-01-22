@@ -2,52 +2,54 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 767DCC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:47:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3ABEC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:47:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 440A12467C
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:47:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DFA72468A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:47:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579686451;
-	bh=dez6bY75cECNOLPtutvRtSN4Rc+ag1aEluc3e4CHQk8=;
+	s=default; t=1579686454;
+	bh=ukVkUyF05fhN75MBR5+oeu5iKDPLeh+x2ejrY96sZbU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZZ4dQztqzKe9Z7dwKPoJePNFTQvuMdfej0iUfvMPPTVPU7G+1m995CBhVGCNc703T
-	 ata+egTKUM3wyihI8B8YR6a/wCbtgpXH+0L9M96Vn0P6r5YM+p9SETCQKtNKgUhJxd
-	 UTxcFEadV6BPFD2uqlS+jUv6pp/wS702CQno9EoM=
+	b=xdr5N3ACjpYkXorzK3znefe2LX2e/BLYyyx9mLgMXHQSUL3pylRaFoJnoqz19Wjw0
+	 F9eVZ5Ovd6NJ/KZeAX3eTbVfCsvDpluhg+N3y+GsXjUmrD/dymC7C8Jg/EGJiARhID
+	 /8zbm+a1XTyLCEITbGkwvWAIqRAeqs5IGq0Lpylk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387677AbgAVJmG (ORCPT
+        id S1730614AbgAVJrd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 04:42:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33474 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 04:47:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33704 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387654AbgAVJl5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 04:41:57 -0500
+        id S2387661AbgAVJmE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 04:42:04 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 488FF24686;
-        Wed, 22 Jan 2020 09:41:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8D05824690;
+        Wed, 22 Jan 2020 09:42:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579686116;
-        bh=dez6bY75cECNOLPtutvRtSN4Rc+ag1aEluc3e4CHQk8=;
+        s=default; t=1579686124;
+        bh=ukVkUyF05fhN75MBR5+oeu5iKDPLeh+x2ejrY96sZbU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EGjd8U4kLUz9WGnyQgqlpXAnxIwBeS/q8r6OyFgcZAMKzBz/82v7QSTXojGWEPEbw
-         2CUzAfLpn/a7sHGq60GP88xsJUjH6MQe2fcVfoM9PXVvLw61qbysBlBG0eJiMxLBxa
-         aMNTpXGxuFoe8jAkdj+Oe35xJJCewae+3dwx1XYI=
+        b=rD8jhizHHO8m5WTohmt6GeqLYf95VhdQXYWG1Efn7T8i5v1/5CEVJtjP8QFHQxC6G
+         0P8KDwh0FjdQbbzp7IEm2g9RgIt3M8aEGWREA9fIeEEmNvIjvZaMCvywXJJikNEhqS
+         gFEZBV7z548pV0Eu1tc0yLHgwY/FLLsPoBwXpfpk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        Shawn Guo <shawnguo@kernel.org>
-Subject: [PATCH 4.19 049/103] ARM: dts: imx7: Fix Toradex Colibri iMX7S 256MB NAND flash support
-Date:   Wed, 22 Jan 2020 10:29:05 +0100
-Message-Id: <20200122092811.156385679@linuxfoundation.org>
+        stable@vger.kernel.org, Bharath Vedartham <linux.bhar@gmail.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 052/103] mm/huge_memory.c: make __thp_get_unmapped_area static
+Date:   Wed, 22 Jan 2020 10:29:08 +0100
+Message-Id: <20200122092811.542790118@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200122092803.587683021@linuxfoundation.org>
 References: <20200122092803.587683021@linuxfoundation.org>
@@ -60,31 +62,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+From: Bharath Vedartham <linux.bhar@gmail.com>
 
-commit 4b0b97e651ecf29f20248420b52b6864fbd40bc2 upstream.
+[ Upstream commit b3b07077b01ecbbd98efede778c195567de25b71 ]
 
-Turns out when introducing the eMMC version the gpmi node required for
-NAND flash support got enabled exclusively on Colibri iMX7D 512MB.
+__thp_get_unmapped_area is only used in mm/huge_memory.c.  Make it static.
+Tested by building and booting the kernel.
 
-Fixes: f928a4a377e4 ("ARM: dts: imx7: add Toradex Colibri iMX7D 1GB (eMMC) support")
-Signed-off-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Link: http://lkml.kernel.org/r/20190504102353.GA22525@bharath12345-Inspiron-5559
+Signed-off-by: Bharath Vedartham <linux.bhar@gmail.com>
+Acked-by: Michal Hocko <mhocko@suse.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/imx7s-colibri.dtsi |    4 ++++
- 1 file changed, 4 insertions(+)
+ mm/huge_memory.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/arm/boot/dts/imx7s-colibri.dtsi
-+++ b/arch/arm/boot/dts/imx7s-colibri.dtsi
-@@ -49,3 +49,7 @@
- 		reg = <0x80000000 0x10000000>;
- 	};
- };
-+
-+&gpmi {
-+	status = "okay";
-+};
+diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+index 5a1771bd5d04..950466876625 100644
+--- a/mm/huge_memory.c
++++ b/mm/huge_memory.c
+@@ -509,7 +509,7 @@ void prep_transhuge_page(struct page *page)
+ 	set_compound_page_dtor(page, TRANSHUGE_PAGE_DTOR);
+ }
+ 
+-unsigned long __thp_get_unmapped_area(struct file *filp, unsigned long len,
++static unsigned long __thp_get_unmapped_area(struct file *filp, unsigned long len,
+ 		loff_t off, unsigned long flags, unsigned long size)
+ {
+ 	unsigned long addr;
+-- 
+2.20.1
+
 
 
