@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 568BFC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:44:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17A3FC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:44:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DCCB2468E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:44:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D72812468B
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:44:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579686253;
-	bh=3rHlzasWHcPAFaggQC/NRvYs/QBTLjHsJ2g+/APZs0I=;
+	s=default; t=1579686261;
+	bh=kaVVNOUg6hZOJU0tZTqrhmIx6Qi5G8d0rrMaaWLoxmk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gbQ5rIt7x1XVjVNtXXInv+X7J3O1azlbnh5WTIxokdF2Qnd6zbOyRc2csYLQabxbp
-	 ihNMcPsYtVzFGXBXQi9ho8+dEwZGrYSwsyDCC35kaB+HgBt/eHWx0GIYheyThBYjJQ
-	 GOP+QYgM0GAMKC8tBhjbRQjHUMWSLKutRqTkDins=
+	b=XnRnKHvQoUeK+vB6ABjyWRl07EJCri1gc8tBpIpGXb60gVdoabtfBn83qicibEY/K
+	 6V3uxrMZt1fPUWEK2vnpv5fO22rT1fG9Ckvbi3d4MyS1aURknHEKLVJqmDo+QXNgv7
+	 6+WtfMlFIGxjkScX/isThaW8ZCg3MDA58FFg4QtA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388010AbgAVJoM (ORCPT
+        id S2387607AbgAVJoT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 04:44:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37094 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 04:44:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37166 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388002AbgAVJoJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 04:44:09 -0500
+        id S2388006AbgAVJoL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 04:44:11 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3587E24689;
-        Wed, 22 Jan 2020 09:44:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A80ED24689;
+        Wed, 22 Jan 2020 09:44:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579686248;
-        bh=3rHlzasWHcPAFaggQC/NRvYs/QBTLjHsJ2g+/APZs0I=;
+        s=default; t=1579686251;
+        bh=kaVVNOUg6hZOJU0tZTqrhmIx6Qi5G8d0rrMaaWLoxmk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=s6Z3qktDFGapnkOsL6ENGy6oXflMsozkk7iuIkhQ5pTNxbl0CRpgp4gA7QttBBYpY
-         mD4TYFtIM1P4ooLhZs8JhJLgRoFutEinoUH3CSXcXYYhMuHX0jZcB5xHO8b8RnP1jl
-         RHA8BpZiQexnNMXxWHKCZf1Iad4+ez7Vgwb/1W2U=
+        b=a4kE6GIDzA0YWCdOIMsjtdT4VyUtQEhPBI/uKPueBhakIwoIiqtVC6069RExfwEdf
+         E6SvU0AwYifA4nyLxSMnd9zDbxSMWhZQT3n1FTmD1F9fDSbDcAmYhhMii/iiaX67nr
+         Yf0VXoJzvBaU+V9apz8CWTI/auqEA+voVsERuZLs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Felix Fietkau <nbd@nbd.name>,
-        Johannes Berg <johannes.berg@intel.com>
-Subject: [PATCH 4.19 058/103] cfg80211: fix page refcount issue in A-MSDU decap
-Date:   Wed, 22 Jan 2020 10:29:14 +0100
-Message-Id: <20200122092812.743594611@linuxfoundation.org>
+        stable@vger.kernel.org, David Bond <dbond@suse.com>,
+        Martin Wilck <mwilck@suse.com>,
+        Himanshu Madhani <hmadhani@marvell.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 4.19 098/103] scsi: qla2xxx: fix rports not being mark as lost in sync fabric scan
+Date:   Wed, 22 Jan 2020 10:29:54 +0100
+Message-Id: <20200122092816.476882804@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200122092803.587683021@linuxfoundation.org>
 References: <20200122092803.587683021@linuxfoundation.org>
@@ -59,36 +61,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Felix Fietkau <nbd@nbd.name>
+From: Martin Wilck <mwilck@suse.com>
 
-commit 81c044fc3bdc5b7be967cd3682528ea94b58c06a upstream.
+commit d341e9a8f2cffe4000c610225c629f62c7489c74 upstream.
 
-The fragments attached to a skb can be part of a compound page. In that case,
-page_ref_inc will increment the refcount for the wrong page. Fix this by
-using get_page instead, which calls page_ref_inc on the compound head and
-also checks for overflow.
+In qla2x00_find_all_fabric_devs(), fcport->flags & FCF_LOGIN_NEEDED is a
+necessary condition for logging into new rports, but not for dropping lost
+ones.
 
-Fixes: 2b67f944f88c ("cfg80211: reuse existing page fragments in A-MSDU rx")
-Cc: stable@vger.kernel.org
-Signed-off-by: Felix Fietkau <nbd@nbd.name>
-Link: https://lore.kernel.org/r/20200113182107.20461-1-nbd@nbd.name
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Fixes: 726b85487067 ("qla2xxx: Add framework for async fabric discovery")
+Link: https://lore.kernel.org/r/20191122221912.20100-2-martin.wilck@suse.com
+Tested-by: David Bond <dbond@suse.com>
+Signed-off-by: Martin Wilck <mwilck@suse.com>
+Acked-by: Himanshu Madhani <hmadhani@marvell.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/wireless/util.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/scsi/qla2xxx/qla_init.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/net/wireless/util.c
-+++ b/net/wireless/util.c
-@@ -537,7 +537,7 @@ __frame_add_frag(struct sk_buff *skb, st
- 	struct skb_shared_info *sh = skb_shinfo(skb);
- 	int page_offset;
+--- a/drivers/scsi/qla2xxx/qla_init.c
++++ b/drivers/scsi/qla2xxx/qla_init.c
+@@ -5710,8 +5710,7 @@ qla2x00_find_all_fabric_devs(scsi_qla_ho
+ 		if (test_bit(LOOP_RESYNC_NEEDED, &vha->dpc_flags))
+ 			break;
  
--	page_ref_inc(page);
-+	get_page(page);
- 	page_offset = ptr - page_address(page);
- 	skb_add_rx_frag(skb, sh->nr_frags, page, page_offset, len, size);
- }
+-		if ((fcport->flags & FCF_FABRIC_DEVICE) == 0 ||
+-		    (fcport->flags & FCF_LOGIN_NEEDED) == 0)
++		if ((fcport->flags & FCF_FABRIC_DEVICE) == 0)
+ 			continue;
+ 
+ 		if (fcport->scan_state == QLA_FCPORT_SCAN) {
+@@ -5734,7 +5733,8 @@ qla2x00_find_all_fabric_devs(scsi_qla_ho
+ 			}
+ 		}
+ 
+-		if (fcport->scan_state == QLA_FCPORT_FOUND)
++		if (fcport->scan_state == QLA_FCPORT_FOUND &&
++		    (fcport->flags & FCF_LOGIN_NEEDED) != 0)
+ 			qla24xx_fcport_handle_login(vha, fcport);
+ 	}
+ 	return (rval);
 
 
