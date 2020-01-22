@@ -5,53 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-5.7 required=3.0 tests=DATE_IN_PAST_03_06,
 	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 516D2C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:21:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AA77C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:21:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E4DA24693
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:21:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E9D12468A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:21:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579699265;
-	bh=nWWiD5jEnlALudvtWMS1vnhl0X6ByubruA79LrLt6CE=;
+	s=default; t=1579699269;
+	bh=KBgjthE4MXi4jjoOKexi2wKqKnsrS/GTG2qljJ1vEok=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nrrlOYbyBocuTR8a73HQp4mF3wNy5Ow9a8wGvHmfE8A9tqRpthEqiasw1gJtDcmUm
-	 1hnTGhOe8mkjxjajgcSqd0fkutQ+auO4r0ChXrlXflOyuBd9Gz9ymWfrhKV34tkaPV
-	 dWQ4C0AlqwNeAfyIdLXZurOZ5wCyeJ8IGQJW2ucs=
+	b=uDv90+fs+fo3Qp5XFpN4DLR2BXT90w/cBol1yatJfklI9YCBsgUrFuazCtonfdc+O
+	 PGOzsV14Vcr3SA/cjZEP/lGEwVBwZghU1NQyNybRKt2H1xZaPvijCjQWKi8ffFFTUJ
+	 pBfqdgGWjx6bj6WFg6G8UVMdrT7tMNm+4CDep9Us=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730154AbgAVNVE (ORCPT
+        id S1730191AbgAVNVI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 08:21:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37536 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 08:21:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37746 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730122AbgAVNU7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 08:20:59 -0500
+        id S1730155AbgAVNVG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 08:21:06 -0500
 Received: from localhost (unknown [84.241.205.26])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B59E82468A;
-        Wed, 22 Jan 2020 13:20:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 39BCD2468C;
+        Wed, 22 Jan 2020 13:21:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579699258;
-        bh=nWWiD5jEnlALudvtWMS1vnhl0X6ByubruA79LrLt6CE=;
+        s=default; t=1579699265;
+        bh=KBgjthE4MXi4jjoOKexi2wKqKnsrS/GTG2qljJ1vEok=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yCUxls7otRVqCnXdPA7STuOCsALDQ2O4NxZgQlE7QqsByCgrgwHhdAH6uEz3dL6Gq
-         R7j2yIZwmohmfqPGZmo6AGdvyoGveYZJJmifD0Gx6ABtbG3S67XDVhFsoRC6HQ+I06
-         38M+sobVnd8h/32w10wIlmKXBjzVN4+/phpuYfpk=
+        b=syUNxM/7i1jhydHF9iW/5AHgjZsOS1EuTqknxlRNbFy8Jql7pk//y5zqTnW+v/ggp
+         2OCzWaXSrqeQEL/Hf5ZTwVEti5OGUvEmvWuJ6ofBjBQgcYYmVIodesYic3Ii/lBkco
+         /yPfyCFXlNysZuY3Btwhq9mrHvV6MBidm5Z1330k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arvind Sankar <nivedita@alum.mit.edu>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-efi@vger.kernel.org, Ingo Molnar <mingo@kernel.org>
-Subject: [PATCH 5.4 072/222] efi/earlycon: Fix write-combine mapping on x86
-Date:   Wed, 22 Jan 2020 10:27:38 +0100
-Message-Id: <20200122092838.874517870@linuxfoundation.org>
+        stable@vger.kernel.org, Wen Yang <wenyang@linux.alibaba.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Qian Cai <cai@lca.pw>, Tejun Heo <tj@kernel.org>,
+        Jens Axboe <axboe@kernel.dk>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.4 091/222] mm/page-writeback.c: avoid potential division by zero in wb_min_max_ratio()
+Date:   Wed, 22 Jan 2020 10:27:57 +0100
+Message-Id: <20200122092840.249902197@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200122092833.339495161@linuxfoundation.org>
 References: <20200122092833.339495161@linuxfoundation.org>
@@ -64,84 +62,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arvind Sankar <nivedita@alum.mit.edu>
+From: Wen Yang <wenyang@linux.alibaba.com>
 
-commit d92b54570d24d017d2630e314b525ed792f5aa6c upstream.
+commit 6d9e8c651dd979aa666bee15f086745f3ea9c4b3 upstream.
 
-On x86, until PAT is initialized, WC translates into UC-. Since we
-calculate and store pgprot_writecombine(PAGE_KERNEL) when earlycon is
-initialized, this means we actually use UC- mappings instead of WC
-mappings, which makes scrolling very slow.
+Patch series "use div64_ul() instead of div_u64() if the divisor is
+unsigned long".
 
-Instead store a boolean flag to indicate whether we want to use
-writeback or write-combine mappings, and recalculate the actual pgprot_t
-we need on every mapping. Once PAT is initialized, we will start using
-write-combine mappings, which speeds up the scrolling considerably.
+We were first inspired by commit b0ab99e7736a ("sched: Fix possible divide
+by zero in avg_atom () calculation"), then refer to the recently analyzed
+mm code, we found this suspicious place.
 
-Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
-Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-Cc: Hans de Goede <hdegoede@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: linux-efi@vger.kernel.org
-Fixes: 69c1f396f25b ("efi/x86: Convert x86 EFI earlyprintk into generic earlycon implementation")
-Link: https://lkml.kernel.org/r/20191224132909.102540-2-ardb@kernel.org
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+ 201                 if (min) {
+ 202                         min *= this_bw;
+ 203                         do_div(min, tot_bw);
+ 204                 }
+
+And we also disassembled and confirmed it:
+
+  /usr/src/debug/kernel-4.9.168-016.ali3000/linux-4.9.168-016.ali3000.alios7.x86_64/mm/page-writeback.c: 201
+  0xffffffff811c37da <__wb_calc_thresh+234>:      xor    %r10d,%r10d
+  0xffffffff811c37dd <__wb_calc_thresh+237>:      test   %rax,%rax
+  0xffffffff811c37e0 <__wb_calc_thresh+240>:      je 0xffffffff811c3800 <__wb_calc_thresh+272>
+  /usr/src/debug/kernel-4.9.168-016.ali3000/linux-4.9.168-016.ali3000.alios7.x86_64/mm/page-writeback.c: 202
+  0xffffffff811c37e2 <__wb_calc_thresh+242>:      imul   %r8,%rax
+  /usr/src/debug/kernel-4.9.168-016.ali3000/linux-4.9.168-016.ali3000.alios7.x86_64/mm/page-writeback.c: 203
+  0xffffffff811c37e6 <__wb_calc_thresh+246>:      mov    %r9d,%r10d    ---> truncates it to 32 bits here
+  0xffffffff811c37e9 <__wb_calc_thresh+249>:      xor    %edx,%edx
+  0xffffffff811c37eb <__wb_calc_thresh+251>:      div    %r10
+  0xffffffff811c37ee <__wb_calc_thresh+254>:      imul   %rbx,%rax
+  0xffffffff811c37f2 <__wb_calc_thresh+258>:      shr    $0x2,%rax
+  0xffffffff811c37f6 <__wb_calc_thresh+262>:      mul    %rcx
+  0xffffffff811c37f9 <__wb_calc_thresh+265>:      shr    $0x2,%rdx
+  0xffffffff811c37fd <__wb_calc_thresh+269>:      mov    %rdx,%r10
+
+This series uses div64_ul() instead of div_u64() if the divisor is
+unsigned long, to avoid truncation to 32-bit on 64-bit platforms.
+
+This patch (of 3):
+
+The variables 'min' and 'max' are unsigned long and do_div truncates
+them to 32 bits, which means it can test non-zero and be truncated to
+zero for division.  Fix this issue by using div64_ul() instead.
+
+Link: http://lkml.kernel.org/r/20200102081442.8273-2-wenyang@linux.alibaba.com
+Fixes: 693108a8a667 ("writeback: make bdi->min/max_ratio handling cgroup writeback aware")
+Signed-off-by: Wen Yang <wenyang@linux.alibaba.com>
+Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
+Cc: Qian Cai <cai@lca.pw>
+Cc: Tejun Heo <tj@kernel.org>
+Cc: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/firmware/efi/earlycon.c |   16 +++++++---------
- 1 file changed, 7 insertions(+), 9 deletions(-)
+ mm/page-writeback.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/firmware/efi/earlycon.c
-+++ b/drivers/firmware/efi/earlycon.c
-@@ -17,7 +17,7 @@ static const struct console *earlycon_co
- static const struct font_desc *font;
- static u32 efi_x, efi_y;
- static u64 fb_base;
--static pgprot_t fb_prot;
-+static bool fb_wb;
- static void *efi_fb;
+--- a/mm/page-writeback.c
++++ b/mm/page-writeback.c
+@@ -201,11 +201,11 @@ static void wb_min_max_ratio(struct bdi_
+ 	if (this_bw < tot_bw) {
+ 		if (min) {
+ 			min *= this_bw;
+-			do_div(min, tot_bw);
++			min = div64_ul(min, tot_bw);
+ 		}
+ 		if (max < 100) {
+ 			max *= this_bw;
+-			do_div(max, tot_bw);
++			max = div64_ul(max, tot_bw);
+ 		}
+ 	}
  
- /*
-@@ -33,10 +33,8 @@ static int __init efi_earlycon_remap_fb(
- 	if (!earlycon_console || !(earlycon_console->flags & CON_ENABLED))
- 		return 0;
- 
--	if (pgprot_val(fb_prot) == pgprot_val(PAGE_KERNEL))
--		efi_fb = memremap(fb_base, screen_info.lfb_size, MEMREMAP_WB);
--	else
--		efi_fb = memremap(fb_base, screen_info.lfb_size, MEMREMAP_WC);
-+	efi_fb = memremap(fb_base, screen_info.lfb_size,
-+			  fb_wb ? MEMREMAP_WB : MEMREMAP_WC);
- 
- 	return efi_fb ? 0 : -ENOMEM;
- }
-@@ -53,9 +51,12 @@ late_initcall(efi_earlycon_unmap_fb);
- 
- static __ref void *efi_earlycon_map(unsigned long start, unsigned long len)
- {
-+	pgprot_t fb_prot;
-+
- 	if (efi_fb)
- 		return efi_fb + start;
- 
-+	fb_prot = fb_wb ? PAGE_KERNEL : pgprot_writecombine(PAGE_KERNEL);
- 	return early_memremap_prot(fb_base + start, len, pgprot_val(fb_prot));
- }
- 
-@@ -215,10 +216,7 @@ static int __init efi_earlycon_setup(str
- 	if (screen_info.capabilities & VIDEO_CAPABILITY_64BIT_BASE)
- 		fb_base |= (u64)screen_info.ext_lfb_base << 32;
- 
--	if (opt && !strcmp(opt, "ram"))
--		fb_prot = PAGE_KERNEL;
--	else
--		fb_prot = pgprot_writecombine(PAGE_KERNEL);
-+	fb_wb = opt && !strcmp(opt, "ram");
- 
- 	si = &screen_info;
- 	xres = si->lfb_width;
 
 
