@@ -2,126 +2,272 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
+	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53AB0C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:01:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3675AC33CB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:02:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24A3F2467F
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:01:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="asxrAUK4"
+	by mail.kernel.org (Postfix) with ESMTP id 0C39024683
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:02:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729271AbgAVNA7 (ORCPT
+        id S1729121AbgAVNCT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 08:00:59 -0500
-Received: from pegase1.c-s.fr ([93.17.236.30]:21233 "EHLO pegase1.c-s.fr"
+        Wed, 22 Jan 2020 08:02:19 -0500
+Received: from ns.iliad.fr ([212.27.33.1]:44002 "EHLO ns.iliad.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728731AbgAVNAl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 08:00:41 -0500
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 482lrQ0w0Pz9v4T5;
-        Wed, 22 Jan 2020 14:00:38 +0100 (CET)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=asxrAUK4; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id K994pD9OcgtK; Wed, 22 Jan 2020 14:00:38 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 482lrP6xDNz9v4T4;
-        Wed, 22 Jan 2020 14:00:37 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1579698038; bh=p9gINth/nDuzFeykCT9Ex40uYSsIuyztIe3V1N19VeY=;
-        h=In-Reply-To:References:From:Subject:To:Cc:Date:From;
-        b=asxrAUK4apDAM78ttunvrwObfFC3Uuc7voda+IWzqCEpDmNIDllZ0k37f3a692EWq
-         nSg0ZpuCIxgdfFyYvYqAPdvj+YA+CHFe2ZrxJBbEqOumIyXKGqmz5kK1MvefLgInPS
-         GwEDO3+HsvL2HO7SCWe13SRLgAmCUdgtvpMMJfnw=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id EBAEE8B7FA;
-        Wed, 22 Jan 2020 14:00:38 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id KO4zAQH-MR6m; Wed, 22 Jan 2020 14:00:38 +0100 (CET)
-Received: from po14934vm.idsi0.si.c-s.fr (po15451.idsi0.si.c-s.fr [172.25.230.100])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id C19F18B800;
-        Wed, 22 Jan 2020 14:00:38 +0100 (CET)
-Received: by po14934vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id B9621651E0; Wed, 22 Jan 2020 13:00:38 +0000 (UTC)
-Message-Id: <35e82a783b398c085e7e76d2bc754cc831c87541.1579697910.git.christophe.leroy@c-s.fr>
-In-Reply-To: <a02d3426f93f7eb04960a4d9140902d278cab0bb.1579697910.git.christophe.leroy@c-s.fr>
-References: <a02d3426f93f7eb04960a4d9140902d278cab0bb.1579697910.git.christophe.leroy@c-s.fr>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [PATCH v1 4/6] powerpc/32s: Drop NULL addr verification
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org
-Date:   Wed, 22 Jan 2020 13:00:38 +0000 (UTC)
+        id S1727022AbgAVNCS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 08:02:18 -0500
+Received: from ns.iliad.fr (localhost [127.0.0.1])
+        by ns.iliad.fr (Postfix) with ESMTP id CF92C209AE;
+        Wed, 22 Jan 2020 14:02:16 +0100 (CET)
+Received: from [192.168.108.51] (freebox.vlq16.iliad.fr [213.36.7.13])
+        by ns.iliad.fr (Postfix) with ESMTP id B45DB20169;
+        Wed, 22 Jan 2020 14:02:16 +0100 (CET)
+From:   Marc Gonzalez <marc.w.gonzalez@free.fr>
+Subject: [RFC PATCH v2] clk: Use a new helper in managed functions
+To:     linux-clk <linux-clk@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Cc:     Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Arnd Bergmann <arnd@arndb.de>
+Message-ID: <56c7b6d5-1248-15bd-8441-5d80557455b3@free.fr>
+Date:   Wed, 22 Jan 2020 14:02:16 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Virus-Scanned: ClamAV using ClamSMTP ; ns.iliad.fr ; Wed Jan 22 14:02:16 2020 +0100 (CET)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-NULL addr is a user address. Don't waste time checking it. If
-someone tries to access it, it will SIGFAULT the same way as for
-address 1, so no need to make it special.
+Introduce devm_add() to factorize devres_alloc/devres_add calls.
 
-The special case is when not doing a write, in that case we want
-to drop the entire function. This is now handled by 'dir' param
-and not by the nulity of 'to' anymore.
+Using that helper produces simpler code and smaller object size:
 
-Also make beginning of prevent_user_access() similar
-to beginning of allow_user_access(), and tell the compiler
-that writing in kernel space or with a 0 length is unlikely
+1 file changed, 27 insertions(+), 66 deletions(-)
 
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+    text	   data	    bss	    dec	    hex	filename
+-   1708	     80	      0	   1788	    6fc	drivers/clk/clk-devres.o
++   1508	     80	      0	   1588	    634	drivers/clk/clk-devres.o
+
+Signed-off-by: Marc Gonzalez <marc.w.gonzalez@free.fr>
 ---
- arch/powerpc/include/asm/book3s/32/kup.h | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+ drivers/base/devres.c    | 14 ++++++
+ drivers/clk/clk-devres.c | 93 ++++++++++++----------------------------
+ include/linux/device.h   |  1 +
+ 3 files changed, 42 insertions(+), 66 deletions(-)
 
-diff --git a/arch/powerpc/include/asm/book3s/32/kup.h b/arch/powerpc/include/asm/book3s/32/kup.h
-index d765515bd1c1..3c1798e56b55 100644
---- a/arch/powerpc/include/asm/book3s/32/kup.h
-+++ b/arch/powerpc/include/asm/book3s/32/kup.h
-@@ -113,7 +113,7 @@ static __always_inline void allow_user_access(void __user *to, const void __user
- 
- 	addr = (__force u32)to;
- 
--	if (!addr || addr >= TASK_SIZE || !size)
-+	if (unlikely(addr >= TASK_SIZE || !size))
- 		return;
- 
- 	end = min(addr + size, TASK_SIZE);
-@@ -124,16 +124,18 @@ static __always_inline void allow_user_access(void __user *to, const void __user
- static __always_inline void prevent_user_access(void __user *to, const void __user *from,
- 						u32 size, unsigned long dir)
- {
--	u32 addr = (__force u32)to;
--	u32 end = min(addr + size, TASK_SIZE);
-+	u32 addr, end;
- 
- 	BUILD_BUG_ON(!__builtin_constant_p(dir));
- 	if (!(dir & KUAP_W))
- 		return;
- 
--	if (!addr || addr >= TASK_SIZE || !size)
-+	addr = (__force u32)to;
-+
-+	if (unlikely(addr >= TASK_SIZE || !size))
- 		return;
- 
-+	end = min(addr + size, TASK_SIZE);
- 	current->thread.kuap = 0;
- 	kuap_update_sr(mfsrin(addr) | SR_KS, addr, end);	/* set Ks */
+diff --git a/drivers/base/devres.c b/drivers/base/devres.c
+index 0bbb328bd17f..76392dd6273b 100644
+--- a/drivers/base/devres.c
++++ b/drivers/base/devres.c
+@@ -685,6 +685,20 @@ int devres_release_group(struct device *dev, void *id)
  }
+ EXPORT_SYMBOL_GPL(devres_release_group);
+ 
++void *devm_add(struct device *dev, dr_release_t func, void *arg, size_t size)
++{
++	void *data = devres_alloc(func, size, GFP_KERNEL);
++
++	if (data) {
++		memcpy(data, arg, size);
++		devres_add(dev, data);
++	} else
++		func(dev, arg);
++
++	return data;
++}
++EXPORT_SYMBOL_GPL(devm_add);
++
+ /*
+  * Custom devres actions allow inserting a simple function call
+  * into the teadown sequence.
+diff --git a/drivers/clk/clk-devres.c b/drivers/clk/clk-devres.c
+index be160764911b..582fda9ad6a6 100644
+--- a/drivers/clk/clk-devres.c
++++ b/drivers/clk/clk-devres.c
+@@ -4,26 +4,18 @@
+ #include <linux/export.h>
+ #include <linux/gfp.h>
+ 
+-static void devm_clk_release(struct device *dev, void *res)
++static void wrap_clk_put(struct device *dev, void *res)
+ {
+ 	clk_put(*(struct clk **)res);
+ }
+ 
+ struct clk *devm_clk_get(struct device *dev, const char *id)
+ {
+-	struct clk **ptr, *clk;
+-
+-	ptr = devres_alloc(devm_clk_release, sizeof(*ptr), GFP_KERNEL);
+-	if (!ptr)
+-		return ERR_PTR(-ENOMEM);
+-
+-	clk = clk_get(dev, id);
+-	if (!IS_ERR(clk)) {
+-		*ptr = clk;
+-		devres_add(dev, ptr);
+-	} else {
+-		devres_free(ptr);
+-	}
++	struct clk *clk = clk_get(dev, id);
++
++	if (!IS_ERR(clk))
++		if (!devm_add(dev, wrap_clk_put, &clk, sizeof(clk)))
++			clk = ERR_PTR(-ENOMEM);
+ 
+ 	return clk;
+ }
+@@ -33,10 +25,7 @@ struct clk *devm_clk_get_optional(struct device *dev, const char *id)
+ {
+ 	struct clk *clk = devm_clk_get(dev, id);
+ 
+-	if (clk == ERR_PTR(-ENOENT))
+-		return NULL;
+-
+-	return clk;
++	return clk == ERR_PTR(-ENOENT) ? NULL : clk;
+ }
+ EXPORT_SYMBOL(devm_clk_get_optional);
+ 
+@@ -45,7 +34,7 @@ struct clk_bulk_devres {
+ 	int num_clks;
+ };
+ 
+-static void devm_clk_bulk_release(struct device *dev, void *res)
++static void wrap_clk_bulk_put(struct device *dev, void *res)
+ {
+ 	struct clk_bulk_devres *devres = res;
+ 
+@@ -55,25 +44,17 @@ static void devm_clk_bulk_release(struct device *dev, void *res)
+ static int __devm_clk_bulk_get(struct device *dev, int num_clks,
+ 			       struct clk_bulk_data *clks, bool optional)
+ {
+-	struct clk_bulk_devres *devres;
+ 	int ret;
+-
+-	devres = devres_alloc(devm_clk_bulk_release,
+-			      sizeof(*devres), GFP_KERNEL);
+-	if (!devres)
+-		return -ENOMEM;
++	struct clk_bulk_devres arg = { clks, num_clks };
+ 
+ 	if (optional)
+ 		ret = clk_bulk_get_optional(dev, num_clks, clks);
+ 	else
+ 		ret = clk_bulk_get(dev, num_clks, clks);
+-	if (!ret) {
+-		devres->clks = clks;
+-		devres->num_clks = num_clks;
+-		devres_add(dev, devres);
+-	} else {
+-		devres_free(devres);
+-	}
++
++	if (!ret)
++		if (!devm_add(dev, wrap_clk_bulk_put, &arg, sizeof(arg)))
++			ret = -ENOMEM;
+ 
+ 	return ret;
+ }
+@@ -95,24 +76,16 @@ EXPORT_SYMBOL_GPL(devm_clk_bulk_get_optional);
+ int __must_check devm_clk_bulk_get_all(struct device *dev,
+ 				       struct clk_bulk_data **clks)
+ {
+-	struct clk_bulk_devres *devres;
+-	int ret;
++	struct clk_bulk_devres arg;
+ 
+-	devres = devres_alloc(devm_clk_bulk_release,
+-			      sizeof(*devres), GFP_KERNEL);
+-	if (!devres)
+-		return -ENOMEM;
+-
+-	ret = clk_bulk_get_all(dev, &devres->clks);
+-	if (ret > 0) {
+-		*clks = devres->clks;
+-		devres->num_clks = ret;
+-		devres_add(dev, devres);
+-	} else {
+-		devres_free(devres);
+-	}
++	arg.num_clks = clk_bulk_get_all(dev, clks);
++	arg.clks = *clks;
+ 
+-	return ret;
++	if (arg.num_clks > 0)
++		if (!devm_add(dev, wrap_clk_bulk_put, &arg, sizeof(arg)))
++			arg.num_clks = -ENOMEM;
++
++	return arg.num_clks;
+ }
+ EXPORT_SYMBOL_GPL(devm_clk_bulk_get_all);
+ 
+@@ -128,30 +101,18 @@ static int devm_clk_match(struct device *dev, void *res, void *data)
+ 
+ void devm_clk_put(struct device *dev, struct clk *clk)
+ {
+-	int ret;
+-
+-	ret = devres_release(dev, devm_clk_release, devm_clk_match, clk);
+-
+-	WARN_ON(ret);
++	WARN_ON(devres_release(dev, wrap_clk_put, devm_clk_match, clk));
+ }
+ EXPORT_SYMBOL(devm_clk_put);
+ 
+ struct clk *devm_get_clk_from_child(struct device *dev,
+ 				    struct device_node *np, const char *con_id)
+ {
+-	struct clk **ptr, *clk;
+-
+-	ptr = devres_alloc(devm_clk_release, sizeof(*ptr), GFP_KERNEL);
+-	if (!ptr)
+-		return ERR_PTR(-ENOMEM);
+-
+-	clk = of_clk_get_by_name(np, con_id);
+-	if (!IS_ERR(clk)) {
+-		*ptr = clk;
+-		devres_add(dev, ptr);
+-	} else {
+-		devres_free(ptr);
+-	}
++	struct clk *clk = of_clk_get_by_name(np, con_id);
++
++	if (!IS_ERR(clk))
++		if (!devm_add(dev, wrap_clk_put, &clk, sizeof(clk)))
++			clk = ERR_PTR(-ENOMEM);
+ 
+ 	return clk;
+ }
+diff --git a/include/linux/device.h b/include/linux/device.h
+index e226030c1df3..d47872c5ab72 100644
+--- a/include/linux/device.h
++++ b/include/linux/device.h
+@@ -969,6 +969,7 @@ void __iomem *devm_of_iomap(struct device *dev,
+ 			    struct device_node *node, int index,
+ 			    resource_size_t *size);
+ 
++void *devm_add(struct device *dev, dr_release_t func, void *arg, size_t size);
+ /* allows to add/remove a custom action to devres stack */
+ int devm_add_action(struct device *dev, void (*action)(void *), void *data);
+ void devm_remove_action(struct device *dev, void (*action)(void *), void *data);
 -- 
-2.25.0
-
+2.17.1
