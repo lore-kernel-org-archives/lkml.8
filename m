@@ -2,115 +2,133 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3F29C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 16:40:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBB4FC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 16:40:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5A9721835
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 16:40:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8AF0024656
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 16:40:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eL0V8Hx0"
+	dkim=pass (1024-bit key) header.d=pobox.com header.i=@pobox.com header.b="Wknxobfb";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=fluxnic.net header.i=@fluxnic.net header.b="tizz4lWi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728797AbgAVQkf (ORCPT
+        id S1728911AbgAVQkp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 11:40:35 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:26827 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725943AbgAVQkf (ORCPT
+        Wed, 22 Jan 2020 11:40:45 -0500
+Received: from pb-smtp21.pobox.com ([173.228.157.53]:51435 "EHLO
+        pb-smtp21.pobox.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725970AbgAVQkp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 11:40:35 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579711233;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=NqHfG4M0oTw1WAYPW8dVqwjrZnqacof+6SuwGnZ6EOk=;
-        b=eL0V8Hx0+G3GFfbteKlWcjHvYALSc0uGocgDQZO25n2cvqQHRy31f7vXl9Za4mMPMWbxO4
-        xmNJSs0Vyd48htJwQeGZvH705mXYnSGfn+7FVlqFz7gOoo1wVeCkp02yZbO/UIS66B4ilH
-        loK1WYEqVuj3TuM8KAbBkrVDAk9xPdo=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-246-IPMzbxzONlC2W_n5wxyglQ-1; Wed, 22 Jan 2020 11:40:31 -0500
-X-MC-Unique: IPMzbxzONlC2W_n5wxyglQ-1
-Received: by mail-wm1-f69.google.com with SMTP id q206so74395wme.9
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jan 2020 08:40:31 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=NqHfG4M0oTw1WAYPW8dVqwjrZnqacof+6SuwGnZ6EOk=;
-        b=W7xWCcim3s7mIGt3LEDSznD8srxwcTdE98sj/D1dkKQRMNdtfpTuSI490ZoRCZbmDc
-         /jhY4FAACjDSqMFnVsupFkEGLWmZr7hHwQpMBcp/dYJ9ZTmqm74likZyl3PfG6bSOfVa
-         B+GSxd2N3ZOaP3Re7sVQ2PcBX0xXPUPJlx9SbKYgZKdjZEnmOEtwIOSaEn8WeG5WLxEq
-         kkywGxDB5cgzrNdk5zkj6nvZlFBEsACres6QbClrvtv3AmpdhUvMUazA0GWq/5CDvyOI
-         rJx+XjeSVjzZtNjaHU4ehlDeSyW8zztH/Y/Zm646mUI6ABYjCnf+Pdm5j2H9HwzCp6hl
-         YOSQ==
-X-Gm-Message-State: APjAAAUPWTs7HDEXNeLPrZry0Aae5UxI35OanksMpxt7QBvcg2hZ+xVM
-        QNwSXabFEF2x05Ws2iermJ96DXADWB2e275nMEVxr5J4Xk2ZpRSi9iqW9IWpRO8x6lbEfJM9uGd
-        Cq362J5KLgqweYQlN1l5v+3MM
-X-Received: by 2002:a7b:cb91:: with SMTP id m17mr3620351wmi.146.1579711230721;
-        Wed, 22 Jan 2020 08:40:30 -0800 (PST)
-X-Google-Smtp-Source: APXvYqzlxcCPkPXf8/I59g7+C0rJdwAgIk/Qu1HaZIoBEn1yWRSeks0GxcFaBr6+ZpRZJtcz+Ttzgg==
-X-Received: by 2002:a7b:cb91:: with SMTP id m17mr3620339wmi.146.1579711230491;
-        Wed, 22 Jan 2020 08:40:30 -0800 (PST)
-Received: from ?IPv6:2001:b07:6468:f312:b8fe:679e:87eb:c059? ([2001:b07:6468:f312:b8fe:679e:87eb:c059])
-        by smtp.gmail.com with ESMTPSA id q3sm59194052wrn.33.2020.01.22.08.40.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 22 Jan 2020 08:40:29 -0800 (PST)
-Subject: Re: [PATCH RFC 2/3] x86/kvm/hyper-v: move VMX controls sanitization
- out of nested_enable_evmcs()
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     kvm@vger.kernel.org, Jim Mattson <jmattson@google.com>,
-        linux-kernel@vger.kernel.org, Liran Alon <liran.alon@oracle.com>,
-        Roman Kagan <rkagan@virtuozzo.com>
-References: <20200115171014.56405-1-vkuznets@redhat.com>
- <20200115171014.56405-3-vkuznets@redhat.com>
- <6c4bdb57-08fb-2c2d-9234-b7efffeb72ed@redhat.com>
- <20200122054724.GD18513@linux.intel.com>
- <9c126d75-225b-3b1b-d97a-bcec1f189e02@redhat.com>
- <87eevrsf3s.fsf@vitty.brq.redhat.com> <20200122155108.GA7201@linux.intel.com>
- <87blqvsbcy.fsf@vitty.brq.redhat.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <f15d9e98-25e9-2031-2db5-6aaa6c78c0eb@redhat.com>
-Date:   Wed, 22 Jan 2020 17:40:27 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Wed, 22 Jan 2020 11:40:45 -0500
+Received: from pb-smtp21.pobox.com (unknown [127.0.0.1])
+        by pb-smtp21.pobox.com (Postfix) with ESMTP id 48C2EAABAF;
+        Wed, 22 Jan 2020 11:40:43 -0500 (EST)
+        (envelope-from nico@fluxnic.net)
+DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=pobox.com; h=date:from:to
+        :cc:subject:in-reply-to:message-id:references:mime-version
+        :content-type; s=sasl; bh=nm4+AllZt0xaKzJosnEhrST2Js8=; b=Wknxob
+        fbY9/d9ilbkbi5SWP4zLtOZRg+xnQE+icEvid8r5yl7ZW3RyIb0/xZ4iyRYh1tCq
+        k2yr2SD5jhl3g4ec7HjsWZ7HC+ddnEdxr/1jyTKsy+aqczATJQVsmG8Fr2diiTBC
+        9OS8QC3MoE9pepsExA4iJ9SBqLwbEfWO36j3g=
+Received: from pb-smtp21.sea.icgroup.com (unknown [127.0.0.1])
+        by pb-smtp21.pobox.com (Postfix) with ESMTP id 4083CAABAE;
+        Wed, 22 Jan 2020 11:40:43 -0500 (EST)
+        (envelope-from nico@fluxnic.net)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed; d=fluxnic.net;
+ h=date:from:to:cc:subject:in-reply-to:message-id:references:mime-version:content-type; s=2016-12.pbsmtp; bh=htryAvkzPUayXcHLCDdZuj4Za0JJ4NkSs6AjxwfUoHc=; b=tizz4lWiNUT4myJCvvfT/5prD8HXoXbGd8rZHVOf+kAsTHNqnJZWeh9i7COEBa2CmxyjtXr4p8sdonfrmY392XBLjIlttj8gdpYv7QeD5VIPDvjy8Z8pZyDzmRAVs/yxSN1PtWOb4n4DDCcbfMlDSkUJ+VPhYUOTBqlDBDOsJ7A=
+Received: from yoda.home (unknown [24.203.50.76])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by pb-smtp21.pobox.com (Postfix) with ESMTPSA id 3034BAABAD;
+        Wed, 22 Jan 2020 11:40:40 -0500 (EST)
+        (envelope-from nico@fluxnic.net)
+Received: from xanadu.home (xanadu.home [192.168.2.2])
+        by yoda.home (Postfix) with ESMTPSA id 5EC3D2DA010B;
+        Wed, 22 Jan 2020 11:40:38 -0500 (EST)
+Date:   Wed, 22 Jan 2020 11:40:38 -0500 (EST)
+From:   Nicolas Pitre <nico@fluxnic.net>
+To:     Lukas Wunner <lukas@wunner.de>
+cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        Mikulas Patocka <mpatocka@redhat.com>,
+        Matthew Whitehead <tedheadster@gmail.com>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] vt: Fix non-blinking cursor regression
+In-Reply-To: <575cb82102aa59a7a8e34248821b78e1dd844777.1579701673.git.lukas@wunner.de>
+Message-ID: <nycvar.YSQ.7.76.2001221032210.1655@knanqh.ubzr>
+References: <575cb82102aa59a7a8e34248821b78e1dd844777.1579701673.git.lukas@wunner.de>
+User-Agent: Alpine 2.21 (LFD 202 2017-01-01)
 MIME-Version: 1.0
-In-Reply-To: <87blqvsbcy.fsf@vitty.brq.redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII
+X-Pobox-Relay-ID: ECB65F08-3D35-11EA-869D-8D86F504CC47-78420484!pb-smtp21.pobox.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 22/01/20 17:29, Vitaly Kuznetsov wrote:
-> Yes, in case we're back to the idea to filter things out in QEMU we can
-> do this. What I don't like is that every other userspace which decides
-> to enable eVMCS will have to perform the exact same surgery as in case
-> it sets allow_unsupported_controls=0 it'll have to know (hardcode) the
-> filtering (or KVM_SET_MSRS will fail) and in case it opts for
-> allow_unsupported_controls=1 Windows guests just won't boot without the
-> filtering.
+On Wed, 22 Jan 2020, Lukas Wunner wrote:
+
+> Since commit a6dbe4427559 ("vt: perform safe console erase in the right
+> order"), when userspace clears both the scrollback buffer and the screen
+> by writing "\e[3J" to an fbdev virtual console, the cursor stops blinking
+> if that virtual console is not in the foreground.  I'm witnessing this
+> on every boot of Raspbian since updating to v4.19.37+ because agetty
+> writes the sequence to /dev/tty6 while the console is still switched to
+> /dev/tty1.  Switching consoles once makes the cursor blink again.
 > 
-> It seems to be 1:1, eVMCSv1 requires the filter.
+> The commit added an invocation of ->con_switch() to flush_scrollback().
+> Normally this is only invoked from switch_screen() to switch consoles.
+> switch_screen() updates *vc->vc_display_fg to the new console and
+> fbcon_switch() updates ops->currcon.  Because the commit only invokes
+> fbcon_switch() but doesn't update *vc->vc_display_fg, it performs an
+> incomplete console switch.
+> 
+> When fb_flashcursor() subsequently blinks the cursor, it retrieves the
+> foreground console from ops->currcon.  Because *vc->vc_display_fg wasn't
+> updated, con_is_visible() incorrectly returns false and as a result,
+> fb_flashcursor() bails out without blinking the cursor.
+> 
+> The invocation of ->con_switch() appears to have been erroneous.  After
+> all, why should a console switch be performed when clearing the screen?
+> The commit message doesn't provide a rationale either.  So delete it.
 
-Yes, that's the point.  It *is* a hack in KVM, but it is generally
-preferrable to have an easier API for userspace, if there's only one way
-to do it.
+The problem here is that only vgacon provides a con_flush_scrollback 
+method. When not provided, the only way to flush the scrollback buffer 
+is to invoke the switch method. If you remove it the scrollback buffer 
+of the foreground console won't be flushed in the fb case and possibly 
+others.
 
-Though we could be a bit more "surgical" and only remove
-SECONDARY_EXEC_VIRTUALIZE_APIC_ACCESSES---thus minimizing the impact on
-non-eVMCS guests.  Vitaly, can you prepare a v2 that does that and adds
-a huge "hack alert" comment that explains the discussion?
+Originally the con_switch method was invoked via update_screen(). The 
+code rationalization in commit a6dbe4427559 failed to carry over a few 
+details though.
 
-Paolo
+So I think the actual fix should instead be like this:
 
+diff --git a/drivers/tty/vt/vt.c b/drivers/tty/vt/vt.c
+index 34aa39d1ae..93314a2f26 100644
+--- a/drivers/tty/vt/vt.c
++++ b/drivers/tty/vt/vt.c
+@@ -936,10 +936,13 @@ static void flush_scrollback(struct vc_data *vc)
+ 	WARN_CONSOLE_UNLOCKED();
+ 
+ 	set_origin(vc);
+-	if (vc->vc_sw->con_flush_scrollback)
++	if (vc->vc_sw->con_flush_scrollback) {
+ 		vc->vc_sw->con_flush_scrollback(vc);
+-	else
++	} else if (con_is_visible(vc)) {
++		hide_cursor(vc);
+ 		vc->vc_sw->con_switch(vc);
++		set_cursor(vc);
++	}
+ }
+ 
+ /*
+
+
+Nicolas
