@@ -2,128 +2,129 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDA20C3F68F
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 07:23:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A80AC3F68F
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 07:23:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5E6924125
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 07:23:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579677804;
-	bh=bbAh3rhHmfmleomVp4XItkwvBRm3+pggpqJQcYaj0pw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=hUutUUxEDY3d0c7YgLgC36vaJE5TdXFiqjMeEyA63Vwjhr3K7Ai++9fajsslvbU2c
-	 i5qJh7WLU/6aSs3m/rW8jrheDjVBcZW+I8/yu7eqd9f9x6dDwkLEJdHjfUyZ5vJmFt
-	 pldkH6u00PFSKgI2D1s9f9IIhiIDAbtxF14K3LXw=
+	by mail.kernel.org (Postfix) with ESMTP id 7C40E24125
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 07:23:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728733AbgAVHXY (ORCPT
+        id S1728998AbgAVHXo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 02:23:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51794 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 02:23:44 -0500
+Received: from mga14.intel.com ([192.55.52.115]:18401 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725975AbgAVHXX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 02:23:23 -0500
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C3E8F2253D;
-        Wed, 22 Jan 2020 07:23:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579677802;
-        bh=bbAh3rhHmfmleomVp4XItkwvBRm3+pggpqJQcYaj0pw=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=Nw68NfTqgmtfdHWRdZhjK8XTTkzkkBbqDAlHJguxpOQHBCZ9k0h8oHLITVrXovekX
-         Jbs/lNg5w1Fhwq+h/+Sj6hWzQT0taikEShjBomAjFAmx8I0ztz8GbX86VAoaHPc8rI
-         8XZgNtFfpn/UKaMgEwOfoMsF67orejhKxLrwHoFI=
-Date:   Wed, 22 Jan 2020 16:23:17 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Brendan Gregg <brendan.d.gregg@gmail.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>, bpf@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        "David S . Miller" <davem@davemloft.net>, paulmck@kernel.org,
-        joel@joelfernandes.org,
-        "Naveen N . Rao" <naveen.n.rao@linux.ibm.com>,
-        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>
-Subject: Re: [RFT PATCH 04/13] kprobes: Make optimizer delay to 1 second
-Message-Id: <20200122162317.0299cf722dd618147d97e89c@kernel.org>
-In-Reply-To: <20200121192905.0f001c61@gandalf.local.home>
-References: <157918584866.29301.6941815715391411338.stgit@devnote2>
-        <157918589199.29301.4419459150054220408.stgit@devnote2>
-        <20200121192905.0f001c61@gandalf.local.home>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        id S1725884AbgAVHXo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 02:23:44 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Jan 2020 23:23:43 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,348,1574150400"; 
+   d="scan'208";a="399924578"
+Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.167]) ([10.237.72.167])
+  by orsmga005.jf.intel.com with ESMTP; 21 Jan 2020 23:23:39 -0800
+Subject: Re: [PATCH V1] mmc: sdhci-msm: Add system suspend/resume callbacks
+To:     Shaik Sajida Bhanu <sbhanu@codeaurora.org>, ulf.hansson@linaro.org
+Cc:     asutoshd@codeaurora.org, stummala@codeaurora.org,
+        vbadigan@codeaurora.org, sayalil@codeaurora.org,
+        cang@codeaurora.org, rampraka@codeaurora.org,
+        linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, agross@kernel.org,
+        bjorn.andersson@linaro.org
+References: <1579617022-13031-1-git-send-email-sbhanu@codeaurora.org>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Message-ID: <c851e723-3e6c-4548-bb67-05a6023b4169@intel.com>
+Date:   Wed, 22 Jan 2020 09:22:53 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
+MIME-Version: 1.0
+In-Reply-To: <1579617022-13031-1-git-send-email-sbhanu@codeaurora.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 21 Jan 2020 19:29:05 -0500
-Steven Rostedt <rostedt@goodmis.org> wrote:
+On 21/01/20 4:30 pm, Shaik Sajida Bhanu wrote:
+> Add system suspend/resume callbacks to sdhci-msm platform driver.
 
-> On Thu, 16 Jan 2020 23:44:52 +0900
-> Masami Hiramatsu <mhiramat@kernel.org> wrote:
-> 
-> > Since the 5 jiffies delay for the optimizer is too
-> > short to wait for other probes, make it longer,
-> > like 1 second.
-> 
-> Hi Masami,
-> 
-> Can you explain more *why* 5 jiffies is too short.
-
-Yes, I had introduced this 5 jiffies delay for multiple probe registration
-and unregistration like systemtap, which will use array-based interface to
-register/unregister. In that case, 5 jiffies will be enough for the delay
-to wait for other kprobe registration/unregsitration.
-
-However, since perf and ftrace register/unregister probes one-by-one with
-RCU synchronization interval, the optimizer will be started before
-finishing to register/unregister all probes.
-And the optimizer locks kprobe_mutex a while -- RCU-tasks synchronization.
-Since the kprobe_mutex is also involved in disabling kprobes, this also
-stops probe-event disabling.
-
-Maybe 5 jiffies is enough for adding/removing a few probe events, but
-not enough for dozens of probe events.
-
-Thank you,
+There were already callbacks, so the commit subject and messages really do
+not tell what this change is about or why it is needed.  Please explain some
+more.
 
 > 
-> Thanks!
+> Signed-off-by: Shaik Sajida Bhanu <sbhanu@codeaurora.org>
+> ---
+>  drivers/mmc/host/sdhci-msm.c | 47 ++++++++++++++++++++++++++++++++++++++++++--
+>  1 file changed, 45 insertions(+), 2 deletions(-)
 > 
-> -- Steve
-> 
-> > 
-> > Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-> > ---
-> >  kernel/kprobes.c |    3 ++-
-> >  1 file changed, 2 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/kernel/kprobes.c b/kernel/kprobes.c
-> > index 0dacdcecc90f..9c6e230852ad 100644
-> > --- a/kernel/kprobes.c
-> > +++ b/kernel/kprobes.c
-> > @@ -469,7 +469,8 @@ static int kprobe_optimizer_queue_update;
-> >  
-> >  static void kprobe_optimizer(struct work_struct *work);
-> >  static DECLARE_DELAYED_WORK(optimizing_work, kprobe_optimizer);
-> > -#define OPTIMIZE_DELAY 5
-> > +/* Wait 1 second for starting optimization */
-> > +#define OPTIMIZE_DELAY HZ
-> >  
-> >  /*
-> >   * Optimize (replace a breakpoint with a jump) kprobes listed on
+> diff --git a/drivers/mmc/host/sdhci-msm.c b/drivers/mmc/host/sdhci-msm.c
+> index 71f29ba..4984857 100644
+> --- a/drivers/mmc/host/sdhci-msm.c
+> +++ b/drivers/mmc/host/sdhci-msm.c
+> @@ -2028,9 +2028,52 @@ static __maybe_unused int sdhci_msm_runtime_resume(struct device *dev)
+>  	return 0;
+>  }
+>  
+> +static int sdhci_msm_suspend(struct device *dev)
+> +{
+> +	struct sdhci_host *host = dev_get_drvdata(dev);
+> +	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
+> +	struct sdhci_msm_host *msm_host = sdhci_pltfm_priv(pltfm_host);
+> +	int ret = 0;
+> +
+> +	if (host->mmc->caps2 & MMC_CAP2_CQE) {
+> +		ret = cqhci_suspend(host->mmc);
+> +		if (ret)
+> +			return ret;
+> +	}
+> +
+> +	disable_irq(msm_host->pwr_irq);
+> +	ret = sdhci_suspend_host(host);
+> +	if (ret)
+> +		return ret;
+> +
+> +	return sdhci_msm_runtime_suspend(dev);
+> +}
+> +
+> +static int sdhci_msm_resume(struct device *dev)
+> +{
+> +	struct sdhci_host *host = dev_get_drvdata(dev);
+> +	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
+> +	struct sdhci_msm_host *msm_host = sdhci_pltfm_priv(pltfm_host);
+> +	int ret = 0;
+> +
+> +	ret = sdhci_msm_runtime_resume(dev);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = sdhci_resume_host(host);
+> +	if (ret < 0)
+> +		return ret;
+> +	enable_irq(msm_host->pwr_irq);
+> +
+> +	if (host->mmc->caps2 & MMC_CAP2_CQE)
+> +		ret = cqhci_resume(host->mmc);
+> +
+> +	return ret;
+> +}
+> +
+>  static const struct dev_pm_ops sdhci_msm_pm_ops = {
+> -	SET_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
+> -				pm_runtime_force_resume)
+> +	SET_SYSTEM_SLEEP_PM_OPS(sdhci_msm_suspend,
+> +				sdhci_msm_resume)
+>  	SET_RUNTIME_PM_OPS(sdhci_msm_runtime_suspend,
+>  			   sdhci_msm_runtime_resume,
+>  			   NULL)
 > 
 
-
--- 
-Masami Hiramatsu <mhiramat@kernel.org>
