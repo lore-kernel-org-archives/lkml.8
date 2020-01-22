@@ -5,48 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-5.7 required=3.0 tests=DATE_IN_PAST_03_06,
 	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72A5AC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:20:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21C59C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:20:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 438972051A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:20:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA9EE24686
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:20:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579699243;
-	bh=XPBQSiM5KqGKjrSjNzH8x1J5nmiAzP2iCbS/ejLm77Q=;
+	s=default; t=1579699247;
+	bh=i00MMTH6MNa35g4XCiL+6Tw0DJKIbDfNKONbh/FSUdk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NciWbk3OkoaFzSJlSOQki5CAPCL3s/WzPQfWTfoz435AQ20F6gPQekLpRkDG94N9b
-	 2AyTC37Y4t/6tRowz7RkKKe5QgtW4CQrZKgvXMcJVVkfocH+KILGRKXm4+GWEtFn6E
-	 CfrzMCYj9PMQXByRItKV9zVZ6g4OnXp8DicpuTJE=
+	b=VKf9Oo3ne1fwzrsE4oxYLBaIXugPC7ZyYocuQLYzFnNUnhZIYpolxqV1gcuTS8rk0
+	 ebHtGO0xTpU147cfs3eEv9RYM+brglQo2r52VGNuvGBiysWD+ygmZoAEzOzycU1PvE
+	 O/QdCxhirATXUMqVQmtrG9f7xEASqAIF/jSGRUwI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730020AbgAVNUm (ORCPT
+        id S1730039AbgAVNUp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 08:20:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37000 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 08:20:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37082 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726590AbgAVNUj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 08:20:39 -0500
+        id S1729527AbgAVNUm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 08:20:42 -0500
 Received: from localhost (unknown [84.241.205.26])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BB6242467A;
-        Wed, 22 Jan 2020 13:20:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B3D4720678;
+        Wed, 22 Jan 2020 13:20:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579699239;
-        bh=XPBQSiM5KqGKjrSjNzH8x1J5nmiAzP2iCbS/ejLm77Q=;
+        s=default; t=1579699242;
+        bh=i00MMTH6MNa35g4XCiL+6Tw0DJKIbDfNKONbh/FSUdk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LYSvb5k/kG9rfgyMhZazAR13iB8fqucMN9PKy9usBWGZQrVjjpV/ZGqs6/dGUAc4H
-         TOmLREIzdlKFiUBxRczo84CYNvSoMljCyAQ2JavdJlmZYAOuMQRCEkM3FPOSqbsFap
-         87sQxBy+u6IBS94NS3IrZLJCJH9zr7Rc4Epy01Gg=
+        b=yQGbUa0pwLjnEp9/S2sW/wLPXPqxc6tzkNCGuAHUqGmj559EAHJOejRmopokuawCD
+         BviBiOxXr22Q58iFpHDSIwtwLPhjOoE9TRjgo+CijJQsR6Midf2UgYFmUpPosOkmJG
+         MARnVtV7mEuimy21xwCwDPpgwoiv0M+s7HiDKoVg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
         David Sterba <dsterba@suse.com>
-Subject: [PATCH 5.4 084/222] btrfs: fix invalid removal of root ref
-Date:   Wed, 22 Jan 2020 10:27:50 +0100
-Message-Id: <20200122092839.725614756@linuxfoundation.org>
+Subject: [PATCH 5.4 085/222] btrfs: do not delete mismatched root refs
+Date:   Wed, 22 Jan 2020 10:27:51 +0100
+Message-Id: <20200122092839.796601078@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200122092833.339495161@linuxfoundation.org>
 References: <20200122092833.339495161@linuxfoundation.org>
@@ -61,33 +61,13 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Josef Bacik <josef@toxicpanda.com>
 
-commit d49d3287e74ffe55ae7430d1e795e5f9bf7359ea upstream.
+commit 423a716cd7be16fb08690760691befe3be97d3fc upstream.
 
-If we have the following sequence of events
-
-  btrfs sub create A
-  btrfs sub create A/B
-  btrfs sub snap A C
-  mkdir C/foo
-  mv A/B C/foo
-  rm -rf *
-
-We will end up with a transaction abort.
-
-The reason for this is because we create a root ref for B pointing to A.
-When we create a snapshot of C we still have B in our tree, but because
-the root ref points to A and not C we will make it appear to be empty.
-
-The problem happens when we move B into C.  This removes the root ref
-for B pointing to A and adds a ref of B pointing to C.  When we rmdir C
-we'll see that we have a ref to our root and remove the root ref,
-despite not actually matching our reference name.
-
-Now btrfs_del_root_ref() allowing this to work is a bug as well, however
-we know that this inode does not actually point to a root ref in the
-first place, so we shouldn't be calling btrfs_del_root_ref() in the
-first place and instead simply look up our dir index for this item and
-do the rest of the removal.
+btrfs_del_root_ref() will simply WARN_ON() if the ref doesn't match in
+any way, and then continue to delete the reference.  This shouldn't
+happen, we have these values because there's more to the reference than
+the original root and the sub root.  If any of these checks fail, return
+-ENOENT.
 
 CC: stable@vger.kernel.org # 4.4+
 Signed-off-by: Josef Bacik <josef@toxicpanda.com>
@@ -96,52 +76,28 @@ Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/btrfs/inode.c |   27 +++++++++++++++++++--------
- 1 file changed, 19 insertions(+), 8 deletions(-)
+ fs/btrfs/root-tree.c |   10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
---- a/fs/btrfs/inode.c
-+++ b/fs/btrfs/inode.c
-@@ -4260,13 +4260,16 @@ static int btrfs_unlink_subvol(struct bt
- 	}
- 	btrfs_release_path(path);
- 
--	ret = btrfs_del_root_ref(trans, objectid, root->root_key.objectid,
--				 dir_ino, &index, name, name_len);
--	if (ret < 0) {
--		if (ret != -ENOENT) {
--			btrfs_abort_transaction(trans, ret);
--			goto out;
--		}
-+	/*
-+	 * This is a placeholder inode for a subvolume we didn't have a
-+	 * reference to at the time of the snapshot creation.  In the meantime
-+	 * we could have renamed the real subvol link into our snapshot, so
-+	 * depending on btrfs_del_root_ref to return -ENOENT here is incorret.
-+	 * Instead simply lookup the dir_index_item for this entry so we can
-+	 * remove it.  Otherwise we know we have a ref to the root and we can
-+	 * call btrfs_del_root_ref, and it _shouldn't_ fail.
-+	 */
-+	if (btrfs_ino(inode) == BTRFS_EMPTY_SUBVOL_DIR_OBJECTID) {
- 		di = btrfs_search_dir_index_item(root, path, dir_ino,
- 						 name, name_len);
- 		if (IS_ERR_OR_NULL(di)) {
-@@ -4281,8 +4284,16 @@ static int btrfs_unlink_subvol(struct bt
+--- a/fs/btrfs/root-tree.c
++++ b/fs/btrfs/root-tree.c
+@@ -376,11 +376,13 @@ again:
  		leaf = path->nodes[0];
- 		btrfs_item_key_to_cpu(leaf, &key, path->slots[0]);
- 		index = key.offset;
-+		btrfs_release_path(path);
-+	} else {
-+		ret = btrfs_del_root_ref(trans, objectid,
-+					 root->root_key.objectid, dir_ino,
-+					 &index, name, name_len);
-+		if (ret) {
-+			btrfs_abort_transaction(trans, ret);
+ 		ref = btrfs_item_ptr(leaf, path->slots[0],
+ 				     struct btrfs_root_ref);
+-
+-		WARN_ON(btrfs_root_ref_dirid(leaf, ref) != dirid);
+-		WARN_ON(btrfs_root_ref_name_len(leaf, ref) != name_len);
+ 		ptr = (unsigned long)(ref + 1);
+-		WARN_ON(memcmp_extent_buffer(leaf, name, ptr, name_len));
++		if ((btrfs_root_ref_dirid(leaf, ref) != dirid) ||
++		    (btrfs_root_ref_name_len(leaf, ref) != name_len) ||
++		    memcmp_extent_buffer(leaf, name, ptr, name_len)) {
++			err = -ENOENT;
 +			goto out;
 +		}
- 	}
--	btrfs_release_path(path);
+ 		*sequence = btrfs_root_ref_sequence(leaf, ref);
  
- 	ret = btrfs_delete_delayed_dir_index(trans, BTRFS_I(dir), index);
- 	if (ret) {
+ 		ret = btrfs_del_item(trans, tree_root, path);
 
 
