@@ -2,205 +2,262 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A48CC33CA1
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 03:23:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 299D3C32771
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 03:23:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26A2D217F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 03:23:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="WqqDeek7"
+	by mail.kernel.org (Postfix) with ESMTP id E5A4D24683
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 03:23:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579663414;
+	bh=ZrACMldnKCBblDjYLsYsmY8S44LP1hRUmCQUZbufUlA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=ggf93HJXVSARBnPfDYeO3Em61/gyL8EaM1lM8mbpFMerqZp6oYPCcb72Rp5TGCqg+
+	 GkfE9kHisTQpAIARA5ixSYHAIWx7PlJtuBgXlD0PILZPN7GV/GYnePeVUjH1hGh2nE
+	 QIr3PxMUDsWckYMhonqNyWm0b5yTqZNlkG3zzRPs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729260AbgAVDXD (ORCPT
+        id S1729285AbgAVDXd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 22:23:03 -0500
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:44238 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729093AbgAVDXD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 22:23:03 -0500
-Received: by mail-pl1-f195.google.com with SMTP id d9so2290086plo.11
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jan 2020 19:23:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=WzWlqSAwBUYEHp474vY25WNq5cVSn3o2GyR5izuQQ6I=;
-        b=WqqDeek7IOETWuK4uyhivNNdGgPsGTJ+LQ4rSmigeF5wvVloRRnW12aj64MLBWr6jj
-         /ESnNSbAnL/NKNkcNYKOUoj4VKBb/N2QWdU/ZQIHt89BWLB7lLagV1EMWo00XgtcP+Rm
-         0obLYR61L1gI1UB9v0WOJgixa+wrnRME/jorMM3AtfVfL1xLSVWLr5WUv4sbYuHwzKI0
-         5WOBxlpUzIWV2u26LJoUn/7WsbyEyY9HMt80MIOfexO/ibceakxxAGnNAoksNRFvmleF
-         ndamVdEYFdkDsEoPm26uKMK8EC+AvcwbvKiuI3PfcsgEeHM7dxRWrk7K05HgZ5y18Nn0
-         CBWQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=WzWlqSAwBUYEHp474vY25WNq5cVSn3o2GyR5izuQQ6I=;
-        b=QGSn/ffWmU/pkpvMWkoVIbQdwh6CKBt13h1wA8Wr/Xu6Auq3qafQDyC60TD9uOgS4J
-         Ext0+NwoVkYZPY0BYKYaaiLiU0xdShnNffpLEC3F1WyM4/9080hqr2sHloU2wKe/TE5D
-         KKMyV0EF1RbJ1/AqLjO6Tm3qovLxkp7wWvACSlIpOLFfvUDbYLNuMuUWTuT60+yAarCI
-         SJFOpvfKtJN37dOPXnpF0iYtqGGWzHSJA7x6YwG2tS50Qa1lrT3wxNviEHqf8uq9D1y4
-         UUTU3m9P1xnvwzVn4x7+mFUWXppvc8mdcIbUb+IP60P0qLaNGyqtTiz4BOlBHKi2Yibk
-         7D/g==
-X-Gm-Message-State: APjAAAXfTnsCm4Db5MPXGgtSuNDrEZR3Em8vp7ymevQAQ4PUASD4PcVB
-        eOzmBOMl4hktAnq78eZ4RGToHw==
-X-Google-Smtp-Source: APXvYqx45UJwpaZsGhTx3w8CdAdqEztpeY705Gedj+Y8kUrFvfcZfV4c4AtGUUhl24em2ZBh1jkXUw==
-X-Received: by 2002:a17:90b:8b:: with SMTP id bb11mr567939pjb.27.1579663381129;
-        Tue, 21 Jan 2020 19:23:01 -0800 (PST)
-Received: from [192.168.1.188] ([66.219.217.145])
-        by smtp.gmail.com with ESMTPSA id w4sm830441pjt.23.2020.01.21.19.23.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 21 Jan 2020 19:23:00 -0800 (PST)
-Subject: Re: [PATCH 3/3] io_uring: add splice(2) support
-To:     Pavel Begunkov <asml.silence@gmail.com>, io-uring@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Cc:     Alexander Viro <viro@zeniv.linux.org.uk>
-References: <cover.1579649589.git.asml.silence@gmail.com>
- <8bfd9a57bf42cfc10ee7195969058d6da277deed.1579649589.git.asml.silence@gmail.com>
- <6d43b9d7-209a-2bbf-e2c2-e125e84b46ab@kernel.dk>
- <14499431-0409-5d57-9b08-aff95b9d2160@gmail.com>
- <b20d33eb-fd88-418c-57b6-32feb84d2373@kernel.dk>
- <578003e9-1af2-4df6-d9e1-cdbbbb701bf7@gmail.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <60459de4-3497-0226-127a-e748486852c6@kernel.dk>
-Date:   Tue, 21 Jan 2020 20:22:58 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Tue, 21 Jan 2020 22:23:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44662 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729093AbgAVDXc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jan 2020 22:23:32 -0500
+Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 08BF02467A;
+        Wed, 22 Jan 2020 03:23:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579663411;
+        bh=ZrACMldnKCBblDjYLsYsmY8S44LP1hRUmCQUZbufUlA=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=ZvwlKDCLtIet2RDdfq2WfLNeEOOvkOXdZvM7/anem9XujUvmLbC4DYxfOFSF1Og8v
+         5Chsw68noDC7mvq+mgJRZCjdEPn6oLvD+Js8JokpOI550w/k4+RYMu7m6MaBCooTPE
+         x3IXwAN/ytJs2y2r0SkxFCwoMlDBmLOGnUAfB5a8=
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        "Naveen N . Rao" <naveen.n.rao@linux.ibm.com>,
+        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Namhyung Kim <namhyung@kernel.org>,
+        =?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= 
+        <thoiland@redhat.com>, Jean-Tsung Hsiao <jhsiao@redhat.com>,
+        Jesper Dangaard Brouer <brouer@redhat.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: [PATCH v2] tracing/uprobe: Fix to make trace_uprobe_filter alignment safe
+Date:   Wed, 22 Jan 2020 12:23:25 +0900
+Message-Id: <157966340499.5107.10978352478952144902.stgit@devnote2>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200122120843.493c7bd2718371af25787206@kernel.org>
+References: <20200122120843.493c7bd2718371af25787206@kernel.org>
+User-Agent: StGit/0.17.1-dirty
 MIME-Version: 1.0
-In-Reply-To: <578003e9-1af2-4df6-d9e1-cdbbbb701bf7@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/21/20 8:16 PM, Pavel Begunkov wrote:
-> On 22/01/2020 05:47, Jens Axboe wrote:
->> On 1/21/20 7:40 PM, Pavel Begunkov wrote:
->>>>> @@ -719,6 +730,11 @@ static const struct io_op_def io_op_defs[] = {
->>>>>  		.needs_file		= 1,
->>>>>  		.fd_non_neg		= 1,
->>>>>  	},
->>>>> +	[IORING_OP_SPLICE] = {
->>>>> +		.needs_file		= 1,
->>>>> +		.hash_reg_file		= 1,
->>>>> +		.unbound_nonreg_file	= 1,
->>>>> +	}
->>>>>  };
->>>>>  
->>>>>  static void io_wq_submit_work(struct io_wq_work **workptr);
->>>>
->>>> I probably want to queue up a reservation for the EPOLL_CTL that I
->>>> haven't included yet, but which has been tested. But that's easily
->>>> manageable, so no biggy on my end.
->>>
->>> I didn't quite get it. Do you mean collision of opcode numbers?
->>
->> Yeah that's all I meant, sorry wasn't too clear. But you can disregard,
->> I'll just pop a reservation in front if/when this is ready to go in if
->> it's before EPOLL_CTL op.
->>
->>>>> diff --git a/include/uapi/linux/io_uring.h b/include/uapi/linux/io_uring.h
->>>>> index 57d05cc5e271..f234b13e7ed3 100644
->>>>> --- a/include/uapi/linux/io_uring.h
->>>>> +++ b/include/uapi/linux/io_uring.h
->>>>> @@ -23,8 +23,14 @@ struct io_uring_sqe {
->>>>>  		__u64	off;	/* offset into file */
->>>>>  		__u64	addr2;
->>>>>  	};
->>>>> -	__u64	addr;		/* pointer to buffer or iovecs */
->>>>> -	__u32	len;		/* buffer size or number of iovecs */
->>>>> +	union {
->>>>> +		__u64	addr;		/* pointer to buffer or iovecs */
->>>>> +		__u64	off_out;
->>>>> +	};
->>>>> +	union {
->>>>> +		__u32	len;	/* buffer size or number of iovecs */
->>>>> +		__s32	fd_out;
->>>>> +	};
->>>>>  	union {
->>>>>  		__kernel_rwf_t	rw_flags;
->>>>>  		__u32		fsync_flags;
->>>>> @@ -37,10 +43,12 @@ struct io_uring_sqe {
->>>>>  		__u32		open_flags;
->>>>>  		__u32		statx_flags;
->>>>>  		__u32		fadvise_advice;
->>>>> +		__u32		splice_flags;
->>>>>  	};
->>>>>  	__u64	user_data;	/* data to be passed back at completion time */
->>>>>  	union {
->>>>>  		__u16	buf_index;	/* index into fixed buffers, if used */
->>>>> +		__u64	splice_len;
->>>>>  		__u64	__pad2[3];
->>>>>  	};
->>>>>  };
->>>>
->>>> Not a huge fan of this, also mean splice can't ever used fixed buffers.
->>>> Hmm...
->>>
->>> But it's not like splice() ever uses user buffers. Isn't it? vmsplice
->>> does, but that's another opcode.
->>
->> I guess that's true, I had vmsplice on my mind for this as well. But
->> won't be a problem there, since it doesn't take 6 arguments like splice
->> does.
->>
->> Another option is to do an indirect for splice, stuff the arguments in a
->> struct that's passed in as a pointer in ->addr. A bit slower, but
->> probably not a huge deal.
->>
->>>>> @@ -67,6 +75,9 @@ enum {
->>>>>  /* always go async */
->>>>>  #define IOSQE_ASYNC		(1U << IOSQE_ASYNC_BIT)
->>>>>  
->>>>> +/* op custom flags */
->>>>> +#define IOSQE_SPLICE_FIXED_OUT	(1U << 16)
->>>>> +
->>>>
->>>> I don't think it's unreasonable to say that if you specify
->>>> IOSQE_FIXED_FILE, then both are fixed. If not, then none of them are.
->>>> What do you think?
->>>>
->>>
->>> It's plausible to register only one end for splicing, e.g. splice from
->>> short-lived sockets to pre-registered buffers-pipes. And it's clearer
->>> do it now.
->>
->> You're probably right, though it's a bit nasty to add an unrelated flag
->> in the splice flag space... We should probably reserve it in splice
->> instead, and just not have it available from the regular system call.
->>
-> Agree, it looks bad. I don't want to add it into sqe->splice_flags to
-> not clash with splice(2) in the future, but could have a separate
-> field in @sqe...  or can leave in in sqe->flags, as it's done in the
-> patch, but that's like a portion of bits would be opcode specific and
-> we would need to set rules for their use.
+Commit 99c9a923e97a ("tracing/uprobe: Fix double perf_event
+linking on multiprobe uprobe") moved trace_uprobe_filter on
+trace_probe_event. However, since it introduced a flexible
+data structure with char array and type casting, the
+alignment of trace_uprobe_filter can be broken.
 
-It won't clash with splice(2), just make that flag illegal if done
-through splice(2) directly. Honestly I think that's (by FAR) the best
-way to do it, having a private io_uring flag that acts as a splice flag
-is really confusing and prone to breakage. Not that it's a huge issue
-with splice as the flags have been stable for years, so don't really see
-a high risk of collision. But we should still do it right, which means
-adding SPLICE_F_OUT_FIXED or whatever you want to call it. Do that as a
-prep patch, make do_splice() into __do_splice(), and have io_uring call
-__do_splice(). Currently splice(2) is permissive in terms of flags, so
-maybe just mask it in do_splice() to be on the safe side. Then we know
-only internal users will set SPLICE_F_OUT_FIXED, and we'll never run
-into the risk of having a collision as it's part of the flag space
-anyway.
+This changes the type of the array to trace_uprobe_filter
+data strucure to fix it.
 
-The sqe->flags space is very tight, so adding a splice specific opcode
-there would be bad.
+Fixes: 99c9a923e97a ("tracing/uprobe: Fix double perf_event linking on multiprobe uprobe")
+Suggested-by: Peter Zijlstra <peterz@infradead.org>
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+---
+ Changes in v2:
+  - Fix build errors against pointer-field mistaking.
+---
+ kernel/trace/trace_kprobe.c |    2 +-
+ kernel/trace/trace_probe.c  |    9 ++++++---
+ kernel/trace/trace_probe.h  |   10 ++++++++--
+ kernel/trace/trace_uprobe.c |   29 +++++++----------------------
+ 4 files changed, 22 insertions(+), 28 deletions(-)
 
--- 
-Jens Axboe
+diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
+index 3e5f9c7d939c..3f54dc2f6e1c 100644
+--- a/kernel/trace/trace_kprobe.c
++++ b/kernel/trace/trace_kprobe.c
+@@ -290,7 +290,7 @@ static struct trace_kprobe *alloc_trace_kprobe(const char *group,
+ 	INIT_HLIST_NODE(&tk->rp.kp.hlist);
+ 	INIT_LIST_HEAD(&tk->rp.kp.list);
+ 
+-	ret = trace_probe_init(&tk->tp, event, group, 0);
++	ret = trace_probe_init(&tk->tp, event, group, false);
+ 	if (ret < 0)
+ 		goto error;
+ 
+diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
+index bba18cf44a30..9ae87be422f2 100644
+--- a/kernel/trace/trace_probe.c
++++ b/kernel/trace/trace_probe.c
+@@ -984,16 +984,19 @@ void trace_probe_cleanup(struct trace_probe *tp)
+ }
+ 
+ int trace_probe_init(struct trace_probe *tp, const char *event,
+-		     const char *group, size_t event_data_size)
++		     const char *group, bool alloc_filter)
+ {
+ 	struct trace_event_call *call;
++	size_t size = sizeof(struct trace_probe_event);
+ 	int ret = 0;
+ 
+ 	if (!event || !group)
+ 		return -EINVAL;
+ 
+-	tp->event = kzalloc(sizeof(struct trace_probe_event) + event_data_size,
+-			    GFP_KERNEL);
++	if (alloc_filter)
++		size += sizeof(struct trace_uprobe_filter);
++
++	tp->event = kzalloc(size, GFP_KERNEL);
+ 	if (!tp->event)
+ 		return -ENOMEM;
+ 
+diff --git a/kernel/trace/trace_probe.h b/kernel/trace/trace_probe.h
+index 03e4e180058d..a0ff9e200ef6 100644
+--- a/kernel/trace/trace_probe.h
++++ b/kernel/trace/trace_probe.h
+@@ -223,6 +223,12 @@ struct probe_arg {
+ 	const struct fetch_type	*type;	/* Type of this argument */
+ };
+ 
++struct trace_uprobe_filter {
++	rwlock_t		rwlock;
++	int			nr_systemwide;
++	struct list_head	perf_events;
++};
++
+ /* Event call and class holder */
+ struct trace_probe_event {
+ 	unsigned int			flags;	/* For TP_FLAG_* */
+@@ -230,7 +236,7 @@ struct trace_probe_event {
+ 	struct trace_event_call		call;
+ 	struct list_head 		files;
+ 	struct list_head		probes;
+-	char				data[0];
++	struct trace_uprobe_filter	filter[0];
+ };
+ 
+ struct trace_probe {
+@@ -323,7 +329,7 @@ static inline bool trace_probe_has_single_file(struct trace_probe *tp)
+ }
+ 
+ int trace_probe_init(struct trace_probe *tp, const char *event,
+-		     const char *group, size_t event_data_size);
++		     const char *group, bool alloc_filter);
+ void trace_probe_cleanup(struct trace_probe *tp);
+ int trace_probe_append(struct trace_probe *tp, struct trace_probe *to);
+ void trace_probe_unlink(struct trace_probe *tp);
+diff --git a/kernel/trace/trace_uprobe.c b/kernel/trace/trace_uprobe.c
+index f66e202fec13..2619bc5ed520 100644
+--- a/kernel/trace/trace_uprobe.c
++++ b/kernel/trace/trace_uprobe.c
+@@ -34,12 +34,6 @@ struct uprobe_trace_entry_head {
+ #define DATAOF_TRACE_ENTRY(entry, is_return)		\
+ 	((void*)(entry) + SIZEOF_TRACE_ENTRY(is_return))
+ 
+-struct trace_uprobe_filter {
+-	rwlock_t		rwlock;
+-	int			nr_systemwide;
+-	struct list_head	perf_events;
+-};
+-
+ static int trace_uprobe_create(int argc, const char **argv);
+ static int trace_uprobe_show(struct seq_file *m, struct dyn_event *ev);
+ static int trace_uprobe_release(struct dyn_event *ev);
+@@ -263,14 +257,6 @@ process_fetch_insn(struct fetch_insn *code, struct pt_regs *regs, void *dest,
+ }
+ NOKPROBE_SYMBOL(process_fetch_insn)
+ 
+-static struct trace_uprobe_filter *
+-trace_uprobe_get_filter(struct trace_uprobe *tu)
+-{
+-	struct trace_probe_event *event = tu->tp.event;
+-
+-	return (struct trace_uprobe_filter *)&event->data[0];
+-}
+-
+ static inline void init_trace_uprobe_filter(struct trace_uprobe_filter *filter)
+ {
+ 	rwlock_init(&filter->rwlock);
+@@ -358,8 +344,7 @@ alloc_trace_uprobe(const char *group, const char *event, int nargs, bool is_ret)
+ 	if (!tu)
+ 		return ERR_PTR(-ENOMEM);
+ 
+-	ret = trace_probe_init(&tu->tp, event, group,
+-				sizeof(struct trace_uprobe_filter));
++	ret = trace_probe_init(&tu->tp, event, group, true);
+ 	if (ret < 0)
+ 		goto error;
+ 
+@@ -367,7 +352,7 @@ alloc_trace_uprobe(const char *group, const char *event, int nargs, bool is_ret)
+ 	tu->consumer.handler = uprobe_dispatcher;
+ 	if (is_ret)
+ 		tu->consumer.ret_handler = uretprobe_dispatcher;
+-	init_trace_uprobe_filter(trace_uprobe_get_filter(tu));
++	init_trace_uprobe_filter(tu->tp.event->filter);
+ 	return tu;
+ 
+ error:
+@@ -1076,7 +1061,7 @@ static void __probe_event_disable(struct trace_probe *tp)
+ 	struct trace_uprobe *tu;
+ 
+ 	tu = container_of(tp, struct trace_uprobe, tp);
+-	WARN_ON(!uprobe_filter_is_empty(trace_uprobe_get_filter(tu)));
++	WARN_ON(!uprobe_filter_is_empty(tu->tp.event->filter));
+ 
+ 	list_for_each_entry(pos, trace_probe_probe_list(tp), list) {
+ 		tu = container_of(pos, struct trace_uprobe, tp);
+@@ -1117,7 +1102,7 @@ static int probe_event_enable(struct trace_event_call *call,
+ 	}
+ 
+ 	tu = container_of(tp, struct trace_uprobe, tp);
+-	WARN_ON(!uprobe_filter_is_empty(trace_uprobe_get_filter(tu)));
++	WARN_ON(!uprobe_filter_is_empty(tu->tp.event->filter));
+ 
+ 	if (enabled)
+ 		return 0;
+@@ -1281,7 +1266,7 @@ static int uprobe_perf_close(struct trace_event_call *call,
+ 		return -ENODEV;
+ 
+ 	tu = container_of(tp, struct trace_uprobe, tp);
+-	if (trace_uprobe_filter_remove(trace_uprobe_get_filter(tu), event))
++	if (trace_uprobe_filter_remove(tu->tp.event->filter, event))
+ 		return 0;
+ 
+ 	list_for_each_entry(pos, trace_probe_probe_list(tp), list) {
+@@ -1306,7 +1291,7 @@ static int uprobe_perf_open(struct trace_event_call *call,
+ 		return -ENODEV;
+ 
+ 	tu = container_of(tp, struct trace_uprobe, tp);
+-	if (trace_uprobe_filter_add(trace_uprobe_get_filter(tu), event))
++	if (trace_uprobe_filter_add(tu->tp.event->filter, event))
+ 		return 0;
+ 
+ 	list_for_each_entry(pos, trace_probe_probe_list(tp), list) {
+@@ -1328,7 +1313,7 @@ static bool uprobe_perf_filter(struct uprobe_consumer *uc,
+ 	int ret;
+ 
+ 	tu = container_of(uc, struct trace_uprobe, consumer);
+-	filter = trace_uprobe_get_filter(tu);
++	filter = tu->tp.event->filter;
+ 
+ 	read_lock(&filter->rwlock);
+ 	ret = __uprobe_perf_filter(filter, mm);
 
