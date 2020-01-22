@@ -5,56 +5,57 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A15F0C33CB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 20:42:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C647C33CAF
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 20:42:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 706782467B
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 20:42:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2CB721835
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 20:42:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XmO+WrH6"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nQW4OgJg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729043AbgAVUmS (ORCPT
+        id S1729122AbgAVUms (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 15:42:18 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:39918 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726227AbgAVUmS (ORCPT
+        Wed, 22 Jan 2020 15:42:48 -0500
+Received: from mail-wm1-f42.google.com ([209.85.128.42]:55052 "EHLO
+        mail-wm1-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725946AbgAVUms (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 15:42:18 -0500
-Received: by mail-wm1-f68.google.com with SMTP id 20so124057wmj.4;
-        Wed, 22 Jan 2020 12:42:16 -0800 (PST)
+        Wed, 22 Jan 2020 15:42:48 -0500
+Received: by mail-wm1-f42.google.com with SMTP id b19so129686wmj.4;
+        Wed, 22 Jan 2020 12:42:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=eeX2JNGz9HgVPRGIoEvaZTiS7IkFyrAlD7or7JXr8vc=;
-        b=XmO+WrH6qgO7Ne8nEAm0qLG4GTHSp4ISjzysPA+T9cbl87pd43WV5D1FUSeCXy7MRT
-         /mBFUrLVUdoJHC/cTbtrHTLL97j/U0kFc0OCK7vOXN7HkQ7vKCy5HD3xvSdgcgcY8+/H
-         PmZDVXYuimI/uLvjmx+5XDqLhyzcZKa43ZC5OpU5s3uTxxP58d8CvAMMRAJsjZOjjq2w
-         DsBKXux9OjGRkF/5LR3SBQ8H9Pg2NL3OOJuVEt9G0uTPDe9BMxcJ3H5MJaUTAPXCYhAU
-         edkWSaIpHvxvpTf770Jo5ESsGtWVsl3KA3Q3bpEqM5AGbGFfoW/4EF6O/QK1Rl+kRO3n
-         CRhA==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=kzLVnx6I7dFbl8GGlRwfZsz6Y4gNG6PLh1f7Jaid6/Y=;
+        b=nQW4OgJgJdFK02hYEBEPwRrR8a6caN8r+4w7uFVz6FctUW898Gk1vZXp3DoONgY4c8
+         9K2Fif9a6xzg3HKh+eCJObqZ5Cok7NihJ5uzLhrkkDyo72h7gTnQ0KpPCxeBKy4P//k/
+         gUDzyEh0aLM1IxYCbgLq8p3kqqD7+TNz6GpQFUvU6N3qIABU77REq13g9SYATmOluUZm
+         ismOTp2Li+XseVYdvh4A3H/SZaN/GWHxBG1YVFmVQb/PlytzNR/9cN+cDU8pbMCi83Jy
+         pnjk4r1uFNNFjp6qwUbFnxYps0XuJJTRu4U3aBC2je5LJ8Prb6FYYKAI28ELmuiFybtW
+         QnCA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=eeX2JNGz9HgVPRGIoEvaZTiS7IkFyrAlD7or7JXr8vc=;
-        b=ccnRjBhxca9usCzPn3ZmaWRQG0rA7JlHPHd1pduWE9uZ/jkTwDfuyLbY2xekIXhfaB
-         cHtaLg1b0Lc/l4FU4Hca9UBB77V6aMJoLvXm0Vfq354/ytoPNdNeBP73PaxEUNLfctxs
-         s/Y9nzzk5Xkv+8FXNyN7ekQhJ3Y4tgPY6JrUADCSrW/LHMWD+0bquF7k3GVh6JMU5W6d
-         /L8PiaYGIyoZK7VCT3JIZ8qyhgKx0kBr2/POjizs5GLGSYZkgiKj02jDjot1/N6KjD/N
-         LVjiVIonxjM2WVT5UAj6lzwp0ounGzXC6KgEnIEN4gT5Qy37Gcq333cWyl9ZoN13ZAbu
-         we2Q==
-X-Gm-Message-State: APjAAAW7yn6rfTUZZKDCBMo5AWciCGZUB28sB7bbDF3EFeMO6e+aJXvp
-        Kb/ifg1F/Pfo5Pl7IGLrerQJBWJo
-X-Google-Smtp-Source: APXvYqzjJmS3tK7eQWlg6JpwLB9Y75eZZTMwk5rQl/gsFfC8eW5kvb2gCBg+6vIiN13AGheMV7dwDA==
-X-Received: by 2002:a7b:cb46:: with SMTP id v6mr21182wmj.117.1579725735539;
-        Wed, 22 Jan 2020 12:42:15 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=kzLVnx6I7dFbl8GGlRwfZsz6Y4gNG6PLh1f7Jaid6/Y=;
+        b=tt0AcafdQyFou7Qgh1H98S4JCH0GmsJRrF88pg6UhHO8f2NxBNni5K4PodGzemY7T8
+         14308yGRhh4yb/XTOxnK4kESGdKsnE0QA7VfN5X/WBZIOnZRk6Jfto1CVZ9BtX0evhQZ
+         YYUfAFWVDQts3aj2ziJ2nqkaE0PxI/DPhLAPTyESqEJAMqQyefO+JI20qDMlo0V3prFx
+         2/fVK8/I/G1j99/uGagjtQTrRlos4GsdvbuU2QLlf3whhQvpfcQMDtyTd8YaM4HbKu63
+         PbdVuT0snyyNXKGfVI4w3sEX5aIx9g3Eoz5plAH+8AZQU/IyhwW04a5XYaPmb54bLt3g
+         ADHg==
+X-Gm-Message-State: APjAAAUuC3zLeu86STV5n8bUC5MGD3vrjNOI1DwkXMkt2xWzD0dn2uFV
+        73b5tr5iKyjVKN1JEaNj5Pe3tN5f
+X-Google-Smtp-Source: APXvYqx00aXRlsFjF/mPoddK+NBD1e722qnLI6u3HAZnDCluwpoUZfbl74On5lKVD+3qSpp/n3nikA==
+X-Received: by 2002:a1c:dc85:: with SMTP id t127mr73172wmg.16.1579725766305;
+        Wed, 22 Jan 2020 12:42:46 -0800 (PST)
 Received: from mail.broadcom.com ([192.19.231.250])
-        by smtp.gmail.com with ESMTPSA id x132sm6216302wmg.0.2020.01.22.12.42.13
+        by smtp.gmail.com with ESMTPSA id x132sm6216302wmg.0.2020.01.22.12.42.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Jan 2020 12:42:15 -0800 (PST)
+        Wed, 22 Jan 2020 12:42:45 -0800 (PST)
 From:   Kamal Dasu <kdasu.kdev@gmail.com>
 To:     linux-kernel@vger.kernel.org,
         Miquel Raynal <miquel.raynal@bootlin.com>,
@@ -69,44 +70,43 @@ To:     linux-kernel@vger.kernel.org,
         Brian Norris <computersforpeace@gmail.com>,
         Kamal Dasu <kdasu.kdev@gmail.com>,
         Sumit Semwal <sumit.semwal@linaro.org>
-Cc:     linux-mtd@lists.infradead.org, devicetree@vger.kernel.org
-Subject: [PATCH V3 1/3] dt: bindings: brcmnand: Add support for flash-edu
-Date:   Wed, 22 Jan 2020 15:41:09 -0500
-Message-Id: <20200122204111.47554-1-kdasu.kdev@gmail.com>
+Cc:     bcm-kernel-feedback-list@broadcom.com, linux-mips@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: [PATCH V3 2/3] arch: mips: brcm: Add 7425 flash-edu support
+Date:   Wed, 22 Jan 2020 15:41:10 -0500
+Message-Id: <20200122204111.47554-2-kdasu.kdev@gmail.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200122204111.47554-1-kdasu.kdev@gmail.com>
+References: <20200122204111.47554-1-kdasu.kdev@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Adding support for EBI DMA unit (EDU).
+Nand controller v5.0 and v6.0 have nand edu blocks that enable
+dma nand flash transfers. This allows for faster read and write
+access.
 
 Signed-off-by: Kamal Dasu <kdasu.kdev@gmail.com>
 ---
- .../devicetree/bindings/mtd/brcm,brcmnand.txt          | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ arch/mips/boot/dts/brcm/bcm7425.dtsi | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt b/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt
-index 82156dc8f304..05651a654c66 100644
---- a/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt
-+++ b/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt
-@@ -35,11 +35,11 @@ Required properties:
-                      (optional) NAND flash cache range (if at non-standard offset)
- - reg-names        : a list of the names corresponding to the previous register
-                      ranges. Should contain "nand" and (optionally)
--                     "flash-dma" and/or "nand-cache".
--- interrupts       : The NAND CTLRDY interrupt and (if Flash DMA is available)
--                     FLASH_DMA_DONE
--- interrupt-names  : May be "nand_ctlrdy" or "flash_dma_done", if broken out as
--                     individual interrupts.
-+                     "flash-dma" or "flash-edu" and/or "nand-cache".
-+- interrupts       : The NAND CTLRDY interrupt, (if Flash DMA is available)
-+                     FLASH_DMA_DONE and if EDU is avaialble and used FLASH_EDU_DONE
-+- interrupt-names  : May be "nand_ctlrdy" or "flash_dma_done" or "flash_edu_done",
-+                     if broken out as individual interrupts.
-                      May be "nand", if the SoC has the individual NAND
-                      interrupts multiplexed behind another custom piece of
-                      hardware
+diff --git a/arch/mips/boot/dts/brcm/bcm7425.dtsi b/arch/mips/boot/dts/brcm/bcm7425.dtsi
+index 410e61ebaf9e..aa0b2d39c902 100644
+--- a/arch/mips/boot/dts/brcm/bcm7425.dtsi
++++ b/arch/mips/boot/dts/brcm/bcm7425.dtsi
+@@ -403,8 +403,8 @@
+ 			compatible = "brcm,brcmnand-v5.0", "brcm,brcmnand";
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+-			reg-names = "nand";
+-			reg = <0x41b800 0x400>;
++			reg-names = "nand", "flash-edu";
++			reg = <0x41b800 0x400>, <0x41bc00 0x24>;
+ 			interrupt-parent = <&hif_l2_intc>;
+ 			interrupts = <24>;
+ 			status = "disabled";
 -- 
 2.17.1
 
