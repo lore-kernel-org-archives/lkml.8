@@ -2,117 +2,80 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 006F7C33CB8
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 08:46:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA84AC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 08:49:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CBAED24672
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 08:46:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579682782;
-	bh=AepTZQnS41aFGnPgtfnFssNsH20gZiJLcFaGD27PRV0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=cYOuyYrSmDhdteQcWUA2MDVixBJsB87YNec5TGGvPMCOufpioCRBYfu56Q6XNMiMJ
-	 mrfzyhGNh3/N9EgB4Idhi8MbqbE3ORYo0QPCZkiNGXeDjU7vHEpX7jToHGeB+7D9FH
-	 mStGu2Dw3uPVBkOu/a2eOd+ZfDHc86IJfEF90jw8=
+	by mail.kernel.org (Postfix) with ESMTP id B193924656
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 08:49:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="PBZryFkN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729203AbgAVIqW (ORCPT
+        id S1729019AbgAVItS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 03:46:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45216 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726004AbgAVIqV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 03:46:21 -0500
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        Wed, 22 Jan 2020 03:49:18 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:47042 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725883AbgAVItS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 03:49:18 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=YCaO7HkGDxrq9uLeSsmssHBPXstORVfrji7Ya82A6ow=; b=PBZryFkN7FC0BHIdjcadjnluY
+        3F/Z7Lu1TSTlHaw3CydYtJIXZVTAJyy7f3/Apj2YOlxDOozUOnmwwekxLBYgirt9ETkOhAA7qKfgA
+        X3UGUF3In4IqthKVlMA509WVRTdL0+VSMSj7+CP6XBjIk87bMjt1i3qyJnndgFB0DaOMzoB8UdItI
+        9SWKyYlnUSQbPcnnfzgGXmEShdDfGoKuXJHKbqQLXuhTtjE1g7hiV0KJYkb+rcal9IhELt3OvAhfO
+        6B3EO1ZF2+QKlFM1VExdc+vtGUFpzzjPHRpTYj9tvPKPJZww6EBw4jqA7v4zQBPxXyzkFDBFR+3xf
+        tmIJFVoVQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iuBhB-0000IC-2I; Wed, 22 Jan 2020 08:49:05 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 412962465A;
-        Wed, 22 Jan 2020 08:46:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579682780;
-        bh=AepTZQnS41aFGnPgtfnFssNsH20gZiJLcFaGD27PRV0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=lKE/jqr5coHc/wWfyg1XVzfBMwoTN0AhXWs9DT60kBanKLjyBiFKr2fllB1806A74
-         +Rr8FQ5616OSPdnCwWeNrWpuI1lXV/wnZDKg0ZJtiGrakIj12v0wYeNSe7WEiV7AHQ
-         6vIdT8z4Tfao3vHQoSBrDVNtmR0OUVIwCurppQHU=
-Date:   Wed, 22 Jan 2020 09:46:17 +0100
-From:   Maxime Ripard <mripard@kernel.org>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Stefan Mavrodiev <stefan@olimex.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vinod Koul <vkoul@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM" 
-        <dmaengine@vger.kernel.org>,
-        "moderated list:ARM/Allwinner sunXi SoC support" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "open list:DRM DRIVERS FOR ALLWINNER A10" 
-        <dri-devel@lists.freedesktop.org>, linux-sunxi@googlegroups.com
-Subject: Re: [PATCH v2 2/2] drm: sun4i: hdmi: Add support for sun4i HDMI
- encoder audio
-Message-ID: <20200122084617.s2n4dqhwanmaxuch@gilmour.lan>
-References: <20200120123326.30743-1-stefan@olimex.com>
- <20200120123326.30743-3-stefan@olimex.com>
- <20200121182905.pxs72ojqx5fz2gi3@gilmour.lan>
- <20200121182937.2ak72e4eklk4za2u@gilmour.lan>
- <20200121183247.GL4656@sirena.org.uk>
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id D7315304121;
+        Wed, 22 Jan 2020 09:47:22 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 262E82B703E5E; Wed, 22 Jan 2020 09:49:02 +0100 (CET)
+Date:   Wed, 22 Jan 2020 09:49:02 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Eric Dumazet <edumazet@google.com>
+Cc:     Shaokun Zhang <zhangshaokun@hisilicon.com>,
+        Eric Dumazet <eric.dumazet@gmail.com>,
+        David Miller <davem@davemloft.net>,
+        netdev <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, jinyuqi@huawei.com,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        guoyang2@huawei.com, Will Deacon <will@kernel.org>
+Subject: Re: [PATCH] net: optimize cmpxchg in ip_idents_reserve
+Message-ID: <20200122084902.GQ14914@hirez.programming.kicks-ass.net>
+References: <1579058620-26684-1-git-send-email-zhangshaokun@hisilicon.com>
+ <20200116.042722.153124126288244814.davem@davemloft.net>
+ <930faaff-4d18-452d-2e44-ef05b65dc858@gmail.com>
+ <1b3aaddf-22f5-1846-90f1-42e68583c1e4@gmail.com>
+ <430496fc-9f26-8cb4-91d8-505fda9af230@hisilicon.com>
+ <20200117123253.GC14879@hirez.programming.kicks-ass.net>
+ <5fd55696-e46c-4269-c106-79782efb0dd8@hisilicon.com>
+ <CANn89iJ02iFxGibdqO+YWVYX4q4J=W9vv7HOpMVqNK-qZvHcQw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="eo44jwmgblwjtd3w"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200121183247.GL4656@sirena.org.uk>
+In-Reply-To: <CANn89iJ02iFxGibdqO+YWVYX4q4J=W9vv7HOpMVqNK-qZvHcQw@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sat, Jan 18, 2020 at 08:12:48PM -0800, Eric Dumazet wrote:
+> Instead the changelog should be explaining why the revert is now safe.
 
---eo44jwmgblwjtd3w
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Tue, Jan 21, 2020 at 06:32:47PM +0000, Mark Brown wrote:
-> On Tue, Jan 21, 2020 at 07:29:37PM +0100, Maxime Ripard wrote:
->
-> > > Mark, our issue here is that we have a driver tied to a device that is
-> > > an HDMI encoder. Obviously, we'll want to register into DRM, which is
-> > > what we were doing so far, with the usual case where at remove /
-> > > unbind time, in order to free the resources, we just retrieve our
-> > > pointer to our private structure using the device's drvdata.
->
-> > > Now, snd_soc_register_card also sets that pointer to the card we try
-> > > to register, which is problematic. It seems that it's used to handle
-> > > suspend / resume automatically, which in this case would be also not
-> > > really fit for us (or rather, we would need to do more that just
-> > > suspend the audio part).
->
-> There's a drvdata field in the snd_soc_card for cases like this - would
-> that work for you?
-
-Ah, right, we could just retrieve the snd_soc_card in the unbind, and
-the retrieve our structure that way. That's pretty simple :)
-
-Stefan, I guess this is the easiest solution, we should just make sure
-that there's a comment to explain why we retrieve snd_soc_card in the
-unbind, since it's somewhat unusual.
-
-Thanks!
-Maxime
-
---eo44jwmgblwjtd3w
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXigL2QAKCRDj7w1vZxhR
-xWq1AP43hh7O1drKmKw4LWDcFL1e3jFnbiNLxBGwUtUAsT8hwwEA505uGh0lTCPZ
-1dpI8BQYcJ5Zzjp9JGkU9Pm1KCyZMQA=
-=vZhm
------END PGP SIGNATURE-----
-
---eo44jwmgblwjtd3w--
+FWIW, it was always safe, UBSAN was just buggy.
