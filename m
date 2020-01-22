@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2571EC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:39:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E1D6C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:39:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC90724684
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:39:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 447CE24680
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:39:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579685954;
-	bh=KBgjthE4MXi4jjoOKexi2wKqKnsrS/GTG2qljJ1vEok=;
+	s=default; t=1579685957;
+	bh=2XKmY0c9D7XUVpX17QA59ql3z4kAvoi44sZGTwYqWqk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0MNR8SPLWY5gy/8aO8XqTscjgSFnUL80KgACFHbcYmW0UgzoX18EwLnpq2mYKoaML
-	 P9rwGgjkDgw8gTYJHszCGUmDgiu/KQPK7LvFtqb8zR0NptGze+dribuFN+hSQJCxcp
-	 vFsh+P+/CAFNhFXkcULGOe/tH8i5MFnLPFWDzpd4=
+	b=B9zkrFBw1iQ2lMNF1kbER3izbSkhfMrSGNLT12R9pFrECcgDila5Js3+J9eYn/Vm0
+	 BbfoO9bLm8lhBz4XvYXlyeTPEws96WoNEN6KsKynnMrArxHyGm7ayOxTUGkEfnJeGQ
+	 A885C87jywAIhAqom0cKBPWVzeY3RvqrJIq2gcNw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733168AbgAVJjN (ORCPT
+        id S1733175AbgAVJjQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 04:39:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56340 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 04:39:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56676 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733142AbgAVJjE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 04:39:04 -0500
+        id S1733142AbgAVJjO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 04:39:14 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 17EF224684;
-        Wed, 22 Jan 2020 09:39:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EF32724680;
+        Wed, 22 Jan 2020 09:39:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579685943;
-        bh=KBgjthE4MXi4jjoOKexi2wKqKnsrS/GTG2qljJ1vEok=;
+        s=default; t=1579685953;
+        bh=2XKmY0c9D7XUVpX17QA59ql3z4kAvoi44sZGTwYqWqk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=g8iCvQ/DCt0adKFw/A18hlORCxvMeure+n0C4tDRPVQNVnd/XY3mXrLq3fqAg5QUo
-         e0lI50or0iRZNNRwde+LwcCErTomulmtPNXujPMVFoZanhiVQc9M7cKSaHniRAZaYC
-         YbdyFGn4a7BJY5RaqmQnxfW5Sukm6CcBXWWWa4ZU=
+        b=sn/5f3vtqAFyLGNalD7YsteaneAI9mEQZYmYXXnz1OWytuehSE1ofIQpAtjnz/II/
+         gX71Ht12eLVQlN6C9FaOYQTDJgY0LUQl6evO9ROILnOUGGvsV8E85MmxgXoK7vDi9r
+         cSQ6CZ9CT8xfdNh1XGY3g/dxy3hDjIaYqVsJ5wEw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wen Yang <wenyang@linux.alibaba.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Qian Cai <cai@lca.pw>, Tejun Heo <tj@kernel.org>,
-        Jens Axboe <axboe@kernel.dk>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.14 28/65] mm/page-writeback.c: avoid potential division by zero in wb_min_max_ratio()
-Date:   Wed, 22 Jan 2020 10:29:13 +0100
-Message-Id: <20200122092754.784874453@linuxfoundation.org>
+        stable@vger.kernel.org, Pengcheng Yang <yangpc@wangsu.com>,
+        Neal Cardwell <ncardwell@google.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.14 49/65] tcp: fix marked lost packets not being retransmitted
+Date:   Wed, 22 Jan 2020 10:29:34 +0100
+Message-Id: <20200122092758.260941988@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200122092750.976732974@linuxfoundation.org>
 References: <20200122092750.976732974@linuxfoundation.org>
@@ -62,79 +60,83 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wen Yang <wenyang@linux.alibaba.com>
+From: Pengcheng Yang <yangpc@wangsu.com>
 
-commit 6d9e8c651dd979aa666bee15f086745f3ea9c4b3 upstream.
+[ Upstream commit e176b1ba476cf36f723cfcc7a9e57f3cb47dec70 ]
 
-Patch series "use div64_ul() instead of div_u64() if the divisor is
-unsigned long".
+When the packet pointed to by retransmit_skb_hint is unlinked by ACK,
+retransmit_skb_hint will be set to NULL in tcp_clean_rtx_queue().
+If packet loss is detected at this time, retransmit_skb_hint will be set
+to point to the current packet loss in tcp_verify_retransmit_hint(),
+then the packets that were previously marked lost but not retransmitted
+due to the restriction of cwnd will be skipped and cannot be
+retransmitted.
 
-We were first inspired by commit b0ab99e7736a ("sched: Fix possible divide
-by zero in avg_atom () calculation"), then refer to the recently analyzed
-mm code, we found this suspicious place.
+To fix this, when retransmit_skb_hint is NULL, retransmit_skb_hint can
+be reset only after all marked lost packets are retransmitted
+(retrans_out >= lost_out), otherwise we need to traverse from
+tcp_rtx_queue_head in tcp_xmit_retransmit_queue().
 
- 201                 if (min) {
- 202                         min *= this_bw;
- 203                         do_div(min, tot_bw);
- 204                 }
+Packetdrill to demonstrate:
 
-And we also disassembled and confirmed it:
+// Disable RACK and set max_reordering to keep things simple
+    0 `sysctl -q net.ipv4.tcp_recovery=0`
+   +0 `sysctl -q net.ipv4.tcp_max_reordering=3`
 
-  /usr/src/debug/kernel-4.9.168-016.ali3000/linux-4.9.168-016.ali3000.alios7.x86_64/mm/page-writeback.c: 201
-  0xffffffff811c37da <__wb_calc_thresh+234>:      xor    %r10d,%r10d
-  0xffffffff811c37dd <__wb_calc_thresh+237>:      test   %rax,%rax
-  0xffffffff811c37e0 <__wb_calc_thresh+240>:      je 0xffffffff811c3800 <__wb_calc_thresh+272>
-  /usr/src/debug/kernel-4.9.168-016.ali3000/linux-4.9.168-016.ali3000.alios7.x86_64/mm/page-writeback.c: 202
-  0xffffffff811c37e2 <__wb_calc_thresh+242>:      imul   %r8,%rax
-  /usr/src/debug/kernel-4.9.168-016.ali3000/linux-4.9.168-016.ali3000.alios7.x86_64/mm/page-writeback.c: 203
-  0xffffffff811c37e6 <__wb_calc_thresh+246>:      mov    %r9d,%r10d    ---> truncates it to 32 bits here
-  0xffffffff811c37e9 <__wb_calc_thresh+249>:      xor    %edx,%edx
-  0xffffffff811c37eb <__wb_calc_thresh+251>:      div    %r10
-  0xffffffff811c37ee <__wb_calc_thresh+254>:      imul   %rbx,%rax
-  0xffffffff811c37f2 <__wb_calc_thresh+258>:      shr    $0x2,%rax
-  0xffffffff811c37f6 <__wb_calc_thresh+262>:      mul    %rcx
-  0xffffffff811c37f9 <__wb_calc_thresh+265>:      shr    $0x2,%rdx
-  0xffffffff811c37fd <__wb_calc_thresh+269>:      mov    %rdx,%r10
+// Establish a connection
+   +0 socket(..., SOCK_STREAM, IPPROTO_TCP) = 3
+   +0 setsockopt(3, SOL_SOCKET, SO_REUSEADDR, [1], 4) = 0
+   +0 bind(3, ..., ...) = 0
+   +0 listen(3, 1) = 0
 
-This series uses div64_ul() instead of div_u64() if the divisor is
-unsigned long, to avoid truncation to 32-bit on 64-bit platforms.
+  +.1 < S 0:0(0) win 32792 <mss 1000,sackOK,nop,nop,nop,wscale 7>
+   +0 > S. 0:0(0) ack 1 <...>
+ +.01 < . 1:1(0) ack 1 win 257
+   +0 accept(3, ..., ...) = 4
 
-This patch (of 3):
+// Send 8 data segments
+   +0 write(4, ..., 8000) = 8000
+   +0 > P. 1:8001(8000) ack 1
 
-The variables 'min' and 'max' are unsigned long and do_div truncates
-them to 32 bits, which means it can test non-zero and be truncated to
-zero for division.  Fix this issue by using div64_ul() instead.
+// Enter recovery and 1:3001 is marked lost
+ +.01 < . 1:1(0) ack 1 win 257 <sack 3001:4001,nop,nop>
+   +0 < . 1:1(0) ack 1 win 257 <sack 5001:6001 3001:4001,nop,nop>
+   +0 < . 1:1(0) ack 1 win 257 <sack 5001:7001 3001:4001,nop,nop>
 
-Link: http://lkml.kernel.org/r/20200102081442.8273-2-wenyang@linux.alibaba.com
-Fixes: 693108a8a667 ("writeback: make bdi->min/max_ratio handling cgroup writeback aware")
-Signed-off-by: Wen Yang <wenyang@linux.alibaba.com>
-Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
-Cc: Qian Cai <cai@lca.pw>
-Cc: Tejun Heo <tj@kernel.org>
-Cc: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+// Retransmit 1:1001, now retransmit_skb_hint points to 1001:2001
+   +0 > . 1:1001(1000) ack 1
+
+// 1001:2001 was ACKed causing retransmit_skb_hint to be set to NULL
+ +.01 < . 1:1(0) ack 2001 win 257 <sack 5001:8001 3001:4001,nop,nop>
+// Now retransmit_skb_hint points to 4001:5001 which is now marked lost
+
+// BUG: 2001:3001 was not retransmitted
+   +0 > . 2001:3001(1000) ack 1
+
+Signed-off-by: Pengcheng Yang <yangpc@wangsu.com>
+Acked-by: Neal Cardwell <ncardwell@google.com>
+Tested-by: Neal Cardwell <ncardwell@google.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- mm/page-writeback.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ net/ipv4/tcp_input.c |    7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
---- a/mm/page-writeback.c
-+++ b/mm/page-writeback.c
-@@ -201,11 +201,11 @@ static void wb_min_max_ratio(struct bdi_
- 	if (this_bw < tot_bw) {
- 		if (min) {
- 			min *= this_bw;
--			do_div(min, tot_bw);
-+			min = div64_ul(min, tot_bw);
- 		}
- 		if (max < 100) {
- 			max *= this_bw;
--			do_div(max, tot_bw);
-+			max = div64_ul(max, tot_bw);
- 		}
- 	}
+--- a/net/ipv4/tcp_input.c
++++ b/net/ipv4/tcp_input.c
+@@ -932,9 +932,10 @@ static void tcp_update_reordering(struct
+ /* This must be called before lost_out is incremented */
+ static void tcp_verify_retransmit_hint(struct tcp_sock *tp, struct sk_buff *skb)
+ {
+-	if (!tp->retransmit_skb_hint ||
+-	    before(TCP_SKB_CB(skb)->seq,
+-		   TCP_SKB_CB(tp->retransmit_skb_hint)->seq))
++	if ((!tp->retransmit_skb_hint && tp->retrans_out >= tp->lost_out) ||
++	    (tp->retransmit_skb_hint &&
++	     before(TCP_SKB_CB(skb)->seq,
++		    TCP_SKB_CB(tp->retransmit_skb_hint)->seq)))
+ 		tp->retransmit_skb_hint = skb;
+ }
  
 
 
