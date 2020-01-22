@@ -4,48 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E53C3C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:56:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB462C3F68F
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:56:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9C5A20704
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:56:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 734D524694
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:56:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579686994;
-	bh=KKDxA6qmVN0e3XiAxuUJ2RGDXFYpnYc8Ej8NWtOMrQU=;
+	s=default; t=1579686997;
+	bh=rfyTEBDo4u3jtWxJP62Z6HW7TktOsKaBxa7T+Abi5iA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zwgQdyRAljbQBcWKE77K2yVmzMPf0YZsKSQh4NW4SVi8cT5r61AXPeLWhKGNokrvo
-	 sNL2A1dDNBYdmFVVkS48cveznNMXwD3YH0Ww23zvIOUvodf5pB8v5LXvStAzR+9Cva
-	 8uGr0rF6b/6WU7aGe0HSh0+jn1Cv0LCIyUek9BWc=
+	b=BCCSCnv4RXeYrX0sOlvHISr1ArXpR1dEJTpGjg4EUPgje4v1JeliZEdb73ynjD3RE
+	 SUp5b5ET9dZpgK8W3Ub3SwLXiFkICvwdsim4yEajT2UrfRO66Aoh3PpWFF3CGWJaF5
+	 F/Lagji9F+tVrmuvWZRoJW8y1g9Zjo8mb7RK0lso=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730926AbgAVJ4e (ORCPT
+        id S1729361AbgAVJcC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 04:56:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44628 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 04:32:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44306 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729963AbgAVJcF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 04:32:05 -0500
+        id S1729882AbgAVJbx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 04:31:53 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B1B8D24672;
-        Wed, 22 Jan 2020 09:32:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7D79A2467A;
+        Wed, 22 Jan 2020 09:31:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579685525;
-        bh=KKDxA6qmVN0e3XiAxuUJ2RGDXFYpnYc8Ej8NWtOMrQU=;
+        s=default; t=1579685513;
+        bh=rfyTEBDo4u3jtWxJP62Z6HW7TktOsKaBxa7T+Abi5iA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=L/8646B8NFxaKEMUtOeuOmdQoHblVZzRCBwCbOSVnaAcIPb5BYnrmPNRuomizvbJj
-         pVJY6bg6SIoqgR033DUZos9jE/Gspgb89l3VC9IADO98PnJ6VS+0AKQHAUjJbaSCA2
-         UV0ZY1Dly3noKkBd/OkFyP1Wl9i1RKk6d7GHKNQQ=
+        b=oGRHEvjzzxXLGiL+eK4hA2t3M+VRe3JR2o0c9HodkRovHdS+i+w9Qo0CtTizCCHEj
+         FaEpLs6juISza926+4vCEK/F6fSCK4RdmZPc/+L6WmTWWAfQYbOn1OWADkDEvrubfQ
+         u91UwURdaBF3D1XZCZtssadoqwM0shtF1589pTtE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Peng Fan <peng.fan@nxp.com>
-Subject: [PATCH 4.4 32/76] tty: serial: pch_uart: correct usage of dma_unmap_sg
-Date:   Wed, 22 Jan 2020 10:28:48 +0100
-Message-Id: <20200122092755.174221621@linuxfoundation.org>
+        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>
+Subject: [PATCH 4.4 45/76] USB: serial: suppress driver bind attributes
+Date:   Wed, 22 Jan 2020 10:29:01 +0100
+Message-Id: <20200122092757.309020249@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200122092751.587775548@linuxfoundation.org>
 References: <20200122092751.587775548@linuxfoundation.org>
@@ -58,65 +58,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peng Fan <peng.fan@nxp.com>
+From: Johan Hovold <johan@kernel.org>
 
-commit 74887542fdcc92ad06a48c0cca17cdf09fc8aa00 upstream.
+commit fdb838efa31e1ed9a13ae6ad0b64e30fdbd00570 upstream.
 
-Per Documentation/DMA-API-HOWTO.txt,
-To unmap a scatterlist, just call:
-	dma_unmap_sg(dev, sglist, nents, direction);
+USB-serial drivers must not be unbound from their ports before the
+corresponding USB driver is unbound from the parent interface so
+suppress the bind and unbind attributes.
 
-.. note::
+Unbinding a serial driver while it's port is open is a sure way to
+trigger a crash as any driver state is released on unbind while port
+hangup is handled on the parent USB interface level. Drivers for
+multiport devices where ports share a resource such as an interrupt
+endpoint also generally cannot handle individual ports going away.
 
-	The 'nents' argument to the dma_unmap_sg call must be
-	the _same_ one you passed into the dma_map_sg call,
-	it should _NOT_ be the 'count' value _returned_ from the
-	dma_map_sg call.
-
-However in the driver, priv->nent is directly assigned with value
-returned from dma_map_sg, and dma_unmap_sg use priv->nent for unmap,
-this breaks the API usage.
-
-So introduce a new entry orig_nent to remember 'nents'.
-
-Fixes: da3564ee027e ("pch_uart: add multi-scatter processing")
-Signed-off-by: Peng Fan <peng.fan@nxp.com>
-Link: https://lore.kernel.org/r/1573623259-6339-1-git-send-email-peng.fan@nxp.com
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Cc: stable <stable@vger.kernel.org>
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Johan Hovold <johan@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/tty/serial/pch_uart.c |    5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/usb/serial/usb-serial.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/drivers/tty/serial/pch_uart.c
-+++ b/drivers/tty/serial/pch_uart.c
-@@ -251,6 +251,7 @@ struct eg20t_port {
- 	struct dma_chan			*chan_rx;
- 	struct scatterlist		*sg_tx_p;
- 	int				nent;
-+	int				orig_nent;
- 	struct scatterlist		sg_rx;
- 	int				tx_dma_use;
- 	void				*rx_buf_virt;
-@@ -804,9 +805,10 @@ static void pch_dma_tx_complete(void *ar
+--- a/drivers/usb/serial/usb-serial.c
++++ b/drivers/usb/serial/usb-serial.c
+@@ -1350,6 +1350,9 @@ static int usb_serial_register(struct us
+ 		return -EINVAL;
  	}
- 	xmit->tail &= UART_XMIT_SIZE - 1;
- 	async_tx_ack(priv->desc_tx);
--	dma_unmap_sg(port->dev, sg, priv->nent, DMA_TO_DEVICE);
-+	dma_unmap_sg(port->dev, sg, priv->orig_nent, DMA_TO_DEVICE);
- 	priv->tx_dma_use = 0;
- 	priv->nent = 0;
-+	priv->orig_nent = 0;
- 	kfree(priv->sg_tx_p);
- 	pch_uart_hal_enable_interrupt(priv, PCH_UART_HAL_TX_INT);
- }
-@@ -1031,6 +1033,7 @@ static unsigned int dma_handle_tx(struct
- 		dev_err(priv->port.dev, "%s:dma_map_sg Failed\n", __func__);
- 		return 0;
- 	}
-+	priv->orig_nent = num;
- 	priv->nent = nent;
  
- 	for (i = 0; i < nent; i++, sg++) {
++	/* Prevent individual ports from being unbound. */
++	driver->driver.suppress_bind_attrs = true;
++
+ 	usb_serial_operations_init(driver);
+ 
+ 	/* Add this device to our list of devices */
 
 
