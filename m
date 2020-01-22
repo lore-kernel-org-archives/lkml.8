@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BBD3C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:45:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05687C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:45:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DCAAC2467B
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:45:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD9092467B
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:45:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579686323;
-	bh=z66//4YlNJQQ3JxsVau+YueKuXK8xmuBukON99+H4m0=;
+	s=default; t=1579686330;
+	bh=4mPE/gzMo7xTmp0JuJIxY5d1q1UzA0qYxFBlXRGY944=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aRcIRuvz38jrw2xZpUEt3iPldGZ+4fto8Q8XBAeF/TNGWBQ7ayewiPSKHVRvZBdyL
-	 9snGkTdeD/xPyJsHK/SbGHkJtWcGUHsqUyhGgJ3Ag3xwbad7IGrUdyAe1/qa6hDDyA
-	 xpqCnHTKtNQWhUkCzXhBgcpXxECsuhoiFg+ZFwgM=
+	b=H3OKIaFaCf5GmqND+s+ghP0aE05QjFnF+QekkL1BblAmUcPQrUaaRj+K0lpvtBZMj
+	 jrEZLQ5fYUZlHWh56leTsIyhtCiONevn/U5a1nMBDJ+dyEa4bLfmADAWpSTi0McOO5
+	 ji8K6kndF56fYV0rvBVHKwb+Edz6FrSU1CYBAf04=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387984AbgAVJpV (ORCPT
+        id S1730012AbgAVJpa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 04:45:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39138 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 04:45:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38584 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729996AbgAVJpL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 04:45:11 -0500
+        id S2387932AbgAVJo4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 04:44:56 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 629582467B;
-        Wed, 22 Jan 2020 09:45:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 507122467B;
+        Wed, 22 Jan 2020 09:44:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579686310;
-        bh=z66//4YlNJQQ3JxsVau+YueKuXK8xmuBukON99+H4m0=;
+        s=default; t=1579686295;
+        bh=4mPE/gzMo7xTmp0JuJIxY5d1q1UzA0qYxFBlXRGY944=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oZBTf5BbrXPeAfvlde6x5/q73UQlskFzLMb9uDkI9dVpTIt7xeFpQWAgDMoHQcekN
-         XaVHjKzFbXtvYcned53NErkoUq4epZj+g7bjfGbI2euuDO3gRklDlqsOVoFQXnZf3x
-         kIY5dbS+qT9no5Nm5d9VvoT+Jqin+83J/iT0pn5U=
+        b=C6EBXgl4qjZ0Y8EbH7k70+IgL26hTtmVqTqWvrj995voGor6HtmkeZ56EG4xnyD28
+         ypztZUk1w5ICTYaGS787Z/Iwp9VJwemm7dpt1/euUUdtLTdv04MOIrKniV6xdoK2hA
+         wMqHlPjMfdS2nUx6Da/c+AcMN+fJKHdKrumVJPvY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.4 025/222] ALSA: usb-audio: fix sync-ep altsetting sanity check
-Date:   Wed, 22 Jan 2020 10:26:51 +0100
-Message-Id: <20200122092835.230210629@linuxfoundation.org>
+        stable@vger.kernel.org, Rob Clark <robdclark@gmail.com>,
+        Georgi Djakov <georgi.djakov@linaro.org>,
+        Stephen Boyd <sboyd@kernel.org>
+Subject: [PATCH 5.4 002/222] clk: qcom: gcc-sdm845: Add missing flag to votable GDSCs
+Date:   Wed, 22 Jan 2020 10:26:28 +0100
+Message-Id: <20200122092833.515642549@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200122092833.339495161@linuxfoundation.org>
 References: <20200122092833.339495161@linuxfoundation.org>
@@ -59,42 +60,96 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+From: Georgi Djakov <georgi.djakov@linaro.org>
 
-commit 5d1b71226dc4d44b4b65766fa9d74492f9d4587b upstream.
+commit 5e82548e26ef62e257dc2ff37c11acb5eb72728e upstream.
 
-The altsetting sanity check in set_sync_ep_implicit_fb_quirk() was
-checking for there to be at least one altsetting but then went on to
-access the second one, which may not exist.
+On sdm845 devices, during boot we see the following warnings (unless we
+have added 'pd_ignore_unused' to the kernel command line):
+	hlos1_vote_mmnoc_mmu_tbu_sf_gdsc status stuck at 'on'
+	hlos1_vote_mmnoc_mmu_tbu_hf1_gdsc status stuck at 'on'
+	hlos1_vote_mmnoc_mmu_tbu_hf0_gdsc status stuck at 'on'
+	hlos1_vote_aggre_noc_mmu_tbu2_gdsc status stuck at 'on'
+	hlos1_vote_aggre_noc_mmu_tbu1_gdsc status stuck at 'on'
+	hlos1_vote_aggre_noc_mmu_pcie_tbu_gdsc status stuck at 'on'
+	hlos1_vote_aggre_noc_mmu_audio_tbu_gdsc status stuck at 'on'
 
-This could lead to random slab data being used to initialise the sync
-endpoint in snd_usb_add_endpoint().
+As the name of these GDSCs suggests, they are "votable" and in downstream
+DT, they all have the property "qcom,no-status-check-on-disable", which
+means that we should not poll the status bit when we disable them.
 
-Fixes: c75a8a7ae565 ("ALSA: snd-usb: add support for implicit feedback")
-Fixes: ca10a7ebdff1 ("ALSA: usb-audio: FT C400 sync playback EP to capture EP")
-Fixes: 5e35dc0338d8 ("ALSA: usb-audio: add implicit fb quirk for Behringer UFX1204")
-Fixes: 17f08b0d9aaf ("ALSA: usb-audio: add implicit fb quirk for Axe-Fx II")
-Fixes: 103e9625647a ("ALSA: usb-audio: simplify set_sync_ep_implicit_fb_quirk")
-Cc: stable <stable@vger.kernel.org>     # 3.5
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Link: https://lore.kernel.org/r/20200114083953.1106-1-johan@kernel.org
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Luckily the VOTABLE flag already exists and it does exactly what we need,
+so let's make use of it to make the warnings disappear.
+
+Fixes: 06391eddb60a ("clk: qcom: Add Global Clock controller (GCC) driver for SDM845")
+Reported-by: Rob Clark <robdclark@gmail.com>
+Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
+Link: https://lkml.kernel.org/r/20191126153437.11808-1-georgi.djakov@linaro.org
+Tested-by: Rob Clark <robdclark@gmail.com>
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/usb/pcm.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/clk/qcom/gcc-sdm845.c |    7 +++++++
+ 1 file changed, 7 insertions(+)
 
---- a/sound/usb/pcm.c
-+++ b/sound/usb/pcm.c
-@@ -370,7 +370,7 @@ static int set_sync_ep_implicit_fb_quirk
- add_sync_ep_from_ifnum:
- 	iface = usb_ifnum_to_if(dev, ifnum);
+--- a/drivers/clk/qcom/gcc-sdm845.c
++++ b/drivers/clk/qcom/gcc-sdm845.c
+@@ -3255,6 +3255,7 @@ static struct gdsc hlos1_vote_aggre_noc_
+ 		.name = "hlos1_vote_aggre_noc_mmu_audio_tbu_gdsc",
+ 	},
+ 	.pwrsts = PWRSTS_OFF_ON,
++	.flags = VOTABLE,
+ };
  
--	if (!iface || iface->num_altsetting == 0)
-+	if (!iface || iface->num_altsetting < 2)
- 		return -EINVAL;
+ static struct gdsc hlos1_vote_aggre_noc_mmu_pcie_tbu_gdsc = {
+@@ -3263,6 +3264,7 @@ static struct gdsc hlos1_vote_aggre_noc_
+ 		.name = "hlos1_vote_aggre_noc_mmu_pcie_tbu_gdsc",
+ 	},
+ 	.pwrsts = PWRSTS_OFF_ON,
++	.flags = VOTABLE,
+ };
  
- 	alts = &iface->altsetting[1];
+ static struct gdsc hlos1_vote_aggre_noc_mmu_tbu1_gdsc = {
+@@ -3271,6 +3273,7 @@ static struct gdsc hlos1_vote_aggre_noc_
+ 		.name = "hlos1_vote_aggre_noc_mmu_tbu1_gdsc",
+ 	},
+ 	.pwrsts = PWRSTS_OFF_ON,
++	.flags = VOTABLE,
+ };
+ 
+ static struct gdsc hlos1_vote_aggre_noc_mmu_tbu2_gdsc = {
+@@ -3279,6 +3282,7 @@ static struct gdsc hlos1_vote_aggre_noc_
+ 		.name = "hlos1_vote_aggre_noc_mmu_tbu2_gdsc",
+ 	},
+ 	.pwrsts = PWRSTS_OFF_ON,
++	.flags = VOTABLE,
+ };
+ 
+ static struct gdsc hlos1_vote_mmnoc_mmu_tbu_hf0_gdsc = {
+@@ -3287,6 +3291,7 @@ static struct gdsc hlos1_vote_mmnoc_mmu_
+ 		.name = "hlos1_vote_mmnoc_mmu_tbu_hf0_gdsc",
+ 	},
+ 	.pwrsts = PWRSTS_OFF_ON,
++	.flags = VOTABLE,
+ };
+ 
+ static struct gdsc hlos1_vote_mmnoc_mmu_tbu_hf1_gdsc = {
+@@ -3295,6 +3300,7 @@ static struct gdsc hlos1_vote_mmnoc_mmu_
+ 		.name = "hlos1_vote_mmnoc_mmu_tbu_hf1_gdsc",
+ 	},
+ 	.pwrsts = PWRSTS_OFF_ON,
++	.flags = VOTABLE,
+ };
+ 
+ static struct gdsc hlos1_vote_mmnoc_mmu_tbu_sf_gdsc = {
+@@ -3303,6 +3309,7 @@ static struct gdsc hlos1_vote_mmnoc_mmu_
+ 		.name = "hlos1_vote_mmnoc_mmu_tbu_sf_gdsc",
+ 	},
+ 	.pwrsts = PWRSTS_OFF_ON,
++	.flags = VOTABLE,
+ };
+ 
+ static struct clk_regmap *gcc_sdm845_clocks[] = {
 
 
