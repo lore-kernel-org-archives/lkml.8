@@ -2,155 +2,141 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF753C32771
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 07:26:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CBAEC33CB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 07:31:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 710592253D
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 07:26:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="K8Zv8S6D"
+	by mail.kernel.org (Postfix) with ESMTP id 6C8382253D
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 07:31:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726204AbgAVH0r (ORCPT
+        id S1726167AbgAVHb6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 02:26:47 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:57646 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725884AbgAVH0r (ORCPT
+        Wed, 22 Jan 2020 02:31:58 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:44355 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725883AbgAVHb5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 02:26:47 -0500
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00M7I2PK152760;
-        Wed, 22 Jan 2020 07:26:21 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to :
- subject : message-id : mime-version : content-type : in-reply-to;
- s=corp-2019-08-05; bh=t19fr+i+3LAUvZjKR4432MxiwRHJP7muLT3rFzcvB44=;
- b=K8Zv8S6Dql9ihiPPqSMJVU8SFDHL98TVCj/f2M7Wo721MQcoIed7ErtuKP7XSSq5lPct
- agrn19VDdggS/dBEBVRKqT27NM93WOfahSpvaO9F3OfCI4vrX6rm+cMP3DJ+Rbb3E9TI
- ALssTQfWhPnpMfsV0PYa5+K9gyWjQypsrr07ifiG64ADpi+pRwKSky6oZORo8kEvUXtO
- nnw2p2dm9Dnm/jLnKWEaUbjfZ1yweLbSW8EgvTlqrQpIr0Qeq0W2jR5N8Oy6AWEa36i/
- vB1HgioPDx53Ji9A/CJoBr0opZ2jrW5nknylNWIQJ8Dem/RTPHCeCE1nu3XrpZp34uVK SA== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by aserp2120.oracle.com with ESMTP id 2xksyq9vft-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 22 Jan 2020 07:26:21 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00M7Itmn048101;
-        Wed, 22 Jan 2020 07:26:21 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3030.oracle.com with ESMTP id 2xnpfqncne-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 22 Jan 2020 07:26:21 +0000
-Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 00M7QEsY021950;
-        Wed, 22 Jan 2020 07:26:15 GMT
-Received: from kili.mountain (/129.205.23.165)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 21 Jan 2020 23:26:14 -0800
-Date:   Wed, 22 Jan 2020 10:26:04 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     "David S. Miller" <davem@davemloft.net>,
-        syzbot <syzbot+5cfab121b54dff775399@syzkaller.appspotmail.com>,
-        allison@lohutok.net, keescook@chromium.org,
-        kstewart@linuxfoundation.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, pankaj.laxminarayan.bharadiya@intel.com,
-        syzkaller-bugs@googlegroups.com, tglx@linutronix.de
-Subject: [PATCH] net/802/mrp: disconnect on uninit
-Message-ID: <20200122072604.hkspgs6ihyelzxtn@kili.mountain>
+        Wed, 22 Jan 2020 02:31:57 -0500
+Received: by mail-oi1-f193.google.com with SMTP id d62so5187162oia.11;
+        Tue, 21 Jan 2020 23:31:56 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=RqVNk/s/kihSN6HM/Xmr4Y73WPhhKATV/QFQjnujpGg=;
+        b=nJRSl2fSm18QROdiFpbHUDOaYyDmK8vbbYkRZUGkbHC9Ybn7U22QmcJrsPYOfZhM1F
+         U18hf5/hAtdgeHh7x/+jb6Af7u431VGhT+/KH7FYrYcPAu3BooWbMxESMYcSo/2FkiXY
+         nSKFNPEBWO+oudG6FG6qINt0DXzQqFsILmnOvw5GNt+HmeY/H5nnKUSjhBtjlOL9VWxI
+         UiIyIq0RBMDGfbE13o5FeUMj75hv7WYB+HjkERu43AcyZHNgeKDvaK6FUV+HqGbMPq+Z
+         lLeN74uwKQ4qia7kmeK06JGw9KZNIQr0eXqs2n7gwhI/bzJfZMqkWMhympN+7uXN6iiN
+         Q1oA==
+X-Gm-Message-State: APjAAAULh8+p3VgMlXxQtQBTn/nXuTAuxah7uDSwWoyvOoHw2sP3uJrh
+        CBfjnqnqqNOvrevyl1vfCZ6IicKi7jKVFN62Rqo=
+X-Google-Smtp-Source: APXvYqy6HgiLyUhCyYc9fYH8fE1+mOcTDNClquSwMdkOlnTVa3GkzPfrnfP2otxXLIHVLiOx/a+6DUa2KS2lgphvxTs=
+X-Received: by 2002:a05:6808:292:: with SMTP id z18mr5610666oic.131.1579678316554;
+ Tue, 21 Jan 2020 23:31:56 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <000000000000f35c6a059cab64c5@google.com>
-X-Mailer: git-send-email haha only kidding
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9507 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-2001220066
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9507 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-2001220066
+References: <20190212143003.48446-1-john.ogness@linutronix.de>
+ <20200120230522.GA23636@lxhi-065.adit-jv.com> <87v9p4mkhr.fsf@linutronix.de> <20200122023422.GA926@lxhi-065.adit-jv.com>
+In-Reply-To: <20200122023422.GA926@lxhi-065.adit-jv.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Wed, 22 Jan 2020 08:31:44 +0100
+Message-ID: <CAMuHMdXT9USuHw15nA1mLXsh7RKK68eN0phevC_Jauaa7FnW0Q@mail.gmail.com>
+Subject: Re: [RFC PATCH v1 00/25] printk: new implementation
+To:     Eugeniu Rosca <erosca@de.adit-jv.com>
+Cc:     John Ogness <john.ogness@linutronix.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        Andrew Gabbasov <andrew_gabbasov@mentor.com>,
+        Sanjeev Chugh <sanjeev_chugh@mentor.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Daniel Wang <wonderfly@google.com>,
+        Dean Jenkins <dean_jenkins@mentor.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Dirk Behme <dirk.behme@de.bosch.com>,
+        Alan Cox <gnomes@lxorguk.ukuu.org.uk>,
+        Jiri Slaby <jslaby@suse.com>,
+        Peter Feiner <pfeiner@google.com>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Eugeniu Rosca <roscaeugeniu@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[  I was investigating this bug and I sort of got carried away and wrote
-   a patch.  I'm going to see if I can find a test system to start
-   testing these patches then I will resend the patch.  - dan ]
+Hi Eugeniu,
 
-Syzbot discovered that mrp_attr attr structs are being leaked.  They're
-supposed to be freed by mrp_attr_destroy() which is called from
-mrp_attr_event().
+On Wed, Jan 22, 2020 at 3:34 AM Eugeniu Rosca <erosca@de.adit-jv.com> wrote:
+> On Wed, Jan 22, 2020 at 12:56:48AM +0100, John Ogness wrote:
+> > On 2020-01-21, Eugeniu Rosca <erosca@de.adit-jv.com> wrote:
+> > > This [1] is a fairly old thread, but I only recently stumbled upon it,
+> > > while co-investigating below audio distortions [2] on R-Car3 ARM64
+> > > boards, which can be reproduced by stressing [3] the serial console.
+> > >
+> > > The investigation started a few months ago, when users reported audio
+> > > drops during the first seconds of system startup. Only after a few
+> > > weeks it became clear (thanks to some people in Cc) that the
+> > > distortions were contributed by the above-average serial console load
+> > > during the early boot. Once understood, we were able to come up with a
+> > > synthetic test [2-3].
+> > >
+> > > I thought it would be interesting to share below reproduction matrix,
+> > > in order to contrast vanilla to linux-rt-devel [4], as well as to
+> > > compare various preemption models.
+> > >
+> > >                            | Ser.console  Ser.console
+> > >                            | stressed     at rest or disabled
+> > >       --------------------------------------------
+> > >       v5.5-rc6 (PREEMPT=y) | distorted    clean
+> > >     v5.4.5-rt3 (PREEMPT=y) | distorted    clean
+> > >  v5.4.5-rt3 (PREEMPT_RT=y) | clean        clean
+> > >
+> > > My feeling is that the results probably do not surprise linux-rt
+> > > people.
+> > >
+> > > My first question is, should there be any improvement in the case of
+> > > v5.4.5-rt3 (PREEMPT=y), which I do not sense? I would expect so, based
+> > > on the cover letter of this series (pointing out the advantages of the
+> > > redesigned printk mechanism).
+> >
+> > The problem you are reporting is not the problem that the printk rework
+> > is trying to solve.
+>
+> In general, agreed. But there are some quirks and peculiarities in how
+> the issue (increased audio latency) manifests itself on R-Car3, which
+> might create some room for a (relatively simple) loophole solution in
+> the printk mechanism.
+>
+> With that said, I need to diverge a bit from the platform-agnostic
+> scope of this series.
+>
+> So, what's specific to R-Car3, based on my testing, is that the issue
+> can only be reproduced if the printk storm originates on CPU0 (it does
+> not matter if from interrupt or task context, both have been tested). If
+> the printk storm is initiated on any other CPU (there are 7 secondary
+> ones on R-Car H3), there is no regression in the audio quality/latency.
 
-I think that when we close everything down, we're supposed to send one
-last disconnect event but the code for that wasn't fully implemented.
+The secure stuff is running on CPU0, isn't it?
+Is that a coincidence?
 
-Reported-by: syzbot+5cfab121b54dff775399@syzkaller.appspotmail.com
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
----
-Not tested.  Idea only.
+Gr{oetje,eeting}s,
 
- net/802/mrp.c | 20 ++++++++++++++++++--
- 1 file changed, 18 insertions(+), 2 deletions(-)
+                        Geert
 
-diff --git a/net/802/mrp.c b/net/802/mrp.c
-index bea6e43d45a0..f1d71cd68a79 100644
---- a/net/802/mrp.c
-+++ b/net/802/mrp.c
-@@ -562,7 +562,9 @@ void mrp_request_leave(const struct net_device *dev,
- }
- EXPORT_SYMBOL_GPL(mrp_request_leave);
- 
--static void mrp_mad_event(struct mrp_applicant *app, enum mrp_event event)
-+static void mrp_mad_event_helper(struct mrp_applicant *app,
-+				 enum mrp_event event,
-+				 int state)
- {
- 	struct rb_node *node, *next;
- 	struct mrp_attr *attr;
-@@ -571,10 +573,24 @@ static void mrp_mad_event(struct mrp_applicant *app, enum mrp_event event)
- 	     next = node ? rb_next(node) : NULL, node != NULL;
- 	     node = next) {
- 		attr = rb_entry(node, struct mrp_attr, node);
-+		if (state != -1)
-+			attr->state = state;
- 		mrp_attr_event(app, attr, event);
- 	}
- }
- 
-+static void mrp_mad_event(struct mrp_applicant *app, enum mrp_event event)
-+{
-+	mrp_mad_event_helper(app, event, -1);
-+}
-+
-+static void mrp_mad_event_state(struct mrp_applicant *app,
-+				enum mrp_event event,
-+				enum mrp_applicant_state state)
-+{
-+	mrp_mad_event_helper(app, event, state);
-+}
-+
- static void mrp_join_timer_arm(struct mrp_applicant *app)
- {
- 	unsigned long delay;
-@@ -894,7 +910,7 @@ void mrp_uninit_applicant(struct net_device *dev, struct mrp_application *appl)
- 	del_timer_sync(&app->periodic_timer);
- 
- 	spin_lock_bh(&app->lock);
--	mrp_mad_event(app, MRP_EVENT_TX);
-+	mrp_mad_event_state(app, MRP_EVENT_TX, MRP_APPLICANT_LA);
- 	mrp_pdu_queue(app);
- 	spin_unlock_bh(&app->lock);
- 
 -- 
-2.11.0
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
