@@ -2,163 +2,171 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31504C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 19:30:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C271FC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 19:31:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A46620704
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 19:30:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="WblboZNm"
+	by mail.kernel.org (Postfix) with ESMTP id 965B124656
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 19:31:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579721485;
+	bh=o2BnmCQVbX1UVnBo117qG0JJqt29R4LDgBWBNwBCcQk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=P3aR/xV2Vh4aOexBLrToEcC5HXTzsy5JQ5d9866hL4CTLQrQOhhWBvnCV+B6e2Xxr
+	 x1D4byPYcBrAzE2jvmQmtHZblNH7kNoAbtxmMsWaMzfCxhNWn5zAcOoPjyoZl1KBpP
+	 f4Nefu/R2Etf3rjLbdYrP2u3u2V2caI4829wnYmg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728842AbgAVTav (ORCPT
+        id S1726780AbgAVTbY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 14:30:51 -0500
-Received: from userp2120.oracle.com ([156.151.31.85]:49500 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725827AbgAVTau (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 14:30:50 -0500
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00MJSOLY013172;
-        Wed, 22 Jan 2020 19:29:45 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2019-08-05; bh=NWUObdwgZDzbSQPfNwPkqO4BXDviIlQVMJjazGC8iZI=;
- b=WblboZNmJ3T7EyFz0bU/La07yBbrviyMBLElM2gxIIjYpzinBGY4Q5e2k98xiUKKN8F2
- wXZSudBpGBeixGrpEZg3opwZ859Bfdw1gj+4Ktfwi8ZzpAvsHIogDHqkJhgww76nBHgS
- QOvtM9/RIUYrOnL59+9aRHWvkkL1jz+5j+6e2dK3IoxdU0Two7osf7KbDDJiOApa3xPm
- E8C8dNR4wiIGiE5eF9XkdhgdQbiH3NXaw63b0S5CKD+k3AeJKZpzmLnK28I7/COs2540
- jwOEg2AZFuj+CEhnALscVh4IRP7PrxEtJ7jowHd4Fz34bnjDMO9+2vXwNpTuHroyG+4k gg== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 2xktnrdshb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 22 Jan 2020 19:29:45 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00MJSfHr164521;
-        Wed, 22 Jan 2020 19:29:44 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3020.oracle.com with ESMTP id 2xppq18gyk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 22 Jan 2020 19:29:44 +0000
-Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 00MJTenw028887;
-        Wed, 22 Jan 2020 19:29:40 GMT
-Received: from [10.39.195.152] (/10.39.195.152)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 22 Jan 2020 11:29:39 -0800
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: [PATCH v9 0/5] Add NUMA-awareness to qspinlock
-From:   Alex Kogan <alex.kogan@oracle.com>
-In-Reply-To: <CAC4j=Y8rCeTX9oKKbh+dCdTP8Ud4hW1ybu+iE7t_nxMSYBOR5w@mail.gmail.com>
-Date:   Wed, 22 Jan 2020 14:29:36 -0500
-Cc:     linux@armlinux.org.uk, Peter Zijlstra <peterz@infradead.org>,
-        mingo@redhat.com, will.deacon@arm.com, arnd@arndb.de,
-        longman@redhat.com, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        tglx@linutronix.de, bp@alien8.de, hpa@zytor.com, x86@kernel.org,
-        guohanjun@huawei.com, jglauber@marvell.com, dave.dice@oracle.com,
-        steven.sistare@oracle.com, daniel.m.jordan@oracle.com,
-        Will Deacon <will@kernel.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <4F71A184-42C0-4865-9AAA-79A636743C25@oracle.com>
-References: <20200115035920.54451-1-alex.kogan@oracle.com>
- <CAC4j=Y8rCeTX9oKKbh+dCdTP8Ud4hW1ybu+iE7t_nxMSYBOR5w@mail.gmail.com>
-To:     Lihao Liang <lihaoliang@google.com>
-X-Mailer: Apple Mail (2.3445.104.11)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9508 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-2001220165
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9508 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-2001220165
+        Wed, 22 Jan 2020 14:31:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59740 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725827AbgAVTbY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 14:31:24 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B16AE20704;
+        Wed, 22 Jan 2020 19:31:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579721481;
+        bh=o2BnmCQVbX1UVnBo117qG0JJqt29R4LDgBWBNwBCcQk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=hPCNSwnvKq6CG8pVShRBsttZS4RrcNSv4Ahv7eME+9bprcKvO+/Gi8oJ7MpK+Ij4F
+         8N1DgvPdGzZNBQutcGobd0ROCxCMJkJDVnpDnR/qL8gWzl3JpTFs+SNHZvLaCvmy0k
+         LFXPfbpwADUlvJscy+xKm9SDu/pO5tuuUW8eWtE4=
+Date:   Wed, 22 Jan 2020 20:31:18 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Jason Baron <jbaron@akamai.com>
+Cc:     Will Deacon <will@kernel.org>, linux-kernel@vger.kernel.org,
+        kernel-team@android.com
+Subject: [PATCH v3] dynamic_debug: allow to work if debugfs is disabled
+Message-ID: <20200122193118.GA88722@kroah.com>
+References: <20200122074343.GA2099098@kroah.com>
+ <20200122080352.GA15354@willie-the-truck>
+ <20200122081205.GA2227985@kroah.com>
+ <20200122135352.GA9458@kroah.com>
+ <8d68b75c-05b8-b403-0a10-d17b94a73ba7@akamai.com>
+ <20200122192940.GA88549@kroah.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200122192940.GA88549@kroah.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Lihao.
+With the realization that having debugfs enabled on "production" systems is
+generally not a good idea, debugfs is being disabled from more and more
+platforms over time.  However, the functionality of dynamic debugging still is
+needed at times, and since it relies on debugfs for its user api, having
+debugfs disabled also forces dynamic debug to be disabled.
 
-> On Jan 22, 2020, at 6:45 AM, Lihao Liang <lihaoliang@google.com> =
-wrote:
->=20
-> Hi Alex,
->=20
-> On Wed, Jan 22, 2020 at 10:28 AM Alex Kogan <alex.kogan@oracle.com> =
-wrote:
->>=20
->> Summary
->> -------
->>=20
->> Lock throughput can be increased by handing a lock to a waiter on the
->> same NUMA node as the lock holder, provided care is taken to avoid
->> starvation of waiters on other NUMA nodes. This patch introduces CNA
->> (compact NUMA-aware lock) as the slow path for qspinlock. It is
->> enabled through a configuration option (NUMA_AWARE_SPINLOCKS).
->>=20
->=20
-> Thanks for your patches. The experimental results look promising!
->=20
-> I understand that the new CNA qspinlock uses randomization to achieve
-> long-term fairness, and provides the numa_spinlock_threshold parameter
-> for users to tune.
-This has been the case in the first versions of the series, but is not =
-true anymore.
-That is, the long-term fairness is achieved deterministically (and you =
-are correct=20
-that it is done through the numa_spinlock_threshold parameter).
+To get around this, move the "control" file for dynamic_debug to procfs IFF
+debugfs is disabled.  This lets people turn on debugging as needed at runtime
+for individual driverfs and subsystems.
 
-> As Linux runs extremely diverse workloads, it is not
-> clear how randomization affects its fairness, and how users with
-> different requirements are supposed to tune this parameter.
->=20
-> To this end, Will and I consider it beneficial to be able to answer =
-the
-> following question:
->=20
-> With different values of numa_spinlock_threshold and
-> SHUFFLE_REDUCTION_PROB_ARG, how long do threads running on different
-> sockets have to wait to acquire the lock?
-The SHUFFLE_REDUCTION_PROB_ARG parameter is intended for performance
-optimization only, and *does not* affect the long-term fairness (or, at =
-the=20
-very least, does not make it any worse). As Longman correctly pointed =
-out in=20
-his response to this email, the shuffle reduction optimization is =
-relevant only
-when the secondary queue is empty. In that case, CNA hands-off the lock
-exactly as MCS does, i.e., in the FIFO order. Note that when the =
-secondary
-queue is not empty, we do not call probably().
+Reported-by: many different companies
+Cc: Jason Baron <jbaron@akamai.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+v3: rename init function as it is now no longer just for debugfs, thanks
+    to Jason for the review.
+    Fix build warning for debugfs_initialized call.
+v2: Fix up octal permissions and add procfs reference to the Kconfig
+    entry, thanks to Will for the review.
 
-> This is particularly relevant
-> in high contention situations when new threads keep arriving on the =
-same
-> socket as the lock holder.
-In this case, the lock will stay on the same NUMA node/socket for=20
-2^numa_spinlock_threshold times, which is the worst case scenario if we=20=
 
-consider the long-term fairness. And if we have multiple nodes, it will =
-take=20
-up to 2^numa_spinlock_threshold X (nr_nodes - 1) + nr_cpus_per_node
-lock transitions until any given thread will acquire the lock
-(assuming 2^numa_spinlock_threshold > nr_cpus_per_node).
+ .../admin-guide/dynamic-debug-howto.rst       |  3 +++
+ lib/Kconfig.debug                             |  7 ++++---
+ lib/dynamic_debug.c                           | 21 ++++++++++++++-----
+ 3 files changed, 23 insertions(+), 8 deletions(-)
 
-Hopefully, it addresses your concern. Let me know if you have any =
-further=20
-questions.
-
-Best regards,
-=E2=80=94 Alex
+diff --git a/Documentation/admin-guide/dynamic-debug-howto.rst b/Documentation/admin-guide/dynamic-debug-howto.rst
+index 252e5ef324e5..41f43a373a6a 100644
+--- a/Documentation/admin-guide/dynamic-debug-howto.rst
++++ b/Documentation/admin-guide/dynamic-debug-howto.rst
+@@ -54,6 +54,9 @@ If you make a mistake with the syntax, the write will fail thus::
+ 				<debugfs>/dynamic_debug/control
+   -bash: echo: write error: Invalid argument
+ 
++Note, for systems without 'debugfs' enabled, the control file can be
++also found in ``/proc/dynamic_debug/control``.
++
+ Viewing Dynamic Debug Behaviour
+ ===============================
+ 
+diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+index 5ffe144c9794..49980eb8c18e 100644
+--- a/lib/Kconfig.debug
++++ b/lib/Kconfig.debug
+@@ -98,7 +98,7 @@ config DYNAMIC_DEBUG
+ 	bool "Enable dynamic printk() support"
+ 	default n
+ 	depends on PRINTK
+-	depends on DEBUG_FS
++	depends on (DEBUG_FS || PROC_FS)
+ 	help
+ 
+ 	  Compiles debug level messages into the kernel, which would not
+@@ -116,8 +116,9 @@ config DYNAMIC_DEBUG
+ 	  Usage:
+ 
+ 	  Dynamic debugging is controlled via the 'dynamic_debug/control' file,
+-	  which is contained in the 'debugfs' filesystem. Thus, the debugfs
+-	  filesystem must first be mounted before making use of this feature.
++	  which is contained in the 'debugfs' filesystem or procfs if
++	  debugfs is not present. Thus, the debugfs or procfs filesystem
++	  must first be mounted before making use of this feature.
+ 	  We refer the control file as: <debugfs>/dynamic_debug/control. This
+ 	  file contains a list of the debug statements that can be enabled. The
+ 	  format for each line of the file is:
+diff --git a/lib/dynamic_debug.c b/lib/dynamic_debug.c
+index c60409138e13..118e928cdbda 100644
+--- a/lib/dynamic_debug.c
++++ b/lib/dynamic_debug.c
+@@ -991,15 +991,26 @@ static void ddebug_remove_all_tables(void)
+ 
+ static __initdata int ddebug_init_success;
+ 
+-static int __init dynamic_debug_init_debugfs(void)
++static int __init dynamic_debug_init_control(void)
+ {
+-	struct dentry *dir;
++	struct proc_dir_entry *procfs_dir;
++	struct dentry *debugfs_dir;
+ 
+ 	if (!ddebug_init_success)
+ 		return -ENODEV;
+ 
+-	dir = debugfs_create_dir("dynamic_debug", NULL);
+-	debugfs_create_file("control", 0644, dir, NULL, &ddebug_proc_fops);
++	/* Create the control file in debugfs if it is enabled */
++	if (debugfs_initialized()) {
++		debugfs_dir = debugfs_create_dir("dynamic_debug", NULL);
++		debugfs_create_file("control", 0644, debugfs_dir, NULL,
++				    &ddebug_proc_fops);
++		return 0;
++	}
++
++	/* No debugfs so put it in procfs instead */
++	procfs_dir = proc_mkdir("dynamic_debug", NULL);
++	if (procfs_dir)
++		proc_create("control", 0644, procfs_dir, &ddebug_proc_fops);
+ 
+ 	return 0;
+ }
+@@ -1077,4 +1088,4 @@ static int __init dynamic_debug_init(void)
+ early_initcall(dynamic_debug_init);
+ 
+ /* Debugfs setup must be done later */
+-fs_initcall(dynamic_debug_init_debugfs);
++fs_initcall(dynamic_debug_init_control);
+-- 
+2.25.0
 
