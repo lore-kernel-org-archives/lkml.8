@@ -2,142 +2,139 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4EB2C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 17:25:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5D99C33CB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 17:25:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA6E52465B
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 17:25:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF0762465A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 17:25:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aTsgulfu"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="KgLFvqHU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729145AbgAVRZJ (ORCPT
+        id S1729159AbgAVRZk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 12:25:09 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:25378 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725883AbgAVRZJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 12:25:09 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579713908;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=VHvnfO/LwUwnWaPYXVcUEbXAoTeNUswOZpwb/FvyBhE=;
-        b=aTsgulfu5IiudvfMpFVC8LqaCLvatRb4cd/I8HIGaekKV7UJjVicICHoJ3nCYzs9TYZZqg
-        sypt7gHsLFTFPLi3CQBLlFwWQ9sC5EpzHISIb3p/pVG8AvPef8OmdtJdNhm4LrpfYmQyJd
-        eD/ukK/PAY67NiVXgtMb2llJNqcTURE=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-146-ckjOS28dPFaMDyNWePyqDQ-1; Wed, 22 Jan 2020 12:25:06 -0500
-X-MC-Unique: ckjOS28dPFaMDyNWePyqDQ-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 492019920A;
-        Wed, 22 Jan 2020 17:25:03 +0000 (UTC)
-Received: from llong.remote.csb (dhcp-17-59.bos.redhat.com [10.18.17.59])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 61CEC87023;
-        Wed, 22 Jan 2020 17:24:59 +0000 (UTC)
-Subject: Re: [PATCH v9 0/5] Add NUMA-awareness to qspinlock
-To:     Lihao Liang <lihaoliang@google.com>,
-        Alex Kogan <alex.kogan@oracle.com>
-Cc:     linux@armlinux.org.uk, peterz@infradead.org, mingo@redhat.com,
-        will.deacon@arm.com, arnd@arndb.de, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        tglx@linutronix.de, bp@alien8.de, hpa@zytor.com, x86@kernel.org,
-        guohanjun@huawei.com, jglauber@marvell.com, dave.dice@oracle.com,
-        steven.sistare@oracle.com, daniel.m.jordan@oracle.com,
-        Will Deacon <will@kernel.org>
-References: <20200115035920.54451-1-alex.kogan@oracle.com>
- <CAC4j=Y8rCeTX9oKKbh+dCdTP8Ud4hW1ybu+iE7t_nxMSYBOR5w@mail.gmail.com>
-From:   Waiman Long <longman@redhat.com>
-Organization: Red Hat
-Message-ID: <4e15fa1d-9540-3274-502a-4195a0d46f63@redhat.com>
-Date:   Wed, 22 Jan 2020 12:24:58 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Wed, 22 Jan 2020 12:25:40 -0500
+Received: from mail-dm6nam10on2102.outbound.protection.outlook.com ([40.107.93.102]:12737
+        "EHLO NAM10-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725883AbgAVRZj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 12:25:39 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Uu1x1Sr7UzTrZMTQtmG3ZuZIIdYG71BAdN96Hx9riTXlbkLOVOmPFYsPRA9KEcCVeeUaCTKQD0RZWsLUtBqs8GeRpNz/NZ7ONxfKnwBBsGa3Wu7Amo3E/Edd53HaRqNCgnfuY4SmDvcoHQ1/PSEzHyBxSw3tEhVomaUMdIbQSqHkf5CieRi6OeD8/3FtlxwM9aMISjP7WTAwQy8pL5SxVmSVaKUAuQGJpKXp/zZQ7RoSK4q2rgZmDzvzo+jaObOzW1b3Ap2JOWEj16jAmXybshgqi5E4Fz9SJbBfh2y5d7xQVxHGWxzkWNVJpj8/km7WyHEkeLFTe2Vw0sEubp6jjA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=PN6Y/7K5HRgHikv9alqsgK3mwWIvn4eIxNtX8w7Iflw=;
+ b=GJUh76wcT98JKtvTh644Epa7GstjVqVBpyH+nqnmIZbIkpup7n8m10YfF77heGceUPJ1Oa5uI25M4Pio4We/f/719Q2wBahMGf9H7fwHrHBCDwSIiDfcZfQGbu/xcyxeEhMUucX5VjM8SlSZFMYyBU9L88muB+UCfMaxBVzgKYAx62uadp/fdFh48JOFsPySfDmqyhgBcuYgFpbip1AH1ZI1vK/gYxAMXCJM06ohpeZp2qiT/XhpbdchMnpqTbcFKkWf73V/nkiYKVkeuo0tQddl1CCphWYqTboF+3Z22dXLwptFUsyXVX8dfw+eLnC9RIS4HWN6HmvW1mA0g16ohA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=PN6Y/7K5HRgHikv9alqsgK3mwWIvn4eIxNtX8w7Iflw=;
+ b=KgLFvqHU8oyYMRGK4L79lztxMmxtN9YKE2MQIj6hSHBGmJNHviG4+KbCuQefMy+OA/D86IHzKm7HoIqVRBS/yA9nGbqtyRkVDuzAY7JU6oyNcWEHLvYtijwu1H24ZGRyN7OQhXmrmRJRliZJEM6tozg8owwpLQ/PHklDYpPjjAQ=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=lkmlhyz@microsoft.com; 
+Received: from DM5PR2101MB0901.namprd21.prod.outlook.com (52.132.132.158) by
+ DM5PR2101MB0918.namprd21.prod.outlook.com (52.132.132.163) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2686.3; Wed, 22 Jan 2020 17:25:00 +0000
+Received: from DM5PR2101MB0901.namprd21.prod.outlook.com
+ ([fe80::b51c:186a:8630:127e]) by DM5PR2101MB0901.namprd21.prod.outlook.com
+ ([fe80::b51c:186a:8630:127e%9]) with mapi id 15.20.2686.008; Wed, 22 Jan 2020
+ 17:25:00 +0000
+From:   Haiyang Zhang <haiyangz@microsoft.com>
+To:     sashal@kernel.org, linux-hyperv@vger.kernel.org,
+        netdev@vger.kernel.org
+Cc:     haiyangz@microsoft.com, kys@microsoft.com, sthemmin@microsoft.com,
+        olaf@aepfle.de, vkuznets@redhat.com, davem@davemloft.net,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH V3,net-next, 2/2] hv_netvsc: Update document for XDP support
+Date:   Wed, 22 Jan 2020 09:23:34 -0800
+Message-Id: <1579713814-36061-3-git-send-email-haiyangz@microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <1579713814-36061-1-git-send-email-haiyangz@microsoft.com>
+References: <1579713814-36061-1-git-send-email-haiyangz@microsoft.com>
+Content-Type: text/plain
+X-ClientProxiedBy: MWHPR12CA0039.namprd12.prod.outlook.com
+ (2603:10b6:301:2::25) To DM5PR2101MB0901.namprd21.prod.outlook.com
+ (2603:10b6:4:a7::30)
 MIME-Version: 1.0
-In-Reply-To: <CAC4j=Y8rCeTX9oKKbh+dCdTP8Ud4hW1ybu+iE7t_nxMSYBOR5w@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-Content-Transfer-Encoding: quoted-printable
+Received: from linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net (13.77.154.182) by MWHPR12CA0039.namprd12.prod.outlook.com (2603:10b6:301:2::25) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2644.18 via Frontend Transport; Wed, 22 Jan 2020 17:24:59 +0000
+X-Mailer: git-send-email 1.8.3.1
+X-Originating-IP: [13.77.154.182]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 3f5e9f13-43f7-455b-0832-08d79f6001fc
+X-MS-TrafficTypeDiagnostic: DM5PR2101MB0918:|DM5PR2101MB0918:|DM5PR2101MB0918:
+X-MS-Exchange-Transport-Forked: True
+X-LD-Processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
+X-Microsoft-Antispam-PRVS: <DM5PR2101MB09180E9FAF977AE63C97289DAC0C0@DM5PR2101MB0918.namprd21.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
+X-Forefront-PRVS: 029097202E
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10019020)(4636009)(396003)(136003)(376002)(346002)(39860400002)(366004)(199004)(189003)(16526019)(186003)(316002)(6486002)(52116002)(4326008)(26005)(81156014)(6506007)(81166006)(8676002)(6512007)(8936002)(36756003)(2906002)(66946007)(66476007)(478600001)(5660300002)(66556008)(2616005)(956004)(10290500003)(6666004);DIR:OUT;SFP:1102;SCL:1;SRVR:DM5PR2101MB0918;H:DM5PR2101MB0901.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+Received-SPF: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: MaDEAj8Hb9VDcLaGP+qUSMn8fc1b5u/p6r8rxWQLkPVif1dc2l14ECRMMmlr+ub14qdnmCJni8InDsoFIywmxfwV5uUpwRkqASc1D66nXnpzKxFWtYQyq0mTl8RE1iieV+yVyLd+11AIGqJoxfFss1qzyJ1ulzZ2ykcV1qSRcsbQp6R/V6enymRttKrx+J78opjlraxWeiabObFaghwFbLl/CYYaJh5DuRSpwj0bbGbKnrRKur07WPPMaXGfu64ZAkCXYlBmFUAfzbKXjuvBZ3BGsZ7en8jnXs2mc7cWYt8UBTkNz6I968RvkbDsAPppcVM0qPqvSwmdCUkZOROf8A/WG6DXHf6bzg7eiesGzopZoiycx+xBjBdsRXq52R9aXqgh8bg0QpMZq+7MrBATXo4SbyZM//yQmO1CHskXgI+M5Bg2s2s9WMRmqtqhE16X
+X-MS-Exchange-AntiSpam-MessageData: KKPOeoHEN72nuH6mP7AaSusIyf7Q/W6grNgsJX86hZMK2cc6uYsTKfUCuinqGhxXdbzxaFW3jmi7HGEEH2bpvqv2ySIszGDh7NejjgQmBQ6/D4s5vaczcxhA0XAZBs62ndHt4aDhz42X4wpvNZWTFw==
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3f5e9f13-43f7-455b-0832-08d79f6001fc
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Jan 2020 17:25:00.2091
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: iNMPl6lCU28DVUlP5j08ekQ/zbWXLC7Zdl/6KAIACSXclfxsLaKqglgr6cg13ejP/pmKyHwiGLVk2tlOKGEC2Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR2101MB0918
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/22/20 6:45 AM, Lihao Liang wrote:
-> Hi Alex,
->
-> On Wed, Jan 22, 2020 at 10:28 AM Alex Kogan <alex.kogan@oracle.com> wro=
-te:
->> Summary
->> -------
->>
->> Lock throughput can be increased by handing a lock to a waiter on the
->> same NUMA node as the lock holder, provided care is taken to avoid
->> starvation of waiters on other NUMA nodes. This patch introduces CNA
->> (compact NUMA-aware lock) as the slow path for qspinlock. It is
->> enabled through a configuration option (NUMA_AWARE_SPINLOCKS).
->>
-> Thanks for your patches. The experimental results look promising!
->
-> I understand that the new CNA qspinlock uses randomization to achieve
-> long-term fairness, and provides the numa_spinlock_threshold parameter
-> for users to tune. As Linux runs extremely diverse workloads, it is not
-> clear how randomization affects its fairness, and how users with
-> different requirements are supposed to tune this parameter.
->
-> To this end, Will and I consider it beneficial to be able to answer the
-> following question:
->
-> With different values of numa_spinlock_threshold and
-> SHUFFLE_REDUCTION_PROB_ARG, how long do threads running on different
-> sockets have to wait to acquire the lock? This is particularly relevant
-> in high contention situations when new threads keep arriving on the sam=
-e
-> socket as the lock holder.
->
-> In this email, I try to provide some formal analysis to address this
-> question. Let's assume the probability for the lock to stay on the
-> same socket is *at least* p, which corresponds to the probability for
-> the function probably(unsigned int num_bits) in the patch to return *fa=
-lse*,
-> where SHUFFLE_REDUCTION_PROB_ARG is passed as the value of num_bits to =
-the
-> function.
+Added the new section in the document regarding XDP support
+by hv_netvsc driver.
 
-That is not strictly true from my understanding of the code. The
-probably() function does not come into play if a secondary queue is
-present. Also calling cna_scan_main_queue() doesn't guarantee that a
-waiter in the same node can be found. So the simple mathematical
-analysis isn't that applicable in this case. One will have to do an
-actual simulation to find out what the actual behavior will be.
+Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
+---
+ .../networking/device_drivers/microsoft/netvsc.txt  | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
 
-The comment in the code states that:
-
-/*
-=C2=A0* Controls the probability for enabling the scan of the main queue =
-when
-=C2=A0* the secondary queue is empty. The chosen value reduces the amount=
- of
-=C2=A0* unnecessary shuffling of threads between the two waiting queues w=
-hen
-=C2=A0* the contention is low, while responding fast enough and enabling
-=C2=A0* the shuffling when the contention is high.
-=C2=A0*/
-#define SHUFFLE_REDUCTION_PROB_ARG=C2=A0 (7)
-
-Cheers,
-Longman
-
-
+diff --git a/Documentation/networking/device_drivers/microsoft/netvsc.txt b/Documentation/networking/device_drivers/microsoft/netvsc.txt
+index 3bfa635..cd63556 100644
+--- a/Documentation/networking/device_drivers/microsoft/netvsc.txt
++++ b/Documentation/networking/device_drivers/microsoft/netvsc.txt
+@@ -82,3 +82,24 @@ Features
+   contain one or more packets. The send buffer is an optimization, the driver
+   will use slower method to handle very large packets or if the send buffer
+   area is exhausted.
++
++  XDP support
++  -----------
++  XDP (eXpress Data Path) is a feature that runs eBPF bytecode at the early
++  stage when packets arrive at a NIC card. The goal is to increase performance
++  for packet processing, reducing the overhead of SKB allocation and other
++  upper network layers.
++
++  hv_netvsc supports XDP in native mode, and transparently sets the XDP
++  program on the associated VF NIC as well.
++
++  Setting / unsetting XDP program on synthetic NIC (netvsc) propagates to
++  VF NIC automatically. Setting / unsetting XDP program on VF NIC directly
++  is not recommended, also not propagated to synthetic NIC, and may be
++  overwritten by setting of synthetic NIC.
++
++  XDP program cannot run with LRO (RSC) enabled, so you need to disable LRO
++  before running XDP:
++	ethtool -K eth0 lro off
++
++  XDP_REDIRECT action is not yet supported.
+-- 
+1.8.3.1
 
