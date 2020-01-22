@@ -2,94 +2,81 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0821CC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 20:03:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87946C33CB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 20:05:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA6C321835
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 20:03:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5639724656
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 20:05:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="kvZOepP7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728767AbgAVUDk (ORCPT
+        id S1728205AbgAVUFC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 15:03:40 -0500
-Received: from mga03.intel.com ([134.134.136.65]:48784 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725911AbgAVUDj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 15:03:39 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Jan 2020 12:03:30 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,350,1574150400"; 
-   d="scan'208";a="229481726"
-Received: from orsmsx108.amr.corp.intel.com ([10.22.240.6])
-  by orsmga006.jf.intel.com with ESMTP; 22 Jan 2020 12:03:30 -0800
-Received: from orsmsx153.amr.corp.intel.com (10.22.226.247) by
- ORSMSX108.amr.corp.intel.com (10.22.240.6) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Wed, 22 Jan 2020 12:03:29 -0800
-Received: from orsmsx114.amr.corp.intel.com ([169.254.8.4]) by
- ORSMSX153.amr.corp.intel.com ([169.254.12.111]) with mapi id 14.03.0439.000;
- Wed, 22 Jan 2020 12:03:29 -0800
-From:   "Luck, Tony" <tony.luck@intel.com>
-To:     Borislav Petkov <bp@alien8.de>
-CC:     Thomas Gleixner <tglx@linutronix.de>,
-        "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        "Yu, Fenghua" <fenghua.yu@intel.com>,
-        "Ingo Molnar" <mingo@redhat.com>, H Peter Anvin <hpa@zytor.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Shankar, Ravi V" <ravi.v.shankar@intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>, x86 <x86@kernel.org>
-Subject: RE: [PATCH v12] x86/split_lock: Enable split lock detection by
- kernel
-Thread-Topic: [PATCH v12] x86/split_lock: Enable split lock detection by
- kernel
-Thread-Index: AQHV0VV7/XPb/EW8oEGwDJr5iFh+Caf3kN+A//+HzdA=
-Date:   Wed, 22 Jan 2020 20:03:28 +0000
-Message-ID: <3908561D78D1C84285E8C5FCA982C28F7F5483E9@ORSMSX114.amr.corp.intel.com>
-References: <20191122105141.GY4114@hirez.programming.kicks-ass.net>
- <20191122152715.GA1909@hirez.programming.kicks-ass.net>
- <20191123003056.GA28761@agluck-desk2.amr.corp.intel.com>
- <20191125161348.GA12178@linux.intel.com>
- <20191212085948.GS2827@hirez.programming.kicks-ass.net>
- <20200110192409.GA23315@agluck-desk2.amr.corp.intel.com>
- <20200114055521.GI14928@linux.intel.com>
- <20200115222754.GA13804@agluck-desk2.amr.corp.intel.com>
- <20200115225724.GA18268@linux.intel.com>
- <20200122185514.GA16010@agluck-desk2.amr.corp.intel.com>
- <20200122190405.GA23947@zn.tnic>
-In-Reply-To: <20200122190405.GA23947@zn.tnic>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-originating-ip: [10.22.254.140]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Wed, 22 Jan 2020 15:05:02 -0500
+Received: from linux.microsoft.com ([13.77.154.182]:53926 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725827AbgAVUFC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 15:05:02 -0500
+Received: from [10.137.112.108] (unknown [131.107.174.108])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 2A0F12007679;
+        Wed, 22 Jan 2020 12:05:01 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 2A0F12007679
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1579723501;
+        bh=VkKFVv9AeIsNp0khDafTW1BBobp2dQUzk7DlpNA1WeQ=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=kvZOepP7QvtQdOnbBQxDFcMif1b5f1bXdbkUpI62NFjS1vJzbgoNav7quPt5+PvCM
+         E1RBM9/F1G24thc4mbYQZTneeFzbi6Y5by5Z6KvbX8cPx9irNGL6JPw2/YtHoLzsuq
+         Ry8jFQbuFCzuctr5yfKrlpKjOOEbNsv/Bp4FXCio=
+Subject: Re: [PATCH] IMA: Turn IMA_MEASURE_ASYMMETRIC_KEYS off by default
+To:     Mimi Zohar <zohar@linux.ibm.com>,
+        James Bottomley <James.Bottomley@HansenPartnership.com>,
+        linux-integrity@vger.kernel.org
+Cc:     sashal@kernel.org, linux-kernel@vger.kernel.org
+References: <20200121171302.4935-1-nramas@linux.microsoft.com>
+ <1579628090.3390.28.camel@HansenPartnership.com>
+ <1579634035.5125.311.camel@linux.ibm.com>
+ <1579636351.3390.35.camel@HansenPartnership.com>
+ <ac6c559e-2d68-afcb-d316-6ac49a570831@linux.microsoft.com>
+ <1579723379.5182.130.camel@linux.ibm.com>
+From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+Message-ID: <fa7ec770-6552-7538-7393-c23410b3a1ba@linux.microsoft.com>
+Date:   Wed, 22 Jan 2020 12:05:00 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
+In-Reply-To: <1579723379.5182.130.camel@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Pj4gKyNkZWZpbmUgWDg2X0ZFQVRVUkVfU1BMSVRfTE9DS19ERVRFQ1QJKCA3KjMyKzMxKSAvKiAj
-QUMgZm9yIHNwbGl0IGxvY2sgKi8NCj4NCj4gVGhhdCB3b3JkIGlzIGFscmVhZHkgZnVsbCBpbiB0
-aXA6DQo+IC4uLg0KPiB1c2Ugd29yZCAxMSBpbnN0ZWFkLg0KDQpXaWxsIHJlYmFzZSBhZ2FpbnN0
-IHRpcC9tYXN0ZXIgYW5kIG1vdmUgdG8gd29yZCAxMS4NCg0KPj4gKyNkZWZpbmUgTVNSX0lBMzJf
-Q09SRV9DQVBBQklMSVRJRVMJCQkgIDB4MDAwMDAwY2YNCj4+ICsjZGVmaW5lIE1TUl9JQTMyX0NP
-UkVfQ0FQQUJJTElUSUVTX1NQTElUX0xPQ0tfREVURUNUX0JJVCAgNQ0KPj4gKyNkZWZpbmUgTVNS
-X0lBMzJfQ09SRV9DQVBBQklMSVRJRVNfU1BMSVRfTE9DS19ERVRFQ1QJICBCSVQoTVNSX0lBMzJf
-Q09SRV9DQVBBQklMSVRJRVNfU1BMSVRfTE9DS19ERVRFQ1RfQklUKQ0KPg0KPiBBbnkgY2hhbmNl
-IG1ha2luZyB0aG9zZSBzaG9ydGVyPw0KDQpJIGNvdWxkIGFiYnJldmlhdGUgQ0FQQUJJTElUSUVT
-IGFzICJDQVAiLCB0aGF0IHdvdWxkIHNhdmUgOSBjaGFyYWN0ZXJzLiBJcyB0aGF0IGVub3VnaD8N
-Cg0KSSdtIG5vdCBmb25kIG9mIHRoZSAicmVtb3ZlIHRoZSB2b3dlbHMiOiBTUExUX0xDS19EVENU
-LCBidXQgdGhhdCBpcyBzb3J0IG9mIHJlYWRhYmxlDQphbmQgd291bGQgc2F2ZSA0IG1vcmUuIFdo
-YXQgZG8geW91IHRoaW5rPw0KDQotVG9ueQ0K
+On 1/22/20 12:02 PM, Mimi Zohar wrote:
+
+> 
+> Thanks, Lakshmi.  This requires moving the code around.  Instead of
+> doing this on the current code base, I suggest posting a v9 version of
+> the entire "IMA: Deferred measurement of keys".
+> 
+> I suggest making the switch from spinlock to mutex, as you had it
+> originally, before posting v9.  The commit history will then be a lot
+> cleaner.
+> 
+> thanks,
+> 
+> Mimi
+> 
+
+Sure Mimi - I'll post an update to the patch set shortly.
+
+thanks,
+  -lakshmi
