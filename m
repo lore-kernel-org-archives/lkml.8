@@ -4,49 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD768C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:37:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EC86C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:37:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A0A224683
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:37:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40EA22467E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:37:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579685865;
-	bh=PMSIln64bD9O25YS78Zt5inzG7df2u5lU9cUIRgVk2Q=;
+	s=default; t=1579685869;
+	bh=+2FjCr9YaSsUpap2iFDUqs8WIMpwcmCcbVjOTTroLZ0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EhzbzVTTiwPF+c8BcgpXRMmQJ4Y4cxDzMlT2EccW2PzyiILQHNW4szn+LQYHbjP3J
-	 F2xVBi1JX7GXKugCzqeEaoLMMCY9MThd2B0QuGbLsTVGrV1PP3bKPLs/TGoR3mxwpR
-	 XgIbwVGhKDvbA0+pc3z3Hk/WQ7kQeWlxCgVywrGI=
+	b=SJJgJDgzb5V8m7fQ23VXHmzvcrX2EoafVJtVc8LKSw83mnfueJ+AQbRhUwUuwAHox
+	 9ehbx6vMfeLDzyz28DDPMrzNXdqQqeZKyeCAk2yitTGmC0mz+zymx8ioZGaMwVXoQD
+	 /x/AOsAkv//r5ubGq8wSNh2i1YurqBDStJ8pk0ZU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732644AbgAVJho (ORCPT
+        id S1732698AbgAVJhs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 04:37:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53854 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 04:37:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53940 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731321AbgAVJhk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 04:37:40 -0500
+        id S1732662AbgAVJhp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 04:37:45 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A160324680;
-        Wed, 22 Jan 2020 09:37:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C28F82467E;
+        Wed, 22 Jan 2020 09:37:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579685860;
-        bh=PMSIln64bD9O25YS78Zt5inzG7df2u5lU9cUIRgVk2Q=;
+        s=default; t=1579685865;
+        bh=+2FjCr9YaSsUpap2iFDUqs8WIMpwcmCcbVjOTTroLZ0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hGJl3FYJoUk3cByI3IULXEZtiDcRtQWmtbRKw4q5cDDNwH/VWfV0wbJvXx76poiEQ
-         9/Dxncbau+fP2tk34F1uOmKvy3RSalO28hZLD+dVViPUGwgUyqUFoGZnKXJS9r8sqq
-         0JevI49L2m+aXu+0eONlgTDSAl34ql3S3RX6kISc=
+        b=MCLtMw1xZmwpsyNem6cg2LMKTbUwWW+38LYQwJGUhHgdfq9WCx8JcfkBQyKhUIOIb
+         Ppme+5i6JlPrCUMc4NZf9yiNS/G77Y1c4UOK8tSdYmkIqJ7j4E53vndvoqclDCfCHB
+         SI0r27fE+ETdMFawPNh8t7EY5NgXREqFX8UCi+ec=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Reinhard Speyerer <rspmn@arcor.de>,
-        Johan Hovold <johan@kernel.org>
-Subject: [PATCH 4.14 12/65] USB: serial: option: add support for Quectel RM500Q in QDL mode
-Date:   Wed, 22 Jan 2020 10:28:57 +0100
-Message-Id: <20200122092752.951998274@linuxfoundation.org>
+        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>
+Subject: [PATCH 4.14 14/65] USB: serial: ch341: handle unbound port at reset_resume
+Date:   Wed, 22 Jan 2020 10:28:59 +0100
+Message-Id: <20200122092753.130397269@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200122092750.976732974@linuxfoundation.org>
 References: <20200122092750.976732974@linuxfoundation.org>
@@ -59,45 +58,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Reinhard Speyerer <rspmn@arcor.de>
+From: Johan Hovold <johan@kernel.org>
 
-commit f3eaabbfd093c93d791eb930cc68d9b15246a65e upstream.
+commit 4d5ef53f75c22d28f490bcc5c771fcc610a9afa4 upstream.
 
-Add support for Quectel RM500Q in QDL mode.
+Check for NULL port data in reset_resume() to avoid dereferencing a NULL
+pointer in case the port device isn't bound to a driver (e.g. after a
+failed control request at port probe).
 
-T:  Bus=02 Lev=01 Prnt=01 Port=00 Cnt=01 Dev#= 24 Spd=480  MxCh= 0
-D:  Ver= 2.10 Cls=00(>ifc ) Sub=00 Prot=00 MxPS=64 #Cfgs=  1
-P:  Vendor=2c7c ProdID=0800 Rev= 0.00
-S:  Manufacturer=Qualcomm CDMA Technologies MSM
-S:  Product=QUSB_BULK_SN:xxxxxxxx
-S:  SerialNumber=xxxxxxxx
-C:* #Ifs= 1 Cfg#= 1 Atr=a0 MxPwr=  2mA
-I:* If#= 0 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=ff Prot=10 Driver=option
-E:  Ad=81(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
-E:  Ad=01(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
-
-It is assumed that the ZLP flag required for other Qualcomm-based
-5G devices also applies to Quectel RM500Q.
-
-Signed-off-by: Reinhard Speyerer <rspmn@arcor.de>
-Cc: stable <stable@vger.kernel.org>
+Fixes: 1ded7ea47b88 ("USB: ch341 serial: fix port number changed after resume")
+Cc: stable <stable@vger.kernel.org>     # 2.6.30
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Johan Hovold <johan@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/serial/option.c |    2 ++
- 1 file changed, 2 insertions(+)
+ drivers/usb/serial/ch341.c |    6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
---- a/drivers/usb/serial/option.c
-+++ b/drivers/usb/serial/option.c
-@@ -1110,6 +1110,8 @@ static const struct usb_device_id option
- 	{ USB_DEVICE_AND_INTERFACE_INFO(QUECTEL_VENDOR_ID, QUECTEL_PRODUCT_EM12, 0xff, 0, 0) },
- 	{ USB_DEVICE_AND_INTERFACE_INFO(QUECTEL_VENDOR_ID, QUECTEL_PRODUCT_RM500Q, 0xff, 0xff, 0x30) },
- 	{ USB_DEVICE_AND_INTERFACE_INFO(QUECTEL_VENDOR_ID, QUECTEL_PRODUCT_RM500Q, 0xff, 0, 0) },
-+	{ USB_DEVICE_AND_INTERFACE_INFO(QUECTEL_VENDOR_ID, QUECTEL_PRODUCT_RM500Q, 0xff, 0xff, 0x10),
-+	  .driver_info = ZLP },
+--- a/drivers/usb/serial/ch341.c
++++ b/drivers/usb/serial/ch341.c
+@@ -592,9 +592,13 @@ static int ch341_tiocmget(struct tty_str
+ static int ch341_reset_resume(struct usb_serial *serial)
+ {
+ 	struct usb_serial_port *port = serial->port[0];
+-	struct ch341_private *priv = usb_get_serial_port_data(port);
++	struct ch341_private *priv;
+ 	int ret;
  
- 	{ USB_DEVICE(CMOTECH_VENDOR_ID, CMOTECH_PRODUCT_6001) },
- 	{ USB_DEVICE(CMOTECH_VENDOR_ID, CMOTECH_PRODUCT_CMU_300) },
++	priv = usb_get_serial_port_data(port);
++	if (!priv)
++		return 0;
++
+ 	/* reconfigure ch341 serial port after bus-reset */
+ 	ch341_configure(serial->dev, priv);
+ 
 
 
