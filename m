@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE843C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:38:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AE2DC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:38:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8D7324683
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:38:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 715952467E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:38:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579685884;
-	bh=/lJrhMRLesbT5WY05MPZcG0zypEGf3iElPWNFbRIDJI=;
+	s=default; t=1579685886;
+	bh=a8Krtvd5JwHc9XoGjtdThnRhX2rTSpgECSqg6Xznqo4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vRGnB7+nmj2KlszsOYIhw7buLdAiQw3VuKowg4ka2STuY9a9vpmCNzE3ML8sI7Lr9
-	 ERaSw8tf6qLG5BnOfxaBVoQISLhsir6L/iRt65cwcNsZqWnhAo46Ro0slIpqSHIunB
-	 EudnTzq7WpxOXQ4Qd7bWxZeLJMgY7dnkChTOIjZQ=
+	b=c84DT4euPPSZQL+D3E+S8/EoNk9q17M5ssgZM78fhR8e787X25+Z6WH9h895hU+Ij
+	 fqH77B61or6OpZsGadgJfczM+2gQtt7GWrdLeRok+74ZF/ResNOTZWdY7kjsylxqGb
+	 BxBwECn+ZvrsS4hmZxRASAdRMace1cWjAwzuy3bY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732843AbgAVJiD (ORCPT
+        id S1732866AbgAVJiF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 04:38:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54370 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 04:38:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54426 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732804AbgAVJiA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 04:38:00 -0500
+        id S1732826AbgAVJiD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 04:38:03 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 542532467B;
-        Wed, 22 Jan 2020 09:37:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CABE72467E;
+        Wed, 22 Jan 2020 09:38:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579685879;
-        bh=/lJrhMRLesbT5WY05MPZcG0zypEGf3iElPWNFbRIDJI=;
+        s=default; t=1579685882;
+        bh=a8Krtvd5JwHc9XoGjtdThnRhX2rTSpgECSqg6Xznqo4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OxTb3YXCnv297luf92SCYbUEMrlweT65RHMKvhK1/s+3llp0dHgdJETH05l3o3g9P
-         +XxaPi+GmnCzpdWFZvGMrdNBlDF7ZLK4kywaAF1+MsVjs8EL/972pu0UzDGQuMIJQ5
-         SN4IpIxKCuWhnbhjJfoPR/owqvnGrclRrvpDD7W8=
+        b=sdoI7GUvesZepFDe+LCSJg9ffpkOBRsqeYKDjpoXzgCdzuY+A78FgzpRADhpP7pmg
+         9a5J+xSmBacSV/ITUSe8utC9u92xXzNWtE7XLXukayGO1YtvflOiDue6lWq0AxQxtZ
+         XO7+NKgF+iUvz4W7QkKyTNM4aJ/WzzGRVWcwnAyA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jerome Brunet <jbrunet@baylibre.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Stephen Boyd <sboyd@kernel.org>
-Subject: [PATCH 4.14 02/65] clk: Dont try to enable critical clocks if prepare failed
-Date:   Wed, 22 Jan 2020 10:28:47 +0100
-Message-Id: <20200122092751.947135301@linuxfoundation.org>
+        stable@vger.kernel.org, Oleg Nesterov <oleg@redhat.com>,
+        Eric Paris <eparis@redhat.com>,
+        Kees Cook <keescook@chromium.org>,
+        Serge Hallyn <serge@hallyn.com>, Jann Horn <jannh@google.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>
+Subject: [PATCH 4.14 20/65] ptrace: reintroduce usage of subjective credentials in ptrace_has_cap()
+Date:   Wed, 22 Jan 2020 10:29:05 +0100
+Message-Id: <20200122092754.007578340@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200122092750.976732974@linuxfoundation.org>
 References: <20200122092750.976732974@linuxfoundation.org>
@@ -60,65 +62,100 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guenter Roeck <linux@roeck-us.net>
+From: Christian Brauner <christian.brauner@ubuntu.com>
 
-commit 12ead77432f2ce32dea797742316d15c5800cb32 upstream.
+commit 6b3ad6649a4c75504edeba242d3fd36b3096a57f upstream.
 
-The following traceback is seen if a critical clock fails to prepare.
+Commit 69f594a38967 ("ptrace: do not audit capability check when outputing /proc/pid/stat")
+introduced the ability to opt out of audit messages for accesses to various
+proc files since they are not violations of policy.  While doing so it
+somehow switched the check from ns_capable() to
+has_ns_capability{_noaudit}(). That means it switched from checking the
+subjective credentials of the task to using the objective credentials. This
+is wrong since. ptrace_has_cap() is currently only used in
+ptrace_may_access() And is used to check whether the calling task (subject)
+has the CAP_SYS_PTRACE capability in the provided user namespace to operate
+on the target task (object). According to the cred.h comments this would
+mean the subjective credentials of the calling task need to be used.
+This switches ptrace_has_cap() to use security_capable(). Because we only
+call ptrace_has_cap() in ptrace_may_access() and in there we already have a
+stable reference to the calling task's creds under rcu_read_lock() there's
+no need to go through another series of dereferences and rcu locking done
+in ns_capable{_noaudit}().
 
-bcm2835-clk 3f101000.cprman: plld: couldn't lock PLL
-------------[ cut here ]------------
-Enabling unprepared plld_per
-WARNING: CPU: 1 PID: 1 at drivers/clk/clk.c:1014 clk_core_enable+0xcc/0x2c0
-...
-Call trace:
- clk_core_enable+0xcc/0x2c0
- __clk_register+0x5c4/0x788
- devm_clk_hw_register+0x4c/0xb0
- bcm2835_register_pll_divider+0xc0/0x150
- bcm2835_clk_probe+0x134/0x1e8
- platform_drv_probe+0x50/0xa0
- really_probe+0xd4/0x308
- driver_probe_device+0x54/0xe8
- device_driver_attach+0x6c/0x78
- __driver_attach+0x54/0xd8
-...
+As one example where this might be particularly problematic, Jann pointed
+out that in combination with the upcoming IORING_OP_OPENAT feature, this
+bug might allow unprivileged users to bypass the capability checks while
+asynchronously opening files like /proc/*/mem, because the capability
+checks for this would be performed against kernel credentials.
 
-Check return values from clk_core_prepare() and clk_core_enable() and
-bail out if any of those functions returns an error.
+To illustrate on the former point about this being exploitable: When
+io_uring creates a new context it records the subjective credentials of the
+caller. Later on, when it starts to do work it creates a kernel thread and
+registers a callback. The callback runs with kernel creds for
+ktask->real_cred and ktask->cred. To prevent this from becoming a
+full-blown 0-day io_uring will call override_cred() and override
+ktask->cred with the subjective credentials of the creator of the io_uring
+instance. With ptrace_has_cap() currently looking at ktask->real_cred this
+override will be ineffective and the caller will be able to open arbitray
+proc files as mentioned above.
+Luckily, this is currently not exploitable but will turn into a 0-day once
+IORING_OP_OPENAT{2} land in v5.6. Fix it now!
 
-Cc: Jerome Brunet <jbrunet@baylibre.com>
-Fixes: 99652a469df1 ("clk: migrate the count of orphaned clocks at init")
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-Link: https://lkml.kernel.org/r/20191225163429.29694-1-linux@roeck-us.net
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+Cc: Oleg Nesterov <oleg@redhat.com>
+Cc: Eric Paris <eparis@redhat.com>
+Cc: stable@vger.kernel.org
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Reviewed-by: Serge Hallyn <serge@hallyn.com>
+Reviewed-by: Jann Horn <jannh@google.com>
+Fixes: 69f594a38967 ("ptrace: do not audit capability check when outputing /proc/pid/stat")
+Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/clk/clk.c |   10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ kernel/ptrace.c |   15 ++++++++++-----
+ 1 file changed, 10 insertions(+), 5 deletions(-)
 
---- a/drivers/clk/clk.c
-+++ b/drivers/clk/clk.c
-@@ -2482,11 +2482,17 @@ static int __clk_core_init(struct clk_co
- 	if (core->flags & CLK_IS_CRITICAL) {
- 		unsigned long flags;
+--- a/kernel/ptrace.c
++++ b/kernel/ptrace.c
+@@ -258,12 +258,17 @@ static int ptrace_check_attach(struct ta
+ 	return ret;
+ }
  
--		clk_core_prepare(core);
-+		ret = clk_core_prepare(core);
-+		if (ret)
-+			goto out;
+-static int ptrace_has_cap(struct user_namespace *ns, unsigned int mode)
++static bool ptrace_has_cap(const struct cred *cred, struct user_namespace *ns,
++			   unsigned int mode)
+ {
++	int ret;
++
+ 	if (mode & PTRACE_MODE_NOAUDIT)
+-		return has_ns_capability_noaudit(current, ns, CAP_SYS_PTRACE);
++		ret = security_capable(cred, ns, CAP_SYS_PTRACE);
+ 	else
+-		return has_ns_capability(current, ns, CAP_SYS_PTRACE);
++		ret = security_capable(cred, ns, CAP_SYS_PTRACE);
++
++	return ret == 0;
+ }
  
- 		flags = clk_enable_lock();
--		clk_core_enable(core);
-+		ret = clk_core_enable(core);
- 		clk_enable_unlock(flags);
-+		if (ret) {
-+			clk_core_unprepare(core);
-+			goto out;
-+		}
- 	}
+ /* Returns 0 on success, -errno on denial. */
+@@ -315,7 +320,7 @@ static int __ptrace_may_access(struct ta
+ 	    gid_eq(caller_gid, tcred->sgid) &&
+ 	    gid_eq(caller_gid, tcred->gid))
+ 		goto ok;
+-	if (ptrace_has_cap(tcred->user_ns, mode))
++	if (ptrace_has_cap(cred, tcred->user_ns, mode))
+ 		goto ok;
+ 	rcu_read_unlock();
+ 	return -EPERM;
+@@ -334,7 +339,7 @@ ok:
+ 	mm = task->mm;
+ 	if (mm &&
+ 	    ((get_dumpable(mm) != SUID_DUMP_USER) &&
+-	     !ptrace_has_cap(mm->user_ns, mode)))
++	     !ptrace_has_cap(cred, mm->user_ns, mode)))
+ 	    return -EPERM;
  
- 	/*
+ 	return security_ptrace_access_check(task, mode);
 
 
