@@ -2,97 +2,158 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60CB6C33CB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 08:04:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 910B2C32771
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 08:06:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38ADC24687
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 08:04:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6896E24655
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 08:06:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579680418;
+	bh=Qzqm3EPV4VRHGB5gTiBvdvQoCewFBkgqM4mf1zpLn5A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=NG9G0CcUW8nBGX0lOG22Kc1gABMswUptPZ/1gJJjihKaz1gtutOwXa+yAKzqeaQkP
+	 lUlok85xiL0omPDO58VELgb3hROHX/ZkW5AWwujsIS3qvxfUrSdTYhts3vN9N/na2E
+	 L6KzZ1bSjVz6a7mx+lN+wnn+eUvL6lAUtht+V0YE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729471AbgAVIEU (ORCPT
+        id S1726083AbgAVIG5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 03:04:20 -0500
-Received: from rtits2.realtek.com ([211.75.126.72]:33419 "EHLO
-        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726194AbgAVID1 (ORCPT
+        Wed, 22 Jan 2020 03:06:57 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:36332 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725868AbgAVIG5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 03:03:27 -0500
-Authenticated-By: 
-X-SpamFilter-By: BOX Solutions SpamTrap 5.62 with qID 00M83OKD009585, This message is accepted by code: ctloc85258
-Received: from mail.realtek.com (RTEXMB06.realtek.com.tw[172.21.6.99])
-        by rtits2.realtek.com.tw (8.15.2/2.57/5.78) with ESMTPS id 00M83OKD009585
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 22 Jan 2020 16:03:24 +0800
-Received: from RTEXMB06.realtek.com.tw (172.21.6.99) by
- RTEXMB06.realtek.com.tw (172.21.6.99) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Wed, 22 Jan 2020 16:03:23 +0800
-Received: from RTITCASV01.realtek.com.tw (172.21.6.18) by
- RTEXMB06.realtek.com.tw (172.21.6.99) with Microsoft SMTP Server
- (version=TLS1_0, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.1.1779.2
- via Frontend Transport; Wed, 22 Jan 2020 16:03:23 +0800
-Received: from fc30.localdomain (172.21.177.138) by RTITCASV01.realtek.com.tw
- (172.21.6.18) with Microsoft SMTP Server id 14.3.468.0; Wed, 22 Jan 2020
- 16:03:22 +0800
-From:   Hayes Wang <hayeswang@realtek.com>
-To:     <netdev@vger.kernel.org>
-CC:     <nic_swsd@realtek.com>, <linux-kernel@vger.kernel.org>,
-        <linux-usb@vger.kernel.org>, <pmalani@chromium.org>,
-        <grundler@chromium.org>, Hayes Wang <hayeswang@realtek.com>
-Subject: [PATCH net v3 3/9] r8152: get default setting of WOL before initializing
-Date:   Wed, 22 Jan 2020 16:02:07 +0800
-Message-ID: <1394712342-15778-361-Taiwan-albertk@realtek.com>
-X-Mailer: Microsoft Office Outlook 11
-In-Reply-To: <1394712342-15778-358-Taiwan-albertk@realtek.com>
-References: <1394712342-15778-338-Taiwan-albertk@realtek.com>
- <1394712342-15778-358-Taiwan-albertk@realtek.com>
+        Wed, 22 Jan 2020 03:06:57 -0500
+Received: by mail-wm1-f67.google.com with SMTP id p17so6114430wma.1;
+        Wed, 22 Jan 2020 00:06:54 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=yQD6BMfgsUB2zOq+Dz3vFA3XMaEJr7rjWMT5V31lJ5U=;
+        b=ZBu6YbsZXpXW8FW+V/QXVy9LG1vHdZlIpNTchpPtw9k6TpMWs5gc43Fmgvk37HA5cA
+         7u8B0KRjBTuHUAqZUc71KCYTY0dlt29J3CRQAFxfUsWcXXDqalhD8LIQhvKTTi+YR+/B
+         CT/S+5H+JMhQGAvVY8jIFRtij9tFI70TiENjHTbUAdj34ACb9K5eBTkt9ERVoMy/WAWM
+         sOv62shNju8FkQptsVsjTTI+/Vz5wuf0Rwj7VrcScuiPIiHj0iToebcVEUdDqsi0CdoI
+         mHTW4U4zN6dVWRwHLIR4Xa+5ROmkk+PP+WfCZk0yAFC3Idn1Cxk6liS0Bk2rzS/HJtCM
+         mOFw==
+X-Gm-Message-State: APjAAAUrUlok2n/h/VE/8R4n+ykqEr2eku6FKwXOGp4vaEjWmHXraYGt
+        6dGg4omiNe3KPLVvefcgvvkVSIRX
+X-Google-Smtp-Source: APXvYqwNgTz3qLi4HX2cdSOMQc1vCTzd88y/8o+O59L5Ua2zKcJ3ht7mYGYZCXzAvQJpyMQxasO53A==
+X-Received: by 2002:a1c:f003:: with SMTP id a3mr1584888wmb.41.1579680414195;
+        Wed, 22 Jan 2020 00:06:54 -0800 (PST)
+Received: from localhost (ip-37-188-245-167.eurotel.cz. [37.188.245.167])
+        by smtp.gmail.com with ESMTPSA id p15sm2716017wma.40.2020.01.22.00.06.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 22 Jan 2020 00:06:52 -0800 (PST)
+Date:   Wed, 22 Jan 2020 09:06:51 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Yang Shi <yang.shi@linux.alibaba.com>
+Cc:     Wei Yang <richardw.yang@linux.intel.com>,
+        akpm@linux-foundation.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH] mm: move_pages: fix the return value if there are
+ not-migrated pages
+Message-ID: <20200122080651.GN29276@dhcp22.suse.cz>
+References: <1579325203-16405-1-git-send-email-yang.shi@linux.alibaba.com>
+ <20200120130624.GD18451@dhcp22.suse.cz>
+ <20200120131744.GE18451@dhcp22.suse.cz>
+ <20200121014416.GC1567@richard>
+ <20200121084040.GC29276@dhcp22.suse.cz>
+ <27b993f4-cc50-d5a9-1cda-89dd022aea16@linux.alibaba.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [172.21.177.138]
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <27b993f4-cc50-d5a9-1cda-89dd022aea16@linux.alibaba.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Initailization would reset runtime suspend by tp->saved_wolopts, so
-the tp->saved_wolopts should be set before initializing.
+On Tue 21-01-20 11:01:30, Yang Shi wrote:
+> 
+> 
+> On 1/21/20 12:40 AM, Michal Hocko wrote:
+> > On Tue 21-01-20 09:44:16, Wei Yang wrote:
+> > > On Mon, Jan 20, 2020 at 02:17:44PM +0100, Michal Hocko wrote:
+> > > > On Mon 20-01-20 14:06:26, Michal Hocko wrote:
+> > > > > On Sat 18-01-20 13:26:43, Yang Shi wrote:
+> > > > > > The do_move_pages_to_node() might return > 0 value, the number of pages
+> > > > > > that are not migrated, then the value will be returned to userspace
+> > > > > > directly.  But, move_pages() syscall would just return 0 or errno.  So,
+> > > > > > we need reset the return value to 0 for such case as what pre-v4.17 did.
+> > > > > The patch is wrong. migrate_pages returns the number of pages it
+> > > > > _hasn't_ migrated or -errno. Yeah that semantic sucks but...
+> > > > > So err != 0 is always an error. Except err > 0 doesn't really provide
+> > > > > any useful information to the userspace. I cannot really remember what
+> > > > > was the actual behavior before my rework because there were some gotchas
+> > > > > hidden there.
+> > > > OK, so I've double checked. do_move_page_to_node_array would carry the
+> > > > error code over to do_pages_move and it would store the status stored
+> > > > in the pm array. It contains page_to_nid(page) so the resulting code
+> > > > indeed behaves properly before my change and this is a regression. I
+> > > Thanks, I see the change.
+> > > 
+> > > > have a very vague recollection that this has been brought up already.
+> > > > <...looks in notes...>
+> > > > Found it! The report is
+> > > > http://lkml.kernel.org/r/0329efa0984b9b0252ef166abb4498c0795fab36.1535113317.git.jstancek@redhat.com
+> > > > and my proposed workaround was http://lkml.kernel.org/r/20180829145537.GZ10223@dhcp22.suse.cz
+> > > Well, the above two links return 404.
+> > You are right. They are not archived for some reason. Anyway, the patch
+> > I was proposing back then is below:
+> > 
+> > commit cfb88c266b645197135cde2905c2bfc82f6d82a9
+> > Author: Michal Hocko <mhocko@suse.com>
+> > Date:   Wed Nov 14 12:19:09 2018 +0100
+> > 
+> >      mm: fix do_pages_move error reporting
+> >      a49bd4d71637 ("mm, numa: rework do_pages_move") has changed the way how
+> >      we report error to layers above. As the changelog mentioned the semantic
+> >      was quite unclear previously because the return 0 could mean both
+> >      success and failure.
+> >      The above mentioned commit didn't get all the way down to fix this
+> >      completely because it doesn't report pages that we even haven't
+> >      attempted to migrate and therefore we cannot simply say that the
+> >      semantic is:
+> >      - err < 0 - errno
+> >      - err >= 0 number of non-migrated pages.
+> >      Fixes: a49bd4d71637 ("mm, numa: rework do_pages_move")
+> >      Signed-off-by: Michal Hocko <mhocko@suse.com>
+> 
+> Thanks, Michal. But, it looks this patch still could return > 0 value (the
+> total number of non-migrated pages, including not even attempted pages) too,
+> but the problem we are trying to fix is to make do_pages_move() return <= 0
+> value only since the man page of move_pages() doesn't allow return > 0
+> value.
 
-Signed-off-by: Hayes Wang <hayeswang@realtek.com>
----
- drivers/net/usb/r8152.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+Yes this patch just lives with the changed semantic and tries to make it
+sensible. So if some page cannot be migrated then we just stop and
+return the number of non migrated pages at the tail of the given array.
+This would make error handling slightly easier because you know that
+count - ret pages of the array can be skipped if ret >= 0.
 
-diff --git a/drivers/net/usb/r8152.c b/drivers/net/usb/r8152.c
-index 504db2348a3e..c3217a5c2fe1 100644
---- a/drivers/net/usb/r8152.c
-+++ b/drivers/net/usb/r8152.c
-@@ -6739,6 +6739,11 @@ static int rtl8152_probe(struct usb_interface *intf,
- 
- 	intf->needs_remote_wakeup = 1;
- 
-+	if (!rtl_can_wakeup(tp))
-+		__rtl_set_wol(tp, 0);
-+	else
-+		tp->saved_wolopts = __rtl_get_wol(tp);
-+
- 	tp->rtl_ops.init(tp);
- #if IS_BUILTIN(CONFIG_USB_RTL8152)
- 	/* Retry in case request_firmware() is not ready yet. */
-@@ -6756,10 +6761,6 @@ static int rtl8152_probe(struct usb_interface *intf,
- 		goto out1;
- 	}
- 
--	if (!rtl_can_wakeup(tp))
--		__rtl_set_wol(tp, 0);
--
--	tp->saved_wolopts = __rtl_get_wol(tp);
- 	if (tp->saved_wolopts)
- 		device_set_wakeup_enable(&udev->dev, true);
- 	else
+> And, by looking into the old code (v4.16), I spotted another problem. The
+> migrate_pages() would store the migration failure error code into
+> page_to_node->status. So, When do_move_page_to_node_array() returns > 0
+> value, the return value would be reset to 0 and the migration error codes
+> for non-migrated pages would be stored into status to return to userspace.
+> But, the rework removed this.
+> 
+> I didn't dig into the intention of the rework, is it expected?
+
+I have tried to preserve the original semantic as possible. As explained
+in the changelog there were quite some discrepancies even before. This
+new one was not really intentional. We have effectively two options
+here. Either somebody really depend on the former semantic and we have
+to fix this or we can relax the semantic as the above patch attempts.
+
+I would be more inclined for the second option as nobody has complained
+about the new semantic except for few ltp tests which do not represent
+real workload. If you have a real usecase then speak up please.
 -- 
-2.21.0
-
+Michal Hocko
+SUSE Labs
