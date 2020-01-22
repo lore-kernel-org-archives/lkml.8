@@ -2,385 +2,209 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA922C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 16:08:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1F0BC33CAF
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 16:08:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD7302071E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 16:08:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF21A24689
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 16:08:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q04+UCJb"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="S5eG+lqL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728803AbgAVQIN (ORCPT
+        id S1728899AbgAVQIO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 11:08:13 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:43079 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725883AbgAVQIK (ORCPT
+        Wed, 22 Jan 2020 11:08:14 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:47738 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727893AbgAVQIL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 11:08:10 -0500
-Received: by mail-pf1-f193.google.com with SMTP id x6so44864pfo.10;
-        Wed, 22 Jan 2020 08:08:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=2TWeVdE7IiqXKwtqthavTGOK3VlPsF519h/qxKiwBH8=;
-        b=Q04+UCJbkn0aGqOvHG1qMBRBugH6EfoNRf1lcdVgRFcyunWgkVZqApALS5WiISLcp3
-         YFFOFV06XecAkSmcWRP5+ZGHSr0uXEFL0wFg2L3vDcsegBatJ8aiRQMMZV1nbHp9FNqk
-         IBzEVvROnj4mynAIATz9POmp9uLH6CDcsS7ONvgsQPgpDCEZj6rpqi+uyKJm7kAOhs7a
-         OotQ6qFmjhRrLVh3ogGnrufdH9h3RUaNQr3E9+Zy2FzuUXobGtR86ubb2drf2OANx0Zk
-         blnhbiwvawL7l7Z8QPvpHvDlFT0oEPyqrCJVe4apVCASsxAoV3mjnI7c6D4yKXhrZPFI
-         /U4w==
+        Wed, 22 Jan 2020 11:08:11 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579709290;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=P+KDRGIU4sIqYrTCFGRumDg7Ht4/WtmtQGbhXNlfXQ0=;
+        b=S5eG+lqLAgfUGDe4ytC9PJLvzsUTu6VYpkvC1+uO13+olrp4CRFBuqovlzUVljNPM7hdNf
+        QlifI1uonsD437k3D77vn+Qg4uVTtcXsuOI5ymXTSQxb6ug97KFrn8goa7l39thaBtTrgx
+        e3350fNiePOlCiZW+0Q0TVWaWz/Je3I=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-291-kpJ6weqpPa-wOS7qZ798wg-1; Wed, 22 Jan 2020 11:08:08 -0500
+X-MC-Unique: kpJ6weqpPa-wOS7qZ798wg-1
+Received: by mail-wr1-f71.google.com with SMTP id v17so3257277wrm.17
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jan 2020 08:08:08 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :in-reply-to:references;
-        bh=2TWeVdE7IiqXKwtqthavTGOK3VlPsF519h/qxKiwBH8=;
-        b=XSpqT+89P29ErfOdt33dhVIhLuqG4hetaKnHOBqeQQUw8nfjKk5JOW1t0R7o/h0ULM
-         Ya1JKbsbX/X0Y1Wnk2mj9KeWsjj/xPmmqgVU57dxhy+9TC/H5ow+Dj4TMSfRTeJ9Xy9O
-         AejMtRy9hzi8bMu8W+pbs+fgrf8whEKbqOMMXiIxs6Y3tvphZ/9DjW2WociQNvHpzgUp
-         sEhkkq7BgyILKgsAIphmtl8XZHqFqeXpKj/Zcn7m6AykdYA0o/M4LFEsvYkviq2mNkTx
-         f3fmuSytMXHwqmpawJ5e7wuVI+QEV5TKOGYQY6owa6Gec1BXzDiVxRm3eXV5Jjt4lksR
-         Eq6w==
-X-Gm-Message-State: APjAAAV9xPgHeE6qKf1H6wbViZwoDo59mSR1hIxpSpqB2K+51Kl84hkc
-        x0lIo+Bj48HcTDate27IJdSpfn1H
-X-Google-Smtp-Source: APXvYqyS8qPXyc4c4HW0sJyyoBsL9RbuNfFp3CUx+mrZ06vK503mVt7kjj7xiIjExGOWcA1DeNj/cg==
-X-Received: by 2002:a65:55cd:: with SMTP id k13mr11437301pgs.197.1579709289563;
-        Wed, 22 Jan 2020 08:08:09 -0800 (PST)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id d129sm49426895pfd.115.2020.01.22.08.08.08
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 22 Jan 2020 08:08:08 -0800 (PST)
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     linux-hwmon@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Clemens Ladisch <clemens@ladisch.de>,
-        Jean Delvare <jdelvare@suse.com>,
-        Brad Campbell <lists2009@fnarfbargle.com>,
-        =?UTF-8?q?Ondrej=20=C4=8Cerman?= <ocerman@sda1.eu>,
-        Bernhard Gebetsberger <bernhard.gebetsberger@gmx.at>,
-        Holger Kiehl <Holger.Kiehl@dwd.de>,
-        Michael Larabel <michael@phoronix.com>,
-        Jonathan McDowell <noodles@earth.li>,
-        Ken Moffat <zarniwhoop73@googlemail.com>,
-        Sebastian Reichel <sebastian.reichel@collabora.com>,
-        Darren Salt <devspam@moreofthesa.me.uk>,
-        Guenter Roeck <linux@roeck-us.net>
-Subject: [PATCH v4 2/6] hmon: (k10temp) Convert to use devm_hwmon_device_register_with_info
-Date:   Wed, 22 Jan 2020 08:07:56 -0800
-Message-Id: <20200122160800.12560-3-linux@roeck-us.net>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200122160800.12560-1-linux@roeck-us.net>
-References: <20200122160800.12560-1-linux@roeck-us.net>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=P+KDRGIU4sIqYrTCFGRumDg7Ht4/WtmtQGbhXNlfXQ0=;
+        b=cTnlJdEGzIViIphSmKXr9H3XUom7k3fCmXzazc9l8eXhweIsLo1tn+nNcq68sv9Vcg
+         gZbOisDwRencbuMbB2nxG4F6L8rdo+pB/xl/aU1bOur89/yjqI27K8+ndFkcTEW86M2P
+         2dB1R7AiBf8PIxFBr2rNL6iwrx6/1Cf1IGhldO0KHdCgwyuttdMbiPEKOp+IGybPoI6F
+         0tmrvLqDul7CexekrJG60h/0uAcgeBhxojYSHinMWxbH3HOBwf5VPdJ1YqKx1h4b5ORR
+         m9ksaso/SRN1ZGIgMqpkMMFAzCNwRvXFBiIbme0xaa7/jAEwytvz+dFyz042UfvdTgnr
+         zIrg==
+X-Gm-Message-State: APjAAAXqSuXqukH/Dt0WJbKXNgM8w0nkqiFFpYhrIep74DTYQqppOCiA
+        M65dBP0lpBl5jzWrjX6Vhu12Stx7a+A/dnLKT3F02sok7qzqXgcJANegxeiIZU4GToJAygRHFvW
+        LU4SEgOXJTJEAxceGhI8tkpVS
+X-Received: by 2002:a5d:4847:: with SMTP id n7mr11892309wrs.30.1579709287247;
+        Wed, 22 Jan 2020 08:08:07 -0800 (PST)
+X-Google-Smtp-Source: APXvYqx1jrFrBWzdZZ+bxB+IeNrbAk/kSCOdz3k+GgU9ykZ+OKOTuhLTPyedfuGR5bYJvxBe4XTTAQ==
+X-Received: by 2002:a5d:4847:: with SMTP id n7mr11892272wrs.30.1579709286789;
+        Wed, 22 Jan 2020 08:08:06 -0800 (PST)
+Received: from ?IPv6:2001:b07:6468:f312:b8fe:679e:87eb:c059? ([2001:b07:6468:f312:b8fe:679e:87eb:c059])
+        by smtp.gmail.com with ESMTPSA id i11sm59447911wrs.10.2020.01.22.08.08.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 22 Jan 2020 08:08:06 -0800 (PST)
+Subject: Re: [PATCH v5 00/18] kvm: x86: Support AMD SVM AVIC w/ in-kernel
+ irqchip mode
+To:     Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     rkrcmar@redhat.com, joro@8bytes.org, vkuznets@redhat.com,
+        rkagan@virtuozzo.com, graf@amazon.com, jschoenh@amazon.de,
+        karahmed@amazon.de, rimasluk@amazon.com, jon.grimm@amd.com
+References: <1573762520-80328-1-git-send-email-suravee.suthikulpanit@amd.com>
+ <9e3e9692-d786-844e-c625-62b69505d2c9@amd.com>
+ <b4fa2422-f479-e1e4-11c6-5a4dfda53b74@amd.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <aeed73a9-5ef0-4c11-48cd-c36837536e51@redhat.com>
+Date:   Wed, 22 Jan 2020 17:08:01 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
+MIME-Version: 1.0
+In-Reply-To: <b4fa2422-f479-e1e4-11c6-5a4dfda53b74@amd.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert driver to use devm_hwmon_device_register_with_info to simplify
-the code and to reduce its size.
+On 20/01/20 07:16, Suravee Suthikulpanit wrote:
+> Ping
+> 
+> Thanks
+> Suravee
 
-Old size (x86_64):
-   text	   data	    bss	    dec	    hex	filename
-   8247	   4488	     64	  12799	   31ff	drivers/hwmon/k10temp.o
-New size:
-   text	   data	    bss	    dec	    hex	filename
-   6778	   2792	     64	   9634	   25a2	drivers/hwmon/k10temp.o
+Queued it, finally.  Sorry for the wait.
 
-Tested-by: Brad Campbell <lists2009@fnarfbargle.com>
-Tested-by: Bernhard Gebetsberger <bernhard.gebetsberger@gmx.at>
-Tested-by: Holger Kiehl <holger.kiehl@dwd.de>
-Tested-by: Michael Larabel <michael@phoronix.com>
-Tested-by: Jonathan McDowell <noodles@earth.li>
-Tested-by: Ken Moffat <zarniwhoop73@googlemail.com>
-Tested-by: Darren Salt <devspam@moreofthesa.me.uk>
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
----
- drivers/hwmon/k10temp.c | 213 +++++++++++++++++++++-------------------
- 1 file changed, 112 insertions(+), 101 deletions(-)
+Paolo
 
-diff --git a/drivers/hwmon/k10temp.c b/drivers/hwmon/k10temp.c
-index 8807d7da68db..c45f6498a59b 100644
---- a/drivers/hwmon/k10temp.c
-+++ b/drivers/hwmon/k10temp.c
-@@ -1,14 +1,15 @@
- // SPDX-License-Identifier: GPL-2.0-or-later
- /*
-- * k10temp.c - AMD Family 10h/11h/12h/14h/15h/16h processor hardware monitoring
-+ * k10temp.c - AMD Family 10h/11h/12h/14h/15h/16h/17h
-+ *		processor hardware monitoring
-  *
-  * Copyright (c) 2009 Clemens Ladisch <clemens@ladisch.de>
-+ * Copyright (c) 2020 Guenter Roeck <linux@roeck-us.net>
-  */
- 
- #include <linux/bitops.h>
- #include <linux/err.h>
- #include <linux/hwmon.h>
--#include <linux/hwmon-sysfs.h>
- #include <linux/init.h>
- #include <linux/module.h>
- #include <linux/pci.h>
-@@ -127,10 +128,10 @@ static void read_tempreg_nb_f17(struct pci_dev *pdev, u32 *regval)
- 		     F17H_M01H_REPORTED_TEMP_CTRL_OFFSET, regval);
- }
- 
--static unsigned int get_raw_temp(struct k10temp_data *data)
-+static long get_raw_temp(struct k10temp_data *data)
- {
--	unsigned int temp;
- 	u32 regval;
-+	long temp;
- 
- 	data->read_tempreg(data->pdev, &regval);
- 	temp = (regval >> CUR_TEMP_SHIFT) * 125;
-@@ -139,118 +140,108 @@ static unsigned int get_raw_temp(struct k10temp_data *data)
- 	return temp;
- }
- 
--static ssize_t temp1_input_show(struct device *dev,
--				struct device_attribute *attr, char *buf)
--{
--	struct k10temp_data *data = dev_get_drvdata(dev);
--	unsigned int temp = get_raw_temp(data);
--
--	if (temp > data->temp_offset)
--		temp -= data->temp_offset;
--	else
--		temp = 0;
--
--	return sprintf(buf, "%u\n", temp);
--}
--
--static ssize_t temp2_input_show(struct device *dev,
--				struct device_attribute *devattr, char *buf)
--{
--	struct k10temp_data *data = dev_get_drvdata(dev);
--	unsigned int temp = get_raw_temp(data);
--
--	return sprintf(buf, "%u\n", temp);
--}
--
--static ssize_t temp_label_show(struct device *dev,
--			       struct device_attribute *devattr, char *buf)
--{
--	struct sensor_device_attribute *attr = to_sensor_dev_attr(devattr);
--
--	return sprintf(buf, "%s\n", attr->index ? "Tctl" : "Tdie");
--}
-+const char *k10temp_temp_label[] = {
-+	"Tdie",
-+	"Tctl",
-+};
- 
--static ssize_t temp1_max_show(struct device *dev,
--			      struct device_attribute *attr, char *buf)
-+static int k10temp_read_labels(struct device *dev,
-+			       enum hwmon_sensor_types type,
-+			       u32 attr, int channel, const char **str)
- {
--	return sprintf(buf, "%d\n", 70 * 1000);
-+	*str = k10temp_temp_label[channel];
-+	return 0;
- }
- 
--static ssize_t temp_crit_show(struct device *dev,
--			      struct device_attribute *devattr, char *buf)
-+static int k10temp_read(struct device *dev, enum hwmon_sensor_types type,
-+			u32 attr, int channel, long *val)
- {
--	struct sensor_device_attribute *attr = to_sensor_dev_attr(devattr);
- 	struct k10temp_data *data = dev_get_drvdata(dev);
--	int show_hyst = attr->index;
- 	u32 regval;
--	int value;
- 
--	data->read_htcreg(data->pdev, &regval);
--	value = ((regval >> 16) & 0x7f) * 500 + 52000;
--	if (show_hyst)
--		value -= ((regval >> 24) & 0xf) * 500;
--	return sprintf(buf, "%d\n", value);
-+	switch (attr) {
-+	case hwmon_temp_input:
-+		switch (channel) {
-+		case 0:		/* Tdie */
-+			*val = get_raw_temp(data) - data->temp_offset;
-+			if (*val < 0)
-+				*val = 0;
-+			break;
-+		case 1:		/* Tctl */
-+			*val = get_raw_temp(data);
-+			if (*val < 0)
-+				*val = 0;
-+			break;
-+		default:
-+			return -EOPNOTSUPP;
-+		}
-+		break;
-+	case hwmon_temp_max:
-+		*val = 70 * 1000;
-+		break;
-+	case hwmon_temp_crit:
-+		data->read_htcreg(data->pdev, &regval);
-+		*val = ((regval >> 16) & 0x7f) * 500 + 52000;
-+		break;
-+	case hwmon_temp_crit_hyst:
-+		data->read_htcreg(data->pdev, &regval);
-+		*val = (((regval >> 16) & 0x7f)
-+			- ((regval >> 24) & 0xf)) * 500 + 52000;
-+		break;
-+	default:
-+		return -EOPNOTSUPP;
-+	}
-+	return 0;
- }
- 
--static DEVICE_ATTR_RO(temp1_input);
--static DEVICE_ATTR_RO(temp1_max);
--static SENSOR_DEVICE_ATTR_RO(temp1_crit, temp_crit, 0);
--static SENSOR_DEVICE_ATTR_RO(temp1_crit_hyst, temp_crit, 1);
--
--static SENSOR_DEVICE_ATTR_RO(temp1_label, temp_label, 0);
--static DEVICE_ATTR_RO(temp2_input);
--static SENSOR_DEVICE_ATTR_RO(temp2_label, temp_label, 1);
--
--static umode_t k10temp_is_visible(struct kobject *kobj,
--				  struct attribute *attr, int index)
-+static umode_t k10temp_is_visible(const void *_data,
-+				  enum hwmon_sensor_types type,
-+				  u32 attr, int channel)
- {
--	struct device *dev = container_of(kobj, struct device, kobj);
--	struct k10temp_data *data = dev_get_drvdata(dev);
-+	const struct k10temp_data *data = _data;
- 	struct pci_dev *pdev = data->pdev;
- 	u32 reg;
- 
--	switch (index) {
--	case 0 ... 1:	/* temp1_input, temp1_max */
--	default:
--		break;
--	case 2 ... 3:	/* temp1_crit, temp1_crit_hyst */
--		if (!data->read_htcreg)
--			return 0;
--
--		pci_read_config_dword(pdev, REG_NORTHBRIDGE_CAPABILITIES,
--				      &reg);
--		if (!(reg & NB_CAP_HTC))
--			return 0;
--
--		data->read_htcreg(data->pdev, &reg);
--		if (!(reg & HTC_ENABLE))
--			return 0;
--		break;
--	case 4 ... 6:	/* temp1_label, temp2_input, temp2_label */
--		if (!data->show_tdie)
-+	switch (type) {
-+	case hwmon_temp:
-+		switch (attr) {
-+		case hwmon_temp_input:
-+			if (channel && !data->show_tdie)
-+				return 0;
-+			break;
-+		case hwmon_temp_max:
-+			if (channel)
-+				return 0;
-+			break;
-+		case hwmon_temp_crit:
-+		case hwmon_temp_crit_hyst:
-+			if (channel || !data->read_htcreg)
-+				return 0;
-+
-+			pci_read_config_dword(pdev,
-+					      REG_NORTHBRIDGE_CAPABILITIES,
-+					      &reg);
-+			if (!(reg & NB_CAP_HTC))
-+				return 0;
-+
-+			data->read_htcreg(data->pdev, &reg);
-+			if (!(reg & HTC_ENABLE))
-+				return 0;
-+			break;
-+		case hwmon_temp_label:
-+			if (!data->show_tdie)
-+				return 0;
-+			break;
-+		default:
- 			return 0;
-+		}
- 		break;
-+	default:
-+		return 0;
- 	}
--	return attr->mode;
-+	return 0444;
- }
- 
--static struct attribute *k10temp_attrs[] = {
--	&dev_attr_temp1_input.attr,
--	&dev_attr_temp1_max.attr,
--	&sensor_dev_attr_temp1_crit.dev_attr.attr,
--	&sensor_dev_attr_temp1_crit_hyst.dev_attr.attr,
--	&sensor_dev_attr_temp1_label.dev_attr.attr,
--	&dev_attr_temp2_input.attr,
--	&sensor_dev_attr_temp2_label.dev_attr.attr,
--	NULL
--};
--
--static const struct attribute_group k10temp_group = {
--	.attrs = k10temp_attrs,
--	.is_visible = k10temp_is_visible,
--};
--__ATTRIBUTE_GROUPS(k10temp);
--
- static bool has_erratum_319(struct pci_dev *pdev)
- {
- 	u32 pkg_type, reg_dram_cfg;
-@@ -285,8 +276,27 @@ static bool has_erratum_319(struct pci_dev *pdev)
- 	       (boot_cpu_data.x86_model == 4 && boot_cpu_data.x86_stepping <= 2);
- }
- 
--static int k10temp_probe(struct pci_dev *pdev,
--				   const struct pci_device_id *id)
-+static const struct hwmon_channel_info *k10temp_info[] = {
-+	HWMON_CHANNEL_INFO(temp,
-+			   HWMON_T_INPUT | HWMON_T_MAX |
-+			   HWMON_T_CRIT | HWMON_T_CRIT_HYST |
-+			   HWMON_T_LABEL,
-+			   HWMON_T_INPUT | HWMON_T_LABEL),
-+	NULL
-+};
-+
-+static const struct hwmon_ops k10temp_hwmon_ops = {
-+	.is_visible = k10temp_is_visible,
-+	.read = k10temp_read,
-+	.read_string = k10temp_read_labels,
-+};
-+
-+static const struct hwmon_chip_info k10temp_chip_info = {
-+	.ops = &k10temp_hwmon_ops,
-+	.info = k10temp_info,
-+};
-+
-+static int k10temp_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- {
- 	int unreliable = has_erratum_319(pdev);
- 	struct device *dev = &pdev->dev;
-@@ -334,8 +344,9 @@ static int k10temp_probe(struct pci_dev *pdev,
- 		}
- 	}
- 
--	hwmon_dev = devm_hwmon_device_register_with_groups(dev, "k10temp", data,
--							   k10temp_groups);
-+	hwmon_dev = devm_hwmon_device_register_with_info(dev, "k10temp", data,
-+							 &k10temp_chip_info,
-+							 NULL);
- 	return PTR_ERR_OR_ZERO(hwmon_dev);
- }
- 
--- 
-2.17.1
+> On 1/2/20 5:17 PM, Suravee Suthikulpanit wrote:
+>> Paolo,
+>>
+>> Ping. Would you please let me know your feedback when you get a chance
+>> to review this series
+>>
+>> Thanks,
+>> Suravee
+>>
+>> On 11/15/19 3:15 AM, Suravee Suthikulpanit wrote:
+>>> The 'commit 67034bb9dd5e ("KVM: SVM: Add irqchip_split() checks before
+>>> enabling AVIC")' was introduced to fix miscellaneous boot-hang issues
+>>> when enable AVIC. This is mainly due to AVIC hardware doest not #vmexit
+>>> on write to LAPIC EOI register resulting in-kernel PIC and IOAPIC to
+>>> wait and do not inject new interrupts (e.g. PIT, RTC).
+>>>
+>>> This limits AVIC to only work with kernel_irqchip=split mode, which is
+>>> not currently enabled by default, and also required user-space to
+>>> support split irqchip model, which might not be the case.
+>>>
+>>> The goal of this series is to enable AVIC to work in both irqchip modes,
+>>> by allowing AVIC to be deactivated temporarily during runtime, and
+>>> fallback
+>>> to legacy interrupt injection mode (w/ vINTR and interrupt windows)
+>>> when needed, and then re-enabled subsequently (a.k.a Dynamic APICv).
+>>>
+>>> Similar approach is also used to handle Hyper-V SynIC in the
+>>> 'commit 5c919412fe61 ("kvm/x86: Hyper-V synthetic interrupt
+>>> controller")',
+>>> where APICv is permanently disabled at runtime (currently broken for
+>>> AVIC, and fixed by this series).
+>>>
+>>> This series contains several parts:
+>>>    * Part 1: patch 1,2
+>>>      Code clean up, refactor, and introduce helper functions
+>>>
+>>>    * Part 2: patch 3
+>>>      Introduce APICv deactivate bits to keep track of APICv state
+>>>      for each vm.
+>>>    * Part 3: patch 4-10
+>>>      Add support for activate/deactivate APICv at runtime
+>>>
+>>>    * Part 4: patch 11-14:
+>>>      Add support for various cases where APICv needs to
+>>>      be deactivated
+>>>
+>>>    * Part 5: patch 15-17:
+>>>      Introduce in-kernel IOAPIC workaround for AVIC EOI
+>>>
+>>>    * Part 6: path 18
+>>>      Allow enable AVIC w/ kernel_irqchip=on
+>>>
+>>> Pre-requisite Patch:
+>>>    * commit b9c6ff94e43a ("iommu/amd: Re-factor guest virtual APIC
+>>> (de-)activation code")
+>>>     
+>>> (https://git.kernel.org/pub/scm/linux/kernel/git/joro/iommu.git/commit/
+>>>       ?h=next&id=b9c6ff94e43a0ee053e0c1d983fba1ac4953b762)
+>>>
+>>> This series has been tested against v5.3 as following:
+>>>    * Booting Linux, FreeBSD, and Windows Server 2019 VMs upto 240 vcpus
+>>>      w/ qemu option "kernel-irqchip=on" and "-no-hpet".
+>>>    * Pass-through Intel 10GbE NIC and run netperf in the VM.
+>>>
+>>> Changes from V4: (https://lkml.org/lkml/2019/11/1/764)
+>>>    * Rename APICV_DEACT_BIT_xxx to APICV_INHIBIT_REASON_xxxx
+>>>    * Introduce kvm_x86_ops.check_apicv_inhibit_reasons hook
+>>>      to allow vendors to specify which APICv inhibit reason bits
+>>>      to support (patch 08/18).
+>>>    * Update comment on kvm_request_apicv_update() no-lock requirement.
+>>>      (patch 04/18)
+>>>
+>>> Suravee Suthikulpanit (18):
+>>>    kvm: x86: Modify kvm_x86_ops.get_enable_apicv() to use struct kvm
+>>>      parameter
+>>>    kvm: lapic: Introduce APICv update helper function
+>>>    kvm: x86: Introduce APICv inhibit reason bits
+>>>    kvm: x86: Add support for dynamic APICv
+>>>    kvm: x86: Add APICv (de)activate request trace points
+>>>    kvm: x86: svm: Add support to (de)activate posted interrupts
+>>>    svm: Add support for setup/destroy virutal APIC backing page for AVIC
+>>>    kvm: x86: Introduce APICv x86 ops for checking APIC inhibit reasons
+>>>    kvm: x86: Introduce x86 ops hook for pre-update APICv
+>>>    svm: Add support for dynamic APICv
+>>>    kvm: x86: hyperv: Use APICv update request interface
+>>>    svm: Deactivate AVIC when launching guest with nested SVM support
+>>>    svm: Temporary deactivate AVIC during ExtINT handling
+>>>    kvm: i8254: Deactivate APICv when using in-kernel PIT re-injection
+>>>      mode.
+>>>    kvm: lapic: Clean up APIC predefined macros
+>>>    kvm: ioapic: Refactor kvm_ioapic_update_eoi()
+>>>    kvm: ioapic: Lazy update IOAPIC EOI
+>>>    svm: Allow AVIC with in-kernel irqchip mode
+>>>
+>>>   arch/x86/include/asm/kvm_host.h |  19 ++++-
+>>>   arch/x86/kvm/hyperv.c           |   5 +-
+>>>   arch/x86/kvm/i8254.c            |  12 +++
+>>>   arch/x86/kvm/ioapic.c           | 149
+>>> +++++++++++++++++++++++-------------
+>>>   arch/x86/kvm/lapic.c            |  35 +++++----
+>>>   arch/x86/kvm/lapic.h            |   2 +
+>>>   arch/x86/kvm/svm.c              | 164
+>>> +++++++++++++++++++++++++++++++++++-----
+>>>   arch/x86/kvm/trace.h            |  19 +++++
+>>>   arch/x86/kvm/vmx/vmx.c          |  12 ++-
+>>>   arch/x86/kvm/x86.c              |  71 ++++++++++++++---
+>>>   10 files changed, 385 insertions(+), 103 deletions(-)
+>>>
+> 
 
