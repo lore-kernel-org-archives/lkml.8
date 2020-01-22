@@ -2,139 +2,85 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83C39C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 17:07:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 318CDC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 17:08:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61CF62253D
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 17:07:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01A782253D
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 17:08:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="gYO0beO9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729112AbgAVRHv (ORCPT
+        id S1727893AbgAVRIu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 12:07:51 -0500
-Received: from foss.arm.com ([217.140.110.172]:58694 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726004AbgAVRHv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 12:07:51 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D55931FB;
-        Wed, 22 Jan 2020 09:07:50 -0800 (PST)
-Received: from [10.1.196.37] (e121345-lin.cambridge.arm.com [10.1.196.37])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 13C103F6C4;
-        Wed, 22 Jan 2020 09:07:49 -0800 (PST)
-Subject: Re: [Patch v3 1/3] iommu: avoid unnecessary magazine allocations
-To:     Cong Wang <xiyou.wangcong@gmail.com>
-Cc:     iommu@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        John Garry <john.garry@huawei.com>
-References: <20191218043951.10534-1-xiyou.wangcong@gmail.com>
- <20191218043951.10534-2-xiyou.wangcong@gmail.com>
- <db1c7741-e280-7930-1659-2ca43e8aac15@arm.com>
- <CAM_iQpUmRKfiQ-P3G-PkRuumXqxN4TPuZtuqoT3+AFjhnkSwQQ@mail.gmail.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <9033456d-1f17-44a3-2640-24de55421e79@arm.com>
-Date:   Wed, 22 Jan 2020 17:07:48 +0000
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <CAM_iQpUmRKfiQ-P3G-PkRuumXqxN4TPuZtuqoT3+AFjhnkSwQQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+        Wed, 22 Jan 2020 12:08:50 -0500
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:44304 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725802AbgAVRIt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 12:08:49 -0500
+Received: by mail-qk1-f193.google.com with SMTP id v195so382982qkb.11
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jan 2020 09:08:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=content-transfer-encoding:from:mime-version:subject:date:message-id
+         :references:cc:in-reply-to:to;
+        bh=Ti+XLiigPGJrnCx1UGw3YWjZIkauoRbqzr6I8agOXYg=;
+        b=gYO0beO9qr8Hj+zrQ3WQNAEEYfW6hrtkuOgoZZwbJZa0QMvsQZ9rym+MAb5p5utu4A
+         j8O1iPlr0K5ggWcsfoktkcGNdiFMHgGvfZguKeIYhmHWxwOAUmHyIJ1u8VZcg8pSlg52
+         mW8Awb7ub6LgQ4Z4lbzjzOScxsSmvsihpJF0uenoMMPrWTXDdowQM2O9nfqGUOtWy9mn
+         qaL+QEW82WcLovhCCR71xj2Hd7p1zrWL/y5Hwrj2oWSVCG0K82GQLKC0A2LSO3A/nbnu
+         XysoVNRNNdpen0Q9gO72e+sa2xIJNZb0+Gx/ldnR0128BoKlmOciAIEqy2tsauX0jnq0
+         GzNA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=Ti+XLiigPGJrnCx1UGw3YWjZIkauoRbqzr6I8agOXYg=;
+        b=Yoiz+mXc2bZUEuMgATewi35eY+mJXHNxLiAfPtQZz11txUKZkfI782k8E4wIVVTSSN
+         6gWgQ9Ue3EctSjifMflD9irW44PwodJpDgxDv9lX0YdWa3lkuTs8vFn5bUY3onO1CuZS
+         9cn7ogXu0qJFzXVSHClwv7m7XZoB7WD5+SW/YVNh6sO8An8ABXzGirPT9iZYbIT7qGkb
+         LcAzQ053y5L+M10BXoLLSBwSxhZhdKpUH7KZGmgYOnrR7iGURCYSh88Lo9cJvftun40s
+         R7+5lKe+M1Le1JNady+Ty4oMYqOxWwz9u1dQ4aL2oz3voHDoFbZ2SF0ia+4HRE/fIITQ
+         uELA==
+X-Gm-Message-State: APjAAAUltGhGFDPjQCOc4D+usoB/TKr0Djio+7zZ7FbTmnNr+Ez5SiCF
+        rTgMS+2rGXKeiFyBVCTtBCRrsA==
+X-Google-Smtp-Source: APXvYqzND5RoFARXrHSbToItbCBzdJPPWIjcuF0uWwO4L/gSnAUDmKtHepOzn0mEsvpWnNo2JgFIIA==
+X-Received: by 2002:a05:620a:2010:: with SMTP id c16mr10594941qka.386.1579712928569;
+        Wed, 22 Jan 2020 09:08:48 -0800 (PST)
+Received: from [192.168.1.183] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id j15sm2026903qtk.48.2020.01.22.09.08.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 22 Jan 2020 09:08:47 -0800 (PST)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+From:   Qian Cai <cai@lca.pw>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH] locking/osq_lock: fix a data race in osq_wait_next
+Date:   Wed, 22 Jan 2020 12:08:47 -0500
+Message-Id: <A5114711-B8DE-48DA-AFD0-62128AC08270@lca.pw>
+References: <20200122165938.GA16974@willie-the-truck>
+Cc:     mingo@redhat.com, peterz@infradead.org, elver@google.com,
+        linux-kernel@vger.kernel.org
+In-Reply-To: <20200122165938.GA16974@willie-the-truck>
+To:     Will Deacon <will@kernel.org>
+X-Mailer: iPhone Mail (17C54)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 21/01/2020 5:21 pm, Cong Wang wrote:
-> On Tue, Jan 21, 2020 at 3:11 AM Robin Murphy <robin.murphy@arm.com> wrote:
->>
->> On 18/12/2019 4:39 am, Cong Wang wrote:
->>> The IOVA cache algorithm implemented in IOMMU code does not
->>> exactly match the original algorithm described in the paper
->>> "Magazines and Vmem: Extending the Slab Allocator to Many
->>> CPUs and Arbitrary Resources".
->>>
->>> Particularly, it doesn't need to free the loaded empty magazine
->>> when trying to put it back to global depot. To make it work, we
->>> have to pre-allocate magazines in the depot and only recycle them
->>> when all of them are full.
->>>
->>> Before this patch, rcache->depot[] contains either full or
->>> freed entries, after this patch, it contains either full or
->>> empty (but allocated) entries.
->>
->> How much additional memory overhead does this impose (particularly on
->> systems that may have many domains mostly used for large, long-term
->> mappings)? I'm wary that trying to micro-optimise for the "churn network
->> packets as fast as possible" case may penalise every other case,
->> potentially quite badly. Lower-end embedded systems are using IOMMUs in
->> front of their GPUs, video codecs, etc. precisely because they *don't*
->> have much memory to spare (and thus need to scrape together large
->> buffers out of whatever pages they can find).
-> 
-> The calculation is not complicated: 32 * 6 * 129 * 8 = 198144 bytes,
-> which is roughly 192K, per domain.
 
-Theoretically. On many architectures, kmalloc(1032,...) is going to 
-consume rather more than 1032 bytes. Either way, it's rather a lot of 
-memory to waste in the many cases where it will never be used at all.
 
->> But on the other hand, if we were to go down this route, then why is
->> there any dynamic allocation/freeing left at all? Once both the depot
->> and the rcaches are preallocated, then AFAICS it would make more sense
->> to rework the overflow case in __iova_rcache_insert() to just free the
->> IOVAs and swap the empty mag around rather than destroying and
->> recreating it entirely.
-> 
-> It's due to the algorithm requires a swap(), which can't be done with
-> statically allocated magzine. I had the same thought initially but gave it
-> up quickly when realized this.
+> On Jan 22, 2020, at 11:59 AM, Will Deacon <will@kernel.org> wrote:
+>=20
+> I don't understand this; 'next' is a local variable.
+>=20
+> Not keen on the onslaught of random "add a READ_ONCE() to shut the
+> sanitiser up" patches we're going to get from kcsan :(
 
-I'm not sure I follow... we're replacing a "full magazine" pointer with 
-an "empty magazine" pointer regardless of where that empty magazine came 
-from. It would be trivial to preallocate an 'overflow' magazine for the 
-one remaining case of handling a full depot, although to be honest, at 
-that point it's probably most efficient to just free the pfns directly 
-from cpu_rcache->loaded while still under the percpu lock and be done 
-with it.
-
-> If you are suggesting to change the algorithm, it is not a goal of this
-> patchset. I do have plan to search for a better algorithm as the IOMMU
-> performance still sucks (comparing to no IOMMU) after this patchset,
-> but once again, I do not want to change it in this patchset.
-
-"Still sucks" is probably the most interesting thing here - the headline 
-number for the original patch series was that it reached about 98% of 
-bypass performance on Intel VT-d[1]. Sounds like it would be well worth 
-digging in to what's different about your system and/or workload.
-
-> (My ultimate goal is to find a spinlock-free algorithm, otherwise there is
-> no way to make it close to no-IOMMU performance.)
-> 
->>
->> Perhaps there's a reasonable compromise wherein we don't preallocate,
->> but still 'free' empty magazines back to the depot, such that busy
->> domains will quickly reach a steady-state. In fact, having now dug up
->> the paper at this point of writing this reply, that appears to be what
->> fig. 3.1b describes anyway - I don't see any mention of preallocating
->> the depot.
-> 
-> That paper missed a lot of things, it doesn't even recommend a size
-> of a depot or percpu cache. For implementation, we still have to
-> think about those details, including whether to preallocate memory.
-
-Heh, "missed"... To my reading, the original design actually describes a 
-depot consisting of two unbounded (but garbage-collected) lists and a 
-dynamically-adjusted magazine size - I'd hardly blame the authors for 
-not discussing an implementation from 15 years in the future of a 
-fixed-size design *based on* their concept ;)
-
-Robin.
-
-[1] 
-https://lists.linuxfoundation.org/pipermail/iommu/2015-December/015271.html
+My fault. I suspect it is node->next. I=E2=80=99ll do a bit more testing to c=
+onfirm.=
