@@ -7,46 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A11BC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:49:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECB79C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:49:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BF082468A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:49:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF9DB2467B
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:49:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579686580;
-	bh=u5o4ITNKD88xH8XTMiyh2c5zZWnTUz39pEEvIJzm0WU=;
+	s=default; t=1579686585;
+	bh=/Sat1VrLYYW/Qf0KeRlh3+lDYC+VTYYth1oaVFx3RnE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nxUqCFOmerzaI5FNl7PGFcsTymZ63msgwPCfir6w/H/FvHIEgC+IjSHtyJUN2UECl
-	 0CigA8CbXYi4e1MJNB2Gc8oBuEOSwPp0Ql3rCIrAI5jP79IEaJfKe3PQaOfbJECGV9
-	 pAT+Pg9l4qLxo6Nl4jfLA3o4TDCQa+nkeNliHLic=
+	b=gpx1rTtsU47V4qYxxrag3SxKR7OTfG/5F7tzpYVDK4CjZDfQuMLO/1Svu8n2BNk3x
+	 25ehFqawcllwWIz4cf1rZL9GQkLcXINI7vYIV1DOecAYQc0cFCKymwtQUNM4XYrxOG
+	 9I1E3Fm8eEAKRSZs3PAHXQhSiAisd7ZGMmyNz6KM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731526AbgAVJje (ORCPT
+        id S1733217AbgAVJjb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 04:39:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57538 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 04:39:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57476 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733215AbgAVJja (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 04:39:30 -0500
+        id S1731074AbgAVJj2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 04:39:28 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E95CD24685;
-        Wed, 22 Jan 2020 09:39:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6644524687;
+        Wed, 22 Jan 2020 09:39:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579685970;
-        bh=u5o4ITNKD88xH8XTMiyh2c5zZWnTUz39pEEvIJzm0WU=;
+        s=default; t=1579685967;
+        bh=/Sat1VrLYYW/Qf0KeRlh3+lDYC+VTYYth1oaVFx3RnE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qa2wgc4puUEKBTa1kxe+NFeXYy/oJFxBD/lrI8CGphLOIDjWr/MuuJs6RiWSET32H
-         F+dlVs8hCrLxj/wP5quPdl92s0A9E+pt2e8EOUJi5K2l4Qe+rp99TGjCUe0Q8qDvw2
-         6dJqNrQoHFxjQ/MJqtXAy8qaSL1IBP/bN1LfS/0E=
+        b=vIgnLpc274gW9SE1qxrbhskOaS5m1Yue8uiItKYLpzP1rgLfB3MgGb+uZfhAIwjE/
+         bsZ0dyioNftxbKWiT0VNBkMviZ6ZxbwHXYzP7bW7E4wPXEf+Wh1EfADfeEP+sXjuEi
+         nwRCOGyOYBqZn0qi1oP+p/4c0MpvuUR6mIwYNDc8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jose Abreu <Jose.Abreu@synopsys.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 29/65] net: stmmac: 16KB buffer must be 16 byte aligned
-Date:   Wed, 22 Jan 2020 10:29:14 +0100
-Message-Id: <20200122092754.942703367@linuxfoundation.org>
+        stable@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Liviu Dudau <liviu.dudau@arm.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Sudeep Holla <sudeep.holla@arm.com>
+Subject: [PATCH 4.14 55/65] Revert "arm64: dts: juno: add dma-ranges property"
+Date:   Wed, 22 Jan 2020 10:29:40 +0100
+Message-Id: <20200122092759.408506990@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200122092750.976732974@linuxfoundation.org>
 References: <20200122092750.976732974@linuxfoundation.org>
@@ -59,34 +62,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jose Abreu <Jose.Abreu@synopsys.com>
+From: Sudeep Holla <sudeep.holla@arm.com>
 
-commit 8605131747e7e1fd8f6c9f97a00287aae2b2c640 upstream.
+commit 54fb3fe0f211d4729a2551cf9497bd612189af9d upstream.
 
-The 16KB RX Buffer must also be 16 byte aligned. Fix it.
+This reverts commit 193d00a2b35ee3353813b4006a18131122087205.
 
-Fixes: 7ac6653a085b ("stmmac: Move the STMicroelectronics driver")
-Signed-off-by: Jose Abreu <Jose.Abreu@synopsys.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Commit 951d48855d86 ("of: Make of_dma_get_range() work on bus nodes")
+reworked the logic such that of_dma_get_range() works correctly
+starting from a bus node containing "dma-ranges".
+
+Since on Juno we don't have a SoC level bus node and "dma-ranges" is
+present only in the root node, we get the following error:
+
+OF: translation of DMA address(0) to CPU address failed node(/sram@2e000000)
+OF: translation of DMA address(0) to CPU address failed node(/uart@7ff80000)
+...
+OF: translation of DMA address(0) to CPU address failed node(/mhu@2b1f0000)
+OF: translation of DMA address(0) to CPU address failed node(/iommu@2b600000)
+OF: translation of DMA address(0) to CPU address failed node(/iommu@2b600000)
+OF: translation of DMA address(0) to CPU address failed node(/iommu@2b600000)
+
+So let's fix it by dropping the "dma-ranges" property for now. This
+should be fine since it doesn't represent any kind of device-visible
+restriction; it was only there for completeness, and we've since given
+in to the assumption that missing "dma-ranges" implies a 1:1 mapping
+anyway.
+
+We can add it later with a proper SoC bus node and moving all the
+devices that belong there along with the "dma-ranges" if required.
+
+Fixes: 193d00a2b35e ("arm64: dts: juno: add dma-ranges property")
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Liviu Dudau <liviu.dudau@arm.com>
+Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Acked-by: Robin Murphy <robin.murphy@arm.com>
+Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/ethernet/stmicro/stmmac/common.h |    5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ arch/arm64/boot/dts/arm/juno-base.dtsi |    1 -
+ 1 file changed, 1 deletion(-)
 
---- a/drivers/net/ethernet/stmicro/stmmac/common.h
-+++ b/drivers/net/ethernet/stmicro/stmmac/common.h
-@@ -338,9 +338,8 @@ struct dma_features {
- 	unsigned int rx_fifo_size;
- };
+--- a/arch/arm64/boot/dts/arm/juno-base.dtsi
++++ b/arch/arm64/boot/dts/arm/juno-base.dtsi
+@@ -5,7 +5,6 @@
+ 	/*
+ 	 *  Devices shared by all Juno boards
+ 	 */
+-	dma-ranges = <0 0 0 0 0x100 0>;
  
--/* GMAC TX FIFO is 8K, Rx FIFO is 16K */
--#define BUF_SIZE_16KiB 16384
--/* RX Buffer size must be < 8191 and multiple of 4/8/16 bytes */
-+/* RX Buffer size must be multiple of 4/8/16 bytes */
-+#define BUF_SIZE_16KiB 16368
- #define BUF_SIZE_8KiB 8188
- #define BUF_SIZE_4KiB 4096
- #define BUF_SIZE_2KiB 2048
+ 	memtimer: timer@2a810000 {
+ 		compatible = "arm,armv7-timer-mem";
 
 
