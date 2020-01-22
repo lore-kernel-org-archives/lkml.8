@@ -2,190 +2,352 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B78D5C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 12:44:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7582C33CAF
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 12:44:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84FB024688
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 12:44:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="uemOHiP0"
+	by mail.kernel.org (Postfix) with ESMTP id A507524685
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 12:44:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729151AbgAVMor (ORCPT
+        id S1729190AbgAVMot (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 07:44:47 -0500
-Received: from ssl.serverraum.org ([176.9.125.105]:53265 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728998AbgAVMor (ORCPT
+        Wed, 22 Jan 2020 07:44:49 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:33515 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728811AbgAVMos (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 07:44:47 -0500
-Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id AAB6223061;
-        Wed, 22 Jan 2020 13:44:44 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1579697085;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=c8glKPE3mtcxWK7EcKAqhmptjvy0DHsDGU/Oht3Gsm0=;
-        b=uemOHiP0AM6jmU+xGLo1O55NL1lMnlXQvHkkaSrvJqMXFsxNAFCY9lIY08vBboWgZP8b6h
-        zPFuoPjQGE219HHheFPmyKuIW8Ed1IwCsT3E0XiA2yJNXlKeCyMgc1sKvsmLx5jlGdTgRZ
-        ShQjYvvJVlkUycCAIUfZOfHtFbLbsxI=
+        Wed, 22 Jan 2020 07:44:48 -0500
+Received: by mail-wm1-f66.google.com with SMTP id d139so4344193wmd.0;
+        Wed, 22 Jan 2020 04:44:47 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Sqq1jUQ7dMU6f3FqDKnFw724qghKcztaqNgxegjyzNM=;
+        b=XTvy8WU6c7Ql5GuPBKOW51qfnKk5HqtingvmWjj3GOFqVF3MnImCDM8wScRN0/P2I3
+         eyfDObmVOeeUiiy4zPN1/1p0hsaM968ujeli55812zZn56k4aMyZr4YsRnMyn6O19gjB
+         tfUMFi54fKpafc9BkttmmXWZoOz2uImPaoF8qE/ofMl8M/1oawzjVZAfntJoKS0d4Psm
+         DHUyNfureqaLm4JSOlHfGoSpVGFyDw9lhvG17wTNyJDep+eCvlo64Rws1YHCh6XL55dF
+         3KcOjnISVUhMRxfCA5SwvXFKSCQqXAxCvxFk2iFedjSSlpvrXJSoNzD+/zOhanwBw2S5
+         NtQg==
+X-Gm-Message-State: APjAAAXM4J6T2y+yyLGNv+vjNISVipT/4XLyvyLkR/J9oBpx46OHaeZ5
+        CY5nQ4cFmzUmilsw6S4xujQ=
+X-Google-Smtp-Source: APXvYqyOU2SxDFbZY7bSsGP3lY04XHpjUl6no/3MqFXh2sTCSDWjw9/d71Slj+XJd8BhFTx2+uwsYA==
+X-Received: by 2002:a1c:7715:: with SMTP id t21mr2853760wmi.149.1579697086128;
+        Wed, 22 Jan 2020 04:44:46 -0800 (PST)
+Received: from darkstar ([2a00:79e1:abc:308:3084:a9fa:af54:d880])
+        by smtp.gmail.com with ESMTPSA id k16sm59465148wru.0.2020.01.22.04.44.44
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 22 Jan 2020 04:44:44 -0800 (PST)
+Date:   Wed, 22 Jan 2020 13:44:24 +0100
+From:   Patrick Bellasi <patrick.bellasi@matbug.net>
+To:     Qais Yousef <qais.yousef@arm.com>
+Cc:     Valentin Schneider <valentin.schneider@arm.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        qperret@google.com, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH] sched/rt: Add a new sysctl to control uclamp_util_min
+Message-ID: <20200122124424.GA15976@darkstar>
+References: <20191220164838.31619-1-qais.yousef@arm.com>
+ <20200108185650.GA9635@darkstar>
+ <026e46e4-5d09-6260-0fa7-e365b0795c9a@arm.com>
+ <20200109092137.GA2811@darkstar>
+ <20200114213403.cur6gydan6kmplqb@e107158-lin.cambridge.arm.com>
+ <20200122101944.GA12533@darkstar>
+ <20200122114539.jbk6txpbezva2swv@e107158-lin.cambridge.arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Wed, 22 Jan 2020 13:44:44 +0100
-From:   Michael Walle <michael@walle.cc>
-To:     Vignesh Raghavendra <vigneshr@ti.com>
-Cc:     Tudor.Ambarus@microchip.com, linux-mtd@lists.infradead.org,
-        linux-kernel@vger.kernel.org, richard@nod.at,
-        boris.brezillon@collabora.com, miquel.raynal@bootlin.com,
-        marex@denx.de
-Subject: Re: [PATCH v2] mtd: spi-nor: keep lock bits if they are non-volatile
-In-Reply-To: <990b9b16-36e5-ce73-36c7-0ebfa391c26b@ti.com>
-References: <20200103221229.7287-1-michael@walle.cc>
- <8187061.UfBqSTmf1g@192.168.0.113>
- <62b578b07d5eb46a015dafd4c2f45bc2@walle.cc>
- <5323055.WqobA3rpa8@192.168.0.113>
- <990b9b16-36e5-ce73-36c7-0ebfa391c26b@ti.com>
-Message-ID: <e64cc3ac32d2b44c9e6f4b4f795354ae@walle.cc>
-X-Sender: michael@walle.cc
-User-Agent: Roundcube Webmail/1.3.8
-X-Spamd-Bar: /
-X-Rspamd-Server: web
-X-Rspamd-Queue-Id: AAB6223061
-X-Spamd-Result: default: False [-0.10 / 15.00];
-         ARC_NA(0.00)[];
-         FROM_HAS_DN(0.00)[];
-         TO_DN_SOME(0.00)[];
-         TO_MATCH_ENVRCPT_ALL(0.00)[];
-         MIME_GOOD(-0.10)[text/plain];
-         DKIM_SIGNED(0.00)[];
-         RCPT_COUNT_SEVEN(0.00)[8];
-         NEURAL_HAM(-0.00)[-0.662];
-         RCVD_COUNT_ZERO(0.00)[0];
-         FROM_EQ_ENVFROM(0.00)[];
-         MIME_TRACE(0.00)[0:+];
-         MID_RHS_MATCH_FROM(0.00)[]
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200122114539.jbk6txpbezva2swv@e107158-lin.cambridge.arm.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Vignesh,
-
-Am 2020-01-22 13:10, schrieb Vignesh Raghavendra:
-> On 22/01/20 12:23 am, Tudor.Ambarus@microchip.com wrote:
->> Hi, Michael, Vignesh,
->> 
->> On Sunday, January 12, 2020 12:50:57 AM EET Michael Walle wrote:
->>> EXTERNAL EMAIL: Do not click links or open attachments unless you 
->>> know the
->>> content is safe
-> [...]
+On 22-Jan 11:45, Qais Yousef wrote:
+> On 01/22/20 11:19, Patrick Bellasi wrote:
+> > On 14-Jan 21:34, Qais Yousef wrote:
+> > > On 01/09/20 10:21, Patrick Bellasi wrote:
+> > > > That's not entirely true. In that patch we introduce cgroup support
+> > > > but, if you look at the code before that patch, for CFS tasks there is
+> > > > only:
+> > > >  - CFS task-specific values (min,max)=(0,1024) by default
+> > > >  - CFS system-wide tunables (min,max)=(1024,1024) by default
+> > > > and a change on the system-wide tunable allows for example to enforce
+> > > > a uclamp_max=200 on all tasks.
+> > > > 
+> > > > A similar solution can be implemented for RT tasks, where we have:
+> > > >  - RT task-specific values (min,max)=(1024,1024) by default
+> > > >  - RT system-wide tunables (min,max)=(1024,1024) by default
+> > > >  and a change on the system-wide tunable allows for example to enforce
+> > > >  a uclamp_min=200 on all tasks.
+> > > 
+> > > I feel I'm already getting lost in the complexity of the interaction here. Do
+> > > we really need to go that path?
+> > > 
+> > > So we will end up with a default system wide for all tasks + a CFS system wide
+> > > default + an RT system wide default?
+> > > 
+> > > As I understand it, we have a single system wide default now.
+> > 
+> > Right now we have one system wide default and that's both for all
+> > CFS/RT tasks, when cgroups are not in use, or for root group and
+> > autogroup CFS/RT tasks, when cgroups are in use.
+> > 
+> > What I'm proposing is to limit the usage of the current system wide
+> > default to CFS tasks only, while we add a similar new one specifically
+> > for RT tasks.
 > 
->>>> I see three choices:
->>>> 1/ dt prop which gives a per flash granularity. The prop is related 
->>>> to
->>>> hw
->>>> protection and there might be some chances to get this accepted, 
->>>> maybe
->>>> it is
->>>> worth to involve Rob. But I tend to share Vignesh's opinion, this 
->>>> would
->>>> configure the flash and not describe it.
->>> 
->>> Still my preferred way. but also see below. But I wouldn't say it
->> 
->> Try to convince Rob.
->> 
->>> configures the
->>> flash but describe that the user want to use the write protection.
->>> 
->>>> 2/ kconfig option, the behavior would be enforced on all the 
->>>> flashes.
->>>> It would
->>>> be similar to what we have with CONFIG_MTD_SPI_NOR_USE_4K_SECTORS. I
->>>> did a
->>>> patch to address this some time ago:
->>>> https://patchwork.ozlabs.org/patch/
->>>> 1133278/
->>> 
->>> Mhh. If we would combine this with this patch that would be at least 
->>> a
->>> step into
->>> the right direction. At least a distro could enable that kernel 
->>> option
->>> without
->>> breaking old boards/flashes. Because as outlined about you need that 
->>> for
->>> flashes
->>> in category (2). Or you'd have to do a flash_unlock every time you 
->>> want
->>> to write
->>> to it. But that would be really a backwards incompatible change.. ;)
->>> 
->>>> 3/ module param, the behavior would be enforced on all the flashes.
->>>> 
->>>> Preferences or suggestions?
->>> 
->> I would go with 2/ or 3/. Vignesh, what do you prefer and why?
->> 
+> This change of behavior will be user-visible. I doubt anyone depends on it yet,
+> so if we want to change it now is the time.
+
+As it will be forcing users to move tasks into a different group.
+
+> The main issue I see here is that the system wide are *always* enforced. They
+> guarantee a global restriction. Which you're proposing to split into CFS and RT
+> system wide global restrictions.
+
+For RT tasks, since we don't have a utilization signal, we always
+clamp the 1024 value. That's why forcing a default can be obtained by
+just setting a constraints.
+
+Do note that, right now we don't have a concept of default _requested_
+clamp value. Perhaps having used uclamp_default[UCLAMP_CNT] has been
+misleading but what that value does is just setting the default
+_max constraint_ value. If you don't change them, we allow min,max
+constraints to have any value.
+
+> But what I am proposing here is setting the *default* fork value of RT uclamp
+> min. Which is currently hardcoded to uclamp_none(UCLAMP_MAX) = 1024.
+
+Yes, I got what you propose. And that's what I don't like.
+
+The default _requested_ clamp value for RT task is 1024 dy definition,
+since we decided that RT tasks should run to max OPP by default.
+
+> I think the 2 concepts are different to a system wide RT control. Or I am still
+> confused about your vision of how this should really work. I don't see how what
+> you propose could solve my problem.
 > 
-> I dont like option 1, because I am not convinced that this is a HW
-> description to be put in DT.  IIUC, problem is more of what to do with
-> locking configuration that is done before Linux comes up(either in
-> previous boot or by bootloader or POR default). Current code just
-> discards it and unlocks entire flash.
-
-But this is not the main problem. It is rather the intention of the
-user to actually want write protect the flash (for flashes who has
-proper support for them, that is the ones which have non-volatile
-bits).
-
-Flashes with volatile bits are another subject. Here it might be useful
-to unlock them either at probe time or when we first write to them, so
-the user doesn't need to know if its this kind of flash and he would
-actually have to unlock the flash before writing. I've left the
-behaviour for these flashes as it was before.
-
-And yes, u-boot suffers from the same problem, eg. it unlocks the whole
-flash too. I guess they inherited the behaviour from linux. But I
-wanted to start with linux first.
-
-> But proposal is not to touch those bits at probe time and leave this
-> upto userspace to handle.
-
-No, my proposal was to divide the flashes into two categories. The
-unlocking is only done on the flashes which have volatile locking bits,
-thus even when the new option is enabled it won't break access to these
-flashes.
-
-> Adding a Kconfig does not scale well for multi-platform builds. There
-> would not be a way to have protection enabled on one platform but
-> disabled on other. Does not scale for multiple flashes either
+> For example:
 > 
-> Option 3 sounds least bad among all. If module param can be designed to
-> be a string then, we could control locking behavior to be per flash
-> using flash name.
+> 	sysctl_sched_uclamp_util_min = 1024
+> 
+> means that tasks can set their uclamp_min to [0:1024], but
+> 
+> 	sysctl_sched_uclamp_util_min = 800
+> 
+> means that tasks can set their uclamp_min to [0:800]
 
-What about both? A kconfig option which defines the default for the
-kernel parameter? My fear is that once it is a kernel parameter it is
-easy to forget (thus having the non-volatile bits, the flash is
-completely unlocked again) and it is not very handy; for proper write
-protection you'd always have to have this parameter.
+You don't have to play with the min clamp.
 
-btw. I don't see a need to have this option per flash, because once
-the user actually enables it, he is aware that its for all of his
-flashes. I haven't seen flashes which has non-volatile protection bits
-_and_ are protected by default. There shouldn't be a noticable
-difference for the user if the option when enabled.
+To recap, for RT tasks:
+ - the default _requested_ value is 1024
+ - we always clamp the requested value considering the system wide
+   clamps
+ - the system wide clamps for RT tasks will be, by default, set to:
+   (util_min,util_max) = (1024,1024)
 
--michael
+According to the above we have the default behaviors, RT tasks running
+at max OPP.
+
+Now, let say you wanna your RT tasks to run only up to 200.
+Well, what you need to do is to clamp the default _requested_ value
+(1024) with a clamp range like (*,200):
+
+   rt_clamped_util = uclamp_util(1024, (*,200)) = 200
+
+IOW, what you will use to reduce the OPP is something like:
+
+     sysctl_sched_uclamp_util_rt_max = 200
+
+You just need to reduce the MAX clamp constraint, which will enforce
+whatever the task requires and/or its min to be not greater the 200.
+
+
+> Which when splitting this to CFS and RT controls, they'd still mean control
+> the possible range the tasks can use.
+> 
+> But what I want here is that
+> 
+> 	sysctl_sched_rt_default_uclamp_util_min = 800
+> 
+> Will set p->uclamp_min = 800 when a new RT task is forked and will stay like
+> this until the user modifies it. And update all current RT tasks that are still
+> using the default value to the new one when ever this changes.
+
+Right, that will work, but you are adding design concepts on top of a
+design which allows already you to get what you want: just by properly
+setting the constraints.
+
+> If this value is outside the system wide allowed range; it'll be clamped
+> correctly by uclamp_eff_get().
+> 
+> Note that the default fork values for CFS are (0, 1024) and we don't have a way
+> to change this at the moment.
+
+That's not true, the default value at FORK is to copy the parent
+clamps. Unless you ask for a reset on fork.
+
+
+> > 
+> > At the end we will have two system wide defaults, not three.
+> > 
+> > > > > (Would we need CONFIG_RT_GROUP_SCHED for this? IIRC there's a few pain points
+> > > > > when turning it on, but I think we don't have to if we just want things like
+> > > > > uclamp value propagation?)
+> > > > 
+> > > > No, the current design for CFS tasks works also on !CONFIG_CFS_GROUP_SCHED.
+> > > > That's because in this case:
+> > > >   - uclamp_tg_restrict() returns just the task requested value
+> > > >   - uclamp_eff_get() _always_ restricts the requested value considering
+> > > >     the system defaults
+> > > >  
+> > > > > It's quite more work than the simple thing Qais is introducing (and on both
+> > > > > user and kernel side).
+> > > > 
+> > > > But if in the future we will want to extend CGroups support to RT then
+> > > > we will feel the pains because we do the effective computation in two
+> > > > different places.
+> > > 
+> > > Hmm what you're suggesting here is that we want to have
+> > > cpu.rt.uclamp.{min,max}? I'm not sure I can agree this is a good idea.
+> > 
+> > That's exactly what we already do for other controllers. For example,
+> > if you look at the bandwidth controller, we have separate knobs for
+> > CFS and RT tasks.
+> > 
+> > > It makes more sense to create a special group for all rt tasks rather than
+> > > treat rt tasks in a cgroup differently.
+> > 
+> > Don't see why that should make more sense. This can work of course but
+> > it would enforce a more strict configuration and usage of cgroups to
+> > userspace.
+> 
+> It makes sense to me because cgroups offer a logical separation, and if tasks
+> within the same group need to be treated differently then they're logically
+> separated and need to be grouped differently consequently.
+
+And that's why we can have knobs for different scheduling classes in
+the same task group.
+
+> The uclamp values are not RT only properties.
+
+In the current implementation, but that was not certainly the original
+intent. Ref to:
+
+   Message-ID: <20190115101513.2822-10-patrick.bellasi@arm.com>
+   https://lore.kernel.org/lkml/20190115101513.2822-10-patrick.bellasi@arm.com/
+
+I did remove the CFS/RT specialization just to keep uclamp simple for
+the first merge. But now that we have it in and people understand the
+RT use-case better, it's just possible to complete the design with
+specialized CFS and RT default constraints and knobs.
+
+I also remember that Vincent pointed out, at a certain point, that RT
+and CFS tasks should be distinguished internally when it comes to
+aggregate the constraints. This will require more work, but what I'm
+proposing since the beginning is the first step toward this solution.
+
+> I can see the convenience of doing it the way you propose though. Not sure
+> I agree about the added complexity worth it.
+
+I keep not seeing the added complexity. We just need to add two new system
+wide knobs and a small filter in the uclamp_eff_get().
+
+> > I also have some doubths about this approach matching the delegation
+> > model principles.
+> 
+> I don't know about that TBH.
+
+Then it's worth a reading. I remember I discovered quite a lot of
+caviets about how cgroups are supposed to be supported and used.
+
+I have the doubth that reflecting your default concept into something
+playing well with cgroups could be tricky. If anything else, the
+constraints propagation approach we use know is something Teju already
+gave us his blessing on.
+
+> > > > Do note that a proper CGroup support requires that the system default
+> > > > values defines the values for the root group and are consistently
+> > > > propagated down the hierarchy. Thus we need to add a dedicated pair of
+> > > > cgroup attributes, e.g. cpu.util.rt.{min.max}.
+> > > > 
+> > > > To recap, we don't need CGROUP support right now but just to add a new
+> > > > default tracking similar to what we do for CFS.
+> > > >
+> > > > We already proposed such a support in one of the initial versions of
+> > > > the uclamp series:
+> > > >    Message-ID: <20190115101513.2822-10-patrick.bellasi@arm.com>
+> > > >    https://lore.kernel.org/lkml/20190115101513.2822-10-patrick.bellasi@arm.com/
+> > > 
+> > > IIUC what you're suggesting is:
+> > > 
+> > > 	1. Use the sysctl to specify the default_rt_uclamp_min
+> > > 	2. Enforce this value in uclamp_eff_get() rather than my sync logic
+> > > 	3. Remove the current hack to always set
+> > > 	   rt_task->uclamp_min = uclamp_none(UCLAMP_MAX)
+> > 
+> > Right, that's the essence...
+> > 
+> > > If I got it correctly I'd be happy to experiment with it if this is what
+> > > you're suggesting. Otherwise I'm afraid I'm failing to see the crust of the
+> > > problem you're trying to highlight.
+> > 
+> > ... from what your write above I think you got it right.
+> > 
+> > In my previous posting:
+> > 
+> >    Message-ID: <20200109092137.GA2811@darkstar>
+> >    https://lore.kernel.org/lkml/20200109092137.GA2811@darkstar/
+> > 
+> > there is also the code snippet which should be good enough to extend
+> > uclamp_eff_get(). Apart from that, what remains is:
+> 
+> I still have my doubts this will achieve what I want, but hopefully will have
+> time to experiment with this today.
+
+Right, just remember you need to reduce the max clamp, not the min as
+you was proposing in the example above.
+
+> My worry is that this function enforces
+> restrictions, but what I want to do is set a default. I still can't see how
+> they are the same; which your answers hints they are.
+
+It all boils down to see that:
+   
+   rt_clamped_util = uclamp_util(1024, (*,200)) = 200
+
+> > - to add the two new sysfs knobs for sysctl_sched_uclamp_util_{min,max}_rt
+> 
+> See my answer above.
+> 
+> > - make a call about how rt tasks in cgroups are clamped, a simple
+> >   proposal is in the second snippet of my message above.
+> 
+> I'm not keen on changing how this works and it is outside of the scope of this
+> patch anyway. Or at least I don't see how they are related yet.
+
+Sure you'll realize once (if) you add the small uclamp_eff_get()
+change I'm proposing.
+
+Best,
+Patrick
+
+-- 
+#include <best/regards.h>
+
+Patrick Bellasi
