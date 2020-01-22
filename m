@@ -7,48 +7,50 @@ X-Spam-Status: No, score=-5.7 required=3.0 tests=DATE_IN_PAST_03_06,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E26CBC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:22:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5240AC33CAF
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:22:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF8C12468D
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:22:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22B7624695
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:22:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579699323;
-	bh=Z4Vd7ZM0EKOEhvqieaC4mty9HR5DweP5i2aTVASEHVg=;
+	s=default; t=1579699326;
+	bh=eaBgZMQiR1ktJvSTogygs1ZOXePmbAz1byQHBsb4F9Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1BPwHS+wB1M04jqkj08zubUVUV8+jmpbCt2QeO4O7KfMATxBHis5tqKFreqqfG6Jd
-	 ZODM/e9DqqVBaHDnd/ssioVjZQBRzXu6Bm72Yn2JM1zEyAlZ6SOjtE/14ghKyzYgFJ
-	 frZi0RoJHDD4zXcLxX3ztjBd4N6OBKyAFS4hk+0k=
+	b=wlx+JLPiGTB6BvonlKXqoRKP3gA40W+ULHDQRvt+lTq2NvdzymWi32zPueMw9cwnJ
+	 ioEz7s7jxeekYELq2u13V6FDE2I/fFTAOlbwDLkSAALW/tD9DBUYIM6IkCDzxvRpdN
+	 P9ZKdFVZnErqFXQ0pBWlxLGPsXJ9SNG626I9bNU8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730408AbgAVNWC (ORCPT
+        id S1730413AbgAVNWF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 08:22:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39358 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 08:22:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39426 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729440AbgAVNWB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 08:22:01 -0500
+        id S1729440AbgAVNWD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 08:22:03 -0500
 Received: from localhost (unknown [84.241.205.26])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 63501205F4;
-        Wed, 22 Jan 2020 13:21:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5D19624688;
+        Wed, 22 Jan 2020 13:22:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579699320;
-        bh=Z4Vd7ZM0EKOEhvqieaC4mty9HR5DweP5i2aTVASEHVg=;
+        s=default; t=1579699323;
+        bh=eaBgZMQiR1ktJvSTogygs1ZOXePmbAz1byQHBsb4F9Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=k2E82z5g5NOAusGOy9/uG8xrjfo9UfFNLJ9jQP4jit5wnlHIAFyJg/04r9j1fbmeJ
-         NubdcStb46764m7KdKvGhHdm33g1sMKxHGhbS2gBa5E2Yx/VdZGoSqlNXMN3TuT7Up
-         Fk/payzCx3v84h21yt2Ev6pt30RQA+sWlnuKTRQw=
+        b=UMnDOF0DqFjIs0+vtJ7/mm5FjrTngx6nGssIY+Rg8jE+bRnG/lxtGzkMBvI7L61+0
+         HLg0oElZaGoJ2kMgyMc/ljdybMQawshpCS0bWnPT3IxL9y2hJtx2579zpLgwAjiSx5
+         TUXNz8kP0EePVelI6tfVY0NT6dXiXaUJv95sPRNI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Anatoly Trosinenko <anatoly.trosinenko@gmail.com>,
+        syzbot+83979935eb6304f8cd46@syzkaller.appspotmail.com,
+        John Fastabend <john.fastabend@gmail.com>,
         Daniel Borkmann <daniel@iogearbox.net>,
-        Yonghong Song <yhs@fb.com>, Alexei Starovoitov <ast@kernel.org>
-Subject: [PATCH 5.4 107/222] bpf: Fix incorrect verifier simulation of ARSH under ALU32
-Date:   Wed, 22 Jan 2020 10:28:13 +0100
-Message-Id: <20200122092841.397679069@linuxfoundation.org>
+        Jakub Sitnicki <jakub@cloudflare.com>,
+        Song Liu <songliubraving@fb.com>
+Subject: [PATCH 5.4 108/222] bpf: Sockmap/tls, during free we may call tcp_bpf_unhash() in loop
+Date:   Wed, 22 Jan 2020 10:28:14 +0100
+Message-Id: <20200122092841.469023967@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200122092833.339495161@linuxfoundation.org>
 References: <20200122092833.339495161@linuxfoundation.org>
@@ -61,188 +63,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Borkmann <daniel@iogearbox.net>
+From: John Fastabend <john.fastabend@gmail.com>
 
-commit 0af2ffc93a4b50948f9dad2786b7f1bd253bf0b9 upstream.
+commit 4da6a196f93b1af7612340e8c1ad8ce71e18f955 upstream.
 
-Anatoly has been fuzzing with kBdysch harness and reported a hang in one
-of the outcomes:
+When a sockmap is free'd and a socket in the map is enabled with tls
+we tear down the bpf context on the socket, the psock struct and state,
+and then call tcp_update_ulp(). The tcp_update_ulp() call is to inform
+the tls stack it needs to update its saved sock ops so that when the tls
+socket is later destroyed it doesn't try to call the now destroyed psock
+hooks.
 
-  0: R1=ctx(id=0,off=0,imm=0) R10=fp0
-  0: (85) call bpf_get_socket_cookie#46
-  1: R0_w=invP(id=0) R10=fp0
-  1: (57) r0 &= 808464432
-  2: R0_w=invP(id=0,umax_value=808464432,var_off=(0x0; 0x30303030)) R10=fp0
-  2: (14) w0 -= 810299440
-  3: R0_w=invP(id=0,umax_value=4294967295,var_off=(0xcf800000; 0x3077fff0)) R10=fp0
-  3: (c4) w0 s>>= 1
-  4: R0_w=invP(id=0,umin_value=1740636160,umax_value=2147221496,var_off=(0x67c00000; 0x183bfff8)) R10=fp0
-  4: (76) if w0 s>= 0x30303030 goto pc+216
-  221: R0_w=invP(id=0,umin_value=1740636160,umax_value=2147221496,var_off=(0x67c00000; 0x183bfff8)) R10=fp0
-  221: (95) exit
-  processed 6 insns (limit 1000000) [...]
+This is about keeping stacked ULPs in good shape so they always have
+the right set of stacked ops.
 
-Taking a closer look, the program was xlated as follows:
+However, recently unhash() hook was removed from TLS side. But, the
+sockmap/bpf side is not doing any extra work to update the unhash op
+when is torn down instead expecting TLS side to manage it. So both
+TLS and sockmap believe the other side is managing the op and instead
+no one updates the hook so it continues to point at tcp_bpf_unhash().
+When unhash hook is called we call tcp_bpf_unhash() which detects the
+psock has already been destroyed and calls sk->sk_prot_unhash() which
+calls tcp_bpf_unhash() yet again and so on looping and hanging the core.
 
-  # ./bpftool p d x i 12
-  0: (85) call bpf_get_socket_cookie#7800896
-  1: (bf) r6 = r0
-  2: (57) r6 &= 808464432
-  3: (14) w6 -= 810299440
-  4: (c4) w6 s>>= 1
-  5: (76) if w6 s>= 0x30303030 goto pc+216
-  6: (05) goto pc-1
-  7: (05) goto pc-1
-  8: (05) goto pc-1
-  [...]
-  220: (05) goto pc-1
-  221: (05) goto pc-1
-  222: (95) exit
+To fix have sockmap tear down logic fixup the stale pointer.
 
-Meaning, the visible effect is very similar to f54c7898ed1c ("bpf: Fix
-precision tracking for unbounded scalars"), that is, the fall-through
-branch in the instruction 5 is considered to be never taken given the
-conclusion from the min/max bounds tracking in w6, and therefore the
-dead-code sanitation rewrites it as goto pc-1. However, real-life input
-disagrees with verification analysis since a soft-lockup was observed.
-
-The bug sits in the analysis of the ARSH. The definition is that we shift
-the target register value right by K bits through shifting in copies of
-its sign bit. In adjust_scalar_min_max_vals(), we do first coerce the
-register into 32 bit mode, same happens after simulating the operation.
-However, for the case of simulating the actual ARSH, we don't take the
-mode into account and act as if it's always 64 bit, but location of sign
-bit is different:
-
-  dst_reg->smin_value >>= umin_val;
-  dst_reg->smax_value >>= umin_val;
-  dst_reg->var_off = tnum_arshift(dst_reg->var_off, umin_val);
-
-Consider an unknown R0 where bpf_get_socket_cookie() (or others) would
-for example return 0xffff. With the above ARSH simulation, we'd see the
-following results:
-
-  [...]
-  1: R1=ctx(id=0,off=0,imm=0) R2_w=invP65535 R10=fp0
-  1: (85) call bpf_get_socket_cookie#46
-  2: R0_w=invP(id=0) R10=fp0
-  2: (57) r0 &= 808464432
-    -> R0_runtime = 0x3030
-  3: R0_w=invP(id=0,umax_value=808464432,var_off=(0x0; 0x30303030)) R10=fp0
-  3: (14) w0 -= 810299440
-    -> R0_runtime = 0xcfb40000
-  4: R0_w=invP(id=0,umax_value=4294967295,var_off=(0xcf800000; 0x3077fff0)) R10=fp0
-                              (0xffffffff)
-  4: (c4) w0 s>>= 1
-    -> R0_runtime = 0xe7da0000
-  5: R0_w=invP(id=0,umin_value=1740636160,umax_value=2147221496,var_off=(0x67c00000; 0x183bfff8)) R10=fp0
-                              (0x67c00000)           (0x7ffbfff8)
-  [...]
-
-In insn 3, we have a runtime value of 0xcfb40000, which is '1100 1111 1011
-0100 0000 0000 0000 0000', the result after the shift has 0xe7da0000 that
-is '1110 0111 1101 1010 0000 0000 0000 0000', where the sign bit is correctly
-retained in 32 bit mode. In insn4, the umax was 0xffffffff, and changed into
-0x7ffbfff8 after the shift, that is, '0111 1111 1111 1011 1111 1111 1111 1000'
-and means here that the simulation didn't retain the sign bit. With above
-logic, the updates happen on the 64 bit min/max bounds and given we coerced
-the register, the sign bits of the bounds are cleared as well, meaning, we
-need to force the simulation into s32 space for 32 bit alu mode.
-
-Verification after the fix below. We're first analyzing the fall-through branch
-on 32 bit signed >= test eventually leading to rejection of the program in this
-specific case:
-
-  0: R1=ctx(id=0,off=0,imm=0) R10=fp0
-  0: (b7) r2 = 808464432
-  1: R1=ctx(id=0,off=0,imm=0) R2_w=invP808464432 R10=fp0
-  1: (85) call bpf_get_socket_cookie#46
-  2: R0_w=invP(id=0) R10=fp0
-  2: (bf) r6 = r0
-  3: R0_w=invP(id=0) R6_w=invP(id=0) R10=fp0
-  3: (57) r6 &= 808464432
-  4: R0_w=invP(id=0) R6_w=invP(id=0,umax_value=808464432,var_off=(0x0; 0x30303030)) R10=fp0
-  4: (14) w6 -= 810299440
-  5: R0_w=invP(id=0) R6_w=invP(id=0,umax_value=4294967295,var_off=(0xcf800000; 0x3077fff0)) R10=fp0
-  5: (c4) w6 s>>= 1
-  6: R0_w=invP(id=0) R6_w=invP(id=0,umin_value=3888119808,umax_value=4294705144,var_off=(0xe7c00000; 0x183bfff8)) R10=fp0
-                                              (0x67c00000)          (0xfffbfff8)
-  6: (76) if w6 s>= 0x30303030 goto pc+216
-  7: R0_w=invP(id=0) R6_w=invP(id=0,umin_value=3888119808,umax_value=4294705144,var_off=(0xe7c00000; 0x183bfff8)) R10=fp0
-  7: (30) r0 = *(u8 *)skb[808464432]
-  BPF_LD_[ABS|IND] uses reserved fields
-  processed 8 insns (limit 1000000) [...]
-
-Fixes: 9cbe1f5a32dc ("bpf/verifier: improve register value range tracking with ARSH")
-Reported-by: Anatoly Trosinenko <anatoly.trosinenko@gmail.com>
+Fixes: 5d92e631b8be ("net/tls: partially revert fix transition through disconnect with close")
+Reported-by: syzbot+83979935eb6304f8cd46@syzkaller.appspotmail.com
+Signed-off-by: John Fastabend <john.fastabend@gmail.com>
 Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Acked-by: Yonghong Song <yhs@fb.com>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
-Link: https://lore.kernel.org/bpf/20200115204733.16648-1-daniel@iogearbox.net
+Reviewed-by: Jakub Sitnicki <jakub@cloudflare.com>
+Acked-by: Song Liu <songliubraving@fb.com>
+Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/bpf/20200111061206.8028-2-john.fastabend@gmail.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/linux/tnum.h  |    2 +-
- kernel/bpf/tnum.c     |    9 +++++++--
- kernel/bpf/verifier.c |   13 ++++++++++---
- 3 files changed, 18 insertions(+), 6 deletions(-)
+ include/linux/skmsg.h |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/include/linux/tnum.h
-+++ b/include/linux/tnum.h
-@@ -30,7 +30,7 @@ struct tnum tnum_lshift(struct tnum a, u
- /* Shift (rsh) a tnum right (by a fixed shift) */
- struct tnum tnum_rshift(struct tnum a, u8 shift);
- /* Shift (arsh) a tnum right (by a fixed min_shift) */
--struct tnum tnum_arshift(struct tnum a, u8 min_shift);
-+struct tnum tnum_arshift(struct tnum a, u8 min_shift, u8 insn_bitness);
- /* Add two tnums, return @a + @b */
- struct tnum tnum_add(struct tnum a, struct tnum b);
- /* Subtract two tnums, return @a - @b */
---- a/kernel/bpf/tnum.c
-+++ b/kernel/bpf/tnum.c
-@@ -44,14 +44,19 @@ struct tnum tnum_rshift(struct tnum a, u
- 	return TNUM(a.value >> shift, a.mask >> shift);
- }
- 
--struct tnum tnum_arshift(struct tnum a, u8 min_shift)
-+struct tnum tnum_arshift(struct tnum a, u8 min_shift, u8 insn_bitness)
+--- a/include/linux/skmsg.h
++++ b/include/linux/skmsg.h
+@@ -354,6 +354,7 @@ static inline void sk_psock_update_proto
+ static inline void sk_psock_restore_proto(struct sock *sk,
+ 					  struct sk_psock *psock)
  {
- 	/* if a.value is negative, arithmetic shifting by minimum shift
- 	 * will have larger negative offset compared to more shifting.
- 	 * If a.value is nonnegative, arithmetic shifting by minimum shift
- 	 * will have larger positive offset compare to more shifting.
- 	 */
--	return TNUM((s64)a.value >> min_shift, (s64)a.mask >> min_shift);
-+	if (insn_bitness == 32)
-+		return TNUM((u32)(((s32)a.value) >> min_shift),
-+			    (u32)(((s32)a.mask)  >> min_shift));
-+	else
-+		return TNUM((s64)a.value >> min_shift,
-+			    (s64)a.mask  >> min_shift);
- }
++	sk->sk_prot->unhash = psock->saved_unhash;
+ 	sk->sk_write_space = psock->saved_write_space;
  
- struct tnum tnum_add(struct tnum a, struct tnum b)
---- a/kernel/bpf/verifier.c
-+++ b/kernel/bpf/verifier.c
-@@ -4824,9 +4824,16 @@ static int adjust_scalar_min_max_vals(st
- 		/* Upon reaching here, src_known is true and
- 		 * umax_val is equal to umin_val.
- 		 */
--		dst_reg->smin_value >>= umin_val;
--		dst_reg->smax_value >>= umin_val;
--		dst_reg->var_off = tnum_arshift(dst_reg->var_off, umin_val);
-+		if (insn_bitness == 32) {
-+			dst_reg->smin_value = (u32)(((s32)dst_reg->smin_value) >> umin_val);
-+			dst_reg->smax_value = (u32)(((s32)dst_reg->smax_value) >> umin_val);
-+		} else {
-+			dst_reg->smin_value >>= umin_val;
-+			dst_reg->smax_value >>= umin_val;
-+		}
-+
-+		dst_reg->var_off = tnum_arshift(dst_reg->var_off, umin_val,
-+						insn_bitness);
- 
- 		/* blow away the dst_reg umin_value/umax_value and rely on
- 		 * dst_reg var_off to refine the result.
+ 	if (psock->sk_proto) {
 
 
