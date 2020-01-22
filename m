@@ -2,137 +2,91 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34E17C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 00:42:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B50DC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 00:50:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E6052253D
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 00:42:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2D4F2253D
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 00:50:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="MA+CRcuy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728912AbgAVAm6 (ORCPT
+        id S1728912AbgAVAuB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 19:42:58 -0500
-Received: from mga06.intel.com ([134.134.136.31]:22832 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727969AbgAVAm5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 19:42:57 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Jan 2020 16:42:13 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,347,1574150400"; 
-   d="scan'208";a="425679164"
-Received: from richard.sh.intel.com (HELO localhost) ([10.239.159.54])
-  by fmsmga005.fm.intel.com with ESMTP; 21 Jan 2020 16:42:11 -0800
-Date:   Wed, 22 Jan 2020 08:42:22 +0800
-From:   Wei Yang <richardw.yang@linux.intel.com>
-To:     John Hubbard <jhubbard@nvidia.com>
-Cc:     Wei Yang <richardw.yang@linux.intel.com>,
-        akpm@linux-foundation.org, yang.shi@linux.alibaba.com,
-        vbabka@suse.cz, cl@linux.com, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, mhocko@kernel.org
-Subject: Re: [Patch v2] mm/migrate.c: also overwrite error when it is bigger
- than zero
-Message-ID: <20200122004222.GD11409@richard>
-Reply-To: Wei Yang <richardw.yang@linux.intel.com>
-References: <20200119065753.21694-1-richardw.yang@linux.intel.com>
- <20200121015326.GE1567@richard>
- <20200121023408.GA3636@richard>
- <0aa42c19-4144-5c7a-10f5-162b1b068d4c@nvidia.com>
+        Tue, 21 Jan 2020 19:50:01 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:40308 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726970AbgAVAuA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jan 2020 19:50:00 -0500
+Received: by mail-pl1-f193.google.com with SMTP id s21so2118925plr.7
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jan 2020 16:50:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=L2ahSYYVtBJclG2sCuGcuPAZHs8BDStKSUcf592lFM0=;
+        b=MA+CRcuyDTOdAfzsZ7Z7CJZMe+HyIHqR+cWC9yRjuPlJnJU/ktLIAtqU46srg3lRXq
+         UBUmaP81R2jUiOKLC3HfGk7YT9riO6+ZfS63iYj3QTRx58jhwNKZRtQkFyDM4rVhgcMa
+         CmuPFwgiKppw7Q+TRJed+gQQ9kLI24OuV6GCQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=L2ahSYYVtBJclG2sCuGcuPAZHs8BDStKSUcf592lFM0=;
+        b=qob6KF4rs+oY+WlSOSHwomSF23aYPSz1a4QxkuFLaVO9aC+rBNR1+dWi3ZBXKOgSpD
+         gYfpaA75ixTBxDqPtiLthwuPhWNiqR7IrqkwR5h01R2SOdImleBFRAgnlLYR1/5smNmV
+         sqEU+0fLHzyyGf3N14348eZZQg1DdCplciqYqYDiLY0goi3Me0Crrs5EvP1NEP22rkm3
+         +9rp335VjRO8w3UPIxToisbHq+t7Ico4nphgMbSuS2JRN/F5P3ELZmIQU6/m/rwBqtsV
+         DbLWAAqSChzZoFI+xhTl5HP7Vrv9FmnLpSOUqL1DD+stuD8ZqvdCCXp5mNwEZyZvDzTG
+         HnSQ==
+X-Gm-Message-State: APjAAAU0frlE7TXGS5VosPWOpenmNoSkaD2Z6ynHtKIdNe4XLbhWj8RT
+        kZccdA78WuRqZLt9s694XYe3j9vSilicmg==
+X-Google-Smtp-Source: APXvYqxvoUm+DPKz0pv/uboBEGHYnvcl8ne/lAilt1CR4Weg1WWtSIt8yv0Op0ekDTUvV0LKqVR+8A==
+X-Received: by 2002:a17:902:708c:: with SMTP id z12mr7879424plk.15.1579654199989;
+        Tue, 21 Jan 2020 16:49:59 -0800 (PST)
+Received: from smtp.gmail.com ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id g26sm44569791pfo.130.2020.01.21.16.49.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Jan 2020 16:49:59 -0800 (PST)
+From:   Stephen Boyd <swboyd@chromium.org>
+To:     Benson Leung <bleung@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [PATCH] platform/chrome: cros_ec: Drop unaligned.h include
+Date:   Tue, 21 Jan 2020 16:49:58 -0800
+Message-Id: <20200122004958.71836-1-swboyd@chromium.org>
+X-Mailer: git-send-email 2.25.0.341.g760bfbb309-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0aa42c19-4144-5c7a-10f5-162b1b068d4c@nvidia.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 21, 2020 at 11:33:16AM -0800, John Hubbard wrote:
->On 1/20/20 6:34 PM, Wei Yang wrote:
->> On Tue, Jan 21, 2020 at 09:53:26AM +0800, Wei Yang wrote:
->> > On Sun, Jan 19, 2020 at 02:57:53PM +0800, Wei Yang wrote:
->> > > If we get here after successfully adding page to list, err would be
->> > > 1 to indicate the page is queued in the list.
->> > > 
->> > > Current code has two problems:
->> > > 
->> > >   * on success, 0 is not returned
->> > >   * on error, if add_page_for_migratioin() return 1, and the following err1
->> > >     from do_move_pages_to_node() is set, the err1 is not returned since err
->> > >     is 1
->> > > 
->> > > And these behaviors break the user interface.
->> > > 
->> > > Fixes: e0153fc2c760 ("mm: move_pages: return valid node id in status if the
->> > > page is already on the target node").
->
->The Fixes tag should be different, right? Because I don't think that
->commit introduced this problem.
+This include isn't used. Remove it.
 
-This is the correct one.
+Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+---
+ drivers/platform/chrome/cros_ec.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-Before this, we don't return 1 from add_page_for_migration().
-
->
->thanks,
->--
->John Hubbard
->NVIDIA
->
->> > > Signed-off-by: Wei Yang <richardw.yang@linux.intel.com>
->> > > 
->> > > ---
->> > > v2:
->> > >   * put more words to explain the error case
->> > > ---
->> > > mm/migrate.c | 2 +-
->> > > 1 file changed, 1 insertion(+), 1 deletion(-)
->> > > 
->> > > diff --git a/mm/migrate.c b/mm/migrate.c
->> > > index 86873b6f38a7..430fdccc733e 100644
->> > > --- a/mm/migrate.c
->> > > +++ b/mm/migrate.c
->> > > @@ -1676,7 +1676,7 @@ static int do_pages_move(struct mm_struct *mm, nodemask_t task_nodes,
->> > > 	err1 = do_move_pages_to_node(mm, &pagelist, current_node);
->> > > 	if (!err1)
->> > > 		err1 = store_status(status, start, current_node, i - start);
->> > > -	if (!err)
->> > > +	if (err >= 0)
->> > > 		err = err1;
->> > 
->> > Ok, as mentioned by Yang and Michal, only err == 0 means no error.
->> > 
->> > Sounds this regression should be fixed in another place. Let me send out
->> > another patch.
->> > 
->> 
->> Hmm... I took another look into the case, this fix should work.
->> 
->> But yes, the semantic here is a little confusion. Look forward your comments
->> here.
->> 
->> > > out:
->> > > 	return err;
->> > > -- 
->> > > 2.17.1
->> > 
->> > -- 
->> > Wei Yang
->> > Help you, Help me
->> 
->
->thanks,
->-- 
->John Hubbard
->NVIDIA
-
+diff --git a/drivers/platform/chrome/cros_ec.c b/drivers/platform/chrome/cros_ec.c
+index 6d6ce86a1408..81054de0dd81 100644
+--- a/drivers/platform/chrome/cros_ec.c
++++ b/drivers/platform/chrome/cros_ec.c
+@@ -16,7 +16,6 @@
+ #include <linux/platform_data/cros_ec_commands.h>
+ #include <linux/platform_data/cros_ec_proto.h>
+ #include <linux/suspend.h>
+-#include <asm/unaligned.h>
+ 
+ #define CROS_EC_DEV_EC_INDEX 0
+ #define CROS_EC_DEV_PD_INDEX 1
 -- 
-Wei Yang
-Help you, Help me
+Sent by a computer, using git, on the internet
+
