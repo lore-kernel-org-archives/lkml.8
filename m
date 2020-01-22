@@ -7,49 +7,50 @@ X-Spam-Status: No, score=-5.7 required=3.0 tests=DATE_IN_PAST_03_06,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE53FC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:20:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8352BC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:20:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 767742071E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:20:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5822720678
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:20:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579699225;
-	bh=qYTjOtVB/6GImYvCpgBxWMCVtpws3TOB59bPhO6gvoY=;
+	s=default; t=1579699228;
+	bh=uafhk5sWJvoBC4coMWjV2mrDWqrFLj8kEONNP6ybf40=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HAfvg5nCnGApr2SRrCcTIO5cQIZ7Npt/qhxAfF8hRrqP3FFE3rDBsunlwkvJCQjG2
-	 MJvS9A9wM8BmbAS9r4aB55cxfdueskXcjo7ONwHzFkgTa36Nu6/tcvXK/NvjYnYbR/
-	 6vcEHNJcQijA7UGdwzrKGU3ukuGNrPA7qGv8ixtA=
+	b=uyqEpCae7SANNQnjTWWRwc0CubOv+EdqzuVrNGCAjVk0DSjxDeF+pr8DwcWMFZKkg
+	 5OqSKE1yNVv8kfW8jYeGjieVoHVGu7sXG8WOWx3LurFBduzXRnc0MrrpSH9lLgHZpQ
+	 o+gn1KMkhaDCOhf2u2zDqAomudbQf9bCh+qxX2MY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729952AbgAVNUY (ORCPT
+        id S1729968AbgAVNU1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 08:20:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36536 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 08:20:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36614 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729947AbgAVNUV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 08:20:21 -0500
+        id S1729409AbgAVNUY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 08:20:24 -0500
 Received: from localhost (unknown [84.241.205.26])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D4CB524125;
-        Wed, 22 Jan 2020 13:20:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 35C242467F;
+        Wed, 22 Jan 2020 13:20:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579699220;
-        bh=qYTjOtVB/6GImYvCpgBxWMCVtpws3TOB59bPhO6gvoY=;
+        s=default; t=1579699223;
+        bh=uafhk5sWJvoBC4coMWjV2mrDWqrFLj8kEONNP6ybf40=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Co6CFDZnmUAyiX3BH6UVyTmc+vR6Q0rTSwRVbt3jBTH8b60kahaFxwyaD91K1wbcS
-         fdHtXzfoHRa0wcRkewwEIpro0L16RO4Aa/u0sVuiQ/+rBIfV7jo63YEoD6oJOSzkJo
-         AGI4dBNtVyVhnRa/KH2OruWN9Uk4uHgRLwPNcjZ8=
+        b=g5lv3YxK91GZfixCYCSG9TbM3U/kwRxwn1iL4JxMlAlslEozrN7WtPI2TzdnHe67E
+         wIKZxxVR1fx6T3TXfuaBwMkJhwLehikHN9xWPpQHsWpiT5f4jfaAjaL4sJmG/KKbo4
+         UflXUV9kH33YmeJt/WvEwDikZnjKaHYWdu8GnV/o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Ming Lei <ming.lei@redhat.com>,
-        Mikulas Patocka <mpatocka@redhat.com>,
-        Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 5.4 031/222] block: fix an integer overflow in logical block size
-Date:   Wed, 22 Jan 2020 10:26:57 +0100
-Message-Id: <20200122092835.700575757@linuxfoundation.org>
+        stable@vger.kernel.org, Shakeel Butt <shakeelb@google.com>,
+        Borislav Petkov <bp@suse.de>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Reinette Chatre <reinette.chatre@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>, x86-ml <x86@kernel.org>
+Subject: [PATCH 5.4 071/222] x86/resctrl: Fix potential memory leak
+Date:   Wed, 22 Jan 2020 10:27:37 +0100
+Message-Id: <20200122092838.804074617@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200122092833.339495161@linuxfoundation.org>
 References: <20200122092833.339495161@linuxfoundation.org>
@@ -62,116 +63,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mikulas Patocka <mpatocka@redhat.com>
+From: Shakeel Butt <shakeelb@google.com>
 
-commit ad6bf88a6c19a39fb3b0045d78ea880325dfcf15 upstream.
+commit ab6a2114433a3b5b555983dcb9b752a85255f04b upstream.
 
-Logical block size has type unsigned short. That means that it can be at
-most 32768. However, there are architectures that can run with 64k pages
-(for example arm64) and on these architectures, it may be possible to
-create block devices with 64k block size.
+set_cache_qos_cfg() is leaking memory when the given level is not
+RDT_RESOURCE_L3 or RDT_RESOURCE_L2. At the moment, this function is
+called with only valid levels but move the allocation after the valid
+level checks in order to make it more robust and future proof.
 
-For exmaple (run this on an architecture with 64k pages):
+ [ bp: Massage commit message. ]
 
-Mount will fail with this error because it tries to read the superblock using 2-sector
-access:
-  device-mapper: writecache: I/O is not aligned, sector 2, size 1024, block size 65536
-  EXT4-fs (dm-0): unable to read superblock
-
-This patch changes the logical block size from unsigned short to unsigned
-int to avoid the overflow.
-
-Cc: stable@vger.kernel.org
-Reviewed-by: Martin K. Petersen <martin.petersen@oracle.com>
-Reviewed-by: Ming Lei <ming.lei@redhat.com>
-Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Fixes: 99adde9b370de ("x86/intel_rdt: Enable L2 CDP in MSR IA32_L2_QOS_CFG")
+Signed-off-by: Shakeel Butt <shakeelb@google.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Cc: Fenghua Yu <fenghua.yu@intel.com>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Reinette Chatre <reinette.chatre@intel.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: x86-ml <x86@kernel.org>
+Link: https://lkml.kernel.org/r/20200102165844.133133-1-shakeelb@google.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- block/blk-settings.c            |    2 +-
- drivers/md/dm-snap-persistent.c |    2 +-
- drivers/md/raid0.c              |    2 +-
- include/linux/blkdev.h          |    8 ++++----
- 4 files changed, 7 insertions(+), 7 deletions(-)
+ arch/x86/kernel/cpu/resctrl/rdtgroup.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/block/blk-settings.c
-+++ b/block/blk-settings.c
-@@ -328,7 +328,7 @@ EXPORT_SYMBOL(blk_queue_max_segment_size
-  *   storage device can address.  The default of 512 covers most
-  *   hardware.
-  **/
--void blk_queue_logical_block_size(struct request_queue *q, unsigned short size)
-+void blk_queue_logical_block_size(struct request_queue *q, unsigned int size)
- {
- 	q->limits.logical_block_size = size;
+--- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
++++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+@@ -1741,9 +1741,6 @@ static int set_cache_qos_cfg(int level,
+ 	struct rdt_domain *d;
+ 	int cpu;
  
---- a/drivers/md/dm-snap-persistent.c
-+++ b/drivers/md/dm-snap-persistent.c
-@@ -17,7 +17,7 @@
- #include <linux/dm-bufio.h>
+-	if (!zalloc_cpumask_var(&cpu_mask, GFP_KERNEL))
+-		return -ENOMEM;
+-
+ 	if (level == RDT_RESOURCE_L3)
+ 		update = l3_qos_cfg_update;
+ 	else if (level == RDT_RESOURCE_L2)
+@@ -1751,6 +1748,9 @@ static int set_cache_qos_cfg(int level,
+ 	else
+ 		return -EINVAL;
  
- #define DM_MSG_PREFIX "persistent snapshot"
--#define DM_CHUNK_SIZE_DEFAULT_SECTORS 32	/* 16KB */
-+#define DM_CHUNK_SIZE_DEFAULT_SECTORS 32U	/* 16KB */
- 
- #define DM_PREFETCH_CHUNKS		12
- 
---- a/drivers/md/raid0.c
-+++ b/drivers/md/raid0.c
-@@ -87,7 +87,7 @@ static int create_strip_zones(struct mdd
- 	char b[BDEVNAME_SIZE];
- 	char b2[BDEVNAME_SIZE];
- 	struct r0conf *conf = kzalloc(sizeof(*conf), GFP_KERNEL);
--	unsigned short blksize = 512;
-+	unsigned blksize = 512;
- 
- 	*private_conf = ERR_PTR(-ENOMEM);
- 	if (!conf)
---- a/include/linux/blkdev.h
-+++ b/include/linux/blkdev.h
-@@ -328,6 +328,7 @@ struct queue_limits {
- 	unsigned int		max_sectors;
- 	unsigned int		max_segment_size;
- 	unsigned int		physical_block_size;
-+	unsigned int		logical_block_size;
- 	unsigned int		alignment_offset;
- 	unsigned int		io_min;
- 	unsigned int		io_opt;
-@@ -338,7 +339,6 @@ struct queue_limits {
- 	unsigned int		discard_granularity;
- 	unsigned int		discard_alignment;
- 
--	unsigned short		logical_block_size;
- 	unsigned short		max_segments;
- 	unsigned short		max_integrity_segments;
- 	unsigned short		max_discard_segments;
-@@ -1080,7 +1080,7 @@ extern void blk_queue_max_write_same_sec
- 		unsigned int max_write_same_sectors);
- extern void blk_queue_max_write_zeroes_sectors(struct request_queue *q,
- 		unsigned int max_write_same_sectors);
--extern void blk_queue_logical_block_size(struct request_queue *, unsigned short);
-+extern void blk_queue_logical_block_size(struct request_queue *, unsigned int);
- extern void blk_queue_physical_block_size(struct request_queue *, unsigned int);
- extern void blk_queue_alignment_offset(struct request_queue *q,
- 				       unsigned int alignment);
-@@ -1294,7 +1294,7 @@ static inline unsigned int queue_max_seg
- 	return q->limits.max_segment_size;
- }
- 
--static inline unsigned short queue_logical_block_size(const struct request_queue *q)
-+static inline unsigned queue_logical_block_size(const struct request_queue *q)
- {
- 	int retval = 512;
- 
-@@ -1304,7 +1304,7 @@ static inline unsigned short queue_logic
- 	return retval;
- }
- 
--static inline unsigned short bdev_logical_block_size(struct block_device *bdev)
-+static inline unsigned int bdev_logical_block_size(struct block_device *bdev)
- {
- 	return queue_logical_block_size(bdev_get_queue(bdev));
- }
++	if (!zalloc_cpumask_var(&cpu_mask, GFP_KERNEL))
++		return -ENOMEM;
++
+ 	r_l = &rdt_resources_all[level];
+ 	list_for_each_entry(d, &r_l->domains, list) {
+ 		/* Pick one CPU from each domain instance to update MSR */
 
 
