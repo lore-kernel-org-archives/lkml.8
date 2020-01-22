@@ -7,54 +7,54 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 471D5C32771
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 22:26:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 449B6C32771
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 22:27:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14E1A24676
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 22:26:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08DB12465A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 22:27:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RsGmOvIt"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="K0ohNbHM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728913AbgAVW0z (ORCPT
+        id S1729012AbgAVW1A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 17:26:55 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:34274 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728731AbgAVW0w (ORCPT
+        Wed, 22 Jan 2020 17:27:00 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:37505 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728709AbgAVW0x (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 17:26:52 -0500
-Received: by mail-pg1-f196.google.com with SMTP id r11so286494pgf.1
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jan 2020 14:26:52 -0800 (PST)
+        Wed, 22 Jan 2020 17:26:53 -0500
+Received: by mail-pf1-f195.google.com with SMTP id p14so508405pfn.4
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jan 2020 14:26:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=JESjh6inBv92WxZqfb4czYKZ8FKdIT47e0CUpHsL9zw=;
-        b=RsGmOvIt+Bzr6i4aIVzintUFXr+6XX+aQJNI6juKMss4wBAunzxItSZlGbXw7ha+3c
-         V5pNjplf1oyvhJV3/UY1eBclT7Bav7RGheW0wzEZ34ThAk5YhiMCUCN0jmmS1fz8i5Rq
-         3WBNsJe0+drVR3Fi8glb78/uzKQBNkHkind1gitZeqjlkXBg0eabjb5ILlDjiP473ux2
-         LZ5J1BPDiBf1L0IJfDdw5BDmpkkp2vVEuWl426uWWk4c+8E+pLHAJj5YK1M0M+OeLBsV
-         MxdvsQOkXmBtkojh4QldDc4RcnkQiSuotRNJcvmGpFH5ESJmrVx/O4yKvoYr4dhdqkxW
-         1p0g==
+        bh=swWbt3aJL3q8h4lz+/4twKGtWH3pxZbO2/WppH1VqRE=;
+        b=K0ohNbHMOAsVb4M6Ck8cIf3BM8XchMabhMit1TMM4M9rA7DOOGd/sgBcVKqk4Dkfyl
+         MzkiSn6mrkDn4Rzo4C7qixNHdL/CFF78glRDZyCApSy9ECeubN35sr+56Jowj5rwc1qX
+         P0nCx7C1QsIOrrIqxRuZIJCWeIkHckFcMN5GGbk1NVw9Y/JbCuMS4i3CzwgBPRDfpjcq
+         SBIyfImGz9ImHeT0LopgirqAnevkSzpfLi+UMd7UT0MkGdqNkR32HmrLKL2wP3KNBLbp
+         aDB8LJZb1z0/CHBTLZbYRBbK4qL9hHXMe7uTtYP/yX1g1i8LefORegdQRnX/eR1YsnR8
+         UbNA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=JESjh6inBv92WxZqfb4czYKZ8FKdIT47e0CUpHsL9zw=;
-        b=F99/4MlsTkU3JNxu9txlWnRlWLu020Uun1+5iumV+tKvBlH5pkSfyO0HZkeLkLGCJc
-         zajyk5CzPFDm/inVgsOb/VWqgfCzellawoahNQMxaQ586ak9MpHquer0KrogfxH+h2iH
-         YuX2GSOGvSC3l6TZw8YruM6nKCHrJXmbU/KGracWp2C5y5Vn5KRv9w5/XJdXMg9b/1XU
-         3YZY/gecJpM1dv6LYrTyAQKkX44Np9wCjTveR5+Tg2uHZKpM05jH6S5z6CdzO8lXbqOm
-         e2pKYYGmCpAaLD6SYYOnNWObcaUPWLpg3yNon+ULNRQl3kTK4Cvi9ceReBAVyOkeDpO2
-         6kEw==
-X-Gm-Message-State: APjAAAWa0Un63qI9umyVDMkgQ0Q1MdPqerF1A4Ojnj/dBwr56WuoNY4G
-        KgL8OqQMxbrK2MBs459NDY3M9R2Mlxs=
-X-Google-Smtp-Source: APXvYqyHFnzdcPwFmtLdIrSYOuAiwsCTGRIQwQ9Jlfx8tJ4RGPs5SBRmOuXWib6jnxyijCN3yYVuiA==
-X-Received: by 2002:a63:111e:: with SMTP id g30mr541062pgl.251.1579732011742;
-        Wed, 22 Jan 2020 14:26:51 -0800 (PST)
+        bh=swWbt3aJL3q8h4lz+/4twKGtWH3pxZbO2/WppH1VqRE=;
+        b=XHkRBEli5ooBPmtZkk5pYT8kQmKhLOrODfFZd7O5QwVkvPt4H+LO+D3QwHUVILmeZy
+         a2UlUTzKwy7nKWnVmD7LK0HL7k2AcO0U9WJYIcscg08LlULwimnP4mSdLpUHApBHbLSU
+         UZaJ9rppr/Jv9no7/QtaASCCzUR4pOiOB1GWqu88LMJdSs2BjaQDw8J0Jxccba7K1VUh
+         Ft1LMzKEm4YV6/SpQhG3LDGXG0zO3Vxkp61uzRtSMx6n6k0MKzCehaMuYAPL7P9x4lSH
+         cN27cXstYxR3dFfoUz0O9t8qdGnCblW6Q8EwUK6Jm745VGFyTN/LcgXCVXGzCC5s4K2e
+         ZRmw==
+X-Gm-Message-State: APjAAAWmwCqsZREv9+Q8igIPNi4PM9tYeE3pUS4E8PBxZpqjwdeaDzKe
+        2dvk6VL5K9pfskNPcVxEUtRWEWXqhlg=
+X-Google-Smtp-Source: APXvYqxjWJnBDQWDLfs492qyC8m1YgOMNGISqY5eu6Q4wsVKzbqlsokkc0qtDmoQD/wqOD4EOckAOw==
+X-Received: by 2002:a62:3892:: with SMTP id f140mr4552209pfa.190.1579732012776;
+        Wed, 22 Jan 2020 14:26:52 -0800 (PST)
 Received: from localhost.localdomain ([2601:1c2:680:1319:692:26ff:feda:3a81])
-        by smtp.gmail.com with ESMTPSA id a28sm47793509pfh.119.2020.01.22.14.26.50
+        by smtp.gmail.com with ESMTPSA id a28sm47793509pfh.119.2020.01.22.14.26.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Jan 2020 14:26:51 -0800 (PST)
+        Wed, 22 Jan 2020 14:26:52 -0800 (PST)
 From:   John Stultz <john.stultz@linaro.org>
 To:     lkml <linux-kernel@vger.kernel.org>
 Cc:     Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>,
@@ -68,9 +68,9 @@ Cc:     Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>,
         Linux USB List <linux-usb@vger.kernel.org>,
         stable <stable@vger.kernel.org>,
         John Stultz <john.stultz@linaro.org>
-Subject: [RFC][PATCH 1/2] usb: dwc3: gadget: Check for IOC/LST bit in both event->status and TRB->ctrl fields
-Date:   Wed, 22 Jan 2020 22:26:44 +0000
-Message-Id: <20200122222645.38805-2-john.stultz@linaro.org>
+Subject: [RFC][PATCH 2/2] usb: dwc3: gadget: Correct the logic for finding last SG entry
+Date:   Wed, 22 Jan 2020 22:26:45 +0000
+Message-Id: <20200122222645.38805-3-john.stultz@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200122222645.38805-1-john.stultz@linaro.org>
 References: <20200122222645.38805-1-john.stultz@linaro.org>
@@ -81,23 +81,72 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
 
-The present code in dwc3_gadget_ep_reclaim_completed_trb() will check
-for IOC/LST bit in the event->status and returns if IOC/LST bit is
-set. This logic doesn't work if multiple TRBs are queued per
-request and the IOC/LST bit is set on the last TRB of that request.
-Consider an example where a queued request has multiple queued TRBs
-and IOC/LST bit is set only for the last TRB. In this case, the Core
-generates XferComplete/XferInProgress events only for the last TRB
-(since IOC/LST are set only for the last TRB). As per the logic in
-dwc3_gadget_ep_reclaim_completed_trb() event->status is checked for
-IOC/LST bit and returns on the first TRB. This makes the remaining
-TRBs left unhandled.
-To aviod this, changed the code to check for IOC/LST bits in both
-event->status & TRB->ctrl. This patch does the same.
+As a process of preparing TRBs usb_gadget_map_request_by_dev() is
+called from dwc3_prepare_trbs() for mapping the request. This will
+call dma_map_sg() if req->num_sgs are greater than 0. dma_map_sg()
+will map the sg entries in sglist and return the number of mapped SGs.
+As a part of mapping, some sg entries having contigous memory may be
+merged together into a single sg (when IOMMU used). So, the number of
+mapped sg entries may not be equal to the number of orginal sg entries
+in the request (req->num_sgs).
 
-At a practical level, this patch resolves USB transfer stalls seen
-with adb on dwc3 based HiKey960 after functionfs gadget added
-scatter-gather support around v4.20.
+As a part of preparing the TRBs, dwc3_prepare_one_trb_sg() iterates over
+the sg entries present in the sglist and calls sg_is_last() to identify
+whether the sg entry is last and set IOC bit for the last sg entry. The
+sg_is_last() determines last sg if SG_END is set in sg->page_link. When
+IOMMU used, dma_map_sg() merges 2 or more sgs into a single sg and it
+doesn't retain the page_link properties. Because of this reason the
+sg_is_last() may not find SG_END and thus resulting in IOC bit never
+getting set.
+
+For example:
+
+Consider a request having 8 sg entries with each entry having a length of
+4096 bytes. Assume that sg1 & sg2, sg3 & sg4, sg5 & sg6, sg7 & sg8 are
+having contigous memory regions.
+
+Before calling dma_map_sg():
+            sg1-->sg2-->sg3-->sg4-->sg6-->sg7-->sg8
+dma_length: 4K    4K    4K    4K    4K    4K    4K
+SG_END:     False False False False False False True
+num_sgs = 8
+num_mapped_sgs = 0
+
+The dma_map_sg() merges sg1 & sg2 memory regions into sg1->dma_address.
+Similarly sg3 & sg4 into sg2->dma_address, sg5 & sg6 into the
+sg3->dma_address and sg6 & sg8 into sg4->dma_address. Here the memory
+regions are merged but the page_link properties like SG_END are not
+retained into the merged sgs.
+
+After calling dma_map_sg();
+            sg1-->sg2-->sg3-->sg4-->sg6-->sg7-->sg8
+dma_length: 8K    8K    8K    8K    0K    0K     0K
+SG_END:     False False False False False False True
+num_sgs = 8
+num_mapped_sgs = 4
+
+After calling dma_map_sg(), sg1,sg2,sg3,sg4 are having dma_length of
+8096 bytes each and remaining sg4,sg5,sg6,sg7 are having 0 bytes of
+dma_length.
+
+After dma_map_sg() is performed dma_perpare_trb_sg() iterates on all sg
+entries and sets IOC bit only for the sg8 (since sg_is_last() returns true
+only for sg8). But after calling dma_map_sg() the valid data are present
+only till sg4 and the IOC bit should be set for sg4 TRB only (which is not
+happening in the present code)
+
+The above mentioned issue can be fixed by determining last sg based on the
+req->num_queued_sgs instead of sg_is_last(). If (req->num_queued_sgs + 1)
+is equal to req->num_mapped_sgs, then this sg is the last sg. In the above
+example, the dwc3 driver has already queued 3 sgs (upto sg3), so the
+num_queued_sgs = 3. On preparing the next sg (i.e sg4), check for last sg
+(num_queued_sgs + 1) == num_mapped_sgs becomes true. So, the driver sets
+IOC bit for sg4. This patch does the same.
+
+At a practical level, this patch resolves USB transfer stalls
+seen with adb on dwc3 based db845c, pixel3 and other qcom
+hardware after functionfs gadget added scatter-gather support
+around v4.20.
 
 Cc: Felipe Balbi <felipe.balbi@linux.intel.com>
 Cc: Yang Fei <fei.yang@intel.com>
@@ -109,33 +158,26 @@ Cc: Todd Kjos <tkjos@google.com>
 Cc: Greg KH <gregkh@linuxfoundation.org>
 Cc: Linux USB List <linux-usb@vger.kernel.org>
 Cc: stable <stable@vger.kernel.org>
-Tested-by: Tejas Joglekar <tejas.joglekar@synopsys.com>
-Reviewed-by: Thinh Nguyen <thinhn@synopsys.com>
 Signed-off-by: Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
-[jstultz: forward ported to mainline, added note to commit log]
+[jstultz: Add note to end of commit message on specific issue this resovles]
 Signed-off-by: John Stultz <john.stultz@linaro.org>
 ---
- drivers/usb/dwc3/gadget.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ drivers/usb/dwc3/gadget.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c
-index 154f3f3e8cff..1edce3bbb55c 100644
+index 1edce3bbb55c..30a80bc97cfe 100644
 --- a/drivers/usb/dwc3/gadget.c
 +++ b/drivers/usb/dwc3/gadget.c
-@@ -2420,7 +2420,12 @@ static int dwc3_gadget_ep_reclaim_completed_trb(struct dwc3_ep *dep,
- 	if (event->status & DEPEVT_STATUS_SHORT && !chain)
- 		return 1;
+@@ -1068,7 +1068,7 @@ static void dwc3_prepare_one_trb_sg(struct dwc3_ep *dep,
+ 		unsigned int rem = length % maxp;
+ 		unsigned chain = true;
  
--	if (event->status & DEPEVT_STATUS_IOC)
-+	if ((event->status & DEPEVT_STATUS_IOC) &&
-+	    (trb->ctrl & DWC3_TRB_CTRL_IOC))
-+		return 1;
-+
-+	if ((event->status & DEPEVT_STATUS_LST) &&
-+	    (trb->ctrl & DWC3_TRB_CTRL_LST))
- 		return 1;
+-		if (sg_is_last(s))
++		if ((req->num_queued_sgs + 1) == req->request.num_mapped_sgs)
+ 			chain = false;
  
- 	return 0;
+ 		if (rem && usb_endpoint_dir_out(dep->endpoint.desc) && !chain) {
 -- 
 2.17.1
 
