@@ -2,234 +2,129 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URI_HEX autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD083C33CAF
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 19:44:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 817FCC33CB8
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 19:48:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E4EA24655
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 19:44:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579722252;
-	bh=ERAYXnLfEaikjmnspNdobkqN9VU5U20/NnieuVtLYiI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=C21GvLIoC83jzURVtm3M5UNSpCApS2E1um3AKYVpIw3dHvWEZyiCREPr4fIyYOP9q
-	 ykhDK/YEve0S3+FyqVQLEq+jNObVwtV0sOe9/veGi8m9PKDKJLTF0NqFs+6MCnbzo/
-	 VrjgmdfNeBzHKhgcvVH0DewqQWv/xghMlpV9FCzY=
+	by mail.kernel.org (Postfix) with ESMTP id 66CBF24655
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 19:48:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729021AbgAVToL (ORCPT
+        id S1726194AbgAVTs1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 14:44:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41754 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725928AbgAVToK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 14:44:10 -0500
-Received: from mail-il1-f174.google.com (mail-il1-f174.google.com [209.85.166.174])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A13C52465B;
-        Wed, 22 Jan 2020 19:44:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579722249;
-        bh=ERAYXnLfEaikjmnspNdobkqN9VU5U20/NnieuVtLYiI=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=UKN5UFNsvo1rk35ewzqIHLkweANflqnSB76dxH3G3HwLtsrGzN2wFaJWixcUnN02h
-         Dp9a/QGrOGKRXO6zuy5NjOPH8AHw0Lt+b/TykCTudjIQu95feQ62f8Sju1rf0hByvj
-         NCv6UGMKNhI7BaVwcg2mTpvI9Lrpd9Xl+8RCWC2Y=
-Received: by mail-il1-f174.google.com with SMTP id q15so308894ili.11;
-        Wed, 22 Jan 2020 11:44:09 -0800 (PST)
-X-Gm-Message-State: APjAAAWuT8askCUKEIQK8xRN8RAGb1nyC9yU+xmJlg9mqWtomOhs3THJ
-        oX+c+x8n7cVeG+L4c/OhTUKGTYg1unNhIuCphaU=
-X-Google-Smtp-Source: APXvYqwbugcYCElK+66aehWJICUHbHpOAEyrS9vEkHbUgvstAyzm+vwxWBNtbofhJ+VOdmu9iNh+vRs7H0P2c2SbXk8=
-X-Received: by 2002:a92:cb10:: with SMTP id s16mr10093637ilo.176.1579722249065;
- Wed, 22 Jan 2020 11:44:09 -0800 (PST)
+        Wed, 22 Jan 2020 14:48:27 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:35924 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725827AbgAVTs0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 14:48:26 -0500
+Received: by mail-oi1-f194.google.com with SMTP id c16so595875oic.3;
+        Wed, 22 Jan 2020 11:48:26 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=FTYosi5E8b0UvT0IIJB49JTgYDLWPWJYw7Wd7KCpaU4=;
+        b=lkdFNnJUneNQeHeIZa6xjBgStB9CG5BdXiHPDAAbsQww3dtKaxazr8lSyPLzmnEZyT
+         mNp0I6bLNULM4H2i2NixK9B/7nm0QSWRIRm0MikLrQFsnbgCsaOSrDdjfdMkrwOWvK4L
+         Hv4HDG6U82rhk6bjWJytuCAPh4LEj2cTh1smH5z/J1DDnUUv5HvOmVJTGtRV5H1vJZV3
+         LLhIwbQ/RhkO0F9+qCd4eUVbtXxvJhh4lGkOG7dJtsmpat87F8Kg/MqeFuPdiukZAEqs
+         9VAdsU4WkiGdZUFIdNZRYD27roJYrpFLkA3qw7t22hBA8sNKjScvsmfYzOzlrTvolLfi
+         IERg==
+X-Gm-Message-State: APjAAAWvlvPlgofOF1W2JFS9w/kzumhIoRf5/0IV0tpHPCY7xhjvd/vK
+        YXrwnKi6bTNumrVOz4o8eFXINHY4lRjyAlsTBQ4=
+X-Google-Smtp-Source: APXvYqzL6Zjs2GnkkVfslcTmqATM74cyT+fFAHdA4qJPTJkaotMtM+AaPNR12+mep+vfAHrT98V9Vamst6Rdu7njGJY=
+X-Received: by 2002:aca:5905:: with SMTP id n5mr8201223oib.54.1579722505882;
+ Wed, 22 Jan 2020 11:48:25 -0800 (PST)
 MIME-Version: 1.0
-References: <1579675994-7001-1-git-send-email-light.hsieh@mediatek.com> <1579675994-7001-6-git-send-email-light.hsieh@mediatek.com>
-In-Reply-To: <1579675994-7001-6-git-send-email-light.hsieh@mediatek.com>
-From:   Sean Wang <sean.wang@kernel.org>
-Date:   Wed, 22 Jan 2020 11:43:53 -0800
-X-Gmail-Original-Message-ID: <CAGp9Lzox4EcO+WWEoLMshQDhH14644iTuAWA9XQc82JYfp-pqA@mail.gmail.com>
-Message-ID: <CAGp9Lzox4EcO+WWEoLMshQDhH14644iTuAWA9XQc82JYfp-pqA@mail.gmail.com>
-Subject: Re: [PATCH v8 6/6] pinctrl: mediatek: Add support for pin
- configuration dump via debugfs.
-To:     Light Hsieh <light.hsieh@mediatek.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>, kuohong.wang@mediatek.com
+References: <20190212143003.48446-1-john.ogness@linutronix.de>
+ <20200120230522.GA23636@lxhi-065.adit-jv.com> <87v9p4mkhr.fsf@linutronix.de>
+ <20200122023422.GA926@lxhi-065.adit-jv.com> <CAMuHMdXT9USuHw15nA1mLXsh7RKK68eN0phevC_Jauaa7FnW0Q@mail.gmail.com>
+ <20200122165855.GA3485@lxhi-065.adit-jv.com>
+In-Reply-To: <20200122165855.GA3485@lxhi-065.adit-jv.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Wed, 22 Jan 2020 20:48:12 +0100
+Message-ID: <CAMuHMdWzapJ+5Jtf5fPQGP5edzCUfMeQA7v3GVWbKKvR=aXSsg@mail.gmail.com>
+Subject: Re: [RFC PATCH v1 00/25] printk: new implementation
+To:     Eugeniu Rosca <erosca@de.adit-jv.com>
+Cc:     John Ogness <john.ogness@linutronix.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        Andrew Gabbasov <andrew_gabbasov@mentor.com>,
+        Sanjeev Chugh <sanjeev_chugh@mentor.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Daniel Wang <wonderfly@google.com>,
+        Dean Jenkins <dean_jenkins@mentor.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Dirk Behme <dirk.behme@de.bosch.com>,
+        Alan Cox <gnomes@lxorguk.ukuu.org.uk>,
+        Jiri Slaby <jslaby@suse.com>,
+        Peter Feiner <pfeiner@google.com>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Eugeniu Rosca <roscaeugeniu@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 21, 2020 at 10:53 PM <light.hsieh@mediatek.com> wrote:
->
-> From: Light Hsieh <light.hsieh@mediatek.com>
->
-> Add support for pin configuration dump via catting
-> /sys/kernel/debug/pinctrl/$platform_dependent_path/pinconf-pins.
-> pinctrl framework had already support such dump. This patch implement the
-> operation function pointer to fullfill this dump.
->
-> Signed-off-by: Light Hsieh <light.hsieh@mediatek.com>
+Hi Eugeniu,
 
-Acked-by: Sean Wang <sean.wang@kernel.org>
+On Wed, Jan 22, 2020 at 5:59 PM Eugeniu Rosca <erosca@de.adit-jv.com> wrote:
+> On Wed, Jan 22, 2020 at 08:31:44AM +0100, Geert Uytterhoeven wrote:
+> > On Wed, Jan 22, 2020 at 3:34 AM Eugeniu Rosca <erosca@de.adit-jv.com> wrote:
+> > > So, what's specific to R-Car3, based on my testing, is that the issue
+> > > can only be reproduced if the printk storm originates on CPU0 (it does
+> > > not matter if from interrupt or task context, both have been tested). If
+> > > the printk storm is initiated on any other CPU (there are 7 secondary
+> > > ones on R-Car H3), there is no regression in the audio quality/latency.
+> >
+> > The secure stuff is running on CPU0, isn't it?
+> > Is that a coincidence?
+>
+> Nobody has ruled this out so far. As a side note, except for the ARMv8
+> generic IPs, there seems to be quite poor IRQ balancing between the
+> CPU cores of R-Car H3 (although this might be unrelated to the issue):
+>
+> $ cat /proc/interrupts | egrep -v "(0[ ]*){8}"
+>          CPU0   CPU1   CPU2    CPU3 CPU4 CPU5  CPU6  CPU7
+>   3:    55879  17835  14132   33882 6626 4331  6710  4532     GICv2  30 Level     arch_timer
+>  16:        1      0      0       0    0    0     0     0     GICv2  38 Level     e6052000.gpio
+>  32:      203      0      0       0    0    0     0     0     GICv2  51 Level     e66d8000.i2c
+>  33:       95      0      0       0    0    0     0     0     GICv2 205 Level     e60b0000.i2c
+>  94:    19339      0      0       0    0    0     0     0     GICv2  71 Level     eth0:ch0:rx_be
+> 112:    20599      0      0       0    0    0     0     0     GICv2  89 Level     eth0:ch18:tx_be
+> 118:        2      0      0       0    0    0     0     0     GICv2  95 Level     eth0:ch24:emac
+> 122:   442092      0      0       0    0    0     0     0     GICv2 196 Level     e6e88000.serial:mux
+> 124:  2776685      0      0       0    0    0     0     0     GICv2 352 Level     ec700000.dma-controller:0
+> 160:     2896      0      0       0    0    0     0     0     GICv2 197 Level     ee100000.sd
+> 161:     5652      0      0       0    0    0     0     0     GICv2 199 Level     ee140000.sd
+> 162:      147      0      0       0    0    0     0     0     GICv2 200 Level     ee160000.sd
+> 197:        5      0      0       0    0    0     0     0     GICv2 384 Level     ec500000.sound
+> 208:        1      0      0       0    0    0     0     0  gpio-rcar  11 Level     e6800000.ethernet-ffffffff:00
+> IPI0:   12701 366358 545059 1869017 9817 8065  9327 10644       Rescheduling interrupts
+> IPI1:      21     34    111      86  238  191   149   161       Function call interrupts
+> IPI5:   16422    709    509     637    0    0  3346     0       IRQ work interrupts
 
-> ---
->  drivers/pinctrl/mediatek/pinctrl-paris.c | 109 +++++++++++++++++++++++++++++++
->  drivers/pinctrl/mediatek/pinctrl-paris.h |   3 +
->  2 files changed, 112 insertions(+)
->
-> diff --git a/drivers/pinctrl/mediatek/pinctrl-paris.c b/drivers/pinctrl/mediatek/pinctrl-paris.c
-> index 115ebc1..83bf29c 100644
-> --- a/drivers/pinctrl/mediatek/pinctrl-paris.c
-> +++ b/drivers/pinctrl/mediatek/pinctrl-paris.c
-> @@ -539,12 +539,120 @@ static int mtk_pctrl_get_group_pins(struct pinctrl_dev *pctldev,
->         return 0;
->  }
->
-> +static int mtk_hw_get_value_wrap(struct mtk_pinctrl *hw, unsigned int gpio, int field)
-> +{
-> +       const struct mtk_pin_desc *desc;
-> +       int value, err;
-> +
-> +       if (gpio > hw->soc->npins)
-> +               return -EINVAL;
-> +
-> +       desc = (const struct mtk_pin_desc *)&hw->soc->pins[gpio];
-> +
-> +       err = mtk_hw_get_value(hw, desc, field, &value);
-> +       if (err)
-> +               return err;
-> +
-> +       return value;
-> +}
-> +
-> +#define mtk_pctrl_get_pinmux(hw, gpio)                 \
-> +       mtk_hw_get_value_wrap(hw, gpio, PINCTRL_PIN_REG_MODE)
-> +
-> +#define mtk_pctrl_get_direction(hw, gpio)              \
-> +       mtk_hw_get_value_wrap(hw, gpio, PINCTRL_PIN_REG_DIR)
-> +
-> +#define mtk_pctrl_get_out(hw, gpio)                    \
-> +       mtk_hw_get_value_wrap(hw, gpio, PINCTRL_PIN_REG_DO)
-> +
-> +#define mtk_pctrl_get_in(hw, gpio)                     \
-> +       mtk_hw_get_value_wrap(hw, gpio, PINCTRL_PIN_REG_DI)
-> +
-> +#define mtk_pctrl_get_smt(hw, gpio)                    \
-> +       mtk_hw_get_value_wrap(hw, gpio, PINCTRL_PIN_REG_SMT)
-> +
-> +#define mtk_pctrl_get_ies(hw, gpio)                    \
-> +       mtk_hw_get_value_wrap(hw, gpio, PINCTRL_PIN_REG_IES)
-> +
-> +#define mtk_pctrl_get_driving(hw, gpio)                        \
-> +       mtk_hw_get_value_wrap(hw, gpio, PINCTRL_PIN_REG_DRV)
-> +
-> +ssize_t mtk_pctrl_show_one_pin(struct mtk_pinctrl *hw,
-> +       unsigned int gpio, char *buf, unsigned int bufLen)
-> +{
-> +       int pinmux, pullup, pullen, len = 0, r1 = -1, r0 = -1;
-> +       const struct mtk_pin_desc *desc;
-> +
-> +       if (gpio > hw->soc->npins)
-> +               return -EINVAL;
-> +
-> +       desc = (const struct mtk_pin_desc *)&hw->soc->pins[gpio];
-> +       pinmux = mtk_pctrl_get_pinmux(hw, gpio);
-> +       if (pinmux >= hw->soc->nfuncs)
-> +               pinmux -= hw->soc->nfuncs;
-> +
-> +       mtk_pinconf_bias_get_combo(hw, desc, &pullup, &pullen);
-> +       if (pullen == MTK_PUPD_SET_R1R0_00) {
-> +               pullen = 0;
-> +               r1 = 0;
-> +               r0 = 0;
-> +       } else if (pullen == MTK_PUPD_SET_R1R0_01) {
-> +               pullen = 1;
-> +               r1 = 0;
-> +               r0 = 1;
-> +       } else if (pullen == MTK_PUPD_SET_R1R0_10) {
-> +               pullen = 1;
-> +               r1 = 1;
-> +               r0 = 0;
-> +       } else if (pullen == MTK_PUPD_SET_R1R0_11) {
-> +               pullen = 1;
-> +               r1 = 1;
-> +               r0 = 1;
-> +       } else if (pullen != MTK_DISABLE && pullen != MTK_ENABLE) {
-> +               pullen = 0;
-> +       }
-> +       len += snprintf(buf + len, bufLen - len,
-> +                       "%03d: %1d%1d%1d%1d%02d%1d%1d%1d%1d",
-> +                       gpio,
-> +                       pinmux,
-> +                       mtk_pctrl_get_direction(hw, gpio),
-> +                       mtk_pctrl_get_out(hw, gpio),
-> +                       mtk_pctrl_get_in(hw, gpio),
-> +                       mtk_pctrl_get_driving(hw, gpio),
-> +                       mtk_pctrl_get_smt(hw, gpio),
-> +                       mtk_pctrl_get_ies(hw, gpio),
-> +                       pullen,
-> +                       pullup);
-> +
-> +       if (r1 != -1) {
-> +               len += snprintf(buf + len, bufLen - len, " (%1d %1d)\n",
-> +                       r1, r0);
-> +       } else {
-> +               len += snprintf(buf + len, bufLen - len, "\n");
-> +       }
-> +
-> +       return len;
-> +}
-> +
-> +#define PIN_DBG_BUF_SZ 96
-> +static void mtk_pctrl_dbg_show(struct pinctrl_dev *pctldev, struct seq_file *s,
-> +                         unsigned int gpio)
-> +{
-> +       struct mtk_pinctrl *hw = pinctrl_dev_get_drvdata(pctldev);
-> +       char buf[PIN_DBG_BUF_SZ];
-> +
-> +       (void)mtk_pctrl_show_one_pin(hw, gpio, buf, PIN_DBG_BUF_SZ);
-> +
-> +       seq_printf(s, "%s", buf);
-> +}
-> +
->  static const struct pinctrl_ops mtk_pctlops = {
->         .dt_node_to_map         = mtk_pctrl_dt_node_to_map,
->         .dt_free_map            = pinctrl_utils_free_map,
->         .get_groups_count       = mtk_pctrl_get_groups_count,
->         .get_group_name         = mtk_pctrl_get_group_name,
->         .get_group_pins         = mtk_pctrl_get_group_pins,
-> +       .pin_dbg_show           = mtk_pctrl_dbg_show,
->  };
->
->  static int mtk_pmx_get_funcs_cnt(struct pinctrl_dev *pctldev)
-> @@ -641,6 +749,7 @@ static int mtk_pconf_group_set(struct pinctrl_dev *pctldev, unsigned group,
->         .pin_config_get = mtk_pinconf_get,
->         .pin_config_group_get   = mtk_pconf_group_get,
->         .pin_config_group_set   = mtk_pconf_group_set,
-> +       .is_generic = true,
->  };
->
->  static struct pinctrl_desc mtk_desc = {
-> diff --git a/drivers/pinctrl/mediatek/pinctrl-paris.h b/drivers/pinctrl/mediatek/pinctrl-paris.h
-> index 3d43771..afb7650 100644
-> --- a/drivers/pinctrl/mediatek/pinctrl-paris.h
-> +++ b/drivers/pinctrl/mediatek/pinctrl-paris.h
-> @@ -60,6 +60,9 @@
->  int mtk_paris_pinctrl_probe(struct platform_device *pdev,
->                             const struct mtk_pin_soc *soc);
->
-> +ssize_t mtk_pctrl_show_one_pin(struct mtk_pinctrl *hw,
-> +       unsigned int gpio, char *buf, unsigned int bufLen);
-> +
->  extern const struct dev_pm_ops mtk_paris_pinctrl_pm_ops;
->
->  #endif /* __PINCTRL_PARIS_H */
-> --
-> 1.8.1.1.dirty
+Yeah, cpu0 is always heavily loaded w.r.t. interrupts.
+Can you reproduce the problem after forcing all interrupts to e.g. cpu1?
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
