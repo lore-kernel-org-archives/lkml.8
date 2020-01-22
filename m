@@ -2,266 +2,135 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D27AEC33CAF
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:51:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81079C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:51:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B5D52465A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:51:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579686698;
-	bh=c+I0YrXZ+ySONA2pY/RlMnaMzzVIzdvUQX6zX+euRoA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Q9r/cJavH2u9wz0ili97lB80k2xyAU8Zgj1wJGmGwK/ZGqdbi9rlCecOz5zedgj1L
-	 Uz94mp/PgMCGRMmXPK6fVCiamegTi4fmZuFNwmdmYeKBfVY+WfcesYo4WvfBKrtgSp
-	 6NL/QarR6mlAjU20doWefr+VFmqWDOaABEuhTa4g=
+	by mail.kernel.org (Postfix) with ESMTP id 524FC20704
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:51:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="uRp6jW4J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732407AbgAVJhI (ORCPT
+        id S1732891AbgAVJvl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 04:37:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52864 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732283AbgAVJhC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 04:37:02 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E203824693;
-        Wed, 22 Jan 2020 09:37:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579685821;
-        bh=c+I0YrXZ+ySONA2pY/RlMnaMzzVIzdvUQX6zX+euRoA=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=u8m9dGes6xxjtGA2dteKWCy4qhomuyxGZdJtVRnGABxxDFJxISCdfu+gxsvR+mY8g
-         a9VrADHH/q4tKKqFRpO4RfIE66HzxlmlNMmhqB74r7den1hLlgEoGs7EYObH9oYpCn
-         L6DbBBxdQPypbmmP66K5j9sdV0/KWnRTlR2tUXGg=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Jer=C3=B3nimo=20Borque?= <jeronimo@borque.com.ar>,
-        Johan Hovold <johan@kernel.org>
-Subject: [PATCH 4.9 57/97] USB: serial: simple: Add Motorola Solutions TETRA MTP3xxx and MTP85xx
-Date:   Wed, 22 Jan 2020 10:29:01 +0100
-Message-Id: <20200122092805.588542909@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200122092755.678349497@linuxfoundation.org>
-References: <20200122092755.678349497@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Wed, 22 Jan 2020 04:51:41 -0500
+Received: from smtp-fw-9101.amazon.com ([207.171.184.25]:10183 "EHLO
+        smtp-fw-9101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729809AbgAVJhH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 04:37:07 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1579685828; x=1611221828;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   mime-version;
+  bh=K9Kz0EYeQrURGwTjiRNoD6do9zmd0lXIO7vywrJCJO8=;
+  b=uRp6jW4JGtw9vMYS5hPKvfYGsFkEcaruIt126ZG1o9X5RVoBqVguBtnE
+   1TKWRcNJtLVSoog3HSFjAVTs40TJB4RmCnMlBCgnm7x2aTObplckddkKS
+   8mx9sabNgPXaGiJXhXxBoFCS1cCrNymVQH9sa77bMnnv+mkT9vRY8JD3Y
+   k=;
+IronPort-SDR: +ZLstp77iXAZO+vQ5DM0SWDzWs9fWxGYhsX8L1GfAcFYl7ljZWGWoubEp3F+ZLyxkgUzMc616p
+ ILsZ+kD1SJBg==
+X-IronPort-AV: E=Sophos;i="5.70,349,1574121600"; 
+   d="scan'208";a="11919547"
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1e-17c49630.us-east-1.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-9101.sea19.amazon.com with ESMTP; 22 Jan 2020 09:36:56 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
+        by email-inbound-relay-1e-17c49630.us-east-1.amazon.com (Postfix) with ESMTPS id 2D141A1780;
+        Wed, 22 Jan 2020 09:36:48 +0000 (UTC)
+Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
+ EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
+ id 15.0.1236.3; Wed, 22 Jan 2020 09:36:48 +0000
+Received: from u886c93fd17d25d.ant.amazon.com (10.43.162.224) by
+ EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Wed, 22 Jan 2020 09:36:40 +0000
+From:   SeongJae Park <sjpark@amazon.com>
+To:     Michal Hocko <mhocko@kernel.org>
+CC:     Minchan Kim <minchan@kernel.org>, <sspatil@google.com>,
+        <kirill@shutemov.name>, <akpm@linux-foundation.org>,
+        <linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
+        <linux-api@vger.kernel.org>, <oleksandr@redhat.com>,
+        <surenb@google.com>, <timmurray@google.com>, <dancol@google.com>,
+        <sonnyrao@google.com>, <bgeffon@google.com>, <hannes@cmpxchg.org>,
+        <shakeelb@google.com>, <joaodias@google.com>,
+        <ktkhai@virtuozzo.com>, <christian.brauner@ubuntu.com>,
+        <sjpark@amazon.de>
+Subject: Re: Re: [PATCH v2 2/5] mm: introduce external memory hinting API
+Date:   Wed, 22 Jan 2020 10:36:24 +0100
+Message-ID: <20200122093624.14799-1-sjpark@amazon.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200122082853.GS29276@dhcp22.suse.cz> (raw)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.43.162.224]
+X-ClientProxiedBy: EX13d09UWA004.ant.amazon.com (10.43.160.158) To
+ EX13D31EUA001.ant.amazon.com (10.43.165.15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jerónimo Borque <jeronimo@borque.com.ar>
+On Wed, 22 Jan 2020 09:28:53 +0100 Michal Hocko <mhocko@kernel.org> wrote:
 
-commit 260e41ac4dd3e5acb90be624c03ba7f019615b75 upstream.
+> On Tue 21-01-20 10:32:12, Minchan Kim wrote:
+> > On Mon, Jan 20, 2020 at 08:58:25AM +0100, Michal Hocko wrote:
+> [...]
+> > > The interface really has to be robust to future potential usecases.
+> > 
+> > I do understand your concern but for me, it's chicken and egg problem.
+> > We usually do best effort to make something perfect as far as possible
+> > but we also don't do over-engineering without real usecase from the
+> > beginning.
+> > 
+> > I already told you how we could synchronize among processes and potential
+> > way to be extended Daniel suggested(That's why current API has extra field
+> > for the cookie) even though we don't need it right now.
+> 
+> If you can synchronize with the target task then you do not need a
+> remote interface. Just use ptrace and you are done with it.
+> 
+> > If you want to suggest the other way, please explain why your idea is
+> > better and why we need it at this moment.
+> 
+> I believe I have explained my concerns and why they matter. All you are
+> saying is that you do not care because your particular usecase doesn't
+> care. And that is a first signal of a future disaster when we end up
+> with a broken and unfixable interface we have to maintain for ever.
+> 
+> I will not go as far as to nack this but you should seriously think
+> about other potential usecases and how they would work and what we are
+> going to do when a first non-cooperative userspace memory management
+> usecase materializes.
 
-Add device-ids for the Motorola Solutions TETRA radios MTP3xxx series
-and MTP85xx series
+Beside of the specific environment of Android, I think there are many ways to
+know the address space layout and access patterns of other processes.  The
+idle_page_tracking might be an example that widelay available.
 
-$ lsusb -vd 0cad:
+Of course, the information might not strictly correct due to the timing issue,
+but could be still worth to be used under some extreme situations, such as
+memory pressure or fragmentation.  For the same reason, ptrace() would not be
+sufficient, as we have no perfect control, but only some level of control that
+would be useful under specific situations.
 
-Bus 001 Device 009: ID 0cad:9015 Motorola CGISS TETRA PEI interface
-Device Descriptor:
-  bLength                18
-  bDescriptorType         1
-  bcdUSB               2.00
-  bDeviceClass            0
-  bDeviceSubClass         0
-  bDeviceProtocol         0
-  bMaxPacketSize0        64
-  idVendor           0x0cad Motorola CGISS
-  idProduct          0x9015
-  bcdDevice           24.16
-  iManufacturer           1
-  iProduct                2
-  iSerial                 0
-  bNumConfigurations      1
-  Configuration Descriptor:
-    bLength                 9
-    bDescriptorType         2
-    wTotalLength       0x0037
-    bNumInterfaces          2
-    bConfigurationValue     1
-    iConfiguration          3
-    bmAttributes         0x80
-      (Bus Powered)
-    MaxPower              500mA
-    Interface Descriptor:
-      bLength                 9
-      bDescriptorType         4
-      bInterfaceNumber        0
-      bAlternateSetting       0
-      bNumEndpoints           2
-      bInterfaceClass       255 Vendor Specific Class
-      bInterfaceSubClass      0
-      bInterfaceProtocol      0
-      iInterface              0
-      Endpoint Descriptor:
-        bLength                 7
-        bDescriptorType         5
-        bEndpointAddress     0x81  EP 1 IN
-        bmAttributes            2
-          Transfer Type            Bulk
-          Synch Type               None
-          Usage Type               Data
-        wMaxPacketSize     0x0040  1x 64 bytes
-        bInterval               0
-      Endpoint Descriptor:
-        bLength                 7
-        bDescriptorType         5
-        bEndpointAddress     0x01  EP 1 OUT
-        bmAttributes            2
-          Transfer Type            Bulk
-          Synch Type               None
-          Usage Type               Data
-        wMaxPacketSize     0x0040  1x 64 bytes
-        bInterval               0
-    Interface Descriptor:
-      bLength                 9
-      bDescriptorType         4
-      bInterfaceNumber        1
-      bAlternateSetting       0
-      bNumEndpoints           2
-      bInterfaceClass       255 Vendor Specific Class
-      bInterfaceSubClass      0
-      bInterfaceProtocol      0
-      iInterface              0
-      Endpoint Descriptor:
-        bLength                 7
-        bDescriptorType         5
-        bEndpointAddress     0x82  EP 2 IN
-        bmAttributes            2
-          Transfer Type            Bulk
-          Synch Type               None
-          Usage Type               Data
-        wMaxPacketSize     0x0040  1x 64 bytes
-        bInterval               0
-      Endpoint Descriptor:
-        bLength                 7
-        bDescriptorType         5
-        bEndpointAddress     0x02  EP 2 OUT
-        bmAttributes            2
-          Transfer Type            Bulk
-          Synch Type               None
-          Usage Type               Data
-        wMaxPacketSize     0x0040  1x 64 bytes
-        bInterval               0
+I assume the users of this systemcall would understand the tradeoff and make
+decisions.  Also, as the users already have the right to do the tradeoff, I
+think it's fair.  In other words, I think the caller has both the power and the
+responsibility to deal with the time-to-check-time-to-react problem.
 
-Bus 001 Device 010: ID 0cad:9013 Motorola CGISS TETRA PEI interface
-Device Descriptor:
-  bLength                18
-  bDescriptorType         1
-  bcdUSB               2.00
-  bDeviceClass            0
-  bDeviceSubClass         0
-  bDeviceProtocol         0
-  bMaxPacketSize0        64
-  idVendor           0x0cad Motorola CGISS
-  idProduct          0x9013
-  bcdDevice           24.16
-  iManufacturer           1
-  iProduct                2
-  iSerial                 0
-  bNumConfigurations      1
-  Configuration Descriptor:
-    bLength                 9
-    bDescriptorType         2
-    wTotalLength       0x0037
-    bNumInterfaces          2
-    bConfigurationValue     1
-    iConfiguration          3
-    bmAttributes         0x80
-      (Bus Powered)
-    MaxPower              500mA
-    Interface Descriptor:
-      bLength                 9
-      bDescriptorType         4
-      bInterfaceNumber        0
-      bAlternateSetting       0
-      bNumEndpoints           2
-      bInterfaceClass       255 Vendor Specific Class
-      bInterfaceSubClass      0
-      bInterfaceProtocol      0
-      iInterface              0
-      Endpoint Descriptor:
-        bLength                 7
-        bDescriptorType         5
-        bEndpointAddress     0x81  EP 1 IN
-        bmAttributes            2
-          Transfer Type            Bulk
-          Synch Type               None
-          Usage Type               Data
-        wMaxPacketSize     0x0200  1x 512 bytes
-        bInterval               0
-      Endpoint Descriptor:
-        bLength                 7
-        bDescriptorType         5
-        bEndpointAddress     0x01  EP 1 OUT
-        bmAttributes            2
-          Transfer Type            Bulk
-          Synch Type               None
-          Usage Type               Data
-        wMaxPacketSize     0x0200  1x 512 bytes
-        bInterval               0
-    Interface Descriptor:
-      bLength                 9
-      bDescriptorType         4
-      bInterfaceNumber        1
-      bAlternateSetting       0
-      bNumEndpoints           2
-      bInterfaceClass       255 Vendor Specific Class
-      bInterfaceSubClass      0
-      bInterfaceProtocol      0
-      iInterface              0
-      Endpoint Descriptor:
-        bLength                 7
-        bDescriptorType         5
-        bEndpointAddress     0x82  EP 2 IN
-        bmAttributes            2
-          Transfer Type            Bulk
-          Synch Type               None
-          Usage Type               Data
-        wMaxPacketSize     0x0200  1x 512 bytes
-        bInterval               0
-      Endpoint Descriptor:
-        bLength                 7
-        bDescriptorType         5
-        bEndpointAddress     0x02  EP 2 OUT
-        bmAttributes            2
-          Transfer Type            Bulk
-          Synch Type               None
-          Usage Type               Data
-        wMaxPacketSize     0x0200  1x 512 bytes
-        bInterval               0
+Nonetheless, I also agree this is important concern and the patch would be
+better if it adds more detailed documentation regarding this issue.
 
-Signed-off-by: Jerónimo Borque <jeronimo@borque.com.ar>
-Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- drivers/usb/serial/usb-serial-simple.c |    2 ++
- 1 file changed, 2 insertions(+)
-
---- a/drivers/usb/serial/usb-serial-simple.c
-+++ b/drivers/usb/serial/usb-serial-simple.c
-@@ -89,6 +89,8 @@ DEVICE(moto_modem, MOTO_IDS);
- #define MOTOROLA_TETRA_IDS()			\
- 	{ USB_DEVICE(0x0cad, 0x9011) },	/* Motorola Solutions TETRA PEI */ \
- 	{ USB_DEVICE(0x0cad, 0x9012) },	/* MTP6550 */ \
-+	{ USB_DEVICE(0x0cad, 0x9013) },	/* MTP3xxx */ \
-+	{ USB_DEVICE(0x0cad, 0x9015) },	/* MTP85xx */ \
- 	{ USB_DEVICE(0x0cad, 0x9016) }	/* TPG2200 */
- DEVICE(motorola_tetra, MOTOROLA_TETRA_IDS);
- 
+If I'm missing some points or you have different opinions, please let me know.
 
 
+Thanks,
+SeongJae Park
+
+> -- 
+> Michal Hocko
+> SUSE Labs
+> 
