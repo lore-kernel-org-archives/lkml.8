@@ -2,118 +2,96 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C168EC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 14:24:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A953C33CAF
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 14:24:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9551C2465B
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 14:24:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0078C24656
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 14:24:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="jTtwl3El"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gFfdY4a1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729027AbgAVOYq (ORCPT
+        id S1729061AbgAVOYr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 09:24:46 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:48308 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725870AbgAVOYq (ORCPT
+        Wed, 22 Jan 2020 09:24:47 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:24273 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729037AbgAVOYq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 22 Jan 2020 09:24:46 -0500
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00MEOP0r055902;
-        Wed, 22 Jan 2020 08:24:25 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1579703065;
-        bh=Nyeylm0gjyF8o7Phqcn3fOc+DFddhIjGH+F7kSw4Lxg=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=jTtwl3ElWLdUdI1gTZc++aUq5A9xlOe5EM4OjtymNBKOa3QO7666qZx5evq/fIx2k
-         58i4Geij6YHdXaYYBXpJVykvDwniOqsKy0ZsDUS62emfFuZ+9eci0/G2t7B4Ou9Qlo
-         AXShmCpKqH/cNTyxaSvQy4DqzcSjFsmiXxyy/3Yw=
-Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00MEOPV9065269
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 22 Jan 2020 08:24:25 -0600
-Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 22
- Jan 2020 08:24:25 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Wed, 22 Jan 2020 08:24:25 -0600
-Received: from [172.24.145.246] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00MEOIIo016493;
-        Wed, 22 Jan 2020 08:24:19 -0600
-Subject: Re: [PATCH 1/3] dt-bindings: net: can: m_can: Add Documentation for
- stb-gpios
-To:     Dan Murphy <dmurphy@ti.com>, Faiz Abbas <faiz_abbas@ti.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <netdev@vger.kernel.org>, <linux-can@vger.kernel.org>
-CC:     <catalin.marinas@arm.com>, <mark.rutland@arm.com>,
-        <robh+dt@kernel.org>, <davem@davemloft.net>, <mkl@pengutronix.de>,
-        <wg@grandegger.com>, <sriram.dash@samsung.com>, <nm@ti.com>,
-        <t-kristo@ti.com>
-References: <20200122080310.24653-1-faiz_abbas@ti.com>
- <20200122080310.24653-2-faiz_abbas@ti.com>
- <c3b0eeb8-bd78-aa96-4783-62dc93f03bfe@ti.com>
-From:   Sekhar Nori <nsekhar@ti.com>
-Message-ID: <8fc7c343-267d-c91c-0381-60990cfc35e8@ti.com>
-Date:   Wed, 22 Jan 2020 19:54:18 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579703086;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=aqT6CKkFGq3yewDVX4rWRr0dGnPZkXFg3u7EsnPq/64=;
+        b=gFfdY4a1CTVtqebu4zMtGxsFs6Lu25oLORhYFeqoUC6C3HjL3PyH7RjBcvmmRIM2PYR6kE
+        nCWd+u45ZKEM55FHegJW4hDp0WRuAmr/aGI5lP9X5r7tnGwCPjcP4znyZTVNVyfC+XbO+V
+        4sPFVGPgL903ZCa2okuRSraTGHfEisc=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-50-gIjaKBQmP52f6c6Rwcnkyg-1; Wed, 22 Jan 2020 09:24:45 -0500
+X-MC-Unique: gIjaKBQmP52f6c6Rwcnkyg-1
+Received: by mail-wm1-f70.google.com with SMTP id s13so1001131wme.7
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jan 2020 06:24:44 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=aqT6CKkFGq3yewDVX4rWRr0dGnPZkXFg3u7EsnPq/64=;
+        b=JwKE6Ps+5s0MHsJe0FyO78smui7FljTrSBXKBFQc1wBVvFQyfo+KKItaI+V1NvX5w9
+         vOGwWGrln3/HIXL3CRpvPHkVnFDpDATJ8kD94FNoImw+3YLG3B0GAM2U3qqx/LqcC9tS
+         XphRBExsjkQs4iXgv6sI7xSZk+lHlDWwQA7hY+sw8lGNv/0Ul3lIrMoq4LTgo7G5qlqt
+         rD3mcdWDOTwn1M10E5eWH9W/fvdwrO10rtjH23IJ/c6gAmAmiE/j9FUUoRkHCMTfcIQL
+         JTrIdLGaC+YXVenCqJQCWEGSWrRYLpg87KWfaZXehNCKAEk4TS42SyQ8LRi7YNPu8GZp
+         GafA==
+X-Gm-Message-State: APjAAAUUEkHLYA/HIb05Ep8Piex7JyqOtkGZIfMCDIrFM/INwjcJFeKh
+        VR7UPsCQ9U9v3dPAoZiABktDT8wnXlfsuKpn62Oe/yrhpczW7GU3JRcaAc0UyMULDwOSSdVQf1+
+        FNCvCcQ8vkOUQqOFb8hdzaW/4
+X-Received: by 2002:adf:f54d:: with SMTP id j13mr11499353wrp.19.1579703083586;
+        Wed, 22 Jan 2020 06:24:43 -0800 (PST)
+X-Google-Smtp-Source: APXvYqy/2ceqwR2kycBEWzkQorXDtWBW1IKh4GGt2+mtCymg1sayhTfnKvWGxkroPEuUM2HmBy7NKg==
+X-Received: by 2002:adf:f54d:: with SMTP id j13mr11499329wrp.19.1579703083264;
+        Wed, 22 Jan 2020 06:24:43 -0800 (PST)
+Received: from ?IPv6:2001:b07:6468:f312:b8fe:679e:87eb:c059? ([2001:b07:6468:f312:b8fe:679e:87eb:c059])
+        by smtp.gmail.com with ESMTPSA id m3sm55904641wrs.53.2020.01.22.06.24.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 22 Jan 2020 06:24:42 -0800 (PST)
+Subject: Re: [PATCH] KVM: X86: Add 'else' to unify fastop and execute call
+ path
+To:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        linmiaohe <linmiaohe@huawei.com>
+Cc:     rkrcmar@redhat.com, vkuznets@redhat.com, wanpengli@tencent.com,
+        jmattson@google.com, joro@8bytes.org, tglx@linutronix.de,
+        mingo@redhat.com, bp@alien8.de, hpa@zytor.com, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, x86@kernel.org
+References: <1579663304-14524-1-git-send-email-linmiaohe@huawei.com>
+ <20200122044256.GA18513@linux.intel.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <0914980e-30dd-5b39-a951-ca73e1b86ab3@redhat.com>
+Date:   Wed, 22 Jan 2020 15:24:41 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-In-Reply-To: <c3b0eeb8-bd78-aa96-4783-62dc93f03bfe@ti.com>
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <20200122044256.GA18513@linux.intel.com>
+Content-Type: text/plain; charset=windows-1252
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 22/01/20 7:05 PM, Dan Murphy wrote:
-> Faiz
-> 
-> On 1/22/20 2:03 AM, Faiz Abbas wrote:
->> The CAN transceiver on some boards has an STB pin which is
->> used to control its standby mode. Add an optional property
->> stb-gpios to toggle the same.
->>
->> Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
->> Signed-off-by: Sekhar Nori <nsekhar@ti.com>
->> ---
->>   Documentation/devicetree/bindings/net/can/m_can.txt | 2 ++
->>   1 file changed, 2 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/net/can/m_can.txt
->> b/Documentation/devicetree/bindings/net/can/m_can.txt
->> index ed614383af9c..cc8ba3f7a2aa 100644
->> --- a/Documentation/devicetree/bindings/net/can/m_can.txt
->> +++ b/Documentation/devicetree/bindings/net/can/m_can.txt
->> @@ -48,6 +48,8 @@ Optional Subnode:
->>                 that can be used for CAN/CAN-FD modes. See
->>                
->> Documentation/devicetree/bindings/net/can/can-transceiver.txt
->>                 for details.
->> +stb-gpios        : gpio node to toggle the STB (standby) signal on
->> the transceiver
->> +
-> 
-> The m_can.txt is for the m_can framework.  If this is specific to the
-> platform then it really does not belong here.
-> 
-> If the platform has specific nodes then maybe we need a
-> m_can_platform.txt binding for specific platform nodes.  But I leave
-> that decision to Rob.
+On 22/01/20 05:42, Sean Christopherson wrote:
+> Reviewed-by: Sean Christopherson <sean.j.christopherson@intel.com>
 
-Since this is transceiver enable, should this not be in
-Documentation/devicetree/bindings/net/can/can-transceiver.txt?
+Queued, thanks to both!
 
-Thanks,
-Sekhar
+Paolo
+
