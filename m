@@ -7,49 +7,50 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C5B5C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:34:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43AEDC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:34:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B99B24680
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:34:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A54424673
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:34:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579685640;
-	bh=0wWvWshp+tvgSFI8pOHOJrx1Z8wnPY0sv8HdFJhYBDc=;
+	s=default; t=1579685643;
+	bh=WviVC5Ezmk5ibOmxnwu2jFCJQZQc64wGR2u526a4QPk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Bn5x4LaFE5vAs1F/2BWKdZ2gtAM1/AOeK+pMUSH9ppKM8rbblDlSYWzIXZV4N4Bu9
-	 ORFKn1h5VioudVEOYH+dm90jQJ3uEdUYZNXo1JiRiPMPBk1DJlgMK9EVBVbfv9Vqtb
-	 LIOqwatysdSjHEQ0j64RfLebOSIR2FjP5+g0TPnU=
+	b=1IGUuf+nxLPVTx3bNgEseZvn8KWs2qgzs+LUFqvGv2VEmZGvmDKKxkKIq2R5DTwZt
+	 UijCigTmvCe8MuQXOFJHuRAySPmche8PI67YYKFTDMndEQfpxJG+skXS/53oz/W3U8
+	 WeUy/eWSzhrNNP6fG+91ajgWyFF2A5MyFjsivn8o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729396AbgAVJd7 (ORCPT
+        id S1729499AbgAVJeC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 04:33:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48048 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 04:34:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48160 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730063AbgAVJdx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 04:33:53 -0500
+        id S1730710AbgAVJd6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 04:33:58 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0BA802071E;
-        Wed, 22 Jan 2020 09:33:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D00DD24672;
+        Wed, 22 Jan 2020 09:33:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579685633;
-        bh=0wWvWshp+tvgSFI8pOHOJrx1Z8wnPY0sv8HdFJhYBDc=;
+        s=default; t=1579685638;
+        bh=WviVC5Ezmk5ibOmxnwu2jFCJQZQc64wGR2u526a4QPk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Rme50aIieASfpVAOLsMFtn73Uzc8i1vqbYvZ0E72s2IF3URu+Dn4QdPHule5Gz4r2
-         9fw5cXh3EQIjLRabauMVTQXgVIDwSB4EOdOCPcqwVfopbbieUUBto5oQmUWqf17SZu
-         K1u6giEPx3PRZY8mUa0L1AIiBIFqMO11EOM9sDUM=
+        b=hnxziJx4C0ys8yHuXciVoRRWi14nZqY8W9sstC2FfW5bRPXLSpVIF9H0O9OvkNdb2
+         AngDS6iECoQNEdwTmVGbRr5RYCxDXBjtR6nKdBJKgkfv0C7sB8tGgGLhubFxRkxq35
+         PxBAGxUvWO3zX3BA5VGFmJbXlxc6ONgsnTZNuRE4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Sanjay Konduri <sanjay.konduri@redpinesignals.com>,
-        Sushant Kumar Mishra <sushant.mishra@redpinesignals.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
+        stable@vger.kernel.org, Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Bob Picco <bob.picco@oracle.com>,
+        Kristina Martsenko <kristina.martsenko@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
         Ben Hutchings <ben.hutchings@codethink.co.uk>
-Subject: [PATCH 4.9 06/97] rsi: add fix for crash during assertions
-Date:   Wed, 22 Jan 2020 10:28:10 +0100
-Message-Id: <20200122092756.754932862@linuxfoundation.org>
+Subject: [PATCH 4.9 08/97] arm64: dont open code page table entry creation
+Date:   Wed, 22 Jan 2020 10:28:12 +0100
+Message-Id: <20200122092757.097718691@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200122092755.678349497@linuxfoundation.org>
 References: <20200122092755.678349497@linuxfoundation.org>
@@ -62,34 +63,119 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sanjay Konduri <sanjay.konduri@redpinesignals.com>
+From: Kristina Martsenko <kristina.martsenko@arm.com>
 
-commit abd39c6ded9db53aa44c2540092bdd5fb6590fa8 upstream.
+commit 193383043f14a398393dc18bae8380f7fe665ec3 upstream.
 
-Observed crash in some scenarios when assertion has occurred,
-this is because hw structure is freed and is tried to get
-accessed in some functions where null check is already
-present. So, avoided the crash by making the hw to NULL after
-freeing.
+Instead of open coding the generation of page table entries, use the
+macros/functions that exist for this - pfn_p*d and p*d_populate. Most
+code in the kernel already uses these macros, this patch tries to fix
+up the few places that don't. This is useful for the next patch in this
+series, which needs to change the page table entry logic, and it's
+better to have that logic in one place.
 
-Signed-off-by: Sanjay Konduri <sanjay.konduri@redpinesignals.com>
-Signed-off-by: Sushant Kumar Mishra <sushant.mishra@redpinesignals.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+The KVM extended ID map is special, since we're creating a level above
+CONFIG_PGTABLE_LEVELS and the required function isn't available. Leave
+it as is and add a comment to explain it. (The normal kernel ID map code
+doesn't need this change because its page tables are created in assembly
+(__create_page_tables)).
+
+Tested-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+Reviewed-by: Marc Zyngier <marc.zyngier@arm.com>
+Tested-by: Bob Picco <bob.picco@oracle.com>
+Reviewed-by: Bob Picco <bob.picco@oracle.com>
+Signed-off-by: Kristina Martsenko <kristina.martsenko@arm.com>
+Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
+[bwh: Backported to 4.9: adjust context]
 Signed-off-by: Ben Hutchings <ben.hutchings@codethink.co.uk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/wireless/rsi/rsi_91x_mac80211.c |    1 +
- 1 file changed, 1 insertion(+)
+ arch/arm64/include/asm/kvm_mmu.h |    5 +++++
+ arch/arm64/include/asm/pgtable.h |    1 +
+ arch/arm64/kernel/hibernate.c    |    3 +--
+ arch/arm64/mm/mmu.c              |   14 +++++++++-----
+ 4 files changed, 16 insertions(+), 7 deletions(-)
 
---- a/drivers/net/wireless/rsi/rsi_91x_mac80211.c
-+++ b/drivers/net/wireless/rsi/rsi_91x_mac80211.c
-@@ -199,6 +199,7 @@ void rsi_mac80211_detach(struct rsi_hw *
- 		ieee80211_stop_queues(hw);
- 		ieee80211_unregister_hw(hw);
- 		ieee80211_free_hw(hw);
-+		adapter->hw = NULL;
+--- a/arch/arm64/include/asm/kvm_mmu.h
++++ b/arch/arm64/include/asm/kvm_mmu.h
+@@ -300,6 +300,11 @@ static inline bool __kvm_cpu_uses_extend
+ 	return __cpu_uses_extended_idmap();
+ }
+ 
++/*
++ * Can't use pgd_populate here, because the extended idmap adds an extra level
++ * above CONFIG_PGTABLE_LEVELS (which is 2 or 3 if we're using the extended
++ * idmap), and pgd_populate is only available if CONFIG_PGTABLE_LEVELS = 4.
++ */
+ static inline void __kvm_extend_hypmap(pgd_t *boot_hyp_pgd,
+ 				       pgd_t *hyp_pgd,
+ 				       pgd_t *merged_hyp_pgd,
+--- a/arch/arm64/include/asm/pgtable.h
++++ b/arch/arm64/include/asm/pgtable.h
+@@ -353,6 +353,7 @@ static inline int pmd_protnone(pmd_t pmd
+ 
+ #define pud_write(pud)		pte_write(pud_pte(pud))
+ #define pud_pfn(pud)		(((pud_val(pud) & PUD_MASK) & PHYS_MASK) >> PAGE_SHIFT)
++#define pfn_pud(pfn,prot)	(__pud(((phys_addr_t)(pfn) << PAGE_SHIFT) | pgprot_val(prot)))
+ 
+ #define set_pmd_at(mm, addr, pmdp, pmd)	set_pte_at(mm, addr, (pte_t *)pmdp, pmd_pte(pmd))
+ 
+--- a/arch/arm64/kernel/hibernate.c
++++ b/arch/arm64/kernel/hibernate.c
+@@ -247,8 +247,7 @@ static int create_safe_exec_page(void *s
  	}
  
- 	rsi_remove_dbgfs(adapter);
+ 	pte = pte_offset_kernel(pmd, dst_addr);
+-	set_pte(pte, __pte(virt_to_phys((void *)dst) |
+-			 pgprot_val(PAGE_KERNEL_EXEC)));
++	set_pte(pte, pfn_pte(virt_to_pfn(dst), PAGE_KERNEL_EXEC));
+ 
+ 	/*
+ 	 * Load our new page tables. A strict BBM approach requires that we
+--- a/arch/arm64/mm/mmu.c
++++ b/arch/arm64/mm/mmu.c
+@@ -495,8 +495,8 @@ static void __init map_kernel(pgd_t *pgd
+ 		 * entry instead.
+ 		 */
+ 		BUG_ON(!IS_ENABLED(CONFIG_ARM64_16K_PAGES));
+-		set_pud(pud_set_fixmap_offset(pgd, FIXADDR_START),
+-			__pud(__pa(bm_pmd) | PUD_TYPE_TABLE));
++		pud_populate(&init_mm, pud_set_fixmap_offset(pgd, FIXADDR_START),
++			     lm_alias(bm_pmd));
+ 		pud_clear_fixmap();
+ 	} else {
+ 		BUG();
+@@ -611,7 +611,7 @@ int __meminit vmemmap_populate(unsigned
+ 			if (!p)
+ 				return -ENOMEM;
+ 
+-			set_pmd(pmd, __pmd(__pa(p) | PROT_SECT_NORMAL));
++			pmd_set_huge(pmd, __pa(p), __pgprot(PROT_SECT_NORMAL));
+ 		} else
+ 			vmemmap_verify((pte_t *)pmd, node, addr, next);
+ 	} while (addr = next, addr != end);
+@@ -797,15 +797,19 @@ int __init arch_ioremap_pmd_supported(vo
+ 
+ int pud_set_huge(pud_t *pud, phys_addr_t phys, pgprot_t prot)
+ {
++	pgprot_t sect_prot = __pgprot(PUD_TYPE_SECT |
++					pgprot_val(mk_sect_prot(prot)));
+ 	BUG_ON(phys & ~PUD_MASK);
+-	set_pud(pud, __pud(phys | PUD_TYPE_SECT | pgprot_val(mk_sect_prot(prot))));
++	set_pud(pud, pfn_pud(__phys_to_pfn(phys), sect_prot));
+ 	return 1;
+ }
+ 
+ int pmd_set_huge(pmd_t *pmd, phys_addr_t phys, pgprot_t prot)
+ {
++	pgprot_t sect_prot = __pgprot(PMD_TYPE_SECT |
++					pgprot_val(mk_sect_prot(prot)));
+ 	BUG_ON(phys & ~PMD_MASK);
+-	set_pmd(pmd, __pmd(phys | PMD_TYPE_SECT | pgprot_val(mk_sect_prot(prot))));
++	set_pmd(pmd, pfn_pmd(__phys_to_pfn(phys), sect_prot));
+ 	return 1;
+ }
+ 
 
 
