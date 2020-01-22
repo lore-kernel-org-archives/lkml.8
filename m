@@ -2,125 +2,113 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7E38C33CB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 06:37:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 562C9C32771
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 06:38:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E99F24655
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 06:37:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 290282465B
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 06:38:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="GaDZf7co"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="DbgiU9Uj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727022AbgAVGhe (ORCPT
+        id S1728733AbgAVGiR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 01:37:34 -0500
-Received: from ozlabs.org ([203.11.71.1]:51439 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725884AbgAVGhd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 01:37:33 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        Wed, 22 Jan 2020 01:38:17 -0500
+Received: from mail25.static.mailgun.info ([104.130.122.25]:35882 "EHLO
+        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726026AbgAVGiQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 01:38:16 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1579675096; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=BTMKD1kC1hneaJuLFHdKQBVHUfBZ4mFs37EkrltHpA8=;
+ b=DbgiU9UjrV5d3f7N+DkeQ0gJGxxU7I+C6WGhIy83Pw/qw8s53yGYofMXC3SlkNi7g9K193QV
+ 34iD4wf5qn38xw+VTHaZ1xiket+h2X/AsM5O+HduB0aC1uchECxcMvQPepk/BpAYhivZeSx/
+ o8zZYDAxxhrEqzpKN8/6f4DpgyM=
+X-Mailgun-Sending-Ip: 104.130.122.25
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e27edd7.7f0d7ee9f810-smtp-out-n02;
+ Wed, 22 Jan 2020 06:38:15 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 896FBC447A1; Wed, 22 Jan 2020 06:38:14 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 482bLK6kSpz9sRG;
-        Wed, 22 Jan 2020 17:37:29 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1579675051;
-        bh=ETg15+iGHEsGo+l6iowSowBndnR1UCVpO6tb+L7AJVk=;
-        h=Date:From:To:Cc:Subject:From;
-        b=GaDZf7co1bwcH2u2Su8dgDynRu8sib78OYljKmxetGA9TApSdiEiOtWxNkYFe+R+Y
-         BMovZpsLcXX74hQVfb3Bj+xpJeYA+2u+Vlg39Xb+falIv7fjjIOUny9oH2FscHXkR8
-         bvbyNf0X9o8hBmdg37iAZJomMRiYALpEkBaf9gOt8B0Ijo4DZr4F6Rk8YpQqRHMHly
-         AuJ6KmvPiEeQhd22WSddh0aE3oPd255M2Gc3eCe/alsMNuS6lIbQmcvr0vOne+qptf
-         fZe4h05XJ1s9suFVdqVQla6EacWCj/PmrdgGvDth/a7i7nZ2wiLPBl0sYpDMT3UzcO
-         jWu2rgmTooIEA==
-Date:   Wed, 22 Jan 2020 17:37:26 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@elte.hu>, "H. Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Steven Price <steven.price@arm.com>
-Subject: linux-next: manual merge of the akpm tree with the tip tree
-Message-ID: <20200122173726.3d57753b@canb.auug.org.au>
+        (Authenticated sender: sibis)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id E8A42C433CB;
+        Wed, 22 Jan 2020 06:38:13 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_//hEE_DZ5W0rtXA/9gic9+Yb";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Wed, 22 Jan 2020 12:08:13 +0530
+From:   Sibi Sankar <sibis@codeaurora.org>
+To:     Evan Green <evgreen@chromium.org>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Ohad Ben Cohen <ohad@wizery.com>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        linux-remoteproc@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        linux-remoteproc-owner@vger.kernel.org
+Subject: Re: [PATCH 2/4] remoteproc: qcom: q6v5-mss: Improve readability
+ across clk handling
+In-Reply-To: <CAE=gft4Erwjgvj18DuiJaTEUz=1DwzSBtiCTU0QuoGO1+kzsNg@mail.gmail.com>
+References: <20200117135130.3605-1-sibis@codeaurora.org>
+ <20200117135130.3605-3-sibis@codeaurora.org>
+ <CAE=gft4Erwjgvj18DuiJaTEUz=1DwzSBtiCTU0QuoGO1+kzsNg@mail.gmail.com>
+Message-ID: <4663ec41c6e8dec0a2504aa1ddcf838d@codeaurora.org>
+X-Sender: sibis@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_//hEE_DZ5W0rtXA/9gic9+Yb
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hey Evan,
 
-Hi all,
+Thanks for the review!
 
-Today's linux-next merge of the akpm tree got a conflict in:
+On 2020-01-22 00:52, Evan Green wrote:
+> On Fri, Jan 17, 2020 at 5:51 AM Sibi Sankar <sibis@codeaurora.org> 
+> wrote:
+>> 
+>> Define CLKEN and CLKOFF for improving readability of Q6SS clock
+>> handling.
+>> 
+>> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+> 
+> It took me awhile to wrap my head around how this new define,
+> Q6SS_CBCR_TIMEOUT_US, sometimes replaces HALT_CHECK_MAX_LOOPS and
+> sometimes replaces SLEEP_CHECK_MAX_LOOPS. I guess they're conceptually
+> different but set to the same value for now? And you've fixed up a
+> place where the wrong one was used? If you thought the distinction was
+> meaningless I'd also be fine merging these two defines into one.
 
-  arch/x86/platform/efi/efi_64.c
+They really aren't that different
+both are Clks with the same timeout
+the previous naming was just plain
+bad.
 
-between commit:
+SLEEP_CHECK_MAX_LOOPS was used
+probably because it was referring
+to QDSP6SS_SLEEP CBCRs timeout.
+HALT_CHECK_MAX_LOOOPS seems to
+taken directly from CAF code. So
+we should be fine with merging
+the two defines into one.
 
-  1f299fad1e31 ("efi/x86: Limit EFI old memory map to SGI UV machines")
+> Either way, assuming the above is intentional, this looks ok to me.
+> Thanks for renaming that define.
+> 
+> Reviewed-by: Evan Green <evgreen@chromium.org>
 
-from the tip tree and patch:
-
-  "x86: mm+efi: convert ptdump_walk_pgd_level() to take a mm_struct"
-
-from the akpm tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc arch/x86/platform/efi/efi_64.c
-index e2accfe636bd,515eab388b56..000000000000
---- a/arch/x86/platform/efi/efi_64.c
-+++ b/arch/x86/platform/efi/efi_64.c
-@@@ -470,10 -606,10 +470,10 @@@ void __init efi_runtime_update_mappings
-  void __init efi_dump_pagetable(void)
-  {
-  #ifdef CONFIG_EFI_PGT_DUMP
- -	if (efi_enabled(EFI_OLD_MEMMAP))
- +	if (efi_have_uv1_memmap())
-- 		ptdump_walk_pgd_level(NULL, swapper_pg_dir);
-+ 		ptdump_walk_pgd_level(NULL, &init_mm);
-  	else
-- 		ptdump_walk_pgd_level(NULL, efi_mm.pgd);
-+ 		ptdump_walk_pgd_level(NULL, &efi_mm);
-  #endif
-  }
- =20
-
---Sig_//hEE_DZ5W0rtXA/9gic9+Yb
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl4n7aYACgkQAVBC80lX
-0GzZ5Af6Ajw8JwhTrqCuBO//bZrwnAOiy4N+T2myaGW0SKWZ2GMCJfKgF7P/75Ko
-NJ2WRu5UyNyPVRESDzXNWeEwXaXutCMUamU2i8PDk8DR9VSJFTJXYtQ4Q9W+YeeJ
-UagYV6E29Wgz8WkhOGlpO1yyOKrr8txMV1/qrTWGuEsRCih4uRLwTUS04wmOBIzP
-Vr1VqI+16KxEhaPnJgxZVNTS1N467ACh6fDai/IOGf15A5qaGjpzjMNieUYHOiD+
-Vu8QC201KYoed6xKbA+UM13WwZWg8s4MxMUAx9GUCRA+jKgf78jHn2xlCm42xz+X
-OpVKpJpspXa+tZMYZRZoBqUK6DX2vA==
-=Dp2j
------END PGP SIGNATURE-----
-
---Sig_//hEE_DZ5W0rtXA/9gic9+Yb--
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project.
