@@ -6,22 +6,22 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B97C5C33CAF
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 22:24:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BF7BC32771
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 22:24:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CD622465A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 22:24:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F4782465A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 22:24:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728927AbgAVWYD (ORCPT
+        id S1729043AbgAVWYJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 17:24:03 -0500
-Received: from kvm5.telegraphics.com.au ([98.124.60.144]:47890 "EHLO
+        Wed, 22 Jan 2020 17:24:09 -0500
+Received: from kvm5.telegraphics.com.au ([98.124.60.144]:47932 "EHLO
         kvm5.telegraphics.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726605AbgAVWYC (ORCPT
+        with ESMTP id S1728139AbgAVWYD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 17:24:02 -0500
+        Wed, 22 Jan 2020 17:24:03 -0500
 Received: by kvm5.telegraphics.com.au (Postfix, from userid 502)
-        id AB4E5299BD; Wed, 22 Jan 2020 17:23:59 -0500 (EST)
+        id 111F3299C3; Wed, 22 Jan 2020 17:24:00 -0500 (EST)
 To:     "David S. Miller" <davem@davemloft.net>
 Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
         Chris Zankel <chris@zankel.net>,
@@ -30,90 +30,69 @@ Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
         Eric Dumazet <eric.dumazet@gmail.com>,
         Stephen Hemminger <stephen@networkplumber.org>,
         netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Message-Id: <4edeb98033446fcb3e4966b0b856f1243235fa5f.1579730846.git.fthain@telegraphics.com.au>
+Message-Id: <0cdfbf008300aa5e18e34f9b199339f342a899a5.1579730846.git.fthain@telegraphics.com.au>
 In-Reply-To: <cover.1579730846.git.fthain@telegraphics.com.au>
 References: <cover.1579730846.git.fthain@telegraphics.com.au>
 From:   Finn Thain <fthain@telegraphics.com.au>
-Subject: [PATCH net v3 07/12] net/sonic: Improve receive descriptor status
- flag check
+Subject: [PATCH net v3 12/12] net/sonic: Prevent tx watchdog timeout
 Date:   Thu, 23 Jan 2020 09:07:26 +1100
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-After sonic_tx_timeout() calls sonic_init(), it can happen that
-sonic_rx() will subsequently encounter a receive descriptor with no
-flags set. Remove the comment that says that this can't happen.
+Section 5.5.3.2 of the datasheet says,
 
-When giving a receive descriptor to the SONIC, clear the descriptor
-status field. That way, any rx descriptor with flags set can only be
-a newly received packet.
+    If FIFO Underrun, Byte Count Mismatch, Excessive Collision, or
+    Excessive Deferral (if enabled) errors occur, transmission ceases.
 
-Don't process a descriptor without the LPKT bit set. The buffer is
-still in use by the SONIC.
+In this situation, the chip asserts a TXER interrupt rather than TXDN.
+But the handler for the TXDN is the only way that the transmit queue
+gets restarted. Hence, an aborted transmission can result in a watchdog
+timeout.
+
+This problem can be reproduced on congested link, as that can result in
+excessive transmitter collisions. Another way to reproduce this is with
+a FIFO Underrun, which may be caused by DMA latency.
+
+In event of a TXER interrupt, prevent a watchdog timeout by restarting
+transmission.
 
 Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
 Tested-by: Stan Johnson <userm57@yahoo.com>
 Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
 ---
-Changed since v2:
- - Removed blank line.
----
- drivers/net/ethernet/natsemi/sonic.c | 15 +++++----------
- 1 file changed, 5 insertions(+), 10 deletions(-)
+ drivers/net/ethernet/natsemi/sonic.c | 17 +++++++++++++----
+ 1 file changed, 13 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/net/ethernet/natsemi/sonic.c b/drivers/net/ethernet/natsemi/sonic.c
-index 2cee702f49b8..9d2bddc4951b 100644
+index 27b6f6585527..05e760444a92 100644
 --- a/drivers/net/ethernet/natsemi/sonic.c
 +++ b/drivers/net/ethernet/natsemi/sonic.c
-@@ -434,7 +434,6 @@ static int index_from_addr(struct sonic_local *lp, dma_addr_t addr,
- static void sonic_rx(struct net_device *dev)
- {
- 	struct sonic_local *lp = netdev_priv(dev);
--	int status;
- 	int entry = lp->cur_rx;
- 	int prev_entry = lp->eol_rx;
+@@ -415,10 +415,19 @@ static irqreturn_t sonic_interrupt(int irq, void *dev_id)
+ 			lp->stats.rx_missed_errors += 65536;
  
-@@ -445,9 +444,10 @@ static void sonic_rx(struct net_device *dev)
- 		u16 bufadr_l;
- 		u16 bufadr_h;
- 		int pkt_len;
-+		u16 status = sonic_rda_get(dev, entry, SONIC_RD_STATUS);
- 
--		status = sonic_rda_get(dev, entry, SONIC_RD_STATUS);
--		if (status & SONIC_RCR_PRX) {
-+		/* If the RD has LPKT set, the chip has finished with the RB */
-+		if ((status & SONIC_RCR_PRX) && (status & SONIC_RCR_LPKT)) {
- 			u32 addr = (sonic_rda_get(dev, entry,
- 						  SONIC_RD_PKTPTR_H) << 16) |
- 				   sonic_rda_get(dev, entry, SONIC_RD_PKTPTR_L);
-@@ -495,10 +495,6 @@ static void sonic_rx(struct net_device *dev)
- 			bufadr_h = (unsigned long)new_laddr >> 16;
- 			sonic_rra_put(dev, i, SONIC_RR_BUFADR_L, bufadr_l);
- 			sonic_rra_put(dev, i, SONIC_RR_BUFADR_H, bufadr_h);
--		} else {
--			/* This should only happen, if we enable accepting broken packets. */
--		}
--		if (status & SONIC_RCR_LPKT) {
- 			/*
- 			 * this was the last packet out of the current receive buffer
- 			 * give the buffer back to the SONIC
-@@ -511,12 +507,11 @@ static void sonic_rx(struct net_device *dev)
- 					  __func__);
- 				SONIC_WRITE(SONIC_ISR, SONIC_INT_RBE); /* clear the flag */
- 			}
--		} else
--			printk(KERN_ERR "%s: rx desc without RCR_LPKT. Shouldn't happen !?\n",
--			     dev->name);
+ 		/* transmit error */
+-		if (status & SONIC_INT_TXER)
+-			if (SONIC_READ(SONIC_TCR) & SONIC_TCR_FU)
+-				netif_dbg(lp, tx_err, dev, "%s: tx fifo underrun\n",
+-					  __func__);
++		if (status & SONIC_INT_TXER) {
++			u16 tcr = SONIC_READ(SONIC_TCR);
++
++			netif_dbg(lp, tx_err, dev, "%s: TXER intr, TCR %04x\n",
++				  __func__, tcr);
++
++			if (tcr & (SONIC_TCR_EXD | SONIC_TCR_EXC |
++				   SONIC_TCR_FU | SONIC_TCR_BCM)) {
++				/* Aborted transmission. Try again. */
++				netif_stop_queue(dev);
++				SONIC_WRITE(SONIC_CMD, SONIC_CR_TXP);
++			}
 +		}
- 		/*
- 		 * give back the descriptor
- 		 */
-+		sonic_rda_put(dev, entry, SONIC_RD_STATUS, 0);
- 		sonic_rda_put(dev, entry, SONIC_RD_IN_USE, 1);
  
- 		prev_entry = entry;
+ 		/* bus retry */
+ 		if (status & SONIC_INT_BR) {
 -- 
 2.24.1
 
