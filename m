@@ -2,143 +2,151 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33ADEC33CB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 06:18:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E18DEC32771
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 06:18:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A4002465A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 06:18:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B772D24655
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 06:18:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Wn5QGTxL"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="uanwc39E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726077AbgAVGS1 (ORCPT
+        id S1726207AbgAVGSe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 01:18:27 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:41232 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725924AbgAVGS0 (ORCPT
+        Wed, 22 Jan 2020 01:18:34 -0500
+Received: from mail25.static.mailgun.info ([104.130.122.25]:62561 "EHLO
+        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726135AbgAVGSc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 01:18:26 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579673905;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=46Fyq8DajrI/VyojMmIDzfpBih5cCQHJwjUiK8iJUVM=;
-        b=Wn5QGTxLd1d4T+nvQ1/tbd8pOdgc1gV7cxWM7/f5R+P8aM/ai/mzhws4hkncNceXwY8mzQ
-        tyDOTyLz8wUCY6NLE13esPXRH87H6Ns8vQyrelWP0QYg5FMNTE7Wd8whb6ox5jkUyM5ert
-        kZkPbLwQi36fA8FrqpOlvMGBOJzSd1Y=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-405-koa7asbiOJCyfjv1xRzSyw-1; Wed, 22 Jan 2020 01:18:24 -0500
-X-MC-Unique: koa7asbiOJCyfjv1xRzSyw-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Wed, 22 Jan 2020 01:18:32 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1579673912; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=0+6tDurQN9muJjME2SB8JDmDEo2i43PbGdo2TM5ZOM0=;
+ b=uanwc39EhL1KQRzGLPzEETbHN6R+fs8B1Xaw8wQWzpQD1GOLJI7sEbOAn1vUhAr+TKaKzXet
+ KkPE5X+hhQzSm4FGi/dtShLOvAZUhhG0w3dAvoOLGyM5rRl73rrsvY9ruFzk/aMxe+eL+ImH
+ oENs5TfsEZMrCOoTqT6NxHyydAU=
+X-Mailgun-Sending-Ip: 104.130.122.25
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e27e936.7fd4bfa57928-smtp-out-n01;
+ Wed, 22 Jan 2020 06:18:30 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id A7D16C447A4; Wed, 22 Jan 2020 06:18:29 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id ED1991902EA0;
-        Wed, 22 Jan 2020 06:18:20 +0000 (UTC)
-Received: from [10.72.12.103] (ovpn-12-103.pek2.redhat.com [10.72.12.103])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 957EB5D9E2;
-        Wed, 22 Jan 2020 06:18:02 +0000 (UTC)
-Subject: Re: [PATCH 3/5] vDPA: introduce vDPA bus
-To:     "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Gunthorpe <jgg@mellanox.com>
-Cc:     Shahaf Shuler <shahafs@mellanox.com>,
-        Rob Miller <rob.miller@broadcom.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>,
-        Netdev <netdev@vger.kernel.org>,
-        "Bie, Tiwei" <tiwei.bie@intel.com>,
-        "maxime.coquelin@redhat.com" <maxime.coquelin@redhat.com>,
-        "Liang, Cunming" <cunming.liang@intel.com>,
-        "Wang, Zhihong" <zhihong.wang@intel.com>,
-        "Wang, Xiao W" <xiao.w.wang@intel.com>,
-        "haotian.wang@sifive.com" <haotian.wang@sifive.com>,
-        "Zhu, Lingshan" <lingshan.zhu@intel.com>,
-        "eperezma@redhat.com" <eperezma@redhat.com>,
-        "lulu@redhat.com" <lulu@redhat.com>,
-        Parav Pandit <parav@mellanox.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        "stefanha@redhat.com" <stefanha@redhat.com>,
-        "rdunlap@infradead.org" <rdunlap@infradead.org>,
-        "hch@infradead.org" <hch@infradead.org>,
-        Ariel Adam <aadam@redhat.com>,
-        "jakub.kicinski@netronome.com" <jakub.kicinski@netronome.com>,
-        Jiri Pirko <jiri@mellanox.com>,
-        "hanand@xilinx.com" <hanand@xilinx.com>,
-        "mhabets@solarflare.com" <mhabets@solarflare.com>
-References: <239b042c-2d9e-0eec-a1ef-b03b7e2c5419@redhat.com>
- <CAJPjb1+fG9L3=iKbV4Vn13VwaeDZZdcfBPvarogF_Nzhk+FnKg@mail.gmail.com>
- <AM0PR0502MB379553984D0D55FDE25426F6C3330@AM0PR0502MB3795.eurprd05.prod.outlook.com>
- <d69918ca-8af4-44b2-9652-633530d4c113@redhat.com>
- <20200120174933.GB3891@mellanox.com>
- <2a324cec-2863-58f4-c58a-2414ee32c930@redhat.com>
- <20200121004047-mutt-send-email-mst@kernel.org>
- <b9ad744e-c4cd-82f9-f56a-1ecc185e9cd7@redhat.com>
- <20200121031506-mutt-send-email-mst@kernel.org>
- <20200121140456.GA12330@mellanox.com>
- <20200121091636-mutt-send-email-mst@kernel.org>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <26fa6211-6625-6dc6-f5df-7a124d8c53ae@redhat.com>
-Date:   Wed, 22 Jan 2020 14:18:01 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        (Authenticated sender: sibis)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id E2A53C43383;
+        Wed, 22 Jan 2020 06:18:28 +0000 (UTC)
 MIME-Version: 1.0
-In-Reply-To: <20200121091636-mutt-send-email-mst@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Wed, 22 Jan 2020 11:48:28 +0530
+From:   Sibi Sankar <sibis@codeaurora.org>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     evgreen@chromium.org, p.zabel@pengutronix.de, ohad@wizery.com,
+        linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, agross@kernel.org,
+        linux-arm-msm-owner@vger.kernel.org
+Subject: Re: [PATCH 1/4] remoteproc: qcom: q6v5-mss: Use
+ regmap_read_poll_timeout
+In-Reply-To: <20200120192432.GJ1511@yoga>
+References: <20200117135130.3605-1-sibis@codeaurora.org>
+ <20200117135130.3605-2-sibis@codeaurora.org> <20200120192432.GJ1511@yoga>
+Message-ID: <ff6e50e7ab706dcab05d579df8201864@codeaurora.org>
+X-Sender: sibis@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hey Bjorn,
 
-On 2020/1/21 =E4=B8=8B=E5=8D=8810:17, Michael S. Tsirkin wrote:
-> On Tue, Jan 21, 2020 at 02:05:04PM +0000, Jason Gunthorpe wrote:
->> On Tue, Jan 21, 2020 at 03:15:43AM -0500, Michael S. Tsirkin wrote:
->>>> This sounds more flexible e.g driver may choose to implement static =
-mapping
->>>> one through commit. But a question here, it looks to me this still r=
-equires
->>>> the DMA to be synced with at least commit here. Otherwise device may=
- get DMA
->>>> fault? Or device is expected to be paused DMA during begin?
->>>>
->>>> Thanks
->>> For example, commit might switch one set of tables for another,
->>> without need to pause DMA.
->> I'm not aware of any hardware that can do something like this
->> completely atomically..
-> FWIW VTD can do this atomically.
->
->> Any mapping change API has to be based around add/remove regions
->> without any active DMA (ie active DMA is a guest error the guest can
->> be crashed if it does this)
->>
->> Jason
-> Right, lots of cases are well served by only changing parts of
-> mapping that aren't in active use. Memory hotplug is such a case.
-> That's not the same as a completely static mapping.
+Thanks for the review!
 
+On 2020-01-21 00:54, Bjorn Andersson wrote:
+> On Fri 17 Jan 05:51 PST 2020, Sibi Sankar wrote:
+> 
+>> Replace the loop for HALT_ACK detection with regmap_read_poll_timeout.
 
-For hotplug it should be fine with current Qemu since it belongs to=20
-different memory regions. So each dimm should have its own dedicated map=20
-entries in IOMMU.
+sry missed it, will include it
+in the next re-spin
 
-But I'm not sure if the merging logic in current vhost memory listener=20
-may cause any trouble, we may need to disable it.
+>> 
+> 
+> Nice, but we should be able to do the same in q6v5proc_halt_axi_port()?
+> 
+>> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+>> ---
+>>  drivers/remoteproc/qcom_q6v5_mss.c | 16 ++++++----------
+>>  1 file changed, 6 insertions(+), 10 deletions(-)
+>> 
+>> diff --git a/drivers/remoteproc/qcom_q6v5_mss.c 
+>> b/drivers/remoteproc/qcom_q6v5_mss.c
+>> index 51f451311f5fc..f20b39c6ff0ed 100644
+>> --- a/drivers/remoteproc/qcom_q6v5_mss.c
+>> +++ b/drivers/remoteproc/qcom_q6v5_mss.c
+>> @@ -73,6 +73,7 @@
+>>  #define NAV_AXI_IDLE_BIT		BIT(2)
+>> 
+>>  #define HALT_ACK_TIMEOUT_MS		100
+>> +#define NAV_HALT_ACK_TIMEOUT_US		200
+>> 
+>>  /* QDSP6SS_RESET */
+>>  #define Q6SS_STOP_CORE			BIT(0)
+>> @@ -746,7 +747,6 @@ static void q6v5proc_halt_nav_axi_port(struct q6v5 
+>> *qproc,
+>>  				       struct regmap *halt_map,
+>>  				       u32 offset)
+>>  {
+>> -	unsigned long timeout;
+>>  	unsigned int val;
+>>  	int ret;
+>> 
+>> @@ -760,15 +760,11 @@ static void q6v5proc_halt_nav_axi_port(struct 
+>> q6v5 *qproc,
+>>  			   NAV_AXI_HALTREQ_BIT);
+>> 
+>>  	/* Wait for halt ack*/
+>> -	timeout = jiffies + msecs_to_jiffies(HALT_ACK_TIMEOUT_MS);
+>> -	for (;;) {
+>> -		ret = regmap_read(halt_map, offset, &val);
+>> -		if (ret || (val & NAV_AXI_HALTACK_BIT) ||
+>> -		    time_after(jiffies, timeout))
+>> -			break;
+>> -
+>> -		udelay(5);
+>> -	}
+>> +	ret = regmap_read_poll_timeout(halt_map, offset, val,
+>> +				       (val & NAV_AXI_HALTACK_BIT),
+>> +				       5, NAV_HALT_ACK_TIMEOUT_US);
+>> +	if (ret)
+>> +		dev_err(qproc->dev, "nav halt ack timeout\n");
+> 
+> Is there a case where this new print adds value beyond the printout we
+> already have for the case of IDLE_BIT not going high? Can we simply
+> ignore the return value and skip the print?
 
-Thanks
+yes we can skip the print
 
+> 
+> Regards,
+> Bjorn
+> 
+>> 
+>>  	ret = regmap_read(halt_map, offset, &val);
+>>  	if (ret || !(val & NAV_AXI_IDLE_BIT))
+>> --
+>> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora 
+>> Forum,
+>> a Linux Foundation Collaborative Project
 
->
-
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project.
