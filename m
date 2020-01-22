@@ -2,124 +2,129 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URI_HEX autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42318C3F68F
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 16:59:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E14A7C33CB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 16:59:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2306C21569
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 16:59:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B77922467E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 16:59:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579712358;
+	bh=Pah8FKEowSfuW3oA2vi7xcChlEyJ6Lz6Hk0Zu1ZJQmQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=d9n9AoJBz0qJhn8j/kNwhrIGJ+zps6HkTUI+jUC1b/s+c8QfOIpYb7gr5j4k9+AMU
+	 3pU88igPJNhzPZnTImldFGaJ/HDZMF2CaVuNYvRkZJQA6d0WXMyCealWAGQyHzTeU+
+	 D/C6ya2/gEgdOFDzMJhigYzdwVsh4KaWZHyHslTY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728904AbgAVQ7I (ORCPT
+        id S1729058AbgAVQ7S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 11:59:08 -0500
-Received: from smtp1.de.adit-jv.com ([93.241.18.167]:43452 "EHLO
-        smtp1.de.adit-jv.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726083AbgAVQ7I (ORCPT
+        Wed, 22 Jan 2020 11:59:18 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:45296 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726083AbgAVQ7R (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 11:59:08 -0500
-Received: from localhost (smtp1.de.adit-jv.com [127.0.0.1])
-        by smtp1.de.adit-jv.com (Postfix) with ESMTP id 3CBC73C04C1;
-        Wed, 22 Jan 2020 17:59:04 +0100 (CET)
-Received: from smtp1.de.adit-jv.com ([127.0.0.1])
-        by localhost (smtp1.de.adit-jv.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id nI6eqQzdtFkL; Wed, 22 Jan 2020 17:58:59 +0100 (CET)
-Received: from HI2EXCH01.adit-jv.com (hi2exch01.adit-jv.com [10.72.92.24])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtp1.de.adit-jv.com (Postfix) with ESMTPS id 05F543C00C5;
-        Wed, 22 Jan 2020 17:58:59 +0100 (CET)
-Received: from lxhi-065.adit-jv.com (10.72.93.66) by HI2EXCH01.adit-jv.com
- (10.72.92.24) with Microsoft SMTP Server (TLS) id 14.3.468.0; Wed, 22 Jan
- 2020 17:58:58 +0100
-Date:   Wed, 22 Jan 2020 17:58:55 +0100
-From:   Eugeniu Rosca <erosca@de.adit-jv.com>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-CC:     Eugeniu Rosca <erosca@de.adit-jv.com>,
-        John Ogness <john.ogness@linutronix.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Andrew Gabbasov <andrew_gabbasov@mentor.com>,
-        Sanjeev Chugh <sanjeev_chugh@mentor.com>,
-        Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Daniel Wang <wonderfly@google.com>,
-        Dean Jenkins <dean_jenkins@mentor.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Dirk Behme <dirk.behme@de.bosch.com>,
-        Alan Cox <gnomes@lxorguk.ukuu.org.uk>,
-        Jiri Slaby <jslaby@suse.com>,
-        Peter Feiner <pfeiner@google.com>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Eugeniu Rosca <roscaeugeniu@gmail.com>
-Subject: Re: [RFC PATCH v1 00/25] printk: new implementation
-Message-ID: <20200122165855.GA3485@lxhi-065.adit-jv.com>
-References: <20190212143003.48446-1-john.ogness@linutronix.de>
- <20200120230522.GA23636@lxhi-065.adit-jv.com>
- <87v9p4mkhr.fsf@linutronix.de>
- <20200122023422.GA926@lxhi-065.adit-jv.com>
- <CAMuHMdXT9USuHw15nA1mLXsh7RKK68eN0phevC_Jauaa7FnW0Q@mail.gmail.com>
+        Wed, 22 Jan 2020 11:59:17 -0500
+Received: by mail-oi1-f194.google.com with SMTP id n16so6690726oie.12;
+        Wed, 22 Jan 2020 08:59:17 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=mou9J8YjfkvnsPaT9Al7wgNVF7rWGQkRBCyvGjZr+Wo=;
+        b=ThOaV9wZzW/jb23FnbhBqmyl4KgC78rflMRx1XnDzGo8kwjJkznfeimugjv7BBOo2k
+         SZF6MM7r/Fzc31UWUSxJ1E0M7Bj9am/i+ttQkQp7mqztC7uliHwTIv/KsYndnjODyMTW
+         RBDi7ppRj1he5giOhTQbzf5VQVJPpOenZA7bdIsI+Jw81eeSpKJZaTh9zcSPcaK1Pw0a
+         V+MiQ8qBTnDTcD92iZqaP9QUR2AIFv3BVrtDSxKsV7TcFcXmiEhJN0u0dLL4Js7/+bYK
+         AEq4OwOmnueM0xURX/F3A09CYeRqsk2NOaCFZLifMRnp4ljmKhgmN/sLowuvhoxlewKp
+         oaLQ==
+X-Gm-Message-State: APjAAAUBAXakKCMQhQw//SrZ7VJ3s8AODUjCK1sBx8KHLGKSqoDmyQVd
+        d9qElYJDVm1vQl7S21QeXg==
+X-Google-Smtp-Source: APXvYqxRqMrZcWvMtfS9saD5x2uaT9DVAasTND+05WtLmz/+OCZmcSwYW9MtXWDUc9h2IyEzc0blQQ==
+X-Received: by 2002:aca:5083:: with SMTP id e125mr7643124oib.96.1579712355982;
+        Wed, 22 Jan 2020 08:59:15 -0800 (PST)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id e21sm13187177oib.16.2020.01.22.08.59.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 22 Jan 2020 08:59:15 -0800 (PST)
+Received: (nullmailer pid 6651 invoked by uid 1000);
+        Wed, 22 Jan 2020 16:59:14 -0000
+Date:   Wed, 22 Jan 2020 10:59:14 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Saravanan Sekar <sravanhome@gmail.com>
+Cc:     sravanhome@gmail.com, lgirdwood@gmail.com, broonie@kernel.org,
+        robh+dt@kernel.org, mark.rutland@arm.com, mripard@kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v7] dt-bindings: regulator: add document bindings for
+ mpq7920
+Message-ID: <20200122165914.GA3900@bogus>
+References: <20200121192405.25382-1-sravanhome@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAMuHMdXT9USuHw15nA1mLXsh7RKK68eN0phevC_Jauaa7FnW0Q@mail.gmail.com>
-X-Originating-IP: [10.72.93.66]
+In-Reply-To: <20200121192405.25382-1-sravanhome@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Geert,
-
-On Wed, Jan 22, 2020 at 08:31:44AM +0100, Geert Uytterhoeven wrote:
-> On Wed, Jan 22, 2020 at 3:34 AM Eugeniu Rosca <erosca@de.adit-jv.com> wrote:
-> >
-> > So, what's specific to R-Car3, based on my testing, is that the issue
-> > can only be reproduced if the printk storm originates on CPU0 (it does
-> > not matter if from interrupt or task context, both have been tested). If
-> > the printk storm is initiated on any other CPU (there are 7 secondary
-> > ones on R-Car H3), there is no regression in the audio quality/latency.
+On Tue, 21 Jan 2020 20:24:05 +0100, Saravanan Sekar wrote:
+> Add device tree binding information for mpq7920 regulator driver.
+> Example bindings for mpq7920 are added.
 > 
-> The secure stuff is running on CPU0, isn't it?
-> Is that a coincidence?
+> Signed-off-by: Saravanan Sekar <sravanhome@gmail.com>
+> ---
+> 
+> Notes:
+>     Changes on v7 :
+>       - added regualtors child-node under patternProperties, added required
+>       - mps,buck-ovp-disable is not common property, regulator subsystem provides
+>         only over current protection support.
+> 
+>  .../bindings/regulator/mps,mpq7920.yaml       | 118 ++++++++++++++++++
+>  1 file changed, 118 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/regulator/mps,mpq7920.yaml
+> 
 
-Nobody has ruled this out so far. As a side note, except for the ARMv8
-generic IPs, there seems to be quite poor IRQ balancing between the
-CPU cores of R-Car H3 (although this might be unrelated to the issue):
+My bot found errors running 'make dt_binding_check' on your patch:
 
-$ cat /proc/interrupts | egrep -v "(0[ ]*){8}"
-         CPU0   CPU1   CPU2    CPU3 CPU4 CPU5  CPU6  CPU7       
-  3:    55879  17835  14132   33882 6626 4331  6710  4532     GICv2  30 Level     arch_timer
- 16:        1      0      0       0    0    0     0     0     GICv2  38 Level     e6052000.gpio
- 32:      203      0      0       0    0    0     0     0     GICv2  51 Level     e66d8000.i2c
- 33:       95      0      0       0    0    0     0     0     GICv2 205 Level     e60b0000.i2c
- 94:    19339      0      0       0    0    0     0     0     GICv2  71 Level     eth0:ch0:rx_be
-112:    20599      0      0       0    0    0     0     0     GICv2  89 Level     eth0:ch18:tx_be
-118:        2      0      0       0    0    0     0     0     GICv2  95 Level     eth0:ch24:emac
-122:   442092      0      0       0    0    0     0     0     GICv2 196 Level     e6e88000.serial:mux
-124:  2776685      0      0       0    0    0     0     0     GICv2 352 Level     ec700000.dma-controller:0
-160:     2896      0      0       0    0    0     0     0     GICv2 197 Level     ee100000.sd
-161:     5652      0      0       0    0    0     0     0     GICv2 199 Level     ee140000.sd
-162:      147      0      0       0    0    0     0     0     GICv2 200 Level     ee160000.sd
-197:        5      0      0       0    0    0     0     0     GICv2 384 Level     ec500000.sound
-208:        1      0      0       0    0    0     0     0  gpio-rcar  11 Level     e6800000.ethernet-ffffffff:00
-IPI0:   12701 366358 545059 1869017 9817 8065  9327 10644       Rescheduling interrupts
-IPI1:      21     34    111      86  238  191   149   161       Function call interrupts
-IPI5:   16422    709    509     637    0    0  3346     0       IRQ work interrupts
+warning: no schema found in file: Documentation/devicetree/bindings/regulator/mps,mpq7920.yaml
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/regulator/mps,mpq7920.yaml: ignoring, error in schema: properties: regulators: properties: mps,switch-freq
+Documentation/devicetree/bindings/display/simple-framebuffer.example.dts:21.16-37.11: Warning (chosen_node_is_root): /example-0/chosen: chosen node must be at root node
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/regulator/mps,mpq7920.yaml: properties:regulators:properties:mps,switch-freq: {'$ref': '/schemas/types.yaml#/definitions/uint8', 'enum': [0, 1, 2, 3], 'default': 2, 'description': 'switching frequency must be one of following corresponding value\n1.1MHz, 1.65MHz, 2.2MHz, 2.75MHz\n'} is not valid under any of the given schemas (Possible causes of the failure):
+	/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/regulator/mps,mpq7920.yaml: properties:regulators:properties:mps,switch-freq: 'not' is a required property
+	/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/regulator/mps,mpq7920.yaml: properties:regulators:properties:mps,switch-freq:enum:0: 0 is not of type 'string'
+	/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/regulator/mps,mpq7920.yaml: properties:regulators:properties:mps,switch-freq:enum:1: 1 is not of type 'string'
+	/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/regulator/mps,mpq7920.yaml: properties:regulators:properties:mps,switch-freq:enum:2: 2 is not of type 'string'
+	/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/regulator/mps,mpq7920.yaml: properties:regulators:properties:mps,switch-freq:enum:3: 3 is not of type 'string'
 
-BTW/FYI, I raised a bug report to Renesas and specifically asked them
-to approach you, hoping that your massive experience in the serial
-drivers will help. If you arrive to any conclusions in that context,
-we would be delighted to hear from you.
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/regulator/mps,mpq7920.yaml: properties:regulators:patternProperties:^buck[1-4]$:properties:mps,buck-softstart: {'$ref': '/schemas/types.yaml#/definitions/uint8', 'enum': [0, 1, 2, 3], 'description': 'defines the soft start time of this buck, must be one of the following\ncorresponding values 150us, 300us, 610us, 920us\n'} is not valid under any of the given schemas (Possible causes of the failure):
+	/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/regulator/mps,mpq7920.yaml: properties:regulators:patternProperties:^buck[1-4]$:properties:mps,buck-softstart: 'not' is a required property
+	/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/regulator/mps,mpq7920.yaml: properties:regulators:patternProperties:^buck[1-4]$:properties:mps,buck-softstart:enum:0: 0 is not of type 'string'
+	/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/regulator/mps,mpq7920.yaml: properties:regulators:patternProperties:^buck[1-4]$:properties:mps,buck-softstart:enum:1: 1 is not of type 'string'
+	/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/regulator/mps,mpq7920.yaml: properties:regulators:patternProperties:^buck[1-4]$:properties:mps,buck-softstart:enum:2: 2 is not of type 'string'
+	/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/regulator/mps,mpq7920.yaml: properties:regulators:patternProperties:^buck[1-4]$:properties:mps,buck-softstart:enum:3: 3 is not of type 'string'
 
--- 
-Best Regards
-Eugeniu Rosca
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/regulator/mps,mpq7920.yaml: properties:regulators:patternProperties:^buck[1-4]$:properties:mps,buck-phase-delay: {'$ref': '/schemas/types.yaml#/definitions/uint8', 'enum': [0, 1, 2, 3], 'description': 'defines the phase delay of this buck, must be one of the following\ncorresponding values 0deg, 90deg, 180deg, 270deg\n'} is not valid under any of the given schemas (Possible causes of the failure):
+	/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/regulator/mps,mpq7920.yaml: properties:regulators:patternProperties:^buck[1-4]$:properties:mps,buck-phase-delay: 'not' is a required property
+	/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/regulator/mps,mpq7920.yaml: properties:regulators:patternProperties:^buck[1-4]$:properties:mps,buck-phase-delay:enum:0: 0 is not of type 'string'
+	/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/regulator/mps,mpq7920.yaml: properties:regulators:patternProperties:^buck[1-4]$:properties:mps,buck-phase-delay:enum:1: 1 is not of type 'string'
+	/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/regulator/mps,mpq7920.yaml: properties:regulators:patternProperties:^buck[1-4]$:properties:mps,buck-phase-delay:enum:2: 2 is not of type 'string'
+	/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/regulator/mps,mpq7920.yaml: properties:regulators:patternProperties:^buck[1-4]$:properties:mps,buck-phase-delay:enum:3: 3 is not of type 'string'
+
+Documentation/devicetree/bindings/Makefile:12: recipe for target 'Documentation/devicetree/bindings/regulator/mps,mpq7920.example.dts' failed
+make[1]: *** [Documentation/devicetree/bindings/regulator/mps,mpq7920.example.dts] Error 1
+Makefile:1263: recipe for target 'dt_binding_check' failed
+make: *** [dt_binding_check] Error 2
+
+See https://patchwork.ozlabs.org/patch/1226717
+Please check and re-submit.
+
+
+The errors are too helpful here. The problem appears to be that '$ref' 
+has to be under an 'allOf' if there are other constraints.
+
+Rob
