@@ -2,195 +2,127 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B997C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 18:51:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A5C9C3F68F
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 18:52:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B39024656
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 18:51:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TcMDoz2b"
+	by mail.kernel.org (Postfix) with ESMTP id 2B4F424656
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 18:52:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579719159;
+	bh=5N2lby6WvqFZeWW6SAuM+U0/JmDPEWrEqossVjyGV7w=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=2IvEW/8Jumtha6vqpQ19aqZd+3DoLT0y6c1QXgoe6+E75wQKp659fevYD6mo4mts3
+	 vDB+BtWj149Y9Q8CCVUFao3Jf4iEK+nBekso40UAArk0hOCXsYUB0SAvvccOiGPj8e
+	 b02oQXNSJzKrPgeMOOQSivjMF9RH+wMVi3oawZw0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728913AbgAVSvz (ORCPT
+        id S1728981AbgAVSwi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 13:51:55 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:39479 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726026AbgAVSvy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 13:51:54 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579719113;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=AacXIVvW/L9Wi/tQd6CQ3WlW5xZVTV3hdmJ5WDrZQuI=;
-        b=TcMDoz2b4nBj2FRpVN1NNbovfP2YxQIlUTNtZogjsxVvl4H6Mrf5XvEM7oEzS+vSl7ohc0
-        WfZ8ExiyLgHm2RUscPMgedOvNTP0YUbQqursZR/tdqe4DwUYfj81sY7mIQw3cwGnf1+IIa
-        UCpFlNFiOy3wvT1/zE8oezHmL1q7Tpg=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-38-2slksOrWPoOmy2_535dE_w-1; Wed, 22 Jan 2020 13:51:50 -0500
-X-MC-Unique: 2slksOrWPoOmy2_535dE_w-1
-Received: by mail-wr1-f71.google.com with SMTP id c6so376910wrm.18
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jan 2020 10:51:50 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=AacXIVvW/L9Wi/tQd6CQ3WlW5xZVTV3hdmJ5WDrZQuI=;
-        b=kW1dS2Q/Grm/4axaROvZXFRQax3UWOSXDoNOkiT3UtVOftCc+fdfM2+Wx3zZrqPUCx
-         dm6ePNQSZ46RDl04qzsgp//gL/I6Tg74rR370tzz88y5pcd4Xc8ObLVAEClpW0vDEbUd
-         Ib3xfyNtZXwanKz7nw50vVn3QmqCifCZhV62bCsbI0YobAHaectMKz1ALJOBTD7VJbMs
-         ZbickFpFQ6t7Jzxa+a36ga4GBKtLMUyUKmA8SO7nvv5jxh6/foiPOQX+64MDGyOIFjcx
-         axGNZiAy0DLAP9nTrbRMd/v9LEOAiErIN/sF245tpucURLTKiCjRyh28trCaz1U5ofEX
-         r31A==
-X-Gm-Message-State: APjAAAWCPvWMyV/4HV08hq+P+eaEuEh4kB0w0GlwuwaictIPQi4P7NIB
-        8QfQici7HkFnG7Kvu4w2OmjZpa8pSdlVq6yCZ3msdMrRbod0lV44Bh6PNO6QmgmxqKrMzxgnyFL
-        mUaJRvXrMCD0o4goYyssQM3I9
-X-Received: by 2002:a7b:cf0d:: with SMTP id l13mr4555116wmg.13.1579719109389;
-        Wed, 22 Jan 2020 10:51:49 -0800 (PST)
-X-Google-Smtp-Source: APXvYqwjoe52IEp8wH9WLT03b8oTlH5pHHcleUFCdfM3BUg8u4w8DvvniP1058w8iBiqweitzvHTNg==
-X-Received: by 2002:a7b:cf0d:: with SMTP id l13mr4555090wmg.13.1579719109177;
-        Wed, 22 Jan 2020 10:51:49 -0800 (PST)
-Received: from [192.168.1.81] (host81-140-166-164.range81-140.btcentralplus.com. [81.140.166.164])
-        by smtp.gmail.com with ESMTPSA id v17sm58395781wrt.91.2020.01.22.10.51.48
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 22 Jan 2020 10:51:48 -0800 (PST)
-Subject: Re: [POC 09/23] livepatch: Handle race when livepatches are reloaded
- during a module load
-To:     Petr Mladek <pmladek@suse.com>, Jiri Kosina <jikos@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Miroslav Benes <mbenes@suse.cz>
-Cc:     Joe Lawrence <joe.lawrence@redhat.com>,
-        Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>,
-        Nicolai Stange <nstange@suse.de>,
-        live-patching@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200117150323.21801-1-pmladek@suse.com>
- <20200117150323.21801-10-pmladek@suse.com>
-From:   Julien Thierry <jthierry@redhat.com>
-Message-ID: <9f79bff4-42b2-ad1e-6ca6-a3464ab56ef4@redhat.com>
-Date:   Wed, 22 Jan 2020 18:51:47 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Wed, 22 Jan 2020 13:52:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54804 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726026AbgAVSwi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 13:52:38 -0500
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 184A821835;
+        Wed, 22 Jan 2020 18:52:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579719157;
+        bh=5N2lby6WvqFZeWW6SAuM+U0/JmDPEWrEqossVjyGV7w=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=GCTP14tWdJpqduyaoSOjxqcDcDRk88aa+t7uhARNpQVY0cYRdiiVje5oW20xDqhq/
+         xmMgDozhkztwNJcnyPKixFGN9FCL5e7+1UTQtKroaekg6qd6/IqJBMEaJ2sLVwuhBJ
+         +swTUIPVhAae75S0AO/yDPKC6k+AIz8QuEbHRWr4=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1iuL7D-000nzY-Dp; Wed, 22 Jan 2020 18:52:35 +0000
 MIME-Version: 1.0
-In-Reply-To: <20200117150323.21801-10-pmladek@suse.com>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
+Date:   Wed, 22 Jan 2020 18:52:35 +0000
+From:   Marc Zyngier <maz@kernel.org>
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        Evan Green <evgreen@chromium.org>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Christoph Hellwig <hch@lst.de>,
+        Rajat Jain <rajatxjain@gmail.com>
+Subject: Re: [PATCH] PCI/MSI: Avoid torn updates to MSI pairs
+In-Reply-To: <20200122172816.GA139285@google.com>
+References: <20200122172816.GA139285@google.com>
+Message-ID: <9c27a991dfc5237397001ac8e5e613a4@kernel.org>
+X-Sender: maz@kernel.org
+User-Agent: Roundcube Webmail/1.3.8
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: helgaas@kernel.org, evgreen@chromium.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, tglx@linutronix.de, hch@lst.de, rajatxjain@gmail.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Petr,
-
-On 1/17/20 3:03 PM, Petr Mladek wrote:
-> klp_module_coming() might fail to load a livepatch module when
-> the related livepatch gets reloaded in the meantime.
+On 2020-01-22 17:28, Bjorn Helgaas wrote:
+> [+cc Thomas, Marc, Christoph, Rajat]
 > 
-> Detect this situation by adding a timestamp into struct klp_patch.
-> local_clock is enough because klp_mutex must be released and taken
-> several times during this scenario.
+> On Thu, Jan 16, 2020 at 01:31:28PM -0800, Evan Green wrote:
+>> __pci_write_msi_msg() updates three registers in the device: address
+>> high, address low, and data. On x86 systems, address low contains
+>> CPU targeting info, and data contains the vector. The order of writes
+>> is address, then data.
+>> 
+>> This is problematic if an interrupt comes in after address has
+>> been written, but before data is updated, and the SMP affinity of
+>> the interrupt is changing. In this case, the interrupt targets the
+>> wrong vector on the new CPU.
+>> 
+>> This case is pretty easy to stumble into using xhci and CPU 
+>> hotplugging.
+>> Create a script that targets interrupts at a set of cores and then
+>> offlines those cores. Put some stress on USB, and then watch xhci lose
+>> an interrupt and die.
+>> 
+>> Avoid this by disabling MSIs during the update.
+>> 
+>> Signed-off-by: Evan Green <evgreen@chromium.org>
+>> ---
+>> 
+>> 
+>> Bjorn,
+>> I was unsure whether disabling MSIs temporarily is actually an okay
+>> thing to do. I considered using the mask bit, but got the impression
+>> that not all devices support the mask bit. Let me know if this going 
+>> to
+>> cause problems or there's a better way. I can include the repro
+>> script I used to cause mayhem if needed.
 > 
-> Signed-off-by: Petr Mladek <pmladek@suse.com>
-> ---
->   include/linux/livepatch.h | 2 ++
->   kernel/livepatch/core.c   | 9 +++++----
->   2 files changed, 7 insertions(+), 4 deletions(-)
+> I suspect this *is* a problem because I think disabling MSI doesn't
+> disable interrupts; it just means the device will interrupt using INTx
+> instead of MSI.  And the driver is probably not prepared to handle
+> INTx.
 > 
-> diff --git a/include/linux/livepatch.h b/include/linux/livepatch.h
-> index a4567c17a9f2..feb33f023f9f 100644
-> --- a/include/linux/livepatch.h
-> +++ b/include/linux/livepatch.h
-> @@ -155,6 +155,7 @@ struct klp_state {
->    * @obj_list:	dynamic list of the object entries
->    * @enabled:	the patch is enabled (but operation may be incomplete)
->    * @forced:	was involved in a forced transition
-> + * ts:		timestamp when the livepatch has been loaded
-
-Nit: Missing '@'.
-
->    * @free_work:	patch cleanup from workqueue-context
->    * @finish:	for waiting till it is safe to remove the patch module
->    */
-> @@ -171,6 +172,7 @@ struct klp_patch {
->   	struct list_head obj_list;
->   	bool enabled;
->   	bool forced;
-> +	u64 ts;
->   	struct work_struct free_work;
->   	struct completion finish;
->   };
-> diff --git a/kernel/livepatch/core.c b/kernel/livepatch/core.c
-> index 34e3ee2be7ef..8e693c58b736 100644
-> --- a/kernel/livepatch/core.c
-> +++ b/kernel/livepatch/core.c
-> @@ -20,6 +20,7 @@
->   #include <linux/moduleloader.h>
->   #include <linux/completion.h>
->   #include <linux/memory.h>
-> +#include <linux/sched/clock.h>
->   #include <asm/cacheflush.h>
->   #include "core.h"
->   #include "patch.h"
-> @@ -854,6 +855,7 @@ static int klp_init_patch_early(struct klp_patch *patch)
->   	kobject_init(&patch->kobj, &klp_ktype_patch);
->   	patch->enabled = false;
->   	patch->forced = false;
-> +	patch->ts = local_clock();
->   	INIT_WORK(&patch->free_work, klp_free_patch_work_fn);
->   	init_completion(&patch->finish);
->   
-> @@ -1324,6 +1326,7 @@ int klp_module_coming(struct module *mod)
->   {
->   	char patch_name[MODULE_NAME_LEN];
->   	struct klp_patch *patch;
-> +	u64 patch_ts;
->   	int ret = 0;
->   
->   	if (WARN_ON(mod->state != MODULE_STATE_COMING))
-> @@ -1339,6 +1342,7 @@ int klp_module_coming(struct module *mod)
->   			continue;
->   
->   		strncpy(patch_name, patch->obj->patch_name, sizeof(patch_name));
-> +		patch_ts = patch->ts;
->   		mutex_unlock(&klp_mutex);
->   
->   		ret = klp_try_load_object(patch_name, mod->name);
-> @@ -1346,14 +1350,11 @@ int klp_module_coming(struct module *mod)
->   		 * The load might have failed because the patch has
->   		 * been removed in the meantime. In this case, the
->   		 * error might be ignored.
-> -		 *
-> -		 * FIXME: It is not fully proof. The patch might have be
-> -		 * unloaded and loaded again in the mean time.
->   		 */
->   		mutex_lock(&klp_mutex);
->   		if (ret) {
->   			patch = klp_find_patch(patch_name);
-> -			if (patch)
-> +			if (patch && patch->ts == patch_ts)
->   				goto err;
-
-If the timestamps differ, we have found the klp_patch, feels a bit of a 
-waste to go through the list again without trying to load it right away.
-
-Admittedly this is to solve a race condition which should not even 
-happen very often...
-
->   			ret = 0;
->   		}
+> PCIe r5.0, sec 7.7.1.2, seems relevant: "If MSI and MSI-X are both
+> disabled, the Function requests servicing using INTx interrupts (if
+> supported)."
 > 
+> Maybe the IRQ guys have ideas about how to solve this?
 
-Cheers,
+Not from the top of my head. MSI-X should always support masking,
+so we could at least handle that case properly and not loose interrupts.
+Good ol' MSI is more tricky. Disabling MSI, as Bjorn pointed out, is
+just going to make the problem worse.
 
+There is also the problem that a number of drivers pick MSI instead of
+MSI-X.
+
+         M.
 -- 
-Julien Thierry
-
+Jazz is not dead. It just smells funny...
