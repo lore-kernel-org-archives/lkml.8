@@ -2,117 +2,100 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2300C33CB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:39:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C567C33CAF
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:40:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C864720704
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:39:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="taziyYJQ"
+	by mail.kernel.org (Postfix) with ESMTP id 5C92820704
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:40:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729126AbgAVNjU (ORCPT
+        id S1727590AbgAVNkE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 08:39:20 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:46584 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725790AbgAVNjU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 08:39:20 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00MDd0cM057467;
-        Wed, 22 Jan 2020 07:39:00 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1579700340;
-        bh=co1m/tnZ+ImTwD3yuXyZxVaG3wlifWau9XX6MEe8Chg=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=taziyYJQlSzT2GyfKCypQhi5IB6lZr9GRxURow+X6+pPSQokO3HMZ5n1Ktm1eOZV+
-         QOsv5YUsmbCQO9rciykyNX8OSaR8Ff8g2cuKfD4CCH/IloXOHZA9/Fm6d1FFzbQAcT
-         LwBwM8c5O1wWlnzNP20hbrcxQGLBFFveLKn91q14=
-Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00MDd05r065172
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 22 Jan 2020 07:39:00 -0600
-Received: from DFLE112.ent.ti.com (10.64.6.33) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 22
- Jan 2020 07:38:59 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Wed, 22 Jan 2020 07:38:59 -0600
-Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00MDcxqI104110;
-        Wed, 22 Jan 2020 07:38:59 -0600
-Subject: Re: [PATCH 1/3] dt-bindings: net: can: m_can: Add Documentation for
- stb-gpios
-To:     Faiz Abbas <faiz_abbas@ti.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <netdev@vger.kernel.org>, <linux-can@vger.kernel.org>
-CC:     <catalin.marinas@arm.com>, <mark.rutland@arm.com>,
-        <robh+dt@kernel.org>, <davem@davemloft.net>, <mkl@pengutronix.de>,
-        <wg@grandegger.com>, <sriram.dash@samsung.com>, <nm@ti.com>,
-        <t-kristo@ti.com>
-References: <20200122080310.24653-1-faiz_abbas@ti.com>
- <20200122080310.24653-2-faiz_abbas@ti.com>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <c3b0eeb8-bd78-aa96-4783-62dc93f03bfe@ti.com>
-Date:   Wed, 22 Jan 2020 07:35:52 -0600
+        Wed, 22 Jan 2020 08:40:04 -0500
+Received: from foss.arm.com ([217.140.110.172]:56732 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725790AbgAVNkE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 08:40:04 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 991D3328;
+        Wed, 22 Jan 2020 05:40:03 -0800 (PST)
+Received: from [10.37.8.106] (unknown [10.37.8.106])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 740A23F52E;
+        Wed, 22 Jan 2020 05:40:00 -0800 (PST)
+Subject: Re: [PATCH v3 4/7] drm/panfrost: Add support for multiple regulators
+To:     Nicolas Boichat <drinkcat@chromium.org>,
+        Mark Brown <broonie@kernel.org>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Devicetree List <devicetree@vger.kernel.org>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        David Airlie <airlied@linux.ie>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>,
+        Hsin-Yi Wang <hsinyi@chromium.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>
+References: <20200114071602.47627-1-drinkcat@chromium.org>
+ <20200114071602.47627-5-drinkcat@chromium.org>
+ <20200114151643.GW3897@sirena.org.uk>
+ <CANMq1KC_-g45wdGgGiBmEyVXAJMkKwsJBJXGBHOMJk_=NyfpYw@mail.gmail.com>
+From:   Steven Price <steven.price@arm.com>
+Message-ID: <78d5d977-50d5-f28e-0c4c-fd1df9e868e9@arm.com>
+Date:   Wed, 22 Jan 2020 13:40:03 +0000
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-In-Reply-To: <20200122080310.24653-2-faiz_abbas@ti.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+In-Reply-To: <CANMq1KC_-g45wdGgGiBmEyVXAJMkKwsJBJXGBHOMJk_=NyfpYw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Faiz
+On 21/01/2020 04:37, Nicolas Boichat wrote:
+> On Tue, Jan 14, 2020 at 10:16 PM Mark Brown <broonie@kernel.org> wrote:
+>>
+>> On Tue, Jan 14, 2020 at 03:15:59PM +0800, Nicolas Boichat wrote:
+>>
+>>>   - I couldn't find a way to detect the number of regulators in the
+>>>     device tree, if we wanted to refuse to probe the device if there
+>>>     are too many regulators, which might be required for safety, see
+>>>     the thread on v2 [1].
+>>
+>> You'd need to enumerate all the properties of the device and look
+>> for things matching *-supply.
+> 
+> I see ,-) I was hoping for something slightly cleaner, or maybe an
+> existing function in the core.
+> 
+> Steven: How strongly do you feel about this? If so I can add that
+> check in the next revision.
 
-On 1/22/20 2:03 AM, Faiz Abbas wrote:
-> The CAN transceiver on some boards has an STB pin which is
-> used to control its standby mode. Add an optional property
-> stb-gpios to toggle the same.
->
-> Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
-> Signed-off-by: Sekhar Nori <nsekhar@ti.com>
-> ---
->   Documentation/devicetree/bindings/net/can/m_can.txt | 2 ++
->   1 file changed, 2 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/net/can/m_can.txt b/Documentation/devicetree/bindings/net/can/m_can.txt
-> index ed614383af9c..cc8ba3f7a2aa 100644
-> --- a/Documentation/devicetree/bindings/net/can/m_can.txt
-> +++ b/Documentation/devicetree/bindings/net/can/m_can.txt
-> @@ -48,6 +48,8 @@ Optional Subnode:
->   			  that can be used for CAN/CAN-FD modes. See
->   			  Documentation/devicetree/bindings/net/can/can-transceiver.txt
->   			  for details.
-> +stb-gpios		: gpio node to toggle the STB (standby) signal on the transceiver
-> +
+I'm not that strongly bothered about it - my only worry is that there 
+may be hardware out there that might be broken by not activating a 
+regulator. But I don't know how common this multi-regulator design is in 
+practise.
 
-The m_can.txt is for the m_can framework.  If this is specific to the 
-platform then it really does not belong here.
+Thanks,
 
-If the platform has specific nodes then maybe we need a 
-m_can_platform.txt binding for specific platform nodes.  But I leave 
-that decision to Rob.
+Steve
 
-Also I prefer you spell out standby like the gpios are spelled out in 
-the tcan binding.
+> Also, just a heads-up, I'm out for the next 2 weeks, I'll send v4 after that.
+> 
+>>
+>> Reviewed-by: Mark Brown <broonie@kernel.org>
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+> 
 
-Dan
-
-
->   Example:
->   SoC dtsi:
->   m_can1: can@20e8000 {
