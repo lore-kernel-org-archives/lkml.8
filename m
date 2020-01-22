@@ -2,235 +2,118 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52BD3C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 19:09:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0214C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 19:09:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37FA824673
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 19:09:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C568D2465B
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 19:09:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728939AbgAVTJO (ORCPT
+        id S1729012AbgAVTJz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 14:09:14 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:36468 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728809AbgAVTJN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 14:09:13 -0500
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: ezequiel)
-        with ESMTPSA id 57FAF28FD19
-From:   Ezequiel Garcia <ezequiel@collabora.com>
-To:     Sandy Huang <hjc@rock-chips.com>,
-        =?UTF-8?q?Heiko=20St=C3=BCbner?= <heiko@sntech.de>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>
-Cc:     linux-rockchip@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        kernel@collabora.com, Douglas Anderson <dianders@chromium.org>,
-        Tomasz Figa <tfiga@chromium.org>,
-        Mark Yao <mark.yao@rock-chips.com>,
-        Ezequiel Garcia <ezequiel@collabora.com>
-Subject: [PATCH] drm/rockchip: Add GEM create ioctl support
-Date:   Wed, 22 Jan 2020 16:08:55 -0300
-Message-Id: <20200122190855.20385-1-ezequiel@collabora.com>
-X-Mailer: git-send-email 2.25.0
+        Wed, 22 Jan 2020 14:09:55 -0500
+Received: from mga09.intel.com ([134.134.136.24]:12402 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726004AbgAVTJz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 14:09:55 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Jan 2020 11:09:48 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,350,1574150400"; 
+   d="scan'208";a="229464062"
+Received: from ray.jf.intel.com (HELO [10.7.201.139]) ([10.7.201.139])
+  by orsmga006.jf.intel.com with ESMTP; 22 Jan 2020 11:09:48 -0800
+Subject: Re: [PATCH] x86/pkeys: add check for pkey "overflow"
+To:     Cyrill Gorcunov <gorcunov@gmail.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>
+Cc:     linux-kernel@vger.kernel.org, alex.shi@linux.alibaba.com,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
+        x86@kernel.org, bigeasy@linutronix.de,
+        pankaj.laxminarayan.bharadiya@intel.com, aubrey.li@linux.intel.com
+References: <20200122165346.AD4DA150@viggo.jf.intel.com>
+ <20200122185111.GK2437@uranus>
+From:   Dave Hansen <dave.hansen@intel.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+Message-ID: <99b572a5-6a98-d22a-01f1-8bab60e96155@intel.com>
+Date:   Wed, 22 Jan 2020 11:09:47 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
+In-Reply-To: <20200122185111.GK2437@uranus>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mark Yao <mark.yao@rock-chips.com>
+On 1/22/20 10:51 AM, Cyrill Gorcunov wrote:
+>> +	/*
+>> +	 * This code should only be called with valid 'pkey'
+>> +	 * values originating from in-kernel users.  Complain
+>> +	 * if a bad value is observed.
+>> +	 */
+>> +	WARN_ON_ONCE(pkey >= arch_max_pkey());
+> Should not we rather abort this operation and exit with EINVAL
+> or something similar instead of calling wrmsr with overflowed
+> value? IOW,
+> 
+> 	if (pkey >= arch_max_pkey()) {
+> 		WARN_ON_ONCE(1);
+> 		return -EINVAL;
+> 	}
 
-Add driver-specific GEM create/offset ioctls, to allow users
-to create objects of arbitrary size.
+I don't feel strongly about it.  The reason I didn't do that is to
+minimize the chance that this would cause any functional regression.
 
-These are required to allocate buffers to be shared with
-video decoder block, with hardware-specific needs such as
-macroblock alignment and extra room for motion vectors.
-
-Signed-off-by: Mark Yao <mark.yao@rock-chips.com>
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
-Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
----
- drivers/gpu/drm/rockchip/rockchip_drm_drv.c | 11 ++++
- drivers/gpu/drm/rockchip/rockchip_drm_gem.c | 21 +++++++
- drivers/gpu/drm/rockchip/rockchip_drm_gem.h | 13 +++++
- include/uapi/drm/rockchip_drm.h             | 61 +++++++++++++++++++++
- 4 files changed, 106 insertions(+)
- create mode 100644 include/uapi/drm/rockchip_drm.h
-
-diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_drv.c b/drivers/gpu/drm/rockchip/rockchip_drm_drv.c
-index ca12a35483f9..bd35a0b1aa5a 100644
---- a/drivers/gpu/drm/rockchip/rockchip_drm_drv.c
-+++ b/drivers/gpu/drm/rockchip/rockchip_drm_drv.c
-@@ -22,6 +22,7 @@
- #include <drm/drm_of.h>
- #include <drm/drm_probe_helper.h>
- #include <drm/drm_vblank.h>
-+#include <drm/rockchip_drm.h>
- 
- #include "rockchip_drm_drv.h"
- #include "rockchip_drm_fb.h"
-@@ -206,6 +207,14 @@ static void rockchip_drm_unbind(struct device *dev)
- 	drm_dev_put(drm_dev);
- }
- 
-+static const struct drm_ioctl_desc rockchip_ioctls[] = {
-+	DRM_IOCTL_DEF_DRV(ROCKCHIP_GEM_CREATE, rockchip_gem_create_ioctl,
-+			  DRM_UNLOCKED | DRM_AUTH),
-+	DRM_IOCTL_DEF_DRV(ROCKCHIP_GEM_MAP_OFFSET,
-+			  rockchip_gem_map_offset_ioctl,
-+			  DRM_UNLOCKED | DRM_AUTH),
-+};
-+
- static const struct file_operations rockchip_drm_driver_fops = {
- 	.owner = THIS_MODULE,
- 	.open = drm_open,
-@@ -230,6 +239,8 @@ static struct drm_driver rockchip_drm_driver = {
- 	.gem_prime_vmap		= rockchip_gem_prime_vmap,
- 	.gem_prime_vunmap	= rockchip_gem_prime_vunmap,
- 	.gem_prime_mmap		= rockchip_gem_mmap_buf,
-+	.ioctls			= rockchip_ioctls,
-+	.num_ioctls		= ARRAY_SIZE(rockchip_ioctls),
- 	.fops			= &rockchip_drm_driver_fops,
- 	.name	= DRIVER_NAME,
- 	.desc	= DRIVER_DESC,
-diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_gem.c b/drivers/gpu/drm/rockchip/rockchip_drm_gem.c
-index 0d1884684dcb..315fa67d5668 100644
---- a/drivers/gpu/drm/rockchip/rockchip_drm_gem.c
-+++ b/drivers/gpu/drm/rockchip/rockchip_drm_gem.c
-@@ -12,6 +12,7 @@
- #include <drm/drm_gem.h>
- #include <drm/drm_prime.h>
- #include <drm/drm_vma_manager.h>
-+#include <drm/rockchip_drm.h>
- 
- #include "rockchip_drm_drv.h"
- #include "rockchip_drm_gem.h"
-@@ -428,6 +429,26 @@ int rockchip_gem_dumb_create(struct drm_file *file_priv,
- 	return PTR_ERR_OR_ZERO(rk_obj);
- }
- 
-+int rockchip_gem_map_offset_ioctl(struct drm_device *drm, void *data,
-+				  struct drm_file *file_priv)
-+{
-+	struct drm_rockchip_gem_map_off *args = data;
-+
-+	return drm_gem_dumb_map_offset(file_priv, drm, args->handle,
-+				       &args->offset);
-+}
-+
-+int rockchip_gem_create_ioctl(struct drm_device *dev, void *data,
-+			      struct drm_file *file_priv)
-+{
-+	struct drm_rockchip_gem_create *args = data;
-+	struct rockchip_gem_object *rk_obj;
-+
-+	rk_obj = rockchip_gem_create_with_handle(file_priv, dev, args->size,
-+						 &args->handle);
-+	return PTR_ERR_OR_ZERO(rk_obj);
-+}
-+
- /*
-  * Allocate a sg_table for this GEM object.
-  * Note: Both the table's contents, and the sg_table itself must be freed by
-diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_gem.h b/drivers/gpu/drm/rockchip/rockchip_drm_gem.h
-index 7ffc541bea07..87fe58b05bf6 100644
---- a/drivers/gpu/drm/rockchip/rockchip_drm_gem.h
-+++ b/drivers/gpu/drm/rockchip/rockchip_drm_gem.h
-@@ -50,4 +50,17 @@ void rockchip_gem_free_object(struct drm_gem_object *obj);
- int rockchip_gem_dumb_create(struct drm_file *file_priv,
- 			     struct drm_device *dev,
- 			     struct drm_mode_create_dumb *args);
-+
-+/*
-+ * request gem object creation and buffer allocation as the size
-+ * that it is calculated with framebuffer information such as width,
-+ * height and bpp.
-+ */
-+int rockchip_gem_create_ioctl(struct drm_device *dev, void *data,
-+			      struct drm_file *file_priv);
-+
-+/* get buffer offset to map to user space. */
-+int rockchip_gem_map_offset_ioctl(struct drm_device *dev, void *data,
-+				  struct drm_file *file_priv);
-+
- #endif /* _ROCKCHIP_DRM_GEM_H */
-diff --git a/include/uapi/drm/rockchip_drm.h b/include/uapi/drm/rockchip_drm.h
-new file mode 100644
-index 000000000000..3185f72f36b9
---- /dev/null
-+++ b/include/uapi/drm/rockchip_drm.h
-@@ -0,0 +1,61 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+
-+/*
-+ * Copyright (c) Fuzhou Rockchip Electronics Co.Ltd
-+ * Authors:
-+ *       Mark Yao <yzq@rock-chips.com>
-+ *
-+ * base on exynos_drm.h
-+ */
-+
-+#ifndef _ROCKCHIP_DRM_H
-+#define _ROCKCHIP_DRM_H
-+
-+#include <drm/drm.h>
-+
-+#if defined(__cplusplus)
-+extern "C" {
-+#endif
-+
-+/**
-+ * User-desired buffer creation information structure.
-+ *
-+ * @size: user-desired memory allocation size.
-+ * @flags: user request for setting memory type or cache attributes.
-+ * @handle: returned a handle to created gem object.
-+ *     - this handle will be set by gem module of kernel side.
-+ */
-+struct drm_rockchip_gem_create {
-+	uint64_t size;
-+	uint32_t flags;
-+	uint32_t handle;
-+};
-+
-+/**
-+ * A structure for getting buffer offset.
-+ *
-+ * @handle: a pointer to gem object created.
-+ * @pad: just padding to be 64-bit aligned.
-+ * @offset: relatived offset value of the memory region allocated.
-+ *     - this value should be set by user.
-+ */
-+struct drm_rockchip_gem_map_off {
-+	uint32_t handle;
-+	uint32_t pad;
-+	uint64_t offset;
-+};
-+
-+#define DRM_ROCKCHIP_GEM_CREATE		0x00
-+#define DRM_ROCKCHIP_GEM_MAP_OFFSET	0x01
-+
-+#define DRM_IOCTL_ROCKCHIP_GEM_CREATE	DRM_IOWR(DRM_COMMAND_BASE + \
-+		DRM_ROCKCHIP_GEM_CREATE, struct drm_rockchip_gem_create)
-+
-+#define DRM_IOCTL_ROCKCHIP_GEM_MAP_OFFSET	DRM_IOWR(DRM_COMMAND_BASE + \
-+		DRM_ROCKCHIP_GEM_MAP_OFFSET, struct drm_rockchip_gem_map_off)
-+
-+#if defined(__cplusplus)
-+}
-+#endif
-+
-+#endif /* _ROCKCHIP_DRM_H */
--- 
-2.25.0
-
+It's not a huge chance, but I've certainly fat-fingered my share of
+off-by-one bugs.
