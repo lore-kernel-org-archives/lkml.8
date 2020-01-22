@@ -2,119 +2,109 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0610C3F68F
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 23:28:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68E2CC3F68F
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 23:37:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FD5224655
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 23:28:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579735715;
-	bh=fl/FMy92wMlIZM3p6zcuvm5HDMj2TMKFk/1sgHOVXoQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=s3h4tdoGmaiI/sd7y211cRFxPzSYtj3N0UBlJO/juf++OphcXNzQXAZZrw5bJfRzn
-	 U1+qNUIq+/W2YxlqHy2ZNpYWcBTR1EwTAAiOMpE/DKv4ylYCHg+cFgFfyHx8Yoayir
-	 fPIRKxSYKQUzLEdMbct3szsWWD6Sio2qAmOy8NhY=
+	by mail.kernel.org (Postfix) with ESMTP id 4323021835
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 23:37:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726083AbgAVX2e (ORCPT
+        id S1726780AbgAVXhl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 18:28:34 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:34274 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725911AbgAVX2e (ORCPT
+        Wed, 22 Jan 2020 18:37:41 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:38871 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726118AbgAVXhl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 18:28:34 -0500
-Received: by mail-ot1-f67.google.com with SMTP id a15so1069203otf.1;
-        Wed, 22 Jan 2020 15:28:34 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=1YfEIxuF6PBjCYKAOaWqNOw3eBB9MiPAy/z1gh+EZB8=;
-        b=XrATJb9zWSIBeAdOaNZoEZO9vgeUBiyE0EtQGR+XKD9fs3ZQzDawuaNPFipIzn8H43
-         MZrIY4THLXcxNE8n18YJsjyRQIgLev8ghFyMX0WVUhCulxxCjCcyO77VKXCQCpeDerLm
-         7LAmv186AoAyMzZ/Fe4qoRBAO5gASr6CnMenL6Szb0L2hOAY6UIS9B9wOexeCpzq81EV
-         SoPvqEtHNklBBv4jl4XVspRNtXYQoJUJ41Mrh6bxgyzQoVojGkEI1ABQ5Du5lk8lINi1
-         qPjsmvV0Na1ll6bRJWSibXIb1DWnZe24jXpPpuZG7FF/wikr6u90cLx0Kiurwt5YHjNG
-         C3JA==
-X-Gm-Message-State: APjAAAWgtZ5ZuYeFQMWoQmMSc9rmbJUeomreKTzrqA3f1jTTr6znbfvH
-        iAMEnsYukeR5O/x9rNtjTsugkdtGfV368vxIeoIY/w==
-X-Google-Smtp-Source: APXvYqzuGSTRn74Jzegk9rwZkBTRqUh+H/zx6eedV+Do2DDj7eVBFbB9obAJse6pC3NImlePnnQY1EJsMIdk0PY17fA=
-X-Received: by 2002:a9d:7653:: with SMTP id o19mr8916113otl.118.1579735713802;
- Wed, 22 Jan 2020 15:28:33 -0800 (PST)
+        Wed, 22 Jan 2020 18:37:41 -0500
+Received: from p5b06da22.dip0.t-ipconnect.de ([91.6.218.34] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1iuPZ0-0007OT-0Q; Thu, 23 Jan 2020 00:37:34 +0100
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id 3688610029B; Thu, 23 Jan 2020 00:37:33 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Evan Green <evgreen@chromium.org>,
+        Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        Marc Zyngier <maz@kernel.org>, Christoph Hellwig <hch@lst.de>,
+        Rajat Jain <rajatxjain@gmail.com>
+Subject: Re: [PATCH] PCI/MSI: Avoid torn updates to MSI pairs
+In-Reply-To: <CAE=gft6hvO7G2OrxFGXeSDctz-21ryiu8JSBWT0g2fRFss-pxA@mail.gmail.com>
+References: <20200116133102.1.I9c7e72144ef639cc135ea33ef332852a6b33730f@changeid> <20200122172816.GA139285@google.com> <CAE=gft6hvO7G2OrxFGXeSDctz-21ryiu8JSBWT0g2fRFss-pxA@mail.gmail.com>
+Date:   Thu, 23 Jan 2020 00:37:33 +0100
+Message-ID: <875zh3ukoy.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-References: <20200120012331.34776-1-yukuai3@huawei.com>
-In-Reply-To: <20200120012331.34776-1-yukuai3@huawei.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Thu, 23 Jan 2020 00:28:22 +0100
-Message-ID: <CAJZ5v0g4GYmnkYKBNmt+HbuqBGxWwxG-1SW8s-shD=eU4dDF+w@mail.gmail.com>
-Subject: Re: [PATCH] PNP: isapnp: remove defined but not used function 'isapnp_checksum'
-To:     yu kuai <yukuai3@huawei.com>
-Cc:     Jaroslav Kysela <perex@perex.cz>,
-        Rafael Wysocki <rafael.j.wysocki@intel.com>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        yi.zhang@huawei.com, zhengbin13@huawei.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 20, 2020 at 2:24 AM yu kuai <yukuai3@huawei.com> wrote:
->
-> Fix gcc '-Wunused-function' warnning:
->
-> drivers/pnp/isapnp/core.c:752:29: warning: 'isapnp_checksum' defined but
-> not used [-Wunused-function]
-> 752 | static unsigned char __init isapnp_checksum(unsigned char *data)
->
-> Commit 04c589f35bc5 ("PNP: isapnp: remove set but not used variable
-> 'checksum'") removes the last caller of the function. It is never used
-> and so can be removed.
->
-> Fixes: 04c589f35bc5 ("PNP: isapnp: remove set but not used variable 'checksum'")
-> Signed-off-by: yu kuai <yukuai3@huawei.com>
-> ---
->  drivers/pnp/isapnp/core.c | 22 ----------------------
->  1 file changed, 22 deletions(-)
->
-> diff --git a/drivers/pnp/isapnp/core.c b/drivers/pnp/isapnp/core.c
-> index 179b737280e1..6c457006e84b 100644
-> --- a/drivers/pnp/isapnp/core.c
-> +++ b/drivers/pnp/isapnp/core.c
-> @@ -746,28 +746,6 @@ static void __init isapnp_parse_resource_map(struct pnp_card *card)
->         }
->  }
->
-> -/*
-> - *  Compute ISA PnP checksum for first eight bytes.
-> - */
-> -static unsigned char __init isapnp_checksum(unsigned char *data)
-> -{
-> -       int i, j;
-> -       unsigned char checksum = 0x6a, bit, b;
-> -
-> -       for (i = 0; i < 8; i++) {
-> -               b = data[i];
-> -               for (j = 0; j < 8; j++) {
-> -                       bit = 0;
-> -                       if (b & (1 << j))
-> -                               bit = 1;
-> -                       checksum =
-> -                           ((((checksum ^ (checksum >> 1)) & 0x01) ^ bit) << 7)
-> -                           | (checksum >> 1);
-> -               }
-> -       }
-> -       return checksum;
-> -}
-> -
->  /*
->   *  Build device list for all present ISA PnP devices.
->   */
-> --
+Evan Green <evgreen@chromium.org> writes:
+> On Wed, Jan 22, 2020 at 9:28 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
+>> I suspect this *is* a problem because I think disabling MSI doesn't
+>> disable interrupts; it just means the device will interrupt using INTx
+>> instead of MSI.  And the driver is probably not prepared to handle
+>> INTx.
+>>
+>> PCIe r5.0, sec 7.7.1.2, seems relevant: "If MSI and MSI-X are both
+>> disabled, the Function requests servicing using INTx interrupts (if
+>> supported)."
 
-Applied, thanks!
+Disabling MSI is not an option. Masking yes, but MSI does not have
+mandatory masking. We already attempt masking on migration, which covers
+only MSI-X reliably, but not all MSI incarnations.
+
+So I assume that problem happens on a MSI interrupt, right?
+
+>> Maybe the IRQ guys have ideas about how to solve this?
+
+Maybe :)
+
+> But don't we already do this in __pci_restore_msi_state():
+>         pci_intx_for_msi(dev, 0);
+>         pci_msi_set_enable(dev, 0);
+>         arch_restore_msi_irqs(dev);
+>
+> I'd think if there were a chance for a line-based interrupt to get in
+> and wedge itself, it would already be happening there.
+
+That's a completely different beast. It's used when resetting a device
+and for other stuff like virt state migration. That's not a model for
+affinity changes of a live device.
+
+> One other way you could avoid torn MSI writes would be to ensure that
+> if you migrate IRQs across cores, you keep the same x86 vector number.
+> That way the address portion would be updated, and data doesn't
+> change, so there's no window. But that may not actually be feasible.
+
+That's not possible simply because the x86 vector space is limited. If
+we would have to guarantee that then we'd end up with a max of ~220
+interrupts per system. Sufficient for your notebook, but the big iron
+people would be not amused.
+
+The real critical path here is the CPU hotplug path.
+
+For regular migration between two online CPUs we use the 'migrate when
+the irq is actually serviced ' mechanism. That might have the same issue
+on misdesigned devices which are firing the next interrupt before the
+one on the flight is serviced, but I haven't seen any reports with that
+symptom yet.
+
+But before I dig deeper into this, please provide the output of
+
+'lscpci -vvv' and 'cat /proc/interrupts'
+
+Thanks,
+
+        tglx
+
+
