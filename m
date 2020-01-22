@@ -2,115 +2,118 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EDD7C33CAF
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 20:16:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D3D3C33CB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 20:17:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6463A2073A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 20:16:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579724164;
-	bh=UwSm8VaE5Zar7jbwm21fqcL8/v1SlG8YOnDXnHw17ZE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=JmlhuTcBgX/TiorIZoNIh1qd9fCVxpteJdAHPKmFBWC7T6zK8Hj93zpIR/MJ9ItsG
-	 bovIMoo5stkzH/iu9bFrlV4Od1vBZFJRUSfoxl1u8M9nbe99Rr0nSKf46FQZF/VoCw
-	 NMsJVtF77zMYREJT6fhVhso4sfs2qYPeMCI0iaTw=
+	by mail.kernel.org (Postfix) with ESMTP id 1484B2073A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 20:17:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729021AbgAVUQD (ORCPT
+        id S1729027AbgAVURO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 15:16:03 -0500
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:34445 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726780AbgAVUQD (ORCPT
+        Wed, 22 Jan 2020 15:17:14 -0500
+Received: from jabberwock.ucw.cz ([46.255.230.98]:52140 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725911AbgAVURO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 15:16:03 -0500
-Received: by mail-lf1-f65.google.com with SMTP id l18so606770lfc.1
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jan 2020 12:16:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=GLaXGgH4O8WRc84Pr2qZRgc6Y4dR2xbO1cV7z28yhvw=;
-        b=c6/3aq9HZcbkVeterj3636njxvpxgw2prgy9shUHvAD8OXcz0f+wkIkYAuQbjGEWBg
-         wVKr74EpV63VLAZVJqyVwqQj1WCI2m0sZGTgzXF83HkQ+44OAwRd+/sOaE20vmKvYmlT
-         36kGk2sd4GMMWPOxwa4EBhU0TxNUpffdyIDvY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=GLaXGgH4O8WRc84Pr2qZRgc6Y4dR2xbO1cV7z28yhvw=;
-        b=eZeedV9/KZOKlQJ12zr9J4Z5j2TIHzbiU+NkrqAFXDee6/4R5pneIAAwmHY4RLYoZR
-         xsMYSoLAd6LHrPnvoPsNM4nLz0zz8b60Ec+TwPGMKg8LYy1dA3EGe0dIsCx8pIF+Hkcy
-         IS9KFzaz86xkpXlHjnS+BJM+JoPt53FGTf19C7WmUJtsryC2aOU7uETdTsudQOdlF51g
-         yIJZ/wXaQ+oMEhisG/kP/UqNOnfmpOd/dSumTvNyGeaTya2Ae86Wirp1oPOZJeLfyywf
-         hwJnkuqzp9SFSzqO1xRAWpRA30IGNB8V7weqxdX+TNt0P6ALoSNJiA/obisAxkYUpthk
-         queA==
-X-Gm-Message-State: APjAAAXVwZB+GXQBhUoannrvzzWRQ+tz7+hdlyvVYaH3lxX3WsB1+q7+
-        F0/Us1afNZrtssRVDGsH/eVDl8/S8Aw=
-X-Google-Smtp-Source: APXvYqx+byr03N4H26lk76L5AlAXTN5d+NoystmwdiqLSbvTH/4+hiFVa1uKpAYuXjCAMX2RAwMljg==
-X-Received: by 2002:ac2:4436:: with SMTP id w22mr2655537lfl.185.1579724159657;
-        Wed, 22 Jan 2020 12:15:59 -0800 (PST)
-Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com. [209.85.208.179])
-        by smtp.gmail.com with ESMTPSA id v29sm9823547ljd.69.2020.01.22.12.15.58
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 22 Jan 2020 12:15:58 -0800 (PST)
-Received: by mail-lj1-f179.google.com with SMTP id a13so450097ljm.10
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jan 2020 12:15:58 -0800 (PST)
-X-Received: by 2002:a05:651c:282:: with SMTP id b2mr20649915ljo.41.1579724158165;
- Wed, 22 Jan 2020 12:15:58 -0800 (PST)
+        Wed, 22 Jan 2020 15:17:14 -0500
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id A85F71C0357; Wed, 22 Jan 2020 21:17:12 +0100 (CET)
+Date:   Wed, 22 Jan 2020 21:17:11 +0100
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Linus Torvalds <torvalds@linux-foundation.org>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        jacek.anaszewski@gmail.com, linux-leds@vger.kernel.org
+Subject: [GIT PULL] LEDs changes for 5.5-rc8
+Message-ID: <20200122201711.GA29496@amd>
 MIME-Version: 1.0
-References: <12a4be679e43de1eca6e5e2173163f27e2f25236.1579715466.git.christophe.leroy@c-s.fr>
- <CAHk-=wgNQ-rWoLg0OCJYYYbKBnRAUK4NPU-OD+vv-6fWnd=8kA@mail.gmail.com> <CAHk-=winQ_607Sp09H1w70A_WPmt7ydxrNrwvk=N29S=FpASZw@mail.gmail.com>
-In-Reply-To: <CAHk-=winQ_607Sp09H1w70A_WPmt7ydxrNrwvk=N29S=FpASZw@mail.gmail.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Wed, 22 Jan 2020 12:15:41 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wgK1Pbj4DD4OLFuFg1Tgvup85h9W5ZroCOwAE1qCDWuBg@mail.gmail.com>
-Message-ID: <CAHk-=wgK1Pbj4DD4OLFuFg1Tgvup85h9W5ZroCOwAE1qCDWuBg@mail.gmail.com>
-Subject: Re: [PATCH v2 1/6] fs/readdir: Fix filldir() and filldir64() use of user_access_begin()
-To:     Christophe Leroy <christophe.leroy@c-s.fr>
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="y0ulUmNC+osPPQO6"
+Content-Disposition: inline
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 22, 2020 at 12:00 PM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> A bit more re-organization also allows us to do the unsafe_put_user()
-> unconditionally.
 
-I meant the "user_access_begin()", of course.
+--y0ulUmNC+osPPQO6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Code was right, explanation was wrong.
+The following changes since commit d1eef1c619749b2a57e514a3fa67d9a516ffa919:
 
-That said, with this model, we _could_ make the
+  Linux 5.5-rc2 (2019-12-15 15:16:08 -0800)
 
-        unsafe_put_user(offset, &prev->d_off, efault_end);
+are available in the git repository at:
 
-be unconditional too, since now 'prev' will actually be a valid
-pointer - it will match 'dirent' if there was no prev.
+  git://git.kernel.org/pub/scm/linux/kernel/git/pavel/linux-leds.git/ tags/=
+leds-5.5-rc8
 
-But since we want to test whether we had a previous entry anyway (for
-the signal handling latency issue), making the write to the previous
-d_reclen unconditional (and then overwriting it the next iteration)
-doesn't actually buy us anything.
+for you to fetch changes up to 43108c72cf1d518f3ce62d3b1c8a9ffa38ddc28b:
 
-It was the user_access_begin() I'd rather have unconditional, since
-otherwise it gets duplicated in two (very slightly) different versions
-and we have unnecessary code bloat.
+  leds: lm3532: add pointer to documentation and fix typo (2020-01-22 21:08=
+:24 +0100)
 
-           Linus
+----------------------------------------------------------------
+Changes for Linus for -rc8.
+
+Jacek's commit is why I'm requesting this pull; it fixes regression in
+debugging output in sysfs. Others are just bugfixes that should be
+safe. Everything was in -next for while.
+
+Now, I noticed one commit is from "Pavel" and it is supposed to be
+=66rom "Pavel Machek". Can you pull it anyway, or should I redo the
+request? Or feel free to edit/drop that commit.
+
+Best regards,
+								Pavel
+
+----------------------------------------------------------------
+Bartosz Golaszewski (1):
+      led: max77650: add of_match table
+
+Jacek Anaszewski (1):
+      leds: gpio: Fix uninitialized gpio label for fwnode based probe
+
+Pavel (1):
+      leds: lm3532: add pointer to documentation and fix typo
+
+Pavel Machek (2):
+      ledtrig-pattern: fix email address quoting in MODULE_AUTHOR()
+      leds: rb532: cleanup whitespace
+
+Sakari Ailus (1):
+      leds-as3645a: Drop fwnode reference on ignored node
+
+ drivers/leds/leds-as3645a.c            |  3 ++-
+ drivers/leds/leds-gpio.c               | 10 +++++++++-
+ drivers/leds/leds-lm3532.c             |  3 ++-
+ drivers/leds/leds-max77650.c           |  7 +++++++
+ drivers/leds/leds-rb532.c              |  1 -
+ drivers/leds/trigger/ledtrig-pattern.c |  4 ++--
+ 6 files changed, 22 insertions(+), 6 deletions(-)
+
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--y0ulUmNC+osPPQO6
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl4orccACgkQMOfwapXb+vIhHACfUZ9wQ9GkIKpyxLKk2Rz93ne0
+GSMAn3v/CdOgceIvlx3tgc4WSrYfAEnb
+=VROh
+-----END PGP SIGNATURE-----
+
+--y0ulUmNC+osPPQO6--
