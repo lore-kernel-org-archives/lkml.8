@@ -2,116 +2,69 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00DB9C33CAF
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 02:25:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84F05C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 02:28:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB0BC24655
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 02:25:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="XhszVteo"
+	by mail.kernel.org (Postfix) with ESMTP id 58C6524656
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 02:28:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728928AbgAVCZi (ORCPT
+        id S1728779AbgAVC2e convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 21:25:38 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:44410 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726396AbgAVCZi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 21:25:38 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:To:
-        Subject:Sender:Reply-To:Cc:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=9ZOGsttRmOTfzjL1ECAYcpfTSZoQqHHRoblxH4x0j4M=; b=XhszVteo70FgyKJG9DtA7o+hV
-        lGwkANDHq2wJhjn1MqGcqwTJUma+irli294AufHU/9wJByJWODQdSMqejTOSp7RhswG4C+IA43k1S
-        n09gLgOqssnByXkE/bCGX/JzPVZsdlMUPKHehIk88YKYk4VXLYMdJyxJwOE2zjMK15HrO0MeKnpLP
-        R+ZH2c8rygQO5+8BKLrSfTwDNDrSlx35LEV6aBqhpnDwMSq93IYl/wDvEvmsBvo0kQ94ttkqvnI64
-        xqMCl2/SxHizEC8XYpRFJLxl9ufloOdrpXp3/aypAorvYDZGa7ybSY5N6rtXqrTT8zNwI+0rslWc4
-        tU4Da/UJg==;
-Received: from [2601:1c0:6280:3f0::ed68]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iu5i4-0001Bw-5r; Wed, 22 Jan 2020 02:25:36 +0000
-Subject: Re: mmotm 2020-01-21-13-28 uploaded (convert everything to struct
- proc_ops)
-To:     akpm@linux-foundation.org, broonie@kernel.org, mhocko@suse.cz,
-        sfr@canb.auug.org.au, linux-next@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, mm-commits@vger.kernel.org,
-        Alexey Dobriyan <adobriyan@gmail.com>
-References: <20200121212915.APuBK%akpm@linux-foundation.org>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <5a81ab98-4f02-f415-4da5-3d5685915a0e@infradead.org>
-Date:   Tue, 21 Jan 2020 18:25:34 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Tue, 21 Jan 2020 21:28:34 -0500
+Received: from szxga03-in.huawei.com ([45.249.212.189]:2562 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726584AbgAVC2d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jan 2020 21:28:33 -0500
+Received: from DGGEMM404-HUB.china.huawei.com (unknown [172.30.72.57])
+        by Forcepoint Email with ESMTP id 024A1CB1B413457A8B03;
+        Wed, 22 Jan 2020 10:28:32 +0800 (CST)
+Received: from dggeme766-chm.china.huawei.com (10.3.19.112) by
+ DGGEMM404-HUB.china.huawei.com (10.3.20.212) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Wed, 22 Jan 2020 10:28:31 +0800
+Received: from dggeme763-chm.china.huawei.com (10.3.19.109) by
+ dggeme766-chm.china.huawei.com (10.3.19.112) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1713.5; Wed, 22 Jan 2020 10:28:31 +0800
+Received: from dggeme763-chm.china.huawei.com ([10.6.66.36]) by
+ dggeme763-chm.china.huawei.com ([10.6.66.36]) with mapi id 15.01.1713.004;
+ Wed, 22 Jan 2020 10:28:31 +0800
+From:   linmiaohe <linmiaohe@huawei.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
+Subject: Re: [PATCH] KVM: x86: inline memslot_valid_for_gpte
+Thread-Topic: [PATCH] KVM: x86: inline memslot_valid_for_gpte
+Thread-Index: AdXQy3d7kkTwSV2yF0iqcap3dyBxwg==
+Date:   Wed, 22 Jan 2020 02:28:31 +0000
+Message-ID: <b9e84ce9f1ca457bb0835549d6fd5e51@huawei.com>
+Accept-Language: en-US
+Content-Language: zh-CN
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.173.221.158]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-In-Reply-To: <20200121212915.APuBK%akpm@linux-foundation.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/21/20 1:29 PM, akpm@linux-foundation.org wrote:
-> The mm-of-the-moment snapshot 2020-01-21-13-28 has been uploaded to
-> 
->    http://www.ozlabs.org/~akpm/mmotm/
-> 
-> mmotm-readme.txt says
-> 
-> README for mm-of-the-moment:
-> 
-> http://www.ozlabs.org/~akpm/mmotm/
-> 
-> This is a snapshot of my -mm patch queue.  Uploaded at random hopefully
-> more than once a week.
-
-NULL seems to be misspelled as NUL in the proc-convert-everything-to-struct-proc_ops.patch
-patch for kernel/sched/psi.c:
-
- static int __init psi_proc_init(void)
- {
- 	if (psi_enable) {
- 		proc_mkdir("pressure", NULL);
--		proc_create("pressure/io", 0, NULL, &psi_io_fops);
--		proc_create("pressure/memory", 0, NULL, &psi_memory_fops);
--		proc_create("pressure/cpu", 0, NULL, &psi_cpu_fops);
-+		proc_create("pressure/io", 0, NULL, &psi_io_proc_ops);
-+		proc_create("pressure/memory", 0, NUL, &psi_memory_proc_ops); <<<<<<<<<<
-+		proc_create("pressure/cpu", 0, NULL &psi_cpu_proc_ops);
-
-also missing a comma above...
-
- 	}
- 	return 0;
+Hi:
+Paolo Bonzini <pbonzini@redhat.com> wrote:
+>The function now has a single caller, so there is no point in keeping it separate.
+>
+>Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+>---
+> arch/x86/kvm/mmu/mmu.c | 17 ++++-------------
+> 1 file changed, 4 insertions(+), 13 deletions(-)
 
 
-../kernel/sched/psi.c: In function ‘psi_proc_init’:
-../kernel/sched/psi.c:1286:37: error: ‘NUL’ undeclared (first use in this function); did you mean ‘_UL’?
-   proc_create("pressure/memory", 0, NUL, &psi_memory_proc_ops);
-                                     ^~~
-                                     _UL
-../kernel/sched/psi.c:1286:37: note: each undeclared identifier is reported only once for each function it appears in
-../kernel/sched/psi.c:1287:39: error: invalid operands to binary & (have ‘void *’ and ‘const struct proc_ops’)
-   proc_create("pressure/cpu", 0, NULL &psi_cpu_proc_ops);
-                                       ^
-../kernel/sched/psi.c:1287:3: error: too few arguments to function ‘proc_create’
-   proc_create("pressure/cpu", 0, NULL &psi_cpu_proc_ops);
-   ^~~~~~~~~~~
-In file included from ../kernel/sched/psi.c:133:0:
-../include/linux/proc_fs.h:64:24: note: declared here
- struct proc_dir_entry *proc_create(const char *name, umode_t mode, struct proc_dir_entry *parent, const struct proc_ops *proc_ops);
-                        ^~~~~~~~~~~
+It looks fine for me. Thanks!
+Reviewed-by: Miaohe Lin <linmiaohe@huawei.com>
 
-
--- 
-~Randy
-Reported-by: Randy Dunlap <rdunlap@infradead.org>
