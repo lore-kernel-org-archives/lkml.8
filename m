@@ -2,232 +2,115 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_SBL,URIBL_SBL_A,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 484D8C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 16:40:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3F29C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 16:40:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E4EA21835
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 16:40:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5A9721835
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 16:40:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nl7IZ5IN"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eL0V8Hx0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728842AbgAVQj7 (ORCPT
+        id S1728797AbgAVQkf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 11:39:59 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:36752 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725802AbgAVQj4 (ORCPT
+        Wed, 22 Jan 2020 11:40:35 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:26827 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725943AbgAVQkf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 11:39:56 -0500
-Received: by mail-wm1-f67.google.com with SMTP id p17so7898065wma.1
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jan 2020 08:39:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=7/wRTYqfTREfU6U2Q7BRDCb6VZrd3/MsAyFitVuvzmY=;
-        b=nl7IZ5INznZAl++C38LYeMJHiwWxwhURFY/z8dz9NTGRqlDx8185MSMGO00yOHlPwc
-         OEoaavKPkPXmf+2S6MtvLzpp+bL4V1uQO2vdPiQCCWt3Q0v2NL7CtAbOY2JWnfOAHoq5
-         WxelVbfxlyECaPzs+MeLDU6Irk8/yl3x5j7nTtJw8mH9sEws2qFvjRbTTDi9F10U1K95
-         RrV7rREAW1mRGN3lLTkrmDx5hRwCJAEfSDOSVVC22C+yAFCZXm4u4IgwIM7WcYNx+EJk
-         JnlifmhdLPNm1bI8lCzVjkJZ0K10dS80dmmIap23G315NgICtrJYlQaOMfvdaIqHEzWS
-         a9DA==
+        Wed, 22 Jan 2020 11:40:35 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579711233;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=NqHfG4M0oTw1WAYPW8dVqwjrZnqacof+6SuwGnZ6EOk=;
+        b=eL0V8Hx0+G3GFfbteKlWcjHvYALSc0uGocgDQZO25n2cvqQHRy31f7vXl9Za4mMPMWbxO4
+        xmNJSs0Vyd48htJwQeGZvH705mXYnSGfn+7FVlqFz7gOoo1wVeCkp02yZbO/UIS66B4ilH
+        loK1WYEqVuj3TuM8KAbBkrVDAk9xPdo=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-246-IPMzbxzONlC2W_n5wxyglQ-1; Wed, 22 Jan 2020 11:40:31 -0500
+X-MC-Unique: IPMzbxzONlC2W_n5wxyglQ-1
+Received: by mail-wm1-f69.google.com with SMTP id q206so74395wme.9
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jan 2020 08:40:31 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=7/wRTYqfTREfU6U2Q7BRDCb6VZrd3/MsAyFitVuvzmY=;
-        b=m3OTHsDfmRsGveZDN1Y2MmeplAun/MZzcr0wgNV0b+nphKNDk0yXCAU+x1NNfehQ8s
-         HmR19wKe5O6+GT4RR7gag+aVJayzCFltTKbuaZMqAY1rycd13qzgFmVgeID6RNsZ2Xdm
-         XK3OaT8L1xPzsJu0m2WjFEBpgRquFkt3oNVAps22HLnbzrigJYMF6j5Xjv5bqL4Pre8t
-         okAnJV/cnT6R8HUgDm6MYCz10bxniq7d8YRUprwc7Ra79Pky3MW9xfG21dJE1C+WAgWl
-         IrKE318g3jOPzmc6w6FsOZXYexmu+GXy0vHXOAC/M5qwtMGBT8qRo3NfIkTMPNd0iL6g
-         N3bw==
-X-Gm-Message-State: APjAAAV+Tx1josjvU2LHa6EtFUfjAHz2dlqGwdKVeUV1nBjJIqaoC00L
-        XwOvCSD9eDgqbvW4ivpmQsgvOXrR78w=
-X-Google-Smtp-Source: APXvYqz6aevbO2yNiLua5epDBALNHDOVliX4C2AKnPjoHpRSOmi3I7hvRmx+gOtOkwpAA8yYB9TDZA==
-X-Received: by 2002:a1c:5f41:: with SMTP id t62mr3936976wmb.42.1579711194506;
-        Wed, 22 Jan 2020 08:39:54 -0800 (PST)
-Received: from localhost.localdomain (lneuilly-657-1-69-3.w80-11.abo.wanadoo.fr. [80.11.53.3])
-        by smtp.gmail.com with ESMTPSA id j2sm4908557wmk.23.2020.01.22.08.39.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Jan 2020 08:39:53 -0800 (PST)
-From:   Antonio Borneo <borneo.antonio@gmail.com>
-To:     Joe Perches <joe@perches.com>, Andy Whitcroft <apw@canonical.com>
-Cc:     Antonio Borneo <borneo.antonio@gmail.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH V6] checkpatch: add command-line option for TAB size
-Date:   Wed, 22 Jan 2020 17:38:52 +0100
-Message-Id: <20200122163852.124417-3-borneo.antonio@gmail.com>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20190508122721.7513-4-borneo.antonio@gmail.com>
-References: <20190508122721.7513-4-borneo.antonio@gmail.com> <49e0fb2cd3b0a80848f67212167fdbab4b5b8a97.camel@perches.com> <CAAj6DX2=KYJb1_CmyDFra5gpufb2KHU8mT4Nd1UMTHhYs9N1zw@mail.gmail.com> <20190508183606.14767-1-borneo.antonio@gmail.com> <CAAj6DX3aZ+_q1Vi7A+fyje9-s27dYO5_MEhZ_EU-DEVSXwNzkw@mail.gmail.com> <20190509093929.23507-1-borneo.antonio@gmail.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=NqHfG4M0oTw1WAYPW8dVqwjrZnqacof+6SuwGnZ6EOk=;
+        b=W7xWCcim3s7mIGt3LEDSznD8srxwcTdE98sj/D1dkKQRMNdtfpTuSI490ZoRCZbmDc
+         /jhY4FAACjDSqMFnVsupFkEGLWmZr7hHwQpMBcp/dYJ9ZTmqm74likZyl3PfG6bSOfVa
+         B+GSxd2N3ZOaP3Re7sVQ2PcBX0xXPUPJlx9SbKYgZKdjZEnmOEtwIOSaEn8WeG5WLxEq
+         kkywGxDB5cgzrNdk5zkj6nvZlFBEsACres6QbClrvtv3AmpdhUvMUazA0GWq/5CDvyOI
+         rJx+XjeSVjzZtNjaHU4ehlDeSyW8zztH/Y/Zm646mUI6ABYjCnf+Pdm5j2H9HwzCp6hl
+         YOSQ==
+X-Gm-Message-State: APjAAAUPWTs7HDEXNeLPrZry0Aae5UxI35OanksMpxt7QBvcg2hZ+xVM
+        QNwSXabFEF2x05Ws2iermJ96DXADWB2e275nMEVxr5J4Xk2ZpRSi9iqW9IWpRO8x6lbEfJM9uGd
+        Cq362J5KLgqweYQlN1l5v+3MM
+X-Received: by 2002:a7b:cb91:: with SMTP id m17mr3620351wmi.146.1579711230721;
+        Wed, 22 Jan 2020 08:40:30 -0800 (PST)
+X-Google-Smtp-Source: APXvYqzlxcCPkPXf8/I59g7+C0rJdwAgIk/Qu1HaZIoBEn1yWRSeks0GxcFaBr6+ZpRZJtcz+Ttzgg==
+X-Received: by 2002:a7b:cb91:: with SMTP id m17mr3620339wmi.146.1579711230491;
+        Wed, 22 Jan 2020 08:40:30 -0800 (PST)
+Received: from ?IPv6:2001:b07:6468:f312:b8fe:679e:87eb:c059? ([2001:b07:6468:f312:b8fe:679e:87eb:c059])
+        by smtp.gmail.com with ESMTPSA id q3sm59194052wrn.33.2020.01.22.08.40.29
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 22 Jan 2020 08:40:29 -0800 (PST)
+Subject: Re: [PATCH RFC 2/3] x86/kvm/hyper-v: move VMX controls sanitization
+ out of nested_enable_evmcs()
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     kvm@vger.kernel.org, Jim Mattson <jmattson@google.com>,
+        linux-kernel@vger.kernel.org, Liran Alon <liran.alon@oracle.com>,
+        Roman Kagan <rkagan@virtuozzo.com>
+References: <20200115171014.56405-1-vkuznets@redhat.com>
+ <20200115171014.56405-3-vkuznets@redhat.com>
+ <6c4bdb57-08fb-2c2d-9234-b7efffeb72ed@redhat.com>
+ <20200122054724.GD18513@linux.intel.com>
+ <9c126d75-225b-3b1b-d97a-bcec1f189e02@redhat.com>
+ <87eevrsf3s.fsf@vitty.brq.redhat.com> <20200122155108.GA7201@linux.intel.com>
+ <87blqvsbcy.fsf@vitty.brq.redhat.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <f15d9e98-25e9-2031-2db5-6aaa6c78c0eb@redhat.com>
+Date:   Wed, 22 Jan 2020 17:40:27 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <87blqvsbcy.fsf@vitty.brq.redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linux kernel coding style requires a size of 8 characters for
-both TAB and indentation, and such value is embedded as magic
-value allover the checkpatch script.
-This makes hard to reuse the script by other projects with
-different requirements in their coding style (e.g. OpenOCD [1]
-requires TAB size of 4 characters [2]).
+On 22/01/20 17:29, Vitaly Kuznetsov wrote:
+> Yes, in case we're back to the idea to filter things out in QEMU we can
+> do this. What I don't like is that every other userspace which decides
+> to enable eVMCS will have to perform the exact same surgery as in case
+> it sets allow_unsupported_controls=0 it'll have to know (hardcode) the
+> filtering (or KVM_SET_MSRS will fail) and in case it opts for
+> allow_unsupported_controls=1 Windows guests just won't boot without the
+> filtering.
+> 
+> It seems to be 1:1, eVMCSv1 requires the filter.
 
-Replace the magic value 8 with a variable.
+Yes, that's the point.  It *is* a hack in KVM, but it is generally
+preferrable to have an easier API for userspace, if there's only one way
+to do it.
 
-Add a command-line option "--tab-size" to let the user select a
-TAB size value other than 8.
+Though we could be a bit more "surgical" and only remove
+SECONDARY_EXEC_VIRTUALIZE_APIC_ACCESSES---thus minimizing the impact on
+non-eVMCS guests.  Vitaly, can you prepare a v2 that does that and adds
+a huge "hack alert" comment that explains the discussion?
 
-[1] http://openocd.org/
-[2] http://openocd.org/doc/doxygen/html/stylec.html#styleformat
-
-Signed-off-by: Antonio Borneo <borneo.antonio@gmail.com>
-Signed-off-by: Erik Ahlén <erik.ahlen@avalonenterprise.com>
-Signed-off-by: Spencer Oliver <spen@spen-soft.co.uk>
-
----
-
-v1 -> v2
-        add the command line option
-
-v2 -> v3
-        rewrite commit msg to remove script readability issue
-
-v3 -> v4
-        check for command line value positive
-
-v4 -> v5
-        exclude --tab-size=1
-
-v5 -> v6
-	rebased
-
----
- scripts/checkpatch.pl | 26 ++++++++++++++++----------
- 1 file changed, 16 insertions(+), 10 deletions(-)
-
-diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-index 4c1be774b0ed..8bac825665ef 100755
---- a/scripts/checkpatch.pl
-+++ b/scripts/checkpatch.pl
-@@ -64,6 +64,7 @@ my $color = "auto";
- my $allow_c99_comments = 1; # Can be overridden by --ignore C99_COMMENT_TOLERANCE
- # git output parsing needs US English output, so first set backtick child process LANGUAGE
- my $git_command ='export LANGUAGE=en_US.UTF-8; git';
-+my $tabsize = 8;
- 
- sub help {
- 	my ($exitcode) = @_;
-@@ -98,6 +99,7 @@ Options:
-   --show-types               show the specific message type in the output
-   --max-line-length=n        set the maximum line length, if exceeded, warn
-   --min-conf-desc-length=n   set the min description length, if shorter, warn
-+  --tab-size=n               set the number of spaces for tab (default 8)
-   --root=PATH                PATH to the kernel tree root
-   --no-summary               suppress the per-file summary
-   --mailback                 only produce a report in case of warnings/errors
-@@ -215,6 +217,7 @@ GetOptions(
- 	'list-types!'	=> \$list_types,
- 	'max-line-length=i' => \$max_line_length,
- 	'min-conf-desc-length=i' => \$min_conf_desc_length,
-+	'tab-size=i'	=> \$tabsize,
- 	'root=s'	=> \$root,
- 	'summary!'	=> \$summary,
- 	'mailback!'	=> \$mailback,
-@@ -267,6 +270,9 @@ if ($color =~ /^[01]$/) {
- 	die "Invalid color mode: $color\n";
- }
- 
-+# skip TAB size 1 to avoid additional checks on $tabsize - 1
-+die "Invalid TAB size: $tabsize\n" if ($tabsize < 2);
-+
- sub hash_save_array_words {
- 	my ($hashRef, $arrayRef) = @_;
- 
-@@ -1217,7 +1223,7 @@ sub expand_tabs {
- 		if ($c eq "\t") {
- 			$res .= ' ';
- 			$n++;
--			for (; ($n % 8) != 0; $n++) {
-+			for (; ($n % $tabsize) != 0; $n++) {
- 				$res .= ' ';
- 			}
- 			next;
-@@ -2230,7 +2236,7 @@ sub string_find_replace {
- sub tabify {
- 	my ($leading) = @_;
- 
--	my $source_indent = 8;
-+	my $source_indent = $tabsize;
- 	my $max_spaces_before_tab = $source_indent - 1;
- 	my $spaces_to_tab = " " x $source_indent;
- 
-@@ -3198,7 +3204,7 @@ sub process {
- 		next if ($realfile !~ /\.(h|c|pl|dtsi|dts)$/);
- 
- # at the beginning of a line any tabs must come first and anything
--# more than 8 must use tabs.
-+# more than $tabsize must use tabs.
- 		if ($rawline =~ /^\+\s* \t\s*\S/ ||
- 		    $rawline =~ /^\+\s*        \s*/) {
- 			my $herevet = "$here\n" . cat_vet($rawline) . "\n";
-@@ -3217,7 +3223,7 @@ sub process {
- 				"please, no space before tabs\n" . $herevet) &&
- 			    $fix) {
- 				while ($fixed[$fixlinenr] =~
--					   s/(^\+.*) {8,8}\t/$1\t\t/) {}
-+					   s/(^\+.*) {$tabsize,$tabsize}\t/$1\t\t/) {}
- 				while ($fixed[$fixlinenr] =~
- 					   s/(^\+.*) +\t/$1\t/) {}
- 			}
-@@ -3239,11 +3245,11 @@ sub process {
- 		if ($perl_version_ok &&
- 		    $sline =~ /^\+\t+( +)(?:$c90_Keywords\b|\{\s*$|\}\s*(?:else\b|while\b|\s*$)|$Declare\s*$Ident\s*[;=])/) {
- 			my $indent = length($1);
--			if ($indent % 8) {
-+			if ($indent % $tabsize) {
- 				if (WARN("TABSTOP",
- 					 "Statements should start on a tabstop\n" . $herecurr) &&
- 				    $fix) {
--					$fixed[$fixlinenr] =~ s@(^\+\t+) +@$1 . "\t" x ($indent/8)@e;
-+					$fixed[$fixlinenr] =~ s@(^\+\t+) +@$1 . "\t" x ($indent/$tabsize)@e;
- 				}
- 			}
- 		}
-@@ -3261,8 +3267,8 @@ sub process {
- 				my $newindent = $2;
- 
- 				my $goodtabindent = $oldindent .
--					"\t" x ($pos / 8) .
--					" "  x ($pos % 8);
-+					"\t" x ($pos / $tabsize) .
-+					" "  x ($pos % $tabsize);
- 				my $goodspaceindent = $oldindent . " "  x $pos;
- 
- 				if ($newindent ne $goodtabindent &&
-@@ -3733,11 +3739,11 @@ sub process {
- 			#print "line<$line> prevline<$prevline> indent<$indent> sindent<$sindent> check<$check> continuation<$continuation> s<$s> cond_lines<$cond_lines> stat_real<$stat_real> stat<$stat>\n";
- 
- 			if ($check && $s ne '' &&
--			    (($sindent % 8) != 0 ||
-+			    (($sindent % $tabsize) != 0 ||
- 			     ($sindent < $indent) ||
- 			     ($sindent == $indent &&
- 			      ($s !~ /^\s*(?:\}|\{|else\b)/)) ||
--			     ($sindent > $indent + 8))) {
-+			     ($sindent > $indent + $tabsize))) {
- 				WARN("SUSPECT_CODE_INDENT",
- 				     "suspect code indent for conditional statements ($indent, $sindent)\n" . $herecurr . "$stat_real\n");
- 			}
--- 
-2.25.0
+Paolo
 
