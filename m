@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BF39C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:36:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D0FCC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:36:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 060902467B
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:36:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6576B20704
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:36:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579685794;
-	bh=kkBMsYslEkYNPYzHKXDUibNKOCy004q3kA+dqlieGVM=;
+	s=default; t=1579685798;
+	bh=dO5e43ufofDwgysyhPIszf1u9ISv3J4K7wcgkh0Uwww=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VhKiPdj+SJWHdthYuCpWreQ8CSxzjr5XOPBeQeR0YeL8FDsC3ZGkHsuQ/ml2z9cSG
-	 7brx5hB/gfa8by0YNirddlRI95rzQPqUHbmKnBOwZCCYosTpnVwtvhMcLV4bW9G1M1
-	 AY7jWos3dGUbMmjpJ3HNKbEZgu74sS0nxoQPO2oo=
+	b=h/oW+tp4jtKwZwGKOEhzLaSa7Qncx+V4Zoif1yqwywjsRzOyU7QJjYrolaUeaUfmB
+	 Iz0avIUGci4C+DMcfRHaXV0qmEa5TkmeDK/GkpqUD4IDWQsDKKjRZUj9XoisO6RgPd
+	 xIDI4GCdXWQJEY1n4SmPMEVNK+m3WP45jWpxDJwc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731953AbgAVJgd (ORCPT
+        id S1731125AbgAVJgh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 04:36:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52002 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 04:36:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52042 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731035AbgAVJga (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 04:36:30 -0500
+        id S1731934AbgAVJgc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 04:36:32 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4AF2924125;
-        Wed, 22 Jan 2020 09:36:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B388C20704;
+        Wed, 22 Jan 2020 09:36:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579685789;
-        bh=kkBMsYslEkYNPYzHKXDUibNKOCy004q3kA+dqlieGVM=;
+        s=default; t=1579685792;
+        bh=dO5e43ufofDwgysyhPIszf1u9ISv3J4K7wcgkh0Uwww=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qEZs6+tU9N3dziENzKlX7wDfUGGmKrK8Gg32ZUqw7E5o01OWoM1ne7+1DqwBk+zyh
-         AriutTUYRHmW6gj8qVsOaHXHR1LyPsK0tM6INI9YXssTZvkOokSelTjdl+gnBLr/Ww
-         YoK5atPf4txtlWuKFu27Q3uZ/xYDuEOlQ1RN9vKc=
+        b=2g75wB6P5TBMyVZX+RaIeJC2crwLwFBmYo2x4SKay7nctVqB7aNfnTxk+71Rcw85E
+         dlF7NhITmtWRQUbJm9uCS5kwSBhncJUeMFnwCB2pbhyu9gHEKnfSJ9R5zf1ETVM2XR
+         xlXmzjxjZOORtF4rYXKoenCaU7T+i3gUqLn7XCKU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+2b2ef983f973e5c40943@syzkaller.appspotmail.com,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.9 53/97] ALSA: seq: Fix racy access for queue timer in proc read
-Date:   Wed, 22 Jan 2020 10:28:57 +0100
-Message-Id: <20200122092804.995472662@linuxfoundation.org>
+        stable@vger.kernel.org, Sven Eckelmann <sven@narfation.org>,
+        Simon Wunderlich <sw@simonwunderlich.de>
+Subject: [PATCH 4.9 80/97] batman-adv: Fix DAT candidate selection on little endian systems
+Date:   Wed, 22 Jan 2020 10:29:24 +0100
+Message-Id: <20200122092809.206278846@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200122092755.678349497@linuxfoundation.org>
 References: <20200122092755.678349497@linuxfoundation.org>
@@ -60,54 +59,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Sven Eckelmann <sven@narfation.org>
 
-commit 60adcfde92fa40fcb2dbf7cc52f9b096e0cd109a upstream.
+commit 4cc4a1708903f404d2ca0dfde30e71e052c6cbc9 upstream.
 
-snd_seq_info_timer_read() reads the information of the timer assigned
-for each queue, but it's done in a racy way which may lead to UAF as
-spotted by syzkaller.
+The distributed arp table is using a DHT to store and retrieve MAC address
+information for an IP address. This is done using unicast messages to
+selected peers. The potential peers are looked up using the IP address and
+the VID.
 
-This patch applies the missing q->timer_mutex lock while accessing the
-timer object as well as a slight code change to adapt the standard
-coding style.
+While the IP address is always stored in big endian byte order, this is not
+the case of the VID. It can (depending on the host system) either be big
+endian or little endian. The host must therefore always convert it to big
+endian to ensure that all devices calculate the same peers for the same
+lookup data.
 
-Reported-by: syzbot+2b2ef983f973e5c40943@syzkaller.appspotmail.com
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200115203733.26530-1-tiwai@suse.de
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Fixes: be1db4f6615b ("batman-adv: make the Distributed ARP Table vlan aware")
+Signed-off-by: Sven Eckelmann <sven@narfation.org>
+Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/core/seq/seq_timer.c |   14 +++++++++-----
- 1 file changed, 9 insertions(+), 5 deletions(-)
+ net/batman-adv/distributed-arp-table.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/sound/core/seq/seq_timer.c
-+++ b/sound/core/seq/seq_timer.c
-@@ -479,15 +479,19 @@ void snd_seq_info_timer_read(struct snd_
- 		q = queueptr(idx);
- 		if (q == NULL)
- 			continue;
--		if ((tmr = q->timer) == NULL ||
--		    (ti = tmr->timeri) == NULL) {
--			queuefree(q);
--			continue;
--		}
-+		mutex_lock(&q->timer_mutex);
-+		tmr = q->timer;
-+		if (!tmr)
-+			goto unlock;
-+		ti = tmr->timeri;
-+		if (!ti)
-+			goto unlock;
- 		snd_iprintf(buffer, "Timer for queue %i : %s\n", q->queue, ti->timer->name);
- 		resolution = snd_timer_resolution(ti) * tmr->ticks;
- 		snd_iprintf(buffer, "  Period time : %lu.%09lu\n", resolution / 1000000000, resolution % 1000000000);
- 		snd_iprintf(buffer, "  Skew : %u / %u\n", tmr->skew, tmr->skew_base);
-+unlock:
-+		mutex_unlock(&q->timer_mutex);
- 		queuefree(q);
-  	}
- }
+--- a/net/batman-adv/distributed-arp-table.c
++++ b/net/batman-adv/distributed-arp-table.c
+@@ -242,6 +242,7 @@ static u32 batadv_hash_dat(const void *d
+ 	u32 hash = 0;
+ 	const struct batadv_dat_entry *dat = data;
+ 	const unsigned char *key;
++	__be16 vid;
+ 	u32 i;
+ 
+ 	key = (const unsigned char *)&dat->ip;
+@@ -251,7 +252,8 @@ static u32 batadv_hash_dat(const void *d
+ 		hash ^= (hash >> 6);
+ 	}
+ 
+-	key = (const unsigned char *)&dat->vid;
++	vid = htons(dat->vid);
++	key = (__force const unsigned char *)&vid;
+ 	for (i = 0; i < sizeof(dat->vid); i++) {
+ 		hash += key[i];
+ 		hash += (hash << 10);
 
 
