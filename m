@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB5A0C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:46:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6689FC33CB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:46:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF1602467C
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:46:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32E262468C
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:46:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579686381;
-	bh=EwXiR3OAHCKqfa2wQBGY7nZhL1E2myYAN/IcWN8jdxM=;
+	s=default; t=1579686385;
+	bh=tUh9PihcYxzFYZBFE2oWj/PpwZ5irhZl9ayz1NK6Wlc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wG0ejgw88G+QbQbOnHAanExGEU6McfzJfOF32KJlv/3hVUQkclRtNI/Ipu99rKvnm
-	 eY6Qh73rdEfsGPNLmiYX8UYiy9MwqCExAPy6FbGGN4nXtHCsXFOUmkYXV72E5ZqK1p
-	 VOkXegeFW07/A+NBVFODX8s5BRgTOY1coJK7ASZA=
+	b=WCIZUL7OtVXEyDPocaQMsyKX6R8mdRK4kWkHnDOVJ8YEnKVSTz8R9evMQW1mBbyQw
+	 Nt5xlCAti9KJ0ADi4TC276bDe6rEc5aJP9TfeHZKAkYcGRXdSMnavDx2ml/1FOje4F
+	 Jczr5P7ZzWyrf/4u1foPWhc4mZpb+0+svTM3XhaY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730350AbgAVJqU (ORCPT
+        id S2387600AbgAVJnm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 04:46:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36438 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 04:43:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36262 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387924AbgAVJno (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 04:43:44 -0500
+        id S2387898AbgAVJnh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 04:43:37 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5D51D2468B;
-        Wed, 22 Jan 2020 09:43:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 24A142468D;
+        Wed, 22 Jan 2020 09:43:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579686223;
-        bh=EwXiR3OAHCKqfa2wQBGY7nZhL1E2myYAN/IcWN8jdxM=;
+        s=default; t=1579686216;
+        bh=tUh9PihcYxzFYZBFE2oWj/PpwZ5irhZl9ayz1NK6Wlc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kENbBnGUo7vbXIQj+1WgW73Ep9ll2xHfEJHCcefaplaEShSe2+Wa7zpYhfN91EMpm
-         G6uXxPZq6wEyeQDC95VuJ1lZa8lALqKSwm5m/dj0tbko0y3Pfze106KjFO2RSo0EVQ
-         nYwazvvVvfPwyV22AVpei9IFHSx+zL/qdmCOi3Lw=
+        b=xGne94NtdD4eVKZzgsSJ+nYy6ei3PQVJVCSaJVuNOAZmIkcv/v9cvYUocmw/FSJRW
+         JsilWjCOltvn/x0VtOk+FETqePclYhTyibf4ldBGu0gSzDP5Cn5VwBxxmyNlwdmjbs
+         +toKHG6cHdUAcDpmSReklxm4m7/TgWRmtYC4fkN8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH 4.19 093/103] scsi: esas2r: unlock on error in esas2r_nvram_read_direct()
-Date:   Wed, 22 Jan 2020 10:29:49 +0100
-Message-Id: <20200122092815.975194637@linuxfoundation.org>
+        stable@vger.kernel.org, Jon Derrick <jonathan.derrick@intel.com>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        Sushma Kalakota <sushmax.kalakota@intel.com>
+Subject: [PATCH 4.19 090/103] drm/nouveau/bar/gf100: ensure BAR is mapped
+Date:   Wed, 22 Jan 2020 10:29:46 +0100
+Message-Id: <20200122092815.731691833@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200122092803.587683021@linuxfoundation.org>
 References: <20200122092803.587683021@linuxfoundation.org>
@@ -59,31 +60,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Jon Derrick <jonathan.derrick@intel.com>
 
-commit 906ca6353ac09696c1bf0892513c8edffff5e0a6 upstream.
+commit 12e08beb32d64b6070b718630490db83dd321c8c upstream.
 
-This error path is missing an unlock.
+If the BAR is zero size, it indicates it was never successfully mapped.
+Ensure that the BAR is valid during initialization before attempting to
+use it.
 
-Fixes: 26780d9e12ed ("[SCSI] esas2r: ATTO Technology ExpressSAS 6G SAS/SATA RAID Adapter Driver")
-Link: https://lore.kernel.org/r/20191022102324.GA27540@mwanda
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Jon Derrick <jonathan.derrick@intel.com>
+Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
+Signed-off-by: Sushma Kalakota <sushmax.kalakota@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/scsi/esas2r/esas2r_flash.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/gpu/drm/nouveau/nvkm/subdev/bar/gf100.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/drivers/scsi/esas2r/esas2r_flash.c
-+++ b/drivers/scsi/esas2r/esas2r_flash.c
-@@ -1197,6 +1197,7 @@ bool esas2r_nvram_read_direct(struct esa
- 	if (!esas2r_read_flash_block(a, a->nvram, FLS_OFFSET_NVR,
- 				     sizeof(struct esas2r_sas_nvram))) {
- 		esas2r_hdebug("NVRAM read failed, using defaults");
-+		up(&a->nvram_semaphore);
- 		return false;
- 	}
+--- a/drivers/gpu/drm/nouveau/nvkm/subdev/bar/gf100.c
++++ b/drivers/gpu/drm/nouveau/nvkm/subdev/bar/gf100.c
+@@ -94,6 +94,8 @@ gf100_bar_oneinit_bar(struct gf100_bar *
+ 		return ret;
+ 
+ 	bar_len = device->func->resource_size(device, bar_nr);
++	if (!bar_len)
++		return -ENOMEM;
+ 	if (bar_nr == 3 && bar->bar2_halve)
+ 		bar_len >>= 1;
  
 
 
