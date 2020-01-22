@@ -2,81 +2,175 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 603E0C3F68F
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 05:57:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 479FAC3F68F
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 06:04:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3777B24656
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 05:57:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DD622465A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 06:04:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rDOLU2b+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725975AbgAVF5q (ORCPT
+        id S1726016AbgAVGEY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 00:57:46 -0500
-Received: from helcar.hmeau.com ([216.24.177.18]:48864 "EHLO deadmen.hmeau.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725796AbgAVF5q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 00:57:46 -0500
-Received: from gondobar.mordor.me.apana.org.au ([192.168.128.4] helo=gondobar)
-        by deadmen.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
-        id 1iu91L-0002IE-9Z; Wed, 22 Jan 2020 13:57:43 +0800
-Received: from herbert by gondobar with local (Exim 4.89)
-        (envelope-from <herbert@gondor.apana.org.au>)
-        id 1iu91K-0002uz-7T; Wed, 22 Jan 2020 13:57:42 +0800
-Date:   Wed, 22 Jan 2020 13:57:42 +0800
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
-Cc:     davem@davemloft.net, linux-crypto@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/6] crypto: sm2 - introduce OSCCA SM2 asymmetric cipher
- algorithm
-Message-ID: <20200122055742.x3lruabxmv6elnuu@gondor.apana.org.au>
+        Wed, 22 Jan 2020 01:04:24 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:44951 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725836AbgAVGEY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 01:04:24 -0500
+Received: by mail-pg1-f193.google.com with SMTP id x7so2861591pgl.11;
+        Tue, 21 Jan 2020 22:04:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=/h9o3IJUBowmLWfA61u+50384SsUM8Xhdmip5ZMDV/U=;
+        b=rDOLU2b+w9DoleHwa3ayn9bAX80pvFO+gWeoYnPUyDv2Jqo4vowsYXjY+jxll+NcQi
+         TKFSL98RF0EWxJETVrA7hGJBeM0YuljRnym0dCYpoFsb9gWAQUZrL9f2jx/bk9w2s7/J
+         DAt/Od0CABWhKpTjSa67PnkZXXhZTx6rCWTaH76jB7u8fAGuElmfa+dzLorX6jIUC+JV
+         q3rD+O6gkcde0mnYTi5WzNq0hGEFK0Z09QvHGEFSBofGF30mI0jJ3I8AiAE+rX7ZQSfA
+         q9dour+qWb1s2NUKky+QXewZDTM4WJ9+FSPVFFwgg6lmtcHazuker0sY4+ZTeXwx7HjC
+         FdEQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=/h9o3IJUBowmLWfA61u+50384SsUM8Xhdmip5ZMDV/U=;
+        b=rB3tsVj1a6Y39M2+r1sQGdRt8dfLPB4yksYKy1ThDMdeSHVjK/abPxcdpJ7V2GW2AO
+         ky8BHxf0YKTi6L0veSYPInId/ECl2Lm/3ADarcGAeoXFvmsu3nP3WVCBcuezJF0H5M0m
+         AzEyVLTRw2HGJ0vVOxkEA/CSt9BVJk8pzwVrQ2izO/IwV0HKslMERt4Wrwn8RbUEA/QF
+         XzXkVNPgtysYR/zd0A6aaiAF0zgTruexeCFfyB3ikh3tLGt8eyTn7tNHX5Es44Gqk1nU
+         Dx8QCH13kderOEOY0i0XYW/t0c+WWNiiLKl5cFlpmPM2M4gGdTZVSybIpn2hflr90i0U
+         9kcA==
+X-Gm-Message-State: APjAAAVCcZVY+S7ofgo/cc3nOxrYDH2S4WbSlTluSTSWANSrgiEJiHa3
+        plk9UpPGSeFqxCFKmeZHyDI=
+X-Google-Smtp-Source: APXvYqz9OeBvN7zgKLhewIMrKkPlKMyOwBLBE0xGHFrKV4R5pDxHgUjfmYDjBtCK6dLd0rZVOia8Og==
+X-Received: by 2002:a62:1548:: with SMTP id 69mr1146889pfv.239.1579673063272;
+        Tue, 21 Jan 2020 22:04:23 -0800 (PST)
+Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
+        by smtp.gmail.com with ESMTPSA id o134sm47192992pfg.137.2020.01.21.22.04.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Jan 2020 22:04:22 -0800 (PST)
+Date:   Tue, 21 Jan 2020 22:04:19 -0800
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Samuel Holland <samuel@sholland.org>, Chen-Yu Tsai <wens@csie.org>,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-sunxi@googlegroups.com
+Subject: Re: [PATCH v2 1/2] Input: axp20x-pek - Respect userspace wakeup
+ configuration
+Message-ID: <20200122060419.GD110084@dtor-ws>
+References: <20200115051253.32603-1-samuel@sholland.org>
+ <20200115051253.32603-2-samuel@sholland.org>
+ <674932c7-c120-092f-0255-5fa94925155d@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200121095718.52404-4-tianjia.zhang@linux.alibaba.com>
-X-Newsgroups: apana.lists.os.linux.cryptoapi,apana.lists.os.linux.kernel
-Organization: Core
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <674932c7-c120-092f-0255-5fa94925155d@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Tianjia Zhang <tianjia.zhang@linux.alibaba.com> wrote:
-> This new module implement the SM2 public key algorithm. It was
-> published by State Encryption Management Bureau, China.
-> List of specifications for SM2 elliptic curve public key cryptography:
+On Wed, Jan 15, 2020 at 11:50:08AM +0100, Hans de Goede wrote:
+> Hi,
 > 
-> * GM/T 0003.1-2012
-> * GM/T 0003.2-2012
-> * GM/T 0003.3-2012
-> * GM/T 0003.4-2012
-> * GM/T 0003.5-2012
+> On 15-01-2020 06:12, Samuel Holland wrote:
+> > Unlike most other power button drivers, this driver unconditionally
+> > enables its wakeup IRQ. It should be using device_may_wakeup() to
+> > respect the userspace configuration of wakeup sources.
+> > 
+> > Because the AXP20x MFD device uses regmap-irq, the AXP20x PEK IRQs are
+> > nested off of regmap-irq's threaded interrupt handler. The device core
+> > ignores such interrupts, so to actually disable wakeup, we must
+> > explicitly disable all non-wakeup interrupts during suspend.
+> > 
+> > Signed-off-by: Samuel Holland <samuel@sholland.org>
 > 
-> IETF: https://tools.ietf.org/html/draft-shen-sm2-ecdsa-02
-> oscca: http://www.oscca.gov.cn/sca/xxgk/2010-12/17/content_1002386.shtml
-> scctc: http://www.gmbz.org.cn/main/bzlb.html
+> Patch looks good to me:
 > 
-> Signed-off-by: Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
-> ---
-> crypto/Kconfig         |   17 +
-> crypto/Makefile        |   10 +
-> crypto/sm2.c           | 1073 ++++++++++++++++++++++++++++++++++++++++
-> crypto/sm2privkey.asn1 |    5 +
-> crypto/sm2pubkey.asn1  |    3 +
-> 5 files changed, 1108 insertions(+)
-> create mode 100644 crypto/sm2.c
-> create mode 100644 crypto/sm2privkey.asn1
-> create mode 100644 crypto/sm2pubkey.asn1
+> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
 
-We don't add algorithms unless they have a kernel user.  Who is
-going to use this within the kernel?
+Applied, thank you.
 
-Cheers,
+> 
+> Regards,
+> 
+> Hans
+> 
+> 
+> 
+> > ---
+> >   drivers/input/misc/axp20x-pek.c | 37 ++++++++++++++++++++++++++++++++-
+> >   1 file changed, 36 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/input/misc/axp20x-pek.c b/drivers/input/misc/axp20x-pek.c
+> > index 17c1cca74498..0ace3fe3d7dc 100644
+> > --- a/drivers/input/misc/axp20x-pek.c
+> > +++ b/drivers/input/misc/axp20x-pek.c
+> > @@ -280,7 +280,7 @@ static int axp20x_pek_probe_input_device(struct axp20x_pek *axp20x_pek,
+> >   	}
+> >   	if (axp20x_pek->axp20x->variant == AXP288_ID)
+> > -		enable_irq_wake(axp20x_pek->irq_dbr);
+> > +		device_init_wakeup(&pdev->dev, true);
+> >   	return 0;
+> >   }
+> > @@ -352,6 +352,40 @@ static int axp20x_pek_probe(struct platform_device *pdev)
+> >   	return 0;
+> >   }
+> > +static int __maybe_unused axp20x_pek_suspend(struct device *dev)
+> > +{
+> > +	struct axp20x_pek *axp20x_pek = dev_get_drvdata(dev);
+> > +
+> > +	/*
+> > +	 * As nested threaded IRQs are not automatically disabled during
+> > +	 * suspend, we must explicitly disable non-wakeup IRQs.
+> > +	 */
+> > +	if (device_may_wakeup(dev)) {
+> > +		enable_irq_wake(axp20x_pek->irq_dbf);
+> > +		enable_irq_wake(axp20x_pek->irq_dbr);
+> > +	} else {
+> > +		disable_irq(axp20x_pek->irq_dbf);
+> > +		disable_irq(axp20x_pek->irq_dbr);
+> > +	}
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static int __maybe_unused axp20x_pek_resume(struct device *dev)
+> > +{
+> > +	struct axp20x_pek *axp20x_pek = dev_get_drvdata(dev);
+> > +
+> > +	if (device_may_wakeup(dev)) {
+> > +		disable_irq_wake(axp20x_pek->irq_dbf);
+> > +		disable_irq_wake(axp20x_pek->irq_dbr);
+> > +	} else {
+> > +		enable_irq(axp20x_pek->irq_dbf);
+> > +		enable_irq(axp20x_pek->irq_dbr);
+> > +	}
+> > +
+> > +	return 0;
+> > +}
+> > +
+> >   static int __maybe_unused axp20x_pek_resume_noirq(struct device *dev)
+> >   {
+> >   	struct axp20x_pek *axp20x_pek = dev_get_drvdata(dev);
+> > @@ -371,6 +405,7 @@ static int __maybe_unused axp20x_pek_resume_noirq(struct device *dev)
+> >   }
+> >   static const struct dev_pm_ops axp20x_pek_pm_ops = {
+> > +	SET_SYSTEM_SLEEP_PM_OPS(axp20x_pek_suspend, axp20x_pek_resume)
+> >   #ifdef CONFIG_PM_SLEEP
+> >   	.resume_noirq = axp20x_pek_resume_noirq,
+> >   #endif
+> > 
+> 
+
 -- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+Dmitry
