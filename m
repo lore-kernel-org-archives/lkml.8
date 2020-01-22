@@ -2,161 +2,249 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A75F3C33CB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 19:51:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B7BAC33CAF
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 19:52:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7DCF924656
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 19:51:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EFEv++on"
+	by mail.kernel.org (Postfix) with ESMTP id 65B1521835
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 19:52:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728901AbgAVTvu (ORCPT
+        id S1729017AbgAVTwM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 14:51:50 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:57751 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725943AbgAVTvu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 14:51:50 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579722709;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=FPcSthSbcM7Vuq6oiRu0G4FuI4CgyKFmAIFuX7y1w4I=;
-        b=EFEv++onxd68uYf7thn1Z4c9KXjsAdtxYe5e22DUs4n/Sg6Bv8/WY/CaXQuYXtS0B4PNeW
-        uVhZvLsUFeQNA1zYOSJ7VhDYlmUdmprb9ERMmQHUuMpqPPvgWMLp4vzZ/XedgCBKjVqH2Q
-        03Maec12Yh0ibvZu4rRMK+OCoO2bmsg=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-348-F0leqwevPne0Cf6QkgNcbA-1; Wed, 22 Jan 2020 14:51:46 -0500
-X-MC-Unique: F0leqwevPne0Cf6QkgNcbA-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4981E800D41;
-        Wed, 22 Jan 2020 19:51:44 +0000 (UTC)
-Received: from carbon (ovpn-200-26.brq.redhat.com [10.40.200.26])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 87F061001925;
-        Wed, 22 Jan 2020 19:51:34 +0000 (UTC)
-Date:   Wed, 22 Jan 2020 20:51:33 +0100
-From:   Jesper Dangaard Brouer <brouer@redhat.com>
-To:     Haiyang Zhang <haiyangz@microsoft.com>
-Cc:     brouer@redhat.com, sashal@kernel.org, linux-hyperv@vger.kernel.org,
-        netdev@vger.kernel.org, kys@microsoft.com, sthemmin@microsoft.com,
-        olaf@aepfle.de, vkuznets@redhat.com, davem@davemloft.net,
-        linux-kernel@vger.kernel.org,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>
-Subject: Re: [PATCH V3,net-next, 1/2] hv_netvsc: Add XDP support
-Message-ID: <20200122205133.00688f7c@carbon>
-In-Reply-To: <1579713814-36061-2-git-send-email-haiyangz@microsoft.com>
-References: <1579713814-36061-1-git-send-email-haiyangz@microsoft.com>
-        <1579713814-36061-2-git-send-email-haiyangz@microsoft.com>
+        Wed, 22 Jan 2020 14:52:12 -0500
+Received: from mga14.intel.com ([192.55.52.115]:9767 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726005AbgAVTwM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 14:52:12 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Jan 2020 11:52:11 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,350,1574150400"; 
+   d="scan'208";a="400111763"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by orsmga005.jf.intel.com with ESMTP; 22 Jan 2020 11:52:10 -0800
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1iuM2s-000H63-0f; Thu, 23 Jan 2020 03:52:10 +0800
+Date:   Thu, 23 Jan 2020 03:51:43 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     "x86-ml" <x86@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [tip:efi/core] BUILD SUCCESS
+ 0779221e7166c6865555bb6d29bf6af76fc316bd
+Message-ID: <5e28a7cf.opqtVaXcy/+hP344%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 22 Jan 2020 09:23:33 -0800
-Haiyang Zhang <haiyangz@microsoft.com> wrote:
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  efi/core
+branch HEAD: 0779221e7166c6865555bb6d29bf6af76fc316bd  efi/x86: Disallow efi=old_map in mixed mode
 
-> +u32 netvsc_run_xdp(struct net_device *ndev, struct netvsc_channel *nvchan,
-> +		   struct xdp_buff *xdp)
-> +{
-> +	void *data = nvchan->rsc.data[0];
-> +	u32 len = nvchan->rsc.len[0];
-> +	struct page *page = NULL;
-> +	struct bpf_prog *prog;
-> +	u32 act = XDP_PASS;
-> +
-> +	xdp->data_hard_start = NULL;
-> +
-> +	rcu_read_lock();
-> +	prog = rcu_dereference(nvchan->bpf_prog);
-> +
-> +	if (!prog)
-> +		goto out;
-> +
-> +	/* allocate page buffer for data */
-> +	page = alloc_page(GFP_ATOMIC);
+elapsed time: 674m
 
-The alloc_page() + __free_page() alone[1] cost 231 cycles(tsc) 64.395 ns.
-Thus, the XDP_DROP case will already be limited to just around 10Gbit/s
-14.88 Mpps (67.2ns).
+configs tested: 186
+configs skipped: 0
 
-XDP is suppose to be done for performance reasons. This looks like a
-slowdown.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-Measurement tool:
-[1] https://github.com/netoptimizer/prototype-kernel/blob/master/kernel/mm/bench/page_bench01.c
+um                                  defconfig
+um                             i386_defconfig
+um                           x86_64_defconfig
+x86_64                              fedora-25
+x86_64                                  kexec
+x86_64                                    lkp
+x86_64                                   rhel
+x86_64                               rhel-7.6
+h8300                    h8300h-sim_defconfig
+x86_64               randconfig-a001-20200122
+x86_64               randconfig-a002-20200122
+x86_64               randconfig-a003-20200122
+i386                 randconfig-a001-20200122
+i386                 randconfig-a002-20200122
+i386                 randconfig-a003-20200122
+alpha                randconfig-a001-20200122
+m68k                 randconfig-a001-20200122
+mips                 randconfig-a001-20200122
+nds32                randconfig-a001-20200122
+parisc               randconfig-a001-20200122
+riscv                randconfig-a001-20200122
+h8300                     edosk2674_defconfig
+h8300                       h8s-sim_defconfig
+m68k                             allmodconfig
+m68k                       m5475evb_defconfig
+m68k                          multi_defconfig
+m68k                           sun3_defconfig
+csky                 randconfig-a001-20200122
+openrisc             randconfig-a001-20200122
+s390                 randconfig-a001-20200122
+sh                   randconfig-a001-20200122
+xtensa               randconfig-a001-20200122
+sparc                            allyesconfig
+sparc                               defconfig
+sparc64                          allmodconfig
+sparc64                           allnoconfig
+sparc64                          allyesconfig
+sparc64                             defconfig
+ia64                             alldefconfig
+ia64                             allmodconfig
+ia64                              allnoconfig
+ia64                             allyesconfig
+ia64                                defconfig
+s390                             alldefconfig
+s390                             allmodconfig
+s390                              allnoconfig
+s390                             allyesconfig
+s390                          debug_defconfig
+s390                                defconfig
+s390                       zfcpdump_defconfig
+arc                  randconfig-a001-20200123
+arm                  randconfig-a001-20200123
+arm64                randconfig-a001-20200123
+ia64                 randconfig-a001-20200123
+powerpc              randconfig-a001-20200123
+sparc                randconfig-a001-20200123
+x86_64               randconfig-g001-20200122
+x86_64               randconfig-g002-20200122
+x86_64               randconfig-g003-20200122
+i386                 randconfig-g001-20200122
+i386                 randconfig-g002-20200122
+i386                 randconfig-g003-20200122
+i386                                defconfig
+parisc                            allnoconfig
+parisc                            allyesonfig
+parisc                         b180_defconfig
+parisc                        c3000_defconfig
+parisc                              defconfig
+alpha                               defconfig
+csky                                defconfig
+nds32                             allnoconfig
+nds32                               defconfig
+arm                              allmodconfig
+arm                               allnoconfig
+arm                              allyesconfig
+arm                         at91_dt_defconfig
+arm                           efm32_defconfig
+arm                          exynos_defconfig
+arm                        multi_v5_defconfig
+arm                        multi_v7_defconfig
+arm                        shmobile_defconfig
+arm                           sunxi_defconfig
+arm64                            allmodconfig
+arm64                             allnoconfig
+arm64                            allyesconfig
+arm64                               defconfig
+x86_64               randconfig-c001-20200122
+x86_64               randconfig-c002-20200122
+x86_64               randconfig-c003-20200122
+i386                 randconfig-c001-20200122
+i386                 randconfig-c002-20200122
+i386                 randconfig-c003-20200122
+microblaze                      mmu_defconfig
+c6x                  randconfig-a001-20200122
+h8300                randconfig-a001-20200122
+microblaze           randconfig-a001-20200122
+nios2                randconfig-a001-20200122
+sparc64              randconfig-a001-20200122
+x86_64               randconfig-d001-20200122
+x86_64               randconfig-d002-20200122
+x86_64               randconfig-d003-20200122
+i386                 randconfig-d001-20200122
+i386                 randconfig-d002-20200122
+i386                 randconfig-d003-20200122
+mips                           32r2_defconfig
+mips                         64r6el_defconfig
+mips                             allmodconfig
+mips                              allnoconfig
+mips                             allyesconfig
+mips                      fuloong2e_defconfig
+mips                      malta_kvm_defconfig
+x86_64               randconfig-b001-20200122
+x86_64               randconfig-b002-20200122
+x86_64               randconfig-b003-20200122
+i386                 randconfig-b001-20200122
+i386                 randconfig-b002-20200122
+i386                 randconfig-b003-20200122
+i386                             alldefconfig
+i386                              allnoconfig
+i386                             allyesconfig
+c6x                              allyesconfig
+c6x                        evmc6678_defconfig
+nios2                         10m50_defconfig
+nios2                         3c120_defconfig
+openrisc                    or1ksim_defconfig
+openrisc                 simple_smp_defconfig
+xtensa                       common_defconfig
+xtensa                          iss_defconfig
+riscv                            allmodconfig
+arc                  randconfig-a001-20200122
+arm                  randconfig-a001-20200122
+arm64                randconfig-a001-20200122
+ia64                 randconfig-a001-20200122
+powerpc              randconfig-a001-20200122
+sparc                randconfig-a001-20200122
+arc                              allyesconfig
+arc                                 defconfig
+microblaze                    nommu_defconfig
+powerpc                           allnoconfig
+powerpc                             defconfig
+powerpc                       ppc64_defconfig
+powerpc                          rhel-kconfig
+riscv                             allnoconfig
+riscv                            allyesconfig
+riscv                               defconfig
+riscv                    nommu_virt_defconfig
+riscv                          rv32_defconfig
+x86_64               randconfig-h001-20200122
+x86_64               randconfig-h002-20200122
+x86_64               randconfig-h003-20200122
+i386                 randconfig-h001-20200122
+i386                 randconfig-h002-20200122
+i386                 randconfig-h003-20200122
+sh                               allmodconfig
+sh                                allnoconfig
+sh                          rsk7269_defconfig
+sh                  sh7785lcr_32bit_defconfig
+sh                            titan_defconfig
+alpha                randconfig-a001-20200123
+m68k                 randconfig-a001-20200123
+mips                 randconfig-a001-20200123
+nds32                randconfig-a001-20200123
+parisc               randconfig-a001-20200123
+riscv                randconfig-a001-20200123
+x86_64               randconfig-b001-20200123
+x86_64               randconfig-b002-20200123
+x86_64               randconfig-b003-20200123
+i386                 randconfig-b001-20200123
+i386                 randconfig-b002-20200123
+i386                 randconfig-b003-20200123
+x86_64               randconfig-e001-20200122
+x86_64               randconfig-e002-20200122
+x86_64               randconfig-e003-20200122
+i386                 randconfig-e001-20200122
+i386                 randconfig-e002-20200122
+i386                 randconfig-e003-20200122
+csky                 randconfig-a001-20200123
+openrisc             randconfig-a001-20200123
+s390                 randconfig-a001-20200123
+sh                   randconfig-a001-20200123
+xtensa               randconfig-a001-20200123
+c6x                  randconfig-a001-20200123
+h8300                randconfig-a001-20200123
+microblaze           randconfig-a001-20200123
+nios2                randconfig-a001-20200123
+sparc64              randconfig-a001-20200123
 
-> +	if (!page) {
-> +		act = XDP_DROP;
-> +		goto out;
-> +	}
-> +
-> +	xdp->data_hard_start = page_address(page);
-> +	xdp->data = xdp->data_hard_start + NETVSC_XDP_HDRM;
-> +	xdp_set_data_meta_invalid(xdp);
-> +	xdp->data_end = xdp->data + len;
-> +	xdp->rxq = &nvchan->xdp_rxq;
-> +	xdp->handle = 0;
-> +
-> +	memcpy(xdp->data, data, len);
-
-And a memcpy.
-
-> +
-> +	act = bpf_prog_run_xdp(prog, xdp);
-> +
-> +	switch (act) {
-> +	case XDP_PASS:
-> +	case XDP_TX:
-> +	case XDP_DROP:
-> +		break;
-> +
-> +	case XDP_ABORTED:
-> +		trace_xdp_exception(ndev, prog, act);
-> +		break;
-> +
-> +	default:
-> +		bpf_warn_invalid_xdp_action(act);
-> +	}
-> +
-> +out:
-> +	rcu_read_unlock();
-> +
-> +	if (page && act != XDP_PASS && act != XDP_TX) {
-> +		__free_page(page);
-
-Given this runs under NAPI you could optimize this easily for XDP_DROP
-(and XDP_ABORTED) by recycling the page in a driver local cache. (The
-page_pool also have a driver local cache build in, but it might be
-overkill to use page_pool in this simple case).
-
-You could do this in a followup patch.
-
-> +		xdp->data_hard_start = NULL;
-> +	}
-> +
-> +	return act;
-> +}
-
-
-
--- 
-Best regards,
-  Jesper Dangaard Brouer
-  MSc.CS, Principal Kernel Engineer at Red Hat
-  LinkedIn: http://www.linkedin.com/in/brouer
-
+---
+0-DAY kernel test infrastructure                 Open Source Technology Center
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org Intel Corporation
