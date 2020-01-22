@@ -2,216 +2,63 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D28FC33CB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 14:20:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A236CC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 14:22:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31DDC24655
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 14:20:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Nxo4JAVD"
+	by mail.kernel.org (Postfix) with ESMTP id 82DB2217F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 14:22:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726204AbgAVOUO (ORCPT
+        id S1726871AbgAVOWd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 09:20:14 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:39079 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725856AbgAVOUO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 09:20:14 -0500
-Received: by mail-wr1-f67.google.com with SMTP id y11so7446102wrt.6;
-        Wed, 22 Jan 2020 06:20:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:references:in-reply-to:subject:date:message-id
-         :mime-version:content-transfer-encoding:content-language
-         :thread-index;
-        bh=odnlfbvxedcHwvzaTKwKNF5iVHJvzgGKZs+f4uhTfbY=;
-        b=Nxo4JAVDWWjxWcaBJ7R+w5aSZB0FJbdshdVCP5DVio7OHL23Bd+6sjIXc0lPBiNWaF
-         Dj2+5sSQcedPgKGQxNIi3Ar8kB+ZPy23Yo7LUFjnQl1/x0TfpUv6X6wqZyMTfZFDuvlN
-         WR6OtRILHPqzu4ZHXP3n86+hg1++CipAXzyCq4VrVXM8VSzqWbxs39Qu6A2xVhz214lm
-         NEhAbFD9jsnuApVnteL65WxoCASNfp6o0/lPmXlLb2GPRS473KgqoP9ocMQjXOvyveJr
-         hHMLZnlpQz1RSw1hf5rMR2TH/gVNU/rsBmLfPgEaSJRiY9mvofrk1lrxo6cYUE3ck+Yh
-         FmKQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:references:in-reply-to:subject:date
-         :message-id:mime-version:content-transfer-encoding:content-language
-         :thread-index;
-        bh=odnlfbvxedcHwvzaTKwKNF5iVHJvzgGKZs+f4uhTfbY=;
-        b=iWdOPrLn0pcKTsRF+UX3TkzkVBHL7+yFgAEPH4ezId+2G0Y/gDrv9zbZ0hjZUiIxow
-         s0a0d+k5o5RH3XroJ6ugmj73Xo5jdb+P9MtWcptbITao4KchDURtTILWV+SlT2uVSigF
-         Hm73FKEV1EvIZxbnui52HIGfofIxvbW+Y9bai2tOea+x7d3XnFE0VFjvkqEDpp2VgjJP
-         AbESBIOMRQXKuisUtD0cOEmpqyXt1gSU8kgM486hvN8I7srxMK3mmNFQd4yXbtw1GwJh
-         SkxxHn2hcosP7o4pNNZacCsQg4mDbWF7D5gTx5FjkDCuev1WqQgbJfGBsDPYpW9u3jpz
-         0mkQ==
-X-Gm-Message-State: APjAAAW/r986YEXl1m0Aw6/fWZZq79wwxCBUH07/ALI4VNWeUTgEchLY
-        liRTDhxzWcmXqwcq2e1gRC9QkFk912A=
-X-Google-Smtp-Source: APXvYqxXMCagPH7ACZQuJnRY3ckz5tf7Z7cqmlNzon7OzF+oVwLBC1U+byz8fb0maIhABYquDRU+xg==
-X-Received: by 2002:a5d:458d:: with SMTP id p13mr11471660wrq.314.1579702811459;
-        Wed, 22 Jan 2020 06:20:11 -0800 (PST)
-Received: from WINDOWSSS5SP16 ([82.31.89.128])
-        by smtp.gmail.com with ESMTPSA id a1sm57206102wrr.80.2020.01.22.06.20.10
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 22 Jan 2020 06:20:10 -0800 (PST)
-From:   "Robert Milkowski" <rmilkowski@gmail.com>
-To:     "'Trond Myklebust'" <trondmy@hammerspace.com>,
-        <linux-nfs@vger.kernel.org>
-Cc:     <anna.schumaker@netapp.com>, <linux-kernel@vger.kernel.org>,
-        <chuck.lever@oracle.com>
-References: <115c01d5c66d$5dcd7ae0$196870a0$@gmail.com>  <041101d5cd50$e398d720$aaca8560$@gmail.com> <962370db9ae3ba5a17ba390afe7f9de6cea571d4.camel@hammerspace.com>
-In-Reply-To: <962370db9ae3ba5a17ba390afe7f9de6cea571d4.camel@hammerspace.com>
-Subject: RE: [PATCH v2] NFSv4: try lease recovery on NFS4ERR_EXPIRED
-Date:   Wed, 22 Jan 2020 14:20:09 -0000
-Message-ID: <06bd01d5d12f$0e2288b0$2a679a10$@gmail.com>
+        Wed, 22 Jan 2020 09:22:33 -0500
+Received: from foss.arm.com ([217.140.110.172]:57076 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725871AbgAVOWd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 09:22:33 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0A210328;
+        Wed, 22 Jan 2020 06:22:33 -0800 (PST)
+Received: from [10.1.194.46] (e113632-lin.cambridge.arm.com [10.1.194.46])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 08C9D3F52E;
+        Wed, 22 Jan 2020 06:22:31 -0800 (PST)
+Subject: Re: [PATCH v2] sched/fair: Optimize select_idle_core
+To:     Mel Gorman <mgorman@techsingularity.net>,
+        Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Rik van Riel <riel@surriel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vincent Guittot <vincent.guittot@linaro.org>
+References: <20191206172422.6578-1-srikar@linux.vnet.ibm.com>
+ <20200122135509.GW3466@techsingularity.net>
+From:   Valentin Schneider <valentin.schneider@arm.com>
+Message-ID: <0813a57a-093b-2aae-b037-f0a4955c716a@arm.com>
+Date:   Wed, 22 Jan 2020 14:22:30 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-X-Mailer: Microsoft Outlook 16.0
-Content-Language: en-gb
-Thread-Index: AQLAInB1/y2S+pDlHaM8/Hn+WlDXpAIdMZh3AfDH9S2l/rsNYA==
+In-Reply-To: <20200122135509.GW3466@techsingularity.net>
+Content-Type: text/plain; charset=iso-8859-15
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> -----Original Message-----
-> From: Trond Myklebust <trondmy@hammerspace.com>
-> Sent: 17 January 2020 17:24
-> To: linux-nfs@vger.kernel.org; rmilkowski@gmail.com
-> Cc: anna.schumaker@netapp.com; linux-kernel@vger.kernel.org;
-> chuck.lever@oracle.com
-> Subject: Re: [PATCH v2] NFSv4: try lease recovery on NFS4ERR_EXPIRED
->=20
-> On Fri, 2020-01-17 at 16:12 +0000, Robert Milkowski wrote:
-> > Anyone please?
-> >
-> >
-> > -----Original Message-----
-> > From: Robert Milkowski <rmilkowski@gmail.com>
-> > Sent: 08 January 2020 21:48
-> > To: linux-nfs@vger.kernel.org
-> > Cc: 'Trond Myklebust' <trondmy@hammerspace.com>; 'Chuck Lever'
-> > <chuck.lever@oracle.com>; 'Anna Schumaker' =
-<anna.schumaker@netapp.com
-> > >;
-> > linux-kernel@vger.kernel.org
-> > Subject: [PATCH v2] NFSv4: try lease recovery on NFS4ERR_EXPIRED
-> >
-> > From: Robert Milkowski <rmilkowski@gmail.com>
-> >
-> > Currently, if an nfs server returns NFS4ERR_EXPIRED to open(), etc.
-> > we return EIO to applications without even trying to recover.
-> >
-> > Fixes: 272289a3df72 ("NFSv4: nfs4_do_handle_exception() handle
-> > revoke/expiry of a single stateid")
-> > Signed-off-by: Robert Milkowski <rmilkowski@gmail.com>
-> > ---
-> >  fs/nfs/nfs4proc.c | 4 ++++
-> >  1 file changed, 4 insertions(+)
-> >
-> > diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c index
-> > 76d3716..2478405
-> > 100644
-> > --- a/fs/nfs/nfs4proc.c
-> > +++ b/fs/nfs/nfs4proc.c
-> > @@ -481,6 +481,10 @@ static int nfs4_do_handle_exception(struct
-> > nfs_server *server,
-> >  						stateid);
-> >  				goto wait_on_recovery;
-> >  			}
-> > +			if (state =3D=3D NULL) {
-> > +				nfs4_schedule_lease_recovery(clp);
-> > +				goto wait_on_recovery;
-> > +			}
-> >  			/* Fall through */
-> >  		case -NFS4ERR_OPENMODE:
-> >  			if (inode) {
-> > --
-> > 1.8.3.1
-> >
-> >
->=20
-> Does this apply to any case other than NFS4ERR_EXPIRED in the specific
-> case of nfs4_do_open()? I can't see that it does. It looks to me as if
-> the open recovery routines already have their own handling of this =
-case.
+On 22/01/2020 13:55, Mel Gorman wrote:
+> 
+> Acked-by: Mel Gorman <mgorman@techsingularity.net>
+> 
+> I'm a bit surprised to not see this in linux-next or tip. Did this get
+> rejected or did it accidentally get overlooked because the subject is so
+> similar to 60588bfa223f ("sched/fair: Optimize select_idle_cpu") ?
+> 
 
-I only observed the issue with open(). After further
-review I think you are right and it only applies to nfs4_do_open().
-
-
->=20
-> If so, why not just add it as a special case in the nfs4_do_open() =
-error
-> handling? Otherwise this patch will end up overriding other generic
-> cases where we have an inode, but no open state.
->=20
-
-Fair point.
-So perhaps, few lines further instead of:
-
-			if (inode) {
-...
-			if (state =3D=3D NULL) {
-					break;
-			}
-
-There should be:
-
-			if (inode) {
-...
-			if (state =3D=3D NULL) {
-				nfs4_schedule_lease_recovery(clp);
-				goto wait_on_recovery;
-			}
-
-
-
-This way we know that inode cannot be null at this point, and it's a =
-case where both inode and state are NULL.
-This would be a little bit more general in case we reach this point.
-
-But if you think it is better to move it to nfs4_do_open() then I've =
-just tested the following patch:
-
-diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-index 76d3716..b7c4044 100644
---- a/fs/nfs/nfs4proc.c
-+++ b/fs/nfs/nfs4proc.c
-@@ -3187,6 +3187,11 @@ static struct nfs4_state *nfs4_do_open(struct =
-inode *dir,
-                        exception.retry =3D 1;
-                        continue;
-                }
-+               if (status =3D=3D -NFS4ERR_EXPIRED) {
-+                       =
-nfs4_schedule_lease_recovery(server->nfs_client);
-+                       exception.retry =3D 1;
-+                       continue;
-+               }
-                if (status =3D=3D -EAGAIN) {
-                        /* We must have found a delegation */
-                        exception.retry =3D 1;
-
-
-
-Please let me know which way you want to proceed and I will submit an =
-updated patch.
-
-
-
-> Note that _nfs4_do_open() already waits for lease recovery, so we only
-> need the call to nfs_schedule_lease_recovery().
->
-
-Yep
-
---=20
-Robert Milkowski
-
+Most likely the latter; I also had completely forgotten about it and had to
+retrace where and when I reviewed that...
