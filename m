@@ -7,52 +7,56 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2CE4C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:41:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D283C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:41:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80E6E24688
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:41:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14F7624687
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:41:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579686103;
-	bh=V66rkrlWflj1hEr6H8H1kCTKqGFbsByGYb1PUWLNqpk=;
+	s=default; t=1579686107;
+	bh=zifoekzfikkN0HLVFky+MYhZyiAk46TKaY6JJyZfnH0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fgc2K+Lgw1388yJegQkYvabqj6aHXbDVPoJfBTh+1Vi1xLhLxJFhxASex1HIePstb
-	 B340pf1hIiGSJ+IgmM+8G9f+PrbOpEmWphLCPVrummM1iDPMBx9r/K+d88vT4WtHzC
-	 Wp6YDGPLYvk+FbhZ96khs7mjnyFfor7UJdq9lkWw=
+	b=pkbu8plft3Moz9D1KOKx3nzcncbJLjifBL+h9r0sBVQKHDrLSTRZKioI+lz9fJGEW
+	 +Bu55TEtKiIjt/CJ3Sz7f/GPZmUiJmb5LlnQaun0OfEhWfF950ZRfYWDrvxrPUs6hV
+	 dlQttP1IOxz22QObNUufoURQRXpbr1q6nn8ddTP0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387606AbgAVJlm (ORCPT
+        id S2387613AbgAVJlq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 04:41:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:32792 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 04:41:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:32872 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387574AbgAVJla (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 04:41:30 -0500
+        id S1729774AbgAVJlf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 04:41:35 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A38932467B;
-        Wed, 22 Jan 2020 09:41:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4E07A2467B;
+        Wed, 22 Jan 2020 09:41:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579686090;
-        bh=V66rkrlWflj1hEr6H8H1kCTKqGFbsByGYb1PUWLNqpk=;
+        s=default; t=1579686094;
+        bh=zifoekzfikkN0HLVFky+MYhZyiAk46TKaY6JJyZfnH0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=s+Bf5Xhb449N1lpJ470YQK/itlNc3TzDSy6CyGEIirIs6yGSvIAuyoPJyA172f7eV
-         BPb5dt6idDcGaQXn7YB4epudPUu16mDpKNQFPG6PBd/rYUVn/btoALGfux79IW0ZMa
-         PNFzHCxMZIiw8C/bMAO50dp11rjQhpQl9UkLu9S0=
+        b=CJ3Rrf/VNitsNmozXu0eg2aiP+GEtyw5Iz912UgBsFDk+e3XPoS99pTn4w26SBRUb
+         P6AyUOPj5KCb16kgMoMk1BJVoAPmkcDUNBJM+qIXLTVtfiYlQXY1QYtxDYsXPEeUFR
+         0CqQvdtPSG2CZdFLL7/HUP7QtqAOQRthhLyTBHJ4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jin Yao <yao.jin@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Feng Tang <feng.tang@intel.com>, Jin Yao <yao.jin@intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: [PATCH 4.19 039/103] perf report: Fix incorrectly added dimensions as switch perf data file
-Date:   Wed, 22 Jan 2020 10:28:55 +0100
-Message-Id: <20200122092809.794796388@linuxfoundation.org>
+        stable@vger.kernel.org, Adrian Huang <ahuang12@lenovo.com>,
+        Xiaochun Lee <lixc17@lenovo.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Joerg Roedel <jroedel@suse.de>,
+        Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.19 041/103] mm: memcg/slab: call flush_memcg_workqueue() only if memcg workqueue is valid
+Date:   Wed, 22 Jan 2020 10:28:57 +0100
+Message-Id: <20200122092810.080610687@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200122092803.587683021@linuxfoundation.org>
 References: <20200122092803.587683021@linuxfoundation.org>
@@ -65,69 +69,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jin Yao <yao.jin@linux.intel.com>
+From: Adrian Huang <ahuang12@lenovo.com>
 
-commit 0feba17bd7ee3b7e03d141f119049dcc23efa94e upstream.
+commit 2fe20210fc5f5e62644678b8f927c49f2c6f42a7 upstream.
 
-We observed an issue that was some extra columns displayed after switching
-perf data file in browser. The steps to reproduce:
+When booting with amd_iommu=off, the following WARNING message
+appears:
 
-1. perf record -a -e cycles,instructions -- sleep 3
-2. perf report --group
-3. In browser, we use hotkey 's' to switch to another perf.data
-4. Now in browser, the extra columns 'Self' and 'Children' are displayed.
+  AMD-Vi: AMD IOMMU disabled on kernel command-line
+  ------------[ cut here ]------------
+  WARNING: CPU: 0 PID: 0 at kernel/workqueue.c:2772 flush_workqueue+0x42e/0x450
+  Modules linked in:
+  CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.5.0-rc3-amd-iommu #6
+  Hardware name: Lenovo ThinkSystem SR655-2S/7D2WRCZ000, BIOS D8E101L-1.00 12/05/2019
+  RIP: 0010:flush_workqueue+0x42e/0x450
+  Code: ff 0f 0b e9 7a fd ff ff 4d 89 ef e9 33 fe ff ff 0f 0b e9 7f fd ff ff 0f 0b e9 bc fd ff ff 0f 0b e9 a8 fd ff ff e8 52 2c fe ff <0f> 0b 31 d2 48 c7 c6 e0 88 c5 95 48 c7 c7 d8 ad f0 95 e8 19 f5 04
+  Call Trace:
+   kmem_cache_destroy+0x69/0x260
+   iommu_go_to_state+0x40c/0x5ab
+   amd_iommu_prepare+0x16/0x2a
+   irq_remapping_prepare+0x36/0x5f
+   enable_IR_x2apic+0x21/0x172
+   default_setup_apic_routing+0x12/0x6f
+   apic_intr_mode_init+0x1a1/0x1f1
+   x86_late_time_init+0x17/0x1c
+   start_kernel+0x480/0x53f
+   secondary_startup_64+0xb6/0xc0
+  ---[ end trace 30894107c3749449 ]---
+  x2apic: IRQ remapping doesn't support X2APIC mode
+  x2apic disabled
 
-The issue is setup_sorting() executed again after repeat path, so dimensions
-are added again.
+The warning is caused by the calling of 'kmem_cache_destroy()'
+in free_iommu_resources(). Here is the call path:
 
-This patch checks the last key returned from __cmd_report(). If it's
-K_SWITCH_INPUT_DATA, skips the setup_sorting().
+  free_iommu_resources
+    kmem_cache_destroy
+      flush_memcg_workqueue
+        flush_workqueue
 
-Fixes: ad0de0971b7f ("perf report: Enable the runtime switching of perf data file")
-Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Acked-by: Jiri Olsa <jolsa@redhat.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Feng Tang <feng.tang@intel.com>
-Cc: Jin Yao <yao.jin@intel.com>
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lore.kernel.org/lkml/20191220013722.20592-1-yao.jin@linux.intel.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+The root cause is that the IOMMU subsystem runs before the workqueue
+subsystem, which the variable 'wq_online' is still 'false'.  This leads
+to the statement 'if (WARN_ON(!wq_online))' in flush_workqueue() is
+'true'.
+
+Since the variable 'memcg_kmem_cache_wq' is not allocated during the
+time, it is unnecessary to call flush_memcg_workqueue().  This prevents
+the WARNING message triggered by flush_workqueue().
+
+Link: http://lkml.kernel.org/r/20200103085503.1665-1-ahuang12@lenovo.com
+Fixes: 92ee383f6daab ("mm: fix race between kmem_cache destroy, create and deactivate")
+Signed-off-by: Adrian Huang <ahuang12@lenovo.com>
+Reported-by: Xiaochun Lee <lixc17@lenovo.com>
+Reviewed-by: Shakeel Butt <shakeelb@google.com>
+Cc: Joerg Roedel <jroedel@suse.de>
+Cc: Christoph Lameter <cl@linux.com>
+Cc: Pekka Enberg <penberg@kernel.org>
+Cc: David Rientjes <rientjes@google.com>
+Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+Cc: Michal Hocko <mhocko@kernel.org>
+Cc: Johannes Weiner <hannes@cmpxchg.org>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- tools/perf/builtin-report.c |    5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ mm/slab_common.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/tools/perf/builtin-report.c
-+++ b/tools/perf/builtin-report.c
-@@ -961,6 +961,7 @@ int cmd_report(int argc, const char **ar
- 	struct stat st;
- 	bool has_br_stack = false;
- 	int branch_mode = -1;
-+	int last_key = 0;
- 	bool branch_call_mode = false;
- #define CALLCHAIN_DEFAULT_OPT  "graph,0.5,caller,function,percent"
- 	const char report_callchain_help[] = "Display call graph (stack chain/backtrace):\n\n"
-@@ -1292,7 +1293,8 @@ repeat:
- 	else
- 		use_browser = 0;
- 
--	if (setup_sorting(session->evlist) < 0) {
-+	if ((last_key != K_SWITCH_INPUT_DATA) &&
-+	    (setup_sorting(session->evlist) < 0)) {
- 		if (sort_order)
- 			parse_options_usage(report_usage, options, "s", 1);
- 		if (field_order)
-@@ -1390,6 +1392,7 @@ repeat:
- 	ret = __cmd_report(&report);
- 	if (ret == K_SWITCH_INPUT_DATA) {
- 		perf_session__delete(session);
-+		last_key = K_SWITCH_INPUT_DATA;
- 		goto repeat;
- 	} else
- 		ret = 0;
+--- a/mm/slab_common.c
++++ b/mm/slab_common.c
+@@ -850,7 +850,8 @@ static void flush_memcg_workqueue(struct
+ 	 * deactivates the memcg kmem_caches through workqueue. Make sure all
+ 	 * previous workitems on workqueue are processed.
+ 	 */
+-	flush_workqueue(memcg_kmem_cache_wq);
++	if (likely(memcg_kmem_cache_wq))
++		flush_workqueue(memcg_kmem_cache_wq);
+ }
+ #else
+ static inline int shutdown_memcg_caches(struct kmem_cache *s)
 
 
