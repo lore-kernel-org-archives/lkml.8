@@ -2,413 +2,311 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FD29C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 03:16:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2CDDC32771
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 03:17:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB3A924655
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 03:16:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RhTTWk9n"
+	by mail.kernel.org (Postfix) with ESMTP id 9CF2724655
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 03:17:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729145AbgAVDQD (ORCPT
+        id S1729187AbgAVDRN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 22:16:03 -0500
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:44223 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728779AbgAVDQD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 22:16:03 -0500
-Received: by mail-qk1-f196.google.com with SMTP id v195so4914911qkb.11;
-        Tue, 21 Jan 2020 19:16:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=muLpfy5fi0MCMSJBQguUQ/yNJtcASm3thJACvz7P3kQ=;
-        b=RhTTWk9nHg/iStqEbWido5yPl+LlqXEBGJIOIkvDjIw/CDFV1Mx1Nzt6wl8f217XBI
-         zr9tOkylFU6T/6ri5aEI/cW5LYQ4GV8BS+AxaWi4Xd/qInOZP/gWUUM4MOcQl+VK3Jmj
-         IL8+1bQOwtFYMjI1Wciw2uteTYMcwGZ1ZHZr7JjddZYLe1ufA86oUOxQV/otNZMG0nnp
-         Xo8bXGnl2XtmtyeLahQm31Fc6rLXlWKmLvItuwzFwWEKcoVFITLvMRDQZWN0y2Qq5HQY
-         YnoiTfetma/yptigt+r0iFM785HkLxDn3dCTvjy0Rt2n6oE7NAddh927/sTLxQMzsR9J
-         +Gag==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=muLpfy5fi0MCMSJBQguUQ/yNJtcASm3thJACvz7P3kQ=;
-        b=rNHliwd2RbBl884t4vwFuV7j2I0yNE0PCJ0hWz1dGBTCLdyAX7iTCxWdA3WELfGUVh
-         ZLXJJDZl3DICBFuVLian+fZA5o0XIFPym6C1r3ddAmA2mwXh+URoYhQsRy1p0xU35DGH
-         qzKoGGLYTzw3r/F238nN7Pn9qMVPCOuLky3bb+/wcM1OLaZyzAOiY9FelDT7GfH6Z8oK
-         IVgeurGI7w9JBtJM76UMkmk4r+3/oxpm7j+PA2lbPoeusXcTIhMQsyKdIydEsWyaQURG
-         vPxLFM8rg2rT0+O03E6DaRV/q0idARecYNvt8qWug4W75MbIspnG0nEvLYCrhG22KG21
-         om0A==
-X-Gm-Message-State: APjAAAUV/hrc1W480XMMu52VAPHJmhlreKszCsNV6V8lqHUYMh4IazPo
-        enZa+v/DC9VC6+hnYktGeQQ=
-X-Google-Smtp-Source: APXvYqw48tpnEXB7qMFERIwZohHPGojqbt7Jmo87mMJgV0+CRos2/6BACWynNdoWH9tk7QAsCcyDkQ==
-X-Received: by 2002:a37:9f94:: with SMTP id i142mr7974780qke.244.1579662961767;
-        Tue, 21 Jan 2020 19:16:01 -0800 (PST)
-Received: from localhost.localdomain ([2804:14d:72b1:8920:a2ce:f815:f14d:bfac])
-        by smtp.gmail.com with ESMTPSA id n1sm17878751qkk.122.2020.01.21.19.15.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Jan 2020 19:16:01 -0800 (PST)
-From:   "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>
-X-Google-Original-From: Daniel W. S. Almeida
-To:     mchehab@kernel.org, sean@mess.org, tglx@linutronix.de,
-        gregkh@linuxfoundation.org
-Cc:     "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        skhan@linuxfoundation.org,
-        linux-kernel-mentees@lists.linuxfoundation.org
-Subject: [PATCH v4] media: dvb_dummy_tuner: implement driver skeleton
-Date:   Wed, 22 Jan 2020 00:14:45 -0300
-Message-Id: <20200122031445.2316701-1-dwlsalmeida@gmail.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200113191939.1555533-1-dwlsalmeida@gmail.com>
-References: <20200113191939.1555533-1-dwlsalmeida@gmail.com>
+        Tue, 21 Jan 2020 22:17:13 -0500
+Received: from mga05.intel.com ([192.55.52.43]:64595 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728779AbgAVDRN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jan 2020 22:17:13 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Jan 2020 19:17:12 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,347,1574150400"; 
+   d="scan'208";a="259310885"
+Received: from joy-optiplex-7040.sh.intel.com (HELO joy-OptiPlex-7040) ([10.239.13.16])
+  by fmsmga002.fm.intel.com with ESMTP; 21 Jan 2020 19:17:11 -0800
+Date:   Tue, 21 Jan 2020 22:07:58 -0500
+From:   Yan Zhao <yan.y.zhao@intel.com>
+To:     Alex Williamson <alex.williamson@redhat.com>
+Cc:     "Tian, Kevin" <kevin.tian@intel.com>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "peterx@redhat.com" <peterx@redhat.com>,
+        "zhenyuw@linux.intel.com" <zhenyuw@linux.intel.com>,
+        "pbonzini@redhat.com" <pbonzini@redhat.com>,
+        "intel-gvt-dev@lists.freedesktop.org" 
+        <intel-gvt-dev@lists.freedesktop.org>
+Subject: Re: [PATCH v2 2/2] drm/i915/gvt: subsitute kvm_read/write_guest with
+ vfio_dma_rw
+Message-ID: <20200122030758.GI1759@joy-OptiPlex-7040>
+Reply-To: Yan Zhao <yan.y.zhao@intel.com>
+References: <20200115034132.2753-1-yan.y.zhao@intel.com>
+ <20200115035455.12417-1-yan.y.zhao@intel.com>
+ <20200115130651.29d7e9e0@w520.home>
+ <20200116054941.GB1759@joy-OptiPlex-7040>
+ <20200116083729.40983f38@w520.home>
+ <20200119100637.GD1759@joy-OptiPlex-7040>
+ <20200120130157.0ee7042d@w520.home>
+ <20200121081207.GE1759@joy-OptiPlex-7040>
+ <20200121095116.05eeae14@w520.home>
+ <20200121221038.GH1759@joy-OptiPlex-7040>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200121221038.GH1759@joy-OptiPlex-7040>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>
+On Wed, Jan 22, 2020 at 06:10:38AM +0800, Yan Zhao wrote:
+> On Wed, Jan 22, 2020 at 12:51:16AM +0800, Alex Williamson wrote:
+> > On Tue, 21 Jan 2020 03:12:07 -0500
+> > Yan Zhao <yan.y.zhao@intel.com> wrote:
+> > 
+> > > On Tue, Jan 21, 2020 at 04:01:57AM +0800, Alex Williamson wrote:
+> > > > On Sun, 19 Jan 2020 05:06:37 -0500
+> > > > Yan Zhao <yan.y.zhao@intel.com> wrote:
+> > > >   
+> > > > > On Thu, Jan 16, 2020 at 11:37:29PM +0800, Alex Williamson wrote:  
+> > > > > > On Thu, 16 Jan 2020 00:49:41 -0500
+> > > > > > Yan Zhao <yan.y.zhao@intel.com> wrote:
+> > > > > >     
+> > > > > > > On Thu, Jan 16, 2020 at 04:06:51AM +0800, Alex Williamson wrote:    
+> > > > > > > > On Tue, 14 Jan 2020 22:54:55 -0500
+> > > > > > > > Yan Zhao <yan.y.zhao@intel.com> wrote:
+> > > > > > > >       
+> > > > > > > > > As a device model, it is better to read/write guest memory using vfio
+> > > > > > > > > interface, so that vfio is able to maintain dirty info of device IOVAs.
+> > > > > > > > > 
+> > > > > > > > > Compared to kvm interfaces kvm_read/write_guest(), vfio_dma_rw() has ~600
+> > > > > > > > > cycles more overhead on average.
+> > > > > > > > > 
+> > > > > > > > > -------------------------------------
+> > > > > > > > > |    interface     | avg cpu cycles |
+> > > > > > > > > |-----------------------------------|
+> > > > > > > > > | kvm_write_guest  |     1554       |
+> > > > > > > > > | ----------------------------------|
+> > > > > > > > > | kvm_read_guest   |     707        |
+> > > > > > > > > |-----------------------------------|
+> > > > > > > > > | vfio_dma_rw(w)   |     2274       |
+> > > > > > > > > |-----------------------------------|
+> > > > > > > > > | vfio_dma_rw(r)   |     1378       |
+> > > > > > > > > -------------------------------------      
+> > > > > > > > 
+> > > > > > > > In v1 you had:
+> > > > > > > > 
+> > > > > > > > -------------------------------------
+> > > > > > > > |    interface     | avg cpu cycles |
+> > > > > > > > |-----------------------------------|
+> > > > > > > > | kvm_write_guest  |     1546       |
+> > > > > > > > | ----------------------------------|
+> > > > > > > > | kvm_read_guest   |     686        |
+> > > > > > > > |-----------------------------------|
+> > > > > > > > | vfio_iova_rw(w)  |     2233       |
+> > > > > > > > |-----------------------------------|
+> > > > > > > > | vfio_iova_rw(r)  |     1262       |
+> > > > > > > > -------------------------------------
+> > > > > > > > 
+> > > > > > > > So the kvm numbers remained within +0.5-3% while the vfio numbers are
+> > > > > > > > now +1.8-9.2%.  I would have expected the algorithm change to at least
+> > > > > > > > not be worse for small accesses and be better for accesses crossing
+> > > > > > > > page boundaries.  Do you know what happened?
+> > > > > > > >      
+> > > > > > > I only tested the 4 interfaces in GVT's environment, where most of the
+> > > > > > > guest memory accesses are less than one page.
+> > > > > > > And the different fluctuations should be caused by the locks.
+> > > > > > > vfio_dma_rw contends locks with other vfio accesses which are assumed to
+> > > > > > > be abundant in the case of GVT.    
+> > > > > > 
+> > > > > > Hmm, so maybe it's time to convert vfio_iommu.lock from a mutex to a
+> > > > > > rwsem?  Thanks,
+> > > > > >     
+> > > > > 
+> > > > > hi Alex
+> > > > > I tested your rwsem patches at (https://lkml.org/lkml/2020/1/16/1869).
+> > > > > They works without any runtime error at my side. :) 
+> > > > > However, I found out that the previous fluctuation may be because I didn't
+> > > > > take read/write counts in to account.
+> > > > > For example. though the two tests have different avg read/write cycles,
+> > > > > their average cycles are almost the same.
+> > > > >  ______________________________________________________________________
+> > > > > |        | avg read |            | avg write |            |            |
+> > > > > |        | cycles   | read cnt   | cycles    | write cnt  | avg cycles |
+> > > > > |----------------------------------------------------------------------|
+> > > > > | test 1 |   1339   | 29,587,120 |  2258     | 17,098,364 |    1676    |
+> > > > > | test 2 |   1340   | 28,454,262 |  2238     | 16,501,788 |    1670    |
+> > > > >  ----------------------------------------------------------------------
+> > > > > 
+> > > > > After measuring the exact read/write cnt and cycles of a specific workload,
+> > > > > I get below findings:
+> > > > > 
+> > > > > (1) with single VM running glmark2 inside.
+> > > > > glmark2: 40M+ read+write cnt, among which 63% is read.
+> > > > > among reads, 48% is of PAGE_SIZE, the rest is less than a page.
+> > > > > among writes, 100% is less than a page.
+> > > > > 
+> > > > >  __________________________________________________
+> > > > > |       cycles         | read | write |  avg | inc |
+> > > > > |--------------------------------------------------|
+> > > > > | kvm_read/write_page  |  694 |  1506 |  993 |  /  |
+> > > > > |--------------------------------------------------|
+> > > > > |  vfio_dma_rw(mutex)  | 1340 |  2248 | 1673 | 680 |
+> > > > > |--------------------------------------------------|
+> > > > > | vfio_dma_rw(rwsem r) | 1323 |  2198 | 1645 | 653 |
+> > > > >  ---------------------------------------------------
+> > > > > 
+> > > > > so vfio_dma_rw generally has 650+ more cycles per each read/write.
+> > > > > While kvm->srcu is of 160 cycles on average with one vm is running, the
+> > > > > cycles spending on locks for vfio_dma_rw spread like this:
+> > > > >  ___________________________
+> > > > > |        cycles       | avg |
+> > > > > |---------------------------|
+> > > > > |     iommu->lock     | 117 |
+> > > > > |---------------------------|
+> > > > > |   vfio.group_lock   | 108 |
+> > > > > |---------------------------|
+> > > > > | group->unbound_lock | 114 |
+> > > > > |---------------------------|
+> > > > > |  group->device_lock | 115 |
+> > > > > |---------------------------|
+> > > > > |     group->mutex    | 113 |
+> > > > >  ---------------------------
+> > > > > 
+> > > > > I measured the cycles for a mutex without any contention is 104 cycles
+> > > > > on average (including time for get_cycles() and measured in the same way
+> > > > > as other locks). So the contention of a single lock in a single vm
+> > > > > environment is light. probably because there's a vgpu lock hold in GVT already.
+> > > > > 
+> > > > > (2) with two VMs each running glmark2 inside.
+> > > > > The contention increases a little.
+> > > > > 
+> > > > >  ___________________________________________________
+> > > > > |       cycles         | read | write |  avg | inc  |
+> > > > > |---------------------------------------------------|
+> > > > > | kvm_read/write_page  | 1035 |  1832 | 1325 |  /   |
+> > > > > |---------------------------------------------------|
+> > > > > |  vfio_dma_rw(mutex)  | 2104 |  2886 | 2390 | 1065 |
+> > > > > |---------------------------------------------------|
+> > > > > | vfio_dma_rw(rwsem r) | 1965 |  2778 | 2260 | 935  |
+> > > > >  ---------------------------------------------------
+> > > > > 
+> > > > > 
+> > > > >  -----------------------------------------------
+> > > > > |     avg cycles       |   one VM   |  two VMs  |
+> > > > > |-----------------------------------------------|
+> > > > > |  iommu lock (mutex)  |     117    |   150     |
+> > > > > |-----------------------------------|-----------|
+> > > > > | iommu lock (rwsem r) |     117    |   156     |
+> > > > > |-----------------------------------|-----------|
+> > > > > |   kvm->srcu          |     160    |   213     |
+> > > > >  -----------------------------------------------
+> > > > > 
+> > > > > In the kvm case, avg cycles increased 332 cycles, while kvm->srcu only costed
+> > > > > 213 cycles. The rest 109 cycles may be spent on atomic operations.
+> > > > > But I didn't measure them, as get_cycles() operation itself would influence final
+> > > > > cycles by ~20 cycles.  
+> > > > 
+> > > > It seems like we need to extend the vfio external user interface so
+> > > > that GVT-g can hold the group and container user references across
+> > > > multiple calls.  For instance if we had a
+> > > > vfio_group_get_external_user_from_dev() (based on
+> > > > vfio_group_get_external_user()) then i915 could get an opaque
+> > > > vfio_group pointer which it could use to call vfio_group_dma_rw() which
+> > > > would leave us with only the iommu rw_sem locking.  i915 would release
+> > > > the reference with vfio_group_put_external_user() when the device is
+> > > > released.  The same could be done with the pin pages interface to
+> > > > streamline that as well.  Thoughts?  Thanks,
+> > > >  
+> > > hi Alex,
+> > > it works!
+> > 
+> > Hurrah!
+> > 
+> > > now the average vfio_dma_rw cycles can reduced to 1198. 
+> > > one thing I want to propose is that, in sight of dma->task is always user
+> > > space process, instead of calling get_task_mm(dma->task), can we just use
+> > > "mmget_not_zero(dma->task->mm)"? in this way, the avg cycles can
+> > > further reduce to 1051.
+> > 
+> > I'm not an expert there.  As noted in the type1 code we hold a
+> > reference to the task because it's not advised to hold a long term
+> > reference to the mm, so do we know we can look at task->mm without
+> > acquiring task_lock()?  It's possible this is safe, but it's not
+> > abundantly obvious to me.  Please research further and provide
+> > justification if you think it's correct.  Thanks,
+> > 
+> in get_task_mm, 
+> struct mm_struct *get_task_mm(struct task_struct *task)
+> {
+>         struct mm_struct *mm;
+> 
+>         task_lock(task);
+>         mm = task->mm;
+>         if (mm) {
+>                 if (task->flags & PF_KTHREAD)
+>                         mm = NULL;
+>                 else
+>                         mmget(mm);
+>         }
+>         task_unlock(task);
+>         return mm;
+> }
+> task lock is hold only during the call, so the purpose of it is to
+> ensure task->flags and task->mm is not changed or gone before mmget(mm)
+> or function return.
+> so, if we know for sure the task always has no flag PF_THREAD,
+> then we only need to ensure mm is not gone before mmget(mm) is done.
+> 
+> static inline void mmget(struct mm_struct *mm)
+> {
+>         atomic_inc(&mm->mm_users);
+> }
+> 
+> static inline bool mmget_not_zero(struct mm_struct *mm)
+> {
+>         return atomic_inc_not_zero(&mm->mm_users);
+> }
+> 
+> the atomic_inc_not_zero() in  mmget_not_zero can ensure mm is not gone
+> before its ref count inc.
+> 
+> So, I think the only thing we need to make sure is dma->task is not a
+> kernel thread.
+> Do you think I can make this assumption?
+> 
+hi Alex
+Maybe I can still test PF_KTHREAD without holding task_lock
+(task->alloc_lock), as it is only used to protect
+"->fs, ->files, ->mm, ->group_info, ->comm, keyring
+subscriptions and synchronises with wait4().  Also used in procfs.  Also
+pins the final release of task.io_context.  Also protects ->cpuset and 
+->cgroup.subsys[]. And ->vfork_done."
 
-The virtual DVB test driver serves as a reference DVB driver and helps
-validate the existing APIs in the media subsystem. It can also aid developers
-working on userspace applications.
+I checked elsewhere in kernel, e.g.
+try_to_wake_up
+	|->select_task_rq
+		|->is_per_cpu_kthread
+			|->if (!(p->flags & PF_KTHREAD))
+task->alloc_lock is not hold there.
 
-This dummy tuner should support common TV standards such as DVB-T/T2/S/S2,
-ISDB-T and ATSC when completed.
+So, I would replace get_task_mm(dma->task) into two steps:
+(1) check dma->task->flags & PF_KTHREAD, and (2) mmget_not_zero(mm).
 
-Signed-off-by: Daniel W. S. Almeida <dwlsalmeida@gmail.com>
------------------------------------------------------------
-Changes in v4:
-	dvb_dummy_tuner.c:
-		implement the remaining functions for the tuner
-		remove #include "dvb_dummy_tuner.h"
-		remove "release" callback, since this driver does not use dvb_attach()
+I'll do more tests and send out new patches after Chinese new year.
 
-Changes in v3:
-	KConfig:
-		change config name to "Dummy DVB Media Tuner"
-		remove useless 'default n'
-		add module name on help, same as other drivers
-	
-	dvb_dummy_tuner.c:
-		change license from GPL2+ to GPLv2.
-		Remove LKMP reference from the source file
-		Move the copyright notice to the top
-		remove useless goto in dvb_tuner_i2c_probe
-		only call i2c_set_clientdata after the pointer is ready
-
-	remove dvb_dummy_tuner.h as it was not needed
-
-	Fix this error:
-		WARNING: Possible unwrapped commit description (prefer a maximum 75 chars per line)
-		#15: 
-		validate the existing APIs in the media subsystem. It can also aid developers
-	
-	Remove LKMP reference from commit message
+Thanks
+Yan
 
 
-Changes in v2:
-	Commit message was rewritten
-	Added better description in KConfig
-	Added better description in .h and .c
-	Added copyright notice in .h and .c
-	Kconfig dummy tuner option now defaults to 'n'
-	Removed calls to pr_err, pr_debug
 
-----------------------------------------------------------
- drivers/media/tuners/Kconfig           |   9 +
- drivers/media/tuners/Makefile          |   1 +
- drivers/media/tuners/dvb_dummy_tuner.c | 241 +++++++++++++++++++++++++
- 3 files changed, 251 insertions(+)
- create mode 100644 drivers/media/tuners/dvb_dummy_tuner.c
-
-diff --git a/drivers/media/tuners/Kconfig b/drivers/media/tuners/Kconfig
-index e104bb7766e1..8ad54339ceee 100644
---- a/drivers/media/tuners/Kconfig
-+++ b/drivers/media/tuners/Kconfig
-@@ -296,4 +296,13 @@ config MEDIA_TUNER_QM1D1B0004
- 	default m if !MEDIA_SUBDRV_AUTOSELECT
- 	help
- 	  Sharp QM1D1B0004 ISDB-S tuner driver.
-+
-+config MEDIA_TUNER_DVB_DUMMY_TUNER
-+	tristate "Dummy DVB Media Tuner"
-+	depends on MEDIA_SUPPORT && I2C
-+	help
-+	  Dummy DVB media tuner driver
-+	  The virtual DVB test driver serves as a reference DVB driver and helps
-+	  validate the existing APIs in the media subsystem. It can also aid
-+	  developers working on userspace applications.
- endmenu
-diff --git a/drivers/media/tuners/Makefile b/drivers/media/tuners/Makefile
-index 7b4f8423501e..f98de1cf2e19 100644
---- a/drivers/media/tuners/Makefile
-+++ b/drivers/media/tuners/Makefile
-@@ -44,5 +44,6 @@ obj-$(CONFIG_MEDIA_TUNER_QM1D1C0042) += qm1d1c0042.o
- obj-$(CONFIG_MEDIA_TUNER_QM1D1B0004) += qm1d1b0004.o
- obj-$(CONFIG_MEDIA_TUNER_M88RS6000T) += m88rs6000t.o
- obj-$(CONFIG_MEDIA_TUNER_TDA18250) += tda18250.o
-+obj-$(CONFIG_MEDIA_TUNER_DVB_DUMMY_TUNER) += dvb_dummy_tuner.o
- 
- ccflags-y += -I$(srctree)/drivers/media/dvb-frontends
-diff --git a/drivers/media/tuners/dvb_dummy_tuner.c b/drivers/media/tuners/dvb_dummy_tuner.c
-new file mode 100644
-index 000000000000..bb8ab4ac1292
---- /dev/null
-+++ b/drivers/media/tuners/dvb_dummy_tuner.c
-@@ -0,0 +1,241 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (c) 2020 Daniel W. S. Almeida <dwlsalmeida@gmail.com>
-+ *
-+ * The virtual DVB test driver serves as a reference DVB driver and helps
-+ * validate the existing APIs in the media subsystem. It can also aid
-+ * developers working on userspace applications.
-+ *
-+ * This dummy tuner should support common TV standards such as
-+ * DVB-T/T2/S/S2, ISDB-T and ATSC when completed.
-+ *
-+ */
-+
-+#include <linux/errno.h>
-+#include <linux/i2c.h>
-+#include <linux/module.h>
-+#include <linux/slab.h>
-+#include <linux/types.h>
-+#include <media/dvb_frontend.h>
-+
-+#define MOCK_POWER_UP_DELAY_MSEC 1000
-+#define MOCK_TUNE_DELAY_MSEC 1000
-+#define MOCK_SLEEP_DELAY_MSEC 1000
-+#define MOCK_RESUME_DELAY_MSEC 1000
-+
-+struct dvb_dummy_tuner_config {
-+	struct dvb_frontend *fe;
-+};
-+
-+enum dvb_dummy_tuner_lock_status {
-+	STATUS_NO_LOCK = 0,
-+	STATUS_LOCKED = TUNER_STATUS_LOCKED,
-+};
-+
-+enum dvb_dummy_tuner_power_status {
-+	STATUS_UNKNOWN,
-+	STATUS_ASLEEP,
-+	STATUS_ACTIVE
-+};
-+
-+struct dvb_dummy_tuner_hardware_state {
-+	enum dvb_dummy_tuner_power_status power_status;
-+	enum dvb_dummy_tuner_lock_status lock_status;
-+	u32 if_frequency;
-+	u32 tuned_frequency;
-+	u32 bandwidth;
-+};
-+
-+struct dvb_dummy_tuner_dev {
-+	struct dvb_frontend *fe;
-+	struct dvb_dummy_tuner_hardware_state hw_state;
-+	struct dvb_dummy_tuner_config config;
-+};
-+
-+static struct dvb_dummy_tuner_dev*
-+dvb_dummy_tuner_get_dev(struct dvb_frontend *fe)
-+{
-+	struct i2c_client *client = fe->tuner_priv;
-+
-+	return (struct dvb_dummy_tuner_dev *)i2c_get_clientdata(client);
-+}
-+
-+static int dvb_dummy_tuner_init(struct dvb_frontend *fe)
-+{
-+	struct dvb_dummy_tuner_dev *tuner_dev = dvb_dummy_tuner_get_dev(fe);
-+
-+	msleep_interruptible(MOCK_POWER_UP_DELAY_MSEC);
-+
-+	tuner_dev->hw_state.power_status = STATUS_ACTIVE;
-+	tuner_dev->hw_state.if_frequency = 5000;
-+
-+	return 0;
-+}
-+
-+static int dvb_dummy_tuner_sleep(struct dvb_frontend *fe)
-+{
-+	struct dvb_dummy_tuner_dev *tuner_dev = dvb_dummy_tuner_get_dev(fe);
-+
-+	msleep_interruptible(MOCK_SLEEP_DELAY_MSEC);
-+	tuner_dev->hw_state.power_status = STATUS_ASLEEP;
-+
-+	return 0;
-+}
-+
-+static int dvb_dummy_tuner_suspend(struct dvb_frontend *fe)
-+{
-+	return dvb_dummy_tuner_sleep(fe);
-+}
-+
-+static int dvb_dummy_tuner_resume(struct dvb_frontend *fe)
-+{
-+	struct dvb_dummy_tuner_dev *tuner_dev = dvb_dummy_tuner_get_dev(fe);
-+
-+	msleep_interruptible(MOCK_RESUME_DELAY_MSEC);
-+	tuner_dev->hw_state.power_status = STATUS_ACTIVE;
-+
-+	return 0;
-+}
-+
-+static int dvb_dummy_tuner_set_params(struct dvb_frontend *fe)
-+{
-+	struct dvb_dummy_tuner_dev *tuner_dev = dvb_dummy_tuner_get_dev(fe);
-+	struct dtv_frontend_properties *c = &fe->dtv_property_cache;
-+	u32 min_freq = fe->ops.tuner_ops.info.frequency_min_hz;
-+	u32 max_freq = fe->ops.tuner_ops.info.frequency_max_hz;
-+	u32 min_bw = fe->ops.tuner_ops.info.bandwidth_min;
-+	u32 max_bw = fe->ops.tuner_ops.info.bandwidth_max;
-+
-+	msleep_interruptible(MOCK_TUNE_DELAY_MSEC);
-+
-+	if (c->frequency < min_freq  || c->frequency > max_freq  ||
-+	    c->bandwidth_hz < min_bw || c->bandwidth_hz > max_bw) {
-+		tuner_dev->hw_state.lock_status = STATUS_NO_LOCK;
-+		return -EINVAL;
-+	}
-+
-+	tuner_dev->hw_state.tuned_frequency = c->frequency;
-+	tuner_dev->hw_state.bandwidth = c->bandwidth_hz;
-+	tuner_dev->hw_state.lock_status = STATUS_LOCKED;
-+
-+	return 0;
-+}
-+
-+static int dvb_dummy_tuner_set_config(struct dvb_frontend *fe,
-+				      void *priv_cfg)
-+{
-+	struct dvb_dummy_tuner_dev *tuner_dev = dvb_dummy_tuner_get_dev(fe);
-+
-+	WARN_ON(sizeof(tuner_dev->config) != sizeof(*priv_cfg));
-+	memcpy(&tuner_dev->config, priv_cfg, sizeof(*priv_cfg));
-+
-+	return 0;
-+}
-+
-+static int dvb_dummy_tuner_get_frequency(struct dvb_frontend *fe,
-+					 u32 *frequency)
-+{
-+	struct dvb_dummy_tuner_dev *tuner_dev = dvb_dummy_tuner_get_dev(fe);
-+
-+	*frequency = tuner_dev->hw_state.tuned_frequency;
-+
-+	return 0;
-+}
-+
-+static int dvb_dummy_tuner_get_bandwidth(struct dvb_frontend *fe,
-+					 u32 *bandwidth)
-+{
-+	struct dvb_dummy_tuner_dev *tuner_dev = dvb_dummy_tuner_get_dev(fe);
-+
-+	*bandwidth = tuner_dev->hw_state.bandwidth;
-+
-+	return 0;
-+}
-+
-+static int dvb_dummy_tuner_get_if_frequency(struct dvb_frontend *fe,
-+					    u32 *frequency)
-+{
-+	struct dvb_dummy_tuner_dev *tuner_dev = dvb_dummy_tuner_get_dev(fe);
-+
-+	*frequency = tuner_dev->hw_state.if_frequency;
-+
-+	return 0;
-+}
-+
-+static int dvb_dummy_tuner_get_status(struct dvb_frontend *fe, u32 *status)
-+{
-+	struct dvb_dummy_tuner_dev *tuner_dev = dvb_dummy_tuner_get_dev(fe);
-+
-+	*status = tuner_dev->hw_state.lock_status;
-+
-+	return 0;
-+}
-+
-+static const struct dvb_tuner_ops dvb_dummy_tuner_ops = {
-+	.init = dvb_dummy_tuner_init,
-+	.sleep = dvb_dummy_tuner_sleep,
-+	.suspend = dvb_dummy_tuner_suspend,
-+	.resume = dvb_dummy_tuner_resume,
-+	.set_params = dvb_dummy_tuner_set_params,
-+	.set_config = dvb_dummy_tuner_set_config,
-+	.get_bandwidth = dvb_dummy_tuner_get_bandwidth,
-+	.get_frequency = dvb_dummy_tuner_get_frequency,
-+	.get_if_frequency = dvb_dummy_tuner_get_if_frequency,
-+	.get_status = dvb_dummy_tuner_get_status,
-+};
-+
-+static const struct i2c_device_id dvb_dummy_tuner_i2c_id_table[] = {
-+	{"dvb_dummy_tuner", 0},
-+	{}
-+};
-+MODULE_DEVICE_TABLE(i2c, dvb_dummy_tuner_i2c_id_table);
-+
-+static int dvb_dummy_tuner_i2c_probe(struct i2c_client *client,
-+				     const struct i2c_device_id *id)
-+{
-+	struct dvb_dummy_tuner_config *config = client->dev.platform_data;
-+	struct dvb_frontend *fe = config->fe;
-+	struct dvb_dummy_tuner_dev *tuner_dev = NULL;
-+
-+	tuner_dev = kzalloc(sizeof(*tuner_dev), GFP_KERNEL);
-+	if (!tuner_dev)
-+		return -ENOMEM;
-+
-+	tuner_dev->fe = config->fe;
-+	i2c_set_clientdata(client, tuner_dev);
-+
-+	memcpy(&fe->ops.tuner_ops,
-+	       &dvb_dummy_tuner_ops,
-+	       sizeof(struct dvb_tuner_ops));
-+
-+	fe->tuner_priv = client;
-+
-+	return 0;
-+}
-+
-+static int dvb_dummy_tuner_i2c_remove(struct i2c_client *client)
-+{
-+	struct dvb_dummy_tuner_dev *tuner_dev = i2c_get_clientdata(client);
-+	struct dvb_frontend *fe = tuner_dev->fe;
-+
-+	memset(&fe->ops.tuner_ops, 0, sizeof(struct dvb_tuner_ops));
-+	fe->tuner_priv = NULL;
-+	kfree(tuner_dev);
-+
-+	return 0;
-+}
-+
-+static struct i2c_driver dvb_dummy_tuner_i2c_driver = {
-+	.driver = {
-+		.name = "dvb_dummy_tuner",
-+		.suppress_bind_attrs = true,
-+	},
-+	.probe		= dvb_dummy_tuner_i2c_probe,
-+	.remove		= dvb_dummy_tuner_i2c_remove,
-+	.id_table	= dvb_dummy_tuner_i2c_id_table,
-+};
-+module_i2c_driver(dvb_dummy_tuner_i2c_driver);
-+
-+MODULE_DESCRIPTION("DVB Dummy Tuner");
-+MODULE_AUTHOR("Daniel W. S. Almeida");
-+MODULE_LICENSE("GPL");
--- 
-2.24.1
-
+> 
+> _______________________________________________
+> intel-gvt-dev mailing list
+> intel-gvt-dev@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/intel-gvt-dev
