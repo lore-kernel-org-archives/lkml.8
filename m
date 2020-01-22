@@ -2,113 +2,96 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6296DC33CB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 20:55:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7722DC32771
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 20:55:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DC182087E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 20:55:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 430242087E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 20:55:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="fkM/H3pp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729164AbgAVUzI (ORCPT
+        id S1729195AbgAVUzZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 15:55:08 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:41484 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727590AbgAVUzI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 15:55:08 -0500
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00MKqM6g113647
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jan 2020 15:55:06 -0500
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2xp4gk0dsn-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jan 2020 15:55:06 -0500
-Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Wed, 22 Jan 2020 20:55:04 -0000
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 22 Jan 2020 20:55:01 -0000
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 00MKt0cN56295660
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 22 Jan 2020 20:55:00 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1E25011C052;
-        Wed, 22 Jan 2020 20:55:00 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5250111C050;
-        Wed, 22 Jan 2020 20:54:59 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.85.143.97])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed, 22 Jan 2020 20:54:59 +0000 (GMT)
-Subject: Re: [PATCH] IMA: Turn IMA_MEASURE_ASYMMETRIC_KEYS off by default
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        James Bottomley <James.Bottomley@HansenPartnership.com>,
-        linux-integrity@vger.kernel.org
-Cc:     sashal@kernel.org, linux-kernel@vger.kernel.org
-Date:   Wed, 22 Jan 2020 15:54:58 -0500
-In-Reply-To: <fa7ec770-6552-7538-7393-c23410b3a1ba@linux.microsoft.com>
-References: <20200121171302.4935-1-nramas@linux.microsoft.com>
-         <1579628090.3390.28.camel@HansenPartnership.com>
-         <1579634035.5125.311.camel@linux.ibm.com>
-         <1579636351.3390.35.camel@HansenPartnership.com>
-         <ac6c559e-2d68-afcb-d316-6ac49a570831@linux.microsoft.com>
-         <1579723379.5182.130.camel@linux.ibm.com>
-         <fa7ec770-6552-7538-7393-c23410b3a1ba@linux.microsoft.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 20012220-0020-0000-0000-000003A31B8E
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20012220-0021-0000-0000-000021FAB225
-Message-Id: <1579726498.4644.4.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-01-22_08:2020-01-22,2020-01-22 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxlogscore=999
- clxscore=1015 impostorscore=0 phishscore=0 mlxscore=0 suspectscore=0
- spamscore=0 malwarescore=0 adultscore=0 lowpriorityscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-2001220178
+        Wed, 22 Jan 2020 15:55:25 -0500
+Received: from mail.skyhub.de ([5.9.137.197]:39416 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727590AbgAVUzZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 15:55:25 -0500
+Received: from zn.tnic (p200300EC2F0CAE00788EF3390FE77771.dip0.t-ipconnect.de [IPv6:2003:ec:2f0c:ae00:788e:f339:fe7:7771])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id E66B21EC0260;
+        Wed, 22 Jan 2020 21:55:22 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1579726523;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=kuTpIPLP78Xu0y3j5MABprbi+PW0mmI9M3BL9Y2t4zY=;
+        b=fkM/H3pplOs6HA7i8aI41G3yzEzjAwybfZjXlYV+yGhIkCRp3LQYABtdHVn1gbT98j9Ji0
+        FDXk1nK++hW11dxNrKv3JPwf0MB3SaJH0im/o0mfm1TnYRH53WoOsuezOeWb+NZWQy25V7
+        0AfQzSTfXtq4SlUNSpjUxiR2/emp1E4=
+Date:   Wed, 22 Jan 2020 21:55:16 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     "Luck, Tony" <tony.luck@intel.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        "Yu, Fenghua" <fenghua.yu@intel.com>,
+        Ingo Molnar <mingo@redhat.com>, H Peter Anvin <hpa@zytor.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Shankar, Ravi V" <ravi.v.shankar@intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>, x86 <x86@kernel.org>
+Subject: Re: [PATCH v12] x86/split_lock: Enable split lock detection by kernel
+Message-ID: <20200122205516.GB23947@zn.tnic>
+References: <20191123003056.GA28761@agluck-desk2.amr.corp.intel.com>
+ <20191125161348.GA12178@linux.intel.com>
+ <20191212085948.GS2827@hirez.programming.kicks-ass.net>
+ <20200110192409.GA23315@agluck-desk2.amr.corp.intel.com>
+ <20200114055521.GI14928@linux.intel.com>
+ <20200115222754.GA13804@agluck-desk2.amr.corp.intel.com>
+ <20200115225724.GA18268@linux.intel.com>
+ <20200122185514.GA16010@agluck-desk2.amr.corp.intel.com>
+ <20200122190405.GA23947@zn.tnic>
+ <3908561D78D1C84285E8C5FCA982C28F7F5483E9@ORSMSX114.amr.corp.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <3908561D78D1C84285E8C5FCA982C28F7F5483E9@ORSMSX114.amr.corp.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-01-22 at 12:05 -0800, Lakshmi Ramasubramanian wrote:
-> On 1/22/20 12:02 PM, Mimi Zohar wrote:
-> 
-> > 
-> > Thanks, Lakshmi.  This requires moving the code around.  Instead of
-> > doing this on the current code base, I suggest posting a v9 version of
-> > the entire "IMA: Deferred measurement of keys".
-> > 
-> > I suggest making the switch from spinlock to mutex, as you had it
-> > originally, before posting v9.  The commit history will then be a lot
-> > cleaner.
-> > 
-> > thanks,
-> > 
-> > Mimi
-> > 
-> 
-> Sure Mimi - I'll post an update to the patch set shortly.
+On Wed, Jan 22, 2020 at 08:03:28PM +0000, Luck, Tony wrote:
+> I could abbreviate CAPABILITIES as "CAP", that would save 9
+> characters. Is that enough?
 
-I just pushed out the next-integrity-testing branch without the
-"Deferred measurement of keys" patches.  I've kept the "IMA: pre-
-allocate buffer to hold keyrings string" patch, though it probably
-isn't required.
+Sure, except...
 
-thanks,
+> I'm not fond of the "remove the vowels": SPLT_LCK_DTCT, but that is
+> sort of readable and would save 4 more. What do you think?
 
-Mimi
+... we've been trying to keep the MSR names as spelled in the SDM to
+avoid confusion.
 
+Looking at it,
+
+MSR_IA32_CORE_CAPABILITIES -> MSR_IA32_CORE_CAPS
+
+along with a comment above its definition sounds like a good compromise
+to me. IMO, of course.
+
+Thx.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
