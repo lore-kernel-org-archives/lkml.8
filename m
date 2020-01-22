@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01E93C33CB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:50:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C17F9C33CB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:50:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC6F42467B
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:50:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B95B2467B
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:50:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579686618;
-	bh=BIESPlAn6ULQtQt/OSEJWfZLiOh1u+NRyAmVtFMibJk=;
+	s=default; t=1579686621;
+	bh=FwLbWFeFbvdUrH5giB50SJAEdUAePu1BlpASRib3hG4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xZGpMBAXXfZyTYTVTWawjwksZJDHfei/FZuXDOTDGwrBp89atqUCBdWBmAwD0Cn0G
-	 xZ+uS/ozsfOBnVBGhs3iQ++8is8m2lt2ua9OjUvKRzZOpVJMeiMQLMsoC5V8kCv+W5
-	 jJlHruEclZPvY5QVxqpcq9xcWKDGPU9DnLIXdcxA=
+	b=lm7Euh3eTb+MUEs9jr3j5XTQi9vZgaa8RdHOqiDTs9sGaNdXzBUtMJODIhrPR9Rtg
+	 dJjE0/FF9UB9OSdFJTC/VvBnI9zsU2oKM8qvOSLAbX2E1CUVJifQnN78pgqq9lSx8g
+	 MRwb3GV0x7w89g3OGgJOu6y98toQAEzZFPN0/riA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733076AbgAVJid (ORCPT
+        id S1730576AbgAVJic (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 04:38:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55322 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 04:38:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55252 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732980AbgAVJi3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 04:38:29 -0500
+        id S1733027AbgAVJi1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 04:38:27 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D1E6C2467B;
-        Wed, 22 Jan 2020 09:38:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6D74A2467F;
+        Wed, 22 Jan 2020 09:38:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579685909;
-        bh=BIESPlAn6ULQtQt/OSEJWfZLiOh1u+NRyAmVtFMibJk=;
+        s=default; t=1579685906;
+        bh=FwLbWFeFbvdUrH5giB50SJAEdUAePu1BlpASRib3hG4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cLEInDyBajRAZUfjiNCAxC1pBjgh0w2/27MAzD8dLmAlk5A1K/tH/C34DPOJTA9FF
-         zlkCWwxKsAKpB1dfGcXTQwSc+eydR7nGIrgJUOxb/k54JddmN2a4NuywIuFWLT2Llx
-         Hh2QIgo8o9ntSEjKHQxp5tRuxYucVtcmUAzrMd5o=
+        b=IINMkjGF4qQrSNAUvfXcpZUu5fknQPZKw8WqY3bwWWwvsUneFXRNG3+pQw4NWeC7X
+         4NR5o9ww5wpqELbJx+tMhuO/kVJYDmQaeaNqFdP7NY6LB4JyNarHmnLqqn4dAf59rk
+         HGFP4uNFvykfe6/3S+UOPyk2gGwo4mlMZULw/4iY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Lars=20M=C3=B6llendorf?= <lars.moellendorf@plating.de>,
-        Lars-Peter Clausen <lars@metafoo.de>, Stable@vger.kernel.org,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH 4.14 08/65] iio: buffer: align the size of scan bytes to size of the largest element
-Date:   Wed, 22 Jan 2020 10:28:53 +0100
-Message-Id: <20200122092752.442604047@linuxfoundation.org>
+        stable@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>,
+        Tony Lindgren <tony@atomide.com>
+Subject: [PATCH 4.14 07/65] ARM: dts: am571x-idk: Fix gpios property to have the correct  gpio number
+Date:   Wed, 22 Jan 2020 10:28:52 +0100
+Message-Id: <20200122092752.331828273@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200122092750.976732974@linuxfoundation.org>
 References: <20200122092750.976732974@linuxfoundation.org>
@@ -61,58 +59,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lars Möllendorf <lars.moellendorf@plating.de>
+From: Kishon Vijay Abraham I <kishon@ti.com>
 
-commit 883f616530692d81cb70f8a32d85c0d2afc05f69 upstream.
+commit 0c4eb2a6b3c6b0facd0a3bccda5db22e7b3b6f96 upstream.
 
-Previous versions of `iio_compute_scan_bytes` only aligned each element
-to its own length (i.e. its own natural alignment). Because multiple
-consecutive sets of scan elements are buffered this does not work in
-case the computed scan bytes do not align with the natural alignment of
-the first scan element in the set.
+commit d23f3839fe97d8dce03d ("ARM: dts: DRA7: Add pcie1 dt node for
+EP mode") while adding the dt node for EP mode for DRA7 platform,
+added rc node for am571x-idk and populated gpios property with
+"gpio3 23". However the GPIO_PCIE_SWRST line is actually connected
+to "gpio5 18". Fix it here. (The patch adding "gpio3 23" was tested
+with another am57x board in EP mode which doesn't rely on reset from
+host).
 
-This commit fixes this by aligning the scan bytes to the natural
-alignment of the largest scan element in the set.
-
-Fixes: 959d2952d124 ("staging:iio: make iio_sw_buffer_preenable much more general.")
-Signed-off-by: Lars Möllendorf <lars.moellendorf@plating.de>
-Reviewed-by: Lars-Peter Clausen <lars@metafoo.de>
-Cc: <Stable@vger.kernel.org>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: stable <stable@vger.kernel.org> # 4.14+
+Fixes: d23f3839fe97d8dce03d ("ARM: dts: DRA7: Add pcie1 dt node for EP mode")
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/iio/industrialio-buffer.c |    6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/am571x-idk.dts |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/iio/industrialio-buffer.c
-+++ b/drivers/iio/industrialio-buffer.c
-@@ -570,7 +570,7 @@ static int iio_compute_scan_bytes(struct
- 				const unsigned long *mask, bool timestamp)
- {
- 	unsigned bytes = 0;
--	int length, i;
-+	int length, i, largest = 0;
+--- a/arch/arm/boot/dts/am571x-idk.dts
++++ b/arch/arm/boot/dts/am571x-idk.dts
+@@ -93,7 +93,7 @@
  
- 	/* How much space will the demuxed element take? */
- 	for_each_set_bit(i, mask,
-@@ -578,13 +578,17 @@ static int iio_compute_scan_bytes(struct
- 		length = iio_storage_bytes_for_si(indio_dev, i);
- 		bytes = ALIGN(bytes, length);
- 		bytes += length;
-+		largest = max(largest, length);
- 	}
+ &pcie1_rc {
+ 	status = "okay";
+-	gpios = <&gpio3 23 GPIO_ACTIVE_HIGH>;
++	gpios = <&gpio5 18 GPIO_ACTIVE_HIGH>;
+ };
  
- 	if (timestamp) {
- 		length = iio_storage_bytes_for_timestamp(indio_dev);
- 		bytes = ALIGN(bytes, length);
- 		bytes += length;
-+		largest = max(largest, length);
- 	}
-+
-+	bytes = ALIGN(bytes, largest);
- 	return bytes;
- }
- 
+ &pcie1_ep {
 
 
