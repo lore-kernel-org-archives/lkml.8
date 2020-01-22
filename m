@@ -2,74 +2,94 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47D0CC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 11:43:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60BCFC33CB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 11:45:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20C2021734
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 11:43:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E7C321734
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 11:45:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729165AbgAVLnq (ORCPT
+        id S1729196AbgAVLpN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 06:43:46 -0500
-Received: from Chamillionaire.breakpoint.cc ([193.142.43.52]:38730 "EHLO
-        Chamillionaire.breakpoint.cc" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726191AbgAVLnp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 06:43:45 -0500
-Received: from fw by Chamillionaire.breakpoint.cc with local (Exim 4.92)
-        (envelope-from <fw@strlen.de>)
-        id 1iuEQ1-0007c2-PI; Wed, 22 Jan 2020 12:43:33 +0100
-Date:   Wed, 22 Jan 2020 12:43:33 +0100
-From:   Florian Westphal <fw@strlen.de>
-To:     Daniel Borkmann <daniel@iogearbox.net>
-Cc:     Praveen Chaudhary <praveen5582@gmail.com>, fw@strlen.de,
-        pablo@netfilter.org, davem@davemloft.net, kadlec@netfilter.org,
-        netfilter-devel@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Zhenggen Xu <zxu@linkedin.com>,
-        Andy Stracner <astracner@linkedin.com>
-Subject: Re: [PATCH v3] [net]: Fix skb->csum update in
- inet_proto_csum_replace16().
-Message-ID: <20200122114333.GQ795@breakpoint.cc>
-References: <1573080729-3102-1-git-send-email-pchaudhary@linkedin.com>
- <1573080729-3102-2-git-send-email-pchaudhary@linkedin.com>
- <16d56ee6-53bc-1124-3700-bc0a78f927d6@iogearbox.net>
+        Wed, 22 Jan 2020 06:45:13 -0500
+Received: from mx2.suse.de ([195.135.220.15]:47366 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726094AbgAVLpN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 06:45:13 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 2775BAC81;
+        Wed, 22 Jan 2020 11:45:11 +0000 (UTC)
+Date:   Wed, 22 Jan 2020 12:45:09 +0100
+From:   Jean Delvare <jdelvare@suse.de>
+To:     Luca Ceresoli <luca@lucaceresoli.net>
+Cc:     linux-doc@vger.kernel.org, linux-i2c@vger.kernel.org,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Peter Rosin <peda@axentia.se>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 25/26] docs: i2c: old-module-parameters: use monospace
+ for filenames
+Message-ID: <20200122124509.3ec8a3a3@endymion>
+In-Reply-To: <20200106074654.13842-1-luca@lucaceresoli.net>
+References: <20200105224006.10321-1-luca@lucaceresoli.net>
+        <20200106074654.13842-1-luca@lucaceresoli.net>
+Organization: SUSE Linux
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-suse-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <16d56ee6-53bc-1124-3700-bc0a78f927d6@iogearbox.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Daniel Borkmann <daniel@iogearbox.net> wrote:
-> > @@ -449,9 +464,6 @@ void inet_proto_csum_replace16(__sum16 *sum, struct sk_buff *skb,
-> >   	if (skb->ip_summed != CHECKSUM_PARTIAL) {
-> >   		*sum = csum_fold(csum_partial(diff, sizeof(diff),
-> >   				 ~csum_unfold(*sum)));
-> > -		if (skb->ip_summed == CHECKSUM_COMPLETE && pseudohdr)
-> > -			skb->csum = ~csum_partial(diff, sizeof(diff),
-> > -						  ~skb->csum);
+On Mon,  6 Jan 2020 08:46:54 +0100, Luca Ceresoli wrote:
+> Use a monospace (literal) formatting for better readability of filenames.
+
+This description and the subject are confusing. The strings you are
+formatting are not filenames. They may be visible as sysfs attributes
+and thus correspond to a filename, but primarily they are module
+parameters and I2C client names.
+
 > 
-> What is the technical rationale in removing this here but not in any of the
-> other inet_proto_csum_replace*() functions? You changelog has zero analysis
-> on why here but not elsewhere this change would be needed?
+> Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
+> ---
+>  Documentation/i2c/old-module-parameters.rst | 10 +++++-----
+>  1 file changed, 5 insertions(+), 5 deletions(-)
+> 
+> diff --git a/Documentation/i2c/old-module-parameters.rst b/Documentation/i2c/old-module-parameters.rst
+> index 80fb117883fd..fdc470a5f999 100644
+> --- a/Documentation/i2c/old-module-parameters.rst
+> +++ b/Documentation/i2c/old-module-parameters.rst
+> @@ -10,9 +10,9 @@ I2C device driver binding control from user-space
+>  Up to kernel 2.6.32, many I2C drivers used helper macros provided by
+>  <linux/i2c.h> which created standard module parameters to let the user
+>  control how the driver would probe I2C buses and attach to devices. These
+> -parameters were known as "probe" (to let the driver probe for an extra
+> -address), "force" (to forcibly attach the driver to a given device) and
+> -"ignore" (to prevent a driver from probing a given address).
+> +parameters were known as ``probe`` (to let the driver probe for an extra
+> +address), ``force`` (to forcibly attach the driver to a given device) and
+> +``ignore`` (to prevent a driver from probing a given address).
+>  
+>  With the conversion of the I2C subsystem to the standard device driver
+>  binding model, it became clear that these per-module parameters were no
+> @@ -46,8 +46,8 @@ New method (sysfs interface)::
+>    # echo dummy 0x2f > /sys/bus/i2c/devices/i2c-1/new_device
+>    # modprobe <driver>
+>  
+> -Of course, it is important to instantiate the "dummy" device before loading
+> +Of course, it is important to instantiate the ``dummy`` device before loading
+>  the driver. The dummy device will be handled by i2c-core itself, preventing
+>  other drivers from binding to it later on. If there is a real device at the
+>  problematic address, and you want another driver to bind to it, then simply
+> -pass the name of the device in question instead of "dummy".
+> +pass the name of the device in question instead of ``dummy``.
 
-Right, I think it could be dropped everywhere BUT there is a major caveat:
+Reviewed-by: Jean Delvare <jdelvare@suse.de>
 
-At least for the nf_nat case ipv4 header manipulation (which uses the other
-helpers froum utils.c) will eventually also update iph->checksum field
-to account for the changed ip addresses.
-
-And that update doesn't touch skb->csum.
-
-So in a way the update of skb->csum in the other helpers indirectly account
-for later ip header checksum update.
-
-At least that was my conclusion when reviewing the earlier incarnation
-of the patch.
+-- 
+Jean Delvare
+SUSE L3 Support
