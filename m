@@ -2,81 +2,183 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06D1CC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:52:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC836C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:52:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3E6520704
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:52:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="p8YLls2H"
+	by mail.kernel.org (Postfix) with ESMTP id 8179F2465A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:52:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579686743;
+	bh=oW/nJSRnqwL4LFxYNywdLrAnqSiWfV1hujPdnbzAnjE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=BC2ay/dUkT4dxrwEyMKGhLkjTyJlGeOTXvTGR4LzzVYznKG3LVpYuZgobshhis+lv
+	 UUgeBfKGBrERLew/RC8eW5qW+W4p/Hz1lXdyst7rBPBEZ658V29YosZrjbRwzjH4Qi
+	 IMI/Na4Ngg5q2/C6pqGdrLkTRybvNEcvUjm0jA0w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732613AbgAVJwT (ORCPT
+        id S1732415AbgAVJwR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 04:52:19 -0500
-Received: from merlin.infradead.org ([205.233.59.134]:51800 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730891AbgAVJwQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 04:52:16 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=5abJ1QnasX2RGu56JYvUsjvfRt1I9ljUh2ZesPKbuT0=; b=p8YLls2HIIhVbHUeXOH91k+ND
-        OvNM0vHGgLEU4LoIC4sR30p/ug+nv96bSBCBWjq8l93N+i9prze9knLA4/p35cqdr3nJQVBUSp+o/
-        oUb4PFxfkOIi69TOwLODpt8DvaMCrmoHePkSZYiGnOT4b5TFC6j6SvtAyJND2jVQVASGGJNtJCk8H
-        gzTGEqoI1YWFAoID4SKv/vHa+Yh53KIJBrWIJ3QAChO4kVLOyCCHkhHMCI5F4q6HBoFWvKKAE7KwI
-        8ItWBXpUMuC6Py0PqUk4h0mY62cq7XZWizzuJ2415jg0iVSKoh6kc9brledLrHGOTx5Fu1UCakadr
-        mCdZZvQsQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iuCfb-0003jg-MM; Wed, 22 Jan 2020 09:51:31 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        Wed, 22 Jan 2020 04:52:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51936 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731815AbgAVJg2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 04:36:28 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 25F9A3079DF;
-        Wed, 22 Jan 2020 10:49:48 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 9B47B20983E31; Wed, 22 Jan 2020 10:51:27 +0100 (CET)
-Date:   Wed, 22 Jan 2020 10:51:27 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Alex Kogan <alex.kogan@oracle.com>
-Cc:     linux@armlinux.org.uk, mingo@redhat.com, will.deacon@arm.com,
-        arnd@arndb.de, longman@redhat.com, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        tglx@linutronix.de, bp@alien8.de, hpa@zytor.com, x86@kernel.org,
-        guohanjun@huawei.com, jglauber@marvell.com,
-        steven.sistare@oracle.com, daniel.m.jordan@oracle.com,
-        dave.dice@oracle.com, rahul.x.yadav@oracle.com
-Subject: Re: [PATCH v7 3/5] locking/qspinlock: Introduce CNA into the slow
- path of qspinlock
-Message-ID: <20200122095127.GC14946@hirez.programming.kicks-ass.net>
-References: <20191125210709.10293-1-alex.kogan@oracle.com>
- <20191125210709.10293-4-alex.kogan@oracle.com>
- <20200121202919.GM11457@worktop.programming.kicks-ass.net>
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DEEA720704;
+        Wed, 22 Jan 2020 09:36:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579685787;
+        bh=oW/nJSRnqwL4LFxYNywdLrAnqSiWfV1hujPdnbzAnjE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=vXa3wiHNYlO3beDhzq4pB1PqqcU6d80Hb9zUoGG3fWgGA95H5BKP9yzuFqfk7Q94e
+         5aZzBDP0iCbWqp0MV/hA1bfUO9dwAijhcoQMRZAyfShEx+Tp4hlKxM1VLeeoGWHnFs
+         NlrWgHATr4n4sefy9K8qBWrmIbE7Ayi8puKcWsHU=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        syzbot+91bdd8eece0f6629ec8b@syzkaller.appspotmail.com,
+        Florian Westphal <fw@strlen.de>,
+        Pablo Neira Ayuso <pablo@netfilter.org>
+Subject: [PATCH 4.9 79/97] netfilter: arp_tables: init netns pointer in xt_tgdtor_param struct
+Date:   Wed, 22 Jan 2020 10:29:23 +0100
+Message-Id: <20200122092809.057782737@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200122092755.678349497@linuxfoundation.org>
+References: <20200122092755.678349497@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200121202919.GM11457@worktop.programming.kicks-ass.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 21, 2020 at 09:29:19PM +0100, Peter Zijlstra wrote:
-> 
-> various notes and changes in the below.
+From: Florian Westphal <fw@strlen.de>
 
-Also, sorry for replying to v7 and v8, I forgot to refresh email on the
-laptop and had spotty cell service last night and only found v7 in that
-mailbox.
+commit 212e7f56605ef9688d0846db60c6c6ec06544095 upstream.
 
-Afaict none of the things I commented on were fundamentally changed
-though.
+An earlier commit (1b789577f655060d98d20e,
+"netfilter: arp_tables: init netns pointer in xt_tgchk_param struct")
+fixed missing net initialization for arptables, but turns out it was
+incomplete.  We can get a very similar struct net NULL deref during
+error unwinding:
+
+general protection fault: 0000 [#1] PREEMPT SMP KASAN
+RIP: 0010:xt_rateest_put+0xa1/0x440 net/netfilter/xt_RATEEST.c:77
+ xt_rateest_tg_destroy+0x72/0xa0 net/netfilter/xt_RATEEST.c:175
+ cleanup_entry net/ipv4/netfilter/arp_tables.c:509 [inline]
+ translate_table+0x11f4/0x1d80 net/ipv4/netfilter/arp_tables.c:587
+ do_replace net/ipv4/netfilter/arp_tables.c:981 [inline]
+ do_arpt_set_ctl+0x317/0x650 net/ipv4/netfilter/arp_tables.c:1461
+
+Also init the netns pointer in xt_tgdtor_param struct.
+
+Fixes: add67461240c1d ("netfilter: add struct net * to target parameters")
+Reported-by: syzbot+91bdd8eece0f6629ec8b@syzkaller.appspotmail.com
+Signed-off-by: Florian Westphal <fw@strlen.de>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ net/ipv4/netfilter/arp_tables.c |   19 ++++++++++---------
+ 1 file changed, 10 insertions(+), 9 deletions(-)
+
+--- a/net/ipv4/netfilter/arp_tables.c
++++ b/net/ipv4/netfilter/arp_tables.c
+@@ -515,12 +515,13 @@ static inline int check_entry_size_and_h
+ 	return 0;
+ }
+ 
+-static inline void cleanup_entry(struct arpt_entry *e)
++static void cleanup_entry(struct arpt_entry *e, struct net *net)
+ {
+ 	struct xt_tgdtor_param par;
+ 	struct xt_entry_target *t;
+ 
+ 	t = arpt_get_target(e);
++	par.net      = net;
+ 	par.target   = t->u.kernel.target;
+ 	par.targinfo = t->data;
+ 	par.family   = NFPROTO_ARP;
+@@ -612,7 +613,7 @@ static int translate_table(struct net *n
+ 		xt_entry_foreach(iter, entry0, newinfo->size) {
+ 			if (i-- == 0)
+ 				break;
+-			cleanup_entry(iter);
++			cleanup_entry(iter, net);
+ 		}
+ 		return ret;
+ 	}
+@@ -939,7 +940,7 @@ static int __do_replace(struct net *net,
+ 	/* Decrease module usage counts and free resource */
+ 	loc_cpu_old_entry = oldinfo->entries;
+ 	xt_entry_foreach(iter, loc_cpu_old_entry, oldinfo->size)
+-		cleanup_entry(iter);
++		cleanup_entry(iter, net);
+ 
+ 	xt_free_table_info(oldinfo);
+ 	if (copy_to_user(counters_ptr, counters,
+@@ -1003,7 +1004,7 @@ static int do_replace(struct net *net, c
+ 
+  free_newinfo_untrans:
+ 	xt_entry_foreach(iter, loc_cpu_entry, newinfo->size)
+-		cleanup_entry(iter);
++		cleanup_entry(iter, net);
+  free_newinfo:
+ 	xt_free_table_info(newinfo);
+ 	return ret;
+@@ -1300,7 +1301,7 @@ static int compat_do_replace(struct net
+ 
+  free_newinfo_untrans:
+ 	xt_entry_foreach(iter, loc_cpu_entry, newinfo->size)
+-		cleanup_entry(iter);
++		cleanup_entry(iter, net);
+  free_newinfo:
+ 	xt_free_table_info(newinfo);
+ 	return ret;
+@@ -1527,7 +1528,7 @@ static int do_arpt_get_ctl(struct sock *
+ 	return ret;
+ }
+ 
+-static void __arpt_unregister_table(struct xt_table *table)
++static void __arpt_unregister_table(struct net *net, struct xt_table *table)
+ {
+ 	struct xt_table_info *private;
+ 	void *loc_cpu_entry;
+@@ -1539,7 +1540,7 @@ static void __arpt_unregister_table(stru
+ 	/* Decrease module usage counts and free resources */
+ 	loc_cpu_entry = private->entries;
+ 	xt_entry_foreach(iter, loc_cpu_entry, private->size)
+-		cleanup_entry(iter);
++		cleanup_entry(iter, net);
+ 	if (private->number > private->initial_entries)
+ 		module_put(table_owner);
+ 	xt_free_table_info(private);
+@@ -1579,7 +1580,7 @@ int arpt_register_table(struct net *net,
+ 
+ 	ret = nf_register_net_hooks(net, ops, hweight32(table->valid_hooks));
+ 	if (ret != 0) {
+-		__arpt_unregister_table(new_table);
++		__arpt_unregister_table(net, new_table);
+ 		*res = NULL;
+ 	}
+ 
+@@ -1594,7 +1595,7 @@ void arpt_unregister_table(struct net *n
+ 			   const struct nf_hook_ops *ops)
+ {
+ 	nf_unregister_net_hooks(net, ops, hweight32(table->valid_hooks));
+-	__arpt_unregister_table(table);
++	__arpt_unregister_table(net, table);
+ }
+ 
+ /* The built-in targets: standard (NULL) and error. */
+
+
