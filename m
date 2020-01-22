@@ -2,111 +2,118 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C849FC32771
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 04:19:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E941EC33CB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 04:24:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78F7424655
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 04:19:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579666769;
-	bh=epk737smItfyJaeoaZPbpOgtMyNVfwW4iE271OxfH1g=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=Shoe3HK3sycSnNvaGEMaUVDzKgoS9Z2YJT9oQhsixMjDRHTCya//v/EjmOkZfDlQ1
-	 c8oAeaxby9F4e7jCfLw1hTseCAvJrcp5KfSMIhBTzJZgK+4FrxQcMwgTWdGUEgG3mC
-	 a2HUqM4ipgWfZOUeFgMuwGvngpPcq839BrLmqjqQ=
+	by mail.kernel.org (Postfix) with ESMTP id CA1F721734
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 04:24:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729028AbgAVET2 (ORCPT
+        id S1729019AbgAVEYr convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 23:19:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34500 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726605AbgAVET2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 23:19:28 -0500
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 35A9D21835;
-        Wed, 22 Jan 2020 04:19:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579666767;
-        bh=epk737smItfyJaeoaZPbpOgtMyNVfwW4iE271OxfH1g=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=WXXa0uE2wgs19Ih5i4ui6gBi3Bp576npoZZHfYgZ1zYsM/Z+bm1vy08NzKmCA8Ldn
-         5ZVSnd8d4h3CsqjcU6/jbPaBRhxqv0MTYmd8YIM6v13k5CaDHCQ7VadqFbPQC6FPGW
-         x2RQaCNNM2YE/9dsT0xkylCQtwBy9GNcVoYrEXXY=
-Date:   Wed, 22 Jan 2020 13:19:24 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Alex Shi <alex.shi@linux.alibaba.com>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] trace/kprobe: remove MAX_KPROBE_CMDLINE_SIZE
-Message-Id: <20200122131924.49b01587a8ed5149d44f3a94@kernel.org>
-In-Reply-To: <20200121183438.635b0ff7@gandalf.local.home>
-References: <1579586075-45132-1-git-send-email-alex.shi@linux.alibaba.com>
-        <20200121183438.635b0ff7@gandalf.local.home>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Tue, 21 Jan 2020 23:24:47 -0500
+Received: from esa3.mentor.iphmx.com ([68.232.137.180]:9708 "EHLO
+        esa3.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726605AbgAVEYq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jan 2020 23:24:46 -0500
+IronPort-SDR: zdBBn8Mc8BbmdeOMRbvKnvezZaN7hmvtLgjj0g0WTVhDnGp/42T8LIgF68nNznKyX/S0UJnwV5
+ nM0QwXHm6jyxUu3ME7SHvxPrOoyuNQjXA+JBGCBxIi1NRH7X7cZlSrvMiVKpHJkRzHFwgIJhKU
+ OTepdsnRzQ/Fr+TDlAHW7O1+dH8pJs0wovw9mm7Ayf3Nq5nJx0l+OWdata7fHCF3rVc17J8t3k
+ tD7+18UEJzz2lR9tqN7eGHRRRtoWfwWRi1i3ck1F9ol/Ncekpg5weFG5bEVCHfMbQnYoI9VPm2
+ Ic8=
+X-IronPort-AV: E=Sophos;i="5.70,348,1574150400"; 
+   d="scan'208";a="45086045"
+Received: from orw-gwy-01-in.mentorg.com ([192.94.38.165])
+  by esa3.mentor.iphmx.com with ESMTP; 21 Jan 2020 20:24:45 -0800
+IronPort-SDR: 1PEYK0Zhd73ljmnQXNlsUnwuMU8WaqBa6fggtZyqC72aoeTP0V474YLaDlRblaRzDFKAY3rpIV
+ GaY6B4Rr9C1A==
+From:   "Kumar, Vipul" <Vipul_Kumar@mentor.com>
+To:     Sasha Levin <sashal@kernel.org>,
+        Vipul Kumar <vipulk0511@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Stable <stable@vger.kernel.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: RE: [v3] x86/tsc: Unset TSC_KNOWN_FREQ and TSC_RELIABLE flags on
+ Intel Bay Trail SoC
+Thread-Topic: [v3] x86/tsc: Unset TSC_KNOWN_FREQ and TSC_RELIABLE flags on
+ Intel Bay Trail SoC
+Thread-Index: AQHV0GkRCJ8wkYwpdkWzqz5/BlatGKf2e/EA//+aBCA=
+Date:   Wed, 22 Jan 2020 04:24:42 +0000
+Message-ID: <a764bca368794eccbda39238d85da9ba@svr-orw-mbx-01.mgc.mentorg.com>
+References: <1579617717-4098-1-git-send-email-vipulk0511@gmail.com>
+ <20200122022619.B95C024655@mail.kernel.org>
+In-Reply-To: <20200122022619.B95C024655@mail.kernel.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [147.34.91.1]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 21 Jan 2020 18:34:38 -0500
-Steven Rostedt <rostedt@goodmis.org> wrote:
+Hi Sasha,
 
-> Masami,
-> 
-> With your new bootconfig work, will you be utilizing
-> MAX_KPROBE_CMDLINE_SIZE, or should it be removed?
+As this patch is based on commit f3a02ecebed7 ("x86/tsc: Set TSC_KNOWN_FREQ and TSC_RELIABLE flags on Intel Atom SoCs") which was introduced in 4.14.
 
-Good catch! Yes, please remove it.
-I think I have forgot to remove it when I switched
-to COMMAND_LINE_SIZE while writing the code.
+So, this patch is not applicable for kernel versions prior to 4.14.
 
-Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
+As this patch is under review, can we put it on hold ?
 
-Thank you!
+Regards,
+Vipul 
 
-> 
-> -- Steve
-> 
-> 
-> On Tue, 21 Jan 2020 13:54:35 +0800
-> Alex Shi <alex.shi@linux.alibaba.com> wrote:
-> 
-> > This limitation are never lunched from introduce commit 970988e19eb0
-> > ("tracing/kprobe: Add kprobe_event= boot parameter")
-> > 
-> > Could we remove it if no intention to implement it?
-> > 
-> > Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
-> > Cc: Steven Rostedt <rostedt@goodmis.org> 
-> > Cc: Ingo Molnar <mingo@redhat.com> 
-> > Cc: linux-kernel@vger.kernel.org 
-> > ---
-> >  kernel/trace/trace_kprobe.c | 1 -
-> >  1 file changed, 1 deletion(-)
-> > 
-> > diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
-> > index 7f890262c8a3..eafa90d0f760 100644
-> > --- a/kernel/trace/trace_kprobe.c
-> > +++ b/kernel/trace/trace_kprobe.c
-> > @@ -22,7 +22,6 @@
-> >  
-> >  #define KPROBE_EVENT_SYSTEM "kprobes"
-> >  #define KRETPROBE_MAXACTIVE_MAX 4096
-> > -#define MAX_KPROBE_CMDLINE_SIZE 1024
-> >  
-> >  /* Kprobe early definition from command line */
-> >  static char kprobe_boot_events_buf[COMMAND_LINE_SIZE] __initdata;
-> 
+-----Original Message-----
+From: Sasha Levin [mailto:sashal@kernel.org] 
+Sent: 22 January 2020 07:56
+To: Sasha Levin <sashal@kernel.org>; Vipul Kumar <vipulk0511@gmail.com>; Kumar, Vipul <Vipul_Kumar@mentor.com>; Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: linux-kernel@vger.kernel.org; Stable <stable@vger.kernel.org>; stable@vger.kernel.org; stable@vger.kernel.org
+Subject: Re: [v3] x86/tsc: Unset TSC_KNOWN_FREQ and TSC_RELIABLE flags on Intel Bay Trail SoC
 
+Hi,
+
+[This is an automated email]
+
+This commit has been processed because it contains a -stable tag.
+The stable tag indicates that it's relevant for the following trees: all
+
+The bot has tested the following trees: v5.4.13, v4.19.97, v4.14.166, v4.9.210, v4.4.210.
+
+v5.4.13: Build OK!
+v4.19.97: Build OK!
+v4.14.166: Build failed! Errors:
+
+v4.9.210: Failed to apply! Possible dependencies:
+    f3a02ecebed7 ("x86/tsc: Set TSC_KNOWN_FREQ and TSC_RELIABLE flags on Intel Atom SoCs")
+
+v4.4.210: Failed to apply! Possible dependencies:
+    0007bccc3cfd ("x86: Replace RDRAND forced-reseed with simple sanity check")
+    07dc900e17a9 ("perf/x86: Move Kconfig.perf and other perf configuration bits to events/Kconfig")
+    1b74dde7c47c ("x86/cpu: Convert printk(KERN_<LEVEL> ...) to pr_<level>(...)")
+    218cfe4ed888 ("perf/x86: Move perf_event_amd_ibs.c ....... => x86/events/amd/ibs.c")
+    39b0332a2158 ("perf/x86: Move perf_event_amd.c ........... => x86/events/amd/core.c")
+    442f5c74cbea ("perf/x86: Use INST_RETIRED.TOTAL_CYCLES_PS for cycles:pp for Skylake")
+    5b26547dd7fa ("perf/x86: Move perf_event_amd_iommu.[ch] .. => x86/events/amd/iommu.[ch]")
+    724697648eec ("perf/x86: Use INST_RETIRED.PREC_DIST for cycles: ppp")
+    e633c65a1d58 ("x86/perf/intel/uncore: Make the Intel uncore PMU driver modular")
+    fa9cbf320e99 ("perf/x86: Move perf_event.c ............... => x86/events/core.c")
+
+
+NOTE: The patch will not be queued to stable trees until it is upstream.
+
+How should we proceed with this patch?
 
 -- 
-Masami Hiramatsu <mhiramat@kernel.org>
+Thanks,
+Sasha
