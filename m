@@ -2,131 +2,104 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65B62C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:35:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62479C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:36:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45B1C20704
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:35:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34A752467A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:36:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579685764;
+	bh=ULzRYP2OrIeIGLif+7P/9iBBG1jNhnAQbs30VcaK2p4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=1tgoAknY/nbPwM2XkQ702anW5PT5aVMfLk4a5M5MeS+wCtEWhJI/4yyncDdm2jZa4
+	 Z4yOCrmYE5xEk+MPQngoi4+i/4ga0jPwJzr6d8rNvdn7R+HBD6+6FW46bAE52cKef8
+	 19x2F49g7GRc98ftBwci7+sf5HqUPnQkdbi7nJKM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729927AbgAVJf4 (ORCPT
+        id S1731599AbgAVJgB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 04:35:56 -0500
-Received: from foss.arm.com ([217.140.110.172]:53370 "EHLO foss.arm.com"
+        Wed, 22 Jan 2020 04:36:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51174 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730480AbgAVJfw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 04:35:52 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1ADEE1FB;
-        Wed, 22 Jan 2020 01:35:51 -0800 (PST)
-Received: from [10.37.12.190] (unknown [10.37.12.190])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 19A903F68E;
-        Wed, 22 Jan 2020 01:35:38 -0800 (PST)
-Subject: Re: [PATCH 3/4] thermal: devfreq_cooling: Refactor code and switch to
- use Energy Model
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        dri-devel@lists.freedesktop.org, linux-omap@vger.kernel.org,
-        linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org,
-        linux-imx@nxp.com, Morten.Rasmussen@arm.com,
-        Dietmar.Eggemann@arm.com, Chris.Redpath@arm.com,
-        ionela.voinescu@arm.com, javi.merino@arm.com,
-        cw00.choi@samsung.com, b.zolnierkie@samsung.com, rjw@rjwysocki.net,
-        sudeep.holla@arm.com, viresh.kumar@linaro.org, nm@ti.com,
-        sboyd@kernel.org, rui.zhang@intel.com, amit.kucheria@verdurent.com,
-        daniel.lezcano@linaro.org, mingo@redhat.com, peterz@infradead.org,
-        juri.lelli@redhat.com, vincent.guittot@linaro.org,
-        qperret@google.com, bsegall@google.com, mgorman@suse.de,
-        shawnguo@kernel.org, s.hauer@pengutronix.de, festevam@gmail.com,
-        kernel@pengutronix.de, khilman@kernel.org, agross@kernel.org,
-        bjorn.andersson@linaro.org, robh@kernel.org,
-        matthias.bgg@gmail.com, steven.price@arm.com,
-        tomeu.vizoso@collabora.com, alyssa.rosenzweig@collabora.com,
-        airlied@linux.ie, daniel@ffwll.ch, patrick.bellasi@matbug.net
-References: <20200116152032.11301-1-lukasz.luba@arm.com>
- <20200116152032.11301-4-lukasz.luba@arm.com>
- <20200121121124.1a1f3175@gandalf.local.home>
-From:   Lukasz Luba <lukasz.luba@arm.com>
-Message-ID: <6c4c5ac6-2d80-694e-866b-21fe5ef1853f@arm.com>
-Date:   Wed, 22 Jan 2020 09:35:36 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        id S1730716AbgAVJfx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 04:35:53 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9D13D20704;
+        Wed, 22 Jan 2020 09:35:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579685753;
+        bh=ULzRYP2OrIeIGLif+7P/9iBBG1jNhnAQbs30VcaK2p4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=oVjc9MBgX4gMAJp1aOqgz6Dyy2jNWECYaLUA83Z2odZNu5wpHB7m06HdB9wHsbaDE
+         N8rx7DnEzxWgckGb36M3FtUnACee68ZggHpj08RKeOhaah1b9BWSOYB3XOBDwmdfI6
+         rPQ5X51zCi3UoIRP9F5jniZ5rWNqn5m9SBJoCDuQ=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Yuya Fujita <fujita.yuya@fujitsu.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: [PATCH 4.9 66/97] perf hists: Fix variable names inconsistency in hists__for_each() macro
+Date:   Wed, 22 Jan 2020 10:29:10 +0100
+Message-Id: <20200122092806.958463630@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200122092755.678349497@linuxfoundation.org>
+References: <20200122092755.678349497@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-In-Reply-To: <20200121121124.1a1f3175@gandalf.local.home>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Yuya Fujita <fujita.yuya@fujitsu.com>
+
+commit 55347ec340af401437680fd0e88df6739a967f9f upstream.
+
+Variable names are inconsistent in hists__for_each macro().
+
+Due to this inconsistency, the macro replaces its second argument with
+"fmt" regardless of its original name.
+
+So far it works because only "fmt" is passed to the second argument.
+However, this behavior is not expected and should be fixed.
+
+Fixes: f0786af536bb ("perf hists: Introduce hists__for_each_format macro")
+Fixes: aa6f50af822a ("perf hists: Introduce hists__for_each_sort_list macro")
+Signed-off-by: Yuya Fujita <fujita.yuya@fujitsu.com>
+Acked-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Link: http://lore.kernel.org/lkml/OSAPR01MB1588E1C47AC22043175DE1B2E8520@OSAPR01MB1588.jpnprd01.prod.outlook.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ tools/perf/util/hist.h |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+--- a/tools/perf/util/hist.h
++++ b/tools/perf/util/hist.h
+@@ -312,10 +312,10 @@ static inline void perf_hpp__prepend_sor
+ 	list_for_each_entry_safe(format, tmp, &(_list)->sorts, sort_list)
+ 
+ #define hists__for_each_format(hists, format) \
+-	perf_hpp_list__for_each_format((hists)->hpp_list, fmt)
++	perf_hpp_list__for_each_format((hists)->hpp_list, format)
+ 
+ #define hists__for_each_sort_list(hists, format) \
+-	perf_hpp_list__for_each_sort_list((hists)->hpp_list, fmt)
++	perf_hpp_list__for_each_sort_list((hists)->hpp_list, format)
+ 
+ extern struct perf_hpp_fmt perf_hpp__format[];
+ 
 
 
-On 1/21/20 5:11 PM, Steven Rostedt wrote:
-> On Thu, 16 Jan 2020 15:20:31 +0000
-> lukasz.luba@arm.com wrote:
-> 
->> diff --git a/include/trace/events/thermal.h b/include/trace/events/thermal.h
->> index 135e5421f003..8a5f04888abd 100644
->> --- a/include/trace/events/thermal.h
->> +++ b/include/trace/events/thermal.h
->> @@ -153,31 +153,30 @@ TRACE_EVENT(thermal_power_cpu_limit,
->>   TRACE_EVENT(thermal_power_devfreq_get_power,
->>   	TP_PROTO(struct thermal_cooling_device *cdev,
->>   		 struct devfreq_dev_status *status, unsigned long freq,
->> -		u32 dynamic_power, u32 static_power, u32 power),
->> +		u32 power),
->>   
->> -	TP_ARGS(cdev, status,  freq, dynamic_power, static_power, power),
->> +	TP_ARGS(cdev, status,  freq, power),
->>   
->>   	TP_STRUCT__entry(
->>   		__string(type,         cdev->type    )
->>   		__field(unsigned long, freq          )
->> -		__field(u32,           load          )
->> -		__field(u32,           dynamic_power )
->> -		__field(u32,           static_power  )
->> +		__field(u32,           busy_time)
->> +		__field(u32,           total_time)
->>   		__field(u32,           power)
->>   	),
->>   
->>   	TP_fast_assign(
->>   		__assign_str(type, cdev->type);
->>   		__entry->freq = freq;
->> -		__entry->load = (100 * status->busy_time) / status->total_time;
->> -		__entry->dynamic_power = dynamic_power;
->> -		__entry->static_power = static_power;
->> +		__entry->busy_time = status->busy_time;
->> +		__entry->total_time = status->total_time;
->>   		__entry->power = power;
->>   	),
->>   
->> -	TP_printk("type=%s freq=%lu load=%u dynamic_power=%u static_power=%u power=%u",
->> +	TP_printk("type=%s freq=%lu load=%u power=%u",
->>   		__get_str(type), __entry->freq,
->> -		__entry->load, __entry->dynamic_power, __entry->static_power,
->> +		__entry->total_time == 0 ? 0 :
->> +			(100 * __entry->busy_time) / __entry->total_time,
->>   		__entry->power)
->>   );
->>   
-> 
-> Tracing updates look fine to me. Having the division on the output
-> makes more sense.
-> 
-> Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org> # for tracing code
-> 
-> -- Steve
-> 
-
-Thank you Steven, I will include it in the next version with a proper
-label.
-
-Regards,
-Lukasz
