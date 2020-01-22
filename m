@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AED52C3F68F
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:44:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 349FFC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:44:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7ACC52467B
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:44:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B8272468E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:44:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579686266;
-	bh=dEwi0JC7TzjYmMHSKOvdlRofP9l7kVazWtTHC4k6uxA=;
+	s=default; t=1579686269;
+	bh=gEMbZSf7gz/38fyK2S0QNO50FzA33PkIo6Ay1nYgqT0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yi+jFMshV8ILYyHhIaVfjoKWBSLPZarr4ifMpm3Sjw3ujOV+RAJA3ccpsIQ7X9/xj
-	 PwdU1PvGhCt8qfhAfnBeyTdnzvV3mPfv3qSbp83Spl05ZMqW2va3hqq3WKS6bgCycc
-	 iMyEkkz96/lTe1WzycWw81KF+xAkNaxOA1pbEPdU=
+	b=Ub25q5hhWGUMGnBc7t+OygDsurqE2thZ6AU/WT3Hre4EvYXrhqVjNiFAeOby7HtNv
+	 X/WRcBE7xvpZhxal1i/1z29iKYZ3bWwVAf9WiUZsHmP2Xkq2NJMnP87SKnlee2vf4R
+	 Up22LB4x8DelzXhudOYn6wnhufh3zVrhvzK8RFYM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387696AbgAVJo0 (ORCPT
+        id S2388045AbgAVJo2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 04:44:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37368 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 04:44:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37496 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387848AbgAVJoS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 04:44:18 -0500
+        id S2387776AbgAVJoX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 04:44:23 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E9AAA2468B;
-        Wed, 22 Jan 2020 09:44:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C9BA52468B;
+        Wed, 22 Jan 2020 09:44:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579686258;
-        bh=dEwi0JC7TzjYmMHSKOvdlRofP9l7kVazWtTHC4k6uxA=;
+        s=default; t=1579686263;
+        bh=gEMbZSf7gz/38fyK2S0QNO50FzA33PkIo6Ay1nYgqT0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XJWwX1X4JKXp4SaBbx9EjjM4nZyhlGk3Kgwsgk8zM3o0HB9KJglxZ0vvIhOAqrNv4
-         NK/70AfnIZ0fV32aesQx7WiraJYly2HNeHnQZkLiSTcgotsU13GQgN+/uTEDH9i/Bs
-         XMyGymvgC901t/d5bueychdgJFrZ5Wx0mNmyAH6k=
+        b=DycamOghaO5tOni2q2frO4wY1bwON5mcQx4ubgFpau2LrdbtLlVjvrXPZPyemXkj2
+         WS39eBtVkKyE2UVjQjaLd9L/4ZaNAFyZLEIlrD8lkeHtiphGA6OVfl+alydLvJKuG/
+         6+891UYq+xhPUC5NpsLtAuR6KcR0mf6TbypY7L2A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Baolin Wang <baolin.wang@linaro.org>,
-        Stephen Boyd <sboyd@kernel.org>
-Subject: [PATCH 4.19 101/103] clk: sprd: Use IS_ERR() to validate the return value of syscon_regmap_lookup_by_phandle()
-Date:   Wed, 22 Jan 2020 10:29:57 +0100
-Message-Id: <20200122092816.824516282@linuxfoundation.org>
+        stable@vger.kernel.org, Eddie James <eajames@linux.ibm.com>,
+        Guenter Roeck <linux@roeck-us.net>
+Subject: [PATCH 4.19 103/103] hwmon: (pmbus/ibm-cffps) Switch LEDs to blocking brightness call
+Date:   Wed, 22 Jan 2020 10:29:59 +0100
+Message-Id: <20200122092817.056849882@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200122092803.587683021@linuxfoundation.org>
 References: <20200122092803.587683021@linuxfoundation.org>
@@ -59,33 +59,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Baolin Wang <baolin.wang@linaro.org>
+From: Eddie James <eajames@linux.ibm.com>
 
-commit 9629dbdabd1983ef53f125336e1d62d77b1620f9 upstream.
+commit 9861ff954c7e83e2f738ce16fbe15f8a1e121771 upstream.
 
-The syscon_regmap_lookup_by_phandle() will never return NULL, thus use
-IS_ERR() to validate the return value instead of IS_ERR_OR_NULL().
+Since i2c_smbus functions can sleep, the brightness setting function
+for this driver must be the blocking version to avoid scheduling while
+atomic.
 
-Fixes: d41f59fd92f2 ("clk: sprd: Add common infrastructure")
-Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
-Link: https://lkml.kernel.org/r/1995139bee5248ff3e9d46dc715968f212cfc4cc.1570520268.git.baolin.wang@linaro.org
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+Signed-off-by: Eddie James <eajames@linux.ibm.com>
+Link: https://lore.kernel.org/r/20191106200106.29519-2-eajames@linux.ibm.com
+Fixes: ef9e1cdf419a3 ("hwmon: (pmbus/cffps) Add led class device for power supply fault led")
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/clk/sprd/common.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/hwmon/pmbus/ibm-cffps.c |   10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
---- a/drivers/clk/sprd/common.c
-+++ b/drivers/clk/sprd/common.c
-@@ -45,7 +45,7 @@ int sprd_clk_regmap_init(struct platform
+--- a/drivers/hwmon/pmbus/ibm-cffps.c
++++ b/drivers/hwmon/pmbus/ibm-cffps.c
+@@ -269,8 +269,8 @@ static int ibm_cffps_read_word_data(stru
+ 	return rc;
+ }
  
- 	if (of_find_property(node, "sprd,syscon", NULL)) {
- 		regmap = syscon_regmap_lookup_by_phandle(node, "sprd,syscon");
--		if (IS_ERR_OR_NULL(regmap)) {
-+		if (IS_ERR(regmap)) {
- 			pr_err("%s: failed to get syscon regmap\n", __func__);
- 			return PTR_ERR(regmap);
- 		}
+-static void ibm_cffps_led_brightness_set(struct led_classdev *led_cdev,
+-					 enum led_brightness brightness)
++static int ibm_cffps_led_brightness_set(struct led_classdev *led_cdev,
++					enum led_brightness brightness)
+ {
+ 	int rc;
+ 	struct ibm_cffps *psu = container_of(led_cdev, struct ibm_cffps, led);
+@@ -286,9 +286,11 @@ static void ibm_cffps_led_brightness_set
+ 	rc = i2c_smbus_write_byte_data(psu->client, CFFPS_SYS_CONFIG_CMD,
+ 				       psu->led_state);
+ 	if (rc < 0)
+-		return;
++		return rc;
+ 
+ 	led_cdev->brightness = brightness;
++
++	return 0;
+ }
+ 
+ static int ibm_cffps_led_blink_set(struct led_classdev *led_cdev,
+@@ -324,7 +326,7 @@ static void ibm_cffps_create_led_class(s
+ 		 client->addr);
+ 	psu->led.name = psu->led_name;
+ 	psu->led.max_brightness = LED_FULL;
+-	psu->led.brightness_set = ibm_cffps_led_brightness_set;
++	psu->led.brightness_set_blocking = ibm_cffps_led_brightness_set;
+ 	psu->led.blink_set = ibm_cffps_led_blink_set;
+ 
+ 	rc = devm_led_classdev_register(dev, &psu->led);
 
 
