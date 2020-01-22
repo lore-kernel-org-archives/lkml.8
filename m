@@ -2,53 +2,53 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2F2AC33CB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:43:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12259C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:43:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B13E24686
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:43:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DAB7124686
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:43:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579686186;
-	bh=Ixa36PYpa1AbS3yhKx0b+2TirIMqqbfR/UNzFCWU5Jw=;
+	s=default; t=1579686188;
+	bh=S3uee98AlMsi9nXtJdJVdcJ6q6OJiEvSw9r1WsbzTnU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MWL6f+vpKieSyFIEmax9bNjRwTflwYfgK+9pkGKDt5oT673OxWgXZl61TS0R2Bgd9
-	 0UNvV6G2swrmiFmFfiePE9dgJGtcofQ8ApV+W7Mt+DYqG/rxtWmTzi3QZeTTWnBX4u
-	 hfUJwNcxT4ikqO25Y/UGXrXKqfD02l+u7ncDjmDI=
+	b=XOT6caonC53uQUOTQFZuHYvl0NQPv6rXUudwCdS05p+GaLPFPKPRsn2JM7LvBJ7za
+	 BBu3nQWhfgRhK0N2qQkY++0o6CfM6c/kzU+0PXaoCnG26QuscbmLdf2JbpkDjWlRE7
+	 tUHewXZB0gKNkN9zC+k/WiG2VAy3nX/SRAutOMMI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387827AbgAVJnF (ORCPT
+        id S2387835AbgAVJnH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 04:43:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35186 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 04:43:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35244 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387810AbgAVJnA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 04:43:00 -0500
+        id S2387803AbgAVJnD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 04:43:03 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 905232467B;
-        Wed, 22 Jan 2020 09:42:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0F1C524686;
+        Wed, 22 Jan 2020 09:43:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579686180;
-        bh=Ixa36PYpa1AbS3yhKx0b+2TirIMqqbfR/UNzFCWU5Jw=;
+        s=default; t=1579686182;
+        bh=S3uee98AlMsi9nXtJdJVdcJ6q6OJiEvSw9r1WsbzTnU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yUAghn1RnbE5DO4m6JMcrnWl3OnxpiDsjan8r26KAaePx0HIorykT3WLXtDJIYisI
-         m4nuOKFteBoNjxsg4i/UP0M7y9ri3QIQzHHcPP48RC1pVorymSSElrPs6nmEk9UMKL
-         vGl9cLlEKSNjuFTQBc9JV1WCClduiWBeS8FV9Keg=
+        b=MYBZ0gJc1ECqYiCrAUu1l2c0V9EujvmZJVzdCieR3uh02QR+30DlleD1aT1jSkqm4
+         G1o4aCvc5WWfy/hkqZtRDQQWBSqCgE8EniBwWNFPSXqhTfkh0v901D1vMXz4rnlfQf
+         egbNRedBjHlhTyz9CKW6akoIVHYbTWUqyZAouX+g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Petr Machata <petrm@mellanox.com>,
-        Jiri Pirko <jiri@mellanox.com>,
-        Ido Schimmel <idosch@mellanox.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 077/103] mlxsw: spectrum: Wipe xstats.backlog of down ports
-Date:   Wed, 22 Jan 2020 10:29:33 +0100
-Message-Id: <20200122092814.569278040@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+91bdd8eece0f6629ec8b@syzkaller.appspotmail.com,
+        Florian Westphal <fw@strlen.de>,
+        Pablo Neira Ayuso <pablo@netfilter.org>
+Subject: [PATCH 4.19 060/103] netfilter: arp_tables: init netns pointer in xt_tgdtor_param struct
+Date:   Wed, 22 Jan 2020 10:29:16 +0100
+Message-Id: <20200122092812.951420105@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200122092803.587683021@linuxfoundation.org>
 References: <20200122092803.587683021@linuxfoundation.org>
@@ -61,67 +61,124 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Petr Machata <petrm@mellanox.com>
+From: Florian Westphal <fw@strlen.de>
 
-commit ca7609ff3680c51d6c29897f3117aa2ad904f92a upstream.
+commit 212e7f56605ef9688d0846db60c6c6ec06544095 upstream.
 
-Per-port counter cache used by Qdiscs is updated periodically, unless the
-port is down. The fact that the cache is not updated for down ports is no
-problem for most counters, which are relative in nature. However, backlog
-is absolute in nature, and if there is a non-zero value in the cache around
-the time that the port goes down, that value just stays there. This value
-then leaks to offloaded Qdiscs that report non-zero backlog even if
-there (obviously) is no traffic.
+An earlier commit (1b789577f655060d98d20e,
+"netfilter: arp_tables: init netns pointer in xt_tgchk_param struct")
+fixed missing net initialization for arptables, but turns out it was
+incomplete.  We can get a very similar struct net NULL deref during
+error unwinding:
 
-The HW does not keep backlog of a downed port, so do likewise: as the port
-goes down, wipe the backlog value from xstats.
+general protection fault: 0000 [#1] PREEMPT SMP KASAN
+RIP: 0010:xt_rateest_put+0xa1/0x440 net/netfilter/xt_RATEEST.c:77
+ xt_rateest_tg_destroy+0x72/0xa0 net/netfilter/xt_RATEEST.c:175
+ cleanup_entry net/ipv4/netfilter/arp_tables.c:509 [inline]
+ translate_table+0x11f4/0x1d80 net/ipv4/netfilter/arp_tables.c:587
+ do_replace net/ipv4/netfilter/arp_tables.c:981 [inline]
+ do_arpt_set_ctl+0x317/0x650 net/ipv4/netfilter/arp_tables.c:1461
 
-Fixes: 075ab8adaf4e ("mlxsw: spectrum: Collect tclass related stats periodically")
-Signed-off-by: Petr Machata <petrm@mellanox.com>
-Acked-by: Jiri Pirko <jiri@mellanox.com>
-Signed-off-by: Ido Schimmel <idosch@mellanox.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Also init the netns pointer in xt_tgdtor_param struct.
+
+Fixes: add67461240c1d ("netfilter: add struct net * to target parameters")
+Reported-by: syzbot+91bdd8eece0f6629ec8b@syzkaller.appspotmail.com
+Signed-off-by: Florian Westphal <fw@strlen.de>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/ethernet/mellanox/mlxsw/spectrum.c |   13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ net/ipv4/netfilter/arp_tables.c |   19 ++++++++++---------
+ 1 file changed, 10 insertions(+), 9 deletions(-)
 
---- a/drivers/net/ethernet/mellanox/mlxsw/spectrum.c
-+++ b/drivers/net/ethernet/mellanox/mlxsw/spectrum.c
-@@ -1061,6 +1061,9 @@ static void update_stats_cache(struct wo
- 			     periodic_hw_stats.update_dw.work);
- 
- 	if (!netif_carrier_ok(mlxsw_sp_port->dev))
-+		/* Note: mlxsw_sp_port_down_wipe_counters() clears the cache as
-+		 * necessary when port goes down.
-+		 */
- 		goto out;
- 
- 	mlxsw_sp_port_get_hw_stats(mlxsw_sp_port->dev,
-@@ -3309,6 +3312,15 @@ static int mlxsw_sp_port_unsplit(struct
+--- a/net/ipv4/netfilter/arp_tables.c
++++ b/net/ipv4/netfilter/arp_tables.c
+@@ -495,12 +495,13 @@ static inline int check_entry_size_and_h
  	return 0;
  }
  
-+static void
-+mlxsw_sp_port_down_wipe_counters(struct mlxsw_sp_port *mlxsw_sp_port)
-+{
-+	int i;
-+
-+	for (i = 0; i < TC_MAX_QUEUE; i++)
-+		mlxsw_sp_port->periodic_hw_stats.xstats.backlog[i] = 0;
-+}
-+
- static void mlxsw_sp_pude_event_func(const struct mlxsw_reg_info *reg,
- 				     char *pude_pl, void *priv)
+-static inline void cleanup_entry(struct arpt_entry *e)
++static void cleanup_entry(struct arpt_entry *e, struct net *net)
  {
-@@ -3329,6 +3341,7 @@ static void mlxsw_sp_pude_event_func(con
- 	} else {
- 		netdev_info(mlxsw_sp_port->dev, "link down\n");
- 		netif_carrier_off(mlxsw_sp_port->dev);
-+		mlxsw_sp_port_down_wipe_counters(mlxsw_sp_port);
+ 	struct xt_tgdtor_param par;
+ 	struct xt_entry_target *t;
+ 
+ 	t = arpt_get_target(e);
++	par.net      = net;
+ 	par.target   = t->u.kernel.target;
+ 	par.targinfo = t->data;
+ 	par.family   = NFPROTO_ARP;
+@@ -583,7 +584,7 @@ static int translate_table(struct net *n
+ 		xt_entry_foreach(iter, entry0, newinfo->size) {
+ 			if (i-- == 0)
+ 				break;
+-			cleanup_entry(iter);
++			cleanup_entry(iter, net);
+ 		}
+ 		return ret;
  	}
+@@ -926,7 +927,7 @@ static int __do_replace(struct net *net,
+ 	/* Decrease module usage counts and free resource */
+ 	loc_cpu_old_entry = oldinfo->entries;
+ 	xt_entry_foreach(iter, loc_cpu_old_entry, oldinfo->size)
+-		cleanup_entry(iter);
++		cleanup_entry(iter, net);
+ 
+ 	xt_free_table_info(oldinfo);
+ 	if (copy_to_user(counters_ptr, counters,
+@@ -989,7 +990,7 @@ static int do_replace(struct net *net, c
+ 
+  free_newinfo_untrans:
+ 	xt_entry_foreach(iter, loc_cpu_entry, newinfo->size)
+-		cleanup_entry(iter);
++		cleanup_entry(iter, net);
+  free_newinfo:
+ 	xt_free_table_info(newinfo);
+ 	return ret;
+@@ -1286,7 +1287,7 @@ static int compat_do_replace(struct net
+ 
+  free_newinfo_untrans:
+ 	xt_entry_foreach(iter, loc_cpu_entry, newinfo->size)
+-		cleanup_entry(iter);
++		cleanup_entry(iter, net);
+  free_newinfo:
+ 	xt_free_table_info(newinfo);
+ 	return ret;
+@@ -1513,7 +1514,7 @@ static int do_arpt_get_ctl(struct sock *
+ 	return ret;
  }
  
+-static void __arpt_unregister_table(struct xt_table *table)
++static void __arpt_unregister_table(struct net *net, struct xt_table *table)
+ {
+ 	struct xt_table_info *private;
+ 	void *loc_cpu_entry;
+@@ -1525,7 +1526,7 @@ static void __arpt_unregister_table(stru
+ 	/* Decrease module usage counts and free resources */
+ 	loc_cpu_entry = private->entries;
+ 	xt_entry_foreach(iter, loc_cpu_entry, private->size)
+-		cleanup_entry(iter);
++		cleanup_entry(iter, net);
+ 	if (private->number > private->initial_entries)
+ 		module_put(table_owner);
+ 	xt_free_table_info(private);
+@@ -1565,7 +1566,7 @@ int arpt_register_table(struct net *net,
+ 
+ 	ret = nf_register_net_hooks(net, ops, hweight32(table->valid_hooks));
+ 	if (ret != 0) {
+-		__arpt_unregister_table(new_table);
++		__arpt_unregister_table(net, new_table);
+ 		*res = NULL;
+ 	}
+ 
+@@ -1580,7 +1581,7 @@ void arpt_unregister_table(struct net *n
+ 			   const struct nf_hook_ops *ops)
+ {
+ 	nf_unregister_net_hooks(net, ops, hweight32(table->valid_hooks));
+-	__arpt_unregister_table(table);
++	__arpt_unregister_table(net, table);
+ }
+ 
+ /* The built-in targets: standard (NULL) and error. */
 
 
