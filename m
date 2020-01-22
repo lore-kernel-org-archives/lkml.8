@@ -2,95 +2,78 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37F9FC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:48:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 323E6C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:48:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 040222467B
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:48:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579686508;
-	bh=ojuoB49RgLeaf4U1FL5f4WUbko2s627pGU88v1u/W8E=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OL1IHItRqjocw7SZLKUSKkpj67Xik6mQEu+37mofi9Uv+D+WHbT50eeMoPTceuhUB
-	 HEOstBq9T7+YzLisCIAlxn4ILue13iCBuf0Cc0u94xcIh6PDFcH2DlKqiTrnx3PHfw
-	 Vv4KeBxcfwn7BLiPVTNJeh3un9j4ew/tUSFSaadE=
+	by mail.kernel.org (Postfix) with ESMTP id 0F8AE2467C
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:48:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387536AbgAVJlO (ORCPT
+        id S1733195AbgAVJsa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 04:41:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60308 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 04:48:30 -0500
+Received: from mx2.suse.de ([195.135.220.15]:41674 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387505AbgAVJlD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 04:41:03 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F1DD724680;
-        Wed, 22 Jan 2020 09:41:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579686063;
-        bh=ojuoB49RgLeaf4U1FL5f4WUbko2s627pGU88v1u/W8E=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0wHxxe+5MAZi3u0pmS2iX9Ly+NuOnyZDbHAB42AHFoRFK8y5zjPOm+7DZyatsWt81
-         9463FRgpodxMXjnukz48EveP5BKhMKU+54lIl6zAn7sGWm9HRZSveqiGNKWRPDLYii
-         8ZtEav+P3VbZMXMQHhVXTXserlHK+L+Hw20MUFo0=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>,
-        Tony Lindgren <tony@atomide.com>
-Subject: [PATCH 4.19 029/103] ARM: dts: am571x-idk: Fix gpios property to have the correct  gpio number
-Date:   Wed, 22 Jan 2020 10:28:45 +0100
-Message-Id: <20200122092808.203960329@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200122092803.587683021@linuxfoundation.org>
-References: <20200122092803.587683021@linuxfoundation.org>
-User-Agent: quilt/0.66
+        id S1729143AbgAVJs2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 04:48:28 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 7E979AAFD;
+        Wed, 22 Jan 2020 09:48:27 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 6F8531E0A4F; Wed, 22 Jan 2020 10:48:26 +0100 (CET)
+Date:   Wed, 22 Jan 2020 10:48:26 +0100
+From:   Jan Kara <jack@suse.cz>
+To:     wangyan <wangyan122@huawei.com>
+Cc:     tytso@mit.edu, jack@suse.com, linux-ext4@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] jbd2: delete the duplicated words in the comments
+Message-ID: <20200122094826.GD12845@quack2.suse.cz>
+References: <12087f77-ab4d-c7ba-53b4-893dbf0026f0@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <12087f77-ab4d-c7ba-53b4-893dbf0026f0@huawei.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kishon Vijay Abraham I <kishon@ti.com>
+On Wed 22-01-20 17:33:10, wangyan wrote:
+> Delete the duplicated words "is" in the comments
+> 
+> Signed-off-by: Yan Wang <wangyan122@huawei.com>
 
-commit 0c4eb2a6b3c6b0facd0a3bccda5db22e7b3b6f96 upstream.
+Looks good. Thanks. You can add:
 
-commit d23f3839fe97d8dce03d ("ARM: dts: DRA7: Add pcie1 dt node for
-EP mode") while adding the dt node for EP mode for DRA7 platform,
-added rc node for am571x-idk and populated gpios property with
-"gpio3 23". However the GPIO_PCIE_SWRST line is actually connected
-to "gpio5 18". Fix it here. (The patch adding "gpio3 23" was tested
-with another am57x board in EP mode which doesn't rely on reset from
-host).
+Reviewed-by: Jan Kara <jack@suse.cz>
+	
+								Honza
 
-Cc: stable <stable@vger.kernel.org> # 4.14+
-Fixes: d23f3839fe97d8dce03d ("ARM: dts: DRA7: Add pcie1 dt node for EP mode")
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- arch/arm/boot/dts/am571x-idk.dts |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
---- a/arch/arm/boot/dts/am571x-idk.dts
-+++ b/arch/arm/boot/dts/am571x-idk.dts
-@@ -90,7 +90,7 @@
- 
- &pcie1_rc {
- 	status = "okay";
--	gpios = <&gpio3 23 GPIO_ACTIVE_HIGH>;
-+	gpios = <&gpio5 18 GPIO_ACTIVE_HIGH>;
- };
- 
- &pcie1_ep {
-
-
+> ---
+>  fs/jbd2/transaction.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/fs/jbd2/transaction.c b/fs/jbd2/transaction.c
+> index 27b9f9dee434..5c3abbaccb57 100644
+> --- a/fs/jbd2/transaction.c
+> +++ b/fs/jbd2/transaction.c
+> @@ -525,7 +525,7 @@ EXPORT_SYMBOL(jbd2__journal_start);
+>   * modified buffers in the log.  We block until the log can guarantee
+>   * that much space. Additionally, if rsv_blocks > 0, we also create another
+>   * handle with rsv_blocks reserved blocks in the journal. This handle is
+> - * is stored in h_rsv_handle. It is not attached to any particular transaction
+> + * stored in h_rsv_handle. It is not attached to any particular transaction
+>   * and thus doesn't block transaction commit. If the caller uses this reserved
+>   * handle, it has to set h_rsv_handle to NULL as otherwise jbd2_journal_stop()
+>   * on the parent handle will dispose the reserved one. Reserved handle has to
+> -- 
+> 2.19.1
+> 
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
