@@ -2,103 +2,117 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6320C33CB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 22:10:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 052ECC32771
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 22:12:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D3F221835
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 22:10:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gtZOmaZS"
+	by mail.kernel.org (Postfix) with ESMTP id C2E4E24673
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 22:12:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579731161;
+	bh=yXJTAtyUgF/n5VfVCpD4qaPRZD7eOBIuzPZVhbUeTL8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=2SsY4lG2e+VPbekKTfz8zZr9IRR/OG1+2uDVaBm1ZkWtnZPu0sjYN6eC4uAIINwGJ
+	 0bhJdLD5i/6QAFt/wMowUnUGE9WRMJaeWOFe1mGdSu9BgffNquaAex0WttaEOeNZq3
+	 f+EqcbD7vQVnnIIZsxgUepOmp/vujlkzW/cEv/Lo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726234AbgAVWKI (ORCPT
+        id S1726219AbgAVWMk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 17:10:08 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:41150 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725884AbgAVWKH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 17:10:07 -0500
-Received: by mail-oi1-f194.google.com with SMTP id i1so969362oie.8;
-        Wed, 22 Jan 2020 14:10:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=tzE/usQUC+/qHervq9qIJkerRx4RijErGd72FUWsdgM=;
-        b=gtZOmaZSaQA1RT0gYAY3tpH2TX8tqCQrvkx0lHqwRJqlYa9AUwawy8ZprbPbfwpvsG
-         6rakUY0G3Vkv8cHjk1tshjNXUrlLZ4cvEtrK8AhoQmRCk+v00Mtcd+55QW8dAssRccah
-         D0gdYwfGpTQSMeXo3ynX2P4ZzxinEJfasyaKk3p8mjZKFEDwxgvE5kjBzjlSG5E7eGw3
-         wo72JBSn+hFrMQTjT8P9HN7M7U7q/LbR7hn054GnIkawXrCXbzDwsKai2wV7rz9f1tw/
-         cGIJJw9I9s0fzWGdQcJuxzN7xkjjJWSSTM1lkGW1wWMugV9OLR6sv/xWf/1xUDL/RvRo
-         fKVA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=tzE/usQUC+/qHervq9qIJkerRx4RijErGd72FUWsdgM=;
-        b=AOj5mmawQsZ5Ynn9bSh2uY9fvh3s4hTGD+m8mIZFPolHEGrueUI0fS3uJlxNsB1Aqi
-         C5omgYQsPRcvBGnZFZVW8V+QBOUJZFCHJvzdpYZR7gdyQ4oJqrKJVD/syemajHIe+VnL
-         ciK9WkP479WwLfixvrem/vUOGU8eEDoMU3V2JQ+WTOMSZxwSAW6eV1newlsxXxvExry0
-         k4KmiE/1BuFTVOrBYODxbkAqedtcN9/bte+KXKX0hVi9go3kD7XoRg1iQh34Ue+EpVw4
-         4lgInSqHkWxBknGKLPolB6CvGNMYQ0pMmp8JQ533LDzLMkTj7hv1W0or8COr9OH+nFjy
-         wQQQ==
-X-Gm-Message-State: APjAAAUfGCXCM7CEuyATlO0j2NzlETNxh3tjG4w+WaYwQRz5l8c9O5Dy
-        hj3G5MhQBm4szpGbDkdrJhXD3dJG49CBJTaMA8hgRwSKFT0=
-X-Google-Smtp-Source: APXvYqzLaIvFXXa9sDzzeC+7Der05z+2y7PvAqMVLAjIHy8ILzkiBB98xdRD6ZfV72sFmE1yONU6J0ZcD+whAVa6nj8=
-X-Received: by 2002:aca:1011:: with SMTP id 17mr8450834oiq.72.1579731006685;
- Wed, 22 Jan 2020 14:10:06 -0800 (PST)
-MIME-Version: 1.0
-References: <0000000000006370ef059cabac14@google.com> <50239085-ff0f-f797-99af-1a0e58bc5e2e@gmail.com>
- <CAM_iQpXqh1ucVST199c72V22zLPujZy-54p=c5ar=Q9bWNq7OA@mail.gmail.com> <7056f971-8fae-ce88-7e9a-7983e4f57bb2@gmail.com>
-In-Reply-To: <7056f971-8fae-ce88-7e9a-7983e4f57bb2@gmail.com>
-From:   Cong Wang <xiyou.wangcong@gmail.com>
-Date:   Wed, 22 Jan 2020 14:09:55 -0800
-Message-ID: <CAM_iQpWw_pP0zm8VgRoYgeMu=b8v8ECmXAcfSC8WGraQ8CNk+Q@mail.gmail.com>
-Subject: Re: KASAN: slab-out-of-bounds Read in __nla_put_nohdr
-To:     Eric Dumazet <eric.dumazet@gmail.com>
-Cc:     syzbot <syzbot+5af9a90dad568aa9f611@syzkaller.appspotmail.com>,
-        David Miller <davem@davemloft.net>,
-        Jamal Hadi Salim <jhs@mojatatu.com>,
-        Jiri Pirko <jiri@resnulli.us>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux Kernel Network Developers <netdev@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 22 Jan 2020 17:12:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53596 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725970AbgAVWMj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 17:12:39 -0500
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7CE9021835;
+        Wed, 22 Jan 2020 22:12:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579731158;
+        bh=yXJTAtyUgF/n5VfVCpD4qaPRZD7eOBIuzPZVhbUeTL8=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=pvOuqmaRIpjkXG3GkKuNKB7TseHYe4VltsI+SVF8gTpuFw/Y69mtx5NJn6O7WsiPy
+         wdEO/h0fAEhvzmxmMiHjSMpiJhrMDmTvPLNWI3PysmL0zvC5Zxz+P2o2FKO9ZL5iiX
+         tfVH+5LKRTmDymKuOVKue15KuKBUZI6D6mZJFnAs=
+Date:   Thu, 23 Jan 2020 07:12:14 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     David Laight <David.Laight@ACULAB.COM>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jiri Olsa <jolsa@kernel.org>,
+        "Naveen N . Rao" <naveen.n.rao@linux.ibm.com>,
+        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Toke =?UTF-8?B?SMO4aWxhbmQtSsO4cmdl?= =?ISO-2022-JP?B?bnNlbg==?= 
+        <thoiland@redhat.com>, Jean-Tsung Hsiao <jhsiao@redhat.com>,
+        Jesper Dangaard Brouer <brouer@redhat.com>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>
+Subject: Re: [for-linus][PATCH 2/5] tracing/uprobe: Fix double perf_event
+ linking on multiprobe uprobe
+Message-Id: <20200123071214.fb1975d25177963765511435@kernel.org>
+In-Reply-To: <20200121150605.GT14879@hirez.programming.kicks-ass.net>
+References: <20200121143847.609307852@goodmis.org>
+        <20200121143956.600928887@goodmis.org>
+        <20200121145009.GR14879@hirez.programming.kicks-ass.net>
+        <bd3126fff15641098af2a4ac2164f3c4@AcuMS.aculab.com>
+        <20200121150605.GT14879@hirez.programming.kicks-ass.net>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 22, 2020 at 12:33 PM Eric Dumazet <eric.dumazet@gmail.com> wrote:
->
->
->
-> On 1/22/20 12:27 PM, Cong Wang wrote:
-> > On Tue, Jan 21, 2020 at 11:55 AM Eric Dumazet <eric.dumazet@gmail.com> wrote:
-> >> em_nbyte_change() sets
-> >> em->datalen = sizeof(*nbyte) + nbyte->len;
-> >>
-> >> But later tcf_em_validate() overwrites em->datalen with the user provide value (em->datalen = data_len; )
-> >> which can be bigger than the allocated (kmemdup) space in em_nbyte_change()
-> >>
-> >> Should net/sched/em_nbyte.c() provide a dump() handler to avoid this issue ?
-> >
-> > I think for those who implement ->change() we should leave
-> > ->datalen untouched to respect their choices. I don't see why
-> > we have to set it twice.
-> >
-> >
->
-> Agreed, but we need to audit them to make sure all of them are setting ->datalen
->
+On Tue, 21 Jan 2020 16:06:05 +0100
+Peter Zijlstra <peterz@infradead.org> wrote:
 
-I audited all of them, either sets ->datalen in ->change() or just
-implements a ops->datalen. I will send the patch out once passed
-syzbot test.
+> On Tue, Jan 21, 2020 at 02:59:35PM +0000, David Laight wrote:
+> > From: Peter Zijlstra
+> > > Sent: 21 January 2020 14:50
+> > > On Tue, Jan 21, 2020 at 09:38:49AM -0500, Steven Rostedt wrote:
+> > > > diff --git a/kernel/trace/trace_probe.h b/kernel/trace/trace_probe.h
+> > > > index 4ee703728aec..03e4e180058d 100644
+> > > > --- a/kernel/trace/trace_probe.h
+> > > > +++ b/kernel/trace/trace_probe.h
+> > > > @@ -230,6 +230,7 @@ struct trace_probe_event {
+> > > >  	struct trace_event_call		call;
+> > > >  	struct list_head 		files;
+> > > >  	struct list_head		probes;
+> > > > +	char				data[0];
+> > > >  };
+> > > 
+> > > Note that this relies on pure 'luck'. If you stick anything <4 bytes in
+> > > between the list_head and the data member it'll come unstuck real fast.
+> > 
+> > Can you fix it by adding an unnamed struct as in:
+> 
+> The trivial fix is like I suggested in the other thread:
+> 
+> 	struct trace_uprobe_filter filters[0];
+> 
+> The alternative that Masami-San suggested should also work.
 
-Thanks.
+I've sent a fix ( https://lkml.org/lkml/2020/1/21/1214 )
+as Peter suggested, change the field to 
+
+	struct trace_uprobe_filter filters[0];
+
+and change the code around that.
+
+Thank you,
+
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
