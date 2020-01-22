@@ -4,49 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35075C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:48:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52A8BC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:48:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05A0F2467C
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:48:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29D742467B
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:48:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579686488;
-	bh=AkLuwjehgQMV0NZu73AEcKFSv7+rcuwhSHUnoRBjyls=;
+	s=default; t=1579686492;
+	bh=DBde7uZQI+nAKqKHJs8EuTBmhlPbAKjNh1GJFTUbcss=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LBLiXUsljys4KKO3vCYOjI3gCyoFajKxCExceBgWr5QszcMFqExx8c/xFoqc3PhPg
-	 UC3q/WmfdGFraUH5W/dFSdiB1grBROELT/nneuyia1hcFQ/Fm8yD9qkEngORFq9hZp
-	 CHUZtzzo3FrooUi4hn4RFUGrWy2P/pEwaNNvMWbQ=
+	b=C/cVXteTZ8eSVoX66xdjtkVJotfRAOEWK62RRgYYduqPJJzIwSQlbCTA5BsNCUJC3
+	 ygG16ZOKjdOxq0t7Qzmp876hfMS3MJZ+9a6ITbc31Kcy+La6C4sI5APztKUqD1VPFE
+	 D4GH3lKSinTg4x5HRwZGSxVtDSfZC0FXONOG2aZ0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729157AbgAVJsH (ORCPT
+        id S2387591AbgAVJlh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 04:48:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33006 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 04:41:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60792 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387594AbgAVJlk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 04:41:40 -0500
+        id S2387563AbgAVJlX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 04:41:23 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2E27F2467B;
-        Wed, 22 Jan 2020 09:41:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7A57524684;
+        Wed, 22 Jan 2020 09:41:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579686099;
-        bh=AkLuwjehgQMV0NZu73AEcKFSv7+rcuwhSHUnoRBjyls=;
+        s=default; t=1579686082;
+        bh=DBde7uZQI+nAKqKHJs8EuTBmhlPbAKjNh1GJFTUbcss=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wxP2+j+t3M2aR0Jc1PyJNtXM2QY2zP0nDhPwDUHxUZLCA1AmNcA6qv26nc0OIctip
-         86ehSxQeA6iKchyNf15cC28qowGkxXFRjQlineinR6o6L4QYQAh5jWca4/9CXUvbbd
-         BNSakbysiGYj18WiGQjWd9rIwOnwhuWC68T7zyEY=
+        b=Z2tv6bYl3RTp77BYaVpasAznrZ116rCkwSSFlv5lud4NfFhwfWjdlNOeZZMNbd/aT
+         pwpwjfTFEEqMjURDvYiG7Ryd7tna5y6RlgIVZrlet2tknrzMD7Dv9X5FshJXZa5jM1
+         5QpsijhM9vEYpdeyjHjdL2U7fffILKnTtbybivfs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>
-Subject: [PATCH 4.19 043/103] btrfs: fix invalid removal of root ref
-Date:   Wed, 22 Jan 2020 10:28:59 +0100
-Message-Id: <20200122092810.346582942@linuxfoundation.org>
+        stable@vger.kernel.org, Shakeel Butt <shakeelb@google.com>,
+        Borislav Petkov <bp@suse.de>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Reinette Chatre <reinette.chatre@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>, x86-ml <x86@kernel.org>
+Subject: [PATCH 4.19 037/103] x86/resctrl: Fix potential memory leak
+Date:   Wed, 22 Jan 2020 10:28:53 +0100
+Message-Id: <20200122092809.478517811@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200122092803.587683021@linuxfoundation.org>
 References: <20200122092803.587683021@linuxfoundation.org>
@@ -59,89 +63,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josef Bacik <josef@toxicpanda.com>
+From: Shakeel Butt <shakeelb@google.com>
 
-commit d49d3287e74ffe55ae7430d1e795e5f9bf7359ea upstream.
+commit ab6a2114433a3b5b555983dcb9b752a85255f04b upstream.
 
-If we have the following sequence of events
+set_cache_qos_cfg() is leaking memory when the given level is not
+RDT_RESOURCE_L3 or RDT_RESOURCE_L2. At the moment, this function is
+called with only valid levels but move the allocation after the valid
+level checks in order to make it more robust and future proof.
 
-  btrfs sub create A
-  btrfs sub create A/B
-  btrfs sub snap A C
-  mkdir C/foo
-  mv A/B C/foo
-  rm -rf *
+ [ bp: Massage commit message. ]
 
-We will end up with a transaction abort.
-
-The reason for this is because we create a root ref for B pointing to A.
-When we create a snapshot of C we still have B in our tree, but because
-the root ref points to A and not C we will make it appear to be empty.
-
-The problem happens when we move B into C.  This removes the root ref
-for B pointing to A and adds a ref of B pointing to C.  When we rmdir C
-we'll see that we have a ref to our root and remove the root ref,
-despite not actually matching our reference name.
-
-Now btrfs_del_root_ref() allowing this to work is a bug as well, however
-we know that this inode does not actually point to a root ref in the
-first place, so we shouldn't be calling btrfs_del_root_ref() in the
-first place and instead simply look up our dir index for this item and
-do the rest of the removal.
-
-CC: stable@vger.kernel.org # 4.4+
-Signed-off-by: Josef Bacik <josef@toxicpanda.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Fixes: 99adde9b370de ("x86/intel_rdt: Enable L2 CDP in MSR IA32_L2_QOS_CFG")
+Signed-off-by: Shakeel Butt <shakeelb@google.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Cc: Fenghua Yu <fenghua.yu@intel.com>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Reinette Chatre <reinette.chatre@intel.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: x86-ml <x86@kernel.org>
+Link: https://lkml.kernel.org/r/20200102165844.133133-1-shakeelb@google.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/btrfs/inode.c |   27 +++++++++++++++++++--------
- 1 file changed, 19 insertions(+), 8 deletions(-)
+ arch/x86/kernel/cpu/intel_rdt_rdtgroup.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/fs/btrfs/inode.c
-+++ b/fs/btrfs/inode.c
-@@ -4168,13 +4168,16 @@ static int btrfs_unlink_subvol(struct bt
- 	}
- 	btrfs_release_path(path);
+--- a/arch/x86/kernel/cpu/intel_rdt_rdtgroup.c
++++ b/arch/x86/kernel/cpu/intel_rdt_rdtgroup.c
+@@ -1749,9 +1749,6 @@ static int set_cache_qos_cfg(int level,
+ 	struct rdt_domain *d;
+ 	int cpu;
  
--	ret = btrfs_del_root_ref(trans, objectid, root->root_key.objectid,
--				 dir_ino, &index, name, name_len);
--	if (ret < 0) {
--		if (ret != -ENOENT) {
--			btrfs_abort_transaction(trans, ret);
--			goto out;
--		}
-+	/*
-+	 * This is a placeholder inode for a subvolume we didn't have a
-+	 * reference to at the time of the snapshot creation.  In the meantime
-+	 * we could have renamed the real subvol link into our snapshot, so
-+	 * depending on btrfs_del_root_ref to return -ENOENT here is incorret.
-+	 * Instead simply lookup the dir_index_item for this entry so we can
-+	 * remove it.  Otherwise we know we have a ref to the root and we can
-+	 * call btrfs_del_root_ref, and it _shouldn't_ fail.
-+	 */
-+	if (btrfs_ino(inode) == BTRFS_EMPTY_SUBVOL_DIR_OBJECTID) {
- 		di = btrfs_search_dir_index_item(root, path, dir_ino,
- 						 name, name_len);
- 		if (IS_ERR_OR_NULL(di)) {
-@@ -4189,8 +4192,16 @@ static int btrfs_unlink_subvol(struct bt
- 		leaf = path->nodes[0];
- 		btrfs_item_key_to_cpu(leaf, &key, path->slots[0]);
- 		index = key.offset;
-+		btrfs_release_path(path);
-+	} else {
-+		ret = btrfs_del_root_ref(trans, objectid,
-+					 root->root_key.objectid, dir_ino,
-+					 &index, name, name_len);
-+		if (ret) {
-+			btrfs_abort_transaction(trans, ret);
-+			goto out;
-+		}
- 	}
--	btrfs_release_path(path);
+-	if (!zalloc_cpumask_var(&cpu_mask, GFP_KERNEL))
+-		return -ENOMEM;
+-
+ 	if (level == RDT_RESOURCE_L3)
+ 		update = l3_qos_cfg_update;
+ 	else if (level == RDT_RESOURCE_L2)
+@@ -1759,6 +1756,9 @@ static int set_cache_qos_cfg(int level,
+ 	else
+ 		return -EINVAL;
  
- 	ret = btrfs_delete_delayed_dir_index(trans, BTRFS_I(dir), index);
- 	if (ret) {
++	if (!zalloc_cpumask_var(&cpu_mask, GFP_KERNEL))
++		return -ENOMEM;
++
+ 	r_l = &rdt_resources_all[level];
+ 	list_for_each_entry(d, &r_l->domains, list) {
+ 		/* Pick one CPU from each domain instance to update MSR */
 
 
