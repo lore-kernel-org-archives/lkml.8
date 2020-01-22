@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0956C33CB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:37:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC0C1C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:37:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76A812467E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:37:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FB492467B
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:37:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579685820;
-	bh=U01ImcXiMVQ+6F1rV4sEe5fLN+vVgVK5/h8301HQ7L4=;
+	s=default; t=1579685826;
+	bh=JcPHskCelOPDD5T1Vo/nBT+/37mxsX1KIglzaeuUltU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cFBemdXDJnKDcytQxp/l2kCYflzqOlcb5SsOTQilNKEdv00/DvPYkCEk+Fsbo9gR6
-	 6Mz/zgTQfeVcj28pEAjx1b3+g/HUqc2TO95sD4d46VMrRbmX6HUT1qIPIfD3ynZ8HV
-	 Fb/2k/xYAigQSzJNkNtql8NhUQjiMNnVPPtj8uPs=
+	b=KDLpSr2djdkWCy4yVGkQuhz961/ROfo+NnPfhbwVk3PTzymibW7/Hoeb8p4iSv5ex
+	 lm2XEwceANUf26OlsWEduu6CJyrPWVaw9wF/15k1ZL6Q3jS02vsUVcIRSo5qY8/XFz
+	 VgiF+l4sWctPbhL7Hlnjy5kQ3Z6/9Vmju/ta4FNg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732273AbgAVJg7 (ORCPT
+        id S1732381AbgAVJhF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 04:36:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52604 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 04:37:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52686 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729827AbgAVJgy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 04:36:54 -0500
+        id S1732267AbgAVJg5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 04:36:57 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B0A8324686;
-        Wed, 22 Jan 2020 09:36:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 22E022467B;
+        Wed, 22 Jan 2020 09:36:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579685814;
-        bh=U01ImcXiMVQ+6F1rV4sEe5fLN+vVgVK5/h8301HQ7L4=;
+        s=default; t=1579685816;
+        bh=JcPHskCelOPDD5T1Vo/nBT+/37mxsX1KIglzaeuUltU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QYCE2cm+/wxyIufUJkBqRsEgsNJnxiNvWBztYJlUg0VLTUZUFf7kkWCUpcwhmQgOp
-         pKXoa+dtPNRde1gp5h3iw1inY2hU5nKZ9owivAmbnqabqt8Z0yM2UIhlXUdl0Nm3G3
-         /FrAf0u/hJOLjeVkmUUn5FdMy0266r2Bw19Jb7Uw=
+        b=iaVNW6AnV38hEm97e7Tp3XiLOUHLc9MKvGt6rUN1FtW+o6b6/E/6/iWCLufQ0jk5B
+         r8jpxuIlxJNPy6detvSUoHNom4X+MK2EDf8H1Ol2e8KGWzIdkH9Dgf2tR3SvnHCFAl
+         xJg3k12ljqZdQxPCXXscORa0CBfitqfipM0BFIDw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jari Ruusu <jari.ruusu@gmail.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Luis Chamberlain <mcgrof@kernel.org>, stable@kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.9 54/97] Fix built-in early-load Intel microcode alignment
-Date:   Wed, 22 Jan 2020 10:28:58 +0100
-Message-Id: <20200122092805.117049806@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Ming Lei <ming.lei@redhat.com>,
+        Mikulas Patocka <mpatocka@redhat.com>,
+        Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 4.9 55/97] block: fix an integer overflow in logical block size
+Date:   Wed, 22 Jan 2020 10:28:59 +0100
+Message-Id: <20200122092805.284981750@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200122092755.678349497@linuxfoundation.org>
 References: <20200122092755.678349497@linuxfoundation.org>
@@ -62,54 +62,116 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jari Ruusu <jari.ruusu@gmail.com>
+From: Mikulas Patocka <mpatocka@redhat.com>
 
-commit f5ae2ea6347a308cfe91f53b53682ce635497d0d upstream.
+commit ad6bf88a6c19a39fb3b0045d78ea880325dfcf15 upstream.
 
-Intel Software Developer's Manual, volume 3, chapter 9.11.6 says:
+Logical block size has type unsigned short. That means that it can be at
+most 32768. However, there are architectures that can run with 64k pages
+(for example arm64) and on these architectures, it may be possible to
+create block devices with 64k block size.
 
- "Note that the microcode update must be aligned on a 16-byte boundary
-  and the size of the microcode update must be 1-KByte granular"
+For exmaple (run this on an architecture with 64k pages):
 
-When early-load Intel microcode is loaded from initramfs, userspace tool
-'iucode_tool' has already 16-byte aligned those microcode bits in that
-initramfs image.  Image that was created something like this:
+Mount will fail with this error because it tries to read the superblock using 2-sector
+access:
+  device-mapper: writecache: I/O is not aligned, sector 2, size 1024, block size 65536
+  EXT4-fs (dm-0): unable to read superblock
 
- iucode_tool --write-earlyfw=FOO.cpio microcode-files...
+This patch changes the logical block size from unsigned short to unsigned
+int to avoid the overflow.
 
-However, when early-load Intel microcode is loaded from built-in
-firmware BLOB using CONFIG_EXTRA_FIRMWARE= kernel config option, that
-16-byte alignment is not guaranteed.
-
-Fix this by forcing all built-in firmware BLOBs to 16-byte alignment.
-
-[ If we end up having other firmware with much bigger alignment
-  requirements, we might need to introduce some method for the firmware
-  to specify it, this is the minimal "just increase the alignment a bit
-  to account for this one special case" patch    - Linus ]
-
-Signed-off-by: Jari Ruusu <jari.ruusu@gmail.com>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Fenghua Yu <fenghua.yu@intel.com>
-Cc: Luis Chamberlain <mcgrof@kernel.org>
-Cc: stable@kernel.org
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: stable@vger.kernel.org
+Reviewed-by: Martin K. Petersen <martin.petersen@oracle.com>
+Reviewed-by: Ming Lei <ming.lei@redhat.com>
+Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- firmware/Makefile |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ block/blk-settings.c            |    2 +-
+ drivers/md/dm-snap-persistent.c |    2 +-
+ drivers/md/raid0.c              |    2 +-
+ include/linux/blkdev.h          |    8 ++++----
+ 4 files changed, 7 insertions(+), 7 deletions(-)
 
---- a/firmware/Makefile
-+++ b/firmware/Makefile
-@@ -156,7 +156,7 @@ quiet_cmd_fwbin = MK_FW   $@
- 		  PROGBITS=$(if $(CONFIG_ARM),%,@)progbits;		     \
- 		  echo "/* Generated by firmware/Makefile */"		> $@;\
- 		  echo "    .section .rodata"				>>$@;\
--		  echo "    .p2align $${ASM_ALIGN}"			>>$@;\
-+		  echo "    .p2align 4"					>>$@;\
- 		  echo "_fw_$${FWSTR}_bin:"				>>$@;\
- 		  echo "    .incbin \"$(2)\""				>>$@;\
- 		  echo "_fw_end:"					>>$@;\
+--- a/block/blk-settings.c
++++ b/block/blk-settings.c
+@@ -349,7 +349,7 @@ EXPORT_SYMBOL(blk_queue_max_segment_size
+  *   storage device can address.  The default of 512 covers most
+  *   hardware.
+  **/
+-void blk_queue_logical_block_size(struct request_queue *q, unsigned short size)
++void blk_queue_logical_block_size(struct request_queue *q, unsigned int size)
+ {
+ 	q->limits.logical_block_size = size;
+ 
+--- a/drivers/md/dm-snap-persistent.c
++++ b/drivers/md/dm-snap-persistent.c
+@@ -17,7 +17,7 @@
+ #include "dm-bufio.h"
+ 
+ #define DM_MSG_PREFIX "persistent snapshot"
+-#define DM_CHUNK_SIZE_DEFAULT_SECTORS 32	/* 16KB */
++#define DM_CHUNK_SIZE_DEFAULT_SECTORS 32U	/* 16KB */
+ 
+ #define DM_PREFETCH_CHUNKS		12
+ 
+--- a/drivers/md/raid0.c
++++ b/drivers/md/raid0.c
+@@ -82,7 +82,7 @@ static int create_strip_zones(struct mdd
+ 	char b[BDEVNAME_SIZE];
+ 	char b2[BDEVNAME_SIZE];
+ 	struct r0conf *conf = kzalloc(sizeof(*conf), GFP_KERNEL);
+-	unsigned short blksize = 512;
++	unsigned blksize = 512;
+ 
+ 	*private_conf = ERR_PTR(-ENOMEM);
+ 	if (!conf)
+--- a/include/linux/blkdev.h
++++ b/include/linux/blkdev.h
+@@ -277,6 +277,7 @@ struct queue_limits {
+ 	unsigned int		max_sectors;
+ 	unsigned int		max_segment_size;
+ 	unsigned int		physical_block_size;
++	unsigned int		logical_block_size;
+ 	unsigned int		alignment_offset;
+ 	unsigned int		io_min;
+ 	unsigned int		io_opt;
+@@ -286,7 +287,6 @@ struct queue_limits {
+ 	unsigned int		discard_granularity;
+ 	unsigned int		discard_alignment;
+ 
+-	unsigned short		logical_block_size;
+ 	unsigned short		max_segments;
+ 	unsigned short		max_integrity_segments;
+ 
+@@ -996,7 +996,7 @@ extern void blk_queue_max_discard_sector
+ 		unsigned int max_discard_sectors);
+ extern void blk_queue_max_write_same_sectors(struct request_queue *q,
+ 		unsigned int max_write_same_sectors);
+-extern void blk_queue_logical_block_size(struct request_queue *, unsigned short);
++extern void blk_queue_logical_block_size(struct request_queue *, unsigned int);
+ extern void blk_queue_physical_block_size(struct request_queue *, unsigned int);
+ extern void blk_queue_alignment_offset(struct request_queue *q,
+ 				       unsigned int alignment);
+@@ -1221,7 +1221,7 @@ static inline unsigned int queue_max_seg
+ 	return q->limits.max_segment_size;
+ }
+ 
+-static inline unsigned short queue_logical_block_size(struct request_queue *q)
++static inline unsigned queue_logical_block_size(struct request_queue *q)
+ {
+ 	int retval = 512;
+ 
+@@ -1231,7 +1231,7 @@ static inline unsigned short queue_logic
+ 	return retval;
+ }
+ 
+-static inline unsigned short bdev_logical_block_size(struct block_device *bdev)
++static inline unsigned int bdev_logical_block_size(struct block_device *bdev)
+ {
+ 	return queue_logical_block_size(bdev_get_queue(bdev));
+ }
 
 
