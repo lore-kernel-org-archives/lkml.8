@@ -2,52 +2,51 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50173C33CAF
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:30:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 846F6C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:30:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27D2224672
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:30:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57E6324673
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:30:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579685452;
-	bh=KeMuUU1uohJ1StY+/CmAWDNzajPxBmntrU56E74dvHo=;
+	s=default; t=1579685456;
+	bh=PIHW0L+5AV2n7O6ZFHtFj1XbG8tDtNQgLbILcnw0keI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KQB5R4fwhzbhKCxXZHELzR2FmAR8BiAi1K50sAPRjvqGau9RXHLrnwAPUGKtFOyxA
-	 rmaUoYgAJEFoou+72ZxhQrsAHwncuQj5SbYMTKawyQArGvTxMICd3kji1EK1B4btYh
-	 q9Tv9x+xEU4rpcAxflVCfRt+5okKnRkpk9k3s/Lw=
+	b=rx+A/t/rW9D+TKiCmCZJS5wV2QE1+K20v8NAWlhCC3E+1NfDshL14WAcwzvse/Pfq
+	 D8gvPy3FmohPNs5pPRyeM00p0UYZcmulRmr/DJYlg5spdMDTaUBb73uOj7Tu2rHwYV
+	 hJ8mZYbcaQw2wTMbObgy66HtUQIusMZdyYiKOhB8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729397AbgAVJav (ORCPT
+        id S1729431AbgAVJaz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 04:30:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42424 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 04:30:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42552 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729352AbgAVJaq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 04:30:46 -0500
+        id S1729396AbgAVJav (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 04:30:51 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 939662465B;
-        Wed, 22 Jan 2020 09:30:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BD14A2071E;
+        Wed, 22 Jan 2020 09:30:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579685446;
-        bh=KeMuUU1uohJ1StY+/CmAWDNzajPxBmntrU56E74dvHo=;
+        s=default; t=1579685451;
+        bh=PIHW0L+5AV2n7O6ZFHtFj1XbG8tDtNQgLbILcnw0keI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JEu08xsgq7odDBZlsrTHQj1D1lbHhWn2/1SzUQg9AkOk3vsryqPpMEgIBRiOg5mYp
-         +5feYV8AKeVuImE99R1e7pojKnL7w/Uw0A4+K/DwmYe2y3LR+jUnI1U9S/R64Ga8lg
-         qO8uPmJLzps86jcR/iya6WSR4I1MDPP4ax+2q9jY=
+        b=PSvSfcYBmF6J/1VC+AxD+tofpyosfeHLV2Y6GB1TxxKW03QydmSw/ZTycVJJheQnP
+         14kvL/So1rZtR8lrmxl+OGEy8Q0qvaeGvsz7bGtf+PFpI+Q/4TSEcHo3ctZGMGNBWp
+         KZVNbgariXeYyzW7ImJnCyPmLJpmfEo2HURq+os0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ran Bi <ran.bi@mediatek.com>,
-        Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: [PATCH 4.4 18/76] rtc: mt6397: fix alarm register overwrite
-Date:   Wed, 22 Jan 2020 10:28:34 +0100
-Message-Id: <20200122092753.457349847@linuxfoundation.org>
+        stable@vger.kernel.org, Marcel Holtmann <marcel@holtmann.org>,
+        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 02/76] HID: hidraw: Fix returning EPOLLOUT from hidraw_poll
+Date:   Wed, 22 Jan 2020 10:28:18 +0100
+Message-Id: <20200122092751.985439544@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200122092751.587775548@linuxfoundation.org>
 References: <20200122092751.587775548@linuxfoundation.org>
@@ -60,103 +59,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ran Bi <ran.bi@mediatek.com>
+From: Marcel Holtmann <marcel@holtmann.org>
 
-commit 653997eeecef95c3ead4fba1b2d27e6a5854d6cd upstream.
+[ Upstream commit 9f3b61dc1dd7b81e99e7ed23776bb64a35f39e1a ]
 
-Alarm registers high byte was reserved for other functions.
-This add mask in alarm registers operation functions.
-This also fix error condition in interrupt handler.
+When polling a connected /dev/hidrawX device, it is useful to get the
+EPOLLOUT when writing is possible. Since writing is possible as soon as
+the device is connected, always return it.
 
-Fixes: fc2979118f3f ("rtc: mediatek: Add MT6397 RTC driver")
+Right now EPOLLOUT is only returned when there are also input reports
+are available. This works if devices start sending reports when
+connected, but some HID devices might need an output report first before
+sending any input reports. This change will allow using EPOLLOUT here as
+well.
 
-Signed-off-by: Ran Bi <ran.bi@mediatek.com>
-Signed-off-by: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
-Link: https://lore.kernel.org/r/1576057435-3561-6-git-send-email-hsin-hsiung.wang@mediatek.com
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: 378b80370aa1 ("hidraw: Return EPOLLOUT from hidraw_poll")
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+Cc: stable@vger.kernel.org
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/rtc/rtc-mt6397.c |   47 +++++++++++++++++++++++++++++++++--------------
- 1 file changed, 33 insertions(+), 14 deletions(-)
+ drivers/hid/hidraw.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/rtc/rtc-mt6397.c
-+++ b/drivers/rtc/rtc-mt6397.c
-@@ -55,6 +55,14 @@
+diff --git a/drivers/hid/hidraw.c b/drivers/hid/hidraw.c
+index 27d2f5a48a11..e60d9c88bd35 100644
+--- a/drivers/hid/hidraw.c
++++ b/drivers/hid/hidraw.c
+@@ -265,10 +265,10 @@ static unsigned int hidraw_poll(struct file *file, poll_table *wait)
  
- #define RTC_AL_SEC		0x0018
+ 	poll_wait(file, &list->hidraw->wait, wait);
+ 	if (list->head != list->tail)
+-		return POLLIN | POLLRDNORM | POLLOUT;
++		return POLLIN | POLLRDNORM;
+ 	if (!list->hidraw->exist)
+ 		return POLLERR | POLLHUP;
+-	return 0;
++	return POLLOUT | POLLWRNORM;
+ }
  
-+#define RTC_AL_SEC_MASK		0x003f
-+#define RTC_AL_MIN_MASK		0x003f
-+#define RTC_AL_HOU_MASK		0x001f
-+#define RTC_AL_DOM_MASK		0x001f
-+#define RTC_AL_DOW_MASK		0x0007
-+#define RTC_AL_MTH_MASK		0x000f
-+#define RTC_AL_YEA_MASK		0x007f
-+
- #define RTC_PDN2		0x002e
- #define RTC_PDN2_PWRON_ALARM	BIT(4)
- 
-@@ -111,7 +119,7 @@ static irqreturn_t mtk_rtc_irq_handler_t
- 		irqen = irqsta & ~RTC_IRQ_EN_AL;
- 		mutex_lock(&rtc->lock);
- 		if (regmap_write(rtc->regmap, rtc->addr_base + RTC_IRQ_EN,
--				 irqen) < 0)
-+				 irqen) == 0)
- 			mtk_rtc_write_trigger(rtc);
- 		mutex_unlock(&rtc->lock);
- 
-@@ -233,12 +241,12 @@ static int mtk_rtc_read_alarm(struct dev
- 	alm->pending = !!(pdn2 & RTC_PDN2_PWRON_ALARM);
- 	mutex_unlock(&rtc->lock);
- 
--	tm->tm_sec = data[RTC_OFFSET_SEC];
--	tm->tm_min = data[RTC_OFFSET_MIN];
--	tm->tm_hour = data[RTC_OFFSET_HOUR];
--	tm->tm_mday = data[RTC_OFFSET_DOM];
--	tm->tm_mon = data[RTC_OFFSET_MTH];
--	tm->tm_year = data[RTC_OFFSET_YEAR];
-+	tm->tm_sec = data[RTC_OFFSET_SEC] & RTC_AL_SEC_MASK;
-+	tm->tm_min = data[RTC_OFFSET_MIN] & RTC_AL_MIN_MASK;
-+	tm->tm_hour = data[RTC_OFFSET_HOUR] & RTC_AL_HOU_MASK;
-+	tm->tm_mday = data[RTC_OFFSET_DOM] & RTC_AL_DOM_MASK;
-+	tm->tm_mon = data[RTC_OFFSET_MTH] & RTC_AL_MTH_MASK;
-+	tm->tm_year = data[RTC_OFFSET_YEAR] & RTC_AL_YEA_MASK;
- 
- 	tm->tm_year += RTC_MIN_YEAR_OFFSET;
- 	tm->tm_mon--;
-@@ -259,14 +267,25 @@ static int mtk_rtc_set_alarm(struct devi
- 	tm->tm_year -= RTC_MIN_YEAR_OFFSET;
- 	tm->tm_mon++;
- 
--	data[RTC_OFFSET_SEC] = tm->tm_sec;
--	data[RTC_OFFSET_MIN] = tm->tm_min;
--	data[RTC_OFFSET_HOUR] = tm->tm_hour;
--	data[RTC_OFFSET_DOM] = tm->tm_mday;
--	data[RTC_OFFSET_MTH] = tm->tm_mon;
--	data[RTC_OFFSET_YEAR] = tm->tm_year;
--
- 	mutex_lock(&rtc->lock);
-+	ret = regmap_bulk_read(rtc->regmap, rtc->addr_base + RTC_AL_SEC,
-+			       data, RTC_OFFSET_COUNT);
-+	if (ret < 0)
-+		goto exit;
-+
-+	data[RTC_OFFSET_SEC] = ((data[RTC_OFFSET_SEC] & ~(RTC_AL_SEC_MASK)) |
-+				(tm->tm_sec & RTC_AL_SEC_MASK));
-+	data[RTC_OFFSET_MIN] = ((data[RTC_OFFSET_MIN] & ~(RTC_AL_MIN_MASK)) |
-+				(tm->tm_min & RTC_AL_MIN_MASK));
-+	data[RTC_OFFSET_HOUR] = ((data[RTC_OFFSET_HOUR] & ~(RTC_AL_HOU_MASK)) |
-+				(tm->tm_hour & RTC_AL_HOU_MASK));
-+	data[RTC_OFFSET_DOM] = ((data[RTC_OFFSET_DOM] & ~(RTC_AL_DOM_MASK)) |
-+				(tm->tm_mday & RTC_AL_DOM_MASK));
-+	data[RTC_OFFSET_MTH] = ((data[RTC_OFFSET_MTH] & ~(RTC_AL_MTH_MASK)) |
-+				(tm->tm_mon & RTC_AL_MTH_MASK));
-+	data[RTC_OFFSET_YEAR] = ((data[RTC_OFFSET_YEAR] & ~(RTC_AL_YEA_MASK)) |
-+				(tm->tm_year & RTC_AL_YEA_MASK));
-+
- 	if (alm->enabled) {
- 		ret = regmap_bulk_write(rtc->regmap,
- 					rtc->addr_base + RTC_AL_SEC,
+ static int hidraw_open(struct inode *inode, struct file *file)
+-- 
+2.20.1
+
 
 
