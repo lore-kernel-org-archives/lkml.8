@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CC56C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:47:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 767DCC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:47:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE4C82467C
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:47:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 440A12467C
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:47:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579686444;
-	bh=mVsDAopeiFdOOAJlD7vY5WAS4z+/vv+buahmyoiVCKE=;
+	s=default; t=1579686451;
+	bh=dez6bY75cECNOLPtutvRtSN4Rc+ag1aEluc3e4CHQk8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Vr5A1agSv+SL13Rdh7hO/4bp+bfNU6+RaG6tHugGund77eh7no/h6I6HCDyK3+mMr
-	 KbBHNvTXCv/7AEeT4fqe4+3fTligc/qlnIAzqmn9JoZavvSJUGGFZ4PMha7wywIULP
-	 qdmJr9mokbApX6s7Ho157cSkbxvcw9VpjNxlq4Gk=
+	b=ZZ4dQztqzKe9Z7dwKPoJePNFTQvuMdfej0iUfvMPPTVPU7G+1m995CBhVGCNc703T
+	 ata+egTKUM3wyihI8B8YR6a/wCbtgpXH+0L9M96Vn0P6r5YM+p9SETCQKtNKgUhJxd
+	 UTxcFEadV6BPFD2uqlS+jUv6pp/wS702CQno9EoM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387462AbgAVJm3 (ORCPT
+        id S2387677AbgAVJmG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 04:42:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34088 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 04:42:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33474 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733172AbgAVJmS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 04:42:18 -0500
+        id S2387654AbgAVJl5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 04:41:57 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0B37424680;
-        Wed, 22 Jan 2020 09:42:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 488FF24686;
+        Wed, 22 Jan 2020 09:41:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579686138;
-        bh=mVsDAopeiFdOOAJlD7vY5WAS4z+/vv+buahmyoiVCKE=;
+        s=default; t=1579686116;
+        bh=dez6bY75cECNOLPtutvRtSN4Rc+ag1aEluc3e4CHQk8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gNadaqNH4womxjxwd4wUEE87CGyi/CNgJtTd9P3fe3saUtCX1lGh8Q/HCwYnmgZq6
-         5DZMm6oXQ47bsQa02ZplXeRnlKvPquuDe+hGVfO3rkmMijUrS0z7silEbZbApky5Ea
-         2Af/kQD3gyBUp2lDo823a224Trn16UcR6PCQDAnI=
+        b=EGjd8U4kLUz9WGnyQgqlpXAnxIwBeS/q8r6OyFgcZAMKzBz/82v7QSTXojGWEPEbw
+         2CUzAfLpn/a7sHGq60GP88xsJUjH6MQe2fcVfoM9PXVvLw61qbysBlBG0eJiMxLBxa
+         aMNTpXGxuFoe8jAkdj+Oe35xJJCewae+3dwx1XYI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Takashi Sakamoto <o-takashi@sakamocchi.jp>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.19 023/103] ALSA: dice: fix fallback from protocol extension into limited functionality
-Date:   Wed, 22 Jan 2020 10:28:39 +0100
-Message-Id: <20200122092807.241889346@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        Shawn Guo <shawnguo@kernel.org>
+Subject: [PATCH 4.19 049/103] ARM: dts: imx7: Fix Toradex Colibri iMX7S 256MB NAND flash support
+Date:   Wed, 22 Jan 2020 10:29:05 +0100
+Message-Id: <20200122092811.156385679@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200122092803.587683021@linuxfoundation.org>
 References: <20200122092803.587683021@linuxfoundation.org>
@@ -59,40 +60,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Sakamoto <o-takashi@sakamocchi.jp>
+From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
 
-commit 3e2dc6bdb56893bc28257e482e1dbe5d39f313df upstream.
+commit 4b0b97e651ecf29f20248420b52b6864fbd40bc2 upstream.
 
-At failure of attempt to detect protocol extension, ALSA dice driver
-should be fallback to limited functionality. However it's not.
+Turns out when introducing the eMMC version the gpmi node required for
+NAND flash support got enabled exclusively on Colibri iMX7D 512MB.
 
-This commit fixes it.
-
-Cc: <stable@vger.kernel.org> # v4.18+
-Fixes: 58579c056c1c9 ("ALSA: dice: use extended protocol to detect available stream formats")
-Signed-off-by: Takashi Sakamoto <o-takashi@sakamocchi.jp>
-Link: https://lore.kernel.org/r/20200113084630.14305-2-o-takashi@sakamocchi.jp
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Fixes: f928a4a377e4 ("ARM: dts: imx7: add Toradex Colibri iMX7D 1GB (eMMC) support")
+Signed-off-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/firewire/dice/dice-extension.c |    5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/imx7s-colibri.dtsi |    4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/sound/firewire/dice/dice-extension.c
-+++ b/sound/firewire/dice/dice-extension.c
-@@ -159,8 +159,11 @@ int snd_dice_detect_extension_formats(st
- 		int j;
- 
- 		for (j = i + 1; j < 9; ++j) {
--			if (pointers[i * 2] == pointers[j * 2])
-+			if (pointers[i * 2] == pointers[j * 2]) {
-+				// Fallback to limited functionality.
-+				err = -ENXIO;
- 				goto end;
-+			}
- 		}
- 	}
- 
+--- a/arch/arm/boot/dts/imx7s-colibri.dtsi
++++ b/arch/arm/boot/dts/imx7s-colibri.dtsi
+@@ -49,3 +49,7 @@
+ 		reg = <0x80000000 0x10000000>;
+ 	};
+ };
++
++&gpmi {
++	status = "okay";
++};
 
 
