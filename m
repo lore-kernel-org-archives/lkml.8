@@ -5,50 +5,53 @@ X-Spam-Level:
 X-Spam-Status: No, score=-5.7 required=3.0 tests=DATE_IN_PAST_03_06,
 	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 538B0C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:21:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 516D2C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:21:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A1022468C
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:21:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E4DA24693
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:21:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579699263;
-	bh=Z5U8oa2rY/Qhnxybo2dbSelwKsx2b8hEe5G6JYAeth4=;
+	s=default; t=1579699265;
+	bh=nWWiD5jEnlALudvtWMS1vnhl0X6ByubruA79LrLt6CE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vK7e8KgFS2TXu2vLcGWKyngDrcuQ6BRq4bExsLR0LaC/DzhpZa5G7uKE7M4eIevxI
-	 ESxoi93oxq0CWImN3ZWmEEgO7cdRrqDm7ogzK2AQsVZuTBQDvu3AsSMhSWvAr5rTpR
-	 0RqsEBtNPSWKEQGzQ4AgbHz1AFY2SBMlFVU3rDaA=
+	b=nrrlOYbyBocuTR8a73HQp4mF3wNy5Ow9a8wGvHmfE8A9tqRpthEqiasw1gJtDcmUm
+	 1hnTGhOe8mkjxjajgcSqd0fkutQ+auO4r0ChXrlXflOyuBd9Gz9ymWfrhKV34tkaPV
+	 dWQ4C0AlqwNeAfyIdLXZurOZ5wCyeJ8IGQJW2ucs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730145AbgAVNVB (ORCPT
+        id S1730154AbgAVNVE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 08:21:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37414 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 08:21:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37536 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726054AbgAVNU4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 08:20:56 -0500
+        id S1730122AbgAVNU7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 08:20:59 -0500
 Received: from localhost (unknown [84.241.205.26])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 68B9F2468B;
-        Wed, 22 Jan 2020 13:20:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B59E82468A;
+        Wed, 22 Jan 2020 13:20:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579699255;
-        bh=Z5U8oa2rY/Qhnxybo2dbSelwKsx2b8hEe5G6JYAeth4=;
+        s=default; t=1579699258;
+        bh=nWWiD5jEnlALudvtWMS1vnhl0X6ByubruA79LrLt6CE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=t4Ndmqb6sfPL4zq2zIdRioeuPber4tf0/LVrjfO630KnR04vVovKqb1UdG2XK+pF0
-         icNVP6ci3I4i9w6Z4xDZpzHeKB77hI0N+MqMAWgQhJk6ZKhKqDG6sb3BWH704uhG/y
-         oy0CGT+LZ7+pR0BkF5Q/6CsRslb2fPSgVjKAcryA=
+        b=yCUxls7otRVqCnXdPA7STuOCsALDQ2O4NxZgQlE7QqsByCgrgwHhdAH6uEz3dL6Gq
+         R7j2yIZwmohmfqPGZmo6AGdvyoGveYZJJmifD0Gx6ABtbG3S67XDVhFsoRC6HQ+I06
+         38M+sobVnd8h/32w10wIlmKXBjzVN4+/phpuYfpk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Graham Cobb <g.btrfs@cobb.uk.net>,
-        Johannes Thumshirn <johannes.thumshirn@wdc.com>,
-        Qu Wenruo <wqu@suse.com>, Filipe Manana <fdmanana@suse.com>,
-        David Sterba <dsterba@suse.com>
-Subject: [PATCH 5.4 089/222] Btrfs: always copy scrub arguments back to user space
-Date:   Wed, 22 Jan 2020 10:27:55 +0100
-Message-Id: <20200122092840.100648986@linuxfoundation.org>
+        stable@vger.kernel.org, Arvind Sankar <nivedita@alum.mit.edu>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-efi@vger.kernel.org, Ingo Molnar <mingo@kernel.org>
+Subject: [PATCH 5.4 072/222] efi/earlycon: Fix write-combine mapping on x86
+Date:   Wed, 22 Jan 2020 10:27:38 +0100
+Message-Id: <20200122092838.874517870@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200122092833.339495161@linuxfoundation.org>
 References: <20200122092833.339495161@linuxfoundation.org>
@@ -61,64 +64,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Filipe Manana <fdmanana@suse.com>
+From: Arvind Sankar <nivedita@alum.mit.edu>
 
-commit 5afe6ce748c1ea99e0d648153c05075e1ab93afb upstream.
+commit d92b54570d24d017d2630e314b525ed792f5aa6c upstream.
 
-If scrub returns an error we are not copying back the scrub arguments
-structure to user space. This prevents user space to know how much
-progress scrub has done if an error happened - this includes -ECANCELED
-which is returned when users ask for scrub to stop. A particular use
-case, which is used in btrfs-progs, is to resume scrub after it is
-canceled, in that case it relies on checking the progress from the scrub
-arguments structure and then use that progress in a call to resume
-scrub.
+On x86, until PAT is initialized, WC translates into UC-. Since we
+calculate and store pgprot_writecombine(PAGE_KERNEL) when earlycon is
+initialized, this means we actually use UC- mappings instead of WC
+mappings, which makes scrolling very slow.
 
-So fix this by always copying the scrub arguments structure to user
-space, overwriting the value returned to user space with -EFAULT only if
-copying the structure failed to let user space know that either that
-copying did not happen, and therefore the structure is stale, or it
-happened partially and the structure is probably not valid and corrupt
-due to the partial copy.
+Instead store a boolean flag to indicate whether we want to use
+writeback or write-combine mappings, and recalculate the actual pgprot_t
+we need on every mapping. Once PAT is initialized, we will start using
+write-combine mappings, which speeds up the scrolling considerably.
 
-Reported-by: Graham Cobb <g.btrfs@cobb.uk.net>
-Link: https://lore.kernel.org/linux-btrfs/d0a97688-78be-08de-ca7d-bcb4c7fb397e@cobb.uk.net/
-Fixes: 06fe39ab15a6a4 ("Btrfs: do not overwrite scrub error with fault error in scrub ioctl")
-CC: stable@vger.kernel.org # 5.1+
-Reviewed-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>
-Reviewed-by: Qu Wenruo <wqu@suse.com>
-Tested-by: Graham Cobb <g.btrfs@cobb.uk.net>
-Signed-off-by: Filipe Manana <fdmanana@suse.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
+Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+Cc: Hans de Goede <hdegoede@redhat.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: linux-efi@vger.kernel.org
+Fixes: 69c1f396f25b ("efi/x86: Convert x86 EFI earlyprintk into generic earlycon implementation")
+Link: https://lkml.kernel.org/r/20191224132909.102540-2-ardb@kernel.org
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/btrfs/ioctl.c |   14 +++++++++++++-
- 1 file changed, 13 insertions(+), 1 deletion(-)
+ drivers/firmware/efi/earlycon.c |   16 +++++++---------
+ 1 file changed, 7 insertions(+), 9 deletions(-)
 
---- a/fs/btrfs/ioctl.c
-+++ b/fs/btrfs/ioctl.c
-@@ -4254,7 +4254,19 @@ static long btrfs_ioctl_scrub(struct fil
- 			      &sa->progress, sa->flags & BTRFS_SCRUB_READONLY,
- 			      0);
+--- a/drivers/firmware/efi/earlycon.c
++++ b/drivers/firmware/efi/earlycon.c
+@@ -17,7 +17,7 @@ static const struct console *earlycon_co
+ static const struct font_desc *font;
+ static u32 efi_x, efi_y;
+ static u64 fb_base;
+-static pgprot_t fb_prot;
++static bool fb_wb;
+ static void *efi_fb;
  
--	if (ret == 0 && copy_to_user(arg, sa, sizeof(*sa)))
-+	/*
-+	 * Copy scrub args to user space even if btrfs_scrub_dev() returned an
-+	 * error. This is important as it allows user space to know how much
-+	 * progress scrub has done. For example, if scrub is canceled we get
-+	 * -ECANCELED from btrfs_scrub_dev() and return that error back to user
-+	 * space. Later user space can inspect the progress from the structure
-+	 * btrfs_ioctl_scrub_args and resume scrub from where it left off
-+	 * previously (btrfs-progs does this).
-+	 * If we fail to copy the btrfs_ioctl_scrub_args structure to user space
-+	 * then return -EFAULT to signal the structure was not copied or it may
-+	 * be corrupt and unreliable due to a partial copy.
-+	 */
-+	if (copy_to_user(arg, sa, sizeof(*sa)))
- 		ret = -EFAULT;
+ /*
+@@ -33,10 +33,8 @@ static int __init efi_earlycon_remap_fb(
+ 	if (!earlycon_console || !(earlycon_console->flags & CON_ENABLED))
+ 		return 0;
  
- 	if (!(sa->flags & BTRFS_SCRUB_READONLY))
+-	if (pgprot_val(fb_prot) == pgprot_val(PAGE_KERNEL))
+-		efi_fb = memremap(fb_base, screen_info.lfb_size, MEMREMAP_WB);
+-	else
+-		efi_fb = memremap(fb_base, screen_info.lfb_size, MEMREMAP_WC);
++	efi_fb = memremap(fb_base, screen_info.lfb_size,
++			  fb_wb ? MEMREMAP_WB : MEMREMAP_WC);
+ 
+ 	return efi_fb ? 0 : -ENOMEM;
+ }
+@@ -53,9 +51,12 @@ late_initcall(efi_earlycon_unmap_fb);
+ 
+ static __ref void *efi_earlycon_map(unsigned long start, unsigned long len)
+ {
++	pgprot_t fb_prot;
++
+ 	if (efi_fb)
+ 		return efi_fb + start;
+ 
++	fb_prot = fb_wb ? PAGE_KERNEL : pgprot_writecombine(PAGE_KERNEL);
+ 	return early_memremap_prot(fb_base + start, len, pgprot_val(fb_prot));
+ }
+ 
+@@ -215,10 +216,7 @@ static int __init efi_earlycon_setup(str
+ 	if (screen_info.capabilities & VIDEO_CAPABILITY_64BIT_BASE)
+ 		fb_base |= (u64)screen_info.ext_lfb_base << 32;
+ 
+-	if (opt && !strcmp(opt, "ram"))
+-		fb_prot = PAGE_KERNEL;
+-	else
+-		fb_prot = pgprot_writecombine(PAGE_KERNEL);
++	fb_wb = opt && !strcmp(opt, "ram");
+ 
+ 	si = &screen_info;
+ 	xres = si->lfb_width;
 
 
