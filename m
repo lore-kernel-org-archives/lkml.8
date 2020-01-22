@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 023AFC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:36:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08FB5C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:36:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C950F20704
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:36:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C70112467B
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:36:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579685801;
-	bh=9kg3hd95kbchqpnKiuH5WYSqpajo2NxVMIJ/HmbOcQ0=;
+	s=default; t=1579685805;
+	bh=CtDNPQM0JsyQC2PUySSifKGoLe1qIywQcUz1zW0SFdg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XyYjcDg+SeBH0gkTBBEpuZxkqxEYauOWpM6pV2s4JPNMpXBlbls9QnTQzynmQCWt0
-	 GvCsid+CKRuJgQvuTi9RJOqHPXjKQ1zYUAwSqzAGecNksK3iJnefYWuAWfnC2EP56C
-	 IO7CxXwWyqJcxsh5kEDLtLGKJU2oN6J3vrqs55s4=
+	b=or5qzTMcUJRZNihigudtqTfDPhhheuqYgWmGURRvJSiOALliv5NEB6oKPhdcC+irs
+	 sE2EiIprq3Xs9q5PXb33dyjbLix/fYmGq4M0PJWK1qHJ2voAfHbERnDQ6fU0HJp+Z/
+	 30o8SUCPBPuyA2Jfoq4cYS5sySwgPI4jKrN8kpb4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730775AbgAVJgk (ORCPT
+        id S1732004AbgAVJgp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 04:36:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52142 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 04:36:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52222 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730654AbgAVJgh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 04:36:37 -0500
+        id S1731268AbgAVJgj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 04:36:39 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 81D2B24125;
-        Wed, 22 Jan 2020 09:36:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F169320704;
+        Wed, 22 Jan 2020 09:36:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579685797;
-        bh=9kg3hd95kbchqpnKiuH5WYSqpajo2NxVMIJ/HmbOcQ0=;
+        s=default; t=1579685799;
+        bh=CtDNPQM0JsyQC2PUySSifKGoLe1qIywQcUz1zW0SFdg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=K7ChVpj/4xdDS53ouG8EnlgtXh2t15e9hzfX/sxm5oPouehWWj3dR6apDzZ8ohOeJ
-         hFSkJts5BXzY/vY/ZU/mZbaHK41WANmV/2ry0Vy6kUhYnoVS1vF/hjsmgTIQ+KYBZj
-         nVHN/v7k8Dh3L50DFMIjQfhnMtcJq4vhNB634pUY=
+        b=WNhGtUITl9GCBZgvicUV04yug4v11CST2d9vLV9MZqEN/jQ3KXzztSbtWdXdH44rx
+         qc5t0Ngah1tcaUUFS1yyezCWwFjoq/PqBzabSEkwHUVYWJrBObT81vUc0BqMoLXfZg
+         Me2zkA/T4u0JOQ07WwJ5Z33kY8e1WtrRm2Cr/7xo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>,
-        Alexander Lobakin <alobakin@dlink.ru>,
-        Florian Fainelli <f.fainelli@gmail.com>,
+        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 82/97] net: dsa: tag_qca: fix doubled Tx statistics
-Date:   Wed, 22 Jan 2020 10:29:26 +0100
-Message-Id: <20200122092809.531667409@linuxfoundation.org>
+Subject: [PATCH 4.9 83/97] net/wan/fsl_ucc_hdlc: fix out of bounds write on array utdm_info
+Date:   Wed, 22 Jan 2020 10:29:27 +0100
+Message-Id: <20200122092809.683512719@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200122092755.678349497@linuxfoundation.org>
 References: <20200122092755.678349497@linuxfoundation.org>
@@ -61,37 +59,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Lobakin <alobakin@dlink.ru>
+From: Colin Ian King <colin.king@canonical.com>
 
-[ Upstream commit bd5874da57edd001b35cf28ae737779498c16a56 ]
+[ Upstream commit ddf420390526ede3b9ff559ac89f58cb59d9db2f ]
 
-DSA subsystem takes care of netdev statistics since commit 4ed70ce9f01c
-("net: dsa: Refactor transmit path to eliminate duplication"), so
-any accounting inside tagger callbacks is redundant and can lead to
-messing up the stats.
-This bug is present in Qualcomm tagger since day 0.
+Array utdm_info is declared as an array of MAX_HDLC_NUM (4) elements
+however up to UCC_MAX_NUM (8) elements are potentially being written
+to it.  Currently we have an array out-of-bounds write error on the
+last 4 elements. Fix this by making utdm_info UCC_MAX_NUM elements in
+size.
 
-Fixes: cafdc45c949b ("net-next: dsa: add Qualcomm tag RX/TX handler")
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-Signed-off-by: Alexander Lobakin <alobakin@dlink.ru>
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+Addresses-Coverity: ("Out-of-bounds write")
+Fixes: c19b6d246a35 ("drivers/net: support hdlc function for QE-UCC")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/dsa/tag_qca.c |    3 ---
- 1 file changed, 3 deletions(-)
+ drivers/net/wan/fsl_ucc_hdlc.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/net/dsa/tag_qca.c
-+++ b/net/dsa/tag_qca.c
-@@ -40,9 +40,6 @@ static struct sk_buff *qca_tag_xmit(stru
- 	struct dsa_slave_priv *p = netdev_priv(dev);
- 	u16 *phdr, hdr;
+--- a/drivers/net/wan/fsl_ucc_hdlc.c
++++ b/drivers/net/wan/fsl_ucc_hdlc.c
+@@ -77,7 +77,7 @@ static struct ucc_tdm_info utdm_primary_
+ 	},
+ };
  
--	dev->stats.tx_packets++;
--	dev->stats.tx_bytes += skb->len;
--
- 	if (skb_cow_head(skb, 0) < 0)
- 		goto out_free;
+-static struct ucc_tdm_info utdm_info[MAX_HDLC_NUM];
++static struct ucc_tdm_info utdm_info[UCC_MAX_NUM];
  
+ static int uhdlc_init(struct ucc_hdlc_private *priv)
+ {
 
 
