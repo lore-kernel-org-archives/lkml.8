@@ -5,48 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-5.7 required=3.0 tests=DATE_IN_PAST_03_06,
 	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8F74C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:18:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3145C33CB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:18:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CA4B2467F
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:18:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 902952467F
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:18:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579699102;
-	bh=3JLCLRkSYS0RorDnWGU+Xzdr3ilyL6KOkC6l7RNd9RE=;
+	s=default; t=1579699104;
+	bh=5ATbnEXS5jdYGJx+U4E3UUO3331ZkleiTgJsuFchegU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BOzXVDwOVVbgp204oIxnBH9Apbh7HCcbwddVb06uaxIOEhSBrsIVOayYJMOunghuE
-	 Yfaklhy1boxj+mbNcypPtKMkWA6tXet/xDKTk31+S14Mkx6HoREutCQ0K4HhGvmekg
-	 B+nLQyxAKVX2gxdXzSIvVRtxxC0RlW1XnPDkPDcY=
+	b=VubPZXrsGkMsJ0/TD0fbP4fOgPkBI/PQL6YVmXNjqwSPTPbDRHczkh5hz1WUNRs/C
+	 V56l+Ic5pti6r72bOVqUKkMYO2vLYV5BjazBdakkACtD7hSWGQhdLZxBGvRct6hB1o
+	 vDraAbSB1Ov5mV1jQg4iVF7QeOsu6OpyADOP+/9Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729273AbgAVNSV (ORCPT
+        id S1729291AbgAVNSY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 08:18:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33976 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 08:18:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34002 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729190AbgAVNSS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 08:18:18 -0500
+        id S1729260AbgAVNSV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 08:18:21 -0500
 Received: from localhost (unknown [84.241.205.26])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 75CA72467A;
-        Wed, 22 Jan 2020 13:18:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7F9282467E;
+        Wed, 22 Jan 2020 13:18:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579699098;
-        bh=3JLCLRkSYS0RorDnWGU+Xzdr3ilyL6KOkC6l7RNd9RE=;
+        s=default; t=1579699101;
+        bh=5ATbnEXS5jdYGJx+U4E3UUO3331ZkleiTgJsuFchegU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1l4bAKZnDlyT1MumWqD1H242C7YINzrLjJqeJhEkJ5E5XZBWL4l5VYdbD8IcXYusf
-         GIbrfPqv4PWIEmN8WAIBoEil+CfF5kv45gSdME3JevfeGgG0nNzMKxgWyJTj9MQC1Z
-         qDEXfpWGkZR2viZWLmyABtNP0ZKK6oB1C0UyLTuk=
+        b=QOfmzV7OOs+rDAY8CZeQoKrDyQCraUfAwdEK8yghMq9IXqOFLqaWzEVjhR/mGEYxj
+         7GPJYbPybOYEiWjBOMmZeCXNLx7Ql6rUNWhswoBa7ygp2bhkH8MB5y9Gx8JihvvRPb
+         XJUjrImFzvb2MOY/N0/5+tFRsBIGWOI7maQvLt/k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ondrej Holy <oholy@redhat.com>,
-        Miklos Szeredi <mszeredi@redhat.com>
-Subject: [PATCH 5.4 032/222] fuse: fix fuse_send_readpages() in the syncronous read case
-Date:   Wed, 22 Jan 2020 10:26:58 +0100
-Message-Id: <20200122092835.775601334@linuxfoundation.org>
+        stable@vger.kernel.org, Tomasz Duszynski <tduszyns@gmail.com>,
+        Stable@vger.kernel.org,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: [PATCH 5.4 041/222] iio: chemical: pms7003: fix unmet triggered buffer dependency
+Date:   Wed, 22 Jan 2020 10:27:07 +0100
+Message-Id: <20200122092836.481202605@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200122092833.339495161@linuxfoundation.org>
 References: <20200122092833.339495161@linuxfoundation.org>
@@ -59,61 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miklos Szeredi <mszeredi@redhat.com>
+From: Tomasz Duszynski <tduszyns@gmail.com>
 
-commit 7df1e988c723a066754090b22d047c3225342152 upstream.
+commit 217afe63ccf445fc220e5ef480683607b05c0aa5 upstream.
 
-Buffered read in fuse normally goes via:
+IIO triggered buffer depends on IIO buffer which is missing from Kconfig
+file. This should go unnoticed most of the time because there's a
+chance something else has already enabled buffers. In some rare cases
+though one might experience kbuild warnings about unmet direct
+dependencies and build failures due to missing symbols.
 
- -> generic_file_buffered_read()
-   -> fuse_readpages()
-     -> fuse_send_readpages()
-       ->fuse_simple_request() [called since v5.4]
+Fix this by selecting IIO_BUFFER explicitly.
 
-In the case of a read request, fuse_simple_request() will return a
-non-negative bytecount on success or a negative error value.  A positive
-bytecount was taken to be an error and the PG_error flag set on the page.
-This resulted in generic_file_buffered_read() falling back to ->readpage(),
-which would repeat the read request and succeed.  Because of the repeated
-read succeeding the bug was not detected with regression tests or other use
-cases.
-
-The FTP module in GVFS however fails the second read due to the
-non-seekable nature of FTP downloads.
-
-Fix by checking and ignoring positive return value from
-fuse_simple_request().
-
-Reported-by: Ondrej Holy <oholy@redhat.com>
-Link: https://gitlab.gnome.org/GNOME/gvfs/issues/441
-Fixes: 134831e36bbd ("fuse: convert readpages to simple api")
-Cc: <stable@vger.kernel.org> # v5.4
-Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
+Signed-off-by: Tomasz Duszynski <tduszyns@gmail.com>
+Fixes: a1d642266c14 ("iio: chemical: add support for Plantower PMS7003 sensor")
+Cc: <Stable@vger.kernel.org>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/fuse/file.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/iio/chemical/Kconfig |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/fs/fuse/file.c
-+++ b/fs/fuse/file.c
-@@ -882,6 +882,7 @@ static void fuse_send_readpages(struct f
- 	struct fuse_args_pages *ap = &ia->ap;
- 	loff_t pos = page_offset(ap->pages[0]);
- 	size_t count = ap->num_pages << PAGE_SHIFT;
-+	ssize_t res;
- 	int err;
- 
- 	ap->args.out_pages = true;
-@@ -896,7 +897,8 @@ static void fuse_send_readpages(struct f
- 		if (!err)
- 			return;
- 	} else {
--		err = fuse_simple_request(fc, &ap->args);
-+		res = fuse_simple_request(fc, &ap->args);
-+		err = res < 0 ? res : 0;
- 	}
- 	fuse_readpages_end(fc, &ap->args, err);
- }
+--- a/drivers/iio/chemical/Kconfig
++++ b/drivers/iio/chemical/Kconfig
+@@ -65,6 +65,7 @@ config IAQCORE
+ config PMS7003
+ 	tristate "Plantower PMS7003 particulate matter sensor"
+ 	depends on SERIAL_DEV_BUS
++	select IIO_BUFFER
+ 	select IIO_TRIGGERED_BUFFER
+ 	help
+ 	  Say Y here to build support for the Plantower PMS7003 particulate
 
 
