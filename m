@@ -2,215 +2,98 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3632C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 14:14:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D96EC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 14:17:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA0AF24655
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 14:14:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="jBvTSeMb"
+	by mail.kernel.org (Postfix) with ESMTP id 169BA24655
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 14:17:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726605AbgAVOOq (ORCPT
+        id S1726026AbgAVORj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 09:14:46 -0500
-Received: from mail25.static.mailgun.info ([104.130.122.25]:42469 "EHLO
-        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725805AbgAVOOq (ORCPT
+        Wed, 22 Jan 2020 09:17:39 -0500
+Received: from mailout3.hostsharing.net ([176.9.242.54]:55797 "EHLO
+        mailout3.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725868AbgAVORj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 09:14:46 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1579702485; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=GI7hdrNAJlyxnB92IBUS6zfqib3jokI2WLz6CZfnlE4=;
- b=jBvTSeMbnA5D/Bql+eHTYKEVxNl7j5J/9zOsqw//F+011uwOidqz2LmmY9RaKGHNTI+Izdkb
- l8FtvRS8HaoB0dwEls8LqU7zRL6PgoO491hO1RJtJrC9osFdf2AoQL6GTLHaIoE6GZFvDYxn
- I5e2gidh+Gm0UEE5l+DFVUbWpg8=
-X-Mailgun-Sending-Ip: 104.130.122.25
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e2858d0.7f228ab94f80-smtp-out-n03;
- Wed, 22 Jan 2020 14:14:40 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id D033EC447A1; Wed, 22 Jan 2020 14:14:39 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        Wed, 22 Jan 2020 09:17:39 -0500
+Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client CN "*.hostsharing.net", Issuer "COMODO RSA Domain Validation Secure Server CA" (not verified))
+        by mailout3.hostsharing.net (Postfix) with ESMTPS id 48763102AAF1B;
+        Wed, 22 Jan 2020 15:17:36 +0100 (CET)
+Received: from localhost (unknown [87.130.102.138])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: saiprakash.ranjan)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id AD7F1C433CB;
-        Wed, 22 Jan 2020 14:14:38 +0000 (UTC)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Wed, 22 Jan 2020 19:44:38 +0530
-From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-To:     Rob Clark <robdclark@gmail.com>,
-        Douglas Anderson <dianders@chromium.org>
-Cc:     Matthias Kaehlcke <mka@chromium.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Sean Paul <seanpaul@chromium.org>, Sean Paul <sean@poorly.run>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        David Airlie <airlied@linux.ie>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        Daniel Vetter <daniel@ffwll.ch>
-Subject: Re: [REPOST PATCH] drm/msm: Set dma maximum segment size for mdss
-In-Reply-To: <CAF6AEGtBwcFqe9nfohz8D5mo_V1mfR84bBtEUPmnkO2cjeDrfw@mail.gmail.com>
-References: <20200121111813.REPOST.1.I92c66a35fb13f368095b05287bdabdbe88ca6922@changeid>
- <CAF6AEGtBwcFqe9nfohz8D5mo_V1mfR84bBtEUPmnkO2cjeDrfw@mail.gmail.com>
-Message-ID: <74a88f1a4d2ce17e25ecb52b8d1ccbc1@codeaurora.org>
-X-Sender: saiprakash.ranjan@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+        by h08.hostsharing.net (Postfix) with ESMTPSA id E182A60FC0CE;
+        Wed, 22 Jan 2020 15:17:35 +0100 (CET)
+X-Mailbox-Line: From 575cb82102aa59a7a8e34248821b78e1dd844777 Mon Sep 17 00:00:00 2001
+Message-Id: <575cb82102aa59a7a8e34248821b78e1dd844777.1579701673.git.lukas@wunner.de>
+From:   Lukas Wunner <lukas@wunner.de>
+Date:   Wed, 22 Jan 2020 15:17:30 +0100
+Subject: [PATCH] vt: Fix non-blinking cursor regression
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>, Nicolas Pitre <nico@fluxnic.net>
+Cc:     Mikulas Patocka <mpatocka@redhat.com>,
+        Matthew Whitehead <tedheadster@gmail.com>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Since commit a6dbe4427559 ("vt: perform safe console erase in the right
+order"), when userspace clears both the scrollback buffer and the screen
+by writing "\e[3J" to an fbdev virtual console, the cursor stops blinking
+if that virtual console is not in the foreground.  I'm witnessing this
+on every boot of Raspbian since updating to v4.19.37+ because agetty
+writes the sequence to /dev/tty6 while the console is still switched to
+/dev/tty1.  Switching consoles once makes the cursor blink again.
 
-On 2020-01-22 00:56, Rob Clark wrote:
-> On Tue, Jan 21, 2020 at 11:19 AM Douglas Anderson 
-> <dianders@chromium.org> wrote:
->> 
->> From: Sean Paul <seanpaul@chromium.org>
->> 
->> Turning on CONFIG_DMA_API_DEBUG_SG results in the following error:
->> 
->> [   12.078665] msm ae00000.mdss: DMA-API: mapping sg segment longer 
->> than device claims to support [len=3526656] [max=65536]
->> [   12.089870] WARNING: CPU: 6 PID: 334 at 
->> /mnt/host/source/src/third_party/kernel/v4.19/kernel/dma/debug.c:1301 
->> debug_dma_map_sg+0x1dc/0x318
->> [   12.102655] Modules linked in: joydev
->> [   12.106442] CPU: 6 PID: 334 Comm: frecon Not tainted 4.19.0 #2
->> [   12.112450] Hardware name: Google Cheza (rev3+) (DT)
->> [   12.117566] pstate: 60400009 (nZCv daif +PAN -UAO)
->> [   12.122506] pc : debug_dma_map_sg+0x1dc/0x318
->> [   12.126995] lr : debug_dma_map_sg+0x1dc/0x318
->> [   12.131487] sp : ffffff800cc3ba80
->> [   12.134913] x29: ffffff800cc3ba80 x28: 0000000000000000
->> [   12.140395] x27: 0000000000000004 x26: 0000000000000004
->> [   12.145868] x25: ffffff8008e55b18 x24: 0000000000000000
->> [   12.151337] x23: 00000000ffffffff x22: ffffff800921c000
->> [   12.156809] x21: ffffffc0fa75b080 x20: ffffffc0f7195090
->> [   12.162280] x19: ffffffc0f1c53280 x18: 0000000000000000
->> [   12.167749] x17: 0000000000000000 x16: 0000000000000000
->> [   12.173218] x15: 0000000000000000 x14: 0720072007200720
->> [   12.178689] x13: 0720072007200720 x12: 0720072007200720
->> [   12.184161] x11: 0720072007200720 x10: 0720072007200720
->> [   12.189641] x9 : ffffffc0f1fc6b60 x8 : 0000000000000000
->> [   12.195110] x7 : ffffff8008132ce0 x6 : 0000000000000000
->> [   12.200585] x5 : 0000000000000000 x4 : ffffff8008134734
->> [   12.206058] x3 : ffffff800cc3b830 x2 : ffffffc0f1fc6240
->> [   12.211532] x1 : 25045a74f48a7400 x0 : 25045a74f48a7400
->> [   12.217006] Call trace:
->> [   12.219535]  debug_dma_map_sg+0x1dc/0x318
->> [   12.223671]  get_pages+0x19c/0x20c
->> [   12.227177]  msm_gem_fault+0x64/0xfc
->> [   12.230874]  __do_fault+0x3c/0x140
->> [   12.234383]  __handle_mm_fault+0x70c/0xdb8
->> [   12.238603]  handle_mm_fault+0xac/0xc4
->> [   12.242473]  do_page_fault+0x1bc/0x3d4
->> [   12.246342]  do_translation_fault+0x54/0x88
->> [   12.250652]  do_mem_abort+0x60/0xf0
->> [   12.254250]  el0_da+0x20/0x24
->> [   12.257317] irq event stamp: 67260
->> [   12.260828] hardirqs last  enabled at (67259): [<ffffff8008132d0c>] 
->> console_unlock+0x214/0x608
->> [   12.269693] hardirqs last disabled at (67260): [<ffffff8008080e0c>] 
->> do_debug_exception+0x5c/0x178
->> [   12.278820] softirqs last  enabled at (67256): [<ffffff8008081664>] 
->> __do_softirq+0x4d4/0x520
->> [   12.287510] softirqs last disabled at (67249): [<ffffff80080be574>] 
->> irq_exit+0xa8/0x100
->> [   12.295742] ---[ end trace e63cfc40c313ffab ]---
->> 
->> The root of the problem is that the default segment size for sgt is
->> (UINT_MAX & PAGE_MASK), and the default segment size for device dma is
->> 64K. As such, if you compare the 2, you would deduce that the sg 
->> segment
->> will overflow the device's capacity. In reality, the hardware can
->> accommodate the larger sg segments, it's just not initializing its max
->> segment properly. This patch initializes the max segment size for the
->> mdss device, which gets rid of that pesky warning.
->> 
->> Reported-by: Stephen Boyd <swboyd@chromium.org>
->> Signed-off-by: Sean Paul <seanpaul@chromium.org>
->> Tested-by: Stephen Boyd <swboyd@chromium.org>
->> Signed-off-by: Douglas Anderson <dianders@chromium.org>
->> ---
->> This patch has been floating in the ether for over a year [1].  I know
->> next to nothing about it, but I'm told it's still useful so I'm
->> helpfully reposting it.  Please enjoy.
-> 
-> This looks like the right thing to do.. sorry I overlooked the patch
-> first time around
-> 
-> Reviewed-by: Rob Clark <robdclark@gmail.com>
-> 
-> (since I've already sent PR for msm-next, could we pick this up via 
-> drm-misc?)
-> 
+The commit added an invocation of ->con_switch() to flush_scrollback().
+Normally this is only invoked from switch_screen() to switch consoles.
+switch_screen() updates *vc->vc_display_fg to the new console and
+fbcon_switch() updates ops->currcon.  Because the commit only invokes
+fbcon_switch() but doesn't update *vc->vc_display_fg, it performs an
+incomplete console switch.
 
-This also fixes a similar warning seen on SC7180 during video playback.
+When fb_flashcursor() subsequently blinks the cursor, it retrieves the
+foreground console from ops->currcon.  Because *vc->vc_display_fg wasn't
+updated, con_is_visible() incorrectly returns false and as a result,
+fb_flashcursor() bails out without blinking the cursor.
 
-Tested-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+The invocation of ->con_switch() appears to have been erroneous.  After
+all, why should a console switch be performed when clearing the screen?
+The commit message doesn't provide a rationale either.  So delete it.
 
-Logs for reference,
+Fixes: a6dbe4427559 ("vt: perform safe console erase in the right order")
+Signed-off-by: Lukas Wunner <lukas@wunner.de>
+Cc: stable@vger.kernel.org # v5.1+
+Cc: Nicolas Pitre <nico@fluxnic.net>
+Cc: Mikulas Patocka <mpatocka@redhat.com>
+Cc: Matthew Whitehead <tedheadster@gmail.com>
+---
+ drivers/tty/vt/vt.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-localhost ~ # [  647.100504] ------------[ cut here ]------------
-[  647.105748] DMA-API: msm ae00000.mdss: mapping sg segment longer than 
-device claims to support [len=524288] [max=65536]
-
-<...snip...>
-
-[  647.184254] pstate: 60400009 (nZCv daif +PAN -UAO)
-[  647.189211] pc : debug_dma_map_sg+0x1a8/0x2c4
-[  647.193708] lr : debug_dma_map_sg+0x1a8/0x2c4
-[  647.198202] sp : ffffffc010f6ba80
-[  647.201626] x29: ffffffc010f6ba90 x28: 0000000000010000
-[  647.207110] x27: 00000000ffffffff x26: ffffff8174840b80
-[  647.212592] x25: ffffffe9f4fe5000 x24: 0000000000000003
-[  647.218075] x23: ffffff815c223780 x22: ffffff81742d0810
-[  647.223557] x21: 0000000000000003 x20: 0000000000000001
-[  647.229041] x19: 0000000000000001 x18: 0000000000000000
-[  647.234524] x17: 000000000000003c x16: ffffffe9f4444a14
-[  647.240006] x15: 0000000000000006 x14: 0720072007200720
-[  647.245489] x13: 0720072007200720 x12: 0000000000000000
-[  647.250969] x11: 0000000000000000 x10: 0000000000000000
-[  647.256452] x9 : 4be0233cf8ef6200 x8 : 4be0233cf8ef6200
-[  647.261935] x7 : 0720072007200720 x6 : ffffff8175ea0f00
-[  647.267417] x5 : 0000000000000000 x4 : 0000000000000000
-[  647.272898] x3 : 0000000000000000 x2 : ffffff81771d1680
-[  647.278380] x1 : ffffff81771c10c0 x0 : 000000000000006b
-[  647.283863] Call trace:
-[  647.286409]  debug_dma_map_sg+0x1a8/0x2c4
-[  647.290569]  vb2_dma_sg_dmabuf_ops_map+0x138/0x18c [videobuf2_dma_sg]
-[  647.297215]  dma_buf_map_attachment+0x6c/0xb0
-[  647.301724]  drm_gem_prime_import_dev+0xa4/0x134
-[  647.306495]  drm_gem_prime_fd_to_handle+0xc4/0x194
-[  647.311444]  drm_prime_fd_to_handle_ioctl+0x40/0x58
-[  647.316483]  drm_ioctl_kernel+0x94/0x10c
-[  647.320538]  drm_ioctl+0x264/0x3f8
-[  647.324059]  drm_compat_ioctl+0xcc/0xdc
-[  647.328033]  __se_compat_sys_ioctl+0x100/0x2074
-[  647.332715]  __arm64_compat_sys_ioctl+0x20/0x2c
-[  647.337406]  el0_svc_common+0xa4/0x154
-[  647.341279]  el0_svc_compat_handler+0x2c/0x38
-[  647.345781]  el0_svc_compat+0x8/0x10
-[  647.349474] ---[ end trace 2f188eb70b295b6c ]---
-[  648.282197] ------------[ cut here ]------------
-
-
-Thanks,
-Sai
-
+diff --git a/drivers/tty/vt/vt.c b/drivers/tty/vt/vt.c
+index 35d21cdb60d0..eb25fb4ca05f 100644
+--- a/drivers/tty/vt/vt.c
++++ b/drivers/tty/vt/vt.c
+@@ -938,8 +938,6 @@ static void flush_scrollback(struct vc_data *vc)
+ 	set_origin(vc);
+ 	if (vc->vc_sw->con_flush_scrollback)
+ 		vc->vc_sw->con_flush_scrollback(vc);
+-	else
+-		vc->vc_sw->con_switch(vc);
+ }
+ 
+ /*
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
-member
-of Code Aurora Forum, hosted by The Linux Foundation
+2.24.0
+
