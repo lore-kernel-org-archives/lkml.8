@@ -2,130 +2,120 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52CCAC33CB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 08:19:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24C07C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 08:19:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 260932253D
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 08:19:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFE292253D
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 08:19:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="F9sZ0g+1"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="m5SR2jNB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728992AbgAVITM (ORCPT
+        id S1729075AbgAVITo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 03:19:12 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:35075 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726004AbgAVITL (ORCPT
+        Wed, 22 Jan 2020 03:19:44 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:45716 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725970AbgAVITo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 03:19:11 -0500
-Received: by mail-wm1-f68.google.com with SMTP id p17so6156541wmb.0
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jan 2020 00:19:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=date:from:to:cc:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=ahqJi39L7hCmLZPOpPTNeDXrK6DDNhPTKiMAbD2ywhE=;
-        b=F9sZ0g+1suMsinawzZ2+380DXDooohvMYhrtAigpsje4enqGS/E3s0VpLBwSqO1j8b
-         Amc4lUyYFP9yeCXzfVLT+K9Judmv/BsI0HVUB9Sy+j7iPmjkQzVS/mTdCnbkEqvXvLf1
-         784XmubZcHuyL7KHcsx8O6+B5bh3MN77272sQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :content-transfer-encoding:in-reply-to;
-        bh=ahqJi39L7hCmLZPOpPTNeDXrK6DDNhPTKiMAbD2ywhE=;
-        b=ROBT7xbzmFe4Ui6RB+cfNtSzkgkUN2S6RLFN3g5otGiWRlpnYsTXGXnaJ1iGBGs66h
-         Kvy5SBNPXpIQuw37ygcOCSuZlUaRsFUXOo2udjVOvQ73PcHr2wbUy1cBj2g9idvcYCAd
-         4AbGPiQWk2YYbDyz8Pht5C6I6FztVmWj1s1zjP1LQgFWGANE44toLWVzZNnVzTnTHFyC
-         TQBTtpUPaJm6bHteY07tB1XbGVxP9kjOcWOQqUZtJghLwN6t3BIOO1qxeEHxU/R0VHSi
-         JLl1i7XSBfcgutZRaOotRwz6sBr40KZdEMI4Ga/w6USd8Va9iOqzNH76lU3abjIZqNim
-         7bmg==
-X-Gm-Message-State: APjAAAWr1hG0LAqlLwBp7en2woEx1e5+XPsbb+wKYd4j3g67mbYi7fVJ
-        0LmXtwdnPmwZklAePdG79OmL4KHZCyxEDw==
-X-Google-Smtp-Source: APXvYqwN9OhE8aTeF0own3s/Ooyt3OHRegbX3r4sudjELKIGb7qKe67NW4lGo+Sw1GcVN7BxEniEJA==
-X-Received: by 2002:a05:600c:22d3:: with SMTP id 19mr1670290wmg.92.1579681149325;
-        Wed, 22 Jan 2020 00:19:09 -0800 (PST)
-Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
-        by smtp.gmail.com with ESMTPSA id z11sm58565947wrt.82.2020.01.22.00.19.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Jan 2020 00:19:08 -0800 (PST)
-Date:   Wed, 22 Jan 2020 09:19:06 +0100
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     Bo YU <tsu.yubo@gmail.com>
-Cc:     maarten.lankhorst@linux.intel.com, mripard@kernel.org,
-        irlied@linux.ie, daniel@ffwll.ch, airlied@redhat.com,
-        tprevite@gmail.com, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH -next] drm/drm_dp_mst:remove set but not used variable
- 'origlen'
-Message-ID: <20200122081906.GO43062@phenom.ffwll.local>
-Mail-Followup-To: Bo YU <tsu.yubo@gmail.com>,
-        maarten.lankhorst@linux.intel.com, mripard@kernel.org,
-        irlied@linux.ie, airlied@redhat.com, tprevite@gmail.com,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-References: <20200118080628.mxcx7bfwdas5m7un@kaowomen.cn>
+        Wed, 22 Jan 2020 03:19:44 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00M8IhCN041195;
+        Wed, 22 Jan 2020 08:19:34 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=uWz8eBHkgeZjITXN+B+A8IBMNj27yjCWOIaSt0VAyxA=;
+ b=m5SR2jNBsD7bKa33po2xbgW/FAuQ9XGEBLxEAzCnzmTY0DMFtab76AjgBAH6mkz2FGLq
+ 2ePvW3XnakSiOxVVsVqJ6wgQYjrjDIU5wMXORM8I5hGT6Ise3MjSwNiQpT2kvhWfGKg1
+ Oeud6+cku57pkGh5VJu9tidaUApLO7FlxFPm9Srz2WuyguCsfEIvCl9wdEjDS5La2h6B
+ vONIWK+F54NhbRm2/spqIu+WW6tqGFOhUz0KJ+Di2Gg8DyOajTD8vxaLHWz4Zcxd+0e2
+ MOn5JAEF+aUb6jFmnpeQpISvcAFHev6DfflEcOn35tPmNodhlt0/hRgbV0n6ZDihf3bV pg== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2130.oracle.com with ESMTP id 2xkseuj7wk-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 22 Jan 2020 08:19:34 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00M8J7pF188324;
+        Wed, 22 Jan 2020 08:19:33 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3030.oracle.com with ESMTP id 2xnpfqqvr0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 22 Jan 2020 08:19:33 +0000
+Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 00M8I16Q024075;
+        Wed, 22 Jan 2020 08:18:01 GMT
+Received: from kadam (/129.205.23.165)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 22 Jan 2020 00:18:00 -0800
+Date:   Wed, 22 Jan 2020 11:17:53 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Sandesh Kenjana Ashok <sandeshkenjanaashok@gmail.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        devel@driverdev.osuosl.org, linux-mediatek@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] staging: mt7621-pinctrl: Align code by cleanup long lines
+Message-ID: <20200122081753.GE1847@kadam>
+References: <20200121195218.GA10666@SandeshPC>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200118080628.mxcx7bfwdas5m7un@kaowomen.cn>
-X-Operating-System: Linux phenom 5.3.0-3-amd64 
+In-Reply-To: <20200121195218.GA10666@SandeshPC>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9507 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-2001220075
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9507 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-2001220075
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jan 18, 2020 at 04:06:28PM +0800, Bo YU wrote:
-> Fixes gcc '-Wunused-but-set-variable' warning:
+On Tue, Jan 21, 2020 at 08:52:18PM +0100, Sandesh Kenjana Ashok wrote:
+> Cleanup lines over 80 characters in pinctrl-rt2880.c.
+> Issue found by checkpatch.pl
 > 
-> drivers/gpu/drm/drm_dp_mst_topology.c:3693:16: warning: variable
-> ‘origlen’ set but not used [-Wunused-but-set-variable]
->   int replylen, origlen, curreply;
-> 
-> It looks like never use variable origlen after assign value to it.
-> 
-> Fixes: ad7f8a1f9ced7 (drm/helper: add Displayport multi-stream helper (v0.6))
-> Signed-off-by: Bo YU <tsu.yubo@gmail.com>
-
-Queued in drm-misc-next, thanks for your patch.
--Daniel
-
+> Signed-off-by: Sandesh Kenjana Ashok <sandeshkenjanaashok@gmail.com>
 > ---
->  drivers/gpu/drm/drm_dp_mst_topology.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
+>  drivers/staging/mt7621-pinctrl/pinctrl-rt2880.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> diff --git a/drivers/gpu/drm/drm_dp_mst_topology.c b/drivers/gpu/drm/drm_dp_mst_topology.c
-> index 4b74193b89ce..4c76e673206b 100644
-> --- a/drivers/gpu/drm/drm_dp_mst_topology.c
-> +++ b/drivers/gpu/drm/drm_dp_mst_topology.c
-> @@ -3690,7 +3690,7 @@ static bool drm_dp_get_one_sb_msg(struct drm_dp_mst_topology_mgr *mgr, bool up)
->  {
->  	int len;
->  	u8 replyblock[32];
-> -	int replylen, origlen, curreply;
-> +	int replylen, curreply;
->  	int ret;
->  	struct drm_dp_sideband_msg_rx *msg;
->  	int basereg = up ? DP_SIDEBAND_MSG_UP_REQ_BASE : DP_SIDEBAND_MSG_DOWN_REP_BASE;
-> @@ -3710,7 +3710,6 @@ static bool drm_dp_get_one_sb_msg(struct drm_dp_mst_topology_mgr *mgr, bool up)
->  	}
->  	replylen = msg->curchunk_len + msg->curchunk_hdrlen;
+> diff --git a/drivers/staging/mt7621-pinctrl/pinctrl-rt2880.c b/drivers/staging/mt7621-pinctrl/pinctrl-rt2880.c
+> index d0f06790d38f..254d4eb88f5f 100644
+> --- a/drivers/staging/mt7621-pinctrl/pinctrl-rt2880.c
+> +++ b/drivers/staging/mt7621-pinctrl/pinctrl-rt2880.c
+> @@ -159,8 +159,8 @@ static int rt2880_pmx_group_enable(struct pinctrl_dev *pctrldev,
+>  }
 >  
-> -	origlen = replylen;
->  	replylen -= len;
->  	curreply = len;
->  	while (replylen > 0) {
-> -- 
-> 2.11.0
-> 
+>  static int rt2880_pmx_group_gpio_request_enable(struct pinctrl_dev *pctrldev,
+> -						struct pinctrl_gpio_range *range,
+> -						unsigned int pin)
+> +					struct pinctrl_gpio_range *range,
+> +					unsigned int pin)
+>  {
+>  	struct rt2880_priv *p = pinctrl_dev_get_drvdata(pctrldev);
 
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+Now it has a new warning.
+
+CHECK: Alignment should match open parenthesis
+#162: FILE: drivers/staging/mt7621-pinctrl/pinctrl-rt2880.c:162:
++static int rt2880_pmx_group_gpio_request_enable(struct pinctrl_dev *pctrldev,
++                                       struct pinctrl_gpio_range *range,
+
+Just leave it.  The original is fine.
+
+regards,
+dan carpenter
+
