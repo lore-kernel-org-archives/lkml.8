@@ -2,214 +2,176 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D408FC32771
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 06:26:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B7ABC32771
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 06:34:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B05A621835
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 06:26:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57A0721835
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 06:34:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726061AbgAVG0c (ORCPT
+        id S1726004AbgAVGeO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 01:26:32 -0500
-Received: from olimex.com ([184.105.72.32]:57441 "EHLO olimex.com"
+        Wed, 22 Jan 2020 01:34:14 -0500
+Received: from mga14.intel.com ([192.55.52.115]:15104 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725836AbgAVG0b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 01:26:31 -0500
-Received: from 94.155.250.134 ([94.155.250.134])
-        by olimex.com with ESMTPSA (ECDHE-RSA-AES128-GCM-SHA256:TLSv1.2:Kx=ECDH:Au=RSA:Enc=AESGCM(128):Mac=AEAD) (SMTP-AUTH username stefan@olimex.com, mechanism PLAIN)
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jan 2020 22:26:28 -0800
-Subject: Re: [PATCH v2 2/2] drm: sun4i: hdmi: Add support for sun4i HDMI
- encoder audio
-To:     Maxime Ripard <mripard@kernel.org>,
-        Stefan Mavrodiev <stefan@olimex.com>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        Vinod Koul <vkoul@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM" 
-        <dmaengine@vger.kernel.org>,
-        "moderated list:ARM/Allwinner sunXi SoC support" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "open list:DRM DRIVERS FOR ALLWINNER A10" 
-        <dri-devel@lists.freedesktop.org>, linux-sunxi@googlegroups.com
-References: <20200120123326.30743-1-stefan@olimex.com>
- <20200120123326.30743-3-stefan@olimex.com>
- <20200121182905.pxs72ojqx5fz2gi3@gilmour.lan>
-From:   Stefan Mavrodiev <stefan@olimex.com>
-Message-ID: <7be957d3-9f04-f71c-3e63-910b0145a8cd@olimex.com>
-Date:   Wed, 22 Jan 2020 08:26:24 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        id S1725805AbgAVGeO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 01:34:14 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Jan 2020 22:34:13 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,348,1574150400"; 
+   d="scan'208";a="374826359"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by orsmga004.jf.intel.com with ESMTP; 21 Jan 2020 22:34:11 -0800
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1iu9ad-000DxQ-5c; Wed, 22 Jan 2020 14:34:11 +0800
+Date:   Wed, 22 Jan 2020 14:33:36 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     "x86-ml" <x86@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [tip:x86/cpu] BUILD SUCCESS
+ 283bab9809786cf41798512f5c1e97f4b679ba96
+Message-ID: <5e27ecc0.in7e6fnsK/BDEpUe%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-In-Reply-To: <20200121182905.pxs72ojqx5fz2gi3@gilmour.lan>
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  x86/cpu
+branch HEAD: 283bab9809786cf41798512f5c1e97f4b679ba96  x86/cpu: Remove redundant cpu_detect_cache_sizes() call
 
-On 1/21/20 8:29 PM, Maxime Ripard wrote:
-> +Mark
->
-> On Mon, Jan 20, 2020 at 02:33:26PM +0200, Stefan Mavrodiev wrote:
->> Add HDMI audio support for the sun4i-hdmi encoder, used on
->> the older Allwinner chips - A10, A20, A31.
->>
->> Most of the code is based on the BSP implementation. In it
->> dditional formats are supported (S20_3LE and S24_LE), however
->> there where some problems with them and only S16_LE is left.
-> What are those problems?
-It was all noise. Guess it's some byte alignment issue, but
-I didn't manage to solve it.
->
->> Signed-off-by: Stefan Mavrodiev <stefan@olimex.com>
->> ---
->> +static int sun4i_hdmi_audio_probe(struct platform_device *pdev)
->> +{
->> +	struct snd_soc_card *card = &sun4i_hdmi_audio_card;
->> +	struct snd_soc_dai_link_component *comp;
->> +	struct snd_soc_dai_link *link;
->> +	struct device *dev = &pdev->dev;
->> +	struct sun4i_hdmi_audio *priv;
->> +	int ret;
->> +
->> +	ret = devm_snd_dmaengine_pcm_register(dev,
->> +					      &sun4i_hdmi_audio_pcm_config, 0);
->> +	if (ret) {
->> +		dev_err(dev, "Failed registering PCM DMA component\n");
->> +		return ret;
->> +	}
->> +
->> +	ret = devm_snd_soc_register_component(dev,
->> +					      &sun4i_hdmi_audio_component,
->> +					      &sun4i_hdmi_audio_dai, 1);
->> +	if (ret) {
->> +		dev_err(dev, "Failed registering DAI component\n");
->> +		return ret;
->> +	}
->> +
->> +	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
->> +	if (!priv)
->> +		return -ENOMEM;
->> +
->> +	priv->hdmi = dev->parent;
->> +	dev->of_node = dev->parent->of_node;
->> +
->> +	link = devm_kzalloc(dev, sizeof(*link), GFP_KERNEL);
->> +	if (!link)
->> +		return -ENOMEM;
->> +
->> +	comp = devm_kzalloc(dev, sizeof(*comp) * 3, GFP_KERNEL);
->> +	if (!comp)
->> +		return -ENOMEM;
->> +
->> +	link->cpus = &comp[0];
->> +	link->codecs = &comp[1];
->> +	link->platforms = &comp[2];
->> +
->> +	link->num_cpus = 1;
->> +	link->num_codecs = 1;
->> +	link->num_platforms = 1;
->> +
->> +	link->playback_only = 1;
->> +
->> +	link->name = "SUN4I-HDMI";
->> +	link->stream_name = "SUN4I-HDMI PCM";
->> +
->> +	link->codecs->name = dev_name(dev);
->> +	link->codecs->dai_name	= sun4i_hdmi_audio_dai.name;
->> +
->> +	link->cpus->dai_name = dev_name(dev);
->> +
->> +	link->platforms->name = dev_name(dev);
->> +
->> +	link->dai_fmt = SND_SOC_DAIFMT_I2S;
->> +
->> +	card->dai_link = link;
->> +	card->num_links = 1;
->> +	card->dev = dev;
->> +
->> +	snd_soc_card_set_drvdata(card, priv);
->> +	return devm_snd_soc_register_card(dev, card);
->> +}
->> +
->> +static int sun4i_hdmi_audio_remove(struct platform_device *pdev)
->> +{
->> +	return 0;
->> +}
->> +
->> +static struct platform_driver sun4i_hdmi_audio_driver = {
->> +	.probe	= sun4i_hdmi_audio_probe,
->> +	.remove	= sun4i_hdmi_audio_remove,
->> +	.driver	= {
->> +		.name = DRIVER_NAME,
->> +	},
->> +};
->> +module_platform_driver(sun4i_hdmi_audio_driver);
->> +
->> +MODULE_AUTHOR("Stefan Mavrodiev <stefan@olimex.com");
->> +MODULE_DESCRIPTION("Allwinner A10 HDMI Audio driver");
->> +MODULE_LICENSE("GPL v2");
->> +MODULE_ALIAS("platform:" DRIVER_NAME);
-> Sorry if I wasn't clear enough in the previous mail, I didn't suggest
-> to do a driver, this will open another can of worm (as kbuild already
-> pointed out), but to create a new device, and pass that new device to
-> ASoC's functions.
+elapsed time: 2222m
 
-The problem here is that I used sunxi_defconfig instead of the arch
-defconfig during testing. The difference is that in "our" config the
-modules are built-in and thus there is no module_init.
+configs tested: 113
+configs skipped: 1
 
-However I've managed to get it working in v3 (it's not submitted
-yet).
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-I've added separate entry in the Kconfig of type bool. This is to
-manage the SND_SOC dependency. The current patch will fail if
-SND_SOC=m and SUN4I_HDMI=y for example.
+sparc64                          allmodconfig
+sparc                            allyesconfig
+sparc64                          allyesconfig
+sparc                               defconfig
+sparc64                           allnoconfig
+sparc64                             defconfig
+ia64                                defconfig
+powerpc                             defconfig
+csky                 randconfig-a001-20200121
+x86_64                              fedora-25
+x86_64                                  kexec
+x86_64                                    lkp
+x86_64                                   rhel
+x86_64                               rhel-7.6
+arm64                randconfig-a001-20200122
+ia64                 randconfig-a001-20200122
+arm                  randconfig-a001-20200122
+arc                  randconfig-a001-20200122
+sparc                randconfig-a001-20200122
+i386                 randconfig-d003-20200121
+i386                 randconfig-d002-20200121
+x86_64               randconfig-d001-20200121
+x86_64               randconfig-d003-20200121
+x86_64               randconfig-d002-20200121
+i386                 randconfig-d001-20200121
+i386                             alldefconfig
+i386                              allnoconfig
+i386                             allyesconfig
+i386                                defconfig
+um                                  defconfig
+um                             i386_defconfig
+um                           x86_64_defconfig
+h8300                randconfig-a001-20200121
+nios2                randconfig-a001-20200121
+c6x                  randconfig-a001-20200121
+microblaze           randconfig-a001-20200121
+sparc64              randconfig-a001-20200121
+s390                              allnoconfig
+s390                             alldefconfig
+s390                          debug_defconfig
+s390                             allmodconfig
+s390                                defconfig
+s390                       zfcpdump_defconfig
+s390                             allyesconfig
+ia64                             allmodconfig
+ia64                              allnoconfig
+ia64                             allyesconfig
+ia64                             alldefconfig
+alpha                               defconfig
+csky                                defconfig
+nds32                             allnoconfig
+nds32                               defconfig
+c6x                              allyesconfig
+c6x                        evmc6678_defconfig
+nios2                         10m50_defconfig
+nios2                         3c120_defconfig
+openrisc                    or1ksim_defconfig
+openrisc                 simple_smp_defconfig
+xtensa                       common_defconfig
+xtensa                          iss_defconfig
+arc                              allyesconfig
+arc                                 defconfig
+microblaze                      mmu_defconfig
+microblaze                    nommu_defconfig
+powerpc                           allnoconfig
+powerpc                       ppc64_defconfig
+powerpc                          rhel-kconfig
+parisc                        c3000_defconfig
+parisc                         b180_defconfig
+parisc                              defconfig
+parisc                            allnoconfig
+parisc                            allyesonfig
+riscv                randconfig-a001-20200121
+alpha                randconfig-a001-20200121
+parisc               randconfig-a001-20200121
+m68k                 randconfig-a001-20200121
+nds32                randconfig-a001-20200121
+m68k                          multi_defconfig
+m68k                       m5475evb_defconfig
+h8300                    h8300h-sim_defconfig
+h8300                     edosk2674_defconfig
+m68k                           sun3_defconfig
+h8300                       h8s-sim_defconfig
+m68k                             allmodconfig
+mips                             allmodconfig
+mips                           32r2_defconfig
+mips                             allyesconfig
+mips                              allnoconfig
+sh                               allmodconfig
+sh                          rsk7269_defconfig
+sh                  sh7785lcr_32bit_defconfig
+sh                                allnoconfig
+sh                            titan_defconfig
+riscv                          rv32_defconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                            allmodconfig
+riscv                    nommu_virt_defconfig
+riscv                            allyesconfig
+arm                              allmodconfig
+arm                         at91_dt_defconfig
+arm64                               defconfig
+arm                        multi_v5_defconfig
+arm                              allyesconfig
+arm64                            allyesconfig
+arm                               allnoconfig
+arm                           efm32_defconfig
+arm                           sunxi_defconfig
+arm64                             allnoconfig
+arm64                            allmodconfig
+arm                          exynos_defconfig
+arm                        shmobile_defconfig
+arm                        multi_v7_defconfig
 
-Then I've dropped this as it's useless:
-
-> +module_platform_driver(sun4i_hdmi_audio_driver);
-> +
-> +MODULE_AUTHOR("Stefan Mavrodiev <stefan@olimex.com");
-> +MODULE_DESCRIPTION("Allwinner A10 HDMI Audio driver");
-> +MODULE_LICENSE("GPL v2");
-> +MODULE_ALIAS("platform:" DRIVER_NAME);
-In sun4i_hdmi_enc.c I've added __init and __exit
-functions where I register/unregister the additional platform_driver.
-Thus we get 2 platform drivers from one module, which is not something
-uncommon.
-
-If you like this approach I can submit v3.
-
->
-> I tried that, and failed, so I guess it's not an option either.
->
-> Mark, our issue here is that we have a driver tied to a device that is
-> an HDMI encoder. Obviously, we'll want to register into DRM, which is
-> what we were doing so far, with the usual case where at remove /
-> unbind time, in order to free the resources, we just retrieve our
-> pointer to our private structure using the device's drvdata.
->
-> Now, snd_soc_register_card also sets that pointer to the card we try
-> to register, which is problematic. It seems that it's used to handle
-> suspend / resume automatically, which in this case would be also not
-> really fit for us (or rather, we would need to do more that just
-> suspend the audio part).
->
-> Is there anyway we can have that kind of setup? I believe vc4 is in a
-> similar situation, but they worked around it by storing the data they
-> want to access in a global pointer, but that only works for one device
-> which doesn't really suit us either.
->
-> Any suggestions?
-> Thanks!
-> Maxime
+---
+0-DAY kernel test infrastructure                 Open Source Technology Center
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org Intel Corporation
