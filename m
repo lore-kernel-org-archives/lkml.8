@@ -2,108 +2,99 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81FFCC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 19:49:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0521C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 19:50:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 492802465A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 19:49:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72BA824655
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 19:50:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Pob899bk"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="bZ/wRpPI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726621AbgAVTtB (ORCPT
+        id S1727312AbgAVTuB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 14:49:01 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:58733 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725827AbgAVTtB (ORCPT
+        Wed, 22 Jan 2020 14:50:01 -0500
+Received: from mail-io1-f65.google.com ([209.85.166.65]:45336 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725827AbgAVTuB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 14:49:01 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579722539;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=Ma5Y1/pMEZixk7IDf2HYKU6je151JAJZTEKd6Ot7KFo=;
-        b=Pob899bkxLkYzmULrX3MciJrt6kX2pUVCDmXzLYOGnjckCESPef7wbD60/3Hjsiw2CgAME
-        bNWhtH7hIackvDQhTf+Lg6tVlZsvYJbtxrTZH031lpN3qZNszMhC0eK5VOMjA9uWVzSn9I
-        WWbFV5aHwsfog7qIZ4xF5I83gRIP6rE=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-330-POiDRitANUyQ9M88Y-KYTA-1; Wed, 22 Jan 2020 14:48:55 -0500
-X-MC-Unique: POiDRitANUyQ9M88Y-KYTA-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6C8A710937C5;
-        Wed, 22 Jan 2020 19:48:53 +0000 (UTC)
-Received: from malachite.bss.redhat.com (dhcp-10-20-1-90.bss.redhat.com [10.20.1.90])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 5051A5D9E2;
-        Wed, 22 Jan 2020 19:48:50 +0000 (UTC)
-From:   Lyude Paul <lyude@redhat.com>
-To:     dri-devel@lists.freedesktop.org
-Cc:     Wayne Lin <Wayne.Lin@amd.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, linux-kernel@vger.kernel.org
-Subject: [PATCH] drm/dp_mst: Convert drm_dp_mst_topology_mgr.is_waiting_for_dwn_reply to bitfield
-Date:   Wed, 22 Jan 2020 14:48:46 -0500
-Message-Id: <20200122194846.16025-1-lyude@redhat.com>
+        Wed, 22 Jan 2020 14:50:01 -0500
+Received: by mail-io1-f65.google.com with SMTP id i11so458285ioi.12
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jan 2020 11:50:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=XE7/hAeYrBhQF6sVXnevM16644WLVXjiFoETVe+XjZA=;
+        b=bZ/wRpPICWfuWr1XYJvti8fIxacyBeuZmg7Ir8c968UixFzMtUPiE5uK3FfretQkg2
+         l2J6Acl95yd0fB7FE+IaJ7UZXkRi5ainsgCeYRmebGnxE9xl6xY7sKLqLKRmCJlvDgMb
+         sixoCcIv1vz6OXcl0hAd192DNDU6TVaUGtTUa3WJUrlpIqaWTl4tNCmiIAwK9MxIkfb3
+         mPYTBm1BIMkGYLvka7lvpBfLYQPrQN/GGFZvAAMQVWzanxt62KIrMZVRb4aoxh/2tw1R
+         n4KPdAhv2Fa5MLN8IwsU7KiUxrVeu5s0aFDAWjcbviiU1KuG06KPIDjgyDn8Zo1Fvqr4
+         /yBw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=XE7/hAeYrBhQF6sVXnevM16644WLVXjiFoETVe+XjZA=;
+        b=oj1gmKKOeMhHADqV/H4XXBXrimrCRZ6WJtR5ezDtA42iLeyn8VeDNR0hY50spuZgQZ
+         MtaYcL67xvFmEA8ag4DJumw0y8VukjZHtmJlk9ytjn4C+dXyzW6xhFwmRpOcJvA/raBb
+         WrlfPlCezfdRixq1i+GRgFz/4Zi1j1cUkkKFIBJRYmiTA9wS42QXUVSk9ghXUKoI2j+Y
+         GW9GblRlTHyrUvzIoJiHg3fmPA0wzwdtEv/WaJtLwn2nKeCNXXOQ8EghwikgbGZ7OsyV
+         4PqEo2V8hFNny2gTkxXh+UB5DzNhEdlkbupHhY5j1s8xah8O41niUcLi0e+f6u1P0ed4
+         KmlA==
+X-Gm-Message-State: APjAAAUyEuQA86IAJfdIlGyalgHTx4SQCa8cGvg9PdX4B32vMwCASY5G
+        6IYloHvnqmWyQ1h+m+4RUELvcQ==
+X-Google-Smtp-Source: APXvYqzh/r4DbiV9EsamRPst625uR6XO0ZpBhDvW+aHXCTSvKfeXH9rK3zM+5mnmdMs4kQ1p8GfAmg==
+X-Received: by 2002:a05:6602:1233:: with SMTP id z19mr7903174iot.89.1579722600606;
+        Wed, 22 Jan 2020 11:50:00 -0800 (PST)
+Received: from localhost ([64.62.168.194])
+        by smtp.gmail.com with ESMTPSA id b145sm10955534iof.60.2020.01.22.11.49.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 22 Jan 2020 11:49:56 -0800 (PST)
+Date:   Wed, 22 Jan 2020 11:49:54 -0800 (PST)
+From:   Paul Walmsley <paul.walmsley@sifive.com>
+X-X-Sender: paulw@viisi.sifive.com
+To:     Anup Patel <Anup.Patel@wdc.com>
+cc:     Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Atish Patra <Atish.Patra@wdc.com>,
+        Alistair Francis <Alistair.Francis@wdc.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Anup Patel <anup@brainfault.org>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 4/4] RISC-V: Select Goldfish RTC driver for QEMU virt
+ machine
+In-Reply-To: <20191203034909.37385-5-anup.patel@wdc.com>
+Message-ID: <alpine.DEB.2.21.9999.2001221147260.248939@viisi.sifive.com>
+References: <20191203034909.37385-1-anup.patel@wdc.com> <20191203034909.37385-5-anup.patel@wdc.com>
+User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Small nitpick that I noticed a second ago - we can save some space in
-the struct by making this a bitfield and sticking it with the rest of
-the bitfields. Also, some small cleanup to the kdocs for this member.
+On Tue, 3 Dec 2019, Anup Patel wrote:
 
-There should be no functional changes in this patch.
+> We select Goldfish RTC driver using QEMU virt machine kconfig option
+> to access RTC device on QEMU virt machine.
+> 
+> Signed-off-by: Anup Patel <anup.patel@wdc.com>
+> Reviewed-by: Atish Patra <atish.patra@wdc.com>
+> Reviewed-by: Palmer Dabbelt <palmerdabbelt@google.com>
 
-Signed-off-by: Lyude Paul <lyude@redhat.com>
-Cc: Wayne Lin <Wayne.Lin@amd.com>
----
- include/drm/drm_dp_mst_helper.h | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+I just grepped for Goldfish through the QEMU git tree, and it didn't come 
+up with anything.  Per our discussion last year: as a general matter of 
+policy, until QEMU merges support for a simulated hardware device into 
+their master branch, we shouldn't speculatively enable support for it.  
+So, NAK from me on this one until that happens.
 
-diff --git a/include/drm/drm_dp_mst_helper.h b/include/drm/drm_dp_mst_hel=
-per.h
-index bcb39da9adb4..58bbab3684b5 100644
---- a/include/drm/drm_dp_mst_helper.h
-+++ b/include/drm/drm_dp_mst_helper.h
-@@ -590,6 +590,11 @@ struct drm_dp_mst_topology_mgr {
- 	 */
- 	bool payload_id_table_cleared : 1;
-=20
-+	/**
-+	 * @is_waiting_for_dwn_reply: whether we're waiting for a down reply.
-+	 */
-+	bool is_waiting_for_dwn_reply : 1;
-+
- 	/**
- 	 * @mst_primary: Pointer to the primary/first branch device.
- 	 */
-@@ -619,11 +624,6 @@ struct drm_dp_mst_topology_mgr {
- 	 */
- 	struct mutex qlock;
-=20
--	/**
--	 * @is_waiting_for_dwn_reply: indicate whether is waiting for down repl=
-y
--	 */
--	bool is_waiting_for_dwn_reply;
--
- 	/**
- 	 * @tx_msg_downq: List of pending down replies.
- 	 */
---=20
-2.24.1
 
+- Paul
