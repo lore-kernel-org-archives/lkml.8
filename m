@@ -2,161 +2,103 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0962EC33CAF
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:15:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED2D0C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:16:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D546F24655
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:15:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFC3C24655
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:16:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="uBtieWXw"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="l9JX2nkN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729158AbgAVJPp (ORCPT
+        id S1729191AbgAVJQM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 04:15:45 -0500
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:42224 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725911AbgAVJPo (ORCPT
+        Wed, 22 Jan 2020 04:16:12 -0500
+Received: from merlin.infradead.org ([205.233.59.134]:51022 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725911AbgAVJQL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 04:15:44 -0500
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00M9FMLM122955;
-        Wed, 22 Jan 2020 03:15:22 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1579684522;
-        bh=p6TXy9D8Jj5ZMAsUl92rse85KpLnXYI0D7il7xeObjo=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=uBtieWXwbpXSnRK/R3juokz75ZF07c3mFcuNzH5xfgGKpgBJPYDmetcojC/2gI9gN
-         0VOEXTfL2++aG1uTJbYPyywW3QlkZZVZYsgZZaJUD4mknt6vWvHEYL0OY/TgmX2SW2
-         Ngi7YqDlsI0/rO0y0n5xfRIm29JqCAdjoS1cC6wk=
-Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00M9FM9x030906;
-        Wed, 22 Jan 2020 03:15:22 -0600
-Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 22
- Jan 2020 03:15:22 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Wed, 22 Jan 2020 03:15:22 -0600
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00M9FJa9046831;
-        Wed, 22 Jan 2020 03:15:19 -0600
-Subject: Re: [PATCH 2/2] drm/bridge: Add tc358768 driver
-To:     Andrzej Hajda <a.hajda@samsung.com>, <airlied@linux.ie>,
-        <daniel@ffwll.ch>, <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <narmstrong@baylibre.com>
-CC:     <tomi.valkeinen@ti.com>, <dri-devel@lists.freedesktop.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <Laurent.pinchart@ideasonboard.com>, <jonas@kwiboo.se>,
-        <jernej.skrabec@siol.net>
-References: <20191217101506.18910-1-peter.ujfalusi@ti.com>
- <CGME20191217101520epcas1p4a2bdee0cab0c11670b74fbe9e9397835@epcas1p4.samsung.com>
- <20191217101506.18910-3-peter.ujfalusi@ti.com>
- <35d664fe-8091-2744-abf2-69828ebf1148@samsung.com>
- <14306079-500d-09ca-df94-4cf72c43f858@ti.com>
- <cdc941c5-681f-962b-7f99-ebfda6aaaa91@samsung.com>
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-Message-ID: <e8774c16-c34c-adf8-fee5-17323dcd95bf@ti.com>
-Date:   Wed, 22 Jan 2020 11:16:00 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 22 Jan 2020 04:16:11 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=de9Krq9WPfYisRqIZvIrOmUj6iWBtQLyqA73nPcoF8w=; b=l9JX2nkNY2fxHyIdZU7hasx5C
+        PBAR9hJawsYgfFkrmRqc/Rjh1IZYJO9JKWNA/kTgBrTBI6NJYM1mVz+5892V502NDKCzWe+a/cedz
+        IgBMO7Lak5koQUkdc6XRGW+Cxgx1IFlGMhxK/BDZHDEqSp+VIgX8KoG+Q98hR69t91IxUo8mH6ICV
+        QdbYVrcxHkR7rxlE9HZKz8cX2eIjfOEg1Jla68Zfw8fLDY8bhsUfe8uqKlNmrBU+fVsNKRpsWJCnC
+        3VLMaxDYrVEZeFvBf9Wy6GOW/953cYk8n8ZDqUzwmfq/SUg9RjFEsy13DG2O3uC7fXfzf8eaW2eDb
+        Uhla+mRVA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iuC73-0002ue-Uc; Wed, 22 Jan 2020 09:15:50 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id D3ADD305D3F;
+        Wed, 22 Jan 2020 10:14:07 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 5E84920983E34; Wed, 22 Jan 2020 10:15:47 +0100 (CET)
+Date:   Wed, 22 Jan 2020 10:15:47 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Alex Kogan <alex.kogan@oracle.com>
+Cc:     linux@armlinux.org.uk, mingo@redhat.com, will.deacon@arm.com,
+        arnd@arndb.de, longman@redhat.com, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        tglx@linutronix.de, bp@alien8.de, hpa@zytor.com, x86@kernel.org,
+        guohanjun@huawei.com, jglauber@marvell.com,
+        steven.sistare@oracle.com, daniel.m.jordan@oracle.com,
+        dave.dice@oracle.com, rahul.x.yadav@oracle.com
+Subject: Re: [PATCH v7 1/5] locking/qspinlock: Rename mcs lock/unlock macros
+ and make them more generic
+Message-ID: <20200122091547.GU14879@hirez.programming.kicks-ass.net>
+References: <20191125210709.10293-1-alex.kogan@oracle.com>
+ <20191125210709.10293-2-alex.kogan@oracle.com>
 MIME-Version: 1.0
-In-Reply-To: <cdc941c5-681f-962b-7f99-ebfda6aaaa91@samsung.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191125210709.10293-2-alex.kogan@oracle.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andrzej,
+On Mon, Nov 25, 2019 at 04:07:05PM -0500, Alex Kogan wrote:
 
-On 22/01/2020 10.46, Andrzej Hajda wrote:
->>>> +struct tc358768_priv {
->>>> +	struct device *dev;
->>>> +	struct regmap *regmap;
->>>> +	struct gpio_desc *reset_gpio;
->>>> +	struct regulator_bulk_data supplies[ARRAY_SIZE(tc358768_supplies)];
->>>> +	struct clk *refclk;
->>>> +
->>>> +	struct mipi_dsi_host dsi_host;
->>>> +	struct drm_bridge bridge;
->>>> +	struct tc358768_dsi_output output;
->>>
->>> Since tc358768_dsi_output is used only here, you can define it here as
->>> well, up to you.
->> I think I have done it like this to avoid thinking about prefixes for
->> what is under the tc358768_dsi_output.
->> I'll take a look if it will look better unpacked here.
-> 
-> I though rather about in-place anonymous struct definition:
-> 
-> +    struct tc358768_dsi_output {
-> +        struct mipi_dsi_device *dev;
-> +        struct drm_panel *panel;
-> +        struct drm_bridge *bridge;
-> +    } output;
-> 
-> But, as I said - up to you.
+> --- a/arch/arm/include/asm/mcs_spinlock.h
+> +++ b/arch/arm/include/asm/mcs_spinlock.h
+> @@ -6,7 +6,7 @@
+>  #include <asm/spinlock.h>
+>  
+>  /* MCS spin-locking. */
+> -#define arch_mcs_spin_lock_contended(lock)				\
+> +#define arch_mcs_spin_lock(lock)				\
+>  do {									\
+>  	/* Ensure prior stores are observed before we enter wfe. */	\
+>  	smp_mb();							\
+> @@ -14,9 +14,9 @@ do {									\
+>  		wfe();							\
+>  } while (0)								\
+>  
+> -#define arch_mcs_spin_unlock_contended(lock)				\
+> +#define arch_mcs_pass_lock(lock, val)					\
+>  do {									\
+> -	smp_store_release(lock, 1);					\
+> +	smp_store_release((lock), (val));				\
+>  	dsb_sev();							\
+>  } while (0)
 
-I see. I think I will keep how it was. They are in proximity, so easy to
-check.
+So I hate those names; it used to be clear this was the contended path,
+not so anymore. arch_mcs_spin_lock() in particular is grossly misnamed
+now.
 
->>>> +
->>>> +	refclk = clk_get_rate(priv->refclk);
->>>> +
->>>> +	best_diff = UINT_MAX;
->>>> +	best_pll = 0;
->>>> +	best_prd = 0;
->>>> +	best_fbd = 0;
->>>> +
->>>> +	for (prd = 0; prd < 16; ++prd) {
->>>> +		u32 divisor = (prd + 1) * (1 << frs);
->>>> +		u32 fbd;
->>>> +
->>>> +		for (fbd = 0; fbd < 512; ++fbd) {
->>>> +			u32 pll, diff;
->>>> +
->>>> +			pll = (u32)div_u64((u64)refclk * (fbd + 1), divisor);
->>>> +
->>>> +			if (pll >= max_pll || pll < min_pll)
->>>> +				continue;
->>>> +
->>>> +			diff = max(pll, target_pll) - min(pll, target_pll);
->>>> +
->>>> +			if (diff < best_diff) {
->>>> +				best_diff = diff;
->>>> +				best_pll = pll;
->>>> +				best_prd = prd;
->>>> +				best_fbd = fbd;
->>>> +			}
->>>> +
->>>> +			if (best_diff == 0)
->>>> +				break;
->>>> +		}
->>>> +
->>>> +		if (best_diff == 0)
->>>> +			break;
->>> why another check here?
->> To break out from the top for() loop also in case exact match has been
->> found.
-> 
-> 
-> Ahh, OK. So maybe you should put "if (diff == 0) goto found" inside "if
-> (diff < best_diff)" block, in such case goto is not considered harmful
-> :), and is more readable.
+'s/arch_mcs_spin_lock/arch_mcs_spin_wait/g' could perhaps work, if you
+really want to get rid of the _contended suffix.
 
-Exactly my thoughts ;)
-
-- Péter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+Also, pass_lock seems unfortunately named...
