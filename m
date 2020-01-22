@@ -7,46 +7,45 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2E9FC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:40:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 793DBC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:40:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E2EC24680
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:40:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4124724680
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:40:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579686025;
-	bh=uG2XbXMoGZzx8H4q1N55KBac6z4u0PS3eMFKnphQBH4=;
+	s=default; t=1579686032;
+	bh=YntkyKDy5KI2DCgvhufavTpqfWURh67IqaGLyQej8mw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=o8TiLtxZO2PYc+e/WoeAPAoEqjkRwTtw8kzpvQAu7/UJnLdu3/fF15OOuJxKzA9zr
-	 mM6RNB6HtXaF6bVjNZGVNlYoWEH9JxfmqyuQkhoNSUJkIyHl4r/grnLH1VpLEdFhi7
-	 Ik6UOgErd/HkyJHIm3hlJhAUsbyUBTwYqRU2YghU=
+	b=Yzz0dmG+vq80dSzzmeKLTZ4GPt7l2c68XqHU+OA5mcCO99gqeTU9YrkOGqlPvpshB
+	 Y3JazyZTUk7TQ1Obx67pgsrYZCTHuGndgpzlPmhEbt0ZUj6gw2OtMciU+imMbl6uAc
+	 U0EfpLiV//oKH6MMCi7gaWp3DEsLXfuGiIraQyt0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732974AbgAVJkY (ORCPT
+        id S2387461AbgAVJkb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 04:40:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59006 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 04:40:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59204 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733182AbgAVJkR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 04:40:17 -0500
+        id S1732848AbgAVJkW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 04:40:22 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3842624689;
-        Wed, 22 Jan 2020 09:40:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 10BDB24699;
+        Wed, 22 Jan 2020 09:40:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579686016;
-        bh=uG2XbXMoGZzx8H4q1N55KBac6z4u0PS3eMFKnphQBH4=;
+        s=default; t=1579686021;
+        bh=YntkyKDy5KI2DCgvhufavTpqfWURh67IqaGLyQej8mw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=g+8tza/nNiPq5bhNYa59QELKpDmWpXBJGjbGDfNcho/MMfT4XdnddUOTHivuwvoRv
-         6P8OCe8lGtjqnXLHim2cMEr7uh7qJPjMFD4C3k/QDWT/jqqovRKs0NekxFPS2k75WO
-         ZWTFjrECWdRnp4zsjSAvwwjVk16M+pfB+Ttej544=
+        b=M7Yk7OYp7d6xE7Z5dLevssNvn0AFNrG+Z3by/6yegTP+7Eh7xufyBkunbi53NFNYn
+         dowhEp3OTibWluu3FHPVOQMu54B45Ql2DPrrf7sSayLAbET6gFGAdoMxf4uEwTkV00
+         MHjh/1nKiPgO1UxV0LcfOro+P+8QcYspOoQv6kLw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Martin Jansen <martin.jansen@opticon.com>,
-        Johan Hovold <johan@kernel.org>
-Subject: [PATCH 4.19 010/103] USB: serial: opticon: fix control-message timeouts
-Date:   Wed, 22 Jan 2020 10:28:26 +0100
-Message-Id: <20200122092805.192201547@linuxfoundation.org>
+        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>
+Subject: [PATCH 4.19 012/103] USB: serial: suppress driver bind attributes
+Date:   Wed, 22 Jan 2020 10:28:28 +0100
+Message-Id: <20200122092805.511916199@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200122092803.587683021@linuxfoundation.org>
 References: <20200122092803.587683021@linuxfoundation.org>
@@ -61,37 +60,39 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Johan Hovold <johan@kernel.org>
 
-commit 5e28055f340275a8616eee88ef19186631b4d136 upstream.
+commit fdb838efa31e1ed9a13ae6ad0b64e30fdbd00570 upstream.
 
-The driver was issuing synchronous uninterruptible control requests
-without using a timeout. This could lead to the driver hanging
-on open() or tiocmset() due to a malfunctioning (or malicious) device
-until the device is physically disconnected.
+USB-serial drivers must not be unbound from their ports before the
+corresponding USB driver is unbound from the parent interface so
+suppress the bind and unbind attributes.
 
-The USB upper limit of five seconds per request should be more than
-enough.
+Unbinding a serial driver while it's port is open is a sure way to
+trigger a crash as any driver state is released on unbind while port
+hangup is handled on the parent USB interface level. Drivers for
+multiport devices where ports share a resource such as an interrupt
+endpoint also generally cannot handle individual ports going away.
 
-Fixes: 309a057932ab ("USB: opticon: add rts and cts support")
-Cc: stable <stable@vger.kernel.org>     # 2.6.39
-Cc: Martin Jansen <martin.jansen@opticon.com>
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Cc: stable <stable@vger.kernel.org>
 Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Johan Hovold <johan@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/serial/opticon.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/usb/serial/usb-serial.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/drivers/usb/serial/opticon.c
-+++ b/drivers/usb/serial/opticon.c
-@@ -113,7 +113,7 @@ static int send_control_msg(struct usb_s
- 	retval = usb_control_msg(serial->dev, usb_sndctrlpipe(serial->dev, 0),
- 				requesttype,
- 				USB_DIR_OUT|USB_TYPE_VENDOR|USB_RECIP_INTERFACE,
--				0, 0, buffer, 1, 0);
-+				0, 0, buffer, 1, USB_CTRL_SET_TIMEOUT);
- 	kfree(buffer);
+--- a/drivers/usb/serial/usb-serial.c
++++ b/drivers/usb/serial/usb-serial.c
+@@ -1294,6 +1294,9 @@ static int usb_serial_register(struct us
+ 		return -EINVAL;
+ 	}
  
- 	if (retval < 0)
++	/* Prevent individual ports from being unbound. */
++	driver->driver.suppress_bind_attrs = true;
++
+ 	usb_serial_operations_init(driver);
+ 
+ 	/* Add this device to our list of devices */
 
 
