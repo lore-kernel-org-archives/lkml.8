@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-5.7 required=3.0 tests=DATE_IN_PAST_03_06,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9A6BC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:20:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE53FC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:20:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0CFC2467A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:20:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 767742071E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:20:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579699221;
-	bh=JSqun9nJBN4MdPIwWzdJTXE21YaHq+B7jgEJA9Z1utg=;
+	s=default; t=1579699225;
+	bh=qYTjOtVB/6GImYvCpgBxWMCVtpws3TOB59bPhO6gvoY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=n/Len487kEslYea7MKB2iKggwdsKXPZcyLi3W+VKmOwyWpHPo5bg7sgwmHECN82UM
-	 0GGUvfh980cmMWOdvnpTFQxAw1R2aUIMnEnTizj7lKQTOPkSlOs5D0rj2bzpIpBNoB
-	 Gmdoys3aP3OFLqwdmWZv/OS8ufNHckxRbdsdQoZQ=
+	b=HAfvg5nCnGApr2SRrCcTIO5cQIZ7Npt/qhxAfF8hRrqP3FFE3rDBsunlwkvJCQjG2
+	 MJvS9A9wM8BmbAS9r4aB55cxfdueskXcjo7ONwHzFkgTa36Nu6/tcvXK/NvjYnYbR/
+	 6vcEHNJcQijA7UGdwzrKGU3ukuGNrPA7qGv8ixtA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729928AbgAVNUU (ORCPT
+        id S1729952AbgAVNUY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 08:20:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36458 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 08:20:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36536 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729368AbgAVNUS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 08:20:18 -0500
+        id S1729947AbgAVNUV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 08:20:21 -0500
 Received: from localhost (unknown [84.241.205.26])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C60DF2467A;
-        Wed, 22 Jan 2020 13:20:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D4CB524125;
+        Wed, 22 Jan 2020 13:20:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579699217;
-        bh=JSqun9nJBN4MdPIwWzdJTXE21YaHq+B7jgEJA9Z1utg=;
+        s=default; t=1579699220;
+        bh=qYTjOtVB/6GImYvCpgBxWMCVtpws3TOB59bPhO6gvoY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sxSiGhvknzwG/JDARB6zdrxCTVVFwhCW/LbGNVIudzvGrMeaM1qzXOqzbb9DGQrzB
-         gUsHZvN/DlypIo62+Kgm4t2T+V8xvGjRSxHZOyZ3SFF/4iVItSuWhzm+mhCJ1cRIqp
-         MbxnOeQDuCSXlKcU2iWum2Xk4ICGFTvaEGZcB33I=
+        b=Co6CFDZnmUAyiX3BH6UVyTmc+vR6Q0rTSwRVbt3jBTH8b60kahaFxwyaD91K1wbcS
+         fdHtXzfoHRa0wcRkewwEIpro0L16RO4Aa/u0sVuiQ/+rBIfV7jo63YEoD6oJOSzkJo
+         AGI4dBNtVyVhnRa/KH2OruWN9Uk4uHgRLwPNcjZ8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>,
-        Marco Felsch <m.felsch@pengutronix.de>, Stable@vger.kernel.org,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH 5.4 040/222] iio: light: vcnl4000: Fix scale for vcnl4040
-Date:   Wed, 22 Jan 2020 10:27:06 +0100
-Message-Id: <20200122092836.405074922@linuxfoundation.org>
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Ming Lei <ming.lei@redhat.com>,
+        Mikulas Patocka <mpatocka@redhat.com>,
+        Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 5.4 031/222] block: fix an integer overflow in logical block size
+Date:   Wed, 22 Jan 2020 10:26:57 +0100
+Message-Id: <20200122092835.700575757@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200122092833.339495161@linuxfoundation.org>
 References: <20200122092833.339495161@linuxfoundation.org>
@@ -61,51 +62,116 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guido Günther <agx@sigxcpu.org>
+From: Mikulas Patocka <mpatocka@redhat.com>
 
-commit bc80573ea25bb033a58da81b3ce27205b97c088e upstream.
+commit ad6bf88a6c19a39fb3b0045d78ea880325dfcf15 upstream.
 
-According to the data sheet the ambient sensor's scale is 0.12 lux/step
-(not 0.024 lux/step as used by vcnl4200) when the integration time is
-80ms. The integration time is currently hardcoded in the driver to that
-value.
+Logical block size has type unsigned short. That means that it can be at
+most 32768. However, there are architectures that can run with 64k pages
+(for example arm64) and on these architectures, it may be possible to
+create block devices with 64k block size.
 
-See p. 8 in https://www.vishay.com/docs/84307/designingvcnl4040.pdf
+For exmaple (run this on an architecture with 64k pages):
 
-Fixes: 5a441aade5b3 ("iio: light: vcnl4000 add support for the VCNL4040 proximity and light sensor")
-Signed-off-by: Guido Günther <agx@sigxcpu.org>
-Reviewed-by: Marco Felsch <m.felsch@pengutronix.de>
-Cc: <Stable@vger.kernel.org>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Mount will fail with this error because it tries to read the superblock using 2-sector
+access:
+  device-mapper: writecache: I/O is not aligned, sector 2, size 1024, block size 65536
+  EXT4-fs (dm-0): unable to read superblock
+
+This patch changes the logical block size from unsigned short to unsigned
+int to avoid the overflow.
+
+Cc: stable@vger.kernel.org
+Reviewed-by: Martin K. Petersen <martin.petersen@oracle.com>
+Reviewed-by: Ming Lei <ming.lei@redhat.com>
+Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/iio/light/vcnl4000.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ block/blk-settings.c            |    2 +-
+ drivers/md/dm-snap-persistent.c |    2 +-
+ drivers/md/raid0.c              |    2 +-
+ include/linux/blkdev.h          |    8 ++++----
+ 4 files changed, 7 insertions(+), 7 deletions(-)
 
---- a/drivers/iio/light/vcnl4000.c
-+++ b/drivers/iio/light/vcnl4000.c
-@@ -163,7 +163,6 @@ static int vcnl4200_init(struct vcnl4000
- 	if (ret < 0)
- 		return ret;
+--- a/block/blk-settings.c
++++ b/block/blk-settings.c
+@@ -328,7 +328,7 @@ EXPORT_SYMBOL(blk_queue_max_segment_size
+  *   storage device can address.  The default of 512 covers most
+  *   hardware.
+  **/
+-void blk_queue_logical_block_size(struct request_queue *q, unsigned short size)
++void blk_queue_logical_block_size(struct request_queue *q, unsigned int size)
+ {
+ 	q->limits.logical_block_size = size;
  
--	data->al_scale = 24000;
- 	data->vcnl4200_al.reg = VCNL4200_AL_DATA;
- 	data->vcnl4200_ps.reg = VCNL4200_PS_DATA;
- 	switch (id) {
-@@ -172,11 +171,13 @@ static int vcnl4200_init(struct vcnl4000
- 		/* show 54ms in total. */
- 		data->vcnl4200_al.sampling_rate = ktime_set(0, 54000 * 1000);
- 		data->vcnl4200_ps.sampling_rate = ktime_set(0, 4200 * 1000);
-+		data->al_scale = 24000;
- 		break;
- 	case VCNL4040_PROD_ID:
- 		/* Integration time is 80ms, add 10ms. */
- 		data->vcnl4200_al.sampling_rate = ktime_set(0, 100000 * 1000);
- 		data->vcnl4200_ps.sampling_rate = ktime_set(0, 100000 * 1000);
-+		data->al_scale = 120000;
- 		break;
- 	}
- 	data->vcnl4200_al.last_measurement = ktime_set(0, 0);
+--- a/drivers/md/dm-snap-persistent.c
++++ b/drivers/md/dm-snap-persistent.c
+@@ -17,7 +17,7 @@
+ #include <linux/dm-bufio.h>
+ 
+ #define DM_MSG_PREFIX "persistent snapshot"
+-#define DM_CHUNK_SIZE_DEFAULT_SECTORS 32	/* 16KB */
++#define DM_CHUNK_SIZE_DEFAULT_SECTORS 32U	/* 16KB */
+ 
+ #define DM_PREFETCH_CHUNKS		12
+ 
+--- a/drivers/md/raid0.c
++++ b/drivers/md/raid0.c
+@@ -87,7 +87,7 @@ static int create_strip_zones(struct mdd
+ 	char b[BDEVNAME_SIZE];
+ 	char b2[BDEVNAME_SIZE];
+ 	struct r0conf *conf = kzalloc(sizeof(*conf), GFP_KERNEL);
+-	unsigned short blksize = 512;
++	unsigned blksize = 512;
+ 
+ 	*private_conf = ERR_PTR(-ENOMEM);
+ 	if (!conf)
+--- a/include/linux/blkdev.h
++++ b/include/linux/blkdev.h
+@@ -328,6 +328,7 @@ struct queue_limits {
+ 	unsigned int		max_sectors;
+ 	unsigned int		max_segment_size;
+ 	unsigned int		physical_block_size;
++	unsigned int		logical_block_size;
+ 	unsigned int		alignment_offset;
+ 	unsigned int		io_min;
+ 	unsigned int		io_opt;
+@@ -338,7 +339,6 @@ struct queue_limits {
+ 	unsigned int		discard_granularity;
+ 	unsigned int		discard_alignment;
+ 
+-	unsigned short		logical_block_size;
+ 	unsigned short		max_segments;
+ 	unsigned short		max_integrity_segments;
+ 	unsigned short		max_discard_segments;
+@@ -1080,7 +1080,7 @@ extern void blk_queue_max_write_same_sec
+ 		unsigned int max_write_same_sectors);
+ extern void blk_queue_max_write_zeroes_sectors(struct request_queue *q,
+ 		unsigned int max_write_same_sectors);
+-extern void blk_queue_logical_block_size(struct request_queue *, unsigned short);
++extern void blk_queue_logical_block_size(struct request_queue *, unsigned int);
+ extern void blk_queue_physical_block_size(struct request_queue *, unsigned int);
+ extern void blk_queue_alignment_offset(struct request_queue *q,
+ 				       unsigned int alignment);
+@@ -1294,7 +1294,7 @@ static inline unsigned int queue_max_seg
+ 	return q->limits.max_segment_size;
+ }
+ 
+-static inline unsigned short queue_logical_block_size(const struct request_queue *q)
++static inline unsigned queue_logical_block_size(const struct request_queue *q)
+ {
+ 	int retval = 512;
+ 
+@@ -1304,7 +1304,7 @@ static inline unsigned short queue_logic
+ 	return retval;
+ }
+ 
+-static inline unsigned short bdev_logical_block_size(struct block_device *bdev)
++static inline unsigned int bdev_logical_block_size(struct block_device *bdev)
+ {
+ 	return queue_logical_block_size(bdev_get_queue(bdev));
+ }
 
 
