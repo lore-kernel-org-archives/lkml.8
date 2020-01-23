@@ -2,117 +2,85 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8102DC33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 17:30:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4123CC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 17:30:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4FAE321569
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 17:30:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=posteo.de header.i=@posteo.de header.b="B/+QAD5P"
+	by mail.kernel.org (Postfix) with ESMTP id 17A4A21734
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 17:30:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579800617;
+	bh=rmA6KyDbqwAsoSEXaVkYOuGxZZeh0dbF4LK/1h1tWSo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=HdE7t7rtz3dQQyhcG5TjgbtZ3Xjt4YXait9mGbhotVOCL0FdBS0Ef6Zf6QgGyWTV3
+	 j+kY0eSvqNRDB7O1SMKWDPaVhcl4Ow4E6WlmQUOulqT/pL6Gru5EXOit/SlV3NqOq+
+	 IwH1xNcG9nda8RVnwmUsMFHBUTqjo+SUeLzhIVcU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729049AbgAWRaM (ORCPT
+        id S1729108AbgAWRaQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 12:30:12 -0500
-Received: from mout02.posteo.de ([185.67.36.66]:57339 "EHLO mout02.posteo.de"
+        Thu, 23 Jan 2020 12:30:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48664 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728911AbgAWRaK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 12:30:10 -0500
-Received: from submission (posteo.de [89.146.220.130]) 
-        by mout02.posteo.de (Postfix) with ESMTPS id 2B8A0240100
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jan 2020 18:30:08 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.de; s=2017;
-        t=1579800608; bh=jswBLxzmjtwYk5Kuv4nAGpKgQNsVvBOU2fXHpQ4y5Gs=;
-        h=From:To:Cc:Subject:Date:From;
-        b=B/+QAD5PeIhk8ZzLMAIJLIf3n/rKfM3CU3W8F4FslYtVshYN8F+1kpTEn7+IrqA5G
-         XJ05YHac7uYguFVgEP8OF8ksjX8QCn9s+VvzFPGRTqV8mQQ+bEpH2aM7QVXcEGdMYE
-         YO/PZX68RhqNtZ9MZove5GVY2KaQinsMXLqFulaoewxct1IC3U5rRFUO9McT53dRN+
-         IRSGC2FM/w5Pkgh7RVn0PHy4BwA0RB9dQcWRuKNGuZvVrZCA2NJZNscR8wH25TZKCJ
-         LLCzB6WdzmxLOWK3LGRCEOr0+f89yBqt+rlmXnKhs9D/oI53YAznDfawUaqL4wmzKg
-         30VhPiBrLuEEQ==
-Received: from customer (localhost [127.0.0.1])
-        by submission (posteo.de) with ESMTPSA id 483Tmv4HFFz9rxM;
-        Thu, 23 Jan 2020 18:30:07 +0100 (CET)
-From:   Benjamin Thiel <b.thiel@posteo.de>
-To:     kvm@vger.kernel.org
-Cc:     X86 ML <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Benjamin Thiel <b.thiel@posteo.de>
-Subject: [PATCH v2] x86/cpu: Move prototype for get_umwait_control_msr() to global location
-Date:   Thu, 23 Jan 2020 18:29:45 +0100
-Message-Id: <20200123172945.7235-1-b.thiel@posteo.de>
-X-Mailer: git-send-email 2.17.1
+        id S1728911AbgAWRaP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jan 2020 12:30:15 -0500
+Received: from cakuba (unknown [199.201.64.139])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 544DF21569;
+        Thu, 23 Jan 2020 17:30:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579800614;
+        bh=rmA6KyDbqwAsoSEXaVkYOuGxZZeh0dbF4LK/1h1tWSo=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=ezgS0Cf2xaRVBA5xIs0nTkBbjVPaqD3v9CXNTpxEPfBjUIcEBgqpToKeCABolLuER
+         yRSd/GyTRk63WVb4XL3FRV/PbUEEHULCoFoxk0RwwxnglXgPwgJ+i7gxE2AAO2pamh
+         lKZF5FpL/RiHuFx71XNMQ/DePMO79XFCZw+OZ4LM=
+Date:   Thu, 23 Jan 2020 09:30:13 -0800
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     Haiyang Zhang <haiyangz@microsoft.com>
+Cc:     "sashal@kernel.org" <sashal@kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        KY Srinivasan <kys@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "olaf@aepfle.de" <olaf@aepfle.de>, vkuznets <vkuznets@redhat.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH V3,net-next, 1/2] hv_netvsc: Add XDP support
+Message-ID: <20200123093013.53d78485@cakuba>
+In-Reply-To: <MN2PR21MB13757F7D19C11EC175FD9F98CA0F0@MN2PR21MB1375.namprd21.prod.outlook.com>
+References: <1579713814-36061-1-git-send-email-haiyangz@microsoft.com>
+        <1579713814-36061-2-git-send-email-haiyangz@microsoft.com>
+        <20200123085906.20608707@cakuba>
+        <MN2PR21MB13757F7D19C11EC175FD9F98CA0F0@MN2PR21MB1375.namprd21.prod.outlook.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-.. in order to fix a -Wmissing-prototype warning.
+On Thu, 23 Jan 2020 17:14:06 +0000, Haiyang Zhang wrote:
+> > > Changes:
+> > > 	v3: Minor code and comment updates.
+> > >         v2: Added XDP_TX support. Addressed review comments.  
+> > 
+> > How does the locking of the TX path work? You seem to be just calling the
+> > normal xmit method, but you don't hold the xmit queue lock, so the stack can
+> > start xmit concurrently, no?  
+> 
+> The netvsc and vmbus can handle concurrent transmits, except the msd 
+> (Multi-Send Data) field which can only be used by one queue. 
+> 
+> I already added a new flag to netvsc_send(), so packets from XDP_TX won't use 
+> the msd.
 
-No functional change.
+I see, there's a few non-atomic counters there, but maybe that's not a
+big deal.
 
-Signed-off-by: Benjamin Thiel <b.thiel@posteo.de>
----
- arch/x86/include/asm/mwait.h | 2 ++
- arch/x86/kernel/cpu/umwait.c | 1 +
- arch/x86/kvm/vmx/vmx.c       | 1 +
- arch/x86/kvm/vmx/vmx.h       | 2 --
- 4 files changed, 4 insertions(+), 2 deletions(-)
-
-diff --git a/arch/x86/include/asm/mwait.h b/arch/x86/include/asm/mwait.h
-index 9d5252c9685c..b809f117f3f4 100644
---- a/arch/x86/include/asm/mwait.h
-+++ b/arch/x86/include/asm/mwait.h
-@@ -23,6 +23,8 @@
- #define MWAITX_MAX_LOOPS		((u32)-1)
- #define MWAITX_DISABLE_CSTATES		0xf0
- 
-+u32 get_umwait_control_msr(void);
-+
- static inline void __monitor(const void *eax, unsigned long ecx,
- 			     unsigned long edx)
- {
-diff --git a/arch/x86/kernel/cpu/umwait.c b/arch/x86/kernel/cpu/umwait.c
-index c222f283b456..300e3fd5ade3 100644
---- a/arch/x86/kernel/cpu/umwait.c
-+++ b/arch/x86/kernel/cpu/umwait.c
-@@ -4,6 +4,7 @@
- #include <linux/cpu.h>
- 
- #include <asm/msr.h>
-+#include <asm/mwait.h>
- 
- #define UMWAIT_C02_ENABLE	0
- 
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index e3394c839dea..11cd0242479b 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -41,6 +41,7 @@
- #include <asm/mce.h>
- #include <asm/mmu_context.h>
- #include <asm/mshyperv.h>
-+#include <asm/mwait.h>
- #include <asm/spec-ctrl.h>
- #include <asm/virtext.h>
- #include <asm/vmx.h>
-diff --git a/arch/x86/kvm/vmx/vmx.h b/arch/x86/kvm/vmx/vmx.h
-index a4f7f737c5d4..db947076bf68 100644
---- a/arch/x86/kvm/vmx/vmx.h
-+++ b/arch/x86/kvm/vmx/vmx.h
-@@ -14,8 +14,6 @@
- extern const u32 vmx_msr_index[];
- extern u64 host_efer;
- 
--extern u32 get_umwait_control_msr(void);
--
- #define MSR_TYPE_R	1
- #define MSR_TYPE_W	2
- #define MSR_TYPE_RW	3
--- 
-2.17.1
-
+What frees the skb if the ring is full, and netvsc_send_pkt() returns
+-EAGAIN? Nothing checks the return value from netvsc_xdp_xmit().
