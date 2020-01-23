@@ -2,142 +2,117 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B93FC3F68F
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 09:53:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B3E0C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 09:53:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E286024125
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 09:53:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E03422522
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 09:53:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Fa9hI8Q4"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="MKEoa9U0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727215AbgAWJxB (ORCPT
+        id S1728811AbgAWJxG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 04:53:01 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:40642 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726181AbgAWJxA (ORCPT
+        Thu, 23 Jan 2020 04:53:06 -0500
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:18370 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726181AbgAWJxF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 04:53:00 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00N9qpqn104688;
-        Thu, 23 Jan 2020 03:52:51 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1579773171;
-        bh=unRflK1ngAfU5idFLJ2noLbxFExfbABirG8nbGcTCE0=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=Fa9hI8Q4VIxzY0PjWcmAD4ySmg053bjihz0pKXesuoeBgmEIcLCYEQ5QJASXwz5k0
-         w2XANSzvMgI6a32hliEUObFclPtfpxDhBZfvonUQ5vOxZnA2ZCHI9clsshMLG+fFyR
-         3zj2tcoR3JYK04JwQKk6q8mWY/fWBp8dNLNCfSmM=
-Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00N9qp0Q024537
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 23 Jan 2020 03:52:51 -0600
-Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 23
- Jan 2020 03:52:50 -0600
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Thu, 23 Jan 2020 03:52:50 -0600
-Received: from [10.24.69.159] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00N9qiJD128288;
-        Thu, 23 Jan 2020 03:52:45 -0600
-Subject: Re: [PATCH V2 0/5] Add support to defer core initialization
-To:     Vidya Sagar <vidyas@nvidia.com>
-CC:     <jingoohan1@gmail.com>, <gustavo.pimentel@synopsys.com>,
-        <lorenzo.pieralisi@arm.com>, <andrew.murray@arm.com>,
-        <bhelgaas@google.com>, <thierry.reding@gmail.com>,
-        <Jisheng.Zhang@synaptics.com>, <jonathanh@nvidia.com>,
-        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <kthota@nvidia.com>, <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>
-References: <20200103100736.27627-1-vidyas@nvidia.com>
- <a8678df3-141b-51ab-b0cb-5e88c6ac91b5@nvidia.com>
- <680a58ec-5d09-3e3b-2fd6-544c32732818@nvidia.com>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <ca911119-da45-4cbd-b173-2ac8397fd79a@ti.com>
-Date:   Thu, 23 Jan 2020 15:25:53 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:73.0) Gecko/20100101
- Thunderbird/73.0
-MIME-Version: 1.0
-In-Reply-To: <680a58ec-5d09-3e3b-2fd6-544c32732818@nvidia.com>
-Content-Type: text/plain; charset="utf-8"
+        Thu, 23 Jan 2020 04:53:05 -0500
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00N9qYtJ031103;
+        Thu, 23 Jan 2020 10:52:56 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : subject :
+ date : message-id : references : in-reply-to : content-type : content-id :
+ content-transfer-encoding : mime-version; s=STMicroelectronics;
+ bh=VkExEA1zSYkkIawwysFPM2UtiIcmbIryXd4T7Fqwhqw=;
+ b=MKEoa9U0xc75iuaGbBbbosWCuyYadzLqTILEEEWqRcR75ATLSLHrcIPj9jX3T8S+7Caw
+ JmAGtOoXoO4X2wuLUhigGLBBJ5Zf+stX01D6TTxpNSJV8s2zvRkewk40do/n7n/JyFB5
+ qHsa85WpdQlKxGfbNjNiwBGOlzhqXj6Db3pU5sVeToX7K5FVmupCmp8TMGncU97steV3
+ 3DixSsYcnRpM66nh6SWwaSojdJ+iYU364qANn0FVN3ZGPa5RGj1Rp6md+3Xp2gHKM34Q
+ ktOkVFEL0iLiZKL6pg4okiLsZ2Vjb437LIkpw2FX7cnIsx46QlfLFUJWYlt48SQQgq3e 8g== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2xkrp2hep3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 23 Jan 2020 10:52:56 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 93FF310002A;
+        Thu, 23 Jan 2020 10:52:51 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag3node1.st.com [10.75.127.7])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 83128220301;
+        Thu, 23 Jan 2020 10:52:51 +0100 (CET)
+Received: from SFHDAG6NODE3.st.com (10.75.127.18) by SFHDAG3NODE1.st.com
+ (10.75.127.7) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 23 Jan
+ 2020 10:52:50 +0100
+Received: from SFHDAG6NODE3.st.com ([fe80::d04:5337:ab17:b6f6]) by
+ SFHDAG6NODE3.st.com ([fe80::d04:5337:ab17:b6f6%20]) with mapi id
+ 15.00.1473.003; Thu, 23 Jan 2020 10:52:50 +0100
+From:   Philippe CORNU <philippe.cornu@st.com>
+To:     Yannick FERTRE <yannick.fertre@st.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        "Alexandre TORGUE" <alexandre.torgue@st.com>,
+        Etienne CARRIERE <etienne.carriere@st.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
+        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] media: platform: stm32: defer probe for auxiliary clock
+Thread-Topic: [PATCH] media: platform: stm32: defer probe for auxiliary clock
+Thread-Index: AQHV0ESzDelCfuJRrECy+dIwI+lKx6f39HIA
+Date:   Thu, 23 Jan 2020 09:52:50 +0000
+Message-ID: <e7573c97-7c88-bb3d-1bfb-dea92f146da9@st.com>
+References: <1579602152-7432-1-git-send-email-yannick.fertre@st.com>
+In-Reply-To: <1579602152-7432-1-git-send-email-yannick.fertre@st.com>
+Accept-Language: fr-FR, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.75.127.48]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <034509C68120DF4483F7B9EB6FAA225C@st.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-01-23_01:2020-01-23,2020-01-22 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Vidya Sagar,
-
-On 23/01/20 2:54 pm, Vidya Sagar wrote:
-> Hi Kishon,
-> Apologies for pinging again. Could you please review this series?
-> 
-> Thanks,
-> Vidya Sagar
-> 
-> On 1/11/2020 5:18 PM, Vidya Sagar wrote:
->> Hi Kishon,
->> Could you please review this series?
->>
->> Also, this series depends on the following change of yours
->> http://patchwork.ozlabs.org/patch/1109884/
->> Whats the plan to get this merged?
-
-I've posted the endpoint improvements as a separate series
-http://lore.kernel.org/r/20191231100331.6316-1-kishon@ti.com
-
-I'd prefer this series gets tested by others. I'm also planning to test
-this series. Sorry for the delay. I'll test review and test this series
-early next week.
-
-Thanks
-Kishon
-
->>
->> Thanks,
->> Vidya Sagar
->>
->> On 1/3/20 3:37 PM, Vidya Sagar wrote:
->>> EPC/DesignWare core endpoint subsystems assume that the core
->>> registers are
->>> available always for SW to initialize. But, that may not be the case
->>> always.
->>> For example, Tegra194 hardware has the core running on a clock that
->>> is derived
->>> from reference clock that is coming into the endpoint system from host.
->>> Hence core is made available asynchronously based on when host system
->>> is going
->>> for enumeration of devices. To accommodate this kind of hardwares,
->>> support is
->>> required to defer the core initialization until the respective
->>> platform driver
->>> informs the EPC/DWC endpoint sub-systems that the core is indeed
->>> available for
->>> initiaization. This patch series is attempting to add precisely that.
->>> This series is based on Kishon's patch that adds notification mechanism
->>> support from EPC to EPF @ http://patchwork.ozlabs.org/patch/1109884/
->>>
->>> Vidya Sagar (5):
->>>    PCI: endpoint: Add core init notifying feature
->>>    PCI: dwc: Refactor core initialization code for EP mode
->>>    PCI: endpoint: Add notification for core init completion
->>>    PCI: dwc: Add API to notify core initialization completion
->>>    PCI: pci-epf-test: Add support to defer core initialization
->>>
->>>   .../pci/controller/dwc/pcie-designware-ep.c   |  79 +++++++-----
->>>   drivers/pci/controller/dwc/pcie-designware.h  |  11 ++
->>>   drivers/pci/endpoint/functions/pci-epf-test.c | 118 ++++++++++++------
->>>   drivers/pci/endpoint/pci-epc-core.c           |  19 ++-
->>>   include/linux/pci-epc.h                       |   2 +
->>>   include/linux/pci-epf.h                       |   5 +
->>>   6 files changed, 164 insertions(+), 70 deletions(-)
->>>
+RGVhcnMgWWFubmljayAmIEV0aWVubmUsDQpUaGFuayB5b3UgZm9yIHlvdXIgcGF0Y2gsDQoNClJl
+dmlld2VkLWJ5OiBQaGlsaXBwZSBDb3JudSA8cGhpbGlwcGUuY29ybnVAc3QuY29tPg0KDQpQaGls
+aXBwZSA6LSkNCg0KT24gMS8yMS8yMCAxMToyMiBBTSwgWWFubmljayBGZXJ0cmUgd3JvdGU6DQo+
+IEZyb206IEV0aWVubmUgQ2FycmllcmUgPGV0aWVubmUuY2FycmllcmVAc3QuY29tPg0KPiANCj4g
+Q2hhbmdlIHN0bTMyLWNlYyBkcml2ZXIgdG8gZGVmZXIgcHJvYmUgd2hlbiBhdXhpbGlhcnkgY2xv
+Y2sNCj4gImhkbWktY2VjIiBpcyByZWdpc3RlcmVkIGluIHRoZSBzeXN0ZW0gbm90IGhhcyBub3Qg
+YmVlbiBwcm9iZWQgeWV0Lg0KPiANCj4gU2lnbmVkLW9mZi1ieTogRXRpZW5uZSBDYXJyaWVyZSA8
+ZXRpZW5uZS5jYXJyaWVyZUBzdC5jb20+DQo+IC0tLQ0KPiAgIGRyaXZlcnMvbWVkaWEvcGxhdGZv
+cm0vc3RtMzIvc3RtMzItY2VjLmMgfCA2ICsrKysrLQ0KPiAgIDEgZmlsZSBjaGFuZ2VkLCA1IGlu
+c2VydGlvbnMoKyksIDEgZGVsZXRpb24oLSkNCj4gDQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL21l
+ZGlhL3BsYXRmb3JtL3N0bTMyL3N0bTMyLWNlYy5jIGIvZHJpdmVycy9tZWRpYS9wbGF0Zm9ybS9z
+dG0zMi9zdG0zMi1jZWMuYw0KPiBpbmRleCA4YTg2YjJjLi41NDNjOWVjIDEwMDY0NA0KPiAtLS0g
+YS9kcml2ZXJzL21lZGlhL3BsYXRmb3JtL3N0bTMyL3N0bTMyLWNlYy5jDQo+ICsrKyBiL2RyaXZl
+cnMvbWVkaWEvcGxhdGZvcm0vc3RtMzIvc3RtMzItY2VjLmMNCj4gQEAgLTMwMiwxMCArMzAyLDE0
+IEBAIHN0YXRpYyBpbnQgc3RtMzJfY2VjX3Byb2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBk
+ZXYpDQo+ICAgCX0NCj4gICANCj4gICAJY2VjLT5jbGtfaGRtaV9jZWMgPSBkZXZtX2Nsa19nZXQo
+JnBkZXYtPmRldiwgImhkbWktY2VjIik7DQo+ICsJaWYgKElTX0VSUihjZWMtPmNsa19oZG1pX2Nl
+YykgJiYNCj4gKwkgICAgUFRSX0VSUihjZWMtPmNsa19oZG1pX2NlYykgPT0gLUVQUk9CRV9ERUZF
+UikNCj4gKwkJCXJldHVybiAtRVBST0JFX0RFRkVSOw0KPiArDQo+ICAgCWlmICghSVNfRVJSKGNl
+Yy0+Y2xrX2hkbWlfY2VjKSkgew0KPiAgIAkJcmV0ID0gY2xrX3ByZXBhcmUoY2VjLT5jbGtfaGRt
+aV9jZWMpOw0KPiAgIAkJaWYgKHJldCkgew0KPiAtCQkJZGV2X2VycigmcGRldi0+ZGV2LCAiVW5h
+YmxlIHRvIHByZXBhcmUgaGRtaS1jZWMgY2xvY2tcbiIpOw0KPiArCQkJZGV2X2VycigmcGRldi0+
+ZGV2LCAiQ2FuJ3QgcHJlcGFyZSBoZG1pLWNlYyBjbG9ja1xuIik7DQo+ICAgCQkJcmV0dXJuIHJl
+dDsNCj4gICAJCX0NCj4gICAJfQ0KPiA=
