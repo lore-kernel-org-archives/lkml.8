@@ -2,314 +2,141 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 276CEC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 17:30:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 048D3C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 17:31:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E878E21734
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 17:30:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="uSAxAiqi"
+	by mail.kernel.org (Postfix) with ESMTP id CFFF721734
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 17:31:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579800669;
+	bh=5YgAmp9QHKV/2bSBJVWgnKofnRC1tEKIZ8p63aedCew=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
+	b=GGxK5c1ErnOqYkYYWx1BAJaJuIuuS3jicrB9sfKwa0GRS2qykmG+wVLcAUFQ0B1G5
+	 w7EzkEjoyX29VoUDbfV3ts8lgmDwgK+wj/385ZTUb5zSoChzXp3Ugk3bKhq0k0ZY7m
+	 s82+7C1SK2sGLiUc8eHFMDPcSw8RFcInbNz8e9vQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729130AbgAWRaw (ORCPT
+        id S1729152AbgAWRbJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 12:30:52 -0500
-Received: from pegase1.c-s.fr ([93.17.236.30]:42553 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728911AbgAWRav (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 12:30:51 -0500
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 483Tnf5c41z9ttBK;
-        Thu, 23 Jan 2020 18:30:46 +0100 (CET)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=uSAxAiqi; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id G3qys4enj1ab; Thu, 23 Jan 2020 18:30:46 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 483Tnf2Spxz9ttDF;
-        Thu, 23 Jan 2020 18:30:46 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1579800646; bh=4V+8mcfK0ldeSXPjhq+Vb65F63p9Ot9zGh3/s9dN+dY=;
-        h=From:Subject:To:Cc:Date:From;
-        b=uSAxAiqipFb+rDyJZ+jjOWbkv3MZxBlixvVpLfUfraEXACae+hCTWSEUFCU0GvOcs
-         ptangA1iKowdn1CGAfxYi7M9K08s0c6pYTBqWYTSuss4MZPf59qCm1mO3uVB5vCkix
-         wjbTaQIge6DCmrmtzwkObXhd24nftlCsKclWfZxs=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id CDAFA8B836;
-        Thu, 23 Jan 2020 18:30:47 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id SmNadmwM9Uhp; Thu, 23 Jan 2020 18:30:47 +0100 (CET)
-Received: from po14934vm.idsi0.si.c-s.fr (po15451.idsi0.si.c-s.fr [172.25.230.111])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 8E6088B82C;
-        Thu, 23 Jan 2020 18:30:47 +0100 (CET)
-Received: by po14934vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id 6CEEC651E5; Thu, 23 Jan 2020 17:30:47 +0000 (UTC)
-Message-Id: <e041f5eedb23f09ab553be8a91c3de2087147320.1579800517.git.christophe.leroy@c-s.fr>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [PATCH v4] powerpc: use probe_user_read() and probe_user_write()
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Thu, 23 Jan 2020 17:30:47 +0000 (UTC)
+        Thu, 23 Jan 2020 12:31:09 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:39592 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727453AbgAWRbI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jan 2020 12:31:08 -0500
+Received: by mail-lj1-f195.google.com with SMTP id o11so4442736ljc.6;
+        Thu, 23 Jan 2020 09:31:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=WXt6gjVeJUrJUf0Y8CoxViixubZMsgMLgh4C2DTnN/E=;
+        b=ZkoM6bm9rqVUryU3KuPKM2e1ASmf3iXmLMikC8uiwKbZc+to5Ti/LUf/W1ra8/YH8/
+         8+Mu64j7IjMlGWMLz9KU+SuoN6wjWgRATchCgOEsl/E+NYRmLPktBUv470JC7enrc3Tb
+         rfaGavemN525QjTmS1IODBl+jk6xpAM3y3zMc5pHFDUZ0Aam1KmlMn+fZPw+uAt4C2wg
+         B0zFPhbE5aRAPU/CKNzihEjHDzeqr/sLSBD02oMi+Jxt/e6+qNJxKlXxZEOg6vz9lJR4
+         SFBWtL2oW1+fL8bmKbfsY2OR3TyF6hjR136dWDL97pEJuTwTl6k7d1sYkXIvLrJt0gmY
+         HO2Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
+         :date:message-id:mime-version;
+        bh=WXt6gjVeJUrJUf0Y8CoxViixubZMsgMLgh4C2DTnN/E=;
+        b=lrRLAqUST95RXeW4uqjICw6VXC52nMA17fVAf6aq69A5xPnTE66sNj4HZf+TUui0fi
+         HWb7OPjprw6oPQ6+hzaiXFMEoP9y144AIxdJHWOhPu4JQUNMB0wYk+FejDzS6qPO/3c0
+         9tzO5o9fS77c3aTrhLHRqhEPMcE3sqxcfmRqDbzurckApo7N9PxwkgQTf59DoxSaGobo
+         pWLdhEqjJCowRcbDdKVATpzE7gmEH1EmNxGP+OLAvNGTXT2VO4IE1pBJIxr6sT2Vl5Rd
+         fEsLGn308zP4Ww98cOt+xkSKH8LepxSD5Xe4atmsvyouu+ujxrAGr+xHtKQ6iD2YhpAS
+         /r2Q==
+X-Gm-Message-State: APjAAAWQn21s4ZNYcI6ikZaMCChpxZsdFAeUdxF/zmmbo6KYIcnbkDAz
+        BKUoTAqU+HA7oP4fNTvHkU1PcyqMk9Bs4A==
+X-Google-Smtp-Source: APXvYqxP65y863qzNHh2Rf4zVXSCMzske7Raq7CwMthG1FBfKdyGZE6fQP/py86vfgtJ/LJefJK4CQ==
+X-Received: by 2002:a2e:85cd:: with SMTP id h13mr23752271ljj.191.1579800666387;
+        Thu, 23 Jan 2020 09:31:06 -0800 (PST)
+Received: from saruman (88-113-215-33.elisa-laajakaista.fi. [88.113.215.33])
+        by smtp.gmail.com with ESMTPSA id s18sm1932660ljj.36.2020.01.23.09.31.04
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 23 Jan 2020 09:31:05 -0800 (PST)
+From:   Felipe Balbi <balbi@kernel.org>
+To:     "Yang\, Fei" <fei.yang@intel.com>,
+        Andrzej Pietrasiewicz <andrzej.p@collabora.com>,
+        John Stultz <john.stultz@linaro.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Cc:     Felipe Balbi <felipe.balbi@linux.intel.com>,
+        Thinh Nguyen <thinhn@synopsys.com>,
+        Tejas Joglekar <tejas.joglekar@synopsys.com>,
+        Jack Pham <jackp@codeaurora.org>, Todd Kjos <tkjos@google.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Linux USB List <linux-usb@vger.kernel.org>,
+        stable <stable@vger.kernel.org>
+Subject: RE: [RFC][PATCH 0/2] Avoiding DWC3 transfer stalls/hangs when using adb over f_fs
+In-Reply-To: <02E7334B1630744CBDC55DA8586225837F9EE280@ORSMSX102.amr.corp.intel.com>
+References: <20200122222645.38805-1-john.stultz@linaro.org> <ef64036f-7621-50d9-0e23-0f7141a40d7a@collabora.com> <02E7334B1630744CBDC55DA8586225837F9EE280@ORSMSX102.amr.corp.intel.com>
+Date:   Thu, 23 Jan 2020 19:31:54 +0200
+Message-ID: <87o8uu3wqd.fsf@kernel.org>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Instead of opencoding, use probe_user_read() to failessly read
-a user location and probe_user_write() for writing to user.
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
----
-Link to v3: https://patchwork.ozlabs.org/patch/1026042/
-v4: Reviving this patch after one year. Now probe_user_read/write() is in the kernel so patch 1 is gone.
-v3: No change
-v2: Using probe_user_read() instead of probe_user_address()
----
- arch/powerpc/kernel/process.c          | 12 +-----------
- arch/powerpc/kvm/book3s_64_mmu_radix.c |  6 ++----
- arch/powerpc/mm/fault.c                |  6 +-----
- arch/powerpc/oprofile/backtrace.c      | 14 ++------------
- arch/powerpc/perf/callchain.c          | 20 +++-----------------
- arch/powerpc/perf/core-book3s.c        |  8 +-------
- arch/powerpc/sysdev/fsl_pci.c          | 10 ++++------
- 7 files changed, 14 insertions(+), 62 deletions(-)
 
-diff --git a/arch/powerpc/kernel/process.c b/arch/powerpc/kernel/process.c
-index 4df94b6e2f32..79f2cb6ecf87 100644
---- a/arch/powerpc/kernel/process.c
-+++ b/arch/powerpc/kernel/process.c
-@@ -1264,16 +1264,6 @@ void show_user_instructions(struct pt_regs *regs)
- 
- 	pc = regs->nip - (NR_INSN_TO_PRINT * 3 / 4 * sizeof(int));
- 
--	/*
--	 * Make sure the NIP points at userspace, not kernel text/data or
--	 * elsewhere.
--	 */
--	if (!__access_ok(pc, NR_INSN_TO_PRINT * sizeof(int), USER_DS)) {
--		pr_info("%s[%d]: Bad NIP, not dumping instructions.\n",
--			current->comm, current->pid);
--		return;
--	}
--
- 	seq_buf_init(&s, buf, sizeof(buf));
- 
- 	while (n) {
-@@ -1284,7 +1274,7 @@ void show_user_instructions(struct pt_regs *regs)
- 		for (i = 0; i < 8 && n; i++, n--, pc += sizeof(int)) {
- 			int instr;
- 
--			if (probe_kernel_address((const void *)pc, instr)) {
-+			if (probe_user_read(&instr, (void __user *)pc, sizeof(instr))) {
- 				seq_buf_printf(&s, "XXXXXXXX ");
- 				continue;
- 			}
-diff --git a/arch/powerpc/kvm/book3s_64_mmu_radix.c b/arch/powerpc/kvm/book3s_64_mmu_radix.c
-index da857c8ba6e4..231410dc9db4 100644
---- a/arch/powerpc/kvm/book3s_64_mmu_radix.c
-+++ b/arch/powerpc/kvm/book3s_64_mmu_radix.c
-@@ -63,12 +63,10 @@ unsigned long __kvmhv_copy_tofrom_guest_radix(int lpid, int pid,
- 	}
- 	isync();
- 
--	pagefault_disable();
- 	if (is_load)
--		ret = raw_copy_from_user(to, from, n);
-+		ret = probe_user_read(to, (const void __user *)from, n);
- 	else
--		ret = raw_copy_to_user(to, from, n);
--	pagefault_enable();
-+		ret = probe_user_write((void __user *)to, from, n);
- 
- 	/* switch the pid first to avoid running host with unallocated pid */
- 	if (quadrant == 1 && pid != old_pid)
-diff --git a/arch/powerpc/mm/fault.c b/arch/powerpc/mm/fault.c
-index b5047f9b5dec..9e119f98a725 100644
---- a/arch/powerpc/mm/fault.c
-+++ b/arch/powerpc/mm/fault.c
-@@ -279,12 +279,8 @@ static bool bad_stack_expansion(struct pt_regs *regs, unsigned long address,
- 		if ((flags & FAULT_FLAG_WRITE) && (flags & FAULT_FLAG_USER) &&
- 		    access_ok(nip, sizeof(*nip))) {
- 			unsigned int inst;
--			int res;
- 
--			pagefault_disable();
--			res = __get_user_inatomic(inst, nip);
--			pagefault_enable();
--			if (!res)
-+			if (!probe_user_read(&inst, nip, sizeof(inst)))
- 				return !store_updates_sp(inst);
- 			*must_retry = true;
- 		}
-diff --git a/arch/powerpc/oprofile/backtrace.c b/arch/powerpc/oprofile/backtrace.c
-index 43245f4a9bcb..2799b922f780 100644
---- a/arch/powerpc/oprofile/backtrace.c
-+++ b/arch/powerpc/oprofile/backtrace.c
-@@ -28,15 +28,12 @@ static unsigned int user_getsp32(unsigned int sp, int is_first)
- 	unsigned int stack_frame[2];
- 	void __user *p = compat_ptr(sp);
- 
--	if (!access_ok(p, sizeof(stack_frame)))
--		return 0;
--
- 	/*
- 	 * The most likely reason for this is that we returned -EFAULT,
- 	 * which means that we've done all that we can do from
- 	 * interrupt context.
- 	 */
--	if (__copy_from_user_inatomic(stack_frame, p, sizeof(stack_frame)))
-+	if (probe_user_read(stack_frame, (void __user *)p, sizeof(stack_frame)))
- 		return 0;
- 
- 	if (!is_first)
-@@ -54,11 +51,7 @@ static unsigned long user_getsp64(unsigned long sp, int is_first)
- {
- 	unsigned long stack_frame[3];
- 
--	if (!access_ok((void __user *)sp, sizeof(stack_frame)))
--		return 0;
--
--	if (__copy_from_user_inatomic(stack_frame, (void __user *)sp,
--					sizeof(stack_frame)))
-+	if (probe_user_read(stack_frame, (void __user *)sp, sizeof(stack_frame)))
- 		return 0;
- 
- 	if (!is_first)
-@@ -103,7 +96,6 @@ void op_powerpc_backtrace(struct pt_regs * const regs, unsigned int depth)
- 			first_frame = 0;
- 		}
- 	} else {
--		pagefault_disable();
- #ifdef CONFIG_PPC64
- 		if (!is_32bit_task()) {
- 			while (depth--) {
-@@ -112,7 +104,6 @@ void op_powerpc_backtrace(struct pt_regs * const regs, unsigned int depth)
- 					break;
- 				first_frame = 0;
- 			}
--			pagefault_enable();
- 			return;
- 		}
- #endif
-@@ -123,6 +114,5 @@ void op_powerpc_backtrace(struct pt_regs * const regs, unsigned int depth)
- 				break;
- 			first_frame = 0;
- 		}
--		pagefault_enable();
- 	}
- }
-diff --git a/arch/powerpc/perf/callchain.c b/arch/powerpc/perf/callchain.c
-index 35d542515faf..cbc251981209 100644
---- a/arch/powerpc/perf/callchain.c
-+++ b/arch/powerpc/perf/callchain.c
-@@ -155,12 +155,8 @@ static int read_user_stack_64(unsigned long __user *ptr, unsigned long *ret)
- 	    ((unsigned long)ptr & 7))
- 		return -EFAULT;
- 
--	pagefault_disable();
--	if (!__get_user_inatomic(*ret, ptr)) {
--		pagefault_enable();
-+	if (!probe_user_read(ret, ptr, sizeof(*ret)))
- 		return 0;
--	}
--	pagefault_enable();
- 
- 	return read_user_stack_slow(ptr, ret, 8);
- }
-@@ -171,12 +167,8 @@ static int read_user_stack_32(unsigned int __user *ptr, unsigned int *ret)
- 	    ((unsigned long)ptr & 3))
- 		return -EFAULT;
- 
--	pagefault_disable();
--	if (!__get_user_inatomic(*ret, ptr)) {
--		pagefault_enable();
-+	if (!probe_user_read(ret, ptr, sizeof(*ret)))
- 		return 0;
--	}
--	pagefault_enable();
- 
- 	return read_user_stack_slow(ptr, ret, 4);
- }
-@@ -293,17 +285,11 @@ static void perf_callchain_user_64(struct perf_callchain_entry_ctx *entry,
-  */
- static int read_user_stack_32(unsigned int __user *ptr, unsigned int *ret)
- {
--	int rc;
--
- 	if ((unsigned long)ptr > TASK_SIZE - sizeof(unsigned int) ||
- 	    ((unsigned long)ptr & 3))
- 		return -EFAULT;
- 
--	pagefault_disable();
--	rc = __get_user_inatomic(*ret, ptr);
--	pagefault_enable();
--
--	return rc;
-+	return probe_user_read(ret, ptr, sizeof(*ret));
- }
- 
- static inline void perf_callchain_user_64(struct perf_callchain_entry_ctx *entry,
-diff --git a/arch/powerpc/perf/core-book3s.c b/arch/powerpc/perf/core-book3s.c
-index 48604625ab31..3086055bf681 100644
---- a/arch/powerpc/perf/core-book3s.c
-+++ b/arch/powerpc/perf/core-book3s.c
-@@ -415,7 +415,6 @@ static void power_pmu_sched_task(struct perf_event_context *ctx, bool sched_in)
- static __u64 power_pmu_bhrb_to(u64 addr)
- {
- 	unsigned int instr;
--	int ret;
- 	__u64 target;
- 
- 	if (is_kernel_addr(addr)) {
-@@ -426,13 +425,8 @@ static __u64 power_pmu_bhrb_to(u64 addr)
- 	}
- 
- 	/* Userspace: need copy instruction here then translate it */
--	pagefault_disable();
--	ret = __get_user_inatomic(instr, (unsigned int __user *)addr);
--	if (ret) {
--		pagefault_enable();
-+	if (probe_user_read(&instr, (unsigned int __user *)addr, sizeof(instr)))
- 		return 0;
--	}
--	pagefault_enable();
- 
- 	target = branch_target(&instr);
- 	if ((!target) || (instr & BRANCH_ABSOLUTE))
-diff --git a/arch/powerpc/sysdev/fsl_pci.c b/arch/powerpc/sysdev/fsl_pci.c
-index 617a443d673d..4a8874bc1057 100644
---- a/arch/powerpc/sysdev/fsl_pci.c
-+++ b/arch/powerpc/sysdev/fsl_pci.c
-@@ -1065,13 +1065,11 @@ int fsl_pci_mcheck_exception(struct pt_regs *regs)
- 	addr += mfspr(SPRN_MCAR);
- 
- 	if (is_in_pci_mem_space(addr)) {
--		if (user_mode(regs)) {
--			pagefault_disable();
--			ret = get_user(inst, (__u32 __user *)regs->nip);
--			pagefault_enable();
--		} else {
-+		if (user_mode(regs))
-+			ret = probe_user_read(&inst, (void __user *)regs->nip,
-+					      sizeof(inst));
-+		else
- 			ret = probe_kernel_address((void *)regs->nip, inst);
--		}
- 
- 		if (!ret && mcheck_handle_load(regs, inst)) {
- 			regs->nip += 4;
--- 
-2.25.0
+Hi,
 
+"Yang, Fei" <fei.yang@intel.com> writes:
+>>> Hey all,
+>>>    I wanted to send these out for comment and thoughts.
+>>>=20
+>>> Since ~4.20, when the functionfs gadget enabled scatter-gather=20
+>>> support, we have seen problems with adb connections stalling and=20
+>>> stopping to function on hardware with dwc3 usb controllers.
+>>> Specifically, HiKey960, Dragonboard 845c, and Pixel3 devices.
+>>
+>> Any chance this:
+>>=20
+>> https://git.kernel.org/pub/scm/linux/kernel/git/balbi/usb.git/commit/?h=
+=3Dtesting/next&id=3Df63333e8e4fd63d8d8ae83b89d2c38cf21d64801
+> This is a different issue. I have tried initializing num_sgs when debuggi=
+ng this adb stall problem, but it didn't help.
+
+So multiple folks have run through this problem, but not *one* has
+tracepoints collected from the issue? C'mon guys. Can someone, please,
+collect tracepoints so we can figure out what's actually going on?
+
+I'm pretty sure this should be solved at the DMA API level, just want to
+confirm.
+
+cheers
+
+=2D-=20
+balbi
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl4p2IoACgkQzL64meEa
+mQZbPRAAnbPf/J/ta6ffA1BbOyMUF8EnrASllIGEfba7lkJ06oM9KbYAWojsxv1z
+pi3ch1+GVa0S5rCjwQItnCTUwMPqucLLFh9lzy6ubUL5oxTVa9nA6GhMmFTpomfY
+jIQyhafsiW78+srmozJX5ibHpYQJpfSN/63t5XS26vxqTRcIf7AiOe4ZgpNAp/7w
+AH2VAELrlgF7mIIMIwpozTvFXqxKd+QwrCVwAnz6fL/CW5/0y7V+VdgKbSgpI409
+ycIRPGFt7vUCFuT+nfZXEB3pZIQ8urObdEeE9Bq+Tb7I5jGmqxngLcSxsiu97S0y
+zPIn+nPmgOPyt1rOLrpw3VJtSdRmdz3Lnx/i5iwFXcXGGHvV18fQEznHMDz55wzf
+N/umXnh/7mck9dMqcRDJCCw9Oq/PPA1twzCZ39Ne/Wom5Q+voHL0/liMTgIkXUhV
+sf7tuaks+bKKTCYSOR6yIZKmkL1RIYt209wt9tigDBSj/gDJDdGtNX7rtCBYAd5I
+mmKOxImp1hkwyOKPGN3UKSzOKLduajOkvac6fv1lh7kKWQjIAcx4e00cAGCmtRim
+GD4Et1fYhI2/9c6qd96Z9U3YkdQ/O3cMQ9njYTRq/Ihm7Tohd+gdTSIt/Qu6m73Y
+EPwPjgtecfvnV4lYmW0pt3PbDZBrBz4qYjlCF/PmaU35YJERd6E=
+=H9Ta
+-----END PGP SIGNATURE-----
+--=-=-=--
