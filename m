@@ -2,219 +2,78 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
+	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1301C33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 15:30:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 235D4C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 15:31:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C830420684
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 15:30:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579793449;
-	bh=F/zErbJ4t2xmOZ9JfUAJhjS4jtXNS0VWDeOgcpjOweg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=ZgX4lXG2mKdNIUPPwTxL30JHdJ7CTtpmpaFLRn5b2h9ygfLEt7a+M4tTjNNfXYuFo
-	 NVog2eIFN6dwvDAVXRUWSDgA5h7vzy5bhenCluSnUW4PTsw9I8WE1wXVQYIcoFf6qP
-	 VgisT9RcjP2vYd2flDbmbIJWsTPCFtZZXZpIOBMA=
+	by mail.kernel.org (Postfix) with ESMTP id 028A720684
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 15:31:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729043AbgAWPat (ORCPT
+        id S1728792AbgAWPba (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 10:30:49 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:39440 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727278AbgAWPas (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 10:30:48 -0500
-Received: by mail-ot1-f65.google.com with SMTP id 77so3095969oty.6;
-        Thu, 23 Jan 2020 07:30:48 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=dJBGS4e0jWaAWLLcuuHxgK6M1UmjccQT8Vf0obsUZeE=;
-        b=Y9yFrQ9PyknN7p4NsknuKCrrfpYSDR+Zh0lFxOVz2yG7Om5A0Kj/VWxWzH6jQxO9oG
-         UsCpKRTzBmzz/CPGVStPWJDnVYsEhleBaKSqzM4egLuFnX1alArFvhDLE8e0zKlvcQHV
-         g4dYV31ZIeIn2qKQae3HJKqiA0ovAWmILIGlZyv2E0PIInZ3ixwXyD14oVFT7kAvnVIZ
-         DdcEICmv+GWfXyku8BrnAvsoJytM+eF4CyD5IwgUGykeFHpX/FemNZM/rW5rss+D0kTL
-         0BBqNrmpuZIc3zKDL2c1NEcUao/kEoPaFaH9YCMEkqYW4w4qyQyxrbgjkv2MhzeQEScq
-         hmCA==
-X-Gm-Message-State: APjAAAUCDdG4VFagodb9UERtUkoY4B2jKrR8InBnnRN3AMAbpCgMzjkj
-        lyMdQDAyFfWGhjMn+XRFLC48a+kS3bLcIBFHK0c=
-X-Google-Smtp-Source: APXvYqw6IP+WgUGRKWpK62i5avBtF0C6itxi/KoBk1PUkIzbGmaBwLHz4G94k4M9YBc6eq2FJByHi9fUpk84qYEfUy8=
-X-Received: by 2002:a05:6830:1e67:: with SMTP id m7mr11717398otr.262.1579793447589;
- Thu, 23 Jan 2020 07:30:47 -0800 (PST)
+        Thu, 23 Jan 2020 10:31:30 -0500
+Received: from ns.iliad.fr ([212.27.33.1]:56996 "EHLO ns.iliad.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726232AbgAWPba (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jan 2020 10:31:30 -0500
+Received: from ns.iliad.fr (localhost [127.0.0.1])
+        by ns.iliad.fr (Postfix) with ESMTP id 23CB5218D8;
+        Thu, 23 Jan 2020 16:31:28 +0100 (CET)
+Received: from [192.168.108.51] (freebox.vlq16.iliad.fr [213.36.7.13])
+        by ns.iliad.fr (Postfix) with ESMTP id 0AFC31FF32;
+        Thu, 23 Jan 2020 16:31:28 +0100 (CET)
+Subject: Re: [PATCH v2 1/2] i2c: Enable compile testing for some of drivers
+To:     Krzysztof Kozlowski <krzk@kernel.org>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Jean Delvare <jdelvare@suse.de>,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        I2C <linux-i2c@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Greg KH <greg@kroah.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+References: <1578384779-15487-1-git-send-email-krzk@kernel.org>
+From:   Marc Gonzalez <marc.w.gonzalez@free.fr>
+Message-ID: <2ef0dfb9-6f25-29c7-153b-3e4dfa15df8e@free.fr>
+Date:   Thu, 23 Jan 2020 16:31:27 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-References: <20200122151617.531-1-ggherdovich@suse.cz>
-In-Reply-To: <20200122151617.531-1-ggherdovich@suse.cz>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Thu, 23 Jan 2020 16:30:36 +0100
-Message-ID: <CAJZ5v0gO18Oz4qvf3L9LfAX+1ww2XTeP_o_3WixYixB9d=s8Wg@mail.gmail.com>
-Subject: Re: [PATCH v5 0/6] Add support for frequency invariance for (some) x86
-To:     Giovanni Gherdovich <ggherdovich@suse.cz>
-Cc:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Borislav Petkov <bp@suse.de>, Len Brown <lenb@kernel.org>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Matt Fleming <matt@codeblueprint.co.uk>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Paul Turner <pjt@google.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Quentin Perret <qperret@qperret.net>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Doug Smythies <dsmythies@telus.net>,
-        Ionela Voinescu <ionela.voinescu@arm.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1578384779-15487-1-git-send-email-krzk@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Virus-Scanned: ClamAV using ClamSMTP ; ns.iliad.fr ; Thu Jan 23 16:31:28 2020 +0100 (CET)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 22, 2020 at 4:10 PM Giovanni Gherdovich <ggherdovich@suse.cz> wrote:
->
-> v4 at https://lore.kernel.org/lkml/20191113124654.18122-1-ggherdovich@suse.cz/
->
-> Changes wrt v4:
->
-> - Removing conditional access in the function arch_scale_freq_capacity()
->   and initialize arch_freq_scale to 1024 to account for when freq
->   invariance isn't enabled (Ionela V.)
-> - In case the max frequency can't be read in MSRs, do not enable frequency
->   invariance at all (Ionela V., Peter Z.).
-> - Renames:
->     variables:
->       arch_cpu_freq  -> arch_freq_scale
->       arch_max_freq  -> arch_max_freq_ratio
->       ... and others
->     functions:
->       init_scale_freq  -> init_counter_refs
->       set_cpu_max_freq -> init_freq_invariance
->       {core,skx,knl...}_set_cpu_max_freq  -> {core,skx,knl...}_set_max_freq_ratio
->       ... and others
-> - Use the same function for parsing SKX and GLM registers (Peter Z.)
-> - Pass a parameter to the function parsing KNL registers (Peter Z.)
-> - Fix a bug whereby refs to [am]perf were initialized only on cpu #0
->
-> - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-> Cover Letter from v4:
->
-> v3 at https://lore.kernel.org/lkml/20191111180549.12166-1-ggherdovich@suse.cz/
->
-> Changes wrt v3:
->
-> - Add definition of function set_arch_max_freq if !CONFIG_SMP
->
-> - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-> Cover Letter from v3:
->
-> v2 at https://lore.kernel.org/lkml/20191002122926.385-1-ggherdovich@suse.cz/
->
-> Changes wrt v2:
->
-> - Removing the tick_disable mechanism. Frequency scale-invariance isn't
->   just about helping schedutil choose better frequencies, but also
->   providing the scheduler load balancer with better metrics. All users of
->   PELT signals benefit from this feature. The tick_disable patch disabled
->   frequency invariant calculation when a specific driver is in use
->   (intel_pstate in active mode).
->
-> - static_branch_enable(&arch_scale_freq_key) is now called earlier, right
->   after we learn that X86_FEATURE_APERFMPERF is available. Previously Peter
->   Z. commented "if we can't tell the max_freq we don't want to use the
->   invariant stuff.". I've decided to do it differently: if we can't tell
->   the max_freq, then it's because the CPU encodes max_freq in MSRs in a way
->   this patch doesn't understand, and we assume max_p is the max_freq which
->   seems like a safe bet. As a reminder, max_freq=max_p is encoded by
->   setting arch_max_freq=1024 as default value. I'm open to feedback.
->
-> - Refactoring the switch case statement in set_cpu_max_freq() as Rafael
->   W. Now the first patch doesn't hint at what the following patch will
->   bring along.
->
-> - Handling the case were turbo is disabled at runtime and a _PPC ACPI
->   notification is issued, as requested by Rafael W. This happens eg. when
->   some laptop model is disconnected from AC. (Patch #6)
->
-> - Handling all Intel x86_64 micro-arches.
->
-> - A note for Srinivas P., who expressed concern for Atoms: on Atom CPUs the
->   max_freq is set to the highest turbo level, as a power-efficiency
->   oriented measure. In this way the ratio curr_freq/max_freq tends to be
->   lower, PELT signals are consequently lower, and schedutil doesn't push
->   too hard on speed. (Patches #4 and #5).
->
-> - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-> Cover Letter from v2:
->
-> v1 at https://lore.kernel.org/lkml/20190909024216.5942-1-ggherdovich@suse.cz/
->
-> Changes wrt v1:
->
-> - add x86-specific implementation of arch_scale_freq_invariant() using a
->   static key that checks for the availability of APERF and MPERF
-> - refer to GOLDMONT_D instead of GOLDMONT_X, according to recent rename
-> - set arch_cpu_freq to 1024 from x86_arch_scale_freq_tick_disable() to prevent
->   PELT from being fed stale data
->
-> - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-> Cover Letter from v1:
->
-> This is a resend with of Peter Zijlstra's patch to support frequency
-> scale-invariance on x86 from May 2018 [see 1]. I've added some modifications
-> and included performance test results. If Peter doesn't mind, I'm slapping my
-> name on it :)
->
-> The changes from Peter's original implementation are:
->
-> 1) normalizing against the 4-cores turbo level instead or 1-core turbo
-> 2) removing the run-time search for when the above value isn't found in the
->    various Intel MSRs -- the base frequency value is taken in that case.
->
-> The section "4. KNOWN LIMITATIONS" in the first patch commit message addresses
-> the reason why this approach was dropped back in 2018, and explains that the
-> performance gains outweight that issue.
->
-> The second patch from Srinivas is taken verbatim from the May 2018 submission
-> as it still applies.
->
-> I apologies for the length of patch #1 commit message; I've made a table of
-> contents with summaries of each section that should make easier to skim
-> through the content.
->
-> This submission incorporates the feedback and requests for additional tests
-> received during the presentation made at OSPM 2019 in Pisa three months ago.
->
-> [1] https://lore.kernel.org/lkml/20180516044911.28797-2-srinivas.pandruvada@linux.intel.com/
->
-> Giovanni Gherdovich (6):
->   x86,sched: Add support for frequency invariance
->   x86,sched: Add support for frequency invariance on SKYLAKE_X
->   x86,sched: Add support for frequency invariance on XEON_PHI_KNL/KNM
->   x86,sched: Add support for frequency invariance on ATOM_GOLDMONT*
->   x86,sched: Add support for frequency invariance on ATOM
->   x86: intel_pstate: handle runtime turbo disablement/enablement in
->     freq. invariance
->
->  arch/x86/include/asm/topology.h |  25 ++++
->  arch/x86/kernel/smpboot.c       | 290 +++++++++++++++++++++++++++++++++++++++-
->  drivers/cpufreq/intel_pstate.c  |   1 +
->  kernel/sched/core.c             |   1 +
->  kernel/sched/sched.h            |   7 +
->  5 files changed, 323 insertions(+), 1 deletion(-)
->
+On 07/01/2020 09:12, Krzysztof Kozlowski wrote:
 
-All looks good to me, so
+> Some of the I2C bus drivers can be compile tested to increase build
+> coverage.  This requires also:
+> 1. Adding dependencies on COMMON_CLK for BCM2835 and Meson I2C
+>    controllers,
+> 2. Adding 'if' conditional to 'default y' so they will not get enabled
+>    by default on all other architectures,
+> 3. Limiting few compile test options to supported architectures (which
+>    provide the readsX()/writesX() primitives).
+> 
+>  config I2C_BCM_KONA
+>  	tristate "BCM Kona I2C adapter"
+> -	depends on ARCH_BCM_MOBILE
+> -	default y
+> +	depends on ARCH_BCM_MOBILE || COMPILE_TEST
+> +	default y if ARCH_BCM_MOBILE
 
-Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Why not the simpler:
+default ARCH_BCM_MOBILE
 
-for the whole series (and I'm assuming that it will go it through the tip tree).
-
-Thanks!
+Regards.
