@@ -2,132 +2,353 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57485C32771
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 02:26:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F13EC33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 02:26:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32D5324683
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 02:26:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1BEA324676
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 02:26:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579746411;
+	bh=G4bif5h0EdR1HBCRuvWeEfE18dKonKQ9YP77YLj7Ge8=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=uYElU9HgdAaLbgJzgJqOaXDCbdhAVpiXoEuEhtfoCNdoWw/C8T+Hd2wjxhHyw+xmS
+	 5Uhvo6iinvBRZYsLbQjo/elOnhI1QrP9uagl9ptNX8oSmt+iMoJGkg+jlgbyrbd174
+	 Pj0xkp3CK+9SyLiPmiVvKqWez8AZaNarapbjk68Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726204AbgAWC0U (ORCPT
+        id S1726621AbgAWC0u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 21:26:20 -0500
-Received: from mga12.intel.com ([192.55.52.136]:21435 "EHLO mga12.intel.com"
+        Wed, 22 Jan 2020 21:26:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54136 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725933AbgAWC0U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 21:26:20 -0500
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Jan 2020 18:26:20 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,352,1574150400"; 
-   d="scan'208";a="427615570"
-Received: from hao-dev.bj.intel.com (HELO localhost) ([10.238.157.65])
-  by fmsmga006.fm.intel.com with ESMTP; 22 Jan 2020 18:26:17 -0800
-Date:   Thu, 23 Jan 2020 10:05:56 +0800
-From:   Wu Hao <hao.wu@intel.com>
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     will@kernel.org, mdf@kernel.org, mark.rutland@arm.com,
-        linux-fpga@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-api@vger.kernel.org, atull@kernel.org,
-        Luwei Kang <luwei.kang@intel.com>,
-        Xu Yilun <yilun.xu@intel.com>
-Subject: Re: [RESEND Patch v6 2/2] fpga: dfl: fme: add performance reporting
- support
-Message-ID: <20200123020556.GA9716@hao-dev>
-References: <1579230628-22243-1-git-send-email-hao.wu@intel.com>
- <1579230628-22243-3-git-send-email-hao.wu@intel.com>
- <20200122141026.GA10399@kroah.com>
+        id S1725933AbgAWC0t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 21:26:49 -0500
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2AD522465B;
+        Thu, 23 Jan 2020 02:26:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579746408;
+        bh=G4bif5h0EdR1HBCRuvWeEfE18dKonKQ9YP77YLj7Ge8=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=IjVuUTHeQGLlDF3gJGX8HxUwf6+pNC1GN0oauo/+p+MNRH1ex5lsth1fpjhNRmb+r
+         yGErdJqkyyNZQH4d6XszTd8kJyRsz76wN10gicXg1atDi8AQ7uCZy4E+xRf5ub+mSH
+         3EgiWmtvtWpH34x86rifB2ZfqDBOxQtkoaqUPVpA=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 4EAA2352271D; Wed, 22 Jan 2020 18:26:47 -0800 (PST)
+Date:   Wed, 22 Jan 2020 18:26:47 -0800
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Brendan Gregg <brendan.d.gregg@gmail.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>, bpf@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        "David S . Miller" <davem@davemloft.net>, joel@joelfernandes.org,
+        "Naveen N . Rao" <naveen.n.rao@linux.ibm.com>,
+        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>
+Subject: Re: [RFT PATCH 04/13] kprobes: Make optimizer delay to 1 second
+Message-ID: <20200123022647.GO2935@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <157918584866.29301.6941815715391411338.stgit@devnote2>
+ <157918589199.29301.4419459150054220408.stgit@devnote2>
+ <20200121192905.0f001c61@gandalf.local.home>
+ <20200122162317.0299cf722dd618147d97e89c@kernel.org>
+ <20200122071115.28e3c763@gandalf.local.home>
+ <20200122221240.cef447446785f46862fee97a@kernel.org>
+ <20200122165432.GH2935@paulmck-ThinkPad-P72>
+ <20200123103334.6e1821625643d007297ecf94@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200122141026.GA10399@kroah.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20200123103334.6e1821625643d007297ecf94@kernel.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 22, 2020 at 03:10:26PM +0100, Greg KH wrote:
-> On Fri, Jan 17, 2020 at 11:10:28AM +0800, Wu Hao wrote:
-> > +static const struct attribute_group fme_perf_fabric_events_group = {
-> > +	.name = "events",
-> > +	.attrs = fme_perf_fabric_events_attrs,
-> > +	.is_visible = fme_perf_fabric_events_visible,
-> > +};
-> > +
+On Thu, Jan 23, 2020 at 10:33:34AM +0900, Masami Hiramatsu wrote:
+> On Wed, 22 Jan 2020 08:54:32 -0800
+> "Paul E. McKenney" <paulmck@kernel.org> wrote:
 > 
-> I don't see any Documentation/ABI/ entries for all of these new files.
-> Please properly document them so we know how to review this.
-
-Hi Greg,
-
-Thanks a lot for the review. Actually all the sysfs entries under events
-are perf monitoring events following the same format documented in 
-"Documentation/ABI/testing/sysfs-bus-event_source-devices-events" and
-we added some description in our fpga documentation in patch #1.
-
-Yes, I can add something in ABI directly as well in the next version.
-I pasted related descriptions below. I hope this won't block review.
-
-Thank you very much!
-Hao
-
-
-From Documentation/ABI/testing/sysfs-bus-event_source-devices-events
-
-What: /sys/bus/event_source/devices/<pmu>/events/<event>
-Date: 2014/02/24
-Contact:        Linux kernel mailing list <linux-kernel@vger.kernel.org>
-Description:    Per-pmu performance monitoring events specific to the running system
-
-                Each file (except for some of those with a '.' in them, '.unit'
-                and '.scale') in the 'events' directory describes a single
-                performance monitoring event supported by the <pmu>. The name
-                of the file is the name of the event.
-
-                File contents:
-
-                        <term>[=<value>][,<term>[=<value>]]...
-
-                Where <term> is one of the terms listed under
-                /sys/bus/event_source/devices/<pmu>/format/ and <value> is
-                a number is base-16 format with a '0x' prefix (lowercase only).
-                If a <term> is specified alone (without an assigned value), it
-                is implied that 0x1 is assigned to that <term>.
-
-                Examples (each of these lines would be in a seperate file):
-
-                        event=0x2abc
-                        event=0x423,inv,cmask=0x3
-                        domain=0x1,offset=0x8,starting_index=0xffff
-                        domain=0x1,offset=0x8,core=?
-
-                Each of the assignments indicates a value to be assigned to a
-                particular set of bits (as defined by the format file
-                corresponding to the <term>) in the perf_event structure passed
-                to the perf_open syscall.
-
-                In the case of the last example, a value replacing "?" would
-                need to be provided by the user selecting the particular event.
-                This is referred to as "event parameterization". Event
-                parameters have the format 'param=?'.
-
-From Documentation/fpga/dfl.rst added by patch #1.
-
-"
-The "events" directory describes the configuration templates for all available
-events which can be used with perf tool directly. For example, fab_mmio_read
-has the configuration "event=0x06,evtype=0x02,portid=0xff", which shows this
-event belongs to fabric type (0x02), the local event id is 0x06 and it is for
-overall monitoring (portid=0xff).
-"
-
+> > On Wed, Jan 22, 2020 at 10:12:40PM +0900, Masami Hiramatsu wrote:
+> > > On Wed, 22 Jan 2020 07:11:15 -0500
+> > > Steven Rostedt <rostedt@goodmis.org> wrote:
+> > > 
+> > > > On Wed, 22 Jan 2020 16:23:17 +0900
+> > > > Masami Hiramatsu <mhiramat@kernel.org> wrote:
+> > > > 
+> > > > > On Tue, 21 Jan 2020 19:29:05 -0500
+> > > > > Steven Rostedt <rostedt@goodmis.org> wrote:
+> > > > > 
+> > > > > > On Thu, 16 Jan 2020 23:44:52 +0900
+> > > > > > Masami Hiramatsu <mhiramat@kernel.org> wrote:
+> > > > > >   
+> > > > > > > Since the 5 jiffies delay for the optimizer is too
+> > > > > > > short to wait for other probes, make it longer,
+> > > > > > > like 1 second.  
+> > > > > > 
+> > > > > > Hi Masami,
+> > > > > > 
+> > > > > > Can you explain more *why* 5 jiffies is too short.  
+> > > > > 
+> > > > > Yes, I had introduced this 5 jiffies delay for multiple probe registration
+> > > > > and unregistration like systemtap, which will use array-based interface to
+> > > > > register/unregister. In that case, 5 jiffies will be enough for the delay
+> > > > > to wait for other kprobe registration/unregsitration.
+> > > > > 
+> > > > > However, since perf and ftrace register/unregister probes one-by-one with
+> > > > > RCU synchronization interval, the optimizer will be started before
+> > > > > finishing to register/unregister all probes.
+> > > > > And the optimizer locks kprobe_mutex a while -- RCU-tasks synchronization.
+> > > > > Since the kprobe_mutex is also involved in disabling kprobes, this also
+> > > > > stops probe-event disabling.
+> > > > > 
+> > > > > Maybe 5 jiffies is enough for adding/removing a few probe events, but
+> > > > > not enough for dozens of probe events.
+> > > > > 
+> > > > 
+> > > > Perhaps we should have a mechanism that can detect new probes being
+> > > > added, and just continue to delay the optimization, instead of having
+> > > > some arbitrary delay.
+> > > 
+> > > Yes, that is what [03/13] does :) 
+> > > Anyway, it seems that the RCU-synchronization takes more than 5 jiffies.
+> > > And in that case, [03/13] still doesn't work. That's why I added this patch
+> > > after that.
+> > 
+> > If the RCU synchronization is synchronize_rcu_tasks(), then yes, it
+> > will often take way more than 5 jiffies.  If it is synchronize_rcu(),
+> > 5 jiffies would not be unusual, especially on larger systems.
+> > But in the case of synchronize_rcu(), one option is to instead use
+> > synchronize_rcu_expedited().  It is not clear that this last is really
+> > justified in this case, but figured it might be worth mentioning.
 > 
-> thanks,
+> It is synchronize_rcu(), but it seems sometimes it is called several
+> times on one probe disabling.
+
+OK, good to know.
+
+> Anyway, without this update, I added a printk to count optimizer
+> queue-length and found that all optimizer call with a single kprobe
+> on the quenes. I think this depends on the machine, but as far as
+> I tested on 8-threads qemu x86, shows this result...
 > 
-> greg k-h
+> Probes: 256 kprobe_events
+> Enable events
+> real	0m 0.02s
+> user	0m 0.00s
+> sys	0m 0.02s
+> [   17.730548] Queue-update: 180, skipped, Total Queued: 180
+> [   17.739445] Queue-update: 1, go, Total Queued: 180
+> Disable events
+> [   19.744634] Queue-update: 1, go, Total Queued: 1
+> [   19.770743] Queue-update: 1, go, Total Queued: 1
+> [   19.886625] Queue-update: 1, go, Total Queued: 1
+> [   20.006631] Queue-update: 1, go, Total Queued: 1
+> [   20.126628] Queue-update: 1, go, Total Queued: 1
+> [   20.246620] Queue-update: 1, go, Total Queued: 1
+> [   20.374665] Queue-update: 1, go, Total Queued: 1
+> [   20.486617] Queue-update: 1, go, Total Queued: 1
+> [   20.606608] Queue-update: 1, go, Total Queued: 1
+> [   20.726596] Queue-update: 1, go, Total Queued: 1
+> [   20.846608] Queue-update: 1, go, Total Queued: 1
+> [   20.966723] Queue-update: 1, go, Total Queued: 1
+> [   21.086611] Queue-update: 1, go, Total Queued: 1
+> [   21.206605] Queue-update: 1, go, Total Queued: 1
+> [   21.326603] Queue-update: 1, go, Total Queued: 1
+> [   21.462609] Queue-update: 1, go, Total Queued: 1
+> [   21.566755] Queue-update: 1, go, Total Queued: 1
+> [   21.686606] Queue-update: 1, go, Total Queued: 1
+> [   21.806611] Queue-update: 1, go, Total Queued: 1
+> [   21.926609] Queue-update: 1, go, Total Queued: 1
+> [   22.046621] Queue-update: 1, go, Total Queued: 1
+> [   22.166729] Queue-update: 1, go, Total Queued: 1
+> [   22.302609] Queue-update: 1, go, Total Queued: 1
+> [   22.510627] Queue-update: 1, go, Total Queued: 1
+> [   22.536638] Queue-update: 1, go, Total Queued: 1
+> [   22.654618] Queue-update: 1, go, Total Queued: 1
+> [   22.774643] Queue-update: 1, go, Total Queued: 1
+> [   22.902609] Queue-update: 1, go, Total Queued: 1
+> [   23.022608] Queue-update: 1, go, Total Queued: 1
+> [   23.158606] Queue-update: 1, go, Total Queued: 1
+> [   23.254618] Queue-update: 1, go, Total Queued: 1
+> [   23.374647] Queue-update: 1, go, Total Queued: 1
+> [   23.494605] Queue-update: 1, go, Total Queued: 1
+> [   23.614610] Queue-update: 1, go, Total Queued: 1
+> [   23.734606] Queue-update: 1, go, Total Queued: 1
+> [   23.854609] Queue-update: 1, go, Total Queued: 1
+> [   23.974615] Queue-update: 1, go, Total Queued: 1
+> [   24.094609] Queue-update: 1, go, Total Queued: 1
+> [   24.230607] Queue-update: 1, go, Total Queued: 1
+> [   24.342625] Queue-update: 1, go, Total Queued: 1
+> [   24.475478] Queue-update: 1, go, Total Queued: 1
+> [   24.574554] Queue-update: 1, go, Total Queued: 1
+> [   24.694605] Queue-update: 1, go, Total Queued: 1
+> [   24.814585] Queue-update: 1, go, Total Queued: 1
+> [   24.934591] Queue-update: 1, go, Total Queued: 1
+> [   25.054614] Queue-update: 1, go, Total Queued: 1
+> [   25.174628] Queue-update: 1, go, Total Queued: 1
+> [   25.294637] Queue-update: 1, go, Total Queued: 1
+> [   25.414620] Queue-update: 1, go, Total Queued: 1
+> [   25.534553] Queue-update: 1, go, Total Queued: 1
+> [   25.654610] Queue-update: 1, go, Total Queued: 1
+> [   25.774627] Queue-update: 1, go, Total Queued: 1
+> [   25.894609] Queue-update: 1, go, Total Queued: 1
+> [   26.030548] Queue-update: 1, go, Total Queued: 1
+> [   26.134626] Queue-update: 1, go, Total Queued: 1
+> [   26.254620] Queue-update: 1, go, Total Queued: 1
+> [   26.373603] Queue-update: 1, go, Total Queued: 1
+> [   26.502606] Queue-update: 1, go, Total Queued: 1
+> [   26.614607] Queue-update: 1, go, Total Queued: 1
+> [   26.734610] Queue-update: 1, go, Total Queued: 1
+> [   26.854620] Queue-update: 1, go, Total Queued: 1
+> [   26.974660] Queue-update: 1, go, Total Queued: 1
+> [   27.094620] Queue-update: 1, go, Total Queued: 1
+> [   27.214596] Queue-update: 1, go, Total Queued: 1
+> [   27.334640] Queue-update: 1, go, Total Queued: 1
+> [   27.494606] Queue-update: 1, go, Total Queued: 1
+> [   27.574703] Queue-update: 1, go, Total Queued: 1
+> [   27.694609] Queue-update: 1, go, Total Queued: 1
+> [   27.814607] Queue-update: 1, go, Total Queued: 1
+> [   27.934631] Queue-update: 1, go, Total Queued: 1
+> [   28.054606] Queue-update: 1, go, Total Queued: 1
+> [   28.182685] Queue-update: 1, go, Total Queued: 1
+> [   28.318568] Queue-update: 1, go, Total Queued: 1
+> [   28.422610] Queue-update: 1, go, Total Queued: 1
+> [   28.534621] Queue-update: 1, go, Total Queued: 1
+> [   28.654618] Queue-update: 1, go, Total Queued: 1
+> [   28.774622] Queue-update: 1, go, Total Queued: 1
+> [   28.894609] Queue-update: 1, go, Total Queued: 1
+> [   29.022609] Queue-update: 1, go, Total Queued: 1
+> [   29.150615] Queue-update: 1, go, Total Queued: 1
+> [   29.262610] Queue-update: 1, go, Total Queued: 1
+> [   29.374621] Queue-update: 1, go, Total Queued: 1
+> [   29.494606] Queue-update: 1, go, Total Queued: 1
+> [   29.614616] Queue-update: 1, go, Total Queued: 1
+> [   29.734607] Queue-update: 1, go, Total Queued: 1
+> [   29.854601] Queue-update: 1, go, Total Queued: 1
+> [   29.974610] Queue-update: 1, go, Total Queued: 1
+> [   30.094625] Queue-update: 1, go, Total Queued: 1
+> [   30.214606] Queue-update: 1, go, Total Queued: 1
+> [   30.334602] Queue-update: 1, go, Total Queued: 1
+> [   30.454634] Queue-update: 1, go, Total Queued: 1
+> [   30.574606] Queue-update: 1, go, Total Queued: 1
+> [   30.694589] Queue-update: 1, go, Total Queued: 1
+> [   30.814613] Queue-update: 1, go, Total Queued: 1
+> [   30.934602] Queue-update: 1, go, Total Queued: 1
+> [   31.054605] Queue-update: 1, go, Total Queued: 1
+> [   31.182596] Queue-update: 1, go, Total Queued: 1
+> [   31.318621] Queue-update: 1, go, Total Queued: 1
+> [   31.414615] Queue-update: 1, go, Total Queued: 1
+> [   31.534610] Queue-update: 1, go, Total Queued: 1
+> [   31.670608] Queue-update: 1, go, Total Queued: 1
+> [   31.774626] Queue-update: 1, go, Total Queued: 1
+> [   31.894607] Queue-update: 1, go, Total Queued: 1
+> [   32.014609] Queue-update: 1, go, Total Queued: 1
+> [   32.134607] Queue-update: 1, go, Total Queued: 1
+> [   32.254611] Queue-update: 1, go, Total Queued: 1
+> [   32.374608] Queue-update: 1, go, Total Queued: 1
+> [   32.494619] Queue-update: 1, go, Total Queued: 1
+> [   32.614607] Queue-update: 1, go, Total Queued: 1
+> [   32.734612] Queue-update: 1, go, Total Queued: 1
+> [   32.862616] Queue-update: 1, go, Total Queued: 1
+> [   32.974620] Queue-update: 1, go, Total Queued: 1
+> [   33.110609] Queue-update: 1, go, Total Queued: 1
+> [   33.214609] Queue-update: 1, go, Total Queued: 1
+> [   33.342611] Queue-update: 1, go, Total Queued: 1
+> [   33.454607] Queue-update: 1, go, Total Queued: 1
+> [   33.574611] Queue-update: 1, go, Total Queued: 1
+> [   33.694619] Queue-update: 1, go, Total Queued: 1
+> [   33.814607] Queue-update: 1, go, Total Queued: 1
+> [   33.950614] Queue-update: 1, go, Total Queued: 1
+> [   34.062609] Queue-update: 1, go, Total Queued: 1
+> [   34.174609] Queue-update: 1, go, Total Queued: 1
+> [   34.294619] Queue-update: 1, go, Total Queued: 1
+> [   34.430533] Queue-update: 1, go, Total Queued: 1
+> [   34.534594] Queue-update: 1, go, Total Queued: 1
+> [   34.654605] Queue-update: 1, go, Total Queued: 1
+> [   34.790596] Queue-update: 1, go, Total Queued: 1
+> [   34.902611] Queue-update: 1, go, Total Queued: 1
+> [   35.014630] Queue-update: 1, go, Total Queued: 1
+> [   35.134634] Queue-update: 1, go, Total Queued: 1
+> [   35.262608] Queue-update: 1, go, Total Queued: 1
+> [   35.374634] Queue-update: 1, go, Total Queued: 1
+> [   35.494617] Queue-update: 1, go, Total Queued: 1
+> [   35.622608] Queue-update: 1, go, Total Queued: 1
+> [   35.742610] Queue-update: 1, go, Total Queued: 1
+> [   35.854572] Queue-update: 1, go, Total Queued: 1
+> [   35.982596] Queue-update: 1, go, Total Queued: 1
+> [   36.094603] Queue-update: 1, go, Total Queued: 1
+> [   36.222612] Queue-update: 1, go, Total Queued: 1
+> [   36.334610] Queue-update: 1, go, Total Queued: 1
+> [   36.454619] Queue-update: 1, go, Total Queued: 1
+> [   36.574619] Queue-update: 1, go, Total Queued: 1
+> [   36.694643] Queue-update: 1, go, Total Queued: 1
+> [   36.814614] Queue-update: 1, go, Total Queued: 1
+> [   36.934610] Queue-update: 1, go, Total Queued: 1
+> [   37.062609] Queue-update: 1, go, Total Queued: 1
+> [   37.198611] Queue-update: 1, go, Total Queued: 1
+> [   37.294618] Queue-update: 1, go, Total Queued: 1
+> [   37.414618] Queue-update: 1, go, Total Queued: 1
+> [   37.534595] Queue-update: 1, go, Total Queued: 1
+> [   37.662594] Queue-update: 1, go, Total Queued: 1
+> [   37.774610] Queue-update: 1, go, Total Queued: 1
+> [   37.894618] Queue-update: 1, go, Total Queued: 1
+> [   38.014619] Queue-update: 1, go, Total Queued: 1
+> [   38.142612] Queue-update: 1, go, Total Queued: 1
+> [   38.254609] Queue-update: 1, go, Total Queued: 1
+> [   38.374619] Queue-update: 1, go, Total Queued: 1
+> [   38.502481] Queue-update: 1, go, Total Queued: 1
+> [   38.614596] Queue-update: 1, go, Total Queued: 1
+> [   38.734597] Queue-update: 1, go, Total Queued: 1
+> [   38.854606] Queue-update: 1, go, Total Queued: 1
+> [   38.974620] Queue-update: 1, go, Total Queued: 1
+> [   39.094617] Queue-update: 1, go, Total Queued: 1
+> [   39.222597] Queue-update: 1, go, Total Queued: 1
+> [   39.334610] Queue-update: 1, go, Total Queued: 1
+> [   39.454609] Queue-update: 1, go, Total Queued: 1
+> [   39.574633] Queue-update: 1, go, Total Queued: 1
+> [   39.694611] Queue-update: 1, go, Total Queued: 1
+> [   39.814608] Queue-update: 1, go, Total Queued: 1
+> [   39.934610] Queue-update: 1, go, Total Queued: 1
+> [   40.054621] Queue-update: 1, go, Total Queued: 1
+> [   40.174611] Queue-update: 1, go, Total Queued: 1
+> [   40.297471] Queue-update: 1, go, Total Queued: 1
+> [   40.414504] Queue-update: 1, go, Total Queued: 1
+> [   40.534601] Queue-update: 1, go, Total Queued: 1
+> [   40.654611] Queue-update: 1, go, Total Queued: 1
+> [   40.774609] Queue-update: 1, go, Total Queued: 1
+> [   40.894628] Queue-update: 1, go, Total Queued: 1
+> [   41.014608] Queue-update: 1, go, Total Queued: 1
+> [   41.135594] Queue-update: 1, go, Total Queued: 1
+> real	0m 21.40s
+> user	0m 0.00s
+> sys	0m 0.04s
+
+So 21.4s/256 = 84 milliseconds per event disable, correct?
+
+It might be worth trying synchronize_rcu_expedited() just as an experiment
+to see if it speeds things up significantly.
+
+							Thanx, Paul
+
+> Remove events
+> real	0m 2.14s
+> user	0m 0.00s
+> sys	0m 0.04s
+> 
+> 
+> Thank you,
+> 
+> 
+> -- 
+> Masami Hiramatsu <mhiramat@kernel.org>
