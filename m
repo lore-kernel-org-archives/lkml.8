@@ -2,175 +2,131 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 700E5C33CAA
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 08:50:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CDBEC33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 08:50:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 419822467B
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 08:50:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579769420;
-	bh=WmUzWil0Ci7WqA90ZgpGxlZoIZbsqRT3FGXduYBahT0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=bvP7gP5gJWdTTLTxNhs8gSfjdqimRzuRe3HHzNePtl3ykkg9Zzt/FTf1Wd4amt3tr
-	 wfDw6RQy2GWk/2CpMbKwkZF6/lvlKBNeTEuhpCuGmtYLB9MaJ4qQJGy/1hQY3kvx+A
-	 MJQzkf27XsNhSpbdh0/81mNthiswMecLrPN0ATX4=
+	by mail.kernel.org (Postfix) with ESMTP id 024F72087E
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 08:50:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Bcdjx5nP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726796AbgAWIuT (ORCPT
+        id S1728809AbgAWIut (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 03:50:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57292 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725785AbgAWIuT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 03:50:19 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 373E32087E;
-        Thu, 23 Jan 2020 08:50:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579769417;
-        bh=WmUzWil0Ci7WqA90ZgpGxlZoIZbsqRT3FGXduYBahT0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=U8WlXIzR56OYhxv2Xx5yrxdxxXUXq0Z5QV8Sj8YfBZOSvUanc1oF3VjEJ5kjVmC/w
-         oatpmjsBUsvscfiYTHxSP1QvqCqMn8id2khfnQSZn55MMYAku3H3+EY0hNrS+ZNqWn
-         bo0j7SXyjw1muS5+K1yflfMZFlSVVEQIfXHSy8LA=
-Date:   Thu, 23 Jan 2020 09:50:15 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Jason Baron <jbaron@akamai.com>
-Cc:     Randy Dunlap <rdunlap@infradead.org>,
-        Will Deacon <will@kernel.org>, linux-kernel@vger.kernel.org,
-        kernel-team@android.com
-Subject: [PATCH v4] dynamic_debug: allow to work if debugfs is disabled
-Message-ID: <20200123085015.GA436361@kroah.com>
-References: <20200122074343.GA2099098@kroah.com>
- <20200122080352.GA15354@willie-the-truck>
- <20200122081205.GA2227985@kroah.com>
- <20200122135352.GA9458@kroah.com>
- <8d68b75c-05b8-b403-0a10-d17b94a73ba7@akamai.com>
- <20200122192940.GA88549@kroah.com>
- <20200122193118.GA88722@kroah.com>
- <ef1172ac-ea78-146e-575e-93e2d65b4606@infradead.org>
- <20200123084847.GA435637@kroah.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200123084847.GA435637@kroah.com>
+        Thu, 23 Jan 2020 03:50:49 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:52577 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726194AbgAWIut (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jan 2020 03:50:49 -0500
+Received: by mail-wm1-f68.google.com with SMTP id p9so1642932wmc.2;
+        Thu, 23 Jan 2020 00:50:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id;
+        bh=ocf97TvHPaFYNxscXDRJHUBlARjdRQtQP9awJzp3ggM=;
+        b=Bcdjx5nP2PyF1pD8yL4cLQIT8pTkxYXjeP4r69kS+xEJBu1ilgChEknhOfsLIpb/m1
+         uYUwh2rCIbs01lUBhwr9Ou1/mCfI0nKcdIrUIB2LgaDUPXETNPOZkVl9LFWp7/DHO28m
+         W4iygarapFuxapjwDs7UG+d7Fox3AnM9UMgjmLwHF4ALPAWBMFP1VyRW/p7TKSafRqOB
+         GVTkXg7fZCad8ImlnWFtG9YHq7koXjsBLfQlJo7I01WC2kYc5if3fkIfkk8g6RommRYQ
+         pu5M6GaJsOV0WH1QBgMfYxS35e3Tnt5AvAIcszGPVbJMHyG6oGdISsmqZ+k06tEgcIF4
+         vogw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
+        bh=ocf97TvHPaFYNxscXDRJHUBlARjdRQtQP9awJzp3ggM=;
+        b=M1PIcahXXPQaXEXC9qQnvv73hdFoNPMNmhWBGb3MQ/DBhV3YaO154wXXYLddtz76ZL
+         o2Ioqg3yGv13cPKO0BYzj82sgE2NOsLeQ13M832ocjpRPcf61WiM8KWRe1vBRnQBHJrN
+         trHk7YMl25eik7kZCm6J9s9+g1xLeA+5NgxE4s6dv1BbYaVAJNk0rw6IabF2Y/LPYESZ
+         wsft5gyqSkFQdk18v4zQrM1OfWD7SGwoZ6yHCPRJ1YO22CzUFxJhstmtp/68eUL3je6Z
+         bC8i1jyHemDj6KIs5ooxqEShymqPIDVCt6znz2d4MVaq3YmG31nPT5LpZkSPIEA0ihZv
+         OlOg==
+X-Gm-Message-State: APjAAAWCdQkjnMJCV6w6gvYUzp6OqiWjK093XFq5ZZ+7FZ5RZn0kggIy
+        X4mW8sSnzRXbGna0be+JWbTY3j2O
+X-Google-Smtp-Source: APXvYqyCK86pGbQYwiwOZKZZWQekIpHNgNyyVHOM0H3y6SCCn8bVX3KEWezFnmRAmGxSKEL2HCBFYw==
+X-Received: by 2002:a05:600c:2150:: with SMTP id v16mr2907767wml.156.1579769446157;
+        Thu, 23 Jan 2020 00:50:46 -0800 (PST)
+Received: from 640k.localdomain.com ([93.56.166.5])
+        by smtp.gmail.com with ESMTPSA id b16sm2198739wrj.23.2020.01.23.00.50.45
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 23 Jan 2020 00:50:45 -0800 (PST)
+From:   Paolo Bonzini <pbonzini@redhat.com>
+To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     Ben Gardon <bgardon@google.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        stable@vger.kernel.org
+Subject: [PATCH v2] KVM: x86: fix overlap between SPTE_MMIO_MASK and generation
+Date:   Thu, 23 Jan 2020 09:50:42 +0100
+Message-Id: <1579769442-13698-1-git-send-email-pbonzini@redhat.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-With the realization that having debugfs enabled on "production" systems is
-generally not a good idea, debugfs is being disabled from more and more
-platforms over time.  However, the functionality of dynamic debugging still is
-needed at times, and since it relies on debugfs for its user api, having
-debugfs disabled also forces dynamic debug to be disabled.
+The SPTE_MMIO_MASK overlaps with the bits used to track MMIO
+generation number.  A high enough generation number would overwrite the
+SPTE_SPECIAL_MASK region and cause the MMIO SPTE to be misinterpreted.
 
-To get around this, move the "control" file for dynamic_debug to procfs IFF
-debugfs is disabled.  This lets people turn on debugging as needed at runtime
-for individual driverfs and subsystems.
+Likewise, setting bits 52 and 53 would also cause an incorrect generation
+number to be read from the PTE, though this was partially mitigated by the
+(useless if it weren't for the bug) removal of SPTE_SPECIAL_MASK from
+the spte in get_mmio_spte_generation.  Drop that removal, and replace
+it with a compile-time assertion.
 
-Reported-by: many different companies
-Cc: Jason Baron <jbaron@akamai.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 6eeb4ef049e7 ("KVM: x86: assign two bits to track SPTE kinds")
+Reported-by: Ben Gardon <bgardon@google.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 ---
-v4: tweaks to the .rst text thanks to Randy's review
-v3: rename init function as it is now no longer just for debugfs, thanks
-    to Jason for the review.
-    Fix build warning for debugfs_initialized call.
-v2: Fix up octal permissions and add procfs reference to the Kconfig
-    entry, thanks to Will for the review.
+ arch/x86/kvm/mmu/mmu.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
- .../admin-guide/dynamic-debug-howto.rst       |  3 +++
- lib/Kconfig.debug                             |  7 ++++---
- lib/dynamic_debug.c                           | 21 ++++++++++++++-----
- 3 files changed, 23 insertions(+), 8 deletions(-)
-
-diff --git a/Documentation/admin-guide/dynamic-debug-howto.rst b/Documentation/admin-guide/dynamic-debug-howto.rst
-index 252e5ef324e5..60679dda6007 100644
---- a/Documentation/admin-guide/dynamic-debug-howto.rst
-+++ b/Documentation/admin-guide/dynamic-debug-howto.rst
-@@ -54,6 +54,9 @@ If you make a mistake with the syntax, the write will fail thus::
- 				<debugfs>/dynamic_debug/control
-   -bash: echo: write error: Invalid argument
+diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
+index 57e4dbddba72..b9052c7ba43d 100644
+--- a/arch/x86/kvm/mmu/mmu.c
++++ b/arch/x86/kvm/mmu/mmu.c
+@@ -418,22 +418,24 @@ static inline bool is_access_track_spte(u64 spte)
+  * requires a full MMU zap).  The flag is instead explicitly queried when
+  * checking for MMIO spte cache hits.
+  */
+-#define MMIO_SPTE_GEN_MASK		GENMASK_ULL(18, 0)
++#define MMIO_SPTE_GEN_MASK		GENMASK_ULL(17, 0)
  
-+Note, for systems without 'debugfs' enabled, the control file is located
-+in ``/proc/dynamic_debug/control``.
+ #define MMIO_SPTE_GEN_LOW_START		3
+ #define MMIO_SPTE_GEN_LOW_END		11
+ #define MMIO_SPTE_GEN_LOW_MASK		GENMASK_ULL(MMIO_SPTE_GEN_LOW_END, \
+ 						    MMIO_SPTE_GEN_LOW_START)
+ 
+-#define MMIO_SPTE_GEN_HIGH_START	52
+-#define MMIO_SPTE_GEN_HIGH_END		61
++#define MMIO_SPTE_GEN_HIGH_START	PT64_SECOND_AVAIL_BITS_SHIFT
++#define MMIO_SPTE_GEN_HIGH_END		62
+ #define MMIO_SPTE_GEN_HIGH_MASK		GENMASK_ULL(MMIO_SPTE_GEN_HIGH_END, \
+ 						    MMIO_SPTE_GEN_HIGH_START)
 +
- Viewing Dynamic Debug Behaviour
- ===============================
- 
-diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-index 5ffe144c9794..49980eb8c18e 100644
---- a/lib/Kconfig.debug
-+++ b/lib/Kconfig.debug
-@@ -98,7 +98,7 @@ config DYNAMIC_DEBUG
- 	bool "Enable dynamic printk() support"
- 	default n
- 	depends on PRINTK
--	depends on DEBUG_FS
-+	depends on (DEBUG_FS || PROC_FS)
- 	help
- 
- 	  Compiles debug level messages into the kernel, which would not
-@@ -116,8 +116,9 @@ config DYNAMIC_DEBUG
- 	  Usage:
- 
- 	  Dynamic debugging is controlled via the 'dynamic_debug/control' file,
--	  which is contained in the 'debugfs' filesystem. Thus, the debugfs
--	  filesystem must first be mounted before making use of this feature.
-+	  which is contained in the 'debugfs' filesystem or procfs if
-+	  debugfs is not present. Thus, the debugfs or procfs filesystem
-+	  must first be mounted before making use of this feature.
- 	  We refer the control file as: <debugfs>/dynamic_debug/control. This
- 	  file contains a list of the debug statements that can be enabled. The
- 	  format for each line of the file is:
-diff --git a/lib/dynamic_debug.c b/lib/dynamic_debug.c
-index c60409138e13..118e928cdbda 100644
---- a/lib/dynamic_debug.c
-+++ b/lib/dynamic_debug.c
-@@ -991,15 +991,26 @@ static void ddebug_remove_all_tables(void)
- 
- static __initdata int ddebug_init_success;
- 
--static int __init dynamic_debug_init_debugfs(void)
-+static int __init dynamic_debug_init_control(void)
+ static u64 generation_mmio_spte_mask(u64 gen)
  {
--	struct dentry *dir;
-+	struct proc_dir_entry *procfs_dir;
-+	struct dentry *debugfs_dir;
+ 	u64 mask;
  
- 	if (!ddebug_init_success)
- 		return -ENODEV;
+ 	WARN_ON(gen & ~MMIO_SPTE_GEN_MASK);
++	BUILD_BUG_ON((MMIO_SPTE_GEN_HIGH_MASK | MMIO_SPTE_GEN_LOW_MASK) & SPTE_SPECIAL_MASK);
  
--	dir = debugfs_create_dir("dynamic_debug", NULL);
--	debugfs_create_file("control", 0644, dir, NULL, &ddebug_proc_fops);
-+	/* Create the control file in debugfs if it is enabled */
-+	if (debugfs_initialized()) {
-+		debugfs_dir = debugfs_create_dir("dynamic_debug", NULL);
-+		debugfs_create_file("control", 0644, debugfs_dir, NULL,
-+				    &ddebug_proc_fops);
-+		return 0;
-+	}
-+
-+	/* No debugfs so put it in procfs instead */
-+	procfs_dir = proc_mkdir("dynamic_debug", NULL);
-+	if (procfs_dir)
-+		proc_create("control", 0644, procfs_dir, &ddebug_proc_fops);
+ 	mask = (gen << MMIO_SPTE_GEN_LOW_START) & MMIO_SPTE_GEN_LOW_MASK;
+ 	mask |= (gen << MMIO_SPTE_GEN_HIGH_START) & MMIO_SPTE_GEN_HIGH_MASK;
+@@ -444,8 +446,6 @@ static u64 get_mmio_spte_generation(u64 spte)
+ {
+ 	u64 gen;
  
- 	return 0;
- }
-@@ -1077,4 +1088,4 @@ static int __init dynamic_debug_init(void)
- early_initcall(dynamic_debug_init);
- 
- /* Debugfs setup must be done later */
--fs_initcall(dynamic_debug_init_debugfs);
-+fs_initcall(dynamic_debug_init_control);
+-	spte &= ~shadow_mmio_mask;
+-
+ 	gen = (spte & MMIO_SPTE_GEN_LOW_MASK) >> MMIO_SPTE_GEN_LOW_START;
+ 	gen |= (spte & MMIO_SPTE_GEN_HIGH_MASK) >> MMIO_SPTE_GEN_HIGH_START;
+ 	return gen;
 -- 
-2.25.0
+1.8.3.1
 
