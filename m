@@ -2,204 +2,117 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8264AC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 18:08:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2405C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 18:11:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55BC121569
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 18:08:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579802937;
-	bh=0qAN23vYTD70snlLDU2l54H0Kea+680fyrIrNvszBqE=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=Z7V1maxtiaDf0kAeXENfC3LumQS03tVt+ba3WDoLHeQnEoSoyW5qysJkFrIsD0oau
-	 4sJp8Jcs9Drqh4c82TaMP/HktfXKFT7r+3FxEOTSscIudKVQg5WspaOt7HXIBN1Q8B
-	 kchmJEJUqtLzh0fu/EVgBKBks5NcCWn3gcouLM2g=
+	by mail.kernel.org (Postfix) with ESMTP id A83682077C
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 18:11:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="VKK0YIQp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728984AbgAWSI4 (ORCPT
+        id S1728998AbgAWSL5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 13:08:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57938 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727278AbgAWSI4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 13:08:56 -0500
-Received: from lenoir.home (lfbn-ncy-1-150-155.w83-194.abo.wanadoo.fr [83.194.232.155])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6DF362077C;
-        Thu, 23 Jan 2020 18:08:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579802935;
-        bh=0qAN23vYTD70snlLDU2l54H0Kea+680fyrIrNvszBqE=;
-        h=From:To:Cc:Subject:Date:From;
-        b=Q70eGchcrm5DkAXfYN072iB9Cg7HgKYHIWM0kqe7Zsw+HiIXJ2TGivbwZnwFARS0j
-         zilC41c6x1UaYpjj+0US+MlokkSM++Xy7osSrRPPbTKp6mXzGfXi5ovO3da3xnXNhF
-         Ay+J3t5ZRm5IkcD1wa0ze9pqe7fhY9tWAz4nzRjo=
-From:   Frederic Weisbecker <frederic@kernel.org>
-To:     Ingo Molnar <mingo@kernel.org>,
+        Thu, 23 Jan 2020 13:11:57 -0500
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:5154 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727278AbgAWSL4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jan 2020 13:11:56 -0500
+Received: from pps.filterd (m0001303.ppops.net [127.0.0.1])
+        by m0001303.ppops.net (8.16.0.42/8.16.0.42) with SMTP id 00NI3AWU032331
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jan 2020 10:11:54 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=facebook;
+ bh=CkmVwtrV35duuoCq5fkCbRvMAON5kuVztzk7kkKCe7I=;
+ b=VKK0YIQp94Avd91W1DAnYqUlDRZyrveiIcM4UT+r6205KGhV19V/cosKrrgX06/c6Y7q
+ GAuDjVibWiVu01k7yoIEf+HgKZBiZpdb7yAIFGXO69qVw/HiSjUIIkb2PhnxEEKrLhIU
+ pSv3VShiQFcKTdPvir+WDpTOjVrN8veCqaQ= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by m0001303.ppops.net with ESMTP id 2xqem00n8r-2
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jan 2020 10:11:54 -0800
+Received: from intmgw005.03.ash8.facebook.com (2620:10d:c0a8:1b::d) by
+ mail.thefacebook.com (2620:10d:c0a8:83::5) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Thu, 23 Jan 2020 10:11:54 -0800
+Received: by devbig006.ftw2.facebook.com (Postfix, from userid 4523)
+        id D1F2E62E32CF; Thu, 23 Jan 2020 10:11:49 -0800 (PST)
+Smtp-Origin-Hostprefix: devbig
+From:   Song Liu <songliubraving@fb.com>
+Smtp-Origin-Hostname: devbig006.ftw2.facebook.com
+To:     <linux-kernel@vger.kernel.org>
+CC:     <kernel-team@fb.com>, Song Liu <songliubraving@fb.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Jiri Olsa <jolsa@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        Frederic Weisbecker <frederic@kernel.org>
-Subject: [PATCH] sched/vtime: Prevent unstable evaluation of WARN(vtime->state)
-Date:   Thu, 23 Jan 2020 19:08:49 +0100
-Message-Id: <20200123180849.28486-1-frederic@kernel.org>
-X-Mailer: git-send-email 2.25.0
+Smtp-Origin-Cluster: ftw2c04
+Subject: [PATCH v3] perf/core: fix mlock accounting in perf_mmap()
+Date:   Thu, 23 Jan 2020 10:11:46 -0800
+Message-ID: <20200123181146.2238074-1-songliubraving@fb.com>
+X-Mailer: git-send-email 2.17.1
+X-FB-Internal: Safe
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-01-23_11:2020-01-23,2020-01-23 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 suspectscore=1
+ spamscore=0 clxscore=1015 priorityscore=1501 malwarescore=0 adultscore=0
+ lowpriorityscore=0 phishscore=0 impostorscore=0 mlxlogscore=999 mlxscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-2001230140
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chris Wilson <chris@chris-wilson.co.uk>
+Eecreasing sysctl_perf_event_mlock between two consecutive perf_mmap()s of
+a perf ring buffer may lead to an integer underflow in locked memory
+accounting. This may lead to the undesired behaviors, such as failures in
+BPF map creation.
 
-As the vtime is sampled under loose seqcount protection by kcpustat, the
-vtime fields may change as the code flows. Where logic dictates a field
-has a static value, use a READ_ONCE.
+Address this by adjusting the accounting logic to take into account the
+possibility that the amount of already locked memory may exceed the
+current limit.
 
-Fixes: 74722bb223d0 ("sched/vtime: Bring up complete kcpustat accessor")
-Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
+Fixes: c4b75479741c ("perf/core: Make the mlock accounting simple again")
+Signed-off-by: Song Liu <songliubraving@fb.com>
+Suggested-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Ingo Molnar <mingo@kernel.org>
-Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
 ---
- kernel/sched/cputime.c | 41 ++++++++++++++++++++++-------------------
- 1 file changed, 22 insertions(+), 19 deletions(-)
+ kernel/events/core.c | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
-diff --git a/kernel/sched/cputime.c b/kernel/sched/cputime.c
-index d43318a489f2..df3577149d2e 100644
---- a/kernel/sched/cputime.c
-+++ b/kernel/sched/cputime.c
-@@ -912,8 +912,10 @@ void task_cputime(struct task_struct *t, u64 *utime, u64 *stime)
- 	} while (read_seqcount_retry(&vtime->seqcount, seq));
- }
- 
--static int vtime_state_check(struct vtime *vtime, int cpu)
-+static int vtime_state_fetch(struct vtime *vtime, int cpu)
- {
-+	int state = READ_ONCE(vtime->state);
-+
- 	/*
- 	 * We raced against a context switch, fetch the
- 	 * kcpustat task again.
-@@ -930,10 +932,10 @@ static int vtime_state_check(struct vtime *vtime, int cpu)
- 	 *
- 	 * Case 1) is ok but 2) is not. So wait for a safe VTIME state.
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index e543bab787e5..fdb7f7ef380c 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -5917,7 +5917,15 @@ static int perf_mmap(struct file *file, struct vm_area_struct *vma)
  	 */
--	if (vtime->state == VTIME_INACTIVE)
-+	if (state == VTIME_INACTIVE)
- 		return -EAGAIN;
+ 	user_lock_limit *= num_online_cpus();
  
--	return 0;
-+	return state;
- }
- 
- static u64 kcpustat_user_vtime(struct vtime *vtime)
-@@ -952,14 +954,15 @@ static int kcpustat_field_vtime(u64 *cpustat,
- {
- 	struct vtime *vtime = &tsk->vtime;
- 	unsigned int seq;
--	int err;
- 
- 	do {
-+		int state;
+-	user_locked = atomic_long_read(&user->locked_vm) + user_extra;
++	user_locked = atomic_long_read(&user->locked_vm);
 +
- 		seq = read_seqcount_begin(&vtime->seqcount);
++	/*
++	 * sysctl_perf_event_mlock may have changed, so that
++	 *     user->locked_vm > user_lock_limit
++	 */
++	if (user_locked > user_lock_limit)
++		user_locked = user_lock_limit;
++	user_locked += user_extra;
  
--		err = vtime_state_check(vtime, cpu);
--		if (err < 0)
--			return err;
-+		state = vtime_state_fetch(vtime, cpu);
-+		if (state < 0)
-+			return state;
- 
- 		*val = cpustat[usage];
- 
-@@ -972,7 +975,7 @@ static int kcpustat_field_vtime(u64 *cpustat,
- 		 */
- 		switch (usage) {
- 		case CPUTIME_SYSTEM:
--			if (vtime->state == VTIME_SYS)
-+			if (state == VTIME_SYS)
- 				*val += vtime->stime + vtime_delta(vtime);
- 			break;
- 		case CPUTIME_USER:
-@@ -984,11 +987,11 @@ static int kcpustat_field_vtime(u64 *cpustat,
- 				*val += kcpustat_user_vtime(vtime);
- 			break;
- 		case CPUTIME_GUEST:
--			if (vtime->state == VTIME_GUEST && task_nice(tsk) <= 0)
-+			if (state == VTIME_GUEST && task_nice(tsk) <= 0)
- 				*val += vtime->gtime + vtime_delta(vtime);
- 			break;
- 		case CPUTIME_GUEST_NICE:
--			if (vtime->state == VTIME_GUEST && task_nice(tsk) > 0)
-+			if (state == VTIME_GUEST && task_nice(tsk) > 0)
- 				*val += vtime->gtime + vtime_delta(vtime);
- 			break;
- 		default:
-@@ -1039,23 +1042,23 @@ static int kcpustat_cpu_fetch_vtime(struct kernel_cpustat *dst,
- {
- 	struct vtime *vtime = &tsk->vtime;
- 	unsigned int seq;
--	int err;
- 
- 	do {
- 		u64 *cpustat;
- 		u64 delta;
-+		int state;
- 
- 		seq = read_seqcount_begin(&vtime->seqcount);
- 
--		err = vtime_state_check(vtime, cpu);
--		if (err < 0)
--			return err;
-+		state = vtime_state_fetch(vtime, cpu);
-+		if (state < 0)
-+			return state;
- 
- 		*dst = *src;
- 		cpustat = dst->cpustat;
- 
- 		/* Task is sleeping, dead or idle, nothing to add */
--		if (vtime->state < VTIME_SYS)
-+		if (state < VTIME_SYS)
- 			continue;
- 
- 		delta = vtime_delta(vtime);
-@@ -1064,15 +1067,15 @@ static int kcpustat_cpu_fetch_vtime(struct kernel_cpustat *dst,
- 		 * Task runs either in user (including guest) or kernel space,
- 		 * add pending nohz time to the right place.
- 		 */
--		if (vtime->state == VTIME_SYS) {
-+		if (state == VTIME_SYS) {
- 			cpustat[CPUTIME_SYSTEM] += vtime->stime + delta;
--		} else if (vtime->state == VTIME_USER) {
-+		} else if (state == VTIME_USER) {
- 			if (task_nice(tsk) > 0)
- 				cpustat[CPUTIME_NICE] += vtime->utime + delta;
- 			else
- 				cpustat[CPUTIME_USER] += vtime->utime + delta;
- 		} else {
--			WARN_ON_ONCE(vtime->state != VTIME_GUEST);
-+			WARN_ON_ONCE(state != VTIME_GUEST);
- 			if (task_nice(tsk) > 0) {
- 				cpustat[CPUTIME_GUEST_NICE] += vtime->gtime + delta;
- 				cpustat[CPUTIME_NICE] += vtime->gtime + delta;
-@@ -1083,7 +1086,7 @@ static int kcpustat_cpu_fetch_vtime(struct kernel_cpustat *dst,
- 		}
- 	} while (read_seqcount_retry(&vtime->seqcount, seq));
- 
--	return err;
-+	return 0;
- }
- 
- void kcpustat_cpu_fetch(struct kernel_cpustat *dst, int cpu)
+ 	if (user_locked > user_lock_limit) {
+ 		/*
 -- 
-2.25.0
+2.17.1
 
