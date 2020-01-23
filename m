@@ -1,131 +1,63 @@
 Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Level: *
+X-Spam-Status: No, score=1.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_LOCAL_NOVOWEL,
+	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,HK_RANDOM_REPLYTO,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58897C33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 20:55:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BBC3C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 20:55:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2761A21569
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 20:55:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6911F21569
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 20:55:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m+lTZedK"
+	dkim=pass (1024-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="r5uaxjgh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729149AbgAWUzB (ORCPT
+        id S1729208AbgAWUzh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 15:55:01 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:40870 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726191AbgAWUzA (ORCPT
+        Thu, 23 Jan 2020 15:55:37 -0500
+Received: from mail-40132.protonmail.ch ([185.70.40.132]:56264 "EHLO
+        mail-40132.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726191AbgAWUzh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 15:55:00 -0500
-Received: by mail-pg1-f194.google.com with SMTP id k25so1975001pgt.7;
-        Thu, 23 Jan 2020 12:55:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=VkVxNXoZb5ITMLmFjeLX1O6fjDK5AnFJMJ0BZSxNB5g=;
-        b=m+lTZedK9gWF4xwuaTyxbjIg3bAIdwWaB6Ad4V6MfH/Vio65HRNqXkwK0kgc01h0kI
-         5kTOxiQ9vPmo/ygxF2dAX9D/uL+c4r7xKDUHv68qzm1sfcDeh8kyhOg3Ukk4LmkYxD1J
-         jhvIj68UrMBL5PdrQpg1Ee9cJPRODjOuka+qYPSICNp8lJaI6wlOhtJmKECSi3W7Zwxl
-         8ekZzqlJAQnsRemRBYW1i2PAS3flE+CrcoRJ2ZLEAylFOSCFtIhLVSAewJepv1s3wn8Y
-         uv8/6fmuYtlTTfHu3MSpoJQWNJarjMQShWNHz2zAieUl75osDU5NX4dV/BCT0O6Iu5Ii
-         Prsg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=VkVxNXoZb5ITMLmFjeLX1O6fjDK5AnFJMJ0BZSxNB5g=;
-        b=AVUF0vXy9InGmK4sr4LcAfNTTa+YD1cKGuflc33KSgWoUlAVoA49Z0o8m+5b5ZLbtL
-         O1FMCGU6yUeI6v6imxKWSjilkeqyvoOnF1J4kBCnhfE3DecmEGI786hY+vq4bALtuU3D
-         jnO16cLCCkSx4geOzaMlu+sNh0U7QTknJ0bZqRU6sZHSbRvU72doKbMXN6fMWQHcS4eS
-         /gJQoszJTjWJUatICNnCELmwZlpWVvXCXhC0uXJ5Otk+FuWB4ytdi0WQHsVbrbqV9XL/
-         VR7tN9foZT7ct3SbSi1hoTjiSdou8mahQ9qAqkftxsrxYQSYUffjEi23Lvjv7E29KnTG
-         hoJA==
-X-Gm-Message-State: APjAAAWvROhUbffPyAVoQcMQSb2OR0eadWXNNrXdjlJc2i4pzlL2Xi7s
-        0ChEpY0i2jrv1GLBEcVUBg4=
-X-Google-Smtp-Source: APXvYqzHIJnoi81iMDc7G9FPl8tVJE3Z0QS08Q2YEjqX/z/j/UPzE2UfRZuf39Ccdq50EzPulbIa6Q==
-X-Received: by 2002:aa7:8ecf:: with SMTP id b15mr144675pfr.86.1579812900166;
-        Thu, 23 Jan 2020 12:55:00 -0800 (PST)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id e38sm2857390pgm.82.2020.01.23.12.54.59
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 23 Jan 2020 12:54:59 -0800 (PST)
-Date:   Thu, 23 Jan 2020 12:54:58 -0800
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Yong Liang <yong.liang@mediatek.com>
-Cc:     wim@linux-watchdog.org, p.zabel@pengutronix.de,
-        matthias.bgg@gmail.com, linux-watchdog@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org,
-        chang-an.chen@mediatek.com, freddy.hsin@mediatek.com,
-        jiaxin.yu@mediatek.com, yingjoe.chen@mediatek.com, sboyd@kernel.org
-Subject: Re: [PATCH v12 4/4] watchdog: mtk_wdt: mt2712: Add reset controller
-Message-ID: <20200123205458.GA13785@roeck-us.net>
-References: <20200115085828.27791-1-yong.liang@mediatek.com>
- <20200115085828.27791-5-yong.liang@mediatek.com>
+        Thu, 23 Jan 2020 15:55:37 -0500
+Date:   Thu, 23 Jan 2020 20:55:32 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
+        s=default; t=1579812935;
+        bh=NjNZAbulBMS0bWKFpWF0ikCqauCTCFP1hxEyGcdzFnM=;
+        h=Date:To:From:Reply-To:Subject:Feedback-ID:From;
+        b=r5uaxjghkghLizxUOvBY5kBQkek9N37QWPekKODZybuCouwOIyidlKoo5z5rJbapY
+         G52afax7GFZBqc6kyhu7V4o+wdRHUwujZw35SRRfIRWbH18kEy+ZmTZo+bZUyLOYR2
+         X+Ikjz8tdaGSx//m7x7nNEfS0Yi9V6Ak8+ilRhn0=
+To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+From:   vcxzasdfvcxz <vcxzasdfvcxz@protonmail.com>
+Reply-To: vcxzasdfvcxz <vcxzasdfvcxz@protonmail.com>
+Subject: [PATCH] lib/sg_split: remove setting of offset to zero
+Message-ID: <m1IikjLBNle_kj-D3TemaGqgAfGudoitlSaWdj_I21hf7jl8mJaCa-cNTuKzI6Cn94BqqCT432c7s-fEy0bfp5311oRPH5Sywj9R3KgnH7A=@protonmail.com>
+Feedback-ID: UvlvX3kRdLbprDaDPeDY8WvHE6EpBSYWqfjSreuO7DE2A7sBlhSzgMmZ6eSK5y9uJfaMrV5WIdDDzR8JDS6iDw==:Ext:ProtonMail
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200115085828.27791-5-yong.liang@mediatek.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 15, 2020 at 04:58:28PM +0800, Yong Liang wrote:
-> From: "yong.liang" <yong.liang@mediatek.com>
-> 
-> Add reset controller for 2712.
-> Besides watchdog, MTK toprgu module alsa provide sub-system (eg, audio,
-> camera, codec and connectivity) software reset functionality.
-> 
-> Signed-off-by: yong.liang <yong.liang@mediatek.com>
-> Signed-off-by: Jiaxin Yu <jiaxin.yu@mediatek.com>
-> Reviewed-by: Yingjoe Chen <yingjoe.chen@mediatek.com>
-> Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
-> Acked-by: Matthias Brugger <matthias.bgg@gmail.com>
+By setting offset to zero we are losing where in the page the memory is.
 
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+--- a/lib/sg_split.c
++++ b/lib/sg_split.c
+@@ -88,8 +88,6 @@ static void sg_split_phys(struct sg_splitter *splitters, =
+const int nb_splits)
+                        if (!j) {
+                                out_sg->offset +=3D split->skip_sg0;
+                                out_sg->length -=3D split->skip_sg0;
+-                       } else {
+-                               out_sg->offset =3D 0;
+                        }
+                        sg_dma_address(out_sg) =3D 0;
+                        sg_dma_len(out_sg) =3D 0;
 
-> ---
->  drivers/watchdog/mtk_wdt.c | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
-> diff --git a/drivers/watchdog/mtk_wdt.c b/drivers/watchdog/mtk_wdt.c
-> index e88aacb0404d..d6a6393f609d 100644
-> --- a/drivers/watchdog/mtk_wdt.c
-> +++ b/drivers/watchdog/mtk_wdt.c
-> @@ -9,6 +9,7 @@
->   * Based on sunxi_wdt.c
->   */
->  
-> +#include <dt-bindings/reset-controller/mt2712-resets.h>
->  #include <dt-bindings/reset-controller/mt8183-resets.h>
->  #include <linux/delay.h>
->  #include <linux/err.h>
-> @@ -67,6 +68,10 @@ struct mtk_wdt_data {
->  	int toprgu_sw_rst_num;
->  };
->  
-> +static const struct mtk_wdt_data mt2712_data = {
-> +	.toprgu_sw_rst_num = MT2712_TOPRGU_SW_RST_NUM,
-> +};
-> +
->  static const struct mtk_wdt_data mt8183_data = {
->  	.toprgu_sw_rst_num = MT8183_TOPRGU_SW_RST_NUM,
->  };
-> @@ -314,6 +319,7 @@ static int mtk_wdt_resume(struct device *dev)
->  #endif
->  
->  static const struct of_device_id mtk_wdt_dt_ids[] = {
-> +	{ .compatible = "mediatek,mt2712-wdt", .data = &mt2712_data },
->  	{ .compatible = "mediatek,mt6589-wdt" },
->  	{ .compatible = "mediatek,mt8183-wdt", .data = &mt8183_data },
->  	{ /* sentinel */ }
