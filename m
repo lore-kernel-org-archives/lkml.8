@@ -2,83 +2,129 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40A4CC33CAA
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 08:17:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F722C33CAA
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 08:18:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A35322522
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 08:17:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579767452;
-	bh=u1J/1SUJCcIhq1deE4QXCfTmz31ICCHFeB4kq4MMFAo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=io3hSythuiVgoGm2wb4qVIC0pHFo5ny7+AsKqy1wKDkB0M3vZodNzlaIhJIPpzhMM
-	 N5/LaxYzINZsic9vPYJbmjrrKWKB9XRSRZ2gNjqQpOBFBA+72llHN3dEB5oAVgd5rk
-	 GTQTogS2MLNlYeaNYL1iASXoLHmXf1KPeNKox8kI=
+	by mail.kernel.org (Postfix) with ESMTP id 0F03624683
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 08:18:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="WC0+SCrj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727453AbgAWIRb (ORCPT
+        id S1727817AbgAWISE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 03:17:31 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:42335 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725785AbgAWIRa (ORCPT
+        Thu, 23 Jan 2020 03:18:04 -0500
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:60366 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726083AbgAWISE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 03:17:30 -0500
-Received: by mail-lj1-f195.google.com with SMTP id y4so2213019ljj.9;
-        Thu, 23 Jan 2020 00:17:29 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=I9GTPaar5aE0tOtbRNaaUNbpax0uU828acGGECrevW8=;
-        b=WrA/gkR1vzAXoaUaXO7zIr5dx400WT9+gcGzWZp/Tqzl5dxnd9YY9Wt51bT3N7rcbu
-         piMXjEAt3JMvtfxVUVSfI0YDSGBZfq6hk4H2Pp5HBokQuWK0AZOkjtwpb63wvKiZ53vj
-         B10LQi65VDgSqZtQpGyKSNr8ACwGFoxwRl4MX5QaBSFq8m0Tbyzr+xhaCRqiCF9GGnGV
-         oFPCTrPzIDubsAGY3WkEwCUa32ycydZ0UUgwS8Jz7xZ4GvvJcJKh/DU/t+mg5VYdrd7O
-         kJLnJ2b8HvXxvp40M4IJGCu/xoM6DVyk43PLyIs5cf8ezb8e8KO7ycDt/x3cdOg7mA6h
-         M6Eg==
-X-Gm-Message-State: APjAAAV/Ft4XAafRah44PuOzz45DHBKnKVfVX323UjE5/85YtN6nqRUN
-        tCuougqsgThswmEGONw4slkeV2A/
-X-Google-Smtp-Source: APXvYqygxodQS2zX6OmaUQosbre6s51cwrezgdx5y6e3eeya9A6s4urmjzPyt7+hvDMRDTh19gWEUQ==
-X-Received: by 2002:a2e:3a12:: with SMTP id h18mr22615722lja.81.1579767448416;
-        Thu, 23 Jan 2020 00:17:28 -0800 (PST)
-Received: from xi.terra (c-14b8e655.07-184-6d6c6d4.bbcust.telenor.se. [85.230.184.20])
-        by smtp.gmail.com with ESMTPSA id r21sm703627ljn.64.2020.01.23.00.17.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Jan 2020 00:17:27 -0800 (PST)
-Received: from johan by xi.terra with local (Exim 4.92.3)
-        (envelope-from <johan@kernel.org>)
-        id 1iuXg6-0001f2-9e; Thu, 23 Jan 2020 09:17:26 +0100
-Date:   Thu, 23 Jan 2020 09:17:26 +0100
-From:   Johan Hovold <johan@kernel.org>
-To:     Colin King <colin.king@canonical.com>
-Cc:     Johan Hovold <johan@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] USB: serial: cyberjack: fix spelling mistake "To" ->
- "Too"
-Message-ID: <20200123081726.GG8375@localhost>
-References: <20200122233955.2829493-1-colin.king@canonical.com>
+        Thu, 23 Jan 2020 03:18:04 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00N8Hvc6104101;
+        Thu, 23 Jan 2020 02:17:57 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1579767477;
+        bh=Yq3CCzVfMMdSjd8t5z7D+2+x4mCzx46IDjOwWPCACHQ=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=WC0+SCrj2KtrN+v9dQAQL+yBP+pK82VS4kRN1iFE5MCViXWPnndv81QktT/Y+fFCt
+         NhEeHkF9wLqMcyrijuPpw+qqMyTkCX8Gzi20YnF/oKgZBEu5jUMHE60Fylb+2Fzi9n
+         rmQOqgcw5t0UZ7RKW9lo5r74SCfEkpsfZZ2/Op2E=
+Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00N8Hvf0009120
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 23 Jan 2020 02:17:57 -0600
+Received: from DFLE100.ent.ti.com (10.64.6.21) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 23
+ Jan 2020 02:17:57 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Thu, 23 Jan 2020 02:17:57 -0600
+Received: from [172.24.145.136] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00N8HoOF033025;
+        Thu, 23 Jan 2020 02:17:52 -0600
+Subject: Re: [PATCH v6 0/2] spi: cadence-quadpsi: Add support for the Cadence
+ QSPI controller
+To:     "Ramuthevar, Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>,
+        <broonie@kernel.org>, <linux-spi@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <robh+dt@kernel.org>, <dan.carpenter@oracle.com>,
+        <cheol.yong.kim@intel.com>, <qi-ming.wu@intel.com>
+References: <20191230074102.50982-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <860aecbc-22d3-c9ce-3570-44115d6e81b2@ti.com>
+ <1aa6033a-c9e1-579b-0916-25037c07654d@linux.intel.com>
+ <3118e6d5-84f3-cbcf-6a42-761b0d23cb72@linux.intel.com>
+From:   Vignesh Raghavendra <vigneshr@ti.com>
+Message-ID: <1b9d00c5-82c4-3dc7-960f-5077040626ae@ti.com>
+Date:   Thu, 23 Jan 2020 13:48:19 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200122233955.2829493-1-colin.king@canonical.com>
+In-Reply-To: <3118e6d5-84f3-cbcf-6a42-761b0d23cb72@linux.intel.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 22, 2020 at 11:39:55PM +0000, Colin King wrote:
-> From: Colin Ian King <colin.king@canonical.com>
-> 
-> There is a spelling mistake in a dev_dbg message. Fix it.
-> 
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
 
-Applied, thanks.
 
-Johan
+On 21/01/20 5:17 pm, Ramuthevar, Vadivel MuruganX wrote:
+> Hi,
+> 
+> On 15/1/2020 2:21 PM, Ramuthevar, Vadivel MuruganX wrote:
+>> Hi,
+>>
+>> On 15/1/2020 2:13 PM, Vignesh Raghavendra wrote:
+>>> Hi,
+>>>
+>>> On 12/30/2019 1:11 PM, Ramuthevar,Vadivel MuruganX wrote:
+>>>> Add support for the Cadence QSPI controller. This controller is
+>>>> present in the Intel Lightning Mountain(LGM) SoCs, Altera and TI SoCs.
+>>>> This driver has been tested on the Intel LGM SoCs.
+>>>>
+>>>> This driver does not support generic SPI and also the implementation
+>>>> only supports spi-mem interface to replace the existing driver in
+>>>> mtd/spi-nor/cadence-quadspi.c, the existing driver only support SPI-NOR
+>>>> flash memory.
+>>>>
+>>>
+>>>
+>>> I am finally able to get spi-mem based cadence-quaspi driver working on
+>>> TI platforms with DMA and DAC mode. I have also incorporated changes to
+>>> disable DAC and autopolling for your intel SoC:
+>>
+>> Thanks! a lot for the confirmation, with your changes it is working on
+>> TI platform.
+>>
+>>> https://github.com/r-vignesh/linux/commits/qspi
+>>>
+>>> (Top two patches are of interest)
+>>>
+>>> I have tested both DAC and INDAC mode with s25fl flash and everything
+>>> seems to be fine. Could you re test the driver on your SoC? 
+> 
+> while re-testing QSPI_NOR/NAND both didn't work, after few changes from
+> patchV6 followed by your changes,
+> 
+> now QSPI-NOR started working,  soon will be sending updated patch
+> version which includes your changes as well as my changes
+> 
+> without affecting both the platforms(TI and Intel).
+> 
+> BTW,  Have you tested QSPI-NAND on your platform ? with our patches.
+
+No, I don't have a platform with QSPI-NAND.
+
+Regards
+Vignesh
+
