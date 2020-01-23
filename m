@@ -2,126 +2,134 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E88D8C32771
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 02:39:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B827C32771
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 02:39:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3D042465A
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 02:39:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F5CD24673
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 02:39:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="byikFvWW"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZtbU8QCb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726167AbgAWCj2 (ORCPT
+        id S1726231AbgAWCjl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 21:39:28 -0500
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:38281 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725911AbgAWCj2 (ORCPT
+        Wed, 22 Jan 2020 21:39:41 -0500
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:38831 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725911AbgAWCjk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 21:39:28 -0500
-Received: by mail-pl1-f196.google.com with SMTP id t6so680088plj.5
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jan 2020 18:39:28 -0800 (PST)
+        Wed, 22 Jan 2020 21:39:40 -0500
+Received: by mail-pj1-f67.google.com with SMTP id l35so511274pje.3
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jan 2020 18:39:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=bTqNrmZc4XwB7mbH5XKk8hIXReWiy2o/x14mzISIa8Y=;
-        b=byikFvWWlkqO1f5z4PSmmOvGSP4X745Zi5Zxzm8EBh0qZ8UWn56+B0yzEt6K61kzgH
-         UIH4OHaJLtDSr4LI+pVWG+YieX7Ut4IOOluIanj5iVpOVFuSMZjaB2ma+d15j1F5z671
-         LH3wlYrHF15Xms+98W2VTz1Q68Lk1JKy3zffRSylF7hbM1lQGXsrNljDC7N/y8OwPr8L
-         1pXPyvW9a+MC72GbEGM1+4t45D36jbtqH1BA195w/YehECEagnR8xW4NbY8HOGsp2jgF
-         x2VyyxV7PoqCGSv4p6vcZGJ1Pyat9mZznroY9sX+kV3dv0/aqNm9j3DPzxic1emFqhPv
-         05/g==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=/ObBz/9vwTw3ohjDGTscqyWS1Wi8lhEKFZVbdqUQmqc=;
+        b=ZtbU8QCbzG9SfPW0MwWGfsHlxQjUj3j9u8sNB26EDLCUMvOLT/Lc6l2q26ghU8PEjR
+         YaEWM90K/88UeXH2FMNsn/FxVein3GORfaTj3Hx6zBabktTsJx5u0vcx1rbpxLdWjtKX
+         h3SvnF/edqQgUy0z2xGCoTX4bbGeDVUbG27CHqY0lwDmDmOOvgXqIMAWbnCCPdWO01Vm
+         o1m0F4in0lsntPW4H+O9KzpzQEPU72GIEiL1tePh2JElrEx2kVFWGxr7dKQ50MZQjB8o
+         k6F76wV/lT7dqYlZoogF7EPLUcz384MIqOmo8Ew9Pce2tJ3LWN+yeFKthzPa9eqguW9h
+         aUBg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=bTqNrmZc4XwB7mbH5XKk8hIXReWiy2o/x14mzISIa8Y=;
-        b=Rpote3q1Ir5L62dqXE9RyVwEnXOz/6v/qdKPCASRDPiYnb18I6JUDuwdAqml9lXfqD
-         wZkOVGB5cJAh2zczBvZgBeBSlwv2FlUuXQBfo9yiu+qNtYYl9xawMLuzW7fb+emNMbHP
-         eogZsVbs0dbLbn/aOyhWZj/H9lPDxY9bEnRijvcOYk68YUDJBIbAeAhtucDAKhyLr0Ey
-         Uwtwm2sp7P23ySCq0KjF0br9dLvHgkWQ+Gw23BHGc80V50l5qyDzmvuyFFG+D1XZsInj
-         stnroW05GW507iLz8xH4Rfb3kdfrOA5SYYpRMzrqSbvuSzKgijn0RYSIt59nGdAOxXWn
-         zU8A==
-X-Gm-Message-State: APjAAAVFpacNnZZHxuFAGyC6odAAVNmHw3H80Y6RrzcL4CilE45iUaLE
-        7ClIYFL5WLEeUckxXNZPjONY0Q==
-X-Google-Smtp-Source: APXvYqy7I+trccw5AXOWtnefRTubn87fuxIQql4VUIPbEhXpw2iqsLDrMfyucFrbZ7GI1P996ynOSA==
-X-Received: by 2002:a17:90a:c301:: with SMTP id g1mr1870273pjt.88.1579747167904;
-        Wed, 22 Jan 2020 18:39:27 -0800 (PST)
-Received: from localhost ([122.167.18.14])
-        by smtp.gmail.com with ESMTPSA id w11sm386820pgs.60.2020.01.22.18.39.26
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 22 Jan 2020 18:39:26 -0800 (PST)
-Date:   Thu, 23 Jan 2020 08:09:24 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Cristian Marussi <cristian.marussi@arm.com>
-Cc:     arnd@arndb.de, Sudeep Holla <sudeep.holla@arm.com>,
-        jassisinghbrar@gmail.com, peng.fan@nxp.com,
-        peter.hilber@opensynergy.com, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH V3] firmware: arm_scmi: Make scmi core independent of the
- transport type
-Message-ID: <20200123023924.roqc2iyx4wmukk4p@vireshk-i7>
-References: <4b74f1b6c1f9653241a1b5754525e230b3d76a3f.1579595093.git.viresh.kumar@linaro.org>
- <3a8836dd-99d3-faff-af05-2032d609f594@arm.com>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=/ObBz/9vwTw3ohjDGTscqyWS1Wi8lhEKFZVbdqUQmqc=;
+        b=InYjNB9cukDQT3Vrh41+sUdHmXAk4goVD8CCoPFVVMfd8/rnOraOtTVfy3E6qdt7TJ
+         PW5FE4O6ChDXHgFyztg8k3OJmISZW/gEQEIKu8G2h61g5NJxMa1vS08c6myxKVBeP0Cj
+         SgXTeXcgyaCWA2vasrw4tS6YQAvtsMeqJy8q7KqSlHitoFDHNyxzaB9ShSqbDHPFRkTj
+         QxgeRc1Yv/8NlvQNGal0ab+OiyYRgwamNixTTkG1k6X87eVFxWO4WYnuduikPWuZ3Dxg
+         2/sH20lHrYQ6fRkH+Zh0EY065k0CSXfQhuQghQXLD3qgZ3iOjCbgt0p3Dn8fpWF0r31t
+         ib9g==
+X-Gm-Message-State: APjAAAW+2Mof8mlRRLrrmFpdTcuxcvAKEUkmXGOx+4AoenweU5G7wR4d
+        eqST2DVMRI5+OIbDY74JdlM=
+X-Google-Smtp-Source: APXvYqxZCfdu5NMuJiFMUZeqkjIaqsWSjSVbyyBZdQrEGU0li3YjOYM0rshCfGkZNhHG34nxSIwdxA==
+X-Received: by 2002:a17:90a:6484:: with SMTP id h4mr1812491pjj.84.1579747180297;
+        Wed, 22 Jan 2020 18:39:40 -0800 (PST)
+Received: from localhost ([103.29.143.67])
+        by smtp.gmail.com with ESMTPSA id j14sm390076pgs.57.2020.01.22.18.39.38
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 22 Jan 2020 18:39:40 -0800 (PST)
+Date:   Thu, 23 Jan 2020 10:39:36 +0800
+From:   Yue Hu <zbestahu@gmail.com>
+To:     Minchan Kim <minchan@kernel.org>
+Cc:     ngupta@vflare.org, sergey.senozhatsky.work@gmail.com,
+        linux-kernel@vger.kernel.org, huyue2@yulong.com
+Subject: Re: [PATCH] zram: do not set ZRAM_IDLE bit for idlepage writeback
+ in writeback_store()
+Message-ID: <20200123103936.000044ba.zbestahu@gmail.com>
+In-Reply-To: <20200123022305.GF249784@google.com>
+References: <20200121113557.11608-1-zbestahu@gmail.com>
+        <20200123022305.GF249784@google.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; i686-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3a8836dd-99d3-faff-af05-2032d609f594@arm.com>
-User-Agent: NeoMutt/20180716-391-311a52
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 22-01-20, 12:44, Cristian Marussi wrote:
-> On 21/01/2020 08:27, Viresh Kumar wrote:
-> commment is obsolete
+On Wed, 22 Jan 2020 18:23:05 -0800
+Minchan Kim <minchan@kernel.org> wrote:
 
-Right, they need to be checked everywhere again. Sorry for missing
-that earlier.
+> On Tue, Jan 21, 2020 at 07:35:57PM +0800, Yue Hu wrote:
+> > From: Yue Hu <huyue2@yulong.com>
+> > 
+> > Currently, we will call zram_set_flag() to set ZRAM_IDLE bit even for
+> > idlepage writeback. That is pointless. Let's set it only for hugepage mode.  
+> 
+> Could you be more specific? What do you see the problem with that?
 
-> > +struct scmi_chan_info {
-> > +	struct scmi_info *info;
-> > +	struct device *dev;
-> > +	struct scmi_handle *handle;
-> > +	void *transport_info;
-> > +};
+If current writeback mode is idle, ZRAM_IDLE bit will be check firstly for this
+slot. Then go to call zram_set_flag(, , ZRAM_IDLE) if it's marked as ZRAM_IDLE.
+So, it's duplicated setting, am i right? 
+
+Thx.
+
+> 
+> > 
+> > Signed-off-by: Yue Hu <huyue2@yulong.com>
+> > ---
+> >  drivers/block/zram/zram_drv.c | 12 +++++++-----
+> >  1 file changed, 7 insertions(+), 5 deletions(-)
+> > 
+> > diff --git a/drivers/block/zram/zram_drv.c b/drivers/block/zram/zram_drv.c
+> > index 4285e75..eef5767 100644
+> > --- a/drivers/block/zram/zram_drv.c
+> > +++ b/drivers/block/zram/zram_drv.c
+> > @@ -689,16 +689,18 @@ static ssize_t writeback_store(struct device *dev,
+> >  		if (mode == IDLE_WRITEBACK &&
+> >  			  !zram_test_flag(zram, index, ZRAM_IDLE))
+> >  			goto next;
+> > -		if (mode == HUGE_WRITEBACK &&
+> > -			  !zram_test_flag(zram, index, ZRAM_HUGE))
+> > -			goto next;
+> > +		if (mode == HUGE_WRITEBACK) {
+> > +			if (!zram_test_flag(zram, index, ZRAM_HUGE))
+> > +				goto next;
+> > +			/* Need for hugepage writeback racing */
+> > +			zram_set_flag(zram, index, ZRAM_IDLE);
+> > +		}
 > > +
-> > +/**
-> > + * struct scmi_transport_ops - Structure representing a SCMI transport ops
-> > + *
-> > + * @send_message: Callback to send a message
-> > + * @mark_txdone: Callback to mark tx as done
-> > + * @chan_setup: Callback to allocate and setup a channel
-> > + * @chan_free: Callback to free a channel
-> > + */
-> commment is obsolete but I would also ask: are all of these operations supposed to be mandatory supported
-> on any possible foreseeable transport ? (beside the obviously needed like send_message)
-> 
-> I'm asking because they are all called straight away from the driver core without any NULL check
-> so that if a new transport should not need one of them it will be forced to anyway implement a dummy one
-> to comply, which it will be needlessly invoked every time.
+> >  		/*
+> >  		 * Clearing ZRAM_UNDER_WB is duty of caller.
+> >  		 * IOW, zram_free_page never clear it.
+> >  		 */
+> >  		zram_set_flag(zram, index, ZRAM_UNDER_WB);
+> > -		/* Need for hugepage writeback racing */
+> > -		zram_set_flag(zram, index, ZRAM_IDLE);
+> >  		zram_slot_unlock(zram, index);
+> >  		if (zram_bvec_read(zram, &bvec, index, 0, NULL)) {
+> >  			zram_slot_lock(zram, index);
+> > -- 
+> > 1.9.1
+> >   
 
-They are kept as mandatory for now as we don't really know how it
-will look for other transport types. Lets make them optional only when
-someone don't need to define them. It would be a simple change anyway.
-
-> >  /* Each compatible listed below must have descriptor associated with it */
-> >  static const struct of_device_id scmi_of_match[] = {
-> > -	{ .compatible = "arm,scmi", .data = &scmi_generic_desc },
-> > +	{ .compatible = "arm,scmi", .data = &scmi_mailbox_desc },
-> >  	{ /* Sentinel */ },
-> >  };
-> 
-> minor thing: shouldn't the chosen transport being configurable at compile time with some
-> option like CONFIG_SCMI_TRANSPORT_MBOX ? or via DT ?
-
-It is configurable via DT. The compatible should look different in
-that case, something like: "arm,scmi-<newtranport>".
-
--- 
-viresh
