@@ -2,115 +2,262 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 573D3C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 12:05:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 883CFC33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 12:05:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24613217F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 12:05:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5002024655
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 12:05:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pkl7+p+1"
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="ZIRH0c97"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728904AbgAWMFw (ORCPT
+        id S1728998AbgAWMFz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 07:05:52 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:43306 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726026AbgAWMFw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 07:05:52 -0500
-Received: by mail-pf1-f195.google.com with SMTP id x6so1438447pfo.10;
-        Thu, 23 Jan 2020 04:05:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=CqY9YB2wAiI/Wp57Yy4bkMwCyRsVGvnd5+giEA8fZSk=;
-        b=pkl7+p+1Dr0758k+BCjkzs4ph/iqSiSuLUHgd/o8DCTfZPM1Xa0HUXTPlF7BDRUC4P
-         MO4SZ7wblivWzi/UgguYV0RSwHelwC6Zs71MY4RsjjHDBGvvoQhXHyaEgn3xwGmx6Laj
-         HSZTs/TaoMqLoG5tkLHtAMM7whbKuvEhl+iIABEFWkuknY9qMLd5eVd9EQQirj5kv3wY
-         k0tAGHXKlzbNIHNO8YMEGWfzfvvmwVZ/Q1SNJUOi1DQoOUpWDXQoXDq7DslZcDbhSPZm
-         F7dm1bZzKHYKG+rMTiRTxHzo+avb44OE8E1qsbFsN+44v22bINxc/DUSfnS4obhHPd5H
-         A2Ag==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=CqY9YB2wAiI/Wp57Yy4bkMwCyRsVGvnd5+giEA8fZSk=;
-        b=JJhDjdkaFYdAzX28DVAVRms45BYMQ61kgrfFALli2HyDOb40IAolF810Rr5dk7hCUI
-         xhsCy03alWg9q0N/0+dO+a5yzjdw3b5K1w1sBW07rnmuSi8sMeBwIiipb2uqQF2Wcp5w
-         FbwcbyuqDsBQ6csWoQ/t/zHR8QWm07Mmc6WgjGuSQ77rlu6BllE+UW4+d9gRrXfSnrr9
-         ShEdbruddKJugkdsgGpRj38zzUS9cMNRX9Hn4gVywri7HqvQcMA9g26ar49JUxX1VJId
-         HAYkX+XPhU8oveULLwWO3VZqPIJ4fLWl3pI7CiHb/cSwpPvM/FjqWuKwj1PHln7r8XZN
-         zhEg==
-X-Gm-Message-State: APjAAAWUaEBq+vTE1qfNj0OVisgtoiyLvsvLagHyeQrsKkMO48p2FNU4
-        CD7KOBOFAX3NEdv+RLq+lXQ=
-X-Google-Smtp-Source: APXvYqyyH5J0GupMgirTs+5mSj6AqYDWZ14SFy5qG7Ze2gsIZwMDdoS6reaTPzuQVkr8hVKTy8aekw==
-X-Received: by 2002:a63:e954:: with SMTP id q20mr3792032pgj.204.1579781151245;
-        Thu, 23 Jan 2020 04:05:51 -0800 (PST)
-Received: from localhost.localdomain ([103.211.17.138])
-        by smtp.googlemail.com with ESMTPSA id x18sm2643381pfr.26.2020.01.23.04.05.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Jan 2020 04:05:50 -0800 (PST)
-From:   Amol Grover <frextrite@gmail.com>
-To:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        "David S . Miller" <davem@davemloft.net>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>
-Cc:     netdev@vger.kernel.org, bpf@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        Amol Grover <frextrite@gmail.com>
-Subject: [PATCH] bpf: devmap: Pass lockdep expression to RCU lists
-Date:   Thu, 23 Jan 2020 17:34:38 +0530
-Message-Id: <20200123120437.26506-1-frextrite@gmail.com>
-X-Mailer: git-send-email 2.24.1
+        Thu, 23 Jan 2020 07:05:55 -0500
+Received: from bilbo.ozlabs.org ([203.11.71.1]:42637 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726026AbgAWMFx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jan 2020 07:05:53 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 483LZl4c7hz9sQp;
+        Thu, 23 Jan 2020 23:05:51 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
+        s=201909; t=1579781151;
+        bh=ZQ/DobkV1Dl4jXiUQ8eTuwbaOJ9Q+q9Cve8ywXkWLMs=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=ZIRH0c97Xbsudpt8o2hZXHdZ1NqigRM9kAf4c/XGanyKn4DHkPON42Bqf00XpDgck
+         mbTR7REalarbOowPx2aRCWgEs6YbyoPIRapPhLm2AOOQ+KtGPu3y/DXPuuSgLkQ9rK
+         wOvJDKB/gTpZ9Qb5hd+EVkf8Nxg0/0C2bXOgoso/FCShQLDFvvugKJ3HMhXzmeI1cu
+         0H9jqB1QJLMIbD+JAIe/uIYuAv/AkPA0tbuKND1duI5ayJRbvzooEGjci8eHSqxRsT
+         H29RNg3tHCs3o1gcYa6oR2OtyHZx4t9p2YDLgw/GmbmDR8b1h5yUgHnRAi8n2YPIK1
+         0SYsAYiAT8Z4A==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Christophe Leroy <christophe.leroy@c-s.fr>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [PATCH v2 6/6] powerpc: Implement user_access_begin and friends
+In-Reply-To: <2a20d19776faba4d85dbe51ae00a5f6ac5ac0969.1579715466.git.christophe.leroy@c-s.fr>
+References: <12a4be679e43de1eca6e5e2173163f27e2f25236.1579715466.git.christophe.leroy@c-s.fr> <2a20d19776faba4d85dbe51ae00a5f6ac5ac0969.1579715466.git.christophe.leroy@c-s.fr>
+Date:   Thu, 23 Jan 2020 23:05:50 +1100
+Message-ID: <87iml2idi9.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-head is traversed using hlist_for_each_entry_rcu outside an
-RCU read-side critical section but under the protection
-of dtab->index_lock.
+Christophe Leroy <christophe.leroy@c-s.fr> writes:
+> Today, when a function like strncpy_from_user() is called,
+> the userspace access protection is de-activated and re-activated
+> for every word read.
+>
+> By implementing user_access_begin and friends, the protection
+> is de-activated at the beginning of the copy and re-activated at the
+> end.
+>
+> Implement user_access_begin(), user_access_end() and
+> unsafe_get_user(), unsafe_put_user() and unsafe_copy_to_user()
+>
+> For the time being, we keep user_access_save() and
+> user_access_restore() as nops.
 
-Hence, add corresponding lockdep expression to silence false-positive
-lockdep warnings, and harden RCU lists.
+That means we will run with user access enabled in a few more places, but
+it's only used sparingly AFAICS:
 
-Signed-off-by: Amol Grover <frextrite@gmail.com>
----
- kernel/bpf/devmap.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+  kernel/trace/trace_branch.c:    unsigned long flags = user_access_save();
+  lib/ubsan.c:    unsigned long flags = user_access_save();
+  lib/ubsan.c:    unsigned long ua_flags = user_access_save();
+  mm/kasan/common.c:      unsigned long flags = user_access_save();
 
-diff --git a/kernel/bpf/devmap.c b/kernel/bpf/devmap.c
-index 3d3d61b5985b..b4b6b77f309c 100644
---- a/kernel/bpf/devmap.c
-+++ b/kernel/bpf/devmap.c
-@@ -293,7 +293,8 @@ struct bpf_dtab_netdev *__dev_map_hash_lookup_elem(struct bpf_map *map, u32 key)
- 	struct hlist_head *head = dev_map_index_hash(dtab, key);
- 	struct bpf_dtab_netdev *dev;
- 
--	hlist_for_each_entry_rcu(dev, head, index_hlist)
-+	hlist_for_each_entry_rcu(dev, head, index_hlist,
-+				 lockdep_is_held(&dtab->index_lock))
- 		if (dev->idx == key)
- 			return dev;
- 
--- 
-2.24.1
+And we don't have objtool checking that user access enablement isn't
+leaking in the first place, so I guess it's OK for us not to implement
+these to begin with?
 
+cheers
+
+
+> diff --git a/arch/powerpc/include/asm/uaccess.h b/arch/powerpc/include/asm/uaccess.h
+> index cafad1960e76..ea67bbd56bd4 100644
+> --- a/arch/powerpc/include/asm/uaccess.h
+> +++ b/arch/powerpc/include/asm/uaccess.h
+> @@ -91,9 +91,14 @@ static inline int __access_ok(unsigned long addr, unsigned long size,
+>  	__put_user_check((__typeof__(*(ptr)))(x), (ptr), sizeof(*(ptr)))
+>  
+>  #define __get_user(x, ptr) \
+> -	__get_user_nocheck((x), (ptr), sizeof(*(ptr)))
+> +	__get_user_nocheck((x), (ptr), sizeof(*(ptr)), true)
+>  #define __put_user(x, ptr) \
+> -	__put_user_nocheck((__typeof__(*(ptr)))(x), (ptr), sizeof(*(ptr)))
+> +	__put_user_nocheck((__typeof__(*(ptr)))(x), (ptr), sizeof(*(ptr)), true)
+> +
+> +#define __get_user_allowed(x, ptr) \
+> +	__get_user_nocheck((x), (ptr), sizeof(*(ptr)), false)
+> +#define __put_user_allowed(x, ptr) \
+> +	__put_user_nocheck((__typeof__(*(ptr)))(x), (ptr), sizeof(*(ptr)), false)
+>  
+>  #define __get_user_inatomic(x, ptr) \
+>  	__get_user_nosleep((x), (ptr), sizeof(*(ptr)))
+> @@ -138,10 +143,9 @@ extern long __put_user_bad(void);
+>  		: "r" (x), "b" (addr), "i" (-EFAULT), "0" (err))
+>  #endif /* __powerpc64__ */
+>  
+> -#define __put_user_size(x, ptr, size, retval)			\
+> +#define __put_user_size_allowed(x, ptr, size, retval)		\
+>  do {								\
+>  	retval = 0;						\
+> -	allow_write_to_user(ptr, size);				\
+>  	switch (size) {						\
+>  	  case 1: __put_user_asm(x, ptr, retval, "stb"); break;	\
+>  	  case 2: __put_user_asm(x, ptr, retval, "sth"); break;	\
+> @@ -149,17 +153,26 @@ do {								\
+>  	  case 8: __put_user_asm2(x, ptr, retval); break;	\
+>  	  default: __put_user_bad();				\
+>  	}							\
+> +} while (0)
+> +
+> +#define __put_user_size(x, ptr, size, retval)			\
+> +do {								\
+> +	allow_write_to_user(ptr, size);				\
+> +	__put_user_size_allowed(x, ptr, size, retval);		\
+>  	prevent_write_to_user(ptr, size);			\
+>  } while (0)
+>  
+> -#define __put_user_nocheck(x, ptr, size)			\
+> +#define __put_user_nocheck(x, ptr, size, allow)			\
+>  ({								\
+>  	long __pu_err;						\
+>  	__typeof__(*(ptr)) __user *__pu_addr = (ptr);		\
+>  	if (!is_kernel_addr((unsigned long)__pu_addr))		\
+>  		might_fault();					\
+>  	__chk_user_ptr(ptr);					\
+> -	__put_user_size((x), __pu_addr, (size), __pu_err);	\
+> +	if (allow)								\
+> +		__put_user_size((x), __pu_addr, (size), __pu_err);		\
+> +	else									\
+> +		__put_user_size_allowed((x), __pu_addr, (size), __pu_err);	\
+>  	__pu_err;						\
+>  })
+>  
+> @@ -236,13 +249,12 @@ extern long __get_user_bad(void);
+>  		: "b" (addr), "i" (-EFAULT), "0" (err))
+>  #endif /* __powerpc64__ */
+>  
+> -#define __get_user_size(x, ptr, size, retval)			\
+> +#define __get_user_size_allowed(x, ptr, size, retval)		\
+>  do {								\
+>  	retval = 0;						\
+>  	__chk_user_ptr(ptr);					\
+>  	if (size > sizeof(x))					\
+>  		(x) = __get_user_bad();				\
+> -	allow_read_from_user(ptr, size);			\
+>  	switch (size) {						\
+>  	case 1: __get_user_asm(x, ptr, retval, "lbz"); break;	\
+>  	case 2: __get_user_asm(x, ptr, retval, "lhz"); break;	\
+> @@ -250,6 +262,12 @@ do {								\
+>  	case 8: __get_user_asm2(x, ptr, retval);  break;	\
+>  	default: (x) = __get_user_bad();			\
+>  	}							\
+> +} while (0)
+> +
+> +#define __get_user_size(x, ptr, size, retval)			\
+> +do {								\
+> +	allow_read_from_user(ptr, size);			\
+> +	__get_user_size_allowed(x, ptr, size, retval);		\
+>  	prevent_read_from_user(ptr, size);			\
+>  } while (0)
+>  
+> @@ -260,7 +278,7 @@ do {								\
+>  #define __long_type(x) \
+>  	__typeof__(__builtin_choose_expr(sizeof(x) > sizeof(0UL), 0ULL, 0UL))
+>  
+> -#define __get_user_nocheck(x, ptr, size)			\
+> +#define __get_user_nocheck(x, ptr, size, allow)			\
+>  ({								\
+>  	long __gu_err;						\
+>  	__long_type(*(ptr)) __gu_val;				\
+> @@ -269,7 +287,10 @@ do {								\
+>  	if (!is_kernel_addr((unsigned long)__gu_addr))		\
+>  		might_fault();					\
+>  	barrier_nospec();					\
+> -	__get_user_size(__gu_val, __gu_addr, (size), __gu_err);	\
+> +	if (allow)								\
+> +		__get_user_size(__gu_val, __gu_addr, (size), __gu_err);		\
+> +	else									\
+> +		__get_user_size_allowed(__gu_val, __gu_addr, (size), __gu_err);	\
+>  	(x) = (__typeof__(*(ptr)))__gu_val;			\
+>  	__gu_err;						\
+>  })
+> @@ -387,6 +408,34 @@ static inline unsigned long raw_copy_to_user(void __user *to,
+>  	return ret;
+>  }
+>  
+> +static inline unsigned long
+> +raw_copy_to_user_allowed(void __user *to, const void *from, unsigned long n)
+> +{
+> +	unsigned long ret;
+> +	if (__builtin_constant_p(n) && (n) <= 8) {
+> +		ret = 1;
+> +
+> +		switch (n) {
+> +		case 1:
+> +			__put_user_size_allowed(*(u8 *)from, (u8 __user *)to, 1, ret);
+> +			break;
+> +		case 2:
+> +			__put_user_size_allowed(*(u16 *)from, (u16 __user *)to, 2, ret);
+> +			break;
+> +		case 4:
+> +			__put_user_size_allowed(*(u32 *)from, (u32 __user *)to, 4, ret);
+> +			break;
+> +		case 8:
+> +			__put_user_size_allowed(*(u64 *)from, (u64 __user *)to, 8, ret);
+> +			break;
+> +		}
+> +		if (ret == 0)
+> +			return 0;
+> +	}
+> +
+> +	return __copy_tofrom_user(to, (__force const void __user *)from, n);
+> +}
+> +
+>  static __always_inline unsigned long __must_check
+>  copy_to_user_mcsafe(void __user *to, const void *from, unsigned long n)
+>  {
+> @@ -428,4 +477,27 @@ extern long __copy_from_user_flushcache(void *dst, const void __user *src,
+>  extern void memcpy_page_flushcache(char *to, struct page *page, size_t offset,
+>  			   size_t len);
+>  
+> +static __must_check inline bool user_access_begin(const void __user *ptr, size_t len)
+> +{
+> +	if (unlikely(!access_ok(ptr, len)))
+> +		return false;
+> +	allow_read_write_user((void __user *)ptr, ptr, len);
+> +	return true;
+> +}
+> +#define user_access_begin	user_access_begin
+> +
+> +static inline void user_access_end(void)
+> +{
+> +	prevent_user_access(NULL, NULL, ~0UL, KUAP_SELF);
+> +}
+> +#define user_access_end		user_access_end
+> +
+> +static inline unsigned long user_access_save(void) { return 0UL; }
+> +static inline void user_access_restore(unsigned long flags) { }
+> +
+> +#define unsafe_op_wrap(op, err) do { if (unlikely(op)) goto err; } while (0)
+> +#define unsafe_get_user(x,p,e) unsafe_op_wrap(__get_user_allowed(x,p),e)
+> +#define unsafe_put_user(x,p,e) unsafe_op_wrap(__put_user_allowed(x,p),e)
+> +#define unsafe_copy_to_user(d,s,l,e) unsafe_op_wrap(raw_copy_to_user_allowed(d,s,l),e)
+> +
+>  #endif	/* _ARCH_POWERPC_UACCESS_H */
+> -- 
+> 2.25.0
