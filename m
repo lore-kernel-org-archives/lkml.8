@@ -2,112 +2,87 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48E6FC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 14:20:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32854C3F68F
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 14:22:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 260242051A
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 14:20:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE76520663
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 14:22:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579789375;
+	bh=0CWnS0mRk0JiZEylkp7dGV3u+VibJKmoYuNpjW1icQE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=sajsOgTmB/0FMGpHhUNV29cnMT8/oIG2S+Q9K/AGnrdxGMw1FYO3nF6tG9y8sY+11
+	 +I7Mmh7Tm/CjUA+qf+1p6QjcdoYOdJLsK/T0RJQQgQI10Q9bKs41kvU9cSmaBMNOS1
+	 y8NK8IjeCtPl5PbE+h5K9Cd4ZtxQey+we6d8U2mo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729106AbgAWOUx (ORCPT
+        id S1728811AbgAWOWy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 09:20:53 -0500
-Received: from www62.your-server.de ([213.133.104.62]:43474 "EHLO
-        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728890AbgAWOUw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 09:20:52 -0500
-Received: from sslproxy05.your-server.de ([78.46.172.2])
-        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89_1)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1iudLe-0001N4-Hy; Thu, 23 Jan 2020 15:20:42 +0100
-Received: from [2001:1620:665:0:5795:5b0a:e5d5:5944] (helo=linux-3.fritz.box)
-        by sslproxy05.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1iudLe-000WmB-5t; Thu, 23 Jan 2020 15:20:42 +0100
-Subject: Re: [PATCH v3] [net]: Fix skb->csum update in
- inet_proto_csum_replace16().
-To:     Florian Westphal <fw@strlen.de>
-Cc:     Praveen Chaudhary <praveen5582@gmail.com>, pablo@netfilter.org,
-        davem@davemloft.net, kadlec@netfilter.org,
-        netfilter-devel@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Zhenggen Xu <zxu@linkedin.com>,
-        Andy Stracner <astracner@linkedin.com>
-References: <1573080729-3102-1-git-send-email-pchaudhary@linkedin.com>
- <1573080729-3102-2-git-send-email-pchaudhary@linkedin.com>
- <16d56ee6-53bc-1124-3700-bc0a78f927d6@iogearbox.net>
- <20200122114333.GQ795@breakpoint.cc>
- <daf995db-37c6-a2f7-4d12-5c1a29e1c59b@iogearbox.net>
- <20200123082106.GT795@breakpoint.cc>
-From:   Daniel Borkmann <daniel@iogearbox.net>
-Message-ID: <1c1fc75d-e69c-f2f6-78ce-de9dc8aa89ca@iogearbox.net>
-Date:   Thu, 23 Jan 2020 15:20:39 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Thu, 23 Jan 2020 09:22:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56460 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726729AbgAWOWy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jan 2020 09:22:54 -0500
+Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3613E20663;
+        Thu, 23 Jan 2020 14:22:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579789373;
+        bh=0CWnS0mRk0JiZEylkp7dGV3u+VibJKmoYuNpjW1icQE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=MtYUxOHPLLcfVZY2mgybA2pObRKfRFB+tzMwLkJL5ecLVPWkvIby2UCqJY4rqQmtA
+         /iMBTgMNWP9jjRTP12SGza1tcQvigD0441/RS3xJlOYX1nEttGQrQm70c1pTsxRUsl
+         Lmao6F5hUlFYkFnmD6a+nRw8qDQ2r6MTLbqBIthM=
+Date:   Thu, 23 Jan 2020 09:22:52 -0500
+From:   Sasha Levin <sashal@kernel.org>
+To:     Johan Hovold <johan@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org
+Subject: Re: [PATCH AUTOSEL 4.19 592/671] USB: usb-skeleton: fix
+ use-after-free after driver unbind
+Message-ID: <20200123142252.GE1706@sasha-vm>
+References: <20200116170509.12787-1-sashal@kernel.org>
+ <20200116170509.12787-329-sashal@kernel.org>
+ <20200117102116.GS2301@localhost>
 MIME-Version: 1.0
-In-Reply-To: <20200123082106.GT795@breakpoint.cc>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Authenticated-Sender: daniel@iogearbox.net
-X-Virus-Scanned: Clear (ClamAV 0.101.4/25704/Thu Jan 23 12:37:43 2020)
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20200117102116.GS2301@localhost>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/23/20 9:21 AM, Florian Westphal wrote:
-> Daniel Borkmann <daniel@iogearbox.net> wrote:
->> On 1/22/20 12:43 PM, Florian Westphal wrote:
->>> Daniel Borkmann <daniel@iogearbox.net> wrote:
->>>>> @@ -449,9 +464,6 @@ void inet_proto_csum_replace16(__sum16 *sum, struct sk_buff *skb,
->>>>>     	if (skb->ip_summed != CHECKSUM_PARTIAL) {
->>>>>     		*sum = csum_fold(csum_partial(diff, sizeof(diff),
->>>>>     				 ~csum_unfold(*sum)));
->>>>> -		if (skb->ip_summed == CHECKSUM_COMPLETE && pseudohdr)
->>>>> -			skb->csum = ~csum_partial(diff, sizeof(diff),
->>>>> -						  ~skb->csum);
->>>>
->>>> What is the technical rationale in removing this here but not in any of the
->>>> other inet_proto_csum_replace*() functions? You changelog has zero analysis
->>>> on why here but not elsewhere this change would be needed?
->>>
->>> Right, I think it could be dropped everywhere BUT there is a major caveat:
->>>
->>> At least for the nf_nat case ipv4 header manipulation (which uses the other
->>> helpers froum utils.c) will eventually also update iph->checksum field
->>> to account for the changed ip addresses.
->>>
->>> And that update doesn't touch skb->csum.
->>>
->>> So in a way the update of skb->csum in the other helpers indirectly account
->>> for later ip header checksum update.
->>>
->>> At least that was my conclusion when reviewing the earlier incarnation
->>> of the patch.
+On Fri, Jan 17, 2020 at 11:21:16AM +0100, Johan Hovold wrote:
+>On Thu, Jan 16, 2020 at 12:03:50PM -0500, Sasha Levin wrote:
+>> From: Johan Hovold <johan@kernel.org>
 >>
->> Mainly asking because not inet_proto_csum_replace16() but the other ones are
->> exposed via BPF and they are all in no way fundamentally different to each
->> other, but my concern is that depending on how the BPF prog updates the csums
->> things could start to break. :/
-> 
-> I'm reasonably sure removing the skb->csum update from the other
-> helpers will also break ipv4 nat :)
-> 
-> So, AFAIU from what you're saying above the patch seems fine as-is and
-> just needs a more verbose commit message explaining why replace16()
-> doesn't update skb->csum while all the other ones do.
-> 
-> Is that correct?
+>> [ Upstream commit 6353001852776e7eeaab4da78922d4c6f2b076af ]
+>>
+>> The driver failed to stop its read URB on disconnect, something which
+>> could lead to a use-after-free in the completion handler after driver
+>> unbind in case the character device has been closed.
+>>
+>> Fixes: e7389cc9a7ff ("USB: skel_read really sucks royally")
+>> Signed-off-by: Johan Hovold <johan@kernel.org>
+>> Link: https://lore.kernel.org/r/20191009170944.30057-3-johan@kernel.org
+>> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+>> Signed-off-by: Sasha Levin <sashal@kernel.org>
+>
+>This one isn't needed in any stable tree. As we discussed before, the
+>skeleton driver is only there for documentation purposes.
 
-Probably better a comment in the code to avoid confusion on why it's not done in
-inet_proto_csum_replace16() but all the other cases; mainly to avoid some folks
-in future sending random cleanup patches w/ removal attempts.
+I'll drop this, but I'm curious: doesn't this mean that users will build
+on buggy example code?
 
+-- 
 Thanks,
-Daniel
+Sasha
