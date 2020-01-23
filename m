@@ -2,119 +2,116 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B1E9C33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 12:01:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CA82C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 12:03:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 515E62071E
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 12:01:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2D5A21569
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 12:03:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dHB/RV9/"
+	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="km/jVXLj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728988AbgAWMA7 (ORCPT
+        id S1727307AbgAWMDY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 07:00:59 -0500
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:37452 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726026AbgAWMA7 (ORCPT
+        Thu, 23 Jan 2020 07:03:24 -0500
+Received: from mx0a-001ae601.pphosted.com ([67.231.149.25]:54350 "EHLO
+        mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726170AbgAWMDY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 07:00:59 -0500
-Received: by mail-pg1-f195.google.com with SMTP id q127so1280523pga.4
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jan 2020 04:00:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=xsupKns0vCTM3WeJcGkVjDP+YbP5uYoNms0JHy0fvAM=;
-        b=dHB/RV9/Z0x+PyahfYcA/w3hi0IXq91YXf34XiKLEBPH7PVcQB3ly2nZNmJIfFosSh
-         tfju8Bz7/ljCBPKPqeFO2RXN6V9nqsdtEK3slMAXurUXxdfgbJyrwE++vJRJjX4jSogo
-         od+wWoDNC7GcaB18EqZrn5BTX0VP53HsxAlE6A5YVRZnnMpEnp+uF5Y222hDXRIZIykC
-         vYcz3MlH2qI0q3+XyRu74FTf/21m/WHahvQXdDXMzsO5fobC0Y54Dd2WAXwgs/bl5wGU
-         sTRwq7LDAK5xkzv8cnenJLCs2emZOsrU6U9TE8EOkYafvUVEP9l89bPXkAjgBnptMStZ
-         yCkw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=xsupKns0vCTM3WeJcGkVjDP+YbP5uYoNms0JHy0fvAM=;
-        b=KxTEo4EEgcM11TK2125wr/nzW/8dPPiHT93J7rL1VpqTrAJRmwfLhI6LzmTVOzKKwN
-         WlKinbM/zrm8UmJE0v+IWWKrwJKK8+wDt0zEd4oSG4g1t3FoNUUvcXtKouoO4kdMBM7p
-         N/tytkLD6kUkaOHpWezBHH3STG81zaPGXo0MPojkEBMklNuNwkD6Pw2Js7NjghHkQJF0
-         +yLISGyGK5W8C3mIr9nH8lI+bJlTXJepl1ezeMH8fFXxuXVi8UqAiQxe6eO48dMJlQfV
-         ZQqwh4nj2/pSAwycCDmVVsREsydql6TAaVPx+qXTy4L76pdh4EETk/UUuXSodEInASlZ
-         M/tA==
-X-Gm-Message-State: APjAAAU+uCDD9UvL1ZEeaoALIj9ey7gI+HFIO1f8kFo9uwwGRo6hciuA
-        wYznV7uzIP1BP3hqQeMzAtQO
-X-Google-Smtp-Source: APXvYqx87g/e7WC505+cEagRJXfEeDjlYeTZUqvcM8Ppu1p39CKD9QfMfVAClfv/Qg5lNSR8rjwWNg==
-X-Received: by 2002:a63:6ac1:: with SMTP id f184mr3524288pgc.133.1579780858733;
-        Thu, 23 Jan 2020 04:00:58 -0800 (PST)
-Received: from mani ([103.59.133.81])
-        by smtp.gmail.com with ESMTPSA id k23sm2602114pgg.7.2020.01.23.04.00.55
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 23 Jan 2020 04:00:58 -0800 (PST)
-Date:   Thu, 23 Jan 2020 17:30:50 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     gregkh <gregkh@linuxfoundation.org>, smohanad@codeaurora.org,
-        Jeffrey Hugo <jhugo@codeaurora.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        hemantk@codeaurora.org,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 05/16] bus: mhi: core: Add support for ringing
- channel/event ring doorbells
-Message-ID: <20200123120050.GB8937@mani>
-References: <20200123111836.7414-1-manivannan.sadhasivam@linaro.org>
- <20200123111836.7414-6-manivannan.sadhasivam@linaro.org>
- <CAK8P3a2pZEdsAi6YQ5z3YD=zD1iZLu+WPirhwmxeZ33k7sjkeg@mail.gmail.com>
+        Thu, 23 Jan 2020 07:03:24 -0500
+Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
+        by mx0a-001ae601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00NBxpob030558;
+        Thu, 23 Jan 2020 06:03:21 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=PODMain02222019;
+ bh=4V++r+G/n0fBNRVn85iOLexUiH8xVgSQNdaFDvYpwFM=;
+ b=km/jVXLjiokG8osCPgBvApu1XRfim60hsK1Si3Cj/LuEItAO2qpI51+ginDGXe0vzaej
+ +xme9YizsSXU6q9Uw0pmngZZWNs0JD4ODyUjgAyR0AAcqOHmGtzOKaQIAHBZ31YrbZbv
+ t4+C44MdhKnzd0EOjP7He0t+tsTA6MCP5rDfcvdVpRyTJGnEPtLHmgGaR4GBGA3moYDv
+ IONvhSBC53ftjK47ghK/EV698S03rfshqZGYPjLZfMdEVljTC7A94DafrfkDm6m+L6dQ
+ MAsVM8x922GVDBKT09FyvOWT1WY1iByomd6NE92HAlAutk+IVRyl2JCfmziwthwkf4W8 GQ== 
+Authentication-Results: ppops.net;
+        spf=fail smtp.mailfrom=ckeepax@opensource.cirrus.com
+Received: from ediex01.ad.cirrus.com ([5.172.152.52])
+        by mx0a-001ae601.pphosted.com with ESMTP id 2xm0a8yw1d-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Thu, 23 Jan 2020 06:03:19 -0600
+Received: from EDIEX01.ad.cirrus.com (198.61.84.80) by EDIEX01.ad.cirrus.com
+ (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Thu, 23 Jan
+ 2020 12:02:41 +0000
+Received: from ediswmail.ad.cirrus.com (198.61.86.93) by EDIEX01.ad.cirrus.com
+ (198.61.84.80) with Microsoft SMTP Server id 15.1.1591.10 via Frontend
+ Transport; Thu, 23 Jan 2020 12:02:41 +0000
+Received: from ediswmail.ad.cirrus.com (ediswmail.ad.cirrus.com [198.61.86.93])
+        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id D5C312C6;
+        Thu, 23 Jan 2020 12:02:40 +0000 (UTC)
+Date:   Thu, 23 Jan 2020 12:02:40 +0000
+From:   Charles Keepax <ckeepax@opensource.cirrus.com>
+To:     Mark Brown <broonie@kernel.org>
+CC:     <lee.jones@linaro.org>, <lgirdwood@gmail.com>,
+        <linux-kernel@vger.kernel.org>, <patches@opensource.cirrus.com>
+Subject: Re: [PATCH RESEND 1/2] regulator: arizona-ldo1: Improve handling of
+ regulator unbinding
+Message-ID: <20200123120240.GD4098@ediswmail.ad.cirrus.com>
+References: <20200122110842.10702-1-ckeepax@opensource.cirrus.com>
+ <20200122131149.GE3833@sirena.org.uk>
+ <20200123092639.GC4098@ediswmail.ad.cirrus.com>
+ <20200123114805.GA5440@sirena.org.uk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <CAK8P3a2pZEdsAi6YQ5z3YD=zD1iZLu+WPirhwmxeZ33k7sjkeg@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200123114805.GA5440@sirena.org.uk>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-Proofpoint-SPF-Result: fail
+X-Proofpoint-SPF-Record: v=spf1 include:spf-001ae601.pphosted.com include:spf.protection.outlook.com
+ -all
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxscore=0 suspectscore=0
+ bulkscore=0 priorityscore=1501 impostorscore=0 mlxlogscore=999
+ phishscore=0 malwarescore=0 adultscore=0 lowpriorityscore=0 clxscore=1015
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-1910280000
+ definitions=main-2001230103
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Arnd,
+On Thu, Jan 23, 2020 at 11:48:05AM +0000, Mark Brown wrote:
+> On Thu, Jan 23, 2020 at 09:26:39AM +0000, Charles Keepax wrote:
+> 
+> > 3) We could look at doing something in regmap IRQ to change when
+> > it does PM runtime calls, it is regmap doing runtime gets when
+> > drivers remove IRQs that causes the issue. But my accessment was
+> > that what regmap is doing makes perfect sense, so I don't think
+> > this is a good approach.
+> 
+> Why do you even care about the errors?  It's not like this device is
+> going to get removed in a production system and the primary IRQ will be
+> disabled when the core is removed, this is just something that happens
+> during development isn't it?
 
-On Thu, Jan 23, 2020 at 12:39:06PM +0100, Arnd Bergmann wrote:
-> On Thu, Jan 23, 2020 at 12:19 PM Manivannan Sadhasivam
-> <manivannan.sadhasivam@linaro.org> wrote:
-> 
-> > +int __must_check mhi_read_reg(struct mhi_controller *mhi_cntrl,
-> > +                             void __iomem *base, u32 offset, u32 *out)
-> > +{
-> > +       u32 tmp = readl_relaxed(base + offset);
-> ....
-> > +void mhi_write_reg(struct mhi_controller *mhi_cntrl, void __iomem *base,
-> > +                  u32 offset, u32 val)
-> > +{
-> > +       writel_relaxed(val, base + offset);
-> 
-> Please avoid using _relaxed accessors by default, and use the regular
-> ones instead. There are a number of things that can go wrong with
-> the relaxed version, so ideally each caller should have a comment
-> explaining why this instance is safe without the barriers and why it
-> matters to not have it.
-> 
-> If there are performance critical callers of mhi_read_reg/mhi_write_reg,
-> you could add mhi_read_reg_relaxed/mhi_write_reg_relaxed for those
-> and apply the same rules there.
-> 
-> Usually most mmio accesses are only needed for reconfiguration or
-> other slow paths.
-> 
+We do have certain customers who test unbinding the driver and
+complain when it throws errors. Admittedly, you are correct that
+it is a little bit of a stretch to imagine a situation where this
+is a massive problem in production. Best I can offer is one of
+our CODECs gets into a laptop and someone wants to unbind/bind
+the driver, to clear some issue or something.
 
-Fair point. I'll defer to readl/writel APIs and I also need to add
-le32_to_cpu/cpu_to_le32 to them.
+Its been a while since I was looking at this issue, so I will
+double check to see if the issue is purely one of error messages
+or if it actually can cause problems (memory leaks or issues
+rebinding). But on a personal note I would be somewhat happier if
+we could come up with some acceptable way to make the driver
+unbind cleanly.
+
+I am more than happy to do the leg work if we really don't like
+this solution. Do either you or Lee have any thoughts on my
+selective MFD remove helpers? That seemed like the most promising
+alternative solution to me.
 
 Thanks,
-Mani
-
->       Arnd
+Charles
