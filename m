@@ -2,140 +2,115 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F5EFC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 09:27:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A2ACC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 09:27:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E69A624125
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 09:27:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31ABF24684
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 09:27:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="RPcGX5BC"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="LwEOJEum"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726205AbgAWJ1C (ORCPT
+        id S1726743AbgAWJ1R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 04:27:02 -0500
-Received: from mx0a-001ae601.pphosted.com ([67.231.149.25]:6782 "EHLO
-        mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725785AbgAWJ1B (ORCPT
+        Thu, 23 Jan 2020 04:27:17 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:48758 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725785AbgAWJ1R (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 04:27:01 -0500
-Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
-        by mx0a-001ae601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00N9NiUa015513;
-        Thu, 23 Jan 2020 03:26:58 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=PODMain02222019;
- bh=aQuqEAXvS/SXq1MmpZY3fWZYE9htc+lnY2Egj+TmxLU=;
- b=RPcGX5BCnlKG7e/pWWO3T3oHvuue4pNpHL/MFLGB2wLexznDJqF6IVYh93ezGOQMqS0+
- L2Zr6yJJBd9Kp1d4hs4VU1L6VwYlvJHpK+Kwd3c/GXHAEGwPUMRU+qwdgnnVONnmEF/5
- N5J0BWy6jNdvBGlXqmH29CkfSxIZK6/+W+bhSMPu1HlmLN1GaJxqSJmY9Y8fzFQer0im
- 0/mHidFrPhe5THtoa/KXKPKThOUNWRdKv+02ldIjDraCoQaejBhzfc56IaJMhxcDFdiM
- hKACSNPpQtuaOc6ZZGPtsuNVqRxTZc9ZWxbhazm/lMba/oLWihb7K9Y1Fwqj4BiNjsWV ig== 
-Authentication-Results: ppops.net;
-        spf=fail smtp.mailfrom=ckeepax@opensource.cirrus.com
-Received: from ediex02.ad.cirrus.com ([5.172.152.52])
-        by mx0a-001ae601.pphosted.com with ESMTP id 2xm0a8yjrc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Thu, 23 Jan 2020 03:26:58 -0600
-Received: from EDIEX01.ad.cirrus.com (198.61.84.80) by EDIEX02.ad.cirrus.com
- (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Thu, 23 Jan
- 2020 09:26:39 +0000
-Received: from ediswmail.ad.cirrus.com (198.61.86.93) by EDIEX01.ad.cirrus.com
- (198.61.84.80) with Microsoft SMTP Server id 15.1.1591.10 via Frontend
- Transport; Thu, 23 Jan 2020 09:26:39 +0000
-Received: from ediswmail.ad.cirrus.com (ediswmail.ad.cirrus.com [198.61.86.93])
-        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id DCE202D4;
-        Thu, 23 Jan 2020 09:26:39 +0000 (UTC)
-Date:   Thu, 23 Jan 2020 09:26:39 +0000
-From:   Charles Keepax <ckeepax@opensource.cirrus.com>
-To:     Mark Brown <broonie@kernel.org>
-CC:     <lee.jones@linaro.org>, <lgirdwood@gmail.com>,
-        <linux-kernel@vger.kernel.org>, <patches@opensource.cirrus.com>
-Subject: Re: [PATCH RESEND 1/2] regulator: arizona-ldo1: Improve handling of
- regulator unbinding
-Message-ID: <20200123092639.GC4098@ediswmail.ad.cirrus.com>
-References: <20200122110842.10702-1-ckeepax@opensource.cirrus.com>
- <20200122131149.GE3833@sirena.org.uk>
+        Thu, 23 Jan 2020 04:27:17 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=yXt2e8+nL87kk6np60HZC4USlTrjp0fvuIINrNyQqC0=; b=LwEOJEumDlplZiem+kW6UY8o+
+        o4fASuFZarYZZSRRIT23Evkm73x8PyuTMXy/LyQpBhC4omCiPkvdAswM1WDx4yr1FVG00hntqSac/
+        Hwld7WW4oKbQmTH3NnLnnENDswejiBGxVRsW18sMqiVoEc9WCeA9wjztI3U0p1jaW9IRcGpFE9QVg
+        ZOL7xGms0EUyBMlRgPml+hlRZcCx835gj9n+VRICM6l0U2j0jE0GboxXO48Z5HDAeCgyZFoi4Byiw
+        b8Jp7C3noWpZk/LZxsaufi633nbnDQHobnjNuQbIasSlCXFeIUOB66NY8ud8ND8z65FwSFnEi5vyU
+        akNTYWeYQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iuYlR-0007ow-GR; Thu, 23 Jan 2020 09:27:01 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 482F7304121;
+        Thu, 23 Jan 2020 10:25:18 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 1A8E82B6FD00E; Thu, 23 Jan 2020 10:26:58 +0100 (CET)
+Date:   Thu, 23 Jan 2020 10:26:58 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Alex Kogan <alex.kogan@oracle.com>
+Cc:     linux@armlinux.org.uk, mingo@redhat.com, will.deacon@arm.com,
+        arnd@arndb.de, longman@redhat.com, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        tglx@linutronix.de, bp@alien8.de, hpa@zytor.com, x86@kernel.org,
+        guohanjun@huawei.com, jglauber@marvell.com,
+        steven.sistare@oracle.com, daniel.m.jordan@oracle.com,
+        dave.dice@oracle.com
+Subject: Re: [PATCH v9 3/5] locking/qspinlock: Introduce CNA into the slow
+ path of qspinlock
+Message-ID: <20200123092658.GC14879@hirez.programming.kicks-ass.net>
+References: <20200115035920.54451-1-alex.kogan@oracle.com>
+ <20200115035920.54451-4-alex.kogan@oracle.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200122131149.GE3833@sirena.org.uk>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-Proofpoint-SPF-Result: fail
-X-Proofpoint-SPF-Record: v=spf1 include:spf-001ae601.pphosted.com include:spf.protection.outlook.com
- -all
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxscore=0 suspectscore=2
- bulkscore=0 priorityscore=1501 impostorscore=0 mlxlogscore=971
- phishscore=0 malwarescore=0 adultscore=0 lowpriorityscore=0 clxscore=1015
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-1910280000
- definitions=main-2001230079
+In-Reply-To: <20200115035920.54451-4-alex.kogan@oracle.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 22, 2020 at 01:11:49PM +0000, Mark Brown wrote:
-> On Wed, Jan 22, 2020 at 11:08:41AM +0000, Charles Keepax wrote:
-> 
-> > The current unbinding process for Madera has some issues. The trouble
-> > is runtime PM is disabled as the first step of the process, but
-> 
-> Why not just leave runtime PM active until all the subdevices are gone?
-> This is a really bad hack and it's going to be fragile.
-> 
+On Tue, Jan 14, 2020 at 10:59:18PM -0500, Alex Kogan wrote:
+> +/* this function is called only when the primary queue is empty */
+> +static inline bool cna_try_change_tail(struct qspinlock *lock, u32 val,
+> +				       struct mcs_spinlock *node)
+> +{
+> +	struct mcs_spinlock *head_2nd, *tail_2nd;
+> +	u32 new;
+> +
+> +	/* If the secondary queue is empty, do what MCS does. */
+> +	if (node->locked <= 1)
+> +		return __try_clear_tail(lock, val, node);
+> +
+> +	/*
+> +	 * Try to update the tail value to the last node in the secondary queue.
+> +	 * If successful, pass the lock to the first thread in the secondary
+> +	 * queue. Doing those two actions effectively moves all nodes from the
+> +	 * secondary queue into the main one.
+> +	 */
+> +	tail_2nd = decode_tail(node->locked);
+> +	head_2nd = tail_2nd->next;
+> +	new = ((struct cna_node *)tail_2nd)->encoded_tail + _Q_LOCKED_VAL;
+> +
+> +	if (atomic_try_cmpxchg_relaxed(&lock->val, &val, new)) {
+> +		/*
+> +		 * Try to reset @next in tail_2nd to NULL, but no need to check
+> +		 * the result - if failed, a new successor has updated it.
+> +		 */
 
-Admittedly I am not super fond of this solution either. But
-leaving the PM runtime active is basically what this patch does
-(well the mfd part). Leaving the PM runtime enabled means access
-to the DCVDD regulator is required during the remove process,
-which in turn means you need to put that regulator after the
-other devices are removed but before DCVDD is removed. Currently
-the only place we can do that is in the LDO remove, as per this
-patch.
+I think you actually have an ordering bug here; the load of head_2nd
+*must* happen before the atomic_try_cmpxchg(), otherwise it might
+observe the new next and clear a valid next pointer.
 
-Other options that might be viable, pending input for yourself
-and Lee:
+What would be the best fix for that; I'm thinking:
 
-1) We could look at adding a partial remove function to MFD.
-Currently I can only call mfd_remove_devices which nobbles all
-the devices. If I could make calls to remove specific devices I
-could do one call to remove everything except DCVDD, do the put,
-then remove the regulator.
+	head_2nd = smp_load_acquire(&tail_2nd->next);
 
-2) We could look at adding some sort of pre-remove callback into
-MFD, and the regulator put could go in there rather than the
-regulator remove, as per this patch. Although this feels a little
-like the same thing as this patch, just dressed up a little
-differently.
+Will?
 
-3) We could look at doing something in regmap IRQ to change when
-it does PM runtime calls, it is regmap doing runtime gets when
-drivers remove IRQs that causes the issue. But my accessment was
-that what regmap is doing makes perfect sense, so I don't think
-this is a good approach.
-
-> > +static int madera_ldo1_remove(struct platform_device *pdev)
-> > +{
-> > +	struct madera *madera = dev_get_drvdata(pdev->dev.parent);
-> > +
-> > +	if (madera->internal_dcvdd) {
-> > +		regulator_disable(madera->dcvdd);
-> > +		regulator_put(madera->dcvdd);
-> > +	}
-> 
-> This is going to break bisection since it will result in double
-> disables, it'd be fine to do the MFD change first since that'd just
-> leak a reference to enable on a regulator which is about to be discarded
-> entirely anyway but this reordering (and whatever other changes you've
-> done since v1) means you add a double free.
-
-Apologies yes that is a good point. If no one minds, and we end
-up sticking with this approach, I feel it might best to squash
-them both back into one patch?
-
-Thanks,
-Charles
+> +		cmpxchg_relaxed(&tail_2nd->next, head_2nd, NULL);
+> +		arch_mcs_pass_lock(&head_2nd->locked, 1);
+> +		return true;
+> +	}
+> +
+> +	return false;
+> +}
