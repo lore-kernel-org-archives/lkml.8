@@ -2,120 +2,113 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CAA9C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 19:16:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93528C33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 19:17:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7410D2077C
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 19:16:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C7C32077C
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 19:17:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="fTwlNQnS"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="of2n3Wx7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729049AbgAWTQj (ORCPT
+        id S1729093AbgAWTRC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 14:16:39 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:43053 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727590AbgAWTQj (ORCPT
+        Thu, 23 Jan 2020 14:17:02 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:41049 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727590AbgAWTRC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 14:16:39 -0500
-Received: by mail-pg1-f196.google.com with SMTP id u131so1840644pgc.10
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jan 2020 11:16:38 -0800 (PST)
+        Thu, 23 Jan 2020 14:17:02 -0500
+Received: by mail-lj1-f193.google.com with SMTP id h23so4894058ljc.8;
+        Thu, 23 Jan 2020 11:17:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=6wtdQZE06z+aORJTnpPZKoEwjECFJKRvpZenOyG2pbs=;
-        b=fTwlNQnSmBYcTlW2X4DkUAm58zuHxoeu1OEc1vVlBWKcW7LfEspLDnJ4HX4efyba1l
-         uObRu4eaRbt9SL8oC69dLx0ZzK8f0kGqGgDXBigb4khY/TnOqcOfpmpj0x3bKD/JteV6
-         Jwk1lWXngMbf/5avCtsxAskWpmpWiUPoVg32g=
+        d=gmail.com; s=20161025;
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=wmphSZ8sU4dWkQ3DRzdv5dHXvC3B9dVKeB/xkfJZIyo=;
+        b=of2n3Wx7J4bQL0mMgSf/jLoYdJvZcbE7VNKSYVJzAVcCmdUO2dlbmJis2afBsfrASb
+         deOBKJ4AOEspuX+LnRRurfSyxW5e7pp89V5ve0jXUwAq6F5pZYqMj6hqsQ0+V2zug/+2
+         qwnkIfFdVC81eWT0wObxyPuanBnQtYBo9Yesl1vzGSWDicf71pjhjSrN1nntFOriLUjE
+         HJS8PrOMGlHxyikKY6SGl/Lf91yoHIX8vHl4cma6ntm7cOug2TU2B2Pem1pMm4RrBRrq
+         WlRFyN06GsTlZnVt2yLvOCXnPjK9rwT3FgDqpskaM6up2ZpFyMtR44zusEJiHbDr/I/Y
+         pznQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=6wtdQZE06z+aORJTnpPZKoEwjECFJKRvpZenOyG2pbs=;
-        b=Beax+fDrrmh+J43Um4pRSJkoTNVSXReN0udDdg4N2VKHxdJ3gZCAFnCP3+oZYL4Wg4
-         xs3Fz5dWuEemL9/2ExuYfUqxwuHhVO3S2sHUjw/Kdh4jI24U+G3HFCQiqTyhv5MyGwSG
-         X3krP6gekduSy1prgv/3GhV9uvJHcqHQzeHvPfExpHaJLSm2qKZMpdeeWP8UZFvHM3Et
-         nO0wqt48RmvvnuTsWj1vm1a27p+4iyipvO5u2Y5rdf9nvRjxaqHMwyy0GpxIK7hMJs6k
-         3UfucsehVlxifLl/JxnhtyspgKflZAK9kawkWjuIINxNL3EK9Lkd1Z+6KmpfTJuQyhba
-         kjgg==
-X-Gm-Message-State: APjAAAXsRAc6YNro1TA/EBFrossVQpbDSwHLC3vwQRYZE9TAyz/+yEbP
-        yLutOS9BkYC1Zp0ohSsHGelMkw==
-X-Google-Smtp-Source: APXvYqw0a9ZjVf1aQi0SykCpNbX3nRr/2knF42uGFzUQInRewtmQbXeOhyiUEjTVPoGuKU6GqXuSJg==
-X-Received: by 2002:a65:4d0b:: with SMTP id i11mr336402pgt.340.1579806998644;
-        Thu, 23 Jan 2020 11:16:38 -0800 (PST)
-Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
-        by smtp.gmail.com with ESMTPSA id w8sm3323441pfn.186.2020.01.23.11.16.37
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=wmphSZ8sU4dWkQ3DRzdv5dHXvC3B9dVKeB/xkfJZIyo=;
+        b=NowZiT6DJUP6mJZgql35zj37QuH5AqhEkYxe3IeAygOF9Be2MB/ikY8juKfH/osbMf
+         gI3Swa901wuvNc8F1ESa/Y7hEzztCnDg2Nh1smQ5h8XYL1rbmQkESjxTgeakdUZb1lUB
+         OV3DWnwaKQxpTPp396VuyN5/kZSQx7qJfsCeTjO/u9xwCkKnQAElrRxMKVNIm/F13D6B
+         XBDNDCJRyRK0ZeyAaDy5v/C41tlf1LzhDzfBYZYKmfglY7meQtggMGT5pZgj1WzvfzOG
+         GaSkp/4krVV8uBt6q9x5Rh8GEb3Nix4TQNmEj4GhMQann68piE/zw9WPNMAYO/effATn
+         fKpg==
+X-Gm-Message-State: APjAAAWp04mk5+4iJXov/3Nf1U9I24oCTfQOWs+73PWWt1/Ekio83ZPU
+        dpYQcOsAq+G91f7lTyrdxVM=
+X-Google-Smtp-Source: APXvYqyuwRA5CiUa9ZtwW32eQSRiySpogNJVsIYjo5WHM20vJeMkTHQXiyMsF3MEnmmEHfQacykfgA==
+X-Received: by 2002:a2e:844e:: with SMTP id u14mr52113ljh.183.1579807020220;
+        Thu, 23 Jan 2020 11:17:00 -0800 (PST)
+Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
+        by smtp.googlemail.com with ESMTPSA id t9sm1523866lfl.51.2020.01.23.11.16.59
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 23 Jan 2020 11:16:38 -0800 (PST)
-Date:   Thu, 23 Jan 2020 11:16:36 -0800
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Jordan Crouse <jcrouse@codeaurora.org>
-Cc:     linux-arm-msm@vger.kernel.org, Sean Paul <sean@poorly.run>,
-        Sharat Masetty <smasetty@codeaurora.org>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        Douglas Anderson <dianders@chromium.org>,
-        Rob Clark <robdclark@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Georgi Djakov <georgi.djakov@linaro.org>,
-        freedreno@lists.freedesktop.org, Daniel Vetter <daniel@ffwll.ch>
-Subject: Re: [PATCH] drm/msm: Fix a6xx GMU shutdown sequence
-Message-ID: <20200123191636.GY89495@google.com>
-References: <1579797756-10292-1-git-send-email-jcrouse@codeaurora.org>
+        Thu, 23 Jan 2020 11:16:59 -0800 (PST)
+Subject: Re: [PATCH v2 0/9] input: elants: Support Asus TF300T touchscreen
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     "Johnny.Chuang" <johnny.chuang@emc.com.tw>,
+        'Dmitry Torokhov' <dmitry.torokhov@gmail.com>,
+        =?UTF-8?B?J01pY2hhxYIgTWlyb3PFgmF3Jw==?= <mirq-linux@rere.qmqm.pl>,
+        'James Chen' <james.chen@emc.com.tw>
+Cc:     linux-input@vger.kernel.org, 'Scott Liu' <scott.liu@emc.com.tw>,
+        linux-kernel@vger.kernel.org,
+        'Henrik Rydberg' <rydberg@bitmath.org>
+References: <cover.1576079249.git.mirq-linux@rere.qmqm.pl>
+ <20191212192420.GD101194@dtor-ws>
+ <7c67b849-369f-8a20-4f9e-9e0a7caec1cb@gmail.com>
+ <000001d5c634$655bed20$3013c760$@emc.com.tw>
+ <1451c959-03fc-9493-48f1-404cbd273aa9@gmail.com>
+Message-ID: <9b5b8dd4-0d21-0d1f-cd4a-36d0f9008605@gmail.com>
+Date:   Thu, 23 Jan 2020 22:16:53 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
+In-Reply-To: <1451c959-03fc-9493-48f1-404cbd273aa9@gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <1579797756-10292-1-git-send-email-jcrouse@codeaurora.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jordan,
+08.01.2020 18:37, Dmitry Osipenko пишет:
+> 08.01.2020 18:00, Johnny.Chuang пишет:
+>>> 12.12.2019 22:24, Dmitry Torokhov пишет:
+>>>> On Wed, Dec 11, 2019 at 05:03:18PM +0100, Michał Mirosław wrote:
+>>>>> This series cleans up the driver a bit and implements changes needed
+>>>>> to support EKTF3624-based touchscreen used in eg. Asus TF300T tablet.
+>>>>
+>>>> Johnny, could you please take a look at this patch series?
+>>>>
+>>>> Thanks!
+>>>
+>>> Hello Johnny,
+>>>
+>>> Could you please let us know whether you or anyone else from Elan are going
+>>> to take a look at this patchset anytime soon?
+>>
+>> Hi Dmitry Osipenko,
+>>
+>> I'm sorry to reply late. James Chen will take a look at this patch set. 
+>>
+> 
+> No problems, thank you very much.
 
-On Thu, Jan 23, 2020 at 09:42:36AM -0700, Jordan Crouse wrote:
-> Commit e812744c5f95 ("drm: msm: a6xx: Add support for A618") missed
-> updating the VBIF flush in a6xx_gmu_shutdown and instead
-> inserted the new sequence into a6xx_pm_suspend along with a redundant
-> GMU idle.
-> 
-> Move a6xx_bus_clear_pending_transactions to a6xx_gmu.c and use it in
-> the appropriate place in the shutdown routine and remove the redundant
-> idle call.
-> 
-> Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
-> ---
-> 
->  drivers/gpu/drm/msm/adreno/a6xx_gmu.c | 36 +++++++++++++++++++++++++----
->  drivers/gpu/drm/msm/adreno/a6xx_gpu.c | 43 -----------------------------------
->  2 files changed, 31 insertions(+), 48 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
-> index 983afea..f371227 100644
-> --- a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
-> +++ b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
->
-> ...
->
->  /* Gracefully try to shut down the GMU and by extension the GPU */
->  static void a6xx_gmu_shutdown(struct a6xx_gmu *gmu)
->  {
-> @@ -819,11 +849,7 @@ static void a6xx_gmu_shutdown(struct a6xx_gmu *gmu)
->  			return;
->  		}
->  
-> -		/* Clear the VBIF pipe before shutting down */
-> -		gpu_write(gpu, REG_A6XX_VBIF_XIN_HALT_CTRL0, 0xf);
-> -		spin_until((gpu_read(gpu, REG_A6XX_VBIF_XIN_HALT_CTRL1) & 0xf)
-> -			== 0xf);
-> -		gpu_write(gpu, REG_A6XX_VBIF_XIN_HALT_CTRL0, 0);
-> +		a6xx_bus_clear_pending_transactions(adreno_gpu);
+Hello James,
 
-With this the variable 'gpu' isn't used anymore in a6xx_gmu_shutdown(),
-please remove it.
+Could you please let us know whether you'll be able to take a look at
+this series? Thanks in advance.
