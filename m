@@ -2,118 +2,109 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDB7BC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 15:29:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC2F6C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 15:30:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDBD02064C
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 15:29:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="j1j6sCnf"
+	by mail.kernel.org (Postfix) with ESMTP id B3EC924684
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 15:30:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579793406;
+	bh=/z3i8WitLNlWahmY5dE/I3JGerQilohr4h5y/bZjPTA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ZAzfSkeLGkGlF3TuD4Z/vqQ/GJdJlYJbCLQ+yTxk/hsdVIRavUHXwLzu+TwYSRJ/Q
+	 o3OIHF5uHgk+qIOyzf6BIwW3rr0wn2a8Y7U9q/N2djnFi0TLvUgN5vQMHrXGUD7/V/
+	 Y4YXSRyPGD1jZAMZnwDxmdJ2bAnWveGRYvDAM2gc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728904AbgAWP3y (ORCPT
+        id S1729016AbgAWPaG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 10:29:54 -0500
-Received: from merlin.infradead.org ([205.233.59.134]:34794 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727847AbgAWP3y (ORCPT
+        Thu, 23 Jan 2020 10:30:06 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:44868 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727847AbgAWPaF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 10:29:54 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=B/n7W4E7uJv5pAkHx8ZqbqbrQSUi/FNUw9Ppcu+la6k=; b=j1j6sCnf43FehruEfnqskrYLt
-        Nn8vL0JG757sO7HS9jy/OW4qN7Xix2ztFpJGjhG0QLLNLKrSVprKwN1Sm3w4t2G1KuTivtLxuDNow
-        srmx8d4BRDA1cZVtL6pPeoES1PflMknut7Qo5+xQo4tgayMAJo90FilPtFtGDWghaDrVt4qeBqnX/
-        jkQYNsbBaH8pe2tklc/irJIS4pachSjxnlh9EF7llzHd7lOWKQaqSi5iO5UGtwVpOK2z8O/H++xNM
-        IUmNO6YlaNgdwixRiYPWm027TpZwMb8tRhf1G4ApegWcUN+G3gVCW7J+VmdIQ/F6/Es0/QM44NRFi
-        gDzwJ0FxA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iueQ6-0007ex-8F; Thu, 23 Jan 2020 15:29:22 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 2261E300693;
-        Thu, 23 Jan 2020 16:27:38 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 42C712B63FCAF; Thu, 23 Jan 2020 16:29:18 +0100 (CET)
-Date:   Thu, 23 Jan 2020 16:29:18 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Waiman Long <longman@redhat.com>
-Cc:     Alex Kogan <alex.kogan@oracle.com>, linux@armlinux.org.uk,
-        mingo@redhat.com, will.deacon@arm.com, arnd@arndb.de,
-        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, tglx@linutronix.de, bp@alien8.de,
-        hpa@zytor.com, x86@kernel.org, guohanjun@huawei.com,
-        jglauber@marvell.com, steven.sistare@oracle.com,
-        daniel.m.jordan@oracle.com, dave.dice@oracle.com
-Subject: Re: [PATCH v9 3/5] locking/qspinlock: Introduce CNA into the slow
- path of qspinlock
-Message-ID: <20200123152918.GD14879@hirez.programming.kicks-ass.net>
-References: <20200115035920.54451-1-alex.kogan@oracle.com>
- <20200115035920.54451-4-alex.kogan@oracle.com>
- <d751a8ef-aae8-ca70-6a28-79dd8bee2324@redhat.com>
+        Thu, 23 Jan 2020 10:30:05 -0500
+Received: by mail-ot1-f66.google.com with SMTP id h9so3055890otj.11;
+        Thu, 23 Jan 2020 07:30:05 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=YHqBGj/ukTPkl69zvdBgkmcYaLWB1N0Qj6YD43sxU/8=;
+        b=QiVdXJGObleBcBNIEaA1pbFxONW2u86/MusGQU6g9mImTAT2BHsg4IIKpWCm/cYBEa
+         uwIGutMcaFCxfphsVV/vUdFuAcYPjwsAwuYgQr9wcY+orXQs2BGfE1AJuzKtoVIfX6ic
+         8Pa88apJ6B+7vX/Qxl2MbGzBYpOVzt+GyLq20Ew2aWzYLDR7mU+VPnLaaozfd+kb0Qjb
+         Gg9swqYG5Eg9LYmQ7g2vH/SSovebmkjwQjwp2n4N4JGUt2qYcHSXhpZ89By+RUOtweKO
+         +w7PbKq7ECW+YFUVNxsJh+4n16aW/rXB+Cw/M30Y7RMRIRuNv7W+WUCLI//qM7gBq4vS
+         560w==
+X-Gm-Message-State: APjAAAVHvriC6GwCTb89rN40GmuKGhlH1BUs8xjWRjrdmXiQpx3P5pN5
+        i9DEvxWjdABzl2TNzSqVyQ==
+X-Google-Smtp-Source: APXvYqxkWG8AeF8EXXnGTWZ4IdGe6xCc6yw9d5YQpXCkxvBsnWb6O8ACMvnxGdINcohg5IvNyDKtDQ==
+X-Received: by 2002:a05:6830:4ca:: with SMTP id s10mr11737763otd.268.1579793404638;
+        Thu, 23 Jan 2020 07:30:04 -0800 (PST)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id p24sm891368oth.28.2020.01.23.07.30.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 23 Jan 2020 07:30:04 -0800 (PST)
+Received: (nullmailer pid 12956 invoked by uid 1000);
+        Thu, 23 Jan 2020 15:30:02 -0000
+Date:   Thu, 23 Jan 2020 09:30:02 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Olivier Moysan <olivier.moysan@st.com>
+Cc:     jic23@kernel.org, lgirdwood@gmail.com, broonie@kernel.org,
+        perex@perex.cz, tiwai@suse.com, alsa-devel@alsa-project.org,
+        mark.rutland@arm.com, mcoquelin.stm32@gmail.com, lars@metafoo.de,
+        devicetree@vger.kernel.org, linux-iio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, pmeerw@pmeerw.net, knaack.h@gmx.de,
+        fabrice.gasnier@st.com, linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] dt-bindings: stm32: convert dfsdm to json-schema
+Message-ID: <20200123153002.GA14241@bogus>
+References: <20200123083432.21997-1-olivier.moysan@st.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <d751a8ef-aae8-ca70-6a28-79dd8bee2324@redhat.com>
+In-Reply-To: <20200123083432.21997-1-olivier.moysan@st.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 23, 2020 at 09:15:55AM -0500, Waiman Long wrote:
-> On 1/14/20 10:59 PM, Alex Kogan wrote:
-> > +static int __init cna_init_nodes(void)
-> > +{
-> > +	unsigned int cpu;
-> > +
-> > +	/*
-> > +	 * this will break on 32bit architectures, so we restrict
-> > +	 * the use of CNA to 64bit only (see arch/x86/Kconfig)
-> > +	 */
-> > +	BUILD_BUG_ON(sizeof(struct cna_node) > sizeof(struct qnode));
-> > +	/* we store an ecoded tail word in the node's @locked field */
-> > +	BUILD_BUG_ON(sizeof(u32) > sizeof(unsigned int));
-> > +
-> > +	for_each_possible_cpu(cpu)
-> > +		cna_init_nodes_per_cpu(cpu);
-> > +
-> > +	return 0;
-> > +}
-> > +early_initcall(cna_init_nodes);
-> > +
+On Thu, Jan 23, 2020 at 09:34:31AM +0100, Olivier Moysan wrote:
+> Convert the STM32 DFSDM bindings to DT schema format
+> using json-schema.
 > 
-> I just realized that you shouldn't call cna_init_nodes as an
-> early_initcall. Instead,
+> Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
+> ---
+> The DT check still returns some warnings on this bindings:
+> dfsdm@4400d000: filter@4: 'st,adc-channels' is a required property
+> dfsdm@4400d000: filter@5: 'st,adc-channels' is a required property ...
 > 
-> > +/*
-> > + * Switch to the NUMA-friendly slow path for spinlocks when we have
-> > + * multiple NUMA nodes in native environment, unless the user has
-> > + * overridden this default behavior by setting the numa_spinlock flag.
-> > + */
-> > +void __init cna_configure_spin_lock_slowpath(void)
-> > +{
-> > +	if ((numa_spinlock_flag == 1) ||
-> > +	    (numa_spinlock_flag == 0 && nr_node_ids > 1 &&
-> > +		    pv_ops.lock.queued_spin_lock_slowpath ==
-> > +			native_queued_spin_lock_slowpath)) {
-> > +		pv_ops.lock.queued_spin_lock_slowpath =
-> > +		    __cna_queued_spin_lock_slowpath;
-> > +
-> > +		pr_info("Enabling CNA spinlock\n");
-> > +	}
-> > +}
-> 
-> call it when it is sure that CNA spinlock is going to be used. At this
-> point, the system is still in UP mode and the slowpath will not be called.
+> These warnings occur because some disabled nodes do not provides the
+> required properties. These nodes are included from SoC DT,
+> and do not provides by default the properties which are board dependent.
 
-Indeed, let me go fix that!
+We handle disabled nodes, but not when they are child nodes.
+
+> As workaround in DFSDM yaml bindings, the properties
+> (like st,adc-channels) could be defined as required,
+> only for the nodes which are in enabled state.
+
+We should handle this in the tooling, not the schemas. I entered an 
+issue to track this[1].
+
+> ---
+>  .../bindings/iio/adc/st,stm32-dfsdm-adc.txt   | 135 -------
+>  .../bindings/iio/adc/st,stm32-dfsdm-adc.yaml  | 332 ++++++++++++++++++
+>  2 files changed, 332 insertions(+), 135 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/iio/adc/st,stm32-dfsdm-adc.txt
+>  create mode 100644 Documentation/devicetree/bindings/iio/adc/st,stm32-dfsdm-adc.yaml
+
+Applied.
+
+[1] https://github.com/devicetree-org/dt-schema/issues/32
