@@ -2,132 +2,122 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BA17C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 10:07:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EF51C33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 10:10:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C10F2467B
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 10:07:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7FF52467B
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 10:10:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qf3j5dyR"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="lEZ6F2Y3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726771AbgAWKHE (ORCPT
+        id S1726703AbgAWKKF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 05:07:04 -0500
-Received: from merlin.infradead.org ([205.233.59.134]:60824 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726026AbgAWKHE (ORCPT
+        Thu, 23 Jan 2020 05:10:05 -0500
+Received: from mail-wr1-f54.google.com ([209.85.221.54]:42463 "EHLO
+        mail-wr1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726188AbgAWKKE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 05:07:04 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=RNXTHzMWdAtx6D8MqtDjnWjGOecOvXnxd0b3aezRlbM=; b=qf3j5dyRRR2IDX21GjmYWm3EM
-        gP7mN6IpY9OVHkaeBYNVonbidUDC8jdSaYepv223StC0EYxFYf8wIwQPwbPB8P3RHPnLgVIDpaq3H
-        DiKB5VOUgs/ifvf6KqRW/fD9Ul8fWz8HhKfn03sIlXtEE+/3Dvj0gywlJvrBd63Dc3JaD+RXnHkUr
-        +jN0JwEthW71geXwAsmHSD2c5s0pqueSyQd9StM8rWB+YwVZoyoNJKw1TOP1x6C93JSAGoRuSvZOX
-        eFWaJWsTDzeN6ldkbGMpN29bDi7KoX6ZNoGicpVQJIRaOHXNQri1TCO2letCRjl8vKhuNdh3U3ycY
-        P4JXp25aA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iuZNo-0003Ff-11; Thu, 23 Jan 2020 10:06:40 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id E162F300B8D;
-        Thu, 23 Jan 2020 11:04:55 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id D52CE2B6E7A17; Thu, 23 Jan 2020 11:06:35 +0100 (CET)
-Date:   Thu, 23 Jan 2020 11:06:35 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Alex Kogan <alex.kogan@oracle.com>
-Cc:     linux@armlinux.org.uk, mingo@redhat.com, will.deacon@arm.com,
-        arnd@arndb.de, longman@redhat.com, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        tglx@linutronix.de, bp@alien8.de, hpa@zytor.com, x86@kernel.org,
-        guohanjun@huawei.com, jglauber@marvell.com,
-        steven.sistare@oracle.com, daniel.m.jordan@oracle.com,
-        dave.dice@oracle.com
-Subject: Re: [PATCH v9 3/5] locking/qspinlock: Introduce CNA into the slow
- path of qspinlock
-Message-ID: <20200123100635.GE14946@hirez.programming.kicks-ass.net>
-References: <20200115035920.54451-1-alex.kogan@oracle.com>
- <20200115035920.54451-4-alex.kogan@oracle.com>
- <20200123092658.GC14879@hirez.programming.kicks-ass.net>
+        Thu, 23 Jan 2020 05:10:04 -0500
+Received: by mail-wr1-f54.google.com with SMTP id q6so2363364wro.9
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jan 2020 02:10:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=CPtiGh3pLVRqM/RhdEdGDHKOR3MHqHacHg8X7Y8s2e4=;
+        b=lEZ6F2Y3XuFJJ+f1L3xrMx1z5WAfHx5lpS0EBr9opnokRMqukIqIqhwGGeKAPwlCcL
+         JGuqDB/aIDlkL/hUmWsag1p+ar/UNmmzmTrPH2dbu9i+EDK9G14srPRYivZk7CuWIo7c
+         9nncpMgC3UoI9fXRMEvtxn5bWbO0DkMBSsbbIkUhDwqKrF43+4tb7+C7Qt+B+Yolhjjr
+         VEbsfQsB+n6c7my2S4Cgj3Hjq/FJ82bqeBGgldw1ZvUgDuQCKyA9BlkdbybHOuKkGUEH
+         8cPT1tCIT1WiCYgZXDcg9GS33SWuWvXWesDTkAMg2y0WlivRUtPrblssZrLY83zwSdv4
+         3Nhg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=CPtiGh3pLVRqM/RhdEdGDHKOR3MHqHacHg8X7Y8s2e4=;
+        b=OOk/vdtBPyKlR/Mel92iDXvONmfL/CZPKPDPOQoARWascXxGAAQ8p45HGExLNRl4yf
+         Os/ivfyIO7MCZlcX6E6dFppiNvSk9tnP8fbrr6jPChIrVQAPPMOVEshirh00sjxZY9ax
+         qSVnLi/Z0LmIZMwbGjAWCeGaEX18SeUrREXcV3kLdQM+RIaGQ9ah8IFKoYTNu/tTe6OW
+         vsdDKNi58XSsPjPPSvrcXpDCwNwRXFlBkdwqIFCtm6XUj3W1UKuZqURg+gkWcNBi9svJ
+         m5VZzhXBxhzqiPDMaFbiUCb1g3Z04GTSh8C6rzXHDBnGf9n6Y1Sjv1LN0Ez95WmsBgRa
+         u95w==
+X-Gm-Message-State: APjAAAWHrnfTKVFaTeLfaZnFvtdjCFLM8jFReHWy1fmA0GGK9SdgKIrN
+        bjeHbdWW/5LXs6OnXiGFHqF0Lg==
+X-Google-Smtp-Source: APXvYqysNIh/eaPEJ9Qrn6D+jgs5CR8M8Bul4ynZ8ZQyY/NCkS8niuCrkSUJIY9lJjgLK1bUNuvMiA==
+X-Received: by 2002:a5d:484f:: with SMTP id n15mr16446703wrs.365.1579774202577;
+        Thu, 23 Jan 2020 02:10:02 -0800 (PST)
+Received: from Red ([2a01:cb1d:3d5:a100:2e56:dcff:fed2:c6d6])
+        by smtp.googlemail.com with ESMTPSA id q6sm2551467wrx.72.2020.01.23.02.10.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 23 Jan 2020 02:10:02 -0800 (PST)
+Date:   Thu, 23 Jan 2020 11:10:00 +0100
+From:   LABBE Corentin <clabbe@baylibre.com>
+To:     arei.gonglei@huawei.com, mst@redhat.com, jasowang@redhat.com,
+        herbert@gondor.apana.org.au, davem@davemloft.net,
+        virtualization@lists.linux-foundation.org
+Cc:     linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [CRASH] crypto: virtio: crash when modprobing tcrypt on 5.5-rc7 /
+ next-20200122
+Message-ID: <20200123101000.GB24255@Red>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200123092658.GC14879@hirez.programming.kicks-ass.net>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 23, 2020 at 10:26:58AM +0100, Peter Zijlstra wrote:
-> On Tue, Jan 14, 2020 at 10:59:18PM -0500, Alex Kogan wrote:
-> > +/* this function is called only when the primary queue is empty */
-> > +static inline bool cna_try_change_tail(struct qspinlock *lock, u32 val,
-> > +				       struct mcs_spinlock *node)
-> > +{
-> > +	struct mcs_spinlock *head_2nd, *tail_2nd;
-> > +	u32 new;
-> > +
-> > +	/* If the secondary queue is empty, do what MCS does. */
-> > +	if (node->locked <= 1)
-> > +		return __try_clear_tail(lock, val, node);
-> > +
-> > +	/*
-> > +	 * Try to update the tail value to the last node in the secondary queue.
-> > +	 * If successful, pass the lock to the first thread in the secondary
-> > +	 * queue. Doing those two actions effectively moves all nodes from the
-> > +	 * secondary queue into the main one.
-> > +	 */
-> > +	tail_2nd = decode_tail(node->locked);
-> > +	head_2nd = tail_2nd->next;
-> > +	new = ((struct cna_node *)tail_2nd)->encoded_tail + _Q_LOCKED_VAL;
-> > +
-> > +	if (atomic_try_cmpxchg_relaxed(&lock->val, &val, new)) {
-> > +		/*
-> > +		 * Try to reset @next in tail_2nd to NULL, but no need to check
-> > +		 * the result - if failed, a new successor has updated it.
-> > +		 */
-> 
-> I think you actually have an ordering bug here; the load of head_2nd
-> *must* happen before the atomic_try_cmpxchg(), otherwise it might
-> observe the new next and clear a valid next pointer.
-> 
-> What would be the best fix for that; I'm thinking:
-> 
-> 	head_2nd = smp_load_acquire(&tail_2nd->next);
-> 
-> Will?
+Hello
 
-Hmm, given we've not passed the lock around yet; why wouldn't something
-like this work:
+When modprobing tcrypt on qemu 4.1.0 I get a kernel panic on 5.5-rc7 and next-20200122
+qemu is started by:
+/usr/bin/qemu-system-x86_64 -cpu host -enable-kvm -nographic -net nic,model=e1000,macaddr=52:54:00:12:34:58 -net tap -m 512 -monitor none -object cryptodev-backend-builtin,id=cryptodev0 -device virtio-crypto-pci,id=crypto0,cryptodev=cryptodev0 -append 'console=ttyS0 root=/dev/ram0 ip=dhcp' -kernel /var/lib/lava/dispatcher/tmp/41332/deployimages-td18675m/kernel/bzImage -initrd /var/lib/lava/dispatcher/tmp/41332/deployimages-td18675m/ramdisk/rootfs.cpio.gz -drive format=qcow2,file=/var/lib/lava/dispatcher/tmp/41332/apply-overlay-guest-icy4k1ol/lava-guest.qcow2,media=disk,if=ide,id=lavatest
 
-	smp_store_release(&tail_2nd->next, NULL);
+[  112.771925] general protection fault: 0000 [#1] SMP PTI
+[  112.772686] CPU: 0 PID: 126 Comm: virtio0-engine Not tainted 5.5.0-rc7+ #1
+[  112.773576] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS ?-20190711_202441-buildvm-armv7-10.arm.fedoraproject.org-2.fc31 04/01/2014
+[  112.775319] RIP: 0010:sg_next+0x0/0x20
+[  112.775821] Code: cc cc cc cc cc cc cc cc cc cc c7 47 10 00 00 00 00 89 57 0c 48 89 37 89 4f 08 c3 0f 1f 44 00 00 66 2e 0f 1f 84 00 00 00 00 00 <f6> 07 02 75 17 48 8b 57 20 48 8d 47 20 48 89 d1 48 83 e1 fc 83 e2
+[  112.778330] RSP: 0018:ffffa92440237d90 EFLAGS: 00010006
+[  112.779071] RAX: fefefefe00000000 RBX: 000000000000000a RCX: fefefefe00000000
+[  112.780081] RDX: 0000000000000001 RSI: ffff9b19da1a2180 RDI: fefefefe00000000
+[  112.781081] RBP: ffff9b19da1a2198 R08: ffff9b19dfb24ee8 R09: 0000000000000a20
+[  112.782079] R10: ffff9b19da125010 R11: 0000000000000000 R12: ffff9b19da1a21b8
+[  112.783079] R13: 0000000000000003 R14: ffff9b19da1a2180 R15: 0000000000000004
+[  112.784077] FS:  0000000000000000(0000) GS:ffff9b19de400000(0000) knlGS:0000000000000000
+[  112.785202] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[  112.786030] CR2: 00007f18a157b050 CR3: 000000001040a004 CR4: 0000000000060ef0
+[  112.787034] Call Trace:
+[  112.787393]  virtqueue_add_sgs+0x4c/0x90
+[  112.787998]  virtio_crypto_skcipher_crypt_req+0x310/0x3e0
+[  112.788817]  crypto_pump_work+0x10c/0x240
+[  112.789420]  ? __kthread_init_worker+0x50/0x50
+[  112.790082]  kthread_worker_fn+0x89/0x180
+[  112.790690]  kthread+0x10e/0x130
+[  112.791182]  ? kthread_park+0x80/0x80
+[  112.791736]  ret_from_fork+0x35/0x40
+[  112.792282] Modules linked in: cts lzo salsa20_generic camellia_x86_64 camellia_generic fcrypt pcbc tgr192 anubis wp512 khazad tea michael_mic arc4 cast6_generic cast5_generic cast_common deflate sha512_ssse3 sha512_generic cfb ofb serpent_sse2_x86_64 serpent_generic lrw twofish_x86_64_3way twofish_x86_64 crypto_simd cryptd glue_helper twofish_generic twofish_common blowfish_x86_64 blowfish_generic blowfish_common md4 tcrypt(+)
+[  112.797652] ---[ end trace 4a8142d4a08c2518 ]---
+[  112.798320] RIP: 0010:sg_next+0x0/0x20
+[  112.798865] Code: cc cc cc cc cc cc cc cc cc cc c7 47 10 00 00 00 00 89 57 0c 48 89 37 89 4f 08 c3 0f 1f 44 00 00 66 2e 0f 1f 84 00 00 00 00 00 <f6> 07 02 75 17 48 8b 57 20 48 8d 47 20 48 89 d1 48 83 e1 fc 83 e2
+[  112.801452] RSP: 0018:ffffa92440237d90 EFLAGS: 00010006
+[  112.802189] RAX: fefefefe00000000 RBX: 000000000000000a RCX: fefefefe00000000
+[  112.803190] RDX: 0000000000000001 RSI: ffff9b19da1a2180 RDI: fefefefe00000000
+[  112.804192] RBP: ffff9b19da1a2198 R08: ffff9b19dfb24ee8 R09: 0000000000000a20
+[  112.805201] R10: ffff9b19da125010 R11: 0000000000000000 R12: ffff9b19da1a21b8
+[  112.806195] R13: 0000000000000003 R14: ffff9b19da1a2180 R15: 0000000000000004
+[  112.807222] FS:  0000000000000000(0000) GS:ffff9b19de400000(0000) knlGS:0000000000000000
+[  112.808352] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[  112.809169] CR2: 00007f18a157b050 CR3: 000000001040a004 CR4: 0000000000060ef0
 
-	if (!atomic_try_cmpxchg_relaxed(&lock, &val, new)) {
-		tail_2nd->next = head_2nd;
-		return false;
-	}
+I have tested also 5.4.14 
+and I got random freeze with:
+qemu-system-x86_64: virtio: zero sized buffers are not allowed
 
-The whole second queue is only ever modified by the lock owner, and that
-is us, so we can pre-terminate the secondary queue (break the circular
-link), try the cmpxchg and fix it back up when it fails.
-
-
-> > +		cmpxchg_relaxed(&tail_2nd->next, head_2nd, NULL);
-> > +		arch_mcs_pass_lock(&head_2nd->locked, 1);
-> > +		return true;
-> > +	}
-> > +
-> > +	return false;
-> > +}
+Regards
