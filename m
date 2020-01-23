@@ -2,85 +2,120 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41703C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 19:15:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CAA9C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 19:16:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D08920718
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 19:15:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7410D2077C
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 19:16:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="fTwlNQnS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729019AbgAWTPv (ORCPT
+        id S1729049AbgAWTQj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 14:15:51 -0500
-Received: from foss.arm.com ([217.140.110.172]:43574 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727590AbgAWTPv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 14:15:51 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A28A71FB;
-        Thu, 23 Jan 2020 11:15:50 -0800 (PST)
-Received: from [192.168.0.7] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B70123F52E;
-        Thu, 23 Jan 2020 11:15:48 -0800 (PST)
-Subject: Re: [Patch v8 1/7] sched/pelt: Add support to track thermal pressure
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Thara Gopinath <thara.gopinath@linaro.org>
-Cc:     mingo@redhat.com, ionela.voinescu@arm.com,
-        vincent.guittot@linaro.org, rui.zhang@intel.com,
-        qperret@google.com, daniel.lezcano@linaro.org,
-        viresh.kumar@linaro.org, linux-kernel@vger.kernel.org,
-        amit.kachhap@gmail.com, javi.merino@kernel.org,
-        amit.kucheria@verdurent.com
-References: <1579031859-18692-1-git-send-email-thara.gopinath@linaro.org>
- <1579031859-18692-2-git-send-email-thara.gopinath@linaro.org>
- <20200116151724.GR2827@hirez.programming.kicks-ass.net>
-From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
-Message-ID: <e5ecad29-11d8-e7ff-27ff-b63ca44fdcd3@arm.com>
-Date:   Thu, 23 Jan 2020 20:15:47 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Thu, 23 Jan 2020 14:16:39 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:43053 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727590AbgAWTQj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jan 2020 14:16:39 -0500
+Received: by mail-pg1-f196.google.com with SMTP id u131so1840644pgc.10
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jan 2020 11:16:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=6wtdQZE06z+aORJTnpPZKoEwjECFJKRvpZenOyG2pbs=;
+        b=fTwlNQnSmBYcTlW2X4DkUAm58zuHxoeu1OEc1vVlBWKcW7LfEspLDnJ4HX4efyba1l
+         uObRu4eaRbt9SL8oC69dLx0ZzK8f0kGqGgDXBigb4khY/TnOqcOfpmpj0x3bKD/JteV6
+         Jwk1lWXngMbf/5avCtsxAskWpmpWiUPoVg32g=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=6wtdQZE06z+aORJTnpPZKoEwjECFJKRvpZenOyG2pbs=;
+        b=Beax+fDrrmh+J43Um4pRSJkoTNVSXReN0udDdg4N2VKHxdJ3gZCAFnCP3+oZYL4Wg4
+         xs3Fz5dWuEemL9/2ExuYfUqxwuHhVO3S2sHUjw/Kdh4jI24U+G3HFCQiqTyhv5MyGwSG
+         X3krP6gekduSy1prgv/3GhV9uvJHcqHQzeHvPfExpHaJLSm2qKZMpdeeWP8UZFvHM3Et
+         nO0wqt48RmvvnuTsWj1vm1a27p+4iyipvO5u2Y5rdf9nvRjxaqHMwyy0GpxIK7hMJs6k
+         3UfucsehVlxifLl/JxnhtyspgKflZAK9kawkWjuIINxNL3EK9Lkd1Z+6KmpfTJuQyhba
+         kjgg==
+X-Gm-Message-State: APjAAAXsRAc6YNro1TA/EBFrossVQpbDSwHLC3vwQRYZE9TAyz/+yEbP
+        yLutOS9BkYC1Zp0ohSsHGelMkw==
+X-Google-Smtp-Source: APXvYqw0a9ZjVf1aQi0SykCpNbX3nRr/2knF42uGFzUQInRewtmQbXeOhyiUEjTVPoGuKU6GqXuSJg==
+X-Received: by 2002:a65:4d0b:: with SMTP id i11mr336402pgt.340.1579806998644;
+        Thu, 23 Jan 2020 11:16:38 -0800 (PST)
+Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
+        by smtp.gmail.com with ESMTPSA id w8sm3323441pfn.186.2020.01.23.11.16.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 23 Jan 2020 11:16:38 -0800 (PST)
+Date:   Thu, 23 Jan 2020 11:16:36 -0800
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Jordan Crouse <jcrouse@codeaurora.org>
+Cc:     linux-arm-msm@vger.kernel.org, Sean Paul <sean@poorly.run>,
+        Sharat Masetty <smasetty@codeaurora.org>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        Douglas Anderson <dianders@chromium.org>,
+        Rob Clark <robdclark@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Georgi Djakov <georgi.djakov@linaro.org>,
+        freedreno@lists.freedesktop.org, Daniel Vetter <daniel@ffwll.ch>
+Subject: Re: [PATCH] drm/msm: Fix a6xx GMU shutdown sequence
+Message-ID: <20200123191636.GY89495@google.com>
+References: <1579797756-10292-1-git-send-email-jcrouse@codeaurora.org>
 MIME-Version: 1.0
-In-Reply-To: <20200116151724.GR2827@hirez.programming.kicks-ass.net>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <1579797756-10292-1-git-send-email-jcrouse@codeaurora.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 16/01/2020 16:17, Peter Zijlstra wrote:
-> On Tue, Jan 14, 2020 at 02:57:33PM -0500, Thara Gopinath wrote:
+Hi Jordan,
+
+On Thu, Jan 23, 2020 at 09:42:36AM -0700, Jordan Crouse wrote:
+> Commit e812744c5f95 ("drm: msm: a6xx: Add support for A618") missed
+> updating the VBIF flush in a6xx_gmu_shutdown and instead
+> inserted the new sequence into a6xx_pm_suspend along with a redundant
+> GMU idle.
 > 
->> diff --git a/kernel/sched/pelt.h b/kernel/sched/pelt.h
->> index afff644..bf1e17b 100644
->> --- a/kernel/sched/pelt.h
->> +++ b/kernel/sched/pelt.h
->> @@ -7,6 +7,16 @@ int __update_load_avg_cfs_rq(u64 now, struct cfs_rq *cfs_rq);
->>  int update_rt_rq_load_avg(u64 now, struct rq *rq, int running);
->>  int update_dl_rq_load_avg(u64 now, struct rq *rq, int running);
->>  
->> +#ifdef CONFIG_HAVE_SCHED_THERMAL_PRESSURE
+> Move a6xx_bus_clear_pending_transactions to a6xx_gmu.c and use it in
+> the appropriate place in the shutdown routine and remove the redundant
+> idle call.
+> 
+> Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
+> ---
+> 
+>  drivers/gpu/drm/msm/adreno/a6xx_gmu.c | 36 +++++++++++++++++++++++++----
+>  drivers/gpu/drm/msm/adreno/a6xx_gpu.c | 43 -----------------------------------
+>  2 files changed, 31 insertions(+), 48 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
+> index 983afea..f371227 100644
+> --- a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
+> +++ b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
+>
+> ...
+>
+>  /* Gracefully try to shut down the GMU and by extension the GPU */
+>  static void a6xx_gmu_shutdown(struct a6xx_gmu *gmu)
+>  {
+> @@ -819,11 +849,7 @@ static void a6xx_gmu_shutdown(struct a6xx_gmu *gmu)
+>  			return;
+>  		}
+>  
+> -		/* Clear the VBIF pipe before shutting down */
+> -		gpu_write(gpu, REG_A6XX_VBIF_XIN_HALT_CTRL0, 0xf);
+> -		spin_until((gpu_read(gpu, REG_A6XX_VBIF_XIN_HALT_CTRL1) & 0xf)
+> -			== 0xf);
+> -		gpu_write(gpu, REG_A6XX_VBIF_XIN_HALT_CTRL0, 0);
+> +		a6xx_bus_clear_pending_transactions(adreno_gpu);
 
-I assume your plan is to enable this for Arm and Arm64? Otherwise the
-code in 3/7 should also be guarded by this.
-
-diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-index e688dfad0b72..9eb414b2c8b9 100644
---- a/arch/arm64/Kconfig
-+++ b/arch/arm64/Kconfig
-@@ -164,6 +164,7 @@ config ARM64
-        select HAVE_FUNCTION_ARG_ACCESS_API
-        select HAVE_RCU_TABLE_FREE
-        select HAVE_RSEQ
-+       select HAVE_SCHED_THERMAL_PRESSURE
-        select HAVE_STACKPROTECTOR
-        select HAVE_SYSCALL_TRACEPOINTS
-
-Currently it lives in the 'CPU/Task time and stats accounting' of
-.config which doesn't feel right to me.
-
-[...]
+With this the variable 'gpu' isn't used anymore in a6xx_gmu_shutdown(),
+please remove it.
