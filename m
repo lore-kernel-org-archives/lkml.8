@@ -2,153 +2,203 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31AA9C33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 14:52:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2831DC33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 14:53:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0450E21835
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 14:52:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E00E221D7E
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 14:53:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="CShiQaPU"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="mD+YpZ+I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729075AbgAWOw6 (ORCPT
+        id S1729108AbgAWOxF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 09:52:58 -0500
-Received: from mail25.static.mailgun.info ([104.130.122.25]:18785 "EHLO
-        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726811AbgAWOw5 (ORCPT
+        Thu, 23 Jan 2020 09:53:05 -0500
+Received: from smtp-fw-6002.amazon.com ([52.95.49.90]:6510 "EHLO
+        smtp-fw-6002.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728205AbgAWOxE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 09:52:57 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1579791176; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=Gao3gfWhHq8szcjw/lY/yOEX3GT5FaSQZyPjtB7KPM4=; b=CShiQaPU3zAKWFelXut5/va6FL4pbN04AhuME7PMVWq1NHy5UE09aHaJAdisZbpA6aas0RU1
- 5Uj4a/KfZ2YtpusClafc9604K3hHpQ9Q77ZRF6BcvxEIpw3UwuW6RHGXeo/DW2NRrhTYpIle
- Drn40dg104EEUh78AB20W+7MuJo=
-X-Mailgun-Sending-Ip: 104.130.122.25
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e29b33d.7f87d178df48-smtp-out-n01;
- Thu, 23 Jan 2020 14:52:45 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 38106C447A1; Thu, 23 Jan 2020 14:52:44 +0000 (UTC)
-Received: from [10.226.58.28] (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: jhugo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id DBFB0C447A4;
-        Thu, 23 Jan 2020 14:52:42 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org DBFB0C447A4
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jhugo@codeaurora.org
-Subject: Re: [PATCH 01/16] docs: Add documentation for MHI bus
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>
-Cc:     gregkh <gregkh@linuxfoundation.org>, smohanad@codeaurora.org,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        hemantk@codeaurora.org,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>
-References: <20200123111836.7414-1-manivannan.sadhasivam@linaro.org>
- <20200123111836.7414-2-manivannan.sadhasivam@linaro.org>
- <CAK8P3a3Nxr3yqDjZDV1b0e0mdWEEsktwrmKXxZgsnq7Kv82mhw@mail.gmail.com>
- <20200123131015.GA11366@mani>
- <CAK8P3a1z7mVEpxbk47Q3A-tLDhqHUid2_S4tE3NQuf_2_UCOcg@mail.gmail.com>
- <20200123133010.GB11366@mani>
-From:   Jeffrey Hugo <jhugo@codeaurora.org>
-Message-ID: <466ac855-b326-2125-77e5-6e0dcc2c2c35@codeaurora.org>
-Date:   Thu, 23 Jan 2020 07:52:41 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
+        Thu, 23 Jan 2020 09:53:04 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1579791184; x=1611327184;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=2VQokRCHziAuiLVO2+k8TJt4qyueJnIeoeEPU27KRmA=;
+  b=mD+YpZ+It3m2XTX11aJULEzGAPntC48F1PHhuLnlGIqYXC8pP1uvK0aK
+   NsTpqx43MTSALM/IWyUTgHmGHO1SCR77ftuuWUzSEA/MpIKEvFOjxomBL
+   TlTjDTc6CtPRlL7duCQjLvvkvREsWj5tUGL+9Pie+oLBd9JThA3xdVv73
+   Q=;
+IronPort-SDR: ebn1XtRkZnkd0e1K20PIM0snewRWQEndkQu+eWzI81+IaaN6aRrbvMSHXKA9ZpmCwTdKoQNuHa
+ Y5gPpqZfKLvQ==
+X-IronPort-AV: E=Sophos;i="5.70,354,1574121600"; 
+   d="scan'208";a="12947622"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2b-55156cd4.us-west-2.amazon.com) ([10.43.8.6])
+  by smtp-border-fw-out-6002.iad6.amazon.com with ESMTP; 23 Jan 2020 14:53:00 +0000
+Received: from EX13MTAUWC001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
+        by email-inbound-relay-2b-55156cd4.us-west-2.amazon.com (Postfix) with ESMTPS id 446DFA1B26;
+        Thu, 23 Jan 2020 14:52:57 +0000 (UTC)
+Received: from EX13D20UWC001.ant.amazon.com (10.43.162.244) by
+ EX13MTAUWC001.ant.amazon.com (10.43.162.135) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Thu, 23 Jan 2020 14:52:56 +0000
+Received: from 38f9d3867b82.ant.amazon.com (10.43.160.18) by
+ EX13D20UWC001.ant.amazon.com (10.43.162.244) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Thu, 23 Jan 2020 14:52:50 +0000
+Subject: Re: [PATCH v16.1 0/9] mm / virtio: Provide support for free page
+ reporting
+To:     David Hildenbrand <david@redhat.com>,
+        Alexander Duyck <alexander.duyck@gmail.com>,
+        <kvm@vger.kernel.org>, <mst@redhat.com>,
+        <linux-kernel@vger.kernel.org>, <willy@infradead.org>,
+        <mhocko@kernel.org>, <linux-mm@kvack.org>,
+        <akpm@linux-foundation.org>, <mgorman@techsingularity.net>,
+        <vbabka@suse.cz>
+CC:     <yang.zhang.wz@gmail.com>, <nitesh@redhat.com>,
+        <konrad.wilk@oracle.com>, <pagupta@redhat.com>, <riel@surriel.com>,
+        <lcapitulino@redhat.com>, <dave.hansen@intel.com>,
+        <wei.w.wang@intel.com>, <aarcange@redhat.com>,
+        <pbonzini@redhat.com>, <dan.j.williams@intel.com>,
+        <alexander.h.duyck@linux.intel.com>, <osalvador@suse.de>,
+        "Paterson-Jones, Roland" <rolandp@amazon.com>,
+        <hannes@cmpxchg.org>, <hare@suse.com>
+References: <20200122173040.6142.39116.stgit@localhost.localdomain>
+ <914aa4c3-c814-45e0-830b-02796b00b762@amazon.com>
+ <0e2d04a8-af74-e2db-cab0-c67286e33a2a@redhat.com>
+From:   Alexander Graf <graf@amazon.com>
+Message-ID: <5d2daec8-985c-c0a4-4832-8e5493316306@amazon.com>
+Date:   Thu, 23 Jan 2020 15:52:48 +0100
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
+ Gecko/20100101 Thunderbird/68.3.1
 MIME-Version: 1.0
-In-Reply-To: <20200123133010.GB11366@mani>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <0e2d04a8-af74-e2db-cab0-c67286e33a2a@redhat.com>
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.43.160.18]
+X-ClientProxiedBy: EX13D22UWC003.ant.amazon.com (10.43.162.250) To
+ EX13D20UWC001.ant.amazon.com (10.43.162.244)
+Content-Type: text/plain; charset="utf-8"; format="flowed"
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/23/2020 6:30 AM, Manivannan Sadhasivam wrote:
-> On Thu, Jan 23, 2020 at 02:19:51PM +0100, Arnd Bergmann wrote:
->> On Thu, Jan 23, 2020 at 2:10 PM Manivannan Sadhasivam
->> <manivannan.sadhasivam@linaro.org> wrote:
->>>
->>> On Thu, Jan 23, 2020 at 01:58:22PM +0100, Arnd Bergmann wrote:
->>>> On Thu, Jan 23, 2020 at 12:18 PM Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org> wrote:
->>>>
->>>> I don't see any callers of mhi_register_controller(). Did I just miss it or did
->>>> you not post one? I'm particularly interested in where the configuration comes
->>>> from, is this hardcoded in the driver, or parsed from firmware or from registers
->>>> in the hardware itself?
->>>>
->>>
->>> I have not included the controller driver in this patchset. But you can take a
->>> look at the ath11k controller driver here:
->>> https://git.linaro.org/people/manivannan.sadhasivam/linux.git/tree/drivers/net/wireless/ath/ath11k/mhi.c?h=ath11k-qca6390-mhi#n13
->>>
->>> So the configuration comes from the static structures defined in the controller
->>> driver. Earlier revision derived the configuration from devicetree but there are
->>> many cases where this MHI bus is being used in non DT environments like x86.
->>> So inorder to be platform agnostic, we chose static declaration method.
->>>
->>> In future we can add DT/ACPI support for the applicable parameters.
->>
->> What determines the configuration? Is this always something that is fixed
->> in hardware, or can some of the properties be changed based on what
->> firmware runs the device?
->>
-> 
-> AFAIK, these configurations are fixed in hardware (this could come from
-> the firmware I'm not sure but they don't change with firmware revisions
-> for sure)
-> 
-> The reason for defining in the driver itself implies that these don't
-> change. But I'll confirm this with Qcom folks.
-> 
-> Thanks,
-> Mani
-> 
->> If this is determined by the firmware, maybe the configuration would also
->> need to be loaded from the file that contains the firmware, which in turn
->> could be a blob in DT.
->>
->>       Arnd
+CgpPbiAyMy4wMS4yMCAxNTowNSwgRGF2aWQgSGlsZGVuYnJhbmQgd3JvdGU6Cj4gT24gMjMuMDEu
+MjAgMTE6MjAsIEFsZXhhbmRlciBHcmFmIHdyb3RlOgo+PiBIaSBBbGV4LAo+Pgo+PiBPbiAyMi4w
+MS4yMCAxODo0MywgQWxleGFuZGVyIER1eWNrIHdyb3RlOgo+Pj4gVGhpcyBzZXJpZXMgcHJvdmlk
+ZXMgYW4gYXN5bmNocm9ub3VzIG1lYW5zIG9mIHJlcG9ydGluZyBmcmVlIGd1ZXN0IHBhZ2VzCj4+
+PiB0byBhIGh5cGVydmlzb3Igc28gdGhhdCB0aGUgbWVtb3J5IGFzc29jaWF0ZWQgd2l0aCB0aG9z
+ZSBwYWdlcyBjYW4gYmUKPj4+IGRyb3BwZWQgYW5kIHJldXNlZCBieSBvdGhlciBwcm9jZXNzZXMg
+YW5kL29yIGd1ZXN0cyBvbiB0aGUgaG9zdC4gVXNpbmcKPj4+IHRoaXMgaXQgaXMgcG9zc2libGUg
+dG8gYXZvaWQgdW5uZWNlc3NhcnkgSS9PIHRvIGRpc2sgYW5kIGdyZWF0bHkgaW1wcm92ZQo+Pj4g
+cGVyZm9ybWFuY2UgaW4gdGhlIGNhc2Ugb2YgbWVtb3J5IG92ZXJjb21taXQgb24gdGhlIGhvc3Qu
+Cj4+Pgo+Pj4gV2hlbiBlbmFibGVkIHdlIHdpbGwgYmUgcGVyZm9ybWluZyBhIHNjYW4gb2YgZnJl
+ZSBtZW1vcnkgZXZlcnkgMiBzZWNvbmRzCj4+PiB3aGlsZSBwYWdlcyBvZiBzdWZmaWNpZW50bHkg
+aGlnaCBvcmRlciBhcmUgYmVpbmcgZnJlZWQuIEluIGVhY2ggcGFzcyBhdAo+Pj4gbGVhc3Qgb25l
+IHNpeHRlZW50aCBvZiBlYWNoIGZyZWUgbGlzdCB3aWxsIGJlIHJlcG9ydGVkLiBCeSBkb2luZyB0
+aGlzIHdlCj4+PiBhdm9pZCByYWNpbmcgYWdhaW5zdCBvdGhlciB0aHJlYWRzIHRoYXQgbWF5IGJl
+IGNhdXNpbmcgYSBoaWdoIGFtb3VudCBvZgo+Pj4gbWVtb3J5IGNodXJuLgo+Pj4KPj4+IFRoZSBs
+b3dlc3QgcGFnZSBvcmRlciBjdXJyZW50bHkgc2Nhbm5lZCB3aGVuIHJlcG9ydGluZyBwYWdlcyBp
+cwo+Pj4gcGFnZWJsb2NrX29yZGVyIHNvIHRoYXQgdGhpcyBmZWF0dXJlIHdpbGwgbm90IGludGVy
+ZmVyZSB3aXRoIHRoZSB1c2Ugb2YKPj4+IFRyYW5zcGFyZW50IEh1Z2UgUGFnZXMgaW4gdGhlIGNh
+c2Ugb2YgdmlydHVhbGl6YXRpb24uCj4+Pgo+Pj4gQ3VycmVudGx5IHRoaXMgaXMgb25seSBpbiB1
+c2UgYnkgdmlydGlvLWJhbGxvb24gaG93ZXZlciB0aGVyZSBpcyB0aGUgaG9wZQo+Pj4gdGhhdCBh
+dCBzb21lIHBvaW50IGluIHRoZSBmdXR1cmUgb3RoZXIgaHlwZXJ2aXNvcnMgbWlnaHQgYmUgYWJs
+ZSB0byBtYWtlCj4+PiB1c2Ugb2YgaXQuIEluIHRoZSB2aXJ0aW8tYmFsbG9vbi9RRU1VIGltcGxl
+bWVudGF0aW9uIHRoZSBoeXBlcnZpc29yIGlzCj4+PiBjdXJyZW50bHkgdXNpbmcgTUFEVl9ET05U
+TkVFRCB0byBpbmRpY2F0ZSB0byB0aGUgaG9zdCBrZXJuZWwgdGhhdCB0aGUgcGFnZQo+Pj4gaXMg
+Y3VycmVudGx5IGZyZWUuIEl0IHdpbGwgYmUgemVyb2VkIGFuZCBmYXVsdGVkIGJhY2sgaW50byB0
+aGUgZ3Vlc3QgdGhlCj4+PiBuZXh0IHRpbWUgdGhlIHBhZ2UgaXMgYWNjZXNzZWQuCj4+Pgo+Pj4g
+VG8gdHJhY2sgaWYgYSBwYWdlIGlzIHJlcG9ydGVkIG9yIG5vdCB0aGUgVXB0b2RhdGUgZmxhZyB3
+YXMgcmVwdXJwb3NlZCBhbmQKPj4+IHVzZWQgYXMgYSBSZXBvcnRlZCBmbGFnIGZvciBCdWRkeSBw
+YWdlcy4gV2Ugd2FsayB0aG91Z2ggdGhlIGZyZWUgbGlzdAo+Pj4gaXNvbGF0aW5nIHBhZ2VzIGFu
+ZCBhZGRpbmcgdGhlbSB0byB0aGUgc2NhdHRlcmxpc3QgdW50aWwgd2UgZWl0aGVyCj4+PiBlbmNv
+dW50ZXIgdGhlIGVuZCBvZiB0aGUgbGlzdCwgcHJvY2Vzc2VkIGFzIG1hbnkgcGFnZXMgYXMgd2Vy
+ZSBsaXN0ZWQgaW4KPj4+IG5yX2ZyZWUgcHJpb3IgdG8gdXMgc3RhcnRpbmcsIG9yIGhhdmUgZmls
+bGVkIHRoZSBzY2F0dGVybGlzdCB3aXRoIHBhZ2VzIHRvCj4+PiBiZSByZXBvcnRlZC4gSWYgd2Ug
+ZmlsbCB0aGUgc2NhdHRlcmxpc3QgYmVmb3JlIHdlIHJlYWNoIHRoZSBlbmQgb2YgdGhlCj4+PiBs
+aXN0IHdlIHJvdGF0ZSB0aGUgbGlzdCBzbyB0aGF0IHRoZSBmaXJzdCB1bnJlcG9ydGVkIHBhZ2Ug
+d2UgZW5jb3VudGVyIGlzCj4+PiBtb3ZlZCB0byB0aGUgaGVhZCBvZiB0aGUgbGlzdCBhcyB0aGF0
+IGlzIHdoZXJlIHdlIHdpbGwgcmVzdW1lIGFmdGVyIHdlCj4+PiBoYXZlIGZyZWVkIHRoZSByZXBv
+cnRlZCBwYWdlcyBiYWNrIGludG8gdGhlIHRhaWwgb2YgdGhlIGxpc3QuCj4+Pgo+Pj4gQmVsb3cg
+YXJlIHRoZSByZXN1bHRzIGZyb20gdmFyaW91cyBiZW5jaG1hcmtzLiBJIHByaW1hcmlseSBmb2N1
+c2VkIG9uIHR3bwo+Pj4gdGVzdHMuIFRoZSBmaXJzdCBpcyB0aGUgd2lsbC1pdC1zY2FsZS9wYWdl
+X2ZhdWx0MiB0ZXN0LCBhbmQgdGhlIG90aGVyIGlzCj4+PiBhIG1vZGlmaWVkIHZlcnNpb24gb2Yg
+d2lsbC1pdC1zY2FsZS9wYWdlX2ZhdWx0MSB0aGF0IHdhcyBlbmFibGVkIHRvIHVzZQo+Pj4gVEhQ
+LiBJIGRpZCB0aGlzIGFzIGl0IGFsbG93cyBmb3IgYmV0dGVyIHZpc2liaWxpdHkgaW50byBkaWZm
+ZXJlbnQgcGFydHMKPj4+IG9mIHRoZSBtZW1vcnkgc3Vic3lzdGVtLiBUaGUgZ3Vlc3QgaXMgcnVu
+bmluZyB3aXRoIDMyRyBmb3IgUkFNIG9uIG9uZQo+Pj4gbm9kZSBvZiBhIEU1LTI2MzAgdjMuIFRo
+ZSBob3N0IGhhcyBoYWQgc29tZSBmZWF0dXJlcyBzdWNoIGFzIENQVSB0dXJibwo+Pj4gZGlzYWJs
+ZWQgaW4gdGhlIEJJT1MuCj4+Pgo+Pj4gVGVzdCAgICAgICAgICAgICAgICAgICBwYWdlX2ZhdWx0
+MSAoVEhQKSAgICBwYWdlX2ZhdWx0Mgo+Pj4gTmFtZSAgICAgICAgICAgIHRhc2tzICBQcm9jZXNz
+IEl0ZXIgIFNUREVWICBQcm9jZXNzIEl0ZXIgIFNUREVWCj4+PiBCYXNlbGluZSAgICAgICAgICAg
+IDEgICAgMTAxMjQwMi41MCAgMC4xNCUgICAgIDM2MTg1NS4yNSAgMC44MSUKPj4+ICAgICAgICAg
+ICAgICAgICAgICAgIDE2ICAgIDg4Mjc0NTcuMjUgIDAuMDklICAgIDMyODIzNDcuMDAgIDAuMzQl
+Cj4+Pgo+Pj4gUGF0Y2hlcyBBcHBsaWVkICAgICAxICAgIDEwMDc4OTcuMDAgIDAuMjMlICAgICAz
+NjE4ODcuMDAgIDAuMjYlCj4+PiAgICAgICAgICAgICAgICAgICAgICAxNiAgICA4Nzg0NzQxLjc1
+ICAwLjM5JSAgICAzMjQwNjY5LjI1ICAwLjQ4JQo+Pj4KPj4+IFBhdGNoZXMgRW5hYmxlZCAgICAg
+MSAgICAxMDEwMjI3LjUwICAwLjM5JSAgICAgMzU5NzQ5LjI1ICAwLjU2JQo+Pj4gICAgICAgICAg
+ICAgICAgICAgICAgMTYgICAgODc1NjIxOS4wMCAgMC4yNCUgICAgMzIyNjYwOC43NSAgMC45NyUK
+Pj4+Cj4+PiBQYXRjaGVzIEVuYWJsZWQgICAgIDEgICAgMTA1MDk4Mi4wMCAgNC4yNiUgICAgIDM1
+Nzk2Ni4yNSAgMC4xNCUKPj4+ICAgIHBhZ2Ugc2h1ZmZsZSAgICAgIDE2ICAgIDg2NzI2MDEuMjUg
+IDAuNDklICAgIDMyMjMxNzcuNzUgIDAuNDAlCj4+Pgo+Pj4gUGF0Y2hlcyBlbmFibGVkICAgICAx
+ICAgIDEwMDMyMzguMDAgIDAuMjIlICAgICAzNjAyMTEuMDAgIDAuMjIlCj4+PiAgICBzaHVmZmxl
+IHcvIFJGQyAgICAxNiAgICA4NzY3MDEwLjUwICAwLjMyJSAgICAzMTk5ODc0LjAwICAwLjcxJQo+
+Pj4KPj4+IFRoZSByZXN1bHRzIGFib3ZlIGFyZSBmb3IgYSBiYXNlbGluZSB3aXRoIGEgbGludXgt
+bmV4dC0yMDE5MTIxOSBrZXJuZWwsCj4+PiB0aGF0IGtlcm5lbCB3aXRoIHRoaXMgcGF0Y2ggc2V0
+IGFwcGxpZWQgYnV0IHBhZ2UgcmVwb3J0aW5nIGRpc2FibGVkIGluCj4+PiB2aXJ0aW8tYmFsbG9v
+biwgdGhlIHBhdGNoZXMgYXBwbGllZCBhbmQgcGFnZSByZXBvcnRpbmcgZnVsbHkgZW5hYmxlZCwg
+dGhlCj4+PiBwYXRjaGVzIGVuYWJsZWQgd2l0aCBwYWdlIHNodWZmbGluZyBlbmFibGVkLCBhbmQg
+dGhlIHBhdGNoZXMgYXBwbGllZCB3aXRoCj4+PiBwYWdlIHNodWZmbGluZyBlbmFibGVkIGFuZCBh
+biBSRkMgcGF0Y2ggdGhhdCBtYWtlcyB1c2VkIG9mIE1BRFZfRlJFRSBpbgo+Pj4gUUVNVS4gVGhl
+c2UgcmVzdWx0cyBpbmNsdWRlIHRoZSBkZXZpYXRpb24gc2VlbiBiZXR3ZWVuIHRoZSBhdmVyYWdl
+IHZhbHVlCj4+PiByZXBvcnRlZCBoZXJlIHZlcnN1cyB0aGUgaGlnaCBhbmQvb3IgbG93IHZhbHVl
+LiBJIG9ic2VydmVkIHRoYXQgZHVyaW5nIHRoZQo+Pj4gdGVzdCBtZW1vcnkgdXNhZ2UgZm9yIHRo
+ZSBmaXJzdCB0aHJlZSB0ZXN0cyBuZXZlciBkcm9wcGVkIHdoZXJlYXMgd2l0aCB0aGUKPj4+IHBh
+dGNoZXMgZnVsbHkgZW5hYmxlZCB0aGUgVk0gd291bGQgZHJvcCB0byB1c2luZyBvbmx5IGEgZmV3
+IEdCIG9mIHRoZQo+Pj4gaG9zdCdzIG1lbW9yeSB3aGVuIHN3aXRjaGluZyBmcm9tIG1lbWhvZyB0
+byBwYWdlIGZhdWx0IHRlc3RzLgo+Pj4KPj4+IEFueSBvZiB0aGUgb3ZlcmhlYWQgdmlzaWJsZSB3
+aXRoIHRoaXMgcGF0Y2ggc2V0IGVuYWJsZWQgc2VlbXMgZHVlIHRvIHBhZ2UKPj4+IGZhdWx0cyBj
+YXVzZWQgYnkgYWNjZXNzaW5nIHRoZSByZXBvcnRlZCBwYWdlcyBhbmQgdGhlIGhvc3QgemVyb2lu
+ZyB0aGUgcGFnZQo+Pj4gYmVmb3JlIGdpdmluZyBpdCBiYWNrIHRvIHRoZSBndWVzdC4gVGhpcyBv
+dmVyaGVhZCBpcyBtdWNoIG1vcmUgdmlzaWJsZSB3aGVuCj4+PiB1c2luZyBUSFAgdGhhbiB3aXRo
+IHN0YW5kYXJkIDRLIHBhZ2VzLiBJbiBhZGRpdGlvbiBwYWdlIHNodWZmbGluZyBzZWVtZWQgdG8K
+Pj4+IGluY3JlYXNlIHRoZSBhbW91bnQgb2YgZmF1bHRzIGdlbmVyYXRlZCBkdWUgdG8gYW4gaW5j
+cmVhc2UgaW4gbWVtb3J5IGNodXJuLgo+Pj4gVGhlIG92ZXJoZWFkIGlzIHJlZHVjZWQgd2hlbiB1
+c2luZyBNQURWX0ZSRUUgYXMgd2UgY2FuIGF2b2lkIHRoZSBleHRyYQo+Pj4gemVyb2luZyBvZiB0
+aGUgcGFnZXMgd2hlbiB0aGV5IGFyZSByZWludHJvZHVjZWQgdG8gdGhlIGhvc3QsIGFzIGNhbiBi
+ZSBzZWVuCj4+PiB3aGVuIHRoZSBSRkMgaXMgYXBwbGllZCB3aXRoIHNodWZmbGluZyBlbmFibGVk
+Lgo+Pj4KPj4+IFRoZSBvdmVyYWxsIGd1ZXN0IHNpemUgaXMga2VwdCBmYWlybHkgc21hbGwgdG8g
+b25seSBhIGZldyBHQiB3aGlsZSB0aGUgdGVzdAo+Pj4gaXMgcnVubmluZy4gSWYgdGhlIGhvc3Qg
+bWVtb3J5IHdlcmUgb3ZlcnN1YnNjcmliZWQgdGhpcyBwYXRjaCBzZXQgc2hvdWxkCj4+PiByZXN1
+bHQgaW4gYSBwZXJmb3JtYW5jZSBpbXByb3ZlbWVudCBhcyBzd2FwcGluZyBtZW1vcnkgaW4gdGhl
+IGhvc3QgY2FuIGJlCj4+PiBhdm9pZGVkLgo+Pgo+Pgo+PiBJIHJlYWxseSBsaWtlIHRoZSBhcHBy
+b2FjaCBvdmVyYWxsLiBWb2x1bnRhcmlseSBwcm9wYWdhdGluZyBmcmVlIG1lbW9yeQo+PiBmcm9t
+IGEgZ3Vlc3QgdG8gdGhlIGhvc3QgaGFzIGJlZW4gYSBzb3JlIHBvaW50IGV2ZXIgc2luY2UgS1ZN
+IHdhcwo+PiBhcm91bmQuIFRoaXMgc29sdXRpb24gbG9va3MgbGlrZSBhIHZlcnkgZWxlZ2FudCB3
+YXkgdG8gZG8gc28uCj4+Cj4+IFRoZSBiaWcgcGllY2UgSSdtIG1pc3NpbmcgaXMgdGhlIHBhZ2Ug
+Y2FjaGUuIExpbnV4IHdpbGwgYnkgZGVmYXVsdCB0cnkKPj4gdG8ga2VlcCB0aGUgZnJlZSBsaXN0
+IGFzIHNtYWxsIGFzIGl0IGNhbiBpbiBmYXZvciBvZiBwYWdlIGNhY2hlLCBzbyBtb3N0Cj4+IG9m
+IHRoZSBiZW5lZml0IG9mIHRoaXMgcGF0Y2ggc2V0IHdpbGwgYmUgdm9pZCBpbiByZWFsIHdvcmxk
+IHNjZW5hcmlvcy4KPiAKPiBPbmUgYXBwcm9hY2ggaXMgdG8gbW92ZSAocGFydHMgb2YpIHRoZSBw
+YWdlIGNhY2hlIGZyb20gdGhlIGd1ZXN0IHRvIHRoZQo+IGh5cGVydmlzb3IgLSBlLmcuLCB1c2lu
+ZyBlbXVsYXRlZCBOVkRJTU0gb3IgdmlydGlvLXBtZW0uCgpXaGV0aGVyIHlvdSBjYW4gZG8gdGhh
+dCBkZXBlbmRzIGhlYXZpbHkgb24geW91ciB2aXJ0dWFsaXphdGlvbiAKZW52aXJvbm1lbnQuIE9u
+IGEgaG9zdCB3aXRoIHNpbmdsZSB0ZW5hbnQgVk1zLCB0aGF0J3MgZGVmaW5pdGVseSAKZmVhc2li
+bGUuIEluIGEgS3ViZXJuZXRlcyBlbnZpcm9ubWVudCwgaXQgbWlnaHQgYWxzbyBiZSBmZWFzaWJs
+ZS4KCkJ1dCB3aGVuIHlvdSBoYXZlIFZNcyB0aGF0IGFzc3VtZSB0aGF0IHRoZSBob3N0IGlzIGlu
+dGVyZmVyaW5nIHdpdGggdGhlbSAKYXMgbGl0dGxlIGFzIHBvc3NpYmxlLCBpdCBiZWNvbWVzIGhh
+cmRlcjoKCkhvdyBkbyB5b3UgZW5zdXJlIGZhaXJuZXNzIGFjcm9zcyBkaWZmZXJlbnQgVk1zJyBw
+YWdlIGNhY2hlIHRoYXQgaXMgCm11bmdlZCBpbnRvIGEgc2luZ2xlIGJpZyBob3N0IG9uZT8KCkRv
+IHlvdSBldmVuIGhhdmUgaG9zdCBwYWdlIGNhY2hlIG9yIGFyZSB5b3UgdXNpbmcgU1ItSU9WIC8g
+bWRldiBmb3IgCnN0b3JhZ2UgZm9yIHBlcmZvcm1hbmNlIHJlYXNvbnM/CgoKVGhlIHB1enpsZSBp
+cyBzdGlsbCBpbmNvbXBsZXRlLCBldmVuIHdpdGggTlZESU1NIGV4cG9zdXJlIHRvIHRoZSBndWVz
+dCAKYXMgYW4gb3B0aW9uIHVuZm9ydHVuYXRlbHkgOikuCgoKQWxleAoKCgpBbWF6b24gRGV2ZWxv
+cG1lbnQgQ2VudGVyIEdlcm1hbnkgR21iSApLcmF1c2Vuc3RyLiAzOAoxMDExNyBCZXJsaW4KR2Vz
+Y2hhZWZ0c2Z1ZWhydW5nOiBDaHJpc3RpYW4gU2NobGFlZ2VyLCBKb25hdGhhbiBXZWlzcwpFaW5n
+ZXRyYWdlbiBhbSBBbXRzZ2VyaWNodCBDaGFybG90dGVuYnVyZyB1bnRlciBIUkIgMTQ5MTczIEIK
+U2l0ejogQmVybGluClVzdC1JRDogREUgMjg5IDIzNyA4NzkKCgo=
 
-We can't derive the configuration from hardware, and its something that 
-is currently a priori known since the host (linux) needs to initialize 
-the hardware with the configuration before it can communicate with the 
-device (ie the on device FW).
-
-99% of the time the configuration is fixed, however there have been 
-instances where features have been added on the device, which result in 
-new channels, which then impact the configuration.  In the cases I'm 
-aware of this, both sides were updated in lockstep.  I don't know how 
-upstream would handle it.  I'm thinking we can ignore that case until it 
-comes up.
-
-DT/ACPI is tricky, since the cases where we want this currently are 
-essentially standalone PCI(e) cards.  Those are likely to be on systems 
-which don't support DT (ie x86), and there really isn't a place in ACPI 
-to put PCI(e) device configuration information, since its supposed to be 
-a discoverable bus.
-
-There are hardware limitations to the configuration, and that varies 
-from device to device.  Since the host (linux) programs the 
-configuration into the hardware, its possible for an invalid 
-configuration to be programed, but I would expect that in the majority 
-of cases (ie programming a channel that the device FW doesn't know 
-about), there is no adverse impact.
-
--- 
-Jeffrey Hugo
-Qualcomm Technologies, Inc. is a member of the
-Code Aurora Forum, a Linux Foundation Collaborative Project.
