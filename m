@@ -2,114 +2,131 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99232C33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 10:16:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 327B8C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 10:17:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F3DB24125
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 10:16:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06B7024684
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 10:17:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="GAv2gEKp"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="WFs1brqb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728731AbgAWKQh (ORCPT
+        id S1728799AbgAWKRF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 05:16:37 -0500
-Received: from mail-il1-f194.google.com ([209.85.166.194]:40581 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726099AbgAWKQg (ORCPT
+        Thu, 23 Jan 2020 05:17:05 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:59582 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726099AbgAWKRE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 05:16:36 -0500
-Received: by mail-il1-f194.google.com with SMTP id c4so1697066ilo.7
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jan 2020 02:16:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=Clq3TmE58JoFz2R4QbuECPlpViKppwwhqPhDFIlk7XI=;
-        b=GAv2gEKpKL5sHBs3QAQS2iZvBJhXMs9QZRTuUPyF+dSwktr7pB9Y24yb2tnqpcO5nJ
-         zpMwoTtu+HKp9jT+CTc1c0WZqdqZo0qdImTkI0KvqEyXm8a527RFSYaIKZLPUjhwMEXH
-         ow5d29nR9fonp+obMbxhKdZG6vo8h1U8qu0bKzNWx1LgfURiiaPkRGo3Siy4sZt/xuNN
-         2fdktMvl1yOpzPGBDDSH9HHJSo9qpDmCp0cBD4/M8dxrcWWMHsJwBGwTlPvl+CAfxM77
-         tffP4qi1otnlACyC7Q+UVYga6e+hvwKMD5bZwcTsLLXzSuzOxpN8SRiPm8zshrXcvEAo
-         l9Tg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=Clq3TmE58JoFz2R4QbuECPlpViKppwwhqPhDFIlk7XI=;
-        b=nu9WcZ2owDUM0Sm/n0+SCozB2mSWUZw7mhaUCv6C0yvUbrxrOhtlUUQ0h4P+nA/Qtx
-         imKAnHvNrgY8jT9YcfiErPJ6W2A65GScsJGSPp09CvcRS+Q5voSXNvieJii4KYQr0KJ2
-         wucSAl7axGvbWnokoYQif4UZPNmc5OQ/6nmotq47ZGVTRVWfXDkeUG3Losb5Xq42EfJH
-         wRcw89qgaOB0r1BJOYrngTx2La72zkftSmuTfPQUzfP0QxV3HPcYb9IyxqGBiPcXWWGa
-         R8hea0twGxvi/w2/bZhEecw04Xiy7MraAN2ch20xaqldiExKvnr7y0ATEH8QZnoDSslA
-         djwA==
-X-Gm-Message-State: APjAAAXRZB8JICFTW65/PqL/DLZm55IogJOfqAAeQFBDwq2aBj3C0HCx
-        3h9nSBadrurmA7/euec41b080HVZwl5iKBiNm37Szg==
-X-Google-Smtp-Source: APXvYqy9i4gs8Ex3+uErZaUkaGTQbOaOrqoPXhg9/Qs/7oyudyIFGyf6JSihBtcyod15S1FSGSKKRjM65+gZrX3jDmo=
-X-Received: by 2002:a92:3d9d:: with SMTP id k29mr2424144ilf.220.1579774595940;
- Thu, 23 Jan 2020 02:16:35 -0800 (PST)
+        Thu, 23 Jan 2020 05:17:04 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=4YI80HqxIkG8VkHEHmtetD4ZdMB5eeApmBWrDmp9m4Q=; b=WFs1brqbiV7bUsxQqo6kFEJAb
+        rbI+Z0Z6962vVkpSV+8CdJwpHJPDoO6CVwyM0wb5wgckaJUzEcYlqITg3DtOV0P6Xgwo7+4ZSE7H1
+        eWOhW308lHfCNQxQTxVH3GUquJ1LB7zV087j7/M5RpdF24gu7QfEQAXk+Esm9S1xAxC2OsvVLmlzw
+        9/ISmzmUiW+KmEXFIAxuL3HJQe7S/FZ2QA+1CSomqoqsYpcLyPw8JeCkqcZr/QTU/fFqf+QoxxpPG
+        cpASvUtX6jQ1O0ttoxszl9BjXEvmH29Vdfww88c8Ixt6w1mn8jB8QT5wOMwME99AF7CQrCDhcLsHy
+        QFnOK22Eg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iuZXg-0003zH-5U; Thu, 23 Jan 2020 10:16:52 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 75C23304121;
+        Thu, 23 Jan 2020 11:15:09 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 73B9A2B6E79F5; Thu, 23 Jan 2020 11:16:49 +0100 (CET)
+Date:   Thu, 23 Jan 2020 11:16:49 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Alex Kogan <alex.kogan@oracle.com>
+Cc:     linux@armlinux.org.uk, mingo@redhat.com, will.deacon@arm.com,
+        arnd@arndb.de, longman@redhat.com, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        tglx@linutronix.de, bp@alien8.de, hpa@zytor.com, x86@kernel.org,
+        guohanjun@huawei.com, jglauber@marvell.com,
+        steven.sistare@oracle.com, daniel.m.jordan@oracle.com,
+        dave.dice@oracle.com
+Subject: Re: [PATCH v9 3/5] locking/qspinlock: Introduce CNA into the slow
+ path of qspinlock
+Message-ID: <20200123101649.GF14946@hirez.programming.kicks-ass.net>
+References: <20200115035920.54451-1-alex.kogan@oracle.com>
+ <20200115035920.54451-4-alex.kogan@oracle.com>
+ <20200123092658.GC14879@hirez.programming.kicks-ass.net>
+ <20200123100635.GE14946@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-References: <20191224120709.18247-1-brgl@bgdev.pl> <20191224120709.18247-3-brgl@bgdev.pl>
- <CAMuHMdWigj9_CDdDD49qU-y7r+he53v1NEKE9_0RBQCFUrY-Qw@mail.gmail.com>
-In-Reply-To: <CAMuHMdWigj9_CDdDD49qU-y7r+he53v1NEKE9_0RBQCFUrY-Qw@mail.gmail.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Thu, 23 Jan 2020 11:16:25 +0100
-Message-ID: <CAMRc=Mf3BOMC9akxu4-Z-KifGLrbLYC61NB1XWM_Swiz6M8U8g@mail.gmail.com>
-Subject: Re: [PATCH v4 02/13] gpiolib: have a single place of calling set_config()
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Kent Gibson <warthog618@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200123100635.GE14946@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-pon., 20 sty 2020 o 09:44 Geert Uytterhoeven <geert@linux-m68k.org> napisa=
-=C5=82(a):
->
-> Hi Bartosz,
->
-> On Tue, Dec 24, 2019 at 1:08 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote=
-:
-> > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> >
-> > Instead of calling the gpiochip's set_config() callback directly and
-> > checking its existence every time - just add a new routine that perform=
-s
-> > this check internally. Call it in gpio_set_config() and
-> > gpiod_set_transitory(). Also call it in gpiod_set_debounce() and drop
-> > the check for chip->set() as it's irrelevant to this config option.
-> >
-> > Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> > Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
->
+On Thu, Jan 23, 2020 at 11:06:35AM +0100, Peter Zijlstra wrote:
+> On Thu, Jan 23, 2020 at 10:26:58AM +0100, Peter Zijlstra wrote:
+> > On Tue, Jan 14, 2020 at 10:59:18PM -0500, Alex Kogan wrote:
+> > > +/* this function is called only when the primary queue is empty */
+> > > +static inline bool cna_try_change_tail(struct qspinlock *lock, u32 val,
+> > > +				       struct mcs_spinlock *node)
+> > > +{
+> > > +	struct mcs_spinlock *head_2nd, *tail_2nd;
+> > > +	u32 new;
+> > > +
+> > > +	/* If the secondary queue is empty, do what MCS does. */
+> > > +	if (node->locked <= 1)
+> > > +		return __try_clear_tail(lock, val, node);
+> > > +
+> > > +	/*
+> > > +	 * Try to update the tail value to the last node in the secondary queue.
+> > > +	 * If successful, pass the lock to the first thread in the secondary
+> > > +	 * queue. Doing those two actions effectively moves all nodes from the
+> > > +	 * secondary queue into the main one.
+> > > +	 */
+> > > +	tail_2nd = decode_tail(node->locked);
+> > > +	head_2nd = tail_2nd->next;
+> > > +	new = ((struct cna_node *)tail_2nd)->encoded_tail + _Q_LOCKED_VAL;
+> > > +
+> > > +	if (atomic_try_cmpxchg_relaxed(&lock->val, &val, new)) {
+> > > +		/*
+> > > +		 * Try to reset @next in tail_2nd to NULL, but no need to check
+> > > +		 * the result - if failed, a new successor has updated it.
+> > > +		 */
+> > 
+> > I think you actually have an ordering bug here; the load of head_2nd
+> > *must* happen before the atomic_try_cmpxchg(), otherwise it might
+> > observe the new next and clear a valid next pointer.
+> > 
+> > What would be the best fix for that; I'm thinking:
+> > 
+> > 	head_2nd = smp_load_acquire(&tail_2nd->next);
+> > 
+> > Will?
+> 
+> Hmm, given we've not passed the lock around yet; why wouldn't something
+> like this work:
+> 
+> 	smp_store_release(&tail_2nd->next, NULL);
 
-[snip!]
+Argh, make that:
 
->
-> These two lines are not equivalent: the new code no longer uses the
-> packed value of mode and arg!
-> Hence this leads to subsequent cleanups in commits e5e42ad224a040f9
-> ("gpiolib: remove set but not used variable 'config'") and d18fddff061d27=
-96
-> ("gpiolib: Remove duplicated function gpio_do_set_config()").
->
-> However, what was the purpose of the PIN_CONF_PACKED() translation?
-> Why is it no longer needed?
->
+	tail_2nd->next = NULL;
 
-Thanks for catching this. I was OoO for a couple days. I'll try to get
-through the mail today and address this as well.
+	smp_wmb();
 
-Bartosz
+> 	if (!atomic_try_cmpxchg_relaxed(&lock, &val, new)) {
+> 		tail_2nd->next = head_2nd;
+> 		return false;
+> 	}
+> 
+> The whole second queue is only ever modified by the lock owner, and that
+> is us, so we can pre-terminate the secondary queue (break the circular
+> link), try the cmpxchg and fix it back up when it fails.
