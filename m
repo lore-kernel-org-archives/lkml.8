@@ -2,142 +2,188 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E476C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 09:23:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2B50C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 09:24:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70A8524683
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 09:23:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Kbp3FpN7"
+	by mail.kernel.org (Postfix) with ESMTP id AB0332087E
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 09:24:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579771442;
+	bh=nYXlTykcYsOwVGEsYNb1hFkshsznwnBHV26GNJ1Lx7o=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=FuxSpYjzTbQyuqTZlSyRCKOJpwVzR3Z1W7EPlAAs8lx3BtaMj3CODzuurPimF4op+
+	 K4N8Z/zyFqwcFEw9yDwwxEpbo4gcSbQ9+qBS5RcF4mnjUga61bzzEwPnmrKvDm3CNr
+	 NPahb6jbml12xTlD3xIzaHojEoCfEK7nS6fQmRQ8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726442AbgAWJXt (ORCPT
+        id S1727093AbgAWJYC convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 04:23:49 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:29873 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726099AbgAWJXt (ORCPT
+        Thu, 23 Jan 2020 04:24:02 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:42309 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726231AbgAWJYB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 04:23:49 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579771428;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=xLPtPbflHkEcsflpAEJimzZzCHBwCpiVv1nVRjVe5L0=;
-        b=Kbp3FpN7U58z1O2pSqa/LJoZJnO/3NKycnitdK9q+fYH/ryLsL0VWsRdTHmWf3H6BXdQiJ
-        Cjne5GNGAwd8qe+sfU0/IyLKpeO10NBuddhC+bk4rCH9XIwwELeZSSth9e8OzS0b8daBsV
-        2TFwMun3RIRy8HQO5cuDomtpNnRftig=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-74-WzpPDFIlNXSaDcbMF0xGag-1; Thu, 23 Jan 2020 04:23:46 -0500
-X-MC-Unique: WzpPDFIlNXSaDcbMF0xGag-1
-Received: by mail-wm1-f69.google.com with SMTP id t17so348821wmi.7
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jan 2020 01:23:45 -0800 (PST)
+        Thu, 23 Jan 2020 04:24:01 -0500
+Received: by mail-oi1-f196.google.com with SMTP id 18so2254172oin.9;
+        Thu, 23 Jan 2020 01:24:01 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=xLPtPbflHkEcsflpAEJimzZzCHBwCpiVv1nVRjVe5L0=;
-        b=Z3sT/KDwXP3USSzfWtcUba2q2nn7Z+6z4c86z7Y4+k9R/+MIUS/8k3g5h/vJvYJezU
-         fPco4oEUH5vwyV4a0gt+d/NKC+ExIwhkVjqQnwwEjCJaZUn02xRXZDNCeeoQzvCQ3aa6
-         9alr/DBSVvrw2zbBeTfuQhtVB8FjpcYaB1sWnGarbZMLwBIebqO1sfqD39PkX6P3ReEH
-         0tsf2FFf/xJ0pDz7N9cQYQ5tiyU3bYbCfhizvUwXCHELPeatwxbuSJzhE5jvogUdkDA4
-         nDgJr+jZSm/JE2pvpKvRVzp36At0zT9MXmrw2LG9QqsPFR8JM3ifqUijFC/ZG8tudXjN
-         4fQg==
-X-Gm-Message-State: APjAAAVI9S+z4CfTEmGOWJWvKTxKRG02empANUDiiwuN/SdE1cZUCv25
-        5yXeQMVa9ydg6ki7jx7G7yEjIUqNrjpnAEb00IRjJjZ6IX8sc78MuMg0DNMPU/PHVf7NaXbTZiy
-        FaTlMLOrAobcqWTStNdjzmep8
-X-Received: by 2002:adf:e591:: with SMTP id l17mr16599143wrm.139.1579771424890;
-        Thu, 23 Jan 2020 01:23:44 -0800 (PST)
-X-Google-Smtp-Source: APXvYqzELIoIdvuyZLL2GrfNb1F5kfvJAuwopX6+bWrOHnJuStIZz7wtxB1xm4a+UrGei4ixbrQBPw==
-X-Received: by 2002:adf:e591:: with SMTP id l17mr16599120wrm.139.1579771424641;
-        Thu, 23 Jan 2020 01:23:44 -0800 (PST)
-Received: from ?IPv6:2001:b07:6468:f312:b8fe:679e:87eb:c059? ([2001:b07:6468:f312:b8fe:679e:87eb:c059])
-        by smtp.gmail.com with ESMTPSA id 16sm1874485wmi.0.2020.01.23.01.23.43
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 23 Jan 2020 01:23:44 -0800 (PST)
-Subject: Re: [PATCH] KVM: nVMX: set rflags to specify success in
- handle_invvpid() default case
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>,
-        linmiaohe <linmiaohe@huawei.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org, x86@kernel.org,
-        rkrcmar@redhat.com, sean.j.christopherson@intel.com,
-        wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com
-References: <1579749241-712-1-git-send-email-linmiaohe@huawei.com>
- <8736c6sga7.fsf@vitty.brq.redhat.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <1a083ac8-3b01-fd2d-d867-2b3956cdef6d@redhat.com>
-Date:   Thu, 23 Jan 2020 10:23:42 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=PnJZAhJsiiWhg7NwdHJX7FMNohHhmjw2d2yqHeP5FkI=;
+        b=SXgUnFsxfr31S5NH9n7Jje80/qLYr8hZgqcYscHgsgBQ3SJGemtJJSzn3lQhg0HzFv
+         XG29rkx0kPjFXK7J1etyAzemzN6LUTLSGgwyFDKZ73P2ueTpT1+dN2tvAuWplkiRn2xZ
+         L3W5LHuX3N8fCJDupJQ2YjP9mnqU9DhoZenpZljBmQDUB3UNcOheS+D1dTAokZ9l8tGJ
+         uj/07/UPBoH8P7Kx+y8cF50Mj/xkEVL9dZkcdnn3HMMBNRg3SZAtH8noJUqtmrt40dfK
+         yfUghRxCsGmlbx3OfY962AorMD7UnkKH+xsjVU/WZd4c52LnyQRdYPyfIVsDgTAblgt9
+         4Aqg==
+X-Gm-Message-State: APjAAAXwfTpzZFYWQA6qh9MB/dCIhCVhf2UZXJSTbckZGA13oHnDNGa5
+        yb8qoqi5qwmYEK4LScQTYro0hTtjM0owbZSyDjg=
+X-Google-Smtp-Source: APXvYqwzjG65Goc9dRVOljJMk8nj2GR0kejdwxXnxZZWYRclj75dA4ZPvk7xIwYrI/r0GtiIars7IzmDu7mrCEfpjbE=
+X-Received: by 2002:aca:d6c8:: with SMTP id n191mr10298863oig.103.1579771440745;
+ Thu, 23 Jan 2020 01:24:00 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <8736c6sga7.fsf@vitty.brq.redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <2601275.1tEomSadG4@kreacher> <c5a2d11f-86fe-663d-f0ad-ed6ea0da871e@lge.com>
+In-Reply-To: <c5a2d11f-86fe-663d-f0ad-ed6ea0da871e@lge.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Thu, 23 Jan 2020 10:23:47 +0100
+Message-ID: <CAJZ5v0iyJG6fNJ7XQNe0y4KdfAqZiOBG0_f64gtmg26j=ty=NQ@mail.gmail.com>
+Subject: Re: [PATCH] PM: core: Fix handling of devices deleted during
+ system-wide resume
+To:     Chanho Min <chanho.min@lge.com>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Daewoong Kim <daewoong00.kim@lge.com>,
+        Lee Gunho <gunho.lee@lge.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 23/01/20 09:55, Vitaly Kuznetsov wrote:
->> diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
->> index 7608924ee8c1..985d3307ec56 100644
->> --- a/arch/x86/kvm/vmx/nested.c
->> +++ b/arch/x86/kvm/vmx/nested.c
->> @@ -5165,7 +5165,7 @@ static int handle_invvpid(struct kvm_vcpu *vcpu)
->>  		break;
->>  	default:
->>  		WARN_ON_ONCE(1);
->> -		return kvm_skip_emulated_instruction(vcpu);
->> +		break;
->>  	}
->>  
->>  	return nested_vmx_succeed(vcpu);
-> Your patch seems to do the right thing, however, I started wondering if
-> WARN_ON_ONCE() is the right thing to do. SDM says that "If an
-> unsupported INVVPID type is specified, the instruction fails." and this
-> is similar to INVEPT and I decided to check what handle_invept()
-> does. Well, it does BUG_ON(). 
-> 
-> Are we doing the right thing in any of these cases?
+On Thu, Jan 23, 2020 at 3:14 AM Chanho Min <chanho.min@lge.com> wrote:
+>
+> > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> >
+> > If a device is deleted by one of its system-wide resume callbacks
+> > (for example, because it does not appear to be present or accessible
+> > any more) along with its children, the resume of the children may
+> > continue leading to use-after-free errors and other issues
+> > (potentially).
+> >
+> > Namely, if the device's children are resumed asynchronously, their
+> > resume may have been scheduled already before the device's callback
+> > runs and so the device may be deleted while dpm_wait_for_superior()
+> > is being executed for them.  The memory taken up by the parent device
+> > object may be freed then while dpm_wait() is waiting for the parent's
+> > resume callback to complete, which leads to a use-after-free.
+> > Moreover, the resume of the children is really not expected to
+> > continue after they have been unregistered, so it must be terminated
+> > right away in that case.Seokjoo Lee <seokjoo.lee@lge.com>
+> >
+> > To address this problem, modify dpm_wait_for_superior() to check
+> > if the target device is still there in the system-wide PM list of
+> > devices and if so, to increment its parent's reference counter, both
+> > under dpm_list_mtx which prevents device_del() running for the child
+> > from dropping the parent's reference counter prematurely.
+> >
+> > If the device is not present in the system-wide PM list of devices
+> > any more, the resume of it cannot continue, so check that again after
+> > dpm_wait() returns, which means that the parent's callback has been
+> > completed, and pass the result of that check to the caller of
+> > dpm_wait_for_superior() to allow it to abort the device's resume
+> > if it is not there any more.
+> >
+> > Link: https://lore.kernel.org/linux-pm/1579568452-27253-1-git-send-email-chanho.min@lge.com
+> > Reported-by: Chanho Min <chanho.min@lge.com>
+> > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> > ---
+> >   drivers/base/power/main.c |   42 +++++++++++++++++++++++++++++++++++++-----
+> >   1 file changed, 37 insertions(+), 5 deletions(-)
+> >
+> > Index: linux-pm/drivers/base/power/main.c
+> > ===================================================================
+> > --- linux-pm.orig/drivers/base/power/main.cSeokjoo Lee <seokjoo.lee@lge.com>
+> > +++ linux-pm/drivers/base/power/main.c20. 1. 23. 오전 8:11에 Rafael J. Wysocki 이(가) 쓴 글:
+> > @@ -273,10 +273,38 @@ static void dpm_wait_for_suppliers(struc
+> >       device_links_read_unlock(idx);
+> >   }
+> >
+> > -static void dpm_wait_for_superior(struct device *dev, bool async)
+> > +static bool dpm_wait_for_superior(struct device *dev, bool async)
+> >   {
+> > -     dpm_wait(dev->parent, async);
+> > +     struct device *parent;board
+> > +
+> > +     /*
+> > +      * If the device is resumed asynchronously and the parent's callback
+> > +      * deletes both the device and the parent itself, the parent object may
+> > +      * be freed while this function is running, so avoid that by reference
+> > +      * counting the parent once more unless the device has been deleted
+> > +      * already (in which case return right away).
+> > +      */
+> > +     mutex_lock(&dpm_list_mtx);
+> > +
+> > +     if (!device_pm_initialized(dev)) {20. 1. 23. 오전 8:11에 Rafael J. Wysocki 이(가) 쓴 글:
+> > +             mutex_unlock(&dpm_list_mtx);
+> > +             return false;
+> > +     }
+> > +
+> > +     parent = get_device(dev->parent);
+> > +
+> > +     mutex_unlock(&dpm_list_mtx);
+> > +
+> > +     dpm_wait(parent, async);
+> > +     put_device(parent);
+> > +
+> >       dpm_wait_for_suppliers(dev, async);
+> > +
+> > +     /*
+> > +      * If the parent's callback has deleted the device, attempting to resume
+> > +      * it would be invalid, so avoid doing that then.
+> > +      */
+> > +     return device_pm_initialized(dev);20. 1. 23. 오전 8:11에 Rafael J. Wysocki 이(가) 쓴 글:
+> >   }
+> >
+> >   static void dpm_wait_for_consumers(struct device *dev, bool async)
+> > @@ -621,7 +649,8 @@ static int device_resume_noirq(struct de
+> >       if (!dev->power.is_noirq_suspended)
+> >               goto Out;
+> >
+> > -     dpm_wait_for_superior(dev, async);
+> > +     if (!dpm_wait_for_superior(dev, async))
+> > +             goto Out;
+> >
+> >       skip_resume = dev_pm_may_skip_resume(dev);
+> >
+> > @@ -829,7 +858,8 @@ static int device_resume_early(struct de
+> >       if (!dev->power.is_late_suspended)
+> >               goto Out;
+> >
+> > -     dpm_wait_for_superior(dev, async);Seokjoo Lee <seokjoo.lee@lge.com>
+> > +     if (!dpm_wait_for_superior(dev, async))
+> > +             goto Out;
+> >
+> >       callback = dpm_subsys_resume_early_cb(dev, state, &info);
+> >
+> > @@ -944,7 +974,9 @@ static int device_resume(struct device *
+> >               goto Complete;
+> >       }
+> >
+> > -     dpm_wait_for_superior(dev, async);
+> > +     if (!dpm_wait_for_superior(dev, async))
+> > +             goto Complete;
+> > +
+> >       dpm_watchdog_set(&wd, dev);
+> >       device_lock(dev);Thanks, This seems to solve the rare hang on our target.
+> Actually, the problem is occurred in v4.4.
+> Shouldn't it apply to -stable?
 
-Yes, both INVEPT and INVVPID catch this earlier.
-
-For INVEPT:
-
-        types = (vmx->nested.msrs.ept_caps >> VMX_EPT_EXTENT_SHIFT) & 6;
-
-        if (type >= 32 || !(types & (1 << type)))
-                return nested_vmx_failValid(vcpu,
-                                VMXERR_INVALID_OPERAND_TO_INVEPT_INVVPID);
-
-
-
-For INVVPID:
-
-        types = (vmx->nested.msrs.vpid_caps &
-                        VMX_VPID_EXTENT_SUPPORTED_MASK) >> 8;
-
-        if (type >= 32 || !(types & (1 << type)))
-                return nested_vmx_failValid(vcpu,
-                        VMXERR_INVALID_OPERAND_TO_INVEPT_INVVPID);
-
-So I'm leaning towards not applying Miaohe's patch.  Happy Mouse Year
-to everyone, here is an ASCII art (except for one Unicode character) mouse:
-
-
-       __()()
-      /     o)
-  ~~~~\_,__,_>°
-
-Thanks,
-
+Yes, it should, but I'll add a "stable" tag later.
