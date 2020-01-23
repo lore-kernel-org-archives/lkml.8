@@ -2,127 +2,124 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EBE7C33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 13:47:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD61CC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 13:48:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E7EB20661
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 13:47:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="nOFVLQvm"
+	by mail.kernel.org (Postfix) with ESMTP id 8FB1F20661
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 13:48:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579787305;
+	bh=FoxHytvieeiMR5w2vCjs+iRWN/xe1IbjBrRYYeIbBXI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=1eU1gj2LFQ1WukzmwB/K27I5rmgRk6CRe8n3rQS+xxc0SfADbpuycki0n4rNiyyRI
+	 y9oRq0ObkbLp7qM4LFlWbY8PfJUa9i9jgy1KloUndyoR+meaDFBZjB/vFglH+UwVb1
+	 R1Pd6+nCLdfrb6a/X2UxCFtTU7n0EojVQZ1JCJfc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728998AbgAWNrI (ORCPT
+        id S1729016AbgAWNsZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 08:47:08 -0500
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:51357 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728205AbgAWNrI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 08:47:08 -0500
-Received: by mail-pj1-f67.google.com with SMTP id d15so1245194pjw.1
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jan 2020 05:47:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amarulasolutions.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=6qQxJ2SyEvVPvMIErsNNl1ijsgX+GmiVrQvVTmqjFSI=;
-        b=nOFVLQvmwK7zQcfoX6RgA2rrAPXk4uIPXzRXCI/bneBDiL0Ik2eIKCNwhvr4BnCr5H
-         wvsxMbXx6Ve+D9iIe6dS2smIjruESE1T7KPLu5LG0YaI7vKLsy2rK7EFLq5z73+/VkSX
-         xjWrBRsLB8Opl9F6BmXyYe+0uWyqsaOK50p2w=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=6qQxJ2SyEvVPvMIErsNNl1ijsgX+GmiVrQvVTmqjFSI=;
-        b=X5PRX9+rM1pWk2RRPmWh4hSwJRs0KlIOSmoWq8yEgP1T0Yn/MkBtI6NVbxfKY2jt9e
-         /x4dxgtK2OKUc2rd77F8twt4/8k8RnMpmpd0kOiQsuwUwky6eFPas71RlKDrIZyuLXdu
-         jFx2yZQ6+NncrYmkydy/rQz2vQAuXcG5Bk4kzxd8q61yHA4ESakfqB2H2vfseGIN4DMA
-         FmamoPULKJcZdsRmMRjDQsirpgiuiqGw/Oz7uJgGHD4kf5qoIneNhLdk1Acv3/qMXOjH
-         mCj45D56Gn60Guuoz3R28edpR21Gfr+Awjt0ias0Lyrnj7z0CB9BEvs1HT5zFOwO+sXl
-         z0uA==
-X-Gm-Message-State: APjAAAXBKsEnuvBV0sIsqcWd2gDyM+FXuNokxOVHkOX5vBV1q0sv13UB
-        AMYzhed7DhVE90kCBzR9/khwCw==
-X-Google-Smtp-Source: APXvYqxluBr8pbd/5ZuACzarEI+J3Nv0qKlV4YpT+VWQoiazdSaVUD7XjER8s9Oeyn6ZbbfLh5m2jA==
-X-Received: by 2002:a17:902:16a:: with SMTP id 97mr16134852plb.163.1579787227342;
-        Thu, 23 Jan 2020 05:47:07 -0800 (PST)
-Received: from localhost.localdomain ([49.206.202.109])
-        by smtp.gmail.com with ESMTPSA id a10sm3119275pgm.81.2020.01.23.05.47.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Jan 2020 05:47:06 -0800 (PST)
-From:   Jagan Teki <jagan@amarulasolutions.com>
-To:     Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     Michael Trimarchi <michael@amarulasolutions.com>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-amarula@amarulasolutions.com,
-        Jagan Teki <jagan@amarulasolutions.com>
-Subject: [PATCH 3/3] ARM: dts: rockchip: Add vcc50_hdmi for rk3288-vyasa
-Date:   Thu, 23 Jan 2020 19:16:41 +0530
-Message-Id: <20200123134641.30720-3-jagan@amarulasolutions.com>
-X-Mailer: git-send-email 2.18.0.321.gffc6fa0e3
-In-Reply-To: <20200123134641.30720-1-jagan@amarulasolutions.com>
-References: <20200123134641.30720-1-jagan@amarulasolutions.com>
+        Thu, 23 Jan 2020 08:48:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35894 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727194AbgAWNsX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jan 2020 08:48:23 -0500
+Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7BB2A24688;
+        Thu, 23 Jan 2020 13:48:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579787302;
+        bh=FoxHytvieeiMR5w2vCjs+iRWN/xe1IbjBrRYYeIbBXI=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=1AS+dHLPP5rAH9T5VHs73GXahPyDACd7SwtCJD7VthNa8rx17bY8byQrbZdLVw6st
+         /McONvPTX31f0ZJEautzgUfWGlos9MYkPATUg7nOUBZrdeGgNfy+FlwtBpEwdmxnNE
+         u2QibjRJJeoNrPtP39MgM13THZKJCOfzOCTNaVJU=
+Received: by mail-qt1-f174.google.com with SMTP id c24so2475643qtp.5;
+        Thu, 23 Jan 2020 05:48:22 -0800 (PST)
+X-Gm-Message-State: APjAAAXKuxRZTOQmoiUrYjuSIMALCSfn0oJa/JIzrfJF4SonCBnu6tTp
+        WTRRDGH6j0aih2zQ5+4bWp7VoeInTfYxWSjUig==
+X-Google-Smtp-Source: APXvYqzeZnbmbU5C7iKeSjGcGtjCWg8yrdnvL6IUNbFeEnrmCjkbaCvNa0W8VIm6gLl/nyiVJznT6alXW1omCkLRUg0=
+X-Received: by 2002:ac8:6747:: with SMTP id n7mr15914499qtp.224.1579787301560;
+ Thu, 23 Jan 2020 05:48:21 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <09a2fe69-842f-01cf-1cfa-d5fc639b158a@gmail.com>
+In-Reply-To: <09a2fe69-842f-01cf-1cfa-d5fc639b158a@gmail.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Thu, 23 Jan 2020 07:48:09 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqKvFt=BM2BD9HXSEZOAzEnDwAzj7f8pGRnApA8Mp7qxBg@mail.gmail.com>
+Message-ID: <CAL_JsqKvFt=BM2BD9HXSEZOAzEnDwAzj7f8pGRnApA8Mp7qxBg@mail.gmail.com>
+Subject: Re: [PATCH v10 1/2] dt-bindings: edac: dmc-520.yaml
+To:     Shiping Ji <shiping.linux@gmail.com>
+Cc:     Borislav Petkov <bp@alien8.de>, James Morse <james.morse@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        linux-edac <linux-edac@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, hangl@microsoft.com,
+        Lei Wang <lewan@microsoft.com>, ruizhao@microsoft.com,
+        shji@microsoft.com, Scott Branden <scott.branden@broadcom.com>,
+        Yuqing Shen <yuqing.shen@broadcom.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add vcc50_hdmi regulator for Vyasa RK3288 board.
+On Wed, Jan 22, 2020 at 6:31 PM Shiping Ji <shiping.linux@gmail.com> wrote:
+>
+> This is the device tree bindings for new EDAC driver dmc520_edac.c.
+>
+> From: Lei Wang <leiwang_git@outlook.com>
+>
+> Signed-off-by: Lei Wang <leiwang_git@outlook.com>
+> Signed-off-by: Shiping Ji <shiping.linux@gmail.com>
+> Reviewed-by: James Morse <james.morse@arm.com>
+>
+> ---
+>      Changes in v10:
+>          - Convert to the YAML format for binding description
+>
+> ---
+>  .../devicetree/bindings/edac/dmc-520.yaml     | 56 +++++++++++++++++++
+>  1 file changed, 56 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/edac/dmc-520.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/edac/dmc-520.yaml b/Documentation/devicetree/bindings/edac/dmc-520.yaml
+> new file mode 100644
+> index 000000000000..dd5982b227b2
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/edac/dmc-520.yaml
+> @@ -0,0 +1,56 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/edac/dmc-520.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: ARM DMC-520 EDAC bindings
+> +
+> +maintainers:
+> +  - Lei Wang <lewan@microsoft.com>
+> +
+> +description: |+
+> +  DMC-520 node is defined to describe DRAM error detection and correction.
+> +
+> +  https://static.docs.arm.com/100000/0200/corelink_dmc520_trm_100000_0200_01_en.pdf
+> +
+> +properties:
+> +  compatible:
+> +    items:
+> +      - const: brcm,dmc-520
+> +      - const: arm,dmc-520
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    minItems: 1
 
-VCC50_HDMI is the real name used for this regulator as
-per the schematics.
-
-This regulator used for HDMI connector by detecting the
-cable via HDMI_EN gpio and input rails are sourced from
-VSUS_5V regulator.
-
-Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
----
- arch/arm/boot/dts/rk3288-vyasa.dts | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
-
-diff --git a/arch/arm/boot/dts/rk3288-vyasa.dts b/arch/arm/boot/dts/rk3288-vyasa.dts
-index 88c63946f2a3..52291faf7aef 100644
---- a/arch/arm/boot/dts/rk3288-vyasa.dts
-+++ b/arch/arm/boot/dts/rk3288-vyasa.dts
-@@ -78,6 +78,17 @@
- 		vin-supply = <&vcc_io>;
- 	};
- 
-+	vcc50_hdmi: vcc50-hdmi {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vcc50_hdmi";
-+		enable-active-high;
-+		gpio = <&gpio7 RK_PB4 GPIO_ACTIVE_HIGH>; /* HDMI_EN */
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&vcc50_hdmi_en>;
-+		regulator-always-on;
-+		regulator-boot-on;
-+		vin-supply = <&vsus_5v>;
-+	};
- 	vusb1_5v: vusb1-5v {
- 		compatible = "regulator-fixed";
- 		regulator-name = "vusb1_5v";
-@@ -446,6 +457,12 @@
- 		};
- 	};
- 
-+	hdmi {
-+		vcc50_hdmi_en: vcc50-hdmi-en {
-+			rockchip,pins = <7 RK_PB4 RK_FUNC_GPIO &pcfg_pull_none>;
-+		};
-+	};
-+
- 	pmic {
- 		pmic_int: pmic-int {
- 			rockchip,pins = <0 RK_PA4 RK_FUNC_GPIO &pcfg_pull_up>;
--- 
-2.18.0.321.gffc6fa0e3
-
+You also need 'maxItems: 10' here.
