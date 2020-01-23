@@ -2,111 +2,127 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14849C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 16:30:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 391C1C33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 16:41:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD09921D7E
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 16:30:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="ITGRhoN8"
+	by mail.kernel.org (Postfix) with ESMTP id 11BB12064C
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 16:41:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579797670;
+	bh=SYOcg05hp0GKFRdLdX4OKweCK3oCGyHJiXYgJpSn9B0=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=lY9fhrqHlmIrUmtNqgshIbVP/urkvgzjHNq6etTFNXghcIbCS2voeGBIQoXP5Qt9H
+	 iXcJ+lQqRkjOK3LPWk3YEc+k8p7vGELIgyZC/c/dFz7FdCWJu7tXnrT1p1OJsjWJ0Z
+	 6vo8UgmcyetUf1jAZ0FW+UHQjJ9SwaKBgR5+09DQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727194AbgAWQaA (ORCPT
+        id S1728803AbgAWQlJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 11:30:00 -0500
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:35681 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727523AbgAWQ37 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 11:29:59 -0500
-Received: by mail-qk1-f195.google.com with SMTP id z76so4040695qka.2
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jan 2020 08:29:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=vnD7CtKsIUMQZngJBgz/z3z7LZDuTlk1mfUMotJq4ls=;
-        b=ITGRhoN8U017VrzMlBw/yrJX8jmgO/FLsQjjj5XEofW+pB8tFjk8wmXr3GwdIMO95/
-         TdbtO3PIJ8YnZ2nopdVCMK6Ajh4BMIljNe2MEnw/uHTiwJfiLrFUbyGT/2t6KpFSOkpX
-         vfn1n7ptNReviQswLnoPORqii+ccWPX1hrXG9+lrEjDGgnz9ODkEYgRkHFexhcsK48HQ
-         URC+C4PUMHEE1no+vyeTkSKzn6uIzycEMlQEpJTgmXu/9V/SUv5ogYGDOJGV9PLlw65+
-         bOcVPkI4ecRkzi1FpoqIPVnWw4a1SibDgHBDR+PGF12A3huLUWFgnWWS5KNq61gMQELm
-         Ps3Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=vnD7CtKsIUMQZngJBgz/z3z7LZDuTlk1mfUMotJq4ls=;
-        b=YEgWFFurj1gG304zu7t2mTy1/iclYLATKK5rghB1DLtbBGV0Cs0fyVWRGlPMe5+9wE
-         h4H2Z0pzjykFQgH3C6zWoqOsYM6GnJ9XsnibTVFIb6fEyXoO9hoqNUiT/mE+5ReyJBxp
-         V21YYuYB9lIG7PtMqRP8TDYXR+gLyg5eVsu6DKLmDwLK2pdLHnPWSHPfKwgmUDokGJWz
-         HSTZ/wLIkRt8xYRaY6JemqIhMD9go191Q2N1kQbWIyj2X4dbAXIVYVqx5fxY26/mgJEM
-         43X/IzGVteIDS4ipuX0c9ik3L2UD8EN3fIC4zIDXITH6CxQNKOq03s+946un0s9Gmj3B
-         WJDA==
-X-Gm-Message-State: APjAAAWEQHX+GnQlkqB5lsU01p8bkeofyPgBAGs0jJKYI0ZOwuXyApQk
-        /Nhf37hnFHL4Ong6W413J6D6Ag==
-X-Google-Smtp-Source: APXvYqwu8j+jB7xvMUwGV0+Vmf+pKoO72oLwOCLj8Yu+pN4KpMhRP/GPYpj7h2IQFwCZYa3ugyl0xg==
-X-Received: by 2002:a05:620a:134f:: with SMTP id c15mr16463418qkl.115.1579796998789;
-        Thu, 23 Jan 2020 08:29:58 -0800 (PST)
-Received: from ovpn-123-97.rdu2.redhat.com (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id k135sm1121731qke.6.2020.01.23.08.29.56
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 23 Jan 2020 08:29:57 -0800 (PST)
-From:   Qian Cai <cai@lca.pw>
-To:     peterz@infradead.org
-Cc:     will@kernel.org, longman@redhat.com, mingo@redhat.com,
-        catalin.marinas@arm.com, clang-built-linux@googlegroups.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Qian Cai <cai@lca.pw>
-Subject: [PATCH -next] arm64/spinlock: fix a -Wunused-function warning
-Date:   Thu, 23 Jan 2020 11:29:45 -0500
-Message-Id: <20200123162945.7705-1-cai@lca.pw>
-X-Mailer: git-send-email 2.21.0 (Apple Git-122.2)
+        Thu, 23 Jan 2020 11:41:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52074 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727312AbgAWQlJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jan 2020 11:41:09 -0500
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8EE2E21734;
+        Thu, 23 Jan 2020 16:41:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579797668;
+        bh=SYOcg05hp0GKFRdLdX4OKweCK3oCGyHJiXYgJpSn9B0=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=wKcMTcEN8AXJfZr+rw4lPetdkINSK3OPE6IJftTzck/7ynnPzQnrDMgqysqUX83QW
+         0tiuizAa/ivcdupeGkVy2gXHCxNRGeDDJb8JDwLAoTR9Cqtu+zmNj2aUNh9Ya/tF6H
+         C4wWOKEqGw4r2TU86XoKPT5u6foDIhICEl0lrXgM=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 593DA3520C31; Thu, 23 Jan 2020 08:41:08 -0800 (PST)
+Date:   Thu, 23 Jan 2020 08:41:08 -0800
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     madhuparnabhowmik10@gmail.com
+Cc:     mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
+        vincent.guittot@linaro.org, ebiederm@xmission.com,
+        christian.brauner@ubuntu.com, oleg@redhat.com,
+        joel@joelfernandes.org, linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        frextrite@gmail.com, rcu@vger.kernel.org
+Subject: Re: [PATCH] sched.h: Annotate sighand_struct with __rcu
+Message-ID: <20200123164108.GQ2935@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200123145305.10652-1-madhuparnabhowmik10@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200123145305.10652-1-madhuparnabhowmik10@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The commit f5bfdc8e3947 ("locking/osq: Use optimized spinning loop for
-arm64") introduced a warning from Clang because vcpu_is_preempted() is
-compiled away,
+On Thu, Jan 23, 2020 at 08:23:05PM +0530, madhuparnabhowmik10@gmail.com wrote:
+> From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+> 
+> This patch fixes the following sparse errors by annotating the
+> sighand_struct with __rcu
+> 
+> kernel/fork.c:1511:9: error: incompatible types in comparison expression
+> kernel/exit.c:100:19: error: incompatible types in comparison expression
+> kernel/signal.c:1370:27: error: incompatible types in comparison expression
+> 
+> This fix introduces the following sparse error in signal.c due to
+> checking the sighand pointer without rcu primitives:
+> 
+> kernel/signal.c:1386:21: error: incompatible types in comparison expression
+> 
+> This new sparse error is also addressed in this patch.
+> 
+> Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+> ---
+>  include/linux/sched.h | 2 +-
+>  kernel/signal.c       | 3 ++-
+>  2 files changed, 3 insertions(+), 2 deletions(-)
+> 
+> diff --git a/include/linux/sched.h b/include/linux/sched.h
+> index b511e178a89f..7a351360ad54 100644
+> --- a/include/linux/sched.h
+> +++ b/include/linux/sched.h
+> @@ -918,7 +918,7 @@ struct task_struct {
+>  
+>  	/* Signal handlers: */
+>  	struct signal_struct		*signal;
+> -	struct sighand_struct		*sighand;
+> +	struct sighand_struct __rcu		*sighand;
+>  	sigset_t			blocked;
+>  	sigset_t			real_blocked;
+>  	/* Restored if set_restore_sigmask() was used: */
+> diff --git a/kernel/signal.c b/kernel/signal.c
+> index bcd46f547db3..1272def37462 100644
+> --- a/kernel/signal.c
+> +++ b/kernel/signal.c
+> @@ -1383,7 +1383,8 @@ struct sighand_struct *__lock_task_sighand(struct task_struct *tsk,
+>  		 * must see ->sighand == NULL.
+>  		 */
+>  		spin_lock_irqsave(&sighand->siglock, *flags);
+> -		if (likely(sighand == tsk->sighand))
+> +		if (likely(sighand == rcu_dereference_protected(tsk->sighand,
+> +						lockdep_is_held(&sighand->siglock))))
 
-kernel/locking/osq_lock.c:25:19: warning: unused function 'node_cpu'
-[-Wunused-function]
-static inline int node_cpu(struct optimistic_spin_node *node)
-                  ^
-1 warning generated.
+Given that the return value is never dereferenced, you can use
+rcu_access_pointer(), which may be used outside of an RCU read-side
+critical section, and thus does not need the lockdep_is_held().  So this
+change would save a line of code and would be a bit easier on the eyes.
 
-Since vcpu_is_preempted() had already been defined in
-include/linux/sched.h as false, just comment out the redundant macro, so
-it can still be served for the documentation purpose.
+							Thanx, Paul
 
-Fixes: f5bfdc8e3947 ("locking/osq: Use optimized spinning loop for arm64")
-Signed-off-by: Qian Cai <cai@lca.pw>
----
- arch/arm64/include/asm/spinlock.h | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/arch/arm64/include/asm/spinlock.h b/arch/arm64/include/asm/spinlock.h
-index 102404dc1e13..b05f82e8ba19 100644
---- a/arch/arm64/include/asm/spinlock.h
-+++ b/arch/arm64/include/asm/spinlock.h
-@@ -17,7 +17,8 @@
-  *
-  * See:
-  * https://lore.kernel.org/lkml/20200110100612.GC2827@hirez.programming.kicks-ass.net
-+ *
-+ * #define vcpu_is_preempted(cpu)	false
-  */
--#define vcpu_is_preempted(cpu)	false
- 
- #endif /* __ASM_SPINLOCK_H */
--- 
-2.21.0 (Apple Git-122.2)
-
+>  			break;
+>  		spin_unlock_irqrestore(&sighand->siglock, *flags);
+>  	}
+> -- 
+> 2.17.1
+> 
