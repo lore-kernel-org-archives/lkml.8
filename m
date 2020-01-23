@@ -2,189 +2,97 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F2D0C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 11:44:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3B42C33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 11:45:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9A912467E
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 11:44:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90DA72253D
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 11:45:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=benyossef-com.20150623.gappssmtp.com header.i=@benyossef-com.20150623.gappssmtp.com header.b="tFSNFy7T"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="UTnoAprY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728139AbgAWLo5 (ORCPT
+        id S1728998AbgAWLpC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 06:44:57 -0500
-Received: from mail-vk1-f195.google.com ([209.85.221.195]:35458 "EHLO
-        mail-vk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726584AbgAWLo4 (ORCPT
+        Thu, 23 Jan 2020 06:45:02 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:51322 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727312AbgAWLo5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 06:44:56 -0500
-Received: by mail-vk1-f195.google.com with SMTP id o187so890876vka.2
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jan 2020 03:44:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=benyossef-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=nyiurIf26J2PnKEaG0CFQgYd31QfXbKBOura+Qp9DBM=;
-        b=tFSNFy7TaEacy7bRpPIqB4cdCI5aO5jI7z4Cz85Gpq+te0ukUI1F9tsIluuVi7pitp
-         IASLT0XUDz+7mt6+T5PWGQVi2TyP99a4j7wI8IeGOK8IJfM0ZvZqWOVzMwjZa/SZIlRO
-         UhjSe3iGotRv80qlMo4mh8woMNVDkRC7+S8hpJpGFGUCPWKYGpkLj7gJgZcNHyTPTi8N
-         n7IT5cBKS3ckzzajq3S2TmVlfBqFqJibhUuToaaVHHQOKdGG9sxZIVOt+He66nhFu/qM
-         xZnIkhCjLDz+TZB9Knu+i4BqsL7fdf0Q7KTUfWx0IVfeUvdoCcw3oUaaDvSb5pG4gw22
-         tC+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=nyiurIf26J2PnKEaG0CFQgYd31QfXbKBOura+Qp9DBM=;
-        b=g9eWbwQ1nY/+JwuHJ4NcyTZSnZi1JB51Er3LTHrivIVUkEK5Tfi4K0iAN9j9j4b6wm
-         RsB0JwebY3LZtwn/HnnUPzclGoluJVsBAV2EWAow2gV44HcC9SsBfbtp3sR+c9Rk4L6M
-         jktiW+VKcHoAO8+G9CD52IfOg8wqOuKjLxiBev7kq5AWPc/2X8bbGOFFrd87afZBOwwx
-         sE5Nnu0InhO7nLzJwq/NhsaxYyKGZmlYkbzSxsfMNxQ2D2naRGrviTtfCQFUWUtXRLIx
-         iZQLrUOkg7EDXHp2k4yXWwix2ykeRQMFPTAywD4tjlkev0vSWJM5hs5Otvt5NmRhtjk8
-         3YUA==
-X-Gm-Message-State: APjAAAVDY6EjcAzkZwDbDd0lKAbZjzK11u9yvXACaW47EEg+3O+6bRNz
-        oAwIZ/bZBPlIH7jzSyv86syTWMTTOzlOCMaytrlcrg==
-X-Google-Smtp-Source: APXvYqzNR8YxDD7XcoX4QE85sxHKmUMY554jZmO4LxS//U6VPPcRLCy7qBezxGpzkc27vKwsef+pT4RGYMyYwlw0Pz0=
-X-Received: by 2002:a1f:7cc2:: with SMTP id x185mr9354470vkc.1.1579779895649;
- Thu, 23 Jan 2020 03:44:55 -0800 (PST)
+        Thu, 23 Jan 2020 06:44:57 -0500
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00NBip87129993;
+        Thu, 23 Jan 2020 05:44:51 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1579779891;
+        bh=TQxJOkllZRM/u+My4lOJpaDn2K7FzjpSKQ+ZfGHnqnw=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=UTnoAprYrY7UKJedUUIFAdWlBX0HziZyzoxF9hFDX5Huqp63r8F9SqdqKBPAkGrSY
+         4TcQ6Kgk7c+s226i0hFCfnZ54lq6KYOY+iP95wZJJwnSvurYUg9ofxVPQd+TfRyix5
+         bKiTJBEh/mZB1pRkcv/g60DTPpAsnrPhTUx3gZEA=
+Received: from DFLE106.ent.ti.com (dfle106.ent.ti.com [10.64.6.27])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00NBipJL060521;
+        Thu, 23 Jan 2020 05:44:51 -0600
+Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE106.ent.ti.com
+ (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 23
+ Jan 2020 05:44:50 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Thu, 23 Jan 2020 05:44:50 -0600
+Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00NBijBE114078;
+        Thu, 23 Jan 2020 05:44:48 -0600
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+To:     <t-kristo@ti.com>, <nm@ti.com>, <lokeshvutla@ti.com>
+CC:     <robh+dt@kernel.org>, <mark.rutland@arm.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v3 1/9] arm64: dts: ti: k3-am65-main: Correct main NAVSS representation
+Date:   Thu, 23 Jan 2020 13:45:20 +0200
+Message-ID: <20200123114528.26552-2-peter.ujfalusi@ti.com>
+X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200123114528.26552-1-peter.ujfalusi@ti.com>
+References: <20200123114528.26552-1-peter.ujfalusi@ti.com>
 MIME-Version: 1.0
-References: <20200116101447.20374-1-gilad@benyossef.com> <CAMuHMdUhR83SZyWX9Du9d3Sp4A48x_msKaOHGsa88EQKStEDQg@mail.gmail.com>
-In-Reply-To: <CAMuHMdUhR83SZyWX9Du9d3Sp4A48x_msKaOHGsa88EQKStEDQg@mail.gmail.com>
-From:   Gilad Ben-Yossef <gilad@benyossef.com>
-Date:   Thu, 23 Jan 2020 13:44:43 +0200
-Message-ID: <CAOtvUMfDnoFu8V7sYvhgsstX6fuUk3foq+9FJ6SbUKEFnq-zMw@mail.gmail.com>
-Subject: Re: [PATCH 00/11] crypto: ccree - fixes and cleanups
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Ofir Drang <ofir.drang@arm.com>, Hadar Gat <hadar.gat@arm.com>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+NAVSS is a subsystem containing different IPs, it is not really a bus.
+Change the compatible from "simple-bus" to "simple-mfd" to reflect that.
 
-On Wed, Jan 22, 2020 at 6:51 PM Geert Uytterhoeven <geert@linux-m68k.org> w=
-rote:
->
-> Hi Gilad,
->
-> On Thu, Jan 16, 2020 at 11:25 AM Gilad Ben-Yossef <gilad@benyossef.com> w=
-rote:
-> > A bunch of fixes and code cleanups for the ccree driver
->
-> Thank you!
->
-> I wanted to give this a try, but it looks like CCREE is no longer working
-> on R-Car H3, both with/without this series.
->
-> E.g. with renesas-devel[*] and renesas_defconfig +
-> CONFIG_CRYPTO_MANAGER_DISABLE_TESTS=3Dn, I get the following crash:
->
+Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+---
+ arch/arm64/boot/dts/ti/k3-am65-main.dtsi | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Thank you for the bug report Geert!
+diff --git a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
+index efb24579922c..972e14bf9478 100644
+--- a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
++++ b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
+@@ -385,8 +385,8 @@ intr_main_gpio: interrupt-controller0 {
+ 		ti,sci-rm-range-girq = <0x1>;
+ 	};
+ 
+-	cbass_main_navss: interconnect0 {
+-		compatible = "simple-bus";
++	main_navss {
++		compatible = "simple-mfd";
+ 		#address-cells = <2>;
+ 		#size-cells = <2>;
+ 		ranges;
+-- 
+Peter
 
-My R-Car board is on loan at the moment to another project. I didn't
-see this on our internal test board.
-I will track down my R-Car board and reproduce this - hopefully
-beginning of next week and will get back to you.
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
 
-Thanks again,
-Gilad
-
-> ccree e6601000.crypto: ARM CryptoCell 630P Driver: HW version
-> 0xAF400001/0xDCC63000, Driver version 5.0
-> alg: No test for authenc(xcbc(aes),cbc(aes)) (authenc-xcbc-aes-cbc-aes-cc=
-ree)
-> alg: No test for authenc(xcbc(aes),rfc3686(ctr(aes)))
-> (authenc-xcbc-aes-rfc3686-ctr-aes-ccree)
-> ------------[ cut here ]------------
-> kernel BUG at kernel/dma/swiotlb.c:497!
-> Internal error: Oops - BUG: 0 [#1] PREEMPT SMP
-> CPU: 7 PID: 189 Comm: cryptomgr_test Not tainted 5.5.0-rc7-arm64-renesas =
-#463
-> Hardware name: Renesas Salvator-X 2nd version board based on r8a77951 (DT=
-)
-> pstate: 80000005 (Nzcv daif -PAN -UAO)
-> pc : swiotlb_tbl_map_single+0x30c/0x380
-> lr : swiotlb_map+0xb0/0x300
-> sp : ffff800012313430
-> x29: ffff800012313430 x28: 0000000000000000
-> x27: 0000000000000000 x26: 0000000738e7e000
-> x25: ffff0006fa5f8010 x24: 0000000000000000
-> x23: ffff800011aed000 x22: 0000000000000000
-> x21: 0000000000000000 x20: 00000000000e8000
-> x19: ffff80001105e000 x18: ffffffffffffffff
-> x17: 0000000000000007 x16: 0000000000000001
-> x15: ffff800010f5f908 x14: ffff800092313cf7
-> x13: ffff0006ff0b4000 x12: 0000000000000001
-> x11: 0000000000000003 x10: 0000000000200000
-> x9 : 0000000000000000 x8 : 0000000000000001
-> x7 : ffff800011aed9e0 x6 : 0000000000000000
-> x5 : 0000000000000000 x4 : 0000000000000000
-> x3 : 0000000000000000 x2 : 0000000000000000
-> x1 : 0000000074000000 x0 : 0000000000000000
-> Call trace:
->  swiotlb_tbl_map_single+0x30c/0x380
->  swiotlb_map+0xb0/0x300
->  dma_direct_map_page+0xb8/0x140
->  dma_direct_map_sg+0x78/0xe0
->  cc_map_sg+0x10c/0x1a8
->  cc_map_aead_request+0x160/0x990
->  cc_proc_aead+0x140/0xef8
->  cc_aead_encrypt+0x48/0x68
->  crypto_aead_encrypt+0x20/0x30
->  test_aead_vec_cfg+0x20c/0x848
->  test_aead+0xb8/0x140
->  alg_test_aead+0x94/0x178
->  alg_test+0x108/0x3f8
->  cryptomgr_test+0x40/0x48
->  kthread+0x11c/0x120
->  ret_from_fork+0x10/0x18
-> Code: f9402fbc 17ffffa0 f9000bb3 f9002fbc (d4210000)
-> ---[ end trace 272124cd4e3fd6f0 ]---
-> note: cryptomgr_test[189] exited with preempt_count 1
-> ------------[ cut here ]------------
->
-> FWIW, the same happens on R-Car H3 ES1.0.
-> I haven't tried investigating when it stopped working.
-> I stopped running the crypto manager tests when they were broken by
-> CONFIG_HARDENED_USERCOPY_PAGESPAN=3Dy.
->
-> Do you have a clue?
-> Thanks!
->
-> [*] https://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-devel.g=
-it/
->
-> Gr{oetje,eeting}s,
->
->                         Geert
->
-> --
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m6=
-8k.org
->
-> In personal conversations with technical people, I call myself a hacker. =
-But
-> when I'm talking to journalists I just say "programmer" or something like=
- that.
->                                 -- Linus Torvalds
-
-
-
---=20
-Gilad Ben-Yossef
-Chief Coffee Drinker
-
-values of =CE=B2 will give rise to dom!
