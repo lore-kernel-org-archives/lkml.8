@@ -2,204 +2,179 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EC58C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 16:26:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C914C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 16:28:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4031021734
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 16:26:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C92FD21D7E
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 16:28:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="pXeftWy8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728779AbgAWQ0k (ORCPT
+        id S1728904AbgAWQ2e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 11:26:40 -0500
-Received: from mga09.intel.com ([134.134.136.24]:20351 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726605AbgAWQ0k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 11:26:40 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Jan 2020 08:26:39 -0800
-X-IronPort-AV: E=Sophos;i="5.70,354,1574150400"; 
-   d="scan'208";a="220715783"
-Received: from ahduyck-desk1.jf.intel.com ([10.7.198.76])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Jan 2020 08:26:39 -0800
-Message-ID: <af0b12780092e0007ec9e6dbfc92bc15b604b8f4.camel@linux.intel.com>
-Subject: Re: [PATCH v16.1 0/9] mm / virtio: Provide support for free page
- reporting
-From:   Alexander Duyck <alexander.h.duyck@linux.intel.com>
-To:     Alexander Graf <graf@amazon.com>,
-        Alexander Duyck <alexander.duyck@gmail.com>,
-        kvm@vger.kernel.org, mst@redhat.com, linux-kernel@vger.kernel.org,
-        willy@infradead.org, mhocko@kernel.org, linux-mm@kvack.org,
-        akpm@linux-foundation.org, mgorman@techsingularity.net,
-        vbabka@suse.cz
-Cc:     yang.zhang.wz@gmail.com, nitesh@redhat.com, konrad.wilk@oracle.com,
-        david@redhat.com, pagupta@redhat.com, riel@surriel.com,
-        lcapitulino@redhat.com, dave.hansen@intel.com,
-        wei.w.wang@intel.com, aarcange@redhat.com, pbonzini@redhat.com,
-        dan.j.williams@intel.com, osalvador@suse.de,
-        "Paterson-Jones, Roland" <rolandp@amazon.com>, hannes@cmpxchg.org,
-        hare@suse.com
-Date:   Thu, 23 Jan 2020 08:26:39 -0800
-In-Reply-To: <914aa4c3-c814-45e0-830b-02796b00b762@amazon.com>
-References: <20200122173040.6142.39116.stgit@localhost.localdomain>
-         <914aa4c3-c814-45e0-830b-02796b00b762@amazon.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.5 (3.32.5-1.fc30) 
+        Thu, 23 Jan 2020 11:28:34 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:43812 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727312AbgAWQ2d (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jan 2020 11:28:33 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00NGIdeQ028190;
+        Thu, 23 Jan 2020 16:27:35 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2019-08-05;
+ bh=SEWGmpj+C0GP5tdPocK684KKu6ngmTY1W8H/vmTd0A0=;
+ b=pXeftWy8HiCzIEKg+sR2wmeh1TvnQWox+DKmb4s4OearFpwdo8Lv08wnT78PWw6gn5IN
+ mUMIgfndfmOTwrSjHUhBjAlaHAyUVpo9UpSgC9xx2rB+zPWdIoGnDOKBmcnh2jN7YYu5
+ TbvTJLfxoWapvsfAbzFABhZz9KeJtqxsJu92WD/9/eUWk/3fTpglMFVNVCkNj8Mh7+b+
+ Q8XHYWQMkqJGCL24vT9ey02e5/dUkEOIQBVtw9tWPmWqnAyMeEGRH6MAzw61jd8VvAsA
+ tRG74cw1j6oIK0NNvilcn+ns1MbF3LnKpsvrJ5y1iYUf9IXhAloyENRwdfGt9UzHRGvy 9g== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2130.oracle.com with ESMTP id 2xkseuuhkn-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 23 Jan 2020 16:27:34 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00NGJ2YX170407;
+        Thu, 23 Jan 2020 16:27:34 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3030.oracle.com with ESMTP id 2xpq0wutwt-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 23 Jan 2020 16:27:33 +0000
+Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 00NGRTQl025960;
+        Thu, 23 Jan 2020 16:27:29 GMT
+Received: from bostrovs-us.us.oracle.com (/10.152.32.65)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 23 Jan 2020 08:27:29 -0800
+Subject: Re: [RFC PATCH V2 11/11] x86: tsc: avoid system instability in
+ hibernation
+To:     Anchal Agarwal <anchalag@amazon.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        "Singh, Balbir" <sblbir@amazon.com>,
+        "Valentin, Eduardo" <eduval@amazon.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Woodhouse, David" <dwmw@amazon.co.uk>,
+        "vkuznets@redhat.com" <vkuznets@redhat.com>,
+        "sstabellini@kernel.org" <sstabellini@kernel.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "pavel@ucw.cz" <pavel@ucw.cz>, "axboe@kernel.dk" <axboe@kernel.dk>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "roger.pau@citrix.com" <roger.pau@citrix.com>,
+        "hpa@zytor.com" <hpa@zytor.com>,
+        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "Kamata, Munehisa" <kamatam@amazon.com>,
+        "bp@alien8.de" <bp@alien8.de>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "konrad.wilk@oracle.co" <konrad.wilk@oracle.com>,
+        "len.brown@intel.com" <len.brown@intel.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "fllinden@amaozn.com" <fllinden@amazon.com>,
+        "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>
+References: <20200107234526.GA19034@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
+ <20200108105011.GY2827@hirez.programming.kicks-ass.net>
+ <20200110153520.GC8214@u40b0340c692b58f6553c.ant.amazon.com>
+ <20200113101609.GT2844@hirez.programming.kicks-ass.net>
+ <857b42b2e86b2ae09a23f488daada3b1b2836116.camel@amazon.com>
+ <20200113124247.GG2827@hirez.programming.kicks-ass.net>
+ <CAJZ5v0jv+5aLY3N4wFSitu61o9S8tJWEWGGn1Xyw-P82_TwFdQ@mail.gmail.com>
+ <CAJZ5v0imNbbch=NWAdgVKf_hjwRrEiWAL8SFNwe6rW_SjgYzrw@mail.gmail.com>
+ <20200114192952.GA26755@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
+ <20200122200710.GA3071@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
+From:   Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Autocrypt: addr=boris.ostrovsky@oracle.com; keydata=
+ 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
+ Jg6OxFYd01z+a+oL
+Message-ID: <65ae1560-241e-de68-a68a-ffea071f5cc4@oracle.com>
+Date:   Thu, 23 Jan 2020 11:27:15 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20200122200710.GA3071@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9509 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=800
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-2001230131
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9509 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=862 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-2001230131
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2020-01-23 at 11:20 +0100, Alexander Graf wrote:
-> Hi Alex,
-> 
-> On 22.01.20 18:43, Alexander Duyck wrote:
-> > This series provides an asynchronous means of reporting free guest pages
-> > to a hypervisor so that the memory associated with those pages can be
-> > dropped and reused by other processes and/or guests on the host. Using
-> > this it is possible to avoid unnecessary I/O to disk and greatly improve
-> > performance in the case of memory overcommit on the host.
-> > 
-> > When enabled we will be performing a scan of free memory every 2 seconds
-> > while pages of sufficiently high order are being freed. In each pass at
-> > least one sixteenth of each free list will be reported. By doing this we
-> > avoid racing against other threads that may be causing a high amount of
-> > memory churn.
-> > 
-> > The lowest page order currently scanned when reporting pages is
-> > pageblock_order so that this feature will not interfere with the use of
-> > Transparent Huge Pages in the case of virtualization.
-> > 
-> > Currently this is only in use by virtio-balloon however there is the hope
-> > that at some point in the future other hypervisors might be able to make
-> > use of it. In the virtio-balloon/QEMU implementation the hypervisor is
-> > currently using MADV_DONTNEED to indicate to the host kernel that the page
-> > is currently free. It will be zeroed and faulted back into the guest the
-> > next time the page is accessed.
-> > 
-> > To track if a page is reported or not the Uptodate flag was repurposed and
-> > used as a Reported flag for Buddy pages. We walk though the free list
-> > isolating pages and adding them to the scatterlist until we either
-> > encounter the end of the list, processed as many pages as were listed in
-> > nr_free prior to us starting, or have filled the scatterlist with pages to
-> > be reported. If we fill the scatterlist before we reach the end of the
-> > list we rotate the list so that the first unreported page we encounter is
-> > moved to the head of the list as that is where we will resume after we
-> > have freed the reported pages back into the tail of the list.
-> > 
-> > Below are the results from various benchmarks. I primarily focused on two
-> > tests. The first is the will-it-scale/page_fault2 test, and the other is
-> > a modified version of will-it-scale/page_fault1 that was enabled to use
-> > THP. I did this as it allows for better visibility into different parts
-> > of the memory subsystem. The guest is running with 32G for RAM on one
-> > node of a E5-2630 v3. The host has had some features such as CPU turbo
-> > disabled in the BIOS.
-> > 
-> > Test                   page_fault1 (THP)    page_fault2
-> > Name            tasks  Process Iter  STDEV  Process Iter  STDEV
-> > Baseline            1    1012402.50  0.14%     361855.25  0.81%
-> >                     16    8827457.25  0.09%    3282347.00  0.34%
-> > 
-> > Patches Applied     1    1007897.00  0.23%     361887.00  0.26%
-> >                     16    8784741.75  0.39%    3240669.25  0.48%
-> > 
-> > Patches Enabled     1    1010227.50  0.39%     359749.25  0.56%
-> >                     16    8756219.00  0.24%    3226608.75  0.97%
-> > 
-> > Patches Enabled     1    1050982.00  4.26%     357966.25  0.14%
-> >   page shuffle      16    8672601.25  0.49%    3223177.75  0.40%
-> > 
-> > Patches enabled     1    1003238.00  0.22%     360211.00  0.22%
-> >   shuffle w/ RFC    16    8767010.50  0.32%    3199874.00  0.71%
-> > 
-> > The results above are for a baseline with a linux-next-20191219 kernel,
-> > that kernel with this patch set applied but page reporting disabled in
-> > virtio-balloon, the patches applied and page reporting fully enabled, the
-> > patches enabled with page shuffling enabled, and the patches applied with
-> > page shuffling enabled and an RFC patch that makes used of MADV_FREE in
-> > QEMU. These results include the deviation seen between the average value
-> > reported here versus the high and/or low value. I observed that during the
-> > test memory usage for the first three tests never dropped whereas with the
-> > patches fully enabled the VM would drop to using only a few GB of the
-> > host's memory when switching from memhog to page fault tests.
-> > 
-> > Any of the overhead visible with this patch set enabled seems due to page
-> > faults caused by accessing the reported pages and the host zeroing the page
-> > before giving it back to the guest. This overhead is much more visible when
-> > using THP than with standard 4K pages. In addition page shuffling seemed to
-> > increase the amount of faults generated due to an increase in memory churn.
-> > The overhead is reduced when using MADV_FREE as we can avoid the extra
-> > zeroing of the pages when they are reintroduced to the host, as can be seen
-> > when the RFC is applied with shuffling enabled.
-> > 
-> > The overall guest size is kept fairly small to only a few GB while the test
-> > is running. If the host memory were oversubscribed this patch set should
-> > result in a performance improvement as swapping memory in the host can be
-> > avoided.
-> 
-> I really like the approach overall. Voluntarily propagating free memory 
-> from a guest to the host has been a sore point ever since KVM was 
-> around. This solution looks like a very elegant way to do so.
-> 
-> The big piece I'm missing is the page cache. Linux will by default try 
-> to keep the free list as small as it can in favor of page cache, so most 
-> of the benefit of this patch set will be void in real world scenarios.
 
-Agreed. This is a the next piece of this I plan to work on once this is
-accepted. For now the quick and dirty approach is to essentially make use
-of the /proc/sys/vm/drop_caches interface in the guest by either putting
-it in a cronjob somewhere or to have it after memory intensive workloads.
 
-> Traditionally, this was solved by creating pressure from the host 
-> through virtio-balloon: Exactly the piece that this patch set gets away 
-> with. I never liked "ballooning", because the host has very limited 
-> visibility into the actual memory utility of its guests. So leaving the 
-> decision on how much memory is actually needed at a given point in time 
-> should ideally stay with the guest.
-> 
-> What would keep us from applying the page hinting approach to inactive, 
-> clean page cache pages? With writeback in place as well, we would slowly 
-> propagate pages from
-> 
->    dirty -> clean -> clean, inactive -> free -> host owned
-> 
-> which gives a guest a natural path to give up "not important" memory.
+On 1/22/20 3:07 PM, Anchal Agarwal wrote:
+>> In this case tsc_verify_tsc_adjust(true) this does nothing as
+>> feature bit X86_FEATURE_TSC_ADJUST is not available to guest.=20
 
-I considered something similar. Basically one thought I had was to
-essentially look at putting together some sort of epoch. When the host is
-under memory pressure it would need to somehow notify the guest and then
-the guest would start moving the epoch forward so that we start evicting
-pages out of the page cache when the host is under memory pressure.
 
-> The big problem I see is that what I really want from a user's point of 
-> view is a tuneable that says "Automatically free clean page cache pages 
-> that were not accessed in the last X minutes". Otherwise we may run into 
-> the risk of evicting some times in use page cache pages.
-> 
-> I have a hard time grasping the mm code to understand how hard that 
-> would be to implement that though :).
-> 
-> 
-> Alex
+Is it not available to your specific guest? Because AFAICT it is
+available in general (to HVM/PVH guests).
 
-Yeah, I am not exactly an expert on this either as I have only been
-working int he MM tree for about a year now.
 
-I have submitted this as a topic for LSF/MM summit[1] and I am hoping to
-get some feedback on the best way to apply proactive memory pressure as
-one of the subtopics if iti s selected.
+> 4. Also, the instances do not have InvariantTSC exposed.
 
-Thanks.
+If you specify "nomigrate=3Dtrue" in your configuration file you should
+have that feature enabled.
 
-- Alex
 
-[1]: https://lore.kernel.org/linux-mm/4b8671d16573307da09afc56030c2a5f5a9c45bf.camel@linux.intel.com/
-
+-boris
 
