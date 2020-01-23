@@ -2,130 +2,101 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FDF3C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 11:35:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D27EAC33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 11:36:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2400D2467E
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 11:35:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579779356;
-	bh=NgRc4r3/WU3L+AaQZpJg9EMLS9NAgkFiIf8N0LyNC+Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=cJimoh/L7NChLgtQcGOEpX2lDQ9Taeg9D70TMh9LVeQzrpwq3djKo6uwsI5ANGV0x
-	 P00PheLlrOk1HR2aFmeGW3rVYUve/+sba8PCRjrLebXiLlT8gDV4FKvAq11T3z2gqZ
-	 ilJTkEDDToCB58mYjMlvuT97MBcbqNf1L7ooMOaw=
+	by mail.kernel.org (Postfix) with ESMTP id A7F4424125
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 11:36:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="P5xILhim"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729112AbgAWLfz (ORCPT
+        id S1729130AbgAWLgH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 06:35:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48480 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726191AbgAWLfz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 06:35:55 -0500
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DBD9224125;
-        Thu, 23 Jan 2020 11:35:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579779354;
-        bh=NgRc4r3/WU3L+AaQZpJg9EMLS9NAgkFiIf8N0LyNC+Y=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=jjE8q2j+F9NR+6NUtDnw5ybuvoh3/gXOO538RDz1Cem8SjaEsHRMDFEkXXNJm+lm+
-         fkLMODHS28CRnHPazsbkpUlIDTtq7FnPNF9s0Uch7YSSCvgesocygv7IoYAlNFTQaB
-         dJDXbBQRVrNqvf5CCLb60sDENtvFOlIBGjPB4vRk=
-Date:   Thu, 23 Jan 2020 11:35:47 +0000
-From:   Will Deacon <will@kernel.org>
-To:     Waiman Long <longman@redhat.com>
-Cc:     Lihao Liang <lihaoliang@google.com>,
-        Alex Kogan <alex.kogan@oracle.com>, linux@armlinux.org.uk,
-        peterz@infradead.org, mingo@redhat.com, will.deacon@arm.com,
-        arnd@arndb.de, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        tglx@linutronix.de, bp@alien8.de, hpa@zytor.com, x86@kernel.org,
-        guohanjun@huawei.com, jglauber@marvell.com, dave.dice@oracle.com,
-        steven.sistare@oracle.com, daniel.m.jordan@oracle.com
-Subject: Re: [PATCH v9 0/5] Add NUMA-awareness to qspinlock
-Message-ID: <20200123113547.GD18991@willie-the-truck>
-References: <20200115035920.54451-1-alex.kogan@oracle.com>
- <CAC4j=Y8rCeTX9oKKbh+dCdTP8Ud4hW1ybu+iE7t_nxMSYBOR5w@mail.gmail.com>
- <4e15fa1d-9540-3274-502a-4195a0d46f63@redhat.com>
+        Thu, 23 Jan 2020 06:36:07 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:59356 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726811AbgAWLgH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jan 2020 06:36:07 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579779365;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Bi8LeW06fZZr3fzsbfcVE+s/pxdz6ITVUp+XN3fIHAk=;
+        b=P5xILhimAZn0cbmE6HWWtzJcQPgwMxaBEeol+2R+SNZcYrB2axxYlQKDUqADKbMe/c+V5r
+        8Scsl4hXVmNXuI0dGCRiPAnek10hUglLpmh3lslLcfSDzRNpHgk/rdLlulTQsDKSudPPry
+        c9tEid6vP1eKGJFAt6pOU3iN09aoRKQ=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-100-sGwsBWRZPMCWq4rk_QGMjw-1; Thu, 23 Jan 2020 06:36:04 -0500
+X-MC-Unique: sGwsBWRZPMCWq4rk_QGMjw-1
+Received: by mail-wr1-f71.google.com with SMTP id u12so1565856wrt.15
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jan 2020 03:36:04 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Bi8LeW06fZZr3fzsbfcVE+s/pxdz6ITVUp+XN3fIHAk=;
+        b=ZlPxjGXGE8N8zGHZG6JwiHn3rKkHQgv/QTU9SQyfT+IOI+ufpDIRetjxDcaePPYyj/
+         d9sZ4RfDixbd63xa03mel1hug2+SOLg0ZZCsk6SGV1H5e7T0TfBtfFoeh4Kw5M4dCOK9
+         lOalUxnYXbGen/ISDctULQUdxkNOTsgBa8nQee/OTX0u1TFIMdMbhUi997tAm3j4qbuW
+         ANln7OTj3ERGEG6wq+eg/acajLOfgMamQ0MUk4wMzz8jCdbzVIVZGpTPOjG24QzwEQPH
+         2U7JV1D1ztyfLSVi3Z4Pxrry6iB45m68+9sky1miWKIceDZcof5OmfAvgJWXOt33Ae7+
+         Vxkg==
+X-Gm-Message-State: APjAAAXqVzViuKdHjbTCdKZkw1+KpqY9kzckvp8o1XJrJaOHD3N6qKty
+        9aetWQNLNK44CSCD18OUE79SNwuDbT52L9OvHuoecQfpvfoZt6LSru/r5gT4sg3JhT6tuH81SLn
+        omoQLBKG73ihwwmidThxsxF6q
+X-Received: by 2002:a5d:6ac3:: with SMTP id u3mr18058214wrw.25.1579779363168;
+        Thu, 23 Jan 2020 03:36:03 -0800 (PST)
+X-Google-Smtp-Source: APXvYqwoGjn/0V+sdl+z38p2Ox7b5U5YbxLK1TAjEmzDEBF7XjGDA9XuZShzCEpQmSPi7PxX/vu43w==
+X-Received: by 2002:a5d:6ac3:: with SMTP id u3mr18058190wrw.25.1579779362926;
+        Thu, 23 Jan 2020 03:36:02 -0800 (PST)
+Received: from ?IPv6:2001:b07:6468:f312:b8fe:679e:87eb:c059? ([2001:b07:6468:f312:b8fe:679e:87eb:c059])
+        by smtp.gmail.com with ESMTPSA id a16sm2684691wrt.37.2020.01.23.03.35.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 23 Jan 2020 03:36:02 -0800 (PST)
+Subject: Re: [PATCH 1/2] KVM: x86: reorganize pvclock_gtod_data members
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     mtosatti@redhat.com, stable@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+References: <1579702953-24184-1-git-send-email-pbonzini@redhat.com>
+ <1579702953-24184-2-git-send-email-pbonzini@redhat.com>
+ <87tv4mqug3.fsf@vitty.brq.redhat.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <09535a66-d72c-6983-3c10-09d12ed9e632@redhat.com>
+Date:   Thu, 23 Jan 2020 12:35:58 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4e15fa1d-9540-3274-502a-4195a0d46f63@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <87tv4mqug3.fsf@vitty.brq.redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi folks,
-
-(I think Lihao is travelling at the moment, so he may be delayed in his
-replies)
-
-On Wed, Jan 22, 2020 at 12:24:58PM -0500, Waiman Long wrote:
-> On 1/22/20 6:45 AM, Lihao Liang wrote:
-> > On Wed, Jan 22, 2020 at 10:28 AM Alex Kogan <alex.kogan@oracle.com> wrote:
-> >> Summary
-> >> -------
-> >>
-> >> Lock throughput can be increased by handing a lock to a waiter on the
-> >> same NUMA node as the lock holder, provided care is taken to avoid
-> >> starvation of waiters on other NUMA nodes. This patch introduces CNA
-> >> (compact NUMA-aware lock) as the slow path for qspinlock. It is
-> >> enabled through a configuration option (NUMA_AWARE_SPINLOCKS).
-> >>
-> > Thanks for your patches. The experimental results look promising!
-> >
-> > I understand that the new CNA qspinlock uses randomization to achieve
-> > long-term fairness, and provides the numa_spinlock_threshold parameter
-> > for users to tune. As Linux runs extremely diverse workloads, it is not
-> > clear how randomization affects its fairness, and how users with
-> > different requirements are supposed to tune this parameter.
-> >
-> > To this end, Will and I consider it beneficial to be able to answer the
-> > following question:
-> >
-> > With different values of numa_spinlock_threshold and
-> > SHUFFLE_REDUCTION_PROB_ARG, how long do threads running on different
-> > sockets have to wait to acquire the lock? This is particularly relevant
-> > in high contention situations when new threads keep arriving on the same
-> > socket as the lock holder.
-> >
-> > In this email, I try to provide some formal analysis to address this
-> > question. Let's assume the probability for the lock to stay on the
-> > same socket is *at least* p, which corresponds to the probability for
-> > the function probably(unsigned int num_bits) in the patch to return *false*,
-> > where SHUFFLE_REDUCTION_PROB_ARG is passed as the value of num_bits to the
-> > function.
+On 23/01/20 12:32, Vitaly Kuznetsov wrote:
+> Likely a personal preference but the suggested naming is a bit
+> confusing: we use 'base_cycles' to keep 'xtime_nsec' and 'offset' to
+> keep ... 'base'. Not that I think that 'struct timekeeper' is perfect
+> but at least it is documented. Should we maybe just stick to it (and
+> name 'struct pvclock_clock' fields accordingly?)
 > 
-> That is not strictly true from my understanding of the code. The
-> probably() function does not come into play if a secondary queue is
-> present. Also calling cna_scan_main_queue() doesn't guarantee that a
-> waiter in the same node can be found. So the simple mathematical
-> analysis isn't that applicable in this case. One will have to do an
-> actual simulation to find out what the actual behavior will be.
 
-It's certainly true that the analysis is based on the worst-case scenario,
-but I think it's still worth considering. For example, the secondary queue
-does not exist initially so it seems a bit odd that we only instantiate it
-with < 1% probability.
+The problem is that xtime_nsec is not nanoseconds, and I'd really not
+want to have a worse name just for consistency. :(  I chose
+"base_cycles" as an incremental improvement over nsec_base, even though
+that meant also changing struct timekeeper's "base" to "offset".
 
-That said, my real concern with any of this is that it makes formal
-modelling and analysis of the qspinlock considerably more challenging. I
-would /really/ like to see an update to the TLA+ model we have of the
-current implementation [1] and preferably also the userspace version I
-hacked together [2] so that we can continue to test and validate changes
-to the code outside of the usual kernel stress-testing.
+Paolo
 
-Will
-
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/cmarinas/kernel-tla.git/
-[2] https://mirrors.edge.kernel.org/pub/linux/kernel/people/will/spinbench/
