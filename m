@@ -7,62 +7,61 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BC6DC33CB8
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 19:44:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 860AAC33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 19:44:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5979C21D7D
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 19:44:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5161D21D7E
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 19:44:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579808683;
-	bh=gWVgZ0P0uaW1PU35NfDlqZgkkP0Gd5+iLEv3gfhcfII=;
+	s=default; t=1579808687;
+	bh=UXHCieH+qdIt10LtobtHCDbxgtOhZG+kimejOWM/wmI=;
 	h=Date:From:To:CC:CC:CC:Subject:References:In-Reply-To:List-ID:
 	 From;
-	b=wRWyJg97HADwV2s5YtufgwPgrksEIfkm8UUwYoWaX9UsvxGxIH7wmZBAyX/DEM/Ik
-	 oapaR6d9sy5HcYByhD6Mp3wyEEjs4eG1Jw+j5vXeRD7PhNZ1bUCYr42OU7P3kL6C0s
-	 s7lcOtohr5nPSHasOWXVoozhNz3sUwwho3lRZejM=
+	b=Yk5JFF7DCswFzUa/K4dYyEWfxs2Vc/AvLD5QrlLM+HqnyXSEbna8b6mIyj7PaUYV9
+	 KNy6D1r+au+xx0AXXC6WeZaD/3Ej6Ud67/FndR9ioYz2uJLyxS+BFOyteFkw/J7lE3
+	 U0h5edV5YMfdFPUS02G5uP7z0OO0edLFpDo0Wa0M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729271AbgAWTom (ORCPT
+        id S1729297AbgAWToq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 14:44:42 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:38664 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729012AbgAWTol (ORCPT
+        Thu, 23 Jan 2020 14:44:46 -0500
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:40097 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729012AbgAWTop (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 14:44:41 -0500
-Received: by mail-pg1-f194.google.com with SMTP id a33so1895162pgm.5;
-        Thu, 23 Jan 2020 11:44:40 -0800 (PST)
+        Thu, 23 Jan 2020 14:44:45 -0500
+Received: by mail-pl1-f195.google.com with SMTP id s21so1778241plr.7;
+        Thu, 23 Jan 2020 11:44:45 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:message-id:date:from:to:cc:cc:cc:subject
          :references:in-reply-to;
-        bh=nHOYBJJRZELfwjYwt28Qy+NPDprPQ6JWN7h0Dm2UYxM=;
-        b=grA/b11h7mZH/wiNvIeXW//e3YR54LsOljfdN+LfN6axJi5B7CZ0HV9npywNgblrDt
-         ImAPwS9c6SOwUnQ10q+w8pxATxZW3lVww3GVVdTMU8S75pwv4MjWyOCrgxhbWtc6nNdo
-         DH9SWup1j5e8GQDLNXg5972WCNXh3eZWduHSG8Ld67NRMAeJuyzO7oDAsx66hviPSUFo
-         AwMKLMQtnHSrU6HBzsgbFvzlA/CFyp990rPUgRwY9E44ZfTLtSXLb1oLWAKJYTjK7cAt
-         Fc2KMf4qzdt60zo0Q6t0EMi0WrOe5/POFImvT5LOOhhtS2R5LHpcnBE8HZSqM2kJzntK
-         kUgw==
-X-Gm-Message-State: APjAAAVGcZoKDvpG2qY/n7XYgb0Ye0ZhbxjXf9MV0Wqe8Hzdjhfr0F/z
-        5PD0mHboJqmIsOQEPs949Cq/fdYzJHTu8w==
-X-Google-Smtp-Source: APXvYqwacpy9q4WLfMw+jTbB+lsEJJ9ZtgbK+f/yIKZ3/KUtOdETSrcUoUuKNAanDGekzvHkCTQacw==
-X-Received: by 2002:a62:f94d:: with SMTP id g13mr8685479pfm.60.1579808679970;
-        Thu, 23 Jan 2020 11:44:39 -0800 (PST)
+        bh=WyxbAGrKMxKf8dZitmu6cKPMSnHKtEQpit0i2sDj4/s=;
+        b=mEpjL6/xj3I7Uik5MmvCvZecsUt9KlqBN1vepUl8BtNTw1bfk6P31fhOb3mOwQzhM2
+         PTGEJywOih12AHfBuOrpqDMUDYFMl19gHliSe0eGn529awUsuZ6c0UvFZqCsDhvq06uU
+         RO226ZSYYM0mBLwEuPR/EiPRqWZbEn0lhZjyzb+8FMp59kwDbicbtGJu4MD1IVE4PIkR
+         tovLYB9Va+ZD5mK2nhiUYdHQbFUrgVAFOpnNILwCvHGcE5z7rDr1/EUE19bpYgIVsExq
+         Wq+ocHjjKd5qyAvd6JBypUlDu6ux02gFS888b5iFK4i+TGxEDm40lfR+CRiIoxNsymKn
+         xOSQ==
+X-Gm-Message-State: APjAAAUqfNbIAW8dcFXgCzQ63JtTvQkNWqm7w2bZYXzl8SwmmQpCYl3u
+        u4c7lOW4cKRGqBWD9ffizuU=
+X-Google-Smtp-Source: APXvYqxjRorsbk5SBO/J4vgOmFCsvGdtVWavmWrgQsY76cgp07w9JXpcaiDwJGkvh2FFrFB6qvv7rg==
+X-Received: by 2002:a17:90a:ac18:: with SMTP id o24mr6401850pjq.33.1579808684886;
+        Thu, 23 Jan 2020 11:44:44 -0800 (PST)
 Received: from localhost (MIPS-TECHNO.ear1.SanJose1.Level3.net. [4.15.122.74])
-        by smtp.gmail.com with ESMTPSA id a16sm3761309pgb.5.2020.01.23.11.44.39
+        by smtp.gmail.com with ESMTPSA id s21sm3571104pfe.20.2020.01.23.11.44.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Jan 2020 11:44:39 -0800 (PST)
-Message-ID: <5e29f7a7.1c69fb81.d519d.94af@mx.google.com>
-Date:   Thu, 23 Jan 2020 11:44:38 -0800
+        Thu, 23 Jan 2020 11:44:44 -0800 (PST)
+Message-ID: <5e29f7ac.1c69fb81.34b3.880c@mx.google.com>
+Date:   Thu, 23 Jan 2020 11:44:43 -0800
 From:   Paul Burton <paulburton@kernel.org>
-To:     Sergey Korolev <s.korolev@ndmsystems.com>
+To:     Colin King <colin.king@canonical.com>
+CC:     Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>, linux-mips@vger.kernel.org
+CC:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
 CC:     linux-mips@vger.kernel.org
-CC:     s.korolev@ndmsystems.com, Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        James Hogan <jhogan@kernel.org>, linux-kernel@vger.kernel.org
-CC:     linux-mips@vger.kernel.org
-Subject: Re: [PATCH] MIPS: sync-r4k: do slave counter synchronization with  disabled HW interrupts
-References:  <20200122123909.8188-1-s.korolev@ndmsystems.com>
-In-Reply-To:  <20200122123909.8188-1-s.korolev@ndmsystems.com>
+Subject: Re: [PATCH] MIPS: OCTEON: octeon-irq: fix spelling mistake "to" -> "too"
+References:  <20200123005422.2834063-1-colin.king@canonical.com>
+In-Reply-To:  <20200123005422.2834063-1-colin.king@canonical.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -70,16 +69,17 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Hello,
 
-Sergey Korolev wrote:
-> synchronise_count_slave() called with an enabled in mips_clockevent_init()
-> timer interrupt which may decrease synchronization precision.
+Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
+> 
+> There is a spelling mistake in a dev_err message. Fix it.
 
 Applied to mips-next.
 
-> commit 0956be29a96c
-> https://git.kernel.org/mips/c/0956be29a96c
+> commit 636e9d23dd45
+> https://git.kernel.org/mips/c/636e9d23dd45
 > 
-> Signed-off-by: Sergey Korolev <s.korolev@ndmsystems.com>
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
 > Signed-off-by: Paul Burton <paulburton@kernel.org>
 
 Thanks,
