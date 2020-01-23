@@ -2,185 +2,134 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 462BEC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 15:46:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DB24C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 15:47:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2862A21835
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 15:46:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D586F21734
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 15:47:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="Gb6MZiJj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728921AbgAWPqx (ORCPT
+        id S1729014AbgAWPrZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 10:46:53 -0500
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:40768 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726232AbgAWPqx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 10:46:53 -0500
-Received: by mail-oi1-f196.google.com with SMTP id c77so3302603oib.7;
-        Thu, 23 Jan 2020 07:46:51 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=RftF1ldwzLppC9Ac3+m4A9Jal0SaT1mPfGz1y7gPc6I=;
-        b=KBD8K+BYpyOuPfZcgjmjRGasEQykuDYA36NX5ECXDbY4UqgZSB38bZ4/F+hzNi9mNg
-         AbNifunFfO/S3PS52PgAYtRTrVdWezPlFxrB3NAFAT3dwH76gCN7O5k9/7LeC0e8EKmD
-         qndSLiVi+TznrOGO/H3LdnFJW0dn+GPCzsH//mfbAogO9kMoNEMEltZ6XMpBrsG5alKc
-         k657YjaFal+frGKx2h6xjXU42QYnXlmOCBY5BYjrrBsSunAUUps+np551yqqQJYlU8gm
-         XVCjV1T2uqM5WeHVf/I2lRC2h8UQJ4NbwmGiIJDNIBtVuO+w7s6ce3sTKXs+ql8NnnHy
-         44Dg==
-X-Gm-Message-State: APjAAAUjL9h8UJwkoo4I0y29yS9sG0sKl4d+Uura76A/ymodjckQrTFo
-        y5izIZHkACYpWnMa4ZEceH09NRM5goR9frnHjFxQEAxD
-X-Google-Smtp-Source: APXvYqwVon4o8+3XZRgb1s1P9ZASZtrfJ8l/BcEXdtO5DQhrgn0rpFRLl3oxTASw5GCYgM+eLvqvyMsOT+/c48L83DY=
-X-Received: by 2002:aca:1a06:: with SMTP id a6mr10421340oia.148.1579794411477;
- Thu, 23 Jan 2020 07:46:51 -0800 (PST)
+        Thu, 23 Jan 2020 10:47:25 -0500
+Received: from mail-eopbgr30066.outbound.protection.outlook.com ([40.107.3.66]:11032
+        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726232AbgAWPrZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jan 2020 10:47:25 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=P0/DFInD46MWXeBbLGz+eJkzXyw3QLM8uOZjcQ4SMqFQNDkf2ikugFz4nXekyQzXT38f783NJ5DPcNGJSf47P+gmyexDbcBGLVKUXdTSx5laFWlmCLENm+K6zl4smGsoHKaLZDGqTMJMpziLQW6LPkHgzQ0pE8C//9LKYZXxGK8xzLzkosIL04Y9ZXn6hJfwYZRq8HW3cpuTZrxSbAaXb8teZRU5rDt2snXT8JMFzuErJgriZs3gJkyjIrmmJtFuELmtJorGZu1H4/BCo/7NJB1WeDZqMwgu+RcoIoqB5I+C5iELOhe6TGeiFHPlWG5aLNOq5xcexKqAsKLH1kgm4g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=U/r3WI9DB1p4944UQX3PPrtWdqhM99swilJX9QaqZpk=;
+ b=Wk6Gp/eOZ4YrpfAJ1vrD1D91EME1LWeBNzngWSJRthFSXfvkK3qjWE1aShNaZNkoW3vnYIrLyW17DLm+0hS9H4urSTmccmkTmvWUuVqEK8VIBsDeyLRQvetl6jzGWaL/yP9c+SC2TFMlr2DEXe5NL9HvZEJv2oV0DVNJrcjAHAqTFmgCkgtHrJrxdV4ZqgVpAOilU/rZT7tBaLaICkovStErI/kY0dvSzBd0WxbIkdR94DFRM1znyWpENZyLPms3+r/q8nIkYxGzATE1y2+A1FXIk4p3cXQaXTuah3I+jtY+4FEqnZW1iTwTc2u04YvcT+RA2iEBUYr0xPZD5CaLhQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
+ dkim=pass header.d=oss.nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
+ s=selector2-NXP1-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=U/r3WI9DB1p4944UQX3PPrtWdqhM99swilJX9QaqZpk=;
+ b=Gb6MZiJjxI6bUEwRQPzePRCKzmkfVjg2jYtX42gjKFDtFFkF2pih+qxQlM3bQSt+RCR5YthmIjsicBk+avIkH+FQ/2IMjJNOjBbTDz6OceMJtGW0ZWLCVPFU28pL/HzGs2PIz8Dqk/WyUOzvPHutbO3qQVNPPY3oa6f33mDF8Ak=
+Received: from VI1PR0402MB3839.eurprd04.prod.outlook.com (52.134.16.147) by
+ VI1PR0402MB2942.eurprd04.prod.outlook.com (10.175.23.11) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2644.20; Thu, 23 Jan 2020 15:47:22 +0000
+Received: from VI1PR0402MB3839.eurprd04.prod.outlook.com
+ ([fe80::8881:e155:f058:c0d1]) by VI1PR0402MB3839.eurprd04.prod.outlook.com
+ ([fe80::8881:e155:f058:c0d1%4]) with mapi id 15.20.2644.027; Thu, 23 Jan 2020
+ 15:47:21 +0000
+Received: from fsr-ub1864-103.ro-buh02.nxp.com (89.37.124.34) by AM0PR0102CA0024.eurprd01.prod.exchangelabs.com (2603:10a6:208:14::37) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2644.20 via Frontend Transport; Thu, 23 Jan 2020 15:47:19 +0000
+From:   "Daniel Baluta (OSS)" <daniel.baluta@oss.nxp.com>
+To:     "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>
+CC:     "arnd@arndb.de" <arnd@arndb.de>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "info@metux.net" <info@metux.net>,
+        "ztuowen@gmail.com" <ztuowen@gmail.com>,
+        "sergei.shtylyov@cogentembedded.com" 
+        <sergei.shtylyov@cogentembedded.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Daniel Baluta <daniel.baluta@nxp.com>
+Subject: [PATCH] lib: devres: Export devm_ioremap_resource_wc
+Thread-Topic: [PATCH] lib: devres: Export devm_ioremap_resource_wc
+Thread-Index: AQHV0gRljAGUSxVBdUWb9RVfR4pSLw==
+Date:   Thu, 23 Jan 2020 15:47:21 +0000
+Message-ID: <20200123154706.5831-1-daniel.baluta@oss.nxp.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: AM0PR0102CA0024.eurprd01.prod.exchangelabs.com
+ (2603:10a6:208:14::37) To VI1PR0402MB3839.eurprd04.prod.outlook.com
+ (2603:10a6:803:21::19)
+x-mailer: git-send-email 2.17.1
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=daniel.baluta@oss.nxp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [89.37.124.34]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 5fe3c3f0-b577-4889-3768-08d7a01b8843
+x-ms-traffictypediagnostic: VI1PR0402MB2942:|VI1PR0402MB2942:
+x-ms-exchange-sharedmailbox-routingagent-processed: True
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VI1PR0402MB2942B55F652257F632DD1FF1B80F0@VI1PR0402MB2942.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:923;
+x-forefront-prvs: 029174C036
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(376002)(39860400002)(136003)(396003)(366004)(189003)(199004)(66946007)(81166006)(81156014)(1076003)(8936002)(6486002)(86362001)(6916009)(6512007)(8676002)(956004)(2616005)(66446008)(64756008)(66556008)(66476007)(6666004)(71200400001)(186003)(54906003)(2906002)(4326008)(26005)(16526019)(478600001)(6506007)(316002)(5660300002)(4744005)(52116002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB2942;H:VI1PR0402MB3839.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:0;
+received-spf: None (protection.outlook.com: oss.nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: Mx7oogtSTXNYUmS56DfP5vE8b5xL434TEFE86l8tn4h7g2E38EXXhAmXHCrtI0BC06kVPVgTNFlXJbD+YtaUK0hCQbMJUUpF15oQxaF6AUvol9BeQwyHUGmp0JZlmI+ENNJWYO4rViY/ZM7kmPwc4H3NIWkgHo/oMv4iXrpnhvmyb7USSKMqFMFi4Jh/zIYn9WDayoEzeGXT9Q/lIr78/feEArzW6IslxgwDn3v6PuiySM5RBdXcqobGAGjmzpMF7k2QM7hQajGway8SMaD0lASpeTKNBNAUTINIAh4IethqkVsaLIvClqVthrkzmIwseVAqi7d6duD3NK6uCx+tputhP7bA/aWjLsO4cmdia4MHji/utAL+cQ2WRTUJLaPdWH4nf6sWs1qeX8feROtNZ+O/e+weMOXG6bBvLpVrIz5iv6Elm691uJa26KmjE/Yi
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <20200116101447.20374-1-gilad@benyossef.com> <CAMuHMdUhR83SZyWX9Du9d3Sp4A48x_msKaOHGsa88EQKStEDQg@mail.gmail.com>
- <CAOtvUMfDnoFu8V7sYvhgsstX6fuUk3foq+9FJ6SbUKEFnq-zMw@mail.gmail.com>
-In-Reply-To: <CAOtvUMfDnoFu8V7sYvhgsstX6fuUk3foq+9FJ6SbUKEFnq-zMw@mail.gmail.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 23 Jan 2020 16:46:40 +0100
-Message-ID: <CAMuHMdUZbbNX-vsa4TmU7DNKAz2Qo3SR1pHXDOsO4Rh5G8ygZw@mail.gmail.com>
-Subject: Re: [PATCH 00/11] crypto: ccree - fixes and cleanups
-To:     Gilad Ben-Yossef <gilad@benyossef.com>
-Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Ofir Drang <ofir.drang@arm.com>, Hadar Gat <hadar.gat@arm.com>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: oss.nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5fe3c3f0-b577-4889-3768-08d7a01b8843
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Jan 2020 15:47:21.4517
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: hOFJhh90smhNKZw4mGA04Jd2r3LBhM3X/zlc5dPu4KPzHsGQUhLgehcf8h+PWOVYadF2dQDdFeHinLHLNv5R5A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB2942
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Gilad
+From: Daniel Baluta <daniel.baluta@nxp.com>
 
-On Thu, Jan 23, 2020 at 12:44 PM Gilad Ben-Yossef <gilad@benyossef.com> wrote:
-> On Wed, Jan 22, 2020 at 6:51 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> > On Thu, Jan 16, 2020 at 11:25 AM Gilad Ben-Yossef <gilad@benyossef.com> wrote:
-> > > A bunch of fixes and code cleanups for the ccree driver
-> >
-> > Thank you!
-> >
-> > I wanted to give this a try, but it looks like CCREE is no longer working
-> > on R-Car H3, both with/without this series.
-> >
-> > E.g. with renesas-devel[*] and renesas_defconfig +
-> > CONFIG_CRYPTO_MANAGER_DISABLE_TESTS=n, I get the following crash:
->
-> Thank you for the bug report Geert!
->
-> My R-Car board is on loan at the moment to another project. I didn't
-> see this on our internal test board.
-> I will track down my R-Car board and reproduce this - hopefully
-> beginning of next week and will get back to you.
+So that modules can also use it.
 
-In the mean time, I've bisected this failure to commit cdfee5623290bc89
-("driver core: initialize a default DMA mask for platform device").
-However, this looks like a red herring, and seems to be only an exposer
-of an underlying problem.
+Fixes: b873af620e58863b ("lib: devres: provide devm_ioremap_resource_wc()")
+Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
+---
+ lib/devres.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-What's happening is that cc_map_aead_request() receives a request with
-cryptlen = 0.  Due to DRV_CRYPTO_DIRECTION_ENCRYPT, the length to map is
-increased by 8.  This seems to works fine if there is sufficient space
-in the request's scatterlist.  However, if the scatterlist has only a
-single entry of size zero, cc_map_sg() tries to map a zero-length DMA
-buffer, and the BUG)() is triggered.
+diff --git a/lib/devres.c b/lib/devres.c
+index 6ef51f159c54..7fe2bd75dfa3 100644
+--- a/lib/devres.c
++++ b/lib/devres.c
+@@ -182,6 +182,7 @@ void __iomem *devm_ioremap_resource_wc(struct device *d=
+ev,
+ {
+ 	return __devm_ioremap_resource(dev, res, DEVM_IOREMAP_WC);
+ }
++EXPORT_SYMBOL(devm_ioremap_resource_wc);
+=20
+ /*
+  * devm_of_iomap - Requests a resource and maps the memory mapped IO
+--=20
+2.17.1
 
-I noticed commits 04e6d25c5bb244c1 ("crypto: caam - fix zero-length
-buffer DMA mapping") and 07586d3ddf284dd7 ("crypto: caam/qi2 - fix
-zero-length buffer DMA mapping") fixed other issues related to
-zero-length DMA buffers.  But this one seems to be different, and a bit
-more complex.
-
-Adding "if (!req->cryptlen) return 0;" to the top of cc_proc_aead() fixes
-the crash, but makes the tests fail:
-
-    cc_proc_aead:1946: cryptlen is zero!
-    alg: aead: ccm-aes-ccree encryption test failed (wrong result) on
-test vector 9, cfg="in-place"
-    cc_proc_aead:1946: cryptlen is zero!
-    alg: aead: gcm-aes-ccree encryption test failed (wrong result) on
-test vector 0, cfg="in-place"
-
-Do you have a clue?
-Thanks!
-
-> > ccree e6601000.crypto: ARM CryptoCell 630P Driver: HW version
-> > 0xAF400001/0xDCC63000, Driver version 5.0
-> > alg: No test for authenc(xcbc(aes),cbc(aes)) (authenc-xcbc-aes-cbc-aes-ccree)
-> > alg: No test for authenc(xcbc(aes),rfc3686(ctr(aes)))
-> > (authenc-xcbc-aes-rfc3686-ctr-aes-ccree)
-> > ------------[ cut here ]------------
-> > kernel BUG at kernel/dma/swiotlb.c:497!
-> > Internal error: Oops - BUG: 0 [#1] PREEMPT SMP
-> > CPU: 7 PID: 189 Comm: cryptomgr_test Not tainted 5.5.0-rc7-arm64-renesas #463
-> > Hardware name: Renesas Salvator-X 2nd version board based on r8a77951 (DT)
-> > pstate: 80000005 (Nzcv daif -PAN -UAO)
-> > pc : swiotlb_tbl_map_single+0x30c/0x380
-> > lr : swiotlb_map+0xb0/0x300
-> > sp : ffff800012313430
-> > x29: ffff800012313430 x28: 0000000000000000
-> > x27: 0000000000000000 x26: 0000000738e7e000
-> > x25: ffff0006fa5f8010 x24: 0000000000000000
-> > x23: ffff800011aed000 x22: 0000000000000000
-> > x21: 0000000000000000 x20: 00000000000e8000
-> > x19: ffff80001105e000 x18: ffffffffffffffff
-> > x17: 0000000000000007 x16: 0000000000000001
-> > x15: ffff800010f5f908 x14: ffff800092313cf7
-> > x13: ffff0006ff0b4000 x12: 0000000000000001
-> > x11: 0000000000000003 x10: 0000000000200000
-> > x9 : 0000000000000000 x8 : 0000000000000001
-> > x7 : ffff800011aed9e0 x6 : 0000000000000000
-> > x5 : 0000000000000000 x4 : 0000000000000000
-> > x3 : 0000000000000000 x2 : 0000000000000000
-> > x1 : 0000000074000000 x0 : 0000000000000000
-> > Call trace:
-> >  swiotlb_tbl_map_single+0x30c/0x380
-> >  swiotlb_map+0xb0/0x300
-> >  dma_direct_map_page+0xb8/0x140
-> >  dma_direct_map_sg+0x78/0xe0
-> >  cc_map_sg+0x10c/0x1a8
-> >  cc_map_aead_request+0x160/0x990
-> >  cc_proc_aead+0x140/0xef8
-> >  cc_aead_encrypt+0x48/0x68
-> >  crypto_aead_encrypt+0x20/0x30
-> >  test_aead_vec_cfg+0x20c/0x848
-> >  test_aead+0xb8/0x140
-> >  alg_test_aead+0x94/0x178
-> >  alg_test+0x108/0x3f8
-> >  cryptomgr_test+0x40/0x48
-> >  kthread+0x11c/0x120
-> >  ret_from_fork+0x10/0x18
-> > Code: f9402fbc 17ffffa0 f9000bb3 f9002fbc (d4210000)
-> > ---[ end trace 272124cd4e3fd6f0 ]---
-> > note: cryptomgr_test[189] exited with preempt_count 1
-> > ------------[ cut here ]------------
-> >
-> > FWIW, the same happens on R-Car H3 ES1.0.
-> > I haven't tried investigating when it stopped working.
-> > I stopped running the crypto manager tests when they were broken by
-> > CONFIG_HARDENED_USERCOPY_PAGESPAN=y.
-> >
-> > Do you have a clue?
-> > Thanks!
-> >
-> > [*] https://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-devel.git/
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
