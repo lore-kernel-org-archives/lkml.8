@@ -2,75 +2,82 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68637C33CAA
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 07:15:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6A58C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 07:18:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F78B24655
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 07:15:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCA2724655
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 07:18:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579763748;
-	bh=lT6qJL1c2voTb9U/jayZRO46LyAyIO2sqT3pNlCo0EI=;
+	s=default; t=1579763886;
+	bh=gIEX9hZYsbO6Nfckd/eGWEvJLfBwKVJ4N4R+ossLCz0=;
 	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
-	b=w3bWUO2sIAyehAjGeIgi4xFUNh3XC6l+u2c92qORHPYhlB4GxyPb01velJpO85l/b
-	 YNIvsYeE7dfc3fB5ocXdp6/mLErzCoxyJIZaK8QikVQJLZd50UzWJpNQiBNjajyJp+
-	 xeKWLhglo1QGDc8MBaXq0Xo2KEKYy6Y6Rjgcgyx4=
+	b=pEWQ63f6EUBfJGmqn5NdaWOup7pVgOrHk2Iic6C79n1Oc1CorIkT5Xw+chaNRpgiu
+	 J0JR466tnIA0+qjvje8Z+dOlHegCu1vS61pSdPi3xWHcO9RFBupH706n2eFcgvnoQg
+	 eTdCnmaBiiARkLfw0WvrqM3WTc+Ycs2MTeQ6MF28=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726141AbgAWHPr (ORCPT
+        id S1726054AbgAWHSG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 02:15:47 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:34809 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725535AbgAWHPr (ORCPT
+        Thu, 23 Jan 2020 02:18:06 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:37871 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725535AbgAWHSF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 02:15:47 -0500
-Received: by mail-lj1-f195.google.com with SMTP id z22so2070245ljg.1;
-        Wed, 22 Jan 2020 23:15:45 -0800 (PST)
+        Thu, 23 Jan 2020 02:18:05 -0500
+Received: by mail-lj1-f193.google.com with SMTP id o13so2062976ljg.4;
+        Wed, 22 Jan 2020 23:18:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:from:to:cc:subject:in-reply-to:references:date:message-id
          :mime-version;
-        bh=lT6qJL1c2voTb9U/jayZRO46LyAyIO2sqT3pNlCo0EI=;
-        b=HAulJcaYG8a4V8rqbBcuprkbo9Zq7N7mLGC4UHBy4NbBFUiXylGOcEqmE6NFyPbRgY
-         mhFpA8DrO4Kj8uqV7/vA5wsvrq18x91c9VFpnv6lKgNcAhni0/hfG+dqduC/AlBcGHGU
-         lI6XEUEdbE1P8nKUS3IICScMg/HRWSxEPcdC/ZN+ZKm8YyRbBMjoFx8w04c2hzjd0tIH
-         waJU1zGMJZHYBdVB1iTMuXA+u9J6lzoa77ZmvuZ5NynM2q1xH+yGkA/6n+jMTlD1q/jo
-         rV3bPKwErfFs1oUIQX2Rx6mYpuBkGoEwZkBOld3baEWpLxkcE8JL0sNh3wOvltG3i8ij
-         xdlQ==
+        bh=CuAldGSLPgj0cZuA52UGe8E13YiFUOjfGwBDFKo2yXE=;
+        b=pTJQTezq81jzUrz1athF8jHmipi5dqDAep36wvKBsnjIeRbrpHfj8r9+Tugd7Z+jqB
+         A/4UqxyhMn595iUxS8UoNdZ16txu+/WpcxfLMSvRTJiXimAM8+g0U8fsf3ZalAC/yrry
+         4WOeMSY7Jzi/KzA9j0Y44JInmsPOBcosbzchfoqJ5tbVrmdT6p8EgRIEBeuJCv7DLLAY
+         FtzGubnd07cydZX+jS5NcJrSxNPVRLLtYr1PDGpL5VmcWEDTHXt/A5gPs+773eDfnqu0
+         HPm1YLEU9wmLwWuGI0Ln34snAp4uCF3XPjxOO3+8zd/QuAIg0elGCM4YBlnwnEEPsxJ3
+         NL2A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
          :date:message-id:mime-version;
-        bh=lT6qJL1c2voTb9U/jayZRO46LyAyIO2sqT3pNlCo0EI=;
-        b=Lvhs0oNUen2yz5pCahrFcLSrMelpORSWL9P2luR+F7cjjj0ZcsYxZ1ISwtffhdosmU
-         BAWfS3B1FoIk1B/1kvXFhaM4NyaJMm8LNo8QZXfJsKsYkC+GISm4clUNtcZQaa7TyRk3
-         JM9BZCkdEBJsvUwtgNBsEIzTQiySuOiWShx6v/XkQemcNhVVT1qMWxtjUWVsgGbKI7tC
-         iJ5azcn3DqXSfSwafrJQZkymuhlwAoSVflioX8zV+9HtK4M1yytuh2DY24E/E3pfNIYO
-         +FGX+ZDDdiU5XaBqSSpF2O825NvAvW1BDZk3qCgpyxPDOWp+0C0FhlTRNAoJytHLjRpS
-         TN4A==
-X-Gm-Message-State: APjAAAX0+Y2TZbpAIQqOA1Kman15jfwppPumjSf1oDUR1n0wi2pN0jm6
-        DTTg/8ydEHIQfUyZSsqs6jgAgkw9l9c=
-X-Google-Smtp-Source: APXvYqxwcawQpKqQo0rX5X7w+UvTgRv70R9j+UnWCdUX9AxMDPZmbvI420d4f1mfyrURfzPac3hzOQ==
-X-Received: by 2002:a2e:9d89:: with SMTP id c9mr21873107ljj.129.1579763744116;
-        Wed, 22 Jan 2020 23:15:44 -0800 (PST)
+        bh=CuAldGSLPgj0cZuA52UGe8E13YiFUOjfGwBDFKo2yXE=;
+        b=Gi7iC8Bai/dBYCAF6U+o6Invcivs+D6s5D6VHv6YKQ5Rrl+A1mwCyp2mA6M06qgZ6W
+         QZ9NkHJ+kP4uKI3HOLpkoV5FwsNnzupNNiv+PrYaqm8Udzvj/B+FDMLpUhfpNGsydoEb
+         yQRZ11j1RbgnXWL4Z1ca2sclU+jRxl0K7Q6ADIHR4yc89zVp0mUYJak4xd974NfoIUw0
+         d3FNUKiUyYJ6r+HsPVgNl6D6FOCiGwnBzkCAAWcfs2G6l+0qZQ05tfzcvzggG0TmB+ZY
+         3K5IPCQrmUSaKV0a5/pLcONQBYkeXTc2L4sFmJukdgg6austVr+jxl9ApE2kp4+BrD7o
+         5iyQ==
+X-Gm-Message-State: APjAAAXPxNLKKU8dsrTmRL/DuI/1TsPjCmtCctAGoPC/QsbBb8VhC+wj
+        mfr5zghp4lxpOeBWHIYJoUnfCEcih4QMQw==
+X-Google-Smtp-Source: APXvYqxFnbRaep+bCKnSDmdNWgWm4w4KYg5InBAn9aQzIdjnhM9rXicTjlaeGth6vfWzKn61B9vBlw==
+X-Received: by 2002:a05:651c:204f:: with SMTP id t15mr22756637ljo.240.1579763882077;
+        Wed, 22 Jan 2020 23:18:02 -0800 (PST)
 Received: from saruman (88-113-215-33.elisa-laajakaista.fi. [88.113.215.33])
-        by smtp.gmail.com with ESMTPSA id r6sm592066ljk.37.2020.01.22.23.15.42
+        by smtp.gmail.com with ESMTPSA id u23sm528003lfg.89.2020.01.22.23.18.00
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 22 Jan 2020 23:15:43 -0800 (PST)
+        Wed, 22 Jan 2020 23:18:01 -0800 (PST)
 From:   Felipe Balbi <balbi@kernel.org>
-To:     Colin King <colin.king@canonical.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+To:     John Stultz <john.stultz@linaro.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Cc:     John Stultz <john.stultz@linaro.org>,
         Felipe Balbi <felipe.balbi@linux.intel.com>,
-        Pawel Laszczak <pawell@cadence.com>, linux-usb@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] usb: cdns3: fix spelling mistake and rework grammar in text
-In-Reply-To: <20200122234437.2829803-1-colin.king@canonical.com>
-References: <20200122234437.2829803-1-colin.king@canonical.com>
-Date:   Thu, 23 Jan 2020 09:16:33 +0200
-Message-ID: <87zhee4p7y.fsf@kernel.org>
+        Yang Fei <fei.yang@intel.com>,
+        Thinh Nguyen <thinhn@synopsys.com>,
+        Tejas Joglekar <tejas.joglekar@synopsys.com>,
+        Andrzej Pietrasiewicz <andrzej.p@collabora.com>,
+        Jack Pham <jackp@codeaurora.org>, Todd Kjos <tkjos@google.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Linux USB List <linux-usb@vger.kernel.org>,
+        stable <stable@vger.kernel.org>
+Subject: Re: [RFC][PATCH 0/2] Avoiding DWC3 transfer stalls/hangs when using adb over f_fs
+In-Reply-To: <20200122222645.38805-1-john.stultz@linaro.org>
+References: <20200122222645.38805-1-john.stultz@linaro.org>
+Date:   Thu, 23 Jan 2020 09:18:51 +0200
+Message-ID: <87wo9i4p44.fsf@kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; boundary="=-=-=";
         micalg=pgp-sha256; protocol="application/pgp-signature"
@@ -83,20 +90,72 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 Content-Type: text/plain
 Content-Transfer-Encoding: quoted-printable
 
-Colin King <colin.king@canonical.com> writes:
 
-> From: Colin Ian King <colin.king@canonical.com>
+Hi,
+
+John Stultz <john.stultz@linaro.org> writes:
+> Hey all,
+>   I wanted to send these out for comment and thoughts.
 >
-> The text contains a spelling mistake, "to" should be "too"
-> so fix this and re-work the grammar to make it more readable.
+> Since ~4.20, when the functionfs gadget enabled scatter-gather
+> support, we have seen problems with adb connections stalling and
+> stopping to function on hardware with dwc3 usb controllers.
+> Specifically, HiKey960, Dragonboard 845c, and Pixel3 devices.
 >
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> Initally the workaround we used was to simply disable scatter
+> gather support on the dwc3 by commenting out the
+> "dwc->gadget.sg_supported =3D true;" line.
+>
+> After working with Fei Yang, who was seeing similar trouble on
+> Intel dwc3 based hardare, Thinh Nguyen mentioned that a fix had
+> already been found and pointed me to one of Anurag's patches.
+>
+> This solved the issue on HiKey960 and I sent it out to the list
+> but didn't get any feedback.
+>
+> Additional testing with the Dragonboard 845c found that that
+> first fix was not sufficient, and so I've sat on the fix
+> thinking something deeper was amiss and went back to the hack
+> of disabling sg_supported on all dwc3 platforms.=20
+>
+> In the following months Fei's continued and repeated efforts
+> didn't seem to get enough review to result in a fix, and they've
+> since moved on to other work.
+>
+> Recently, I found that folks at qcom have seen similer issues
+> and pointed me to the second patch in this series, which does
+> seem to resolve the issue on the Dragonboard 845c, but not the
+> HiKey960 on its own.
+>
+> So I wanted to send these patches out for comment. There's
+> clearly a number of folks seeing broken behavior for ahwile on
+> dwc3 hardware, and we're all seeemingly working around it in our
+> own ways, so either those individual fixes need to get upstream
+> or we need to figure out some deeper solution to the issue.
+>
+> So I wanted to send these two out for review and feedback.
+>
+> thanks
+> -john
+>
+> Cc: Felipe Balbi <felipe.balbi@linux.intel.com>
+> Cc: Yang Fei <fei.yang@intel.com>
+> Cc: Thinh Nguyen <thinhn@synopsys.com>
+> Cc: Tejas Joglekar <tejas.joglekar@synopsys.com>
+> Cc: Andrzej Pietrasiewicz <andrzej.p@collabora.com>
+> Cc: Jack Pham <jackp@codeaurora.org>
+> Cc: Todd Kjos <tkjos@google.com>
+> Cc: Greg KH <gregkh@linuxfoundation.org>
+> Cc: Linux USB List <linux-usb@vger.kernel.org>
+> Cc: stable <stable@vger.kernel.org>
+>
+> Anurag Kumar Vulisha (2):
+>   usb: dwc3: gadget: Check for IOC/LST bit in both event->status and
+>     TRB->ctrl fields
+>   usb: dwc3: gadget: Correct the logic for finding last SG entry
 
-Greg,
-
-if you want to squeeze this in:
-
-Acked-by: Felipe Balbi <balbi@kernel.org>
+I remember commenting on these patches before and never getting a newer
+version from Anurag.
 
 =2D-=20
 balbi
@@ -106,18 +165,18 @@ Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl4pSFEACgkQzL64meEa
-mQZtnxAAkIO+iANSyFn4Xmze+yspYSGIakS289zIh6h2dJ91QmPtgF9WtxBqRpa0
-IIdVHW3HrGgd88Dorz4JNyguQtMYR9Ok7XeilaaelQ/9qjnBj9dZfzc5XWK3653O
-ATl+6IBrnlMGOjlLnMI31tzeF6p7++RRv2FEpUTf2g4nhK5CKvfRw0qEAybX3Wmx
-yvePHijcySPxhJf06fAmUSfPueeqxYmyy01nuWhSFFe0hQuTXsnb7u91m+nqVXmr
-5oNhcRztHkfMJBI1v0rCruZXm0d7nls3rRAtn9tFSl4PVdscgXNx+xvMrtL+KEyr
-a1DdnuC4sljeYmuT8WMD+TMjAmY1vy8ecpXdGCtDzpsVn45b9ZamZbPD4k+xC/b9
-ncMmwlBQq3//rQadGY1DB7zDrWwXr36exkE3IjO5QTHhHlHVztk/kaUZU5fQjPjt
-lBnLfm+NHlGrKvBnt2BrvZXFvyrODHwkaO117Cp75dmqeneJK4aOvqY3jUBKvQex
-Yohs2QvBlEsaGCLob+SnzJ3YgxGiCxouapfLzq++8lyWLGzGCq50azsPt5dzQlPA
-xD01s1v8qyi4e8dSXNBy2Dbn3QZzuFCf27B1LXgxSGu4w2s41/E/9pbSFzTYpySO
-h0jkRYJqlUN5ToJZDJWVaYABkJmH4q4Z7XDj2g4h92fsKPXrv24=
-=s4W3
+iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl4pSNsACgkQzL64meEa
+mQaZmQ/7BhhVxhrUcob+FDCHXKdmzKnNLEG/H/r/68jTyDwKyboVDrNkpLPsoO4k
+dVEivoTB+X4V+m/G4sqt4jOeSrQs7dOzvzvBdG23yXqL+2xAP6BTVN1qcdXcCTJY
+Ywf5z6tTilVutCMp+KRSHpzsNDOmJWvyn2OZsWxp7e55kOuA0svL1fRY9lRt3Lhg
+FPoKXt7u8oAl1f0SGgKxZemuNROu3CGDdBc8ZpQM+t4/ac5QikfrtdIuFT1uXStz
+QT2n/wg5N+juvFOzjvR9PDXzmopaI8/Toli3nkBBsujThLga3beSjBU7ZneO7MP5
+j8zc7ArMBFdJ7cEBhEfMLPyvDzQL0MPPXuJcQLaMyiZzx4qyb00/jxLCOsFw2srj
+UBzLwuDSJ2CbqgPnRp+WgEcDW8/j31+SI6nCcnyVgJzX6NXKVXhrZF6jPnI8J6yB
+JGSDm+zkflrdwq5olLXGOhZzQ60VpVN5MH700NuP/JwBa8FX4YAVwXAH6CeVjioQ
+5WbzR8Bui9aX2DaqXjBaA6tZpM9BnPVouhAUN4CzlmbOTIfxQNTzAa2K8eOIsl6d
+IN/vXcCKZQu+6K9UurRXdHjIl1Lf46w2zrXmar31qZe3MGdJc6bJiXfg6RZjFoOB
+GhthkcAdk84kL/5a7XEbmvhGWXC9BrALivfWdiqwAWYF+HkK61M=
+=VsDB
 -----END PGP SIGNATURE-----
 --=-=-=--
