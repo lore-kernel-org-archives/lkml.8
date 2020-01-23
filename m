@@ -2,153 +2,110 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35F49C33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 03:56:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8660AC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 04:07:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1673124673
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 03:56:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D35124673
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 04:07:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579752432;
+	bh=Ljk4aNTIh5qaY+LhyrDRlPXS83l3MsxY6wI4fyIxdgs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=VQ0WW3Oq7t4MDLXa4TpC/0olCHPwfcOZ98QoSI7tihEv7lZfzecWJ+yh54nyJfeQV
+	 hjPkyImyw/Wlh6sd3I0YPsDANJrOVDOz45mjqphZHMGR/vtMeoioMwnRO86jKb9i8F
+	 YWMDs1K91yOMFeFFK4JB1eDcorC8P3etucuniVnY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726621AbgAWD46 (ORCPT
+        id S1726227AbgAWEHL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 22:56:58 -0500
-Received: from out30-132.freemail.mail.aliyun.com ([115.124.30.132]:44114 "EHLO
-        out30-132.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725933AbgAWD46 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 22:56:58 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R121e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04394;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0ToNc5uW_1579751811;
-Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0ToNc5uW_1579751811)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Thu, 23 Jan 2020 11:56:54 +0800
-Subject: Re: [v2 PATCH] mm: move_pages: report the number of non-attempted
- pages
-To:     Wei Yang <richardw.yang@linux.intel.com>
-Cc:     mhocko@suse.com, akpm@linux-foundation.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org
-References: <1579736331-85494-1-git-send-email-yang.shi@linux.alibaba.com>
- <20200123032736.GA22196@richard>
-From:   Yang Shi <yang.shi@linux.alibaba.com>
-Message-ID: <01fc1c6b-1cab-7f7e-7879-4fc7b0e4a231@linux.alibaba.com>
-Date:   Wed, 22 Jan 2020 19:56:50 -0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
- Gecko/20100101 Thunderbird/52.7.0
+        Wed, 22 Jan 2020 23:07:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55694 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725989AbgAWEHK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 23:07:10 -0500
+Received: from localhost (unknown [106.200.244.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DFCAF2465A;
+        Thu, 23 Jan 2020 04:07:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579752429;
+        bh=Ljk4aNTIh5qaY+LhyrDRlPXS83l3MsxY6wI4fyIxdgs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=gM30JBU2phcjbEoMCePoUQn2rPt1Ihug1K8uZwpGvusdGIx57rgswEklYC9QRH7YE
+         UBiWP7DuubGSSHNBvCqfhX2VwQbAKPZMoFWwV26JoB1mk4Yn/DQd7KdwfqiHkhNTfu
+         4Xz7wn+Yf7zMXBk6HSkObzgWO75i3AOtFxCO6hik=
+Date:   Thu, 23 Jan 2020 09:37:05 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Colin King <colin.king@canonical.com>
+Cc:     Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-hams@vger.kernel.org, netdev@vger.kernel.org,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] net/rose: fix spelling mistake "to" -> "too"
+Message-ID: <20200123040705.GT2841@vkoul-mobl>
+References: <20200123010133.2834467-1-colin.king@canonical.com>
 MIME-Version: 1.0
-In-Reply-To: <20200123032736.GA22196@richard>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200123010133.2834467-1-colin.king@canonical.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Colin,
 
+On 23-01-20, 01:01, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
+> 
+> There is a spelling mistake in a printk message. Fix it.
+> 
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> ---
+>  drivers/dma/s3c24xx-dma.c | 2 +-
+>  net/rose/af_rose.c        | 2 +-
 
-On 1/22/20 7:27 PM, Wei Yang wrote:
-> On Thu, Jan 23, 2020 at 07:38:51AM +0800, Yang Shi wrote:
->> Since commit a49bd4d71637 ("mm, numa: rework do_pages_move"),
->> the semantic of move_pages() was changed to return the number of
->> non-migrated pages (failed to migration) and the call would be aborted
->> immediately if migrate_pages() returns positive value.  But it didn't
->> report the number of pages that we even haven't attempted to migrate.
->> So, fix it by including non-attempted pages in the return value.
->>
-> First, we want to change the semantic of move_pages(2). The return value
-> indicates the number of pages we didn't managed to migrate?
+Care to split the two..?
 
-This is my understanding.
+Thanks
+>  2 files changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/dma/s3c24xx-dma.c b/drivers/dma/s3c24xx-dma.c
+> index 8e14c72d03f0..63f1453ca250 100644
+> --- a/drivers/dma/s3c24xx-dma.c
+> +++ b/drivers/dma/s3c24xx-dma.c
+> @@ -826,7 +826,7 @@ static struct dma_async_tx_descriptor *s3c24xx_dma_prep_memcpy(
+>  			len, s3cchan->name);
+>  
+>  	if ((len & S3C24XX_DCON_TC_MASK) != len) {
+> -		dev_err(&s3cdma->pdev->dev, "memcpy size %zu to large\n", len);
+> +		dev_err(&s3cdma->pdev->dev, "memcpy size %zu too large\n", len);
+>  		return NULL;
+>  	}
+>  
+> diff --git a/net/rose/af_rose.c b/net/rose/af_rose.c
+> index 46b8ff24020d..1e8eeb044b07 100644
+> --- a/net/rose/af_rose.c
+> +++ b/net/rose/af_rose.c
+> @@ -1475,7 +1475,7 @@ static int __init rose_proto_init(void)
+>  	int rc;
+>  
+>  	if (rose_ndevs > 0x7FFFFFFF/sizeof(struct net_device *)) {
+> -		printk(KERN_ERR "ROSE: rose_proto_init - rose_ndevs parameter to large\n");
+> +		printk(KERN_ERR "ROSE: rose_proto_init - rose_ndevs parameter too large\n");
+>  		rc = -EINVAL;
+>  		goto out;
+>  	}
+> -- 
+> 2.24.0
 
->
-> Second, the return value from migrate_pages() doesn't mean the number of pages
-> we failed to migrate. For example, one -ENOMEM is returned on the first page,
-> migrate_pages() would return 1. But actually, no page successfully migrated.
-
-This would not happen at all since migrate_pages() would just return 
--ENOMEM instead of a positive value, right?
-
->
-> Third, even the migrate_pages() return the exact non-migrate page, we are not
-> sure those non-migrated pages are at the tail of the list. Because in the last
-> case in migrate_pages(), it just remove the page from list. It could be a page
-> in the middle of the list. Then, in userspace, how the return value be
-> leveraged to determine the valid status? Any page in the list could be the
-> victim.
-
-I think this problem has been discussed in another thread. Yes, the 
-status may have non-valid value, but it is supposed to have valid value 
-iff move_pages() return 0. Positive value is an error case, so the 
-validity of status is not guaranteed.
-
->
-> Sounds we need to think about this carefully.
->
->> Fixes: a49bd4d71637 ("mm, numa: rework do_pages_move")
->> Suggested-by: Michal Hocko <mhocko@suse.com>
->> Cc: Wei Yang <richardw.yang@linux.intel.com>
->> Cc: <stable@vger.kernel.org>    [4.17+]
->> Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
->> ---
->> v2: Rebased on top of the latest mainline kernel per Andrew
->>
->> mm/migrate.c | 24 ++++++++++++++++++++++--
->> 1 file changed, 22 insertions(+), 2 deletions(-)
->>
->> diff --git a/mm/migrate.c b/mm/migrate.c
->> index 86873b6..9b8eb5d 100644
->> --- a/mm/migrate.c
->> +++ b/mm/migrate.c
->> @@ -1627,8 +1627,18 @@ static int do_pages_move(struct mm_struct *mm, nodemask_t task_nodes,
->> 			start = i;
->> 		} else if (node != current_node) {
->> 			err = do_move_pages_to_node(mm, &pagelist, current_node);
->> -			if (err)
->> +			if (err) {
->> +				/*
->> +				 * Positive err means the number of failed
->> +				 * pages to migrate.  Since we are going to
->> +				 * abort and return the number of non-migrated
->> +				 * pages, so need incude the rest of the
->> +				 * nr_pages that have not attempted as well.
->> +				 */
->> +				if (err > 0)
->> +					err += nr_pages - i - 1;
->> 				goto out;
->> +			}
->> 			err = store_status(status, start, current_node, i - start);
->> 			if (err)
->> 				goto out;
->> @@ -1659,8 +1669,11 @@ static int do_pages_move(struct mm_struct *mm, nodemask_t task_nodes,
->> 			goto out_flush;
->>
->> 		err = do_move_pages_to_node(mm, &pagelist, current_node);
->> -		if (err)
->> +		if (err) {
->> +			if (err > 0)
->> +				err += nr_pages - i - 1;
->> 			goto out;
->> +		}
->> 		if (i > start) {
->> 			err = store_status(status, start, current_node, i - start);
->> 			if (err)
->> @@ -1674,6 +1687,13 @@ static int do_pages_move(struct mm_struct *mm, nodemask_t task_nodes,
->>
->> 	/* Make sure we do not overwrite the existing error */
->> 	err1 = do_move_pages_to_node(mm, &pagelist, current_node);
->> +	/*
->> +	 * Don't have to report non-attempted pages here since:
->> +	 *     - If the above loop is done gracefully there is not non-attempted
->> +	 *       page.
->> +	 *     - If the above loop is aborted to it means more fatal error
->> +	 *       happened, should return err.
->> +	 */
->> 	if (!err1)
->> 		err1 = store_status(status, start, current_node, i - start);
->> 	if (!err)
->> -- 
->> 1.8.3.1
-
+-- 
+~Vinod
