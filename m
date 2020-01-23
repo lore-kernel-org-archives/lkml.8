@@ -2,337 +2,188 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2897AC33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 01:33:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5324C33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 01:37:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F39E12467F
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 01:33:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579743221;
-	bh=myHd0xxtAYA4MzDv/+EBMBjMsqwHwg57OhyKIipZXAY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=gy+ZoAHESm8TPcHXpDe1AaHRI96NiIDrAU9mlA5FoakCo7R+2NEemOGtT9RGGTR04
-	 sMajPalMWQFf1OiKeUuYraOBV+l8TIVHuwYFSE9YoKMKx9ozMt0CKPWKBc4ZZrYTLr
-	 2z0lJsWCoqFRlT8/aXVZiRGtnJPLB8wRbl6LnSb0=
+	by mail.kernel.org (Postfix) with ESMTP id 9B4FB24676
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 01:37:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727816AbgAWBdk (ORCPT
+        id S1726181AbgAWBhf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 20:33:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49102 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 20:37:35 -0500
+Received: from mga02.intel.com ([134.134.136.20]:13999 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725943AbgAWBdk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 20:33:40 -0500
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3E96D24125;
-        Thu, 23 Jan 2020 01:33:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579743219;
-        bh=myHd0xxtAYA4MzDv/+EBMBjMsqwHwg57OhyKIipZXAY=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=YvUplKxyBu/kXyrKrUWaX35kMfrQbDAC1x8bfqJtEhZyjFz4ekoD1uGrPk7tyNe2A
-         kroibVymaR9XGqpzdU1U0qVLrZQ6XuW0BM6nkP5IdAWvSIbX5CnGOyvchLO7m+3V3V
-         rqBnJAgz+WgsrSf45hnSM0201PehjecRVFsHvDz8=
-Date:   Thu, 23 Jan 2020 10:33:34 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     paulmck@kernel.org
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Brendan Gregg <brendan.d.gregg@gmail.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>, bpf@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        "David S . Miller" <davem@davemloft.net>, joel@joelfernandes.org,
-        "Naveen N . Rao" <naveen.n.rao@linux.ibm.com>,
-        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>
-Subject: Re: [RFT PATCH 04/13] kprobes: Make optimizer delay to 1 second
-Message-Id: <20200123103334.6e1821625643d007297ecf94@kernel.org>
-In-Reply-To: <20200122165432.GH2935@paulmck-ThinkPad-P72>
-References: <157918584866.29301.6941815715391411338.stgit@devnote2>
-        <157918589199.29301.4419459150054220408.stgit@devnote2>
-        <20200121192905.0f001c61@gandalf.local.home>
-        <20200122162317.0299cf722dd618147d97e89c@kernel.org>
-        <20200122071115.28e3c763@gandalf.local.home>
-        <20200122221240.cef447446785f46862fee97a@kernel.org>
-        <20200122165432.GH2935@paulmck-ThinkPad-P72>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        id S1725911AbgAWBhe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 20:37:34 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Jan 2020 17:37:33 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,352,1574150400"; 
+   d="scan'208";a="250817035"
+Received: from zdeng-mobl.gar.corp.intel.com (HELO arch-ashland-svkelley) ([10.254.47.109])
+  by fmsmga004.fm.intel.com with ESMTP; 22 Jan 2020 17:37:31 -0800
+Message-ID: <8f1e5981b519acb5edf53b5392c81ef7cbf6a3eb.camel@linux.intel.com>
+Subject: Re: RE: Re: "oneshot" interrupt causes another interrupt to be
+ fired erroneously in Haswell system
+From:   Sean V Kelley <sean.v.kelley@linux.intel.com>
+Reply-To: sean.v.kelley@linux.intel.com
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Kar Hin Ong <kar.hin.ong@ni.com>,
+        Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-rt-users <linux-rt-users@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Julia Cartwright <julia.cartwright@ni.com>,
+        Keng Soon Cheah <keng.soon.cheah@ni.com>,
+        Gratian Crisan <gratian.crisan@ni.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Date:   Wed, 22 Jan 2020 17:37:31 -0800
+In-Reply-To: <87muanwwhb.fsf@nanos.tec.linutronix.de>
+References: <20191031230532.GA170712@google.com>
+         <alpine.DEB.2.21.1911050017410.17054@nanos.tec.linutronix.de>
+         <MN2PR04MB625594021250E0FB92EC955DC3780@MN2PR04MB6255.namprd04.prod.outlook.com>
+         <87a76oxqv1.fsf@nanos.tec.linutronix.de>
+         <MN2PR04MB62551D8B240966B02ED71516C3360@MN2PR04MB6255.namprd04.prod.outlook.com>
+         <87muanwwhb.fsf@nanos.tec.linutronix.de>
+Organization: Intel Corporation
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.3 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 22 Jan 2020 08:54:32 -0800
-"Paul E. McKenney" <paulmck@kernel.org> wrote:
-
-> On Wed, Jan 22, 2020 at 10:12:40PM +0900, Masami Hiramatsu wrote:
-> > On Wed, 22 Jan 2020 07:11:15 -0500
-> > Steven Rostedt <rostedt@goodmis.org> wrote:
-> > 
-> > > On Wed, 22 Jan 2020 16:23:17 +0900
-> > > Masami Hiramatsu <mhiramat@kernel.org> wrote:
+On Thu, 2020-01-16 at 11:01 +0100, Thomas Gleixner wrote:
+> Kar Hin Ong <kar.hin.ong@ni.com> writes:
+> > > I don't have access to the document you mentioned, but I know
+> > > that chipsets
+> > > have a knob to control that behaviour. Just checked a few chipset
+> > > docs and they
+> > > contain the same sentence, but then in the next paragraph they
+> > > say:
 > > > 
-> > > > On Tue, 21 Jan 2020 19:29:05 -0500
-> > > > Steven Rostedt <rostedt@goodmis.org> wrote:
-> > > > 
-> > > > > On Thu, 16 Jan 2020 23:44:52 +0900
-> > > > > Masami Hiramatsu <mhiramat@kernel.org> wrote:
-> > > > >   
-> > > > > > Since the 5 jiffies delay for the optimizer is too
-> > > > > > short to wait for other probes, make it longer,
-> > > > > > like 1 second.  
-> > > > > 
-> > > > > Hi Masami,
-> > > > > 
-> > > > > Can you explain more *why* 5 jiffies is too short.  
-> > > > 
-> > > > Yes, I had introduced this 5 jiffies delay for multiple probe registration
-> > > > and unregistration like systemtap, which will use array-based interface to
-> > > > register/unregister. In that case, 5 jiffies will be enough for the delay
-> > > > to wait for other kprobe registration/unregsitration.
-> > > > 
-> > > > However, since perf and ftrace register/unregister probes one-by-one with
-> > > > RCU synchronization interval, the optimizer will be started before
-> > > > finishing to register/unregister all probes.
-> > > > And the optimizer locks kprobe_mutex a while -- RCU-tasks synchronization.
-> > > > Since the kprobe_mutex is also involved in disabling kprobes, this also
-> > > > stops probe-event disabling.
-> > > > 
-> > > > Maybe 5 jiffies is enough for adding/removing a few probe events, but
-> > > > not enough for dozens of probe events.
-> > > > 
+> > >  "If the I/OxAPIC entry is masked (via the mask bit in the
+> > > corresponding
+> > >   Redirection Table Entry), then the corresponding PCI Express
+> > >   interrupt(s) is forwarded to the legacy ICH, provided the
+> > > Disable PCI
+> > >   INTx Routing to ICH bit is clear, Section 19.10.2.27,
+> > > QPIPINTRC: Intel
+> > >   QuickPath Interconnect Protocol Interrupt Control."
 > > > 
-> > > Perhaps we should have a mechanism that can detect new probes being
-> > > added, and just continue to delay the optimization, instead of having
-> > > some arbitrary delay.
+> > > That control bit is 0 after reset, so the legacy forwarding
+> > > works.
 > > 
-> > Yes, that is what [03/13] does :) 
-> > Anyway, it seems that the RCU-synchronization takes more than 5 jiffies.
-> > And in that case, [03/13] still doesn't work. That's why I added this patch
-> > after that.
+> > Intel support engineer do provide similar advice to us as a
+> > workaround
+> > to the CPU behaviour.  They said we could enable the
+> > "Don'tRouteToPCH"
+> > bit in the BIOS to block the interrupt from propagating to
+> > PCH.  This
+> > bit is located at "Coherent Interface Protocol Interrupt Control
+> > (cipintrc)" register of "Virtualization" device (Bus 0, Device 5,
+> > Function 0, Offset 0x14C).
+> > 
+> > With the help of our BIOS engineer, after setting this bit in BIOS
+> > does prevent the interrupt forwarding.
+> > 
+> > However, Intel told us that this workaround is not validated, i.e.
+> > the
+> > side effect of setting this bit is unknown.
 > 
-> If the RCU synchronization is synchronize_rcu_tasks(), then yes, it
-> will often take way more than 5 jiffies.  If it is synchronize_rcu(),
-> 5 jiffies would not be unusual, especially on larger systems.
-> But in the case of synchronize_rcu(), one option is to instead use
-> synchronize_rcu_expedited().  It is not clear that this last is really
-> justified in this case, but figured it might be worth mentioning.
-
-It is synchronize_rcu(), but it seems sometimes it is called several
-times on one probe disabling.
-
-Anyway, without this update, I added a printk to count optimizer
-queue-length and found that all optimizer call with a single kprobe
-on the quenes. I think this depends on the machine, but as far as
-I tested on 8-threads qemu x86, shows this result...
-
-Probes: 256 kprobe_events
-Enable events
-real	0m 0.02s
-user	0m 0.00s
-sys	0m 0.02s
-[   17.730548] Queue-update: 180, skipped, Total Queued: 180
-[   17.739445] Queue-update: 1, go, Total Queued: 180
-Disable events
-[   19.744634] Queue-update: 1, go, Total Queued: 1
-[   19.770743] Queue-update: 1, go, Total Queued: 1
-[   19.886625] Queue-update: 1, go, Total Queued: 1
-[   20.006631] Queue-update: 1, go, Total Queued: 1
-[   20.126628] Queue-update: 1, go, Total Queued: 1
-[   20.246620] Queue-update: 1, go, Total Queued: 1
-[   20.374665] Queue-update: 1, go, Total Queued: 1
-[   20.486617] Queue-update: 1, go, Total Queued: 1
-[   20.606608] Queue-update: 1, go, Total Queued: 1
-[   20.726596] Queue-update: 1, go, Total Queued: 1
-[   20.846608] Queue-update: 1, go, Total Queued: 1
-[   20.966723] Queue-update: 1, go, Total Queued: 1
-[   21.086611] Queue-update: 1, go, Total Queued: 1
-[   21.206605] Queue-update: 1, go, Total Queued: 1
-[   21.326603] Queue-update: 1, go, Total Queued: 1
-[   21.462609] Queue-update: 1, go, Total Queued: 1
-[   21.566755] Queue-update: 1, go, Total Queued: 1
-[   21.686606] Queue-update: 1, go, Total Queued: 1
-[   21.806611] Queue-update: 1, go, Total Queued: 1
-[   21.926609] Queue-update: 1, go, Total Queued: 1
-[   22.046621] Queue-update: 1, go, Total Queued: 1
-[   22.166729] Queue-update: 1, go, Total Queued: 1
-[   22.302609] Queue-update: 1, go, Total Queued: 1
-[   22.510627] Queue-update: 1, go, Total Queued: 1
-[   22.536638] Queue-update: 1, go, Total Queued: 1
-[   22.654618] Queue-update: 1, go, Total Queued: 1
-[   22.774643] Queue-update: 1, go, Total Queued: 1
-[   22.902609] Queue-update: 1, go, Total Queued: 1
-[   23.022608] Queue-update: 1, go, Total Queued: 1
-[   23.158606] Queue-update: 1, go, Total Queued: 1
-[   23.254618] Queue-update: 1, go, Total Queued: 1
-[   23.374647] Queue-update: 1, go, Total Queued: 1
-[   23.494605] Queue-update: 1, go, Total Queued: 1
-[   23.614610] Queue-update: 1, go, Total Queued: 1
-[   23.734606] Queue-update: 1, go, Total Queued: 1
-[   23.854609] Queue-update: 1, go, Total Queued: 1
-[   23.974615] Queue-update: 1, go, Total Queued: 1
-[   24.094609] Queue-update: 1, go, Total Queued: 1
-[   24.230607] Queue-update: 1, go, Total Queued: 1
-[   24.342625] Queue-update: 1, go, Total Queued: 1
-[   24.475478] Queue-update: 1, go, Total Queued: 1
-[   24.574554] Queue-update: 1, go, Total Queued: 1
-[   24.694605] Queue-update: 1, go, Total Queued: 1
-[   24.814585] Queue-update: 1, go, Total Queued: 1
-[   24.934591] Queue-update: 1, go, Total Queued: 1
-[   25.054614] Queue-update: 1, go, Total Queued: 1
-[   25.174628] Queue-update: 1, go, Total Queued: 1
-[   25.294637] Queue-update: 1, go, Total Queued: 1
-[   25.414620] Queue-update: 1, go, Total Queued: 1
-[   25.534553] Queue-update: 1, go, Total Queued: 1
-[   25.654610] Queue-update: 1, go, Total Queued: 1
-[   25.774627] Queue-update: 1, go, Total Queued: 1
-[   25.894609] Queue-update: 1, go, Total Queued: 1
-[   26.030548] Queue-update: 1, go, Total Queued: 1
-[   26.134626] Queue-update: 1, go, Total Queued: 1
-[   26.254620] Queue-update: 1, go, Total Queued: 1
-[   26.373603] Queue-update: 1, go, Total Queued: 1
-[   26.502606] Queue-update: 1, go, Total Queued: 1
-[   26.614607] Queue-update: 1, go, Total Queued: 1
-[   26.734610] Queue-update: 1, go, Total Queued: 1
-[   26.854620] Queue-update: 1, go, Total Queued: 1
-[   26.974660] Queue-update: 1, go, Total Queued: 1
-[   27.094620] Queue-update: 1, go, Total Queued: 1
-[   27.214596] Queue-update: 1, go, Total Queued: 1
-[   27.334640] Queue-update: 1, go, Total Queued: 1
-[   27.494606] Queue-update: 1, go, Total Queued: 1
-[   27.574703] Queue-update: 1, go, Total Queued: 1
-[   27.694609] Queue-update: 1, go, Total Queued: 1
-[   27.814607] Queue-update: 1, go, Total Queued: 1
-[   27.934631] Queue-update: 1, go, Total Queued: 1
-[   28.054606] Queue-update: 1, go, Total Queued: 1
-[   28.182685] Queue-update: 1, go, Total Queued: 1
-[   28.318568] Queue-update: 1, go, Total Queued: 1
-[   28.422610] Queue-update: 1, go, Total Queued: 1
-[   28.534621] Queue-update: 1, go, Total Queued: 1
-[   28.654618] Queue-update: 1, go, Total Queued: 1
-[   28.774622] Queue-update: 1, go, Total Queued: 1
-[   28.894609] Queue-update: 1, go, Total Queued: 1
-[   29.022609] Queue-update: 1, go, Total Queued: 1
-[   29.150615] Queue-update: 1, go, Total Queued: 1
-[   29.262610] Queue-update: 1, go, Total Queued: 1
-[   29.374621] Queue-update: 1, go, Total Queued: 1
-[   29.494606] Queue-update: 1, go, Total Queued: 1
-[   29.614616] Queue-update: 1, go, Total Queued: 1
-[   29.734607] Queue-update: 1, go, Total Queued: 1
-[   29.854601] Queue-update: 1, go, Total Queued: 1
-[   29.974610] Queue-update: 1, go, Total Queued: 1
-[   30.094625] Queue-update: 1, go, Total Queued: 1
-[   30.214606] Queue-update: 1, go, Total Queued: 1
-[   30.334602] Queue-update: 1, go, Total Queued: 1
-[   30.454634] Queue-update: 1, go, Total Queued: 1
-[   30.574606] Queue-update: 1, go, Total Queued: 1
-[   30.694589] Queue-update: 1, go, Total Queued: 1
-[   30.814613] Queue-update: 1, go, Total Queued: 1
-[   30.934602] Queue-update: 1, go, Total Queued: 1
-[   31.054605] Queue-update: 1, go, Total Queued: 1
-[   31.182596] Queue-update: 1, go, Total Queued: 1
-[   31.318621] Queue-update: 1, go, Total Queued: 1
-[   31.414615] Queue-update: 1, go, Total Queued: 1
-[   31.534610] Queue-update: 1, go, Total Queued: 1
-[   31.670608] Queue-update: 1, go, Total Queued: 1
-[   31.774626] Queue-update: 1, go, Total Queued: 1
-[   31.894607] Queue-update: 1, go, Total Queued: 1
-[   32.014609] Queue-update: 1, go, Total Queued: 1
-[   32.134607] Queue-update: 1, go, Total Queued: 1
-[   32.254611] Queue-update: 1, go, Total Queued: 1
-[   32.374608] Queue-update: 1, go, Total Queued: 1
-[   32.494619] Queue-update: 1, go, Total Queued: 1
-[   32.614607] Queue-update: 1, go, Total Queued: 1
-[   32.734612] Queue-update: 1, go, Total Queued: 1
-[   32.862616] Queue-update: 1, go, Total Queued: 1
-[   32.974620] Queue-update: 1, go, Total Queued: 1
-[   33.110609] Queue-update: 1, go, Total Queued: 1
-[   33.214609] Queue-update: 1, go, Total Queued: 1
-[   33.342611] Queue-update: 1, go, Total Queued: 1
-[   33.454607] Queue-update: 1, go, Total Queued: 1
-[   33.574611] Queue-update: 1, go, Total Queued: 1
-[   33.694619] Queue-update: 1, go, Total Queued: 1
-[   33.814607] Queue-update: 1, go, Total Queued: 1
-[   33.950614] Queue-update: 1, go, Total Queued: 1
-[   34.062609] Queue-update: 1, go, Total Queued: 1
-[   34.174609] Queue-update: 1, go, Total Queued: 1
-[   34.294619] Queue-update: 1, go, Total Queued: 1
-[   34.430533] Queue-update: 1, go, Total Queued: 1
-[   34.534594] Queue-update: 1, go, Total Queued: 1
-[   34.654605] Queue-update: 1, go, Total Queued: 1
-[   34.790596] Queue-update: 1, go, Total Queued: 1
-[   34.902611] Queue-update: 1, go, Total Queued: 1
-[   35.014630] Queue-update: 1, go, Total Queued: 1
-[   35.134634] Queue-update: 1, go, Total Queued: 1
-[   35.262608] Queue-update: 1, go, Total Queued: 1
-[   35.374634] Queue-update: 1, go, Total Queued: 1
-[   35.494617] Queue-update: 1, go, Total Queued: 1
-[   35.622608] Queue-update: 1, go, Total Queued: 1
-[   35.742610] Queue-update: 1, go, Total Queued: 1
-[   35.854572] Queue-update: 1, go, Total Queued: 1
-[   35.982596] Queue-update: 1, go, Total Queued: 1
-[   36.094603] Queue-update: 1, go, Total Queued: 1
-[   36.222612] Queue-update: 1, go, Total Queued: 1
-[   36.334610] Queue-update: 1, go, Total Queued: 1
-[   36.454619] Queue-update: 1, go, Total Queued: 1
-[   36.574619] Queue-update: 1, go, Total Queued: 1
-[   36.694643] Queue-update: 1, go, Total Queued: 1
-[   36.814614] Queue-update: 1, go, Total Queued: 1
-[   36.934610] Queue-update: 1, go, Total Queued: 1
-[   37.062609] Queue-update: 1, go, Total Queued: 1
-[   37.198611] Queue-update: 1, go, Total Queued: 1
-[   37.294618] Queue-update: 1, go, Total Queued: 1
-[   37.414618] Queue-update: 1, go, Total Queued: 1
-[   37.534595] Queue-update: 1, go, Total Queued: 1
-[   37.662594] Queue-update: 1, go, Total Queued: 1
-[   37.774610] Queue-update: 1, go, Total Queued: 1
-[   37.894618] Queue-update: 1, go, Total Queued: 1
-[   38.014619] Queue-update: 1, go, Total Queued: 1
-[   38.142612] Queue-update: 1, go, Total Queued: 1
-[   38.254609] Queue-update: 1, go, Total Queued: 1
-[   38.374619] Queue-update: 1, go, Total Queued: 1
-[   38.502481] Queue-update: 1, go, Total Queued: 1
-[   38.614596] Queue-update: 1, go, Total Queued: 1
-[   38.734597] Queue-update: 1, go, Total Queued: 1
-[   38.854606] Queue-update: 1, go, Total Queued: 1
-[   38.974620] Queue-update: 1, go, Total Queued: 1
-[   39.094617] Queue-update: 1, go, Total Queued: 1
-[   39.222597] Queue-update: 1, go, Total Queued: 1
-[   39.334610] Queue-update: 1, go, Total Queued: 1
-[   39.454609] Queue-update: 1, go, Total Queued: 1
-[   39.574633] Queue-update: 1, go, Total Queued: 1
-[   39.694611] Queue-update: 1, go, Total Queued: 1
-[   39.814608] Queue-update: 1, go, Total Queued: 1
-[   39.934610] Queue-update: 1, go, Total Queued: 1
-[   40.054621] Queue-update: 1, go, Total Queued: 1
-[   40.174611] Queue-update: 1, go, Total Queued: 1
-[   40.297471] Queue-update: 1, go, Total Queued: 1
-[   40.414504] Queue-update: 1, go, Total Queued: 1
-[   40.534601] Queue-update: 1, go, Total Queued: 1
-[   40.654611] Queue-update: 1, go, Total Queued: 1
-[   40.774609] Queue-update: 1, go, Total Queued: 1
-[   40.894628] Queue-update: 1, go, Total Queued: 1
-[   41.014608] Queue-update: 1, go, Total Queued: 1
-[   41.135594] Queue-update: 1, go, Total Queued: 1
-real	0m 21.40s
-user	0m 0.00s
-sys	0m 0.04s
-Remove events
-real	0m 2.14s
-user	0m 0.00s
-sys	0m 0.04s
+> What? That's ridiculous.
+> 
+> That bit is documented in various chipset documents and that legacy
+> rerouting is really just there to support OSes which do not support
+> multiple IO-APICs properly.
+> 
+> If setting this bit has unknown side effects then someone at Intel
+> should have a close look and fix their documentation.
+> 
+> Can the Intel people on Cc please take care of this?
 
 
-Thank you,
+I looked into it Thomas.  The issue is as you suggested early in the
+thread.  If an IRQ arrives at line N of a non-primary IO-APIC and that
+line is masked, a new IRQ is generated on the primary IO-APIC/PIC.  
+
+The BIOS setting to address this forwarding is as above Disable INTx
+Route to PCH/ICH/SouthBridge. When this bit is set, local INTx messages
+received from the PCI-E ports are not routed to legacy PCH - they are
+either converted into MSI via the integrated I/OxAPIC (if the I/OxAPIC
+mask bit is clear in the appropriate entries) or cause no further
+action (when mask bit is set).
+
+This capability is tested and supported fully on Intel platforms.
+
+For example, 5520 [1], Xeon E5 4600  [2] , Xeon E7 [3], and so on
+include this bit :
+ 
+[1] 
+https://www.intel.com/content/dam/www/public/us/en/documents/datasheets/5520-5500-chipset-ioh-datasheet.pdf
+page 139
+[2] 
+https://www.intel.com/content/dam/www/public/us/en/documents/datasheets/xeon-e5-1600-2600-vol-2-datasheet.pdf
+, page 280
+[3] 
+https://www.intel.com/content/dam/www/public/us/en/documents/datasheets/xeon-e7-v2-datasheet-vol-2.pdf
+, page 373
+etc..
+
+Once you get to SKX/CLX things change and integrated IOxAPICs in the
+IIO module convert legacy PCI Express interrupt messages into MSI
+interrupts directly.  Beyond SKX/CLX there are no longer IOxAPICs in
+IIO. IOxAPIC is only in the PCH. Devices connected to the
+IIO will use native MSI/MSI-x mechanisms.
+
+The problem is with the absolute lack of useful documentation.  That’s
+not acceptable.  
+
+You recall the work Olaf and Stefan did at SuSE ten years ago (?) on
+boot irq quirks and the amount of research they had to do it learn
+about the behavior.[4]
+
+[4]
+http://lkml.iu.edu/hypermail/linux/kernel/0807.1/3160.html
+ 
+From a Real-Time Linux perspective this is really important to me.  As
+we get closer to fully mainlined we need to have this information
+readily available with greater usage of threaded irqs in combination
+with legacy interrupts on the older platforms.
+
+So I will ensure we actually create useful information pointing to this
+behavior either in kernel docs or online as in a white paper or both.
 
 
--- 
-Masami Hiramatsu <mhiramat@kernel.org>
+> As we have already quirks in drivers/pci/quirks.c which handle the
+> same
+> issue on older chipsets, we really should add one for these kind of
+> systems to avoid fiddling with the BIOS (which you can, but most
+> people
+> cannot).
+
+Agreed, and I will follow-up with Kar Hin Ong to get them added.
+
+Thanks,
+
+Sean
+
+
+> 
+> 
+> Thanks,
+> 
+>         tglx
+> 
+
