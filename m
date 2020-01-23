@@ -2,211 +2,274 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F3D3C33CAA
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 21:56:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C68BAC33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 22:04:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA4EA2071E
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 21:56:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88DBC207FF
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 22:04:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cLvqqzEz"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KlPH26XL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729095AbgAWV43 (ORCPT
+        id S1729031AbgAWWEe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 16:56:29 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:30281 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727215AbgAWV42 (ORCPT
+        Thu, 23 Jan 2020 17:04:34 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:47052 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727215AbgAWWEe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 16:56:28 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579816586;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=9+0VnNQu9UMoXCLNhPM/TS67VMiYE2w9OTMD3hYOX6g=;
-        b=cLvqqzEzbCbbdRojF9d4wnanhpE+ymTA67NaIcHuBKki96JvyHF2LOITPA+uxPHavluRT8
-        8NOrEzyfTkLrB/D+yfrRIn5uTjxmd09stT+aETxV6jgs00sUQB1fkz1nzTEoPG+mfx6Yrg
-        Cp33Xrr8jgmhC8wFZKDiewA6ZbKgwNk=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-74-1nkxB7eZP5ec4fmyt-u6-w-1; Thu, 23 Jan 2020 16:56:22 -0500
-X-MC-Unique: 1nkxB7eZP5ec4fmyt-u6-w-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B0845107ACC7;
-        Thu, 23 Jan 2020 21:56:21 +0000 (UTC)
-Received: from pauld.bos.csb (dhcp-17-51.bos.redhat.com [10.18.17.51])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 1DDE83B0;
-        Thu, 23 Jan 2020 21:56:21 +0000 (UTC)
-Date:   Thu, 23 Jan 2020 16:56:19 -0500
-From:   Phil Auld <pauld@redhat.com>
-To:     Kirill Tkhai <ktkhai@virtuozzo.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@gmail.com>, mingo@redhat.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3]sched/rt: Stop for_each_process_thread() iterations in
- tg_has_rt_tasks()
-Message-ID: <20200123215616.GA14789@pauld.bos.csb>
-References: <152415882713.2054.8734093066910722403.stgit@localhost.localdomain>
- <20180420092540.GG24599@localhost.localdomain>
- <0d7fbdab-b972-7f86-4090-b49f9315c868@virtuozzo.com>
- <854a5fb1-a9c1-023f-55ec-17fa14ad07d5@virtuozzo.com>
- <20180425194915.GH4064@hirez.programming.kicks-ass.net>
- <9f76872b-85e6-63bd-e503-fcaec69e28e3@virtuozzo.com>
+        Thu, 23 Jan 2020 17:04:34 -0500
+Received: by mail-pf1-f196.google.com with SMTP id n9so29915pff.13;
+        Thu, 23 Jan 2020 14:04:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=UyIKQITrO0oWF7hxsRux+qHlDrSK6oW0uL/e4R7PnzI=;
+        b=KlPH26XLFlBW/VUiAnxOoQ2Fn2luRmmaxSOizRqo6F4XxxoxPWkiccfQ2E7SC9GRdn
+         1RKNFcQcqxhqGgTIbaPaAhmm6L0HrZSxgTAAt5GONHnXwd1N/KFPcv0xeiTHGOMveT/a
+         ArXwkA44LBwFymOHaPmlB3VMVwKrH/X9jKNf8HUZzSooucilvHGqPjLlVsG+6xXJVfd9
+         ic4m4eVwLW0UM3BPPJS8AP3kR1aylGgBfg1L860eWXvvUgL4hF+HhmhYSpcPruBNHw5r
+         F3XdPtZ595SZDcH8FkMoCeLygg98gV3Y97OCKctdLsQBroRxZY3Cg8P3AlKDYcgnW2zL
+         HrDQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :mime-version:content-transfer-encoding;
+        bh=UyIKQITrO0oWF7hxsRux+qHlDrSK6oW0uL/e4R7PnzI=;
+        b=mwGrzQ/shjk2PavBXu86Z4+u1uZvWvJuHr9WoOkUtKLP7mhf7MXiniGCiQbox239LQ
+         hfwaKcypmaDTDiTgs7pUn4e9+/tGvfTny+YxnG5Ptw+IMNWnu7+Dg50807PEC2SBXzb9
+         v5bQ29cPxb2h851289SOIdMk8Sc2seWmAQEcU1IOC+LMnPeaH5O9gjc/zfiZRIBD7Aot
+         d0LLLeIUZK1wmUeNAC8Fb62yMiMCNjG0wSFFJR2ujAZqEmZp38xRe57x62qNUce/X+DQ
+         20KPdYNCIvks3O8bsX9zV/DsYrBWYrwsXGMW7QYSZizZj81IBpFZWtw9izzbYtG/J2wy
+         i/lA==
+X-Gm-Message-State: APjAAAUw7NuxJQWsE2yGha+n+kSpO15aemFZvd4zbTTxXYDn+gTtPkXx
+        1i6kDxf1+mJ/Pty6ugmsrF7jRnvC
+X-Google-Smtp-Source: APXvYqx7ndr87YrZCsK67u+RBUy1vUiYNmdwe8nONkI3gr4qcq3gFykCDJJatFethv9dL1piRhpmtQ==
+X-Received: by 2002:aa7:948c:: with SMTP id z12mr351286pfk.156.1579817072964;
+        Thu, 23 Jan 2020 14:04:32 -0800 (PST)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id l2sm3768326pff.59.2020.01.23.14.04.31
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 23 Jan 2020 14:04:31 -0800 (PST)
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     linux-hwmon@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Clemens Ladisch <clemens@ladisch.de>,
+        Jean Delvare <jdelvare@suse.com>,
+        =?UTF-8?q?Ondrej=20=C4=8Cerman?= <ocerman@sda1.eu>,
+        Michael Larabel <michael@phoronix.com>,
+        Guenter Roeck <linux@roeck-us.net>
+Subject: [PATCH v3] hwmon: (k10temp) Display up to eight sets of CCD temperatures
+Date:   Thu, 23 Jan 2020 14:04:22 -0800
+Message-Id: <20200123220422.30334-1-linux@roeck-us.net>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9f76872b-85e6-63bd-e503-fcaec69e28e3@virtuozzo.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+In HWiNFO, we see support for Tccd1, Tccd3, Tccd5, and Tccd7 temperature
+sensors on Zen2 based Threadripper CPUs. Checking register maps on
+Threadripper 3970X confirms SMN register addresses and values for those
+sensors.
 
-On Thu, Apr 26, 2018 at 12:54:41PM +0300 Kirill Tkhai wrote:
-> From: Kirill Tkhai <ktkhai@virtuozzo.com>
-> 
-> tg_rt_schedulable() iterates over all child task groups,
-> while tg_has_rt_tasks() iterates over all linked tasks.
-> In case of systems with big number of tasks, this may
-> take a lot of time.
-> 
-> I observed hard LOCKUP on machine with 20000+ processes
-> after write to "cpu.rt_period_us" of cpu cgroup with
-> 39 children. The problem occurred because of tasklist_lock
-> is held for a long time and other processes can't do fork().
-> 
-> PID: 1036268  TASK: ffff88766c310000  CPU: 36  COMMAND: "criu"
->  #0 [ffff887f7f408e48] crash_nmi_callback at ffffffff81050601
->  #1 [ffff887f7f408e58] nmi_handle at ffffffff816e0cc7
->  #2 [ffff887f7f408eb0] do_nmi at ffffffff816e0fb0
->  #3 [ffff887f7f408ef0] end_repeat_nmi at ffffffff816e00b9
->     [exception RIP: tg_rt_schedulable+463]
->     RIP: ffffffff810bf49f  RSP: ffff886537ad7d50  RFLAGS: 00000202
->     RAX: 0000000000000000  RBX: 000000003b9aca00  RCX: ffff883e9cb4b1b0
->     RDX: ffff887d0be43608  RSI: ffff886537ad7dd8  RDI: ffff8840a6ad0000
->     RBP: ffff886537ad7d68   R8: ffff887d0be431b0   R9: 00000000000e7ef0
->     R10: ffff88164fc39400  R11: 0000000000023380  R12: ffffffff81ef8d00
->     R13: ffffffff810bea40  R14: 0000000000000000  R15: ffff8840a6ad0000
->     ORIG_RAX: ffffffffffffffff  CS: 0010  SS: 0018
-> --- <NMI exception stack> ---
->  #4 [ffff886537ad7d50] tg_rt_schedulable at ffffffff810bf49f
->  #5 [ffff886537ad7d70] walk_tg_tree_from at ffffffff810c6c91
->  #6 [ffff886537ad7dc0] tg_set_rt_bandwidth at ffffffff810c6dd0
->  #7 [ffff886537ad7e28] cpu_rt_period_write_uint at ffffffff810c6eea
->  #8 [ffff886537ad7e38] cgroup_file_write at ffffffff8111cfd3
->  #9 [ffff886537ad7ec8] vfs_write at ffffffff8121eced
-> #10 [ffff886537ad7f08] sys_write at ffffffff8121faff
-> #11 [ffff886537ad7f50] system_call_fastpath at ffffffff816e8a7d
-> 
-> The patch reworks tg_has_rt_tasks() and makes it to iterate over
-> task group process list instead of iteration over all tasks list.
-> This makes the function to scale well, and reduces its execution
-> time.
-> 
-> Note, that since tasklist_lock doesn't protect a task against
-> sched_class changing, we don't introduce new races in comparison
-> to that we had before.
-> 
-> Signed-off-by: Kirill Tkhai <ktkhai@virtuozzo.com>
-> ---
->  kernel/sched/rt.c |   21 +++++++++++----------
->  1 file changed, 11 insertions(+), 10 deletions(-)
-> 
-> diff --git a/kernel/sched/rt.c b/kernel/sched/rt.c
-> index 7aef6b4e885a..a40535c604b8 100644
-> --- a/kernel/sched/rt.c
-> +++ b/kernel/sched/rt.c
-> @@ -2395,10 +2395,11 @@ const struct sched_class rt_sched_class = {
->   */
->  static DEFINE_MUTEX(rt_constraints_mutex);
->  
-> -/* Must be called with tasklist_lock held */
->  static inline int tg_has_rt_tasks(struct task_group *tg)
->  {
-> -	struct task_struct *g, *p;
-> +	struct task_struct *task;
-> +	struct css_task_iter it;
-> +	int ret = 0;
->  
->  	/*
->  	 * Autogroups do not have RT tasks; see autogroup_create().
-> @@ -2406,12 +2407,16 @@ static inline int tg_has_rt_tasks(struct task_group *tg)
->  	if (task_group_is_autogroup(tg))
->  		return 0;
->  
-> -	for_each_process_thread(g, p) {
-> -		if (rt_task(p) && task_group(p) == tg)
-> -			return 1;
-> +	css_task_iter_start(&tg->css, 0, &it);
-> +	while ((task = css_task_iter_next(&it))) {
-> +		if (rt_task(task)) {
-> +			ret = 1;
-> +			break;
-> +		}
->  	}
-> +	css_task_iter_end(&it);
->  
-> -	return 0;
-> +	return ret;
->  }
->  
->  struct rt_schedulable_data {
-> @@ -2510,7 +2515,6 @@ static int tg_set_rt_bandwidth(struct task_group *tg,
->  		return -EINVAL;
->  
->  	mutex_lock(&rt_constraints_mutex);
-> -	read_lock(&tasklist_lock);
->  	err = __rt_schedulable(tg, rt_period, rt_runtime);
->  	if (err)
->  		goto unlock;
-> @@ -2528,7 +2532,6 @@ static int tg_set_rt_bandwidth(struct task_group *tg,
->  	}
->  	raw_spin_unlock_irq(&tg->rt_bandwidth.rt_runtime_lock);
->  unlock:
-> -	read_unlock(&tasklist_lock);
->  	mutex_unlock(&rt_constraints_mutex);
->  
->  	return err;
-> @@ -2582,9 +2585,7 @@ static int sched_rt_global_constraints(void)
->  	int ret = 0;
->  
->  	mutex_lock(&rt_constraints_mutex);
-> -	read_lock(&tasklist_lock);
->  	ret = __rt_schedulable(NULL, 0, 0);
-> -	read_unlock(&tasklist_lock);
->  	mutex_unlock(&rt_constraints_mutex);
->  
->  	return ret;
+Register values observed in an idle system:
 
-Sorry to necro this...  
+0x059950: 00000000 00000abc 00000000 00000ad8
+0x059960: 00000000 00000ade 00000000 00000ae4
 
-I have a customer case that has hit the issue here. It looks like this
-fix didn't end up going in. 
+Under load:
 
-The only way I could reproduce it myself was to add a udelay(2) to 
-the tg_has_rt_tasks loop. With this patch applied, even with the 
-udelay nothing bad happens.
+0x059950: 00000000 00000c02 00000000 00000c14
+0x059960: 00000000 00000c30 00000000 00000c22
 
-Kirill, did you have a good way to reproduce it without adding 
-delays? 
+More analysis shows that EPYC CPUs support up to 8 CCD temperature
+sensors.
 
-Peter, is there any chance of taking something like this?
+On top of that, in thm_10_0_sh_mask.h in the Linux kernel, we find
+definitions for THM_DIE{1-3}_TEMP__VALID_MASK, set to 0x00000800, as well
+as matching SMN addresses. This lets us conclude that bit 11 of the
+respective registers is a valid bit. With this assumption, the temperature
+offset is now 49 degrees C. This conveniently matches the documented
+temperature offset for Tdie, again suggesting that above registers indeed
+report temperatures sensor values. Assume that bit 11 is indeed a valid
+bit, and add support for the additional sensors.
 
-Is there a better fix? 
+With this patch applied, output from 3970X (idle) looks as follows:
 
+k10temp-pci-00c3
+Adapter: PCI adapter
+Tdie:         +55.9°C
+Tctl:         +55.9°C
+Tccd1:        +39.8°C
+Tccd3:        +43.8°C
+Tccd5:        +43.8°C
+Tccd7:        +44.8°C
 
-Thanks,
-Phil
+Tested-by: Michael Larabel <michael@phoronix.com>
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+---
+v3: Increased number of supported CCD sensors to 8.
+    Dropped note that functionality on high-end CPUs is not known,
+    since that is no longer correct.
 
+v2: Added additional sensors to k10temp_info[].
+
+ drivers/hwmon/k10temp.c | 70 ++++++++++++++++++-----------------------
+ 1 file changed, 31 insertions(+), 39 deletions(-)
+
+diff --git a/drivers/hwmon/k10temp.c b/drivers/hwmon/k10temp.c
+index 5e3f43594084..1634cb6394f0 100644
+--- a/drivers/hwmon/k10temp.c
++++ b/drivers/hwmon/k10temp.c
+@@ -7,7 +7,7 @@
+  * Copyright (c) 2020 Guenter Roeck <linux@roeck-us.net>
+  *
+  * Implementation notes:
+- * - CCD1 and CCD2 register address information as well as the calculation to
++ * - CCD register address information as well as the calculation to
+  *   convert raw register values is from https://github.com/ocerman/zenpower.
+  *   The information is not confirmed from chip datasheets, but experiments
+  *   suggest that it provides reasonable temperature values.
+@@ -18,11 +18,6 @@
+  *   normalized to report 1A/LSB for core current and and 0.25A/LSB for SoC
+  *   current. Reported values can be adjusted using the sensors configuration
+  *   file.
+- * - It is unknown if the mechanism to read CCD1/CCD2 temperature as well as
+- *   current and voltage information works on higher-end Ryzen CPUs.
+- *   Information reported by Windows tools suggests that additional sensors
+- *   (both temperature and voltage/current) are supported, but their register
+- *   location is currently unknown.
+  */
+ 
+ #include <linux/bitops.h>
+@@ -80,8 +75,10 @@ static DEFINE_MUTEX(nb_smu_ind_mutex);
+ 
+ /* F17h M01h Access througn SMN */
+ #define F17H_M01H_REPORTED_TEMP_CTRL_OFFSET	0x00059800
+-#define F17H_M70H_CCD1_TEMP			0x00059954
+-#define F17H_M70H_CCD2_TEMP			0x00059958
++
++#define F17H_M70H_CCD_TEMP(x)			(0x00059954 + ((x) * 4))
++#define F17H_M70H_CCD_TEMP_VALID		BIT(11)
++#define F17H_M70H_CCD_TEMP_MASK			GENMASK(10, 0)
+ 
+ #define F17H_M01H_SVI				0x0005A000
+ #define F17H_M01H_SVI_TEL_PLANE0		(F17H_M01H_SVI + 0xc)
+@@ -100,8 +97,7 @@ struct k10temp_data {
+ 	int temp_offset;
+ 	u32 temp_adjust_mask;
+ 	bool show_tdie;
+-	bool show_tccd1;
+-	bool show_tccd2;
++	u32 show_tccd;
+ 	u32 svi_addr[2];
+ 	bool show_current;
+ 	int cfactor[2];
+@@ -188,6 +184,12 @@ const char *k10temp_temp_label[] = {
+ 	"Tctl",
+ 	"Tccd1",
+ 	"Tccd2",
++	"Tccd3",
++	"Tccd4",
++	"Tccd5",
++	"Tccd6",
++	"Tccd7",
++	"Tccd8",
+ };
+ 
+ const char *k10temp_in_label[] = {
+@@ -277,15 +279,10 @@ static int k10temp_read_temp(struct device *dev, u32 attr, int channel,
+ 			if (*val < 0)
+ 				*val = 0;
+ 			break;
+-		case 2:		/* Tccd1 */
+-			amd_smn_read(amd_pci_dev_to_node_id(data->pdev),
+-				     F17H_M70H_CCD1_TEMP, &regval);
+-			*val = (regval & 0xfff) * 125 - 305000;
+-			break;
+-		case 3:		/* Tccd2 */
++		case 2 ... 9:		/* Tccd{1-8} */
+ 			amd_smn_read(amd_pci_dev_to_node_id(data->pdev),
+-				     F17H_M70H_CCD2_TEMP, &regval);
+-			*val = (regval & 0xfff) * 125 - 305000;
++				     F17H_M70H_CCD_TEMP(channel - 2), &regval);
++			*val = (regval & F17H_M70H_CCD_TEMP_MASK) * 125 - 49000;
+ 			break;
+ 		default:
+ 			return -EOPNOTSUPP;
+@@ -343,12 +340,8 @@ static umode_t k10temp_is_visible(const void *_data,
+ 				if (!data->show_tdie)
+ 					return 0;
+ 				break;
+-			case 2:		/* Tccd1 */
+-				if (!data->show_tccd1)
+-					return 0;
+-				break;
+-			case 3:		/* Tccd2 */
+-				if (!data->show_tccd2)
++			case 2 ... 9:		/* Tccd{1-8} */
++				if (!(data->show_tccd & BIT(channel - 2)))
+ 					return 0;
+ 				break;
+ 			default:
+@@ -382,12 +375,8 @@ static umode_t k10temp_is_visible(const void *_data,
+ 			case 0:		/* Tdie */
+ 			case 1:		/* Tctl */
+ 				break;
+-			case 2:		/* Tccd1 */
+-				if (!data->show_tccd1)
+-					return 0;
+-				break;
+-			case 3:		/* Tccd2 */
+-				if (!data->show_tccd2)
++			case 2 ... 9:		/* Tccd{1-8} */
++				if (!(data->show_tccd & BIT(channel - 2)))
+ 					return 0;
+ 				break;
+ 			default:
+@@ -520,6 +509,12 @@ static const struct hwmon_channel_info *k10temp_info[] = {
+ 			   HWMON_T_LABEL,
+ 			   HWMON_T_INPUT | HWMON_T_LABEL,
+ 			   HWMON_T_INPUT | HWMON_T_LABEL,
++			   HWMON_T_INPUT | HWMON_T_LABEL,
++			   HWMON_T_INPUT | HWMON_T_LABEL,
++			   HWMON_T_INPUT | HWMON_T_LABEL,
++			   HWMON_T_INPUT | HWMON_T_LABEL,
++			   HWMON_T_INPUT | HWMON_T_LABEL,
++			   HWMON_T_INPUT | HWMON_T_LABEL,
+ 			   HWMON_T_INPUT | HWMON_T_LABEL),
+ 	HWMON_CHANNEL_INFO(in,
+ 			   HWMON_I_INPUT | HWMON_I_LABEL,
+@@ -595,15 +590,12 @@ static int k10temp_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+ 			data->cfactor[1] = CFACTOR_ISOC;
+ 			data->svi_addr[0] = F17H_M01H_SVI_TEL_PLANE1;
+ 			data->svi_addr[1] = F17H_M01H_SVI_TEL_PLANE0;
+-			amd_smn_read(amd_pci_dev_to_node_id(pdev),
+-				     F17H_M70H_CCD1_TEMP, &regval);
+-			if (regval & 0xfff)
+-				data->show_tccd1 = true;
+-
+-			amd_smn_read(amd_pci_dev_to_node_id(pdev),
+-				     F17H_M70H_CCD2_TEMP, &regval);
+-			if (regval & 0xfff)
+-				data->show_tccd2 = true;
++			for (i = 0; i < 8; i++) {
++				amd_smn_read(amd_pci_dev_to_node_id(pdev),
++					     F17H_M70H_CCD_TEMP(i), &regval);
++				if (regval & F17H_M70H_CCD_TEMP_VALID)
++					data->show_tccd |= BIT(i);
++			}
+ 			break;
+ 		}
+ 	} else {
 -- 
+2.17.1
 
