@@ -2,98 +2,129 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D48B6C33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 22:44:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83FA6C33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 22:45:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A1F9A21835
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 22:44:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DDA2206A2
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 22:45:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cHIAbkji"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729324AbgAWWo6 (ORCPT
+        id S1729491AbgAWWpz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 17:44:58 -0500
-Received: from www62.your-server.de ([213.133.104.62]:48100 "EHLO
-        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726191AbgAWWo6 (ORCPT
+        Thu, 23 Jan 2020 17:45:55 -0500
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:38887 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729413AbgAWWpz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 17:44:58 -0500
-Received: from sslproxy06.your-server.de ([78.46.172.3])
-        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89_1)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1iulDb-0000HU-22; Thu, 23 Jan 2020 23:44:55 +0100
-Received: from [178.197.248.20] (helo=pc-9.home)
-        by sslproxy06.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1iulDa-000Fp0-Ir; Thu, 23 Jan 2020 23:44:54 +0100
-Subject: Re: [PATCH v2 bpf-next 1/3] bpf: Add bpf_perf_prog_read_branches()
- helper
-To:     Daniel Xu <dxu@dxuuu.xyz>,
-        John Fastabend <john.fastabend@gmail.com>, bpf@vger.kernel.org,
-        ast@kernel.org, songliubraving@fb.com, yhs@fb.com, andriin@fb.com
-Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com,
-        peterz@infradead.org, mingo@redhat.com, acme@kernel.org
-References: <C03IYDPABSU1.1C6OL4DJ7ID1H@dlxu-fedora-R90QNFJV>
-From:   Daniel Borkmann <daniel@iogearbox.net>
-Message-ID: <9341443f-b29a-e92e-0e12-7990927b4e33@iogearbox.net>
-Date:   Thu, 23 Jan 2020 23:44:53 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Thu, 23 Jan 2020 17:45:55 -0500
+Received: by mail-pl1-f194.google.com with SMTP id t6so1985573plj.5
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jan 2020 14:45:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=lDS+3WSPujoShC7doDseBAcn2qbrDXuKgW17o9svkCE=;
+        b=cHIAbkjiGYyGWlr3Qz9vajplT0PI/Z+8Fu/987ccE+I6XbK1j4skJ2XgVqKVyg0WCE
+         ExvFumHeQgiYha4XHUjAOLhyreLsvwM4jgACWap39lK/AWGFloVw4Hr5STe9eoFyCWUc
+         I/+yqinWGOTw/eo9zFj3l98TQryNcCi7uFIjGzyqFr3N70b0pQqrLd6TzhugV5MwVXId
+         TYgVR9BKfj5YodqfA9q20jXt0V8aXLDs8mY8TxdF9GpDTG8MsOxUgdFSjrwLlM6GvNO/
+         sBf/y2aQhew8mrLgtCJYyOsHpz8+lKJkco0uulnwq9ln9kwGFrnE61XkMVvKfbxUedwL
+         slzQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=lDS+3WSPujoShC7doDseBAcn2qbrDXuKgW17o9svkCE=;
+        b=PzLMTaVCjSr/vIgVkQsT6jxphPKvlTPyuQBW/ncp5lWJ/ety3PtjKvPWitzdplUF2x
+         Fvo9wheb/0typboucOWOrh4JJllkd6yGrAmvWNW9bNbCRKFtt/LPAAEDXD5KYzpG5fw8
+         23sc0GTqoxf9n7ahufQDfRX9zPr/9jfiEZDLvF2RVnuRU8zDEzHU1dSKJiJte0L23PJ5
+         A1yHUbolaCuq8GgaW4ccmBc8KRbjWMqUepB0HZ8Nlb5cXKqgfOx6PUkFZIxm678CHfLm
+         qum32nMSOXdZKcG8MZkVOlxQ44cNerHL1J/wS+e0PtgP4T8i5+BA50OI/BL4deNQbVrm
+         clUg==
+X-Gm-Message-State: APjAAAUfkHWiY9kK6m/m6cEdSpxnAVmK9vG2+fvMgOr9oXBoDwS5CAUD
+        zS1lEd+Pos7LtMUfAbngJ37Y2t3ZNdCG/4J53RywBQ==
+X-Google-Smtp-Source: APXvYqw7Z3x2noRBQ2heUDMAvH6d/E7XrpibeDUNwqhuI6EQkiajmtzVh7BryjyvfCVGWCPH76TTKcMb42RHhJibjjc=
+X-Received: by 2002:a17:902:9f98:: with SMTP id g24mr393688plq.325.1579819554213;
+ Thu, 23 Jan 2020 14:45:54 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <C03IYDPABSU1.1C6OL4DJ7ID1H@dlxu-fedora-R90QNFJV>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Authenticated-Sender: daniel@iogearbox.net
-X-Virus-Scanned: Clear (ClamAV 0.101.4/25704/Thu Jan 23 12:37:43 2020)
+References: <20191216220555.245089-1-brendanhiggins@google.com>
+ <20191216220555.245089-5-brendanhiggins@google.com> <20191217075836.C76942072D@mail.kernel.org>
+In-Reply-To: <20191217075836.C76942072D@mail.kernel.org>
+From:   Brendan Higgins <brendanhiggins@google.com>
+Date:   Thu, 23 Jan 2020 14:45:43 -0800
+Message-ID: <CAFd5g47=FxbKtm9rA3zKvnipdTdP_VR8zJ3pad-QukL5Ottrjw@mail.gmail.com>
+Subject: Re: [RFC v1 4/6] init: main: add KUnit to kernel init
+To:     Stephen Boyd <sboyd@kernel.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Alan Maguire <alan.maguire@oracle.com>,
+        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+        Arnd Bergmann <arnd@arndb.de>, David Gow <davidgow@google.com>,
+        Jeff Dike <jdike@addtoit.com>,
+        Kees Cook <keescook@chromium.org>,
+        Richard Weinberger <richard@nod.at>, rppt@linux.ibm.com,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Knut Omang <knut.omang@oracle.com>,
+        linux-um <linux-um@lists.infradead.org>,
+        linux-arch@vger.kernel.org,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        KUnit Development <kunit-dev@googlegroups.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/23/20 11:30 PM, Daniel Xu wrote:
-> On Thu Jan 23, 2020 at 11:23 PM, Daniel Borkmann wrote:
-> [...]
->>
->> Yes, so we've been following this practice for all the BPF helpers no
->> matter
->> which program type. Though for tracing it may be up to debate whether it
->> makes
->> still sense given there's nothing to be leaked here since you can read
->> this data
->> anyway via probe read if you'd wanted to. So we might as well get rid of
->> the
->> clearing for all tracing helpers.
-> 
-> Right, that makes sense. Do you want me to leave it in for this patchset
-> and then remove all of them in a followup patchset?
+Sorry for the late reply. I sent this thinking I would check in over
+vacation, and then didn't.
 
-Lets leave it in and in a different set, we can clean this up for all tracing
-related helpers at once.
+On Mon, Dec 16, 2019 at 11:58 PM Stephen Boyd <sboyd@kernel.org> wrote:
+>
+> Quoting Brendan Higgins (2019-12-16 14:05:53)
+> > Remove KUnit from init calls entirely, instead call directly from
+> > kernel_init().
+>
+> Yes, but why? Is it desired to run the unit tests earlier than opening
+> the console or something?
 
->> Different question related to your set. It looks like br_stack is only
->> available
->> on x86, is that correct? For other archs this will always bail out on
->> !br_stack
->> test. Perhaps we should document this fact so users are not surprised
->> why their
->> prog using this helper is not working on !x86. Wdyt?
-> 
-> I think perf_event_open() should fail on !x86 if a user tries to configure
-> it with branch stack collection. So there would not be the opportunity for
-> the bpf prog to be attached and run. I haven't tested this, though. I'll
-> look through the code / install a VM and test it.
+I want to make sure it is called after late_init is done (so that you
+can test things initialized in late_init). And I want to make sure it
+runs before init*fs is loaded so that there is a mechanism to run
+tests without having to put a userland together.
 
-As far as I can see the prog would still be attachable and runnable, just that
-the helper always will return -EINVAL on these archs. Maybe error code should be
-changed into -ENOENT to avoid confusion wrt whether user provided some invalid
-input args. Should this actually bail out with -EINVAL if size is not a multiple
-of sizeof(struct perf_branch_entry) as otherwise we'd end up copying half broken
-branch entry information?
+> > diff --git a/lib/kunit/executor.c b/lib/kunit/executor.c
+> > index 978086cfd257d..ca880224c0bab 100644
+> > --- a/lib/kunit/executor.c
+> > +++ b/lib/kunit/executor.c
+> > @@ -32,12 +32,10 @@ static bool kunit_run_all_tests(void)
+> >         return !has_test_failed;
+> >  }
+> >
+> > -static int kunit_executor_init(void)
+> > +int kunit_executor_init(void)
+>
+> Should be marked __init? Even before this patch presumably.
 
-Thanks,
-Daniel
+Just this function? No strong opinion.
+
+If by "before this patch" you mean other stuff in this patchset?
+
+> >  {
+> >         if (kunit_run_all_tests())
+> >                 return 0;
+> >         else
+> >                 return -EFAULT;
+> >  }
+> > -
+> > -late_initcall(kunit_executor_init);
