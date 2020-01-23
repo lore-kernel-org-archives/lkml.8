@@ -3,223 +3,639 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81406C35242
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 23:49:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 738B6C35243
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 23:50:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D78A21569
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 23:49:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28D792087E
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 23:50:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="C7rlh2yj";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="NJCTaxa+"
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="oob/6ZtS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730050AbgAWXtY (ORCPT
+        id S1730106AbgAWXui (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 18:49:24 -0500
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:3640 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728665AbgAWXtX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 18:49:23 -0500
-Received: from pps.filterd (m0148461.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00NNjIjs030124;
-        Thu, 23 Jan 2020 15:48:57 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=facebook;
- bh=3wEr0kwihbN/aSGgJSnfBgm5cyEkqu8AW4+PTqneJSo=;
- b=C7rlh2yj29K0HiEAQ6cI/Yf76kmNxgSLoQortaXvNpOHmKIvRREkiuiQO6HqkU1i1ypY
- uMg9RRkwjZea8FUDnlE7nh5XdgOODCeuPU0RV9PwDXngQkxc863nG9K6usHz9955lk4Q
- c6UnMcTifMgu5n9WSFkivpw2coRxIKQEfQ0= 
-Received: from mail.thefacebook.com ([163.114.132.120])
-        by mx0a-00082601.pphosted.com with ESMTP id 2xq49c4ggv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Thu, 23 Jan 2020 15:48:56 -0800
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (100.104.98.9) by
- o365-in.thefacebook.com (100.104.94.199) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Thu, 23 Jan 2020 15:48:56 -0800
+        Thu, 23 Jan 2020 18:50:38 -0500
+Received: from mail-bn8nam12on2071.outbound.protection.outlook.com ([40.107.237.71]:22248
+        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728655AbgAWXuh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jan 2020 18:50:37 -0500
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=CGswrgQIBE/jXI4QdzGMAmVmwTTjyjxL2O5CdW5gAYgslwjp8L7KvWO//xyQM6J9rGKFctpbnomNK0/oEpsJe0MDeWWmRmOAmiKNmRAXshDiUtty1cfXgKMjTJWMYrpFFK5DuwQxdMTW3mueV0utmgpJEMapADhmG952sA4lczESwy+NleqGUv82ysqZxwqTirXCfrigAqy3QNNzGibPx3AhTkIbthGP+cd8Rkhn2ociqGhdx3nzpKLZWPqF/F0WEEQdINn4TKBWfQC9rWJJaFgQPMjTEJvwWpuKKtr/g0dH/7t/UFCT1msnvKCI7oUoy4I9j6S3+cI3E5VKze5vgA==
+ b=nMM2u/f+2YN6FzjUwq1qxVnDR64vD2FHkxl3MoBFetJ06DnPU5WWHr6NyAOX6QO1Strw6C0A4Am9G2OYN/jfcMjTjJCOvCzX5jK/rgwfsrSagdjaGtUEFT5lWzF2qZ0Gdo306uaA9iDggvN034W313kpt7HQ27Q5NkaFQU6z7qtir96SOJH0T6La+ra1EZZnM/TQC+jcmt8hqvR+Wt+/TVby0BLebi7s2Q/0yc6ebv+MqQrcmaw5Yo2CJ7uuDCF0E0luEAbO7uIyfSZUXUip8VGvaQ+8gu3aPbJkjcZ8qFU697/gBnvNLqh1mR9cMUZi5S8qD0JiMKyO6kVUkaOoSg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3wEr0kwihbN/aSGgJSnfBgm5cyEkqu8AW4+PTqneJSo=;
- b=TLrqCyTkjqwW5OKe2B1PEs3IL0RNVMrOGAtnYiAw/hzAuVqA/ufPLz8QowazkWpTQUFfqokHZXxBGdv8aOZcN3WsoCWv2uljHso7y3LZCvs8PMboypS1Spimu7CqURuoL7F0wxrgrHgCeUTZbQ95mlOCIojlt7dG3r308CsJRePU1dBS1m7UOV8OfMeWXKz1d41sQWoRmckajtrd4oyTkLjRktzYkrYdjgqpnXvIB24enk0i9bEyemXK5SIbGFR80kbQNKHT6QljG4nXCDCHzFTAj/wimXfLhSiietQSd4hfVnEymxHRR3ndHIUDrQV5ay+sD57rLHG1Bx4a0sLRBQ==
+ bh=2sSqz9KV7u3eGJiuYSgWLEUVop7mKkbFiAfUNH+nplM=;
+ b=FNlkUp02CawMzW+mh0YSmbTBJ1B7U595NRwZk5WtpSdgu40JDS8ne0UVFMpktiPSAXN1NO2r0A1ggbDCNp4yS9xekxUU3iLbF2e8rFEtzjgBVnwNYBZeeS9UAzFRdeUMzCJLzYytyc3JBhahEQTcf/O6kyofy/klGlKDppeXezQb4DcbN2aO1iJxwjDs7JSLBaaw21EF9O51PR3Zz957zFkt12Pgj50GbxSYE+Qo6eWYY/bMPje9FTZNlZw7YimDTYbxf+iUGtzNFRiZ9eARUxALdwaC/Lu9BFruHLakOiS2o5jIj29652K1GvIpzBSjUDb0X5bAnGSI0+P5VSVECg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
- header.d=fb.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector2-fb-onmicrosoft-com;
+ smtp.mailfrom=xilinx.com; dmarc=pass action=none header.from=xilinx.com;
+ dkim=pass header.d=xilinx.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3wEr0kwihbN/aSGgJSnfBgm5cyEkqu8AW4+PTqneJSo=;
- b=NJCTaxa+OzX4eSIFN8+qB0VD3fQJQS//laeWfScuMOUex3vNpk91EqoaX4P4g+zCzsFcRApxOm9jmL2LjPWd2LpSDu64IKnS/bvIWH6ukVDFIg/oJ2ZHGbQyXQbNI2WiuCd+wPw/bU8Wg1yn2ztV7XkSnSbIk0bwh9p2N+zGIeE=
-Received: from DM6PR15MB3001.namprd15.prod.outlook.com (20.178.231.16) by
- DM6PR15MB2730.namprd15.prod.outlook.com (20.179.164.74) with Microsoft SMTP
+ bh=2sSqz9KV7u3eGJiuYSgWLEUVop7mKkbFiAfUNH+nplM=;
+ b=oob/6ZtSTVVKOl+y1zlw5NTwmIWBkOFwBnpKVEfZ87YjJhcO3YuEtPLs3aMSHxksmNK4cqB767bKmkAT8STjbL/92dt0E5kik9uCZbVw8Mv0uGnnGP9EWoz/KvySSd2QiO5pTwdoWy84mCwgYxIKYkjYtHmRqZ974bRzNdzn5v8=
+Received: from BYAPR02MB5992.namprd02.prod.outlook.com (20.179.89.80) by
+ BYAPR02MB4582.namprd02.prod.outlook.com (52.135.237.146) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2644.18; Thu, 23 Jan 2020 23:48:55 +0000
-Received: from DM6PR15MB3001.namprd15.prod.outlook.com
- ([fe80::1d74:b392:183e:c8c2]) by DM6PR15MB3001.namprd15.prod.outlook.com
- ([fe80::1d74:b392:183e:c8c2%6]) with mapi id 15.20.2644.028; Thu, 23 Jan 2020
- 23:48:55 +0000
-Received: from macbook-pro-52.dhcp.thefacebook.com (2620:10d:c090:200::3:d9ea) by MWHPR22CA0012.namprd22.prod.outlook.com (2603:10b6:300:ef::22) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2665.20 via Frontend Transport; Thu, 23 Jan 2020 23:48:53 +0000
-From:   Yonghong Song <yhs@fb.com>
-To:     Daniel Xu <dxu@dxuuu.xyz>,
-        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
-        "ast@kernel.org" <ast@kernel.org>,
-        "daniel@iogearbox.net" <daniel@iogearbox.net>,
-        Song Liu <songliubraving@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Kernel Team <Kernel-team@fb.com>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "acme@kernel.org" <acme@kernel.org>
-Subject: Re: [PATCH v3 bpf-next 1/3] bpf: Add bpf_perf_prog_read_branches()
- helper
-Thread-Topic: [PATCH v3 bpf-next 1/3] bpf: Add bpf_perf_prog_read_branches()
- helper
-Thread-Index: AQHV0jNjlQny4mUlfUCZG6n7Skv20qf46uqA
-Date:   Thu, 23 Jan 2020 23:48:55 +0000
-Message-ID: <5f8e2ffd-9368-cb0c-9591-c6b7ecb8edb0@fb.com>
-References: <20200123212312.3963-1-dxu@dxuuu.xyz>
- <20200123212312.3963-2-dxu@dxuuu.xyz>
-In-Reply-To: <20200123212312.3963-2-dxu@dxuuu.xyz>
+ 15.20.2644.19; Thu, 23 Jan 2020 23:47:57 +0000
+Received: from BYAPR02MB5992.namprd02.prod.outlook.com
+ ([fe80::f5fd:4723:4a89:3ed9]) by BYAPR02MB5992.namprd02.prod.outlook.com
+ ([fe80::f5fd:4723:4a89:3ed9%7]) with mapi id 15.20.2665.017; Thu, 23 Jan 2020
+ 23:47:57 +0000
+From:   Jolly Shah <JOLLYS@xilinx.com>
+To:     Greg KH <gregkh@linuxfoundation.org>
+CC:     "ard.biesheuvel@linaro.org" <ard.biesheuvel@linaro.org>,
+        "mingo@kernel.org" <mingo@kernel.org>,
+        "matt@codeblueprint.co.uk" <matt@codeblueprint.co.uk>,
+        "sudeep.holla@arm.com" <sudeep.holla@arm.com>,
+        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
+        "keescook@chromium.org" <keescook@chromium.org>,
+        "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>,
+        Michal Simek <michals@xilinx.com>,
+        Rajan Vaja <RAJANV@xilinx.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Rajan Vaja <RAJANV@xilinx.com>
+Subject: RE: [PATCH v2 1/4] firmware: xilinx: Add sysfs interface
+Thread-Topic: [PATCH v2 1/4] firmware: xilinx: Add sysfs interface
+Thread-Index: AQHVxn8DFx2mcD2XT0SouhH9uTzcjqfqR5+AgA6zcwA=
+Date:   Thu, 23 Jan 2020 23:47:57 +0000
+Message-ID: <BYAPR02MB5992FC37E0D2AD9946414417B80F0@BYAPR02MB5992.namprd02.prod.outlook.com>
+References: <1578527663-10243-1-git-send-email-jolly.shah@xilinx.com>
+ <1578527663-10243-2-git-send-email-jolly.shah@xilinx.com>
+ <20200114145257.GA1910108@kroah.com>
+In-Reply-To: <20200114145257.GA1910108@kroah.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
 X-MS-TNEF-Correlator: 
-x-clientproxiedby: MWHPR22CA0012.namprd22.prod.outlook.com
- (2603:10b6:300:ef::22) To DM6PR15MB3001.namprd15.prod.outlook.com
- (2603:10b6:5:13c::16)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [2620:10d:c090:200::3:d9ea]
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=JOLLYS@xilinx.com; 
+x-originating-ip: [149.199.62.133]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: de68e52f-1817-45fc-1326-08d7a05ece7f
-x-ms-traffictypediagnostic: DM6PR15MB2730:
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 9903c75f-42e9-41a4-1130-08d7a05eac29
+x-ms-traffictypediagnostic: BYAPR02MB4582:|BYAPR02MB4582:
 x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DM6PR15MB273073A9C0EF7705BC721AB4D30F0@DM6PR15MB2730.namprd15.prod.outlook.com>
-x-fb-source: Internal
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-microsoft-antispam-prvs: <BYAPR02MB45820D3A4667AF301FC269BDB80F0@BYAPR02MB4582.namprd02.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
 x-forefront-prvs: 029174C036
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(376002)(346002)(39860400002)(396003)(366004)(199004)(189003)(66446008)(478600001)(5660300002)(81156014)(8676002)(64756008)(81166006)(53546011)(8936002)(66476007)(66556008)(31686004)(36756003)(6506007)(52116002)(110136005)(54906003)(2906002)(316002)(4326008)(86362001)(31696002)(71200400001)(66946007)(2616005)(186003)(6512007)(6636002)(6486002)(16526019);DIR:OUT;SFP:1102;SCL:1;SRVR:DM6PR15MB2730;H:DM6PR15MB3001.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: fb.com does not designate
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(346002)(39860400002)(376002)(396003)(136003)(189003)(199004)(107886003)(6916009)(186003)(26005)(33656002)(64756008)(66446008)(76116006)(5660300002)(52536014)(71200400001)(2906002)(66476007)(66946007)(55016002)(30864003)(478600001)(9686003)(66556008)(7696005)(53546011)(6506007)(316002)(54906003)(7416002)(86362001)(8936002)(8676002)(4326008)(81166006)(81156014);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR02MB4582;H:BYAPR02MB5992.namprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: xilinx.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: DlwhomCMoh1GCIxlTYA/4DAwvZ7ZpcwXCCIHMW5WSvnwBk3acX8roCqVyuret4ALqBE474n/YB6u2jkEC1qtS3LxR9QUwPvLtvV3fc0HsETfCHoyoyGMumqfJIpScQk1wZCZubCFBy08Etbw0paNhl0zuWDHf/KYOySOf78CFtuK9bUTrOId3K4xdRoL8MRbGEEd0chwGY8ESLOlIuZspO0GiBMNsXWrHYGWeAtZoNO6KzFC+7MSwDPdhnKg3k0tR9SMygMvxfpsEv7gEGOfP4ubW27jdHFcXv7DECDJAYh2NzB7J3lNS25oGJzed3q+1vvKW1lXG1cLFh2QxKm6Kww+q0H/W1sE74WdGtML+zGpRZBy2wul0VTHdkRAb9hoa268xAmxI1kDyI5fgz4Sb0slLeQeZ00dePl2Nz2CJXD11UQUsg9QPqkkOpLquyzr
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <D9FCA0C026767C4B9028EDED55D86991@namprd15.prod.outlook.com>
-Content-Transfer-Encoding: base64
+x-microsoft-antispam-message-info: xxUFfJzhrMG66S+hHEZu88GuKfD3Qh/Gg4J8yxcm9tlPg3LJIgB6mXgHsIi90GENkzaulNKGT8M6oT4V1kpN5H1WVTSID3EbdlyojZLo7po6Kt8E5kt7fSdCBixd5NDy84YOaDaB9/HpPhk78kH8i880JFi1lngpd01RubyG/S2VlcY7yz52szRfrVtlqhA2ohXEVQzxr1BPUBSqe686ysIiP9kZqm92c0bKrAfW73CBYyAW0M3t1CsTdOoX8WPTdQdBJ65dKc0ytwT06ufa/RfGWdFL5sb9jumBm72HYZVhpV5DfnpQd099ucZac/QR8JPdgNZN1wgvsdp0heGRWo3g+AYI6EoBjqDWRgTEtuh0tJYQZLYE1z3HH6Odo87BuXazGShkfN5tELD07CgRNeXDemGHSsBW/rtKrUiPhVDzQMWS/WcJLVFx3jaG5RDZ
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: de68e52f-1817-45fc-1326-08d7a05ece7f
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Jan 2020 23:48:55.0547
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9903c75f-42e9-41a4-1130-08d7a05eac29
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Jan 2020 23:47:57.0467
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-id: 657af505-d5df-48d0-8300-c31994686c5c
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: KLpJI9Bpxu88cpZ6pD2oiB1Ikr6dP1MG2Z9DIjnX/2gzSsKaRn8iKArQ+ufMIPW7
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR15MB2730
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-01-23_13:2020-01-23,2020-01-23 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 mlxlogscore=999
- impostorscore=0 phishscore=0 mlxscore=0 spamscore=0 suspectscore=0
- clxscore=1011 lowpriorityscore=0 malwarescore=0 bulkscore=0 adultscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-2001230177
-X-FB-Internal: deliver
+X-MS-Exchange-CrossTenant-userprincipalname: Y/0JjJmEYCEnjiKofgeIjHJjAFsSMNRi8AI0bKPDpdq4SelcsSCSIhnUM1eRqfJWTh0hohVprXt3eqnvxbfnlA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR02MB4582
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCk9uIDEvMjMvMjAgMToyMyBQTSwgRGFuaWVsIFh1IHdyb3RlOg0KPiBCcmFuY2ggcmVjb3Jk
-cyBhcmUgYSBDUFUgZmVhdHVyZSB0aGF0IGNhbiBiZSBjb25maWd1cmVkIHRvIHJlY29yZA0KPiBj
-ZXJ0YWluIGJyYW5jaGVzIHRoYXQgYXJlIHRha2VuIGR1cmluZyBjb2RlIGV4ZWN1dGlvbi4gVGhp
-cyBkYXRhIGlzDQo+IHBhcnRpY3VsYXJseSBpbnRlcmVzdGluZyBmb3IgcHJvZmlsZSBndWlkZWQg
-b3B0aW1pemF0aW9ucy4gcGVyZiBoYXMgaGFkDQo+IGJyYW5jaCByZWNvcmQgc3VwcG9ydCBmb3Ig
-YSB3aGlsZSBidXQgdGhlIGRhdGEgY29sbGVjdGlvbiBjYW4gYmUgYSBiaXQNCj4gY29hcnNlIGdy
-YWluZWQuDQo+IA0KPiBXZSAoRmFjZWJvb2spIGhhdmUgc2VlbiBpbiBleHBlcmltZW50cyB0aGF0
-IGFzc29jaWF0aW5nIG1ldGFkYXRhIHdpdGgNCj4gYnJhbmNoIHJlY29yZHMgY2FuIGltcHJvdmUg
-cmVzdWx0cyAoYWZ0ZXIgcG9zdHByb2Nlc3NpbmcpLiBXZSBnZW5lcmFsbHkNCj4gdXNlIGJwZl9w
-cm9iZV9yZWFkXyooKSB0byBnZXQgbWV0YWRhdGEgb3V0IG9mIHVzZXJzcGFjZS4gVGhhdCdzIHdo
-eSBicGYNCj4gc3VwcG9ydCBmb3IgYnJhbmNoIHJlY29yZHMgaXMgdXNlZnVsLg0KPiANCj4gQXNp
-ZGUgZnJvbSB0aGlzIHBhcnRpY3VsYXIgdXNlIGNhc2UsIGhhdmluZyBicmFuY2ggZGF0YSBhdmFp
-bGFibGUgdG8gYnBmDQo+IHByb2dzIGNhbiBiZSB1c2VmdWwgdG8gZ2V0IHN0YWNrIHRyYWNlcyBv
-dXQgb2YgdXNlcnNwYWNlIGFwcGxpY2F0aW9ucw0KPiB0aGF0IG9taXQgZnJhbWUgcG9pbnRlcnMu
-DQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBEYW5pZWwgWHUgPGR4dUBkeHV1dS54eXo+DQo+IC0tLQ0K
-PiAgIGluY2x1ZGUvdWFwaS9saW51eC9icGYuaCB8IDE1ICsrKysrKysrKysrKysrLQ0KPiAgIGtl
-cm5lbC90cmFjZS9icGZfdHJhY2UuYyB8IDMxICsrKysrKysrKysrKysrKysrKysrKysrKysrKysr
-KysNCj4gICAyIGZpbGVzIGNoYW5nZWQsIDQ1IGluc2VydGlvbnMoKyksIDEgZGVsZXRpb24oLSkN
-Cj4gDQo+IGRpZmYgLS1naXQgYS9pbmNsdWRlL3VhcGkvbGludXgvYnBmLmggYi9pbmNsdWRlL3Vh
-cGkvbGludXgvYnBmLmgNCj4gaW5kZXggZjFkNzRhMmJkMjM0Li41MGM1ODBjOGEyMDEgMTAwNjQ0
-DQo+IC0tLSBhL2luY2x1ZGUvdWFwaS9saW51eC9icGYuaA0KPiArKysgYi9pbmNsdWRlL3VhcGkv
-bGludXgvYnBmLmgNCj4gQEAgLTI4OTIsNiArMjg5MiwxOCBAQCB1bmlvbiBicGZfYXR0ciB7DQo+
-ICAgICoJCU9idGFpbiB0aGUgNjRiaXQgamlmZmllcw0KPiAgICAqCVJldHVybg0KPiAgICAqCQlU
-aGUgNjQgYml0IGppZmZpZXMNCj4gKyAqDQo+ICsgKiBpbnQgYnBmX3BlcmZfcHJvZ19yZWFkX2Jy
-YW5jaGVzKHN0cnVjdCBicGZfcGVyZl9ldmVudF9kYXRhICpjdHgsIHZvaWQgKmJ1ZiwgdTMyIGJ1
-Zl9zaXplKQ0KPiArICoJRGVzY3JpcHRpb24NCj4gKyAqCQlGb3IgZW4gZUJQRiBwcm9ncmFtIGF0
-dGFjaGVkIHRvIGEgcGVyZiBldmVudCwgcmV0cmlldmUgdGhlDQoNCmVuID0+IGFuDQoNCj4gKyAq
-CQlicmFuY2ggcmVjb3JkcyAoc3RydWN0IHBlcmZfYnJhbmNoX2VudHJ5KSBhc3NvY2lhdGVkIHRv
-ICpjdHgqDQo+ICsgKgkJYW5kIHN0b3JlIGl0IGluCXRoZSBidWZmZXIgcG9pbnRlZCBieSAqYnVm
-KiB1cCB0byBzaXplDQo+ICsgKgkJKmJ1Zl9zaXplKiBieXRlcy4NCj4gKyAqDQo+ICsgKgkJQW55
-IHVudXNlZCBwYXJ0cyBvZiAqYnVmKiB3aWxsIGJlIGZpbGxlZCB3aXRoIHplcm9zLg0KPiArICoJ
-UmV0dXJuDQo+ICsgKgkJT24gc3VjY2VzcywgbnVtYmVyIG9mIGJ5dGVzIHdyaXR0ZW4gdG8gKmJ1
-ZiouIE9uIGVycm9yLCBhDQo+ICsgKgkJbmVnYXRpdmUgdmFsdWUuDQo+ICAgICovDQo+ICAgI2Rl
-ZmluZSBfX0JQRl9GVU5DX01BUFBFUihGTikJCVwNCj4gICAJRk4odW5zcGVjKSwJCQlcDQo+IEBA
-IC0zMDEyLDcgKzMwMjQsOCBAQCB1bmlvbiBicGZfYXR0ciB7DQo+ICAgCUZOKHByb2JlX3JlYWRf
-a2VybmVsX3N0ciksCVwNCj4gICAJRk4odGNwX3NlbmRfYWNrKSwJCVwNCj4gICAJRk4oc2VuZF9z
-aWduYWxfdGhyZWFkKSwJCVwNCj4gLQlGTihqaWZmaWVzNjQpLA0KPiArCUZOKGppZmZpZXM2NCks
-CQkJXA0KPiArCUZOKHBlcmZfcHJvZ19yZWFkX2JyYW5jaGVzKSwNCj4gICANCj4gICAvKiBpbnRl
-Z2VyIHZhbHVlIGluICdpbW0nIGZpZWxkIG9mIEJQRl9DQUxMIGluc3RydWN0aW9uIHNlbGVjdHMg
-d2hpY2ggaGVscGVyDQo+ICAgICogZnVuY3Rpb24gZUJQRiBwcm9ncmFtIGludGVuZHMgdG8gY2Fs
-bA0KPiBkaWZmIC0tZ2l0IGEva2VybmVsL3RyYWNlL2JwZl90cmFjZS5jIGIva2VybmVsL3RyYWNl
-L2JwZl90cmFjZS5jDQo+IGluZGV4IDE5ZTc5M2FhNDQxYS4uMjRjNTEyNzJhMWY3IDEwMDY0NA0K
-PiAtLS0gYS9rZXJuZWwvdHJhY2UvYnBmX3RyYWNlLmMNCj4gKysrIGIva2VybmVsL3RyYWNlL2Jw
-Zl90cmFjZS5jDQo+IEBAIC0xMDI4LDYgKzEwMjgsMzUgQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBi
-cGZfZnVuY19wcm90byBicGZfcGVyZl9wcm9nX3JlYWRfdmFsdWVfcHJvdG8gPSB7DQo+ICAgICAg
-ICAgICAgLmFyZzNfdHlwZSAgICAgID0gQVJHX0NPTlNUX1NJWkUsDQo+ICAgfTsNCj4gICANCj4g
-K0JQRl9DQUxMXzMoYnBmX3BlcmZfcHJvZ19yZWFkX2JyYW5jaGVzLCBzdHJ1Y3QgYnBmX3BlcmZf
-ZXZlbnRfZGF0YV9rZXJuICosIGN0eCwNCj4gKwkgICB2b2lkICosIGJ1ZiwgdTMyLCBzaXplKQ0K
-PiArew0KPiArCXN0cnVjdCBwZXJmX2JyYW5jaF9zdGFjayAqYnJfc3RhY2sgPSBjdHgtPmRhdGEt
-PmJyX3N0YWNrOw0KPiArCXUzMiB0b19jb3B5ID0gMCwgdG9fY2xlYXIgPSBzaXplOw0KPiArCWlu
-dCBlcnIgPSAtRUlOVkFMOw0KPiArDQo+ICsJaWYgKHVubGlrZWx5KCFicl9zdGFjaykpDQo+ICsJ
-CWdvdG8gY2xlYXI7DQo+ICsNCj4gKwl0b19jb3B5ID0gbWluX3QodTMyLCBicl9zdGFjay0+bnIg
-KiBzaXplb2Yoc3RydWN0IHBlcmZfYnJhbmNoX2VudHJ5KSwgc2l6ZSk7DQo+ICsJdG9fY2xlYXIg
-LT0gdG9fY29weTsNCj4gKw0KPiArCW1lbWNweShidWYsIGJyX3N0YWNrLT5lbnRyaWVzLCB0b19j
-b3B5KTsNCj4gKwllcnIgPSB0b19jb3B5Ow0KPiArY2xlYXI6DQo+ICsJbWVtc2V0KGJ1ZiArIHRv
-X2NvcHksIDAsIHRvX2NsZWFyKTsNCj4gKwlyZXR1cm4gZXJyOw0KDQpJZiBzaXplIDwgdTMyLCBi
-cl9zdGFjay0+bnIgKiBzaXplb2Yoc3RydWN0IHBlcmZfYnJhbmNoX2VudHJ5KSwNCnVzZXIgaGFz
-IG5vIHdheSB0byBrbm93IHdoZXRoZXIgc29tZSBlbnRyaWVzIGFyZSBub3QgY29waWVkIGV4Y2Vw
-dA0KcmVwZWF0ZWQgdHJ5aW5nIGxhcmdlciBidWZmZXJzIHVudGlsIHRoZSByZXR1cm4gdmFsdWUg
-aXMgc21hbGxlcg0KdGhhbiBpbnB1dCBidWZmZXIgc2l6ZS4NCg0KSSB0aGluayByZXR1cm5pbmcg
-dGhlIGV4cGVjdGVkIGJ1ZmZlciBzaXplIHRvIHVzZXJzIHNob3VsZCBiZSBhIGdvb2QgDQp0aGlu
-Zz8gV2UgbWF5IG5vdCBoYXZlIG1hbGxvYyB0b2RheSBpbiBicGYsIGJ1dCBmdXR1cmUgbWFsbG9j
-IHRoaW5nIA0Kc2hvdWxkIGhlbHAgaW4gdGhpcyBjYXNlLg0KDQpJbiB1c2VyIHNwYWNlLCB1c2Vy
-IG1heSBoYXZlIGEgZml4ZWQgYnVmZmVyLCByZXBlYXRlZCBgcmVhZGAgc2hvdWxkDQpyZWFkIGFs
-bCB2YWx1ZXMuDQoNClVzaW5nIGJwZl9wcm9iZV9yZWFkKCksIHJlcGVhdGVkIHJlYWQgd2l0aCBh
-ZGp1c3RlZCBzb3VyY2UgcG9pbnRlcg0KY2FuIGFsc28gcmVhZCBhbGwgYnVmZmVycy4NCg0KT25l
-IHBvc3NpYmxlIGRlc2lnbiBpcyB0byBhZGQgYSBmbGFnIHRvIHRoZSBmdW5jdGlvbiwgZS5nLiwg
-aWYNCmZsYWcgPT0gR0VUX0JSX1NUQUNLX05SLCByZXR1cm4gYnJfc3RhY2stPm5yIGluIGJ1Zi9z
-aXplLg0KaWYgZmxhZyA9PSBHRVRfQlJfU1RBQ0ssIHJldHVybiBicl9zdGFjay0+ZW50cmllcyBp
-biBidWYvc2l6ZS4NCg0KV2hhdCBkbyB5b3UgdGhpbms/DQoNCg0KPiArfQ0KPiArDQo+ICtzdGF0
-aWMgY29uc3Qgc3RydWN0IGJwZl9mdW5jX3Byb3RvIGJwZl9wZXJmX3Byb2dfcmVhZF9icmFuY2hl
-c19wcm90byA9IHsNCj4gKyAgICAgICAgIC5mdW5jICAgICAgICAgICA9IGJwZl9wZXJmX3Byb2df
-cmVhZF9icmFuY2hlcywNCj4gKyAgICAgICAgIC5ncGxfb25seSAgICAgICA9IHRydWUsDQo+ICsg
-ICAgICAgICAucmV0X3R5cGUgICAgICAgPSBSRVRfSU5URUdFUiwNCj4gKyAgICAgICAgIC5hcmcx
-X3R5cGUgICAgICA9IEFSR19QVFJfVE9fQ1RYLA0KPiArICAgICAgICAgLmFyZzJfdHlwZSAgICAg
-ID0gQVJHX1BUUl9UT19VTklOSVRfTUVNLA0KPiArICAgICAgICAgLmFyZzNfdHlwZSAgICAgID0g
-QVJHX0NPTlNUX1NJWkUsDQo+ICt9Ow0KPiArDQo+ICAgc3RhdGljIGNvbnN0IHN0cnVjdCBicGZf
-ZnVuY19wcm90byAqDQo+ICAgcGVfcHJvZ19mdW5jX3Byb3RvKGVudW0gYnBmX2Z1bmNfaWQgZnVu
-Y19pZCwgY29uc3Qgc3RydWN0IGJwZl9wcm9nICpwcm9nKQ0KPiAgIHsNCj4gQEAgLTEwNDAsNiAr
-MTA2OSw4IEBAIHBlX3Byb2dfZnVuY19wcm90byhlbnVtIGJwZl9mdW5jX2lkIGZ1bmNfaWQsIGNv
-bnN0IHN0cnVjdCBicGZfcHJvZyAqcHJvZykNCj4gICAJCXJldHVybiAmYnBmX2dldF9zdGFja19w
-cm90b190cDsNCj4gICAJY2FzZSBCUEZfRlVOQ19wZXJmX3Byb2dfcmVhZF92YWx1ZToNCj4gICAJ
-CXJldHVybiAmYnBmX3BlcmZfcHJvZ19yZWFkX3ZhbHVlX3Byb3RvOw0KPiArCWNhc2UgQlBGX0ZV
-TkNfcGVyZl9wcm9nX3JlYWRfYnJhbmNoZXM6DQo+ICsJCXJldHVybiAmYnBmX3BlcmZfcHJvZ19y
-ZWFkX2JyYW5jaGVzX3Byb3RvOw0KPiAgIAlkZWZhdWx0Og0KPiAgIAkJcmV0dXJuIHRyYWNpbmdf
-ZnVuY19wcm90byhmdW5jX2lkLCBwcm9nKTsNCj4gICAJfQ0KPiANCg==
+Hi Greg,
+
+Thanks for the review.
+
+> -----Original Message-----
+> From: Greg KH <gregkh@linuxfoundation.org>
+> Sent: Tuesday, January 14, 2020 6:53 AM
+> To: Jolly Shah <JOLLYS@xilinx.com>
+> Cc: ard.biesheuvel@linaro.org; mingo@kernel.org; matt@codeblueprint.co.uk=
+;
+> sudeep.holla@arm.com; hkallweit1@gmail.com; keescook@chromium.org;
+> dmitry.torokhov@gmail.com; Michal Simek <michals@xilinx.com>; Rajan Vaja
+> <RAJANV@xilinx.com>; linux-arm-kernel@lists.infradead.org; linux-
+> kernel@vger.kernel.org; Rajan Vaja <RAJANV@xilinx.com>; Jolly Shah
+> <JOLLYS@xilinx.com>
+> Subject: Re: [PATCH v2 1/4] firmware: xilinx: Add sysfs interface
+>=20
+> On Wed, Jan 08, 2020 at 03:54:20PM -0800, Jolly Shah wrote:
+> > From: Rajan Vaja <rajan.vaja@xilinx.com>
+> >
+> > Add Firmware-ggs sysfs interface which provides read/write
+> > interface to global storage registers.
+> >
+> > Signed-off-by: Rajan Vaja <rajan.vaja@xilinx.com>
+> > Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+> > Signed-off-by: Jolly Shah <jollys@xilinx.com>
+> > ---
+> > Changes in v2:
+> >  - Updated Linux kernel version in documentation.
+> >  - Used DEVICE_ATTR_* and ATTRIBUTE_GROUPS macros.
+> >  - Free Kobject structure in case of error.
+> >  - Resolved smatch errors.
+> >  - Updated Signed-off-by sequence.
+> > ---
+> >  Documentation/ABI/stable/sysfs-firmware-zynqmp |  50 +++++
+> >  drivers/firmware/xilinx/Makefile               |   2 +-
+> >  drivers/firmware/xilinx/zynqmp-ggs.c           | 284
+> +++++++++++++++++++++++++
+> >  drivers/firmware/xilinx/zynqmp.c               |  32 +++
+> >  include/linux/firmware/xlnx-zynqmp.h           |  10 +
+> >  5 files changed, 377 insertions(+), 1 deletion(-)
+> >  create mode 100644 Documentation/ABI/stable/sysfs-firmware-zynqmp
+> >  create mode 100644 drivers/firmware/xilinx/zynqmp-ggs.c
+> >
+> > diff --git a/Documentation/ABI/stable/sysfs-firmware-zynqmp
+> b/Documentation/ABI/stable/sysfs-firmware-zynqmp
+> > new file mode 100644
+> > index 0000000..cffa2fc
+> > --- /dev/null
+> > +++ b/Documentation/ABI/stable/sysfs-firmware-zynqmp
+> > @@ -0,0 +1,50 @@
+> > +What:		/sys/firmware/zynqmp/ggs*
+>=20
+> Why are these attributes just not hanging off of the platform device for
+> the firmware controller?  Why do you need a new subdir under "firmware"?
+
+Firmware driver was changed later to be platform driver but these interface=
+s were defined=20
+earlier and are in use.
+
+>=20
+> > +Date:		January 2018
+> > +KernelVersion:	5.5
+>=20
+> 5.6?  :)
+
+Yes. Will fix it in next version.
+
+>=20
+> > +Contact:	"Jolly Shah" <jollys@xilinx.com>
+> > +Description:
+> > +		Read/Write PMU global general storage register value,
+> > +		GLOBAL_GEN_STORAGE{0:3}.
+> > +		Global general storage register that can be used
+> > +		by system to pass information between masters.
+> > +
+> > +		The register is reset during system or power-on
+> > +		resets. Three registers are used by the FSBL and
+> > +		other Xilinx software products: GLOBAL_GEN_STORAGE{4:6}.
+> > +
+> > +		Usage:
+> > +		# cat /sys/firmware/zynqmp/ggs0
+> > +		# echo <mask> <value> > /sys/firmware/zynqmp/ggs0
+> > +
+> > +		Example:
+> > +		# cat /sys/firmware/zynqmp/ggs0
+> > +		# echo 0xFFFFFFFF 0x1234ABCD > /sys/firmware/zynqmp/ggs0
+> > +
+> > +Users:		Xilinx
+> > +
+> > +What:		/sys/firmware/zynqmp/pggs*
+> > +Date:		January 2018
+> > +KernelVersion:	5.5
+> > +Contact:	"Jolly Shah" <jollys@xilinx.com>
+> > +Description:
+> > +		Read/Write PMU persistent global general storage register
+> > +		value, PERS_GLOB_GEN_STORAGE{0:3}.
+> > +		Persistent global general storage register that
+> > +		can be used by system to pass information between
+> > +		masters.
+> > +
+> > +		This register is only reset by the power-on reset
+> > +		and maintains its value through a system reset.
+> > +		Four registers are used by the FSBL and other Xilinx
+> > +		software products: PERS_GLOB_GEN_STORAGE{4:7}.
+> > +		Register is reset only by a POR reset.
+> > +
+> > +		Usage:
+> > +		# cat /sys/firmware/zynqmp/pggs0
+> > +		# echo <mask> <value> > /sys/firmware/zynqmp/pggs0
+> > +
+> > +		Example:
+> > +		# cat /sys/firmware/zynqmp/pggs0
+> > +		# echo 0xFFFFFFFF 0x1234ABCD > /sys/firmware/zynqmp/pggs0
+> > +
+> > +Users:		Xilinx
+> > diff --git a/drivers/firmware/xilinx/Makefile
+> b/drivers/firmware/xilinx/Makefile
+> > index 875a537..1e8643c 100644
+> > --- a/drivers/firmware/xilinx/Makefile
+> > +++ b/drivers/firmware/xilinx/Makefile
+> > @@ -1,5 +1,5 @@
+> >  # SPDX-License-Identifier: GPL-2.0
+> >  # Makefile for Xilinx firmwares
+> >
+> > -obj-$(CONFIG_ZYNQMP_FIRMWARE) +=3D zynqmp.o
+> > +obj-$(CONFIG_ZYNQMP_FIRMWARE) +=3D zynqmp.o zynqmp-ggs.o
+> >  obj-$(CONFIG_ZYNQMP_FIRMWARE_DEBUG) +=3D zynqmp-debug.o
+> > diff --git a/drivers/firmware/xilinx/zynqmp-ggs.c
+> b/drivers/firmware/xilinx/zynqmp-ggs.c
+> > new file mode 100644
+> > index 0000000..e2a6700
+> > --- /dev/null
+> > +++ b/drivers/firmware/xilinx/zynqmp-ggs.c
+> > @@ -0,0 +1,284 @@
+> > +// SPDX-License-Identifier: GPL-2.0+
+> > +/*
+> > + * Xilinx Zynq MPSoC Firmware layer
+> > + *
+> > + *  Copyright (C) 2014-2018 Xilinx, Inc.
+> > + *
+> > + *  Jolly Shah <jollys@xilinx.com>
+> > + *  Rajan Vaja <rajanv@xilinx.com>
+> > + */
+> > +
+> > +#include <linux/compiler.h>
+> > +#include <linux/of.h>
+> > +#include <linux/init.h>
+> > +#include <linux/module.h>
+> > +#include <linux/uaccess.h>
+> > +#include <linux/slab.h>
+> > +#include <linux/firmware/xlnx-zynqmp.h>
+> > +
+> > +static ssize_t read_register(char *buf, u32 ioctl_id, u32 reg)
+> > +{
+> > +	int ret;
+> > +	u32 ret_payload[PAYLOAD_ARG_CNT];
+> > +	const struct zynqmp_eemi_ops *eemi_ops =3D
+> zynqmp_pm_get_eemi_ops();
+> > +
+> > +	if (IS_ERR(eemi_ops) || !eemi_ops->ioctl)
+> > +		return -EFAULT;
+> > +
+> > +	ret =3D eemi_ops->ioctl(0, ioctl_id, reg, 0, ret_payload);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	return sprintf(buf, "0x%x\n", ret_payload[1]);
+> > +}
+> > +
+> > +static ssize_t write_register(const char *buf, size_t count, u32 read_=
+ioctl,
+> > +			      u32 write_ioctl, u32 reg)
+> > +{
+> > +	char *kern_buff, *inbuf, *tok;
+> > +	long mask, value;
+> > +	int ret;
+> > +	u32 ret_payload[PAYLOAD_ARG_CNT];
+> > +	const struct zynqmp_eemi_ops *eemi_ops =3D
+> zynqmp_pm_get_eemi_ops();
+> > +
+> > +	if (IS_ERR(eemi_ops) || !eemi_ops->ioctl)
+> > +		return -EFAULT;
+> > +
+> > +	kern_buff =3D kzalloc(count, GFP_KERNEL);
+> > +	if (!kern_buff)
+> > +		return -ENOMEM;
+> > +
+> > +	ret =3D strlcpy(kern_buff, buf, count);
+> > +	if (ret < 0) {
+> > +		ret =3D -EFAULT;
+> > +		goto err;
+> > +	}
+> > +
+> > +	inbuf =3D kern_buff;
+> > +
+> > +	/* Read the write mask */
+> > +	tok =3D strsep(&inbuf, " ");
+> > +	if (!tok) {
+> > +		ret =3D -EFAULT;
+>=20
+> If you just set count to the error value, no need to test the value of
+> ret when you exit.  Not a big deal...
+
+Ok. Will fix it in next version
+
+>=20
+> > +		goto err;
+> > +	}
+> > +
+> > +	ret =3D kstrtol(tok, 16, &mask);
+> > +	if (ret) {
+> > +		ret =3D -EFAULT;
+> > +		goto err;
+> > +	}
+> > +
+> > +	/* Read the write value */
+> > +	tok =3D strsep(&inbuf, " ");
+> > +	if (!tok) {
+> > +		ret =3D -EFAULT;
+> > +		goto err;
+> > +	}
+> > +
+> > +	ret =3D kstrtol(tok, 16, &value);
+> > +	if (ret) {
+> > +		ret =3D -EFAULT;
+> > +		goto err;
+> > +	}
+> > +
+> > +	ret =3D eemi_ops->ioctl(0, read_ioctl, reg, 0, ret_payload);
+>=20
+> This feels "tricky", if you tie this to the device you have your driver
+> bound to, will this make it easier instead of having to go through the
+> ioctl callback?
+>=20
+
+GGS(general global storage) registers are in PMU space and linux doesn't ha=
+ve access to it=20
+Hence ioctl is used.
+
+>=20
+> > +	if (ret) {
+> > +		ret =3D -EFAULT;
+> > +		goto err;
+> > +	}
+> > +	ret_payload[1] &=3D ~mask;
+> > +	value &=3D mask;
+> > +	value |=3D ret_payload[1];
+> > +
+> > +	ret =3D eemi_ops->ioctl(0, write_ioctl, reg, value, NULL);
+> > +	if (ret)
+> > +		ret =3D -EFAULT;
+> > +
+> > +err:
+> > +	kfree(kern_buff);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	return count;
+> > +}
+> > +
+> > +/**
+> > + * ggs_show - Show global general storage (ggs) sysfs attribute
+> > + * @device: Device structure
+> > + * @attr: Device attribute structure
+> > + * @buf: Requested available shutdown_scope attributes string
+> > + * @reg: Register number
+> > + *
+> > + * Return:Number of bytes printed into the buffer.
+> > + *
+> > + * Helper function for viewing a ggs register value.
+> > + *
+> > + * User-space interface for viewing the content of the ggs0 register.
+> > + * cat /sys/firmware/zynqmp/ggs0
+> > + */
+> > +static ssize_t ggs_show(struct device *device,
+> > +			struct device_attribute *attr,
+> > +			char *buf,
+> > +			u32 reg)
+> > +{
+> > +	return read_register(buf, IOCTL_READ_GGS, reg);
+> > +}
+> > +
+> > +/**
+> > + * ggs_store - Store global general storage (ggs) sysfs attribute
+> > + * @device: Device structure
+> > + * @attr: Device attribute structure
+> > + * @buf: User entered shutdown_scope attribute string
+> > + * @count: Size of buf
+> > + * @reg: Register number
+> > + *
+> > + * Return: count argument if request succeeds, the corresponding
+> > + * error code otherwise
+> > + *
+> > + * Helper function for storing a ggs register value.
+> > + *
+> > + * For example, the user-space interface for storing a value to the
+> > + * ggs0 register:
+> > + * echo 0xFFFFFFFF 0x1234ABCD > /sys/firmware/zynqmp/ggs0
+> > + */
+> > +static ssize_t ggs_store(struct device *device,
+> > +			 struct device_attribute *attr,
+> > +			 const char *buf, size_t count,
+> > +			 u32 reg)
+> > +{
+> > +	if (!device || !attr || !buf || !count || reg >=3D GSS_NUM_REGS)
+> > +		return -EINVAL;
+> > +
+> > +	return write_register(buf, count, IOCTL_READ_GGS, IOCTL_WRITE_GGS,
+> reg);
+> > +}
+> > +
+> > +/* GGS register show functions */
+> > +#define GGS0_SHOW(N)						\
+> > +	ssize_t ggs##N##_show(struct device *device,		\
+> > +			      struct device_attribute *attr,	\
+> > +			      char *buf)			\
+> > +	{							\
+> > +		return ggs_show(device, attr, buf, N);		\
+> > +	}
+> > +
+> > +static GGS0_SHOW(0);
+> > +static GGS0_SHOW(1);
+> > +static GGS0_SHOW(2);
+> > +static GGS0_SHOW(3);
+> > +
+> > +/* GGS register store function */
+> > +#define GGS0_STORE(N)						\
+> > +	ssize_t ggs##N##_store(struct device *device,		\
+> > +			       struct device_attribute *attr,	\
+> > +			       const char *buf,			\
+> > +			       size_t count)			\
+> > +	{							\
+> > +		return ggs_store(device, attr, buf, count, N);	\
+> > +	}
+> > +
+> > +static GGS0_STORE(0);
+> > +static GGS0_STORE(1);
+> > +static GGS0_STORE(2);
+> > +static GGS0_STORE(3);
+> > +
+> > +/**
+> > + * pggs_show - Show persistent global general storage (pggs) sysfs att=
+ribute
+> > + * @device: Device structure
+> > + * @attr: Device attribute structure
+> > + * @buf: Requested available shutdown_scope attributes string
+> > + * @reg: Register number
+> > + *
+> > + * Return:Number of bytes printed into the buffer.
+> > + *
+> > + * Helper function for viewing a pggs register value.
+> > + */
+> > +static ssize_t pggs_show(struct device *device,
+> > +			 struct device_attribute *attr,
+> > +			 char *buf,
+> > +			 u32 reg)
+> > +{
+> > +	return read_register(buf, IOCTL_READ_PGGS, reg);
+> > +}
+> > +
+> > +/**
+> > + * pggs_store - Store persistent global general storage (pggs) sysfs a=
+ttribute
+> > + * @device: Device structure
+> > + * @attr: Device attribute structure
+> > + * @buf: User entered shutdown_scope attribute string
+> > + * @count: Size of buf
+> > + * @reg: Register number
+> > + *
+> > + * Return: count argument if request succeeds, the corresponding
+> > + * error code otherwise
+> > + *
+> > + * Helper function for storing a pggs register value.
+> > + */
+> > +static ssize_t pggs_store(struct device *device,
+> > +			  struct device_attribute *attr,
+> > +			  const char *buf, size_t count,
+> > +			  u32 reg)
+> > +{
+> > +	return write_register(buf, count, IOCTL_READ_PGGS,
+> > +			      IOCTL_WRITE_PGGS, reg);
+> > +}
+> > +
+> > +#define PGGS0_SHOW(N)						\
+> > +	ssize_t pggs##N##_show(struct device *device,		\
+> > +			       struct device_attribute *attr,	\
+> > +			       char *buf)			\
+> > +	{							\
+> > +		return pggs_show(device, attr, buf, N);		\
+> > +	}
+> > +
+> > +#define PGGS0_STORE(N)						\
+> > +	ssize_t pggs##N##_store(struct device *device,		\
+> > +				struct device_attribute *attr,	\
+> > +				const char *buf,		\
+> > +				size_t count)			\
+> > +	{							\
+> > +		return pggs_store(device, attr, buf, count, N);	\
+> > +	}
+> > +
+> > +/* PGGS register show functions */
+> > +static PGGS0_SHOW(0);
+> > +static PGGS0_SHOW(1);
+> > +static PGGS0_SHOW(2);
+> > +static PGGS0_SHOW(3);
+> > +
+> > +/* PGGS register store functions */
+> > +static PGGS0_STORE(0);
+> > +static PGGS0_STORE(1);
+> > +static PGGS0_STORE(2);
+> > +static PGGS0_STORE(3);
+> > +
+> > +/* GGS register attributes */
+> > +static DEVICE_ATTR_RW(ggs0);
+> > +static DEVICE_ATTR_RW(ggs1);
+> > +static DEVICE_ATTR_RW(ggs2);
+> > +static DEVICE_ATTR_RW(ggs3);
+> > +
+> > +/* PGGS register attributes */
+> > +static DEVICE_ATTR_RW(pggs0);
+> > +static DEVICE_ATTR_RW(pggs1);
+> > +static DEVICE_ATTR_RW(pggs2);
+> > +static DEVICE_ATTR_RW(pggs3);
+> > +
+> > +static struct attribute *zynqmp_ggs_attrs[] =3D {
+> > +	&dev_attr_ggs0.attr,
+> > +	&dev_attr_ggs1.attr,
+> > +	&dev_attr_ggs2.attr,
+> > +	&dev_attr_ggs3.attr,
+> > +	&dev_attr_pggs0.attr,
+> > +	&dev_attr_pggs1.attr,
+> > +	&dev_attr_pggs2.attr,
+> > +	&dev_attr_pggs3.attr,
+> > +	NULL,
+> > +};
+> > +
+> > +ATTRIBUTE_GROUPS(zynqmp_ggs);
+> > +
+> > +int zynqmp_pm_ggs_init(struct kobject *parent_kobj)
+> > +{
+> > +	return sysfs_create_group(parent_kobj, zynqmp_ggs_groups[0]);
+>=20
+> You might be racing userspace here and loosing :(
+
+Prob is called before user space is notified about sysfs so racing shouldn'=
+t happen.
+Or you are referring to some other race condition?
+
+>=20
+> > +}
+> > diff --git a/drivers/firmware/xilinx/zynqmp.c
+> b/drivers/firmware/xilinx/zynqmp.c
+> > index 75bdfaa..4c1117d 100644
+> > --- a/drivers/firmware/xilinx/zynqmp.c
+> > +++ b/drivers/firmware/xilinx/zynqmp.c
+> > @@ -473,6 +473,10 @@ static inline int zynqmp_is_valid_ioctl(u32 ioctl_=
+id)
+> >  	case IOCTL_GET_PLL_FRAC_MODE:
+> >  	case IOCTL_SET_PLL_FRAC_DATA:
+> >  	case IOCTL_GET_PLL_FRAC_DATA:
+> > +	case IOCTL_WRITE_GGS:
+> > +	case IOCTL_READ_GGS:
+> > +	case IOCTL_WRITE_PGGS:
+> > +	case IOCTL_READ_PGGS:
+>=20
+> Huh???
+
+Sorry not sure about your concern here. These registers are in PMU space an=
+d hence
+Ioctl is needed to let linux access them.
+
+>=20
+> >  		return 1;
+> >  	default:
+> >  		return 0;
+> > @@ -704,6 +708,28 @@ const struct zynqmp_eemi_ops
+> *zynqmp_pm_get_eemi_ops(void)
+> >  }
+> >  EXPORT_SYMBOL_GPL(zynqmp_pm_get_eemi_ops);
+> >
+> > +static int zynqmp_pm_sysfs_init(void)
+> > +{
+> > +	struct kobject *zynqmp_kobj;
+> > +	int ret;
+> > +
+> > +	zynqmp_kobj =3D kobject_create_and_add("zynqmp", firmware_kobj);
+> > +	if (!zynqmp_kobj) {
+> > +		pr_err("zynqmp: Firmware kobj add failed.\n");
+> > +		return -ENOMEM;
+> > +	}
+> > +
+> > +	ret =3D zynqmp_pm_ggs_init(zynqmp_kobj);
+> > +	if (ret) {
+> > +		kobject_put(zynqmp_kobj);
+> > +		pr_err("%s() GGS init fail with error %d\n",
+> > +		       __func__, ret);
+> > +		goto err;
+> > +	}
+> > +err:
+> > +	return ret;
+> > +}
+> > +
+> >  static int zynqmp_firmware_probe(struct platform_device *pdev)
+> >  {
+> >  	struct device *dev =3D &pdev->dev;
+> > @@ -751,6 +777,12 @@ static int zynqmp_firmware_probe(struct
+> platform_device *pdev)
+> >  	/* Assign eemi_ops_table */
+> >  	eemi_ops_tbl =3D &eemi_ops;
+> >
+> > +	ret =3D zynqmp_pm_sysfs_init();
+>=20
+> See, you have a platform device, hang the attributes off of that instead
+> of making a kobject and detatching yourself from the global device tree!
+>=20
+> Please redo this, I think it will make it a lot simpler and more
+> obvious.
+
+Agree it will be simpler but to as firmware driver was changed to be platfo=
+rm driver,
+to keep paths same, we used sysfs.
+
+Thanks,
+Jolly Shah
+
+
+>=20
+> thanks,
+>=20
+> greg k-h
