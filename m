@@ -2,180 +2,166 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AE44C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 16:52:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4709EC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 16:55:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E38221569
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 16:52:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07A902071E
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 16:55:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nXB3f6r+"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="dRbH+Z4D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728899AbgAWQwb (ORCPT
+        id S1729253AbgAWQzb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 11:52:31 -0500
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:44211 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726605AbgAWQwb (ORCPT
+        Thu, 23 Jan 2020 11:55:31 -0500
+Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:57621 "EHLO
+        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729221AbgAWQzb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 11:52:31 -0500
-Received: by mail-pl1-f194.google.com with SMTP id d9so1573033plo.11
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jan 2020 08:52:30 -0800 (PST)
+        Thu, 23 Jan 2020 11:55:31 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=C25w/GEX+B7a1YmYzSZutb0HdBvba9WfZTsok53isvI=;
-        b=nXB3f6r+N0orzrPhauDEj9qAyXnR6jwj08hwnWiPxEtTMuP2EZEsaVy2uX31f6myhu
-         CRB/ssIL9IzgSJGTdeMPID4nVlsbWGQlRzWhe5tluSX67M6+0FEmbc7+Cp9Z9JF7aIov
-         12xFXy3ZIT2cvkHyHUhHpW+4kv3yB8VXslznSXTA4zR3XetCjpMMS7OEr7p3uzRuSCx6
-         vCTodS9dr7epPTi/qRDAODsoFBHa/uAllFKUjNSW//2gEabJgi8RAltAHQefHNcHrPym
-         VoRqai6XEySsHKIFgOrEFMLK43I+ELtx4wqsJZ+YbWcl+CdFOGpuncaFDBsTEaD2XiPD
-         XQAQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=C25w/GEX+B7a1YmYzSZutb0HdBvba9WfZTsok53isvI=;
-        b=XHYgSgQHNvm91T13CBtawtlq9FrbellAHqEkl0EqPExnorqSlX+VsgImj7pTpDLhm2
-         +kMvPsnRW38TZXnG9B+fFhQvUudcRYmRP/US2f75TqoiKdbbqAC8fsVSLmO0LQiW6roo
-         VXX+vNnwByEEjHsdwXg6gaoo9F4ep7iTH7k62i27/0P8fos6RHaAWcXBArnjCzPZWVHD
-         vEAqSxozYWRpw2i1Xr+6SGW4xLO7GsYuKiOQVKi6HdUCwzjg43BwdjklNxI89jRDKP1v
-         BSLeXjITqrK38lUxyWCeUJ+i96BW2FJbwuRa4PkG+hwxeUvFzMEbbOOByZwidbOGEukb
-         UHMg==
-X-Gm-Message-State: APjAAAWyNrclWWrAH7tE/JC6JZk/Bz4Jm3UQuS7ZEGe4+Gag+0MK3mdJ
-        J4Tz1ywDLhz6hzxmf/iSW5HARYCt
-X-Google-Smtp-Source: APXvYqx+ecdqbLe2gNFYL+BiR1oLCsos0/UYR9/iT2BidZAuXH5qxWxXoBOIZ6jkLO20RUVTSem0ng==
-X-Received: by 2002:a17:902:8494:: with SMTP id c20mr17746917plo.189.1579798350367;
-        Thu, 23 Jan 2020 08:52:30 -0800 (PST)
-Received: from workstation-portable ([103.211.17.138])
-        by smtp.gmail.com with ESMTPSA id u3sm3445364pjv.32.2020.01.23.08.52.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Jan 2020 08:52:29 -0800 (PST)
-Date:   Thu, 23 Jan 2020 22:22:24 +0530
-From:   Amol Grover <frextrite@gmail.com>
-To:     Jessica Yu <jeyu@kernel.org>
-Cc:     linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>,
-        "Paul E . McKenney" <paulmck@kernel.org>
-Subject: Re: [PATCH] kernel: module: Pass lockdep expression to RCU lists
-Message-ID: <20200123165224.GA4484@workstation-portable>
-References: <20200121124745.14864-1-frextrite@gmail.com>
- <20200123121010.GA9011@linux-8ccs>
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1579798530; x=1611334530;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=mdM50JhuE89n4g3vElfEZYKWgxShNtcICnTpm8dSINE=;
+  b=dRbH+Z4DF8DslCf7wJ9xLuyIdT9NcZaLfWgtNYu4+jwpqGQPYyOmrQWF
+   sqfvhLRmrfN9Q9owtvIaK3lcBlTkfLY+2sB1RNxLP5sZJFibldiGtzr2j
+   UnvV/vylrpeKZtNaIoRXTPldYwTiLHPboq/6XS8Bodyk/AFIn7JWeDxCQ
+   Q=;
+IronPort-SDR: SLCpVvXbRwcr5o+gS8iV+L24OSauaZCgRuuGr8zRYDFBu0tEQzPVcKxVA5vPKgnveYbs03Y/w4
+ PGw12I1RLZRg==
+X-IronPort-AV: E=Sophos;i="5.70,354,1574121600"; 
+   d="scan'208";a="21995785"
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1a-807d4a99.us-east-1.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 23 Jan 2020 16:55:18 +0000
+Received: from EX13MTAUWC001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
+        by email-inbound-relay-1a-807d4a99.us-east-1.amazon.com (Postfix) with ESMTPS id F0230A2AE9;
+        Thu, 23 Jan 2020 16:55:08 +0000 (UTC)
+Received: from EX13D20UWC001.ant.amazon.com (10.43.162.244) by
+ EX13MTAUWC001.ant.amazon.com (10.43.162.135) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Thu, 23 Jan 2020 16:55:07 +0000
+Received: from 38f9d3867b82.ant.amazon.com (10.43.161.78) by
+ EX13D20UWC001.ant.amazon.com (10.43.162.244) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Thu, 23 Jan 2020 16:55:01 +0000
+Subject: Re: [PATCH v16.1 0/9] mm / virtio: Provide support for free page
+ reporting
+To:     Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        Alexander Duyck <alexander.duyck@gmail.com>,
+        <kvm@vger.kernel.org>, <mst@redhat.com>,
+        <linux-kernel@vger.kernel.org>, <willy@infradead.org>,
+        <mhocko@kernel.org>, <linux-mm@kvack.org>,
+        <akpm@linux-foundation.org>, <mgorman@techsingularity.net>,
+        <vbabka@suse.cz>
+CC:     <yang.zhang.wz@gmail.com>, <nitesh@redhat.com>,
+        <konrad.wilk@oracle.com>, <david@redhat.com>, <pagupta@redhat.com>,
+        <riel@surriel.com>, <lcapitulino@redhat.com>,
+        <dave.hansen@intel.com>, <wei.w.wang@intel.com>,
+        <aarcange@redhat.com>, <pbonzini@redhat.com>,
+        <dan.j.williams@intel.com>, <osalvador@suse.de>,
+        "Paterson-Jones, Roland" <rolandp@amazon.com>,
+        <hannes@cmpxchg.org>, <hare@suse.com>
+References: <20200122173040.6142.39116.stgit@localhost.localdomain>
+ <914aa4c3-c814-45e0-830b-02796b00b762@amazon.com>
+ <af0b12780092e0007ec9e6dbfc92bc15b604b8f4.camel@linux.intel.com>
+From:   Alexander Graf <graf@amazon.com>
+Message-ID: <ad73c0c8-3a9c-8ffd-9a31-7e9a5cd5f246@amazon.com>
+Date:   Thu, 23 Jan 2020 17:54:59 +0100
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
+ Gecko/20100101 Thunderbird/68.3.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200123121010.GA9011@linux-8ccs>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <af0b12780092e0007ec9e6dbfc92bc15b604b8f4.camel@linux.intel.com>
+Content-Language: en-US
+X-Originating-IP: [10.43.161.78]
+X-ClientProxiedBy: EX13D28UWB004.ant.amazon.com (10.43.161.56) To
+ EX13D20UWC001.ant.amazon.com (10.43.162.244)
+Content-Type: text/plain; charset="utf-8"; format="flowed"
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 23, 2020 at 01:10:10PM +0100, Jessica Yu wrote:
-> +++ Amol Grover [21/01/20 18:17 +0530]:
-> > modules is traversed using list_for_each_entry_rcu outside an
-> > RCU read-side critical section but under the protection
-> > of module_mutex or with preemption disabled.
-> > 
-> > Hence, add corresponding lockdep expression to silence false-positive
-> > lockdep warnings, and harden RCU lists.
-> > 
-> > list_for_each_entry_rcu when traversed inside a preempt disabled
-> > section, doesn't need an explicit lockdep expression since it is
-> > implicitly checked for.
-> > 
-> > Add macro for the corresponding lockdep expression.
-> > 
-> > Signed-off-by: Amol Grover <frextrite@gmail.com>
-> 
-> Hi Amol!
-> 
-> Masami already submitted a patch for this, it's been in linux-next for
-> a while. See commit bf08949cc8b9 ("modules: lockdep: Suppress
-> suspicious RCU usage warning").
-> 
+CgpPbiAyMy4wMS4yMCAxNzoyNiwgQWxleGFuZGVyIER1eWNrIHdyb3RlOgo+IE9uIFRodSwgMjAy
+MC0wMS0yMyBhdCAxMToyMCArMDEwMCwgQWxleGFuZGVyIEdyYWYgd3JvdGU6Cj4+IEhpIEFsZXgs
+Cj4+Cj4+IE9uIDIyLjAxLjIwIDE4OjQzLCBBbGV4YW5kZXIgRHV5Y2sgd3JvdGU6ClsuLi5dCj4+
+PiBUaGUgb3ZlcmFsbCBndWVzdCBzaXplIGlzIGtlcHQgZmFpcmx5IHNtYWxsIHRvIG9ubHkgYSBm
+ZXcgR0Igd2hpbGUgdGhlIHRlc3QKPj4+IGlzIHJ1bm5pbmcuIElmIHRoZSBob3N0IG1lbW9yeSB3
+ZXJlIG92ZXJzdWJzY3JpYmVkIHRoaXMgcGF0Y2ggc2V0IHNob3VsZAo+Pj4gcmVzdWx0IGluIGEg
+cGVyZm9ybWFuY2UgaW1wcm92ZW1lbnQgYXMgc3dhcHBpbmcgbWVtb3J5IGluIHRoZSBob3N0IGNh
+biBiZQo+Pj4gYXZvaWRlZC4KPj4KPj4gSSByZWFsbHkgbGlrZSB0aGUgYXBwcm9hY2ggb3ZlcmFs
+bC4gVm9sdW50YXJpbHkgcHJvcGFnYXRpbmcgZnJlZSBtZW1vcnkKPj4gZnJvbSBhIGd1ZXN0IHRv
+IHRoZSBob3N0IGhhcyBiZWVuIGEgc29yZSBwb2ludCBldmVyIHNpbmNlIEtWTSB3YXMKPj4gYXJv
+dW5kLiBUaGlzIHNvbHV0aW9uIGxvb2tzIGxpa2UgYSB2ZXJ5IGVsZWdhbnQgd2F5IHRvIGRvIHNv
+Lgo+Pgo+PiBUaGUgYmlnIHBpZWNlIEknbSBtaXNzaW5nIGlzIHRoZSBwYWdlIGNhY2hlLiBMaW51
+eCB3aWxsIGJ5IGRlZmF1bHQgdHJ5Cj4+IHRvIGtlZXAgdGhlIGZyZWUgbGlzdCBhcyBzbWFsbCBh
+cyBpdCBjYW4gaW4gZmF2b3Igb2YgcGFnZSBjYWNoZSwgc28gbW9zdAo+PiBvZiB0aGUgYmVuZWZp
+dCBvZiB0aGlzIHBhdGNoIHNldCB3aWxsIGJlIHZvaWQgaW4gcmVhbCB3b3JsZCBzY2VuYXJpb3Mu
+Cj4gCj4gQWdyZWVkLiBUaGlzIGlzIGEgdGhlIG5leHQgcGllY2Ugb2YgdGhpcyBJIHBsYW4gdG8g
+d29yayBvbiBvbmNlIHRoaXMgaXMKPiBhY2NlcHRlZC4gRm9yIG5vdyB0aGUgcXVpY2sgYW5kIGRp
+cnR5IGFwcHJvYWNoIGlzIHRvIGVzc2VudGlhbGx5IG1ha2UgdXNlCj4gb2YgdGhlIC9wcm9jL3N5
+cy92bS9kcm9wX2NhY2hlcyBpbnRlcmZhY2UgaW4gdGhlIGd1ZXN0IGJ5IGVpdGhlciBwdXR0aW5n
+Cj4gaXQgaW4gYSBjcm9uam9iIHNvbWV3aGVyZSBvciB0byBoYXZlIGl0IGFmdGVyIG1lbW9yeSBp
+bnRlbnNpdmUgd29ya2xvYWRzLgo+IAo+PiBUcmFkaXRpb25hbGx5LCB0aGlzIHdhcyBzb2x2ZWQg
+YnkgY3JlYXRpbmcgcHJlc3N1cmUgZnJvbSB0aGUgaG9zdAo+PiB0aHJvdWdoIHZpcnRpby1iYWxs
+b29uOiBFeGFjdGx5IHRoZSBwaWVjZSB0aGF0IHRoaXMgcGF0Y2ggc2V0IGdldHMgYXdheQo+PiB3
+aXRoLiBJIG5ldmVyIGxpa2VkICJiYWxsb29uaW5nIiwgYmVjYXVzZSB0aGUgaG9zdCBoYXMgdmVy
+eSBsaW1pdGVkCj4+IHZpc2liaWxpdHkgaW50byB0aGUgYWN0dWFsIG1lbW9yeSB1dGlsaXR5IG9m
+IGl0cyBndWVzdHMuIFNvIGxlYXZpbmcgdGhlCj4+IGRlY2lzaW9uIG9uIGhvdyBtdWNoIG1lbW9y
+eSBpcyBhY3R1YWxseSBuZWVkZWQgYXQgYSBnaXZlbiBwb2ludCBpbiB0aW1lCj4+IHNob3VsZCBp
+ZGVhbGx5IHN0YXkgd2l0aCB0aGUgZ3Vlc3QuCj4+Cj4+IFdoYXQgd291bGQga2VlcCB1cyBmcm9t
+IGFwcGx5aW5nIHRoZSBwYWdlIGhpbnRpbmcgYXBwcm9hY2ggdG8gaW5hY3RpdmUsCj4+IGNsZWFu
+IHBhZ2UgY2FjaGUgcGFnZXM/IFdpdGggd3JpdGViYWNrIGluIHBsYWNlIGFzIHdlbGwsIHdlIHdv
+dWxkIHNsb3dseQo+PiBwcm9wYWdhdGUgcGFnZXMgZnJvbQo+Pgo+PiAgICAgZGlydHkgLT4gY2xl
+YW4gLT4gY2xlYW4sIGluYWN0aXZlIC0+IGZyZWUgLT4gaG9zdCBvd25lZAo+Pgo+PiB3aGljaCBn
+aXZlcyBhIGd1ZXN0IGEgbmF0dXJhbCBwYXRoIHRvIGdpdmUgdXAgIm5vdCBpbXBvcnRhbnQiIG1l
+bW9yeS4KPiAKPiBJIGNvbnNpZGVyZWQgc29tZXRoaW5nIHNpbWlsYXIuIEJhc2ljYWxseSBvbmUg
+dGhvdWdodCBJIGhhZCB3YXMgdG8KPiBlc3NlbnRpYWxseSBsb29rIGF0IHB1dHRpbmcgdG9nZXRo
+ZXIgc29tZSBzb3J0IG9mIGVwb2NoLiBXaGVuIHRoZSBob3N0IGlzCj4gdW5kZXIgbWVtb3J5IHBy
+ZXNzdXJlIGl0IHdvdWxkIG5lZWQgdG8gc29tZWhvdyBub3RpZnkgdGhlIGd1ZXN0IGFuZCB0aGVu
+Cj4gdGhlIGd1ZXN0IHdvdWxkIHN0YXJ0IG1vdmluZyB0aGUgZXBvY2ggZm9yd2FyZCBzbyB0aGF0
+IHdlIHN0YXJ0IGV2aWN0aW5nCj4gcGFnZXMgb3V0IG9mIHRoZSBwYWdlIGNhY2hlIHdoZW4gdGhl
+IGhvc3QgaXMgdW5kZXIgbWVtb3J5IHByZXNzdXJlLgoKSSB0aGluayB3ZSB3YW50IHRvIGNvbnNp
+ZGVyIGFuIGludGVyZmFjZSBpbiB3aGljaCB0aGUgaG9zdCBhY3RpdmVseSBhc2tzIApndWVzdHMg
+dG8gcHVyZ2UgcGFnZXMgdG8gYmUgb24gdGhlIHNhbWUgbGluZSBhcyBzd2FwcGluZzogVGhlIGxh
+c3QgbGluZSAKb2YgZGVmZW5zZS4KCkluIHRoZSBub3JtYWwgbW9kZSBvZiBvcGVyYXRpb24sIHlv
+dSBzdGlsbCB3YW50IHRvIHNocmluayBkb3duIAp2b2x1bnRhcmlseSwgc28gdGhhdCBldmVyeW9u
+ZSBjb29wZXJhdGl2ZWx5IHRyaWVzIHRvIG1ha2UgZnJlZSBmb3IgbmV3IApndWVzdHMgeW91IGNv
+dWxkIHBvdGVudGlhbGx5IHJ1biBvbiB0aGUgc2FtZSBob3N0LgoKSWYgeW91IHN0YXJ0IHRvIGFw
+cGx5IHByZXNzdXJlIHRvIGd1ZXN0cyB0byBmaW5kIG91dCBvZiB0aGV5IG1pZ2h0IGhhdmUgCnNv
+bWUgcGFnZXMgdG8gc3BhcmUsIHdlJ3JlIGFsbW9zdCBiYWNrIHRvIHRoZSBvbGQgc3R5bGUgYmFs
+bG9vbmluZyBhcHByb2FjaC4KCkJ0dywgaGF2ZSB5b3UgZXZlciBsb29rZWQgYXQgQ01NMiBbMV0/
+IFdpdGggdGhhdCwgdGhlIGhvc3QgY2FuIAplc3NlbnRpYWxseSBqdXN0ICJzdGVhbCIgcGFnZXMg
+ZnJvbSB0aGUgZ3Vlc3Qgd2hlbiBpdCBuZWVkcyBhbnksIHdpdGhvdXQgCnRoZSBuZWVkIHRvIGV4
+ZWN1dGUgdGhlIGd1ZXN0IG1lYW53aGlsZS4gVGhhdCBtZWFucyBpbnNpZGUgdGhlIGhvc3QgCnN3
+YXBwaW5nIHBhdGgsIENNTTIgY2FuIGp1c3QgZXZpY3QgZ3Vlc3QgcGFnZSBjYWNoZSBwYWdlcyBh
+cyBlYXNpbHkgYXMgCndlIGV2aWN0IGhvc3QgcGFnZSBjYWNoZSBwYWdlcy4gVG8gbWUsIHRoYXQn
+cyBldmVuIG1vcmUgYXR0cmFjdGl2ZSBpbiAKdGhlIHN3YXAgLyBlbWVyZ2VuY3kgY2FzZSB0aGFu
+IGFuIGludGVyZmFjZSB3aGljaCByZXF1aXJlcyB0aGUgZ3Vlc3QgdG8gCnByb2FjdGl2ZWx5IGV4
+ZWN1dGUgd2hpbGUgd2UgYXJlIGluIGEgbG93IG1lbSBzaXR1YXRpb24uCgo+PiBUaGUgYmlnIHBy
+b2JsZW0gSSBzZWUgaXMgdGhhdCB3aGF0IEkgcmVhbGx5IHdhbnQgZnJvbSBhIHVzZXIncyBwb2lu
+dCBvZgo+PiB2aWV3IGlzIGEgdHVuZWFibGUgdGhhdCBzYXlzICJBdXRvbWF0aWNhbGx5IGZyZWUg
+Y2xlYW4gcGFnZSBjYWNoZSBwYWdlcwo+PiB0aGF0IHdlcmUgbm90IGFjY2Vzc2VkIGluIHRoZSBs
+YXN0IFggbWludXRlcyIuIE90aGVyd2lzZSB3ZSBtYXkgcnVuIGludG8KPj4gdGhlIHJpc2sgb2Yg
+ZXZpY3Rpbmcgc29tZSB0aW1lcyBpbiB1c2UgcGFnZSBjYWNoZSBwYWdlcy4KPj4KPj4gSSBoYXZl
+IGEgaGFyZCB0aW1lIGdyYXNwaW5nIHRoZSBtbSBjb2RlIHRvIHVuZGVyc3RhbmQgaG93IGhhcmQg
+dGhhdAo+PiB3b3VsZCBiZSB0byBpbXBsZW1lbnQgdGhhdCB0aG91Z2ggOikuCj4+Cj4+Cj4+IEFs
+ZXgKPiAKPiBZZWFoLCBJIGFtIG5vdCBleGFjdGx5IGFuIGV4cGVydCBvbiB0aGlzIGVpdGhlciBh
+cyBJIGhhdmUgb25seSBiZWVuCj4gd29ya2luZyBpbnQgaGUgTU0gdHJlZSBmb3IgYWJvdXQgYSB5
+ZWFyIG5vdy4KPiAKPiBJIGhhdmUgc3VibWl0dGVkIHRoaXMgYXMgYSB0b3BpYyBmb3IgTFNGL01N
+IHN1bW1pdFsxXSBhbmQgSSBhbSBob3BpbmcgdG8KPiBnZXQgc29tZSBmZWVkYmFjayBvbiB0aGUg
+YmVzdCB3YXkgdG8gYXBwbHkgcHJvYWN0aXZlIG1lbW9yeSBwcmVzc3VyZSBhcwo+IG9uZSBvZiB0
+aGUgc3VidG9waWNzIGlmIGl0IGlzIHNlbGVjdGVkLgoKVGhhdCdzIGEgZ3JlYXQgaWRlYSEgSGFu
+bmVzIGp1c3QgbWVudGlvbmVkIExTRi9NTSBhcyBhIGdvb2QgZm9ydW0gdG8gCmRpc2N1c3MgdGhp
+cyBhdCBsYXN0IG5pZ2h0LCBJJ20gZ2xhZCB0byBzZWUgeW91IGFscmVhZHkgcGlja2VkIHVwIG9u
+IGl0IDopLgoKCkFsZXgKClsxXSBodHRwczovL3d3dy5rZXJuZWwub3JnL2RvYy9vbHMvMjAwNi9v
+bHMyMDA2djItcGFnZXMtMzIxLTMzNi5wZGYKCgoKQW1hem9uIERldmVsb3BtZW50IENlbnRlciBH
+ZXJtYW55IEdtYkgKS3JhdXNlbnN0ci4gMzgKMTAxMTcgQmVybGluCkdlc2NoYWVmdHNmdWVocnVu
+ZzogQ2hyaXN0aWFuIFNjaGxhZWdlciwgSm9uYXRoYW4gV2Vpc3MKRWluZ2V0cmFnZW4gYW0gQW10
+c2dlcmljaHQgQ2hhcmxvdHRlbmJ1cmcgdW50ZXIgSFJCIDE0OTE3MyBCClNpdHo6IEJlcmxpbgpV
+c3QtSUQ6IERFIDI4OSAyMzcgODc5CgoK
 
-Hey Jessica,
-
-Thank you for reviewing the patch!
-
-Thanks
-Amol
-
-> Thanks!
-> 
-> Jessica
-> 
-> > ---
-> > kernel/module.c | 12 +++++++-----
-> > 1 file changed, 7 insertions(+), 5 deletions(-)
-> > 
-> > diff --git a/kernel/module.c b/kernel/module.c
-> > index b56f3224b161..2425f58159dd 100644
-> > --- a/kernel/module.c
-> > +++ b/kernel/module.c
-> > @@ -84,6 +84,8 @@
-> >  * 3) module_addr_min/module_addr_max.
-> >  * (delete and add uses RCU list operations). */
-> > DEFINE_MUTEX(module_mutex);
-> > +#define module_mutex_held() \
-> > +	lockdep_is_held(&module_mutex)
-> > EXPORT_SYMBOL_GPL(module_mutex);
-> > static LIST_HEAD(modules);
-> > 
-> > @@ -214,7 +216,7 @@ static struct module *mod_find(unsigned long addr)
-> > {
-> > 	struct module *mod;
-> > 
-> > -	list_for_each_entry_rcu(mod, &modules, list) {
-> > +	list_for_each_entry_rcu(mod, &modules, list, module_mutex_held()) {
-> > 		if (within_module(addr, mod))
-> > 			return mod;
-> > 	}
-> > @@ -448,7 +450,7 @@ bool each_symbol_section(bool (*fn)(const struct symsearch *arr,
-> > 	if (each_symbol_in_section(arr, ARRAY_SIZE(arr), NULL, fn, data))
-> > 		return true;
-> > 
-> > -	list_for_each_entry_rcu(mod, &modules, list) {
-> > +	list_for_each_entry_rcu(mod, &modules, list, module_mutex_held()) {
-> > 		struct symsearch arr[] = {
-> > 			{ mod->syms, mod->syms + mod->num_syms, mod->crcs,
-> > 			  NOT_GPL_ONLY, false },
-> > @@ -616,7 +618,7 @@ static struct module *find_module_all(const char *name, size_t len,
-> > 
-> > 	module_assert_mutex_or_preempt();
-> > 
-> > -	list_for_each_entry_rcu(mod, &modules, list) {
-> > +	list_for_each_entry_rcu(mod, &modules, list, module_mutex_held()) {
-> > 		if (!even_unformed && mod->state == MODULE_STATE_UNFORMED)
-> > 			continue;
-> > 		if (strlen(mod->name) == len && !memcmp(mod->name, name, len))
-> > @@ -2040,7 +2042,7 @@ void set_all_modules_text_rw(void)
-> > 		return;
-> > 
-> > 	mutex_lock(&module_mutex);
-> > -	list_for_each_entry_rcu(mod, &modules, list) {
-> > +	list_for_each_entry_rcu(mod, &modules, list, module_mutex_held()) {
-> > 		if (mod->state == MODULE_STATE_UNFORMED)
-> > 			continue;
-> > 
-> > @@ -2059,7 +2061,7 @@ void set_all_modules_text_ro(void)
-> > 		return;
-> > 
-> > 	mutex_lock(&module_mutex);
-> > -	list_for_each_entry_rcu(mod, &modules, list) {
-> > +	list_for_each_entry_rcu(mod, &modules, list, module_mutex_held()) {
-> > 		/*
-> > 		 * Ignore going modules since it's possible that ro
-> > 		 * protection has already been disabled, otherwise we'll
-> > -- 
-> > 2.24.1
-> > 
