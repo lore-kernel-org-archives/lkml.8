@@ -2,134 +2,118 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B827C32771
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 02:39:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41DC9C32771
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 02:45:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F5CD24673
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 02:39:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZtbU8QCb"
+	by mail.kernel.org (Postfix) with ESMTP id 1A01F2465A
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 02:45:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726231AbgAWCjl (ORCPT
+        id S1726167AbgAWCpq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 21:39:41 -0500
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:38831 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725911AbgAWCjk (ORCPT
+        Wed, 22 Jan 2020 21:45:46 -0500
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:54274 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725911AbgAWCpq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 21:39:40 -0500
-Received: by mail-pj1-f67.google.com with SMTP id l35so511274pje.3
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jan 2020 18:39:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=/ObBz/9vwTw3ohjDGTscqyWS1Wi8lhEKFZVbdqUQmqc=;
-        b=ZtbU8QCbzG9SfPW0MwWGfsHlxQjUj3j9u8sNB26EDLCUMvOLT/Lc6l2q26ghU8PEjR
-         YaEWM90K/88UeXH2FMNsn/FxVein3GORfaTj3Hx6zBabktTsJx5u0vcx1rbpxLdWjtKX
-         h3SvnF/edqQgUy0z2xGCoTX4bbGeDVUbG27CHqY0lwDmDmOOvgXqIMAWbnCCPdWO01Vm
-         o1m0F4in0lsntPW4H+O9KzpzQEPU72GIEiL1tePh2JElrEx2kVFWGxr7dKQ50MZQjB8o
-         k6F76wV/lT7dqYlZoogF7EPLUcz384MIqOmo8Ew9Pce2tJ3LWN+yeFKthzPa9eqguW9h
-         aUBg==
+        Wed, 22 Jan 2020 21:45:46 -0500
+Received: by mail-pj1-f66.google.com with SMTP id kx11so483823pjb.4;
+        Wed, 22 Jan 2020 18:45:45 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=/ObBz/9vwTw3ohjDGTscqyWS1Wi8lhEKFZVbdqUQmqc=;
-        b=InYjNB9cukDQT3Vrh41+sUdHmXAk4goVD8CCoPFVVMfd8/rnOraOtTVfy3E6qdt7TJ
-         PW5FE4O6ChDXHgFyztg8k3OJmISZW/gEQEIKu8G2h61g5NJxMa1vS08c6myxKVBeP0Cj
-         SgXTeXcgyaCWA2vasrw4tS6YQAvtsMeqJy8q7KqSlHitoFDHNyxzaB9ShSqbDHPFRkTj
-         QxgeRc1Yv/8NlvQNGal0ab+OiyYRgwamNixTTkG1k6X87eVFxWO4WYnuduikPWuZ3Dxg
-         2/sH20lHrYQ6fRkH+Zh0EY065k0CSXfQhuQghQXLD3qgZ3iOjCbgt0p3Dn8fpWF0r31t
-         ib9g==
-X-Gm-Message-State: APjAAAW+2Mof8mlRRLrrmFpdTcuxcvAKEUkmXGOx+4AoenweU5G7wR4d
-        eqST2DVMRI5+OIbDY74JdlM=
-X-Google-Smtp-Source: APXvYqxZCfdu5NMuJiFMUZeqkjIaqsWSjSVbyyBZdQrEGU0li3YjOYM0rshCfGkZNhHG34nxSIwdxA==
-X-Received: by 2002:a17:90a:6484:: with SMTP id h4mr1812491pjj.84.1579747180297;
-        Wed, 22 Jan 2020 18:39:40 -0800 (PST)
-Received: from localhost ([103.29.143.67])
-        by smtp.gmail.com with ESMTPSA id j14sm390076pgs.57.2020.01.22.18.39.38
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 22 Jan 2020 18:39:40 -0800 (PST)
-Date:   Thu, 23 Jan 2020 10:39:36 +0800
-From:   Yue Hu <zbestahu@gmail.com>
-To:     Minchan Kim <minchan@kernel.org>
-Cc:     ngupta@vflare.org, sergey.senozhatsky.work@gmail.com,
-        linux-kernel@vger.kernel.org, huyue2@yulong.com
-Subject: Re: [PATCH] zram: do not set ZRAM_IDLE bit for idlepage writeback
- in writeback_store()
-Message-ID: <20200123103936.000044ba.zbestahu@gmail.com>
-In-Reply-To: <20200123022305.GF249784@google.com>
-References: <20200121113557.11608-1-zbestahu@gmail.com>
-        <20200123022305.GF249784@google.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; i686-w64-mingw32)
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=0bTKL1nEMmiTu3DN8/wNxHjP2cGwCMK4tEMnT3FtOBI=;
+        b=s0kMqxltPtbhmFm/nMEveMzjTQTXXwFp9+LnB3QUWDEvFzbWzbZzuR/zujwHd1iGJf
+         /f+qJAOwU3neV9/nKKnhKxUJpCboxtrXiMWmo+6V1effVbe7gOj4cXuK1j3LpEgBi+eg
+         ik4qeMMPdjeuhmPxXT1zPOKISKKNsEsFwN4PX6tZOVK/iRY5eHm2oauO+drPYv1LcREs
+         qiTt7O7/RY1+dtgAL7i8mivf1/q6QglIatTUEIIuUQT/GVMndd2EYAsnZgL2c/PJxiPs
+         HK3gSRgwmtgvqxyVzCh5iiWgDkn64uatbAGDoR02NmRHafTut4wF5QiTBYrkerULJdzN
+         DOGg==
+X-Gm-Message-State: APjAAAV5hg0+zlTExqPqgVzpaNHnPFsQLFb166ydy72IDrVNh1oRPhpp
+        z/p+13Uej4r+HS+/9rssJrlI9Pyb
+X-Google-Smtp-Source: APXvYqyFjqN4SMdx78XQgp5nv9AZUTULnc9pP0nt+Zco5cy3IfTgnLZJV7ILLKiPHIbGOxLvQAc2vg==
+X-Received: by 2002:a17:90a:fa10:: with SMTP id cm16mr1916091pjb.129.1579747545094;
+        Wed, 22 Jan 2020 18:45:45 -0800 (PST)
+Received: from ?IPv6:2601:647:4000:d7:d957:4568:237a:bc62? ([2601:647:4000:d7:d957:4568:237a:bc62])
+        by smtp.gmail.com with ESMTPSA id b1sm288408pfp.44.2020.01.22.18.45.43
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 22 Jan 2020 18:45:44 -0800 (PST)
+Subject: Re: [PATCH -next] scsi: qla2xxx: use PTR_ERR_OR_ZERO() to simplify
+ code
+To:     Chen Zhou <chenzhou10@huawei.com>, hmadhani@marvell.com,
+        jejb@linux.ibm.com, martin.petersen@oracle.com
+Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200122101812.94816-1-chenzhou10@huawei.com>
+From:   Bart Van Assche <bvanassche@acm.org>
+Autocrypt: addr=bvanassche@acm.org; prefer-encrypt=mutual; keydata=
+ mQENBFSOu4oBCADcRWxVUvkkvRmmwTwIjIJvZOu6wNm+dz5AF4z0FHW2KNZL3oheO3P8UZWr
+ LQOrCfRcK8e/sIs2Y2D3Lg/SL7qqbMehGEYcJptu6mKkywBfoYbtBkVoJ/jQsi2H0vBiiCOy
+ fmxMHIPcYxaJdXxrOG2UO4B60Y/BzE6OrPDT44w4cZA9DH5xialliWU447Bts8TJNa3lZKS1
+ AvW1ZklbvJfAJJAwzDih35LxU2fcWbmhPa7EO2DCv/LM1B10GBB/oQB5kvlq4aA2PSIWkqz4
+ 3SI5kCPSsygD6wKnbRsvNn2mIACva6VHdm62A7xel5dJRfpQjXj2snd1F/YNoNc66UUTABEB
+ AAG0JEJhcnQgVmFuIEFzc2NoZSA8YnZhbmFzc2NoZUBhY20ub3JnPokBOQQTAQIAIwUCVI67
+ igIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEHFcPTXFzhAJ8QkH/1AdXblKL65M
+ Y1Zk1bYKnkAb4a98LxCPm/pJBilvci6boefwlBDZ2NZuuYWYgyrehMB5H+q+Kq4P0IBbTqTa
+ jTPAANn62A6jwJ0FnCn6YaM9TZQjM1F7LoDX3v+oAkaoXuq0dQ4hnxQNu792bi6QyVdZUvKc
+ macVFVgfK9n04mL7RzjO3f+X4midKt/s+G+IPr4DGlrq+WH27eDbpUR3aYRk8EgbgGKvQFdD
+ CEBFJi+5ZKOArmJVBSk21RHDpqyz6Vit3rjep7c1SN8s7NhVi9cjkKmMDM7KYhXkWc10lKx2
+ RTkFI30rkDm4U+JpdAd2+tP3tjGf9AyGGinpzE2XY1K5AQ0EVI67igEIAKiSyd0nECrgz+H5
+ PcFDGYQpGDMTl8MOPCKw/F3diXPuj2eql4xSbAdbUCJzk2ETif5s3twT2ER8cUTEVOaCEUY3
+ eOiaFgQ+nGLx4BXqqGewikPJCe+UBjFnH1m2/IFn4T9jPZkV8xlkKmDUqMK5EV9n3eQLkn5g
+ lco+FepTtmbkSCCjd91EfThVbNYpVQ5ZjdBCXN66CKyJDMJ85HVr5rmXG/nqriTh6cv1l1Js
+ T7AFvvPjUPknS6d+BETMhTkbGzoyS+sywEsQAgA+BMCxBH4LvUmHYhpS+W6CiZ3ZMxjO8Hgc
+ ++w1mLeRUvda3i4/U8wDT3SWuHcB3DWlcppECLkAEQEAAYkBHwQYAQIACQUCVI67igIbDAAK
+ CRBxXD01xc4QCZ4dB/0QrnEasxjM0PGeXK5hcZMT9Eo998alUfn5XU0RQDYdwp6/kMEXMdmT
+ oH0F0xB3SQ8WVSXA9rrc4EBvZruWQ+5/zjVrhhfUAx12CzL4oQ9Ro2k45daYaonKTANYG22y
+ //x8dLe2Fv1By4SKGhmzwH87uXxbTJAUxiWIi1np0z3/RDnoVyfmfbbL1DY7zf2hYXLLzsJR
+ mSsED/1nlJ9Oq5fALdNEPgDyPUerqHxcmIub+pF0AzJoYHK5punqpqfGmqPbjxrJLPJfHVKy
+ goMj5DlBMoYqEgpbwdUYkH6QdizJJCur4icy8GUNbisFYABeoJ91pnD4IGei3MTdvINSZI5e
+Message-ID: <697e27b4-a531-3670-0618-f5dc58a8608b@acm.org>
+Date:   Wed, 22 Jan 2020 18:45:43 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20200122101812.94816-1-chenzhou10@huawei.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 22 Jan 2020 18:23:05 -0800
-Minchan Kim <minchan@kernel.org> wrote:
-
-> On Tue, Jan 21, 2020 at 07:35:57PM +0800, Yue Hu wrote:
-> > From: Yue Hu <huyue2@yulong.com>
-> > 
-> > Currently, we will call zram_set_flag() to set ZRAM_IDLE bit even for
-> > idlepage writeback. That is pointless. Let's set it only for hugepage mode.  
+On 2020-01-22 02:18, Chen Zhou wrote:
+> PTR_ERR_OR_ZERO contains if(IS_ERR(...)) + PTR_ERR, just use 
+> PTR_ERR_OR_ZERO directly.
 > 
-> Could you be more specific? What do you see the problem with that?
-
-If current writeback mode is idle, ZRAM_IDLE bit will be check firstly for this
-slot. Then go to call zram_set_flag(, , ZRAM_IDLE) if it's marked as ZRAM_IDLE.
-So, it's duplicated setting, am i right? 
-
-Thx.
-
+> Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
+> ---
+>  drivers/scsi/qla2xxx/tcm_qla2xxx.c | 4 +---
+>  1 file changed, 1 insertion(+), 3 deletions(-)
 > 
-> > 
-> > Signed-off-by: Yue Hu <huyue2@yulong.com>
-> > ---
-> >  drivers/block/zram/zram_drv.c | 12 +++++++-----
-> >  1 file changed, 7 insertions(+), 5 deletions(-)
-> > 
-> > diff --git a/drivers/block/zram/zram_drv.c b/drivers/block/zram/zram_drv.c
-> > index 4285e75..eef5767 100644
-> > --- a/drivers/block/zram/zram_drv.c
-> > +++ b/drivers/block/zram/zram_drv.c
-> > @@ -689,16 +689,18 @@ static ssize_t writeback_store(struct device *dev,
-> >  		if (mode == IDLE_WRITEBACK &&
-> >  			  !zram_test_flag(zram, index, ZRAM_IDLE))
-> >  			goto next;
-> > -		if (mode == HUGE_WRITEBACK &&
-> > -			  !zram_test_flag(zram, index, ZRAM_HUGE))
-> > -			goto next;
-> > +		if (mode == HUGE_WRITEBACK) {
-> > +			if (!zram_test_flag(zram, index, ZRAM_HUGE))
-> > +				goto next;
-> > +			/* Need for hugepage writeback racing */
-> > +			zram_set_flag(zram, index, ZRAM_IDLE);
-> > +		}
-> > +
-> >  		/*
-> >  		 * Clearing ZRAM_UNDER_WB is duty of caller.
-> >  		 * IOW, zram_free_page never clear it.
-> >  		 */
-> >  		zram_set_flag(zram, index, ZRAM_UNDER_WB);
-> > -		/* Need for hugepage writeback racing */
-> > -		zram_set_flag(zram, index, ZRAM_IDLE);
-> >  		zram_slot_unlock(zram, index);
-> >  		if (zram_bvec_read(zram, &bvec, index, 0, NULL)) {
-> >  			zram_slot_lock(zram, index);
-> > -- 
-> > 1.9.1
-> >   
+> diff --git a/drivers/scsi/qla2xxx/tcm_qla2xxx.c b/drivers/scsi/qla2xxx/tcm_qla2xxx.c
+> index abe7f79..719d53d 100644
+> --- a/drivers/scsi/qla2xxx/tcm_qla2xxx.c
+> +++ b/drivers/scsi/qla2xxx/tcm_qla2xxx.c
+> @@ -1462,10 +1462,8 @@ static int tcm_qla2xxx_check_initiator_node_acl(
+>  				       sizeof(struct qla_tgt_cmd),
+>  				       TARGET_PROT_ALL, port_name,
+>  				       qlat_sess, tcm_qla2xxx_session_cb);
+> -	if (IS_ERR(se_sess))
+> -		return PTR_ERR(se_sess);
+>  
+> -	return 0;
+> +	return PTR_ERR_OR_ZERO(se_sess);
+>  }
 
+Is this a useful change? My personal opinion is that the current
+implementation (without this patch) is easier to read.
+
+Thanks,
+
+Bart.
