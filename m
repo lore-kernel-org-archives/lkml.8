@@ -2,79 +2,183 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67DE6C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 13:51:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE4B1C33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 13:51:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 423EF20684
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 13:51:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82C9720684
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 13:51:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579787518;
+	bh=vLvMBfKBDUNVaF/aoU4PfN2HEsbDc54gpbCoCV6eEbk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=jyyGUN6VyCbYFiPi9+ijdUFk1ai6ahwjSy4sv2OXhkGU0vGflV1Gl3kXZzxzBPmW0
+	 U0HlR/gh7QoKQXr6vxf6ro6K/zDXLZdHSsTr1asqWTTFSYYdcVloYtcYa/84OPI65Z
+	 +RyXn3k/qda7ZCt3fWoKRpPOMe8iawPzWhdN2da4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729138AbgAWNvv (ORCPT
+        id S1729174AbgAWNv5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 08:51:51 -0500
-Received: from hostingweb31-40.netsons.net ([89.40.174.40]:35009 "EHLO
-        hostingweb31-40.netsons.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726792AbgAWNvt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 08:51:49 -0500
-Received: from [109.168.11.45] (port=47192 helo=pc-ceresoli.dev.aim)
-        by hostingweb31.netsons.net with esmtpa (Exim 4.92)
-        (envelope-from <luca@lucaceresoli.net>)
-        id 1iuctf-000CNg-H1; Thu, 23 Jan 2020 14:51:47 +0100
-From:   Luca Ceresoli <luca@lucaceresoli.net>
-To:     linux-i2c@vger.kernel.org, linux-doc@vger.kernel.org
-Cc:     Luca Ceresoli <luca@lucaceresoli.net>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Jean Delvare <jdelvare@suse.de>, Peter Rosin <peda@axentia.se>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2 05/28] docs: i2c: fix typo
-Date:   Thu, 23 Jan 2020 14:50:40 +0100
-Message-Id: <20200123135103.20540-6-luca@lucaceresoli.net>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200123135103.20540-1-luca@lucaceresoli.net>
-References: <20200123135103.20540-1-luca@lucaceresoli.net>
+        Thu, 23 Jan 2020 08:51:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37964 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726792AbgAWNvw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jan 2020 08:51:52 -0500
+Received: from mail-qk1-f171.google.com (mail-qk1-f171.google.com [209.85.222.171])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9B7902467E;
+        Thu, 23 Jan 2020 13:51:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579787511;
+        bh=vLvMBfKBDUNVaF/aoU4PfN2HEsbDc54gpbCoCV6eEbk=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=b1iJ2GrWbJ6sOxtCE6X6YZSNhYFzNIpM/kQYgA7f2/wGJ1koX74CO1m1w/MCm5No0
+         BPLG4NXoQP5wOgn4QhptHUFzhR6166fKfS6Kxce1LEQd9yrrm3KsQU88+1pGGo0Au7
+         LREyoiAW0bRXR/meubXNdV6fucp7AraKrvthmWK0=
+Received: by mail-qk1-f171.google.com with SMTP id d10so3470716qke.1;
+        Thu, 23 Jan 2020 05:51:51 -0800 (PST)
+X-Gm-Message-State: APjAAAWtw3Red/ht3cdA8QN6luNT0Uj5cczoElWDB42a0jS4cHNLWSdV
+        bS0ZbErdlCANEm2Grher6dMU8XN/gz5pdItuHQ==
+X-Google-Smtp-Source: APXvYqwfO87Q0/W6AzS8yzHZDgljp8mtFonCDEPSQx1uYWjdYoPARCRWT3YmVbhrRhH7b66Aa6HwT9mSNtLWLu4ZXEM=
+X-Received: by 2002:a05:620a:135b:: with SMTP id c27mr14856515qkl.119.1579787510715;
+ Thu, 23 Jan 2020 05:51:50 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - hostingweb31.netsons.net
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - lucaceresoli.net
-X-Get-Message-Sender-Via: hostingweb31.netsons.net: authenticated_id: luca+lucaceresoli.net/only user confirmed/virtual account not confirmed
-X-Authenticated-Sender: hostingweb31.netsons.net: luca@lucaceresoli.net
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+References: <20200123012317.14808-1-chris.packham@alliedtelesis.co.nz> <20200123012317.14808-2-chris.packham@alliedtelesis.co.nz>
+In-Reply-To: <20200123012317.14808-2-chris.packham@alliedtelesis.co.nz>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Thu, 23 Jan 2020 07:51:37 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqLvM34WSBE29beBgJj0jLA6P_UwQUbTuEQcYJgrkg3v1A@mail.gmail.com>
+Message-ID: <CAL_JsqLvM34WSBE29beBgJj0jLA6P_UwQUbTuEQcYJgrkg3v1A@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] dt-bindings: spi: Document binding for generic SPI multiplexer
+To:     Chris Packham <chris.packham@alliedtelesis.co.nz>
+Cc:     Mark Brown <broonie@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix "issus" -> "issues".
+On Wed, Jan 22, 2020 at 7:24 PM Chris Packham
+<chris.packham@alliedtelesis.co.nz> wrote:
+>
+> Add binding documentation for the spi-mux driver. This allows a generic
+> multiplexer to be used to provide access to multiple SPI devices.
+>
+> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+> ---
+>
+> Notes:
+>     Changes in v2:
+>     - update license
+>     - make dt_binding_check clean
 
-Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
-Acked-by: Peter Rosin <peda@axentia.se>
-Reviewed-by: Jean Delvare <jdelvare@suse.de>
----
- Documentation/i2c/i2c-topology.rst | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Sure about that?
 
-diff --git a/Documentation/i2c/i2c-topology.rst b/Documentation/i2c/i2c-topology.rst
-index 0875090d6aeb..b413ef6a6773 100644
---- a/Documentation/i2c/i2c-topology.rst
-+++ b/Documentation/i2c/i2c-topology.rst
-@@ -169,7 +169,7 @@ PL1. If you build a topology with a parent-locked mux being the child
-      of another mux, this might break a possible assumption from the
-      child mux that the root adapter is unused between its select op
-      and the actual transfer (e.g. if the child mux is auto-closing
--     and the parent mux issus I2C-transfers as part of its select).
-+     and the parent mux issues I2C-transfers as part of its select).
-      This is especially the case if the parent mux is mux-locked, but
-      it may also happen if the parent mux is parent-locked.
- 
--- 
-2.25.0
+>
+>  .../devicetree/bindings/spi/spi-mux.yaml      | 84 +++++++++++++++++++
+>  1 file changed, 84 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/spi/spi-mux.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/spi/spi-mux.yaml b/Documentation/devicetree/bindings/spi/spi-mux.yaml
+> new file mode 100644
+> index 000000000000..4bdb31e2257e
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/spi/spi-mux.yaml
+> @@ -0,0 +1,84 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/spi/spi-mux.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Generic SPI Multiplexer
+> +
+> +description: |
+> +  This binding describes a SPI bus multiplexer to route the SPI chip select
+> +  signals. This can be used when you need more devices than the SPI controller
+> +  has chip selects available. An example setup is shown in ASCII art; the actual
+> +  setting of the multiplexer to a channel needs to be done by a specific SPI mux
+> +  driver.
+> +
+> +        MOSI /--------------------------------+--------+--------+--------\
+> +        MISO |/------------------------------+|-------+|-------+|-------\|
+> +         SCL ||/----------------------------+||------+||------+||------\||
+> +             |||                            |||      |||      |||      |||
+> +      +------------+                        |||      |||      |||      |||
+> +      | SoC  |||   |                      +-+++-+  +-+++-+  +-+++-+  +-+++-+
+> +      |      |||   |                      | dev |  | dev |  | dev |  | dev |
+> +      |   +--+++-+ | CS-X  +------+\      +--+--+  +--+--+  +--+--+  +--+--+
+> +      |   | SPI  +-|-------+ Mux  |\\   CS-0 |        |        |        |
+> +      |   +------+ |       +--+---+\\\-------/   CS-1 |        |        |
+> +      |            |          |    \\\----------------/   CS-2 |        |
+> +      |   +------+ |          |     \\-------------------------/   CS-3 |
+> +      |   | ?    +-|----------/      \----------------------------------/
+> +      |   +------+ |
+> +      +------------+
+> +
+> +allOf:
+> +  - $ref: "/schemas/spi/spi-controller.yaml#"
+> +
+> +maintainers:
+> +  - Chris Packham <chris.packham@alliedtelesis.co.nz>
+> +
+> +properties:
+> +  compatible:
+> +    const: spi-mux
+> +
+> +  mux-controls:
+> +    maxItems: 1
+> +
+> +required:
+> +   - compatible
+> +   - reg
+> +   - spi-max-frequency
+> +   - mux-controls
+> +
+> +examples:
+> +   - |
+> +     mux: mux-controller {
+> +       compatible = "gpio-mux";
+> +       #mux-control-cells = <0>;
+> +
+> +       mux-gpios = <&gpio0 3 GPIO_ACTIVE_HIGH>;
+> +     };
+> +
+> +     spi {
+> +       spi-mux@0 {
+> +         compatible = "spi-mux";
+> +         #address-cells = <1>;
+> +         #size-cells = <0>;
+> +         reg = <0>;
+> +         spi-max-frequency = <100000000>;
+> +
+> +         mux-controls = <&mux>
 
+Missing semicolon.
+
+> +
+> +         spi-flash@0 {
+> +           compatible = "jedec,spi-nor";
+> +           #address-cells = <1>;
+> +           #size-cells = <1>;
+> +           reg = <0>;
+> +           spi-max-frequency = <40000000>;
+> +         };
+> +
+> +         spi-device@1 {
+> +           compatible = "lineartechnology,ltc2488";
+> +           reg = <1>;
+> +           spi-max-frequency = <10000000>;
+> +         };
+> +       };
+> +     };
+> --
+> 2.25.0
+>
