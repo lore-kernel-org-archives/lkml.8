@@ -2,400 +2,236 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1460FC33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 22:24:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79F27C33CAA
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 22:29:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE51521569
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 22:24:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="JFJqrpBT"
+	by mail.kernel.org (Postfix) with ESMTP id 42B8C21569
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 22:29:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729437AbgAWWYo (ORCPT
+        id S1729274AbgAWW3x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 17:24:44 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:43605 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726232AbgAWWYn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 17:24:43 -0500
-Received: by mail-pg1-f196.google.com with SMTP id u131so2083163pgc.10
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jan 2020 14:24:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=lBn5phI/wvY2dGyGq5+GP6PZXQDJo0dQ0g226tozhLw=;
-        b=JFJqrpBTRixhHPkhc3o74fo9jnsE+ii0G7INopIoeIw3xNFfzok9E6d8HdvYfWw5Bj
-         jA/78vAs4tXzwjeZjCHn2FXcGNfTUZlUiTtBqwNRudlIBcGpW+TP69BakRuRFHQuBY8v
-         k4wkVtVqm8kiCa5vhxJxY26tm+J9pjQtL5oEk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=lBn5phI/wvY2dGyGq5+GP6PZXQDJo0dQ0g226tozhLw=;
-        b=VktYaKgu2JgSyzaKGINQLnSjN/DdfJx9H0/wsPV2BpNS8Bcm6oVvWZmOCy+FjdUK8K
-         +5GL9luOfCKO0CEJBJlO/sM0D1odtnkYGudzTmjUCkcz4O3bTtpOVPDMYj1o1EM1bL85
-         TeYP6r6xTH6wWJF3Wgy3BrddNr4RrpP2Du+Ahsph68EJu53C0MLTWlgpITtUNcFns0sg
-         kVujfAU8phPdrxrEw3BAN3vzby9LxOvfyQ6mAL2B8Onsyz3GvnsQCZDLj4dAIGZMA4nE
-         40bJIOuDktt844yg2eP75TwbAe50XXELpeoNFB7dW+lacALJGh07aeG2g+WC3NtSyxD3
-         muSw==
-X-Gm-Message-State: APjAAAVx/I6oW1FFr4AWKMbaM9VPpK0xkbbXt5fCBaUKQcQpg1cLvchk
-        eX+k9gjAXLqcM/n2cfFX3OTJt2NlYD8eeA==
-X-Google-Smtp-Source: APXvYqz0ypJ4B3MMtsyYkJBD/mIB2rhy6JHC4GhM3IlaKoQDYRZCROcJ1IuiGwybSNmz3smRAWsR1w==
-X-Received: by 2002:a63:fa50:: with SMTP id g16mr619334pgk.202.1579818282803;
-        Thu, 23 Jan 2020 14:24:42 -0800 (PST)
-Received: from chromium.org ([2a00:79e1:abc:122:bd8d:3f7b:87f7:16d1])
-        by smtp.gmail.com with ESMTPSA id f9sm3768994pfd.141.2020.01.23.14.24.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Jan 2020 14:24:41 -0800 (PST)
-From:   KP Singh <kpsingh@chromium.org>
-X-Google-Original-From: KP Singh <kpsingh>
-Date:   Thu, 23 Jan 2020 14:24:36 -0800
-To:     Casey Schaufler <casey@schaufler-ca.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Linux Security Module list 
-        <linux-security-module@vger.kernel.org>, bpf@vger.kernel.org
-Subject: Re: [PATCH bpf-next v3 04/10] bpf: lsm: Add mutable hooks list for
- the BPF LSM
-Message-ID: <20200123222436.GA1598@chromium.org>
-References: <20200123152440.28956-1-kpsingh@chromium.org>
- <20200123152440.28956-5-kpsingh@chromium.org>
- <29157a88-7049-906e-fe92-b7a1e2183c6b@schaufler-ca.com>
- <20200123175942.GA131348@google.com>
- <5004b3f4-ca5b-a546-4e87-b852cc248079@schaufler-ca.com>
+        Thu, 23 Jan 2020 17:29:53 -0500
+Received: from mga05.intel.com ([192.55.52.43]:10119 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726584AbgAWW3x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jan 2020 17:29:53 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Jan 2020 14:29:52 -0800
+X-IronPort-AV: E=Sophos;i="5.70,355,1574150400"; 
+   d="scan'208";a="220821514"
+Received: from ahduyck-desk1.jf.intel.com ([10.7.198.76])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Jan 2020 14:29:52 -0800
+Message-ID: <f928d85be9d1119095134277a2ca8a67b98fa5fb.camel@linux.intel.com>
+Subject: Re: [PATCH v16.1 0/9] mm / virtio: Provide support for free page
+ reporting
+From:   Alexander Duyck <alexander.h.duyck@linux.intel.com>
+To:     Johannes Weiner <hannes@cmpxchg.org>
+Cc:     Alexander Graf <graf@amazon.com>,
+        Alexander Duyck <alexander.duyck@gmail.com>,
+        kvm@vger.kernel.org, mst@redhat.com, linux-kernel@vger.kernel.org,
+        willy@infradead.org, mhocko@kernel.org, linux-mm@kvack.org,
+        akpm@linux-foundation.org, mgorman@techsingularity.net,
+        vbabka@suse.cz, yang.zhang.wz@gmail.com, nitesh@redhat.com,
+        konrad.wilk@oracle.com, david@redhat.com, pagupta@redhat.com,
+        riel@surriel.com, lcapitulino@redhat.com, dave.hansen@intel.com,
+        wei.w.wang@intel.com, aarcange@redhat.com, pbonzini@redhat.com,
+        dan.j.williams@intel.com, osalvador@suse.de,
+        "Paterson-Jones, Roland" <rolandp@amazon.com>, hare@suse.com
+Date:   Thu, 23 Jan 2020 14:29:52 -0800
+In-Reply-To: <20200123191705.GB154785@cmpxchg.org>
+References: <20200122173040.6142.39116.stgit@localhost.localdomain>
+         <914aa4c3-c814-45e0-830b-02796b00b762@amazon.com>
+         <af0b12780092e0007ec9e6dbfc92bc15b604b8f4.camel@linux.intel.com>
+         <20200123191705.GB154785@cmpxchg.org>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.5 (3.32.5-1.fc30) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5004b3f4-ca5b-a546-4e87-b852cc248079@schaufler-ca.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 23-Jan 11:09, Casey Schaufler wrote:
-> On 1/23/2020 9:59 AM, KP Singh wrote:
-> > On 23-Jan 09:03, Casey Schaufler wrote:
-> >> On 1/23/2020 7:24 AM, KP Singh wrote:
-> >>> From: KP Singh <kpsingh@google.com>
-> >>>
-> >>> - The list of hooks registered by an LSM is currently immutable as they
-> >>>   are declared with __lsm_ro_after_init and they are attached to a
-> >>>   security_hook_heads struct.
-> >>> - For the BPF LSM we need to de/register the hooks at runtime. Making
-> >>>   the existing security_hook_heads mutable broadens an
-> >>>   attack vector, so a separate security_hook_heads is added for only
-> >>>   those that ~must~ be mutable.
-> >>> - These mutable hooks are run only after all the static hooks have
-> >>>   successfully executed.
-> >>>
-> >>> This is based on the ideas discussed in:
-> >>>
-> >>>   https://lore.kernel.org/lkml/20180408065916.GA2832@ircssh-2.c.rugged-nimbus-611.internal
-> >>>
-> >>> Reviewed-by: Brendan Jackman <jackmanb@google.com>
-> >>> Reviewed-by: Florent Revest <revest@google.com>
-> >>> Reviewed-by: Thomas Garnier <thgarnie@google.com>
-> >>> Signed-off-by: KP Singh <kpsingh@google.com>
-> >>> ---
-> >>>  MAINTAINERS             |  1 +
-> >>>  include/linux/bpf_lsm.h | 72 +++++++++++++++++++++++++++++++++++++++++
-> >>>  security/bpf/Kconfig    |  1 +
-> >>>  security/bpf/Makefile   |  2 +-
-> >>>  security/bpf/hooks.c    | 20 ++++++++++++
-> >>>  security/bpf/lsm.c      |  7 ++++
-> >>>  security/security.c     | 25 +++++++-------
-> >>>  7 files changed, 116 insertions(+), 12 deletions(-)
-> >>>  create mode 100644 include/linux/bpf_lsm.h
-> >>>  create mode 100644 security/bpf/hooks.c
-> >>>
-> >>> diff --git a/MAINTAINERS b/MAINTAINERS
-> >>> index e2b7f76a1a70..c606b3d89992 100644
-> >>> --- a/MAINTAINERS
-> >>> +++ b/MAINTAINERS
-> >>> @@ -3209,6 +3209,7 @@ L:	linux-security-module@vger.kernel.org
-> >>>  L:	bpf@vger.kernel.org
-> >>>  S:	Maintained
-> >>>  F:	security/bpf/
-> >>> +F:	include/linux/bpf_lsm.h
-> >>>  
-> >>>  BROADCOM B44 10/100 ETHERNET DRIVER
-> >>>  M:	Michael Chan <michael.chan@broadcom.com>
-> >>> diff --git a/include/linux/bpf_lsm.h b/include/linux/bpf_lsm.h
-> >>> new file mode 100644
-> >>> index 000000000000..57c20b2cd2f4
-> >>> --- /dev/null
-> >>> +++ b/include/linux/bpf_lsm.h
-> >>> @@ -0,0 +1,72 @@
-> >>> +/* SPDX-License-Identifier: GPL-2.0 */
-> >>> +
-> >>> +/*
-> >>> + * Copyright 2019 Google LLC.
-> >>> + */
-> >>> +
-> >>> +#ifndef _LINUX_BPF_LSM_H
-> >>> +#define _LINUX_BPF_LSM_H
-> >>> +
-> >>> +#include <linux/bpf.h>
-> >>> +#include <linux/lsm_hooks.h>
-> >>> +
-> >>> +#ifdef CONFIG_SECURITY_BPF
-> >>> +
-> >>> +/* Mutable hooks defined at runtime and executed after all the statically
-> >>> + * defined LSM hooks.
-> >>> + */
-> >>> +extern struct security_hook_heads bpf_lsm_hook_heads;
-> >>> +
-> >>> +int bpf_lsm_srcu_read_lock(void);
-> >>> +void bpf_lsm_srcu_read_unlock(int idx);
-> >>> +
-> >>> +#define CALL_BPF_LSM_VOID_HOOKS(FUNC, ...)			\
-> >>> +	do {							\
-> >>> +		struct security_hook_list *P;			\
-> >>> +		int _idx;					\
-> >>> +								\
-> >>> +		if (hlist_empty(&bpf_lsm_hook_heads.FUNC))	\
-> >>> +			break;					\
-> >>> +								\
-> >>> +		_idx = bpf_lsm_srcu_read_lock();		\
-> >>> +		hlist_for_each_entry(P, &bpf_lsm_hook_heads.FUNC, list) \
-> >>> +			P->hook.FUNC(__VA_ARGS__);		\
-> >>> +		bpf_lsm_srcu_read_unlock(_idx);			\
-> >>> +	} while (0)
-> >>> +
-> >>> +#define CALL_BPF_LSM_INT_HOOKS(FUNC, ...) ({			\
-> >>> +	int _ret = 0;						\
-> >>> +	do {							\
-> >>> +		struct security_hook_list *P;			\
-> >>> +		int _idx;					\
-> >>> +								\
-> >>> +		if (hlist_empty(&bpf_lsm_hook_heads.FUNC))	\
-> >>> +			break;					\
-> >>> +								\
-> >>> +		_idx = bpf_lsm_srcu_read_lock();		\
-> >>> +								\
-> >>> +		hlist_for_each_entry(P,				\
-> >>> +			&bpf_lsm_hook_heads.FUNC, list) {	\
-> >>> +			_ret = P->hook.FUNC(__VA_ARGS__);		\
-> >>> +			if (_ret && IS_ENABLED(CONFIG_SECURITY_BPF_ENFORCE)) \
-> >>> +				break;				\
-> >>> +		}						\
-> >>> +		bpf_lsm_srcu_read_unlock(_idx);			\
-> >>> +	} while (0);						\
-> >>> +	IS_ENABLED(CONFIG_SECURITY_BPF_ENFORCE) ? _ret : 0;	\
-> >>> +})
-> >>> +
-> >>> +#else /* !CONFIG_SECURITY_BPF */
-> >>> +
-> >>> +#define CALL_BPF_LSM_INT_HOOKS(FUNC, ...) (0)
-> >>> +#define CALL_BPF_LSM_VOID_HOOKS(...)
-> >>> +
-> >>> +static inline int bpf_lsm_srcu_read_lock(void)
-> >>> +{
-> >>> +	return 0;
-> >>> +}
-> >>> +static inline void bpf_lsm_srcu_read_unlock(int idx) {}
-> >>> +
-> >>> +#endif /* CONFIG_SECURITY_BPF */
-> >>> +
-> >>> +#endif /* _LINUX_BPF_LSM_H */
-> >>> diff --git a/security/bpf/Kconfig b/security/bpf/Kconfig
-> >>> index a5f6c67ae526..595e4ad597ae 100644
-> >>> --- a/security/bpf/Kconfig
-> >>> +++ b/security/bpf/Kconfig
-> >>> @@ -6,6 +6,7 @@ config SECURITY_BPF
-> >>>  	bool "BPF-based MAC and audit policy"
-> >>>  	depends on SECURITY
-> >>>  	depends on BPF_SYSCALL
-> >>> +	depends on SRCU
-> >>>  	help
-> >>>  	  This enables instrumentation of the security hooks with
-> >>>  	  eBPF programs.
-> >>> diff --git a/security/bpf/Makefile b/security/bpf/Makefile
-> >>> index c78a8a056e7e..c526927c337d 100644
-> >>> --- a/security/bpf/Makefile
-> >>> +++ b/security/bpf/Makefile
-> >>> @@ -2,4 +2,4 @@
-> >>>  #
-> >>>  # Copyright 2019 Google LLC.
-> >>>  
-> >>> -obj-$(CONFIG_SECURITY_BPF) := lsm.o ops.o
-> >>> +obj-$(CONFIG_SECURITY_BPF) := lsm.o ops.o hooks.o
-> >>> diff --git a/security/bpf/hooks.c b/security/bpf/hooks.c
-> >>> new file mode 100644
-> >>> index 000000000000..b123d9cb4cd4
-> >>> --- /dev/null
-> >>> +++ b/security/bpf/hooks.c
-> >>> @@ -0,0 +1,20 @@
-> >>> +// SPDX-License-Identifier: GPL-2.0
-> >>> +
-> >>> +/*
-> >>> + * Copyright 2019 Google LLC.
-> >>> + */
-> >>> +
-> >>> +#include <linux/bpf_lsm.h>
-> >>> +#include <linux/srcu.h>
-> >>> +
-> >>> +DEFINE_STATIC_SRCU(security_hook_srcu);
-> >>> +
-> >>> +int bpf_lsm_srcu_read_lock(void)
-> >>> +{
-> >>> +	return srcu_read_lock(&security_hook_srcu);
-> >>> +}
-> >>> +
-> >>> +void bpf_lsm_srcu_read_unlock(int idx)
-> >>> +{
-> >>> +	return srcu_read_unlock(&security_hook_srcu, idx);
-> >>> +}
-> >>> diff --git a/security/bpf/lsm.c b/security/bpf/lsm.c
-> >>> index dc9ac03c7aa0..a25a068e1781 100644
-> >>> --- a/security/bpf/lsm.c
-> >>> +++ b/security/bpf/lsm.c
-> >>> @@ -4,6 +4,7 @@
-> >>>   * Copyright 2019 Google LLC.
-> >>>   */
-> >>>  
-> >>> +#include <linux/bpf_lsm.h>
-> >>>  #include <linux/lsm_hooks.h>
-> >>>  
-> >>>  /* This is only for internal hooks, always statically shipped as part of the
-> >>> @@ -12,6 +13,12 @@
-> >>>   */
-> >>>  static struct security_hook_list bpf_lsm_hooks[] __lsm_ro_after_init = {};
-> >>>  
-> >>> +/* Security hooks registered dynamically by the BPF LSM and must be accessed
-> >>> + * by holding bpf_lsm_srcu_read_lock and bpf_lsm_srcu_read_unlock. The mutable
-> >>> + * hooks dynamically allocated by the BPF LSM are appeneded here.
-> >>> + */
-> >>> +struct security_hook_heads bpf_lsm_hook_heads;
-> >>> +
-> >>>  static int __init bpf_lsm_init(void)
-> >>>  {
-> >>>  	security_add_hooks(bpf_lsm_hooks, ARRAY_SIZE(bpf_lsm_hooks), "bpf");
-> >>> diff --git a/security/security.c b/security/security.c
-> >>> index 30a8aa700557..95a46ca25dcd 100644
-> >>> --- a/security/security.c
-> >>> +++ b/security/security.c
-> >>> @@ -27,6 +27,7 @@
-> >>>  #include <linux/backing-dev.h>
-> >>>  #include <linux/string.h>
-> >>>  #include <linux/msg.h>
-> >>> +#include <linux/bpf_lsm.h>
-> >>>  #include <net/flow.h>
-> >>>  
-> >>>  #define MAX_LSM_EVM_XATTR	2
-> >>> @@ -657,20 +658,22 @@ static void __init lsm_early_task(struct task_struct *task)
-> >>>  								\
-> >>>  		hlist_for_each_entry(P, &security_hook_heads.FUNC, list) \
-> >>>  			P->hook.FUNC(__VA_ARGS__);		\
-> >>> +		CALL_BPF_LSM_VOID_HOOKS(FUNC, __VA_ARGS__);	\
-> >> I'm sorry if I wasn't clear on the v2 review.
-> >> This does not belong in the infrastructure. You should be
-> >> doing all the bpf_lsm hook processing in you module.
-> >> bpf_lsm_task_alloc() should loop though all the bpf
-> >> task_alloc hooks if they have to be handled differently
-> >> from "normal" LSM hooks.
-> > The BPF LSM does not define static hooks (the ones registered to
-> > security_hook_heads in security.c with __lsm_ro_after_init) for each
-> > LSM hook. If it tries to do that one ends with what was in v1:
-> >
-> >   https://lore.kernel.org/bpf/20191220154208.15895-7-kpsingh@chromium.org
-> >
-> > This gets quite ugly (security/bpf/hooks.h from v1) and was noted by
-> > the BPF maintainers:
-> >
-> >   https://lore.kernel.org/bpf/20191222012722.gdqhppxpfmqfqbld@ast-mbp.dhcp.thefacebook.com/
-> >
-> > As I mentioned, some of the ideas we used here are based on:
-> >
-> >   https://lore.kernel.org/lkml/20180408065916.GA2832@ircssh-2.c.rugged-nimbus-611.internal
-> >
-> > Which gave each LSM the ability to add mutable hooks at runtime. If
-> > you prefer we can make this generic and allow the LSMs to register
-> > mutable hooks with the BPF LSM be the only LSM that uses it (and
-> > enforce it with a whitelist).
-> >
-> > Would this generic approach be something you would consider better
-> > than just calling the BPF mutable hooks directly?
+On Thu, 2020-01-23 at 14:17 -0500, Johannes Weiner wrote:
+> On Thu, Jan 23, 2020 at 08:26:39AM -0800, Alexander Duyck wrote:
+> > On Thu, 2020-01-23 at 11:20 +0100, Alexander Graf wrote:
+> > > Hi Alex,
+> > > 
+> > > On 22.01.20 18:43, Alexander Duyck wrote:
+> > > > This series provides an asynchronous means of reporting free guest pages
+> > > > to a hypervisor so that the memory associated with those pages can be
+> > > > dropped and reused by other processes and/or guests on the host. Using
+> > > > this it is possible to avoid unnecessary I/O to disk and greatly improve
+> > > > performance in the case of memory overcommit on the host.
+> > > > 
+> > > > When enabled we will be performing a scan of free memory every 2 seconds
+> > > > while pages of sufficiently high order are being freed. In each pass at
+> > > > least one sixteenth of each free list will be reported. By doing this we
+> > > > avoid racing against other threads that may be causing a high amount of
+> > > > memory churn.
+> > > > 
+> > > > The lowest page order currently scanned when reporting pages is
+> > > > pageblock_order so that this feature will not interfere with the use of
+> > > > Transparent Huge Pages in the case of virtualization.
+> > > > 
+> > > > Currently this is only in use by virtio-balloon however there is the hope
+> > > > that at some point in the future other hypervisors might be able to make
+> > > > use of it. In the virtio-balloon/QEMU implementation the hypervisor is
+> > > > currently using MADV_DONTNEED to indicate to the host kernel that the page
+> > > > is currently free. It will be zeroed and faulted back into the guest the
+> > > > next time the page is accessed.
+> > > > 
+> > > > To track if a page is reported or not the Uptodate flag was repurposed and
+> > > > used as a Reported flag for Buddy pages. We walk though the free list
+> > > > isolating pages and adding them to the scatterlist until we either
+> > > > encounter the end of the list, processed as many pages as were listed in
+> > > > nr_free prior to us starting, or have filled the scatterlist with pages to
+> > > > be reported. If we fill the scatterlist before we reach the end of the
+> > > > list we rotate the list so that the first unreported page we encounter is
+> > > > moved to the head of the list as that is where we will resume after we
+> > > > have freed the reported pages back into the tail of the list.
+> > > > 
+> > > > Below are the results from various benchmarks. I primarily focused on two
+> > > > tests. The first is the will-it-scale/page_fault2 test, and the other is
+> > > > a modified version of will-it-scale/page_fault1 that was enabled to use
+> > > > THP. I did this as it allows for better visibility into different parts
+> > > > of the memory subsystem. The guest is running with 32G for RAM on one
+> > > > node of a E5-2630 v3. The host has had some features such as CPU turbo
+> > > > disabled in the BIOS.
+> > > > 
+> > > > Test                   page_fault1 (THP)    page_fault2
+> > > > Name            tasks  Process Iter  STDEV  Process Iter  STDEV
+> > > > Baseline            1    1012402.50  0.14%     361855.25  0.81%
+> > > >                     16    8827457.25  0.09%    3282347.00  0.34%
+> > > > 
+> > > > Patches Applied     1    1007897.00  0.23%     361887.00  0.26%
+> > > >                     16    8784741.75  0.39%    3240669.25  0.48%
+> > > > 
+> > > > Patches Enabled     1    1010227.50  0.39%     359749.25  0.56%
+> > > >                     16    8756219.00  0.24%    3226608.75  0.97%
+> > > > 
+> > > > Patches Enabled     1    1050982.00  4.26%     357966.25  0.14%
+> > > >   page shuffle      16    8672601.25  0.49%    3223177.75  0.40%
+> > > > 
+> > > > Patches enabled     1    1003238.00  0.22%     360211.00  0.22%
+> > > >   shuffle w/ RFC    16    8767010.50  0.32%    3199874.00  0.71%
+> > > > 
+> > > > The results above are for a baseline with a linux-next-20191219 kernel,
+> > > > that kernel with this patch set applied but page reporting disabled in
+> > > > virtio-balloon, the patches applied and page reporting fully enabled, the
+> > > > patches enabled with page shuffling enabled, and the patches applied with
+> > > > page shuffling enabled and an RFC patch that makes used of MADV_FREE in
+> > > > QEMU. These results include the deviation seen between the average value
+> > > > reported here versus the high and/or low value. I observed that during the
+> > > > test memory usage for the first three tests never dropped whereas with the
+> > > > patches fully enabled the VM would drop to using only a few GB of the
+> > > > host's memory when switching from memhog to page fault tests.
+> > > > 
+> > > > Any of the overhead visible with this patch set enabled seems due to page
+> > > > faults caused by accessing the reported pages and the host zeroing the page
+> > > > before giving it back to the guest. This overhead is much more visible when
+> > > > using THP than with standard 4K pages. In addition page shuffling seemed to
+> > > > increase the amount of faults generated due to an increase in memory churn.
+> > > > The overhead is reduced when using MADV_FREE as we can avoid the extra
+> > > > zeroing of the pages when they are reintroduced to the host, as can be seen
+> > > > when the RFC is applied with shuffling enabled.
+> > > > 
+> > > > The overall guest size is kept fairly small to only a few GB while the test
+> > > > is running. If the host memory were oversubscribed this patch set should
+> > > > result in a performance improvement as swapping memory in the host can be
+> > > > avoided.
+> > > 
+> > > I really like the approach overall. Voluntarily propagating free memory 
+> > > from a guest to the host has been a sore point ever since KVM was 
+> > > around. This solution looks like a very elegant way to do so.
+> > > 
+> > > The big piece I'm missing is the page cache. Linux will by default try 
+> > > to keep the free list as small as it can in favor of page cache, so most 
+> > > of the benefit of this patch set will be void in real world scenarios.
+> > 
+> > Agreed. This is a the next piece of this I plan to work on once this is
+> > accepted. For now the quick and dirty approach is to essentially make use
+> > of the /proc/sys/vm/drop_caches interface in the guest by either putting
+> > it in a cronjob somewhere or to have it after memory intensive workloads.
+> > 
+> > > Traditionally, this was solved by creating pressure from the host 
+> > > through virtio-balloon: Exactly the piece that this patch set gets away 
+> > > with. I never liked "ballooning", because the host has very limited 
+> > > visibility into the actual memory utility of its guests. So leaving the 
+> > > decision on how much memory is actually needed at a given point in time 
+> > > should ideally stay with the guest.
+> > > 
+> > > What would keep us from applying the page hinting approach to inactive, 
+> > > clean page cache pages? With writeback in place as well, we would slowly 
+> > > propagate pages from
+> > > 
+> > >    dirty -> clean -> clean, inactive -> free -> host owned
+> > > 
+> > > which gives a guest a natural path to give up "not important" memory.
+> > 
+> > I considered something similar. Basically one thought I had was to
+> > essentially look at putting together some sort of epoch. When the host is
+> > under memory pressure it would need to somehow notify the guest and then
+> > the guest would start moving the epoch forward so that we start evicting
+> > pages out of the page cache when the host is under memory pressure.
+> > 
+> > > The big problem I see is that what I really want from a user's point of 
+> > > view is a tuneable that says "Automatically free clean page cache pages 
+> > > that were not accessed in the last X minutes". Otherwise we may run into 
+> > > the risk of evicting some times in use page cache pages.
+> > > 
+> > > I have a hard time grasping the mm code to understand how hard that 
+> > > would be to implement that though :).
+> > > 
+> > > 
+> > > Alex
+> > 
+> > Yeah, I am not exactly an expert on this either as I have only been
+> > working int he MM tree for about a year now.
+> > 
+> > I have submitted this as a topic for LSF/MM summit[1] and I am hoping to
+> > get some feedback on the best way to apply proactive memory pressure as
+> > one of the subtopics if iti s selected.
 > 
-> What I think makes sense is for the BPF LSM to have a hook
-> for each of the interfaces and for that hook to handle the
-> mutable list for the interface. If BPF not included there
-> will be no mutable hooks. 
+> I've been working on a proactive reclaim project that shrinks
+> workloads to their smallest, still healthy, memory footprint.
 > 
-> Yes, your v1 got this right.
-
-BPF LSM does provide mutable LSM hooks and it ends up being simpler
-to implement/maintain when they are treated as such.
-
- The other approaches which we have considered are:
-
-- Using macro magic to allocate static hook bodies which call eBPF
-  programs as implemented in v1. This entails maintaining a
-  separate list of LSM hooks in the BPF LSM which is evident from the
-  giant security/bpf/include/hooks.h in:
-
-  https://lore.kernel.org/bpf/20191220154208.15895-7-kpsingh@chromium.org
-
-- Another approach one can think of is to allocate all the trampoline
-  images (one page each) at __init and update these images to invoke
-  BPF programs when they are attached.
-
-Both these approaches seem to suffer from the downside of doing more
-work when it's not really needed (i.e. doing prep work for hooks which
-have no eBPF programs attached) and they appear to to mask the fact
-that what the BPF LSM provides is actually mutable LSM hooks by
-allocating static wrappers around mutable callbacks.
-
-Are there other downsides apart from the fact we have an explicit call
-to the mutable hooks in the LSM code? (Note that we want to have these
-mutable hooks run after all the static LSM hooks so ordering
-would still end up being LSM_ORDER_LAST)
-
-It would be great to hear the maintainers' perspective based on the
-trade-offs involved with the different approaches discussed.
-
-We are happy to adapt our approach based on the consensus we reach
-here.
-
-- KP
-
+> Because we (FB) have a similar problem with containers: in order to
+> know how many workloads can be safely combined on a host, we first
+> need to know how much memory a given workload truly requires - as
+> opposed to how many pages it would gobble up for one-off cache and
+> cold anon regions if it had the whole machine to itself.
 > 
-> >
-> > - KP
-> >
-> >>>  	} while (0)
-> >>>  
-> >>> -#define call_int_hook(FUNC, IRC, ...) ({			\
-> >>> -	int RC = IRC;						\
-> >>> -	do {							\
-> >>> -		struct security_hook_list *P;			\
-> >>> -								\
-> >>> +#define call_int_hook(FUNC, IRC, ...) ({				\
-> >>> +	int RC = IRC;							\
-> >>> +	do {								\
-> >>> +		struct security_hook_list *P;				\
-> >>>  		hlist_for_each_entry(P, &security_hook_heads.FUNC, list) { \
-> >>> -			RC = P->hook.FUNC(__VA_ARGS__);		\
-> >>> -			if (RC != 0)				\
-> >>> -				break;				\
-> >>> -		}						\
-> >>> -	} while (0);						\
-> >>> -	RC;							\
-> >>> +			RC = P->hook.FUNC(__VA_ARGS__);			\
-> >>> +			if (RC != 0)					\
-> >>> +				break;					\
-> >>> +		}							\
-> >>> +		if (RC == 0)						\
-> >>> +			RC = CALL_BPF_LSM_INT_HOOKS(FUNC, __VA_ARGS__);	\
-> >>> +	} while (0);							\
-> >>> +	RC;								\
-> >>>  })
-> >>>  
-> >>>  /* Security operations */
+> This userspace tool uses cgroups and psi to adjust the memory limits
+> of workloads in a pressure feedback loop. It targets a minimal rate of
+> refaults/swapping/reclaim activity to identify the point where all the
+> cold pages have been evicted and we're *just* about to start eating
+> into warmer memory.
 > 
+> With SSDs, control over pressure is fine-grained enough that we can
+> run it on even highly latency-sensitive things like our web servers
+> without impacting response time meaningfully.
+> 
+> It harnesses the VM's existing LRU/clock algorithm to identify the
+> pages which are most likely to be cold, so the approach scales to
+> large memory sizes (256G+) with only minor CPU overhead.
+> 
+> https://github.com/facebookincubator/senpai
+> 
+> The same concept could be applicable to shrinking guests proactively
+> in virtualized environments?
+
+Looking it over this kind of does what we would want to do, however we
+would need to find a way to have this work without the cgroup requirement.
+Essentially we would have the guest running this and then proactively
+keeping its own resources in check.
+
+- Alex
+
+
