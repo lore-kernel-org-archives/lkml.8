@@ -5,54 +5,54 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 569C3C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 15:25:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56C34C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 15:25:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2AB5822522
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 15:25:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2514224125
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 15:25:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Jp69RmQk"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Sd/REqC2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729133AbgAWPZL (ORCPT
+        id S1729184AbgAWPZP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 10:25:11 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:45462 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729107AbgAWPZK (ORCPT
+        Thu, 23 Jan 2020 10:25:15 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:32844 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729149AbgAWPZO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 10:25:10 -0500
-Received: by mail-pg1-f193.google.com with SMTP id b9so1525721pgk.12
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jan 2020 07:25:10 -0800 (PST)
+        Thu, 23 Jan 2020 10:25:14 -0500
+Received: by mail-pf1-f195.google.com with SMTP id z16so1703181pfk.0
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jan 2020 07:25:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=Q4x5KAd27m8l4DDargFurbUE9qKxXrSpODZZ6bpQ4NY=;
-        b=Jp69RmQkL6xEcGqyr24OfJqADG68GZDN7XOwN3C6RbgKxk3YJckrojP9H/yfiLVGpD
-         qxWHjOfZEMp2p7tz7HOgM5FsSgnfRGBg54bIj9ZW2VfOMvC9cDf9MxtKy4m9AdBGYb8b
-         c/1qg6nFPcx20v7/fvgeAGxLiHhwmCvUw+Ja4=
+        bh=TOgW7lcXGtnBKERztN8ZYLITTM6bIMZTuIfirqHWInE=;
+        b=Sd/REqC2xMx3gXm3vWuonOosNbIknnr7sb8eU7WJ45Jkxi5hbmo3Rh9zHsOOlZ680F
+         dX2+GfvsBxzesS7kOJJWI0kLHbMedyxut5gEPoZXqhRmXKzSDAPLK4mLWzPlAH3qi0Kw
+         3fVx4g9e4N9XWruZLaoMzM+T5xinGEs2JOno8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=Q4x5KAd27m8l4DDargFurbUE9qKxXrSpODZZ6bpQ4NY=;
-        b=X23f7r/3D3pFYqRRh3JSvowbbWbgOB77ez7ql1rAyyjqnUw4lq7+h2e2nkDpTl/68Z
-         Tp9ePF40lled6D2kaT8Kxb8mTVqR8z5jOJvNyn0z2snGo7vbOL6EMswB39nS6Vn34y44
-         j8hIXLn8nIdt71839GCkLU1jB8SvJFPaq2eB74bQc4QpwRhuGqRMLPHzsEA403VkWoXJ
-         NsCfcExx3l2hLQUoopZDESc8xLd/kE3OkVBaiV4XFfUQeUASOKOg2Y15mBqTOA2duOkz
-         9F5w7u3UFr1d4v9oBD866ZagbH7pPt4vtPu66xOYXsVAQ1P7K8G1hSv/Z0DmHHF9Uuwq
-         OSgg==
-X-Gm-Message-State: APjAAAWSxIM1f73N1yre/j9Pb3w42eKG9LRcJCMPoqRGIt5kjOA6qjv8
-        XtI2/T5YXgTINql1aw22YnvdsSVvQ5xU6A==
-X-Google-Smtp-Source: APXvYqy69wILp8KzY5eBLZS9Y6shozDIu5m42vqavj1O7DKkYvFz5hDVbewtJW2V8AcxgFhtzKJSDA==
-X-Received: by 2002:a63:2ac2:: with SMTP id q185mr4570434pgq.417.1579793109702;
-        Thu, 23 Jan 2020 07:25:09 -0800 (PST)
+        bh=TOgW7lcXGtnBKERztN8ZYLITTM6bIMZTuIfirqHWInE=;
+        b=d6Wbs2VTI0L6b5ULUD6uT/a9wRQzHmKaj6fB+otNw+XbV/fPTu4mVyz0kMYs+cUGs1
+         n+9Ii9c1qoLe5ntcNWXGnOZYzQ3z6IHdcn+YLisX/xDMWdPLJHgIzr1AVl3hAsR3eggi
+         BjDpLoMuTYVP3nXX5jj9yDPat9tV/atfoRD+wb+Xtd7oAj70KfAXhNb/tyxMNTHMDIof
+         V7X7Rsd42HP6nyUYiHrbn0Ve5Rp23s+CY1TgDAvmO1xwLvZLdU6Y+/soihfFEkMXcZmB
+         lfForC3LAhPve4C0EWdDIGZzTC6WOaNB/FphcGxNUXpaWgUIklTN/by6Oq9WjdTC4Bux
+         1+Aw==
+X-Gm-Message-State: APjAAAXQenFVFFfS9GYs3kPYMkf7R1N862GMjng4hNj1geoNx4W8UhgB
+        Czjbz+xnMQu2ocG9NKZKksRz0tptqtcp1g==
+X-Google-Smtp-Source: APXvYqygc+cRwf48735fBToutn7dQqalMu9GLbzzxo+aD4TUlffbFL4gbcJME4MCdblTk8HCTth2Lg==
+X-Received: by 2002:a65:6794:: with SMTP id e20mr4475292pgr.152.1579793113577;
+        Thu, 23 Jan 2020 07:25:13 -0800 (PST)
 Received: from kpsingh-kernel.localdomain ([2a00:79e1:abc:122:bd8d:3f7b:87f7:16d1])
-        by smtp.gmail.com with ESMTPSA id v5sm3108118pfn.122.2020.01.23.07.25.08
+        by smtp.gmail.com with ESMTPSA id v5sm3108118pfn.122.2020.01.23.07.25.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Jan 2020 07:25:09 -0800 (PST)
+        Thu, 23 Jan 2020 07:25:12 -0800 (PST)
 From:   KP Singh <kpsingh@chromium.org>
 To:     linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
         linux-security-module@vger.kernel.org
@@ -83,9 +83,9 @@ Cc:     Brendan Jackman <jackmanb@google.com>,
         Stanislav Fomichev <sdf@google.com>,
         Quentin Monnet <quentin.monnet@netronome.com>,
         Andrey Ignatov <rdna@fb.com>, Joe Stringer <joe@wand.net.nz>
-Subject: [PATCH bpf-next v3 01/10] bpf: btf: Add btf_type_by_name_kind
-Date:   Thu, 23 Jan 2020 07:24:31 -0800
-Message-Id: <20200123152440.28956-2-kpsingh@chromium.org>
+Subject: [PATCH bpf-next v3 03/10] bpf: lsm: Introduce types for eBPF based LSM
+Date:   Thu, 23 Jan 2020 07:24:33 -0800
+Message-Id: <20200123152440.28956-4-kpsingh@chromium.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200123152440.28956-1-kpsingh@chromium.org>
 References: <20200123152440.28956-1-kpsingh@chromium.org>
@@ -98,64 +98,166 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: KP Singh <kpsingh@google.com>
 
-- The LSM code does the combination of btf_find_by_name_kind and
-  btf_type_by_id a couple of times to figure out the BTF type for
-  security_hook_heads and security_list_options.
-- Add an extern for btf_vmlinux in btf.h
+A new eBPF program type BPF_PROG_TYPE_LSM with an
+expected attach type of BPF_LSM_MAC. Attachment to LSM hooks is not
+implemented in this patch.
+
+On defining the types for the program, the macros expect that
+<prog_name>_prog_ops and <prog_name>_verifier_ops exist. This is
+implicitly required by the macro:
+
+  BPF_PROG_TYPE(BPF_PROG_TYPE_LSM, lsm, ...)
 
 Signed-off-by: KP Singh <kpsingh@google.com>
 Reviewed-by: Brendan Jackman <jackmanb@google.com>
 Reviewed-by: Florent Revest <revest@google.com>
 Reviewed-by: Thomas Garnier <thgarnie@google.com>
 ---
- include/linux/btf.h |  3 +++
- kernel/bpf/btf.c    | 12 ++++++++++++
- 2 files changed, 15 insertions(+)
+ include/linux/bpf_types.h      |  4 ++++
+ include/uapi/linux/bpf.h       |  2 ++
+ kernel/bpf/syscall.c           |  6 ++++++
+ security/bpf/Makefile          |  2 +-
+ security/bpf/ops.c             | 28 ++++++++++++++++++++++++++++
+ tools/include/uapi/linux/bpf.h |  2 ++
+ tools/lib/bpf/libbpf_probes.c  |  1 +
+ 7 files changed, 44 insertions(+), 1 deletion(-)
+ create mode 100644 security/bpf/ops.c
 
-diff --git a/include/linux/btf.h b/include/linux/btf.h
-index 5c1ea99b480f..d4e859f90a39 100644
---- a/include/linux/btf.h
-+++ b/include/linux/btf.h
-@@ -15,6 +15,7 @@ struct btf_type;
- union bpf_attr;
+diff --git a/include/linux/bpf_types.h b/include/linux/bpf_types.h
+index c81d4ece79a4..c36790b202e3 100644
+--- a/include/linux/bpf_types.h
++++ b/include/linux/bpf_types.h
+@@ -70,6 +70,10 @@ BPF_PROG_TYPE(BPF_PROG_TYPE_STRUCT_OPS, bpf_struct_ops,
+ 	      void *, void *)
+ BPF_PROG_TYPE(BPF_PROG_TYPE_EXT, bpf_extension,
+ 	      void *, void *)
++#ifdef CONFIG_SECURITY_BPF
++BPF_PROG_TYPE(BPF_PROG_TYPE_LSM, lsm,
++	       void *, void *)
++#endif /* CONFIG_SECURITY_BPF */
+ #endif
  
- extern const struct file_operations btf_fops;
-+extern struct btf *btf_vmlinux;
+ BPF_MAP_TYPE(BPF_MAP_TYPE_ARRAY, array_map_ops)
+diff --git a/include/uapi/linux/bpf.h b/include/uapi/linux/bpf.h
+index f1d74a2bd234..2f1e24a8c4a4 100644
+--- a/include/uapi/linux/bpf.h
++++ b/include/uapi/linux/bpf.h
+@@ -181,6 +181,7 @@ enum bpf_prog_type {
+ 	BPF_PROG_TYPE_TRACING,
+ 	BPF_PROG_TYPE_STRUCT_OPS,
+ 	BPF_PROG_TYPE_EXT,
++	BPF_PROG_TYPE_LSM,
+ };
  
- void btf_put(struct btf *btf);
- int btf_new_fd(const union bpf_attr *attr);
-@@ -66,6 +67,8 @@ const struct btf_type *
- btf_resolve_size(const struct btf *btf, const struct btf_type *type,
- 		 u32 *type_size, const struct btf_type **elem_type,
- 		 u32 *total_nelems);
-+const struct btf_type *btf_type_by_name_kind(
-+	struct btf *btf, const char *name, u8 kind);
+ enum bpf_attach_type {
+@@ -210,6 +211,7 @@ enum bpf_attach_type {
+ 	BPF_TRACE_RAW_TP,
+ 	BPF_TRACE_FENTRY,
+ 	BPF_TRACE_FEXIT,
++	BPF_LSM_MAC,
+ 	__MAX_BPF_ATTACH_TYPE
+ };
  
- #define for_each_member(i, struct_type, member)			\
- 	for (i = 0, member = btf_type_member(struct_type);	\
-diff --git a/kernel/bpf/btf.c b/kernel/bpf/btf.c
-index 32963b6d5a9c..ea53c16802cb 100644
---- a/kernel/bpf/btf.c
-+++ b/kernel/bpf/btf.c
-@@ -441,6 +441,18 @@ const struct btf_type *btf_type_resolve_func_ptr(const struct btf *btf,
- 	return NULL;
- }
+diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
+index a91ad518c050..eab4a36ee889 100644
+--- a/kernel/bpf/syscall.c
++++ b/kernel/bpf/syscall.c
+@@ -2396,6 +2396,9 @@ static int bpf_prog_attach(const union bpf_attr *attr)
+ 	case BPF_LIRC_MODE2:
+ 		ptype = BPF_PROG_TYPE_LIRC_MODE2;
+ 		break;
++	case BPF_LSM_MAC:
++		ptype = BPF_PROG_TYPE_LSM;
++		break;
+ 	case BPF_FLOW_DISSECTOR:
+ 		ptype = BPF_PROG_TYPE_FLOW_DISSECTOR;
+ 		break;
+@@ -2427,6 +2430,9 @@ static int bpf_prog_attach(const union bpf_attr *attr)
+ 	case BPF_PROG_TYPE_LIRC_MODE2:
+ 		ret = lirc_prog_attach(attr, prog);
+ 		break;
++	case BPF_PROG_TYPE_LSM:
++		ret = -EOPNOTSUPP;
++		break;
+ 	case BPF_PROG_TYPE_FLOW_DISSECTOR:
+ 		ret = skb_flow_dissector_bpf_prog_attach(attr, prog);
+ 		break;
+diff --git a/security/bpf/Makefile b/security/bpf/Makefile
+index 26a0ab6f99b7..c78a8a056e7e 100644
+--- a/security/bpf/Makefile
++++ b/security/bpf/Makefile
+@@ -2,4 +2,4 @@
+ #
+ # Copyright 2019 Google LLC.
  
-+const struct btf_type *btf_type_by_name_kind(
-+	struct btf *btf, const char *name, u8 kind)
+-obj-$(CONFIG_SECURITY_BPF) := lsm.o
++obj-$(CONFIG_SECURITY_BPF) := lsm.o ops.o
+diff --git a/security/bpf/ops.c b/security/bpf/ops.c
+new file mode 100644
+index 000000000000..81c2bd9c0495
+--- /dev/null
++++ b/security/bpf/ops.c
+@@ -0,0 +1,28 @@
++// SPDX-License-Identifier: GPL-2.0
++
++/*
++ * Copyright 2019 Google LLC.
++ */
++
++#include <linux/filter.h>
++#include <linux/bpf.h>
++
++const struct bpf_prog_ops lsm_prog_ops = {
++};
++
++static const struct bpf_func_proto *get_bpf_func_proto(
++	enum bpf_func_id func_id, const struct bpf_prog *prog)
 +{
-+	s32 type_id;
-+
-+	type_id = btf_find_by_name_kind(btf, name, kind);
-+	if (type_id < 0)
-+		return ERR_PTR(type_id);
-+
-+	return btf_type_by_id(btf, type_id);
++	switch (func_id) {
++	case BPF_FUNC_map_lookup_elem:
++		return &bpf_map_lookup_elem_proto;
++	case BPF_FUNC_get_current_pid_tgid:
++		return &bpf_get_current_pid_tgid_proto;
++	default:
++		return NULL;
++	}
 +}
 +
- /* Types that act only as a source, not sink or intermediate
-  * type when resolving.
-  */
++const struct bpf_verifier_ops lsm_verifier_ops = {
++	.get_func_proto = get_bpf_func_proto,
++};
+diff --git a/tools/include/uapi/linux/bpf.h b/tools/include/uapi/linux/bpf.h
+index f1d74a2bd234..2f1e24a8c4a4 100644
+--- a/tools/include/uapi/linux/bpf.h
++++ b/tools/include/uapi/linux/bpf.h
+@@ -181,6 +181,7 @@ enum bpf_prog_type {
+ 	BPF_PROG_TYPE_TRACING,
+ 	BPF_PROG_TYPE_STRUCT_OPS,
+ 	BPF_PROG_TYPE_EXT,
++	BPF_PROG_TYPE_LSM,
+ };
+ 
+ enum bpf_attach_type {
+@@ -210,6 +211,7 @@ enum bpf_attach_type {
+ 	BPF_TRACE_RAW_TP,
+ 	BPF_TRACE_FENTRY,
+ 	BPF_TRACE_FEXIT,
++	BPF_LSM_MAC,
+ 	__MAX_BPF_ATTACH_TYPE
+ };
+ 
+diff --git a/tools/lib/bpf/libbpf_probes.c b/tools/lib/bpf/libbpf_probes.c
+index b782ebef6ac9..2c92059c0c90 100644
+--- a/tools/lib/bpf/libbpf_probes.c
++++ b/tools/lib/bpf/libbpf_probes.c
+@@ -108,6 +108,7 @@ probe_load(enum bpf_prog_type prog_type, const struct bpf_insn *insns,
+ 	case BPF_PROG_TYPE_TRACING:
+ 	case BPF_PROG_TYPE_STRUCT_OPS:
+ 	case BPF_PROG_TYPE_EXT:
++	case BPF_PROG_TYPE_LSM:
+ 	default:
+ 		break;
+ 	}
 -- 
 2.20.1
 
