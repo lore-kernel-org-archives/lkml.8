@@ -2,131 +2,118 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9D0EC33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 22:59:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10BD4C33CAA
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 23:00:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2FD524125
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 22:59:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA70520718
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 23:00:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="QHKBwjvI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729606AbgAWW77 (ORCPT
+        id S1729747AbgAWXAG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 17:59:59 -0500
-Received: from mga03.intel.com ([134.134.136.65]:60764 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727061AbgAWW76 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 17:59:58 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Jan 2020 14:59:30 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,355,1574150400"; 
-   d="scan'208";a="290005495"
-Received: from richard.sh.intel.com (HELO localhost) ([10.239.159.54])
-  by fmsmga001.fm.intel.com with ESMTP; 23 Jan 2020 14:59:28 -0800
-Date:   Fri, 24 Jan 2020 06:59:40 +0800
-From:   Wei Yang <richardw.yang@linux.intel.com>
-To:     Yang Shi <yang.shi@linux.alibaba.com>
-Cc:     mhocko@suse.com, richardw.yang@linux.intel.com,
-        akpm@linux-foundation.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [v2 PATCH] mm: move_pages: report the number of non-attempted
- pages
-Message-ID: <20200123225940.GC29851@richard>
-Reply-To: Wei Yang <richardw.yang@linux.intel.com>
-References: <1579736331-85494-1-git-send-email-yang.shi@linux.alibaba.com>
+        Thu, 23 Jan 2020 18:00:06 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:32814 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729596AbgAWXAG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jan 2020 18:00:06 -0500
+Received: by mail-lj1-f195.google.com with SMTP id y6so259595lji.0
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jan 2020 15:00:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=nS7ocb5jumTWRAIkSgB97xnkdSH5hp40IMpcRwtHcbY=;
+        b=QHKBwjvIIEDpjKu390N/gc1f9Q6gVEAklPmkY+Ok83BmjLFPgsYimIPaB7w1N5KOuB
+         XmXHjgtDrWaV/cu4fniFp9KuQKOAKHB3BEC222MdEkfvQhSskR8IVqks1DjwMdbuZaG6
+         5ceBFph6PeI4oRJXdzPwLHMoChv0YMYyEP4vE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=nS7ocb5jumTWRAIkSgB97xnkdSH5hp40IMpcRwtHcbY=;
+        b=XNWQw+bwUXtj4yCAQdtR/WeSuH4wN8VFgtOxZWzsYeetmrdLSd7IU+KuxCbahQumF3
+         MHsNL5v0jSiyagm6IiuZ1zFFWC1VJwxEcEYJIsMlF78uaY6dDz53H6/U4zJL23Ybm9R/
+         f3IIyEamjYh8v/ijCnwb2SK22/P2ES/ItOkZNbIsFRYyO1oOLzJJP8Orp06Td7HKaRpM
+         k+meWHweqG7Gpjs95a9D17oNZTvCx0re+kku2lYMpRpMyveHEFpJJPkt5bym3lBMUcTd
+         EMK9QNWsRxAS9N2Yz+jKOVJkA4JEfZkJl/Mz5UzN/XZVvr3ci5OZfUuLnW44rKLy/Sv6
+         1egw==
+X-Gm-Message-State: APjAAAXlWVCmOsPvzsncZooF+87WBVArkP7RTgG7UEOMTH5Ei5HBsZFD
+        QW5c26OxCVsUNym5kDPUexGEItSB7dY=
+X-Google-Smtp-Source: APXvYqzWIV1y70IxuAh2D2D18R2dEvVs29qvhR/xi2+SzuHlXaDcF8TUeIZ88oaw58W0oG32HHhgNw==
+X-Received: by 2002:a2e:808a:: with SMTP id i10mr402199ljg.151.1579820404185;
+        Thu, 23 Jan 2020 15:00:04 -0800 (PST)
+Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com. [209.85.167.54])
+        by smtp.gmail.com with ESMTPSA id k25sm1987404lji.42.2020.01.23.15.00.03
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 23 Jan 2020 15:00:03 -0800 (PST)
+Received: by mail-lf1-f54.google.com with SMTP id v201so3559821lfa.11
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jan 2020 15:00:03 -0800 (PST)
+X-Received: by 2002:a19:e011:: with SMTP id x17mr44398lfg.59.1579820402396;
+ Thu, 23 Jan 2020 15:00:02 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1579736331-85494-1-git-send-email-yang.shi@linux.alibaba.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200117162444.v2.1.I9c7e72144ef639cc135ea33ef332852a6b33730f@changeid>
+ <CACK8Z6Ft95qj4e_fsA32r_bcz2SsHOW1xxqZJt3_DBAJw=NMGA@mail.gmail.com>
+ <CAE=gft6fKQWExW-=xjZGzXs30XohfpA5SKggvL2WtYXAHmzMew@mail.gmail.com>
+ <87y2tytv5i.fsf@nanos.tec.linutronix.de> <87eevqkpgn.fsf@nanos.tec.linutronix.de>
+ <CAE=gft6YiM5S1A7iJYJTd5zmaAa8=nhLE3B94JtWa+XW-qVSqQ@mail.gmail.com>
+In-Reply-To: <CAE=gft6YiM5S1A7iJYJTd5zmaAa8=nhLE3B94JtWa+XW-qVSqQ@mail.gmail.com>
+From:   Evan Green <evgreen@chromium.org>
+Date:   Thu, 23 Jan 2020 14:59:25 -0800
+X-Gmail-Original-Message-ID: <CAE=gft5xta4XCJtctWe=R3w=kVr598JCbk9VSRue04nzKAk3CQ@mail.gmail.com>
+Message-ID: <CAE=gft5xta4XCJtctWe=R3w=kVr598JCbk9VSRue04nzKAk3CQ@mail.gmail.com>
+Subject: Re: [PATCH v2] PCI/MSI: Avoid torn updates to MSI pairs
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Rajat Jain <rajatja@google.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 23, 2020 at 07:38:51AM +0800, Yang Shi wrote:
->Since commit a49bd4d71637 ("mm, numa: rework do_pages_move"),
->the semantic of move_pages() was changed to return the number of
->non-migrated pages (failed to migration) and the call would be aborted
->immediately if migrate_pages() returns positive value.  But it didn't
->report the number of pages that we even haven't attempted to migrate.
->So, fix it by including non-attempted pages in the return value.
+On Thu, Jan 23, 2020 at 12:59 PM Evan Green <evgreen@chromium.org> wrote:
 >
->Fixes: a49bd4d71637 ("mm, numa: rework do_pages_move")
->Suggested-by: Michal Hocko <mhocko@suse.com>
->Cc: Wei Yang <richardw.yang@linux.intel.com>
->Cc: <stable@vger.kernel.org>    [4.17+]
->Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
->---
->v2: Rebased on top of the latest mainline kernel per Andrew
+> On Thu, Jan 23, 2020 at 10:17 AM Thomas Gleixner <tglx@linutronix.de> wrote:
+> >
+> > Evan,
+> >
+> > Thomas Gleixner <tglx@linutronix.de> writes:
+> > > This is not yet debugged fully and as this is happening on MSI-X I'm not
+> > > really convinced yet that your 'torn write' theory holds.
+> >
+> > can you please apply the debug patch below and run your test. When the
+> > failure happens, stop the tracer and collect the trace.
+> >
+> > Another question. Did you ever try to change the affinity of that
+> > interrupt without hotplug rapidly while the device makes traffic? If
+> > not, it would be interesting whether this leads to a failure as well.
 >
-> mm/migrate.c | 24 ++++++++++++++++++++++--
-> 1 file changed, 22 insertions(+), 2 deletions(-)
+> Thanks for the patch. Looks pretty familiar :)
+> I ran into issues where trace_printks on offlined cores seem to
+> disappear. I even made sure the cores were back online when I
+> collected the trace. So your logs might not be useful. Known issue
+> with the tracer?
 >
->diff --git a/mm/migrate.c b/mm/migrate.c
->index 86873b6..9b8eb5d 100644
->--- a/mm/migrate.c
->+++ b/mm/migrate.c
->@@ -1627,8 +1627,18 @@ static int do_pages_move(struct mm_struct *mm, nodemask_t task_nodes,
-> 			start = i;
-> 		} else if (node != current_node) {
-> 			err = do_move_pages_to_node(mm, &pagelist, current_node);
->-			if (err)
->+			if (err) {
->+				/*
->+				 * Positive err means the number of failed
->+				 * pages to migrate.  Since we are going to
->+				 * abort and return the number of non-migrated
->+				 * pages, so need incude the rest of the
->+				 * nr_pages that have not attempted as well.
->+				 */
->+				if (err > 0)
->+					err += nr_pages - i - 1;
-> 				goto out;
->+			}
-> 			err = store_status(status, start, current_node, i - start);
-> 			if (err)
-> 				goto out;
->@@ -1659,8 +1669,11 @@ static int do_pages_move(struct mm_struct *mm, nodemask_t task_nodes,
-> 			goto out_flush;
-> 
-> 		err = do_move_pages_to_node(mm, &pagelist, current_node);
->-		if (err)
->+		if (err) {
->+			if (err > 0)
->+				err += nr_pages - i - 1;
-> 			goto out;
->+		}
-> 		if (i > start) {
-> 			err = store_status(status, start, current_node, i - start);
-> 			if (err)
->@@ -1674,6 +1687,13 @@ static int do_pages_move(struct mm_struct *mm, nodemask_t task_nodes,
-> 
-> 	/* Make sure we do not overwrite the existing error */
-> 	err1 = do_move_pages_to_node(mm, &pagelist, current_node);
->+	/*
->+	 * Don't have to report non-attempted pages here since:
+> I figured I'd share my own debug chicken scratch, in case you could
+> glean anything from it. The LOG entries print out timestamps (divide
+> by 1000000) that you can match up back to earlier in the log (ie so
+> the last XHCI MSI change occurred at 74.032501, the last interrupt
+> came in at 74.032405). Forgive the mess.
+>
+> I also tried changing the affinity rapidly without CPU hotplug, but
+> didn't see the issue, at least not in the few minutes I waited
+> (normally repros easily within 1 minute). An interesting datapoint.
 
-In previous comment, you use "non-migrated". Here is "non-attempted". What's
-the difference?
-
->+	 *     - If the above loop is done gracefully there is not non-attempted
->+	 *       page.
->+	 *     - If the above loop is aborted to it means more fatal error
->+	 *       happened, should return err.
->+	 */
-> 	if (!err1)
-> 		err1 = store_status(status, start, current_node, i - start);
-> 	if (!err)
->-- 
->1.8.3.1
-
--- 
-Wei Yang
-Help you, Help me
+One additional datapoint. The intel guys suggested enabling
+CONFIG_IRQ_REMAP, which does seem to eliminate the issue for me. I'm
+still hoping there's a smaller fix so I don't have to add all that in.
+-Evan
