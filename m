@@ -2,92 +2,154 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DEE4C3F68F
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 15:07:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 065D7C33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 15:11:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23DD42087E
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 15:07:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1EFD21835
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 15:11:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="L8NE79R9"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WQYyGWnp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728827AbgAWPHM (ORCPT
+        id S1728899AbgAWPLn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 10:07:12 -0500
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:40834 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726590AbgAWPHM (ORCPT
+        Thu, 23 Jan 2020 10:11:43 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:30362 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726240AbgAWPLm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 10:07:12 -0500
-Received: by mail-lf1-f67.google.com with SMTP id c23so1652151lfi.7
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jan 2020 07:07:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=LO2b8uVYVBtkLDQSkWiZOiZeR9UaVRc6c7oLAxiq0hs=;
-        b=L8NE79R9J3d4CO6b59XTiUIFYotqfCg7rEI6/iByzUEA3FODTd/T6JOtG8bUKnUoc6
-         78/roEZXuyoIbVFDHsUiAr48VYDPT65EQBJoADV/TRCYFM+GsDEAl8jXJqvy93dy66Of
-         yqwZ2YcadIjcEOjCnxXmFlX+4e97Tn88hLMiG49i4NKufYwLjwe9IcD6IoRu2so+ShEy
-         Aqga92LMx7pO0sXUS5lkn2zDNOYjilWoxQRjLsWdenwGBUqr5Z+F2fYwnWlngIywgiEK
-         QHr1OI+M7XuvC0jZ0rufP5WFZYbbOtwrNIch5Fh0Q3+TwyldE2Ops76pGUemkVFhyPeJ
-         SRTQ==
+        Thu, 23 Jan 2020 10:11:42 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579792301;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=G0UV4KnB1lt7EMsASswd8dWEm02CKeOR2gA8iM2LVcI=;
+        b=WQYyGWnpQ88Iji73ef73styg+omxBP0+gbiEK5aMGxzusjb6yMrArWhLkogNIXa3UVindP
+        gW4uudQF5U0p6p2rR7lp3U3R6W30kaAg3vyx+nHVm2VSSFtQ4djKLS6rPFWRnuBiqkVQ8J
+        s7pzdfX0OgUZbUHj7FJ1SIvjNIowDxs=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-2--pTQctVxPEKacXU9gvjBXA-1; Thu, 23 Jan 2020 10:11:25 -0500
+X-MC-Unique: -pTQctVxPEKacXU9gvjBXA-1
+Received: by mail-wr1-f70.google.com with SMTP id h30so1935330wrh.5
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jan 2020 07:11:25 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=LO2b8uVYVBtkLDQSkWiZOiZeR9UaVRc6c7oLAxiq0hs=;
-        b=JvOX/nHxkgkaJzIY+BXcfvtVYWEy3zzPWc0E4PZb5v1WEabQ+RLjo/wkFP4npkyNUK
-         4sO9BLw0ecX7thnNOF+pKxS32+FzMl7HK9AGdzkyu004HtOp1X9HuucuQAm54et8knDl
-         Akzwb/OcH4dkPHWbAzpftK7bq75Qc9d4XRzZZrDGymqIVgbqd1doEruJvnNt84PmZzoa
-         j4QVM5xOOjwhVSD6/qPYZb7rLnZonAkZl9/mXUXiZANGp5rxTquMLp6pyWhaIJqhAT/w
-         F0GvNguli3srm9gmZZ4btsHV2Ko+d/gI8T28r2TcDPi0CaByLH0kfAN2ANNTo89IfN3k
-         AaHg==
-X-Gm-Message-State: APjAAAXrXqA+eg3ZzV+lFUWF9WcsQMTc1VqPbMs45TF2AN9dnzL8mXjt
-        NeN5E/V8XB/zP+AbNeiQHeU9y5/5+hzrdriQOivm9Q==
-X-Google-Smtp-Source: APXvYqySCUYd+U3ZvPuMwCzrM2ftGIrgnFPVoMuA9jR8gZ3PcpcdibtTAWSuOFjbM8o+bjA9sAjze4V6fKpgDMdCUSE=
-X-Received: by 2002:a19:dc14:: with SMTP id t20mr4884795lfg.47.1579792029804;
- Thu, 23 Jan 2020 07:07:09 -0800 (PST)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=G0UV4KnB1lt7EMsASswd8dWEm02CKeOR2gA8iM2LVcI=;
+        b=U5jwoTEW7QVTmvDIy3/An88C0/YIxNYbksOJaBZIUN+fnm1rL0GVgAKtA1Pdrp3ZZo
+         xGjOHIlS5ha6aDBoGjjU8REmb9k9y7RBLXoNraY9MUFIKb4/nAUMKqaYoaM/wr+gBpWI
+         +CgLZiXbA51UMWPcMio1Q5A8Ns/1OlfoGNRtr4F63mrtg2DQFiAIill7Ul2vZGFzdhdu
+         mWWPqzR22JRMwgsV6Xeq6uIssUBANlT1MBPgDgi9mb+EN00wU4qIGQriaO5pAj7KwNJz
+         T/OUXAcH950yzobNnqYht/INH5NnHrF9snyJ/euO1x0TyHkcMmvsqCeDILzNS2wSbBLC
+         veug==
+X-Gm-Message-State: APjAAAUrtFmI4w7Dn/lAM3XHUVzGydQdamWO0LJIhW4PLhjj/QNtvert
+        meOHuFzzk6ewX05cnn4CJuRfV3eaZXUF/evUrgc2foPQMjUSXDqReXNoRDfLsQgYhH4oLV1tB42
+        YvwhKGOUMkGJiNnc30oN3Ooq5
+X-Received: by 2002:a05:600c:2059:: with SMTP id p25mr4912889wmg.161.1579792282960;
+        Thu, 23 Jan 2020 07:11:22 -0800 (PST)
+X-Google-Smtp-Source: APXvYqyuG8AqgpsWohRveZfsCX1EDtHU8w7RprAsRh0cBlav4qVZZ5HalRTUC8mBUSmFThwXkidyhg==
+X-Received: by 2002:a05:600c:2059:: with SMTP id p25mr4912872wmg.161.1579792282748;
+        Thu, 23 Jan 2020 07:11:22 -0800 (PST)
+Received: from [192.168.1.81] (host81-140-166-164.range81-140.btcentralplus.com. [81.140.166.164])
+        by smtp.gmail.com with ESMTPSA id k16sm3720036wru.0.2020.01.23.07.11.21
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 23 Jan 2020 07:11:22 -0800 (PST)
+Subject: Re: [RFC v5 00/57] objtool: Add support for arm64
+To:     Will Deacon <will@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        jpoimboe@redhat.com, peterz@infradead.org, raphael.gault@arm.com,
+        catalin.marinas@arm.com
+References: <20200109160300.26150-1-jthierry@redhat.com>
+ <20200121103025.GC11154@willie-the-truck>
+ <400d402d-c964-6f0c-2954-6f6afcb94635@redhat.com>
+ <20200123143503.GA19649@willie-the-truck>
+From:   Julien Thierry <jthierry@redhat.com>
+Message-ID: <ad6f3a12-60b9-f2d8-b0c9-0de59c0e0c2c@redhat.com>
+Date:   Thu, 23 Jan 2020 15:11:20 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-References: <1576672860-14420-1-git-send-email-peng.fan@nxp.com> <AM0PR04MB448174E1DE647E9F2F65106988360@AM0PR04MB4481.eurprd04.prod.outlook.com>
-In-Reply-To: <AM0PR04MB448174E1DE647E9F2F65106988360@AM0PR04MB4481.eurprd04.prod.outlook.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 23 Jan 2020 16:06:58 +0100
-Message-ID: <CACRpkdbi8KTEEEpv0fv3Hq_gyRqR0Kzeb799P6woq7+xwhdgUg@mail.gmail.com>
-Subject: Re: [PATCH 1/2] pinctrl: mvebu: armada-37xx: use use platform api
-To:     Peng Fan <peng.fan@nxp.com>
-Cc:     "jason@lakedaemon.net" <jason@lakedaemon.net>,
-        "andrew@lunn.ch" <andrew@lunn.ch>,
-        "gregory.clement@bootlin.com" <gregory.clement@bootlin.com>,
-        "sebastian.hesselbarth@gmail.com" <sebastian.hesselbarth@gmail.com>,
-        "mripard@kernel.org" <mripard@kernel.org>,
-        "wens@csie.org" <wens@csie.org>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200123143503.GA19649@willie-the-truck>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 16, 2020 at 9:28 AM Peng Fan <peng.fan@nxp.com> wrote:
 
-> Hi Linus,
->
-> > Subject: [PATCH 1/2] pinctrl: mvebu: armada-37xx: use use platform api
->
-> Would you pick this patch up?
->
-> Per Uwe, this v1 patch use %pe is better that v2 use %d.
 
-OK patch applied to my devel branch for v5.6.
+On 1/23/20 2:35 PM, Will Deacon wrote:
+> On Thu, Jan 23, 2020 at 01:52:17PM +0000, Julien Thierry wrote:
+>>
+>>
+>> On 1/21/20 10:30 AM, Will Deacon wrote:
+>>> On Thu, Jan 09, 2020 at 04:02:03PM +0000, Julien Thierry wrote:
+>>>> This patch series is the continuation of Raphael's work [1]. All the
+>>>> patches can be retrieved from:
+>>>> git clone -b arm64-objtool-v5 https://github.com/julien-thierry/linux.git
+>>>
+>>> [...]
+>>>
+>>>>     objtool: arm64: Decode unknown instructions
+>>>>     objtool: arm64: Decode simple data processing instructions
+>>>>     objtool: arm64: Decode add/sub immediate instructions
+>>>>     objtool: arm64: Decode logical data processing instructions
+>>>>     objtool: arm64: Decode system instructions not affecting the flow
+>>>>     objtool: arm64: Decode calls to higher EL
+>>>>     objtool: arm64: Decode brk instruction
+>>>>     objtool: arm64: Decode instruction triggering context switch
+>>>>     objtool: arm64: Decode branch instructions with PC relative immediates
+>>>>     objtool: arm64: Decode branch to register instruction
+>>>>     objtool: arm64: Decode basic load/stores
+>>>>     objtool: arm64: Decode load/store with register offset
+>>>>     objtool: arm64: Decode load/store register pair instructions
+>>>>     objtool: arm64: Decode FP/SIMD load/store instructions
+>>>>     objtool: arm64: Decode load/store exclusive
+>>>>     objtool: arm64: Decode atomic load/store
+>>>>     objtool: arm64: Decode pointer auth load instructions
+>>>>     objtool: arm64: Decode load acquire/store release
+>>>>     objtool: arm64: Decode load/store with memory tag
+>>>>     objtool: arm64: Decode load literal
+>>>>     objtool: arm64: Decode register data processing instructions
+>>>>     objtool: arm64: Decode FP/SIMD data processing instructions
+>>>>     objtool: arm64: Decode SVE instructions
+>>>
+>>> That's a lot of decoding logic which we already have in
+>>> arch/arm64/{kernel/insn.c,include/asm/insn.h}. I'd prefer to see this stuff
+>>> reused or generated from a single source, since it's really easy to get it
+>>> wrong, has a tendency to bitrot and is nasty to debug.
+>>>
+>>
+>> The thing is that the code in those files is mostly encoding logic
+>> (motivated by BPF) rather than decoding (except for the instruction that
+>> might be trapped, but these rarely overlap with instructions that objtools
+>> cares about). I agree that ideally the decoding/encoding should be under
+>> arch/arm64/lib, I was just a bit weary introducing a lot of decoding code
+>> under arch/arm64 that wouldn't even be used in kernel code.
+> 
+> Hmm, but kprobes decodes instructions somehow :p
+> 
+> Not saying you have to refactor everything, but I'd hope you could reuse
+> some of the aarch64_insn_is* and aarch64_insn_extract* functions at least.
+> 
 
-Yours,
-Linus Walleij
+Oh, you're right, there seem to be more than what I remembered. There is 
+probably a bunch of things I can reuse (and I'll feel more at ease with 
+that rather than introducing a whole bunch of new code :D ).
+
+Thanks,
+
+-- 
+Julien Thierry
+
