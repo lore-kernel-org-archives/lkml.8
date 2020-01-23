@@ -2,183 +2,274 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C7C5C33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 18:34:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1AEEC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 18:36:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C8222253D
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 18:34:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABAAA21D7E
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 18:36:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="IS1prM98";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="gAwbPOtU"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MoeIwIkj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729008AbgAWSet (ORCPT
+        id S1728890AbgAWSgu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 13:34:49 -0500
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:5198 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727022AbgAWSet (ORCPT
+        Thu, 23 Jan 2020 13:36:50 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:33519 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728057AbgAWSgt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 13:34:49 -0500
-Received: from pps.filterd (m0044010.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00NINBik019481;
-        Thu, 23 Jan 2020 10:34:34 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=facebook;
- bh=75NiwwAgjJV6DnGBoawC1dxUbB7h1PrzcaUsJagFBMs=;
- b=IS1prM98FQYVSOdd3EHfXpgbJFxDADx28l3XRAVCKBppAY41x1emEFodqh8aZmfPNRx9
- FAgHQnoU4RtNC1TEw3SR6CV90AqsH9bVU9LG00TCMvCvEV1CdIbVCDgJtfcwpjBu5uic
- dA93EaGiD5U51x/Lva7xc9Eflm4HjBz5TTo= 
-Received: from maileast.thefacebook.com ([163.114.130.16])
-        by mx0a-00082601.pphosted.com with ESMTP id 2xqgc5r5rq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Thu, 23 Jan 2020 10:34:34 -0800
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (100.104.31.183)
- by o365-in.thefacebook.com (100.104.36.103) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Thu, 23 Jan 2020 10:34:32 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ZW2u7XdT5SycilaiUupMUYOGFFJwqP1JKwXUyBW00433L8s07c2EEjOMoHil23UTnHdtojUAEx0p3zSER1oZBoDEtfUmwIB5sdR4SC8p6pl3gDKvy0O28AS+yHzjLlkmd0OdfMdnb4XK26hkGuWFA3QyhtfiDusBf33ibMrr88HSjMsTGYVB+UrKRsRhtWXqkfhS8VD/nT1cCggg1Ues2qINplo0imfURlZiiPr0PP4kQEZZULKtTwEDVJ6F0ybvz7SqzLsSt7LGwsXx+GGsq55HFLu7gN8oF72jIGJw6gezvjMpPvo8xD2Bqr3uhPcFjSKLyMhGPGexIVyO5Q3ziw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=75NiwwAgjJV6DnGBoawC1dxUbB7h1PrzcaUsJagFBMs=;
- b=DQUer0ZqhM/8DaC0RCOHHPcQwpBq44sHmY0xx7VNJnNhldlIVTYWjMOWI65knz6QjrGBayicZNMXaEGfqGsSco+oF25Nrk8d8GeZ3ADJbQtVCCFsv75C52SihFwgs1ei92Dm+4Y6PldkS/bkPixPUFYqNPXy0IC+uu0/Sxhw6tJ9oPz8NXnsBL2gS6vf+qzyZMkUyk9Wx+zhs2LkevmCMmL50NViMgDoS9MW/MyBZAe9RsaK1Yryq7baIvF4aF3nLoKu5xtVG4+yplSkntYsT5cgOnFE65oPgWrl2CfaRA/ijgGqjzL3w0dyzs2Kdjrhj1jwGcAVfMjF+3GY1kmUlQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
- header.d=fb.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector2-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=75NiwwAgjJV6DnGBoawC1dxUbB7h1PrzcaUsJagFBMs=;
- b=gAwbPOtULKaTOjsvQjaEJ4welcKhDpf2GJ/ItOC2sZjMTLOEvVUQ0XO9d/GYtFoZMSxiRFV4AlbKkKyRAitq9hbk1s4qfI1uuxbMvKglyTrBLjh+QPZztGN1LEmk9yX1+mlpycKyqJR4CYrpXaud7wv+VaKleKToBeH/eX3Po+U=
-Received: from MN2PR15MB3213.namprd15.prod.outlook.com (20.179.21.76) by
- MN2PR15MB3182.namprd15.prod.outlook.com (20.179.22.15) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2665.20; Thu, 23 Jan 2020 18:34:32 +0000
-Received: from MN2PR15MB3213.namprd15.prod.outlook.com
- ([fe80::6d1e:f2f7:d36:a42f]) by MN2PR15MB3213.namprd15.prod.outlook.com
- ([fe80::6d1e:f2f7:d36:a42f%4]) with mapi id 15.20.2644.027; Thu, 23 Jan 2020
- 18:34:32 +0000
-Received: from kafai-mbp.dhcp.thefacebook.com (2620:10d:c090:200::2:d66d) by MWHPR17CA0094.namprd17.prod.outlook.com (2603:10b6:300:c2::32) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2665.20 via Frontend Transport; Thu, 23 Jan 2020 18:34:30 +0000
-From:   Martin Lau <kafai@fb.com>
-To:     Lorenz Bauer <lmb@cloudflare.com>,
-        John Fastabend <john.fastabend@gmail.com>
-CC:     Shuah Khan <shuah@kernel.org>, Alexei Starovoitov <ast@kernel.org>,
-        "Daniel Borkmann" <daniel@iogearbox.net>,
-        Song Liu <songliubraving@fb.com>, "Yonghong Song" <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH bpf 1/4] selftests: bpf: use a temporary file in
- test_sockmap
-Thread-Topic: [PATCH bpf 1/4] selftests: bpf: use a temporary file in
- test_sockmap
-Thread-Index: AQHV0g6PlHOQTD0hFEGeoXBT3XL7Yqf4k16A
-Date:   Thu, 23 Jan 2020 18:34:31 +0000
-Message-ID: <20200123183427.wsmwuheq3wcw3usm@kafai-mbp.dhcp.thefacebook.com>
-References: <20200123165934.9584-1-lmb@cloudflare.com>
- <20200123165934.9584-2-lmb@cloudflare.com>
-In-Reply-To: <20200123165934.9584-2-lmb@cloudflare.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: MWHPR17CA0094.namprd17.prod.outlook.com
- (2603:10b6:300:c2::32) To MN2PR15MB3213.namprd15.prod.outlook.com
- (2603:10b6:208:3d::12)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [2620:10d:c090:200::2:d66d]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 69fe9c6e-b9b5-4290-fa95-08d7a032e337
-x-ms-traffictypediagnostic: MN2PR15MB3182:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MN2PR15MB31829E9A5377B00464B4A802D50F0@MN2PR15MB3182.namprd15.prod.outlook.com>
-x-fb-source: Internal
-x-ms-oob-tlc-oobclassifiers: OLM:7219;
-x-forefront-prvs: 029174C036
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(376002)(136003)(39860400002)(396003)(366004)(346002)(189003)(199004)(8936002)(81166006)(71200400001)(81156014)(316002)(8676002)(110136005)(54906003)(478600001)(6506007)(186003)(16526019)(4326008)(86362001)(2906002)(5660300002)(7696005)(52116002)(55016002)(9686003)(66946007)(66556008)(66446008)(64756008)(1076003)(66476007);DIR:OUT;SFP:1102;SCL:1;SRVR:MN2PR15MB3182;H:MN2PR15MB3213.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: fb.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: PAV7rMMcJEShM3DTorvQ8H/LPrYL4fCWHpU02gS44c/NC/bQlYMqiVC5d5CaugLjKlFWjImqys8NXxSzwf4zRGCaOtnYDXFMaQWdxId4QdtVeXt0rhjr1UdRa2IDswZiwOzwSvgM8JFTya+MFCgndwSaK1dYmKsvesPo1KZ9h9VF+XmVkOFrmD8Gt9cu5bH/Gk7/ziltfcMIDdry0CbvxS7tFfw9Z4PyYpq4xEJkQjCzPQkNT0IwR9V9qlWO3Xkdg8WWAnEJ5rRkFL371jKroHaEtbfT2unA/szYdGSv+gx/Z+YVsdBly48/P6vhpj9ex3/2bKhPDd/k3KtVwxebAa56qTFHlocj0e9/2lBhMGt8Bm7awQ5y1D8KCVhhvDNft0jwFaj8ZCffVF54maIS5aE1/15hzssW5zSMRi79J2AD+M6A3rDQbI4RD4FA0cLj
-x-ms-exchange-antispam-messagedata: Kt/Z1PzJ0aBMi4uT5KL2wWg07oCMugFSq+JqPA5cnnYMvOlMwMVfLmP/+kuwUtBw0Y+65v9pQvdQ/T09ISbQyJlhBC0oDWv266/ToJdk3rKzC6UzEffJ2ElYXH0bNHTmVyAqMTpm/uLwFNWtH1946OR2NL3VKKC6MmlEzjHyET/DQehALGpEB5q8cIb09Wzf
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <406A8A76E111A84FAC876779309A2CE2@namprd15.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Thu, 23 Jan 2020 13:36:49 -0500
+Received: by mail-pg1-f196.google.com with SMTP id 6so1817611pgk.0
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jan 2020 10:36:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Du75DAz6gc6OUr1fY7FgpBOCLXXoZnGoDrqj+IQyVuc=;
+        b=MoeIwIkj0ihYvrUBOmCwHNkYR4q6x4Sw0Cz+yPfY1OzKFCRPoDzMtx4ElTUYyTYtk7
+         nm3TyJLxCQsAGwIN5e0lAzXQQbwaQQa0k8WjRQmEsVSrk+E5dut6bE7iXxEqbw1gaNd0
+         7dkx2r7zFuEGDYxMdNXnFZ/hOfnMW4QYY5cfgpJx4FXR3WwIMIfW//Ip3tB+FsRs9bDF
+         RsDQR/fVkpo3xqSkqoo2x+ppR6SF2eS4Y3Fzvgq5LiZNrM1mhK2fS3sVl89aj4Fz13k3
+         Cwrxl52LnLmwczYMnx/duVHbF9JXiXzrceg+vHRrbkXejX7GBAh5/gTEgWLsXMtepcYn
+         4IUQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Du75DAz6gc6OUr1fY7FgpBOCLXXoZnGoDrqj+IQyVuc=;
+        b=PtdJyhHcw5tU3XgLcvL7chi0zXIlk5sPOq1QdMlj2xaCSxCsCZ9DfXhiwrKkJCOh1M
+         lhHVvdPacHvi0K3K53e+ZDh9s7HUoYpwbYiSAOPttwbgIJ/+F1L8958TQ2B3UVMxMXx7
+         8Nv/n56GocRIpPd9Lh6HAh62T0tf4Aawdzq9anpSM/aUWXZGT4ipXBUAwEq6uf7VHtGo
+         Z8D/ry3+xxLxvviSk3twiBazRGX52vgjUigokq84zA7H8AZvczZo6j61MOp7I+i/NZwR
+         u8sXw01bYhTTcr2ech2dwgkmx1i52P0I/tIxxeGproLqJylpPvwIkepKSpcc8o+0GU2n
+         /O3Q==
+X-Gm-Message-State: APjAAAXgfz1cWoLauUGjBKxHTBlvlmtSRxnplUqb/xjlMQzHi9gGewDy
+        M0uibTwMA3QgKgZKRq24uLj25aW1JJ0X4G6weTORRw==
+X-Google-Smtp-Source: APXvYqzF1ufdUeg3XR7qqSc7Ev+wkbpiMXUi17btU/iZKt/BGrI8ecPaVhYXLQWrDvCoRqCUIV7DuLTqSNMiKYeevHs=
+X-Received: by 2002:a62:e215:: with SMTP id a21mr8683542pfi.3.1579804608647;
+ Thu, 23 Jan 2020 10:36:48 -0800 (PST)
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 69fe9c6e-b9b5-4290-fa95-08d7a032e337
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Jan 2020 18:34:32.0728
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: VRRmyLcsM5qF5ClnTC/vIPL5D5plzkVj+5vR4CO5G7H0Ri6E1wGhRpwTFxRMAfSh
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR15MB3182
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-01-23_11:2020-01-23,2020-01-23 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 clxscore=1015
- adultscore=0 mlxlogscore=999 mlxscore=0 lowpriorityscore=0 spamscore=0
- bulkscore=0 impostorscore=0 priorityscore=1501 phishscore=0 suspectscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-2001230141
-X-FB-Internal: deliver
+References: <20200123153341.19947-1-will@kernel.org> <20200123153341.19947-10-will@kernel.org>
+In-Reply-To: <20200123153341.19947-10-will@kernel.org>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Thu, 23 Jan 2020 10:36:37 -0800
+Message-ID: <CAKwvOd=Bp+FWXHUKZnk+_dN=jTYZGdc_QVhErC3N-Frpk4mssQ@mail.gmail.com>
+Subject: Re: [PATCH v2 09/10] compiler/gcc: Raise minimum GCC version for
+ kernel builds to 4.8
+To:     Will Deacon <will@kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        kernel-team <kernel-team@android.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Segher Boessenkool <segher@kernel.crashing.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Peter Oberparleiter <oberpar@linux.ibm.com>,
+        Masahiro Yamada <masahiroy@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 23, 2020 at 04:59:30PM +0000, Lorenz Bauer wrote:
-> Use a proper temporary file for sendpage tests. This means that running
-> the tests doesn't clutter the working directory, and allows running the
-> test on read-only filesystems.
->=20
-> Signed-off-by: Lorenz Bauer <lmb@cloudflare.com>
-> ---
->  tools/testing/selftests/bpf/test_sockmap.c | 15 +++++----------
->  1 file changed, 5 insertions(+), 10 deletions(-)
->=20
-> diff --git a/tools/testing/selftests/bpf/test_sockmap.c b/tools/testing/s=
-elftests/bpf/test_sockmap.c
-> index 4a851513c842..779e11da979c 100644
-> --- a/tools/testing/selftests/bpf/test_sockmap.c
-> +++ b/tools/testing/selftests/bpf/test_sockmap.c
-> @@ -331,7 +331,7 @@ static int msg_loop_sendpage(int fd, int iov_length, =
-int cnt,
->  	FILE *file;
->  	int i, fp;
-> =20
-> -	file =3D fopen(".sendpage_tst.tmp", "w+");
-> +	file =3D tmpfile();
->  	if (!file) {
->  		perror("create file for sendpage");
->  		return 1;
-> @@ -340,13 +340,8 @@ static int msg_loop_sendpage(int fd, int iov_length,=
- int cnt,
->  		fwrite(&k, sizeof(char), 1, file);
->  	fflush(file);
->  	fseek(file, 0, SEEK_SET);
-> -	fclose(file);
-> =20
-> -	fp =3D open(".sendpage_tst.tmp", O_RDONLY);
-> -	if (fp < 0) {
-> -		perror("reopen file for sendpage");
-> -		return 1;
-> -	}
-> +	fp =3D fileno(file);
-It may be better to keep fp =3D=3D -1 check here.
-It is not clear to me the original intention of reopen.
-I would defer to John for comment.
+On Thu, Jan 23, 2020 at 7:34 AM Will Deacon <will@kernel.org> wrote:
+>
+> It is very rare to see versions of GCC prior to 4.8 being used to build
+> the mainline kernel. These old compilers are also know to have codegen
+> issues which can lead to silent miscompilation:
+>
+> https://gcc.gnu.org/bugzilla/show_bug.cgi?id=58145
+>
+> Raise the minimum GCC version for kernel build to 4.8 and remove some
+> tautological Kconfig dependencies as a consequence.
+>
+> Cc: Nick Desaulniers <ndesaulniers@google.com>
 
-> =20
->  	clock_gettime(CLOCK_MONOTONIC, &s->start);
->  	for (i =3D 0; i < cnt; i++) {
+Thanks for the patch.
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+I wouldn't mind if this patch preceded the earlier one in the series
+adding the warning, should the series require a v2 and if folks are
+generally ok with bumping the min version.
+
+> Cc: Arnd Bergmann <arnd@arndb.de>
+
+Arnd had previously mentioned that one of the older RHEL releases
+still supported was using a version of GCC < 4.8.  I don't know enough
+about RHEL to know if packages are available to use newer compilers on
+that distribution?  Or if it's a common version that kernel developers
+are using?  It feels like eventually a workaround for a known compiler
+bug becomes too burdensome to maintain, at which point we bump the
+minimum version required.  In the future, it may be worthwhile for us
+to discuss kernel toolchain upgrade process, and potentially document
+it.
+
+> Cc: Masahiro Yamada <masahiroy@kernel.org>
+> Signed-off-by: Will Deacon <will@kernel.org>
+> ---
+>  Documentation/process/changes.rst |  2 +-
+>  arch/arm/crypto/Kconfig           | 12 ++++++------
+>  crypto/Kconfig                    |  1 -
+>  include/linux/compiler-gcc.h      |  5 ++---
+>  init/Kconfig                      |  1 -
+>  scripts/Kconfig.include           |  3 ---
+>  scripts/gcc-plugins/Kconfig       |  4 +---
+>  7 files changed, 10 insertions(+), 18 deletions(-)
+>
+> diff --git a/Documentation/process/changes.rst b/Documentation/process/changes.rst
+> index 2284f2221f02..f2cbfa901cc8 100644
+> --- a/Documentation/process/changes.rst
+> +++ b/Documentation/process/changes.rst
+> @@ -29,7 +29,7 @@ you probably needn't concern yourself with pcmciautils.
+>  ====================== ===============  ========================================
+>          Program        Minimal version       Command to check the version
+>  ====================== ===============  ========================================
+> -GNU C                  4.6              gcc --version
+> +GNU C                  4.8              gcc --version
+>  GNU make               3.81             make --version
+>  binutils               2.21             ld -v
+>  flex                   2.5.35           flex --version
+> diff --git a/arch/arm/crypto/Kconfig b/arch/arm/crypto/Kconfig
+> index 2674de6ada1f..c9bf2df85cb9 100644
+> --- a/arch/arm/crypto/Kconfig
+> +++ b/arch/arm/crypto/Kconfig
+> @@ -30,7 +30,7 @@ config CRYPTO_SHA1_ARM_NEON
+>
+>  config CRYPTO_SHA1_ARM_CE
+>         tristate "SHA1 digest algorithm (ARM v8 Crypto Extensions)"
+> -       depends on KERNEL_MODE_NEON && (CC_IS_CLANG || GCC_VERSION >= 40800)
+> +       depends on KERNEL_MODE_NEON
+>         select CRYPTO_SHA1_ARM
+>         select CRYPTO_HASH
+>         help
+> @@ -39,7 +39,7 @@ config CRYPTO_SHA1_ARM_CE
+>
+>  config CRYPTO_SHA2_ARM_CE
+>         tristate "SHA-224/256 digest algorithm (ARM v8 Crypto Extensions)"
+> -       depends on KERNEL_MODE_NEON && (CC_IS_CLANG || GCC_VERSION >= 40800)
+> +       depends on KERNEL_MODE_NEON
+>         select CRYPTO_SHA256_ARM
+>         select CRYPTO_HASH
+>         help
+> @@ -96,7 +96,7 @@ config CRYPTO_AES_ARM_BS
+>
+>  config CRYPTO_AES_ARM_CE
+>         tristate "Accelerated AES using ARMv8 Crypto Extensions"
+> -       depends on KERNEL_MODE_NEON && (CC_IS_CLANG || GCC_VERSION >= 40800)
+> +       depends on KERNEL_MODE_NEON
+>         select CRYPTO_SKCIPHER
+>         select CRYPTO_LIB_AES
+>         select CRYPTO_SIMD
+> @@ -106,7 +106,7 @@ config CRYPTO_AES_ARM_CE
+>
+>  config CRYPTO_GHASH_ARM_CE
+>         tristate "PMULL-accelerated GHASH using NEON/ARMv8 Crypto Extensions"
+> -       depends on KERNEL_MODE_NEON && (CC_IS_CLANG || GCC_VERSION >= 40800)
+> +       depends on KERNEL_MODE_NEON
+>         select CRYPTO_HASH
+>         select CRYPTO_CRYPTD
+>         select CRYPTO_GF128MUL
+> @@ -118,13 +118,13 @@ config CRYPTO_GHASH_ARM_CE
+>
+>  config CRYPTO_CRCT10DIF_ARM_CE
+>         tristate "CRCT10DIF digest algorithm using PMULL instructions"
+> -       depends on KERNEL_MODE_NEON && (CC_IS_CLANG || GCC_VERSION >= 40800)
+> +       depends on KERNEL_MODE_NEON
+>         depends on CRC_T10DIF
+>         select CRYPTO_HASH
+>
+>  config CRYPTO_CRC32_ARM_CE
+>         tristate "CRC32(C) digest algorithm using CRC and/or PMULL instructions"
+> -       depends on KERNEL_MODE_NEON && (CC_IS_CLANG || GCC_VERSION >= 40800)
+> +       depends on KERNEL_MODE_NEON
+>         depends on CRC32
+>         select CRYPTO_HASH
+>
+> diff --git a/crypto/Kconfig b/crypto/Kconfig
+> index 5575d48473bd..bd8540f56efc 100644
+> --- a/crypto/Kconfig
+> +++ b/crypto/Kconfig
+> @@ -320,7 +320,6 @@ config CRYPTO_AEGIS128
+>  config CRYPTO_AEGIS128_SIMD
+>         bool "Support SIMD acceleration for AEGIS-128"
+>         depends on CRYPTO_AEGIS128 && ((ARM || ARM64) && KERNEL_MODE_NEON)
+> -       depends on !ARM || CC_IS_CLANG || GCC_VERSION >= 40800
+>         default y
+>
+>  config CRYPTO_AEGIS128_AESNI_SSE2
+> diff --git a/include/linux/compiler-gcc.h b/include/linux/compiler-gcc.h
+> index d7ee4c6bad48..e2f725273261 100644
+> --- a/include/linux/compiler-gcc.h
+> +++ b/include/linux/compiler-gcc.h
+> @@ -10,7 +10,8 @@
+>                      + __GNUC_MINOR__ * 100     \
+>                      + __GNUC_PATCHLEVEL__)
+>
+> -#if GCC_VERSION < 40600
+> +/* https://gcc.gnu.org/bugzilla/show_bug.cgi?id=58145 */
+> +#if GCC_VERSION < 40800
+>  # error Sorry, your compiler is too old - please upgrade it.
+>  #endif
+>
+> @@ -126,9 +127,7 @@
+>  #if defined(CONFIG_ARCH_USE_BUILTIN_BSWAP) && !defined(__CHECKER__)
+>  #define __HAVE_BUILTIN_BSWAP32__
+>  #define __HAVE_BUILTIN_BSWAP64__
+> -#if GCC_VERSION >= 40800
+>  #define __HAVE_BUILTIN_BSWAP16__
+> -#endif
+>  #endif /* CONFIG_ARCH_USE_BUILTIN_BSWAP && !__CHECKER__ */
+>
+>  #if GCC_VERSION >= 70000
+> diff --git a/init/Kconfig b/init/Kconfig
+> index bdc2f1b1667b..46729aa2ca0b 100644
+> --- a/init/Kconfig
+> +++ b/init/Kconfig
+> @@ -1257,7 +1257,6 @@ config LD_DEAD_CODE_DATA_ELIMINATION
+>         bool "Dead code and data elimination (EXPERIMENTAL)"
+>         depends on HAVE_LD_DEAD_CODE_DATA_ELIMINATION
+>         depends on EXPERT
+> -       depends on !(FUNCTION_TRACER && CC_IS_GCC && GCC_VERSION < 40800)
+>         depends on $(cc-option,-ffunction-sections -fdata-sections)
+>         depends on $(ld-option,--gc-sections)
+>         help
+> diff --git a/scripts/Kconfig.include b/scripts/Kconfig.include
+> index 4e645a798b56..5b7dc6635c4e 100644
+> --- a/scripts/Kconfig.include
+> +++ b/scripts/Kconfig.include
+> @@ -43,6 +43,3 @@ gcc-version := $(shell,$(srctree)/scripts/gcc-version.sh $(CC))
+>
+>  # Return y if the compiler is GCC, n otherwise
+>  cc-is-gcc := $(success,$(CC) --version | head -n 1 | grep -q gcc)
+> -
+> -# Warn if the compiler is GCC prior to 4.8
+> -$(warning-if,$(if-success,[ $(gcc-version) -lt 40800 ],$(cc-is-gcc),n),"Your compiler is old and may miscompile the kernel due to https://gcc.gnu.org/bugzilla/show_bug.cgi?id=58145 - please upgrade it.")
+> diff --git a/scripts/gcc-plugins/Kconfig b/scripts/gcc-plugins/Kconfig
+> index e3569543bdac..a0f669cd224f 100644
+> --- a/scripts/gcc-plugins/Kconfig
+> +++ b/scripts/gcc-plugins/Kconfig
+> @@ -1,9 +1,7 @@
+>  # SPDX-License-Identifier: GPL-2.0-only
+> -preferred-plugin-hostcc := $(if-success,[ $(gcc-version) -ge 40800 ],$(HOSTCXX),$(HOSTCC))
+> -
+>  config PLUGIN_HOSTCC
+>         string
+> -       default "$(shell,$(srctree)/scripts/gcc-plugin.sh "$(preferred-plugin-hostcc)" "$(HOSTCXX)" "$(CC)")" if CC_IS_GCC
+> +       default "$(shell,$(srctree)/scripts/gcc-plugin.sh "$(HOSTCXX)" "$(HOSTCXX)" "$(CC)")" if CC_IS_GCC
+>         help
+>           Host compiler used to build GCC plugins.  This can be $(HOSTCXX),
+>           $(HOSTCC), or a null string if GCC plugin is unsupported.
+> --
+> 2.25.0.341.g760bfbb309-goog
+>
+
+
+-- 
+Thanks,
+~Nick Desaulniers
