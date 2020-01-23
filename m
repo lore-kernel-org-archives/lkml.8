@@ -2,115 +2,110 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBC00C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 11:05:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EBA9C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 11:06:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D7842253D
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 11:05:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="J2s79Z7t"
+	by mail.kernel.org (Postfix) with ESMTP id 7A00B24655
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 11:06:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728899AbgAWLFK (ORCPT
+        id S1726885AbgAWLGl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 06:05:10 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:46909 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726194AbgAWLFJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 06:05:09 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579777508;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=jxuyA80MEb2gTFQSCosXFokQLxTD9/TGE5FZXZ4AEMM=;
-        b=J2s79Z7t+QeS+d8HCTZE6CMZJ1S1hG/VieatsGVbw7pQwlwEiQA6Sr6iorAf7B/XJyPcNB
-        jRvF8GAmI/N2kRxY5mVbXCLtkzsCoP0Gl1/XWVutUYwWqK/6ML4rIkjqeOpXA5AnuqLLk9
-        uMoNCeyEho/uEltIwqbISgJ5IGsLlFQ=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-177--nKY3tyLNCSpxiCzT7fDaA-1; Thu, 23 Jan 2020 06:05:04 -0500
-X-MC-Unique: -nKY3tyLNCSpxiCzT7fDaA-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 360CB1005F6B;
-        Thu, 23 Jan 2020 11:05:02 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-49.rdu2.redhat.com [10.10.120.49])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id AA64B5C1B5;
-        Thu, 23 Jan 2020 11:05:00 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <20200122193306.GB4675@bombadil.infradead.org>
-References: <20200122193306.GB4675@bombadil.infradead.org> <3577430.1579705075@warthog.procyon.org.uk>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     dhowells@redhat.com, Alexander Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RFC][PATCH] iov_iter: Add ITER_MAPPING
+        Thu, 23 Jan 2020 06:06:41 -0500
+Received: from foss.arm.com ([217.140.110.172]:37812 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726026AbgAWLGl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jan 2020 06:06:41 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 50A1531B;
+        Thu, 23 Jan 2020 03:06:40 -0800 (PST)
+Received: from [10.1.197.50] (e120937-lin.cambridge.arm.com [10.1.197.50])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4E7AB3F6C4;
+        Thu, 23 Jan 2020 03:06:39 -0800 (PST)
+Subject: Re: [PATCH V3] firmware: arm_scmi: Make scmi core independent of the
+ transport type
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     arnd@arndb.de, Sudeep Holla <sudeep.holla@arm.com>,
+        jassisinghbrar@gmail.com, peng.fan@nxp.com,
+        peter.hilber@opensynergy.com, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+References: <4b74f1b6c1f9653241a1b5754525e230b3d76a3f.1579595093.git.viresh.kumar@linaro.org>
+ <3a8836dd-99d3-faff-af05-2032d609f594@arm.com>
+ <20200123023924.roqc2iyx4wmukk4p@vireshk-i7>
+From:   Cristian Marussi <cristian.marussi@arm.com>
+Message-ID: <d5d71818-e68f-7688-4378-64d96bea922d@arm.com>
+Date:   Thu, 23 Jan 2020 11:06:38 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <3785794.1579777499.1@warthog.procyon.org.uk>
-Date:   Thu, 23 Jan 2020 11:04:59 +0000
-Message-ID: <3785795.1579777499@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+In-Reply-To: <20200123023924.roqc2iyx4wmukk4p@vireshk-i7>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Matthew Wilcox <willy@infradead.org> wrote:
+On 23/01/2020 02:39, Viresh Kumar wrote:
+> On 22-01-20, 12:44, Cristian Marussi wrote:
+>> On 21/01/2020 08:27, Viresh Kumar wrote:
+>> commment is obsolete
+> 
+> Right, they need to be checked everywhere again. Sorry for missing
+> that earlier.
+> 
+>>> +struct scmi_chan_info {
+>>> +	struct scmi_info *info;
+>>> +	struct device *dev;
+>>> +	struct scmi_handle *handle;
+>>> +	void *transport_info;
+>>> +};
+>>> +
+>>> +/**
+>>> + * struct scmi_transport_ops - Structure representing a SCMI transport ops
+>>> + *
+>>> + * @send_message: Callback to send a message
+>>> + * @mark_txdone: Callback to mark tx as done
+>>> + * @chan_setup: Callback to allocate and setup a channel
+>>> + * @chan_free: Callback to free a channel
+>>> + */
+>> commment is obsolete but I would also ask: are all of these operations supposed to be mandatory supported
+>> on any possible foreseeable transport ? (beside the obviously needed like send_message)
+>>
+>> I'm asking because they are all called straight away from the driver core without any NULL check
+>> so that if a new transport should not need one of them it will be forced to anyway implement a dummy one
+>> to comply, which it will be needlessly invoked every time.
+> 
+> They are kept as mandatory for now as we don't really know how it
+> will look for other transport types. Lets make them optional only when
+> someone don't need to define them. It would be a simple change anyway.
 
-> It's perfectly legal to have compound pages in the page cache.  Call
-> find_subpage(page, xas.xa_index) unconditionally.
+Ok, fine.
+> 
+>>>  /* Each compatible listed below must have descriptor associated with it */
+>>>  static const struct of_device_id scmi_of_match[] = {
+>>> -	{ .compatible = "arm,scmi", .data = &scmi_generic_desc },
+>>> +	{ .compatible = "arm,scmi", .data = &scmi_mailbox_desc },
+>>>  	{ /* Sentinel */ },
+>>>  };
+>>
+>> minor thing: shouldn't the chosen transport being configurable at compile time with some
+>> option like CONFIG_SCMI_TRANSPORT_MBOX ? or via DT ?
+> 
+> It is configurable via DT. The compatible should look different in
+> that case, something like: "arm,scmi-<newtranport>".
+> 
 
-Like this?
+Ah ok, we're assuming mailbox transport as the default, being the only one existing as of now.
+Fine for me, thanks for the explanation.
 
-#define iterate_mapping(i, n, __v, skip, STEP) {		\
-	struct page *page;					\
-	size_t wanted = n, seg, offset;				\
-	loff_t start = i->mapping_start + skip;			\
-	pgoff_t index = start >> PAGE_SHIFT;			\
-								\
-	XA_STATE(xas, &i->mapping->i_pages, index);		\
-								\
-	rcu_read_lock();						\
-	xas_for_each(&xas, page, ULONG_MAX) {				\
-		if (xas_retry(&xas, page) || xa_is_value(page)) {	\
-			WARN_ON(1);					\
-			break;						\
-		}							\
-		__v.bv_page = find_subpage(page, xas.xa_index);		\
-		offset = (i->mapping_start + skip) & ~PAGE_MASK;	\
-		seg = PAGE_SIZE - offset;			\
-		__v.bv_offset = offset;				\
-		__v.bv_len = min(n, seg);			\
-		(void)(STEP);					\
-		n -= __v.bv_len;				\
-		skip += __v.bv_len;				\
-		if (n == 0)					\
-			break;					\
-	}							\
-	rcu_read_unlock();					\
-	n = wanted - n;						\
-}
+Reviewed-by: Cristian Marussi <cristian.marussi@arm.com>
 
-Note that the walk is not restartable - and the array is supposed to have been
-fully populated by the caller for the range specified - so I've made it print
-a warning and end the loop if xas_retry() or xa_is_value() return true (which
-takes care of the !page case too).  Possibly I could just leave it to fault in
-this case and not check.
+Regards
 
-If PageHuge(page) is true, I presume I need to support that too.  How do I
-find out how big the page is?
-
-David
+Cristian
 
