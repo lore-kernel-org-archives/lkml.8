@@ -2,87 +2,165 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24020C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 17:55:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C09E5C3F68F
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 17:56:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7C7922464
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 17:55:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579802143;
-	bh=WQfF52ocBvdFZrGb8gqOqp46CCs46jtplHpqIo6xK7o=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=DZ+jzPehgdrNQ+a87XyUMqYl+XCXU5ExuYUNmYbZV4F6f1yw6ID1uupdlkKS1LQ/C
-	 GTOLPwgj1lTOnb6e0iy8QxqYkDwF+uRg2EYEhjzFuzzvOoL+LjdX0zDXa9CIpi81z6
-	 pUgckh4ThjtsgyWGgPMULm3AXdbhilMcovSyqEfI=
+	by mail.kernel.org (Postfix) with ESMTP id 91FE12467E
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 17:56:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="NK4+dXDp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728939AbgAWRzm (ORCPT
+        id S1728992AbgAWR4V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 12:55:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49012 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726621AbgAWRzl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 12:55:41 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 28BB920718;
-        Thu, 23 Jan 2020 17:55:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579802139;
-        bh=WQfF52ocBvdFZrGb8gqOqp46CCs46jtplHpqIo6xK7o=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=izD0sZ/0eWhZ0V86Gh+KU1CiIJHw7hDsdlomWl779Ou720ttBnLEIfT5g0nvJom66
-         B9Uw8EsWfyHs3dXpaMxJL172BZLzQSBOnn57ynjeHg6bFSegWBk1hqDkDPRi4c4Yxu
-         d0GtijL0/hb3/8OuG/Q5pagbdf+OJV6A6tahHfyI=
-Date:   Thu, 23 Jan 2020 18:55:36 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     "Theodore Y. Ts'o" <tytso@mit.edu>
-Cc:     Jason Baron <jbaron@akamai.com>, Will Deacon <will@kernel.org>,
-        linux-kernel@vger.kernel.org, kernel-team@android.com
-Subject: Re: [PATCH v3] dynamic_debug: allow to work if debugfs is disabled
-Message-ID: <20200123175536.GA1796501@kroah.com>
-References: <20200122074343.GA2099098@kroah.com>
- <20200122080352.GA15354@willie-the-truck>
- <20200122081205.GA2227985@kroah.com>
- <20200122135352.GA9458@kroah.com>
- <8d68b75c-05b8-b403-0a10-d17b94a73ba7@akamai.com>
- <20200122192940.GA88549@kroah.com>
- <20200122193118.GA88722@kroah.com>
- <20200123155340.GD147870@mit.edu>
+        Thu, 23 Jan 2020 12:56:21 -0500
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:36454 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726621AbgAWR4U (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jan 2020 12:56:20 -0500
+Received: by mail-lf1-f66.google.com with SMTP id f24so3020159lfh.3
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jan 2020 09:56:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=tbUt6go+kLuXKXQ0VzJ6Mhyl0zSlPzgGsNDFNiXJt7g=;
+        b=NK4+dXDpNBbzPh3b80IEDt5inscQTCvjYG7+GPJ5WUbiU+W/8YhHNLVwGhxs57FIS4
+         fK7JN1NswFF2h0zIXnkR7Xk+qgzuLlEZVN6S32B+6w20Ygvnm09GYcbJgAJZKjeKpTGc
+         792wHEdxRwurEfdqWJVhjVFcefHoQJugA+IyI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=tbUt6go+kLuXKXQ0VzJ6Mhyl0zSlPzgGsNDFNiXJt7g=;
+        b=HbBeZ38yXuWPElfNaRsPw/ss1YAxZ8OFrF/zRSB/lZ/nCFpRyWdRIRz49ngNZGPMlh
+         /dUJgEBAaxot/fuvF0auK80+3KXQwQ/8z76ukW4QAMCfv6lFTbFPjcsSI/2pXD0LjnsK
+         G1kmoCZnWm/+nMgYaOwqqdKpFXWFIkkDp9ZB3b3TD8E7PAikdWdFRKbHN3aZajEHgo90
+         vhPJlTcDOZnNGDIcRuavw67+FPCz5VByyxa/PttbEFQ+0S85YVFRyWEHLFBNaUgM4OI8
+         KXGrZnYAXrdt6s5rDWt9hvS9RT3+5axvPkRUqixuMKb5Z64VeVU3UQxLpiWzwVVRwNOk
+         NeFA==
+X-Gm-Message-State: APjAAAUd+l0KZ+CdAFVY2K/F3hloV1zapUbWizEZc4qMxyKgbDR0vvvv
+        Zj9/LQdHcjpA1FPeRAfHiiDrC0nlLlg=
+X-Google-Smtp-Source: APXvYqzTBj4kZDmNLLjuYQ0Y8nAgf93cDy01vB5IM3Bopk3X2vbaJoXVD1I9EdWS8Mw6R4xfaFZBXA==
+X-Received: by 2002:ac2:44bc:: with SMTP id c28mr4749572lfm.72.1579802177333;
+        Thu, 23 Jan 2020 09:56:17 -0800 (PST)
+Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com. [209.85.208.174])
+        by smtp.gmail.com with ESMTPSA id x10sm79734ljd.68.2020.01.23.09.56.16
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 23 Jan 2020 09:56:16 -0800 (PST)
+Received: by mail-lj1-f174.google.com with SMTP id o13so4582551ljg.4
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jan 2020 09:56:16 -0800 (PST)
+X-Received: by 2002:a2e:b017:: with SMTP id y23mr24733117ljk.229.1579802175831;
+ Thu, 23 Jan 2020 09:56:15 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200123155340.GD147870@mit.edu>
+References: <20200116133102.1.I9c7e72144ef639cc135ea33ef332852a6b33730f@changeid>
+ <20200122172816.GA139285@google.com> <CAE=gft6hvO7G2OrxFGXeSDctz-21ryiu8JSBWT0g2fRFss-pxA@mail.gmail.com>
+ <875zh3ukoy.fsf@nanos.tec.linutronix.de> <CAE=gft7ukQOxHmJT_tkWzA3u2cecmV0Jiq-ukAu-1OR+sPnTtg@mail.gmail.com>
+ <871rrqva0t.fsf@nanos.tec.linutronix.de>
+In-Reply-To: <871rrqva0t.fsf@nanos.tec.linutronix.de>
+From:   Evan Green <evgreen@chromium.org>
+Date:   Thu, 23 Jan 2020 09:55:39 -0800
+X-Gmail-Original-Message-ID: <CAE=gft77xmkc6-4+h3WAp_4C7ra8XKSxcsqrVkBrYgXE0JPeSw@mail.gmail.com>
+Message-ID: <CAE=gft77xmkc6-4+h3WAp_4C7ra8XKSxcsqrVkBrYgXE0JPeSw@mail.gmail.com>
+Subject: Re: [PATCH] PCI/MSI: Avoid torn updates to MSI pairs
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Marc Zyngier <maz@kernel.org>, Christoph Hellwig <hch@lst.de>,
+        Rajat Jain <rajatxjain@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 23, 2020 at 10:53:40AM -0500, Theodore Y. Ts'o wrote:
-> On Wed, Jan 22, 2020 at 08:31:18PM +0100, Greg Kroah-Hartman wrote:
-> > With the realization that having debugfs enabled on "production" systems is
-> > generally not a good idea, debugfs is being disabled from more and more
-> > platforms over time.  However, the functionality of dynamic debugging still is
-> > needed at times, and since it relies on debugfs for its user api, having
-> > debugfs disabled also forces dynamic debug to be disabled.
-> > 
-> > To get around this, move the "control" file for dynamic_debug to procfs IFF
-> > debugfs is disabled.  This lets people turn on debugging as needed at runtime
-> > for individual driverfs and subsystems.
-> 
-> Instead of moving the control file IFF debugfs is enabled, what about
-> always making it available in /proc, and marking the control file for
-> dynamic_debug in debugfs as deprecated?  It would seem to me that this
-> would cause less confusion in the future....
+On Thu, Jan 23, 2020 at 12:42 AM Thomas Gleixner <tglx@linutronix.de> wrote:
+>
+> Evan Green <evgreen@chromium.org> writes:
+> > On Wed, Jan 22, 2020 at 3:37 PM Thomas Gleixner <tglx@linutronix.de> wrote:
+> >> > One other way you could avoid torn MSI writes would be to ensure that
+> >> > if you migrate IRQs across cores, you keep the same x86 vector number.
+> >> > That way the address portion would be updated, and data doesn't
+> >> > change, so there's no window. But that may not actually be feasible.
+> >>
+> >> That's not possible simply because the x86 vector space is limited. If
+> >> we would have to guarantee that then we'd end up with a max of ~220
+> >> interrupts per system. Sufficient for your notebook, but the big iron
+> >> people would be not amused.
+> >
+> > Right, that occurred to me as well. The actual requirement isn't quite
+> > as restrictive. What you really need is the old vector to be
+> > registered on both the old CPU and the new CPU. Then once the
+> > interrupt is confirmed to have moved we could release both the old
+> > vector both CPUs, leaving only the new vector on the new CPU.
+>
+> Sure, and how can you guarantee that without reserving the vector on all
+> CPUs in the first place? If you don't do that then if the vector is not
+> available affinity setting would fail every so often and it would pretty
+> much prevent hotplug if a to be migrated vector is not available on at
+> least one online CPU.
+>
+> > In that world some SMP affinity transitions might fail, which is a
+> > bummer. To avoid that, you could first migrate to a vector that's
+> > available on both the source and destination CPUs, keeping affinity
+> > the same. Then change affinity in a separate step.
+>
+> Good luck with doing that at the end of the hotplug routine where the
+> CPU is about to vanish.
+>
+> > Or alternatively, you could permanently designate a "transit" vector.
+> > If an interrupt fires on this vector, then we call all ISRs currently
+> > in transit between CPUs. You might end up calling ISRs that didn't
+> > actually need service, but at least that's better than missing edges.
+>
+> I don't think we need that. While walking the dogs I thought about
+> invoking a force migrated interrupt on the target CPU, but haven't
+> thought it through yet.
 
-Why deprecate it?  It's fine where it is, and most developer's have
-debugfs enabled so all is good.  I'd rather only use /proc as a
-last-resort.
+Yeah, I think the Intel folks did that in some tree of theirs too.
 
-thanks,
+>
+> >> 'lscpci -vvv' and 'cat /proc/interrupts'
+> >
+> > Here it is:
+> > https://pastebin.com/YyxBUvQ2
+>
+> Hrm:
+>
+>         Capabilities: [80] MSI-X: Enable+ Count=16 Masked-
+>
+> So this is weird. We mask it before moving it, so the tear issue should
+> not happen on MSI-X. So the tearing might be just a red herring.
 
-greg k-h
+Mmm... sorry what? This is the complete entry for xhci:
+
+00:14.0 USB controller: Intel Corporation Device 02ed (prog-if 30 [XHCI])
+        Subsystem: Intel Corporation Device 7270
+        Control: I/O- Mem+ BusMaster- SpecCycle- MemWINV- VGASnoop-
+ParErr- Stepping- SERR- FastB2B- DisINTx+
+        Status: Cap+ 66MHz- UDF- FastB2B+ ParErr- DEVSEL=medium
+>TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
+        Interrupt: pin A routed to IRQ 124
+        Region 0: Memory at d1200000 (64-bit, non-prefetchable) [size=64K]
+        Capabilities: [70] Power Management version 2
+                Flags: PMEClk- DSI- D1- D2- AuxCurrent=375mA
+PME(D0-,D1-,D2-,D3hot+,D3cold+)
+                Status: D3 NoSoftRst+ PME-Enable+ DSel=0 DScale=0 PME-
+        Capabilities: [80] MSI: Enable+ Count=1/8 Maskable- 64bit+
+                Address: 00000000fee10004  Data: 402a
+        Capabilities: [90] Vendor Specific Information: Len=14 <?>
+        Kernel driver in use: xhci_hcd
+
+
+>
+> Let me stare into the code a bit.
+
+Thanks, I appreciate the help.
+
+-Evan
