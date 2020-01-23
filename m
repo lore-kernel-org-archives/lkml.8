@@ -2,111 +2,82 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA2FAC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 15:58:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65F1CC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 15:59:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7DF3320704
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 15:58:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="ZWocr9Sv"
+	by mail.kernel.org (Postfix) with ESMTP id 3AB0E20704
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 15:59:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729058AbgAWP60 (ORCPT
+        id S1728913AbgAWP7W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 10:58:26 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:54228 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726885AbgAWP60 (ORCPT
+        Thu, 23 Jan 2020 10:59:22 -0500
+Received: from www62.your-server.de ([213.133.104.62]:37840 "EHLO
+        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726231AbgAWP7V (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 10:58:26 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1579795105; h=In-Reply-To: Content-Type: MIME-Version:
- References: Message-ID: Subject: Cc: To: From: Date: Sender;
- bh=cyM8CFsI8eeTQsNH7DLgcGWPSRi12+w5DPdW4N60rn0=; b=ZWocr9SvZ5He/Qo+CxbYlSJe2Uj6ZkjpT33mkdG24s5ad2ETjfooY4jdzkbSjKCt1n0jgYKc
- rUKP3Dg00vRwp6Noj8NQ8hDMEVDCuXb4C6zHWnonuTQ5mpT8rzxfs3mJe1GfktNC0JTnUclV
- apNDJf0TQ6xh9A5M3ZiX9TElSyA=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e29c29d.7f93f000f880-smtp-out-n02;
- Thu, 23 Jan 2020 15:58:21 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 0DF68C433A2; Thu, 23 Jan 2020 15:58:20 +0000 (UTC)
-Received: from jcrouse1-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: jcrouse)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 43DF1C433CB;
-        Thu, 23 Jan 2020 15:58:19 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 43DF1C433CB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
-Date:   Thu, 23 Jan 2020 08:58:17 -0700
-From:   Jordan Crouse <jcrouse@codeaurora.org>
-To:     Sharat Masetty <smasetty@codeaurora.org>
-Cc:     freedreno@lists.freedesktop.org, dri-devel@freedesktop.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/3] drm: msm: Add 618 gpu to the adreno gpu list
-Message-ID: <20200123155817.GA20380@jcrouse1-lnx.qualcomm.com>
-Mail-Followup-To: Sharat Masetty <smasetty@codeaurora.org>,
-        freedreno@lists.freedesktop.org, dri-devel@freedesktop.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1579763945-10478-1-git-send-email-smasetty@codeaurora.org>
+        Thu, 23 Jan 2020 10:59:21 -0500
+Received: from sslproxy02.your-server.de ([78.47.166.47])
+        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89_1)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1iuesw-0002U1-Du; Thu, 23 Jan 2020 16:59:10 +0100
+Received: from [2001:1620:665:0:5795:5b0a:e5d5:5944] (helo=linux-3.fritz.box)
+        by sslproxy02.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1iuesv-0002p8-Si; Thu, 23 Jan 2020 16:59:09 +0100
+Subject: Re: [PATCH] bpf: devmap: Pass lockdep expression to RCU lists
+To:     =?UTF-8?Q?Toke_H=c3=b8iland-J=c3=b8rgensen?= <toke@redhat.com>,
+        Amol Grover <frextrite@gmail.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>
+Cc:     netdev@vger.kernel.org, bpf@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>,
+        "Paul E . McKenney" <paulmck@kernel.org>
+References: <20200123120437.26506-1-frextrite@gmail.com>
+ <87d0ba9ttp.fsf@toke.dk>
+From:   Daniel Borkmann <daniel@iogearbox.net>
+Message-ID: <b019ff62-08f5-1536-48f3-484b9dc2e064@iogearbox.net>
+Date:   Thu, 23 Jan 2020 16:59:09 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1579763945-10478-1-git-send-email-smasetty@codeaurora.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <87d0ba9ttp.fsf@toke.dk>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Authenticated-Sender: daniel@iogearbox.net
+X-Virus-Scanned: Clear (ClamAV 0.101.4/25704/Thu Jan 23 12:37:43 2020)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 23, 2020 at 12:49:03PM +0530, Sharat Masetty wrote:
-> This patch adds Adreno 618 entry and its associated properties
-> to the gpulist entries.
+On 1/23/20 2:38 PM, Toke Høiland-Jørgensen wrote:
+> Amol Grover <frextrite@gmail.com> writes:
 > 
-> Signed-off-by: Sharat Masetty <smasetty@codeaurora.org>
-
-I'm extremely confused - these have been in linux-next for weeks. Why are you
-sending them out again?
-
-Jordan
-
-> ---
->  drivers/gpu/drm/msm/adreno/adreno_device.c | 11 +++++++++++
->  1 file changed, 11 insertions(+)
+>> head is traversed using hlist_for_each_entry_rcu outside an
+>> RCU read-side critical section but under the protection
+>> of dtab->index_lock.
+>>
+>> Hence, add corresponding lockdep expression to silence false-positive
+>> lockdep warnings, and harden RCU lists.
+>>
+>> Signed-off-by: Amol Grover <frextrite@gmail.com>
 > 
-> diff --git a/drivers/gpu/drm/msm/adreno/adreno_device.c b/drivers/gpu/drm/msm/adreno/adreno_device.c
-> index fbbdf86..cb3a6e5 100644
-> --- a/drivers/gpu/drm/msm/adreno/adreno_device.c
-> +++ b/drivers/gpu/drm/msm/adreno/adreno_device.c
-> @@ -167,6 +167,17 @@
->  		.init = a5xx_gpu_init,
->  		.zapfw = "a540_zap.mdt",
->  	}, {
-> +		.rev = ADRENO_REV(6, 1, 8, ANY_ID),
-> +		.revn = 618,
-> +		.name = "A618",
-> +		.fw = {
-> +			[ADRENO_FW_SQE] = "a630_sqe.fw",
-> +			[ADRENO_FW_GMU] = "a630_gmu.bin",
-> +		},
-> +		.gmem = SZ_512K,
-> +		.inactive_period = DRM_MSM_INACTIVE_PERIOD,
-> +		.init = a6xx_gpu_init,
-> +	}, {
->  		.rev = ADRENO_REV(6, 3, 0, ANY_ID),
->  		.revn = 630,
->  		.name = "A630",
-> -- 
-> 1.9.1
-> 
+> Could you please add an appropriate Fixes: tag?
 
--- 
-The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
++1, please reply with Fixes: tag (no need to resend).
