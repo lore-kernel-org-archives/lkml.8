@@ -2,145 +2,311 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D53F3C33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 15:25:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7672DC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 15:25:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4DC922464
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 15:25:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 375472467B
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 15:25:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="N/ImqNQK"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="iJEdOkp9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727296AbgAWPZX (ORCPT
+        id S1729304AbgAWPZ3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 10:25:23 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:45350 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729236AbgAWPZV (ORCPT
+        Thu, 23 Jan 2020 10:25:29 -0500
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:36996 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729259AbgAWPZ2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 10:25:21 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579793120;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=2iN/148ydxo6cOEibr7t4o6TqZN00D1PLyEg2aOUAsE=;
-        b=N/ImqNQKIivh8OIOEw4MhvodqBsbZzkrCPqydS8TUySwbD7Ee8ehByo58FJg2Fn+tTxyiA
-        TSAhk5Khj6yVK8Guv/ZGV0qTxHgrcVDPhno3vRdG0uLLVCVRj4BQr8p8uza17CuUaJZaQ0
-        uCdUiW6ssgmFDl1EcdHL4TmcRe08r9w=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-52-3aZizUTBO7aYE8g_rivKQQ-1; Thu, 23 Jan 2020 10:25:16 -0500
-X-MC-Unique: 3aZizUTBO7aYE8g_rivKQQ-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 44FDC1005513;
-        Thu, 23 Jan 2020 15:25:13 +0000 (UTC)
-Received: from llong.remote.csb (dhcp-17-59.bos.redhat.com [10.18.17.59])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 4F3EE610D8;
-        Thu, 23 Jan 2020 15:25:08 +0000 (UTC)
-Subject: Re: [PATCH v9 0/5] Add NUMA-awareness to qspinlock
-To:     Will Deacon <will@kernel.org>
-Cc:     Lihao Liang <lihaoliang@google.com>,
-        Alex Kogan <alex.kogan@oracle.com>, linux@armlinux.org.uk,
-        peterz@infradead.org, mingo@redhat.com, will.deacon@arm.com,
-        arnd@arndb.de, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        tglx@linutronix.de, bp@alien8.de, hpa@zytor.com, x86@kernel.org,
-        guohanjun@huawei.com, jglauber@marvell.com, dave.dice@oracle.com,
-        steven.sistare@oracle.com, daniel.m.jordan@oracle.com
-References: <20200115035920.54451-1-alex.kogan@oracle.com>
- <CAC4j=Y8rCeTX9oKKbh+dCdTP8Ud4hW1ybu+iE7t_nxMSYBOR5w@mail.gmail.com>
- <4e15fa1d-9540-3274-502a-4195a0d46f63@redhat.com>
- <20200123113547.GD18991@willie-the-truck>
-From:   Waiman Long <longman@redhat.com>
-Organization: Red Hat
-Message-ID: <54ba237b-e1db-c14c-7cff-b0be41731ba5@redhat.com>
-Date:   Thu, 23 Jan 2020 10:25:07 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Thu, 23 Jan 2020 10:25:28 -0500
+Received: by mail-pl1-f194.google.com with SMTP id c23so1490700plz.4
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jan 2020 07:25:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=Pm/qlmTwoj9xBcfQ8i56kTmB4d7npYdmRJjtPZEldNU=;
+        b=iJEdOkp9cfyjO+r1ZPhPq6BQfndRotjgj/AyZ0IhQeZma1zlDm/prxLGkjAKuq+jSU
+         VztkFXcfqQkIMMMmA3H7Axqgt6SbVjtCev+ZGBxXYncrDmU/p91nVIJTSoeuAWaZGDAE
+         6+2R/e6AnUFN1R8KiKWai1QheA4mdgjx45spw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=Pm/qlmTwoj9xBcfQ8i56kTmB4d7npYdmRJjtPZEldNU=;
+        b=TaLxx/z4kIr+UgmOratncVXzfNkhJhWhp9lsBH18/Ks3retnxOVsuCQAVQGL2zJGH0
+         s4ykPXlQqOeGhNzpnhna2q00CxPo8SyXbEuvCNBpqfpA2JtLTVzjhMTTmtegehbqapQf
+         rPjrJcR+nxgcoQyujT2Aq/IFBkNuiNA74kQUJw8g6JBVR8XipT7WkHUqvkEzYJRdYyAf
+         N0aY+QPzorknAw7H59WVB58B4hdBGpH+tVlZPysfv26f2BJ3FgXSeYKyK4QOcFPpq1NA
+         1h/vObeaTcx0pmTi6AMDi81wjN5+2kLnWPCupk9Ha2qWv6OrClCbsWNiIszkBVCYexo5
+         ISLQ==
+X-Gm-Message-State: APjAAAWQYGMr2qSM1AbTduoIeN4HV/cudBsWI87G7fkOb1E6GtnJNo8J
+        GZEPNCxpALGchCFzEU27vDPAvAX8Vp6dPA==
+X-Google-Smtp-Source: APXvYqwl+g5hqZiMHHCFU7voGkQ+34EMfRPBhV+Dei2UW4tlPjN55vZe/zGM4x3WKAYiWZHQOxQUnQ==
+X-Received: by 2002:a17:902:524:: with SMTP id 33mr17242642plf.241.1579793127216;
+        Thu, 23 Jan 2020 07:25:27 -0800 (PST)
+Received: from kpsingh-kernel.localdomain ([2a00:79e1:abc:122:bd8d:3f7b:87f7:16d1])
+        by smtp.gmail.com with ESMTPSA id v5sm3108118pfn.122.2020.01.23.07.25.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 23 Jan 2020 07:25:26 -0800 (PST)
+From:   KP Singh <kpsingh@chromium.org>
+To:     linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+        linux-security-module@vger.kernel.org
+Cc:     Brendan Jackman <jackmanb@google.com>,
+        Florent Revest <revest@google.com>,
+        Thomas Garnier <thgarnie@google.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        James Morris <jmorris@namei.org>,
+        Kees Cook <keescook@chromium.org>,
+        Thomas Garnier <thgarnie@chromium.org>,
+        Michael Halcrow <mhalcrow@google.com>,
+        Paul Turner <pjt@google.com>,
+        Brendan Gregg <brendan.d.gregg@gmail.com>,
+        Jann Horn <jannh@google.com>,
+        Matthew Garrett <mjg59@google.com>,
+        Christian Brauner <christian@brauner.io>,
+        =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>,
+        Florent Revest <revest@chromium.org>,
+        Brendan Jackman <jackmanb@chromium.org>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Stanislav Fomichev <sdf@google.com>,
+        Quentin Monnet <quentin.monnet@netronome.com>,
+        Andrey Ignatov <rdna@fb.com>, Joe Stringer <joe@wand.net.nz>
+Subject: [PATCH bpf-next v3 10/10] bpf: lsm: Add Documentation
+Date:   Thu, 23 Jan 2020 07:24:40 -0800
+Message-Id: <20200123152440.28956-11-kpsingh@chromium.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200123152440.28956-1-kpsingh@chromium.org>
+References: <20200123152440.28956-1-kpsingh@chromium.org>
 MIME-Version: 1.0
-In-Reply-To: <20200123113547.GD18991@willie-the-truck>
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/23/20 6:35 AM, Will Deacon wrote:
-> Hi folks,
->
-> (I think Lihao is travelling at the moment, so he may be delayed in his
-> replies)
->
-> On Wed, Jan 22, 2020 at 12:24:58PM -0500, Waiman Long wrote:
->> On 1/22/20 6:45 AM, Lihao Liang wrote:
->>> On Wed, Jan 22, 2020 at 10:28 AM Alex Kogan <alex.kogan@oracle.com> wrote:
->>>> Summary
->>>> -------
->>>>
->>>> Lock throughput can be increased by handing a lock to a waiter on the
->>>> same NUMA node as the lock holder, provided care is taken to avoid
->>>> starvation of waiters on other NUMA nodes. This patch introduces CNA
->>>> (compact NUMA-aware lock) as the slow path for qspinlock. It is
->>>> enabled through a configuration option (NUMA_AWARE_SPINLOCKS).
->>>>
->>> Thanks for your patches. The experimental results look promising!
->>>
->>> I understand that the new CNA qspinlock uses randomization to achieve
->>> long-term fairness, and provides the numa_spinlock_threshold parameter
->>> for users to tune. As Linux runs extremely diverse workloads, it is not
->>> clear how randomization affects its fairness, and how users with
->>> different requirements are supposed to tune this parameter.
->>>
->>> To this end, Will and I consider it beneficial to be able to answer the
->>> following question:
->>>
->>> With different values of numa_spinlock_threshold and
->>> SHUFFLE_REDUCTION_PROB_ARG, how long do threads running on different
->>> sockets have to wait to acquire the lock? This is particularly relevant
->>> in high contention situations when new threads keep arriving on the same
->>> socket as the lock holder.
->>>
->>> In this email, I try to provide some formal analysis to address this
->>> question. Let's assume the probability for the lock to stay on the
->>> same socket is *at least* p, which corresponds to the probability for
->>> the function probably(unsigned int num_bits) in the patch to return *false*,
->>> where SHUFFLE_REDUCTION_PROB_ARG is passed as the value of num_bits to the
->>> function.
->> That is not strictly true from my understanding of the code. The
->> probably() function does not come into play if a secondary queue is
->> present. Also calling cna_scan_main_queue() doesn't guarantee that a
->> waiter in the same node can be found. So the simple mathematical
->> analysis isn't that applicable in this case. One will have to do an
->> actual simulation to find out what the actual behavior will be.
-> It's certainly true that the analysis is based on the worst-case scenario,
-> but I think it's still worth considering. For example, the secondary queue
-> does not exist initially so it seems a bit odd that we only instantiate it
-> with < 1% probability.
->
-> That said, my real concern with any of this is that it makes formal
-> modelling and analysis of the qspinlock considerably more challenging. I
-> would /really/ like to see an update to the TLA+ model we have of the
-> current implementation [1] and preferably also the userspace version I
-> hacked together [2] so that we can continue to test and validate changes
-> to the code outside of the usual kernel stress-testing.
+From: KP Singh <kpsingh@google.com>
 
-I do agree that the current CNA code is hard to model. The CNA lock
-behaves like a regular qspinlock in many cases. If the lock becomes
-fairly contended with waiters from different nodes, it will
-opportunistically switch to CNA mode where preference is given to
-waiters in the same node.
+Document how eBPF programs (BPF_PROG_TYPE_LSM) can be loaded and
+attached (BPF_LSM_MAC) to the LSM hooks.
 
-Cheers,
-Longman
+Signed-off-by: KP Singh <kpsingh@google.com>
+Reviewed-by: Brendan Jackman <jackmanb@google.com>
+Reviewed-by: Florent Revest <revest@google.com>
+Reviewed-by: Thomas Garnier <thgarnie@google.com>
+---
+ Documentation/security/bpf.rst   | 165 +++++++++++++++++++++++++++++++
+ Documentation/security/index.rst |   1 +
+ MAINTAINERS                      |   1 +
+ 3 files changed, 167 insertions(+)
+ create mode 100644 Documentation/security/bpf.rst
+
+diff --git a/Documentation/security/bpf.rst b/Documentation/security/bpf.rst
+new file mode 100644
+index 000000000000..ec7d147c83b2
+--- /dev/null
++++ b/Documentation/security/bpf.rst
+@@ -0,0 +1,165 @@
++.. SPDX-License-Identifier: GPL-2.0+
++.. Copyright 2019 Google LLC.
++
++==========================
++eBPF Linux Security Module
++==========================
++
++This LSM allows runtime instrumentation of the LSM hooks by privileged users to
++implement system-wide MAC (Mandatory Access Control) and Audit policies using
++eBPF. The LSM is privileged and stackable and requires both ``CAP_SYS_ADMIN``
++and ``CAP_MAC_ADMIN`` for the loading of BPF programs and modification of MAC
++policies respectively.
++
++eBPF Programs
++==============
++
++`eBPF (extended BPF) <https://cilium.readthedocs.io/en/latest/bpf>`_ is a
++virtual machine-like construct in the Linux Kernel allowing the execution of
++verifiable, just-in-time compiled byte code at various points in the Kernel.
++
++The eBPF LSM adds a new type, ``BPF_PROG_TYPE_LSM``, of eBPF programs which
++have the following characteristics:
++
++   * Multiple eBPF programs can be attached to the same LSM hook
++   * The programs are always run after the static hooks (i.e. the ones
++     registered by SELinux, AppArmor, Smack etc.)
++   * LSM hooks can return an ``-EPERM`` to indicate the decision of the
++     MAC policy being enforced (``CONFIG_SECURITY_BPF_ENFORCE``) or
++     simply be used for auditing.
++   * If ``CONFIG_SECURITY_BPF_ENFORCE`` is enabled and a non-zero error
++     code is returned from the BPF program, no further BPF programs for
++     the hook are executed
++   * Allowing the eBPF programs to be attached to all the LSM hooks by
++     making :doc:`/bpf/btf` type information available for all LSM hooks
++     and allowing the BPF verifier to perform runtime relocations and
++     validation on the programs
++
++Structure
++---------
++
++The example shows an eBPF program that can be attached to the ``file_mprotect``
++LSM hook:
++
++.. c:function:: int file_mprotect(struct vm_area_struct *vma, unsigned long reqprot, unsigned long prot);
++
++eBPF programs that use :doc:`/bpf/btf` do not need to include kernel headers
++for accessing information from the attached eBPF program's context. They can
++simply declare the structures in the eBPF program and only specify the fields
++that need to be accessed.
++
++.. code-block:: c
++
++	struct mm_struct {
++		unsigned long start_brk, brk, start_stack;
++	} __attribute__((preserve_access_index));
++
++	struct vm_area_struct {
++		unsigned long start_brk, brk, start_stack;
++		unsigned long vm_start, vm_end;
++		struct mm_struct *vm_mm;
++	} __attribute__((preserve_access_index));
++
++
++.. note:: Only the size and the names of the fields must match the type in the
++	  kernel and the order of the fields is irrelevant.
++
++This can be further simplified (if one has access to the BTF information at
++build time) by generating the ``vmlinux.h`` with:
++
++.. code-block:: console
++
++        # bpftool dump file <path-to-btf-vmlinux> format c > vmlinux.h
++
++.. note:: ``path-to-btf-vmlinux`` can be ``/sys/kernel/btf/vmlinux`` if the
++	  build environment matches the environment the BPF programs are
++	  deployed in.
++
++The ``vmlinux.h`` can then simply be included in the BPF programs wihtout
++requiring the definition of the the types.
++
++The eBPF programs can be declared using the``BPF_PROG``
++macros defined in `tools/testing/selftests/bpf/bpf_trace_helpers.h`_. In this
++example:
++
++	* ``"lsm/file_mprotect"`` indicates the LSM hook that the program must
++	  be attached to
++	* ``mprotect_audit`` is the name of the eBPF program
++
++.. code-block:: c
++
++        SEC("lsm/file_mprotect")
++        int BPF_PROG(mprotect_audit, struct vm_area_struct *vma,
++                     unsigned long reqprot, unsigned long prot)
++	{
++		int is_heap;
++
++		is_heap = (vma->vm_start >= vma->vm_mm->start_brk &&
++			   vma->vm_end <= vma->vm_mm->brk);
++
++		/*
++		 * Return an -EPERM or write information to the perf events buffer
++		 * for auditing
++		 */
++	}
++
++The ``__attribute__((preserve_access_index))`` is a clang feature that allows
++the BPF verifier to update the offsets for the access at runtime using the
++:doc:`/bpf/btf` information. Since the BPF verifier is aware of the types, it
++also validates all the accesses made to the various types in the eBPF program.
++
++Loading
++-------
++
++eBPP programs can be loaded with the :manpage:`bpf(2)` syscall's
++``BPF_PROG_LOAD`` operation or more simply by using the the libbpf helper
++``bpf_prog_load_xattr``:
++
++
++.. code-block:: c
++
++	struct bpf_prog_load_attr attr = {
++		.file = "./prog.o",
++	};
++	struct bpf_object *prog_obj;
++	struct bpf_program *prog;
++	int prog_fd;
++
++	bpf_prog_load_xattr(&attr, &prog_obj, &prog_fd);
++
++Attachment to LSM Hooks
++-----------------------
++
++The LSM allows attachment of eBPF programs as LSM hooks using :manpage:`bpf(2)`
++syscall's ``BPF_PROG_ATTACH`` operation or more simply by
++using the libbpf helper ``bpf_program__attach_lsm``. In the code shown below
++``prog`` is the eBPF program loaded using ``BPF_PROG_LOAD``:
++
++.. code-block:: c
++
++	struct bpf_link *link;
++
++	link = bpf_program__attach_lsm(prog);
++
++The program can be detached from the LSM hook by *destroying* the ``link``
++link returned by ``bpf_program__attach_lsm``:
++
++.. code-block:: c
++
++	link->destroy();
++
++Examples
++--------
++
++An example eBPF program can be found in
++`tools/testing/selftests/bpf/progs/lsm_mprotect_audit.c`_ and the corresponding
++userspace code in
++`tools/testing/selftests/bpf/prog_tests/lsm_mprotect_audit.c`_
++
++.. Links
++.. _tools/testing/selftests/bpf/bpf_trace_helpers.h:
++   https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree/tools/testing/selftests/selftests/bpf/bpf_trace_helpers.h
++.. _tools/testing/selftests/bpf/progs/lsm_mprotect_audit.c:
++   https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree/tools/testing/selftests/bpf/progs/lsm_mprotect_audit.c
++.. _tools/testing/selftests/bpf/prog_tests/lsm_mprotect_audit.c:
++   https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree/tools/testing/selftests/bpf/prog_tests/lsm_mprotect_audit.c
+diff --git a/Documentation/security/index.rst b/Documentation/security/index.rst
+index fc503dd689a7..844463df4547 100644
+--- a/Documentation/security/index.rst
++++ b/Documentation/security/index.rst
+@@ -5,6 +5,7 @@ Security Documentation
+ .. toctree::
+    :maxdepth: 1
+ 
++   bpf
+    credentials
+    IMA-templates
+    keys/index
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 32236d89d00b..e1de1a345205 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -3213,6 +3213,7 @@ F:	include/linux/bpf_lsm.h
+ F:	tools/testing/selftests/bpf/lsm_helpers.h
+ F:	tools/testing/selftests/bpf/progs/lsm_mprotect_audit.c
+ F:	tools/testing/selftests/bpf/prog_tests/lsm_mprotect_audit.c
++F:	Documentation/security/bpf.rst
+ 
+ BROADCOM B44 10/100 ETHERNET DRIVER
+ M:	Michael Chan <michael.chan@broadcom.com>
+-- 
+2.20.1
 
