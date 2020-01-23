@@ -2,227 +2,138 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6BC3C3F68F
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 07:24:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9679C33CAA
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 07:26:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7457E217F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 07:24:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579764296;
-	bh=m/lm5HBL2vKn+WcOpvJG+ogbaU/RjLgSlo9mp3zqrMk=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
-	b=ihTwBKLzPOSpmUQPKjiHKwThcQfjib5WX4q2y0IVBP1fEGZOIITkoFTu7cE/ZWmme
-	 oK9OrKebQy7C1HVXB+v6EuNxMLYEpyu/2LA6YUtnZOiGIs2ueSjGNdc2qZkeDpisQR
-	 oH+tyIbZ5Mr8Z/Ak1cprGUNiJFTsmGCXm5I/ME7Y=
+	by mail.kernel.org (Postfix) with ESMTP id AA258217F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 07:26:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="vnr9wTWw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726780AbgAWHYz (ORCPT
+        id S1726442AbgAWH0E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 02:24:55 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:44652 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725785AbgAWHYz (ORCPT
+        Thu, 23 Jan 2020 02:26:04 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:23129 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726054AbgAWH0D (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 02:24:55 -0500
-Received: by mail-lj1-f196.google.com with SMTP id q8so2035087ljj.11;
-        Wed, 22 Jan 2020 23:24:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=PO+/EdtxmoIB337Uw05Y/8H8Ge6zwOpflVL5MWt26PY=;
-        b=G0fds4rIEiyIfLJHqvfVgDDOj1X4PQddS9IFWnrCIb0JSNo2SbYipZrqG2y8oayiuC
-         VOMgzOa/youe9ap0jgRM7ap3JaJCY2b1/xVKK6rziVZefT70k97pLulMPTsr+pxetOxC
-         sI+CnbNaaq2hIDw2bd1GK0CtzXb5kFXcugEOBNBXd7Cgv/dPMJQfoV4DFUSJpWDjIoGp
-         zDQs9P3rd3hd8ATvzMzskQuce0OPDMzoy14O0p/njhv8canVsfVxhWQrJ1ytX7uPwwVe
-         YRg8nwLa09rR6J+r3/98FJs295/Tftbq0zy/CIyGrdP68gZ5MovXWV55Lgr5kmiHmWtx
-         ESMA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
-         :date:message-id:mime-version;
-        bh=PO+/EdtxmoIB337Uw05Y/8H8Ge6zwOpflVL5MWt26PY=;
-        b=qu7K58e1L4YJNFx2Q7EzAvBBUWvLwdIU2CQMGjdnC4wUbdKolQAPBx1fsCJYWLkBtm
-         YO6wJFuZEvyW+ByUll9oYjYQ/xdcylzfUcV+5aYRMrqDQ6qUgSaMDaJ0dCpVTWOZEXQ/
-         yulW2QZvP0rDYvTM45UlBknrQ8XAwNn46u6Ateio1onqcj2tyUHTgEdjNvj1dYCtifdT
-         ULm75Gx35915Bk2pSVv6ZiVETYcjoSlwhGOe/ezFrOXVDNVJHEj1u4Ad6aevkFv/Z5jY
-         VQRcg6+U6S7yTeN2J5SAlccPIjcpG5mMkb0AUgmuw3dlrd9hHp2h+dcKfH8qtqz2qC3i
-         MPHA==
-X-Gm-Message-State: APjAAAUgRxGJSOLPAi8VtTCRDfNjnfaYpn6GBndU4yar4E7a+zXGMr9l
-        sa1JGciHWGCkazuYF2EWSoI=
-X-Google-Smtp-Source: APXvYqyL5kKScDlEz+0IBCoUuFQTzXQhJEUjdjWCkW35DBPBwbvEvZfdfDleC0OjDRAiD9xYmfmn4g==
-X-Received: by 2002:a2e:880c:: with SMTP id x12mr22004208ljh.44.1579764291777;
-        Wed, 22 Jan 2020 23:24:51 -0800 (PST)
-Received: from saruman (88-113-215-33.elisa-laajakaista.fi. [88.113.215.33])
-        by smtp.gmail.com with ESMTPSA id m15sm620655ljg.4.2020.01.22.23.24.50
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 22 Jan 2020 23:24:50 -0800 (PST)
-From:   Felipe Balbi <balbi@kernel.org>
-To:     John Stultz <john.stultz@linaro.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Cc:     Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>,
-        Felipe Balbi <felipe.balbi@linux.intel.com>,
-        Yang Fei <fei.yang@intel.com>,
-        Thinh Nguyen <thinhn@synopsys.com>,
-        Tejas Joglekar <tejas.joglekar@synopsys.com>,
-        Andrzej Pietrasiewicz <andrzej.p@collabora.com>,
-        Jack Pham <jackp@codeaurora.org>, Todd Kjos <tkjos@google.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Linux USB List <linux-usb@vger.kernel.org>,
-        stable <stable@vger.kernel.org>,
-        John Stultz <john.stultz@linaro.org>
-Subject: Re: [RFC][PATCH 2/2] usb: dwc3: gadget: Correct the logic for finding last SG entry
-In-Reply-To: <20200122222645.38805-3-john.stultz@linaro.org>
-References: <20200122222645.38805-1-john.stultz@linaro.org> <20200122222645.38805-3-john.stultz@linaro.org>
-Date:   Thu, 23 Jan 2020 09:25:40 +0200
-Message-ID: <87r1zq4osr.fsf@kernel.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+        Thu, 23 Jan 2020 02:26:03 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1579764363; h=References: In-Reply-To: Message-Id: Date:
+ Subject: Cc: To: From: Sender;
+ bh=9S0QIlbYmQAb+fbkT7yD3PV4Zf5YseEdwAjssYu+PQ8=; b=vnr9wTWw2x2Veo4SM1099Zb4UQdHa1hU6RcceKNILV7zvbtEja1UaX36JHlbWs5TBF4f3o5c
+ 7O7AFLmr8TVljm7+KhrAAIW0lqT6l2KT0Yw+/KnQCKcl5Sst/wa1h+XMOjToAoHgFN0rtAvX
+ LHD6+KXvrvovmyVTvQFUmvwT7WQ=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e294a8a.7fd2376666f8-smtp-out-n01;
+ Thu, 23 Jan 2020 07:26:02 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 1B3C1C447A5; Thu, 23 Jan 2020 07:26:02 +0000 (UTC)
+Received: from pacamara-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: cang)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 666D0C43383;
+        Thu, 23 Jan 2020 07:26:00 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 666D0C43383
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=cang@codeaurora.org
+From:   Can Guo <cang@codeaurora.org>
+To:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
+        hongwus@codeaurora.org, rnayak@codeaurora.org,
+        linux-scsi@vger.kernel.org, kernel-team@android.com,
+        saravanak@google.com, salyzyn@google.com, cang@codeaurora.org
+Cc:     Sayali Lokhande <sayalil@codeaurora.org>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        Pedro Sousa <pedrom.sousa@synopsys.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        Bean Huo <beanhuo@micron.com>,
+        Venkat Gopalakrishnan <venkatg@codeaurora.org>,
+        Tomas Winkler <tomas.winkler@intel.com>,
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v4 1/8] scsi: ufs: Flush exception event before suspend
+Date:   Wed, 22 Jan 2020 23:25:42 -0800
+Message-Id: <1579764349-15578-2-git-send-email-cang@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <1579764349-15578-1-git-send-email-cang@codeaurora.org>
+References: <1579764349-15578-1-git-send-email-cang@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+From: Sayali Lokhande <sayalil@codeaurora.org>
 
+Exception event can be raised by the device when system
+suspend is in progress. This will result in unclocked
+register access in exception event handler as clocks will
+be turned off during suspend. This change makes sure to flush
+exception event handler work in suspend before disabling
+clocks to avoid unclocked register access issue.
 
-Hi,
+Signed-off-by: Sayali Lokhande <sayalil@codeaurora.org>
+Signed-off-by: Asutosh Das <asutoshd@codeaurora.org>
+Signed-off-by: Can Guo <cang@codeaurora.org>
+---
+ drivers/scsi/ufs/ufshcd.c | 21 ++++++++++++++++++---
+ 1 file changed, 18 insertions(+), 3 deletions(-)
 
-John Stultz <john.stultz@linaro.org> writes:
-> From: Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
->
-> As a process of preparing TRBs usb_gadget_map_request_by_dev() is
-> called from dwc3_prepare_trbs() for mapping the request. This will
-> call dma_map_sg() if req->num_sgs are greater than 0. dma_map_sg()
-> will map the sg entries in sglist and return the number of mapped SGs.
-> As a part of mapping, some sg entries having contigous memory may be
-> merged together into a single sg (when IOMMU used). So, the number of
-> mapped sg entries may not be equal to the number of orginal sg entries
-> in the request (req->num_sgs).
->
-> As a part of preparing the TRBs, dwc3_prepare_one_trb_sg() iterates over
-> the sg entries present in the sglist and calls sg_is_last() to identify
-> whether the sg entry is last and set IOC bit for the last sg entry. The
-> sg_is_last() determines last sg if SG_END is set in sg->page_link. When
-> IOMMU used, dma_map_sg() merges 2 or more sgs into a single sg and it
-> doesn't retain the page_link properties. Because of this reason the
-> sg_is_last() may not find SG_END and thus resulting in IOC bit never
-> getting set.
->
-> For example:
->
-> Consider a request having 8 sg entries with each entry having a length of
-> 4096 bytes. Assume that sg1 & sg2, sg3 & sg4, sg5 & sg6, sg7 & sg8 are
-> having contigous memory regions.
->
-> Before calling dma_map_sg():
->             sg1-->sg2-->sg3-->sg4-->sg6-->sg7-->sg8
-> dma_length: 4K    4K    4K    4K    4K    4K    4K
-> SG_END:     False False False False False False True
-> num_sgs =3D 8
-> num_mapped_sgs =3D 0
->
-> The dma_map_sg() merges sg1 & sg2 memory regions into sg1->dma_address.
-> Similarly sg3 & sg4 into sg2->dma_address, sg5 & sg6 into the
-> sg3->dma_address and sg6 & sg8 into sg4->dma_address. Here the memory
-> regions are merged but the page_link properties like SG_END are not
-> retained into the merged sgs.
->
-> After calling dma_map_sg();
->             sg1-->sg2-->sg3-->sg4-->sg6-->sg7-->sg8
-> dma_length: 8K    8K    8K    8K    0K    0K     0K
-> SG_END:     False False False False False False True
-> num_sgs =3D 8
-> num_mapped_sgs =3D 4
->
-> After calling dma_map_sg(), sg1,sg2,sg3,sg4 are having dma_length of
-> 8096 bytes each and remaining sg4,sg5,sg6,sg7 are having 0 bytes of
-> dma_length.
->
-> After dma_map_sg() is performed dma_perpare_trb_sg() iterates on all sg
-> entries and sets IOC bit only for the sg8 (since sg_is_last() returns true
-> only for sg8). But after calling dma_map_sg() the valid data are present
-> only till sg4 and the IOC bit should be set for sg4 TRB only (which is not
-> happening in the present code)
->
-> The above mentioned issue can be fixed by determining last sg based on the
-> req->num_queued_sgs instead of sg_is_last(). If (req->num_queued_sgs + 1)
-> is equal to req->num_mapped_sgs, then this sg is the last sg. In the above
-> example, the dwc3 driver has already queued 3 sgs (upto sg3), so the
-> num_queued_sgs =3D 3. On preparing the next sg (i.e sg4), check for last =
-sg
-> (num_queued_sgs + 1) =3D=3D num_mapped_sgs becomes true. So, the driver s=
-ets
-> IOC bit for sg4. This patch does the same.
->
-> At a practical level, this patch resolves USB transfer stalls
-> seen with adb on dwc3 based db845c, pixel3 and other qcom
-> hardware after functionfs gadget added scatter-gather support
-> around v4.20.
->
-> Cc: Felipe Balbi <felipe.balbi@linux.intel.com>
-> Cc: Yang Fei <fei.yang@intel.com>
-> Cc: Thinh Nguyen <thinhn@synopsys.com>
-> Cc: Tejas Joglekar <tejas.joglekar@synopsys.com>
-> Cc: Andrzej Pietrasiewicz <andrzej.p@collabora.com>
-> Cc: Jack Pham <jackp@codeaurora.org>
-> Cc: Todd Kjos <tkjos@google.com>
-> Cc: Greg KH <gregkh@linuxfoundation.org>
-> Cc: Linux USB List <linux-usb@vger.kernel.org>
-> Cc: stable <stable@vger.kernel.org>
-> Signed-off-by: Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
-> [jstultz: Add note to end of commit message on specific issue this resovl=
-es]
-> Signed-off-by: John Stultz <john.stultz@linaro.org>
-> ---
->  drivers/usb/dwc3/gadget.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c
-> index 1edce3bbb55c..30a80bc97cfe 100644
-> --- a/drivers/usb/dwc3/gadget.c
-> +++ b/drivers/usb/dwc3/gadget.c
-> @@ -1068,7 +1068,7 @@ static void dwc3_prepare_one_trb_sg(struct dwc3_ep =
-*dep,
->  		unsigned int rem =3D length % maxp;
->  		unsigned chain =3D true;
->=20=20
-> -		if (sg_is_last(s))
-> +		if ((req->num_queued_sgs + 1) =3D=3D req->request.num_mapped_sgs)
-
-This is probably a bug on DMA API. If it combines pages from
-scatter-list, then it should also move the last SG so sg_is_last()
-continues to work.
-
-I had asked author to discuss this with DMA API maintainers. Can you do
-that?
-
-=2D-=20
-balbi
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl4pSnQACgkQzL64meEa
-mQb7Yg/+PnSb51d1HUUeuHT8QUblsTEKU68Qb06aygcf99oZctcC0jsnQvaaPTTq
-ceDuG2AOT7IL4OMBOUibjUUYy1HS0194D9Zrq1/xUqu6DcIo3ZgDb2QVUX27jOuX
-qRYyag5uj5mmOpJSCHOC6X71wLPU/CMPBlDTK27+Ogtqtke2jiFnLz8bZoW8rZKM
-7xxZ0t892oR5Qr/kqdJrDQUDvfjXiRl0hjzudywE0HwH77uxALFjYi8UAZ868qv3
-MERgNMIGV35UZZDSs5fhTQp79YUgJjmDfiZblUhr3vphDQsuzykYXKJ3ZWYtvXHz
-XOEUTTc0dVRbtYoKEZh3727Grv4nVqZ+IqzmI7uZQtTNr38DB5X9b/psWPm7nZS/
-MlIYUpfeIBXXW5XwLG6f1JZ+K33sTfjVeTyrHs8/2V+BOGoVnuXBMjKEoSAlEI6K
-NOxZvJVfUOG+gemezrgMCb7TJFCTVjCI1v7qwbWRiYsy+SNezs05iv+H69JysYiG
-oqybEgcHV7jGijr3myV51Rr+oWadqTjVYO7nntyJjtXJENf+/ULWzZsL1pauihtJ
-Fz8xrFNhwGYuUnvgbSUExBY7F1CY86C66chY9HpBKFXywbOSL8yoOflTrGKasq1X
-VkGbxKq4vRIdN9Enii/VaTyFlG+tXV4glH3YZlbTG75uU8ckEmg=
-=j5rc
------END PGP SIGNATURE-----
---=-=-=--
+diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+index 1201578..c2de29f 100644
+--- a/drivers/scsi/ufs/ufshcd.c
++++ b/drivers/scsi/ufs/ufshcd.c
+@@ -4760,8 +4760,15 @@ static void ufshcd_slave_destroy(struct scsi_device *sdev)
+ 			 * UFS device needs urgent BKOPs.
+ 			 */
+ 			if (!hba->pm_op_in_progress &&
+-			    ufshcd_is_exception_event(lrbp->ucd_rsp_ptr))
+-				schedule_work(&hba->eeh_work);
++			    ufshcd_is_exception_event(lrbp->ucd_rsp_ptr)) {
++				/*
++				 * Prevent suspend once eeh_work is scheduled
++				 * to avoid deadlock between ufshcd_suspend
++				 * and exception event handler.
++				 */
++				if (schedule_work(&hba->eeh_work))
++					pm_runtime_get_noresume(hba->dev);
++			}
+ 			break;
+ 		case UPIU_TRANSACTION_REJECT_UPIU:
+ 			/* TODO: handle Reject UPIU Response */
+@@ -5215,7 +5222,14 @@ static void ufshcd_exception_event_handler(struct work_struct *work)
+ 
+ out:
+ 	scsi_unblock_requests(hba->host);
+-	pm_runtime_put_sync(hba->dev);
++	/*
++	 * pm_runtime_get_noresume is called while scheduling
++	 * eeh_work to avoid suspend racing with exception work.
++	 * Hence decrement usage counter using pm_runtime_put_noidle
++	 * to allow suspend on completion of exception event handler.
++	 */
++	pm_runtime_put_noidle(hba->dev);
++	pm_runtime_put(hba->dev);
+ 	return;
+ }
+ 
+@@ -7901,6 +7915,7 @@ static int ufshcd_suspend(struct ufs_hba *hba, enum ufs_pm_op pm_op)
+ 			goto enable_gating;
+ 	}
+ 
++	flush_work(&hba->eeh_work);
+ 	ret = ufshcd_link_state_transition(hba, req_link_state, 1);
+ 	if (ret)
+ 		goto set_dev_active;
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
