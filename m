@@ -2,93 +2,119 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B95F8C33CB8
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 14:43:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43A52C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 14:44:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8599B21569
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 14:43:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579790609;
-	bh=JcgtoUqsESmD3A/2bsSCDPMCrO/wp97Z1NQPgshb+po=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=e4WZ2HLOIQ83bjqXh/H87CwrCg9ufU5HDraGfr8NELHOXYVQt2gGRkCFwXLmTdk15
-	 i6zJ+WcZdCarjebxifo4kgnubOy9Zc0TEZg2sAZPwBsMzRdwiLDKS2lGEG1Nv1RIbu
-	 TsFFYWB6Cz3jQpcBekFmdf0V1tEw0XOverOtEX7M=
+	by mail.kernel.org (Postfix) with ESMTP id 157C520704
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 14:44:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="gx7tlueO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728916AbgAWOn3 (ORCPT
+        id S1729009AbgAWOoW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 09:43:29 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:42844 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726232AbgAWOn2 (ORCPT
+        Thu, 23 Jan 2020 09:44:22 -0500
+Received: from mail25.static.mailgun.info ([104.130.122.25]:29595 "EHLO
+        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726240AbgAWOoW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 09:43:28 -0500
-Received: by mail-oi1-f194.google.com with SMTP id 18so3072570oin.9;
-        Thu, 23 Jan 2020 06:43:28 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=7SayZJgIXHjCdU3TAFI8Ocs5cvmGh8wgxSjfDXiqUmU=;
-        b=cxSDvpbUKLOtBOI3fGsin6p2Q1mBdA9arjtDLfwIuwW3GiBSM+SDY4OwZvljpg5H8n
-         QuuKr24wIPsoqYa0t5sX+gVoonfx0slv1/6bWbbu2ktRh+BznRTyx6PLan0BaTReLvS8
-         +pjgOgzHaflBREHkRQKtI2FP70hF18tj2esYrIRam9KNyU5DOlXqZTxJy10pXSqhYTlo
-         g05JsHpg7srKGRoQua+mhC8VcuagSmXtBJUPcDFltTwKIQfSKZ5QD8U/nx2A7XOXxLJp
-         dUPgiHaRWNf1Z7B7dCeV0pG5/QV44Fsm+KNHZzKNJZ9d9iWLevSHS51Lh1n0tUsSeWIs
-         Of9w==
-X-Gm-Message-State: APjAAAWF44DtPLu43ev6DdfGEQfoUzFIi/fodDW0cZFdOvyEpDqh6Go9
-        Th7EWnqonW48lLVmvEJKLw==
-X-Google-Smtp-Source: APXvYqzGbdY9oCHH7SiwtERsp5ylmchXaof2S8Eo3kpOm01m82P1WOVc0ecY+Jf3C0L3OyPvAH5Kzg==
-X-Received: by 2002:aca:1c1a:: with SMTP id c26mr10845348oic.75.1579790607604;
-        Thu, 23 Jan 2020 06:43:27 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id s6sm849207otd.72.2020.01.23.06.43.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Jan 2020 06:43:26 -0800 (PST)
-Received: (nullmailer pid 12444 invoked by uid 1000);
-        Thu, 23 Jan 2020 14:43:26 -0000
-Date:   Thu, 23 Jan 2020 08:43:26 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Benjamin Gaignard <benjamin.gaignard@st.com>
-Cc:     gregkh@linuxfoundation.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, mcoquelin.stm32@gmail.com,
-        alexandre.torgue@st.com, linux-serial@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, fabrice.gasnier@st.com,
-        erwan.leray@st.com, Benjamin Gaignard <benjamin.gaignard@st.com>
-Subject: Re: [PATCH v2 2/2] dt-bindings: serial: Convert STM32 UART to
- json-schema
-Message-ID: <20200123144326.GA12392@bogus>
-References: <20200122095558.22553-1-benjamin.gaignard@st.com>
- <20200122095558.22553-3-benjamin.gaignard@st.com>
+        Thu, 23 Jan 2020 09:44:22 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1579790661; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=HcX2Aw1GwJmH4+E7kYExxM1bSry4/2ZTDPoiiydnMe8=; b=gx7tlueOv0dBKjKqD+jeArrBqXavWie2cB/sbrndOmpYADlAswLD6HdX4PwYo6oPP77xoIg5
+ aFjyOfu4UrTMbfBm9/55593i/d1/S8VmGv3SUus1XyOHcDd5dy/S+GHCPxXQmsLMe5nx1LHT
+ sBlK8Mf1GiUH52ihtvVqp5vk+yk=
+X-Mailgun-Sending-Ip: 104.130.122.25
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e29b141.7f18538746c0-smtp-out-n03;
+ Thu, 23 Jan 2020 14:44:17 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 6827FC447A1; Thu, 23 Jan 2020 14:44:17 +0000 (UTC)
+Received: from [10.226.58.28] (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: jhugo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id F378CC43383;
+        Thu, 23 Jan 2020 14:44:15 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org F378CC43383
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jhugo@codeaurora.org
+Subject: Re: [PATCH 05/16] bus: mhi: core: Add support for ringing
+ channel/event ring doorbells
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>
+Cc:     gregkh <gregkh@linuxfoundation.org>, smohanad@codeaurora.org,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        hemantk@codeaurora.org,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20200123111836.7414-1-manivannan.sadhasivam@linaro.org>
+ <20200123111836.7414-6-manivannan.sadhasivam@linaro.org>
+ <CAK8P3a2pZEdsAi6YQ5z3YD=zD1iZLu+WPirhwmxeZ33k7sjkeg@mail.gmail.com>
+ <20200123120050.GB8937@mani>
+From:   Jeffrey Hugo <jhugo@codeaurora.org>
+Message-ID: <e56387b3-6588-1153-48bd-ba92b5609769@codeaurora.org>
+Date:   Thu, 23 Jan 2020 07:44:14 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200122095558.22553-3-benjamin.gaignard@st.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200123120050.GB8937@mani>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 22 Jan 2020 10:55:58 +0100, Benjamin Gaignard wrote:
-> Convert STM32 UART bindings to json-schema.
+On 1/23/2020 5:00 AM, Manivannan Sadhasivam wrote:
+> Hi Arnd,
 > 
-> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
-> ---
->  .../devicetree/bindings/serial/st,stm32-uart.yaml  | 80 ++++++++++++++++++++++
->  .../devicetree/bindings/serial/st,stm32-usart.txt  | 57 ---------------
->  2 files changed, 80 insertions(+), 57 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/serial/st,stm32-uart.yaml
->  delete mode 100644 Documentation/devicetree/bindings/serial/st,stm32-usart.txt
+> On Thu, Jan 23, 2020 at 12:39:06PM +0100, Arnd Bergmann wrote:
+>> On Thu, Jan 23, 2020 at 12:19 PM Manivannan Sadhasivam
+>> <manivannan.sadhasivam@linaro.org> wrote:
+>>
+>>> +int __must_check mhi_read_reg(struct mhi_controller *mhi_cntrl,
+>>> +                             void __iomem *base, u32 offset, u32 *out)
+>>> +{
+>>> +       u32 tmp = readl_relaxed(base + offset);
+>> ....
+>>> +void mhi_write_reg(struct mhi_controller *mhi_cntrl, void __iomem *base,
+>>> +                  u32 offset, u32 val)
+>>> +{
+>>> +       writel_relaxed(val, base + offset);
+>>
+>> Please avoid using _relaxed accessors by default, and use the regular
+>> ones instead. There are a number of things that can go wrong with
+>> the relaxed version, so ideally each caller should have a comment
+>> explaining why this instance is safe without the barriers and why it
+>> matters to not have it.
+>>
+>> If there are performance critical callers of mhi_read_reg/mhi_write_reg,
+>> you could add mhi_read_reg_relaxed/mhi_write_reg_relaxed for those
+>> and apply the same rules there.
+>>
+>> Usually most mmio accesses are only needed for reconfiguration or
+>> other slow paths.
+>>
 > 
+> Fair point. I'll defer to readl/writel APIs and I also need to add
+> le32_to_cpu/cpu_to_le32 to them.
 
-Applied, thanks.
+I would expect we would be using these in the "hot" path.
 
-Rob
+I'm a bit confused, I thought the convention was to put a comment why a 
+barrier was necessary, now we should be putting a comment why a barrier 
+is not necessary?
+
+
+-- 
+Jeffrey Hugo
+Qualcomm Technologies, Inc. is a member of the
+Code Aurora Forum, a Linux Foundation Collaborative Project.
