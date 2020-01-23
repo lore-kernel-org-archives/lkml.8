@@ -2,135 +2,113 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 119B8C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 09:33:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A141C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 09:36:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DCB0C2467E
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 09:33:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C64922522
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 09:36:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="wsgMKH/3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726442AbgAWJdv (ORCPT
+        id S1726232AbgAWJgS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 04:33:51 -0500
-Received: from mga05.intel.com ([192.55.52.43]:56919 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726026AbgAWJdu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 04:33:50 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Jan 2020 01:33:50 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,353,1574150400"; 
-   d="scan'208";a="287394507"
-Received: from um.fi.intel.com (HELO um) ([10.237.72.57])
-  by fmsmga001.fm.intel.com with ESMTP; 23 Jan 2020 01:33:48 -0800
-From:   Alexander Shishkin <alexander.shishkin@linux.intel.com>
-To:     Song Liu <songliubraving@fb.com>, linux-kernel@vger.kernel.org
-Cc:     kernel-team@fb.com, Song Liu <songliubraving@fb.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        alexander.shishkin@linux.intel.com
-Subject: Re: [PATCH v2] perf/core: fix mlock accounting in perf_mmap()
-In-Reply-To: <20200122190447.1920297-1-songliubraving@fb.com>
-References: <20200122190447.1920297-1-songliubraving@fb.com>
-Date:   Thu, 23 Jan 2020 11:33:47 +0200
-Message-ID: <8736c6bjpg.fsf@ashishki-desk.ger.corp.intel.com>
+        Thu, 23 Jan 2020 04:36:18 -0500
+Received: from merlin.infradead.org ([205.233.59.134]:60542 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726026AbgAWJgS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jan 2020 04:36:18 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Transfer-Encoding:
+        Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+        Sender:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=YixZocxPtvbPBg+61NfVP/W8TQN9iRjk5ZtElvThCac=; b=wsgMKH/3+zhqxyAE0Yn4q+6ZNM
+        1i3hdKBlyLh13TkJcOydPEUGqTACaIsumP7f4saKJMOf9CotWZyy7cQol+DrVydLgWlquRUj1R/+A
+        QTtk/hlHgTdnyuzwgO2xpEAHHeAYZS/v0+nGoUaorAkteno8SiiQJEF+jczEOeVLgq/5M1hZqeRPW
+        jGyaWRn4+jQkfd5mAilEiDw+XSoDA/hWa4jyJ9JUsnINqttpc0E/2L3E2QG8fiJKqlzIBjal2EsVG
+        hN9qn5NhMhngueMvfbdw01OKeC/8f3T90IhuigH3lrLYVJhggjeqz952q50KeVMJP5T0ZaK7+5m3Q
+        93HnfLGg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iuYuE-0002qM-Jg; Thu, 23 Jan 2020 09:36:06 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id E8574300B8D;
+        Thu, 23 Jan 2020 10:34:24 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id DE3D42B70D34E; Thu, 23 Jan 2020 10:36:04 +0100 (CET)
+Date:   Thu, 23 Jan 2020 10:36:04 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Marco Elver <elver@google.com>
+Cc:     Qian Cai <cai@lca.pw>, Will Deacon <will@kernel.org>,
+        mingo@redhat.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] locking/osq_lock: fix a data race in osq_wait_next
+Message-ID: <20200123093604.GT14914@hirez.programming.kicks-ass.net>
+References: <20200122165938.GA16974@willie-the-truck>
+ <A5114711-B8DE-48DA-AFD0-62128AC08270@lca.pw>
+ <20200122223851.GA45602@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200122223851.GA45602@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Song Liu <songliubraving@fb.com> writes:
+On Wed, Jan 22, 2020 at 11:38:51PM +0100, Marco Elver wrote:
 
-> sysctl_perf_event_mlock and user->locked_vm can change value
-> independently, so we can't guarantee:
+> If possible, decode and get the line numbers. I have observed a data
+> race in osq_lock before, however, this is the only one I have recently
+> seen in osq_lock:
+> 
+> read to 0xffff88812c12d3d4 of 4 bytes by task 23304 on cpu 0:
+>  osq_lock+0x170/0x2f0 kernel/locking/osq_lock.c:143
+> 
+> 	while (!READ_ONCE(node->locked)) {
+> 		/*
+> 		 * If we need to reschedule bail... so we can block.
+> 		 * Use vcpu_is_preempted() to avoid waiting for a preempted
+> 		 * lock holder:
+> 		 */
+> -->		if (need_resched() || vcpu_is_preempted(node_cpu(node->prev)))
+> 			goto unqueue;
+> 
+> 		cpu_relax();
+> 	}
+> 
+> where
+> 
+> 	static inline int node_cpu(struct optimistic_spin_node *node)
+> 	{
+> -->		return node->cpu - 1;
+> 	}
+> 
+> 
+> write to 0xffff88812c12d3d4 of 4 bytes by task 23334 on cpu 1:
+>  osq_lock+0x89/0x2f0 kernel/locking/osq_lock.c:99
+> 
+> 	bool osq_lock(struct optimistic_spin_queue *lock)
+> 	{
+> 		struct optimistic_spin_node *node = this_cpu_ptr(&osq_node);
+> 		struct optimistic_spin_node *prev, *next;
+> 		int curr = encode_cpu(smp_processor_id());
+> 		int old;
+> 
+> 		node->locked = 0;
+> 		node->next = NULL;
+> -->		node->cpu = curr;
+> 
 
-Looks good, I still have some suggestions below.
-
->
->    user->locked_vm <= user_lock_limit
->
-> When user->locked_vm is larger than user_lock_limit, we cannot simply
-> update extra and user_extra as:
->
->    extra = user_locked - user_lock_limit;
->    user_extra -= extra;
->
-> Otherwise, user_extra will be negative. In extreme cases, this may lead to
-> negative user->locked_vm (until this perf-mmap is closed), which break
-> locked_vm badly.
->
-> Fix this by adjusting user_locked before calculating extra and user_extra.
-
-The commit message is just talking about the code. We can see the code
-when we scroll down to the diff. What this can be instead is:
-
-1. Problem statement: decreasing sysctl_perf_event_mlock between two
-consecutive mmap()s of a perf ring buffer may lead to an integer
-underflow in locked memory accounting. This may lead to the following
-undesired behavior: <an example of bad behavior as opposed to expected
-behavior>.
-
-2. Fix description: address this by adjusting the accounting logic to
-take into account the possibility that the amount of already locked
-memory may exceed the current limit.
-
-> Fixes: c4b75479741c ("perf/core: Make the mlock accounting simple again")
-> Signed-off-by: Song Liu <songliubraving@fb.com>
-> Suggested-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-> Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-> Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-> Cc: Jiri Olsa <jolsa@kernel.org>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> ---
->  kernel/events/core.c | 13 ++++++++++++-
->  1 file changed, 12 insertions(+), 1 deletion(-)
->
-> diff --git a/kernel/events/core.c b/kernel/events/core.c
-> index 2173c23c25b4..d25f2de45996 100644
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-> @@ -5916,8 +5916,19 @@ static int perf_mmap(struct file *file, struct vm_area_struct *vma)
->  	 */
->  	user_lock_limit *= num_online_cpus();
->  
-> -	user_locked = atomic_long_read(&user->locked_vm) + user_extra;
-> +	user_locked = atomic_long_read(&user->locked_vm);
->  
-> +	/*
-> +	 * sysctl_perf_event_mlock and user->locked_vm can change value
-> +	 * independently. so we can't guarantee:
-> +	 *     user->locked_vm <= user_lock_limit
-
-"sysctl_perf_event_mlock may have changed, so that user->locked_vm >
-user_lock_limit".
-
-> +	 *
-> +	 * Adjust user_locked to be <= user_lock_limit so we can calcualte
-> +	 * correct extra and user_extra.
-
-This comment is also verbalizing the C code that follows. I don't think
-it's necessary.
-
-> +	 */
-> +	user_locked = min_t(unsigned long, user_locked, user_lock_limit);
-
-A matter of preference, but to me the "if (user_locked >=
-user_lock_limit)" is easier to read.
-
-> +
-> +	user_locked += user_extra;
->  	if (user_locked > user_lock_limit) {
->  		/*
->  		 * charge locked_vm until it hits user_lock_limit;
-
-Thanks,
---
-Alex
+Yeah, that's impossible. This store happens before the node is
+published, so no matter how the load in node_cpu() is shattered, it must
+observe the right value.
