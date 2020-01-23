@@ -2,140 +2,93 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC572C33CAA
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 08:19:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E39D1C33CAA
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 08:21:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F64124683
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 08:19:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FoZFuOpI"
+	by mail.kernel.org (Postfix) with ESMTP id B27E824683
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 08:21:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728811AbgAWITg (ORCPT
+        id S1727194AbgAWIVP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 03:19:36 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:59704 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726083AbgAWITf (ORCPT
+        Thu, 23 Jan 2020 03:21:15 -0500
+Received: from Chamillionaire.breakpoint.cc ([193.142.43.52]:43226 "EHLO
+        Chamillionaire.breakpoint.cc" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726083AbgAWIVP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 03:19:35 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579767574;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=r8G9CiUcTrvaUADmAjAIB3KCKMVrK5hIYghUAfanm1s=;
-        b=FoZFuOpIBG+mw4dSFEXvDtg/itXuFJfoMRiAySH74ydGir4rNFSGmGyiqAc07VWfY2Vf88
-        nTOBsZtWqWBvbx3chaDz+QzZo9UHXzNTBs4lPkEtJa5/E15aIv2wwlJpAT5LXMjh+SR6O8
-        lWA0NC3Z/HCtSklwh2gCm/q+yGeVTS8=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-161-GDK3HAbMObCnYJNP01EYcQ-1; Thu, 23 Jan 2020 03:19:30 -0500
-X-MC-Unique: GDK3HAbMObCnYJNP01EYcQ-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0034A1800D48;
-        Thu, 23 Jan 2020 08:19:27 +0000 (UTC)
-Received: from oldenburg2.str.redhat.com (ovpn-116-150.ams2.redhat.com [10.36.116.150])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id B137581C0A;
-        Thu, 23 Jan 2020 08:19:20 +0000 (UTC)
-From:   Florian Weimer <fweimer@redhat.com>
-To:     "H. Peter Anvin" <hpa@zytor.com>
-Cc:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Chris Lameter <cl@linux.com>, Jann Horn <jannh@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Joel Fernandes <joelaf@google.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Dave Watson <davejwatson@fb.com>,
-        Will Deacon <will.deacon@arm.com>, shuah <shuah@kernel.org>,
-        Andi Kleen <andi@firstfloor.org>,
-        linux-kselftest <linux-kselftest@vger.kernel.org>,
-        Russell King <linux@arm.linux.org.uk>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        Paul <paulmck@linux.vnet.ibm.com>, Paul Turner <pjt@google.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Josh Triplett <josh@joshtriplett.org>,
-        rostedt <rostedt@goodmis.org>, Ben Maurer <bmaurer@fb.com>,
-        linux-api <linux-api@vger.kernel.org>,
-        Andy Lutomirski <luto@amacapital.net>
-Subject: Re: [RFC PATCH v1] pin_on_cpu: Introduce thread CPU pinning system call
-References: <20200121160312.26545-1-mathieu.desnoyers@efficios.com>
-        <CAG48ez2bQdoT9y7HkyU06DTazysUDdPdJe+gyV-NxgQA7JWQVQ@mail.gmail.com>
-        <430172781.596271.1579636021412.JavaMail.zimbra@efficios.com>
-        <CAG48ez2Z5CesMfandNK+S32Rrgp_QGQHqQ1Fpd5-YTsCWGfHeg@mail.gmail.com>
-        <2049164886.596497.1579641536619.JavaMail.zimbra@efficios.com>
-        <alpine.DEB.2.21.2001212141590.1231@www.lameter.com>
-        <1648013936.596672.1579655468604.JavaMail.zimbra@efficios.com>
-        <ead7a565-9a23-a7d7-904d-c4860f63952a@zytor.com>
-Date:   Thu, 23 Jan 2020 09:19:18 +0100
-In-Reply-To: <ead7a565-9a23-a7d7-904d-c4860f63952a@zytor.com> (H. Peter
-        Anvin's message of "Wed, 22 Jan 2020 23:53:54 -0800")
-Message-ID: <87a76efuux.fsf@oldenburg2.str.redhat.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.3 (gnu/linux)
+        Thu, 23 Jan 2020 03:21:15 -0500
+Received: from fw by Chamillionaire.breakpoint.cc with local (Exim 4.92)
+        (envelope-from <fw@strlen.de>)
+        id 1iuXje-0005Xd-Ny; Thu, 23 Jan 2020 09:21:06 +0100
+Date:   Thu, 23 Jan 2020 09:21:06 +0100
+From:   Florian Westphal <fw@strlen.de>
+To:     Daniel Borkmann <daniel@iogearbox.net>
+Cc:     Florian Westphal <fw@strlen.de>,
+        Praveen Chaudhary <praveen5582@gmail.com>, pablo@netfilter.org,
+        davem@davemloft.net, kadlec@netfilter.org,
+        netfilter-devel@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Zhenggen Xu <zxu@linkedin.com>,
+        Andy Stracner <astracner@linkedin.com>
+Subject: Re: [PATCH v3] [net]: Fix skb->csum update in
+ inet_proto_csum_replace16().
+Message-ID: <20200123082106.GT795@breakpoint.cc>
+References: <1573080729-3102-1-git-send-email-pchaudhary@linkedin.com>
+ <1573080729-3102-2-git-send-email-pchaudhary@linkedin.com>
+ <16d56ee6-53bc-1124-3700-bc0a78f927d6@iogearbox.net>
+ <20200122114333.GQ795@breakpoint.cc>
+ <daf995db-37c6-a2f7-4d12-5c1a29e1c59b@iogearbox.net>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <daf995db-37c6-a2f7-4d12-5c1a29e1c59b@iogearbox.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* H. Peter Anvin:
+Daniel Borkmann <daniel@iogearbox.net> wrote:
+> On 1/22/20 12:43 PM, Florian Westphal wrote:
+> > Daniel Borkmann <daniel@iogearbox.net> wrote:
+> > > > @@ -449,9 +464,6 @@ void inet_proto_csum_replace16(__sum16 *sum, struct sk_buff *skb,
+> > > >    	if (skb->ip_summed != CHECKSUM_PARTIAL) {
+> > > >    		*sum = csum_fold(csum_partial(diff, sizeof(diff),
+> > > >    				 ~csum_unfold(*sum)));
+> > > > -		if (skb->ip_summed == CHECKSUM_COMPLETE && pseudohdr)
+> > > > -			skb->csum = ~csum_partial(diff, sizeof(diff),
+> > > > -						  ~skb->csum);
+> > > 
+> > > What is the technical rationale in removing this here but not in any of the
+> > > other inet_proto_csum_replace*() functions? You changelog has zero analysis
+> > > on why here but not elsewhere this change would be needed?
+> > 
+> > Right, I think it could be dropped everywhere BUT there is a major caveat:
+> > 
+> > At least for the nf_nat case ipv4 header manipulation (which uses the other
+> > helpers froum utils.c) will eventually also update iph->checksum field
+> > to account for the changed ip addresses.
+> > 
+> > And that update doesn't touch skb->csum.
+> > 
+> > So in a way the update of skb->csum in the other helpers indirectly account
+> > for later ip header checksum update.
+> > 
+> > At least that was my conclusion when reviewing the earlier incarnation
+> > of the patch.
+> 
+> Mainly asking because not inet_proto_csum_replace16() but the other ones are
+> exposed via BPF and they are all in no way fundamentally different to each
+> other, but my concern is that depending on how the BPF prog updates the csums
+> things could start to break. :/
 
-> On 2020-01-21 17:11, Mathieu Desnoyers wrote:
->> ----- On Jan 21, 2020, at 4:44 PM, Chris Lameter cl@linux.com wrote:
->> 
->>> These scenarios are all pretty complex and will be difficult to understand
->>> for the user of these APIs.
->>>
->>> I think the easiest solution (and most comprehensible) is for the user
->>> space process that does per cpu operations to get some sort of signal. If
->>> its not able to handle that then terminate it. The code makes a basic
->>> assumption after all that the process is running on a specific cpu. If
->>> this is no longer the case then its better to abort if the process cannot
->>> handle moving to a different processor.
->> 
->> The point of pin_on_cpu() is to allow threads to access per-cpu data
->> structures belonging to a given CPU even if they cannot run on that
->> CPU (because it is offline).
->> 
->> I am not sure what scenario your signal delivery proposal aims to cover.
->> 
->> Just to try to put this into the context of a specific scenario to see
->> if I understand your point, is the following what you have in mind ?
->> 
->> 1. Thread A issues pin_on_cpu(5),
->> 2. Thread B issues sched_setaffinity removing cpu 5 from thread A's
->>    affinity mask,
->> 3. Noticing that it would generate an invalid combination, rather than
->>    failing sched_setaffinity, it would send a SIGSEGV (or other) signal
->>    to thread A.
->> 
->> Or so you have something entirely different in mind ?
->> 
->
-> I would agree that this seems like the only sane option, or you will
-> be in a world of hurt because of conflicting semantics. It is not just
-> offlining, but what happens if a policy manager calls
-> sched_setaffinity() on another thread -- and now the universe breaks
-> because a library is updated to use this new system call which
-> collides with the expectations of the policy manager.
+I'm reasonably sure removing the skb->csum update from the other
+helpers will also break ipv4 nat :)
 
-Yes, this new interface seems fundamentally incompatible with how
-affinity masks are changed today.
+So, AFAIU from what you're saying above the patch seems fine as-is and
+just needs a more verbose commit message explaining why replace16()
+doesn't update skb->csum while all the other ones do.
 
-Would it be possible to make pin_on_cpu_set to use fallback
-synchronization via a futex if the CPU cannot be acquired by running on
-it?  The rseq section would need to check the futex as well, but would
-not have to acquire it.
-
-Thanks,
-Florian
-
+Is that correct?
