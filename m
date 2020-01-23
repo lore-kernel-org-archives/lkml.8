@@ -1,63 +1,131 @@
 Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: *
-X-Spam-Status: No, score=1.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_LOCAL_NOVOWEL,
-	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,HK_RANDOM_REPLYTO,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Level: 
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BBC3C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 20:55:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24BD1C3F68F
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 21:02:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6911F21569
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 20:55:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="r5uaxjgh"
+	by mail.kernel.org (Postfix) with ESMTP id D9FD822522
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 21:02:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579813360;
+	bh=tI9c40yRmWnxTwDHzzQPk83Bb4G5okHkmWcfo79ivVc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=LTYadITS3MXz3zRTbdHKvFM6cv8REq9gzxB+5sigi0DRIr3Wm2ET2SvKjSFotl/Ux
+	 PFB6K4zjskYBuGVPkBFwY07N2OllnzN25LRmFQwAjr2dE0hha4Efon6Od/mAtTW+y+
+	 f/w+cCTYo8xVsVcXN0vHtmXLY6NOIEoG+UddwqZc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729208AbgAWUzh (ORCPT
+        id S1729263AbgAWVCj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 15:55:37 -0500
-Received: from mail-40132.protonmail.ch ([185.70.40.132]:56264 "EHLO
-        mail-40132.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726191AbgAWUzh (ORCPT
+        Thu, 23 Jan 2020 16:02:39 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:34556 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726191AbgAWVCi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 15:55:37 -0500
-Date:   Thu, 23 Jan 2020 20:55:32 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
-        s=default; t=1579812935;
-        bh=NjNZAbulBMS0bWKFpWF0ikCqauCTCFP1hxEyGcdzFnM=;
-        h=Date:To:From:Reply-To:Subject:Feedback-ID:From;
-        b=r5uaxjghkghLizxUOvBY5kBQkek9N37QWPekKODZybuCouwOIyidlKoo5z5rJbapY
-         G52afax7GFZBqc6kyhu7V4o+wdRHUwujZw35SRRfIRWbH18kEy+ZmTZo+bZUyLOYR2
-         X+Ikjz8tdaGSx//m7x7nNEfS0Yi9V6Ak8+ilRhn0=
-To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-From:   vcxzasdfvcxz <vcxzasdfvcxz@protonmail.com>
-Reply-To: vcxzasdfvcxz <vcxzasdfvcxz@protonmail.com>
-Subject: [PATCH] lib/sg_split: remove setting of offset to zero
-Message-ID: <m1IikjLBNle_kj-D3TemaGqgAfGudoitlSaWdj_I21hf7jl8mJaCa-cNTuKzI6Cn94BqqCT432c7s-fEy0bfp5311oRPH5Sywj9R3KgnH7A=@protonmail.com>
-Feedback-ID: UvlvX3kRdLbprDaDPeDY8WvHE6EpBSYWqfjSreuO7DE2A7sBlhSzgMmZ6eSK5y9uJfaMrV5WIdDDzR8JDS6iDw==:Ext:ProtonMail
+        Thu, 23 Jan 2020 16:02:38 -0500
+Received: by mail-ot1-f67.google.com with SMTP id a15so4186701otf.1;
+        Thu, 23 Jan 2020 13:02:38 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=JwkzB9x1WanWBhDL7x07j92uDlqSFlw2k1NGj/hLgTI=;
+        b=opwwqkVr7ujqaFEXL/m94OShnLJaHmfL96kZAQoawzKRHOMX38UT1Erln0IAMOL6Yf
+         6iV3dnAIxbiBWwYMuu+JPN4QRWCaNKTBPuEkh0hUuAl1kMH4Li8gzFbtnrt6RWZ2G/Ak
+         JvuGpAnl8VLTouUZ7Gi4WuampEOtAB/Naa4uqVD6FRvL5tThZuFw4KgqLTe8BhHaW535
+         yU4N+8jcJcPcf2ItCUBmv1WlcgQi+kIiMxbLchuD7Kb5w3Ujy6AeCSLEYQGgsxN32BSO
+         Q2BsOEZCgqFVZQfKkmDUKO1ouAPH7sCGexcv9yGJXA1WojGJcQgqfNqFb3a9KW+N+tKI
+         UJfg==
+X-Gm-Message-State: APjAAAXdtJwvJRMofiMSKCqhNwTP+m9z5gSTIIkaWJ5StClZBVhDOYJo
+        XeeOIinORFjYI4IVWs30sO3rd5ioOzDbJ3Rp9DU=
+X-Google-Smtp-Source: APXvYqyPIvypfDCs30t1gqIpepbgvzYop6gWlF2t/0E8yKfq7mJSeQh1VrOYGs6HAAT3CzMUeucf0TINV6jaGNWPijE=
+X-Received: by 2002:a05:6830:1e67:: with SMTP id m7mr225722otr.262.1579813357759;
+ Thu, 23 Jan 2020 13:02:37 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+References: <20200122173538.1142069-1-douglas.raillard@arm.com>
+ <20200122173538.1142069-5-douglas.raillard@arm.com> <CAJZ5v0gP5v3LzU-uGyHpoJV8z+E2heR1PEQp+c=L7RZS3FzCWg@mail.gmail.com>
+ <9b5afae9-0cf5-6c3a-b94b-0796da4e6a71@arm.com>
+In-Reply-To: <9b5afae9-0cf5-6c3a-b94b-0796da4e6a71@arm.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Thu, 23 Jan 2020 22:02:26 +0100
+Message-ID: <CAJZ5v0h8=Kh-xutPMf110UOrRfEQtjjOTneZaWoZLaYO=Bfm1A@mail.gmail.com>
+Subject: Re: [RFC PATCH v4 4/6] sched/cpufreq: Introduce sugov_cpu_ramp_boost
+To:     Douglas Raillard <douglas.raillard@arm.com>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        qperret@google.com, Linux PM <linux-pm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-By setting offset to zero we are losing where in the page the memory is.
+On Thu, Jan 23, 2020 at 6:21 PM Douglas Raillard
+<douglas.raillard@arm.com> wrote:
+>
+>
+>
+> On 1/23/20 3:55 PM, Rafael J. Wysocki wrote:
+> > On Wed, Jan 22, 2020 at 6:36 PM Douglas RAILLARD
+> > <douglas.raillard@arm.com> wrote:
+> >>
+> >> Use the utilization signals dynamic to detect when the utilization of a
+> >> set of tasks starts increasing because of a change in tasks' behavior.
+> >> This allows detecting when spending extra power for faster frequency
+> >> ramp up response would be beneficial to the reactivity of the system.
+> >>
+> >> This ramp boost is computed as the difference between util_avg and
+> >> util_est_enqueued. This number somehow represents a lower bound of how
+> >> much extra utilization this tasks is actually using, compared to our
+> >> best current stable knowledge of it (which is util_est_enqueued).
+> >>
+> >> When the set of runnable tasks changes, the boost is disabled as the
+> >> impact of blocked utilization on util_avg will make the delta with
+> >> util_est_enqueued not very informative.
+> >>
+> >> Signed-off-by: Douglas RAILLARD <douglas.raillard@arm.com>
+> >> ---
+> >>  kernel/sched/cpufreq_schedutil.c | 43 ++++++++++++++++++++++++++++++++
+> >>  1 file changed, 43 insertions(+)
+> >>
+> >> diff --git a/kernel/sched/cpufreq_schedutil.c b/kernel/sched/cpufreq_schedutil.c
+> >> index 608963da4916..25a410a1ff6a 100644
+> >> --- a/kernel/sched/cpufreq_schedutil.c
+> >> +++ b/kernel/sched/cpufreq_schedutil.c
+> >> @@ -61,6 +61,10 @@ struct sugov_cpu {
+> >>         unsigned long           bw_dl;
+> >>         unsigned long           max;
+> >>
+> >> +       unsigned long           ramp_boost;
+> >> +       unsigned long           util_est_enqueued;
+> >> +       unsigned long           util_avg;
+> >> +
+> >>         /* The field below is for single-CPU policies only: */
+> >>  #ifdef CONFIG_NO_HZ_COMMON
+> >>         unsigned long           saved_idle_calls;
+> >> @@ -183,6 +187,42 @@ static void sugov_deferred_update(struct sugov_policy *sg_policy, u64 time,
+> >>         }
+> >>  }
+> >>
+> >> +static unsigned long sugov_cpu_ramp_boost(struct sugov_cpu *sg_cpu)
+> >> +{
+> >> +       return READ_ONCE(sg_cpu->ramp_boost);
+> >> +}
+> >
+> > Where exactly is this function used?
+>
+> In the next commit where the boost value is actually used to do
+> something. The function is introduced here to keep the
+> WRITE_ONCE/READ_ONCE pair together.
 
---- a/lib/sg_split.c
-+++ b/lib/sg_split.c
-@@ -88,8 +88,6 @@ static void sg_split_phys(struct sg_splitter *splitters, =
-const int nb_splits)
-                        if (!j) {
-                                out_sg->offset +=3D split->skip_sg0;
-                                out_sg->length -=3D split->skip_sg0;
--                       } else {
--                               out_sg->offset =3D 0;
-                        }
-                        sg_dma_address(out_sg) =3D 0;
-                        sg_dma_len(out_sg) =3D 0;
-
+But ramp_boost itself is not really used in this patch too AFAICS.
