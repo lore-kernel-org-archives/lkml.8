@@ -7,97 +7,97 @@ X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1DD0C33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 22:15:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39AD4C33CAA
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 22:16:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E1FF21734
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 22:15:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F286421734
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 22:16:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sjK3dNrI"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="owiLuPsQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729009AbgAWWP0 (ORCPT
+        id S1729133AbgAWWQ2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 17:15:26 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:33520 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727312AbgAWWPZ (ORCPT
+        Thu, 23 Jan 2020 17:16:28 -0500
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:35065 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727312AbgAWWQ1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 17:15:25 -0500
-Received: by mail-pg1-f196.google.com with SMTP id 6so2104548pgk.0
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jan 2020 14:15:25 -0800 (PST)
+        Thu, 23 Jan 2020 17:16:27 -0500
+Received: by mail-pj1-f65.google.com with SMTP id s7so118707pjc.0
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jan 2020 14:16:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=tXBwxhPJLlGlsNaOTHSkvCkjScA/qmIHT8AzKeFydO8=;
-        b=sjK3dNrIhnT59AxIccgYBllx19BQGy09eIHs6Xza5RECBLrH81Q0N6IZNxqQsOUm4e
-         2CeGJhJR5oByJjb7DAdHCzom/7osgyWHaVehLZF59dO05VIChggrcIa4b7UubLHPGtm9
-         /p0hwCYEeFFyi7UWUv+6ahVXnReFYX1HDhjzYmMvx+lNRdPlRhAnRsWBTaUKS+MFk8in
-         Z5cK+NAmrcy4thsvsX2HYP5yYWOHV7mKgi7M4eSRABul9JHpWWJx0F7zaYaMHmNxh6hn
-         YokQmcOPSvM3I9n31XimMGfbUaLXzKaQIeaMVdmTJdA6EiMkxuhgrWhJN9LQm8oV2/iP
-         2tHA==
+        bh=POE26sNda0qtVdGqaXyUt84eyMAEBk9xA850hvv0kH4=;
+        b=owiLuPsQcxHYXKCoP2YMvnzUUPRJslexRJOb18oXdkPOh4AC/fUyal/8hlDeRp0mdv
+         95kuNy3Kj511gamXHKpivwFl1DWCF0A0Y4Gg8kcYVQlTq+a1hI+Oq2F7npRIwS/sRbLy
+         bQYuRm0gv+0PeBKEW6cZ337kB2rH+rFCuIyCs5tDxu5vilTm2/tjN4N8+GWxnzQjyXBF
+         a8OwHYZWuHAxe0etWYupTfs/aNXsWV/aIkLDu1qVfQFPWPIOni32bHbPFDm0fPpaDhqL
+         Vl7ulGV5qPCRx2w5O/MhRC8mo1C9nAOIV9q9rvvlvmxFRh8+uxQr97uBodTZuSf5YqYq
+         4gYQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=tXBwxhPJLlGlsNaOTHSkvCkjScA/qmIHT8AzKeFydO8=;
-        b=Rh9+jwpqTW7P899aTXRbJeBQB72fKsfx7mRMKRxYyeWuZXdYOXspgoiKSjckiId4P2
-         fKI7jua1fESvDlWFibOb+IgEgrvlXZnKt4R8GrQH6+N3+kjF35K5DDutA2rr/LI5hZgN
-         fBgJRJmApGQdkQlmRVsgsIJixppMxTIKeIOwPkGxXJXxYghqOTFStseWn/4P9T+8A5mx
-         9A+n/4Yo1FNR364xKcAAjiIQQh/7SbANtMYh+lzwVa/fauGyAMnU0mSr1cUxeTHDkUGH
-         BWC5KN/uHPkAkDv5pSRwaCxdMqWi1HmYl1BVNmEzw1CAOzOuVbTIVR6XWSsc7XM//7li
-         LLJw==
-X-Gm-Message-State: APjAAAUSXljjrMsjjTPKTWwkRgyLBRWMtmFJhBz5G9vrrxHn3GE+Pmyq
-        eimQ6pHYvwvitmxSPKHdcDB25e9HEzEtXf27YmxdQZRf
-X-Google-Smtp-Source: APXvYqziuRWMnPljfz/bZp0L+T5uoyDPGMPlFhp5B6LWngEd1YcbHv5Z4Ye1FJte7JIRLPmklQwFeQrvOC+e+F9qqQM=
-X-Received: by 2002:a63:597:: with SMTP id 145mr550696pgf.384.1579817724899;
- Thu, 23 Jan 2020 14:15:24 -0800 (PST)
+        bh=POE26sNda0qtVdGqaXyUt84eyMAEBk9xA850hvv0kH4=;
+        b=XDiPhEqlTyGszhJpc76v+1eTEGDlyjs9Mu5ETVQOcUyxD0E1TMqi/hpR36Thng3CNj
+         hGuMw4zl3zXNPgCxt3qalZ7DeeZCQA/jEUT8Wts2+6+LGM9W4GYoF5bYxLECKBZqszp9
+         l4pB7plPzvw6KhNxDOqcHie4dkuT3ccJLHiGBSuP3+KtuhG5Nv/aw1/spbuAI+e6j9a5
+         HQ6aqxHK1H1tpPARXVqGPVpvj+wkhkqQzrZecFiRSwTWZnleQQcnpKPKBixOKVNwU/97
+         qBStbIgD8X2i+3wcTGdFZNTeRQ2ScqjP7lkN6xwQ1LbTxZycGcRDeXOk+aZDqrs3lzmO
+         eEHA==
+X-Gm-Message-State: APjAAAVixiAvFSASXRPG4wNqNFhkzOZvfJCUBsJsLO1eKAbb3DZXN8PV
+        RIw1W88gm9vq9TocNdtGjNHXMpxUxtJ7mqc5k74Vbg==
+X-Google-Smtp-Source: APXvYqxxENHLtb92CkinCc6e7hMd/rmU5Q1evHN28+Wrp9/KsMdz3zfVLEZj0nvViglYxV3hcct7P8IRe35WoCSUI4U=
+X-Received: by 2002:a17:902:fe8d:: with SMTP id x13mr320727plm.232.1579817786931;
+ Thu, 23 Jan 2020 14:16:26 -0800 (PST)
 MIME-Version: 1.0
 References: <20191211192742.95699-1-brendanhiggins@google.com>
- <20191211192742.95699-2-brendanhiggins@google.com> <CACRpkdaTJej2zFX0y7mAYymBdGNvHpp3VyU0kOd=ScA_gMAf-A@mail.gmail.com>
-In-Reply-To: <CACRpkdaTJej2zFX0y7mAYymBdGNvHpp3VyU0kOd=ScA_gMAf-A@mail.gmail.com>
+ <20191211192742.95699-7-brendanhiggins@google.com> <20191214112815.GA3335535@kroah.com>
+In-Reply-To: <20191214112815.GA3335535@kroah.com>
 From:   Brendan Higgins <brendanhiggins@google.com>
-Date:   Thu, 23 Jan 2020 14:15:13 -0800
-Message-ID: <CAFd5g44herz1-S-48NB=oKuTFhotHNodi7=S0Z-ffkPcqq08vQ@mail.gmail.com>
-Subject: Re: [PATCH v1 1/7] pinctrl: equilibrium: add unspecified HAS_IOMEM dependency
-To:     Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 23 Jan 2020 14:16:15 -0800
+Message-ID: <CAFd5g44Eg7DjBYWfKZ-s860X+GW65k-RtwjfEbeGXkKQ99h8WA@mail.gmail.com>
+Subject: Re: [PATCH v1 6/7] staging: axis-fifo: add unspecified HAS_IOMEM dependency
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc:     Jeff Dike <jdike@addtoit.com>, Richard Weinberger <richard@nod.at>,
         Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Moses Christopher <moseschristopherb@gmail.com>,
         linux-um <linux-um@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        David Gow <davidgow@google.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        David Gow <davidgow@google.com>, devel@driverdev.osuosl.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sorry for not getting to this before I went on vacation.
-
-On Mon, Dec 16, 2019 at 2:39 AM Linus Walleij <linus.walleij@linaro.org> wrote:
+On Sat, Dec 14, 2019 at 3:28 AM Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
 >
-> On Wed, Dec 11, 2019 at 8:28 PM Brendan Higgins
-> <brendanhiggins@google.com> wrote:
->
-> > Currently CONFIG_PINCTRL_EQUILIBRIUM=y implicitly depends on
+> On Wed, Dec 11, 2019 at 11:27:41AM -0800, Brendan Higgins wrote:
+> > Currently CONFIG_XIL_AXIS_FIFO=y implicitly depends on
 > > CONFIG_HAS_IOMEM=y; consequently, on architectures without IOMEM we get
 > > the following build error:
 > >
-> > ld: drivers/pinctrl/pinctrl-equilibrium.o: in function `eqbr_pinctrl_probe':
-> > drivers/pinctrl/pinctrl-equilibrium.c:908: undefined reference to `devm_platform_ioremap_resource'
-> > ld: drivers/pinctrl/pinctrl-equilibrium.c:223: undefined reference to `devm_ioremap_resource'
+> > ld: drivers/staging/axis-fifo/axis-fifo.o: in function `axis_fifo_probe':
+> > drivers/staging/axis-fifo/axis-fifo.c:809: undefined reference to `devm_ioremap_resource'
 > >
-> > Fix the build error by adding the CONFIG_HAS_IOMEM=y dependency.
+> > Fix the build error by adding the unspecified dependency.
 > >
 > > Reported-by: Brendan Higgins <brendanhiggins@google.com>
 > > Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
 >
-> Patch applied but I augmented it with the recently added
-> OF dependency so it now says:
-> depends on OF && HAS_IOMEM
+> Saying you reported a problem and then fixed it kind of does a bit of
+> disservice to the "reported-by:" tag which we normally use only to
+> credit the people that do not actually fix the problem.
+>
+> So in the future, no need for this to be there for patches that you
+> write yourself.
 
-Probably too late now to be helpful, but I can confirm that OF does
-NOT depend on HAS_IOMEM, so this patch was still needed.
+Alright, thanks for spelling that out. I will remember that in the future.
 
-Thanks regardless!
+Cheers!
