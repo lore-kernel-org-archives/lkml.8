@@ -2,171 +2,224 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35C95C33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 13:39:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88768C33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 13:41:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08D5520661
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 13:39:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 503A924684
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 13:41:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=toradex.com header.i=@toradex.com header.b="ulCfqUpW"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="XJS0Z/EQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728853AbgAWNjG (ORCPT
+        id S1728792AbgAWNlE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 08:39:06 -0500
-Received: from mail-db8eur05on2123.outbound.protection.outlook.com ([40.107.20.123]:37600
-        "EHLO EUR05-DB8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726792AbgAWNjG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 08:39:06 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=MNrdRN+2DvfRUQM1GOfuLizIQ24dly///1lZmavqfalSoPwUiolQ5N4vOHv781TPBfcRgOhpxUrcyt10GjBQkZwlQ3lkB68g7OXyQJzSh6nHZx+o4nvdXNYMLbA2NQMeoyvnjPqggNq3tgxHdB+FZncEDHQfE9b9LfS4Wj50HS+AP8Fd1uYs0lvHaQjrtTR6omsNAv3X1o5xrz/i9rLMlTRfto+kQh32dMtB3lwYr2C0QcSUR++bH6KVDTZmrGzk7VAzX2zS+oMSjt4bdHNSxaoSZtpJWjFmp8qmweQ5WuZAd8ErF7Ifog4a3G02Gl1Yl94gW6RVCURVaEC27Qi6PQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2s3tlYFhgdSiLQm4ik4h3D6zxaVWhtbGDckbK+wvSM0=;
- b=j91O9VmFE4mGMJgj7gGspIcOrix5X4Y8RIXWyYw2rR7feZlxcqcvuK8+Mkpgw1M7vw0rh27RGjIzPj7vtPusTj8WbB8bqxvYkwHheTji0cOeM1pZDCLVWOuvze/SyZe8C5vsQ2tSnqI4br3KlIsqdUHDU6NDMHLqDRxdn0lesiknMMDi7tseY7u/FL6koIXtkPwbLpIdgAu41uFnlqji9sHVg/p+oixt9RZHY3QCyrP18vsWSyh69jI2M4syUpKQhAVkzUO+7qhcdHG7oiOX7xR1atmIrM24TDeIOvHWaPPO+D1PHe/UeOYIEnzM5Q+PxSaOkS2YKZrZPRV4AEBcnw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=toradex.com; dmarc=pass action=none header.from=toradex.com;
- dkim=pass header.d=toradex.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=toradex.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2s3tlYFhgdSiLQm4ik4h3D6zxaVWhtbGDckbK+wvSM0=;
- b=ulCfqUpWGBTStMKXFhbIIdwq/6CFYg0v2JNr3r64xD2B5JiHHyfnARmYzm/qrclrW1aEWXzYkLmSiJ2gZhPUkRQkGDsuNX8hwxfp0jnyf2T4XAaE1a6WP2iIOYFu2TJXqkylB9b2dN/7ifL9wHUW0St0R+mL3OxF5XXtN0HuATw=
-Received: from VI1PR05MB3279.eurprd05.prod.outlook.com (10.170.238.24) by
- VI1PR05MB4720.eurprd05.prod.outlook.com (20.176.6.17) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2644.22; Thu, 23 Jan 2020 13:39:01 +0000
-Received: from VI1PR05MB3279.eurprd05.prod.outlook.com
- ([fe80::c14f:4592:515f:6e52]) by VI1PR05MB3279.eurprd05.prod.outlook.com
- ([fe80::c14f:4592:515f:6e52%7]) with mapi id 15.20.2644.027; Thu, 23 Jan 2020
- 13:39:01 +0000
-Received: from mail-qk1-f170.google.com (209.85.222.170) by MN2PR19CA0008.namprd19.prod.outlook.com (2603:10b6:208:178::21) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2644.19 via Frontend Transport; Thu, 23 Jan 2020 13:39:01 +0000
-Received: by mail-qk1-f170.google.com with SMTP id k6so3408174qki.5;        Thu, 23 Jan 2020 05:39:01 -0800 (PST)
-From:   Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
-To:     Marcel Ziswiler <marcel@ziswiler.com>
-CC:     Thierry Reding <thierry.reding@gmail.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "info@logictechno.com" <info@logictechno.com>,
-        "j.bauer@endrich.com" <j.bauer@endrich.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v4 2/3] dt-bindings: panel-simple: add bindings for logic
- technologies displays
-Thread-Topic: [PATCH v4 2/3] dt-bindings: panel-simple: add bindings for logic
- technologies displays
-Thread-Index: AQHV0fGSiCgG8q+p4k6l4T/A2wrxsg==
-Date:   Thu, 23 Jan 2020 13:39:01 +0000
-Message-ID: <CAGgjyvGJr+Yvn6D8i6k7N=uTNq7uWAqyJQv-Bn+samMn_km2BA@mail.gmail.com>
-References: <20200120080100.170294-1-marcel@ziswiler.com>
- <20200120080100.170294-2-marcel@ziswiler.com>
-In-Reply-To: <20200120080100.170294-2-marcel@ziswiler.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: MN2PR19CA0008.namprd19.prod.outlook.com
- (2603:10b6:208:178::21) To VI1PR05MB3279.eurprd05.prod.outlook.com
- (2603:10a6:802:1c::24)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=oleksandr.suvorov@toradex.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-gm-message-state: APjAAAWaAm7NT5gF60b2ul6il9X2xGNq5rstrvpl8V8UoU/jDkC3Yc0u
-        JkOJnSwM3O0M2S0Ntf7WbOGmymTivAnsUNKSMDA=
-x-google-smtp-source: APXvYqwHdoIm2gkZNB9+mft6eWjNU94wAAqcKZh4qyseww49f2rOVJB/HGbiuT0g+joW6oQL6DibWmbKodut6OB/6BM=
-x-received: by 2002:ac8:1851:: with SMTP id
- n17mr16327905qtk.305.1579786367031; Thu, 23 Jan 2020 05:32:47 -0800 (PST)
-x-gmail-original-message-id: <CAGgjyvGJr+Yvn6D8i6k7N=uTNq7uWAqyJQv-Bn+samMn_km2BA@mail.gmail.com>
-x-originating-ip: [209.85.222.170]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 6387b1dd-30e6-4f98-f8ca-08d7a0099b34
-x-ms-traffictypediagnostic: VI1PR05MB4720:
-x-microsoft-antispam-prvs: <VI1PR05MB4720849EB3AA918746EE5660F90F0@VI1PR05MB4720.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:400;
-x-forefront-prvs: 029174C036
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(366004)(199004)(189003)(54906003)(9686003)(42186006)(966005)(5660300002)(66476007)(66556008)(81166006)(81156014)(66946007)(450100002)(66446008)(6862004)(4326008)(64756008)(498600001)(8676002)(55446002)(186003)(8936002)(44832011)(86362001)(71200400001)(52116002)(26005)(53546011)(2906002);DIR:OUT;SFP:1102;SCL:1;SRVR:VI1PR05MB4720;H:VI1PR05MB3279.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: toradex.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: OLo/7dYqO6LflEtCe5NSsjE5wJ4fn60fQ3mevdUfwJH4chyR317KXUbph4BgolpKXZFoWTXsNMlifshb/MA4EotT8ZkXqAOKWkKG4iyKOvIi0x+qG91RwNATlxUYkM8N8ah70onSv2q6ru00Ne1usOMwS1IMHXe5xyCpR5ObcSxFoLEEk+i53EuWJOMHy9faPS/8C2Ge1e9iCWaQ0huDem0Ww0mYIryGwCLcIVe33br5ucldaerxJNB6YBDCS8K811CEENr/5mc8W56uaQozeU2ADNiI7TdtTbyQgyzy30vxFG2HXNsq0NCFcd/InuU34K/TNMULEbF8klL7g2HyWmSpqyaBxdT5N0Hj1FUpWhXAKAPuq4w/u1el/YDgWTxUt4tRR5s8A6ffALKZq2CN3Ha0AmDZQjj9sYGxwws+uXL06H+JPE9lq51gzYeAONP1ZSpOvXuhKpRLASJIlC7TfWz89ktlhZLFLCOhW8kepjg=
-x-ms-exchange-transport-forked: True
+        Thu, 23 Jan 2020 08:41:04 -0500
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:52424 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727194AbgAWNlE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jan 2020 08:41:04 -0500
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200123134101euoutp01b0dc89e037c1f225e42b7405cb08b0e9~sh8fiWSkT3054430544euoutp01R
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jan 2020 13:41:01 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200123134101euoutp01b0dc89e037c1f225e42b7405cb08b0e9~sh8fiWSkT3054430544euoutp01R
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1579786861;
+        bh=ZGbG1trnMfxnxiOl694oQYbvwi99MZvwy2VPOXqw/Nw=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=XJS0Z/EQrvW98RqKrAECYBQrX+XrU6YAM8n31oeZLea2XYQTplS/MZ09lMemqAp/e
+         vQqqMBlyqgHWkehYASISqrslh+ZFuxeo1hhwUiNhLAByxUZEgB6jJ8ze4B6lhYnuR0
+         K1NITMEfY1grdP9k/Ijn6/DlvELCwxIOHYWURbpI=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20200123134101eucas1p20fad4ad4210c6069f083d42a303dafad~sh8fKLoi41835818358eucas1p2U;
+        Thu, 23 Jan 2020 13:41:01 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id 5D.B0.60698.D62A92E5; Thu, 23
+        Jan 2020 13:41:01 +0000 (GMT)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20200123134100eucas1p1078c46b83d1ef49f9b1616f8f7789cf1~sh8eurSxH0264902649eucas1p1C;
+        Thu, 23 Jan 2020 13:41:00 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200123134100eusmtrp256b30342263bd08b6496efc722a5d914~sh8euBVjK2966729667eusmtrp2U;
+        Thu, 23 Jan 2020 13:41:00 +0000 (GMT)
+X-AuditID: cbfec7f5-a0fff7000001ed1a-6a-5e29a26d67d4
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id F6.A9.07950.C62A92E5; Thu, 23
+        Jan 2020 13:41:00 +0000 (GMT)
+Received: from AMDC2765.digital.local (unknown [106.120.51.73]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20200123134100eusmtip2724e809f5bc1bdb2b25003c7e6f041c5~sh8eKFQUE0505605056eusmtip2D;
+        Thu, 23 Jan 2020 13:41:00 +0000 (GMT)
+From:   Marek Szyprowski <m.szyprowski@samsung.com>
+To:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        linux-samsung-soc@vger.kernel.org
+Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Tzung-Bi Shih <tzungbi@google.com>,
+        Dylan Reid <dgreid@google.com>,
+        Jimmy Cheng-Yi Chiang <cychiang@google.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Subject: [PATCH] ASoC: max98090: silence lockdep warning
+Date:   Thu, 23 Jan 2020 14:40:46 +0100
+Message-Id: <20200123134046.9769-1-m.szyprowski@samsung.com>
+X-Mailer: git-send-email 2.17.1
+X-Brightmail-Tracker: H4sIAAAAAAAAA01Sa0hTYRju2zk7O5sujlPw84LRomBBmpl6IJGipPXPX+Ukl1MPU3JTdjZT
+        g/CGlyXNbjotnCwkm+nWEE0z02O1yNy8FAZqJgiRJV5W0DSyzbMu/54r7/PjxRFRFTccz1Nr
+        KY1akS/GBGjvS4/zkMoskR9uWoDk20mGQz4yWrnk7cUljHw1Wo6QNc21gHS5bDxyeuAuRhpd
+        Qxyy6/k8jxz9WsMlByeXeccDpDZ3BSZts+ukdksdJr3WYwFStz0qlZsuSMqh8vOKKE1McqYg
+        d6C3Dy0s31e89NqBloH1SD3g45A4Ck1zZkQPBLiI6ADQZGr3k28AXh/RYyxxA7jYaeD8qVS+
+        2wSscR/AiZnZ/yoWJ8+XwohYqF/x1fl4CJEFXW1sCCGmObCz3ID4jGCChGsMs4NRYj9sXl9F
+        fVhIJMEux4b/3B7YaRveKUPCjUHmpglhjVOw9YsBsDgYLjt6eCyOhNv9Jg5bqPQOd3bxWFIP
+        4HSF0d84Buecm959uHeTBFoHYlj5BPSMPuX5ZEjshu9Xgnwy4oU3epsQVhbC2moRmz4AWxzd
+        f8+OTEz5p0mh1cxwfVhEZMA6xydOA4hq+XerDQALCKV0tEpJ0XFq6lI0rVDROrUyOrtAZQfe
+        3xj75fj+GAz9zGIAgQNxoHBYL5GLuIoiukTFAIgj4hAhOOuVhDmKklJKU3BBo8unaAZE4Kg4
+        VBhn/pwhIpQKLXWRogopzR+Xg/PDy4DZcm457cgH7HxKxNpSrXYX5TkZKz+tlUXeOhN0h6/V
+        zxaO/7hSb4t/UpqcELhlTB2UdWTHBTSOf2xFH4x1J4YYEsPSpiTI8MTCM1nY5fTU4ofKftdm
+        qPxNlSyxnfA09CeNxZszUxKitqs5Wy829I3z1TV9e1XWdvPM1axV+T0xSucqYg8iGlrxG8Nx
+        NQUXAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrJLMWRmVeSWpSXmKPExsVy+t/xe7o5izTjDJoOWFlcuXiIyWLjjPWs
+        FlMfPmGzOHG4kdmifWYHo8X58xvYLS7vmsNmMeP8PiaLtUfuslscftPOarHn4it2B26PDZ+b
+        2DwWbCr12LSqk82jb8sqRo/Pm+QCWKP0bIryS0tSFTLyi0tslaINLYz0DC0t9IxMLPUMjc1j
+        rYxMlfTtbFJSczLLUov07RL0MnZt285S0Khc8eTUcZYGxo8yXYycHBICJhLNV38xdjFycQgJ
+        LGWUmHDoAAtEQkbi5LQGVghbWOLPtS42iKJPjBKn3u9kAkmwCRhKdL0FSXByiAikSPycsQ5s
+        ErPATSaJH4uXM4MkhAUsJD4cOgRmswioSsz8+B5sA6+AjcTa45+YIDbIS6zecIB5AiPPAkaG
+        VYwiqaXFuem5xUZ6xYm5xaV56XrJ+bmbGIHBuu3Yzy07GLveBR9iFOBgVOLhlejVjBNiTSwr
+        rsw9xCjBwawkwssYBhTiTUmsrEotyo8vKs1JLT7EaAq0fCKzlGhyPjCS8kriDU0NzS0sDc2N
+        zY3NLJTEeTsEDsYICaQnlqRmp6YWpBbB9DFxcEo1MJp6fao4deDcfRut/0+WR845cuGLqmCg
+        XOmq0vzOos9n6wL+rZzqc+hImp15GG/G6ikZDokTTq9hWphnJ7T6XbW+7jW20Ar/vMObsv96
+        Fig+ZHCe8tOd22b1hounGVUkXu4U5jO7enrOxGuJbLFHkk7O3/b+aGoOozd7ppd2PGO7vVD+
+        41dHfyqxFGckGmoxFxUnAgC351VtbAIAAA==
+X-CMS-MailID: 20200123134100eucas1p1078c46b83d1ef49f9b1616f8f7789cf1
+X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
-Content-ID: <F68E9E049C34E14ABAE2A88B01C7EAB3@eurprd05.prod.outlook.com>
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-OriginatorOrg: toradex.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6387b1dd-30e6-4f98-f8ca-08d7a0099b34
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Jan 2020 13:39:01.7073
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: d9995866-0d9b-4251-8315-093f062abab4
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: XUfXuN9mSw6VSSjiQCbiCuPKAnW9p9vsJO8/uxStFH5kJEMx8NqNrKR7d3OtV3diykGK8HG7qIv1SDB4oq2fZwEBBj6xc95jwgfVfyc6/Mw=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB4720
+X-RootMTR: 20200123134100eucas1p1078c46b83d1ef49f9b1616f8f7789cf1
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200123134100eucas1p1078c46b83d1ef49f9b1616f8f7789cf1
+References: <CGME20200123134100eucas1p1078c46b83d1ef49f9b1616f8f7789cf1@eucas1p1.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gTW9uLCBKYW4gMjAsIDIwMjAgYXQgMTA6MDIgQU0gTWFyY2VsIFppc3dpbGVyIDxtYXJjZWxA
-emlzd2lsZXIuY29tPiB3cm90ZToNCj4NCj4gRnJvbTogTWFyY2VsIFppc3dpbGVyIDxtYXJjZWwu
-emlzd2lsZXJAdG9yYWRleC5jb20+DQo+DQo+IEFkZCBiaW5kaW5ncyBmb3IgdGhlIGZvbGxvd2lu
-ZyAzIHRvIGJlIGFkZGVkIGRpc3BsYXkgcGFuZWxzIG1hbnVmYWN0dXJlZA0KPiBieSBMb2dpYyBU
-ZWNobm9sb2dpZXMgTGltaXRlZDoNCj4NCj4gLSBMVDE2MTAxMC0yTkhDIGUuZy4gYXMgZm91bmQg
-aW4gdGhlIFRvcmFkZXggQ2FwYWNpdGl2ZSBUb3VjaCBEaXNwbGF5DQo+IDciIFBhcmFsbGVsIFsx
-XQ0KPiAtIExUMTYxMDEwLTJOSFIgZS5nLiBhcyBmb3VuZCBpbiB0aGUgVG9yYWRleCBSZXNpc3Rp
-dmUgVG91Y2ggRGlzcGxheSA3Ig0KPiBQYXJhbGxlbCBbMl0NCj4gLSBMVDE3MDQxMC0yV0hDIGUu
-Zy4gYXMgZm91bmQgaW4gdGhlIFRvcmFkZXggQ2FwYWNpdGl2ZSBUb3VjaCBEaXNwbGF5DQo+IDEw
-LjEiIExWRFMgWzNdDQo+DQo+IFRob3NlIHBhbmVscyBtYXkgYWxzbyBiZSBkaXN0cmlidXRlZCBi
-eSBFbmRyaWNoIEJhdWVsZW1lbnRlIFZlcnRyaWVicw0KPiBHbWJIIFs0XS4NCj4NCj4gWzFdIGh0
-dHBzOi8vZG9jcy50b3JhZGV4LmNvbS8xMDQ0OTctNy1pbmNoLXBhcmFsbGVsLWNhcGFjaXRpdmUt
-dG91Y2gtZGlzcGxheS04MDB4NDgwLWRhdGFzaGVldC5wZGYNCj4gWzJdIGh0dHBzOi8vZG9jcy50
-b3JhZGV4LmNvbS8xMDQ0OTgtNy1pbmNoLXBhcmFsbGVsLXJlc2lzdGl2ZS10b3VjaC1kaXNwbGF5
-LTgwMHg0ODAucGRmDQo+IFszXSBodHRwczovL2RvY3MudG9yYWRleC5jb20vMTA1OTUyLTEwLTEt
-aW5jaC1sdmRzLWNhcGFjaXRpdmUtdG91Y2gtZGlzcGxheS0xMjgweDgwMC1kYXRhc2hlZXQucGRm
-DQo+IFs0XSBodHRwczovL3d3dy5lbmRyaWNoLmNvbS9pc2k1MF9pc2kzMF90ZnQtZGlzcGxheXMv
-bHQxNzA0MTAtMXdoY19pc2kzMA0KPg0KPiBTaWduZWQtb2ZmLWJ5OiBNYXJjZWwgWmlzd2lsZXIg
-PG1hcmNlbC56aXN3aWxlckB0b3JhZGV4LmNvbT4NClJldmlld2VkLWJ5OiBPbGVrc2FuZHIgU3V2
-b3JvdiA8b2xla3NhbmRyLnN1dm9yb3ZAdG9yYWRleC5jb20+DQo+DQo+IC0tLQ0KPg0KPiBDaGFu
-Z2VzIGluIHY0Og0KPiAtIFJlLW9yZGVyZWQgY29tbWl0cyBhcyBzdWdnZXN0ZWQgYnkgU2FtIGFu
-ZCByZS13b3JkZWQgY29tbWl0IG1lc3NhZ2UuDQo+DQo+IENoYW5nZXMgaW4gdjM6DQo+IC0gQWRk
-IGl0IHRvIHJlY2VudGx5IGludHJvZHVjZWQgcGFuZWwtc2ltcGxlLnlhbWwgaW5zdGVhZCBhcyBz
-dWdnZXN0ZWQNCj4gICBieSBTYW0uDQo+DQo+IENoYW5nZXMgaW4gdjI6DQo+IC0gTmV3IHBhdGNo
-IGFkZGluZyBkaXNwbGF5IHBhbmVsIGJpbmRpbmdzIGFzIHdlbGwgYXMgc3VnZ2VzdGVkIGJ5IFJv
-Yi4NCj4NCj4gIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvcGFuZWwtc2lt
-cGxlLnlhbWwgICAgIHwgNiArKysrKysNCj4gIDEgZmlsZSBjaGFuZ2VkLCA2IGluc2VydGlvbnMo
-KykNCj4NCj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9k
-aXNwbGF5L3BhbmVsL3BhbmVsLXNpbXBsZS55YW1sIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
-L2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvcGFuZWwtc2ltcGxlLnlhbWwNCj4gaW5kZXggNGE4MDY0
-ZTMxNzkzLi5mMzNjNWQ5NzlmOTYgMTAwNjQ0DQo+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNl
-dHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL3BhbmVsLXNpbXBsZS55YW1sDQo+ICsrKyBiL0Rv
-Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL3BhbmVsLXNpbXBs
-ZS55YW1sDQo+IEBAIC00MSw2ICs0MSwxMiBAQCBwcm9wZXJ0aWVzOg0KPiAgICAgICAgLSBmcmlk
-YSxmcmQzNTBoNTQwMDQNCj4gICAgICAgICAgIyBHaWFudFBsdXMgR1BNOTQwQjAgMy4wIiBRVkdB
-IFRGVCBMQ0QgcGFuZWwNCj4gICAgICAgIC0gZ2lhbnRwbHVzLGdwbTk0MGIwDQo+ICsgICAgICAg
-ICMgTG9naWMgVGVjaG5vbG9naWVzIExUMTYxMDEwLTJOSEMgNyIgV1ZHQSBURlQgQ2FwIFRvdWNo
-IE1vZHVsZQ0KPiArICAgICAgLSBsb2dpY3RlY2hubyxsdDE2MTAxMC0ybmhjDQo+ICsgICAgICAg
-ICMgTG9naWMgVGVjaG5vbG9naWVzIExUMTYxMDEwLTJOSFIgNyIgV1ZHQSBURlQgUmVzaXN0aXZl
-IFRvdWNoIE1vZHVsZQ0KPiArICAgICAgLSBsb2dpY3RlY2hubyxsdDE2MTAxMC0ybmhyDQo+ICsg
-ICAgICAgICMgTG9naWMgVGVjaG5vbG9naWVzIExUMTcwNDEwLTJXSEMgMTAuMSIgMTI4MHg4MDAg
-SVBTIFRGVCBDYXAgVG91Y2ggTW9kLg0KPiArICAgICAgLSBsb2dpY3RlY2hubyxsdDE3MDQxMC0y
-d2hjDQo+ICAgICAgICAgICMgU2F0b3ogU0FUMDUwQVQ0MEgxMlIyIDUuMCIgV1ZHQSBURlQgTENE
-IHBhbmVsDQo+ICAgICAgICAtIHNhdG96LHNhdDA1MGF0NDBoMTJyMg0KPiAgICAgICAgICAjIFNo
-YXJwIExTMDIwQjFERDAxRCAyLjAiIEhRVkdBIFRGVCBMQ0QgcGFuZWwNCj4gLS0NCj4gMi4yNC4x
-DQo+DQoNCg0KLS0gDQpCZXN0IHJlZ2FyZHMNCk9sZWtzYW5kciBTdXZvcm92DQoNClRvcmFkZXgg
-QUcNCkFsdHNhZ2Vuc3RyYXNzZSA1IHwgNjA0OCBIb3J3L0x1emVybiB8IFN3aXR6ZXJsYW5kIHwg
-VDogKzQxIDQxIDUwMA0KNDgwMCAobWFpbiBsaW5lKQ0K
+Commit 08df0d9a00f7 ("ASoC: max98090: revert "ASoC: max98090: fix lockdep
+warning"") provided a good rationale for removing separate lock for the
+SHDN register access. However it restored the lockdep warning during the
+system boot. To silence the lockdep warning, mark the mutex taken in the
+max98090_shdn_save() function with the lockdep class dedicated for the
+runtime DAPM operations: SND_SOC_DAPM_CLASS_RUNTIME. This finally fixes
+the following lockdep warning observed on Exynos4412-based Odroid U3
+board:
+
+======================================================
+WARNING: possible circular locking dependency detected
+5.5.0-rc7-next-20200123 #7329 Not tainted
+------------------------------------------------------
+alsactl/1105 is trying to acquire lock:
+ed4f7cf4 (&card->dapm_mutex){+.+.}, at: max98090_shdn_save+0x1c/0x28
+
+but task is already holding lock:
+edb8d49c (&card->controls_rwsem){++++}, at: snd_ctl_ioctl+0xcc/0xbb8
+
+which lock already depends on the new lock.
+
+
+the existing dependency chain (in reverse order) is:
+
+-> #1 (&card->controls_rwsem){++++}:
+       snd_ctl_add_replace+0x3c/0x84
+       dapm_create_or_share_kcontrol+0x24c/0x2e0
+       snd_soc_dapm_new_widgets+0x308/0x594
+       snd_soc_bind_card+0x834/0xa94
+       devm_snd_soc_register_card+0x34/0x6c
+       odroid_audio_probe+0x288/0x34c
+       platform_drv_probe+0x6c/0xa4
+       really_probe+0x200/0x48c
+       driver_probe_device+0x78/0x1f8
+       bus_for_each_drv+0x74/0xb8
+       __device_attach+0xd4/0x16c
+       bus_probe_device+0x88/0x90
+       deferred_probe_work_func+0x3c/0xd0
+       process_one_work+0x230/0x7bc
+       worker_thread+0x44/0x524
+       kthread+0x130/0x164
+       ret_from_fork+0x14/0x20
+       0x0
+
+-> #0 (&card->dapm_mutex){+.+.}:
+       lock_acquire+0xe8/0x270
+       __mutex_lock+0x9c/0xb18
+       mutex_lock_nested+0x1c/0x24
+       max98090_shdn_save+0x1c/0x28
+       max98090_put_enum_double+0x20/0x40
+       snd_ctl_ioctl+0x190/0xbb8
+       ksys_ioctl+0x484/0xb10
+       ret_fast_syscall+0x0/0x28
+       0xbede0564
+
+other info that might help us debug this:
+
+ Possible unsafe locking scenario:
+
+       CPU0                    CPU1
+       ----                    ----
+  lock(&card->controls_rwsem);
+                               lock(&card->dapm_mutex);
+                               lock(&card->controls_rwsem);
+  lock(&card->dapm_mutex);
+
+ *** DEADLOCK ***
+
+1 lock held by alsactl/1105:
+ #0: edb8d49c (&card->controls_rwsem){++++}, at: snd_ctl_ioctl+0xcc/0xbb8
+
+stack backtrace:
+CPU: 2 PID: 1105 Comm: alsactl Not tainted 5.5.0-rc7-next-20200123 #7329
+Hardware name: Samsung Exynos (Flattened Device Tree)
+[<c01126f0>] (unwind_backtrace) from [<c010e1e8>] (show_stack+0x10/0x14)
+[<c010e1e8>] (show_stack) from [<c0b5234c>] (dump_stack+0xb4/0xe0)
+[<c0b5234c>] (dump_stack) from [<c018a610>] (check_noncircular+0x1ec/0x208)
+[<c018a610>] (check_noncircular) from [<c018ca2c>] (__lock_acquire+0x1210/0x25ec)
+[<c018ca2c>] (__lock_acquire) from [<c018e728>] (lock_acquire+0xe8/0x270)
+[<c018e728>] (lock_acquire) from [<c0b71928>] (__mutex_lock+0x9c/0xb18)
+[<c0b71928>] (__mutex_lock) from [<c0b723c0>] (mutex_lock_nested+0x1c/0x24)
+[<c0b723c0>] (mutex_lock_nested) from [<c086097c>] (max98090_shdn_save+0x1c/0x28)
+[<c086097c>] (max98090_shdn_save) from [<c08613f8>] (max98090_put_enum_double+0x20/0x40)
+[<c08613f8>] (max98090_put_enum_double) from [<c0833f20>] (snd_ctl_ioctl+0x190/0xbb8)
+[<c0833f20>] (snd_ctl_ioctl) from [<c02cae14>] (ksys_ioctl+0x484/0xb10)
+[<c02cae14>] (ksys_ioctl) from [<c0101000>] (ret_fast_syscall+0x0/0x28)
+Exception stack(0xed331fa8 to 0xed331ff0)
+...
+
+Fixes: 08df0d9a00f7 ("ASoC: max98090: revert "ASoC: max98090: fix lockdep warning"")
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+---
+ sound/soc/codecs/max98090.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/sound/soc/codecs/max98090.c b/sound/soc/codecs/max98090.c
+index 0313e1183167..5bc2c6411b33 100644
+--- a/sound/soc/codecs/max98090.c
++++ b/sound/soc/codecs/max98090.c
+@@ -52,7 +52,8 @@ static void max98090_shdn_restore_locked(struct max98090_priv *max98090)
+ 
+ static void max98090_shdn_save(struct max98090_priv *max98090)
+ {
+-	mutex_lock(&max98090->component->card->dapm_mutex);
++	mutex_lock_nested(&max98090->component->card->dapm_mutex,
++			  SND_SOC_DAPM_CLASS_RUNTIME);
+ 	max98090_shdn_save_locked(max98090);
+ }
+ 
+-- 
+2.17.1
+
