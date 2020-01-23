@@ -2,134 +2,132 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C569BC3F68F
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 02:25:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57485C32771
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 02:26:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6F7924673
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 02:25:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32D5324683
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 02:26:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726227AbgAWCZC (ORCPT
+        id S1726204AbgAWC0U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 21:25:02 -0500
-Received: from szxga06-in.huawei.com ([45.249.212.32]:47698 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725933AbgAWCZB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 21:25:01 -0500
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 35ADC651C4DD263FBCD7;
-        Thu, 23 Jan 2020 10:24:58 +0800 (CST)
-Received: from [127.0.0.1] (10.133.219.224) by DGGEMS401-HUB.china.huawei.com
- (10.3.19.201) with Microsoft SMTP Server id 14.3.439.0; Thu, 23 Jan 2020
- 10:24:55 +0800
-Subject: Re: [PATCH] jffs2: Fix integer underflow in jffs2_rtime_compress
-To:     Richard Weinberger <richard@nod.at>
-CC:     <linux-mtd@lists.infradead.org>, <dwmw2@infradead.org>,
-        <linux-kernel@vger.kernel.org>, <stable@vger.kernel.org>
-References: <20181215162350.12489-1-richard@nod.at>
- <cae86ca1-91f9-6728-df64-40580145220d@huawei.com>
- <2142335.HPRDAJu19m@blindfold>
-From:   Hou Tao <houtao1@huawei.com>
-Message-ID: <e727e81a-c633-60be-9b93-5b6dc9d1936a@huawei.com>
-Date:   Thu, 23 Jan 2020 10:24:55 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.8.0
+        Wed, 22 Jan 2020 21:26:20 -0500
+Received: from mga12.intel.com ([192.55.52.136]:21435 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725933AbgAWC0U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 21:26:20 -0500
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Jan 2020 18:26:20 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,352,1574150400"; 
+   d="scan'208";a="427615570"
+Received: from hao-dev.bj.intel.com (HELO localhost) ([10.238.157.65])
+  by fmsmga006.fm.intel.com with ESMTP; 22 Jan 2020 18:26:17 -0800
+Date:   Thu, 23 Jan 2020 10:05:56 +0800
+From:   Wu Hao <hao.wu@intel.com>
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     will@kernel.org, mdf@kernel.org, mark.rutland@arm.com,
+        linux-fpga@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-api@vger.kernel.org, atull@kernel.org,
+        Luwei Kang <luwei.kang@intel.com>,
+        Xu Yilun <yilun.xu@intel.com>
+Subject: Re: [RESEND Patch v6 2/2] fpga: dfl: fme: add performance reporting
+ support
+Message-ID: <20200123020556.GA9716@hao-dev>
+References: <1579230628-22243-1-git-send-email-hao.wu@intel.com>
+ <1579230628-22243-3-git-send-email-hao.wu@intel.com>
+ <20200122141026.GA10399@kroah.com>
 MIME-Version: 1.0
-In-Reply-To: <2142335.HPRDAJu19m@blindfold>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.133.219.224]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200122141026.GA10399@kroah.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Richard,
-
-On 2018/12/20 18:45, Richard Weinberger wrote:
-> Am Donnerstag, 20. Dezember 2018, 11:43:08 CET schrieb Hou Tao:
->>
->> On 2018/12/16 0:23, Richard Weinberger wrote:
->>> The rtime compressor assumes that at least two bytes are
->>> compressed.
->>> If we try to compress just one byte, the loop condition will
->>> wrap around and an out-of-bounds write happens.
->>>
->>> Cc: <stable@vger.kernel.org>
->>> Signed-off-by: Richard Weinberger <richard@nod.at>
->>> ---
->>>  fs/jffs2/compr_rtime.c | 3 +++
->>>  1 file changed, 3 insertions(+)
->>> It seems that it doesn't incur any harm because the minimal allocated
->> size will be 8-bytes and jffs2_rtime_compress() will write 2-bytes into
->> the allocated buffer.
+On Wed, Jan 22, 2020 at 03:10:26PM +0100, Greg KH wrote:
+> On Fri, Jan 17, 2020 at 11:10:28AM +0800, Wu Hao wrote:
+> > +static const struct attribute_group fme_perf_fabric_events_group = {
+> > +	.name = "events",
+> > +	.attrs = fme_perf_fabric_events_attrs,
+> > +	.is_visible = fme_perf_fabric_events_visible,
+> > +};
+> > +
 > 
-> Are you sure about that? I saw odd kernel behavior and KASAN complained too.
-> 
+> I don't see any Documentation/ABI/ entries for all of these new files.
+> Please properly document them so we know how to review this.
 
-Sorry for the later reply.
+Hi Greg,
 
-Yes. KASAN complains but it doesn't incur any harm because the minimal allocated
-size returned by kmalloc() will be 8-bytes.
+Thanks a lot for the review. Actually all the sysfs entries under events
+are perf monitoring events following the same format documented in 
+"Documentation/ABI/testing/sysfs-bus-event_source-devices-events" and
+we added some description in our fpga documentation in patch #1.
 
-But we better fix it, because it's bad to depend on the implementation of kmalloc().
+Yes, I can add something in ABI directly as well in the next version.
+I pasted related descriptions below. I hope this won't block review.
 
-It seems that mtd-utils has already fixed it years ago. Maybe we can use it directly ?
-
-And your fix also looks good to me, so
-
-Reviewed-by: Hou Tao <houtao1@huawei.com>
-
-commit e8457f16306ad6e2c8708275bf42b5dfff40fffd
-Author: Enrico Scholz <enrico.scholz@sigma-chemnitz.de>
-Date:   Thu Jun 24 15:02:40 2010 +0200
-
-    mkfs.jffs2: fix integer underflow in jffs2_rtime_compress()
-
-    When '*dstlen' is 0 or 1, comparison will return wrong result.  Reported
-    by valgrind as
-
-    ==5919== Invalid write of size 1
-    ==5919==    at 0x40564E: jffs2_rtime_compress (compr_rtime.c:51)
-    ==5919==    by 0x40676B: jffs2_compress (compr.c:246)
-    ==5919==    by 0x403EE4: recursive_populate_directory (mkfs.jffs2.c:884)
-    ==5919==  Address 0x4e1bdb1 is 0 bytes after a block of size 1 alloc'd
-    ==5919==    at 0x4A0515D: malloc (vg_replace_malloc.c:195)
-    ==5919==    by 0x40671C: jffs2_compress (compr.c:229)
-    ==5919==    by 0x403EE4: recursive_populate_directory (mkfs.jffs2.c:884)
-
-    Signed-off-by: Enrico Scholz <enrico.scholz@sigma-chemnitz.de>
-    Signed-off-by: Artem Bityutskiy <Artem.Bityutskiy@nokia.com>
-
-diff --git a/compr_rtime.c b/compr_rtime.c
-index 131536c..5613963 100644
---- a/compr_rtime.c
-+++ b/compr_rtime.c
-@@ -32,7 +32,7 @@ static int jffs2_rtime_compress(unsigned char *data_in, unsigned char *cpage_out
-
-        memset(positions,0,sizeof(positions));
-
--       while (pos < (*sourcelen) && outpos <= (*dstlen)-2) {
-+       while (pos < (*sourcelen) && outpos+2 <= (*dstlen)) {
-                int backpos, runlen=0;
-                unsigned char value;
+Thank you very much!
+Hao
 
 
+From Documentation/ABI/testing/sysfs-bus-event_source-devices-events
 
-> Thanks,
-> //richard
+What: /sys/bus/event_source/devices/<pmu>/events/<event>
+Date: 2014/02/24
+Contact:        Linux kernel mailing list <linux-kernel@vger.kernel.org>
+Description:    Per-pmu performance monitoring events specific to the running system
 
+                Each file (except for some of those with a '.' in them, '.unit'
+                and '.scale') in the 'events' directory describes a single
+                performance monitoring event supported by the <pmu>. The name
+                of the file is the name of the event.
 
+                File contents:
 
+                        <term>[=<value>][,<term>[=<value>]]...
+
+                Where <term> is one of the terms listed under
+                /sys/bus/event_source/devices/<pmu>/format/ and <value> is
+                a number is base-16 format with a '0x' prefix (lowercase only).
+                If a <term> is specified alone (without an assigned value), it
+                is implied that 0x1 is assigned to that <term>.
+
+                Examples (each of these lines would be in a seperate file):
+
+                        event=0x2abc
+                        event=0x423,inv,cmask=0x3
+                        domain=0x1,offset=0x8,starting_index=0xffff
+                        domain=0x1,offset=0x8,core=?
+
+                Each of the assignments indicates a value to be assigned to a
+                particular set of bits (as defined by the format file
+                corresponding to the <term>) in the perf_event structure passed
+                to the perf_open syscall.
+
+                In the case of the last example, a value replacing "?" would
+                need to be provided by the user selecting the particular event.
+                This is referred to as "event parameterization". Event
+                parameters have the format 'param=?'.
+
+From Documentation/fpga/dfl.rst added by patch #1.
+
+"
+The "events" directory describes the configuration templates for all available
+events which can be used with perf tool directly. For example, fab_mmio_read
+has the configuration "event=0x06,evtype=0x02,portid=0xff", which shows this
+event belongs to fabric type (0x02), the local event id is 0x06 and it is for
+overall monitoring (portid=0xff).
+"
 
 > 
+> thanks,
 > 
-> 
-> .
-> 
-
+> greg k-h
