@@ -2,117 +2,106 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F35DC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 18:47:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 856ADC3F68F
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 18:48:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7999722522
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 18:47:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="CoItWY00"
+	by mail.kernel.org (Postfix) with ESMTP id 6022C22464
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 18:48:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579805283;
+	bh=zEHXZgI3rw2iy9T9WOm9a8cYfxBrmLbuaUc9lGrAlDU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=XfO5LdOVxqu08N+vfbEW0yDyp8vksjwT2SYBYvyvt9d+vD64Zs2DJnkXHGz/OKJVA
+	 bE6/GtRP+60wvSFNnG2BhvLZZtrKYHk03I3zqdQjk+cizK26icO7QF2ieGD8COMUzO
+	 GwkgD0LPCeVm3jt1sZ2/vvtIAiIliUdR9vd8lNd0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729100AbgAWSrd (ORCPT
+        id S1729108AbgAWSsC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 13:47:33 -0500
-Received: from userp2120.oracle.com ([156.151.31.85]:41634 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729074AbgAWSra (ORCPT
+        Thu, 23 Jan 2020 13:48:02 -0500
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:45903 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728809AbgAWSsC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 13:47:30 -0500
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00NINnI3120077;
-        Thu, 23 Jan 2020 18:47:25 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references; s=corp-2019-08-05;
- bh=Qp7vLIF4+itHswU2F+ettpG5KHMtj1kxr7/UZnRz1cc=;
- b=CoItWY00Zn1CxIClVQ4vLU7iSfJUbplp87vOgqqjvhTJcsSdzkxgGIVsL5lGUceaskO9
- aKSISFa/+nnyd0wlP0m2N3j9XUkm1VF/X87v6bW9QFBBm+lTqQt4E2vxmPybNyJV77wC
- gkxHzNzteQh25R5dlDznEoKg2CjQH+mxAlRwlSqzipJeZqGBwwvhMORvrYs1uu8BQBUq
- 3yyhZQhJm20/xMjR77fSm7WVg13pXRxrhvVJl31ml+EQtvTHsHv5p91DJfK27tZspdGi
- cHj1P+cidS8YGwRWG+ThpRc6XsDXgTwOP2lSMhkGbv0n1lW27sBLOI6afMCycdlZSy48 9w== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2120.oracle.com with ESMTP id 2xktnrm5jx-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 23 Jan 2020 18:47:25 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00NINbbW163465;
-        Thu, 23 Jan 2020 18:47:24 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3030.oracle.com with ESMTP id 2xpq0x4fjx-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 23 Jan 2020 18:47:24 +0000
-Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 00NIlOqb016319;
-        Thu, 23 Jan 2020 18:47:24 GMT
-Received: from dhcp-10-175-166-237.vpn.oracle.com (/10.175.166.237)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 23 Jan 2020 10:47:23 -0800
-From:   Alan Maguire <alan.maguire@oracle.com>
-To:     brendanhiggins@google.com, gregkh@linuxfoundation.org
-Cc:     corbet@lwn.net, linux-kselftest@vger.kernel.org,
-        kunit-dev@googlegroups.com, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Alan Maguire <alan.maguire@oracle.com>
-Subject: [PATCH v2 kunit-next 3/3] kunit: update documentation to describe debugfs representation
-Date:   Thu, 23 Jan 2020 18:47:01 +0000
-Message-Id: <1579805221-31905-4-git-send-email-alan.maguire@oracle.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1579805221-31905-1-git-send-email-alan.maguire@oracle.com>
-References: <1579805221-31905-1-git-send-email-alan.maguire@oracle.com>
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9509 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=3 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-2001230141
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9509 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=3 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-2001230141
+        Thu, 23 Jan 2020 13:48:02 -0500
+Received: by mail-lf1-f65.google.com with SMTP id 203so3100756lfa.12
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jan 2020 10:48:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=nTTlf7PIq8m+h1b8hl1eM7lP8o081tv0+h5Byplabe4=;
+        b=Mj9KYt/E2aNDAWdYyMNCrPSCFRO71sOFNKIv1qcIG2H25vJy2SyD3sMLVq4FaDcfeP
+         iGlcEsouR1fuzQs9IjFsmMH6TyLgOGNtzw0PWZ+6esf3f+uNHjTwy2QjoAL8divZL0PF
+         0AN44j8uLfXOosmSCqaAgRkchGVu+6EMdfKNs=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=nTTlf7PIq8m+h1b8hl1eM7lP8o081tv0+h5Byplabe4=;
+        b=rfh7CdP2eAS/ZqAXXfOsYaZVRZuKRDuQflmYll8jcn5Usq791YwynD/IW3Y1XMk+Mb
+         f8/rTBnntf1MWTa7A83t2z3+TNSWpYsfwgLGiUCHOJHtfB5NWbb5UEtx8s66hujZ/LE5
+         d+Wn9W3kYTd4xEag5XvOGh9JyhA4nypnXQfenTBL49g+GiIUBohnVBz3HYtJPnBA7JaY
+         xQwICrWXr2O7/T2rm5qnIc6x7qbJUMHwRRKDbijo4DpSEO/gJ0j0Htad5WDx1zhgBM2S
+         B6Hjl2/rH20yzndR9ActI/YZ1NhvQLl4IDBdy1OrVDpLuvUa38APRjuFytl4/e4KsBu7
+         MCkw==
+X-Gm-Message-State: APjAAAUrqcGuuiGrR9CYFI+SjN+MBnCIa40WByANs+gUg32vHjoId7Nf
+        VaVVBwwLvIkatJDRMUktxmAOntTuG9w=
+X-Google-Smtp-Source: APXvYqzxd/FM+GbJ6AwCIn5g/hza/BMossX9AD5zw1lOORTvjwrT3ILo5ziyUdidjejF5s/uzjk4aw==
+X-Received: by 2002:a19:c697:: with SMTP id w145mr5444905lff.54.1579805279417;
+        Thu, 23 Jan 2020 10:47:59 -0800 (PST)
+Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com. [209.85.167.43])
+        by smtp.gmail.com with ESMTPSA id b20sm1719610ljp.20.2020.01.23.10.47.58
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 23 Jan 2020 10:47:58 -0800 (PST)
+Received: by mail-lf1-f43.google.com with SMTP id y19so3110546lfl.9
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jan 2020 10:47:58 -0800 (PST)
+X-Received: by 2002:a19:4849:: with SMTP id v70mr5482335lfa.30.1579805278133;
+ Thu, 23 Jan 2020 10:47:58 -0800 (PST)
+MIME-Version: 1.0
+References: <70f99f7474826883877e84f93224e937d9c974de.1579767339.git.christophe.leroy@c-s.fr>
+In-Reply-To: <70f99f7474826883877e84f93224e937d9c974de.1579767339.git.christophe.leroy@c-s.fr>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Thu, 23 Jan 2020 10:47:42 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wgcm5JzyacekDGQ4Ocoe-F5it-7-sbgU8oPnhwnSH3KAA@mail.gmail.com>
+Message-ID: <CAHk-=wgcm5JzyacekDGQ4Ocoe-F5it-7-sbgU8oPnhwnSH3KAA@mail.gmail.com>
+Subject: Re: [PATCH] lib: Reduce user_access_begin() boundaries in
+ strncpy_from_user() and strnlen_user()
+To:     Christophe Leroy <christophe.leroy@c-s.fr>,
+        linux-arch <linux-arch@vger.kernel.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Linux-MM <linux-mm@kvack.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Documentation should describe debugfs layout and semantics.
+On Thu, Jan 23, 2020 at 12:34 AM Christophe Leroy
+<christophe.leroy@c-s.fr> wrote:
+>
+> The range passed to user_access_begin() by strncpy_from_user() and
+> strnlen_user() starts at 'src' and goes up to the limit of userspace
+> allthough reads will be limited by the 'count' param.
+>
+> On 32 bits powerpc (book3s/32) access has to be granted for each 256Mbytes
+> segment and the cost increases with the number of segments to unlock.
+>
+> Limit the range with 'count' param.
 
-Signed-off-by: Alan Maguire <alan.maguire@oracle.com>
----
- Documentation/dev-tools/kunit/usage.rst | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+Ack. I'm tempted to take this for 5.5 too, just so that the
+unquestionably trivial fixes are in that baseline, and the
+infrastructure is ready for any architecture that has issues like
+this.
 
-diff --git a/Documentation/dev-tools/kunit/usage.rst b/Documentation/dev-tools/kunit/usage.rst
-index 7cd56a1..b05c843 100644
---- a/Documentation/dev-tools/kunit/usage.rst
-+++ b/Documentation/dev-tools/kunit/usage.rst
-@@ -590,3 +590,22 @@ able to run one test case per invocation.
- 
- .. TODO(brendanhiggins@google.com): Add an actual example of an architecture
-    dependent KUnit test.
-+
-+KUnit debugfs representation
-+============================
-+When kunit test suites are initialized, they create an associated directory
-+in /sys/kernel/debug/kunit/<test-suite>.  The directory contains two files
-+
-+- results: "cat results" displays results of last test run
-+- run: "cat run" runs the test suite and displays the results
-+
-+Thus to re-run all currently loaded suites and display results, we can do this:
-+
-+```
-+$ cat /sys/kernel/debug/kunit/*/run
-+```
-+
-+The debugfs representation is primarily of use when kunit test suites are
-+run in a native environment, either as modules or builtin.  Having a way
-+to display results like this is valuable as otherwise results can be
-+intermixed with other events in dmesg output.
--- 
-1.8.3.1
+Adding 'linux-arch' to the participants, to see if other architectures
+are at all looking at actually implementing the whole
+user_access_begin/end() dance too..
 
+               Linus
