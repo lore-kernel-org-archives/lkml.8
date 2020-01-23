@@ -2,174 +2,75 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEC39C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 13:30:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06C3DC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 13:30:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8CA621835
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 13:30:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC8982077C
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 13:30:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Qvhbh/vX"
+	dkim=pass (2048-bit key) header.d=posteo.de header.i=@posteo.de header.b="H4nRpvF/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728799AbgAWNaa (ORCPT
+        id S1728904AbgAWNa5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 08:30:30 -0500
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:45912 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726729AbgAWNa3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 08:30:29 -0500
-Received: by mail-ed1-f68.google.com with SMTP id v28so3261460edw.12;
-        Thu, 23 Jan 2020 05:30:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=IiWAALaEhjJXo291MxNcDCCNHviU2XOa9axp5A6Jt8E=;
-        b=Qvhbh/vXUu3aCTWDtyaawFnJLD5iv0v1BrMjOl21CN5+J+O0j4Y+c+unjGEnwbjeNi
-         wUkW/8qDOBuKd8mjDxQ0QGqVYm3QjNtgPfCF8GGk212ABuTl1AvFOw8BIiV6sO4sTGGj
-         AsvpKzcdbh2ZSuEtGiHsXW8sn7H+scR/joHD2HJ4Dq7sR67LmIVKT8mLu4zTyTqUoltx
-         dw4gsCGlrGDhSix7kU81fcx5cqTNLKojkWpydVMlUcjJGUa8nHAWJcdFLp4Q2kXppTAd
-         tE3cgvW/vwNAiQ4Sm/Zs5pRqqk6j+Z9DQI5gFGn5yXDaBo0iH1nBSkJlDEYUjGx21f4b
-         Ae6A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=IiWAALaEhjJXo291MxNcDCCNHviU2XOa9axp5A6Jt8E=;
-        b=L7orHZknbeJ+YSCrJANaaVMCc2oOCS0woPT/5eQLBgBPV3NpaQu1/o7DLHeDN+kGYH
-         ObAUztFEgOze5+CIx8XIHTXL1/sjlAuClEYyihJh3qvrfnNWgKkRAtvUpi3HxNUrDLo6
-         o+Enqm0AT2Gj9KVDRH+CREJly2/sNHvrpaDnjBwqL1qESS/PZ9iZg14WzN4pPYOn/W3p
-         zlO17dMXZ2LnCzzDiGVIs6xORivuVHz1j2Ax9aD1sDo2ToF35Gepb3A8ne/Rw6sJVUCc
-         A2HjWMSEzZMfbYxxcGAQdgA21rQpPp6YJl3G8mRzc/x/cmxKF0Hp2wPZhuUVG1eN3oTf
-         5tpg==
-X-Gm-Message-State: APjAAAVyklxKFcDqO1x5yxdI4//+LIyOxa1hhHudL3tC2DH5jnx9h95o
-        4kaA9qXnDD13FuYlvsJfzGO+JmP/8TE0gM9yn2o=
-X-Google-Smtp-Source: APXvYqxt31COidURfCWB7E9cxNx/HSg5G6+Cfz5YpTwRiMseW1+rbdXl0j1Wc8LNge3xcBfuWV4bUNiiOSR7L9urebY=
-X-Received: by 2002:a05:6402:19b2:: with SMTP id o18mr928732edz.368.1579786227446;
- Thu, 23 Jan 2020 05:30:27 -0800 (PST)
-MIME-Version: 1.0
-References: <20191127094517.6255-1-Po.Liu@nxp.com> <87v9p93a2s.fsf@linux.intel.com>
- <9b13a47e-8ca3-66b0-063c-798a5fa71149@ti.com>
-In-Reply-To: <9b13a47e-8ca3-66b0-063c-798a5fa71149@ti.com>
-From:   Vladimir Oltean <olteanv@gmail.com>
-Date:   Thu, 23 Jan 2020 15:30:16 +0200
-Message-ID: <CA+h21hqk2pCfrQg5kC6HzmL=eEqJXjuRsu+cVkGsEi8OXGpKJA@mail.gmail.com>
-Subject: Re: [v1,net-next, 1/2] ethtool: add setting frame preemption of
- traffic classes
-To:     Murali Karicheri <m-karicheri2@ti.com>
-Cc:     Vinicius Costa Gomes <vinicius.gomes@intel.com>,
-        Po Liu <po.liu@nxp.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "hauke.mehrtens@intel.com" <hauke.mehrtens@intel.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "allison@lohutok.net" <allison@lohutok.net>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
-        "saeedm@mellanox.com" <saeedm@mellanox.com>,
-        "andrew@lunn.ch" <andrew@lunn.ch>,
-        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
-        "alexandru.ardelean@analog.com" <alexandru.ardelean@analog.com>,
-        "jiri@mellanox.com" <jiri@mellanox.com>,
-        "ayal@mellanox.com" <ayal@mellanox.com>,
-        "pablo@netfilter.org" <pablo@netfilter.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "simon.horman@netronome.com" <simon.horman@netronome.com>,
-        Claudiu Manoil <claudiu.manoil@nxp.com>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>,
-        Alexandru Marginean <alexandru.marginean@nxp.com>,
-        Xiaoliang Yang <xiaoliang.yang_1@nxp.com>,
-        Roy Zang <roy.zang@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>,
-        Jerry Huang <jerry.huang@nxp.com>, Leo Li <leoyang.li@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 23 Jan 2020 08:30:57 -0500
+Received: from mout02.posteo.de ([185.67.36.66]:41665 "EHLO mout02.posteo.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726729AbgAWNa4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jan 2020 08:30:56 -0500
+Received: from submission (posteo.de [89.146.220.130]) 
+        by mout02.posteo.de (Postfix) with ESMTPS id 7BEA42400FF
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jan 2020 14:30:54 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.de; s=2017;
+        t=1579786254; bh=iarPYW24XwnOcNKIc9y4ecet74CCTDRkn8cloENLcIU=;
+        h=From:To:Cc:Subject:Date:From;
+        b=H4nRpvF/CsB370b3kwlN5V+yZUfGWwkPtiJIuuCvCiinTE1hS/at5+u9uaUbUHFW6
+         GmT8CsArpKRXRKbK+mQ9sIgbzEHqURKR7wJ+yYrFUIFq5iytmpY/RuXg2Dtxdyv7oE
+         /QcCe/c0rt5Eijko5At+j6V1xzRUFxmp5YZEIrjOZhGFovoxe78p8cPMdlOYAyp68V
+         JaYgpAkinUnPKdGrQRUbMk3RFYj04yJTM9gJSzijQ4Qps7OWaMDL394PXw2Ku227g3
+         JaoaSth6CgmR1xY7VH1K41E8PuxlQ/FpwEvX3VYUV54u6S7mYSFFKAAx7tyMkYS1qF
+         9zXk6619T7fmQ==
+Received: from customer (localhost [127.0.0.1])
+        by submission (posteo.de) with ESMTPSA id 483NSt0qsyz9rxY;
+        Thu, 23 Jan 2020 14:30:54 +0100 (CET)
+From:   Benjamin Thiel <b.thiel@posteo.de>
+To:     Borislav Petkov <bp@alien8.de>, X86 ML <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Cc:     Benjamin Thiel <b.thiel@posteo.de>
+Subject: [PATCH] x86/iopl: Include prototype header for ksys_ioperm()
+Date:   Thu, 23 Jan 2020 14:30:51 +0100
+Message-Id: <20200123133051.5974-1-b.thiel@posteo.de>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Murali,
+.. in order to fix a -Wmissing-prototype warning.
 
-On Wed, 22 Jan 2020 at 20:04, Murali Karicheri <m-karicheri2@ti.com> wrote:
->
-> I have question about the below parameters in The Gate Parameter Table
-> that are not currently supported by tc command. Looks like they need to
-> be shown to user for management.
->
->      - ConfigChange - Looks like this needs to be controlled by
->        user. After sending admin command, user send this trigger to start
->        copying admin schedule to operation schedule. Is this getting
->        added to tc command?
+No functional change.
 
-"The ConfigChange parameter signals the start of a
-configuration change for the gate
-when it is set to TRUE. This should only be done
-when the various administrative parameters
-are all set to appropriate values."
+Signed-off-by: Benjamin Thiel <b.thiel@posteo.de>
+---
+ arch/x86/kernel/ioport.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-As far as my understanding goes, all tc-taprio commands currently
-behave as though this boolean is implicitly set to TRUE after the
-structures have been set up. I'm not sure there is any value in doing
-otherwise.
+diff --git a/arch/x86/kernel/ioport.c b/arch/x86/kernel/ioport.c
+index 8abeee0dd7bf..a53e7b4a7419 100644
+--- a/arch/x86/kernel/ioport.c
++++ b/arch/x86/kernel/ioport.c
+@@ -13,6 +13,7 @@
+ 
+ #include <asm/io_bitmap.h>
+ #include <asm/desc.h>
++#include <asm/syscalls.h>
+ 
+ #ifdef CONFIG_X86_IOPL_IOPERM
+ 
+-- 
+2.17.1
 
->      - ConfigChangeTime - The time at which the administrative variables
->        that determine the cycle are to be copied across to the
->        corresponding operational variables, expressed as a PTP timescale
-
-This is the base-time of the admin schedule, no?
-
-"The PTPtime at which the next config change is scheduled to occur.
-The value is a representation of a PTPtime value,
-consisting of a 48-bit integer
-number of seconds and a 32-bit integer number of nanoseconds."
-
->      - TickGranularity - the management parameters specified in Gate
->        Parameter Table allow a management station to discover the
->        characteristics of an implementation=E2=80=99s cycle timer clock
->        (TickGranularity) and to set the parameters for the gating cycle
->        accordingly.
-
-Not sure who is going to use this and for what purpose, but ok.
-
->      - ConfigPending - A Boolean variable, set TRUE to indicate that
->        there is a new cycle configuration awaiting installation.
-
-I had tried to export something like this (driver calls back into
-sch_taprio.c when hw has applied the config, this would result in
-ConfigPending =3D FALSE), but ultimately didn't finish the idea, and it
-caused some problems too, due to incorrect RCU usage.
-
->      - ConfigChangeError - Error in configuration (AdminBaseTime <
->        CurrentTime)
-
-This can be exported similarly.
-
->      - SupportedListMax - Maximum supported Admin/Open shed list.
->
-> Is there a plan to export these from driver through tc show or such
-> command? The reason being, there would be applications developed to
-> manage configuration/schedule of TSN nodes that would requires these
-> information from the node. So would need a support either in tc or
-> some other means to retrieve them from hardware or driver. That is my
-> understanding...
->
-
-Not sure what answer you expect to receive for "is there any plan".
-You can go ahead and propose something, as long as it is reasonably
-useful to have.
-
-> Regards,
->
-> Murali
->
-> --
-> Murali Karicheri
-> Texas Instruments
-
-Thanks,
--Vladimir
