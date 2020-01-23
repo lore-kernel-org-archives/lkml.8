@@ -2,135 +2,124 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04907C33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 19:49:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ED97C33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 19:49:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE92521D7D
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 19:49:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66C8221D7E
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 19:49:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="rcQkWff2"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PkSLtKYt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729021AbgAWTtS (ORCPT
+        id S1729126AbgAWTtx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 14:49:18 -0500
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:45023 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726191AbgAWTtR (ORCPT
+        Thu, 23 Jan 2020 14:49:53 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:38828 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726118AbgAWTtx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 14:49:17 -0500
-Received: by mail-qk1-f193.google.com with SMTP id v195so4653423qkb.11
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jan 2020 11:49:17 -0800 (PST)
+        Thu, 23 Jan 2020 14:49:53 -0500
+Received: by mail-pf1-f196.google.com with SMTP id x185so2026510pfc.5
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jan 2020 11:49:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=fYWv3gkaBG3PC7KY5b1PI2c9hwBzlBIPCdR2DcObPZc=;
-        b=rcQkWff2IxD8g6voBRp5FFJKudPCu2/bWS9vjCC3BTh7jVw1+6wvrXtCMv/eqUU0K8
-         Mtn8A4f095sTk9pGH5ytPPFt9+LXqUaeZtE9nMPgEh7FSyeI5cFpiERe1+xuDf8OHOuY
-         paJRXyu7SboiwQAj090+qqt+509/rR2xRrOOeTqMuAA7HIpquqWj+5S0c77hRRCyRGYD
-         QgBUeJSA4F62UvixJGNUKvET7PAedWRTqTH4ZmU8gmINuZoiXGlm5cu6QZaftJdgOF6M
-         xDHukbohrGroDmu8d5773suxH+L7XI19X8EtKpNOT50+cc/lIZ5fEJcQYsnBP9Plr3PU
-         io7w==
+        d=chromium.org; s=google;
+        h=message-id:mime-version:content-transfer-encoding:in-reply-to
+         :references:to:cc:from:subject:user-agent:date;
+        bh=AsiBDxfR3YiAUP6+urybhWiy8mHMpvOtUZtlAgoqD+g=;
+        b=PkSLtKYtYi1OcAK+7nw7vWeNOsVnqbyq+qI+VdhZDT2KFdzpC+bHz8WiajuMhK++nz
+         Ne4HKz7CL/6hY12kMMKuYVLgTLGYXi95QSDNG8LX662hiyD70AgACtRdmMyb8KhIm8UR
+         VUEH28tRg96g6WLiM4Q22CqJXuRA4WX19k1Fk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=fYWv3gkaBG3PC7KY5b1PI2c9hwBzlBIPCdR2DcObPZc=;
-        b=IJqlAOaAcA5Mz5qwItig5fzoatTur/RArK0Xt09TYs4NBzeC3FDRYiDNsnRrYW7gnr
-         CSw67/UsleQ/9qnNvIuaJe+q908TRBXFwuunJ1cgY8ur5rgQHysphKsvzO7MyJ/Sm9ZE
-         6MrFTN5pnodnblxfmWZsdXtoAb6IeCqQcz9SAHacdWLD38rqzANWZMq5xlgEIXzScmzr
-         nu8z+1cZaUpMBOL00sOMzHenbX+YLVUdyqiKSbB0yO6Txz9FDHdONBgfNuz0oMRoF0zZ
-         cr40To6UTCr1zO0G/EinY3paMRFlOTpBhOqLXCgoEZ3g+y3CONXkKTOoqYVlK7MpTDP9
-         IMIA==
-X-Gm-Message-State: APjAAAUY74cv9FFtaFRNnFWDAJUnfTv5fCIrV6kcFtOi/lQPtjqgr20e
-        o3xhGzbUCp2do0uctH37JKRqZQ==
-X-Google-Smtp-Source: APXvYqx5v5NP0kCPnQiptjsW8R3LNoRZLqm+Mf0vqi2X+tunoECrfmNLbYLzVp4sOuFPwKFmDuOOMA==
-X-Received: by 2002:a37:4dc4:: with SMTP id a187mr18136788qkb.436.1579808956541;
-        Thu, 23 Jan 2020 11:49:16 -0800 (PST)
-Received: from [192.168.1.153] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id i90sm1516366qtd.49.2020.01.23.11.49.15
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 23 Jan 2020 11:49:15 -0800 (PST)
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3608.40.2.2.4\))
-Subject: Re: [PATCH -next] efi/libstub/x86: fix an EFI server boot failure
-From:   Qian Cai <cai@lca.pw>
-In-Reply-To: <CAKv+Gu_snhTpsM4cjZ38UhH02v151NW4cJdQu9QVqCWu4rFVZw@mail.gmail.com>
-Date:   Thu, 23 Jan 2020 14:49:14 -0500
-Cc:     Ingo Molnar <mingo@redhat.com>, Ard Biesheuvel <ardb@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+        h=x-gm-message-state:message-id:mime-version
+         :content-transfer-encoding:in-reply-to:references:to:cc:from:subject
+         :user-agent:date;
+        bh=AsiBDxfR3YiAUP6+urybhWiy8mHMpvOtUZtlAgoqD+g=;
+        b=kobFx4MG5c/ym9Cw7ERNY9qQSP8gUqeotlcCt8iezyaJHbkZ0NlOk1+Lbmwl5juPG7
+         cldUa/dr8Ql36uFDD3f9u5fhIZDT/TeEG25oZWCTlgmTsjrWZr5GrgmZ8OzGB5+6EL2Q
+         Eh3cAW4LVLUrvGqpONmDjmowGnWShyFOFtwO9OMKbNrNkIPBYeQUANuO6Vpj9Xp4gHbp
+         43G2eiLFMFIlG48epa/UB8WOQOXlmjTc2ggM4833V3/DnxX9G6g0mablBxUOLr/ytOge
+         6ivn9h7Bm6ANwDlqPgsf6ibIirVf3a7wbvqBpXNPtUVqPloQwGgcY1JnUTlXNjcQRSPU
+         cEag==
+X-Gm-Message-State: APjAAAUCEoIoNyFGcXI0qZieFREAc2zMGxual6gAoOosLnrVX3sgQdEP
+        joDVny30fJaUR3i389Evk+6DwQ==
+X-Google-Smtp-Source: APXvYqwVEQXX+m3S5BGhf04yLN3caID/CuWtHA4zxtFC4LRWdaqmOtdLcHFyM8Ypv9iy28HI/QH1FA==
+X-Received: by 2002:aa7:9556:: with SMTP id w22mr6978147pfq.198.1579808992570;
+        Thu, 23 Jan 2020 11:49:52 -0800 (PST)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id e18sm3856195pjt.21.2020.01.23.11.49.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 23 Jan 2020 11:49:51 -0800 (PST)
+Message-ID: <5e29f8df.1c69fb81.fc97b.8df8@mx.google.com>
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-Message-Id: <10CCB37C-B91A-4A15-B9C0-5DBA5DD0BFD9@lca.pw>
-References: <20200122191430.4888-1-cai@lca.pw>
- <CAKv+Gu_snhTpsM4cjZ38UhH02v151NW4cJdQu9QVqCWu4rFVZw@mail.gmail.com>
-To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>
-X-Mailer: Apple Mail (2.3608.40.2.2.4)
+In-Reply-To: <20200123160031.9853-1-saiprakash.ranjan@codeaurora.org>
+References: <20200123160031.9853-1-saiprakash.ranjan@codeaurora.org>
+To:     Anton Vorontsov <anton@enomsg.org>,
+        Colin Cross <ccross@android.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Kees Cook <keescook@chromium.org>,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        Tony Luck <tony.luck@intel.com>
+Cc:     Matthias Kaehlcke <mka@chromium.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org,
+        Douglas Anderson <dianders@chromium.org>,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+From:   Stephen Boyd <swboyd@chromium.org>
+Subject: Re: [PATCH] pstore: Fix printing of duplicate boot messages to console
+User-Agent: alot/0.8.1
+Date:   Thu, 23 Jan 2020 11:49:50 -0800
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-> On Jan 22, 2020, at 2:17 PM, Ard Biesheuvel =
-<ard.biesheuvel@linaro.org> wrote:
+Quoting Sai Prakash Ranjan (2020-01-23 08:00:31)
+> Since commit f92b070f2dc8 ("printk: Do not miss new messages
+> when replaying the log"), CON_PRINTBUFFER flag causes the
+> duplicate boot messages to be printed on the console when
+> PSTORE_CONSOLE and earlycon (boot console) is enabled.
+> Pstore console registers to boot console when earlycon is
+> enabled during pstore_register_console as a part of ramoops
+> initialization in postcore_initcall and the printk core
+> checks for CON_PRINTBUFFER flag and replays the log buffer
+> to registered console (in this case pstore console which
+> just registered to boot console) causing duplicate messages
+> to be printed. Remove the CON_PRINTBUFFER flag from pstore
+> console since pstore is not concerned with the printing of
+> buffer to console but with writing of the buffer to the
+> backend.
 >=20
-> On Wed, 22 Jan 2020 at 20:15, Qian Cai <cai@lca.pw> wrote:
->>=20
->> x86_64 EFI systems are unable to boot due to a typo in the recent =
-commit.
->>=20
->> EFI config tables not found.
->> -- System halted
->>=20
->> Fixes: 796eb8d26a57 ("efi/libstub/x86: Use const attribute for =
-efi_is_64bit()")
->> Signed-off-by: Qian Cai <cai@lca.pw>
->> ---
->> arch/x86/boot/compressed/eboot.c | 2 +-
->> 1 file changed, 1 insertion(+), 1 deletion(-)
->>=20
->> diff --git a/arch/x86/boot/compressed/eboot.c =
-b/arch/x86/boot/compressed/eboot.c
->> index 82e26d0ff075..287393d725f0 100644
->> --- a/arch/x86/boot/compressed/eboot.c
->> +++ b/arch/x86/boot/compressed/eboot.c
->> @@ -32,7 +32,7 @@ __attribute_const__ bool efi_is_64bit(void)
->> {
->>        if (IS_ENABLED(CONFIG_EFI_MIXED))
->>                return efi_is64;
->> -       return IS_ENABLED(CONFIG_X64_64);
->> +       return IS_ENABLED(CONFIG_X86_64);
->> }
->>=20
->> static efi_status_t
+> Console log with earlycon and pstore console enabled:
 >=20
-> Apologies for the breakage - your fix is obviously correct. But I did
-> test this code, so I am curious why I didn't see this problem. Are you
-> booting via GRUB or from the UEFI shell? Can you share your .config
-> please?
+> [    0.008342] Console: colour dummy device 80x25
+> [    0.000000] Booting Linux on physical CPU 0x0000000000 [0x51df805e]
+> ...
+> [    1.244049] hw-breakpoint: found 6 breakpoint and 4 watchpoint registe=
+rs.
+> [    0.000000] Booting Linux on physical CPU 0x0000000000 [0x51df805e]
+>=20
+> Fixes: f92b070f2dc8 ("printk: Do not miss new messages when replaying the=
+ log")
+> Reported-by: Douglas Anderson <dianders@chromium.org>
+> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+> ---
 
-https://raw.githubusercontent.com/cailca/linux-mm/master/x86.config
+While I like the idea, it seems that this breaks console-ramoops by
+removing all the text that is printed in the kernel log before this
+console is registered. I reboot and see that
+/sys/fs/pstore/console-ramoops-1 starts like this now:
 
-BTW, this will also trigger a compilation breakage,
+	localhost ~ # cat /sys/fs/pstore/console-ramoops-0
+	[    0.943472] printk: console [pstore-1] enabled
 
-ld: arch/x86/platform/efi/efi_64.o: in function =
-`efi_set_virtual_address_map':
-efi_64.c:(.init.text+0x1419): undefined reference to `__efi64_thunk'
-ld: efi_64.c:(.init.text+0x1530): undefined reference to =
-`efi_uv1_memmap_phys_prolog'
-ld: efi_64.c:(.init.text+0x1706): undefined reference to =
-`efi_uv1_memmap_phys_epilog=E2=80=99
+Maybe this console can be "special" and not require anything to be
+printed out to visible consoles but still get the entire log contents?
+Or we should just not worry about it.
 
-Likely due to the commit =E2=80=9Cefi/x86: avoid KASAN false positives =
-when accessing the 1:1 mapping=E2=80=9D
-
-Looks like you are in process fixing that one as well.=
