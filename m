@@ -2,158 +2,153 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98028C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 13:44:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 983CBC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 13:46:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 684732467E
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 13:44:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579787088;
-	bh=ehtW9l9ACdNUpNo6gsMIkwoNpfOA6s3D+OSmNLbylzQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=hOiYXYOFRpyt1+MZAGemjtWOqheoX1IGVzwhEUbqLfD8w/6uZqvtEv0k1y6zvV08b
-	 mL41uUmHu7jKBNjKi63/kNCJNwXVpqnxdhQhhbe17J2wixW0pQ49QJa4w3QO2Dxvak
-	 D4KRY5vHdrKECybTUz6QStMvj9eeDI8NcyakqDTw=
+	by mail.kernel.org (Postfix) with ESMTP id 68EF920661
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 13:46:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SQq4RbV4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728916AbgAWNos (ORCPT
+        id S1728708AbgAWNqG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 08:44:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33630 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726227AbgAWNoq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 08:44:46 -0500
-Received: from mail-qk1-f169.google.com (mail-qk1-f169.google.com [209.85.222.169])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2C9E024688;
-        Thu, 23 Jan 2020 13:44:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579787085;
-        bh=ehtW9l9ACdNUpNo6gsMIkwoNpfOA6s3D+OSmNLbylzQ=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=f6itICyEccPeU2EkmbAw44eFVsEnQiCvVRTYc3RMmfw1f5V5rghHrFdF6dnC+r1wV
-         LW0nDwCzxH/GTTtVFZtYGJLOP+nJu1VWepUnkNyHvE63DC36JQuxG/BFcyxUuYXolx
-         hnkuLUgk7s2DCpWGgBq76zQCpyZ5Of2xjyCLBDDQ=
-Received: by mail-qk1-f169.google.com with SMTP id c17so3403985qkg.7;
-        Thu, 23 Jan 2020 05:44:45 -0800 (PST)
-X-Gm-Message-State: APjAAAVGqpIIeB5KV3T+3vZXkfcRfIR9lYyS07oqlxR+975ItnwWTjCS
-        hGYipOYanfuv1/Pzjs8/SQjtSXIWl9u92Es0lQ==
-X-Google-Smtp-Source: APXvYqwj1kYyeJq3Ccl1DyDpR3KLsILueUjym2UJmfupNznTqTkOSej7+FQVm2ExBXPWgHI5dXhLnNyU9f/PKwvhq6E=
-X-Received: by 2002:a05:620a:1eb:: with SMTP id x11mr16326677qkn.254.1579787084251;
- Thu, 23 Jan 2020 05:44:44 -0800 (PST)
+        Thu, 23 Jan 2020 08:46:06 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:24251 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726771AbgAWNqG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jan 2020 08:46:06 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579787165;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=VtZifEes/xPS0tX2V6FJysZYwcxBaACzo8UdIegQS8I=;
+        b=SQq4RbV4hCSRrzwwgSrlWgldR15TSA0QknjEFZ3Lo8wC49yUPhfKEmRh41gA1ZSYJ+cIyN
+        wYuH+ZiM34kIFvim7cVDGt6etQzPGf9TG2JXEQ+/aegtXU2LQcONndntfIOSDL/E1EKdpe
+        KmV2yBpWuLQ6hJH6dF/Zz6DE0fFuURU=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-95-_qRnomWSPO2bhjyDD_RAPQ-1; Thu, 23 Jan 2020 08:46:03 -0500
+X-MC-Unique: _qRnomWSPO2bhjyDD_RAPQ-1
+Received: by mail-wm1-f70.google.com with SMTP id s25so611256wmj.3
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jan 2020 05:46:03 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=VtZifEes/xPS0tX2V6FJysZYwcxBaACzo8UdIegQS8I=;
+        b=GWOD6K45Yz2wqUggP2imufJrT5ICSABdloUMrtG6J9GAxjZi6w6F0nepzmO3sRLwuX
+         M/GDNWZpr43brU4RlCBLyBDQK8ulnqo/V+v/GfeYGGZ5E+Ji7hi+IqAlgUJnv4Q5WZRS
+         11z8IZjJBBZu94nRZjI4ZikZS4nG67GSlol+ScrwRd79dYgnLsMyerd7+GKbncoS2Qb9
+         b8hTSkJ+LDEAQN8iyXsDOaI24oCKDpprrrJ2QApAyPvUKbW1Vz4/qC7bTNmLb8r4i1u+
+         tcpykCq+db+nzbc/rSZ5oGg2u9dEEhvUkKprP9w5FUbqprYZNCtU7ZsTWs/+8718vkwQ
+         085g==
+X-Gm-Message-State: APjAAAWDjIdpw0vej5zFBN/VzIQBOW5f16YVJb/RJCjTa/nJlFSFBpFy
+        8tZn9ckzpsiMDit52dZb3QXc2eKrJshuHbzl0pQLWr7lh/LoynxugW7O9aBq5bUVjhLQUaERxlU
+        K7/KVT1MEcde3zV5Ynkz5WlF4
+X-Received: by 2002:a1c:9d08:: with SMTP id g8mr3280711wme.141.1579787162465;
+        Thu, 23 Jan 2020 05:46:02 -0800 (PST)
+X-Google-Smtp-Source: APXvYqwAtcy2+OVcrCE6/tOfXs/OQbjMwjI+6j59QafTu+Mi1s5U7hfolm3QkEabmC9Ir6oE+U5Etg==
+X-Received: by 2002:a1c:9d08:: with SMTP id g8mr3280703wme.141.1579787162301;
+        Thu, 23 Jan 2020 05:46:02 -0800 (PST)
+Received: from [192.168.1.81] (host81-140-166-164.range81-140.btcentralplus.com. [81.140.166.164])
+        by smtp.gmail.com with ESMTPSA id f12sm2527135wmj.10.2020.01.23.05.46.00
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 23 Jan 2020 05:46:01 -0800 (PST)
+Subject: Re: [RFC v5 47/57] arm64: assembler: Add macro to annotate asm
+ function having non standard stack-frame.
+To:     Will Deacon <will@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        jpoimboe@redhat.com, peterz@infradead.org, raphael.gault@arm.com,
+        catalin.marinas@arm.com
+References: <20200109160300.26150-1-jthierry@redhat.com>
+ <20200109160300.26150-48-jthierry@redhat.com>
+ <20200121103005.GA11154@willie-the-truck>
+From:   Julien Thierry <jthierry@redhat.com>
+Message-ID: <66b1746b-c77b-a4d3-846b-cecdc5a15357@redhat.com>
+Date:   Thu, 23 Jan 2020 13:45:58 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-References: <09a2fe69-842f-01cf-1cfa-d5fc639b158a@gmail.com>
-In-Reply-To: <09a2fe69-842f-01cf-1cfa-d5fc639b158a@gmail.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Thu, 23 Jan 2020 07:44:32 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+1S=mOS0-eb0=ibSn81ReDmDjrA9=bHpKC16w8B6Aq3Q@mail.gmail.com>
-Message-ID: <CAL_Jsq+1S=mOS0-eb0=ibSn81ReDmDjrA9=bHpKC16w8B6Aq3Q@mail.gmail.com>
-Subject: Re: [PATCH v10 1/2] dt-bindings: edac: dmc-520.yaml
-To:     Shiping Ji <shiping.linux@gmail.com>
-Cc:     Borislav Petkov <bp@alien8.de>, James Morse <james.morse@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        linux-edac <linux-edac@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, hangl@microsoft.com,
-        Lei Wang <lewan@microsoft.com>, ruizhao@microsoft.com,
-        shji@microsoft.com, Scott Branden <scott.branden@broadcom.com>,
-        Yuqing Shen <yuqing.shen@broadcom.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200121103005.GA11154@willie-the-truck>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 22, 2020 at 6:31 PM Shiping Ji <shiping.linux@gmail.com> wrote:
->
-> This is the device tree bindings for new EDAC driver dmc520_edac.c.
->
-> From: Lei Wang <leiwang_git@outlook.com>
->
-> Signed-off-by: Lei Wang <leiwang_git@outlook.com>
-> Signed-off-by: Shiping Ji <shiping.linux@gmail.com>
-> Reviewed-by: James Morse <james.morse@arm.com>
->
-> ---
->      Changes in v10:
->          - Convert to the YAML format for binding description
->
-> ---
->  .../devicetree/bindings/edac/dmc-520.yaml     | 56 +++++++++++++++++++
->  1 file changed, 56 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/edac/dmc-520.yaml
->
-> diff --git a/Documentation/devicetree/bindings/edac/dmc-520.yaml b/Documentation/devicetree/bindings/edac/dmc-520.yaml
-> new file mode 100644
-> index 000000000000..dd5982b227b2
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/edac/dmc-520.yaml
-> @@ -0,0 +1,56 @@
-> +# SPDX-License-Identifier: GPL-2.0
 
-Dual license new bindings please:
 
-(GPL-2.0-only OR BSD-2-Clause)
+On 1/21/20 10:30 AM, Will Deacon wrote:
+> On Thu, Jan 09, 2020 at 04:02:50PM +0000, Julien Thierry wrote:
+>> From: Raphael Gault <raphael.gault@arm.com>
+>>
+>> Some functions don't have standard stack-frames but are intended
+>> this way. In order for objtool to ignore those particular cases
+>> we add a macro that enables us to annotate the cases we chose
+>> to mark as particular.
+>>
+>> Signed-off-by: Raphael Gault <raphael.gault@arm.com>
+>> Signed-off-by: Julien Thierry <jthierry@redhat.com>
+>> ---
+>>   include/linux/frame.h | 19 ++++++++++++++++++-
+>>   1 file changed, 18 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/include/linux/frame.h b/include/linux/frame.h
+>> index 02d3ca2d9598..1e35e58ab259 100644
+>> --- a/include/linux/frame.h
+>> +++ b/include/linux/frame.h
+>> @@ -11,14 +11,31 @@
+>>    *
+>>    * For more information, see tools/objtool/Documentation/stack-validation.txt.
+>>    */
+>> +#ifndef __ASSEMBLY__
+>>   #define STACK_FRAME_NON_STANDARD(func) \
+>>   	static void __used __section(.discard.func_stack_frame_non_standard) \
+>>   		*__func_stack_frame_non_standard_##func = func
+>> +#else
+>> +	/*
+>> +	 * This macro is the arm64 assembler equivalent of the
+>> +	 * macro STACK_FRAME_NON_STANDARD define at
+>> +	 * ~/include/linux/frame.h
+>> +	 */
+>> +	.macro	asm_stack_frame_non_standard	func
+>> +	.pushsection ".discard.func_stack_frame_non_standard"
+>> +	.quad	\func
+>> +	.popsection
+>> +	.endm
+>>
+>> +#endif /* __ASSEMBLY__ */
+>>   #else /* !CONFIG_STACK_VALIDATION */
+>>
+>> +#ifndef __ASSEMBLY__
+>>   #define STACK_FRAME_NON_STANDARD(func)
+>> -
+>> +#else
+>> +	.macro	asm_stack_frame_non_standard	func
+>> +	.endm
+>> +#endif /* __ASSEMBLY__ */
+> 
+> Hmm. Given that we're currently going through the exercise of converting
+> a bunch of ENTRY/ENDPROC macros to use the new SYM_{CODE,FUNC}_{START,END}
+> macros, I would much prefer for this to be a new flavour of those.
+> 
+> In fact, can you just use SYM_CODE_* for this?
+> 
 
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/edac/dmc-520.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: ARM DMC-520 EDAC bindings
-> +
-> +maintainers:
-> +  - Lei Wang <lewan@microsoft.com>
-> +
-> +description: |+
-> +  DMC-520 node is defined to describe DRAM error detection and correction.
-> +
-> +  https://static.docs.arm.com/100000/0200/corelink_dmc520_trm_100000_0200_01_en.pdf
-> +
-> +properties:
-> +  compatible:
-> +    items:
-> +      - const: brcm,dmc-520
-> +      - const: arm,dmc-520
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    minItems: 1
-> +
-> +  interrupt-names:
-> +    minItems: 1
-> +    items:
-> +      - const: ram_ecc_errc
-> +      - const: ram_ecc_errd
-> +      - const: dram_ecc_errc
-> +      - const: dram_ecc_errd
-> +      - const: failed_access
-> +      - const: failed_prog
-> +      - const: link_err
-> +      - const: temperature_event
-> +      - const: arch_fsm
-> +      - const: phy_request
+You mean to not introduce the STACK_FRAME_NON_STANDARD() macro and just 
+mark the asm callable symbols that don't set up a stackframe as SYM_CODE_* ?
 
-This defines not just the names, but the index they must be at which I
-don't think you want.
+-- 
+Julien Thierry
 
-minItems: 1
-maxItems: 10
-items:
-  enum:
-    - ram_ecc_errc
-    - ram_ecc_errd
-    ...
-
-Note the lack of '-' under 'items' making it a schema that applies to all items.
-
-Run 'make dt_binding_check' as that would have caught this issue on the example.
-
-Rob
