@@ -2,75 +2,101 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B6EAC33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 17:38:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02CA4C33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 17:39:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F14E82071E
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 17:38:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D153321734
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 17:39:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NM3FsjMu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729108AbgAWRiU (ORCPT
+        id S1728899AbgAWRj6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 12:38:20 -0500
-Received: from mail.hallyn.com ([178.63.66.53]:36766 "EHLO mail.hallyn.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727022AbgAWRiU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 12:38:20 -0500
-Received: by mail.hallyn.com (Postfix, from userid 1001)
-        id 55A15F8F; Thu, 23 Jan 2020 11:38:18 -0600 (CST)
-Date:   Thu, 23 Jan 2020 11:38:18 -0600
-From:   "Serge E. Hallyn" <serge@hallyn.com>
-To:     Alex Shi <alex.shi@linux.alibaba.com>
-Cc:     Matthew Garrett <matthewgarrett@google.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] security: remove EARLY_LSM_COUNT which never used
-Message-ID: <20200123173818.GA26551@mail.hallyn.com>
-References: <1579596603-258380-1-git-send-email-alex.shi@linux.alibaba.com>
+        Thu, 23 Jan 2020 12:39:58 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:44430 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727022AbgAWRj5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jan 2020 12:39:57 -0500
+Received: by mail-lj1-f196.google.com with SMTP id q8so4449735ljj.11;
+        Thu, 23 Jan 2020 09:39:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=yFNfvLLpVwrxfE4d/23goL8ipurkosHK6cucyJx3weQ=;
+        b=NM3FsjMuPvJoEpN6PjTU2zC9O95D/1OOpI+dDQsgi+guT5b518OSJA7bMJ0Nk5xi98
+         EMFIj2CGEvAVgLd6NNMShh7Z96gwdtymGCS3AublihRtzY813sfUFXwy0YAqbZutnH7B
+         9qdIU1sPjgsqGXK9SKgGc9AX55NUp9j7k163QvhSBF3bokEE9mIrm18pQJHZ9RHeZGhz
+         rHRAcVi6LmN1PLCTgu3NBE4T1nJF0DtXYUZIfCRF3Nu0W2L7t0ffguukI0nAxfdqBHJM
+         FbiekKDoFJ+5ucboYonNJsNbNs0XA8IBOlPoIhpn7Uy9oHp7jo2Vbyd6zPYGIR3IKdat
+         GtgA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=yFNfvLLpVwrxfE4d/23goL8ipurkosHK6cucyJx3weQ=;
+        b=ho8LYOv93Ovnkm7LDDIOpYPtNRuaC3BJxJvMahZT31QX0R4a8CvVC0pMQVzD6f7RfW
+         ZULY8xy31niACU5SLNgne/z9r1NbDW6X40yLmCNgL+2HaRsVFh0riCGxQ40aI9j0fKs1
+         JIammpbDNajGMqfjXagXnWzx1pAt9Wru5ih8fh4/8Jkh64BJ7aN9yaFK4z6EOl26W0Q5
+         b1f25tL7zr1kt9oS+4rX9rIH8t4FzcgQSBBapW7XfqfqQpkFmPKSc/ShVKIr4wudpd0Q
+         tKFhME0LBwXDklKIdQXYCmDeao5X80XNCPQ7TpraQyy8NhPhsM8VuZWg707EGcRk787B
+         IG5w==
+X-Gm-Message-State: APjAAAVEVGujtqyKJmdjgy6sDBW+4VX8Qfq6FZX7O6M3q0HcTaxoo1Sw
+        fSILeLYnmIyrMRZWOAqqL6rbKcBn
+X-Google-Smtp-Source: APXvYqxB/CslpriNX9CDhIYOGnL8o06dSzLt/0G5siEyvWLLw/p9f0d5ulOCOj1AlzCKbl//i4cDWA==
+X-Received: by 2002:a2e:9ad0:: with SMTP id p16mr24499202ljj.111.1579801195468;
+        Thu, 23 Jan 2020 09:39:55 -0800 (PST)
+Received: from localhost.localdomain (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
+        by smtp.gmail.com with ESMTPSA id s9sm1912778ljh.90.2020.01.23.09.39.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 23 Jan 2020 09:39:54 -0800 (PST)
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Nick Dyer <nick@shmanahar.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v1] Input: atmel_mxt_ts - correct local variable type
+Date:   Thu, 23 Jan 2020 20:39:07 +0300
+Message-Id: <20200123173907.6870-1-digetx@gmail.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1579596603-258380-1-git-send-email-alex.shi@linux.alibaba.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 21, 2020 at 04:50:03PM +0800, Alex Shi wrote:
-> This macro is never used from it was introduced in commit e6b1db98cf4d5
-> ("security: Support early LSMs"), better to remove it.
-> 
-> Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
-> Cc: Matthew Garrett <matthewgarrett@google.com>
-> Cc: James Morris <jmorris@namei.org> 
-> Cc: "Serge E. Hallyn" <serge@hallyn.com> 
+GCC produces this warning when kernel compiled using `make W=1`:
 
-Acked-by: Serge Hallyn <serge@hallyn.com>
+  warning: comparison of unsigned expression >= 0 is always true [-Wtype-limits]
+  if (byte_offset >= 0 && byte_offset < cfg->mem_size) {
 
-Does indeed seem unused.
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+---
+ drivers/input/touchscreen/atmel_mxt_ts.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-> Cc: linux-security-module@vger.kernel.org 
-> Cc: linux-kernel@vger.kernel.org 
-> ---
->  security/security.c | 1 -
->  1 file changed, 1 deletion(-)
-> 
-> diff --git a/security/security.c b/security/security.c
-> index cd2d18d2d279..b9771de83cf7 100644
-> --- a/security/security.c
-> +++ b/security/security.c
-> @@ -33,7 +33,6 @@
->  
->  /* How many LSMs were built into the kernel? */
->  #define LSM_COUNT (__end_lsm_info - __start_lsm_info)
-> -#define EARLY_LSM_COUNT (__end_early_lsm_info - __start_early_lsm_info)
->  
->  struct security_hook_heads security_hook_heads __lsm_ro_after_init;
->  static BLOCKING_NOTIFIER_HEAD(blocking_lsm_notifier_chain);
-> -- 
-> 1.8.3.1
+diff --git a/drivers/input/touchscreen/atmel_mxt_ts.c b/drivers/input/touchscreen/atmel_mxt_ts.c
+index ae60442efda0..bd0fc4b08608 100644
+--- a/drivers/input/touchscreen/atmel_mxt_ts.c
++++ b/drivers/input/touchscreen/atmel_mxt_ts.c
+@@ -1287,8 +1287,8 @@ static int mxt_prepare_cfg_mem(struct mxt_data *data, struct mxt_cfg *cfg)
+ {
+ 	struct device *dev = &data->client->dev;
+ 	struct mxt_object *object;
+-	unsigned int type, instance, size, byte_offset;
+-	int offset;
++	unsigned int type, instance, size;
++	int offset, byte_offset;
+ 	int ret;
+ 	int i;
+ 	u16 reg;
+-- 
+2.24.0
+
