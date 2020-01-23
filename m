@@ -2,131 +2,97 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32DA4C35242
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 23:37:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F7A3C35242
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 23:37:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03D4E207FF
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 23:37:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1EE8520718
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 23:37:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K1vPMQgl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729930AbgAWXhQ (ORCPT
+        id S1729988AbgAWXh0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 18:37:16 -0500
-Received: from out30-131.freemail.mail.aliyun.com ([115.124.30.131]:32933 "EHLO
-        out30-131.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729288AbgAWXhP (ORCPT
+        Thu, 23 Jan 2020 18:37:26 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:44047 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729288AbgAWXh0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 18:37:15 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R191e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04396;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0ToQ2aA1_1579822620;
-Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0ToQ2aA1_1579822620)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Fri, 24 Jan 2020 07:37:12 +0800
-Subject: Re: [v2 PATCH] mm: move_pages: report the number of non-attempted
- pages
-To:     Wei Yang <richardw.yang@linux.intel.com>
-Cc:     mhocko@suse.com, akpm@linux-foundation.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org
-References: <1579736331-85494-1-git-send-email-yang.shi@linux.alibaba.com>
- <20200123225940.GC29851@richard>
-From:   Yang Shi <yang.shi@linux.alibaba.com>
-Message-ID: <424a0fbb-1e9a-ca9d-ba43-cb247d7a4b67@linux.alibaba.com>
-Date:   Thu, 23 Jan 2020 15:36:58 -0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
- Gecko/20100101 Thunderbird/52.7.0
+        Thu, 23 Jan 2020 18:37:26 -0500
+Received: by mail-pf1-f195.google.com with SMTP id 62so158666pfu.11;
+        Thu, 23 Jan 2020 15:37:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=AnAOgh110uKPc3d8VRtFP1cCUwjRHhenRNDU4AcKph8=;
+        b=K1vPMQgl/Yg+46UKknCjnjFG34twgu8GDgt+p5hRGEbg5j/8DXs0FedhC0j4h/53Vm
+         r9HDbAatrCio+h9dR8/itKPROddqjz+l6/cpJlJ/goja6xaF7PmSF4k4BdfTSMXkjGwm
+         3NMFtEPenDER9X7HM9w0a7sNEurnEcSojTlKBN87DC/te47lDw/wkZCSrTC05QP/p8yW
+         lD7eEh5qASYejJRLu4FS16CYrMRG/ymjIXPwtgTBkXVk/McJ/67jK8v6sNX82eahfReq
+         Vm1eFyHtM9MKOCDVW76a9jtDg9qEeWKR5XoAhdqnAeBNbZ0rY5g053dolcKC2yoQCc3l
+         ejaA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=AnAOgh110uKPc3d8VRtFP1cCUwjRHhenRNDU4AcKph8=;
+        b=FxLMByBWZ/rdQHQp+9go9qsQRE5PluTWQhEZffT6a8t5djHXUpYx+tE6R1wuG3LKCk
+         xK37ZgNp9V8mXIwgpUZrG8cLotiTgJKRWz3cXWXMW2uZrZ0rteCfrQsZ5XPXL9yhmwcr
+         yrtojXMKrkZ3kVj2uSg8Q5+QSnZ5C2eyhSNYGOxWNN79R8zQQq0OeqHI64FbElZ0IP06
+         KD/5DOmmQU35BiO5H1pjmEMFlKfXxNhEVjJ3dZnld5YpKAaIolUvzv+DrwXpAC7Pd1Ud
+         SQ7yFebalpVIGOgCg5rkHIcmbuPyVRKYcKevz5/DFD0NYJSNwdhebfyBPUPY6m8YhDCg
+         PW3g==
+X-Gm-Message-State: APjAAAV/9cq2Y6Pk8td5YqVIBtJzMu4Giu4bZrkHsH+4vp7p/CxlNxoN
+        ZjZdlupTL/zmm3Heax8Jml6+Nwey
+X-Google-Smtp-Source: APXvYqx2Oz2x7aK2w2WY7H8GZslB2DP/lDmHVrC4VNx9P3gFaCAHqPF3LBhJCNPpT/oPHOgxMJR+ow==
+X-Received: by 2002:a63:2e07:: with SMTP id u7mr877200pgu.295.1579822645505;
+        Thu, 23 Jan 2020 15:37:25 -0800 (PST)
+Received: from ?IPv6:2001:4898:d8:28:140e:bf9b:65a6:dd72? ([2001:4898:80e8:0:9425:bf9b:65a6:dd72])
+        by smtp.gmail.com with ESMTPSA id z30sm4042494pfq.154.2020.01.23.15.37.24
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 23 Jan 2020 15:37:24 -0800 (PST)
+Subject: Re: [PATCH v10 1/2] dt-bindings: edac: dmc-520.yaml
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     Borislav Petkov <bp@alien8.de>, James Morse <james.morse@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        linux-edac <linux-edac@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, hangl@microsoft.com,
+        Lei Wang <lewan@microsoft.com>, ruizhao@microsoft.com,
+        shji@microsoft.com, Scott Branden <scott.branden@broadcom.com>,
+        Yuqing Shen <yuqing.shen@broadcom.com>
+References: <09a2fe69-842f-01cf-1cfa-d5fc639b158a@gmail.com>
+ <CAL_Jsq+1S=mOS0-eb0=ibSn81ReDmDjrA9=bHpKC16w8B6Aq3Q@mail.gmail.com>
+From:   Shiping Ji <shiping.linux@gmail.com>
+Message-ID: <e0bab7de-1308-409c-febc-608a812592e3@gmail.com>
+Date:   Thu, 23 Jan 2020 15:37:22 -0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <20200123225940.GC29851@richard>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <CAL_Jsq+1S=mOS0-eb0=ibSn81ReDmDjrA9=bHpKC16w8B6Aq3Q@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 1/23/2020 5:44 AM, Rob Herring wrote:
 
+> Run 'make dt_binding_check' as that would have caught this issue on the example.
 
-On 1/23/20 2:59 PM, Wei Yang wrote:
-> On Thu, Jan 23, 2020 at 07:38:51AM +0800, Yang Shi wrote:
->> Since commit a49bd4d71637 ("mm, numa: rework do_pages_move"),
->> the semantic of move_pages() was changed to return the number of
->> non-migrated pages (failed to migration) and the call would be aborted
->> immediately if migrate_pages() returns positive value.  But it didn't
->> report the number of pages that we even haven't attempted to migrate.
->> So, fix it by including non-attempted pages in the return value.
->>
->> Fixes: a49bd4d71637 ("mm, numa: rework do_pages_move")
->> Suggested-by: Michal Hocko <mhocko@suse.com>
->> Cc: Wei Yang <richardw.yang@linux.intel.com>
->> Cc: <stable@vger.kernel.org>    [4.17+]
->> Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
->> ---
->> v2: Rebased on top of the latest mainline kernel per Andrew
->>
->> mm/migrate.c | 24 ++++++++++++++++++++++--
->> 1 file changed, 22 insertions(+), 2 deletions(-)
->>
->> diff --git a/mm/migrate.c b/mm/migrate.c
->> index 86873b6..9b8eb5d 100644
->> --- a/mm/migrate.c
->> +++ b/mm/migrate.c
->> @@ -1627,8 +1627,18 @@ static int do_pages_move(struct mm_struct *mm, nodemask_t task_nodes,
->> 			start = i;
->> 		} else if (node != current_node) {
->> 			err = do_move_pages_to_node(mm, &pagelist, current_node);
->> -			if (err)
->> +			if (err) {
->> +				/*
->> +				 * Positive err means the number of failed
->> +				 * pages to migrate.  Since we are going to
->> +				 * abort and return the number of non-migrated
->> +				 * pages, so need incude the rest of the
->> +				 * nr_pages that have not attempted as well.
->> +				 */
->> +				if (err > 0)
->> +					err += nr_pages - i - 1;
->> 				goto out;
->> +			}
->> 			err = store_status(status, start, current_node, i - start);
->> 			if (err)
->> 				goto out;
->> @@ -1659,8 +1669,11 @@ static int do_pages_move(struct mm_struct *mm, nodemask_t task_nodes,
->> 			goto out_flush;
->>
->> 		err = do_move_pages_to_node(mm, &pagelist, current_node);
->> -		if (err)
->> +		if (err) {
->> +			if (err > 0)
->> +				err += nr_pages - i - 1;
->> 			goto out;
->> +		}
->> 		if (i > start) {
->> 			err = store_status(status, start, current_node, i - start);
->> 			if (err)
->> @@ -1674,6 +1687,13 @@ static int do_pages_move(struct mm_struct *mm, nodemask_t task_nodes,
->>
->> 	/* Make sure we do not overwrite the existing error */
->> 	err1 = do_move_pages_to_node(mm, &pagelist, current_node);
->> +	/*
->> +	 * Don't have to report non-attempted pages here since:
-> In previous comment, you use "non-migrated". Here is "non-attempted". What's
-> the difference?
+Eventually I have the dtc with yaml output built and resolved issues reported by "make dt_binding_check". Shall I submit a new v11 patch for the dt-bindings only or I should add driver code patch into v11 too?
 
-In that comment "non-migrated" includes both reported by migrate_pages() 
-and the non-attempted.
+Thanks!
 
->
->> +	 *     - If the above loop is done gracefully there is not non-attempted
->> +	 *       page.
->> +	 *     - If the above loop is aborted to it means more fatal error
->> +	 *       happened, should return err.
->> +	 */
->> 	if (!err1)
->> 		err1 = store_status(status, start, current_node, i - start);
->> 	if (!err)
->> -- 
->> 1.8.3.1
-
+-- 
+Best regards,
+Shiping Ji
