@@ -2,173 +2,87 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CDDAC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 17:54:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24020C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 17:55:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13FAF22464
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 17:54:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7C7922464
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 17:55:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579802143;
+	bh=WQfF52ocBvdFZrGb8gqOqp46CCs46jtplHpqIo6xK7o=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=DZ+jzPehgdrNQ+a87XyUMqYl+XCXU5ExuYUNmYbZV4F6f1yw6ID1uupdlkKS1LQ/C
+	 GTOLPwgj1lTOnb6e0iy8QxqYkDwF+uRg2EYEhjzFuzzvOoL+LjdX0zDXa9CIpi81z6
+	 pUgckh4ThjtsgyWGgPMULm3AXdbhilMcovSyqEfI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729049AbgAWRyA convert rfc822-to-8bit (ORCPT
+        id S1728939AbgAWRzm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 12:54:00 -0500
-Received: from mga09.intel.com ([134.134.136.24]:30479 "EHLO mga09.intel.com"
+        Thu, 23 Jan 2020 12:55:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49012 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727022AbgAWRx7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 12:53:59 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Jan 2020 09:49:44 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,354,1574150400"; 
-   d="scan'208";a="428040520"
-Received: from vcostago-desk1.jf.intel.com (HELO vcostago-desk1) ([10.54.70.26])
-  by fmsmga006.fm.intel.com with ESMTP; 23 Jan 2020 09:49:42 -0800
-From:   Vinicius Costa Gomes <vinicius.gomes@intel.com>
-To:     Vladimir Oltean <olteanv@gmail.com>,
-        Murali Karicheri <m-karicheri2@ti.com>
-Cc:     Po Liu <po.liu@nxp.com>,
-        "davem\@davemloft.net" <davem@davemloft.net>,
-        "hauke.mehrtens\@intel.com" <hauke.mehrtens@intel.com>,
-        "gregkh\@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "allison\@lohutok.net" <allison@lohutok.net>,
-        "tglx\@linutronix.de" <tglx@linutronix.de>,
-        "hkallweit1\@gmail.com" <hkallweit1@gmail.com>,
-        "saeedm\@mellanox.com" <saeedm@mellanox.com>,
-        "andrew\@lunn.ch" <andrew@lunn.ch>,
-        "f.fainelli\@gmail.com" <f.fainelli@gmail.com>,
-        "alexandru.ardelean\@analog.com" <alexandru.ardelean@analog.com>,
-        "jiri\@mellanox.com" <jiri@mellanox.com>,
-        "ayal\@mellanox.com" <ayal@mellanox.com>,
-        "pablo\@netfilter.org" <pablo@netfilter.org>,
-        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev\@vger.kernel.org" <netdev@vger.kernel.org>,
-        "simon.horman\@netronome.com" <simon.horman@netronome.com>,
-        Claudiu Manoil <claudiu.manoil@nxp.com>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>,
-        Alexandru Marginean <alexandru.marginean@nxp.com>,
-        Xiaoliang Yang <xiaoliang.yang_1@nxp.com>,
-        Roy Zang <roy.zang@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>,
-        Jerry Huang <jerry.huang@nxp.com>, Leo Li <leoyang.li@nxp.com>
-Subject: Re: [v1,net-next, 1/2] ethtool: add setting frame preemption of traffic classes
-In-Reply-To: <CA+h21hqk2pCfrQg5kC6HzmL=eEqJXjuRsu+cVkGsEi8OXGpKJA@mail.gmail.com>
-References: <20191127094517.6255-1-Po.Liu@nxp.com> <87v9p93a2s.fsf@linux.intel.com> <9b13a47e-8ca3-66b0-063c-798a5fa71149@ti.com> <CA+h21hqk2pCfrQg5kC6HzmL=eEqJXjuRsu+cVkGsEi8OXGpKJA@mail.gmail.com>
-Date:   Thu, 23 Jan 2020 09:50:54 -0800
-Message-ID: <87d0bajc3l.fsf@linux.intel.com>
+        id S1726621AbgAWRzl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jan 2020 12:55:41 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 28BB920718;
+        Thu, 23 Jan 2020 17:55:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579802139;
+        bh=WQfF52ocBvdFZrGb8gqOqp46CCs46jtplHpqIo6xK7o=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=izD0sZ/0eWhZ0V86Gh+KU1CiIJHw7hDsdlomWl779Ou720ttBnLEIfT5g0nvJom66
+         B9Uw8EsWfyHs3dXpaMxJL172BZLzQSBOnn57ynjeHg6bFSegWBk1hqDkDPRi4c4Yxu
+         d0GtijL0/hb3/8OuG/Q5pagbdf+OJV6A6tahHfyI=
+Date:   Thu, 23 Jan 2020 18:55:36 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     "Theodore Y. Ts'o" <tytso@mit.edu>
+Cc:     Jason Baron <jbaron@akamai.com>, Will Deacon <will@kernel.org>,
+        linux-kernel@vger.kernel.org, kernel-team@android.com
+Subject: Re: [PATCH v3] dynamic_debug: allow to work if debugfs is disabled
+Message-ID: <20200123175536.GA1796501@kroah.com>
+References: <20200122074343.GA2099098@kroah.com>
+ <20200122080352.GA15354@willie-the-truck>
+ <20200122081205.GA2227985@kroah.com>
+ <20200122135352.GA9458@kroah.com>
+ <8d68b75c-05b8-b403-0a10-d17b94a73ba7@akamai.com>
+ <20200122192940.GA88549@kroah.com>
+ <20200122193118.GA88722@kroah.com>
+ <20200123155340.GD147870@mit.edu>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200123155340.GD147870@mit.edu>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Thu, Jan 23, 2020 at 10:53:40AM -0500, Theodore Y. Ts'o wrote:
+> On Wed, Jan 22, 2020 at 08:31:18PM +0100, Greg Kroah-Hartman wrote:
+> > With the realization that having debugfs enabled on "production" systems is
+> > generally not a good idea, debugfs is being disabled from more and more
+> > platforms over time.  However, the functionality of dynamic debugging still is
+> > needed at times, and since it relies on debugfs for its user api, having
+> > debugfs disabled also forces dynamic debug to be disabled.
+> > 
+> > To get around this, move the "control" file for dynamic_debug to procfs IFF
+> > debugfs is disabled.  This lets people turn on debugging as needed at runtime
+> > for individual driverfs and subsystems.
+> 
+> Instead of moving the control file IFF debugfs is enabled, what about
+> always making it available in /proc, and marking the control file for
+> dynamic_debug in debugfs as deprecated?  It would seem to me that this
+> would cause less confusion in the future....
 
-Vladimir Oltean <olteanv@gmail.com> writes:
+Why deprecate it?  It's fine where it is, and most developer's have
+debugfs enabled so all is good.  I'd rather only use /proc as a
+last-resort.
 
-> Hi Murali,
->
-> On Wed, 22 Jan 2020 at 20:04, Murali Karicheri <m-karicheri2@ti.com> wrote:
->>
->> I have question about the below parameters in The Gate Parameter Table
->> that are not currently supported by tc command. Looks like they need to
->> be shown to user for management.
->>
->>      - ConfigChange - Looks like this needs to be controlled by
->>        user. After sending admin command, user send this trigger to start
->>        copying admin schedule to operation schedule. Is this getting
->>        added to tc command?
->
-> "The ConfigChange parameter signals the start of a
-> configuration change for the gate
-> when it is set to TRUE. This should only be done
-> when the various administrative parameters
-> are all set to appropriate values."
->
-> As far as my understanding goes, all tc-taprio commands currently
-> behave as though this boolean is implicitly set to TRUE after the
-> structures have been set up. I'm not sure there is any value in doing
-> otherwise.
->
->>      - ConfigChangeTime - The time at which the administrative variables
->>        that determine the cycle are to be copied across to the
->>        corresponding operational variables, expressed as a PTP timescale
->
-> This is the base-time of the admin schedule, no?
->
-> "The PTPtime at which the next config change is scheduled to occur.
-> The value is a representation of a PTPtime value,
-> consisting of a 48-bit integer
-> number of seconds and a 32-bit integer number of nanoseconds."
->
->>      - TickGranularity - the management parameters specified in Gate
->>        Parameter Table allow a management station to discover the
->>        characteristics of an implementation’s cycle timer clock
->>        (TickGranularity) and to set the parameters for the gating cycle
->>        accordingly.
->
-> Not sure who is going to use this and for what purpose, but ok.
->
->>      - ConfigPending - A Boolean variable, set TRUE to indicate that
->>        there is a new cycle configuration awaiting installation.
->
-> I had tried to export something like this (driver calls back into
-> sch_taprio.c when hw has applied the config, this would result in
-> ConfigPending = FALSE), but ultimately didn't finish the idea, and it
-> caused some problems too, due to incorrect RCU usage.
->
+thanks,
 
-If this should be exported, this should be done from taprio, perhaps
-adding a new field to what is exported via the dump() callback, which
-should be quite easy.
-
->>      - ConfigChangeError - Error in configuration (AdminBaseTime <
->>        CurrentTime)
->
-> This can be exported similarly.
-
-In my view, having this as a "runtime" error is not useful, as we can
-verify this at configuration time.
-
->
->>      - SupportedListMax - Maximum supported Admin/Open shed list.
->>
->> Is there a plan to export these from driver through tc show or such
->> command? The reason being, there would be applications developed to
->> manage configuration/schedule of TSN nodes that would requires these
->> information from the node. So would need a support either in tc or
->> some other means to retrieve them from hardware or driver. That is my
->> understanding...
->>
-
-Hm, now I understamd what you meant here...
-
->
-> Not sure what answer you expect to receive for "is there any plan".
-> You can go ahead and propose something, as long as it is reasonably
-> useful to have.
-
-... if this is indeed useful, perhaps one way to do is to add a subcommand
-to TC_SETUP_QDISC_TAPRIO, so we can retrieve the stats/information we want
-from the driver. Similar to what cls_flower does.
-
->
->> Regards,
->>
->> Murali
->>
->> --
->> Murali Karicheri
->> Texas Instruments
->
-> Thanks,
-> -Vladimir
-
-Cheers,
---
-Vinicius
+greg k-h
