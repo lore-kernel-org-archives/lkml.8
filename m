@@ -2,138 +2,97 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BC67C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 14:53:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30C3EC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 14:53:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F387B21835
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 14:53:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 069AC24125
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 14:53:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="JI3RP/gV"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IoZ+hHh9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729199AbgAWOxq (ORCPT
+        id S1729213AbgAWOxs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 09:53:46 -0500
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:50646 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729017AbgAWOxe (ORCPT
+        Thu, 23 Jan 2020 09:53:48 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:34827 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729188AbgAWOxq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 09:53:34 -0500
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200123145332euoutp0107893e54b16dca7af5ddd3fd8df1a5fe~si7zKEAN22816728167euoutp01O
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jan 2020 14:53:32 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200123145332euoutp0107893e54b16dca7af5ddd3fd8df1a5fe~si7zKEAN22816728167euoutp01O
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1579791212;
-        bh=gUt0xdJYsjZMQC8Hykq0BgkZD7XebHRDKl7WMh5ImJE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JI3RP/gVkaD9dJ5vvzp3vwzH2hWE7OgIkkFQISse6n+pYfzH05A764Xe7zbk4TSNM
-         2TvKwddGOvIYQzpfcJMmCCfZfHxOs+A6js6wMHTy9euICWmsTU8nR67oXL2zw5Fuzo
-         iB6HGFRl2d/WrzOwRwi3vYsq39MSJXJ3dVeiaRro=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20200123145331eucas1p102fdaf977d34988fb2e95a98d113170b~si7y6Co_j2151721517eucas1p10;
-        Thu, 23 Jan 2020 14:53:31 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges1new.samsung.com (EUCPMTA) with SMTP id 72.8B.61286.B63B92E5; Thu, 23
-        Jan 2020 14:53:31 +0000 (GMT)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20200123145331eucas1p2aaf6eccd724af9edc25a547b6fde7961~si7yKabuE3021030210eucas1p2J;
-        Thu, 23 Jan 2020 14:53:31 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200123145331eusmtrp1a63db195c5616fa163544891c9764d3a~si7yJxBfb2757227572eusmtrp1P;
-        Thu, 23 Jan 2020 14:53:31 +0000 (GMT)
-X-AuditID: cbfec7f2-ef1ff7000001ef66-1e-5e29b36b5107
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id 4A.43.07950.B63B92E5; Thu, 23
-        Jan 2020 14:53:31 +0000 (GMT)
-Received: from AMDC3218.digital.local (unknown [106.120.51.18]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20200123145330eusmtip2f4c1ce251dd8ada3925cc44767e7f33a~si7xlJ5TV1862618626eusmtip2M;
-        Thu, 23 Jan 2020 14:53:30 +0000 (GMT)
-From:   Kamil Konieczny <k.konieczny@samsung.com>
-To:     k.konieczny@samsung.com
-Cc:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Kukjin Kim <kgene@kernel.org>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>
-Subject: [PATCH 1/3] PM / devfreq: exynos-nocp: fix debug print type
-Date:   Thu, 23 Jan 2020 15:53:11 +0100
-Message-Id: <20200123145313.27539-2-k.konieczny@samsung.com>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200123145313.27539-1-k.konieczny@samsung.com>
+        Thu, 23 Jan 2020 09:53:46 -0500
+Received: by mail-lj1-f194.google.com with SMTP id j1so3790054lja.2
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jan 2020 06:53:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=tP2rc3sKgqYT9el7f1WHPuLRZRmFlraniNcLzRTh1pc=;
+        b=IoZ+hHh9hNTkHT2YdnouTrYjcsSt8gBQuva/8HSDudsOjNdpBl4/AY6qjsAHBlriLV
+         nTHyHpV+MwD85kPFu8T95GN+dtKdP69SnHaFGu9mMcuxKzDrxWNde1TNydE3OP+B1pDi
+         YdKXnPtMUKfYQz+qEHDPX1SXImBIn5SKSC5ld3HA4mRE8mwoPRm2KAblSga8TJUt8lEV
+         HUCMahOwnl0Qgb5YsPjJK+Uf3STpWDbV5hPuSUlPye0aJKEqyc5myrXRWOe/3odRhFVy
+         gF8bxp2wwGmuv/sSJ77ptgBBO+GfpuXC/w9pS0s942Qk6Q5hbrRW5/BrbI+px+OdoBA5
+         ddQA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=tP2rc3sKgqYT9el7f1WHPuLRZRmFlraniNcLzRTh1pc=;
+        b=sVLtXtyrIroUwA7aG09/VDtOWDQABoKmGT7t4qypAYW0nBaE7NoHmc8+XxXM+886J5
+         g9K8QQ8rTReOp6VZ36VPPUlNsrsRUaszsrzImrOY1QlIAtwVt7/D0BHT0Or3qVbfERjX
+         lboN0hhw44sBwvvfPbgkMxYCanN+gAWpONqJCXr6vRHLCYVwkVBqc1g+f9Wqa4IpKHOl
+         b+n0h6YtToEikIpue2RkPUqkbVyHce/rfFhEqdtXv7yVuXfewmws+abCF7ZKC1x0uhki
+         uRWqxfTOCLgb8Q13VZcbmcmNjPFNGzDY5bdIzbgifqzeFT2Wrz2faZ1b5bp6kb3+gQ3Q
+         PU2g==
+X-Gm-Message-State: APjAAAWsViGIuRfnwS/DAesluWJdd8JNxHl3u7uomPFjZIpzqKAwM6Vb
+        0ddIMnNB8aMoqdu5XbeZrT/OuEt72gLSYsD+44Hu3g==
+X-Google-Smtp-Source: APXvYqwfj7WWn0juBVOB8AF0fnjeeNkmI+4iRvbuJD3XjPlxz72XbJT6NEb8X5O+9ai22dAUSazBreWyIu9u9mNdGqM=
+X-Received: by 2002:a2e:98c4:: with SMTP id s4mr23335397ljj.102.1579791224055;
+ Thu, 23 Jan 2020 06:53:44 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprPKsWRmVeSWpSXmKPExsWy7djP87rZmzXjDO7sMbXYOGM9q8WCTzNY
-        Lfofv2a2OH9+A7vF2aY37BaXd81hs/jce4TRYu2Ru+wWtxtXsDlwemxa1cnm0bdlFaPH501y
-        AcxRXDYpqTmZZalF+nYJXBkLGg6zF/SxV5yfvJGlgbGTrYuRk0NCwERi8arrrF2MXBxCAisY
-        JRpvzmOBcL4wSsxs7WKGcD4zSmw4087UxcgB1nJnbjpEfDmjxLwle5nhOia+/MACMpdNQF/i
-        4NmTYLaIgLRE56KJTCBFzAL7mSQ2XXrDDJIQFnCROPF0LTuIzSKgKvFi32FGEJtXwEbi8dvH
-        rBAHykvMbjwNdiyngK3E1AcL2SBqBCVOznwCtoAZqKZ562ywKyQE+tkles88hGp2kVjU3cwI
-        YQtLvDq+hR3ClpE4PbmHBcIul3i6sI8dormFUeJB+0eohLXEnXO/2EB+ZhbQlFi/Sx8i7Cgx
-        f/VqFkhQ8EnceCsIcQOfxKRt05khwrwSHW1CENWqEs9P9TBB2NISXf/XQV3mIfGt6zrjBEbF
-        WUi+mYXkm1kIexcwMq9iFE8tLc5NTy02zEst1ytOzC0uzUvXS87P3cQITDan/x3/tIPx66Wk
-        Q4wCHIxKPLwSvZpxQqyJZcWVuYcYJTiYlUR4GcOAQrwpiZVVqUX58UWlOanFhxilOViUxHmN
-        F72MFRJITyxJzU5NLUgtgskycXBKNTDu3qoxcU/whzuK14s23nvHfkf4cMjbgm2qJ0syS61Z
-        u3MqHyy4aDN93jIW7gULjGd1VH0/97ImorXl6OW36ufPLO/KvvHOLuuOsbx38eeDM1qvbHlm
-        rCxRl2H/obTim2LwEVFhQcXNtu4OG0pj49fMt3gu1cJ6eyH7geAr/dOvSBQ4WV5b9N9ciaU4
-        I9FQi7moOBEAE89eFzIDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFuplkeLIzCtJLcpLzFFi42I5/e/4Pd3szZpxBt/es1psnLGe1WLBpxms
-        Fv2PXzNbnD+/gd3ibNMbdovLu+awWXzuPcJosfbIXXaL240r2Bw4PTat6mTz6NuyitHj8ya5
-        AOYoPZui/NKSVIWM/OISW6VoQwsjPUNLCz0jE0s9Q2PzWCsjUyV9O5uU1JzMstQifbsEvYwF
-        DYfZC/rYK85P3sjSwNjJ1sXIwSEhYCJxZ256FyMXh5DAUkaJR28+s3QxcgLFpSUaT69mgrCF
-        Jf5c62KDKPrEKHGy4QA7SIJNQF/i4NmTYA0iQA2diyYygRQxCxxlklhy5ARYQljAReLE07Vg
-        DSwCqhIv9h1mBLF5BWwkHr99zAqxQV5iduNpNhCbU8BWYuqDhWC2EFDN513HWSHqBSVOznwC
-        NpMZqL5562zmCYwCs5CkZiFJLWBkWsUoklpanJueW2ykV5yYW1yal66XnJ+7iREYFduO/dyy
-        g7HrXfAhRgEORiUeXolezTgh1sSy4srcQ4wSHMxKIryMYUAh3pTEyqrUovz4otKc1OJDjKZA
-        T0xklhJNzgdGbF5JvKGpobmFpaG5sbmxmYWSOG+HwMEYIYH0xJLU7NTUgtQimD4mDk6pBsae
-        8h6GmRJ8q22El2frzxe4/DustvD977Nyxt9Sjs35yyZw6uJGzhsPDmw+9LH7XNhz3RlrF7PP
-        NK+NMu9rXTFvkh33u/LcsqPyis3bcptY+zT2qLrwsJ2TiyprlZroyqxVv+9oe9oXp9C5uSdC
-        rlRuvMpoKMNyT/rotb7Py6buyd7a8Uz+iokSS3FGoqEWc1FxIgA/ZYrKoAIAAA==
-X-CMS-MailID: 20200123145331eucas1p2aaf6eccd724af9edc25a547b6fde7961
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200123145331eucas1p2aaf6eccd724af9edc25a547b6fde7961
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20200123145331eucas1p2aaf6eccd724af9edc25a547b6fde7961
-References: <20200123145313.27539-1-k.konieczny@samsung.com>
-        <CGME20200123145331eucas1p2aaf6eccd724af9edc25a547b6fde7961@eucas1p2.samsung.com>
+References: <20200115073811.24438-1-bigunclemax@gmail.com>
+In-Reply-To: <20200115073811.24438-1-bigunclemax@gmail.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 23 Jan 2020 15:53:33 +0100
+Message-ID: <CACRpkdYqTCmG1=HM0QphPou43HFSXBNB5HH1R8xH0KEb=zxC1Q@mail.gmail.com>
+Subject: Re: [PATCH] gpio: mvebu: clear irq in edge cause register before
+ unmask edge irq
+To:     Maxim <bigunclemax@gmail.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-pwm@vger.kernel.org,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Values printed in dev_dbg are both unsigned long, but were
-printed as signed decimals. Change this to unsigned long.
+On Wed, Jan 15, 2020 at 8:40 AM Maxim <bigunclemax@gmail.com> wrote:
 
-Signed-off-by: Kamil Konieczny <k.konieczny@samsung.com>
----
- drivers/devfreq/event/exynos-nocp.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> From: Maxim Kiselev <bigunclemax@gmail.com>
+>
+> When input GPIO set from 0 to 1, the interrupt bit asserted in the GPIO
+> Interrupt Cause Register (ICR) even if the corresponding interrupt
+> masked in the GPIO Interrupt Mask Register.
+>
+> Because interrupt mask register only affects assertion of the interrupt
+> bits in Main Interrupt Cause Register and it does not affect the
+> setting of bits in the GPIO ICR.
+>
+> So, there is problem, when we unmask interrupt with already
+> asserted bit in the GPIO ICR, then false interrupt immediately occurs
+> even if GPIO don't change their value since last unmask.
+>
+> Signed-off-by: Maxim Kiselev <bigunclemax@gmail.com>
 
-diff --git a/drivers/devfreq/event/exynos-nocp.c b/drivers/devfreq/event/exynos-nocp.c
-index ccc531ee6938..ebe9cdf94f54 100644
---- a/drivers/devfreq/event/exynos-nocp.c
-+++ b/drivers/devfreq/event/exynos-nocp.c
-@@ -167,7 +167,7 @@ static int exynos_nocp_get_event(struct devfreq_event_dev *edev,
- 	edata->load_count = ((counter[1] << 16) | counter[0]);
- 	edata->total_count = ((counter[3] << 16) | counter[2]);
- 
--	dev_dbg(&edev->dev, "%s (event: %ld/%ld)\n", edev->desc->name,
-+	dev_dbg(&edev->dev, "%s (event: %lu/%lu)\n", edev->desc->name,
- 					edata->load_count, edata->total_count);
- 
- 	return 0;
--- 
-2.25.0
+Since there is no feedback from the MVEBU maintainers I have
+tentatively applied the patch for v5.6 so it gets some testing.
 
+Yours,
+Linus Walleij
