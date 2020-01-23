@@ -2,155 +2,145 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B2C6C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 09:48:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 267BDC3F68F
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 09:48:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0760622522
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 09:48:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4D4424655
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 09:48:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="zuKKKPIc"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="kwE+guB4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726761AbgAWJsh (ORCPT
+        id S1727296AbgAWJsl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 04:48:37 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:46347 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726103AbgAWJsg (ORCPT
+        Thu, 23 Jan 2020 04:48:41 -0500
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:22828 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726103AbgAWJsk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 04:48:36 -0500
-Received: by mail-wr1-f65.google.com with SMTP id z7so2267481wrl.13
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jan 2020 01:48:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:autocrypt:organization:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Kn81JYc9N9F0sdKy+Q2CIEDl23p6b50Wt6+KCmJKWVY=;
-        b=zuKKKPIcS/4Bjo0Jbt3+sNV5+A7pgTKEHneuYtSBIrLh+MvanIbBfGGgGIUa0a19k0
-         ilJzgzQmbJSj7gFNYn697kd6v/5MVwnJvc4o3MScZhfJVyOqXaeHbw99BOM1yo9IZcbq
-         J+F92jpPcs+AUprJtZvtfyGbcINy3d75e18zFZuN01dAL54E7H/y/biP20x0u9ypv982
-         CAIVjJ/4uCi/EM7ABcbWc8dsjTCIAn8vokF4rW/AYf0D/ryzy8T9UHBtpJcKVzYIjXh6
-         siercVQ6l/gP4HDkcRFJ+DWljvcNs0/DEYGMjEBFfph/Oc7/yhaIhJXmdAXRbNo4dreC
-         QkMw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :organization:message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=Kn81JYc9N9F0sdKy+Q2CIEDl23p6b50Wt6+KCmJKWVY=;
-        b=pXdqdQDWaCHQsmRXJSGrVLddoVPBV0edMnl+sqMBa9n0fPhRi1/nyDeJWLtrkE8q5G
-         8JUMJLD+CSmVq0iZUJZDbL644t1xxvwivsIjPoxPVC93a+RYeMzdKmOQt5/F3aP6dqCm
-         ejYtaSqaPo/EKlFrxa3s9LVi4zyjR7WygkPHjbWjgO5j/egfgkITfwMBjfEXvDLC0bn0
-         e58w9nAsHD9NSYffP0yuSS2pMTLQuOsysopFOSQJDMQOCFKbo70I4jxCbghGMtTV35Fj
-         +oaJDpv3g9dgKhEr8Tn2cEYYONxkf4eT/rZ6A7jKO5+YOpD+IsTaEknzRDSgEwceywGo
-         /WXw==
-X-Gm-Message-State: APjAAAWjAP5De+7VLjZt3RwQZ+bWhCR7QiHuJh1MwL/2VNlWTj1GrhYZ
-        8wJ/mvTJ2vPdbCBLdTQLb6bapQ==
-X-Google-Smtp-Source: APXvYqwR4np2yZ97TsG3h9ujDbTjFSuo+wgRA7T1wq50MAXa9EGMzF8Pd8Bjk8QqTLm07BqpfAARHw==
-X-Received: by 2002:adf:ec4c:: with SMTP id w12mr17363058wrn.124.1579772913571;
-        Thu, 23 Jan 2020 01:48:33 -0800 (PST)
-Received: from [10.1.2.12] (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id o187sm2261256wme.36.2020.01.23.01.48.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 23 Jan 2020 01:48:33 -0800 (PST)
-Subject: Re: [PATCH] arm64: dts: meson-sm1-sei610: add missing interrupt-names
-To:     Guillaume La Roque <glaroque@baylibre.com>, khilman@baylibre.com,
-        devicetree@vger.kernel.org
-Cc:     linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-References: <20200117133423.22602-1-glaroque@baylibre.com>
-From:   Neil Armstrong <narmstrong@baylibre.com>
-Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
- 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
- BSwxi7g3Mu7u5kUByanqHyA=
-Organization: Baylibre
-Message-ID: <42e82841-067d-245b-6196-183503da389b@baylibre.com>
-Date:   Thu, 23 Jan 2020 10:48:32 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
-MIME-Version: 1.0
-In-Reply-To: <20200117133423.22602-1-glaroque@baylibre.com>
-Content-Type: text/plain; charset=utf-8
+        Thu, 23 Jan 2020 04:48:40 -0500
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00N9mC54013055;
+        Thu, 23 Jan 2020 10:48:31 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : subject :
+ date : message-id : references : in-reply-to : content-type : content-id :
+ content-transfer-encoding : mime-version; s=STMicroelectronics;
+ bh=5SeB8s9x5wreO4d7oXmbLoQrU983LvSqPs1ieUjIzyc=;
+ b=kwE+guB4L+TVQrsvECuZKE3pAe4MDcMpp91Cq7pFu6eBCAOy503dDk9w9cH0KIK6vL5X
+ 61EQIPLI0+LTzvLPlbCnp+TO5qjB1ojfB+eRhw4SQCU/ZuGLdCB7X1YfcGLTg/EsiNz5
+ nlOjb3aB8I9Kz6P6xxv+3WTz85bcdneeP9LZqAX994RT+OoDxEuU2Ay9c2IUMTuG7Dgk
+ SqtnoRHt72jALZaUqv9lX8ubtifxrwc8iHAJpZw4iy51Ln5sdvedYIVA+FzDFXY01zvZ
+ 7Xxqx5eKRM81VMnrLGYD9SMaaoyLWQSSWkRjTxQhVeZMIwBXJCh8PKn73dMR1BDgf4i+ 7g== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2xkr1e9h4q-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 23 Jan 2020 10:48:31 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id CA5F110002A;
+        Thu, 23 Jan 2020 10:48:30 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag3node1.st.com [10.75.127.7])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id BCFF421FEBE;
+        Thu, 23 Jan 2020 10:48:30 +0100 (CET)
+Received: from SFHDAG6NODE3.st.com (10.75.127.18) by SFHDAG3NODE1.st.com
+ (10.75.127.7) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 23 Jan
+ 2020 10:48:30 +0100
+Received: from SFHDAG6NODE3.st.com ([fe80::d04:5337:ab17:b6f6]) by
+ SFHDAG6NODE3.st.com ([fe80::d04:5337:ab17:b6f6%20]) with mapi id
+ 15.00.1473.003; Thu, 23 Jan 2020 10:48:30 +0100
+From:   Philippe CORNU <philippe.cornu@st.com>
+To:     Yannick FERTRE <yannick.fertre@st.com>,
+        Benjamin GAIGNARD <benjamin.gaignard@st.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        "Alexandre TORGUE" <alexandre.torgue@st.com>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] drm/stm: ltdc: add number of interrupts
+Thread-Topic: [PATCH] drm/stm: ltdc: add number of interrupts
+Thread-Index: AQHV0EN8f8iUffIhZ0Oxt7cntisoXKf38z2A
+Date:   Thu, 23 Jan 2020 09:48:30 +0000
+Message-ID: <2b967bed-c2fa-1575-3e06-ae5b19069e56@st.com>
+References: <1579601632-7001-1-git-send-email-yannick.fertre@st.com>
+In-Reply-To: <1579601632-7001-1-git-send-email-yannick.fertre@st.com>
+Accept-Language: fr-FR, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.75.127.48]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <D570B8DBE1872C4E9FC6288AD5D884E0@st.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-01-23_01:2020-01-23,2020-01-22 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 17/01/2020 14:34, Guillaume La Roque wrote:
-> add missing "host-wakeup interrupt names
-> 
-> Fixes: 30388cc07572 ("arm64: dts: meson-sm1-sei610: add gpio bluetooth interrupt")
-> 
-> Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
-> ---
->  arch/arm64/boot/dts/amlogic/meson-sm1-sei610.dts | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/arch/arm64/boot/dts/amlogic/meson-sm1-sei610.dts b/arch/arm64/boot/dts/amlogic/meson-sm1-sei610.dts
-> index a8bb3fa9fec9..cb1b48f5b8b1 100644
-> --- a/arch/arm64/boot/dts/amlogic/meson-sm1-sei610.dts
-> +++ b/arch/arm64/boot/dts/amlogic/meson-sm1-sei610.dts
-> @@ -593,6 +593,7 @@
->  		compatible = "brcm,bcm43438-bt";
->  		interrupt-parent = <&gpio_intc>;
->  		interrupts = <95 IRQ_TYPE_LEVEL_HIGH>;
-> +		interrupt-names = "host-wakeup";
->  		shutdown-gpios = <&gpio GPIOX_17 GPIO_ACTIVE_HIGH>;
->  		max-speed = <2000000>;
->  		clocks = <&wifi32k>;
-> 
-
-Acked-by: Neil Armstrong <narmstrong@baylibre.com>
+RGVhciBZYW5uaWNrLA0KVGhhbmsgeW91IGZvciB5b3VyIHBhdGNoLA0KDQpBY2tlZC1ieTogUGhp
+bGlwcGUgQ29ybnUgPHBoaWxpcHBlLmNvcm51QHN0LmNvbT4NCg0KUGhpbGlwcGUgOi0pDQoNCk9u
+IDEvMjEvMjAgMTE6MTMgQU0sIFlhbm5pY2sgRmVydHJlIHdyb3RlOg0KPiBUaGUgbnVtYmVyIG9m
+IGludGVycnVwdHMgZGVwZW5kcyBvbiB0aGUgbHRkYyB2ZXJzaW9uLg0KPiBEb24ndCB0cnkgdG8g
+Z2V0IGludGVycnVwdCB3aGljaCBub3QgZXhpc3QsIGF2b2lkaW5nDQo+IGtlcm5lbCB3YXJuaW5n
+IG1lc3NhZ2VzLg0KPiANCj4gU2lnbmVkLW9mZi1ieTogWWFubmljayBGZXJ0cmUgPHlhbm5pY2su
+ZmVydHJlQHN0LmNvbT4NCj4gLS0tDQo+ICAgZHJpdmVycy9ncHUvZHJtL3N0bS9sdGRjLmMgfCAz
+MCArKysrKysrKysrKysrKystLS0tLS0tLS0tLS0tLS0NCj4gICBkcml2ZXJzL2dwdS9kcm0vc3Rt
+L2x0ZGMuaCB8ICAxICsNCj4gICAyIGZpbGVzIGNoYW5nZWQsIDE2IGluc2VydGlvbnMoKyksIDE1
+IGRlbGV0aW9ucygtKQ0KPiANCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9zdG0vbHRk
+Yy5jIGIvZHJpdmVycy9ncHUvZHJtL3N0bS9sdGRjLmMNCj4gaW5kZXggYzI4MTVlOC4uNTgwOTJi
+MCAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL3N0bS9sdGRjLmMNCj4gKysrIGIvZHJp
+dmVycy9ncHUvZHJtL3N0bS9sdGRjLmMNCj4gQEAgLTExNDYsMTIgKzExNDYsMTQgQEAgc3RhdGlj
+IGludCBsdGRjX2dldF9jYXBzKHN0cnVjdCBkcm1fZGV2aWNlICpkZGV2KQ0KPiAgIAkJbGRldi0+
+Y2Fwcy5wYWRfbWF4X2ZyZXFfaHogPSA5MDAwMDAwMDsNCj4gICAJCWlmIChsZGV2LT5jYXBzLmh3
+X3ZlcnNpb24gPT0gSFdWRVJfMTAyMDApDQo+ICAgCQkJbGRldi0+Y2Fwcy5wYWRfbWF4X2ZyZXFf
+aHogPSA2NTAwMDAwMDsNCj4gKwkJbGRldi0+Y2Fwcy5uYl9pcnEgPSAyOw0KPiAgIAkJYnJlYWs7
+DQo+ICAgCWNhc2UgSFdWRVJfMjAxMDE6DQo+ICAgCQlsZGV2LT5jYXBzLnJlZ19vZnMgPSBSRUdf
+T0ZTXzQ7DQo+ICAgCQlsZGV2LT5jYXBzLnBpeF9mbXRfaHcgPSBsdGRjX3BpeF9mbXRfYTE7DQo+
+ICAgCQlsZGV2LT5jYXBzLm5vbl9hbHBoYV9vbmx5X2wxID0gZmFsc2U7DQo+ICAgCQlsZGV2LT5j
+YXBzLnBhZF9tYXhfZnJlcV9oeiA9IDE1MDAwMDAwMDsNCj4gKwkJbGRldi0+Y2Fwcy5uYl9pcnEg
+PSA0Ow0KPiAgIAkJYnJlYWs7DQo+ICAgCWRlZmF1bHQ6DQo+ICAgCQlyZXR1cm4gLUVOT0RFVjsN
+Cj4gQEAgLTEyNTEsMTMgKzEyNTMsMjEgQEAgaW50IGx0ZGNfbG9hZChzdHJ1Y3QgZHJtX2Rldmlj
+ZSAqZGRldikNCj4gICAJcmVnX2NsZWFyKGxkZXYtPnJlZ3MsIExURENfSUVSLA0KPiAgIAkJICBJ
+RVJfTElFIHwgSUVSX1JSSUUgfCBJRVJfRlVJRSB8IElFUl9URVJSSUUpOw0KPiAgIA0KPiAtCWZv
+ciAoaSA9IDA7IGkgPCBNQVhfSVJROyBpKyspIHsNCj4gKwlyZXQgPSBsdGRjX2dldF9jYXBzKGRk
+ZXYpOw0KPiArCWlmIChyZXQpIHsNCj4gKwkJRFJNX0VSUk9SKCJoYXJkd2FyZSBpZGVudGlmaWVy
+ICgweCUwOHgpIG5vdCBzdXBwb3J0ZWQhXG4iLA0KPiArCQkJICBsZGV2LT5jYXBzLmh3X3ZlcnNp
+b24pOw0KPiArCQlnb3RvIGVycjsNCj4gKwl9DQo+ICsNCj4gKwlEUk1fREVCVUdfRFJJVkVSKCJs
+dGRjIGh3IHZlcnNpb24gMHglMDh4XG4iLCBsZGV2LT5jYXBzLmh3X3ZlcnNpb24pOw0KPiArDQo+
+ICsJZm9yIChpID0gMDsgaSA8IGxkZXYtPmNhcHMubmJfaXJxOyBpKyspIHsNCj4gICAJCWlycSA9
+IHBsYXRmb3JtX2dldF9pcnEocGRldiwgaSk7DQo+IC0JCWlmIChpcnEgPT0gLUVQUk9CRV9ERUZF
+UikNCj4gKwkJaWYgKGlycSA8IDApIHsNCj4gKwkJCXJldCA9IGlycTsNCj4gICAJCQlnb3RvIGVy
+cjsNCj4gLQ0KPiAtCQlpZiAoaXJxIDwgMCkNCj4gLQkJCWNvbnRpbnVlOw0KPiArCQl9DQo+ICAg
+DQo+ICAgCQlyZXQgPSBkZXZtX3JlcXVlc3RfdGhyZWFkZWRfaXJxKGRldiwgaXJxLCBsdGRjX2ly
+cSwNCj4gICAJCQkJCQlsdGRjX2lycV90aHJlYWQsIElSUUZfT05FU0hPVCwNCj4gQEAgLTEyNjgs
+MTYgKzEyNzgsNiBAQCBpbnQgbHRkY19sb2FkKHN0cnVjdCBkcm1fZGV2aWNlICpkZGV2KQ0KPiAg
+IAkJfQ0KPiAgIAl9DQo+ICAgDQo+IC0NCj4gLQlyZXQgPSBsdGRjX2dldF9jYXBzKGRkZXYpOw0K
+PiAtCWlmIChyZXQpIHsNCj4gLQkJRFJNX0VSUk9SKCJoYXJkd2FyZSBpZGVudGlmaWVyICgweCUw
+OHgpIG5vdCBzdXBwb3J0ZWQhXG4iLA0KPiAtCQkJICBsZGV2LT5jYXBzLmh3X3ZlcnNpb24pOw0K
+PiAtCQlnb3RvIGVycjsNCj4gLQl9DQo+IC0NCj4gLQlEUk1fREVCVUdfRFJJVkVSKCJsdGRjIGh3
+IHZlcnNpb24gMHglMDh4XG4iLCBsZGV2LT5jYXBzLmh3X3ZlcnNpb24pOw0KPiAtDQo+ICAgCS8q
+IEFkZCBlbmRwb2ludHMgcGFuZWxzIG9yIGJyaWRnZXMgaWYgYW55ICovDQo+ICAgCWZvciAoaSA9
+IDA7IGkgPCBNQVhfRU5EUE9JTlRTOyBpKyspIHsNCj4gICAJCWlmIChwYW5lbFtpXSkgew0KPiBk
+aWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL3N0bS9sdGRjLmggYi9kcml2ZXJzL2dwdS9kcm0v
+c3RtL2x0ZGMuaA0KPiBpbmRleCBhMWFkMGFlLi4zMTBlODdmIDEwMDY0NA0KPiAtLS0gYS9kcml2
+ZXJzL2dwdS9kcm0vc3RtL2x0ZGMuaA0KPiArKysgYi9kcml2ZXJzL2dwdS9kcm0vc3RtL2x0ZGMu
+aA0KPiBAQCAtMTksNiArMTksNyBAQCBzdHJ1Y3QgbHRkY19jYXBzIHsNCj4gICAJY29uc3QgdTMy
+ICpwaXhfZm10X2h3OwkvKiBzdXBwb3J0ZWQgcGl4ZWwgZm9ybWF0cyAqLw0KPiAgIAlib29sIG5v
+bl9hbHBoYV9vbmx5X2wxOyAvKiBub24tbmF0aXZlIG5vLWFscGhhIGZvcm1hdHMgb24gbGF5ZXIg
+MSAqLw0KPiAgIAlpbnQgcGFkX21heF9mcmVxX2h6OwkvKiBtYXggZnJlcXVlbmN5IHN1cHBvcnRl
+ZCBieSBwYWQgKi8NCj4gKwlpbnQgbmJfaXJxOwkJLyogbnVtYmVyIG9mIGhhcmR3YXJlIGludGVy
+cnVwdHMgKi8NCj4gICB9Ow0KPiAgIA0KPiAgICNkZWZpbmUgTFREQ19NQVhfTEFZRVIJNA0KPiA=
