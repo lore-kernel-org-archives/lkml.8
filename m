@@ -7,77 +7,78 @@ X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22BF8C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 11:45:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8E99C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 11:46:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6FF824685
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 11:45:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C59824673
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 11:46:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AN5LvWBI"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CTQB2nh9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729275AbgAWLp5 (ORCPT
+        id S1729293AbgAWLqF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 06:45:57 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:35853 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726729AbgAWLpz (ORCPT
+        Thu, 23 Jan 2020 06:46:05 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:28096 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729276AbgAWLqF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 06:45:55 -0500
+        Thu, 23 Jan 2020 06:46:05 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579779954;
+        s=mimecast20190719; t=1579779963;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=OrVyjo0oqyywlytVkCXxXhcblo/6CF8e8F0Ha+//2Ek=;
-        b=AN5LvWBImkhc3bO0epvNrVk7tpkZMfvMrhrlUNnCM28Xr8mvUO5z0HOAoeWiKyyOxP5Niu
-        0F9Cz2fapzMM8e5kQP6PoWvuCiuZB//7U4r4wfHZsLYDvHri8IkrbRXAgjialFoOL3hNeX
-        f3NSBIGGf81mCL3vU3ClteiNvh2UNRE=
+        bh=TINMfTTXVCZiZEAT1DE8Sul0vKADWHazf6vsI5AdTmI=;
+        b=CTQB2nh9Hac6trZpUpaX8oLTVQVGuCGKtEwYStyQH56z2FB3RpKNrt3U7WZwYD8PiwVdNo
+        yiDraA2wDoaFKkq47MrHdx4WM1pODHsGlflKIL+727fvML6zaoiI3Y0rZyZyC8UDcy6XuS
+        LB30GMo8a6M1Z4AGx5yrSl1cDAn9vDE=
 Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
  [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-193-ZJNA4eyTNkCCOvPPuycR7g-1; Thu, 23 Jan 2020 06:45:50 -0500
-X-MC-Unique: ZJNA4eyTNkCCOvPPuycR7g-1
-Received: by mail-wm1-f71.google.com with SMTP id l11so615574wmi.0
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jan 2020 03:45:50 -0800 (PST)
+ us-mta-188-gAxVici-M7i2NKSGApJkQg-1; Thu, 23 Jan 2020 06:46:02 -0500
+X-MC-Unique: gAxVici-M7i2NKSGApJkQg-1
+Received: by mail-wm1-f71.google.com with SMTP id q26so471439wmq.8
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jan 2020 03:46:01 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=OrVyjo0oqyywlytVkCXxXhcblo/6CF8e8F0Ha+//2Ek=;
-        b=pUJFIgi48HhG/ZbRiwHtQYe7o6TwMoW8UkgUtOOsX+LpZ/2a9K4leMq5Ujo/BuIKTI
-         fNgtIhzpROAYNc4mTLhamR5hfoI/4iMgGrllmZBNuC8Dy3l+tXcVSsMDwFtRhuRJLc1K
-         owUG3sH1LrJXk8617EU/RGbImmpQyQsDvNiiYbgDPW8QqSsggmKjK5vVBJMIjXbd1/vf
-         irLJa4MBSUyrchu8qNhimqDC910FPhp3IjhsY5otGRChw1yRPfDQOBXmGJAfki7REy4K
-         k81ffj3hJk8Rk/7+yCdJQSj6P/nap4gZD1MhZHP9eAXQvOHHzEd5VyMHzt0TWxV7gnI5
-         6O8w==
-X-Gm-Message-State: APjAAAVgQSdRYP7B5++IAI9msI9bAa6iYddd4fo33ajqvgx+BjA9MgpZ
-        o6ojPFsOTQ/ltUpl/f/jIppZGG+WLphVRZE83zyvTMToZMnhkVnzqidKKRNQrj9Dd0Bq6aKnsrl
-        YVgG98R+Jtefz9Lw5BqYfDtxx
-X-Received: by 2002:a1c:67c3:: with SMTP id b186mr3757816wmc.36.1579779949711;
-        Thu, 23 Jan 2020 03:45:49 -0800 (PST)
-X-Google-Smtp-Source: APXvYqy2/RO25x3GfNc/hah6VfoFxhZcx6jhmB2U+pGiK4uHFhpzGYFNDnmyuXKIw0WXa3XSq+SyYA==
-X-Received: by 2002:a1c:67c3:: with SMTP id b186mr3757800wmc.36.1579779949529;
-        Thu, 23 Jan 2020 03:45:49 -0800 (PST)
+        bh=TINMfTTXVCZiZEAT1DE8Sul0vKADWHazf6vsI5AdTmI=;
+        b=Ba7EZmUTYk5aMj44muS8wUldLpkm0wCFa9uDH2bHX6Jx4sxlzZtoXwHieTowvZo84/
+         jTfPlTiu9KB37u91jr9U5u5laQXCRBQqV0gTlYe/i7iOamIy7fOT8uShmMhcX0MMRqjI
+         h1lfbBkKRzjCdysXV4VD/yra0o0O0bvr8Ce5vwWg9USckxwBeyAOvBNK+FIff5W+fjJU
+         kW8zpbzDrkYeOXOiz4ZvqEhFTSnAxnYR87ldJpzicJew1fw9NlaM00Kz8S8y4pzpgG26
+         YttWtghxgZb0UrmsSEVA1lnufMPnYQ5p2OyOqjbZ3i9kTxrkGstU7PJ31CKJKE5L/Gm1
+         OyfQ==
+X-Gm-Message-State: APjAAAUivKF3oXMXw5ND9e/mlLLLMS/v6wWCN/74001CShLELpn8nmj0
+        KcLV/IiPwF6N2aDDotKZ1dblQCzfrQdQd/tJ6YxIUrjwmomMy6jhTDmZRc6uHpYyEU87sdx8xGn
+        QizqbPceUfOHy4AB8xFJlNLw+
+X-Received: by 2002:a1c:f218:: with SMTP id s24mr3979411wmc.128.1579779960889;
+        Thu, 23 Jan 2020 03:46:00 -0800 (PST)
+X-Google-Smtp-Source: APXvYqwVnwCiCN3NOxdGWRBJAtDImJ6Nrbwlr+9vtghF6EhH/gepoqxynALefGm704TwHdxrrc4Fsg==
+X-Received: by 2002:a1c:f218:: with SMTP id s24mr3979384wmc.128.1579779960668;
+        Thu, 23 Jan 2020 03:46:00 -0800 (PST)
 Received: from [192.168.1.81] (host81-140-166-164.range81-140.btcentralplus.com. [81.140.166.164])
-        by smtp.gmail.com with ESMTPSA id x11sm2750016wre.68.2020.01.23.03.45.48
+        by smtp.gmail.com with ESMTPSA id z3sm2609010wrs.94.2020.01.23.03.45.59
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 23 Jan 2020 03:45:49 -0800 (PST)
-Subject: Re: [RFC v5 08/57] objtool: Make ORC support optional
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
+        Thu, 23 Jan 2020 03:46:00 -0800 (PST)
+Subject: Re: [RFC v5 11/57] objtool: Abstract alternative special case
+ handling
+To:     Peter Zijlstra <peterz@infradead.org>
 Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        peterz@infradead.org, raphael.gault@arm.com,
+        jpoimboe@redhat.com, raphael.gault@arm.com,
         catalin.marinas@arm.com, will@kernel.org
 References: <20200109160300.26150-1-jthierry@redhat.com>
- <20200109160300.26150-9-jthierry@redhat.com>
- <20200121163747.kbasjd2wn4q44vcf@treble>
+ <20200109160300.26150-12-jthierry@redhat.com>
+ <20200120145401.GB14897@hirez.programming.kicks-ass.net>
 From:   Julien Thierry <jthierry@redhat.com>
-Message-ID: <7d1df0d8-87ee-01c1-1fdb-7d25e1dc4f5b@redhat.com>
-Date:   Thu, 23 Jan 2020 11:45:48 +0000
+Message-ID: <b5066ff8-9bfc-635f-a4fd-2ed3e20271b6@redhat.com>
+Date:   Thu, 23 Jan 2020 11:45:58 +0000
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.3.0
 MIME-Version: 1.0
-In-Reply-To: <20200121163747.kbasjd2wn4q44vcf@treble>
+In-Reply-To: <20200120145401.GB14897@hirez.programming.kicks-ass.net>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -88,26 +89,61 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-On 1/21/20 4:37 PM, Josh Poimboeuf wrote:
-> On Thu, Jan 09, 2020 at 04:02:11PM +0000, Julien Thierry wrote:
->> diff --git a/tools/objtool/Makefile b/tools/objtool/Makefile
->> index d2a19b0bc05a..24d653e0b6ec 100644
->> --- a/tools/objtool/Makefile
->> +++ b/tools/objtool/Makefile
->> @@ -6,6 +6,10 @@ ifeq ($(ARCH),x86_64)
->>   ARCH := x86
->>   endif
->>   
->> +ifeq ($(ARCH),x86)
->> +OBJTOOL_ORC := y
->> +endif
+On 1/20/20 2:54 PM, Peter Zijlstra wrote:
+> On Thu, Jan 09, 2020 at 04:02:14PM +0000, Julien Thierry wrote:
+>> diff --git a/tools/objtool/arch/x86/arch_special.c b/tools/objtool/arch/x86/arch_special.c
+>> new file mode 100644
+>> index 000000000000..6dba31f419d0
+>> --- /dev/null
+>> +++ b/tools/objtool/arch/x86/arch_special.c
+>> @@ -0,0 +1,34 @@
+>> +// SPDX-License-Identifier: GPL-2.0-or-later
+>> +#include "../../special.h"
+>> +#include "../../builtin.h"
+>> +
+>> +void arch_handle_alternative(unsigned short feature, struct special_alt *alt)
+>> +{
+>> +	/*
+>> +	 * If UACCESS validation is enabled; force that alternative;
+>> +	 * otherwise force it the other way.
+>> +	 *
+>> +	 * What we want to avoid is having both the original and the
+>> +	 * alternative code flow at the same time, in that case we can
+>> +	 * find paths that see the STAC but take the NOP instead of
+>> +	 * CLAC and the other way around.
+>> +	 */
 > 
-> I think this should check SRCARCH instead, a la:
+> That comment ^,
 > 
->    https://lkml.kernel.org/r/d5d11370ae116df6c653493acd300ec3d7f5e925.1579543924.git.jpoimboe@redhat.com
+>> +	switch (feature) {
+>> +	case X86_FEATURE_SMAP:
+> 
+> goes here >
 > 
 
-Yes, thanks for pointing it out.
+Good catch, I'll fix that.
+
+>> +		if (uaccess)
+>> +			alt->skip_orig = true;
+>> +		else
+>> +			alt->skip_alt = true;
+>> +		break;
+> 
+>> +	case X86_FEATURE_POPCNT:
+>> +		/*
+>> +		 * It has been requested that we don't validate the !POPCNT
+>> +		 * feature path which is a "very very small percentage of
+>> +		 * machines".
+>> +		 */
+>> +		alt->skip_orig = true;
+>> +		break;
+>> +	default:
+>> +		break;
+>> +	}
+>> +}
+> 
+
+Thanks,
 
 -- 
 Julien Thierry
