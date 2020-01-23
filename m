@@ -2,122 +2,320 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EF51C33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 10:10:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91BB6C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 10:11:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7FF52467B
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 10:10:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="lEZ6F2Y3"
+	by mail.kernel.org (Postfix) with ESMTP id 59C392253D
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 10:11:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726703AbgAWKKF (ORCPT
+        id S1726772AbgAWKLn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 05:10:05 -0500
-Received: from mail-wr1-f54.google.com ([209.85.221.54]:42463 "EHLO
-        mail-wr1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726188AbgAWKKE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 05:10:04 -0500
-Received: by mail-wr1-f54.google.com with SMTP id q6so2363364wro.9
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jan 2020 02:10:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=CPtiGh3pLVRqM/RhdEdGDHKOR3MHqHacHg8X7Y8s2e4=;
-        b=lEZ6F2Y3XuFJJ+f1L3xrMx1z5WAfHx5lpS0EBr9opnokRMqukIqIqhwGGeKAPwlCcL
-         JGuqDB/aIDlkL/hUmWsag1p+ar/UNmmzmTrPH2dbu9i+EDK9G14srPRYivZk7CuWIo7c
-         9nncpMgC3UoI9fXRMEvtxn5bWbO0DkMBSsbbIkUhDwqKrF43+4tb7+C7Qt+B+Yolhjjr
-         VEbsfQsB+n6c7my2S4Cgj3Hjq/FJ82bqeBGgldw1ZvUgDuQCKyA9BlkdbybHOuKkGUEH
-         8cPT1tCIT1WiCYgZXDcg9GS33SWuWvXWesDTkAMg2y0WlivRUtPrblssZrLY83zwSdv4
-         3Nhg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=CPtiGh3pLVRqM/RhdEdGDHKOR3MHqHacHg8X7Y8s2e4=;
-        b=OOk/vdtBPyKlR/Mel92iDXvONmfL/CZPKPDPOQoARWascXxGAAQ8p45HGExLNRl4yf
-         Os/ivfyIO7MCZlcX6E6dFppiNvSk9tnP8fbrr6jPChIrVQAPPMOVEshirh00sjxZY9ax
-         qSVnLi/Z0LmIZMwbGjAWCeGaEX18SeUrREXcV3kLdQM+RIaGQ9ah8IFKoYTNu/tTe6OW
-         vsdDKNi58XSsPjPPSvrcXpDCwNwRXFlBkdwqIFCtm6XUj3W1UKuZqURg+gkWcNBi9svJ
-         m5VZzhXBxhzqiPDMaFbiUCb1g3Z04GTSh8C6rzXHDBnGf9n6Y1Sjv1LN0Ez95WmsBgRa
-         u95w==
-X-Gm-Message-State: APjAAAWHrnfTKVFaTeLfaZnFvtdjCFLM8jFReHWy1fmA0GGK9SdgKIrN
-        bjeHbdWW/5LXs6OnXiGFHqF0Lg==
-X-Google-Smtp-Source: APXvYqysNIh/eaPEJ9Qrn6D+jgs5CR8M8Bul4ynZ8ZQyY/NCkS8niuCrkSUJIY9lJjgLK1bUNuvMiA==
-X-Received: by 2002:a5d:484f:: with SMTP id n15mr16446703wrs.365.1579774202577;
-        Thu, 23 Jan 2020 02:10:02 -0800 (PST)
-Received: from Red ([2a01:cb1d:3d5:a100:2e56:dcff:fed2:c6d6])
-        by smtp.googlemail.com with ESMTPSA id q6sm2551467wrx.72.2020.01.23.02.10.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Jan 2020 02:10:02 -0800 (PST)
-Date:   Thu, 23 Jan 2020 11:10:00 +0100
-From:   LABBE Corentin <clabbe@baylibre.com>
-To:     arei.gonglei@huawei.com, mst@redhat.com, jasowang@redhat.com,
-        herbert@gondor.apana.org.au, davem@davemloft.net,
-        virtualization@lists.linux-foundation.org
-Cc:     linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [CRASH] crypto: virtio: crash when modprobing tcrypt on 5.5-rc7 /
- next-20200122
-Message-ID: <20200123101000.GB24255@Red>
+        Thu, 23 Jan 2020 05:11:43 -0500
+Received: from mga05.intel.com ([192.55.52.43]:59628 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726188AbgAWKLn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jan 2020 05:11:43 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Jan 2020 02:11:42 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,353,1574150400"; 
+   d="scan'208";a="400293430"
+Received: from joy-optiplex-7040.sh.intel.com (HELO joy-OptiPlex-7040) ([10.239.13.16])
+  by orsmga005.jf.intel.com with ESMTP; 23 Jan 2020 02:11:40 -0800
+Date:   Thu, 23 Jan 2020 05:02:27 -0500
+From:   Yan Zhao <yan.y.zhao@intel.com>
+To:     Alex Williamson <alex.williamson@redhat.com>
+Cc:     "Tian, Kevin" <kevin.tian@intel.com>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "peterx@redhat.com" <peterx@redhat.com>,
+        "zhenyuw@linux.intel.com" <zhenyuw@linux.intel.com>,
+        "pbonzini@redhat.com" <pbonzini@redhat.com>,
+        "intel-gvt-dev@lists.freedesktop.org" 
+        <intel-gvt-dev@lists.freedesktop.org>
+Subject: Re: [PATCH v2 2/2] drm/i915/gvt: subsitute kvm_read/write_guest with
+ vfio_dma_rw
+Message-ID: <20200123100227.GJ1759@joy-OptiPlex-7040>
+Reply-To: Yan Zhao <yan.y.zhao@intel.com>
+References: <20200115035455.12417-1-yan.y.zhao@intel.com>
+ <20200115130651.29d7e9e0@w520.home>
+ <20200116054941.GB1759@joy-OptiPlex-7040>
+ <20200116083729.40983f38@w520.home>
+ <20200119100637.GD1759@joy-OptiPlex-7040>
+ <20200120130157.0ee7042d@w520.home>
+ <20200121081207.GE1759@joy-OptiPlex-7040>
+ <20200121095116.05eeae14@w520.home>
+ <20200121221038.GH1759@joy-OptiPlex-7040>
+ <20200122030758.GI1759@joy-OptiPlex-7040>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200122030758.GI1759@joy-OptiPlex-7040>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello
+On Wed, Jan 22, 2020 at 11:07:58AM +0800, Yan Zhao wrote:
+> On Wed, Jan 22, 2020 at 06:10:38AM +0800, Yan Zhao wrote:
+> > On Wed, Jan 22, 2020 at 12:51:16AM +0800, Alex Williamson wrote:
+> > > On Tue, 21 Jan 2020 03:12:07 -0500
+> > > Yan Zhao <yan.y.zhao@intel.com> wrote:
+> > > 
+> > > > On Tue, Jan 21, 2020 at 04:01:57AM +0800, Alex Williamson wrote:
+> > > > > On Sun, 19 Jan 2020 05:06:37 -0500
+> > > > > Yan Zhao <yan.y.zhao@intel.com> wrote:
+> > > > >   
+> > > > > > On Thu, Jan 16, 2020 at 11:37:29PM +0800, Alex Williamson wrote:  
+> > > > > > > On Thu, 16 Jan 2020 00:49:41 -0500
+> > > > > > > Yan Zhao <yan.y.zhao@intel.com> wrote:
+> > > > > > >     
+> > > > > > > > On Thu, Jan 16, 2020 at 04:06:51AM +0800, Alex Williamson wrote:    
+> > > > > > > > > On Tue, 14 Jan 2020 22:54:55 -0500
+> > > > > > > > > Yan Zhao <yan.y.zhao@intel.com> wrote:
+> > > > > > > > >       
+> > > > > > > > > > As a device model, it is better to read/write guest memory using vfio
+> > > > > > > > > > interface, so that vfio is able to maintain dirty info of device IOVAs.
+> > > > > > > > > > 
+> > > > > > > > > > Compared to kvm interfaces kvm_read/write_guest(), vfio_dma_rw() has ~600
+> > > > > > > > > > cycles more overhead on average.
+> > > > > > > > > > 
+> > > > > > > > > > -------------------------------------
+> > > > > > > > > > |    interface     | avg cpu cycles |
+> > > > > > > > > > |-----------------------------------|
+> > > > > > > > > > | kvm_write_guest  |     1554       |
+> > > > > > > > > > | ----------------------------------|
+> > > > > > > > > > | kvm_read_guest   |     707        |
+> > > > > > > > > > |-----------------------------------|
+> > > > > > > > > > | vfio_dma_rw(w)   |     2274       |
+> > > > > > > > > > |-----------------------------------|
+> > > > > > > > > > | vfio_dma_rw(r)   |     1378       |
+> > > > > > > > > > -------------------------------------      
+> > > > > > > > > 
+> > > > > > > > > In v1 you had:
+> > > > > > > > > 
+> > > > > > > > > -------------------------------------
+> > > > > > > > > |    interface     | avg cpu cycles |
+> > > > > > > > > |-----------------------------------|
+> > > > > > > > > | kvm_write_guest  |     1546       |
+> > > > > > > > > | ----------------------------------|
+> > > > > > > > > | kvm_read_guest   |     686        |
+> > > > > > > > > |-----------------------------------|
+> > > > > > > > > | vfio_iova_rw(w)  |     2233       |
+> > > > > > > > > |-----------------------------------|
+> > > > > > > > > | vfio_iova_rw(r)  |     1262       |
+> > > > > > > > > -------------------------------------
+> > > > > > > > > 
+> > > > > > > > > So the kvm numbers remained within +0.5-3% while the vfio numbers are
+> > > > > > > > > now +1.8-9.2%.  I would have expected the algorithm change to at least
+> > > > > > > > > not be worse for small accesses and be better for accesses crossing
+> > > > > > > > > page boundaries.  Do you know what happened?
+> > > > > > > > >      
+> > > > > > > > I only tested the 4 interfaces in GVT's environment, where most of the
+> > > > > > > > guest memory accesses are less than one page.
+> > > > > > > > And the different fluctuations should be caused by the locks.
+> > > > > > > > vfio_dma_rw contends locks with other vfio accesses which are assumed to
+> > > > > > > > be abundant in the case of GVT.    
+> > > > > > > 
+> > > > > > > Hmm, so maybe it's time to convert vfio_iommu.lock from a mutex to a
+> > > > > > > rwsem?  Thanks,
+> > > > > > >     
+> > > > > > 
+> > > > > > hi Alex
+> > > > > > I tested your rwsem patches at (https://lkml.org/lkml/2020/1/16/1869).
+> > > > > > They works without any runtime error at my side. :) 
+> > > > > > However, I found out that the previous fluctuation may be because I didn't
+> > > > > > take read/write counts in to account.
+> > > > > > For example. though the two tests have different avg read/write cycles,
+> > > > > > their average cycles are almost the same.
+> > > > > >  ______________________________________________________________________
+> > > > > > |        | avg read |            | avg write |            |            |
+> > > > > > |        | cycles   | read cnt   | cycles    | write cnt  | avg cycles |
+> > > > > > |----------------------------------------------------------------------|
+> > > > > > | test 1 |   1339   | 29,587,120 |  2258     | 17,098,364 |    1676    |
+> > > > > > | test 2 |   1340   | 28,454,262 |  2238     | 16,501,788 |    1670    |
+> > > > > >  ----------------------------------------------------------------------
+> > > > > > 
+> > > > > > After measuring the exact read/write cnt and cycles of a specific workload,
+> > > > > > I get below findings:
+> > > > > > 
+> > > > > > (1) with single VM running glmark2 inside.
+> > > > > > glmark2: 40M+ read+write cnt, among which 63% is read.
+> > > > > > among reads, 48% is of PAGE_SIZE, the rest is less than a page.
+> > > > > > among writes, 100% is less than a page.
+> > > > > > 
+> > > > > >  __________________________________________________
+> > > > > > |       cycles         | read | write |  avg | inc |
+> > > > > > |--------------------------------------------------|
+> > > > > > | kvm_read/write_page  |  694 |  1506 |  993 |  /  |
+> > > > > > |--------------------------------------------------|
+> > > > > > |  vfio_dma_rw(mutex)  | 1340 |  2248 | 1673 | 680 |
+> > > > > > |--------------------------------------------------|
+> > > > > > | vfio_dma_rw(rwsem r) | 1323 |  2198 | 1645 | 653 |
+> > > > > >  ---------------------------------------------------
+> > > > > > 
+> > > > > > so vfio_dma_rw generally has 650+ more cycles per each read/write.
+> > > > > > While kvm->srcu is of 160 cycles on average with one vm is running, the
+> > > > > > cycles spending on locks for vfio_dma_rw spread like this:
+> > > > > >  ___________________________
+> > > > > > |        cycles       | avg |
+> > > > > > |---------------------------|
+> > > > > > |     iommu->lock     | 117 |
+> > > > > > |---------------------------|
+> > > > > > |   vfio.group_lock   | 108 |
+> > > > > > |---------------------------|
+> > > > > > | group->unbound_lock | 114 |
+> > > > > > |---------------------------|
+> > > > > > |  group->device_lock | 115 |
+> > > > > > |---------------------------|
+> > > > > > |     group->mutex    | 113 |
+> > > > > >  ---------------------------
+> > > > > > 
+> > > > > > I measured the cycles for a mutex without any contention is 104 cycles
+> > > > > > on average (including time for get_cycles() and measured in the same way
+> > > > > > as other locks). So the contention of a single lock in a single vm
+> > > > > > environment is light. probably because there's a vgpu lock hold in GVT already.
+> > > > > > 
+> > > > > > (2) with two VMs each running glmark2 inside.
+> > > > > > The contention increases a little.
+> > > > > > 
+> > > > > >  ___________________________________________________
+> > > > > > |       cycles         | read | write |  avg | inc  |
+> > > > > > |---------------------------------------------------|
+> > > > > > | kvm_read/write_page  | 1035 |  1832 | 1325 |  /   |
+> > > > > > |---------------------------------------------------|
+> > > > > > |  vfio_dma_rw(mutex)  | 2104 |  2886 | 2390 | 1065 |
+> > > > > > |---------------------------------------------------|
+> > > > > > | vfio_dma_rw(rwsem r) | 1965 |  2778 | 2260 | 935  |
+> > > > > >  ---------------------------------------------------
+> > > > > > 
+> > > > > > 
+> > > > > >  -----------------------------------------------
+> > > > > > |     avg cycles       |   one VM   |  two VMs  |
+> > > > > > |-----------------------------------------------|
+> > > > > > |  iommu lock (mutex)  |     117    |   150     |
+> > > > > > |-----------------------------------|-----------|
+> > > > > > | iommu lock (rwsem r) |     117    |   156     |
+> > > > > > |-----------------------------------|-----------|
+> > > > > > |   kvm->srcu          |     160    |   213     |
+> > > > > >  -----------------------------------------------
+> > > > > > 
+> > > > > > In the kvm case, avg cycles increased 332 cycles, while kvm->srcu only costed
+> > > > > > 213 cycles. The rest 109 cycles may be spent on atomic operations.
+> > > > > > But I didn't measure them, as get_cycles() operation itself would influence final
+> > > > > > cycles by ~20 cycles.  
+> > > > > 
+> > > > > It seems like we need to extend the vfio external user interface so
+> > > > > that GVT-g can hold the group and container user references across
+> > > > > multiple calls.  For instance if we had a
+> > > > > vfio_group_get_external_user_from_dev() (based on
+> > > > > vfio_group_get_external_user()) then i915 could get an opaque
+> > > > > vfio_group pointer which it could use to call vfio_group_dma_rw() which
+> > > > > would leave us with only the iommu rw_sem locking.  i915 would release
+> > > > > the reference with vfio_group_put_external_user() when the device is
+> > > > > released.  The same could be done with the pin pages interface to
+> > > > > streamline that as well.  Thoughts?  Thanks,
+> > > > >  
+> > > > hi Alex,
+> > > > it works!
+> > > 
+> > > Hurrah!
+> > > 
+> > > > now the average vfio_dma_rw cycles can reduced to 1198. 
+> > > > one thing I want to propose is that, in sight of dma->task is always user
+> > > > space process, instead of calling get_task_mm(dma->task), can we just use
+> > > > "mmget_not_zero(dma->task->mm)"? in this way, the avg cycles can
+> > > > further reduce to 1051.
+> > > 
+> > > I'm not an expert there.  As noted in the type1 code we hold a
+> > > reference to the task because it's not advised to hold a long term
+> > > reference to the mm, so do we know we can look at task->mm without
+> > > acquiring task_lock()?  It's possible this is safe, but it's not
+> > > abundantly obvious to me.  Please research further and provide
+> > > justification if you think it's correct.  Thanks,
+> > > 
+> > in get_task_mm, 
+> > struct mm_struct *get_task_mm(struct task_struct *task)
+> > {
+> >         struct mm_struct *mm;
+> > 
+> >         task_lock(task);
+> >         mm = task->mm;
+> >         if (mm) {
+> >                 if (task->flags & PF_KTHREAD)
+> >                         mm = NULL;
+> >                 else
+> >                         mmget(mm);
+> >         }
+> >         task_unlock(task);
+> >         return mm;
+> > }
+> > task lock is hold only during the call, so the purpose of it is to
+> > ensure task->flags and task->mm is not changed or gone before mmget(mm)
+> > or function return.
+> > so, if we know for sure the task always has no flag PF_THREAD,
+> > then we only need to ensure mm is not gone before mmget(mm) is done.
+> > 
+> > static inline void mmget(struct mm_struct *mm)
+> > {
+> >         atomic_inc(&mm->mm_users);
+> > }
+> > 
+> > static inline bool mmget_not_zero(struct mm_struct *mm)
+> > {
+> >         return atomic_inc_not_zero(&mm->mm_users);
+> > }
+> > 
+> > the atomic_inc_not_zero() in  mmget_not_zero can ensure mm is not gone
+> > before its ref count inc.
+> > 
+> > So, I think the only thing we need to make sure is dma->task is not a
+> > kernel thread.
+> > Do you think I can make this assumption?
+> > 
+> hi Alex
+> Maybe I can still test PF_KTHREAD without holding task_lock
+> (task->alloc_lock), as it is only used to protect
+> "->fs, ->files, ->mm, ->group_info, ->comm, keyring
+> subscriptions and synchronises with wait4().  Also used in procfs.  Also
+> pins the final release of task.io_context.  Also protects ->cpuset and 
+> ->cgroup.subsys[]. And ->vfork_done."
+> 
+> I checked elsewhere in kernel, e.g.
+> try_to_wake_up
+> 	|->select_task_rq
+> 		|->is_per_cpu_kthread
+> 			|->if (!(p->flags & PF_KTHREAD))
+> task->alloc_lock is not hold there.
+> 
+> So, I would replace get_task_mm(dma->task) into two steps:
+> (1) check dma->task->flags & PF_KTHREAD, and (2) mmget_not_zero(mm).
+> 
+> I'll do more tests and send out new patches after Chinese new year.
+> 
+> Thanks
+> Yan
+>
+hi Alex
+after a second thought, I find out that the task->alloc_lock cannot be
+dropped, as there are chances that dma->task->mm is set to null between
+checking "dma->task->mm != NULL" and "mmget_not_zero(dma->task->mm)".
 
-When modprobing tcrypt on qemu 4.1.0 I get a kernel panic on 5.5-rc7 and next-20200122
-qemu is started by:
-/usr/bin/qemu-system-x86_64 -cpu host -enable-kvm -nographic -net nic,model=e1000,macaddr=52:54:00:12:34:58 -net tap -m 512 -monitor none -object cryptodev-backend-builtin,id=cryptodev0 -device virtio-crypto-pci,id=crypto0,cryptodev=cryptodev0 -append 'console=ttyS0 root=/dev/ram0 ip=dhcp' -kernel /var/lib/lava/dispatcher/tmp/41332/deployimages-td18675m/kernel/bzImage -initrd /var/lib/lava/dispatcher/tmp/41332/deployimages-td18675m/ramdisk/rootfs.cpio.gz -drive format=qcow2,file=/var/lib/lava/dispatcher/tmp/41332/apply-overlay-guest-icy4k1ol/lava-guest.qcow2,media=disk,if=ide,id=lavatest
+The chances of this condition can be increased by adding a msleep in-between
+the two lines of code to mimic possible task schedule. Then it was proved that
+dma->task->mm could be set to NULL in exit_mm() by killing QEMU.
 
-[  112.771925] general protection fault: 0000 [#1] SMP PTI
-[  112.772686] CPU: 0 PID: 126 Comm: virtio0-engine Not tainted 5.5.0-rc7+ #1
-[  112.773576] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS ?-20190711_202441-buildvm-armv7-10.arm.fedoraproject.org-2.fc31 04/01/2014
-[  112.775319] RIP: 0010:sg_next+0x0/0x20
-[  112.775821] Code: cc cc cc cc cc cc cc cc cc cc c7 47 10 00 00 00 00 89 57 0c 48 89 37 89 4f 08 c3 0f 1f 44 00 00 66 2e 0f 1f 84 00 00 00 00 00 <f6> 07 02 75 17 48 8b 57 20 48 8d 47 20 48 89 d1 48 83 e1 fc 83 e2
-[  112.778330] RSP: 0018:ffffa92440237d90 EFLAGS: 00010006
-[  112.779071] RAX: fefefefe00000000 RBX: 000000000000000a RCX: fefefefe00000000
-[  112.780081] RDX: 0000000000000001 RSI: ffff9b19da1a2180 RDI: fefefefe00000000
-[  112.781081] RBP: ffff9b19da1a2198 R08: ffff9b19dfb24ee8 R09: 0000000000000a20
-[  112.782079] R10: ffff9b19da125010 R11: 0000000000000000 R12: ffff9b19da1a21b8
-[  112.783079] R13: 0000000000000003 R14: ffff9b19da1a2180 R15: 0000000000000004
-[  112.784077] FS:  0000000000000000(0000) GS:ffff9b19de400000(0000) knlGS:0000000000000000
-[  112.785202] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[  112.786030] CR2: 00007f18a157b050 CR3: 000000001040a004 CR4: 0000000000060ef0
-[  112.787034] Call Trace:
-[  112.787393]  virtqueue_add_sgs+0x4c/0x90
-[  112.787998]  virtio_crypto_skcipher_crypt_req+0x310/0x3e0
-[  112.788817]  crypto_pump_work+0x10c/0x240
-[  112.789420]  ? __kthread_init_worker+0x50/0x50
-[  112.790082]  kthread_worker_fn+0x89/0x180
-[  112.790690]  kthread+0x10e/0x130
-[  112.791182]  ? kthread_park+0x80/0x80
-[  112.791736]  ret_from_fork+0x35/0x40
-[  112.792282] Modules linked in: cts lzo salsa20_generic camellia_x86_64 camellia_generic fcrypt pcbc tgr192 anubis wp512 khazad tea michael_mic arc4 cast6_generic cast5_generic cast_common deflate sha512_ssse3 sha512_generic cfb ofb serpent_sse2_x86_64 serpent_generic lrw twofish_x86_64_3way twofish_x86_64 crypto_simd cryptd glue_helper twofish_generic twofish_common blowfish_x86_64 blowfish_generic blowfish_common md4 tcrypt(+)
-[  112.797652] ---[ end trace 4a8142d4a08c2518 ]---
-[  112.798320] RIP: 0010:sg_next+0x0/0x20
-[  112.798865] Code: cc cc cc cc cc cc cc cc cc cc c7 47 10 00 00 00 00 89 57 0c 48 89 37 89 4f 08 c3 0f 1f 44 00 00 66 2e 0f 1f 84 00 00 00 00 00 <f6> 07 02 75 17 48 8b 57 20 48 8d 47 20 48 89 d1 48 83 e1 fc 83 e2
-[  112.801452] RSP: 0018:ffffa92440237d90 EFLAGS: 00010006
-[  112.802189] RAX: fefefefe00000000 RBX: 000000000000000a RCX: fefefefe00000000
-[  112.803190] RDX: 0000000000000001 RSI: ffff9b19da1a2180 RDI: fefefefe00000000
-[  112.804192] RBP: ffff9b19da1a2198 R08: ffff9b19dfb24ee8 R09: 0000000000000a20
-[  112.805201] R10: ffff9b19da125010 R11: 0000000000000000 R12: ffff9b19da1a21b8
-[  112.806195] R13: 0000000000000003 R14: ffff9b19da1a2180 R15: 0000000000000004
-[  112.807222] FS:  0000000000000000(0000) GS:ffff9b19de400000(0000) knlGS:0000000000000000
-[  112.808352] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[  112.809169] CR2: 00007f18a157b050 CR3: 000000001040a004 CR4: 0000000000060ef0
+So I have to keep the call to get_task_mm().  :)
 
-I have tested also 5.4.14 
-and I got random freeze with:
-qemu-system-x86_64: virtio: zero sized buffers are not allowed
+Thanks
+Yan
 
-Regards
+
