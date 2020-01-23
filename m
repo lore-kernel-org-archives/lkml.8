@@ -2,102 +2,151 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61F9AC3F68F
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 23:09:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF4D8C33CAA
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 23:10:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3592C21835
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 23:09:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A99E721835
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 23:10:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EGal7W4O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729752AbgAWXJr (ORCPT
+        id S1729777AbgAWXKq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 18:09:47 -0500
-Received: from www62.your-server.de ([213.133.104.62]:51846 "EHLO
-        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727056AbgAWXJq (ORCPT
+        Thu, 23 Jan 2020 18:10:46 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:33640 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727056AbgAWXKp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 18:09:46 -0500
-Received: from sslproxy06.your-server.de ([78.46.172.3])
-        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89_1)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1iulbZ-0003Iv-NT; Fri, 24 Jan 2020 00:09:41 +0100
-Received: from [178.197.248.20] (helo=pc-9.home)
-        by sslproxy06.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1iulbZ-000TS6-9W; Fri, 24 Jan 2020 00:09:41 +0100
-Subject: Re: [PATCH v2 bpf-next 1/3] bpf: Add bpf_perf_prog_read_branches()
- helper
-To:     Andrii Nakryiko <andriin@fb.com>, Daniel Xu <dxu@dxuuu.xyz>,
-        John Fastabend <john.fastabend@gmail.com>,
-        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
-        "ast@kernel.org" <ast@kernel.org>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Kernel Team <Kernel-team@fb.com>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "acme@kernel.org" <acme@kernel.org>
-References: <C03IYDPABSU1.1C6OL4DJ7ID1H@dlxu-fedora-R90QNFJV>
- <2b11467f-9d93-8109-4561-d25ac605ef10@fb.com>
-From:   Daniel Borkmann <daniel@iogearbox.net>
-Message-ID: <34ee093c-9757-e8dd-bc06-80398822f27e@iogearbox.net>
-Date:   Fri, 24 Jan 2020 00:09:40 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Thu, 23 Jan 2020 18:10:45 -0500
+Received: by mail-wr1-f67.google.com with SMTP id b6so5249513wrq.0;
+        Thu, 23 Jan 2020 15:10:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=J4auLfeTWYpfRnRGmALkFYqcKSPLJ0m/g2ODa3jrK1c=;
+        b=EGal7W4OAs1ShOUeFk8DBOF/grFbVGnHDqKtZt6ZKvoeae2FHLK346srFokFr8Z856
+         Ud9eLuOY5qggOmoXGH8Q94pIrY36Kn7ZVzrI/Z1JqsXPAQISwuZDRevKgJINRcBq/OiL
+         LnSfkgcK872L+evBH8dMdO42/WjPU9z0IF8BZysUCHP0vjr4Huugp8qMLcYzfVST3+Co
+         CNtbKiVBbTjSIIQFUI54BTxevfmyZNQ1ebq6sMP/yjmE4o5XlVU7Nj+mTQO/363CR7CL
+         UYPgdK94BqMLuWvOLS0PLUp90LGgES+1XTVBuyEo4P9g28GZEVnDUe3SmyHl4+/j6eRC
+         RmOA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=J4auLfeTWYpfRnRGmALkFYqcKSPLJ0m/g2ODa3jrK1c=;
+        b=Fun1lxI/o94/bOQgy8wOYsJQwPQ2uM0MF04fXShLzh4vy85ttKPK63YsJHKQoxhcy7
+         boW4kgkNtZxgE8SeWW4HoUzoktVonpQM3PbIwSYrcqXLGJsUgpiIH2C1GM7r/fN+ZmB8
+         RTl2eTiD1fT8B5vAv0GftUDiMWehY1W3SuvZm2ZzuHB9Tg9PX04U8httX8dFlnYt+0rP
+         EWsRr31l9W4ME75x14XlMowzkrHuocf4jRC3ofW2bibjC5gMaUrbBFrQ1w9AcfYnL6dB
+         s+bBe1OEKD/L7hVBm4yWOOfsyn+2sX+SLkyMVWZJfSTuWsWMP6XPvuN3uRVwTzPp8B0N
+         Bjdg==
+X-Gm-Message-State: APjAAAWdSN9sRwOr175kKZMn0yFWrMinvSrYlwtICAV8wnX/6JA4nGWA
+        /YjFURX/2lkuaOmGpq1S410=
+X-Google-Smtp-Source: APXvYqzpix3/UoO0zYYUskqcPQbRVEYyW2mrxMcV8vZWmWwc5qbmGd7vTFIsErg56ocucvRROmcNVg==
+X-Received: by 2002:a5d:4f8e:: with SMTP id d14mr473570wru.112.1579821043400;
+        Thu, 23 Jan 2020 15:10:43 -0800 (PST)
+Received: from localhost.localdomain (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
+        by smtp.gmail.com with ESMTPSA id z6sm5105552wrw.36.2020.01.23.15.10.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 23 Jan 2020 15:10:42 -0800 (PST)
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Laxman Dewangan <ldewangan@nvidia.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>
+Cc:     dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v5 00/14] NVIDIA Tegra APB DMA driver fixes and improvements
+Date:   Fri, 24 Jan 2020 02:03:11 +0300
+Message-Id: <20200123230325.3037-1-digetx@gmail.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-In-Reply-To: <2b11467f-9d93-8109-4561-d25ac605ef10@fb.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Authenticated-Sender: daniel@iogearbox.net
-X-Virus-Scanned: Clear (ClamAV 0.101.4/25704/Thu Jan 23 12:37:43 2020)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/23/20 11:41 PM, Andrii Nakryiko wrote:
-> On 1/23/20 2:30 PM, Daniel Xu wrote:
->> On Thu Jan 23, 2020 at 11:23 PM, Daniel Borkmann wrote:
->> [...]
->>>
->>> Yes, so we've been following this practice for all the BPF helpers no
->>> matter
->>> which program type. Though for tracing it may be up to debate whether it
->>> makes
->>> still sense given there's nothing to be leaked here since you can read
->>> this data
->>> anyway via probe read if you'd wanted to. So we might as well get rid of
->>> the
->>> clearing for all tracing helpers.
->>
->> Right, that makes sense. Do you want me to leave it in for this patchset
->> and then remove all of them in a followup patchset?
-> 
-> I don't think we can remove that for existing tracing helpers (e.g.,
-> bpf_probe_read). There are applications that explicitly expect
-> destination memory to be zeroed out on failure. It's a BPF world's
-> memset(0).
+Hello,
 
-Due to avoiding error checks that way if the expected outcome of the buf
-is non-zero anyway? Agree, that those would break, so yeah they cannot be
-removed then.
+This series fixes some problems that I spotted recently, secondly the
+driver's code gets a cleanup. Please review and apply, thanks in advance!
 
-> I also wonder if BPF verifier has any extra assumptions for
-> ARG_PTR_TO_UNINIT_MEM w.r.t. it being initialized after helper call
-> (e.g., for liveness tracking).
+Changelog:
 
-There are no extra assumptions other than memory being written after the
-helper call (whether success or failure of the helper itself doesn't matter,
-so there are no assumptions about the content); the data that has been
-written to the buffer is marked as initialized but unknown (e.g. in
-check_stack_write() the case where reg remains NULL since value_regno is
-negative).
+v5: - Fixed touching hardware registers after RPM-suspending in the patch
+      "Keep clock enabled only during of DMA transfer", now RPM is kept
+      resumed in the tegra_dma_terminate_all() while needed. Thanks to
+      Jon Hunter for pointing at this problem in a review comment to v4.
 
-Thanks,
-Daniel
+    - The "Clean up runtime PM teardown" patch is replaced with the "Remove
+      assumptions about unavailable runtime PM" patch because I recalled that
+      now RPM is always available on all Tegra SoCs.
+
+    - The "Clean up suspend-resume" patch got a minor improvement, now
+      tasklet_kill() is invoked before checking of the busy state in
+      tegra_dma_dev_suspend(), this should allow us to catch problems if DMA
+      callback issues a new DMA transfer.
+
+    - Added Jon's acks to the reviewed patches.
+
+v4: - Addressed Jon's request to *not* remove the runtime PM usage, instead
+      there is now new patch that makes RPM more practical:
+
+        dmaengine: tegra-apb: Keep clock enabled only during of DMA transfer
+
+    - Added new minor patch to clean up RPM's teardown:
+
+        dmaengine: tegra-apb: Clean up runtime PM teardown
+
+v3: - In the review comment to v1 Michał Mirosław suggested that "Prevent
+      race conditions on channel's freeing" does changes that deserve to
+      be separated into two patches. I factored out and improved tasklet
+      releasing into this new patch:
+
+        dmaengine: tegra-apb: Clean up tasklet releasing
+
+    - The "Fix use-after-free" patch got an improved commit message.
+
+v2: - I took another look at the driver and spotted few more things that
+      could be improved, which resulted in these new patches:
+
+        dmaengine: tegra-apb: Remove runtime PM usage
+        dmaengine: tegra-apb: Clean up suspend-resume
+        dmaengine: tegra-apb: Add missing of_dma_controller_free
+        dmaengine: tegra-apb: Allow to compile as a loadable kernel module
+        dmaengine: tegra-apb: Remove MODULE_ALIAS
+
+Dmitry Osipenko (14):
+  dmaengine: tegra-apb: Fix use-after-free
+  dmaengine: tegra-apb: Implement synchronization hook
+  dmaengine: tegra-apb: Prevent race conditions on channel's freeing
+  dmaengine: tegra-apb: Clean up tasklet releasing
+  dmaengine: tegra-apb: Prevent race conditions of tasklet vs free list
+  dmaengine: tegra-apb: Use devm_platform_ioremap_resource
+  dmaengine: tegra-apb: Use devm_request_irq
+  dmaengine: tegra-apb: Fix coding style problems
+  dmaengine: tegra-apb: Remove assumptions about unavailable runtime PM
+  dmaengine: tegra-apb: Keep clock enabled only during of DMA transfer
+  dmaengine: tegra-apb: Clean up suspend-resume
+  dmaengine: tegra-apb: Add missing of_dma_controller_free
+  dmaengine: tegra-apb: Allow to compile as a loadable kernel module
+  dmaengine: tegra-apb: Remove MODULE_ALIAS
+
+ drivers/dma/Kconfig           |   2 +-
+ drivers/dma/tegra20-apb-dma.c | 507 +++++++++++++++++-----------------
+ 2 files changed, 260 insertions(+), 249 deletions(-)
+
+-- 
+2.24.0
+
