@@ -2,139 +2,130 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82233C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 11:35:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FDF3C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 11:35:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 536EE24125
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 11:35:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="kH+19aZe"
+	by mail.kernel.org (Postfix) with ESMTP id 2400D2467E
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 11:35:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579779356;
+	bh=NgRc4r3/WU3L+AaQZpJg9EMLS9NAgkFiIf8N0LyNC+Y=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=cJimoh/L7NChLgtQcGOEpX2lDQ9Taeg9D70TMh9LVeQzrpwq3djKo6uwsI5ANGV0x
+	 P00PheLlrOk1HR2aFmeGW3rVYUve/+sba8PCRjrLebXiLlT8gDV4FKvAq11T3z2gqZ
+	 ilJTkEDDToCB58mYjMlvuT97MBcbqNf1L7ooMOaw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729095AbgAWLfh (ORCPT
+        id S1729112AbgAWLfz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 06:35:37 -0500
-Received: from lb3-smtp-cloud9.xs4all.net ([194.109.24.30]:45247 "EHLO
-        lb3-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726191AbgAWLfh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 06:35:37 -0500
-Received: from [IPv6:2001:983:e9a7:1:1bd:458:b834:7f13]
- ([IPv6:2001:983:e9a7:1:1bd:458:b834:7f13])
-        by smtp-cloud9.xs4all.net with ESMTPA
-        id ualpiy1VaT6sRualqixbcI; Thu, 23 Jan 2020 12:35:34 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
-        t=1579779334; bh=KEHyB2YSBLhTH76juePtrte4Uqe1v74RtTuxnjS6ESw=;
-        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
-         Subject;
-        b=kH+19aZeG/th3Kb+uBZwEgMzAdZIMhawWPepzm7JZVQEfMzba5ZeGMpJvkd23h5Ac
-         regY7JLcijhNRr4b9X4Kj/dKP4pQOfMvLOUE9oadsXR9/GptPPnqkyYY+FSRtuOVhl
-         ycl55j9Ir6GmEGiYWxPFzDPkFCQgnihjicpE3X6kOiX4M8lhf2bwRch3h7qOYk8bNH
-         4C+6aDaUDbYppbNSexA5unpK5+LTwRuyRML0KBLvHPk14I/NE1MeBy65wqkYJNYv5e
-         T24A4dZc1f5xPPLcMj0Zo2xRMx3dZ/X9KM1gkKTQWwKHz1kyqayJ4wW7UhB6ujfuxD
-         7d5UVTiUVwFYw==
-Subject: Re: [RFC][PATCH 13/15] videobuf2: do not sync buffers for DMABUF
- queues
-To:     Sergey Senozhatsky <senozhatsky@chromium.org>
-Cc:     Hans Verkuil <hans.verkuil@cisco.com>,
-        Tomasz Figa <tfiga@chromium.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Sakari Ailus <sakari.ailus@iki.fi>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Pawel Osciak <posciak@chromium.org>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20191217032034.54897-1-senozhatsky@chromium.org>
- <20191217032034.54897-14-senozhatsky@chromium.org>
- <2d0e1a9b-6c5e-ff70-9862-32c8b8aaf65f@xs4all.nl>
- <20200122050515.GB49953@google.com>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <57f711a0-6183-74f6-ab24-ebe414cb6881@xs4all.nl>
-Date:   Thu, 23 Jan 2020 12:35:33 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Thu, 23 Jan 2020 06:35:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48480 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726191AbgAWLfz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jan 2020 06:35:55 -0500
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DBD9224125;
+        Thu, 23 Jan 2020 11:35:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579779354;
+        bh=NgRc4r3/WU3L+AaQZpJg9EMLS9NAgkFiIf8N0LyNC+Y=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=jjE8q2j+F9NR+6NUtDnw5ybuvoh3/gXOO538RDz1Cem8SjaEsHRMDFEkXXNJm+lm+
+         fkLMODHS28CRnHPazsbkpUlIDTtq7FnPNF9s0Uch7YSSCvgesocygv7IoYAlNFTQaB
+         dJDXbBQRVrNqvf5CCLb60sDENtvFOlIBGjPB4vRk=
+Date:   Thu, 23 Jan 2020 11:35:47 +0000
+From:   Will Deacon <will@kernel.org>
+To:     Waiman Long <longman@redhat.com>
+Cc:     Lihao Liang <lihaoliang@google.com>,
+        Alex Kogan <alex.kogan@oracle.com>, linux@armlinux.org.uk,
+        peterz@infradead.org, mingo@redhat.com, will.deacon@arm.com,
+        arnd@arndb.de, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        tglx@linutronix.de, bp@alien8.de, hpa@zytor.com, x86@kernel.org,
+        guohanjun@huawei.com, jglauber@marvell.com, dave.dice@oracle.com,
+        steven.sistare@oracle.com, daniel.m.jordan@oracle.com
+Subject: Re: [PATCH v9 0/5] Add NUMA-awareness to qspinlock
+Message-ID: <20200123113547.GD18991@willie-the-truck>
+References: <20200115035920.54451-1-alex.kogan@oracle.com>
+ <CAC4j=Y8rCeTX9oKKbh+dCdTP8Ud4hW1ybu+iE7t_nxMSYBOR5w@mail.gmail.com>
+ <4e15fa1d-9540-3274-502a-4195a0d46f63@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20200122050515.GB49953@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfFopszA+QvXTY3B1Zj27KGKBvsbxEPtzbuP86jYxKN8NfHKcNcahR0+HMQVTFh5+Qk9B2QWy90ayhnUMRgfR/HDQDDcv6rPAJGCMarqO+bQ1VuzH0CDI
- faQth5pTfW8vmyHDw+EETiF26T/zSkrEzq92K8xpWQw+F2Zw5qI9SDiDsaU3GMJvHPhkadAzljht67/ZReaSAlmZyGEcLtv1LFVoZKI2PABPvQHhFiPOd0fb
- U34BS+45enK/WhR6uxOhDSduOM5m/bSo69DAhFjOP2fZMUNzFCiHf8+XShd7FuqDSFfOKpNhq2eI2DHPhpCvofFnQqGedoWG+HkAJNZLz/kTty/3N8kf/dg0
- nFnr6EGDAVJoGM+7UVfhNtg7e4tJOfFY9/g+ZRjSY0EcmqX0EtJ4Ga9gt/hZHO34yIEBapk0nGE2KHWCscl4LL6Yp+rsTSjHsu22C+pjj4rTp+lyZz/lK9Va
- 5xJoWNK+owTcpGn5RFex/Pp7/NS9GXAJc/AcidSIpg+LPfcUIn5lR5DqYgwwujCJMdb9Sgaema8hYmG8XmCApmij7cJKfRFekM9DpA6OmCsM0eEXtQH654b5
- xaFzdFTjs6SZpVhQ27/4j4XPquXrXPQt9EDK67QglgaiTw==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4e15fa1d-9540-3274-502a-4195a0d46f63@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/22/20 6:05 AM, Sergey Senozhatsky wrote:
-> On (20/01/10 11:30), Hans Verkuil wrote:
-> [..]
->>> diff --git a/drivers/media/common/videobuf2/videobuf2-v4l2.c b/drivers/media/common/videobuf2/videobuf2-v4l2.c
->>> index 1762849288ae..2b9d3318e6fb 100644
->>> --- a/drivers/media/common/videobuf2/videobuf2-v4l2.c
->>> +++ b/drivers/media/common/videobuf2/videobuf2-v4l2.c
->>> @@ -341,8 +341,22 @@ static void set_buffer_cache_hints(struct vb2_queue *q,
->>>  				   struct vb2_buffer *vb,
->>>  				   struct v4l2_buffer *b)
->>>  {
->>> -	vb->need_cache_sync_on_prepare = 1;
->>> +	/*
->>> +	 * DMA exporter should take care of cache syncs, so we can avoid
->>> +	 * explicit ->prepare()/->finish() syncs.
->>> +	 */
->>> +	if (q->memory == VB2_MEMORY_DMABUF) {
->>> +		vb->need_cache_sync_on_finish = 0;
->>> +		vb->need_cache_sync_on_prepare = 0;
->>> +		return;
->>> +	}
->>>  
->>> +	/*
->>> +	 * For other ->memory types we always need ->prepare() cache
->>> +	 * sync. ->finish() cache sync, however, can be avoided when queue
->>> +	 * direction is TO_DEVICE.
->>> +	 */
->>> +	vb->need_cache_sync_on_prepare = 1;
->>
->> I'm trying to remember: what needs to be done in prepare()
->> for a capture buffer? I thought that for capture you only
->> needed to invalidate the cache in finish(), but nothing needs
->> to be done in the prepare().
+Hi folks,
+
+(I think Lihao is travelling at the moment, so he may be delayed in his
+replies)
+
+On Wed, Jan 22, 2020 at 12:24:58PM -0500, Waiman Long wrote:
+> On 1/22/20 6:45 AM, Lihao Liang wrote:
+> > On Wed, Jan 22, 2020 at 10:28 AM Alex Kogan <alex.kogan@oracle.com> wrote:
+> >> Summary
+> >> -------
+> >>
+> >> Lock throughput can be increased by handing a lock to a waiter on the
+> >> same NUMA node as the lock holder, provided care is taken to avoid
+> >> starvation of waiters on other NUMA nodes. This patch introduces CNA
+> >> (compact NUMA-aware lock) as the slow path for qspinlock. It is
+> >> enabled through a configuration option (NUMA_AWARE_SPINLOCKS).
+> >>
+> > Thanks for your patches. The experimental results look promising!
+> >
+> > I understand that the new CNA qspinlock uses randomization to achieve
+> > long-term fairness, and provides the numa_spinlock_threshold parameter
+> > for users to tune. As Linux runs extremely diverse workloads, it is not
+> > clear how randomization affects its fairness, and how users with
+> > different requirements are supposed to tune this parameter.
+> >
+> > To this end, Will and I consider it beneficial to be able to answer the
+> > following question:
+> >
+> > With different values of numa_spinlock_threshold and
+> > SHUFFLE_REDUCTION_PROB_ARG, how long do threads running on different
+> > sockets have to wait to acquire the lock? This is particularly relevant
+> > in high contention situations when new threads keep arriving on the same
+> > socket as the lock holder.
+> >
+> > In this email, I try to provide some formal analysis to address this
+> > question. Let's assume the probability for the lock to stay on the
+> > same socket is *at least* p, which corresponds to the probability for
+> > the function probably(unsigned int num_bits) in the patch to return *false*,
+> > where SHUFFLE_REDUCTION_PROB_ARG is passed as the value of num_bits to the
+> > function.
 > 
-> Hmm. Not sure. A precaution in case if user-space wrote to that buffer?
+> That is not strictly true from my understanding of the code. The
+> probably() function does not come into play if a secondary queue is
+> present. Also calling cna_scan_main_queue() doesn't guarantee that a
+> waiter in the same node can be found. So the simple mathematical
+> analysis isn't that applicable in this case. One will have to do an
+> actual simulation to find out what the actual behavior will be.
 
-But whatever was written in the buffer is going to be overwritten anyway.
+It's certainly true that the analysis is based on the worst-case scenario,
+but I think it's still worth considering. For example, the secondary queue
+does not exist initially so it seems a bit odd that we only instantiate it
+with < 1% probability.
 
-Unless I am mistaken the current situation is that the cache syncs are done
-in both prepare and finish, regardless of the DMA direction.
+That said, my real concern with any of this is that it makes formal
+modelling and analysis of the qspinlock considerably more challenging. I
+would /really/ like to see an update to the TLA+ model we have of the
+current implementation [1] and preferably also the userspace version I
+hacked together [2] so that we can continue to test and validate changes
+to the code outside of the usual kernel stress-testing.
 
-I would keep that behavior to avoid introducing any unexpected regressions.
+Will
 
-Then, if q->allow_cache_hint is set, then default to a cache sync (cache clean)
-in the prepare for OUTPUT buffers and a cache sync (cache invalidate) in the
-finish for CAPTURE buffers.
-
-This also means that any drivers that want to access a buffer in between the
-prepare...finish calls will need to do a begin/end_cpu_access. But that's a
-separate matter.
-
-Regards,
-
-	Hans
-
-> 
-> +	if (q->dma_dir == DMA_FROM_DEVICE)
-> +		q->need_cache_sync_on_prepare = 0;
-> 
-> ?
-> 
-> 	-ss
-> 
-
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/cmarinas/kernel-tla.git/
+[2] https://mirrors.edge.kernel.org/pub/linux/kernel/people/will/spinbench/
