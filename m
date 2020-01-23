@@ -2,94 +2,115 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDEF2C33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 15:59:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61856C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 16:01:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A69D20704
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 15:59:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38CBE214AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 16:01:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e9QuWKow"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="VE07v7+C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729019AbgAWP72 (ORCPT
+        id S1728831AbgAWQBA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 10:59:28 -0500
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:55710 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726231AbgAWP72 (ORCPT
+        Thu, 23 Jan 2020 11:01:00 -0500
+Received: from mail25.static.mailgun.info ([104.130.122.25]:58655 "EHLO
+        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726885AbgAWQBA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 10:59:28 -0500
-Received: by mail-pj1-f68.google.com with SMTP id d5so1387794pjz.5;
-        Thu, 23 Jan 2020 07:59:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=3lwWLGkfzAovdDMrWkQasFS2HMs+aMhOk+szSNNm5TI=;
-        b=e9QuWKowpgho/99fE038B4BI67PJoG0yVJzwQbrf0SF8zcC22iiiwEkYzVEXnZ8UnZ
-         NihkXRJu0waCssSZ97VJ4NXm21Er7F/xn3bxPTRh7SmkvvANdePnaoq3m7hzZlJsXONj
-         nLBgdJmjgQtMWOe80/T514wehUnNPMleiJKIn9mz8a5k6OQ5S5bcLgUKMGF4qLruv6MV
-         +M4B87DHciOVKCFBBj7uSzi1MvLs272F6MsUwwJg9i/kmH4HM+sH5mCaP3ba8xr9o62S
-         2wwCABmUYb6/RRdNQZM9RXM4kJK1rMVrndsdAnfOk1wkl51ApBUZJmvxKrdfDgd0OBd7
-         OlhA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=3lwWLGkfzAovdDMrWkQasFS2HMs+aMhOk+szSNNm5TI=;
-        b=DeQp5B+B/GREi4XcKKoRtNt7HDC0fHq0yXKHEAdyIR20vfRZZM8gUE7dmXiMwXQqlk
-         ANp8kBMb0ZhY9/k0qPa2DtvUect8HIBRpHOKDlrFqbRE+HERIMPwuzTRcrJcU6WZu1Zq
-         Pijw7nDjF4gA+j6AT6Btaj0GQyW/yCd4xRvMu4qK1BrCfQGNV4gEY5hhNLzKWFwYdQhH
-         kT+WKN8oYqcIuHW8tXMHVHIvVnkGG4R+ShexcygdW/XitjwyOjkuGvWYE4jNVqeERlnq
-         0Rrms6fURrw+UBGnKBOOUV72aZHbZ99HgsxPW0It7VU2MXaYULImmNR15cLd51CQrN85
-         ujgQ==
-X-Gm-Message-State: APjAAAVGsbvzXNG4na1ZPSGMcvuCemU7R5jNjjjMPvSuBmyDnMCyfA9q
-        /ZMYz8IqF5/vUIex+R37A9M=
-X-Google-Smtp-Source: APXvYqxNZZFq/QoM9B6a3Phq48DxWGP5jYfjvkqKQQD6OOmolCYMybdfaXv3Uqqm8cObqqU5ZgA7hw==
-X-Received: by 2002:a17:902:6904:: with SMTP id j4mr17588463plk.88.1579795167218;
-        Thu, 23 Jan 2020 07:59:27 -0800 (PST)
-Received: from localhost.localdomain ([118.150.8.24])
-        by smtp.gmail.com with ESMTPSA id h3sm3456254pjs.0.2020.01.23.07.59.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Jan 2020 07:59:26 -0800 (PST)
-From:   pierre Kuo <vichy.kuo@gmail.com>
-To:     myungjoo.ham@samsung.com, kyungmin.park@samsung.com,
-        cw00.choi@samsung.com
-Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        pierre Kuo <vichy.kuo@gmail.com>
-Subject: [PATCH] PM / devfreq: use constant name of userspace governor
-Date:   Thu, 23 Jan 2020 23:59:12 +0800
-Message-Id: <20200123155912.22160-1-vichy.kuo@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 23 Jan 2020 11:01:00 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1579795259; h=Content-Transfer-Encoding: MIME-Version:
+ Message-Id: Date: Subject: Cc: To: From: Sender;
+ bh=eFeZtL7giiOcNKhy0ZgWz6ZZVkZcK/c5/KyFaL3YYBo=; b=VE07v7+C6ofajeZZdj5OiMmM5RX1Ccx2CsKiKujkHkAiNCTJqny0p/z8pcflVww8lo/tOrMl
+ 6TJTp0bxNvLZDRrXhSKioPulNZlLDoeVsH2JAJuxAuhDhYjmUVRtUlX1LHZacdlb3DkomEBN
+ RIVfJV0EZATsXFh7q/PyWKcbE1Q=
+X-Mailgun-Sending-Ip: 104.130.122.25
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e29c32b.7f86da1909d0-smtp-out-n03;
+ Thu, 23 Jan 2020 16:00:43 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id CE2FDC4479C; Thu, 23 Jan 2020 16:00:42 +0000 (UTC)
+Received: from blr-ubuntu-253.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: saiprakash.ranjan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 63103C43383;
+        Thu, 23 Jan 2020 16:00:38 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 63103C43383
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=saiprakash.ranjan@codeaurora.org
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To:     Kees Cook <keescook@chromium.org>,
+        Anton Vorontsov <anton@enomsg.org>,
+        Colin Cross <ccross@android.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Joel Fernandes <joel@joelfernandes.org>
+Cc:     Stephen Boyd <swboyd@chromium.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org,
+        Douglas Anderson <dianders@chromium.org>,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Subject: [PATCH] pstore: Fix printing of duplicate boot messages to console
+Date:   Thu, 23 Jan 2020 21:30:31 +0530
+Message-Id: <20200123160031.9853-1-saiprakash.ranjan@codeaurora.org>
+X-Mailer: git-send-email 2.24.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Based on commit aa7c352f9841 ("PM / devfreq: Define the constant governor
-name"), use constant name for userspace governor.
+Since commit f92b070f2dc8 ("printk: Do not miss new messages
+when replaying the log"), CON_PRINTBUFFER flag causes the
+duplicate boot messages to be printed on the console when
+PSTORE_CONSOLE and earlycon (boot console) is enabled.
+Pstore console registers to boot console when earlycon is
+enabled during pstore_register_console as a part of ramoops
+initialization in postcore_initcall and the printk core
+checks for CON_PRINTBUFFER flag and replays the log buffer
+to registered console (in this case pstore console which
+just registered to boot console) causing duplicate messages
+to be printed. Remove the CON_PRINTBUFFER flag from pstore
+console since pstore is not concerned with the printing of
+buffer to console but with writing of the buffer to the
+backend.
 
-Signed-off-by: pierre Kuo <vichy.kuo@gmail.com>
+Console log with earlycon and pstore console enabled:
+
+[    0.008342] Console: colour dummy device 80x25
+[    0.000000] Booting Linux on physical CPU 0x0000000000 [0x51df805e]
+...
+[    1.244049] hw-breakpoint: found 6 breakpoint and 4 watchpoint registers.
+[    0.000000] Booting Linux on physical CPU 0x0000000000 [0x51df805e]
+
+Fixes: f92b070f2dc8 ("printk: Do not miss new messages when replaying the log")
+Reported-by: Douglas Anderson <dianders@chromium.org>
+Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
 ---
- drivers/devfreq/governor_userspace.c | 2 +-
+ fs/pstore/platform.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/devfreq/governor_userspace.c b/drivers/devfreq/governor_userspace.c
-index af94942fcf95..0fd6c4851071 100644
---- a/drivers/devfreq/governor_userspace.c
-+++ b/drivers/devfreq/governor_userspace.c
-@@ -131,7 +131,7 @@ static int devfreq_userspace_handler(struct devfreq *devfreq,
- }
- 
- static struct devfreq_governor devfreq_userspace = {
--	.name = "userspace",
-+	.name = DEVFREQ_GOV_USERSPACE,
- 	.get_target_freq = devfreq_userspace_func,
- 	.event_handler = devfreq_userspace_handler,
+diff --git a/fs/pstore/platform.c b/fs/pstore/platform.c
+index d896457e7c11..271b00db0973 100644
+--- a/fs/pstore/platform.c
++++ b/fs/pstore/platform.c
+@@ -505,7 +505,7 @@ static void pstore_console_write(struct console *con, const char *s, unsigned c)
+ static struct console pstore_console = {
+ 	.name	= "pstore",
+ 	.write	= pstore_console_write,
+-	.flags	= CON_PRINTBUFFER | CON_ENABLED | CON_ANYTIME,
++	.flags	= CON_ENABLED | CON_ANYTIME,
+ 	.index	= -1,
  };
+ 
 -- 
-2.17.1
-
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
