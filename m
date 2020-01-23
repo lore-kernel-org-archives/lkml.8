@@ -2,183 +2,161 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 336E9C3F68F
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 18:32:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C40D1C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 18:33:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13D6721569
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 18:32:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A588921569
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 18:33:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728809AbgAWScK (ORCPT
+        id S1728901AbgAWSdj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 13:32:10 -0500
-Received: from foss.arm.com ([217.140.110.172]:43212 "EHLO foss.arm.com"
+        Thu, 23 Jan 2020 13:33:39 -0500
+Received: from mga11.intel.com ([192.55.52.93]:12374 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726792AbgAWScK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 13:32:10 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6A56F1FB;
-        Thu, 23 Jan 2020 10:32:09 -0800 (PST)
-Received: from localhost (e108754-lin.cambridge.arm.com [10.1.199.79])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0B6253F52E;
-        Thu, 23 Jan 2020 10:32:08 -0800 (PST)
-Date:   Thu, 23 Jan 2020 18:32:07 +0000
-From:   Ionela Voinescu <ionela.voinescu@arm.com>
-To:     Valentin Schneider <valentin.schneider@arm.com>
-Cc:     catalin.marinas@arm.com, will@kernel.org, mark.rutland@arm.com,
-        maz@kernel.org, suzuki.poulose@arm.com, sudeep.holla@arm.com,
-        dietmar.eggemann@arm.com, peterz@infradead.org, mingo@redhat.com,
-        ggherdovich@suse.cz, vincent.guittot@linaro.org,
-        linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/6] arm64: add support for the AMU extension v1
-Message-ID: <20200123183207.GB20475@arm.com>
-References: <20191218182607.21607-1-ionela.voinescu@arm.com>
- <20191218182607.21607-2-ionela.voinescu@arm.com>
- <05b1981b-cf4d-d990-5155-6ed3fadcca92@arm.com>
+        id S1726792AbgAWSdj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jan 2020 13:33:39 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Jan 2020 10:33:38 -0800
+X-IronPort-AV: E=Sophos;i="5.70,354,1574150400"; 
+   d="scan'208";a="220753681"
+Received: from ahduyck-desk1.jf.intel.com ([10.7.198.76])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Jan 2020 10:33:38 -0800
+Message-ID: <3e24a8ad7afe7c2f6ec8ffe7260a3e31bbe41651.camel@linux.intel.com>
+Subject: Re: [PATCH v16.1 0/9] mm / virtio: Provide support for free page
+ reporting
+From:   Alexander Duyck <alexander.h.duyck@linux.intel.com>
+To:     Alexander Graf <graf@amazon.com>,
+        Alexander Duyck <alexander.duyck@gmail.com>,
+        kvm@vger.kernel.org, mst@redhat.com, linux-kernel@vger.kernel.org,
+        willy@infradead.org, mhocko@kernel.org, linux-mm@kvack.org,
+        akpm@linux-foundation.org, mgorman@techsingularity.net,
+        vbabka@suse.cz
+Cc:     yang.zhang.wz@gmail.com, nitesh@redhat.com, konrad.wilk@oracle.com,
+        david@redhat.com, pagupta@redhat.com, riel@surriel.com,
+        lcapitulino@redhat.com, dave.hansen@intel.com,
+        wei.w.wang@intel.com, aarcange@redhat.com, pbonzini@redhat.com,
+        dan.j.williams@intel.com, osalvador@suse.de,
+        "Paterson-Jones, Roland" <rolandp@amazon.com>, hannes@cmpxchg.org,
+        hare@suse.com
+Date:   Thu, 23 Jan 2020 10:33:37 -0800
+In-Reply-To: <ad73c0c8-3a9c-8ffd-9a31-7e9a5cd5f246@amazon.com>
+References: <20200122173040.6142.39116.stgit@localhost.localdomain>
+         <914aa4c3-c814-45e0-830b-02796b00b762@amazon.com>
+         <af0b12780092e0007ec9e6dbfc92bc15b604b8f4.camel@linux.intel.com>
+         <ad73c0c8-3a9c-8ffd-9a31-7e9a5cd5f246@amazon.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.5 (3.32.5-1.fc30) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <05b1981b-cf4d-d990-5155-6ed3fadcca92@arm.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thursday 23 Jan 2020 at 17:04:07 (+0000), Valentin Schneider wrote:
-> Hi Ionela,
+On Thu, 2020-01-23 at 17:54 +0100, Alexander Graf wrote:
 > 
-> On 18/12/2019 18:26, Ionela Voinescu wrote:
-> > --- a/arch/arm64/include/asm/sysreg.h
-> > +++ b/arch/arm64/include/asm/sysreg.h
-> > @@ -382,6 +382,42 @@
-> >  #define SYS_TPIDR_EL0			sys_reg(3, 3, 13, 0, 2)
-> >  #define SYS_TPIDRRO_EL0			sys_reg(3, 3, 13, 0, 3)
-> >  
-> > +/* Definitions for system register interface to AMU for ARMv8.4 onwards */
-> > +#define SYS_AM_EL0(crm, op2)		sys_reg(3, 3, 13, crm, op2)
-> > +#define SYS_AMCR_EL0			SYS_AM_EL0(2, 0)
-> > +#define SYS_AMCFGR_EL0			SYS_AM_EL0(2, 1)
-> > +#define SYS_AMCGCR_EL0			SYS_AM_EL0(2, 2)
-> > +#define SYS_AMUSERENR_EL0		SYS_AM_EL0(2, 3)
-> > +#define SYS_AMCNTENCLR0_EL0		SYS_AM_EL0(2, 4)
-> > +#define SYS_AMCNTENSET0_EL0		SYS_AM_EL0(2, 5)
-> > +#define SYS_AMCNTENCLR1_EL0		SYS_AM_EL0(3, 0)
-> > +#define SYS_AMCNTENSET1_EL0		SYS_AM_EL0(3, 1)
-> > +
-> > +/*
-> > + * Group 0 of activity monitors (architected):
-> > + *                op0 CRn   op1   op2     CRm
-> > + * Counter:       11  1101  011   n<2:0>  010:n<3>
+> On 23.01.20 17:26, Alexander Duyck wrote:
+> > On Thu, 2020-01-23 at 11:20 +0100, Alexander Graf wrote:
+> > > Hi Alex,
+> > > 
+> > > On 22.01.20 18:43, Alexander Duyck wrote:
+> [...]
+> > > > The overall guest size is kept fairly small to only a few GB while the test
+> > > > is running. If the host memory were oversubscribed this patch set should
+> > > > result in a performance improvement as swapping memory in the host can be
+> > > > avoided.
+> > > 
+> > > I really like the approach overall. Voluntarily propagating free memory
+> > > from a guest to the host has been a sore point ever since KVM was
+> > > around. This solution looks like a very elegant way to do so.
+> > > 
+> > > The big piece I'm missing is the page cache. Linux will by default try
+> > > to keep the free list as small as it can in favor of page cache, so most
+> > > of the benefit of this patch set will be void in real world scenarios.
+> > 
+> > Agreed. This is a the next piece of this I plan to work on once this is
+> > accepted. For now the quick and dirty approach is to essentially make use
+> > of the /proc/sys/vm/drop_caches interface in the guest by either putting
+> > it in a cronjob somewhere or to have it after memory intensive workloads.
+> > 
+> > > Traditionally, this was solved by creating pressure from the host
+> > > through virtio-balloon: Exactly the piece that this patch set gets away
+> > > with. I never liked "ballooning", because the host has very limited
+> > > visibility into the actual memory utility of its guests. So leaving the
+> > > decision on how much memory is actually needed at a given point in time
+> > > should ideally stay with the guest.
+> > > 
+> > > What would keep us from applying the page hinting approach to inactive,
+> > > clean page cache pages? With writeback in place as well, we would slowly
+> > > propagate pages from
+> > > 
+> > >     dirty -> clean -> clean, inactive -> free -> host owned
+> > > 
+> > > which gives a guest a natural path to give up "not important" memory.
+> > 
+> > I considered something similar. Basically one thought I had was to
+> > essentially look at putting together some sort of epoch. When the host is
+> > under memory pressure it would need to somehow notify the guest and then
+> > the guest would start moving the epoch forward so that we start evicting
+> > pages out of the page cache when the host is under memory pressure.
 > 
-> Nit: any reason for picking a different order than the encoding one? e.g.
->                      op0  op1  CRn   CRm       op2
->                      11   011  1101  010:<n3>  n<2:0>
+> I think we want to consider an interface in which the host actively asks 
+> guests to purge pages to be on the same line as swapping: The last line 
+> of defense.
 
+I suppose. The only reason I was thinking that we may want to look at
+doing something like that was to avoid putting pressure on the guest when
+the host doesn't need us to.
 
-I followed the format in the documentation at the time: DDI 0487D.a.
-But you are correct as in I should have used the encoding format.
-
-
+> In the normal mode of operation, you still want to shrink down 
+> voluntarily, so that everyone cooperatively tries to make free for new 
+> guests you could potentially run on the same host.
 > 
-> > + * Type:          11  1101  011   n<2:0>  011:n<3>
-> > + * n: 0-3
-> 
-> My Arm ARM (DDI 0487E.a) says n can be in the [0, 15] range, despite there
-> being only 4 architected counters ATM. Shouldn't matter too much now, but
-> when more architected counters are added we'll have to assert 'n' against
-> something (some revision #?).
-> 
+> If you start to apply pressure to guests to find out of they might have 
+> some pages to spare, we're almost back to the old style ballooning approach.
 
-You are correct, that interval for the values of n should change. I
-probably mapped my brain to the current architected counters. 
+Thats true. In addition we avoid possible issues with us trying to flush
+out a bunch of memory from multiple guests as once since they would be
+proactively freeing the memory.
 
-But the way I've defined SYS_AMEVCNTR0_EL0 will allow to access the full
-range of 16 counters, for future versions of the AMU. I am hoping that
-we won't have to directly use information in the feature register in
-regards to the version of AMU. These first 4 architected counters should
-be present in all future versions, and later we can use information in
-AMCGCR_EL0 to get the number of architected counters (n) and
-AMEVTYPER0<n>_EL0 to find out the type. The same logic would apply to
-the auxiliary counters.
+I'm thinking the inactive state could be something similar to MADV_FREE in
+terms of behavior.  If it sits in the queue for long enough we decide
+nobody is using it anymore so it is freed, but if it is accessed it is
+cheap for us to just put it back without much in the way of overhead.
 
-> > + *
-> > + * Group 1 of activity monitors (auxiliary):
-> > + *                op0 CRn   op1   op2     CRm
-> > + * Counter:       11  1101  011   n<2:0>  110:n<3>
-> > + * Type:          11  1101  011   n<2:0>  111:n<3>
-> > + * n: 0-15
-> > + */
-> > +
-> > +#define SYS_AMEVCNTR0_EL0(n)            SYS_AM_EL0(4 + ((n) >> 3), (n) & 0x7)
->                                                                           /^^^^
-> If you want to be fancy, you could use GENMASK(2, 0) --------------------/
-> 
+> Btw, have you ever looked at CMM2 [1]? With that, the host can 
+> essentially just "steal" pages from the guest when it needs any, without 
+> the need to execute the guest meanwhile. That means inside the host 
+> swapping path, CMM2 can just evict guest page cache pages as easily as 
+> we evict host page cache pages. To me, that's even more attractive in 
+> the swap / emergency case than an interface which requires the guest to 
+> proactively execute while we are in a low mem situation.
 
-I'll be fancy!
+<snip>
 
-> > +#define SYS_AMEVTYPE0_EL0(n)            SYS_AM_EL0(6 + ((n) >> 3), (n) & 0x7)
-> > +#define SYS_AMEVCNTR1_EL0(n)            SYS_AM_EL0(12 + ((n) >> 3), (n) & 0x7)
-> > +#define SYS_AMEVTYPE1_EL0(n)            SYS_AM_EL0(14 + ((n) >> 3), (n) & 0x7)
-> > +
-> > +/* V1: Fixed (architecturally defined) activity monitors */
-> > +#define SYS_AMEVCNTR0_CORE_EL0          SYS_AMEVCNTR0_EL0(0)
-> > +#define SYS_AMEVCNTR0_CONST_EL0         SYS_AMEVCNTR0_EL0(1)
-> > +#define SYS_AMEVCNTR0_INST_RET_EL0      SYS_AMEVCNTR0_EL0(2)
-> > +#define SYS_AMEVCNTR0_MEM_STALL         SYS_AMEVCNTR0_EL0(3)
-> > +
-> >  #define SYS_CNTFRQ_EL0			sys_reg(3, 3, 14, 0, 0)
-> >  
-> >  #define SYS_CNTP_TVAL_EL0		sys_reg(3, 3, 14, 2, 0)
-> 
-> > @@ -1150,6 +1152,59 @@ static bool has_hw_dbm(const struct arm64_cpu_capabilities *cap,
-> >  
-> >  #endif
-> >  
-> > +#ifdef CONFIG_ARM64_AMU_EXTN
-> > +
-> > +/*
-> > + * This per cpu variable only signals that the CPU implementation supports
-> > + * the Activity Monitors Unit (AMU) but does not provide information
-> > + * regarding all the events that it supports.
-> > + * When this amu_feat per CPU variable is true, the user of this feature
-> > + * can only rely on the presence of the 4 fixed counters. But this does
-> > + * not guarantee that the counters are enabled or access to these counters
-> > + * is provided by code executed at higher exception levels.
-> > + *
-> > + * Also, to ensure the safe use of this per_cpu variable, the following
-> > + * accessor is defined to allow a read of amu_feat for the current cpu only
-> > + * from the current cpu.
-> > + *  - cpu_has_amu_feat()
-> > + */
-> > +static DEFINE_PER_CPU_READ_MOSTLY(u8, amu_feat);
-> > +
-> 
-> Why not bool?
-> 
+> [1] https://www.kernel.org/doc/ols/2006/ols2006v2-pages-321-336.pdf
 
-I've changed it from bool after a sparse warning about expression using
-sizeof(bool) and found this is due to sizeof(bool) being compiler
-dependent. It does not change anything but I thought it might be a good
-idea to define it as 8-bit unsigned and rely on fixed size.
+I hadn't read through this before. If nothing else the verbiage is useful
+since what we are discussing is essentially how to deal with the
+"volatile" pages within the system, the "unused" pages are the ones we
+have reported to the host with the page reporting, and the "stable" pages
+are those pages that have been faulted back into the guest when it
+accessed them.
 
-Thank you for the review,
-Ionela.
+I can see there would be some advantages to CMM2, however it seems like it
+is adding a significant amount of state to pages since it has to support a
+fairly significant number of states and then there is the added complexity
+for all the transitions in and out of stable from the various states
+depending on how things are being changed.
 
-> > +inline bool cpu_has_amu_feat(void)
-> > +{
-> > +	return !!this_cpu_read(amu_feat);
-> > +}
-> > +
-> > +static void cpu_amu_enable(struct arm64_cpu_capabilities const *cap)
-> > +{
-> > +	if (has_cpuid_feature(cap, SCOPE_LOCAL_CPU)) {
-> > +		pr_info("detected CPU%d: Activity Monitors Unit (AMU)\n",
-> > +			smp_processor_id());
-> > +		this_cpu_write(amu_feat, 1);
-> > +	}
-> > +}
+Do you happen to know if anyone has done any research into how much
+overhead is added with CMM2 enabled? I'd be curious since it seems like
+the paper mentions having to track a signficant number of state
+transitions for the memory throughout the kernel.
+
