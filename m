@@ -2,141 +2,90 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 048D3C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 17:31:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B92DC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 17:31:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFFF721734
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 17:31:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579800669;
-	bh=5YgAmp9QHKV/2bSBJVWgnKofnRC1tEKIZ8p63aedCew=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
-	b=GGxK5c1ErnOqYkYYWx1BAJaJuIuuS3jicrB9sfKwa0GRS2qykmG+wVLcAUFQ0B1G5
-	 w7EzkEjoyX29VoUDbfV3ts8lgmDwgK+wj/385ZTUb5zSoChzXp3Ugk3bKhq0k0ZY7m
-	 s82+7C1SK2sGLiUc8eHFMDPcSw8RFcInbNz8e9vQ=
+	by mail.kernel.org (Postfix) with ESMTP id DB86521734
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 17:31:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="XvGvEarO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729152AbgAWRbJ (ORCPT
+        id S1729153AbgAWRb3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 12:31:09 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:39592 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727453AbgAWRbI (ORCPT
+        Thu, 23 Jan 2020 12:31:29 -0500
+Received: from mail-qt1-f178.google.com ([209.85.160.178]:34699 "EHLO
+        mail-qt1-f178.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727296AbgAWRb2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 12:31:08 -0500
-Received: by mail-lj1-f195.google.com with SMTP id o11so4442736ljc.6;
-        Thu, 23 Jan 2020 09:31:07 -0800 (PST)
+        Thu, 23 Jan 2020 12:31:28 -0500
+Received: by mail-qt1-f178.google.com with SMTP id h12so3115457qtu.1
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jan 2020 09:31:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=WXt6gjVeJUrJUf0Y8CoxViixubZMsgMLgh4C2DTnN/E=;
-        b=ZkoM6bm9rqVUryU3KuPKM2e1ASmf3iXmLMikC8uiwKbZc+to5Ti/LUf/W1ra8/YH8/
-         8+Mu64j7IjMlGWMLz9KU+SuoN6wjWgRATchCgOEsl/E+NYRmLPktBUv470JC7enrc3Tb
-         rfaGavemN525QjTmS1IODBl+jk6xpAM3y3zMc5pHFDUZ0Aam1KmlMn+fZPw+uAt4C2wg
-         B0zFPhbE5aRAPU/CKNzihEjHDzeqr/sLSBD02oMi+Jxt/e6+qNJxKlXxZEOg6vz9lJR4
-         SFBWtL2oW1+fL8bmKbfsY2OR3TyF6hjR136dWDL97pEJuTwTl6k7d1sYkXIvLrJt0gmY
-         HO2Q==
+        d=lca.pw; s=google;
+        h=content-transfer-encoding:from:mime-version:subject:date:message-id
+         :references:cc:in-reply-to:to;
+        bh=rBBThgXC3RlRJATFU2MQijt5WNYWxLR5qQsGqFoA6wA=;
+        b=XvGvEarOb01ZEusXNSWgTQPqXL49NPn7ZdBHl1xDJaj4P91lqVHNgPsdqyfzRxxM9q
+         QWhIY6G3RfbdNuPfN3VY+KvSQOFyF3VyVufw3Whe5jToj5GHdp4dU3hgBwO1U27iO0bl
+         8EzOMA1a937f6UGkiS9HfLzxNDx0Q7wVHE8wDkqCU9uZhb1bP8/k41g16s+snBOpEcTB
+         HtFkVwN5Hjsi5BPTzD77DOIAwiDW/lQ74bBAey5s2Dor1BNiqRagXDcmoRbbcg11nKyG
+         eNhS/2h81T5gq1KD4+K2QCr6M+0DhgoVYUXvCd1xG15NQ5iEL3qB2jKK25A5XqbTNMLm
+         D5Jg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
-         :date:message-id:mime-version;
-        bh=WXt6gjVeJUrJUf0Y8CoxViixubZMsgMLgh4C2DTnN/E=;
-        b=lrRLAqUST95RXeW4uqjICw6VXC52nMA17fVAf6aq69A5xPnTE66sNj4HZf+TUui0fi
-         HWb7OPjprw6oPQ6+hzaiXFMEoP9y144AIxdJHWOhPu4JQUNMB0wYk+FejDzS6qPO/3c0
-         9tzO5o9fS77c3aTrhLHRqhEPMcE3sqxcfmRqDbzurckApo7N9PxwkgQTf59DoxSaGobo
-         pWLdhEqjJCowRcbDdKVATpzE7gmEH1EmNxGP+OLAvNGTXT2VO4IE1pBJIxr6sT2Vl5Rd
-         fEsLGn308zP4Ww98cOt+xkSKH8LepxSD5Xe4atmsvyouu+ujxrAGr+xHtKQ6iD2YhpAS
-         /r2Q==
-X-Gm-Message-State: APjAAAWQn21s4ZNYcI6ikZaMCChpxZsdFAeUdxF/zmmbo6KYIcnbkDAz
-        BKUoTAqU+HA7oP4fNTvHkU1PcyqMk9Bs4A==
-X-Google-Smtp-Source: APXvYqxP65y863qzNHh2Rf4zVXSCMzske7Raq7CwMthG1FBfKdyGZE6fQP/py86vfgtJ/LJefJK4CQ==
-X-Received: by 2002:a2e:85cd:: with SMTP id h13mr23752271ljj.191.1579800666387;
-        Thu, 23 Jan 2020 09:31:06 -0800 (PST)
-Received: from saruman (88-113-215-33.elisa-laajakaista.fi. [88.113.215.33])
-        by smtp.gmail.com with ESMTPSA id s18sm1932660ljj.36.2020.01.23.09.31.04
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 23 Jan 2020 09:31:05 -0800 (PST)
-From:   Felipe Balbi <balbi@kernel.org>
-To:     "Yang\, Fei" <fei.yang@intel.com>,
-        Andrzej Pietrasiewicz <andrzej.p@collabora.com>,
-        John Stultz <john.stultz@linaro.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Cc:     Felipe Balbi <felipe.balbi@linux.intel.com>,
-        Thinh Nguyen <thinhn@synopsys.com>,
-        Tejas Joglekar <tejas.joglekar@synopsys.com>,
-        Jack Pham <jackp@codeaurora.org>, Todd Kjos <tkjos@google.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Linux USB List <linux-usb@vger.kernel.org>,
-        stable <stable@vger.kernel.org>
-Subject: RE: [RFC][PATCH 0/2] Avoiding DWC3 transfer stalls/hangs when using adb over f_fs
-In-Reply-To: <02E7334B1630744CBDC55DA8586225837F9EE280@ORSMSX102.amr.corp.intel.com>
-References: <20200122222645.38805-1-john.stultz@linaro.org> <ef64036f-7621-50d9-0e23-0f7141a40d7a@collabora.com> <02E7334B1630744CBDC55DA8586225837F9EE280@ORSMSX102.amr.corp.intel.com>
-Date:   Thu, 23 Jan 2020 19:31:54 +0200
-Message-ID: <87o8uu3wqd.fsf@kernel.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=rBBThgXC3RlRJATFU2MQijt5WNYWxLR5qQsGqFoA6wA=;
+        b=uikeuhp8usSEiDJwyeuRBHt6ZFk8LMTc081ECEUsM/2N7ANw+sS+sv/EqjuW9UhgMm
+         qwA6Yh1xCaq7HUUZJj9tV2zsfWnjeyCujyYTb57oQhMWCVC6qPu3FE5h02aS4XvKpfeW
+         UaJfXQl5q14ylPgCWL2xRNZzzPngTnvLPu3Fu1MUlmxiwQvKx0UE5/UNDUl/U00kZDAD
+         XYcd4EZ62ewEmqW7zndqujsIMkZeGbDw27WuCjZA7u7uIdxnwtUFryZBOR+2WRH6h9aB
+         mWawbb2t9g6GZP7BZBKUKPKW0Ct+si88CzXKuNPko3bMrYHEc4WUKAcbpdo9RgtLtXmC
+         U2aQ==
+X-Gm-Message-State: APjAAAXmgKcSs+59fGq5ib9+YP768KmpGKQ0exnoXtchiCMfXBhi8JLP
+        8w2de8jPeJNoCbszmaqULy6LSD5etAAgjQ==
+X-Google-Smtp-Source: APXvYqwrAlyp/Lf5BA048RSQXVW/8wtLXFtugWLJuAfJ4/djDPXGUFxMFAqSZR2WzsgC17OwYTT7cg==
+X-Received: by 2002:ac8:745a:: with SMTP id h26mr16566059qtr.320.1579800687406;
+        Thu, 23 Jan 2020 09:31:27 -0800 (PST)
+Received: from [192.168.1.183] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id q7sm1194556qkc.43.2020.01.23.09.31.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 23 Jan 2020 09:31:26 -0800 (PST)
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+From:   Qian Cai <cai@lca.pw>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH -next] arm64/spinlock: fix a -Wunused-function warning
+Date:   Thu, 23 Jan 2020 12:31:25 -0500
+Message-Id: <48DF011A-3074-422C-BFBA-1A9F2EF4A7BA@lca.pw>
+References: <20200123165614.GA20126@willie-the-truck>
+Cc:     peterz@infradead.org, longman@redhat.com, mingo@redhat.com,
+        catalin.marinas@arm.com, clang-built-linux@googlegroups.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20200123165614.GA20126@willie-the-truck>
+To:     Will Deacon <will@kernel.org>
+X-Mailer: iPhone Mail (17C54)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
 
 
-Hi,
+> On Jan 23, 2020, at 11:56 AM, Will Deacon <will@kernel.org> wrote:
+> 
+> Damn, the whole point of this was to warn in the case that
+> vcpu_is_preempted() does get defined for arm64. Can we force it to evaluate
+> the macro argument instead (e.g. ({ (cpu), false; }) or something)?
 
-"Yang, Fei" <fei.yang@intel.com> writes:
->>> Hey all,
->>>    I wanted to send these out for comment and thoughts.
->>>=20
->>> Since ~4.20, when the functionfs gadget enabled scatter-gather=20
->>> support, we have seen problems with adb connections stalling and=20
->>> stopping to function on hardware with dwc3 usb controllers.
->>> Specifically, HiKey960, Dragonboard 845c, and Pixel3 devices.
->>
->> Any chance this:
->>=20
->> https://git.kernel.org/pub/scm/linux/kernel/git/balbi/usb.git/commit/?h=
-=3Dtesting/next&id=3Df63333e8e4fd63d8d8ae83b89d2c38cf21d64801
-> This is a different issue. I have tried initializing num_sgs when debuggi=
-ng this adb stall problem, but it didn't help.
+Actually, static inline should be better.
 
-So multiple folks have run through this problem, but not *one* has
-tracepoints collected from the issue? C'mon guys. Can someone, please,
-collect tracepoints so we can figure out what's actually going on?
-
-I'm pretty sure this should be solved at the DMA API level, just want to
-confirm.
-
-cheers
-
-=2D-=20
-balbi
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl4p2IoACgkQzL64meEa
-mQZbPRAAnbPf/J/ta6ffA1BbOyMUF8EnrASllIGEfba7lkJ06oM9KbYAWojsxv1z
-pi3ch1+GVa0S5rCjwQItnCTUwMPqucLLFh9lzy6ubUL5oxTVa9nA6GhMmFTpomfY
-jIQyhafsiW78+srmozJX5ibHpYQJpfSN/63t5XS26vxqTRcIf7AiOe4ZgpNAp/7w
-AH2VAELrlgF7mIIMIwpozTvFXqxKd+QwrCVwAnz6fL/CW5/0y7V+VdgKbSgpI409
-ycIRPGFt7vUCFuT+nfZXEB3pZIQ8urObdEeE9Bq+Tb7I5jGmqxngLcSxsiu97S0y
-zPIn+nPmgOPyt1rOLrpw3VJtSdRmdz3Lnx/i5iwFXcXGGHvV18fQEznHMDz55wzf
-N/umXnh/7mck9dMqcRDJCCw9Oq/PPA1twzCZ39Ne/Wom5Q+voHL0/liMTgIkXUhV
-sf7tuaks+bKKTCYSOR6yIZKmkL1RIYt209wt9tigDBSj/gDJDdGtNX7rtCBYAd5I
-mmKOxImp1hkwyOKPGN3UKSzOKLduajOkvac6fv1lh7kKWQjIAcx4e00cAGCmtRim
-GD4Et1fYhI2/9c6qd96Z9U3YkdQ/O3cMQ9njYTRq/Ihm7Tohd+gdTSIt/Qu6m73Y
-EPwPjgtecfvnV4lYmW0pt3PbDZBrBz4qYjlCF/PmaU35YJERd6E=
-=H9Ta
------END PGP SIGNATURE-----
---=-=-=--
+#define vcpu_is_preempted vcpu_is_preempted
+static inline bool vcpu_is_preempted(int cpu)
+{
+	return false;
+}
