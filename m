@@ -2,185 +2,91 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F962C33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 17:27:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1899C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 17:27:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D95321569
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 17:27:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="fjdvtLTl";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="fkm+ZNPe"
+	by mail.kernel.org (Postfix) with ESMTP id 8D22021734
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 17:27:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579800429;
+	bh=GSo5r3TWjpardWgDCzGMqZYl5XSsfkEFRtnZtAa6WCc=;
+	h=Date:From:To:Cc:Subject:Reply-To:List-ID:From;
+	b=sgLiusMjHV3NMG9VAQKseBGINSLc8VHO35svVUt7dr8VORzbKnAEuDfKMCqELu/2J
+	 kYMCbi3NcyWCgFbTS62j5TAVQYPPSJ425JExxxlY1LZvUlIX6m2VuoHrjjeBKrQNq3
+	 EGtev9dlEJ9hr5JFB6GvCAsHScVffWHfYBia9KOg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729075AbgAWR1B (ORCPT
+        id S1729096AbgAWR1I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 12:27:01 -0500
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:59550 "EHLO
-        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727022AbgAWR1B (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 12:27:01 -0500
-Received: from pps.filterd (m0148460.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00NHQ374010702;
-        Thu, 23 Jan 2020 09:26:46 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=facebook;
- bh=w2I/EfgPe4A752+qeGgsLz/FPeYHuUVEhtLy86+W9Ug=;
- b=fjdvtLTljw1eRjoGuv27nXD5ok6Z/YCbHFaE5s+tMfNfigOYWtXAwiAoFgGr7I1yTrbo
- cAccFvu6OzNMcMYFbD01vifsYI/3pYmGiK4ScOefkor73x9jtB0/Iq7Jbd0yu9VH6FRX
- NdDdrLVJfC9QVYbtrJZpxJMSKKn+JJzCqWc= 
-Received: from maileast.thefacebook.com ([163.114.130.16])
-        by mx0a-00082601.pphosted.com with ESMTP id 2xqemegdpx-12
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Thu, 23 Jan 2020 09:26:46 -0800
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (100.104.31.183)
- by o365-in.thefacebook.com (100.104.35.175) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Thu, 23 Jan 2020 09:26:45 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=hj3ism0YksLuE4quC7t1gJUJCj+cWKoi/xBjyDQA8AlrXnbt0JpnlrtI3mk94drr7u6jmnhsnV0H2kgKL+fKpkz2vf1RGPvRa5MIsAIsMX8GzOM9AgK4rTtw4n32gLiCpQFU0RpdBZBNeOm887AfjI+EKE2c6CZCFG0udVFFvAsa/XTK5EuBPdh95ptArKUmyHoUB4bn4hriJ4NQF5LPQsF7n8FEj4crsrdrhuH5Tk5PaBw5CSitcmRx8Xrxf/CPQ+nU8sOPhtJ2YM/taSDTpbT9QiZVpxOtLqZqWIMjpDqJTYsJ7tSpT72fq3CJVkvcZKKGPq3UunG5D3CF01uBUA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=w2I/EfgPe4A752+qeGgsLz/FPeYHuUVEhtLy86+W9Ug=;
- b=Hp6o8Jl0L/FMHw1P60wKOVxAjtLuFh8chvBdKXns7anxpHN1fe2kJDYZUumY/KsjN855a0lOCy4nlkt/UFYr1ZQEDt7IiovMDITyBpkbzEeZxD80Ql26LUa80z66wSfYZni1uLCLQmK0XhYWdFlNttlGgOQ31YLHA07fMM9g0AVJOvigjlj7fT8KvxPeMtjzdbZpoPM+YMeA+1Isbft+oGUWzuxJlkv53kC3VCJa8wdkQPyLUfdlDAq9zscOSXm/0wax3Mbyn6EZOg7R98erNwy+U4s6S1U0YZrHHQcnDOdlRe9kI52bjbQzc4C0c91YzLc3xQovKpuqH5JkMeAKHg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
- header.d=fb.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector2-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=w2I/EfgPe4A752+qeGgsLz/FPeYHuUVEhtLy86+W9Ug=;
- b=fkm+ZNPeYjgl15y+x2sYuJthAQ65PKazp7z/uUnC61fmweUammQUkEX1xR23WveiZMGe5hauu7rYVhhFCSBwhVfjetWf2neJTSUtiHA8i2qahlJgVjpFtn1mjONSFa3IaxED5BsBAnfyErOsfrO07bSKw9d9/gnGX5kQ+vYNYR0=
-Received: from MN2PR15MB3213.namprd15.prod.outlook.com (20.179.21.76) by
- MN2PR15MB2672.namprd15.prod.outlook.com (20.179.145.26) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2644.24; Thu, 23 Jan 2020 17:26:44 +0000
-Received: from MN2PR15MB3213.namprd15.prod.outlook.com
- ([fe80::6d1e:f2f7:d36:a42f]) by MN2PR15MB3213.namprd15.prod.outlook.com
- ([fe80::6d1e:f2f7:d36:a42f%4]) with mapi id 15.20.2644.027; Thu, 23 Jan 2020
- 17:26:44 +0000
-Received: from kafai-mbp.dhcp.thefacebook.com (2620:10d:c090:200::2:d66d) by MWHPR15CA0027.namprd15.prod.outlook.com (2603:10b6:300:ad::13) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2644.19 via Frontend Transport; Thu, 23 Jan 2020 17:25:48 +0000
-From:   Martin Lau <kafai@fb.com>
-To:     Lorenz Bauer <lmb@cloudflare.com>
-CC:     Shuah Khan <shuah@kernel.org>, Alexei Starovoitov <ast@kernel.org>,
-        "Daniel Borkmann" <daniel@iogearbox.net>,
-        Song Liu <songliubraving@fb.com>, "Yonghong Song" <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH bpf 3/4] selftests: bpf: make reuseport test output more
- legible
-Thread-Topic: [PATCH bpf 3/4] selftests: bpf: make reuseport test output more
- legible
-Thread-Index: AQHV0g6ItLyq7O8stEG8xWfq7jPWB6f4gCsA
-Date:   Thu, 23 Jan 2020 17:26:44 +0000
-Message-ID: <20200123172544.xjbcgtmaj5g3p6qp@kafai-mbp.dhcp.thefacebook.com>
-References: <20200123165934.9584-1-lmb@cloudflare.com>
- <20200123165934.9584-4-lmb@cloudflare.com>
-In-Reply-To: <20200123165934.9584-4-lmb@cloudflare.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: MWHPR15CA0027.namprd15.prod.outlook.com
- (2603:10b6:300:ad::13) To MN2PR15MB3213.namprd15.prod.outlook.com
- (2603:10b6:208:3d::12)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [2620:10d:c090:200::2:d66d]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 627b6c0e-a40c-4f6e-71ae-08d7a0294a71
-x-ms-traffictypediagnostic: MN2PR15MB2672:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MN2PR15MB2672D94609714551B47314BED50F0@MN2PR15MB2672.namprd15.prod.outlook.com>
-x-fb-source: Internal
-x-ms-oob-tlc-oobclassifiers: OLM:6108;
-x-forefront-prvs: 029174C036
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(39860400002)(346002)(376002)(366004)(396003)(136003)(189003)(199004)(66946007)(8936002)(16526019)(9686003)(66446008)(66556008)(64756008)(6666004)(186003)(1076003)(66476007)(478600001)(4326008)(2906002)(5660300002)(7696005)(52116002)(55016002)(81156014)(81166006)(8676002)(6916009)(71200400001)(86362001)(54906003)(316002)(6506007);DIR:OUT;SFP:1102;SCL:1;SRVR:MN2PR15MB2672;H:MN2PR15MB3213.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: fb.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: MsPbm+IDPJcVkqqF3e+tuc2OLWKfZkUBH9SqURkRnnMedc9WYODOouxiAEh+A4IOI6WwzGHWDVDFEHGnvDAawZXneR+eIurMVuU1plPqg3G2WEAeRvqO5wSkGC8su0lYq94lw8KKurWitPPtr6JRmL0DNsBaxRtFA9OrwabdssGk3VhzDzh+hX5B4o56VLhOPXG6AAzcKEys9pGvEXQ3foES+MEcoZQrZEEpZUePLfebI0qjUGPLNIWwL1BHfOEkScYU46Pi1dhkyZJoigbsHpEQtNqFqa/nqP8FeZQRSJafis0wnIw/tg5mL9WaHlc+AP8cUu4Wu+Ri+tSlT2ZrewY1rG+vCTNjFsLjQ4Hb3DfFn6JR5t2G2oo7jq0k+Yo63SG5LrFOBwY9bczD41nztBqFRYZHuT1mBoMNV6XiRk7mwqXjLlqi0GkTHyeRPK8R
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <578FEA970865F14B857C8A40DA8A6E20@namprd15.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Thu, 23 Jan 2020 12:27:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46376 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727022AbgAWR1I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jan 2020 12:27:08 -0500
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 93AD521569;
+        Thu, 23 Jan 2020 17:27:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579800427;
+        bh=GSo5r3TWjpardWgDCzGMqZYl5XSsfkEFRtnZtAa6WCc=;
+        h=Date:From:To:Cc:Subject:Reply-To:From;
+        b=AW0ZTo3ER/ioiD9u1ciduDzGBqLu2/pThLU/IrA7YWmM8jmQ08YzdRdlEUsHM5Ms9
+         uL8sQroxU6wOI+/oAJv14TCP9nY5uoGNjr2sYnIH8yPPlcr9yFeyXFeJrcxJGhWgkL
+         HXztwLsC27xk/4bJmEU8rQ0YYDqfgECakun3Emv0=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 6BA923520C31; Thu, 23 Jan 2020 09:27:07 -0800 (PST)
+Date:   Thu, 23 Jan 2020 09:27:07 -0800
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     dave@stgolabs.net, josh@joshtriplett.org
+Cc:     linux-kernel@vger.kernel.org, will@kernel.org, peterz@infradead.org
+Subject: [PATCH RFC locktorture] Print ratio of acquisitions, not failures
+Message-ID: <20200123172707.GA24441@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 627b6c0e-a40c-4f6e-71ae-08d7a0294a71
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Jan 2020 17:26:44.1168
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Op+g3/03CrlMIP0EycOteCN7QC5dQXTMHvZN4/0iynUFiquKDnh0W0hDqIa7RzTR
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR15MB2672
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-01-23_10:2020-01-23,2020-01-23 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 bulkscore=0 clxscore=1015
- priorityscore=1501 mlxscore=0 malwarescore=0 lowpriorityscore=0
- mlxlogscore=999 adultscore=0 spamscore=0 suspectscore=0 impostorscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-2001230136
-X-FB-Internal: deliver
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 23, 2020 at 04:59:32PM +0000, Lorenz Bauer wrote:
-> Include the name of the mismatching result in human readable format
-> when reporting an error. The new output looks like the following:
->=20
->   unexpected result
->    result: [1, 0, 0, 0, 0, 0]
->   expected: [0, 0, 0, 0, 0, 0]
->   mismatch on DROP_ERR_INNER_MAP (bpf_prog_linum:153)
->   check_results:FAIL:382
->=20
-> Signed-off-by: Lorenz Bauer <lmb@cloudflare.com>
-> ---
->  .../bpf/prog_tests/select_reuseport.c         | 30 ++++++++++++++++---
->  1 file changed, 26 insertions(+), 4 deletions(-)
->=20
-> diff --git a/tools/testing/selftests/bpf/prog_tests/select_reuseport.c b/=
-tools/testing/selftests/bpf/prog_tests/select_reuseport.c
-> index 2c37ae7dc214..09a536af139a 100644
-> --- a/tools/testing/selftests/bpf/prog_tests/select_reuseport.c
-> +++ b/tools/testing/selftests/bpf/prog_tests/select_reuseport.c
-> @@ -316,6 +316,28 @@ static void check_data(int type, sa_family_t family,=
- const struct cmd *cmd,
->  		       expected.len, result.len, get_linum());
->  }
-> =20
-> +static const char *result_to_str(enum result res)
-> +{
-> +	switch (res) {
-> +	case DROP_ERR_INNER_MAP:
-> +		return "DROP_ERR_INNER_MAP";
-> +	case DROP_ERR_SKB_DATA:
-> +		return "DROP_ERR_SKB_DATA";
-> +	case DROP_ERR_SK_SELECT_REUSEPORT:
-> +		return "DROP_ERR_SK_SELECT_REUSEPORT";
-> +	case DROP_MISC:
-> +		return "DROP_MISC";
-> +	case PASS:
-> +		return "PASS";
-> +	case PASS_ERR_SK_SELECT_REUSEPORT:
-> +		return "PASS_ERR_SK_SELECT_REUSEPORT";
-> +	case NR_RESULTS:
-This should return "UNKNOWN" also.
+The __torture_print_stats() function in locktorture.c carefully
+initializes local variable "min" to statp[0].n_lock_acquired, but
+then compares it to statp[i].n_lock_fail.  Given that the .n_lock_fail
+field should normally be zero, and given the initialization, it seems
+reasonable to display the maximum and minimum number acquisitions
+instead of miscomputing the maximum and minimum number of failures.
+This commit therefore switches from failures to acquisitions.
 
-> +		return "NR_RESULTS";
-> +	default:
-> +		return "UNKNOWN";
-> +	}
-> +}
-> +
+Reported-by: Will Deacon <will@kernel.org>
+Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+Cc: Davidlohr Bueso <dave@stgolabs.net>
+Cc: Josh Triplett <josh@joshtriplett.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+
+diff --git a/kernel/locking/locktorture.c b/kernel/locking/locktorture.c
+index 99475a6..687c1d8 100644
+--- a/kernel/locking/locktorture.c
++++ b/kernel/locking/locktorture.c
+@@ -696,10 +696,10 @@ static void __torture_print_stats(char *page,
+ 		if (statp[i].n_lock_fail)
+ 			fail = true;
+ 		sum += statp[i].n_lock_acquired;
+-		if (max < statp[i].n_lock_fail)
+-			max = statp[i].n_lock_fail;
+-		if (min > statp[i].n_lock_fail)
+-			min = statp[i].n_lock_fail;
++		if (max < statp[i].n_lock_acquired)
++			max = statp[i].n_lock_acquired;
++		if (min > statp[i].n_lock_acquired)
++			min = statp[i].n_lock_acquired;
+ 	}
+ 	page += sprintf(page,
+ 			"%s:  Total: %lld  Max/Min: %ld/%ld %s  Fail: %d %s\n",
