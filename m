@@ -2,111 +2,115 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EB26C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 09:54:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49A4EC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 09:54:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D56CD2253D
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 09:54:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B7C12253D
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 09:54:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LHNQSCBY"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="v5co6l0Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728655AbgAWJyb (ORCPT
+        id S1728803AbgAWJym (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 04:54:31 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:40943 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726026AbgAWJya (ORCPT
+        Thu, 23 Jan 2020 04:54:42 -0500
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:18912 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726792AbgAWJyl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 04:54:30 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579773269;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=JdY/01YnxgEcf8jBEhI8KPQzD/6+XrjHVp2ZZDmVmCk=;
-        b=LHNQSCBYIuzDd4nMLaVBvJbdcJsK/v8i2iYh2URjlVKPWS2HRFiSuBIl4/i/PA3qDrGimP
-        +uAH0gy4Ht3/rvD7Vse9wJaWQyqOwCHCXgyVDW+sOqTAKYpci5jUaBraKeEHr2rRgJJqNJ
-        cG4V7HWCwvzpmN4yyEq3K0CirFourcQ=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-142-bwpWl3lDOJi-X5PWeg9oRA-1; Thu, 23 Jan 2020 04:54:27 -0500
-X-MC-Unique: bwpWl3lDOJi-X5PWeg9oRA-1
-Received: by mail-wr1-f71.google.com with SMTP id 90so1478000wrq.6
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jan 2020 01:54:27 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=JdY/01YnxgEcf8jBEhI8KPQzD/6+XrjHVp2ZZDmVmCk=;
-        b=fDfq8mjchYA1duFXX6d7b4cogw6fwux+ZpNgkD7AAqEEYOHpkTrIBcQX7j9AfToACT
-         HWz57eXUvS0p5jwuNff5xbf774AHmRV2PaAQ8D5uu0CDOtSEj/Vv6XGS7tpkoKDg9ERx
-         oP50widwzFToGOspbBXjWCMjxypdM3ZUG3yvMuEICFqeY71BJ3nEYR+L5zLl6nSDTeJk
-         X4U8oDHVpOyLbfD+UqAYT5FHDs8dZRaWBk2KEd+iXhilqauPXClt4s2jpgxDdn7x1p4P
-         2hxZLW51/HUSbTKcejm60ZYxmrLT7iYsM7FLwg44GQqYxlG2MBpbsC7OQSapi5JFb0fd
-         Md9Q==
-X-Gm-Message-State: APjAAAUKn0YqFb12wDITp/+Bsi8nOHyIivtKUEPszCTVi/M96VFruGdQ
-        16CGpsGs/MmFWSLtcASD8216MAy0jDU4JOYlgNNORn3qoK1ofuW92KmHw+ppB4ccn83IGhnVQU1
-        xPuBYa7gPy+/WcOw+l4oora8d
-X-Received: by 2002:adf:d183:: with SMTP id v3mr17317244wrc.180.1579773266297;
-        Thu, 23 Jan 2020 01:54:26 -0800 (PST)
-X-Google-Smtp-Source: APXvYqyAtrBi9gbReQo2xoYrZX95q69/GNjES5FxPk/zX0+P2S8Pau4UYtndwwrsnAMcOxolIcX0Xg==
-X-Received: by 2002:adf:d183:: with SMTP id v3mr17317202wrc.180.1579773266023;
-        Thu, 23 Jan 2020 01:54:26 -0800 (PST)
-Received: from ?IPv6:2001:b07:6468:f312:b8fe:679e:87eb:c059? ([2001:b07:6468:f312:b8fe:679e:87eb:c059])
-        by smtp.gmail.com with ESMTPSA id c9sm2166949wme.41.2020.01.23.01.54.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 23 Jan 2020 01:54:25 -0800 (PST)
-Subject: Re: [PATCH] KVM: nVMX: set rflags to specify success in
- handle_invvpid() default case
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>,
-        linmiaohe <linmiaohe@huawei.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org, x86@kernel.org,
-        rkrcmar@redhat.com, sean.j.christopherson@intel.com,
-        wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com
-References: <1579749241-712-1-git-send-email-linmiaohe@huawei.com>
- <8736c6sga7.fsf@vitty.brq.redhat.com>
- <1a083ac8-3b01-fd2d-d867-2b3956cdef6d@redhat.com>
- <87wo9iqzfa.fsf@vitty.brq.redhat.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <ee7d815f-750f-3d0e-2def-1631be66a483@redhat.com>
-Date:   Thu, 23 Jan 2020 10:54:22 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
-MIME-Version: 1.0
-In-Reply-To: <87wo9iqzfa.fsf@vitty.brq.redhat.com>
-Content-Type: text/plain; charset=utf-8
+        Thu, 23 Jan 2020 04:54:41 -0500
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00N9qYtZ031103;
+        Thu, 23 Jan 2020 10:54:32 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : subject :
+ date : message-id : references : in-reply-to : content-type : content-id :
+ content-transfer-encoding : mime-version; s=STMicroelectronics;
+ bh=BECIotAqTZ4curw6tCZp7XoV78IzRZm8xDxenBuoeYg=;
+ b=v5co6l0ZT0ja4V444Q2EDiWN48TF9JtopDiyHfdxtgtrK6wKjZXYZWW/tvL8DC/7528h
+ ndu/iObcqI+9foqqxMixF8AQG+qqi5GyMICYMGWfmivAldkqC/RJVvRxQ0CvIOy26Cgt
+ qjzQO07ievY49x92P3GjLXgcIGewPdkp+cbB5lmymzLasxuZRMIEO3+AgrsZNUfIhP2Y
+ z167R2XX6xpRw3y0HAFBv1cV8bGRCVjborvMAF6HWiEa5QW3itXx7E/P5HUgLKQF3Cgd
+ DUGEhBKXb/fayv76FNlFbV9aCy6IZrSybiZZL8rtsFvr1UUlR9kyygeUlRFIUs2LMJ9s kA== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2xkrp2hev9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 23 Jan 2020 10:54:32 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id E11CD10003D;
+        Thu, 23 Jan 2020 10:54:30 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id D4C42220303;
+        Thu, 23 Jan 2020 10:54:30 +0100 (CET)
+Received: from SFHDAG6NODE3.st.com (10.75.127.18) by SFHDAG3NODE3.st.com
+ (10.75.127.9) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Thu, 23 Jan
+ 2020 10:54:30 +0100
+Received: from SFHDAG6NODE3.st.com ([fe80::d04:5337:ab17:b6f6]) by
+ SFHDAG6NODE3.st.com ([fe80::d04:5337:ab17:b6f6%20]) with mapi id
+ 15.00.1473.003; Thu, 23 Jan 2020 10:54:30 +0100
+From:   Philippe CORNU <philippe.cornu@st.com>
+To:     Yannick FERTRE <yannick.fertre@st.com>,
+        Benjamin GAIGNARD <benjamin.gaignard@st.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        "Alexandre TORGUE" <alexandre.torgue@st.com>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] drm/stm: dsi: stm mipi dsi doesn't print error on probe
+ deferral
+Thread-Topic: [PATCH] drm/stm: dsi: stm mipi dsi doesn't print error on probe
+ deferral
+Thread-Index: AQHV0ETplOrB/RayDE+q4WmBGigVhKf39OeA
+Date:   Thu, 23 Jan 2020 09:54:30 +0000
+Message-ID: <1fd9adf5-873b-2b9d-fe22-278f2ea64746@st.com>
+References: <1579602245-7577-1-git-send-email-yannick.fertre@st.com>
+In-Reply-To: <1579602245-7577-1-git-send-email-yannick.fertre@st.com>
+Accept-Language: fr-FR, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.75.127.51]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <8B3A3BD23C9EC140904C34361AB91F6F@st.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-01-23_01:2020-01-23,2020-01-22 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 23/01/20 10:45, Vitaly Kuznetsov wrote:
->>> SDM says that "If an
->>> unsupported INVVPID type is specified, the instruction fails." and this
->>> is similar to INVEPT and I decided to check what handle_invept()
->>> does. Well, it does BUG_ON(). 
->>>
->>> Are we doing the right thing in any of these cases?
->>
->> Yes, both INVEPT and INVVPID catch this earlier.
->>
->> So I'm leaning towards not applying Miaohe's patch.
-> 
-> Well, we may at least want to converge on BUG_ON() for both
-> handle_invvpid()/handle_invept(), there's no need for them to differ.
-
-WARN_ON_ONCE + nested_vmx_failValid would probably be better, if we
-really want to change this.
-
-Paolo
-
+RGVhcnMgWWFubmljayAmIEV0aWVubmUsDQpUaGFuayB5b3UgZm9yIHlvdXIgcGF0Y2gsDQoNClJl
+dmlld2VkLWJ5OiBQaGlsaXBwZSBDb3JudSA8cGhpbGlwcGUuY29ybnVAc3QuY29tPg0KDQpQaGls
+aXBwZSA6LSkNCg0KT24gMS8yMS8yMCAxMToyNCBBTSwgWWFubmljayBGZXJ0cmUgd3JvdGU6DQo+
+IEZyb206IEV0aWVubmUgQ2FycmllcmUgPGV0aWVubmUuY2FycmllcmVAc3QuY29tPg0KPiANCj4g
+Q2hhbmdlIERTSSBkcml2ZXIgdG8gbm90IHByaW50IGFuIGVycm9yIHRyYWNlIHdoZW4gcHJvYmUN
+Cj4gaXMgZGVmZXJyZWQgZm9yIGEgY2xvY2sgcmVzb3VyY2UuDQo+IA0KPiBTaWduZWQtb2ZmLWJ5
+OiBFdGllbm5lIENhcnJpZXJlIDxldGllbm5lLmNhcnJpZXJlQHN0LmNvbT4NCj4gLS0tDQo+ICAg
+ZHJpdmVycy9ncHUvZHJtL3N0bS9kd19taXBpX2RzaS1zdG0uYyB8IDQgKysrLQ0KPiAgIDEgZmls
+ZSBjaGFuZ2VkLCAzIGluc2VydGlvbnMoKyksIDEgZGVsZXRpb24oLSkNCj4gDQo+IGRpZmYgLS1n
+aXQgYS9kcml2ZXJzL2dwdS9kcm0vc3RtL2R3X21pcGlfZHNpLXN0bS5jIGIvZHJpdmVycy9ncHUv
+ZHJtL3N0bS9kd19taXBpX2RzaS1zdG0uYw0KPiBpbmRleCA0YjE2NTYzLi4yZTFmMjY2IDEwMDY0
+NA0KPiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vc3RtL2R3X21pcGlfZHNpLXN0bS5jDQo+ICsrKyBi
+L2RyaXZlcnMvZ3B1L2RybS9zdG0vZHdfbWlwaV9kc2ktc3RtLmMNCj4gQEAgLTM3Nyw3ICszNzcs
+OSBAQCBzdGF0aWMgaW50IGR3X21pcGlfZHNpX3N0bV9wcm9iZShzdHJ1Y3QgcGxhdGZvcm1fZGV2
+aWNlICpwZGV2KQ0KPiAgIAlkc2ktPnBsbHJlZl9jbGsgPSBkZXZtX2Nsa19nZXQoZGV2LCAicmVm
+Iik7DQo+ICAgCWlmIChJU19FUlIoZHNpLT5wbGxyZWZfY2xrKSkgew0KPiAgIAkJcmV0ID0gUFRS
+X0VSUihkc2ktPnBsbHJlZl9jbGspOw0KPiAtCQlEUk1fRVJST1IoIlVuYWJsZSB0byBnZXQgcGxs
+IHJlZmVyZW5jZSBjbG9jazogJWRcbiIsIHJldCk7DQo+ICsJCWlmIChyZXQgIT0gLUVQUk9CRV9E
+RUZFUikNCj4gKwkJCURSTV9FUlJPUigiVW5hYmxlIHRvIGdldCBwbGwgcmVmZXJlbmNlIGNsb2Nr
+OiAlZFxuIiwNCj4gKwkJCQkgIHJldCk7DQo+ICAgCQlnb3RvIGVycl9jbGtfZ2V0Ow0KPiAgIAl9
+DQo+ICAgDQo+IA==
