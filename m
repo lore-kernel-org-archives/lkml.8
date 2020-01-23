@@ -2,72 +2,75 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 403D7C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 09:19:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA1DBC33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 09:20:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 155F124673
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 09:19:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A841824673
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 09:20:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726205AbgAWJTs (ORCPT
+        id S1726871AbgAWJUB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 04:19:48 -0500
-Received: from mga01.intel.com ([192.55.52.88]:48096 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725785AbgAWJTr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 04:19:47 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Jan 2020 01:19:47 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,353,1574150400"; 
-   d="scan'208";a="245336174"
-Received: from um.fi.intel.com (HELO um) ([10.237.72.57])
-  by orsmga002.jf.intel.com with ESMTP; 23 Jan 2020 01:19:44 -0800
-From:   Alexander Shishkin <alexander.shishkin@linux.intel.com>
-To:     Song Liu <songliubraving@fb.com>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        Kernel Team <Kernel-team@fb.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        alexander.shishkin@linux.intel.com
-Subject: Re: [PATCH] perf/core: fix mlock accounting in perf_mmap()
-In-Reply-To: <79CAEE07-57BC-4915-A812-DD99AAF1B809@fb.com>
-References: <20200117234503.1324050-1-songliubraving@fb.com> <87blqybknz.fsf@ashishki-desk.ger.corp.intel.com> <79CAEE07-57BC-4915-A812-DD99AAF1B809@fb.com>
-Date:   Thu, 23 Jan 2020 11:19:44 +0200
-Message-ID: <875zh2bkcv.fsf@ashishki-desk.ger.corp.intel.com>
+        Thu, 23 Jan 2020 04:20:01 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:36198 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725785AbgAWJUB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jan 2020 04:20:01 -0500
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1iuYeZ-0007Cn-1G; Thu, 23 Jan 2020 09:19:55 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Lars-Peter Clausen <lars@metafoo.de>,
+        Michael Hennerich <Michael.Hennerich@analog.com>,
+        Stefan Popa <stefan.popa@analog.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-iio@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH][V2] iio: ad5755: fix spelling mistake "to" -> "too" and grammar
+Date:   Thu, 23 Jan 2020 09:19:54 +0000
+Message-Id: <20200123091954.10506-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Song Liu <songliubraving@fb.com> writes:
+From: Colin Ian King <colin.king@canonical.com>
 
->> On Jan 20, 2020, at 12:24 AM, Alexander Shishkin <alexander.shishkin@linux.intel.com> wrote:
->> 
->> Song Liu <songliubraving@fb.com> writes:
->> 
->>> sysctl_perf_event_mlock and user->locked_vm can change value
->>> independently, so we can't guarantee:
->>> 
->>>    user->locked_vm <= user_lock_limit
->> 
->> This means: if the sysctl got sufficiently decreased, so that the
->> existing locked_vm exceeds it, we need to deal with the overflow, right?
->
-> Reducing sysctl is one way to generate the overflow. Another way is to 
-> call setrlimit() from user space to allow bigger user->locked_vm. 
+There is a spelling mistake and grammar mistake in a dev_err
+message. Fix it.
 
-You mean RLIMIT_MEMLOCK? That's a limit on mm->pinned_vm. Doesn't affect
-user->locked_vm.
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+V2: fix grammar too, thanks to Alexandru Ardelean for spotting this.
+---
+ drivers/iio/dac/ad5755.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Regards,
---
-Alex
+diff --git a/drivers/iio/dac/ad5755.c b/drivers/iio/dac/ad5755.c
+index b9175fb4c8ab..1359a1a92fdc 100644
+--- a/drivers/iio/dac/ad5755.c
++++ b/drivers/iio/dac/ad5755.c
+@@ -655,7 +655,7 @@ static struct ad5755_platform_data *ad5755_parse_dt(struct device *dev)
+ 	for_each_child_of_node(np, pp) {
+ 		if (devnr >= AD5755_NUM_CHANNELS) {
+ 			dev_err(dev,
+-				"There is to many channels defined in DT\n");
++				"There are too many channels defined in DT\n");
+ 			goto error_out;
+ 		}
+ 
+-- 
+2.24.0
+
