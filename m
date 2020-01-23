@@ -2,145 +2,131 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1D96C3F68F
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 18:52:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18419C33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 18:54:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7416824655
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 18:52:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="e0eAkopM"
+	by mail.kernel.org (Postfix) with ESMTP id DF0FC2467B
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 18:54:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729017AbgAWSw3 (ORCPT
+        id S1728901AbgAWSyR convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 13:52:29 -0500
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:38971 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728831AbgAWSw3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 13:52:29 -0500
-Received: by mail-pg1-f195.google.com with SMTP id 4so1818413pgd.6
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jan 2020 10:52:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=/HIgWTybk6CC3JVz4nmT3PGzBcRGE/1gMLzKZ2iu2jY=;
-        b=e0eAkopMT/lWXA2we6hDwxa3kgFS/1T2VaefkmGUvPHOkyB45OFh8csM4c9XBF7xxD
-         xJ4sbwuFb0MoTDt3p+0b2KMrsnFRTtSRpgh7CJZlR2d9xr+WmgPJOOqY245XeJQtY0Dl
-         PunG5hZeVpZd8CjRRwXKwEDju6gU0xZvDFk1XfhK5zpKScZKzLIqLAXTtYLryco4vhK5
-         vPSfPpULdU+LBcDKqmGfGTQhQGkrSovm4H03SQA5DnNnUf6fAjAhPY/fiCPysINq2Gs9
-         yX4zTN6GgeaSRmbpN3MV2heoPOwgg288JgwR+DBFG8L6oKit2kQgL2NhpG5dZEgaJ0m/
-         lINA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=/HIgWTybk6CC3JVz4nmT3PGzBcRGE/1gMLzKZ2iu2jY=;
-        b=Wg/tugdAQjIl2rxprg3sK8Qgbp8jP6lfYz6a2Rkis9eReVSLe3mrZx+/6fUry/mooz
-         a9ebXAW4lzcG85YiPBY9mUZozs8KfGUBs/q5WMMXDBT0JTKu84yMbxf8BK/C2PUD7m7k
-         RLy39s9q4AUe3ANyT1VnubLBlkGdhpXOXfkczqXOOZKEC5TytW01hIgz7C/bxmmmjR8K
-         UIA+tEPeeExIs1zZ3AUD1SuGwXsSRKhCNlQRDMdnfwtxJHTtvnP+c5K+7dEhHX8q6oQ4
-         XwyBlBt9dlz0oqjZ9KVMD5qC9JCfFDyttplWmyplO9ruuty1wQkBpI9zWIOheurngIAi
-         A72w==
-X-Gm-Message-State: APjAAAUgWDXmZ+9eNOGbP4VXjc0A6Oag4b5ZCYueq2yYzfm8npArXLyL
-        2tZsB/NrA/cSBZZxo+4TgtzKVQ==
-X-Google-Smtp-Source: APXvYqwb0Dm759onHzJsHI0qaChii+UBFR/+cfwTXWHY+akNML1O7gnTFlmahTk/bilyqtYvVscuCQ==
-X-Received: by 2002:aa7:9729:: with SMTP id k9mr8705251pfg.72.1579805548644;
-        Thu, 23 Jan 2020 10:52:28 -0800 (PST)
-Received: from ?IPv6:2600:380:4562:fb25:b980:6664:b71f:35b5? ([2600:380:4562:fb25:b980:6664:b71f:35b5])
-        by smtp.gmail.com with ESMTPSA id q25sm3396820pfg.41.2020.01.23.10.52.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 23 Jan 2020 10:52:28 -0800 (PST)
-Subject: Re: [PATCH 1/1] blk/core: Gracefully handle unset make_request_fn
-To:     Mike Snitzer <snitzer@redhat.com>,
-        Stefan Bader <stefan.bader@canonical.com>
-Cc:     linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
-        dm-devel@redhat.com, Tyler Hicks <tyler.hicks@canonical.com>,
-        Alasdair Kergon <agk@redhat.com>
-References: <20200123091713.12623-1-stefan.bader@canonical.com>
- <20200123091713.12623-2-stefan.bader@canonical.com>
- <20200123103541.GA28102@redhat.com> <20200123172816.GA31063@redhat.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <81055166-37fb-ad65-6a53-11c22c626ab1@kernel.dk>
-Date:   Thu, 23 Jan 2020 11:52:26 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-MIME-Version: 1.0
-In-Reply-To: <20200123172816.GA31063@redhat.com>
-Content-Type: text/plain; charset=utf-8
+        Thu, 23 Jan 2020 13:54:17 -0500
+Received: from mga05.intel.com ([192.55.52.43]:59071 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727590AbgAWSyQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jan 2020 13:54:16 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Jan 2020 10:54:16 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,354,1574150400"; 
+   d="scan'208";a="221697238"
+Received: from orsmsx103.amr.corp.intel.com ([10.22.225.130])
+  by fmsmga007.fm.intel.com with ESMTP; 23 Jan 2020 10:54:15 -0800
+Received: from orsmsx102.amr.corp.intel.com ([169.254.3.100]) by
+ ORSMSX103.amr.corp.intel.com ([169.254.5.147]) with mapi id 14.03.0439.000;
+ Thu, 23 Jan 2020 10:54:15 -0800
+From:   "Yang, Fei" <fei.yang@intel.com>
+To:     Felipe Balbi <balbi@kernel.org>,
+        John Stultz <john.stultz@linaro.org>,
+        lkml <linux-kernel@vger.kernel.org>
+CC:     Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>,
+        Thinh Nguyen <thinhn@synopsys.com>,
+        Tejas Joglekar <tejas.joglekar@synopsys.com>,
+        "Andrzej Pietrasiewicz" <andrzej.p@collabora.com>,
+        Jack Pham <jackp@codeaurora.org>, Todd Kjos <tkjos@google.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        "Linux USB List" <linux-usb@vger.kernel.org>,
+        stable <stable@vger.kernel.org>,
+        "John Stultz" <john.stultz@linaro.org>
+Subject: RE: [RFC][PATCH 1/2] usb: dwc3: gadget: Check for IOC/LST bit in
+ both event->status and TRB->ctrl fields
+Thread-Topic: [RFC][PATCH 1/2] usb: dwc3: gadget: Check for IOC/LST bit in
+ both event->status and TRB->ctrl fields
+Thread-Index: AQHV0XMMDal2ka/y0kSxMT/Pi5VKVaf4X3SAgAA3SWA=
+Date:   Thu, 23 Jan 2020 18:54:15 +0000
+Message-ID: <02E7334B1630744CBDC55DA8586225837F9EE439@ORSMSX102.amr.corp.intel.com>
+References: <20200122222645.38805-1-john.stultz@linaro.org>
+ <20200122222645.38805-2-john.stultz@linaro.org> <87tv4m4ov2.fsf@kernel.org>
+In-Reply-To: <87tv4m4ov2.fsf@kernel.org>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-originating-ip: [10.22.254.138]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/23/20 10:28 AM, Mike Snitzer wrote:
-> On Thu, Jan 23 2020 at  5:35am -0500,
-> Mike Snitzer <snitzer@redhat.com> wrote:
-> 
->> On Thu, Jan 23 2020 at  4:17am -0500,
->> Stefan Bader <stefan.bader@canonical.com> wrote:
->>
->>> When device-mapper adapted for multi-queue functionality, they
->>> also re-organized the way the make-request function was set.
->>> Before, this happened when the device-mapper logical device was
->>> created. Now it is done once the mapping table gets loaded the
->>> first time (this also decides whether the block device is request
->>> or bio based).
->>>
->>> However in generic_make_request(), the request function gets used
->>> without further checks and this happens if one tries to mount such
->>> a partially set up device.
->>>
->>> This can easily be reproduced with the following steps:
->>>  - dmsetup create -n test
->>>  - mount /dev/dm-<#> /mnt
->>>
->>> This maybe is something which also should be fixed up in device-
->>> mapper.
->>
->> I'll look closer at other options.
->>
->>> But given there is already a check for an unset queue
->>> pointer and potentially there could be other drivers which do or
->>> might do the same, it sounds like a good move to add another check
->>> to generic_make_request_checks() and to bail out if the request
->>> function has not been set, yet.
->>>
->>> BugLink: https://bugs.launchpad.net/bugs/1860231
->>
->> >From that bug;
->> "The currently proposed fix introduces no chance of stability
->> regressions. There is a chance of a very small performance regression
->> since an additional pointer comparison is performed on each block layer
->> request but this is unlikely to be noticeable."
->>
->> This captures my immediate concern: slowing down everyone for this DM
->> edge-case isn't desirable.
-> 
-> SO I had a look and there isn't anything easier than adding the proposed
-> NULL check in generic_make_request_checks().  Given the many
-> conditionals in that  function.. what's one more? ;)
-> 
-> I looked at marking the queue frozen to prevent IO via
-> blk_queue_enter()'s existing cheeck -- but that quickly felt like an
-> abuse, especially in that there isn't a queue unfreeze for bio-based.
-> 
-> Jens, I'll defer to you to judge this patch further.  If you're OK with
-> it: cool.  If not, I'm open to suggestions for how to proceed.  
-> 
+>> The present code in dwc3_gadget_ep_reclaim_completed_trb() will check 
+>> for IOC/LST bit in the event->status and returns if IOC/LST bit is 
+>> set. This logic doesn't work if multiple TRBs are queued per request 
+>> and the IOC/LST bit is set on the last TRB of that request.
+>> Consider an example where a queued request has multiple queued TRBs 
+>> and IOC/LST bit is set only for the last TRB. In this case, the Core 
+>> generates XferComplete/XferInProgress events only for the last TRB 
+>> (since IOC/LST are set only for the last TRB). As per the logic in
+>> dwc3_gadget_ep_reclaim_completed_trb() event->status is checked for 
+>> IOC/LST bit and returns on the first TRB. This makes the remaining 
+>> TRBs left unhandled.
+>> To aviod this, changed the code to check for IOC/LST bits in both
+>     avoid
+>
+>> event->status & TRB->ctrl. This patch does the same.
+>
+> We don't need to check both. It's very likely that checking the TRB is enough.
+>
+>> At a practical level, this patch resolves USB transfer stalls seen 
+>> with adb on dwc3 based HiKey960 after functionfs gadget added 
+>> scatter-gather support around v4.20.
+>
+> Right, I remember asking for tracepoint data showing this problem happening. It's the best way to figure out what's really going on.
+>
+> Before we accept these two patches, could you collect dwc3 tracepoint data and share here?
 
-It does kinda suck... The generic_make_request_checks() is a mess, and
-this doesn't make it any better. Any reason why we can't solve this
-two step setup in a clean fashion instead of patching around it like
-this? Feels like a pretty bad hack, tbh.
+I should have replied to this one. Sorry for the confusion on the other thread.
+I have sent tracepoints long time ago for this problem, but the tracepoints did help much on debugging the issue, so I'm not going to send again.
 
--- 
-Jens Axboe
+But the problem is really obvious though. In function dwc3_gadget_ep_reclaim_trb_sg(), the for_each_sg loop doesn't get a chance to iterate through all TRBs in the sg list, because this function only gets called when the last TRB in the list is completed (because of setting IOC), so at this moment event->status has IOC bit set. The consequence is that, when the for_each_sg loop trying to reclaim the first TRB in the sg list, the call dwc3_gadget_ep_reclaim_completed_trb() returns 1 (if (event-status & DEPEVT_STATUS_IOC) return 1;), thus the for loop is terminated before the rest of the TRBs are reclaimed.
 
+static int dwc3_gadget_ep_reclaim_trb_sg(struct dwc3_ep *dep,
+                struct dwc3_request *req, const struct dwc3_event_depevt *event,
+                int status)
+{
+        struct dwc3_trb *trb = &dep->trb_pool[dep->trb_dequeue];
+        struct scatterlist *sg = req->sg;
+        struct scatterlist *s;
+        unsigned int pending = req->num_pending_sgs;
+        unsigned int i;
+        int ret = 0;
+
+        for_each_sg(sg, s, pending, i) {
+                trb = &dep->trb_pool[dep->trb_dequeue];
+
+                if (trb->ctrl & DWC3_TRB_CTRL_HWO)
+                        break;
+
+                req->sg = sg_next(s);
+                req->num_pending_sgs--;
+
+                ret = dwc3_gadget_ep_reclaim_completed_trb(dep, req,
+                                trb, event, status, true);
+                if (ret)
+                        break;
+        }
+
+        return ret;
+}
+ 
