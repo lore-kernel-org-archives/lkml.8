@@ -2,547 +2,134 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9837FC3F68F
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 07:03:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF726C33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 07:03:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 781862467F
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 07:03:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8525B22522
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 07:03:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="DJ8eo2mA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726029AbgAWHDd (ORCPT
+        id S1726164AbgAWHDv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 02:03:33 -0500
-Received: from smtp2207-205.mail.aliyun.com ([121.197.207.205]:42081 "EHLO
-        smtp2207-205.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725535AbgAWHDd (ORCPT
+        Thu, 23 Jan 2020 02:03:51 -0500
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:45258 "EHLO
+        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725535AbgAWHDv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 02:03:33 -0500
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.07436282|-1;CH=green;DM=CONTINUE|CONTINUE|true|0.265628-0.0172641-0.717108;DS=CONTINUE|ham_system_inform|0.0500938-0.000935655-0.948971;FP=0|0|0|0|0|-1|-1|-1;HT=e01l07447;MF=liaoweixiong@allwinnertech.com;NM=1;PH=DS;RN=16;RT=16;SR=0;TI=SMTPD_---.GgVejnm_1579763006;
-Received: from 192.168.43.221(mailfrom:liaoweixiong@allwinnertech.com fp:SMTPD_---.GgVejnm_1579763006)
-          by smtp.aliyun-inc.com(10.147.44.145);
-          Thu, 23 Jan 2020 15:03:27 +0800
-Subject: Re: [PATCH v1 11/11] mtd: new support oops logger based on pstore/blk
-To:     Vignesh Raghavendra <vigneshr@ti.com>,
-        Kees Cook <keescook@chromium.org>,
-        Anton Vorontsov <anton@enomsg.org>,
-        Colin Cross <ccross@android.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mtd@lists.infradead.org
-References: <1579482233-2672-1-git-send-email-liaoweixiong@allwinnertech.com>
- <1579482233-2672-12-git-send-email-liaoweixiong@allwinnertech.com>
- <de3659ad-10bc-f14c-169d-d004c8726316@ti.com>
-From:   liaoweixiong <liaoweixiong@allwinnertech.com>
-Message-ID: <bee57965-6160-0979-68ee-d3841a585df9@allwinnertech.com>
-Date:   Thu, 23 Jan 2020 15:03:25 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-MIME-Version: 1.0
-In-Reply-To: <de3659ad-10bc-f14c-169d-d004c8726316@ti.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+        Thu, 23 Jan 2020 02:03:51 -0500
+Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00N6xqk1017754;
+        Thu, 23 Jan 2020 02:03:31 -0500
+Received: from nam04-bn3-obe.outbound.protection.outlook.com (mail-bn3nam04lp2054.outbound.protection.outlook.com [104.47.46.54])
+        by mx0a-00128a01.pphosted.com with ESMTP id 2xkvrbn2mw-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 23 Jan 2020 02:03:31 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ML//cD0sbG0QN+HFPdMGu1eCmDS45jESI3IQZG1bximLUQHlXnszzBxJ+MYHvfiggRpnsMXAYNOoatw4VU9rS9cc23kdR+FfBBPO4OIkofw3OI58QmyWqeqp5YB/k6mPD4mWZdyXsMvJTtLCoXsq5te1zC7bwilJUeucJv7x7i8IaoO9//T24mEgVi3W5Q0nbgL7aJib6YaLAYWkntoqi34vaiJ2dE/ON/6qG2FZm53npihUd7Yq8EGXul0ostW0lYugcfX0W2K4mQB5BWXDqyCdWZaseHi6ak9KK4LBODpNzRpsC28fCPEItgj9z5gWxp/9CFZGiE0572ovg2GSdg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=51w0vRpXImliqnOaCFVICBelIsG77PJjdIpVQ2ykInw=;
+ b=QOC13v1Qj+By4cz1KC1XBhAeh+tRhJyRp0aorWJmvfefuLQX1f60jBen+QjJF/L/KNd4h/5j/sCkk2iBqAjENh74Zpkq5TxSlop8lo0hxazusBoCez+X+oMg1XZIhc6rKIKdpzM6uIDp5kf1my5ww4xmpUYr3KtjLY/CCLSDCsHNVhPoIHLAJ/ErflIbbZhOIRzzcZD1pMUNJ/flN3apjEB808KCnhN/pzaDqOSDBqt6X+4QLJylZFUQHRyo1CfqsUthnpf8Li6AX9ADsHcffQl2dtnpyWVZl9ToQqPZfQlCadJYjHERhPxOAunCSM56QDET05lTz0uUFQb1LRlafw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=analog.com; dmarc=pass action=none header.from=analog.com;
+ dkim=pass header.d=analog.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=51w0vRpXImliqnOaCFVICBelIsG77PJjdIpVQ2ykInw=;
+ b=DJ8eo2mAFuV2Aq3h4uB9iQBpYv0pRXBZSf7Ny/JI3IjWh5uCZJufvxeHecIN6AYuFf5r3eA8lL8ZzgrajbEY9eOHuEk7IZsxTnDdcCfg+mLE57R0Pity779MJFMBwm13kcucsqxyKHclnVYHm6Q4uXwQGMARgBLVc5pxYSDpbAk=
+Received: from CH2PR03MB5192.namprd03.prod.outlook.com (20.180.12.152) by
+ CH2SPR01MB0025.namprd03.prod.outlook.com (20.180.7.199) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2644.28; Thu, 23 Jan 2020 07:03:27 +0000
+Received: from CH2PR03MB5192.namprd03.prod.outlook.com
+ ([fe80::dce7:7fec:f33f:ad39]) by CH2PR03MB5192.namprd03.prod.outlook.com
+ ([fe80::dce7:7fec:f33f:ad39%7]) with mapi id 15.20.2665.017; Thu, 23 Jan 2020
+ 07:03:27 +0000
+From:   "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
+To:     "zzzzPopa, zzzzStefan Serban" <StefanSerban.Popa@analog.com>,
+        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
+        "jic23@kernel.org" <jic23@kernel.org>,
+        "colin.king@canonical.com" <colin.king@canonical.com>,
+        "Hennerich, Michael" <Michael.Hennerich@analog.com>,
+        "lars@metafoo.de" <lars@metafoo.de>,
+        "knaack.h@gmx.de" <knaack.h@gmx.de>,
+        "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>
+CC:     "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] iio: ad5755: fix spelling mistake "to" -> "too"
+Thread-Topic: [PATCH] iio: ad5755: fix spelling mistake "to" -> "too"
+Thread-Index: AQHV0X/sP6h7qhLTzEuBaVo2SdpnK6f31A8A
+Date:   Thu, 23 Jan 2020 07:03:27 +0000
+Message-ID: <c32a44272aa593c3d0cda71a50b08f33338a2dc0.camel@analog.com>
+References: <20200122235839.2830850-1-colin.king@canonical.com>
+In-Reply-To: <20200122235839.2830850-1-colin.king@canonical.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [137.71.226.54]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: fee2da5e-0bfc-4526-58c1-08d79fd258b6
+x-ms-traffictypediagnostic: CH2SPR01MB0025:
+x-ld-processed: eaa689b4-8f87-40e0-9c6f-7228de4d754a,ExtAddr
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <CH2SPR01MB0025AC3D2CBD785D23DBD730F90F0@CH2SPR01MB0025.namprd03.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:5797;
+x-forefront-prvs: 029174C036
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(136003)(396003)(346002)(39860400002)(366004)(189003)(199004)(54906003)(110136005)(86362001)(8676002)(4326008)(81166006)(4744005)(81156014)(8936002)(2616005)(316002)(6512007)(71200400001)(6486002)(66476007)(64756008)(66556008)(66946007)(66446008)(6506007)(76116006)(26005)(186003)(36756003)(478600001)(5660300002)(2906002)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:CH2SPR01MB0025;H:CH2PR03MB5192.namprd03.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: analog.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: WDlf9ZRvH4krd1EujpU+ddcCSi0PtSctYSHN3vcEpY+r/iwDrM5kCuJWnFzm9fd4iGFnFXRFjgxPKGZq5ZNYeCVZANru4hh5942vW0u+qGCTTMDZ9FfjgQZ4O0y3nE06nyoaT8Otn3ZjEUwavIT04uo++Jppkq3uFxugOHE1LTXqoPxd1VWaKWm6g8+h2BItL/H2MSxnyRa8MxY+ILVHHkEhqM+5w20WMstSrUKh3FhwjdizS7/44v8MrSsSPukpjSMgdhSMqzGNCxYmaLi2fR2+gSESJkQUSNeJq8DPtsQalfQ4JyrFQWkymZ7OxTLlCf0bFJ481V1veuAPBHT/i8esN+CIfSw78KYiOEQFh7n15eDjWQvZ8UUUZJk+30UXULNtPcYDtzYBPeDTfClqn5z0ai/5+zLQzseezUZ8o9FXLu4yg03MEbN4mfnI5x2nS8/xl9U9AXJZuhf2t1jJHA7u42IpaPnED7oD+Go9zFFeqa8AiWyS7jK1VzAOfFiw
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <E5EDDFC08C967B48A2285F2BB0D08756@namprd03.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: analog.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: fee2da5e-0bfc-4526-58c1-08d79fd258b6
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Jan 2020 07:03:27.4258
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: K7wntI/o+bJYF+A8vNcy94zI3WZAOzHtIrOda+4w1/uCoUazGcus9K58z2BOw8nh3ERagQIL11gJ7zRqWWquzWxyz8Fb3LLltkktzgGL3q8=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2SPR01MB0025
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-01-22_08:2020-01-22,2020-01-22 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
+ lowpriorityscore=0 suspectscore=0 mlxscore=0 malwarescore=0
+ impostorscore=0 adultscore=0 phishscore=0 bulkscore=0 clxscore=1011
+ priorityscore=1501 mlxlogscore=999 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-1910280000 definitions=main-2001230058
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-hi Vignesh Raghavendra,
-
-On 2020/1/23 下午12:24, Vignesh Raghavendra wrote:
-> Hi
-> 
-> On 20/01/20 6:33 am, WeiXiong Liao wrote:
-> [...]
->> +static inline int mtdpstore_panic_block_isbad(struct mtdpstore_context *cxt,
->> +		loff_t off)
->> +{
->> +	struct mtd_info *mtd = cxt->mtd;
->> +	u64 blknum = div_u64(off, mtd->erasesize);
->> +
->> +	return test_bit(blknum, cxt->badmap);
->> +}
->> +
->> +static inline void mtdpstore_mark_used(struct mtdpstore_context *cxt,
->> +		loff_t off)
->> +{
->> +	u64 zonenum = div_u64(off, cxt->bo_info.dmesg_size);
->> +
->> +	pr_debug("mark zone %llu used\n", zonenum);
-> 
-> Please replace pr_*() with dev_*() throughout the patch. Device pointer
-> should be available via struct mtd_info
-> 
-
-OK. I will fix it later. Thank you.
-
-> Regards
-> Vignesh
-> 
->> +	set_bit(zonenum, cxt->usedmap);
->> +}
->> +
->> +static inline void mtdpstore_mark_unused(struct mtdpstore_context *cxt,
->> +		loff_t off)
->> +{
->> +	u64 zonenum = div_u64(off, cxt->bo_info.dmesg_size);
->> +
->> +	pr_debug("mark zone %llu unused\n", zonenum);
->> +	clear_bit(zonenum, cxt->usedmap);
->> +}
->> +
->> +static inline void mtdpstore_block_mark_unused(struct mtdpstore_context *cxt,
->> +		loff_t off)
->> +{
->> +	u64 zonenum = div_u64(off, cxt->bo_info.dmesg_size);
->> +	u32 zonecnt = cxt->mtd->erasesize / cxt->bo_info.dmesg_size;
->> +
->> +	while (zonecnt > 0) {
->> +		pr_debug("mark zone %llu unused\n", zonenum);
->> +		clear_bit(zonenum, cxt->usedmap);
->> +		zonenum++;
->> +		zonecnt--;
->> +	}
->> +}
->> +
->> +static inline int mtdpstore_is_used(struct mtdpstore_context *cxt, loff_t off)
->> +{
->> +	u64 zonenum = div_u64(off, cxt->bo_info.dmesg_size);
->> +	u64 blknum = div_u64(off, cxt->mtd->erasesize);
->> +
->> +	if (test_bit(blknum, cxt->badmap))
->> +		return true;
->> +	return test_bit(zonenum, cxt->usedmap);
->> +}
->> +
->> +static int mtdpstore_block_is_used(struct mtdpstore_context *cxt,
->> +		loff_t off)
->> +{
->> +	u64 zonenum = div_u64(off, cxt->bo_info.dmesg_size);
->> +	u32 zonecnt = cxt->mtd->erasesize / cxt->bo_info.dmesg_size;
->> +
->> +	while (zonecnt > 0) {
->> +		if (test_bit(zonenum, cxt->usedmap))
->> +			return true;
->> +		zonenum++;
->> +		zonecnt--;
->> +	}
->> +	return false;
->> +}
->> +
->> +static int mtdpstore_is_empty(struct mtdpstore_context *cxt, char *buf,
->> +		size_t size)
->> +{
->> +	struct mtd_info *mtd = cxt->mtd;
->> +	size_t sz;
->> +	int i;
->> +
->> +	sz = min_t(uint32_t, size, mtd->writesize / 4);
->> +	for (i = 0; i < sz; i++) {
->> +		if (buf[i] != (char)0xFF)
->> +			return false;
->> +	}
->> +	return true;
->> +}
->> +
->> +static void mtdpstore_mark_removed(struct mtdpstore_context *cxt, loff_t off)
->> +{
->> +	u64 zonenum = div_u64(off, cxt->bo_info.dmesg_size);
->> +
->> +	pr_debug("mark zone %llu removed\n", zonenum);
->> +	set_bit(zonenum, cxt->rmmap);
->> +}
->> +
->> +static void mtdpstore_block_clear_removed(struct mtdpstore_context *cxt,
->> +		loff_t off)
->> +{
->> +	u64 zonenum = div_u64(off, cxt->bo_info.dmesg_size);
->> +	u32 zonecnt = cxt->mtd->erasesize / cxt->bo_info.dmesg_size;
->> +
->> +	while (zonecnt > 0) {
->> +		clear_bit(zonenum, cxt->rmmap);
->> +		zonenum++;
->> +		zonecnt--;
->> +	}
->> +}
->> +
->> +static int mtdpstore_block_is_removed(struct mtdpstore_context *cxt,
->> +		loff_t off)
->> +{
->> +	u64 zonenum = div_u64(off, cxt->bo_info.dmesg_size);
->> +	u32 zonecnt = cxt->mtd->erasesize / cxt->bo_info.dmesg_size;
->> +
->> +	while (zonecnt > 0) {
->> +		if (test_bit(zonenum, cxt->rmmap))
->> +			return true;
->> +		zonenum++;
->> +		zonecnt--;
->> +	}
->> +	return false;
->> +}
->> +
->> +static int mtdpstore_erase_do(struct mtdpstore_context *cxt, loff_t off)
->> +{
->> +	struct erase_info erase;
->> +	int ret;
->> +
->> +	pr_debug("try to erase off 0x%llx\n", off);
->> +	erase.len = cxt->mtd->erasesize;
->> +	erase.addr = off;
->> +	ret = mtd_erase(cxt->mtd, &erase);
->> +	if (!ret)
->> +		mtdpstore_block_clear_removed(cxt, off);
->> +	else
->> +		pr_err("erase of region [0x%llx, 0x%llx] on \"%s\" failed\n",
->> +		       (unsigned long long)erase.addr,
->> +		       (unsigned long long)erase.len, cxt->bo_info.device);
->> +	return ret;
->> +}
->> +
->> +/*
->> + * called while removing file
->> + *
->> + * Avoiding over erasing, do erase only when all zones are removed or unused.
->> + * Ensure to remove when unregister by reading, erasing and wrtiing back.
->> + */
->> +static ssize_t mtdpstore_erase(size_t size, loff_t off)
->> +{
->> +	struct mtdpstore_context *cxt = &oops_cxt;
->> +
->> +	if (mtdpstore_block_isbad(cxt, off))
->> +		return -EIO;
->> +
->> +	mtdpstore_mark_unused(cxt, off);
->> +
->> +	if (likely(mtdpstore_block_is_used(cxt, off))) {
->> +		mtdpstore_mark_removed(cxt, off);
->> +		return 0;
->> +	}
->> +
->> +	/* all zones are unused, erase it */
->> +	off = ALIGN_DOWN(off, cxt->mtd->erasesize);
->> +	return mtdpstore_erase_do(cxt, off);
->> +}
->> +
->> +/*
->> + * What is securety for mtdpstore?
->> + * As there is no erase for panic case, we should ensure at least one zone
->> + * is writable. Otherwise, panic write will be failed.
->> + * If zone is used, write operation will return -ENEXT, which means that
->> + * pstore/blk will try one by one until get a empty zone. So, it's no need
->> + * to ensure next zone is empty, but at least one.
->> + */
->> +static int mtdpstore_security(struct mtdpstore_context *cxt, loff_t off)
->> +{
->> +	int ret = 0, i;
->> +	u32 zonenum = (u32)div_u64(off, cxt->bo_info.dmesg_size);
->> +	u32 zonecnt = (u32)div_u64(cxt->mtd->size, cxt->bo_info.dmesg_size);
->> +	u32 blkcnt = (u32)div_u64(cxt->mtd->size, cxt->mtd->erasesize);
->> +	u32 erasesize = cxt->mtd->erasesize;
->> +
->> +	for (i = 0; i < zonecnt; i++) {
->> +		u32 num = (zonenum + i) % zonecnt;
->> +
->> +		/* found empty zone */
->> +		if (!test_bit(num, cxt->usedmap))
->> +			return 0;
->> +	}
->> +
->> +	/* If there is no any empty zone, we have no way but to do erase */
->> +	off = ALIGN_DOWN(off, erasesize);
->> +	while (blkcnt--) {
->> +		div64_u64_rem(off + erasesize, cxt->mtd->size, (u64 *)&off);
->> +
->> +		if (mtdpstore_block_isbad(cxt, off))
->> +			continue;
->> +
->> +		ret = mtdpstore_erase_do(cxt, off);
->> +		if (!ret) {
->> +			mtdpstore_block_mark_unused(cxt, off);
->> +			break;
->> +		}
->> +	}
->> +
->> +	if (ret)
->> +		pr_err("all blocks bad!\n");
->> +	pr_debug("end security\n");
->> +	return ret;
->> +}
->> +
->> +static ssize_t mtdpstore_write(const char *buf, size_t size, loff_t off)
->> +{
->> +	struct mtdpstore_context *cxt = &oops_cxt;
->> +	size_t retlen;
->> +	int ret;
->> +
->> +	if (mtdpstore_block_isbad(cxt, off))
->> +		return -ENEXT;
->> +
->> +	/* zone is used, please try next one */
->> +	if (mtdpstore_is_used(cxt, off))
->> +		return -ENEXT;
->> +
->> +	pr_debug("try to write off 0x%llx size %zu\n", off, size);
->> +	ret = mtd_write(cxt->mtd, off, size, &retlen, (u_char *)buf);
->> +	if (ret < 0 || retlen != size) {
->> +		pr_err("write failure at %lld (%zu of %zu written), err %d\n",
->> +				off, retlen, size, ret);
->> +		return -EIO;
->> +	}
->> +	mtdpstore_mark_used(cxt, off);
->> +
->> +	mtdpstore_security(cxt, off);
->> +	return retlen;
->> +}
->> +
->> +/*
->> + * All zones will be read as pstore/blk will read zone one by one when do
->> + * recover.
->> + */
->> +static ssize_t mtdpstore_read(char *buf, size_t size, loff_t off)
->> +{
->> +	struct mtdpstore_context *cxt = &oops_cxt;
->> +	size_t retlen;
->> +	int ret;
->> +
->> +	if (mtdpstore_block_isbad(cxt, off))
->> +		return -ENEXT;
->> +
->> +	pr_debug("try to read off 0x%llx size %zu\n", off, size);
->> +	ret = mtd_read(cxt->mtd, off, size, &retlen, (u_char *)buf);
->> +	if ((ret < 0 && !mtd_is_bitflip(ret)) || size != retlen)  {
->> +		pr_err("read failure at %lld (%zu of %zu read), err %d\n",
->> +				off, retlen, size, ret);
->> +		return -EIO;
->> +	}
->> +
->> +	if (mtdpstore_is_empty(cxt, buf, size))
->> +		mtdpstore_mark_unused(cxt, off);
->> +	else
->> +		mtdpstore_mark_used(cxt, off);
->> +
->> +	mtdpstore_security(cxt, off);
->> +	return retlen;
->> +}
->> +
->> +static ssize_t mtdpstore_panic_write(const char *buf, size_t size, loff_t off)
->> +{
->> +	struct mtdpstore_context *cxt = &oops_cxt;
->> +	size_t retlen;
->> +	int ret;
->> +
->> +	if (mtdpstore_panic_block_isbad(cxt, off))
->> +		return -ENEXT;
->> +
->> +	/* zone is used, please try next one */
->> +	if (mtdpstore_is_used(cxt, off))
->> +		return -ENEXT;
->> +
->> +	ret = mtd_panic_write(cxt->mtd, off, size, &retlen, (u_char *)buf);
->> +	if (ret < 0 || size != retlen) {
->> +		pr_err("panic write failure at %lld (%zu of %zu read), err %d\n",
->> +				off, retlen, size, ret);
->> +		return -EIO;
->> +	}
->> +	mtdpstore_mark_used(cxt, off);
->> +
->> +	return retlen;
->> +}
->> +
->> +static void mtdpstore_notify_add(struct mtd_info *mtd)
->> +{
->> +	int ret;
->> +	struct mtdpstore_context *cxt = &oops_cxt;
->> +	struct blkoops_info *info = &cxt->bo_info;
->> +	unsigned long longcnt;
->> +
->> +	if (!strcmp(mtd->name, info->device))
->> +		cxt->index = mtd->index;
->> +
->> +	if (mtd->index != cxt->index || cxt->index < 0)
->> +		return;
->> +
->> +	pr_debug("found matching MTD device %s\n", mtd->name);
->> +
->> +	if (mtd->size < info->dmesg_size * 2) {
->> +		pr_err("MTD partition %d not big enough\n", mtd->index);
->> +		return;
->> +	}
->> +	if (mtd->erasesize < info->dmesg_size) {
->> +		pr_err("eraseblock size of MTD partition %d too small\n",
->> +				mtd->index);
->> +		return;
->> +	}
->> +	if (unlikely(info->dmesg_size % mtd->writesize)) {
->> +		pr_err("record size %lu KB must align to write size %d KB\n",
->> +				info->dmesg_size / 1024,
->> +				mtd->writesize / 1024);
->> +		return;
->> +	}
->> +	if (unlikely(mtd->size > MTDPSTORE_MAX_MTD_SIZE)) {
->> +		pr_err("mtd%d is too large (limit is %d MiB)\n",
->> +				mtd->index,
->> +				MTDPSTORE_MAX_MTD_SIZE / 1024 / 1024);
->> +		return;
->> +	}
->> +
->> +	longcnt = BITS_TO_LONGS(div_u64(mtd->size, info->dmesg_size));
->> +	cxt->rmmap = kcalloc(longcnt, sizeof(long), GFP_KERNEL);
->> +	cxt->usedmap = kcalloc(longcnt, sizeof(long), GFP_KERNEL);
->> +
->> +	longcnt = BITS_TO_LONGS(div_u64(mtd->size, mtd->erasesize));
->> +	cxt->badmap = kcalloc(longcnt, sizeof(long), GFP_KERNEL);
->> +
->> +	cxt->bo_dev.total_size = mtd->size;
->> +	/* just support dmesg right now */
->> +	cxt->bo_dev.flags = BLKOOPS_DEV_SUPPORT_DMESG;
->> +	cxt->bo_dev.read = mtdpstore_read;
->> +	cxt->bo_dev.write = mtdpstore_write;
->> +	cxt->bo_dev.erase = mtdpstore_erase;
->> +	cxt->bo_dev.panic_write = mtdpstore_panic_write;
->> +
->> +	ret = blkoops_register_device(&cxt->bo_dev);
->> +	if (ret) {
->> +		pr_err("mtd%d register to blkoops failed\n", mtd->index);
->> +		return;
->> +	}
->> +	cxt->mtd = mtd;
->> +	pr_info("Attached to MTD device %d\n", mtd->index);
->> +}
->> +
->> +static int mtdpstore_flush_removed_do(struct mtdpstore_context *cxt,
->> +		loff_t off, size_t size)
->> +{
->> +	struct mtd_info *mtd = cxt->mtd;
->> +	u_char *buf;
->> +	int ret;
->> +	size_t retlen;
->> +	struct erase_info erase;
->> +
->> +	buf = kmalloc(mtd->erasesize, GFP_KERNEL);
->> +	if (!buf)
->> +		return -ENOMEM;
->> +
->> +	/* 1st. read to cache */
->> +	ret = mtd_read(mtd, off, mtd->erasesize, &retlen, buf);
->> +	if (ret || retlen != mtd->erasesize)
->> +		goto free;
->> +
->> +	/* 2nd. erase block */
->> +	erase.len = mtd->erasesize;
->> +	erase.addr = off;
->> +	ret = mtd_erase(mtd, &erase);
->> +	if (ret)
->> +		goto free;
->> +
->> +	/* 3rd. write back */
->> +	while (size) {
->> +		unsigned int zonesize = cxt->bo_info.dmesg_size;
->> +
->> +		/* remove must clear used bit */
->> +		if (mtdpstore_is_used(cxt, off))
->> +			mtd_write(mtd, off, zonesize, &retlen, buf);
->> +
->> +		off += zonesize;
->> +		size -= min_t(unsigned int, zonesize, size);
->> +	}
->> +
->> +free:
->> +	kfree(buf);
->> +	return ret;
->> +}
->> +
->> +static int mtdpstore_flush_removed(struct mtdpstore_context *cxt)
->> +{
->> +	struct mtd_info *mtd = cxt->mtd;
->> +	int ret;
->> +	loff_t off;
->> +	u32 blkcnt = (u32)div_u64(mtd->size, mtd->erasesize);
->> +
->> +	for (off = 0; blkcnt > 0; blkcnt--, off += mtd->erasesize) {
->> +		ret = mtdpstore_block_is_removed(cxt, off);
->> +		if (!ret) {
->> +			off += mtd->erasesize;
->> +			continue;
->> +		}
->> +
->> +		ret = mtdpstore_flush_removed_do(cxt, off, mtd->erasesize);
->> +		if (ret)
->> +			return ret;
->> +	}
->> +	return 0;
->> +}
->> +
->> +static void mtdpstore_notify_remove(struct mtd_info *mtd)
->> +{
->> +	struct mtdpstore_context *cxt = &oops_cxt;
->> +
->> +	if (mtd->index != cxt->index || cxt->index < 0)
->> +		return;
->> +
->> +	mtdpstore_flush_removed(cxt);
->> +
->> +	blkoops_unregister_device(&cxt->bo_dev);
->> +	kfree(cxt->badmap);
->> +	kfree(cxt->usedmap);
->> +	kfree(cxt->rmmap);
->> +	cxt->mtd = NULL;
->> +	cxt->index = -1;
->> +}
->> +
->> +static struct mtd_notifier mtdpstore_notifier = {
->> +	.add	= mtdpstore_notify_add,
->> +	.remove	= mtdpstore_notify_remove,
->> +};
->> +
->> +static int __init mtdpstore_init(void)
->> +{
->> +	int ret;
->> +	struct mtdpstore_context *cxt = &oops_cxt;
->> +	struct blkoops_info *info = &cxt->bo_info;
->> +
->> +	ret = blkoops_info(info);
->> +	if (unlikely(ret))
->> +		return ret;
->> +
->> +	if (strlen(info->device) == 0) {
->> +		pr_err("mtd device must be supplied\n");
->> +		return -EINVAL;
->> +	}
->> +	if (!info->dmesg_size) {
->> +		pr_err("no recorder enabled\n");
->> +		return -EINVAL;
->> +	}
->> +
->> +	/* Setup the MTD device to use */
->> +	ret = kstrtoint((char *)info->device, 0, &cxt->index);
->> +	if (ret)
->> +		cxt->index = -1;
->> +
->> +	register_mtd_user(&mtdpstore_notifier);
->> +	return 0;
->> +}
->> +module_init(mtdpstore_init);
->> +
->> +static void __exit mtdpstore_exit(void)
->> +{
->> +	unregister_mtd_user(&mtdpstore_notifier);
->> +}
->> +module_exit(mtdpstore_exit);
->> +
->> +MODULE_LICENSE("GPL");
->> +MODULE_AUTHOR("WeiXiong Liao <liaoweixiong@allwinnertech.com>");
->> +MODULE_DESCRIPTION("MTD Oops/Panic console logger/driver");
->>
-> 
+T24gV2VkLCAyMDIwLTAxLTIyIGF0IDIzOjU4ICswMDAwLCBDb2xpbiBLaW5nIHdyb3RlOg0KPiBb
+RXh0ZXJuYWxdDQo+IA0KPiBGcm9tOiBDb2xpbiBJYW4gS2luZyA8Y29saW4ua2luZ0BjYW5vbmlj
+YWwuY29tPg0KPiANCj4gVGhlcmUgaXMgYSBzcGVsbGluZyBtaXN0YWtlIGluIGEgZGV2X2VyciBt
+ZXNzYWdlLiBGaXggaXQuDQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBDb2xpbiBJYW4gS2luZyA8Y29s
+aW4ua2luZ0BjYW5vbmljYWwuY29tPg0KPiAtLS0NCj4gIGRyaXZlcnMvaWlvL2RhYy9hZDU3NTUu
+YyB8IDIgKy0NCj4gIDEgZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKSwgMSBkZWxldGlvbigt
+KQ0KPiANCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvaWlvL2RhYy9hZDU3NTUuYyBiL2RyaXZlcnMv
+aWlvL2RhYy9hZDU3NTUuYw0KPiBpbmRleCBiOTE3NWZiNGM4YWIuLmRhZDBiMjYyMjhhMiAxMDA2
+NDQNCj4gLS0tIGEvZHJpdmVycy9paW8vZGFjL2FkNTc1NS5jDQo+ICsrKyBiL2RyaXZlcnMvaWlv
+L2RhYy9hZDU3NTUuYw0KPiBAQCAtNjU1LDcgKzY1NSw3IEBAIHN0YXRpYyBzdHJ1Y3QgYWQ1NzU1
+X3BsYXRmb3JtX2RhdGEgKmFkNTc1NV9wYXJzZV9kdChzdHJ1Y3QNCj4gZGV2aWNlICpkZXYpDQo+
+ICAJZm9yX2VhY2hfY2hpbGRfb2Zfbm9kZShucCwgcHApIHsNCj4gIAkJaWYgKGRldm5yID49IEFE
+NTc1NV9OVU1fQ0hBTk5FTFMpIHsNCj4gIAkJCWRldl9lcnIoZGV2LA0KPiAtCQkJCSJUaGVyZSBp
+cyB0byBtYW55IGNoYW5uZWxzIGRlZmluZWQgaW4gRFRcbiIpOw0KPiArCQkJCSJUaGVyZSBpcyB0
+b28gbWFueSBjaGFubmVscyBkZWZpbmVkIGluIERUXG4iKTsNCg0KSWYgZ29pbmcgZm9yIHRoZSBz
+cGVsbGluZyBzdHVmZiwgbWF5YmUgYWxzbyBjaGFuZ2UgImlzIiB0byAiYXJlIjoNCidUaGVyZSBh
+cmUgdG9vIG1hbnkgY2hhbm5lbHMgZGVmaW5lZCBpbiBEVFxuJw0KDQoNCj4gIAkJCWdvdG8gZXJy
+b3Jfb3V0Ow0KPiAgCQl9DQo+ICANCg==
