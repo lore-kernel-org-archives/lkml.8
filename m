@@ -2,200 +2,426 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB2AFC33CAA
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 21:36:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88E3AC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 21:37:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A68DB20665
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 21:36:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B6B1207FF
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 21:37:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="JGf6hitG"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GpiRDsoW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729083AbgAWVgK (ORCPT
+        id S1726191AbgAWVhS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 16:36:10 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:42380 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726191AbgAWVgJ (ORCPT
+        Thu, 23 Jan 2020 16:37:18 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:34060 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728708AbgAWVhR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 16:36:09 -0500
-Received: by mail-lj1-f193.google.com with SMTP id y4so5396387ljj.9
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jan 2020 13:36:07 -0800 (PST)
+        Thu, 23 Jan 2020 16:37:17 -0500
+Received: by mail-wr1-f65.google.com with SMTP id t2so4931072wrr.1;
+        Thu, 23 Jan 2020 13:37:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=hMyXK37D1SY1vwV+WlcNr41eq9aZRtXuphVComfAQVQ=;
-        b=JGf6hitGz+m+ANGWCtXXNmlHWR+dQ/BZUfRkAld6SD6nyEJJWkhHMwDQZL8Tg3rEI6
-         E5wDExHPHU3tOhZaD3uMzylwgNwR/Wf9C3XHKUpDzVGdRtuGWPx6tbstejnrgJrQeN+g
-         Dmso35KzWIS2UCBggmhhuHBvnfIpWhxJWW0gyGW2SsOAh/Ff5Bltiu0u80w/D/v+iq7e
-         wnzu7aJ0+yCcORXR2HzC8GaXEygtzUvCvvQD4T5mdqKgxlH9t+1HZeBY5CJ65wYPgaLh
-         LteK7V9iBlHEF5ip9MJqmX9Yg28imNv8LPKe1tmJV6DDUXayP+pLl8zZYp33fO+aOwDN
-         QytQ==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to;
+        bh=ZWpBhbXeVZLaPeJZtMiBvJEIVffq3Z2vtGP/vPPTPKA=;
+        b=GpiRDsoWq45KNCle0oqYym+Cf//LmirQry38EQxyuDci+fOCOtrJBGIAk80J6Mz6oI
+         bug/R6fmCPyKMLEo6QS4B7Lm5AD0t0qQnhWQyniozx460nhoPzYJ5oLpp/XtaD01yZew
+         YEtHmfe344UjiWb3+l3p1U/iXjU7zA/FT5g5zRRtzGr7INplASA+QHimqF8dHZRSZTg2
+         jGbhV+BeIE0hCYvbC0UO1XXL7MB+pw6RO6UxKzeD3QmJGDJSh/1Y6XmVGYifnEe817Qy
+         dwRkHwFPrmdb+9IEyRFgJuQN5GzpCF7Fmj7UpusSxJri0vbV95nHK7XHtdqNoSNgj5+Y
+         y/sA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=hMyXK37D1SY1vwV+WlcNr41eq9aZRtXuphVComfAQVQ=;
-        b=c7135O3gVZyPTXDJtoCMOg78X2+lwv4yqFFBq/9PIfFSnWYjkbEiESX8XHoaJ/rl/Y
-         BZmY9AS/AbnGOtmrKKZKvJKuIzkBcfdgKy5ll4+76mHluHHxcyx2MJsKztwfxsi6EaJN
-         0Ed0izx2Pbr4egN+dXc8wsj2aF+7/taEPUt9P02cRZ13aN6rQ5MdG7edGU0kso05FFFN
-         TIQr4E6SniwTPuCZOs4XJAjNKw2MoWgczC7ExFN8MRD7oLawqHx4XcEXeutdT81iuEPS
-         rYBfDFiWYg4NSt73oiVA2PtYCOWu8ipiA+tzWUBLU+/mShrQq0e09B5lakaXiNFPHgYx
-         xahg==
-X-Gm-Message-State: APjAAAVrpdfOqTRtIQ4ZJxCCg4ppIuPbUBzASE5YTuyokIJPYab7RPkm
-        RVkHD5BCHkdphod7au/S/+OT9aW4CJCg464dveiS
-X-Google-Smtp-Source: APXvYqzmiH85n1JcJPF1cLLPQxAHGXAPgPHI716hr05qfSBXxCFeGrnpxFyI4zZk9EfGn+ZIo3+k+WaGSr/n41CSiEg=
-X-Received: by 2002:a2e:b52b:: with SMTP id z11mr236562ljm.155.1579815366587;
- Thu, 23 Jan 2020 13:36:06 -0800 (PST)
-MIME-Version: 1.0
-References: <cover.1577736799.git.rgb@redhat.com> <7d7933d742fdf4a94c84b791906a450b16f2e81f.1577736799.git.rgb@redhat.com>
- <CAHC9VhSuwJGryfrBfzxG01zwb-O_7dbjS0x0a3w-XjcNuYSAcg@mail.gmail.com>
- <20200123162918.b3jbed7tbvr2sf2p@madcap2.tricolour.ca> <CAHC9VhTusiQoudB8G5jjDFyM9WxBUAjZ6_X35ywJ063Jb75dQA@mail.gmail.com>
- <20200123200412.j2aucdp3cvk57prw@madcap2.tricolour.ca>
-In-Reply-To: <20200123200412.j2aucdp3cvk57prw@madcap2.tricolour.ca>
-From:   Paul Moore <paul@paul-moore.com>
-Date:   Thu, 23 Jan 2020 16:35:55 -0500
-Message-ID: <CAHC9VhQ2_MQdGAT6Pda9FRe6s0y4JC1XUQenpr-VJiyq9M_CBw@mail.gmail.com>
-Subject: Re: [PATCH ghak90 V8 07/16] audit: add contid support for signalling
- the audit daemon
-To:     Richard Guy Briggs <rgb@redhat.com>
-Cc:     nhorman@tuxdriver.com, linux-api@vger.kernel.org,
-        containers@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>, dhowells@redhat.com,
-        Linux-Audit Mailing List <linux-audit@redhat.com>,
-        netfilter-devel@vger.kernel.org, ebiederm@xmission.com,
-        simo@redhat.com, netdev@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, Eric Paris <eparis@parisplace.org>,
-        mpatel@redhat.com, Serge Hallyn <serge@hallyn.com>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to;
+        bh=ZWpBhbXeVZLaPeJZtMiBvJEIVffq3Z2vtGP/vPPTPKA=;
+        b=Em+rWxyX4a/3tkPL9yPhrkNOOmVK5SQ5t2ffShBo6wK2hNFsO41WMLgDQjwT4Rpe0l
+         bb6aD0uJqM/JzwJZbVfuZaZhMGI+fTE4mGmTuyFVHd42JDl11vzPhK8PoiPS+1QhQQjL
+         KiSllTaabdPyMTFAlm0GIJLNshh8S6WFr2d4cCmzMf10XEpI683X+p05SsKeL9R90POL
+         heMpgrqaXNv1EQNMMAYHwx5GW/sp7ofbb44oGjFQuc2+BSAbwAff6NBDfZAqHKi8oe8J
+         OV1HQtg4H+SZJYjlc08UY6KwR+TnIZEtxJxT4qUaOgtF/wMzkOmeYRfy+ib5991uOUfV
+         FuOQ==
+X-Gm-Message-State: APjAAAUYwi4QW/+ymqKy9gWlNLj70tmQUZNjHVoXrUg3by+B76TzhQ35
+        ih4oUI91YW8PZTuC3rKpE30=
+X-Google-Smtp-Source: APXvYqyoK4ulX4Mr0m2DsYdXGNhPrk70c9qXNO3ZD66nFkirevCR+InAiANF6eKEMb/mUrLyheZhjA==
+X-Received: by 2002:a5d:448c:: with SMTP id j12mr75021wrq.125.1579815434134;
+        Thu, 23 Jan 2020 13:37:14 -0800 (PST)
+Received: from x1cbn.MEGAROWIFI.local ([5.148.123.66])
+        by smtp.gmail.com with ESMTPSA id p18sm4192971wmb.8.2020.01.23.13.37.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 23 Jan 2020 13:37:13 -0800 (PST)
+From:   SeongJae Park <sj38.park@gmail.com>
+To:     Brendan Higgins <brendanhiggins@google.com>
+Cc:     SeongJae Park <sjpark@amazon.com>,
+        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        mgorman@suse.de, SeongJae Park <sj38.park@gmail.com>,
+        SeongJae Park <sjpark@amazon.de>
+Subject: Re: Re: [RFC PATCH 5/5] mm/damon: Add kunit tests
+Date:   Thu, 23 Jan 2020 22:37:02 +0100
+Message-Id: <20200123213702.14739-1-sj38.park@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <CAFd5g47eB42E3X7m_rfmG=vEcMK9dtdAFZT5WjwV3sx3MO0-MQ@mail.gmail.com> (raw)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 23, 2020 at 3:04 PM Richard Guy Briggs <rgb@redhat.com> wrote:
-> On 2020-01-23 12:09, Paul Moore wrote:
-> > On Thu, Jan 23, 2020 at 11:29 AM Richard Guy Briggs <rgb@redhat.com> wrote:
-> > > On 2020-01-22 16:28, Paul Moore wrote:
-> > > > On Tue, Dec 31, 2019 at 2:50 PM Richard Guy Briggs <rgb@redhat.com> wrote:
-> > > > >
-> > > > > Add audit container identifier support to the action of signalling the
-> > > > > audit daemon.
-> > > > >
-> > > > > Since this would need to add an element to the audit_sig_info struct,
-> > > > > a new record type AUDIT_SIGNAL_INFO2 was created with a new
-> > > > > audit_sig_info2 struct.  Corresponding support is required in the
-> > > > > userspace code to reflect the new record request and reply type.
-> > > > > An older userspace won't break since it won't know to request this
-> > > > > record type.
-> > > > >
-> > > > > Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
-> > > > > ---
-> > > > >  include/linux/audit.h       |  7 +++++++
-> > > > >  include/uapi/linux/audit.h  |  1 +
-> > > > >  kernel/audit.c              | 35 +++++++++++++++++++++++++++++++++++
-> > > > >  kernel/audit.h              |  1 +
-> > > > >  security/selinux/nlmsgtab.c |  1 +
-> > > > >  5 files changed, 45 insertions(+)
-> > > >
-> > > > ...
-> > > >
-> > > > > diff --git a/kernel/audit.c b/kernel/audit.c
-> > > > > index 0871c3e5d6df..51159c94041c 100644
-> > > > > --- a/kernel/audit.c
-> > > > > +++ b/kernel/audit.c
-> > > > > @@ -126,6 +126,14 @@ struct auditd_connection {
-> > > > >  kuid_t         audit_sig_uid = INVALID_UID;
-> > > > >  pid_t          audit_sig_pid = -1;
-> > > > >  u32            audit_sig_sid = 0;
-> > > > > +/* Since the signal information is stored in the record buffer at the
-> > > > > + * time of the signal, but not retrieved until later, there is a chance
-> > > > > + * that the last process in the container could terminate before the
-> > > > > + * signal record is delivered.  In this circumstance, there is a chance
-> > > > > + * the orchestrator could reuse the audit container identifier, causing
-> > > > > + * an overlap of audit records that refer to the same audit container
-> > > > > + * identifier, but a different container instance.  */
-> > > > > +u64            audit_sig_cid = AUDIT_CID_UNSET;
-> > > >
-> > > > I believe we could prevent the case mentioned above by taking an
-> > > > additional reference to the audit container ID object when the signal
-> > > > information is collected, dropping it only after the signal
-> > > > information is collected by userspace or another process signals the
-> > > > audit daemon.  Yes, it would block that audit container ID from being
-> > > > reused immediately, but since we are talking about one number out of
-> > > > 2^64 that seems like a reasonable tradeoff.
-> > >
-> > > I had thought that through and should have been more explicit about that
-> > > situation when I documented it.  We could do that, but then the syscall
-> > > records would be connected with the call from auditd on shutdown to
-> > > request that signal information, rather than the exit of that last
-> > > process that was using that container.  This strikes me as misleading.
-> > > Is that really what we want?
+On Thu, 23 Jan 2020 13:12:55 -0800 Brendan Higgins <brendanhiggins@google.com> wrote:
+
+> On Fri, Jan 10, 2020 at 5:18 AM SeongJae Park <sjpark@amazon.com> wrote:
 > >
-> >  ???
+> > From: SeongJae Park <sjpark@amazon.de>
 > >
-> > I think one of us is not understanding the other; maybe it's me, maybe
-> > it's you, maybe it's both of us.
+> > This commit adds kunit based unit tests for DAMON.
 > >
-> > Anyway, here is what I was trying to convey with my original comment
-> > ... When we record the audit container ID in audit_signal_info() we
-> > take an extra reference to the audit container ID object so that it
-> > will not disappear (and get reused) until after we respond with an
-> > AUDIT_SIGNAL_INFO2.  In audit_receive_msg() when we do the
-> > AUDIT_SIGNAL_INFO2 processing we drop the extra reference we took in
-> > audit_signal_info().  Unless I'm missing some other change you made,
-> > this *shouldn't* affect the syscall records, all it does is preserve
-> > the audit container ID object in the kernel's ACID store so it doesn't
-> > get reused.
->
-> This is exactly what I had understood.  I hadn't considered the extra
-> details below in detail due to my original syscall concern, but they
-> make sense.
->
-> The syscall I refer to is the one connected with the drop of the
-> audit container identifier by the last process that was in that
-> container in patch 5/16.  The production of this record is contingent on
-> the last ref in a contobj being dropped.  So if it is due to that ref
-> being maintained by audit_signal_info() until the AUDIT_SIGNAL_INFO2
-> record it fetched, then it will appear that the fetch action closed the
-> container rather than the last process in the container to exit.
->
-> Does this make sense?
+> > Signed-off-by: SeongJae Park <sjpark@amazon.de>
+> 
+> Sorry for the late review on this: I am still getting caught up on my
+> vacation backlog.
 
-More so than your original reply, at least to me anyway.
+Thank you so much for this review, Brendan :)
 
-It makes sense that the audit container ID wouldn't be marked as
-"dead" since it would still be very much alive and available for use
-by the orchestrator, the question is if that is desirable or not.  I
-think the answer to this comes down the preserving the correctness of
-the audit log.
+BTW, I posted 'PATCH v1' of this [1] meanwhile and I forgot adding you as
+recipients, sorry.  That said, the kunit related part has no change with the
+next spin, so your reviews will applied.  Will not miss you from 'v2'.
 
-If the audit container ID reported by AUDIT_SIGNAL_INFO2 has been
-reused then I think there is a legitimate concern that the audit log
-is not correct, and could be misleading.  If we solve that by grabbing
-an extra reference, then there could also be some confusion as
-userspace considers a container to be "dead" while the audit container
-ID still exists in the kernel, and the kernel generated audit
-container ID death record will not be generated until much later (and
-possibly be associated with a different event, but that could be
-solved by unassociating the container death record).  Of the two
-approaches, I think the latter is safer in that it preserves the
-correctness of the audit log, even though it could result in a delay
-of the container death record.
+[1] https://lore.kernel.org/linux-mm/20200120162757.32375-1-sjpark@amazon.com/
 
-Neither way is perfect, so if you have any other ideas I'm all ears.
+> 
+> > ---
+> >  mm/Kconfig      |  11 +
+> >  mm/damon-test.h | 571 ++++++++++++++++++++++++++++++++++++++++++++++++
+> >  mm/damon.c      |   2 +
+> >  3 files changed, 584 insertions(+)
+> >  create mode 100644 mm/damon-test.h
+> >
+> > diff --git a/mm/Kconfig b/mm/Kconfig
+> > index b7af8a1b5cb5..7b023799aa38 100644
+> > --- a/mm/Kconfig
+> > +++ b/mm/Kconfig
+> > @@ -748,4 +748,15 @@ config DAMON
+> >           be 1) accurate enough to be useful for performance-centric domains,
+> >           and 2) sufficiently light-weight so that it can be applied online.
+> >
+> > +config DAMON_TEST
+> 
+> To be consistent with other KUnit tests, this should be "DAMON_KUNIT_TEST".
 
-> > (We do need to do some extra housekeeping in audit_signal_info() to
-> > deal with the case where nobody asks for AUDIT_SIGNAL_INFO2 -
-> > basically if audit_sig_cid is not NULL we should drop a reference
-> > before assigning it a new object pointer, and of course we would need
-> > to set audit_sig_cid to NULL in audit_receive_msg() after sending it
-> > up to userspace and dropping the extra ref.)
+Good point, will do so.
 
--- 
-paul moore
-www.paul-moore.com
+> 
+> > +       bool "Test for damon"
+> > +       depends on DAMON && KUNIT
+> > +       help
+> > +         This builds the DAMON Kunit test suite.
+> > +
+> > +         For more information on KUnit and unit tests in general, please refer
+> > +         to the KUnit documentation.
+> > +
+> > +         If unsure, say N.
+> > +
+> >  endmenu
+> > diff --git a/mm/damon-test.h b/mm/damon-test.h
+> > new file mode 100644
+> > index 000000000000..0d94910b8fe5
+> > --- /dev/null
+> > +++ b/mm/damon-test.h
+> > @@ -0,0 +1,571 @@
+[...]
+> > +
+> > +static void damon_test_set_pids(struct kunit *test)
+> > +{
+> > +       unsigned long pids[] = {1, 2, 3};
+> > +       char buf[64];
+> > +
+> > +       damon_set_pids(pids, 3);
+> > +       damon_sprint_pids(buf, 64);
+> > +       pr_info("buf: %s (%zu)\n", buf, strlen(buf));
+> 
+> Might want to use kunit_info here so it matches the TAP test log
+> format. Not a requirement, just an FYI.
+
+Oh, this is a debugging code I missed to delete.  Will delete from next spin.
+Also, will use 'kunit_info()' like things if I need any log, either.
+
+> 
+> > +       KUNIT_EXPECT_EQ(test, 0, strncmp(buf, "1 2 3\n", 64));
+> 
+> Here and elsewhere: This should probably use KUNIT_EXPECT_STREQ().
+
+Good point, will fix with the next spin.
+
+> 
+[...]
+> > +
+> > +static void damon_test_three_regions_in_vmas(struct kunit *test)
+> > +{
+> > +       struct region regions[3] = {0,};
+> > +
+> > +       struct vm_area_struct vmas[] = {
+> > +               (struct vm_area_struct) {.vm_start = 10, .vm_end = 20},
+> > +               (struct vm_area_struct) {.vm_start = 20, .vm_end = 25},
+> > +               (struct vm_area_struct) {.vm_start = 200, .vm_end = 210},
+> > +               (struct vm_area_struct) {.vm_start = 210, .vm_end = 220},
+> > +               (struct vm_area_struct) {.vm_start = 300, .vm_end = 305},
+> > +               (struct vm_area_struct) {.vm_start = 307, .vm_end = 330},
+> > +       };
+> > +       vmas[0].vm_next = &vmas[1];
+> > +       vmas[1].vm_next = &vmas[2];
+> > +       vmas[2].vm_next = &vmas[3];
+> > +       vmas[3].vm_next = &vmas[4];
+> > +       vmas[4].vm_next = &vmas[5];
+> > +       vmas[5].vm_next = NULL;
+> > +
+> > +       damon_three_regions_in_vmas(&vmas[0], regions);
+> > +
+> > +       KUNIT_EXPECT_EQ(test, 10ul, regions[0].start);
+> > +       KUNIT_EXPECT_EQ(test, 25ul, regions[0].end);
+> > +       KUNIT_EXPECT_EQ(test, 200ul, regions[1].start);
+> > +       KUNIT_EXPECT_EQ(test, 220ul, regions[1].end);
+> > +       KUNIT_EXPECT_EQ(test, 300ul, regions[2].start);
+> > +       KUNIT_EXPECT_EQ(test, 330ul, regions[2].end);
+> 
+> It's not obvious to me what property you are proving here. Might want
+> to add a comment.
+
+It's closely related with DAMON internal logic.  Will add a reference to a
+document for the internal logic and what I'm checking, as you suggested.  Same
+for other ambiguous test code fragments you pointed out below.
+
+> 
+[...]
+> > +
+> > +static void damon_test_aggregate(struct kunit *test)
+> > +{
+> > +       unsigned long pids[] = {1, 2, 3};
+> > +       unsigned long saddr[][3] = {{10, 20, 30}, {5, 42, 49}, {13, 33, 55} };
+> > +       unsigned long eaddr[][3] = {{15, 27, 40}, {31, 45, 55}, {23, 44, 66} };
+> > +       unsigned long accesses[][3] = {{42, 95, 84}, {10, 20, 30}, {0, 1, 2} };
+> > +       struct damon_task *t;
+> > +       struct damon_region *r;
+> > +       int it, ir;
+> > +       ssize_t sz, sr, sp;
+> > +
+> > +       damon_set_pids(pids, 3);
+> > +
+> > +       it = 0;
+> > +       damon_for_each_task(t) {
+> > +               for (ir = 0; ir < 3; ir++) {
+> > +                       r = damon_new_region(saddr[it][ir], eaddr[it][ir]);
+> > +                       r->nr_accesses = accesses[it][ir];
+> > +                       damon_add_region_tail(r, t);
+> > +               }
+> > +               it++;
+> > +       }
+> > +       kdamond_flush_aggregated();
+> 
+> I think this test case is also difficult to understand. I think you
+> probably need at least a comment on what this test case does.
+> 
+> > +       it = 0;
+> > +       damon_for_each_task(t) {
+> > +               ir = 0;
+> > +               damon_for_each_region(r, t) {
+> > +                       KUNIT_EXPECT_EQ(test, 0u, r->nr_accesses);
+> > +                       ir++;
+> > +               }
+> > +               KUNIT_EXPECT_EQ(test, 3, ir);
+> > +               it++;
+> > +       }
+> > +       KUNIT_EXPECT_EQ(test, 3, it);
+> > +
+> > +       sr = sizeof(r->vm_start) + sizeof(r->vm_end) + sizeof(r->nr_accesses);
+> > +       sp = sizeof(t->pid) + sizeof(unsigned int) + 3 * sr;
+> > +       sz = sizeof(struct timespec64) + sizeof(unsigned int) + 3 * sp;
+> > +       KUNIT_EXPECT_EQ(test, (unsigned int)sz, damon_rbuf_offset);
+> > +
+> > +       damon_cleanup_global_state();
+> > +}
+> > +
+[...]
+> > +
+> > +static void damon_test_update_two_gaps(struct kunit *test)
+> > +{
+> 
+> I think this test case is also difficult to understand. I think you
+> probably need at least a comment on what this test case does.
+> 
+> > +       struct damon_task *t;
+> > +       struct damon_region *r, *prev = NULL;
+> > +       unsigned long regions[] = {10, 20, 20, 30,
+> > +               50, 55, 55, 57, 57, 59,
+> > +               70, 80, 80, 90, 90, 100};       /* 10-30, 50-59, 70-100 */
+> > +       struct region new_regions[3] = {
+> > +               (struct region){.start = 5, .end = 27},
+> > +               (struct region){.start = 45, .end = 55},
+> > +               (struct region){.start = 73, .end = 104} };
+> > +       int i;
+> > +       bool first_gap = true;
+> > +
+> > +       t = damon_new_task(42);
+> > +       for (i = 0; i < ARRAY_SIZE(regions) / 2; i++) {
+> > +               r = damon_new_region(regions[i * 2], regions[i * 2 + 1]);
+> > +               damon_add_region_tail(r, t);
+> > +       }
+> > +       damon_add_task_tail(t);
+> > +
+> > +       damon_apply_three_regions(t, new_regions);
+> > +
+> > +       damon_for_each_region(r, t) {
+> > +               if (prev == NULL) {
+> > +                       KUNIT_EXPECT_EQ(test, r->vm_start, 5ul);
+> > +                       goto next;
+> > +               }
+> > +
+> > +               if (prev->vm_end != r->vm_start && first_gap) {
+> > +                       KUNIT_EXPECT_EQ(test, prev->vm_end, 27ul);
+> > +                       KUNIT_EXPECT_EQ(test, r->vm_start, 45ul);
+> > +                       first_gap = false;
+> > +                       goto next;
+> > +               }
+> > +
+> > +               if (prev->vm_end != r->vm_start && !first_gap) {
+> > +                       KUNIT_EXPECT_EQ(test, prev->vm_end, 55ul);
+> > +                       KUNIT_EXPECT_EQ(test, r->vm_start, 73ul);
+> > +                       goto next;
+> > +               }
+> > +
+> > +next:
+> > +               prev = r;
+> > +       }
+> > +
+> > +       damon_cleanup_global_state();
+> > +}
+> > +
+> > +static void damon_test_update_two_gaps2(struct kunit *test)
+> > +{
+> 
+> Same here.
+> 
+> > +       struct damon_task *t;
+> > +       struct damon_region *r;
+> > +       /* 10-20-30, 50-55-57-59, 70-80-90-100 */
+> > +       unsigned long regions[] = {10, 20, 20, 30,
+> > +               50, 55, 55, 57, 57, 59,
+> > +               70, 80, 80, 90, 90, 100};
+> > +       struct region new_regions[3] = {
+> > +               (struct region){.start = 5, .end = 27},
+> > +               (struct region){.start = 56, .end = 57},
+> > +               (struct region){.start = 65, .end = 104} };
+> > +       /* expect 5-27, 56-57, 65-80-90-104 */
+> > +       unsigned long answers[] = {5, 20, 20, 27,
+> > +               56, 57,
+> > +               65, 80, 80, 90, 90, 104};
+> > +       int i;
+> > +
+> > +       t = damon_new_task(42);
+> > +       for (i = 0; i < ARRAY_SIZE(regions) / 2; i++) {
+> > +               r = damon_new_region(regions[i * 2], regions[i * 2 + 1]);
+> > +               damon_add_region_tail(r, t);
+> > +       }
+> > +       damon_add_task_tail(t);
+> > +
+> > +       damon_apply_three_regions(t, new_regions);
+> > +
+> > +       for (i = 0; i < ARRAY_SIZE(answers) / 2; i++) {
+> > +               r = damon_nth_region_of(t, i);
+> > +               KUNIT_EXPECT_EQ(test, r->vm_start, answers[i * 2]);
+> > +               KUNIT_EXPECT_EQ(test, r->vm_end, answers[i++ * 2 + 1]);
+> > +       }
+> > +
+> > +       damon_cleanup_global_state();
+> > +}
+> > +
+> > +static void damon_test_update_two_gaps3(struct kunit *test)
+> > +{
+> 
+> Same here.
+> 
+> > +       struct damon_task *t;
+> > +       struct damon_region *r;
+> > +       /* 10-20-30, 50-55-57-59, 70-80-90-100 */
+> > +       unsigned long regions[] = {10, 20, 20, 30,
+> > +               50, 55, 55, 57, 57, 59,
+> > +               70, 80, 80, 90, 90, 100};
+> > +       struct region new_regions[3] = {
+> > +               (struct region){.start = 5, .end = 27},
+> > +               (struct region){.start = 61, .end = 63},
+> > +               (struct region){.start = 65, .end = 104} };
+> > +       /* expect 5-27, 56-57, 65-80-90-104 */
+> > +       unsigned long answers[] = {5, 20, 20, 27,
+> > +               61, 63,
+> > +               65, 80, 80, 90, 90, 104};
+> > +       int i;
+> > +
+> > +       t = damon_new_task(42);
+> > +       for (i = 0; i < ARRAY_SIZE(regions) / 2; i++) {
+> > +               r = damon_new_region(regions[i * 2], regions[i * 2 + 1]);
+> > +               damon_add_region_tail(r, t);
+> > +       }
+> > +       damon_add_task_tail(t);
+> > +
+> > +       damon_apply_three_regions(t, new_regions);
+> > +
+> > +       for (i = 0; i < ARRAY_SIZE(answers) / 2; i++) {
+> > +               r = damon_nth_region_of(t, i);
+> > +               KUNIT_EXPECT_EQ(test, r->vm_start, answers[i * 2]);
+> > +               KUNIT_EXPECT_EQ(test, r->vm_end, answers[i++ * 2 + 1]);
+> > +       }
+> > +
+> > +       damon_cleanup_global_state();
+> > +}
+> > +
+> > +static void damon_test_update_two_gaps4(struct kunit *test)
+> > +{
+> 
+> Ditto.
+> 
+> > +       struct damon_task *t;
+> > +       struct damon_region *r;
+> > +       /* 10-20-30, 50-55-57-59, 70-80-90-100 */
+> > +       unsigned long regions[] = {10, 20, 20, 30,
+> > +               50, 55, 55, 57, 57, 59,
+> > +               70, 80, 80, 90, 90, 100};
+> > +       struct region new_regions[3] = {
+> > +               (struct region){.start = 5, .end = 7},
+> > +               (struct region){.start = 30, .end = 32},
+> > +               (struct region){.start = 65, .end = 68} };
+> > +       /* expect 5-27, 56-57, 65-80-90-104 */
+> > +       unsigned long answers[] = {5, 7, 30, 32, 65, 68};
+> > +       int i;
+> > +
+> > +       t = damon_new_task(42);
+> > +       for (i = 0; i < ARRAY_SIZE(regions) / 2; i++) {
+> > +               r = damon_new_region(regions[i * 2], regions[i * 2 + 1]);
+> > +               damon_add_region_tail(r, t);
+> > +       }
+> > +       damon_add_task_tail(t);
+> > +
+> > +       damon_apply_three_regions(t, new_regions);
+> > +
+> > +       for (i = 0; i < ARRAY_SIZE(answers) / 2; i++) {
+> > +               r = damon_nth_region_of(t, i);
+> > +               KUNIT_EXPECT_EQ(test, r->vm_start, answers[i * 2]);
+> > +               KUNIT_EXPECT_EQ(test, r->vm_end, answers[i++ * 2 + 1]);
+> > +       }
+> > +
+> > +       damon_cleanup_global_state();
+> > +}
+> > +
+[...]
+
+
+Will apply all of your suggestions, soon.
+
+
+Thanks,
+SeongJae Park
