@@ -2,96 +2,104 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A087DC33CAA
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 08:23:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79128C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 08:23:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D87924125
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 08:23:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45EA924125
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 08:23:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="kL3OvILS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726231AbgAWIXN (ORCPT
+        id S1727235AbgAWIX1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 03:23:13 -0500
-Received: from foss.arm.com ([217.140.110.172]:35958 "EHLO foss.arm.com"
+        Thu, 23 Jan 2020 03:23:27 -0500
+Received: from mail.skyhub.de ([5.9.137.197]:45466 "EHLO mail.skyhub.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726061AbgAWIXN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 03:23:13 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4AADB1FB;
-        Thu, 23 Jan 2020 00:23:12 -0800 (PST)
-Received: from [10.162.16.32] (p8cg001049571a15.blr.arm.com [10.162.16.32])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CA1773F6C4;
-        Thu, 23 Jan 2020 00:26:43 -0800 (PST)
-Subject: Re: [PATCH 0/2] mm/thp: rework the pmd protect changing flow
-To:     Xuefeng Wang <wxf.wang@hisilicon.com>, catalin.marinas@arm.com,
-        will@kernel.org, mark.rutland@arm.com, arnd@arndb.de,
-        akpm@linux-foundation.org
-Cc:     linux-arch@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        chenzhou10@huawei.com
-References: <20200123075514.15142-1-wxf.wang@hisilicon.com>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Message-ID: <50493410-c44c-7ef0-81f9-d4ce9a525c1f@arm.com>
-Date:   Thu, 23 Jan 2020 13:54:32 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        id S1726232AbgAWIX0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jan 2020 03:23:26 -0500
+Received: from zn.tnic (p200300EC2F095B0060FE665DEF90E16F.dip0.t-ipconnect.de [IPv6:2003:ec:2f09:5b00:60fe:665d:ef90:e16f])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 5D8831EC047D;
+        Thu, 23 Jan 2020 09:23:25 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1579767805;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=WIJL5XHyKt5KPKlO9I4JS71YWtGovioHHFMiIIQUA4M=;
+        b=kL3OvILS/zc0IEoZqMt3xfaJMrGvbZ3Bsz+Z35zr15SqFdwyAaZZXkpnGmaT1ZJUZsBH28
+        r3RnAaE+xZT/6FCp3SdHdZeV7RrhAfodbplmpbM9vPNjJximr9OYLjvpaEreAKrE5Gi6CT
+        NEZrzDbQh+F9o9/Jp5EWDNwvUWAlwJc=
+Date:   Thu, 23 Jan 2020 09:23:22 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Shiping Ji <shiping.linux@gmail.com>
+Cc:     James Morse <james.morse@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        linux-edac <linux-edac@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, hangl@microsoft.com,
+        Lei Wang <lewan@microsoft.com>, ruizhao@microsoft.com,
+        shji@microsoft.com, Scott Branden <scott.branden@broadcom.com>,
+        Yuqing Shen <yuqing.shen@broadcom.com>
+Subject: Re: [PATCH v10 1/2] dt-bindings: edac: dmc-520.yaml
+Message-ID: <20200123082322.GB10328@zn.tnic>
+References: <09a2fe69-842f-01cf-1cfa-d5fc639b158a@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200123075514.15142-1-wxf.wang@hisilicon.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <09a2fe69-842f-01cf-1cfa-d5fc639b158a@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 01/23/2020 01:25 PM, Xuefeng Wang wrote:
-> On KunPeng920 board. When changing permission of a large range region,
-> pmdp_invalidate() takes about 65% in profile (with hugepages) in JIT tool.
-> Kernel will flush tlb twice: first flush happens in pmdp_invalidate, second
-> flush happens at the end of change_protect_range(). The first pmdp_invalidate
-> is not necessary if the hardware support atomic pmdp changing. The atomic
-> changing pimd to zero can prevent the hardware from update asynchronous.
-> So reconstruct it and remove the first pmdp_invalidate. And the second tlb
-> flush can make sure the new tlb entry valid.
+On Wed, Jan 22, 2020 at 04:31:07PM -0800, Shiping Ji wrote:
+> This is the device tree bindings for new EDAC driver dmc520_edac.c.
 > 
-> This patch series add a pmdp_modify_prot transaction abstraction firstly.
-> Then add pmdp_modify_prot_start() in arm64, which uses pmdp_huge_get_and_clear()
-> to atomically fetch the pmd and zero the entry.
+> From: Lei Wang <leiwang_git@outlook.com>
+> 
+> Signed-off-by: Lei Wang <leiwang_git@outlook.com>
+> Signed-off-by: Shiping Ji <shiping.linux@gmail.com>
+> Reviewed-by: James Morse <james.morse@arm.com>
+> 
+> ---
+>      Changes in v10:
+>          - Convert to the YAML format for binding description
 
-There is a comment section in change_huge_pmd() which details how clearing
-the PMD entry there (in prot_numa case) can potentially race with another
-concurrent madvise(MADV_DONTNEED, ..) call. Here is the comment block for
-reference.
+So you've changed this patch considerably. If you do so, you cannot keep
+Reviewed-by tags.
 
-        /*
-         * In case prot_numa, we are under down_read(mmap_sem). It's critical
-         * to not clear pmd intermittently to avoid race with MADV_DONTNEED
-         * which is also under down_read(mmap_sem):
-         *
-         *      CPU0:                           CPU1:
-         *                              change_huge_pmd(prot_numa=1)
-         *                               pmdp_huge_get_and_clear_notify()
-         * madvise_dontneed()
-         *  zap_pmd_range()
-         *   pmd_trans_huge(*pmd) == 0 (without ptl)
-         *   // skip the pmd
-         *                               set_pmd_at();
-         *                               // pmd is re-established
-         *
-         * The race makes MADV_DONTNEED miss the huge pmd and don't clear it
-         * which may break userspace.
-         *
-         * pmdp_invalidate() is required to make sure we don't miss
-         * dirty/young flags set by hardware.
-         */
+Also, AFAICT, you've written a completely *new* patch which would mean
+that this time you're the author. Correct?
 
-By defining the new override with pmdp_huge_get_and_clear(), are not we
-now exposed to above race condition ?
+If so, you don't need to keep Lei's From.
 
-- Anshuman
+In any case, please take some time to read this:
+
+https://www.kernel.org/doc/html/latest/process/index.html
+
+It is a lot so do concentrate on the whole process, i.e., this:
+
+https://www.kernel.org/doc/html/latest/process/development-process.html
+
+so that you have a basic idea.
+
+If you have questions, I'm sure Sasha would be willing to answer them
+even if he's away now.
+
+Thx.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
