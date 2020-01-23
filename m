@@ -2,114 +2,136 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78B02C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 18:16:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49538C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 18:17:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 519F421569
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 18:16:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PBWUy2bh"
+	by mail.kernel.org (Postfix) with ESMTP id 2D3C92077C
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 18:17:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728904AbgAWSQs (ORCPT
+        id S1729076AbgAWSRB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 13:16:48 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:39430 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727278AbgAWSQs (ORCPT
+        Thu, 23 Jan 2020 13:17:01 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:40736 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727278AbgAWSRA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 13:16:48 -0500
-Received: by mail-wm1-f67.google.com with SMTP id 20so3516798wmj.4
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jan 2020 10:16:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=wA0Wlh+bd+MxRm3pbZVk/Z3ATg06ui/SAg+IeXpD4OE=;
-        b=PBWUy2bhRdikggryP8vrrfs3us8jT66cGBG5UclsBcCOs55TitHn/AqOsbVMM8s+JC
-         YhOdYvXE58Q6IEU7ZHXgZKpOMmV7WED4iplM/r9eq+5r+BebcB2VOxBdoENXeU01abfb
-         ZkMRMxJIhNmHAY8WHyx4PWkAZaB8awa/PNMgaDtlUBogkdXz11wk2V1HG+5o+RETq5eb
-         xHMRXyp+kM2yyzQ7Wmrcib0v7RW7JlkVN7aBIUfBAZvO9AzJQmVyI8Xy5fLYOO0pDdkW
-         nzHJk80MGXYxaAuVDl8ABfFKdtccGsPVYVlWOaKkQqosxP26SrXZFCunZpEOxNZiAJQn
-         6rAA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=wA0Wlh+bd+MxRm3pbZVk/Z3ATg06ui/SAg+IeXpD4OE=;
-        b=o15Kr2uNR4nj8ZC5fZsQlZYwbPN8DBKOBEw53hXdaRJt9YCq51XNcDKkf5gWTzoGuN
-         lFyR/RmB+Tpra7KcLaprKoS7RMxIVP9vnioWxnrs2loVhUgHNOIkJXXKveU9VkTYTEAe
-         GjYY+yCk3dgAImtxMyyZUjZUsd6lhthDrFn4wAJR50/nWYP3q2ekTg3+8Y6ii5EVnwBU
-         hpMIcBInlbh2xsz0tzHGtN5J+pGuW8LOp71JXigno8xiIS5oYSbDtjA0Or0KJgHVcl/F
-         uoO3887gTXK3qCur+91b00AM8EtMOer264R2u1JymYN9QSf54RrIUYFJ8OeqvsbBsd+Q
-         EQxg==
-X-Gm-Message-State: APjAAAUKEW0HSV1q0n6Ccv7Z1cUwibXs/qdqYUeJl/9bhzZ+Xpk7aqnL
-        N49nId3wES8gBNAeFd7TST+GoL2t3AYcFh5giA4=
-X-Google-Smtp-Source: APXvYqxMWRfg6O8UAm4VcJ2/Kqy36PAXmSCue2SezbqRmFiaWzZoOYrtkoYatbjzAKCy47K1rRrcJZQ3n4v9DdWFepE=
-X-Received: by 2002:a7b:cfc2:: with SMTP id f2mr5207959wmm.44.1579803406444;
- Thu, 23 Jan 2020 10:16:46 -0800 (PST)
+        Thu, 23 Jan 2020 13:17:00 -0500
+Received: from p5b06da22.dip0.t-ipconnect.de ([91.6.218.34] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1iuh2G-0005bq-TU; Thu, 23 Jan 2020 19:16:57 +0100
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id 3292F101623; Thu, 23 Jan 2020 19:16:56 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Evan Green <evgreen@chromium.org>, Rajat Jain <rajatja@google.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] PCI/MSI: Avoid torn updates to MSI pairs
+In-Reply-To: <87y2tytv5i.fsf@nanos.tec.linutronix.de>
+References: <20200117162444.v2.1.I9c7e72144ef639cc135ea33ef332852a6b33730f@changeid> <CACK8Z6Ft95qj4e_fsA32r_bcz2SsHOW1xxqZJt3_DBAJw=NMGA@mail.gmail.com> <CAE=gft6fKQWExW-=xjZGzXs30XohfpA5SKggvL2WtYXAHmzMew@mail.gmail.com> <87y2tytv5i.fsf@nanos.tec.linutronix.de>
+Date:   Thu, 23 Jan 2020 19:16:56 +0100
+Message-ID: <87eevqkpgn.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-References: <20200123154706.5831-1-daniel.baluta@oss.nxp.com> <20200123175658.GB1796501@kroah.com>
-In-Reply-To: <20200123175658.GB1796501@kroah.com>
-From:   Daniel Baluta <daniel.baluta@gmail.com>
-Date:   Thu, 23 Jan 2020 20:16:35 +0200
-Message-ID: <CAEnQRZAnfT0kBCmir+-cTkg+8bgO0pk+1S-rSfUVobf=Hzxz7g@mail.gmail.com>
-Subject: Re: [PATCH] lib: devres: Export devm_ioremap_resource_wc
-To:     "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
-Cc:     "Daniel Baluta (OSS)" <daniel.baluta@oss.nxp.com>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "info@metux.net" <info@metux.net>,
-        "ztuowen@gmail.com" <ztuowen@gmail.com>,
-        "sergei.shtylyov@cogentembedded.com" 
-        <sergei.shtylyov@cogentembedded.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Daniel Baluta <daniel.baluta@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 23, 2020 at 7:57 PM gregkh@linuxfoundation.org
-<gregkh@linuxfoundation.org> wrote:
->
-> On Thu, Jan 23, 2020 at 03:47:21PM +0000, Daniel Baluta (OSS) wrote:
-> > From: Daniel Baluta <daniel.baluta@nxp.com>
-> >
-> > So that modules can also use it.
-> >
-> > Fixes: b873af620e58863b ("lib: devres: provide devm_ioremap_resource_wc()")
-> > Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
-> > ---
-> >  lib/devres.c | 1 +
-> >  1 file changed, 1 insertion(+)
-> >
-> > diff --git a/lib/devres.c b/lib/devres.c
-> > index 6ef51f159c54..7fe2bd75dfa3 100644
-> > --- a/lib/devres.c
-> > +++ b/lib/devres.c
-> > @@ -182,6 +182,7 @@ void __iomem *devm_ioremap_resource_wc(struct device *dev,
-> >  {
-> >       return __devm_ioremap_resource(dev, res, DEVM_IOREMAP_WC);
-> >  }
-> > +EXPORT_SYMBOL(devm_ioremap_resource_wc);
->
-> EXPORT_SYMBOL_GPL() perhaps?
->
-> What in-tree driver needs this?
+Evan,
 
-I was experimenting with an out of tree driver and I also was using it wrong :D.
-Indeed looks like there is no real potential user so far in the kernel tree.
+Thomas Gleixner <tglx@linutronix.de> writes:
+> This is not yet debugged fully and as this is happening on MSI-X I'm not
+> really convinced yet that your 'torn write' theory holds.
 
-Perhaps: drivers/net/ethernet/amazon/ena/ena_netdev.c
+can you please apply the debug patch below and run your test. When the
+failure happens, stop the tracer and collect the trace.
 
-Also, I chose EXPORT_SYMBOL because the same way its cousin
-devm_ioremap_resource.
+Another question. Did you ever try to change the affinity of that
+interrupt without hotplug rapidly while the device makes traffic? If
+not, it would be interesting whether this leads to a failure as well.
 
-Daniel.
+Thanks
+
+        tglx
+
+8<---------------
+
+--- a/arch/x86/kernel/apic/vector.c
++++ b/arch/x86/kernel/apic/vector.c
+@@ -964,6 +964,8 @@ void irq_force_complete_move(struct irq_
+ 	if (!vector)
+ 		goto unlock;
+ 
++	trace_printk("IRQ %u vector %u irq inprogress %u\n", vector,
++		     irqd->irq, apicd->move_in_progress);
+ 	/*
+ 	 * This is tricky. If the cleanup of the old vector has not been
+ 	 * done yet, then the following setaffinity call will fail with
+--- a/arch/x86/kernel/irq.c
++++ b/arch/x86/kernel/irq.c
+@@ -244,6 +244,8 @@ u64 arch_irq_stat(void)
+ 
+ 	desc = __this_cpu_read(vector_irq[vector]);
+ 	if (likely(!IS_ERR_OR_NULL(desc))) {
++		trace_printk("Handle vector %u IRQ %u\n", vector,
++			     desc->irq_data.irq);
+ 		if (IS_ENABLED(CONFIG_X86_32))
+ 			handle_irq(desc, regs);
+ 		else
+@@ -252,10 +254,18 @@ u64 arch_irq_stat(void)
+ 		ack_APIC_irq();
+ 
+ 		if (desc == VECTOR_UNUSED) {
++			trace_printk("Handle unused vector %u\n", vector);
+ 			pr_emerg_ratelimited("%s: %d.%d No irq handler for vector\n",
+ 					     __func__, smp_processor_id(),
+ 					     vector);
+ 		} else {
++			if (desc == VECTOR_SHUTDOWN) {
++				trace_printk("Handle shutdown vector %u\n",
++					     vector);
++			} else if (desc == VECTOR_RETRIGGERED) {
++				trace_printk("Handle retriggered vector %u\n",
++					     vector);
++			}
+ 			__this_cpu_write(vector_irq[vector], VECTOR_UNUSED);
+ 		}
+ 	}
+@@ -373,9 +383,14 @@ void fixup_irqs(void)
+ 		if (IS_ERR_OR_NULL(__this_cpu_read(vector_irq[vector])))
+ 			continue;
+ 
++		desc = __this_cpu_read(vector_irq[vector]);
++		trace_printk("FIXUP: %u\n", desc->irq_data.irq);
++
+ 		irr = apic_read(APIC_IRR + (vector / 32 * 0x10));
+ 		if (irr  & (1 << (vector % 32))) {
+ 			desc = __this_cpu_read(vector_irq[vector]);
++			trace_printk("FIXUP: %u IRR pending\n",
++				     desc->irq_data.irq);
+ 
+ 			raw_spin_lock(&desc->lock);
+ 			data = irq_desc_get_irq_data(desc);
+--- a/kernel/irq/cpuhotplug.c
++++ b/kernel/irq/cpuhotplug.c
+@@ -122,6 +122,10 @@ static bool migrate_one_irq(struct irq_d
+ 		affinity = cpu_online_mask;
+ 		brokeaff = true;
+ 	}
++
++	trace_printk("IRQ: %d maskchip %d wasmasked %d break %d\n",
++		     d->irq, maskchip, irqd_irq_masked(d), brokeaff);
++
+ 	/*
+ 	 * Do not set the force argument of irq_do_set_affinity() as this
+ 	 * disables the masking of offline CPUs from the supplied affinity
