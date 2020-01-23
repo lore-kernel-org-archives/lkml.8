@@ -2,85 +2,123 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13DAEC33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 14:12:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18DCDC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 14:16:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE0732051A
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 14:12:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF1C7217F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 14:16:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="II4+EIzt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727590AbgAWOM5 (ORCPT
+        id S1728779AbgAWOQH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 09:12:57 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:40191 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726227AbgAWOM5 (ORCPT
+        Thu, 23 Jan 2020 09:16:07 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:34073 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726729AbgAWOQH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 09:12:57 -0500
-Received: from [5.158.153.53] (helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1iudE0-0001Ni-7q; Thu, 23 Jan 2020 15:12:48 +0100
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 897AF1017FA; Thu, 23 Jan 2020 15:12:47 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     vipul kumar <vipulk0511@gmail.com>
-Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        linux-kernel@vger.kernel.org, Stable <stable@vger.kernel.org>,
-        Srikanth Krishnakar <Srikanth_Krishnakar@mentor.com>,
-        Cedric Hombourger <Cedric_Hombourger@mentor.com>,
-        x86@kernel.org, Bin Gao <bin.gao@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Len Brown <len.brown@intel.com>,
-        Vipul Kumar <vipul_kumar@mentor.com>
-Subject: Re: [v3] x86/tsc: Unset TSC_KNOWN_FREQ and TSC_RELIABLE flags on Intel Bay Trail SoC
-In-Reply-To: <CADdC98TE4oNWZyEsqXzr+zJtfdTTOyeeuHqu1u04X_ktLHo-Hg@mail.gmail.com>
-References: <1579617717-4098-1-git-send-email-vipulk0511@gmail.com> <87eevs7lfd.fsf@nanos.tec.linutronix.de> <CADdC98RJpsvu_zWehNGDDN=W11rD11NSPaodg-zuaXsHuOJYTQ@mail.gmail.com> <878slzeeim.fsf@nanos.tec.linutronix.de> <CADdC98TE4oNWZyEsqXzr+zJtfdTTOyeeuHqu1u04X_ktLHo-Hg@mail.gmail.com>
-Date:   Thu, 23 Jan 2020 15:12:47 +0100
-Message-ID: <87muaep8gw.fsf@nanos.tec.linutronix.de>
+        Thu, 23 Jan 2020 09:16:07 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579788965;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=/NlvV8sLBYjX4HhniKYbwd4Qsi6bxUolByF4ash31SU=;
+        b=II4+EIztUNhrWqkElEHtpPu09cCvhITB1jFUhrDpBZ2nu81dE+TWa1Jqt11Efzn2+Wv/WA
+        wF2WYbssEVakEKRrN3A7+8tT8ZMluRREwNhhWq9d2QkFZHp3kAAN73my1lWGn2ZiGqCzj2
+        qoCnKiGy6lDmK7fL24VgcdUtFx0IP7M=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-181-U4d8_1qPOfexJ9uhx9dzrw-1; Thu, 23 Jan 2020 09:16:01 -0500
+X-MC-Unique: U4d8_1qPOfexJ9uhx9dzrw-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9557A18C8C0D;
+        Thu, 23 Jan 2020 14:15:58 +0000 (UTC)
+Received: from llong.remote.csb (dhcp-17-59.bos.redhat.com [10.18.17.59])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 1AB801CB;
+        Thu, 23 Jan 2020 14:15:56 +0000 (UTC)
+Subject: Re: [PATCH v9 3/5] locking/qspinlock: Introduce CNA into the slow
+ path of qspinlock
+To:     Alex Kogan <alex.kogan@oracle.com>, linux@armlinux.org.uk,
+        peterz@infradead.org, mingo@redhat.com, will.deacon@arm.com,
+        arnd@arndb.de, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        tglx@linutronix.de, bp@alien8.de, hpa@zytor.com, x86@kernel.org,
+        guohanjun@huawei.com, jglauber@marvell.com
+Cc:     steven.sistare@oracle.com, daniel.m.jordan@oracle.com,
+        dave.dice@oracle.com
+References: <20200115035920.54451-1-alex.kogan@oracle.com>
+ <20200115035920.54451-4-alex.kogan@oracle.com>
+From:   Waiman Long <longman@redhat.com>
+Organization: Red Hat
+Message-ID: <d751a8ef-aae8-ca70-6a28-79dd8bee2324@redhat.com>
+Date:   Thu, 23 Jan 2020 09:15:55 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+In-Reply-To: <20200115035920.54451-4-alex.kogan@oracle.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Vipul,
+On 1/14/20 10:59 PM, Alex Kogan wrote:
+> +static int __init cna_init_nodes(void)
+> +{
+> +	unsigned int cpu;
+> +
+> +	/*
+> +	 * this will break on 32bit architectures, so we restrict
+> +	 * the use of CNA to 64bit only (see arch/x86/Kconfig)
+> +	 */
+> +	BUILD_BUG_ON(sizeof(struct cna_node) > sizeof(struct qnode));
+> +	/* we store an ecoded tail word in the node's @locked field */
+> +	BUILD_BUG_ON(sizeof(u32) > sizeof(unsigned int));
+> +
+> +	for_each_possible_cpu(cpu)
+> +		cna_init_nodes_per_cpu(cpu);
+> +
+> +	return 0;
+> +}
+> +early_initcall(cna_init_nodes);
+> +
 
-please disable HTML mixed mode completely in your mail client when
-posting on LKML. Such mails are silently dropped on the list server and
-never reach the public archives.
+I just realized that you shouldn't call cna_init_nodes as an
+early_initcall. Instead,
 
-vipul kumar <vipulk0511@gmail.com> writes:
->> > On Tue, Jan 21, 2020 at 11:15 PM Thomas Gleixner <tglx@linutronix.de>
->> wrote:
->> What's the frequency which is determined from the MSR? Something like
->> ...
->
-> tsc: Detected 1832.600 MHz processor
+> +/*
+> + * Switch to the NUMA-friendly slow path for spinlocks when we have
+> + * multiple NUMA nodes in native environment, unless the user has
+> + * overridden this default behavior by setting the numa_spinlock flag.
+> + */
+> +void __init cna_configure_spin_lock_slowpath(void)
+> +{
+> +	if ((numa_spinlock_flag == 1) ||
+> +	    (numa_spinlock_flag == 0 && nr_node_ids > 1 &&
+> +		    pv_ops.lock.queued_spin_lock_slowpath ==
+> +			native_queued_spin_lock_slowpath)) {
+> +		pv_ops.lock.queued_spin_lock_slowpath =
+> +		    __cna_queued_spin_lock_slowpath;
+> +
+> +		pr_info("Enabling CNA spinlock\n");
+> +	}
+> +}
 
-vs.
+call it when it is sure that CNA spinlock is going to be used. At this
+point, the system is still in UP mode and the slowpath will not be called.
 
-> tsc: Refined TSC clocksource calibration: 1833.333 MHz
+Cheers,
+Longman
 
-So the MSR readout is off by 0.4%
-
->    Attached full logs with patch and without patch.
-
-I can't find the debug output in them. Also:
-
-> [    0.000000] Linux version 4.14.139-rt66 ....
-
-Can you please run that patch on top of current mainline please? I
-really want to see the debug output.
-
-Thanks,
-
-        tglx
