@@ -2,84 +2,200 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D816AC33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 21:35:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB2AFC33CAA
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 21:36:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A8412064C
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 21:35:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A68DB20665
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 21:36:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LrAqB744"
+	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="JGf6hitG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728931AbgAWVfW (ORCPT
+        id S1729083AbgAWVgK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 16:35:22 -0500
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:37763 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727215AbgAWVfW (ORCPT
+        Thu, 23 Jan 2020 16:36:10 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:42380 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726191AbgAWVgJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 16:35:22 -0500
-Received: by mail-lf1-f68.google.com with SMTP id b15so3475247lfc.4
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jan 2020 13:35:21 -0800 (PST)
+        Thu, 23 Jan 2020 16:36:09 -0500
+Received: by mail-lj1-f193.google.com with SMTP id y4so5396387ljj.9
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jan 2020 13:36:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=5JEo2S95QV9RzdysiSqX6sLlLVR7bGOobEMqZB4SbLo=;
-        b=LrAqB744pt/J8vqkIc85K0oHNitxTEwLxcSEUaIu43WhAUvXxzMBCno2LvKfhQXu0L
-         QMnDBsNc3YXR2shrIDVs0cUYKafdaONjLDcBPiNDFxzTadHp5C4whl76dAFOre9YwVzU
-         SY5P5FuMOtoNfri/t2DbZOWE9hkwyIdKhD+6dX4Frdz9995yNciwne+2Og90Q1HkEPiX
-         NuHYw4ugQZx1YCWveavpWPHRqj1dsxgKFKB39MCg2ouG++cHgAe6Ch91a9z0efCDXaHQ
-         2k7yiw90gujkm3E+HDqwQmF2Ea0YT5OQ0JDQimumZ7sEChjjoRThspQXQ+9ucSEyluzb
-         +R3g==
+        bh=hMyXK37D1SY1vwV+WlcNr41eq9aZRtXuphVComfAQVQ=;
+        b=JGf6hitGz+m+ANGWCtXXNmlHWR+dQ/BZUfRkAld6SD6nyEJJWkhHMwDQZL8Tg3rEI6
+         E5wDExHPHU3tOhZaD3uMzylwgNwR/Wf9C3XHKUpDzVGdRtuGWPx6tbstejnrgJrQeN+g
+         Dmso35KzWIS2UCBggmhhuHBvnfIpWhxJWW0gyGW2SsOAh/Ff5Bltiu0u80w/D/v+iq7e
+         wnzu7aJ0+yCcORXR2HzC8GaXEygtzUvCvvQD4T5mdqKgxlH9t+1HZeBY5CJ65wYPgaLh
+         LteK7V9iBlHEF5ip9MJqmX9Yg28imNv8LPKe1tmJV6DDUXayP+pLl8zZYp33fO+aOwDN
+         QytQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=5JEo2S95QV9RzdysiSqX6sLlLVR7bGOobEMqZB4SbLo=;
-        b=uKToQvhugTNogQ8m/6p7HGmNLx15UtVqqVcysTruwd5Y0J0ee4WILxULiHwiJTPfRE
-         OuKDklOAIeKx3nnq//xbilKdQrnyMi9T1JfuWBv+KpvNri1V8OlZnkX5EgoLJHjJZUAj
-         l33jk0j8mhCa58i6jn0Vx/FCCse6MQb1d87S1diRAMifbwJ5gSeyG1NwEfDCkGpH72UF
-         19nzkpAco8SXNcdKkvd7VR+7vj5FoRTYQOUPdO1vj056kWPhnXo15up4e5JcX4RspbSp
-         //gBTB6rkwP9M9j1eEx86deLXVBZJr2L1KL18SM1a20IWWDablNThL2vnT/XfrGJ+TSg
-         d+EQ==
-X-Gm-Message-State: APjAAAUO7wZnpmAdTK+wB0d1kusX/Y4Pfm/ot2qJTUiF4HmS99DKQ0JV
-        QCvox27oG3Hp5CqZsdTmQyQs85N+ElCsPBpzTIWb5w==
-X-Google-Smtp-Source: APXvYqx0p8hvRbgBC26M9FVdzAYzLSri+D8u6aFzpfJCv9MmjQWjujEFU9JKr/o3Xmz+P0huC2zlxY0gHbxp1WC7mHE=
-X-Received: by 2002:a19:c307:: with SMTP id t7mr5721872lff.166.1579815320173;
- Thu, 23 Jan 2020 13:35:20 -0800 (PST)
+        bh=hMyXK37D1SY1vwV+WlcNr41eq9aZRtXuphVComfAQVQ=;
+        b=c7135O3gVZyPTXDJtoCMOg78X2+lwv4yqFFBq/9PIfFSnWYjkbEiESX8XHoaJ/rl/Y
+         BZmY9AS/AbnGOtmrKKZKvJKuIzkBcfdgKy5ll4+76mHluHHxcyx2MJsKztwfxsi6EaJN
+         0Ed0izx2Pbr4egN+dXc8wsj2aF+7/taEPUt9P02cRZ13aN6rQ5MdG7edGU0kso05FFFN
+         TIQr4E6SniwTPuCZOs4XJAjNKw2MoWgczC7ExFN8MRD7oLawqHx4XcEXeutdT81iuEPS
+         rYBfDFiWYg4NSt73oiVA2PtYCOWu8ipiA+tzWUBLU+/mShrQq0e09B5lakaXiNFPHgYx
+         xahg==
+X-Gm-Message-State: APjAAAVrpdfOqTRtIQ4ZJxCCg4ppIuPbUBzASE5YTuyokIJPYab7RPkm
+        RVkHD5BCHkdphod7au/S/+OT9aW4CJCg464dveiS
+X-Google-Smtp-Source: APXvYqzmiH85n1JcJPF1cLLPQxAHGXAPgPHI716hr05qfSBXxCFeGrnpxFyI4zZk9EfGn+ZIo3+k+WaGSr/n41CSiEg=
+X-Received: by 2002:a2e:b52b:: with SMTP id z11mr236562ljm.155.1579815366587;
+ Thu, 23 Jan 2020 13:36:06 -0800 (PST)
 MIME-Version: 1.0
-References: <20200120223201.241390-1-ebiggers@kernel.org> <20200122230649.GC182745@gmail.com>
-In-Reply-To: <20200122230649.GC182745@gmail.com>
-From:   Daniel Rosenberg <drosen@google.com>
-Date:   Thu, 23 Jan 2020 13:35:08 -0800
-Message-ID: <CA+PiJmRBM-0J+LAckrvzg_bxEF+EmjwG5_PzgiWJ7SQu219p2g@mail.gmail.com>
-Subject: Re: [PATCH v5 0/6] fscrypt preparations for encryption+casefolding
-To:     Eric Biggers <ebiggers@kernel.org>
-Cc:     linux-fscrypt@vger.kernel.org, kernel-team@android.com,
-        linux-kernel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net,
-        linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
-        Gabriel Krisman Bertazi <krisman@collabora.com>,
-        linux-mtd@lists.infradead.org, Richard Weinberger <richard@nod.at>
+References: <cover.1577736799.git.rgb@redhat.com> <7d7933d742fdf4a94c84b791906a450b16f2e81f.1577736799.git.rgb@redhat.com>
+ <CAHC9VhSuwJGryfrBfzxG01zwb-O_7dbjS0x0a3w-XjcNuYSAcg@mail.gmail.com>
+ <20200123162918.b3jbed7tbvr2sf2p@madcap2.tricolour.ca> <CAHC9VhTusiQoudB8G5jjDFyM9WxBUAjZ6_X35ywJ063Jb75dQA@mail.gmail.com>
+ <20200123200412.j2aucdp3cvk57prw@madcap2.tricolour.ca>
+In-Reply-To: <20200123200412.j2aucdp3cvk57prw@madcap2.tricolour.ca>
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Thu, 23 Jan 2020 16:35:55 -0500
+Message-ID: <CAHC9VhQ2_MQdGAT6Pda9FRe6s0y4JC1XUQenpr-VJiyq9M_CBw@mail.gmail.com>
+Subject: Re: [PATCH ghak90 V8 07/16] audit: add contid support for signalling
+ the audit daemon
+To:     Richard Guy Briggs <rgb@redhat.com>
+Cc:     nhorman@tuxdriver.com, linux-api@vger.kernel.org,
+        containers@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>, dhowells@redhat.com,
+        Linux-Audit Mailing List <linux-audit@redhat.com>,
+        netfilter-devel@vger.kernel.org, ebiederm@xmission.com,
+        simo@redhat.com, netdev@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, Eric Paris <eparis@parisplace.org>,
+        mpatel@redhat.com, Serge Hallyn <serge@hallyn.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 22, 2020 at 3:06 PM Eric Biggers <ebiggers@kernel.org> wrote:
+On Thu, Jan 23, 2020 at 3:04 PM Richard Guy Briggs <rgb@redhat.com> wrote:
+> On 2020-01-23 12:09, Paul Moore wrote:
+> > On Thu, Jan 23, 2020 at 11:29 AM Richard Guy Briggs <rgb@redhat.com> wrote:
+> > > On 2020-01-22 16:28, Paul Moore wrote:
+> > > > On Tue, Dec 31, 2019 at 2:50 PM Richard Guy Briggs <rgb@redhat.com> wrote:
+> > > > >
+> > > > > Add audit container identifier support to the action of signalling the
+> > > > > audit daemon.
+> > > > >
+> > > > > Since this would need to add an element to the audit_sig_info struct,
+> > > > > a new record type AUDIT_SIGNAL_INFO2 was created with a new
+> > > > > audit_sig_info2 struct.  Corresponding support is required in the
+> > > > > userspace code to reflect the new record request and reply type.
+> > > > > An older userspace won't break since it won't know to request this
+> > > > > record type.
+> > > > >
+> > > > > Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
+> > > > > ---
+> > > > >  include/linux/audit.h       |  7 +++++++
+> > > > >  include/uapi/linux/audit.h  |  1 +
+> > > > >  kernel/audit.c              | 35 +++++++++++++++++++++++++++++++++++
+> > > > >  kernel/audit.h              |  1 +
+> > > > >  security/selinux/nlmsgtab.c |  1 +
+> > > > >  5 files changed, 45 insertions(+)
+> > > >
+> > > > ...
+> > > >
+> > > > > diff --git a/kernel/audit.c b/kernel/audit.c
+> > > > > index 0871c3e5d6df..51159c94041c 100644
+> > > > > --- a/kernel/audit.c
+> > > > > +++ b/kernel/audit.c
+> > > > > @@ -126,6 +126,14 @@ struct auditd_connection {
+> > > > >  kuid_t         audit_sig_uid = INVALID_UID;
+> > > > >  pid_t          audit_sig_pid = -1;
+> > > > >  u32            audit_sig_sid = 0;
+> > > > > +/* Since the signal information is stored in the record buffer at the
+> > > > > + * time of the signal, but not retrieved until later, there is a chance
+> > > > > + * that the last process in the container could terminate before the
+> > > > > + * signal record is delivered.  In this circumstance, there is a chance
+> > > > > + * the orchestrator could reuse the audit container identifier, causing
+> > > > > + * an overlap of audit records that refer to the same audit container
+> > > > > + * identifier, but a different container instance.  */
+> > > > > +u64            audit_sig_cid = AUDIT_CID_UNSET;
+> > > >
+> > > > I believe we could prevent the case mentioned above by taking an
+> > > > additional reference to the audit container ID object when the signal
+> > > > information is collected, dropping it only after the signal
+> > > > information is collected by userspace or another process signals the
+> > > > audit daemon.  Yes, it would block that audit container ID from being
+> > > > reused immediately, but since we are talking about one number out of
+> > > > 2^64 that seems like a reasonable tradeoff.
+> > >
+> > > I had thought that through and should have been more explicit about that
+> > > situation when I documented it.  We could do that, but then the syscall
+> > > records would be connected with the call from auditd on shutdown to
+> > > request that signal information, rather than the exit of that last
+> > > process that was using that container.  This strikes me as misleading.
+> > > Is that really what we want?
+> >
+> >  ???
+> >
+> > I think one of us is not understanding the other; maybe it's me, maybe
+> > it's you, maybe it's both of us.
+> >
+> > Anyway, here is what I was trying to convey with my original comment
+> > ... When we record the audit container ID in audit_signal_info() we
+> > take an extra reference to the audit container ID object so that it
+> > will not disappear (and get reused) until after we respond with an
+> > AUDIT_SIGNAL_INFO2.  In audit_receive_msg() when we do the
+> > AUDIT_SIGNAL_INFO2 processing we drop the extra reference we took in
+> > audit_signal_info().  Unless I'm missing some other change you made,
+> > this *shouldn't* affect the syscall records, all it does is preserve
+> > the audit container ID object in the kernel's ACID store so it doesn't
+> > get reused.
 >
-> I've applied this series to fscrypt.git#master; however I'd still like Acked-bys
-> from the UBIFS maintainers on the two UBIFS patches, as well as more
-> Reviewed-bys from anyone interested.  If I don't hear anything from anyone, I
-> might drop these to give more time, especially if there isn't an v5.5-rc8.
+> This is exactly what I had understood.  I hadn't considered the extra
+> details below in detail due to my original syscall concern, but they
+> make sense.
 >
-> - Eric
+> The syscall I refer to is the one connected with the drop of the
+> audit container identifier by the last process that was in that
+> container in patch 5/16.  The production of this record is contingent on
+> the last ref in a contobj being dropped.  So if it is due to that ref
+> being maintained by audit_signal_info() until the AUDIT_SIGNAL_INFO2
+> record it fetched, then it will appear that the fetch action closed the
+> container rather than the last process in the container to exit.
+>
+> Does this make sense?
 
-The patches look good to me. Thanks for the fixups.
--Daniel
+More so than your original reply, at least to me anyway.
+
+It makes sense that the audit container ID wouldn't be marked as
+"dead" since it would still be very much alive and available for use
+by the orchestrator, the question is if that is desirable or not.  I
+think the answer to this comes down the preserving the correctness of
+the audit log.
+
+If the audit container ID reported by AUDIT_SIGNAL_INFO2 has been
+reused then I think there is a legitimate concern that the audit log
+is not correct, and could be misleading.  If we solve that by grabbing
+an extra reference, then there could also be some confusion as
+userspace considers a container to be "dead" while the audit container
+ID still exists in the kernel, and the kernel generated audit
+container ID death record will not be generated until much later (and
+possibly be associated with a different event, but that could be
+solved by unassociating the container death record).  Of the two
+approaches, I think the latter is safer in that it preserves the
+correctness of the audit log, even though it could result in a delay
+of the container death record.
+
+Neither way is perfect, so if you have any other ideas I'm all ears.
+
+> > (We do need to do some extra housekeeping in audit_signal_info() to
+> > deal with the case where nobody asks for AUDIT_SIGNAL_INFO2 -
+> > basically if audit_sig_cid is not NULL we should drop a reference
+> > before assigning it a new object pointer, and of course we would need
+> > to set audit_sig_cid to NULL in audit_receive_msg() after sending it
+> > up to userspace and dropping the extra ref.)
+
+-- 
+paul moore
+www.paul-moore.com
