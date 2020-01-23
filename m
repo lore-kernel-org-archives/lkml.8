@@ -5,58 +5,58 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E91CC33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 23:10:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26D5AC33CAA
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 23:11:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1D0521D7D
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 23:10:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7BEE21734
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 23:10:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QU22ArdA"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RFLKSghk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729858AbgAWXKz (ORCPT
+        id S1729900AbgAWXK7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 18:10:55 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:40796 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729678AbgAWXKv (ORCPT
+        Thu, 23 Jan 2020 18:10:59 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:42653 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729837AbgAWXKy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 18:10:51 -0500
-Received: by mail-wr1-f67.google.com with SMTP id c14so5188798wrn.7;
-        Thu, 23 Jan 2020 15:10:50 -0800 (PST)
+        Thu, 23 Jan 2020 18:10:54 -0500
+Received: by mail-wr1-f68.google.com with SMTP id q6so5168318wro.9;
+        Thu, 23 Jan 2020 15:10:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=TN3Aq9biuh1Hk4JoQDeAp7VLhhgR3QH0ii3GwHrM2/8=;
-        b=QU22ArdAc0hImwOzo1G/Bn3Q0m0bAPw5X2TMexZ/jmO2FoLfDcc8lQiGQuAT6Fwigc
-         zAbnTx3z+SGU3rHzNbikqe/XSj/YSA6+hOMtu1/2yfod3tUHWtyW2HZsKtI4iwa6uW3F
-         C2IMEshfTh6BGAlAQ41pmNMcMP/WSKSzB1V25uyMDEdwG6ha3laIF2d3fQ7IkOYSssMg
-         yGCvPYzpdkJzpE/ISk00GNPxzajh4JmeKtdgv0l8zSWnCb9d7rHYw0uRZpU3+8pSrHwx
-         ZR59g/ftC6ho9o4rS6D/R1AcXHpegzae6J/sQu4s8z51ItzitSapXbRw6AzsJGqo4psM
-         Jevw==
+        bh=iIeXeqWybCn0khYUW1LlWp0vQo+B3g3sVK/buP+mLKA=;
+        b=RFLKSghkKtdswaFGhkjA2H4LA8sgEW7Ckiev/iNbFObVyq7m9U73J6mO7ViFfwhnTq
+         YyWNZuMw4Or29F2Z4b9SDYF4oBlbIj31hp4ECwE2tYqtflVWwwVDhYQ5cz/pYXQ7CupG
+         BnA4yY2qrZsAd/qqIa8XPpvkQ5tL3tCdeNtoga/ohYXbkaYiDwf/HsRsIz63kKH1Gcrv
+         Lo+PNT9BCcqeCVWOW0Xs55It3iRU7NMeFMM2y6loxq/ibAlbhVOqiLFH4J6VsQz1tXH0
+         JCmVOmzMfK+5GJSEmIJ2nm//hG6XAdgQke4eoq7DSUX8jnd7plVRYQEP/EbAOzq9pvl+
+         lkow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=TN3Aq9biuh1Hk4JoQDeAp7VLhhgR3QH0ii3GwHrM2/8=;
-        b=jzHg6DVPOc5UFpm2DTF9BduayWWoCiiTgZ+ag4ke4wDeLTi/uimQiZwoTn7/r+myJu
-         v6ojOS7Vum0y+NzI+z9jLSUbf2CnaHx7KWdBSSnYhugt384zUgyiT5K+UrbhhGmQtm7z
-         irxGeZ7jACkwo14lh6sfT217ntxIMX/zMsBclOv/PLNUsM9SccaCaqDiSr9Jb+wPom0h
-         obrVyS1E6YafcUxs9g3Ifhc/yDqNXew3AGFy/tzSWU1rQBRH+z1Zsi68aRkka2EjjCCY
-         s9abjrgEF6+95L+H+h9NAsdjpI0DNk2tu6tVSjJISJg3Z27yO3jpPDYcxcEPeqya459k
-         kzZA==
-X-Gm-Message-State: APjAAAW2Xyixjm1+8YOsuSyskWIcfcboVs6YeLzZvgkdsTZ8Iwtu7uKU
-        dX1lxWj96k/7DMPZXAq+3eM=
-X-Google-Smtp-Source: APXvYqyXcG0WQl47qaYlaDh2lIxzeONymSjOWQbc5/AiaZVx++ziEgD9efjytX2rB0mpSgX/NigpmA==
-X-Received: by 2002:adf:eb51:: with SMTP id u17mr479368wrn.29.1579821049856;
-        Thu, 23 Jan 2020 15:10:49 -0800 (PST)
+        bh=iIeXeqWybCn0khYUW1LlWp0vQo+B3g3sVK/buP+mLKA=;
+        b=PQ3an4jOteCZKFpqLHClU/VbRakFKYaqL7vo04jamS4bqsykN4FA+bH/VV9cLJnBdQ
+         E1MTGOFzc5tuygV+9/xsjleGGuyaR5Fc3UVzc5pAUzkeEPWm8qjY2fEL7eLY0usYBami
+         Mni1kLzsbDnF9UQ/KQ5uKOF4wOIRtiRFAbWtMdpT0Tl1WOxTNMfgzm4U2QtFJz/HX1Fv
+         qOswYybANEjP0c3NyPTpc3JgxA90ZcfaQSlgjDBNV2PyuHaPXehHVQwHDRGmknWN4AHF
+         YeNdzsg1QaXUyft/igthlZkF26ue2JZGl8mHlytRx6EOKwP2FDzRwXpIN6m/Qk626xbL
+         hHMg==
+X-Gm-Message-State: APjAAAXv1zecJi/Z5sONpb/NF/hKne/4p5DjDT19WuEl1VqrsDpH1hCM
+        1ua2XMyb2gLocAtmT5UnFPYBeQ/S
+X-Google-Smtp-Source: APXvYqzQM9BRYlIR8ZyGAuAhCaVc7Gc6aQQznEXhWRurnHxF9+87PSuC+6K+2D09AyYrrAsGEOhkRA==
+X-Received: by 2002:a5d:558d:: with SMTP id i13mr452664wrv.364.1579821052375;
+        Thu, 23 Jan 2020 15:10:52 -0800 (PST)
 Received: from localhost.localdomain (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.gmail.com with ESMTPSA id z6sm5105552wrw.36.2020.01.23.15.10.48
+        by smtp.gmail.com with ESMTPSA id z6sm5105552wrw.36.2020.01.23.15.10.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Jan 2020 15:10:49 -0800 (PST)
+        Thu, 23 Jan 2020 15:10:52 -0800 (PST)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Laxman Dewangan <ldewangan@nvidia.com>,
         Vinod Koul <vkoul@kernel.org>,
@@ -66,9 +66,9 @@ To:     Laxman Dewangan <ldewangan@nvidia.com>,
         =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>
 Cc:     dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v5 05/14] dmaengine: tegra-apb: Prevent race conditions of tasklet vs free list
-Date:   Fri, 24 Jan 2020 02:03:16 +0300
-Message-Id: <20200123230325.3037-6-digetx@gmail.com>
+Subject: [PATCH v5 07/14] dmaengine: tegra-apb: Use devm_request_irq
+Date:   Fri, 24 Jan 2020 02:03:18 +0300
+Message-Id: <20200123230325.3037-8-digetx@gmail.com>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20200123230325.3037-1-digetx@gmail.com>
 References: <20200123230325.3037-1-digetx@gmail.com>
@@ -79,31 +79,110 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The interrupt handler puts a half-completed DMA descriptor on a free list
-and then schedules tasklet to process bottom half of the descriptor that
-executes client's callback, this creates possibility to pick up the busy
-descriptor from the free list. Thus let's disallow descriptor's re-use
-until it is fully processed.
+Use resource-managed variant of request_irq for brevity.
 
 Acked-by: Jon Hunter <jonathanh@nvidia.com>
 Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- drivers/dma/tegra20-apb-dma.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/dma/tegra20-apb-dma.c | 35 +++++++++++------------------------
+ 1 file changed, 11 insertions(+), 24 deletions(-)
 
 diff --git a/drivers/dma/tegra20-apb-dma.c b/drivers/dma/tegra20-apb-dma.c
-index 1b8a11804962..aafad50d075e 100644
+index f44291207928..dff21e80ffa4 100644
 --- a/drivers/dma/tegra20-apb-dma.c
 +++ b/drivers/dma/tegra20-apb-dma.c
-@@ -281,7 +281,7 @@ static struct tegra_dma_desc *tegra_dma_desc_get(
+@@ -182,7 +182,6 @@ struct tegra_dma_channel {
+ 	char			name[12];
+ 	bool			config_init;
+ 	int			id;
+-	int			irq;
+ 	void __iomem		*chan_addr;
+ 	spinlock_t		lock;
+ 	bool			busy;
+@@ -1380,7 +1379,6 @@ static const struct tegra_dma_chip_data tegra148_dma_chip_data = {
  
- 	/* Do not allocate if desc are waiting for ack */
- 	list_for_each_entry(dma_desc, &tdc->free_dma_desc, node) {
--		if (async_tx_test_ack(&dma_desc->txd)) {
-+		if (async_tx_test_ack(&dma_desc->txd) && !dma_desc->cb_count) {
- 			list_del(&dma_desc->node);
- 			spin_unlock_irqrestore(&tdc->lock, flags);
- 			dma_desc->txd.flags = 0;
+ static int tegra_dma_probe(struct platform_device *pdev)
+ {
+-	struct resource *res;
+ 	struct tegra_dma *tdma;
+ 	int ret;
+ 	int i;
+@@ -1446,25 +1444,27 @@ static int tegra_dma_probe(struct platform_device *pdev)
+ 	INIT_LIST_HEAD(&tdma->dma_dev.channels);
+ 	for (i = 0; i < cdata->nr_channels; i++) {
+ 		struct tegra_dma_channel *tdc = &tdma->channels[i];
++		int irq;
+ 
+ 		tdc->chan_addr = tdma->base_addr +
+ 				 TEGRA_APBDMA_CHANNEL_BASE_ADD_OFFSET +
+ 				 (i * cdata->channel_reg_size);
+ 
+-		res = platform_get_resource(pdev, IORESOURCE_IRQ, i);
+-		if (!res) {
+-			ret = -EINVAL;
++		irq = platform_get_irq(pdev, i);
++		if (irq < 0) {
++			ret = irq;
+ 			dev_err(&pdev->dev, "No irq resource for chan %d\n", i);
+-			goto err_irq;
++			goto err_pm_disable;
+ 		}
+-		tdc->irq = res->start;
++
+ 		snprintf(tdc->name, sizeof(tdc->name), "apbdma.%d", i);
+-		ret = request_irq(tdc->irq, tegra_dma_isr, 0, tdc->name, tdc);
++		ret = devm_request_irq(&pdev->dev, irq, tegra_dma_isr, 0,
++				       tdc->name, tdc);
+ 		if (ret) {
+ 			dev_err(&pdev->dev,
+ 				"request_irq failed with err %d channel %d\n",
+ 				ret, i);
+-			goto err_irq;
++			goto err_pm_disable;
+ 		}
+ 
+ 		tdc->dma_chan.device = &tdma->dma_dev;
+@@ -1517,7 +1517,7 @@ static int tegra_dma_probe(struct platform_device *pdev)
+ 	if (ret < 0) {
+ 		dev_err(&pdev->dev,
+ 			"Tegra20 APB DMA driver registration failed %d\n", ret);
+-		goto err_irq;
++		goto err_pm_disable;
+ 	}
+ 
+ 	ret = of_dma_controller_register(pdev->dev.of_node,
+@@ -1534,13 +1534,7 @@ static int tegra_dma_probe(struct platform_device *pdev)
+ 
+ err_unregister_dma_dev:
+ 	dma_async_device_unregister(&tdma->dma_dev);
+-err_irq:
+-	while (--i >= 0) {
+-		struct tegra_dma_channel *tdc = &tdma->channels[i];
+-
+-		free_irq(tdc->irq, tdc);
+-	}
+-
++err_pm_disable:
+ 	pm_runtime_disable(&pdev->dev);
+ 	if (!pm_runtime_status_suspended(&pdev->dev))
+ 		tegra_dma_runtime_suspend(&pdev->dev);
+@@ -1550,16 +1544,9 @@ static int tegra_dma_probe(struct platform_device *pdev)
+ static int tegra_dma_remove(struct platform_device *pdev)
+ {
+ 	struct tegra_dma *tdma = platform_get_drvdata(pdev);
+-	int i;
+-	struct tegra_dma_channel *tdc;
+ 
+ 	dma_async_device_unregister(&tdma->dma_dev);
+ 
+-	for (i = 0; i < tdma->chip_data->nr_channels; ++i) {
+-		tdc = &tdma->channels[i];
+-		free_irq(tdc->irq, tdc);
+-	}
+-
+ 	pm_runtime_disable(&pdev->dev);
+ 	if (!pm_runtime_status_suspended(&pdev->dev))
+ 		tegra_dma_runtime_suspend(&pdev->dev);
 -- 
 2.24.0
 
