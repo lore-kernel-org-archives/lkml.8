@@ -2,154 +2,183 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 065D7C33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 15:11:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 006E5C33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 15:12:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1EFD21835
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 15:11:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA79A21D7D
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 15:12:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WQYyGWnp"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Liw91XNp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728899AbgAWPLn (ORCPT
+        id S1728984AbgAWPMK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 10:11:43 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:30362 "EHLO
+        Thu, 23 Jan 2020 10:12:10 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:60737 "EHLO
         us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726240AbgAWPLm (ORCPT
+        with ESMTP id S1728904AbgAWPMK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 10:11:42 -0500
+        Thu, 23 Jan 2020 10:12:10 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579792301;
+        s=mimecast20190719; t=1579792329;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=G0UV4KnB1lt7EMsASswd8dWEm02CKeOR2gA8iM2LVcI=;
-        b=WQYyGWnpQ88Iji73ef73styg+omxBP0+gbiEK5aMGxzusjb6yMrArWhLkogNIXa3UVindP
-        gW4uudQF5U0p6p2rR7lp3U3R6W30kaAg3vyx+nHVm2VSSFtQ4djKLS6rPFWRnuBiqkVQ8J
-        s7pzdfX0OgUZbUHj7FJ1SIvjNIowDxs=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-2--pTQctVxPEKacXU9gvjBXA-1; Thu, 23 Jan 2020 10:11:25 -0500
-X-MC-Unique: -pTQctVxPEKacXU9gvjBXA-1
-Received: by mail-wr1-f70.google.com with SMTP id h30so1935330wrh.5
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jan 2020 07:11:25 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=G0UV4KnB1lt7EMsASswd8dWEm02CKeOR2gA8iM2LVcI=;
-        b=U5jwoTEW7QVTmvDIy3/An88C0/YIxNYbksOJaBZIUN+fnm1rL0GVgAKtA1Pdrp3ZZo
-         xGjOHIlS5ha6aDBoGjjU8REmb9k9y7RBLXoNraY9MUFIKb4/nAUMKqaYoaM/wr+gBpWI
-         +CgLZiXbA51UMWPcMio1Q5A8Ns/1OlfoGNRtr4F63mrtg2DQFiAIill7Ul2vZGFzdhdu
-         mWWPqzR22JRMwgsV6Xeq6uIssUBANlT1MBPgDgi9mb+EN00wU4qIGQriaO5pAj7KwNJz
-         T/OUXAcH950yzobNnqYht/INH5NnHrF9snyJ/euO1x0TyHkcMmvsqCeDILzNS2wSbBLC
-         veug==
-X-Gm-Message-State: APjAAAUrtFmI4w7Dn/lAM3XHUVzGydQdamWO0LJIhW4PLhjj/QNtvert
-        meOHuFzzk6ewX05cnn4CJuRfV3eaZXUF/evUrgc2foPQMjUSXDqReXNoRDfLsQgYhH4oLV1tB42
-        YvwhKGOUMkGJiNnc30oN3Ooq5
-X-Received: by 2002:a05:600c:2059:: with SMTP id p25mr4912889wmg.161.1579792282960;
-        Thu, 23 Jan 2020 07:11:22 -0800 (PST)
-X-Google-Smtp-Source: APXvYqyuG8AqgpsWohRveZfsCX1EDtHU8w7RprAsRh0cBlav4qVZZ5HalRTUC8mBUSmFThwXkidyhg==
-X-Received: by 2002:a05:600c:2059:: with SMTP id p25mr4912872wmg.161.1579792282748;
-        Thu, 23 Jan 2020 07:11:22 -0800 (PST)
-Received: from [192.168.1.81] (host81-140-166-164.range81-140.btcentralplus.com. [81.140.166.164])
-        by smtp.gmail.com with ESMTPSA id k16sm3720036wru.0.2020.01.23.07.11.21
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 23 Jan 2020 07:11:22 -0800 (PST)
-Subject: Re: [RFC v5 00/57] objtool: Add support for arm64
-To:     Will Deacon <will@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        jpoimboe@redhat.com, peterz@infradead.org, raphael.gault@arm.com,
-        catalin.marinas@arm.com
-References: <20200109160300.26150-1-jthierry@redhat.com>
- <20200121103025.GC11154@willie-the-truck>
- <400d402d-c964-6f0c-2954-6f6afcb94635@redhat.com>
- <20200123143503.GA19649@willie-the-truck>
-From:   Julien Thierry <jthierry@redhat.com>
-Message-ID: <ad6f3a12-60b9-f2d8-b0c9-0de59c0e0c2c@redhat.com>
-Date:   Thu, 23 Jan 2020 15:11:20 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        bh=TOTDTwuaI0Kk0LUy5rbPDT0f6tV/bdzpgd5A51iAmQw=;
+        b=Liw91XNpW2Keht2Q1ClXCZRASkSQSrbbFXovrJg/eoSftPuVRrPTVROh56KtVBukmsKYQ8
+        ukzjF39WdaasFdnPCRrFDGbUV8enhva+T6FdJ/tB7ocu+QX6jDutvGNybly36j43iyq3vv
+        /8gPWvnKtrXZBCmCyraUHglegnx6sjE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-207-dY3-Hz3EOVSB5G3kVMwjQA-1; Thu, 23 Jan 2020 10:12:04 -0500
+X-MC-Unique: dY3-Hz3EOVSB5G3kVMwjQA-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id EED9D18B5F95;
+        Thu, 23 Jan 2020 15:12:02 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-120-49.rdu2.redhat.com [10.10.120.49])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id A3DED8CCCB;
+        Thu, 23 Jan 2020 15:12:01 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <8ee40192da117d9cdf4eab1e63ab5f77b359801c.camel@btinternet.com>
+References: <8ee40192da117d9cdf4eab1e63ab5f77b359801c.camel@btinternet.com>
+To:     Stephen Smalley <sds@tycho.nsa.gov>
+Cc:     dhowells@redhat.com,
+        Richard Haines <richard_c_haines@btinternet.com>,
+        keyrings@vger.kernel.org, selinux@vger.kernel.org,
+        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: SELinux: How to split permissions for keys?
 MIME-Version: 1.0
-In-Reply-To: <20200123143503.GA19649@willie-the-truck>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <4057699.1579792320.1@warthog.procyon.org.uk>
+Content-Transfer-Encoding: quoted-printable
+Date:   Thu, 23 Jan 2020 15:12:00 +0000
+Message-ID: <4057700.1579792320@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Stephen,
 
+I have patches to split the permissions that are used for keys to make the=
+m a
+bit finer grained and easier to use - and also to move to ACLs rather than
+fixed masks.  See patch "keys: Replace uid/gid/perm permissions checking w=
+ith
+an ACL" here:
 
-On 1/23/20 2:35 PM, Will Deacon wrote:
-> On Thu, Jan 23, 2020 at 01:52:17PM +0000, Julien Thierry wrote:
->>
->>
->> On 1/21/20 10:30 AM, Will Deacon wrote:
->>> On Thu, Jan 09, 2020 at 04:02:03PM +0000, Julien Thierry wrote:
->>>> This patch series is the continuation of Raphael's work [1]. All the
->>>> patches can be retrieved from:
->>>> git clone -b arm64-objtool-v5 https://github.com/julien-thierry/linux.git
->>>
->>> [...]
->>>
->>>>     objtool: arm64: Decode unknown instructions
->>>>     objtool: arm64: Decode simple data processing instructions
->>>>     objtool: arm64: Decode add/sub immediate instructions
->>>>     objtool: arm64: Decode logical data processing instructions
->>>>     objtool: arm64: Decode system instructions not affecting the flow
->>>>     objtool: arm64: Decode calls to higher EL
->>>>     objtool: arm64: Decode brk instruction
->>>>     objtool: arm64: Decode instruction triggering context switch
->>>>     objtool: arm64: Decode branch instructions with PC relative immediates
->>>>     objtool: arm64: Decode branch to register instruction
->>>>     objtool: arm64: Decode basic load/stores
->>>>     objtool: arm64: Decode load/store with register offset
->>>>     objtool: arm64: Decode load/store register pair instructions
->>>>     objtool: arm64: Decode FP/SIMD load/store instructions
->>>>     objtool: arm64: Decode load/store exclusive
->>>>     objtool: arm64: Decode atomic load/store
->>>>     objtool: arm64: Decode pointer auth load instructions
->>>>     objtool: arm64: Decode load acquire/store release
->>>>     objtool: arm64: Decode load/store with memory tag
->>>>     objtool: arm64: Decode load literal
->>>>     objtool: arm64: Decode register data processing instructions
->>>>     objtool: arm64: Decode FP/SIMD data processing instructions
->>>>     objtool: arm64: Decode SVE instructions
->>>
->>> That's a lot of decoding logic which we already have in
->>> arch/arm64/{kernel/insn.c,include/asm/insn.h}. I'd prefer to see this stuff
->>> reused or generated from a single source, since it's really easy to get it
->>> wrong, has a tendency to bitrot and is nasty to debug.
->>>
->>
->> The thing is that the code in those files is mostly encoding logic
->> (motivated by BPF) rather than decoding (except for the instruction that
->> might be trapped, but these rarely overlap with instructions that objtools
->> cares about). I agree that ideally the decoding/encoding should be under
->> arch/arm64/lib, I was just a bit weary introducing a lot of decoding code
->> under arch/arm64 that wouldn't even be used in kernel code.
-> 
-> Hmm, but kprobes decodes instructions somehow :p
-> 
-> Not saying you have to refactor everything, but I'd hope you could reuse
-> some of the aarch64_insn_is* and aarch64_insn_extract* functions at least.
-> 
+	https://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git/log=
+/?h=3Dkeys-acl
 
-Oh, you're right, there seem to be more than what I remembered. There is 
-probably a bunch of things I can reuse (and I'll feel more at ease with 
-that rather than introducing a whole bunch of new code :D ).
+However, I may not have managed the permission mask transformation inside
+SELinux correctly.  Could you lend an eyeball?  The change to the permissi=
+ons
+model is as follows:
+
+    The SETATTR permission is split to create two new permissions:
+    =
+
+     (1) SET_SECURITY - which allows the key's owner, group and ACL to be
+         changed and a restriction to be placed on a keyring.
+    =
+
+     (2) REVOKE - which allows a key to be revoked.
+    =
+
+    The SEARCH permission is split to create:
+    =
+
+     (1) SEARCH - which allows a keyring to be search and a key to be foun=
+d.
+    =
+
+     (2) JOIN - which allows a keyring to be joined as a session keyring.
+    =
+
+     (3) INVAL - which allows a key to be invalidated.
+    =
+
+    The WRITE permission is also split to create:
+    =
+
+     (1) WRITE - which allows a key's content to be altered and links to b=
+e
+         added, removed and replaced in a keyring.
+    =
+
+     (2) CLEAR - which allows a keyring to be cleared completely.  This is
+         split out to make it possible to give just this to an administrat=
+or.
+    =
+
+     (3) REVOKE - see above.
+
+The change to SELinux is attached below.
+
+Should the split be pushed down into the SELinux policy rather than trying=
+ to
+calculate it?
 
 Thanks,
+David
+---
+diff --git a/security/selinux/hooks.c b/security/selinux/hooks.c
+index 116b4d644f68..c8db5235b01f 100644
+--- a/security/selinux/hooks.c
++++ b/security/selinux/hooks.c
+@@ -6556,6 +6556,7 @@ static int selinux_key_permission(key_ref_t key_ref,
+ {
+ 	struct key *key;
+ 	struct key_security_struct *ksec;
++	unsigned oldstyle_perm;
+ 	u32 sid;
+ =
 
--- 
-Julien Thierry
+ 	/* if no specific permissions are requested, we skip the
+@@ -6564,13 +6565,26 @@ static int selinux_key_permission(key_ref_t key_re=
+f,
+ 	if (perm =3D=3D 0)
+ 		return 0;
+ =
+
++	oldstyle_perm =3D perm & (KEY_NEED_VIEW | KEY_NEED_READ | KEY_NEED_WRITE=
+ |
++				KEY_NEED_SEARCH | KEY_NEED_LINK);
++	if (perm & KEY_NEED_SETSEC)
++		oldstyle_perm |=3D OLD_KEY_NEED_SETATTR;
++	if (perm & KEY_NEED_INVAL)
++		oldstyle_perm |=3D KEY_NEED_SEARCH;
++	if (perm & KEY_NEED_REVOKE && !(perm & OLD_KEY_NEED_SETATTR))
++		oldstyle_perm |=3D KEY_NEED_WRITE;
++	if (perm & KEY_NEED_JOIN)
++		oldstyle_perm |=3D KEY_NEED_SEARCH;
++	if (perm & KEY_NEED_CLEAR)
++		oldstyle_perm |=3D KEY_NEED_WRITE;
++
+ 	sid =3D cred_sid(cred);
+ =
+
+ 	key =3D key_ref_to_ptr(key_ref);
+ 	ksec =3D key->security;
+ =
+
+ 	return avc_has_perm(&selinux_state,
+-			    sid, ksec->sid, SECCLASS_KEY, perm, NULL);
++			    sid, ksec->sid, SECCLASS_KEY, oldstyle_perm, NULL);
+ }
+ =
+
+ static int selinux_key_getsecurity(struct key *key, char **_buffer)
 
