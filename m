@@ -2,98 +2,150 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F073EC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 14:50:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 462DCC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 14:51:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C382E214AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 14:50:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qNzbAggN"
+	by mail.kernel.org (Postfix) with ESMTP id 237F52073A
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 14:51:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729108AbgAWOun (ORCPT
+        id S1729112AbgAWOvI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 09:50:43 -0500
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:42910 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726811AbgAWOum (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 09:50:42 -0500
-Received: by mail-lf1-f67.google.com with SMTP id y19so2476002lfl.9
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jan 2020 06:50:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=fNTKUOvPaK7NGZPdn9RrwLDwm3nxspv1+FNYwv3C3hM=;
-        b=qNzbAggNf44Rjyi3xYv12GbLVPoWqZaEGnVV865MBvv6jFfDzRtp4lOna6Rgm4rgvc
-         pXliObXDmabJwqfsEkby+uUceYrj9wJFfeWWmo7UIi7yjws0apqOXVdy6sq+tifkxkyJ
-         WJ1w2CzfVPxAiHupGieQE0pSn3n43ScymKcvFNCn7HGnmo9TVWnuAL8CSvRgn37iGczT
-         +QToDC6Zr4hjR2FvfO97FxNd9RacVRcMy+5gfNp8sdObik/cuPXSxrq5pSLv/lQBQcos
-         Emm0PCLfAkk60QWURSKRv/BYfrvv/11/Cfrb785duxuKS4o1Nx6SQwiIUcp2P08VKKXW
-         7ppQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=fNTKUOvPaK7NGZPdn9RrwLDwm3nxspv1+FNYwv3C3hM=;
-        b=Z14MHopMQUuQnLYOlGEKqo/Jr0EQod7hPSVMxEL33ygaHZnbtmqWxeKk5HcAdaFafb
-         XThUtkvC3vNbuwUrnU2pggFaLKP4fKHJVkcBoW9rhl7rnNeK93dwWQoXwwZHYBi50n3m
-         /K3yuPWC5PfS+/r3l+6HyH3oBiCX0EPIc+GNflBel+syejxi4/nUUrK2HhmPjNhJKNFy
-         OD5aY7aI/iyRObBj+xnOvcv0zC04XDjQExQwnAmK2Sb021zXx/900ViLFB73n+vQiA9G
-         TiZmRr6QgRHwPDM+iq9xxiux20MhPLbd8Z3BP/XCo+GHVMaybh8/2LwQpfGHAFEGhGdK
-         V+bg==
-X-Gm-Message-State: APjAAAWlvrIves3QKUzW5vw/zMl7WB9EAq6bznk2g8sFmzyPMOH0ilwr
-        GIer/APKaUnxD280vqxiH7k4W1O2nisapJCdeUQolA==
-X-Google-Smtp-Source: APXvYqxGwUR1H9HYGs2wE0Gbmgjwgzwz74XfSo69PdeiRrNPsM7q47aeOmg84PC9sjlXyry/YWLldmwkbBajFIoCZ68=
-X-Received: by 2002:ac2:4d04:: with SMTP id r4mr4985943lfi.77.1579791040844;
- Thu, 23 Jan 2020 06:50:40 -0800 (PST)
+        Thu, 23 Jan 2020 09:51:08 -0500
+Received: from mga17.intel.com ([192.55.52.151]:52212 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729009AbgAWOvH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jan 2020 09:51:07 -0500
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Jan 2020 06:51:00 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,354,1574150400"; 
+   d="scan'208";a="221532042"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga007.fm.intel.com with ESMTP; 23 Jan 2020 06:50:58 -0800
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1iudow-0004I4-J5; Thu, 23 Jan 2020 16:50:58 +0200
+Date:   Thu, 23 Jan 2020 16:50:58 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Kent Gibson <warthog618@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jiri Kosina <jkosina@suse.cz>,
+        Stefani Seibold <stefani@seibold.net>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: Re: [RESEND PATCH v5 0/7] gpiolib: add an ioctl() for monitoring
+ line status changes
+Message-ID: <20200123145058.GW32742@smile.fi.intel.com>
+References: <20200123140506.29275-1-brgl@bgdev.pl>
 MIME-Version: 1.0
-References: <1579052348-32167-1-git-send-email-Anson.Huang@nxp.com> <1579052348-32167-2-git-send-email-Anson.Huang@nxp.com>
-In-Reply-To: <1579052348-32167-2-git-send-email-Anson.Huang@nxp.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 23 Jan 2020 15:50:30 +0100
-Message-ID: <CACRpkdZ_v93Laaz-=1-CyOWPr86VAaeeArGRc5a18NgHNiuf=g@mail.gmail.com>
-Subject: Re: [PATCH V9 2/3] pinctrl: freescale: Add i.MX8MP pinctrl driver support
-To:     Anson Huang <Anson.Huang@nxp.com>
-Cc:     Dong Aisheng <aisheng.dong@nxp.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Stefan Agner <stefan@agner.ch>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Abel Vesa <abel.vesa@nxp.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Olof Johansson <olof@lixom.net>, maxime@cerno.tech,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Dinh Nguyen <dinguyen@kernel.org>,
-        Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        NXP Linux Team <Linux-imx@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200123140506.29275-1-brgl@bgdev.pl>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 15, 2020 at 2:43 AM Anson Huang <Anson.Huang@nxp.com> wrote:
+On Thu, Jan 23, 2020 at 03:04:59PM +0100, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> 
+> Resending with some people who could ack kfifo patches in copy.
 
-> Add the pinctrl driver support for i.MX8MP.
->
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> Reviewed-by: Abel Vesa <abel.vesa@nxp.com>
+Haven't you got Ack from Stefani [1]?
 
-Patch applied with Fabio's review tag.
+[1]: https://lkml.org/lkml/2020/1/7/514
 
-Yours,
-Linus Walleij
+> 
+> ===
+> 
+> When discussing the recent user-space changes with Kent and while working
+> on dbus API for libgpiod I noticed that we really don't have any way of
+> keeping the line info synchronized between the kernel and user-space
+> processes. We can of course periodically re-read the line information or
+> even do it every time we want to read a property but this isn't optimal.
+> 
+> This series adds a new ioctl() that allows user-space to set up a watch on
+> the GPIO chardev file-descriptor which can then be polled for events
+> emitted by the kernel when the line is requested, released or its status
+> changed. This of course doesn't require the line to be requested. Multiple
+> user-space processes can watch the same lines.
+> 
+> This series also includes a variety of minor tweaks & fixes for problems
+> discovered during development. For instance it addresses a race-condition
+> in current line event fifo.
+> 
+> First two patches add new helpers to kfifo, that are used in the later
+> parts of the series.
+> 
+> v1: https://lkml.org/lkml/2019/11/27/327
+> 
+> v1 -> v2:
+> - rework the main patch of the series: re-use the existing file-descriptor
+>   associated with an open character device
+> - add a patch adding a debug message when the line event kfifo is full and
+>   we're discarding another event
+> - rework the locking mechanism for lineevent kfifo: reuse the spinlock
+>   from the waitqueue structure
+> - other minor changes
+> 
+> v2 -> v3:
+> - added patches providing new implementation for some kfifo macros
+> - fixed a regression in the patch reworking the line event fifo: reading
+>   multiple events is now still possible
+> - reworked the structure for new ioctl: it's now padded such that there
+>   be no alignment issues if running a 64-bit kernel on 32-bit userspace
+> - fixed a bug where one process could disable the status watch of another
+> - use kstrtoul() instead of atoi() in gpio-watch for string validation
+> 
+> v3 -> v4:
+> - removed a binary file checked in by mistake
+> - drop __func__ from debug messages
+> - restructure the code in the notifier call
+> - add comments about the alignment of the new uAPI structure
+> - remove a stray new line that doesn't belong in this series
+> - tested the series on 32-bit user-space with 64-bit kernel
+> 
+> v4 -> v5:
+> - dropped patches already merged upstream
+> - collected review tags
+> 
+> Bartosz Golaszewski (7):
+>   kfifo: provide noirqsave variants of spinlocked in and out helpers
+>   kfifo: provide kfifo_is_empty_spinlocked()
+>   gpiolib: rework the locking mechanism for lineevent kfifo
+>   gpiolib: emit a debug message when adding events to a full kfifo
+>   gpiolib: provide a dedicated function for setting lineinfo
+>   gpiolib: add new ioctl() for monitoring changes in line info
+>   tools: gpio: implement gpio-watch
+> 
+>  drivers/gpio/gpiolib.c    | 351 +++++++++++++++++++++++++++++---------
+>  drivers/gpio/gpiolib.h    |   1 +
+>  include/linux/kfifo.h     |  73 ++++++++
+>  include/uapi/linux/gpio.h |  30 ++++
+>  tools/gpio/.gitignore     |   1 +
+>  tools/gpio/Build          |   1 +
+>  tools/gpio/Makefile       |  11 +-
+>  tools/gpio/gpio-watch.c   |  99 +++++++++++
+>  8 files changed, 486 insertions(+), 81 deletions(-)
+>  create mode 100644 tools/gpio/gpio-watch.c
+> 
+> -- 
+> 2.23.0
+> 
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
