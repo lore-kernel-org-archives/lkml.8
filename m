@@ -2,97 +2,136 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F7A3C35242
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 23:37:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F291EC35240
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 23:40:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1EE8520718
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 23:37:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B80DB207FF
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 23:40:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K1vPMQgl"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="M+TsQr/5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729988AbgAWXh0 (ORCPT
+        id S1729852AbgAWXke (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 18:37:26 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:44047 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729288AbgAWXh0 (ORCPT
+        Thu, 23 Jan 2020 18:40:34 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:56632 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729288AbgAWXkd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 18:37:26 -0500
-Received: by mail-pf1-f195.google.com with SMTP id 62so158666pfu.11;
-        Thu, 23 Jan 2020 15:37:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=AnAOgh110uKPc3d8VRtFP1cCUwjRHhenRNDU4AcKph8=;
-        b=K1vPMQgl/Yg+46UKknCjnjFG34twgu8GDgt+p5hRGEbg5j/8DXs0FedhC0j4h/53Vm
-         r9HDbAatrCio+h9dR8/itKPROddqjz+l6/cpJlJ/goja6xaF7PmSF4k4BdfTSMXkjGwm
-         3NMFtEPenDER9X7HM9w0a7sNEurnEcSojTlKBN87DC/te47lDw/wkZCSrTC05QP/p8yW
-         lD7eEh5qASYejJRLu4FS16CYrMRG/ymjIXPwtgTBkXVk/McJ/67jK8v6sNX82eahfReq
-         Vm1eFyHtM9MKOCDVW76a9jtDg9qEeWKR5XoAhdqnAeBNbZ0rY5g053dolcKC2yoQCc3l
-         ejaA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=AnAOgh110uKPc3d8VRtFP1cCUwjRHhenRNDU4AcKph8=;
-        b=FxLMByBWZ/rdQHQp+9go9qsQRE5PluTWQhEZffT6a8t5djHXUpYx+tE6R1wuG3LKCk
-         xK37ZgNp9V8mXIwgpUZrG8cLotiTgJKRWz3cXWXMW2uZrZ0rteCfrQsZ5XPXL9yhmwcr
-         yrtojXMKrkZ3kVj2uSg8Q5+QSnZ5C2eyhSNYGOxWNN79R8zQQq0OeqHI64FbElZ0IP06
-         KD/5DOmmQU35BiO5H1pjmEMFlKfXxNhEVjJ3dZnld5YpKAaIolUvzv+DrwXpAC7Pd1Ud
-         SQ7yFebalpVIGOgCg5rkHIcmbuPyVRKYcKevz5/DFD0NYJSNwdhebfyBPUPY6m8YhDCg
-         PW3g==
-X-Gm-Message-State: APjAAAV/9cq2Y6Pk8td5YqVIBtJzMu4Giu4bZrkHsH+4vp7p/CxlNxoN
-        ZjZdlupTL/zmm3Heax8Jml6+Nwey
-X-Google-Smtp-Source: APXvYqx2Oz2x7aK2w2WY7H8GZslB2DP/lDmHVrC4VNx9P3gFaCAHqPF3LBhJCNPpT/oPHOgxMJR+ow==
-X-Received: by 2002:a63:2e07:: with SMTP id u7mr877200pgu.295.1579822645505;
-        Thu, 23 Jan 2020 15:37:25 -0800 (PST)
-Received: from ?IPv6:2001:4898:d8:28:140e:bf9b:65a6:dd72? ([2001:4898:80e8:0:9425:bf9b:65a6:dd72])
-        by smtp.gmail.com with ESMTPSA id z30sm4042494pfq.154.2020.01.23.15.37.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 23 Jan 2020 15:37:24 -0800 (PST)
-Subject: Re: [PATCH v10 1/2] dt-bindings: edac: dmc-520.yaml
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Borislav Petkov <bp@alien8.de>, James Morse <james.morse@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        linux-edac <linux-edac@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, hangl@microsoft.com,
-        Lei Wang <lewan@microsoft.com>, ruizhao@microsoft.com,
-        shji@microsoft.com, Scott Branden <scott.branden@broadcom.com>,
-        Yuqing Shen <yuqing.shen@broadcom.com>
-References: <09a2fe69-842f-01cf-1cfa-d5fc639b158a@gmail.com>
- <CAL_Jsq+1S=mOS0-eb0=ibSn81ReDmDjrA9=bHpKC16w8B6Aq3Q@mail.gmail.com>
-From:   Shiping Ji <shiping.linux@gmail.com>
-Message-ID: <e0bab7de-1308-409c-febc-608a812592e3@gmail.com>
-Date:   Thu, 23 Jan 2020 15:37:22 -0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-MIME-Version: 1.0
-In-Reply-To: <CAL_Jsq+1S=mOS0-eb0=ibSn81ReDmDjrA9=bHpKC16w8B6Aq3Q@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Thu, 23 Jan 2020 18:40:33 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00NNddRX162728;
+        Thu, 23 Jan 2020 23:39:43 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to;
+ s=corp-2019-08-05; bh=LuHOXPa0REgKt+N/61X5+EaaF8izuIJBTiFn/CQUE9c=;
+ b=M+TsQr/5QRHVJ7C+CcV4RTCnd9fI3rn/M4Rn+X33uDdvU/+TH4nAQ68ZUyd60AuNR6tV
+ TyRBcBeU1tUfGq3gV/rlo9yiD9rrQrrkjtQmtCvjXuCZp9ZWNtJJtMvkUQxviUHkGuwn
+ zGKoU03JOpi5+lzzMcNUZ8ZMb5Lr+zVscinhp3ok55ZqzNv9VZxbM0XesseTdOS9MiCI
+ Em2kmnE1vWi9XcZuwdbn2WgnJq4AyDxfp4GtHRP176kWTLgmwD9Dr1pl6t+RjwshAec9
+ LaGJYOONigJTR1icMYW3CXPwIdFNiwam7RgqvXwAQDbZt3ROVn/gbBJwwXqd4yK0kLmR /w== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2120.oracle.com with ESMTP id 2xksyqnn1v-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 23 Jan 2020 23:39:43 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00NNdAmb148603;
+        Thu, 23 Jan 2020 23:39:42 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3030.oracle.com with ESMTP id 2xqmuxhjy8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 23 Jan 2020 23:39:42 +0000
+Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 00NNdbmU011661;
+        Thu, 23 Jan 2020 23:39:38 GMT
+Received: from [10.11.111.157] (/10.11.111.157)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 23 Jan 2020 15:39:36 -0800
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+Subject: Re: [PATCH v9 4/5] locking/qspinlock: Introduce starvation avoidance
+ into CNA
+From:   Alex Kogan <alex.kogan@oracle.com>
+In-Reply-To: <5f865b62-4867-2c7b-715a-0605759e647f@redhat.com>
+Date:   Thu, 23 Jan 2020 18:39:36 -0500
+Cc:     linux@armlinux.org.uk, peterz@infradead.org, mingo@redhat.com,
+        will.deacon@arm.com, arnd@arndb.de, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        tglx@linutronix.de, bp@alien8.de, hpa@zytor.com, x86@kernel.org,
+        guohanjun@huawei.com, jglauber@marvell.com,
+        steven.sistare@oracle.com, daniel.m.jordan@oracle.com,
+        dave.dice@oracle.com
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <1B2B46E9-651E-4BA5-988A-924AE3E72C00@oracle.com>
+References: <20200115035920.54451-1-alex.kogan@oracle.com>
+ <20200115035920.54451-5-alex.kogan@oracle.com>
+ <f5e31716-d687-f64c-0fc5-f1c9b539c4ff@redhat.com>
+ <5f865b62-4867-2c7b-715a-0605759e647f@redhat.com>
+To:     Waiman Long <longman@redhat.com>
+X-Mailer: Apple Mail (2.3445.104.11)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9509 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-2001230176
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9509 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-2001230176
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/23/2020 5:44 AM, Rob Herring wrote:
+> On Jan 23, 2020, at 3:39 PM, Waiman Long <longman@redhat.com> wrote:
+>=20
+> On 1/23/20 2:55 PM, Waiman Long wrote:
+>> Playing with lock event counts, I would like you to change the =
+meaning
+>> intra_count parameter that you are tracking. Instead of tracking the
+>> number of times a lock is passed to a waiter of the same node
+>> consecutively, I would like you to track the number of times the head
+>> waiter in the secondary queue has given up its chance to acquire the
+>> lock because a later waiter has jumped the queue and acquire the lock
+>> before it.
+Isn=E2=80=99t that the same thing? Note that we keep track of the number =
+of=20
+intra-node lock transfers only when the secondary queue is not empty.
 
-> Run 'make dt_binding_check' as that would have caught this issue on the example.
+>> This value determines the worst case latency that a secondary
+>> queue waiter can experience. So
+>=20
+> Well, that is not strictly true as a a waiter in the middle of the
+> secondary queue can go back and fro between the queues for a number of
+> times. Of course, if we can ensure that when a FLUSH_SECONDARY_QUEUE =
+is
+> issued, those waiters that were in the secondary queue won't be put =
+back
+> into the secondary queue again.
+This will not work as intended when we have more than 2 nodes. That is, =
+if we
+have threads from node A & B in the secondary queue, and then the queue
+is flushed and its head (say, from node A) gets the lock, we want to =
+push=20
+threads from node B back into the secondary queue, to keep the lock on =
+node A.
 
-Eventually I have the dtc with yaml output built and resolved issues reported by "make dt_binding_check". Shall I submit a new v11 patch for the dt-bindings only or I should add driver code patch into v11 too?
+And if we have only 2 nodes, a waiter in the middle of the secondary =
+queue will=20
+never go back into the secondary queue, even if the threshold is small.=20=
 
-Thanks!
+This is because we flush the secondary queue by putting all its waiters =
+in
+the front of the main queue, and the secondary queue will remain empty =
+at least
+until we reach a thread from another node.
 
--- 
-Best regards,
-Shiping Ji
+Regards,
+=E2=80=94 Alex=
