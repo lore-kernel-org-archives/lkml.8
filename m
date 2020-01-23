@@ -2,262 +2,214 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 883CFC33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 12:05:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C231DC33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 12:06:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5002024655
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 12:05:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D5302253D
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 12:06:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="ZIRH0c97"
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="TJzLVsJd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728998AbgAWMFz (ORCPT
+        id S1729027AbgAWMGw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 07:05:55 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:42637 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726026AbgAWMFx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 07:05:53 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 483LZl4c7hz9sQp;
-        Thu, 23 Jan 2020 23:05:51 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1579781151;
-        bh=ZQ/DobkV1Dl4jXiUQ8eTuwbaOJ9Q+q9Cve8ywXkWLMs=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=ZIRH0c97Xbsudpt8o2hZXHdZ1NqigRM9kAf4c/XGanyKn4DHkPON42Bqf00XpDgck
-         mbTR7REalarbOowPx2aRCWgEs6YbyoPIRapPhLm2AOOQ+KtGPu3y/DXPuuSgLkQ9rK
-         wOvJDKB/gTpZ9Qb5hd+EVkf8Nxg0/0C2bXOgoso/FCShQLDFvvugKJ3HMhXzmeI1cu
-         0H9jqB1QJLMIbD+JAIe/uIYuAv/AkPA0tbuKND1duI5ayJRbvzooEGjci8eHSqxRsT
-         H29RNg3tHCs3o1gcYa6oR2OtyHZx4t9p2YDLgw/GmbmDR8b1h5yUgHnRAi8n2YPIK1
-         0SYsAYiAT8Z4A==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Christophe Leroy <christophe.leroy@c-s.fr>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH v2 6/6] powerpc: Implement user_access_begin and friends
-In-Reply-To: <2a20d19776faba4d85dbe51ae00a5f6ac5ac0969.1579715466.git.christophe.leroy@c-s.fr>
-References: <12a4be679e43de1eca6e5e2173163f27e2f25236.1579715466.git.christophe.leroy@c-s.fr> <2a20d19776faba4d85dbe51ae00a5f6ac5ac0969.1579715466.git.christophe.leroy@c-s.fr>
-Date:   Thu, 23 Jan 2020 23:05:50 +1100
-Message-ID: <87iml2idi9.fsf@mpe.ellerman.id.au>
+        Thu, 23 Jan 2020 07:06:52 -0500
+Received: from mail-co1nam11on2049.outbound.protection.outlook.com ([40.107.220.49]:6053
+        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726590AbgAWMGw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jan 2020 07:06:52 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=OVvvUN5zQ1+lyzPKEn7/t/h4NGbyMvbBzXB0anD8ZrKTeDeQdQ8Rnm2DIlLPZfIuEMXyOKVaVUliYy+2eJ+tPaxXdMcLzrLN+kyHlnSToZqE27iVFtXfvOJHxyIrV2eTCRcOxzJiufy5aG2ErRPvBSIOxpxOu//ualgvp45WjuGq6MB76B20sH00b69tkHh6lhkYy3yYzY6KtYFNHR/YRCoOtIwslD/FMUBwAJv9wgUi6PJF28fUDz5rmgrqScK3uMPyUGflu5QwjDXja+zbftmcB2nhsfOFge+4fy0Ov4fOXdXIFbY0vc2lXdkRTTn4Z/ziko3Wy0X5gTIE8oxqLA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=KOiY4x4yyw4P/8u3tVKr116a3J84fqjzkpcBVm9+rpw=;
+ b=Smpnd7z7xwB2OTye92PhtaM8aiuJPSsFOsTSH3BUJmOQSGIVLTZwRm/rSlG8R6Olz7oCmI3c3xYpKCp8D0l9SY0T4FPphDwJf1MHDuzqNoxbnRrQVtZ5aCQ3BP+FZbZfk3oI0wgukLhXXdI7L7G+Q8hk/e+h0/FtZZw4RRTea8PaU2pEhRJuo020PWLQrLm/kYqmLzgDBE9J4hS0K2gmsHCB7dGl/nhSnYb7YsH6qxAk5GRWJCxZjneiyjJvtVxF9tf/Th5U9S0DEq7ndtf4EPEZs6NwGE8UG1LW6J7foD442MVm70958ps8jOVzyeiahzs6/hPBaRweNKOws5I98g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 149.199.60.83) smtp.rcpttodomain=gondor.apana.org.au
+ smtp.mailfrom=xilinx.com; dmarc=bestguesspass action=none
+ header.from=xilinx.com; dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=KOiY4x4yyw4P/8u3tVKr116a3J84fqjzkpcBVm9+rpw=;
+ b=TJzLVsJd8b9wEDROm/bphjC3Q9qFD+I3KAD1MA2mvhlIL48pjb0LmLAKtqDFWgkJyg4AsV3IbIu5MHwW1jS481k3UYsJTSY4i3cmV2geleRSkGP92wVLuml6EQL/IurlnSSkHjjiqPr2lKsQhXKgEkZdbRXKmTK3HB7kyG1hqDc=
+Received: from BL0PR02CA0103.namprd02.prod.outlook.com (2603:10b6:208:51::44)
+ by SN6PR02MB4398.namprd02.prod.outlook.com (2603:10b6:805:ad::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2644.23; Thu, 23 Jan
+ 2020 12:06:48 +0000
+Received: from BL2NAM02FT012.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e46::205) by BL0PR02CA0103.outlook.office365.com
+ (2603:10b6:208:51::44) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2665.20 via Frontend
+ Transport; Thu, 23 Jan 2020 12:06:48 +0000
+Authentication-Results: spf=pass (sender IP is 149.199.60.83)
+ smtp.mailfrom=xilinx.com; gondor.apana.org.au; dkim=none (message not signed)
+ header.d=none;gondor.apana.org.au; dmarc=bestguesspass action=none
+ header.from=xilinx.com;
+Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
+ 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
+ client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
+Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
+ BL2NAM02FT012.mail.protection.outlook.com (10.152.77.27) with Microsoft SMTP
+ Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2665.18
+ via Frontend Transport; Thu, 23 Jan 2020 12:06:46 +0000
+Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
+        by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
+        (envelope-from <michal.simek@xilinx.com>)
+        id 1iubG1-0001hF-Jh; Thu, 23 Jan 2020 04:06:45 -0800
+Received: from [127.0.0.1] (helo=localhost)
+        by xsj-pvapsmtp01 with smtp (Exim 4.63)
+        (envelope-from <michal.simek@xilinx.com>)
+        id 1iubFw-00052R-Fg; Thu, 23 Jan 2020 04:06:40 -0800
+Received: from xsj-pvapsmtp01 (smtp2.xilinx.com [149.199.38.66])
+        by xsj-smtp-dlp2.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id 00NC6W4k029904;
+        Thu, 23 Jan 2020 04:06:32 -0800
+Received: from [172.30.17.107]
+        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
+        (envelope-from <michals@xilinx.com>)
+        id 1iubFo-00051h-04; Thu, 23 Jan 2020 04:06:32 -0800
+Subject: Re: [PATCH V5 1/4] firmware: xilinx: Add ZynqMP aes API for AES
+ functionality
+To:     Kalyani Akula <kalyani.akula@xilinx.com>,
+        herbert@gondor.apana.org.au, davem@davemloft.net, monstr@seznam.cz,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        git-dev <git-dev@xilinx.com>,
+        Mohan Marutirao Dhanawade <mohand@xilinx.com>,
+        Sarat Chand Savitala <saratcha@xilinx.com>,
+        Harsh Jain <harshj@xilinx.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Kalyani Akula <kalyania@xilinx.com>
+References: <1579777877-10553-1-git-send-email-kalyani.akula@xilinx.com>
+ <1579777877-10553-2-git-send-email-kalyani.akula@xilinx.com>
+From:   Michal Simek <michal.simek@xilinx.com>
+Message-ID: <23169ad8-f0a4-13f4-f2e8-3072b05b0469@xilinx.com>
+Date:   Thu, 23 Jan 2020 13:06:28 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <1579777877-10553-2-git-send-email-kalyani.akula@xilinx.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-RCIS-Action: ALLOW
+X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
+X-TM-AS-User-Approved-Sender: Yes;Yes
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(346002)(396003)(136003)(39860400002)(376002)(189003)(199004)(44832011)(31686004)(31696002)(9786002)(316002)(2906002)(5660300002)(8676002)(70206006)(81166006)(186003)(81156014)(4326008)(8936002)(70586007)(36756003)(336012)(6666004)(356004)(478600001)(426003)(26005)(2616005)(107886003)(54906003);DIR:OUT;SFP:1101;SCL:1;SRVR:SN6PR02MB4398;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;MX:1;A:1;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 26670e3a-1ddf-4b7d-8887-08d79ffcb83f
+X-MS-TrafficTypeDiagnostic: SN6PR02MB4398:
+X-Microsoft-Antispam-PRVS: <SN6PR02MB43986DDE170E2E200492DBE3C60F0@SN6PR02MB4398.namprd02.prod.outlook.com>
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-Oob-TLC-OOBClassifiers: OLM:1443;
+X-Forefront-PRVS: 029174C036
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: DSnIB8LjkXwuFVgVYkWX5Kjm0VZOHc4q0Fx28DqTz3DBdu6cyTg5twbd26i8HdtHVTbG8VuoGl7Xt2PT5NfL0Lb7emd++bM90+cew6Ntd0iuaROxDoXVVHOe2lMFsytnbdgUqG3LAKNheWxFFRYgX86T0X6LeYiQkQyoELPpvPAwCkLtwY+J5I6GMzNLNXLzheTf3+AHAGprorf+2p5vayrxndiz2YnxA8u+VaP7cloHT3A+o9v05aSliv4+7vWNrcQ8QTA2fnm0CSERdzJiUn1GoncFL1S4njTKqeCD4G6nd6nMfu8yIR/gSibr8B3ILjIUB/eSXnZMhTfmqZWg7oWkE5igCdXlzDm5L+stqQjP9uWs42HsvuClIvQoy5RkbHbgs9p9Ul6uUndxqqw52rFcGfa2fpZ7+JAkCduQRaUGFnopVBfLrKHMPfsMB8ON
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Jan 2020 12:06:46.5498
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 26670e3a-1ddf-4b7d-8887-08d79ffcb83f
+X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR02MB4398
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Christophe Leroy <christophe.leroy@c-s.fr> writes:
-> Today, when a function like strncpy_from_user() is called,
-> the userspace access protection is de-activated and re-activated
-> for every word read.
->
-> By implementing user_access_begin and friends, the protection
-> is de-activated at the beginning of the copy and re-activated at the
-> end.
->
-> Implement user_access_begin(), user_access_end() and
-> unsafe_get_user(), unsafe_put_user() and unsafe_copy_to_user()
->
-> For the time being, we keep user_access_save() and
-> user_access_restore() as nops.
-
-That means we will run with user access enabled in a few more places, but
-it's only used sparingly AFAICS:
-
-  kernel/trace/trace_branch.c:    unsigned long flags = user_access_save();
-  lib/ubsan.c:    unsigned long flags = user_access_save();
-  lib/ubsan.c:    unsigned long ua_flags = user_access_save();
-  mm/kasan/common.c:      unsigned long flags = user_access_save();
-
-And we don't have objtool checking that user access enablement isn't
-leaking in the first place, so I guess it's OK for us not to implement
-these to begin with?
-
-cheers
-
-
-> diff --git a/arch/powerpc/include/asm/uaccess.h b/arch/powerpc/include/asm/uaccess.h
-> index cafad1960e76..ea67bbd56bd4 100644
-> --- a/arch/powerpc/include/asm/uaccess.h
-> +++ b/arch/powerpc/include/asm/uaccess.h
-> @@ -91,9 +91,14 @@ static inline int __access_ok(unsigned long addr, unsigned long size,
->  	__put_user_check((__typeof__(*(ptr)))(x), (ptr), sizeof(*(ptr)))
->  
->  #define __get_user(x, ptr) \
-> -	__get_user_nocheck((x), (ptr), sizeof(*(ptr)))
-> +	__get_user_nocheck((x), (ptr), sizeof(*(ptr)), true)
->  #define __put_user(x, ptr) \
-> -	__put_user_nocheck((__typeof__(*(ptr)))(x), (ptr), sizeof(*(ptr)))
-> +	__put_user_nocheck((__typeof__(*(ptr)))(x), (ptr), sizeof(*(ptr)), true)
-> +
-> +#define __get_user_allowed(x, ptr) \
-> +	__get_user_nocheck((x), (ptr), sizeof(*(ptr)), false)
-> +#define __put_user_allowed(x, ptr) \
-> +	__put_user_nocheck((__typeof__(*(ptr)))(x), (ptr), sizeof(*(ptr)), false)
->  
->  #define __get_user_inatomic(x, ptr) \
->  	__get_user_nosleep((x), (ptr), sizeof(*(ptr)))
-> @@ -138,10 +143,9 @@ extern long __put_user_bad(void);
->  		: "r" (x), "b" (addr), "i" (-EFAULT), "0" (err))
->  #endif /* __powerpc64__ */
->  
-> -#define __put_user_size(x, ptr, size, retval)			\
-> +#define __put_user_size_allowed(x, ptr, size, retval)		\
->  do {								\
->  	retval = 0;						\
-> -	allow_write_to_user(ptr, size);				\
->  	switch (size) {						\
->  	  case 1: __put_user_asm(x, ptr, retval, "stb"); break;	\
->  	  case 2: __put_user_asm(x, ptr, retval, "sth"); break;	\
-> @@ -149,17 +153,26 @@ do {								\
->  	  case 8: __put_user_asm2(x, ptr, retval); break;	\
->  	  default: __put_user_bad();				\
->  	}							\
-> +} while (0)
-> +
-> +#define __put_user_size(x, ptr, size, retval)			\
-> +do {								\
-> +	allow_write_to_user(ptr, size);				\
-> +	__put_user_size_allowed(x, ptr, size, retval);		\
->  	prevent_write_to_user(ptr, size);			\
->  } while (0)
->  
-> -#define __put_user_nocheck(x, ptr, size)			\
-> +#define __put_user_nocheck(x, ptr, size, allow)			\
->  ({								\
->  	long __pu_err;						\
->  	__typeof__(*(ptr)) __user *__pu_addr = (ptr);		\
->  	if (!is_kernel_addr((unsigned long)__pu_addr))		\
->  		might_fault();					\
->  	__chk_user_ptr(ptr);					\
-> -	__put_user_size((x), __pu_addr, (size), __pu_err);	\
-> +	if (allow)								\
-> +		__put_user_size((x), __pu_addr, (size), __pu_err);		\
-> +	else									\
-> +		__put_user_size_allowed((x), __pu_addr, (size), __pu_err);	\
->  	__pu_err;						\
->  })
->  
-> @@ -236,13 +249,12 @@ extern long __get_user_bad(void);
->  		: "b" (addr), "i" (-EFAULT), "0" (err))
->  #endif /* __powerpc64__ */
->  
-> -#define __get_user_size(x, ptr, size, retval)			\
-> +#define __get_user_size_allowed(x, ptr, size, retval)		\
->  do {								\
->  	retval = 0;						\
->  	__chk_user_ptr(ptr);					\
->  	if (size > sizeof(x))					\
->  		(x) = __get_user_bad();				\
-> -	allow_read_from_user(ptr, size);			\
->  	switch (size) {						\
->  	case 1: __get_user_asm(x, ptr, retval, "lbz"); break;	\
->  	case 2: __get_user_asm(x, ptr, retval, "lhz"); break;	\
-> @@ -250,6 +262,12 @@ do {								\
->  	case 8: __get_user_asm2(x, ptr, retval);  break;	\
->  	default: (x) = __get_user_bad();			\
->  	}							\
-> +} while (0)
-> +
-> +#define __get_user_size(x, ptr, size, retval)			\
-> +do {								\
-> +	allow_read_from_user(ptr, size);			\
-> +	__get_user_size_allowed(x, ptr, size, retval);		\
->  	prevent_read_from_user(ptr, size);			\
->  } while (0)
->  
-> @@ -260,7 +278,7 @@ do {								\
->  #define __long_type(x) \
->  	__typeof__(__builtin_choose_expr(sizeof(x) > sizeof(0UL), 0ULL, 0UL))
->  
-> -#define __get_user_nocheck(x, ptr, size)			\
-> +#define __get_user_nocheck(x, ptr, size, allow)			\
->  ({								\
->  	long __gu_err;						\
->  	__long_type(*(ptr)) __gu_val;				\
-> @@ -269,7 +287,10 @@ do {								\
->  	if (!is_kernel_addr((unsigned long)__gu_addr))		\
->  		might_fault();					\
->  	barrier_nospec();					\
-> -	__get_user_size(__gu_val, __gu_addr, (size), __gu_err);	\
-> +	if (allow)								\
-> +		__get_user_size(__gu_val, __gu_addr, (size), __gu_err);		\
-> +	else									\
-> +		__get_user_size_allowed(__gu_val, __gu_addr, (size), __gu_err);	\
->  	(x) = (__typeof__(*(ptr)))__gu_val;			\
->  	__gu_err;						\
->  })
-> @@ -387,6 +408,34 @@ static inline unsigned long raw_copy_to_user(void __user *to,
->  	return ret;
+On 23. 01. 20 12:11, Kalyani Akula wrote:
+> Add ZynqMP firmware AES API to perform encryption/decryption of given data.
+> 
+> Signed-off-by: Kalyani Akula <kalyani.akula@xilinx.com>
+> ---
+> 
+> V5 Changes:
+> - Moved firmware: xilinx: Add ZynqMP aes API for AES patch from 3/4 to 1/4
+> - This patch (1/4) is based on below commit id because of possible merge conflict
+>   commit 461011b1e1ab ("drivers: firmware: xilinx: Add support for feature check")  
+> - Added newlines in between at the start and end of zynqmp_pm_aes_engine function
+> 
+>  drivers/firmware/xilinx/zynqmp.c     | 25 +++++++++++++++++++++++++
+>  include/linux/firmware/xlnx-zynqmp.h |  2 ++
+>  2 files changed, 27 insertions(+)
+> 
+> diff --git a/drivers/firmware/xilinx/zynqmp.c b/drivers/firmware/xilinx/zynqmp.c
+> index 0137bf3..20c084f 100644
+> --- a/drivers/firmware/xilinx/zynqmp.c
+> +++ b/drivers/firmware/xilinx/zynqmp.c
+> @@ -705,6 +705,30 @@ static int zynqmp_pm_set_requirement(const u32 node, const u32 capabilities,
+>  				   qos, ack, NULL);
 >  }
 >  
-> +static inline unsigned long
-> +raw_copy_to_user_allowed(void __user *to, const void *from, unsigned long n)
+> +/**
+> + * zynqmp_pm_aes - Access AES hardware to encrypt/decrypt the data using
+> + * AES-GCM core.
+> + * @address:	Address of the AesParams structure.
+> + * @out:	Returned output value
+> + *
+> + * Return:	Returns status, either success or error code.
+> + */
+> +static int zynqmp_pm_aes_engine(const u64 address, u32 *out)
 > +{
-> +	unsigned long ret;
-> +	if (__builtin_constant_p(n) && (n) <= 8) {
-> +		ret = 1;
+> +	u32 ret_payload[PAYLOAD_ARG_CNT];
+> +	int ret;
 > +
-> +		switch (n) {
-> +		case 1:
-> +			__put_user_size_allowed(*(u8 *)from, (u8 __user *)to, 1, ret);
-> +			break;
-> +		case 2:
-> +			__put_user_size_allowed(*(u16 *)from, (u16 __user *)to, 2, ret);
-> +			break;
-> +		case 4:
-> +			__put_user_size_allowed(*(u32 *)from, (u32 __user *)to, 4, ret);
-> +			break;
-> +		case 8:
-> +			__put_user_size_allowed(*(u64 *)from, (u64 __user *)to, 8, ret);
-> +			break;
-> +		}
-> +		if (ret == 0)
-> +			return 0;
-> +	}
+> +	if (!out)
+> +		return -EINVAL;
 > +
-> +	return __copy_tofrom_user(to, (__force const void __user *)from, n);
+> +	ret = zynqmp_pm_invoke_fn(PM_SECURE_AES, upper_32_bits(address),
+> +				  lower_32_bits(address),
+> +				  0, 0, ret_payload);
+> +	*out = ret_payload[1];
+> +
+> +	return ret;
 > +}
 > +
->  static __always_inline unsigned long __must_check
->  copy_to_user_mcsafe(void __user *to, const void *from, unsigned long n)
->  {
-> @@ -428,4 +477,27 @@ extern long __copy_from_user_flushcache(void *dst, const void __user *src,
->  extern void memcpy_page_flushcache(char *to, struct page *page, size_t offset,
->  			   size_t len);
+>  static const struct zynqmp_eemi_ops eemi_ops = {
+>  	.get_api_version = zynqmp_pm_get_api_version,
+>  	.get_chipid = zynqmp_pm_get_chipid,
+> @@ -728,6 +752,7 @@ static int zynqmp_pm_set_requirement(const u32 node, const u32 capabilities,
+>  	.set_requirement = zynqmp_pm_set_requirement,
+>  	.fpga_load = zynqmp_pm_fpga_load,
+>  	.fpga_get_status = zynqmp_pm_fpga_get_status,
+> +	.aes = zynqmp_pm_aes_engine,
+>  };
 >  
-> +static __must_check inline bool user_access_begin(const void __user *ptr, size_t len)
-> +{
-> +	if (unlikely(!access_ok(ptr, len)))
-> +		return false;
-> +	allow_read_write_user((void __user *)ptr, ptr, len);
-> +	return true;
-> +}
-> +#define user_access_begin	user_access_begin
-> +
-> +static inline void user_access_end(void)
-> +{
-> +	prevent_user_access(NULL, NULL, ~0UL, KUAP_SELF);
-> +}
-> +#define user_access_end		user_access_end
-> +
-> +static inline unsigned long user_access_save(void) { return 0UL; }
-> +static inline void user_access_restore(unsigned long flags) { }
-> +
-> +#define unsafe_op_wrap(op, err) do { if (unlikely(op)) goto err; } while (0)
-> +#define unsafe_get_user(x,p,e) unsafe_op_wrap(__get_user_allowed(x,p),e)
-> +#define unsafe_put_user(x,p,e) unsafe_op_wrap(__put_user_allowed(x,p),e)
-> +#define unsafe_copy_to_user(d,s,l,e) unsafe_op_wrap(raw_copy_to_user_allowed(d,s,l),e)
-> +
->  #endif	/* _ARCH_POWERPC_UACCESS_H */
-> -- 
-> 2.25.0
+>  /**
+> diff --git a/include/linux/firmware/xlnx-zynqmp.h b/include/linux/firmware/xlnx-zynqmp.h
+> index e72eccf..5455830 100644
+> --- a/include/linux/firmware/xlnx-zynqmp.h
+> +++ b/include/linux/firmware/xlnx-zynqmp.h
+> @@ -82,6 +82,7 @@ enum pm_api_id {
+>  	PM_CLOCK_GETRATE,
+>  	PM_CLOCK_SETPARENT,
+>  	PM_CLOCK_GETPARENT,
+> +	PM_SECURE_AES = 47,
+>  	PM_FEATURE_CHECK = 63,
+>  	PM_API_MAX,
+>  };
+> @@ -313,6 +314,7 @@ struct zynqmp_eemi_ops {
+>  			       const u32 capabilities,
+>  			       const u32 qos,
+>  			       const enum zynqmp_pm_request_ack ack);
+> +	int (*aes)(const u64 address, u32 *out);
+>  };
+>  
+>  int zynqmp_pm_invoke_fn(u32 pm_api_id, u32 arg0, u32 arg1,
+> 
+
+Acked-by: Michal Simek <michal.simek@xilinx.com>
+
+Thanks,
+Michal
