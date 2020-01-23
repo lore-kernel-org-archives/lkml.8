@@ -2,692 +2,158 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A7A2C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 17:43:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40834C33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 17:44:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3FECB214AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 17:43:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11AF42071E
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 17:44:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="ER31gEbT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728904AbgAWRng (ORCPT
+        id S1729075AbgAWRo4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 12:43:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45132 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727022AbgAWRng (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 12:43:36 -0500
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4D21B2071E;
-        Thu, 23 Jan 2020 17:43:33 +0000 (UTC)
-Date:   Thu, 23 Jan 2020 12:43:31 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>
-Subject: [GIT PULL v2] tracing: Fixes for v5.5
-Message-ID: <20200123124331.3980539f@gandalf.local.home>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Thu, 23 Jan 2020 12:44:56 -0500
+Received: from mail-mw2nam12on2136.outbound.protection.outlook.com ([40.107.244.136]:17249
+        "EHLO NAM12-MW2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727022AbgAWRo4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jan 2020 12:44:56 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Byiy23TprH0nIHP54kYALTEODvoHLm/SXvU8x2Bj4SmCUpBZsVq302rb3MnV7oNetibW0lWlPNNhzu4uhZsI3tjob9Dl9mpbK0OVOkMqaFsLkZAYBYDaoAEuXViQzDzsznUdbrRvS8/RgPXse7Lcpuq5wQd4wF5BE95vMDEAxg81N7jf7fQDQeFckSffhq2J3mYs9mjInbzOPlmTPFm6m093GioC7wuMbD9WEeoylV6mABSviAnAPeSBCPPALZP/zFy2K1JAkKBWswlu+MzXgOBQtBtf21HV9fcE+nKY5MnbzGcAokVE9RBpVJfuhsjXl2LqKRYN7nHntP5GFu897Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=dcRI9beZse0lG11RbrUH9ml+lntYvkWI0aF0F52XeO8=;
+ b=d2TQdaEs3d4GOV8Pcff7POiR1G0tCthgkI/qv362xICe0HcLcx840VnUPMTATezcEnzgVJdZ4Ix0S/dmZnxpr9ewEDImlq56Szo8n46x6wyywLtqVz0/M5e0dNGGxJSnZT8/9Qibc1ArgLNHMAbfSaFHt/Basgv2PHrjpjeEs3NQUvsZWH3fm/qcYXr3IyGD28PO1itiITrM1Q8opJ8u91ohn1sdY2MRKUdK9Yx15wk1jrQnNCCSRqxFOdl0B3fj1Nio5B+hVkEgRW5VawURxpXfGfBF1yJQSKAIBoK1TojGRA/m/W20KfwlT4RX0CIgYgn/zgLbAAlNlXylXQi5Og==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=dcRI9beZse0lG11RbrUH9ml+lntYvkWI0aF0F52XeO8=;
+ b=ER31gEbTq2a3FjLp+b68dWfLmXhdA/EYpnLOdcqwNZj0KmU/o/6Jxp1bahqz6PTn0aumZbB4AgEwbsiGETPeqUPBjcAzCvUeksgpnOHCEcZ1z/mVIUfs17TmgyB7zQHjkCtP8pvwviEgdchjCstZzPmuTSHqTpo+B+TT/QCXGJ8=
+Received: from MN2PR21MB1375.namprd21.prod.outlook.com (20.179.23.160) by
+ MN2PR21MB1216.namprd21.prod.outlook.com (20.179.20.144) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2686.3; Thu, 23 Jan 2020 17:44:53 +0000
+Received: from MN2PR21MB1375.namprd21.prod.outlook.com
+ ([fe80::5deb:9ab5:f05a:5423]) by MN2PR21MB1375.namprd21.prod.outlook.com
+ ([fe80::5deb:9ab5:f05a:5423%6]) with mapi id 15.20.2686.013; Thu, 23 Jan 2020
+ 17:44:53 +0000
+From:   Haiyang Zhang <haiyangz@microsoft.com>
+To:     Jakub Kicinski <kuba@kernel.org>
+CC:     "sashal@kernel.org" <sashal@kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        KY Srinivasan <kys@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "olaf@aepfle.de" <olaf@aepfle.de>, vkuznets <vkuznets@redhat.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH V3,net-next, 1/2] hv_netvsc: Add XDP support
+Thread-Topic: [PATCH V3,net-next, 1/2] hv_netvsc: Add XDP support
+Thread-Index: AQHV0UjdH1AVu+KRP0+E0p14Je7IQaf4ekYAgAABksCAAAcfgIAAAh5w
+Date:   Thu, 23 Jan 2020 17:44:52 +0000
+Message-ID: <MN2PR21MB1375147709E57BA25F661505CA0F0@MN2PR21MB1375.namprd21.prod.outlook.com>
+References: <1579713814-36061-1-git-send-email-haiyangz@microsoft.com>
+        <1579713814-36061-2-git-send-email-haiyangz@microsoft.com>
+        <20200123085906.20608707@cakuba>
+        <MN2PR21MB13757F7D19C11EC175FD9F98CA0F0@MN2PR21MB1375.namprd21.prod.outlook.com>
+ <20200123093013.53d78485@cakuba>
+In-Reply-To: <20200123093013.53d78485@cakuba>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=haiyangz@microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-01-23T17:44:51.4844806Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=c8d5ad5b-c76c-4ac7-8c93-e15f6f73f981;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=haiyangz@microsoft.com; 
+x-originating-ip: [96.61.92.94]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: a6ab1373-e798-478b-e5a1-08d7a02bf3ce
+x-ms-traffictypediagnostic: MN2PR21MB1216:|MN2PR21MB1216:|MN2PR21MB1216:
+x-ms-exchange-transport-forked: True
+x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
+x-microsoft-antispam-prvs: <MN2PR21MB1216054B92E92061FE6C7CC3CA0F0@MN2PR21MB1216.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 029174C036
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(396003)(366004)(136003)(346002)(376002)(39860400002)(199004)(189003)(316002)(54906003)(86362001)(8990500004)(5660300002)(10290500003)(9686003)(2906002)(55016002)(478600001)(26005)(33656002)(53546011)(6506007)(81166006)(66476007)(66556008)(76116006)(6916009)(4326008)(186003)(81156014)(8936002)(64756008)(66946007)(66446008)(71200400001)(52536014)(7696005)(8676002);DIR:OUT;SFP:1102;SCL:1;SRVR:MN2PR21MB1216;H:MN2PR21MB1375.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 9FM5qUROSyz4BaCxeY8Mm1T828mGE3YyKoPjCQttDtOXkYhVAeI5jcYphlz/FS5H8H0AhS5VCG5fDLl+Epu9XsNAK4j5B04wPzKj0+rpZOmIwD7d9co/G5OnJ9aSTtzsHGdroV5rsmBxDX4bwFvDYKPhuVwm9YKwNzNZNkI1w2EEePQL9J75mMDnfCZ6FObiquqzdzw4Tnol9XSBmkU6XCkFVIgwlil2Wbi0Phawh5zaSE2ERhqk2x/7YAEIjRN+yw8rIlt3Zkxif9cm31md7gB1KJlUn+YJr1Y6IA9AvEWa3FFHTj7ZZUE0omYaTQp2vtzYGxPbkP4N8+BW43//VbqJtxzO8jKCNJPXj1oD08HE3lqc20l0Vj4fFSmg8rqkCGFi0hOukObhYVwg+aUeqsOcFi16MP+YksPmjJIluW/BC7iwrVwgf79CFdgRiITt
+x-ms-exchange-antispam-messagedata: o7rx8mdXSco3ESnKw9YeOX+RJ9hukRDD6wEnmPgJwGPdEGCIYVqmAY/MePxJqkpd/IAWAFaO4xxpK41Jubqj/1EHgbx2U6zWXvAX1vlJERtw+UF7VpnKQUH/v2Q2PVtmkTz+n4rFOxYHsSlrdS0mXw==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a6ab1373-e798-478b-e5a1-08d7a02bf3ce
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Jan 2020 17:44:52.8696
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: v+blLINXE1BiQT62jxYFEucNvFV7itQRi/GTX3VwRhKxVJ2JW77Ci7teocgBHaaUdUWcuQy4hQfcrW5rNDbo4A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR21MB1216
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-Linus,
 
-Various tracing fixes:
+> -----Original Message-----
+> From: Jakub Kicinski <kuba@kernel.org>
+> Sent: Thursday, January 23, 2020 12:30 PM
+> To: Haiyang Zhang <haiyangz@microsoft.com>
+> Cc: sashal@kernel.org; linux-hyperv@vger.kernel.org; netdev@vger.kernel.o=
+rg;
+> KY Srinivasan <kys@microsoft.com>; Stephen Hemminger
+> <sthemmin@microsoft.com>; olaf@aepfle.de; vkuznets
+> <vkuznets@redhat.com>; davem@davemloft.net; linux-kernel@vger.kernel.org
+> Subject: Re: [PATCH V3,net-next, 1/2] hv_netvsc: Add XDP support
+>=20
+> On Thu, 23 Jan 2020 17:14:06 +0000, Haiyang Zhang wrote:
+> > > > Changes:
+> > > > 	v3: Minor code and comment updates.
+> > > >         v2: Added XDP_TX support. Addressed review comments.
+> > >
+> > > How does the locking of the TX path work? You seem to be just
+> > > calling the normal xmit method, but you don't hold the xmit queue
+> > > lock, so the stack can start xmit concurrently, no?
+> >
+> > The netvsc and vmbus can handle concurrent transmits, except the msd
+> > (Multi-Send Data) field which can only be used by one queue.
+> >
+> > I already added a new flag to netvsc_send(), so packets from XDP_TX
+> > won't use the msd.
+>=20
+> I see, there's a few non-atomic counters there, but maybe that's not a bi=
+g deal.
+Yes, those error counters are used less frequently, and not necessary to be=
+ precise.
 
- - Fix a function comparison warning for a xen trace event macro
- - Fix a double perf_event linking to a trace_uprobe_filter for multiple events
- - Fix suspicious RCU warnings in trace event code for using
-    list_for_each_entry_rcu() when the "_rcu" portion wasn't needed.
- - Fix a bug in the histogram code when using the same variable
- - Fix a NULL pointer dereference when tracefs lockdown enabled and calling
-    trace_set_default_clock()
+> What frees the skb if the ring is full, and netvsc_send_pkt() returns -EA=
+GAIN?
+> Nothing checks the return value from netvsc_xdp_xmit().
+Good catch! I will add skb free when -EAGAIN is returned for XDP_TX.
+I will update the patch.
 
-This v2 version contains:
+Thanks,
+- Haiyang
 
- - A fix to a bug found with the double perf_event linking patch
-
-
-Please pull the latest trace-v5.5-rc6-2 tree, which can be found at:
-
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/rostedt/linux-trace.git
-trace-v5.5-rc6-2
-
-Tag SHA1: 2a27340359b615a9793b80c85e5506f75065ffd9
-Head SHA1: b61387cb732cf283d318b2165c44913525fe545f
-
-
-Changbin Du (1):
-      tracing: xen: Ordered comparison of function pointers
-
-Masami Hiramatsu (3):
-      tracing/uprobe: Fix double perf_event linking on multiprobe uprobe
-      tracing: trigger: Replace unneeded RCU-list traversals
-      tracing/uprobe: Fix to make trace_uprobe_filter alignment safe
-
-Masami Ichikawa (1):
-      tracing: Do not set trace clock if tracefs lockdown is in effect
-
-Steven Rostedt (VMware) (1):
-      tracing: Fix histogram code when expression has same var as value
-
-----
- include/trace/events/xen.h          |   6 +-
- kernel/trace/trace.c                |   5 ++
- kernel/trace/trace_events_hist.c    |  63 +++++++++++++++----
- kernel/trace/trace_events_trigger.c |  20 ++++--
- kernel/trace/trace_kprobe.c         |   2 +-
- kernel/trace/trace_probe.c          |   8 ++-
- kernel/trace/trace_probe.h          |   9 ++-
- kernel/trace/trace_uprobe.c         | 121 +++++++++++++++++++++---------------
- 8 files changed, 163 insertions(+), 71 deletions(-)
----------------------------
-diff --git a/include/trace/events/xen.h b/include/trace/events/xen.h
-index 9a0e8af21310..a5ccfa67bc5c 100644
---- a/include/trace/events/xen.h
-+++ b/include/trace/events/xen.h
-@@ -66,7 +66,11 @@ TRACE_EVENT(xen_mc_callback,
- 	    TP_PROTO(xen_mc_callback_fn_t fn, void *data),
- 	    TP_ARGS(fn, data),
- 	    TP_STRUCT__entry(
--		    __field(xen_mc_callback_fn_t, fn)
-+		    /*
-+		     * Use field_struct to avoid is_signed_type()
-+		     * comparison of a function pointer.
-+		     */
-+		    __field_struct(xen_mc_callback_fn_t, fn)
- 		    __field(void *, data)
- 		    ),
- 	    TP_fast_assign(
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index ddb7e7f5fe8d..5b6ee4aadc26 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -9420,6 +9420,11 @@ __init static int tracing_set_default_clock(void)
- {
- 	/* sched_clock_stable() is determined in late_initcall */
- 	if (!trace_boot_clock && !sched_clock_stable()) {
-+		if (security_locked_down(LOCKDOWN_TRACEFS)) {
-+			pr_warn("Can not set tracing clock due to lockdown\n");
-+			return -EPERM;
-+		}
-+
- 		printk(KERN_WARNING
- 		       "Unstable clock detected, switching default tracing clock to \"global\"\n"
- 		       "If you want to keep using the local clock, then add:\n"
-diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
-index f62de5f43e79..6ac35b9e195d 100644
---- a/kernel/trace/trace_events_hist.c
-+++ b/kernel/trace/trace_events_hist.c
-@@ -116,6 +116,7 @@ struct hist_field {
- 	struct ftrace_event_field	*field;
- 	unsigned long			flags;
- 	hist_field_fn_t			fn;
-+	unsigned int			ref;
- 	unsigned int			size;
- 	unsigned int			offset;
- 	unsigned int                    is_signed;
-@@ -1766,11 +1767,13 @@ static struct hist_field *find_var(struct hist_trigger_data *hist_data,
- 	struct event_trigger_data *test;
- 	struct hist_field *hist_field;
- 
-+	lockdep_assert_held(&event_mutex);
-+
- 	hist_field = find_var_field(hist_data, var_name);
- 	if (hist_field)
- 		return hist_field;
- 
--	list_for_each_entry_rcu(test, &file->triggers, list) {
-+	list_for_each_entry(test, &file->triggers, list) {
- 		if (test->cmd_ops->trigger_type == ETT_EVENT_HIST) {
- 			test_data = test->private_data;
- 			hist_field = find_var_field(test_data, var_name);
-@@ -1820,7 +1823,9 @@ static struct hist_field *find_file_var(struct trace_event_file *file,
- 	struct event_trigger_data *test;
- 	struct hist_field *hist_field;
- 
--	list_for_each_entry_rcu(test, &file->triggers, list) {
-+	lockdep_assert_held(&event_mutex);
-+
-+	list_for_each_entry(test, &file->triggers, list) {
- 		if (test->cmd_ops->trigger_type == ETT_EVENT_HIST) {
- 			test_data = test->private_data;
- 			hist_field = find_var_field(test_data, var_name);
-@@ -2423,8 +2428,16 @@ static int contains_operator(char *str)
- 	return field_op;
- }
- 
-+static void get_hist_field(struct hist_field *hist_field)
-+{
-+	hist_field->ref++;
-+}
-+
- static void __destroy_hist_field(struct hist_field *hist_field)
- {
-+	if (--hist_field->ref > 1)
-+		return;
-+
- 	kfree(hist_field->var.name);
- 	kfree(hist_field->name);
- 	kfree(hist_field->type);
-@@ -2466,6 +2479,8 @@ static struct hist_field *create_hist_field(struct hist_trigger_data *hist_data,
- 	if (!hist_field)
- 		return NULL;
- 
-+	hist_field->ref = 1;
-+
- 	hist_field->hist_data = hist_data;
- 
- 	if (flags & HIST_FIELD_FL_EXPR || flags & HIST_FIELD_FL_ALIAS)
-@@ -2661,6 +2676,17 @@ static struct hist_field *create_var_ref(struct hist_trigger_data *hist_data,
- {
- 	unsigned long flags = HIST_FIELD_FL_VAR_REF;
- 	struct hist_field *ref_field;
-+	int i;
-+
-+	/* Check if the variable already exists */
-+	for (i = 0; i < hist_data->n_var_refs; i++) {
-+		ref_field = hist_data->var_refs[i];
-+		if (ref_field->var.idx == var_field->var.idx &&
-+		    ref_field->var.hist_data == var_field->hist_data) {
-+			get_hist_field(ref_field);
-+			return ref_field;
-+		}
-+	}
- 
- 	ref_field = create_hist_field(var_field->hist_data, NULL, flags, NULL);
- 	if (ref_field) {
-@@ -3115,7 +3141,9 @@ static char *find_trigger_filter(struct hist_trigger_data *hist_data,
- {
- 	struct event_trigger_data *test;
- 
--	list_for_each_entry_rcu(test, &file->triggers, list) {
-+	lockdep_assert_held(&event_mutex);
-+
-+	list_for_each_entry(test, &file->triggers, list) {
- 		if (test->cmd_ops->trigger_type == ETT_EVENT_HIST) {
- 			if (test->private_data == hist_data)
- 				return test->filter_str;
-@@ -3166,9 +3194,11 @@ find_compatible_hist(struct hist_trigger_data *target_hist_data,
- 	struct event_trigger_data *test;
- 	unsigned int n_keys;
- 
-+	lockdep_assert_held(&event_mutex);
-+
- 	n_keys = target_hist_data->n_fields - target_hist_data->n_vals;
- 
--	list_for_each_entry_rcu(test, &file->triggers, list) {
-+	list_for_each_entry(test, &file->triggers, list) {
- 		if (test->cmd_ops->trigger_type == ETT_EVENT_HIST) {
- 			hist_data = test->private_data;
- 
-@@ -5528,7 +5558,7 @@ static int hist_show(struct seq_file *m, void *v)
- 		goto out_unlock;
- 	}
- 
--	list_for_each_entry_rcu(data, &event_file->triggers, list) {
-+	list_for_each_entry(data, &event_file->triggers, list) {
- 		if (data->cmd_ops->trigger_type == ETT_EVENT_HIST)
- 			hist_trigger_show(m, data, n++);
- 	}
-@@ -5921,7 +5951,9 @@ static int hist_register_trigger(char *glob, struct event_trigger_ops *ops,
- 	if (hist_data->attrs->name && !named_data)
- 		goto new;
- 
--	list_for_each_entry_rcu(test, &file->triggers, list) {
-+	lockdep_assert_held(&event_mutex);
-+
-+	list_for_each_entry(test, &file->triggers, list) {
- 		if (test->cmd_ops->trigger_type == ETT_EVENT_HIST) {
- 			if (!hist_trigger_match(data, test, named_data, false))
- 				continue;
-@@ -6005,10 +6037,12 @@ static bool have_hist_trigger_match(struct event_trigger_data *data,
- 	struct event_trigger_data *test, *named_data = NULL;
- 	bool match = false;
- 
-+	lockdep_assert_held(&event_mutex);
-+
- 	if (hist_data->attrs->name)
- 		named_data = find_named_trigger(hist_data->attrs->name);
- 
--	list_for_each_entry_rcu(test, &file->triggers, list) {
-+	list_for_each_entry(test, &file->triggers, list) {
- 		if (test->cmd_ops->trigger_type == ETT_EVENT_HIST) {
- 			if (hist_trigger_match(data, test, named_data, false)) {
- 				match = true;
-@@ -6026,10 +6060,12 @@ static bool hist_trigger_check_refs(struct event_trigger_data *data,
- 	struct hist_trigger_data *hist_data = data->private_data;
- 	struct event_trigger_data *test, *named_data = NULL;
- 
-+	lockdep_assert_held(&event_mutex);
-+
- 	if (hist_data->attrs->name)
- 		named_data = find_named_trigger(hist_data->attrs->name);
- 
--	list_for_each_entry_rcu(test, &file->triggers, list) {
-+	list_for_each_entry(test, &file->triggers, list) {
- 		if (test->cmd_ops->trigger_type == ETT_EVENT_HIST) {
- 			if (!hist_trigger_match(data, test, named_data, false))
- 				continue;
-@@ -6051,10 +6087,12 @@ static void hist_unregister_trigger(char *glob, struct event_trigger_ops *ops,
- 	struct event_trigger_data *test, *named_data = NULL;
- 	bool unregistered = false;
- 
-+	lockdep_assert_held(&event_mutex);
-+
- 	if (hist_data->attrs->name)
- 		named_data = find_named_trigger(hist_data->attrs->name);
- 
--	list_for_each_entry_rcu(test, &file->triggers, list) {
-+	list_for_each_entry(test, &file->triggers, list) {
- 		if (test->cmd_ops->trigger_type == ETT_EVENT_HIST) {
- 			if (!hist_trigger_match(data, test, named_data, false))
- 				continue;
-@@ -6080,7 +6118,9 @@ static bool hist_file_check_refs(struct trace_event_file *file)
- 	struct hist_trigger_data *hist_data;
- 	struct event_trigger_data *test;
- 
--	list_for_each_entry_rcu(test, &file->triggers, list) {
-+	lockdep_assert_held(&event_mutex);
-+
-+	list_for_each_entry(test, &file->triggers, list) {
- 		if (test->cmd_ops->trigger_type == ETT_EVENT_HIST) {
- 			hist_data = test->private_data;
- 			if (check_var_refs(hist_data))
-@@ -6323,7 +6363,8 @@ hist_enable_trigger(struct event_trigger_data *data, void *rec,
- 	struct enable_trigger_data *enable_data = data->private_data;
- 	struct event_trigger_data *test;
- 
--	list_for_each_entry_rcu(test, &enable_data->file->triggers, list) {
-+	list_for_each_entry_rcu(test, &enable_data->file->triggers, list,
-+				lockdep_is_held(&event_mutex)) {
- 		if (test->cmd_ops->trigger_type == ETT_EVENT_HIST) {
- 			if (enable_data->enable)
- 				test->paused = false;
-diff --git a/kernel/trace/trace_events_trigger.c b/kernel/trace/trace_events_trigger.c
-index 2cd53ca21b51..40106fff06a4 100644
---- a/kernel/trace/trace_events_trigger.c
-+++ b/kernel/trace/trace_events_trigger.c
-@@ -501,7 +501,9 @@ void update_cond_flag(struct trace_event_file *file)
- 	struct event_trigger_data *data;
- 	bool set_cond = false;
- 
--	list_for_each_entry_rcu(data, &file->triggers, list) {
-+	lockdep_assert_held(&event_mutex);
-+
-+	list_for_each_entry(data, &file->triggers, list) {
- 		if (data->filter || event_command_post_trigger(data->cmd_ops) ||
- 		    event_command_needs_rec(data->cmd_ops)) {
- 			set_cond = true;
-@@ -536,7 +538,9 @@ static int register_trigger(char *glob, struct event_trigger_ops *ops,
- 	struct event_trigger_data *test;
- 	int ret = 0;
- 
--	list_for_each_entry_rcu(test, &file->triggers, list) {
-+	lockdep_assert_held(&event_mutex);
-+
-+	list_for_each_entry(test, &file->triggers, list) {
- 		if (test->cmd_ops->trigger_type == data->cmd_ops->trigger_type) {
- 			ret = -EEXIST;
- 			goto out;
-@@ -581,7 +585,9 @@ static void unregister_trigger(char *glob, struct event_trigger_ops *ops,
- 	struct event_trigger_data *data;
- 	bool unregistered = false;
- 
--	list_for_each_entry_rcu(data, &file->triggers, list) {
-+	lockdep_assert_held(&event_mutex);
-+
-+	list_for_each_entry(data, &file->triggers, list) {
- 		if (data->cmd_ops->trigger_type == test->cmd_ops->trigger_type) {
- 			unregistered = true;
- 			list_del_rcu(&data->list);
-@@ -1497,7 +1503,9 @@ int event_enable_register_trigger(char *glob,
- 	struct event_trigger_data *test;
- 	int ret = 0;
- 
--	list_for_each_entry_rcu(test, &file->triggers, list) {
-+	lockdep_assert_held(&event_mutex);
-+
-+	list_for_each_entry(test, &file->triggers, list) {
- 		test_enable_data = test->private_data;
- 		if (test_enable_data &&
- 		    (test->cmd_ops->trigger_type ==
-@@ -1537,7 +1545,9 @@ void event_enable_unregister_trigger(char *glob,
- 	struct event_trigger_data *data;
- 	bool unregistered = false;
- 
--	list_for_each_entry_rcu(data, &file->triggers, list) {
-+	lockdep_assert_held(&event_mutex);
-+
-+	list_for_each_entry(data, &file->triggers, list) {
- 		enable_data = data->private_data;
- 		if (enable_data &&
- 		    (data->cmd_ops->trigger_type ==
-diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
-index 7f890262c8a3..3f54dc2f6e1c 100644
---- a/kernel/trace/trace_kprobe.c
-+++ b/kernel/trace/trace_kprobe.c
-@@ -290,7 +290,7 @@ static struct trace_kprobe *alloc_trace_kprobe(const char *group,
- 	INIT_HLIST_NODE(&tk->rp.kp.hlist);
- 	INIT_LIST_HEAD(&tk->rp.kp.list);
- 
--	ret = trace_probe_init(&tk->tp, event, group);
-+	ret = trace_probe_init(&tk->tp, event, group, false);
- 	if (ret < 0)
- 		goto error;
- 
-diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
-index 905b10af5d5c..9ae87be422f2 100644
---- a/kernel/trace/trace_probe.c
-+++ b/kernel/trace/trace_probe.c
-@@ -984,15 +984,19 @@ void trace_probe_cleanup(struct trace_probe *tp)
- }
- 
- int trace_probe_init(struct trace_probe *tp, const char *event,
--		     const char *group)
-+		     const char *group, bool alloc_filter)
- {
- 	struct trace_event_call *call;
-+	size_t size = sizeof(struct trace_probe_event);
- 	int ret = 0;
- 
- 	if (!event || !group)
- 		return -EINVAL;
- 
--	tp->event = kzalloc(sizeof(struct trace_probe_event), GFP_KERNEL);
-+	if (alloc_filter)
-+		size += sizeof(struct trace_uprobe_filter);
-+
-+	tp->event = kzalloc(size, GFP_KERNEL);
- 	if (!tp->event)
- 		return -ENOMEM;
- 
-diff --git a/kernel/trace/trace_probe.h b/kernel/trace/trace_probe.h
-index 4ee703728aec..a0ff9e200ef6 100644
---- a/kernel/trace/trace_probe.h
-+++ b/kernel/trace/trace_probe.h
-@@ -223,6 +223,12 @@ struct probe_arg {
- 	const struct fetch_type	*type;	/* Type of this argument */
- };
- 
-+struct trace_uprobe_filter {
-+	rwlock_t		rwlock;
-+	int			nr_systemwide;
-+	struct list_head	perf_events;
-+};
-+
- /* Event call and class holder */
- struct trace_probe_event {
- 	unsigned int			flags;	/* For TP_FLAG_* */
-@@ -230,6 +236,7 @@ struct trace_probe_event {
- 	struct trace_event_call		call;
- 	struct list_head 		files;
- 	struct list_head		probes;
-+	struct trace_uprobe_filter	filter[0];
- };
- 
- struct trace_probe {
-@@ -322,7 +329,7 @@ static inline bool trace_probe_has_single_file(struct trace_probe *tp)
- }
- 
- int trace_probe_init(struct trace_probe *tp, const char *event,
--		     const char *group);
-+		     const char *group, bool alloc_filter);
- void trace_probe_cleanup(struct trace_probe *tp);
- int trace_probe_append(struct trace_probe *tp, struct trace_probe *to);
- void trace_probe_unlink(struct trace_probe *tp);
-diff --git a/kernel/trace/trace_uprobe.c b/kernel/trace/trace_uprobe.c
-index 352073d36585..2619bc5ed520 100644
---- a/kernel/trace/trace_uprobe.c
-+++ b/kernel/trace/trace_uprobe.c
-@@ -34,12 +34,6 @@ struct uprobe_trace_entry_head {
- #define DATAOF_TRACE_ENTRY(entry, is_return)		\
- 	((void*)(entry) + SIZEOF_TRACE_ENTRY(is_return))
- 
--struct trace_uprobe_filter {
--	rwlock_t		rwlock;
--	int			nr_systemwide;
--	struct list_head	perf_events;
--};
--
- static int trace_uprobe_create(int argc, const char **argv);
- static int trace_uprobe_show(struct seq_file *m, struct dyn_event *ev);
- static int trace_uprobe_release(struct dyn_event *ev);
-@@ -60,7 +54,6 @@ static struct dyn_event_operations trace_uprobe_ops = {
-  */
- struct trace_uprobe {
- 	struct dyn_event		devent;
--	struct trace_uprobe_filter	filter;
- 	struct uprobe_consumer		consumer;
- 	struct path			path;
- 	struct inode			*inode;
-@@ -351,7 +344,7 @@ alloc_trace_uprobe(const char *group, const char *event, int nargs, bool is_ret)
- 	if (!tu)
- 		return ERR_PTR(-ENOMEM);
- 
--	ret = trace_probe_init(&tu->tp, event, group);
-+	ret = trace_probe_init(&tu->tp, event, group, true);
- 	if (ret < 0)
- 		goto error;
- 
-@@ -359,7 +352,7 @@ alloc_trace_uprobe(const char *group, const char *event, int nargs, bool is_ret)
- 	tu->consumer.handler = uprobe_dispatcher;
- 	if (is_ret)
- 		tu->consumer.ret_handler = uretprobe_dispatcher;
--	init_trace_uprobe_filter(&tu->filter);
-+	init_trace_uprobe_filter(tu->tp.event->filter);
- 	return tu;
- 
- error:
-@@ -1067,13 +1060,14 @@ static void __probe_event_disable(struct trace_probe *tp)
- 	struct trace_probe *pos;
- 	struct trace_uprobe *tu;
- 
-+	tu = container_of(tp, struct trace_uprobe, tp);
-+	WARN_ON(!uprobe_filter_is_empty(tu->tp.event->filter));
-+
- 	list_for_each_entry(pos, trace_probe_probe_list(tp), list) {
- 		tu = container_of(pos, struct trace_uprobe, tp);
- 		if (!tu->inode)
- 			continue;
- 
--		WARN_ON(!uprobe_filter_is_empty(&tu->filter));
--
- 		uprobe_unregister(tu->inode, tu->offset, &tu->consumer);
- 		tu->inode = NULL;
- 	}
-@@ -1108,7 +1102,7 @@ static int probe_event_enable(struct trace_event_call *call,
- 	}
- 
- 	tu = container_of(tp, struct trace_uprobe, tp);
--	WARN_ON(!uprobe_filter_is_empty(&tu->filter));
-+	WARN_ON(!uprobe_filter_is_empty(tu->tp.event->filter));
- 
- 	if (enabled)
- 		return 0;
-@@ -1205,39 +1199,39 @@ __uprobe_perf_filter(struct trace_uprobe_filter *filter, struct mm_struct *mm)
- }
- 
- static inline bool
--uprobe_filter_event(struct trace_uprobe *tu, struct perf_event *event)
-+trace_uprobe_filter_event(struct trace_uprobe_filter *filter,
-+			  struct perf_event *event)
- {
--	return __uprobe_perf_filter(&tu->filter, event->hw.target->mm);
-+	return __uprobe_perf_filter(filter, event->hw.target->mm);
- }
- 
--static int uprobe_perf_close(struct trace_uprobe *tu, struct perf_event *event)
-+static bool trace_uprobe_filter_remove(struct trace_uprobe_filter *filter,
-+				       struct perf_event *event)
- {
- 	bool done;
- 
--	write_lock(&tu->filter.rwlock);
-+	write_lock(&filter->rwlock);
- 	if (event->hw.target) {
- 		list_del(&event->hw.tp_list);
--		done = tu->filter.nr_systemwide ||
-+		done = filter->nr_systemwide ||
- 			(event->hw.target->flags & PF_EXITING) ||
--			uprobe_filter_event(tu, event);
-+			trace_uprobe_filter_event(filter, event);
- 	} else {
--		tu->filter.nr_systemwide--;
--		done = tu->filter.nr_systemwide;
-+		filter->nr_systemwide--;
-+		done = filter->nr_systemwide;
- 	}
--	write_unlock(&tu->filter.rwlock);
-+	write_unlock(&filter->rwlock);
- 
--	if (!done)
--		return uprobe_apply(tu->inode, tu->offset, &tu->consumer, false);
--
--	return 0;
-+	return done;
- }
- 
--static int uprobe_perf_open(struct trace_uprobe *tu, struct perf_event *event)
-+/* This returns true if the filter always covers target mm */
-+static bool trace_uprobe_filter_add(struct trace_uprobe_filter *filter,
-+				    struct perf_event *event)
- {
- 	bool done;
--	int err;
- 
--	write_lock(&tu->filter.rwlock);
-+	write_lock(&filter->rwlock);
- 	if (event->hw.target) {
- 		/*
- 		 * event->parent != NULL means copy_process(), we can avoid
-@@ -1247,28 +1241,21 @@ static int uprobe_perf_open(struct trace_uprobe *tu, struct perf_event *event)
- 		 * attr.enable_on_exec means that exec/mmap will install the
- 		 * breakpoints we need.
- 		 */
--		done = tu->filter.nr_systemwide ||
-+		done = filter->nr_systemwide ||
- 			event->parent || event->attr.enable_on_exec ||
--			uprobe_filter_event(tu, event);
--		list_add(&event->hw.tp_list, &tu->filter.perf_events);
-+			trace_uprobe_filter_event(filter, event);
-+		list_add(&event->hw.tp_list, &filter->perf_events);
- 	} else {
--		done = tu->filter.nr_systemwide;
--		tu->filter.nr_systemwide++;
-+		done = filter->nr_systemwide;
-+		filter->nr_systemwide++;
- 	}
--	write_unlock(&tu->filter.rwlock);
-+	write_unlock(&filter->rwlock);
- 
--	err = 0;
--	if (!done) {
--		err = uprobe_apply(tu->inode, tu->offset, &tu->consumer, true);
--		if (err)
--			uprobe_perf_close(tu, event);
--	}
--	return err;
-+	return done;
- }
- 
--static int uprobe_perf_multi_call(struct trace_event_call *call,
--				  struct perf_event *event,
--		int (*op)(struct trace_uprobe *tu, struct perf_event *event))
-+static int uprobe_perf_close(struct trace_event_call *call,
-+			     struct perf_event *event)
- {
- 	struct trace_probe *pos, *tp;
- 	struct trace_uprobe *tu;
-@@ -1278,25 +1265,59 @@ static int uprobe_perf_multi_call(struct trace_event_call *call,
- 	if (WARN_ON_ONCE(!tp))
- 		return -ENODEV;
- 
-+	tu = container_of(tp, struct trace_uprobe, tp);
-+	if (trace_uprobe_filter_remove(tu->tp.event->filter, event))
-+		return 0;
-+
- 	list_for_each_entry(pos, trace_probe_probe_list(tp), list) {
- 		tu = container_of(pos, struct trace_uprobe, tp);
--		ret = op(tu, event);
-+		ret = uprobe_apply(tu->inode, tu->offset, &tu->consumer, false);
- 		if (ret)
- 			break;
- 	}
- 
- 	return ret;
- }
-+
-+static int uprobe_perf_open(struct trace_event_call *call,
-+			    struct perf_event *event)
-+{
-+	struct trace_probe *pos, *tp;
-+	struct trace_uprobe *tu;
-+	int err = 0;
-+
-+	tp = trace_probe_primary_from_call(call);
-+	if (WARN_ON_ONCE(!tp))
-+		return -ENODEV;
-+
-+	tu = container_of(tp, struct trace_uprobe, tp);
-+	if (trace_uprobe_filter_add(tu->tp.event->filter, event))
-+		return 0;
-+
-+	list_for_each_entry(pos, trace_probe_probe_list(tp), list) {
-+		err = uprobe_apply(tu->inode, tu->offset, &tu->consumer, true);
-+		if (err) {
-+			uprobe_perf_close(call, event);
-+			break;
-+		}
-+	}
-+
-+	return err;
-+}
-+
- static bool uprobe_perf_filter(struct uprobe_consumer *uc,
- 				enum uprobe_filter_ctx ctx, struct mm_struct *mm)
- {
-+	struct trace_uprobe_filter *filter;
- 	struct trace_uprobe *tu;
- 	int ret;
- 
- 	tu = container_of(uc, struct trace_uprobe, consumer);
--	read_lock(&tu->filter.rwlock);
--	ret = __uprobe_perf_filter(&tu->filter, mm);
--	read_unlock(&tu->filter.rwlock);
-+	filter = tu->tp.event->filter;
-+
-+	read_lock(&filter->rwlock);
-+	ret = __uprobe_perf_filter(filter, mm);
-+	read_unlock(&filter->rwlock);
- 
- 	return ret;
- }
-@@ -1419,10 +1440,10 @@ trace_uprobe_register(struct trace_event_call *event, enum trace_reg type,
- 		return 0;
- 
- 	case TRACE_REG_PERF_OPEN:
--		return uprobe_perf_multi_call(event, data, uprobe_perf_open);
-+		return uprobe_perf_open(event, data);
- 
- 	case TRACE_REG_PERF_CLOSE:
--		return uprobe_perf_multi_call(event, data, uprobe_perf_close);
-+		return uprobe_perf_close(event, data);
- 
- #endif
- 	default:
