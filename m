@@ -2,279 +2,153 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACF3CC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 08:11:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78F90C33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 08:14:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DC6124655
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 08:11:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="g/0qMp0C"
+	by mail.kernel.org (Postfix) with ESMTP id 5915B24655
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 08:14:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727141AbgAWILl (ORCPT
+        id S1726590AbgAWIO2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 03:11:41 -0500
-Received: from mail-eopbgr1320101.outbound.protection.outlook.com ([40.107.132.101]:47808
-        "EHLO APC01-PU1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725785AbgAWILl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 03:11:41 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=T040e6oAiwo3sRUm08e6qC16ztB1d1pIomuEq6iO6+PUhXxYGMN5LarKKzLnOwX0Phpjisrx56qlbem5YVTZxRofpfvGMLc8bCo5bSSuPexKMo0/hCUtBurEVeAi5K/s4qU2EtMzuh0x/m8c/rumB/dg9I4PrwoEG9GSaZ7V9XR6IVHsO/3udiZpqqLQn07myIFDfWmB/C5JFzDj+60PkpE5KZDGf0X0N/9vnPlFBA83GXvHS+8Nszkv6ffi8TXKZpvB8WKhYS5oiBqJCea03iWT9f6sIlxoQ4cDgZMvN9iy3LCVtH+ZKgLr4zPAN2iHTaNl261E9oqpBziWSNksIg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=yYiIAXMCRGL4ZDgH8cXtS9PjdvX/7APDAMcGohVbU5g=;
- b=JjusPkfSOsMNuDvWAczSSNifaiCK5oyqBPvJmgd3p6bCPhB5M7ga1wquBBXvgQKbH4D5Sy9SO3PffIA9tdAg/Fia9QnvWsru+1sfHAOnyZyrJfpFgXZmhoE+MQJ12i/GSbAIM5AVQ0X+QxAUN/pS5J+di9WBctqdsZKjCqj48ayPzuTS1zE/7obmNVEKfXfE04s563MoWAkRnIH5wttixph4+HXuKeDEXcLuwk1R5gSH4MFRpvweKwEvEchvKluagEJeDq6A4+Mu8rdrD3ECnJ0IY8j1rEewInmwf9OWO9TyXK9h1SgZAqXpMSoHV36Gf5DM7wlBENcqTnl83WslVA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=yYiIAXMCRGL4ZDgH8cXtS9PjdvX/7APDAMcGohVbU5g=;
- b=g/0qMp0CijHgyPK1ArpeY8meMKWVZj9p6nbmfU97msnw8uEmT59hmCGH2vsE2LSOQ5a7EDET9Nj6opyCvXmarFSGXOykYArbOAawl9rHAGWmTK6aox3tCqMr3tRKqNMncaOJpSXwTu6RK1/UhGmF/QotzzwjQ9PTN7UNkuPgpUU=
-Received: from HK0P153MB0148.APCP153.PROD.OUTLOOK.COM (52.133.156.139) by
- HK0P153MB0259.APCP153.PROD.OUTLOOK.COM (52.132.236.12) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2686.3; Thu, 23 Jan 2020 08:11:33 +0000
-Received: from HK0P153MB0148.APCP153.PROD.OUTLOOK.COM
- ([fe80::58ea:c6ae:4ea3:8432]) by HK0P153MB0148.APCP153.PROD.OUTLOOK.COM
- ([fe80::58ea:c6ae:4ea3:8432%4]) with mapi id 15.20.2686.008; Thu, 23 Jan 2020
- 08:11:33 +0000
-From:   Dexuan Cui <decui@microsoft.com>
-To:     Michael Kelley <mikelley@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "sashal@kernel.org" <sashal@kernel.org>,
-        Sasha Levin <Alexander.Levin@microsoft.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        vkuznets <vkuznets@redhat.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v2 4/4] hv_utils: Add the support of hibernation
-Thread-Topic: [PATCH v2 4/4] hv_utils: Add the support of hibernation
-Thread-Index: AdXJ2zJbjzKVVIRATtCsfhHYStD+UQHcnlmwABw2wRA=
-Date:   Thu, 23 Jan 2020 08:11:32 +0000
-Message-ID: <HK0P153MB0148D8719B52A34BDB6C5836BF0F0@HK0P153MB0148.APCP153.PROD.OUTLOOK.COM>
-References: <HK0P153MB0148B7D12E62DD559A5D2B9DBF350@HK0P153MB0148.APCP153.PROD.OUTLOOK.COM>
- <DM5PR2101MB104749677CD07DE42B5BD26DD70C0@DM5PR2101MB1047.namprd21.prod.outlook.com>
-In-Reply-To: <DM5PR2101MB104749677CD07DE42B5BD26DD70C0@DM5PR2101MB1047.namprd21.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=decui@microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-01-13T06:32:21.2927925Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=4db3c986-4f1e-4eb3-944c-2fd501d37986;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=decui@microsoft.com; 
-x-originating-ip: [2601:600:a280:7f70:21c4:4274:62b5:126b]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 72c5d336-c511-4837-0311-08d79fdbdbd8
-x-ms-traffictypediagnostic: HK0P153MB0259:|HK0P153MB0259:|HK0P153MB0259:
-x-ms-exchange-transport-forked: True
-x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
-x-microsoft-antispam-prvs: <HK0P153MB0259F9EB4442B8F2D1E66DB5BF0F0@HK0P153MB0259.APCP153.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 029174C036
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(136003)(39860400002)(366004)(376002)(346002)(396003)(199004)(189003)(86362001)(10290500003)(110136005)(478600001)(186003)(8990500004)(81156014)(33656002)(81166006)(8936002)(8676002)(2906002)(7696005)(6506007)(966005)(5660300002)(71200400001)(66446008)(66556008)(55016002)(76116006)(66946007)(52536014)(64756008)(66476007)(316002)(9686003);DIR:OUT;SFP:1102;SCL:1;SRVR:HK0P153MB0259;H:HK0P153MB0148.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: otLn8TL/VxefjbLX9LPhuAzfiLna3W7QN+Nf7G/KQQW1u/uD4qXyf6i+9s+saoUnzF07/kiyKGyJCwn4nt620T5k/1gIACPcgMFIQfd1rs5bhIFcOWii2oD7LXXSwkEFYtpkcpCyO930Sxk3iW4uSA9aEljK0SnHpYFY5SxF9ivSeFqZv5UlURKNFm9gfPik1rtTzXu6ko4d1+ISN1XZ926+4WYBy1RvdsOnR7PTGjHPHN3l1oaqHadeMYD7MnVxxCZhn464Ux1YTEGipfZVm9ZuejcubBJrsReSU/lm3ch1HaDVX9akmO2Z9ZZDF3XrtLKQH5+pr58QLrPgWUH/3r2IeJDDRKou3DRvPeZfBY4TSvZWszSlodOKsrfVklKASisdtLPj4sy9Y8E74VyqlP+i3hdvIVbzOmYEP0Q+7FtHOtk+G6rRoeZYN+G/KctXiPhRtI6Asd8zcM+qNZTCBGASFAg21DygG7acg41Veew=
-x-ms-exchange-antispam-messagedata: iSjbpNdp0QegqFbhobqCll6QcyrUynNKuTncufoZm8MVydpGG4qMZH6Qo7WSIBxMU9DRrXPxdXL/z9F1mQ081MWh6SUsnRS5ok9O+af/iM0ZOvOWkRjjH1Nsb1iCe1Q8EtV3Ba7SPYGwRLMp146+tKdeXjFMUWccGQs+zlN4gChs6AWT7LZzT4wA+AetnkB21s+HpvyWD+O4n1gOQA3Feg==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 23 Jan 2020 03:14:28 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:52446 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725785AbgAWIO1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jan 2020 03:14:27 -0500
+Received: by mail-wm1-f67.google.com with SMTP id p9so1533259wmc.2;
+        Thu, 23 Jan 2020 00:14:24 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=hMetq05ahE3/VlZ36EO7t0o08RZOdKUBr1lWl/7z4lM=;
+        b=IhvxioSt+YtVkF6fJdpl+hl3IN74WXS0iqWWeWJ34CRfa2fbnuk3mCSCNefDvL+kgT
+         CiiRNQO2QeHt46PemPGhY/bNi4Qq0WKeukWtsqfxLpSS06IMDsNVBfGbL6eFqeTKlRrx
+         nB6NzIPiN2wkkT6q2wCRSB874MrUfJ/dMYCHM7LkmJarnHA2Qc6vkCMtDmQZLc2I9v//
+         +/ME2vRtNfPqzMjfWd4aq9LSBgCNV5OiW5v+tKenB3MDsM8IcUsUbEyvXtaf0s4JrCR/
+         REjyElA+9zTmcEYL9DpuHdr1w8lGNpdEb7mNwwyK0/BOJ0IpwSQd3q3N1athzBFi/Dku
+         FPcA==
+X-Gm-Message-State: APjAAAV3BZQ7PKLYVmC+IoTBz2PZyGj3RGTdUKdFCLBtMxO7N8ZEcfHa
+        BZ3i8MNT0bnrSFTfEB1y/0yVfh/L8QUgJw==
+X-Google-Smtp-Source: APXvYqzjQ3n9r4UHA6R7ndK6wkS7cGwTUj9Rt8LtpkScsKU8JWHDud5M9O9TmXPC3wD7X34l9EH/XQ==
+X-Received: by 2002:a7b:cb46:: with SMTP id v6mr2956731wmj.117.1579767264210;
+        Thu, 23 Jan 2020 00:14:24 -0800 (PST)
+Received: from ?IPv6:2a0b:e7c0:0:107::70f? ([2a0b:e7c0:0:107::70f])
+        by smtp.gmail.com with ESMTPSA id a5sm1626869wmb.37.2020.01.23.00.14.21
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 23 Jan 2020 00:14:23 -0800 (PST)
+Subject: Re: [kernel-hardening] [PATCH 09/38] usercopy: Mark kmalloc caches as
+ usercopy caches
+To:     Kees Cook <keescook@chromium.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>
+Cc:     linux-kernel@vger.kernel.org, David Windsor <dave@nullcore.net>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        linux-xfs@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Christoph Hellwig <hch@infradead.org>,
+        Christoph Lameter <cl@linux.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Laura Abbott <labbott@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Christoffer Dall <christoffer.dall@linaro.org>,
+        Dave Kleikamp <dave.kleikamp@oracle.com>,
+        Jan Kara <jack@suse.cz>,
+        Luis de Bethencourt <luisbg@kernel.org>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Rik van Riel <riel@redhat.com>,
+        Matthew Garrett <mjg59@google.com>,
+        linux-fsdevel@vger.kernel.org, linux-arch@vger.kernel.org,
+        netdev@vger.kernel.org, kernel-hardening@lists.openwall.com,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Michal Kubecek <mkubecek@suse.cz>
+References: <1515636190-24061-1-git-send-email-keescook@chromium.org>
+ <1515636190-24061-10-git-send-email-keescook@chromium.org>
+ <9519edb7-456a-a2fa-659e-3e5a1ff89466@suse.cz>
+ <201911121313.1097D6EE@keescook> <201911141327.4DE6510@keescook>
+From:   Jiri Slaby <jslaby@suse.cz>
+Autocrypt: addr=jslaby@suse.cz; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <bfca96db-bbd0-d958-7732-76e36c667c68@suse.cz>
+Date:   Thu, 23 Jan 2020 09:14:20 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 72c5d336-c511-4837-0311-08d79fdbdbd8
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Jan 2020 08:11:32.6438
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: x6c5PMjbDu2DTVlWPy/Yp6E8wWY15itLotfeQwFE593nUX7/CGwkor968XIfBUhBZO2qYQURt+5VgqFYSj+azA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: HK0P153MB0259
+In-Reply-To: <201911141327.4DE6510@keescook>
+Content-Type: text/plain; charset=iso-8859-2
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> From: Michael Kelley <mikelley@microsoft.com>
-> Sent: Wednesday, January 22, 2020 10:28 AM
-> ...
-> > +int hv_fcopy_pre_suspend(void)
-> > +{
-> > +	struct vmbus_channel *channel =3D fcopy_transaction.recv_channel;
-> > +	struct hv_fcopy_hdr *fcopy_msg;
-> > +
-> > +	tasklet_disable(&channel->callback_event);
-> > + ...
-> > +	fcopy_msg =3D kzalloc(sizeof(*fcopy_msg), GFP_KERNEL);
-> > +	if (!fcopy_msg)
-> > +		goto err;
-> > +
-> > +	fcopy_msg->operation =3D CANCEL_FCOPY;
-> > +
-> > +	hv_fcopy_cancel_work();
-> > +
-> > +	/* We don't care about the return value. */
-> > +	hvutil_transport_send(hvt, fcopy_msg, sizeof(*fcopy_msg), NULL);
-> > +
-> > +	kfree(fcopy_msg);
-> > +
-> > +	fcopy_transaction.state =3D HVUTIL_READY;
->=20
-> Is the ordering correct here? =20
+On 14. 11. 19, 22:27, Kees Cook wrote:
+> On Tue, Nov 12, 2019 at 01:21:54PM -0800, Kees Cook wrote:
+>> How is iucv the only network protocol that has run into this? Do others
+>> use a bounce buffer?
+> 
+> Another solution would be to use a dedicated kmem cache (instead of the
+> shared kmalloc dma one)?
 
-This is intentional. I'll add a comment (please see the below).
+Has there been any conclusion to this thread yet? For the time being, we
+disabled HARDENED_USERCOPY on s390...
 
-> It seems like the fcopy daemon could receive
-> the cancel message and do the write before the state is forced to
-> HVUTIL_READY.
+https://lore.kernel.org/kernel-hardening/9519edb7-456a-a2fa-659e-3e5a1ff89466@suse.cz/
 
-This can not happen, because when we're here from util_suspend(), all the
-userspace processes have been frozen (please refer to another mail from me
-https://lkml.org/lkml/2020/1/13/1021). The userspace is thawed only after
-util_resume() and the other part of the resume procedure finish.
-
-When we're here in util_suspend(), we can be in any of the below states:
-
-#1: hv_utils has not queued any message to the userspace daemon.
-Now hv_fcopy_pre_suspend() queues a message to the daemon, and forces
-the state to HVUTIL_READY; the daemon should read the message without=20
-any error; later when the daemon calls write(), the write() returns -1 beca=
-use=20
-fcopy_transaction.state !=3D HVUTIL_USERSPACE_REQ and fcopy_on_msg()=20
-returns -EINVAL; the daemon responds to the write() error by closing and=20
-re-opening the dev file, which triggers a reset in the hv_utils driver: see
-hvt_op_release() -> hvt_reset() -> fcopy_on_reset(), and later the daemon
-registers itself to the hv_utils driver, and everything comes back to norma=
-l.
-
-#2: hv_utils has queued a message to the userspace daemon.
-Now hv_fcopy_pre_suspend() fails to queue an extra message to the=20
-daemon, but still forces the state to HVUTIL_READY.
-
-#2.1 the userspace has not read the message.
-The daemon reads the queued message and later the write() fails, so the
-daemon closes and re-opens the dev file.
-
-#2.2 the userspace has read the message, but has not called write() yet.
-The write() fails, so the daemon closes and re-opens the dev file.
-
-#2.3 the userspace has read the message, and has called write().
-This is actualy the same as #1.
-
-So, IMO the patch should be handling the scenarios correctly.
-=20
-> > +
-> > +	/* tasklet_enable() will be called in hv_fcopy_pre_resume(). */
-> > +
-> > +	return 0;
-> > +err:
-> > +	tasklet_enable(&channel->callback_event);
->=20
-> A nit, but if you did the memory allocation first, you could return -ENOM=
-EM
-> immediately on error and avoid the err: label and re-enabling the tasklet=
-.
-
-Good idea! I'll fix this.
-
-> > +	return -ENOMEM;
-> > +}
-> > ...
-> > --- a/drivers/hv/hv_snapshot.c
-> > +++ b/drivers/hv/hv_snapshot.c
-> > @@ -229,6 +229,7 @@ static void vss_handle_request(struct work_struct
-> *dummy)
-> >  		vss_transaction.state =3D HVUTIL_HOSTMSG_RECEIVED;
-> >  		vss_send_op();
-> >  		return;
-> > +
->=20
-> Gratuitous blank line added?
-
-Will remove it. I probably tried to make the "return;" more noticeable.=20
-=20
-> >  	case VSS_OP_GET_DM_INFO:
-> >  		vss_transaction.msg->dm_info.flags =3D 0;
-> >  		break;
-> > ...
-> > +int hv_vss_pre_suspend(void)
-> > +{
-> > ...
-> > +	/* We don't care about the return value. */
-> > +	hvutil_transport_send(hvt, vss_msg, sizeof(*vss_msg), NULL);
-> > +
-> > +	kfree(vss_msg);
-> > +
-> > +	vss_transaction.state =3D HVUTIL_READY;
->=20
-> Same comment about the ordering.
-
-I'll add a comment for this. I may add a long comment in util_suspend()
-and add a short comment here.
-
-> > +
-> > +	/* tasklet_enable() will be called in hv_vss_pre_resume(). */
-> > +
-> > +	return 0;
-> > +err:
-> > +	tasklet_enable(&channel->callback_event);
-> > +	return -ENOMEM;
->=20
-> Same comment about simplifying the error handling applies here.
-
-Will fix this.
-=20
-> > +static int util_suspend(struct hv_device *dev)
-> > +{
-> > +	struct hv_util_service *srv =3D hv_get_drvdata(dev);
-> > +	int ret =3D 0;
-> > +
-> > +	if (srv->util_pre_suspend) {
-> > +		ret =3D srv->util_pre_suspend();
-> > +
->=20
-> Unneeded blank line?
-
-Will remove this.
-
-> > +		if (ret)
-> > +			return ret;
-> > +	}
-> > +
-> > +	vmbus_close(dev->channel);
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static int util_resume(struct hv_device *dev)
-> > +{
-> > +	struct hv_util_service *srv =3D hv_get_drvdata(dev);
-> > +	int ret =3D 0;
-> > +
-> > +	if (srv->util_pre_resume) {
-> > +		ret =3D srv->util_pre_resume();
-> > +
->=20
-> Unneeded blank line?
-
-Will remove this.
-
-Thanks,
--- Dexuan
+thanks,
+-- 
+js
+suse labs
