@@ -2,71 +2,64 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DD4BC33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 18:59:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40A3AC33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 19:00:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58CE921569
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 18:59:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19A1C22522
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 19:00:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="M9Vgqe1f"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="hl/QHk5i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728900AbgAWS7N (ORCPT
+        id S1729017AbgAWTAW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 13:59:13 -0500
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:40085 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727590AbgAWS7N (ORCPT
+        Thu, 23 Jan 2020 14:00:22 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:48374 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727022AbgAWTAV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 13:59:13 -0500
-Received: by mail-pl1-f194.google.com with SMTP id s21so1728464plr.7
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jan 2020 10:59:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=hAqWpJ1NuJTGK5OF4DpdL8tVTeFlEZehO0INBb+L18s=;
-        b=M9Vgqe1fI4i1vkrxFL94iqUTtEMBkNNpQs1Jzc7292AqRfj9q/5vvSUaw2jVl5Ghyz
-         tTJrd0Ilejp/eyhwIfFLkzi5V2FBdZgW5PMuUSJ8jSuzgZ1TeO0yenU8WQJqhe3+mKHz
-         t0XknWPJgsX/ni67qERPzuVT0b7IABVBticzPrv/0X2ZrdPrD3gFfRWrXCuFjlHjjg6F
-         URB+1y9Q4a+zaR+1DX9f0oM3BMINDMhZFuN2+WT3zurC4b3cYpvkz2SdXueZNvTulPTf
-         ZN4uwHr3mbX3gAfsFyjfFnK5bDIiPmAEKlcSdpXVCfw6Qrts/CICt4bYicizXTmrFKch
-         O6YA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=hAqWpJ1NuJTGK5OF4DpdL8tVTeFlEZehO0INBb+L18s=;
-        b=FmVc8mwJ9YEkgGycr3WonrTp/3+lM3gSpoXFZWhLD6xpokezKnO/M2GTfJvlNQdCF1
-         zBU4F0NTRUoTfeZcySzylAiwK14RgIfbLG9FdS5BxjnKC+TVD+wF4gNzGDxsWQ3GMnnv
-         sZ92IMry6WTxzr3xeWAXGOGh+Rn3FaW9NvYjlNi9yYk3MTFBxRfy4sqFKXB9CW335zTG
-         5QtjoESzfyP1fQpVBNru7EG/Ncsk7GeWeSedvAVdEy+ZCNAQkNDinX/ikArkPOIIBt4F
-         Xcg8GedzJIbv/W4zD4nnn3DD3Ij6SD2Ys5rLaxVq84TTEsVq2j50HB41pdIzlhBrnr+p
-         hVjg==
-X-Gm-Message-State: APjAAAUSX7JFgatE5dmo4N5glwzaQu9bPg3t8Tq447IjxzI+cMhWBn6q
-        WL78qfJipoStwyxY6TuY2OzfNQSyOpBIfw==
-X-Google-Smtp-Source: APXvYqyz2oXSsDtYYv3RSa6VA5HhqPv2N44KU2lqJNVnXf6/2pcJ37hmJrAs7TseU0myONmwtXsu/Q==
-X-Received: by 2002:a17:902:59cd:: with SMTP id d13mr17953917plj.146.1579805952557;
-        Thu, 23 Jan 2020 10:59:12 -0800 (PST)
-Received: from ?IPv6:2600:380:4562:fb25:b980:6664:b71f:35b5? ([2600:380:4562:fb25:b980:6664:b71f:35b5])
-        by smtp.gmail.com with ESMTPSA id v4sm4123577pgo.63.2020.01.23.10.59.11
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 23 Jan 2020 10:59:12 -0800 (PST)
-Subject: Re: [PATCH] Adding multiple workers to the loop device.
-To:     "muraliraja.muniraju" <muraliraja.muniraju@rubrik.com>
-Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200121192540.51642-1-muraliraja.muniraju@rubrik.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <88d16046-f9aa-d5e8-1b1c-7c3ff9516290@kernel.dk>
-Date:   Thu, 23 Jan 2020 11:59:10 -0700
+        Thu, 23 Jan 2020 14:00:21 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:MIME-Version:Date:Message-ID:Subject:From:Cc:To:Sender:Reply-To:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=8HR2OlxtYSb8VdzQerDMMYUwatLK4APc/+QQpvP3lEg=; b=hl/QHk5iTlsDRKCfY+NHVGyfL
+        qgqj7dYv7pKzurBROUVNuwRXpgmtf5xN3yRceVvnxS/eNW6WGHi95QfEo03tR4rTgkcR9wKIpjOmb
+        81jLRVHYNsnKtfnjooWbbrFPxwX56OTZ63ybhx80bRhENoVrRLtGFmp5a9OL1jd8EGj42zKv99+eB
+        JwtSr7fZ7Cz//tDfqUVR3E5tPEXA9q0ngG2/f56cyWSgnmbgWjx3we2vtNWgdwVb329LgskVc333M
+        J503k7JhpQBbDcV/o75dUqL1juPCeAu+WcLSbMe1/lmAGA9E3WwrLYl6CMt5DUF3qozC89SWC/IFK
+        whdtZUgpw==;
+Received: from [2601:1c0:6280:3f0::ed68]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iuhiE-0003BI-Ui; Thu, 23 Jan 2020 19:00:19 +0000
+To:     "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>
+Cc:     Jan Kara <jack@suse.com>, Theodore Ts'o <tytso@mit.edu>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        linux-ext4@vger.kernel.org,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Jozsef Kadlecsik <kadlec@netfilter.org>,
+        Florian Westphal <fw@strlen.de>,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        Paul Mackerras <paulus@samba.org>, linux-ppp@vger.kernel.org,
+        Jan Kara <jack@suse.com>, reiserfs-devel@vger.kernel.org,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        linux-xfs <linux-xfs@vger.kernel.org>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Subject: [PATCH] Documentation: changes.rst: update several outdated project
+ URLs
+Message-ID: <efb1f518-9e66-c472-d124-4b7d91e56639@infradead.org>
+Date:   Thu, 23 Jan 2020 11:00:12 -0800
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-In-Reply-To: <20200121192540.51642-1-muraliraja.muniraju@rubrik.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -75,19 +68,127 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/21/20 12:25 PM, muraliraja.muniraju wrote:
-> Current loop device implementation has a single kthread worker and
-> drains one request at a time to completion. If the underneath device is
-> slow then this reduces the concurrency significantly. To help in these
-> cases, adding multiple loop workers increases the concurrency. Also to
-> retain the old behaviour the default number of loop workers is 1 and can
-> be tuned via the ioctl.
+From: Randy Dunlap <rdunlap@infradead.org>
 
-Have you considered using blk-mq for this? Right now loop just does
-some basic checks and then queues for a thread. If you bump nr_hw_queues
-up (provide a parameter for that) and set BLK_MQ_F_BLOCKING in the
-tag flags, then that might be a more viable approach for handling this.
+Update projects URLs in the changes.rst file.
 
--- 
-Jens Axboe
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+Cc: Jonathan Corbet <corbet@lwn.net>
+Cc: linux-doc@vger.kernel.org
+Cc: Jan Kara <jack@suse.com>
+Cc: "Theodore Ts'o" <tytso@mit.edu>
+Cc: Andreas Dilger <adilger.kernel@dilger.ca>
+Cc: linux-ext4@vger.kernel.org
+Cc: Pablo Neira Ayuso <pablo@netfilter.org>
+Cc: Jozsef Kadlecsik <kadlec@netfilter.org>
+Cc: Florian Westphal <fw@strlen.de>
+Cc: netfilter-devel@vger.kernel.org
+Cc: coreteam@netfilter.org
+Cc: Paul Mackerras <paulus@samba.org>
+Cc: linux-ppp@vger.kernel.org
+Cc: Jan Kara <jack@suse.com>
+Cc: reiserfs-devel@vger.kernel.org
+Cc: Darrick J. Wong <darrick.wong@oracle.com>
+Cc: linux-xfs@vger.kernel.org
+---
+
+ Documentation/process/changes.rst                    |   12 ++++++----
+ Documentation/translations/it_IT/process/changes.rst |   12 ++++++----
+ 2 files changed, 16 insertions(+), 8 deletions(-)
+
+diff -Naurp linux-next-20200123/Documentation/translations/it_IT/process/changes.rst%WWW linux-next-20200123/Documentation/translations/it_IT/process/changes.rst
+--- linux-next-20200123/Documentation/translations/it_IT/process/changes.rst%WWW	2019-11-24 16:32:01.000000000 -0800
++++ linux-next-20200123/Documentation/translations/it_IT/process/changes.rst	2020-01-23 10:47:56.226457425 -0800
+@@ -391,6 +391,8 @@ E2fsprogs
+ ---------
+ 
+ - <http://prdownloads.sourceforge.net/e2fsprogs/e2fsprogs-1.29.tar.gz>
++- <https://www.kernel.org/pub/linux/kernel/people/tytso/e2fsprogs/>
++- <https://git.kernel.org/pub/scm/fs/ext2/e2fsprogs.git/>
+ 
+ JFSutils
+ --------
+@@ -400,12 +402,12 @@ JFSutils
+ Reiserfsprogs
+ -------------
+ 
+-- <http://www.kernel.org/pub/linux/utils/fs/reiserfs/>
++- <https://git.kernel.org/pub/scm/linux/kernel/git/jeffm/reiserfsprogs.git/>
+ 
+ Xfsprogs
+ --------
+ 
+-- <ftp://oss.sgi.com/projects/xfs/>
++- <https://git.kernel.org/pub/scm/fs/xfs/xfsprogs-dev.git>
+ 
+ Pcmciautils
+ -----------
+@@ -444,7 +446,9 @@ Rete
+ PPP
+ ---
+ 
+-- <ftp://ftp.samba.org/pub/ppp/>
++- <https://download.samba.org/pub/ppp/>
++- <https://git.ozlabs.org/?p=ppp.git>
++- <https://github.com/paulusmack/ppp/>
+ 
+ 
+ NFS-utils
+@@ -455,7 +459,7 @@ NFS-utils
+ Iptables
+ --------
+ 
+-- <http://www.iptables.org/downloads.html>
++- <https://netfilter.org/projects/iptables/index.html>
+ 
+ Ip-route2
+ ---------
+diff -Naurp linux-next-20200123/Documentation/process/changes.rst%WWW linux-next-20200123/Documentation/process/changes.rst
+--- linux-next-20200123/Documentation/process/changes.rst%WWW	2019-11-24 16:32:01.000000000 -0800
++++ linux-next-20200123/Documentation/process/changes.rst	2020-01-23 10:47:56.226457425 -0800
+@@ -384,6 +384,8 @@ E2fsprogs
+ ---------
+ 
+ - <http://prdownloads.sourceforge.net/e2fsprogs/e2fsprogs-1.29.tar.gz>
++- <https://www.kernel.org/pub/linux/kernel/people/tytso/e2fsprogs/>
++- <https://git.kernel.org/pub/scm/fs/ext2/e2fsprogs.git/>
+ 
+ JFSutils
+ --------
+@@ -393,12 +395,12 @@ JFSutils
+ Reiserfsprogs
+ -------------
+ 
+-- <http://www.kernel.org/pub/linux/utils/fs/reiserfs/>
++- <https://git.kernel.org/pub/scm/linux/kernel/git/jeffm/reiserfsprogs.git/>
+ 
+ Xfsprogs
+ --------
+ 
+-- <ftp://oss.sgi.com/projects/xfs/>
++- <https://git.kernel.org/pub/scm/fs/xfs/xfsprogs-dev.git>
+ 
+ Pcmciautils
+ -----------
+@@ -437,7 +439,9 @@ Networking
+ PPP
+ ---
+ 
+-- <ftp://ftp.samba.org/pub/ppp/>
++- <https://download.samba.org/pub/ppp/>
++- <https://git.ozlabs.org/?p=ppp.git>
++- <https://github.com/paulusmack/ppp/>
+ 
+ NFS-utils
+ ---------
+@@ -447,7 +451,7 @@ NFS-utils
+ Iptables
+ --------
+ 
+-- <http://www.iptables.org/downloads.html>
++- <https://netfilter.org/projects/iptables/index.html>
+ 
+ Ip-route2
+ ---------
+
 
