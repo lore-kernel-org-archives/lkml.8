@@ -2,191 +2,189 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76DF4C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 11:18:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB4D3C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 11:18:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49E3C206D4
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 11:18:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4D5A206D4
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 11:18:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="c1uwStnI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728731AbgAWLSX (ORCPT
+        id S1728904AbgAWLSr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 06:18:23 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:35703 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726026AbgAWLSW (ORCPT
+        Thu, 23 Jan 2020 06:18:47 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:46872 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728760AbgAWLSq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 06:18:22 -0500
-Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=bjornoya.blackshift.org)
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mkl@pengutronix.de>)
-        id 1iuaUt-0002lI-UB; Thu, 23 Jan 2020 12:18:04 +0100
-Received: from [IPv6:2a03:f580:87bc:d400:197e:2d9b:882c:b51d] (unknown [IPv6:2a03:f580:87bc:d400:197e:2d9b:882c:b51d])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits)
-         client-signature RSA-PSS (4096 bits))
-        (Client CN "mkl@blackshift.org", Issuer "StartCom Class 1 Client CA" (not verified))
-        (Authenticated sender: mkl@blackshift.org)
-        by smtp.blackshift.org (Postfix) with ESMTPSA id 897304A8DB2;
-        Thu, 23 Jan 2020 11:17:56 +0000 (UTC)
-Subject: Re: [PATCH 0/3] Add Support for MCAN in AM654x-idk
-To:     Faiz Abbas <faiz_abbas@ti.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, netdev@vger.kernel.org,
-        linux-can@vger.kernel.org
-Cc:     catalin.marinas@arm.com, mark.rutland@arm.com, robh+dt@kernel.org,
-        davem@davemloft.net, wg@grandegger.com, sriram.dash@samsung.com,
-        dmurphy@ti.com, nm@ti.com, t-kristo@ti.com
-References: <20200122080310.24653-1-faiz_abbas@ti.com>
-From:   Marc Kleine-Budde <mkl@pengutronix.de>
-Openpgp: preference=signencrypt
-Autocrypt: addr=mkl@pengutronix.de; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <e3025ab6-04b5-3eba-5e0d-70caabee26fb@pengutronix.de>
-Date:   Thu, 23 Jan 2020 12:17:52 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Thu, 23 Jan 2020 06:18:46 -0500
+Received: by mail-pg1-f193.google.com with SMTP id z124so1207997pgb.13
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jan 2020 03:18:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=14Cy2AtRziplQARjpP+FrR2VzeYvgJNHCuR6KyfvDnc=;
+        b=c1uwStnI3pw+CyVU02GmTzCb6/Sk3dbPOf6YRPUAkeLihhwCTvNjdH7DXdOPgI+33h
+         miBhW0Rx5MNNHmg0hiOxZP7LE++pRraXLcRppWE0jX8+U1defSmSW6nMHCQmU6bXo97D
+         TC9Z88VXbUl+2Hy3YP8YTtQBGbaAjjc8yvQ+h5ylyJGP8AGr5AqsGnCxZ2uoEROZVVVC
+         mdOPtlCXbgmxAqsctTIFapJ1aLuBI1AAngLGPNSKeROfZr7p4PmqVwZWW+WQHnmSS2bW
+         4iOaBiAg058GXdF88KmFm2wphA7hQIa2txufi7moWKbn7TRu8Xv6K13sjjVtkcgFK6Ss
+         O5mQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=14Cy2AtRziplQARjpP+FrR2VzeYvgJNHCuR6KyfvDnc=;
+        b=a4hj5S3TT1s4BCofPrYHyntLzad/wuFQi4CGZUpUqETe7gxsC2ebHi9GO3p7jVJdtT
+         e3z9y+GSwhhk+nXrtlC4wVGBfhqRHFC82iobMvuK0+VTt8sLuXivDd9hrUdjCcmMuMxR
+         BIJNwP2Y7m6JR+S+K4bBSprqkAZ+oKGi0BKIeAy6Coh44Cqi2ZT6T/ifIjmTSDFTBx7A
+         4Jn9OLFCrblV8iE4uLYHHiDHvacJ2W15U7avyN1wx5dqzDQVTQCCvihTDEXUXL1jsNdF
+         tv3MrpzsRSfebr5Hh4BWmH3Q3c6lqpiSRlMUWa/zyRAffRQCh4XaQREtpf++jyPKX0sK
+         BDFg==
+X-Gm-Message-State: APjAAAXipVETsf47dwqss+Dcy9MFIdjOSSElmrAPIBR2WiVBP9bu43xH
+        yY1iVQd40/PKI/24lBpLkuoO
+X-Google-Smtp-Source: APXvYqyqC3eUfkfrQEUKQvNcDTgCszFR5IkBKoptYJBKRY6DV0EUkpI0hVPoIO4AJQtL2ne3pmGomw==
+X-Received: by 2002:a63:213:: with SMTP id 19mr3436961pgc.160.1579778325593;
+        Thu, 23 Jan 2020 03:18:45 -0800 (PST)
+Received: from localhost.localdomain ([103.59.133.81])
+        by smtp.googlemail.com with ESMTPSA id y6sm2627559pgc.10.2020.01.23.03.18.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 23 Jan 2020 03:18:44 -0800 (PST)
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     gregkh@linuxfoundation.org, arnd@arndb.de
+Cc:     smohanad@codeaurora.org, jhugo@codeaurora.org,
+        kvalo@codeaurora.org, bjorn.andersson@linaro.org,
+        hemantk@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: [PATCH 00/16] Add MHI bus support
+Date:   Thu, 23 Jan 2020 16:48:20 +0530
+Message-Id: <20200123111836.7414-1-manivannan.sadhasivam@linaro.org>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-In-Reply-To: <20200122080310.24653-1-faiz_abbas@ti.com>
-Content-Type: multipart/signed; micalg=pgp-sha512;
- protocol="application/pgp-signature";
- boundary="NYPXrD8dZpuBhFWGBbPAmL2QzBA7ljtTf"
-X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
-X-SA-Exim-Mail-From: mkl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---NYPXrD8dZpuBhFWGBbPAmL2QzBA7ljtTf
-Content-Type: multipart/mixed; boundary="QyFCGrPkezEuEBS1nbpXxyDGG5wrx8uVJ";
- protected-headers="v1"
-From: Marc Kleine-Budde <mkl@pengutronix.de>
-To: Faiz Abbas <faiz_abbas@ti.com>, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
- netdev@vger.kernel.org, linux-can@vger.kernel.org
-Cc: catalin.marinas@arm.com, mark.rutland@arm.com, robh+dt@kernel.org,
- davem@davemloft.net, wg@grandegger.com, sriram.dash@samsung.com,
- dmurphy@ti.com, nm@ti.com, t-kristo@ti.com
-Message-ID: <e3025ab6-04b5-3eba-5e0d-70caabee26fb@pengutronix.de>
-Subject: Re: [PATCH 0/3] Add Support for MCAN in AM654x-idk
-References: <20200122080310.24653-1-faiz_abbas@ti.com>
-In-Reply-To: <20200122080310.24653-1-faiz_abbas@ti.com>
+Hello,
 
---QyFCGrPkezEuEBS1nbpXxyDGG5wrx8uVJ
-Content-Type: text/plain; charset=utf-8
-Content-Language: de-DE
-Content-Transfer-Encoding: quoted-printable
+This is the second attempt at adding the MHI (Modem Host Interface) bus
+interface to Linux kernel. MHI is a communication protocol used by the
+host processors to control and communicate with modems over a high
+speed peripheral bus or shared memory. The MHI protocol has been
+designed and developed by Qualcomm Innovation Center, Inc., for use
+in their modems.
 
-On 1/22/20 9:03 AM, Faiz Abbas wrote:
-> This series adds driver patches to support MCAN in TI's AM654x-idk.
->=20
-> Faiz Abbas (3):
->   dt-bindings: net: can: m_can: Add Documentation for stb-gpios
->   can: m_can: m_can_platform: Add support for enabling transceiver
->     through the STB line
->   arm64: defconfig: Add Support for Bosch M_CAN controllers
->=20
->  Documentation/devicetree/bindings/net/can/m_can.txt |  2 ++
->  arch/arm64/configs/defconfig                        |  3 +++
->  drivers/net/can/m_can/m_can_platform.c              | 12 ++++++++++++
->  3 files changed, 17 insertions(+)
+The first submission was made by Sujeev Dias of Qualcomm:
 
-What about adding support for xceiver-supply as done in several other
-drivers (ti_hecc.c, flexcan.c, mcp251x.c)? And using this for the stb lin=
-e?
+https://lkml.org/lkml/2018/4/26/1159
+https://lkml.org/lkml/2018/7/9/987
 
-Marc
+This series addresses most of the review comments by Greg and Arnd for
+the initial patchset. Furthermore, in order to ease the review process
+I've splitted the patches logically and dropped few of them which were
+not required for this initial submission.
 
---=20
-Pengutronix e.K.                 | Marc Kleine-Budde           |
-Embedded Linux                   | https://www.pengutronix.de  |
-Vertretung West/Dortmund         | Phone: +49-231-2826-924     |
-Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-5555 |
+Below is the high level changelog:
 
+1. Removed all DT related code
+2. Got rid of pci specific struct members from top level mhi structs
+3. Moved device specific callbacks like ul_xfer() to driver struct. It
+   doesn’t make sense to have callbacks in device struct as suggested by
+   Greg
+4. Used priv data of `struct device` instead of own priv data in
+   `mhi_device` as suggested by Greg. This will allow us to use
+    dev_set{get}_drvdata() APIs in client drivers
+5. Removed all debugfs related code
+6. Changes to the APIs to look uniform
+7. Converted the documentation to .rst and placed in its own subdirectory
+8. Changes to the MHI device naming
+9. Converted all uppercase variable names to appropriate lowercase ones
+10. Removed custom debug code and used the dev_* ones where applicable
+11. Dropped timesync, DTR, UCI, and Qcom controller related codes
+12. Added QRTR client driver patch
+13. Added modalias support for the MHI stack as well as client driver for
+    autoloading of modules (client drivers) by udev once the MHI devices
+    are created
 
---QyFCGrPkezEuEBS1nbpXxyDGG5wrx8uVJ--
+This series includes the MHI stack as well as the QRTR client driver which
+falls under the networking subsystem.
 
---NYPXrD8dZpuBhFWGBbPAmL2QzBA7ljtTf
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
+Following developers deserve explicit acknowledgements for their
+contributions to the MHI code:
 
------BEGIN PGP SIGNATURE-----
+Sujeev Dias
+Siddartha Mohanadoss
+Hemant Kumar
+Jeff Hugo
 
-iQEzBAEBCgAdFiEEmvEkXzgOfc881GuFWsYho5HknSAFAl4pgOAACgkQWsYho5Hk
-nSC/egf/eNjB8/lL8muUSORGL2cgcDJIY77iCCdmjkPckQ0gG//AAseZ6T8y/rph
-I66pOuysdn2ON8V1N5aeFefGwxF9T9bNvjJe1vsSHqIdLNUmpstuHMKs7jgKQxPE
-ublvNPRh/XtrQ2/ERSFApv55CqA2+9VwSSKAPFKmhrmyUHuZCVlPPWCF06AkuLac
-sZaFffTh0ZCNuq5XoGiZPJWDJ8IjLN//nH/eBrCZpd9omTqC84EUFBW8aV7F2gZa
-quhtzwoufrEFUUAqdkQlFHvTOeiMnHmJhSx0PLetoscDBc7dVoajELf9pUmaAGBt
-/fa70dou1CkvLPpdYxpUUrrzi/3qRw==
-=0YB1
------END PGP SIGNATURE-----
+Thanks,
+Mani
 
---NYPXrD8dZpuBhFWGBbPAmL2QzBA7ljtTf--
+Manivannan Sadhasivam (16):
+  docs: Add documentation for MHI bus
+  bus: mhi: core: Add support for registering MHI controllers
+  bus: mhi: core: Add support for registering MHI client drivers
+  bus: mhi: core: Add support for creating and destroying MHI devices
+  bus: mhi: core: Add support for ringing channel/event ring doorbells
+  bus: mhi: core: Add support for PM state transitions
+  bus: mhi: core: Add support for basic PM operations
+  bus: mhi: core: Add support for downloading firmware over BHIe
+  bus: mhi: core: Add support for downloading RDDM image during panic
+  bus: mhi: core: Add support for processing events from client device
+  bus: mhi: core: Add support for data transfer
+  bus: mhi: core: Add uevent support for module autoloading
+  MAINTAINERS: Add entry for MHI bus
+  net: qrtr: Add MHI transport layer
+  net: qrtr: Do not depend on ARCH_QCOM
+  soc: qcom: Do not depend on ARCH_QCOM for QMI helpers
+
+ Documentation/index.rst           |    1 +
+ Documentation/mhi/index.rst       |   18 +
+ Documentation/mhi/mhi.rst         |  218 ++++
+ Documentation/mhi/topology.rst    |   60 ++
+ MAINTAINERS                       |    9 +
+ drivers/bus/Kconfig               |    1 +
+ drivers/bus/Makefile              |    3 +
+ drivers/bus/mhi/Kconfig           |   14 +
+ drivers/bus/mhi/Makefile          |    2 +
+ drivers/bus/mhi/core/Makefile     |    3 +
+ drivers/bus/mhi/core/boot.c       |  510 ++++++++++
+ drivers/bus/mhi/core/init.c       | 1283 +++++++++++++++++++++++
+ drivers/bus/mhi/core/internal.h   |  703 +++++++++++++
+ drivers/bus/mhi/core/main.c       | 1581 +++++++++++++++++++++++++++++
+ drivers/bus/mhi/core/pm.c         |  974 ++++++++++++++++++
+ drivers/soc/qcom/Kconfig          |    1 -
+ include/linux/mhi.h               |  680 +++++++++++++
+ include/linux/mod_devicetable.h   |   13 +
+ net/qrtr/Kconfig                  |    8 +-
+ net/qrtr/Makefile                 |    2 +
+ net/qrtr/mhi.c                    |  207 ++++
+ scripts/mod/devicetable-offsets.c |    3 +
+ scripts/mod/file2alias.c          |   10 +
+ 23 files changed, 6302 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/mhi/index.rst
+ create mode 100644 Documentation/mhi/mhi.rst
+ create mode 100644 Documentation/mhi/topology.rst
+ create mode 100644 drivers/bus/mhi/Kconfig
+ create mode 100644 drivers/bus/mhi/Makefile
+ create mode 100644 drivers/bus/mhi/core/Makefile
+ create mode 100644 drivers/bus/mhi/core/boot.c
+ create mode 100644 drivers/bus/mhi/core/init.c
+ create mode 100644 drivers/bus/mhi/core/internal.h
+ create mode 100644 drivers/bus/mhi/core/main.c
+ create mode 100644 drivers/bus/mhi/core/pm.c
+ create mode 100644 include/linux/mhi.h
+ create mode 100644 net/qrtr/mhi.c
+
+-- 
+2.17.1
+
