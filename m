@@ -6,30 +6,30 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A027C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 20:41:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25DF6C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 20:41:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CEE9A246B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 20:41:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E826A246B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 20:41:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729133AbgAWUlm (ORCPT
+        id S1729861AbgAWUls (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 15:41:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45840 "EHLO mail.kernel.org"
+        Thu, 23 Jan 2020 15:41:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45678 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729232AbgAWUjo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729012AbgAWUjo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 23 Jan 2020 15:39:44 -0500
 Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5C33E24673;
-        Thu, 23 Jan 2020 20:39:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A42B421D7D;
+        Thu, 23 Jan 2020 20:39:43 +0000 (UTC)
 Received: from rostedt by gandalf.local.home with local (Exim 4.93)
         (envelope-from <rostedt@goodmis.org>)
-        id 1iujGR-000mWv-9l; Thu, 23 Jan 2020 15:39:43 -0500
-Message-Id: <20200123203943.183615371@goodmis.org>
+        id 1iujGQ-000mUV-Io; Thu, 23 Jan 2020 15:39:42 -0500
+Message-Id: <20200123203942.460742840@goodmis.org>
 User-Agent: quilt/0.65
-Date:   Thu, 23 Jan 2020 15:39:36 -0500
+Date:   Thu, 23 Jan 2020 15:39:31 -0500
 From:   Steven Rostedt <rostedt@goodmis.org>
 To:     linux-kernel@vger.kernel.org,
         linux-rt-users <linux-rt-users@vger.kernel.org>
@@ -40,9 +40,11 @@ Cc:     Thomas Gleixner <tglx@linutronix.de>,
         Julia Cartwright <julia@ni.com>,
         Daniel Wagner <wagi@monom.org>,
         Tom Zanussi <zanussi@kernel.org>,
-        Marc Zyngier <maz@kernel.org>,
-        Julien Grall <julien.grall@arm.com>
-Subject: [PATCH RT 06/30] KVM: arm/arm64: Let the timer expire in hardirq context on RT
+        Benjamin Rouxel <benjamin.rouxel@uva.nl>,
+        Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        linux-samsung-soc@vger.kernel.org
+Subject: [PATCH RT 01/30] i2c: exynos5: Remove IRQF_ONESHOT
 References: <20200123203930.646725253@goodmis.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-15
@@ -56,52 +58,47 @@ If anyone has any objections, please let me know.
 
 ------------------
 
-From: Thomas Gleixner <tglx@linutronix.de>
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 
-[ Upstream commit 719cc080c914045a6e35787bf4dc3ba91cfd3efb ]
+[ Upstream commit 4b217df0ab3f7910c96e42091cc7d9f221d05f01 ]
 
-The timers are canceled from an preempt-notifier which is invoked with
-disabled preemption which is not allowed on PREEMPT_RT.
-The timer callback is short so in could be invoked in hard-IRQ context
-on -RT.
+The drivers sets IRQF_ONESHOT and passes only a primary handler. The IRQ
+is masked while the primary is handler is invoked independently of
+IRQF_ONESHOT.
+With IRQF_ONESHOT the core code will not force-thread the interrupt and
+this is probably not intended. I *assume* that the original author copied
+the IRQ registration from another driver which passed a primary and
+secondary handler and removed the secondary handler but keeping the
+ONESHOT flag.
 
-Let the timer expire on hard-IRQ context even on -RT.
+Remove IRQF_ONESHOT.
 
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Acked-by: Marc Zyngier <maz@kernel.org>
-Tested-by: Julien Grall <julien.grall@arm.com>
+Reported-by: Benjamin Rouxel <benjamin.rouxel@uva.nl>
+Tested-by: Benjamin Rouxel <benjamin.rouxel@uva.nl>
+Cc: Kukjin Kim <kgene@kernel.org>
+Cc: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: linux-samsung-soc@vger.kernel.org
 Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 ---
- virt/kvm/arm/arch_timer.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/i2c/busses/i2c-exynos5.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/virt/kvm/arm/arch_timer.c b/virt/kvm/arm/arch_timer.c
-index 17cecc96f735..217d39f40393 100644
---- a/virt/kvm/arm/arch_timer.c
-+++ b/virt/kvm/arm/arch_timer.c
-@@ -67,7 +67,7 @@ static inline bool userspace_irqchip(struct kvm *kvm)
- static void soft_timer_start(struct hrtimer *hrt, u64 ns)
- {
- 	hrtimer_start(hrt, ktime_add_ns(ktime_get(), ns),
--		      HRTIMER_MODE_ABS);
-+		      HRTIMER_MODE_ABS_HARD);
- }
+diff --git a/drivers/i2c/busses/i2c-exynos5.c b/drivers/i2c/busses/i2c-exynos5.c
+index c1ce2299a76e..5c57ecf4b79e 100644
+--- a/drivers/i2c/busses/i2c-exynos5.c
++++ b/drivers/i2c/busses/i2c-exynos5.c
+@@ -800,9 +800,7 @@ static int exynos5_i2c_probe(struct platform_device *pdev)
+ 	}
  
- static void soft_timer_cancel(struct hrtimer *hrt, struct work_struct *work)
-@@ -638,10 +638,10 @@ void kvm_timer_vcpu_init(struct kvm_vcpu *vcpu)
- 	vcpu_ptimer(vcpu)->cntvoff = 0;
- 
- 	INIT_WORK(&timer->expired, kvm_timer_inject_irq_work);
--	hrtimer_init(&timer->bg_timer, CLOCK_MONOTONIC, HRTIMER_MODE_ABS);
-+	hrtimer_init(&timer->bg_timer, CLOCK_MONOTONIC, HRTIMER_MODE_ABS_HARD);
- 	timer->bg_timer.function = kvm_bg_timer_expire;
- 
--	hrtimer_init(&timer->phys_timer, CLOCK_MONOTONIC, HRTIMER_MODE_ABS);
-+	hrtimer_init(&timer->phys_timer, CLOCK_MONOTONIC, HRTIMER_MODE_ABS_HARD);
- 	timer->phys_timer.function = kvm_phys_timer_expire;
- 
- 	vtimer->irq.irq = default_vtimer_irq.irq;
+ 	ret = devm_request_irq(&pdev->dev, i2c->irq, exynos5_i2c_irq,
+-				IRQF_NO_SUSPEND | IRQF_ONESHOT,
+-				dev_name(&pdev->dev), i2c);
+-
++			       IRQF_NO_SUSPEND, dev_name(&pdev->dev), i2c);
+ 	if (ret != 0) {
+ 		dev_err(&pdev->dev, "cannot request HS-I2C IRQ %d\n", i2c->irq);
+ 		goto err_clk;
 -- 
 2.24.1
 
