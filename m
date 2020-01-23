@@ -2,114 +2,137 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2B9DC33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 09:45:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EA92C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 09:45:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7BA722522
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 09:45:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579772712;
-	bh=8Eo6lfID/VSidXUVOi2AIgllUkREaCWWm1hsqGNvKLI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=cQ1dZ5kRO+KBMYG0o6PJWTMrz5f0R3iwAxEY5LWLH9N464TEQwc4huxT4w2VNHwBQ
-	 UspHyLkY0a7DOLxDZvrhuGKcXw6hh9/G428cLq7Q0k6s9nfj/UR2Ui6/ZwCaf3MBPe
-	 J3PPZS/hIx+OMqmeed41uqqseqKhtCRvgiI8JUNQ=
+	by mail.kernel.org (Postfix) with ESMTP id 6439A217F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 09:45:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="X8hXKyjT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726871AbgAWJpL (ORCPT
+        id S1727480AbgAWJpV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 04:45:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47308 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726103AbgAWJpL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 04:45:11 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6A919217F4;
-        Thu, 23 Jan 2020 09:45:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579772710;
-        bh=8Eo6lfID/VSidXUVOi2AIgllUkREaCWWm1hsqGNvKLI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=07WJ47GO8dhv2DrGCC4yCTW6bbFFamSwyxc73Qq5v3PyJr3svbMM4joy2pXvYwey2
-         g+BXFlYc7XRV0Cs83l1lNdtFeXzkwZyaAxk7ZBy74kWmTbZDVMkUkAWhHuYvHGg4bL
-         iDm0NCMHir24M9qMonW+WqpsJlOaYGCbuuuIjOEI=
-Date:   Thu, 23 Jan 2020 10:45:08 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Chris Wilson <chris@chris-wilson.co.uk>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        torvalds@linux-foundation.org, lwn@lwn.net,
-        Jiri Slaby <jslaby@suse.cz>
-Subject: Re: Linux 4.19.98
-Message-ID: <20200123094508.GA661791@kroah.com>
-References: <20200123084632.GA435419@kroah.com>
- <157976968555.18920.13404367012873725550@skylake-alporthouse-com>
- <20200123092832.GA586919@kroah.com>
- <157977223818.18920.13596879587159565742@skylake-alporthouse-com>
+        Thu, 23 Jan 2020 04:45:21 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:27436 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726885AbgAWJpU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jan 2020 04:45:20 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579772719;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=MzX6+vB1Xsw4thPSPKllXzkIMMw9yMJ4EsBg/hWVsio=;
+        b=X8hXKyjTGFLdB1iJnyxrPFusY5mrxMi4MITekeLD3qPVEHXx1k5zVJyN/rs12eZB1+0Up+
+        m3JD20SOjXCQAx/mbHuUWXGK6QeRdu6KzFyBcycZPJMWHYMpNU/n0/8Gqg+Bn2j7VCitI+
+        /M9h4voDSe/k9T/lYyeTiz8m79804HE=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-85-1H301O7MOj25qqFp8h-iTg-1; Thu, 23 Jan 2020 04:45:16 -0500
+X-MC-Unique: 1H301O7MOj25qqFp8h-iTg-1
+Received: by mail-wr1-f71.google.com with SMTP id j4so1455161wrs.13
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jan 2020 01:45:16 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=MzX6+vB1Xsw4thPSPKllXzkIMMw9yMJ4EsBg/hWVsio=;
+        b=Ei+FZwipoVAl7V5pZblp9FYDUuh3Rs+yhZA7ZY5IubAloAUAYKVwJeMG0P2fDgn19G
+         zMdCZLs3tC/cipDAVwIdqhkVeb/2iua8iSOUIN1bH0novaWcbx7Sr0wKqLbSSkQTJjtl
+         XotM6IK7kCI556vEAs/Ly+2yiMhcfnS9TT3l0nbAVMeObOkGdVYmSdgASfvzrO5OiOP9
+         Ti6uK4W0vDrmmOmKwVMNpgyXLdpijyAuphlC5YgQSbuqdsPIgAXwP7YYTcMTbdthP13d
+         NAWXn+NWtbsXNhsesnM5KageAW58tlyYsUgyvaTH2dWX6b4pV1OvCmXc1FJfxXWrDYLK
+         uVzA==
+X-Gm-Message-State: APjAAAXNYTwkFGAQeUDQaHJv5roAEXABEIINikvnBx7HhcfQECY2OHYN
+        pOTvmWvdCEuAKX9IrBrCI1xSnHiM6pIqqQoAc3yFr097V6aSeydx9kMOkpIXttEi2uMUfLJ2O5s
+        hWl4nceK9YowmGa4BfwvPlq0E
+X-Received: by 2002:a1c:4144:: with SMTP id o65mr3109661wma.81.1579772715480;
+        Thu, 23 Jan 2020 01:45:15 -0800 (PST)
+X-Google-Smtp-Source: APXvYqxAIX93bsgTcrSBiFj30of2pgg0VpgNuw/XwpFAIlGghwGu9wEyJwZ0l8Ywl/vNLBijmNtpdQ==
+X-Received: by 2002:a1c:4144:: with SMTP id o65mr3109641wma.81.1579772715295;
+        Thu, 23 Jan 2020 01:45:15 -0800 (PST)
+Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
+        by smtp.gmail.com with ESMTPSA id o15sm2251300wra.83.2020.01.23.01.45.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 23 Jan 2020 01:45:14 -0800 (PST)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>,
+        linmiaohe <linmiaohe@huawei.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org, x86@kernel.org,
+        rkrcmar@redhat.com, sean.j.christopherson@intel.com,
+        wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com
+Subject: Re: [PATCH] KVM: nVMX: set rflags to specify success in handle_invvpid() default case
+In-Reply-To: <1a083ac8-3b01-fd2d-d867-2b3956cdef6d@redhat.com>
+References: <1579749241-712-1-git-send-email-linmiaohe@huawei.com> <8736c6sga7.fsf@vitty.brq.redhat.com> <1a083ac8-3b01-fd2d-d867-2b3956cdef6d@redhat.com>
+Date:   Thu, 23 Jan 2020 10:45:13 +0100
+Message-ID: <87wo9iqzfa.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <157977223818.18920.13596879587159565742@skylake-alporthouse-com>
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 23, 2020 at 09:37:18AM +0000, Chris Wilson wrote:
-> Quoting Greg KH (2020-01-23 09:28:32)
-> > On Thu, Jan 23, 2020 at 08:54:45AM +0000, Chris Wilson wrote:
-> > > Quoting Greg KH (2020-01-23 08:46:32)
-> > > > I'm announcing the release of the 4.19.98 kernel.
-> > > 
-> > > commit 3e6b472f474accf757e107919f8ee42e7315ac0d
-> > > Author: Waiman Long <longman@redhat.com>
-> > > Date:   Wed Nov 14 09:55:40 2018 -0800
-> > > 
-> > >     efi: Fix debugobjects warning on 'efi_rts_work'
-> > > 
-> > >     [ Upstream commit ef1491e791308317bb9851a0ad380c4a68b58d54 ]
-> > > 
-> > >     The following commit:
-> > > 
-> > >       9dbbedaa6171 ("efi: Make efi_rts_work accessible to efi page fault handler")
-> > > 
-> > >     converted 'efi_rts_work' from an auto variable to a global variable.
-> > >     However, when submitting the work, INIT_WORK_ONSTACK() was still used,
-> > >     causing the following complaint from debugobjects:
-> > > 
-> > >       ODEBUG: object 00000000ed27b500 is NOT on stack 00000000c7d38760, but annotated.
-> > > 
-> > >     Change the macro to just INIT_WORK() to eliminate the warning.
-> > > 
-> > >     Signed-off-by: Waiman Long <longman@redhat.com>
-> > >     Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-> > >     Acked-by: Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>
-> > >     Cc: Linus Torvalds <torvalds@linux-foundation.org>
-> > >     Cc: Peter Zijlstra <peterz@infradead.org>
-> > >     Cc: Thomas Gleixner <tglx@linutronix.de>
-> > >     Cc: linux-efi@vger.kernel.org
-> > >     Fixes: 9dbbedaa6171 ("efi: Make efi_rts_work accessible to efi page fault handler")
-> > >     Link: http://lkml.kernel.org/r/20181114175544.12860-2-ard.biesheuvel@linaro.org
-> > >     Signed-off-by: Ingo Molnar <mingo@kernel.org>
-> > >     Signed-off-by: Sasha Levin <sashal@kernel.org>
-> > > 
-> > > was incorrectly applied to v4.19.41 and causes lockdep complaints for
-> > > the onstack efi_rts_work being initialised by INIT_WORK().
-> > 
-> > Incorrectly how?  Fuzz off, or it shouldn't be applied at all?  Should
-> > this be reverted, or just fixed up, and if fixed up, do you have a patch
-> > to fix it?
-> 
-> Just reverted. It applies to 9dbbedaa6171 which moved the efi_rts_work
-> off the stack, but is not in v4.19.y, so efi_rts_work is still a local
-> and needs the INIT_WORK_ONSTACK annotation.
+Paolo Bonzini <pbonzini@redhat.com> writes:
 
-Ok, thanks, will go revert this and push out a new release with that
-fix, thanks for letting me know.
+> On 23/01/20 09:55, Vitaly Kuznetsov wrote:
+>>> diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
+>>> index 7608924ee8c1..985d3307ec56 100644
+>>> --- a/arch/x86/kvm/vmx/nested.c
+>>> +++ b/arch/x86/kvm/vmx/nested.c
+>>> @@ -5165,7 +5165,7 @@ static int handle_invvpid(struct kvm_vcpu *vcpu)
+>>>  		break;
+>>>  	default:
+>>>  		WARN_ON_ONCE(1);
+>>> -		return kvm_skip_emulated_instruction(vcpu);
+>>> +		break;
+>>>  	}
+>>>  
+>>>  	return nested_vmx_succeed(vcpu);
+>> Your patch seems to do the right thing, however, I started wondering if
+>> WARN_ON_ONCE() is the right thing to do. SDM says that "If an
+>> unsupported INVVPID type is specified, the instruction fails." and this
+>> is similar to INVEPT and I decided to check what handle_invept()
+>> does. Well, it does BUG_ON(). 
+>> 
+>> Are we doing the right thing in any of these cases?
+>
+> Yes, both INVEPT and INVVPID catch this earlier.
+>
+> For INVEPT:
+>
+>         types = (vmx->nested.msrs.ept_caps >> VMX_EPT_EXTENT_SHIFT) & 6;
+>
+>         if (type >= 32 || !(types & (1 << type)))
+>                 return nested_vmx_failValid(vcpu,
+>                                 VMXERR_INVALID_OPERAND_TO_INVEPT_INVVPID);
+>
+>
+>
+> For INVVPID:
+>
+>         types = (vmx->nested.msrs.vpid_caps &
+>                         VMX_VPID_EXTENT_SUPPORTED_MASK) >> 8;
+>
+>         if (type >= 32 || !(types & (1 << type)))
+>                 return nested_vmx_failValid(vcpu,
+>                         VMXERR_INVALID_OPERAND_TO_INVEPT_INVVPID);
+>
 
-greg k-h
+Ah, true, thanks for checking!
+
+> So I'm leaning towards not applying Miaohe's patch.
+
+Well, we may at least want to converge on BUG_ON() for both
+handle_invvpid()/handle_invept(), there's no need for them to differ.
+
+-- 
+Vitaly
+
