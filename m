@@ -4,28 +4,28 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74FB5C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 14:03:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F7EBC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 14:03:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D16721835
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 14:03:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B0FE217F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 14:03:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="K2hyK9oR"
+	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="HVyMTIGb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729190AbgAWODW (ORCPT
+        id S1729224AbgAWODZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 09:03:22 -0500
-Received: from esa1.microchip.iphmx.com ([68.232.147.91]:43284 "EHLO
-        esa1.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729012AbgAWODV (ORCPT
+        Thu, 23 Jan 2020 09:03:25 -0500
+Received: from esa2.microchip.iphmx.com ([68.232.149.84]:5788 "EHLO
+        esa2.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729186AbgAWODW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 09:03:21 -0500
-Received-SPF: Pass (esa1.microchip.iphmx.com: domain of
+        Thu, 23 Jan 2020 09:03:22 -0500
+Received-SPF: Pass (esa2.microchip.iphmx.com: domain of
   Tudor.Ambarus@microchip.com designates 198.175.253.82 as
   permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa1.microchip.iphmx.com;
+  client-ip=198.175.253.82; receiver=esa2.microchip.iphmx.com;
   envelope-from="Tudor.Ambarus@microchip.com";
   x-sender="Tudor.Ambarus@microchip.com";
   x-conformance=spf_only; x-record-type="v=spf1";
@@ -33,38 +33,38 @@ Received-SPF: Pass (esa1.microchip.iphmx.com: domain of
   a:smtpout.microchip.com -exists:%{i}.spf.microchip.iphmx.com
   include:servers.mcsv.net include:mktomail.com
   include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa1.microchip.iphmx.com: no sender
+Received-SPF: None (esa2.microchip.iphmx.com: no sender
   authenticity information available from domain of
   postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa1.microchip.iphmx.com;
+  client-ip=198.175.253.82; receiver=esa2.microchip.iphmx.com;
   envelope-from="Tudor.Ambarus@microchip.com";
   x-sender="postmaster@email.microchip.com";
   x-conformance=spf_only
-Authentication-Results: esa1.microchip.iphmx.com; spf=Pass smtp.mailfrom=Tudor.Ambarus@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dkim=pass (signature verified) header.i=@microchiptechnology.onmicrosoft.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: eVFpOUDn0nTfUWgpsYNbPwNLOqDGwOYXwD49py+WaGWaaFg9ovtl6MTND34A1laS3ZTaO9pWFK
- tgDxG1/G/mS/ldGxeNmskV539ELkBPe0zF+GINlc7jVwavtsqH8K3Ki+qu6hlDGCkqGp0xrlkc
- lRZW80wvRicLlLyZuyca0jnQgO76KfnoKxmeuktnwl1T6pNpztONZC0pI8hZcJN9+26w+WxPKC
- XjST2mBLWcf25C4uUv5NCTNJFu20dSJLOUADA9YuKQQ0HB+SkPElf/x2nV7yss2fkcquXdr8K1
- GGA=
+Authentication-Results: esa2.microchip.iphmx.com; spf=Pass smtp.mailfrom=Tudor.Ambarus@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dkim=pass (signature verified) header.i=@microchiptechnology.onmicrosoft.com; dmarc=pass (p=none dis=none) d=microchip.com
+IronPort-SDR: 9j5hEO8eZ6hegDfNsTyRb5MgWQ85ZgMsX2okKLyjkxlapSKVYB4xQDvUhxgExtoWOq9vpY/Ppt
+ i3UzyKtGdYZCjCcjYezGS03M0LWN606jluqK2EnyAtBKgeqJe3NKSXZkAizutpVCrgZ9XA9Fno
+ Vcgcs6w645oVInYqupW7r/AD161zccO5YC/01vEg4CRnm9BYIEP8NwH3RfsGmjuFw4qOWVf+RR
+ Tui4VurjN2BDzzelJOX+cAVvbKWC6mbWJQXe7r071W/r3mmpRdlkP5GR2/5RkIh6El5RqHnar+
+ vZU=
 X-IronPort-AV: E=Sophos;i="5.70,354,1574146800"; 
-   d="scan'208";a="65735579"
+   d="scan'208";a="63527841"
 Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 23 Jan 2020 07:03:19 -0700
+  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 23 Jan 2020 07:03:21 -0700
 Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Thu, 23 Jan 2020 07:03:16 -0700
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (10.10.215.89) by
+ 15.1.1713.5; Thu, 23 Jan 2020 07:03:10 -0700
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (10.10.215.89) by
  email.microchip.com (10.10.87.151) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
- via Frontend Transport; Thu, 23 Jan 2020 07:03:16 -0700
+ via Frontend Transport; Thu, 23 Jan 2020 07:03:11 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=EQT6bvxm06gAAB6hEbCCa4c9oDPbhrvxN0mWnjOT46SaMdf7XutmK96Lph1knUqPuH+Q6wW5UuLImqkrS0MGyU1BaM40ayvMsp2DFoRp+VuH1jP8/uAPpV6yN347Eb3YcMBHTiY+nLN7ExEMOIuRLS+bVp4L3llwFe/Y0lsu8+G7NqKSriMhkxBe2rDhxwSiKPyBa2F1BpS8gI7QiEOgCHMSQzBEypQ+LaTER0FrCrFgC/BgB/uUwtsXKjtb4CZLnYFu0DDBNM7bR3nETMwY6RC5spOXDs6nXRGkGluwZjm5AyODzqDHLUWAUIf+WM3z8fhhAyiXJvpMrr8RlXUCyA==
+ b=moLiCqvTQPgVBi83y2bCFfVBVL7N9Heb9N7eQaLQo6VF7uPcGbizurvpu6xWU3mv0hc0jUCwYnrTOIcoH07Puw5tzOoiWRtnCvSJadZ7DpAhe6CdGuQDSoIPSCWnR5M1ydXCd7hcNNMIu0AS6NvWS7YNLCG8HzdDGjykEODkOdLTN1fObF88y971sMf9ovgvHJt/E0VOJRiPrfCyoEkWk5uMqmOWM8jARdvvuBn7iDecMLN67MaB1xtmemeI6w41E4TtTy/z+5Lm57x2dayTMktwj8m5SghSYbl1MoxHKUUvVJ3rWgZjTunyf1AGhNst/VlLey7CMYvkj+y9KtM5yQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=H8WJ40JAHNtvXacElpVMs4YRQfvkF3MRNJBTvWkM2N8=;
- b=UQpJQBd0UVZu3LWTirdfV/rwpwvzxoGidI0YuGi1zGYucpDTo5cRhppPc2oEaQY+tn9xgbX1+oo7bURt8Y1CL08wOxvwaAQJJGK/DbW1TwQl/rNSdb8AOBaIzbGdT21qJbyAMCQJTzgUmJ/ccFV0c+5w8RPtHJI201LaRLH2cREADz7fH8g5f4S+A8QqGYyQSrRghC1MFC0pzZILHsFfCVOPhZR4ZAkbpViI41N5zBwz7+Ug/+YrxW5qiXNPTXMu/6ubzHO10mxUedltGhNhgdMSQtWIXjdKz7qH74UrJ236GU3Fqrn45ZCV62A1Q/FESZfxht9Yq6j68F5/TGMDJQ==
+ bh=xH9EbT/FPyK7w4KJ1mOp0JOUUtYPDR0qGvxVTMYivp4=;
+ b=mVf0iN6SIMA/3Yxd37r2xCsIARdxnUJgHKsMgdFDrJfr/T7UBwroEVXj2RKh6Pk6S7DoJLK3bcXn2mJMzXC7DJqjYZxnG2jT3ezFgvpWwEBOvJdj0QTTyQCKx59xIJlb8Tlx8f6AfBDW7NMYa7riqCTyshAq1c9KIbwuUsuI2+Eu3iZGl+Pu+64b5vb9KQSBvi29hYEsgkeGMZrya0fIx60vpwMnZoojdZgkfIBQGzhPBTsEXrqLIoJ1D6GVFZezk5OnP/E2qLvwABA9P2xT+Fho+voYouXIEA3l/u04H2mnf1+yKRsaUpn0Q64Upf7a9feM2cEe/F3RURBRdOyDRQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=microchip.com; dmarc=pass action=none
  header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
@@ -72,28 +72,28 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=microchiptechnology.onmicrosoft.com;
  s=selector2-microchiptechnology-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=H8WJ40JAHNtvXacElpVMs4YRQfvkF3MRNJBTvWkM2N8=;
- b=K2hyK9oRey+l/anRvpdhb8Hgab8ICTzV9oexvNCW6N+XT7CW+gJKX6uStxoIYVpfHcfDOkHNXEtNqcP5Xn4KVs9Nn3FDQ0bl56+m7NeGCE4ClX2hXDlE2X11omvYwyiWeGfnYSK77ZYT3OTDEyGQYb33ehfbBkoaKkjtMu1Fo+U=
+ bh=xH9EbT/FPyK7w4KJ1mOp0JOUUtYPDR0qGvxVTMYivp4=;
+ b=HVyMTIGbhf9xVpZOd5ShaJz7JuP9/1N7Lvm6X2ScHKV93FnuLv1Uk/w5fLg+3VT/Tih1iWePDnQUC1VDkJf93JZnQhd3IS5+yqeJwZmNLdVRwDTBRbRVPrNJakT5uBydpP4Z7oVRix4cBEZLpmJzWpKrq501eahrKsyIQLH4DJ8=
 Received: from MN2PR11MB4448.namprd11.prod.outlook.com (52.135.39.157) by
- MN2PR11MB3582.namprd11.prod.outlook.com (20.178.251.28) with Microsoft SMTP
+ MN2PR11MB4190.namprd11.prod.outlook.com (20.179.151.223) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2644.20; Thu, 23 Jan 2020 14:03:14 +0000
+ 15.20.2644.20; Thu, 23 Jan 2020 14:03:09 +0000
 Received: from MN2PR11MB4448.namprd11.prod.outlook.com
  ([fe80::3c8f:7a55:cbd:adfb]) by MN2PR11MB4448.namprd11.prod.outlook.com
  ([fe80::3c8f:7a55:cbd:adfb%5]) with mapi id 15.20.2644.027; Thu, 23 Jan 2020
- 14:03:14 +0000
+ 14:03:09 +0000
 From:   <Tudor.Ambarus@microchip.com>
 To:     <Ludovic.Desroches@microchip.com>, <dan.j.williams@intel.com>,
         <vkoul@kernel.org>
 CC:     <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <Tudor.Ambarus@microchip.com>
-Subject: [PATCH 08/10] dmaengine: at_xdmac: Drop locking in
- at_xdmac_alloc_chan_resources()
-Thread-Topic: [PATCH 08/10] dmaengine: at_xdmac: Drop locking in
- at_xdmac_alloc_chan_resources()
-Thread-Index: AQHV0fXaZQjnejE0TEqc5jyVns2qLw==
-Date:   Thu, 23 Jan 2020 14:03:14 +0000
-Message-ID: <20200123140237.125799-8-tudor.ambarus@microchip.com>
+Subject: [PATCH 05/10] dmaengine: at_hdmac: Switch atomic allocations to
+ GFP_NOWAIT
+Thread-Topic: [PATCH 05/10] dmaengine: at_hdmac: Switch atomic allocations to
+ GFP_NOWAIT
+Thread-Index: AQHV0fXXs9r8bOU5kkSU4QX5BgPxKw==
+Date:   Thu, 23 Jan 2020 14:03:09 +0000
+Message-ID: <20200123140237.125799-5-tudor.ambarus@microchip.com>
 References: <20200123140237.125799-1-tudor.ambarus@microchip.com>
 In-Reply-To: <20200123140237.125799-1-tudor.ambarus@microchip.com>
 Accept-Language: en-US
@@ -102,29 +102,29 @@ X-MS-Has-Attach:
 X-MS-TNEF-Correlator: 
 x-originating-ip: [94.177.32.156]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: cc2f02dc-eb3b-451c-6129-08d7a00cfd36
-x-ms-traffictypediagnostic: MN2PR11MB3582:
+x-ms-office365-filtering-correlation-id: 12b16a5c-0d3b-4174-a4a0-08d7a00cfa4e
+x-ms-traffictypediagnostic: MN2PR11MB4190:
 x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MN2PR11MB3582AD3E8656222F68DD02AFF00F0@MN2PR11MB3582.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6108;
+x-microsoft-antispam-prvs: <MN2PR11MB419050B9FA25A502713147D1F00F0@MN2PR11MB4190.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:1303;
 x-forefront-prvs: 029174C036
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(346002)(396003)(366004)(39860400002)(136003)(189003)(199004)(2616005)(6486002)(316002)(26005)(36756003)(4326008)(81156014)(186003)(54906003)(110136005)(81166006)(6512007)(5660300002)(478600001)(8676002)(66946007)(64756008)(66476007)(76116006)(91956017)(66446008)(66556008)(1076003)(2906002)(6506007)(107886003)(8936002)(71200400001)(86362001);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR11MB3582;H:MN2PR11MB4448.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39860400002)(376002)(136003)(346002)(396003)(366004)(199004)(189003)(1076003)(76116006)(91956017)(66446008)(64756008)(66476007)(66946007)(66556008)(6506007)(86362001)(107886003)(2906002)(71200400001)(8936002)(4326008)(26005)(54906003)(36756003)(316002)(2616005)(6486002)(110136005)(81156014)(5660300002)(8676002)(6512007)(186003)(478600001)(81166006);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR11MB4190;H:MN2PR11MB4448.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
 received-spf: None (protection.outlook.com: microchip.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: a8hyQjmdffQa3XJKJwR1xh0D9rh5fXcKQl+z7Is56whoEJrT2yIRowH6IKMzECv+heUHJrs/LiHsIsdyf4hB3RmdVJHwyHgnP//AManWpC80pprEmicM1AjrkCEc3ozKoomH7zi7jPRIzdLwy56QOu/oUnmkC4ZqKTz963r4Tse3wVqA7tf8HdSKOGiC/CHckTrMWkiszHGK1sDJLESepGOrutSjUusO1Vb7OYTnLtOTNNNyb8FsA4H+dNqpU236haaeZEl9OaMpgb0qufn7kxgoHL0vIq3WfunDEXCU5h+laNeV9JLuEbZLCkULSdhbpkFojhgv4dQki+TWkxATrJtkb4f/Tp/FknuryKOSnmMA0UvW/aHmJq3OrogQ/3kADwNF/9xxETiKf3hxv46pdsZMpPZ4HxKRZlCNhdTp6k6VWn/IhUzfmKkFUkFpfAni
+x-microsoft-antispam-message-info: rCq6MOCIuE/D00QcDaXfJzSU1MGCbEmmrUq+46izB74OstI3LfSxKKCIR4l6jlH6aqdOZpNs25tDrKPJdC00SGudEIMAw6tVPJ6abh8piVe4FJPdzMI9wmtiVZiTqkQ3tPUi7nnasZmUuTsfLeVnTHH2QPv5L2i4HHGgv5PTLUeDAH/iPNSmXNPSCx82uUoJWQf589CAjisFm+SN/qWSGi+JJ+VFSYb6O5D5j1zalJ1EwhUCdLM/gD14E/+yKEIWXQ2dbQHWXpB3X30wP78mPhXWO2Cls5EKeiU36M27+f5y/UekJxzybE490SZYageWsCiNSHMy7sGPPEel7ZZVAEoRmIxmK6wPYjehc9qDfSu2GPShZLm6YRzFcEecnY8ICNCxVecy4uvqice6by9Q7ubyDcmYmIThgmmz5jL8s971i4otPbpD4Dr8C8gq0c1V
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: cc2f02dc-eb3b-451c-6129-08d7a00cfd36
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Jan 2020 14:03:14.2476
+X-MS-Exchange-CrossTenant-Network-Message-Id: 12b16a5c-0d3b-4174-a4a0-08d7a00cfa4e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Jan 2020 14:03:09.4814
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: YQKB7eLXAX2Sg+A5rRHJhTF2jQeD1VEPPJAFpCPuPBwPQPGVJ2Sw+S2NjBZ8+wjcZp0rxV2EDj9Hs9sZ30hv2Cts0Z8KhzqXm7ZMH4DUErQ=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR11MB3582
+X-MS-Exchange-CrossTenant-userprincipalname: iUTDd8l7Bgrr0uNhG5ywGxw64PjmomMIiGXsqzrSuQO0g3QWqGkmpNg5BMiYnOmLUhme/EymRVBtxcdTtHFUAfh9tkbKCE5P0gkr4njnzuc=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR11MB4190
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -132,55 +132,49 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Tudor Ambarus <tudor.ambarus@microchip.com>
 
-There is no need for locking in device_alloc_chan_resources(),
-the DMA core takes care of it by using a dma_list_mutex around
-the DMA devices.
+Avoids sleeping without depleting the emergency pool.
+The rationale being that in most cases a dma device is either
+offloading an operation that will automatically fallback to
+software when the descriptor allocation fails, or we can simply poll
+and wait for the dma device to release some in use descriptors.
 
 Signed-off-by: Tudor Ambarus <tudor.ambarus@microchip.com>
 ---
- drivers/dma/at_xdmac.c | 11 ++---------
- 1 file changed, 2 insertions(+), 9 deletions(-)
+ drivers/dma/at_hdmac.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/dma/at_xdmac.c b/drivers/dma/at_xdmac.c
-index 3d6e84def7a6..8fb01bc90ba7 100644
---- a/drivers/dma/at_xdmac.c
-+++ b/drivers/dma/at_xdmac.c
-@@ -1820,22 +1820,17 @@ static int at_xdmac_alloc_chan_resources(struct dma=
-_chan *chan)
- 	struct at_xdmac_chan	*atchan =3D to_at_xdmac_chan(chan);
- 	struct at_xdmac_desc	*desc;
- 	int			i;
--	unsigned long		flags;
--
--	spin_lock_irqsave(&atchan->lock, flags);
+diff --git a/drivers/dma/at_hdmac.c b/drivers/dma/at_hdmac.c
+index 44d998bc894b..8e8e04bd1b28 100644
+--- a/drivers/dma/at_hdmac.c
++++ b/drivers/dma/at_hdmac.c
+@@ -147,7 +147,7 @@ static struct at_desc *atc_desc_get(struct at_dma_chan =
+*atchan)
 =20
- 	if (at_xdmac_chan_is_enabled(atchan)) {
- 		dev_err(chan2dev(chan),
- 			"can't allocate channel resources (channel enabled)\n");
--		i =3D -EIO;
--		goto spin_unlock;
-+		return -EIO;
- 	}
+ 	/* no more descriptor available in initial pool: create one more */
+ 	if (!ret)
+-		ret =3D atc_alloc_descriptor(&atchan->chan_common, GFP_ATOMIC);
++		ret =3D atc_alloc_descriptor(&atchan->chan_common, GFP_NOWAIT);
 =20
- 	if (!list_empty(&atchan->free_descs_list)) {
- 		dev_err(chan2dev(chan),
- 			"can't allocate channel resources (channel not free from a previous use=
-)\n");
--		i =3D -EIO;
--		goto spin_unlock;
-+		return -EIO;
- 	}
-=20
- 	for (i =3D 0; i < init_nr_desc_per_channel; i++) {
-@@ -1852,8 +1847,6 @@ static int at_xdmac_alloc_chan_resources(struct dma_c=
-han *chan)
-=20
- 	dev_dbg(chan2dev(chan), "%s: allocated %d descriptors\n", __func__, i);
-=20
--spin_unlock:
--	spin_unlock_irqrestore(&atchan->lock, flags);
- 	return i;
+ 	return ret;
  }
+@@ -931,7 +931,7 @@ atc_prep_dma_memset(struct dma_chan *chan, dma_addr_t d=
+est, int value,
+ 		return NULL;
+ 	}
 =20
+-	vaddr =3D dma_pool_alloc(atdma->memset_pool, GFP_ATOMIC, &paddr);
++	vaddr =3D dma_pool_alloc(atdma->memset_pool, GFP_NOWAIT, &paddr);
+ 	if (!vaddr) {
+ 		dev_err(chan2dev(chan), "%s: couldn't allocate buffer\n",
+ 			__func__);
+@@ -989,7 +989,7 @@ atc_prep_dma_memset_sg(struct dma_chan *chan,
+ 		return NULL;
+ 	}
+=20
+-	vaddr =3D dma_pool_alloc(atdma->memset_pool, GFP_ATOMIC, &paddr);
++	vaddr =3D dma_pool_alloc(atdma->memset_pool, GFP_NOWAIT, &paddr);
+ 	if (!vaddr) {
+ 		dev_err(chan2dev(chan), "%s: couldn't allocate buffer\n",
+ 			__func__);
 --=20
 2.23.0
