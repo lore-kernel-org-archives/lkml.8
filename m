@@ -2,112 +2,115 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A16BAC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 11:04:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBC00C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 11:05:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E5322253D
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 11:04:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D7842253D
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 11:05:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="J2s79Z7t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728139AbgAWLEx (ORCPT
+        id S1728899AbgAWLFK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 06:04:53 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:39685 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726026AbgAWLEx (ORCPT
+        Thu, 23 Jan 2020 06:05:10 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:46909 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726194AbgAWLFJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 06:04:53 -0500
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1iuaI3-0006g1-Fk; Thu, 23 Jan 2020 12:04:47 +0100
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id F04A61C1A13;
-        Thu, 23 Jan 2020 12:04:46 +0100 (CET)
-Date:   Thu, 23 Jan 2020 11:04:46 -0000
-From:   "tip-bot2 for Arvind Sankar" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/asm] x86/boot: Simplify calculation of output address
-Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
-        Borislav Petkov <bp@suse.de>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200107194436.2166846-1-nivedita@alum.mit.edu>
-References: <20200107194436.2166846-1-nivedita@alum.mit.edu>
+        Thu, 23 Jan 2020 06:05:09 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579777508;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=jxuyA80MEb2gTFQSCosXFokQLxTD9/TGE5FZXZ4AEMM=;
+        b=J2s79Z7t+QeS+d8HCTZE6CMZJ1S1hG/VieatsGVbw7pQwlwEiQA6Sr6iorAf7B/XJyPcNB
+        jRvF8GAmI/N2kRxY5mVbXCLtkzsCoP0Gl1/XWVutUYwWqK/6ML4rIkjqeOpXA5AnuqLLk9
+        uMoNCeyEho/uEltIwqbISgJ5IGsLlFQ=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-177--nKY3tyLNCSpxiCzT7fDaA-1; Thu, 23 Jan 2020 06:05:04 -0500
+X-MC-Unique: -nKY3tyLNCSpxiCzT7fDaA-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 360CB1005F6B;
+        Thu, 23 Jan 2020 11:05:02 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-120-49.rdu2.redhat.com [10.10.120.49])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id AA64B5C1B5;
+        Thu, 23 Jan 2020 11:05:00 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <20200122193306.GB4675@bombadil.infradead.org>
+References: <20200122193306.GB4675@bombadil.infradead.org> <3577430.1579705075@warthog.procyon.org.uk>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     dhowells@redhat.com, Alexander Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RFC][PATCH] iov_iter: Add ITER_MAPPING
 MIME-Version: 1.0
-Message-ID: <157977748674.396.4073029577161163163.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <3785794.1579777499.1@warthog.procyon.org.uk>
+Date:   Thu, 23 Jan 2020 11:04:59 +0000
+Message-ID: <3785795.1579777499@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/asm branch of tip:
+Matthew Wilcox <willy@infradead.org> wrote:
 
-Commit-ID:     183ef7adf4ed638ac0fb0c3c9a71fc00e8512b61
-Gitweb:        https://git.kernel.org/tip/183ef7adf4ed638ac0fb0c3c9a71fc00e8512b61
-Author:        Arvind Sankar <nivedita@alum.mit.edu>
-AuthorDate:    Tue, 07 Jan 2020 14:44:34 -05:00
-Committer:     Borislav Petkov <bp@suse.de>
-CommitterDate: Thu, 23 Jan 2020 11:58:43 +01:00
+> It's perfectly legal to have compound pages in the page cache.  Call
+> find_subpage(page, xas.xa_index) unconditionally.
 
-x86/boot: Simplify calculation of output address
+Like this?
 
-Condense the calculation of decompressed kernel start a little.
+#define iterate_mapping(i, n, __v, skip, STEP) {		\
+	struct page *page;					\
+	size_t wanted = n, seg, offset;				\
+	loff_t start = i->mapping_start + skip;			\
+	pgoff_t index = start >> PAGE_SHIFT;			\
+								\
+	XA_STATE(xas, &i->mapping->i_pages, index);		\
+								\
+	rcu_read_lock();						\
+	xas_for_each(&xas, page, ULONG_MAX) {				\
+		if (xas_retry(&xas, page) || xa_is_value(page)) {	\
+			WARN_ON(1);					\
+			break;						\
+		}							\
+		__v.bv_page = find_subpage(page, xas.xa_index);		\
+		offset = (i->mapping_start + skip) & ~PAGE_MASK;	\
+		seg = PAGE_SIZE - offset;			\
+		__v.bv_offset = offset;				\
+		__v.bv_len = min(n, seg);			\
+		(void)(STEP);					\
+		n -= __v.bv_len;				\
+		skip += __v.bv_len;				\
+		if (n == 0)					\
+			break;					\
+	}							\
+	rcu_read_unlock();					\
+	n = wanted - n;						\
+}
 
-Committer notes:
+Note that the walk is not restartable - and the array is supposed to have been
+fully populated by the caller for the range specified - so I've made it print
+a warning and end the loop if xas_retry() or xa_is_value() return true (which
+takes care of the !page case too).  Possibly I could just leave it to fault in
+this case and not check.
 
-before:
+If PageHuge(page) is true, I presume I need to support that too.  How do I
+find out how big the page is?
 
-ebp = ebx - (init_size - _end)
+David
 
-after:
-
-eax = (ebx + _end) - init_size
-
-where in both ebx contains the temporary address the kernel is moved to
-for in-place decompression.
-
-The before and after difference in register state is %eax and %ebp
-but that is immaterial because the compressed image is not built with
--mregparm, i.e., all arguments of the following extract_kernel() call
-are passed on the stack.
-
-Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Link: https://lkml.kernel.org/r/20200107194436.2166846-1-nivedita@alum.mit.edu
----
- arch/x86/boot/compressed/head_32.S | 8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
-
-diff --git a/arch/x86/boot/compressed/head_32.S b/arch/x86/boot/compressed/head_32.S
-index f2dfd6d..1cc55c7 100644
---- a/arch/x86/boot/compressed/head_32.S
-+++ b/arch/x86/boot/compressed/head_32.S
-@@ -240,11 +240,9 @@ SYM_FUNC_START_LOCAL_NOALIGN(.Lrelocated)
- 				/* push arguments for extract_kernel: */
- 	pushl	$z_output_len	/* decompressed length, end of relocs */
- 
--	movl    BP_init_size(%esi), %eax
--	subl    $_end, %eax
--	movl    %ebx, %ebp
--	subl    %eax, %ebp
--	pushl	%ebp		/* output address */
-+	leal	_end(%ebx), %eax
-+	subl    BP_init_size(%esi), %eax
-+	pushl	%eax		/* output address */
- 
- 	pushl	$z_input_len	/* input_len */
- 	leal	input_data(%ebx), %eax
