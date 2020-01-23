@@ -2,196 +2,102 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA07EC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 17:49:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 774C1C33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 17:52:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8752021734
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 17:49:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="KYkxkhMn"
+	by mail.kernel.org (Postfix) with ESMTP id 5375E20718
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 17:52:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729083AbgAWRt4 (ORCPT
+        id S1728831AbgAWRw4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 12:49:56 -0500
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:1053 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727022AbgAWRt4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 12:49:56 -0500
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00NHeEXV029160;
-        Thu, 23 Jan 2020 18:49:46 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=6fSPNr7rvrjO4ZCLWwcFOZUjczpj72PXNX0gM6nq77o=;
- b=KYkxkhMnXTqD/v/s98CtEe/GlzEiOZzcfaKd3Oh/xzmYDtcMGC6yfg/5+chJ1F6JLkZp
- ZztGvxVwE3kZaAVVvYfuyyy8z6HrlWD1X1S3dMugzHufz33qhTU8n8D/MzmvIoAf+p0v
- frMXu0IoXvwD/UBUrUHomL2wWwB4KgxfcBmXVvQsWqBgxlV0gCzKBKwk8gchcv4ETaXi
- V1Vz3H2EGr92mv5vi7HWMQcTREJVAh7PkUIXowDpoMKs5vFhjMlhK/TItkQHhXn1v+1N
- wgjiio1S2VFOT1Ah9RmyGMFL0oyl7pRVHYR3U7vs8aVaNTenA4oeGh/eWIrSH3oQayPs 8A== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2xkr1ebr35-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 23 Jan 2020 18:49:46 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 1681D100034;
-        Thu, 23 Jan 2020 18:49:46 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag3node1.st.com [10.75.127.7])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id ED9502C6A66;
-        Thu, 23 Jan 2020 18:49:45 +0100 (CET)
-Received: from lmecxl0889.lme.st.com (10.75.127.47) by SFHDAG3NODE1.st.com
- (10.75.127.7) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 23 Jan
- 2020 18:49:44 +0100
-Subject: Re: [PATCH v2 7/8] remoteproc: qcom: q6v5: Add common panic handler
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>
-CC:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ohad Ben-Cohen <ohad@wizery.com>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-remoteproc <linux-remoteproc@vger.kernel.org>,
-        Sibi Sankar <sibis@codeaurora.org>,
-        Rishabh Bhatnagar <rishabhb@codeaurora.org>
-References: <20191227053215.423811-1-bjorn.andersson@linaro.org>
- <20191227053215.423811-8-bjorn.andersson@linaro.org>
- <20200110212806.GD11555@xps15> <20200122193936.GB3261042@ripper>
- <CANLsYkx-C9U4W3R3Xo6t3BJBM4UK_i3zuwzhnXMMEQ0-ur+8Kg@mail.gmail.com>
- <20200123171524.GV1511@yoga>
-From:   Arnaud POULIQUEN <arnaud.pouliquen@st.com>
-Message-ID: <8d92c4b5-4238-23d2-50fc-1a5bdfc2c67b@st.com>
-Date:   Thu, 23 Jan 2020 18:49:44 +0100
+        Thu, 23 Jan 2020 12:52:56 -0500
+Received: from foss.arm.com ([217.140.110.172]:42864 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727022AbgAWRw4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jan 2020 12:52:56 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 49B711FB;
+        Thu, 23 Jan 2020 09:52:55 -0800 (PST)
+Received: from [10.1.195.43] (e107049-lin.cambridge.arm.com [10.1.195.43])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2B0673F52E;
+        Thu, 23 Jan 2020 09:52:54 -0800 (PST)
+Subject: Re: [RFC PATCH v4 3/6] sched/cpufreq: Hook em_pd_get_higher_power()
+ into get_next_freq()
+To:     Quentin Perret <qperret@google.com>
+Cc:     linux-kernel@vger.kernel.org, rjw@rjwysocki.net,
+        viresh.kumar@linaro.org, peterz@infradead.org,
+        juri.lelli@redhat.com, vincent.guittot@linaro.org,
+        dietmar.eggemann@arm.com, linux-pm@vger.kernel.org
+References: <20200122173538.1142069-1-douglas.raillard@arm.com>
+ <20200122173538.1142069-4-douglas.raillard@arm.com>
+ <20200123161644.GA144523@google.com>
+From:   Douglas Raillard <douglas.raillard@arm.com>
+Organization: ARM
+Message-ID: <5a2af4e7-f9eb-4f23-908a-fab2c7395a99@arm.com>
+Date:   Thu, 23 Jan 2020 17:52:53 +0000
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+ Thunderbird/68.3.1
 MIME-Version: 1.0
-In-Reply-To: <20200123171524.GV1511@yoga>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
+In-Reply-To: <20200123161644.GA144523@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB-large
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.47]
-X-ClientProxiedBy: SFHDAG3NODE1.st.com (10.75.127.7) To SFHDAG3NODE1.st.com
- (10.75.127.7)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-01-23_10:2020-01-23,2020-01-23 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Bjorn, Mathieu
 
-On 1/23/20 6:15 PM, Bjorn Andersson wrote:
-> On Thu 23 Jan 09:01 PST 2020, Mathieu Poirier wrote:
-> 
->> On Wed, 22 Jan 2020 at 12:40, Bjorn Andersson
->> <bjorn.andersson@linaro.org> wrote:
->>>
->>> On Fri 10 Jan 13:28 PST 2020, Mathieu Poirier wrote:
->>>
->>>> On Thu, Dec 26, 2019 at 09:32:14PM -0800, Bjorn Andersson wrote:
->>>>> Add a common panic handler that invokes a stop request and sleep enough
->>>>> to let the remoteproc flush it's caches etc in order to aid post mortem
->>>>> debugging.
->>>>>
->>>>> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
->>>>> ---
->>>>>
->>>>> Changes since v1:
->>>>> - None
->>>>>
->>>>>  drivers/remoteproc/qcom_q6v5.c | 19 +++++++++++++++++++
->>>>>  drivers/remoteproc/qcom_q6v5.h |  1 +
->>>>>  2 files changed, 20 insertions(+)
->>>>>
->>>>> diff --git a/drivers/remoteproc/qcom_q6v5.c b/drivers/remoteproc/qcom_q6v5.c
->>>>> index cb0f4a0be032..17167c980e02 100644
->>>>> --- a/drivers/remoteproc/qcom_q6v5.c
->>>>> +++ b/drivers/remoteproc/qcom_q6v5.c
->>>>> @@ -6,6 +6,7 @@
->>>>>   * Copyright (C) 2014 Sony Mobile Communications AB
->>>>>   * Copyright (c) 2012-2013, The Linux Foundation. All rights reserved.
->>>>>   */
->>>>> +#include <linux/delay.h>
->>>>>  #include <linux/kernel.h>
->>>>>  #include <linux/platform_device.h>
->>>>>  #include <linux/interrupt.h>
->>>>> @@ -15,6 +16,8 @@
->>>>>  #include <linux/remoteproc.h>
->>>>>  #include "qcom_q6v5.h"
->>>>>
->>>>> +#define Q6V5_PANIC_DELAY_MS        200
->>>>> +
->>>>>  /**
->>>>>   * qcom_q6v5_prepare() - reinitialize the qcom_q6v5 context before start
->>>>>   * @q6v5:  reference to qcom_q6v5 context to be reinitialized
->>>>> @@ -162,6 +165,22 @@ int qcom_q6v5_request_stop(struct qcom_q6v5 *q6v5)
->>>>>  }
->>>>>  EXPORT_SYMBOL_GPL(qcom_q6v5_request_stop);
->>>>>
->>>>> +/**
->>>>> + * qcom_q6v5_panic() - panic handler to invoke a stop on the remote
->>>>> + * @q6v5:  reference to qcom_q6v5 context
->>>>> + *
->>>>> + * Set the stop bit and sleep in order to allow the remote processor to flush
->>>>> + * its caches etc for post mortem debugging.
->>>>> + */
->>>>> +void qcom_q6v5_panic(struct qcom_q6v5 *q6v5)
->>>>> +{
->>>>> +   qcom_smem_state_update_bits(q6v5->state,
->>>>> +                               BIT(q6v5->stop_bit), BIT(q6v5->stop_bit));
->>>>> +
->>>>> +   mdelay(Q6V5_PANIC_DELAY_MS);
->>>>
->>>> I really wonder if the delay should be part of the remoteproc core and
->>>> configurable via device tree.  Wanting the remote processor to flush its caches
->>>> is likely something other vendors will want when dealing with a kernel panic.
->>>> It would be nice to see if other people have an opinion on this topic.  If not
->>>> then we can keep the delay here and move it to the core if need be.
->>>>
->>>
->>> I gave this some more thought and what we're trying to achieve is to
->>> signal the remote processors about the panic and then give them time to
->>> react, but per the proposal (and Qualcomm downstream iirc) we will do
->>> this for each remote processor, one by one.
->>>
->>> So in the typical case of a Qualcomm platform with 4-5 remoteprocs we'll
->>> end up giving the first one a whole second to react and the last one
->>> "only" 200ms.
->>>
->>> Moving the delay to the core by iterating over rproc_list calling
->>> panic() and then delaying would be cleaner imo.
->>
->> I agree.
->>
->>>
->>> It might be nice to make this configurable in DT, but I agree that it
->>> would be nice to hear from others if this would be useful.
->>
->> I think the delay has to be configurable via DT if we move this to the
->> core.  The binding can be optional and default to 200ms if not
->> present.
->>
-> 
-> How about I make the panic() return the required delay and then we let
-> the core sleep for MAX() of the returned durations? That way the default
-> is still a property of the remoteproc drivers - and 200ms seems rather
-> arbitrary to put in the core, even as a default.
 
-I agree with Bjorn, the delay should be provided by the platform.
-But in this case i wonder if it is simpler to just let the platform take care it?
-For instance for stm32mp1 the stop corresponds to the reset on the remote processor core. To inform the coprocessor about an imminent shutdown we use a signal relying on a mailbox (cf. stm32_rproc_stop).  
-In this case we would need a delay between the signal and the reset, but not after (no cache management).
+On 1/23/20 4:16 PM, Quentin Perret wrote:
+> On Wednesday 22 Jan 2020 at 17:35:35 (+0000), Douglas RAILLARD wrote:
+>> @@ -210,9 +211,16 @@ static unsigned int get_next_freq(struct sugov_policy *sg_policy,
+>>  	struct cpufreq_policy *policy = sg_policy->policy;
+>>  	unsigned int freq = arch_scale_freq_invariant() ?
+>>  				policy->cpuinfo.max_freq : policy->cur;
+>> +	struct em_perf_domain *pd = sugov_policy_get_pd(sg_policy);
+>>  
+>>  	freq = map_util_freq(util, freq, max);
+>>  
+>> +	/*
+>> +	 * Try to get a higher frequency if one is available, given the extra
+>> +	 * power we are ready to spend.
+>> +	 */
+>> +	freq = em_pd_get_higher_freq(pd, freq, 0);
+> 
+> I find it sad that the call just below to cpufreq_driver_resolve_freq()
+> and cpufreq_frequency_table_target() iterates the OPPs all over again.
+> It's especially a shame since most existing users of the EM stuff do
+> have a cpufreq frequency table.
+> 
+> Have you looked at hooking this inside cpufreq_driver_resolve_freq()
+> instead ? If we have a well-formed EM available, the call to
+> cpufreq_frequency_table_target() feels redundant, so we might want to
+> skip it.
 
-Regards,
-Arnaud
+We can't really move the call to em_pd_get_higher_freq() into
+cpufreq_driver_resolve_freq() since that's a schedutil-specific feature,
+and we would loose the !sg_policy->need_freq_update optimization.
+
+Maybe we can add a flag to cpufreq_driver_resolve_freq() that promises
+that the frequency is already a valid one. We have to be careful though,
+since a number of things can make that untrue:
+ - em_pd_get_higher_freq() will return the passed freq verbatim if it's
+higher than the max freq, so em_pd_get_higher_freq() will have to set
+the flag itself in case that logic changes.
+ - policy limits can change the value
+ - future things could tinker with the freq and forget to reset the flag.
+
+If you think it's worth it I can make these changes.
+
+> Thoughts ?
 > 
-> Regards,
-> Bjorn
+> Quentin
 > 
+
+Cheers,
+Douglas
