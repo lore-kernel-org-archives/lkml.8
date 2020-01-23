@@ -2,147 +2,227 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FBDEC33CBA
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 07:24:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6BC3C3F68F
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 07:24:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DE96217F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 07:24:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7457E217F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 07:24:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579764296;
+	bh=m/lm5HBL2vKn+WcOpvJG+ogbaU/RjLgSlo9mp3zqrMk=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
+	b=ihTwBKLzPOSpmUQPKjiHKwThcQfjib5WX4q2y0IVBP1fEGZOIITkoFTu7cE/ZWmme
+	 oK9OrKebQy7C1HVXB+v6EuNxMLYEpyu/2LA6YUtnZOiGIs2ueSjGNdc2qZkeDpisQR
+	 oH+tyIbZ5Mr8Z/Ak1cprGUNiJFTsmGCXm5I/ME7Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726703AbgAWHYi (ORCPT
+        id S1726780AbgAWHYz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 02:24:38 -0500
-Received: from asavdk4.altibox.net ([109.247.116.15]:34668 "EHLO
-        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725785AbgAWHYi (ORCPT
+        Thu, 23 Jan 2020 02:24:55 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:44652 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725785AbgAWHYz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 02:24:38 -0500
-Received: from ravnborg.org (unknown [158.248.194.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk4.altibox.net (Postfix) with ESMTPS id CDE0680487;
-        Thu, 23 Jan 2020 08:24:30 +0100 (CET)
-Date:   Thu, 23 Jan 2020 08:24:29 +0100
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     David Lechner <david@lechnology.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        David Airlie <airlied@linux.ie>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Chris Brandt <chris.brandt@renesas.com>,
-        dri-devel@lists.freedesktop.org
-Subject: Re: [PATCH] dt-bindings: restrict properties for sitronix,st7735r
-Message-ID: <20200123072429.GA11848@ravnborg.org>
-References: <20200115124548.3951-1-geert+renesas@glider.be>
- <20200115124548.3951-2-geert+renesas@glider.be>
- <ba21d2c8-ccc6-2704-fa1f-d28239700547@lechnology.com>
- <20200120190249.GA9619@ravnborg.org>
+        Thu, 23 Jan 2020 02:24:55 -0500
+Received: by mail-lj1-f196.google.com with SMTP id q8so2035087ljj.11;
+        Wed, 22 Jan 2020 23:24:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=PO+/EdtxmoIB337Uw05Y/8H8Ge6zwOpflVL5MWt26PY=;
+        b=G0fds4rIEiyIfLJHqvfVgDDOj1X4PQddS9IFWnrCIb0JSNo2SbYipZrqG2y8oayiuC
+         VOMgzOa/youe9ap0jgRM7ap3JaJCY2b1/xVKK6rziVZefT70k97pLulMPTsr+pxetOxC
+         sI+CnbNaaq2hIDw2bd1GK0CtzXb5kFXcugEOBNBXd7Cgv/dPMJQfoV4DFUSJpWDjIoGp
+         zDQs9P3rd3hd8ATvzMzskQuce0OPDMzoy14O0p/njhv8canVsfVxhWQrJ1ytX7uPwwVe
+         YRg8nwLa09rR6J+r3/98FJs295/Tftbq0zy/CIyGrdP68gZ5MovXWV55Lgr5kmiHmWtx
+         ESMA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
+         :date:message-id:mime-version;
+        bh=PO+/EdtxmoIB337Uw05Y/8H8Ge6zwOpflVL5MWt26PY=;
+        b=qu7K58e1L4YJNFx2Q7EzAvBBUWvLwdIU2CQMGjdnC4wUbdKolQAPBx1fsCJYWLkBtm
+         YO6wJFuZEvyW+ByUll9oYjYQ/xdcylzfUcV+5aYRMrqDQ6qUgSaMDaJ0dCpVTWOZEXQ/
+         yulW2QZvP0rDYvTM45UlBknrQ8XAwNn46u6Ateio1onqcj2tyUHTgEdjNvj1dYCtifdT
+         ULm75Gx35915Bk2pSVv6ZiVETYcjoSlwhGOe/ezFrOXVDNVJHEj1u4Ad6aevkFv/Z5jY
+         VQRcg6+U6S7yTeN2J5SAlccPIjcpG5mMkb0AUgmuw3dlrd9hHp2h+dcKfH8qtqz2qC3i
+         MPHA==
+X-Gm-Message-State: APjAAAUgRxGJSOLPAi8VtTCRDfNjnfaYpn6GBndU4yar4E7a+zXGMr9l
+        sa1JGciHWGCkazuYF2EWSoI=
+X-Google-Smtp-Source: APXvYqyL5kKScDlEz+0IBCoUuFQTzXQhJEUjdjWCkW35DBPBwbvEvZfdfDleC0OjDRAiD9xYmfmn4g==
+X-Received: by 2002:a2e:880c:: with SMTP id x12mr22004208ljh.44.1579764291777;
+        Wed, 22 Jan 2020 23:24:51 -0800 (PST)
+Received: from saruman (88-113-215-33.elisa-laajakaista.fi. [88.113.215.33])
+        by smtp.gmail.com with ESMTPSA id m15sm620655ljg.4.2020.01.22.23.24.50
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 22 Jan 2020 23:24:50 -0800 (PST)
+From:   Felipe Balbi <balbi@kernel.org>
+To:     John Stultz <john.stultz@linaro.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Cc:     Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>,
+        Yang Fei <fei.yang@intel.com>,
+        Thinh Nguyen <thinhn@synopsys.com>,
+        Tejas Joglekar <tejas.joglekar@synopsys.com>,
+        Andrzej Pietrasiewicz <andrzej.p@collabora.com>,
+        Jack Pham <jackp@codeaurora.org>, Todd Kjos <tkjos@google.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Linux USB List <linux-usb@vger.kernel.org>,
+        stable <stable@vger.kernel.org>,
+        John Stultz <john.stultz@linaro.org>
+Subject: Re: [RFC][PATCH 2/2] usb: dwc3: gadget: Correct the logic for finding last SG entry
+In-Reply-To: <20200122222645.38805-3-john.stultz@linaro.org>
+References: <20200122222645.38805-1-john.stultz@linaro.org> <20200122222645.38805-3-john.stultz@linaro.org>
+Date:   Thu, 23 Jan 2020 09:25:40 +0200
+Message-ID: <87r1zq4osr.fsf@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200120190249.GA9619@ravnborg.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=VcLZwmh9 c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=7gkXJVJtAAAA:8
-        a=WZHNqt2aAAAA:8 a=VwQbUJbxAAAA:8 a=e5mUnYsNAAAA:8 a=hiXH8xowJhRCH_7nMvoA:9
-        a=7Zwj6sZBwVKJAoWSPKxL6X1jA+E=:19 a=CjuIK1q_8ugA:10
-        a=E9Po1WZjFZOl8hwRPBS3:22 a=PrHl9onO2p7xFKlKy1af:22
-        a=AjGcO6oz07-iQ99wixmX:22 a=Vxmtnl_E_bksehYqCbjh:22
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 20, 2020 at 08:02:49PM +0100, Sam Ravnborg wrote:
-> Hi David.
-> 
-> > > +allOf:
-> > > +  - $ref: panel/panel-common.yaml#
-> > 
-> > not all of these properties are applicable.
-> > 
-> 
-> > > +required:
-> > > +  - compatible
-> > > +  - reg
-> > > +  - dc-gpios
-> > > +  - reset-gpios
-> > 
-> > Missing optional rotation and backlight properties.
-> 
-> Thanks for catching this. I have written a little .yaml files
-> since I applied this - and learned a little more of the syntax.
-> 
-> See attached patch for my attempt to fix this.
-> Please review.
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-Hi David, Geert.
 
-Any feedback on this patch?
+Hi,
 
-	Sam
-
-> 
-> 	Sam
-> 
-> >From 6b54fb0a071c0732cd4bd5b88f456b5a85bcf4f2 Mon Sep 17 00:00:00 2001
-> From: Sam Ravnborg <sam@ravnborg.org>
-> Date: Mon, 20 Jan 2020 19:55:04 +0100
-> Subject: [PATCH] dt-bindings: restrict properties for sitronix,st7735r
-> 
-> David Lechner noticed (paraphrased):
-> - not all properties from panel-common are applicable.
-> - missing optional rotation and backlight properties
-> 
-> Fix this by listing all allowed properties, and do not allow other properties.
-> 
-> Fixes: abdd9e3705c8 ("dt-bindings: display: sitronix,st7735r: Convert to DT schema")
-> Reported-by: David Lechner <david@lechnology.com>
-> Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
-> Cc: Geert Uytterhoeven <geert+renesas@glider.be>
-> Cc: David Lechner <david@lechnology.com>
-> Cc: Rob Herring <robh@kernel.org>
-> Cc: dri-devel@lists.freedesktop.org
+John Stultz <john.stultz@linaro.org> writes:
+> From: Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
+>
+> As a process of preparing TRBs usb_gadget_map_request_by_dev() is
+> called from dwc3_prepare_trbs() for mapping the request. This will
+> call dma_map_sg() if req->num_sgs are greater than 0. dma_map_sg()
+> will map the sg entries in sglist and return the number of mapped SGs.
+> As a part of mapping, some sg entries having contigous memory may be
+> merged together into a single sg (when IOMMU used). So, the number of
+> mapped sg entries may not be equal to the number of orginal sg entries
+> in the request (req->num_sgs).
+>
+> As a part of preparing the TRBs, dwc3_prepare_one_trb_sg() iterates over
+> the sg entries present in the sglist and calls sg_is_last() to identify
+> whether the sg entry is last and set IOC bit for the last sg entry. The
+> sg_is_last() determines last sg if SG_END is set in sg->page_link. When
+> IOMMU used, dma_map_sg() merges 2 or more sgs into a single sg and it
+> doesn't retain the page_link properties. Because of this reason the
+> sg_is_last() may not find SG_END and thus resulting in IOC bit never
+> getting set.
+>
+> For example:
+>
+> Consider a request having 8 sg entries with each entry having a length of
+> 4096 bytes. Assume that sg1 & sg2, sg3 & sg4, sg5 & sg6, sg7 & sg8 are
+> having contigous memory regions.
+>
+> Before calling dma_map_sg():
+>             sg1-->sg2-->sg3-->sg4-->sg6-->sg7-->sg8
+> dma_length: 4K    4K    4K    4K    4K    4K    4K
+> SG_END:     False False False False False False True
+> num_sgs =3D 8
+> num_mapped_sgs =3D 0
+>
+> The dma_map_sg() merges sg1 & sg2 memory regions into sg1->dma_address.
+> Similarly sg3 & sg4 into sg2->dma_address, sg5 & sg6 into the
+> sg3->dma_address and sg6 & sg8 into sg4->dma_address. Here the memory
+> regions are merged but the page_link properties like SG_END are not
+> retained into the merged sgs.
+>
+> After calling dma_map_sg();
+>             sg1-->sg2-->sg3-->sg4-->sg6-->sg7-->sg8
+> dma_length: 8K    8K    8K    8K    0K    0K     0K
+> SG_END:     False False False False False False True
+> num_sgs =3D 8
+> num_mapped_sgs =3D 4
+>
+> After calling dma_map_sg(), sg1,sg2,sg3,sg4 are having dma_length of
+> 8096 bytes each and remaining sg4,sg5,sg6,sg7 are having 0 bytes of
+> dma_length.
+>
+> After dma_map_sg() is performed dma_perpare_trb_sg() iterates on all sg
+> entries and sets IOC bit only for the sg8 (since sg_is_last() returns true
+> only for sg8). But after calling dma_map_sg() the valid data are present
+> only till sg4 and the IOC bit should be set for sg4 TRB only (which is not
+> happening in the present code)
+>
+> The above mentioned issue can be fixed by determining last sg based on the
+> req->num_queued_sgs instead of sg_is_last(). If (req->num_queued_sgs + 1)
+> is equal to req->num_mapped_sgs, then this sg is the last sg. In the above
+> example, the dwc3 driver has already queued 3 sgs (upto sg3), so the
+> num_queued_sgs =3D 3. On preparing the next sg (i.e sg4), check for last =
+sg
+> (num_queued_sgs + 1) =3D=3D num_mapped_sgs becomes true. So, the driver s=
+ets
+> IOC bit for sg4. This patch does the same.
+>
+> At a practical level, this patch resolves USB transfer stalls
+> seen with adb on dwc3 based db845c, pixel3 and other qcom
+> hardware after functionfs gadget added scatter-gather support
+> around v4.20.
+>
+> Cc: Felipe Balbi <felipe.balbi@linux.intel.com>
+> Cc: Yang Fei <fei.yang@intel.com>
+> Cc: Thinh Nguyen <thinhn@synopsys.com>
+> Cc: Tejas Joglekar <tejas.joglekar@synopsys.com>
+> Cc: Andrzej Pietrasiewicz <andrzej.p@collabora.com>
+> Cc: Jack Pham <jackp@codeaurora.org>
+> Cc: Todd Kjos <tkjos@google.com>
+> Cc: Greg KH <gregkh@linuxfoundation.org>
+> Cc: Linux USB List <linux-usb@vger.kernel.org>
+> Cc: stable <stable@vger.kernel.org>
+> Signed-off-by: Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
+> [jstultz: Add note to end of commit message on specific issue this resovl=
+es]
+> Signed-off-by: John Stultz <john.stultz@linaro.org>
 > ---
->  .../devicetree/bindings/display/sitronix,st7735r.yaml      | 7 +++++++
->  1 file changed, 7 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/display/sitronix,st7735r.yaml b/Documentation/devicetree/bindings/display/sitronix,st7735r.yaml
-> index 8892d79e6e10..0cebaaefda03 100644
-> --- a/Documentation/devicetree/bindings/display/sitronix,st7735r.yaml
-> +++ b/Documentation/devicetree/bindings/display/sitronix,st7735r.yaml
-> @@ -39,12 +39,19 @@ properties:
->      maxItems: 1
->      description: Display data/command selection (D/CX)
->  
-> +  backlight: true
-> +  reg: true
-> +  reset-gpios: true
-> +  rotation: true
-> +
->  required:
->    - compatible
->    - reg
->    - dc-gpios
->    - reset-gpios
->  
-> +additionalProperties: false
-> +
->  examples:
->    - |
->      #include <dt-bindings/gpio/gpio.h>
-> -- 
-> 2.20.1
-> 
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+>  drivers/usb/dwc3/gadget.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c
+> index 1edce3bbb55c..30a80bc97cfe 100644
+> --- a/drivers/usb/dwc3/gadget.c
+> +++ b/drivers/usb/dwc3/gadget.c
+> @@ -1068,7 +1068,7 @@ static void dwc3_prepare_one_trb_sg(struct dwc3_ep =
+*dep,
+>  		unsigned int rem =3D length % maxp;
+>  		unsigned chain =3D true;
+>=20=20
+> -		if (sg_is_last(s))
+> +		if ((req->num_queued_sgs + 1) =3D=3D req->request.num_mapped_sgs)
+
+This is probably a bug on DMA API. If it combines pages from
+scatter-list, then it should also move the last SG so sg_is_last()
+continues to work.
+
+I had asked author to discuss this with DMA API maintainers. Can you do
+that?
+
+=2D-=20
+balbi
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl4pSnQACgkQzL64meEa
+mQb7Yg/+PnSb51d1HUUeuHT8QUblsTEKU68Qb06aygcf99oZctcC0jsnQvaaPTTq
+ceDuG2AOT7IL4OMBOUibjUUYy1HS0194D9Zrq1/xUqu6DcIo3ZgDb2QVUX27jOuX
+qRYyag5uj5mmOpJSCHOC6X71wLPU/CMPBlDTK27+Ogtqtke2jiFnLz8bZoW8rZKM
+7xxZ0t892oR5Qr/kqdJrDQUDvfjXiRl0hjzudywE0HwH77uxALFjYi8UAZ868qv3
+MERgNMIGV35UZZDSs5fhTQp79YUgJjmDfiZblUhr3vphDQsuzykYXKJ3ZWYtvXHz
+XOEUTTc0dVRbtYoKEZh3727Grv4nVqZ+IqzmI7uZQtTNr38DB5X9b/psWPm7nZS/
+MlIYUpfeIBXXW5XwLG6f1JZ+K33sTfjVeTyrHs8/2V+BOGoVnuXBMjKEoSAlEI6K
+NOxZvJVfUOG+gemezrgMCb7TJFCTVjCI1v7qwbWRiYsy+SNezs05iv+H69JysYiG
+oqybEgcHV7jGijr3myV51Rr+oWadqTjVYO7nntyJjtXJENf+/ULWzZsL1pauihtJ
+Fz8xrFNhwGYuUnvgbSUExBY7F1CY86C66chY9HpBKFXywbOSL8yoOflTrGKasq1X
+VkGbxKq4vRIdN9Enii/VaTyFlG+tXV4glH3YZlbTG75uU8ckEmg=
+=j5rc
+-----END PGP SIGNATURE-----
+--=-=-=--
