@@ -2,91 +2,53 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3EA1C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 15:45:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DB57C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 15:45:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B7B621734
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 15:45:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="McLHS2v0"
+	by mail.kernel.org (Postfix) with ESMTP id 7C4FC21734
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 15:45:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728792AbgAWPpQ (ORCPT
+        id S1728900AbgAWPp2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 10:45:16 -0500
-Received: from merlin.infradead.org ([205.233.59.134]:34888 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726231AbgAWPpQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 10:45:16 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=CfGynnt/xKdfIoX3WMfV+TOt1SzqpkEnFYHQojJ4eyw=; b=McLHS2v0m0LRF8+Wgk153BavG
-        1x0mpFvtr0BM2TLBd5GHvUOOmNcQ6c6eeCzhBn9NkfN6Z42mE1te7qDQiOlXcKUAinXGOFV7oLZ8m
-        BRNE2Q5QW8deuAFp6aWaeJamLrDdM8xbWb5YkzYIcVYMR23KDhlUBf8NFLfrEYfPWF3g6UQKkRVq2
-        Bx2S5CHsIwA953Tj/c8T2AP2OowZVDZqg8btcoK81EEuFFe9fohz4GNWYd7HYYjN2t57xZO2RdeQy
-        w7kEMDLLy6uRPpf1WxwVnRKaKjKTlf7Z66+qfhos83Y5N0cQ5WYUkQtU3CR6zAZv1UPJQCf3r7qhq
-        dV2rCZWSg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iuef2-0007oi-9n; Thu, 23 Jan 2020 15:44:48 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id CD64130067C;
-        Thu, 23 Jan 2020 16:43:05 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id D7BE42B714F6E; Thu, 23 Jan 2020 16:44:45 +0100 (CET)
-Date:   Thu, 23 Jan 2020 16:44:45 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Giovanni Gherdovich <ggherdovich@suse.cz>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@suse.de>,
-        Len Brown <lenb@kernel.org>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Matt Fleming <matt@codeblueprint.co.uk>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Paul Turner <pjt@google.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Quentin Perret <qperret@qperret.net>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Doug Smythies <dsmythies@telus.net>,
-        Ionela Voinescu <ionela.voinescu@arm.com>
-Subject: Re: [PATCH v5 0/6] Add support for frequency invariance for (some)
- x86
-Message-ID: <20200123154445.GW14914@hirez.programming.kicks-ass.net>
-References: <20200122151617.531-1-ggherdovich@suse.cz>
- <CAJZ5v0gO18Oz4qvf3L9LfAX+1ww2XTeP_o_3WixYixB9d=s8Wg@mail.gmail.com>
+        Thu, 23 Jan 2020 10:45:28 -0500
+Received: from mga04.intel.com ([192.55.52.120]:29414 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726231AbgAWPp2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jan 2020 10:45:28 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Jan 2020 07:45:27 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,354,1574150400"; 
+   d="scan'208";a="222375221"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by fmsmga008.fm.intel.com with ESMTP; 23 Jan 2020 07:45:27 -0800
+Date:   Thu, 23 Jan 2020 07:45:27 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Tao Xu <tao3.xu@intel.com>, Jingqi Liu <jingqi.liu@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [RESEND] Atomic switch of MSR_IA32_UMWAIT_CONTROL
+Message-ID: <20200123154526.GC13178@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAJZ5v0gO18Oz4qvf3L9LfAX+1ww2XTeP_o_3WixYixB9d=s8Wg@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 23, 2020 at 04:30:36PM +0100, Rafael J. Wysocki wrote:
-> All looks good to me, so
-> 
-> Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> 
-> for the whole series (and I'm assuming that it will go it through the tip tree).
+cc'ing KVM and LKML this time...
 
-Thanks, and yes, I've picked them up and will push them to tip if
-nothing falls out.
+Why does KVM use the atomic load/store lists to load MSR_IA32_UMWAIT_CONTROL
+on VM-Enter/VM-Exit?  Unless the host kernel is doing UWMAIT, which it
+really shouldn't and AFAICT doesn't, isn't it better to use the shared MSR
+mechanism to load the host value only when returning to userspace, and
+reload the guest value on demand?
