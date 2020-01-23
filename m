@@ -2,155 +2,148 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE5D0C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 13:17:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA72EC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 13:17:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD4F42467B
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 13:17:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE5FB2467B
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 13:17:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="AaKLcq1H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727453AbgAWNRM (ORCPT
+        id S1728765AbgAWNRQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 08:17:12 -0500
-Received: from mail-il1-f199.google.com ([209.85.166.199]:47830 "EHLO
-        mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726026AbgAWNRL (ORCPT
+        Thu, 23 Jan 2020 08:17:16 -0500
+Received: from rnd-relay.smtp.broadcom.com ([192.19.229.170]:41776 "EHLO
+        rnd-relay.smtp.broadcom.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726026AbgAWNRP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 08:17:11 -0500
-Received: by mail-il1-f199.google.com with SMTP id x69so2288403ill.14
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jan 2020 05:17:11 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=M/T56jh5ZjLwzBjohUJv3CPw6EZc5CaN+pPMp5UPMi8=;
-        b=cQz8FpjNkLrR9gJ0Q7oS6D8kcHQMxz3NRdsfyPZTcpjIac4GhK9dZ4qgSD6yyx4Ern
-         xDPXC9zzhaJ3DQQlIjKGtT1/wxUi42GZa6KG/AGmeHc30HIpxUbYK+oOquFfkbR691LO
-         BGiEfxIsMnoL3cLT3Kw9KRUeLbA7phyLJ6uuYYHgky0cT4MhAwR5Gfx4wn3HkZwnRU9W
-         ShVSA+TWwXtULBl9hLhZEuh/OB3wqSyoT5LzE80gTebFctp0/EpwRq8T5aVwVG0xztHA
-         F+TaXpPV2zvZfOHg9VwaZIMJuXt+7KbGAvSRqH2TKbdyDTO0J09DgB5X0NTG/Qp6uXfL
-         OQiA==
-X-Gm-Message-State: APjAAAUibhqOYa8TEcn8XocoupdDFI9yNmjtmvzUD6wnJ27fJiaseEYR
-        cT6uwwJAhemDghbxWvKK4eHcdAvjMEoa8+LHO8wInbj45Gl6
-X-Google-Smtp-Source: APXvYqwsg5y57hY5025HrdixFMdwrZEyUk/g+pM7hsnTs15k9799/GGmSVH6lvg8jb7EHZSh1E0VDLugipmv5mqvJ1+Ipylnthdw
-MIME-Version: 1.0
-X-Received: by 2002:a5d:8451:: with SMTP id w17mr5679243ior.303.1579785430679;
- Thu, 23 Jan 2020 05:17:10 -0800 (PST)
-Date:   Thu, 23 Jan 2020 05:17:10 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000006ac90f059cce75d4@google.com>
-Subject: BUG: corrupted list in em28xx_init_extension
-From:   syzbot <syzbot+a6969ef522a36d3344c9@syzkaller.appspotmail.com>
-To:     andreyknvl@google.com, linux-kernel@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-usb@vger.kernel.org,
-        mchehab@kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 23 Jan 2020 08:17:15 -0500
+X-Greylist: delayed 527 seconds by postgrey-1.27 at vger.kernel.org; Thu, 23 Jan 2020 08:17:13 EST
+Received: from mail-irv-17.broadcom.com (mail-irv-17.lvn.broadcom.net [10.75.242.48])
+        by rnd-relay.smtp.broadcom.com (Postfix) with ESMTP id C21C330C123;
+        Thu, 23 Jan 2020 05:01:47 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.10.3 rnd-relay.smtp.broadcom.com C21C330C123
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=broadcom.com;
+        s=dkimrelay; t=1579784507;
+        bh=GRbeVqWsXvHOOBiyzIBZ+swPrvzsE9qungb3Sc5kCHg=;
+        h=From:To:Cc:Subject:Date:From;
+        b=AaKLcq1HqgI96Pla0Fz4E2OjsKquCk2SOU1wtq/cyl3xZlgQixYJJT2a8zgQ5U7u2
+         HbWSE0aVgxBGr1mJ6hhaV6Ge93zaEfARcs1vWj25PDGaOOsQDlKCNM7eRKPxiSYmuK
+         VSg6ixTSxTkLzudFyFR7Ew/1NLW1BlRdqJj63rHc=
+Received: from lvnvde3894.broadcom.com (lvnvde3894.lvn.broadcom.net [10.175.127.104])
+        by mail-irv-17.broadcom.com (Postfix) with ESMTP id 5F78E140069;
+        Thu, 23 Jan 2020 05:08:25 -0800 (PST)
+Received: by lvnvde3894.broadcom.com (Postfix, from userid 55335)
+        id 58086220AF8; Thu, 23 Jan 2020 05:08:25 -0800 (PST)
+From:   Kalimuthu Velappan <kalimuthu.velappan@broadcom.com>
+To:     kalimuthu.velappan@broadcom.com
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Stanislav Fomichev <sdf@google.com>,
+        Quentin Monnet <quentin.monnet@netronome.com>,
+        Andrey Ignatov <rdna@fb.com>,
+        netdev@vger.kernel.org (open list:BPF (Safe dynamic programs and tools)),
+        bpf@vger.kernel.org (open list:BPF (Safe dynamic programs and tools)),
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] Support for nlattr and nested_nlattr attribute search in EBPF filter
+Date:   Thu, 23 Jan 2020 05:08:12 -0800
+Message-Id: <20200123130816.24815-1-kalimuthu.velappan@broadcom.com>
+X-Mailer: git-send-email 2.18.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Added attribute search and nested attribute support in EBPF filter
+functionality.
 
-syzbot found the following crash on:
-
-HEAD commit:    4cc301ee usb: gadget: add raw-gadget interface
-git tree:       https://github.com/google/kasan.git usb-fuzzer
-console output: https://syzkaller.appspot.com/x/log.txt?x=15de59c9e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=9ba75825443d54bd
-dashboard link: https://syzkaller.appspot.com/bug?extid=a6969ef522a36d3344c9
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11934d85e00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=10c70721e00000
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+a6969ef522a36d3344c9@syzkaller.appspotmail.com
-
-em28xx 1-1:0.200: Audio interface 200 found (Vendor Class)
-em28xx 1-1:0.200: unknown em28xx chip ID (0)
-em28xx 1-1:0.200: Config register raw data: 0xfffffffb
-em28xx 1-1:0.200: AC97 chip type couldn't be determined
-em28xx 1-1:0.200: No AC97 audio processor
-list_add corruption. prev->next should be next (ffffffff87a1a960), but was ffffffff85a00184. (prev=ffff8881cd5e0240).
-------------[ cut here ]------------
-kernel BUG at lib/list_debug.c:26!
-invalid opcode: 0000 [#1] SMP KASAN
-CPU: 1 PID: 94 Comm: kworker/1:2 Not tainted 5.5.0-rc6-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Workqueue: usb_hub_wq hub_event
-RIP: 0010:__list_add_valid.cold+0x3a/0x3c lib/list_debug.c:26
-Code: 0b 48 89 f2 4c 89 e1 48 89 ee 48 c7 c7 a0 fc fb 85 e8 04 17 40 ff 0f 0b 48 89 f1 48 c7 c7 20 fc fb 85 4c 89 e6 e8 f0 16 40 ff <0f> 0b 48 89 ee 48 c7 c7 c0 fd fb 85 e8 df 16 40 ff 0f 0b 4c 89 ea
-RSP: 0018:ffff8881d5d570c8 EFLAGS: 00010282
-RAX: 0000000000000075 RBX: ffff8881cd764120 RCX: 0000000000000000
-RDX: 0000000000000000 RSI: ffffffff8129598d RDI: ffffed103abaae0b
-RBP: ffff8881cd764240 R08: 0000000000000075 R09: ffffed103b666210
-R10: ffffed103b66620f R11: ffff8881db33107f R12: ffffffff87a1a960
-R13: ffff8881cd764000 R14: ffff8881cd76412c R15: ffff8881cd5a2000
-FS:  0000000000000000(0000) GS:ffff8881db300000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007f7f37b26000 CR3: 00000001c5fe1000 CR4: 00000000001406e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- __list_add include/linux/list.h:60 [inline]
- list_add_tail include/linux/list.h:93 [inline]
- em28xx_init_extension+0x44/0x1f0 drivers/media/usb/em28xx/em28xx-core.c:1125
- em28xx_init_dev.isra.0+0xa7b/0x15d8 drivers/media/usb/em28xx/em28xx-cards.c:3540
- em28xx_usb_probe.cold+0xcac/0x2515 drivers/media/usb/em28xx/em28xx-cards.c:3889
- usb_probe_interface+0x310/0x800 drivers/usb/core/driver.c:361
- really_probe+0x290/0xad0 drivers/base/dd.c:548
- driver_probe_device+0x223/0x350 drivers/base/dd.c:721
- __device_attach_driver+0x1d1/0x290 drivers/base/dd.c:828
- bus_for_each_drv+0x162/0x1e0 drivers/base/bus.c:430
- __device_attach+0x217/0x390 drivers/base/dd.c:894
- bus_probe_device+0x1e4/0x290 drivers/base/bus.c:490
- device_add+0x1459/0x1bf0 drivers/base/core.c:2487
- usb_set_configuration+0xe47/0x17d0 drivers/usb/core/message.c:2023
- generic_probe+0x9d/0xd5 drivers/usb/core/generic.c:210
- usb_probe_device+0xaf/0x140 drivers/usb/core/driver.c:266
- really_probe+0x290/0xad0 drivers/base/dd.c:548
- driver_probe_device+0x223/0x350 drivers/base/dd.c:721
- __device_attach_driver+0x1d1/0x290 drivers/base/dd.c:828
- bus_for_each_drv+0x162/0x1e0 drivers/base/bus.c:430
- __device_attach+0x217/0x390 drivers/base/dd.c:894
- bus_probe_device+0x1e4/0x290 drivers/base/bus.c:490
- device_add+0x1459/0x1bf0 drivers/base/core.c:2487
- usb_new_device.cold+0x540/0xcd0 drivers/usb/core/hub.c:2537
- hub_port_connect drivers/usb/core/hub.c:5184 [inline]
- hub_port_connect_change drivers/usb/core/hub.c:5324 [inline]
- port_event drivers/usb/core/hub.c:5470 [inline]
- hub_event+0x21cb/0x4300 drivers/usb/core/hub.c:5552
- process_one_work+0x945/0x15c0 kernel/workqueue.c:2264
- process_scheduled_works kernel/workqueue.c:2326 [inline]
- worker_thread+0x7ab/0xe20 kernel/workqueue.c:2412
- kthread+0x318/0x420 kernel/kthread.c:255
- ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-Modules linked in:
----[ end trace 8bae0db31a929c42 ]---
-RIP: 0010:__list_add_valid.cold+0x3a/0x3c lib/list_debug.c:26
-Code: 0b 48 89 f2 4c 89 e1 48 89 ee 48 c7 c7 a0 fc fb 85 e8 04 17 40 ff 0f 0b 48 89 f1 48 c7 c7 20 fc fb 85 4c 89 e6 e8 f0 16 40 ff <0f> 0b 48 89 ee 48 c7 c7 c0 fd fb 85 e8 df 16 40 ff 0f 0b 4c 89 ea
-RSP: 0018:ffff8881d5d570c8 EFLAGS: 00010282
-RAX: 0000000000000075 RBX: ffff8881cd764120 RCX: 0000000000000000
-RDX: 0000000000000000 RSI: ffffffff8129598d RDI: ffffed103abaae0b
-RBP: ffff8881cd764240 R08: 0000000000000075 R09: ffffed103b666210
-R10: ffffed103b66620f R11: ffff8881db33107f R12: ffffffff87a1a960
-R13: ffff8881cd764000 R14: ffff8881cd76412c R15: ffff8881cd5a2000
-FS:  0000000000000000(0000) GS:ffff8881db300000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007f7f37b26000 CR3: 00000001c5fe1000 CR4: 00000000001406e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-
-
+Signed-off-by: Kalimuthu Velappan <kalimuthu.velappan@broadcom.com>
 ---
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+ include/uapi/linux/bpf.h       |  5 ++++-
+ net/core/filter.c              | 22 ++++++++++++++++++++++
+ tools/include/uapi/linux/bpf.h |  4 +++-
+ 3 files changed, 29 insertions(+), 2 deletions(-)
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+diff --git a/include/uapi/linux/bpf.h b/include/uapi/linux/bpf.h
+index dbbcf0b..ac9794c 100644
+--- a/include/uapi/linux/bpf.h
++++ b/include/uapi/linux/bpf.h
+@@ -2938,7 +2938,10 @@ union bpf_attr {
+ 	FN(probe_read_user),		\
+ 	FN(probe_read_kernel),		\
+ 	FN(probe_read_user_str),	\
+-	FN(probe_read_kernel_str),
++	FN(probe_read_kernel_str),  \
++	FN(skb_get_nlattr),     \
++	FN(skb_get_nlattr_nest),
++
+ 
+ /* integer value in 'imm' field of BPF_CALL instruction selects which helper
+  * function eBPF program intends to call
+diff --git a/net/core/filter.c b/net/core/filter.c
+index 538f6a7..56a87e1 100644
+--- a/net/core/filter.c
++++ b/net/core/filter.c
+@@ -2699,6 +2699,24 @@ static const struct bpf_func_proto bpf_set_hash_invalid_proto = {
+ 	.arg1_type	= ARG_PTR_TO_CTX,
+ };
+ 
++static const struct bpf_func_proto bpf_skb_get_nlattr_proto = {
++	.func		= bpf_skb_get_nlattr,
++	.gpl_only	= false,
++	.ret_type	= RET_INTEGER,
++	.arg1_type	= ARG_PTR_TO_CTX,
++	.arg2_type  = ARG_ANYTHING,
++	.arg3_type  = ARG_ANYTHING,
++};
++
++static const struct bpf_func_proto skb_get_nlattr_nest_proto = {
++	.func		= bpf_skb_get_nlattr_nest,
++	.gpl_only	= false,
++	.ret_type	= RET_INTEGER,
++	.arg1_type	= ARG_PTR_TO_CTX,
++	.arg2_type  = ARG_ANYTHING,
++	.arg3_type  = ARG_ANYTHING,
++};
++
+ BPF_CALL_2(bpf_set_hash, struct sk_buff *, skb, u32, hash)
+ {
+ 	/* Set user specified hash as L4(+), so that it gets returned
+@@ -6091,6 +6109,10 @@ sk_filter_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
+ 		return &bpf_get_socket_uid_proto;
+ 	case BPF_FUNC_perf_event_output:
+ 		return &bpf_skb_event_output_proto;
++	case BPF_FUNC_skb_get_nlattr:
++		return &bpf_skb_get_nlattr_proto;
++	case BPF_FUNC_skb_get_nlattr_nest:
++		return &skb_get_nlattr_nest_proto;
+ 	default:
+ 		return bpf_base_func_proto(func_id);
+ 	}
+diff --git a/tools/include/uapi/linux/bpf.h b/tools/include/uapi/linux/bpf.h
+index dbbcf0b..3bfbc0e 100644
+--- a/tools/include/uapi/linux/bpf.h
++++ b/tools/include/uapi/linux/bpf.h
+@@ -2938,7 +2938,9 @@ union bpf_attr {
+ 	FN(probe_read_user),		\
+ 	FN(probe_read_kernel),		\
+ 	FN(probe_read_user_str),	\
+-	FN(probe_read_kernel_str),
++	FN(probe_read_kernel_str),  \
++	FN(skb_get_nlattr),     \
++	FN(skb_get_nlattr_nest),
+ 
+ /* integer value in 'imm' field of BPF_CALL instruction selects which helper
+  * function eBPF program intends to call
+-- 
+2.7.4
+
