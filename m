@@ -2,285 +2,204 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0D5BC33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 22:32:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82C3EC33CAA
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 22:32:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B187A21734
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 22:32:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YmqGb74J"
+	by mail.kernel.org (Postfix) with ESMTP id 4CAF621D7E
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 22:32:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729384AbgAWWcn (ORCPT
+        id S1729433AbgAWWcq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 17:32:43 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:38574 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728057AbgAWWcm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 17:32:42 -0500
-Received: by mail-pg1-f194.google.com with SMTP id a33so2113149pgm.5;
-        Thu, 23 Jan 2020 14:32:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=k8oUDoYMucazXFtxquav+0rZYAd22M/oWku/ViIo0WM=;
-        b=YmqGb74JT8DeaJv78V0yvcQhOiel5q6bPg8H8N01PqdXRj9r8sor50gNT9VHYzMLll
-         NOfnNd5B2Pyg2unheZGbcOxm4R62eWbsQ8tJJDJZgmhaHfS5puROVDF8TSMkfKvYjdHH
-         dX8/UEbi3/J8XNo2BSboYUB/CwrgFiDq5P5m7/811HLUVTBWFYaTCsVeYgEAZvqPWE2M
-         hb5Yb7inCiSk4dha7dCKAqRmbMT4ksiFnLiKu/2VDuHSMYZQ2Sm471q0Ccl9IqslDWL6
-         PUNv3CFRrsRglHL8aK6u6kNR608MqPEV0RMYCQIjXGW5HUSRVFwQr4yUbSdNgmYrvo9q
-         ETaw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition
-         :content-transfer-encoding:in-reply-to:user-agent;
-        bh=k8oUDoYMucazXFtxquav+0rZYAd22M/oWku/ViIo0WM=;
-        b=mOFaCeWhTwXac2II5AcxDuwXfYZev70qiuuG8VX3Zg7qMDgyI6Z1frCxAw66VgJ0E2
-         VqHCkONnW4LbdJUFSHxxRgqx5Y+/uHuCll8nWq4luaS0IAL5mBbKjhhmtXkRUgnUmpOX
-         D2hG+dUjlvlLAOMWU1tH1ZuaTpRma9E1wusOtKA6wfxYtWIqr6CE0YGZRYDWvufX5QRR
-         aQcXUvb7ok3q0EzfkMN36Rs14uXrG+2mi1H466n+38KxKM6ow+E86Z3ohAcGc4U1h9G1
-         Jo6AQM3bIG9bAaXaw6jAA6Uoxj77ZGByyOCyv4FWOZ7+hxcGfDaUugjf1EkqjEcC7RCW
-         XlyA==
-X-Gm-Message-State: APjAAAVs+cwR7BQjC13xG6x0XYoUAH/xaoy1jMhm96pPs0UV06tIIwlx
-        FTYZYhAVzax/gAkHpJet83afbNi4
-X-Google-Smtp-Source: APXvYqxGGnuXj36YNiexqLXr2+RD48Pi0SbQzd0Slmz2rysiEvi+HNJPya6TypZmelAYnMWm3XOG4w==
-X-Received: by 2002:a63:fe50:: with SMTP id x16mr623986pgj.31.1579818761292;
-        Thu, 23 Jan 2020 14:32:41 -0800 (PST)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id z6sm3540720pfa.155.2020.01.23.14.32.40
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 23 Jan 2020 14:32:40 -0800 (PST)
-Date:   Thu, 23 Jan 2020 14:32:39 -0800
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     linux-hwmon@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Clemens Ladisch <clemens@ladisch.de>,
-        Jean Delvare <jdelvare@suse.com>,
-        Ondrej =?utf-8?Q?=C4=8Cerman?= <ocerman@sda1.eu>,
-        Michael Larabel <michael@phoronix.com>
-Subject: Re: [PATCH v3] hwmon: (k10temp) Display up to eight sets of CCD
- temperatures
-Message-ID: <20200123223239.GA2070@roeck-us.net>
-References: <20200123220422.30334-1-linux@roeck-us.net>
+        Thu, 23 Jan 2020 17:32:46 -0500
+Received: from foss.arm.com ([217.140.110.172]:44900 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728057AbgAWWcp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jan 2020 17:32:45 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AC233328;
+        Thu, 23 Jan 2020 14:32:44 -0800 (PST)
+Received: from [192.168.122.166] (unknown [10.118.28.54])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6F5DE3F68E;
+        Thu, 23 Jan 2020 14:32:44 -0800 (PST)
+Subject: Re: [RFC 1/2] net: bcmgenet: Initial bcmgenet ACPI support
+To:     Florian Fainelli <f.fainelli@gmail.com>, netdev@vger.kernel.org
+Cc:     opendmb@gmail.com, davem@davemloft.net,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-kernel@vger.kernel.org, wahrenst@gmx.net,
+        Andrew Lunn <andrew@lunn.ch>
+References: <20200123060823.1902366-1-jeremy.linton@arm.com>
+ <20200123060823.1902366-2-jeremy.linton@arm.com>
+ <27337e71-1349-4819-7fe4-c6ecfed522cc@gmail.com>
+From:   Jeremy Linton <jeremy.linton@arm.com>
+Message-ID: <db42c0b5-04f8-72fc-cc9e-05d0f513ac5f@arm.com>
+Date:   Thu, 23 Jan 2020 16:32:37 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200123220422.30334-1-linux@roeck-us.net>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <27337e71-1349-4819-7fe4-c6ecfed522cc@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sorry for the noise - please don't bother with this version.
-I'll send v4 in a minute, with improved support for older EPYC CPUs.
+Hi,
 
-Guenter
+First, thanks for taking a look at this.
 
-On Thu, Jan 23, 2020 at 02:04:22PM -0800, Guenter Roeck wrote:
-> In HWiNFO, we see support for Tccd1, Tccd3, Tccd5, and Tccd7 temperature
-> sensors on Zen2 based Threadripper CPUs. Checking register maps on
-> Threadripper 3970X confirms SMN register addresses and values for those
-> sensors.
+On 1/23/20 3:22 PM, Florian Fainelli wrote:
+> On 1/22/20 10:08 PM, Jeremy Linton wrote:
+>> The rpi4 is capable of booting in ACPI mode with the latest
+>> edk2-platform commits. As such, it would be helpful if the genet
+>> platform device were usable.
+>>
+>> To achive this we convert some of the of_ calls to device_ and
+>> add the ACPI id module table, and tweak the phy connection code
+>> to use phy_connect() in the ACPI path.
 > 
-> Register values observed in an idle system:
+> This seems reasonable to me at first glance, although I would be
+> splitting the bcmgenet.c changes from the bcmmii.c for clarity.
+
+Sure.
+
 > 
-> 0x059950: 00000000 00000abc 00000000 00000ad8
-> 0x059960: 00000000 00000ade 00000000 00000ae4
+> There are some more specific comments below.
 > 
-> Under load:
+>>
+>> Signed-off-by: Jeremy Linton <jeremy.linton@arm.com>
+>> ---
+>>   .../net/ethernet/broadcom/genet/bcmgenet.c    | 19 +++--
+>>   drivers/net/ethernet/broadcom/genet/bcmmii.c  | 76 ++++++++++++-------
+>>   2 files changed, 63 insertions(+), 32 deletions(-)
+>>
+
+(trimming some)
+
+>> diff --git a/drivers/net/ethernet/broadcom/genet/bcmmii.c b/drivers/net/ethernet/broadcom/genet/bcmmii.c
+>> index 6392a2530183..054be1eaa1ae 100644
+>> --- a/drivers/net/ethernet/broadcom/genet/bcmmii.c
+>> +++ b/drivers/net/ethernet/broadcom/genet/bcmmii.c
+>> @@ -5,7 +5,7 @@
+>>    * Copyright (c) 2014-2017 Broadcom
+>>    */
+>>   
+>> -
+>> +#include <linux/acpi.h>
+>>   #include <linux/types.h>
+>>   #include <linux/delay.h>
+>>   #include <linux/wait.h>
+>> @@ -308,10 +308,21 @@ int bcmgenet_mii_config(struct net_device *dev, bool init)
+>>   	return 0;
+>>   }
+>>   
+>> +static void bcmgenet_phy_name(char *phy_name, int mdid, int phid)
+>> +{
+>> +	char mdio_bus_id[MII_BUS_ID_SIZE];
+>> +
+>> +	snprintf(mdio_bus_id, MII_BUS_ID_SIZE, "%s-%d",
+>> +		 UNIMAC_MDIO_DRV_NAME, mdid);
+>> +	snprintf(phy_name, MII_BUS_ID_SIZE, PHY_ID_FMT, mdio_bus_id, phid);
+>> +}
+>> +
+>>   int bcmgenet_mii_probe(struct net_device *dev)
+>>   {
+>>   	struct bcmgenet_priv *priv = netdev_priv(dev);
+>> -	struct device_node *dn = priv->pdev->dev.of_node;
+>> +	struct device *kdev = &priv->pdev->dev;
+>> +	struct device_node *dn = kdev->of_node;
+>> +
+>>   	struct phy_device *phydev;
+>>   	u32 phy_flags = 0;
+>>   	int ret;
+>> @@ -333,6 +344,16 @@ int bcmgenet_mii_probe(struct net_device *dev)
+>>   			pr_err("could not attach to PHY\n");
+>>   			return -ENODEV;
+>>   		}
+>> +	} else if (has_acpi_companion(kdev)) {
+>> +		char phy_name[MII_BUS_ID_SIZE + 3];
+>> +
+>> +		bcmgenet_phy_name(phy_name,  priv->pdev->id, 1);
 > 
-> 0x059950: 00000000 00000c02 00000000 00000c14
-> 0x059960: 00000000 00000c30 00000000 00000c22
+> There is no guarantee that 1 is valid other than for the current
+> Raspberry Pi 4 design that we have in the wild, would ACPI be used in
+> the future with other designs, this would likely be different. Can you
+> find a way to communicate that address via appropriate firmware properties?
+
+Your right, that "1" seems like it should be dynamic despite a large 
+number of these nic drivers hardcoding the phy address.
+
+Another _DSD property could be added, but that likely just moves the 
+hardcoding from one place to another. Particularly, given that the 
+mdiobus_register() phy scanning is working correctly and the machine 
+knows what the phy address is.
+
+AFAIK, The correct choice is something like phy_find_first(), but the 
+mii_bus structure is layered down in the unimac module's private data, 
+which we could retrieve, but that would be really ugly.
+
+There is of_mdio_find_bus(), but that doesn't apply either. A generic 
+mdio_find_bus() that takes the bus name string, or maybe the parent 
+device and does the bus_find_device itself would be helpful.
+
+Suggestions?
+
+
 > 
-> More analysis shows that EPYC CPUs support up to 8 CCD temperature
-> sensors.
+>> +		phydev = phy_connect(dev, phy_name, bcmgenet_mii_setup,
+>> +				     priv->phy_interface);
+>> +		if (!IS_ERR(phydev))
+>> +			phydev->dev_flags = phy_flags;
+>> +		else
+>> +			return -ENODEV;
+>>   	} else {
+>>   		phydev = dev->phydev;
+>>   		phydev->dev_flags = phy_flags;
+>> @@ -435,6 +456,7 @@ static int bcmgenet_mii_register(struct bcmgenet_priv *priv)
+>>   	ppd.wait_func = bcmgenet_mii_wait;
+>>   	ppd.wait_func_data = priv;
+>>   	ppd.bus_name = "bcmgenet MII bus";
+>> +	ppd.phy_mask = ~0;
 > 
-> On top of that, in thm_10_0_sh_mask.h in the Linux kernel, we find
-> definitions for THM_DIE{1-3}_TEMP__VALID_MASK, set to 0x00000800, as well
-> as matching SMN addresses. This lets us conclude that bit 11 of the
-> respective registers is a valid bit. With this assumption, the temperature
-> offset is now 49 degrees C. This conveniently matches the documented
-> temperature offset for Tdie, again suggesting that above registers indeed
-> report temperatures sensor values. Assume that bit 11 is indeed a valid
-> bit, and add support for the additional sensors.
+> This is going to be breaking PHY scanning for the platform_data case, so
+> maybe something like:
+
+Does it? I thought it was being reset in bcmgenet_mii_pdata_init(). I 
+guess I don't fully understand the what happens in PHY_INTERFACE_MODE_MOCA.
+
 > 
-> With this patch applied, output from 3970X (idle) looks as follows:
+> 	if (acpi_has_companion())
+> 		ppd.phy_mask = ~BIT(acpi_phy_id);
 > 
-> k10temp-pci-00c3
-> Adapter: PCI adapter
-> Tdie:         +55.9°C
-> Tctl:         +55.9°C
-> Tccd1:        +39.8°C
-> Tccd3:        +43.8°C
-> Tccd5:        +43.8°C
-> Tccd7:        +44.8°C
+> or something like that?
+
+Sure, if nothing else I can wrap the mask in if (acpi) though, as I 
+mentioned above I've got some reservations about picking up the phy id 
+from the firmware unless its absolutely required.
+
+
 > 
-> Tested-by: Michael Larabel <michael@phoronix.com>
-> Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-> ---
-> v3: Increased number of supported CCD sensors to 8.
->     Dropped note that functionality on high-end CPUs is not known,
->     since that is no longer correct.
+>>   
+>>   	/* Unimac MDIO bus controller starts at UniMAC offset + MDIO_CMD
+>>   	 * and is 2 * 32-bits word long, 8 bytes total.
+>> @@ -477,12 +499,28 @@ static int bcmgenet_mii_register(struct bcmgenet_priv *priv)
+>>   	return ret;
+>>   }
+>>   
+>> +static int bcmgenet_mii_phy_init(struct bcmgenet_priv *priv)
+>> +{
 > 
-> v2: Added additional sensors to k10temp_info[].
+> Maybe name that phy_interface_init(), there is not strictly much PHY
+> initialization going on here, just property fetching and internal book
+> keeping.
 > 
->  drivers/hwmon/k10temp.c | 70 ++++++++++++++++++-----------------------
->  1 file changed, 31 insertions(+), 39 deletions(-)
-> 
-> diff --git a/drivers/hwmon/k10temp.c b/drivers/hwmon/k10temp.c
-> index 5e3f43594084..1634cb6394f0 100644
-> --- a/drivers/hwmon/k10temp.c
-> +++ b/drivers/hwmon/k10temp.c
-> @@ -7,7 +7,7 @@
->   * Copyright (c) 2020 Guenter Roeck <linux@roeck-us.net>
->   *
->   * Implementation notes:
-> - * - CCD1 and CCD2 register address information as well as the calculation to
-> + * - CCD register address information as well as the calculation to
->   *   convert raw register values is from https://github.com/ocerman/zenpower.
->   *   The information is not confirmed from chip datasheets, but experiments
->   *   suggest that it provides reasonable temperature values.
-> @@ -18,11 +18,6 @@
->   *   normalized to report 1A/LSB for core current and and 0.25A/LSB for SoC
->   *   current. Reported values can be adjusted using the sensors configuration
->   *   file.
-> - * - It is unknown if the mechanism to read CCD1/CCD2 temperature as well as
-> - *   current and voltage information works on higher-end Ryzen CPUs.
-> - *   Information reported by Windows tools suggests that additional sensors
-> - *   (both temperature and voltage/current) are supported, but their register
-> - *   location is currently unknown.
->   */
->  
->  #include <linux/bitops.h>
-> @@ -80,8 +75,10 @@ static DEFINE_MUTEX(nb_smu_ind_mutex);
->  
->  /* F17h M01h Access througn SMN */
->  #define F17H_M01H_REPORTED_TEMP_CTRL_OFFSET	0x00059800
-> -#define F17H_M70H_CCD1_TEMP			0x00059954
-> -#define F17H_M70H_CCD2_TEMP			0x00059958
-> +
-> +#define F17H_M70H_CCD_TEMP(x)			(0x00059954 + ((x) * 4))
-> +#define F17H_M70H_CCD_TEMP_VALID		BIT(11)
-> +#define F17H_M70H_CCD_TEMP_MASK			GENMASK(10, 0)
->  
->  #define F17H_M01H_SVI				0x0005A000
->  #define F17H_M01H_SVI_TEL_PLANE0		(F17H_M01H_SVI + 0xc)
-> @@ -100,8 +97,7 @@ struct k10temp_data {
->  	int temp_offset;
->  	u32 temp_adjust_mask;
->  	bool show_tdie;
-> -	bool show_tccd1;
-> -	bool show_tccd2;
-> +	u32 show_tccd;
->  	u32 svi_addr[2];
->  	bool show_current;
->  	int cfactor[2];
-> @@ -188,6 +184,12 @@ const char *k10temp_temp_label[] = {
->  	"Tctl",
->  	"Tccd1",
->  	"Tccd2",
-> +	"Tccd3",
-> +	"Tccd4",
-> +	"Tccd5",
-> +	"Tccd6",
-> +	"Tccd7",
-> +	"Tccd8",
->  };
->  
->  const char *k10temp_in_label[] = {
-> @@ -277,15 +279,10 @@ static int k10temp_read_temp(struct device *dev, u32 attr, int channel,
->  			if (*val < 0)
->  				*val = 0;
->  			break;
-> -		case 2:		/* Tccd1 */
-> -			amd_smn_read(amd_pci_dev_to_node_id(data->pdev),
-> -				     F17H_M70H_CCD1_TEMP, &regval);
-> -			*val = (regval & 0xfff) * 125 - 305000;
-> -			break;
-> -		case 3:		/* Tccd2 */
-> +		case 2 ... 9:		/* Tccd{1-8} */
->  			amd_smn_read(amd_pci_dev_to_node_id(data->pdev),
-> -				     F17H_M70H_CCD2_TEMP, &regval);
-> -			*val = (regval & 0xfff) * 125 - 305000;
-> +				     F17H_M70H_CCD_TEMP(channel - 2), &regval);
-> +			*val = (regval & F17H_M70H_CCD_TEMP_MASK) * 125 - 49000;
->  			break;
->  		default:
->  			return -EOPNOTSUPP;
-> @@ -343,12 +340,8 @@ static umode_t k10temp_is_visible(const void *_data,
->  				if (!data->show_tdie)
->  					return 0;
->  				break;
-> -			case 2:		/* Tccd1 */
-> -				if (!data->show_tccd1)
-> -					return 0;
-> -				break;
-> -			case 3:		/* Tccd2 */
-> -				if (!data->show_tccd2)
-> +			case 2 ... 9:		/* Tccd{1-8} */
-> +				if (!(data->show_tccd & BIT(channel - 2)))
->  					return 0;
->  				break;
->  			default:
-> @@ -382,12 +375,8 @@ static umode_t k10temp_is_visible(const void *_data,
->  			case 0:		/* Tdie */
->  			case 1:		/* Tctl */
->  				break;
-> -			case 2:		/* Tccd1 */
-> -				if (!data->show_tccd1)
-> -					return 0;
-> -				break;
-> -			case 3:		/* Tccd2 */
-> -				if (!data->show_tccd2)
-> +			case 2 ... 9:		/* Tccd{1-8} */
-> +				if (!(data->show_tccd & BIT(channel - 2)))
->  					return 0;
->  				break;
->  			default:
-> @@ -520,6 +509,12 @@ static const struct hwmon_channel_info *k10temp_info[] = {
->  			   HWMON_T_LABEL,
->  			   HWMON_T_INPUT | HWMON_T_LABEL,
->  			   HWMON_T_INPUT | HWMON_T_LABEL,
-> +			   HWMON_T_INPUT | HWMON_T_LABEL,
-> +			   HWMON_T_INPUT | HWMON_T_LABEL,
-> +			   HWMON_T_INPUT | HWMON_T_LABEL,
-> +			   HWMON_T_INPUT | HWMON_T_LABEL,
-> +			   HWMON_T_INPUT | HWMON_T_LABEL,
-> +			   HWMON_T_INPUT | HWMON_T_LABEL,
->  			   HWMON_T_INPUT | HWMON_T_LABEL),
->  	HWMON_CHANNEL_INFO(in,
->  			   HWMON_I_INPUT | HWMON_I_LABEL,
-> @@ -595,15 +590,12 @@ static int k10temp_probe(struct pci_dev *pdev, const struct pci_device_id *id)
->  			data->cfactor[1] = CFACTOR_ISOC;
->  			data->svi_addr[0] = F17H_M01H_SVI_TEL_PLANE1;
->  			data->svi_addr[1] = F17H_M01H_SVI_TEL_PLANE0;
-> -			amd_smn_read(amd_pci_dev_to_node_id(pdev),
-> -				     F17H_M70H_CCD1_TEMP, &regval);
-> -			if (regval & 0xfff)
-> -				data->show_tccd1 = true;
-> -
-> -			amd_smn_read(amd_pci_dev_to_node_id(pdev),
-> -				     F17H_M70H_CCD2_TEMP, &regval);
-> -			if (regval & 0xfff)
-> -				data->show_tccd2 = true;
-> +			for (i = 0; i < 8; i++) {
-> +				amd_smn_read(amd_pci_dev_to_node_id(pdev),
-> +					     F17H_M70H_CCD_TEMP(i), &regval);
-> +				if (regval & F17H_M70H_CCD_TEMP_VALID)
-> +					data->show_tccd |= BIT(i);
-> +			}
->  			break;
->  		}
->  	} else {
-> -- 
-> 2.17.1
-> 
+
+Yup, sounds good.
+
+
+Thanks, again!
