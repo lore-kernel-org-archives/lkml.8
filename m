@@ -2,193 +2,367 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 406FEC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 17:01:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9610EC33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 17:03:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 165F22071E
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 17:01:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6085B2071E
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 17:03:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jwusNk8H"
+	dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b="o7zm3+2F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729998AbgAWRBi (ORCPT
+        id S1730071AbgAWRDx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 12:01:38 -0500
-Received: from mail-il1-f194.google.com ([209.85.166.194]:40969 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729838AbgAWRBh (ORCPT
+        Thu, 23 Jan 2020 12:03:53 -0500
+Received: from sonic301-38.consmr.mail.ne1.yahoo.com ([66.163.184.207]:37857
+        "EHLO sonic301-38.consmr.mail.ne1.yahoo.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729548AbgAWRDx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 12:01:37 -0500
-Received: by mail-il1-f194.google.com with SMTP id f10so2597141ils.8
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jan 2020 09:01:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=3T3XW9ObtDvH41u0oiLPng2xqMLffjeMRdO/UO5hcQk=;
-        b=jwusNk8HEBf+lYTXTSZF87RSARfaLlueWxX9AWHVr+fInNo8lx+kEnxvm10B3mp7hR
-         vUmGtD4Nu51ZyA2PrM9jMUSuEnmAO4Cu1vlkmQ15MLVSLyTmGbrWYbzkbQIIP9LYuLX7
-         MgmxJx31rM/0zu5f60oPXpCNtAVYWAMqzaE2mVSZrsO2F/gszaSGMFEx53EIKKvi1vWW
-         9vdWkWnVCIO2vxYmdS4TTWk5UouMAR1ac887GoDD+dCRCVz/WCRW5m3w5/MUdPNuPBwf
-         09jkEQck1tOIq8uiMTfsrXDhMC2gejddhzHIw8umyFvJgMLsR5mCD5D1/mcm64fHp9pk
-         LBNQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=3T3XW9ObtDvH41u0oiLPng2xqMLffjeMRdO/UO5hcQk=;
-        b=UUckVamOEl2tkkYGInwsubH6QFwrP4mY1XWatR/2joOPr2FZRLa9Y0YFJkyg/UM53s
-         rLvqk0yKVL1VxLnI8Tju/D/B+ObR8QJFgt4q48w6EVdB/nHQ0trh/gGdtDxmHlmSAH/e
-         t+s3+4BcM4TCwAJWNxUWE9nlA0ORP0zf7UYA4fQkOsvKW8sJY94VnlyeKwFbQWYn+lpP
-         U7fznN48BShjUBVa//M0h77ji2JFgcCiPCLOUSrZogv8Xe2KHEc7bn6BiPgIZUGGph23
-         2CEyxxEHhxK/5ex89txthgA+EaQT+/KM+lLTVeWWHLJKpTj5VOLiLs/0GOCgfl1tur/v
-         1/fw==
-X-Gm-Message-State: APjAAAUHa3DpL8G/KPK2zHn4YKF69u39ZmCbqjTWthlgPB59UeWqqYUU
-        tqf4Oncmb8CHZbLo6gs8o9mKbM4KBSnvWc2hhYJK3w==
-X-Google-Smtp-Source: APXvYqyLZKjrRp/IwFBeBXBlZTKic2w21A8Xn1g75ixmc/1tXdRf9Sgawmhq/Dpa/23MCm3mSMWjDmbH4maJ1mfiRZY=
-X-Received: by 2002:a92:2907:: with SMTP id l7mr13319443ilg.140.1579798895648;
- Thu, 23 Jan 2020 09:01:35 -0800 (PST)
+        Thu, 23 Jan 2020 12:03:53 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1579799031; bh=DjIheSjYqHrWuIvRL/YFnXndELjorh97M7vPqZTiO3E=; h=Subject:To:References:Cc:From:Date:In-Reply-To:From:Subject; b=o7zm3+2FXH8ABMWty9E9cirCw069rxls+2wyKJgvk9E+eQoWWQOc9TJdDnRqmveFP8+3GTK3nBCFJjKWOSCsp8ftUqXUh5sGo9HKpzkwX/efk9UJbzUoudjmeMXpQJnY9bKENdUYVGprGI9i7YDpURwfT6YFAxkdJoALxLNQcU8FlonkXXM3InRTRnglkdvxRTsw5jb0lOis8lSCv0ILjOmZ83Rpv63o72HX23lBwDgUizzWyRv6xn7W9Y8gGeXcvNsnwApMwq38juNnTdk/lAbUtqMkHRFgLAESjbz2SGA8CVL14vuDR/JsncFYaBxDTLfcGkLY59zQAqUQyfOH1g==
+X-YMail-OSG: GfmIL8kVM1lmaelH9gBL8oDSL_60sMjoDY0mfc7QcGgA3b7ToGvaqiX6xjAhQXR
+ r..EU5GAy9_KZdP9ThH4AZYWbKSBMOnk2tMLqD7B4Yn1fIxYW.wbhs25WHFdnclNTBaFVyYr1WJC
+ DF3Z17m1NUVewmccRZ7e84RP8x9b557V21sbo_qlgdHvhsOPrEeYr5DQKR5uxJx5BrV2xvsTb3zn
+ c8QW8Gx3ACXEw1Ub4B6sD5_Cr1CswvZ3SkBtI7LWkJtbXudE8yxh03pYCvTUJTYYofQTooSxY94S
+ pTN2cJjMX.mf_gy02gpc1tDdNUGk39TK1IasHJlDU2aJBG3LhDPuLXQeGaoCGrpDbx6KtV9SoqcG
+ zLezXhNljOjcchP89mUZhJJ9PtHWTp9DeLvHV7bFhDxqiq2D4j0m.2lMa66RwkAZPacqNVbw8cnd
+ R8GAe8D7a6vust_dTss0RMd9pZEKJKfpoqT45gOL34CdzkKjGgs4Ck7jrzK6keNfHO.HyCGTzCHp
+ 5WrwDmpKdZIV6PddiwxqaeRhNAPPCIr6DNG2pRNUH3lRr56cPYYHLSuixfH.aNqJVa_rnjlQtEAo
+ kR4TZ_3yBZooiQLVA5Y8zwGSNLulxtvRoqSx.1nrxbECAH1gWR62J051ZVCUC.qKQ9dID_sl_j6k
+ 6n4I.Eo2npfvZztbkNSXD8d_g3lcIbhQYLdvVdkaDsPpUuzL7y31x0RYW1LSqYFFKtp3ff92sYbW
+ h4_QSy.gJFdTeDnQrrlSUUN177qT8x5MnjoA_M1Sxds_qNp8bAVAXr4wcTuRmb5lFr3Y3ccdXTxe
+ nm8.EbAkcCcWwDgk5nO4ZqlSltAMfznrUQpwEEkwCxN0oOF2NCheGNc6tGvNahx2R7RisI0JB_qF
+ 81VbIFMz0KHeKANx8701_EthiGSkqUYvyX_bHv.W9OGHXmVXFvyd21jd8DsxgKMyulehS0uK1Yq5
+ FUfvG2a5ZQproJxbVHsIVxp9QqFQPKC6sxyKsCRF73bSMQddpxgIRhOaFEs3U9CPFTSq1tTB.z4B
+ Btu0YkN1mzQF5Wcr0R0X6GUZI0VSZlqZKmjfWp4UUXZ2xybUBan5ghuMuovsmQpt8oIQlmPTJUFE
+ v43Q37ZRC2oj3Iwp8xjrX..UnP6R.Yq.rHoD961TWXLuHX.BUu0iTxZnGM6nM8zAspN98539dwhO
+ iH2jn37jmY.ZcTF3mH7qTiDfFkzOIJTs5sV1gRm39TDr6vrqhRzwLoCxLMU7Nz_bKSJFDK45hdHx
+ 1vUFvhD5xxInWzjQ9do6PsA1HnAL5grXLOF6e3lzYG.qHUb7nfsrNGhNvFd3uBxtOmenbZu2sSlu
+ _kwIKMon2R8lGfwJh6k0NBIf4cMeJ103XIXmKVaBGpcMiSiwNfanhEdrpx7gMJBGtPz5Mhrvk19g
+ XQCdHeepYnieMw2gyWjxn9ZsPFl1BjTYqC0XFNN6LecxUsJxaEehX0A--
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic301.consmr.mail.ne1.yahoo.com with HTTP; Thu, 23 Jan 2020 17:03:51 +0000
+Received: by smtp427.mail.bf1.yahoo.com (Oath Hermes SMTP Server) with ESMTPA ID 411c2b259896b6d5783089d449bbf34d;
+          Thu, 23 Jan 2020 17:03:48 +0000 (UTC)
+Subject: Re: [PATCH bpf-next v3 04/10] bpf: lsm: Add mutable hooks list for
+ the BPF LSM
+To:     KP Singh <kpsingh@chromium.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux Security Module list 
+        <linux-security-module@vger.kernel.org>, bpf@vger.kernel.org
+References: <20200123152440.28956-1-kpsingh@chromium.org>
+ <20200123152440.28956-5-kpsingh@chromium.org>
+Cc:     Casey Schaufler <casey@schaufler-ca.com>
+From:   Casey Schaufler <casey@schaufler-ca.com>
+Autocrypt: addr=casey@schaufler-ca.com; keydata=
+ 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
+ abzjfg==
+Message-ID: <29157a88-7049-906e-fe92-b7a1e2183c6b@schaufler-ca.com>
+Date:   Thu, 23 Jan 2020 09:03:47 -0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-References: <20191227053215.423811-1-bjorn.andersson@linaro.org>
- <20191227053215.423811-8-bjorn.andersson@linaro.org> <20200110212806.GD11555@xps15>
- <20200122193936.GB3261042@ripper>
-In-Reply-To: <20200122193936.GB3261042@ripper>
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-Date:   Thu, 23 Jan 2020 10:01:24 -0700
-Message-ID: <CANLsYkx-C9U4W3R3Xo6t3BJBM4UK_i3zuwzhnXMMEQ0-ur+8Kg@mail.gmail.com>
-Subject: Re: [PATCH v2 7/8] remoteproc: qcom: q6v5: Add common panic handler
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ohad Ben-Cohen <ohad@wizery.com>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-remoteproc <linux-remoteproc@vger.kernel.org>,
-        Sibi Sankar <sibis@codeaurora.org>,
-        Rishabh Bhatnagar <rishabhb@codeaurora.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200123152440.28956-5-kpsingh@chromium.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Mailer: WebService/1.1.14873 hermes Apache-HttpAsyncClient/4.1.4 (Java/1.8.0_181)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 22 Jan 2020 at 12:40, Bjorn Andersson
-<bjorn.andersson@linaro.org> wrote:
+On 1/23/2020 7:24 AM, KP Singh wrote:
+> From: KP Singh <kpsingh@google.com>
 >
-> On Fri 10 Jan 13:28 PST 2020, Mathieu Poirier wrote:
+> - The list of hooks registered by an LSM is currently immutable as they
+>   are declared with __lsm_ro_after_init and they are attached to a
+>   security_hook_heads struct.
+> - For the BPF LSM we need to de/register the hooks at runtime. Making
+>   the existing security_hook_heads mutable broadens an
+>   attack vector, so a separate security_hook_heads is added for only
+>   those that ~must~ be mutable.
+> - These mutable hooks are run only after all the static hooks have
+>   successfully executed.
 >
-> > On Thu, Dec 26, 2019 at 09:32:14PM -0800, Bjorn Andersson wrote:
-> > > Add a common panic handler that invokes a stop request and sleep enough
-> > > to let the remoteproc flush it's caches etc in order to aid post mortem
-> > > debugging.
-> > >
-> > > Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> > > ---
-> > >
-> > > Changes since v1:
-> > > - None
-> > >
-> > >  drivers/remoteproc/qcom_q6v5.c | 19 +++++++++++++++++++
-> > >  drivers/remoteproc/qcom_q6v5.h |  1 +
-> > >  2 files changed, 20 insertions(+)
-> > >
-> > > diff --git a/drivers/remoteproc/qcom_q6v5.c b/drivers/remoteproc/qcom_q6v5.c
-> > > index cb0f4a0be032..17167c980e02 100644
-> > > --- a/drivers/remoteproc/qcom_q6v5.c
-> > > +++ b/drivers/remoteproc/qcom_q6v5.c
-> > > @@ -6,6 +6,7 @@
-> > >   * Copyright (C) 2014 Sony Mobile Communications AB
-> > >   * Copyright (c) 2012-2013, The Linux Foundation. All rights reserved.
-> > >   */
-> > > +#include <linux/delay.h>
-> > >  #include <linux/kernel.h>
-> > >  #include <linux/platform_device.h>
-> > >  #include <linux/interrupt.h>
-> > > @@ -15,6 +16,8 @@
-> > >  #include <linux/remoteproc.h>
-> > >  #include "qcom_q6v5.h"
-> > >
-> > > +#define Q6V5_PANIC_DELAY_MS        200
-> > > +
-> > >  /**
-> > >   * qcom_q6v5_prepare() - reinitialize the qcom_q6v5 context before start
-> > >   * @q6v5:  reference to qcom_q6v5 context to be reinitialized
-> > > @@ -162,6 +165,22 @@ int qcom_q6v5_request_stop(struct qcom_q6v5 *q6v5)
-> > >  }
-> > >  EXPORT_SYMBOL_GPL(qcom_q6v5_request_stop);
-> > >
-> > > +/**
-> > > + * qcom_q6v5_panic() - panic handler to invoke a stop on the remote
-> > > + * @q6v5:  reference to qcom_q6v5 context
-> > > + *
-> > > + * Set the stop bit and sleep in order to allow the remote processor to flush
-> > > + * its caches etc for post mortem debugging.
-> > > + */
-> > > +void qcom_q6v5_panic(struct qcom_q6v5 *q6v5)
-> > > +{
-> > > +   qcom_smem_state_update_bits(q6v5->state,
-> > > +                               BIT(q6v5->stop_bit), BIT(q6v5->stop_bit));
-> > > +
-> > > +   mdelay(Q6V5_PANIC_DELAY_MS);
-> >
-> > I really wonder if the delay should be part of the remoteproc core and
-> > configurable via device tree.  Wanting the remote processor to flush its caches
-> > is likely something other vendors will want when dealing with a kernel panic.
-> > It would be nice to see if other people have an opinion on this topic.  If not
-> > then we can keep the delay here and move it to the core if need be.
-> >
+> This is based on the ideas discussed in:
 >
-> I gave this some more thought and what we're trying to achieve is to
-> signal the remote processors about the panic and then give them time to
-> react, but per the proposal (and Qualcomm downstream iirc) we will do
-> this for each remote processor, one by one.
+>   https://lore.kernel.org/lkml/20180408065916.GA2832@ircssh-2.c.rugged-nimbus-611.internal
 >
-> So in the typical case of a Qualcomm platform with 4-5 remoteprocs we'll
-> end up giving the first one a whole second to react and the last one
-> "only" 200ms.
+> Reviewed-by: Brendan Jackman <jackmanb@google.com>
+> Reviewed-by: Florent Revest <revest@google.com>
+> Reviewed-by: Thomas Garnier <thgarnie@google.com>
+> Signed-off-by: KP Singh <kpsingh@google.com>
+> ---
+>  MAINTAINERS             |  1 +
+>  include/linux/bpf_lsm.h | 72 +++++++++++++++++++++++++++++++++++++++++
+>  security/bpf/Kconfig    |  1 +
+>  security/bpf/Makefile   |  2 +-
+>  security/bpf/hooks.c    | 20 ++++++++++++
+>  security/bpf/lsm.c      |  7 ++++
+>  security/security.c     | 25 +++++++-------
+>  7 files changed, 116 insertions(+), 12 deletions(-)
+>  create mode 100644 include/linux/bpf_lsm.h
+>  create mode 100644 security/bpf/hooks.c
 >
-> Moving the delay to the core by iterating over rproc_list calling
-> panic() and then delaying would be cleaner imo.
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index e2b7f76a1a70..c606b3d89992 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -3209,6 +3209,7 @@ L:	linux-security-module@vger.kernel.org
+>  L:	bpf@vger.kernel.org
+>  S:	Maintained
+>  F:	security/bpf/
+> +F:	include/linux/bpf_lsm.h
+>  
+>  BROADCOM B44 10/100 ETHERNET DRIVER
+>  M:	Michael Chan <michael.chan@broadcom.com>
+> diff --git a/include/linux/bpf_lsm.h b/include/linux/bpf_lsm.h
+> new file mode 100644
+> index 000000000000..57c20b2cd2f4
+> --- /dev/null
+> +++ b/include/linux/bpf_lsm.h
+> @@ -0,0 +1,72 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +
+> +/*
+> + * Copyright 2019 Google LLC.
+> + */
+> +
+> +#ifndef _LINUX_BPF_LSM_H
+> +#define _LINUX_BPF_LSM_H
+> +
+> +#include <linux/bpf.h>
+> +#include <linux/lsm_hooks.h>
+> +
+> +#ifdef CONFIG_SECURITY_BPF
+> +
+> +/* Mutable hooks defined at runtime and executed after all the statically
+> + * defined LSM hooks.
+> + */
+> +extern struct security_hook_heads bpf_lsm_hook_heads;
+> +
+> +int bpf_lsm_srcu_read_lock(void);
+> +void bpf_lsm_srcu_read_unlock(int idx);
+> +
+> +#define CALL_BPF_LSM_VOID_HOOKS(FUNC, ...)			\
+> +	do {							\
+> +		struct security_hook_list *P;			\
+> +		int _idx;					\
+> +								\
+> +		if (hlist_empty(&bpf_lsm_hook_heads.FUNC))	\
+> +			break;					\
+> +								\
+> +		_idx = bpf_lsm_srcu_read_lock();		\
+> +		hlist_for_each_entry(P, &bpf_lsm_hook_heads.FUNC, list) \
+> +			P->hook.FUNC(__VA_ARGS__);		\
+> +		bpf_lsm_srcu_read_unlock(_idx);			\
+> +	} while (0)
+> +
+> +#define CALL_BPF_LSM_INT_HOOKS(FUNC, ...) ({			\
+> +	int _ret = 0;						\
+> +	do {							\
+> +		struct security_hook_list *P;			\
+> +		int _idx;					\
+> +								\
+> +		if (hlist_empty(&bpf_lsm_hook_heads.FUNC))	\
+> +			break;					\
+> +								\
+> +		_idx = bpf_lsm_srcu_read_lock();		\
+> +								\
+> +		hlist_for_each_entry(P,				\
+> +			&bpf_lsm_hook_heads.FUNC, list) {	\
+> +			_ret = P->hook.FUNC(__VA_ARGS__);		\
+> +			if (_ret && IS_ENABLED(CONFIG_SECURITY_BPF_ENFORCE)) \
+> +				break;				\
+> +		}						\
+> +		bpf_lsm_srcu_read_unlock(_idx);			\
+> +	} while (0);						\
+> +	IS_ENABLED(CONFIG_SECURITY_BPF_ENFORCE) ? _ret : 0;	\
+> +})
+> +
+> +#else /* !CONFIG_SECURITY_BPF */
+> +
+> +#define CALL_BPF_LSM_INT_HOOKS(FUNC, ...) (0)
+> +#define CALL_BPF_LSM_VOID_HOOKS(...)
+> +
+> +static inline int bpf_lsm_srcu_read_lock(void)
+> +{
+> +	return 0;
+> +}
+> +static inline void bpf_lsm_srcu_read_unlock(int idx) {}
+> +
+> +#endif /* CONFIG_SECURITY_BPF */
+> +
+> +#endif /* _LINUX_BPF_LSM_H */
+> diff --git a/security/bpf/Kconfig b/security/bpf/Kconfig
+> index a5f6c67ae526..595e4ad597ae 100644
+> --- a/security/bpf/Kconfig
+> +++ b/security/bpf/Kconfig
+> @@ -6,6 +6,7 @@ config SECURITY_BPF
+>  	bool "BPF-based MAC and audit policy"
+>  	depends on SECURITY
+>  	depends on BPF_SYSCALL
+> +	depends on SRCU
+>  	help
+>  	  This enables instrumentation of the security hooks with
+>  	  eBPF programs.
+> diff --git a/security/bpf/Makefile b/security/bpf/Makefile
+> index c78a8a056e7e..c526927c337d 100644
+> --- a/security/bpf/Makefile
+> +++ b/security/bpf/Makefile
+> @@ -2,4 +2,4 @@
+>  #
+>  # Copyright 2019 Google LLC.
+>  
+> -obj-$(CONFIG_SECURITY_BPF) := lsm.o ops.o
+> +obj-$(CONFIG_SECURITY_BPF) := lsm.o ops.o hooks.o
+> diff --git a/security/bpf/hooks.c b/security/bpf/hooks.c
+> new file mode 100644
+> index 000000000000..b123d9cb4cd4
+> --- /dev/null
+> +++ b/security/bpf/hooks.c
+> @@ -0,0 +1,20 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +
+> +/*
+> + * Copyright 2019 Google LLC.
+> + */
+> +
+> +#include <linux/bpf_lsm.h>
+> +#include <linux/srcu.h>
+> +
+> +DEFINE_STATIC_SRCU(security_hook_srcu);
+> +
+> +int bpf_lsm_srcu_read_lock(void)
+> +{
+> +	return srcu_read_lock(&security_hook_srcu);
+> +}
+> +
+> +void bpf_lsm_srcu_read_unlock(int idx)
+> +{
+> +	return srcu_read_unlock(&security_hook_srcu, idx);
+> +}
+> diff --git a/security/bpf/lsm.c b/security/bpf/lsm.c
+> index dc9ac03c7aa0..a25a068e1781 100644
+> --- a/security/bpf/lsm.c
+> +++ b/security/bpf/lsm.c
+> @@ -4,6 +4,7 @@
+>   * Copyright 2019 Google LLC.
+>   */
+>  
+> +#include <linux/bpf_lsm.h>
+>  #include <linux/lsm_hooks.h>
+>  
+>  /* This is only for internal hooks, always statically shipped as part of the
+> @@ -12,6 +13,12 @@
+>   */
+>  static struct security_hook_list bpf_lsm_hooks[] __lsm_ro_after_init = {};
+>  
+> +/* Security hooks registered dynamically by the BPF LSM and must be accessed
+> + * by holding bpf_lsm_srcu_read_lock and bpf_lsm_srcu_read_unlock. The mutable
+> + * hooks dynamically allocated by the BPF LSM are appeneded here.
+> + */
+> +struct security_hook_heads bpf_lsm_hook_heads;
+> +
+>  static int __init bpf_lsm_init(void)
+>  {
+>  	security_add_hooks(bpf_lsm_hooks, ARRAY_SIZE(bpf_lsm_hooks), "bpf");
+> diff --git a/security/security.c b/security/security.c
+> index 30a8aa700557..95a46ca25dcd 100644
+> --- a/security/security.c
+> +++ b/security/security.c
+> @@ -27,6 +27,7 @@
+>  #include <linux/backing-dev.h>
+>  #include <linux/string.h>
+>  #include <linux/msg.h>
+> +#include <linux/bpf_lsm.h>
+>  #include <net/flow.h>
+>  
+>  #define MAX_LSM_EVM_XATTR	2
+> @@ -657,20 +658,22 @@ static void __init lsm_early_task(struct task_struct *task)
+>  								\
+>  		hlist_for_each_entry(P, &security_hook_heads.FUNC, list) \
+>  			P->hook.FUNC(__VA_ARGS__);		\
+> +		CALL_BPF_LSM_VOID_HOOKS(FUNC, __VA_ARGS__);	\
 
-I agree.
+I'm sorry if I wasn't clear on the v2 review.
+This does not belong in the infrastructure. You should be
+doing all the bpf_lsm hook processing in you module.
+bpf_lsm_task_alloc() should loop though all the bpf
+task_alloc hooks if they have to be handled differently
+from "normal" LSM hooks.
 
->
-> It might be nice to make this configurable in DT, but I agree that it
-> would be nice to hear from others if this would be useful.
-
-I think the delay has to be configurable via DT if we move this to the
-core.  The binding can be optional and default to 200ms if not
-present.
-
->
-> Regards,
-> Bjorn
->
-> > Thanks,
-> > Mathieu
-> >
-> > > +}
-> > > +EXPORT_SYMBOL_GPL(qcom_q6v5_panic);
-> > > +
-> > >  /**
-> > >   * qcom_q6v5_init() - initializer of the q6v5 common struct
-> > >   * @q6v5:  handle to be initialized
-> > > diff --git a/drivers/remoteproc/qcom_q6v5.h b/drivers/remoteproc/qcom_q6v5.h
-> > > index 7ac92c1e0f49..c37e6fd063e4 100644
-> > > --- a/drivers/remoteproc/qcom_q6v5.h
-> > > +++ b/drivers/remoteproc/qcom_q6v5.h
-> > > @@ -42,5 +42,6 @@ int qcom_q6v5_prepare(struct qcom_q6v5 *q6v5);
-> > >  int qcom_q6v5_unprepare(struct qcom_q6v5 *q6v5);
-> > >  int qcom_q6v5_request_stop(struct qcom_q6v5 *q6v5);
-> > >  int qcom_q6v5_wait_for_start(struct qcom_q6v5 *q6v5, int timeout);
-> > > +void qcom_q6v5_panic(struct qcom_q6v5 *q6v5);
-> > >
-> > >  #endif
-> > > --
-> > > 2.24.0
-> > >
+>  	} while (0)
+>  
+> -#define call_int_hook(FUNC, IRC, ...) ({			\
+> -	int RC = IRC;						\
+> -	do {							\
+> -		struct security_hook_list *P;			\
+> -								\
+> +#define call_int_hook(FUNC, IRC, ...) ({				\
+> +	int RC = IRC;							\
+> +	do {								\
+> +		struct security_hook_list *P;				\
+>  		hlist_for_each_entry(P, &security_hook_heads.FUNC, list) { \
+> -			RC = P->hook.FUNC(__VA_ARGS__);		\
+> -			if (RC != 0)				\
+> -				break;				\
+> -		}						\
+> -	} while (0);						\
+> -	RC;							\
+> +			RC = P->hook.FUNC(__VA_ARGS__);			\
+> +			if (RC != 0)					\
+> +				break;					\
+> +		}							\
+> +		if (RC == 0)						\
+> +			RC = CALL_BPF_LSM_INT_HOOKS(FUNC, __VA_ARGS__);	\
+> +	} while (0);							\
+> +	RC;								\
+>  })
+>  
+>  /* Security operations */
