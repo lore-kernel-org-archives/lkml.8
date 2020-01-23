@@ -2,102 +2,173 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 774C1C33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 17:52:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CDDAC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 17:54:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5375E20718
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 17:52:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13FAF22464
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 17:54:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728831AbgAWRw4 (ORCPT
+        id S1729049AbgAWRyA convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 12:52:56 -0500
-Received: from foss.arm.com ([217.140.110.172]:42864 "EHLO foss.arm.com"
+        Thu, 23 Jan 2020 12:54:00 -0500
+Received: from mga09.intel.com ([134.134.136.24]:30479 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727022AbgAWRw4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 12:52:56 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 49B711FB;
-        Thu, 23 Jan 2020 09:52:55 -0800 (PST)
-Received: from [10.1.195.43] (e107049-lin.cambridge.arm.com [10.1.195.43])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2B0673F52E;
-        Thu, 23 Jan 2020 09:52:54 -0800 (PST)
-Subject: Re: [RFC PATCH v4 3/6] sched/cpufreq: Hook em_pd_get_higher_power()
- into get_next_freq()
-To:     Quentin Perret <qperret@google.com>
-Cc:     linux-kernel@vger.kernel.org, rjw@rjwysocki.net,
-        viresh.kumar@linaro.org, peterz@infradead.org,
-        juri.lelli@redhat.com, vincent.guittot@linaro.org,
-        dietmar.eggemann@arm.com, linux-pm@vger.kernel.org
-References: <20200122173538.1142069-1-douglas.raillard@arm.com>
- <20200122173538.1142069-4-douglas.raillard@arm.com>
- <20200123161644.GA144523@google.com>
-From:   Douglas Raillard <douglas.raillard@arm.com>
-Organization: ARM
-Message-ID: <5a2af4e7-f9eb-4f23-908a-fab2c7395a99@arm.com>
-Date:   Thu, 23 Jan 2020 17:52:53 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
+        id S1727022AbgAWRx7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jan 2020 12:53:59 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Jan 2020 09:49:44 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,354,1574150400"; 
+   d="scan'208";a="428040520"
+Received: from vcostago-desk1.jf.intel.com (HELO vcostago-desk1) ([10.54.70.26])
+  by fmsmga006.fm.intel.com with ESMTP; 23 Jan 2020 09:49:42 -0800
+From:   Vinicius Costa Gomes <vinicius.gomes@intel.com>
+To:     Vladimir Oltean <olteanv@gmail.com>,
+        Murali Karicheri <m-karicheri2@ti.com>
+Cc:     Po Liu <po.liu@nxp.com>,
+        "davem\@davemloft.net" <davem@davemloft.net>,
+        "hauke.mehrtens\@intel.com" <hauke.mehrtens@intel.com>,
+        "gregkh\@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "allison\@lohutok.net" <allison@lohutok.net>,
+        "tglx\@linutronix.de" <tglx@linutronix.de>,
+        "hkallweit1\@gmail.com" <hkallweit1@gmail.com>,
+        "saeedm\@mellanox.com" <saeedm@mellanox.com>,
+        "andrew\@lunn.ch" <andrew@lunn.ch>,
+        "f.fainelli\@gmail.com" <f.fainelli@gmail.com>,
+        "alexandru.ardelean\@analog.com" <alexandru.ardelean@analog.com>,
+        "jiri\@mellanox.com" <jiri@mellanox.com>,
+        "ayal\@mellanox.com" <ayal@mellanox.com>,
+        "pablo\@netfilter.org" <pablo@netfilter.org>,
+        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev\@vger.kernel.org" <netdev@vger.kernel.org>,
+        "simon.horman\@netronome.com" <simon.horman@netronome.com>,
+        Claudiu Manoil <claudiu.manoil@nxp.com>,
+        Vladimir Oltean <vladimir.oltean@nxp.com>,
+        Alexandru Marginean <alexandru.marginean@nxp.com>,
+        Xiaoliang Yang <xiaoliang.yang_1@nxp.com>,
+        Roy Zang <roy.zang@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>,
+        Jerry Huang <jerry.huang@nxp.com>, Leo Li <leoyang.li@nxp.com>
+Subject: Re: [v1,net-next, 1/2] ethtool: add setting frame preemption of traffic classes
+In-Reply-To: <CA+h21hqk2pCfrQg5kC6HzmL=eEqJXjuRsu+cVkGsEi8OXGpKJA@mail.gmail.com>
+References: <20191127094517.6255-1-Po.Liu@nxp.com> <87v9p93a2s.fsf@linux.intel.com> <9b13a47e-8ca3-66b0-063c-798a5fa71149@ti.com> <CA+h21hqk2pCfrQg5kC6HzmL=eEqJXjuRsu+cVkGsEi8OXGpKJA@mail.gmail.com>
+Date:   Thu, 23 Jan 2020 09:50:54 -0800
+Message-ID: <87d0bajc3l.fsf@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20200123161644.GA144523@google.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB-large
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi,
 
+Vladimir Oltean <olteanv@gmail.com> writes:
 
-On 1/23/20 4:16 PM, Quentin Perret wrote:
-> On Wednesday 22 Jan 2020 at 17:35:35 (+0000), Douglas RAILLARD wrote:
->> @@ -210,9 +211,16 @@ static unsigned int get_next_freq(struct sugov_policy *sg_policy,
->>  	struct cpufreq_policy *policy = sg_policy->policy;
->>  	unsigned int freq = arch_scale_freq_invariant() ?
->>  				policy->cpuinfo.max_freq : policy->cur;
->> +	struct em_perf_domain *pd = sugov_policy_get_pd(sg_policy);
->>  
->>  	freq = map_util_freq(util, freq, max);
->>  
->> +	/*
->> +	 * Try to get a higher frequency if one is available, given the extra
->> +	 * power we are ready to spend.
->> +	 */
->> +	freq = em_pd_get_higher_freq(pd, freq, 0);
-> 
-> I find it sad that the call just below to cpufreq_driver_resolve_freq()
-> and cpufreq_frequency_table_target() iterates the OPPs all over again.
-> It's especially a shame since most existing users of the EM stuff do
-> have a cpufreq frequency table.
-> 
-> Have you looked at hooking this inside cpufreq_driver_resolve_freq()
-> instead ? If we have a well-formed EM available, the call to
-> cpufreq_frequency_table_target() feels redundant, so we might want to
-> skip it.
+> Hi Murali,
+>
+> On Wed, 22 Jan 2020 at 20:04, Murali Karicheri <m-karicheri2@ti.com> wrote:
+>>
+>> I have question about the below parameters in The Gate Parameter Table
+>> that are not currently supported by tc command. Looks like they need to
+>> be shown to user for management.
+>>
+>>      - ConfigChange - Looks like this needs to be controlled by
+>>        user. After sending admin command, user send this trigger to start
+>>        copying admin schedule to operation schedule. Is this getting
+>>        added to tc command?
+>
+> "The ConfigChange parameter signals the start of a
+> configuration change for the gate
+> when it is set to TRUE. This should only be done
+> when the various administrative parameters
+> are all set to appropriate values."
+>
+> As far as my understanding goes, all tc-taprio commands currently
+> behave as though this boolean is implicitly set to TRUE after the
+> structures have been set up. I'm not sure there is any value in doing
+> otherwise.
+>
+>>      - ConfigChangeTime - The time at which the administrative variables
+>>        that determine the cycle are to be copied across to the
+>>        corresponding operational variables, expressed as a PTP timescale
+>
+> This is the base-time of the admin schedule, no?
+>
+> "The PTPtime at which the next config change is scheduled to occur.
+> The value is a representation of a PTPtime value,
+> consisting of a 48-bit integer
+> number of seconds and a 32-bit integer number of nanoseconds."
+>
+>>      - TickGranularity - the management parameters specified in Gate
+>>        Parameter Table allow a management station to discover the
+>>        characteristics of an implementation’s cycle timer clock
+>>        (TickGranularity) and to set the parameters for the gating cycle
+>>        accordingly.
+>
+> Not sure who is going to use this and for what purpose, but ok.
+>
+>>      - ConfigPending - A Boolean variable, set TRUE to indicate that
+>>        there is a new cycle configuration awaiting installation.
+>
+> I had tried to export something like this (driver calls back into
+> sch_taprio.c when hw has applied the config, this would result in
+> ConfigPending = FALSE), but ultimately didn't finish the idea, and it
+> caused some problems too, due to incorrect RCU usage.
+>
 
-We can't really move the call to em_pd_get_higher_freq() into
-cpufreq_driver_resolve_freq() since that's a schedutil-specific feature,
-and we would loose the !sg_policy->need_freq_update optimization.
+If this should be exported, this should be done from taprio, perhaps
+adding a new field to what is exported via the dump() callback, which
+should be quite easy.
 
-Maybe we can add a flag to cpufreq_driver_resolve_freq() that promises
-that the frequency is already a valid one. We have to be careful though,
-since a number of things can make that untrue:
- - em_pd_get_higher_freq() will return the passed freq verbatim if it's
-higher than the max freq, so em_pd_get_higher_freq() will have to set
-the flag itself in case that logic changes.
- - policy limits can change the value
- - future things could tinker with the freq and forget to reset the flag.
+>>      - ConfigChangeError - Error in configuration (AdminBaseTime <
+>>        CurrentTime)
+>
+> This can be exported similarly.
 
-If you think it's worth it I can make these changes.
+In my view, having this as a "runtime" error is not useful, as we can
+verify this at configuration time.
 
-> Thoughts ?
-> 
-> Quentin
-> 
+>
+>>      - SupportedListMax - Maximum supported Admin/Open shed list.
+>>
+>> Is there a plan to export these from driver through tc show or such
+>> command? The reason being, there would be applications developed to
+>> manage configuration/schedule of TSN nodes that would requires these
+>> information from the node. So would need a support either in tc or
+>> some other means to retrieve them from hardware or driver. That is my
+>> understanding...
+>>
+
+Hm, now I understamd what you meant here...
+
+>
+> Not sure what answer you expect to receive for "is there any plan".
+> You can go ahead and propose something, as long as it is reasonably
+> useful to have.
+
+... if this is indeed useful, perhaps one way to do is to add a subcommand
+to TC_SETUP_QDISC_TAPRIO, so we can retrieve the stats/information we want
+from the driver. Similar to what cls_flower does.
+
+>
+>> Regards,
+>>
+>> Murali
+>>
+>> --
+>> Murali Karicheri
+>> Texas Instruments
+>
+> Thanks,
+> -Vladimir
 
 Cheers,
-Douglas
+--
+Vinicius
