@@ -2,109 +2,219 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC2F6C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 15:30:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1301C33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 15:30:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3EC924684
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 15:30:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C830420684
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 15:30:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579793406;
-	bh=/z3i8WitLNlWahmY5dE/I3JGerQilohr4h5y/bZjPTA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ZAzfSkeLGkGlF3TuD4Z/vqQ/GJdJlYJbCLQ+yTxk/hsdVIRavUHXwLzu+TwYSRJ/Q
-	 o3OIHF5uHgk+qIOyzf6BIwW3rr0wn2a8Y7U9q/N2djnFi0TLvUgN5vQMHrXGUD7/V/
-	 Y4YXSRyPGD1jZAMZnwDxmdJ2bAnWveGRYvDAM2gc=
+	s=default; t=1579793449;
+	bh=F/zErbJ4t2xmOZ9JfUAJhjS4jtXNS0VWDeOgcpjOweg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=ZgX4lXG2mKdNIUPPwTxL30JHdJ7CTtpmpaFLRn5b2h9ygfLEt7a+M4tTjNNfXYuFo
+	 NVog2eIFN6dwvDAVXRUWSDgA5h7vzy5bhenCluSnUW4PTsw9I8WE1wXVQYIcoFf6qP
+	 VgisT9RcjP2vYd2flDbmbIJWsTPCFtZZXZpIOBMA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729016AbgAWPaG (ORCPT
+        id S1729043AbgAWPat (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 10:30:06 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:44868 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727847AbgAWPaF (ORCPT
+        Thu, 23 Jan 2020 10:30:49 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:39440 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727278AbgAWPas (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 10:30:05 -0500
-Received: by mail-ot1-f66.google.com with SMTP id h9so3055890otj.11;
-        Thu, 23 Jan 2020 07:30:05 -0800 (PST)
+        Thu, 23 Jan 2020 10:30:48 -0500
+Received: by mail-ot1-f65.google.com with SMTP id 77so3095969oty.6;
+        Thu, 23 Jan 2020 07:30:48 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=YHqBGj/ukTPkl69zvdBgkmcYaLWB1N0Qj6YD43sxU/8=;
-        b=QiVdXJGObleBcBNIEaA1pbFxONW2u86/MusGQU6g9mImTAT2BHsg4IIKpWCm/cYBEa
-         uwIGutMcaFCxfphsVV/vUdFuAcYPjwsAwuYgQr9wcY+orXQs2BGfE1AJuzKtoVIfX6ic
-         8Pa88apJ6B+7vX/Qxl2MbGzBYpOVzt+GyLq20Ew2aWzYLDR7mU+VPnLaaozfd+kb0Qjb
-         Gg9swqYG5Eg9LYmQ7g2vH/SSovebmkjwQjwp2n4N4JGUt2qYcHSXhpZ89By+RUOtweKO
-         +w7PbKq7ECW+YFUVNxsJh+4n16aW/rXB+Cw/M30Y7RMRIRuNv7W+WUCLI//qM7gBq4vS
-         560w==
-X-Gm-Message-State: APjAAAVHvriC6GwCTb89rN40GmuKGhlH1BUs8xjWRjrdmXiQpx3P5pN5
-        i9DEvxWjdABzl2TNzSqVyQ==
-X-Google-Smtp-Source: APXvYqxkWG8AeF8EXXnGTWZ4IdGe6xCc6yw9d5YQpXCkxvBsnWb6O8ACMvnxGdINcohg5IvNyDKtDQ==
-X-Received: by 2002:a05:6830:4ca:: with SMTP id s10mr11737763otd.268.1579793404638;
-        Thu, 23 Jan 2020 07:30:04 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id p24sm891368oth.28.2020.01.23.07.30.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Jan 2020 07:30:04 -0800 (PST)
-Received: (nullmailer pid 12956 invoked by uid 1000);
-        Thu, 23 Jan 2020 15:30:02 -0000
-Date:   Thu, 23 Jan 2020 09:30:02 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Olivier Moysan <olivier.moysan@st.com>
-Cc:     jic23@kernel.org, lgirdwood@gmail.com, broonie@kernel.org,
-        perex@perex.cz, tiwai@suse.com, alsa-devel@alsa-project.org,
-        mark.rutland@arm.com, mcoquelin.stm32@gmail.com, lars@metafoo.de,
-        devicetree@vger.kernel.org, linux-iio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, pmeerw@pmeerw.net, knaack.h@gmx.de,
-        fabrice.gasnier@st.com, linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] dt-bindings: stm32: convert dfsdm to json-schema
-Message-ID: <20200123153002.GA14241@bogus>
-References: <20200123083432.21997-1-olivier.moysan@st.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=dJBGS4e0jWaAWLLcuuHxgK6M1UmjccQT8Vf0obsUZeE=;
+        b=Y9yFrQ9PyknN7p4NsknuKCrrfpYSDR+Zh0lFxOVz2yG7Om5A0Kj/VWxWzH6jQxO9oG
+         UsCpKRTzBmzz/CPGVStPWJDnVYsEhleBaKSqzM4egLuFnX1alArFvhDLE8e0zKlvcQHV
+         g4dYV31ZIeIn2qKQae3HJKqiA0ovAWmILIGlZyv2E0PIInZ3ixwXyD14oVFT7kAvnVIZ
+         DdcEICmv+GWfXyku8BrnAvsoJytM+eF4CyD5IwgUGykeFHpX/FemNZM/rW5rss+D0kTL
+         0BBqNrmpuZIc3zKDL2c1NEcUao/kEoPaFaH9YCMEkqYW4w4qyQyxrbgjkv2MhzeQEScq
+         hmCA==
+X-Gm-Message-State: APjAAAUCDdG4VFagodb9UERtUkoY4B2jKrR8InBnnRN3AMAbpCgMzjkj
+        lyMdQDAyFfWGhjMn+XRFLC48a+kS3bLcIBFHK0c=
+X-Google-Smtp-Source: APXvYqw6IP+WgUGRKWpK62i5avBtF0C6itxi/KoBk1PUkIzbGmaBwLHz4G94k4M9YBc6eq2FJByHi9fUpk84qYEfUy8=
+X-Received: by 2002:a05:6830:1e67:: with SMTP id m7mr11717398otr.262.1579793447589;
+ Thu, 23 Jan 2020 07:30:47 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200123083432.21997-1-olivier.moysan@st.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200122151617.531-1-ggherdovich@suse.cz>
+In-Reply-To: <20200122151617.531-1-ggherdovich@suse.cz>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Thu, 23 Jan 2020 16:30:36 +0100
+Message-ID: <CAJZ5v0gO18Oz4qvf3L9LfAX+1ww2XTeP_o_3WixYixB9d=s8Wg@mail.gmail.com>
+Subject: Re: [PATCH v5 0/6] Add support for frequency invariance for (some) x86
+To:     Giovanni Gherdovich <ggherdovich@suse.cz>
+Cc:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Borislav Petkov <bp@suse.de>, Len Brown <lenb@kernel.org>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Matt Fleming <matt@codeblueprint.co.uk>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Paul Turner <pjt@google.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Quentin Perret <qperret@qperret.net>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Doug Smythies <dsmythies@telus.net>,
+        Ionela Voinescu <ionela.voinescu@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 23, 2020 at 09:34:31AM +0100, Olivier Moysan wrote:
-> Convert the STM32 DFSDM bindings to DT schema format
-> using json-schema.
-> 
-> Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
-> ---
-> The DT check still returns some warnings on this bindings:
-> dfsdm@4400d000: filter@4: 'st,adc-channels' is a required property
-> dfsdm@4400d000: filter@5: 'st,adc-channels' is a required property ...
-> 
-> These warnings occur because some disabled nodes do not provides the
-> required properties. These nodes are included from SoC DT,
-> and do not provides by default the properties which are board dependent.
+On Wed, Jan 22, 2020 at 4:10 PM Giovanni Gherdovich <ggherdovich@suse.cz> wrote:
+>
+> v4 at https://lore.kernel.org/lkml/20191113124654.18122-1-ggherdovich@suse.cz/
+>
+> Changes wrt v4:
+>
+> - Removing conditional access in the function arch_scale_freq_capacity()
+>   and initialize arch_freq_scale to 1024 to account for when freq
+>   invariance isn't enabled (Ionela V.)
+> - In case the max frequency can't be read in MSRs, do not enable frequency
+>   invariance at all (Ionela V., Peter Z.).
+> - Renames:
+>     variables:
+>       arch_cpu_freq  -> arch_freq_scale
+>       arch_max_freq  -> arch_max_freq_ratio
+>       ... and others
+>     functions:
+>       init_scale_freq  -> init_counter_refs
+>       set_cpu_max_freq -> init_freq_invariance
+>       {core,skx,knl...}_set_cpu_max_freq  -> {core,skx,knl...}_set_max_freq_ratio
+>       ... and others
+> - Use the same function for parsing SKX and GLM registers (Peter Z.)
+> - Pass a parameter to the function parsing KNL registers (Peter Z.)
+> - Fix a bug whereby refs to [am]perf were initialized only on cpu #0
+>
+> - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+> Cover Letter from v4:
+>
+> v3 at https://lore.kernel.org/lkml/20191111180549.12166-1-ggherdovich@suse.cz/
+>
+> Changes wrt v3:
+>
+> - Add definition of function set_arch_max_freq if !CONFIG_SMP
+>
+> - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+> Cover Letter from v3:
+>
+> v2 at https://lore.kernel.org/lkml/20191002122926.385-1-ggherdovich@suse.cz/
+>
+> Changes wrt v2:
+>
+> - Removing the tick_disable mechanism. Frequency scale-invariance isn't
+>   just about helping schedutil choose better frequencies, but also
+>   providing the scheduler load balancer with better metrics. All users of
+>   PELT signals benefit from this feature. The tick_disable patch disabled
+>   frequency invariant calculation when a specific driver is in use
+>   (intel_pstate in active mode).
+>
+> - static_branch_enable(&arch_scale_freq_key) is now called earlier, right
+>   after we learn that X86_FEATURE_APERFMPERF is available. Previously Peter
+>   Z. commented "if we can't tell the max_freq we don't want to use the
+>   invariant stuff.". I've decided to do it differently: if we can't tell
+>   the max_freq, then it's because the CPU encodes max_freq in MSRs in a way
+>   this patch doesn't understand, and we assume max_p is the max_freq which
+>   seems like a safe bet. As a reminder, max_freq=max_p is encoded by
+>   setting arch_max_freq=1024 as default value. I'm open to feedback.
+>
+> - Refactoring the switch case statement in set_cpu_max_freq() as Rafael
+>   W. Now the first patch doesn't hint at what the following patch will
+>   bring along.
+>
+> - Handling the case were turbo is disabled at runtime and a _PPC ACPI
+>   notification is issued, as requested by Rafael W. This happens eg. when
+>   some laptop model is disconnected from AC. (Patch #6)
+>
+> - Handling all Intel x86_64 micro-arches.
+>
+> - A note for Srinivas P., who expressed concern for Atoms: on Atom CPUs the
+>   max_freq is set to the highest turbo level, as a power-efficiency
+>   oriented measure. In this way the ratio curr_freq/max_freq tends to be
+>   lower, PELT signals are consequently lower, and schedutil doesn't push
+>   too hard on speed. (Patches #4 and #5).
+>
+> - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+> Cover Letter from v2:
+>
+> v1 at https://lore.kernel.org/lkml/20190909024216.5942-1-ggherdovich@suse.cz/
+>
+> Changes wrt v1:
+>
+> - add x86-specific implementation of arch_scale_freq_invariant() using a
+>   static key that checks for the availability of APERF and MPERF
+> - refer to GOLDMONT_D instead of GOLDMONT_X, according to recent rename
+> - set arch_cpu_freq to 1024 from x86_arch_scale_freq_tick_disable() to prevent
+>   PELT from being fed stale data
+>
+> - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+> Cover Letter from v1:
+>
+> This is a resend with of Peter Zijlstra's patch to support frequency
+> scale-invariance on x86 from May 2018 [see 1]. I've added some modifications
+> and included performance test results. If Peter doesn't mind, I'm slapping my
+> name on it :)
+>
+> The changes from Peter's original implementation are:
+>
+> 1) normalizing against the 4-cores turbo level instead or 1-core turbo
+> 2) removing the run-time search for when the above value isn't found in the
+>    various Intel MSRs -- the base frequency value is taken in that case.
+>
+> The section "4. KNOWN LIMITATIONS" in the first patch commit message addresses
+> the reason why this approach was dropped back in 2018, and explains that the
+> performance gains outweight that issue.
+>
+> The second patch from Srinivas is taken verbatim from the May 2018 submission
+> as it still applies.
+>
+> I apologies for the length of patch #1 commit message; I've made a table of
+> contents with summaries of each section that should make easier to skim
+> through the content.
+>
+> This submission incorporates the feedback and requests for additional tests
+> received during the presentation made at OSPM 2019 in Pisa three months ago.
+>
+> [1] https://lore.kernel.org/lkml/20180516044911.28797-2-srinivas.pandruvada@linux.intel.com/
+>
+> Giovanni Gherdovich (6):
+>   x86,sched: Add support for frequency invariance
+>   x86,sched: Add support for frequency invariance on SKYLAKE_X
+>   x86,sched: Add support for frequency invariance on XEON_PHI_KNL/KNM
+>   x86,sched: Add support for frequency invariance on ATOM_GOLDMONT*
+>   x86,sched: Add support for frequency invariance on ATOM
+>   x86: intel_pstate: handle runtime turbo disablement/enablement in
+>     freq. invariance
+>
+>  arch/x86/include/asm/topology.h |  25 ++++
+>  arch/x86/kernel/smpboot.c       | 290 +++++++++++++++++++++++++++++++++++++++-
+>  drivers/cpufreq/intel_pstate.c  |   1 +
+>  kernel/sched/core.c             |   1 +
+>  kernel/sched/sched.h            |   7 +
+>  5 files changed, 323 insertions(+), 1 deletion(-)
+>
 
-We handle disabled nodes, but not when they are child nodes.
+All looks good to me, so
 
-> As workaround in DFSDM yaml bindings, the properties
-> (like st,adc-channels) could be defined as required,
-> only for the nodes which are in enabled state.
+Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-We should handle this in the tooling, not the schemas. I entered an 
-issue to track this[1].
+for the whole series (and I'm assuming that it will go it through the tip tree).
 
-> ---
->  .../bindings/iio/adc/st,stm32-dfsdm-adc.txt   | 135 -------
->  .../bindings/iio/adc/st,stm32-dfsdm-adc.yaml  | 332 ++++++++++++++++++
->  2 files changed, 332 insertions(+), 135 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/iio/adc/st,stm32-dfsdm-adc.txt
->  create mode 100644 Documentation/devicetree/bindings/iio/adc/st,stm32-dfsdm-adc.yaml
-
-Applied.
-
-[1] https://github.com/devicetree-org/dt-schema/issues/32
+Thanks!
