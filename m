@@ -4,309 +4,276 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B74EBC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 13:00:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDC1BC33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 13:00:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 730E524125
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 13:00:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7CDD24125
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 13:00:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="OwwVj0lJ"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="rm/2qf+r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726792AbgAWNAA (ORCPT
+        id S1729017AbgAWNAG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 08:00:00 -0500
+        Thu, 23 Jan 2020 08:00:06 -0500
 Received: from pegase1.c-s.fr ([93.17.236.30]:30497 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726232AbgAWM76 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 07:59:58 -0500
+        id S1728816AbgAWNAA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jan 2020 08:00:00 -0500
 Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 483Mn65Rbbz9vB4c;
-        Thu, 23 Jan 2020 13:59:54 +0100 (CET)
+        by localhost (Postfix) with ESMTP id 483Mn95Q9Nz9vB4m;
+        Thu, 23 Jan 2020 13:59:57 +0100 (CET)
 Authentication-Results: localhost; dkim=pass
         reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=OwwVj0lJ; dkim-adsp=pass;
+        header.d=c-s.fr header.i=@c-s.fr header.b=rm/2qf+r; dkim-adsp=pass;
         dkim-atps=neutral
 X-Virus-Scanned: Debian amavisd-new at c-s.fr
 Received: from pegase1.c-s.fr ([192.168.12.234])
         by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id YupXVbyZvbC2; Thu, 23 Jan 2020 13:59:54 +0100 (CET)
+        with ESMTP id VPNpAqKhQ0dN; Thu, 23 Jan 2020 13:59:57 +0100 (CET)
 Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 483Mn64DTFz9vB4X;
-        Thu, 23 Jan 2020 13:59:54 +0100 (CET)
+        by pegase1.c-s.fr (Postfix) with ESMTP id 483Mn94NDjz9vB4X;
+        Thu, 23 Jan 2020 13:59:57 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1579784394; bh=KHjVev/0JBmVbBC1xdcedLkGg2vPxpY9MoOGz7cIty8=;
+        t=1579784397; bh=2yOjkw9m1uEpm7zxUYT3EfexfCnLtwBekkcTKmBrIPM=;
         h=In-Reply-To:References:From:Subject:To:Cc:Date:From;
-        b=OwwVj0lJkx5qJ84nPcZiLu3SkTyipMGnH7P1UHHVeh4xJohOWSNMXGPF5UJpevvxJ
-         KyyZojBtxbAzE7wwBWGXQrd95I1gjydW6oJ8jHz6KEosp7nF/1X5h1PdwhT4XJzZNl
-         QngcQPS5vYCIVpzRIRs+1lQuHWxqORtawVZNwelw=
+        b=rm/2qf+rqZuvCf1awr06co0x+fEcX5QE2mHwQBjSCJnbwrMeCOpTSobLhNzccUXkE
+         HRlhiYNqKu5ahG7q8SqKcHXpfTjYu/Pezk7rlv8AUF2HrMAxURRSpzDBAgWHxLEhgQ
+         Yd5qEOuoKomtvWt/Bcm8qv1HSJOeigH+pwocxVG8=
 Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id D030F8B82C;
-        Thu, 23 Jan 2020 13:59:55 +0100 (CET)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id D79468B82C;
+        Thu, 23 Jan 2020 13:59:58 +0100 (CET)
 X-Virus-Scanned: amavisd-new at c-s.fr
 Received: from messagerie.si.c-s.fr ([127.0.0.1])
         by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id u-vpBJS8Yh3Y; Thu, 23 Jan 2020 13:59:55 +0100 (CET)
+        with ESMTP id p7cn4rlmlrk1; Thu, 23 Jan 2020 13:59:58 +0100 (CET)
 Received: from po14934vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 769698B826;
-        Thu, 23 Jan 2020 13:59:55 +0100 (CET)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 8C1FA8B826;
+        Thu, 23 Jan 2020 13:59:58 +0100 (CET)
 Received: by po14934vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id 4EEED651C0; Thu, 23 Jan 2020 12:59:55 +0000 (UTC)
-Message-Id: <5557b2d5115d450ef50ab45249dad4fb31a03c5c.1579783936.git.christophe.leroy@c-s.fr>
+        id 638C9651C0; Thu, 23 Jan 2020 12:59:58 +0000 (UTC)
+Message-Id: <4cf9d1d96e2d4f7c196eb492501362b533f0fd4b.1579783936.git.christophe.leroy@c-s.fr>
 In-Reply-To: <fed4f49349913cb6739dac647ba6a61d56b989d2.1579783936.git.christophe.leroy@c-s.fr>
 References: <fed4f49349913cb6739dac647ba6a61d56b989d2.1579783936.git.christophe.leroy@c-s.fr>
 From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [PATCH v3 4/7] powerpc/kuap: Fix set direction in
- allow/prevent_user_access()
+Subject: [PATCH v3 7/7] powerpc: Implement user_access_begin and friends
 To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Paul Mackerras <paulus@samba.org>,
         Michael Ellerman <mpe@ellerman.id.au>
 Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
         linux-fsdevel@vger.kernel.org, linux-mm@kvack.org
-Date:   Thu, 23 Jan 2020 12:59:55 +0000 (UTC)
+Date:   Thu, 23 Jan 2020 12:59:58 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-__builtin_constant_p() always return 0 for pointers, so on RADIX
-we always end up opening both direction (by writing 0 in SPR29):
+Today, when a function like strncpy_from_user() is called,
+the userspace access protection is de-activated and re-activated
+for every word read.
 
-0000000000000170 <._copy_to_user>:
-...
- 1b0:	4c 00 01 2c 	isync
- 1b4:	39 20 00 00 	li      r9,0
- 1b8:	7d 3d 03 a6 	mtspr   29,r9
- 1bc:	4c 00 01 2c 	isync
- 1c0:	48 00 00 01 	bl      1c0 <._copy_to_user+0x50>
-			1c0: R_PPC64_REL24	.__copy_tofrom_user
-...
-0000000000000220 <._copy_from_user>:
-...
- 2ac:	4c 00 01 2c 	isync
- 2b0:	39 20 00 00 	li      r9,0
- 2b4:	7d 3d 03 a6 	mtspr   29,r9
- 2b8:	4c 00 01 2c 	isync
- 2bc:	7f c5 f3 78 	mr      r5,r30
- 2c0:	7f 83 e3 78 	mr      r3,r28
- 2c4:	48 00 00 01 	bl      2c4 <._copy_from_user+0xa4>
-			2c4: R_PPC64_REL24	.__copy_tofrom_user
-...
+By implementing user_access_begin and friends, the protection
+is de-activated at the beginning of the copy and re-activated at the
+end.
 
-Use an explicit parameter for direction selection, so that GCC
-is able to see it is a constant:
+Implement user_access_begin(), user_access_end() and
+unsafe_get_user(), unsafe_put_user() and unsafe_copy_to_user()
 
-00000000000001b0 <._copy_to_user>:
-...
- 1f0:	4c 00 01 2c 	isync
- 1f4:	3d 20 40 00 	lis     r9,16384
- 1f8:	79 29 07 c6 	rldicr  r9,r9,32,31
- 1fc:	7d 3d 03 a6 	mtspr   29,r9
- 200:	4c 00 01 2c 	isync
- 204:	48 00 00 01 	bl      204 <._copy_to_user+0x54>
-			204: R_PPC64_REL24	.__copy_tofrom_user
-...
-0000000000000260 <._copy_from_user>:
-...
- 2ec:	4c 00 01 2c 	isync
- 2f0:	39 20 ff ff 	li      r9,-1
- 2f4:	79 29 00 04 	rldicr  r9,r9,0,0
- 2f8:	7d 3d 03 a6 	mtspr   29,r9
- 2fc:	4c 00 01 2c 	isync
- 300:	7f c5 f3 78 	mr      r5,r30
- 304:	7f 83 e3 78 	mr      r3,r28
- 308:	48 00 00 01 	bl      308 <._copy_from_user+0xa8>
-			308: R_PPC64_REL24	.__copy_tofrom_user
-...
+For the time being, we keep user_access_save() and
+user_access_restore() as nops.
 
 Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
 ---
 v2: no change
-v3: no change
+v3: adapted to the new format of user_access_begin/end()
 ---
- arch/powerpc/include/asm/book3s/32/kup.h      | 13 ++++++--
- .../powerpc/include/asm/book3s/64/kup-radix.h | 11 +++----
- arch/powerpc/include/asm/kup.h                | 30 ++++++++++++++-----
- arch/powerpc/include/asm/nohash/32/kup-8xx.h  |  4 +--
- arch/powerpc/include/asm/uaccess.h            |  4 +--
- 5 files changed, 43 insertions(+), 19 deletions(-)
+ arch/powerpc/include/asm/uaccess.h | 100 ++++++++++++++++++++++++++---
+ 1 file changed, 90 insertions(+), 10 deletions(-)
 
-diff --git a/arch/powerpc/include/asm/book3s/32/kup.h b/arch/powerpc/include/asm/book3s/32/kup.h
-index d88008c8eb85..d765515bd1c1 100644
---- a/arch/powerpc/include/asm/book3s/32/kup.h
-+++ b/arch/powerpc/include/asm/book3s/32/kup.h
-@@ -102,11 +102,13 @@ static inline void kuap_update_sr(u32 sr, u32 addr, u32 end)
- 	isync();	/* Context sync required after mtsrin() */
- }
- 
--static inline void allow_user_access(void __user *to, const void __user *from, u32 size)
-+static __always_inline void allow_user_access(void __user *to, const void __user *from,
-+					      u32 size, unsigned long dir)
- {
- 	u32 addr, end;
- 
--	if (__builtin_constant_p(to) && to == NULL)
-+	BUILD_BUG_ON(!__builtin_constant_p(dir));
-+	if (!(dir & KUAP_W))
- 		return;
- 
- 	addr = (__force u32)to;
-@@ -119,11 +121,16 @@ static inline void allow_user_access(void __user *to, const void __user *from, u
- 	kuap_update_sr(mfsrin(addr) & ~SR_KS, addr, end);	/* Clear Ks */
- }
- 
--static inline void prevent_user_access(void __user *to, const void __user *from, u32 size)
-+static __always_inline void prevent_user_access(void __user *to, const void __user *from,
-+						u32 size, unsigned long dir)
- {
- 	u32 addr = (__force u32)to;
- 	u32 end = min(addr + size, TASK_SIZE);
- 
-+	BUILD_BUG_ON(!__builtin_constant_p(dir));
-+	if (!(dir & KUAP_W))
-+		return;
-+
- 	if (!addr || addr >= TASK_SIZE || !size)
- 		return;
- 
-diff --git a/arch/powerpc/include/asm/book3s/64/kup-radix.h b/arch/powerpc/include/asm/book3s/64/kup-radix.h
-index dbbd22cb80f5..f11315306d41 100644
---- a/arch/powerpc/include/asm/book3s/64/kup-radix.h
-+++ b/arch/powerpc/include/asm/book3s/64/kup-radix.h
-@@ -77,20 +77,21 @@ static inline void set_kuap(unsigned long value)
- 	isync();
- }
- 
--static inline void allow_user_access(void __user *to, const void __user *from,
--				     unsigned long size)
-+static __always_inline void allow_user_access(void __user *to, const void __user *from,
-+					      unsigned long size, unsigned long dir)
- {
- 	// This is written so we can resolve to a single case at build time
--	if (__builtin_constant_p(to) && to == NULL)
-+	BUILD_BUG_ON(!__builtin_constant_p(dir));
-+	if (dir == KUAP_R)
- 		set_kuap(AMR_KUAP_BLOCK_WRITE);
--	else if (__builtin_constant_p(from) && from == NULL)
-+	else if (dir == KUAP_W)
- 		set_kuap(AMR_KUAP_BLOCK_READ);
- 	else
- 		set_kuap(0);
- }
- 
- static inline void prevent_user_access(void __user *to, const void __user *from,
--				       unsigned long size)
-+				       unsigned long size, unsigned long dir)
- {
- 	set_kuap(AMR_KUAP_BLOCKED);
- }
-diff --git a/arch/powerpc/include/asm/kup.h b/arch/powerpc/include/asm/kup.h
-index 812e66f31934..ff57bfcb88f7 100644
---- a/arch/powerpc/include/asm/kup.h
-+++ b/arch/powerpc/include/asm/kup.h
-@@ -2,6 +2,10 @@
- #ifndef _ASM_POWERPC_KUP_H_
- #define _ASM_POWERPC_KUP_H_
- 
-+#define KUAP_R		1
-+#define KUAP_W		2
-+#define KUAP_RW		(KUAP_R | KUAP_W)
-+
- #ifdef CONFIG_PPC64
- #include <asm/book3s/64/kup-radix.h>
- #endif
-@@ -42,9 +46,9 @@ void setup_kuap(bool disabled);
- #else
- static inline void setup_kuap(bool disabled) { }
- static inline void allow_user_access(void __user *to, const void __user *from,
--				     unsigned long size) { }
-+				     unsigned long size, unsigned long dir) { }
- static inline void prevent_user_access(void __user *to, const void __user *from,
--				       unsigned long size) { }
-+				       unsigned long size, unsigned long dir) { }
- static inline bool
- bad_kuap_fault(struct pt_regs *regs, unsigned long address, bool is_write)
- {
-@@ -54,24 +58,36 @@ bad_kuap_fault(struct pt_regs *regs, unsigned long address, bool is_write)
- 
- static inline void allow_read_from_user(const void __user *from, unsigned long size)
- {
--	allow_user_access(NULL, from, size);
-+	allow_user_access(NULL, from, size, KUAP_R);
- }
- 
- static inline void allow_write_to_user(void __user *to, unsigned long size)
- {
--	allow_user_access(to, NULL, size);
-+	allow_user_access(to, NULL, size, KUAP_W);
-+}
-+
-+static inline void allow_read_write_user(void __user *to, const void __user *from,
-+					 unsigned long size)
-+{
-+	allow_user_access(to, from, size, KUAP_RW);
- }
- 
- static inline void prevent_read_from_user(const void __user *from, unsigned long size)
- {
--	prevent_user_access(NULL, from, size);
-+	prevent_user_access(NULL, from, size, KUAP_R);
- }
- 
- static inline void prevent_write_to_user(void __user *to, unsigned long size)
- {
--	prevent_user_access(to, NULL, size);
-+	prevent_user_access(to, NULL, size, KUAP_W);
-+}
-+
-+static inline void prevent_read_write_user(void __user *to, const void __user *from,
-+					   unsigned long size)
-+{
-+	prevent_user_access(to, from, size, KUAP_RW);
- }
- 
- #endif /* !__ASSEMBLY__ */
- 
--#endif /* _ASM_POWERPC_KUP_H_ */
-+#endif /* _ASM_POWERPC_KUAP_H_ */
-diff --git a/arch/powerpc/include/asm/nohash/32/kup-8xx.h b/arch/powerpc/include/asm/nohash/32/kup-8xx.h
-index f2fea603b929..1d70c80366fd 100644
---- a/arch/powerpc/include/asm/nohash/32/kup-8xx.h
-+++ b/arch/powerpc/include/asm/nohash/32/kup-8xx.h
-@@ -35,13 +35,13 @@
- #include <asm/reg.h>
- 
- static inline void allow_user_access(void __user *to, const void __user *from,
--				     unsigned long size)
-+				     unsigned long size, unsigned long dir)
- {
- 	mtspr(SPRN_MD_AP, MD_APG_INIT);
- }
- 
- static inline void prevent_user_access(void __user *to, const void __user *from,
--				       unsigned long size)
-+				       unsigned long size, unsigned long dir)
- {
- 	mtspr(SPRN_MD_AP, MD_APG_KUAP);
- }
 diff --git a/arch/powerpc/include/asm/uaccess.h b/arch/powerpc/include/asm/uaccess.h
-index c92fe7fe9692..cafad1960e76 100644
+index cafad1960e76..30204e80df1b 100644
 --- a/arch/powerpc/include/asm/uaccess.h
 +++ b/arch/powerpc/include/asm/uaccess.h
-@@ -313,9 +313,9 @@ raw_copy_in_user(void __user *to, const void __user *from, unsigned long n)
- 	unsigned long ret;
+@@ -91,9 +91,14 @@ static inline int __access_ok(unsigned long addr, unsigned long size,
+ 	__put_user_check((__typeof__(*(ptr)))(x), (ptr), sizeof(*(ptr)))
  
- 	barrier_nospec();
--	allow_user_access(to, from, n);
-+	allow_read_write_user(to, from, n);
- 	ret = __copy_tofrom_user(to, from, n);
--	prevent_user_access(to, from, n);
-+	prevent_read_write_user(to, from, n);
+ #define __get_user(x, ptr) \
+-	__get_user_nocheck((x), (ptr), sizeof(*(ptr)))
++	__get_user_nocheck((x), (ptr), sizeof(*(ptr)), true)
+ #define __put_user(x, ptr) \
+-	__put_user_nocheck((__typeof__(*(ptr)))(x), (ptr), sizeof(*(ptr)))
++	__put_user_nocheck((__typeof__(*(ptr)))(x), (ptr), sizeof(*(ptr)), true)
++
++#define __get_user_allowed(x, ptr) \
++	__get_user_nocheck((x), (ptr), sizeof(*(ptr)), false)
++#define __put_user_allowed(x, ptr) \
++	__put_user_nocheck((__typeof__(*(ptr)))(x), (ptr), sizeof(*(ptr)), false)
+ 
+ #define __get_user_inatomic(x, ptr) \
+ 	__get_user_nosleep((x), (ptr), sizeof(*(ptr)))
+@@ -138,10 +143,9 @@ extern long __put_user_bad(void);
+ 		: "r" (x), "b" (addr), "i" (-EFAULT), "0" (err))
+ #endif /* __powerpc64__ */
+ 
+-#define __put_user_size(x, ptr, size, retval)			\
++#define __put_user_size_allowed(x, ptr, size, retval)		\
+ do {								\
+ 	retval = 0;						\
+-	allow_write_to_user(ptr, size);				\
+ 	switch (size) {						\
+ 	  case 1: __put_user_asm(x, ptr, retval, "stb"); break;	\
+ 	  case 2: __put_user_asm(x, ptr, retval, "sth"); break;	\
+@@ -149,17 +153,26 @@ do {								\
+ 	  case 8: __put_user_asm2(x, ptr, retval); break;	\
+ 	  default: __put_user_bad();				\
+ 	}							\
++} while (0)
++
++#define __put_user_size(x, ptr, size, retval)			\
++do {								\
++	allow_write_to_user(ptr, size);				\
++	__put_user_size_allowed(x, ptr, size, retval);		\
+ 	prevent_write_to_user(ptr, size);			\
+ } while (0)
+ 
+-#define __put_user_nocheck(x, ptr, size)			\
++#define __put_user_nocheck(x, ptr, size, allow)			\
+ ({								\
+ 	long __pu_err;						\
+ 	__typeof__(*(ptr)) __user *__pu_addr = (ptr);		\
+ 	if (!is_kernel_addr((unsigned long)__pu_addr))		\
+ 		might_fault();					\
+ 	__chk_user_ptr(ptr);					\
+-	__put_user_size((x), __pu_addr, (size), __pu_err);	\
++	if (allow)								\
++		__put_user_size((x), __pu_addr, (size), __pu_err);		\
++	else									\
++		__put_user_size_allowed((x), __pu_addr, (size), __pu_err);	\
+ 	__pu_err;						\
+ })
+ 
+@@ -236,13 +249,12 @@ extern long __get_user_bad(void);
+ 		: "b" (addr), "i" (-EFAULT), "0" (err))
+ #endif /* __powerpc64__ */
+ 
+-#define __get_user_size(x, ptr, size, retval)			\
++#define __get_user_size_allowed(x, ptr, size, retval)		\
+ do {								\
+ 	retval = 0;						\
+ 	__chk_user_ptr(ptr);					\
+ 	if (size > sizeof(x))					\
+ 		(x) = __get_user_bad();				\
+-	allow_read_from_user(ptr, size);			\
+ 	switch (size) {						\
+ 	case 1: __get_user_asm(x, ptr, retval, "lbz"); break;	\
+ 	case 2: __get_user_asm(x, ptr, retval, "lhz"); break;	\
+@@ -250,6 +262,12 @@ do {								\
+ 	case 8: __get_user_asm2(x, ptr, retval);  break;	\
+ 	default: (x) = __get_user_bad();			\
+ 	}							\
++} while (0)
++
++#define __get_user_size(x, ptr, size, retval)			\
++do {								\
++	allow_read_from_user(ptr, size);			\
++	__get_user_size_allowed(x, ptr, size, retval);		\
+ 	prevent_read_from_user(ptr, size);			\
+ } while (0)
+ 
+@@ -260,7 +278,7 @@ do {								\
+ #define __long_type(x) \
+ 	__typeof__(__builtin_choose_expr(sizeof(x) > sizeof(0UL), 0ULL, 0UL))
+ 
+-#define __get_user_nocheck(x, ptr, size)			\
++#define __get_user_nocheck(x, ptr, size, allow)			\
+ ({								\
+ 	long __gu_err;						\
+ 	__long_type(*(ptr)) __gu_val;				\
+@@ -269,7 +287,10 @@ do {								\
+ 	if (!is_kernel_addr((unsigned long)__gu_addr))		\
+ 		might_fault();					\
+ 	barrier_nospec();					\
+-	__get_user_size(__gu_val, __gu_addr, (size), __gu_err);	\
++	if (allow)								\
++		__get_user_size(__gu_val, __gu_addr, (size), __gu_err);		\
++	else									\
++		__get_user_size_allowed(__gu_val, __gu_addr, (size), __gu_err);	\
+ 	(x) = (__typeof__(*(ptr)))__gu_val;			\
+ 	__gu_err;						\
+ })
+@@ -387,6 +408,34 @@ static inline unsigned long raw_copy_to_user(void __user *to,
  	return ret;
  }
- #endif /* __powerpc64__ */
+ 
++static inline unsigned long
++raw_copy_to_user_allowed(void __user *to, const void *from, unsigned long n)
++{
++	unsigned long ret;
++	if (__builtin_constant_p(n) && (n) <= 8) {
++		ret = 1;
++
++		switch (n) {
++		case 1:
++			__put_user_size_allowed(*(u8 *)from, (u8 __user *)to, 1, ret);
++			break;
++		case 2:
++			__put_user_size_allowed(*(u16 *)from, (u16 __user *)to, 2, ret);
++			break;
++		case 4:
++			__put_user_size_allowed(*(u32 *)from, (u32 __user *)to, 4, ret);
++			break;
++		case 8:
++			__put_user_size_allowed(*(u64 *)from, (u64 __user *)to, 8, ret);
++			break;
++		}
++		if (ret == 0)
++			return 0;
++	}
++
++	return __copy_tofrom_user(to, (__force const void __user *)from, n);
++}
++
+ static __always_inline unsigned long __must_check
+ copy_to_user_mcsafe(void __user *to, const void *from, unsigned long n)
+ {
+@@ -428,4 +477,35 @@ extern long __copy_from_user_flushcache(void *dst, const void __user *src,
+ extern void memcpy_page_flushcache(char *to, struct page *page, size_t offset,
+ 			   size_t len);
+ 
++static __must_check inline unsigned long
++user_access_begin(const void __user *ptr, size_t len, bool write)
++{
++	if (unlikely(!access_ok(ptr, len)))
++		return 0;
++	return allow_user_access((void __user *)ptr, ptr, len, write ? KUAP_RW : KUAP_R);
++}
++#define user_access_begin	user_access_begin
++
++static inline void user_access_end(unsigned long key)
++{
++	if (IS_ENABLED(CONFIG_PPC_BOOK3S_32)) {
++		void __user *ptr = (__force void __user *)(key & 0xf0000000);
++		u32 size = (key << 28) - (key & 0xf0000000);
++
++		prevent_user_access(ptr, ptr, size, key & 0xf000000f ? KUAP_RW : KUAP_R);
++	} else {
++		prevent_user_access(NULL, NULL, ~0UL, KUAP_RW);
++	}
++}
++#define user_access_end		user_access_end
++
++static inline unsigned long user_access_save(void) { return 0UL; }
++static inline void user_access_restore(unsigned long flags) { }
++
++#define unsafe_op_wrap(op, err) do { if (unlikely(op)) goto err; } while (0)
++#define unsafe_get_user(x, p, e) unsafe_op_wrap(__get_user_allowed(x, p), e)
++#define unsafe_put_user(x, p, e) unsafe_op_wrap(__put_user_allowed(x, p), e)
++#define unsafe_copy_to_user(d, s, l, e) \
++	unsafe_op_wrap(raw_copy_to_user_allowed(d, s, l), e)
++
+ #endif	/* _ARCH_POWERPC_UACCESS_H */
 -- 
 2.25.0
 
