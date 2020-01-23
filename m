@@ -2,125 +2,130 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEC6BC33CAA
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 21:23:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 896F8C33CAA
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 21:27:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A02920704
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 21:23:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dxuuu.xyz header.i=@dxuuu.xyz header.b="BmcQl186";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="NYWc3pN9"
+	by mail.kernel.org (Postfix) with ESMTP id 4C5E320704
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 21:27:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579814839;
+	bh=sVWIP5sj1idIHlsOmL5JPIne1wX95SUsfOrV6NQ1YHE=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=RxyaP7ll+Fqwo+H9VxguOpRtlCn9fYnikh+ZcJA0K06qTiV7mIx2uN2QNIP/dijhH
+	 /fanwJt8/Q6dG5xagNQyFURSCJ4vjnOfWBy2PTnewvFLLbTaw1R8F2qK+tXzAlJNwM
+	 AhA+GyAQb871vJB77dV31Vhg1Ghak4H9fTPGXZm4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729598AbgAWVXu (ORCPT
+        id S1728760AbgAWV1S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 16:23:50 -0500
-Received: from new2-smtp.messagingengine.com ([66.111.4.224]:44453 "EHLO
-        new2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728765AbgAWVXl (ORCPT
+        Thu, 23 Jan 2020 16:27:18 -0500
+Received: from mail-il1-f196.google.com ([209.85.166.196]:40255 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726118AbgAWV1S (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 16:23:41 -0500
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 9B82A5F91;
-        Thu, 23 Jan 2020 16:23:40 -0500 (EST)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute4.internal (MEProxy); Thu, 23 Jan 2020 16:23:40 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dxuuu.xyz; h=
-        from:to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm2; bh=i2TbaaLRbCuDS
-        5CihmwELlkML+zGJC6EN5XnNvRO3WY=; b=BmcQl186+HHoH0Gc6tj0f2bHqulnA
-        o13G5rDPgIg8yUEvyinOXBnrnQktIHKXMU9vzaujM6BeWpG/BghQv2bPl+L4VoM2
-        eFLg3sFHrdRdFYcmLiIaF8s9RmJjrl0DfmgI/hqnn+AZQWphvPoPnQtVR8a2/Z8O
-        Wf899bJkjtH8oeFkv67N9U2CSgYzUE8lQZ2TVs9buT4o9OFYk/17bw4A17ybKBkp
-        bJju5rZgr8vLteVBBCjpijU9nBw/G/XA/wHX/MF1XZwsKxaBZXxn3PIRFfpOBMYN
-        etLuSXpS3IJ/vrFVXx1kxJtQX7bVFFJpQs8J/0/3US+vOEnN+27ncaAuw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :in-reply-to:message-id:mime-version:references:subject:to
-        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm1; bh=i2TbaaLRbCuDS5CihmwELlkML+zGJC6EN5XnNvRO3WY=; b=NYWc3pN9
-        GCDQoQoAiu5AwTwk2oN3HZ/yuhYEOHs3bTUKDQ5TeWAWoiKU1BBBdE0mWL0to4o8
-        2c3y6eBNm6D3XYouCYfj/Hh3NeevNSIXI8k++MTAwvhAizZ8mPcWeGwr0RGASW5W
-        vuBEoWp/QuGnYRDUn/MYoBSq0QMGf0XTpbYx3CleN1dWqEbiGCrRbuClzfyZtNFD
-        eS60/jzZPTI8dSQqeDUXUPcYomUVd5g7rgcyjwn2o3YV/UkaehAffyYp0cT103/z
-        PydzRQndcbc+8npMt9iIUA393FX1ghoofKHH6Gt3pQZAxbHISz1DRNMUXAxcnDeg
-        HBAOcUKglln/Tg==
-X-ME-Sender: <xms:3A4qXmLhrsyAx6N-_869faNiwUxAXs6OFaNhwKMH1zwkkVT1y4L_Lw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrvddvgdelvdcutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecufghrlhcuvffnffculdejtddmnecujfgurhephffvuf
-    ffkffojghfggfgsedtkeertdertddtnecuhfhrohhmpeffrghnihgvlhcuighuuceougig
-    uhesugiguhhuuhdrgiihiieqnecukfhppeduleelrddvtddurdeigedrudefheenucevlh
-    hushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegugihusegugihu
-    uhhurdighiii
-X-ME-Proxy: <xmx:3A4qXib4cKgwBEPTaPhHeSWSrgrgvzGS8tMXrk6YzUNMHUEnah5BkQ>
-    <xmx:3A4qXhu5vq9tgHSe4IeW71aDg-irovLu4hvVVvGZHBrSDgS1q4Ccwg>
-    <xmx:3A4qXvsbZky1OzTelpkwP1KE1cweoMztidZJu5I6BgQtkBICLSgzsQ>
-    <xmx:3A4qXna1eMZAb76yBrVBxi0nZ_4UuZonF57hubU5lIcNvuXduY5yHw>
-Received: from dlxu-fedora-R90QNFJV.thefacebook.com (unknown [199.201.64.135])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 301283060AA8;
-        Thu, 23 Jan 2020 16:23:39 -0500 (EST)
-From:   Daniel Xu <dxu@dxuuu.xyz>
-To:     bpf@vger.kernel.org, ast@kernel.org, daniel@iogearbox.net,
-        songliubraving@fb.com, yhs@fb.com, andriin@fb.com
-Cc:     Daniel Xu <dxu@dxuuu.xyz>, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com, peterz@infradead.org, mingo@redhat.com,
-        acme@kernel.org
-Subject: [PATCH v3 bpf-next 2/3] tools/bpf: Sync uapi header bpf.h
-Date:   Thu, 23 Jan 2020 13:23:11 -0800
-Message-Id: <20200123212312.3963-3-dxu@dxuuu.xyz>
-X-Mailer: git-send-email 2.21.1
-In-Reply-To: <20200123212312.3963-1-dxu@dxuuu.xyz>
-References: <20200123212312.3963-1-dxu@dxuuu.xyz>
+        Thu, 23 Jan 2020 16:27:18 -0500
+Received: by mail-il1-f196.google.com with SMTP id c4so38778ilo.7
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jan 2020 13:27:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Rlz3hvUu+9u2oNJYG4g2Rw59Iz8hixxTpHD2vCOcLXo=;
+        b=PwBvHXWcPbHsFtHuoq3AUL5vFUZnWEbflYLFA0fa+kpnrYlFYyZ0WNPhmm0JH5IX20
+         wOJlpK/ta+WU/QC7YYY/nAK98YO4OkEzz+mMqfx2W1MeL5DIBZGjjs2GThFWLbmP4ZXO
+         BWndEWvmKE617UUJcuQWCt1gg1wDNoy4ZugQk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Rlz3hvUu+9u2oNJYG4g2Rw59Iz8hixxTpHD2vCOcLXo=;
+        b=H7y0+0+jgHLxp7cLT7toRm+yEi0dmrKaIfgTDQb05lCYmpMemi833jMOOkZbVcoT/D
+         QQB1JUDaG9ViGcglDczICJdUcLbPVBO+RxaYBXIOWA6aR4AFpJ+DE9r7TTHoDE9Ue5Uy
+         6c8nk3XpR/BOHDbdJPXSporfA7uGL5Lh9uRb5UGd3fODT2wHEB4wkbbeeqet9pjGJBFy
+         tT9Sgh8RW/+LmzI15UYtqLqb0YmbH+X98uVQrQBCe9FD/DIEmArItGddcFEB4qI1n78H
+         brn6Vh1OslAPVrbsM2D31Tcy7XZ+zdYSyTs5T1d5zsU+ly553TerG9XLMknJ6sQhE29V
+         tmfQ==
+X-Gm-Message-State: APjAAAXoth0PIlCtxbSUO7qpjZuc1b3Mc4ayc+dBWzog6hKyH4jWYhbS
+        QUxMfZS1MTTyaLTNTfTsRFAm1Q==
+X-Google-Smtp-Source: APXvYqzlBlohdIzyH1fQ7g2B5f1t9VHWWDYOQC2BgsHZYkufZHxwNvX/yEX1sbKHcfdWI3OzYGhGPQ==
+X-Received: by 2002:a05:6e02:cc5:: with SMTP id c5mr249989ilj.47.1579814837406;
+        Thu, 23 Jan 2020 13:27:17 -0800 (PST)
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
+        by smtp.gmail.com with ESMTPSA id i11sm701592ion.1.2020.01.23.13.27.16
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 23 Jan 2020 13:27:16 -0800 (PST)
+Subject: Re: [PATCH] iommu: amd: Fix IOMMU perf counter clobbering during init
+To:     Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
+        Joerg Roedel <joro@8bytes.org>
+Cc:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        Shuah Khan <skhan@linuxfoundation.org>
+References: <20200114151220.29578-1-skhan@linuxfoundation.org>
+ <20200117100829.GE15760@8bytes.org>
+ <42c0a806-9947-1401-9754-8aa88bd7062f@amd.com>
+ <24a46b0f-33d7-5f94-661a-80f035213892@linuxfoundation.org>
+From:   Shuah Khan <skhan@linuxfoundation.org>
+Message-ID: <d7b8aa31-ded5-082e-0324-91b6277507ba@linuxfoundation.org>
+Date:   Thu, 23 Jan 2020 14:27:15 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
+In-Reply-To: <24a46b0f-33d7-5f94-661a-80f035213892@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Signed-off-by: Daniel Xu <dxu@dxuuu.xyz>
----
- tools/include/uapi/linux/bpf.h | 15 ++++++++++++++-
- 1 file changed, 14 insertions(+), 1 deletion(-)
+On 1/21/20 8:32 AM, Shuah Khan wrote:
+> On 1/20/20 7:10 PM, Suravee Suthikulpanit wrote:
+>> On 1/17/2020 5:08 PM, Joerg Roedel wrote:
+>>> Adding Suravee, who wrote the IOMMU Perf Counter code.
+>>>
+>>> On Tue, Jan 14, 2020 at 08:12:20AM -0700, Shuah Khan wrote:
+>>>> init_iommu_perf_ctr() clobbers the register when it checks write access
+>>>> to IOMMU perf counters and fails to restore when they are writable.
+>>>>
+>>>> Add save and restore to fix it.
+>>>>
+>>>> Signed-off-by: Shuah Khan<skhan@linuxfoundation.org>
+>>>> ---
+>>>>   drivers/iommu/amd_iommu_init.c | 22 ++++++++++++++++------
+>>>>   1 file changed, 16 insertions(+), 6 deletions(-)
+>>> Suravee, can you please review this patch?
+>>>
+>>
+>> This looks ok. Does this fix certain issues? Or is this just for sanity.
+> 
+> I didn't notice any problems. Counters aren't writable on my system.
+> However, it certainly looks like a bog since registers aren't restored
+> like in other places in this file where such checks are done on other
+> registers.
+> 
+> I see 2 banks and 4 counters on my system. Is it sufficient to check
+> the first bank and first counter? In other words, if the first one
+> isn't writable, are all counters non-writable?
+> 
+> Should we read the config first and then, try to see if any of the
+> counters are writable? I have a patch that does that, I can send it
+> out for review.
+> 
+>>
+>> Reviewed-by: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
 
-diff --git a/tools/include/uapi/linux/bpf.h b/tools/include/uapi/linux/bpf.h
-index f1d74a2bd234..50c580c8a201 100644
---- a/tools/include/uapi/linux/bpf.h
-+++ b/tools/include/uapi/linux/bpf.h
-@@ -2892,6 +2892,18 @@ union bpf_attr {
-  *		Obtain the 64bit jiffies
-  *	Return
-  *		The 64 bit jiffies
-+ *
-+ * int bpf_perf_prog_read_branches(struct bpf_perf_event_data *ctx, void *buf, u32 buf_size)
-+ *	Description
-+ *		For en eBPF program attached to a perf event, retrieve the
-+ *		branch records (struct perf_branch_entry) associated to *ctx*
-+ *		and store it in	the buffer pointed by *buf* up to size
-+ *		*buf_size* bytes.
-+ *
-+ *		Any unused parts of *buf* will be filled with zeros.
-+ *	Return
-+ *		On success, number of bytes written to *buf*. On error, a
-+ *		negative value.
-  */
- #define __BPF_FUNC_MAPPER(FN)		\
- 	FN(unspec),			\
-@@ -3012,7 +3024,8 @@ union bpf_attr {
- 	FN(probe_read_kernel_str),	\
- 	FN(tcp_send_ack),		\
- 	FN(send_signal_thread),		\
--	FN(jiffies64),
-+	FN(jiffies64),			\
-+	FN(perf_prog_read_branches),
- 
- /* integer value in 'imm' field of BPF_CALL instruction selects which helper
-  * function eBPF program intends to call
--- 
-2.21.1
+Joerg,
 
+Please don't pull this in. I introduced a bug in this patch. It always
+returns amd_iommu_pc_present false even when it can write to the
+counters. My bad.
+
+I will send v2.
+
+thanks,
+-- Shuah
