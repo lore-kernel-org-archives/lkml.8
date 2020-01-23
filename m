@@ -2,149 +2,144 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 976F6C35241
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 23:56:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2526C35240
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 23:59:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D7A924687
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 23:56:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68E74206D3
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 23:59:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gqdOAPHf"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="X9ZZUmQC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730157AbgAWX4w (ORCPT
+        id S1729409AbgAWX7U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 18:56:52 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:41254 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729277AbgAWX4w (ORCPT
+        Thu, 23 Jan 2020 18:59:20 -0500
+Received: from mail-pf1-f201.google.com ([209.85.210.201]:56743 "EHLO
+        mail-pf1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728911AbgAWX7U (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 18:56:52 -0500
-Received: by mail-lj1-f196.google.com with SMTP id h23so353215ljc.8;
-        Thu, 23 Jan 2020 15:56:50 -0800 (PST)
+        Thu, 23 Jan 2020 18:59:20 -0500
+Received: by mail-pf1-f201.google.com with SMTP id h16so196329pfn.23
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jan 2020 15:59:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=GBpSA+S70IveCTtKIGEFtQpKccngEqKX7VJI5QTlR44=;
-        b=gqdOAPHfQJs7X0ZXIxK83uE8YRY1mng4HqdwWXVTp8ByvyNa6ZheKj2RHCguW3xOwZ
-         PUmnNIdiPmp1TjkbXzo4bwZ21v8NE7OR0rDTqT9O9iEZXXL3EeCNmepJpMkkLj+lNpYn
-         CQ7ZTNuFfLU3mLP1kjo5813jL7L7BEakXcMcWSmqmSrMMDSWau3h0+JuO/z7/fxIARFz
-         Gxho2oK8ZnU+aweBDeR8YBIB01ggNKfDr+9S2Xwfc0/R4iOCDAeWFTxyampSwIweBf3g
-         ylJKbNGhspngo3OUllSFtZxk0fQ6RgE64tZVOJOXmIcNo6z2VE3UZM5OXmDXIEE23tpJ
-         6L0g==
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=taYXiMSvG/uOaWszHXNY3LIQcqdsQdZuQaVnEsyfgN4=;
+        b=X9ZZUmQCdFs3o0xNe3+a2C4Q/lpN3y90i7OPOgw8+bGTRkrAQwpN6gGiTFeZ2JR44C
+         vMbVwSw1/C/YVthi+ePmCJjl+nqJFlPnMna01e7d3lSWe/GrOkQX8NFNZZpOPkni8UqW
+         aiffVoXahEftvoB+wQpe9YS+2/B+YKdPeHB+ZlSuWMIgmbbDKa100IIaISWeB0OquqJL
+         fo0IzJpTh5hSuYaQH9eIAEDn4vOdGkCiM3zASdah+l1bHwAAEyNz6ROyEIiN2FFA05LU
+         P4+XGcpqX1Sw0l/BbUCUBZ22LzzckjxeoujgJk6s4Zn1G3ps6YVr/hPcD0dH/0xYIheO
+         hnNA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=GBpSA+S70IveCTtKIGEFtQpKccngEqKX7VJI5QTlR44=;
-        b=ThwgBCnCAaZxwT9cifvUcUMiNz5K5z+XDDaSFK23ZKUmljC0f7s4446PA/nNTyb+2g
-         DiuAVLRrHc/gBbYOfI7d4OTF3EXUiMr3mtPr5xsw3WZsPE1nxVte57o41AdOyB3SMzmf
-         5h0ZZ6VMCDtd3NjgDoxXEzO64HO2H8VtLsMKhcYOd6rZEswuJc4b5obSgHo9VqhVb4vY
-         Xa9qxKmvl+mutP8AaYPH/+AnvCZLWiDmh2pNfX2gw0mtlN7sQmAp2klavPxPDEPqWIPs
-         a3DvcTZcUh4f9xoZrgNWpV9i6auF8HJNZF1PuZfaOziNX15OBM+mG7Mu1csH2+ykFmfW
-         Dvvw==
-X-Gm-Message-State: APjAAAWNkP8SPsvYxVcP2pPY+LPrDPakpYBO3EGWI1RF2hZxMD7qdTUS
-        LP22RPfSoG1mn9VcltVoCBDPQkBB
-X-Google-Smtp-Source: APXvYqxoTeKZ48pGOHQTsLFqutvtN4hgoSviLPAKKeyV9HeVxPD93R0HyzG+SjwU+HzCapUUY5PaPQ==
-X-Received: by 2002:a2e:3619:: with SMTP id d25mr481791lja.231.1579823809203;
-        Thu, 23 Jan 2020 15:56:49 -0800 (PST)
-Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id y2sm188582ljm.28.2020.01.23.15.56.47
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 23 Jan 2020 15:56:48 -0800 (PST)
-Subject: Re: [PATCH v8 11/22] ASoC: tegra: Add fallback implementation for
- audio mclk
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, broonie@kernel.org,
-        lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.com,
-        mperttunen@nvidia.com, gregkh@linuxfoundation.org,
-        sboyd@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc:     pdeschrijver@nvidia.com, pgaikwad@nvidia.com, spujar@nvidia.com,
-        josephl@nvidia.com, daniel.lezcano@linaro.org,
-        mmaddireddy@nvidia.com, markz@nvidia.com,
-        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1578986667-16041-1-git-send-email-skomatineni@nvidia.com>
- <1578986667-16041-12-git-send-email-skomatineni@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <aef36b46-789a-c44e-4cd1-9d4183435ba9@gmail.com>
-Date:   Fri, 24 Jan 2020 02:56:45 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
-MIME-Version: 1.0
-In-Reply-To: <1578986667-16041-12-git-send-email-skomatineni@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=taYXiMSvG/uOaWszHXNY3LIQcqdsQdZuQaVnEsyfgN4=;
+        b=Kgm7oFeAj4bSfnbs1A73XjRjIwjrhBHWD+ty8gYfV7Uh0NqMdUSeJwe02jINNY+EOv
+         h1rpkn4KZSMTs1y4bUJY0BPzBZbjSS6eiuQrn3DVudgvUWUQ2D2G16LrndPwXUef6cUk
+         9QsnnJnoYZj5V7gAaLwwoxcv51xwlMwjv6YNoEia/FyFd0/vs4Ykm+XWabSJ613Ed53Y
+         sJ5YOVggA9UYqzcoKocXE0q1jM5pGxxRrSBM0kS7pkcjKoCY+dHYJ6KCqS2FOSKVgm5T
+         r2+8DGTpvFBtZp3PwKKlH4gBe2TOrwvERLgpEtqxZtykQLhZeSItT8/4zOU02hrEFWcP
+         cxvA==
+X-Gm-Message-State: APjAAAUgU1xLMyhcWMOu2G52Of4S42YJpoUhIh7GvJuMRTZsLNlaJahh
+        6L+55lr1kHqrq4tK8vS3Xt3BAeHX+AbXbot81Kn73Q==
+X-Google-Smtp-Source: APXvYqyDIp+eGmrYp3/rfPhDduqurXLOKZW+c8hSrVPuXFgIDBtOVRKHnifIEoajdXNfOrzKOOaJj0Mi9uj6fqXTRVQmeg==
+X-Received: by 2002:a63:744f:: with SMTP id e15mr1054047pgn.344.1579823959193;
+ Thu, 23 Jan 2020 15:59:19 -0800 (PST)
+Date:   Thu, 23 Jan 2020 15:59:14 -0800
+Message-Id: <20200123235914.223178-1-brendanhiggins@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.25.0.341.g760bfbb309-goog
+Subject: [PATCH v2] uml: make CONFIG_STATIC_LINK actually static
+From:   Brendan Higgins <brendanhiggins@google.com>
+To:     jdike@addtoit.com, richard@nod.at, anton.ivanov@cambridgegreys.com,
+        geert@linux-m68k.org, james_mcmechan@hotmail.com
+Cc:     linux-um@lists.infradead.org, linux-kernel@vger.kernel.org,
+        davidgow@google.com, Brendan Higgins <brendanhiggins@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-14.01.2020 10:24, Sowjanya Komatineni пишет:
-> mclk is from clk_out_1 which is part of Tegra PMC block and pmc clocks
-> are moved to Tegra PMC driver with pmc as clock provider and using pmc
-> clock ids.
-> 
-> New device tree uses clk_out_1 from pmc clock provider as audio mclk.
-> 
-> So, this patch adds implementation for mclk fallback to extern1 when
-> retrieving mclk returns -ENOENT to be backward compatible of new device
-> tree with older kernels.
-> 
-> Fixes: 110147c8c513 ("ASoC: tegra: always use clk_get() in utility code")
-> 
-> Tested-by: Dmitry Osipenko <digetx@gmail.com>
-> Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
-> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-> ---
->  sound/soc/tegra/tegra_asoc_utils.c | 18 +++++++++++++++---
->  1 file changed, 15 insertions(+), 3 deletions(-)
-> 
-> diff --git a/sound/soc/tegra/tegra_asoc_utils.c b/sound/soc/tegra/tegra_asoc_utils.c
-> index 536a578e9512..74d3ffe7e603 100644
-> --- a/sound/soc/tegra/tegra_asoc_utils.c
-> +++ b/sound/soc/tegra/tegra_asoc_utils.c
-> @@ -191,9 +191,21 @@ int tegra_asoc_utils_init(struct tegra_asoc_utils_data *data,
->  
->  	data->clk_cdev1 = clk_get(dev, "mclk");
->  	if (IS_ERR(data->clk_cdev1)) {
-> -		dev_err(data->dev, "Can't retrieve clk cdev1\n");
-> -		ret = PTR_ERR(data->clk_cdev1);
-> -		goto err_put_pll_a_out0;
-> +		if (PTR_ERR(data->clk_cdev1) != -ENOENT) {
-> +			dev_err(data->dev, "Can't retrieve clk cdev1\n");
-> +			ret = PTR_ERR(data->clk_cdev1);
-> +			goto err_put_pll_a_out0;
-> +		}
-> +
-> +		/* Fall back to extern1 */
-> +		data->clk_cdev1 = clk_get(dev, "extern1");
-> +		if (IS_ERR(data->clk_cdev1)) {
-> +			dev_err(data->dev, "Can't retrieve clk extern1\n");
-> +			ret = PTR_ERR(data->clk_cdev1);
-> +			goto err_put_pll_a_out0;
-> +		}
-> +
-> +		dev_info(data->dev, "Falling back to extern1\n");
->  	}
->  
->  	ret = tegra_asoc_utils_set_rate(data, 44100, 256 * 44100);
-> 
+Currently, CONFIG_STATIC_LINK can be enabled with options which cannot
+be statically linked, namely UML_NET_VECTOR, UML_NET_VDE, and
+UML_NET_PCAP; this is because glibc tries to load NSS which does not
+support being statically linked. So make CONFIG_STATIC_LINK depend on
+!UML_NET_VECTOR && !UML_NET_VDE && !UML_NET_PCAP.
 
-I tried to double-check if audio works using the updated DT works with
-this fallback and unfortunately it is not (maybe I actually missed to
-test this case before).. the driver doesn't probe at all because of the
-assigned-clocks presence, which makes clk core to fail finding the MCLK
-and thus assigned-clocks configuration fails, preventing the driver's
-loading.
+Link: https://lore.kernel.org/lkml/f658f317-be54-ed75-8296-c373c2dcc697@cambridgegreys.com/#t
+Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
+---
+Changes since last revision:
 
-I'm not sure what could be done about it. Perhaps just to give up on the
-compatibility of older kernels with the new DTs, missing audio isn't
-really that critical (perhaps).
+Incorporated Geert Uytterhoeven's suggestion of using a separate
+FORBID_STATIC_LINK config option that each driver incompatible with
+static linking selects.
+---
+ arch/um/Kconfig         | 7 +++++++
+ arch/um/drivers/Kconfig | 3 +++
+ 2 files changed, 10 insertions(+)
+
+diff --git a/arch/um/Kconfig b/arch/um/Kconfig
+index 0917f8443c285..27a51e7dd59c6 100644
+--- a/arch/um/Kconfig
++++ b/arch/um/Kconfig
+@@ -62,8 +62,12 @@ config NR_CPUS
+ 
+ source "arch/$(HEADER_ARCH)/um/Kconfig"
+ 
++config FORBID_STATIC_LINK
++	def_bool n
++
+ config STATIC_LINK
+ 	bool "Force a static link"
++	depends on !FORBID_STATIC_LINK
+ 	default n
+ 	help
+ 	  This option gives you the ability to force a static link of UML.
+@@ -73,6 +77,9 @@ config STATIC_LINK
+ 	  Additionally, this option enables using higher memory spaces (up to
+ 	  2.75G) for UML.
+ 
++	  NOTE: This option is incompatible with some networking features which
++	  depend on features that require being dynamically loaded (like NSS).
++
+ config LD_SCRIPT_STATIC
+ 	bool
+ 	default y
+diff --git a/arch/um/drivers/Kconfig b/arch/um/drivers/Kconfig
+index 72d4170557820..9160ead56e33c 100644
+--- a/arch/um/drivers/Kconfig
++++ b/arch/um/drivers/Kconfig
+@@ -234,6 +234,7 @@ config UML_NET_DAEMON
+ config UML_NET_VECTOR
+ 	bool "Vector I/O high performance network devices"
+ 	depends on UML_NET
++	select FORBID_STATIC_LINK
+ 	help
+ 	This User-Mode Linux network driver uses multi-message send
+ 	and receive functions. The host running the UML guest must have
+@@ -245,6 +246,7 @@ config UML_NET_VECTOR
+ config UML_NET_VDE
+ 	bool "VDE transport (obsolete)"
+ 	depends on UML_NET
++	select FORBID_STATIC_LINK
+ 	help
+ 	This User-Mode Linux network transport allows one or more running
+ 	UMLs on a single host to communicate with each other and also
+@@ -292,6 +294,7 @@ config UML_NET_MCAST
+ config UML_NET_PCAP
+ 	bool "pcap transport (obsolete)"
+ 	depends on UML_NET
++	select FORBID_STATIC_LINK
+ 	help
+ 	The pcap transport makes a pcap packet stream on the host look
+ 	like an ethernet device inside UML.  This is useful for making
+-- 
+2.25.0.341.g760bfbb309-goog
+
