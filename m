@@ -2,560 +2,330 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2932BC35240
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 23:17:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 335D4C35242
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 23:21:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA6E221835
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 23:17:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7DCD20684
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 23:21:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="g67+3Fd5";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="O3qtM000"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729747AbgAWXRW (ORCPT
+        id S1729760AbgAWXVO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 18:17:22 -0500
-Received: from mga03.intel.com ([134.134.136.65]:61960 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727056AbgAWXRW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 18:17:22 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Jan 2020 15:16:54 -0800
-X-IronPort-AV: E=Sophos;i="5.70,355,1574150400"; 
-   d="scan'208";a="216418877"
-Received: from agluck-desk2.sc.intel.com (HELO agluck-desk2.amr.corp.intel.com) ([10.3.52.68])
-  by orsmga007-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Jan 2020 15:16:53 -0800
-Date:   Thu, 23 Jan 2020 15:16:52 -0800
-From:   "Luck, Tony" <tony.luck@intel.com>
-To:     Arvind Sankar <nivedita@alum.mit.edu>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        "Yu, Fenghua" <fenghua.yu@intel.com>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        H Peter Anvin <hpa@zytor.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Shankar, Ravi V" <ravi.v.shankar@intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>, x86 <x86@kernel.org>
-Subject: [PATCH v14] x86/split_lock: Enable split lock detection by kernel
-Message-ID: <20200123231652.GA4457@agluck-desk2.amr.corp.intel.com>
-References: <20200110192409.GA23315@agluck-desk2.amr.corp.intel.com>
- <20200114055521.GI14928@linux.intel.com>
- <20200115222754.GA13804@agluck-desk2.amr.corp.intel.com>
- <20200115225724.GA18268@linux.intel.com>
- <20200122185514.GA16010@agluck-desk2.amr.corp.intel.com>
- <20200122224245.GA2331824@rani.riverdale.lan>
- <3908561D78D1C84285E8C5FCA982C28F7F54887A@ORSMSX114.amr.corp.intel.com>
- <20200123004507.GA2403906@rani.riverdale.lan>
- <20200123035359.GA23659@agluck-desk2.amr.corp.intel.com>
- <20200123044514.GA2453000@rani.riverdale.lan>
+        Thu, 23 Jan 2020 18:21:14 -0500
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:10452 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729277AbgAWXVN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jan 2020 18:21:13 -0500
+Received: from pps.filterd (m0109334.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00NNJKt9023824;
+        Thu, 23 Jan 2020 15:20:48 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=facebook;
+ bh=1jEKBxgyF6Dzewd+xjmWtfaKPgkRiussRG+Hs89Udx0=;
+ b=g67+3Fd5ScZrvlT73xDKgyK3ofFgGb+rWxVFZyOu5kiiqQ3maHw1shkTKjQ05OPeHwGC
+ cChtPov/GZW1U1c2GCSIq7+5tVIBfQjbXT4aQJODfcZebd7J36mHaUGHUxOx32nVJ+8u
+ VZ8kQHR5ifPabcnIqHN1wb+F3TjsWSYvHto= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by mx0a-00082601.pphosted.com with ESMTP id 2xpu216uhb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Thu, 23 Jan 2020 15:20:47 -0800
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (100.104.31.183)
+ by o365-in.thefacebook.com (100.104.35.173) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Thu, 23 Jan 2020 15:20:46 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=VLM9HtGSELNH+f6MwS0V/bxhva27wUew+JwDu7waeqofFBebkMVtJ6IXJLLYaKIJ78L0+bmqH0qzI0kwFCOd/K98cl9SU7fryyKZtH0QIMacrCTaR0U1c2bsNVczAmPgW/XSnYL8J00kjhnGCDjAm+KHXwfTOjVK1HZCBtd8N1gnePSnt2m2wKcVUFm+aSUD4Ve3FW29ntinEZW672QxammZZgCOtgTv7fJ98NcMjb2s6d3AUy9d1wuYOVT+RQZeHWwTeNjNFpS8NbY49moJOUNKW+mLdEV8ng8PzfPwLOlhjP5ZG7gS0LlW6y5RAhAwcoxDg4cxkJuf6qjQNNg1Og==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=1jEKBxgyF6Dzewd+xjmWtfaKPgkRiussRG+Hs89Udx0=;
+ b=QO6YStZgnHsUVIykm9RDPgDCckhfu0tRoM/R2icKeL8FHeQl8a9lMqosKLHGP7qFl3xNqVfTd6SD9cygA6VIbdgVeTDG5cOVwo5l4wb3+0VZvs33zPl4di6UwS2WrI2swiI1i6y23UgVe9w+0yMSEIVINjmrxiW+BOkot70PR8M0pBsp+NafBIV0uS+Y075k8KjEPjD13osRHRpQHMbRVPrCg9/p68xQGuB4O9OQFFx+u0HbzeQWH4Wm/znt06YcKYh2AUiGkKL3I351Zp+XZU0f+qoQ/2UdmejY7q/zVefUnK2JG8LbI7idHmaUBSF4/jvv5wyltINmvcU/20UnQg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
+ header.d=fb.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector2-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=1jEKBxgyF6Dzewd+xjmWtfaKPgkRiussRG+Hs89Udx0=;
+ b=O3qtM000w1pWnVbT9G+3WAqN2pS6vI2S/me92mkywQAYtW2fURNIYReM/kaBbIiMCdDAuCRKPUdpUkMn0TUVlb58X/x6nE0lKV+nz8C66xZxmDjEohz96o/Lcmhq1LUBxIH/Pr4EsEiu/BBTLgBSw/5uVPBU4cgP3cQM+wFE1ig=
+Received: from MN2PR15MB3213.namprd15.prod.outlook.com (20.179.21.76) by
+ MN2PR15MB2989.namprd15.prod.outlook.com (20.178.251.85) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2644.20; Thu, 23 Jan 2020 23:20:44 +0000
+Received: from MN2PR15MB3213.namprd15.prod.outlook.com
+ ([fe80::6d1e:f2f7:d36:a42f]) by MN2PR15MB3213.namprd15.prod.outlook.com
+ ([fe80::6d1e:f2f7:d36:a42f%4]) with mapi id 15.20.2644.028; Thu, 23 Jan 2020
+ 23:20:44 +0000
+Received: from kafai-mbp.dhcp.thefacebook.com (2620:10d:c090:200::2:d66d) by CO1PR15CA0046.namprd15.prod.outlook.com (2603:10b6:101:1f::14) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2665.19 via Frontend Transport; Thu, 23 Jan 2020 23:20:42 +0000
+From:   Martin Lau <kafai@fb.com>
+To:     Daniel Xu <dxu@dxuuu.xyz>
+CC:     "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
+        "ast@kernel.org" <ast@kernel.org>,
+        "daniel@iogearbox.net" <daniel@iogearbox.net>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Kernel Team <Kernel-team@fb.com>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "acme@kernel.org" <acme@kernel.org>
+Subject: Re: [PATCH v3 bpf-next 3/3] selftests/bpf: add
+ bpf_perf_prog_read_branches() selftest
+Thread-Topic: [PATCH v3 bpf-next 3/3] selftests/bpf: add
+ bpf_perf_prog_read_branches() selftest
+Thread-Index: AQHV0jNm0a9RiyoxwUS3VlcHP8aotqf44wwA
+Date:   Thu, 23 Jan 2020 23:20:44 +0000
+Message-ID: <20200123232040.dqsswmoltc3rlqhm@kafai-mbp.dhcp.thefacebook.com>
+References: <20200123212312.3963-1-dxu@dxuuu.xyz>
+ <20200123212312.3963-4-dxu@dxuuu.xyz>
+In-Reply-To: <20200123212312.3963-4-dxu@dxuuu.xyz>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: CO1PR15CA0046.namprd15.prod.outlook.com
+ (2603:10b6:101:1f::14) To MN2PR15MB3213.namprd15.prod.outlook.com
+ (2603:10b6:208:3d::12)
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [2620:10d:c090:200::2:d66d]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 03aea31c-1a0e-4844-4d54-08d7a05adeaa
+x-ms-traffictypediagnostic: MN2PR15MB2989:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <MN2PR15MB2989E6A7731B0B425D2EF892D50F0@MN2PR15MB2989.namprd15.prod.outlook.com>
+x-fb-source: Internal
+x-ms-oob-tlc-oobclassifiers: OLM:6790;
+x-forefront-prvs: 029174C036
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(396003)(39860400002)(346002)(376002)(366004)(199004)(189003)(7696005)(52116002)(81166006)(316002)(71200400001)(81156014)(186003)(6916009)(2906002)(55016002)(9686003)(54906003)(86362001)(4326008)(6506007)(8936002)(5660300002)(1076003)(16526019)(8676002)(66556008)(478600001)(66946007)(66446008)(64756008)(66476007);DIR:OUT;SFP:1102;SCL:1;SRVR:MN2PR15MB2989;H:MN2PR15MB3213.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: fb.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 3uVeiFzc74WCzs9nAnu973yT5bbK53dRp/0ByJTLPBPE0cZUQH/sSs4c5t0dTpEoUG4PkQlzrBlZmC+Jicb9bE/3AibWJmuseR3023Od7wCf2hZtgpS9QOGHiLg/+cZcCQkvg9YzBgM0iRqF/pXz7Gybaz8oXNVO8GjltFrH7qF6yTDj1Aurk1SSl5OUntf6AqFAqkNn+JRKppamkLhTCRS5EyqPQw8dC/dzrr+w9gceZ0eIfASg5eZmqDKeDJ3Fsr/rxuQoB96yFZJ+bBeHyN3zXeJ3JaHDjnfjhesCDZHf1xRtQ2XG5iPz7hhqk8kUspH6eTTFQVPy+gXySj6E1ZLfnmykTqQxovy+p1NQjeZ5lQ5dLkE+llkM7SNSyhBP/fEZbtyWxnfZjqbD4ybJG3bHMGvtjQYt+ohfVaYhLIy8hN19vtpqySvqDi19CBu1
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <AB65E96AF005944286A502C47588A92A@namprd15.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200123044514.GA2453000@rani.riverdale.lan>
+X-MS-Exchange-CrossTenant-Network-Message-Id: 03aea31c-1a0e-4844-4d54-08d7a05adeaa
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Jan 2020 23:20:44.4745
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: fZAkmHzv+51geLFCRaZiTMM95wpcWdkO28MKIwjso2NsCDxLwKvzu6F99aehbDYq
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR15MB2989
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-01-23_13:2020-01-23,2020-01-23 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 bulkscore=0
+ suspectscore=0 adultscore=0 impostorscore=0 spamscore=0 lowpriorityscore=0
+ mlxlogscore=999 phishscore=0 malwarescore=0 clxscore=1015 mlxscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-2001230175
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Zijlstra <peterz@infradead.org>
+On Thu, Jan 23, 2020 at 01:23:12PM -0800, Daniel Xu wrote:
+> Signed-off-by: Daniel Xu <dxu@dxuuu.xyz>
+Please put some details to avoid empty commit message.
+Same for patch 2.
 
-A split-lock occurs when an atomic instruction operates on data
-that spans two cache lines. In order to maintain atomicity the
-core takes a global bus lock.
+> ---
+>  .../selftests/bpf/prog_tests/perf_branches.c  | 106 ++++++++++++++++++
+>  .../selftests/bpf/progs/test_perf_branches.c  |  39 +++++++
+>  2 files changed, 145 insertions(+)
+>  create mode 100644 tools/testing/selftests/bpf/prog_tests/perf_branches.=
+c
+>  create mode 100644 tools/testing/selftests/bpf/progs/test_perf_branches.=
+c
+>=20
+> diff --git a/tools/testing/selftests/bpf/prog_tests/perf_branches.c b/too=
+ls/testing/selftests/bpf/prog_tests/perf_branches.c
+> new file mode 100644
+> index 000000000000..f8d7356a6507
+> --- /dev/null
+> +++ b/tools/testing/selftests/bpf/prog_tests/perf_branches.c
+> @@ -0,0 +1,106 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +#define _GNU_SOURCE
+> +#include <pthread.h>
+> +#include <sched.h>
+> +#include <sys/socket.h>
+> +#include <test_progs.h>
+> +#include "bpf/libbpf_internal.h"
+> +
+> +static void on_sample(void *ctx, int cpu, void *data, __u32 size)
+> +{
+> +	int pbe_size =3D sizeof(struct perf_branch_entry);
+> +	int ret =3D *(int *)data, duration =3D 0;
+> +
+> +	// It's hard to validate the contents of the branch entries b/c it
+> +	// would require some kind of disassembler and also encoding the
+> +	// valid jump instructions for supported architectures. So just check
+> +	// the easy stuff for now.
+/* ... */ comment style
 
-This is typically >1000 cycles slower than an atomic operation
-within a cache line. It also disrupts performance on other cores
-(which must wait for the bus lock to be released before their
-memory operations can complete. For real-time systems this may
-mean missing deadlines. For other systems it may just be very
-annoying.
+> +	CHECK(ret < 0, "read_branches", "err %d\n", ret);
+> +	CHECK(ret % pbe_size !=3D 0, "read_branches",
+> +	      "bytes written=3D%d not multiple of struct size=3D%d\n",
+> +	      ret, pbe_size);
+> +
+> +	*(int *)ctx =3D 1;
+> +}
+> +
+> +void test_perf_branches(void)
+> +{
+> +	int err, prog_fd, i, pfd =3D -1, duration =3D 0, ok =3D 0;
+> +	const char *file =3D "./test_perf_branches.o";
+> +	const char *prog_name =3D "perf_event";
+> +	struct perf_buffer_opts pb_opts =3D {};
+> +	struct perf_event_attr attr =3D {};
+> +	struct bpf_map *perf_buf_map;
+> +	struct bpf_program *prog;
+> +	struct bpf_object *obj;
+> +	struct perf_buffer *pb;
+> +	struct bpf_link *link;
+> +	volatile int j =3D 0;
+> +	cpu_set_t cpu_set;
+> +
+> +	/* load program */
+> +	err =3D bpf_prog_load(file, BPF_PROG_TYPE_PERF_EVENT, &obj, &prog_fd);
+> +	if (CHECK(err, "obj_load", "err %d errno %d\n", err, errno)) {
+> +		obj =3D NULL;
+> +		goto out_close;
+> +	}
+> +
+> +	prog =3D bpf_object__find_program_by_title(obj, prog_name);
+> +	if (CHECK(!prog, "find_probe", "prog '%s' not found\n", prog_name))
+> +		goto out_close;
+> +
+> +	/* load map */
+> +	perf_buf_map =3D bpf_object__find_map_by_name(obj, "perf_buf_map");
+> +	if (CHECK(!perf_buf_map, "find_perf_buf_map", "not found\n"))
+> +		goto out_close;
+Using skel may be able to cut some lines.
 
-Some CPUs have the capability to raise an #AC trap when a
-split lock is attempted.
+> +
+> +	/* create perf event */
+> +	attr.size =3D sizeof(attr);
+> +	attr.type =3D PERF_TYPE_HARDWARE;
+> +	attr.config =3D PERF_COUNT_HW_CPU_CYCLES;
+> +	attr.freq =3D 1;
+> +	attr.sample_freq =3D 4000;
+> +	attr.sample_type =3D PERF_SAMPLE_BRANCH_STACK;
+> +	attr.branch_sample_type =3D PERF_SAMPLE_BRANCH_USER | PERF_SAMPLE_BRANC=
+H_ANY;
+> +	pfd =3D syscall(__NR_perf_event_open, &attr, -1, 0, -1, PERF_FLAG_FD_CL=
+OEXEC);
+> +	if (CHECK(pfd < 0, "perf_event_open", "err %d\n", pfd))
+> +		goto out_close;
+> +
+> +	/* attach perf_event */
+> +	link =3D bpf_program__attach_perf_event(prog, pfd);
+> +	if (CHECK(IS_ERR(link), "attach_perf_event", "err %ld\n", PTR_ERR(link)=
+))
+> +		goto out_close_perf;
+> +
+> +	/* set up perf buffer */
+> +	pb_opts.sample_cb =3D on_sample;
+> +	pb_opts.ctx =3D &ok;
+> +	pb =3D perf_buffer__new(bpf_map__fd(perf_buf_map), 1, &pb_opts);
+> +	if (CHECK(IS_ERR(pb), "perf_buf__new", "err %ld\n", PTR_ERR(pb)))
+> +		goto out_detach;
+> +
+> +	/* generate some branches on cpu 0 */
+> +	CPU_ZERO(&cpu_set);
+> +	CPU_SET(0, &cpu_set);
+> +	err =3D pthread_setaffinity_np(pthread_self(), sizeof(cpu_set), &cpu_se=
+t);
+> +	if (err && CHECK(err, "set_affinity", "cpu #0, err %d\n", err))
+'err &&' seems unnecessary.
 
-Provide a command line option to give the user choices on how
-to handle this. split_lock_detect=
-	off	- not enabled (no traps for split locks)
-	warn	- warn once when an application does a
-		  split lock, bust allow it to continue
-		  running.
-	fatal	- Send SIGBUS to applications that cause split lock
+> +		goto out_free_pb;
+> +	for (i =3D 0; i < 1000000; ++i)
+May be some comments on 1000000?
 
-Default is "warn". Note that if the kernel hits a split lock
-in any mode other than "off" it will OOPs.
+> +		++j;
+> +
+> +	/* read perf buffer */
+> +	err =3D perf_buffer__poll(pb, 500);
+> +	if (CHECK(err < 0, "perf_buffer__poll", "err %d\n", err))
+> +		goto out_free_pb;
+> +
+> +	if (CHECK(!ok, "ok", "not ok\n"))
+> +		goto out_free_pb;
+> +
+> +out_free_pb:
+> +	perf_buffer__free(pb);
+> +out_detach:
+> +	bpf_link__destroy(link);
+> +out_close_perf:
+> +	close(pfd);
+> +out_close:
+> +	bpf_object__close(obj);
+> +}
+> diff --git a/tools/testing/selftests/bpf/progs/test_perf_branches.c b/too=
+ls/testing/selftests/bpf/progs/test_perf_branches.c
+> new file mode 100644
+> index 000000000000..d818079c7778
+> --- /dev/null
+> +++ b/tools/testing/selftests/bpf/progs/test_perf_branches.c
+> @@ -0,0 +1,39 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +// Copyright (c) 2019 Facebook
+> +
+> +#include <linux/ptrace.h>
+> +#include <linux/bpf.h>
+> +#include <bpf/bpf_helpers.h>
+> +#include "bpf_trace_helpers.h"
+> +
+> +struct {
+> +	__uint(type, BPF_MAP_TYPE_PERF_EVENT_ARRAY);
+> +	__uint(key_size, sizeof(int));
+> +	__uint(value_size, sizeof(int));
+> +} perf_buf_map SEC(".maps");
+> +
+> +struct fake_perf_branch_entry {
+> +	__u64 _a;
+> +	__u64 _b;
+> +	__u64 _c;
+> +};
+> +
+> +SEC("perf_event")
+> +int perf_branches(void *ctx)
+> +{
+> +	int ret;
+> +	struct fake_perf_branch_entry entries[4];
+Try to keep the reverse xmas tree.
 
-One implementation wrinkle is that the MSR to control the
-split lock detection is per-core, not per thread. This might
-result in some short lived races on HT systems in "warn" mode
-if Linux tries to enable on one thread while disabling on
-the other. Race analysis by Sean Christopherson:
+> +
+> +	ret =3D bpf_perf_prog_read_branches(ctx,
+> +					  entries,
+> +					  sizeof(entries));
+> +	/* ignore spurious events */
+> +	if (!ret)
+Check for -ve also?
 
-  - Toggling of split-lock is only done in "warn" mode.  Worst case
-    scenario of a race is that a misbehaving task will generate multiple
-    #AC exceptions on the same instruction.  And this race will only occur
-    if both siblings are running tasks that generate split-lock #ACs, e.g.
-    a race where sibling threads are writing different values will only
-    occur if CPUx is disabling split-lock after an #AC and CPUy is
-    re-enabling split-lock after *its* previous task generated an #AC.
-  - Transitioning between modes at runtime isn't supported and disabling
-    is tracked per task, so hardware will always reach a steady state that
-    matches the configured mode.  I.e. split-lock is guaranteed to be
-    enabled in hardware once all _TIF_SLD threads have been scheduled out.
-
-Co-developed-by: Fenghua Yu <fenghua.yu@intel.com>
-Co-developed-by: Tony Luck <tony.luck@intel.com>
-Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Signed-off-by: Tony Luck <tony.luck@intel.com>
----
-
-v14: I chatted offline with Sean about the kernel parameter name. He's
-     now OK with the more generic name "split_lock_detect" rather than
-     the trap specific split_lock_ac. So this reverts that change in
-     the code and Documentation.  Thanks to Arvind for making us see
-     sense ... not bike shedding at all!
-
- .../admin-guide/kernel-parameters.txt         |  18 ++
- arch/x86/include/asm/cpu.h                    |  17 ++
- arch/x86/include/asm/cpufeatures.h            |   2 +
- arch/x86/include/asm/msr-index.h              |   9 +
- arch/x86/include/asm/thread_info.h            |   6 +-
- arch/x86/kernel/cpu/common.c                  |   2 +
- arch/x86/kernel/cpu/intel.c                   | 177 ++++++++++++++++++
- arch/x86/kernel/process.c                     |   3 +
- arch/x86/kernel/traps.c                       |  24 ++-
- 9 files changed, 254 insertions(+), 4 deletions(-)
-
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index 7f1e2f327e43..568d20c04441 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -3207,6 +3207,24 @@
- 
- 	nosoftlockup	[KNL] Disable the soft-lockup detector.
- 
-+	split_lock_detect=
-+			[X86] Enable split lock detection
-+
-+			When enabled (and if hardware support is present), atomic
-+			instructions that access data across cache line
-+			boundaries will result in an alignment check exception.
-+
-+			off	- not enabled
-+
-+			warn	- the kernel will pr_alert about applications
-+				  triggering the #AC exception
-+
-+			fatal	- the kernel will SIGBUS applications that
-+				  trigger the #AC exception.
-+
-+			For any more other than 'off' the kernel will die if
-+			it (or firmware) will trigger #AC.
-+
- 	nosync		[HW,M68K] Disables sync negotiation for all devices.
- 
- 	nowatchdog	[KNL] Disable both lockup detectors, i.e.
-diff --git a/arch/x86/include/asm/cpu.h b/arch/x86/include/asm/cpu.h
-index adc6cc86b062..32a295533e2d 100644
---- a/arch/x86/include/asm/cpu.h
-+++ b/arch/x86/include/asm/cpu.h
-@@ -40,4 +40,21 @@ int mwait_usable(const struct cpuinfo_x86 *);
- unsigned int x86_family(unsigned int sig);
- unsigned int x86_model(unsigned int sig);
- unsigned int x86_stepping(unsigned int sig);
-+#ifdef CONFIG_CPU_SUP_INTEL
-+extern void __init cpu_set_core_cap_bits(struct cpuinfo_x86 *c);
-+extern bool split_lock_detect_enabled(void);
-+extern bool handle_user_split_lock(struct pt_regs *regs, long error_code);
-+extern void switch_sld(struct task_struct *);
-+#else
-+static inline void __init cpu_set_core_cap_bits(struct cpuinfo_x86 *c) {}
-+static inline bool split_lock_detect_enabled(void)
-+{
-+	return false;
-+}
-+static inline bool handle_user_split_lock(struct pt_regs *regs, long error_code)
-+{
-+	return false;
-+}
-+static inline void switch_sld(struct task_struct *prev) {}
-+#endif
- #endif /* _ASM_X86_CPU_H */
-diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
-index f3327cb56edf..cd56ad5d308e 100644
---- a/arch/x86/include/asm/cpufeatures.h
-+++ b/arch/x86/include/asm/cpufeatures.h
-@@ -285,6 +285,7 @@
- #define X86_FEATURE_CQM_MBM_LOCAL	(11*32+ 3) /* LLC Local MBM monitoring */
- #define X86_FEATURE_FENCE_SWAPGS_USER	(11*32+ 4) /* "" LFENCE in user entry SWAPGS path */
- #define X86_FEATURE_FENCE_SWAPGS_KERNEL	(11*32+ 5) /* "" LFENCE in kernel entry SWAPGS path */
-+#define X86_FEATURE_SPLIT_LOCK_DETECT	(11*32+ 6) /* #AC for split lock */
- 
- /* Intel-defined CPU features, CPUID level 0x00000007:1 (EAX), word 12 */
- #define X86_FEATURE_AVX512_BF16		(12*32+ 5) /* AVX512 BFLOAT16 instructions */
-@@ -367,6 +368,7 @@
- #define X86_FEATURE_INTEL_STIBP		(18*32+27) /* "" Single Thread Indirect Branch Predictors */
- #define X86_FEATURE_FLUSH_L1D		(18*32+28) /* Flush L1D cache */
- #define X86_FEATURE_ARCH_CAPABILITIES	(18*32+29) /* IA32_ARCH_CAPABILITIES MSR (Intel) */
-+#define X86_FEATURE_CORE_CAPABILITIES	(18*32+30) /* "" IA32_CORE_CAPABILITIES MSR */
- #define X86_FEATURE_SPEC_CTRL_SSBD	(18*32+31) /* "" Speculative Store Bypass Disable */
- 
- /*
-diff --git a/arch/x86/include/asm/msr-index.h b/arch/x86/include/asm/msr-index.h
-index ebe1685e92dd..8821697a7549 100644
---- a/arch/x86/include/asm/msr-index.h
-+++ b/arch/x86/include/asm/msr-index.h
-@@ -41,6 +41,10 @@
- 
- /* Intel MSRs. Some also available on other CPUs */
- 
-+#define MSR_TEST_CTRL				0x00000033
-+#define MSR_TEST_CTRL_SPLIT_LOCK_DETECT_BIT	29
-+#define MSR_TEST_CTRL_SPLIT_LOCK_DETECT		BIT(MSR_TEST_CTRL_SPLIT_LOCK_DETECT_BIT)
-+
- #define MSR_IA32_SPEC_CTRL		0x00000048 /* Speculation Control */
- #define SPEC_CTRL_IBRS			BIT(0)	   /* Indirect Branch Restricted Speculation */
- #define SPEC_CTRL_STIBP_SHIFT		1	   /* Single Thread Indirect Branch Predictor (STIBP) bit */
-@@ -70,6 +74,11 @@
-  */
- #define MSR_IA32_UMWAIT_CONTROL_TIME_MASK	(~0x03U)
- 
-+/* Abbreviated from Intel SDM name IA32_CORE_CAPABILITIES */
-+#define MSR_IA32_CORE_CAPS			  0x000000cf
-+#define MSR_IA32_CORE_CAPS_SPLIT_LOCK_DETECT_BIT  5
-+#define MSR_IA32_CORE_CAPS_SPLIT_LOCK_DETECT	  BIT(MSR_IA32_CORE_CAPS_SPLIT_LOCK_DETECT_BIT)
-+
- #define MSR_PKG_CST_CONFIG_CONTROL	0x000000e2
- #define NHM_C3_AUTO_DEMOTE		(1UL << 25)
- #define NHM_C1_AUTO_DEMOTE		(1UL << 26)
-diff --git a/arch/x86/include/asm/thread_info.h b/arch/x86/include/asm/thread_info.h
-index cf4327986e98..e0d12517f348 100644
---- a/arch/x86/include/asm/thread_info.h
-+++ b/arch/x86/include/asm/thread_info.h
-@@ -92,6 +92,7 @@ struct thread_info {
- #define TIF_NOCPUID		15	/* CPUID is not accessible in userland */
- #define TIF_NOTSC		16	/* TSC is not accessible in userland */
- #define TIF_IA32		17	/* IA32 compatibility process */
-+#define TIF_SLD			18	/* Restore split lock detection on context switch */
- #define TIF_NOHZ		19	/* in adaptive nohz mode */
- #define TIF_MEMDIE		20	/* is terminating due to OOM killer */
- #define TIF_POLLING_NRFLAG	21	/* idle is polling for TIF_NEED_RESCHED */
-@@ -122,6 +123,7 @@ struct thread_info {
- #define _TIF_NOCPUID		(1 << TIF_NOCPUID)
- #define _TIF_NOTSC		(1 << TIF_NOTSC)
- #define _TIF_IA32		(1 << TIF_IA32)
-+#define _TIF_SLD		(1 << TIF_SLD)
- #define _TIF_NOHZ		(1 << TIF_NOHZ)
- #define _TIF_POLLING_NRFLAG	(1 << TIF_POLLING_NRFLAG)
- #define _TIF_IO_BITMAP		(1 << TIF_IO_BITMAP)
-@@ -158,9 +160,9 @@ struct thread_info {
- 
- #ifdef CONFIG_X86_IOPL_IOPERM
- # define _TIF_WORK_CTXSW_PREV	(_TIF_WORK_CTXSW| _TIF_USER_RETURN_NOTIFY | \
--				 _TIF_IO_BITMAP)
-+				 _TIF_IO_BITMAP | _TIF_SLD)
- #else
--# define _TIF_WORK_CTXSW_PREV	(_TIF_WORK_CTXSW| _TIF_USER_RETURN_NOTIFY)
-+# define _TIF_WORK_CTXSW_PREV	(_TIF_WORK_CTXSW| _TIF_USER_RETURN_NOTIFY | _TIF_SLD)
- #endif
- 
- #define _TIF_WORK_CTXSW_NEXT	(_TIF_WORK_CTXSW)
-diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
-index 86b8241c8209..adb2f639f388 100644
---- a/arch/x86/kernel/cpu/common.c
-+++ b/arch/x86/kernel/cpu/common.c
-@@ -1242,6 +1242,8 @@ static void __init early_identify_cpu(struct cpuinfo_x86 *c)
- 
- 	cpu_set_bug_bits(c);
- 
-+	cpu_set_core_cap_bits(c);
-+
- 	fpu__init_system(c);
- 
- #ifdef CONFIG_X86_32
-diff --git a/arch/x86/kernel/cpu/intel.c b/arch/x86/kernel/cpu/intel.c
-index 57473e2c0869..68d2a7044779 100644
---- a/arch/x86/kernel/cpu/intel.c
-+++ b/arch/x86/kernel/cpu/intel.c
-@@ -19,6 +19,8 @@
- #include <asm/microcode_intel.h>
- #include <asm/hwcap2.h>
- #include <asm/elf.h>
-+#include <asm/cpu_device_id.h>
-+#include <asm/cmdline.h>
- 
- #ifdef CONFIG_X86_64
- #include <linux/topology.h>
-@@ -31,6 +33,20 @@
- #include <asm/apic.h>
- #endif
- 
-+enum split_lock_detect_state {
-+	sld_off = 0,
-+	sld_warn,
-+	sld_fatal,
-+};
-+
-+/*
-+ * Default to sld_off because most systems do not support
-+ * split lock detection. split_lock_setup() will switch this
-+ * to sld_warn, and then check to see if there is a command
-+ * line override.
-+ */
-+static enum split_lock_detect_state sld_state = sld_off;
-+
- /*
-  * Just in case our CPU detection goes bad, or you have a weird system,
-  * allow a way to override the automatic disabling of MPX.
-@@ -606,6 +622,8 @@ static void init_intel_misc_features(struct cpuinfo_x86 *c)
- 	wrmsrl(MSR_MISC_FEATURES_ENABLES, msr);
- }
- 
-+static void split_lock_init(void);
-+
- static void init_intel(struct cpuinfo_x86 *c)
- {
- 	early_init_intel(c);
-@@ -720,6 +738,8 @@ static void init_intel(struct cpuinfo_x86 *c)
- 		tsx_enable();
- 	if (tsx_ctrl_state == TSX_CTRL_DISABLE)
- 		tsx_disable();
-+
-+	split_lock_init();
- }
- 
- #ifdef CONFIG_X86_32
-@@ -981,3 +1001,160 @@ static const struct cpu_dev intel_cpu_dev = {
- };
- 
- cpu_dev_register(intel_cpu_dev);
-+
-+#undef pr_fmt
-+#define pr_fmt(fmt) "x86/split lock detection: " fmt
-+
-+static const struct {
-+	const char			*option;
-+	enum split_lock_detect_state	state;
-+} sld_options[] __initconst = {
-+	{ "off",	sld_off   },
-+	{ "warn",	sld_warn  },
-+	{ "fatal",	sld_fatal },
-+};
-+
-+static inline bool match_option(const char *arg, int arglen, const char *opt)
-+{
-+	int len = strlen(opt);
-+
-+	return len == arglen && !strncmp(arg, opt, len);
-+}
-+
-+static void __init split_lock_setup(void)
-+{
-+	enum split_lock_detect_state sld;
-+	char arg[20];
-+	int i, ret;
-+
-+	sld_state = sld = sld_warn;
-+	setup_force_cpu_cap(X86_FEATURE_SPLIT_LOCK_DETECT);
-+
-+	ret = cmdline_find_option(boot_command_line, "split_lock_detect",
-+				  arg, sizeof(arg));
-+	if (ret < 0)
-+		goto print;
-+
-+	for (i = 0; i < ARRAY_SIZE(sld_options); i++) {
-+		if (match_option(arg, ret, sld_options[i].option)) {
-+			sld = sld_options[i].state;
-+			break;
-+		}
-+	}
-+
-+	if (sld != sld_state)
-+		sld_state = sld;
-+
-+print:
-+	switch(sld) {
-+	case sld_off:
-+		pr_info("disabled\n");
-+		break;
-+
-+	case sld_warn:
-+		pr_info("warning about user-space split_locks\n");
-+		break;
-+
-+	case sld_fatal:
-+		pr_info("sending SIGBUS on user-space split_locks\n");
-+		break;
-+	}
-+}
-+
-+/*
-+ * The TEST_CTRL MSR is per core. So multiple threads can
-+ * read/write the MSR in parallel. But it's possible to
-+ * simplify the read/write without locking and without
-+ * worry about overwriting the MSR because only bit 29
-+ * is implemented in the MSR and the bit is set as 1 by all
-+ * threads. Locking may be needed in the future if situation
-+ * is changed e.g. other bits are implemented.
-+ */
-+
-+static bool __sld_msr_set(bool on)
-+{
-+	u64 test_ctrl_val;
-+
-+	if (rdmsrl_safe(MSR_TEST_CTRL, &test_ctrl_val))
-+		return false;
-+
-+	if (on)
-+		test_ctrl_val |= MSR_TEST_CTRL_SPLIT_LOCK_DETECT;
-+	else
-+		test_ctrl_val &= ~MSR_TEST_CTRL_SPLIT_LOCK_DETECT;
-+
-+	if (wrmsrl_safe(MSR_TEST_CTRL, test_ctrl_val))
-+		return false;
-+
-+	return true;
-+}
-+
-+static void split_lock_init(void)
-+{
-+	if (sld_state == sld_off)
-+		return;
-+
-+	if (__sld_msr_set(true))
-+		return;
-+
-+	/*
-+	 * If this is anything other than the boot-cpu, you've done
-+	 * funny things and you get to keep whatever pieces.
-+	 */
-+	pr_warn("MSR fail -- disabled\n");
-+	__sld_msr_set(sld_off);
-+}
-+
-+bool split_lock_detect_enabled(void)
-+{
-+	return sld_state != sld_off;
-+}
-+
-+bool handle_user_split_lock(struct pt_regs *regs, long error_code)
-+{
-+	if ((regs->flags & X86_EFLAGS_AC) || sld_state == sld_fatal)
-+		return false;
-+
-+	pr_warn_ratelimited("#AC: %s/%d took a split_lock trap at address: 0x%lx\n",
-+		 current->comm, current->pid, regs->ip);
-+
-+	__sld_msr_set(false);
-+	set_tsk_thread_flag(current, TIF_SLD);
-+	return true;
-+}
-+
-+void switch_sld(struct task_struct *prev)
-+{
-+	__sld_msr_set(true);
-+	clear_tsk_thread_flag(prev, TIF_SLD);
-+}
-+
-+#define SPLIT_LOCK_CPU(model) {X86_VENDOR_INTEL, 6, model, X86_FEATURE_ANY}
-+
-+/*
-+ * The following processors have split lock detection feature. But since they
-+ * don't have MSR IA32_CORE_CAPABILITIES, the feature cannot be enumerated by
-+ * the MSR. So enumerate the feature by family and model on these processors.
-+ */
-+static const struct x86_cpu_id split_lock_cpu_ids[] __initconst = {
-+	SPLIT_LOCK_CPU(INTEL_FAM6_ICELAKE_X),
-+	SPLIT_LOCK_CPU(INTEL_FAM6_ICELAKE_L),
-+	{}
-+};
-+
-+void __init cpu_set_core_cap_bits(struct cpuinfo_x86 *c)
-+{
-+	u64 ia32_core_caps = 0;
-+
-+	if (cpu_has(c, X86_FEATURE_CORE_CAPABILITIES)) {
-+		/* Enumerate features reported in IA32_CORE_CAPABILITIES MSR. */
-+		rdmsrl(MSR_IA32_CORE_CAPS, ia32_core_caps);
-+	} else if (!boot_cpu_has(X86_FEATURE_HYPERVISOR)) {
-+		/* Enumerate split lock detection by family and model. */
-+		if (x86_match_cpu(split_lock_cpu_ids))
-+			ia32_core_caps |= MSR_IA32_CORE_CAPS_SPLIT_LOCK_DETECT;
-+	}
-+
-+	if (ia32_core_caps & MSR_IA32_CORE_CAPS_SPLIT_LOCK_DETECT)
-+		split_lock_setup();
-+}
-diff --git a/arch/x86/kernel/process.c b/arch/x86/kernel/process.c
-index 839b5244e3b7..355760d36505 100644
---- a/arch/x86/kernel/process.c
-+++ b/arch/x86/kernel/process.c
-@@ -650,6 +650,9 @@ void __switch_to_xtra(struct task_struct *prev_p, struct task_struct *next_p)
- 		/* Enforce MSR update to ensure consistent state */
- 		__speculation_ctrl_update(~tifn, tifn);
- 	}
-+
-+	if (tifp & _TIF_SLD)
-+		switch_sld(prev_p);
- }
- 
- /*
-diff --git a/arch/x86/kernel/traps.c b/arch/x86/kernel/traps.c
-index 9e6f822922a3..61c576b95184 100644
---- a/arch/x86/kernel/traps.c
-+++ b/arch/x86/kernel/traps.c
-@@ -46,6 +46,7 @@
- #include <asm/traps.h>
- #include <asm/desc.h>
- #include <asm/fpu/internal.h>
-+#include <asm/cpu.h>
- #include <asm/cpu_entry_area.h>
- #include <asm/mce.h>
- #include <asm/fixmap.h>
-@@ -244,7 +245,6 @@ do_trap(int trapnr, int signr, char *str, struct pt_regs *regs,
- {
- 	struct task_struct *tsk = current;
- 
--
- 	if (!do_trap_no_signal(tsk, trapnr, str, regs, error_code))
- 		return;
- 
-@@ -290,9 +290,29 @@ DO_ERROR(X86_TRAP_OLD_MF, SIGFPE,           0, NULL, "coprocessor segment overru
- DO_ERROR(X86_TRAP_TS,     SIGSEGV,          0, NULL, "invalid TSS",         invalid_TSS)
- DO_ERROR(X86_TRAP_NP,     SIGBUS,           0, NULL, "segment not present", segment_not_present)
- DO_ERROR(X86_TRAP_SS,     SIGBUS,           0, NULL, "stack segment",       stack_segment)
--DO_ERROR(X86_TRAP_AC,     SIGBUS,  BUS_ADRALN, NULL, "alignment check",     alignment_check)
- #undef IP
- 
-+dotraplinkage void do_alignment_check(struct pt_regs *regs, long error_code)
-+{
-+	const char str[] = "alignment check";
-+
-+	RCU_LOCKDEP_WARN(!rcu_is_watching(), "entry code didn't wake RCU");
-+
-+	if (notify_die(DIE_TRAP, str, regs, error_code, X86_TRAP_AC, SIGBUS) == NOTIFY_STOP)
-+		return;
-+
-+	if (!user_mode(regs))
-+		die("Split lock detected\n", regs, error_code);
-+
-+	cond_local_irq_enable(regs);
-+
-+	if (handle_user_split_lock(regs, error_code))
-+		return;
-+
-+	do_trap(X86_TRAP_AC, SIGBUS, "alignment check", regs,
-+		error_code, BUS_ADRALN, NULL);
-+}
-+
- #ifdef CONFIG_VMAP_STACK
- __visible void __noreturn handle_stack_overflow(const char *message,
- 						struct pt_regs *regs,
--- 
-2.21.0
-
+> +		return 1;
+> +
+> +	bpf_perf_event_output(ctx, &perf_buf_map, BPF_F_CURRENT_CPU,
+> +			      &ret, sizeof(ret));
+> +	return 0;
+> +}
+> +
+> +char _license[] SEC("license") =3D "GPL";
+> --=20
+> 2.21.1
+>=20
