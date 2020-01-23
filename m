@@ -2,113 +2,110 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A141C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 09:36:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8759EC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 09:36:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C64922522
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 09:36:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="wsgMKH/3"
+	by mail.kernel.org (Postfix) with ESMTP id 55C1924684
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 09:36:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726232AbgAWJgS (ORCPT
+        id S1726911AbgAWJge (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 04:36:18 -0500
-Received: from merlin.infradead.org ([205.233.59.134]:60542 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726026AbgAWJgS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 04:36:18 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Transfer-Encoding:
-        Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-        Sender:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=YixZocxPtvbPBg+61NfVP/W8TQN9iRjk5ZtElvThCac=; b=wsgMKH/3+zhqxyAE0Yn4q+6ZNM
-        1i3hdKBlyLh13TkJcOydPEUGqTACaIsumP7f4saKJMOf9CotWZyy7cQol+DrVydLgWlquRUj1R/+A
-        QTtk/hlHgTdnyuzwgO2xpEAHHeAYZS/v0+nGoUaorAkteno8SiiQJEF+jczEOeVLgq/5M1hZqeRPW
-        jGyaWRn4+jQkfd5mAilEiDw+XSoDA/hWa4jyJ9JUsnINqttpc0E/2L3E2QG8fiJKqlzIBjal2EsVG
-        hN9qn5NhMhngueMvfbdw01OKeC/8f3T90IhuigH3lrLYVJhggjeqz952q50KeVMJP5T0ZaK7+5m3Q
-        93HnfLGg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iuYuE-0002qM-Jg; Thu, 23 Jan 2020 09:36:06 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id E8574300B8D;
-        Thu, 23 Jan 2020 10:34:24 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id DE3D42B70D34E; Thu, 23 Jan 2020 10:36:04 +0100 (CET)
-Date:   Thu, 23 Jan 2020 10:36:04 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Marco Elver <elver@google.com>
-Cc:     Qian Cai <cai@lca.pw>, Will Deacon <will@kernel.org>,
-        mingo@redhat.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] locking/osq_lock: fix a data race in osq_wait_next
-Message-ID: <20200123093604.GT14914@hirez.programming.kicks-ass.net>
-References: <20200122165938.GA16974@willie-the-truck>
- <A5114711-B8DE-48DA-AFD0-62128AC08270@lca.pw>
- <20200122223851.GA45602@google.com>
+        Thu, 23 Jan 2020 04:36:34 -0500
+Received: from szxga08-in.huawei.com ([45.249.212.255]:45680 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726026AbgAWJgd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jan 2020 04:36:33 -0500
+Received: from DGGEMM401-HUB.china.huawei.com (unknown [172.30.72.56])
+        by Forcepoint Email with ESMTP id 58B8F9300ED82D6FD96C;
+        Thu, 23 Jan 2020 17:36:31 +0800 (CST)
+Received: from dggeme713-chm.china.huawei.com (10.1.199.109) by
+ DGGEMM401-HUB.china.huawei.com (10.3.20.209) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Thu, 23 Jan 2020 17:36:30 +0800
+Received: from dggeme763-chm.china.huawei.com (10.3.19.109) by
+ dggeme713-chm.china.huawei.com (10.1.199.109) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1713.5; Thu, 23 Jan 2020 17:36:30 +0800
+Received: from dggeme763-chm.china.huawei.com ([10.6.66.36]) by
+ dggeme763-chm.china.huawei.com ([10.6.66.36]) with mapi id 15.01.1713.004;
+ Thu, 23 Jan 2020 17:36:30 +0800
+From:   linmiaohe <linmiaohe@huawei.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>
+CC:     "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "rkrcmar@redhat.com" <rkrcmar@redhat.com>,
+        "sean.j.christopherson@intel.com" <sean.j.christopherson@intel.com>,
+        "wanpengli@tencent.com" <wanpengli@tencent.com>,
+        "jmattson@google.com" <jmattson@google.com>,
+        "joro@8bytes.org" <joro@8bytes.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "bp@alien8.de" <bp@alien8.de>, "hpa@zytor.com" <hpa@zytor.com>
+Subject: Re: [PATCH] KVM: nVMX: set rflags to specify success in
+ handle_invvpid() default case
+Thread-Topic: [PATCH] KVM: nVMX: set rflags to specify success in
+ handle_invvpid() default case
+Thread-Index: AdXRz6RAoVCeZerqGEOd3DyH2pYaqQ==
+Date:   Thu, 23 Jan 2020 09:36:30 +0000
+Message-ID: <a3eb519e5831459db1c926776ad97cca@huawei.com>
+Accept-Language: en-US
+Content-Language: zh-CN
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.173.221.158]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200122223851.GA45602@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 22, 2020 at 11:38:51PM +0100, Marco Elver wrote:
-
-> If possible, decode and get the line numbers. I have observed a data
-> race in osq_lock before, however, this is the only one I have recently
-> seen in osq_lock:
-> 
-> read to 0xffff88812c12d3d4 of 4 bytes by task 23304 on cpu 0:
->  osq_lock+0x170/0x2f0 kernel/locking/osq_lock.c:143
-> 
-> 	while (!READ_ONCE(node->locked)) {
-> 		/*
-> 		 * If we need to reschedule bail... so we can block.
-> 		 * Use vcpu_is_preempted() to avoid waiting for a preempted
-> 		 * lock holder:
-> 		 */
-> -->		if (need_resched() || vcpu_is_preempted(node_cpu(node->prev)))
-> 			goto unqueue;
-> 
-> 		cpu_relax();
-> 	}
-> 
-> where
-> 
-> 	static inline int node_cpu(struct optimistic_spin_node *node)
-> 	{
-> -->		return node->cpu - 1;
-> 	}
-> 
-> 
-> write to 0xffff88812c12d3d4 of 4 bytes by task 23334 on cpu 1:
->  osq_lock+0x89/0x2f0 kernel/locking/osq_lock.c:99
-> 
-> 	bool osq_lock(struct optimistic_spin_queue *lock)
-> 	{
-> 		struct optimistic_spin_node *node = this_cpu_ptr(&osq_node);
-> 		struct optimistic_spin_node *prev, *next;
-> 		int curr = encode_cpu(smp_processor_id());
-> 		int old;
-> 
-> 		node->locked = 0;
-> 		node->next = NULL;
-> -->		node->cpu = curr;
-> 
-
-Yeah, that's impossible. This store happens before the node is
-published, so no matter how the load in node_cpu() is shattered, it must
-observe the right value.
+UGFvbG8gQm9uemluaSA8cGJvbnppbmlAcmVkaGF0LmNvbT4gd3JvdGU6DQo+IE9uIDIzLzAxLzIw
+IDA5OjU1LCBWaXRhbHkgS3V6bmV0c292IHdyb3RlOg0KPiA+IFlvdXIgcGF0Y2ggc2VlbXMgdG8g
+ZG8gdGhlIHJpZ2h0IHRoaW5nLCBob3dldmVyLCBJIHN0YXJ0ZWQgd29uZGVyaW5nIA0KPiA+IGlm
+DQo+ID4gV0FSTl9PTl9PTkNFKCkgaXMgdGhlIHJpZ2h0IHRoaW5nIHRvIGRvLiBTRE0gc2F5cyB0
+aGF0ICJJZiBhbiANCj4gPiB1bnN1cHBvcnRlZCBJTlZWUElEIHR5cGUgaXMgc3BlY2lmaWVkLCB0
+aGUgaW5zdHJ1Y3Rpb24gZmFpbHMuIiBhbmQgDQo+ID4gdGhpcyBpcyBzaW1pbGFyIHRvIElOVkVQ
+VCBhbmQgSSBkZWNpZGVkIHRvIGNoZWNrIHdoYXQgaGFuZGxlX2ludmVwdCgpIA0KPiA+IGRvZXMu
+IFdlbGwsIGl0IGRvZXMgQlVHX09OKCkuDQo+ID4gDQo+ID4gQXJlIHdlIGRvaW5nIHRoZSByaWdo
+dCB0aGluZyBpbiBhbnkgb2YgdGhlc2UgY2FzZXM/DQo+DQo+IFllcywgYm90aCBJTlZFUFQgYW5k
+IElOVlZQSUQgY2F0Y2ggdGhpcyBlYXJsaWVyLg0KPg0KPiBGb3IgSU5WRVBUOg0KPg0KPiAgICAg
+ICAgIHR5cGVzID0gKHZteC0+bmVzdGVkLm1zcnMuZXB0X2NhcHMgPj4gVk1YX0VQVF9FWFRFTlRf
+U0hJRlQpICYgNjsNCj4NCj4gICAgICAgICBpZiAodHlwZSA+PSAzMiB8fCAhKHR5cGVzICYgKDEg
+PDwgdHlwZSkpKQ0KPiAgICAgICAgICAgICAgICAgcmV0dXJuIG5lc3RlZF92bXhfZmFpbFZhbGlk
+KHZjcHUsDQo+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgVk1YRVJSX0lOVkFMSURf
+T1BFUkFORF9UT19JTlZFUFRfSU5WVlBJRCk7DQo+DQo+DQo+DQo+IEZvciBJTlZWUElEOg0KPg0K
+PiAgICAgICAgIHR5cGVzID0gKHZteC0+bmVzdGVkLm1zcnMudnBpZF9jYXBzICYNCj4gICAgICAg
+ICAgICAgICAgICAgICAgICAgVk1YX1ZQSURfRVhURU5UX1NVUFBPUlRFRF9NQVNLKSA+PiA4Ow0K
+Pg0KPiAgICAgICAgIGlmICh0eXBlID49IDMyIHx8ICEodHlwZXMgJiAoMSA8PCB0eXBlKSkpDQo+
+ICAgICAgICAgICAgICAgICByZXR1cm4gbmVzdGVkX3ZteF9mYWlsVmFsaWQodmNwdSwNCj4gICAg
+ICAgICAgICAgICAgICAgICAgICAgVk1YRVJSX0lOVkFMSURfT1BFUkFORF9UT19JTlZFUFRfSU5W
+VlBJRCk7DQo+DQo+IFNvIEknbSBsZWFuaW5nIHRvd2FyZHMgbm90IGFwcGx5aW5nIE1pYW9oZSdz
+IHBhdGNoLiAgSGFwcHkgTW91c2UgWWVhciB0byBldmVyeW9uZSwgaGVyZSBpcyBhbiBBU0NJSSBh
+cnQgKGV4Y2VwdCBmb3Igb25lIFVuaWNvZGUgY2hhcmFjdGVyKSBtb3VzZToNCj4NCj4NCj4gICAg
+ICAgIF9fKCkoKQ0KPiAgICAgICAvICAgICBvKQ0KPiAgIH5+fn5cXyxfXyxfPsKwDQo+DQo+IFRo
+YW5rcywNCg0KWWVzLCBpdCBzZWVtcyBteSBwYXRjaCBpcyBtZWFuaW5nbGVzcy4gQW5kIHRoYW5r
+cyBmb3IgYm90aCBvZiB5b3VyIHJldmlldyBhbmQgcmVwbHkuDQpIYXBweSBNb3VzZSBZZWFyIGFu
+ZCBJIGNhdGNoIGEgbWlja2V5IG1vdXNlOg0KDQogICAjIyMjIyMjIyMjIw0KICAjIyMjIyMjIyMj
+IyMjIyMgICAgICAgIF9fLS0tLS1fXyAgICAgICAgICAjIw0KIyMjIyMjIyMjIyMjIyMjIyMjICAg
+ICMjIyAgICAgICAgICBcICAgICAgICMjIyMNCiMjIyMjIyMjIyMjIyMjIyMjIyAjIyMjICMgICAg
+ICAgICAgICBcICAgICAjICMjDQogIyMjIyMjIyMjIyMjIyMjIyMjIyMgICAgICAgICAgICBcfn5c
+ICBcICAgLCMjIiwNCiAgIyMjIyMjIyMjIyMjIyMjIyMgICAgICAgL35+XCAgICBcIyMgXCAgXCIg
+ICAgIDoNCiAgICAjIyMjIyMjIyMjIyMjIyMgICAgICAgXCAgICBcICAgXCMjIiAvICAgICAgIDoN
+CiAgICAgICAgICAgICAgIyMjIyMjIyAgICAgICBcIyMjIFwgICAgLyAgICAgICAgIDoNCiAgICAg
+ICAgICAgICAgIyMjIyMjIyMjIyMjIyAgXCMjIy8gICAgICAgICAgICAgOg0KICAgICAgICAgICAg
+ICAgIyMjIyMjIyMgICAgICAgICAgICAgICAgICAgICAgIDoNCiAgICAgICAgICAgICAgICAjIyMj
+IyMgICBfXyAgICAgICAgICAgICAgICAgIDoNCiAgICAgICAgICAgICAgICAgIyMjIyAgIC9cICAg
+ICAgICAgICAgICAgICAgLw0KICAgICAgIyMjIyMjIyMjIyMjICMjIyAgICBcXF9fX19fX19fX19f
+X19fL3wNCiAgICAjIyMjIyMjIyMjIyMjIyMjIyMgICAgIFwgX18gICAgICAgICAvIC8NCiAgIyMj
+IyMjIyMjIyMjIyMjIyMjIyNcX18gICAgXCAgXC0tLVwsLyAvDQogICMjIyMjIyMjIyMjIyMjIyMj
+IyMgICAgXCAgICAgXF9fX19fLyAvDQogICAjIyMjIyMjIyMjIyMjIyMjIyAgICAgICBcX19fX19f
+X19fLw0KICAgICMjIyMjIyMjIyMjIyMjIw0KICAgICAgIyMjIyMjIyMjIyMNCg0KVGhhbmtzIGJv
+dGggYWdhaW4uDQo=
