@@ -2,640 +2,480 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 738B6C35243
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 23:50:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00171C35240
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 23:50:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28D792087E
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 23:50:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9B3221835
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 23:50:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="oob/6ZtS"
+	dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b="ebcEk/n+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730106AbgAWXui (ORCPT
+        id S1730124AbgAWXuk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 18:50:38 -0500
-Received: from mail-bn8nam12on2071.outbound.protection.outlook.com ([40.107.237.71]:22248
-        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728655AbgAWXuh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jan 2020 18:50:40 -0500
+Received: from sonic305-28.consmr.mail.ne1.yahoo.com ([66.163.185.154]:43169
+        "EHLO sonic305-28.consmr.mail.ne1.yahoo.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730061AbgAWXuh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 23 Jan 2020 18:50:37 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=nMM2u/f+2YN6FzjUwq1qxVnDR64vD2FHkxl3MoBFetJ06DnPU5WWHr6NyAOX6QO1Strw6C0A4Am9G2OYN/jfcMjTjJCOvCzX5jK/rgwfsrSagdjaGtUEFT5lWzF2qZ0Gdo306uaA9iDggvN034W313kpt7HQ27Q5NkaFQU6z7qtir96SOJH0T6La+ra1EZZnM/TQC+jcmt8hqvR+Wt+/TVby0BLebi7s2Q/0yc6ebv+MqQrcmaw5Yo2CJ7uuDCF0E0luEAbO7uIyfSZUXUip8VGvaQ+8gu3aPbJkjcZ8qFU697/gBnvNLqh1mR9cMUZi5S8qD0JiMKyO6kVUkaOoSg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2sSqz9KV7u3eGJiuYSgWLEUVop7mKkbFiAfUNH+nplM=;
- b=FNlkUp02CawMzW+mh0YSmbTBJ1B7U595NRwZk5WtpSdgu40JDS8ne0UVFMpktiPSAXN1NO2r0A1ggbDCNp4yS9xekxUU3iLbF2e8rFEtzjgBVnwNYBZeeS9UAzFRdeUMzCJLzYytyc3JBhahEQTcf/O6kyofy/klGlKDppeXezQb4DcbN2aO1iJxwjDs7JSLBaaw21EF9O51PR3Zz957zFkt12Pgj50GbxSYE+Qo6eWYY/bMPje9FTZNlZw7YimDTYbxf+iUGtzNFRiZ9eARUxALdwaC/Lu9BFruHLakOiS2o5jIj29652K1GvIpzBSjUDb0X5bAnGSI0+P5VSVECg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=xilinx.com; dmarc=pass action=none header.from=xilinx.com;
- dkim=pass header.d=xilinx.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2sSqz9KV7u3eGJiuYSgWLEUVop7mKkbFiAfUNH+nplM=;
- b=oob/6ZtSTVVKOl+y1zlw5NTwmIWBkOFwBnpKVEfZ87YjJhcO3YuEtPLs3aMSHxksmNK4cqB767bKmkAT8STjbL/92dt0E5kik9uCZbVw8Mv0uGnnGP9EWoz/KvySSd2QiO5pTwdoWy84mCwgYxIKYkjYtHmRqZ974bRzNdzn5v8=
-Received: from BYAPR02MB5992.namprd02.prod.outlook.com (20.179.89.80) by
- BYAPR02MB4582.namprd02.prod.outlook.com (52.135.237.146) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2644.19; Thu, 23 Jan 2020 23:47:57 +0000
-Received: from BYAPR02MB5992.namprd02.prod.outlook.com
- ([fe80::f5fd:4723:4a89:3ed9]) by BYAPR02MB5992.namprd02.prod.outlook.com
- ([fe80::f5fd:4723:4a89:3ed9%7]) with mapi id 15.20.2665.017; Thu, 23 Jan 2020
- 23:47:57 +0000
-From:   Jolly Shah <JOLLYS@xilinx.com>
-To:     Greg KH <gregkh@linuxfoundation.org>
-CC:     "ard.biesheuvel@linaro.org" <ard.biesheuvel@linaro.org>,
-        "mingo@kernel.org" <mingo@kernel.org>,
-        "matt@codeblueprint.co.uk" <matt@codeblueprint.co.uk>,
-        "sudeep.holla@arm.com" <sudeep.holla@arm.com>,
-        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
-        "keescook@chromium.org" <keescook@chromium.org>,
-        "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>,
-        Michal Simek <michals@xilinx.com>,
-        Rajan Vaja <RAJANV@xilinx.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Rajan Vaja <RAJANV@xilinx.com>
-Subject: RE: [PATCH v2 1/4] firmware: xilinx: Add sysfs interface
-Thread-Topic: [PATCH v2 1/4] firmware: xilinx: Add sysfs interface
-Thread-Index: AQHVxn8DFx2mcD2XT0SouhH9uTzcjqfqR5+AgA6zcwA=
-Date:   Thu, 23 Jan 2020 23:47:57 +0000
-Message-ID: <BYAPR02MB5992FC37E0D2AD9946414417B80F0@BYAPR02MB5992.namprd02.prod.outlook.com>
-References: <1578527663-10243-1-git-send-email-jolly.shah@xilinx.com>
- <1578527663-10243-2-git-send-email-jolly.shah@xilinx.com>
- <20200114145257.GA1910108@kroah.com>
-In-Reply-To: <20200114145257.GA1910108@kroah.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=JOLLYS@xilinx.com; 
-x-originating-ip: [149.199.62.133]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 9903c75f-42e9-41a4-1130-08d7a05eac29
-x-ms-traffictypediagnostic: BYAPR02MB4582:|BYAPR02MB4582:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BYAPR02MB45820D3A4667AF301FC269BDB80F0@BYAPR02MB4582.namprd02.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 029174C036
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(346002)(39860400002)(376002)(396003)(136003)(189003)(199004)(107886003)(6916009)(186003)(26005)(33656002)(64756008)(66446008)(76116006)(5660300002)(52536014)(71200400001)(2906002)(66476007)(66946007)(55016002)(30864003)(478600001)(9686003)(66556008)(7696005)(53546011)(6506007)(316002)(54906003)(7416002)(86362001)(8936002)(8676002)(4326008)(81166006)(81156014);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR02MB4582;H:BYAPR02MB5992.namprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: xilinx.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: xxUFfJzhrMG66S+hHEZu88GuKfD3Qh/Gg4J8yxcm9tlPg3LJIgB6mXgHsIi90GENkzaulNKGT8M6oT4V1kpN5H1WVTSID3EbdlyojZLo7po6Kt8E5kt7fSdCBixd5NDy84YOaDaB9/HpPhk78kH8i880JFi1lngpd01RubyG/S2VlcY7yz52szRfrVtlqhA2ohXEVQzxr1BPUBSqe686ysIiP9kZqm92c0bKrAfW73CBYyAW0M3t1CsTdOoX8WPTdQdBJ65dKc0ytwT06ufa/RfGWdFL5sb9jumBm72HYZVhpV5DfnpQd099ucZac/QR8JPdgNZN1wgvsdp0heGRWo3g+AYI6EoBjqDWRgTEtuh0tJYQZLYE1z3HH6Odo87BuXazGShkfN5tELD07CgRNeXDemGHSsBW/rtKrUiPhVDzQMWS/WcJLVFx3jaG5RDZ
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1579823434; bh=AZ8XDyA8mdEEn6XXq23Kda3A5Cp88RgAxBGpvcWOyjc=; h=Subject:To:Cc:References:From:Date:In-Reply-To:From:Subject; b=ebcEk/n+QoAm0tfRFhruj74ZYSfn9Jlm0cJFDarKhyA6pVoFyEjZBisKXPMnGObLTMZy8jDJ0FpLRhx7dKXpQdgccuvQnIq/l+dtQf32mzql0nKjLJXuwCiktVilX4cvfCzTzu3uhzxdfdjXHt4LkCFjvaj1gB8GDy49NfkDniRI7Y9DQRgYa36sBsvfxxtxXA0dCZU9+A+nIoGj+20HO7lFLpjfm1TSUn0dTwL7hRpvMli719UsyLkN+IJMwABZV2kc4zawNBcW/bLeS6vfiXnUzSNa1AmWXF7wMFu9TzGNDxnJB4P4v57Xf8LBdzCJcqwfIrSDBYlb71IJJuH6uQ==
+X-YMail-OSG: wvHAuNEVM1lTpTsTNsOq3HIQthREXq.Ulhxaq8ZDS80bdkbitVb8GS8ZgWyptlj
+ WCVGzESMIUBD1jWJ9.THjBIBdR8Mn5kSAVM71HbqAju42dzuswUb_XTsMavtbkH3i0OxFi33Ky2w
+ xcLIASK8SolyDzRaEmS3Qd6jboqQ8wwT7jFNFwHwoYm5gnTIs6c7AflGXHXzyc8Iexmi5gPWH_2Y
+ 2d3jolZ1TipP5x64PcHHWFTGYkeZ2N.Xkwjr4rzKBGNHWmgrL75fQJ0dGT.jtxfSWxx5jp.H.Ih_
+ KpwuJQOejyKN7JRZ9gOIg7WU86.xH6BMTQoxFf03ldK_buT8ucajKR4n3WFcOBUX1mukOVjQJdMC
+ gg5Iykm7zjGGItSVk5vDarq2nUKz7DIoT4L88a0u7ePwekHTjLFFpowQX31JB4RVMZb8XuOCm6Du
+ ZxAsxZMRiD6y82tn4QTWR.kH.6nq9J.C8aQh4iycmsSZuCDtHjp6EemeR4fFB6uinGVSF5GaqVC3
+ B0wUrMFDyhtxm8E1sVx4k5r2bYspwQ5nZgP6nj9WfQg9qDpxZpWTzVV0Le88n.Bd6Qe6EibdmVZ.
+ XWgI2EvYJynuBCCvPqjs9SAw88OFr12lCKuCcr6BG4DPv9.z.9.wdaeTlxYh5niUMKOJm3kfhk09
+ Nv3II_VoXsGbOBY6pqVM2KYopj3YnJGY.GSmUsxWqvZNDUHeDn0UkKb43kF08Ofz0irc7Qfxa8Eg
+ PbeapZJkgeBgk0iIdlyJtFwh5dbO5qRPfCTMx14HVBjlhA.OgDom7NSxXye2pOFs2j2i0mPNcHv2
+ rYRmxYb7CL9kHOuM.ZWpPWS1vw1sSHBFiTeb7qik.cB2KYU1e5gm5TCeOR.8c3BCHq5i64yFr4d_
+ k2pos_DSUKzCmDmgA5cYQ1qcVItEYFdsZ10yTQP.kryGkzC1PMcH1rZ9nLmoUHbcTXyPCdN5YxSE
+ l_jfwq6Jj4c7Zjkm3xgTMkG3Ed.gh5SCoE0UV4VWZ9qtxOq3siGKDj9tPqudXeSNbHddqw0Ew0gF
+ dCsH96UaJL0JbvyAk4xhlRsaqJgfI7zph2BnHA9veDWZAutzUFTvM752fjBuIW9_2SEcDj.5Fvp1
+ s.FnTjsLU2tdXCp.TP9BHcno.4wWsPZfBwaq6AmK8Sloy47gc.XjGySmlXJT0XKAEeacE6t1HMU5
+ kGziQK8u3mP7YfjrCdAF81Z0ydDyjb0.VWAEZaJ5DCQp8.Ex2OH6lLwzbcfivWh0vRdzFGnXDaPe
+ WXB.UaHsJJDQQqkg97pzZQmjXPV2bgUWwWihksm__6mlP9sVRQku1A8QXaQGEKWg_sEHJgIu5ZxJ
+ JY68taYNz7G7DbqpGqHybuEZp4QYcyZaHGLtUe80q.amScxpJcmNw.oD7to5Rn8mJb0kBabHy_Un
+ YkLdPKPxs03wZBllVYAA_ekhXy0qkiW2nqNdEdLgZthXMkTMB5Q--
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic305.consmr.mail.ne1.yahoo.com with HTTP; Thu, 23 Jan 2020 23:50:34 +0000
+Received: by smtp420.mail.gq1.yahoo.com (Oath Hermes SMTP Server) with ESMTPA ID 9cc78e19df46886fe420010c17c38cf2;
+          Thu, 23 Jan 2020 23:50:30 +0000 (UTC)
+Subject: Re: [PATCH bpf-next v3 04/10] bpf: lsm: Add mutable hooks list for
+ the BPF LSM
+To:     KP Singh <kpsingh@chromium.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Linux Security Module list 
+        <linux-security-module@vger.kernel.org>, bpf@vger.kernel.org,
+        Casey Schaufler <casey@schaufler-ca.com>
+References: <20200123152440.28956-1-kpsingh@chromium.org>
+ <20200123152440.28956-5-kpsingh@chromium.org>
+ <29157a88-7049-906e-fe92-b7a1e2183c6b@schaufler-ca.com>
+ <20200123175942.GA131348@google.com>
+ <5004b3f4-ca5b-a546-4e87-b852cc248079@schaufler-ca.com>
+ <20200123222436.GA1598@chromium.org>
+From:   Casey Schaufler <casey@schaufler-ca.com>
+Autocrypt: addr=casey@schaufler-ca.com; keydata=
+ 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
+ abzjfg==
+Message-ID: <f571b719-e11f-416e-4232-f99036e38f15@schaufler-ca.com>
+Date:   Thu, 23 Jan 2020 15:50:30 -0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9903c75f-42e9-41a4-1130-08d7a05eac29
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Jan 2020 23:47:57.0467
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Y/0JjJmEYCEnjiKofgeIjHJjAFsSMNRi8AI0bKPDpdq4SelcsSCSIhnUM1eRqfJWTh0hohVprXt3eqnvxbfnlA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR02MB4582
+In-Reply-To: <20200123222436.GA1598@chromium.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+X-Mailer: WebService/1.1.14873 hermes Apache-HttpAsyncClient/4.1.4 (Java/1.8.0_181)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Greg,
+On 1/23/2020 2:24 PM, KP Singh wrote:
+> On 23-Jan 11:09, Casey Schaufler wrote:
+>> On 1/23/2020 9:59 AM, KP Singh wrote:
+>>> On 23-Jan 09:03, Casey Schaufler wrote:
+>>>> On 1/23/2020 7:24 AM, KP Singh wrote:
+>>>>> From: KP Singh <kpsingh@google.com>
+>>>>>
+>>>>> - The list of hooks registered by an LSM is currently immutable as =
+they
+>>>>>   are declared with __lsm_ro_after_init and they are attached to a
+>>>>>   security_hook_heads struct.
+>>>>> - For the BPF LSM we need to de/register the hooks at runtime. Maki=
+ng
+>>>>>   the existing security_hook_heads mutable broadens an
+>>>>>   attack vector, so a separate security_hook_heads is added for onl=
+y
+>>>>>   those that ~must~ be mutable.
+>>>>> - These mutable hooks are run only after all the static hooks have
+>>>>>   successfully executed.
+>>>>>
+>>>>> This is based on the ideas discussed in:
+>>>>>
+>>>>>   https://lore.kernel.org/lkml/20180408065916.GA2832@ircssh-2.c.rug=
+ged-nimbus-611.internal
+>>>>>
+>>>>> Reviewed-by: Brendan Jackman <jackmanb@google.com>
+>>>>> Reviewed-by: Florent Revest <revest@google.com>
+>>>>> Reviewed-by: Thomas Garnier <thgarnie@google.com>
+>>>>> Signed-off-by: KP Singh <kpsingh@google.com>
+>>>>> ---
+>>>>>  MAINTAINERS             |  1 +
+>>>>>  include/linux/bpf_lsm.h | 72 +++++++++++++++++++++++++++++++++++++=
+++++
+>>>>>  security/bpf/Kconfig    |  1 +
+>>>>>  security/bpf/Makefile   |  2 +-
+>>>>>  security/bpf/hooks.c    | 20 ++++++++++++
+>>>>>  security/bpf/lsm.c      |  7 ++++
+>>>>>  security/security.c     | 25 +++++++-------
+>>>>>  7 files changed, 116 insertions(+), 12 deletions(-)
+>>>>>  create mode 100644 include/linux/bpf_lsm.h
+>>>>>  create mode 100644 security/bpf/hooks.c
+>>>>>
+>>>>> diff --git a/MAINTAINERS b/MAINTAINERS
+>>>>> index e2b7f76a1a70..c606b3d89992 100644
+>>>>> --- a/MAINTAINERS
+>>>>> +++ b/MAINTAINERS
+>>>>> @@ -3209,6 +3209,7 @@ L:	linux-security-module@vger.kernel.org
+>>>>>  L:	bpf@vger.kernel.org
+>>>>>  S:	Maintained
+>>>>>  F:	security/bpf/
+>>>>> +F:	include/linux/bpf_lsm.h
+>>>>> =20
+>>>>>  BROADCOM B44 10/100 ETHERNET DRIVER
+>>>>>  M:	Michael Chan <michael.chan@broadcom.com>
+>>>>> diff --git a/include/linux/bpf_lsm.h b/include/linux/bpf_lsm.h
+>>>>> new file mode 100644
+>>>>> index 000000000000..57c20b2cd2f4
+>>>>> --- /dev/null
+>>>>> +++ b/include/linux/bpf_lsm.h
+>>>>> @@ -0,0 +1,72 @@
+>>>>> +/* SPDX-License-Identifier: GPL-2.0 */
+>>>>> +
+>>>>> +/*
+>>>>> + * Copyright 2019 Google LLC.
+>>>>> + */
+>>>>> +
+>>>>> +#ifndef _LINUX_BPF_LSM_H
+>>>>> +#define _LINUX_BPF_LSM_H
+>>>>> +
+>>>>> +#include <linux/bpf.h>
+>>>>> +#include <linux/lsm_hooks.h>
+>>>>> +
+>>>>> +#ifdef CONFIG_SECURITY_BPF
+>>>>> +
+>>>>> +/* Mutable hooks defined at runtime and executed after all the sta=
+tically
+>>>>> + * defined LSM hooks.
+>>>>> + */
+>>>>> +extern struct security_hook_heads bpf_lsm_hook_heads;
+>>>>> +
+>>>>> +int bpf_lsm_srcu_read_lock(void);
+>>>>> +void bpf_lsm_srcu_read_unlock(int idx);
+>>>>> +
+>>>>> +#define CALL_BPF_LSM_VOID_HOOKS(FUNC, ...)			\
+>>>>> +	do {							\
+>>>>> +		struct security_hook_list *P;			\
+>>>>> +		int _idx;					\
+>>>>> +								\
+>>>>> +		if (hlist_empty(&bpf_lsm_hook_heads.FUNC))	\
+>>>>> +			break;					\
+>>>>> +								\
+>>>>> +		_idx =3D bpf_lsm_srcu_read_lock();		\
+>>>>> +		hlist_for_each_entry(P, &bpf_lsm_hook_heads.FUNC, list) \
+>>>>> +			P->hook.FUNC(__VA_ARGS__);		\
+>>>>> +		bpf_lsm_srcu_read_unlock(_idx);			\
+>>>>> +	} while (0)
+>>>>> +
+>>>>> +#define CALL_BPF_LSM_INT_HOOKS(FUNC, ...) ({			\
+>>>>> +	int _ret =3D 0;						\
+>>>>> +	do {							\
+>>>>> +		struct security_hook_list *P;			\
+>>>>> +		int _idx;					\
+>>>>> +								\
+>>>>> +		if (hlist_empty(&bpf_lsm_hook_heads.FUNC))	\
+>>>>> +			break;					\
+>>>>> +								\
+>>>>> +		_idx =3D bpf_lsm_srcu_read_lock();		\
+>>>>> +								\
+>>>>> +		hlist_for_each_entry(P,				\
+>>>>> +			&bpf_lsm_hook_heads.FUNC, list) {	\
+>>>>> +			_ret =3D P->hook.FUNC(__VA_ARGS__);		\
+>>>>> +			if (_ret && IS_ENABLED(CONFIG_SECURITY_BPF_ENFORCE)) \
+>>>>> +				break;				\
+>>>>> +		}						\
+>>>>> +		bpf_lsm_srcu_read_unlock(_idx);			\
+>>>>> +	} while (0);						\
+>>>>> +	IS_ENABLED(CONFIG_SECURITY_BPF_ENFORCE) ? _ret : 0;	\
+>>>>> +})
+>>>>> +
+>>>>> +#else /* !CONFIG_SECURITY_BPF */
+>>>>> +
+>>>>> +#define CALL_BPF_LSM_INT_HOOKS(FUNC, ...) (0)
+>>>>> +#define CALL_BPF_LSM_VOID_HOOKS(...)
+>>>>> +
+>>>>> +static inline int bpf_lsm_srcu_read_lock(void)
+>>>>> +{
+>>>>> +	return 0;
+>>>>> +}
+>>>>> +static inline void bpf_lsm_srcu_read_unlock(int idx) {}
+>>>>> +
+>>>>> +#endif /* CONFIG_SECURITY_BPF */
+>>>>> +
+>>>>> +#endif /* _LINUX_BPF_LSM_H */
+>>>>> diff --git a/security/bpf/Kconfig b/security/bpf/Kconfig
+>>>>> index a5f6c67ae526..595e4ad597ae 100644
+>>>>> --- a/security/bpf/Kconfig
+>>>>> +++ b/security/bpf/Kconfig
+>>>>> @@ -6,6 +6,7 @@ config SECURITY_BPF
+>>>>>  	bool "BPF-based MAC and audit policy"
+>>>>>  	depends on SECURITY
+>>>>>  	depends on BPF_SYSCALL
+>>>>> +	depends on SRCU
+>>>>>  	help
+>>>>>  	  This enables instrumentation of the security hooks with
+>>>>>  	  eBPF programs.
+>>>>> diff --git a/security/bpf/Makefile b/security/bpf/Makefile
+>>>>> index c78a8a056e7e..c526927c337d 100644
+>>>>> --- a/security/bpf/Makefile
+>>>>> +++ b/security/bpf/Makefile
+>>>>> @@ -2,4 +2,4 @@
+>>>>>  #
+>>>>>  # Copyright 2019 Google LLC.
+>>>>> =20
+>>>>> -obj-$(CONFIG_SECURITY_BPF) :=3D lsm.o ops.o
+>>>>> +obj-$(CONFIG_SECURITY_BPF) :=3D lsm.o ops.o hooks.o
+>>>>> diff --git a/security/bpf/hooks.c b/security/bpf/hooks.c
+>>>>> new file mode 100644
+>>>>> index 000000000000..b123d9cb4cd4
+>>>>> --- /dev/null
+>>>>> +++ b/security/bpf/hooks.c
+>>>>> @@ -0,0 +1,20 @@
+>>>>> +// SPDX-License-Identifier: GPL-2.0
+>>>>> +
+>>>>> +/*
+>>>>> + * Copyright 2019 Google LLC.
+>>>>> + */
+>>>>> +
+>>>>> +#include <linux/bpf_lsm.h>
+>>>>> +#include <linux/srcu.h>
+>>>>> +
+>>>>> +DEFINE_STATIC_SRCU(security_hook_srcu);
+>>>>> +
+>>>>> +int bpf_lsm_srcu_read_lock(void)
+>>>>> +{
+>>>>> +	return srcu_read_lock(&security_hook_srcu);
+>>>>> +}
+>>>>> +
+>>>>> +void bpf_lsm_srcu_read_unlock(int idx)
+>>>>> +{
+>>>>> +	return srcu_read_unlock(&security_hook_srcu, idx);
+>>>>> +}
+>>>>> diff --git a/security/bpf/lsm.c b/security/bpf/lsm.c
+>>>>> index dc9ac03c7aa0..a25a068e1781 100644
+>>>>> --- a/security/bpf/lsm.c
+>>>>> +++ b/security/bpf/lsm.c
+>>>>> @@ -4,6 +4,7 @@
+>>>>>   * Copyright 2019 Google LLC.
+>>>>>   */
+>>>>> =20
+>>>>> +#include <linux/bpf_lsm.h>
+>>>>>  #include <linux/lsm_hooks.h>
+>>>>> =20
+>>>>>  /* This is only for internal hooks, always statically shipped as p=
+art of the
+>>>>> @@ -12,6 +13,12 @@
+>>>>>   */
+>>>>>  static struct security_hook_list bpf_lsm_hooks[] __lsm_ro_after_in=
+it =3D {};
+>>>>> =20
+>>>>> +/* Security hooks registered dynamically by the BPF LSM and must b=
+e accessed
+>>>>> + * by holding bpf_lsm_srcu_read_lock and bpf_lsm_srcu_read_unlock.=
+ The mutable
+>>>>> + * hooks dynamically allocated by the BPF LSM are appeneded here.
+>>>>> + */
+>>>>> +struct security_hook_heads bpf_lsm_hook_heads;
+>>>>> +
+>>>>>  static int __init bpf_lsm_init(void)
+>>>>>  {
+>>>>>  	security_add_hooks(bpf_lsm_hooks, ARRAY_SIZE(bpf_lsm_hooks), "bpf=
+");
+>>>>> diff --git a/security/security.c b/security/security.c
+>>>>> index 30a8aa700557..95a46ca25dcd 100644
+>>>>> --- a/security/security.c
+>>>>> +++ b/security/security.c
+>>>>> @@ -27,6 +27,7 @@
+>>>>>  #include <linux/backing-dev.h>
+>>>>>  #include <linux/string.h>
+>>>>>  #include <linux/msg.h>
+>>>>> +#include <linux/bpf_lsm.h>
+>>>>>  #include <net/flow.h>
+>>>>> =20
+>>>>>  #define MAX_LSM_EVM_XATTR	2
+>>>>> @@ -657,20 +658,22 @@ static void __init lsm_early_task(struct task=
+_struct *task)
+>>>>>  								\
+>>>>>  		hlist_for_each_entry(P, &security_hook_heads.FUNC, list) \
+>>>>>  			P->hook.FUNC(__VA_ARGS__);		\
+>>>>> +		CALL_BPF_LSM_VOID_HOOKS(FUNC, __VA_ARGS__);	\
+>>>> I'm sorry if I wasn't clear on the v2 review.
+>>>> This does not belong in the infrastructure. You should be
+>>>> doing all the bpf_lsm hook processing in you module.
+>>>> bpf_lsm_task_alloc() should loop though all the bpf
+>>>> task_alloc hooks if they have to be handled differently
+>>>> from "normal" LSM hooks.
+>>> The BPF LSM does not define static hooks (the ones registered to
+>>> security_hook_heads in security.c with __lsm_ro_after_init) for each
+>>> LSM hook. If it tries to do that one ends with what was in v1:
+>>>
+>>>   https://lore.kernel.org/bpf/20191220154208.15895-7-kpsingh@chromium=
+=2Eorg
+>>>
+>>> This gets quite ugly (security/bpf/hooks.h from v1) and was noted by
+>>> the BPF maintainers:
+>>>
+>>>   https://lore.kernel.org/bpf/20191222012722.gdqhppxpfmqfqbld@ast-mbp=
+=2Edhcp.thefacebook.com/
+>>>
+>>> As I mentioned, some of the ideas we used here are based on:
+>>>
+>>>   https://lore.kernel.org/lkml/20180408065916.GA2832@ircssh-2.c.rugge=
+d-nimbus-611.internal
+>>>
+>>> Which gave each LSM the ability to add mutable hooks at runtime. If
+>>> you prefer we can make this generic and allow the LSMs to register
+>>> mutable hooks with the BPF LSM be the only LSM that uses it (and
+>>> enforce it with a whitelist).
+>>>
+>>> Would this generic approach be something you would consider better
+>>> than just calling the BPF mutable hooks directly?
+>> What I think makes sense is for the BPF LSM to have a hook
+>> for each of the interfaces and for that hook to handle the
+>> mutable list for the interface. If BPF not included there
+>> will be no mutable hooks.=20
+>>
+>> Yes, your v1 got this right.
+> BPF LSM does provide mutable LSM hooks and it ends up being simpler
+> to implement/maintain when they are treated as such.
 
-Thanks for the review.
+If you want to put mutable hook handling in the infrastructure
+you need to make it general mutable hook handling as opposed to
+BPF hook handling. I don't know if that would be acceptable for
+all the reasons called out about dynamic module loading.
 
-> -----Original Message-----
-> From: Greg KH <gregkh@linuxfoundation.org>
-> Sent: Tuesday, January 14, 2020 6:53 AM
-> To: Jolly Shah <JOLLYS@xilinx.com>
-> Cc: ard.biesheuvel@linaro.org; mingo@kernel.org; matt@codeblueprint.co.uk=
-;
-> sudeep.holla@arm.com; hkallweit1@gmail.com; keescook@chromium.org;
-> dmitry.torokhov@gmail.com; Michal Simek <michals@xilinx.com>; Rajan Vaja
-> <RAJANV@xilinx.com>; linux-arm-kernel@lists.infradead.org; linux-
-> kernel@vger.kernel.org; Rajan Vaja <RAJANV@xilinx.com>; Jolly Shah
-> <JOLLYS@xilinx.com>
-> Subject: Re: [PATCH v2 1/4] firmware: xilinx: Add sysfs interface
->=20
-> On Wed, Jan 08, 2020 at 03:54:20PM -0800, Jolly Shah wrote:
-> > From: Rajan Vaja <rajan.vaja@xilinx.com>
-> >
-> > Add Firmware-ggs sysfs interface which provides read/write
-> > interface to global storage registers.
-> >
-> > Signed-off-by: Rajan Vaja <rajan.vaja@xilinx.com>
-> > Signed-off-by: Michal Simek <michal.simek@xilinx.com>
-> > Signed-off-by: Jolly Shah <jollys@xilinx.com>
-> > ---
-> > Changes in v2:
-> >  - Updated Linux kernel version in documentation.
-> >  - Used DEVICE_ATTR_* and ATTRIBUTE_GROUPS macros.
-> >  - Free Kobject structure in case of error.
-> >  - Resolved smatch errors.
-> >  - Updated Signed-off-by sequence.
-> > ---
-> >  Documentation/ABI/stable/sysfs-firmware-zynqmp |  50 +++++
-> >  drivers/firmware/xilinx/Makefile               |   2 +-
-> >  drivers/firmware/xilinx/zynqmp-ggs.c           | 284
-> +++++++++++++++++++++++++
-> >  drivers/firmware/xilinx/zynqmp.c               |  32 +++
-> >  include/linux/firmware/xlnx-zynqmp.h           |  10 +
-> >  5 files changed, 377 insertions(+), 1 deletion(-)
-> >  create mode 100644 Documentation/ABI/stable/sysfs-firmware-zynqmp
-> >  create mode 100644 drivers/firmware/xilinx/zynqmp-ggs.c
-> >
-> > diff --git a/Documentation/ABI/stable/sysfs-firmware-zynqmp
-> b/Documentation/ABI/stable/sysfs-firmware-zynqmp
-> > new file mode 100644
-> > index 0000000..cffa2fc
-> > --- /dev/null
-> > +++ b/Documentation/ABI/stable/sysfs-firmware-zynqmp
-> > @@ -0,0 +1,50 @@
-> > +What:		/sys/firmware/zynqmp/ggs*
->=20
-> Why are these attributes just not hanging off of the platform device for
-> the firmware controller?  Why do you need a new subdir under "firmware"?
+>
+>  The other approaches which we have considered are:
+>
+> - Using macro magic to allocate static hook bodies which call eBPF
+>   programs as implemented in v1. This entails maintaining a
+>   separate list of LSM hooks in the BPF LSM which is evident from the
+>   giant security/bpf/include/hooks.h in:
+>
+>   https://lore.kernel.org/bpf/20191220154208.15895-7-kpsingh@chromium.o=
+rg
 
-Firmware driver was changed later to be platform driver but these interface=
-s were defined=20
-earlier and are in use.
+I haven't put much though into how you might make that cleaner,
+but I don't see how you can expect any approach to turn out
+smaller than or less ugly than security.c.
 
->=20
-> > +Date:		January 2018
-> > +KernelVersion:	5.5
->=20
-> 5.6?  :)
+>
+> - Another approach one can think of is to allocate all the trampoline
+>   images (one page each) at __init and update these images to invoke
+>   BPF programs when they are attached.
+>
+> Both these approaches seem to suffer from the downside of doing more
+> work when it's not really needed (i.e. doing prep work for hooks which
+> have no eBPF programs attached) and they appear to to mask the fact
+> that what the BPF LSM provides is actually mutable LSM hooks by
+> allocating static wrappers around mutable callbacks.
 
-Yes. Will fix it in next version.
+That's a "feature" of the LSM infrastructure. If you're not using a hook
+you just don't provide one. It is a artifact of your intent of providing
+a general extension that requires you provide a hook which may do nothing=
 
->=20
-> > +Contact:	"Jolly Shah" <jollys@xilinx.com>
-> > +Description:
-> > +		Read/Write PMU global general storage register value,
-> > +		GLOBAL_GEN_STORAGE{0:3}.
-> > +		Global general storage register that can be used
-> > +		by system to pass information between masters.
-> > +
-> > +		The register is reset during system or power-on
-> > +		resets. Three registers are used by the FSBL and
-> > +		other Xilinx software products: GLOBAL_GEN_STORAGE{4:6}.
-> > +
-> > +		Usage:
-> > +		# cat /sys/firmware/zynqmp/ggs0
-> > +		# echo <mask> <value> > /sys/firmware/zynqmp/ggs0
-> > +
-> > +		Example:
-> > +		# cat /sys/firmware/zynqmp/ggs0
-> > +		# echo 0xFFFFFFFF 0x1234ABCD > /sys/firmware/zynqmp/ggs0
-> > +
-> > +Users:		Xilinx
-> > +
-> > +What:		/sys/firmware/zynqmp/pggs*
-> > +Date:		January 2018
-> > +KernelVersion:	5.5
-> > +Contact:	"Jolly Shah" <jollys@xilinx.com>
-> > +Description:
-> > +		Read/Write PMU persistent global general storage register
-> > +		value, PERS_GLOB_GEN_STORAGE{0:3}.
-> > +		Persistent global general storage register that
-> > +		can be used by system to pass information between
-> > +		masters.
-> > +
-> > +		This register is only reset by the power-on reset
-> > +		and maintains its value through a system reset.
-> > +		Four registers are used by the FSBL and other Xilinx
-> > +		software products: PERS_GLOB_GEN_STORAGE{4:7}.
-> > +		Register is reset only by a POR reset.
-> > +
-> > +		Usage:
-> > +		# cat /sys/firmware/zynqmp/pggs0
-> > +		# echo <mask> <value> > /sys/firmware/zynqmp/pggs0
-> > +
-> > +		Example:
-> > +		# cat /sys/firmware/zynqmp/pggs0
-> > +		# echo 0xFFFFFFFF 0x1234ABCD > /sys/firmware/zynqmp/pggs0
-> > +
-> > +Users:		Xilinx
-> > diff --git a/drivers/firmware/xilinx/Makefile
-> b/drivers/firmware/xilinx/Makefile
-> > index 875a537..1e8643c 100644
-> > --- a/drivers/firmware/xilinx/Makefile
-> > +++ b/drivers/firmware/xilinx/Makefile
-> > @@ -1,5 +1,5 @@
-> >  # SPDX-License-Identifier: GPL-2.0
-> >  # Makefile for Xilinx firmwares
-> >
-> > -obj-$(CONFIG_ZYNQMP_FIRMWARE) +=3D zynqmp.o
-> > +obj-$(CONFIG_ZYNQMP_FIRMWARE) +=3D zynqmp.o zynqmp-ggs.o
-> >  obj-$(CONFIG_ZYNQMP_FIRMWARE_DEBUG) +=3D zynqmp-debug.o
-> > diff --git a/drivers/firmware/xilinx/zynqmp-ggs.c
-> b/drivers/firmware/xilinx/zynqmp-ggs.c
-> > new file mode 100644
-> > index 0000000..e2a6700
-> > --- /dev/null
-> > +++ b/drivers/firmware/xilinx/zynqmp-ggs.c
-> > @@ -0,0 +1,284 @@
-> > +// SPDX-License-Identifier: GPL-2.0+
-> > +/*
-> > + * Xilinx Zynq MPSoC Firmware layer
-> > + *
-> > + *  Copyright (C) 2014-2018 Xilinx, Inc.
-> > + *
-> > + *  Jolly Shah <jollys@xilinx.com>
-> > + *  Rajan Vaja <rajanv@xilinx.com>
-> > + */
-> > +
-> > +#include <linux/compiler.h>
-> > +#include <linux/of.h>
-> > +#include <linux/init.h>
-> > +#include <linux/module.h>
-> > +#include <linux/uaccess.h>
-> > +#include <linux/slab.h>
-> > +#include <linux/firmware/xlnx-zynqmp.h>
-> > +
-> > +static ssize_t read_register(char *buf, u32 ioctl_id, u32 reg)
-> > +{
-> > +	int ret;
-> > +	u32 ret_payload[PAYLOAD_ARG_CNT];
-> > +	const struct zynqmp_eemi_ops *eemi_ops =3D
-> zynqmp_pm_get_eemi_ops();
-> > +
-> > +	if (IS_ERR(eemi_ops) || !eemi_ops->ioctl)
-> > +		return -EFAULT;
-> > +
-> > +	ret =3D eemi_ops->ioctl(0, ioctl_id, reg, 0, ret_payload);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	return sprintf(buf, "0x%x\n", ret_payload[1]);
-> > +}
-> > +
-> > +static ssize_t write_register(const char *buf, size_t count, u32 read_=
-ioctl,
-> > +			      u32 write_ioctl, u32 reg)
-> > +{
-> > +	char *kern_buff, *inbuf, *tok;
-> > +	long mask, value;
-> > +	int ret;
-> > +	u32 ret_payload[PAYLOAD_ARG_CNT];
-> > +	const struct zynqmp_eemi_ops *eemi_ops =3D
-> zynqmp_pm_get_eemi_ops();
-> > +
-> > +	if (IS_ERR(eemi_ops) || !eemi_ops->ioctl)
-> > +		return -EFAULT;
-> > +
-> > +	kern_buff =3D kzalloc(count, GFP_KERNEL);
-> > +	if (!kern_buff)
-> > +		return -ENOMEM;
-> > +
-> > +	ret =3D strlcpy(kern_buff, buf, count);
-> > +	if (ret < 0) {
-> > +		ret =3D -EFAULT;
-> > +		goto err;
-> > +	}
-> > +
-> > +	inbuf =3D kern_buff;
-> > +
-> > +	/* Read the write mask */
-> > +	tok =3D strsep(&inbuf, " ");
-> > +	if (!tok) {
-> > +		ret =3D -EFAULT;
->=20
-> If you just set count to the error value, no need to test the value of
-> ret when you exit.  Not a big deal...
+for every interface.
 
-Ok. Will fix it in next version
+>
+> Are there other downsides apart from the fact we have an explicit call
+> to the mutable hooks in the LSM code? (Note that we want to have these
+> mutable hooks run after all the static LSM hooks so ordering
+> would still end up being LSM_ORDER_LAST)
 
->=20
-> > +		goto err;
-> > +	}
-> > +
-> > +	ret =3D kstrtol(tok, 16, &mask);
-> > +	if (ret) {
-> > +		ret =3D -EFAULT;
-> > +		goto err;
-> > +	}
-> > +
-> > +	/* Read the write value */
-> > +	tok =3D strsep(&inbuf, " ");
-> > +	if (!tok) {
-> > +		ret =3D -EFAULT;
-> > +		goto err;
-> > +	}
-> > +
-> > +	ret =3D kstrtol(tok, 16, &value);
-> > +	if (ret) {
-> > +		ret =3D -EFAULT;
-> > +		goto err;
-> > +	}
-> > +
-> > +	ret =3D eemi_ops->ioctl(0, read_ioctl, reg, 0, ret_payload);
->=20
-> This feels "tricky", if you tie this to the device you have your driver
-> bound to, will this make it easier instead of having to go through the
-> ioctl callback?
->=20
+My intention when I suggested using LSM_ORDER_LAST was to
+remove the explicit calls to BPF in the infrastructure.
 
-GGS(general global storage) registers are in PMU space and linux doesn't ha=
-ve access to it=20
-Hence ioctl is used.
+>
+> It would be great to hear the maintainers' perspective based on the
+> trade-offs involved with the different approaches discussed.
 
->=20
-> > +	if (ret) {
-> > +		ret =3D -EFAULT;
-> > +		goto err;
-> > +	}
-> > +	ret_payload[1] &=3D ~mask;
-> > +	value &=3D mask;
-> > +	value |=3D ret_payload[1];
-> > +
-> > +	ret =3D eemi_ops->ioctl(0, write_ioctl, reg, value, NULL);
-> > +	if (ret)
-> > +		ret =3D -EFAULT;
-> > +
-> > +err:
-> > +	kfree(kern_buff);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	return count;
-> > +}
-> > +
-> > +/**
-> > + * ggs_show - Show global general storage (ggs) sysfs attribute
-> > + * @device: Device structure
-> > + * @attr: Device attribute structure
-> > + * @buf: Requested available shutdown_scope attributes string
-> > + * @reg: Register number
-> > + *
-> > + * Return:Number of bytes printed into the buffer.
-> > + *
-> > + * Helper function for viewing a ggs register value.
-> > + *
-> > + * User-space interface for viewing the content of the ggs0 register.
-> > + * cat /sys/firmware/zynqmp/ggs0
-> > + */
-> > +static ssize_t ggs_show(struct device *device,
-> > +			struct device_attribute *attr,
-> > +			char *buf,
-> > +			u32 reg)
-> > +{
-> > +	return read_register(buf, IOCTL_READ_GGS, reg);
-> > +}
-> > +
-> > +/**
-> > + * ggs_store - Store global general storage (ggs) sysfs attribute
-> > + * @device: Device structure
-> > + * @attr: Device attribute structure
-> > + * @buf: User entered shutdown_scope attribute string
-> > + * @count: Size of buf
-> > + * @reg: Register number
-> > + *
-> > + * Return: count argument if request succeeds, the corresponding
-> > + * error code otherwise
-> > + *
-> > + * Helper function for storing a ggs register value.
-> > + *
-> > + * For example, the user-space interface for storing a value to the
-> > + * ggs0 register:
-> > + * echo 0xFFFFFFFF 0x1234ABCD > /sys/firmware/zynqmp/ggs0
-> > + */
-> > +static ssize_t ggs_store(struct device *device,
-> > +			 struct device_attribute *attr,
-> > +			 const char *buf, size_t count,
-> > +			 u32 reg)
-> > +{
-> > +	if (!device || !attr || !buf || !count || reg >=3D GSS_NUM_REGS)
-> > +		return -EINVAL;
-> > +
-> > +	return write_register(buf, count, IOCTL_READ_GGS, IOCTL_WRITE_GGS,
-> reg);
-> > +}
-> > +
-> > +/* GGS register show functions */
-> > +#define GGS0_SHOW(N)						\
-> > +	ssize_t ggs##N##_show(struct device *device,		\
-> > +			      struct device_attribute *attr,	\
-> > +			      char *buf)			\
-> > +	{							\
-> > +		return ggs_show(device, attr, buf, N);		\
-> > +	}
-> > +
-> > +static GGS0_SHOW(0);
-> > +static GGS0_SHOW(1);
-> > +static GGS0_SHOW(2);
-> > +static GGS0_SHOW(3);
-> > +
-> > +/* GGS register store function */
-> > +#define GGS0_STORE(N)						\
-> > +	ssize_t ggs##N##_store(struct device *device,		\
-> > +			       struct device_attribute *attr,	\
-> > +			       const char *buf,			\
-> > +			       size_t count)			\
-> > +	{							\
-> > +		return ggs_store(device, attr, buf, count, N);	\
-> > +	}
-> > +
-> > +static GGS0_STORE(0);
-> > +static GGS0_STORE(1);
-> > +static GGS0_STORE(2);
-> > +static GGS0_STORE(3);
-> > +
-> > +/**
-> > + * pggs_show - Show persistent global general storage (pggs) sysfs att=
-ribute
-> > + * @device: Device structure
-> > + * @attr: Device attribute structure
-> > + * @buf: Requested available shutdown_scope attributes string
-> > + * @reg: Register number
-> > + *
-> > + * Return:Number of bytes printed into the buffer.
-> > + *
-> > + * Helper function for viewing a pggs register value.
-> > + */
-> > +static ssize_t pggs_show(struct device *device,
-> > +			 struct device_attribute *attr,
-> > +			 char *buf,
-> > +			 u32 reg)
-> > +{
-> > +	return read_register(buf, IOCTL_READ_PGGS, reg);
-> > +}
-> > +
-> > +/**
-> > + * pggs_store - Store persistent global general storage (pggs) sysfs a=
-ttribute
-> > + * @device: Device structure
-> > + * @attr: Device attribute structure
-> > + * @buf: User entered shutdown_scope attribute string
-> > + * @count: Size of buf
-> > + * @reg: Register number
-> > + *
-> > + * Return: count argument if request succeeds, the corresponding
-> > + * error code otherwise
-> > + *
-> > + * Helper function for storing a pggs register value.
-> > + */
-> > +static ssize_t pggs_store(struct device *device,
-> > +			  struct device_attribute *attr,
-> > +			  const char *buf, size_t count,
-> > +			  u32 reg)
-> > +{
-> > +	return write_register(buf, count, IOCTL_READ_PGGS,
-> > +			      IOCTL_WRITE_PGGS, reg);
-> > +}
-> > +
-> > +#define PGGS0_SHOW(N)						\
-> > +	ssize_t pggs##N##_show(struct device *device,		\
-> > +			       struct device_attribute *attr,	\
-> > +			       char *buf)			\
-> > +	{							\
-> > +		return pggs_show(device, attr, buf, N);		\
-> > +	}
-> > +
-> > +#define PGGS0_STORE(N)						\
-> > +	ssize_t pggs##N##_store(struct device *device,		\
-> > +				struct device_attribute *attr,	\
-> > +				const char *buf,		\
-> > +				size_t count)			\
-> > +	{							\
-> > +		return pggs_store(device, attr, buf, count, N);	\
-> > +	}
-> > +
-> > +/* PGGS register show functions */
-> > +static PGGS0_SHOW(0);
-> > +static PGGS0_SHOW(1);
-> > +static PGGS0_SHOW(2);
-> > +static PGGS0_SHOW(3);
-> > +
-> > +/* PGGS register store functions */
-> > +static PGGS0_STORE(0);
-> > +static PGGS0_STORE(1);
-> > +static PGGS0_STORE(2);
-> > +static PGGS0_STORE(3);
-> > +
-> > +/* GGS register attributes */
-> > +static DEVICE_ATTR_RW(ggs0);
-> > +static DEVICE_ATTR_RW(ggs1);
-> > +static DEVICE_ATTR_RW(ggs2);
-> > +static DEVICE_ATTR_RW(ggs3);
-> > +
-> > +/* PGGS register attributes */
-> > +static DEVICE_ATTR_RW(pggs0);
-> > +static DEVICE_ATTR_RW(pggs1);
-> > +static DEVICE_ATTR_RW(pggs2);
-> > +static DEVICE_ATTR_RW(pggs3);
-> > +
-> > +static struct attribute *zynqmp_ggs_attrs[] =3D {
-> > +	&dev_attr_ggs0.attr,
-> > +	&dev_attr_ggs1.attr,
-> > +	&dev_attr_ggs2.attr,
-> > +	&dev_attr_ggs3.attr,
-> > +	&dev_attr_pggs0.attr,
-> > +	&dev_attr_pggs1.attr,
-> > +	&dev_attr_pggs2.attr,
-> > +	&dev_attr_pggs3.attr,
-> > +	NULL,
-> > +};
-> > +
-> > +ATTRIBUTE_GROUPS(zynqmp_ggs);
-> > +
-> > +int zynqmp_pm_ggs_init(struct kobject *parent_kobj)
-> > +{
-> > +	return sysfs_create_group(parent_kobj, zynqmp_ggs_groups[0]);
->=20
-> You might be racing userspace here and loosing :(
+Please bear in mind that the maintainer (James Morris) didn't
+develop the hook list scheme.
 
-Prob is called before user space is notified about sysfs so racing shouldn'=
-t happen.
-Or you are referring to some other race condition?
+> We are happy to adapt our approach based on the consensus we reach
+> here.
+>
+> - KP
+>
+>>> - KP
+>>>
+>>>>>  	} while (0)
+>>>>> =20
+>>>>> -#define call_int_hook(FUNC, IRC, ...) ({			\
+>>>>> -	int RC =3D IRC;						\
+>>>>> -	do {							\
+>>>>> -		struct security_hook_list *P;			\
+>>>>> -								\
+>>>>> +#define call_int_hook(FUNC, IRC, ...) ({				\
+>>>>> +	int RC =3D IRC;							\
+>>>>> +	do {								\
+>>>>> +		struct security_hook_list *P;				\
+>>>>>  		hlist_for_each_entry(P, &security_hook_heads.FUNC, list) { \
+>>>>> -			RC =3D P->hook.FUNC(__VA_ARGS__);		\
+>>>>> -			if (RC !=3D 0)				\
+>>>>> -				break;				\
+>>>>> -		}						\
+>>>>> -	} while (0);						\
+>>>>> -	RC;							\
+>>>>> +			RC =3D P->hook.FUNC(__VA_ARGS__);			\
+>>>>> +			if (RC !=3D 0)					\
+>>>>> +				break;					\
+>>>>> +		}							\
+>>>>> +		if (RC =3D=3D 0)						\
+>>>>> +			RC =3D CALL_BPF_LSM_INT_HOOKS(FUNC, __VA_ARGS__);	\
+>>>>> +	} while (0);							\
+>>>>> +	RC;								\
+>>>>>  })
+>>>>> =20
+>>>>>  /* Security operations */
 
->=20
-> > +}
-> > diff --git a/drivers/firmware/xilinx/zynqmp.c
-> b/drivers/firmware/xilinx/zynqmp.c
-> > index 75bdfaa..4c1117d 100644
-> > --- a/drivers/firmware/xilinx/zynqmp.c
-> > +++ b/drivers/firmware/xilinx/zynqmp.c
-> > @@ -473,6 +473,10 @@ static inline int zynqmp_is_valid_ioctl(u32 ioctl_=
-id)
-> >  	case IOCTL_GET_PLL_FRAC_MODE:
-> >  	case IOCTL_SET_PLL_FRAC_DATA:
-> >  	case IOCTL_GET_PLL_FRAC_DATA:
-> > +	case IOCTL_WRITE_GGS:
-> > +	case IOCTL_READ_GGS:
-> > +	case IOCTL_WRITE_PGGS:
-> > +	case IOCTL_READ_PGGS:
->=20
-> Huh???
-
-Sorry not sure about your concern here. These registers are in PMU space an=
-d hence
-Ioctl is needed to let linux access them.
-
->=20
-> >  		return 1;
-> >  	default:
-> >  		return 0;
-> > @@ -704,6 +708,28 @@ const struct zynqmp_eemi_ops
-> *zynqmp_pm_get_eemi_ops(void)
-> >  }
-> >  EXPORT_SYMBOL_GPL(zynqmp_pm_get_eemi_ops);
-> >
-> > +static int zynqmp_pm_sysfs_init(void)
-> > +{
-> > +	struct kobject *zynqmp_kobj;
-> > +	int ret;
-> > +
-> > +	zynqmp_kobj =3D kobject_create_and_add("zynqmp", firmware_kobj);
-> > +	if (!zynqmp_kobj) {
-> > +		pr_err("zynqmp: Firmware kobj add failed.\n");
-> > +		return -ENOMEM;
-> > +	}
-> > +
-> > +	ret =3D zynqmp_pm_ggs_init(zynqmp_kobj);
-> > +	if (ret) {
-> > +		kobject_put(zynqmp_kobj);
-> > +		pr_err("%s() GGS init fail with error %d\n",
-> > +		       __func__, ret);
-> > +		goto err;
-> > +	}
-> > +err:
-> > +	return ret;
-> > +}
-> > +
-> >  static int zynqmp_firmware_probe(struct platform_device *pdev)
-> >  {
-> >  	struct device *dev =3D &pdev->dev;
-> > @@ -751,6 +777,12 @@ static int zynqmp_firmware_probe(struct
-> platform_device *pdev)
-> >  	/* Assign eemi_ops_table */
-> >  	eemi_ops_tbl =3D &eemi_ops;
-> >
-> > +	ret =3D zynqmp_pm_sysfs_init();
->=20
-> See, you have a platform device, hang the attributes off of that instead
-> of making a kobject and detatching yourself from the global device tree!
->=20
-> Please redo this, I think it will make it a lot simpler and more
-> obvious.
-
-Agree it will be simpler but to as firmware driver was changed to be platfo=
-rm driver,
-to keep paths same, we used sysfs.
-
-Thanks,
-Jolly Shah
-
-
->=20
-> thanks,
->=20
-> greg k-h
