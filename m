@@ -2,130 +2,174 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58777C33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 13:30:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEC39C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 13:30:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C81D2467F
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 13:30:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8CA621835
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 13:30:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DEyMGAeW"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Qvhbh/vX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727312AbgAWNaT (ORCPT
+        id S1728799AbgAWNaa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 08:30:19 -0500
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:33448 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726729AbgAWNaT (ORCPT
+        Thu, 23 Jan 2020 08:30:30 -0500
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:45912 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726729AbgAWNa3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 08:30:19 -0500
-Received: by mail-pl1-f194.google.com with SMTP id ay11so1379133plb.0
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jan 2020 05:30:19 -0800 (PST)
+        Thu, 23 Jan 2020 08:30:29 -0500
+Received: by mail-ed1-f68.google.com with SMTP id v28so3261460edw.12;
+        Thu, 23 Jan 2020 05:30:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=c3Jf7YornRWAcLPIhzKeqbQgyPavsrhhAxYWXcZAFbQ=;
-        b=DEyMGAeWS1/dCHnfqvubuElHzwpwoHrxLr1c2h4oYR0RbGR2X54v5m7I+bXyLqI9uI
-         JnzxuyDNAjCST4K/hvvOD9FKhuv/2UYfvOFmzW0VtSna7dqiCx54Cd88hrfME/wG1ivG
-         cDlLbz63wJt517U3IpkeOnCXc5p+jukIT88/29CqI360gZCzQv6Q3gAPXpOJTE6KEXl/
-         vpgPT4LAYpscBQaNh/aJUfHH2dHFIvvFtpJBb8R86G5Cn+iyU6YnafU3TNpJVRfaxOub
-         cPtxmYWWY6ka7GINgvGUcANfLVQGXMeeBkW8ThFAYvxXUFNByRYGnrUT/q9d/btyjnpT
-         +6VA==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=IiWAALaEhjJXo291MxNcDCCNHviU2XOa9axp5A6Jt8E=;
+        b=Qvhbh/vXUu3aCTWDtyaawFnJLD5iv0v1BrMjOl21CN5+J+O0j4Y+c+unjGEnwbjeNi
+         wUkW/8qDOBuKd8mjDxQ0QGqVYm3QjNtgPfCF8GGk212ABuTl1AvFOw8BIiV6sO4sTGGj
+         AsvpKzcdbh2ZSuEtGiHsXW8sn7H+scR/joHD2HJ4Dq7sR67LmIVKT8mLu4zTyTqUoltx
+         dw4gsCGlrGDhSix7kU81fcx5cqTNLKojkWpydVMlUcjJGUa8nHAWJcdFLp4Q2kXppTAd
+         tE3cgvW/vwNAiQ4Sm/Zs5pRqqk6j+Z9DQI5gFGn5yXDaBo0iH1nBSkJlDEYUjGx21f4b
+         Ae6A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=c3Jf7YornRWAcLPIhzKeqbQgyPavsrhhAxYWXcZAFbQ=;
-        b=rIiT7fIpYs+c3hXbXlksQysPHDB0p2nFBPJPVQeS+RF2jclixBzCtAFfNeWxVS2Rfe
-         bPw12H6wb9WTnR6A/XGcNpJVObVbHg0VzCfCA1s9QcaWzlBRfiVQx3/XJKD0+ObPJ9uW
-         2Y8Hpo3xpZSAEZASxyIclok7FGUYt5KmSiR3grJZm/5deizyfYeF9ZyYFa++pmVcqxQt
-         wZx6QXQadMlHxgx0zMSvkso1wHOqr/A4wpR8hQgm2NDA5PwYYS3pYIZtciNWVPEL3pD4
-         M6QHOA+W5r4NaWqNgeFfcCdvJq5YX0f6fSKq3i6+H9nYHZOSFC2Qir8QzeEWrH84qsea
-         yejg==
-X-Gm-Message-State: APjAAAXz7h38vZfP0WUdFEtziXTmurAqkD3/rSHu6GiDVX3GTHuPlYUX
-        uxngEaDdcqoqNBExPS/Gg6lB
-X-Google-Smtp-Source: APXvYqzRrhC1Pol+miUZIGuk11fLm1hNtBXeyIm++eRIHyMx6m2gejJxb0JJSeRXLweMpEAMiTxILg==
-X-Received: by 2002:a17:90a:8001:: with SMTP id b1mr4503509pjn.39.1579786218610;
-        Thu, 23 Jan 2020 05:30:18 -0800 (PST)
-Received: from mani ([103.59.133.81])
-        by smtp.gmail.com with ESMTPSA id r6sm2755819pfh.91.2020.01.23.05.30.15
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 23 Jan 2020 05:30:17 -0800 (PST)
-Date:   Thu, 23 Jan 2020 19:00:10 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     gregkh <gregkh@linuxfoundation.org>, smohanad@codeaurora.org,
-        Jeffrey Hugo <jhugo@codeaurora.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        hemantk@codeaurora.org,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>
-Subject: Re: [PATCH 01/16] docs: Add documentation for MHI bus
-Message-ID: <20200123133010.GB11366@mani>
-References: <20200123111836.7414-1-manivannan.sadhasivam@linaro.org>
- <20200123111836.7414-2-manivannan.sadhasivam@linaro.org>
- <CAK8P3a3Nxr3yqDjZDV1b0e0mdWEEsktwrmKXxZgsnq7Kv82mhw@mail.gmail.com>
- <20200123131015.GA11366@mani>
- <CAK8P3a1z7mVEpxbk47Q3A-tLDhqHUid2_S4tE3NQuf_2_UCOcg@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=IiWAALaEhjJXo291MxNcDCCNHviU2XOa9axp5A6Jt8E=;
+        b=L7orHZknbeJ+YSCrJANaaVMCc2oOCS0woPT/5eQLBgBPV3NpaQu1/o7DLHeDN+kGYH
+         ObAUztFEgOze5+CIx8XIHTXL1/sjlAuClEYyihJh3qvrfnNWgKkRAtvUpi3HxNUrDLo6
+         o+Enqm0AT2Gj9KVDRH+CREJly2/sNHvrpaDnjBwqL1qESS/PZ9iZg14WzN4pPYOn/W3p
+         zlO17dMXZ2LnCzzDiGVIs6xORivuVHz1j2Ax9aD1sDo2ToF35Gepb3A8ne/Rw6sJVUCc
+         A2HjWMSEzZMfbYxxcGAQdgA21rQpPp6YJl3G8mRzc/x/cmxKF0Hp2wPZhuUVG1eN3oTf
+         5tpg==
+X-Gm-Message-State: APjAAAVyklxKFcDqO1x5yxdI4//+LIyOxa1hhHudL3tC2DH5jnx9h95o
+        4kaA9qXnDD13FuYlvsJfzGO+JmP/8TE0gM9yn2o=
+X-Google-Smtp-Source: APXvYqxt31COidURfCWB7E9cxNx/HSg5G6+Cfz5YpTwRiMseW1+rbdXl0j1Wc8LNge3xcBfuWV4bUNiiOSR7L9urebY=
+X-Received: by 2002:a05:6402:19b2:: with SMTP id o18mr928732edz.368.1579786227446;
+ Thu, 23 Jan 2020 05:30:27 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAK8P3a1z7mVEpxbk47Q3A-tLDhqHUid2_S4tE3NQuf_2_UCOcg@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20191127094517.6255-1-Po.Liu@nxp.com> <87v9p93a2s.fsf@linux.intel.com>
+ <9b13a47e-8ca3-66b0-063c-798a5fa71149@ti.com>
+In-Reply-To: <9b13a47e-8ca3-66b0-063c-798a5fa71149@ti.com>
+From:   Vladimir Oltean <olteanv@gmail.com>
+Date:   Thu, 23 Jan 2020 15:30:16 +0200
+Message-ID: <CA+h21hqk2pCfrQg5kC6HzmL=eEqJXjuRsu+cVkGsEi8OXGpKJA@mail.gmail.com>
+Subject: Re: [v1,net-next, 1/2] ethtool: add setting frame preemption of
+ traffic classes
+To:     Murali Karicheri <m-karicheri2@ti.com>
+Cc:     Vinicius Costa Gomes <vinicius.gomes@intel.com>,
+        Po Liu <po.liu@nxp.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "hauke.mehrtens@intel.com" <hauke.mehrtens@intel.com>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "allison@lohutok.net" <allison@lohutok.net>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
+        "saeedm@mellanox.com" <saeedm@mellanox.com>,
+        "andrew@lunn.ch" <andrew@lunn.ch>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        "alexandru.ardelean@analog.com" <alexandru.ardelean@analog.com>,
+        "jiri@mellanox.com" <jiri@mellanox.com>,
+        "ayal@mellanox.com" <ayal@mellanox.com>,
+        "pablo@netfilter.org" <pablo@netfilter.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "simon.horman@netronome.com" <simon.horman@netronome.com>,
+        Claudiu Manoil <claudiu.manoil@nxp.com>,
+        Vladimir Oltean <vladimir.oltean@nxp.com>,
+        Alexandru Marginean <alexandru.marginean@nxp.com>,
+        Xiaoliang Yang <xiaoliang.yang_1@nxp.com>,
+        Roy Zang <roy.zang@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>,
+        Jerry Huang <jerry.huang@nxp.com>, Leo Li <leoyang.li@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 23, 2020 at 02:19:51PM +0100, Arnd Bergmann wrote:
-> On Thu, Jan 23, 2020 at 2:10 PM Manivannan Sadhasivam
-> <manivannan.sadhasivam@linaro.org> wrote:
-> >
-> > On Thu, Jan 23, 2020 at 01:58:22PM +0100, Arnd Bergmann wrote:
-> > > On Thu, Jan 23, 2020 at 12:18 PM Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org> wrote:
-> > >
-> > > I don't see any callers of mhi_register_controller(). Did I just miss it or did
-> > > you not post one? I'm particularly interested in where the configuration comes
-> > > from, is this hardcoded in the driver, or parsed from firmware or from registers
-> > > in the hardware itself?
-> > >
-> >
-> > I have not included the controller driver in this patchset. But you can take a
-> > look at the ath11k controller driver here:
-> > https://git.linaro.org/people/manivannan.sadhasivam/linux.git/tree/drivers/net/wireless/ath/ath11k/mhi.c?h=ath11k-qca6390-mhi#n13
-> >
-> > So the configuration comes from the static structures defined in the controller
-> > driver. Earlier revision derived the configuration from devicetree but there are
-> > many cases where this MHI bus is being used in non DT environments like x86.
-> > So inorder to be platform agnostic, we chose static declaration method.
-> >
-> > In future we can add DT/ACPI support for the applicable parameters.
-> 
-> What determines the configuration? Is this always something that is fixed
-> in hardware, or can some of the properties be changed based on what
-> firmware runs the device?
-> 
+Hi Murali,
 
-AFAIK, these configurations are fixed in hardware (this could come from
-the firmware I'm not sure but they don't change with firmware revisions
-for sure)
+On Wed, 22 Jan 2020 at 20:04, Murali Karicheri <m-karicheri2@ti.com> wrote:
+>
+> I have question about the below parameters in The Gate Parameter Table
+> that are not currently supported by tc command. Looks like they need to
+> be shown to user for management.
+>
+>      - ConfigChange - Looks like this needs to be controlled by
+>        user. After sending admin command, user send this trigger to start
+>        copying admin schedule to operation schedule. Is this getting
+>        added to tc command?
 
-The reason for defining in the driver itself implies that these don't
-change. But I'll confirm this with Qcom folks.
+"The ConfigChange parameter signals the start of a
+configuration change for the gate
+when it is set to TRUE. This should only be done
+when the various administrative parameters
+are all set to appropriate values."
+
+As far as my understanding goes, all tc-taprio commands currently
+behave as though this boolean is implicitly set to TRUE after the
+structures have been set up. I'm not sure there is any value in doing
+otherwise.
+
+>      - ConfigChangeTime - The time at which the administrative variables
+>        that determine the cycle are to be copied across to the
+>        corresponding operational variables, expressed as a PTP timescale
+
+This is the base-time of the admin schedule, no?
+
+"The PTPtime at which the next config change is scheduled to occur.
+The value is a representation of a PTPtime value,
+consisting of a 48-bit integer
+number of seconds and a 32-bit integer number of nanoseconds."
+
+>      - TickGranularity - the management parameters specified in Gate
+>        Parameter Table allow a management station to discover the
+>        characteristics of an implementation=E2=80=99s cycle timer clock
+>        (TickGranularity) and to set the parameters for the gating cycle
+>        accordingly.
+
+Not sure who is going to use this and for what purpose, but ok.
+
+>      - ConfigPending - A Boolean variable, set TRUE to indicate that
+>        there is a new cycle configuration awaiting installation.
+
+I had tried to export something like this (driver calls back into
+sch_taprio.c when hw has applied the config, this would result in
+ConfigPending =3D FALSE), but ultimately didn't finish the idea, and it
+caused some problems too, due to incorrect RCU usage.
+
+>      - ConfigChangeError - Error in configuration (AdminBaseTime <
+>        CurrentTime)
+
+This can be exported similarly.
+
+>      - SupportedListMax - Maximum supported Admin/Open shed list.
+>
+> Is there a plan to export these from driver through tc show or such
+> command? The reason being, there would be applications developed to
+> manage configuration/schedule of TSN nodes that would requires these
+> information from the node. So would need a support either in tc or
+> some other means to retrieve them from hardware or driver. That is my
+> understanding...
+>
+
+Not sure what answer you expect to receive for "is there any plan".
+You can go ahead and propose something, as long as it is reasonably
+useful to have.
+
+> Regards,
+>
+> Murali
+>
+> --
+> Murali Karicheri
+> Texas Instruments
 
 Thanks,
-Mani
-
-> If this is determined by the firmware, maybe the configuration would also
-> need to be loaded from the file that contains the firmware, which in turn
-> could be a blob in DT.
-> 
->      Arnd
+-Vladimir
