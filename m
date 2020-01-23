@@ -2,135 +2,101 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B445C3F68F
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 18:14:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76D1FC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 18:14:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63E0921569
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 18:14:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579803246;
-	bh=khqNxXYOqxvr10GxSY4pK/rC4A5nXWgtbLtZjysW0tM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=CHe0T66/gTLZk0XDya/SVyrluCj/qRzDyOhDSNL90o33OrGn+F+4JI1sAHMVBqxmG
-	 fO7J9n5HA5V752HfSp8FvVPee+jxWvp5cTalSnGD1LWNUo05rjiEnFmrpvDJ2oie+W
-	 sGKxh41GVx+HtR+0MELPYMIDkSkFuRiuQWxmalJc=
+	by mail.kernel.org (Postfix) with ESMTP id 4D52A2467F
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 18:14:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fsfzk5mA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728984AbgAWSOF (ORCPT
+        id S1729037AbgAWSOx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 13:14:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:32776 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727278AbgAWSOF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 13:14:05 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 193C32077C;
-        Thu, 23 Jan 2020 18:14:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579803244;
-        bh=khqNxXYOqxvr10GxSY4pK/rC4A5nXWgtbLtZjysW0tM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=m6asSqk7k53NoVQqWZp5O/KT6yAK5dk9u05Hvx1NArYa4VN2Z0doJqdrcwhL1Z/4Q
-         jiNGysgPQaUqeME0aWbfKEsBmsVQPpFzRFpZo+v9QP5m2NMrYl9w4V2uGXE81Xw42q
-         BOh2rwfoJKb26w5YmE4sZdY5MEaK63DADyxq11Lk=
-Date:   Thu, 23 Jan 2020 19:14:02 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Jeffrey Hugo <jhugo@codeaurora.org>
-Cc:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        arnd@arndb.de, smohanad@codeaurora.org, kvalo@codeaurora.org,
-        bjorn.andersson@linaro.org, hemantk@codeaurora.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 02/16] bus: mhi: core: Add support for registering MHI
- controllers
-Message-ID: <20200123181402.GA1897633@kroah.com>
-References: <20200123111836.7414-1-manivannan.sadhasivam@linaro.org>
- <20200123111836.7414-3-manivannan.sadhasivam@linaro.org>
- <c8fdf0b0-eaec-9672-4f43-f0254d6dbf0e@codeaurora.org>
+        Thu, 23 Jan 2020 13:14:53 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:42500 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727278AbgAWSOx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jan 2020 13:14:53 -0500
+Received: by mail-ot1-f65.google.com with SMTP id 66so3624011otd.9;
+        Thu, 23 Jan 2020 10:14:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=QiY1d7i7CA5Tav17hx32IsMyqd7CfjaBpQNb7C5kBuw=;
+        b=fsfzk5mArV7ZcorT1o9PQKB9wdAMbgqF6PRn/aUZfOx0XfSoa3hebW2GJvaUPHnJP2
+         63jLNVbDZ+5I8xqjdLwD084Egu3c6rzhpxHGBgodeNT2HDUefNDKE5J0zSTBSpSSu3ix
+         YS6Sj5oLLAqy+7WRO16x7Iwptqrqzp2B19IveaCXaXHhd7e5kicoyfmr3EN6MbvvGeYx
+         oRHLceJV6ZtGa61JTf1hV+UzCzkqwUXLY7Fei/8aUeRerbdPPaVa4vnLwH3TmufPwrU6
+         gvd8quYw2cqDyLkOJ2NAZumi+0J6hBSEorjkDLovPFv6QFsQxV2FkJCWjxzh0nunCZ9g
+         5WNw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=QiY1d7i7CA5Tav17hx32IsMyqd7CfjaBpQNb7C5kBuw=;
+        b=iuU+AnRVMd3Rs+kBfnOIG25PiWKikK6LeDM0cuOIgT2fdVTVMpd4+I4QfBfPAqFyto
+         ++J4Fi69yyyq+h6+wYshT3rs7chA0WVXDjrX4onRtfIrekqt619jGfn38TFm79OhKnAV
+         CDANbr8HxtcCsblvYC5ItLZ6234/b8YZshoNNSDLAPcgz0tVf/P1cCtmdpNmGgB3KONA
+         MjDGxHwpUlOGqtZdaaPpEWw5ykxgxpP61+90ThUObz61uAW6zY92JDysALkyn9XUdymt
+         Hw7rkrPmSZc4oRxIBueKRrxPAK4wPhYTdjqe+abvH9+TPP1Ik1EaW8Oes375GC4hXD4h
+         z+ag==
+X-Gm-Message-State: APjAAAWCWcMdN4Xh9un7DQM/R57ceVBagWlqMl90Ip+BQxiiDgIT8hgx
+        eSyqP/lqlz8OoRz4DJKKlS03A58Y5P76fs8QrNk=
+X-Google-Smtp-Source: APXvYqwJjFmJNIjrARE0noxL4rB+Lw5AseD4BssMsVsC+uhiQLAVzM103SDmmU7/8SdHCFKnOl0AwIGP0+ZPEj6keBo=
+X-Received: by 2002:a9d:da2:: with SMTP id 31mr11837551ots.319.1579803291997;
+ Thu, 23 Jan 2020 10:14:51 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c8fdf0b0-eaec-9672-4f43-f0254d6dbf0e@codeaurora.org>
+References: <0000000000007c3ba2059cb50843@google.com>
+In-Reply-To: <0000000000007c3ba2059cb50843@google.com>
+From:   Cong Wang <xiyou.wangcong@gmail.com>
+Date:   Thu, 23 Jan 2020 10:14:41 -0800
+Message-ID: <CAM_iQpUHHmJGQfVFf2C=b_-QNwLG7WMK=z=PpiEtVHvX7HkzGA@mail.gmail.com>
+Subject: Re: WARNING in cbq_destroy
+To:     syzbot <syzbot+63bdb6006961d8c917c6@syzkaller.appspotmail.com>
+Cc:     David Miller <davem@davemloft.net>,
+        Jamal Hadi Salim <jhs@mojatatu.com>,
+        Jiri Pirko <jiri@resnulli.us>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux Kernel Network Developers <netdev@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 23, 2020 at 10:05:50AM -0700, Jeffrey Hugo wrote:
-> On 1/23/2020 4:18 AM, Manivannan Sadhasivam wrote:
-> > This commit adds support for registering MHI controller drivers with
-> > the MHI stack. MHI controller drivers manages the interaction with the
-> > MHI client devices such as the external modems and WiFi chipsets. They
-> > are also the MHI bus master in charge of managing the physical link
-> > between the host and client device.
-> > 
-> > This is based on the patch submitted by Sujeev Dias:
-> > https://lkml.org/lkml/2018/7/9/987
-> > 
-> > Signed-off-by: Sujeev Dias <sdias@codeaurora.org>
-> > Signed-off-by: Siddartha Mohanadoss <smohanad@codeaurora.org>
-> > [jhugo: added static config for controllers and fixed several bugs]
-> > Signed-off-by: Jeffrey Hugo <jhugo@codeaurora.org>
-> > [mani: removed DT dependency, splitted and cleaned up for upstream]
-> > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > ---
-> >   drivers/bus/Kconfig             |   1 +
-> >   drivers/bus/Makefile            |   3 +
-> >   drivers/bus/mhi/Kconfig         |  14 +
-> >   drivers/bus/mhi/Makefile        |   2 +
-> >   drivers/bus/mhi/core/Makefile   |   3 +
-> >   drivers/bus/mhi/core/init.c     | 404 +++++++++++++++++++++++++++++
-> >   drivers/bus/mhi/core/internal.h | 169 ++++++++++++
-> >   include/linux/mhi.h             | 438 ++++++++++++++++++++++++++++++++
-> >   include/linux/mod_devicetable.h |  12 +
-> >   9 files changed, 1046 insertions(+)
-> >   create mode 100644 drivers/bus/mhi/Kconfig
-> >   create mode 100644 drivers/bus/mhi/Makefile
-> >   create mode 100644 drivers/bus/mhi/core/Makefile
-> >   create mode 100644 drivers/bus/mhi/core/init.c
-> >   create mode 100644 drivers/bus/mhi/core/internal.h
-> >   create mode 100644 include/linux/mhi.h
-> > 
-> > diff --git a/drivers/bus/Kconfig b/drivers/bus/Kconfig
-> > index 50200d1c06ea..383934e54786 100644
-> > --- a/drivers/bus/Kconfig
-> > +++ b/drivers/bus/Kconfig
-> > @@ -202,5 +202,6 @@ config DA8XX_MSTPRI
-> >   	  peripherals.
-> >   source "drivers/bus/fsl-mc/Kconfig"
-> > +source "drivers/bus/mhi/Kconfig"
-> >   endmenu
-> > diff --git a/drivers/bus/Makefile b/drivers/bus/Makefile
-> > index 1320bcf9fa9d..05f32cd694a4 100644
-> > --- a/drivers/bus/Makefile
-> > +++ b/drivers/bus/Makefile
-> > @@ -34,3 +34,6 @@ obj-$(CONFIG_UNIPHIER_SYSTEM_BUS)	+= uniphier-system-bus.o
-> >   obj-$(CONFIG_VEXPRESS_CONFIG)	+= vexpress-config.o
-> >   obj-$(CONFIG_DA8XX_MSTPRI)	+= da8xx-mstpri.o
-> > +
-> > +# MHI
-> > +obj-$(CONFIG_MHI_BUS)		+= mhi/
-> > diff --git a/drivers/bus/mhi/Kconfig b/drivers/bus/mhi/Kconfig
-> > new file mode 100644
-> > index 000000000000..a8bd9bd7db7c
-> > --- /dev/null
-> > +++ b/drivers/bus/mhi/Kconfig
-> > @@ -0,0 +1,14 @@
-> > +# SPDX-License-Identifier: GPL-2.0
-> 
-> first time I noticed this, although I suspect this will need to be corrected
-> "everywhere" -
-> Per the SPDX website, the "GPL-2.0" label is deprecated.  It's replacement
-> is "GPL-2.0-only".
-> I think all instances should be updated to "GPL-2.0-only"
+On Tue, Jan 21, 2020 at 10:57 PM syzbot
+<syzbot+63bdb6006961d8c917c6@syzkaller.appspotmail.com> wrote:
+>
+> Hello,
+>
+> syzbot found the following crash on:
+>
+> HEAD commit:    d96d875e Merge tag 'fixes_for_v5.5-rc8' of git://git.kerne..
+> git tree:       upstream
+> console output: https://syzkaller.appspot.com/x/log.txt?x=144f7601e00000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=83c00afca9cf5153
+> dashboard link: https://syzkaller.appspot.com/bug?extid=63bdb6006961d8c917c6
+> compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17a1a721e00000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=11a91a95e00000
+>
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+63bdb6006961d8c917c6@syzkaller.appspotmail.com
+>
+> netlink: 96 bytes leftover after parsing attributes in process `syz-executor899'.
+> ------------[ cut here ]------------
+> WARNING: CPU: 1 PID: 8828 at net/sched/sch_cbq.c:1437 cbq_destroy_class net/sched/sch_cbq.c:1437 [inline]
+> WARNING: CPU: 1 PID: 8828 at net/sched/sch_cbq.c:1437 cbq_destroy+0x324/0x400 net/sched/sch_cbq.c:1471
 
-No, it is fine, please read Documentation/process/license-rules.rst
 
-thanks,
+Just FYI: I am still working on a fix, which is more complicated than I thought.
 
-greg k-h
+Thanks.
