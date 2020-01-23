@@ -2,147 +2,115 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB577C33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 11:37:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DF7FC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 11:38:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B193C2253D
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 11:37:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579779451;
-	bh=WNpyOeiH6NxaelMzhoQuhfS3wxx0n6onafkM/Lk/XTg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=gUz/HEG42XwFbgVqHDhjeBVcObu3Zdhaz5L43NrfDz63+R70RAzzK371592DJiZZv
-	 3Kho/+fB4S+fC9Eaz9KoioB9GBQ68eDYd9/u/EahqZa5GR4jlpzUUEuCN+LBKZwhKv
-	 egvhxuhAOwo+4AUy3VxqanT516NhLUP8xU5OqR3w=
+	by mail.kernel.org (Postfix) with ESMTP id 2AA7D2468C
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 11:38:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727307AbgAWLhb (ORCPT
+        id S1728779AbgAWLh7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 06:37:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49504 "EHLO mail.kernel.org"
+        Thu, 23 Jan 2020 06:37:59 -0500
+Received: from foss.arm.com ([217.140.110.172]:38148 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726194AbgAWLhb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 06:37:31 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A38F224125;
-        Thu, 23 Jan 2020 11:37:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579779450;
-        bh=WNpyOeiH6NxaelMzhoQuhfS3wxx0n6onafkM/Lk/XTg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=sOdYSkEH5W0QkNzEk7RHS8cFmUMlw1F6i1GKMtOSzF3+fUYPxoNi/8Z9BT0eF89ik
-         P8P0iDCViFCL8eJZSnMLbP3xqZdKGisNU1BQ957FD47r3Y/dUkA8je+pD++ovY9fcc
-         jV2kn8jPgk9uObUgDLEgYUI9+2sfR9JRvGVpnTGo=
-Date:   Thu, 23 Jan 2020 12:37:26 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Kent Gibson <warthog618@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v5 0/7] gpiolib: add an ioctl() for monitoring line
- status changes
-Message-ID: <20200123113726.GA980445@kroah.com>
-References: <20200109115010.27814-1-brgl@bgdev.pl>
- <CAMRc=Mf34JTo-mCCb-ubdY9=YsGQp-YrkhQMp811_wXyVtW-=Q@mail.gmail.com>
- <CAMRc=Mc80hudqxHMp87_Ro+k1YQNeo=FxYD0oZy_g7P=Z2w-Zw@mail.gmail.com>
+        id S1726194AbgAWLh6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jan 2020 06:37:58 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E13B1328;
+        Thu, 23 Jan 2020 03:37:57 -0800 (PST)
+Received: from [10.1.197.50] (e120937-lin.cambridge.arm.com [10.1.197.50])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DA3513F6C4;
+        Thu, 23 Jan 2020 03:37:56 -0800 (PST)
+Subject: Re: [PATCH V4] firmware: arm_scmi: Make scmi core independent of the
+ transport type
+To:     Viresh Kumar <viresh.kumar@linaro.org>,
+        Sudeep Holla <sudeep.holla@arm.com>
+Cc:     arnd@arndb.de, jassisinghbrar@gmail.com, peng.fan@nxp.com,
+        peter.hilber@opensynergy.com, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+References: <20200121183818.GA11522@bogus>
+ <a9ec58818b5e0c982810e74efe3f5f22b930ae40.1579660436.git.viresh.kumar@linaro.org>
+ <20200122121538.GA31240@bogus> <20200123103033.GA7511@bogus>
+ <20200123112711.mggm7ayxcqnr54yf@vireshk-i7>
+From:   Cristian Marussi <cristian.marussi@arm.com>
+Message-ID: <6b614d90-6326-db81-12dc-a0b4a467400f@arm.com>
+Date:   Thu, 23 Jan 2020 11:37:55 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
+In-Reply-To: <20200123112711.mggm7ayxcqnr54yf@vireshk-i7>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMRc=Mc80hudqxHMp87_Ro+k1YQNeo=FxYD0oZy_g7P=Z2w-Zw@mail.gmail.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 23, 2020 at 11:15:05AM +0100, Bartosz Golaszewski wrote:
-> wt., 14 sty 2020 o 08:44 Bartosz Golaszewski <brgl@bgdev.pl> napisał(a):
-> >
-> > czw., 9 sty 2020 o 12:50 Bartosz Golaszewski <brgl@bgdev.pl> napisał(a):
-> > >
-> > > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> > >
-> > > When discussing the recent user-space changes with Kent and while working
-> > > on dbus API for libgpiod I noticed that we really don't have any way of
-> > > keeping the line info synchronized between the kernel and user-space
-> > > processes. We can of course periodically re-read the line information or
-> > > even do it every time we want to read a property but this isn't optimal.
-> > >
-> > > This series adds a new ioctl() that allows user-space to set up a watch on
-> > > the GPIO chardev file-descriptor which can then be polled for events
-> > > emitted by the kernel when the line is requested, released or its status
-> > > changed. This of course doesn't require the line to be requested. Multiple
-> > > user-space processes can watch the same lines.
-> > >
-> > > This series also includes a variety of minor tweaks & fixes for problems
-> > > discovered during development. For instance it addresses a race-condition
-> > > in current line event fifo.
-> > >
-> > > First two patches add new helpers to kfifo, that are used in the later
-> > > parts of the series.
-> > >
-> > > v1: https://lkml.org/lkml/2019/11/27/327
-> > >
-> > > v1 -> v2:
-> > > - rework the main patch of the series: re-use the existing file-descriptor
-> > >   associated with an open character device
-> > > - add a patch adding a debug message when the line event kfifo is full and
-> > >   we're discarding another event
-> > > - rework the locking mechanism for lineevent kfifo: reuse the spinlock
-> > >   from the waitqueue structure
-> > > - other minor changes
-> > >
-> > > v2 -> v3:
-> > > - added patches providing new implementation for some kfifo macros
-> > > - fixed a regression in the patch reworking the line event fifo: reading
-> > >   multiple events is now still possible
-> > > - reworked the structure for new ioctl: it's now padded such that there
-> > >   be no alignment issues if running a 64-bit kernel on 32-bit userspace
-> > > - fixed a bug where one process could disable the status watch of another
-> > > - use kstrtoul() instead of atoi() in gpio-watch for string validation
-> > >
-> > > v3 -> v4:
-> > > - removed a binary file checked in by mistake
-> > > - drop __func__ from debug messages
-> > > - restructure the code in the notifier call
-> > > - add comments about the alignment of the new uAPI structure
-> > > - remove a stray new line that doesn't belong in this series
-> > > - tested the series on 32-bit user-space with 64-bit kernel
-> > >
-> > > v4 -> v5:
-> > > - dropped patches already merged upstream
-> > > - collected review tags
-> > >
-> > > Bartosz Golaszewski (7):
-> > >   kfifo: provide noirqsave variants of spinlocked in and out helpers
-> > >   kfifo: provide kfifo_is_empty_spinlocked()
-> > >   gpiolib: rework the locking mechanism for lineevent kfifo
-> > >   gpiolib: emit a debug message when adding events to a full kfifo
-> > >   gpiolib: provide a dedicated function for setting lineinfo
-> > >   gpiolib: add new ioctl() for monitoring changes in line info
-> > >   tools: gpio: implement gpio-watch
-> >
-> > Hi Andrew,
-> >
-> > could you Ack the first two patches in this series if you're fine with
-> > them? The code they modify lives in lib/ and doesn't have an assigned
-> > maintainer, so I've been told to Cc you on this series. It would be
-> > great if we could get it in for v5.6 merge window.
-> >
-> > Best regards,
-> > Bartosz Golaszewski
+On 23/01/2020 11:27, Viresh Kumar wrote:
+> On 23-01-20, 10:30, Sudeep Holla wrote:
+>> On Wed, Jan 22, 2020 at 12:15:38PM +0000, Sudeep Holla wrote:
+>>> On Wed, Jan 22, 2020 at 08:06:23AM +0530, Viresh Kumar wrote:
+>>>
+>>
+>> [...]
+>>
+>>>> Can you please help me getting this tested, now that I have rebased it
+>>>> as well :) ?
+>>>>
+>>>
+>>> Sure, I will give it a go on my Juno. Thanks for the rebase, makes it
+>>> simpler.
+>>>
+>>
+>> Sorry for the delay. I gave this a spin on my Juno. I am seeing below
+>> warning once on boot but it continues and everything seem to work fine.
+>> Also the warning is not related to this change I believe and this patch
+>> is just helping to hit some corner case with deferred probe and devres.
+>> I need to spend some time to debug it.
+>>
+>> Regards,
+>> Sudeep
+>>
+>> --->8
+>>
+>> WARNING: CPU: 1 PID: 187 at drivers/base/dd.c:519 really_probe+0x11c/0x418
+>> Modules linked in:
+>> CPU: 1 PID: 187 Comm: kworker/1:2 Not tainted 5.5.0-rc7-00026-gf7231cd3108d-dirty #20
+>> Hardware name: ARM LTD ARM Juno Development Platform/ARM Juno Development Platform, BIOS EDK II Jan 16 2020
+>> Workqueue: events deferred_probe_work_func
+>> pstate: 80000005 (Nzcv daif -PAN -UAO)
+>> pc : really_probe+0x11c/0x418
+>> lr : really_probe+0x10c/0x418
+>> Call trace:
+>>  really_probe+0x11c/0x418
+>>  driver_probe_device+0xe4/0x138
+>>  __device_attach_driver+0x90/0x110
+>>  bus_for_each_drv+0x80/0xd0
+>>  __device_attach+0xdc/0x160
+>>  device_initial_probe+0x18/0x20
+>>  bus_probe_device+0x98/0xa0
+>>  deferred_probe_work_func+0x90/0xe0
+>>  process_one_work+0x1ec/0x4a8
+>>  worker_thread+0x210/0x490
+>>  kthread+0x110/0x118
+>>  ret_from_fork+0x10/0x18
+>> ---[ end trace 06f96d55ce6093a8 ]---
 > 
-> Gentle ping.
-> 
-> Greg: could you maybe ack the kfifo patches so that we can get this in for v5.6?
+> Still it looks strange that the warning comes only after my patch :)
 
-I am not the kfifo maintainer :(
+In fact, got the same warning while testing your patch on JUNO at top of SCMI for-next.
+But then everything worked fine as Sudeep said.
+
+Thanks
+
+Cristian
+
+> 
+> Should I send V5 (fixed few comments after reviews) now ?
+> 
+
