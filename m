@@ -2,125 +2,111 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89557C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 15:57:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA2FAC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 15:58:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6473B20704
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 15:57:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DF3320704
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 15:58:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="ZWocr9Sv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728904AbgAWP5x (ORCPT
+        id S1729058AbgAWP60 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 10:57:53 -0500
-Received: from www62.your-server.de ([213.133.104.62]:37536 "EHLO
-        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726885AbgAWP5x (ORCPT
+        Thu, 23 Jan 2020 10:58:26 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:54228 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726885AbgAWP60 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 10:57:53 -0500
-Received: from sslproxy02.your-server.de ([78.47.166.47])
-        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89_1)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1iuerU-0002Nx-KQ; Thu, 23 Jan 2020 16:57:40 +0100
-Received: from [2001:1620:665:0:5795:5b0a:e5d5:5944] (helo=linux-3.fritz.box)
-        by sslproxy02.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1iuerU-000SOJ-77; Thu, 23 Jan 2020 16:57:40 +0100
-Subject: Re: [PATCH] Support for nlattr and nested_nlattr attribute search in
- EBPF filter
-To:     Kalimuthu Velappan <kalimuthu.velappan@broadcom.com>
-Cc:     Alexei Starovoitov <ast@kernel.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Stanislav Fomichev <sdf@google.com>,
-        Quentin Monnet <quentin.monnet@netronome.com>,
-        Andrey Ignatov <rdna@fb.com>,
-        "open list:BPF (Safe dynamic programs and tools)" 
-        <netdev@vger.kernel.org>,
-        "open list:BPF (Safe dynamic programs and tools)" 
-        <bpf@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
-References: <20200123130816.24815-1-kalimuthu.velappan@broadcom.com>
-From:   Daniel Borkmann <daniel@iogearbox.net>
-Message-ID: <a7d6f51f-8c5c-9242-97a1-8fdea9fdbb7b@iogearbox.net>
-Date:   Thu, 23 Jan 2020 16:57:39 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Thu, 23 Jan 2020 10:58:26 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1579795105; h=In-Reply-To: Content-Type: MIME-Version:
+ References: Message-ID: Subject: Cc: To: From: Date: Sender;
+ bh=cyM8CFsI8eeTQsNH7DLgcGWPSRi12+w5DPdW4N60rn0=; b=ZWocr9SvZ5He/Qo+CxbYlSJe2Uj6ZkjpT33mkdG24s5ad2ETjfooY4jdzkbSjKCt1n0jgYKc
+ rUKP3Dg00vRwp6Noj8NQ8hDMEVDCuXb4C6zHWnonuTQ5mpT8rzxfs3mJe1GfktNC0JTnUclV
+ apNDJf0TQ6xh9A5M3ZiX9TElSyA=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e29c29d.7f93f000f880-smtp-out-n02;
+ Thu, 23 Jan 2020 15:58:21 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 0DF68C433A2; Thu, 23 Jan 2020 15:58:20 +0000 (UTC)
+Received: from jcrouse1-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: jcrouse)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 43DF1C433CB;
+        Thu, 23 Jan 2020 15:58:19 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 43DF1C433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
+Date:   Thu, 23 Jan 2020 08:58:17 -0700
+From:   Jordan Crouse <jcrouse@codeaurora.org>
+To:     Sharat Masetty <smasetty@codeaurora.org>
+Cc:     freedreno@lists.freedesktop.org, dri-devel@freedesktop.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/3] drm: msm: Add 618 gpu to the adreno gpu list
+Message-ID: <20200123155817.GA20380@jcrouse1-lnx.qualcomm.com>
+Mail-Followup-To: Sharat Masetty <smasetty@codeaurora.org>,
+        freedreno@lists.freedesktop.org, dri-devel@freedesktop.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1579763945-10478-1-git-send-email-smasetty@codeaurora.org>
 MIME-Version: 1.0
-In-Reply-To: <20200123130816.24815-1-kalimuthu.velappan@broadcom.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Authenticated-Sender: daniel@iogearbox.net
-X-Virus-Scanned: Clear (ClamAV 0.101.4/25704/Thu Jan 23 12:37:43 2020)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1579763945-10478-1-git-send-email-smasetty@codeaurora.org>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/23/20 2:08 PM, Kalimuthu Velappan wrote:
-> Added attribute search and nested attribute support in EBPF filter
-> functionality.
-
-Your commit describes what the code does, but not the rationale why it's needed
-resp. the use-case you're trying to solve with this.
-
-Also, why it cannot be resolved in native BPF?
-
-> Signed-off-by: Kalimuthu Velappan <kalimuthu.velappan@broadcom.com>
-> ---
->   include/uapi/linux/bpf.h       |  5 ++++-
->   net/core/filter.c              | 22 ++++++++++++++++++++++
->   tools/include/uapi/linux/bpf.h |  4 +++-
->   3 files changed, 29 insertions(+), 2 deletions(-)
+On Thu, Jan 23, 2020 at 12:49:03PM +0530, Sharat Masetty wrote:
+> This patch adds Adreno 618 entry and its associated properties
+> to the gpulist entries.
 > 
-> diff --git a/include/uapi/linux/bpf.h b/include/uapi/linux/bpf.h
-> index dbbcf0b..ac9794c 100644
-> --- a/include/uapi/linux/bpf.h
-> +++ b/include/uapi/linux/bpf.h
-> @@ -2938,7 +2938,10 @@ union bpf_attr {
->   	FN(probe_read_user),		\
->   	FN(probe_read_kernel),		\
->   	FN(probe_read_user_str),	\
-> -	FN(probe_read_kernel_str),
-> +	FN(probe_read_kernel_str),  \
-> +	FN(skb_get_nlattr),     \
-> +	FN(skb_get_nlattr_nest),
-> +
+> Signed-off-by: Sharat Masetty <smasetty@codeaurora.org>
 
-This is not on latest bpf-next tree.
+I'm extremely confused - these have been in linux-next for weeks. Why are you
+sending them out again?
 
->   /* integer value in 'imm' field of BPF_CALL instruction selects which helper
->    * function eBPF program intends to call
-> diff --git a/net/core/filter.c b/net/core/filter.c
-> index 538f6a7..56a87e1 100644
-> --- a/net/core/filter.c
-> +++ b/net/core/filter.c
-> @@ -2699,6 +2699,24 @@ static const struct bpf_func_proto bpf_set_hash_invalid_proto = {
->   	.arg1_type	= ARG_PTR_TO_CTX,
->   };
->   
-> +static const struct bpf_func_proto bpf_skb_get_nlattr_proto = {
-> +	.func		= bpf_skb_get_nlattr,
-> +	.gpl_only	= false,
-> +	.ret_type	= RET_INTEGER,
-> +	.arg1_type	= ARG_PTR_TO_CTX,
-> +	.arg2_type  = ARG_ANYTHING,
-> +	.arg3_type  = ARG_ANYTHING,
-> +};
-> +
-> +static const struct bpf_func_proto skb_get_nlattr_nest_proto = {
-> +	.func		= bpf_skb_get_nlattr_nest,
-> +	.gpl_only	= false,
-> +	.ret_type	= RET_INTEGER,
-> +	.arg1_type	= ARG_PTR_TO_CTX,
-> +	.arg2_type  = ARG_ANYTHING,
-> +	.arg3_type  = ARG_ANYTHING,
-> +};
-> +
->   BPF_CALL_2(bpf_set_hash, struct sk_buff *, skb, u32, hash)
+Jordan
+
+> ---
+>  drivers/gpu/drm/msm/adreno/adreno_device.c | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
+> 
+> diff --git a/drivers/gpu/drm/msm/adreno/adreno_device.c b/drivers/gpu/drm/msm/adreno/adreno_device.c
+> index fbbdf86..cb3a6e5 100644
+> --- a/drivers/gpu/drm/msm/adreno/adreno_device.c
+> +++ b/drivers/gpu/drm/msm/adreno/adreno_device.c
+> @@ -167,6 +167,17 @@
+>  		.init = a5xx_gpu_init,
+>  		.zapfw = "a540_zap.mdt",
+>  	}, {
+> +		.rev = ADRENO_REV(6, 1, 8, ANY_ID),
+> +		.revn = 618,
+> +		.name = "A618",
+> +		.fw = {
+> +			[ADRENO_FW_SQE] = "a630_sqe.fw",
+> +			[ADRENO_FW_GMU] = "a630_gmu.bin",
+> +		},
+> +		.gmem = SZ_512K,
+> +		.inactive_period = DRM_MSM_INACTIVE_PERIOD,
+> +		.init = a6xx_gpu_init,
+> +	}, {
+>  		.rev = ADRENO_REV(6, 3, 0, ANY_ID),
+>  		.revn = 630,
+>  		.name = "A630",
+> -- 
+> 1.9.1
+> 
+
+-- 
+The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
