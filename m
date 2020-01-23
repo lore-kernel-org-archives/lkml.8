@@ -2,99 +2,260 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AF0BC33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 08:03:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43EBDC33CAA
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 08:06:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E5FB24684
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 08:03:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579766597;
-	bh=W+B5E/F5JFplL6UXkuYJVtwhzk5JKp5PLXL6ULLfCCg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=akcgsUiqkyDxzAihUhHH/H+P0j5FHXmuVH58Mgupi1IBC5gM6m2sW6D5QEvSXlp/+
-	 CZ0TtH1DMVM3ujMb99LChVqUHA+IIqDuncgyV7EHH4x5L/fdBuEuJD6esKQdySyHsE
-	 VJt8NES/fushK8RvJP9G1+w3+Y2ZjDWF4JQKD4s8=
+	by mail.kernel.org (Postfix) with ESMTP id 12FF424655
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 08:06:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726227AbgAWIDQ (ORCPT
+        id S1726170AbgAWIGa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 03:03:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35956 "EHLO mail.kernel.org"
+        Thu, 23 Jan 2020 03:06:30 -0500
+Received: from gloria.sntech.de ([185.11.138.130]:46018 "EHLO gloria.sntech.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725955AbgAWIDQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 03:03:16 -0500
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6FE6724673;
-        Thu, 23 Jan 2020 08:03:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579766595;
-        bh=W+B5E/F5JFplL6UXkuYJVtwhzk5JKp5PLXL6ULLfCCg=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=2PJ9PWIB3yJlywSFA2gUtF3om6H0peRQkjqYOJFOWi/xoPcb9b1t6xSUa/Fw9r7eQ
-         Qwxcvmt9dfxjgwLVQeVuyHbE4BKaPegtpKY+lV/nWGOLLBhKMv1IRzaE5C7u2KGJ0Y
-         JZCXQfzSWzmxMI+ekiuCoHi9zWov0uHGN2DAekLw=
-Received: by mail-lf1-f46.google.com with SMTP id r14so1607763lfm.5;
-        Thu, 23 Jan 2020 00:03:15 -0800 (PST)
-X-Gm-Message-State: APjAAAWs4p+NqG39vRwWtqt7JQP4HzmcUpBiPsmdcvsm0pe8qkyBFTbg
-        9NTjl1L9pXfdOkkPyZUhMd0M6p3vW8YbAIFXPTA=
-X-Google-Smtp-Source: APXvYqwjlReg5RfranzuZw4WJT9YEaeunN45Pk1Qpm/E3VosJWD8TxfwfusW93pL08k/Y3081mRrnYJ4QtT/+91WyRs=
-X-Received: by 2002:ac2:485c:: with SMTP id 28mr3947023lfy.118.1579766593592;
- Thu, 23 Jan 2020 00:03:13 -0800 (PST)
+        id S1725955AbgAWIG3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jan 2020 03:06:29 -0500
+Received: from ip092042140082.rev.nessus.at ([92.42.140.82] helo=phil.localnet)
+        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <heiko@sntech.de>)
+        id 1iuXVN-0004gu-Fu; Thu, 23 Jan 2020 09:06:21 +0100
+From:   Heiko Stuebner <heiko@sntech.de>
+To:     Ezequiel Garcia <ezequiel@collabora.com>
+Cc:     Sandy Huang <hjc@rock-chips.com>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        linux-rockchip@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        kernel@collabora.com, Douglas Anderson <dianders@chromium.org>,
+        Tomasz Figa <tfiga@chromium.org>,
+        Mark Yao <mark.yao@rock-chips.com>
+Subject: Re: [PATCH] drm/rockchip: Add GEM create ioctl support
+Date:   Thu, 23 Jan 2020 09:06:20 +0100
+Message-ID: <2150585.39Qbo98K5S@phil>
+In-Reply-To: <20200122190855.20385-1-ezequiel@collabora.com>
+References: <20200122190855.20385-1-ezequiel@collabora.com>
 MIME-Version: 1.0
-References: <20200123172101.2f31947c@canb.auug.org.au> <beb9e3a3-4824-6328-12f8-3d005f376374@infradead.org>
-In-Reply-To: <beb9e3a3-4824-6328-12f8-3d005f376374@infradead.org>
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-Date:   Thu, 23 Jan 2020 09:03:02 +0100
-X-Gmail-Original-Message-ID: <CAJKOXPcJ8V+bLDeJGg+emCaYHtDjuKa--yMk_HRCsB_DrwJGrw@mail.gmail.com>
-Message-ID: <CAJKOXPcJ8V+bLDeJGg+emCaYHtDjuKa--yMk_HRCsB_DrwJGrw@mail.gmail.com>
-Subject: Re: linux-next: Tree for Jan 23 (PHY_EXYNOS5250_SATA in drivers/phy/samsung/Kconfig)
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Geert Uytterhoeven <geert@linux-m68k.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 23 Jan 2020 at 08:00, Randy Dunlap <rdunlap@infradead.org> wrote:
->
-> On 1/22/20 10:21 PM, Stephen Rothwell wrote:
-> > Hi all,
-> >
-> > Changes since 20200122:
-> >
->
-> Is linux-next missing some of the COMPILE_TEST fixes?  I am still seeing
-> this warning (that I reported on Jan. 9-2020 and that Arnd has sent a
-> possible patch for):
->
->
-> on i386 or x86_64:
->
-> WARNING: unmet direct dependencies detected for I2C_S3C2410
->   Depends on [n]: I2C [=y] && HAS_IOMEM [=y] && HAVE_S3C2410_I2C [=n]
->   Selected by [y]:
->   - PHY_EXYNOS5250_SATA [=y] && (SOC_EXYNOS5250 || COMPILE_TEST [=y]) && HAS_IOMEM [=y] && OF [=y]
+Hi Ezquiel,
 
-Hi Randy,
+Am Mittwoch, 22. Januar 2020, 20:08:55 CET schrieb Ezequiel Garcia:
+> From: Mark Yao <mark.yao@rock-chips.com>
+> 
+> Add driver-specific GEM create/offset ioctls, to allow users
+> to create objects of arbitrary size.
+> 
+> These are required to allocate buffers to be shared with
+> video decoder block, with hardware-specific needs such as
+> macroblock alignment and extra room for motion vectors.
 
-The fix was posted quite some time ago - next to the patches
-(unfortunately) introducing the issue.  I posted v2, after review, on
-7th of January:
-https://lore.kernel.org/linux-arm-kernel/1578384779-15487-1-git-send-email-krzk@kernel.org/T/#t
+Previously the use of this ioctl was to allow a custom xserver
+to allocate memory to hand over to a binary mali blob for rendering.
+The counter argument was that these dumb buffer should not be
+rendered into at all.
 
-Maybe I missed someone on Cc there?
+Nowadays we have prime for buffer sharing between display ip
+and 3d-renderer, and somehow this seems to work also with
+binary blobs via libgbm or so. Not sure how this behaves with X11
+though but at least up to wayland that seems to work, so in current
+display pipelines there doesn't seem to be a need for such an ioctl
+anymore.
 
-Best regards,
-Krzysztof
+So I guess my question to understand this is, shouldn't there be
+something similar done when sharing buffers with a video decoder?
+Instead of userspace requesting a buffer and then handing it to
+the hardware video decoder?
+
+Thanks
+Heiko
+
+> Signed-off-by: Mark Yao <mark.yao@rock-chips.com>
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
+> ---
+>  drivers/gpu/drm/rockchip/rockchip_drm_drv.c | 11 ++++
+>  drivers/gpu/drm/rockchip/rockchip_drm_gem.c | 21 +++++++
+>  drivers/gpu/drm/rockchip/rockchip_drm_gem.h | 13 +++++
+>  include/uapi/drm/rockchip_drm.h             | 61 +++++++++++++++++++++
+>  4 files changed, 106 insertions(+)
+>  create mode 100644 include/uapi/drm/rockchip_drm.h
+> 
+> diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_drv.c b/drivers/gpu/drm/rockchip/rockchip_drm_drv.c
+> index ca12a35483f9..bd35a0b1aa5a 100644
+> --- a/drivers/gpu/drm/rockchip/rockchip_drm_drv.c
+> +++ b/drivers/gpu/drm/rockchip/rockchip_drm_drv.c
+> @@ -22,6 +22,7 @@
+>  #include <drm/drm_of.h>
+>  #include <drm/drm_probe_helper.h>
+>  #include <drm/drm_vblank.h>
+> +#include <drm/rockchip_drm.h>
+>  
+>  #include "rockchip_drm_drv.h"
+>  #include "rockchip_drm_fb.h"
+> @@ -206,6 +207,14 @@ static void rockchip_drm_unbind(struct device *dev)
+>  	drm_dev_put(drm_dev);
+>  }
+>  
+> +static const struct drm_ioctl_desc rockchip_ioctls[] = {
+> +	DRM_IOCTL_DEF_DRV(ROCKCHIP_GEM_CREATE, rockchip_gem_create_ioctl,
+> +			  DRM_UNLOCKED | DRM_AUTH),
+> +	DRM_IOCTL_DEF_DRV(ROCKCHIP_GEM_MAP_OFFSET,
+> +			  rockchip_gem_map_offset_ioctl,
+> +			  DRM_UNLOCKED | DRM_AUTH),
+> +};
+> +
+>  static const struct file_operations rockchip_drm_driver_fops = {
+>  	.owner = THIS_MODULE,
+>  	.open = drm_open,
+> @@ -230,6 +239,8 @@ static struct drm_driver rockchip_drm_driver = {
+>  	.gem_prime_vmap		= rockchip_gem_prime_vmap,
+>  	.gem_prime_vunmap	= rockchip_gem_prime_vunmap,
+>  	.gem_prime_mmap		= rockchip_gem_mmap_buf,
+> +	.ioctls			= rockchip_ioctls,
+> +	.num_ioctls		= ARRAY_SIZE(rockchip_ioctls),
+>  	.fops			= &rockchip_drm_driver_fops,
+>  	.name	= DRIVER_NAME,
+>  	.desc	= DRIVER_DESC,
+> diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_gem.c b/drivers/gpu/drm/rockchip/rockchip_drm_gem.c
+> index 0d1884684dcb..315fa67d5668 100644
+> --- a/drivers/gpu/drm/rockchip/rockchip_drm_gem.c
+> +++ b/drivers/gpu/drm/rockchip/rockchip_drm_gem.c
+> @@ -12,6 +12,7 @@
+>  #include <drm/drm_gem.h>
+>  #include <drm/drm_prime.h>
+>  #include <drm/drm_vma_manager.h>
+> +#include <drm/rockchip_drm.h>
+>  
+>  #include "rockchip_drm_drv.h"
+>  #include "rockchip_drm_gem.h"
+> @@ -428,6 +429,26 @@ int rockchip_gem_dumb_create(struct drm_file *file_priv,
+>  	return PTR_ERR_OR_ZERO(rk_obj);
+>  }
+>  
+> +int rockchip_gem_map_offset_ioctl(struct drm_device *drm, void *data,
+> +				  struct drm_file *file_priv)
+> +{
+> +	struct drm_rockchip_gem_map_off *args = data;
+> +
+> +	return drm_gem_dumb_map_offset(file_priv, drm, args->handle,
+> +				       &args->offset);
+> +}
+> +
+> +int rockchip_gem_create_ioctl(struct drm_device *dev, void *data,
+> +			      struct drm_file *file_priv)
+> +{
+> +	struct drm_rockchip_gem_create *args = data;
+> +	struct rockchip_gem_object *rk_obj;
+> +
+> +	rk_obj = rockchip_gem_create_with_handle(file_priv, dev, args->size,
+> +						 &args->handle);
+> +	return PTR_ERR_OR_ZERO(rk_obj);
+> +}
+> +
+>  /*
+>   * Allocate a sg_table for this GEM object.
+>   * Note: Both the table's contents, and the sg_table itself must be freed by
+> diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_gem.h b/drivers/gpu/drm/rockchip/rockchip_drm_gem.h
+> index 7ffc541bea07..87fe58b05bf6 100644
+> --- a/drivers/gpu/drm/rockchip/rockchip_drm_gem.h
+> +++ b/drivers/gpu/drm/rockchip/rockchip_drm_gem.h
+> @@ -50,4 +50,17 @@ void rockchip_gem_free_object(struct drm_gem_object *obj);
+>  int rockchip_gem_dumb_create(struct drm_file *file_priv,
+>  			     struct drm_device *dev,
+>  			     struct drm_mode_create_dumb *args);
+> +
+> +/*
+> + * request gem object creation and buffer allocation as the size
+> + * that it is calculated with framebuffer information such as width,
+> + * height and bpp.
+> + */
+> +int rockchip_gem_create_ioctl(struct drm_device *dev, void *data,
+> +			      struct drm_file *file_priv);
+> +
+> +/* get buffer offset to map to user space. */
+> +int rockchip_gem_map_offset_ioctl(struct drm_device *dev, void *data,
+> +				  struct drm_file *file_priv);
+> +
+>  #endif /* _ROCKCHIP_DRM_GEM_H */
+> diff --git a/include/uapi/drm/rockchip_drm.h b/include/uapi/drm/rockchip_drm.h
+> new file mode 100644
+> index 000000000000..3185f72f36b9
+> --- /dev/null
+> +++ b/include/uapi/drm/rockchip_drm.h
+> @@ -0,0 +1,61 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +
+> +/*
+> + * Copyright (c) Fuzhou Rockchip Electronics Co.Ltd
+> + * Authors:
+> + *       Mark Yao <yzq@rock-chips.com>
+> + *
+> + * base on exynos_drm.h
+> + */
+> +
+> +#ifndef _ROCKCHIP_DRM_H
+> +#define _ROCKCHIP_DRM_H
+> +
+> +#include <drm/drm.h>
+> +
+> +#if defined(__cplusplus)
+> +extern "C" {
+> +#endif
+> +
+> +/**
+> + * User-desired buffer creation information structure.
+> + *
+> + * @size: user-desired memory allocation size.
+> + * @flags: user request for setting memory type or cache attributes.
+> + * @handle: returned a handle to created gem object.
+> + *     - this handle will be set by gem module of kernel side.
+> + */
+> +struct drm_rockchip_gem_create {
+> +	uint64_t size;
+> +	uint32_t flags;
+> +	uint32_t handle;
+> +};
+> +
+> +/**
+> + * A structure for getting buffer offset.
+> + *
+> + * @handle: a pointer to gem object created.
+> + * @pad: just padding to be 64-bit aligned.
+> + * @offset: relatived offset value of the memory region allocated.
+> + *     - this value should be set by user.
+> + */
+> +struct drm_rockchip_gem_map_off {
+> +	uint32_t handle;
+> +	uint32_t pad;
+> +	uint64_t offset;
+> +};
+> +
+> +#define DRM_ROCKCHIP_GEM_CREATE		0x00
+> +#define DRM_ROCKCHIP_GEM_MAP_OFFSET	0x01
+> +
+> +#define DRM_IOCTL_ROCKCHIP_GEM_CREATE	DRM_IOWR(DRM_COMMAND_BASE + \
+> +		DRM_ROCKCHIP_GEM_CREATE, struct drm_rockchip_gem_create)
+> +
+> +#define DRM_IOCTL_ROCKCHIP_GEM_MAP_OFFSET	DRM_IOWR(DRM_COMMAND_BASE + \
+> +		DRM_ROCKCHIP_GEM_MAP_OFFSET, struct drm_rockchip_gem_map_off)
+> +
+> +#if defined(__cplusplus)
+> +}
+> +#endif
+> +
+> +#endif /* _ROCKCHIP_DRM_H */
+> 
+
+
+
+
