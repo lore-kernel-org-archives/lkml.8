@@ -2,101 +2,116 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91837C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 19:06:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55372C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 19:06:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70FE821D7D
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 19:06:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3730B21D7D
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 19:06:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728984AbgAWTF7 (ORCPT
+        id S1729016AbgAWTGD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 14:05:59 -0500
-Received: from mga04.intel.com ([192.55.52.120]:46723 "EHLO mga04.intel.com"
+        Thu, 23 Jan 2020 14:06:03 -0500
+Received: from mga12.intel.com ([192.55.52.136]:45947 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727590AbgAWTF7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 14:05:59 -0500
+        id S1728792AbgAWTGC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jan 2020 14:06:02 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Jan 2020 11:05:59 -0800
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Jan 2020 11:06:01 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,354,1574150400"; 
-   d="scan'208";a="259972421"
+   d="scan'208";a="216352271"
 Received: from viggo.jf.intel.com (HELO localhost.localdomain) ([10.54.77.144])
-  by fmsmga002.fm.intel.com with ESMTP; 23 Jan 2020 11:05:57 -0800
-Subject: [PATCH 0/5] x86: finish the MPX removal process
+  by orsmga007.jf.intel.com with ESMTP; 23 Jan 2020 11:06:01 -0800
+Subject: [PATCH 2/5] x86/mpx: remove build infrastructure
 To:     linux-kernel@vger.kernel.org
 Cc:     Dave Hansen <dave.hansen@linux.intel.com>, peterz@infradead.org,
         luto@kernel.org, x86@kernel.org, torvalds@linux-foundation.org,
-        linux-arch@vger.kernel.org, benh@kernel.crashing.org,
-        paulus@samba.org, mpe@ellerman.id.au, jdike@addtoit.com,
-        richard@nod.at, anton.ivanov@cambridgegreys.com, gxt@pku.edu.cn
+        akpm@linux-foundation.org
 From:   Dave Hansen <dave.hansen@linux.intel.com>
-Date:   Thu, 23 Jan 2020 11:04:56 -0800
-Message-Id: <20200123190456.8E05ADE6@viggo.jf.intel.com>
+Date:   Thu, 23 Jan 2020 11:05:00 -0800
+References: <20200123190456.8E05ADE6@viggo.jf.intel.com>
+In-Reply-To: <20200123190456.8E05ADE6@viggo.jf.intel.com>
+Message-Id: <20200123190500.9119F8F4@viggo.jf.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-MPX requires recompiling applications, which requires compiler support.
-Unfortunately, GCC 9.1 is expected to be be released without support for
-MPX.  This means that there was only a relatively small window where
-folks could have ever used MPX.  It failed to gain wide adoption in the
-industry, and Linux was the only mainstream OS to ever support it widely.
 
-Support for the feature may also disappear on future processors.
+From: Dave Hansen <dave.hansen@linux.intel.com>
 
-This set completes the process that we started during the 5.4 merge window.
+MPX is being removed from the kernel due to a lack of support
+in the toolchain going forward (gcc).
 
-I'd _rather_ this go in via the x86 tree, but I'm not picky.  I could also
-send a pull request directly to Linus.  This series is also available here
-(mostly for 0day to chew on):
-
-	https://git.kernel.org/pub/scm/linux/kernel/git/daveh/x86-mpx.git/log/?h=mpx-remove-20200123
-
-This posting is mostly an FYI in case any affected maintainers have any
-concerns.
-
- Documentation/x86/intel_mpx.rst            |  252 -------
- arch/x86/include/asm/mpx.h                 |  116 ---
- arch/x86/include/asm/trace/mpx.h           |  134 ----
- arch/x86/mm/mpx.c                          |  938 -----------------------------
- b/arch/powerpc/include/asm/mmu_context.h   |    5 
- b/arch/um/include/asm/mmu_context.h        |    5 
- b/arch/unicore32/include/asm/mmu_context.h |    5 
- b/arch/x86/Kconfig                         |   28 
- b/arch/x86/include/asm/bugs.h              |    6 
- b/arch/x86/include/asm/disabled-features.h |    8 
- b/arch/x86/include/asm/mmu.h               |    4 
- b/arch/x86/include/asm/mmu_context.h       |   26 
- b/arch/x86/include/asm/processor.h         |   18 
- b/arch/x86/kernel/alternative.c            |    1 
- b/arch/x86/kernel/cpu/common.c             |   18 
- b/arch/x86/kernel/cpu/intel.c              |   36 -
- b/arch/x86/kernel/setup.c                  |    2 
- b/arch/x86/kernel/sys_x86_64.c             |    9 
- b/arch/x86/kernel/traps.c                  |   74 --
- b/arch/x86/mm/Makefile                     |    1 
- b/arch/x86/mm/hugetlbpage.c                |    5 
- b/arch/x86/mm/mmap.c                       |    2 
- b/fs/exec.c                                |    1 
- b/include/asm-generic/mm_hooks.h           |    5 
- 24 files changed, 2 insertions(+), 1697 deletions(-)
+Remove the Kconfig option and the Makefile line.  This makes
+arch/x86/mm/mpx.c and anything under an #ifdef for
+X86_INTEL_MPX dead code.
 
 Cc: Peter Zijlstra (Intel) <peterz@infradead.org>
 Cc: Andy Lutomirski <luto@kernel.org>
 Cc: x86@kernel.org
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: linux-arch@vger.kernel.org
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: Paul Mackerras <paulus@samba.org>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: Jeff Dike <jdike@addtoit.com>
-Cc: Richard Weinberger <richard@nod.at>
-Cc: Anton Ivanov <anton.ivanov@cambridgegreys.com>
-Cc: Guan Xuetao <gxt@pku.edu.cn>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Dave Hansen <dave.hansen@linux.intel.com>
+---
+
+ b/arch/x86/Kconfig     |   28 ----------------------------
+ b/arch/x86/mm/Makefile |    1 -
+ 2 files changed, 29 deletions(-)
+
+diff -puN arch/x86/Kconfig~mpx-remove-build arch/x86/Kconfig
+--- a/arch/x86/Kconfig~mpx-remove-build	2020-01-23 10:41:04.863942440 -0800
++++ b/arch/x86/Kconfig	2020-01-23 10:41:04.869942440 -0800
+@@ -1896,34 +1896,6 @@ config X86_INTEL_UMIP
+ 	  specific cases in protected and virtual-8086 modes. Emulated
+ 	  results are dummy.
+ 
+-config X86_INTEL_MPX
+-	prompt "Intel MPX (Memory Protection Extensions)"
+-	def_bool n
+-	# Note: only available in 64-bit mode due to VMA flags shortage
+-	depends on CPU_SUP_INTEL && X86_64
+-	select ARCH_USES_HIGH_VMA_FLAGS
+-	---help---
+-	  MPX provides hardware features that can be used in
+-	  conjunction with compiler-instrumented code to check
+-	  memory references.  It is designed to detect buffer
+-	  overflow or underflow bugs.
+-
+-	  This option enables running applications which are
+-	  instrumented or otherwise use MPX.  It does not use MPX
+-	  itself inside the kernel or to protect the kernel
+-	  against bad memory references.
+-
+-	  Enabling this option will make the kernel larger:
+-	  ~8k of kernel text and 36 bytes of data on a 64-bit
+-	  defconfig.  It adds a long to the 'mm_struct' which
+-	  will increase the kernel memory overhead of each
+-	  process and adds some branches to paths used during
+-	  exec() and munmap().
+-
+-	  For details, see Documentation/x86/intel_mpx.rst
+-
+-	  If unsure, say N.
+-
+ config X86_INTEL_MEMORY_PROTECTION_KEYS
+ 	prompt "Intel Memory Protection Keys"
+ 	def_bool y
+diff -puN arch/x86/mm/Makefile~mpx-remove-build arch/x86/mm/Makefile
+--- a/arch/x86/mm/Makefile~mpx-remove-build	2020-01-23 10:41:04.865942440 -0800
++++ b/arch/x86/mm/Makefile	2020-01-23 10:41:04.870942440 -0800
+@@ -45,7 +45,6 @@ obj-$(CONFIG_AMD_NUMA)		+= amdtopology.o
+ obj-$(CONFIG_ACPI_NUMA)		+= srat.o
+ obj-$(CONFIG_NUMA_EMU)		+= numa_emulation.o
+ 
+-obj-$(CONFIG_X86_INTEL_MPX)			+= mpx.o
+ obj-$(CONFIG_X86_INTEL_MEMORY_PROTECTION_KEYS)	+= pkeys.o
+ obj-$(CONFIG_RANDOMIZE_MEMORY)			+= kaslr.o
+ obj-$(CONFIG_PAGE_TABLE_ISOLATION)		+= pti.o
+_
