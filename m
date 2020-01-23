@@ -2,138 +2,138 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0852C33CAA
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 06:08:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBBF2C33CAA
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 06:12:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A673624655
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 06:08:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABBDF24655
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 06:12:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="NlyuTrzZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727296AbgAWGIn (ORCPT
+        id S1726103AbgAWGMp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 01:08:43 -0500
-Received: from foss.arm.com ([217.140.110.172]:35378 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726240AbgAWGIh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 01:08:37 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8225CFEC;
-        Wed, 22 Jan 2020 22:08:36 -0800 (PST)
-Received: from mammon-tx2.austin.arm.com (mammon-tx2.austin.arm.com [10.118.28.62])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 71E073F68E;
-        Wed, 22 Jan 2020 22:08:36 -0800 (PST)
-From:   Jeremy Linton <jeremy.linton@arm.com>
-To:     netdev@vger.kernel.org
-Cc:     opendmb@gmail.com, f.fainelli@gmail.com, davem@davemloft.net,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-kernel@vger.kernel.org, wahrenst@gmx.net,
-        Jeremy Linton <jeremy.linton@arm.com>
-Subject: [RFC 2/2] net: bcmgenet: Fetch MAC address from the adapter
-Date:   Thu, 23 Jan 2020 00:08:23 -0600
-Message-Id: <20200123060823.1902366-3-jeremy.linton@arm.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200123060823.1902366-1-jeremy.linton@arm.com>
-References: <20200123060823.1902366-1-jeremy.linton@arm.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Thu, 23 Jan 2020 01:12:45 -0500
+Received: from mail25.static.mailgun.info ([104.130.122.25]:42451 "EHLO
+        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725818AbgAWGMp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jan 2020 01:12:45 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1579759964; h=References: In-Reply-To: Message-Id: Date:
+ Subject: Cc: To: From: Sender;
+ bh=9S0QIlbYmQAb+fbkT7yD3PV4Zf5YseEdwAjssYu+PQ8=; b=NlyuTrzZfMfyrczXjiAgD94Y4TZBr8LLpRkQZx/PjThOBL5EGkehIRR3n44GqyT2ecp/dSGh
+ WNK9bzcq0MUVvllh6VZQMsjM/0b62QqcKGN6/fu5t1AnMkiay5hMiZ09+0rnwW40YEB91vUg
+ Cq5TitLs80zLhtUmnDEK5k5Tzis=
+X-Mailgun-Sending-Ip: 104.130.122.25
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e29395b.7fb056a165a8-smtp-out-n02;
+ Thu, 23 Jan 2020 06:12:43 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 6427EC447B1; Thu, 23 Jan 2020 06:12:43 +0000 (UTC)
+Received: from pacamara-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: cang)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 9E777C447A5;
+        Thu, 23 Jan 2020 06:12:41 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 9E777C447A5
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=cang@codeaurora.org
+From:   Can Guo <cang@codeaurora.org>
+To:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
+        hongwus@codeaurora.org, rnayak@codeaurora.org,
+        linux-scsi@vger.kernel.org, kernel-team@android.com,
+        saravanak@google.com, salyzyn@google.com, cang@codeaurora.org
+Cc:     Sayali Lokhande <sayalil@codeaurora.org>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        Pedro Sousa <pedrom.sousa@synopsys.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        Bean Huo <beanhuo@micron.com>,
+        Venkat Gopalakrishnan <venkatg@codeaurora.org>,
+        Tomas Winkler <tomas.winkler@intel.com>,
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v3 1/8] scsi: ufs: Flush exception event before suspend
+Date:   Wed, 22 Jan 2020 22:12:18 -0800
+Message-Id: <1579759946-5448-2-git-send-email-cang@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <1579759946-5448-1-git-send-email-cang@codeaurora.org>
+References: <1579759946-5448-1-git-send-email-cang@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ARM/ACPI machines should utilize self describing hardware
-when possible. The MAC address on the BCM GENET can be
-read from the adapter if a full featured firmware has already
-programmed it. Lets try using the address already programmed,
-if it appears to be valid.
+From: Sayali Lokhande <sayalil@codeaurora.org>
 
-Signed-off-by: Jeremy Linton <jeremy.linton@arm.com>
+Exception event can be raised by the device when system
+suspend is in progress. This will result in unclocked
+register access in exception event handler as clocks will
+be turned off during suspend. This change makes sure to flush
+exception event handler work in suspend before disabling
+clocks to avoid unclocked register access issue.
+
+Signed-off-by: Sayali Lokhande <sayalil@codeaurora.org>
+Signed-off-by: Asutosh Das <asutoshd@codeaurora.org>
+Signed-off-by: Can Guo <cang@codeaurora.org>
 ---
- .../net/ethernet/broadcom/genet/bcmgenet.c    | 47 ++++++++++++++-----
- 1 file changed, 36 insertions(+), 11 deletions(-)
+ drivers/scsi/ufs/ufshcd.c | 21 ++++++++++++++++++---
+ 1 file changed, 18 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/ethernet/broadcom/genet/bcmgenet.c b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
-index c736700f829e..6782bb0a24bd 100644
---- a/drivers/net/ethernet/broadcom/genet/bcmgenet.c
-+++ b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
-@@ -2779,6 +2779,27 @@ static void bcmgenet_set_hw_addr(struct bcmgenet_priv *priv,
- 	bcmgenet_umac_writel(priv, (addr[4] << 8) | addr[5], UMAC_MAC1);
+diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+index 1201578..c2de29f 100644
+--- a/drivers/scsi/ufs/ufshcd.c
++++ b/drivers/scsi/ufs/ufshcd.c
+@@ -4760,8 +4760,15 @@ static void ufshcd_slave_destroy(struct scsi_device *sdev)
+ 			 * UFS device needs urgent BKOPs.
+ 			 */
+ 			if (!hba->pm_op_in_progress &&
+-			    ufshcd_is_exception_event(lrbp->ucd_rsp_ptr))
+-				schedule_work(&hba->eeh_work);
++			    ufshcd_is_exception_event(lrbp->ucd_rsp_ptr)) {
++				/*
++				 * Prevent suspend once eeh_work is scheduled
++				 * to avoid deadlock between ufshcd_suspend
++				 * and exception event handler.
++				 */
++				if (schedule_work(&hba->eeh_work))
++					pm_runtime_get_noresume(hba->dev);
++			}
+ 			break;
+ 		case UPIU_TRANSACTION_REJECT_UPIU:
+ 			/* TODO: handle Reject UPIU Response */
+@@ -5215,7 +5222,14 @@ static void ufshcd_exception_event_handler(struct work_struct *work)
+ 
+ out:
+ 	scsi_unblock_requests(hba->host);
+-	pm_runtime_put_sync(hba->dev);
++	/*
++	 * pm_runtime_get_noresume is called while scheduling
++	 * eeh_work to avoid suspend racing with exception work.
++	 * Hence decrement usage counter using pm_runtime_put_noidle
++	 * to allow suspend on completion of exception event handler.
++	 */
++	pm_runtime_put_noidle(hba->dev);
++	pm_runtime_put(hba->dev);
+ 	return;
  }
  
-+static void bcmgenet_get_hw_addr(struct bcmgenet_priv *priv,
-+				 unsigned char *addr)
-+{
-+	u32 addr_tmp;
-+	bool acpi_mode = has_acpi_companion(&priv->pdev->dev);
-+
-+	/* UEFI/ACPI machines and possibly others will preprogram the MAC */
-+	if (acpi_mode) {
-+		addr_tmp = bcmgenet_umac_readl(priv, UMAC_MAC0);
-+		addr[0] = addr_tmp >> 24;
-+		addr[1] = (addr_tmp >> 16) & 0xff;
-+		addr[2] = (addr_tmp >>	8) & 0xff;
-+		addr[3] = addr_tmp & 0xff;
-+		addr_tmp = bcmgenet_umac_readl(priv, UMAC_MAC1);
-+		addr[4] = (addr_tmp >> 8) & 0xff;
-+		addr[5] = addr_tmp & 0xff;
-+	} else {
-+		memset(addr, 0, ETH_ALEN);
-+	}
-+}
-+
- /* Returns a reusable dma control register value */
- static u32 bcmgenet_dma_disable(struct bcmgenet_priv *priv)
- {
-@@ -3509,11 +3530,6 @@ static int bcmgenet_probe(struct platform_device *pdev)
+@@ -7901,6 +7915,7 @@ static int ufshcd_suspend(struct ufs_hba *hba, enum ufs_pm_op pm_op)
+ 			goto enable_gating;
  	}
- 	priv->wol_irq = platform_get_irq_optional(pdev, 2);
  
--	if (dn)
--		macaddr = of_get_mac_address(dn);
--	else if (pd)
--		macaddr = pd->mac_address;
--
- 	priv->base = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(priv->base)) {
- 		err = PTR_ERR(priv->base);
-@@ -3524,12 +3540,6 @@ static int bcmgenet_probe(struct platform_device *pdev)
- 
- 	SET_NETDEV_DEV(dev, &pdev->dev);
- 	dev_set_drvdata(&pdev->dev, dev);
--	if (IS_ERR_OR_NULL(macaddr) || !is_valid_ether_addr(macaddr)) {
--		dev_warn(&pdev->dev, "using random Ethernet MAC\n");
--		eth_hw_addr_random(dev);
--	} else {
--		ether_addr_copy(dev->dev_addr, macaddr);
--	}
- 	dev->watchdog_timeo = 2 * HZ;
- 	dev->ethtool_ops = &bcmgenet_ethtool_ops;
- 	dev->netdev_ops = &bcmgenet_netdev_ops;
-@@ -3601,6 +3611,21 @@ static int bcmgenet_probe(struct platform_device *pdev)
- 	    !strcasecmp(phy_mode_str, "internal"))
- 		bcmgenet_power_up(priv, GENET_POWER_PASSIVE);
- 
-+	if (dn)
-+		macaddr = of_get_mac_address(dn);
-+	else if (pd)
-+		macaddr = pd->mac_address;
-+
-+	if (IS_ERR_OR_NULL(macaddr) || !is_valid_ether_addr(macaddr)) {
-+		bcmgenet_get_hw_addr(priv, dev->dev_addr);
-+		if (!is_valid_ether_addr(dev->dev_addr)) {
-+			dev_warn(&pdev->dev, "using random Ethernet MAC\n");
-+			eth_hw_addr_random(dev);
-+		}
-+	} else {
-+		ether_addr_copy(dev->dev_addr, macaddr);
-+	}
-+
- 	reset_umac(priv);
- 
- 	err = bcmgenet_mii_init(dev);
++	flush_work(&hba->eeh_work);
+ 	ret = ufshcd_link_state_transition(hba, req_link_state, 1);
+ 	if (ret)
+ 		goto set_dev_active;
 -- 
-2.24.1
-
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
