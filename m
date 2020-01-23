@@ -2,158 +2,159 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40834C33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 17:44:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC2DFC33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 17:46:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11AF42071E
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 17:44:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="ER31gEbT"
+	by mail.kernel.org (Postfix) with ESMTP id 970C321D7D
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 17:46:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579801567;
+	bh=Nm/1hZYRDXEy1h5zI+ojaQyAVgcLuXzuAam4glSnMeQ=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
+	b=VuA6SFWLzGffWRL8RIVtRp9kUoWsSIQB8vnO0wU82Fg7np7fu3HNfp/aYRdtlpJQ1
+	 g4IyO7uyeyDBwoMUY4ekRG/vfJlGaIALeEQyRcla2Uf/2Xz73AR3uHV0Jdi0PuDZ3v
+	 cj7U2LtIjFyLTAZfx4wcYQQW7rzTSBtVRbMma/dw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729075AbgAWRo4 (ORCPT
+        id S1729078AbgAWRqG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 12:44:56 -0500
-Received: from mail-mw2nam12on2136.outbound.protection.outlook.com ([40.107.244.136]:17249
-        "EHLO NAM12-MW2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727022AbgAWRo4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 12:44:56 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Byiy23TprH0nIHP54kYALTEODvoHLm/SXvU8x2Bj4SmCUpBZsVq302rb3MnV7oNetibW0lWlPNNhzu4uhZsI3tjob9Dl9mpbK0OVOkMqaFsLkZAYBYDaoAEuXViQzDzsznUdbrRvS8/RgPXse7Lcpuq5wQd4wF5BE95vMDEAxg81N7jf7fQDQeFckSffhq2J3mYs9mjInbzOPlmTPFm6m093GioC7wuMbD9WEeoylV6mABSviAnAPeSBCPPALZP/zFy2K1JAkKBWswlu+MzXgOBQtBtf21HV9fcE+nKY5MnbzGcAokVE9RBpVJfuhsjXl2LqKRYN7nHntP5GFu897Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dcRI9beZse0lG11RbrUH9ml+lntYvkWI0aF0F52XeO8=;
- b=d2TQdaEs3d4GOV8Pcff7POiR1G0tCthgkI/qv362xICe0HcLcx840VnUPMTATezcEnzgVJdZ4Ix0S/dmZnxpr9ewEDImlq56Szo8n46x6wyywLtqVz0/M5e0dNGGxJSnZT8/9Qibc1ArgLNHMAbfSaFHt/Basgv2PHrjpjeEs3NQUvsZWH3fm/qcYXr3IyGD28PO1itiITrM1Q8opJ8u91ohn1sdY2MRKUdK9Yx15wk1jrQnNCCSRqxFOdl0B3fj1Nio5B+hVkEgRW5VawURxpXfGfBF1yJQSKAIBoK1TojGRA/m/W20KfwlT4RX0CIgYgn/zgLbAAlNlXylXQi5Og==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dcRI9beZse0lG11RbrUH9ml+lntYvkWI0aF0F52XeO8=;
- b=ER31gEbTq2a3FjLp+b68dWfLmXhdA/EYpnLOdcqwNZj0KmU/o/6Jxp1bahqz6PTn0aumZbB4AgEwbsiGETPeqUPBjcAzCvUeksgpnOHCEcZ1z/mVIUfs17TmgyB7zQHjkCtP8pvwviEgdchjCstZzPmuTSHqTpo+B+TT/QCXGJ8=
-Received: from MN2PR21MB1375.namprd21.prod.outlook.com (20.179.23.160) by
- MN2PR21MB1216.namprd21.prod.outlook.com (20.179.20.144) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2686.3; Thu, 23 Jan 2020 17:44:53 +0000
-Received: from MN2PR21MB1375.namprd21.prod.outlook.com
- ([fe80::5deb:9ab5:f05a:5423]) by MN2PR21MB1375.namprd21.prod.outlook.com
- ([fe80::5deb:9ab5:f05a:5423%6]) with mapi id 15.20.2686.013; Thu, 23 Jan 2020
- 17:44:53 +0000
-From:   Haiyang Zhang <haiyangz@microsoft.com>
-To:     Jakub Kicinski <kuba@kernel.org>
-CC:     "sashal@kernel.org" <sashal@kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        KY Srinivasan <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "olaf@aepfle.de" <olaf@aepfle.de>, vkuznets <vkuznets@redhat.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH V3,net-next, 1/2] hv_netvsc: Add XDP support
-Thread-Topic: [PATCH V3,net-next, 1/2] hv_netvsc: Add XDP support
-Thread-Index: AQHV0UjdH1AVu+KRP0+E0p14Je7IQaf4ekYAgAABksCAAAcfgIAAAh5w
-Date:   Thu, 23 Jan 2020 17:44:52 +0000
-Message-ID: <MN2PR21MB1375147709E57BA25F661505CA0F0@MN2PR21MB1375.namprd21.prod.outlook.com>
-References: <1579713814-36061-1-git-send-email-haiyangz@microsoft.com>
-        <1579713814-36061-2-git-send-email-haiyangz@microsoft.com>
-        <20200123085906.20608707@cakuba>
-        <MN2PR21MB13757F7D19C11EC175FD9F98CA0F0@MN2PR21MB1375.namprd21.prod.outlook.com>
- <20200123093013.53d78485@cakuba>
-In-Reply-To: <20200123093013.53d78485@cakuba>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=haiyangz@microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-01-23T17:44:51.4844806Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=c8d5ad5b-c76c-4ac7-8c93-e15f6f73f981;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=haiyangz@microsoft.com; 
-x-originating-ip: [96.61.92.94]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: a6ab1373-e798-478b-e5a1-08d7a02bf3ce
-x-ms-traffictypediagnostic: MN2PR21MB1216:|MN2PR21MB1216:|MN2PR21MB1216:
-x-ms-exchange-transport-forked: True
-x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
-x-microsoft-antispam-prvs: <MN2PR21MB1216054B92E92061FE6C7CC3CA0F0@MN2PR21MB1216.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 029174C036
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(396003)(366004)(136003)(346002)(376002)(39860400002)(199004)(189003)(316002)(54906003)(86362001)(8990500004)(5660300002)(10290500003)(9686003)(2906002)(55016002)(478600001)(26005)(33656002)(53546011)(6506007)(81166006)(66476007)(66556008)(76116006)(6916009)(4326008)(186003)(81156014)(8936002)(64756008)(66946007)(66446008)(71200400001)(52536014)(7696005)(8676002);DIR:OUT;SFP:1102;SCL:1;SRVR:MN2PR21MB1216;H:MN2PR21MB1375.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 9FM5qUROSyz4BaCxeY8Mm1T828mGE3YyKoPjCQttDtOXkYhVAeI5jcYphlz/FS5H8H0AhS5VCG5fDLl+Epu9XsNAK4j5B04wPzKj0+rpZOmIwD7d9co/G5OnJ9aSTtzsHGdroV5rsmBxDX4bwFvDYKPhuVwm9YKwNzNZNkI1w2EEePQL9J75mMDnfCZ6FObiquqzdzw4Tnol9XSBmkU6XCkFVIgwlil2Wbi0Phawh5zaSE2ERhqk2x/7YAEIjRN+yw8rIlt3Zkxif9cm31md7gB1KJlUn+YJr1Y6IA9AvEWa3FFHTj7ZZUE0omYaTQp2vtzYGxPbkP4N8+BW43//VbqJtxzO8jKCNJPXj1oD08HE3lqc20l0Vj4fFSmg8rqkCGFi0hOukObhYVwg+aUeqsOcFi16MP+YksPmjJIluW/BC7iwrVwgf79CFdgRiITt
-x-ms-exchange-antispam-messagedata: o7rx8mdXSco3ESnKw9YeOX+RJ9hukRDD6wEnmPgJwGPdEGCIYVqmAY/MePxJqkpd/IAWAFaO4xxpK41Jubqj/1EHgbx2U6zWXvAX1vlJERtw+UF7VpnKQUH/v2Q2PVtmkTz+n4rFOxYHsSlrdS0mXw==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 23 Jan 2020 12:46:06 -0500
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:41733 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727022AbgAWRqG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jan 2020 12:46:06 -0500
+Received: by mail-lf1-f67.google.com with SMTP id m30so2958559lfp.8;
+        Thu, 23 Jan 2020 09:46:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=9SUGR8QdPMNh7QLWat7AGgDe3jaF2rbpW1KxZ9s3AOs=;
+        b=sbFxacSfBCAGBU7s2TQJY0DzNNQymStUoOtlfwJBSEBZcT6Z/Mj9byWnE1Za5HXWkB
+         HHwxRj5HnyQLx0JTKC4L1ghcKf8AgKcqkc0Mu1b3SgdH3LMU04PsjcLonuH3Zfl5M3G9
+         6NQIneG0d0c6MgKlDpopQtJsg1qegmt59z8gBdm9BZpq1CaZNJoXQwCBrmGd8Fe15rxu
+         D2YrNynapEEOiHCGsaeWp/u0+6G+N/JmhB9+x1g0kzrNyYxKT11DedfTf4m+q4oSgv+t
+         KPkmLkX+JhNE+2xMdYCHXC+g2G5NN+FZJTf5cmsBCMXqE2RXSYPnWNeh5xQf+pmZJ5zT
+         6s6Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
+         :date:message-id:mime-version;
+        bh=9SUGR8QdPMNh7QLWat7AGgDe3jaF2rbpW1KxZ9s3AOs=;
+        b=acUccFWUpfaY+2pX5apMWCetRGDrBrGKyZd440RRxbLbGGAC+qh1T12R2T678qHkPH
+         vsyx7n/CMw7C/lyGpDzUFeXKDkiEm+ZHGKnt2isGLbDhjcmXTolQyss3BNqWSkp/lu56
+         EhoT3fDZia8+Nap48+AFGlV8vDPG+81hkVP23myBnHGBv9KL/HQsds9loBMp9TEEANPz
+         kIy2WerDSgDgwEDZs7wPflxZhIONlNr0YultupEGBKfg0e6WWnKmO/BSpa/J4jgDPcpx
+         /vODQO1IFdtaSOrUj6enwE/blg2SMnWBSpUiaFXKsG+dXuAdYw26dUqhjnAJTMk7skrL
+         vO+g==
+X-Gm-Message-State: APjAAAXpqRJpW6mw3xr2kzQHTwYx1xPcjQh5ALL42Lqv1X7nMTV2OWGG
+        UhBTHYZXaiDTOqYWqAobmRls03iykySScw==
+X-Google-Smtp-Source: APXvYqx1D1Oq970OIGQK6so+TTaZuGf+dWk0DQrGNPBalH7w5tCE1RWZJXmyIiFu0n1PWuhk49C2MQ==
+X-Received: by 2002:ac2:4a91:: with SMTP id l17mr5353742lfp.75.1579801563345;
+        Thu, 23 Jan 2020 09:46:03 -0800 (PST)
+Received: from saruman (88-113-215-33.elisa-laajakaista.fi. [88.113.215.33])
+        by smtp.gmail.com with ESMTPSA id r2sm1668668lff.63.2020.01.23.09.46.01
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 23 Jan 2020 09:46:02 -0800 (PST)
+From:   Felipe Balbi <balbi@kernel.org>
+To:     "Yang\, Fei" <fei.yang@intel.com>,
+        Andrzej Pietrasiewicz <andrzej.p@collabora.com>,
+        John Stultz <john.stultz@linaro.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Cc:     Felipe Balbi <felipe.balbi@linux.intel.com>,
+        Thinh Nguyen <thinhn@synopsys.com>,
+        Tejas Joglekar <tejas.joglekar@synopsys.com>,
+        Jack Pham <jackp@codeaurora.org>, Todd Kjos <tkjos@google.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Linux USB List <linux-usb@vger.kernel.org>,
+        stable <stable@vger.kernel.org>
+Subject: RE: [RFC][PATCH 0/2] Avoiding DWC3 transfer stalls/hangs when using adb over f_fs
+In-Reply-To: <02E7334B1630744CBDC55DA8586225837F9EE335@ORSMSX102.amr.corp.intel.com>
+References: <20200122222645.38805-1-john.stultz@linaro.org> <ef64036f-7621-50d9-0e23-0f7141a40d7a@collabora.com> <02E7334B1630744CBDC55DA8586225837F9EE280@ORSMSX102.amr.corp.intel.com> <87o8uu3wqd.fsf@kernel.org> <02E7334B1630744CBDC55DA8586225837F9EE335@ORSMSX102.amr.corp.intel.com>
+Date:   Thu, 23 Jan 2020 19:46:51 +0200
+Message-ID: <87lfpy3w1g.fsf@kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a6ab1373-e798-478b-e5a1-08d7a02bf3ce
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Jan 2020 17:44:52.8696
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: v+blLINXE1BiQT62jxYFEucNvFV7itQRi/GTX3VwRhKxVJ2JW77Ci7teocgBHaaUdUWcuQy4hQfcrW5rNDbo4A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR21MB1216
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
 
-> -----Original Message-----
-> From: Jakub Kicinski <kuba@kernel.org>
-> Sent: Thursday, January 23, 2020 12:30 PM
-> To: Haiyang Zhang <haiyangz@microsoft.com>
-> Cc: sashal@kernel.org; linux-hyperv@vger.kernel.org; netdev@vger.kernel.o=
-rg;
-> KY Srinivasan <kys@microsoft.com>; Stephen Hemminger
-> <sthemmin@microsoft.com>; olaf@aepfle.de; vkuznets
-> <vkuznets@redhat.com>; davem@davemloft.net; linux-kernel@vger.kernel.org
-> Subject: Re: [PATCH V3,net-next, 1/2] hv_netvsc: Add XDP support
->=20
-> On Thu, 23 Jan 2020 17:14:06 +0000, Haiyang Zhang wrote:
-> > > > Changes:
-> > > > 	v3: Minor code and comment updates.
-> > > >         v2: Added XDP_TX support. Addressed review comments.
-> > >
-> > > How does the locking of the TX path work? You seem to be just
-> > > calling the normal xmit method, but you don't hold the xmit queue
-> > > lock, so the stack can start xmit concurrently, no?
-> >
-> > The netvsc and vmbus can handle concurrent transmits, except the msd
-> > (Multi-Send Data) field which can only be used by one queue.
-> >
-> > I already added a new flag to netvsc_send(), so packets from XDP_TX
-> > won't use the msd.
->=20
-> I see, there's a few non-atomic counters there, but maybe that's not a bi=
-g deal.
-Yes, those error counters are used less frequently, and not necessary to be=
- precise.
+Hi,
 
-> What frees the skb if the ring is full, and netvsc_send_pkt() returns -EA=
-GAIN?
-> Nothing checks the return value from netvsc_xdp_xmit().
-Good catch! I will add skb free when -EAGAIN is returned for XDP_TX.
-I will update the patch.
+"Yang, Fei" <fei.yang@intel.com> writes:
+>>>>> Hey all,
+>>>>>    I wanted to send these out for comment and thoughts.
+>>>>>=20
+>>>>> Since ~4.20, when the functionfs gadget enabled scatter-gather=20
+>>>>> support, we have seen problems with adb connections stalling and=20
+>>>>> stopping to function on hardware with dwc3 usb controllers.
+>>>>> Specifically, HiKey960, Dragonboard 845c, and Pixel3 devices.
+>>>>
+>>>> Any chance this:
+>>>>=20
+>>>> https://git.kernel.org/pub/scm/linux/kernel/git/balbi/usb.git/commit/
+>>>> ?h=3Dtesting/next&id=3Df63333e8e4fd63d8d8ae83b89d2c38cf21d64801
+>>> This is a different issue. I have tried initializing num_sgs when debug=
+ging this adb stall problem, but it didn't help.
+>>
+>> So multiple folks have run through this problem, but not *one* has trace=
+points collected from the issue? C'mon guys. Can someone, please, collect t=
+racepoints so we can figure out what's actually going on?
+>>
+>> I'm pretty sure this should be solved at the DMA API level, just want to=
+ confirm.
+>
+> I have sent you the tracepoints long time ago. Also my analysis of the
+> problem (BTW, I don't think the tracepoints helped much). It's
+> basically a logic problem in function dwc3_gadget_ep_reclaim_trb_sg().
 
-Thanks,
-- Haiyang
+AFAICT, this is caused by DMA API merging pages together when map an
+sglist for DMA. While doing that, it does *not* move the SG_END flag
+which sg_is_last() checks.
 
+I consider that an overlook on the DMA API, wouldn't you? Why should DMA
+API users care if pages were merged or not while mapping the sglist? We
+have for_each_sg() and sg_is_last() for a reason.
+
+> I can try dig into my old emails and resend, but that is a bit hard to fi=
+nd.
+
+Don't bother, I'm still not convinced we should fix at the driver level
+when sg_is_last() should be working here, unless we should iterate over
+num_sgs instead of num_mapped_sgs, though I don't think that's the case
+since in that case we would have to chain buffers of size zero.
+
+=2D-=20
+balbi
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl4p3AsACgkQzL64meEa
+mQaTdA/+PpmXuec0fjzp1yy6MejaVnnPEOFDVaOYvpaYkbH9C/UhwT42e5ZuaVg1
+abC2wFsKPer2Xbtb9rmJflvqiD+smblgDpkLyFHEwZRC0a7o+c6CkFYMPNNM9+w/
+sNWVwM3sfLGQ9Wcx0hQueLmhksBbvGcAqnph/MwFJcz81k77/BEYFqo/8n7c6o7K
+YBJrySxFqi6y/jCv0u+FDG449XOdh2Udydp/7UPCXrOZis6D2nxiiU8H7taKGZuO
+jluTVDFsFQK9CA8GVLMocciLUPSQlSDlac3cUH4lQnVqDGNGfjSN37AkFzeUKSNL
+HgOJA0E4ewtZFe3EM1JKQU968a3OrPYkdzZi0pvwnDxfJ8pyo1/jqQInz518etwq
+SHqM2r/Pwwtem+wwbi6Z+WKmfwHI445Jht3DoC1dSnREXSG5VzXJzyIWVrAvtexN
+kWDaqp4tBVQqVbsmOIQVBio46kBe/yNlhFgycnaXGSlz7JLJXvfMqhA4xSAbr6Vt
+rob9DoX879dS0JS3YN6tOHQeP0eVZjq/xUwTjhVDA1l/XNb7WM4lx//5o8hqn1VW
+XMP9VBC4W0NZoRmhi4pcp7zXHxTal68rLJkYL78yi8R9N3ERuo3XylA40jAOaR0E
+najiMxtEwxPalArWq9qbWI/EcMEMMiom03pZnFnHAiTsj7alMhE=
+=ZK9D
+-----END PGP SIGNATURE-----
+--=-=-=--
