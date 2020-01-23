@@ -2,276 +2,97 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4B6FC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 17:57:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3557C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 17:59:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC77520718
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 17:57:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A77A922464
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 17:59:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579802364;
+	bh=zhpUuE6PK/zOndKhHQokjtmzfz+eTmWt6DhZEmzDtnM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=LqrUkKdUpR/3JSZ5xFMcmf81O+SfLzIiU3LMXrKeu/Ai8kIyaCqMgKSiRzE1uX4lo
+	 F5pG7rOFTuyWGoqfXR+9gc4i/wI085/JZ3aAqL5QX4ydboUR7cN1zZGeH7zO9Oyhcr
+	 HgAEH4xvMrsoEHPejO2Gg2vs5sxG7b29nQ7lbnUA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729094AbgAWR56 (ORCPT
+        id S1728981AbgAWR7X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 12:57:58 -0500
-Received: from mail-il-dmz.mellanox.com ([193.47.165.129]:42833 "EHLO
-        mellanox.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727278AbgAWR55 (ORCPT
+        Thu, 23 Jan 2020 12:59:23 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:41751 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727022AbgAWR7X (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 12:57:57 -0500
-Received: from Internal Mail-Server by MTLPINE2 (envelope-from moshe@mellanox.com)
-        with ESMTPS (AES256-SHA encrypted); 23 Jan 2020 19:57:55 +0200
-Received: from dev-l-vrt-136.mtl.labs.mlnx (dev-l-vrt-136.mtl.labs.mlnx [10.134.136.1])
-        by labmailer.mlnx (8.13.8/8.13.8) with ESMTP id 00NHvtqD024477;
-        Thu, 23 Jan 2020 19:57:55 +0200
-Received: from dev-l-vrt-136.mtl.labs.mlnx (localhost [127.0.0.1])
-        by dev-l-vrt-136.mtl.labs.mlnx (8.14.7/8.14.7) with ESMTP id 00NHvtkn027292;
-        Thu, 23 Jan 2020 19:57:55 +0200
-Received: (from moshe@localhost)
-        by dev-l-vrt-136.mtl.labs.mlnx (8.14.7/8.14.7/Submit) id 00NHvsUM027291;
-        Thu, 23 Jan 2020 19:57:54 +0200
-From:   Moshe Shemesh <moshe@mellanox.com>
-To:     "David S. Miller" <davem@davemloft.net>
-Cc:     Jiri Pirko <jiri@mellanox.com>,
-        Vikas Gupta <vikas.gupta@broadcom.com>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Moshe Shemesh <moshe@mellanox.com>
-Subject: [PATCH net-next v2] devlink: Add health recover notifications on devlink flows
-Date:   Thu, 23 Jan 2020 19:57:13 +0200
-Message-Id: <1579802233-27224-1-git-send-email-moshe@mellanox.com>
-X-Mailer: git-send-email 1.8.4.3
+        Thu, 23 Jan 2020 12:59:23 -0500
+Received: by mail-lj1-f193.google.com with SMTP id h23so4572292ljc.8
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jan 2020 09:59:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=zdFWsGYP+/xokr+Jc40CYV8I3yOJTReQRwsZpMafAIU=;
+        b=eYCXt9KuCjSWsxKT/LS/oRbB0oCaiHnqj4H6RJ7QasqoCu3gRsmkjJE0XL+lw9FM4Z
+         Utq4fAiOjg0fs8R1CeLtZy+7kX5ZX+QDtdxpqRuAg+ACSnejnWkdBli2iyS3I+Y8xyg8
+         2ry2FHh/zgNd68ry0JVzr2TgceUB6QJzCCqn4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=zdFWsGYP+/xokr+Jc40CYV8I3yOJTReQRwsZpMafAIU=;
+        b=N8TR4rYoKcFgpku8kGKb3NAHJRnRGFmMyt8RGKGXMsMRQeeqvHjPFVfJaeASBazbi8
+         5OYGe4ZcvKZPUZnIRLZWSpBGWYh3iYnkhJPFCWQAIiNqpGpa1mT7b9YXUeSjYgEpjAn8
+         ZyaMxhWZCFAVfO1NMhacxQWaIERQ5PRdj4c+Y34uExtL5nqY0vbBSjnlFGYdMuqcL2G4
+         STjYe4w6Si2nmlvm0R3wnbTpPfSRQc7m18mwUyQhvFrVpj4D95SLYa8x1mK/jt2DJvgs
+         HLLbPU8O8andw4GKW7kuwsO/g+cqeN1sehCTVXu30E5GB9oVBSSK4yUVyDivkSyOGmaU
+         SpFw==
+X-Gm-Message-State: APjAAAWstzEZ9rQMeUbmJ4nEgGk/XICx5Jqkekh8lDUd1YTMyoATe3Qz
+        4e3t/S+qs+oGM8f/2b6U4hfxOcfzlAU=
+X-Google-Smtp-Source: APXvYqx88QNgtdEmtho+vLWzDEHgNBuyw/BSk+8qsyD/zI5yKpeYZT2tTGaAkLyIi18Fnuumfj/GZw==
+X-Received: by 2002:a2e:548:: with SMTP id 69mr23746742ljf.67.1579802360206;
+        Thu, 23 Jan 2020 09:59:20 -0800 (PST)
+Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com. [209.85.208.181])
+        by smtp.gmail.com with ESMTPSA id d26sm1446593lfa.44.2020.01.23.09.59.19
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 23 Jan 2020 09:59:19 -0800 (PST)
+Received: by mail-lj1-f181.google.com with SMTP id a13so4553566ljm.10
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jan 2020 09:59:19 -0800 (PST)
+X-Received: by 2002:a2e:9510:: with SMTP id f16mr23701334ljh.249.1579802359199;
+ Thu, 23 Jan 2020 09:59:19 -0800 (PST)
+MIME-Version: 1.0
+References: <20200123153341.19947-1-will@kernel.org>
+In-Reply-To: <20200123153341.19947-1-will@kernel.org>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Thu, 23 Jan 2020 09:59:03 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wjC2EDquO8_kzc-FHOGGjgODOLKjswYGJAMh58zTkyX3w@mail.gmail.com>
+Message-ID: <CAHk-=wjC2EDquO8_kzc-FHOGGjgODOLKjswYGJAMh58zTkyX3w@mail.gmail.com>
+Subject: Re: [PATCH v2 00/10] Rework READ_ONCE() to improve codegen
+To:     Will Deacon <will@kernel.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Android Kernel Team <kernel-team@android.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Segher Boessenkool <segher@kernel.crashing.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Peter Oberparleiter <oberpar@linux.ibm.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Devlink health recover notifications were added only on driver direct
-updates of health_state through devlink_health_reporter_state_update().
-Add notifications on updates of health_state by devlink flows of report
-and recover.
+On Thu, Jan 23, 2020 at 7:33 AM Will Deacon <will@kernel.org> wrote:
+>
+> This is version two of the patches I previously posted as an RFC here:
 
-Moved functions devlink_nl_health_reporter_fill() and
-devlink_recover_notify() to avoid forward declaration.
+Looks fine to me, as far as I can tell,
 
-Fixes: 97ff3bd37fac ("devlink: add devink notification when reporter update health state")
-Signed-off-by: Moshe Shemesh <moshe@mellanox.com>
----
-
-v2 changes:
- - Move functions to avoid forward declaration
----
- net/core/devlink.c | 176 +++++++++++++++++++++++----------------------
- 1 file changed, 89 insertions(+), 87 deletions(-)
-
-diff --git a/net/core/devlink.c b/net/core/devlink.c
-index 64367eeb21e6..ca1df0ec3c97 100644
---- a/net/core/devlink.c
-+++ b/net/core/devlink.c
-@@ -4843,6 +4843,93 @@ devlink_health_reporter_destroy(struct devlink_health_reporter *reporter)
- }
- EXPORT_SYMBOL_GPL(devlink_health_reporter_destroy);
- 
-+static int
-+devlink_nl_health_reporter_fill(struct sk_buff *msg,
-+				struct devlink *devlink,
-+				struct devlink_health_reporter *reporter,
-+				enum devlink_command cmd, u32 portid,
-+				u32 seq, int flags)
-+{
-+	struct nlattr *reporter_attr;
-+	void *hdr;
-+
-+	hdr = genlmsg_put(msg, portid, seq, &devlink_nl_family, flags, cmd);
-+	if (!hdr)
-+		return -EMSGSIZE;
-+
-+	if (devlink_nl_put_handle(msg, devlink))
-+		goto genlmsg_cancel;
-+
-+	reporter_attr = nla_nest_start_noflag(msg,
-+					      DEVLINK_ATTR_HEALTH_REPORTER);
-+	if (!reporter_attr)
-+		goto genlmsg_cancel;
-+	if (nla_put_string(msg, DEVLINK_ATTR_HEALTH_REPORTER_NAME,
-+			   reporter->ops->name))
-+		goto reporter_nest_cancel;
-+	if (nla_put_u8(msg, DEVLINK_ATTR_HEALTH_REPORTER_STATE,
-+		       reporter->health_state))
-+		goto reporter_nest_cancel;
-+	if (nla_put_u64_64bit(msg, DEVLINK_ATTR_HEALTH_REPORTER_ERR_COUNT,
-+			      reporter->error_count, DEVLINK_ATTR_PAD))
-+		goto reporter_nest_cancel;
-+	if (nla_put_u64_64bit(msg, DEVLINK_ATTR_HEALTH_REPORTER_RECOVER_COUNT,
-+			      reporter->recovery_count, DEVLINK_ATTR_PAD))
-+		goto reporter_nest_cancel;
-+	if (reporter->ops->recover &&
-+	    nla_put_u64_64bit(msg, DEVLINK_ATTR_HEALTH_REPORTER_GRACEFUL_PERIOD,
-+			      reporter->graceful_period,
-+			      DEVLINK_ATTR_PAD))
-+		goto reporter_nest_cancel;
-+	if (reporter->ops->recover &&
-+	    nla_put_u8(msg, DEVLINK_ATTR_HEALTH_REPORTER_AUTO_RECOVER,
-+		       reporter->auto_recover))
-+		goto reporter_nest_cancel;
-+	if (reporter->dump_fmsg &&
-+	    nla_put_u64_64bit(msg, DEVLINK_ATTR_HEALTH_REPORTER_DUMP_TS,
-+			      jiffies_to_msecs(reporter->dump_ts),
-+			      DEVLINK_ATTR_PAD))
-+		goto reporter_nest_cancel;
-+	if (reporter->dump_fmsg &&
-+	    nla_put_u64_64bit(msg, DEVLINK_ATTR_HEALTH_REPORTER_DUMP_TS_NS,
-+			      reporter->dump_real_ts, DEVLINK_ATTR_PAD))
-+		goto reporter_nest_cancel;
-+
-+	nla_nest_end(msg, reporter_attr);
-+	genlmsg_end(msg, hdr);
-+	return 0;
-+
-+reporter_nest_cancel:
-+	nla_nest_end(msg, reporter_attr);
-+genlmsg_cancel:
-+	genlmsg_cancel(msg, hdr);
-+	return -EMSGSIZE;
-+}
-+
-+static void devlink_recover_notify(struct devlink_health_reporter *reporter,
-+				   enum devlink_command cmd)
-+{
-+	struct sk_buff *msg;
-+	int err;
-+
-+	WARN_ON(cmd != DEVLINK_CMD_HEALTH_REPORTER_RECOVER);
-+
-+	msg = nlmsg_new(NLMSG_DEFAULT_SIZE, GFP_KERNEL);
-+	if (!msg)
-+		return;
-+
-+	err = devlink_nl_health_reporter_fill(msg, reporter->devlink,
-+					      reporter, cmd, 0, 0, 0);
-+	if (err) {
-+		nlmsg_free(msg);
-+		return;
-+	}
-+
-+	genlmsg_multicast_netns(&devlink_nl_family,
-+				devlink_net(reporter->devlink),
-+				msg, 0, DEVLINK_MCGRP_CONFIG, GFP_KERNEL);
-+}
-+
- void
- devlink_health_reporter_recovery_done(struct devlink_health_reporter *reporter)
- {
-@@ -4869,6 +4956,7 @@ devlink_health_reporter_recover(struct devlink_health_reporter *reporter,
- 
- 	devlink_health_reporter_recovery_done(reporter);
- 	reporter->health_state = DEVLINK_HEALTH_REPORTER_STATE_HEALTHY;
-+	devlink_recover_notify(reporter, DEVLINK_CMD_HEALTH_REPORTER_RECOVER);
- 
- 	return 0;
- }
-@@ -4935,6 +5023,7 @@ int devlink_health_report(struct devlink_health_reporter *reporter,
- 	reporter->error_count++;
- 	prev_health_state = reporter->health_state;
- 	reporter->health_state = DEVLINK_HEALTH_REPORTER_STATE_ERROR;
-+	devlink_recover_notify(reporter, DEVLINK_CMD_HEALTH_REPORTER_RECOVER);
- 
- 	/* abort if the previous error wasn't recovered */
- 	if (reporter->auto_recover &&
-@@ -5017,93 +5106,6 @@ devlink_health_reporter_put(struct devlink_health_reporter *reporter)
- 	refcount_dec(&reporter->refcount);
- }
- 
--static int
--devlink_nl_health_reporter_fill(struct sk_buff *msg,
--				struct devlink *devlink,
--				struct devlink_health_reporter *reporter,
--				enum devlink_command cmd, u32 portid,
--				u32 seq, int flags)
--{
--	struct nlattr *reporter_attr;
--	void *hdr;
--
--	hdr = genlmsg_put(msg, portid, seq, &devlink_nl_family, flags, cmd);
--	if (!hdr)
--		return -EMSGSIZE;
--
--	if (devlink_nl_put_handle(msg, devlink))
--		goto genlmsg_cancel;
--
--	reporter_attr = nla_nest_start_noflag(msg,
--					      DEVLINK_ATTR_HEALTH_REPORTER);
--	if (!reporter_attr)
--		goto genlmsg_cancel;
--	if (nla_put_string(msg, DEVLINK_ATTR_HEALTH_REPORTER_NAME,
--			   reporter->ops->name))
--		goto reporter_nest_cancel;
--	if (nla_put_u8(msg, DEVLINK_ATTR_HEALTH_REPORTER_STATE,
--		       reporter->health_state))
--		goto reporter_nest_cancel;
--	if (nla_put_u64_64bit(msg, DEVLINK_ATTR_HEALTH_REPORTER_ERR_COUNT,
--			      reporter->error_count, DEVLINK_ATTR_PAD))
--		goto reporter_nest_cancel;
--	if (nla_put_u64_64bit(msg, DEVLINK_ATTR_HEALTH_REPORTER_RECOVER_COUNT,
--			      reporter->recovery_count, DEVLINK_ATTR_PAD))
--		goto reporter_nest_cancel;
--	if (reporter->ops->recover &&
--	    nla_put_u64_64bit(msg, DEVLINK_ATTR_HEALTH_REPORTER_GRACEFUL_PERIOD,
--			      reporter->graceful_period,
--			      DEVLINK_ATTR_PAD))
--		goto reporter_nest_cancel;
--	if (reporter->ops->recover &&
--	    nla_put_u8(msg, DEVLINK_ATTR_HEALTH_REPORTER_AUTO_RECOVER,
--		       reporter->auto_recover))
--		goto reporter_nest_cancel;
--	if (reporter->dump_fmsg &&
--	    nla_put_u64_64bit(msg, DEVLINK_ATTR_HEALTH_REPORTER_DUMP_TS,
--			      jiffies_to_msecs(reporter->dump_ts),
--			      DEVLINK_ATTR_PAD))
--		goto reporter_nest_cancel;
--	if (reporter->dump_fmsg &&
--	    nla_put_u64_64bit(msg, DEVLINK_ATTR_HEALTH_REPORTER_DUMP_TS_NS,
--			      reporter->dump_real_ts, DEVLINK_ATTR_PAD))
--		goto reporter_nest_cancel;
--
--	nla_nest_end(msg, reporter_attr);
--	genlmsg_end(msg, hdr);
--	return 0;
--
--reporter_nest_cancel:
--	nla_nest_end(msg, reporter_attr);
--genlmsg_cancel:
--	genlmsg_cancel(msg, hdr);
--	return -EMSGSIZE;
--}
--
--static void devlink_recover_notify(struct devlink_health_reporter *reporter,
--				   enum devlink_command cmd)
--{
--	struct sk_buff *msg;
--	int err;
--
--	WARN_ON(cmd != DEVLINK_CMD_HEALTH_REPORTER_RECOVER);
--
--	msg = nlmsg_new(NLMSG_DEFAULT_SIZE, GFP_KERNEL);
--	if (!msg)
--		return;
--
--	err = devlink_nl_health_reporter_fill(msg, reporter->devlink,
--					      reporter, cmd, 0, 0, 0);
--	if (err) {
--		nlmsg_free(msg);
--		return;
--	}
--
--	genlmsg_multicast_netns(&devlink_nl_family,
--				devlink_net(reporter->devlink),
--				msg, 0, DEVLINK_MCGRP_CONFIG, GFP_KERNEL);
--}
--
- void
- devlink_health_reporter_state_update(struct devlink_health_reporter *reporter,
- 				     enum devlink_health_reporter_state state)
--- 
-2.17.1
-
+              Linus
