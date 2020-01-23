@@ -2,180 +2,130 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6095C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 13:00:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CB40C33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 13:02:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8864824125
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 13:00:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F64C24125
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 13:02:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="m8vT+7Vj"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cj15zwE2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729085AbgAWNAS (ORCPT
+        id S1727278AbgAWNCA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 08:00:18 -0500
-Received: from pegase1.c-s.fr ([93.17.236.30]:60517 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726605AbgAWM75 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 07:59:57 -0500
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 483Mn554fPz9vB4b;
-        Thu, 23 Jan 2020 13:59:53 +0100 (CET)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=m8vT+7Vj; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id ODcJLQQ8KZdO; Thu, 23 Jan 2020 13:59:53 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 483Mn53tM9z9vB4X;
-        Thu, 23 Jan 2020 13:59:53 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1579784393; bh=2A+DHD4btbFKfkOs6li2k01GNKK7HnJcrGNXJq6nAh4=;
-        h=In-Reply-To:References:From:Subject:To:Cc:Date:From;
-        b=m8vT+7VjBVWNki/Oeh7C7BbraLtfYVArr703qXZL5c2vj5AWSKxjwCbz9BtuuyWR1
-         GBQQZ9vzCgDZPZeTu8eiNjIm54B1gFVifdKLURdmXWV1lTt4RBeAY8pYc5TPPIEmqf
-         t9E+BFoZEi62/xolOq+fMXM7cb68oLHKfK+h+guE=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id B4F0D8B82E;
-        Thu, 23 Jan 2020 13:59:54 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id kZ62ky9AMEwp; Thu, 23 Jan 2020 13:59:54 +0100 (CET)
-Received: from po14934vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 714C98B826;
-        Thu, 23 Jan 2020 13:59:54 +0100 (CET)
-Received: by po14934vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id 44CEB651C0; Thu, 23 Jan 2020 12:59:54 +0000 (UTC)
-Message-Id: <584ce843dc9d1982934c2b64dd9e64f21ac84c9a.1579783936.git.christophe.leroy@c-s.fr>
-In-Reply-To: <fed4f49349913cb6739dac647ba6a61d56b989d2.1579783936.git.christophe.leroy@c-s.fr>
-References: <fed4f49349913cb6739dac647ba6a61d56b989d2.1579783936.git.christophe.leroy@c-s.fr>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [PATCH v3 3/7] powerpc/32s: Fix bad_kuap_fault()
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org
-Date:   Thu, 23 Jan 2020 12:59:54 +0000 (UTC)
+        Thu, 23 Jan 2020 08:02:00 -0500
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:38608 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726026AbgAWNCA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jan 2020 08:02:00 -0500
+Received: by mail-pj1-f65.google.com with SMTP id l35so1268334pje.3
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jan 2020 05:02:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=1bWB6ONkrT4WgWO4GSee5Bs4kxW688nuEU9Jrsivajs=;
+        b=cj15zwE2L+LsB3Pok/kWy1UJUW3Nev9f/JDrLWnnKhnzn/mGek2Gs2OMBkG/caj1Zp
+         BDuPozbl5U14q/wGz9Mbwkydb3P751tr5PWr89W5JkUe1VVv0QSWC5pEt6mDTcvmWK1g
+         fVc/6+FXMdGeXFWL8khum5toRJ2dEzuKBiMZuUyq55iL03rdg4fYnhf5fkbWh5jJ9ldD
+         bG9+E22yE8jDSDkiqM69UlbG0TaHxAuLAm8sM1QDAS6OCrTq8ONEeNiFlCPMjp046E+i
+         FUkQRIusYeVsYJeMbegvmdDgNuE39wBn+RS0vb7azWTrzZgzLnvSXFVT+3PVW0RKCsN9
+         yHaA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=1bWB6ONkrT4WgWO4GSee5Bs4kxW688nuEU9Jrsivajs=;
+        b=PaMnFm/eFx5WorJoXL0BgL3HQ8nkdmwBlMvgLGdolubhFBpd8y61/FpecX7CRXPMiN
+         uZh29oD3U7MqodsB1xXc/GqccuC7xICYoZxXHKXpqNj+QOOgFaWghBQNku8S5eLf13gL
+         mr9wsGZZCQslFbsluzcfYj+mLMQJJKjea/0xhZhMOkRYLvvMdmkrri0FDABRiSzedVpn
+         00zZXAQeFaIESr3EhtQbUmGHuedzQ08ssvFhzH6EAr4WHi9wGh494TNoG0vUezHtbzsC
+         uwXtPICZQIwOf6BXoMo4pDfMWeC17LgvGgHDF+980lrBXvZ9gjdeWLZ7s+PeMcEFOm/9
+         t27w==
+X-Gm-Message-State: APjAAAXFuWFXyONUcwIXNjLNuGYDnkEahnhXZr6Zw85EKEu2BTIYvgYa
+        y6iaTrHoofKdRwtuWV1bUpwL
+X-Google-Smtp-Source: APXvYqzaXk2eAZRdxNDIM7/2E3DX1Jx+K2rhwL79it4MYq+uh5USkxF+qD+8KI2641f8Rzy2Gv8Gzw==
+X-Received: by 2002:a17:902:9691:: with SMTP id n17mr16555805plp.304.1579784519567;
+        Thu, 23 Jan 2020 05:01:59 -0800 (PST)
+Received: from mani ([103.59.133.81])
+        by smtp.gmail.com with ESMTPSA id g22sm3015074pgk.85.2020.01.23.05.01.56
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 23 Jan 2020 05:01:58 -0800 (PST)
+Date:   Thu, 23 Jan 2020 18:31:51 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     gregkh <gregkh@linuxfoundation.org>, smohanad@codeaurora.org,
+        Jeffrey Hugo <jhugo@codeaurora.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        hemantk@codeaurora.org,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 05/16] bus: mhi: core: Add support for ringing
+ channel/event ring doorbells
+Message-ID: <20200123130151.GD8937@mani>
+References: <20200123111836.7414-1-manivannan.sadhasivam@linaro.org>
+ <20200123111836.7414-6-manivannan.sadhasivam@linaro.org>
+ <CAK8P3a2pZEdsAi6YQ5z3YD=zD1iZLu+WPirhwmxeZ33k7sjkeg@mail.gmail.com>
+ <20200123120050.GB8937@mani>
+ <CAK8P3a1ACFdUdEywEQRAJ=HRYOp+0Y051ffNgAgqvSgjOEGyMA@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAK8P3a1ACFdUdEywEQRAJ=HRYOp+0Y051ffNgAgqvSgjOEGyMA@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-At the moment, bad_kuap_fault() reports a fault only if a bad access
-to userspace occurred while access to userspace was not granted.
+On Thu, Jan 23, 2020 at 01:44:32PM +0100, Arnd Bergmann wrote:
+> On Thu, Jan 23, 2020 at 1:01 PM Manivannan Sadhasivam
+> <manivannan.sadhasivam@linaro.org> wrote:
+> > On Thu, Jan 23, 2020 at 12:39:06PM +0100, Arnd Bergmann wrote:
+> > > On Thu, Jan 23, 2020 at 12:19 PM Manivannan Sadhasivam
+> > > <manivannan.sadhasivam@linaro.org> wrote:
+> > >
+> > > > +int __must_check mhi_read_reg(struct mhi_controller *mhi_cntrl,
+> > > > +                             void __iomem *base, u32 offset, u32 *out)
+> > > > +{
+> > > > +       u32 tmp = readl_relaxed(base + offset);
+> > > ....
+> > > > +void mhi_write_reg(struct mhi_controller *mhi_cntrl, void __iomem *base,
+> > > > +                  u32 offset, u32 val)
+> > > > +{
+> > > > +       writel_relaxed(val, base + offset);
+> > >
+> > > Please avoid using _relaxed accessors by default, and use the regular
+> > > ones instead. There are a number of things that can go wrong with
+> > > the relaxed version, so ideally each caller should have a comment
+> > > explaining why this instance is safe without the barriers and why it
+> > > matters to not have it.
+> > >
+> > > If there are performance critical callers of mhi_read_reg/mhi_write_reg,
+> > > you could add mhi_read_reg_relaxed/mhi_write_reg_relaxed for those
+> > > and apply the same rules there.
+> > >
+> > > Usually most mmio accesses are only needed for reconfiguration or
+> > > other slow paths.
+> > >
+> >
+> > Fair point. I'll defer to readl/writel APIs and I also need to add
+> > le32_to_cpu/cpu_to_le32 to them.
+> 
+> What do you need the byteswap for? All of the above already
+> assume that the registers are little-endian.
+> 
 
-But if a fault occurs for a write outside the allowed userspace
-segment(s) that have been unlocked, bad_kuap_fault() fails to
-detect it and the kernel loops forever in do_page_fault().
+I thought the readl/writel are native endian... Now I read the macro
+definitions once again and looks like these APIs are LE for all archs...
+So it is not needed. Sorry for the confusion.
 
-Fix it by checking that the accessed address is within the allowed
-range.
+Thanks,
+Mani
 
-Fixes: a68c31fc01ef ("powerpc/32s: Implement Kernel Userspace Access Protection")
-Cc: stable@vger.kernel.org
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
----
-v2: added missing address parametre to bad_kuap_fault() in asm/kup.h
-v3: no change
----
- arch/powerpc/include/asm/book3s/32/kup.h       | 9 +++++++--
- arch/powerpc/include/asm/book3s/64/kup-radix.h | 3 ++-
- arch/powerpc/include/asm/kup.h                 | 6 +++++-
- arch/powerpc/include/asm/nohash/32/kup-8xx.h   | 3 ++-
- arch/powerpc/mm/fault.c                        | 2 +-
- 5 files changed, 17 insertions(+), 6 deletions(-)
-
-diff --git a/arch/powerpc/include/asm/book3s/32/kup.h b/arch/powerpc/include/asm/book3s/32/kup.h
-index f9dc597b0b86..d88008c8eb85 100644
---- a/arch/powerpc/include/asm/book3s/32/kup.h
-+++ b/arch/powerpc/include/asm/book3s/32/kup.h
-@@ -131,12 +131,17 @@ static inline void prevent_user_access(void __user *to, const void __user *from,
- 	kuap_update_sr(mfsrin(addr) | SR_KS, addr, end);	/* set Ks */
- }
- 
--static inline bool bad_kuap_fault(struct pt_regs *regs, bool is_write)
-+static inline bool
-+bad_kuap_fault(struct pt_regs *regs, unsigned long address, bool is_write)
- {
-+	unsigned long begin = regs->kuap & 0xf0000000;
-+	unsigned long end = regs->kuap << 28;
-+
- 	if (!is_write)
- 		return false;
- 
--	return WARN(!regs->kuap, "Bug: write fault blocked by segment registers !");
-+	return WARN(address < begin || address >= end,
-+		    "Bug: write fault blocked by segment registers !");
- }
- 
- #endif /* CONFIG_PPC_KUAP */
-diff --git a/arch/powerpc/include/asm/book3s/64/kup-radix.h b/arch/powerpc/include/asm/book3s/64/kup-radix.h
-index f254de956d6a..dbbd22cb80f5 100644
---- a/arch/powerpc/include/asm/book3s/64/kup-radix.h
-+++ b/arch/powerpc/include/asm/book3s/64/kup-radix.h
-@@ -95,7 +95,8 @@ static inline void prevent_user_access(void __user *to, const void __user *from,
- 	set_kuap(AMR_KUAP_BLOCKED);
- }
- 
--static inline bool bad_kuap_fault(struct pt_regs *regs, bool is_write)
-+static inline bool
-+bad_kuap_fault(struct pt_regs *regs, unsigned long address, bool is_write)
- {
- 	return WARN(mmu_has_feature(MMU_FTR_RADIX_KUAP) &&
- 		    (regs->kuap & (is_write ? AMR_KUAP_BLOCK_WRITE : AMR_KUAP_BLOCK_READ)),
-diff --git a/arch/powerpc/include/asm/kup.h b/arch/powerpc/include/asm/kup.h
-index 5b5e39643a27..812e66f31934 100644
---- a/arch/powerpc/include/asm/kup.h
-+++ b/arch/powerpc/include/asm/kup.h
-@@ -45,7 +45,11 @@ static inline void allow_user_access(void __user *to, const void __user *from,
- 				     unsigned long size) { }
- static inline void prevent_user_access(void __user *to, const void __user *from,
- 				       unsigned long size) { }
--static inline bool bad_kuap_fault(struct pt_regs *regs, bool is_write) { return false; }
-+static inline bool
-+bad_kuap_fault(struct pt_regs *regs, unsigned long address, bool is_write)
-+{
-+	return false;
-+}
- #endif /* CONFIG_PPC_KUAP */
- 
- static inline void allow_read_from_user(const void __user *from, unsigned long size)
-diff --git a/arch/powerpc/include/asm/nohash/32/kup-8xx.h b/arch/powerpc/include/asm/nohash/32/kup-8xx.h
-index 1006a427e99c..f2fea603b929 100644
---- a/arch/powerpc/include/asm/nohash/32/kup-8xx.h
-+++ b/arch/powerpc/include/asm/nohash/32/kup-8xx.h
-@@ -46,7 +46,8 @@ static inline void prevent_user_access(void __user *to, const void __user *from,
- 	mtspr(SPRN_MD_AP, MD_APG_KUAP);
- }
- 
--static inline bool bad_kuap_fault(struct pt_regs *regs, bool is_write)
-+static inline bool
-+bad_kuap_fault(struct pt_regs *regs, unsigned long address, bool is_write)
- {
- 	return WARN(!((regs->kuap ^ MD_APG_KUAP) & 0xf0000000),
- 		    "Bug: fault blocked by AP register !");
-diff --git a/arch/powerpc/mm/fault.c b/arch/powerpc/mm/fault.c
-index b5047f9b5dec..1baeb045f7f4 100644
---- a/arch/powerpc/mm/fault.c
-+++ b/arch/powerpc/mm/fault.c
-@@ -233,7 +233,7 @@ static bool bad_kernel_fault(struct pt_regs *regs, unsigned long error_code,
- 
- 	// Read/write fault in a valid region (the exception table search passed
- 	// above), but blocked by KUAP is bad, it can never succeed.
--	if (bad_kuap_fault(regs, is_write))
-+	if (bad_kuap_fault(regs, address, is_write))
- 		return true;
- 
- 	// What's left? Kernel fault on user in well defined regions (extable
--- 
-2.25.0
-
+>        Arnd
