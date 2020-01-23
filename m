@@ -2,118 +2,115 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AECF1C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 14:47:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC9F1C3F68F
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 14:48:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 796E12073A
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 14:47:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A32AB214AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 14:48:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="WaYfx3zU"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="YxDU0BNb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729100AbgAWOry (ORCPT
+        id S1729126AbgAWOsD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 09:47:54 -0500
-Received: from userp2120.oracle.com ([156.151.31.85]:33116 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728921AbgAWOrs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 09:47:48 -0500
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00NERiCK095224;
-        Thu, 23 Jan 2020 14:47:44 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references; s=corp-2019-08-05;
- bh=e9LPuLPpovv+Q98nj95t1aZnDoW6xo0plszUK4bYMs4=;
- b=WaYfx3zUb9D/oUA1kcnLqNlhq0rM8RqglnIbm5g2m7ZLFatt1YR1M2vciDbrQE4gZmBL
- xiX7StzRlYhQSoIkaUhycVSnsvNTF7fAnUlRY7eQcYBflSvpdFmPTPTA9PbBFihP+v0K
- vdRCNa2g2H2dpDolKcBrEWCX07pOskk4uzz8+4ICQ+G7zL7VLSO39Rcuop2kYz5qoK4w
- 7UZPYgN2yc78A47V5/6ZynTSvHe4QKOVLAPBW8iB8VgjxSi9C/SwZ3qtGkK1WeBjJGQA
- R2y0Tu4LN/5hk5Rj5VLa/EdoVRPakqb1s2aZABDo9ydmLyb0XG65a1eEzZvVSFLOkOSF GA== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2120.oracle.com with ESMTP id 2xktnrjhnr-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 23 Jan 2020 14:47:43 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00NETGju113719;
-        Thu, 23 Jan 2020 14:47:43 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3020.oracle.com with ESMTP id 2xpt6pf628-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 23 Jan 2020 14:47:43 +0000
-Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 00NElfYJ030974;
-        Thu, 23 Jan 2020 14:47:41 GMT
-Received: from dhcp-10-175-173-105.vpn.oracle.com (/10.175.173.105)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 23 Jan 2020 06:47:41 -0800
-From:   Alan Maguire <alan.maguire@oracle.com>
-To:     brendanhiggins@google.com
-Cc:     corbet@lwn.net, linux-kselftest@vger.kernel.org,
-        kunit-dev@googlegroups.com, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Alan Maguire <alan.maguire@oracle.com>
-Subject: [PATCH kunit 3/3] kunit: update documentation to describe debugfs representation
-Date:   Thu, 23 Jan 2020 14:47:20 +0000
-Message-Id: <1579790840-27009-4-git-send-email-alan.maguire@oracle.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1579790840-27009-1-git-send-email-alan.maguire@oracle.com>
-References: <1579790840-27009-1-git-send-email-alan.maguire@oracle.com>
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9508 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=5 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-2001230124
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9508 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=5 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-2001230124
+        Thu, 23 Jan 2020 09:48:03 -0500
+Received: from mail-eopbgr00064.outbound.protection.outlook.com ([40.107.0.64]:33679
+        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728921AbgAWOsC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jan 2020 09:48:02 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=S2+/7dWPaA58oJxU6wnwmkwrNBguTGWji9eORLCOdeZYYJekaPHOxenNinhUur9L2QHWt+2a0WcihqtU9noVg1/4opyDJ+4DG0WprN3mssgSPlMDNby94U9yX0NRGv0/ZHWvuogv1DqbhIMvMjZFQ9i8isvJLqxul/dRi6gPRSyYyssWAdr7F28VisXBcwX6Htk6O2jWFlWn2LHiOFKV8xcfoAqTgaQYF9k/di8MAPmJN4jey2ACMcYFWTMMCitNl7ZBD0olNDlPtIox+s3Vg5soba1JJ91PjrNX7gHfqZPwqghECOgjZafkJ8pwraUC0fz0A41STuHOPbZCUdPp4A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=bJuDDdkOR6J7Zi7B5yj9y6OQP/qoFMNiWYh4gszCEH0=;
+ b=iwXpEtQvKmjgreFt2bRbCps4xjWvYPzmGbvhGDbsz0WtsSayxfCf/CMA2mr5g/nEfI6j9rwDmGcy4NQbF/+qJAqN8QbKelKtnse92zAC9JhWCbhUE/C1+Grgv4Te+jpXjp/JAIv9sG32W6mKFaTa4oSt9eHEWhjsdMDb0+Gd8kuTFVNw96JqauNokt0tpWSHbgSCVRaux6Dsbbm0w2wxWEpERsCpi+BdOJZyU/EtFILHmgTMfJ5BBqabyOS4VkPxOGYCaefmhAklY5aG+172/GIIPqB0L9VKnEev+mCsdXl/DKaSzi3ycg/U9Dn7PFCTBS5gc5dlw5/BgfZ/Hsf5aw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=bJuDDdkOR6J7Zi7B5yj9y6OQP/qoFMNiWYh4gszCEH0=;
+ b=YxDU0BNbnXeHhtFpsqyNhAxCeTTuo26MMqn9DCoAz+EuvZas4mr2KfEVCBwQ/EKimlMaz3hBPLrQHnvXAHALZzIhyvimvGvmF4HUqr60btXIdhWpQSmYYeKxcr4T8lwbfEtCwSQZUU2fts2jwqAphBebg+1Nh1O0/YbQC/tXSiA=
+Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com (52.134.3.153) by
+ VI1PR0402MB3821.eurprd04.prod.outlook.com (52.134.13.161) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2644.20; Thu, 23 Jan 2020 14:47:58 +0000
+Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com
+ ([fe80::85e9:f844:f8b0:27d]) by VI1PR0402MB3485.eurprd04.prod.outlook.com
+ ([fe80::85e9:f844:f8b0:27d%7]) with mapi id 15.20.2644.027; Thu, 23 Jan 2020
+ 14:47:58 +0000
+From:   Horia Geanta <horia.geanta@nxp.com>
+To:     Pankaj Gupta <pankaj.gupta@nxp.com>,
+        Aymen Sghaier <aymen.sghaier@nxp.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     Arun Pathak <arun.pathak@nxp.com>
+Subject: Re: [PATCH] add support for TLS1.2 algorithms offload
+Thread-Topic: [PATCH] add support for TLS1.2 algorithms offload
+Thread-Index: AQHV0d9fpUp9vdyUr0ua541zV8eJNw==
+Date:   Thu, 23 Jan 2020 14:47:58 +0000
+Message-ID: <VI1PR0402MB34855705F10BB498911FEF78980F0@VI1PR0402MB3485.eurprd04.prod.outlook.com>
+References: <20200123110413.23064-1-pankaj.gupta@nxp.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=horia.geanta@nxp.com; 
+x-originating-ip: [84.117.251.185]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: f9d68ff8-6262-4603-32ff-08d7a0133ce5
+x-ms-traffictypediagnostic: VI1PR0402MB3821:|VI1PR0402MB3821:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VI1PR0402MB382140965DBCC77B37E96241980F0@VI1PR0402MB3821.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6108;
+x-forefront-prvs: 029174C036
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(396003)(376002)(136003)(39860400002)(366004)(199004)(189003)(7696005)(4326008)(66946007)(66446008)(66476007)(64756008)(9686003)(478600001)(55016002)(91956017)(8936002)(76116006)(86362001)(33656002)(66556008)(966005)(5660300002)(44832011)(4744005)(186003)(53546011)(26005)(110136005)(52536014)(71200400001)(2906002)(316002)(81156014)(6506007)(81166006)(8676002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB3821;H:VI1PR0402MB3485.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: pzjCd6GNSeaFxXrWCFoobLaK2c80vD/5RPjTHidAqZkwgdFiPTZ5K0sQhGnBGjCywLo+KSK6+h3vy3L+YiBtWxXilzhvtdfSKJY9khAm8u0C4OIacmI4qYDoV44lIfQvY7bNh2qS5O3wgyyqPKU45VFqE9eelkOKe/kBz7wgxeo/XIyWW3K1nHHUHQm0OqCPDb5kpQs67PMhtDQSjTyU/ofImA0iz42UZWFgQeeibdh5iXD+JgJB6iNxI9LhZLNRIZrew9a3k40T+H17PL2TpM/p0Ii1tARDvYxg61BPCiplyb61Xao0KqHhrJJJR9/G66IxB3d60oA4u9gVVNeUKRQzzHItOKN79ogQRS552bBKES3KxWY0/2n6nvdTQKWl6V4yyutzzyf9BMQ2cRBFWIyjlpNdsYdc45kIvdsGafwTEWAGFY95k29KftTg6WZlLhEUQuxDORFKN2QSyucJbZP9kPowYNBmyzVvNLVp7I0=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f9d68ff8-6262-4603-32ff-08d7a0133ce5
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Jan 2020 14:47:58.0944
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: QLJRwQa2K74ZUfO8ioUncGeH6N8pgUVwoR4lWcbMXt5G+UgHRFEYE7i86muPTU7xOuFPRl0+xpoS6BN62KnstQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB3821
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Documentation should describe debugfs layout and semantics.
-
-Signed-off-by: Alan Maguire <alan.maguire@oracle.com>
----
- Documentation/dev-tools/kunit/usage.rst | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
-
-diff --git a/Documentation/dev-tools/kunit/usage.rst b/Documentation/dev-tools/kunit/usage.rst
-index 7cd56a1..b1ebf9f 100644
---- a/Documentation/dev-tools/kunit/usage.rst
-+++ b/Documentation/dev-tools/kunit/usage.rst
-@@ -590,3 +590,23 @@ able to run one test case per invocation.
- 
- .. TODO(brendanhiggins@google.com): Add an actual example of an architecture
-    dependent KUnit test.
-+
-+KUnit debugfs representation
-+============================
-+When kunit test suites are initialized, they create an associated directory
-+in /sys/kernel/debug/kunit/<test-suite>.  The directory contains two files
-+
-+- results: "cat results" displays results of last test run
-+- run: "cat run" runs the test suite and displays the results
-+
-+Thus to re-run all currently loaded suites and display results, we can do this:
-+
-+```
-+$ cat /sys/kernel/debug/kunit/*/run
-+```
-+
-+The debugfs representation is primarily of use when kunit test suites are
-+run in a native environment, either as modules or builtin.  Having a way
-+to display results like this is valuable as otherwise results can be
-+intermixed with other events in dmesg output.
-+
--- 
-1.8.3.1
-
+On 1/23/2020 1:22 PM, Pankaj Gupta wrote:=0A=
+>         - aes-128-cbc-hmac-sha256=0A=
+>         - aes-256-cbc-hmac-sha256=0A=
+> =0A=
+> Enabled the support of TLS1.1 algorithms offload=0A=
+> =0A=
+>         - aes-128-cbc-hmac-sha1=0A=
+>         - aes-256-cbc-hmac-sha1=0A=
+> =0A=
+Patch does not apply, since there's no specific tls support=0A=
+in upstream caam drivers.=0A=
+=0A=
+caam drivers register crypto algorithms to the crypto API,=0A=
+and ktls uses whatever it pleases:=0A=
+https://www.kernel.org/doc/html/latest/networking/tls-offload.html=0A=
+https://www.kernel.org/doc/html/latest/networking/tls.html=0A=
+=0A=
+Horia=0A=
