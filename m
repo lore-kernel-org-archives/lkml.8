@@ -2,132 +2,90 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D2A2C33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 18:19:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69571C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 18:19:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D646C24125
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 18:19:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=benyossef-com.20150623.gappssmtp.com header.i=@benyossef-com.20150623.gappssmtp.com header.b="vWDImQhW"
+	by mail.kernel.org (Postfix) with ESMTP id 4D33D24125
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 18:19:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729076AbgAWSTB (ORCPT
+        id S1729112AbgAWSTL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 13:19:01 -0500
-Received: from mail-vs1-f66.google.com ([209.85.217.66]:37021 "EHLO
-        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728988AbgAWSTB (ORCPT
+        Thu, 23 Jan 2020 13:19:11 -0500
+Received: from asavdk3.altibox.net ([109.247.116.14]:46934 "EHLO
+        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728831AbgAWSTK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 13:19:01 -0500
-Received: by mail-vs1-f66.google.com with SMTP id x18so2380921vsq.4
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jan 2020 10:19:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=benyossef-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=OqxshwjEZk15r2HIYLwJvhZobDP5rWlqMcRJh/RNTO4=;
-        b=vWDImQhWepEclk+VMgrMtqjicDFT3eIkDyKl3fKOvmTY2bj7EAZYV9HgzGnmXfPlyg
-         33UX4671AAMqIUqxSIklCyvbUM30AmviPYm12FXMYgej0FKwPweLv45xc1BfDMdgiG34
-         fhTZSJ4nNbHmRXGc7WLTKF/9kEQrTQ228JcsXqf3xjED9wHtbBOkBNVIjPUh0CLVCbxA
-         +hVOaTvN+d82xDY2LuN0revzmFywaEhJr+Gg+/0cbl12fITXYJlswyhvQHOnjjlLHJ3g
-         ok4rOPVTbE3Bkb2/+WzzTZpApczhCIYVhA9PBBcbPt+fpuWgJXt0WDoSljKei5NBivKF
-         q5Pg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=OqxshwjEZk15r2HIYLwJvhZobDP5rWlqMcRJh/RNTO4=;
-        b=dpeRh94u1Nx9ww6aWTyHM3jq+Kuj8rPolecnGXan4CXzCzhekQDVsv2o7nEL9KXkQb
-         Jd3Q2ScvkVUes1AtazwadhTkD2x7A+cLaPH3Ml0nWfaVkP089IOJMELh0roAZDUzY3p/
-         Y/9vWFef52tWymCuipeUPgIXa8PbWmuXB3ZGegkp9H6fmSlqqfznMbTDjjJzxTRienPX
-         /eWPnsTxix28BukWbFJO00dh4tAg5ggyR0DQt1KDoJPOrQpRzfLAuLHj2iQPS7VXGOyj
-         0gGF//7GR7jEnI5Rpeen33ldMYCj6Mi0hWJez1zliPhrMZaL+QHc0JM/9Dccz54P4eD2
-         l0Cw==
-X-Gm-Message-State: APjAAAXVCLbHVkEGXuT0Ga6znt4iiCF2aP8KQhc7F7D9GBdYZP+/zQuI
-        /qsxxSJKgV/lHs6kOb+2s+jGd5qdeuOEH8C6moplBA==
-X-Google-Smtp-Source: APXvYqzOjOD3kh4FjOTrXgXqCPEKCyM8OuN7CeGs4LHHfnmXvUi9lx3crZYBAUn3Op+myZU5Ui/tHw3vwrtGAzpq1BY=
-X-Received: by 2002:a67:c90d:: with SMTP id w13mr6769203vsk.164.1579803540508;
- Thu, 23 Jan 2020 10:19:00 -0800 (PST)
-MIME-Version: 1.0
-References: <20200116101447.20374-1-gilad@benyossef.com> <CAMuHMdUhR83SZyWX9Du9d3Sp4A48x_msKaOHGsa88EQKStEDQg@mail.gmail.com>
- <CAOtvUMfDnoFu8V7sYvhgsstX6fuUk3foq+9FJ6SbUKEFnq-zMw@mail.gmail.com> <CAMuHMdUZbbNX-vsa4TmU7DNKAz2Qo3SR1pHXDOsO4Rh5G8ygZw@mail.gmail.com>
-In-Reply-To: <CAMuHMdUZbbNX-vsa4TmU7DNKAz2Qo3SR1pHXDOsO4Rh5G8ygZw@mail.gmail.com>
-From:   Gilad Ben-Yossef <gilad@benyossef.com>
-Date:   Thu, 23 Jan 2020 20:18:45 +0200
-Message-ID: <CAOtvUMdCm8LTfVOgrkGAa5ig6dodyd7QwcEvHz-TnvkMfnhDZA@mail.gmail.com>
-Subject: Re: [PATCH 00/11] crypto: ccree - fixes and cleanups
+        Thu, 23 Jan 2020 13:19:10 -0500
+Received: from ravnborg.org (unknown [158.248.194.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk3.altibox.net (Postfix) with ESMTPS id CFE8220051;
+        Thu, 23 Jan 2020 19:19:05 +0100 (CET)
+Date:   Thu, 23 Jan 2020 19:19:04 +0100
+From:   Sam Ravnborg <sam@ravnborg.org>
 To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Ofir Drang <ofir.drang@arm.com>, Hadar Gat <hadar.gat@arm.com>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, David Lechner <david@lechnology.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        David Airlie <airlied@linux.ie>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>
-Content-Type: text/plain; charset="UTF-8"
+        Rob Herring <robh+dt@kernel.org>,
+        Chris Brandt <chris.brandt@renesas.com>,
+        DRI Development <dri-devel@lists.freedesktop.org>
+Subject: Re: [PATCH] dt-bindings: restrict properties for sitronix,st7735r
+Message-ID: <20200123181904.GC17233@ravnborg.org>
+References: <20200115124548.3951-1-geert+renesas@glider.be>
+ <20200115124548.3951-2-geert+renesas@glider.be>
+ <ba21d2c8-ccc6-2704-fa1f-d28239700547@lechnology.com>
+ <20200120190249.GA9619@ravnborg.org>
+ <CAMuHMdV4QtKTBvM+8U=BgDV7zzQfO50Z_pnwpNWLhh6Gioe+=A@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdV4QtKTBvM+8U=BgDV7zzQfO50Z_pnwpNWLhh6Gioe+=A@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=eMA9ckh1 c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=7gkXJVJtAAAA:8
+        a=WZHNqt2aAAAA:8 a=J6VubnrAGtYNr-PBG9AA:9 a=CjuIK1q_8ugA:10
+        a=E9Po1WZjFZOl8hwRPBS3:22 a=PrHl9onO2p7xFKlKy1af:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 23, 2020 at 5:46 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
->
-> Hi Gilad
->
-> On Thu, Jan 23, 2020 at 12:44 PM Gilad Ben-Yossef <gilad@benyossef.com> wrote:
-> > On Wed, Jan 22, 2020 at 6:51 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> > > On Thu, Jan 16, 2020 at 11:25 AM Gilad Ben-Yossef <gilad@benyossef.com> wrote:
-> > > > A bunch of fixes and code cleanups for the ccree driver
-> > >
-> > > Thank you!
-> > >
-> > > I wanted to give this a try, but it looks like CCREE is no longer working
-> > > on R-Car H3, both with/without this series.
-> > >
-> > > E.g. with renesas-devel[*] and renesas_defconfig +
-> > > CONFIG_CRYPTO_MANAGER_DISABLE_TESTS=n, I get the following crash:
+Hi Geert & Rob.
+
+On Thu, Jan 23, 2020 at 08:43:39AM +0100, Geert Uytterhoeven wrote:
+> Hi Sam,
+> 
+> On Mon, Jan 20, 2020 at 8:02 PM Sam Ravnborg <sam@ravnborg.org> wrote:
+> > From 6b54fb0a071c0732cd4bd5b88f456b5a85bcf4f2 Mon Sep 17 00:00:00 2001
+> > From: Sam Ravnborg <sam@ravnborg.org>
+> > Date: Mon, 20 Jan 2020 19:55:04 +0100
+> > Subject: [PATCH] dt-bindings: restrict properties for sitronix,st7735r
 > >
-> > Thank you for the bug report Geert!
+> > David Lechner noticed (paraphrased):
+> > - not all properties from panel-common are applicable.
+> > - missing optional rotation and backlight properties
 > >
-> > My R-Car board is on loan at the moment to another project. I didn't
-> > see this on our internal test board.
-> > I will track down my R-Car board and reproduce this - hopefully
-> > beginning of next week and will get back to you.
->
-> In the mean time, I've bisected this failure to commit cdfee5623290bc89
-> ("driver core: initialize a default DMA mask for platform device").
-> However, this looks like a red herring, and seems to be only an exposer
-> of an underlying problem.
+> > Fix this by listing all allowed properties, and do not allow other properties.
+> >
+> > Fixes: abdd9e3705c8 ("dt-bindings: display: sitronix,st7735r: Convert to DT schema")
+> > Reported-by: David Lechner <david@lechnology.com>
+> > Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
+> 
+> I'm far from a DT yaml expert, but LGTM, so:
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Thank you for continue digging into this.
+Thanks, now pushed to drm-misc-next.
 
-> What's happening is that cc_map_aead_request() receives a request with
-> cryptlen = 0.  Due to DRV_CRYPTO_DIRECTION_ENCRYPT, the length to map is
-> increased by 8.  This seems to works fine if there is sufficient space
-> in the request's scatterlist.  However, if the scatterlist has only a
-> single entry of size zero, cc_map_sg() tries to map a zero-length DMA
-> buffer, and the BUG)() is triggered.
->
-
-OK, this does rings a bell - can you verify please if
-CONFIG_CRYPTO_MANAGER_EXTRA_TESTS is enabled and if it does can you
-see if it happens if it is turned off?
-
-There was an issue I've seen happen only with
-CONFIG_CRYPTO_MANAGER_EXTRA_TESTS enabled and only after commit
-49763fc6b1af4 ("crypto: testmgr - generate inauthentic AEAD test
-vectors") which I am chasing. I was half starting to believe it
-was an issue in the testmgr commit and not the ccree driver.
-
-However, the stack trace doesn't look exactly the same but the
-description of the issue does. It seems you are seeing the same issue
-in another code path.
-
-Thank you - this is very helpful!
-
-I now have a better direction to look into...
-
-Gilad
+	Sam
