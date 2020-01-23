@@ -2,117 +2,230 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC3A9C33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 04:55:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C751FC33CAA
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 05:13:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 841232467E
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 04:55:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 922E62467B
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 05:13:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="M+sOXDa4"
+	dkim=pass (1024-bit key) header.d=gibson.dropbear.id.au header.i=@gibson.dropbear.id.au header.b="Urb2nN2j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726231AbgAWEza (ORCPT
+        id S1726099AbgAWFNZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 23:55:30 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:63889 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726118AbgAWEz3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 23:55:29 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1579755329; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=99PdJyM1Ez87NeZe2HjnZWq1VMrDCTFIbcSGdc8l8U4=;
- b=M+sOXDa4QLTMhDi0V/ee1rWESsruOmqLurQgo2Kdr+MnL7Q4TPk7zclR/hQ7Ie07zmreU0tL
- /wqrS8Hx0x7gLAW4HGyaAG+mnE1dSn/sCOOeuVEiWnOpxhk4Hwo5Oj7QH+QiofA5bQZ3o8zQ
- jUx21kGOfcIbgAj/QhQw+kOCAQk=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e29273d.7fc7ea9d0d88-smtp-out-n01;
- Thu, 23 Jan 2020 04:55:25 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 824BDC433CB; Thu, 23 Jan 2020 04:55:25 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: kgunda)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 99255C43383;
-        Thu, 23 Jan 2020 04:55:24 +0000 (UTC)
+        Thu, 23 Jan 2020 00:13:25 -0500
+Received: from ozlabs.org ([203.11.71.1]:53647 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725535AbgAWFNZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jan 2020 00:13:25 -0500
+Received: by ozlabs.org (Postfix, from userid 1007)
+        id 4839Qp1wQBz9sSL; Thu, 23 Jan 2020 16:13:22 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+        d=gibson.dropbear.id.au; s=201602; t=1579756402;
+        bh=EndBGkPODenb5XpA0SDzQL0qO6AOtb8zZmjrL1qSQkk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Urb2nN2jTgJpLIgiBgErMo0isifQ5rrFdnx6dTAXMhpVjfzi4umWLayu+/LtEAEoa
+         3XsZlrL0ItA+MlR1Kk4KuW42yuqMXcyXdCWYDkvIgdXj5WFQLKooRPRBVTYgMayQno
+         a6402Djr5CHoQFc5NIgLYX0Gn8I5xQ1w1vk14rMU=
+Date:   Thu, 23 Jan 2020 16:13:16 +1100
+From:   David Gibson <david@gibson.dropbear.id.au>
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     Alexandre Torgue <alexandre.torgue@st.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Simon Glass <sjg@chromium.org>, devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Devicetree Compiler <devicetree-compiler@vger.kernel.org>,
+        Steve McIntyre <steve.mcintyre@linaro.org>
+Subject: Re: [RFC PATCH 1/3] dtc: Add dtb build information option
+Message-ID: <20200123051316.GP2347@umbus.fritz.box>
+References: <20200113181625.3130-1-alexandre.torgue@st.com>
+ <20200113181625.3130-2-alexandre.torgue@st.com>
+ <20200116005741.GB54439@umbus>
+ <d2594b79-a45d-dcac-3642-90016a1408b8@st.com>
+ <20200117090937.GU54439@umbus>
+ <CAL_JsqKTsX9efYDMjGahFDxj0cEfzozeNrY1Nq1bECzgOZGqdQ@mail.gmail.com>
+ <20200119063916.GD54439@umbus>
+ <CAL_Jsq+-O0cpw9YtVGAjFWstu-=uXVgK0ccgyRj+bjR93gPriw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Thu, 23 Jan 2020 10:25:24 +0530
-From:   kgunda@codeaurora.org
-To:     Daniel Thompson <daniel.thompson@linaro.org>
-Cc:     Chen Zhou <chenzhou10@huawei.com>, agross@kernel.org,
-        bjorn.andersson@linaro.org, lee.jones@linaro.org,
-        jingoohan1@gmail.com, b.zolnierkie@samsung.com,
-        linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm-owner@vger.kernel.org
-Subject: Re: [PATCH -next v2] backlight: qcom-wled: fix unsigned comparison to
- zero
-In-Reply-To: <20200122105540.w5vrvs34zxmhkjae@holly.lan>
-References: <20200122013240.132861-1-chenzhou10@huawei.com>
- <20200122105540.w5vrvs34zxmhkjae@holly.lan>
-Message-ID: <c9da004a1110b51d1737fe773901678b@codeaurora.org>
-X-Sender: kgunda@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="b5sSX5qSQrSInIHt"
+Content-Disposition: inline
+In-Reply-To: <CAL_Jsq+-O0cpw9YtVGAjFWstu-=uXVgK0ccgyRj+bjR93gPriw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-01-22 16:25, Daniel Thompson wrote:
-> On Wed, Jan 22, 2020 at 09:32:40AM +0800, Chen Zhou wrote:
->> Fixes coccicheck warning:
->> ./drivers/video/backlight/qcom-wled.c:1104:5-15:
->> 	WARNING: Unsigned expression compared with zero: string_len > 0
->> 
->> The unsigned variable string_len is assigned a return value from the 
->> call
->> to of_property_count_elems_of_size(), which may return negative error 
->> code.
->> 
->> Fixes: 775d2ffb4af6 ("backlight: qcom-wled: Restructure the driver for 
->> WLED3")
->> Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
->> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> 
-> Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
-> 
-Reviewed-by: Kiran Gunda <kgunda@codeaurora.org>
->> ---
->> 
->> changes in v2:
->> - fix commit message description.
->> 
->> ---
->>  drivers/video/backlight/qcom-wled.c | 4 ++--
->>  1 file changed, 2 insertions(+), 2 deletions(-)
->> 
->> diff --git a/drivers/video/backlight/qcom-wled.c 
->> b/drivers/video/backlight/qcom-wled.c
->> index d46052d..3d276b3 100644
->> --- a/drivers/video/backlight/qcom-wled.c
->> +++ b/drivers/video/backlight/qcom-wled.c
->> @@ -956,8 +956,8 @@ static int wled_configure(struct wled *wled, int 
->> version)
->>  	struct wled_config *cfg = &wled->cfg;
->>  	struct device *dev = wled->dev;
->>  	const __be32 *prop_addr;
->> -	u32 size, val, c, string_len;
->> -	int rc, i, j;
->> +	u32 size, val, c;
->> +	int rc, i, j, string_len;
->> 
->>  	const struct wled_u32_opts *u32_opts = NULL;
->>  	const struct wled_u32_opts wled3_opts[] = {
->> --
->> 2.7.4
->> 
+
+--b5sSX5qSQrSInIHt
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Tue, Jan 21, 2020 at 09:59:44AM -0600, Rob Herring wrote:
+> On Sun, Jan 19, 2020 at 12:41 AM David Gibson
+> <david@gibson.dropbear.id.au> wrote:
+> >
+> > On Fri, Jan 17, 2020 at 08:43:23AM -0600, Rob Herring wrote:
+> > > On Fri, Jan 17, 2020 at 6:26 AM David Gibson
+> > > <david@gibson.dropbear.id.au> wrote:
+> > > >
+> > > > On Thu, Jan 16, 2020 at 09:58:23AM +0100, Alexandre Torgue wrote:
+> > > > > Hi David
+> > > > >
+> > > > > On 1/16/20 1:57 AM, David Gibson wrote:
+> > > > > > On Mon, Jan 13, 2020 at 07:16:23PM +0100, Alexandre Torgue wrot=
+e:
+> > > > > > > This commit adds the possibility to add build information for=
+ a DTB.
+> > > > > > > Build information can be: build date, DTS version, "who built=
+ the DTB"
+> > > > > > > (same kind of information that we get in Linux with the Linux=
+ banner).
+> > > > > > >
+> > > > > > > To do this, an extra option "-B" using an information file as=
+ argument
+> > > > > > > has been added. If this option is used, input device tree is =
+appended with
+> > > > > > > a new string property "Build-info". This property is built wi=
+th information
+> > > > > > > found in information file given as argument. This file has to=
+ be generated
+> > > > > > > by user and shouldn't exceed 256 bytes.
+> > > > > > >
+> > > > > > > Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
+> > > > > >
+> > > > > > At the very least, this patch of the series will need to be sen=
+t to
+> > > > > > upstream dtc first.
+> > > > >
+> > > > > Ok sorry. I thought that sending all the series would give more
+> > > > > information.
+> > > >
+> > > > That's fair enough, but in order to merge, you'll need to post agai=
+nst
+> > > > upstream dtc.
+> > > >
+> > > > > > I'm also not terribly clear on what you're trying to accomplish=
+ here,
+> > > > > > and why it's useful.
+> > > > >
+> > > > > Let's take Kernel boot at example (but could be extend to other D=
+TB "users"
+> > > > > like U-Boot). When Linux kernel booting we get a log that gives u=
+seful
+> > > > > information about kernel image: source version, build date, peopl=
+e who built
+> > > > > the kernel image, compiler version. This information is useful fo=
+r debug and
+> > > > > support. The aim is to get same kind of information but for the D=
+TB.
+> > > > >
+> > > > > > Since you're doing this specifically for use with dtbs built in=
+ the
+> > > > > > kernel build, could you just use a:
+> > > > > >     Build-info =3D /incbin/ "build-info.txt";
+> > > > > > in each of the in-kernel .dts files?
+> > > > >
+> > > > > My first idea was to not modify all existing .dts files. Adding a=
+n extra
+> > > > > option in dtc is (for me) the softer way to do it. I mean, compile
+> > > > > information should come through compiler without modify .dts file=
+s outside
+> > > > > from dtc. In this way it will be easy to everybody using dtc (ins=
+ide our
+> > > > > outside Linux tree) to add dtb build info (even if they don't how=
+ to write a
+> > > > > dts file).
+> > > >
+> > > > But you're not really having this information coming from the
+> > > > compiler.  Instead you're adding a compiler option that just force
+> > > > includes another file into the generated tree, and it's up to your
+> > > > build scripts to put something useful into that file.
+> > > >
+> > > > I don't really see that as preferable to modifying the .dts files.
+> > > >
+> > > > I also dislike the fact that the option as proposed is much more
+> > > > general than the name suggests, but also very similar too, but much
+> > > > more specific than the existing /incbin/ option.
+> > > >
+> > > > What might be better would be to have a dtc option which force appe=
+nds
+> > > > an extra .dts to the mail .dts compiled.  You can then put an overl=
+ay
+> > > > template in that file, something like:
+> > > >
+> > > > &{/} {
+> > > >         linux,build-info =3D /incbin/ "build-info.txt;
+> > > > }
+> > >
+> > > I like this suggestion either as an include another dts file or an
+> > > overlay.
+> >
+> > Sorry, to be clear what I'm talking about here is just including
+> > another dts file, and using the compile-type overlay syntax.  This is
+> > not the same as .dtbo style runtime overlays (though the final result
+> > is about the same in this case).
+>=20
+> Ah, okay. That's probably easier to implement.
+>=20
+> > > The latter could be useful as a way to maintain current dtb
+> > > files while splitting the source files into base and overlay dts
+> > > files.
+> > >
+> > > But no, let's not prepend this with 'linux'. It's not a property
+> > > specific for Linux to consume.
+> >
+> > It's not really about who consumes it.  It's about defining a
+> > namespace for the new property to exist in, since it's not part of a
+> > relevant standard (if we wanted to make it such, we should pin down
+> > what goes in there with much more precision).
+>=20
+> I can't think of any cases of the 'linux' prefix not being about who
+> consumes it. And we often end up dropping 'linux' because it turns out
+> to not be Linux specific. I don't care to see u-boot,build-info,
+> freebsd,build-info, etc. when a given dtb can only have 1 of those.
+
+But all other vendor prefixes are about who generated or specified the
+information, not who consumes it, e.g. "ibm,XXX", "fsl,YYY", etc.
+
+> My intent is this property name is added to the DT spec, but I don't
+> agree we should define what's in it beyond a string. It is information
+> that is useful for humans identifying what the dtb was built from.
+>=20
+> Rob
+>=20
+
+--=20
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
+
+--b5sSX5qSQrSInIHt
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEdfRlhq5hpmzETofcbDjKyiDZs5IFAl4pK2wACgkQbDjKyiDZ
+s5LRthAAvnFwh1/QPJTb0Pk4hrdDgI4GYCc5H1CNQDjh9ROoEpnEJD2wOfkq7aGK
+qt0MyXulz6qZDYfmK19gCU+FSP76kij4OfX9aqh0C9gpnMRrqu9Shye0mbFT5iwR
+0DFHxmnwyc9xG6HGtVSi3i85yAOYOKubQ95uwgrj5jdXtONhCmYlnC6UeXd4ATDd
+ykta/FyqAR7lLOJz+9Mdu6lsWoeqOoKe4RWr5fGnQ9PFviJtxr0HCYGpwwuZ4+tQ
+sPzjBUZ8gJu5btg39Zok883IZi4iK148EpZH/9l+zlHfpMKzajx48cKrjgZO5Va4
+Rp0f6NOm8jBQZQ2DnuvN3BDR0WjAcGtUpyczxIf7LEPuLGd3e+LiAVrT7esbx2qc
+bi31Ci2IYed1YmtjfJLmaPmqtBU4/5f/IiYFD87c5JHJjTO33gp0eIELOG9FeQFF
+Yrgm1QknHecNd3BODgk8CObZnYGISy7d4hu1JY3/BMe1v2LCUZfahlyPIHF5qipK
+p98NCmbkzOjoE3C6J5RU7ewALKxauLJq1n1eUMBk8nR+TdsaxEIGkDVRA2upK0+U
+EgygPrWIu7LFp5cxMNEmZVXIHdzW+ZcCfOBxaO9Bp7zea5HTCLXS1HSFQbrc86wj
+nmcZjyWAqxtuxgjPOKdhEKLo0gO0c5jCnWQvecghxdNR7aFO/hs=
+=bV2o
+-----END PGP SIGNATURE-----
+
+--b5sSX5qSQrSInIHt--
