@@ -2,117 +2,181 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1CE1C33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 20:03:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06B26C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 20:04:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 845F02077C
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 20:03:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C717224673
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 20:04:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GpKn2eY5"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ECeXObAg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729203AbgAWUDB (ORCPT
+        id S1729232AbgAWUEf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 15:03:01 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:46022 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727453AbgAWUDB (ORCPT
+        Thu, 23 Jan 2020 15:04:35 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:57642 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729083AbgAWUEe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 15:03:01 -0500
-Received: by mail-lj1-f194.google.com with SMTP id j26so5035810ljc.12
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jan 2020 12:03:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=CE81ES9colZ9LJcYyttHbY8aVJS9UvEcbtX66gtyy2E=;
-        b=GpKn2eY5BAIsAhvRiSFxr/3nfax0j9bVKB9I5iWZy7ejFawDE1lemjHYj3JnD4AYF7
-         WpUf6HzI+kP7xUVkxHwTcBwQWMZ42MGNXd39pry40m8itYHdFFUdzB4XpzZ78vZxlne5
-         pDoqfnWIUXoRXCypX6sLCxKnebUGKNET0TXzl+40ocecSorkdDvQG8iqQS1M6KcDadc1
-         MNG2xHgQ2gxTm8X8fUa/xF5WSPF5UoEB9GnGGRn4QqFgiituOdzWzlgN6bcGGKN9o4dv
-         5QNnhyuvO4ULL+Adw713vc60Z8aKMjIzmOXmrPnlUYTu4/6m3Nj24X10lbLBGzSLawSb
-         +KHw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=CE81ES9colZ9LJcYyttHbY8aVJS9UvEcbtX66gtyy2E=;
-        b=m1aUM0GcQNUVBYZdh7ere1lC+EfNuHhP5li417Ocj64vVmRqA25ojKvNPQ8Fg1CZmG
-         jKYgxKr4X/Go031dOcNv0FCSEwUgMr5kXqzwOgLiqlgOF6/Se/6oXTSF4oENKrjjpN2G
-         /uZ6sYWEHkrXW8RCv32ksBSkQpyxiwqDfM124NYEtfCdfsqLkD7p1hHZlKJGDx6+rqIs
-         0spHj5msE58csimvcGOutgYgpTkndodDCwVI2otvDaRyxl+ZQjp/fv17OJgieFvBD+Ws
-         fPEdwBaFf9byEeokg5BWP+RUl6tkKa0pBR9gROYCkJRTdKnIN1/YG9R67qdqzaI+tyQ4
-         CkHg==
-X-Gm-Message-State: APjAAAULcoY/mz4sfh40HHiisQCpDoAoEamDNq85y37er5nyHjkkIhZB
-        +73ke0IYQY4aY40tHUFnIEIIng==
-X-Google-Smtp-Source: APXvYqxDTc65ooMHbFqtuMAsz5UFQtlLj/mJDMkAbA2hWYv59r7jxMC2Jq1ezf/icxiqcyjcqWBU1Q==
-X-Received: by 2002:a2e:8197:: with SMTP id e23mr32501ljg.250.1579809779317;
-        Thu, 23 Jan 2020 12:02:59 -0800 (PST)
-Received: from localhost.localdomain (h-158-174-22-210.NA.cust.bahnhof.se. [158.174.22.210])
-        by smtp.gmail.com with ESMTPSA id e8sm2112163ljb.45.2020.01.23.12.02.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Jan 2020 12:02:58 -0800 (PST)
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-To:     Linus <torvalds@linux-foundation.org>, linux-mmc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [GIT PULL] MMC fixes for v5.5-rc8
-Date:   Thu, 23 Jan 2020 21:02:57 +0100
-Message-Id: <20200123200257.17258-1-ulf.hansson@linaro.org>
-X-Mailer: git-send-email 2.17.1
+        Thu, 23 Jan 2020 15:04:34 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579809872;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=xjRl9ZZ81W8xX/UqPzwMqsqBvlHeFQjwNrpBMx4oFqs=;
+        b=ECeXObAgFZ7fO/VDpVAZm1jwqDydMoMXPVwl76uoxbbxEDQjjnYNxLhDU7sAHzWI+pS8nv
+        MtVen3TIYyPN2ViyCVpll5wP7hwZULmmZuDrg+pT4c6CeN/ilwGpSHLSwfz7I5QVUPElEN
+        w0JA6siJ7owELb7ZK3LsJtyHRLUunYQ=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-391-CnYRFvCbNZWJjbwRdlgROQ-1; Thu, 23 Jan 2020 15:04:30 -0500
+X-MC-Unique: CnYRFvCbNZWJjbwRdlgROQ-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id DCB608005A7;
+        Thu, 23 Jan 2020 20:04:26 +0000 (UTC)
+Received: from madcap2.tricolour.ca (ovpn-112-12.phx2.redhat.com [10.3.112.12])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id E05405C1B2;
+        Thu, 23 Jan 2020 20:04:15 +0000 (UTC)
+Date:   Thu, 23 Jan 2020 15:04:12 -0500
+From:   Richard Guy Briggs <rgb@redhat.com>
+To:     Paul Moore <paul@paul-moore.com>
+Cc:     nhorman@tuxdriver.com, linux-api@vger.kernel.org,
+        containers@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>, dhowells@redhat.com,
+        Linux-Audit Mailing List <linux-audit@redhat.com>,
+        netfilter-devel@vger.kernel.org, ebiederm@xmission.com,
+        simo@redhat.com, netdev@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, Eric Paris <eparis@parisplace.org>,
+        mpatel@redhat.com, Serge Hallyn <serge@hallyn.com>
+Subject: Re: [PATCH ghak90 V8 07/16] audit: add contid support for signalling
+ the audit daemon
+Message-ID: <20200123200412.j2aucdp3cvk57prw@madcap2.tricolour.ca>
+References: <cover.1577736799.git.rgb@redhat.com>
+ <7d7933d742fdf4a94c84b791906a450b16f2e81f.1577736799.git.rgb@redhat.com>
+ <CAHC9VhSuwJGryfrBfzxG01zwb-O_7dbjS0x0a3w-XjcNuYSAcg@mail.gmail.com>
+ <20200123162918.b3jbed7tbvr2sf2p@madcap2.tricolour.ca>
+ <CAHC9VhTusiQoudB8G5jjDFyM9WxBUAjZ6_X35ywJ063Jb75dQA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHC9VhTusiQoudB8G5jjDFyM9WxBUAjZ6_X35ywJ063Jb75dQA@mail.gmail.com>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On 2020-01-23 12:09, Paul Moore wrote:
+> On Thu, Jan 23, 2020 at 11:29 AM Richard Guy Briggs <rgb@redhat.com> wrote:
+> > On 2020-01-22 16:28, Paul Moore wrote:
+> > > On Tue, Dec 31, 2019 at 2:50 PM Richard Guy Briggs <rgb@redhat.com> wrote:
+> > > >
+> > > > Add audit container identifier support to the action of signalling the
+> > > > audit daemon.
+> > > >
+> > > > Since this would need to add an element to the audit_sig_info struct,
+> > > > a new record type AUDIT_SIGNAL_INFO2 was created with a new
+> > > > audit_sig_info2 struct.  Corresponding support is required in the
+> > > > userspace code to reflect the new record request and reply type.
+> > > > An older userspace won't break since it won't know to request this
+> > > > record type.
+> > > >
+> > > > Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
+> > > > ---
+> > > >  include/linux/audit.h       |  7 +++++++
+> > > >  include/uapi/linux/audit.h  |  1 +
+> > > >  kernel/audit.c              | 35 +++++++++++++++++++++++++++++++++++
+> > > >  kernel/audit.h              |  1 +
+> > > >  security/selinux/nlmsgtab.c |  1 +
+> > > >  5 files changed, 45 insertions(+)
+> > >
+> > > ...
+> > >
+> > > > diff --git a/kernel/audit.c b/kernel/audit.c
+> > > > index 0871c3e5d6df..51159c94041c 100644
+> > > > --- a/kernel/audit.c
+> > > > +++ b/kernel/audit.c
+> > > > @@ -126,6 +126,14 @@ struct auditd_connection {
+> > > >  kuid_t         audit_sig_uid = INVALID_UID;
+> > > >  pid_t          audit_sig_pid = -1;
+> > > >  u32            audit_sig_sid = 0;
+> > > > +/* Since the signal information is stored in the record buffer at the
+> > > > + * time of the signal, but not retrieved until later, there is a chance
+> > > > + * that the last process in the container could terminate before the
+> > > > + * signal record is delivered.  In this circumstance, there is a chance
+> > > > + * the orchestrator could reuse the audit container identifier, causing
+> > > > + * an overlap of audit records that refer to the same audit container
+> > > > + * identifier, but a different container instance.  */
+> > > > +u64            audit_sig_cid = AUDIT_CID_UNSET;
+> > >
+> > > I believe we could prevent the case mentioned above by taking an
+> > > additional reference to the audit container ID object when the signal
+> > > information is collected, dropping it only after the signal
+> > > information is collected by userspace or another process signals the
+> > > audit daemon.  Yes, it would block that audit container ID from being
+> > > reused immediately, but since we are talking about one number out of
+> > > 2^64 that seems like a reasonable tradeoff.
+> >
+> > I had thought that through and should have been more explicit about that
+> > situation when I documented it.  We could do that, but then the syscall
+> > records would be connected with the call from auditd on shutdown to
+> > request that signal information, rather than the exit of that last
+> > process that was using that container.  This strikes me as misleading.
+> > Is that really what we want?
+> 
+>  ???
+> 
+> I think one of us is not understanding the other; maybe it's me, maybe
+> it's you, maybe it's both of us.
+> 
+> Anyway, here is what I was trying to convey with my original comment
+> ... When we record the audit container ID in audit_signal_info() we
+> take an extra reference to the audit container ID object so that it
+> will not disappear (and get reused) until after we respond with an
+> AUDIT_SIGNAL_INFO2.  In audit_receive_msg() when we do the
+> AUDIT_SIGNAL_INFO2 processing we drop the extra reference we took in
+> audit_signal_info().  Unless I'm missing some other change you made,
+> this *shouldn't* affect the syscall records, all it does is preserve
+> the audit container ID object in the kernel's ACID store so it doesn't
+> get reused.
 
-Here's a PR with a couple of MMC fixes intended for v5.5-rc8. Details about the
-highlights are as usual found in the signed tag.
+This is exactly what I had understood.  I hadn't considered the extra
+details below in detail due to my original syscall concern, but they
+make sense.
 
-Please pull this in!
+The syscall I refer to is the one connected with the drop of the
+audit container identifier by the last process that was in that
+container in patch 5/16.  The production of this record is contingent on
+the last ref in a contobj being dropped.  So if it is due to that ref
+being maintained by audit_signal_info() until the AUDIT_SIGNAL_INFO2
+record it fetched, then it will appear that the fetch action closed the
+container rather than the last process in the container to exit.
 
-Kind regards
-Ulf Hansson
+Does this make sense?
 
+> (We do need to do some extra housekeeping in audit_signal_info() to
+> deal with the case where nobody asks for AUDIT_SIGNAL_INFO2 -
+> basically if audit_sig_cid is not NULL we should drop a reference
+> before assigning it a new object pointer, and of course we would need
+> to set audit_sig_cid to NULL in audit_receive_msg() after sending it
+> up to userspace and dropping the extra ref.)
+> 
+> paul moore
 
-The following changes since commit f667216c5c7c967c3e568cdddefb51fe606bfe26:
+- RGB
 
-  mmc: sdhci-of-esdhc: re-implement erratum A-009204 workaround (2019-12-19 08:13:43 +0100)
+--
+Richard Guy Briggs <rgb@redhat.com>
+Sr. S/W Engineer, Kernel Security, Base Operating Systems
+Remote, Ottawa, Red Hat Canada
+IRC: rgb, SunRaycer
+Voice: +1.647.777.2635, Internal: (81) 32635
 
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/ulfh/mmc.git tags/mmc-v5.5-rc2-2
-
-for you to fetch changes up to 2a187d03352086e300daa2044051db00044cd171:
-
-  mmc: sdhci: fix minimum clock rate for v3 controller (2020-01-20 10:36:27 +0100)
-
-----------------------------------------------------------------
-MMC host:
- - sdhci: Fix minimum clock rate for v3 controllers
- - sdhci-tegra: Fix SDR50 tuning override
- - sdhci_am654: Fixup tuning issues and support for CQHCI
- - sdhci_am654: Remove wrong write protect flag
-
-----------------------------------------------------------------
-Faiz Abbas (3):
-      mmc: sdhci_am654: Remove Inverted Write Protect flag
-      mmc: sdhci_am654: Reset Command and Data line after tuning
-      mmc: sdhci_am654: Fix Command Queuing in AM65x
-
-Michał Mirosław (2):
-      mmc: tegra: fix SDR50 tuning override
-      mmc: sdhci: fix minimum clock rate for v3 controller
-
- drivers/mmc/host/sdhci-tegra.c |  2 +-
- drivers/mmc/host/sdhci.c       | 10 ++++----
- drivers/mmc/host/sdhci_am654.c | 54 +++++++++++++++++++++++++++---------------
- 3 files changed, 42 insertions(+), 24 deletions(-)
