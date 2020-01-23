@@ -2,132 +2,122 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7013C33CAA
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 07:14:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68637C33CAA
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 07:15:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97A0F24673
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 07:14:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="ltf6qhyb"
+	by mail.kernel.org (Postfix) with ESMTP id 2F78B24655
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 07:15:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579763748;
+	bh=lT6qJL1c2voTb9U/jayZRO46LyAyIO2sqT3pNlCo0EI=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
+	b=w3bWUO2sIAyehAjGeIgi4xFUNh3XC6l+u2c92qORHPYhlB4GxyPb01velJpO85l/b
+	 YNIvsYeE7dfc3fB5ocXdp6/mLErzCoxyJIZaK8QikVQJLZd50UzWJpNQiBNjajyJp+
+	 xeKWLhglo1QGDc8MBaXq0Xo2KEKYy6Y6Rjgcgyx4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726143AbgAWHOI (ORCPT
+        id S1726141AbgAWHPr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 02:14:08 -0500
-Received: from userp2130.oracle.com ([156.151.31.86]:60732 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725818AbgAWHOI (ORCPT
+        Thu, 23 Jan 2020 02:15:47 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:34809 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725535AbgAWHPr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 02:14:08 -0500
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00N7DA4R152700;
-        Thu, 23 Jan 2020 07:13:58 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=BOy4K2QWjRBsMDuS+rLwD8ll1XI+QfWWndEhMOblce0=;
- b=ltf6qhyb5gt5ndzPnTqxgkTMbDsZ/ziUkEztgKDGUhLKzypCLsa/+FCQmJqhK6Hfc+Cj
- BPr4N/XqEW1VQs2+x4vUb4qeuxr+E07/odYsHA/5HWZKTFqmQrRXObuzPWXsm1Sg+MBN
- iaCvVjTIk/q1CHF4wqNPxXxHjNqk5l7e0NdHmh5KwLVxOlSVH1hsMrRF5jlWcYk/imWL
- MShHp7GXT4KIQYxO58dAIKNHm7VxnVp5JN5mSQFZ4Gx2/xhFT9u2rVul3JdhVU3AHBdF
- 85hSSeTUVV+37y8q2HsOypLN2rkqEtCJsvcgQ7L6nLUkZ29wm2r9lIOArRHYIpuf6KpC KA== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 2xkseurgqp-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 23 Jan 2020 07:13:58 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00N7Dmi0172749;
-        Thu, 23 Jan 2020 07:13:57 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3030.oracle.com with ESMTP id 2xpq0vtgdb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 23 Jan 2020 07:13:56 +0000
-Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 00N7DN0C000935;
-        Thu, 23 Jan 2020 07:13:24 GMT
-Received: from kadam (/129.205.23.165)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 22 Jan 2020 23:13:22 -0800
-Date:   Thu, 23 Jan 2020 10:13:13 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Eric Dumazet <eric.dumazet@gmail.com>
-Cc:     Cong Wang <xiyou.wangcong@gmail.com>,
-        syzbot <syzbot+5af9a90dad568aa9f611@syzkaller.appspotmail.com>,
-        David Miller <davem@davemloft.net>,
-        Jamal Hadi Salim <jhs@mojatatu.com>,
-        Jiri Pirko <jiri@resnulli.us>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux Kernel Network Developers <netdev@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Subject: Re: KASAN: slab-out-of-bounds Read in __nla_put_nohdr
-Message-ID: <20200123071313.GI1847@kadam>
-References: <0000000000006370ef059cabac14@google.com>
- <50239085-ff0f-f797-99af-1a0e58bc5e2e@gmail.com>
- <CAM_iQpXqh1ucVST199c72V22zLPujZy-54p=c5ar=Q9bWNq7OA@mail.gmail.com>
- <7056f971-8fae-ce88-7e9a-7983e4f57bb2@gmail.com>
+        Thu, 23 Jan 2020 02:15:47 -0500
+Received: by mail-lj1-f195.google.com with SMTP id z22so2070245ljg.1;
+        Wed, 22 Jan 2020 23:15:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=lT6qJL1c2voTb9U/jayZRO46LyAyIO2sqT3pNlCo0EI=;
+        b=HAulJcaYG8a4V8rqbBcuprkbo9Zq7N7mLGC4UHBy4NbBFUiXylGOcEqmE6NFyPbRgY
+         mhFpA8DrO4Kj8uqV7/vA5wsvrq18x91c9VFpnv6lKgNcAhni0/hfG+dqduC/AlBcGHGU
+         lI6XEUEdbE1P8nKUS3IICScMg/HRWSxEPcdC/ZN+ZKm8YyRbBMjoFx8w04c2hzjd0tIH
+         waJU1zGMJZHYBdVB1iTMuXA+u9J6lzoa77ZmvuZ5NynM2q1xH+yGkA/6n+jMTlD1q/jo
+         rV3bPKwErfFs1oUIQX2Rx6mYpuBkGoEwZkBOld3baEWpLxkcE8JL0sNh3wOvltG3i8ij
+         xdlQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
+         :date:message-id:mime-version;
+        bh=lT6qJL1c2voTb9U/jayZRO46LyAyIO2sqT3pNlCo0EI=;
+        b=Lvhs0oNUen2yz5pCahrFcLSrMelpORSWL9P2luR+F7cjjj0ZcsYxZ1ISwtffhdosmU
+         BAWfS3B1FoIk1B/1kvXFhaM4NyaJMm8LNo8QZXfJsKsYkC+GISm4clUNtcZQaa7TyRk3
+         JM9BZCkdEBJsvUwtgNBsEIzTQiySuOiWShx6v/XkQemcNhVVT1qMWxtjUWVsgGbKI7tC
+         iJ5azcn3DqXSfSwafrJQZkymuhlwAoSVflioX8zV+9HtK4M1yytuh2DY24E/E3pfNIYO
+         +FGX+ZDDdiU5XaBqSSpF2O825NvAvW1BDZk3qCgpyxPDOWp+0C0FhlTRNAoJytHLjRpS
+         TN4A==
+X-Gm-Message-State: APjAAAX0+Y2TZbpAIQqOA1Kman15jfwppPumjSf1oDUR1n0wi2pN0jm6
+        DTTg/8ydEHIQfUyZSsqs6jgAgkw9l9c=
+X-Google-Smtp-Source: APXvYqxwcawQpKqQo0rX5X7w+UvTgRv70R9j+UnWCdUX9AxMDPZmbvI420d4f1mfyrURfzPac3hzOQ==
+X-Received: by 2002:a2e:9d89:: with SMTP id c9mr21873107ljj.129.1579763744116;
+        Wed, 22 Jan 2020 23:15:44 -0800 (PST)
+Received: from saruman (88-113-215-33.elisa-laajakaista.fi. [88.113.215.33])
+        by smtp.gmail.com with ESMTPSA id r6sm592066ljk.37.2020.01.22.23.15.42
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 22 Jan 2020 23:15:43 -0800 (PST)
+From:   Felipe Balbi <balbi@kernel.org>
+To:     Colin King <colin.king@canonical.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>,
+        Pawel Laszczak <pawell@cadence.com>, linux-usb@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] usb: cdns3: fix spelling mistake and rework grammar in text
+In-Reply-To: <20200122234437.2829803-1-colin.king@canonical.com>
+References: <20200122234437.2829803-1-colin.king@canonical.com>
+Date:   Thu, 23 Jan 2020 09:16:33 +0200
+Message-ID: <87zhee4p7y.fsf@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7056f971-8fae-ce88-7e9a-7983e4f57bb2@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9508 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=841
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-2001230061
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9508 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=905 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-2001230061
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 22, 2020 at 12:33:17PM -0800, Eric Dumazet wrote:
-> 
-> 
-> On 1/22/20 12:27 PM, Cong Wang wrote:
-> > On Tue, Jan 21, 2020 at 11:55 AM Eric Dumazet <eric.dumazet@gmail.com> wrote:
-> >> em_nbyte_change() sets
-> >> em->datalen = sizeof(*nbyte) + nbyte->len;
-> >>
-> >> But later tcf_em_validate() overwrites em->datalen with the user provide value (em->datalen = data_len; )
-> >> which can be bigger than the allocated (kmemdup) space in em_nbyte_change()
-> >>
-> >> Should net/sched/em_nbyte.c() provide a dump() handler to avoid this issue ?
-> > 
-> > I think for those who implement ->change() we should leave
-> > ->datalen untouched to respect their choices. I don't see why
-> > we have to set it twice.
-> > 
-> >
-> 
-> Agreed, but we need to audit them to make sure all of them are setting ->datalen
-> 
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-Smatch provides a way to do this sort of search:
+Colin King <colin.king@canonical.com> writes:
 
-$ smdb where tcf_ematch datalen
-net/sched/ematch.c             | tcf_em_validate                | (struct tcf_ematch)->datalen | 0-65519
-net/sched/ematch.c             | tcf_em_tree_validate           | (struct tcf_ematch)->datalen | 0
-net/sched/em_ipt.c             | em_ipt_change                  | (struct tcf_ematch)->datalen | 16-131080
-net/sched/em_meta.c            | em_meta_change                 | (struct tcf_ematch)->datalen | 48
-net/sched/em_text.c            | em_text_change                 | (struct tcf_ematch)->datalen | 16
-net/sched/em_canid.c           | em_canid_change                | (struct tcf_ematch)->datalen | 276-4268
-net/sched/em_ipset.c           | em_ipset_change                | (struct tcf_ematch)->datalen | 4
-net/sched/em_nbyte.c           | em_nbyte_change                | (struct tcf_ematch)->datalen | 4-4099
+> From: Colin Ian King <colin.king@canonical.com>
+>
+> The text contains a spelling mistake, "to" should be "too"
+> so fix this and re-work the grammar to make it more readable.
+>
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
 
-It is imperfect...  The main drawback is that it's based on my
-allmodconfig which might not include every function.  But always there
-are other bugs to be discovered.
+Greg,
 
-regards,
-dan carpenter
+if you want to squeeze this in:
 
+Acked-by: Felipe Balbi <balbi@kernel.org>
+
+=2D-=20
+balbi
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl4pSFEACgkQzL64meEa
+mQZtnxAAkIO+iANSyFn4Xmze+yspYSGIakS289zIh6h2dJ91QmPtgF9WtxBqRpa0
+IIdVHW3HrGgd88Dorz4JNyguQtMYR9Ok7XeilaaelQ/9qjnBj9dZfzc5XWK3653O
+ATl+6IBrnlMGOjlLnMI31tzeF6p7++RRv2FEpUTf2g4nhK5CKvfRw0qEAybX3Wmx
+yvePHijcySPxhJf06fAmUSfPueeqxYmyy01nuWhSFFe0hQuTXsnb7u91m+nqVXmr
+5oNhcRztHkfMJBI1v0rCruZXm0d7nls3rRAtn9tFSl4PVdscgXNx+xvMrtL+KEyr
+a1DdnuC4sljeYmuT8WMD+TMjAmY1vy8ecpXdGCtDzpsVn45b9ZamZbPD4k+xC/b9
+ncMmwlBQq3//rQadGY1DB7zDrWwXr36exkE3IjO5QTHhHlHVztk/kaUZU5fQjPjt
+lBnLfm+NHlGrKvBnt2BrvZXFvyrODHwkaO117Cp75dmqeneJK4aOvqY3jUBKvQex
+Yohs2QvBlEsaGCLob+SnzJ3YgxGiCxouapfLzq++8lyWLGzGCq50azsPt5dzQlPA
+xD01s1v8qyi4e8dSXNBy2Dbn3QZzuFCf27B1LXgxSGu4w2s41/E/9pbSFzTYpySO
+h0jkRYJqlUN5ToJZDJWVaYABkJmH4q4Z7XDj2g4h92fsKPXrv24=
+=s4W3
+-----END PGP SIGNATURE-----
+--=-=-=--
