@@ -2,65 +2,64 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB586C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 06:44:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCF26C33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 06:44:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98416217F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 06:44:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9509424676
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 06:44:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579761850;
-	bh=+qi4DUw9jPqOv33t2VN4VutJS6xHK0z0lu0KmoxSSH0=;
+	s=default; t=1579761872;
+	bh=1GmUqOVj6mRzezmjr3zkqX9FlUTLHdkWD3uj6/AfuBA=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=1DdpZ+x5XpB6rfpUYlocjdQWDeCCWV9gGy2cZfVNNq1MI9Ew68jOEogiF8xGpZduJ
-	 nmmy6+ol14gg71Pyyt3ZyTzsbtYhzjbtRI3EX3Nzc6TACSxagaJH+cBhg56K3Q8Jo5
-	 8AjTtOFoFMrEyPNXR5DPf5Fkwl+MrOi1srGR2S3A=
+	b=ptYGINsNE8vTyqtnzHGH50vt29oJX6y+OPppAarJwn6NGPgqZiZlFUcRrkCLMxL+r
+	 HGShE16ohO16NPt+3zQQgmo2eGcUHlIT6wVCW9uDZk2I1PdmKBBOmZ8EFZ391L4Dwm
+	 YwR9wVcph1PMJkCCf+pnqFl0BUc3vg5SU1hxB0Co=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726204AbgAWGoK (ORCPT
+        id S1726703AbgAWGoc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 01:44:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35374 "EHLO mail.kernel.org"
+        Thu, 23 Jan 2020 01:44:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35794 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725535AbgAWGoI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 01:44:08 -0500
+        id S1725535AbgAWGob (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jan 2020 01:44:31 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0041124676;
-        Thu, 23 Jan 2020 06:44:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D119A217F4;
+        Thu, 23 Jan 2020 06:44:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579761848;
-        bh=+qi4DUw9jPqOv33t2VN4VutJS6xHK0z0lu0KmoxSSH0=;
+        s=default; t=1579761871;
+        bh=1GmUqOVj6mRzezmjr3zkqX9FlUTLHdkWD3uj6/AfuBA=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=anNe+KQG2pZIp1XNx0+WyhYBUFamQ4nTVCDZec37Y4W1t+TN/3kWHXgTbg37y9uKW
-         Tzq/55wSw3TCWQEolzVtFJTYGWlHogXAX0SClncc+iaLvLCof1tKELcgq38zkHfeqU
-         1zWMytqKbrWi0LNsHTb8YGKGSfPH9M4m6EXnAxzo=
-Date:   Thu, 23 Jan 2020 07:44:06 +0100
+        b=VcOjgfj4AUGNLSGMKQtFpitQrnblyimWKHEepGlVPgtdBpDAQRH9Bmmi7BFBKiyxE
+         NiJBPY6SoEHiNuMfKOK5our7jJ4oKKryVw2f+QXMEOCEHCZedS/8gdgCWgsmlIhNdR
+         F3JRGjN5MdDmqTdkhbVQPt4SU9vZSpMll6YXnl5Q=
+Date:   Thu, 23 Jan 2020 07:44:29 +0100
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     shuah <shuah@kernel.org>
+To:     Guenter Roeck <linux@roeck-us.net>
 Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, linux@roeck-us.net,
-        patches@kernelci.org, ben.hutchings@codethink.co.uk,
-        lkft-triage@lists.linaro.org, stable@vger.kernel.org
+        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
 Subject: Re: [PATCH 5.4 000/222] 5.4.14-stable review
-Message-ID: <20200123064406.GB124954@kroah.com>
+Message-ID: <20200123064429.GC124954@kroah.com>
 References: <20200122092833.339495161@linuxfoundation.org>
- <d1a53f66-136e-f1c8-34d4-9ead26cff0b7@kernel.org>
+ <20200122190052.GE20093@roeck-us.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <d1a53f66-136e-f1c8-34d4-9ead26cff0b7@kernel.org>
+In-Reply-To: <20200122190052.GE20093@roeck-us.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 22, 2020 at 01:51:20PM -0700, shuah wrote:
-> On 1/22/20 2:26 AM, Greg Kroah-Hartman wrote:
+On Wed, Jan 22, 2020 at 11:00:52AM -0800, Guenter Roeck wrote:
+> On Wed, Jan 22, 2020 at 10:26:26AM +0100, Greg Kroah-Hartman wrote:
 > > This is the start of the stable review cycle for the 5.4.14 release.
 > > There are 222 patches in this series, all will be posted as a response
 > > to this one.  If anyone has any issues with these being applied, please
@@ -69,19 +68,12 @@ On Wed, Jan 22, 2020 at 01:51:20PM -0700, shuah wrote:
 > > Responses should be made by Fri, 24 Jan 2020 09:25:24 +0000.
 > > Anything received after that time might be too late.
 > > 
-> > The whole patch series can be found in one patch at:
-> > 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.14-rc1.gz
-> > or in the git tree and branch at:
-> > 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.4.y
-> > and the diffstat can be found below.
-> > 
-> > thanks,
-> > 
-> > greg k-h
-> > 
 > 
-> Compiled and booted on my test system. No dmesg regressions.
+> Build results:
+> 	total: 158 pass: 158 fail: 0
+> Qemu test results:
+> 	total: 389 pass: 389 fail: 0
 
-Great, thanks for testing all of these and letting me know.
+Thanks for testing all of these and letting me know.
 
 greg k-h
