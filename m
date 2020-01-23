@@ -2,132 +2,174 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 769F4C33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 05:38:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C64EC33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 05:39:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4DF3A24676
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 05:38:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32D702467B
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 05:39:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kgDZ3Ev4"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="biECtVc3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726141AbgAWFiQ (ORCPT
+        id S1726205AbgAWFjc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 00:38:16 -0500
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:39841 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725785AbgAWFiP (ORCPT
+        Thu, 23 Jan 2020 00:39:32 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:41497 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725785AbgAWFjc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 00:38:15 -0500
-Received: by mail-pj1-f65.google.com with SMTP id e11so712032pjt.4
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jan 2020 21:38:15 -0800 (PST)
+        Thu, 23 Jan 2020 00:39:32 -0500
+Received: by mail-pg1-f196.google.com with SMTP id x8so779044pgk.8;
+        Wed, 22 Jan 2020 21:39:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=u59zjSXS/XTq3y/VRi/ypiF6GVPni5LqrGm7pUdf9CE=;
-        b=kgDZ3Ev4YhI8UWauD6wYC6ui+jiErE23+nYrenotZ35rNra4h+mVoeirGvXwdx6CKN
-         77TGlhJY8iEJ62/2FuGOovMklg+H6b/iyel7P8It95jvfZBwE07PU3D9vxjmtSO6U53N
-         LJpCPFfXIfHIGX30wrWCr6YhnnEescqs/XOwciVchmTCme+RjcrcDcmasWJ0EcVsgGqV
-         9Yk5mBDbsKPzz81AT+jdVrmll9S6543DWkRp9I99ZpVJTp5xNT1TA5/mNzmxUKRuXPDT
-         8aMdky9w8+/piEPQ2MqwrfQ8g2/Sg2OlgndjMBs33uaKlNOUnbVVIQ8VPtz/y+PmODbB
-         XsVg==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:message-id:in-reply-to:references:subject
+         :mime-version:content-transfer-encoding;
+        bh=522Me73twh2nTYCu4hIkEamQ+hvQqmKh9bh03C17Xgg=;
+        b=biECtVc3WF7mpVNb+rOtM9ClESkGxqr3sPZxfkJXyVFFCz2PuyrsZumnWXHcxWFEkv
+         PiWdXpD+QVyh5RwykXpvo/y9y5ozaEgLY9CWRAo+I/YV7+63njkmfn/H4Vlvix2PEL3h
+         rt1oCzyhMrF1MHd5LQxlN3yqZsMDWwWPiJNnQa4yy6ypzQbNfHr4hUQku+OjfTfLcrqB
+         6qdhuMqAeZVa4NtCa/nR7OuTvDoVTV6gUCdY0QBw/Zdv3O5vB0UjrG0OzUJNBxyhJqZx
+         ylg39RWYArBduTmQdfeILP5Fw+TyqG8E5G6uoKY+YJSOK94zqCEY3DraD4LFdmLO21aa
+         AhhQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=u59zjSXS/XTq3y/VRi/ypiF6GVPni5LqrGm7pUdf9CE=;
-        b=kRA2hRbF5C+6EFIaM7d4+Iqbl6KN5Kzn+hnH9EAm20VJmWdqvEuhs4nE4kK/NGmGEs
-         JnWb6Px8Aax7H7pnAw18bVfHEK+lpoLwGNChk5vqpQ6+WxjX0sKs8913xE6jpoLioiPd
-         lSEb4fw2V1BodbQFn3lPql8lWxj1jC87Y/klfnLDlTFldMmIoC/Fv/tWylKSiolxHtHZ
-         ZO9T8RSLnfUJhWq6bE5DSK2+sqolaimwlccKGiXOKm0oEJYzhMPtCKlxxMkxHMb9TzDW
-         K/PkLprSZxhpp3VTRNpGj+Sdv6ws5KoHGgJ/+l0R04H+Y00KGkOSd4/KuXYli8jav5yy
-         DRsg==
-X-Gm-Message-State: APjAAAXl/iin2Cuxt4xCgKX5DO6iTFaND8qC/+JyFR/26+Ndrb6JsVB3
-        X3JCWARlZ8nOl80Au17rX7iK6QqJKHo=
-X-Google-Smtp-Source: APXvYqxLeiUeWrnNMNt1yazM9GWw8JOan3GgSFOGMok29IKmjwN2od/hMqiGhQuqC29PZady7Iz9Bg==
-X-Received: by 2002:a17:902:528:: with SMTP id 37mr15071319plf.322.1579757894919;
-        Wed, 22 Jan 2020 21:38:14 -0800 (PST)
-Received: from yoga (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id f8sm788874pfn.2.2020.01.22.21.38.13
+        h=x-gm-message-state:date:from:to:cc:message-id:in-reply-to
+         :references:subject:mime-version:content-transfer-encoding;
+        bh=522Me73twh2nTYCu4hIkEamQ+hvQqmKh9bh03C17Xgg=;
+        b=pO9L/bIT0cMn1aQIKV86ouuHwrFcK3ARAgQ25UE0/eqvQgZYxYqkxbk55yxIJfhsoV
+         vs/dI5eQw/HkxzPnpe6dHyfddZoD1EhWTtGykFr2oGV/ujjlwEJsRvLcvqJoROUba3YV
+         JNUqoI55t9Te7KzW6dSl8xTFow2FHVkqnnvLlwRrgqR1zYPgQaS6X4ADtWpfBglZ7GyF
+         ScsijHJ/0+kQBndJb80nBSPsTJwQ5ESkn4klDrIt9ZMwnUuvWF/9ixFDluftsxdSg3+3
+         PxXVo8Mb0KVbzNd/DaQKja61iufx9MLn18W/7UQ1WS2N5QPSqccpQ9JwXj3f/hMXnJhb
+         rmmA==
+X-Gm-Message-State: APjAAAUOVG1a58o0QJKAvfPIHk+vzPN9ClcAn6lgJLAnFVbOh9EgYzz/
+        /RlFESjudt1SzC8bDB63qwncjoYp
+X-Google-Smtp-Source: APXvYqwvYftf6cYBhtE6CDjxHWZ49NFhmJOGdHzSWMM/8zK4aWYWOaWtHe6orEcvdndyPYRDaJilMg==
+X-Received: by 2002:a63:ea4b:: with SMTP id l11mr2087578pgk.357.1579757971574;
+        Wed, 22 Jan 2020 21:39:31 -0800 (PST)
+Received: from localhost ([184.63.162.180])
+        by smtp.gmail.com with ESMTPSA id b126sm927914pga.19.2020.01.22.21.39.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Jan 2020 21:38:14 -0800 (PST)
-Date:   Wed, 22 Jan 2020 21:38:11 -0800
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     rishabhb@codeaurora.org
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ohad Ben-Cohen <ohad@wizery.com>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-        Sibi Sankar <sibis@codeaurora.org>
-Subject: Re: [PATCH v2 2/8] remoteproc: qcom: Introduce driver to store pil
- info in IMEM
-Message-ID: <20200123053811.GU1511@yoga>
-References: <20191227053215.423811-1-bjorn.andersson@linaro.org>
- <20191227053215.423811-3-bjorn.andersson@linaro.org>
- <60c10082ba90fbba0f056df8575d205f@codeaurora.org>
- <20200122230849.GC3261042@ripper>
- <2ffeff6b57e6bb4567f00c09e5b82131@codeaurora.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2ffeff6b57e6bb4567f00c09e5b82131@codeaurora.org>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+        Wed, 22 Jan 2020 21:39:30 -0800 (PST)
+Date:   Wed, 22 Jan 2020 21:39:21 -0800
+From:   John Fastabend <john.fastabend@gmail.com>
+To:     Daniel Xu <dxu@dxuuu.xyz>, bpf@vger.kernel.org, ast@kernel.org,
+        daniel@iogearbox.net, songliubraving@fb.com, yhs@fb.com,
+        andriin@fb.com
+Cc:     Daniel Xu <dxu@dxuuu.xyz>, linux-kernel@vger.kernel.org,
+        kernel-team@fb.com, peterz@infradead.org, mingo@redhat.com,
+        acme@kernel.org
+Message-ID: <5e293189e298d_1bc42ab516c865b8a1@john-XPS-13-9370.notmuch>
+In-Reply-To: <20200122202220.21335-2-dxu@dxuuu.xyz>
+References: <20200122202220.21335-1-dxu@dxuuu.xyz>
+ <20200122202220.21335-2-dxu@dxuuu.xyz>
+Subject: RE: [PATCH v2 bpf-next 1/3] bpf: Add bpf_perf_prog_read_branches()
+ helper
+Mime-Version: 1.0
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 22 Jan 15:58 PST 2020, rishabhb@codeaurora.org wrote:
+Daniel Xu wrote:
+> Branch records are a CPU feature that can be configured to record
+> certain branches that are taken during code execution. This data is
+> particularly interesting for profile guided optimizations. perf has had
+> branch record support for a while but the data collection can be a bit
+> coarse grained.
+> 
+> We (Facebook) have seen in experiments that associating metadata with
+> branch records can improve results (after postprocessing). We generally
+> use bpf_probe_read_*() to get metadata out of userspace. That's why bpf
+> support for branch records is useful.
+> 
+> Aside from this particular use case, having branch data available to bpf
+> progs can be useful to get stack traces out of userspace applications
+> that omit frame pointers.
+> 
+> Signed-off-by: Daniel Xu <dxu@dxuuu.xyz>
+> ---
+>  include/uapi/linux/bpf.h | 13 ++++++++++++-
+>  kernel/trace/bpf_trace.c | 31 +++++++++++++++++++++++++++++++
+>  2 files changed, 43 insertions(+), 1 deletion(-)
+> 
+> diff --git a/include/uapi/linux/bpf.h b/include/uapi/linux/bpf.h
+> index 033d90a2282d..7350c5be6158 100644
+> --- a/include/uapi/linux/bpf.h
+> +++ b/include/uapi/linux/bpf.h
+> @@ -2885,6 +2885,16 @@ union bpf_attr {
+>   *		**-EPERM** if no permission to send the *sig*.
+>   *
+>   *		**-EAGAIN** if bpf program can try again.
+> + *
+> + * int bpf_perf_prog_read_branches(struct bpf_perf_event_data *ctx, void *buf, u32 buf_size)
+> + * 	Description
+> + * 		For en eBPF program attached to a perf event, retrieve the
+> + * 		branch records (struct perf_branch_entry) associated to *ctx*
+> + * 		and store it in	the buffer pointed by *buf* up to size
+> + * 		*buf_size* bytes.
 
-> On 2020-01-22 15:08, Bjorn Andersson wrote:
-> > On Wed 22 Jan 14:56 PST 2020, rishabhb@codeaurora.org wrote:
-> > > On 2019-12-26 21:32, Bjorn Andersson wrote:
-> > > > diff --git a/drivers/remoteproc/qcom_pil_info.c
-> > [..]
-> > > > +static int pil_reloc_probe(struct platform_device *pdev)
-> > > > +{
-> > > > +	struct pil_reloc *reloc;
-> > > > +
-> > > > +	reloc = devm_kzalloc(&pdev->dev, sizeof(*reloc), GFP_KERNEL);
-> > > > +	if (!reloc)
-> > > > +		return -ENOMEM;
-> > > > +
-> > > > +	reloc->dev = &pdev->dev;
-> > > > +	reloc->map = syscon_node_to_regmap(pdev->dev.parent->of_node);
-> > > If there are multiple entries like "pil-reloc" in the imem node
-> > > mapping the entire imem multiple times may not work. Is there a way
-> > > we can somehow just iomap the required region for pil?
-> > 
-> > With the entire imem being represented as a syscon this will be
-> > ioremapped once and all callers of syscon_node_to_regmap() (or one of
-> > the other syscon getters) will get a regmap back that reference this one
-> > mapping.
-> > 
-> > So doing it this way allow us to "map" sections of imem that is smaller
-> > than PAGE_SIZE.
-> > 
-> > 
-> > That said, it means that all imem users/clients should access imem
-> > through this syscon regmap.
-> > 
-> > Regards,
-> > Bjorn
-> Yes, the clients are spread around in different drivers currently.
-> So accessing same regmap is not possible.
+It seems extra bytes in buf will be cleared. The number of bytes
+copied is returned so I don't see any reason to clear the extra bytes I would
+just let the BPF program do this if they care. But it should be noted in
+the description at least.
 
-The few examples upstream are children of the imem simple-mfd/syscon and
-will thereby naturally request the regmap of the parent syscon.
+> + * 	Return
+> + *		On success, number of bytes written to *buf*. On error, a
+> + *		negative value.
+>   */
+>  #define __BPF_FUNC_MAPPER(FN)		\
+>  	FN(unspec),			\
+> @@ -3004,7 +3014,8 @@ union bpf_attr {
+>  	FN(probe_read_user_str),	\
+>  	FN(probe_read_kernel_str),	\
+>  	FN(tcp_send_ack),		\
+> -	FN(send_signal_thread),
+> +	FN(send_signal_thread),		\
+> +	FN(perf_prog_read_branches),
+>  
+>  /* integer value in 'imm' field of BPF_CALL instruction selects which helper
+>   * function eBPF program intends to call
+> diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+> index 19e793aa441a..24c51272a1f7 100644
+> --- a/kernel/trace/bpf_trace.c
+> +++ b/kernel/trace/bpf_trace.c
+> @@ -1028,6 +1028,35 @@ static const struct bpf_func_proto bpf_perf_prog_read_value_proto = {
+>           .arg3_type      = ARG_CONST_SIZE,
+>  };
+>  
+> +BPF_CALL_3(bpf_perf_prog_read_branches, struct bpf_perf_event_data_kern *, ctx,
+> +	   void *, buf, u32, size)
+> +{
+> +	struct perf_branch_stack *br_stack = ctx->data->br_stack;
+> +	u32 to_copy = 0, to_clear = size;
+> +	int err = -EINVAL;
+> +
+> +	if (unlikely(!br_stack))
+> +		goto clear;
+> +
+> +	to_copy = min_t(u32, br_stack->nr * sizeof(struct perf_branch_entry), size);
+> +	to_clear -= to_copy;
+> +
+> +	memcpy(buf, br_stack->entries, to_copy);
+> +	err = to_copy;
+> +clear:
+> +	memset(buf + to_copy, 0, to_clear);
 
-For driver that doesn't fit this model (I don't find one right now), or
-if you have downstream drivers that are designed differently you could
-use syscon_regmap_lookup_by_phandle() to acquire the imem regmap from
-any device in the system.
+Here, why do this at all? If the user cares they can clear the bytes
+directly from the BPF program. I suspect its probably going to be
+wasted work in most cases. If its needed for some reason provide 
+a comment with it.
 
-Regards,
-Bjorn.
+> +	return err;
+> +}
+
+[...]
