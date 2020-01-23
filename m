@@ -2,448 +2,134 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F8EAC33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 11:49:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E144C33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 11:52:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 602A42253D
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 11:49:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 138C2206D4
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 11:52:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZUN40+oI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726968AbgAWLtg (ORCPT
+        id S1726811AbgAWLwj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 06:49:36 -0500
-Received: from foss.arm.com ([217.140.110.172]:38454 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726026AbgAWLtg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 06:49:36 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 24C03328;
-        Thu, 23 Jan 2020 03:49:35 -0800 (PST)
-Received: from [10.37.12.160] (unknown [10.37.12.160])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6E5E53F6C4;
-        Thu, 23 Jan 2020 03:49:31 -0800 (PST)
-From:   Lukasz Luba <lukasz.luba@arm.com>
-Subject: Re: [PATCH v2 6/6] arm64: use activity monitors for frequency
- invariance
-To:     Ionela Voinescu <ionela.voinescu@arm.com>, catalin.marinas@arm.com,
-        will@kernel.org, mark.rutland@arm.com, maz@kernel.org,
-        suzuki.poulose@arm.com, sudeep.holla@arm.com,
-        dietmar.eggemann@arm.com
-Cc:     peterz@infradead.org, mingo@redhat.com, ggherdovich@suse.cz,
-        vincent.guittot@linaro.org, linux-arm-kernel@lists.infradead.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20191218182607.21607-1-ionela.voinescu@arm.com>
- <20191218182607.21607-7-ionela.voinescu@arm.com>
-Message-ID: <0ca05a2d-918b-0c70-6dc6-ef1f5f58f388@arm.com>
-Date:   Thu, 23 Jan 2020 11:49:29 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Thu, 23 Jan 2020 06:52:39 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:27024 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726026AbgAWLwi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jan 2020 06:52:38 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579780357;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=InTGFoFr4K0JH5iJeKl7FcrQzJzUete0v0UfYk0ekVs=;
+        b=ZUN40+oIEvEynQNhzyzM9Funuik6m5tDDDdo4sKJ9mY1bJCMC7hII2DLOqBMEj+wjvOUFg
+        zyHbeqIXtSasxgKKmKsIFoYGeYmLQMXdEu+4acImTC4RS6BIo8mRON/J7tBMbyurmiOKQ1
+        MruXXq2jIPbv5ZKE1Yphit3OrePVIic=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-401-osJjPQaQMtCD_ERo0jKsQg-1; Thu, 23 Jan 2020 06:52:35 -0500
+X-MC-Unique: osJjPQaQMtCD_ERo0jKsQg-1
+Received: by mail-wr1-f70.google.com with SMTP id o6so1583169wrp.8
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jan 2020 03:52:35 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=InTGFoFr4K0JH5iJeKl7FcrQzJzUete0v0UfYk0ekVs=;
+        b=joYM8WV1SrXcBESCOIpQLQ8SLXrd1rzaUaBdOmS8n5tE/MjrTgt9lN2lPBRn7Fdn8F
+         gIfByzfdr/ffHsVDxPZZCFftk8qWKCjgF0rTLzYl80Tvy5YQAN3XvquUMp4o8oMQKFQ/
+         1E7xWIiTpAU4YrFRKaWPw7f0/YZHIfWLLzH6Rbt7IkNZKGbDIlckzTv0C0ntQEcjupp+
+         rtCFD07Nhyj6LpbPiKkZrygYSV1DOx02JOsjp+V8h18eIoFVVbselQBWabMPBbOp+Xql
+         lk82TQlTxu1pNadRsVnB+Omz6pvL7gJjvOhiMtUlilxi4wWeRHX8+ZeiMhXB8PsXoeCi
+         DyHg==
+X-Gm-Message-State: APjAAAWjcNrhs1ns3Oa8zv9ZSIhrJ0eHpZEHXb1bUqgdv+B19Rc/uiE3
+        LeaUbVKWmXiix4oP1vpAV8U3XP2CHjoiPVVHxGeVaDV4ba56LOz4D+kl6MgJPRK9vZIBPYG24Ua
+        oMhsOFUXiOAIOAfntcQKpFxV8
+X-Received: by 2002:adf:82a7:: with SMTP id 36mr17569551wrc.203.1579780353363;
+        Thu, 23 Jan 2020 03:52:33 -0800 (PST)
+X-Google-Smtp-Source: APXvYqz5O2ZqEQVqQn32hTKvSwhWMEEvVB7a4Div4tqNA/qDlS49TvRgqkmhE+r7V5GWwO3fPdE5RA==
+X-Received: by 2002:adf:82a7:: with SMTP id 36mr17569535wrc.203.1579780353079;
+        Thu, 23 Jan 2020 03:52:33 -0800 (PST)
+Received: from redhat.com (bzq-79-176-0-156.red.bezeqint.net. [79.176.0.156])
+        by smtp.gmail.com with ESMTPSA id a9sm2320787wmm.15.2020.01.23.03.52.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 23 Jan 2020 03:52:32 -0800 (PST)
+Date:   Thu, 23 Jan 2020 06:52:29 -0500
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     LABBE Corentin <clabbe@baylibre.com>
+Cc:     arei.gonglei@huawei.com, jasowang@redhat.com,
+        herbert@gondor.apana.org.au, davem@davemloft.net,
+        virtualization@lists.linux-foundation.org,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [CRASH] crypto: virtio: crash when modprobing tcrypt on 5.5-rc7
+ / next-20200122
+Message-ID: <20200123065150-mutt-send-email-mst@kernel.org>
+References: <20200123101000.GB24255@Red>
 MIME-Version: 1.0
-In-Reply-To: <20191218182607.21607-7-ionela.voinescu@arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200123101000.GB24255@Red>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Ionela,
-
-Please find my few comments below.
-
-On 12/18/19 6:26 PM, Ionela Voinescu wrote:
-> The Frequency Invariance Engine (FIE) is providing a frequency
-> scaling correction factor that helps achieve more accurate
-> load-tracking.
+On Thu, Jan 23, 2020 at 11:10:00AM +0100, LABBE Corentin wrote:
+> Hello
 > 
-> So far, for arm and arm64 platforms, this scale factor has been
-> obtained based on the ratio between the current frequency and the
-> maximum supported frequency recorded by the cpufreq policy. The
-> setting of this scale factor is triggered from cpufreq drivers by
-> calling arch_set_freq_scale. The current frequency used in computation
-> is the frequency requested by a governor, but it may not be the
-> frequency that was implemented by the platform.
+> When modprobing tcrypt on qemu 4.1.0 I get a kernel panic on 5.5-rc7 and next-20200122
+> qemu is started by:
+> /usr/bin/qemu-system-x86_64 -cpu host -enable-kvm -nographic -net nic,model=e1000,macaddr=52:54:00:12:34:58 -net tap -m 512 -monitor none -object cryptodev-backend-builtin,id=cryptodev0 -device virtio-crypto-pci,id=crypto0,cryptodev=cryptodev0 -append 'console=ttyS0 root=/dev/ram0 ip=dhcp' -kernel /var/lib/lava/dispatcher/tmp/41332/deployimages-td18675m/kernel/bzImage -initrd /var/lib/lava/dispatcher/tmp/41332/deployimages-td18675m/ramdisk/rootfs.cpio.gz -drive format=qcow2,file=/var/lib/lava/dispatcher/tmp/41332/apply-overlay-guest-icy4k1ol/lava-guest.qcow2,media=disk,if=ide,id=lavatest
 > 
-> This correction factor can also be obtained using a core counter and a
-> constant counter to get information on the performance (frequency based
-> only) obtained in a period of time. This will more accurately reflect
-> the actual current frequency of the CPU, compared with the alternative
-> implementation that reflects the request of a performance level from
-> the OS.
+> [  112.771925] general protection fault: 0000 [#1] SMP PTI
+> [  112.772686] CPU: 0 PID: 126 Comm: virtio0-engine Not tainted 5.5.0-rc7+ #1
+> [  112.773576] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS ?-20190711_202441-buildvm-armv7-10.arm.fedoraproject.org-2.fc31 04/01/2014
+> [  112.775319] RIP: 0010:sg_next+0x0/0x20
+> [  112.775821] Code: cc cc cc cc cc cc cc cc cc cc c7 47 10 00 00 00 00 89 57 0c 48 89 37 89 4f 08 c3 0f 1f 44 00 00 66 2e 0f 1f 84 00 00 00 00 00 <f6> 07 02 75 17 48 8b 57 20 48 8d 47 20 48 89 d1 48 83 e1 fc 83 e2
+> [  112.778330] RSP: 0018:ffffa92440237d90 EFLAGS: 00010006
+> [  112.779071] RAX: fefefefe00000000 RBX: 000000000000000a RCX: fefefefe00000000
+> [  112.780081] RDX: 0000000000000001 RSI: ffff9b19da1a2180 RDI: fefefefe00000000
+> [  112.781081] RBP: ffff9b19da1a2198 R08: ffff9b19dfb24ee8 R09: 0000000000000a20
+> [  112.782079] R10: ffff9b19da125010 R11: 0000000000000000 R12: ffff9b19da1a21b8
+> [  112.783079] R13: 0000000000000003 R14: ffff9b19da1a2180 R15: 0000000000000004
+> [  112.784077] FS:  0000000000000000(0000) GS:ffff9b19de400000(0000) knlGS:0000000000000000
+> [  112.785202] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [  112.786030] CR2: 00007f18a157b050 CR3: 000000001040a004 CR4: 0000000000060ef0
+> [  112.787034] Call Trace:
+> [  112.787393]  virtqueue_add_sgs+0x4c/0x90
+> [  112.787998]  virtio_crypto_skcipher_crypt_req+0x310/0x3e0
+> [  112.788817]  crypto_pump_work+0x10c/0x240
+> [  112.789420]  ? __kthread_init_worker+0x50/0x50
+> [  112.790082]  kthread_worker_fn+0x89/0x180
+> [  112.790690]  kthread+0x10e/0x130
+> [  112.791182]  ? kthread_park+0x80/0x80
+> [  112.791736]  ret_from_fork+0x35/0x40
+> [  112.792282] Modules linked in: cts lzo salsa20_generic camellia_x86_64 camellia_generic fcrypt pcbc tgr192 anubis wp512 khazad tea michael_mic arc4 cast6_generic cast5_generic cast_common deflate sha512_ssse3 sha512_generic cfb ofb serpent_sse2_x86_64 serpent_generic lrw twofish_x86_64_3way twofish_x86_64 crypto_simd cryptd glue_helper twofish_generic twofish_common blowfish_x86_64 blowfish_generic blowfish_common md4 tcrypt(+)
+> [  112.797652] ---[ end trace 4a8142d4a08c2518 ]---
+> [  112.798320] RIP: 0010:sg_next+0x0/0x20
+> [  112.798865] Code: cc cc cc cc cc cc cc cc cc cc c7 47 10 00 00 00 00 89 57 0c 48 89 37 89 4f 08 c3 0f 1f 44 00 00 66 2e 0f 1f 84 00 00 00 00 00 <f6> 07 02 75 17 48 8b 57 20 48 8d 47 20 48 89 d1 48 83 e1 fc 83 e2
+> [  112.801452] RSP: 0018:ffffa92440237d90 EFLAGS: 00010006
+> [  112.802189] RAX: fefefefe00000000 RBX: 000000000000000a RCX: fefefefe00000000
+> [  112.803190] RDX: 0000000000000001 RSI: ffff9b19da1a2180 RDI: fefefefe00000000
+> [  112.804192] RBP: ffff9b19da1a2198 R08: ffff9b19dfb24ee8 R09: 0000000000000a20
+> [  112.805201] R10: ffff9b19da125010 R11: 0000000000000000 R12: ffff9b19da1a21b8
+> [  112.806195] R13: 0000000000000003 R14: ffff9b19da1a2180 R15: 0000000000000004
+> [  112.807222] FS:  0000000000000000(0000) GS:ffff9b19de400000(0000) knlGS:0000000000000000
+> [  112.808352] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [  112.809169] CR2: 00007f18a157b050 CR3: 000000001040a004 CR4: 0000000000060ef0
 > 
-> Therefore, implement arch_scale_freq_tick to use activity monitors, if
-> present, for the computation of the frequency scale factor.
+> I have tested also 5.4.14 
+> and I got random freeze with:
+> qemu-system-x86_64: virtio: zero sized buffers are not allowed
 > 
-> The use of AMU counters depends on:
->   - CONFIG_ARM64_AMU_EXTN - depents on the AMU extension being present
->   - CONFIG_CPU_FREQ - the current frequency obtained using counter
->     information is divided by the maximum frequency obtained from the
->     cpufreq policy.
-> 
-> While it is possible to have a combination of CPUs in the system with
-> and without support for activity monitors, the use of counters for
-> frequency invariance is only enabled for a CPU, if all related CPUs
-> (CPUs in the same frequency domain) support and have enabled the core
+> Regards
 
-This looks like an edge case scenario, for which we are designing the
-whole machinery with workqueues. AFAIU we cannot run the code in
-arch_set_freq_scale() and you want to be check all CPUs upfront.
+did any of previous versions work for you?
+Any chance of a bisect?
 
-Maybe you can just wait till all CPUs boot and then set the proper
-flags and finish initialization. Something like:
-per_cpu(s8, amu_feat) /* form the patch 1/6 */
-OR
-per_cpu(u8, amu_scale_freq) /* from this patch */
-with maybe some values:
-0 - not checked yet
-1 - checked and present
--1 - checked and not available
--2 - checked but in conflict with others in the freq domain
--3..-k - other odd configurations
-
-could potentially eliminate the need of workqueues.
-
-Then, if we could trigger this from i.e. late_initcall, the CPUs
-should be online and you can validate them.
-
-> and constant activity monitor counters. In this way, there is a clear
-> separation between the policies for which arch_set_freq_scale
-> (cpufreq based FIE) is used, and the policies for which
-> arch_scale_freq_tick (counter based FIE) is used to set the frequency
-> scale factor. For this purpose, a cpufreq notifier is registered to
-> trigger validation work for CPUs and policies at policy creation that
-> will enable or disable the use of AMU counters for frequency invariance.
-> 
-> Signed-off-by: Ionela Voinescu <ionela.voinescu@arm.com>
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Cc: Will Deacon <will@kernel.org>
-> Cc: Sudeep Holla <sudeep.holla@arm.com>
-> ---
->   arch/arm64/include/asm/topology.h |   9 ++
->   arch/arm64/kernel/topology.c      | 233 ++++++++++++++++++++++++++++++
->   drivers/base/arch_topology.c      |  16 ++
->   3 files changed, 258 insertions(+)
-> 
-> diff --git a/arch/arm64/include/asm/topology.h b/arch/arm64/include/asm/topology.h
-> index a4d945db95a2..98412dd27565 100644
-> --- a/arch/arm64/include/asm/topology.h
-> +++ b/arch/arm64/include/asm/topology.h
-> @@ -19,6 +19,15 @@ int pcibus_to_node(struct pci_bus *bus);
->   /* Replace task scheduler's default frequency-invariant accounting */
->   #define arch_scale_freq_capacity topology_get_freq_scale
->   
-> +#if defined(CONFIG_ARM64_AMU_EXTN) && defined(CONFIG_CPU_FREQ)
-> +void topology_scale_freq_tick(void);
-> +/*
-> + * Replace task scheduler's default counter-based frequency-invariance
-> + * scale factor setting.
-> + */
-> +#define arch_scale_freq_tick topology_scale_freq_tick
-> +#endif
-> +
->   /* Replace task scheduler's default cpu-invariant accounting */
->   #define arch_scale_cpu_capacity topology_get_cpu_scale
->   
-> diff --git a/arch/arm64/kernel/topology.c b/arch/arm64/kernel/topology.c
-> index fa9528dfd0ce..61f8264afec9 100644
-> --- a/arch/arm64/kernel/topology.c
-> +++ b/arch/arm64/kernel/topology.c
-> @@ -14,6 +14,7 @@
->   #include <linux/acpi.h>
->   #include <linux/arch_topology.h>
->   #include <linux/cacheinfo.h>
-> +#include <linux/cpufreq.h>
->   #include <linux/init.h>
->   #include <linux/percpu.h>
->   
-> @@ -120,4 +121,236 @@ int __init parse_acpi_topology(void)
->   }
->   #endif
->   
-> +#if defined(CONFIG_ARM64_AMU_EXTN) && defined(CONFIG_CPU_FREQ)
->   
-> +#undef pr_fmt
-> +#define pr_fmt(fmt) "AMU: " fmt
-> +
-> +static void init_fie_counters_done_workfn(struct work_struct *work);
-> +static DECLARE_WORK(init_fie_counters_done_work,
-> +		    init_fie_counters_done_workfn);
-> +
-> +static struct workqueue_struct *policy_amu_fie_init_wq;
-> +static struct workqueue_struct *cpu_amu_fie_init_wq;
-> +
-> +struct cpu_amu_work {
-> +	struct work_struct cpu_work;
-> +	struct work_struct policy_work;
-> +	unsigned int cpuinfo_max_freq;
-> +	struct cpumask policy_cpus;
-> +	bool cpu_amu_fie;
-> +};
-> +static struct cpu_amu_work __percpu *works;
-> +static cpumask_var_t cpus_to_visit;
-> +
-> +static DEFINE_PER_CPU_READ_MOSTLY(unsigned long, arch_max_freq_scale);
-> +static DEFINE_PER_CPU(u64, arch_const_cycles_prev);
-> +static DEFINE_PER_CPU(u64, arch_core_cycles_prev);
-> +DECLARE_PER_CPU(u8, amu_scale_freq);
-> +
-> +static void cpu_amu_fie_init_workfn(struct work_struct *work)
-> +{
-> +	u64 core_cnt, const_cnt, ratio;
-> +	struct cpu_amu_work *amu_work;
-> +	int cpu = smp_processor_id();
-> +
-> +	if (!cpu_has_amu_feat()) {
-> +		pr_debug("CPU%d: counters are not supported.\n", cpu);
-> +		return;
-> +	}
-> +
-> +	core_cnt = read_sysreg_s(SYS_AMEVCNTR0_CORE_EL0);
-> +	const_cnt = read_sysreg_s(SYS_AMEVCNTR0_CONST_EL0);
-> +
-> +	if (unlikely(!core_cnt || !const_cnt)) {
-> +		pr_err("CPU%d: cycle counters are not enabled.\n", cpu);
-> +		return;
-> +	}
-> +
-> +	amu_work = container_of(work, struct cpu_amu_work, cpu_work);
-> +	if (unlikely(!(amu_work->cpuinfo_max_freq))) {
-> +		pr_err("CPU%d: invalid maximum frequency.\n", cpu);
-> +		return;
-> +	}
-> +
-> +	/*
-> +	 * Pre-compute the fixed ratio between the frequency of the
-> +	 * constant counter and the maximum frequency of the CPU (hz).
-> +	 */
-> +	ratio = (u64)arch_timer_get_rate() << (2 * SCHED_CAPACITY_SHIFT);
-> +	ratio = div64_u64(ratio, amu_work->cpuinfo_max_freq * 1000);
-> +	this_cpu_write(arch_max_freq_scale, (unsigned long)ratio);
-> +
-> +	this_cpu_write(arch_core_cycles_prev, core_cnt);
-> +	this_cpu_write(arch_const_cycles_prev, const_cnt);
-> +	amu_work->cpu_amu_fie = true;
-> +}
-> +
-> +static void policy_amu_fie_init_workfn(struct work_struct *work)
-> +{
-> +	struct cpu_amu_work *amu_work;
-> +	u8 enable;
-> +	int cpu;
-> +
-> +	amu_work = container_of(work, struct cpu_amu_work, policy_work);
-> +
-> +	flush_workqueue(cpu_amu_fie_init_wq);
-> +
-> +	for_each_cpu(cpu, &amu_work->policy_cpus)
-> +		if (!(per_cpu_ptr(works, cpu)->cpu_amu_fie))
-> +			break;
-> +
-> +	enable = (cpu >= nr_cpu_ids) ? 1 : 0;
-> +
-> +	for_each_cpu(cpu, &amu_work->policy_cpus)
-> +		per_cpu(amu_scale_freq, cpu) = enable;
-> +
-> +	pr_info("CPUs[%*pbl]: counters %s be used for FIE.",
-> +		cpumask_pr_args(&amu_work->policy_cpus),
-> +		enable ? "will" : "WON'T");
-> +}
-> +
-> +static int init_fie_counters_callback(struct notifier_block *nb,
-> +				      unsigned long val,
-> +				      void *data)
-> +{
-> +	struct cpufreq_policy *policy = data;
-> +	struct cpu_amu_work *work;
-> +	int cpu;
-> +
-> +	if (val != CPUFREQ_CREATE_POLICY)
-> +		return 0;
-> +
-> +	/* Return if not all related CPUs are online */
-> +	if (!cpumask_equal(policy->cpus, policy->related_cpus)) {
-> +		pr_info("CPUs[%*pbl]: counters WON'T be used for FIE.",
-> +			cpumask_pr_args(policy->related_cpus));
-> +		return 0;
-> +	}
-> +
-> +	/*
-> +	 * Queue functions on all online CPUs from policy to:
-> +	 *  - Check support and enablement for AMU counters
-> +	 *  - Store system freq to max freq ratio per cpu
-> +	 *  - Flag CPU as valid for use of counters for FIE
-> +	 */
-> +	for_each_cpu(cpu, policy->cpus) {
-> +		work = per_cpu_ptr(works, cpu);
-> +		work->cpuinfo_max_freq = policy->cpuinfo.max_freq;
-> +		work->cpu_amu_fie = false;
-> +		INIT_WORK(&work->cpu_work, cpu_amu_fie_init_workfn);
-> +		queue_work_on(cpu, cpu_amu_fie_init_wq, &work->cpu_work);
-> +	}
-> +
-> +	/*
-> +	 * Queue function to validate support at policy level:
-> +	 *  - Flush all work on online policy CPUs
-> +	 *  - Verify that all online policy CPUs are flagged as
-> +	 *    valid for use of counters for FIE
-> +	 *  - Enable or disable use of counters for FIE on CPUs
-> +	 */
-> +	work = per_cpu_ptr(works, cpumask_first(policy->cpus));
-> +	cpumask_copy(&work->policy_cpus, policy->cpus);
-> +	INIT_WORK(&work->policy_work, policy_amu_fie_init_workfn);
-> +	queue_work(policy_amu_fie_init_wq, &work->policy_work);
-> +
-> +	cpumask_andnot(cpus_to_visit, cpus_to_visit, policy->cpus);
-> +	if (cpumask_empty(cpus_to_visit))
-> +		schedule_work(&init_fie_counters_done_work);
-> +
-> +	return 0;
-> +}
-> +
-> +static struct notifier_block init_fie_counters_notifier = {
-> +	.notifier_call = init_fie_counters_callback,
-> +};
-> +
-> +static void init_fie_counters_done_workfn(struct work_struct *work)
-> +{
-> +	cpufreq_unregister_notifier(&init_fie_counters_notifier,
-> +				    CPUFREQ_POLICY_NOTIFIER);
-> +
-> +	/*
-> +	 * Destroy policy_amu_fie_init_wq first to ensure all policy
-> +	 * work is finished, which includes flushing of the per-CPU
-> +	 * work, before cpu_amu_fie_init_wq is destroyed.
-> +	 */
-> +	destroy_workqueue(policy_amu_fie_init_wq);
-> +	destroy_workqueue(cpu_amu_fie_init_wq);
-> +
-> +	free_percpu(works);
-> +	free_cpumask_var(cpus_to_visit);
-> +}
-> +
-> +static int __init register_fie_counters_cpufreq_notifier(void)
-> +{
-> +	int ret = -ENOMEM;
-> +
-> +	if (!alloc_cpumask_var(&cpus_to_visit, GFP_KERNEL))
-> +		goto out;
-> +
-> +	cpumask_copy(cpus_to_visit, cpu_possible_mask);
-> +
-> +	cpu_amu_fie_init_wq = create_workqueue("cpu_amu_fie_init_wq");
-> +	if (!cpu_amu_fie_init_wq)
-> +		goto free_cpumask;
-> +
-> +	policy_amu_fie_init_wq = create_workqueue("policy_amu_fie_init_wq");
-> +	if (!cpu_amu_fie_init_wq)
-> +		goto free_cpu_wq;
-> +
-> +	works = alloc_percpu(struct cpu_amu_work);
-> +	if (!works)
-> +		goto free_policy_wq;
-> +
-> +	ret = cpufreq_register_notifier(&init_fie_counters_notifier,
-> +					CPUFREQ_POLICY_NOTIFIER);
-> +	if (ret)
-> +		goto free_works;
-> +
-> +	return 0;
-> +
-> +free_works:
-> +	free_percpu(works);
-> +free_policy_wq:
-> +	destroy_workqueue(policy_amu_fie_init_wq);
-> +free_cpu_wq:
-> +	destroy_workqueue(cpu_amu_fie_init_wq);
-> +free_cpumask:
-> +	free_cpumask_var(cpus_to_visit);
-> +out:
-> +	return ret;
-> +}
-> +core_initcall(register_fie_counters_cpufreq_notifier);
-
-If we move it to a bit later stage maybe it could solve the
-issue with not-all-CPUs-online? Is it needed at this stage?
-The device_initcall or late_initcall is not an option for it?
-
-
-> +
-> +void topology_scale_freq_tick(void)
-> +{
-> +	u64 prev_core_cnt, prev_const_cnt;
-> +	u64 core_cnt, const_cnt, scale;
-> +
-> +	if (!this_cpu_read(amu_scale_freq))
-> +		return;
-> +
-> +	const_cnt = read_sysreg_s(SYS_AMEVCNTR0_CONST_EL0);
-> +	core_cnt = read_sysreg_s(SYS_AMEVCNTR0_CORE_EL0);
-> +	prev_const_cnt = this_cpu_read(arch_const_cycles_prev);
-> +	prev_core_cnt = this_cpu_read(arch_core_cycles_prev);
-> +
-> +	if (unlikely(core_cnt <= prev_core_cnt ||
-> +		     const_cnt <= prev_const_cnt))
-> +		goto store_and_exit;
-> +
-> +	scale = core_cnt - prev_core_cnt;
-> +	scale *= this_cpu_read(arch_max_freq_scale);
-> +	scale = div64_u64(scale >> SCHED_CAPACITY_SHIFT,
-> +			  const_cnt - prev_const_cnt);
-> +
-> +	scale = min_t(unsigned long, scale, SCHED_CAPACITY_SCALE);
-> +	this_cpu_write(freq_scale, (unsigned long)scale);
-> +
-> +store_and_exit:
-> +	this_cpu_write(arch_core_cycles_prev, core_cnt);
-> +	this_cpu_write(arch_const_cycles_prev, const_cnt);
-> +}
-> +
-> +#endif
-> diff --git a/drivers/base/arch_topology.c b/drivers/base/arch_topology.c
-> index 1eb81f113786..3ae6091d845e 100644
-> --- a/drivers/base/arch_topology.c
-> +++ b/drivers/base/arch_topology.c
-> @@ -23,12 +23,28 @@
->   
->   DEFINE_PER_CPU(unsigned long, freq_scale) = SCHED_CAPACITY_SCALE;
->   
-> +#if defined(CONFIG_ARM64_AMU_EXTN) && defined(CONFIG_CPU_FREQ)
-> +DEFINE_PER_CPU_READ_MOSTLY(u8, amu_scale_freq);
-> +#endif
-> +
->   void arch_set_freq_scale(struct cpumask *cpus, unsigned long cur_freq,
->   			 unsigned long max_freq)
->   {
->   	unsigned long scale;
->   	int i;
->   
-> +#if defined(CONFIG_ARM64_AMU_EXTN) && defined(CONFIG_CPU_FREQ)
-
-This kind of #ifdef is probably not the best option inside drivers/base/
-The function is called from cpufreq drivers, could we react earlier
-and keep this function untouched?
-
-
-> +	/*
-> +	 * This function will only be called from CPUFREQ drivers.
-> +	 * If the use of counters for FIE is enabled, establish if a CPU,
-> +	 * the first one, supports counters and if they are valid. If they
-> +	 * are, just return as we don't want to update with information
-> +	 * from CPUFREQ. In this case the scale factor will be updated
-> +	 * from arch_scale_freq_tick.
-> +	 */
-> +	if (per_cpu(amu_scale_freq, cpumask_first(cpus)))
-> +		return;
-> +#endif
->   	scale = (cur_freq << SCHED_CAPACITY_SHIFT) / max_freq;
->   
->   	for_each_cpu(i, cpus)
-> 
-
-
-Regards,
-Lukasz
