@@ -2,102 +2,147 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13F52C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 11:36:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB577C33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 11:37:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E837E24125
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 11:36:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B193C2253D
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 11:37:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579779451;
+	bh=WNpyOeiH6NxaelMzhoQuhfS3wxx0n6onafkM/Lk/XTg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=gUz/HEG42XwFbgVqHDhjeBVcObu3Zdhaz5L43NrfDz63+R70RAzzK371592DJiZZv
+	 3Kho/+fB4S+fC9Eaz9KoioB9GBQ68eDYd9/u/EahqZa5GR4jlpzUUEuCN+LBKZwhKv
+	 egvhxuhAOwo+4AUy3VxqanT516NhLUP8xU5OqR3w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729134AbgAWLgx (ORCPT
+        id S1727307AbgAWLhb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 06:36:53 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:38607 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726584AbgAWLgw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 06:36:52 -0500
-Received: from 1.general.cking.uk.vpn ([10.172.193.212])
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <colin.king@canonical.com>)
-        id 1iuan3-0008M3-MY; Thu, 23 Jan 2020 11:36:49 +0000
-Subject: Re: [PATCH] dmaengine: fix spelling mistake "to" -> "too"
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, dmaengine@vger.kernel.org,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200123092359.10714-1-colin.king@canonical.com>
- <20200123113522.GY2841@vkoul-mobl>
-From:   Colin Ian King <colin.king@canonical.com>
-Autocrypt: addr=colin.king@canonical.com; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <37684969-d807-7dfd-3a9f-4d0ee86f408d@canonical.com>
-Date:   Thu, 23 Jan 2020 11:36:49 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Thu, 23 Jan 2020 06:37:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49504 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726194AbgAWLhb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jan 2020 06:37:31 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A38F224125;
+        Thu, 23 Jan 2020 11:37:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579779450;
+        bh=WNpyOeiH6NxaelMzhoQuhfS3wxx0n6onafkM/Lk/XTg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=sOdYSkEH5W0QkNzEk7RHS8cFmUMlw1F6i1GKMtOSzF3+fUYPxoNi/8Z9BT0eF89ik
+         P8P0iDCViFCL8eJZSnMLbP3xqZdKGisNU1BQ957FD47r3Y/dUkA8je+pD++ovY9fcc
+         jV2kn8jPgk9uObUgDLEgYUI9+2sfR9JRvGVpnTGo=
+Date:   Thu, 23 Jan 2020 12:37:26 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Kent Gibson <warthog618@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v5 0/7] gpiolib: add an ioctl() for monitoring line
+ status changes
+Message-ID: <20200123113726.GA980445@kroah.com>
+References: <20200109115010.27814-1-brgl@bgdev.pl>
+ <CAMRc=Mf34JTo-mCCb-ubdY9=YsGQp-YrkhQMp811_wXyVtW-=Q@mail.gmail.com>
+ <CAMRc=Mc80hudqxHMp87_Ro+k1YQNeo=FxYD0oZy_g7P=Z2w-Zw@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200123113522.GY2841@vkoul-mobl>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMRc=Mc80hudqxHMp87_Ro+k1YQNeo=FxYD0oZy_g7P=Z2w-Zw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 23/01/2020 11:35, Vinod Koul wrote:
-> On 23-01-20, 09:23, Colin King wrote:
->> From: Colin Ian King <colin.king@canonical.com>
->>
->> There is a spelling mistake in a dev_err message. Fix it.
+On Thu, Jan 23, 2020 at 11:15:05AM +0100, Bartosz Golaszewski wrote:
+> wt., 14 sty 2020 o 08:44 Bartosz Golaszewski <brgl@bgdev.pl> napisał(a):
+> >
+> > czw., 9 sty 2020 o 12:50 Bartosz Golaszewski <brgl@bgdev.pl> napisał(a):
+> > >
+> > > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> > >
+> > > When discussing the recent user-space changes with Kent and while working
+> > > on dbus API for libgpiod I noticed that we really don't have any way of
+> > > keeping the line info synchronized between the kernel and user-space
+> > > processes. We can of course periodically re-read the line information or
+> > > even do it every time we want to read a property but this isn't optimal.
+> > >
+> > > This series adds a new ioctl() that allows user-space to set up a watch on
+> > > the GPIO chardev file-descriptor which can then be polled for events
+> > > emitted by the kernel when the line is requested, released or its status
+> > > changed. This of course doesn't require the line to be requested. Multiple
+> > > user-space processes can watch the same lines.
+> > >
+> > > This series also includes a variety of minor tweaks & fixes for problems
+> > > discovered during development. For instance it addresses a race-condition
+> > > in current line event fifo.
+> > >
+> > > First two patches add new helpers to kfifo, that are used in the later
+> > > parts of the series.
+> > >
+> > > v1: https://lkml.org/lkml/2019/11/27/327
+> > >
+> > > v1 -> v2:
+> > > - rework the main patch of the series: re-use the existing file-descriptor
+> > >   associated with an open character device
+> > > - add a patch adding a debug message when the line event kfifo is full and
+> > >   we're discarding another event
+> > > - rework the locking mechanism for lineevent kfifo: reuse the spinlock
+> > >   from the waitqueue structure
+> > > - other minor changes
+> > >
+> > > v2 -> v3:
+> > > - added patches providing new implementation for some kfifo macros
+> > > - fixed a regression in the patch reworking the line event fifo: reading
+> > >   multiple events is now still possible
+> > > - reworked the structure for new ioctl: it's now padded such that there
+> > >   be no alignment issues if running a 64-bit kernel on 32-bit userspace
+> > > - fixed a bug where one process could disable the status watch of another
+> > > - use kstrtoul() instead of atoi() in gpio-watch for string validation
+> > >
+> > > v3 -> v4:
+> > > - removed a binary file checked in by mistake
+> > > - drop __func__ from debug messages
+> > > - restructure the code in the notifier call
+> > > - add comments about the alignment of the new uAPI structure
+> > > - remove a stray new line that doesn't belong in this series
+> > > - tested the series on 32-bit user-space with 64-bit kernel
+> > >
+> > > v4 -> v5:
+> > > - dropped patches already merged upstream
+> > > - collected review tags
+> > >
+> > > Bartosz Golaszewski (7):
+> > >   kfifo: provide noirqsave variants of spinlocked in and out helpers
+> > >   kfifo: provide kfifo_is_empty_spinlocked()
+> > >   gpiolib: rework the locking mechanism for lineevent kfifo
+> > >   gpiolib: emit a debug message when adding events to a full kfifo
+> > >   gpiolib: provide a dedicated function for setting lineinfo
+> > >   gpiolib: add new ioctl() for monitoring changes in line info
+> > >   tools: gpio: implement gpio-watch
+> >
+> > Hi Andrew,
+> >
+> > could you Ack the first two patches in this series if you're fine with
+> > them? The code they modify lives in lib/ and doesn't have an assigned
+> > maintainer, so I've been told to Cc you on this series. It would be
+> > great if we could get it in for v5.6 merge window.
+> >
+> > Best regards,
+> > Bartosz Golaszewski
 > 
-> You had sent this earlier, I have picked that one already!
+> Gentle ping.
 > 
-Oops. I'm going mad.
+> Greg: could you maybe ack the kfifo patches so that we can get this in for v5.6?
+
+I am not the kfifo maintainer :(
