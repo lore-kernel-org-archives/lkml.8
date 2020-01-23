@@ -2,113 +2,83 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13C3EC3F68F
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 23:47:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA956C3F68F
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 23:47:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3BCB2253D
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 23:47:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ehnX8wn1"
+	by mail.kernel.org (Postfix) with ESMTP id 9B55321835
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 23:47:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729335AbgAWXrF (ORCPT
+        id S1729841AbgAWXr0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 18:47:05 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:43582 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728655AbgAWXrE (ORCPT
+        Thu, 23 Jan 2020 18:47:26 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:41216 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728655AbgAWXrZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 18:47:04 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=U+yXTvHHU03TXloUdyqgFfYwZHk55Ef51wCsDSsmGsI=; b=ehnX8wn1rWvYakIpMftcLUwVf
-        EQ5CZGze3s398yhpeex6weLpOykg1lpVjuC0aRpMIXO/gAf3LTycguXj10WnZpK0UJ2cJeYfXHutx
-        QDU+QVBJKtqeRAx3YCBl9aDqU0GMGZd6bflmPHNv2TYb+ewgI86HG9oFFDCmn6ZD+TeBqlyHIXSRn
-        m1nkW7c6tEZshwfnXaTtLBynZ9LZkrXupkDa326tgMBks78cibrU9XujQALHKPOeZEO4c8JsYotV8
-        2J9jqMKPgTXxOYo+OEXrawSmrf3GceG939igGP/SZAroxFT2xbhT6gdt1dRXyvIAOhVoKzRGAiky4
-        pWu1DT9tA==;
-Received: from [2601:1c0:6280:3f0::ed68]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iumBg-0001QU-QQ; Thu, 23 Jan 2020 23:47:00 +0000
-Subject: Re: linux-next: Tree for Jan 23 (gpu/drm/panel/)
-To:     Sam Ravnborg <sam@ravnborg.org>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Thierry Reding <thierry.reding@gmail.com>
-References: <20200123172101.2f31947c@canb.auug.org.au>
- <098616df-a696-9544-5ca2-c84ce9980999@infradead.org>
- <20200123194959.GA25073@ravnborg.org>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <6a610bdf-3227-fcad-6208-e1e7e085c940@infradead.org>
-Date:   Thu, 23 Jan 2020 15:46:59 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Thu, 23 Jan 2020 18:47:25 -0500
+Received: from p5b06da22.dip0.t-ipconnect.de ([91.6.218.34] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1iumBy-0001hK-2a; Fri, 24 Jan 2020 00:47:18 +0100
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id 7A542100490; Fri, 24 Jan 2020 00:47:17 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Evan Green <evgreen@chromium.org>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Marc Zyngier <maz@kernel.org>, Christoph Hellwig <hch@lst.de>,
+        Rajat Jain <rajatxjain@gmail.com>
+Subject: Re: [PATCH] PCI/MSI: Avoid torn updates to MSI pairs
+In-Reply-To: <CAE=gft77xmkc6-4+h3WAp_4C7ra8XKSxcsqrVkBrYgXE0JPeSw@mail.gmail.com>
+References: <20200116133102.1.I9c7e72144ef639cc135ea33ef332852a6b33730f@changeid> <20200122172816.GA139285@google.com> <CAE=gft6hvO7G2OrxFGXeSDctz-21ryiu8JSBWT0g2fRFss-pxA@mail.gmail.com> <875zh3ukoy.fsf@nanos.tec.linutronix.de> <CAE=gft7ukQOxHmJT_tkWzA3u2cecmV0Jiq-ukAu-1OR+sPnTtg@mail.gmail.com> <871rrqva0t.fsf@nanos.tec.linutronix.de> <CAE=gft77xmkc6-4+h3WAp_4C7ra8XKSxcsqrVkBrYgXE0JPeSw@mail.gmail.com>
+Date:   Fri, 24 Jan 2020 00:47:17 +0100
+Message-ID: <87sgk520sa.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <20200123194959.GA25073@ravnborg.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/23/20 11:49 AM, Sam Ravnborg wrote:
-> Hi Randy.
-> 
-> Thanks - I think (kidding, this has bugged of for a long time).
-> 
-> On Thu, Jan 23, 2020 at 12:44:25AM -0800, Randy Dunlap wrote:
->> On 1/22/20 10:21 PM, Stephen Rothwell wrote:
->>> Hi all,
->>>
->>> Changes since 20200122:
->>>
+Evan Green <evgreen@chromium.org> writes:
+> On Thu, Jan 23, 2020 at 12:42 AM Thomas Gleixner <tglx@linutronix.de> wrote:
+>> Hrm:
 >>
+>>         Capabilities: [80] MSI-X: Enable+ Count=16 Masked-
 >>
->> on i386:
->>
->> ERROR: "drm_panel_of_backlight" [drivers/gpu/drm/panel/panel-sharp-lq101r1sx01.ko] undefined!
->> ERROR: "drm_panel_of_backlight" [drivers/gpu/drm/panel/panel-rocktech-jh057n00900.ko] undefined!
->> ERROR: "drm_panel_of_backlight" [drivers/gpu/drm/panel/panel-raydium-rm68200.ko] undefined!
->> ERROR: "drm_panel_of_backlight" [drivers/gpu/drm/panel/panel-panasonic-vvx10f034n00.ko] undefined!
->> ERROR: "drm_panel_of_backlight" [drivers/gpu/drm/panel/panel-osd-osd101t2587-53ts.ko] undefined!
->> ERROR: "drm_panel_of_backlight" [drivers/gpu/drm/panel/panel-olimex-lcd-olinuxino.ko] undefined!
->> ERROR: "drm_panel_of_backlight" [drivers/gpu/drm/panel/panel-leadtek-ltk500hd1829.ko] undefined!
->> ERROR: "drm_panel_of_backlight" [drivers/gpu/drm/panel/panel-kingdisplay-kd097d04.ko] undefined!
->> ERROR: "drm_panel_of_backlight" [drivers/gpu/drm/panel/panel-innolux-p079zca.ko] undefined!
->> ERROR: "drm_panel_of_backlight" [drivers/gpu/drm/panel/panel-ilitek-ili9881c.ko] undefined!
->> ERROR: "drm_panel_of_backlight" [drivers/gpu/drm/panel/panel-lvds.ko] undefined!
->> ERROR: "drm_panel_of_backlight" [drivers/gpu/drm/panel/panel-boe-himax8279d.ko]
->>
->>
->> Full randconfig file is attached.
-> 
-> I tried reproducing with latest drm-misc-next - no luck.
-> 
-> Can you check if you have:
-> 
-> 8d6cb2f7fb90018d9e3efdc9bc95e6da213a352f
->     drm/drm_panel: fix export of drm_panel_of_backlight, try #3
-> 
-> 
-> As we expect this to fix it for good.
-> Maybe the patch has not hit the right tree
-> and is thus not in -next.
+>> So this is weird. We mask it before moving it, so the tear issue should
+>> not happen on MSI-X. So the tearing might be just a red herring.
+>
+> Mmm... sorry what? This is the complete entry for xhci:
+>
+> 00:14.0 USB controller: Intel Corporation Device 02ed (prog-if 30 [XHCI])
+>         Subsystem: Intel Corporation Device 7270
+>         Control: I/O- Mem+ BusMaster- SpecCycle- MemWINV- VGASnoop-
+> ParErr- Stepping- SERR- FastB2B- DisINTx+
+>         Status: Cap+ 66MHz- UDF- FastB2B+ ParErr- DEVSEL=medium
+>>TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
+>         Interrupt: pin A routed to IRQ 124
+>         Region 0: Memory at d1200000 (64-bit, non-prefetchable) [size=64K]
+>         Capabilities: [70] Power Management version 2
+>                 Flags: PMEClk- DSI- D1- D2- AuxCurrent=375mA
+> PME(D0-,D1-,D2-,D3hot+,D3cold+)
+>                 Status: D3 NoSoftRst+ PME-Enable+ DSel=0 DScale=0 PME-
+>         Capabilities: [80] MSI: Enable+ Count=1/8 Maskable- 64bit+
+>                 Address: 00000000fee10004  Data: 402a
+>         Capabilities: [90] Vendor Specific Information: Len=14 <?>
+>         Kernel driver in use: xhci_hcd
 
-Hi Sam,
+Bah. I was looking at the WIFI for whatever reason.
 
-Sorry, I don't have the linux-next git tree so I can't check that commit.
+Thanks,
 
--- 
-~Randy
-
+        tglx
