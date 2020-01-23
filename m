@@ -2,99 +2,125 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77C44C32771
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 02:58:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF21EC32771
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 03:02:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49BC124125
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 02:58:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 921F624673
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 03:02:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="J6gYOfoW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726205AbgAWC60 (ORCPT
+        id S1726219AbgAWDCN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 21:58:26 -0500
-Received: from szxga06-in.huawei.com ([45.249.212.32]:47510 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725911AbgAWC60 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 21:58:26 -0500
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id ABB2152DA18A987470E2;
-        Thu, 23 Jan 2020 10:58:23 +0800 (CST)
-Received: from huawei.com (10.175.105.18) by DGGEMS402-HUB.china.huawei.com
- (10.3.19.202) with Microsoft SMTP Server id 14.3.439.0; Thu, 23 Jan 2020
- 10:58:13 +0800
-From:   linmiaohe <linmiaohe@huawei.com>
-To:     <pbonzini@redhat.com>, <rkrcmar@redhat.com>,
-        <sean.j.christopherson@intel.com>, <vkuznets@redhat.com>,
-        <wanpengli@tencent.com>, <jmattson@google.com>, <joro@8bytes.org>,
-        <tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
-        <hpa@zytor.com>
-CC:     <linmiaohe@huawei.com>, <kvm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <x86@kernel.org>
-Subject: [PATCH] KVM: x86: avoid some unnecessary copy in __x86_set_memory_region()
-Date:   Thu, 23 Jan 2020 11:00:13 +0800
-Message-ID: <1579748413-432-1-git-send-email-linmiaohe@huawei.com>
-X-Mailer: git-send-email 1.8.3.1
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.105.18]
-X-CFilter-Loop: Reflected
+        Wed, 22 Jan 2020 22:02:13 -0500
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:34948 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725911AbgAWDCM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 22:02:12 -0500
+Received: by mail-pl1-f196.google.com with SMTP id g6so709464plt.2
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jan 2020 19:02:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
+        h=content-transfer-encoding:from:mime-version:subject:date:message-id
+         :references:cc:in-reply-to:to;
+        bh=QHwD3xJbxA6Bj+Yx1EYQsUkr/yHSHTopSLaHf+HB1LQ=;
+        b=J6gYOfoWW7D94l0Y7ebAoY3D9qsp2ivY4bRoViRNM2t+ygjSQ7c98hfo1U/XlqYySc
+         JojfwPv88Mja6A6xQTlrtoPOT36SxrfCvfj3t5/EqQfJCxSo0NcL1czveIgtaa7lDe95
+         L+vwHoDMjlgDTN7MvU7EIxsiGv1L9+qITCvUNfrbshL2PKCeiVc7vZB3qVeSzAkQSp+S
+         8VGp43i/tm1uGMM+3zQEztlAgfEXgCGnbBuZ/2w1MEV7J62DVCLiS10G//0E58+SgMsx
+         w946YabfAyizOwSP6vU1vxY35l/0xrrc1X+/j0QklraJ0iAJO6pkB3c74LgNhr3Brd1z
+         5FJg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=QHwD3xJbxA6Bj+Yx1EYQsUkr/yHSHTopSLaHf+HB1LQ=;
+        b=hj8kVrnW9jSp4rHCHeBP9dAuLZa4aFUUoUUGZfQ6vrb62YAB9Utc2mpFEY5WXQIY7K
+         iU2WKD/Fzk0QKIgbkkjIv5KJwfV0a7dx0Lr2NQGI+awMHMhiuazUTbTMweHsT4fnHeq8
+         Ze8x81Z+ZsfNgSnNdTV+znqo2Mva3YRh8BBV4rZiVViHGjazezgsVSuHShgFFrZ5PHXS
+         RISZlf+SfJl6E/PU6k2NTwD7IMbY09kJ1IeMAuZZWoWpAQytCcHMv4zb8bBhtE5C3USX
+         //4Z56Qcw9xCU3q09dKFjlXDKoQhZdyhTdcZvyN3NbUgRwmxVwltheWJwOIdu0LA7Gte
+         8yHQ==
+X-Gm-Message-State: APjAAAXzyY9j30ITIVR5kTnbrAoIyri3pX4DyLDlntLzDNzFz+hw1v16
+        CCngAa6zLGV3DLsmDBGRZ0yPaQ==
+X-Google-Smtp-Source: APXvYqx0ztp78PhfwAEOpZE9YOyLcEj6xDbpjw3B4QFYco9brX2bu9A5MvQuDHkORMpB6ZNtfDJ0aw==
+X-Received: by 2002:a17:90a:5215:: with SMTP id v21mr2014316pjh.31.1579748532131;
+        Wed, 22 Jan 2020 19:02:12 -0800 (PST)
+Received: from ?IPv6:2600:1010:b025:c4e4:c9ce:11e3:9a9e:90f0? ([2600:1010:b025:c4e4:c9ce:11e3:9a9e:90f0])
+        by smtp.gmail.com with ESMTPSA id y203sm312460pfb.65.2020.01.22.19.02.11
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 22 Jan 2020 19:02:11 -0800 (PST)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+From:   Andy Lutomirski <luto@amacapital.net>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH] mm: Add MREMAP_DONTUNMAP to mremap().
+Date:   Wed, 22 Jan 2020 19:02:08 -0800
+Message-Id: <CD5EA896-7364-40E2-8709-A014973FFBC8@amacapital.net>
+References: <20200123014627.71720-1-bgeffon@google.com>
+Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Arnd Bergmann <arnd@arndb.de>, Sonny Rao <sonnyrao@google.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Lokesh Gidra <lokeshgidra@google.com>,
+        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+        Yu Zhao <yuzhao@google.com>, Jesse Barnes <jsbarnes@google.com>
+In-Reply-To: <20200123014627.71720-1-bgeffon@google.com>
+To:     Brian Geffon <bgeffon@google.com>
+X-Mailer: iPhone Mail (17C54)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miaohe Lin <linmiaohe@huawei.com>
 
-Only userspace_addr and npages are passed to vm_munmap() when remove a
-memory region. So we shouldn't copy the integral kvm_memory_slot struct.
 
-No functional change intended.
+> On Jan 22, 2020, at 5:46 PM, Brian Geffon <bgeffon@google.com> wrote:
+>=20
+> =EF=BB=BFMREMAP_DONTUNMAP is an additional flag that can be used with
+> MREMAP_FIXED to move a mapping to a new address. Normally, mremap(2)
+> would then tear down the old vma so subsequent accesses to the vma
+> cause a segfault. However, with this new flag it will keep the old
+> vma with zapping PTEs so any access to the old VMA after that point
+> will result in a pagefault.
 
-Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
----
- arch/x86/kvm/x86.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+This needs a vastly better description. Perhaps:
 
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index d1faa74981d9..767f29877938 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -9735,9 +9735,9 @@ void kvm_arch_sync_events(struct kvm *kvm)
- int __x86_set_memory_region(struct kvm *kvm, int id, gpa_t gpa, u32 size)
- {
- 	int i, r;
--	unsigned long hva;
-+	unsigned long hva, uaddr, npages;
- 	struct kvm_memslots *slots = kvm_memslots(kvm);
--	struct kvm_memory_slot *slot, old;
-+	struct kvm_memory_slot *slot;
- 
- 	/* Called with kvm->slots_lock held.  */
- 	if (WARN_ON(id >= KVM_MEM_SLOTS_NUM))
-@@ -9761,9 +9761,10 @@ int __x86_set_memory_region(struct kvm *kvm, int id, gpa_t gpa, u32 size)
- 			return 0;
- 
- 		hva = 0;
-+		uaddr = slot->userspace_addr;
-+		npages = slot->npages;
- 	}
- 
--	old = *slot;
- 	for (i = 0; i < KVM_ADDRESS_SPACE_NUM; i++) {
- 		struct kvm_userspace_memory_region m;
- 
-@@ -9778,7 +9779,7 @@ int __x86_set_memory_region(struct kvm *kvm, int id, gpa_t gpa, u32 size)
- 	}
- 
- 	if (!size)
--		vm_munmap(old.userspace_addr, old.npages * PAGE_SIZE);
-+		vm_munmap(uaddr, npages * PAGE_SIZE);
- 
- 	return 0;
- }
--- 
-2.19.1
+When remapping an anonymous, private mapping, if MREMAP_DONTUNMAP is set, th=
+e source mapping will not be removed. Instead it will be cleared as if a bra=
+nd new anonymous, private mapping had been created atomically as part of the=
+ mremap() call.  If a userfaultfd was watching the source, it will continue t=
+o watch the new mapping.  For a mapping that is shared or not anonymous, MRE=
+MAP_DONTUNMAP will cause the mremap() call to fail.
 
+Or is it something else?
+
+>=20
+> This feature will find a use in ChromeOS along with userfaultfd.
+> Specifically we will want to register a VMA with userfaultfd and then
+> pull it out from under a running process. By using MREMAP_DONTUNMAP we
+> don't have to worry about mprotecting and then potentially racing with
+> VMA permission changes from a running process.
+
+Does this mean you yank it out but you want to replace it simultaneously?
+
+>=20
+> This feature also has a use case in Android, Lokesh Gidra has said
+> that "As part of using userfaultfd for GC, We'll have to move the physical=
+
+> pages of the java heap to a separate location. For this purpose mremap
+> will be used. Without the MREMAP_DONTUNMAP flag, when I mremap the java
+> heap, its virtual mapping will be removed as well. Therefore, we'll
+> require performing mmap immediately after. This is not only time consuming=
+
+> but also opens a time window where a native thread may call mmap and
+> reserve the java heap's address range for its own usage. This flag
+> solves the problem."
+
+Cute.=
