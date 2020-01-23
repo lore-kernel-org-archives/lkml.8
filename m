@@ -2,169 +2,105 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28711C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 19:10:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71E0AC33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 19:14:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0970F24673
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 19:10:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D3822077C
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 19:14:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="VdZgkZgv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729076AbgAWTKy (ORCPT
+        id S1728988AbgAWTOA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 14:10:54 -0500
-Received: from mga06.intel.com ([134.134.136.31]:9851 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728709AbgAWTKy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 14:10:54 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Jan 2020 11:06:06 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,354,1574150400"; 
-   d="scan'208";a="251070651"
-Received: from viggo.jf.intel.com (HELO localhost.localdomain) ([10.54.77.144])
-  by fmsmga004.fm.intel.com with ESMTP; 23 Jan 2020 11:06:05 -0800
-Subject: [PATCH 4/5] mm: remove arch_bprm_mm_init() hook
-To:     linux-kernel@vger.kernel.org
-Cc:     Dave Hansen <dave.hansen@linux.intel.com>, peterz@infradead.org,
-        luto@kernel.org, x86@kernel.org, torvalds@linux-foundation.org,
-        linux-arch@vger.kernel.org, benh@kernel.crashing.org,
-        paulus@samba.org, mpe@ellerman.id.au, jdike@addtoit.com,
-        richard@nod.at, anton.ivanov@cambridgegreys.com, gxt@pku.edu.cn,
-        akpm@linux-foundation.org
-From:   Dave Hansen <dave.hansen@linux.intel.com>
-Date:   Thu, 23 Jan 2020 11:05:03 -0800
-References: <20200123190456.8E05ADE6@viggo.jf.intel.com>
-In-Reply-To: <20200123190456.8E05ADE6@viggo.jf.intel.com>
-Message-Id: <20200123190503.133804C8@viggo.jf.intel.com>
+        Thu, 23 Jan 2020 14:14:00 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:35588 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728709AbgAWTOA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jan 2020 14:14:00 -0500
+Received: by mail-pf1-f196.google.com with SMTP id i23so1986525pfo.2
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jan 2020 11:13:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=+j6n3bLqsywHmHf3IWP7jfMllioYd4CpeP8JoTqsBg4=;
+        b=VdZgkZgvc+axYrbN0WmRyJokY3HmJqCNSto/KBRyWcFp+Pq3NHvPFfpH+sYGzX6Mcf
+         g22nywECZ1Rmo1bhwF+SNdC7agfaEN1xGSqa3LadFG+de8ugL2qYR5ZXfeelocFesZrv
+         /W9uP2k/th0jCtd8sxXpwy8nWxNHNbtVmYtdnTYThMvsagzjZ/1OQ2ZIXj06+UC9ykHA
+         KJgvE5QisCvhHIrX1rGIfwsWHkZQUKPkQEsGQM2e53ibX7zxeacbfPOLc+Dfm9lmuFTR
+         7au1oO1oKsH0K+ZSQTR5effJiR1/XfGVckuiawtGmcBLc3OjnhUh1UqzMyrgLFaS5mLm
+         6svw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=+j6n3bLqsywHmHf3IWP7jfMllioYd4CpeP8JoTqsBg4=;
+        b=Dt0/Gb0Cs7GsUgezgsGJW9bQUnr0OeWJbZ/anpQitIdP/KtkW2uTmit0iXrR0Dmu6r
+         dmAsLeTqt14FJAAGl6cTQ5VsYau996mPJulDMunOVFzhfASu02Ixyab6m2fCRLXQwKoF
+         UVRV0h/k0cf5yLypOTrMKVPrqv4pO/lVMMqcQuSapQJuIkwr4xU3Q3ZGl6Qw0NeI8Eu6
+         MZDRSPrEgCELt4aK7Vz8GBP/zVXvOvmR7MjbL59IwJymtUrLvLK2VLJjM7O1HN3wkzra
+         lRdq6R4gKM4ZTDEgcc7xO5JFbXqeHigivY7fi0hflIFTzgxJWDPEmKfzMtypw8AnPVca
+         oN0Q==
+X-Gm-Message-State: APjAAAVds+ZOC9+9sSy/W6b6VC/WiINvhAyLzTsnXjlezp039HoDl+e1
+        L5h/e+KpHV7LIwxYZOky4jK8NA==
+X-Google-Smtp-Source: APXvYqyy93D4u/4fyfGaogLMtiMjbjktxYdJjqvu555rM06/JgrUxLKamGaHJUP2hOZTjSK3nw/55A==
+X-Received: by 2002:a63:500c:: with SMTP id e12mr312091pgb.214.1579806839580;
+        Thu, 23 Jan 2020 11:13:59 -0800 (PST)
+Received: from ?IPv6:2600:380:4562:fb25:b980:6664:b71f:35b5? ([2600:380:4562:fb25:b980:6664:b71f:35b5])
+        by smtp.gmail.com with ESMTPSA id k44sm3731287pjb.20.2020.01.23.11.13.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 23 Jan 2020 11:13:59 -0800 (PST)
+Subject: Re: [PATCH] io_uring: wakeup threads waiting for EPOLLOUT events
+To:     Stefano Garzarella <sgarzare@redhat.com>
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>, io-uring@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
+References: <20200116134946.184711-1-sgarzare@redhat.com>
+ <2d2dda92-3c50-ee62-5ffe-0589d4c8fc0d@kernel.dk>
+ <20200116155557.mwjc7vu33xespiag@steredhat>
+ <5723453a-9326-e954-978e-910b8b495b38@kernel.dk>
+ <20200116162630.6r3xc55kdyyq5tvz@steredhat>
+ <a02a58dc-bf23-ed74-aec6-52c85360fe00@kernel.dk>
+ <20200116170342.4jvkhbbw4x6z3txn@steredhat>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <2d3d4932-8894-6969-4006-25141ca1286e@kernel.dk>
+Date:   Thu, 23 Jan 2020 12:13:57 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
+MIME-Version: 1.0
+In-Reply-To: <20200116170342.4jvkhbbw4x6z3txn@steredhat>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 1/16/20 10:03 AM, Stefano Garzarella wrote:
+> On Thu, Jan 16, 2020 at 09:30:12AM -0700, Jens Axboe wrote:
+>> On 1/16/20 9:26 AM, Stefano Garzarella wrote:
+>>>> Since the use case is mostly single submitter, unless you're doing
+>>>> something funky or unusual, you're not going to be needing POLLOUT ever.
+>>>
+>>> The case that I had in mind was with kernel side polling enabled and
+>>> a single submitter that can use epoll() to wait free slots in the SQ
+>>> ring. (I don't have a test, maybe I can write one...)
+>>
+>> Right, I think that's the only use case where it makes sense, because
+>> you have someone else draining the sq side for you. A test case would
+>> indeed be nice, liburing has a good arsenal of test cases and this would
+>> be a good addition!
+> 
+> Sure, I'll send a test to liburing for this case!
 
-From: Dave Hansen <dave.hansen@linux.intel.com>
+Gentle ping on the test case :-)
 
-MPX is being removed from the kernel due to a lack of support
-in the toolchain going forward (gcc).
+-- 
+Jens Axboe
 
-arch_bprm_mm_init() is used at execve() time.  The only non-stub
-implementation is on x86 for MPX.  Remove the hook entirely from
-all architectures and generic code.
-
-Cc: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: x86@kernel.org
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: linux-arch@vger.kernel.org
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: Paul Mackerras <paulus@samba.org>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: Jeff Dike <jdike@addtoit.com>
-Cc: Richard Weinberger <richard@nod.at>
-Cc: Anton Ivanov <anton.ivanov@cambridgegreys.com>
-Cc: Guan Xuetao <gxt@pku.edu.cn>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Dave Hansen <dave.hansen@linux.intel.com>
----
-
- b/arch/powerpc/include/asm/mmu_context.h   |    5 -----
- b/arch/um/include/asm/mmu_context.h        |    5 -----
- b/arch/unicore32/include/asm/mmu_context.h |    5 -----
- b/arch/x86/include/asm/mmu_context.h       |    6 ------
- b/fs/exec.c                                |    1 -
- b/include/asm-generic/mm_hooks.h           |    5 -----
- 6 files changed, 27 deletions(-)
-
-diff -puN arch/powerpc/include/asm/mmu_context.h~mpx-remove-generic-mm arch/powerpc/include/asm/mmu_context.h
---- a/arch/powerpc/include/asm/mmu_context.h~mpx-remove-generic-mm	2020-01-23 10:41:07.054942434 -0800
-+++ b/arch/powerpc/include/asm/mmu_context.h	2020-01-23 10:41:07.068942434 -0800
-@@ -238,11 +238,6 @@ static inline void arch_unmap(struct mm_
- 		mm->context.vdso_base = 0;
- }
- 
--static inline void arch_bprm_mm_init(struct mm_struct *mm,
--				     struct vm_area_struct *vma)
--{
--}
--
- #ifdef CONFIG_PPC_MEM_KEYS
- bool arch_vma_access_permitted(struct vm_area_struct *vma, bool write,
- 			       bool execute, bool foreign);
-diff -puN arch/um/include/asm/mmu_context.h~mpx-remove-generic-mm arch/um/include/asm/mmu_context.h
---- a/arch/um/include/asm/mmu_context.h~mpx-remove-generic-mm	2020-01-23 10:41:07.056942434 -0800
-+++ b/arch/um/include/asm/mmu_context.h	2020-01-23 10:41:07.068942434 -0800
-@@ -25,11 +25,6 @@ static inline void arch_unmap(struct mm_
- 			unsigned long start, unsigned long end)
- {
- }
--static inline void arch_bprm_mm_init(struct mm_struct *mm,
--				     struct vm_area_struct *vma)
--{
--}
--
- static inline bool arch_vma_access_permitted(struct vm_area_struct *vma,
- 		bool write, bool execute, bool foreign)
- {
-diff -puN arch/unicore32/include/asm/mmu_context.h~mpx-remove-generic-mm arch/unicore32/include/asm/mmu_context.h
---- a/arch/unicore32/include/asm/mmu_context.h~mpx-remove-generic-mm	2020-01-23 10:41:07.058942434 -0800
-+++ b/arch/unicore32/include/asm/mmu_context.h	2020-01-23 10:41:07.068942434 -0800
-@@ -89,11 +89,6 @@ static inline void arch_unmap(struct mm_
- {
- }
- 
--static inline void arch_bprm_mm_init(struct mm_struct *mm,
--				     struct vm_area_struct *vma)
--{
--}
--
- static inline bool arch_vma_access_permitted(struct vm_area_struct *vma,
- 		bool write, bool execute, bool foreign)
- {
-diff -puN arch/x86/include/asm/mmu_context.h~mpx-remove-generic-mm arch/x86/include/asm/mmu_context.h
---- a/arch/x86/include/asm/mmu_context.h~mpx-remove-generic-mm	2020-01-23 10:41:07.060942434 -0800
-+++ b/arch/x86/include/asm/mmu_context.h	2020-01-23 10:41:07.069942434 -0800
-@@ -272,12 +272,6 @@ static inline bool is_64bit_mm(struct mm
- }
- #endif
- 
--static inline void arch_bprm_mm_init(struct mm_struct *mm,
--		struct vm_area_struct *vma)
--{
--	mpx_mm_init(mm);
--}
--
- static inline void arch_unmap(struct mm_struct *mm, unsigned long start,
- 			      unsigned long end)
- {
-diff -puN fs/exec.c~mpx-remove-generic-mm fs/exec.c
---- a/fs/exec.c~mpx-remove-generic-mm	2020-01-23 10:41:07.062942434 -0800
-+++ b/fs/exec.c	2020-01-23 10:41:07.069942434 -0800
-@@ -273,7 +273,6 @@ static int __bprm_mm_init(struct linux_b
- 		goto err;
- 
- 	mm->stack_vm = mm->total_vm = 1;
--	arch_bprm_mm_init(mm, vma);
- 	up_write(&mm->mmap_sem);
- 	bprm->p = vma->vm_end - sizeof(void *);
- 	return 0;
-diff -puN include/asm-generic/mm_hooks.h~mpx-remove-generic-mm include/asm-generic/mm_hooks.h
---- a/include/asm-generic/mm_hooks.h~mpx-remove-generic-mm	2020-01-23 10:41:07.064942434 -0800
-+++ b/include/asm-generic/mm_hooks.h	2020-01-23 10:41:07.069942434 -0800
-@@ -22,11 +22,6 @@ static inline void arch_unmap(struct mm_
- {
- }
- 
--static inline void arch_bprm_mm_init(struct mm_struct *mm,
--				     struct vm_area_struct *vma)
--{
--}
--
- static inline bool arch_vma_access_permitted(struct vm_area_struct *vma,
- 		bool write, bool execute, bool foreign)
- {
-_
