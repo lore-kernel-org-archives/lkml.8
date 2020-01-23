@@ -2,74 +2,76 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAFDCC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 14:47:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E74BC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 14:47:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE4062073A
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 14:47:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4247F214AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 14:47:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="LiNGUPo1"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="DT/WpeL3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729075AbgAWOru (ORCPT
+        id S1729031AbgAWOrs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 09:47:50 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:47582 "EHLO
+        Thu, 23 Jan 2020 09:47:48 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:47592 "EHLO
         aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727235AbgAWOro (ORCPT
+        with ESMTP id S1728916AbgAWOrp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 09:47:44 -0500
+        Thu, 23 Jan 2020 09:47:45 -0500
 Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00NERemS081753;
-        Thu, 23 Jan 2020 14:47:39 GMT
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00NERrZD081837;
+        Thu, 23 Jan 2020 14:47:41 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id; s=corp-2019-08-05;
- bh=VLBXQG3L+vQfzIALTTItUjwrNdTrwGxtWuccZS4MiYE=;
- b=LiNGUPo1GHT9f9L0wu5LjSFhHy6zHvo6EahYGk3S/r8cdn3gAAkmWglibqW841OpJzH+
- XEY2/CsHy6bbOQrw10B/mlffnQNZupsqJ8OlkXnYCn0ALtDug2GlbmRtfzCIdhV55Qmb
- OYxUyl5lLDYxnbyanpIW3nT7i2Vmlfh4plC4AlYiPpdFIX0QQvF6Kq9iuaS2SOasWLTw
- bx7DQ8zyo4jAtdD/Xe8xFGpI/eBo4FCbEnbC5UAavK/dG1vHNXaMDadJKTSVgkP030U0
- bjOBSRvLzg+jbxJFQ4ZmZ08F33Dhe66Dp+l7IG3epb4M09tioLHeoEHrHci538C6V6r8 gw== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2120.oracle.com with ESMTP id 2xksyqjpsx-1
+ subject : date : message-id : in-reply-to : references; s=corp-2019-08-05;
+ bh=LJyhLcWaqg+AjjFHhdMbMnMRBxEYPQZdjfXc+Qw6vfk=;
+ b=DT/WpeL3WeKaYkrSqvO6A8EGHtyz7FYQ7mBtMLB7VHltuH+tqr2Aemr/C3bJnP2OTNDk
+ EhPGl2fRCBYwLSOQQhrpZwoFxR4O2t0o3WAZ/bTJFUFQR74H/HaInuIdVrpYwjC1GNQV
+ KMYQ6AH3V3ZXOwKhItBwMAvCkqrQlcxOHhQNSovNi5OqZReOjdc96PPYCRCI9BUpHR/y
+ PAlUj7aXpio1z9Wqe4eFNcYCh4ZmCPppyAHOV+/LCjlO78+Hv4P+oVK8ULai7ZWYDU7P
+ ydgEUfxsKRL20vpp3WJiGkNyn9S/9pa8moKNo8l0wIQsISPh1fE4Oqw35YoU4Bgy790A yw== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by aserp2120.oracle.com with ESMTP id 2xksyqjpt6-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 23 Jan 2020 14:47:39 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00NET6kd007769;
-        Thu, 23 Jan 2020 14:47:38 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3030.oracle.com with ESMTP id 2xpq7mw44b-1
+        Thu, 23 Jan 2020 14:47:41 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00NESfVZ097430;
+        Thu, 23 Jan 2020 14:47:40 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3020.oracle.com with ESMTP id 2xppq7665j-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 23 Jan 2020 14:47:38 +0000
+        Thu, 23 Jan 2020 14:47:40 +0000
 Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 00NElWk2001377;
-        Thu, 23 Jan 2020 14:47:32 GMT
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 00NElc8b007935;
+        Thu, 23 Jan 2020 14:47:38 GMT
 Received: from dhcp-10-175-173-105.vpn.oracle.com (/10.175.173.105)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 23 Jan 2020 06:47:31 -0800
+        with ESMTP ; Thu, 23 Jan 2020 06:47:37 -0800
 From:   Alan Maguire <alan.maguire@oracle.com>
 To:     brendanhiggins@google.com
 Cc:     corbet@lwn.net, linux-kselftest@vger.kernel.org,
         kunit-dev@googlegroups.com, linux-doc@vger.kernel.org,
         linux-kernel@vger.kernel.org,
         Alan Maguire <alan.maguire@oracle.com>
-Subject: [PATCH kunit 0/3] kunit: add debugfs representation to show results/run tests
-Date:   Thu, 23 Jan 2020 14:47:17 +0000
-Message-Id: <1579790840-27009-1-git-send-email-alan.maguire@oracle.com>
+Subject: [PATCH kunit 2/3] kunit: add "run" debugfs file to run suites, display results
+Date:   Thu, 23 Jan 2020 14:47:19 +0000
+Message-Id: <1579790840-27009-3-git-send-email-alan.maguire@oracle.com>
 X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <1579790840-27009-1-git-send-email-alan.maguire@oracle.com>
+References: <1579790840-27009-1-git-send-email-alan.maguire@oracle.com>
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9508 signatures=668685
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=5 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=732
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
  adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.0.1-1911140001 definitions=main-2001230124
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9508 signatures=668685
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
  suspectscore=5 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=797 adultscore=0
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
  definitions=main-2001230124
 Sender: linux-kernel-owner@vger.kernel.org
@@ -77,32 +79,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When kunit tests are run on native (i.e. non-UML) environments, the results
-of test execution are often intermixed with dmesg output.  This patch
-series attempts to solve this by providing a debugfs representation
-of the results of the last test run, available as
+Add /sys/kernel/debug/kunit/<suite>/run file which will run the
+specified suite and show results.
 
-/sys/kernel/debug/kunit/<testsuite>/results
+Signed-off-by: Alan Maguire <alan.maguire@oracle.com>
+---
+ lib/kunit/debugfs.c | 34 ++++++++++++++++++++++++++++++++++
+ 1 file changed, 34 insertions(+)
 
-In addition, we provide a way to re-run the tests and show results via
-
-/sys/kernel/debug/kunit/<testsuite>/run
-
-Alan Maguire (3):
-  kunit: add debugfs /sys/kernel/debug/kunit/<suite>/results display
-  kunit: add "run" debugfs file to run suites, display results
-  kunit: update documentation to describe debugfs representation
-
- Documentation/dev-tools/kunit/usage.rst |  20 +++++
- include/kunit/test.h                    |  21 +++--
- lib/kunit/Makefile                      |   3 +-
- lib/kunit/debugfs.c                     | 145 ++++++++++++++++++++++++++++++++
- lib/kunit/debugfs.h                     |  11 +++
- lib/kunit/test.c                        |  88 ++++++++++++++-----
- 6 files changed, 260 insertions(+), 28 deletions(-)
- create mode 100644 lib/kunit/debugfs.c
- create mode 100644 lib/kunit/debugfs.h
-
+diff --git a/lib/kunit/debugfs.c b/lib/kunit/debugfs.c
+index 5994f32..4881261 100644
+--- a/lib/kunit/debugfs.c
++++ b/lib/kunit/debugfs.c
+@@ -15,6 +15,7 @@
+ 
+ #define KUNIT_DEBUGFS_ROOT             "kunit"
+ #define KUNIT_DEBUGFS_RESULTS          "results"
++#define KUNIT_DEBUGFS_RUN		"run"
+ 
+ /*
+  * Create a debugfs representation of test suites:
+@@ -23,6 +24,8 @@
+  * /sys/kernel/debug/kunit/<testsuite>/results	Show results of last run for
+  *						testsuite
+  *
++ * /sys/kernel/debug/kunit/<testsuite>/run	Run testsuite and show results
++ *
+  */
+ 
+ static struct dentry *debugfs_rootdir;
+@@ -72,6 +75,18 @@ static int debugfs_print_results(struct seq_file *seq, void *v)
+ 	return 0;
+ }
+ 
++/*
++ * /sys/kernel/debug/kunit/<testsuite>/run (re)runs suite and shows all results.
++ */
++static int debugfs_run_print_results(struct seq_file *seq, void *v)
++{
++	struct kunit_suite *suite = (struct kunit_suite *)seq->private;
++
++	kunit_run_tests(suite);
++
++	return debugfs_print_results(seq, v);
++}
++
+ static int debugfs_release(struct inode *inode, struct file *file)
+ {
+ 	return single_release(inode, file);
+@@ -93,6 +108,22 @@ static int debugfs_results_open(struct inode *inode, struct file *file)
+ 	.release = debugfs_release,
+ };
+ 
++static int debugfs_run_open(struct inode *inode, struct file *file)
++{
++	struct kunit_suite *suite;
++
++	suite = (struct kunit_suite *)inode->i_private;
++
++	return single_open(file, debugfs_run_print_results, suite);
++}
++
++static const struct file_operations debugfs_run_fops = {
++	.open = debugfs_run_open,
++	.read = seq_read,
++	.llseek = seq_lseek,
++	.release = debugfs_release,
++};
++
+ void debugfs_create_suite(struct kunit_suite *suite)
+ {
+ 	/* First add /sys/kernel/debug/kunit/<testsuite> */
+@@ -103,6 +134,9 @@ void debugfs_create_suite(struct kunit_suite *suite)
+ 	debugfs_create_file(KUNIT_DEBUGFS_RESULTS, S_IFREG | 0444,
+ 			    suite->debugfs,
+ 			    suite, &debugfs_results_fops);
++	debugfs_create_file(KUNIT_DEBUGFS_RUN, S_IFREG | 0444,
++			    suite->debugfs,
++			    suite, &debugfs_run_fops);
+ }
+ 
+ void debugfs_destroy_suite(struct kunit_suite *suite)
 -- 
 1.8.3.1
 
