@@ -2,168 +2,158 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97C09C33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 06:13:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48463C33CAA
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 06:16:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D84424676
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 06:13:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579760015;
-	bh=HgwXTG7/lJmoAGRVP88B5zaZHvQNCymL2+iVP33OqMQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=lv1z0GTUZKl3Wo5tx6AfZVCLu4BvzKK2cx/2xFBAdaROhGskomyIAHhh56iWb/dkc
-	 K3IRWaTEnrqCUC8EYsXOIQJwMnaIFsqx36wu4kx7T4CjHs/z0Y32sGc3KzW7BYrAlD
-	 N60Qx3jkY79D3w17ZOnEg9z+kXotDmmLhKx1Tnfs=
+	by mail.kernel.org (Postfix) with ESMTP id 237DD24655
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 06:16:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728992AbgAWGNf (ORCPT
+        id S1726092AbgAWGQf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 01:13:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57356 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725938AbgAWGNe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 01:13:34 -0500
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3611F24655;
-        Thu, 23 Jan 2020 06:13:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579760014;
-        bh=HgwXTG7/lJmoAGRVP88B5zaZHvQNCymL2+iVP33OqMQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=ex0JaWa4OWOF+IKz1tBJ8l/tTXPp21JrNC5XYh4u24KYHeHf+5ZPuLW36/VI8IdeW
-         PwkV2CJqwI6V3Lyn3ZrTgDcYziqxmt0l75rfQ/DtD3rQQrKeMmIea6amfj0+h8doHq
-         FgCGYODIBR1HDnQODYbeaUXAezYDXYgwlVO+Ko4I=
-Date:   Thu, 23 Jan 2020 15:13:28 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     paulmck@kernel.org
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Brendan Gregg <brendan.d.gregg@gmail.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>, bpf@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        "David S . Miller" <davem@davemloft.net>, joel@joelfernandes.org,
-        "Naveen N . Rao" <naveen.n.rao@linux.ibm.com>,
-        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>
-Subject: Re: [RFT PATCH 04/13] kprobes: Make optimizer delay to 1 second
-Message-Id: <20200123151328.f977525ea447da3b7fe4256d@kernel.org>
-In-Reply-To: <20200123022647.GO2935@paulmck-ThinkPad-P72>
-References: <157918584866.29301.6941815715391411338.stgit@devnote2>
-        <157918589199.29301.4419459150054220408.stgit@devnote2>
-        <20200121192905.0f001c61@gandalf.local.home>
-        <20200122162317.0299cf722dd618147d97e89c@kernel.org>
-        <20200122071115.28e3c763@gandalf.local.home>
-        <20200122221240.cef447446785f46862fee97a@kernel.org>
-        <20200122165432.GH2935@paulmck-ThinkPad-P72>
-        <20200123103334.6e1821625643d007297ecf94@kernel.org>
-        <20200123022647.GO2935@paulmck-ThinkPad-P72>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        Thu, 23 Jan 2020 01:16:35 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:39297 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725818AbgAWGQe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jan 2020 01:16:34 -0500
+Received: by mail-wm1-f67.google.com with SMTP id 20so1219326wmj.4
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jan 2020 22:16:32 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=kfE35KBwl+2nFSjY/GRPMZyp+lnRwUJWyIthsUdFhdM=;
+        b=PVcboj1FWamGFbuIzQlJXZj4oXDKehC0qYyWXlYMym1sIAhPqcEosRDDgz8qgDnT7w
+         TdI/LWdeu76+2wPC9XethMXU/VJmtC9OjcfN1DvWzV76bAkqgzoXFNzijuEB0izEqP8M
+         EUM7cMbjnKdLm83lbaFimHTw1aJ3WmWLMcPnEb8AWwZB8u6uXK1fsRzXD+zwYXoDoc8k
+         npWdxRDMt1Hl+J8dZ+ZxVfTbrFEBOfx/tBXzQ7kzyiJ/nhEoJegPF1HQNZGnncJEZD3x
+         bDfDE5ogaBt8wImJBCNuTVPiDL0n4pqaTyanpXw2ZdByie1VEVS+ShJHk3WJvnxLtr5I
+         beKg==
+X-Gm-Message-State: APjAAAVneimg5cTQ1mGda0q3lexkgdshz6H11q83C8bX9AS9cJsZ5FYm
+        VES8tD/Fl5Wnsajycb4mmOUrq9N9qhk=
+X-Google-Smtp-Source: APXvYqzc/I/KVa5MiE0q2vf11p6E4p5sckWpXq258I3GTo5ZfpzP8Eu76rnwbUPVEP2ZEWikC5WbQw==
+X-Received: by 2002:a1c:f210:: with SMTP id s16mr2120599wmc.57.1579760191372;
+        Wed, 22 Jan 2020 22:16:31 -0800 (PST)
+Received: from ?IPv6:2a0b:e7c0:0:107::49? ([2a0b:e7c0:0:107::49])
+        by smtp.gmail.com with ESMTPSA id n3sm1626766wrs.8.2020.01.22.22.16.30
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 22 Jan 2020 22:16:30 -0800 (PST)
+Subject: Re: [PATCH v2] tty: n_hdlc: Use flexible-array member and
+ struct_size() helper
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mikael Magnusson <mikachu@gmail.com>
+Cc:     linux-kernel@vger.kernel.org
+References: <20200121172138.GA3162@embeddedor>
+From:   Jiri Slaby <jslaby@suse.com>
+Autocrypt: addr=jslaby@suse.com; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <31591fc2-7f4c-f73e-6041-0f9af698dbcd@suse.com>
+Date:   Thu, 23 Jan 2020 07:16:29 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
+MIME-Version: 1.0
+In-Reply-To: <20200121172138.GA3162@embeddedor>
+Content-Type: text/plain; charset=iso-8859-2
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 22 Jan 2020 18:26:47 -0800
-"Paul E. McKenney" <paulmck@kernel.org> wrote:
-
-> > Anyway, without this update, I added a printk to count optimizer
-> > queue-length and found that all optimizer call with a single kprobe
-> > on the quenes. I think this depends on the machine, but as far as
-> > I tested on 8-threads qemu x86, shows this result...
-> > 
-> > Probes: 256 kprobe_events
-> > Enable events
-> > real	0m 0.02s
-> > user	0m 0.00s
-> > sys	0m 0.02s
-> > [   17.730548] Queue-update: 180, skipped, Total Queued: 180
-> > [   17.739445] Queue-update: 1, go, Total Queued: 180
-> > Disable events
-[...]
-> > [   41.135594] Queue-update: 1, go, Total Queued: 1
-> > real	0m 21.40s
-> > user	0m 0.00s
-> > sys	0m 0.04s
+On 21. 01. 20, 18:21, Gustavo A. R. Silva wrote:
+> Old code in the kernel uses 1-byte and 0-byte arrays to indicate the
+> presence of a "variable length array":
 > 
-> So 21.4s/256 = 84 milliseconds per event disable, correct?
-
-Actually, it seems only 172 probes are on the unoptimized list, so
-the number will be a bit different.
-
-Anyway, that above elapsed time is including non-batch optimizer
-working time as below.
-
-(1) start looping on probe events
-  (2) disabling-kprobe
-    (2.1) wait kprobe_mutex if optimizer is running
-    (2.2) if the kprobe is on optimized kprobe, queue it to unoptimizing
-          list and kick optimizer with 5 jiffies delay
-  (4) unlink enabled event
-  (5) wait synchronize_rcu()
-  (6) optimizer start optimization before finishing (5)
-(7) goto (1)
-
-I think the disabling performance issue came from (6) (and (2.1)).
-Thus, if we change (2.2) to 1 HZ jiffies, the optimizer will start
-after some loops are done. (and the optimizer detects "active"
-queuing, postpone the process)
-
+> struct something {
+>     int length;
+>     u8 data[1];
+> };
 > 
-> It might be worth trying synchronize_rcu_expedited() just as an experiment
-> to see if it speeds things up significantly.
+> struct something *instance;
+> 
+> instance = kmalloc(sizeof(*instance) + size, GFP_KERNEL);
+> instance->length = size;
+> memcpy(instance->data, source, size);
+> 
+> There is also 0-byte arrays. Both cases pose confusion for things like
+> sizeof(), CONFIG_FORTIFY_SOURCE, etc.[1] Instead, the preferred mechanism
+> to declare variable-length types such as the one above is a flexible array
+> member[2] which need to be the last member of a structure and empty-sized:
+> 
+> struct something {
+>         int stuff;
+>         u8 data[];
+> };
+> 
+> Also, by making use of the mechanism above, we will get a compiler warning
+> in case the flexible array does not occur last in the structure, which
+> will help us prevent some kind of undefined behavior bugs from being
+> inadvertenly introduced[3] to the codebase from now on.
+> 
+> Lastly, make use of the struct_size() helper to safely calculate the
+> allocation size for instances of struct n_hdlc_buf and avoid any potential
+> type mistakes[4][5].
+> 
+> [1] https://github.com/KSPP/linux/issues/21
+> [2] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+> [4] https://lore.kernel.org/lkml/60e14fb7-8596-e21c-f4be-546ce39e7bdb@embeddedor.com/
+> [5] commit 553d66cb1e86 ("iommu/vt-d: Use struct_size() helper")
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 
-Would you mean replacing synchronize_rcu() in disabling loop, or
-replacing synchronize_rcu_tasks() in optimizer?
+Now it looks good to me:
+Reviewed-by: Jiri Slaby <jslaby@suse.cz>
 
-I think that is not a root cause of this behavior, since if we
-make the optimizer delay to 1 sec, it seems enough for making
-it a batch operation. See below, this is the result with patched
-kernel (1 HZ delay).
-
-Probes: 256 kprobe_events
-Enable events
-real	0m 0.07s
-user	0m 0.00s
-sys	0m 0.07s
-[   19.191181] Queue-update: 180, skipped, Total Queued: 180
-Disable events
-[   20.214966] Queue-update: 1, go, Total Queued: 172
-[   21.302924] Queue-update: 86, skipped, Total Queued: 86
-real	0m 2.11s
-user	0m 0.00s
-sys	0m 0.03s
-[   22.327173] Queue-update: 87, skipped, Total Queued: 172
-[   23.350933] Queue-update: 1, go, Total Queued: 172
-Remove events
-real	0m 2.13s
-user	0m 0.02s
-sys	0m 0.02s
-
-As you can see, the optimizer ran outside of the disabling loop.
-In that case, it is OK to synchronize RCU tasks in the optimizer
-because it just runs *once* per multiple probe events.
-
-From above result, 86 probes are disabled per 1 sec delay.
-Each probe disabling took 11-12 msec in average. So 
-(HZ / 10) can also be good. (But note that the optimizer
-will retry to run each time until the disabling loop is
-finished.)
-
-BTW, testing kernel was build with HZ=1000, if HZ=250 or HZ=100,
-the result will be different in the current code. So I think
-we should use HZ-based delay instead of fixed number.
-
-Thank you,
-
+thanks,
 -- 
-Masami Hiramatsu <mhiramat@kernel.org>
+js
+suse labs
