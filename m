@@ -2,99 +2,84 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49156C33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 17:23:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7FB9C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 17:23:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18655207FF
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 17:23:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579800186;
-	bh=vdad4h34opYp5igmK3XVwdbMOblM1qfChkC2aQ7dLVA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=UgLUR1VNW5yP0ZQTEt2zPDdUlHuj8G4Pn99e3D3jv5kWeiemJHLzBSnqpSdvB+Hd6
-	 yVkm4RLhnH67VgCYrrIhEO2+U0iFB45/WFvqgxzDSrXtH+awaEsWbWtYPnYalYD04I
-	 RcCWqGP6sf0W8CAp7yPmnRaQjPQRZjWmJ41omSbc=
+	by mail.kernel.org (Postfix) with ESMTP id 7AB30207FF
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 17:23:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="hVbeOddT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729008AbgAWRXF (ORCPT
+        id S1729014AbgAWRXj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 12:23:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44108 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726605AbgAWRXF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 12:23:05 -0500
-Received: from linux-8ccs (x2f7fea8.dyn.telefonica.de [2.247.254.168])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 30AB1207FF;
-        Thu, 23 Jan 2020 17:23:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579800184;
-        bh=vdad4h34opYp5igmK3XVwdbMOblM1qfChkC2aQ7dLVA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=cs0hz3m7UAqKvsQ5oNLIQzdgRdSQjGmU0cMUw27DzycVvzfHfNH/nQ5z7PAO+W+5U
-         c8OCWz5tPzB3HrmhpkQXB7fqizYL1b/ISqQRHpfOs1cEi7w0DDQRoFwjn5tUZsuRsX
-         uDd89xMAqcCAODFElxaBDSxEYsTQskn/YEXoPMG0=
-Date:   Thu, 23 Jan 2020 18:22:58 +0100
-From:   Jessica Yu <jeyu@kernel.org>
-To:     madhuparnabhowmik10@gmail.com
-Cc:     linux-kernel@vger.kernel.org, joel@joelfernandes.org,
-        frextrite@gmail.com, rcu@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org, paulmck@kernel.org
-Subject: Re: [PATCH] module.h: Annotate mod_kallsyms with __rcu
-Message-ID: <20200123172257.GA14784@linux-8ccs>
-References: <20200122170447.20539-1-madhuparnabhowmik10@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20200122170447.20539-1-madhuparnabhowmik10@gmail.com>
-X-OS:   Linux linux-8ccs 4.12.14-lp150.12.61-default x86_64
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Thu, 23 Jan 2020 12:23:39 -0500
+Received: from mail-qt1-f171.google.com ([209.85.160.171]:34824 "EHLO
+        mail-qt1-f171.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726605AbgAWRXj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jan 2020 12:23:39 -0500
+Received: by mail-qt1-f171.google.com with SMTP id e12so3096868qto.2
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jan 2020 09:23:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=content-transfer-encoding:from:mime-version:subject:date:message-id
+         :references:cc:in-reply-to:to;
+        bh=+sYyfk2n+qS4NMdl3Vo9UqAuiI6xlOeTWYyIti0K5ik=;
+        b=hVbeOddT0KKo6GOQuvzZWMbSjBYMK5i+gpoApDm7N88DDU9k7qb85keVm53gLSW8T7
+         JDq9ygwaLv8amOGkNm5ietSMbJpDmIB80ktQL46tBNLbvAPcX4SbuDz/nQonbFTKozOH
+         R86DkqlXkkhRzDZHQsyqUdUYq+eEDQDLlpl8OmErfsvZLow0aJ4ZTU3if869SL6nYL8/
+         MaZ2T79MYU1wMk6rLDH7cHRZ7kzJNB9Z48iIIXkxKyhX0GaI1GDAsZF+v01IDSpBhtnN
+         P34m0iFOBRgq98RAMpdKvR+6nYPh90rSmWfCpJTg52ZGVF5HGYW9qu+nmnbUXk7LiyCb
+         lREA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=+sYyfk2n+qS4NMdl3Vo9UqAuiI6xlOeTWYyIti0K5ik=;
+        b=EhP9rNXlePOE4cJi6wxxWEndmgzfjjeyaS02Uz+phWsy3g+7bNq7SvtbGUi1zocFyS
+         OJq2uqfzZH8HU8nFkOWz6xZfnJbSEDM6q6c/Ennhgw3TGj5p/fV5+u4zF3kxtFTgwd/5
+         JlCw5iUsdi/Jix/b7okIx6ZW+GHHJRbDvqATLwBC6ScTq3v4SVCa1qTGsDNpmSyVOKkl
+         CO49/WbIh5nD6IVkO/9m0kR8DHbmfBnrsu9ShKyNTu4F8RyS4qNTVCgxYf0eupRptrcr
+         ECHJGMfySSWBDEVEHpqzbxIqeuq0wf0Pk4oNcfuHAXCzNhmnSIKPLs/X/NF4FiHrY9ub
+         /ewA==
+X-Gm-Message-State: APjAAAXh5wIyT5kD6UrK2wztAoEprJk9nPWARUUGdEL5v2FnDCi9c5VR
+        WIaLoB/ItyuaDd/4GqWKkfQRvUGvwW6ggQ==
+X-Google-Smtp-Source: APXvYqwDs1vdseljV+3M82+Ba/lPWXbY6OUEEzKCzOwkCXHGV1a35jWIeymg/Y3S2CIuD8+ef/wZmQ==
+X-Received: by 2002:aed:204d:: with SMTP id 71mr17284568qta.116.1579800217727;
+        Thu, 23 Jan 2020 09:23:37 -0800 (PST)
+Received: from [192.168.1.183] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id g62sm1179038qkd.25.2020.01.23.09.23.36
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 23 Jan 2020 09:23:37 -0800 (PST)
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+From:   Qian Cai <cai@lca.pw>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH -next] arm64/spinlock: fix a -Wunused-function warning
+Date:   Thu, 23 Jan 2020 12:23:36 -0500
+Message-Id: <39F4C46F-6B94-4F0E-9CC6-1AB0BB5D6209@lca.pw>
+References: <20200123165614.GA20126@willie-the-truck>
+Cc:     peterz@infradead.org, longman@redhat.com, mingo@redhat.com,
+        catalin.marinas@arm.com, clang-built-linux@googlegroups.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20200123165614.GA20126@willie-the-truck>
+To:     Will Deacon <will@kernel.org>
+X-Mailer: iPhone Mail (17C54)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+++ madhuparnabhowmik10@gmail.com [22/01/20 22:34 +0530]:
->From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
->
->This patch fixes the following sparse errors:
->
->kernel/module.c:3623:9: error: incompatible types in comparison expression
->kernel/module.c:4060:41: error: incompatible types in comparison expression
->kernel/module.c:4203:28: error: incompatible types in comparison expression
->kernel/module.c:4225:41: error: incompatible types in comparison expression
->
->Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
 
-Hi Madhuparna,
 
-Thanks, I can confirm this patch fixes the sparse warnings. I've
-applied it to modules-next.
+> On Jan 23, 2020, at 11:56 AM, Will Deacon <will@kernel.org> wrote:
+> 
+> Damn, the whole point of this was to warn in the case that
+> vcpu_is_preempted() does get defined for arm64. Can we force it to evaluate
+> the macro argument instead (e.g. ({ (cpu), false; }) or something)?
 
-Jessica
-
->---
-> include/linux/module.h | 2 +-
-> 1 file changed, 1 insertion(+), 1 deletion(-)
->
->diff --git a/include/linux/module.h b/include/linux/module.h
->index bd165ba68617..dfdc8863e26a 100644
->--- a/include/linux/module.h
->+++ b/include/linux/module.h
->@@ -429,7 +429,7 @@ struct module {
->
-> #ifdef CONFIG_KALLSYMS
-> 	/* Protected by RCU and/or module_mutex: use rcu_dereference() */
->-	struct mod_kallsyms *kallsyms;
->+	struct mod_kallsyms __rcu *kallsyms;
-> 	struct mod_kallsyms core_kallsyms;
->
-> 	/* Section attributes */
->-- 
->2.17.1
->
+That should work. Let me test it out and rinse.
