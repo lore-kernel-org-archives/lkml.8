@@ -2,93 +2,78 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F37EC3F68F
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 06:44:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DB12C3F68F
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 06:46:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DDCD24684
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 06:44:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B11A2467E
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 06:46:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579761898;
-	bh=6sdhIS//fwShMit7ksf+WjBeNo3at8hC8qzOZNYS17o=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=1vYltq470B8WZTm97rdvjdu+cTC2IBCvxkj9JVSSLgKUUhQ8CtOefT19ADd8+Gd0x
-	 LMJJ0NILOeCWvMHDtXWmfX/kOgFSO1NHAk+LVvIZ8Y+q1q1cvh04sI4XQlgQdjoydQ
-	 9R11UKreAL4GGzJxxDdw8U2oVDoopLQpqsF1ZZBQ=
+	s=default; t=1579761976;
+	bh=T3vIGKZC1bfw3mu1T/uU0TZlAZMQ/9TbOrBDWxrgMfE=;
+	h=In-Reply-To:References:To:From:Subject:Date:List-ID:From;
+	b=2COgqe6AdWLeps+S0P7DscyE/mydmDM4YRdwSJ6tlrytBgm4AebCNXFr6qQA3yVYO
+	 4DSW4PtSin/5bLdKyLy4x1qB39uzR7B9dDzEV/RN7X9j52i6nEMpOax5BMtaW14CCI
+	 oXEQCgX449okj3tflK24GEVKcaG1aD93KhZPLAvY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726761AbgAWGo5 (ORCPT
+        id S1726118AbgAWGqP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 01:44:57 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36048 "EHLO mail.kernel.org"
+        Thu, 23 Jan 2020 01:46:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36276 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725535AbgAWGo5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 01:44:57 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        id S1725535AbgAWGqP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jan 2020 01:46:15 -0500
+Received: from kernel.org (unknown [104.132.0.74])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 43B00217F4;
-        Thu, 23 Jan 2020 06:44:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 78346217F4;
+        Thu, 23 Jan 2020 06:46:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579761896;
-        bh=6sdhIS//fwShMit7ksf+WjBeNo3at8hC8qzOZNYS17o=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=x98zDvQjDP7BNO63LTRpKURD+zhuzDlDVNC4i06osYz5xTBoXC1e6AaHHiR3fFe54
-         ySQ7znx0GiWrIxJzmjY2jPt0+2BVv9+G5sKZ2VVvERx52VtNayaPc4LuFsBLkIdGsu
-         MR5kzyen9fd/L8c5Q0lUSerCdWPZfvdWVDdQMWSI=
-Date:   Thu, 23 Jan 2020 07:44:54 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>
-Subject: Re: [PATCH 5.4 000/222] 5.4.14-stable review
-Message-ID: <20200123064454.GD124954@kroah.com>
-References: <20200122092833.339495161@linuxfoundation.org>
- <CA+G9fYuFsU+3V_3wKdkfNEr=LB+QsPv6WCzFVfbi6gHR5T=vmQ@mail.gmail.com>
+        s=default; t=1579761974;
+        bh=T3vIGKZC1bfw3mu1T/uU0TZlAZMQ/9TbOrBDWxrgMfE=;
+        h=In-Reply-To:References:To:From:Subject:Date:From;
+        b=hsoi5gkWuNCLOIdDRxnpJEm08tN6cjSyI1suOqT/8ebYNe3ltG6ctwlRHSTwAlZKG
+         pN6p/6qWbUCHUthBWt6PCWBCNuk+qQQGyXanRUtqD3QBZaZPqmG1Deu0j83DUSAXla
+         VyOPHlN4gc/lIdAsagkBJ0NBjsPS7I69Oq0JzNns=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CA+G9fYuFsU+3V_3wKdkfNEr=LB+QsPv6WCzFVfbi6gHR5T=vmQ@mail.gmail.com>
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1579217994-22219-3-git-send-email-vnkgutta@codeaurora.org>
+References: <1579217994-22219-1-git-send-email-vnkgutta@codeaurora.org> <1579217994-22219-3-git-send-email-vnkgutta@codeaurora.org>
+To:     agross@kernel.org, bjorn.andersson@linaro.org,
+        devicetree@vger.kernel.org, jshriram@codeaurora.org,
+        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mark.rutland@arm.com,
+        mturquette@baylibre.com, psodagud@codeaurora.org,
+        robh+dt@kernel.org, tdas@codeaurora.org, tsoni@codeaurora.org,
+        vinod.koul@linaro.org, vnkgutta@codeaurora.org
+From:   Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH 2/7] clk: qcom: rpmh: Add support for RPMH clocks on SM8250
+User-Agent: alot/0.8.1
+Date:   Wed, 22 Jan 2020 22:46:13 -0800
+Message-Id: <20200123064614.78346217F4@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 22, 2020 at 11:39:19PM +0530, Naresh Kamboju wrote:
-> On Wed, 22 Jan 2020 at 18:48, Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
-> >
-> > This is the start of the stable review cycle for the 5.4.14 release.
-> > There are 222 patches in this series, all will be posted as a response
-> > to this one.  If anyone has any issues with these being applied, please
-> > let me know.
-> >
-> > Responses should be made by Fri, 24 Jan 2020 09:25:24 +0000.
-> > Anything received after that time might be too late.
-> >
-> > The whole patch series can be found in one patch at:
-> >         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.14-rc1.gz
-> > or in the git tree and branch at:
-> >         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.4.y
-> > and the diffstat can be found below.
-> >
-> > thanks,
-> >
-> > greg k-h
-> 
-> Results from Linaro’s test farm.
-> No regressions on arm64, arm, x86_64, and i386.
+Quoting Venkata Narendra Kumar Gutta (2020-01-16 15:39:49)
+> @@ -490,6 +512,7 @@ static int clk_rpmh_probe(struct platform_device *pde=
+v)
+>         { .compatible =3D "qcom,sdm845-rpmh-clk", .data =3D &clk_rpmh_sdm=
+845},
+>         { .compatible =3D "qcom,sm8150-rpmh-clk", .data =3D &clk_rpmh_sm8=
+150},
+>         { .compatible =3D "qcom,sc7180-rpmh-clk", .data =3D &clk_rpmh_sc7=
+180},
+> +       { .compatible =3D "qcom,sm8250-rpmh-clk",  .data =3D &clk_rpmh_sm=
+8250},
 
-Thanks for testing all of these and letting me know.
+We should sort this on compatible.
 
-greg k-h
+>         { }
+>  };
+>  MODULE_DEVICE_TABLE(of, clk_rpmh_match_table);
