@@ -7,59 +7,60 @@ X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
 	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D2FEC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 18:05:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10A37C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 18:05:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2358420718
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 18:05:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB87322522
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 18:05:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="t1FZb1fR"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="n+Pcpr5w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729359AbgAWSFF (ORCPT
+        id S1729372AbgAWSFH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 13:05:05 -0500
-Received: from mail-vs1-f74.google.com ([209.85.217.74]:43706 "EHLO
-        mail-vs1-f74.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729345AbgAWSFE (ORCPT
+        Thu, 23 Jan 2020 13:05:07 -0500
+Received: from mail-qv1-f74.google.com ([209.85.219.74]:54814 "EHLO
+        mail-qv1-f74.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729334AbgAWSFC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 13:05:04 -0500
-Received: by mail-vs1-f74.google.com with SMTP id j8so466077vsm.10
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jan 2020 10:05:03 -0800 (PST)
+        Thu, 23 Jan 2020 13:05:02 -0500
+Received: by mail-qv1-f74.google.com with SMTP id v5so2507168qvn.21
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jan 2020 10:05:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=IgY/A9lI8I0CLEHHbAfWjUttLZ/uMo5ZHLdhVrD7cM0=;
-        b=t1FZb1fRlGn6sS3KiIywlF3SWXZSC72vi3l8yghm1rqJkGVi2ppxi2bhsdIjvKvpRo
-         mtWcSzCLmK9615UMLkHpgpsmNt5T84sa65TDnvwPSa9ngmlIgsKEROMy5IpuHkvfb8N7
-         bCjmso/kge2qOgVpMLvorx9kPfR6WTEwTFQ8ai/lbr8rUqpqvjYUnTSXQVQ71Drj5GJK
-         RECoQDzgsJUdJwfKMT9nw/Gcan8lFs4CF7xzacTYrzpmO7QXUtJ0wOvCMIvFcmKTG6ds
-         S0JhBqH4xNZ9AdbRXFzXIauav8aPfCE3jZORlJTJUBw0/YItGp4DWvk1Kp8cXJfqmuFI
-         13ag==
+        bh=UdYBz3AD49871PUkNPj4Uebf8Il0FeRd7J00v5oi04U=;
+        b=n+Pcpr5wOrgmU2c65Sgk80FsAlBLVRmkLo0XbwUrvO9lDOhlDLvWFp2fHgsz+gjvvb
+         9lx4qvrnQ8p0/CkVzkNSU4oXoXO4CMa9BtSrE3crfGshR1UTDh0RwJK+DOwDma3gFbB8
+         F2dNcvr12Zzft48S7piu2oUTIsarWn5vyptyDl6Z6M0aEf95Ms8tdNZBCUyhPXA4tfav
+         D2CILGxOu/uL0cyVXZztwjdsLpDRa641IIbvddCDN9ZqBeb5/T0uxvaWjoTO+YiCRWmn
+         e+kv/mrOHQAq2kqUGToqJpMknvIq8Zd00f9/JSuXKO3dmmwH4r909as/b2CLtB0pcfrn
+         Sxow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=IgY/A9lI8I0CLEHHbAfWjUttLZ/uMo5ZHLdhVrD7cM0=;
-        b=R6DoAdmqz3Elfp0rKfYMHoSGUd6hA3j6nofREzl1OCI9VRzt0d7OQHepfvuS9g6IDr
-         1QDs25o3AR8nuEe8XxQJg8zOPifm6ZH7VnBQrNYpud5ZGF4JNOnxvVSs74jjPhYJB9d1
-         5zE9tTdZZ/tAF/C7JWVFTfDeFSEtEPBhUKJtV/FicJUyHOM3t669dWXTtvAt9O50Mxcb
-         XGjPbQIEZtMYGROzXqrrCvB4n4gND0QPffcBZVWTmO+R1vYmLvToo7Ucs24g1JFF4SnY
-         VzzdaczeTlK5JcMnYoq3qmU03OBKfaUrs2lFa7ECrg2t/dDf7gpWO4yNEUNr1nuwfeip
-         W35A==
-X-Gm-Message-State: APjAAAVkinz+gaB+iNPrgMCZ/Ok1OO683Iw46H1xNHkwpf190sjJ/+5F
-        H4pPWfO8X/lDxW0mAWYbWPMrpsUVb0LlyExEjgn2pMCssL3v6KEIS0Dv4C8hcRmjrVDzZtphmg0
-        VJd/JS963okWq/icgwLegPI/+5XdIkFw6EI1n1QEzIBn3Dd3hO5+hfSWA/euzegkPLLWo5to4
-X-Google-Smtp-Source: APXvYqxXhcIT67XYPNyAtt7N43so6bSsWc4OopxKKv8aAXTznOXWZ7A8M1Li4/dumBajBFClbx8iUmgtV+QX
-X-Received: by 2002:a67:e44b:: with SMTP id n11mr7496089vsm.115.1579802702764;
- Thu, 23 Jan 2020 10:05:02 -0800 (PST)
-Date:   Thu, 23 Jan 2020 10:04:36 -0800
+        bh=UdYBz3AD49871PUkNPj4Uebf8Il0FeRd7J00v5oi04U=;
+        b=ny8ic2FHISyMPN1uowvfWlxkqWbpvIacbdw1Y13EvYXB2dqsLiJmHeZA8C/H+ZpXyj
+         r20QxPQ/UDL+1V3gAlFTtiYR1HEM2Edf27UZG1yj09xUPdc1BEtHrm/x7JPz9PDh7ezI
+         igBv5ldFo1EuGJ+T3/lSZiYGVmnYgURve85GpW2SJ+z6sTzD5S4ihs4KBWjX1H1eLEO8
+         Oj+uUN0dUHmGG4Zrt7vK2O160I/N6ENUgI4DTPLlRt8DAh2UcARtMCe2/xtxgI4X/I30
+         aLOBPREqtOzCnQvFqzNxHj+3ex7EZUnGH35XquKZ+QSYVQNJGLf7xxE9aeLvVHw0sqLU
+         zT4w==
+X-Gm-Message-State: APjAAAVZFrMdHq9koJDc5LvwY6GZOszENLbcgrSU/fwJKZ/GqLuy/n2y
+        XszZtX58Z52833SEiATcjlKHq6g8P0sajhTCD/lONISlWgKEhfjXFRVXkDtyx0aiaVMwOMItNmO
+        mePbBH5YpN+/a91ZCCEKOOaPOAVNbfNQpQBnXpmZ9ka1NmYRx1oeCjRq9NlHoJyTO1zLzhiWK
+X-Google-Smtp-Source: APXvYqw/mRdsaZ41fljNpl0GCv0XtJYfDahhtiR1QNY/cSbWhanCWfktv1CfZhgA95ua8wi2fyuKZN0sD5DP
+X-Received: by 2002:a37:a881:: with SMTP id r123mr5611982qke.275.1579802700645;
+ Thu, 23 Jan 2020 10:05:00 -0800 (PST)
+Date:   Thu, 23 Jan 2020 10:04:35 -0800
 In-Reply-To: <20200123180436.99487-1-bgardon@google.com>
-Message-Id: <20200123180436.99487-11-bgardon@google.com>
+Message-Id: <20200123180436.99487-10-bgardon@google.com>
 Mime-Version: 1.0
 References: <20200123180436.99487-1-bgardon@google.com>
 X-Mailer: git-send-email 2.25.0.341.g760bfbb309-goog
-Subject: [PATCH v4 10/10] KVM: selftests: Move memslot 0 above KVM internal memslots
+Subject: [PATCH v4 09/10] KVM: selftests: Stop memslot creation in KVM
+ internal memslot region
 From:   Ben Gardon <bgardon@google.com>
 To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
         linux-kselftest@vger.kernel.org
@@ -76,45 +77,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-KVM creates internal memslots between 3 and 4 GiB paddrs on the first
-vCPU creation. If memslot 0 is large enough it collides with these
-memslots an causes vCPU creation to fail. Instead of creating memslot 0
-at paddr 0, start it 4G into the guest physical address space.
+KVM creates internal memslots covering the region between 3G and 4G in
+the guest physical address space, when the first vCPU is created.
+Mapping this region before creation of the first vCPU causes vCPU
+creation to fail. Prohibit tests from creating such a memslot and fail
+with a helpful warning when they try to.
 
 Signed-off-by: Ben Gardon <bgardon@google.com>
 ---
- tools/testing/selftests/kvm/lib/kvm_util.c | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+ tools/testing/selftests/kvm/lib/kvm_util.c | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
 diff --git a/tools/testing/selftests/kvm/lib/kvm_util.c b/tools/testing/selftests/kvm/lib/kvm_util.c
-index 5b971c04f1643..427c88d32e988 100644
+index 41cf45416060f..5b971c04f1643 100644
 --- a/tools/testing/selftests/kvm/lib/kvm_util.c
 +++ b/tools/testing/selftests/kvm/lib/kvm_util.c
-@@ -130,9 +130,11 @@ _Static_assert(sizeof(vm_guest_mode_string)/sizeof(char *) == NUM_VM_MODES,
-  *
-  * Creates a VM with the mode specified by mode (e.g. VM_MODE_P52V48_4K).
-  * When phy_pages is non-zero, a memory region of phy_pages physical pages
-- * is created and mapped starting at guest physical address 0.  The file
-- * descriptor to control the created VM is created with the permissions
-- * given by perm (e.g. O_RDWR).
-+ * is created, starting at 4G into the guest physical address space to avoid
-+ * KVM internal memslots which map the region between 3G and 4G. If tests need
-+ * to use the physical region between 0 and 3G, they can allocate another
-+ * memslot for that region. The file descriptor to control the created VM is
-+ * created with the permissions given by perm (e.g. O_RDWR).
-  */
- struct kvm_vm *_vm_create(enum vm_guest_mode mode, uint64_t phy_pages, int perm)
- {
-@@ -231,7 +233,8 @@ struct kvm_vm *_vm_create(enum vm_guest_mode mode, uint64_t phy_pages, int perm)
- 	vm->vpages_mapped = sparsebit_alloc();
- 	if (phy_pages != 0)
- 		vm_userspace_mem_region_add(vm, VM_MEM_SRC_ANONYMOUS,
--					    0, 0, phy_pages, 0);
-+					    KVM_INTERNAL_MEMSLOTS_END_PADDR,
-+					    0, phy_pages, 0);
+@@ -113,6 +113,8 @@ const char * const vm_guest_mode_string[] = {
+ _Static_assert(sizeof(vm_guest_mode_string)/sizeof(char *) == NUM_VM_MODES,
+ 	       "Missing new mode strings?");
  
- 	return vm;
- }
++#define KVM_INTERNAL_MEMSLOTS_START_PADDR (3UL << 30)
++#define KVM_INTERNAL_MEMSLOTS_END_PADDR (4UL << 30)
+ /*
+  * VM Create
+  *
+@@ -593,6 +595,20 @@ void vm_userspace_mem_region_add(struct kvm_vm *vm,
+ 		"  vm->max_gfn: 0x%lx vm->page_size: 0x%x",
+ 		guest_paddr, npages, vm->max_gfn, vm->page_size);
+ 
++	/*
++	 * Check that this region does not overlap with KVM internal memslots
++	 * which are created when the first vCPU is created.
++	 */
++	TEST_ASSERT(guest_paddr >= KVM_INTERNAL_MEMSLOTS_END_PADDR ||
++		    guest_paddr + npages < KVM_INTERNAL_MEMSLOTS_START_PADDR,
++		    "Memslot overlapps with region mapped by internal KVM\n"
++		    "memslots:\n"
++		    "  Requested paddr range:      [0x%lx, 0x%lx)\n"
++		    "  KVM internal memslot range: [0x%lx, 0x%lx)\n",
++		    guest_paddr, guest_paddr + npages,
++		    KVM_INTERNAL_MEMSLOTS_START_PADDR,
++		    KVM_INTERNAL_MEMSLOTS_END_PADDR);
++
+ 	/*
+ 	 * Confirm a mem region with an overlapping address doesn't
+ 	 * already exist.
 -- 
 2.25.0.341.g760bfbb309-goog
 
