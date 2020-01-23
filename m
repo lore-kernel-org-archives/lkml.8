@@ -2,93 +2,160 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58A7FC33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 15:25:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 569C3C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 15:25:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 280E222522
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 15:25:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AB5822522
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 15:25:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="nU81obDA"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Jp69RmQk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729100AbgAWPY7 (ORCPT
+        id S1729133AbgAWPZL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 10:24:59 -0500
-Received: from mail-io1-f43.google.com ([209.85.166.43]:34289 "EHLO
-        mail-io1-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726968AbgAWPY6 (ORCPT
+        Thu, 23 Jan 2020 10:25:11 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:45462 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729107AbgAWPZK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 10:24:58 -0500
-Received: by mail-io1-f43.google.com with SMTP id z193so3359795iof.1
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jan 2020 07:24:58 -0800 (PST)
+        Thu, 23 Jan 2020 10:25:10 -0500
+Received: by mail-pg1-f193.google.com with SMTP id b9so1525721pgk.12
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jan 2020 07:25:10 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=BC99IbgznV51ebkSNmOlrBudQG7GZ3+AdYLBnCjDBqE=;
-        b=nU81obDAB3xzze9+m3K7YBN1TZ3htR7PWAbiHRx7Q5iA/6i9aOmjRlME8wQlYZqM0X
-         wQ5a7JFKNbQGIBTTU06kgXo0ZNFhy/Oj+YjE3CupnrptmMKo6ZCLr6QuVDliNeZs3szr
-         MisGDT6n0ppw396O5BYnEQY7Jh4cLHXRr/bKSUqgq1DdghwcHCLF5aLlEYIRMeCRwHiK
-         20np/ldbhY2TFScg6G63Nt0Faf2F4hMbHblW9I2LCk/OBdHbTRyTXRwBt9z0Q5RYE3Vi
-         VDUL7Q/7m7/I+iKVhBGAcoyJ28cBk8bJn98+Ag+IRn5QPNIbn5sQSvjV5G5HjRT0wuoB
-         nCng==
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=Q4x5KAd27m8l4DDargFurbUE9qKxXrSpODZZ6bpQ4NY=;
+        b=Jp69RmQkL6xEcGqyr24OfJqADG68GZDN7XOwN3C6RbgKxk3YJckrojP9H/yfiLVGpD
+         qxWHjOfZEMp2p7tz7HOgM5FsSgnfRGBg54bIj9ZW2VfOMvC9cDf9MxtKy4m9AdBGYb8b
+         c/1qg6nFPcx20v7/fvgeAGxLiHhwmCvUw+Ja4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=BC99IbgznV51ebkSNmOlrBudQG7GZ3+AdYLBnCjDBqE=;
-        b=b/c0aZ3h054VS2yqBu8CMbE+tBqJxj5QtbjsYbLZ0hlquqmw1Pj/063hdb+R+ut3DP
-         Gst+JvnVL749R2tYRfn0QzJpKg9ZdOYTDoFPVGaxR1iMaOLyh0eeerR3dznWtQjqUR1X
-         IUSNS01MZg4/9NH/tJ+9bVI4hV+BGFBdKhoYzP6A5SJ5F4wG1HKnoa/YDSnhCEIZP2jl
-         34yDMuGrPYADM+5MTX8CPtFMdlFLniX212qFo62TX04sk84JbQh7pywzT3Mg5AkdBsj3
-         w8SV/JLD+q4GFqAmvP95Ab3DTjHnFIgc+adrq4cCGB+NFT0l0RtUoF+WGA4DIW7jgUKH
-         pRvg==
-X-Gm-Message-State: APjAAAWCqOG6KdTLEr6N8oEWzyoeBAKcnfKIhwfEvKbiJnCcHZBU3u+P
-        SNYWMqy0YKq+1UY0BclqpMpHODY6xJqQXdmaaqXesQ==
-X-Google-Smtp-Source: APXvYqwGqBocjjR32aYXUSpm+fAyIaNTMJhRfvsKcYSQG+OWC5akeoEIMD2bkacKENwDt1VBALJDMq6ff2W1JRyXVk4=
-X-Received: by 2002:a05:6638:72c:: with SMTP id j12mr11974539jad.136.1579793097823;
- Thu, 23 Jan 2020 07:24:57 -0800 (PST)
-MIME-Version: 1.0
-References: <20200123140506.29275-1-brgl@bgdev.pl> <20200123145058.GW32742@smile.fi.intel.com>
-In-Reply-To: <20200123145058.GW32742@smile.fi.intel.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Thu, 23 Jan 2020 16:24:46 +0100
-Message-ID: <CAMRc=MfNHjYB_8hbN610mnOG8y=9zEOG7+YE1s5-sYoi63=U4Q@mail.gmail.com>
-Subject: Re: [RESEND PATCH v5 0/7] gpiolib: add an ioctl() for monitoring line
- status changes
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Kent Gibson <warthog618@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=Q4x5KAd27m8l4DDargFurbUE9qKxXrSpODZZ6bpQ4NY=;
+        b=X23f7r/3D3pFYqRRh3JSvowbbWbgOB77ez7ql1rAyyjqnUw4lq7+h2e2nkDpTl/68Z
+         Tp9ePF40lled6D2kaT8Kxb8mTVqR8z5jOJvNyn0z2snGo7vbOL6EMswB39nS6Vn34y44
+         j8hIXLn8nIdt71839GCkLU1jB8SvJFPaq2eB74bQc4QpwRhuGqRMLPHzsEA403VkWoXJ
+         NsCfcExx3l2hLQUoopZDESc8xLd/kE3OkVBaiV4XFfUQeUASOKOg2Y15mBqTOA2duOkz
+         9F5w7u3UFr1d4v9oBD866ZagbH7pPt4vtPu66xOYXsVAQ1P7K8G1hSv/Z0DmHHF9Uuwq
+         OSgg==
+X-Gm-Message-State: APjAAAWSxIM1f73N1yre/j9Pb3w42eKG9LRcJCMPoqRGIt5kjOA6qjv8
+        XtI2/T5YXgTINql1aw22YnvdsSVvQ5xU6A==
+X-Google-Smtp-Source: APXvYqy69wILp8KzY5eBLZS9Y6shozDIu5m42vqavj1O7DKkYvFz5hDVbewtJW2V8AcxgFhtzKJSDA==
+X-Received: by 2002:a63:2ac2:: with SMTP id q185mr4570434pgq.417.1579793109702;
+        Thu, 23 Jan 2020 07:25:09 -0800 (PST)
+Received: from kpsingh-kernel.localdomain ([2a00:79e1:abc:122:bd8d:3f7b:87f7:16d1])
+        by smtp.gmail.com with ESMTPSA id v5sm3108118pfn.122.2020.01.23.07.25.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 23 Jan 2020 07:25:09 -0800 (PST)
+From:   KP Singh <kpsingh@chromium.org>
+To:     linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+        linux-security-module@vger.kernel.org
+Cc:     Brendan Jackman <jackmanb@google.com>,
+        Florent Revest <revest@google.com>,
+        Thomas Garnier <thgarnie@google.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        James Morris <jmorris@namei.org>,
+        Kees Cook <keescook@chromium.org>,
+        Thomas Garnier <thgarnie@chromium.org>,
+        Michael Halcrow <mhalcrow@google.com>,
+        Paul Turner <pjt@google.com>,
+        Brendan Gregg <brendan.d.gregg@gmail.com>,
+        Jann Horn <jannh@google.com>,
+        Matthew Garrett <mjg59@google.com>,
+        Christian Brauner <christian@brauner.io>,
+        =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>,
+        Florent Revest <revest@chromium.org>,
+        Brendan Jackman <jackmanb@chromium.org>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jiri Kosina <jkosina@suse.cz>,
-        Stefani Seibold <stefani@seibold.net>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Stanislav Fomichev <sdf@google.com>,
+        Quentin Monnet <quentin.monnet@netronome.com>,
+        Andrey Ignatov <rdna@fb.com>, Joe Stringer <joe@wand.net.nz>
+Subject: [PATCH bpf-next v3 01/10] bpf: btf: Add btf_type_by_name_kind
+Date:   Thu, 23 Jan 2020 07:24:31 -0800
+Message-Id: <20200123152440.28956-2-kpsingh@chromium.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200123152440.28956-1-kpsingh@chromium.org>
+References: <20200123152440.28956-1-kpsingh@chromium.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-czw., 23 sty 2020 o 15:51 Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> napisa=C5=82(a):
->
-> On Thu, Jan 23, 2020 at 03:04:59PM +0100, Bartosz Golaszewski wrote:
-> > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> >
-> > Resending with some people who could ack kfifo patches in copy.
->
-> Haven't you got Ack from Stefani [1]?
->
-> [1]: https://lkml.org/lkml/2020/1/7/514
->
+From: KP Singh <kpsingh@google.com>
 
-Ha! Somehow I must have missed this.
+- The LSM code does the combination of btf_find_by_name_kind and
+  btf_type_by_id a couple of times to figure out the BTF type for
+  security_hook_heads and security_list_options.
+- Add an extern for btf_vmlinux in btf.h
 
-Thanks, that's settled then.
+Signed-off-by: KP Singh <kpsingh@google.com>
+Reviewed-by: Brendan Jackman <jackmanb@google.com>
+Reviewed-by: Florent Revest <revest@google.com>
+Reviewed-by: Thomas Garnier <thgarnie@google.com>
+---
+ include/linux/btf.h |  3 +++
+ kernel/bpf/btf.c    | 12 ++++++++++++
+ 2 files changed, 15 insertions(+)
+
+diff --git a/include/linux/btf.h b/include/linux/btf.h
+index 5c1ea99b480f..d4e859f90a39 100644
+--- a/include/linux/btf.h
++++ b/include/linux/btf.h
+@@ -15,6 +15,7 @@ struct btf_type;
+ union bpf_attr;
+ 
+ extern const struct file_operations btf_fops;
++extern struct btf *btf_vmlinux;
+ 
+ void btf_put(struct btf *btf);
+ int btf_new_fd(const union bpf_attr *attr);
+@@ -66,6 +67,8 @@ const struct btf_type *
+ btf_resolve_size(const struct btf *btf, const struct btf_type *type,
+ 		 u32 *type_size, const struct btf_type **elem_type,
+ 		 u32 *total_nelems);
++const struct btf_type *btf_type_by_name_kind(
++	struct btf *btf, const char *name, u8 kind);
+ 
+ #define for_each_member(i, struct_type, member)			\
+ 	for (i = 0, member = btf_type_member(struct_type);	\
+diff --git a/kernel/bpf/btf.c b/kernel/bpf/btf.c
+index 32963b6d5a9c..ea53c16802cb 100644
+--- a/kernel/bpf/btf.c
++++ b/kernel/bpf/btf.c
+@@ -441,6 +441,18 @@ const struct btf_type *btf_type_resolve_func_ptr(const struct btf *btf,
+ 	return NULL;
+ }
+ 
++const struct btf_type *btf_type_by_name_kind(
++	struct btf *btf, const char *name, u8 kind)
++{
++	s32 type_id;
++
++	type_id = btf_find_by_name_kind(btf, name, kind);
++	if (type_id < 0)
++		return ERR_PTR(type_id);
++
++	return btf_type_by_id(btf, type_id);
++}
++
+ /* Types that act only as a source, not sink or intermediate
+  * type when resolving.
+  */
+-- 
+2.20.1
+
