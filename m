@@ -2,67 +2,166 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 352C8C33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 00:29:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEDC3C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 00:31:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1215E20665
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 00:29:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A83B224673
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 00:31:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HQz+kC3X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726231AbgAWA3Z (ORCPT
+        id S1726780AbgAWAbJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 19:29:25 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:52560 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725911AbgAWA3Y (ORCPT
+        Wed, 22 Jan 2020 19:31:09 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:33608 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725911AbgAWAbJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 19:29:24 -0500
-Received: from [82.43.126.140] (helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <colin.king@canonical.com>)
-        id 1iuQN8-0004aM-9o; Thu, 23 Jan 2020 00:29:22 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Richard Russon <ldm@flatcap.org>, Jens Axboe <axboe@kernel.dk>,
-        linux-ntfs-dev@lists.sourceforge.net, linux-block@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] partitions/ldm: fix spelling mistake "to" -> "too"
-Date:   Thu, 23 Jan 2020 00:29:21 +0000
-Message-Id: <20200123002921.2832716-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.24.0
+        Wed, 22 Jan 2020 19:31:09 -0500
+Received: by mail-pg1-f193.google.com with SMTP id 6so440882pgk.0;
+        Wed, 22 Jan 2020 16:31:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:subject:to:cc:message-id:date:user-agent:mime-version
+         :content-language:content-transfer-encoding;
+        bh=I1NWWVIHGXoG7VFbe2feJQfdiQOYXTHsoIp2sJtnPI8=;
+        b=HQz+kC3Xpm6aWDCXfQNE4n+bC+wKNzsli7HoknufUNIKNIAMtFf3rT2088xdYHgbYD
+         03oAN39sE5tPfE5/zXqzta4ekmSXp1WySkdNtzyeMpb6HOkVfqoBC8xKREkUfO5P4iyE
+         TFMWqU55yjJ4s16fHQN/6tCvqjvm6GO+qUyuJI/x1UVc27K+/6PB6gSqqpBTwg7xVTxj
+         HPGv+yzFzmhoqAnIvnceFk+DN97r9XrLxsBCrFpErh2m7Et+S9irgQO/WSId+RbAPOZB
+         mL/gvWQO2/YbY0TgwoRUiJR9PR3DDfqdKiVMDagKXPeRq+ctGq491uRUB37H86ELK064
+         +9/Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:subject:to:cc:message-id:date:user-agent
+         :mime-version:content-language:content-transfer-encoding;
+        bh=I1NWWVIHGXoG7VFbe2feJQfdiQOYXTHsoIp2sJtnPI8=;
+        b=mJdGMBZZYZ1Q345tzohFabbjk4nN2zF5XTtaIKifz4V+FOAKKo2rMGARriAtJvy1Gz
+         5XNmd+y4IneBEbJU55lZ1gL5c+Jr6Hz3uTyYIrppAOFU2Khcdfbgh4Ofi/5Ui4u0MJr5
+         7EJzVaibw8pmvNL+JUVez9eYFAVgvd9EAW8Zkmf5CVCx66pjgXwsnrYLfGFg1H7HR1qt
+         /kQDQrDlM/Fyc/9QzHOJ1oNyQ+NgCBsQdSU7H+AfIFmhOzoJwa03ycESjGk62Pvg/6qO
+         uhHaBbI+usd7CgoyUy7EPpxmUnaQu//0S6fRmH0PjxBINHVgdaiuBnsHnbQWUXdAd2cN
+         MU3g==
+X-Gm-Message-State: APjAAAUfhZNV8rwbVy8/5UuKQ65AprOjIttcTPxhABeY2VWSHnPTeMZ6
+        PZcuffOLdJmByzzYFfSrcFM=
+X-Google-Smtp-Source: APXvYqx1qO1eGORTmIN0owFT8xYr45XG8x/ePyvdZj93OO1vfLtYaPpqyeCTYgKB4CUl7DF4DYGVeQ==
+X-Received: by 2002:aa7:820d:: with SMTP id k13mr5213655pfi.10.1579739468778;
+        Wed, 22 Jan 2020 16:31:08 -0800 (PST)
+Received: from ?IPv6:2001:4898:d8:28:140e:bf9b:65a6:dd72? ([2001:4898:80e8:a:941b:bf9b:65a6:dd72])
+        by smtp.gmail.com with ESMTPSA id s24sm94177pfd.161.2020.01.22.16.31.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 22 Jan 2020 16:31:08 -0800 (PST)
+From:   Shiping Ji <shiping.linux@gmail.com>
+Subject: [PATCH v10 1/2] dt-bindings: edac: dmc-520.yaml
+To:     Borislav Petkov <bp@alien8.de>, James Morse <james.morse@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        linux-edac <linux-edac@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, hangl@microsoft.com,
+        Lei Wang <lewan@microsoft.com>, ruizhao@microsoft.com,
+        shji@microsoft.com, Scott Branden <scott.branden@broadcom.com>,
+        Yuqing Shen <yuqing.shen@broadcom.com>
+Message-ID: <09a2fe69-842f-01cf-1cfa-d5fc639b158a@gmail.com>
+Date:   Wed, 22 Jan 2020 16:31:07 -0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+This is the device tree bindings for new EDAC driver dmc520_edac.c.
 
-There is a spelling mistake in a ldm_error message. Fix it.
+From: Lei Wang <leiwang_git@outlook.com>
 
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Signed-off-by: Lei Wang <leiwang_git@outlook.com>
+Signed-off-by: Shiping Ji <shiping.linux@gmail.com>
+Reviewed-by: James Morse <james.morse@arm.com>
+
 ---
- block/partitions/ldm.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+     Changes in v10:
+         - Convert to the YAML format for binding description
 
-diff --git a/block/partitions/ldm.c b/block/partitions/ldm.c
-index fe5d970e2e60..a2d97ee1908c 100644
---- a/block/partitions/ldm.c
-+++ b/block/partitions/ldm.c
-@@ -1233,7 +1233,7 @@ static bool ldm_frag_add (const u8 *data, int size, struct list_head *frags)
- 	BUG_ON (!data || !frags);
- 
- 	if (size < 2 * VBLK_SIZE_HEAD) {
--		ldm_error("Value of size is to small.");
-+		ldm_error("Value of size is too small.");
- 		return false;
- 	}
- 
+---
+ .../devicetree/bindings/edac/dmc-520.yaml     | 56 +++++++++++++++++++
+ 1 file changed, 56 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/edac/dmc-520.yaml
+
+diff --git a/Documentation/devicetree/bindings/edac/dmc-520.yaml b/Documentation/devicetree/bindings/edac/dmc-520.yaml
+new file mode 100644
+index 000000000000..dd5982b227b2
+--- /dev/null
++++ b/Documentation/devicetree/bindings/edac/dmc-520.yaml
+@@ -0,0 +1,56 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/edac/dmc-520.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: ARM DMC-520 EDAC bindings
++
++maintainers:
++  - Lei Wang <lewan@microsoft.com>
++
++description: |+
++  DMC-520 node is defined to describe DRAM error detection and correction.
++
++  https://static.docs.arm.com/100000/0200/corelink_dmc520_trm_100000_0200_01_en.pdf
++
++properties:
++  compatible:
++    items:
++      - const: brcm,dmc-520
++      - const: arm,dmc-520
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    minItems: 1
++
++  interrupt-names:
++    minItems: 1
++    items:
++      - const: ram_ecc_errc
++      - const: ram_ecc_errd
++      - const: dram_ecc_errc
++      - const: dram_ecc_errd
++      - const: failed_access
++      - const: failed_prog
++      - const: link_err
++      - const: temperature_event
++      - const: arch_fsm
++      - const: phy_request
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - interrupt-names
++
++examples:
++  - |
++    dmc0: dmc@200000 {
++        compatible = "brcm,dmc-520", "arm,dmc-520";
++        reg = <0x200000 0x80000>;
++        interrupts = <0x0 0x349 0x4>, <0x0 0x34B 0x4>;
++        interrupt-names = "dram_ecc_errc", "dram_ecc_errd";
++    };
 -- 
-2.24.0
+2.17.1
+
 
