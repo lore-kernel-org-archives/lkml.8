@@ -2,162 +2,97 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C76D4C33CAA
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 06:36:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 876D3C33CAA
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 06:41:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5A7024673
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 06:36:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57E55217F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 06:41:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="PIVXTPnp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726099AbgAWGgG (ORCPT
+        id S1726191AbgAWGll (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 01:36:06 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:7980 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725535AbgAWGgG (ORCPT
+        Thu, 23 Jan 2020 01:41:41 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:60062 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725818AbgAWGll (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 01:36:06 -0500
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00N6WReq036419
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jan 2020 01:36:05 -0500
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2xp4gkesb5-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jan 2020 01:36:05 -0500
-Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <parth@linux.ibm.com>;
-        Thu, 23 Jan 2020 06:36:03 -0000
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 23 Jan 2020 06:35:59 -0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 00N6ZwVq53149826
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 23 Jan 2020 06:35:58 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2FEB74C040;
-        Thu, 23 Jan 2020 06:35:58 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 45DA04C046;
-        Thu, 23 Jan 2020 06:35:53 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.102.18.124])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 23 Jan 2020 06:35:53 +0000 (GMT)
-Subject: Re: [RFC v6 1/5] sched: Introduce switch to enable TurboSched for
- task packing
-To:     Tim Chen <tim.c.chen@linux.intel.com>,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
-Cc:     peterz@infradead.org, mingo@redhat.com, vincent.guittot@linaro.org,
-        dietmar.eggemann@arm.com, patrick.bellasi@matbug.net,
-        valentin.schneider@arm.com, pavel@ucw.cz, dsmythies@telus.net,
-        qperret@google.com
-References: <20200121063307.17221-1-parth@linux.ibm.com>
- <20200121063307.17221-2-parth@linux.ibm.com>
- <0fb8fa5c-0edd-913d-912f-df383a3d4007@linux.intel.com>
-From:   Parth Shah <parth@linux.ibm.com>
-Date:   Thu, 23 Jan 2020 12:05:51 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Thu, 23 Jan 2020 01:41:41 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Type:MIME-Version:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=vzA4qFI0clehk17KAQWnrnqYblUUCzc7lcilnwcRFvA=; b=PIVXTPnpPMrYaUzy4A4QmGXDD1
+        F2yRfoz0Em5QGFQtULhnLC+Al6M+v5iz9V6KGHTI4W9fC7cgM3JwuIa/IDXWW4IlgusDM90rgVRm+
+        8qGAyvv54PG/P5klPQIbSeTFpIARw9kVzLg5CAct8QLjaom5acY1Xg87avWx9NBoolhwskCpZkmJN
+        WHeoVfH0r1rocGdd45006lBGjqAXvsiqvtcfN/w27n0LfswZcMp0yKKiAMOnz/HdAr0RSCv2A0+gH
+        BiWJsT2v6Yr/J9zho3kFjBqSJM2Fnb2aiakIdsBpn+wnUhprd6dyK+cdGbUwUsIpCw6bj/stxFSIe
+        nLZwxfcQ==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iuWBQ-0001la-NL; Thu, 23 Jan 2020 06:41:40 +0000
+Date:   Wed, 22 Jan 2020 22:41:40 -0800
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [GIT PULL] XArray for 5.5
+Message-ID: <20200123064140.GG4675@bombadil.infradead.org>
 MIME-Version: 1.0
-In-Reply-To: <0fb8fa5c-0edd-913d-912f-df383a3d4007@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 20012306-0020-0000-0000-000003A334D5
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20012306-0021-0000-0000-000021FACCA8
-Message-Id: <1f99c7cc-223c-302d-2c42-a3933e2d8877@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-01-22_08:2020-01-22,2020-01-22 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxlogscore=999
- clxscore=1015 impostorscore=0 phishscore=0 mlxscore=0 suspectscore=0
- spamscore=0 malwarescore=0 adultscore=0 lowpriorityscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-2001230055
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+I had an oops live on stage at linux.conf.au this year, and it turned out
+to be a bug in xas_find() which I can't prove isn't triggerable in the
+current codebase.  Then in looking for the bug, I spotted two more bugs.
+The bots have had a few days to chew on this with no problems reported,
+and it passes the test-suite (which now has more tests to make sure
+these problems don't come back).
 
-On 1/23/20 3:07 AM, Tim Chen wrote:
-> On 1/20/20 10:33 PM, Parth Shah wrote:
->> Create a static key which allows to enable or disable TurboSched feature at
->> runtime.
->>
->> This key is added in order to enable the TurboSched feature only when
->> required. This helps in optimizing the scheduler fast-path when the
->> TurboSched feature is disabled.
->>
->> Also provide get/put methods to keep track of the tasks using the
->> TurboSched feature and also refcount classified background tasks. This
->> allows to enable the feature on setting first task classified as background
->> noise, similarly disable the feature on unsetting of such last task.
->>
->> Signed-off-by: Parth Shah <parth@linux.ibm.com>
->> ---
->>  kernel/sched/core.c  | 25 +++++++++++++++++++++++++
->>  kernel/sched/sched.h | 12 ++++++++++++
->>  2 files changed, 37 insertions(+)
->>
->> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
->> index a9e5d157b1a5..dfbb52d66b29 100644
->> --- a/kernel/sched/core.c
->> +++ b/kernel/sched/core.c
->> @@ -73,6 +73,31 @@ __read_mostly int scheduler_running;
->>   */
->>  int sysctl_sched_rt_runtime = 950000;
->>  
->> +#ifdef CONFIG_SCHED_SMT
->> +DEFINE_STATIC_KEY_FALSE(__turbo_sched_enabled);
->> +static DEFINE_MUTEX(turbo_sched_lock);
->> +static int turbo_sched_count;
->> +
->> +void turbo_sched_get(void)
->> +{
->> +	mutex_lock(&turbo_sched_lock);
->> +	if (!turbo_sched_count++)
->> +		static_branch_enable(&__turbo_sched_enabled);
-> 
-> If you use static_branch_inc(&__turbo_sched_enabled) and
-> static_branch_dec(&__turbo_sched_enabled),  you don't have
-> to define turbo_sched_count. And turbo_sched_lock is
-> also unnecessary as static_branch_inc/dec are atomic.
-> 
+So I feel pretty comfortable asking you to pull this, even though it's
+so late in the development cycle.
 
-That's a good suggestion. I will make those changes in the next version.
+The following changes since commit 0058b0a506e40d9a2c62015fe92eb64a44d78cd9:
 
->> +	mutex_unlock(&turbo_sched_lock);
->> +}
->> +
->> +void turbo_sched_put(void)
->> +{
->> +	mutex_lock(&turbo_sched_lock);
->> +	if (!--turbo_sched_count)
->> +		static_branch_disable(&__turbo_sched_enabled);
->> +	mutex_unlock(&turbo_sched_lock);
->> +}
->> +#else
->> +void turbo_sched_get(void) { return ; }
->> +void turbo_sched_get(void) { return ; }
-> 
-> Double definition of turbo_sched_get.
-> You probably meant turbo_sched_put in the second definition.
+  Merge git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net (2019-11-08 18:21:05 -0800)
 
-yes, my bad. I meant turbo_sched_put() instead.
+are available in the Git repository at:
 
+  git://git.infradead.org/users/willy/linux-dax.git tags/xarray-5.5
 
-Thanks,
-Parth
+for you to fetch changes up to 00ed452c210a0bc1ff3ee79e1ce6b199f00a0638:
 
-> 
-> Tim
-> 
+  XArray: Add xa_for_each_range (2020-01-17 22:33:37 -0500)
+
+----------------------------------------------------------------
+XArray updates for 5.5
+
+Primarily bugfixes, mostly around handling index wrap-around correctly.
+A couple of doc fixes and adding missing APIs.
+
+----------------------------------------------------------------
+Matthew Wilcox (Oracle) (7):
+      XArray: Fix xas_pause at ULONG_MAX
+      XArray: Improve documentation of search marks
+      XArray: Add wrappers for nested spinlocks
+      XArray: Fix infinite loop with entry at ULONG_MAX
+      XArray: Fix xa_find_after with multi-index entries
+      XArray: Fix xas_find returning too many entries
+      XArray: Add xa_for_each_range
+
+ Documentation/core-api/xarray.rst | 70 +++++++++++++++++++++--------------
+ include/linux/xarray.h            | 45 +++++++++++++++++++---
+ lib/test_xarray.c                 | 78 ++++++++++++++++++++++++++++++++-------
+ lib/xarray.c                      | 41 ++++++++++++++------
+ 4 files changed, 175 insertions(+), 59 deletions(-)
 
