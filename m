@@ -2,141 +2,111 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AA37C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 16:29:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14849C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 16:30:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D79621D7E
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 16:29:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD09921D7E
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 16:30:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cgGne5Gx"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="ITGRhoN8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729027AbgAWQ3u (ORCPT
+        id S1727194AbgAWQaA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 11:29:50 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:54341 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728992AbgAWQ3t (ORCPT
+        Thu, 23 Jan 2020 11:30:00 -0500
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:35681 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727523AbgAWQ37 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 11:29:49 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579796989;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=N4iGmEv+O+D46staOSzOI6kwETvpx6pYrLK3YZYNIsU=;
-        b=cgGne5GxipwELNVexvqoRr3cs8bsANBpDidM8aeWFTOnoa+MXuex1uNFOVYaEwjfMHuPGc
-        BENnu6LZEA2q87iHFx6rRxzs5G/PgTOLPTYssUgW0E/V83agCo+6aXDuNcNvHlEkvD+dRX
-        C4pDVZJCM0RQY4mLvigtJv48iQ3jJHs=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-359-diEMvO8mOZKZ-4-2FGH2sg-1; Thu, 23 Jan 2020 11:29:47 -0500
-X-MC-Unique: diEMvO8mOZKZ-4-2FGH2sg-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CD965CF9BF;
-        Thu, 23 Jan 2020 16:29:42 +0000 (UTC)
-Received: from madcap2.tricolour.ca (ovpn-112-12.phx2.redhat.com [10.3.112.12])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 4A6D95DA60;
-        Thu, 23 Jan 2020 16:29:20 +0000 (UTC)
-Date:   Thu, 23 Jan 2020 11:29:18 -0500
-From:   Richard Guy Briggs <rgb@redhat.com>
-To:     Paul Moore <paul@paul-moore.com>
-Cc:     containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
-        Linux-Audit Mailing List <linux-audit@redhat.com>,
-        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
-        sgrubb@redhat.com, omosnace@redhat.com, dhowells@redhat.com,
-        simo@redhat.com, Eric Paris <eparis@parisplace.org>,
-        Serge Hallyn <serge@hallyn.com>, ebiederm@xmission.com,
-        nhorman@tuxdriver.com, Dan Walsh <dwalsh@redhat.com>,
-        mpatel@redhat.com
-Subject: Re: [PATCH ghak90 V8 07/16] audit: add contid support for signalling
- the audit daemon
-Message-ID: <20200123162918.b3jbed7tbvr2sf2p@madcap2.tricolour.ca>
-References: <cover.1577736799.git.rgb@redhat.com>
- <7d7933d742fdf4a94c84b791906a450b16f2e81f.1577736799.git.rgb@redhat.com>
- <CAHC9VhSuwJGryfrBfzxG01zwb-O_7dbjS0x0a3w-XjcNuYSAcg@mail.gmail.com>
+        Thu, 23 Jan 2020 11:29:59 -0500
+Received: by mail-qk1-f195.google.com with SMTP id z76so4040695qka.2
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jan 2020 08:29:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=vnD7CtKsIUMQZngJBgz/z3z7LZDuTlk1mfUMotJq4ls=;
+        b=ITGRhoN8U017VrzMlBw/yrJX8jmgO/FLsQjjj5XEofW+pB8tFjk8wmXr3GwdIMO95/
+         TdbtO3PIJ8YnZ2nopdVCMK6Ajh4BMIljNe2MEnw/uHTiwJfiLrFUbyGT/2t6KpFSOkpX
+         vfn1n7ptNReviQswLnoPORqii+ccWPX1hrXG9+lrEjDGgnz9ODkEYgRkHFexhcsK48HQ
+         URC+C4PUMHEE1no+vyeTkSKzn6uIzycEMlQEpJTgmXu/9V/SUv5ogYGDOJGV9PLlw65+
+         bOcVPkI4ecRkzi1FpoqIPVnWw4a1SibDgHBDR+PGF12A3huLUWFgnWWS5KNq61gMQELm
+         Ps3Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=vnD7CtKsIUMQZngJBgz/z3z7LZDuTlk1mfUMotJq4ls=;
+        b=YEgWFFurj1gG304zu7t2mTy1/iclYLATKK5rghB1DLtbBGV0Cs0fyVWRGlPMe5+9wE
+         h4H2Z0pzjykFQgH3C6zWoqOsYM6GnJ9XsnibTVFIb6fEyXoO9hoqNUiT/mE+5ReyJBxp
+         V21YYuYB9lIG7PtMqRP8TDYXR+gLyg5eVsu6DKLmDwLK2pdLHnPWSHPfKwgmUDokGJWz
+         HSTZ/wLIkRt8xYRaY6JemqIhMD9go191Q2N1kQbWIyj2X4dbAXIVYVqx5fxY26/mgJEM
+         43X/IzGVteIDS4ipuX0c9ik3L2UD8EN3fIC4zIDXITH6CxQNKOq03s+946un0s9Gmj3B
+         WJDA==
+X-Gm-Message-State: APjAAAWEQHX+GnQlkqB5lsU01p8bkeofyPgBAGs0jJKYI0ZOwuXyApQk
+        /Nhf37hnFHL4Ong6W413J6D6Ag==
+X-Google-Smtp-Source: APXvYqwu8j+jB7xvMUwGV0+Vmf+pKoO72oLwOCLj8Yu+pN4KpMhRP/GPYpj7h2IQFwCZYa3ugyl0xg==
+X-Received: by 2002:a05:620a:134f:: with SMTP id c15mr16463418qkl.115.1579796998789;
+        Thu, 23 Jan 2020 08:29:58 -0800 (PST)
+Received: from ovpn-123-97.rdu2.redhat.com (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id k135sm1121731qke.6.2020.01.23.08.29.56
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 23 Jan 2020 08:29:57 -0800 (PST)
+From:   Qian Cai <cai@lca.pw>
+To:     peterz@infradead.org
+Cc:     will@kernel.org, longman@redhat.com, mingo@redhat.com,
+        catalin.marinas@arm.com, clang-built-linux@googlegroups.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Qian Cai <cai@lca.pw>
+Subject: [PATCH -next] arm64/spinlock: fix a -Wunused-function warning
+Date:   Thu, 23 Jan 2020 11:29:45 -0500
+Message-Id: <20200123162945.7705-1-cai@lca.pw>
+X-Mailer: git-send-email 2.21.0 (Apple Git-122.2)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHC9VhSuwJGryfrBfzxG01zwb-O_7dbjS0x0a3w-XjcNuYSAcg@mail.gmail.com>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-01-22 16:28, Paul Moore wrote:
-> On Tue, Dec 31, 2019 at 2:50 PM Richard Guy Briggs <rgb@redhat.com> wrote:
-> >
-> > Add audit container identifier support to the action of signalling the
-> > audit daemon.
-> >
-> > Since this would need to add an element to the audit_sig_info struct,
-> > a new record type AUDIT_SIGNAL_INFO2 was created with a new
-> > audit_sig_info2 struct.  Corresponding support is required in the
-> > userspace code to reflect the new record request and reply type.
-> > An older userspace won't break since it won't know to request this
-> > record type.
-> >
-> > Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
-> > ---
-> >  include/linux/audit.h       |  7 +++++++
-> >  include/uapi/linux/audit.h  |  1 +
-> >  kernel/audit.c              | 35 +++++++++++++++++++++++++++++++++++
-> >  kernel/audit.h              |  1 +
-> >  security/selinux/nlmsgtab.c |  1 +
-> >  5 files changed, 45 insertions(+)
-> 
-> ...
-> 
-> > diff --git a/kernel/audit.c b/kernel/audit.c
-> > index 0871c3e5d6df..51159c94041c 100644
-> > --- a/kernel/audit.c
-> > +++ b/kernel/audit.c
-> > @@ -126,6 +126,14 @@ struct auditd_connection {
-> >  kuid_t         audit_sig_uid = INVALID_UID;
-> >  pid_t          audit_sig_pid = -1;
-> >  u32            audit_sig_sid = 0;
-> > +/* Since the signal information is stored in the record buffer at the
-> > + * time of the signal, but not retrieved until later, there is a chance
-> > + * that the last process in the container could terminate before the
-> > + * signal record is delivered.  In this circumstance, there is a chance
-> > + * the orchestrator could reuse the audit container identifier, causing
-> > + * an overlap of audit records that refer to the same audit container
-> > + * identifier, but a different container instance.  */
-> > +u64            audit_sig_cid = AUDIT_CID_UNSET;
-> 
-> I believe we could prevent the case mentioned above by taking an
-> additional reference to the audit container ID object when the signal
-> information is collected, dropping it only after the signal
-> information is collected by userspace or another process signals the
-> audit daemon.  Yes, it would block that audit container ID from being
-> reused immediately, but since we are talking about one number out of
-> 2^64 that seems like a reasonable tradeoff.
+The commit f5bfdc8e3947 ("locking/osq: Use optimized spinning loop for
+arm64") introduced a warning from Clang because vcpu_is_preempted() is
+compiled away,
 
-I had thought that through and should have been more explicit about that
-situation when I documented it.  We could do that, but then the syscall
-records would be connected with the call from auditd on shutdown to
-request that signal information, rather than the exit of that last
-process that was using that container.  This strikes me as misleading.
-Is that really what we want?
+kernel/locking/osq_lock.c:25:19: warning: unused function 'node_cpu'
+[-Wunused-function]
+static inline int node_cpu(struct optimistic_spin_node *node)
+                  ^
+1 warning generated.
 
-> paul moore
+Since vcpu_is_preempted() had already been defined in
+include/linux/sched.h as false, just comment out the redundant macro, so
+it can still be served for the documentation purpose.
 
-- RGB
+Fixes: f5bfdc8e3947 ("locking/osq: Use optimized spinning loop for arm64")
+Signed-off-by: Qian Cai <cai@lca.pw>
+---
+ arch/arm64/include/asm/spinlock.h | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---
-Richard Guy Briggs <rgb@redhat.com>
-Sr. S/W Engineer, Kernel Security, Base Operating Systems
-Remote, Ottawa, Red Hat Canada
-IRC: rgb, SunRaycer
-Voice: +1.647.777.2635, Internal: (81) 32635
+diff --git a/arch/arm64/include/asm/spinlock.h b/arch/arm64/include/asm/spinlock.h
+index 102404dc1e13..b05f82e8ba19 100644
+--- a/arch/arm64/include/asm/spinlock.h
++++ b/arch/arm64/include/asm/spinlock.h
+@@ -17,7 +17,8 @@
+  *
+  * See:
+  * https://lore.kernel.org/lkml/20200110100612.GC2827@hirez.programming.kicks-ass.net
++ *
++ * #define vcpu_is_preempted(cpu)	false
+  */
+-#define vcpu_is_preempted(cpu)	false
+ 
+ #endif /* __ASM_SPINLOCK_H */
+-- 
+2.21.0 (Apple Git-122.2)
 
