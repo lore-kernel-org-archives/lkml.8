@@ -2,156 +2,129 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B12EC33CAA
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 07:46:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D3D1C33CAA
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 07:50:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F23124125
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 07:46:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1BF0924125
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 07:50:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="V88w8LBk"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="u0uzKue8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726204AbgAWHqr (ORCPT
+        id S1726188AbgAWHuM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 02:46:47 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:54914 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725785AbgAWHqq (ORCPT
+        Thu, 23 Jan 2020 02:50:12 -0500
+Received: from mail25.static.mailgun.info ([104.130.122.25]:47154 "EHLO
+        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725785AbgAWHuL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 02:46:46 -0500
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00N7kb5G072953;
-        Thu, 23 Jan 2020 01:46:37 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1579765597;
-        bh=k2ZMVkvCNf/Gfser3QIkUsbMUcA2ylnSbCBWpeJbj8g=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=V88w8LBki/lQMA2Vpahcoa8g28fnHSTcwPz4tcMxf/QK+e/o5PchB6Y8rIulpxN91
-         Mwj6D8e+pZUPlGHhH07RGtSQcqaNRaL8QjsHOCj1jA5CWa4E63ipFDGq5OG59ojdji
-         BKh5yaeLtAxvmCHN5U0aP4eTrtVjGwi7xEswEgQE=
-Received: from DFLE101.ent.ti.com (dfle101.ent.ti.com [10.64.6.22])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00N7kb3C121133;
-        Thu, 23 Jan 2020 01:46:37 -0600
-Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE101.ent.ti.com
- (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 23
- Jan 2020 01:46:37 -0600
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE101.ent.ti.com
- (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Thu, 23 Jan 2020 01:46:37 -0600
-Received: from [172.24.145.136] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00N7kXrc046191;
-        Thu, 23 Jan 2020 01:46:34 -0600
-Subject: Re: [EXT] Re: [PATCH v6 0/2] spi: cadence-quadpsi: Add support for
- the Cadence QSPI controller
-To:     Kuldeep Singh <kuldeep.singh@nxp.com>,
-        "Ramuthevar,Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "dan.carpenter@oracle.com" <dan.carpenter@oracle.com>,
-        "cheol.yong.kim@intel.com" <cheol.yong.kim@intel.com>,
-        "qi-ming.wu@intel.com" <qi-ming.wu@intel.com>
-References: <20191230074102.50982-1-vadivel.muruganx.ramuthevar@linux.intel.com>
- <860aecbc-22d3-c9ce-3570-44115d6e81b2@ti.com>
- <AM0PR0402MB355668F205AD711D2059CDB5E00F0@AM0PR0402MB3556.eurprd04.prod.outlook.com>
-From:   Vignesh Raghavendra <vigneshr@ti.com>
-Message-ID: <40ee10f1-0b30-155c-c165-1baa57a22109@ti.com>
-Date:   Thu, 23 Jan 2020 13:17:02 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Thu, 23 Jan 2020 02:50:11 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1579765811; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=WYCodPgSQbxsvqvCCjKLZcm4QATIvQ6uhvXA/IjZoVE=;
+ b=u0uzKue88peISJd/QAYJNw4239NeSpts4YtLp424GXD+XUMWjVLSbp0LQClvQocWw2PEHjWJ
+ GS/S5ayUk7jbW6PJFaI+DrNmhs47FhxeEaRwvs3awUur2VLG0u1Tq7e/sOG7MbzNBGqal91q
+ FD98pFW2SxUOpY8gD9AVHWc98yk=
+X-Mailgun-Sending-Ip: 104.130.122.25
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e29502c.7fe6e4bbe180-smtp-out-n02;
+ Thu, 23 Jan 2020 07:50:04 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 74932C447A2; Thu, 23 Jan 2020 07:50:02 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: hongwus)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 9629FC43383;
+        Thu, 23 Jan 2020 07:50:01 +0000 (UTC)
 MIME-Version: 1.0
-In-Reply-To: <AM0PR0402MB355668F205AD711D2059CDB5E00F0@AM0PR0402MB3556.eurprd04.prod.outlook.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Thu, 23 Jan 2020 15:50:01 +0800
+From:   hongwus@codeaurora.org
+To:     Can Guo <cang@codeaurora.org>
+Cc:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
+        rnayak@codeaurora.org, linux-scsi@vger.kernel.org,
+        kernel-team@android.com, saravanak@google.com, salyzyn@google.com,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        Pedro Sousa <pedrom.sousa@synopsys.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        Venkat Gopalakrishnan <venkatg@codeaurora.org>,
+        Tomas Winkler <tomas.winkler@intel.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 2/8] scsi: ufs: set load before setting voltage in
+ regulators
+In-Reply-To: <1579764349-15578-3-git-send-email-cang@codeaurora.org>
+References: <1579764349-15578-1-git-send-email-cang@codeaurora.org>
+ <1579764349-15578-3-git-send-email-cang@codeaurora.org>
+Message-ID: <5e18c16a6f01043ccf4756ea7677441b@codeaurora.org>
+X-Sender: hongwus@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Can,
+   It makes sense that set the load before enable regulator or set 
+voltage. Just avoid voltage drop.
 
-
-On 23/01/20 12:54 pm, Kuldeep Singh wrote:
-> Hi Vignesh,
+On 2020-01-23 15:25, Can Guo wrote:
+> From: Asutosh Das <asutoshd@codeaurora.org>
 > 
->> -----Original Message-----
->> From: linux-kernel-owner@vger.kernel.org <linux-kernel-
->> owner@vger.kernel.org> On Behalf Of Vignesh Raghavendra
->> Sent: Wednesday, January 15, 2020 11:43 AM
->> To: Ramuthevar,Vadivel MuruganX
->> <vadivel.muruganx.ramuthevar@linux.intel.com>; broonie@kernel.org; linux-
->> spi@vger.kernel.org; linux-kernel@vger.kernel.org
->> Cc: robh+dt@kernel.org; dan.carpenter@oracle.com;
->> cheol.yong.kim@intel.com; qi-ming.wu@intel.com
->> Subject: [EXT] Re: [PATCH v6 0/2] spi: cadence-quadpsi: Add support for the
->> Cadence QSPI controller
->>
->> Caution: EXT Email
->>
->> Hi,
->>
->> On 12/30/2019 1:11 PM, Ramuthevar,Vadivel MuruganX wrote:
->>> Add support for the Cadence QSPI controller. This controller is
->>> present in the Intel Lightning Mountain(LGM) SoCs, Altera and TI SoCs.
->>> This driver has been tested on the Intel LGM SoCs.
->>>
->>> This driver does not support generic SPI and also the implementation
->>> only supports spi-mem interface to replace the existing driver in
->>> mtd/spi-nor/cadence-quadspi.c, the existing driver only support
->>> SPI-NOR flash memory.
->>>
->>
->>
->>
->> I am finally able to get spi-mem based cadence-quaspi driver working on TI
->> platforms with DMA and DAC mode. I have also incorporated changes to
->> disable DAC and autopolling for your intel SoC:
->>
->> https://eur01.safelinks.protection.outlook.com/?url=https%3A%2F%2Fgithub.co
->> m%2Fr-
->> vignesh%2Flinux%2Fcommits%2Fqspi&amp;data=02%7C01%7Ckuldeep.singh%
->> 40nxp.com%7Ccbd14ac527ae4298a28808d7998219e6%7C686ea1d3bc2b4c6fa
->> 92cd99c5c301635%7C0%7C0%7C637146656365872638&amp;sdata=jAR7lmry
->> R9fdqF3e4A2dQzF0Q0fYxMvM7sNhx8lvoy0%3D&amp;reserved=0
->>
->> (Top two patches are of interest)
->>
->> I have tested both DAC and INDAC mode with s25fl flash and everything seems
->> to be fine. Could you re test the driver on your SoC? Feel free to fold it into
->> your series if everything works.
+> This sequence change is required to avoid dips in voltage
+> during boot-up.
 > 
-> Is JFFS2/UBIFS a valid use case here? And were you able to test the same?
-> I see few issues with Spansion flashes (s25fs) in framework and couldn’t make FS utilities run.
-> On the other hand, file systems on other flashes (ex: micron, mt25qu) are showing positive results.
+> Apparently, this dip is caused because in the original
+> sequence, the regulators are initialized in lpm mode.
+> And then when the load is set to high, and more current
+> is drawn, than is allowed in lpm, the dip is seen.
 > 
-
-I did test with s25fl512s with UBIFS and did not see any issue. Could
-you try with latest linux master or linux next? There were couple of
-fixes in the last -rc related to spansion flashes?
-
-[1]
-https://git.kernel.org/pub/scm/linux/kernel/git/mtd/linux.git/commit/?h=mtd/fixes&id=440b6d50254bdbd84c2a665c7f53ec69dd741a4f
-[2]https://git.kernel.org/pub/scm/linux/kernel/git/mtd/linux.git/commit/?h=mtd/fixes&id=da2ef8124f20b4ce18d1d3d24fc7b88e687e10bb
-
-> Thanks
-> Kuldeep
+> Signed-off-by: Asutosh Das <asutoshd@codeaurora.org>
+> Signed-off-by: Can Guo <cang@codeaurora.org>
+> ---
+>  drivers/scsi/ufs/ufshcd.c | 10 +++++-----
+>  1 file changed, 5 insertions(+), 5 deletions(-)
 > 
->>
->> Regards
->> Vignesh
->>
->>
+> diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+> index c2de29f..c386c2d 100644
+> --- a/drivers/scsi/ufs/ufshcd.c
+> +++ b/drivers/scsi/ufs/ufshcd.c
+> @@ -7225,6 +7225,11 @@ static int ufshcd_config_vreg(struct device 
+> *dev,
+>  	name = vreg->name;
 > 
+>  	if (regulator_count_voltages(reg) > 0) {
+> +		uA_load = on ? vreg->max_uA : 0;
+> +		ret = ufshcd_config_vreg_load(dev, vreg, uA_load);
+> +		if (ret)
+> +			goto out;
+> +
+>  		if (vreg->min_uV && vreg->max_uV) {
+>  			min_uV = on ? vreg->min_uV : 0;
+>  			ret = regulator_set_voltage(reg, min_uV, vreg->max_uV);
+> @@ -7235,11 +7240,6 @@ static int ufshcd_config_vreg(struct device 
+> *dev,
+>  				goto out;
+>  			}
+>  		}
+> -
+> -		uA_load = on ? vreg->max_uA : 0;
+> -		ret = ufshcd_config_vreg_load(dev, vreg, uA_load);
+> -		if (ret)
+> -			goto out;
+>  	}
+>  out:
+>  	return ret;
 
--- 
-Regards
-Vignesh
+
+Reviewed-by: Hongwu Su <hongwus@codeaurora.org>
