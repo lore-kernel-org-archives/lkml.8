@@ -6,89 +6,92 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E39D1C33CAA
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 08:21:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A087DC33CAA
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 08:23:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B27E824683
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 08:21:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D87924125
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 08:23:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727194AbgAWIVP (ORCPT
+        id S1726231AbgAWIXN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 03:21:15 -0500
-Received: from Chamillionaire.breakpoint.cc ([193.142.43.52]:43226 "EHLO
-        Chamillionaire.breakpoint.cc" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726083AbgAWIVP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 03:21:15 -0500
-Received: from fw by Chamillionaire.breakpoint.cc with local (Exim 4.92)
-        (envelope-from <fw@strlen.de>)
-        id 1iuXje-0005Xd-Ny; Thu, 23 Jan 2020 09:21:06 +0100
-Date:   Thu, 23 Jan 2020 09:21:06 +0100
-From:   Florian Westphal <fw@strlen.de>
-To:     Daniel Borkmann <daniel@iogearbox.net>
-Cc:     Florian Westphal <fw@strlen.de>,
-        Praveen Chaudhary <praveen5582@gmail.com>, pablo@netfilter.org,
-        davem@davemloft.net, kadlec@netfilter.org,
-        netfilter-devel@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Zhenggen Xu <zxu@linkedin.com>,
-        Andy Stracner <astracner@linkedin.com>
-Subject: Re: [PATCH v3] [net]: Fix skb->csum update in
- inet_proto_csum_replace16().
-Message-ID: <20200123082106.GT795@breakpoint.cc>
-References: <1573080729-3102-1-git-send-email-pchaudhary@linkedin.com>
- <1573080729-3102-2-git-send-email-pchaudhary@linkedin.com>
- <16d56ee6-53bc-1124-3700-bc0a78f927d6@iogearbox.net>
- <20200122114333.GQ795@breakpoint.cc>
- <daf995db-37c6-a2f7-4d12-5c1a29e1c59b@iogearbox.net>
+        Thu, 23 Jan 2020 03:23:13 -0500
+Received: from foss.arm.com ([217.140.110.172]:35958 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726061AbgAWIXN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jan 2020 03:23:13 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4AADB1FB;
+        Thu, 23 Jan 2020 00:23:12 -0800 (PST)
+Received: from [10.162.16.32] (p8cg001049571a15.blr.arm.com [10.162.16.32])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CA1773F6C4;
+        Thu, 23 Jan 2020 00:26:43 -0800 (PST)
+Subject: Re: [PATCH 0/2] mm/thp: rework the pmd protect changing flow
+To:     Xuefeng Wang <wxf.wang@hisilicon.com>, catalin.marinas@arm.com,
+        will@kernel.org, mark.rutland@arm.com, arnd@arndb.de,
+        akpm@linux-foundation.org
+Cc:     linux-arch@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        chenzhou10@huawei.com
+References: <20200123075514.15142-1-wxf.wang@hisilicon.com>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Message-ID: <50493410-c44c-7ef0-81f9-d4ce9a525c1f@arm.com>
+Date:   Thu, 23 Jan 2020 13:54:32 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <daf995db-37c6-a2f7-4d12-5c1a29e1c59b@iogearbox.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200123075514.15142-1-wxf.wang@hisilicon.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Daniel Borkmann <daniel@iogearbox.net> wrote:
-> On 1/22/20 12:43 PM, Florian Westphal wrote:
-> > Daniel Borkmann <daniel@iogearbox.net> wrote:
-> > > > @@ -449,9 +464,6 @@ void inet_proto_csum_replace16(__sum16 *sum, struct sk_buff *skb,
-> > > >    	if (skb->ip_summed != CHECKSUM_PARTIAL) {
-> > > >    		*sum = csum_fold(csum_partial(diff, sizeof(diff),
-> > > >    				 ~csum_unfold(*sum)));
-> > > > -		if (skb->ip_summed == CHECKSUM_COMPLETE && pseudohdr)
-> > > > -			skb->csum = ~csum_partial(diff, sizeof(diff),
-> > > > -						  ~skb->csum);
-> > > 
-> > > What is the technical rationale in removing this here but not in any of the
-> > > other inet_proto_csum_replace*() functions? You changelog has zero analysis
-> > > on why here but not elsewhere this change would be needed?
-> > 
-> > Right, I think it could be dropped everywhere BUT there is a major caveat:
-> > 
-> > At least for the nf_nat case ipv4 header manipulation (which uses the other
-> > helpers froum utils.c) will eventually also update iph->checksum field
-> > to account for the changed ip addresses.
-> > 
-> > And that update doesn't touch skb->csum.
-> > 
-> > So in a way the update of skb->csum in the other helpers indirectly account
-> > for later ip header checksum update.
-> > 
-> > At least that was my conclusion when reviewing the earlier incarnation
-> > of the patch.
+
+
+On 01/23/2020 01:25 PM, Xuefeng Wang wrote:
+> On KunPeng920 board. When changing permission of a large range region,
+> pmdp_invalidate() takes about 65% in profile (with hugepages) in JIT tool.
+> Kernel will flush tlb twice: first flush happens in pmdp_invalidate, second
+> flush happens at the end of change_protect_range(). The first pmdp_invalidate
+> is not necessary if the hardware support atomic pmdp changing. The atomic
+> changing pimd to zero can prevent the hardware from update asynchronous.
+> So reconstruct it and remove the first pmdp_invalidate. And the second tlb
+> flush can make sure the new tlb entry valid.
 > 
-> Mainly asking because not inet_proto_csum_replace16() but the other ones are
-> exposed via BPF and they are all in no way fundamentally different to each
-> other, but my concern is that depending on how the BPF prog updates the csums
-> things could start to break. :/
+> This patch series add a pmdp_modify_prot transaction abstraction firstly.
+> Then add pmdp_modify_prot_start() in arm64, which uses pmdp_huge_get_and_clear()
+> to atomically fetch the pmd and zero the entry.
 
-I'm reasonably sure removing the skb->csum update from the other
-helpers will also break ipv4 nat :)
+There is a comment section in change_huge_pmd() which details how clearing
+the PMD entry there (in prot_numa case) can potentially race with another
+concurrent madvise(MADV_DONTNEED, ..) call. Here is the comment block for
+reference.
 
-So, AFAIU from what you're saying above the patch seems fine as-is and
-just needs a more verbose commit message explaining why replace16()
-doesn't update skb->csum while all the other ones do.
+        /*
+         * In case prot_numa, we are under down_read(mmap_sem). It's critical
+         * to not clear pmd intermittently to avoid race with MADV_DONTNEED
+         * which is also under down_read(mmap_sem):
+         *
+         *      CPU0:                           CPU1:
+         *                              change_huge_pmd(prot_numa=1)
+         *                               pmdp_huge_get_and_clear_notify()
+         * madvise_dontneed()
+         *  zap_pmd_range()
+         *   pmd_trans_huge(*pmd) == 0 (without ptl)
+         *   // skip the pmd
+         *                               set_pmd_at();
+         *                               // pmd is re-established
+         *
+         * The race makes MADV_DONTNEED miss the huge pmd and don't clear it
+         * which may break userspace.
+         *
+         * pmdp_invalidate() is required to make sure we don't miss
+         * dirty/young flags set by hardware.
+         */
 
-Is that correct?
+By defining the new override with pmdp_huge_get_and_clear(), are not we
+now exposed to above race condition ?
+
+- Anshuman
