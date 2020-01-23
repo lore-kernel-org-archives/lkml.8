@@ -2,110 +2,114 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EBA9C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 11:06:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6C76C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 11:08:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A00B24655
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 11:06:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 933CC2467F
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 11:08:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="iZZrAHuK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726885AbgAWLGl (ORCPT
+        id S1727141AbgAWLIi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 06:06:41 -0500
-Received: from foss.arm.com ([217.140.110.172]:37812 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726026AbgAWLGl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 06:06:41 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 50A1531B;
-        Thu, 23 Jan 2020 03:06:40 -0800 (PST)
-Received: from [10.1.197.50] (e120937-lin.cambridge.arm.com [10.1.197.50])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4E7AB3F6C4;
-        Thu, 23 Jan 2020 03:06:39 -0800 (PST)
-Subject: Re: [PATCH V3] firmware: arm_scmi: Make scmi core independent of the
- transport type
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     arnd@arndb.de, Sudeep Holla <sudeep.holla@arm.com>,
-        jassisinghbrar@gmail.com, peng.fan@nxp.com,
-        peter.hilber@opensynergy.com, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-References: <4b74f1b6c1f9653241a1b5754525e230b3d76a3f.1579595093.git.viresh.kumar@linaro.org>
- <3a8836dd-99d3-faff-af05-2032d609f594@arm.com>
- <20200123023924.roqc2iyx4wmukk4p@vireshk-i7>
-From:   Cristian Marussi <cristian.marussi@arm.com>
-Message-ID: <d5d71818-e68f-7688-4378-64d96bea922d@arm.com>
-Date:   Thu, 23 Jan 2020 11:06:38 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Thu, 23 Jan 2020 06:08:38 -0500
+Received: from lb2-smtp-cloud9.xs4all.net ([194.109.24.26]:39011 "EHLO
+        lb2-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726026AbgAWLIi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jan 2020 06:08:38 -0500
+Received: from [IPv6:2001:983:e9a7:1:1bd:458:b834:7f13]
+ ([IPv6:2001:983:e9a7:1:1bd:458:b834:7f13])
+        by smtp-cloud9.xs4all.net with ESMTPA
+        id uaLiixt49T6sRuaLjixWHh; Thu, 23 Jan 2020 12:08:36 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
+        t=1579777716; bh=n0bbi5reB6btYraVhNownfDKq5l4b7KiRDlNRMAIbV8=;
+        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
+         Subject;
+        b=iZZrAHuKVni3DbpCO5XU1+OM2sL3jMYnSeK1YO4BioiOvDNQjb+xgEo30EMOlOfTq
+         KXRKK+9V857ZAJaX84zuYdx7TtUmK4+cxJByHfhn/i+ok0wPNhnh5QmJU6LuiuskEZ
+         QdcD2vHUlCrfW47VFZ5K4xEgNd4mVpITXp/dt7KbyV+SSJv4gra0+V6ucNPYavVbKN
+         nKtze3JrQhXtpYv4AZGRbvreKtrx9pt8Bl/kTXiCHpg1EipKAJ2p5f4/hi3vq8C8hs
+         UMrDKaLjoCo5brD5ivffVHh89HUY5O7LUp8YSmQaRp++w0BS2Qwv0WuGfVSVExeNMU
+         QQ3v3czxDCX+Q==
+Subject: Re: [RFC][PATCH 05/15] videobuf2: handle
+ V4L2_FLAG_MEMORY_NON_CONSISTENT in REQBUFS
+To:     Sergey Senozhatsky <senozhatsky@chromium.org>
+Cc:     Hans Verkuil <hans.verkuil@cisco.com>,
+        Tomasz Figa <tfiga@chromium.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Sakari Ailus <sakari.ailus@iki.fi>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Pawel Osciak <posciak@chromium.org>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20191217032034.54897-1-senozhatsky@chromium.org>
+ <20191217032034.54897-6-senozhatsky@chromium.org>
+ <8d0c95c3-64a2-ec14-0ac2-204b0430b2b4@xs4all.nl>
+ <20200122021805.GE149602@google.com> <20200122034826.GA49953@google.com>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <7c4accc6-56f2-ecd0-1549-a4114b339ce8@xs4all.nl>
+Date:   Thu, 23 Jan 2020 12:08:34 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20200123023924.roqc2iyx4wmukk4p@vireshk-i7>
+In-Reply-To: <20200122034826.GA49953@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfOclX7/0TmC/wSsftm7U8GyP5KhyI0dBeMH8ozix/GKMBMuloalMwkCDnJ8sUU9FVHiTjl6KI/hQqhjFKt46GRlSo+I0KEcnM/ykFt7+XlPRJqPHyvZy
+ akPVxqLy0tVAx7rkmoirlcektaqPBF0lWC7MW5gWhYmXLB5WcgkoeVvIp72RQF+V7KxdwG6NDVfozQXfhrl3AbFx/K0QH17vvXfDmMonxr9FLspZwn1UfkHR
+ G/sbXbRwlPLm1IiXDGs6BPMFPDDNl7KC1TZzQf0c7D8aNjOJ5P6/uRxx4ufQvbQnzqxfLVh+v8YApY9lyJdmv9VgSIfVi4Ya7dVM9YQa6QOwAIq9uI+V+Tpk
+ T0tG1M3ZeLkDCVtTHj5CNcYZ4h8/5w3cWzb+PD2OPsWIskr/Mp9rYsQv5i0UYeAHvT0zgI/1bjXFz1ezeLR0EsDRPNfQpZYsTNCz11T1IemOvq//9JDQX5MF
+ CHacnvwzuxEbzGvOEzHEBOOy8iOIQxBq4NdajdrvL0yVIDV8BbfBfyUbdJW6R9mU8gaQyPib80k4ml5PG3CWr702dpMZhkg3p0UrjgluKOV5b8aHVve2jjsH
+ I3W+8JctKOCfwins7Np1TDZrSW77gcKY0Bf1LprtNGLOPQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 23/01/2020 02:39, Viresh Kumar wrote:
-> On 22-01-20, 12:44, Cristian Marussi wrote:
->> On 21/01/2020 08:27, Viresh Kumar wrote:
->> commment is obsolete
-> 
-> Right, they need to be checked everywhere again. Sorry for missing
-> that earlier.
-> 
->>> +struct scmi_chan_info {
->>> +	struct scmi_info *info;
->>> +	struct device *dev;
->>> +	struct scmi_handle *handle;
->>> +	void *transport_info;
->>> +};
->>> +
->>> +/**
->>> + * struct scmi_transport_ops - Structure representing a SCMI transport ops
->>> + *
->>> + * @send_message: Callback to send a message
->>> + * @mark_txdone: Callback to mark tx as done
->>> + * @chan_setup: Callback to allocate and setup a channel
->>> + * @chan_free: Callback to free a channel
->>> + */
->> commment is obsolete but I would also ask: are all of these operations supposed to be mandatory supported
->> on any possible foreseeable transport ? (beside the obviously needed like send_message)
+On 1/22/20 4:48 AM, Sergey Senozhatsky wrote:
+> On (20/01/22 11:18), Sergey Senozhatsky wrote:
+> [..]
+>>>> +    * -
+>>>> +      - __u32
+>>>>        - ``reserved``\ [1]
+>>>>        - A place holder for future extensions. Drivers and applications
+>>>> -	must set the array to zero.
+>>>> +	must set the array to zero, unless application wants to specify
+>>>> +        buffer management ``flags``.
+>>>
+>>> I think support for this flag should be signaled as a V4L2_BUF_CAP capability.
+>>> If the capability is not set, then vb2 should set 'flags' to 0 to preserve the
+>>> old 'Drivers and applications must set the array to zero' behavior.
 >>
->> I'm asking because they are all called straight away from the driver core without any NULL check
->> so that if a new transport should not need one of them it will be forced to anyway implement a dummy one
->> to comply, which it will be needlessly invoked every time.
+>> The patch set adds V4L2_BUF_CAP_SUPPORTS_CACHE_HINTS towards the end of the
+>> series, I guess I can shuffle the patches and change the wording here.
 > 
-> They are kept as mandatory for now as we don't really know how it
-> will look for other transport types. Lets make them optional only when
-> someone don't need to define them. It would be a simple change anyway.
-
-Ok, fine.
+> Or I can add separate queue flag and V4L2_BUF_CAP:
 > 
->>>  /* Each compatible listed below must have descriptor associated with it */
->>>  static const struct of_device_id scmi_of_match[] = {
->>> -	{ .compatible = "arm,scmi", .data = &scmi_generic_desc },
->>> +	{ .compatible = "arm,scmi", .data = &scmi_mailbox_desc },
->>>  	{ /* Sentinel */ },
->>>  };
->>
->> minor thing: shouldn't the chosen transport being configurable at compile time with some
->> option like CONFIG_SCMI_TRANSPORT_MBOX ? or via DT ?
+> struct vb2_queue {
+> ...
+> 	allow_cache_hints:1
+> +	allow_consistency_hints:1
+> ...
+> }
 > 
-> It is configurable via DT. The compatible should look different in
-> that case, something like: "arm,scmi-<newtranport>".
+> and then have CAP_SUPPORTS_CACHE_HINTS/CAP_SUPPORTS_CONSISTENCY_HINTS.
+
+Don't these two go hand-in-hand? I.e. either neither are supported, or
+both are supported? If so, then one queue flag is sufficient.
+
+Regards,
+
+	Hans
+
 > 
-
-Ah ok, we're assuming mailbox transport as the default, being the only one existing as of now.
-Fine for me, thanks for the explanation.
-
-Reviewed-by: Cristian Marussi <cristian.marussi@arm.com>
-
-Regards
-
-Cristian
+> 	-ss
+> 
 
