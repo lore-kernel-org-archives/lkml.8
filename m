@@ -2,366 +2,145 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 656FFC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 15:25:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D53F3C33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 15:25:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2AB4D22522
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 15:25:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4DC922464
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 15:25:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="cZSeeL5R"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="N/ImqNQK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729232AbgAWPZT (ORCPT
+        id S1727296AbgAWPZX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 10:25:19 -0500
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:53547 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729027AbgAWPZS (ORCPT
+        Thu, 23 Jan 2020 10:25:23 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:45350 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729236AbgAWPZV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 10:25:18 -0500
-Received: by mail-pj1-f66.google.com with SMTP id n96so1351483pjc.3
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jan 2020 07:25:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=oVnvq+rdY3S8cnNkWIr/Sx9lQ7Cq9VlVRk5jzqLcR2I=;
-        b=cZSeeL5RhX6TetUuhke9ho3TlNGzquX9MiXzXGHooL2yL+N/bQpV19bFyQ/8kFq7Py
-         wXnmG+6uX1toic0eFfn8LGq9VAlodU+JqAKDRK6/l72iJpE6OmY1OTEfFvrSffbJYnpz
-         lous7ANG5IKdLNPIah1UXxISk+yn9uIW8Dpn0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=oVnvq+rdY3S8cnNkWIr/Sx9lQ7Cq9VlVRk5jzqLcR2I=;
-        b=tBHrDrNmT3dyON34MdL4QpsJKgabvzllQniHg9Z19AApL4JGiapzIeBus4z+QXtj8L
-         C6ztq6GE2G64TQV0GpnJcRIjEQcWWqwShQpde5GmtXXZw04MjiruvIQpQ9Dv9zcf6+eF
-         ZuBUWrpBjcKz4NEevj+NOV70M0lnYlDX+hQgf3lOBO2HKd4NtlarUmk5/z5vGG7s84LV
-         2rcj2bFgVNkCjmcbN6zrwHaT9l+DJSgfDLic45GQxlJTfAs0wffIXd/WI1os+iEmqNPV
-         idxwJkkBLvaguMVWBA/ut6vMxaI0C9xZfBUBx6GCzzYeTmLXfqaTgId6p9B5UbuqVbCG
-         nLxQ==
-X-Gm-Message-State: APjAAAV+cutpL2qwul2ocAlDgBfixaFEp1jyCxreT3gT3v/WJO9zAf3N
-        XRRJ1quJVIRdHSE/+/n/dcr8uJ7vvpj+xQ==
-X-Google-Smtp-Source: APXvYqyZdMZRBGhIMmDhzMUiOJKBbQPmGCt4q71t3x85OZaN6YlXk2wVApZmGobBbW/OsgsnHg/AEA==
-X-Received: by 2002:a17:90a:26e1:: with SMTP id m88mr5081754pje.101.1579793117156;
-        Thu, 23 Jan 2020 07:25:17 -0800 (PST)
-Received: from kpsingh-kernel.localdomain ([2a00:79e1:abc:122:bd8d:3f7b:87f7:16d1])
-        by smtp.gmail.com with ESMTPSA id v5sm3108118pfn.122.2020.01.23.07.25.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Jan 2020 07:25:16 -0800 (PST)
-From:   KP Singh <kpsingh@chromium.org>
-To:     linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
-        linux-security-module@vger.kernel.org
-Cc:     Brendan Jackman <jackmanb@google.com>,
-        Florent Revest <revest@google.com>,
-        Thomas Garnier <thgarnie@google.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        James Morris <jmorris@namei.org>,
-        Kees Cook <keescook@chromium.org>,
-        Thomas Garnier <thgarnie@chromium.org>,
-        Michael Halcrow <mhalcrow@google.com>,
-        Paul Turner <pjt@google.com>,
-        Brendan Gregg <brendan.d.gregg@gmail.com>,
-        Jann Horn <jannh@google.com>,
-        Matthew Garrett <mjg59@google.com>,
-        Christian Brauner <christian@brauner.io>,
-        =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>,
-        Florent Revest <revest@chromium.org>,
-        Brendan Jackman <jackmanb@chromium.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Stanislav Fomichev <sdf@google.com>,
-        Quentin Monnet <quentin.monnet@netronome.com>,
-        Andrey Ignatov <rdna@fb.com>, Joe Stringer <joe@wand.net.nz>
-Subject: [PATCH bpf-next v3 05/10] bpf: lsm: BTF API for LSM hooks
-Date:   Thu, 23 Jan 2020 07:24:35 -0800
-Message-Id: <20200123152440.28956-6-kpsingh@chromium.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200123152440.28956-1-kpsingh@chromium.org>
-References: <20200123152440.28956-1-kpsingh@chromium.org>
+        Thu, 23 Jan 2020 10:25:21 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579793120;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=2iN/148ydxo6cOEibr7t4o6TqZN00D1PLyEg2aOUAsE=;
+        b=N/ImqNQKIivh8OIOEw4MhvodqBsbZzkrCPqydS8TUySwbD7Ee8ehByo58FJg2Fn+tTxyiA
+        TSAhk5Khj6yVK8Guv/ZGV0qTxHgrcVDPhno3vRdG0uLLVCVRj4BQr8p8uza17CuUaJZaQ0
+        uCdUiW6ssgmFDl1EcdHL4TmcRe08r9w=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-52-3aZizUTBO7aYE8g_rivKQQ-1; Thu, 23 Jan 2020 10:25:16 -0500
+X-MC-Unique: 3aZizUTBO7aYE8g_rivKQQ-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 44FDC1005513;
+        Thu, 23 Jan 2020 15:25:13 +0000 (UTC)
+Received: from llong.remote.csb (dhcp-17-59.bos.redhat.com [10.18.17.59])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 4F3EE610D8;
+        Thu, 23 Jan 2020 15:25:08 +0000 (UTC)
+Subject: Re: [PATCH v9 0/5] Add NUMA-awareness to qspinlock
+To:     Will Deacon <will@kernel.org>
+Cc:     Lihao Liang <lihaoliang@google.com>,
+        Alex Kogan <alex.kogan@oracle.com>, linux@armlinux.org.uk,
+        peterz@infradead.org, mingo@redhat.com, will.deacon@arm.com,
+        arnd@arndb.de, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        tglx@linutronix.de, bp@alien8.de, hpa@zytor.com, x86@kernel.org,
+        guohanjun@huawei.com, jglauber@marvell.com, dave.dice@oracle.com,
+        steven.sistare@oracle.com, daniel.m.jordan@oracle.com
+References: <20200115035920.54451-1-alex.kogan@oracle.com>
+ <CAC4j=Y8rCeTX9oKKbh+dCdTP8Ud4hW1ybu+iE7t_nxMSYBOR5w@mail.gmail.com>
+ <4e15fa1d-9540-3274-502a-4195a0d46f63@redhat.com>
+ <20200123113547.GD18991@willie-the-truck>
+From:   Waiman Long <longman@redhat.com>
+Organization: Red Hat
+Message-ID: <54ba237b-e1db-c14c-7cff-b0be41731ba5@redhat.com>
+Date:   Thu, 23 Jan 2020 10:25:07 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200123113547.GD18991@willie-the-truck>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: KP Singh <kpsingh@google.com>
+On 1/23/20 6:35 AM, Will Deacon wrote:
+> Hi folks,
+>
+> (I think Lihao is travelling at the moment, so he may be delayed in his
+> replies)
+>
+> On Wed, Jan 22, 2020 at 12:24:58PM -0500, Waiman Long wrote:
+>> On 1/22/20 6:45 AM, Lihao Liang wrote:
+>>> On Wed, Jan 22, 2020 at 10:28 AM Alex Kogan <alex.kogan@oracle.com> wrote:
+>>>> Summary
+>>>> -------
+>>>>
+>>>> Lock throughput can be increased by handing a lock to a waiter on the
+>>>> same NUMA node as the lock holder, provided care is taken to avoid
+>>>> starvation of waiters on other NUMA nodes. This patch introduces CNA
+>>>> (compact NUMA-aware lock) as the slow path for qspinlock. It is
+>>>> enabled through a configuration option (NUMA_AWARE_SPINLOCKS).
+>>>>
+>>> Thanks for your patches. The experimental results look promising!
+>>>
+>>> I understand that the new CNA qspinlock uses randomization to achieve
+>>> long-term fairness, and provides the numa_spinlock_threshold parameter
+>>> for users to tune. As Linux runs extremely diverse workloads, it is not
+>>> clear how randomization affects its fairness, and how users with
+>>> different requirements are supposed to tune this parameter.
+>>>
+>>> To this end, Will and I consider it beneficial to be able to answer the
+>>> following question:
+>>>
+>>> With different values of numa_spinlock_threshold and
+>>> SHUFFLE_REDUCTION_PROB_ARG, how long do threads running on different
+>>> sockets have to wait to acquire the lock? This is particularly relevant
+>>> in high contention situations when new threads keep arriving on the same
+>>> socket as the lock holder.
+>>>
+>>> In this email, I try to provide some formal analysis to address this
+>>> question. Let's assume the probability for the lock to stay on the
+>>> same socket is *at least* p, which corresponds to the probability for
+>>> the function probably(unsigned int num_bits) in the patch to return *false*,
+>>> where SHUFFLE_REDUCTION_PROB_ARG is passed as the value of num_bits to the
+>>> function.
+>> That is not strictly true from my understanding of the code. The
+>> probably() function does not come into play if a secondary queue is
+>> present. Also calling cna_scan_main_queue() doesn't guarantee that a
+>> waiter in the same node can be found. So the simple mathematical
+>> analysis isn't that applicable in this case. One will have to do an
+>> actual simulation to find out what the actual behavior will be.
+> It's certainly true that the analysis is based on the worst-case scenario,
+> but I think it's still worth considering. For example, the secondary queue
+> does not exist initially so it seems a bit odd that we only instantiate it
+> with < 1% probability.
+>
+> That said, my real concern with any of this is that it makes formal
+> modelling and analysis of the qspinlock considerably more challenging. I
+> would /really/ like to see an update to the TLA+ model we have of the
+> current implementation [1] and preferably also the userspace version I
+> hacked together [2] so that we can continue to test and validate changes
+> to the code outside of the usual kernel stress-testing.
 
-The BTF API provides information required by the BPF verifier to
-attach eBPF programs to the LSM hooks by using the BTF information of
-two types:
+I do agree that the current CNA code is hard to model. The CNA lock
+behaves like a regular qspinlock in many cases. If the lock becomes
+fairly contended with waiters from different nodes, it will
+opportunistically switch to CNA mode where preference is given to
+waiters in the same node.
 
-- struct security_hook_heads: This type provides the offset (using the
-  lsm_hook_idx passed by the userspace) to which a new dynamically
-  allocated security hook must be attached
-- union security_list_options: This provides the information about the
-  function prototype required by the hook
-
-The type_ids for these types are calculated once during __init as
-bpf_type_by_name_kind does an expensive linear search with string
-compariason.  Furthermore, the total number of LSM hooks which can be
-determined from the btf_type_vlen of security_hook_heads is needed (in a
-subsequent patch) to initialize the mutable hooks for the BPF LSM.
-
-When the program is loaded:
-
-- The verifier receives the index of a member in struct
-  security_hook_heads to which a program must be attached as
-  prog->aux->lsm_hook_idx.
-- bpf_lsm_type_by_idx is used to determine the func_proto of
-  the LSM hook and updates prog->aux->attach_func_proto
-- bpf_lsm_head_by_idx is used to determine the hlist_head to which
-  the BPF program must be attached.
-
-Reviewed-by: Brendan Jackman <jackmanb@google.com>
-Reviewed-by: Florent Revest <revest@google.com>
-Reviewed-by: Thomas Garnier <thgarnie@google.com>
-Signed-off-by: KP Singh <kpsingh@google.com>
----
- include/linux/bpf_lsm.h        | 12 ++++++
- security/bpf/Kconfig           |  1 +
- security/bpf/Makefile          |  2 +
- security/bpf/hooks.c           | 75 ++++++++++++++++++++++++++++++++++
- security/bpf/include/bpf_lsm.h | 21 ++++++++++
- security/bpf/lsm.c             | 35 ++++++++++++++++
- 6 files changed, 146 insertions(+)
- create mode 100644 security/bpf/include/bpf_lsm.h
-
-diff --git a/include/linux/bpf_lsm.h b/include/linux/bpf_lsm.h
-index 57c20b2cd2f4..5e61c0736001 100644
---- a/include/linux/bpf_lsm.h
-+++ b/include/linux/bpf_lsm.h
-@@ -19,6 +19,8 @@ extern struct security_hook_heads bpf_lsm_hook_heads;
- 
- int bpf_lsm_srcu_read_lock(void);
- void bpf_lsm_srcu_read_unlock(int idx);
-+const struct btf_type *bpf_lsm_type_by_idx(struct btf *btf, u32 offset);
-+const struct btf_member *bpf_lsm_head_by_idx(struct btf *btf, u32 idx);
- 
- #define CALL_BPF_LSM_VOID_HOOKS(FUNC, ...)			\
- 	do {							\
-@@ -66,6 +68,16 @@ static inline int bpf_lsm_srcu_read_lock(void)
- 	return 0;
- }
- static inline void bpf_lsm_srcu_read_unlock(int idx) {}
-+static inline const struct btf_type *bpf_lsm_type_by_idx(
-+	struct btf *btf, u32 idx)
-+{
-+	return ERR_PTR(-EOPNOTSUPP);
-+}
-+static inline const struct btf_member *bpf_lsm_head_by_idx(
-+	struct btf *btf, u32 idx)
-+{
-+	return ERR_PTR(-EOPNOTSUPP);
-+}
- 
- #endif /* CONFIG_SECURITY_BPF */
- 
-diff --git a/security/bpf/Kconfig b/security/bpf/Kconfig
-index 595e4ad597ae..9438d899b618 100644
---- a/security/bpf/Kconfig
-+++ b/security/bpf/Kconfig
-@@ -7,6 +7,7 @@ config SECURITY_BPF
- 	depends on SECURITY
- 	depends on BPF_SYSCALL
- 	depends on SRCU
-+	depends on DEBUG_INFO_BTF
- 	help
- 	  This enables instrumentation of the security hooks with
- 	  eBPF programs.
-diff --git a/security/bpf/Makefile b/security/bpf/Makefile
-index c526927c337d..748b9b7d4bc7 100644
---- a/security/bpf/Makefile
-+++ b/security/bpf/Makefile
-@@ -3,3 +3,5 @@
- # Copyright 2019 Google LLC.
- 
- obj-$(CONFIG_SECURITY_BPF) := lsm.o ops.o hooks.o
-+
-+ccflags-y := -I$(srctree)/security/bpf -I$(srctree)/security/bpf/include
-diff --git a/security/bpf/hooks.c b/security/bpf/hooks.c
-index b123d9cb4cd4..e9dc6933b6fa 100644
---- a/security/bpf/hooks.c
-+++ b/security/bpf/hooks.c
-@@ -5,8 +5,12 @@
-  */
- 
- #include <linux/bpf_lsm.h>
-+#include <linux/bpf.h>
-+#include <linux/btf.h>
- #include <linux/srcu.h>
- 
-+#include "bpf_lsm.h"
-+
- DEFINE_STATIC_SRCU(security_hook_srcu);
- 
- int bpf_lsm_srcu_read_lock(void)
-@@ -18,3 +22,74 @@ void bpf_lsm_srcu_read_unlock(int idx)
- {
- 	return srcu_read_unlock(&security_hook_srcu, idx);
- }
-+
-+static inline int validate_hlist_head(struct btf *btf,
-+				      const struct btf_member *member)
-+{
-+	const struct btf_type *t;
-+
-+	t = btf_type_by_id(btf, member->type);
-+	if (unlikely(!t))
-+		return -EINVAL;
-+
-+	if (BTF_INFO_KIND(t->info) != BTF_KIND_STRUCT)
-+		return -EINVAL;
-+
-+	if (t->size != sizeof(struct hlist_head))
-+		return -EINVAL;
-+
-+	return 0;
-+}
-+
-+/* Find the BTF representation of the security_hook_heads member for a member
-+ * with a given index in struct security_hook_heads.
-+ */
-+const struct btf_member *bpf_lsm_head_by_idx(struct btf *btf, u32 idx)
-+{
-+	const struct btf_member *member;
-+	int ret;
-+
-+	if (idx >= btf_type_vlen(bpf_lsm_info.btf_hook_heads))
-+		return ERR_PTR(-EINVAL);
-+
-+	member = btf_type_member(bpf_lsm_info.btf_hook_heads) + idx;
-+	ret = validate_hlist_head(btf, member);
-+	if (ret < 0)
-+		return ERR_PTR(ret);
-+
-+	return member;
-+}
-+
-+/* Given an index of a member in security_hook_heads return the
-+ * corresponding type for the LSM hook. The members of the union
-+ * security_list_options have the same name as the security_hook_heads which
-+ * is ensured by the LSM_HOOK_INIT macro defined in include/linux/lsm_hooks.h
-+ */
-+const struct btf_type *bpf_lsm_type_by_idx(struct btf *btf, u32 idx)
-+{
-+	const struct btf_member *member, *hook_head = NULL;
-+	const struct btf_type *t;
-+	u32 i;
-+
-+	hook_head = bpf_lsm_head_by_idx(btf, idx);
-+	if (IS_ERR(hook_head))
-+		return ERR_PTR(PTR_ERR(hook_head));
-+
-+	for_each_member(i, bpf_lsm_info.btf_hook_types, member) {
-+		if (hook_head->name_off == member->name_off) {
-+			t = btf_type_by_id(btf, member->type);
-+			if (unlikely(!t))
-+				return ERR_PTR(-EINVAL);
-+
-+			if (!btf_type_is_ptr(t))
-+				return ERR_PTR(-EINVAL);
-+
-+			t = btf_type_by_id(btf, t->type);
-+			if (unlikely(!t))
-+				return ERR_PTR(-EINVAL);
-+			return t;
-+		}
-+	}
-+
-+	return ERR_PTR(-ESRCH);
-+}
-diff --git a/security/bpf/include/bpf_lsm.h b/security/bpf/include/bpf_lsm.h
-new file mode 100644
-index 000000000000..f142596d97bd
---- /dev/null
-+++ b/security/bpf/include/bpf_lsm.h
-@@ -0,0 +1,21 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+
-+#ifndef _BPF_LSM_H
-+#define _BPF_LSM_H
-+
-+#include <linux/filter.h>
-+#include <linux/bpf.h>
-+#include <linux/btf.h>
-+
-+struct bpf_lsm_info {
-+	/* BTF type for security_hook_heads populated at init.
-+	 */
-+	const struct btf_type *btf_hook_heads;
-+	/* BTF type for security_list_options populated at init.
-+	 */
-+	const struct btf_type *btf_hook_types;
-+};
-+
-+extern struct bpf_lsm_info bpf_lsm_info;
-+
-+#endif /* _BPF_LSM_H */
-diff --git a/security/bpf/lsm.c b/security/bpf/lsm.c
-index a25a068e1781..736e0ee3f926 100644
---- a/security/bpf/lsm.c
-+++ b/security/bpf/lsm.c
-@@ -7,6 +7,8 @@
- #include <linux/bpf_lsm.h>
- #include <linux/lsm_hooks.h>
- 
-+#include "bpf_lsm.h"
-+
- /* This is only for internal hooks, always statically shipped as part of the
-  * BPF LSM. Statically defined hooks are appended to the security_hook_heads
-  * which is common for LSMs and R/O after init.
-@@ -19,6 +21,39 @@ static struct security_hook_list bpf_lsm_hooks[] __lsm_ro_after_init = {};
-  */
- struct security_hook_heads bpf_lsm_hook_heads;
- 
-+struct bpf_lsm_info bpf_lsm_info;
-+
-+static __init int bpf_lsm_info_init(void)
-+{
-+	const struct btf_type *t;
-+
-+	if (!btf_vmlinux)
-+		/* No need to grab any locks because we are still in init */
-+		btf_vmlinux = btf_parse_vmlinux();
-+
-+	if (IS_ERR(btf_vmlinux)) {
-+		pr_err("btf_vmlinux is malformed\n");
-+		return PTR_ERR(btf_vmlinux);
-+	}
-+
-+	t = btf_type_by_name_kind(btf_vmlinux, "security_hook_heads",
-+				  BTF_KIND_STRUCT);
-+	if (WARN_ON(IS_ERR(t)))
-+		return PTR_ERR(t);
-+
-+	bpf_lsm_info.btf_hook_heads = t;
-+
-+	t = btf_type_by_name_kind(btf_vmlinux, "security_list_options",
-+				  BTF_KIND_UNION);
-+	if (WARN_ON(IS_ERR(t)))
-+		return PTR_ERR(t);
-+
-+	bpf_lsm_info.btf_hook_types = t;
-+	return 0;
-+}
-+
-+late_initcall(bpf_lsm_info_init);
-+
- static int __init bpf_lsm_init(void)
- {
- 	security_add_hooks(bpf_lsm_hooks, ARRAY_SIZE(bpf_lsm_hooks), "bpf");
--- 
-2.20.1
+Cheers,
+Longman
 
