@@ -2,107 +2,97 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 846DFC3F68F
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 00:22:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D433C33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 00:23:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5261024673
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 00:22:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FCA621835
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 00:23:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Gqq0t7c9"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kjHjZRwl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727312AbgAWAWb (ORCPT
+        id S1728205AbgAWAXF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 19:22:31 -0500
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:37087 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725911AbgAWAWb (ORCPT
+        Wed, 22 Jan 2020 19:23:05 -0500
+Received: from mail-il1-f193.google.com ([209.85.166.193]:34379 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726004AbgAWAXF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 19:22:31 -0500
-Received: by mail-pl1-f194.google.com with SMTP id c23so541310plz.4
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jan 2020 16:22:30 -0800 (PST)
+        Wed, 22 Jan 2020 19:23:05 -0500
+Received: by mail-il1-f193.google.com with SMTP id l4so397714ilj.1;
+        Wed, 22 Jan 2020 16:23:04 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:subject:cc:to:in-reply-to:references:message-id
-         :mime-version:content-transfer-encoding;
-        bh=UAm+y673BEPrHXldf2cTkx9EiCWchkK86gahuOo9dk8=;
-        b=Gqq0t7c92u8Zn8crwvApOUsfht3cORZv7uVMYRvrtTIgWsm23Net97AVNClAcOkmmB
-         pxqGhUp0ZYwu1u7hel7fdiadtQOUCuDIxGH7sjYeVOV+SaeLJY0jUh94/2JgvJqPJTtp
-         jPuJ6Leh4h8sRMpi7JGtMxxhmpL0ySPNaGJ52/Vk4UeDZjpRUmlIxU3a1KM6ZiRVyEie
-         KeRRkSy4qzpFfH5rytbA8QAb+12ZuybdunJ2zFVkuk051N5+XKRI/PJc5NtiRqMgZsUO
-         fy+WE2zUY4svBIjixpgXQeinZSsRNVV6YR2+eeHsXgBXUqk4iQ5Ewog33ZCx0qqjNtze
-         lpfA==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=/fehjbHt+IVYClv5muhqeCjgs2EeR5SVRn+obSNfCt0=;
+        b=kjHjZRwlmqsxGGeNme0AOQ0/17n+IzG2BfEqoxcuHH47HwtrifYlg3fL8BtTwNe49C
+         VVeOdZNQvaBs9Mvl4BK4wVPCJSG5MrFiD0Wlkby2JA3F6k97alePmybytiMp53g8+l1X
+         JR7vO4W0TfKZztUCOqW3/9Wfxz7YzXrvqjnYyxEG379brOXfc518/bTcpu800cTBnR7s
+         Q8NcggkdgiKjd3SlsAvZRb1tH9sADpN9hBxhZwCGskGplo5DZrueuyTir3ifatxgT8EI
+         TX7FOeRR6MKq4AL2eWlCSDMxy7ZcXvSSSXpEv09/pSnOUYf13up8OZVb6AUokq2oU7Fg
+         MLtQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:subject:cc:to:in-reply-to:references
-         :message-id:mime-version:content-transfer-encoding;
-        bh=UAm+y673BEPrHXldf2cTkx9EiCWchkK86gahuOo9dk8=;
-        b=TwpSqn9exgPTEzCX9I8b/EPNhDlKn2mB+1nMsTBo9MT/Bm//GXPNMs9w64oVoSf9Vu
-         8Np0VQljXHZiUy7fFrt78Rn0190D3F52CQemjOLztVUWEUAE+A9HZKPS6T+fiNWzhBcQ
-         HQzA2hhMzQaJB4JxX0xvoovTZljfGg8yVgeLkuyOEeIRkVf9DhdaqRsUPT/vUBcueGYz
-         DOadbAOD8ZOrkdaPnoDohVaQ12gG0IPbzO+jHSxxQj+d6HPPRlUh1nTKRHb8TniEPZcF
-         uPqP6rbmVYlD6Nc2q3CI9VZ7QAmjf3+aO1ySX4EdS+kbXGfrpwDo5dcFG9tmraljnYSg
-         hFLQ==
-X-Gm-Message-State: APjAAAVQtXsOxcHPhZX/Nb20ih4Wi5xEtl+kstSmEu8/uSRNySt6u114
-        LaLT4W74SOq3MHVr+Y0VLYSfMw==
-X-Google-Smtp-Source: APXvYqx2V97ZyPLOxzNfRyOlfnGOYECZDnsr0TDNwoPNFUjkpuaMeWSR8pcnWnTvlQo3qPZ0SwQMdw==
-X-Received: by 2002:a17:90b:8ce:: with SMTP id ds14mr1301887pjb.57.1579738949984;
-        Wed, 22 Jan 2020 16:22:29 -0800 (PST)
-Received: from localhost ([2620:0:1000:2514:7f69:cd98:a2a2:a03d])
-        by smtp.gmail.com with ESMTPSA id p18sm4086431pjo.3.2020.01.22.16.22.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Jan 2020 16:22:29 -0800 (PST)
-Date:   Wed, 22 Jan 2020 16:22:29 -0800 (PST)
-X-Google-Original-Date: Wed, 22 Jan 2020 16:21:35 PST (-0800)
-From:   Palmer Dabbelt <palmerdabbelt@google.com>
-X-Google-Original-From: Palmer Dabbelt <palmer@dabbelt.com>
-Subject:     Re: [PATCH] riscv: change CSR M/S defines to use "X" for prefix
-CC:     Paul Walmsley <paul.walmsley@sifive.com>, aou@eecs.berkeley.edu,
-        tglx@linutronix.de, daniel.lezcano@linaro.org,
-        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
-        jason@lakedaemon.net, maz@kernel.org,
-        Damien Le Moal <Damien.LeMoal@wdc.com>,
-        Christoph Hellwig <hch@lst.de>
-To:     Olof Johansson <olof@lixom.net>
-In-Reply-To: <alpine.DEB.2.21.9999.2001070314050.75790@viisi.sifive.com>
-References: <alpine.DEB.2.21.9999.2001070314050.75790@viisi.sifive.com>
-  <20191218170603.58256-1-olof@lixom.net> <alpine.DEB.2.21.9999.2001031723310.283180@viisi.sifive.com>
-  <CAOesGMir810kVTDyoTFuhK-PdFe4J2u2VM+L8jOdO8DghAELQg@mail.gmail.com>
-Message-ID: <mhng-55d1f282-e2ee-4ff3-b2c0-1701d175b426@palmerdabbelt-glaptop>
-Mime-Version: 1.0 (MHng)
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/fehjbHt+IVYClv5muhqeCjgs2EeR5SVRn+obSNfCt0=;
+        b=f+Y4a6qiRnZPSUDWTsuAVLuQM39AtsqEhSXcSrU2tQUvArcnUcZe3tYunSsxBJQOwA
+         5opuiOSic5mhyAfTUGxqADtt/WPduJy+0fGtoutJ1CNzwWQ7bHA1L67J3NmcGrRgbv82
+         C1MRP99LDJGGOn++UMSOL5sydfChRsiGTcJ/xWE7pI4hMTQn56pru31uX96Q9f6FV4SA
+         WdwU08RjPu+vdt10LuVXLlqA0SPKTZ62PX80HmNENNubj+PakG4G6o2tDy6aa+R1HuNW
+         2UBynq1HzDw0eDsl1jFt3Fxqezaqrenfx3Y5+Ixyr6ssvxRT8emSttpFny8+6pAUOU8O
+         fxzw==
+X-Gm-Message-State: APjAAAWwOmYSudVemTc+cDx5jqTpdJY1r6n8mZAtWI1tVKRcz30uvUDE
+        q6lES08PngE6eyjDZzT9xKsdq6PPX1vXtQIwpplE3Q==
+X-Google-Smtp-Source: APXvYqx7BXEqrkv5mOf8hdouXZDby5H+Q7RqaEErooN339jI9cftxrvDU69nbSqALoMbZsDe3TK8KYsjYkdUq5i8I3Y=
+X-Received: by 2002:a92:3d17:: with SMTP id k23mr10409682ila.110.1579738984350;
+ Wed, 22 Jan 2020 16:23:04 -0800 (PST)
+MIME-Version: 1.0
+References: <20190330081836.26942-1-biergaizi2009@gmail.com> <20190330081836.26942-2-biergaizi2009@gmail.com>
+In-Reply-To: <20190330081836.26942-2-biergaizi2009@gmail.com>
+From:   Matt Turner <mattst88@gmail.com>
+Date:   Wed, 22 Jan 2020 16:22:53 -0800
+Message-ID: <CAEdQ38H-qRwcbcDVD_pEv9pGL33h=51kV3GYO87zSe9keZwT7A@mail.gmail.com>
+Subject: Re: [PATCH 1/1] mfd: yeeloong_kb3310b: support KB3310B EC for Lemote
+ Yeeloong laptops.
+To:     Tom Li <biergaizi2009@gmail.com>
+Cc:     Lee Jones <lee.jones@linaro.org>, linux-mips@vger.kernel.org,
+        Paul Burton <paul.burton@mips.com>,
+        LKML <linux-kernel@vger.kernel.org>, Yifeng Li <tomli@tomli.me>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 07 Jan 2020 03:15:56 PST (-0800), Paul Walmsley wrote:
-> On Fri, 3 Jan 2020, Olof Johansson wrote:
+On Sat, Mar 30, 2019 at 1:19 AM Tom Li <biergaizi2009@gmail.com> wrote:
 >
->> Sure, this does the job. I'd personally prefer consistent prefixes but
->> that's just bikeshed color preferences -- this is fine.
+> From: Yifeng Li <tomli@tomli.me>
 >
-> Thanks for the ack.  For what it's worth, we're in agreement that we
-> should prophylactically place RV_ prefixes on the rest of the CSR_ macro
-> names.  I just would prefer that it's done outside the late -rc series,
-> since it's not technically a fix.
+> Lemote Yeeloong is a laptop powered by Loongson 2F MIPS processor,
+> primarily a demo platform for hobbyists and developers. It uses an
+> ENE KB3310B Embedded Controller with customized firmware to implement
+> hardware and power management.
+>
+> A monolithic platform driver code for those functionality has existed
+> out-of-tree for many years. This commit creates a MFD driver for the EC
+> chip on Yeeloong laptop to isolate EC-related code from core MIPS code,
+> and serves as the foundation of various subdrivers.
+>
+> NOTE: A regmap could be the reasonable abstraction for I/O, but (1)
+> it requires some additional refactoring to convert the shutdown/wakeup
+> routines in board files to subdrivers, and (2) we're only using simple
+> reads/writes, repmap only adds boilerplates to the existing files without
+> additional benefits. We simply export the EC-related functions for now,
+> until we come back to refactor the board files.
+>
+> Signed-off-by: Yifeng Li <tomli@tomli.me>
 
-Olof: are you going to send a v2 of this patch that converts everything else
-over or do you want me to?  I think we all agree it's the right way to go, Paul
-was just trying to limit the scope of the change late in the RC cycle.  I'd
-like to get this on for-next sooner rather than later as it'll probably
-conflict with everything.
-
->> (Builds are still failing for some configs, but will be fixed if/when
->> you pick up https://lore.kernel.org/linux-riscv/20191217040631.91886-1-olof@lixom.net/)
->
-> That one is on my radar - just haven't had a chance to review/test it
-> yet.  Thanks for sending that one too!
->
->
-> - Paul
+Did you give up on upstreaming this code? That would be a shame, and
+somewhat ironic given that you were frustrated about lack of review,
+etc, and then never responded to the review given :(
