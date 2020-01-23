@@ -2,116 +2,155 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 389F6C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 13:13:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE5D0C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 13:17:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B9D724655
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 13:13:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="QeFapJ65"
+	by mail.kernel.org (Postfix) with ESMTP id BD4F42467B
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 13:17:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728901AbgAWNNG (ORCPT
+        id S1727453AbgAWNRM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 08:13:06 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:34011 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728792AbgAWNNC (ORCPT
+        Thu, 23 Jan 2020 08:17:12 -0500
+Received: from mail-il1-f199.google.com ([209.85.166.199]:47830 "EHLO
+        mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726026AbgAWNRL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 08:13:02 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1579785182; h=Content-Transfer-Encoding: MIME-Version:
- References: In-Reply-To: Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=HQkB2ZhFnCLma0netfVRRuYUjdLJFslhBm5LAJ36CLI=; b=QeFapJ65gZwGDXUaX9JW4M+mbC1Fh+AchvZtKZbECfHpEcPKmKIHwQtEWITUN62vqXSFu8Sz
- ZBfJjxFdC4kVEQWfusPIS4vkCEcKxrCqbwScTWQy4qUzqcBMy37F9JLHzEdjWQ050MlW74Wj
- IC8mwWOIS5dGjq4j/spxEri0CeU=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e299bdd.7fa62d251420-smtp-out-n02;
- Thu, 23 Jan 2020 13:13:01 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id DFEC2C433CB; Thu, 23 Jan 2020 13:13:00 +0000 (UTC)
-Received: from blr-ubuntu-87.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: sibis)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 5A88AC447A1;
-        Thu, 23 Jan 2020 13:12:57 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 5A88AC447A1
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sibis@codeaurora.org
-From:   Sibi Sankar <sibis@codeaurora.org>
-To:     bjorn.andersson@linaro.org, evgreen@chromium.org,
-        p.zabel@pengutronix.de
-Cc:     ohad@wizery.com, linux-arm-msm@vger.kernel.org,
-        linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        agross@kernel.org, Sibi Sankar <sibis@codeaurora.org>
-Subject: [PATCH v2 2/2] remoteproc: qcom: q6v5-mss: Improve readability of reset_assert
-Date:   Thu, 23 Jan 2020 18:42:36 +0530
-Message-Id: <20200123131236.1078-3-sibis@codeaurora.org>
-X-Mailer: git-send-email 2.22.1
-In-Reply-To: <20200123131236.1078-1-sibis@codeaurora.org>
-References: <20200123131236.1078-1-sibis@codeaurora.org>
+        Thu, 23 Jan 2020 08:17:11 -0500
+Received: by mail-il1-f199.google.com with SMTP id x69so2288403ill.14
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jan 2020 05:17:11 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=M/T56jh5ZjLwzBjohUJv3CPw6EZc5CaN+pPMp5UPMi8=;
+        b=cQz8FpjNkLrR9gJ0Q7oS6D8kcHQMxz3NRdsfyPZTcpjIac4GhK9dZ4qgSD6yyx4Ern
+         xDPXC9zzhaJ3DQQlIjKGtT1/wxUi42GZa6KG/AGmeHc30HIpxUbYK+oOquFfkbR691LO
+         BGiEfxIsMnoL3cLT3Kw9KRUeLbA7phyLJ6uuYYHgky0cT4MhAwR5Gfx4wn3HkZwnRU9W
+         ShVSA+TWwXtULBl9hLhZEuh/OB3wqSyoT5LzE80gTebFctp0/EpwRq8T5aVwVG0xztHA
+         F+TaXpPV2zvZfOHg9VwaZIMJuXt+7KbGAvSRqH2TKbdyDTO0J09DgB5X0NTG/Qp6uXfL
+         OQiA==
+X-Gm-Message-State: APjAAAUibhqOYa8TEcn8XocoupdDFI9yNmjtmvzUD6wnJ27fJiaseEYR
+        cT6uwwJAhemDghbxWvKK4eHcdAvjMEoa8+LHO8wInbj45Gl6
+X-Google-Smtp-Source: APXvYqwsg5y57hY5025HrdixFMdwrZEyUk/g+pM7hsnTs15k9799/GGmSVH6lvg8jb7EHZSh1E0VDLugipmv5mqvJ1+Ipylnthdw
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a5d:8451:: with SMTP id w17mr5679243ior.303.1579785430679;
+ Thu, 23 Jan 2020 05:17:10 -0800 (PST)
+Date:   Thu, 23 Jan 2020 05:17:10 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000006ac90f059cce75d4@google.com>
+Subject: BUG: corrupted list in em28xx_init_extension
+From:   syzbot <syzbot+a6969ef522a36d3344c9@syzkaller.appspotmail.com>
+To:     andreyknvl@google.com, linux-kernel@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-usb@vger.kernel.org,
+        mchehab@kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Define AXI_GATING_VALID_OVERRIDE and fixup comments to improve readability
-of Q6 modem reset sequence on SC7180 SoCs.
+Hello,
 
-Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+syzbot found the following crash on:
+
+HEAD commit:    4cc301ee usb: gadget: add raw-gadget interface
+git tree:       https://github.com/google/kasan.git usb-fuzzer
+console output: https://syzkaller.appspot.com/x/log.txt?x=15de59c9e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=9ba75825443d54bd
+dashboard link: https://syzkaller.appspot.com/bug?extid=a6969ef522a36d3344c9
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11934d85e00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=10c70721e00000
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+a6969ef522a36d3344c9@syzkaller.appspotmail.com
+
+em28xx 1-1:0.200: Audio interface 200 found (Vendor Class)
+em28xx 1-1:0.200: unknown em28xx chip ID (0)
+em28xx 1-1:0.200: Config register raw data: 0xfffffffb
+em28xx 1-1:0.200: AC97 chip type couldn't be determined
+em28xx 1-1:0.200: No AC97 audio processor
+list_add corruption. prev->next should be next (ffffffff87a1a960), but was ffffffff85a00184. (prev=ffff8881cd5e0240).
+------------[ cut here ]------------
+kernel BUG at lib/list_debug.c:26!
+invalid opcode: 0000 [#1] SMP KASAN
+CPU: 1 PID: 94 Comm: kworker/1:2 Not tainted 5.5.0-rc6-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Workqueue: usb_hub_wq hub_event
+RIP: 0010:__list_add_valid.cold+0x3a/0x3c lib/list_debug.c:26
+Code: 0b 48 89 f2 4c 89 e1 48 89 ee 48 c7 c7 a0 fc fb 85 e8 04 17 40 ff 0f 0b 48 89 f1 48 c7 c7 20 fc fb 85 4c 89 e6 e8 f0 16 40 ff <0f> 0b 48 89 ee 48 c7 c7 c0 fd fb 85 e8 df 16 40 ff 0f 0b 4c 89 ea
+RSP: 0018:ffff8881d5d570c8 EFLAGS: 00010282
+RAX: 0000000000000075 RBX: ffff8881cd764120 RCX: 0000000000000000
+RDX: 0000000000000000 RSI: ffffffff8129598d RDI: ffffed103abaae0b
+RBP: ffff8881cd764240 R08: 0000000000000075 R09: ffffed103b666210
+R10: ffffed103b66620f R11: ffff8881db33107f R12: ffffffff87a1a960
+R13: ffff8881cd764000 R14: ffff8881cd76412c R15: ffff8881cd5a2000
+FS:  0000000000000000(0000) GS:ffff8881db300000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f7f37b26000 CR3: 00000001c5fe1000 CR4: 00000000001406e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ __list_add include/linux/list.h:60 [inline]
+ list_add_tail include/linux/list.h:93 [inline]
+ em28xx_init_extension+0x44/0x1f0 drivers/media/usb/em28xx/em28xx-core.c:1125
+ em28xx_init_dev.isra.0+0xa7b/0x15d8 drivers/media/usb/em28xx/em28xx-cards.c:3540
+ em28xx_usb_probe.cold+0xcac/0x2515 drivers/media/usb/em28xx/em28xx-cards.c:3889
+ usb_probe_interface+0x310/0x800 drivers/usb/core/driver.c:361
+ really_probe+0x290/0xad0 drivers/base/dd.c:548
+ driver_probe_device+0x223/0x350 drivers/base/dd.c:721
+ __device_attach_driver+0x1d1/0x290 drivers/base/dd.c:828
+ bus_for_each_drv+0x162/0x1e0 drivers/base/bus.c:430
+ __device_attach+0x217/0x390 drivers/base/dd.c:894
+ bus_probe_device+0x1e4/0x290 drivers/base/bus.c:490
+ device_add+0x1459/0x1bf0 drivers/base/core.c:2487
+ usb_set_configuration+0xe47/0x17d0 drivers/usb/core/message.c:2023
+ generic_probe+0x9d/0xd5 drivers/usb/core/generic.c:210
+ usb_probe_device+0xaf/0x140 drivers/usb/core/driver.c:266
+ really_probe+0x290/0xad0 drivers/base/dd.c:548
+ driver_probe_device+0x223/0x350 drivers/base/dd.c:721
+ __device_attach_driver+0x1d1/0x290 drivers/base/dd.c:828
+ bus_for_each_drv+0x162/0x1e0 drivers/base/bus.c:430
+ __device_attach+0x217/0x390 drivers/base/dd.c:894
+ bus_probe_device+0x1e4/0x290 drivers/base/bus.c:490
+ device_add+0x1459/0x1bf0 drivers/base/core.c:2487
+ usb_new_device.cold+0x540/0xcd0 drivers/usb/core/hub.c:2537
+ hub_port_connect drivers/usb/core/hub.c:5184 [inline]
+ hub_port_connect_change drivers/usb/core/hub.c:5324 [inline]
+ port_event drivers/usb/core/hub.c:5470 [inline]
+ hub_event+0x21cb/0x4300 drivers/usb/core/hub.c:5552
+ process_one_work+0x945/0x15c0 kernel/workqueue.c:2264
+ process_scheduled_works kernel/workqueue.c:2326 [inline]
+ worker_thread+0x7ab/0xe20 kernel/workqueue.c:2412
+ kthread+0x318/0x420 kernel/kthread.c:255
+ ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+Modules linked in:
+---[ end trace 8bae0db31a929c42 ]---
+RIP: 0010:__list_add_valid.cold+0x3a/0x3c lib/list_debug.c:26
+Code: 0b 48 89 f2 4c 89 e1 48 89 ee 48 c7 c7 a0 fc fb 85 e8 04 17 40 ff 0f 0b 48 89 f1 48 c7 c7 20 fc fb 85 4c 89 e6 e8 f0 16 40 ff <0f> 0b 48 89 ee 48 c7 c7 c0 fd fb 85 e8 df 16 40 ff 0f 0b 4c 89 ea
+RSP: 0018:ffff8881d5d570c8 EFLAGS: 00010282
+RAX: 0000000000000075 RBX: ffff8881cd764120 RCX: 0000000000000000
+RDX: 0000000000000000 RSI: ffffffff8129598d RDI: ffffed103abaae0b
+RBP: ffff8881cd764240 R08: 0000000000000075 R09: ffffed103b666210
+R10: ffffed103b66620f R11: ffff8881db33107f R12: ffffffff87a1a960
+R13: ffff8881cd764000 R14: ffff8881cd76412c R15: ffff8881cd5a2000
+FS:  0000000000000000(0000) GS:ffff8881db300000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f7f37b26000 CR3: 00000001c5fe1000 CR4: 00000000001406e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+
+
 ---
- drivers/remoteproc/qcom_q6v5_mss.c | 15 ++++++++++++---
- 1 file changed, 12 insertions(+), 3 deletions(-)
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/drivers/remoteproc/qcom_q6v5_mss.c b/drivers/remoteproc/qcom_q6v5_mss.c
-index 89ab96c21a44a..a1cc9cbe038f1 100644
---- a/drivers/remoteproc/qcom_q6v5_mss.c
-+++ b/drivers/remoteproc/qcom_q6v5_mss.c
-@@ -71,6 +71,7 @@
- #define NAV_AXI_HALTREQ_BIT		BIT(0)
- #define NAV_AXI_HALTACK_BIT		BIT(1)
- #define NAV_AXI_IDLE_BIT		BIT(2)
-+#define AXI_GATING_VALID_OVERRIDE	BIT(0)
- 
- #define HALT_ACK_TIMEOUT_US		100000
- #define NAV_HALT_ACK_TIMEOUT_US		200
-@@ -415,16 +416,24 @@ static int q6v5_reset_assert(struct q6v5 *qproc)
- 		ret = reset_control_reset(qproc->mss_restart);
- 		reset_control_deassert(qproc->pdc_reset);
- 	} else if (qproc->has_halt_nav) {
--		/* SWAR using CONN_BOX_SPARE_0 for pipeline glitch issue */
-+		/*
-+		 * When the AXI pipeline is being reset with the Q6 modem partly
-+		 * operational there is possibility of AXI valid signal to
-+		 * glitch, leading to spurious transactions and Q6 hangs. A work
-+		 * around is employed by asserting the AXI_GATING_VALID_OVERRIDE
-+		 * BIT before triggering Q6 MSS reset. Both the HALTREQ and
-+		 * AXI_GATING_VALID_OVERRIDE are withdrawn post MSS assert
-+		 * followed by a MSS deassert, while holding the PDC reset.
-+		 */
- 		reset_control_assert(qproc->pdc_reset);
- 		regmap_update_bits(qproc->conn_map, qproc->conn_box,
--				   BIT(0), BIT(0));
-+				   AXI_GATING_VALID_OVERRIDE, 1);
- 		regmap_update_bits(qproc->halt_nav_map, qproc->halt_nav,
- 				   NAV_AXI_HALTREQ_BIT, 0);
- 		reset_control_assert(qproc->mss_restart);
- 		reset_control_deassert(qproc->pdc_reset);
- 		regmap_update_bits(qproc->conn_map, qproc->conn_box,
--				   BIT(0), 0);
-+				   AXI_GATING_VALID_OVERRIDE, 0);
- 		ret = reset_control_deassert(qproc->mss_restart);
- 	} else {
- 		ret = reset_control_assert(qproc->mss_restart);
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
