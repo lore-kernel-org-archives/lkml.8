@@ -2,76 +2,171 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61F78C32771
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 02:13:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36BD7C33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 02:14:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 343D924676
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 02:13:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579745630;
-	bh=UVtHGuBwD4NKnOj+Kfsya+kpYb2Ei7ghhepkkktbhCw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=gcdROK1y8SzBtMdziJOygV46sweTD2vnYXuFybH8V54+1y7tHBP+LlOrRO5/v2cZo
-	 QtZbY94YD6iPEklBt1y9ncB7/EjCfijQgWAG3iSRgJrSrpbcbPKzn/X0dgSVSmTUuD
-	 1AjW18IMxACPDY8E0Cb/YbWeVtWn0P6KprOgvuRs=
+	by mail.kernel.org (Postfix) with ESMTP id 12AB724125
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 02:14:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726118AbgAWCNt (ORCPT
+        id S1726231AbgAWCOI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 21:13:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44922 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725911AbgAWCNs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 21:13:48 -0500
-Received: from sol.localdomain (c-107-3-166-239.hsd1.ca.comcast.net [107.3.166.239])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3CEFE24125;
-        Thu, 23 Jan 2020 02:13:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579745628;
-        bh=UVtHGuBwD4NKnOj+Kfsya+kpYb2Ei7ghhepkkktbhCw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=bDZDIFzZTL682ulrwViKOe3ewyQMdqkVmdmvds4xrpPq8JiU9RfR7qcpjFRab+o8R
-         PiUYSZiGGtYjMeFGuBcGEK/Qsg/TCaVD+tNFJWPm5ZNhjNF2928EPwaguDVdEh+cr6
-         6tmFC6YDE4ITDDWouK47F3UXSqAHzvvr2BLnLGfM=
-Date:   Wed, 22 Jan 2020 18:13:46 -0800
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Jaegeuk Kim <jaegeuk@kernel.org>
-Cc:     linux-kernel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net,
-        Hridya Valsaraju <hridya@google.com>
-Subject: Re: [PATCH 2/2] f2fs: Add f2fs stats to sysfs
-Message-ID: <20200123021346.GA862@sol.localdomain>
-References: <20200123011354.75282-1-jaegeuk@kernel.org>
- <20200123011354.75282-2-jaegeuk@kernel.org>
+        Wed, 22 Jan 2020 21:14:08 -0500
+Received: from lgeamrelo11.lge.com ([156.147.23.51]:36456 "EHLO
+        lgeamrelo11.lge.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725911AbgAWCOI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 21:14:08 -0500
+Received: from unknown (HELO lgemrelse6q.lge.com) (156.147.1.121)
+        by 156.147.23.51 with ESMTP; 23 Jan 2020 11:14:05 +0900
+X-Original-SENDERIP: 156.147.1.121
+X-Original-MAILFROM: chanho.min@lge.com
+Received: from unknown (HELO ?10.178.36.63?) (10.178.36.63)
+        by 156.147.1.121 with ESMTP; 23 Jan 2020 11:14:05 +0900
+X-Original-SENDERIP: 10.178.36.63
+X-Original-MAILFROM: chanho.min@lge.com
+Subject: Re: [PATCH] PM: core: Fix handling of devices deleted during
+ system-wide resume
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux PM <linux-pm@vger.kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Daewoong Kim <daewoong00.kim@lge.com>,
+        Lee Gunho <gunho.lee@lge.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>
+References: <2601275.1tEomSadG4@kreacher>
+From:   Chanho Min <chanho.min@lge.com>
+Message-ID: <c5a2d11f-86fe-663d-f0ad-ed6ea0da871e@lge.com>
+Date:   Thu, 23 Jan 2020 11:14:04 +0900
+User-Agent: Mozilla/5.0 (X11; Linux i686; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200123011354.75282-2-jaegeuk@kernel.org>
+In-Reply-To: <2601275.1tEomSadG4@kreacher>
+Content-Type: text/plain; charset=euc-kr; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 22, 2020 at 05:13:54PM -0800, Jaegeuk Kim wrote:
-> diff --git a/fs/f2fs/debug.c b/fs/f2fs/debug.c
-> index ce2936554ef8..7565ba9967dd 100644
-> --- a/fs/f2fs/debug.c
-> +++ b/fs/f2fs/debug.c
-> @@ -150,7 +150,7 @@ static void update_general_status(struct f2fs_sb_info *sbi)
->  /*
->   * This function calculates BDF of every segments
->   */
-> -static void update_sit_info(struct f2fs_sb_info *sbi)
-> +void update_sit_info(struct f2fs_sb_info *sbi)
->  {
->  	struct f2fs_stat_info *si = F2FS_STAT(sbi);
->  	unsigned long long blks_per_sec, hblks_per_sec, total_vblocks;
+> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> 
+> If a device is deleted by one of its system-wide resume callbacks
+> (for example, because it does not appear to be present or accessible
+> any more) along with its children, the resume of the children may
+> continue leading to use-after-free errors and other issues
+> (potentially).
+> 
+> Namely, if the device's children are resumed asynchronously, their
+> resume may have been scheduled already before the device's callback
+> runs and so the device may be deleted while dpm_wait_for_superior()
+> is being executed for them.  The memory taken up by the parent device
+> object may be freed then while dpm_wait() is waiting for the parent's
+> resume callback to complete, which leads to a use-after-free.
+> Moreover, the resume of the children is really not expected to
+> continue after they have been unregistered, so it must be terminated
+> right away in that case.Seokjoo Lee <seokjoo.lee@lge.com>
+> 
+> To address this problem, modify dpm_wait_for_superior() to check
+> if the target device is still there in the system-wide PM list of
+> devices and if so, to increment its parent's reference counter, both
+> under dpm_list_mtx which prevents device_del() running for the child
+> from dropping the parent's reference counter prematurely.
+> 
+> If the device is not present in the system-wide PM list of devices
+> any more, the resume of it cannot continue, so check that again after
+> dpm_wait() returns, which means that the parent's callback has been
+> completed, and pass the result of that check to the caller of
+> dpm_wait_for_superior() to allow it to abort the device's resume
+> if it is not there any more.
+> 
+> Link: https://lore.kernel.org/linux-pm/1579568452-27253-1-git-send-email-chanho.min@lge.com
+> Reported-by: Chanho Min <chanho.min@lge.com>
+> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> ---
+>   drivers/base/power/main.c |   42 +++++++++++++++++++++++++++++++++++++-----
+>   1 file changed, 37 insertions(+), 5 deletions(-)
+> 
+> Index: linux-pm/drivers/base/power/main.c
+> ===================================================================
+> --- linux-pm.orig/drivers/base/power/main.cSeokjoo Lee <seokjoo.lee@lge.com>
+> +++ linux-pm/drivers/base/power/main.c20. 1. 23. 오전 8:11에 Rafael J. Wysocki 이(가) 쓴 글:
+> @@ -273,10 +273,38 @@ static void dpm_wait_for_suppliers(struc
+>   	device_links_read_unlock(idx);
+>   }
+>   
+> -static void dpm_wait_for_superior(struct device *dev, bool async)
+> +static bool dpm_wait_for_superior(struct device *dev, bool async)
+>   {
+> -	dpm_wait(dev->parent, async);
+> +	struct device *parent;board
+> +
+> +	/*
+> +	 * If the device is resumed asynchronously and the parent's callback
+> +	 * deletes both the device and the parent itself, the parent object may
+> +	 * be freed while this function is running, so avoid that by reference
+> +	 * counting the parent once more unless the device has been deleted
+> +	 * already (in which case return right away).
+> +	 */
+> +	mutex_lock(&dpm_list_mtx);
+> +
+> +	if (!device_pm_initialized(dev)) {20. 1. 23. 오전 8:11에 Rafael J. Wysocki 이(가) 쓴 글:
+> +		mutex_unlock(&dpm_list_mtx);
+> +		return false;
+> +	}
+> +
+> +	parent = get_device(dev->parent);
+> +
+> +	mutex_unlock(&dpm_list_mtx);
+> +
+> +	dpm_wait(parent, async);
+> +	put_device(parent);
+> +
+>   	dpm_wait_for_suppliers(dev, async);
+> +
+> +	/*
+> +	 * If the parent's callback has deleted the device, attempting to resume
+> +	 * it would be invalid, so avoid doing that then.
+> +	 */
+> +	return device_pm_initialized(dev);20. 1. 23. 오전 8:11에 Rafael J. Wysocki 이(가) 쓴 글:
+>   }
+>   
+>   static void dpm_wait_for_consumers(struct device *dev, bool async)
+> @@ -621,7 +649,8 @@ static int device_resume_noirq(struct de
+>   	if (!dev->power.is_noirq_suspended)
+>   		goto Out;
+>   
+> -	dpm_wait_for_superior(dev, async);
+> +	if (!dpm_wait_for_superior(dev, async))
+> +		goto Out;
+>   
+>   	skip_resume = dev_pm_may_skip_resume(dev);
+>   
+> @@ -829,7 +858,8 @@ static int device_resume_early(struct de
+>   	if (!dev->power.is_late_suspended)
+>   		goto Out;
+>   
+> -	dpm_wait_for_superior(dev, async);Seokjoo Lee <seokjoo.lee@lge.com>
+> +	if (!dpm_wait_for_superior(dev, async))
+> +		goto Out;
+>   
+>   	callback = dpm_subsys_resume_early_cb(dev, state, &info);
+>   
+> @@ -944,7 +974,9 @@ static int device_resume(struct device *
+>   		goto Complete;
+>   	}
+>   
+> -	dpm_wait_for_superior(dev, async);
+> +	if (!dpm_wait_for_superior(dev, async))
+> +		goto Complete;
+> +
+>   	dpm_watchdog_set(&wd, dev);
+>   	device_lock(dev);Thanks, This seems to solve the rare hang on our target.
+Actually, the problem is occurred in v4.4.
+Shouldn't it apply to -stable?
 
-Global functions need a "f2fs_" prefix.
-
-- Eric
+Chanho
