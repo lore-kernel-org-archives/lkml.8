@@ -2,131 +2,151 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 327B8C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 10:17:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D7DFC33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 10:19:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06B7024684
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 10:17:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="WFs1brqb"
+	by mail.kernel.org (Postfix) with ESMTP id 2D3B524125
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 10:19:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728799AbgAWKRF (ORCPT
+        id S1727093AbgAWKTV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 05:17:05 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:59582 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726099AbgAWKRE (ORCPT
+        Thu, 23 Jan 2020 05:19:21 -0500
+Received: from alexa-out-blr-01.qualcomm.com ([103.229.18.197]:17853 "EHLO
+        alexa-out-blr-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726099AbgAWKTV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 05:17:04 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=4YI80HqxIkG8VkHEHmtetD4ZdMB5eeApmBWrDmp9m4Q=; b=WFs1brqbiV7bUsxQqo6kFEJAb
-        rbI+Z0Z6962vVkpSV+8CdJwpHJPDoO6CVwyM0wb5wgckaJUzEcYlqITg3DtOV0P6Xgwo7+4ZSE7H1
-        eWOhW308lHfCNQxQTxVH3GUquJ1LB7zV087j7/M5RpdF24gu7QfEQAXk+Esm9S1xAxC2OsvVLmlzw
-        9/ISmzmUiW+KmEXFIAxuL3HJQe7S/FZ2QA+1CSomqoqsYpcLyPw8JeCkqcZr/QTU/fFqf+QoxxpPG
-        cpASvUtX6jQ1O0ttoxszl9BjXEvmH29Vdfww88c8Ixt6w1mn8jB8QT5wOMwME99AF7CQrCDhcLsHy
-        QFnOK22Eg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iuZXg-0003zH-5U; Thu, 23 Jan 2020 10:16:52 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 75C23304121;
-        Thu, 23 Jan 2020 11:15:09 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 73B9A2B6E79F5; Thu, 23 Jan 2020 11:16:49 +0100 (CET)
-Date:   Thu, 23 Jan 2020 11:16:49 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Alex Kogan <alex.kogan@oracle.com>
-Cc:     linux@armlinux.org.uk, mingo@redhat.com, will.deacon@arm.com,
-        arnd@arndb.de, longman@redhat.com, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        tglx@linutronix.de, bp@alien8.de, hpa@zytor.com, x86@kernel.org,
-        guohanjun@huawei.com, jglauber@marvell.com,
-        steven.sistare@oracle.com, daniel.m.jordan@oracle.com,
-        dave.dice@oracle.com
-Subject: Re: [PATCH v9 3/5] locking/qspinlock: Introduce CNA into the slow
- path of qspinlock
-Message-ID: <20200123101649.GF14946@hirez.programming.kicks-ass.net>
-References: <20200115035920.54451-1-alex.kogan@oracle.com>
- <20200115035920.54451-4-alex.kogan@oracle.com>
- <20200123092658.GC14879@hirez.programming.kicks-ass.net>
- <20200123100635.GE14946@hirez.programming.kicks-ass.net>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200123100635.GE14946@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Thu, 23 Jan 2020 05:19:21 -0500
+Received: from ironmsg01-blr.qualcomm.com ([10.86.208.130])
+  by alexa-out-blr-01.qualcomm.com with ESMTP/TLS/AES256-SHA; 23 Jan 2020 15:48:38 +0530
+Received: from kalyant-linux.qualcomm.com ([10.204.66.210])
+  by ironmsg01-blr.qualcomm.com with ESMTP; 23 Jan 2020 15:48:13 +0530
+Received: by kalyant-linux.qualcomm.com (Postfix, from userid 94428)
+        id D4CD74534; Thu, 23 Jan 2020 15:48:11 +0530 (IST)
+From:   Kalyan Thota <kalyan_t@codeaurora.org>
+To:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
+        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org
+Cc:     Kalyan Thota <kalyan_t@codeaurora.org>,
+        linux-kernel@vger.kernel.org, robdclark@gmail.com,
+        seanpaul@chromium.org, hoegsberg@chromium.org,
+        dianders@chromium.org, jsanka@codeaurora.org,
+        harigovi@codeaurora.org, travitej@codeaurora.org,
+        nganji@codeaurora.org
+Subject: [PATCH] msm:disp:dpu1: add UBWC support for display on SC7180
+Date:   Thu, 23 Jan 2020 15:47:55 +0530
+Message-Id: <1579774675-20235-1-git-send-email-kalyan_t@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 23, 2020 at 11:06:35AM +0100, Peter Zijlstra wrote:
-> On Thu, Jan 23, 2020 at 10:26:58AM +0100, Peter Zijlstra wrote:
-> > On Tue, Jan 14, 2020 at 10:59:18PM -0500, Alex Kogan wrote:
-> > > +/* this function is called only when the primary queue is empty */
-> > > +static inline bool cna_try_change_tail(struct qspinlock *lock, u32 val,
-> > > +				       struct mcs_spinlock *node)
-> > > +{
-> > > +	struct mcs_spinlock *head_2nd, *tail_2nd;
-> > > +	u32 new;
-> > > +
-> > > +	/* If the secondary queue is empty, do what MCS does. */
-> > > +	if (node->locked <= 1)
-> > > +		return __try_clear_tail(lock, val, node);
-> > > +
-> > > +	/*
-> > > +	 * Try to update the tail value to the last node in the secondary queue.
-> > > +	 * If successful, pass the lock to the first thread in the secondary
-> > > +	 * queue. Doing those two actions effectively moves all nodes from the
-> > > +	 * secondary queue into the main one.
-> > > +	 */
-> > > +	tail_2nd = decode_tail(node->locked);
-> > > +	head_2nd = tail_2nd->next;
-> > > +	new = ((struct cna_node *)tail_2nd)->encoded_tail + _Q_LOCKED_VAL;
-> > > +
-> > > +	if (atomic_try_cmpxchg_relaxed(&lock->val, &val, new)) {
-> > > +		/*
-> > > +		 * Try to reset @next in tail_2nd to NULL, but no need to check
-> > > +		 * the result - if failed, a new successor has updated it.
-> > > +		 */
-> > 
-> > I think you actually have an ordering bug here; the load of head_2nd
-> > *must* happen before the atomic_try_cmpxchg(), otherwise it might
-> > observe the new next and clear a valid next pointer.
-> > 
-> > What would be the best fix for that; I'm thinking:
-> > 
-> > 	head_2nd = smp_load_acquire(&tail_2nd->next);
-> > 
-> > Will?
-> 
-> Hmm, given we've not passed the lock around yet; why wouldn't something
-> like this work:
-> 
-> 	smp_store_release(&tail_2nd->next, NULL);
+Add UBWC global configuration for display on
+SC7180 target.
 
-Argh, make that:
+Signed-off-by: Kalyan Thota <kalyan_t@codeaurora.org>
+---
+ drivers/gpu/drm/msm/disp/dpu1/dpu_mdss.c | 58 +++++++++++++++++++++++++++++++-
+ 1 file changed, 57 insertions(+), 1 deletion(-)
 
-	tail_2nd->next = NULL;
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_mdss.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_mdss.c
+index 29705e7..80d3cfc 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_mdss.c
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_mdss.c
+@@ -12,6 +12,7 @@
+ 
+ #define to_dpu_mdss(x) container_of(x, struct dpu_mdss, base)
+ 
++#define HW_REV				0x0
+ #define HW_INTR_STATUS			0x0010
+ 
+ /* Max BW defined in KBps */
+@@ -22,6 +23,17 @@ struct dpu_irq_controller {
+ 	struct irq_domain *domain;
+ };
+ 
++struct dpu_hw_cfg {
++	u32 val;
++	u32 offset;
++};
++
++struct dpu_mdss_hw_init_handler {
++	u32 hw_rev;
++	u32 hw_reg_count;
++	struct dpu_hw_cfg* hw_cfg;
++};
++
+ struct dpu_mdss {
+ 	struct msm_mdss base;
+ 	void __iomem *mmio;
+@@ -32,6 +44,44 @@ struct dpu_mdss {
+ 	u32 num_paths;
+ };
+ 
++static struct dpu_hw_cfg hw_cfg[] = {
++    {
++	/* UBWC global settings */
++	.val = 0x1E,
++	.offset = 0x144,
++    }
++};
++
++static struct dpu_mdss_hw_init_handler cfg_handler[] = {
++    { .hw_rev = DPU_HW_VER_620,
++      .hw_reg_count = ARRAY_SIZE(hw_cfg),
++      .hw_cfg = hw_cfg
++    },
++};
++
++static void dpu_mdss_hw_init(struct dpu_mdss *dpu_mdss, u32 hw_rev)
++{
++	int i;
++	u32 count = 0;
++	struct dpu_hw_cfg *hw_cfg = NULL;
++
++	for (i = 0; i < ARRAY_SIZE(cfg_handler); i++) {
++		if (cfg_handler[i].hw_rev == hw_rev) {
++			hw_cfg = cfg_handler[i].hw_cfg;
++			count = cfg_handler[i].hw_reg_count;
++			break;
++	    }
++	}
++
++	for (i = 0; i < count; i++ ) {
++		writel_relaxed(hw_cfg->val,
++			dpu_mdss->mmio + hw_cfg->offset);
++		hw_cfg++;
++	}
++
++    return;
++}
++
+ static int dpu_mdss_parse_data_bus_icc_path(struct drm_device *dev,
+ 						struct dpu_mdss *dpu_mdss)
+ {
+@@ -174,12 +224,18 @@ static int dpu_mdss_enable(struct msm_mdss *mdss)
+ 	struct dpu_mdss *dpu_mdss = to_dpu_mdss(mdss);
+ 	struct dss_module_power *mp = &dpu_mdss->mp;
+ 	int ret;
++	u32 mdss_rev;
+ 
+ 	dpu_mdss_icc_request_bw(mdss);
+ 
+ 	ret = msm_dss_enable_clk(mp->clk_config, mp->num_clk, true);
+-	if (ret)
++	if (ret) {
+ 		DPU_ERROR("clock enable failed, ret:%d\n", ret);
++		return ret;
++	}
++
++	mdss_rev = readl_relaxed(dpu_mdss->mmio + HW_REV);
++	dpu_mdss_hw_init(dpu_mdss, mdss_rev);
+ 
+ 	return ret;
+ }
+-- 
+1.9.1
 
-	smp_wmb();
-
-> 	if (!atomic_try_cmpxchg_relaxed(&lock, &val, new)) {
-> 		tail_2nd->next = head_2nd;
-> 		return false;
-> 	}
-> 
-> The whole second queue is only ever modified by the lock owner, and that
-> is us, so we can pre-terminate the secondary queue (break the circular
-> link), try the cmpxchg and fix it back up when it fails.
