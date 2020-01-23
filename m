@@ -2,134 +2,140 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4453C33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 09:24:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F5EFC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 09:27:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A71A2087E
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 09:24:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E69A624125
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 09:27:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Xeh0yuoB"
+	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="RPcGX5BC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727817AbgAWJYi (ORCPT
+        id S1726205AbgAWJ1C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 04:24:38 -0500
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:8170 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725785AbgAWJYi (ORCPT
+        Thu, 23 Jan 2020 04:27:02 -0500
+Received: from mx0a-001ae601.pphosted.com ([67.231.149.25]:6782 "EHLO
+        mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725785AbgAWJ1B (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 04:24:38 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e2966280000>; Thu, 23 Jan 2020 01:23:52 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 23 Jan 2020 01:24:37 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 23 Jan 2020 01:24:37 -0800
-Received: from [10.25.73.122] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 23 Jan
- 2020 09:24:33 +0000
-Subject: Re: [PATCH V2 0/5] Add support to defer core initialization
-From:   Vidya Sagar <vidyas@nvidia.com>
-To:     <kishon@ti.com>
-CC:     <jingoohan1@gmail.com>, <gustavo.pimentel@synopsys.com>,
-        <lorenzo.pieralisi@arm.com>, <andrew.murray@arm.com>,
-        <bhelgaas@google.com>, <thierry.reding@gmail.com>,
-        <Jisheng.Zhang@synaptics.com>, <jonathanh@nvidia.com>,
-        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <kthota@nvidia.com>, <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>
-References: <20200103100736.27627-1-vidyas@nvidia.com>
- <a8678df3-141b-51ab-b0cb-5e88c6ac91b5@nvidia.com>
-X-Nvconfidentiality: public
-Message-ID: <680a58ec-5d09-3e3b-2fd6-544c32732818@nvidia.com>
-Date:   Thu, 23 Jan 2020 14:54:30 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Thu, 23 Jan 2020 04:27:01 -0500
+Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
+        by mx0a-001ae601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00N9NiUa015513;
+        Thu, 23 Jan 2020 03:26:58 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=PODMain02222019;
+ bh=aQuqEAXvS/SXq1MmpZY3fWZYE9htc+lnY2Egj+TmxLU=;
+ b=RPcGX5BCnlKG7e/pWWO3T3oHvuue4pNpHL/MFLGB2wLexznDJqF6IVYh93ezGOQMqS0+
+ L2Zr6yJJBd9Kp1d4hs4VU1L6VwYlvJHpK+Kwd3c/GXHAEGwPUMRU+qwdgnnVONnmEF/5
+ N5J0BWy6jNdvBGlXqmH29CkfSxIZK6/+W+bhSMPu1HlmLN1GaJxqSJmY9Y8fzFQer0im
+ 0/mHidFrPhe5THtoa/KXKPKThOUNWRdKv+02ldIjDraCoQaejBhzfc56IaJMhxcDFdiM
+ hKACSNPpQtuaOc6ZZGPtsuNVqRxTZc9ZWxbhazm/lMba/oLWihb7K9Y1Fwqj4BiNjsWV ig== 
+Authentication-Results: ppops.net;
+        spf=fail smtp.mailfrom=ckeepax@opensource.cirrus.com
+Received: from ediex02.ad.cirrus.com ([5.172.152.52])
+        by mx0a-001ae601.pphosted.com with ESMTP id 2xm0a8yjrc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Thu, 23 Jan 2020 03:26:58 -0600
+Received: from EDIEX01.ad.cirrus.com (198.61.84.80) by EDIEX02.ad.cirrus.com
+ (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Thu, 23 Jan
+ 2020 09:26:39 +0000
+Received: from ediswmail.ad.cirrus.com (198.61.86.93) by EDIEX01.ad.cirrus.com
+ (198.61.84.80) with Microsoft SMTP Server id 15.1.1591.10 via Frontend
+ Transport; Thu, 23 Jan 2020 09:26:39 +0000
+Received: from ediswmail.ad.cirrus.com (ediswmail.ad.cirrus.com [198.61.86.93])
+        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id DCE202D4;
+        Thu, 23 Jan 2020 09:26:39 +0000 (UTC)
+Date:   Thu, 23 Jan 2020 09:26:39 +0000
+From:   Charles Keepax <ckeepax@opensource.cirrus.com>
+To:     Mark Brown <broonie@kernel.org>
+CC:     <lee.jones@linaro.org>, <lgirdwood@gmail.com>,
+        <linux-kernel@vger.kernel.org>, <patches@opensource.cirrus.com>
+Subject: Re: [PATCH RESEND 1/2] regulator: arizona-ldo1: Improve handling of
+ regulator unbinding
+Message-ID: <20200123092639.GC4098@ediswmail.ad.cirrus.com>
+References: <20200122110842.10702-1-ckeepax@opensource.cirrus.com>
+ <20200122131149.GE3833@sirena.org.uk>
 MIME-Version: 1.0
-In-Reply-To: <a8678df3-141b-51ab-b0cb-5e88c6ac91b5@nvidia.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1579771432; bh=CJkKxyTcSbvf0mPRyw06IElQEGq2bOcaS4s3pVBON7k=;
-        h=X-PGP-Universal:Subject:From:To:CC:References:X-Nvconfidentiality:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=Xeh0yuoBkA5QXkhqjM1166Nnm/5vcIjw0ly24p4ffLbyEJyUYcEsKhy/h+Vz6a4XO
-         1AvHAR8pI1Z26vBBLapfq7mMAjDBGn2I0uv4uhFx1XLZZvIUo4kHlYMtgoNzUNvdAa
-         31K/ZOzGEKS1ykoSPtHhcDkmmBKRE95kUJEa7Ksn/swvZ1bpBxRSoRK3ILxboVGxmK
-         ay6bm7CtVZwhUVtTF6r4W2vzouuie2nC9VseU3g8eR8C1STf9cenfbbvFOwTIjUISG
-         CZioIIux0Cy938Sau1Dthrq6SEvTDAaKbq1J7+iusMfg8mfVo93+iNlKde1494MZua
-         ffUICBmOJLLlw==
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20200122131149.GE3833@sirena.org.uk>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-Proofpoint-SPF-Result: fail
+X-Proofpoint-SPF-Record: v=spf1 include:spf-001ae601.pphosted.com include:spf.protection.outlook.com
+ -all
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxscore=0 suspectscore=2
+ bulkscore=0 priorityscore=1501 impostorscore=0 mlxlogscore=971
+ phishscore=0 malwarescore=0 adultscore=0 lowpriorityscore=0 clxscore=1015
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-1910280000
+ definitions=main-2001230079
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Kishon,
-Apologies for pinging again. Could you please review this series?
+On Wed, Jan 22, 2020 at 01:11:49PM +0000, Mark Brown wrote:
+> On Wed, Jan 22, 2020 at 11:08:41AM +0000, Charles Keepax wrote:
+> 
+> > The current unbinding process for Madera has some issues. The trouble
+> > is runtime PM is disabled as the first step of the process, but
+> 
+> Why not just leave runtime PM active until all the subdevices are gone?
+> This is a really bad hack and it's going to be fragile.
+> 
+
+Admittedly I am not super fond of this solution either. But
+leaving the PM runtime active is basically what this patch does
+(well the mfd part). Leaving the PM runtime enabled means access
+to the DCVDD regulator is required during the remove process,
+which in turn means you need to put that regulator after the
+other devices are removed but before DCVDD is removed. Currently
+the only place we can do that is in the LDO remove, as per this
+patch.
+
+Other options that might be viable, pending input for yourself
+and Lee:
+
+1) We could look at adding a partial remove function to MFD.
+Currently I can only call mfd_remove_devices which nobbles all
+the devices. If I could make calls to remove specific devices I
+could do one call to remove everything except DCVDD, do the put,
+then remove the regulator.
+
+2) We could look at adding some sort of pre-remove callback into
+MFD, and the regulator put could go in there rather than the
+regulator remove, as per this patch. Although this feels a little
+like the same thing as this patch, just dressed up a little
+differently.
+
+3) We could look at doing something in regmap IRQ to change when
+it does PM runtime calls, it is regmap doing runtime gets when
+drivers remove IRQs that causes the issue. But my accessment was
+that what regmap is doing makes perfect sense, so I don't think
+this is a good approach.
+
+> > +static int madera_ldo1_remove(struct platform_device *pdev)
+> > +{
+> > +	struct madera *madera = dev_get_drvdata(pdev->dev.parent);
+> > +
+> > +	if (madera->internal_dcvdd) {
+> > +		regulator_disable(madera->dcvdd);
+> > +		regulator_put(madera->dcvdd);
+> > +	}
+> 
+> This is going to break bisection since it will result in double
+> disables, it'd be fine to do the MFD change first since that'd just
+> leak a reference to enable on a regulator which is about to be discarded
+> entirely anyway but this reordering (and whatever other changes you've
+> done since v1) means you add a double free.
+
+Apologies yes that is a good point. If no one minds, and we end
+up sticking with this approach, I feel it might best to squash
+them both back into one patch?
 
 Thanks,
-Vidya Sagar
-
-On 1/11/2020 5:18 PM, Vidya Sagar wrote:
-> Hi Kishon,
-> Could you please review this series?
->=20
-> Also, this series depends on the following change of yours
-> http://patchwork.ozlabs.org/patch/1109884/
-> Whats the plan to get this merged?
->=20
-> Thanks,
-> Vidya Sagar
->=20
-> On 1/3/20 3:37 PM, Vidya Sagar wrote:
->> EPC/DesignWare core endpoint subsystems assume that the core registers=20
->> are
->> available always for SW to initialize. But, that may not be the case=20
->> always.
->> For example, Tegra194 hardware has the core running on a clock that is=20
->> derived
->> from reference clock that is coming into the endpoint system from host.
->> Hence core is made available asynchronously based on when host system=20
->> is going
->> for enumeration of devices. To accommodate this kind of hardwares,=20
->> support is
->> required to defer the core initialization until the respective=20
->> platform driver
->> informs the EPC/DWC endpoint sub-systems that the core is indeed=20
->> available for
->> initiaization. This patch series is attempting to add precisely that.
->> This series is based on Kishon's patch that adds notification mechanism
->> support from EPC to EPF @ http://patchwork.ozlabs.org/patch/1109884/
->>
->> Vidya Sagar (5):
->> =C2=A0=C2=A0 PCI: endpoint: Add core init notifying feature
->> =C2=A0=C2=A0 PCI: dwc: Refactor core initialization code for EP mode
->> =C2=A0=C2=A0 PCI: endpoint: Add notification for core init completion
->> =C2=A0=C2=A0 PCI: dwc: Add API to notify core initialization completion
->> =C2=A0=C2=A0 PCI: pci-epf-test: Add support to defer core initialization
->>
->> =C2=A0 .../pci/controller/dwc/pcie-designware-ep.c=C2=A0=C2=A0 |=C2=A0 7=
-9 +++++++-----
->> =C2=A0 drivers/pci/controller/dwc/pcie-designware.h=C2=A0 |=C2=A0 11 ++
->> =C2=A0 drivers/pci/endpoint/functions/pci-epf-test.c | 118 ++++++++++++-=
------
->> =C2=A0 drivers/pci/endpoint/pci-epc-core.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 19 ++-
->> =C2=A0 include/linux/pci-epc.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 2 +
->> =C2=A0 include/linux/pci-epf.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 5 +
->> =C2=A0 6 files changed, 164 insertions(+), 70 deletions(-)
->>
+Charles
