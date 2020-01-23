@@ -2,115 +2,112 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3832DC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 18:25:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 792B9C33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 18:29:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E0CF21569
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 18:25:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579803950;
-	bh=//Gx7TpRR9XJE4SitAtv6bFOO1oNBBqtuf9aoscDo6s=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=uinpLSD5emkNh5ofAHqsbFdznBa/aMOAO4YVC0qg2Vq6WX8N7aa0STw4WUgTyGS+E
-	 c1PQcHUnk314w9BQSchq9EN16ZNtXL7h3Ijtc6UahhYD1VVmY6AXIhGKR3L9kFPUrs
-	 z8eJIb5DXhK+xpTlsKIh9kEXKe1hDpJ4xkBo+MBQ=
+	by mail.kernel.org (Postfix) with ESMTP id 5D87C21569
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 18:29:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728988AbgAWSZt (ORCPT
+        id S1729009AbgAWS3C convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 13:25:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40222 "EHLO mail.kernel.org"
+        Thu, 23 Jan 2020 13:29:02 -0500
+Received: from mga04.intel.com ([192.55.52.120]:43749 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727278AbgAWSZt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 13:25:49 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AF9462077C;
-        Thu, 23 Jan 2020 18:25:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579803948;
-        bh=//Gx7TpRR9XJE4SitAtv6bFOO1oNBBqtuf9aoscDo6s=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=GD7H1bVYa9bikI7RV+4cY6E4eQZ1G0GKSNpUZS3jSY39neata6PAyGeiPm+5Rp04l
-         OzAj+T3u9o7SJv+LrYPbVDTwTt2yLKAHKTm399caH9wSWGvdEtR0FndfEgEC4a94qq
-         7efA7P/zX19EtOMiNR+Z/tqiklYAq419vY282FHc=
-Date:   Thu, 23 Jan 2020 19:25:45 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc:     Clemens Ladisch <clemens@ladisch.de>,
-        Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] char: hpet: Use flexible-array member
-Message-ID: <20200123182545.GA1954152@kroah.com>
-References: <20200120235326.GA29231@embeddedor.com>
+        id S1727278AbgAWS3C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jan 2020 13:29:02 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Jan 2020 10:29:01 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,354,1574150400"; 
+   d="scan'208";a="216341610"
+Received: from orsmsx109.amr.corp.intel.com ([10.22.240.7])
+  by orsmga007.jf.intel.com with ESMTP; 23 Jan 2020 10:29:00 -0800
+Received: from orsmsx102.amr.corp.intel.com ([169.254.3.100]) by
+ ORSMSX109.amr.corp.intel.com ([169.254.11.6]) with mapi id 14.03.0439.000;
+ Thu, 23 Jan 2020 10:29:00 -0800
+From:   "Yang, Fei" <fei.yang@intel.com>
+To:     Felipe Balbi <balbi@kernel.org>,
+        Andrzej Pietrasiewicz <andrzej.p@collabora.com>,
+        John Stultz <john.stultz@linaro.org>,
+        lkml <linux-kernel@vger.kernel.org>
+CC:     Felipe Balbi <felipe.balbi@linux.intel.com>,
+        Thinh Nguyen <thinhn@synopsys.com>,
+        Tejas Joglekar <tejas.joglekar@synopsys.com>,
+        "Jack Pham" <jackp@codeaurora.org>, Todd Kjos <tkjos@google.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Linux USB List <linux-usb@vger.kernel.org>,
+        stable <stable@vger.kernel.org>
+Subject: RE: [RFC][PATCH 0/2] Avoiding DWC3 transfer stalls/hangs when using
+ adb over f_fs
+Thread-Topic: [RFC][PATCH 0/2] Avoiding DWC3 transfer stalls/hangs when
+ using adb over f_fs
+Thread-Index: AQHV0XMMcRoryuKxgUWuu9vXC1fi/6f4daqA///7ALCAAJiOAP//ee5QgACKP4D//31cgA==
+Date:   Thu, 23 Jan 2020 18:28:59 +0000
+Message-ID: <02E7334B1630744CBDC55DA8586225837F9EE3C0@ORSMSX102.amr.corp.intel.com>
+References: <20200122222645.38805-1-john.stultz@linaro.org>
+ <ef64036f-7621-50d9-0e23-0f7141a40d7a@collabora.com>
+ <02E7334B1630744CBDC55DA8586225837F9EE280@ORSMSX102.amr.corp.intel.com>
+ <87o8uu3wqd.fsf@kernel.org>
+ <02E7334B1630744CBDC55DA8586225837F9EE335@ORSMSX102.amr.corp.intel.com>
+ <87lfpy3w1g.fsf@kernel.org>
+In-Reply-To: <87lfpy3w1g.fsf@kernel.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-originating-ip: [10.22.254.138]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200120235326.GA29231@embeddedor.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 20, 2020 at 05:53:26PM -0600, Gustavo A. R. Silva wrote:
-> Old code in the kernel uses 1-byte and 0-byte arrays to indicate the
-> presence of a "variable length array":
-> 
-> struct something {
->     int length;
->     u8 data[1];
-> };
-> 
-> struct something *instance;
-> 
-> instance = kmalloc(sizeof(*instance) + size, GFP_KERNEL);
-> instance->length = size;
-> memcpy(instance->data, source, size);
-> 
-> There is also 0-byte arrays. Both cases pose confusion for things like
-> sizeof(), CONFIG_FORTIFY_SOURCE, etc.[1] Instead, the preferred mechanism
-> to declare variable-length types such as the one above is a flexible array
-> member[2] which need to be the last member of a structure and empty-sized:
-> 
-> struct something {
->         int stuff;
->         u8 data[];
-> };
-> 
-> Also, by making use of the mechanism above, we will get a compiler warning
-> in case the flexible array does not occur last in the structure, which
-> will help us prevent some kind of undefined behavior bugs from being
-> unadvertenly introduced[3] to the codebase from now on.
-> 
-> [1] https://github.com/KSPP/linux/issues/21
-> [2] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
-> 
-> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-> ---
->  drivers/char/hpet.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/char/hpet.c b/drivers/char/hpet.c
-> index 9ac6671bb514..aed2c45f7968 100644
-> --- a/drivers/char/hpet.c
-> +++ b/drivers/char/hpet.c
-> @@ -110,7 +110,7 @@ struct hpets {
->  	unsigned long hp_delta;
->  	unsigned int hp_ntimer;
->  	unsigned int hp_which;
-> -	struct hpet_dev hp_dev[1];
-> +	struct hpet_dev hp_dev[];
+>>>>>> Since ~4.20, when the functionfs gadget enabled scatter-gather 
+>>>>>> support, we have seen problems with adb connections stalling and 
+>>>>>> stopping to function on hardware with dwc3 usb controllers.
+>>>>>> Specifically, HiKey960, Dragonboard 845c, and Pixel3 devices.
+>>>>>
+>>>>> Any chance this:
+>>>>> 
+>>>>> https://git.kernel.org/pub/scm/linux/kernel/git/balbi/usb.git/commi
+>>>>> t/
+>>>>> ?h=testing/next&id=f63333e8e4fd63d8d8ae83b89d2c38cf21d64801
+>>>> This is a different issue. I have tried initializing num_sgs when debugging this adb stall problem, but it didn't help.
+>>>
+>>> So multiple folks have run through this problem, but not *one* has tracepoints collected from the issue? C'mon guys.
+>>> Can someone, please, collect tracepoints so we can figure out what's actually going on?
+>>>
+>>> I'm pretty sure this should be solved at the DMA API level, just want to confirm.
+>>
+>> I have sent you the tracepoints long time ago. Also my analysis of the 
+>> problem (BTW, I don't think the tracepoints helped much). It's 
+>> basically a logic problem in function dwc3_gadget_ep_reclaim_trb_sg().
+>
+> AFAICT, this is caused by DMA API merging pages together when map an sglist for DMA. While doing that,
+> it does *not* move the SG_END flag which sg_is_last() checks.
+>
+> I consider that an overlook on the DMA API, wouldn't you? Why should DMA API users care if pages were merged or not while mapping the sglist?
+> We have for_each_sg() and sg_is_last() for a reason.
 
-Are you sure the allocation size is the same again?  Much like the
-n_hdlc patch was, I think you need to adjust the variable size here.
-Maybe, it's a bit of a pain to figure out at a quick glance, I just want
-to make sure you at least do look at that :)
+Oops, my bad. Actually, I was talking about the other patch, not the one setting num_sgs = 0; I don't know if this patch is really needed, but from
+what I remember the DMA API is setting up the num_sgs properly. I agree even if there is a problem initializing num_sgs, it should be fixed in DMA API.
 
-thanks,
+> I can try dig into my old emails and resend, but that is a bit hard to find.
+>
+> Don't bother, I'm still not convinced we should fix at the driver level when sg_is_last() should be working here,
+> unless we should iterate over num_sgs instead of num_mapped_sgs, though I don't think that's the case since
+> in that case we would have to chain buffers of size zero.
 
-greg k-h
+> --
+> balbi
