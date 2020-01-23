@@ -2,193 +2,132 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40A3AC33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 19:00:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C6D5C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 19:01:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 19A1C22522
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 19:00:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6380124655
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 19:01:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="hl/QHk5i"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VMqswA/J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729017AbgAWTAW (ORCPT
+        id S1729037AbgAWTBa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 14:00:22 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:48374 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727022AbgAWTAV (ORCPT
+        Thu, 23 Jan 2020 14:01:30 -0500
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:42014 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727022AbgAWTBa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 14:00:21 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:MIME-Version:Date:Message-ID:Subject:From:Cc:To:Sender:Reply-To:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=8HR2OlxtYSb8VdzQerDMMYUwatLK4APc/+QQpvP3lEg=; b=hl/QHk5iTlsDRKCfY+NHVGyfL
-        qgqj7dYv7pKzurBROUVNuwRXpgmtf5xN3yRceVvnxS/eNW6WGHi95QfEo03tR4rTgkcR9wKIpjOmb
-        81jLRVHYNsnKtfnjooWbbrFPxwX56OTZ63ybhx80bRhENoVrRLtGFmp5a9OL1jd8EGj42zKv99+eB
-        JwtSr7fZ7Cz//tDfqUVR3E5tPEXA9q0ngG2/f56cyWSgnmbgWjx3we2vtNWgdwVb329LgskVc333M
-        J503k7JhpQBbDcV/o75dUqL1juPCeAu+WcLSbMe1/lmAGA9E3WwrLYl6CMt5DUF3qozC89SWC/IFK
-        whdtZUgpw==;
-Received: from [2601:1c0:6280:3f0::ed68]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iuhiE-0003BI-Ui; Thu, 23 Jan 2020 19:00:19 +0000
-To:     "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>
-Cc:     Jan Kara <jack@suse.com>, Theodore Ts'o <tytso@mit.edu>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        linux-ext4@vger.kernel.org,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Jozsef Kadlecsik <kadlec@netfilter.org>,
-        Florian Westphal <fw@strlen.de>,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        Paul Mackerras <paulus@samba.org>, linux-ppp@vger.kernel.org,
-        Jan Kara <jack@suse.com>, reiserfs-devel@vger.kernel.org,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        linux-xfs <linux-xfs@vger.kernel.org>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Subject: [PATCH] Documentation: changes.rst: update several outdated project
- URLs
-Message-ID: <efb1f518-9e66-c472-d124-4b7d91e56639@infradead.org>
-Date:   Thu, 23 Jan 2020 11:00:12 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Thu, 23 Jan 2020 14:01:30 -0500
+Received: by mail-qk1-f196.google.com with SMTP id q15so4524147qke.9;
+        Thu, 23 Jan 2020 11:01:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=907wA0+8Q3SZ+tEArR2jGnLZ9RFPMcn5w1EEdI6pVwg=;
+        b=VMqswA/J+7ATigs+BX5YY2AaOI0+cPO3PhE743H4ut0Gqt/By5PmEyiQ0qKySwgiqE
+         4IHPXVIBGs7WQeFh/x96y8L40oGaCOyRPtetIxO/EqQB9g8/Y+oViaXcRtDbeO0gmyQH
+         dfCGAR2EH1zNPeAXrJ3dZFQgzh2J8of6NSu8ewfFhgMvR3vb4v/3XxJFJB07KqFMNYJG
+         tQjp6nKBXGmHw+ViSExfzQtzLLPaawGP7Fw0eq3SzgCWX55G0WTbknbFAjqcPVGZUPXY
+         BTExC6t3qtigc5Wo4P6QByWBtKoSg5z7lKx+Pz5lRlMjG7FVxmRRQKiXr0wal+h0Hwyc
+         eSlQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=907wA0+8Q3SZ+tEArR2jGnLZ9RFPMcn5w1EEdI6pVwg=;
+        b=YIKJBMVWkkqVngpExggDIlX2koZja5x5jGM71fIA1zP4gdf0rYTHbIBpVwUsg+14JZ
+         Nr3LYqdkb95ZN5dfVHlSsPE+MGBqYKc2OVF12y0IFCbp5XSeb7pdJILukVVFu/jhhzuA
+         2/Kw+Vs5kXj6xxYnlOmekUo0Yss2bpCjjpUM93nrstsGIBFKbu8j8IdI5/akekEFTYUg
+         kImwIecOrlMIQAU0WV9rvTNoJxs4L0jmBVElDh8DuretgFO/27zDQSzT5O/lISrak/gP
+         CmkDqx7npLwJ7UotWdo8FENe1fNWjb1M//pneHD9MXZZstW48pEf0iHIdSsxyo48VnOv
+         ImAw==
+X-Gm-Message-State: APjAAAVciFrmI1vbOFDK7jpdxHHC1eU9edgFU7faoSNlCwqHIwwgJ07z
+        BavK+5jeZ7Nzy8A9JXL+51c=
+X-Google-Smtp-Source: APXvYqxBDzXGxI5Uk2o6AapNjbkG/L5A9z/XbTDtTRM/wNWF1dDd/6yZFcVvNQwRODcyrXaCkicBNA==
+X-Received: by 2002:a05:620a:1666:: with SMTP id d6mr17824639qko.379.1579806089276;
+        Thu, 23 Jan 2020 11:01:29 -0800 (PST)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id x41sm1461080qtj.52.2020.01.23.11.01.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 23 Jan 2020 11:01:29 -0800 (PST)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
+Date:   Thu, 23 Jan 2020 14:01:27 -0500
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     David Laight <David.Laight@aculab.com>,
+        Will Deacon <will@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+        "kernel-team@android.com" <kernel-team@android.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Segher Boessenkool <segher@kernel.crashing.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Peter Oberparleiter <oberpar@linux.ibm.com>,
+        Masahiro Yamada <masahiroy@kernel.org>
+Subject: Re: [PATCH v2 00/10] Rework READ_ONCE() to improve codegen
+Message-ID: <20200123190125.GA2683468@rani.riverdale.lan>
+References: <20200123153341.19947-1-will@kernel.org>
+ <26ad7a8a975c4e06b44a3184d7c86e5f@AcuMS.aculab.com>
+ <20200123171641.GC20126@willie-the-truck>
+ <2bfe2be6da484f15b0d229dd02d16ae6@AcuMS.aculab.com>
+ <CAKwvOdkFGTeVQPm8Z3Y7mQ-=6d5CFxmEJ+hBb8ns2r2H1cb0hQ@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <CAKwvOdkFGTeVQPm8Z3Y7mQ-=6d5CFxmEJ+hBb8ns2r2H1cb0hQ@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Randy Dunlap <rdunlap@infradead.org>
+On Thu, Jan 23, 2020 at 10:45:08AM -0800, Nick Desaulniers wrote:
+> On Thu, Jan 23, 2020 at 9:32 AM David Laight <David.Laight@aculab.com> wrote:
+> >
+> > From: Will Deacon
+> > > Sent: 23 January 2020 17:17
+> > >
+> > > I think it depends how much we care about those older compilers. My series
+> > > first moves it to "Good luck mate, you're on your own" and then follows up
+> 
+> I wish the actual warning was worded that way. :P
+> 
+> > > with a "Let me take that off you it's sharp".
+> 
+> > Oh - and I need to find a newer compiler :-(
+> 
+> What distro are you using? Does it have a package for a newer
+> compiler?  I'm honestly curious about what policies if any the kernel
+> has for supporting developer's toolchains from their distributions.
+> (ie. Arnd usually has pretty good stats what distro's use which
+> version of GCC and are still supported; Do we strive to not break
+> them? Is asking kernel devs to compile their own toolchain too much to
+> ask?  Is it still if they're using really old distro's/toolchains that
+> we don't want to support?  Do we survey kernel devs about what they're
+> using?).  Apologies if this is already documented somewhere, but if
+> not I'd eventually like to brainstorm and write it down somewhere in
+> the tree.  Documentation/process/changes.rst doesn't really answer the
+> above questions, I think.
+> 
+> -- 
+> Thanks,
+> ~Nick Desaulniers
 
-Update projects URLs in the changes.rst file.
+Reposting Arnd's link
+https://www.spinics.net/lists/linux-kbuild/msg23648.html
 
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: Jonathan Corbet <corbet@lwn.net>
-Cc: linux-doc@vger.kernel.org
-Cc: Jan Kara <jack@suse.com>
-Cc: "Theodore Ts'o" <tytso@mit.edu>
-Cc: Andreas Dilger <adilger.kernel@dilger.ca>
-Cc: linux-ext4@vger.kernel.org
-Cc: Pablo Neira Ayuso <pablo@netfilter.org>
-Cc: Jozsef Kadlecsik <kadlec@netfilter.org>
-Cc: Florian Westphal <fw@strlen.de>
-Cc: netfilter-devel@vger.kernel.org
-Cc: coreteam@netfilter.org
-Cc: Paul Mackerras <paulus@samba.org>
-Cc: linux-ppp@vger.kernel.org
-Cc: Jan Kara <jack@suse.com>
-Cc: reiserfs-devel@vger.kernel.org
-Cc: Darrick J. Wong <darrick.wong@oracle.com>
-Cc: linux-xfs@vger.kernel.org
----
+Seems like there is nothing still on versions between 4.6 and 4.8. It
+might be useful to put a list of distro's that are running the current
+minimum supported toolchain versions in process/changes.rst?
 
- Documentation/process/changes.rst                    |   12 ++++++----
- Documentation/translations/it_IT/process/changes.rst |   12 ++++++----
- 2 files changed, 16 insertions(+), 8 deletions(-)
-
-diff -Naurp linux-next-20200123/Documentation/translations/it_IT/process/changes.rst%WWW linux-next-20200123/Documentation/translations/it_IT/process/changes.rst
---- linux-next-20200123/Documentation/translations/it_IT/process/changes.rst%WWW	2019-11-24 16:32:01.000000000 -0800
-+++ linux-next-20200123/Documentation/translations/it_IT/process/changes.rst	2020-01-23 10:47:56.226457425 -0800
-@@ -391,6 +391,8 @@ E2fsprogs
- ---------
- 
- - <http://prdownloads.sourceforge.net/e2fsprogs/e2fsprogs-1.29.tar.gz>
-+- <https://www.kernel.org/pub/linux/kernel/people/tytso/e2fsprogs/>
-+- <https://git.kernel.org/pub/scm/fs/ext2/e2fsprogs.git/>
- 
- JFSutils
- --------
-@@ -400,12 +402,12 @@ JFSutils
- Reiserfsprogs
- -------------
- 
--- <http://www.kernel.org/pub/linux/utils/fs/reiserfs/>
-+- <https://git.kernel.org/pub/scm/linux/kernel/git/jeffm/reiserfsprogs.git/>
- 
- Xfsprogs
- --------
- 
--- <ftp://oss.sgi.com/projects/xfs/>
-+- <https://git.kernel.org/pub/scm/fs/xfs/xfsprogs-dev.git>
- 
- Pcmciautils
- -----------
-@@ -444,7 +446,9 @@ Rete
- PPP
- ---
- 
--- <ftp://ftp.samba.org/pub/ppp/>
-+- <https://download.samba.org/pub/ppp/>
-+- <https://git.ozlabs.org/?p=ppp.git>
-+- <https://github.com/paulusmack/ppp/>
- 
- 
- NFS-utils
-@@ -455,7 +459,7 @@ NFS-utils
- Iptables
- --------
- 
--- <http://www.iptables.org/downloads.html>
-+- <https://netfilter.org/projects/iptables/index.html>
- 
- Ip-route2
- ---------
-diff -Naurp linux-next-20200123/Documentation/process/changes.rst%WWW linux-next-20200123/Documentation/process/changes.rst
---- linux-next-20200123/Documentation/process/changes.rst%WWW	2019-11-24 16:32:01.000000000 -0800
-+++ linux-next-20200123/Documentation/process/changes.rst	2020-01-23 10:47:56.226457425 -0800
-@@ -384,6 +384,8 @@ E2fsprogs
- ---------
- 
- - <http://prdownloads.sourceforge.net/e2fsprogs/e2fsprogs-1.29.tar.gz>
-+- <https://www.kernel.org/pub/linux/kernel/people/tytso/e2fsprogs/>
-+- <https://git.kernel.org/pub/scm/fs/ext2/e2fsprogs.git/>
- 
- JFSutils
- --------
-@@ -393,12 +395,12 @@ JFSutils
- Reiserfsprogs
- -------------
- 
--- <http://www.kernel.org/pub/linux/utils/fs/reiserfs/>
-+- <https://git.kernel.org/pub/scm/linux/kernel/git/jeffm/reiserfsprogs.git/>
- 
- Xfsprogs
- --------
- 
--- <ftp://oss.sgi.com/projects/xfs/>
-+- <https://git.kernel.org/pub/scm/fs/xfs/xfsprogs-dev.git>
- 
- Pcmciautils
- -----------
-@@ -437,7 +439,9 @@ Networking
- PPP
- ---
- 
--- <ftp://ftp.samba.org/pub/ppp/>
-+- <https://download.samba.org/pub/ppp/>
-+- <https://git.ozlabs.org/?p=ppp.git>
-+- <https://github.com/paulusmack/ppp/>
- 
- NFS-utils
- ---------
-@@ -447,7 +451,7 @@ NFS-utils
- Iptables
- --------
- 
--- <http://www.iptables.org/downloads.html>
-+- <https://netfilter.org/projects/iptables/index.html>
- 
- Ip-route2
- ---------
-
-
+I think the issue is not just kernel devs. Users may need to compile a
+custom kernel or at least build a module.
