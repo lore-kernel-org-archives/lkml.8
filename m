@@ -4,32 +4,32 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10FE7C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 20:41:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B540C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 20:41:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D75AF24691
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 20:41:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CA9024691
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 20:41:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729262AbgAWUjp (ORCPT
+        id S1729841AbgAWUlg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 15:39:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45746 "EHLO mail.kernel.org"
+        Thu, 23 Jan 2020 15:41:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45862 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729159AbgAWUjo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 15:39:44 -0500
+        id S1729251AbgAWUjp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jan 2020 15:39:45 -0500
 Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E64952467E;
-        Thu, 23 Jan 2020 20:39:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9C88324689;
+        Thu, 23 Jan 2020 20:39:44 +0000 (UTC)
 Received: from rostedt by gandalf.local.home with local (Exim 4.93)
         (envelope-from <rostedt@goodmis.org>)
-        id 1iujGQ-000mVT-Rv; Thu, 23 Jan 2020 15:39:42 -0500
-Message-Id: <20200123203942.751467858@goodmis.org>
+        id 1iujGR-000mXt-Iv; Thu, 23 Jan 2020 15:39:43 -0500
+Message-Id: <20200123203943.466391736@goodmis.org>
 User-Agent: quilt/0.65
-Date:   Thu, 23 Jan 2020 15:39:33 -0500
+Date:   Thu, 23 Jan 2020 15:39:38 -0500
 From:   Steven Rostedt <rostedt@goodmis.org>
 To:     linux-kernel@vger.kernel.org,
         linux-rt-users <linux-rt-users@vger.kernel.org>
@@ -40,8 +40,9 @@ Cc:     Thomas Gleixner <tglx@linutronix.de>,
         Julia Cartwright <julia@ni.com>,
         Daniel Wagner <wagi@monom.org>,
         Tom Zanussi <zanussi@kernel.org>,
-        Juri Lelli <juri.lelli@redhat.com>
-Subject: [PATCH RT 03/30] sched/deadline: Ensure inactive_timer runs in hardirq context
+        Julien Grall <julien.grall@arm.com>
+Subject: [PATCH RT 08/30] hrtimer: Use READ_ONCE to access timer->base in
+ hrimer_grab_expiry_lock()
 References: <20200123203930.646725253@goodmis.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-15
@@ -55,48 +56,40 @@ If anyone has any objections, please let me know.
 
 ------------------
 
-From: Juri Lelli <juri.lelli@redhat.com>
+From: Julien Grall <julien.grall@arm.com>
 
-[ Upstream commit ba94e7aed7405c58251b1380e6e7d73aa8284b41 ]
+[ Upstream commit 2c8fdbe7ef0ad06c1a326886c5954e117b5657d6 ]
 
-SCHED_DEADLINE inactive timer needs to run in hardirq context (as
-dl_task_timer already does) on PREEMPT_RT
+The update to timer->base is protected by the base->cpu_base->lock().
+However, hrtimer_grab_expirty_lock() does not access it with the lock.
 
-Change the mode to HRTIMER_MODE_REL_HARD.
+So it would theorically be possible to have timer->base changed under
+our feet. We need to prevent the compiler to refetch timer->base so the
+check and the access is performed on the same base.
 
-[ tglx: Fixed up the start site, so mode debugging works ]
+Other access of timer->base are either done with a lock or protected
+with READ_ONCE(). So use READ_ONCE() in hrtimer_grab_expirty_lock().
 
-Signed-off-by: Juri Lelli <juri.lelli@redhat.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/20190731103715.4047-1-juri.lelli@redhat.com
+Signed-off-by: Julien Grall <julien.grall@arm.com>
 Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 ---
- kernel/sched/deadline.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ kernel/time/hrtimer.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/sched/deadline.c b/kernel/sched/deadline.c
-index 974a8f9b615a..929167a1d991 100644
---- a/kernel/sched/deadline.c
-+++ b/kernel/sched/deadline.c
-@@ -287,7 +287,7 @@ static void task_non_contending(struct task_struct *p)
+diff --git a/kernel/time/hrtimer.c b/kernel/time/hrtimer.c
+index 94d97eae0a46..d6026c170c2d 100644
+--- a/kernel/time/hrtimer.c
++++ b/kernel/time/hrtimer.c
+@@ -941,7 +941,7 @@ EXPORT_SYMBOL_GPL(hrtimer_forward);
  
- 	dl_se->dl_non_contending = 1;
- 	get_task_struct(p);
--	hrtimer_start(timer, ns_to_ktime(zerolag_time), HRTIMER_MODE_REL);
-+	hrtimer_start(timer, ns_to_ktime(zerolag_time), HRTIMER_MODE_REL_HARD);
- }
- 
- static void task_contending(struct sched_dl_entity *dl_se, int flags)
-@@ -1325,7 +1325,7 @@ void init_dl_inactive_task_timer(struct sched_dl_entity *dl_se)
+ void hrtimer_grab_expiry_lock(const struct hrtimer *timer)
  {
- 	struct hrtimer *timer = &dl_se->inactive_timer;
+-	struct hrtimer_clock_base *base = timer->base;
++	struct hrtimer_clock_base *base = READ_ONCE(timer->base);
  
--	hrtimer_init(timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
-+	hrtimer_init(timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL_HARD);
- 	timer->function = inactive_task_timer;
- }
- 
+ 	if (base && base->cpu_base) {
+ 		spin_lock(&base->cpu_base->softirq_expiry_lock);
 -- 
 2.24.1
 
