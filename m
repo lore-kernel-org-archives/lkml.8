@@ -2,122 +2,119 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E24DFC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 13:34:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 815BAC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 13:37:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDDFB21835
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 13:34:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54BB420661
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 13:37:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ehfZwprk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728779AbgAWNex convert rfc822-to-8bit (ORCPT
+        id S1727847AbgAWNho (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 08:34:53 -0500
-Received: from logand.com ([37.48.87.44]:33250 "EHLO logand.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726232AbgAWNex (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 08:34:53 -0500
-Received: by logand.com (Postfix, from userid 1001)
-        id 2C76619F8AB; Thu, 23 Jan 2020 14:34:51 +0100 (CET)
-X-Mailer: emacs 26.3 (via feedmail 11-beta-1 Q)
-From:   Tomas Hlavaty <tom@logand.com>
-To:     Viacheslav Dubeyko <slava@dubeyko.com>,
-        Ryusuke Konishi <konishi.ryusuke@gmail.com>
-Cc:     linux-nilfs <linux-nilfs@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: BUG: unable to handle kernel NULL pointer dereference at 00000000000000a8 in nilfs_segctor_do_construct
-In-Reply-To: <76887BD9-D6C4-4A89-8F55-4BEAF2828FD3@dubeyko.com>
-References: <8736emquds.fsf@logand.com> <CAKFNMo=k1wVHOwXhTLEOJ+A-nwmvJ+sN_PPa8kY8fMxrQ4R+Jw@mail.gmail.com> <76887BD9-D6C4-4A89-8F55-4BEAF2828FD3@dubeyko.com>
-Date:   Thu, 23 Jan 2020 14:00:21 +0100
-Message-ID: <87sgk6tjiy.fsf@logand.com>
+        Thu, 23 Jan 2020 08:37:44 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:59903 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726729AbgAWNhn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jan 2020 08:37:43 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579786662;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=D/mKKFH0Pgl6eS/j/YSBbgLp/TGqqZwcT4ZYT6DqoVE=;
+        b=ehfZwprk0j1lEJz4juilZedVKzN146EAVxRRqQehD2Tfb3OGMGmCjXJr0I+IFQEgHMe5Eg
+        heFKqpzhXGXdwfl9gpIzMK/fGtyRaY5En8B++uub1ZJforNmrPBNbkFzDMEip4/9122x7t
+        UPLbJaxwgdjdw/J1mmOePcAlON23t7g=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-76-RmPa_-kPPlyz1GZ6KM_CTA-1; Thu, 23 Jan 2020 08:37:37 -0500
+X-MC-Unique: RmPa_-kPPlyz1GZ6KM_CTA-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 96BAE800D48;
+        Thu, 23 Jan 2020 13:37:34 +0000 (UTC)
+Received: from carbon (ovpn-200-37.brq.redhat.com [10.40.200.37])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 40B737C42C;
+        Thu, 23 Jan 2020 13:37:26 +0000 (UTC)
+Date:   Thu, 23 Jan 2020 14:37:25 +0100
+From:   Jesper Dangaard Brouer <brouer@redhat.com>
+To:     Amol Grover <frextrite@gmail.com>
+Cc:     brouer@redhat.com, Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>,
+        "Paul E . McKenney" <paulmck@kernel.org>
+Subject: Re: [PATCH] bpf: devmap: Pass lockdep expression to RCU lists
+Message-ID: <20200123143725.036140e7@carbon>
+In-Reply-To: <20200123120437.26506-1-frextrite@gmail.com>
+References: <20200123120437.26506-1-frextrite@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Viacheslav,
+On Thu, 23 Jan 2020 17:34:38 +0530
+Amol Grover <frextrite@gmail.com> wrote:
 
-Viacheslav Dubeyko <slava@dubeyko.com> writes:
-> (1) the partition size?
+> head is traversed using hlist_for_each_entry_rcu outside an
+> RCU read-side critical section but under the protection
+> of dtab->index_lock.
 
-the first disk with crash was 1TB
+We do hold the lock in update and delete cases, but not in the lookup
+cases.  Is it then still okay to add the lockdep_is_held() annotation?
 
-the second disk with crash, which i have by me, is 2TB:
+If it is then it looks fine to me:
 
-$ lsblk /dev/sdb
-NAME      MAJ:MIN RM  SIZE RO TYPE  MOUNTPOINT
-sdb         8:16   0  1.8T  0 disk  
-└─extdisk 254:2    0  1.8T  0 crypt /mnt/b
+Acked-by: Jesper Dangaard Brouer <brouer@redhat.com>
+ 
+> Hence, add corresponding lockdep expression to silence false-positive
+> lockdep warnings, and harden RCU lists.
+> 
+> Signed-off-by: Amol Grover <frextrite@gmail.com>
+> ---
+>  kernel/bpf/devmap.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/kernel/bpf/devmap.c b/kernel/bpf/devmap.c
+> index 3d3d61b5985b..b4b6b77f309c 100644
+> --- a/kernel/bpf/devmap.c
+> +++ b/kernel/bpf/devmap.c
+> @@ -293,7 +293,8 @@ struct bpf_dtab_netdev *__dev_map_hash_lookup_elem(struct bpf_map *map, u32 key)
+>  	struct hlist_head *head = dev_map_index_hash(dtab, key);
+>  	struct bpf_dtab_netdev *dev;
+>  
+> -	hlist_for_each_entry_rcu(dev, head, index_hlist)
+> +	hlist_for_each_entry_rcu(dev, head, index_hlist,
+> +				 lockdep_is_held(&dtab->index_lock))
+>  		if (dev->idx == key)
+>  			return dev;
+>  
 
-> (2) the logical block size?
-> (3) the segment size?
+-- 
+Best regards,
+  Jesper Dangaard Brouer
+  MSc.CS, Principal Kernel Engineer at Red Hat
+  LinkedIn: http://www.linkedin.com/in/brouer
 
-how can i find (2) and (3) out?
-
-here is the output of nilfs-tune:
-
-$ sudo nilfs-tune -l /dev/mapper/extdisk
-nilfs-tune 2.2.7
-Filesystem volume name:	  backup1_nilfs2
-Filesystem UUID:	  7d9708f9-464f-41b7-a0c6-eda18741012f
-Filesystem magic number:  0x3434
-Filesystem revision #:	  2.0
-Filesystem features:      (none)
-Filesystem state:	  valid
-Filesystem OS type:	  Linux
-Block size:		  4096
-Filesystem created:	  Thu Dec 27 14:14:14 2018
-Last mount time:	  Fri Dec 20 13:06:15 2019
-Last write time:	  Thu Jan 23 13:04:30 2020
-Mount count:		  15
-Maximum mount count:	  50
-Reserve blocks uid:	  0 (user root)
-Reserve blocks gid:	  0 (group root)
-First inode:		  11
-Inode size:		  128
-DAT entry size:		  32
-Checkpoint size:	  192
-Segment usage size:	  16
-Number of segments:	  238465
-Device size:		  2000396834816
-First data block:	  1
-# of blocks per segment:  2048
-Reserved segments %:	  5
-Last checkpoint #:	  9884
-Last block address:	  280841435
-Last sequence #:	  137120
-Free blocks count:	  207591424
-Commit interval:	  0
-# of blks to create seg:  0
-CRC seed:		  0x5172270a
-CRC check sum:		  0x2ef767d2
-CRC check data size:	  0x00000118
-
-it seems strange that the last write time is today, even though i
-mounted the partition read-only
-
-/dev/mapper/extdisk on /mnt/b type nilfs2 (ro,relatime)
-
-> (4) how the partition was created?
-
-using parted
-then cryptsetup luksFormat
-then cryptsetup luksOpen
-then mkfs.nilfs2
-
-> (5) the version of tools that created the partition?
-
-how can i find this out?  is it saved somewhere?
-
-> (6) the amount of free space on the partition?
-
-/dev/mapper/extdisk  1.9T  1.1T  699G  61% /mnt/b
-
-Regards,
-
-Tomas
