@@ -2,123 +2,78 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18DCDC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 14:16:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A519DC33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 14:17:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF1C7217F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 14:16:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="II4+EIzt"
+	by mail.kernel.org (Postfix) with ESMTP id 70BEB214AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 14:17:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579789060;
+	bh=aBxSUr/gjynePT84F3DyY+Db2ohisB0vJNv4FgKtc7I=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=2vRoxrOWfUNKTQcrF+LVRg5O2sl6+K+BY6ctoSjLkHKQBj4RoR8Ay3Z5V9TUR0uu8
+	 rx+DbHMbZg18UygOe/uKLsx9ioDp3Ew27bRflNQPy+/rog6so/2DqayCG3Wypsdncc
+	 c/wFPQOrAgcrltAmwGlRUO5DpHa+AtwDDR3fquTE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728779AbgAWOQH (ORCPT
+        id S1728853AbgAWORj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 09:16:07 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:34073 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726729AbgAWOQH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 09:16:07 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579788965;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=/NlvV8sLBYjX4HhniKYbwd4Qsi6bxUolByF4ash31SU=;
-        b=II4+EIztUNhrWqkElEHtpPu09cCvhITB1jFUhrDpBZ2nu81dE+TWa1Jqt11Efzn2+Wv/WA
-        wF2WYbssEVakEKRrN3A7+8tT8ZMluRREwNhhWq9d2QkFZHp3kAAN73my1lWGn2ZiGqCzj2
-        qoCnKiGy6lDmK7fL24VgcdUtFx0IP7M=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-181-U4d8_1qPOfexJ9uhx9dzrw-1; Thu, 23 Jan 2020 09:16:01 -0500
-X-MC-Unique: U4d8_1qPOfexJ9uhx9dzrw-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Thu, 23 Jan 2020 09:17:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52162 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726729AbgAWORj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jan 2020 09:17:39 -0500
+Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9557A18C8C0D;
-        Thu, 23 Jan 2020 14:15:58 +0000 (UTC)
-Received: from llong.remote.csb (dhcp-17-59.bos.redhat.com [10.18.17.59])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 1AB801CB;
-        Thu, 23 Jan 2020 14:15:56 +0000 (UTC)
-Subject: Re: [PATCH v9 3/5] locking/qspinlock: Introduce CNA into the slow
- path of qspinlock
-To:     Alex Kogan <alex.kogan@oracle.com>, linux@armlinux.org.uk,
-        peterz@infradead.org, mingo@redhat.com, will.deacon@arm.com,
-        arnd@arndb.de, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        tglx@linutronix.de, bp@alien8.de, hpa@zytor.com, x86@kernel.org,
-        guohanjun@huawei.com, jglauber@marvell.com
-Cc:     steven.sistare@oracle.com, daniel.m.jordan@oracle.com,
-        dave.dice@oracle.com
-References: <20200115035920.54451-1-alex.kogan@oracle.com>
- <20200115035920.54451-4-alex.kogan@oracle.com>
-From:   Waiman Long <longman@redhat.com>
-Organization: Red Hat
-Message-ID: <d751a8ef-aae8-ca70-6a28-79dd8bee2324@redhat.com>
-Date:   Thu, 23 Jan 2020 09:15:55 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        by mail.kernel.org (Postfix) with ESMTPSA id 9FDC320718;
+        Thu, 23 Jan 2020 14:17:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579789058;
+        bh=aBxSUr/gjynePT84F3DyY+Db2ohisB0vJNv4FgKtc7I=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=w63LnevdSdZAkY4eBt+Wa2NXfG7LtIuPnDdxzREo7fPXI6REGhdaIQN5/SX4bzgII
+         /j3MDnlDjlQhWWAJChsYrKoxruEBWmKdgD1tOikU5vlWe3mkmQyBPO83hdrmUkmGCY
+         Z8CtCXqK/xF3EfSDl+iOy/oVMDLLyov1ls7KrLBQ=
+Date:   Thu, 23 Jan 2020 09:17:37 -0500
+From:   Sasha Levin <sashal@kernel.org>
+To:     Iago Toral <itoral@igalia.com>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Eric Anholt <eric@anholt.net>, dri-devel@lists.freedesktop.org
+Subject: Re: [PATCH AUTOSEL 5.4 003/205] drm/v3d: don't leak bin job if
+ v3d_job_init fails.
+Message-ID: <20200123141737.GC1706@sasha-vm>
+References: <20200116164300.6705-1-sashal@kernel.org>
+ <20200116164300.6705-3-sashal@kernel.org>
+ <cb93a21557216d1b389390c556f421132aac88f0.camel@igalia.com>
 MIME-Version: 1.0
-In-Reply-To: <20200115035920.54451-4-alex.kogan@oracle.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <cb93a21557216d1b389390c556f421132aac88f0.camel@igalia.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/14/20 10:59 PM, Alex Kogan wrote:
-> +static int __init cna_init_nodes(void)
-> +{
-> +	unsigned int cpu;
-> +
-> +	/*
-> +	 * this will break on 32bit architectures, so we restrict
-> +	 * the use of CNA to 64bit only (see arch/x86/Kconfig)
-> +	 */
-> +	BUILD_BUG_ON(sizeof(struct cna_node) > sizeof(struct qnode));
-> +	/* we store an ecoded tail word in the node's @locked field */
-> +	BUILD_BUG_ON(sizeof(u32) > sizeof(unsigned int));
-> +
-> +	for_each_possible_cpu(cpu)
-> +		cna_init_nodes_per_cpu(cpu);
-> +
-> +	return 0;
-> +}
-> +early_initcall(cna_init_nodes);
-> +
+On Fri, Jan 17, 2020 at 08:25:30AM +0100, Iago Toral wrote:
+>Hi Sasha,
+>
+>
+>please notice that there were two separate patches that addressed the
+>same issue and applying both simultaneously leads to a double free
+>(which is what I see is happening with this patch: see the second call
+>to kfree(bin) right below the one added here). This issue was raised
+>previously here:
+>
+>https://lists.freedesktop.org/archives/dri-devel/2019-October/241425.html
 
-I just realized that you shouldn't call cna_init_nodes as an
-early_initcall. Instead,
+I'll drop this patch for now. Any idea why upstream didn't pick up the
+fix yet? I see the problem still exists there.
 
-> +/*
-> + * Switch to the NUMA-friendly slow path for spinlocks when we have
-> + * multiple NUMA nodes in native environment, unless the user has
-> + * overridden this default behavior by setting the numa_spinlock flag.
-> + */
-> +void __init cna_configure_spin_lock_slowpath(void)
-> +{
-> +	if ((numa_spinlock_flag == 1) ||
-> +	    (numa_spinlock_flag == 0 && nr_node_ids > 1 &&
-> +		    pv_ops.lock.queued_spin_lock_slowpath ==
-> +			native_queued_spin_lock_slowpath)) {
-> +		pv_ops.lock.queued_spin_lock_slowpath =
-> +		    __cna_queued_spin_lock_slowpath;
-> +
-> +		pr_info("Enabling CNA spinlock\n");
-> +	}
-> +}
-
-call it when it is sure that CNA spinlock is going to be used. At this
-point, the system is still in UP mode and the slowpath will not be called.
-
-Cheers,
-Longman
-
+-- 
+Thanks,
+Sasha
