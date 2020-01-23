@@ -2,136 +2,143 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F291EC35240
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 23:40:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D4E4C3F68F
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 23:44:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B80DB207FF
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 23:40:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="M+TsQr/5"
+	by mail.kernel.org (Postfix) with ESMTP id 215E82087E
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 23:44:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729852AbgAWXke (ORCPT
+        id S1729963AbgAWXoM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 18:40:34 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:56632 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729288AbgAWXkd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 18:40:33 -0500
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00NNddRX162728;
-        Thu, 23 Jan 2020 23:39:43 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2019-08-05; bh=LuHOXPa0REgKt+N/61X5+EaaF8izuIJBTiFn/CQUE9c=;
- b=M+TsQr/5QRHVJ7C+CcV4RTCnd9fI3rn/M4Rn+X33uDdvU/+TH4nAQ68ZUyd60AuNR6tV
- TyRBcBeU1tUfGq3gV/rlo9yiD9rrQrrkjtQmtCvjXuCZp9ZWNtJJtMvkUQxviUHkGuwn
- zGKoU03JOpi5+lzzMcNUZ8ZMb5Lr+zVscinhp3ok55ZqzNv9VZxbM0XesseTdOS9MiCI
- Em2kmnE1vWi9XcZuwdbn2WgnJq4AyDxfp4GtHRP176kWTLgmwD9Dr1pl6t+RjwshAec9
- LaGJYOONigJTR1icMYW3CXPwIdFNiwam7RgqvXwAQDbZt3ROVn/gbBJwwXqd4yK0kLmR /w== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2120.oracle.com with ESMTP id 2xksyqnn1v-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 23 Jan 2020 23:39:43 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00NNdAmb148603;
-        Thu, 23 Jan 2020 23:39:42 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3030.oracle.com with ESMTP id 2xqmuxhjy8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 23 Jan 2020 23:39:42 +0000
-Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 00NNdbmU011661;
-        Thu, 23 Jan 2020 23:39:38 GMT
-Received: from [10.11.111.157] (/10.11.111.157)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 23 Jan 2020 15:39:36 -0800
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: [PATCH v9 4/5] locking/qspinlock: Introduce starvation avoidance
- into CNA
-From:   Alex Kogan <alex.kogan@oracle.com>
-In-Reply-To: <5f865b62-4867-2c7b-715a-0605759e647f@redhat.com>
-Date:   Thu, 23 Jan 2020 18:39:36 -0500
-Cc:     linux@armlinux.org.uk, peterz@infradead.org, mingo@redhat.com,
-        will.deacon@arm.com, arnd@arndb.de, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        tglx@linutronix.de, bp@alien8.de, hpa@zytor.com, x86@kernel.org,
-        guohanjun@huawei.com, jglauber@marvell.com,
-        steven.sistare@oracle.com, daniel.m.jordan@oracle.com,
-        dave.dice@oracle.com
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <1B2B46E9-651E-4BA5-988A-924AE3E72C00@oracle.com>
-References: <20200115035920.54451-1-alex.kogan@oracle.com>
- <20200115035920.54451-5-alex.kogan@oracle.com>
- <f5e31716-d687-f64c-0fc5-f1c9b539c4ff@redhat.com>
- <5f865b62-4867-2c7b-715a-0605759e647f@redhat.com>
-To:     Waiman Long <longman@redhat.com>
-X-Mailer: Apple Mail (2.3445.104.11)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9509 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-2001230176
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9509 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-2001230176
+        Thu, 23 Jan 2020 18:44:12 -0500
+Received: from mga01.intel.com ([192.55.52.88]:49240 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728655AbgAWXoM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jan 2020 18:44:12 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Jan 2020 15:44:11 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,355,1574150400"; 
+   d="scan'208";a="260054545"
+Received: from richard.sh.intel.com (HELO localhost) ([10.239.159.54])
+  by fmsmga002.fm.intel.com with ESMTP; 23 Jan 2020 15:43:57 -0800
+Date:   Fri, 24 Jan 2020 07:44:08 +0800
+From:   Wei Yang <richardw.yang@linux.intel.com>
+To:     Yang Shi <yang.shi@linux.alibaba.com>
+Cc:     Wei Yang <richardw.yang@linux.intel.com>, mhocko@suse.com,
+        akpm@linux-foundation.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [v2 PATCH] mm: move_pages: report the number of non-attempted
+ pages
+Message-ID: <20200123234408.GA2457@richard>
+Reply-To: Wei Yang <richardw.yang@linux.intel.com>
+References: <1579736331-85494-1-git-send-email-yang.shi@linux.alibaba.com>
+ <20200123225940.GC29851@richard>
+ <424a0fbb-1e9a-ca9d-ba43-cb247d7a4b67@linux.alibaba.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <424a0fbb-1e9a-ca9d-ba43-cb247d7a4b67@linux.alibaba.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> On Jan 23, 2020, at 3:39 PM, Waiman Long <longman@redhat.com> wrote:
->=20
-> On 1/23/20 2:55 PM, Waiman Long wrote:
->> Playing with lock event counts, I would like you to change the =
-meaning
->> intra_count parameter that you are tracking. Instead of tracking the
->> number of times a lock is passed to a waiter of the same node
->> consecutively, I would like you to track the number of times the head
->> waiter in the secondary queue has given up its chance to acquire the
->> lock because a later waiter has jumped the queue and acquire the lock
->> before it.
-Isn=E2=80=99t that the same thing? Note that we keep track of the number =
-of=20
-intra-node lock transfers only when the secondary queue is not empty.
+On Thu, Jan 23, 2020 at 03:36:58PM -0800, Yang Shi wrote:
+>
+>
+>On 1/23/20 2:59 PM, Wei Yang wrote:
+>> On Thu, Jan 23, 2020 at 07:38:51AM +0800, Yang Shi wrote:
+>> > Since commit a49bd4d71637 ("mm, numa: rework do_pages_move"),
+>> > the semantic of move_pages() was changed to return the number of
+>> > non-migrated pages (failed to migration) and the call would be aborted
+>> > immediately if migrate_pages() returns positive value.  But it didn't
+>> > report the number of pages that we even haven't attempted to migrate.
+>> > So, fix it by including non-attempted pages in the return value.
+>> > 
+>> > Fixes: a49bd4d71637 ("mm, numa: rework do_pages_move")
+>> > Suggested-by: Michal Hocko <mhocko@suse.com>
+>> > Cc: Wei Yang <richardw.yang@linux.intel.com>
+>> > Cc: <stable@vger.kernel.org>    [4.17+]
+>> > Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
+>> > ---
+>> > v2: Rebased on top of the latest mainline kernel per Andrew
+>> > 
+>> > mm/migrate.c | 24 ++++++++++++++++++++++--
+>> > 1 file changed, 22 insertions(+), 2 deletions(-)
+>> > 
+>> > diff --git a/mm/migrate.c b/mm/migrate.c
+>> > index 86873b6..9b8eb5d 100644
+>> > --- a/mm/migrate.c
+>> > +++ b/mm/migrate.c
+>> > @@ -1627,8 +1627,18 @@ static int do_pages_move(struct mm_struct *mm, nodemask_t task_nodes,
+>> > 			start = i;
+>> > 		} else if (node != current_node) {
+>> > 			err = do_move_pages_to_node(mm, &pagelist, current_node);
+>> > -			if (err)
+>> > +			if (err) {
+>> > +				/*
+>> > +				 * Positive err means the number of failed
+>> > +				 * pages to migrate.  Since we are going to
+>> > +				 * abort and return the number of non-migrated
+>> > +				 * pages, so need incude the rest of the
+>> > +				 * nr_pages that have not attempted as well.
+>> > +				 */
+>> > +				if (err > 0)
+>> > +					err += nr_pages - i - 1;
+>> > 				goto out;
+>> > +			}
+>> > 			err = store_status(status, start, current_node, i - start);
+>> > 			if (err)
+>> > 				goto out;
+>> > @@ -1659,8 +1669,11 @@ static int do_pages_move(struct mm_struct *mm, nodemask_t task_nodes,
+>> > 			goto out_flush;
+>> > 
+>> > 		err = do_move_pages_to_node(mm, &pagelist, current_node);
+>> > -		if (err)
+>> > +		if (err) {
+>> > +			if (err > 0)
+>> > +				err += nr_pages - i - 1;
+>> > 			goto out;
+>> > +		}
+>> > 		if (i > start) {
+>> > 			err = store_status(status, start, current_node, i - start);
+>> > 			if (err)
+>> > @@ -1674,6 +1687,13 @@ static int do_pages_move(struct mm_struct *mm, nodemask_t task_nodes,
+>> > 
+>> > 	/* Make sure we do not overwrite the existing error */
+>> > 	err1 = do_move_pages_to_node(mm, &pagelist, current_node);
+>> > +	/*
+>> > +	 * Don't have to report non-attempted pages here since:
+>> In previous comment, you use "non-migrated". Here is "non-attempted". What's
+>> the difference?
+>
+>In that comment "non-migrated" includes both reported by migrate_pages() and
+>the non-attempted.
+>
 
->> This value determines the worst case latency that a secondary
->> queue waiter can experience. So
->=20
-> Well, that is not strictly true as a a waiter in the middle of the
-> secondary queue can go back and fro between the queues for a number of
-> times. Of course, if we can ensure that when a FLUSH_SECONDARY_QUEUE =
-is
-> issued, those waiters that were in the secondary queue won't be put =
-back
-> into the secondary queue again.
-This will not work as intended when we have more than 2 nodes. That is, =
-if we
-have threads from node A & B in the secondary queue, and then the queue
-is flushed and its head (say, from node A) gets the lock, we want to =
-push=20
-threads from node B back into the secondary queue, to keep the lock on =
-node A.
+ok, I see the difference.
 
-And if we have only 2 nodes, a waiter in the middle of the secondary =
-queue will=20
-never go back into the secondary queue, even if the threshold is small.=20=
+>> 
+>> > +	 *     - If the above loop is done gracefully there is not non-attempted
+>> > +	 *       page.
+>> > +	 *     - If the above loop is aborted to it means more fatal error
+>> > +	 *       happened, should return err.
+>> > +	 */
+>> > 	if (!err1)
+>> > 		err1 = store_status(status, start, current_node, i - start);
+>> > 	if (!err)
+>> > -- 
+>> > 1.8.3.1
 
-This is because we flush the secondary queue by putting all its waiters =
-in
-the front of the main queue, and the secondary queue will remain empty =
-at least
-until we reach a thread from another node.
-
-Regards,
-=E2=80=94 Alex=
+-- 
+Wei Yang
+Help you, Help me
