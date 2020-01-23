@@ -2,104 +2,90 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25DF6C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 20:41:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72042C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 20:43:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E826A246B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 20:41:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20E3D246B0
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 20:43:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="TW7NOjaJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729861AbgAWUls (ORCPT
+        id S1729275AbgAWUnv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 15:41:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45678 "EHLO mail.kernel.org"
+        Thu, 23 Jan 2020 15:43:51 -0500
+Received: from bilbo.ozlabs.org ([203.11.71.1]:33733 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729012AbgAWUjo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 15:39:44 -0500
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1729012AbgAWUnu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jan 2020 15:43:50 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A42B421D7D;
-        Thu, 23 Jan 2020 20:39:43 +0000 (UTC)
-Received: from rostedt by gandalf.local.home with local (Exim 4.93)
-        (envelope-from <rostedt@goodmis.org>)
-        id 1iujGQ-000mUV-Io; Thu, 23 Jan 2020 15:39:42 -0500
-Message-Id: <20200123203942.460742840@goodmis.org>
-User-Agent: quilt/0.65
-Date:   Thu, 23 Jan 2020 15:39:31 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     linux-kernel@vger.kernel.org,
-        linux-rt-users <linux-rt-users@vger.kernel.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Carsten Emde <C.Emde@osadl.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        John Kacur <jkacur@redhat.com>,
-        Julia Cartwright <julia@ni.com>,
-        Daniel Wagner <wagi@monom.org>,
-        Tom Zanussi <zanussi@kernel.org>,
-        Benjamin Rouxel <benjamin.rouxel@uva.nl>,
-        Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        linux-samsung-soc@vger.kernel.org
-Subject: [PATCH RT 01/30] i2c: exynos5: Remove IRQF_ONESHOT
-References: <20200123203930.646725253@goodmis.org>
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 483Z4M6d2Xz9sP3;
+        Fri, 24 Jan 2020 07:43:47 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1579812228;
+        bh=83x96HuRmZI8HHCCDM2x3tssC2dnG1Ta+2mmPEAAWCw=;
+        h=Date:From:To:Cc:Subject:From;
+        b=TW7NOjaJRth72YbYMqruCrwL+W51IX4hZVKDv8n+t4Dc6vPl6/8G6HGbM9CkEslnD
+         eoq67NnLRqk4r+W+Y7Z8f3Zs1bzPjmVmFZoAgyTorJaCW0511323Xwzf31/xtATjPV
+         DUAJkFEmZ1cXQ/THOgvLfgtfxrXYm8LfN1NjiUhBJjDb+N9ioEHRdvzunxjSNEdq7u
+         qTKD+NluiBl16fT2TK3Q4Ie+KPZbHWd2lIQjpELXOu2ee3bWZBdx6icjI17Q5pKB1S
+         vO0/DJxYjvOT+k2IRlFXF7+IN8NQaJ200Z725zSY/Qf2RNg65TFcWTRiZ1lmQMyBmt
+         SSVujzqnQ1C/g==
+Date:   Fri, 24 Jan 2020 07:43:42 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Paolo Bonzini <pbonzini@redhat.com>,
+        Radim =?UTF-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        KVM <kvm@vger.kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Marios Pomonis <pomonis@google.com>
+Subject: linux-next: Signed-off-by missing for commit in the kvm tree
+Message-ID: <20200124074331.30855ca4@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-15
+Content-Type: multipart/signed; boundary="Sig_/lESH38tHS8EWSmCvUcbj37q";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-4.19.94-rt39-rc2 stable review patch.
-If anyone has any objections, please let me know.
+--Sig_/lESH38tHS8EWSmCvUcbj37q
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-------------------
+Hi all,
 
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Commit
 
-[ Upstream commit 4b217df0ab3f7910c96e42091cc7d9f221d05f01 ]
+  821189a1c9b1 ("KVM: x86: Refactor prefix decoding to prevent Spectre-v1/L=
+1TF attacks")
 
-The drivers sets IRQF_ONESHOT and passes only a primary handler. The IRQ
-is masked while the primary is handler is invoked independently of
-IRQF_ONESHOT.
-With IRQF_ONESHOT the core code will not force-thread the interrupt and
-this is probably not intended. I *assume* that the original author copied
-the IRQ registration from another driver which passed a primary and
-secondary handler and removed the secondary handler but keeping the
-ONESHOT flag.
+is missing a Signed-off-by from its author.
 
-Remove IRQF_ONESHOT.
+--=20
+Cheers,
+Stephen Rothwell
 
-Reported-by: Benjamin Rouxel <benjamin.rouxel@uva.nl>
-Tested-by: Benjamin Rouxel <benjamin.rouxel@uva.nl>
-Cc: Kukjin Kim <kgene@kernel.org>
-Cc: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: linux-samsung-soc@vger.kernel.org
-Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
----
- drivers/i2c/busses/i2c-exynos5.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+--Sig_/lESH38tHS8EWSmCvUcbj37q
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-diff --git a/drivers/i2c/busses/i2c-exynos5.c b/drivers/i2c/busses/i2c-exynos5.c
-index c1ce2299a76e..5c57ecf4b79e 100644
---- a/drivers/i2c/busses/i2c-exynos5.c
-+++ b/drivers/i2c/busses/i2c-exynos5.c
-@@ -800,9 +800,7 @@ static int exynos5_i2c_probe(struct platform_device *pdev)
- 	}
- 
- 	ret = devm_request_irq(&pdev->dev, i2c->irq, exynos5_i2c_irq,
--				IRQF_NO_SUSPEND | IRQF_ONESHOT,
--				dev_name(&pdev->dev), i2c);
--
-+			       IRQF_NO_SUSPEND, dev_name(&pdev->dev), i2c);
- 	if (ret != 0) {
- 		dev_err(&pdev->dev, "cannot request HS-I2C IRQ %d\n", i2c->irq);
- 		goto err_clk;
--- 
-2.24.1
+-----BEGIN PGP SIGNATURE-----
 
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl4qBX4ACgkQAVBC80lX
+0GyUaQf/VBHGHO0SyZgerneK71woKrNjHeKPH85NnUQyv0y0Dma6SIPNIbjyNvju
+giTysRD9dBeSBK9/ue1DImtkQhXZBzyrfUmL0hEDY79kUERhHUE5pXZf+Sxlqajw
+NL1HMhuFopccV3LFWCuLQfZw61Xz8S4LmeUxzX3e7AabRiVpGQOIOXJswJeL2VSp
+L5mavH6h+iajJBdLQlbTV7PZ5ZjX8+qOg41/96BaZ27u5csqopWOUkXO1SVntZgH
+REkfLSwPgJ/+e4Ja92T/NxRRWIy06CYjlFia4nBDVXB25UmVDpCvQlXKAuE9DFLU
+HOwk/7AiqVM5ary6+XoRecgMXqKwFg==
+=9kGt
+-----END PGP SIGNATURE-----
 
+--Sig_/lESH38tHS8EWSmCvUcbj37q--
