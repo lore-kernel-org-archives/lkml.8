@@ -2,143 +2,56 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D4E4C3F68F
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 23:44:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79B94C3F68F
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 23:44:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 215E82087E
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 23:44:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 478FE2087E
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 23:44:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729963AbgAWXoM (ORCPT
+        id S1730035AbgAWXoj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 18:44:12 -0500
-Received: from mga01.intel.com ([192.55.52.88]:49240 "EHLO mga01.intel.com"
+        Thu, 23 Jan 2020 18:44:39 -0500
+Received: from namei.org ([65.99.196.166]:59502 "EHLO namei.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728655AbgAWXoM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 18:44:12 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Jan 2020 15:44:11 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,355,1574150400"; 
-   d="scan'208";a="260054545"
-Received: from richard.sh.intel.com (HELO localhost) ([10.239.159.54])
-  by fmsmga002.fm.intel.com with ESMTP; 23 Jan 2020 15:43:57 -0800
-Date:   Fri, 24 Jan 2020 07:44:08 +0800
-From:   Wei Yang <richardw.yang@linux.intel.com>
-To:     Yang Shi <yang.shi@linux.alibaba.com>
-Cc:     Wei Yang <richardw.yang@linux.intel.com>, mhocko@suse.com,
-        akpm@linux-foundation.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [v2 PATCH] mm: move_pages: report the number of non-attempted
- pages
-Message-ID: <20200123234408.GA2457@richard>
-Reply-To: Wei Yang <richardw.yang@linux.intel.com>
-References: <1579736331-85494-1-git-send-email-yang.shi@linux.alibaba.com>
- <20200123225940.GC29851@richard>
- <424a0fbb-1e9a-ca9d-ba43-cb247d7a4b67@linux.alibaba.com>
+        id S1728655AbgAWXoj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jan 2020 18:44:39 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by namei.org (8.14.4/8.14.4) with ESMTP id 00NNiJVP013876;
+        Thu, 23 Jan 2020 23:44:19 GMT
+Date:   Fri, 24 Jan 2020 10:44:19 +1100 (AEDT)
+From:   James Morris <jmorris@namei.org>
+To:     Alex Shi <alex.shi@linux.alibaba.com>
+cc:     Matthew Garrett <matthewgarrett@google.com>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] security: remove EARLY_LSM_COUNT which never used
+In-Reply-To: <1579596603-258380-1-git-send-email-alex.shi@linux.alibaba.com>
+Message-ID: <alpine.LRH.2.21.2001241043540.12618@namei.org>
+References: <1579596603-258380-1-git-send-email-alex.shi@linux.alibaba.com>
+User-Agent: Alpine 2.21 (LRH 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <424a0fbb-1e9a-ca9d-ba43-cb247d7a4b67@linux.alibaba.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 23, 2020 at 03:36:58PM -0800, Yang Shi wrote:
->
->
->On 1/23/20 2:59 PM, Wei Yang wrote:
->> On Thu, Jan 23, 2020 at 07:38:51AM +0800, Yang Shi wrote:
->> > Since commit a49bd4d71637 ("mm, numa: rework do_pages_move"),
->> > the semantic of move_pages() was changed to return the number of
->> > non-migrated pages (failed to migration) and the call would be aborted
->> > immediately if migrate_pages() returns positive value.  But it didn't
->> > report the number of pages that we even haven't attempted to migrate.
->> > So, fix it by including non-attempted pages in the return value.
->> > 
->> > Fixes: a49bd4d71637 ("mm, numa: rework do_pages_move")
->> > Suggested-by: Michal Hocko <mhocko@suse.com>
->> > Cc: Wei Yang <richardw.yang@linux.intel.com>
->> > Cc: <stable@vger.kernel.org>    [4.17+]
->> > Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
->> > ---
->> > v2: Rebased on top of the latest mainline kernel per Andrew
->> > 
->> > mm/migrate.c | 24 ++++++++++++++++++++++--
->> > 1 file changed, 22 insertions(+), 2 deletions(-)
->> > 
->> > diff --git a/mm/migrate.c b/mm/migrate.c
->> > index 86873b6..9b8eb5d 100644
->> > --- a/mm/migrate.c
->> > +++ b/mm/migrate.c
->> > @@ -1627,8 +1627,18 @@ static int do_pages_move(struct mm_struct *mm, nodemask_t task_nodes,
->> > 			start = i;
->> > 		} else if (node != current_node) {
->> > 			err = do_move_pages_to_node(mm, &pagelist, current_node);
->> > -			if (err)
->> > +			if (err) {
->> > +				/*
->> > +				 * Positive err means the number of failed
->> > +				 * pages to migrate.  Since we are going to
->> > +				 * abort and return the number of non-migrated
->> > +				 * pages, so need incude the rest of the
->> > +				 * nr_pages that have not attempted as well.
->> > +				 */
->> > +				if (err > 0)
->> > +					err += nr_pages - i - 1;
->> > 				goto out;
->> > +			}
->> > 			err = store_status(status, start, current_node, i - start);
->> > 			if (err)
->> > 				goto out;
->> > @@ -1659,8 +1669,11 @@ static int do_pages_move(struct mm_struct *mm, nodemask_t task_nodes,
->> > 			goto out_flush;
->> > 
->> > 		err = do_move_pages_to_node(mm, &pagelist, current_node);
->> > -		if (err)
->> > +		if (err) {
->> > +			if (err > 0)
->> > +				err += nr_pages - i - 1;
->> > 			goto out;
->> > +		}
->> > 		if (i > start) {
->> > 			err = store_status(status, start, current_node, i - start);
->> > 			if (err)
->> > @@ -1674,6 +1687,13 @@ static int do_pages_move(struct mm_struct *mm, nodemask_t task_nodes,
->> > 
->> > 	/* Make sure we do not overwrite the existing error */
->> > 	err1 = do_move_pages_to_node(mm, &pagelist, current_node);
->> > +	/*
->> > +	 * Don't have to report non-attempted pages here since:
->> In previous comment, you use "non-migrated". Here is "non-attempted". What's
->> the difference?
->
->In that comment "non-migrated" includes both reported by migrate_pages() and
->the non-attempted.
->
+On Tue, 21 Jan 2020, Alex Shi wrote:
 
-ok, I see the difference.
+> This macro is never used from it was introduced in commit e6b1db98cf4d5
+> ("security: Support early LSMs"), better to remove it.
+> 
+> Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
 
->> 
->> > +	 *     - If the above loop is done gracefully there is not non-attempted
->> > +	 *       page.
->> > +	 *     - If the above loop is aborted to it means more fatal error
->> > +	 *       happened, should return err.
->> > +	 */
->> > 	if (!err1)
->> > 		err1 = store_status(status, start, current_node, i - start);
->> > 	if (!err)
->> > -- 
->> > 1.8.3.1
+Thanks, applied to
+git://git.kernel.org/pub/scm/linux/kernel/git/jmorris/linux-security.git next-general
 
 -- 
-Wei Yang
-Help you, Help me
+James Morris
+<jmorris@namei.org>
+
