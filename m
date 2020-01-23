@@ -2,102 +2,132 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07EF9C33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 07:05:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7013C33CAA
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 07:14:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDC4522522
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 07:05:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97A0F24673
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 07:14:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="ltf6qhyb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726885AbgAWHFS (ORCPT
+        id S1726143AbgAWHOI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 02:05:18 -0500
-Received: from szxga06-in.huawei.com ([45.249.212.32]:48816 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725897AbgAWHFM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 02:05:12 -0500
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 56141EF6D7548A770757;
-        Thu, 23 Jan 2020 15:05:10 +0800 (CST)
-Received: from huawei.com (10.175.102.38) by DGGEMS401-HUB.china.huawei.com
- (10.3.19.201) with Microsoft SMTP Server id 14.3.439.0; Thu, 23 Jan 2020
- 15:05:04 +0800
-From:   Xuefeng Wang <wxf.wang@hisilicon.com>
-To:     <catalin.marinas@arm.com>, <will@kernel.org>,
-        <mark.rutland@arm.com>, <arnd@arndb.de>,
-        <akpm@linux-foundation.org>
-CC:     <linux-arch@vger.kernel.org>, <linux-mm@kvack.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <chenzhou10@huawei.com>,
-        Xuefeng Wang <wxf.wang@hisilicon.com>
-Subject: [PATCH v2 2/2] arm64: mm: rework the pmd protect changing flow
-Date:   Thu, 23 Jan 2020 15:55:13 +0800
-Message-ID: <20200123075514.15142-3-wxf.wang@hisilicon.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200123075514.15142-1-wxf.wang@hisilicon.com>
-References: <20200123075514.15142-1-wxf.wang@hisilicon.com>
+        Thu, 23 Jan 2020 02:14:08 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:60732 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725818AbgAWHOI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jan 2020 02:14:08 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00N7DA4R152700;
+        Thu, 23 Jan 2020 07:13:58 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=BOy4K2QWjRBsMDuS+rLwD8ll1XI+QfWWndEhMOblce0=;
+ b=ltf6qhyb5gt5ndzPnTqxgkTMbDsZ/ziUkEztgKDGUhLKzypCLsa/+FCQmJqhK6Hfc+Cj
+ BPr4N/XqEW1VQs2+x4vUb4qeuxr+E07/odYsHA/5HWZKTFqmQrRXObuzPWXsm1Sg+MBN
+ iaCvVjTIk/q1CHF4wqNPxXxHjNqk5l7e0NdHmh5KwLVxOlSVH1hsMrRF5jlWcYk/imWL
+ MShHp7GXT4KIQYxO58dAIKNHm7VxnVp5JN5mSQFZ4Gx2/xhFT9u2rVul3JdhVU3AHBdF
+ 85hSSeTUVV+37y8q2HsOypLN2rkqEtCJsvcgQ7L6nLUkZ29wm2r9lIOArRHYIpuf6KpC KA== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2130.oracle.com with ESMTP id 2xkseurgqp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 23 Jan 2020 07:13:58 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00N7Dmi0172749;
+        Thu, 23 Jan 2020 07:13:57 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3030.oracle.com with ESMTP id 2xpq0vtgdb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 23 Jan 2020 07:13:56 +0000
+Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 00N7DN0C000935;
+        Thu, 23 Jan 2020 07:13:24 GMT
+Received: from kadam (/129.205.23.165)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 22 Jan 2020 23:13:22 -0800
+Date:   Thu, 23 Jan 2020 10:13:13 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Eric Dumazet <eric.dumazet@gmail.com>
+Cc:     Cong Wang <xiyou.wangcong@gmail.com>,
+        syzbot <syzbot+5af9a90dad568aa9f611@syzkaller.appspotmail.com>,
+        David Miller <davem@davemloft.net>,
+        Jamal Hadi Salim <jhs@mojatatu.com>,
+        Jiri Pirko <jiri@resnulli.us>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux Kernel Network Developers <netdev@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Subject: Re: KASAN: slab-out-of-bounds Read in __nla_put_nohdr
+Message-ID: <20200123071313.GI1847@kadam>
+References: <0000000000006370ef059cabac14@google.com>
+ <50239085-ff0f-f797-99af-1a0e58bc5e2e@gmail.com>
+ <CAM_iQpXqh1ucVST199c72V22zLPujZy-54p=c5ar=Q9bWNq7OA@mail.gmail.com>
+ <7056f971-8fae-ce88-7e9a-7983e4f57bb2@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.102.38]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7056f971-8fae-ce88-7e9a-7983e4f57bb2@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9508 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=841
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-2001230061
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9508 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=905 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-2001230061
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On KunPeng920 board. When changing permission of a large range region,
-pmdp_invalidate() takes about 65% in profile (with hugepages) in JIT tool.
-Kernel will flush tlb twice: first flush happens in pmdp_invalidate, second
-flush happens at the end of change_protect_range(). The first pmdp_invalidate
-is not necessary if the hardware support atomic pmdp changing. The atomic
-changing pimd to zero can prevent the hardware from update asynchronous.
-So reconstruct it and remove the first pmdp_invalidate. And the second tlb
-flush can make sure the new tlb entry valid.
+On Wed, Jan 22, 2020 at 12:33:17PM -0800, Eric Dumazet wrote:
+> 
+> 
+> On 1/22/20 12:27 PM, Cong Wang wrote:
+> > On Tue, Jan 21, 2020 at 11:55 AM Eric Dumazet <eric.dumazet@gmail.com> wrote:
+> >> em_nbyte_change() sets
+> >> em->datalen = sizeof(*nbyte) + nbyte->len;
+> >>
+> >> But later tcf_em_validate() overwrites em->datalen with the user provide value (em->datalen = data_len; )
+> >> which can be bigger than the allocated (kmemdup) space in em_nbyte_change()
+> >>
+> >> Should net/sched/em_nbyte.c() provide a dump() handler to avoid this issue ?
+> > 
+> > I think for those who implement ->change() we should leave
+> > ->datalen untouched to respect their choices. I don't see why
+> > we have to set it twice.
+> > 
+> >
+> 
+> Agreed, but we need to audit them to make sure all of them are setting ->datalen
+> 
 
-Add pmdp_modify_prot_start() in arm64, which uses pmdp_huge_get_and_clear()
-to fetch the pmd and zero entry, preventing racing of any hardware updates.
+Smatch provides a way to do this sort of search:
 
-After rework, the mprotect can get 3~13 times performace gain in range
-64M to 512M.
+$ smdb where tcf_ematch datalen
+net/sched/ematch.c             | tcf_em_validate                | (struct tcf_ematch)->datalen | 0-65519
+net/sched/ematch.c             | tcf_em_tree_validate           | (struct tcf_ematch)->datalen | 0
+net/sched/em_ipt.c             | em_ipt_change                  | (struct tcf_ematch)->datalen | 16-131080
+net/sched/em_meta.c            | em_meta_change                 | (struct tcf_ematch)->datalen | 48
+net/sched/em_text.c            | em_text_change                 | (struct tcf_ematch)->datalen | 16
+net/sched/em_canid.c           | em_canid_change                | (struct tcf_ematch)->datalen | 276-4268
+net/sched/em_ipset.c           | em_ipset_change                | (struct tcf_ematch)->datalen | 4
+net/sched/em_nbyte.c           | em_nbyte_change                | (struct tcf_ematch)->datalen | 4-4099
 
-4K granule/THP on
-memory size(M)	64	128	256	320	448	512
-pre-patch	0.77	1.40	2.64	3.23	4.49	5.10
-post-patch	0.20	0.23	0.28	0.31	0.37	0.39
+It is imperfect...  The main drawback is that it's based on my
+allmodconfig which might not include every function.  But always there
+are other bugs to be discovered.
 
-Signed-off-by: Xuefeng Wang <wxf.wang@hisilicon.com>
-Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
----
- arch/arm64/include/asm/pgtable.h | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+regards,
+dan carpenter
 
-diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
-index cd5de0e40bfa..bccdaa5bd5f2 100644
---- a/arch/arm64/include/asm/pgtable.h
-+++ b/arch/arm64/include/asm/pgtable.h
-@@ -769,6 +769,20 @@ static inline pmd_t pmdp_huge_get_and_clear(struct mm_struct *mm,
- }
- #endif /* CONFIG_TRANSPARENT_HUGEPAGE */
-
-+#ifdef CONFIG_TRANSPARENT_HUGEPAGE
-+#define __HAVE_ARCH_PMDP_MODIFY_PROT_TRANSACTION
-+static inline pmd_t pmdp_modify_prot_start(struct vm_area_struct *vma,
-+						unsigned long addr,
-+						pmd_t *pmdp)
-+{
-+	/*
-+	 * Atomic change pmd to zero, prevent the hardware from update
-+	 * aynchronously update it.
-+	 */
-+	return pmdp_huge_get_and_clear(vma->vm_mm, addr, pmdp);
-+}
-+#endif /* CONFIG_TRANSPARENT_HUGEPAGE */
-+
- /*
-  * ptep_set_wrprotect - mark read-only while trasferring potential hardware
-  * dirty status (PTE_DBM && !PTE_RDONLY) to the software PTE_DIRTY bit.
---
-2.17.1
