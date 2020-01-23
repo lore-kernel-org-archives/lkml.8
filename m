@@ -7,52 +7,52 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9A1CC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 22:06:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BFA9C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 22:06:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B015E21569
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 22:06:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA0E7207FF
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 22:06:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="w1TFSaR1"
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="T96LxjAo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729402AbgAWWGF (ORCPT
+        id S1729423AbgAWWGJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 17:06:05 -0500
-Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:37888 "EHLO
+        Thu, 23 Jan 2020 17:06:09 -0500
+Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:37895 "EHLO
         gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727816AbgAWWGE (ORCPT
+        with ESMTP id S1729410AbgAWWGH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 17:06:04 -0500
+        Thu, 23 Jan 2020 17:06:07 -0500
 Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 8ADC2891DA;
-        Fri, 24 Jan 2020 11:06:01 +1300 (NZDT)
+        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 5C075891DB;
+        Fri, 24 Jan 2020 11:06:04 +1300 (NZDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-        s=mail181024; t=1579817161;
-        bh=unkNyH/rcVXzgVxfVgqBINaGACcuV6NQCiwY237r2rg=;
+        s=mail181024; t=1579817164;
+        bh=zeFePKo6fhbCcfDQ2OhTCgA3upjarST3rYiHMVEi89M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=w1TFSaR1fbrMThdEaNlq50CSHG/YoapnWgzAnZElt9sFHIxUP+gmxHM07tSOQOLly
-         lPW6YSfUu02+nxjrumOZcrs7m1UyqET49CPYqkG8sZI+mk3ilYJdFLgWQ36mRYfSov
-         WR8OVXu9FDznn9b2zcZMw6nrTZPLshOJt5btHYLUPJZfns5O4umiIA5KqjOvmOTRJR
-         LZ/Dtj1h8d0oPOQ5TyUT9chlzoxQXzgv9hYQUYzxC95sfkW4JqBn3pZ3GNU/07I8YH
-         ZFyNzgxDeBzUvcTQ/a2FYgbHUbEf1z/ds2REHDxtG+yHIjO41Z/BPC97DOpGDsJlVc
-         2eJt6TVQrBPzw==
+        b=T96LxjAonFKEQfv57yLPlGmLq1HjQaGIYBK7aQhMdoAuzyyShj6dRKSN6JLpboqIT
+         tp1qLeOOBEVgwZIYeJ7yGeaiblMzJSJe3nEIDGNiJPe/xaUqJiRt+KIUVQbSD657jK
+         ol1uDYE9Lj0CHc7dnicoVCJ6HqsgfVyiG9kY9ebJrrIHeTDm8+UH2pUOTgwgsQg4ol
+         ObfZzrORJpFPx9SSo0yFl6mvuqv00CxWstUTqPnXdyBvdypJ1rAjZBY14vMsr1b0tA
+         FHcZ8eoVFTuw5K5TKv3K86ulvM+Oyssel6MEMETqnVar7fejq264lL6DDOsvOvG+D1
+         xHpRM2tk3yyoA==
 Received: from smtp (Not Verified[10.32.16.33]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
-        id <B5e2a18c90000>; Fri, 24 Jan 2020 11:06:01 +1300
+        id <B5e2a18cb0000>; Fri, 24 Jan 2020 11:06:03 +1300
 Received: from logans-dl.ws.atlnz.lc (logans-dl.ws.atlnz.lc [10.33.25.61])
-        by smtp (Postfix) with ESMTP id 2DDCB13EEC9;
-        Fri, 24 Jan 2020 11:05:59 +1300 (NZDT)
+        by smtp (Postfix) with ESMTP id 057A813EEC9;
+        Fri, 24 Jan 2020 11:06:01 +1300 (NZDT)
 Received: by logans-dl.ws.atlnz.lc (Postfix, from userid 1820)
-        id 4672EC0DF6; Fri, 24 Jan 2020 11:06:01 +1300 (NZDT)
+        id 1DFF7C0DF6; Fri, 24 Jan 2020 11:06:03 +1300 (NZDT)
 From:   Logan Shaw <logan.shaw@alliedtelesis.co.nz>
 To:     linux@roeck-us.net, jdelvare@suse.com, robh+dt@kernel.org
 Cc:     linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org,
         devicetree@vger.kernel.org, Joshua.Scott@alliedtelesis.co.nz,
         Chris.Packham@alliedtelesis.co.nz, logan.shaw@alliedtelesis.co.nz
-Subject: [PATCH v5 1/2] hwmon: (adt7475) Added attenuator bypass support
-Date:   Fri, 24 Jan 2020 11:05:32 +1300
-Message-Id: <20200123220533.2228-2-logan.shaw@alliedtelesis.co.nz>
+Subject: [PATCH v5 2/2] dt-bindings: hwmon: (adt7475) Added missing adt7475 doccumentation
+Date:   Fri, 24 Jan 2020 11:05:33 +1300
+Message-Id: <20200123220533.2228-3-logan.shaw@alliedtelesis.co.nz>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200123220533.2228-1-logan.shaw@alliedtelesis.co.nz>
 References: <20200123220533.2228-1-logan.shaw@alliedtelesis.co.nz>
@@ -64,113 +64,126 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Added support for reading DTS properties to set attenuators on
-device probe for the ADT7473, ADT7475, ADT7476, and ADT7490.
+Added a new file documenting the adt7475 devicetree and added the four
+new properties to it.
 
 Signed-off-by: Logan Shaw <logan.shaw@alliedtelesis.co.nz>
 ---
 ---
- drivers/hwmon/adt7475.c | 68 +++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 68 insertions(+)
+ .../devicetree/bindings/hwmon/adt7475.yaml    | 95 +++++++++++++++++++
+ 1 file changed, 95 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/hwmon/adt7475.yaml
 
-diff --git a/drivers/hwmon/adt7475.c b/drivers/hwmon/adt7475.c
-index 6c64d50c9aae..8afc5a89ec92 100644
---- a/drivers/hwmon/adt7475.c
-+++ b/drivers/hwmon/adt7475.c
-@@ -19,6 +19,7 @@
- #include <linux/hwmon-vid.h>
- #include <linux/err.h>
- #include <linux/jiffies.h>
-+#include <linux/of.h>
- #include <linux/util_macros.h>
-=20
- /* Indexes for the sysfs hooks */
-@@ -1457,6 +1458,70 @@ static int adt7475_update_limits(struct i2c_client=
- *client)
- 	return 0;
- }
-=20
-+/**
-+ * Sets or clears the given bit in the config depending on the value of =
-the
-+ * given dts property. Non-zero value sets, zero value clears. No change=
- if
-+ * the property is absent.
-+ */
-+static void modify_config(const struct i2c_client *client, char *propert=
-y,
-+				u8 *config, u8 bit_index)
-+{
-+	u32 prop_value =3D 0;
-+	int ret =3D of_property_read_u32(client->dev.of_node, property,
-+					&prop_value);
+diff --git a/Documentation/devicetree/bindings/hwmon/adt7475.yaml b/Docum=
+entation/devicetree/bindings/hwmon/adt7475.yaml
+new file mode 100644
+index 000000000000..450da5e66e07
+--- /dev/null
++++ b/Documentation/devicetree/bindings/hwmon/adt7475.yaml
+@@ -0,0 +1,95 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/adt7475.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+	if (!ret) {
-+		if (prop_value)
-+			*config |=3D (1 << bit_index);
-+		else
-+			*config &=3D ~(1 << bit_index);
-+	}
-+}
++title: ADT7475 hwmon sensor
 +
-+/**
-+ * Configures the attenuator bypasses for voltage inputs, depening on
-+ * properties in the dts.
-+.*
-+ * The adt7473 and adt7475 only support bypassing in1.
-+ *
-+ * Returns a negative error code if there was an error writing to the re=
-gister.
-+ */
-+static int load_attenuators(const struct i2c_client *client, int chip,
-+				u8 *config2, u8 *config4)
-+{
-+	u8 conf_copy;
-+	int ret =3D 0;
++maintainers:
++  - Jean Delvare <jdelvare@suse.com>
 +
-+	if (chip =3D=3D adt7476 || chip =3D=3D adt7490) {
-+		conf_copy =3D *config4;
++description: |
++  The ADT7473, ADT7475, ADT7476, and ADT7490 are thermal monitors and mu=
+ltiple
++  PWN fan controllers.
 +
-+		modify_config(client, "bypass-attenuator-in0", &conf_copy, 4);
-+		modify_config(client, "bypass-attenuator-in1", &conf_copy, 5);
-+		modify_config(client, "bypass-attenuator-in3", &conf_copy, 6);
-+		modify_config(client, "bypass-attenuator-in4", &conf_copy, 7);
++  They support monitoring and controlling up to four fans (the ADT7490 c=
+an only
++  control up to three). They support reading a single on chip temperatur=
+e
++  sensor and two off chip temperature sensors (the ADT7490 additionally
++  supports measuring up to three current external temperature sensors wi=
+th
++  series resistance cancellation (SRC)).
 +
-+		ret =3D i2c_smbus_write_byte_data(client, REG_CONFIG4,
-+			conf_copy);
-+		if (ret < 0)
-+			return ret;
++  Datasheets:
++  https://www.onsemi.com/pub/Collateral/ADT7473-D.PDF
++  https://www.onsemi.com/pub/Collateral/ADT7475-D.PDF
++  https://www.onsemi.com/pub/Collateral/ADT7476-D.PDF
++  https://www.onsemi.com/pub/Collateral/ADT7490-D.PDF
 +
-+		*config4 =3D conf_copy;
-+	} else if (chip =3D=3D adt7473 || chip =3D=3D adt7475) {
-+		conf_copy =3D *config2;
++  Description taken from omsemiconductors specification sheets, with min=
+or
++  rephrasing.
 +
-+		modify_config(client, "bypass-attenuator-in1", &conf_copy, 5);
++properties:
++  compatible:
++    enum:
++      - adi,adt7473
++      - adi,adt7475
++      - adi,adt7476
++      - adi,adt7490
 +
-+		ret =3D i2c_smbus_write_byte_data(client, REG_CONFIG2,
-+			conf_copy);
-+		if (ret < 0)
-+			return ret;
++  reg:
++    maxItems: 1
 +
-+		*config2 =3D conf_copy;
-+	}
++  bypass-attenuator-in0:
++    description: |
++      Configures bypassing the individual voltage input
++      attenuator, on in0. This is supported on the ADT7476 and ADT7490.
++      If set to a non-zero integer the attenuator is bypassed, if set to
++      zero the attenuator is not bypassed. If the property is absent the=
+n
++      the config register is not modified.
++    maxItems: 1
 +
-+	return 0;
-+}
++  bypass-attenuator-in1:
++    description: |
++      Configures bypassing the individual voltage input
++      attenuator, on in1. This is supported on the ADT7473, ADT7475,
++      ADT7476 and ADT7490. If set to a non-zero integer the attenuator
++      is bypassed, if set to zero the attenuator is not bypassed. If the
++      property is absent then the config register is not modified.
++    maxItems: 1
 +
- static int adt7475_probe(struct i2c_client *client,
- 			 const struct i2c_device_id *id)
- {
-@@ -1546,6 +1611,9 @@ static int adt7475_probe(struct i2c_client *client,
-=20
- 	/* Voltage attenuators can be bypassed, globally or individually */
- 	config2 =3D adt7475_read(REG_CONFIG2);
-+	if (load_attenuators(client, chip, &config2, &(data->config4)) < 0)
-+		dev_warn(&client->dev, "Error setting bypass attenuators\n");
++  bypass-attenuator-in3:
++    description: |
++      Configures bypassing the individual voltage input
++      attenuator, on in3. This is supported on the ADT7476 and ADT7490.
++      If set to a non-zero integer the attenuator is bypassed, if set to
++      zero the attenuator is not bypassed. If the property is absent the=
+n
++      the config register is not modified.
++    maxItems: 1
 +
- 	if (config2 & CONFIG2_ATTN) {
- 		data->bypass_attn =3D (0x3 << 3) | 0x3;
- 	} else {
++  bypass-attenuator-in4:
++    description: |
++      Configures bypassing the individual voltage input
++      attenuator, on in4. This is supported on the ADT7476 and ADT7490.
++      If set to a non-zero integer the attenuator is bypassed, if set to
++      zero the attenuator is not bypassed. If the property is absent the=
+n
++      the config register is not modified.
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++
++examples:
++  - |
++    i2c {
++      #address-cells =3D <1>;
++      #size-cells =3D <0>;
++
++      hwmon@2e {
++        compatible =3D "adi,adt7476";
++        reg =3D <0x2e>;
++        bypass-attenuator-in0 =3D <1>;
++        bypass-attenuator-in1 =3D <0>;
++      };
++    };
++...
 --=20
 2.25.0
 
