@@ -2,101 +2,196 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADBEDC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 17:49:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA07EC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 17:49:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E8A421734
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 17:49:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8752021734
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 17:49:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BeOqupiK"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="KYkxkhMn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728998AbgAWRth (ORCPT
+        id S1729083AbgAWRt4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 12:49:37 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:38830 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727022AbgAWRth (ORCPT
+        Thu, 23 Jan 2020 12:49:56 -0500
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:1053 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727022AbgAWRt4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 12:49:37 -0500
-Received: by mail-pf1-f195.google.com with SMTP id x185so1876228pfc.5;
-        Thu, 23 Jan 2020 09:49:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=pmwM/RjTjMeKJJSz0utNzRkzs2Ah1FBEm23erGfIBU0=;
-        b=BeOqupiK3Vu2fFuS68nq6ecQn8Vo2jwMQdojQuLXZhZHIVNdOzs1JLjFwqn5mjWeFq
-         P0G6daxp47/Uk1NgC2+xuJON8uHoMytMdafoir4L90j6LpNC9jk5CAqhHnABlSSXehVd
-         XlTnfEfIOmT4IyT1r6+tDdKTW3olEq8ND+iASsSRAiDJa2HI9lTyRS1up7zQq3VC5LKI
-         DZEM2NZaj0/Qe3zxBfOsULO7BlKRhDQZtNGljJo6gi+k/4m+Zj4fb4dhfkEWiYvItSCk
-         1j1AiHMMyTeiL7p8U+1vpVdIIgDLBLcNDjXsbXDdR6UgpQDnkfi4XfXupxgWW5CWx+7l
-         mX8Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=pmwM/RjTjMeKJJSz0utNzRkzs2Ah1FBEm23erGfIBU0=;
-        b=CJI0vPoq1ZYU5EaAeD/PS1GTpQ92dpqdez1u7UGAcTlfbIpzckqHlNT5hjejQM7wkc
-         4RYoqreyxGrHbz5x/M1u9J+mUjzXg/JJJV0+8K7v8jeM0VfX56/s5oZfMepARnMySCRo
-         4jTYvjKyZKbHbXgDiV1UXiB1tr8gUv1okv/O9nmS4ajYwSr0aFBUa+HbJp5kdj3COF5q
-         z5XHQ/pH3MnebnYmg0z/8G9w0CEHEc0jwovAaHO1BSWwWc3GjstC/jLnyBYWKPqdPjYb
-         mU7sbsuyhk0aetZyKYYgD7B12oqlZWZ87XcRX9cUyCsjdXpRP4ZQtrF0va6yV1A9OV0f
-         mnHw==
-X-Gm-Message-State: APjAAAVKzLmk8/L1xA74JG7fJSeEV5OEy1wCS/czd12v2sG9kbOW1QGZ
-        kJxNoKsXd2A0QBPcRbsQ77qr72zX
-X-Google-Smtp-Source: APXvYqxMQYoCS89083iM0osTStyfuMoISmfSd2S1xkk/uE/h0v/Z98L086evGzQx0P68M+cQ27IljA==
-X-Received: by 2002:a62:8602:: with SMTP id x2mr8420961pfd.39.1579801776631;
-        Thu, 23 Jan 2020 09:49:36 -0800 (PST)
-Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id j21sm3312326pji.7.2020.01.23.09.49.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Jan 2020 09:49:36 -0800 (PST)
-From:   Florian Fainelli <f.fainelli@gmail.com>
-To:     netdev@vger.kernel.org
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Doug Berger <opendmb@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        bcm-kernel-feedback-list@broadcom.com (open list:BROADCOM GENET
-        ETHERNET DRIVER), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH net] net: bcmgenet: Use netif_tx_napi_add() for TX NAPI
-Date:   Thu, 23 Jan 2020 09:49:34 -0800
-Message-Id: <20200123174934.29500-1-f.fainelli@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 23 Jan 2020 12:49:56 -0500
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00NHeEXV029160;
+        Thu, 23 Jan 2020 18:49:46 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=6fSPNr7rvrjO4ZCLWwcFOZUjczpj72PXNX0gM6nq77o=;
+ b=KYkxkhMnXTqD/v/s98CtEe/GlzEiOZzcfaKd3Oh/xzmYDtcMGC6yfg/5+chJ1F6JLkZp
+ ZztGvxVwE3kZaAVVvYfuyyy8z6HrlWD1X1S3dMugzHufz33qhTU8n8D/MzmvIoAf+p0v
+ frMXu0IoXvwD/UBUrUHomL2wWwB4KgxfcBmXVvQsWqBgxlV0gCzKBKwk8gchcv4ETaXi
+ V1Vz3H2EGr92mv5vi7HWMQcTREJVAh7PkUIXowDpoMKs5vFhjMlhK/TItkQHhXn1v+1N
+ wgjiio1S2VFOT1Ah9RmyGMFL0oyl7pRVHYR3U7vs8aVaNTenA4oeGh/eWIrSH3oQayPs 8A== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2xkr1ebr35-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 23 Jan 2020 18:49:46 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 1681D100034;
+        Thu, 23 Jan 2020 18:49:46 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag3node1.st.com [10.75.127.7])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id ED9502C6A66;
+        Thu, 23 Jan 2020 18:49:45 +0100 (CET)
+Received: from lmecxl0889.lme.st.com (10.75.127.47) by SFHDAG3NODE1.st.com
+ (10.75.127.7) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 23 Jan
+ 2020 18:49:44 +0100
+Subject: Re: [PATCH v2 7/8] remoteproc: qcom: q6v5: Add common panic handler
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>
+CC:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ohad Ben-Cohen <ohad@wizery.com>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-remoteproc <linux-remoteproc@vger.kernel.org>,
+        Sibi Sankar <sibis@codeaurora.org>,
+        Rishabh Bhatnagar <rishabhb@codeaurora.org>
+References: <20191227053215.423811-1-bjorn.andersson@linaro.org>
+ <20191227053215.423811-8-bjorn.andersson@linaro.org>
+ <20200110212806.GD11555@xps15> <20200122193936.GB3261042@ripper>
+ <CANLsYkx-C9U4W3R3Xo6t3BJBM4UK_i3zuwzhnXMMEQ0-ur+8Kg@mail.gmail.com>
+ <20200123171524.GV1511@yoga>
+From:   Arnaud POULIQUEN <arnaud.pouliquen@st.com>
+Message-ID: <8d92c4b5-4238-23d2-50fc-1a5bdfc2c67b@st.com>
+Date:   Thu, 23 Jan 2020 18:49:44 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
+MIME-Version: 1.0
+In-Reply-To: <20200123171524.GV1511@yoga>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.75.127.47]
+X-ClientProxiedBy: SFHDAG3NODE1.st.com (10.75.127.7) To SFHDAG3NODE1.st.com
+ (10.75.127.7)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-01-23_10:2020-01-23,2020-01-23 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Before commit 7587935cfa11 ("net: bcmgenet: move NAPI initialization to
-ring initialization") moved the code, this used to be
-netif_tx_napi_add(), but we lost that small semantic change in the
-process, restore that.
+Hi Bjorn, Mathieu
 
-Fixes: 7587935cfa11 ("net: bcmgenet: move NAPI initialization to ring initialization")
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
----
- drivers/net/ethernet/broadcom/genet/bcmgenet.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+On 1/23/20 6:15 PM, Bjorn Andersson wrote:
+> On Thu 23 Jan 09:01 PST 2020, Mathieu Poirier wrote:
+> 
+>> On Wed, 22 Jan 2020 at 12:40, Bjorn Andersson
+>> <bjorn.andersson@linaro.org> wrote:
+>>>
+>>> On Fri 10 Jan 13:28 PST 2020, Mathieu Poirier wrote:
+>>>
+>>>> On Thu, Dec 26, 2019 at 09:32:14PM -0800, Bjorn Andersson wrote:
+>>>>> Add a common panic handler that invokes a stop request and sleep enough
+>>>>> to let the remoteproc flush it's caches etc in order to aid post mortem
+>>>>> debugging.
+>>>>>
+>>>>> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+>>>>> ---
+>>>>>
+>>>>> Changes since v1:
+>>>>> - None
+>>>>>
+>>>>>  drivers/remoteproc/qcom_q6v5.c | 19 +++++++++++++++++++
+>>>>>  drivers/remoteproc/qcom_q6v5.h |  1 +
+>>>>>  2 files changed, 20 insertions(+)
+>>>>>
+>>>>> diff --git a/drivers/remoteproc/qcom_q6v5.c b/drivers/remoteproc/qcom_q6v5.c
+>>>>> index cb0f4a0be032..17167c980e02 100644
+>>>>> --- a/drivers/remoteproc/qcom_q6v5.c
+>>>>> +++ b/drivers/remoteproc/qcom_q6v5.c
+>>>>> @@ -6,6 +6,7 @@
+>>>>>   * Copyright (C) 2014 Sony Mobile Communications AB
+>>>>>   * Copyright (c) 2012-2013, The Linux Foundation. All rights reserved.
+>>>>>   */
+>>>>> +#include <linux/delay.h>
+>>>>>  #include <linux/kernel.h>
+>>>>>  #include <linux/platform_device.h>
+>>>>>  #include <linux/interrupt.h>
+>>>>> @@ -15,6 +16,8 @@
+>>>>>  #include <linux/remoteproc.h>
+>>>>>  #include "qcom_q6v5.h"
+>>>>>
+>>>>> +#define Q6V5_PANIC_DELAY_MS        200
+>>>>> +
+>>>>>  /**
+>>>>>   * qcom_q6v5_prepare() - reinitialize the qcom_q6v5 context before start
+>>>>>   * @q6v5:  reference to qcom_q6v5 context to be reinitialized
+>>>>> @@ -162,6 +165,22 @@ int qcom_q6v5_request_stop(struct qcom_q6v5 *q6v5)
+>>>>>  }
+>>>>>  EXPORT_SYMBOL_GPL(qcom_q6v5_request_stop);
+>>>>>
+>>>>> +/**
+>>>>> + * qcom_q6v5_panic() - panic handler to invoke a stop on the remote
+>>>>> + * @q6v5:  reference to qcom_q6v5 context
+>>>>> + *
+>>>>> + * Set the stop bit and sleep in order to allow the remote processor to flush
+>>>>> + * its caches etc for post mortem debugging.
+>>>>> + */
+>>>>> +void qcom_q6v5_panic(struct qcom_q6v5 *q6v5)
+>>>>> +{
+>>>>> +   qcom_smem_state_update_bits(q6v5->state,
+>>>>> +                               BIT(q6v5->stop_bit), BIT(q6v5->stop_bit));
+>>>>> +
+>>>>> +   mdelay(Q6V5_PANIC_DELAY_MS);
+>>>>
+>>>> I really wonder if the delay should be part of the remoteproc core and
+>>>> configurable via device tree.  Wanting the remote processor to flush its caches
+>>>> is likely something other vendors will want when dealing with a kernel panic.
+>>>> It would be nice to see if other people have an opinion on this topic.  If not
+>>>> then we can keep the delay here and move it to the core if need be.
+>>>>
+>>>
+>>> I gave this some more thought and what we're trying to achieve is to
+>>> signal the remote processors about the panic and then give them time to
+>>> react, but per the proposal (and Qualcomm downstream iirc) we will do
+>>> this for each remote processor, one by one.
+>>>
+>>> So in the typical case of a Qualcomm platform with 4-5 remoteprocs we'll
+>>> end up giving the first one a whole second to react and the last one
+>>> "only" 200ms.
+>>>
+>>> Moving the delay to the core by iterating over rproc_list calling
+>>> panic() and then delaying would be cleaner imo.
+>>
+>> I agree.
+>>
+>>>
+>>> It might be nice to make this configurable in DT, but I agree that it
+>>> would be nice to hear from others if this would be useful.
+>>
+>> I think the delay has to be configurable via DT if we move this to the
+>> core.  The binding can be optional and default to 200ms if not
+>> present.
+>>
+> 
+> How about I make the panic() return the required delay and then we let
+> the core sleep for MAX() of the returned durations? That way the default
+> is still a property of the remoteproc drivers - and 200ms seems rather
+> arbitrary to put in the core, even as a default.
 
-diff --git a/drivers/net/ethernet/broadcom/genet/bcmgenet.c b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
-index 120fa05a39ff..0a8624be44a9 100644
---- a/drivers/net/ethernet/broadcom/genet/bcmgenet.c
-+++ b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
-@@ -2164,8 +2164,8 @@ static void bcmgenet_init_tx_ring(struct bcmgenet_priv *priv,
- 				  DMA_END_ADDR);
- 
- 	/* Initialize Tx NAPI */
--	netif_napi_add(priv->dev, &ring->napi, bcmgenet_tx_poll,
--		       NAPI_POLL_WEIGHT);
-+	netif_tx_napi_add(priv->dev, &ring->napi, bcmgenet_tx_poll,
-+			  NAPI_POLL_WEIGHT);
- }
- 
- /* Initialize a RDMA ring */
--- 
-2.17.1
+I agree with Bjorn, the delay should be provided by the platform.
+But in this case i wonder if it is simpler to just let the platform take care it?
+For instance for stm32mp1 the stop corresponds to the reset on the remote processor core. To inform the coprocessor about an imminent shutdown we use a signal relying on a mailbox (cf. stm32_rproc_stop).  
+In this case we would need a delay between the signal and the reset, but not after (no cache management).
 
+Regards,
+Arnaud
+> 
+> Regards,
+> Bjorn
+> 
