@@ -2,97 +2,164 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 843AFC3F68F
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 17:20:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91CD9C33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 17:21:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5AF6D20718
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 17:20:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7264120684
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 17:21:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728927AbgAWRUs (ORCPT
+        id S1729066AbgAWRVI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 12:20:48 -0500
-Received: from muru.com ([72.249.23.125]:52134 "EHLO muru.com"
+        Thu, 23 Jan 2020 12:21:08 -0500
+Received: from foss.arm.com ([217.140.110.172]:42606 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726605AbgAWRUs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 12:20:48 -0500
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id DC3E2810A;
-        Thu, 23 Jan 2020 17:21:29 +0000 (UTC)
-Date:   Thu, 23 Jan 2020 09:20:44 -0800
-From:   Tony Lindgren <tony@atomide.com>
-To:     Tero Kristo <t-kristo@ti.com>
-Cc:     Benoit Parrot <bparrot@ti.com>, linux-omap@vger.kernel.org,
-        linux-clk@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [Patch v3 0/3] ARM: dts: am43x-vpfe/ov2659.patch
-Message-ID: <20200123172044.GC5885@atomide.com>
-References: <20191211140720.10539-1-bparrot@ti.com>
- <20191212174123.GF35479@atomide.com>
- <c4ae58dc-3c81-f493-a665-6926baa0f04c@ti.com>
- <20191213152938.GK35479@atomide.com>
- <20200113165413.i6nbi2i7xyue4fti@ti.com>
- <20200114160422.GQ5885@atomide.com>
- <e72f8de3-fd30-a216-8e6e-934a05259ed6@ti.com>
+        id S1726605AbgAWRVI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jan 2020 12:21:08 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 618DE1FB;
+        Thu, 23 Jan 2020 09:21:07 -0800 (PST)
+Received: from [10.1.195.43] (e107049-lin.cambridge.arm.com [10.1.195.43])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1F5DD3F52E;
+        Thu, 23 Jan 2020 09:21:06 -0800 (PST)
+Subject: Re: [RFC PATCH v4 4/6] sched/cpufreq: Introduce sugov_cpu_ramp_boost
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        qperret@google.com, Linux PM <linux-pm@vger.kernel.org>
+References: <20200122173538.1142069-1-douglas.raillard@arm.com>
+ <20200122173538.1142069-5-douglas.raillard@arm.com>
+ <CAJZ5v0gP5v3LzU-uGyHpoJV8z+E2heR1PEQp+c=L7RZS3FzCWg@mail.gmail.com>
+From:   Douglas Raillard <douglas.raillard@arm.com>
+Organization: ARM
+Message-ID: <9b5afae9-0cf5-6c3a-b94b-0796da4e6a71@arm.com>
+Date:   Thu, 23 Jan 2020 17:21:05 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e72f8de3-fd30-a216-8e6e-934a05259ed6@ti.com>
+In-Reply-To: <CAJZ5v0gP5v3LzU-uGyHpoJV8z+E2heR1PEQp+c=L7RZS3FzCWg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB-large
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Tero Kristo <t-kristo@ti.com> [200117 14:16]:
-> On 14/01/2020 18:04, Tony Lindgren wrote:
-> > * Benoit Parrot <bparrot@ti.com> [200113 16:51]:
-> > > Tony Lindgren <tony@atomide.com> wrote on Fri [2019-Dec-13 07:29:38 -0800]:
-> > > > * Tero Kristo <t-kristo@ti.com> [191213 07:43]:
-> > > > > On 12/12/2019 19:41, Tony Lindgren wrote:
-> > > > > > * Benoit Parrot <bparrot@ti.com> [191211 06:04]:
-> > > > > > > This patch series adds the missing camera endpoint (ov2659) as well as
-> > > > > > > the required source clocks nodes for the sensor.
-> > > > > > > 
-> > > > > > > On the am437x-sk-evm the camera sensor is sourced from clkout1 but that
-> > > > > > > clock nodes/tree was removed as it was unsed at the time, we are
-> > > > > > > re-adding the needed clock nodes here.
-> > > > > > 
-> > > > > > Tero, it seems I can already pick this series?
-> > > > > 
-> > > > > I believe it is ready if you approve the clkout1 clock patch.
-> > > > 
-> > > > OK yeah looks fine.
-> > > > 
-> > > > > > Or ou want to queue the changes to am43xx-clocks.dtsi along with all
-> > > > > > your other clock patches?
-> > > > > 
-> > > > > Well, I have actually never queued any omap2+ dts patches myself, and I
-> > > > > don't think there would be too many of those coming for next merge either.
-> > > > 
-> > > > OK will queue this series then. For the other ones from Benoit
-> > > > looks like we need an immutable clock branch before I can apply
-> > > > anything.
-> > > 
-> > > Tony, Tero,
-> > > 
-> > > Are these merged anyware now?
-> > > I still don't see any of these on linux-next?
-> > 
-> > Tero any news on getting some immutable clock changes branch done?
-> > Looks like there are quite a few pending clock patches right now,
-> > probably best to set them all into a branch that I can also merge
-> > in.
+
+
+On 1/23/20 3:55 PM, Rafael J. Wysocki wrote:
+> On Wed, Jan 22, 2020 at 6:36 PM Douglas RAILLARD
+> <douglas.raillard@arm.com> wrote:
+>>
+>> Use the utilization signals dynamic to detect when the utilization of a
+>> set of tasks starts increasing because of a change in tasks' behavior.
+>> This allows detecting when spending extra power for faster frequency
+>> ramp up response would be beneficial to the reactivity of the system.
+>>
+>> This ramp boost is computed as the difference between util_avg and
+>> util_est_enqueued. This number somehow represents a lower bound of how
+>> much extra utilization this tasks is actually using, compared to our
+>> best current stable knowledge of it (which is util_est_enqueued).
+>>
+>> When the set of runnable tasks changes, the boost is disabled as the
+>> impact of blocked utilization on util_avg will make the delta with
+>> util_est_enqueued not very informative.
+>>
+>> Signed-off-by: Douglas RAILLARD <douglas.raillard@arm.com>
+>> ---
+>>  kernel/sched/cpufreq_schedutil.c | 43 ++++++++++++++++++++++++++++++++
+>>  1 file changed, 43 insertions(+)
+>>
+>> diff --git a/kernel/sched/cpufreq_schedutil.c b/kernel/sched/cpufreq_schedutil.c
+>> index 608963da4916..25a410a1ff6a 100644
+>> --- a/kernel/sched/cpufreq_schedutil.c
+>> +++ b/kernel/sched/cpufreq_schedutil.c
+>> @@ -61,6 +61,10 @@ struct sugov_cpu {
+>>         unsigned long           bw_dl;
+>>         unsigned long           max;
+>>
+>> +       unsigned long           ramp_boost;
+>> +       unsigned long           util_est_enqueued;
+>> +       unsigned long           util_avg;
+>> +
+>>         /* The field below is for single-CPU policies only: */
+>>  #ifdef CONFIG_NO_HZ_COMMON
+>>         unsigned long           saved_idle_calls;
+>> @@ -183,6 +187,42 @@ static void sugov_deferred_update(struct sugov_policy *sg_policy, u64 time,
+>>         }
+>>  }
+>>
+>> +static unsigned long sugov_cpu_ramp_boost(struct sugov_cpu *sg_cpu)
+>> +{
+>> +       return READ_ONCE(sg_cpu->ramp_boost);
+>> +}
 > 
-> Working on that now, have been forced to prioritize work lately. I can
-> probably get the branch set-up on Monday and send a pull-req out assuming it
-> is not too late for 5.6 already.
+> Where exactly is this function used?
 
-Yes it might be too late, but I'm applying these too into
-omap-for-v5.6/ti-sysc-dt-cam.
+In the next commit where the boost value is actually used to do
+something. The function is introduced here to keep the
+WRITE_ONCE/READ_ONCE pair together.
 
-Regards,
-
-Tony
+> 
+>> +
+>> +static unsigned long sugov_cpu_ramp_boost_update(struct sugov_cpu *sg_cpu)
+>> +{
+>> +       struct rq *rq = cpu_rq(sg_cpu->cpu);
+>> +       unsigned long util_est_enqueued;
+>> +       unsigned long util_avg;
+>> +       unsigned long boost = 0;
+>> +
+>> +       util_est_enqueued = READ_ONCE(rq->cfs.avg.util_est.enqueued);
+>> +       util_avg = READ_ONCE(rq->cfs.avg.util_avg);
+>> +
+>> +       /*
+>> +        * Boost when util_avg becomes higher than the previous stable
+>> +        * knowledge of the enqueued tasks' set util, which is CPU's
+>> +        * util_est_enqueued.
+>> +        *
+>> +        * We try to spot changes in the workload itself, so we want to
+>> +        * avoid the noise of tasks being enqueued/dequeued. To do that,
+>> +        * we only trigger boosting when the "amount of work" enqueued
+>> +        * is stable.
+>> +        */
+>> +       if (util_est_enqueued == sg_cpu->util_est_enqueued &&
+>> +           util_avg >= sg_cpu->util_avg &&
+>> +           util_avg > util_est_enqueued)
+>> +               boost = util_avg - util_est_enqueued;
+>> +
+>> +       sg_cpu->util_est_enqueued = util_est_enqueued;
+>> +       sg_cpu->util_avg = util_avg;
+>> +       WRITE_ONCE(sg_cpu->ramp_boost, boost);
+>> +       return boost;
+>> +}
+>> +
+>>  /**
+>>   * get_next_freq - Compute a new frequency for a given cpufreq policy.
+>>   * @sg_policy: schedutil policy object to compute the new frequency for.
+>> @@ -514,6 +554,7 @@ static void sugov_update_single(struct update_util_data *hook, u64 time,
+>>         busy = !sg_policy->need_freq_update && sugov_cpu_is_busy(sg_cpu);
+>>
+>>         util = sugov_get_util(sg_cpu);
+>> +       sugov_cpu_ramp_boost_update(sg_cpu);
+>>         max = sg_cpu->max;
+>>         util = sugov_iowait_apply(sg_cpu, time, util, max);
+>>         next_f = get_next_freq(sg_policy, util, max);
+>> @@ -554,6 +595,8 @@ static unsigned int sugov_next_freq_shared(struct sugov_cpu *sg_cpu, u64 time)
+>>                 unsigned long j_util, j_max;
+>>
+>>                 j_util = sugov_get_util(j_sg_cpu);
+>> +               if (j_sg_cpu == sg_cpu)
+>> +                       sugov_cpu_ramp_boost_update(sg_cpu);
+>>                 j_max = j_sg_cpu->max;
+>>                 j_util = sugov_iowait_apply(j_sg_cpu, time, j_util, j_max);
+>>
+>> --
