@@ -2,200 +2,62 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 430ADC3F68F
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 10:20:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B2F9C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 10:21:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F31732253D
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 10:20:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="U9zEmA2k"
+	by mail.kernel.org (Postfix) with ESMTP id 778F92253D
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 10:21:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728765AbgAWKUb (ORCPT
+        id S1728842AbgAWKV1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 05:20:31 -0500
-Received: from smtp-fw-9101.amazon.com ([207.171.184.25]:32978 "EHLO
-        smtp-fw-9101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726188AbgAWKUb (ORCPT
+        Thu, 23 Jan 2020 05:21:27 -0500
+Received: from shards.monkeyblade.net ([23.128.96.9]:56164 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726099AbgAWKV1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 05:20:31 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1579774830; x=1611310830;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=P+o6yTH2FOy0MjrPim0GvktpNq0l7p1JzAFu5x01uj8=;
-  b=U9zEmA2kcg5v7EUOGiB1bSGut5lJ9YpHMsPna3jZVWP8B8041t7z9hkj
-   0XEtySHaH8JJYEa1bRVSVrb03VZ1FlkoNB2GJNc3onQeKUNDZoq4flK99
-   I0eSQlafSg78ayg+gUYDv9J9i2IFwX7v20PJEef+RLvPK7a3K3D0TfEBW
-   4=;
-IronPort-SDR: 8GLFTpISfk1UajXOHLhRh1Orm3IHU27tvsEn+qSqrXnmtYmSwQnjmKw+IDFqEWyn6MeBznAHz6
- McE5c0V1+A2A==
-X-IronPort-AV: E=Sophos;i="5.70,353,1574121600"; 
-   d="scan'208";a="12158218"
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2a-22cc717f.us-west-2.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-9101.sea19.amazon.com with ESMTP; 23 Jan 2020 10:20:18 +0000
-Received: from EX13MTAUWC001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
-        by email-inbound-relay-2a-22cc717f.us-west-2.amazon.com (Postfix) with ESMTPS id 55612A26ED;
-        Thu, 23 Jan 2020 10:20:16 +0000 (UTC)
-Received: from EX13D20UWC001.ant.amazon.com (10.43.162.244) by
- EX13MTAUWC001.ant.amazon.com (10.43.162.135) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Thu, 23 Jan 2020 10:20:16 +0000
-Received: from 38f9d3867b82.ant.amazon.com (10.43.161.176) by
- EX13D20UWC001.ant.amazon.com (10.43.162.244) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Thu, 23 Jan 2020 10:20:10 +0000
-Subject: Re: [PATCH v16.1 0/9] mm / virtio: Provide support for free page
- reporting
-To:     Alexander Duyck <alexander.duyck@gmail.com>, <kvm@vger.kernel.org>,
-        <mst@redhat.com>, <linux-kernel@vger.kernel.org>,
-        <willy@infradead.org>, <mhocko@kernel.org>, <linux-mm@kvack.org>,
-        <akpm@linux-foundation.org>, <mgorman@techsingularity.net>,
-        <vbabka@suse.cz>
-CC:     <yang.zhang.wz@gmail.com>, <nitesh@redhat.com>,
-        <konrad.wilk@oracle.com>, <david@redhat.com>, <pagupta@redhat.com>,
-        <riel@surriel.com>, <lcapitulino@redhat.com>,
-        <dave.hansen@intel.com>, <wei.w.wang@intel.com>,
-        <aarcange@redhat.com>, <pbonzini@redhat.com>,
-        <dan.j.williams@intel.com>, <alexander.h.duyck@linux.intel.com>,
-        <osalvador@suse.de>, "Paterson-Jones, Roland" <rolandp@amazon.com>,
-        <hannes@cmpxchg.org>, <hare@suse.com>
-References: <20200122173040.6142.39116.stgit@localhost.localdomain>
-From:   Alexander Graf <graf@amazon.com>
-Message-ID: <914aa4c3-c814-45e0-830b-02796b00b762@amazon.com>
-Date:   Thu, 23 Jan 2020 11:20:07 +0100
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
- Gecko/20100101 Thunderbird/68.3.1
-MIME-Version: 1.0
-In-Reply-To: <20200122173040.6142.39116.stgit@localhost.localdomain>
-Content-Language: en-US
-X-Originating-IP: [10.43.161.176]
-X-ClientProxiedBy: EX13D33UWC003.ant.amazon.com (10.43.162.132) To
- EX13D20UWC001.ant.amazon.com (10.43.162.244)
-Content-Type: text/plain; charset="utf-8"; format="flowed"
-Content-Transfer-Encoding: base64
+        Thu, 23 Jan 2020 05:21:27 -0500
+Received: from localhost (unknown [185.13.106.231])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 78A1A153DBDB8;
+        Thu, 23 Jan 2020 02:21:21 -0800 (PST)
+Date:   Thu, 23 Jan 2020 11:21:15 +0100 (CET)
+Message-Id: <20200123.112115.1188930223656280023.davem@davemloft.net>
+To:     hayeswang@realtek.com
+Cc:     netdev@vger.kernel.org, nic_swsd@realtek.com,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+        pmalani@chromium.org, grundler@chromium.org
+Subject: Re: [PATCH net v3 0/9] r8152: serial fixes
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <1394712342-15778-358-Taiwan-albertk@realtek.com>
+References: <1394712342-15778-338-Taiwan-albertk@realtek.com>
+        <1394712342-15778-358-Taiwan-albertk@realtek.com>
+X-Mailer: Mew version 6.8 on Emacs 26.3
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 23 Jan 2020 02:21:26 -0800 (PST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgQWxleCwKCk9uIDIyLjAxLjIwIDE4OjQzLCBBbGV4YW5kZXIgRHV5Y2sgd3JvdGU6Cj4gVGhp
-cyBzZXJpZXMgcHJvdmlkZXMgYW4gYXN5bmNocm9ub3VzIG1lYW5zIG9mIHJlcG9ydGluZyBmcmVl
-IGd1ZXN0IHBhZ2VzCj4gdG8gYSBoeXBlcnZpc29yIHNvIHRoYXQgdGhlIG1lbW9yeSBhc3NvY2lh
-dGVkIHdpdGggdGhvc2UgcGFnZXMgY2FuIGJlCj4gZHJvcHBlZCBhbmQgcmV1c2VkIGJ5IG90aGVy
-IHByb2Nlc3NlcyBhbmQvb3IgZ3Vlc3RzIG9uIHRoZSBob3N0LiBVc2luZwo+IHRoaXMgaXQgaXMg
-cG9zc2libGUgdG8gYXZvaWQgdW5uZWNlc3NhcnkgSS9PIHRvIGRpc2sgYW5kIGdyZWF0bHkgaW1w
-cm92ZQo+IHBlcmZvcm1hbmNlIGluIHRoZSBjYXNlIG9mIG1lbW9yeSBvdmVyY29tbWl0IG9uIHRo
-ZSBob3N0Lgo+IAo+IFdoZW4gZW5hYmxlZCB3ZSB3aWxsIGJlIHBlcmZvcm1pbmcgYSBzY2FuIG9m
-IGZyZWUgbWVtb3J5IGV2ZXJ5IDIgc2Vjb25kcwo+IHdoaWxlIHBhZ2VzIG9mIHN1ZmZpY2llbnRs
-eSBoaWdoIG9yZGVyIGFyZSBiZWluZyBmcmVlZC4gSW4gZWFjaCBwYXNzIGF0Cj4gbGVhc3Qgb25l
-IHNpeHRlZW50aCBvZiBlYWNoIGZyZWUgbGlzdCB3aWxsIGJlIHJlcG9ydGVkLiBCeSBkb2luZyB0
-aGlzIHdlCj4gYXZvaWQgcmFjaW5nIGFnYWluc3Qgb3RoZXIgdGhyZWFkcyB0aGF0IG1heSBiZSBj
-YXVzaW5nIGEgaGlnaCBhbW91bnQgb2YKPiBtZW1vcnkgY2h1cm4uCj4gCj4gVGhlIGxvd2VzdCBw
-YWdlIG9yZGVyIGN1cnJlbnRseSBzY2FubmVkIHdoZW4gcmVwb3J0aW5nIHBhZ2VzIGlzCj4gcGFn
-ZWJsb2NrX29yZGVyIHNvIHRoYXQgdGhpcyBmZWF0dXJlIHdpbGwgbm90IGludGVyZmVyZSB3aXRo
-IHRoZSB1c2Ugb2YKPiBUcmFuc3BhcmVudCBIdWdlIFBhZ2VzIGluIHRoZSBjYXNlIG9mIHZpcnR1
-YWxpemF0aW9uLgo+IAo+IEN1cnJlbnRseSB0aGlzIGlzIG9ubHkgaW4gdXNlIGJ5IHZpcnRpby1i
-YWxsb29uIGhvd2V2ZXIgdGhlcmUgaXMgdGhlIGhvcGUKPiB0aGF0IGF0IHNvbWUgcG9pbnQgaW4g
-dGhlIGZ1dHVyZSBvdGhlciBoeXBlcnZpc29ycyBtaWdodCBiZSBhYmxlIHRvIG1ha2UKPiB1c2Ug
-b2YgaXQuIEluIHRoZSB2aXJ0aW8tYmFsbG9vbi9RRU1VIGltcGxlbWVudGF0aW9uIHRoZSBoeXBl
-cnZpc29yIGlzCj4gY3VycmVudGx5IHVzaW5nIE1BRFZfRE9OVE5FRUQgdG8gaW5kaWNhdGUgdG8g
-dGhlIGhvc3Qga2VybmVsIHRoYXQgdGhlIHBhZ2UKPiBpcyBjdXJyZW50bHkgZnJlZS4gSXQgd2ls
-bCBiZSB6ZXJvZWQgYW5kIGZhdWx0ZWQgYmFjayBpbnRvIHRoZSBndWVzdCB0aGUKPiBuZXh0IHRp
-bWUgdGhlIHBhZ2UgaXMgYWNjZXNzZWQuCj4gCj4gVG8gdHJhY2sgaWYgYSBwYWdlIGlzIHJlcG9y
-dGVkIG9yIG5vdCB0aGUgVXB0b2RhdGUgZmxhZyB3YXMgcmVwdXJwb3NlZCBhbmQKPiB1c2VkIGFz
-IGEgUmVwb3J0ZWQgZmxhZyBmb3IgQnVkZHkgcGFnZXMuIFdlIHdhbGsgdGhvdWdoIHRoZSBmcmVl
-IGxpc3QKPiBpc29sYXRpbmcgcGFnZXMgYW5kIGFkZGluZyB0aGVtIHRvIHRoZSBzY2F0dGVybGlz
-dCB1bnRpbCB3ZSBlaXRoZXIKPiBlbmNvdW50ZXIgdGhlIGVuZCBvZiB0aGUgbGlzdCwgcHJvY2Vz
-c2VkIGFzIG1hbnkgcGFnZXMgYXMgd2VyZSBsaXN0ZWQgaW4KPiBucl9mcmVlIHByaW9yIHRvIHVz
-IHN0YXJ0aW5nLCBvciBoYXZlIGZpbGxlZCB0aGUgc2NhdHRlcmxpc3Qgd2l0aCBwYWdlcyB0bwo+
-IGJlIHJlcG9ydGVkLiBJZiB3ZSBmaWxsIHRoZSBzY2F0dGVybGlzdCBiZWZvcmUgd2UgcmVhY2gg
-dGhlIGVuZCBvZiB0aGUKPiBsaXN0IHdlIHJvdGF0ZSB0aGUgbGlzdCBzbyB0aGF0IHRoZSBmaXJz
-dCB1bnJlcG9ydGVkIHBhZ2Ugd2UgZW5jb3VudGVyIGlzCj4gbW92ZWQgdG8gdGhlIGhlYWQgb2Yg
-dGhlIGxpc3QgYXMgdGhhdCBpcyB3aGVyZSB3ZSB3aWxsIHJlc3VtZSBhZnRlciB3ZQo+IGhhdmUg
-ZnJlZWQgdGhlIHJlcG9ydGVkIHBhZ2VzIGJhY2sgaW50byB0aGUgdGFpbCBvZiB0aGUgbGlzdC4K
-PiAKPiBCZWxvdyBhcmUgdGhlIHJlc3VsdHMgZnJvbSB2YXJpb3VzIGJlbmNobWFya3MuIEkgcHJp
-bWFyaWx5IGZvY3VzZWQgb24gdHdvCj4gdGVzdHMuIFRoZSBmaXJzdCBpcyB0aGUgd2lsbC1pdC1z
-Y2FsZS9wYWdlX2ZhdWx0MiB0ZXN0LCBhbmQgdGhlIG90aGVyIGlzCj4gYSBtb2RpZmllZCB2ZXJz
-aW9uIG9mIHdpbGwtaXQtc2NhbGUvcGFnZV9mYXVsdDEgdGhhdCB3YXMgZW5hYmxlZCB0byB1c2UK
-PiBUSFAuIEkgZGlkIHRoaXMgYXMgaXQgYWxsb3dzIGZvciBiZXR0ZXIgdmlzaWJpbGl0eSBpbnRv
-IGRpZmZlcmVudCBwYXJ0cwo+IG9mIHRoZSBtZW1vcnkgc3Vic3lzdGVtLiBUaGUgZ3Vlc3QgaXMg
-cnVubmluZyB3aXRoIDMyRyBmb3IgUkFNIG9uIG9uZQo+IG5vZGUgb2YgYSBFNS0yNjMwIHYzLiBU
-aGUgaG9zdCBoYXMgaGFkIHNvbWUgZmVhdHVyZXMgc3VjaCBhcyBDUFUgdHVyYm8KPiBkaXNhYmxl
-ZCBpbiB0aGUgQklPUy4KPiAKPiBUZXN0ICAgICAgICAgICAgICAgICAgIHBhZ2VfZmF1bHQxIChU
-SFApICAgIHBhZ2VfZmF1bHQyCj4gTmFtZSAgICAgICAgICAgIHRhc2tzICBQcm9jZXNzIEl0ZXIg
-IFNUREVWICBQcm9jZXNzIEl0ZXIgIFNUREVWCj4gQmFzZWxpbmUgICAgICAgICAgICAxICAgIDEw
-MTI0MDIuNTAgIDAuMTQlICAgICAzNjE4NTUuMjUgIDAuODElCj4gICAgICAgICAgICAgICAgICAg
-ICAxNiAgICA4ODI3NDU3LjI1ICAwLjA5JSAgICAzMjgyMzQ3LjAwICAwLjM0JQo+IAo+IFBhdGNo
-ZXMgQXBwbGllZCAgICAgMSAgICAxMDA3ODk3LjAwICAwLjIzJSAgICAgMzYxODg3LjAwICAwLjI2
-JQo+ICAgICAgICAgICAgICAgICAgICAgMTYgICAgODc4NDc0MS43NSAgMC4zOSUgICAgMzI0MDY2
-OS4yNSAgMC40OCUKPiAKPiBQYXRjaGVzIEVuYWJsZWQgICAgIDEgICAgMTAxMDIyNy41MCAgMC4z
-OSUgICAgIDM1OTc0OS4yNSAgMC41NiUKPiAgICAgICAgICAgICAgICAgICAgIDE2ICAgIDg3NTYy
-MTkuMDAgIDAuMjQlICAgIDMyMjY2MDguNzUgIDAuOTclCj4gCj4gUGF0Y2hlcyBFbmFibGVkICAg
-ICAxICAgIDEwNTA5ODIuMDAgIDQuMjYlICAgICAzNTc5NjYuMjUgIDAuMTQlCj4gICBwYWdlIHNo
-dWZmbGUgICAgICAxNiAgICA4NjcyNjAxLjI1ICAwLjQ5JSAgICAzMjIzMTc3Ljc1ICAwLjQwJQo+
-IAo+IFBhdGNoZXMgZW5hYmxlZCAgICAgMSAgICAxMDAzMjM4LjAwICAwLjIyJSAgICAgMzYwMjEx
-LjAwICAwLjIyJQo+ICAgc2h1ZmZsZSB3LyBSRkMgICAgMTYgICAgODc2NzAxMC41MCAgMC4zMiUg
-ICAgMzE5OTg3NC4wMCAgMC43MSUKPiAKPiBUaGUgcmVzdWx0cyBhYm92ZSBhcmUgZm9yIGEgYmFz
-ZWxpbmUgd2l0aCBhIGxpbnV4LW5leHQtMjAxOTEyMTkga2VybmVsLAo+IHRoYXQga2VybmVsIHdp
-dGggdGhpcyBwYXRjaCBzZXQgYXBwbGllZCBidXQgcGFnZSByZXBvcnRpbmcgZGlzYWJsZWQgaW4K
-PiB2aXJ0aW8tYmFsbG9vbiwgdGhlIHBhdGNoZXMgYXBwbGllZCBhbmQgcGFnZSByZXBvcnRpbmcg
-ZnVsbHkgZW5hYmxlZCwgdGhlCj4gcGF0Y2hlcyBlbmFibGVkIHdpdGggcGFnZSBzaHVmZmxpbmcg
-ZW5hYmxlZCwgYW5kIHRoZSBwYXRjaGVzIGFwcGxpZWQgd2l0aAo+IHBhZ2Ugc2h1ZmZsaW5nIGVu
-YWJsZWQgYW5kIGFuIFJGQyBwYXRjaCB0aGF0IG1ha2VzIHVzZWQgb2YgTUFEVl9GUkVFIGluCj4g
-UUVNVS4gVGhlc2UgcmVzdWx0cyBpbmNsdWRlIHRoZSBkZXZpYXRpb24gc2VlbiBiZXR3ZWVuIHRo
-ZSBhdmVyYWdlIHZhbHVlCj4gcmVwb3J0ZWQgaGVyZSB2ZXJzdXMgdGhlIGhpZ2ggYW5kL29yIGxv
-dyB2YWx1ZS4gSSBvYnNlcnZlZCB0aGF0IGR1cmluZyB0aGUKPiB0ZXN0IG1lbW9yeSB1c2FnZSBm
-b3IgdGhlIGZpcnN0IHRocmVlIHRlc3RzIG5ldmVyIGRyb3BwZWQgd2hlcmVhcyB3aXRoIHRoZQo+
-IHBhdGNoZXMgZnVsbHkgZW5hYmxlZCB0aGUgVk0gd291bGQgZHJvcCB0byB1c2luZyBvbmx5IGEg
-ZmV3IEdCIG9mIHRoZQo+IGhvc3QncyBtZW1vcnkgd2hlbiBzd2l0Y2hpbmcgZnJvbSBtZW1ob2cg
-dG8gcGFnZSBmYXVsdCB0ZXN0cy4KPiAKPiBBbnkgb2YgdGhlIG92ZXJoZWFkIHZpc2libGUgd2l0
-aCB0aGlzIHBhdGNoIHNldCBlbmFibGVkIHNlZW1zIGR1ZSB0byBwYWdlCj4gZmF1bHRzIGNhdXNl
-ZCBieSBhY2Nlc3NpbmcgdGhlIHJlcG9ydGVkIHBhZ2VzIGFuZCB0aGUgaG9zdCB6ZXJvaW5nIHRo
-ZSBwYWdlCj4gYmVmb3JlIGdpdmluZyBpdCBiYWNrIHRvIHRoZSBndWVzdC4gVGhpcyBvdmVyaGVh
-ZCBpcyBtdWNoIG1vcmUgdmlzaWJsZSB3aGVuCj4gdXNpbmcgVEhQIHRoYW4gd2l0aCBzdGFuZGFy
-ZCA0SyBwYWdlcy4gSW4gYWRkaXRpb24gcGFnZSBzaHVmZmxpbmcgc2VlbWVkIHRvCj4gaW5jcmVh
-c2UgdGhlIGFtb3VudCBvZiBmYXVsdHMgZ2VuZXJhdGVkIGR1ZSB0byBhbiBpbmNyZWFzZSBpbiBt
-ZW1vcnkgY2h1cm4uCj4gVGhlIG92ZXJoZWFkIGlzIHJlZHVjZWQgd2hlbiB1c2luZyBNQURWX0ZS
-RUUgYXMgd2UgY2FuIGF2b2lkIHRoZSBleHRyYQo+IHplcm9pbmcgb2YgdGhlIHBhZ2VzIHdoZW4g
-dGhleSBhcmUgcmVpbnRyb2R1Y2VkIHRvIHRoZSBob3N0LCBhcyBjYW4gYmUgc2Vlbgo+IHdoZW4g
-dGhlIFJGQyBpcyBhcHBsaWVkIHdpdGggc2h1ZmZsaW5nIGVuYWJsZWQuCj4gCj4gVGhlIG92ZXJh
-bGwgZ3Vlc3Qgc2l6ZSBpcyBrZXB0IGZhaXJseSBzbWFsbCB0byBvbmx5IGEgZmV3IEdCIHdoaWxl
-IHRoZSB0ZXN0Cj4gaXMgcnVubmluZy4gSWYgdGhlIGhvc3QgbWVtb3J5IHdlcmUgb3ZlcnN1YnNj
-cmliZWQgdGhpcyBwYXRjaCBzZXQgc2hvdWxkCj4gcmVzdWx0IGluIGEgcGVyZm9ybWFuY2UgaW1w
-cm92ZW1lbnQgYXMgc3dhcHBpbmcgbWVtb3J5IGluIHRoZSBob3N0IGNhbiBiZQo+IGF2b2lkZWQu
-CgoKSSByZWFsbHkgbGlrZSB0aGUgYXBwcm9hY2ggb3ZlcmFsbC4gVm9sdW50YXJpbHkgcHJvcGFn
-YXRpbmcgZnJlZSBtZW1vcnkgCmZyb20gYSBndWVzdCB0byB0aGUgaG9zdCBoYXMgYmVlbiBhIHNv
-cmUgcG9pbnQgZXZlciBzaW5jZSBLVk0gd2FzIAphcm91bmQuIFRoaXMgc29sdXRpb24gbG9va3Mg
-bGlrZSBhIHZlcnkgZWxlZ2FudCB3YXkgdG8gZG8gc28uCgpUaGUgYmlnIHBpZWNlIEknbSBtaXNz
-aW5nIGlzIHRoZSBwYWdlIGNhY2hlLiBMaW51eCB3aWxsIGJ5IGRlZmF1bHQgdHJ5IAp0byBrZWVw
-IHRoZSBmcmVlIGxpc3QgYXMgc21hbGwgYXMgaXQgY2FuIGluIGZhdm9yIG9mIHBhZ2UgY2FjaGUs
-IHNvIG1vc3QgCm9mIHRoZSBiZW5lZml0IG9mIHRoaXMgcGF0Y2ggc2V0IHdpbGwgYmUgdm9pZCBp
-biByZWFsIHdvcmxkIHNjZW5hcmlvcy4KClRyYWRpdGlvbmFsbHksIHRoaXMgd2FzIHNvbHZlZCBi
-eSBjcmVhdGluZyBwcmVzc3VyZSBmcm9tIHRoZSBob3N0IAp0aHJvdWdoIHZpcnRpby1iYWxsb29u
-OiBFeGFjdGx5IHRoZSBwaWVjZSB0aGF0IHRoaXMgcGF0Y2ggc2V0IGdldHMgYXdheSAKd2l0aC4g
-SSBuZXZlciBsaWtlZCAiYmFsbG9vbmluZyIsIGJlY2F1c2UgdGhlIGhvc3QgaGFzIHZlcnkgbGlt
-aXRlZCAKdmlzaWJpbGl0eSBpbnRvIHRoZSBhY3R1YWwgbWVtb3J5IHV0aWxpdHkgb2YgaXRzIGd1
-ZXN0cy4gU28gbGVhdmluZyB0aGUgCmRlY2lzaW9uIG9uIGhvdyBtdWNoIG1lbW9yeSBpcyBhY3R1
-YWxseSBuZWVkZWQgYXQgYSBnaXZlbiBwb2ludCBpbiB0aW1lIApzaG91bGQgaWRlYWxseSBzdGF5
-IHdpdGggdGhlIGd1ZXN0LgoKV2hhdCB3b3VsZCBrZWVwIHVzIGZyb20gYXBwbHlpbmcgdGhlIHBh
-Z2UgaGludGluZyBhcHByb2FjaCB0byBpbmFjdGl2ZSwgCmNsZWFuIHBhZ2UgY2FjaGUgcGFnZXM/
-IFdpdGggd3JpdGViYWNrIGluIHBsYWNlIGFzIHdlbGwsIHdlIHdvdWxkIHNsb3dseSAKcHJvcGFn
-YXRlIHBhZ2VzIGZyb20KCiAgIGRpcnR5IC0+IGNsZWFuIC0+IGNsZWFuLCBpbmFjdGl2ZSAtPiBm
-cmVlIC0+IGhvc3Qgb3duZWQKCndoaWNoIGdpdmVzIGEgZ3Vlc3QgYSBuYXR1cmFsIHBhdGggdG8g
-Z2l2ZSB1cCAibm90IGltcG9ydGFudCIgbWVtb3J5LgoKVGhlIGJpZyBwcm9ibGVtIEkgc2VlIGlz
-IHRoYXQgd2hhdCBJIHJlYWxseSB3YW50IGZyb20gYSB1c2VyJ3MgcG9pbnQgb2YgCnZpZXcgaXMg
-YSB0dW5lYWJsZSB0aGF0IHNheXMgIkF1dG9tYXRpY2FsbHkgZnJlZSBjbGVhbiBwYWdlIGNhY2hl
-IHBhZ2VzIAp0aGF0IHdlcmUgbm90IGFjY2Vzc2VkIGluIHRoZSBsYXN0IFggbWludXRlcyIuIE90
-aGVyd2lzZSB3ZSBtYXkgcnVuIGludG8gCnRoZSByaXNrIG9mIGV2aWN0aW5nIHNvbWUgdGltZXMg
-aW4gdXNlIHBhZ2UgY2FjaGUgcGFnZXMuCgpJIGhhdmUgYSBoYXJkIHRpbWUgZ3Jhc3BpbmcgdGhl
-IG1tIGNvZGUgdG8gdW5kZXJzdGFuZCBob3cgaGFyZCB0aGF0IAp3b3VsZCBiZSB0byBpbXBsZW1l
-bnQgdGhhdCB0aG91Z2ggOikuCgoKQWxleAoKCgpBbWF6b24gRGV2ZWxvcG1lbnQgQ2VudGVyIEdl
-cm1hbnkgR21iSApLcmF1c2Vuc3RyLiAzOAoxMDExNyBCZXJsaW4KR2VzY2hhZWZ0c2Z1ZWhydW5n
-OiBDaHJpc3RpYW4gU2NobGFlZ2VyLCBKb25hdGhhbiBXZWlzcwpFaW5nZXRyYWdlbiBhbSBBbXRz
-Z2VyaWNodCBDaGFybG90dGVuYnVyZyB1bnRlciBIUkIgMTQ5MTczIEIKU2l0ejogQmVybGluClVz
-dC1JRDogREUgMjg5IDIzNyA4NzkKCgo=
+From: Hayes Wang <hayeswang@realtek.com>
+Date: Wed, 22 Jan 2020 16:02:04 +0800
 
+> v3:
+> 1. Fix the typos for patch #5 and #6.
+> 2. Modify the commit message of patch #9.
+> 
+> v2:
+> For patch #2, move declaring the variable "ocp_data".
+> 
+> v1:
+> These patches are used to fix some issues for RTL8153.
+
+Series applied, thank you.
