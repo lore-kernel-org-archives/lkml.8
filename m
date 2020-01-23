@@ -2,81 +2,130 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7250C33CAA
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 22:22:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A664C33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 22:23:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9246521569
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 22:22:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22CC821569
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 22:23:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729263AbgAWWWD (ORCPT
+        id S1729308AbgAWWXl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 17:22:03 -0500
-Received: from mail-il1-f197.google.com ([209.85.166.197]:49757 "EHLO
-        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728655AbgAWWWD (ORCPT
+        Thu, 23 Jan 2020 17:23:41 -0500
+Received: from www62.your-server.de ([213.133.104.62]:45156 "EHLO
+        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728655AbgAWWXl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 17:22:03 -0500
-Received: by mail-il1-f197.google.com with SMTP id p67so19868ill.16
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jan 2020 14:22:03 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=U2ciZII89LyEb1jgPxE5/IJrQKEwwRWzV2RXknpTZh0=;
-        b=s+zvO/Vk6AevJ0woR+fITZL6btQVrZrlL1ugTbQQ1bf25C3wqcR9hnA6w+b+OSYnOs
-         l/TKDN3trj9KxDSjcIvTvLw0P+4e4+5fQerPb1g8v1e2/A1AIbst4cTUz3Pejq/M9TA9
-         I89KPniJ3je/nEMsS7ZDCL74kJGMMmDMd3Dkfy4vQP5JnYb1Gqap7xwsrHs2iyKr+xas
-         KgErYg9oZ/UtaQLL+EBTjiviT8JqU5zuXvt+qqcQajA/z24uvCX/Mzs5uQS8eoisjcBM
-         NZjLtyAJutgO90VuJb/CG9AZnheGo4v5Y6kRMKA8kMSfi3Q7+Q748B5TAasgVE0vOTVE
-         LUwQ==
-X-Gm-Message-State: APjAAAU8EXWMt+C7SdyD7/E4V+Hrim/Rz17oqlV6Bct0lASDAWszD2rU
-        L0aA8mr5pObmXcWoGoMbmN7fuBofchlHMqtpwLQcekxPrUKl
-X-Google-Smtp-Source: APXvYqzaQsx9AEgaVI+glQ1AcIBsAAutP1ZctuK9ZTtYuJ4mdcopjSrfR25SqY6ZJWnqbTQIJlRs2yTGajrbtyPIUwun6yUoBqiI
+        Thu, 23 Jan 2020 17:23:41 -0500
+Received: from sslproxy06.your-server.de ([78.46.172.3])
+        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89_1)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1iuksy-000790-9r; Thu, 23 Jan 2020 23:23:36 +0100
+Received: from [178.197.248.20] (helo=pc-9.home)
+        by sslproxy06.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1iuksx-000EkD-TE; Thu, 23 Jan 2020 23:23:35 +0100
+Subject: Re: [PATCH v2 bpf-next 1/3] bpf: Add bpf_perf_prog_read_branches()
+ helper
+To:     Daniel Xu <dxu@dxuuu.xyz>,
+        John Fastabend <john.fastabend@gmail.com>, bpf@vger.kernel.org,
+        ast@kernel.org, songliubraving@fb.com, yhs@fb.com, andriin@fb.com
+Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com,
+        peterz@infradead.org, mingo@redhat.com, acme@kernel.org
+References: <C03FZ2ZXKIY9.21PQ3FP3MQYU7@dlxu-fedora-R90QNFJV>
+From:   Daniel Borkmann <daniel@iogearbox.net>
+Message-ID: <297f40e7-667b-63ea-c7d7-6d03a636c4c7@iogearbox.net>
+Date:   Thu, 23 Jan 2020 23:23:35 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-X-Received: by 2002:a02:8587:: with SMTP id d7mr59180jai.39.1579818122597;
- Thu, 23 Jan 2020 14:22:02 -0800 (PST)
-Date:   Thu, 23 Jan 2020 14:22:02 -0800
-In-Reply-To: <000000000000da7a79059caf2656@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000001df94059cd612b2@google.com>
-Subject: Re: WARNING in __proc_create (2)
-From:   syzbot <syzbot+b904ba7c947a37b4b291@syzkaller.appspotmail.com>
-To:     a@unstable.cc, b.a.t.m.a.n@lists.open-mesh.org,
-        dan.carpenter@oracle.com, davem@davemloft.net, dhowells@redhat.com,
-        info@drgreenstore.com, linux-afs@lists.infradead.org,
-        linux-kernel@vger.kernel.org, mareklindner@neomailbox.ch,
-        netdev@vger.kernel.org, sw@simonwunderlich.de,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <C03FZ2ZXKIY9.21PQ3FP3MQYU7@dlxu-fedora-R90QNFJV>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Authenticated-Sender: daniel@iogearbox.net
+X-Virus-Scanned: Clear (ClamAV 0.101.4/25704/Thu Jan 23 12:37:43 2020)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has bisected this bug to:
+On 1/23/20 9:09 PM, Daniel Xu wrote:
+> Hi John, thanks for looking.
+> 
+> On Wed Jan 22, 2020 at 9:39 PM, John Fastabend wrote:
+> [...]
+>>> diff --git a/include/uapi/linux/bpf.h b/include/uapi/linux/bpf.h
+>>> index 033d90a2282d..7350c5be6158 100644
+>>> --- a/include/uapi/linux/bpf.h
+>>> +++ b/include/uapi/linux/bpf.h
+>>> @@ -2885,6 +2885,16 @@ union bpf_attr {
+>>>    *		**-EPERM** if no permission to send the *sig*.
+>>>    *
+>>>    *		**-EAGAIN** if bpf program can try again.
+>>> + *
+>>> + * int bpf_perf_prog_read_branches(struct bpf_perf_event_data *ctx, void *buf, u32 buf_size)
+>>> + * 	Description
+>>> + * 		For en eBPF program attached to a perf event, retrieve the
+>>> + * 		branch records (struct perf_branch_entry) associated to *ctx*
+>>> + * 		and store it in	the buffer pointed by *buf* up to size
+>>> + * 		*buf_size* bytes.
+>>
+>> It seems extra bytes in buf will be cleared. The number of bytes
+>> copied is returned so I don't see any reason to clear the extra bytes I
+>> would
+>> just let the BPF program do this if they care. But it should be noted in
+>> the description at least.
+> 
+> In include/linux/bpf.h:
+> 
+>          /* the following constraints used to prototype bpf_memcmp() and other
+>           * functions that access data on eBPF program stack
+>           */
+>          ARG_PTR_TO_UNINIT_MEM,  /* pointer to memory does not need to be initialized,
+>                                   * helper function must fill all bytes or clear
+>                                   * them in error case.
+>                                   */
+> 
+> I figured it would be good to clear out the stack b/c this helper
+> writes data on program stack.
+> 
+> Also bpf_perf_prog_read_value() does something similar (fill zeros on
+> failure).
+> 
+> [...]
+>>> +	to_copy = min_t(u32, br_stack->nr * sizeof(struct perf_branch_entry), size);
+>>> +	to_clear -= to_copy;
+>>> +
+>>> +	memcpy(buf, br_stack->entries, to_copy);
+>>> +	err = to_copy;
+>>> +clear:
+>>> +	memset(buf + to_copy, 0, to_clear);
+>>
+>>
+>> Here, why do this at all? If the user cares they can clear the bytes
+>> directly from the BPF program. I suspect its probably going to be
+>> wasted work in most cases. If its needed for some reason provide
+>> a comment with it.
+> 
+> Same concern as above, right?
 
-commit f4b3526d83c40dd8bf5948b9d7a1b2c340f0dcc8
-Author: David Howells <dhowells@redhat.com>
-Date:   Thu Nov 2 15:27:48 2017 +0000
+Yes, so we've been following this practice for all the BPF helpers no matter
+which program type. Though for tracing it may be up to debate whether it makes
+still sense given there's nothing to be leaked here since you can read this data
+anyway via probe read if you'd wanted to. So we might as well get rid of the
+clearing for all tracing helpers.
 
-    afs: Connect up the CB.ProbeUuid
+Different question related to your set. It looks like br_stack is only available
+on x86, is that correct? For other archs this will always bail out on !br_stack
+test. Perhaps we should document this fact so users are not surprised why their
+prog using this helper is not working on !x86. Wdyt?
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1627a721e00000
-start commit:   d96d875e Merge tag 'fixes_for_v5.5-rc8' of git://git.kerne..
-git tree:       upstream
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=1527a721e00000
-console output: https://syzkaller.appspot.com/x/log.txt?x=1127a721e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=83c00afca9cf5153
-dashboard link: https://syzkaller.appspot.com/bug?extid=b904ba7c947a37b4b291
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12c96185e00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=14f859c9e00000
+Thanks,
+Daniel
 
-Reported-by: syzbot+b904ba7c947a37b4b291@syzkaller.appspotmail.com
-Fixes: f4b3526d83c4 ("afs: Connect up the CB.ProbeUuid")
-
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
