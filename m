@@ -2,164 +2,429 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87C2BC3F68F
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 19:08:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DEC6C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 19:08:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6330C22522
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 19:08:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D38CA2467B
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 19:08:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=hammerspace.com header.i=@hammerspace.com header.b="AAL0zJBT"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LzER0gtM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729074AbgAWTIZ (ORCPT
+        id S1729106AbgAWTIk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 14:08:25 -0500
-Received: from mail-dm6nam11on2137.outbound.protection.outlook.com ([40.107.223.137]:17153
-        "EHLO NAM11-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728655AbgAWTIZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 14:08:25 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=RaRIJ+Ej1dSYnfTGkIaRMks030PA/A/XE5f5MMj0yvLtaylSKhSJeBFRDXMG0Ylq3T2K042RoiYw5HmHhQnR+MHfc/td8klZ1WjDwxRXORS0zSVBm/ScSdr4dgLNg3pDgZDWqHiLgJ2u43UYs+ga2gzRzlI7+OJvRnyJ04egJ9Tv3sQxuRLkDkYg5MGW0qOEbbso+iF6H82MNkD/qDRXuvl9mfX6ZEdz2BbmLfrVxPoE2uzQ6HApTGSiHtiejV0hLaXatTaAR832hk8KFySSMEww1mK2/fehEyYDqhWhV3dZRSEiXRKUa2FWzVgX92Jab8yBN6Paq1WyxxHNsGNAhg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=TKCGyV/ofvIy5vGb3dPEn4Gh5KeFjyfa1cFxNEqyo+o=;
- b=nUictxW+m/JnRcpBYul0hTUijBjvOCYCq7I5gyScmB4dRcBACQ1Ym14B+UnnxWP+oLz2Nf/YBGrhGyGqn2q4SpCvl/u8zxfcHrhyXbEcV/e8lCqCC84h1q7/JCvr69CnroNm/JVHEwRhY47manuxVNdsw47RYuVeELcBlE1L1uOcSPbgD2FiDk82zIYx+0kX9qo7AdGEILsiAKq1BZYQlXFrHrmHCsdCIM/rbsVISIGNdRapccCSmLFi5VbJcDrzXJ9+AqloPLKB/Amgvzk1AUp4p1JvarWYEFKt4uN18EUoFV1NicoaB4c68Ae1aDHvnCWuLndjnZkLD9PF61pYlw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=hammerspace.com; dmarc=pass action=none
- header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=TKCGyV/ofvIy5vGb3dPEn4Gh5KeFjyfa1cFxNEqyo+o=;
- b=AAL0zJBTKEYTWAyz7b7gHXKWVnefh2U5TgEkNFFYKvYuNUThGHTB5C0dXgj+4c7hG5argwmT5mMRmwp8dskxXKEiFQvnWtcce9LrgxuiKdrNZSX85FDCMHmx0YzAAWj4w4/D84GJkznIuCmUFxAfNbaykjhQUWlsXDw2bLoVFVU=
-Received: from DM5PR1301MB2108.namprd13.prod.outlook.com (10.174.186.34) by
- DM5PR1301MB2073.namprd13.prod.outlook.com (10.174.186.38) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2665.17; Thu, 23 Jan 2020 19:08:21 +0000
-Received: from DM5PR1301MB2108.namprd13.prod.outlook.com
- ([fe80::9449:ded8:d7b:a344]) by DM5PR1301MB2108.namprd13.prod.outlook.com
- ([fe80::9449:ded8:d7b:a344%3]) with mapi id 15.20.2665.017; Thu, 23 Jan 2020
- 19:08:21 +0000
-From:   Trond Myklebust <trondmy@hammerspace.com>
-To:     "rmilkowski@gmail.com" <rmilkowski@gmail.com>,
-        "Anna.Schumaker@netapp.com" <Anna.Schumaker@netapp.com>,
-        "chuck.lever@oracle.com" <chuck.lever@oracle.com>
-CC:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3] NFSv4.0: nfs4_do_fsinfo() should not do implicit lease
- renewals
-Thread-Topic: [PATCH v3] NFSv4.0: nfs4_do_fsinfo() should not do implicit
- lease renewals
-Thread-Index: AdW/I2auAYB5hyQWQDmn+e9BiY7hDAAA4KMABCT0qAAAZzrDgAAyNGcA
-Date:   Thu, 23 Jan 2020 19:08:20 +0000
-Message-ID: <a62e45ba968fe845fa757174efc0cab93c490d54.camel@hammerspace.com>
-References: <025801d5bf24$aa242100$fe6c6300$@gmail.com>
-         <D82A1590-FAA3-47C5-B198-937ED88EF71C@oracle.com>
-         <084f01d5cfba$bc5c4d10$3514e730$@gmail.com>
-         <49e7b99bd1451a0dbb301915f655c73b3d9354df.camel@netapp.com>
-In-Reply-To: <49e7b99bd1451a0dbb301915f655c73b3d9354df.camel@netapp.com>
-Accept-Language: en-US, en-GB
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=trondmy@hammerspace.com; 
-x-originating-ip: [63.235.104.78]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 391db58c-3952-4093-f57d-08d7a0379cd3
-x-ms-traffictypediagnostic: DM5PR1301MB2073:
-x-microsoft-antispam-prvs: <DM5PR1301MB2073E9AE5226081313173D74B80F0@DM5PR1301MB2073.namprd13.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 029174C036
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(396003)(39830400003)(346002)(376002)(366004)(199004)(189003)(316002)(186003)(53546011)(8936002)(6486002)(71200400001)(6506007)(6512007)(478600001)(8676002)(81156014)(81166006)(26005)(66556008)(66476007)(64756008)(5660300002)(66446008)(66946007)(86362001)(4326008)(110136005)(36756003)(2616005)(76116006)(91956017)(2906002)(54906003);DIR:OUT;SFP:1102;SCL:1;SRVR:DM5PR1301MB2073;H:DM5PR1301MB2108.namprd13.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: hammerspace.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: xmPgeVC5sxihdgvDS78wmiBc039ouE60YVZcyCfsfTAHsstX7AUOn107QnghZY1GTrOR5G+5iWF7kD0Ks0yXKiIqid+5AParPMZblEJEa/F2OmJuvwoPr8gyHbdyFpREFeZreDhGzEKhuQ8hKL6xEXsH1vsednKOydMZ4d+BYSOdoqoawJThUA6eNHR0Y3XChd8AmmbtPogSQaE3MYCI4nDs24zUABXHVF6Th+pD/by76GoZvsigXZuwdqYMRk7BnDq8bcbF9DZsh2jXGCo8g1JLsK9Lr+RoA3FN25FNOMnY+r78MxtrvjBAYj4yxAi4ED/P5c2MPqKB2JPZgKxqsep67JcF5Aw8eFcN2Suvhcg1e1iIMv/DEeQ2dFC58Z1ZV1Pjcl5u/rauytHZX8ML0pyNkSMHw5GuSeu912t6Gq/Bnxzh4jUCjtIEPRD+QATG
-x-ms-exchange-antispam-messagedata: q0FK2l6sMBZeY6yRaDt0a+VyGrHQ1yz7q/lsWyfIaFKomhc2vkIp3IrQbGTDRhK0adocaC5vyzop1y3NCPaQezxsMnkDpkNvCXtiag/qpuSih4ziKHo/Ms+1ZfRaRDRKJUWxj9N3369m5E0o0Z4s9A==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <F91F7412D11D9D498D91E4ECE709469C@namprd13.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Thu, 23 Jan 2020 14:08:40 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:36363 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728655AbgAWTIj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jan 2020 14:08:39 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579806517;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=yQSbP7xL7O+hyZSRGOOyumI6FFVUEaNmSAjDFUIBoLk=;
+        b=LzER0gtMogmliOppnfIfSCfoyG+JM0mM+zpBbkAzR7j16BmtrzRwcBKookdPg/OfJIrpxV
+        NkA3m9fMN0cb9ltud5AlWSsEeqzztvOPMMTKelsj0NLZ3qAXmMuTzxsrStIzaPAn+qY3BC
+        AvKNWCgKCF2CeBdKXccVbBpsWbSUtJM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-440-d9G3W9PfNam5fN9VaxgD3g-1; Thu, 23 Jan 2020 14:08:32 -0500
+X-MC-Unique: d9G3W9PfNam5fN9VaxgD3g-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id EFE38DB61;
+        Thu, 23 Jan 2020 19:08:29 +0000 (UTC)
+Received: from llong.remote.csb (dhcp-17-59.bos.redhat.com [10.18.17.59])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 144A660BF3;
+        Thu, 23 Jan 2020 19:08:26 +0000 (UTC)
+Subject: Re: [PATCH v9 0/5] Add NUMA-awareness to qspinlock
+From:   Waiman Long <longman@redhat.com>
+To:     Will Deacon <will@kernel.org>
+Cc:     Lihao Liang <lihaoliang@google.com>,
+        Alex Kogan <alex.kogan@oracle.com>, linux@armlinux.org.uk,
+        peterz@infradead.org, mingo@redhat.com, will.deacon@arm.com,
+        arnd@arndb.de, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        tglx@linutronix.de, bp@alien8.de, hpa@zytor.com, x86@kernel.org,
+        guohanjun@huawei.com, jglauber@marvell.com, dave.dice@oracle.com,
+        steven.sistare@oracle.com, daniel.m.jordan@oracle.com
+References: <20200115035920.54451-1-alex.kogan@oracle.com>
+ <CAC4j=Y8rCeTX9oKKbh+dCdTP8Ud4hW1ybu+iE7t_nxMSYBOR5w@mail.gmail.com>
+ <4e15fa1d-9540-3274-502a-4195a0d46f63@redhat.com>
+ <20200123113547.GD18991@willie-the-truck>
+ <54ba237b-e1db-c14c-7cff-b0be41731ba5@redhat.com>
+Organization: Red Hat
+Message-ID: <9f8e040a-0684-41c9-0c2e-65d2a1e14c22@redhat.com>
+Date:   Thu, 23 Jan 2020 14:08:26 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-X-OriginatorOrg: hammerspace.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 391db58c-3952-4093-f57d-08d7a0379cd3
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Jan 2020 19:08:20.9327
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 2o/MKt9L1QFCu4OKEZtZpMa0Cx3c/++k+bQGoCwg/Y3J08UAbGtwwOaqT8LHFwdmehoaBGpUokiXhm1pMbjpsg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR1301MB2073
+In-Reply-To: <54ba237b-e1db-c14c-7cff-b0be41731ba5@redhat.com>
+Content-Type: multipart/mixed;
+ boundary="------------C3B3D0C2A24A32A734C19393"
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gV2VkLCAyMDIwLTAxLTIyIGF0IDE5OjEwICswMDAwLCBTY2h1bWFrZXIsIEFubmEgd3JvdGU6
-DQo+IEhpIFJvYmVydCwNCj4gDQo+IE9uIE1vbiwgMjAyMC0wMS0yMCBhdCAxNzo1NSArMDAwMCwg
-Um9iZXJ0IE1pbGtvd3NraSB3cm90ZToNCj4gPiA+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0t
-DQo+ID4gPiBGcm9tOiBDaHVjayBMZXZlciA8Y2h1Y2subGV2ZXJAb3JhY2xlLmNvbT4NCj4gPiA+
-IFNlbnQ6IDMwIERlY2VtYmVyIDIwMTkgMTU6MzcNCj4gPiA+IFRvOiBSb2JlcnQgTWlsa293c2tp
-IDxybWlsa293c2tpQGdtYWlsLmNvbT4NCj4gPiA+IENjOiBMaW51eCBORlMgTWFpbGluZyBMaXN0
-IDxsaW51eC1uZnNAdmdlci5rZXJuZWwub3JnPjsgVHJvbmQNCj4gPiA+IE15a2xlYnVzdA0KPiA+
-ID4gPHRyb25kLm15a2xlYnVzdEBoYW1tZXJzcGFjZS5jb20+OyBBbm5hIFNjaHVtYWtlcg0KPiA+
-ID4gPGFubmEuc2NodW1ha2VyQG5ldGFwcC5jb20+OyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwu
-b3JnDQo+ID4gPiBTdWJqZWN0OiBSZTogW1BBVENIIHYzXSBORlN2NC4wOiBuZnM0X2RvX2ZzaW5m
-bygpIHNob3VsZCBub3QgZG8NCj4gPiA+IGltcGxpY2l0DQo+ID4gPiBsZWFzZSByZW5ld2Fscw0K
-PiA+ID4gDQo+ID4gPiANCj4gPiA+IA0KPiA+ID4gPiBPbiBEZWMgMzAsIDIwMTksIGF0IDEwOjIw
-IEFNLCBSb2JlcnQgTWlsa293c2tpIDwNCj4gPiA+ID4gcm1pbGtvd3NraUBnbWFpbC5jb20+DQo+
-ID4gPiB3cm90ZToNCj4gPiA+ID4gRnJvbTogUm9iZXJ0IE1pbGtvd3NraSA8cm1pbGtvd3NraUBn
-bWFpbC5jb20+DQo+ID4gPiA+IA0KPiA+ID4gPiBDdXJyZW50bHksIGVhY2ggdGltZSBuZnM0X2Rv
-X2ZzaW5mbygpIGlzIGNhbGxlZCBpdCB3aWxsIGRvIGFuDQo+ID4gPiA+IGltcGxpY2l0DQo+ID4g
-PiA+IE5GUzQgbGVhc2UgcmVuZXdhbCwgd2hpY2ggaXMgbm90IGNvbXBsaWFudCB3aXRoIHRoZSBO
-RlM0DQo+ID4gPiBzcGVjaWZpY2F0aW9uLg0KPiA+ID4gPiBUaGlzIGNhbiByZXN1bHQgaW4gYSBs
-ZWFzZSBiZWluZyBleHBpcmVkIGJ5IGFuIE5GUyBzZXJ2ZXIuDQo+ID4gPiA+IA0KPiA+ID4gPiBD
-b21taXQgODNjYTdmNWFiMzFmICgiTkZTOiBBdm9pZCBQVVRST09URkggd2hlbiBtYW5hZ2luZw0K
-PiA+ID4gPiBsZWFzZXMiKQ0KPiA+ID4gPiBpbnRyb2R1Y2VkIGltcGxpY2l0IGNsaWVudCBsZWFz
-ZSByZW5ld2FsIGluIG5mczRfZG9fZnNpbmZvKCksDQo+ID4gPiA+IHdoaWNoDQo+ID4gPiA+IGNh
-biByZXN1bHQgaW4gdGhlIE5GU3Y0LjAgbGVhc2UgdG8gZXhwaXJlIG9uIGEgc2VydmVyIHNpZGUs
-IGFuZA0KPiA+ID4gPiBzZXJ2ZXJzIHJldHVybmluZyBORlM0RVJSX0VYUElSRUQgb3IgTkZTNEVS
-Ul9TVEFMRV9DTElFTlRJRC4NCj4gPiA+ID4gDQo+ID4gPiA+IFRoaXMgY2FuIGVhc2lseSBiZSBy
-ZXByb2R1Y2VkIGJ5IGZyZXF1ZW50bHkgdW5tb3VudGluZyBhIHN1Yi0NCj4gPiA+ID4gbW91bnQs
-DQo+ID4gPiA+IHRoZW4gc3RhdCdpbmcgaXQgdG8gZ2V0IGl0IG1vdW50ZWQgYWdhaW4sIHdoaWNo
-IHdpbGwgZGVsYXkgb3INCj4gPiA+ID4gZXZlbg0KPiA+ID4gPiBjb21wbGV0ZWx5IHByZXZlbnQg
-Y2xpZW50IGZyb20gc2VuZGluZyBSRU5FVyBvcGVyYXRpb25zIGlmIG5vDQo+ID4gPiA+IG90aGVy
-DQo+ID4gPiA+IE5GUyBvcGVyYXRpb25zIGFyZSBpc3N1ZWQuIEV2ZW50dWFsbHkgbmZzIHNlcnZl
-ciB3aWxsIGV4cGlyZQ0KPiA+ID4gPiBjbGllbnQncw0KPiA+ID4gPiBsZWFzZSBhbmQgcmV0dXJu
-IGFuIGVycm9yIG9uIGZpbGUgYWNjZXNzIG9yIG5leHQgUkVORVcuDQo+ID4gPiA+IA0KPiA+ID4g
-PiBUaGlzIGNhbiBhbHNvIGhhcHBlbiB3aGVuIGEgc3ViLW1vdW50IGlzIGF1dG9tYXRpY2FsbHkN
-Cj4gPiA+ID4gdW5tb3VudGVkIGR1ZQ0KPiA+ID4gPiB0byBpbmFjdGl2aXR5IChhZnRlciBuZnNf
-bW91bnRwb2ludF9leHBpcnlfdGltZW91dCksIHRoZW4gaXQgaXMNCj4gPiA+ID4gbW91bnRlZCBh
-Z2FpbiB2aWEgc3RhdCgpLiBUaGlzIGNhbiByZXN1bHQgaW4gYSBzaG9ydCB3aW5kb3cNCj4gPiA+
-ID4gZHVyaW5nDQo+ID4gPiA+IHdoaWNoIGNsaWVudCdzIGxlYXNlIHdpbGwgZXhwaXJlIG9uIGEg
-c2VydmVyIGJ1dCBub3Qgb24gYQ0KPiA+ID4gPiBjbGllbnQuDQo+ID4gPiA+IFRoaXMgc3BlY2lm
-aWMgY2FzZSB3YXMgb2JzZXJ2ZWQgb24gcHJvZHVjdGlvbiBzeXN0ZW1zLg0KPiA+ID4gPiANCj4g
-PiA+ID4gVGhpcyBwYXRjaCBtYWtlcyBhbiBleHBsaWNpdCBsZWFzZSByZW5ld2FsIGluc3RlYWQg
-b2YgYW4NCj4gPiA+ID4gaW1wbGljaXQgb25lLA0KPiA+ID4gPiBieSBhZGRpbmcgUkVORVcgdG8g
-YSBjb21wb3VuZCBvcGVyYXRpb24gaXNzdWVkIGJ5DQo+ID4gPiA+IG5mczRfZG9fZnNpbmZvKCks
-DQo+ID4gPiA+IHNpbWlsYXJseSB0byBORlN2NC4xIHdoaWNoIGFkZHMgU0VRVUVOQ0Ugb3BlcmF0
-aW9uLg0KPiA+ID4gPiANCj4gPiA+ID4gRml4ZXM6IDgzY2E3ZjVhYjMxZiAoIk5GUzogQXZvaWQg
-UFVUUk9PVEZIIHdoZW4gbWFuYWdpbmcNCj4gPiA+ID4gbGVhc2VzIikNCj4gPiA+ID4gU2lnbmVk
-LW9mZi1ieTogUm9iZXJ0IE1pbGtvd3NraSA8cm1pbGtvd3NraUBnbWFpbC5jb20+DQo+ID4gPiAN
-Cj4gPiA+IFJldmlld2VkLWJ5OiBDaHVjayBMZXZlciA8Y2h1Y2subGV2ZXJAb3JhY2xlLmNvbT4N
-Cj4gPiA+IA0KPiA+ID4gDQo+ID4gDQo+ID4gSG93IGRvIHdlIHByb2dyZXNzIGl0IGZ1cnRoZXI/
-DQo+IA0KPiBUaGFua3MgZm9yIGZvbGxvd2luZyB1cCEgSSBoYXZlIHRoZSBwYXRjaCBpbmNsdWRl
-ZCBpbiBteSBsaW51eC1uZXh0DQo+IGJyYW5jaCBmb3INCj4gdGhlIG5leHQgbWVyZ2Ugd2luZG93
-Lg0KDQpOQUNLLiBUaGlzIGlzIHRoZSB3cm9uZyB3YXkgdG8gc29sdmUgdGhlIHByb2JsZW0uIExl
-YXNlIHJlbmV3YWwgaW4NCk5GU3Y0IGRvZXMgbm90IG5lZWQgdG8gYmUgdGllZCB0byBmc2luZm8u
-IEl0IGNyZWF0ZXMgYW4gdW5uZWNlc3NhcnkNCmV4dHJhIGVycm9yIGNvbmRpdGlvbiB0aGF0IGhh
-cyBhYnNvbHV0ZWx5IG5vdGhpbmcgdG8gZG8gd2l0aCB0aGUNCmZ1bmN0aW9uYWxpdHkgb2YgcmV0
-cmlldmluZyBwZXItZmlsZXN5c3RlbSBhdHRyaWJ1dGVzLg0KDQpBbGwgdGhhdCBuZWVkcyB0byBi
-ZSBkb25lIGhlcmUgaXMgdG8gbW92ZSB0aGUgc2V0dGluZyBvZiBjbHAtDQo+Y2xfbGFzdF9yZW5l
-d2FsIF9vdXRfIG9mIG5mczRfc2V0X2xlYXNlX3BlcmlvZCgpLCBhbmQganVzdCBoYXZlDQpuZnM0
-X3Byb2Nfc2V0Y2xpZW50aWRfY29uZmlybSgpIGFuZCBuZnM0X3VwZGF0ZV9zZXNzaW9uKCkgY2Fs
-bA0KZG9fcmVuZXdfbGVhc2UoKS4NCg0KLS0gDQpUcm9uZCBNeWtsZWJ1c3QNCkxpbnV4IE5GUyBj
-bGllbnQgbWFpbnRhaW5lciwgSGFtbWVyc3BhY2UNCnRyb25kLm15a2xlYnVzdEBoYW1tZXJzcGFj
-ZS5jb20NCg0KDQo=
+This is a multi-part message in MIME format.
+--------------C3B3D0C2A24A32A734C19393
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+
+On 1/23/20 10:25 AM, Waiman Long wrote:
+> On 1/23/20 6:35 AM, Will Deacon wrote:
+>> Hi folks,
+>>
+>> (I think Lihao is travelling at the moment, so he may be delayed in his
+>> replies)
+>>
+>> On Wed, Jan 22, 2020 at 12:24:58PM -0500, Waiman Long wrote:
+>>> On 1/22/20 6:45 AM, Lihao Liang wrote:
+>>>> On Wed, Jan 22, 2020 at 10:28 AM Alex Kogan <alex.kogan@oracle.com> wrote:
+>>>>> Summary
+>>>>> -------
+>>>>>
+>>>>> Lock throughput can be increased by handing a lock to a waiter on the
+>>>>> same NUMA node as the lock holder, provided care is taken to avoid
+>>>>> starvation of waiters on other NUMA nodes. This patch introduces CNA
+>>>>> (compact NUMA-aware lock) as the slow path for qspinlock. It is
+>>>>> enabled through a configuration option (NUMA_AWARE_SPINLOCKS).
+>>>>>
+>>>> Thanks for your patches. The experimental results look promising!
+>>>>
+>>>> I understand that the new CNA qspinlock uses randomization to achieve
+>>>> long-term fairness, and provides the numa_spinlock_threshold parameter
+>>>> for users to tune. As Linux runs extremely diverse workloads, it is not
+>>>> clear how randomization affects its fairness, and how users with
+>>>> different requirements are supposed to tune this parameter.
+>>>>
+>>>> To this end, Will and I consider it beneficial to be able to answer the
+>>>> following question:
+>>>>
+>>>> With different values of numa_spinlock_threshold and
+>>>> SHUFFLE_REDUCTION_PROB_ARG, how long do threads running on different
+>>>> sockets have to wait to acquire the lock? This is particularly relevant
+>>>> in high contention situations when new threads keep arriving on the same
+>>>> socket as the lock holder.
+>>>>
+>>>> In this email, I try to provide some formal analysis to address this
+>>>> question. Let's assume the probability for the lock to stay on the
+>>>> same socket is *at least* p, which corresponds to the probability for
+>>>> the function probably(unsigned int num_bits) in the patch to return *false*,
+>>>> where SHUFFLE_REDUCTION_PROB_ARG is passed as the value of num_bits to the
+>>>> function.
+>>> That is not strictly true from my understanding of the code. The
+>>> probably() function does not come into play if a secondary queue is
+>>> present. Also calling cna_scan_main_queue() doesn't guarantee that a
+>>> waiter in the same node can be found. So the simple mathematical
+>>> analysis isn't that applicable in this case. One will have to do an
+>>> actual simulation to find out what the actual behavior will be.
+>> It's certainly true that the analysis is based on the worst-case scenario,
+>> but I think it's still worth considering. For example, the secondary queue
+>> does not exist initially so it seems a bit odd that we only instantiate it
+>> with < 1% probability.
+>>
+>> That said, my real concern with any of this is that it makes formal
+>> modelling and analysis of the qspinlock considerably more challenging. I
+>> would /really/ like to see an update to the TLA+ model we have of the
+>> current implementation [1] and preferably also the userspace version I
+>> hacked together [2] so that we can continue to test and validate changes
+>> to the code outside of the usual kernel stress-testing.
+> I do agree that the current CNA code is hard to model. The CNA lock
+> behaves like a regular qspinlock in many cases. If the lock becomes
+> fairly contended with waiters from different nodes, it will
+> opportunistically switch to CNA mode where preference is given to
+> waiters in the same node.
+
+BTW, I added the attached draft lock_event patch on top of the v9 CNA
+patch series to observe the behavior of the CNA lock. Using a 2-socket
+96-thread x86-64 server, the lock event output after boot up was:
+
+cna_intra_max=1942
+cna_mainscan_hit=134
+cna_merge_queue=73
+cna_prescan_hit=16662
+cna_prescan_miss=268
+cna_splice_new=352
+cna_splice_old=2415
+lock_pending=130090
+lock_slowpath=191868
+lock_use_node2=135
+
+After resetting the counts and running a 96-thread lock stress test for
+10s, I got
+
+cna_intra_max=65536
+cna_mainscan_hit=46
+cna_merge_queue=661
+cna_prescan_hit=42486841
+cna_prescan_miss=68
+cna_splice_new=676
+cna_splice_old=402
+lock_pending=11012
+lock_slowpath=44332335
+lock_use_node2=57203
+
+So the cna_intra_max does go to the maximum of 64k.
+
+Cheers,
+Longman
+
+
+--------------C3B3D0C2A24A32A734C19393
+Content-Type: text/x-patch;
+ name="0006-locking-qspinlock-Enable-lock-events-tracking-for-CN.patch"
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+ filename*0="0006-locking-qspinlock-Enable-lock-events-tracking-for-CN.pa";
+ filename*1="tch"
+
+From aa090c6f0a07d48dc4dcb22087cf4c17a25686d6 Mon Sep 17 00:00:00 2001
+From: Waiman Long <longman@redhat.com>
+Date: Thu, 23 Jan 2020 13:53:12 -0500
+Subject: [PATCH 6/6] locking/qspinlock: Enable lock events tracking for CNA
+ qspinlock code
+
+Add some lock events for tracking the behavior of the CNA qspinlock
+code. A new lockevent_max() function is added to find out the maximum
+value that CNA intra_count can reach.
+
+Signed-off-by: Waiman Long <longman@redhat.com>
+---
+ kernel/locking/lock_events.c      | 23 +++++++++++++++++++----
+ kernel/locking/lock_events.h      | 11 +++++++++++
+ kernel/locking/lock_events_list.h | 13 +++++++++++++
+ kernel/locking/qspinlock_cna.h    | 21 ++++++++++++++++-----
+ kernel/locking/qspinlock_stat.h   | 23 ++++++++++++++++++++++-
+ 5 files changed, 81 insertions(+), 10 deletions(-)
+
+diff --git a/kernel/locking/lock_events.c b/kernel/locking/lock_events.c
+index fa2c2f951c6b..0237cbbc94a2 100644
+--- a/kernel/locking/lock_events.c
++++ b/kernel/locking/lock_events.c
+@@ -120,14 +120,29 @@ static const struct file_operations fops_lockevent = {
+ 
+ static bool __init skip_lockevent(const char *name)
+ {
+-	static int pv_on __initdata = -1;
++	static enum {
++		LOCK_UNKNOWN,
++		LOCK_NATIVE,
++		LOCK_PV,
++		LOCK_CNA,
++	} state __initdata = LOCK_UNKNOWN;
++
++	if (state == LOCK_UNKNOWN) {
++		if (pv_ops.lock.queued_spin_lock_slowpath ==
++		    native_queued_spin_lock_slowpath)
++			state = LOCK_NATIVE;
++		else if (pv_ops.lock.queued_spin_lock_slowpath ==
++			 pv_queued_spin_lock_slowpath)
++			state = LOCK_PV;
++		else
++			state = LOCK_CNA;
++	}
+ 
+-	if (pv_on < 0)
+-		pv_on = !pv_is_native_spin_unlock();
+ 	/*
+ 	 * Skip PV qspinlock events on bare metal.
+ 	 */
+-	if (!pv_on && !memcmp(name, "pv_", 3))
++	if (((state != LOCK_PV)  && !memcmp(name, "pv_", 3)) ||
++	    ((state != LOCK_CNA) && !memcmp(name, "cna_", 4)))
+ 		return true;
+ 	return false;
+ }
+diff --git a/kernel/locking/lock_events.h b/kernel/locking/lock_events.h
+index 8c7e7d25f09c..d8528725324c 100644
+--- a/kernel/locking/lock_events.h
++++ b/kernel/locking/lock_events.h
+@@ -50,11 +50,22 @@ static inline void __lockevent_add(enum lock_events event, int inc)
+ 
+ #define lockevent_add(ev, c)	__lockevent_add(LOCKEVENT_ ##ev, c)
+ 
++static inline void __lockevent_max(enum lock_events event, unsigned long val)
++{
++	unsigned long max = raw_cpu_read(lockevents[event]);
++
++	if (val > max)
++		raw_cpu_write(lockevents[event], val);
++}
++
++#define lockevent_max(ev, v)	__lockevent_max(LOCKEVENT_ ##ev, v)
++
+ #else  /* CONFIG_LOCK_EVENT_COUNTS */
+ 
+ #define lockevent_inc(ev)
+ #define lockevent_add(ev, c)
+ #define lockevent_cond_inc(ev, c)
++#define lockevent_max(ev, v)
+ 
+ #endif /* CONFIG_LOCK_EVENT_COUNTS */
+ #endif /* __LOCKING_LOCK_EVENTS_H */
+diff --git a/kernel/locking/lock_events_list.h b/kernel/locking/lock_events_list.h
+index 239039d0ce21..df1042bb19e9 100644
+--- a/kernel/locking/lock_events_list.h
++++ b/kernel/locking/lock_events_list.h
+@@ -35,6 +35,19 @@ LOCK_EVENT(pv_wait_head)	/* # of vCPU wait's at the queue head	   */
+ LOCK_EVENT(pv_wait_node)	/* # of vCPU wait's at non-head queue node */
+ #endif /* CONFIG_PARAVIRT_SPINLOCKS */
+ 
++#ifdef CONFIG_NUMA_AWARE_SPINLOCKS
++/*
++ * Locking events for CNA qspinlock
++ */
++LOCK_EVENT(cna_prescan_hit)
++LOCK_EVENT(cna_prescan_miss)
++LOCK_EVENT(cna_mainscan_hit)
++LOCK_EVENT(cna_merge_queue)	/* # of queue merges (secondary -> primary) */
++LOCK_EVENT(cna_splice_new)	/* # of splices to new secondary queue	    */
++LOCK_EVENT(cna_splice_old)	/* # of splices to existing secondary queue */
++LOCK_EVENT(cna_intra_max)	/* Maximum intra_count value		    */
++#endif
++
+ /*
+  * Locking events for qspinlock
+  *
+diff --git a/kernel/locking/qspinlock_cna.h b/kernel/locking/qspinlock_cna.h
+index f0b0c15dcf9d..2c410d67e094 100644
+--- a/kernel/locking/qspinlock_cna.h
++++ b/kernel/locking/qspinlock_cna.h
+@@ -193,6 +193,7 @@ static void cna_splice_tail(struct mcs_spinlock *node,
+ 	if (node->locked <= 1) { /* if secondary queue is empty */
+ 		/* create secondary queue */
+ 		last->next = first;
++		lockevent_inc(cna_splice_new);
+ 	} else {
+ 		/* add to the tail of the secondary queue */
+ 		struct mcs_spinlock *tail_2nd = decode_tail(node->locked);
+@@ -200,6 +201,7 @@ static void cna_splice_tail(struct mcs_spinlock *node,
+ 
+ 		tail_2nd->next = first;
+ 		last->next = head_2nd;
++		lockevent_inc(cna_splice_old);
+ 	}
+ 
+ 	node->locked = ((struct cna_node *)last)->encoded_tail;
+@@ -285,14 +287,15 @@ __always_inline u32 cna_pre_scan(struct qspinlock *lock,
+ 			cn->intra_count == intra_node_handoff_threshold ?
+ 				FLUSH_SECONDARY_QUEUE :
+ 				cna_scan_main_queue(node, node);
+-
++	lockevent_cond_inc(cna_prescan_hit,
++			   cn->pre_scan_result == LOCAL_WAITER_FOUND);
+ 	return 0;
+ }
+ 
+ static inline void cna_pass_lock(struct mcs_spinlock *node,
+ 				 struct mcs_spinlock *next)
+ {
+-	struct cna_node *cn = (struct cna_node *)node;
++	struct cna_node *cn = (struct cna_node *)node, *next_cn;
+ 	struct mcs_spinlock *next_holder = next, *tail_2nd;
+ 	u32 val = 1;
+ 
+@@ -311,20 +314,27 @@ static inline void cna_pass_lock(struct mcs_spinlock *node,
+ 	 * pre-scan, and if so, try to find it in post-scan starting from the
+ 	 * node where pre-scan stopped (stored in @pre_scan_result)
+ 	 */
+-	if (scan >= MIN_ENCODED_TAIL)
++	if (scan >= MIN_ENCODED_TAIL) {
+ 		scan = cna_scan_main_queue(node, decode_tail(scan));
++		lockevent_inc(cna_prescan_miss);
++		lockevent_cond_inc(cna_mainscan_hit,
++				   scan == LOCAL_WAITER_FOUND);
++	}
+ 
+ 	if (scan == LOCAL_WAITER_FOUND) {
+ 		next_holder = node->next;
++		next_cn = (struct cna_node *)next_holder;
++
+ 		/*
+ 		 * we unlock successor by passing a non-zero value,
+ 		 * so set @val to 1 iff @locked is 0, which will happen
+ 		 * if we acquired the MCS lock when its queue was empty
+ 		 */
+ 		val = node->locked ? node->locked : 1;
++
+ 		/* inc @intra_count if the secondary queue is not empty */
+-		((struct cna_node *)next_holder)->intra_count =
+-			cn->intra_count + (node->locked > 1);
++		next_cn->intra_count = cn->intra_count + (node->locked > 1);
++		lockevent_max(cna_intra_max, next_cn->intra_count);
+ 	} else if (node->locked > 1) {	  /* if secondary queue is not empty */
+ 		/* next holder will be the first node in the secondary queue */
+ 		tail_2nd = decode_tail(node->locked);
+@@ -332,6 +342,7 @@ static inline void cna_pass_lock(struct mcs_spinlock *node,
+ 		next_holder = tail_2nd->next;
+ 		/* splice the secondary queue onto the head of the main queue */
+ 		tail_2nd->next = next;
++		lockevent_inc(cna_merge_queue);
+ 	}
+ 
+ pass_lock:
+diff --git a/kernel/locking/qspinlock_stat.h b/kernel/locking/qspinlock_stat.h
+index e625bb410aa2..530f86477e0f 100644
+--- a/kernel/locking/qspinlock_stat.h
++++ b/kernel/locking/qspinlock_stat.h
+@@ -22,6 +22,18 @@
+  */
+ static DEFINE_PER_CPU(u64, pv_kick_time);
+ 
++#ifdef CONFIG_NUMA_AWARE_SPINLOCKS
++static inline bool lock_event_return_max(int id)
++{
++	return id == LOCKEVENT_cna_intra_max;
++}
++#else
++static inline bool lock_event_return_max(int id)
++{
++	return false;
++}
++#endif
++
+ /*
+  * Function to read and return the PV qspinlock counts.
+  *
+@@ -38,7 +50,7 @@ ssize_t lockevent_read(struct file *file, char __user *user_buf,
+ {
+ 	char buf[64];
+ 	int cpu, id, len;
+-	u64 sum = 0, kicks = 0;
++	u64 sum = 0, kicks = 0, val;
+ 
+ 	/*
+ 	 * Get the counter ID stored in file->f_inode->i_private
+@@ -49,6 +61,15 @@ ssize_t lockevent_read(struct file *file, char __user *user_buf,
+ 		return -EBADF;
+ 
+ 	for_each_possible_cpu(cpu) {
++		val = per_cpu(lockevents[id], cpu);
++		if (lock_event_return_max(id)) {
++			/*
++			 * Find the maximum of all per-cpu values
++			 */
++			if (val > sum)
++				sum = val;
++			continue;
++		}
+ 		sum += per_cpu(lockevents[id], cpu);
+ 		/*
+ 		 * Need to sum additional counters for some of them
+-- 
+2.18.1
+
+
+--------------C3B3D0C2A24A32A734C19393--
+
