@@ -2,81 +2,88 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D27EAC33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 11:36:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13F52C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 11:36:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7F4424125
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 11:36:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="P5xILhim"
+	by mail.kernel.org (Postfix) with ESMTP id E837E24125
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 11:36:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729130AbgAWLgH (ORCPT
+        id S1729134AbgAWLgx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 06:36:07 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:59356 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726811AbgAWLgH (ORCPT
+        Thu, 23 Jan 2020 06:36:53 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:38607 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726584AbgAWLgw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 06:36:07 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579779365;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Bi8LeW06fZZr3fzsbfcVE+s/pxdz6ITVUp+XN3fIHAk=;
-        b=P5xILhimAZn0cbmE6HWWtzJcQPgwMxaBEeol+2R+SNZcYrB2axxYlQKDUqADKbMe/c+V5r
-        8Scsl4hXVmNXuI0dGCRiPAnek10hUglLpmh3lslLcfSDzRNpHgk/rdLlulTQsDKSudPPry
-        c9tEid6vP1eKGJFAt6pOU3iN09aoRKQ=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-100-sGwsBWRZPMCWq4rk_QGMjw-1; Thu, 23 Jan 2020 06:36:04 -0500
-X-MC-Unique: sGwsBWRZPMCWq4rk_QGMjw-1
-Received: by mail-wr1-f71.google.com with SMTP id u12so1565856wrt.15
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jan 2020 03:36:04 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Bi8LeW06fZZr3fzsbfcVE+s/pxdz6ITVUp+XN3fIHAk=;
-        b=ZlPxjGXGE8N8zGHZG6JwiHn3rKkHQgv/QTU9SQyfT+IOI+ufpDIRetjxDcaePPYyj/
-         d9sZ4RfDixbd63xa03mel1hug2+SOLg0ZZCsk6SGV1H5e7T0TfBtfFoeh4Kw5M4dCOK9
-         lOalUxnYXbGen/ISDctULQUdxkNOTsgBa8nQee/OTX0u1TFIMdMbhUi997tAm3j4qbuW
-         ANln7OTj3ERGEG6wq+eg/acajLOfgMamQ0MUk4wMzz8jCdbzVIVZGpTPOjG24QzwEQPH
-         2U7JV1D1ztyfLSVi3Z4Pxrry6iB45m68+9sky1miWKIceDZcof5OmfAvgJWXOt33Ae7+
-         Vxkg==
-X-Gm-Message-State: APjAAAXqVzViuKdHjbTCdKZkw1+KpqY9kzckvp8o1XJrJaOHD3N6qKty
-        9aetWQNLNK44CSCD18OUE79SNwuDbT52L9OvHuoecQfpvfoZt6LSru/r5gT4sg3JhT6tuH81SLn
-        omoQLBKG73ihwwmidThxsxF6q
-X-Received: by 2002:a5d:6ac3:: with SMTP id u3mr18058214wrw.25.1579779363168;
-        Thu, 23 Jan 2020 03:36:03 -0800 (PST)
-X-Google-Smtp-Source: APXvYqwoGjn/0V+sdl+z38p2Ox7b5U5YbxLK1TAjEmzDEBF7XjGDA9XuZShzCEpQmSPi7PxX/vu43w==
-X-Received: by 2002:a5d:6ac3:: with SMTP id u3mr18058190wrw.25.1579779362926;
-        Thu, 23 Jan 2020 03:36:02 -0800 (PST)
-Received: from ?IPv6:2001:b07:6468:f312:b8fe:679e:87eb:c059? ([2001:b07:6468:f312:b8fe:679e:87eb:c059])
-        by smtp.gmail.com with ESMTPSA id a16sm2684691wrt.37.2020.01.23.03.35.59
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 23 Jan 2020 03:36:02 -0800 (PST)
-Subject: Re: [PATCH 1/2] KVM: x86: reorganize pvclock_gtod_data members
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     mtosatti@redhat.com, stable@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-References: <1579702953-24184-1-git-send-email-pbonzini@redhat.com>
- <1579702953-24184-2-git-send-email-pbonzini@redhat.com>
- <87tv4mqug3.fsf@vitty.brq.redhat.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <09535a66-d72c-6983-3c10-09d12ed9e632@redhat.com>
-Date:   Thu, 23 Jan 2020 12:35:58 +0100
+        Thu, 23 Jan 2020 06:36:52 -0500
+Received: from 1.general.cking.uk.vpn ([10.172.193.212])
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1iuan3-0008M3-MY; Thu, 23 Jan 2020 11:36:49 +0000
+Subject: Re: [PATCH] dmaengine: fix spelling mistake "to" -> "too"
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, dmaengine@vger.kernel.org,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200123092359.10714-1-colin.king@canonical.com>
+ <20200123113522.GY2841@vkoul-mobl>
+From:   Colin Ian King <colin.king@canonical.com>
+Autocrypt: addr=colin.king@canonical.com; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <37684969-d807-7dfd-3a9f-4d0ee86f408d@canonical.com>
+Date:   Thu, 23 Jan 2020 11:36:49 +0000
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <87tv4mqug3.fsf@vitty.brq.redhat.com>
+In-Reply-To: <20200123113522.GY2841@vkoul-mobl>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -85,18 +92,12 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 23/01/20 12:32, Vitaly Kuznetsov wrote:
-> Likely a personal preference but the suggested naming is a bit
-> confusing: we use 'base_cycles' to keep 'xtime_nsec' and 'offset' to
-> keep ... 'base'. Not that I think that 'struct timekeeper' is perfect
-> but at least it is documented. Should we maybe just stick to it (and
-> name 'struct pvclock_clock' fields accordingly?)
+On 23/01/2020 11:35, Vinod Koul wrote:
+> On 23-01-20, 09:23, Colin King wrote:
+>> From: Colin Ian King <colin.king@canonical.com>
+>>
+>> There is a spelling mistake in a dev_err message. Fix it.
 > 
-
-The problem is that xtime_nsec is not nanoseconds, and I'd really not
-want to have a worse name just for consistency. :(  I chose
-"base_cycles" as an incremental improvement over nsec_base, even though
-that meant also changing struct timekeeper's "base" to "offset".
-
-Paolo
-
+> You had sent this earlier, I have picked that one already!
+> 
+Oops. I'm going mad.
