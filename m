@@ -2,188 +2,100 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5324C33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 01:37:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98A1FC3F68F
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 01:40:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B4FB24676
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 01:37:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E80D2465B
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 01:40:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BmLthYi7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726181AbgAWBhf (ORCPT
+        id S1726191AbgAWBkw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 20:37:35 -0500
-Received: from mga02.intel.com ([134.134.136.20]:13999 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725911AbgAWBhe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 20:37:34 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Jan 2020 17:37:33 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,352,1574150400"; 
-   d="scan'208";a="250817035"
-Received: from zdeng-mobl.gar.corp.intel.com (HELO arch-ashland-svkelley) ([10.254.47.109])
-  by fmsmga004.fm.intel.com with ESMTP; 22 Jan 2020 17:37:31 -0800
-Message-ID: <8f1e5981b519acb5edf53b5392c81ef7cbf6a3eb.camel@linux.intel.com>
-Subject: Re: RE: Re: "oneshot" interrupt causes another interrupt to be
- fired erroneously in Haswell system
-From:   Sean V Kelley <sean.v.kelley@linux.intel.com>
-Reply-To: sean.v.kelley@linux.intel.com
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Kar Hin Ong <kar.hin.ong@ni.com>,
-        Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-rt-users <linux-rt-users@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Julia Cartwright <julia.cartwright@ni.com>,
-        Keng Soon Cheah <keng.soon.cheah@ni.com>,
-        Gratian Crisan <gratian.crisan@ni.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Date:   Wed, 22 Jan 2020 17:37:31 -0800
-In-Reply-To: <87muanwwhb.fsf@nanos.tec.linutronix.de>
-References: <20191031230532.GA170712@google.com>
-         <alpine.DEB.2.21.1911050017410.17054@nanos.tec.linutronix.de>
-         <MN2PR04MB625594021250E0FB92EC955DC3780@MN2PR04MB6255.namprd04.prod.outlook.com>
-         <87a76oxqv1.fsf@nanos.tec.linutronix.de>
-         <MN2PR04MB62551D8B240966B02ED71516C3360@MN2PR04MB6255.namprd04.prod.outlook.com>
-         <87muanwwhb.fsf@nanos.tec.linutronix.de>
-Organization: Intel Corporation
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.3 
+        Wed, 22 Jan 2020 20:40:52 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:33973 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725943AbgAWBkw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 20:40:52 -0500
+Received: by mail-wm1-f66.google.com with SMTP id s144so763431wme.1;
+        Wed, 22 Jan 2020 17:40:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=dxERX3Z6knme8mbg8LLRPMLRshct8bmUqfHIkVOFyXY=;
+        b=BmLthYi7yXkfQqaQ/Yu82ME78VMEz+g2Svn8AFdCwzluDqcrVEoyEk9kGRn2RdO+lI
+         d+uRAQ+iRqo1cgq1fb6tHIk1rQVRy4suxQVKjRzcKyEP+2RfTxHP9L6wWfmoay+UH3Ji
+         sAalggte4whNe9wzmJvrkRwmjAuQyLbp1TQcI1WHqWkpZb55JrhlHVOzFVavrSHoJL/Y
+         PJ/D2XPtRsLkWuc4IG2DP9MhD44oL60DB3+ggjXEX9mJz7c4ChZ45ZG2Nn6vZ3R9/JXA
+         BwNLTFcDSMdVwHH0hraSI8SCD1D3ZqHuztdTcJmQFRzdDmfhdzHbfa+e4sJA2Lg16+RS
+         t5Rg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=dxERX3Z6knme8mbg8LLRPMLRshct8bmUqfHIkVOFyXY=;
+        b=KFy7CqcoTcEu1+ORbD/i/LJfAUnserpccSoyp0AhWQ+QeWxfPlGM6hUJMSrUljPD7s
+         qTrFONDsk45q6+29YnjA8adEchrXrS2tqj3zKGGC8DfC3m5UntzMt+xH7ZHPtILexw+7
+         QB5SlIc/1Y6wl3EWGdoUosLxuU2wXywdvAr4krelTr65ZKI2/9FAuUtq8nf7Y4ZaDWaM
+         wJvszQOkPaJTqdDp61jju0FJLc0vetDa7ftLgMe7ij0WZ7d52Rsq3yLvKuzVegoNRdpp
+         hIXmejdF3QLGArRxrFnMjskIDCVapuT7ZixSh8mca596duE6P0hbqRWkl47qzf8TaTx2
+         2Zfw==
+X-Gm-Message-State: APjAAAXdG1TNqDnmNVec7qv/EHNUNOYLtVDmHTaAmmzqhTQBKbiTAozR
+        FdRyYZOUM4GylgpKoqip5kMR0VtCFIcam95ROHgQE0N3a70CdQ==
+X-Google-Smtp-Source: APXvYqx/VfVrGYkRjQq9xgDLNm+4N559pc8TMzBq3MRYjQ9MPzm7WfGRD0wnnSNjXNWIlKNYioVh0v1DAm/m1PHswuc=
+X-Received: by 2002:a1c:cc06:: with SMTP id h6mr1148278wmb.118.1579743649711;
+ Wed, 22 Jan 2020 17:40:49 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <DM6PR04MB5754D8E261B4200AA62D442D860D0@DM6PR04MB5754.namprd04.prod.outlook.com>
+ <20200121201014.52345-1-muraliraja.muniraju@rubrik.com>
+In-Reply-To: <20200121201014.52345-1-muraliraja.muniraju@rubrik.com>
+From:   Ming Lei <tom.leiming@gmail.com>
+Date:   Thu, 23 Jan 2020 09:40:38 +0800
+Message-ID: <CACVXFVN2QteGv=mWpVimZ9y2yzLZOOthB9muFsxTG3LkWWpwfA@mail.gmail.com>
+Subject: Re: Re [PATCH] Adding multiple workers to the loop device.
+To:     "muraliraja.muniraju" <muraliraja.muniraju@rubrik.com>
+Cc:     Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
+        Jens Axboe <axboe@kernel.dk>,
+        linux-block <linux-block@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2020-01-16 at 11:01 +0100, Thomas Gleixner wrote:
-> Kar Hin Ong <kar.hin.ong@ni.com> writes:
-> > > I don't have access to the document you mentioned, but I know
-> > > that chipsets
-> > > have a knob to control that behaviour. Just checked a few chipset
-> > > docs and they
-> > > contain the same sentence, but then in the next paragraph they
-> > > say:
-> > > 
-> > >  "If the I/OxAPIC entry is masked (via the mask bit in the
-> > > corresponding
-> > >   Redirection Table Entry), then the corresponding PCI Express
-> > >   interrupt(s) is forwarded to the legacy ICH, provided the
-> > > Disable PCI
-> > >   INTx Routing to ICH bit is clear, Section 19.10.2.27,
-> > > QPIPINTRC: Intel
-> > >   QuickPath Interconnect Protocol Interrupt Control."
-> > > 
-> > > That control bit is 0 after reset, so the legacy forwarding
-> > > works.
-> > 
-> > Intel support engineer do provide similar advice to us as a
-> > workaround
-> > to the CPU behaviour.  They said we could enable the
-> > "Don'tRouteToPCH"
-> > bit in the BIOS to block the interrupt from propagating to
-> > PCH.  This
-> > bit is located at "Coherent Interface Protocol Interrupt Control
-> > (cipintrc)" register of "Virtualization" device (Bus 0, Device 5,
-> > Function 0, Offset 0x14C).
-> > 
-> > With the help of our BIOS engineer, after setting this bit in BIOS
-> > does prevent the interrupt forwarding.
-> > 
-> > However, Intel told us that this workaround is not validated, i.e.
-> > the
-> > side effect of setting this bit is unknown.
-> 
-> What? That's ridiculous.
-> 
-> That bit is documented in various chipset documents and that legacy
-> rerouting is really just there to support OSes which do not support
-> multiple IO-APICs properly.
-> 
-> If setting this bit has unknown side effects then someone at Intel
-> should have a close look and fix their documentation.
-> 
-> Can the Intel people on Cc please take care of this?
+On Wed, Jan 22, 2020 at 4:11 AM muraliraja.muniraju
+<muraliraja.muniraju@rubrik.com> wrote:
+>
+> Below is the dd results that I ran with the worker and without the worker changes.
+> Enhanced Loop has the changes and ran with 1,2,3,4 workers with 4 dds running on the same loop device.
+> Normal Loop is 1 worker(the existing code) with 4 dd's running on the same loop device.
+> Enhanced loop
+> 1 - READ: io=21981MB, aggrb=187558KB/s, minb=187558KB/s, maxb=187558KB/s, mint=120008msec, maxt=120008msec
+> 2 - READ: io=41109MB, aggrb=350785KB/s, minb=350785KB/s, maxb=350785KB/s, mint=120004msec, maxt=120004msec
+> 3 - READ: io=45927MB, aggrb=391802KB/s, minb=391802KB/s, maxb=391802KB/s, mint=120033msec, maxt=120033msec
+> 4 - READ: io=45771MB, aggrb=390543KB/s, minb=390543KB/s, maxb=390543KB/s, mint=120011msec, maxt=120011msec
+> Normal loop
+> 1 - READ: io=18432MB, aggrb=157201KB/s, minb=157201KB/s, maxb=157201KB/s, mint=120065msec, maxt=120065msec
+> 2 - READ: io=18762MB, aggrb=160035KB/s, minb=160035KB/s, maxb=160035KB/s, mint=120050msec, maxt=120050msec
+> 3 - READ: io=18174MB, aggrb=155058KB/s, minb=155058KB/s, maxb=155058KB/s, mint=120020msec, maxt=120020msec
+> 4 - READ: io=20559MB, aggrb=175407KB/s, minb=175407KB/s, maxb=175407KB/s, mint=120020msec, maxt=120020msec
 
+Could you share your exact test command?
 
-I looked into it Thomas.  The issue is as you suggested early in the
-thread.  If an IRQ arrives at line N of a non-primary IO-APIC and that
-line is masked, a new IRQ is generated on the primary IO-APIC/PIC.  
+Multiple jobs may hurt performance in case of sequential IOs on HDD backend.
+Also the 1st version of the loop dio patch uses normal wq, I remembered that
+random IOperformance isn't improved much, meantime sequential IO perf drops
+with normal wq, whentesting SSD backend.
 
-The BIOS setting to address this forwarding is as above Disable INTx
-Route to PCH/ICH/SouthBridge. When this bit is set, local INTx messages
-received from the PCI-E ports are not routed to legacy PCH - they are
-either converted into MSI via the integrated I/OxAPIC (if the I/OxAPIC
-mask bit is clear in the appropriate entries) or cause no further
-action (when mask bit is set).
-
-This capability is tested and supported fully on Intel platforms.
-
-For example, 5520 [1], Xeon E5 4600  [2] , Xeon E7 [3], and so on
-include this bit :
- 
-[1] 
-https://www.intel.com/content/dam/www/public/us/en/documents/datasheets/5520-5500-chipset-ioh-datasheet.pdf
-page 139
-[2] 
-https://www.intel.com/content/dam/www/public/us/en/documents/datasheets/xeon-e5-1600-2600-vol-2-datasheet.pdf
-, page 280
-[3] 
-https://www.intel.com/content/dam/www/public/us/en/documents/datasheets/xeon-e7-v2-datasheet-vol-2.pdf
-, page 373
-etc..
-
-Once you get to SKX/CLX things change and integrated IOxAPICs in the
-IIO module convert legacy PCI Express interrupt messages into MSI
-interrupts directly.  Beyond SKX/CLX there are no longer IOxAPICs in
-IIO. IOxAPIC is only in the PCH. Devices connected to the
-IIO will use native MSI/MSI-x mechanisms.
-
-The problem is with the absolute lack of useful documentation.  That’s
-not acceptable.  
-
-You recall the work Olaf and Stefan did at SuSE ten years ago (?) on
-boot irq quirks and the amount of research they had to do it learn
-about the behavior.[4]
-
-[4]
-http://lkml.iu.edu/hypermail/linux/kernel/0807.1/3160.html
- 
-From a Real-Time Linux perspective this is really important to me.  As
-we get closer to fully mainlined we need to have this information
-readily available with greater usage of threaded irqs in combination
-with legacy interrupts on the older platforms.
-
-So I will ensure we actually create useful information pointing to this
-behavior either in kernel docs or online as in a white paper or both.
-
-
-> As we have already quirks in drivers/pci/quirks.c which handle the
-> same
-> issue on older chipsets, we really should add one for these kind of
-> systems to avoid fiddling with the BIOS (which you can, but most
-> people
-> cannot).
-
-Agreed, and I will follow-up with Kar Hin Ong to get them added.
+So I took kthread worker.
 
 Thanks,
-
-Sean
-
-
-> 
-> 
-> Thanks,
-> 
->         tglx
-> 
-
+Ming Lei
