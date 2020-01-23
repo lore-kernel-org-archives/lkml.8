@@ -2,252 +2,347 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 238BFC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 21:13:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC2BAC33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 21:17:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC19121835
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 21:13:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A430F22522
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 21:17:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Br1gHiZh"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="AKuXUv2f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729031AbgAWVNN (ORCPT
+        id S1729184AbgAWVRR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 16:13:13 -0500
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:38519 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727816AbgAWVNL (ORCPT
+        Thu, 23 Jan 2020 16:17:17 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:45505 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728911AbgAWVRQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 16:13:11 -0500
-Received: by mail-ed1-f67.google.com with SMTP id i16so4862330edr.5;
-        Thu, 23 Jan 2020 13:13:09 -0800 (PST)
+        Thu, 23 Jan 2020 16:17:16 -0500
+Received: by mail-pg1-f193.google.com with SMTP id b9so1994233pgk.12
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jan 2020 13:17:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Dh2wt1vORa35MTM3FuGiuCtiW/CFK3Ccqbeyfn7ivTI=;
-        b=Br1gHiZhtEos2FE84vsmPLrz7y9aPx1FHdepJbLcQe6rKsLX944lSzvKlnFFHrao+u
-         OgZRGimuRrGs8l7319YKrzQj3uuYQ68+VIvE5wJRiJLBHWDim1p5yT+r5fBW0i1MMtc5
-         C94h7/VtpLspAGIup4FwX2aiCcyC/mVs3UEfOPu8t438OD5Fr63Bhos8ko4sRDeeZICn
-         a434UyLJY19Z1UNf0u6FC+SzjahHcVAZvOm3QPeKU7eCggo4BjB0fY9fQySIIY6swXVu
-         N4ZzS7NHs6pwGARnZ+jm2W7fYePXf+5rWs0tT3NRNHghczRoEXLEcY7vnEKOKkHqWl0D
-         Kx9g==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=crehbYw2UhZPaBsAWXJAZJ8j+MOOYVMiLFkroMb+XYc=;
+        b=AKuXUv2fKbUZTluu30cyu8JZw4ZVU+9VvaQyCp9nQI2YabApZY/LmKjZ00zzVvy7mM
+         uwRUSvyLWQCC1vIGAmo4bdS8XNQ3Ns4QU+e5KhYGxBDruRaA7e1A5Zdm2XFdEqMtfK5v
+         sG/Vy2pe/P2kKq2Q1SKOujAw6ZAMRmfxvt3ad4I4eid2hPxMQVTDiUHNSQPycbN9AzNO
+         u80WyCwM1biYojbmMUhNCvvSYXh+dbRWYKO6dnteSk55GYLM1UHm0y4DH6UaO2agTt9l
+         /M3eE3Xx2JU6v2ROxFirCXHHIrxKHcmksK9BiIb0tp17ic5uzg6FXpUEWXHg6STfo9cP
+         dTZA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=Dh2wt1vORa35MTM3FuGiuCtiW/CFK3Ccqbeyfn7ivTI=;
-        b=tg/t4HPkQyyizGZqcWR5JySedgkewowG9w4t5A9kPdEl/1aihbK20xi8ncEpTGH1k0
-         ZEDfcg87vjuDdt6+WTdsuUqiynRuzhwRv7dD9WzFdBp0I7bRJvmR2/yxE+DIxOOfVajT
-         0sAsnvpWzLXPLsbFVM6+TuoPN+M2RT9WL88skpPMhQvo7ihRmf0gcn1opMo/IebJGxWS
-         piVmGfnpIBEpYyUE1GAgdg630vsa+KUDBiRTTHSlEwUJ1bqxCayeAGPRid3Y4DZx+8xx
-         8Law1yXJSCk/WnLj/lknbc1Sg72BdCwsg9CDjOA3S+HZZSpmO/cmPY1wQ8d/D14HEAib
-         gslg==
-X-Gm-Message-State: APjAAAWB7RDYA7+/fmeNddbyLp9H4ypf/hO3/zspVnU7MpKXNKHy/Nrz
-        xaOCWCeZ810wQ/EW0gq5rSg=
-X-Google-Smtp-Source: APXvYqx6wnIYlrFVF9yeSitfx4KEX6bfY3YcCjjjY1kcHH4cpgS5OW6MMyYedqGO/MG9BQNVLEN4lw==
-X-Received: by 2002:a17:906:c40d:: with SMTP id u13mr25787ejz.178.1579813988472;
-        Thu, 23 Jan 2020 13:13:08 -0800 (PST)
-Received: from [10.67.50.115] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id o15sm40291edj.3.2020.01.23.13.13.05
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 23 Jan 2020 13:13:07 -0800 (PST)
-Subject: Re: [RFC 2/2] net: bcmgenet: Fetch MAC address from the adapter
-To:     Jeremy Linton <jeremy.linton@arm.com>, netdev@vger.kernel.org
-Cc:     opendmb@gmail.com, davem@davemloft.net,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-kernel@vger.kernel.org, wahrenst@gmx.net
-References: <20200123060823.1902366-1-jeremy.linton@arm.com>
- <20200123060823.1902366-3-jeremy.linton@arm.com>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
- 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
- G10n8gCguORqNGMsVRxrlLs7/himep7MrCc=
-Message-ID: <465844cf-ff19-9bb5-15d3-cc876a2d40f6@gmail.com>
-Date:   Thu, 23 Jan 2020 13:13:01 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=crehbYw2UhZPaBsAWXJAZJ8j+MOOYVMiLFkroMb+XYc=;
+        b=ZkW66VYxNuPWZ+QRM1OqE7IYIhZj4/0doaaQqzzJbAQkk0+15liiWPU4/7y+7o00GM
+         EyRfL7r2dH+4pGiW7y24EwzjVmJlmwOHexE2xjvVXp0VLXHy2eiiEcmgZdgQ1VDkKO+c
+         MklaH0moIi8h1m2fTkyN2B/YjMdwGbZb/IiYgOo8qDfxuyPkekr8yvnM9ZH4faDxL2zE
+         lBCpAbsqtH+7e4XSjQ5TaHF0I83rupNY8/uVAOqgwRYvRmWFZ61YpVW3vPSPtiX0dnNj
+         Fo4L7qUYB66os2U3R0MyGxdcV3W3VN363ZFXlqI+C0eSjDV7GMKqBpY6MtnL0RATJIn5
+         cuyw==
+X-Gm-Message-State: APjAAAUDwNef4JxLYiN9A+pW50SnPDTpvn6KnySJSpYGmigr35gyyEUm
+        hjqZ8gDoNw7y6ZPZ/tFMry243RXwpO8zHG/tAu9X0A==
+X-Google-Smtp-Source: APXvYqxSOLWVhjzhicOj5KXj0E3l44yLncvqrrKNueoTVSA+QAQ73UBk/JmoL8IGPmKEolmPpY4QvDCPaNMGkt5ZAZw=
+X-Received: by 2002:a63:480f:: with SMTP id v15mr322640pga.201.1579814234877;
+ Thu, 23 Jan 2020 13:17:14 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200123060823.1902366-3-jeremy.linton@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20200110131522.29964-1-sjpark@amazon.com> <20200110131522.29964-5-sjpark@amazon.com>
+In-Reply-To: <20200110131522.29964-5-sjpark@amazon.com>
+From:   Brendan Higgins <brendanhiggins@google.com>
+Date:   Thu, 23 Jan 2020 13:17:04 -0800
+Message-ID: <CAFd5g44WpJQTDG9TK6xB0VYB92qnR=0g1nGcZOF60Bf2X7XB5Q@mail.gmail.com>
+Subject: Re: [RFC PATCH 4/5] Documentation/admin-guide/mm: Add a document for DAMON
+To:     SeongJae Park <sjpark@amazon.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        mgorman@suse.de, SeongJae Park <sj38.park@gmail.com>,
+        SeongJae Park <sjpark@amazon.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/22/20 10:08 PM, Jeremy Linton wrote:
-> ARM/ACPI machines should utilize self describing hardware
-> when possible. The MAC address on the BCM GENET can be
-> read from the adapter if a full featured firmware has already
-> programmed it. Lets try using the address already programmed,
-> if it appears to be valid.
-
-s/BCM GENET/BCMGENET/ or just GENET.
-
-> 
-> Signed-off-by: Jeremy Linton <jeremy.linton@arm.com>
+On Fri, Jan 10, 2020 at 5:16 AM SeongJae Park <sjpark@amazon.com> wrote:
+>
+> From: SeongJae Park <sjpark@amazon.de>
+>
+> This commit adds a simple document for DAMON under
+> 'Documentation/admin-guide/mm/'.
+>
+> Signed-off-by: SeongJae Park <sjpark@amazon.de>
 > ---
->  .../net/ethernet/broadcom/genet/bcmgenet.c    | 47 ++++++++++++++-----
->  1 file changed, 36 insertions(+), 11 deletions(-)
-> 
-> diff --git a/drivers/net/ethernet/broadcom/genet/bcmgenet.c b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
-> index c736700f829e..6782bb0a24bd 100644
-> --- a/drivers/net/ethernet/broadcom/genet/bcmgenet.c
-> +++ b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
-> @@ -2779,6 +2779,27 @@ static void bcmgenet_set_hw_addr(struct bcmgenet_priv *priv,
->  	bcmgenet_umac_writel(priv, (addr[4] << 8) | addr[5], UMAC_MAC1);
->  }
->  
-> +static void bcmgenet_get_hw_addr(struct bcmgenet_priv *priv,
-> +				 unsigned char *addr)
-> +{
-> +	u32 addr_tmp;
-> +	bool acpi_mode = has_acpi_companion(&priv->pdev->dev);
+>  .../admin-guide/mm/data_access_monitor.rst    | 235 ++++++++++++++++++
+>  Documentation/admin-guide/mm/index.rst        |   1 +
+>  2 files changed, 236 insertions(+)
+>  create mode 100644 Documentation/admin-guide/mm/data_access_monitor.rst
+>
+> diff --git a/Documentation/admin-guide/mm/data_access_monitor.rst b/Documentation/admin-guide/mm/data_access_monitor.rst
+> new file mode 100644
+> index 000000000000..907a7af75f35
+> --- /dev/null
+> +++ b/Documentation/admin-guide/mm/data_access_monitor.rst
+> @@ -0,0 +1,235 @@
+> +.. _data_access_monitor:
 > +
-> +	/* UEFI/ACPI machines and possibly others will preprogram the MAC */
-> +	if (acpi_mode) {
-> +		addr_tmp = bcmgenet_umac_readl(priv, UMAC_MAC0);
-> +		addr[0] = addr_tmp >> 24;
-> +		addr[1] = (addr_tmp >> 16) & 0xff;
-> +		addr[2] = (addr_tmp >>	8) & 0xff;
-> +		addr[3] = addr_tmp & 0xff;
-> +		addr_tmp = bcmgenet_umac_readl(priv, UMAC_MAC1);
-> +		addr[4] = (addr_tmp >> 8) & 0xff;
-> +		addr[5] = addr_tmp & 0xff;
-> +	} else {
-> +		memset(addr, 0, ETH_ALEN);
-> +	}
-> +}
+> +==========================
+> +DAMON: Data Access MONitor
+> +==========================
 > +
->  /* Returns a reusable dma control register value */
->  static u32 bcmgenet_dma_disable(struct bcmgenet_priv *priv)
->  {
-> @@ -3509,11 +3530,6 @@ static int bcmgenet_probe(struct platform_device *pdev)
->  	}
->  	priv->wol_irq = platform_get_irq_optional(pdev, 2);
->  
-> -	if (dn)
-> -		macaddr = of_get_mac_address(dn);
-> -	else if (pd)
-> -		macaddr = pd->mac_address;
-> -
->  	priv->base = devm_platform_ioremap_resource(pdev, 0);
->  	if (IS_ERR(priv->base)) {
->  		err = PTR_ERR(priv->base);
-> @@ -3524,12 +3540,6 @@ static int bcmgenet_probe(struct platform_device *pdev)
->  
->  	SET_NETDEV_DEV(dev, &pdev->dev);
->  	dev_set_drvdata(&pdev->dev, dev);
-> -	if (IS_ERR_OR_NULL(macaddr) || !is_valid_ether_addr(macaddr)) {
-> -		dev_warn(&pdev->dev, "using random Ethernet MAC\n");
-> -		eth_hw_addr_random(dev);
-> -	} else {
-> -		ether_addr_copy(dev->dev_addr, macaddr);
-> -	}
->  	dev->watchdog_timeo = 2 * HZ;
->  	dev->ethtool_ops = &bcmgenet_ethtool_ops;
->  	dev->netdev_ops = &bcmgenet_netdev_ops;
-> @@ -3601,6 +3611,21 @@ static int bcmgenet_probe(struct platform_device *pdev)
->  	    !strcasecmp(phy_mode_str, "internal"))
->  		bcmgenet_power_up(priv, GENET_POWER_PASSIVE);
->  
-> +	if (dn)
-> +		macaddr = of_get_mac_address(dn);
-> +	else if (pd)
-> +		macaddr = pd->mac_address;
-
-I would be adding an:
-
-	else if (has_acpi_companion())
-		bcmgenet_get_hw_addr(priv, macaddr);
-
-such that bcmgenet_get_hw_addr() does not have much ACPI specific
-knowledge and get be used outside, with the caller knowing whether it is
-appropriate.
-
-You should also indicate in your commit message that you are moving the
-fetching of the MAC address at a later point where the clocks are turned
-on, to guarantee that the registers can be read.
-
-With that fixed:
-
-Acked-by: Florian Fainelli <f.fainelli@gmail.com>
-
 > +
-> +	if (IS_ERR_OR_NULL(macaddr) || !is_valid_ether_addr(macaddr)) {
-> +		bcmgenet_get_hw_addr(priv, dev->dev_addr);
-> +		if (!is_valid_ether_addr(dev->dev_addr)) {
-> +			dev_warn(&pdev->dev, "using random Ethernet MAC\n");
-> +			eth_hw_addr_random(dev);
-> +		}
-> +	} else {
-> +		ether_addr_copy(dev->dev_addr, macaddr);
-> +	}
+> +Too Long; Don't Read
+> +====================
 > +
->  	reset_umac(priv);
->  
->  	err = bcmgenet_mii_init(dev);
-> 
+> +DAMON is a kernel module that allows users to monitor the actual memory access
+> +pattern of specific user-space processes.  It aims to be 1) accurate enough to
+> +be useful for performance-centric domains, and 2) sufficiently light-weight so
+> +that it can be applied online.
+> +
+> +For the goals, DAMON utilizes its two core mechanisms, called region-based
+> +sampling and adaptive regions adjustment.  The region-based sampling allows
+> +users to make their own trade-off between the quality and the overhead of the
+> +monitoring and set the upperbound of the monitoring overhead.  Further, the
+> +adaptive regions adjustment mechanism makes DAMON to maximize the quality and
+> +minimize the overhead with its best efforts while preserving the users
+> +configured trade-off.
+> +
+> +
+> +Background
+> +==========
+> +
+> +For performance-centric analysis and optimizations of memory management schemes
+> +(either that of kernel space or user space), the actual data access pattern of
+> +the workloads is highly useful.  The information need to be only reasonable
+> +rather than strictly correct, because some level of incorrectness can be
+> +handled in many performance-centric domains.  It also need to be taken within
+> +reasonably short time with only light-weight overhead.
+> +
+> +Manually extracting such data is not easy and time consuming if the target
+> +workload is huge and complex, even for the developers of the programs.  There
+> +are a range of tools and techniques developed for general memory access
+> +investigations, and some of those could be partially used for this purpose.
+> +However, most of those are not practical or unscalable, mainly because those
+> +are designed with no consideration about the trade-off between the accuracy of
+> +the output and the overhead.
+> +
+> +The memory access instrumentation techniques which is applied to many tools
+> +such as Intel PIN is essential for correctness required cases such as invalid
+> +memory access bug detections.  However, those usually incur high overhead which
+> +is unacceptable for many of the performance-centric domains.  Periodic access
+> +checks based on H/W or S/W access counting features (e.g., the Accessed bits of
+> +PTEs or the PG_Idle flags of pages) can dramatically decrease the overhead by
+> +forgiving some of the quality, compared to the instrumentation based
+> +techniques.  The reduced quality is still reasonable for many of the domains,
+> +but the overhead can arbitrarily increase as the size of the target workload
+> +grows.  Miniature-like static region based sampling can set the upperbound of
+> +the overhead, but it will now decrease the quality of the output as the size of
+> +the workload grows.
+> +
+> +
+> +Expected Use-cases
+> +==================
+> +
+> +A straightforward usecase of DAMON would be the program behavior analysis.
+> +With the DAMON output, users can confirm whether the program is running as
+> +intended or not.  This will be useful for debuggings and tests of design
+> +points.
+> +
+> +The monitored results can also be useful for counting the dynamic working set
+> +size of workloads.  For the administration of memory overcommitted systems or
+> +selection of the environments (e.g., containers providing different amount of
+> +memory) for your workloads, this will be useful.
+> +
+> +If you are a programmer, you can optimize your program by managing the memory
+> +based on the actual data access pattern.  For example, you can identify the
+> +dynamic hotness of your data using DAMON and call ``mlock()`` to keep your hot
+> +data in DRAM, or call ``madvise()`` with ``MADV_PAGEOUT`` to proactively
+> +reclaim cold data.  Even though your program is guaranteed to not encounter
+> +memory pressure, you can still improve the performance by applying the DAMON
+> +outputs for call of ``MADV_HUGEPAGE`` and ``MADV_NOHUGEPAGE``.  More creative
+> +optimizations would be possible.  Our evaluations of DAMON includes a
+> +straightforward optimization using the ``mlock()``.  Please refer to the below
+> +Evaluation section for more detail.
+> +
+> +As DAMON incurs very low overhead, such optimizations can be applied not only
+> +offline, but also online.  Also, there is no reason to limit such optimizations
+> +to the user space.  Several parts of the kernel's memory management mechanisms
+> +could be also optimized using DAMON. The reclamation, the THP (de)promotion
+> +decisions, and the compaction would be such a candidates.
+> +
+> +
+> +Mechanisms of DAMON
+> +===================
+> +
+> +
+> +Basic Access Check
+> +------------------
+> +
+> +DAMON basically reports what pages are how frequently accessed.  The report is
+> +passed to users in binary format via a ``result file`` which users can set it's
+> +path.  Note that the frequency is not an absolute number of accesses, but a
+> +relative frequency among the pages of the target workloads.
+> +
+> +Users can also control the resolution of the reports by setting two time
+> +intervals, ``sampling interval`` and ``aggregation interval``.  In detail,
+> +DAMON checks access to each page per ``sampling interval``, aggregates the
+> +results (counts the number of the accesses to each page), and reports the
+> +aggregated results per ``aggregation interval``.  For the access check of each
+> +page, DAMON uses the Accessed bits of PTEs.
+> +
+> +This is thus similar to the previously mentioned periodic access checks based
+> +mechanisms, which overhead is increasing as the size of the target process
+> +grows.
+> +
+> +
+> +Region Based Sampling
+> +---------------------
+> +
+> +To avoid the unbounded increase of the overhead, DAMON groups a number of
+> +adjacent pages that assumed to have same access frequencies into a region.  As
+> +long as the assumption (pages in a region have same access frequencies) is
+> +kept, only one page in the region is required to be checked.  Thus, for each
+> +``sampling interval``, DAMON randomly picks one page in each region and clears
+> +its Accessed bit.  After one more ``sampling interval``, DAMON reads the
+> +Accessed bit of the page and increases the access frequency of the region if
+> +the bit has set meanwhile.  Therefore, the monitoring overhead is controllable
+> +by setting the number of regions.  DAMON allows users to set the minimal and
+> +maximum number of regions for the trade-off.
+> +
+> +Except the assumption, this is almost same with the above-mentioned
+> +miniature-like static region based sampling.  In other words, this scheme
+> +cannot preserve the quality of the output if the assumption is not guaranteed.
+> +
+> +
+> +Adaptive Regions Adjustment
+> +---------------------------
+> +
+> +At the beginning of the monitoring, DAMON constructs the initial regions by
+> +evenly splitting the memory mapped address space of the process into the
+> +user-specified minimal number of regions.  In this initial state, the
+> +assumption is normally not kept and thus the quality could be low.  To keep the
+> +assumption as much as possible, DAMON adaptively merges and splits each region.
+> +For each ``aggregation interval``, it compares the access frequencies of
+> +adjacent regions and merges those if the frequency difference is small.  Then,
+> +after it reports and clears the aggregated access frequency of each region, it
+> +splits each region into two regions if the total number of regions is smaller
+> +than the half of the user-specified maximum number of regions.
+> +
+> +In this way, DAMON provides its best-effort quality and minimal overhead while
+> +keeping the bounds users set for their trade-off.
+> +
+> +
+> +Applying Dynamic Memory Mappings
+> +--------------------------------
+> +
+> +Only a number of small parts in the super-huge virtual address space of the
+> +processes is mapped to physical memory and accessed.  Thus, tracking the
+> +unmapped address regions is just wasteful.  However, tracking every memory
+> +mapping change might incur an overhead.  For the reason, DAMON applies the
+> +dynamic memory mapping changes to the tracking regions only for each of an
+> +user-specified time interval (``regions update interval``).
+> +
+> +
+> +User Interface
+> +==============
+> +
+> +DAMON exports three files, ``attrs``, ``pids``, and ``monitor_on`` under its
+> +debugfs directory, ``<debugfs>/damon/``.
+> +
+> +
+> +Attributes
+> +----------
+> +
+> +Users can read and write the ``sampling interval``, ``aggregation interval``,
+> +``regions update interval``, min/max number of regions, and the path to
+> +``result file`` by reading from and writing to the ``attrs`` file.  For
+> +example, below commands set those values to 5 ms, 100 ms, 1,000 ms, 10, 1000,
+> +and ``/damon.data`` and check it again::
+> +
+> +    # cd <debugfs>/damon
+> +    # echo 5000 100000 1000000 10 1000 /damon.data > attrs
+> +    # cat attrs
+> +    5000 100000 1000000 10 1000 /damon.data
+> +
+> +
+> +Target PIDs
+> +-----------
+> +
+> +Users can read and write the pids of current monitoring target processes by
+> +reading from and writing to the `pids` file.  For example, below commands set
+> +processes having pids 42 and 4242 as the processes to be monitored and check
+> +it again::
+> +
+> +    # cd <debugfs>/damon
+> +    # echo 42 4242 > pids
+> +    # cat pids
+> +    42 4242
+> +
+> +Note that setting the pids doesn't starts the monitoring.
+> +
+> +
+> +Turning On/Off
+> +--------------
+> +
+> +You can check current status, start and stop the monitoring by reading from and
+> +writing to the ``monitor_on`` file.  Writing ``on`` to the file starts DAMON to
+> +monitor the target processes with the attributes.  Writing ``off`` to the file
+> +stops DAMON.  DAMON also stops if every target processes is be terminated.
+> +Below example commands turn on, off, and check status of DAMON::
+> +
+> +    # cd <debugfs>/damon
+> +    # echo on > monitor_on
+> +    # echo off > monitor_on
+> +    # cat monitor_on
+> +    off
+> +
+> +Please note that you cannot write to the ``attrs`` and ``pids`` files while the
+> +monitoring is turned on.  If you write to the files while DAMON is running,
+> +``-EINVAL`` will be returned.
+> +
+> +
+> +User Space Wrapper
+> +------------------
+> +
+> +DAMON has a shallow wrapper python script, ``/tools/damon/damn`` that provides
+> +more convenient interface.  Note that it is only aimed to be used for minimal
+> +reference of the DAMON's raw interfaces and for debugging of the DAMON itself.
+> +Based on the debugfs interface, you can create another cool and more convenient
+> +user space tools.
+> +
+> +
+> +Quick Tutorial
+> +--------------
+> +
+> +To test DAMON on your system,
+> +
+> +1. Ensure your kernel is built with CONFIG_DAMON turned on, and debugfs is
+> +   mounted at ``/sys/kernel/debug/``.
+> +2. ``<your kernel source tree>/tools/damon/damn -h``
 
+I think it would be helpful for the reader to provide an example of
+what they should expect to see here.
 
--- 
-Florian
+> diff --git a/Documentation/admin-guide/mm/index.rst b/Documentation/admin-guide/mm/index.rst
+> index 11db46448354..d3d0ba373eb6 100644
+> --- a/Documentation/admin-guide/mm/index.rst
+> +++ b/Documentation/admin-guide/mm/index.rst
+> @@ -27,6 +27,7 @@ the Linux memory management.
+>
+>     concepts
+>     cma_debugfs
+> +   data_access_monitor
+>     hugetlbpage
+>     idle_page_tracking
+>     ksm
+> --
+> 2.17.1
+>
