@@ -2,167 +2,114 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00FF6C33CAA
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 21:45:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37A1BC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 21:45:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B081820665
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 21:45:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 050E920665
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 21:45:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="FkFiUQ+Q"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LGYaj3ag"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729078AbgAWVpV (ORCPT
+        id S1729180AbgAWVpm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 16:45:21 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:45206 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728057AbgAWVpU (ORCPT
+        Thu, 23 Jan 2020 16:45:42 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:48493 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728911AbgAWVpl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 16:45:20 -0500
-Received: by mail-lj1-f195.google.com with SMTP id j26so5402133ljc.12
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jan 2020 13:45:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=14Phm8+YcLeBER1tUmYRr6u2IEB1IiJoYWbH7UYZiVo=;
-        b=FkFiUQ+QKLXb0B0bW8Dkh0idUJ/db0OxoHdnOxNAp1boJLPUkSnF0i7Bdi1TnSHg31
-         7DLxaMiuAxaLeTfpvYGTB5pDNYF4brL6mBnAtQ50VspqngrmvJeH/+0eJLoTUZwwcNur
-         JAyFY0lEOW/cQuhfOdHnCYnqVkBNxdDhqQ3OlUfpJNAuoTfxaOt3y6cUFoLlHZmgwLI4
-         4Lkic2ibNKtNZ0+gjR5pgpO7uhwUR3no6Ynmw5sz8oUizYKwrpA2JOd4FinkN6SiZTM5
-         oJjkoj0cwM7s2n6b/q6hbwIegVIvRgqr09h1A/K86vcXBXGaqQ1OQrhHJm6RBnSPHVPv
-         7m4g==
+        Thu, 23 Jan 2020 16:45:41 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579815940;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=u61jrRml7uBsTChqQkvEyIjmfc5MgOu8Mlxfsu5OMjo=;
+        b=LGYaj3ageoOgOQJYg/Wlyy3OIhnOdZumeDj/G8cRfAEWZzQYax/8aBrpah5R2zMyNAyvEZ
+        qCYBMg+MDpse+Np4GbrmyTskgvB1JqaHlMQG/BUIA9AsmNcj1lJZnXIYT7Muu2HzKLrl67
+        x6gowANcsZJ4FtrJ1Bya6KtZRzdBg10=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-356-m_EnMrTeMc-3suXy6w0IHg-1; Thu, 23 Jan 2020 16:45:38 -0500
+X-MC-Unique: m_EnMrTeMc-3suXy6w0IHg-1
+Received: by mail-wm1-f71.google.com with SMTP id y24so1697382wmj.8
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jan 2020 13:45:38 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=14Phm8+YcLeBER1tUmYRr6u2IEB1IiJoYWbH7UYZiVo=;
-        b=GfTuOnEzDkeD4ZNrupTuO98LCiAd38myYHMLGDS7yBoPI5mQVrRPzqooNn7mqC4jay
-         /tZC5sVTI4UYdErCBPlPFCKHRMViVViumVVtFk+rIUGq8sfilYEXAtCcg8S/MumPoMsM
-         ATRMEZ4Wgoa1vD2CfUg+UlIWSFfGPsjBAjMZ47F8rbb2sfz+eiub1iONaa778lHqzgZH
-         baMCnBDsfLSReBTlYYDSHz2iczIUo8NPEq1up5pnlPRs2q1VPBW2fWqfLp/syALBDFqo
-         3TVR5uRLrQCGcGDSInGkeGOmPgYUo78LoDtwFT28WPz9s2cevIJJdhFdVLXqMjYb/KpP
-         IZqw==
-X-Gm-Message-State: APjAAAWhOhb4QbKkV09NF+SvccKH/xEcWSw5lOcn4PCnXMmlgo88CL+M
-        I/Gqp8qE0cksLMPQ/39iEZydIQvMXor+lH2yTj3QTms=
-X-Google-Smtp-Source: APXvYqyeJRF7GdpSJouygYcw2FtawzW1+7XH4sU4JZtZF7oRd79p7FnopINhaoh+EW2YgGAP3IzlLPlnhyW/dWQlAVs=
-X-Received: by 2002:a2e:9b03:: with SMTP id u3mr256015lji.87.1579815917614;
- Thu, 23 Jan 2020 13:45:17 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=u61jrRml7uBsTChqQkvEyIjmfc5MgOu8Mlxfsu5OMjo=;
+        b=a3UIsDBKdfAszgk4MOxJxGlNHL2Cbm+TONTtaJS61XZf/lTPlNyezNGwm86jwaRlhZ
+         hdDcDk6xaUyu3FPYZv/+NL3aXBetK3pj+/Zxwup+10cs6vIadM8RE0zoMAWy5lueHmrp
+         aQUC8/LB9LC805GyV0F+69HUuH977ZlXlwj4VY6XMJ5mw3v2NTAYbvHMViiHL/TBKbel
+         wh1uLbao5Q8jhUHUid+1Jtr25sPk6UONoq/90OI9A3YD2fSB4Pl4uWpPOnZfmIzSN0ZP
+         1JBt9Ja8MqxmFRzoeVTlXa4TxmlLAGx4WYbX5ALYziaJmOqrIwa2RkuVsJ6BLfyTlz9Z
+         04uQ==
+X-Gm-Message-State: APjAAAUzOXqxF2931sV6QN123Nbmp0K2KHJF+ui6rJ+8Ks6ZxWZ27LNe
+        hHbgPn4w7LBh5EsRMXSTz1sqOM41xRbseC153FnS6/n0xNORmLa4Dyy9kOiANkFDERl2Q5B0+WQ
+        LlmhifIUbrHYSpmyzJkOVFzeg
+X-Received: by 2002:a5d:4085:: with SMTP id o5mr91673wrp.321.1579815937023;
+        Thu, 23 Jan 2020 13:45:37 -0800 (PST)
+X-Google-Smtp-Source: APXvYqypvLRV506GGxMfAQP/vrSzj5p5HHA+EMluQu+yI3TOmaSFK8iaFL33miPix2yjG9Oq+XvZzw==
+X-Received: by 2002:a5d:4085:: with SMTP id o5mr91651wrp.321.1579815936765;
+        Thu, 23 Jan 2020 13:45:36 -0800 (PST)
+Received: from steredhat ([80.188.125.198])
+        by smtp.gmail.com with ESMTPSA id y139sm4299842wmd.24.2020.01.23.13.45.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 23 Jan 2020 13:45:35 -0800 (PST)
+Date:   Thu, 23 Jan 2020 22:45:33 +0100
+From:   Stefano Garzarella <sgarzare@redhat.com>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>, io-uring@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH] io_uring: wakeup threads waiting for EPOLLOUT events
+Message-ID: <20200123214533.ikn4olf7k5dfbaq6@steredhat>
+References: <20200116134946.184711-1-sgarzare@redhat.com>
+ <2d2dda92-3c50-ee62-5ffe-0589d4c8fc0d@kernel.dk>
+ <20200116155557.mwjc7vu33xespiag@steredhat>
+ <5723453a-9326-e954-978e-910b8b495b38@kernel.dk>
+ <20200116162630.6r3xc55kdyyq5tvz@steredhat>
+ <a02a58dc-bf23-ed74-aec6-52c85360fe00@kernel.dk>
+ <20200116170342.4jvkhbbw4x6z3txn@steredhat>
+ <2d3d4932-8894-6969-4006-25141ca1286e@kernel.dk>
 MIME-Version: 1.0
-References: <ca70ee17d85860aa599e0001a75d639d819de7ae.1579292286.git.rgb@redhat.com>
- <CAHC9VhR9p+aOTzv7g-ujuMsMtLvOZKkoKJWsthZnj38rzJe1TA@mail.gmail.com>
- <20200122230742.7vwtvmhhjerray5f@madcap2.tricolour.ca> <CAHC9VhTcv9E8DUDJ2Y-PzXmU0_+ufVydbPB3Q_Fhb8-7TUZMmg@mail.gmail.com>
- <20200123161349.z55l2dd7qsyhoxbn@madcap2.tricolour.ca> <CAHC9VhTEfZXCV6TwJ4KOoDCea3x5i85_gBmMi=cygGG9OQCGOQ@mail.gmail.com>
- <20200123185149.sr4b4u4s2ec7renc@madcap2.tricolour.ca> <CAHC9VhSPwfNqqoMid+bHRa-XTj4b+DbE6+ov8=MsCxMBuHbjWg@mail.gmail.com>
- <20200123201541.emtse6l5wrnrpqgc@madcap2.tricolour.ca>
-In-Reply-To: <20200123201541.emtse6l5wrnrpqgc@madcap2.tricolour.ca>
-From:   Paul Moore <paul@paul-moore.com>
-Date:   Thu, 23 Jan 2020 16:45:06 -0500
-Message-ID: <CAHC9VhQxRGCzmJB0p06_4k8cwyWOz1j=DCOYjLqGvDVNpMoYfA@mail.gmail.com>
-Subject: Re: [PATCH ghak28 V4] audit: log audit netlink multicast bind and
- unbind events
-To:     Richard Guy Briggs <rgb@redhat.com>
-Cc:     Eric Paris <eparis@parisplace.org>, nhorman@redhat.com,
-        Linux-Audit Mailing List <linux-audit@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2d3d4932-8894-6969-4006-25141ca1286e@kernel.dk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 23, 2020 at 3:15 PM Richard Guy Briggs <rgb@redhat.com> wrote:
-> On 2020-01-23 14:07, Paul Moore wrote:
-> > On Thu, Jan 23, 2020 at 1:52 PM Richard Guy Briggs <rgb@redhat.com> wrote:
-> > > On 2020-01-23 11:57, Paul Moore wrote:
-> > > > On Thu, Jan 23, 2020 at 11:14 AM Richard Guy Briggs <rgb@redhat.com> wrote:
-> > > > > On 2020-01-23 09:32, Paul Moore wrote:
-> > > > > > On Wed, Jan 22, 2020 at 6:07 PM Richard Guy Briggs <rgb@redhat.com> wrote:
-> > > > > > > On 2020-01-22 17:40, Paul Moore wrote:
-> > > > > > > > On Fri, Jan 17, 2020 at 3:21 PM Richard Guy Briggs <rgb@redhat.com> wrote:
-> > > > > >
-> > > > > > ...
-> > > > > >
-> > > > > > > > > diff --git a/kernel/audit.c b/kernel/audit.c
-> > > > > > > > > index 17b0d523afb3..478259f3fa53 100644
-> > > > > > > > > --- a/kernel/audit.c
-> > > > > > > > > +++ b/kernel/audit.c
-> > > > > > > > > @@ -1520,20 +1520,60 @@ static void audit_receive(struct sk_buff  *skb)
-> > > > > > > > >         audit_ctl_unlock();
-> > > > > > > > >  }
-> > > > > > > > >
-> > > > > > > > > +/* Log information about who is connecting to the audit multicast socket */
-> > > > > > > > > +static void audit_log_multicast_bind(int group, const char *op, int err)
-> > > > > > > > > +{
-> > > > > > > > > +       const struct cred *cred;
-> > > > > > > > > +       struct tty_struct *tty;
-> > > > > > > > > +       char comm[sizeof(current->comm)];
-> > > > > > > > > +       struct audit_buffer *ab;
-> > > > > > > > > +
-> > > > > > > > > +       if (!audit_enabled)
-> > > > > > > > > +               return;
-> > > > > > > > > +
-> > > > > > > > > +       ab = audit_log_start(audit_context(), GFP_KERNEL, AUDIT_EVENT_LISTENER);
-> > > > > > > > > +       if (!ab)
-> > > > > > > > > +               return;
-> > > > > > > > > +
-> > > > > > > > > +       cred = current_cred();
-> > > > > > > > > +       tty = audit_get_tty();
-> > > > > > > > > +       audit_log_format(ab, "pid=%u uid=%u auid=%u tty=%s ses=%u",
-> > > > > > > > > +                        task_pid_nr(current),
-> > > > > > > > > +                        from_kuid(&init_user_ns, cred->uid),
-> > > > > > > > > +                        from_kuid(&init_user_ns, audit_get_loginuid(current)),
-> > > > > > > > > +                        tty ? tty_name(tty) : "(none)",
-> > > > > > > > > +                        audit_get_sessionid(current));
-> > > > > > > >
-> > > > > > > > Don't we already get all of that information as part of the syscall record?
-> > > > > > >
-> > > > > > > Yes.  However, the syscall record isn't always present.  One example is
-> > > > > > > systemd, shown above.
-> > > > > >
-> > > > > > Assuming that the system supports syscall auditing, the absence of a
-> > > > > > syscall record is a configuration choice made by the admin.  If the
-> > > > > > system doesn't support syscall auditing the obvious "fix" is to do the
-> > > > > > work to enable syscall auditing on that platform ... but now we're
-> > > > > > starting to get off topic.
-> > > > >
-> > > > > Well, the system did spit out a syscall record with the example above,
-> > > > > so it has support for syscall auditing.
-> > > > >
-> > > > > I'm testing on f30 with an upstream kernel, the standard 30-stig ruleset and
-> > > > > with kernel command line audit=1.  What else is needed to support a syscall
-> > > > > record on systemd before any audit rules have been put in place?  We may still
-> > > > > have a bug here that affects early process auditing.  What am I missing?
-> > > > >
-> > > > > If we can get that sorted out, we don't need subject attributes in this record.
-> > > >
-> > > > It looks like some debugging is in order.  There must be some sort of
-> > > > action initiated by userspace which is causing the multicast
-> > > > "op=connect", right?  Find out what that is and why it isn't
-> > > > generating a syscall record (maybe it's not a syscall? I don't know
-> > > > what systemd is doing here).
-> > >
-> > > One clue is that subj=kernel and auid, ttye and ses are unset, despite
-> > > the rest checking out:
-> > >         pid=1 uid=root auid=unset tty=(none) ses=unset subj=kernel comm=systemd exe=/usr/lib/systemd/systemd
-> >
-> > Does Fedora use systemd in its initramfs (I'm guessing the answer is
-> > "yes")?  If so, I wonder if that is the source of this record.
->
-> Asking around, I got: "yes, dracut uses systemd these days"
->
-> So, yes, that is the source of this record.
->
-> So if there is no syscall associated with that record, it appears we
-> need those subject attributes.
+On Thu, Jan 23, 2020 at 12:13:57PM -0700, Jens Axboe wrote:
+> On 1/16/20 10:03 AM, Stefano Garzarella wrote:
+> > On Thu, Jan 16, 2020 at 09:30:12AM -0700, Jens Axboe wrote:
+> >> On 1/16/20 9:26 AM, Stefano Garzarella wrote:
+> >>>> Since the use case is mostly single submitter, unless you're doing
+> >>>> something funky or unusual, you're not going to be needing POLLOUT ever.
+> >>>
+> >>> The case that I had in mind was with kernel side polling enabled and
+> >>> a single submitter that can use epoll() to wait free slots in the SQ
+> >>> ring. (I don't have a test, maybe I can write one...)
+> >>
+> >> Right, I think that's the only use case where it makes sense, because
+> >> you have someone else draining the sq side for you. A test case would
+> >> indeed be nice, liburing has a good arsenal of test cases and this would
+> >> be a good addition!
+> > 
+> > Sure, I'll send a test to liburing for this case!
+> 
+> Gentle ping on the test case :-)
+> 
 
-Well, I'm fairly certain that the record in question was the result of
-a syscall made by systemd, the question is why was it not recorded?
-That is something that needs to be answered.
+Yes, you are right :-)
 
--- 
-paul moore
-www.paul-moore.com
+I was a little busy this week to finish some works before DevConf.
+I hope to work on the test case these days, so by Monday I hope I have it ;-)
+
+Cheers,
+Stefano
+
