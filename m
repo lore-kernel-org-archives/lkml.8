@@ -7,127 +7,91 @@ X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF851C33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 14:41:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5600C33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 14:42:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5ECB214AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 14:41:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D99C20704
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 14:42:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579790518;
-	bh=BLfTIIaNkuDfViyoiMC/57m9FStmctpzWllEfHfPU/Y=;
+	s=default; t=1579790547;
+	bh=1Dn+fl/jr2XOrPxCAJFsmb+RFAJag/5bwntu5/Ek0MU=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Tn+U+LIWBzGZb2ixkFbpiPg5Y/JqGxaFm8Yq1v9/NlTRC8jjKiJjZFCrN43G4iqz8
-	 okxLysZunEecgYIfO/zLZTIA+07Yq5wsQdSUoSX0xHx3ph6vcaUnkWvO8u6dDi/xQS
-	 rzXn7HdFZEJkk7B+6V9+3pV/ZBmnjuqU+hX7WnNg=
+	b=WMRa9gZBdc+uLdpIJendiO7KLxVDXmEP1mum6BU2t+OsTbAFxxLe5ZozkIVKPjZu2
+	 KalwIbXfBvjJ6hiAmE2DzmC3xVcMUciRk3mm7JSOJzAafc1on0yXjGc/RltY3UKYtL
+	 Js2lqVbwWbDi/iQTRKfH2Tn9mTznmsyppC4bikAM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729012AbgAWOl6 (ORCPT
+        id S1729043AbgAWOm1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 09:41:58 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:33050 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726771AbgAWOl5 (ORCPT
+        Thu, 23 Jan 2020 09:42:27 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:38600 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726771AbgAWOm0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 09:41:57 -0500
-Received: by mail-oi1-f194.google.com with SMTP id q81so3127466oig.0;
-        Thu, 23 Jan 2020 06:41:57 -0800 (PST)
+        Thu, 23 Jan 2020 09:42:26 -0500
+Received: by mail-ot1-f68.google.com with SMTP id z9so2931793oth.5;
+        Thu, 23 Jan 2020 06:42:26 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=XyyEYmd6rzPdE4SjzNvt9zLoM4bcWk4jZl+F6inRdac=;
-        b=F/1+xwwP/Y/0+1RrHcYRcVgMnQohCYtrTwnvPU+cmHRezE4bR0TZ9xlL7wjSo9st75
-         rwrgILMWbx4eNcfOOIXbmlHhZ2J81PszH+UC9Nqyp8gEy0jQm3Uq2VhZMxF6DQ3wFg9m
-         Q3WarnfP42ZPq13cZeQ76/CYaFnl5XXLyINPYBrn6owZT5zXXk5gHVVACZ1rrz7hJFC0
-         BVvjQofzM4aozLzsQ91bmr0K8E+H9RrbEdZu5c7MEw7baJZiDjt0+ATlzHe+jy4AU7z9
-         pXmcH6f9tgIIAQsrRjis2pAdKWjO0Q9H2AsaanfKWELI6DGO/eBUON5C1OVwDw/8DiWq
-         uF+w==
-X-Gm-Message-State: APjAAAWYOVEh3meDRPVso2PO9HhQzjNlIWgCesdfDY3EIuQWFg9SWmK9
-        6ljRyJ2ax3/OjtsjgMgO9w==
-X-Google-Smtp-Source: APXvYqzBkE5Rv9HPj5Qd04PviHLLr7khBD4hO9ohPV1CuplqS7AN8jQmX3T8AbcYgjI08E1/d+keNA==
-X-Received: by 2002:aca:2118:: with SMTP id 24mr10597649oiz.28.1579790517079;
-        Thu, 23 Jan 2020 06:41:57 -0800 (PST)
+        bh=VojjtS7akMpAwcay/UmymGiR2hr9tFaDHzEASOXUD8w=;
+        b=qInmoVWZHV918nepi6SS8coqrotGCF1BScJvQq49sl+vNDm3mvSXN5eHsP43sw20M/
+         4oxI9rnGW65vUQkl1fJKc6R8iKCEYnELAK73T31p892W0GHs2IE/FnRWHmVJ46dFKwvk
+         ORsP5OHmCb438u5OHaPKAxK7FDCdz9g+TJDFyJ9sRVAWQBIrwAb8M9phs80fHnsKMExa
+         9Rd4f9SFWlLPgm/NAmbq0Footirgr/UINAMpf57W+pZC10eYCxqmVVSEqL2a3AqknhOb
+         ET0+QBl+EEnIK6/UloBZPO1oNC/KG4gznTuSOZfBKqDN2tmNdNwe2H4aaFNceoVXz9VN
+         1Ccw==
+X-Gm-Message-State: APjAAAVQ8y0zbEjJYwjfyxhsK2Uxe0eWc1Z6SQEOMzc6tR4SxnsKd96s
+        k2K5jlmhHk6S8lmvNNMyXzLNDmk=
+X-Google-Smtp-Source: APXvYqxykG4E/5TrCk67dHt8GjjUfo7u0vBc/K5VrQHFHH+0sZpSZGqLdxDBl66PpWm84FUIUxD2uw==
+X-Received: by 2002:a9d:3e16:: with SMTP id a22mr12080775otd.259.1579790545677;
+        Thu, 23 Jan 2020 06:42:25 -0800 (PST)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id k17sm846309otl.45.2020.01.23.06.41.55
+        by smtp.gmail.com with ESMTPSA id n16sm845782otk.25.2020.01.23.06.42.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Jan 2020 06:41:56 -0800 (PST)
-Received: (nullmailer pid 8536 invoked by uid 1000);
-        Thu, 23 Jan 2020 14:41:55 -0000
-Date:   Thu, 23 Jan 2020 08:41:55 -0600
+        Thu, 23 Jan 2020 06:42:25 -0800 (PST)
+Received: (nullmailer pid 9469 invoked by uid 1000);
+        Thu, 23 Jan 2020 14:42:24 -0000
+Date:   Thu, 23 Jan 2020 08:42:24 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Sam Ravnborg <sam@ravnborg.org>
-Cc:     David Lechner <david@lechnology.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Noralf =?iso-8859-1?Q?Tr=F8nnes?= <noralf@tronnes.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Chris Brandt <chris.brandt@renesas.com>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: restrict properties for sitronix,st7735r
-Message-ID: <20200123144155.GA29553@bogus>
-References: <20200115124548.3951-1-geert+renesas@glider.be>
- <20200115124548.3951-2-geert+renesas@glider.be>
- <ba21d2c8-ccc6-2704-fa1f-d28239700547@lechnology.com>
- <20200120190249.GA9619@ravnborg.org>
+To:     Benjamin Gaignard <benjamin.gaignard@st.com>
+Cc:     gregkh@linuxfoundation.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, mcoquelin.stm32@gmail.com,
+        alexandre.torgue@st.com, linux-serial@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, fabrice.gasnier@st.com,
+        erwan.leray@st.com, Benjamin Gaignard <benjamin.gaignard@st.com>
+Subject: Re: [PATCH v2 1/2] dt-bindings: serial: Convert rs485 bindings to
+ json-schema
+Message-ID: <20200123144224.GA9094@bogus>
+References: <20200122095558.22553-1-benjamin.gaignard@st.com>
+ <20200122095558.22553-2-benjamin.gaignard@st.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200120190249.GA9619@ravnborg.org>
+In-Reply-To: <20200122095558.22553-2-benjamin.gaignard@st.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 20, 2020 at 08:02:49PM +0100, Sam Ravnborg wrote:
-> Hi David.
+On Wed, 22 Jan 2020 10:55:57 +0100, Benjamin Gaignard wrote:
+> Convert rs485 binding to yaml style file.
 > 
-> > > +allOf:
-> > > +  - $ref: panel/panel-common.yaml#
-> > 
-> > not all of these properties are applicable.
-> > 
-> 
-> > > +required:
-> > > +  - compatible
-> > > +  - reg
-> > > +  - dc-gpios
-> > > +  - reset-gpios
-> > 
-> > Missing optional rotation and backlight properties.
-> 
-> Thanks for catching this. I have written a little .yaml files
-> since I applied this - and learned a little more of the syntax.
-> 
-> See attached patch for my attempt to fix this.
-> Please review.
-> 
-> 	Sam
-> 
-> From 6b54fb0a071c0732cd4bd5b88f456b5a85bcf4f2 Mon Sep 17 00:00:00 2001
-> From: Sam Ravnborg <sam@ravnborg.org>
-> Date: Mon, 20 Jan 2020 19:55:04 +0100
-> Subject: [PATCH] dt-bindings: restrict properties for sitronix,st7735r
-> 
-> David Lechner noticed (paraphrased):
-> - not all properties from panel-common are applicable.
-> - missing optional rotation and backlight properties
-> 
-> Fix this by listing all allowed properties, and do not allow other properties.
-> 
-> Fixes: abdd9e3705c8 ("dt-bindings: display: sitronix,st7735r: Convert to DT schema")
-> Reported-by: David Lechner <david@lechnology.com>
-> Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
-> Cc: Geert Uytterhoeven <geert+renesas@glider.be>
-> Cc: David Lechner <david@lechnology.com>
-> Cc: Rob Herring <robh@kernel.org>
-> Cc: dri-devel@lists.freedesktop.org
+> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
 > ---
->  .../devicetree/bindings/display/sitronix,st7735r.yaml      | 7 +++++++
->  1 file changed, 7 insertions(+)
+> version 2:
+> - remove types inside rs485-rts-delay property and add a maximum for delay
+>   values
+> 
+>  Documentation/devicetree/bindings/serial/rs485.txt | 32 +--------------
+>  .../devicetree/bindings/serial/rs485.yaml          | 45 ++++++++++++++++++++++
+>  2 files changed, 46 insertions(+), 31 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/serial/rs485.yaml
+> 
 
-Acked-by: Rob Herring <robh@kernel.org>
+Applied, thanks.
+
+Rob
