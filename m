@@ -2,732 +2,252 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F8B4C33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 21:13:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 238BFC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 21:13:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 029AE21835
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 21:13:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC19121835
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 21:13:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Oz99gZv7"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Br1gHiZh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728797AbgAWVNJ (ORCPT
+        id S1729031AbgAWVNN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 16:13:09 -0500
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:36036 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727816AbgAWVNI (ORCPT
+        Thu, 23 Jan 2020 16:13:13 -0500
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:38519 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727816AbgAWVNL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 16:13:08 -0500
-Received: by mail-pj1-f66.google.com with SMTP id n59so42336pjb.1
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jan 2020 13:13:08 -0800 (PST)
+        Thu, 23 Jan 2020 16:13:11 -0500
+Received: by mail-ed1-f67.google.com with SMTP id i16so4862330edr.5;
+        Thu, 23 Jan 2020 13:13:09 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=6wpmiim8QVTezoGjHOb0voVyMmr/vVLwldVWKwAVCSI=;
-        b=Oz99gZv77ElCOPCb7+qFUgo6x/al9DjS5HGSe++pJfkB5glRfeUnRT65paQ6WVvUdF
-         gDOh1AsWq7mM7ehe7CURKALW+CFEgqOUXizQw8Urzr1qe8Hx5V6u/GH/jz3J352GGLz0
-         7ntoZDMGg8G0ra25HvTlMynunTcHivE/2P3wwAPmpayzU0460oBub3CJGh4s3nHMyqB+
-         V15Kan03NKAswql5uoMTqlqRWbMxtr5xWq2BFILeec7keVvsfUaujd6ByEWZY2dBsanO
-         ROM/6c7soS17MsRf1MQMcc8PZffojFuwu7DijLVQII1ohvCPBGu/et5HJXX1wjkzdpjD
-         3AgA==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Dh2wt1vORa35MTM3FuGiuCtiW/CFK3Ccqbeyfn7ivTI=;
+        b=Br1gHiZhtEos2FE84vsmPLrz7y9aPx1FHdepJbLcQe6rKsLX944lSzvKlnFFHrao+u
+         OgZRGimuRrGs8l7319YKrzQj3uuYQ68+VIvE5wJRiJLBHWDim1p5yT+r5fBW0i1MMtc5
+         C94h7/VtpLspAGIup4FwX2aiCcyC/mVs3UEfOPu8t438OD5Fr63Bhos8ko4sRDeeZICn
+         a434UyLJY19Z1UNf0u6FC+SzjahHcVAZvOm3QPeKU7eCggo4BjB0fY9fQySIIY6swXVu
+         N4ZzS7NHs6pwGARnZ+jm2W7fYePXf+5rWs0tT3NRNHghczRoEXLEcY7vnEKOKkHqWl0D
+         Kx9g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6wpmiim8QVTezoGjHOb0voVyMmr/vVLwldVWKwAVCSI=;
-        b=MZst0B3Qs8UvBXcFszVLxnZEzm/4/0C4I8Befv4DSICV3WieqM9w+ZGt5oiLiiR9p9
-         pfO3RpJnDJdHo3chUvAutlcVRlL1ZEaynU+sNti2o4KsIB/gnwbN09UalgraoA+ClAwx
-         lKNKtSaeuHm/JLKvHmsrtfW6q7hD9qM0qaaKiEst12FRXdfIFzkIKcg2WvEHH0fXGN43
-         otCpGOiN0tp9C5IAI4mj7HHJBpL7ARjuwKZy7VOJ7Oaq0NNQdAwLQ867nj4Zu4iP3Adg
-         8XagQqAFVjqD4rgY/jSOJPRGHL1DbqtXuzU06vOdLu8bL+egD/RrEecJVtpOoCK/oVa1
-         aJSw==
-X-Gm-Message-State: APjAAAUA1Xw+tlxnQFr2BytBUQ0p6fJF7p3qfCNHjn0Q0yvgeqlRQ6bh
-        tygdAEr7X8SxwAxOZp92Fl88JnVrHKF7guAq/mAZpA==
-X-Google-Smtp-Source: APXvYqx0vKloJwZMdT+rTROmZMxonMvWDTNUmKb5T/PnAAhv/SBm/qsNJ3xaxcTSA8zdsWI8aP6U3n48Rtjx5kInsoI=
-X-Received: by 2002:a17:902:9a4c:: with SMTP id x12mr55564plv.297.1579813987117;
- Thu, 23 Jan 2020 13:13:07 -0800 (PST)
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=Dh2wt1vORa35MTM3FuGiuCtiW/CFK3Ccqbeyfn7ivTI=;
+        b=tg/t4HPkQyyizGZqcWR5JySedgkewowG9w4t5A9kPdEl/1aihbK20xi8ncEpTGH1k0
+         ZEDfcg87vjuDdt6+WTdsuUqiynRuzhwRv7dD9WzFdBp0I7bRJvmR2/yxE+DIxOOfVajT
+         0sAsnvpWzLXPLsbFVM6+TuoPN+M2RT9WL88skpPMhQvo7ihRmf0gcn1opMo/IebJGxWS
+         piVmGfnpIBEpYyUE1GAgdg630vsa+KUDBiRTTHSlEwUJ1bqxCayeAGPRid3Y4DZx+8xx
+         8Law1yXJSCk/WnLj/lknbc1Sg72BdCwsg9CDjOA3S+HZZSpmO/cmPY1wQ8d/D14HEAib
+         gslg==
+X-Gm-Message-State: APjAAAWB7RDYA7+/fmeNddbyLp9H4ypf/hO3/zspVnU7MpKXNKHy/Nrz
+        xaOCWCeZ810wQ/EW0gq5rSg=
+X-Google-Smtp-Source: APXvYqx6wnIYlrFVF9yeSitfx4KEX6bfY3YcCjjjY1kcHH4cpgS5OW6MMyYedqGO/MG9BQNVLEN4lw==
+X-Received: by 2002:a17:906:c40d:: with SMTP id u13mr25787ejz.178.1579813988472;
+        Thu, 23 Jan 2020 13:13:08 -0800 (PST)
+Received: from [10.67.50.115] ([192.19.223.252])
+        by smtp.googlemail.com with ESMTPSA id o15sm40291edj.3.2020.01.23.13.13.05
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 23 Jan 2020 13:13:07 -0800 (PST)
+Subject: Re: [RFC 2/2] net: bcmgenet: Fetch MAC address from the adapter
+To:     Jeremy Linton <jeremy.linton@arm.com>, netdev@vger.kernel.org
+Cc:     opendmb@gmail.com, davem@davemloft.net,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-kernel@vger.kernel.org, wahrenst@gmx.net
+References: <20200123060823.1902366-1-jeremy.linton@arm.com>
+ <20200123060823.1902366-3-jeremy.linton@arm.com>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
+ 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
+ G10n8gCguORqNGMsVRxrlLs7/himep7MrCc=
+Message-ID: <465844cf-ff19-9bb5-15d3-cc876a2d40f6@gmail.com>
+Date:   Thu, 23 Jan 2020 13:13:01 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-References: <20200110131522.29964-1-sjpark@amazon.com> <20200110131753.30737-1-sjpark@amazon.com>
-In-Reply-To: <20200110131753.30737-1-sjpark@amazon.com>
-From:   Brendan Higgins <brendanhiggins@google.com>
-Date:   Thu, 23 Jan 2020 13:12:55 -0800
-Message-ID: <CAFd5g47eB42E3X7m_rfmG=vEcMK9dtdAFZT5WjwV3sx3MO0-MQ@mail.gmail.com>
-Subject: Re: [RFC PATCH 5/5] mm/damon: Add kunit tests
-To:     SeongJae Park <sjpark@amazon.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        mgorman@suse.de, SeongJae Park <sj38.park@gmail.com>,
-        SeongJae Park <sjpark@amazon.de>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200123060823.1902366-3-jeremy.linton@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 10, 2020 at 5:18 AM SeongJae Park <sjpark@amazon.com> wrote:
->
-> From: SeongJae Park <sjpark@amazon.de>
->
-> This commit adds kunit based unit tests for DAMON.
->
-> Signed-off-by: SeongJae Park <sjpark@amazon.de>
+On 1/22/20 10:08 PM, Jeremy Linton wrote:
+> ARM/ACPI machines should utilize self describing hardware
+> when possible. The MAC address on the BCM GENET can be
+> read from the adapter if a full featured firmware has already
+> programmed it. Lets try using the address already programmed,
+> if it appears to be valid.
 
-Sorry for the late review on this: I am still getting caught up on my
-vacation backlog.
+s/BCM GENET/BCMGENET/ or just GENET.
 
+> 
+> Signed-off-by: Jeremy Linton <jeremy.linton@arm.com>
 > ---
->  mm/Kconfig      |  11 +
->  mm/damon-test.h | 571 ++++++++++++++++++++++++++++++++++++++++++++++++
->  mm/damon.c      |   2 +
->  3 files changed, 584 insertions(+)
->  create mode 100644 mm/damon-test.h
->
-> diff --git a/mm/Kconfig b/mm/Kconfig
-> index b7af8a1b5cb5..7b023799aa38 100644
-> --- a/mm/Kconfig
-> +++ b/mm/Kconfig
-> @@ -748,4 +748,15 @@ config DAMON
->           be 1) accurate enough to be useful for performance-centric domains,
->           and 2) sufficiently light-weight so that it can be applied online.
->
-> +config DAMON_TEST
-
-To be consistent with other KUnit tests, this should be "DAMON_KUNIT_TEST".
-
-> +       bool "Test for damon"
-> +       depends on DAMON && KUNIT
-> +       help
-> +         This builds the DAMON Kunit test suite.
-> +
-> +         For more information on KUnit and unit tests in general, please refer
-> +         to the KUnit documentation.
-> +
-> +         If unsure, say N.
-> +
->  endmenu
-> diff --git a/mm/damon-test.h b/mm/damon-test.h
-> new file mode 100644
-> index 000000000000..0d94910b8fe5
-> --- /dev/null
-> +++ b/mm/damon-test.h
-> @@ -0,0 +1,571 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * Data Access Monitor Unit Tests
-> + *
-> + * Copyright 2019 Amazon.com, Inc. or its affiliates.  All rights reserved.
-> + *
-> + * Author: SeongJae Park <sjpark@amazon.de>
-> + */
-> +
-> +#ifdef CONFIG_DAMON_TEST
-> +
-> +#ifndef _DAMON_TEST_H
-> +#define _DAMON_TEST_H
-> +
-> +#include <kunit/test.h>
-> +
-> +static void damon_test_str_to_pids(struct kunit *test)
-> +{
-> +       char *question;
-> +       unsigned long *answers;
-> +       unsigned long expected[] = {12, 35, 46};
-> +       ssize_t nr_integers = 0, i;
-> +
-> +       question = "123";
-> +       answers = str_to_pids(question, strnlen(question, 128), &nr_integers);
-> +       KUNIT_EXPECT_EQ(test, 1l, nr_integers);
-> +       KUNIT_EXPECT_EQ(test, 123ul, answers[0]);
-> +       kfree(answers);
-> +
-> +       question = "123abc";
-> +       answers = str_to_pids(question, strnlen(question, 128), &nr_integers);
-> +       KUNIT_EXPECT_EQ(test, 1l, nr_integers);
-> +       KUNIT_EXPECT_EQ(test, 123ul, answers[0]);
-> +       kfree(answers);
-> +
-> +       question = "a123";
-> +       answers = str_to_pids(question, strnlen(question, 128), &nr_integers);
-> +       KUNIT_EXPECT_EQ(test, 0l, nr_integers);
-> +       KUNIT_EXPECT_PTR_EQ(test, answers, (unsigned long *)NULL);
-> +
-> +       question = "12 35";
-> +       answers = str_to_pids(question, strnlen(question, 128), &nr_integers);
-> +       KUNIT_EXPECT_EQ(test, 2l, nr_integers);
-> +       for (i = 0; i < nr_integers; i++)
-> +               KUNIT_EXPECT_EQ(test, expected[i], answers[i]);
-> +       kfree(answers);
-> +
-> +       question = "12 35 46";
-> +       answers = str_to_pids(question, strnlen(question, 128), &nr_integers);
-> +       KUNIT_EXPECT_EQ(test, 3l, nr_integers);
-> +       for (i = 0; i < nr_integers; i++)
-> +               KUNIT_EXPECT_EQ(test, expected[i], answers[i]);
-> +       kfree(answers);
-> +
-> +       question = "12 35 abc 46";
-> +       answers = str_to_pids(question, strnlen(question, 128), &nr_integers);
-> +       KUNIT_EXPECT_EQ(test, 2l, nr_integers);
-> +       for (i = 0; i < 2; i++)
-> +               KUNIT_EXPECT_EQ(test, expected[i], answers[i]);
-> +       kfree(answers);
-> +
-> +       question = "";
-> +       answers = str_to_pids(question, strnlen(question, 128), &nr_integers);
-> +       KUNIT_EXPECT_EQ(test, 0l, nr_integers);
-> +       KUNIT_EXPECT_PTR_EQ(test, (unsigned long *)NULL, answers);
-> +       kfree(answers);
-> +
-> +       question = "\n";
-> +       answers = str_to_pids(question, strnlen(question, 128), &nr_integers);
-> +       KUNIT_EXPECT_EQ(test, 0l, nr_integers);
-> +       KUNIT_EXPECT_PTR_EQ(test, (unsigned long *)NULL, answers);
-> +       kfree(answers);
-> +}
-> +
-> +static void damon_test_regions(struct kunit *test)
-> +{
-> +       struct damon_region *r;
-> +       struct damon_task *t;
-> +
-> +       r = damon_new_region(1, 2);
-> +       KUNIT_EXPECT_EQ(test, 1ul, r->vm_start);
-> +       KUNIT_EXPECT_EQ(test, 2ul, r->vm_end);
-> +       KUNIT_EXPECT_EQ(test, 0u, r->nr_accesses);
-> +       KUNIT_EXPECT_TRUE(test, r->sampling_addr >= r->vm_start);
-> +       KUNIT_EXPECT_TRUE(test, r->sampling_addr < r->vm_end);
-> +
-> +       t = damon_new_task(42);
-> +       KUNIT_EXPECT_EQ(test, 0u, nr_damon_regions(t));
-> +
-> +       damon_add_region_tail(r, t);
-> +       KUNIT_EXPECT_EQ(test, 1u, nr_damon_regions(t));
-> +
-> +       damon_del_region(r);
-> +       KUNIT_EXPECT_EQ(test, 0u, nr_damon_regions(t));
-> +
-> +       damon_free_task(t);
-> +}
-> +
-> +static void damon_test_tasks(struct kunit *test)
-> +{
-> +       struct damon_task *t;
-> +
-> +       t = damon_new_task(42);
-> +       KUNIT_EXPECT_EQ(test, 42ul, t->pid);
-> +       KUNIT_EXPECT_EQ(test, 0u, nr_damon_tasks());
-> +
-> +       damon_add_task_tail(t);
-> +       KUNIT_EXPECT_EQ(test, 1u, nr_damon_tasks());
-> +
-> +       damon_destroy_task(t);
-> +       KUNIT_EXPECT_EQ(test, 0u, nr_damon_tasks());
-> +}
-> +
-> +static void damon_test_set_pids(struct kunit *test)
-> +{
-> +       unsigned long pids[] = {1, 2, 3};
-> +       char buf[64];
-> +
-> +       damon_set_pids(pids, 3);
-> +       damon_sprint_pids(buf, 64);
-> +       pr_info("buf: %s (%zu)\n", buf, strlen(buf));
-
-Might want to use kunit_info here so it matches the TAP test log
-format. Not a requirement, just an FYI.
-
-> +       KUNIT_EXPECT_EQ(test, 0, strncmp(buf, "1 2 3\n", 64));
-
-Here and elsewhere: This should probably use KUNIT_EXPECT_STREQ().
-
-> +
-> +       damon_set_pids(NULL, 0);
-> +       damon_sprint_pids(buf, 64);
-> +       KUNIT_EXPECT_EQ(test, 0, strncmp(buf, "\n", 64));
-> +
-> +       damon_set_pids((unsigned long []){1, 2}, 2);
-> +       damon_sprint_pids(buf, 64);
-> +       KUNIT_EXPECT_EQ(test, 0, strncmp(buf, "1 2\n", 64));
-> +
-> +       damon_set_pids((unsigned long []){2}, 1);
-> +       damon_sprint_pids(buf, 64);
-> +       KUNIT_EXPECT_EQ(test, 0, strncmp(buf, "2\n", 64));
-> +
-> +       damon_set_pids(NULL, 0);
-> +       damon_sprint_pids(buf, 64);
-> +       KUNIT_EXPECT_EQ(test, 0, strncmp(buf, "\n", 64));
-> +}
-> +
-> +static void damon_test_three_regions_in_vmas(struct kunit *test)
-> +{
-> +       struct region regions[3] = {0,};
-> +
-> +       struct vm_area_struct vmas[] = {
-> +               (struct vm_area_struct) {.vm_start = 10, .vm_end = 20},
-> +               (struct vm_area_struct) {.vm_start = 20, .vm_end = 25},
-> +               (struct vm_area_struct) {.vm_start = 200, .vm_end = 210},
-> +               (struct vm_area_struct) {.vm_start = 210, .vm_end = 220},
-> +               (struct vm_area_struct) {.vm_start = 300, .vm_end = 305},
-> +               (struct vm_area_struct) {.vm_start = 307, .vm_end = 330},
-> +       };
-> +       vmas[0].vm_next = &vmas[1];
-> +       vmas[1].vm_next = &vmas[2];
-> +       vmas[2].vm_next = &vmas[3];
-> +       vmas[3].vm_next = &vmas[4];
-> +       vmas[4].vm_next = &vmas[5];
-> +       vmas[5].vm_next = NULL;
-> +
-> +       damon_three_regions_in_vmas(&vmas[0], regions);
-> +
-> +       KUNIT_EXPECT_EQ(test, 10ul, regions[0].start);
-> +       KUNIT_EXPECT_EQ(test, 25ul, regions[0].end);
-> +       KUNIT_EXPECT_EQ(test, 200ul, regions[1].start);
-> +       KUNIT_EXPECT_EQ(test, 220ul, regions[1].end);
-> +       KUNIT_EXPECT_EQ(test, 300ul, regions[2].start);
-> +       KUNIT_EXPECT_EQ(test, 330ul, regions[2].end);
-
-It's not obvious to me what property you are proving here. Might want
-to add a comment.
-
-> +}
-> +
-> +/* Clean up global state of damon */
-> +static void damon_cleanup_global_state(void)
-> +{
-> +       struct damon_task *t, *next;
-> +
-> +       damon_for_each_task_safe(t, next)
-> +               damon_destroy_task(t);
-> +
-> +       damon_rbuf_offset = 0;
-> +}
-> +
-> +static void damon_test_aggregate(struct kunit *test)
-> +{
-> +       unsigned long pids[] = {1, 2, 3};
-> +       unsigned long saddr[][3] = {{10, 20, 30}, {5, 42, 49}, {13, 33, 55} };
-> +       unsigned long eaddr[][3] = {{15, 27, 40}, {31, 45, 55}, {23, 44, 66} };
-> +       unsigned long accesses[][3] = {{42, 95, 84}, {10, 20, 30}, {0, 1, 2} };
-> +       struct damon_task *t;
-> +       struct damon_region *r;
-> +       int it, ir;
-> +       ssize_t sz, sr, sp;
-> +
-> +       damon_set_pids(pids, 3);
-> +
-> +       it = 0;
-> +       damon_for_each_task(t) {
-> +               for (ir = 0; ir < 3; ir++) {
-> +                       r = damon_new_region(saddr[it][ir], eaddr[it][ir]);
-> +                       r->nr_accesses = accesses[it][ir];
-> +                       damon_add_region_tail(r, t);
-> +               }
-> +               it++;
-> +       }
-> +       kdamond_flush_aggregated();
-
-I think this test case is also difficult to understand. I think you
-probably need at least a comment on what this test case does.
-
-> +       it = 0;
-> +       damon_for_each_task(t) {
-> +               ir = 0;
-> +               damon_for_each_region(r, t) {
-> +                       KUNIT_EXPECT_EQ(test, 0u, r->nr_accesses);
-> +                       ir++;
-> +               }
-> +               KUNIT_EXPECT_EQ(test, 3, ir);
-> +               it++;
-> +       }
-> +       KUNIT_EXPECT_EQ(test, 3, it);
-> +
-> +       sr = sizeof(r->vm_start) + sizeof(r->vm_end) + sizeof(r->nr_accesses);
-> +       sp = sizeof(t->pid) + sizeof(unsigned int) + 3 * sr;
-> +       sz = sizeof(struct timespec64) + sizeof(unsigned int) + 3 * sp;
-> +       KUNIT_EXPECT_EQ(test, (unsigned int)sz, damon_rbuf_offset);
-> +
-> +       damon_cleanup_global_state();
-> +}
-> +
-> +static void damon_test_write_rbuf(struct kunit *test)
-> +{
-> +       char *data;
-> +
-> +       data = "hello";
-> +       damon_write_rbuf(data, strnlen(data, 256));
-> +       KUNIT_EXPECT_EQ(test, damon_rbuf_offset, 5u);
-> +
-> +       damon_write_rbuf(data, 0);
-> +       KUNIT_EXPECT_EQ(test, damon_rbuf_offset, 5u);
-> +
-> +       KUNIT_EXPECT_EQ(test, strncmp(damon_rbuf, data, 5), 0);
-> +}
-> +
-> +static void damon_test_update_two_gaps(struct kunit *test)
-> +{
-
-I think this test case is also difficult to understand. I think you
-probably need at least a comment on what this test case does.
-
-> +       struct damon_task *t;
-> +       struct damon_region *r, *prev = NULL;
-> +       unsigned long regions[] = {10, 20, 20, 30,
-> +               50, 55, 55, 57, 57, 59,
-> +               70, 80, 80, 90, 90, 100};       /* 10-30, 50-59, 70-100 */
-> +       struct region new_regions[3] = {
-> +               (struct region){.start = 5, .end = 27},
-> +               (struct region){.start = 45, .end = 55},
-> +               (struct region){.start = 73, .end = 104} };
-> +       int i;
-> +       bool first_gap = true;
-> +
-> +       t = damon_new_task(42);
-> +       for (i = 0; i < ARRAY_SIZE(regions) / 2; i++) {
-> +               r = damon_new_region(regions[i * 2], regions[i * 2 + 1]);
-> +               damon_add_region_tail(r, t);
-> +       }
-> +       damon_add_task_tail(t);
-> +
-> +       damon_apply_three_regions(t, new_regions);
-> +
-> +       damon_for_each_region(r, t) {
-> +               if (prev == NULL) {
-> +                       KUNIT_EXPECT_EQ(test, r->vm_start, 5ul);
-> +                       goto next;
-> +               }
-> +
-> +               if (prev->vm_end != r->vm_start && first_gap) {
-> +                       KUNIT_EXPECT_EQ(test, prev->vm_end, 27ul);
-> +                       KUNIT_EXPECT_EQ(test, r->vm_start, 45ul);
-> +                       first_gap = false;
-> +                       goto next;
-> +               }
-> +
-> +               if (prev->vm_end != r->vm_start && !first_gap) {
-> +                       KUNIT_EXPECT_EQ(test, prev->vm_end, 55ul);
-> +                       KUNIT_EXPECT_EQ(test, r->vm_start, 73ul);
-> +                       goto next;
-> +               }
-> +
-> +next:
-> +               prev = r;
-> +       }
-> +
-> +       damon_cleanup_global_state();
-> +}
-> +
-> +static void damon_test_update_two_gaps2(struct kunit *test)
-> +{
-
-Same here.
-
-> +       struct damon_task *t;
-> +       struct damon_region *r;
-> +       /* 10-20-30, 50-55-57-59, 70-80-90-100 */
-> +       unsigned long regions[] = {10, 20, 20, 30,
-> +               50, 55, 55, 57, 57, 59,
-> +               70, 80, 80, 90, 90, 100};
-> +       struct region new_regions[3] = {
-> +               (struct region){.start = 5, .end = 27},
-> +               (struct region){.start = 56, .end = 57},
-> +               (struct region){.start = 65, .end = 104} };
-> +       /* expect 5-27, 56-57, 65-80-90-104 */
-> +       unsigned long answers[] = {5, 20, 20, 27,
-> +               56, 57,
-> +               65, 80, 80, 90, 90, 104};
-> +       int i;
-> +
-> +       t = damon_new_task(42);
-> +       for (i = 0; i < ARRAY_SIZE(regions) / 2; i++) {
-> +               r = damon_new_region(regions[i * 2], regions[i * 2 + 1]);
-> +               damon_add_region_tail(r, t);
-> +       }
-> +       damon_add_task_tail(t);
-> +
-> +       damon_apply_three_regions(t, new_regions);
-> +
-> +       for (i = 0; i < ARRAY_SIZE(answers) / 2; i++) {
-> +               r = damon_nth_region_of(t, i);
-> +               KUNIT_EXPECT_EQ(test, r->vm_start, answers[i * 2]);
-> +               KUNIT_EXPECT_EQ(test, r->vm_end, answers[i++ * 2 + 1]);
-> +       }
-> +
-> +       damon_cleanup_global_state();
-> +}
-> +
-> +static void damon_test_update_two_gaps3(struct kunit *test)
-> +{
-
-Same here.
-
-> +       struct damon_task *t;
-> +       struct damon_region *r;
-> +       /* 10-20-30, 50-55-57-59, 70-80-90-100 */
-> +       unsigned long regions[] = {10, 20, 20, 30,
-> +               50, 55, 55, 57, 57, 59,
-> +               70, 80, 80, 90, 90, 100};
-> +       struct region new_regions[3] = {
-> +               (struct region){.start = 5, .end = 27},
-> +               (struct region){.start = 61, .end = 63},
-> +               (struct region){.start = 65, .end = 104} };
-> +       /* expect 5-27, 56-57, 65-80-90-104 */
-> +       unsigned long answers[] = {5, 20, 20, 27,
-> +               61, 63,
-> +               65, 80, 80, 90, 90, 104};
-> +       int i;
-> +
-> +       t = damon_new_task(42);
-> +       for (i = 0; i < ARRAY_SIZE(regions) / 2; i++) {
-> +               r = damon_new_region(regions[i * 2], regions[i * 2 + 1]);
-> +               damon_add_region_tail(r, t);
-> +       }
-> +       damon_add_task_tail(t);
-> +
-> +       damon_apply_three_regions(t, new_regions);
-> +
-> +       for (i = 0; i < ARRAY_SIZE(answers) / 2; i++) {
-> +               r = damon_nth_region_of(t, i);
-> +               KUNIT_EXPECT_EQ(test, r->vm_start, answers[i * 2]);
-> +               KUNIT_EXPECT_EQ(test, r->vm_end, answers[i++ * 2 + 1]);
-> +       }
-> +
-> +       damon_cleanup_global_state();
-> +}
-> +
-> +static void damon_test_update_two_gaps4(struct kunit *test)
-> +{
-
-Ditto.
-
-> +       struct damon_task *t;
-> +       struct damon_region *r;
-> +       /* 10-20-30, 50-55-57-59, 70-80-90-100 */
-> +       unsigned long regions[] = {10, 20, 20, 30,
-> +               50, 55, 55, 57, 57, 59,
-> +               70, 80, 80, 90, 90, 100};
-> +       struct region new_regions[3] = {
-> +               (struct region){.start = 5, .end = 7},
-> +               (struct region){.start = 30, .end = 32},
-> +               (struct region){.start = 65, .end = 68} };
-> +       /* expect 5-27, 56-57, 65-80-90-104 */
-> +       unsigned long answers[] = {5, 7, 30, 32, 65, 68};
-> +       int i;
-> +
-> +       t = damon_new_task(42);
-> +       for (i = 0; i < ARRAY_SIZE(regions) / 2; i++) {
-> +               r = damon_new_region(regions[i * 2], regions[i * 2 + 1]);
-> +               damon_add_region_tail(r, t);
-> +       }
-> +       damon_add_task_tail(t);
-> +
-> +       damon_apply_three_regions(t, new_regions);
-> +
-> +       for (i = 0; i < ARRAY_SIZE(answers) / 2; i++) {
-> +               r = damon_nth_region_of(t, i);
-> +               KUNIT_EXPECT_EQ(test, r->vm_start, answers[i * 2]);
-> +               KUNIT_EXPECT_EQ(test, r->vm_end, answers[i++ * 2 + 1]);
-> +       }
-> +
-> +       damon_cleanup_global_state();
-> +}
-> +
-> +static void damon_test_split_evenly(struct kunit *test)
-> +{
-> +       struct damon_task *t;
-> +       struct damon_region *r;
-> +       unsigned long i;
-> +
-> +       KUNIT_EXPECT_EQ(test, damon_split_region_evenly(NULL, 5), -EINVAL);
-> +
-> +       t = damon_new_task(42);
-> +       r = damon_new_region(0, 100);
-> +       KUNIT_EXPECT_EQ(test, damon_split_region_evenly(r, 0), -EINVAL);
-> +
-> +       damon_add_region_tail(r, t);
-> +       KUNIT_EXPECT_EQ(test, damon_split_region_evenly(r, 10), 0);
-> +       KUNIT_EXPECT_EQ(test, nr_damon_regions(t), 10u);
-> +
-> +       i = 0;
-> +       damon_for_each_region(r, t) {
-> +               KUNIT_EXPECT_EQ(test, r->vm_start, i++ * 10);
-> +               KUNIT_EXPECT_EQ(test, r->vm_end, i * 10);
-> +       }
-> +       damon_free_task(t);
-> +
-> +       t = damon_new_task(42);
-> +       r = damon_new_region(5, 59);
-> +       damon_add_region_tail(r, t);
-> +       KUNIT_EXPECT_EQ(test, damon_split_region_evenly(r, 5), 0);
-> +       KUNIT_EXPECT_EQ(test, nr_damon_regions(t), 5u);
-> +
-> +       i = 0;
-> +       damon_for_each_region(r, t) {
-> +               if (i == 4)
-> +                       break;
-> +               KUNIT_EXPECT_EQ(test, r->vm_start, 5 + 10 * i++);
-> +               KUNIT_EXPECT_EQ(test, r->vm_end, 5 + 10 * i);
-> +       }
-> +       KUNIT_EXPECT_EQ(test, r->vm_start, 5 + 10 * i);
-> +       KUNIT_EXPECT_EQ(test, r->vm_end, 59ul);
-> +       damon_free_task(t);
-> +
-> +       t = damon_new_task(42);
-> +       r = damon_new_region(5, 6);
-> +       damon_add_region_tail(r, t);
-> +       KUNIT_EXPECT_EQ(test, damon_split_region_evenly(r, 2), -EINVAL);
-> +       KUNIT_EXPECT_EQ(test, nr_damon_regions(t), 1u);
-> +
-> +       damon_for_each_region(r, t) {
-> +               KUNIT_EXPECT_EQ(test, r->vm_start, 5ul);
-> +               KUNIT_EXPECT_EQ(test, r->vm_end, 6ul);
-> +       }
-> +       damon_free_task(t);
-> +}
-> +
-> +static void damon_test_split_at(struct kunit *test)
-> +{
-> +       struct damon_task *t;
-> +       struct damon_region *r;
-> +
-> +       t = damon_new_task(42);
-> +       r = damon_new_region(0, 100);
-> +       damon_add_region_tail(r, t);
-> +       damon_split_region_at(r, 25);
-> +       KUNIT_EXPECT_EQ(test, r->vm_start, 0ul);
-> +       KUNIT_EXPECT_EQ(test, r->vm_end, 25ul);
-> +
-> +       r = damon_next_region(r);
-> +       KUNIT_EXPECT_EQ(test, r->vm_start, 25ul);
-> +       KUNIT_EXPECT_EQ(test, r->vm_end, 100ul);
-> +
-> +       damon_free_task(t);
-> +}
-> +
-> +static void damon_test_merge_two(struct kunit *test)
-> +{
-> +       struct damon_task *t;
-> +       struct damon_region *r, *r2, *r3;
-> +       int i;
-> +
-> +       t = damon_new_task(42);
-> +       r = damon_new_region(0, 100);
-> +       r->nr_accesses = 10;
-> +       damon_add_region_tail(r, t);
-> +       r2 = damon_new_region(100, 300);
-> +       r2->nr_accesses = 20;
-> +       damon_add_region_tail(r2, t);
-> +
-> +       damon_merge_two_regions(r, r2);
-> +       KUNIT_EXPECT_EQ(test, r->vm_start, 0ul);
-> +       KUNIT_EXPECT_EQ(test, r->vm_end, 300ul);
-> +       KUNIT_EXPECT_EQ(test, r->nr_accesses, 16u);
-> +
-> +       i = 0;
-> +       damon_for_each_region(r3, t) {
-> +               KUNIT_EXPECT_PTR_EQ(test, r, r3);
-> +               i++;
-> +       }
-> +       KUNIT_EXPECT_EQ(test, i, 1);
-> +
-> +       damon_free_task(t);
-> +}
-> +
-> +static void damon_test_merge_regions_of(struct kunit *test)
-> +{
-> +       struct damon_task *t;
-> +       struct damon_region *r;
-> +       unsigned long sa[] = {0, 100, 114, 122, 130, 156, 170, 184};
-> +       unsigned long ea[] = {100, 112, 122, 130, 156, 170, 184, 230};
-> +       unsigned int nrs[] = {0, 0, 10, 10, 20, 30, 1, 2};
-> +
-> +       unsigned long saddrs[] = {0, 114, 130, 156, 170};
-> +       unsigned long eaddrs[] = {112, 130, 156, 170, 230};
-> +       int i;
-> +
-> +       t = damon_new_task(42);
-> +       for (i = 0; i < ARRAY_SIZE(sa); i++) {
-> +               r = damon_new_region(sa[i], ea[i]);
-> +               r->nr_accesses = nrs[i];
-> +               damon_add_region_tail(r, t);
-> +       }
-> +
-> +       damon_merge_regions_of(t, 9);
-> +       /* 0-112, 114-130, 130-156, 156-170 */
-> +       KUNIT_EXPECT_EQ(test, nr_damon_regions(t), 5u);
-> +       for (i = 0; i < 5; i++) {
-> +               r = damon_nth_region_of(t, i);
-> +               KUNIT_EXPECT_EQ(test, r->vm_start, saddrs[i]);
-> +               KUNIT_EXPECT_EQ(test, r->vm_end, eaddrs[i]);
-> +       }
-> +       damon_free_task(t);
-> +}
-> +
-> +static void damon_test_split_regions_of(struct kunit *test)
-> +{
-> +       struct damon_task *t;
-> +       struct damon_region *r;
-> +
-> +       t = damon_new_task(42);
-> +       r = damon_new_region(0, 22);
-> +       damon_add_region_tail(r, t);
-> +       damon_split_regions_of(t);
-> +       KUNIT_EXPECT_EQ(test, nr_damon_regions(t), 2u);
-> +       damon_free_task(t);
-> +}
-> +
-> +static void damon_test_kdamond_need_stop(struct kunit *test)
-> +{
-> +       KUNIT_EXPECT_TRUE(test, kdamond_need_stop());
-> +}
-> +
-> +static struct kunit_case damon_test_cases[] = {
-> +       KUNIT_CASE(damon_test_str_to_pids),
-> +       KUNIT_CASE(damon_test_tasks),
-> +       KUNIT_CASE(damon_test_regions),
-> +       KUNIT_CASE(damon_test_set_pids),
-> +       KUNIT_CASE(damon_test_three_regions_in_vmas),
-> +       KUNIT_CASE(damon_test_aggregate),
-> +       KUNIT_CASE(damon_test_write_rbuf),
-> +       KUNIT_CASE(damon_test_update_two_gaps),
-> +       KUNIT_CASE(damon_test_update_two_gaps2),
-> +       KUNIT_CASE(damon_test_update_two_gaps3),
-> +       KUNIT_CASE(damon_test_update_two_gaps4),
-> +       KUNIT_CASE(damon_test_split_evenly),
-> +       KUNIT_CASE(damon_test_split_at),
-> +       KUNIT_CASE(damon_test_merge_two),
-> +       KUNIT_CASE(damon_test_merge_regions_of),
-> +       KUNIT_CASE(damon_test_split_regions_of),
-> +       KUNIT_CASE(damon_test_kdamond_need_stop),
-> +       {},
-> +};
-> +
-> +static struct kunit_suite damon_test_suite = {
-> +       .name = "damon",
-> +       .test_cases = damon_test_cases,
-> +};
-> +kunit_test_suite(damon_test_suite);
-> +
-> +#endif /* _DAMON_TEST_H */
-> +
-> +#endif /* CONFIG_DAMON_TEST */
-> diff --git a/mm/damon.c b/mm/damon.c
-> index 0e99b4875700..c4b6b2db9a8c 100644
-> --- a/mm/damon.c
-> +++ b/mm/damon.c
-> @@ -1262,3 +1262,5 @@ static int __init damon_init(void)
+>  .../net/ethernet/broadcom/genet/bcmgenet.c    | 47 ++++++++++++++-----
+>  1 file changed, 36 insertions(+), 11 deletions(-)
+> 
+> diff --git a/drivers/net/ethernet/broadcom/genet/bcmgenet.c b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
+> index c736700f829e..6782bb0a24bd 100644
+> --- a/drivers/net/ethernet/broadcom/genet/bcmgenet.c
+> +++ b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
+> @@ -2779,6 +2779,27 @@ static void bcmgenet_set_hw_addr(struct bcmgenet_priv *priv,
+>  	bcmgenet_umac_writel(priv, (addr[4] << 8) | addr[5], UMAC_MAC1);
 >  }
->
->  module_init(damon_init);
+>  
+> +static void bcmgenet_get_hw_addr(struct bcmgenet_priv *priv,
+> +				 unsigned char *addr)
+> +{
+> +	u32 addr_tmp;
+> +	bool acpi_mode = has_acpi_companion(&priv->pdev->dev);
 > +
-> +#include "damon-test.h"
-> --
-> 2.17.1
->
+> +	/* UEFI/ACPI machines and possibly others will preprogram the MAC */
+> +	if (acpi_mode) {
+> +		addr_tmp = bcmgenet_umac_readl(priv, UMAC_MAC0);
+> +		addr[0] = addr_tmp >> 24;
+> +		addr[1] = (addr_tmp >> 16) & 0xff;
+> +		addr[2] = (addr_tmp >>	8) & 0xff;
+> +		addr[3] = addr_tmp & 0xff;
+> +		addr_tmp = bcmgenet_umac_readl(priv, UMAC_MAC1);
+> +		addr[4] = (addr_tmp >> 8) & 0xff;
+> +		addr[5] = addr_tmp & 0xff;
+> +	} else {
+> +		memset(addr, 0, ETH_ALEN);
+> +	}
+> +}
+> +
+>  /* Returns a reusable dma control register value */
+>  static u32 bcmgenet_dma_disable(struct bcmgenet_priv *priv)
+>  {
+> @@ -3509,11 +3530,6 @@ static int bcmgenet_probe(struct platform_device *pdev)
+>  	}
+>  	priv->wol_irq = platform_get_irq_optional(pdev, 2);
+>  
+> -	if (dn)
+> -		macaddr = of_get_mac_address(dn);
+> -	else if (pd)
+> -		macaddr = pd->mac_address;
+> -
+>  	priv->base = devm_platform_ioremap_resource(pdev, 0);
+>  	if (IS_ERR(priv->base)) {
+>  		err = PTR_ERR(priv->base);
+> @@ -3524,12 +3540,6 @@ static int bcmgenet_probe(struct platform_device *pdev)
+>  
+>  	SET_NETDEV_DEV(dev, &pdev->dev);
+>  	dev_set_drvdata(&pdev->dev, dev);
+> -	if (IS_ERR_OR_NULL(macaddr) || !is_valid_ether_addr(macaddr)) {
+> -		dev_warn(&pdev->dev, "using random Ethernet MAC\n");
+> -		eth_hw_addr_random(dev);
+> -	} else {
+> -		ether_addr_copy(dev->dev_addr, macaddr);
+> -	}
+>  	dev->watchdog_timeo = 2 * HZ;
+>  	dev->ethtool_ops = &bcmgenet_ethtool_ops;
+>  	dev->netdev_ops = &bcmgenet_netdev_ops;
+> @@ -3601,6 +3611,21 @@ static int bcmgenet_probe(struct platform_device *pdev)
+>  	    !strcasecmp(phy_mode_str, "internal"))
+>  		bcmgenet_power_up(priv, GENET_POWER_PASSIVE);
+>  
+> +	if (dn)
+> +		macaddr = of_get_mac_address(dn);
+> +	else if (pd)
+> +		macaddr = pd->mac_address;
+
+I would be adding an:
+
+	else if (has_acpi_companion())
+		bcmgenet_get_hw_addr(priv, macaddr);
+
+such that bcmgenet_get_hw_addr() does not have much ACPI specific
+knowledge and get be used outside, with the caller knowing whether it is
+appropriate.
+
+You should also indicate in your commit message that you are moving the
+fetching of the MAC address at a later point where the clocks are turned
+on, to guarantee that the registers can be read.
+
+With that fixed:
+
+Acked-by: Florian Fainelli <f.fainelli@gmail.com>
+
+> +
+> +	if (IS_ERR_OR_NULL(macaddr) || !is_valid_ether_addr(macaddr)) {
+> +		bcmgenet_get_hw_addr(priv, dev->dev_addr);
+> +		if (!is_valid_ether_addr(dev->dev_addr)) {
+> +			dev_warn(&pdev->dev, "using random Ethernet MAC\n");
+> +			eth_hw_addr_random(dev);
+> +		}
+> +	} else {
+> +		ether_addr_copy(dev->dev_addr, macaddr);
+> +	}
+> +
+>  	reset_umac(priv);
+>  
+>  	err = bcmgenet_mii_init(dev);
+> 
+
+
+-- 
+Florian
