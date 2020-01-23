@@ -2,115 +2,111 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33BC1C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 09:53:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EB26C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 09:54:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 055DB2253D
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 09:53:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D56CD2253D
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 09:54:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="MpyUX39+"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LHNQSCBY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728842AbgAWJxd (ORCPT
+        id S1728655AbgAWJyb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 04:53:33 -0500
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:34547 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726170AbgAWJxc (ORCPT
+        Thu, 23 Jan 2020 04:54:31 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:40943 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726026AbgAWJya (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 04:53:32 -0500
-Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00N9qXBO031074;
-        Thu, 23 Jan 2020 10:53:23 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : subject :
- date : message-id : references : in-reply-to : content-type : content-id :
- content-transfer-encoding : mime-version; s=STMicroelectronics;
- bh=jebCpCZZPKIum5p14EQM9vpinaAYlo2VjAoXb/u5ZBY=;
- b=MpyUX39+rEZepgTqjQAc6e5DadLTkm8Pu+rILybvdd5rHQF2t0mA9Ic48DJG4LiNj3Ln
- IffXiAW7mxZr3TH2XK6sq8GGyAr73LiYNJJWzzi/orPd9oXkyCKI7U4pwBLybOmyOiAe
- nw3p8KRMqaNmy0eFKOR+zREEUFNU5p8nmmRXIOal4NxELI4EQIz4g3dTBQwMETKJ5fGm
- XzcFb4loYanznOg8ZXJAEhaF7hClWIbGyhjogbGL/Ahdx+yrlHRk0q2vjem0/iJqomLl
- +AdxaavzF0TtrRWVLDbCEIUzvJfk+giqXHDsUmgT16QvlWPFm5VdGWa0mQkbABcZbsIZ Zg== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2xkrp2her6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 23 Jan 2020 10:53:23 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 2EF31100038;
-        Thu, 23 Jan 2020 10:53:20 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag3node1.st.com [10.75.127.7])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 18C3A220308;
-        Thu, 23 Jan 2020 10:53:20 +0100 (CET)
-Received: from SFHDAG6NODE3.st.com (10.75.127.18) by SFHDAG3NODE1.st.com
- (10.75.127.7) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 23 Jan
- 2020 10:53:19 +0100
-Received: from SFHDAG6NODE3.st.com ([fe80::d04:5337:ab17:b6f6]) by
- SFHDAG6NODE3.st.com ([fe80::d04:5337:ab17:b6f6%20]) with mapi id
- 15.00.1473.003; Thu, 23 Jan 2020 10:53:19 +0100
-From:   Philippe CORNU <philippe.cornu@st.com>
-To:     Yannick FERTRE <yannick.fertre@st.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        "Alexandre TORGUE" <alexandre.torgue@st.com>,
-        Etienne CARRIERE <etienne.carriere@st.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
-        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] media: platform: stm32: don't print an error on probe
- deferral
-Thread-Topic: [PATCH] media: platform: stm32: don't print an error on probe
- deferral
-Thread-Index: AQHV0ES87tnRYSqWgkGOHCLoEwzT46f39JSA
-Date:   Thu, 23 Jan 2020 09:53:19 +0000
-Message-ID: <a1b2d0b4-749e-71db-9e1a-9f784da9d729@st.com>
-References: <1579602169-7484-1-git-send-email-yannick.fertre@st.com>
-In-Reply-To: <1579602169-7484-1-git-send-email-yannick.fertre@st.com>
-Accept-Language: fr-FR, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.75.127.48]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <692E62893EDD6D4F9096E3ACEFF068B2@st.com>
-Content-Transfer-Encoding: base64
+        Thu, 23 Jan 2020 04:54:30 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579773269;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=JdY/01YnxgEcf8jBEhI8KPQzD/6+XrjHVp2ZZDmVmCk=;
+        b=LHNQSCBYIuzDd4nMLaVBvJbdcJsK/v8i2iYh2URjlVKPWS2HRFiSuBIl4/i/PA3qDrGimP
+        +uAH0gy4Ht3/rvD7Vse9wJaWQyqOwCHCXgyVDW+sOqTAKYpci5jUaBraKeEHr2rRgJJqNJ
+        cG4V7HWCwvzpmN4yyEq3K0CirFourcQ=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-142-bwpWl3lDOJi-X5PWeg9oRA-1; Thu, 23 Jan 2020 04:54:27 -0500
+X-MC-Unique: bwpWl3lDOJi-X5PWeg9oRA-1
+Received: by mail-wr1-f71.google.com with SMTP id 90so1478000wrq.6
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jan 2020 01:54:27 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=JdY/01YnxgEcf8jBEhI8KPQzD/6+XrjHVp2ZZDmVmCk=;
+        b=fDfq8mjchYA1duFXX6d7b4cogw6fwux+ZpNgkD7AAqEEYOHpkTrIBcQX7j9AfToACT
+         HWz57eXUvS0p5jwuNff5xbf774AHmRV2PaAQ8D5uu0CDOtSEj/Vv6XGS7tpkoKDg9ERx
+         oP50widwzFToGOspbBXjWCMjxypdM3ZUG3yvMuEICFqeY71BJ3nEYR+L5zLl6nSDTeJk
+         X4U8oDHVpOyLbfD+UqAYT5FHDs8dZRaWBk2KEd+iXhilqauPXClt4s2jpgxDdn7x1p4P
+         2hxZLW51/HUSbTKcejm60ZYxmrLT7iYsM7FLwg44GQqYxlG2MBpbsC7OQSapi5JFb0fd
+         Md9Q==
+X-Gm-Message-State: APjAAAUKn0YqFb12wDITp/+Bsi8nOHyIivtKUEPszCTVi/M96VFruGdQ
+        16CGpsGs/MmFWSLtcASD8216MAy0jDU4JOYlgNNORn3qoK1ofuW92KmHw+ppB4ccn83IGhnVQU1
+        xPuBYa7gPy+/WcOw+l4oora8d
+X-Received: by 2002:adf:d183:: with SMTP id v3mr17317244wrc.180.1579773266297;
+        Thu, 23 Jan 2020 01:54:26 -0800 (PST)
+X-Google-Smtp-Source: APXvYqyAtrBi9gbReQo2xoYrZX95q69/GNjES5FxPk/zX0+P2S8Pau4UYtndwwrsnAMcOxolIcX0Xg==
+X-Received: by 2002:adf:d183:: with SMTP id v3mr17317202wrc.180.1579773266023;
+        Thu, 23 Jan 2020 01:54:26 -0800 (PST)
+Received: from ?IPv6:2001:b07:6468:f312:b8fe:679e:87eb:c059? ([2001:b07:6468:f312:b8fe:679e:87eb:c059])
+        by smtp.gmail.com with ESMTPSA id c9sm2166949wme.41.2020.01.23.01.54.24
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 23 Jan 2020 01:54:25 -0800 (PST)
+Subject: Re: [PATCH] KVM: nVMX: set rflags to specify success in
+ handle_invvpid() default case
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        linmiaohe <linmiaohe@huawei.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org, x86@kernel.org,
+        rkrcmar@redhat.com, sean.j.christopherson@intel.com,
+        wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com
+References: <1579749241-712-1-git-send-email-linmiaohe@huawei.com>
+ <8736c6sga7.fsf@vitty.brq.redhat.com>
+ <1a083ac8-3b01-fd2d-d867-2b3956cdef6d@redhat.com>
+ <87wo9iqzfa.fsf@vitty.brq.redhat.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <ee7d815f-750f-3d0e-2def-1631be66a483@redhat.com>
+Date:   Thu, 23 Jan 2020 10:54:22 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-01-23_01:2020-01-23,2020-01-22 signatures=0
+In-Reply-To: <87wo9iqzfa.fsf@vitty.brq.redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RGVhcnMgWWFubmljayAmIEV0aWVubmUsDQpUaGFuayB5b3UgZm9yIHlvdXIgcGF0Y2gsDQoNClJl
-dmlld2VkLWJ5OiBQaGlsaXBwZSBDb3JudSA8cGhpbGlwcGUuY29ybnVAc3QuY29tPg0KDQpQaGls
-aXBwZSA6LSkNCg0KT24gMS8yMS8yMCAxMToyMiBBTSwgWWFubmljayBGZXJ0cmUgd3JvdGU6DQo+
-IEZyb206IEV0aWVubmUgQ2FycmllcmUgPGV0aWVubmUuY2FycmllcmVAc3QuY29tPg0KPiANCj4g
-Q2hhbmdlIHN0bTMyLWNlYyBkcml2ZXIgdG8gbm90IHByaW50IGFuIGVycm9yIG1lc3NhZ2Ugd2hl
-biB0aGUNCj4gZGV2aWNlIHByb2JlIG9wZXJhdGlvbiBpcyBkZWZlcnJlZC4NCj4gDQo+IFNpZ25l
-ZC1vZmYtYnk6IEV0aWVubmUgQ2FycmllcmUgPGV0aWVubmUuY2FycmllcmVAc3QuY29tPg0KPiAt
-LS0NCj4gICBkcml2ZXJzL21lZGlhL3BsYXRmb3JtL3N0bTMyL3N0bTMyLWNlYy5jIHwgNCArKyst
-DQo+ICAgMSBmaWxlIGNoYW5nZWQsIDMgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQ0KPiAN
-Cj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvbWVkaWEvcGxhdGZvcm0vc3RtMzIvc3RtMzItY2VjLmMg
-Yi9kcml2ZXJzL21lZGlhL3BsYXRmb3JtL3N0bTMyL3N0bTMyLWNlYy5jDQo+IGluZGV4IDhhODZi
-MmMuLjljMTM3ZjEgMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvbWVkaWEvcGxhdGZvcm0vc3RtMzIv
-c3RtMzItY2VjLmMNCj4gKysrIGIvZHJpdmVycy9tZWRpYS9wbGF0Zm9ybS9zdG0zMi9zdG0zMi1j
-ZWMuYw0KPiBAQCAtMjkxLDcgKzI5MSw5IEBAIHN0YXRpYyBpbnQgc3RtMzJfY2VjX3Byb2JlKHN0
-cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpDQo+ICAgDQo+ICAgCWNlYy0+Y2xrX2NlYyA9IGRl
-dm1fY2xrX2dldCgmcGRldi0+ZGV2LCAiY2VjIik7DQo+ICAgCWlmIChJU19FUlIoY2VjLT5jbGtf
-Y2VjKSkgew0KPiAtCQlkZXZfZXJyKCZwZGV2LT5kZXYsICJDYW5ub3QgZ2V0IGNlYyBjbG9ja1xu
-Iik7DQo+ICsJCWlmIChQVFJfRVJSKGNlYy0+Y2xrX2NlYykgIT0gLUVQUk9CRV9ERUZFUikNCj4g
-KwkJCWRldl9lcnIoJnBkZXYtPmRldiwgIkNhbm5vdCBnZXQgY2VjIGNsb2NrXG4iKTsNCj4gKw0K
-PiAgIAkJcmV0dXJuIFBUUl9FUlIoY2VjLT5jbGtfY2VjKTsNCj4gICAJfQ0KPiAgIA0KPiA=
+On 23/01/20 10:45, Vitaly Kuznetsov wrote:
+>>> SDM says that "If an
+>>> unsupported INVVPID type is specified, the instruction fails." and this
+>>> is similar to INVEPT and I decided to check what handle_invept()
+>>> does. Well, it does BUG_ON(). 
+>>>
+>>> Are we doing the right thing in any of these cases?
+>>
+>> Yes, both INVEPT and INVVPID catch this earlier.
+>>
+>> So I'm leaning towards not applying Miaohe's patch.
+> 
+> Well, we may at least want to converge on BUG_ON() for both
+> handle_invvpid()/handle_invept(), there's no need for them to differ.
+
+WARN_ON_ONCE + nested_vmx_failValid would probably be better, if we
+really want to change this.
+
+Paolo
+
