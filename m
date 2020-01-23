@@ -2,80 +2,160 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF9B9C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 17:07:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4004BC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 17:09:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF38424125
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 17:07:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14C77206D4
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 17:09:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="fVFhxuuC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729213AbgAWRHp (ORCPT
+        id S1729361AbgAWRJT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 12:07:45 -0500
-Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:40363 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728904AbgAWRHo (ORCPT
+        Thu, 23 Jan 2020 12:09:19 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:45889 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729225AbgAWRJS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 12:07:44 -0500
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-181-V2hgLzYAN0OJMt6VOffMLQ-1; Thu, 23 Jan 2020 17:07:41 +0000
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Thu, 23 Jan 2020 17:07:40 +0000
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Thu, 23 Jan 2020 17:07:40 +0000
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Will Deacon' <will@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
-        "kernel-team@android.com" <kernel-team@android.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Segher Boessenkool <segher@kernel.crashing.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Peter Oberparleiter <oberpar@linux.ibm.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>
-Subject: RE: [PATCH v2 00/10] Rework READ_ONCE() to improve codegen
-Thread-Topic: [PATCH v2 00/10] Rework READ_ONCE() to improve codegen
-Thread-Index: AQHV0gKFFdfdrbkjnU+llP+aeIA9U6f4esgQ
-Date:   Thu, 23 Jan 2020 17:07:40 +0000
-Message-ID: <26ad7a8a975c4e06b44a3184d7c86e5f@AcuMS.aculab.com>
-References: <20200123153341.19947-1-will@kernel.org>
-In-Reply-To: <20200123153341.19947-1-will@kernel.org>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Thu, 23 Jan 2020 12:09:18 -0500
+Received: by mail-lj1-f194.google.com with SMTP id j26so4312015ljc.12
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jan 2020 09:09:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=EoI0l4kaWTQec4tn5Ld9ZCvI5RqFAqp9PrVGXBLYlGE=;
+        b=fVFhxuuC85CKWEXjWPZjUwe+E2ZvU24vSAIadJBa+Ft9IRArNmW35Swl+jhyL4SbSw
+         Q9y1gY0sctni33PC0OvsTEp15m3qeF+Ox4KoeaR1j1bfiGK/un6S52NDn4Mmp7JZyTWN
+         T4+GcR/uluwB+tQB+fNDYzVWf25RKz6Wf9cz/hgquK9Jxf67xA/gq61Jlji6pBo0BW1h
+         pphNci+Itjc9Hy6EK728qegKSUWTqi4toMGOqpiG4FTi4ZVSa3Pyo+WL4giv/emjl4KZ
+         N+8QV2duNaLjezM2vWW4tbJ2IqC9/1zcehqsTVQU1Cz0GaYOg/ae7LEcFoRy5LtZ74Xo
+         fKgg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=EoI0l4kaWTQec4tn5Ld9ZCvI5RqFAqp9PrVGXBLYlGE=;
+        b=uGxsduJMb+zCMbvu5mfQphw+PgJsABBRYDgKBpza+ysUcp5kXQZQRrDfR6yZi2wxWg
+         DSj0S5r13m4RW+qtJUe/YNrR6UVqSJ48OM5JmVdWZIcBvW+cYhxHSheyppA210E7+Gi5
+         cFP1CNi6U9Fh5ZE2jGNlNdgqUwHnhxtohO6Dza/acPp5N6DTDrkhyWxqtBm1iYusdF1A
+         H2S2ouE8p41aEhuPuRgu9N8rO3bhNfCe0tKijBLVoDhtBFH5kNHtIa6H33KaeEUWkfSM
+         c4GcM81XhRlyQVQwmx89RgOF1pCc6D/ABj6V1RedUX0w7Ag9I5HdeR2Iq0hs2pVjwxDQ
+         1LFg==
+X-Gm-Message-State: APjAAAXVYIvUgwd1LZIssgdC0mHCg3kHhPYqo5t4h56rac0ZgBrLCa95
+        0TgNQWciXYyl5FU+EcGLSFeSNOqsZa680Xutmxdj
+X-Google-Smtp-Source: APXvYqw/G8F1wO9xDPIULnMv336Q7Ztb/ejMkG/Wfe5XISfozmjQXVeq7xRRyREbIKTpRE6MgbiXKL2eAyaswTaX414=
+X-Received: by 2002:a2e:9f52:: with SMTP id v18mr23988656ljk.30.1579799355718;
+ Thu, 23 Jan 2020 09:09:15 -0800 (PST)
 MIME-Version: 1.0
-X-MC-Unique: V2hgLzYAN0OJMt6VOffMLQ-1
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+References: <cover.1577736799.git.rgb@redhat.com> <7d7933d742fdf4a94c84b791906a450b16f2e81f.1577736799.git.rgb@redhat.com>
+ <CAHC9VhSuwJGryfrBfzxG01zwb-O_7dbjS0x0a3w-XjcNuYSAcg@mail.gmail.com> <20200123162918.b3jbed7tbvr2sf2p@madcap2.tricolour.ca>
+In-Reply-To: <20200123162918.b3jbed7tbvr2sf2p@madcap2.tricolour.ca>
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Thu, 23 Jan 2020 12:09:04 -0500
+Message-ID: <CAHC9VhTusiQoudB8G5jjDFyM9WxBUAjZ6_X35ywJ063Jb75dQA@mail.gmail.com>
+Subject: Re: [PATCH ghak90 V8 07/16] audit: add contid support for signalling
+ the audit daemon
+To:     Richard Guy Briggs <rgb@redhat.com>
+Cc:     containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
+        Linux-Audit Mailing List <linux-audit@redhat.com>,
+        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
+        sgrubb@redhat.com, omosnace@redhat.com, dhowells@redhat.com,
+        simo@redhat.com, Eric Paris <eparis@parisplace.org>,
+        Serge Hallyn <serge@hallyn.com>, ebiederm@xmission.com,
+        nhorman@tuxdriver.com, Dan Walsh <dwalsh@redhat.com>,
+        mpatel@redhat.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogV2lsbCBEZWFjb24NCj4gU2VudDogMjMgSmFudWFyeSAyMDIwIDE1OjM0DQouLi4NCj4g
-ICAqIE9ubHkgd2FybiBvbmNlIGF0IGJ1aWxkLXRpbWUgaWYgR0NDIHByaW9yIHRvIDQuOCBpcyBk
-ZXRlY3RlZC4uLg0KPiANCj4gICAqIC4uLiBhbmQgdGhlbiByYWlzZSB0aGUgbWluaW11bSBHQ0Mg
-dmVyc2lvbiB0byA0LjgsIHdpdGggYW4gZXJyb3IgZm9yDQo+ICAgICBvbGRlciB2ZXJzaW9ucyBv
-ZiB0aGUgY29tcGlsZXINCg0KSWYgdGhlIGtlcm5lbCBjb21waWxlZCB3aXRoIGdjYyA0LjcgaXMg
-bGlrZWx5IHRvIGJlIGJ1Z2d5LCBkb24ndCB0aGVzZQ0KbmVlZCB0byBiZSBpbiB0aGUgb3RoZXIg
-b3JkZXI/DQoNCk90aGVyd2lzZSB5b3UgbmVlZCB0byBrZWVwIHRoZSBvbGQgdmVyc2lvbnMgZm9y
-IHVzZSB3aXRoIHRoZSBvbGQNCmNvbXBpbGVycy4NCg0KCURhdmlkDQoNCi0NClJlZ2lzdGVyZWQg
-QWRkcmVzcyBMYWtlc2lkZSwgQnJhbWxleSBSb2FkLCBNb3VudCBGYXJtLCBNaWx0b24gS2V5bmVz
-LCBNSzEgMVBULCBVSw0KUmVnaXN0cmF0aW9uIE5vOiAxMzk3Mzg2IChXYWxlcykNCg==
+On Thu, Jan 23, 2020 at 11:29 AM Richard Guy Briggs <rgb@redhat.com> wrote:
+> On 2020-01-22 16:28, Paul Moore wrote:
+> > On Tue, Dec 31, 2019 at 2:50 PM Richard Guy Briggs <rgb@redhat.com> wrote:
+> > >
+> > > Add audit container identifier support to the action of signalling the
+> > > audit daemon.
+> > >
+> > > Since this would need to add an element to the audit_sig_info struct,
+> > > a new record type AUDIT_SIGNAL_INFO2 was created with a new
+> > > audit_sig_info2 struct.  Corresponding support is required in the
+> > > userspace code to reflect the new record request and reply type.
+> > > An older userspace won't break since it won't know to request this
+> > > record type.
+> > >
+> > > Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
+> > > ---
+> > >  include/linux/audit.h       |  7 +++++++
+> > >  include/uapi/linux/audit.h  |  1 +
+> > >  kernel/audit.c              | 35 +++++++++++++++++++++++++++++++++++
+> > >  kernel/audit.h              |  1 +
+> > >  security/selinux/nlmsgtab.c |  1 +
+> > >  5 files changed, 45 insertions(+)
+> >
+> > ...
+> >
+> > > diff --git a/kernel/audit.c b/kernel/audit.c
+> > > index 0871c3e5d6df..51159c94041c 100644
+> > > --- a/kernel/audit.c
+> > > +++ b/kernel/audit.c
+> > > @@ -126,6 +126,14 @@ struct auditd_connection {
+> > >  kuid_t         audit_sig_uid = INVALID_UID;
+> > >  pid_t          audit_sig_pid = -1;
+> > >  u32            audit_sig_sid = 0;
+> > > +/* Since the signal information is stored in the record buffer at the
+> > > + * time of the signal, but not retrieved until later, there is a chance
+> > > + * that the last process in the container could terminate before the
+> > > + * signal record is delivered.  In this circumstance, there is a chance
+> > > + * the orchestrator could reuse the audit container identifier, causing
+> > > + * an overlap of audit records that refer to the same audit container
+> > > + * identifier, but a different container instance.  */
+> > > +u64            audit_sig_cid = AUDIT_CID_UNSET;
+> >
+> > I believe we could prevent the case mentioned above by taking an
+> > additional reference to the audit container ID object when the signal
+> > information is collected, dropping it only after the signal
+> > information is collected by userspace or another process signals the
+> > audit daemon.  Yes, it would block that audit container ID from being
+> > reused immediately, but since we are talking about one number out of
+> > 2^64 that seems like a reasonable tradeoff.
+>
+> I had thought that through and should have been more explicit about that
+> situation when I documented it.  We could do that, but then the syscall
+> records would be connected with the call from auditd on shutdown to
+> request that signal information, rather than the exit of that last
+> process that was using that container.  This strikes me as misleading.
+> Is that really what we want?
 
+ ???
+
+I think one of us is not understanding the other; maybe it's me, maybe
+it's you, maybe it's both of us.
+
+Anyway, here is what I was trying to convey with my original comment
+... When we record the audit container ID in audit_signal_info() we
+take an extra reference to the audit container ID object so that it
+will not disappear (and get reused) until after we respond with an
+AUDIT_SIGNAL_INFO2.  In audit_receive_msg() when we do the
+AUDIT_SIGNAL_INFO2 processing we drop the extra reference we took in
+audit_signal_info().  Unless I'm missing some other change you made,
+this *shouldn't* affect the syscall records, all it does is preserve
+the audit container ID object in the kernel's ACID store so it doesn't
+get reused.
+
+(We do need to do some extra housekeeping in audit_signal_info() to
+deal with the case where nobody asks for AUDIT_SIGNAL_INFO2 -
+basically if audit_sig_cid is not NULL we should drop a reference
+before assigning it a new object pointer, and of course we would need
+to set audit_sig_cid to NULL in audit_receive_msg() after sending it
+up to userspace and dropping the extra ref.)
+
+-- 
+paul moore
+www.paul-moore.com
