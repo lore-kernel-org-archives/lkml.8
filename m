@@ -2,78 +2,158 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDC08C33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 13:44:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98028C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 13:44:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B91162467E
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 13:44:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 684732467E
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 13:44:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579787083;
-	bh=9DIdOrCNk422XAEqzrSHhadTNLm5nYKHPPJS3Xs+wSc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=eCKUeG9AXAZgJDFDB1imwAIcvmCZX42Y9nx1+z/Sds9KCjVD844dXY/E0U9JPt8mS
-	 KqCRsGS6M2XXZvesfj2u2x5nEUDIdjLDgqT4HCqiv98YdhRZQPXEtEcSCe/+zfNjXG
-	 sAk/eY+GeyqCxOtbz4/1jrn9K1rhgvFOtiXgrzDU=
+	s=default; t=1579787088;
+	bh=ehtW9l9ACdNUpNo6gsMIkwoNpfOA6s3D+OSmNLbylzQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=hOiYXYOFRpyt1+MZAGemjtWOqheoX1IGVzwhEUbqLfD8w/6uZqvtEv0k1y6zvV08b
+	 mL41uUmHu7jKBNjKi63/kNCJNwXVpqnxdhQhhbe17J2wixW0pQ49QJa4w3QO2Dxvak
+	 D4KRY5vHdrKECybTUz6QStMvj9eeDI8NcyakqDTw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728831AbgAWNon (ORCPT
+        id S1728916AbgAWNos (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 08:44:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33462 "EHLO mail.kernel.org"
+        Thu, 23 Jan 2020 08:44:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33630 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726780AbgAWNom (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 08:44:42 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726227AbgAWNoq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jan 2020 08:44:46 -0500
+Received: from mail-qk1-f169.google.com (mail-qk1-f169.google.com [209.85.222.169])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CC5AC20661;
-        Thu, 23 Jan 2020 13:44:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2C9E024688;
+        Thu, 23 Jan 2020 13:44:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579787082;
-        bh=9DIdOrCNk422XAEqzrSHhadTNLm5nYKHPPJS3Xs+wSc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=CEDVkmnMhbNbTeWmvaUqtHFMx/KOYeIPXXMOQV5gis678BQFtBb9C4fNOqMOFbt5H
-         NPPxPb8utZghY2YX5WIhe0b83m/1mmpBsT8mqb2NlefqLVvGQq+nf5+g0oapwxnfLY
-         nrTKdsBVl/xBG6Re/Xsf3Sh6Ck72aXrlR5EBXBfw=
-Date:   Thu, 23 Jan 2020 14:44:40 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Roja Rani Yarubandi <rojay@codeaurora.org>
-Cc:     akashast@codeaurora.org, msavaliy@qti.qualcomm.com,
-        mgautam@codeaurora.org, skakit@codeaurora.org,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Jiri Slaby <jslaby@suse.com>, linux-arm-msm@vger.kernel.org,
-        linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/1] tty: serial: qcom_geni_serial: Configure
- UART_IO_MACRO_CTRL register
-Message-ID: <20200123134440.GA1484051@kroah.com>
-References: <20200123124802.24862-1-rojay@codeaurora.org>
- <20200123124802.24862-2-rojay@codeaurora.org>
+        s=default; t=1579787085;
+        bh=ehtW9l9ACdNUpNo6gsMIkwoNpfOA6s3D+OSmNLbylzQ=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=f6itICyEccPeU2EkmbAw44eFVsEnQiCvVRTYc3RMmfw1f5V5rghHrFdF6dnC+r1wV
+         LW0nDwCzxH/GTTtVFZtYGJLOP+nJu1VWepUnkNyHvE63DC36JQuxG/BFcyxUuYXolx
+         hnkuLUgk7s2DCpWGgBq76zQCpyZ5Of2xjyCLBDDQ=
+Received: by mail-qk1-f169.google.com with SMTP id c17so3403985qkg.7;
+        Thu, 23 Jan 2020 05:44:45 -0800 (PST)
+X-Gm-Message-State: APjAAAVGqpIIeB5KV3T+3vZXkfcRfIR9lYyS07oqlxR+975ItnwWTjCS
+        hGYipOYanfuv1/Pzjs8/SQjtSXIWl9u92Es0lQ==
+X-Google-Smtp-Source: APXvYqwj1kYyeJq3Ccl1DyDpR3KLsILueUjym2UJmfupNznTqTkOSej7+FQVm2ExBXPWgHI5dXhLnNyU9f/PKwvhq6E=
+X-Received: by 2002:a05:620a:1eb:: with SMTP id x11mr16326677qkn.254.1579787084251;
+ Thu, 23 Jan 2020 05:44:44 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200123124802.24862-2-rojay@codeaurora.org>
+References: <09a2fe69-842f-01cf-1cfa-d5fc639b158a@gmail.com>
+In-Reply-To: <09a2fe69-842f-01cf-1cfa-d5fc639b158a@gmail.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Thu, 23 Jan 2020 07:44:32 -0600
+X-Gmail-Original-Message-ID: <CAL_Jsq+1S=mOS0-eb0=ibSn81ReDmDjrA9=bHpKC16w8B6Aq3Q@mail.gmail.com>
+Message-ID: <CAL_Jsq+1S=mOS0-eb0=ibSn81ReDmDjrA9=bHpKC16w8B6Aq3Q@mail.gmail.com>
+Subject: Re: [PATCH v10 1/2] dt-bindings: edac: dmc-520.yaml
+To:     Shiping Ji <shiping.linux@gmail.com>
+Cc:     Borislav Petkov <bp@alien8.de>, James Morse <james.morse@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        linux-edac <linux-edac@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, hangl@microsoft.com,
+        Lei Wang <lewan@microsoft.com>, ruizhao@microsoft.com,
+        shji@microsoft.com, Scott Branden <scott.branden@broadcom.com>,
+        Yuqing Shen <yuqing.shen@broadcom.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 23, 2020 at 06:18:02PM +0530, Roja Rani Yarubandi wrote:
-> Configure UART_IO_MACRO_CTRL register if UART lines are swapped.
-> 
-> Signed-off-by: Roja Rani Yarubandi <rojay@codeaurora.org>
+On Wed, Jan 22, 2020 at 6:31 PM Shiping Ji <shiping.linux@gmail.com> wrote:
+>
+> This is the device tree bindings for new EDAC driver dmc520_edac.c.
+>
+> From: Lei Wang <leiwang_git@outlook.com>
+>
+> Signed-off-by: Lei Wang <leiwang_git@outlook.com>
+> Signed-off-by: Shiping Ji <shiping.linux@gmail.com>
+> Reviewed-by: James Morse <james.morse@arm.com>
+>
 > ---
->  drivers/tty/serial/qcom_geni_serial.c | 6 ++++++
->  1 file changed, 6 insertions(+)
+>      Changes in v10:
+>          - Convert to the YAML format for binding description
+>
+> ---
+>  .../devicetree/bindings/edac/dmc-520.yaml     | 56 +++++++++++++++++++
+>  1 file changed, 56 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/edac/dmc-520.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/edac/dmc-520.yaml b/Documentation/devicetree/bindings/edac/dmc-520.yaml
+> new file mode 100644
+> index 000000000000..dd5982b227b2
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/edac/dmc-520.yaml
+> @@ -0,0 +1,56 @@
+> +# SPDX-License-Identifier: GPL-2.0
 
-What changed from v1?  Always put that below the --- line.
+Dual license new bindings please:
 
-And no need for a 0/1 email for a single patch, just put everything in
-the patch changelog itself as it is standalone.
+(GPL-2.0-only OR BSD-2-Clause)
 
-thanks,
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/edac/dmc-520.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: ARM DMC-520 EDAC bindings
+> +
+> +maintainers:
+> +  - Lei Wang <lewan@microsoft.com>
+> +
+> +description: |+
+> +  DMC-520 node is defined to describe DRAM error detection and correction.
+> +
+> +  https://static.docs.arm.com/100000/0200/corelink_dmc520_trm_100000_0200_01_en.pdf
+> +
+> +properties:
+> +  compatible:
+> +    items:
+> +      - const: brcm,dmc-520
+> +      - const: arm,dmc-520
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    minItems: 1
+> +
+> +  interrupt-names:
+> +    minItems: 1
+> +    items:
+> +      - const: ram_ecc_errc
+> +      - const: ram_ecc_errd
+> +      - const: dram_ecc_errc
+> +      - const: dram_ecc_errd
+> +      - const: failed_access
+> +      - const: failed_prog
+> +      - const: link_err
+> +      - const: temperature_event
+> +      - const: arch_fsm
+> +      - const: phy_request
 
-greg k-h
+This defines not just the names, but the index they must be at which I
+don't think you want.
+
+minItems: 1
+maxItems: 10
+items:
+  enum:
+    - ram_ecc_errc
+    - ram_ecc_errd
+    ...
+
+Note the lack of '-' under 'items' making it a schema that applies to all items.
+
+Run 'make dt_binding_check' as that would have caught this issue on the example.
+
+Rob
