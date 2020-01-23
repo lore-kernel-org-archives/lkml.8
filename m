@@ -2,69 +2,139 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACB04C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 11:35:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82233C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 11:35:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 837AF24655
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 11:35:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579779328;
-	bh=izvZuwImB3GgfCiGqIjOGun3WeYdSpQvEwdBkmy0m/U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=CTLfeWG6DG95SKxLOysPdDol999QcO6XYtLiMOLHAxuBcfQSmLm8rJQd8mIDT/uRx
-	 TTzKXvqER5GbWRPGHD4F2TEDphzj2jnjxiLeE7l/1lU9/ncmrTl/MKSKFoG4QXh8gQ
-	 yJi4l/TauslGCLLQt3FSaflBCwZ7D3TS+9gtESGg=
+	by mail.kernel.org (Postfix) with ESMTP id 536EE24125
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 11:35:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="kH+19aZe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729052AbgAWLf2 (ORCPT
+        id S1729095AbgAWLfh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 06:35:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48064 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727093AbgAWLf1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 06:35:27 -0500
-Received: from localhost (unknown [106.200.244.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3C9BF24125;
-        Thu, 23 Jan 2020 11:35:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579779327;
-        bh=izvZuwImB3GgfCiGqIjOGun3WeYdSpQvEwdBkmy0m/U=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=2qH3LgwDIP17Bj3NnZYz9WhRdGYZN/Cg6wLQ16qKQj6ZoVLcofKlD39gvGT0ChX/g
-         vdU9FKReNNCbZRx6stcAxVKYS6HvOniAxpHd+ImpVAyr/g/iDlvygTpxGyoa4ee3RE
-         iXMOkDy9uEQFnBPurv2owJQFVUZrKUcvxalFu4IQ=
-Date:   Thu, 23 Jan 2020 17:05:22 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Colin King <colin.king@canonical.com>
-Cc:     Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, dmaengine@vger.kernel.org,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dmaengine: fix spelling mistake "to" -> "too"
-Message-ID: <20200123113522.GY2841@vkoul-mobl>
-References: <20200123092359.10714-1-colin.king@canonical.com>
+        Thu, 23 Jan 2020 06:35:37 -0500
+Received: from lb3-smtp-cloud9.xs4all.net ([194.109.24.30]:45247 "EHLO
+        lb3-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726191AbgAWLfh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jan 2020 06:35:37 -0500
+Received: from [IPv6:2001:983:e9a7:1:1bd:458:b834:7f13]
+ ([IPv6:2001:983:e9a7:1:1bd:458:b834:7f13])
+        by smtp-cloud9.xs4all.net with ESMTPA
+        id ualpiy1VaT6sRualqixbcI; Thu, 23 Jan 2020 12:35:34 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
+        t=1579779334; bh=KEHyB2YSBLhTH76juePtrte4Uqe1v74RtTuxnjS6ESw=;
+        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
+         Subject;
+        b=kH+19aZeG/th3Kb+uBZwEgMzAdZIMhawWPepzm7JZVQEfMzba5ZeGMpJvkd23h5Ac
+         regY7JLcijhNRr4b9X4Kj/dKP4pQOfMvLOUE9oadsXR9/GptPPnqkyYY+FSRtuOVhl
+         ycl55j9Ir6GmEGiYWxPFzDPkFCQgnihjicpE3X6kOiX4M8lhf2bwRch3h7qOYk8bNH
+         4C+6aDaUDbYppbNSexA5unpK5+LTwRuyRML0KBLvHPk14I/NE1MeBy65wqkYJNYv5e
+         T24A4dZc1f5xPPLcMj0Zo2xRMx3dZ/X9KM1gkKTQWwKHz1kyqayJ4wW7UhB6ujfuxD
+         7d5UVTiUVwFYw==
+Subject: Re: [RFC][PATCH 13/15] videobuf2: do not sync buffers for DMABUF
+ queues
+To:     Sergey Senozhatsky <senozhatsky@chromium.org>
+Cc:     Hans Verkuil <hans.verkuil@cisco.com>,
+        Tomasz Figa <tfiga@chromium.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Sakari Ailus <sakari.ailus@iki.fi>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Pawel Osciak <posciak@chromium.org>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20191217032034.54897-1-senozhatsky@chromium.org>
+ <20191217032034.54897-14-senozhatsky@chromium.org>
+ <2d0e1a9b-6c5e-ff70-9862-32c8b8aaf65f@xs4all.nl>
+ <20200122050515.GB49953@google.com>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <57f711a0-6183-74f6-ab24-ebe414cb6881@xs4all.nl>
+Date:   Thu, 23 Jan 2020 12:35:33 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200123092359.10714-1-colin.king@canonical.com>
+In-Reply-To: <20200122050515.GB49953@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfFopszA+QvXTY3B1Zj27KGKBvsbxEPtzbuP86jYxKN8NfHKcNcahR0+HMQVTFh5+Qk9B2QWy90ayhnUMRgfR/HDQDDcv6rPAJGCMarqO+bQ1VuzH0CDI
+ faQth5pTfW8vmyHDw+EETiF26T/zSkrEzq92K8xpWQw+F2Zw5qI9SDiDsaU3GMJvHPhkadAzljht67/ZReaSAlmZyGEcLtv1LFVoZKI2PABPvQHhFiPOd0fb
+ U34BS+45enK/WhR6uxOhDSduOM5m/bSo69DAhFjOP2fZMUNzFCiHf8+XShd7FuqDSFfOKpNhq2eI2DHPhpCvofFnQqGedoWG+HkAJNZLz/kTty/3N8kf/dg0
+ nFnr6EGDAVJoGM+7UVfhNtg7e4tJOfFY9/g+ZRjSY0EcmqX0EtJ4Ga9gt/hZHO34yIEBapk0nGE2KHWCscl4LL6Yp+rsTSjHsu22C+pjj4rTp+lyZz/lK9Va
+ 5xJoWNK+owTcpGn5RFex/Pp7/NS9GXAJc/AcidSIpg+LPfcUIn5lR5DqYgwwujCJMdb9Sgaema8hYmG8XmCApmij7cJKfRFekM9DpA6OmCsM0eEXtQH654b5
+ xaFzdFTjs6SZpVhQ27/4j4XPquXrXPQt9EDK67QglgaiTw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 23-01-20, 09:23, Colin King wrote:
-> From: Colin Ian King <colin.king@canonical.com>
+On 1/22/20 6:05 AM, Sergey Senozhatsky wrote:
+> On (20/01/10 11:30), Hans Verkuil wrote:
+> [..]
+>>> diff --git a/drivers/media/common/videobuf2/videobuf2-v4l2.c b/drivers/media/common/videobuf2/videobuf2-v4l2.c
+>>> index 1762849288ae..2b9d3318e6fb 100644
+>>> --- a/drivers/media/common/videobuf2/videobuf2-v4l2.c
+>>> +++ b/drivers/media/common/videobuf2/videobuf2-v4l2.c
+>>> @@ -341,8 +341,22 @@ static void set_buffer_cache_hints(struct vb2_queue *q,
+>>>  				   struct vb2_buffer *vb,
+>>>  				   struct v4l2_buffer *b)
+>>>  {
+>>> -	vb->need_cache_sync_on_prepare = 1;
+>>> +	/*
+>>> +	 * DMA exporter should take care of cache syncs, so we can avoid
+>>> +	 * explicit ->prepare()/->finish() syncs.
+>>> +	 */
+>>> +	if (q->memory == VB2_MEMORY_DMABUF) {
+>>> +		vb->need_cache_sync_on_finish = 0;
+>>> +		vb->need_cache_sync_on_prepare = 0;
+>>> +		return;
+>>> +	}
+>>>  
+>>> +	/*
+>>> +	 * For other ->memory types we always need ->prepare() cache
+>>> +	 * sync. ->finish() cache sync, however, can be avoided when queue
+>>> +	 * direction is TO_DEVICE.
+>>> +	 */
+>>> +	vb->need_cache_sync_on_prepare = 1;
+>>
+>> I'm trying to remember: what needs to be done in prepare()
+>> for a capture buffer? I thought that for capture you only
+>> needed to invalidate the cache in finish(), but nothing needs
+>> to be done in the prepare().
 > 
-> There is a spelling mistake in a dev_err message. Fix it.
+> Hmm. Not sure. A precaution in case if user-space wrote to that buffer?
 
-You had sent this earlier, I have picked that one already!
+But whatever was written in the buffer is going to be overwritten anyway.
 
--- 
-~Vinod
+Unless I am mistaken the current situation is that the cache syncs are done
+in both prepare and finish, regardless of the DMA direction.
+
+I would keep that behavior to avoid introducing any unexpected regressions.
+
+Then, if q->allow_cache_hint is set, then default to a cache sync (cache clean)
+in the prepare for OUTPUT buffers and a cache sync (cache invalidate) in the
+finish for CAPTURE buffers.
+
+This also means that any drivers that want to access a buffer in between the
+prepare...finish calls will need to do a begin/end_cpu_access. But that's a
+separate matter.
+
+Regards,
+
+	Hans
+
+> 
+> +	if (q->dma_dir == DMA_FROM_DEVICE)
+> +		q->need_cache_sync_on_prepare = 0;
+> 
+> ?
+> 
+> 	-ss
+> 
+
