@@ -2,97 +2,135 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A05ADC33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 09:31:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 119B8C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 09:33:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6CC48217F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 09:31:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579771886;
-	bh=ofqaYahzvgq+eIn720BepNkOb/oxsQhcSuhegc0TNls=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=bIu7Vmjnq1CI3Rg0/TIKPdPIRe5tRGooYxd7kTNmphgUD6MCUWnNtntOG7pPA0a9o
-	 y6jke+RQ4rySE+FZ3Q5ZhzDECxdd4dUCc8XEW6JrJT3YV86T32qqozMuOZJ9+k5dPV
-	 vuPsQnrN/Yr68kQauKWdeoeO05PwvhiQx0fkZIMI=
+	by mail.kernel.org (Postfix) with ESMTP id DCB0C2467E
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 09:33:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726871AbgAWJb0 (ORCPT
+        id S1726442AbgAWJdv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 04:31:26 -0500
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:40163 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726099AbgAWJbZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 04:31:25 -0500
-Received: by mail-ed1-f67.google.com with SMTP id b8so2623527edx.7;
-        Thu, 23 Jan 2020 01:31:24 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=R1J6FCR4iw6F143Mrog9ddQTJ4O+wJBhPa0ux9+3yY8=;
-        b=gKAQ9JZMovlAj3iP6osQEIVZ2avjqvUKah4ci/iMjQRKtRZnm9fkONSX/sTiUs8GMl
-         aYtXc9W3ubKAwffxeD/pZlljQjyn9MECKZSbz75N1I5n1KJKUTx2u2Mqji12sZnPhZ/q
-         YthQQ+CSFswOnceTmRDHKUh8pJYYmHy4cO6id3v7b28SShk8sa/GDS8E8riCH24MJZK/
-         pAmz/8EywYQmVmcaog0gEns3nZoFOWKluhK46G/W73gRfITsPNYLbczFwXe8AXqq/uU3
-         YYm2udyPacxAytS8j9gdwk4wxfjqptfo6VsKtzhRwHcDk99PnZylYBVcXFQs/BVijMnW
-         Hh2w==
-X-Gm-Message-State: APjAAAWmxp/IwShOOwJHZ3wlgOV0JMsAwK7nuLC5FovsKqOWAwuT2YIH
-        Mu0Xaj3eLm0VUV226w45qoKfWbh92VU=
-X-Google-Smtp-Source: APXvYqwidU7GWgMJb55gz0w+PLoJyZZqodHUu04xJ43Vh76V+omwmhwQwEgK/DA64YUcFlx9Aen1fQ==
-X-Received: by 2002:a05:6402:30b7:: with SMTP id df23mr6178248edb.325.1579771883413;
-        Thu, 23 Jan 2020 01:31:23 -0800 (PST)
-Received: from pi3 ([194.230.155.229])
-        by smtp.googlemail.com with ESMTPSA id dx7sm48267ejb.81.2020.01.23.01.31.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Jan 2020 01:31:22 -0800 (PST)
-Date:   Thu, 23 Jan 2020 10:31:20 +0100
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Wolfram Sang <wsa@the-dreams.de>
-Cc:     Jean Delvare <jdelvare@suse.de>,
-        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Greg KH <greg@kroah.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH v2 1/2] i2c: Enable compile testing for some of drivers
-Message-ID: <20200123093120.GA2365@pi3>
-References: <1578384779-15487-1-git-send-email-krzk@kernel.org>
- <20200123091228.GB1105@ninjato>
+        Thu, 23 Jan 2020 04:33:51 -0500
+Received: from mga05.intel.com ([192.55.52.43]:56919 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726026AbgAWJdu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jan 2020 04:33:50 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Jan 2020 01:33:50 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,353,1574150400"; 
+   d="scan'208";a="287394507"
+Received: from um.fi.intel.com (HELO um) ([10.237.72.57])
+  by fmsmga001.fm.intel.com with ESMTP; 23 Jan 2020 01:33:48 -0800
+From:   Alexander Shishkin <alexander.shishkin@linux.intel.com>
+To:     Song Liu <songliubraving@fb.com>, linux-kernel@vger.kernel.org
+Cc:     kernel-team@fb.com, Song Liu <songliubraving@fb.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        alexander.shishkin@linux.intel.com
+Subject: Re: [PATCH v2] perf/core: fix mlock accounting in perf_mmap()
+In-Reply-To: <20200122190447.1920297-1-songliubraving@fb.com>
+References: <20200122190447.1920297-1-songliubraving@fb.com>
+Date:   Thu, 23 Jan 2020 11:33:47 +0200
+Message-ID: <8736c6bjpg.fsf@ashishki-desk.ger.corp.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200123091228.GB1105@ninjato>
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 23, 2020 at 10:12:28AM +0100, Wolfram Sang wrote:
-> 
-> >  config I2C_ZX2967
-> >  	tristate "ZTE ZX2967 I2C support"
-> > -	depends on ARCH_ZX
-> > -	default y
-> > +	depends on ARCH_ZX || (COMPILE_TEST && (ARC || ARM || ARM64 || M68K || RISCV || SUPERH || SPARC))
-> > +	# COMPILE_TEST needs architectures with readsX()/writesX() primitives
-> 
-> The list of archs neither looks pretty nor very maintainable. My
-> suggestion is that we leave this out of COMPILE_TEST until we have
-> something like ARCH_HAS_READS or something. What do you think?
+Song Liu <songliubraving@fb.com> writes:
 
-Indeed it does not look good. However having compile testing allows
-kbuild to run sparse and smatch which already started pointing minor
-issues in existing drivers.
+> sysctl_perf_event_mlock and user->locked_vm can change value
+> independently, so we can't guarantee:
 
-Yeah... pros and cons... I don't have a strong opinion to keep it. Since
-patch is important, maybe let's just skip this part?
+Looks good, I still have some suggestions below.
 
-Best regards,
-Krzysztof
+>
+>    user->locked_vm <= user_lock_limit
+>
+> When user->locked_vm is larger than user_lock_limit, we cannot simply
+> update extra and user_extra as:
+>
+>    extra = user_locked - user_lock_limit;
+>    user_extra -= extra;
+>
+> Otherwise, user_extra will be negative. In extreme cases, this may lead to
+> negative user->locked_vm (until this perf-mmap is closed), which break
+> locked_vm badly.
+>
+> Fix this by adjusting user_locked before calculating extra and user_extra.
+
+The commit message is just talking about the code. We can see the code
+when we scroll down to the diff. What this can be instead is:
+
+1. Problem statement: decreasing sysctl_perf_event_mlock between two
+consecutive mmap()s of a perf ring buffer may lead to an integer
+underflow in locked memory accounting. This may lead to the following
+undesired behavior: <an example of bad behavior as opposed to expected
+behavior>.
+
+2. Fix description: address this by adjusting the accounting logic to
+take into account the possibility that the amount of already locked
+memory may exceed the current limit.
+
+> Fixes: c4b75479741c ("perf/core: Make the mlock accounting simple again")
+> Signed-off-by: Song Liu <songliubraving@fb.com>
+> Suggested-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+> Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+> Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
+> Cc: Jiri Olsa <jolsa@kernel.org>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> ---
+>  kernel/events/core.c | 13 ++++++++++++-
+>  1 file changed, 12 insertions(+), 1 deletion(-)
+>
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> index 2173c23c25b4..d25f2de45996 100644
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -5916,8 +5916,19 @@ static int perf_mmap(struct file *file, struct vm_area_struct *vma)
+>  	 */
+>  	user_lock_limit *= num_online_cpus();
+>  
+> -	user_locked = atomic_long_read(&user->locked_vm) + user_extra;
+> +	user_locked = atomic_long_read(&user->locked_vm);
+>  
+> +	/*
+> +	 * sysctl_perf_event_mlock and user->locked_vm can change value
+> +	 * independently. so we can't guarantee:
+> +	 *     user->locked_vm <= user_lock_limit
+
+"sysctl_perf_event_mlock may have changed, so that user->locked_vm >
+user_lock_limit".
+
+> +	 *
+> +	 * Adjust user_locked to be <= user_lock_limit so we can calcualte
+> +	 * correct extra and user_extra.
+
+This comment is also verbalizing the C code that follows. I don't think
+it's necessary.
+
+> +	 */
+> +	user_locked = min_t(unsigned long, user_locked, user_lock_limit);
+
+A matter of preference, but to me the "if (user_locked >=
+user_lock_limit)" is easier to read.
+
+> +
+> +	user_locked += user_extra;
+>  	if (user_locked > user_lock_limit) {
+>  		/*
+>  		 * charge locked_vm until it hits user_lock_limit;
+
+Thanks,
+--
+Alex
