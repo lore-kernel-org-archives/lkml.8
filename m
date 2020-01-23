@@ -2,94 +2,110 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0259C33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 20:50:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 476AAC3F68F
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 20:50:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91B802253D
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 20:50:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579812638;
-	bh=D4LTdBYYcqv+ik1Pg4jtD5ZnmXsEUXj8mdhQQjWTksA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=UAN2B6aduW9QDZeLtV0azFVdJ68OF6giBg8spL3ev/BU098y/l0zrwESWH47QBtQu
-	 nb5XUNdzQKCsrWYnxmQ4eylvsLZUOP3pUQwYQ8/0i8VljxUVVGGCbFdA5iLljTLuWz
-	 hYGvTfYM2Nci1tS046eazRFn1JER6rTsn2dlAgtE=
+	by mail.kernel.org (Postfix) with ESMTP id 1814120704
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 20:50:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uDpTmgI3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729203AbgAWUuh (ORCPT
+        id S1729339AbgAWUuo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 15:50:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48840 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728831AbgAWUuh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 15:50:37 -0500
-Received: from mail-qv1-f50.google.com (mail-qv1-f50.google.com [209.85.219.50])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A00EB2253D;
-        Thu, 23 Jan 2020 20:50:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579812636;
-        bh=D4LTdBYYcqv+ik1Pg4jtD5ZnmXsEUXj8mdhQQjWTksA=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=TGRTjbhNsL4XA1B13RstA2PBC9UNxAAcPQ1EhwHxew8oHjyEXFb0f0NlwSjrZJj8e
-         +mtBcQfwSoBGDIVvAEWOEwb7Skz706EOwFZOEe3czEJaTyJ88CHL5ENeoqWnw2jry2
-         6Al5UdFzlvY1OGGjrtuoTKD0oHuNdR3MHZnbRVKk=
-Received: by mail-qv1-f50.google.com with SMTP id u10so2190641qvi.2;
-        Thu, 23 Jan 2020 12:50:36 -0800 (PST)
-X-Gm-Message-State: APjAAAVlWOCVPhVppxNA1Oi34q9wxdj6s7TLsANSiZ3LbzsNxvevZwe8
-        01APxjdcBf9LweqluOEjqdHxPteDLQBmLldSDQ==
-X-Google-Smtp-Source: APXvYqyrN/ifItlATEFTfxubxslw3zMCfRZgyB5QYn1GQetklMTcxJ3km4RPXJFBnI525IWkPPS16O71YGW8tHw1uvk=
-X-Received: by 2002:ad4:450a:: with SMTP id k10mr17058351qvu.136.1579812635794;
- Thu, 23 Jan 2020 12:50:35 -0800 (PST)
+        Thu, 23 Jan 2020 15:50:44 -0500
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:54430 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729267AbgAWUum (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jan 2020 15:50:42 -0500
+Received: by mail-pj1-f66.google.com with SMTP id kx11so5050pjb.4;
+        Thu, 23 Jan 2020 12:50:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=tz7oPfyxX9BD+xzMJnGaVoJGnhN4ODjNZkmfQaubnZk=;
+        b=uDpTmgI33ECUY01x0pqytt117lR/SxR58Q0Opmd7zVrtQ7nxmoD+GuqybKzE/yQy/j
+         jgrDCNo7rTPgYyKNvMNtZ9GqRuugASPFJH3dqvG/JbHoIwqWzWvIZJ74ExHYH9oAiXFk
+         TNJvpQAKBoWo14qeN167oyiY/lS2VcOReBgAdLJfUCn99/YKX6SC2DJJWUzNYprn6nOb
+         eWAXe93lU+1yWHbZKg14EkRjM+P69NbiZDxBqWeQxyM+wRtz+FVM273uv5MMD1jKb8iK
+         QPXa4G2wMx528+PEKDZw9jdPeFhWOYM2o4BnwlJlZwR0ISLeABk4gWds1l9J1QdDu7kC
+         LO9g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=tz7oPfyxX9BD+xzMJnGaVoJGnhN4ODjNZkmfQaubnZk=;
+        b=XxQVjNTKwiGgW/MM0l8lp0umwdnqGqWHFER8LPrvgfUpUeVdw+mlpoS1sdx1VJav/W
+         0/6JoLKYWrF2o6y4ppTbHsPDHVms/skk9yR3+72wL94cK2x4/fE3PF3YL3TiMf0gJn6J
+         cc/Rw+NIQGqmjfbtYxcBeoP3w7slreeLYnE0b8kVg1R3i3upwQlW2hkB+sjCbVUo2Qto
+         v67M67oHwye4XZUp7Cn5BTzFTr88VUf3u6VAm/Qo2TUcpBgY4B4UwbIQDxFKB6GqqGR4
+         V//MIWl30Kp3HyQy0hD+dGT5zhenVNhlvhspRNkEJMHiUNG9ymuv/qgd8oNYiVSZ0RTc
+         +lOw==
+X-Gm-Message-State: APjAAAUyv8SEmrKZ1XJOMGyLZHEcukdv3c8XxOLHy+ZSWu5aEgoNqhk1
+        aNbWnqd92RIcMAx3fbNCNWqOUWwy
+X-Google-Smtp-Source: APXvYqzdJ+Yt5rZTFDz7nD9oG1L83Ph9tCIN+wYgO3+j09sFFqD1b46eoo/libghsRSPvsSgB3H0JQ==
+X-Received: by 2002:a17:90a:be0d:: with SMTP id a13mr6593209pjs.78.1579812642075;
+        Thu, 23 Jan 2020 12:50:42 -0800 (PST)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id q10sm3741842pfn.5.2020.01.23.12.50.40
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 23 Jan 2020 12:50:41 -0800 (PST)
+Date:   Thu, 23 Jan 2020 12:50:39 -0800
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Marco Felsch <m.felsch@pengutronix.de>
+Cc:     support.opensource@diasemi.com, robh+dt@kernel.org,
+        lee.jones@linaro.org, stwiss.opensource@diasemi.com,
+        Adam.Thomson.Opensource@diasemi.com,
+        linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel@pengutronix.de
+Subject: Re: [PATCH 2/3] dt-bindings: watchdog: da9062: add suspend disable
+ option
+Message-ID: <20200123205039.GA13268@roeck-us.net>
+References: <20200108095704.23233-1-m.felsch@pengutronix.de>
+ <20200108095704.23233-3-m.felsch@pengutronix.de>
 MIME-Version: 1.0
-References: <20200122174005.17257-1-sravanhome@gmail.com> <CAL_JsqLq5XFdVRJa-XuTDbA_s=hpu3P4VGou=XfmSJs5NFAQqQ@mail.gmail.com>
- <3489a505-9992-037d-5007-6e5f5726a4e7@gmail.com>
-In-Reply-To: <3489a505-9992-037d-5007-6e5f5726a4e7@gmail.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Thu, 23 Jan 2020 14:50:24 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqJ6B76nyQ8W8LPaM7czesqN54LE=nqd_Vaz++tQ65r2PQ@mail.gmail.com>
-Message-ID: <CAL_JsqJ6B76nyQ8W8LPaM7czesqN54LE=nqd_Vaz++tQ65r2PQ@mail.gmail.com>
-Subject: Re: [PATCH v8] dt-bindings: regulator: add document bindings for mpq7920
-To:     saravanan sekar <sravanhome@gmail.com>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <mripard@kernel.org>, devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200108095704.23233-3-m.felsch@pengutronix.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 23, 2020 at 1:14 AM saravanan sekar <sravanhome@gmail.com> wrote:
->
->
-> On 22/01/20 11:16 pm, Rob Herring wrote:
->
-> On Wed, Jan 22, 2020 at 11:40 AM Saravanan Sekar <sravanhome@gmail.com> wrote:
->
-> Add device tree binding information for mpq7920 regulator driver.
-> Example bindings for mpq7920 are added.
->
-> Signed-off-by: Saravanan Sekar <sravanhome@gmail.com>
+On Wed, Jan 08, 2020 at 10:57:03AM +0100, Marco Felsch wrote:
+> Document the watchdog disable option which can be used if the hardware
+> automatic suspend option is broken.
+> 
+> Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+> Reviewed-by: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+
 > ---
->
-> Notes:
->     Changes on v8 :
->       - fixed error reported by dt_binding_check
->
-> Still broken. :(
->
-> Sorry I cannot reproduce any error, yaml is parsed and mps,mpq7920.example.dts is generated
->   CHKDT   Documentation/devicetree/bindings/regulator/mps,mpq7920.yaml
-> Please help me giving more detail
-
-What about building the example? The build log is attached to the
-patch in DT patchwork.
-
-Rob
+>  Documentation/devicetree/bindings/watchdog/da9062-wdt.txt | 5 +++++
+>  1 file changed, 5 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/watchdog/da9062-wdt.txt b/Documentation/devicetree/bindings/watchdog/da9062-wdt.txt
+> index b935b526d2f3..950e4fba8dbc 100644
+> --- a/Documentation/devicetree/bindings/watchdog/da9062-wdt.txt
+> +++ b/Documentation/devicetree/bindings/watchdog/da9062-wdt.txt
+> @@ -6,6 +6,11 @@ Required properties:
+>  	"dlg,da9061-watchdog", "dlg,da9062-watchdog"
+>  	"dlg,da9062-watchdog"
+>  
+> +Optional properties:
+> +- dlg,use-sw-pm: Add this property to disable the watchdog during suspend.
+> +	Only use this option if you can't use the watchdog automatic suspend
+> +	function during a suspend (see register CONTROL_B).
+> +
+>  Example: DA9062
+>  
+>  	pmic0: da9062@58 {
