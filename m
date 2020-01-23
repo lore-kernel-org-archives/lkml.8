@@ -2,159 +2,68 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC2DFC33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 17:46:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A2DCC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 17:46:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 970C321D7D
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 17:46:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579801567;
-	bh=Nm/1hZYRDXEy1h5zI+ojaQyAVgcLuXzuAam4glSnMeQ=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
-	b=VuA6SFWLzGffWRL8RIVtRp9kUoWsSIQB8vnO0wU82Fg7np7fu3HNfp/aYRdtlpJQ1
-	 g4IyO7uyeyDBwoMUY4ekRG/vfJlGaIALeEQyRcla2Uf/2Xz73AR3uHV0Jdi0PuDZ3v
-	 cj7U2LtIjFyLTAZfx4wcYQQW7rzTSBtVRbMma/dw=
+	by mail.kernel.org (Postfix) with ESMTP id 2E14D21734
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 17:46:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729078AbgAWRqG (ORCPT
+        id S1729143AbgAWRqP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 12:46:06 -0500
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:41733 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727022AbgAWRqG (ORCPT
+        Thu, 23 Jan 2020 12:46:15 -0500
+Received: from coyote.holtmann.net ([212.227.132.17]:47367 "EHLO
+        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729050AbgAWRqN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 12:46:06 -0500
-Received: by mail-lf1-f67.google.com with SMTP id m30so2958559lfp.8;
-        Thu, 23 Jan 2020 09:46:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=9SUGR8QdPMNh7QLWat7AGgDe3jaF2rbpW1KxZ9s3AOs=;
-        b=sbFxacSfBCAGBU7s2TQJY0DzNNQymStUoOtlfwJBSEBZcT6Z/Mj9byWnE1Za5HXWkB
-         HHwxRj5HnyQLx0JTKC4L1ghcKf8AgKcqkc0Mu1b3SgdH3LMU04PsjcLonuH3Zfl5M3G9
-         6NQIneG0d0c6MgKlDpopQtJsg1qegmt59z8gBdm9BZpq1CaZNJoXQwCBrmGd8Fe15rxu
-         D2YrNynapEEOiHCGsaeWp/u0+6G+N/JmhB9+x1g0kzrNyYxKT11DedfTf4m+q4oSgv+t
-         KPkmLkX+JhNE+2xMdYCHXC+g2G5NN+FZJTf5cmsBCMXqE2RXSYPnWNeh5xQf+pmZJ5zT
-         6s6Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
-         :date:message-id:mime-version;
-        bh=9SUGR8QdPMNh7QLWat7AGgDe3jaF2rbpW1KxZ9s3AOs=;
-        b=acUccFWUpfaY+2pX5apMWCetRGDrBrGKyZd440RRxbLbGGAC+qh1T12R2T678qHkPH
-         vsyx7n/CMw7C/lyGpDzUFeXKDkiEm+ZHGKnt2isGLbDhjcmXTolQyss3BNqWSkp/lu56
-         EhoT3fDZia8+Nap48+AFGlV8vDPG+81hkVP23myBnHGBv9KL/HQsds9loBMp9TEEANPz
-         kIy2WerDSgDgwEDZs7wPflxZhIONlNr0YultupEGBKfg0e6WWnKmO/BSpa/J4jgDPcpx
-         /vODQO1IFdtaSOrUj6enwE/blg2SMnWBSpUiaFXKsG+dXuAdYw26dUqhjnAJTMk7skrL
-         vO+g==
-X-Gm-Message-State: APjAAAXpqRJpW6mw3xr2kzQHTwYx1xPcjQh5ALL42Lqv1X7nMTV2OWGG
-        UhBTHYZXaiDTOqYWqAobmRls03iykySScw==
-X-Google-Smtp-Source: APXvYqx1D1Oq970OIGQK6so+TTaZuGf+dWk0DQrGNPBalH7w5tCE1RWZJXmyIiFu0n1PWuhk49C2MQ==
-X-Received: by 2002:ac2:4a91:: with SMTP id l17mr5353742lfp.75.1579801563345;
-        Thu, 23 Jan 2020 09:46:03 -0800 (PST)
-Received: from saruman (88-113-215-33.elisa-laajakaista.fi. [88.113.215.33])
-        by smtp.gmail.com with ESMTPSA id r2sm1668668lff.63.2020.01.23.09.46.01
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 23 Jan 2020 09:46:02 -0800 (PST)
-From:   Felipe Balbi <balbi@kernel.org>
-To:     "Yang\, Fei" <fei.yang@intel.com>,
-        Andrzej Pietrasiewicz <andrzej.p@collabora.com>,
-        John Stultz <john.stultz@linaro.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Cc:     Felipe Balbi <felipe.balbi@linux.intel.com>,
-        Thinh Nguyen <thinhn@synopsys.com>,
-        Tejas Joglekar <tejas.joglekar@synopsys.com>,
-        Jack Pham <jackp@codeaurora.org>, Todd Kjos <tkjos@google.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Linux USB List <linux-usb@vger.kernel.org>,
-        stable <stable@vger.kernel.org>
-Subject: RE: [RFC][PATCH 0/2] Avoiding DWC3 transfer stalls/hangs when using adb over f_fs
-In-Reply-To: <02E7334B1630744CBDC55DA8586225837F9EE335@ORSMSX102.amr.corp.intel.com>
-References: <20200122222645.38805-1-john.stultz@linaro.org> <ef64036f-7621-50d9-0e23-0f7141a40d7a@collabora.com> <02E7334B1630744CBDC55DA8586225837F9EE280@ORSMSX102.amr.corp.intel.com> <87o8uu3wqd.fsf@kernel.org> <02E7334B1630744CBDC55DA8586225837F9EE335@ORSMSX102.amr.corp.intel.com>
-Date:   Thu, 23 Jan 2020 19:46:51 +0200
-Message-ID: <87lfpy3w1g.fsf@kernel.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+        Thu, 23 Jan 2020 12:46:13 -0500
+Received: from marcel-macpro.fritz.box (p4FEFC5A7.dip0.t-ipconnect.de [79.239.197.167])
+        by mail.holtmann.org (Postfix) with ESMTPSA id A11B2CED02;
+        Thu, 23 Jan 2020 18:55:31 +0100 (CET)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3608.40.2.2.4\))
+Subject: Re: [Bluez PATCH v1] bluetooth: secure bluetooth stack from bluedump
+ attack
+From:   Marcel Holtmann <marcel@holtmann.org>
+In-Reply-To: <CALWDO_VUckYfEbh8RC=X2zqWKd5+2qOEux2ctdpo_Jfwkt_V9g@mail.gmail.com>
+Date:   Thu, 23 Jan 2020 18:46:12 +0100
+Cc:     Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        Yun-hao Chung <howardchung@google.com>,
+        BlueZ devel list <linux-bluetooth@vger.kernel.org>,
+        chromeos-bluetooth-upstreaming@chromium.org,
+        "David S. Miller" <davem@davemloft.net>,
+        netdev <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Transfer-Encoding: 7bit
+Message-Id: <C926F619-C47A-433C-9DA7-4E3F8C49FC8C@holtmann.org>
+References: <20200106181425.Bluez.v1.1.I5ee1ea8e19d41c5bdffb4211aeb9cd9efa5e0a4a@changeid>
+ <CD07E771-6F40-4158-A0F9-03FC128CDCD3@holtmann.org>
+ <CALWDO_VUckYfEbh8RC=X2zqWKd5+2qOEux2ctdpo_Jfwkt_V9g@mail.gmail.com>
+To:     Alain Michaud <alainmichaud@google.com>
+X-Mailer: Apple Mail (2.3608.40.2.2.4)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+Hi Alain,
 
+> Did you have additional feedback on this before we can send a new
+> version to address Marcel's comments?
+> 
+> Marcel, you are right, LE likely will need a similar fix.  Given we
+> currently have SC disabled on chromium, we can probably submit this as
+> a separate patch unless someone else would like to contribute it
+> sooner.
 
-Hi,
+I would prefer if we get BR/EDR and LE fixed in the same kernel release.
 
-"Yang, Fei" <fei.yang@intel.com> writes:
->>>>> Hey all,
->>>>>    I wanted to send these out for comment and thoughts.
->>>>>=20
->>>>> Since ~4.20, when the functionfs gadget enabled scatter-gather=20
->>>>> support, we have seen problems with adb connections stalling and=20
->>>>> stopping to function on hardware with dwc3 usb controllers.
->>>>> Specifically, HiKey960, Dragonboard 845c, and Pixel3 devices.
->>>>
->>>> Any chance this:
->>>>=20
->>>> https://git.kernel.org/pub/scm/linux/kernel/git/balbi/usb.git/commit/
->>>> ?h=3Dtesting/next&id=3Df63333e8e4fd63d8d8ae83b89d2c38cf21d64801
->>> This is a different issue. I have tried initializing num_sgs when debug=
-ging this adb stall problem, but it didn't help.
->>
->> So multiple folks have run through this problem, but not *one* has trace=
-points collected from the issue? C'mon guys. Can someone, please, collect t=
-racepoints so we can figure out what's actually going on?
->>
->> I'm pretty sure this should be solved at the DMA API level, just want to=
- confirm.
->
-> I have sent you the tracepoints long time ago. Also my analysis of the
-> problem (BTW, I don't think the tracepoints helped much). It's
-> basically a logic problem in function dwc3_gadget_ep_reclaim_trb_sg().
+Regards
 
-AFAICT, this is caused by DMA API merging pages together when map an
-sglist for DMA. While doing that, it does *not* move the SG_END flag
-which sg_is_last() checks.
+Marcel
 
-I consider that an overlook on the DMA API, wouldn't you? Why should DMA
-API users care if pages were merged or not while mapping the sglist? We
-have for_each_sg() and sg_is_last() for a reason.
-
-> I can try dig into my old emails and resend, but that is a bit hard to fi=
-nd.
-
-Don't bother, I'm still not convinced we should fix at the driver level
-when sg_is_last() should be working here, unless we should iterate over
-num_sgs instead of num_mapped_sgs, though I don't think that's the case
-since in that case we would have to chain buffers of size zero.
-
-=2D-=20
-balbi
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl4p3AsACgkQzL64meEa
-mQaTdA/+PpmXuec0fjzp1yy6MejaVnnPEOFDVaOYvpaYkbH9C/UhwT42e5ZuaVg1
-abC2wFsKPer2Xbtb9rmJflvqiD+smblgDpkLyFHEwZRC0a7o+c6CkFYMPNNM9+w/
-sNWVwM3sfLGQ9Wcx0hQueLmhksBbvGcAqnph/MwFJcz81k77/BEYFqo/8n7c6o7K
-YBJrySxFqi6y/jCv0u+FDG449XOdh2Udydp/7UPCXrOZis6D2nxiiU8H7taKGZuO
-jluTVDFsFQK9CA8GVLMocciLUPSQlSDlac3cUH4lQnVqDGNGfjSN37AkFzeUKSNL
-HgOJA0E4ewtZFe3EM1JKQU968a3OrPYkdzZi0pvwnDxfJ8pyo1/jqQInz518etwq
-SHqM2r/Pwwtem+wwbi6Z+WKmfwHI445Jht3DoC1dSnREXSG5VzXJzyIWVrAvtexN
-kWDaqp4tBVQqVbsmOIQVBio46kBe/yNlhFgycnaXGSlz7JLJXvfMqhA4xSAbr6Vt
-rob9DoX879dS0JS3YN6tOHQeP0eVZjq/xUwTjhVDA1l/XNb7WM4lx//5o8hqn1VW
-XMP9VBC4W0NZoRmhi4pcp7zXHxTal68rLJkYL78yi8R9N3ERuo3XylA40jAOaR0E
-najiMxtEwxPalArWq9qbWI/EcMEMMiom03pZnFnHAiTsj7alMhE=
-=ZK9D
------END PGP SIGNATURE-----
---=-=-=--
