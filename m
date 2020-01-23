@@ -2,73 +2,76 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A332C32771
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 02:06:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61F78C32771
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 02:13:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 088EB2467A
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 02:06:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 343D924676
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 02:13:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579745630;
+	bh=UVtHGuBwD4NKnOj+Kfsya+kpYb2Ei7ghhepkkktbhCw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=gcdROK1y8SzBtMdziJOygV46sweTD2vnYXuFybH8V54+1y7tHBP+LlOrRO5/v2cZo
+	 QtZbY94YD6iPEklBt1y9ncB7/EjCfijQgWAG3iSRgJrSrpbcbPKzn/X0dgSVSmTUuD
+	 1AjW18IMxACPDY8E0Cb/YbWeVtWn0P6KprOgvuRs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726871AbgAWCGa (ORCPT
+        id S1726118AbgAWCNt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 21:06:30 -0500
-Received: from szxga04-in.huawei.com ([45.249.212.190]:10131 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725911AbgAWCGa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 21:06:30 -0500
-Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 1B545BF418CF57AB050E;
-        Thu, 23 Jan 2020 10:06:28 +0800 (CST)
-Received: from huawei.com (10.175.105.18) by DGGEMS404-HUB.china.huawei.com
- (10.3.19.204) with Microsoft SMTP Server id 14.3.439.0; Thu, 23 Jan 2020
- 10:06:17 +0800
-From:   linmiaohe <linmiaohe@huawei.com>
-To:     <pbonzini@redhat.com>, <rkrcmar@redhat.com>,
-        <sean.j.christopherson@intel.com>, <vkuznets@redhat.com>,
-        <wanpengli@tencent.com>, <jmattson@google.com>, <joro@8bytes.org>,
-        <tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
-        <hpa@zytor.com>
-CC:     <linmiaohe@huawei.com>, <kvm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <x86@kernel.org>
-Subject: [PATCH] KVM: nVMX: delete meaningless nested_vmx_run() declaration
-Date:   Thu, 23 Jan 2020 10:08:20 +0800
-Message-ID: <1579745300-13029-1-git-send-email-linmiaohe@huawei.com>
-X-Mailer: git-send-email 1.8.3.1
+        Wed, 22 Jan 2020 21:13:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44922 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725911AbgAWCNs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 21:13:48 -0500
+Received: from sol.localdomain (c-107-3-166-239.hsd1.ca.comcast.net [107.3.166.239])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3CEFE24125;
+        Thu, 23 Jan 2020 02:13:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579745628;
+        bh=UVtHGuBwD4NKnOj+Kfsya+kpYb2Ei7ghhepkkktbhCw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=bDZDIFzZTL682ulrwViKOe3ewyQMdqkVmdmvds4xrpPq8JiU9RfR7qcpjFRab+o8R
+         PiUYSZiGGtYjMeFGuBcGEK/Qsg/TCaVD+tNFJWPm5ZNhjNF2928EPwaguDVdEh+cr6
+         6tmFC6YDE4ITDDWouK47F3UXSqAHzvvr2BLnLGfM=
+Date:   Wed, 22 Jan 2020 18:13:46 -0800
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Jaegeuk Kim <jaegeuk@kernel.org>
+Cc:     linux-kernel@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net,
+        Hridya Valsaraju <hridya@google.com>
+Subject: Re: [PATCH 2/2] f2fs: Add f2fs stats to sysfs
+Message-ID: <20200123021346.GA862@sol.localdomain>
+References: <20200123011354.75282-1-jaegeuk@kernel.org>
+ <20200123011354.75282-2-jaegeuk@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.105.18]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200123011354.75282-2-jaegeuk@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miaohe Lin <linmiaohe@huawei.com>
+On Wed, Jan 22, 2020 at 05:13:54PM -0800, Jaegeuk Kim wrote:
+> diff --git a/fs/f2fs/debug.c b/fs/f2fs/debug.c
+> index ce2936554ef8..7565ba9967dd 100644
+> --- a/fs/f2fs/debug.c
+> +++ b/fs/f2fs/debug.c
+> @@ -150,7 +150,7 @@ static void update_general_status(struct f2fs_sb_info *sbi)
+>  /*
+>   * This function calculates BDF of every segments
+>   */
+> -static void update_sit_info(struct f2fs_sb_info *sbi)
+> +void update_sit_info(struct f2fs_sb_info *sbi)
+>  {
+>  	struct f2fs_stat_info *si = F2FS_STAT(sbi);
+>  	unsigned long long blks_per_sec, hblks_per_sec, total_vblocks;
 
-The function nested_vmx_run() declaration is below its implementation. So
-this is meaningless and should be removed.
+Global functions need a "f2fs_" prefix.
 
-Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
----
- arch/x86/kvm/vmx/nested.c | 2 --
- 1 file changed, 2 deletions(-)
-
-diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
-index 95b3f4306ac2..7608924ee8c1 100644
---- a/arch/x86/kvm/vmx/nested.c
-+++ b/arch/x86/kvm/vmx/nested.c
-@@ -4723,8 +4723,6 @@ static int handle_vmclear(struct kvm_vcpu *vcpu)
- 	return nested_vmx_succeed(vcpu);
- }
- 
--static int nested_vmx_run(struct kvm_vcpu *vcpu, bool launch);
--
- /* Emulate the VMLAUNCH instruction */
- static int handle_vmlaunch(struct kvm_vcpu *vcpu)
- {
--- 
-2.19.1
-
+- Eric
