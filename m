@@ -2,82 +2,138 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D8BCC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 15:34:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED081C33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 15:43:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31E0B21D7D
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 15:34:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zr5YfkPm"
+	by mail.kernel.org (Postfix) with ESMTP id C575E21734
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 15:43:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579794200;
+	bh=LVMTUUS6+fiERp87P7xAqtTRy0QAm4wGpkRLJv6gLrw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=YrbFPICvTSFV3iFBOILHcoe12o5UXNH0KG/56rXW7c64UerLTOg+I5zJifHSIw7tG
+	 MEE2PoFFPmcvGwYtAFXOrWAMiy3opQojdqoX1g+ZfuBCQD3RMrj9o7XmUUHOZXfaaT
+	 7jD9cES2mujN8R+HhDsNDLtK1+NCSsj7C8s9gW2c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729255AbgAWPeu (ORCPT
+        id S1728139AbgAWPnU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 10:34:50 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:38206 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726771AbgAWPeu (ORCPT
+        Thu, 23 Jan 2020 10:43:20 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:46546 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726703AbgAWPnT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 10:34:50 -0500
-Received: by mail-lj1-f193.google.com with SMTP id w1so3942639ljh.5
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jan 2020 07:34:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=uGc9Zy7AW/fR7fXYuwont3bFuuFXgBZFTRJ7sZoElSo=;
-        b=zr5YfkPmo20rKsCQ5i5CEu7VVdzgywAvimLQi/Be+hihr8BxcOGs1gOLYvBxcxEQOD
-         AIEdG53EEtE7XKpMSBJAJ05lGssxylwhusa/oumgsziAG8F3/PDhCOgdzDt4DOI8DCWY
-         9vAGBbU1wqSWPOshk4GC4xr0KlPg0Fm5IqTXGy7s9erZlT7ASoQiyG9PHIOsas4ZNATH
-         KmBzdqlw1SH4LLofdn2e5EbKiCnvRSZ1iCHU0zsqNmKLgAnvxuRGLORPkEji+YRreWG9
-         QPhlz61MbXIEtrqZaIbAY3YLa2nxG3F4DGmbGA34/0nmBwU6wU65hZeFgEOAIro/l4zv
-         wk8Q==
+        Thu, 23 Jan 2020 10:43:19 -0500
+Received: by mail-oi1-f196.google.com with SMTP id 13so3250827oij.13;
+        Thu, 23 Jan 2020 07:43:19 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=uGc9Zy7AW/fR7fXYuwont3bFuuFXgBZFTRJ7sZoElSo=;
-        b=PaGHwuCPrSOa4RSBcb/NRPj2dQ9Z5pZxXHB0+fcmi+bhe8TRTQeTGSMsBLsnK4sTOp
-         fncopgUerj620VHlIgnpJkxo05G7jGcpDm1Z50ZDf+npQg4eeW4hfw0cxdqlZeuk78yX
-         aBCWpqcReXU1JQRS7UyJYVYXYfnsjRm15AHvaFPKVYiMf3ZUaUV2J1Tho+UTbHKZc340
-         owVy+2HbhJcaNpK91IVoOMWNfaQ7+bHtuOPDJ/8Ru7Kel1da4gH/VNCqIxE8NbQCxMXr
-         +Y8sKp8OTA0HMPGS/La5iJNjcbl6IsYV0yFb5eYj7y+I6dl/nPGeG4GUxeybfTZ9c1Mq
-         G/yg==
-X-Gm-Message-State: APjAAAWCqmmZOnXzVpahijlXogplHYo+FZtTiypvOjYtcp/+NkQn/026
-        Pglfwa0x/Q5KlKH4xQqUhHICdjnGuto2Gjzvk3P7c2sqKDY=
-X-Google-Smtp-Source: APXvYqwhjq9wryjQTKjeZHti7yKynQUDY6uaABgQtqtZvxRMmxVUb0GvwQ6R1tROoIrXOsYgqsVVabM6LSPuaQhLoww=
-X-Received: by 2002:a05:651c:111c:: with SMTP id d28mr24194674ljo.32.1579793687669;
- Thu, 23 Jan 2020 07:34:47 -0800 (PST)
+        bh=jvg7wSBuSfnR+jPryCZqogmG0U1OOdgKNdgdT9M+CAQ=;
+        b=lyWkAB5M+lsG763lNA/3NM/KSFbKu0um0ESVtRBeilYaV0ybr2O+JzwuzCwsQ55HKL
+         tDzRUFuFCY5OJ4gHN0hiVpnknpWgKjpkGfYQEM7O4VtoNggNMDtWR697MA6mVHXiVI00
+         EgY9ke4n03QPLrs7IgSoSjxxW1Zj9JYfxFIZDODxpFM0jQPI115grrYroi08ktOXU3GK
+         CbLiCSPCxQ+OG4fl22dg7SOqpy2+KNrF8QfWnV1nooHChigqnEX4UbzRvilJdvNpc7Kg
+         UPFdOzghVMvbLv4zhGrKaVOMfZ4bk9pf4ioC7CGlumu2Jq4gx4UvljZgtMHxhON/dFqe
+         e5gg==
+X-Gm-Message-State: APjAAAVdVSqIPfFOVrasKvOUtStK/SZ6bFcq5pWnDkDiDLewCuIMj1En
+        CWNqhg0XUlCbiHhqDLOqOr92XFPFJO+7PsjDJZw=
+X-Google-Smtp-Source: APXvYqxCsrAW1z//6Pb/k1EDcWu7Q4HQzQvh5jIFIL3idRGPe6BEtYDcgbdULAUMwc/yPusaeuzyWoPhbY5Whd8XrR8=
+X-Received: by 2002:a54:4e96:: with SMTP id c22mr11231161oiy.110.1579794198623;
+ Thu, 23 Jan 2020 07:43:18 -0800 (PST)
 MIME-Version: 1.0
-References: <20200103170155.100743-1-joyce.ooi@intel.com>
-In-Reply-To: <20200103170155.100743-1-joyce.ooi@intel.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 23 Jan 2020 16:34:36 +0100
-Message-ID: <CACRpkdawgTzXSRs7DUV7n6fGDWvUs_yG_4aTYa-DOzBMtu5XbQ@mail.gmail.com>
-Subject: Re: [PATCH] MAINTAINERS: Replace Tien Hock Loh as Altera PIO maintainer
-To:     "Ooi, Joyce" <joyce.ooi@intel.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Loh Tien Hock <tien.hock.loh@intel.com>,
-        See Chin Liang <chin.liang.see@intel.com>,
-        Tan Ley Foon <ley.foon.tan@intel.com>, Ooi@vger.kernel.org
+References: <20200122173538.1142069-1-douglas.raillard@arm.com>
+In-Reply-To: <20200122173538.1142069-1-douglas.raillard@arm.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Thu, 23 Jan 2020 16:43:07 +0100
+Message-ID: <CAJZ5v0hL9AbpgivRGtCtqQo4XRYdt=SDjD=_FAVZmKAi=+VvzA@mail.gmail.com>
+Subject: Re: [RFC PATCH v4 0/6] sched/cpufreq: Make schedutil energy aware
+To:     Douglas RAILLARD <douglas.raillard@arm.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        qperret@google.com, Linux PM <linux-pm@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 3, 2020 at 6:02 PM Ooi, Joyce <joyce.ooi@intel.com> wrote:
-
-> This patch is to replace Tien Hock Loh as Altera PIO maintainer as he
-> has moved to a different role.
+On Wed, Jan 22, 2020 at 6:36 PM Douglas RAILLARD
+<douglas.raillard@arm.com> wrote:
 >
-> Signed-off-by: Ooi, Joyce <joyce.ooi@intel.com>
+> Make schedutil cpufreq governor energy-aware.
 
-Patch applied to the GPIO tree with Tien's ACK.
+I have to say that your terminology is confusing to me, like what
+exactly does "energy-aware" mean in the first place?
 
-Yours,
-Linus Walleij
+> - patch 1 introduces a function to retrieve a frequency given a base
+>   frequency and an energy cost margin.
+> - patch 2 links Energy Model perf_domain to sugov_policy.
+> - patch 3 updates get_next_freq() to make use of the Energy Model.
+> - patch 4 adds sugov_cpu_ramp_boost() function.
+> - patch 5 updates sugov_update_(single|shared)() to make use of
+>   sugov_cpu_ramp_boost().
+> - patch 6 introduces a tracepoint in get_next_freq() for
+>   testing/debugging. Since it's not a trace event, it's not exposed to
+>   userspace in a directly usable way, allowing for painless future
+>   updates/removal.
+>
+> The benefits of using the EM in schedutil are twofold:
+
+I guess you mean using the EM directly in schedutil (note that it is
+used indirectly already, because of EAS), but that needs to be clearly
+stated.
+
+> 1) Selecting the highest possible frequency for a given cost. Some
+>    platforms can have lower frequencies that are less efficient than
+>    higher ones, in which case they should be skipped for most purposes.
+>    They can still be useful to give more freedom to thermal throttling
+>    mechanisms, but not under normal circumstances.
+>    note: the EM framework will warn about such OPPs "hertz/watts ratio
+>    non-monotonically decreasing"
+
+While all of that is fair enough for platforms using the EM, do you
+realize that the EM is not available on the majority of architectures
+(including some fairly significant ones) and so adding overhead
+related to it for all of them is quite less than welcome?
+
+> 2) Driving the frequency selection with power in mind, in addition to
+>    maximizing the utilization of the non-idle CPUs in the system.
+
+Care to explain this?  I'm totally unsure what you mean here.
+
+> Point 1) is implemented in "PM: Introduce em_pd_get_higher_freq()" and
+> enabled in schedutil by
+> "sched/cpufreq: Hook em_pd_get_higher_power() into get_next_freq()".
+>
+> Point 2) is enabled in
+> "sched/cpufreq: Boost schedutil frequency ramp up". It allows using
+> higher frequencies when it is known that the true utilization of
+> currently running tasks is exceeding their previous stable point.
+
+Please explain "true utilization" and "stable point".
+
+> The benefits are:
+>
+> * Boosting the frequency when the behavior of a runnable task changes,
+>   leading to an increase in utilization. That shortens the frequency
+>   ramp up duration, which in turns allows the utilization signal to
+>   reach stable values quicker.  Since the allowed frequency boost is
+>   bounded in energy, it will behave consistently across platforms,
+>   regardless of the OPP cost range.
+
+Sounds good.
+
+Can you please describe the algorithm applied to achieve that?
+
+> * The boost is only transient, and should not impact a lot the energy
+>   consumed of workloads with very stable utilization signals.
