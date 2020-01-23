@@ -2,124 +2,124 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD61CC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 13:48:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C028C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 13:51:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FB1F20661
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 13:48:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579787305;
-	bh=FoxHytvieeiMR5w2vCjs+iRWN/xe1IbjBrRYYeIbBXI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=1eU1gj2LFQ1WukzmwB/K27I5rmgRk6CRe8n3rQS+xxc0SfADbpuycki0n4rNiyyRI
-	 y9oRq0ObkbLp7qM4LFlWbY8PfJUa9i9jgy1KloUndyoR+meaDFBZjB/vFglH+UwVb1
-	 R1Pd6+nCLdfrb6a/X2UxCFtTU7n0EojVQZ1JCJfc=
+	by mail.kernel.org (Postfix) with ESMTP id 57FAE20663
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 13:51:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729016AbgAWNsZ (ORCPT
+        id S1728731AbgAWNv0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 08:48:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35894 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727194AbgAWNsX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 08:48:23 -0500
-Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7BB2A24688;
-        Thu, 23 Jan 2020 13:48:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579787302;
-        bh=FoxHytvieeiMR5w2vCjs+iRWN/xe1IbjBrRYYeIbBXI=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=1AS+dHLPP5rAH9T5VHs73GXahPyDACd7SwtCJD7VthNa8rx17bY8byQrbZdLVw6st
-         /McONvPTX31f0ZJEautzgUfWGlos9MYkPATUg7nOUBZrdeGgNfy+FlwtBpEwdmxnNE
-         u2QibjRJJeoNrPtP39MgM13THZKJCOfzOCTNaVJU=
-Received: by mail-qt1-f174.google.com with SMTP id c24so2475643qtp.5;
-        Thu, 23 Jan 2020 05:48:22 -0800 (PST)
-X-Gm-Message-State: APjAAAXKuxRZTOQmoiUrYjuSIMALCSfn0oJa/JIzrfJF4SonCBnu6tTp
-        WTRRDGH6j0aih2zQ5+4bWp7VoeInTfYxWSjUig==
-X-Google-Smtp-Source: APXvYqzeZnbmbU5C7iKeSjGcGtjCWg8yrdnvL6IUNbFeEnrmCjkbaCvNa0W8VIm6gLl/nyiVJznT6alXW1omCkLRUg0=
-X-Received: by 2002:ac8:6747:: with SMTP id n7mr15914499qtp.224.1579787301560;
- Thu, 23 Jan 2020 05:48:21 -0800 (PST)
+        Thu, 23 Jan 2020 08:51:26 -0500
+Received: from hostingweb31-40.netsons.net ([89.40.174.40]:46374 "EHLO
+        hostingweb31-40.netsons.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726771AbgAWNv0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jan 2020 08:51:26 -0500
+Received: from [109.168.11.45] (port=47192 helo=pc-ceresoli.dev.aim)
+        by hostingweb31.netsons.net with esmtpa (Exim 4.92)
+        (envelope-from <luca@lucaceresoli.net>)
+        id 1iuctH-000CNg-2A; Thu, 23 Jan 2020 14:51:23 +0100
+From:   Luca Ceresoli <luca@lucaceresoli.net>
+To:     linux-i2c@vger.kernel.org, linux-doc@vger.kernel.org
+Cc:     Luca Ceresoli <luca@lucaceresoli.net>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Jean Delvare <jdelvare@suse.de>, Peter Rosin <peda@axentia.se>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2 00/28] docs: i2c: rework I2C documentation, part I
+Date:   Thu, 23 Jan 2020 14:50:35 +0100
+Message-Id: <20200123135103.20540-1-luca@lucaceresoli.net>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-References: <09a2fe69-842f-01cf-1cfa-d5fc639b158a@gmail.com>
-In-Reply-To: <09a2fe69-842f-01cf-1cfa-d5fc639b158a@gmail.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Thu, 23 Jan 2020 07:48:09 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqKvFt=BM2BD9HXSEZOAzEnDwAzj7f8pGRnApA8Mp7qxBg@mail.gmail.com>
-Message-ID: <CAL_JsqKvFt=BM2BD9HXSEZOAzEnDwAzj7f8pGRnApA8Mp7qxBg@mail.gmail.com>
-Subject: Re: [PATCH v10 1/2] dt-bindings: edac: dmc-520.yaml
-To:     Shiping Ji <shiping.linux@gmail.com>
-Cc:     Borislav Petkov <bp@alien8.de>, James Morse <james.morse@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        linux-edac <linux-edac@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, hangl@microsoft.com,
-        Lei Wang <lewan@microsoft.com>, ruizhao@microsoft.com,
-        shji@microsoft.com, Scott Branden <scott.branden@broadcom.com>,
-        Yuqing Shen <yuqing.shen@broadcom.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - hostingweb31.netsons.net
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - lucaceresoli.net
+X-Get-Message-Sender-Via: hostingweb31.netsons.net: authenticated_id: luca+lucaceresoli.net/only user confirmed/virtual account not confirmed
+X-Authenticated-Sender: hostingweb31.netsons.net: luca@lucaceresoli.net
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 22, 2020 at 6:31 PM Shiping Ji <shiping.linux@gmail.com> wrote:
->
-> This is the device tree bindings for new EDAC driver dmc520_edac.c.
->
-> From: Lei Wang <leiwang_git@outlook.com>
->
-> Signed-off-by: Lei Wang <leiwang_git@outlook.com>
-> Signed-off-by: Shiping Ji <shiping.linux@gmail.com>
-> Reviewed-by: James Morse <james.morse@arm.com>
->
-> ---
->      Changes in v10:
->          - Convert to the YAML format for binding description
->
-> ---
->  .../devicetree/bindings/edac/dmc-520.yaml     | 56 +++++++++++++++++++
->  1 file changed, 56 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/edac/dmc-520.yaml
->
-> diff --git a/Documentation/devicetree/bindings/edac/dmc-520.yaml b/Documentation/devicetree/bindings/edac/dmc-520.yaml
-> new file mode 100644
-> index 000000000000..dd5982b227b2
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/edac/dmc-520.yaml
-> @@ -0,0 +1,56 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/edac/dmc-520.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: ARM DMC-520 EDAC bindings
-> +
-> +maintainers:
-> +  - Lei Wang <lewan@microsoft.com>
-> +
-> +description: |+
-> +  DMC-520 node is defined to describe DRAM error detection and correction.
-> +
-> +  https://static.docs.arm.com/100000/0200/corelink_dmc520_trm_100000_0200_01_en.pdf
-> +
-> +properties:
-> +  compatible:
-> +    items:
-> +      - const: brcm,dmc-520
-> +      - const: arm,dmc-520
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    minItems: 1
+Hi,
 
-You also need 'maxItems: 10' here.
+this series is a list of improvements to the I2C documentation.
+
+It started as a simple reordering of index.rst from alphabetical order to a
+logical order. Then it grew to a mixture of various improvements to each
+section and some cross-section changes.
+
+I wanted to rework all the sections in a unique series, but after covering
+about one third of them the number of patches has already grown pretty long
+so I'm sending it in its current state. I will continue to cover the rest
+of the sections later.
+
+Each patch is quite self-standing, and most are trivial, so have a good
+reading.
+
+v2 incorporates many improvements suggested by Jean Delvare and Peter
+Rosin. A special thank you to Jean for his very patient and appreciated
+review work of _all_ of the 26 patches. Thanks to his work the patches are
+now 28. :) Patches 27 and 28 are the new ones.
+
+Luca
+
+Luca Ceresoli (28):
+  docs: i2c: sort index logically
+  docs: i2c: summary: extend introduction
+  docs: i2c: summary: rewrite the "terminology" section
+  docs: i2c: call it "I2C" consistently
+  docs: i2c: fix typo
+  docs: i2c: replace "I2C-transfer" -> "I2C transfer" consistently
+  docs: i2c: i2c-protocol: fix kernel-doc function syntax
+  docs: i2c: i2c-protocol: properly name start and stop conditions
+  docs: i2c: i2c-protocol: remove unneeded colons from table
+  docs: i2c: i2c-protocol: use proper names for ACK and NACK
+  docs: i2c: smbus: fix link syntax
+  docs: i2c: smbus-protocol: properly name start and stop conditions
+  docs: i2c: smbus-protocol: remove unneeded colons from table
+  docs: i2c: smbus-protocol: use proper names for ACK and NACK
+  docs: i2c: smbus-protocol: enable kernel-doc function syntax
+  docs: i2c: smbus-protocol: fix kernel-doc function syntax
+  docs: i2c: smbus-protocol: fix typo
+  docs: i2c: smbus-protocol: fix punctuation
+  docs: i2c: smbus-protocol: improve I2C Block transactions description
+  docs: i2c: instantiating-devices: fix internal hyperlink
+  docs: i2c: instantiating-devices: rearrange static instatiation
+  docs: i2c: instantiating-devices: use monospace for sysfs attributes
+  docs: i2c: old-module-parameters: fix internal hyperlink
+  docs: i2c: old-module-parameters: clarify this is for obsolete kernels
+  docs: i2c: old-module-parameters: use monospace instead of ""
+  docs: i2c: rename sections so the overall picture is clearer
+  docs: i2c: i2c-protocol: use same wording as smbus-protocol
+  docs: i2c: writing-clients: properly name the stop condition
+
+ Documentation/i2c/dev-interface.rst         |   24 +-
+ Documentation/i2c/dma-considerations.rst    |    2 +-
+ Documentation/i2c/i2c-protocol.rst          |   45 +-
+ Documentation/i2c/i2c-topology.rst          |   72 +-
+ Documentation/i2c/i2c.svg                   | 1341 +++++++++++++++++++
+ Documentation/i2c/index.rst                 |   59 +-
+ Documentation/i2c/instantiating-devices.rst |  115 +-
+ Documentation/i2c/old-module-parameters.rst |   31 +-
+ Documentation/i2c/slave-interface.rst       |    4 +-
+ Documentation/i2c/smbus-protocol.rst        |  107 +-
+ Documentation/i2c/summary.rst               |   62 +-
+ Documentation/i2c/writing-clients.rst       |   16 +-
+ 12 files changed, 1654 insertions(+), 224 deletions(-)
+ create mode 100644 Documentation/i2c/i2c.svg
+
+-- 
+2.25.0
+
