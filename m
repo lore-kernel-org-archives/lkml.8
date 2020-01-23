@@ -2,227 +2,162 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76B64C33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 14:05:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6886C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 14:05:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35A3421835
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 14:05:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cxSHZjZP"
+	by mail.kernel.org (Postfix) with ESMTP id 8B89E2087E
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 14:05:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729401AbgAWOFq (ORCPT
+        id S1729418AbgAWOFu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 09:05:46 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:52443 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729375AbgAWOFo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 09:05:44 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579788343;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=WPUndn+3PlaftyGJyUhWMdZQ5jf1QcGRmeI6Yc2wsnQ=;
-        b=cxSHZjZP2w1dUfKouVAmLxELNtJbMi1oo0mePOeg6z/n4+48xY03JOADGmrUuQux4dYFKk
-        J5jiVbLlEl+Cu/zM4KbGWyABwB9//k0itHEkApEQIGzy8fDfcXIkFa8cjdgTvXrRvESZj8
-        Sg+kxXhF//ujinJdkdfmwdc7A/kG/Cw=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-1-gMCv7wvPNRaGl0ErooX8Bw-1; Thu, 23 Jan 2020 09:05:41 -0500
-X-MC-Unique: gMCv7wvPNRaGl0ErooX8Bw-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9D30BDBF7;
-        Thu, 23 Jan 2020 14:05:37 +0000 (UTC)
-Received: from [10.36.117.56] (ovpn-117-56.ams2.redhat.com [10.36.117.56])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 91FF98CCEB;
-        Thu, 23 Jan 2020 14:05:12 +0000 (UTC)
-Subject: Re: [PATCH v16.1 0/9] mm / virtio: Provide support for free page
- reporting
-To:     Alexander Graf <graf@amazon.com>,
-        Alexander Duyck <alexander.duyck@gmail.com>,
-        kvm@vger.kernel.org, mst@redhat.com, linux-kernel@vger.kernel.org,
-        willy@infradead.org, mhocko@kernel.org, linux-mm@kvack.org,
-        akpm@linux-foundation.org, mgorman@techsingularity.net,
-        vbabka@suse.cz
-Cc:     yang.zhang.wz@gmail.com, nitesh@redhat.com, konrad.wilk@oracle.com,
-        pagupta@redhat.com, riel@surriel.com, lcapitulino@redhat.com,
-        dave.hansen@intel.com, wei.w.wang@intel.com, aarcange@redhat.com,
-        pbonzini@redhat.com, dan.j.williams@intel.com,
-        alexander.h.duyck@linux.intel.com, osalvador@suse.de,
-        "Paterson-Jones, Roland" <rolandp@amazon.com>, hannes@cmpxchg.org,
-        hare@suse.com
-References: <20200122173040.6142.39116.stgit@localhost.localdomain>
- <914aa4c3-c814-45e0-830b-02796b00b762@amazon.com>
-From:   David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
-Organization: Red Hat GmbH
-Message-ID: <0e2d04a8-af74-e2db-cab0-c67286e33a2a@redhat.com>
-Date:   Thu, 23 Jan 2020 15:05:11 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
-MIME-Version: 1.0
-In-Reply-To: <914aa4c3-c814-45e0-830b-02796b00b762@amazon.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+        Thu, 23 Jan 2020 09:05:50 -0500
+Received: from gw.cm.dream.jp ([59.157.128.2]:45404 "EHLO vsmtp02.cm.dti.ne.jp"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726729AbgAWOFs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jan 2020 09:05:48 -0500
+X-Greylist: delayed 400 seconds by postgrey-1.27 at vger.kernel.org; Thu, 23 Jan 2020 09:05:14 EST
+Received: from localhost (KD124210025232.ppp-bb.dion.ne.jp [124.210.25.232]) by vsmtp02.cm.dti.ne.jp (3.11v) with ESMTP AUTH id 00NDwSSk000958;Thu, 23 Jan 2020 22:58:32 +0900 (JST)
+Date:   Thu, 23 Jan 2020 22:58:27 +0900 (JST)
+Message-Id: <20200123.225827.1155989593018204741.hermes@ceres.dti.ne.jp>
+To:     linux-kernel@vger.kernel.org
+Subject: Re: BUG: unable to handle kernel NULL pointer dereference at
+ 00000000000000a8 in nilfs_segctor_do_construct
+From:   ARAI Shun-ichi <hermes@ceres.dti.ne.jp>
+In-Reply-To: <CAKFNMo=k1wVHOwXhTLEOJ+A-nwmvJ+sN_PPa8kY8fMxrQ4R+Jw@mail.gmail.com>
+References: <8736emquds.fsf@logand.com>
+        <CAKFNMo=k1wVHOwXhTLEOJ+A-nwmvJ+sN_PPa8kY8fMxrQ4R+Jw@mail.gmail.com>
+X-Mailer: Mew version 6.8 on Emacs 26.3
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=iso-2022-jp
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 23.01.20 11:20, Alexander Graf wrote:
-> Hi Alex,
-> 
-> On 22.01.20 18:43, Alexander Duyck wrote:
->> This series provides an asynchronous means of reporting free guest pages
->> to a hypervisor so that the memory associated with those pages can be
->> dropped and reused by other processes and/or guests on the host. Using
->> this it is possible to avoid unnecessary I/O to disk and greatly improve
->> performance in the case of memory overcommit on the host.
->>
->> When enabled we will be performing a scan of free memory every 2 seconds
->> while pages of sufficiently high order are being freed. In each pass at
->> least one sixteenth of each free list will be reported. By doing this we
->> avoid racing against other threads that may be causing a high amount of
->> memory churn.
->>
->> The lowest page order currently scanned when reporting pages is
->> pageblock_order so that this feature will not interfere with the use of
->> Transparent Huge Pages in the case of virtualization.
->>
->> Currently this is only in use by virtio-balloon however there is the hope
->> that at some point in the future other hypervisors might be able to make
->> use of it. In the virtio-balloon/QEMU implementation the hypervisor is
->> currently using MADV_DONTNEED to indicate to the host kernel that the page
->> is currently free. It will be zeroed and faulted back into the guest the
->> next time the page is accessed.
->>
->> To track if a page is reported or not the Uptodate flag was repurposed and
->> used as a Reported flag for Buddy pages. We walk though the free list
->> isolating pages and adding them to the scatterlist until we either
->> encounter the end of the list, processed as many pages as were listed in
->> nr_free prior to us starting, or have filled the scatterlist with pages to
->> be reported. If we fill the scatterlist before we reach the end of the
->> list we rotate the list so that the first unreported page we encounter is
->> moved to the head of the list as that is where we will resume after we
->> have freed the reported pages back into the tail of the list.
->>
->> Below are the results from various benchmarks. I primarily focused on two
->> tests. The first is the will-it-scale/page_fault2 test, and the other is
->> a modified version of will-it-scale/page_fault1 that was enabled to use
->> THP. I did this as it allows for better visibility into different parts
->> of the memory subsystem. The guest is running with 32G for RAM on one
->> node of a E5-2630 v3. The host has had some features such as CPU turbo
->> disabled in the BIOS.
->>
->> Test                   page_fault1 (THP)    page_fault2
->> Name            tasks  Process Iter  STDEV  Process Iter  STDEV
->> Baseline            1    1012402.50  0.14%     361855.25  0.81%
->>                     16    8827457.25  0.09%    3282347.00  0.34%
->>
->> Patches Applied     1    1007897.00  0.23%     361887.00  0.26%
->>                     16    8784741.75  0.39%    3240669.25  0.48%
->>
->> Patches Enabled     1    1010227.50  0.39%     359749.25  0.56%
->>                     16    8756219.00  0.24%    3226608.75  0.97%
->>
->> Patches Enabled     1    1050982.00  4.26%     357966.25  0.14%
->>   page shuffle      16    8672601.25  0.49%    3223177.75  0.40%
->>
->> Patches enabled     1    1003238.00  0.22%     360211.00  0.22%
->>   shuffle w/ RFC    16    8767010.50  0.32%    3199874.00  0.71%
->>
->> The results above are for a baseline with a linux-next-20191219 kernel,
->> that kernel with this patch set applied but page reporting disabled in
->> virtio-balloon, the patches applied and page reporting fully enabled, the
->> patches enabled with page shuffling enabled, and the patches applied with
->> page shuffling enabled and an RFC patch that makes used of MADV_FREE in
->> QEMU. These results include the deviation seen between the average value
->> reported here versus the high and/or low value. I observed that during the
->> test memory usage for the first three tests never dropped whereas with the
->> patches fully enabled the VM would drop to using only a few GB of the
->> host's memory when switching from memhog to page fault tests.
->>
->> Any of the overhead visible with this patch set enabled seems due to page
->> faults caused by accessing the reported pages and the host zeroing the page
->> before giving it back to the guest. This overhead is much more visible when
->> using THP than with standard 4K pages. In addition page shuffling seemed to
->> increase the amount of faults generated due to an increase in memory churn.
->> The overhead is reduced when using MADV_FREE as we can avoid the extra
->> zeroing of the pages when they are reintroduced to the host, as can be seen
->> when the RFC is applied with shuffling enabled.
->>
->> The overall guest size is kept fairly small to only a few GB while the test
->> is running. If the host memory were oversubscribed this patch set should
->> result in a performance improvement as swapping memory in the host can be
->> avoided.
-> 
-> 
-> I really like the approach overall. Voluntarily propagating free memory 
-> from a guest to the host has been a sore point ever since KVM was 
-> around. This solution looks like a very elegant way to do so.
-> 
-> The big piece I'm missing is the page cache. Linux will by default try 
-> to keep the free list as small as it can in favor of page cache, so most 
-> of the benefit of this patch set will be void in real world scenarios.
+Hi,
 
-One approach is to move (parts of) the page cache from the guest to the
-hypervisor - e.g., using emulated NVDIMM or virtio-pmem.
+It is reproducible in my environment.
+Kernel version is 4.19.86 (Gentoo).
+NILFS2 with kernel 4.19.82 works well.
 
--- 
-Thanks,
+I did following for the test.
 
-David / dhildenb
+i) mount corrupt partition with read-only option
+ (this partition causes "mounting fs with errors" at every rw mount)
+ i-1) wait a few minutes ... not crash
+ i-2) fs access (ls, du, ...) ... not crash
 
+ii) create small NILFS2 fs and read-write mount
+ dd if=/dev/zero of=/tmp/n bs=1M count=500
+ mount -o loop /tmp/n /mnt/tmp
+ ii-1) wait a few minutes ... not crash
+ ii-2) touch file in the fs ... crash (in few seconds)
+
+
+In <CAKFNMo=k1wVHOwXhTLEOJ+A-nwmvJ+sN_PPa8kY8fMxrQ4R+Jw@mail.gmail.com>;
+   Ryusuke Konishi <konishi.ryusuke@gmail.com> wrote
+   as Subject "Re: BUG: unable to handle kernel NULL pointer dereference at 00000000000000a8 in nilfs_segctor_do_construct":
+
+> Hi,
+> 
+>> It was likely caused by improper shutdown and following nilfs2 partition
+>> corruption.  Now I can still read the data, but on the whole the
+>> computer is not useable, because starting a process which uses the
+>> corrupted file system simply crashes in kernel.
+> 
+> Thank you for reporting the issue.
+> Let me ask you a few questions:
+> 
+> 1) Is the crash reproducible in the environment ?
+> 2) Can you mount the corrupted(?) partition from a recent version of kernel ?
+> 3) Does read-only mount option (-r) work to avoid the crash ?
+> 
+> Thanks,
+> Ryusuke Konishi
+> 
+> 2019年11月18日(月) 2:34 Tomas Hlavaty <tom@logand.com>:
+>>
+>> Hi Ryusuke,
+>>
+>> today I got this bug in kernel, which seems to be related to nilfs2.
+>>
+>> It was likely caused by improper shutdown and following nilfs2 partition
+>> corruption.  Now I can still read the data, but on the whole the
+>> computer is not useable, because starting a process which uses the
+>> corrupted file system simply crashes in kernel.  I am actually not sure
+>> if the filesystem is corrupted, as I don't know about any tool to check
+>> that.  The relevant parts of dmesg log are bellow.
+>>
+>> Please let me know if you are the right contact or if you need more info
+>> about the problem.
+>>
+>> Thank you,
+>>
+>> Tomas
+>>
+>> [    0.000000] Linux version 4.19.84 (nixbld@localhost) (gcc version 8.3.0 (GCC)) #1-NixOS SMP Tue Nov 12 18:21:46 UTC 2019
+>> [    0.000000] Command line: initrd=\efi\nixos\4s51zw36kd1qb0ymk0charxjg8x6k5k3-initrd-linux-4.19.84-initrd.efi systemConfig=/nix/store/gdbxhzysr929abrymjqala0b5bh2fqmv-nixos-system-ushi-19.09.1258.07e66484e67 init=/nix/store/gdbxhzysr929abrymjqala0b5bh2fqmv-nixos-system-ushi-19.09.1258.07e66484e67/init loglevel=4
+>>
+>>
+>>
+>> [   37.741106] systemd-journald[470]: Received client request to flush runtime journal.
+>> [   37.749084] systemd-journald[470]: File /var/log/journal/55a4ea9159c14c0bb8767a43819c6927/system.journal corrupted or uncleanly shut down, renaming and replacing.
+>> [   37.810819] audit: type=1130 audit(1573985039.617:3): pid=1 uid=0 auid=4294967295 ses=4294967295 subj==unconfined msg='unit=systemd-udevd comm="systemd" exe="/nix/store/v8flm2h07zcfg5k5npz56m0ayj0qm1q8-systemd-243/lib/systemd/systemd" hostname=? addr=? terminal=? res=success'
+>>
+>> [   38.321561] NILFS version 2 loaded
+>> [   38.323236] NILFS (dm-1): mounting unchecked fs
+>>
+>>
+>> [   38.349185] NILFS (dm-1): recovery complete
+>> [   38.353228] NILFS (dm-1): segctord starting. Construction interval = 5 seconds, CP frequency < 30 seconds
+>>
+>> [   63.543941] systemd-journald[470]: File
+>> /var/log/journal/55a4ea9159c14c0bb8767a43819c6927/user-1000.journal
+>> corrupted or uncleanly shut down, renaming and replacing.
+>>
+>> [12637.085548] BUG: unable to handle kernel NULL pointer dereference at 00000000000000a8
+>> [12637.085558] PGD 0 P4D 0
+>> [12637.085567] Oops: 0000 [#1] SMP PTI
+>> [12637.085574] CPU: 0 PID: 657 Comm: segctord Not tainted 4.19.84 #1-NixOS
+>> [12637.085577] Hardware name: ASUSTeK COMPUTER INC. VivoBook 15_ASUS Laptop X507MA_R507MA/X507MA, BIOS X507MA.301 09/14/2018
+>> [12637.085589] RIP: 0010:percpu_counter_add_batch+0x4/0x60
+>> [12637.085593] Code: 89 e6 89 c7 e8 dd 3b 28 00 3b 05 fb e0 b6 00 72 d8 4c 89 ee 48 89 ef e8 7a 63 2a 00 48 89 d8 5b 5d 41 5c 41 5d c3 41 54 55 53 <48> 8b 47 20 65 44 8b 20 49 63 ec 48 63 ca 48 01 f5 48 39 e9 7e 0a
+>> [12637.085597] RSP: 0018:ffff9d1b00a0bd20 EFLAGS: 00010006
+>> [12637.085601] RAX: 0000000000000002 RBX: 0000000000000000 RCX: 0000000000000018
+>> [12637.085604] RDX: 0000000000000018 RSI: 0000000000000001 RDI: 0000000000000088
+>> [12637.085608] RBP: ffff8df67a2988d0 R08: 0000000000000000 R09: ffff8df66fe0cfe0
+>> [12637.085611] R10: 0000000000000230 R11: 0000000000000000 R12: 0000000000000000
+>> [12637.085614] R13: ffff8df67a298758 R14: ffff8df67a2988c8 R15: ffffccd684229a80
+>> [12637.085618] FS:  0000000000000000(0000) GS:ffff8df67ba00000(0000) knlGS:0000000000000000
+>> [12637.085621] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+>> [12637.085624] CR2: 00000000000000a8 CR3: 000000011ac0a000 CR4: 0000000000340ef0
+>> [12637.085628] Call Trace:
+>> [12637.085640]  __test_set_page_writeback+0x37c/0x3f0
+>> [12637.085663]  nilfs_segctor_do_construct+0x184e/0x2040 [nilfs2]
+>> [12637.085680]  nilfs_segctor_construct+0x1f5/0x2e0 [nilfs2]
+>> [12637.085693]  nilfs_segctor_thread+0x129/0x370 [nilfs2]
+>> [12637.085706]  ? nilfs_segctor_construct+0x2e0/0x2e0 [nilfs2]
+>> [12637.085713]  kthread+0x112/0x130
+>> [12637.085719]  ? kthread_bind+0x30/0x30
+>> [12637.085728]  ret_from_fork+0x1f/0x40
+>> [12637.085734] Modules linked in: ctr ccm af_packet msr 8021q snd_hda_codec_hdmi snd_hda_codec_realtek snd_hda_codec_generic hid_multitouch arc4 ath9k ath9k_common ath9k_hw ath mac80211 snd_soc_skl snd_soc_skl_ipc spi_pxa2xx_platform asus_nb_wmi snd_soc_sst_ipc snd_soc_sst_dsp asus_wmi 8250_dw i2c_designware_platform sparse_keymap i2c_designware_core wmi_bmof i915 snd_hda_ext_core nilfs2 snd_soc_acpi_intel_match snd_soc_acpi uvcvideo videobuf2_vmalloc nls_iso8859_1 videobuf2_memops videobuf2_v4l2 snd_soc_core nls_cp437 rtsx_usb_ms intel_telemetry_pltdrv vfat intel_punit_ipc intel_telemetry_core fat intel_pmc_ipc memstick videobuf2_common snd_compress kvmgt vfio_mdev mdev ath3k vfio_iommu_type1 vfio btusb ac97_bus snd_pcm_dmaengine btrtl x86_pkg_temp_thermal intel_powerclamp btbcm cec coretemp btintel
+>> [12637.085819]  crct10dif_pclmul crc32_pclmul videodev snd_hda_intel bluetooth drm_kms_helper ghash_clmulni_intel deflate media efi_pstore intel_cstate pstore intel_rapl_perf cfg80211 snd_hda_codec joydev mousedev evdev wdat_wdt serio_raw mac_hid efivars drm snd_hda_core snd_hwdep ecdh_generic snd_pcm snd_timer mei_me idma64 virt_dma snd intel_gtt agpgart i2c_i801 i2c_algo_bit mei fb_sys_fops syscopyarea soundcore rfkill processor_thermal_device sysfillrect sysimgblt intel_lpss_pci intel_soc_dts_iosf thermal wmi intel_lpss i2c_hid i2c_core battery tpm_crb button ac tpm_tis tpm_tis_core asus_wireless video pcc_cpufreq tpm rng_core pinctrl_geminilake int3400_thermal int3403_thermal pinctrl_intel int340x_thermal_zone acpi_thermal_rel iptable_nat nf_nat_ipv4 nf_nat xt_conntrack nf_conntrack nf_defrag_ipv6
+>> [12637.085912]  nf_defrag_ipv4 libcrc32c ip6t_rpfilter ipt_rpfilter ip6table_raw iptable_raw xt_pkttype nf_log_ipv6 nf_log_ipv4 nf_log_common xt_LOG xt_tcpudp ip6table_filter ip6_tables iptable_filter sch_fq_codel loop cpufreq_powersave tun tap macvlan bridge stp llc kvm_intel kvm irqbypass efivarfs ip_tables x_tables ipv6 crc_ccitt autofs4 ext4 crc32c_generic crc16 mbcache jbd2 fscrypto dm_crypt algif_skcipher af_alg rtsx_usb_sdmmc mmc_core rtsx_usb hid_generic usbhid hid sd_mod input_leds led_class atkbd libps2 ahci libahci xhci_pci libata xhci_hcd aesni_intel usbcore aes_x86_64 crypto_simd scsi_mod cryptd glue_helper crc32c_intel usb_common rtc_cmos i8042 serio dm_mod
+>> [12637.086000] CR2: 00000000000000a8
+>> [12637.086005] ---[ end trace ee0079180c990cd2 ]---
+>> [12637.120805] RIP: 0010:percpu_counter_add_batch+0x4/0x60
+>> [12637.120807] Code: 89 e6 89 c7 e8 dd 3b 28 00 3b 05 fb e0 b6 00 72 d8 4c 89 ee 48 89 ef e8 7a 63 2a 00 48 89 d8 5b 5d 41 5c 41 5d c3 41 54 55 53 <48> 8b 47 20 65 44 8b 20 49 63 ec 48 63 ca 48 01 f5 48 39 e9 7e 0a
+>> [12637.120809] RSP: 0018:ffff9d1b00a0bd20 EFLAGS: 00010006
+>> [12637.120811] RAX: 0000000000000002 RBX: 0000000000000000 RCX: 0000000000000018
+>> [12637.120812] RDX: 0000000000000018 RSI: 0000000000000001 RDI: 0000000000000088
+>> [12637.120814] RBP: ffff8df67a2988d0 R08: 0000000000000000 R09: ffff8df66fe0cfe0
+>> [12637.120815] R10: 0000000000000230 R11: 0000000000000000 R12: 0000000000000000
+>> [12637.120816] R13: ffff8df67a298758 R14: ffff8df67a2988c8 R15: ffffccd684229a80
+>> [12637.120818] FS:  0000000000000000(0000) GS:ffff8df67ba00000(0000) knlGS:0000000000000000
+>> [12637.120820] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+>> [12637.120821] CR2: 00000000000000a8 CR3: 0000000138e0a000 CR4: 0000000000340ef0
