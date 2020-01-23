@@ -2,113 +2,92 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15825C33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 21:39:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CC36C33CAA
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 21:40:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1F50207FF
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 21:39:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="q0KRmVU2"
+	by mail.kernel.org (Postfix) with ESMTP id 46ABE20665
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 21:40:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728939AbgAWVjM (ORCPT
+        id S1729078AbgAWVkZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 16:39:12 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:46879 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726191AbgAWVjM (ORCPT
+        Thu, 23 Jan 2020 16:40:25 -0500
+Received: from charlotte.tuxdriver.com ([70.61.120.58]:56063 "EHLO
+        smtp.tuxdriver.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728655AbgAWVkZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 16:39:12 -0500
-Received: by mail-wr1-f66.google.com with SMTP id z7so4854477wrl.13;
-        Thu, 23 Jan 2020 13:39:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=YcgCOt08ESne+tYHU6zwz+Uk0GGpvUG34jW5hND2KP8=;
-        b=q0KRmVU2sUjnBvb4qvh2OEJINZpXn9noQIvxIE69SLeV/GEO/eu1lzkAlV/+zuW6wB
-         wpiBZQyCrtBKdMJ5QWE6RhC3Fh6nPl3vXmESKni5iyNkfF1PaVFBTNpAg86lcjSaWh69
-         mdbNe4Zs1rBH2AANOpEnTbwQCcgFGfAJ4tFW4LoG4EorFH9340W2ImqDS7E433CvOfYc
-         /1s+k3mc8znMZ6jQNoHtmUxBV+FDlES4Rotwrqz6/wtJdw0naYJlpdU/tpkz8Us7noyw
-         MSsus3NVQuh/jbqDN6HF4IfSBN2QiVokCpm89hhpgrmA/5dmsDw13hB42R1EemZQwUdW
-         P+8w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=YcgCOt08ESne+tYHU6zwz+Uk0GGpvUG34jW5hND2KP8=;
-        b=udSQALTrVqcg20cLD+NAcS1hwocT3bG8K89rYplda2qA3tW/INj+iM+msHcuI0MLOo
-         w4Q58t2yK1xwSQhKJEcVrwljWT1Gvi4Mf06gK8Y1MrrsbgGcSJchOsbQzY99GQswqFfZ
-         NSj7gY0F48hs03NLY0dBeh7v/tHBEyM9eYS5KRhsXOKh3usckR+edU8jegwtMpBSPqiN
-         1+3jhkGqtxOk99IpsnYX5tQ+dz/mDyUd5P7GQIuQcGpipP6GRcaTjJrt/GFBRagl4TYV
-         lrh4oyYbdjUhR6EgsFtHs0e5FJaQ5Z95H3P64/s68dTZHHdWR2Ikr7gyiZcA1/BMsmsO
-         0EIQ==
-X-Gm-Message-State: APjAAAXUAc3hGaFs7d+ao7TQ2OH69IPt8IgIHOWfZL6/EXza+6Cx4mbG
-        S6Mwl1TMKKUdHdOZCyN7J5pagSkbPJqE8tayg1k=
-X-Google-Smtp-Source: APXvYqwyoTgYy4ctf0PLUzPnRY8IPNUxXoBdOgVGKMbrmgEQQz7/8JgA9GdcqM2NRA60zyf9FJXevk5qAuK+53xj0IE=
-X-Received: by 2002:a5d:5491:: with SMTP id h17mr106054wrv.374.1579815550332;
- Thu, 23 Jan 2020 13:39:10 -0800 (PST)
+        Thu, 23 Jan 2020 16:40:25 -0500
+Received: from [62.209.224.147] (helo=localhost)
+        by smtp.tuxdriver.com with esmtpsa (TLSv1:AES256-SHA:256)
+        (Exim 4.63)
+        (envelope-from <nhorman@tuxdriver.com>)
+        id 1iukCx-0001FH-7H; Thu, 23 Jan 2020 16:40:17 -0500
+Date:   Thu, 23 Jan 2020 22:40:09 +0100
+From:   Neil Horman <nhorman@tuxdriver.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     "liuchao (CR)" <liuchao173@huawei.com>,
+        linfeilong <linfeilong@huawei.com>,
+        Hushiyuan <hushiyuan@huawei.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: =?utf-8?B?562U5aSNOiBbUkZDXSBpcnE6IFNr?= =?utf-8?Q?ip_printin?=
+ =?utf-8?Q?g?= irq when desc->action is null even if any_count is not zero
+Message-ID: <20200123214009.GA17257@localhost.localdomain>
+References: <20200121130959.22589-1-liuchao173@huawei.com>
+ <87k15jek6v.fsf@nanos.tec.linutronix.de>
+ <20200122192856.GA2852@localhost.localdomain>
+ <7966953BB2EC794AA37DF0A21FAD8A34021318DA@DGGEMA503-MBX.china.huawei.com>
+ <87pnfatkpy.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-References: <20200123002216.2832146-1-colin.king@canonical.com>
-In-Reply-To: <20200123002216.2832146-1-colin.king@canonical.com>
-From:   Alex Deucher <alexdeucher@gmail.com>
-Date:   Thu, 23 Jan 2020 16:38:57 -0500
-Message-ID: <CADnq5_PxfM2i0BxpKtOUeL2+hxLUbwocyWNmd9qzXnOesJfuWg@mail.gmail.com>
-Subject: Re: [PATCH] drm/amd/amdgpu: fix spelling mistake "to" -> "too"
-To:     Colin King <colin.king@canonical.com>
-Cc:     Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
-        David Zhou <David1.Zhou@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87pnfatkpy.fsf@nanos.tec.linutronix.de>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 22, 2020 at 7:22 PM Colin King <colin.king@canonical.com> wrote:
->
-> From: Colin Ian King <colin.king@canonical.com>
->
-> There is a spelling mistake in a DRM_ERROR message. Fix it.
->
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+On Thu, Jan 23, 2020 at 01:34:33PM +0100, Thomas Gleixner wrote:
+> Chao,
+> 
+> "liuchao (CR)" <liuchao173@huawei.com> writes:
+> > On Thu, Jan 23, 2020 at 03:29AM +0800, Neil Horman wrote:
+> >> > I'm not opposed to suppress the output, but I really want the opinion
+> >> > of the irqbalance maintainers on that.
+> >
+> > Irqbalance is an example. I mean, when this happens, users who cat /proc/interrupts 
+> > may be confused about where the interrupt came from and what it was used for. 
+> > People who use Linux may not understand the principle of this. They are not sure 
+> > whether this is a problem of the system or not.
+> 
+> Well, this has been that way for 20+ years and so far nobody got
+> confused. If it's not documented then we should do so.
+> 
+> >> Actually, irqbalance ignores the trailing irq name (or it should at least), so you
+> >> should be able to drop that portion of /proc/irqbalance, though I cant speak for
+> >> any other users of it.
+> >
+> > If irq isn't removed from /proc/interrups, it will still be parsed in
+> > collect_full_irq_list and parse_proc_interrupts.
+> 
+> Sure, and why is that a problem? Again, this is really historic behaviour.
+> 
+> > irq_name is used in guess_arm_irq_hints.
+> 
+> That's a problem of guess_arm_irq_hints() then.
+> 
+> Again, I'm not against supressing such lines in general, but I want to
+> make sure that no tool depends on that information.
+> 
+I think it probably makes sense to just keep it then.  I'm not sure I
+see it as hurting anything to keep it around.
 
-Applied.  thanks!
+Neil
 
-Alex
-
-> ---
->  drivers/gpu/drm/amd/amdgpu/amdgpu_vce.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_vce.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_vce.c
-> index ceb0dbf685f1..59ddba137946 100644
-> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_vce.c
-> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_vce.c
-> @@ -652,7 +652,7 @@ static int amdgpu_vce_cs_reloc(struct amdgpu_cs_parser *p, uint32_t ib_idx,
->
->         if ((addr + (uint64_t)size) >
->             (mapping->last + 1) * AMDGPU_GPU_PAGE_SIZE) {
-> -               DRM_ERROR("BO to small for addr 0x%010Lx %d %d\n",
-> +               DRM_ERROR("BO too small for addr 0x%010Lx %d %d\n",
->                           addr, lo, hi);
->                 return -EINVAL;
->         }
-> --
-> 2.24.0
->
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+> Thanks,
+> 
+>         tglx
+> 
