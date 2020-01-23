@@ -2,197 +2,177 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5EE6C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 21:03:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8666C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 21:05:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69EDE21D7D
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 21:03:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75E2721569
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 21:05:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AL+8uFF+"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kiQh5gmy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729401AbgAWVDD (ORCPT
+        id S1729414AbgAWVFL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 16:03:03 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:57869 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726191AbgAWVDC (ORCPT
+        Thu, 23 Jan 2020 16:05:11 -0500
+Received: from mail-qv1-f66.google.com ([209.85.219.66]:43652 "EHLO
+        mail-qv1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727816AbgAWVFL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 16:03:02 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579813381;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=YZjD8aqaGH6JNDHX+A7tsAQo+cl/H8KbJHBmNjl1CAs=;
-        b=AL+8uFF+N9owvQ37LFmYwnD7fBbJkvTjCFZFoMX63i47bouTzEgAQ/diB80WmxGLXY12Fl
-        sjLXqcCJj+VwaYqRaWdnFSaH+BhrWxxjlCjBDhHV64H5C3naOTRfjmU+N1OHh0WI4FzepD
-        5nmDerGdr/RS3oxceCs0UG+/D5ATX3M=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-312-HDmQ2MhAMA6cXpt_V3B92g-1; Thu, 23 Jan 2020 16:02:57 -0500
-X-MC-Unique: HDmQ2MhAMA6cXpt_V3B92g-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D398B8024E5;
-        Thu, 23 Jan 2020 21:02:54 +0000 (UTC)
-Received: from madcap2.tricolour.ca (ovpn-112-12.phx2.redhat.com [10.3.112.12])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 467D281207;
-        Thu, 23 Jan 2020 21:02:43 +0000 (UTC)
-Date:   Thu, 23 Jan 2020 16:02:40 -0500
-From:   Richard Guy Briggs <rgb@redhat.com>
-To:     Paul Moore <paul@paul-moore.com>
-Cc:     containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
-        Linux-Audit Mailing List <linux-audit@redhat.com>,
-        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
-        sgrubb@redhat.com, omosnace@redhat.com, dhowells@redhat.com,
-        simo@redhat.com, Eric Paris <eparis@parisplace.org>,
-        Serge Hallyn <serge@hallyn.com>, ebiederm@xmission.com,
-        nhorman@tuxdriver.com, Dan Walsh <dwalsh@redhat.com>,
-        mpatel@redhat.com
-Subject: Re: [PATCH ghak90 V8 12/16] audit: contid check descendancy and
- nesting
-Message-ID: <20200123210240.sq64tptjm3ds7xss@madcap2.tricolour.ca>
-References: <cover.1577736799.git.rgb@redhat.com>
- <cfbb80a08fc770dd0dcf6dac6ff307a80d877c3f.1577736799.git.rgb@redhat.com>
- <CAHC9VhT1+mx_tVzyXD=UBqagqYgAFjZ=X1A6oBiMvjVCn8=V-w@mail.gmail.com>
+        Thu, 23 Jan 2020 16:05:11 -0500
+Received: by mail-qv1-f66.google.com with SMTP id p2so2183708qvo.10
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jan 2020 13:05:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=mcbgbKXHYzFeK72nb97pWxaHY+EZyGnc0S9E+ApdXgs=;
+        b=kiQh5gmyJl9700k6zOiLXFG+rMXZHdZexdPHhc9Oo/WZkyRTatXR1udIrGkvsG66u8
+         q0rAB/dhh0LWPtn+GWe5a99BMC97Lurx5lQOotFfeIIYCtCGszmf0r2j0ZbYnFnfPn/1
+         n3l2OfAYzoYlLsKH4ck090Hf41x1DJLwZtQahzFGTxBThS3FTWwUygkzuc7W1seUZlmB
+         1itqYVomtcqrt0pSIN7H1+3UvpITXzxUGhFcbLvc6NUPWnPN26yTIleOEzzDYh+MrtYg
+         8OgG0KY7Pyqj2UnBj/Agzut5JTZpX3rWNDKl8j9vQ1/aA0W40ph/AGl9IM5w++cesls9
+         crMg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=mcbgbKXHYzFeK72nb97pWxaHY+EZyGnc0S9E+ApdXgs=;
+        b=CV8m1WJfv5crhhYYFqaPoCbXPg/xEoT/DqxT9PzjsAumHGj3Ay1dUqaXd0a6yuX1Lp
+         nohK1iPVwaSnB30273+UOcuimdx2lXR+TdnUicsPjVnXw4+pqnghAYe34uLBm6BgBY+V
+         bsGnwP8NuI18+xnOgcY739rr5s1HYUMz4M31lKoLnrh6UGILL32Trm1PmtqQS1/duHGU
+         PtYs4oKl19LV3A8roKBjSZuEyszyeuBbTtAE+phYmjUCEWi//rrKNg+N3Sljca8hqQfd
+         Mxf+Hr+OlOnRW+tIuZtlvVfZIYXQBfhhWNGYkRKEyBiqP4MqQFsTWNuvCJHC79IM4n+4
+         bkUg==
+X-Gm-Message-State: APjAAAVawJWbeDwyQp/Pup87c3XEHQd1ibvOiVoETnEYeybR7PMe5jRu
+        FY/lYMFcY6wgbhfP+bmR9FA7pVq5V6CehjLk6xQ=
+X-Google-Smtp-Source: APXvYqyU4q0R+13VyLA6khfyhXa/z4Ae+4+LM6baqHej3pQtAvoBbfdV2vu5cZ8RDOXlrnl3VafUWuaJgCovP0srz4E=
+X-Received: by 2002:a0c:edb2:: with SMTP id h18mr17967337qvr.94.1579813509664;
+ Thu, 23 Jan 2020 13:05:09 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHC9VhT1+mx_tVzyXD=UBqagqYgAFjZ=X1A6oBiMvjVCn8=V-w@mail.gmail.com>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+References: <20200107220640.834-1-yichengli@chromium.org>
+In-Reply-To: <20200107220640.834-1-yichengli@chromium.org>
+From:   Enric Balletbo Serra <eballetbo@gmail.com>
+Date:   Thu, 23 Jan 2020 22:04:58 +0100
+Message-ID: <CAFqH_538ncoNMuSZoC9VfT9fV_NUd7GhGd2q0D0-ag-V9Cpw3A@mail.gmail.com>
+Subject: Re: [PATCH v5] platform: cros_ec: Query EC protocol version if EC
+ transitions between RO/RW
+To:     Yicheng Li <yichengli@chromium.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Benson Leung <bleung@chromium.org>,
+        Gwendal Grignou <gwendal@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-01-22 16:29, Paul Moore wrote:
-> On Tue, Dec 31, 2019 at 2:51 PM Richard Guy Briggs <rgb@redhat.com> wrote:
-> >
-> > Require the target task to be a descendant of the container
-> > orchestrator/engine.
-> >
-> > You would only change the audit container ID from one set or inherited
-> > value to another if you were nesting containers.
-> >
-> > If changing the contid, the container orchestrator/engine must be a
-> > descendant and not same orchestrator as the one that set it so it is not
-> > possible to change the contid of another orchestrator's container.
-> >
-> > Since the task_is_descendant() function is used in YAMA and in audit,
-> > remove the duplication and pull the function into kernel/core/sched.c
-> >
-> > Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
-> > ---
-> >  include/linux/sched.h    |  3 +++
-> >  kernel/audit.c           | 44 ++++++++++++++++++++++++++++++++++++--------
-> >  kernel/sched/core.c      | 33 +++++++++++++++++++++++++++++++++
-> >  security/yama/yama_lsm.c | 33 ---------------------------------
-> >  4 files changed, 72 insertions(+), 41 deletions(-)
-> 
-> ...
-> 
-> > diff --git a/kernel/audit.c b/kernel/audit.c
-> > index f7a8d3288ca0..ef8e07524c46 100644
-> > --- a/kernel/audit.c
-> > +++ b/kernel/audit.c
-> > @@ -2603,22 +2610,43 @@ int audit_set_contid(struct task_struct *task, u64 contid)
-> >         oldcontid = audit_get_contid(task);
-> >         read_lock(&tasklist_lock);
-> >         /* Don't allow the contid to be unset */
-> > -       if (!audit_contid_valid(contid))
-> > +       if (!audit_contid_valid(contid)) {
-> >                 rc = -EINVAL;
-> > +               goto unlock;
-> > +       }
-> >         /* Don't allow the contid to be set to the same value again */
-> > -       else if (contid == oldcontid) {
-> > +       if (contid == oldcontid) {
-> >                 rc = -EADDRINUSE;
-> > +               goto unlock;
-> > +       }
-> >         /* if we don't have caps, reject */
-> > -       else if (!capable(CAP_AUDIT_CONTROL))
-> > +       if (!capable(CAP_AUDIT_CONTROL)) {
-> >                 rc = -EPERM;
-> > -       /* if task has children or is not single-threaded, deny */
-> > -       else if (!list_empty(&task->children))
-> > +               goto unlock;
-> > +       }
-> > +       /* if task has children, deny */
-> > +       if (!list_empty(&task->children)) {
-> >                 rc = -EBUSY;
-> > -       else if (!(thread_group_leader(task) && thread_group_empty(task)))
-> > +               goto unlock;
-> > +       }
-> > +       /* if task is not single-threaded, deny */
-> > +       if (!(thread_group_leader(task) && thread_group_empty(task))) {
-> >                 rc = -EALREADY;
-> > -       /* if contid is already set, deny */
-> > -       else if (audit_contid_set(task))
-> > +               goto unlock;
-> > +       }
-> 
-> It seems like the if/else-if conversion above should be part of an
-> earlier patchset.
+Hi Yicheng,
 
-I had considered that, but it wasn't obvious where that conversion
-should happen since it wasn't necessary earlier and is now.  I can move
-it earlier if you feel strongly about it.
+Missatge de Yicheng Li <yichengli@chromium.org> del dia dt., 7 de gen.
+2020 a les 23:10:
+>
+> RO and RW of EC may have different EC protocol version. If EC transitions
+> between RO and RW, but AP does not reboot (this is true for fingerprint
+> microcontroller / cros_fp, but not true for main ec / cros_ec), the AP
+> still uses the protocol version queried before transition, which can
+> cause problems. In the case of fingerprint microcontroller, this causes
+> AP to send the wrong version of EC_CMD_GET_NEXT_EVENT to RO in the
+> interrupt handler, which in turn prevents RO to clear the interrupt
+> line to AP, in an infinite loop.
+>
+> Once an EC_HOST_EVENT_INTERFACE_READY is received, we know that there
+> might have been a transition between RO and RW, so re-query the protocol.
+>
+> Change-Id: I49a51cc10d22a4ab9e75204a4c0c8819d5b3d282
 
-> > +       /* if task is not descendant, block */
-> > +       if (task == current) {
-> > +               rc = -EBADSLT;
-> > +               goto unlock;
-> > +       }
-> > +       if (!task_is_descendant(current, task)) {
-> > +               rc = -EXDEV;
-> > +               goto unlock;
-> > +       }
-> 
-> I understand you are trying to provide a unique error code for each
-> failure case, but this is getting silly.  Let's group the descendent
-> checks under the same error code.
+I changed the subject to 'platform/chrome' and removed the Change-id line
 
-Ok.  I was trying to provide more information for debugging for me and
-for users.
+> Signed-off-by: Yicheng Li <yichengli@chromium.org>
 
-> > +       /* only allow contid setting again if nesting */
-> > +       if (audit_contid_set(task) && audit_contid_isowner(task))
-> >                 rc = -ECHILD;
-> 
-> Should that be "!audit_contid_isowner()"?
+And added the Fabien's Tested-by tag
 
-No.  If the contid is already set on this task and if it is the same
-orchestrator that already owns this one, then block it since the same
-orchestrator is not allowed to set it again.  Another orchestrator that
-has been shown by previous tests to be a descendant of the orchestrator
-that already owns this one would be permitted.
+> ---
+>  drivers/platform/chrome/cros_ec.c           | 24 +++++++++++++++++++++
+>  include/linux/platform_data/cros_ec_proto.h |  3 +++
 
-Now that I say this explicitly, it appears I need another test to check:
+Fixed a trivial conflict with current chrome-platform tree and applied for-next.
 
-	/* only allow contid setting again if nesting */
-	if (audit_contid_set(task) && ( audit_contid_isowner(task) || !task_is_descendant(_audit_contobj(task)->owner, current) ))
-		rc = -ECHILD;
+Please remember to cc all the maintainers and maintain a changelog
+between version next time.
 
-So we're back to audit_contobj_owner() like in the previous patchset
-that would make this cleaner.
+Thanks,
+ Enric
 
-> paul moore
 
-- RGB
-
---
-Richard Guy Briggs <rgb@redhat.com>
-Sr. S/W Engineer, Kernel Security, Base Operating Systems
-Remote, Ottawa, Red Hat Canada
-IRC: rgb, SunRaycer
-Voice: +1.647.777.2635, Internal: (81) 32635
-
+>  2 files changed, 27 insertions(+)
+>
+> diff --git a/drivers/platform/chrome/cros_ec.c b/drivers/platform/chrome/cros_ec.c
+> index 9b2d07422e17..38ec1fb409a5 100644
+> --- a/drivers/platform/chrome/cros_ec.c
+> +++ b/drivers/platform/chrome/cros_ec.c
+> @@ -104,6 +104,23 @@ static int cros_ec_sleep_event(struct cros_ec_device *ec_dev, u8 sleep_event)
+>         return ret;
+>  }
+>
+> +static int cros_ec_ready_event(struct notifier_block *nb,
+> +       unsigned long queued_during_suspend, void *_notify)
+> +{
+> +       struct cros_ec_device *ec_dev = container_of(nb, struct cros_ec_device,
+> +                                                    notifier_ready);
+> +       u32 host_event = cros_ec_get_host_event(ec_dev);
+> +
+> +       if (host_event & EC_HOST_EVENT_MASK(EC_HOST_EVENT_INTERFACE_READY)) {
+> +               mutex_lock(&ec_dev->lock);
+> +               cros_ec_query_all(ec_dev);
+> +               mutex_unlock(&ec_dev->lock);
+> +               return NOTIFY_OK;
+> +       }
+> +
+> +       return NOTIFY_DONE;
+> +}
+> +
+>  /**
+>   * cros_ec_register() - Register a new ChromeOS EC, using the provided info.
+>   * @ec_dev: Device to register.
+> @@ -201,6 +218,13 @@ int cros_ec_register(struct cros_ec_device *ec_dev)
+>                 dev_dbg(ec_dev->dev, "Error %d clearing sleep event to ec",
+>                         err);
+>
+> +       /* Register the notifier for EC_HOST_EVENT_INTERFACE_READY event. */
+> +       ec_dev->notifier_ready.notifier_call = cros_ec_ready_event;
+> +       err = blocking_notifier_chain_register(&ec_dev->event_notifier,
+> +                                              &ec_dev->notifier_ready);
+> +       if (err)
+> +               return err;
+> +
+>         dev_info(dev, "Chrome EC device registered\n");
+>
+>         return 0;
+> diff --git a/include/linux/platform_data/cros_ec_proto.h b/include/linux/platform_data/cros_ec_proto.h
+> index 0d4e4aaed37a..a1c545c464e7 100644
+> --- a/include/linux/platform_data/cros_ec_proto.h
+> +++ b/include/linux/platform_data/cros_ec_proto.h
+> @@ -121,6 +121,8 @@ struct cros_ec_command {
+>   * @event_data: Raw payload transferred with the MKBP event.
+>   * @event_size: Size in bytes of the event data.
+>   * @host_event_wake_mask: Mask of host events that cause wake from suspend.
+> + * @notifier_ready: The notifier_block to let the kernel re-query EC
+> + *      communication protocol when the EC sends EC_HOST_EVENT_INTERFACE_READY.
+>   * @ec: The platform_device used by the mfd driver to interface with the
+>   *      main EC.
+>   * @pd: The platform_device used by the mfd driver to interface with the
+> @@ -161,6 +163,7 @@ struct cros_ec_device {
+>         int event_size;
+>         u32 host_event_wake_mask;
+>         u32 last_resume_result;
+> +       struct notifier_block notifier_ready;
+>
+>         /* The platform devices used by the mfd driver */
+>         struct platform_device *ec;
+> --
+> 2.21.0
+>
