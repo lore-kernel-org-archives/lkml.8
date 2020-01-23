@@ -2,63 +2,61 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE370C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 11:45:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B2C6C33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 11:45:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A41A724673
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 11:45:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5A0B24673
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 11:45:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="cpDYBLG0"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="cUIkrbLo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729236AbgAWLpg (ORCPT
+        id S1728904AbgAWLpA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 06:45:36 -0500
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:51748 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728911AbgAWLpB (ORCPT
+        Thu, 23 Jan 2020 06:45:00 -0500
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:53834 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727523AbgAWLo5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 06:45:01 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00NBisCA098625;
-        Thu, 23 Jan 2020 05:44:54 -0600
+        Thu, 23 Jan 2020 06:44:57 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00NBinIw023470;
+        Thu, 23 Jan 2020 05:44:49 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1579779894;
-        bh=FNcobQYsMgJmD3mcDnCu1EKfN5SCQ6gDGMEphE7602o=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=cpDYBLG0v0HqonYNQtzhzn3lPuD4p35J33tyeUiql8CDO4g9locwUAT3Z7+saQN3u
-         avqEKYj7kCCTo2U3y3JdFENYUZNPbP+yk3Pu62QK6Tr1d1XeR0T0tac1tJX6jfrEs1
-         c9+2Sv0LtHdTGk1fS4ZgLLN2n4/PxMtfwfMGWut8=
-Received: from DLEE107.ent.ti.com (dlee107.ent.ti.com [157.170.170.37])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00NBis91051377
+        s=ti-com-17Q1; t=1579779889;
+        bh=056yP0wQc7y1OMqVn54WtC4Yn6DYkshBLN9I0yRi7e8=;
+        h=From:To:CC:Subject:Date;
+        b=cUIkrbLol1zXrJYj+GSwPOJQauBCLtHn6ZqwzVlf4XZMxM9vcmV9zXYdeFC8Yz4yS
+         edVrO//9G754yHYpOj6iw4XbW9nzbpUzBgW907Qk7JqWmMGZfBDBO5A7I3g8JfwQY8
+         L9TKwkR43NYxF+PugcyaiePOoFHoo9J/2MhG2YRU=
+Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00NBimiW016993
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 23 Jan 2020 05:44:54 -0600
-Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+        Thu, 23 Jan 2020 05:44:49 -0600
+Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 23
- Jan 2020 05:44:52 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ Jan 2020 05:44:47 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE111.ent.ti.com
+ (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Thu, 23 Jan 2020 05:44:52 -0600
+ Frontend Transport; Thu, 23 Jan 2020 05:44:47 -0600
 Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00NBijBF114078;
-        Thu, 23 Jan 2020 05:44:50 -0600
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00NBijBD114078;
+        Thu, 23 Jan 2020 05:44:45 -0600
 From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
 To:     <t-kristo@ti.com>, <nm@ti.com>, <lokeshvutla@ti.com>
 CC:     <robh+dt@kernel.org>, <mark.rutland@arm.com>,
         <linux-arm-kernel@lists.infradead.org>,
         <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v3 2/9] arm64: dts: ti: k3-am65-main: Move secure proxy under cbass_main_navss
-Date:   Thu, 23 Jan 2020 13:45:21 +0200
-Message-ID: <20200123114528.26552-3-peter.ujfalusi@ti.com>
+Subject: [PATCH v3 0/9] arm64: dts: ti: UDMAP and McASP support
+Date:   Thu, 23 Jan 2020 13:45:19 +0200
+Message-ID: <20200123114528.26552-1-peter.ujfalusi@ti.com>
 X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200123114528.26552-1-peter.ujfalusi@ti.com>
-References: <20200123114528.26552-1-peter.ujfalusi@ti.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
@@ -68,53 +66,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Secure proxy (NAVSS0_SEC_PROXY0) is part of the Navigator Subsystem.
+Hi,
 
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Changes since v2:
+- Correct unit addresses for the McASP nodes
+- Remove unit address and label for MAIN and MCU NAVSS
+
+Changes since v1:
+- rebased on ti-k3-next
+- Corrected j721e mcu_udma node: s/udmap/dma-controller
+- Moved the two McASP node patch at the end of the series
+
+The ringacc and UDMA documentation and drivers are in next-20200122.
+
+While adding the DMA support I have noticed few issues which is also fixed by
+this series.
+
+Tero: I have included the McASP nodes as well to have examples for other
+peripherals on how he binding should be used.
+The patches for the McASP driver is not in next, but they are only internal
+driver changes (and Kconfig), not adding new DT dependencies.
+Since the McASP is disabled in SoC dtsi due to board level configuration needs
+it is not going to erroneously probe drivers.
+
+It is up to you if you pick them or not, but I believe they serve a safe and
+nice example how the dma binding should be used for UDMA.
+
+Regards,
+Peter
 ---
- arch/arm64/boot/dts/ti/k3-am65-main.dtsi | 22 +++++++++++-----------
- 1 file changed, 11 insertions(+), 11 deletions(-)
+Peter Ujfalusi (9):
+  arm64: dts: ti: k3-am65-main: Correct main NAVSS representation
+  arm64: dts: ti: k3-am65-main: Move secure proxy under cbass_main_navss
+  arm64: dts: ti: k3-am65: DMA support
+  arm64: dts: ti: k3-j721e: Correct the address for MAIN NAVSS
+  arm64: dts: ti: k3-j721e-main: Correct main NAVSS representation
+  arm64: dts: ti: k3-j721e-main: Move secure proxy and smmu under
+    main_navss
+  arm64: dts: ti: k3-j721e: DMA support
+  arm64: dts: ti: k3-am654-main: Add McASP nodes
+  arm64: dts: ti: k3-j721e-main: Add McASP nodes
 
-diff --git a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
-index 972e14bf9478..c21315c43c55 100644
---- a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
-@@ -51,17 +51,6 @@ gic_its: gic-its@1820000 {
- 		};
- 	};
- 
--	secure_proxy_main: mailbox@32c00000 {
--		compatible = "ti,am654-secure-proxy";
--		#mbox-cells = <1>;
--		reg-names = "target_data", "rt", "scfg";
--		reg = <0x00 0x32c00000 0x00 0x100000>,
--		      <0x00 0x32400000 0x00 0x100000>,
--		      <0x00 0x32800000 0x00 0x100000>;
--		interrupt-names = "rx_011";
--		interrupts = <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>;
--	};
--
- 	serdes0: serdes@900000 {
- 		compatible = "ti,phy-am654-serdes";
- 		reg = <0x0 0x900000 0x0 0x2000>;
-@@ -414,6 +403,17 @@ inta_main_udmass: interrupt-controller@33d00000 {
- 			ti,sci-rm-range-global-event = <0x1>;
- 		};
- 
-+		secure_proxy_main: mailbox@32c00000 {
-+			compatible = "ti,am654-secure-proxy";
-+			#mbox-cells = <1>;
-+			reg-names = "target_data", "rt", "scfg";
-+			reg = <0x00 0x32c00000 0x00 0x100000>,
-+			      <0x00 0x32400000 0x00 0x100000>,
-+			      <0x00 0x32800000 0x00 0x100000>;
-+			interrupt-names = "rx_011";
-+			interrupts = <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>;
-+		};
-+
- 		hwspinlock: spinlock@30e00000 {
- 			compatible = "ti,am654-hwspinlock";
- 			reg = <0x00 0x30e00000 0x00 0x1000>;
+ arch/arm64/boot/dts/ti/k3-am65-main.dtsi      | 122 ++++++-
+ arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi       |  46 +++
+ arch/arm64/boot/dts/ti/k3-j721e-main.dtsi     | 313 ++++++++++++++++--
+ .../boot/dts/ti/k3-j721e-mcu-wakeup.dtsi      |  45 +++
+ arch/arm64/boot/dts/ti/k3-j721e.dtsi          |   2 +-
+ 5 files changed, 491 insertions(+), 37 deletions(-)
+
 -- 
 Peter
 
