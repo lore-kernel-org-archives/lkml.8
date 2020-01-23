@@ -2,122 +2,131 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD55EC33CAA
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 07:29:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55555C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 07:38:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFBBC2467B
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 07:29:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2728124673
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 07:38:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="G52D8YgH"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="mbeg9Xge"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726240AbgAWH3K (ORCPT
+        id S1726191AbgAWHif (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 02:29:10 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:29902 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725777AbgAWH3K (ORCPT
+        Thu, 23 Jan 2020 02:38:35 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:54658 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725777AbgAWHif (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 02:29:10 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579764549;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=Swf1miaJ2KibF1rWEltK6FB4Al/NU26D9Z8MNRvgV1o=;
-        b=G52D8YgHWIsZhVqHm1vk9HxsUHKk+PSLCx86kvrT+ulwDx9uao78tLlE4H0Hp/Y7hWrNAh
-        AFHS8H/y+f9NK242c56VMGje7MbdUqP2wwuL2mSRKFoZeyEXNM6PpAqZQgfRVsh9U8FfKC
-        L/gJeqe2ZOZDQ3MAIJjNJOB6cGvH1BY=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-419-Yrx5KV4OMdWYXRDKdw2KFw-1; Thu, 23 Jan 2020 02:29:07 -0500
-X-MC-Unique: Yrx5KV4OMdWYXRDKdw2KFw-1
-Received: by mail-wr1-f70.google.com with SMTP id t3so1284513wrm.23
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jan 2020 23:29:07 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Swf1miaJ2KibF1rWEltK6FB4Al/NU26D9Z8MNRvgV1o=;
-        b=kE6F71YnFcu6hW2G/X1MgPRGaq6RRyIpaKJq5EsZbqmrTWOGTLJzeQr7CnOyGsPePX
-         ViyAqiEXc9Yx0rVLVKipudwASkLGF8jZwX+p3DKhRSkOltksYQIXAtDKS4e3OOYwugeO
-         6XIQyvhmN+grw6jJjZ6tdjxM3DGbBW0ooaFEnjuZvexB+kh7SBBhG6kCFGl9OBd6ruWV
-         EA+8WDMdomQ2d4BtpLXlYjaD+vuUw0czCYevhLhzbnayZST5H1vB6fYBN/x9JndmJyQt
-         dbADZe1i0rN3HbDOvaOAkS8ZwQ3iSvHNlg9Z1GQsM24kVdj1g2k6OkJuQh9huYOwH8fX
-         dmbg==
-X-Gm-Message-State: APjAAAV1N1yTMNiyjdxyZLli3Tqf9Sfj7jv1Nuu8StfXgWC6x9h66+yv
-        lFnkfCcdGJLMkztabZ0NNjQb9VIka0/jpJ858bdrDXg4HmEv8ddUzmaeTMpIIROQO60pmMYP/cv
-        3vJkyCUTEgONtpmWBrmPjrhR/
-X-Received: by 2002:adf:fe0e:: with SMTP id n14mr16615705wrr.116.1579764546475;
-        Wed, 22 Jan 2020 23:29:06 -0800 (PST)
-X-Google-Smtp-Source: APXvYqynoI3k83YYvEjN9Vq70/cg2K/88hFd6YtoeaGnpbIqaxUURJKASpUHj31Q/0KxCIPHp2utJg==
-X-Received: by 2002:adf:fe0e:: with SMTP id n14mr16615675wrr.116.1579764546241;
-        Wed, 22 Jan 2020 23:29:06 -0800 (PST)
-Received: from localhost (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id a9sm1509848wmm.15.2020.01.22.23.29.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Jan 2020 23:29:04 -0800 (PST)
-Date:   Thu, 23 Jan 2020 08:29:04 +0100
-From:   Oleksandr Natalenko <oleksandr@redhat.com>
-To:     Minchan Kim <minchan@kernel.org>
-Cc:     "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Michal Hocko <mhocko@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>, linux-api@vger.kernel.org,
-        Suren Baghdasaryan <surenb@google.com>,
-        Tim Murray <timmurray@google.com>,
-        Daniel Colascione <dancol@google.com>,
-        Sandeep Patil <sspatil@google.com>,
-        Sonny Rao <sonnyrao@google.com>,
-        Brian Geffon <bgeffon@google.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        John Dias <joaodias@google.com>, ktkhai@virtuozzo.com,
-        christian.brauner@ubuntu.com, sjpark@amazon.de
-Subject: Re: [PATCH v2 2/5] mm: introduce external memory hinting API
-Message-ID: <20200123072904.ludphxkxseyg2qli@butterfly.localdomain>
-References: <20200116235953.163318-1-minchan@kernel.org>
- <20200116235953.163318-3-minchan@kernel.org>
- <20200117115225.GV19428@dhcp22.suse.cz>
- <20200117155837.bowyjpndfiym6cgs@box>
- <20200117173239.GB140922@google.com>
- <20200117212653.7uftw3lk35oykkmb@box>
- <20200121181113.GE140922@google.com>
- <20200122104424.7gvrfivymjvdous4@butterfly.localdomain>
- <20200123014316.GB249784@google.com>
+        Thu, 23 Jan 2020 02:38:35 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00N7cG5V040330;
+        Thu, 23 Jan 2020 01:38:16 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1579765096;
+        bh=+3fXqcctM4dNh7tgCXPjwPubIvB6hs8YxTRU7AzutRk=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=mbeg9XgepZonrW1hQIw7gajr0qSxQQboBeue0IYJbJMm1keAa72SugKcqLG9zVXS0
+         +/wucmukAmdUWSXS1TUMevXdKQy89omXtpS4/MIuyVbaBfFn8sn/syzbcnurcxLyek
+         TeWKXuxjudNzQyqYiE0Xyc66WPOYqNlKZBeYzwww=
+Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00N7cGqC059359
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 23 Jan 2020 01:38:16 -0600
+Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 23
+ Jan 2020 01:38:16 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Thu, 23 Jan 2020 01:38:15 -0600
+Received: from [172.24.190.4] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00N7cAwc040274;
+        Thu, 23 Jan 2020 01:38:11 -0600
+Subject: Re: [PATCH 1/3] dt-bindings: net: can: m_can: Add Documentation for
+ stb-gpios
+To:     Dan Murphy <dmurphy@ti.com>, Sekhar Nori <nsekhar@ti.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <netdev@vger.kernel.org>, <linux-can@vger.kernel.org>
+CC:     <catalin.marinas@arm.com>, <mark.rutland@arm.com>,
+        <robh+dt@kernel.org>, <davem@davemloft.net>, <mkl@pengutronix.de>,
+        <wg@grandegger.com>, <sriram.dash@samsung.com>, <nm@ti.com>,
+        <t-kristo@ti.com>
+References: <20200122080310.24653-1-faiz_abbas@ti.com>
+ <20200122080310.24653-2-faiz_abbas@ti.com>
+ <c3b0eeb8-bd78-aa96-4783-62dc93f03bfe@ti.com>
+ <8fc7c343-267d-c91c-0381-60990cfc35e8@ti.com>
+ <f834087b-da1c-88a0-93fe-bc72c8ac71ff@ti.com>
+From:   Faiz Abbas <faiz_abbas@ti.com>
+Message-ID: <57baeedc-9f51-7b92-f190-c0bbd8525a16@ti.com>
+Date:   Thu, 23 Jan 2020 13:09:41 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200123014316.GB249784@google.com>
+In-Reply-To: <f834087b-da1c-88a0-93fe-bc72c8ac71ff@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 22, 2020 at 05:43:16PM -0800, Minchan Kim wrote:
-> > It seems I've overlooked an important piece of this submission: one
-> > cannot apply the hint to all the anonymous mapping regardless of address
-> > range. For KSM I'd rather either have a possibility to hint all the
-> > anonymous mappings, or, as it was suggested previously, be able to iterate
-> > over existing mappings using some (fd-based?) API.
+Hi,
+
+On 22/01/20 8:04 pm, Dan Murphy wrote:
+> Sekhar
 > 
-> Thing is how you could identify a certan range is better for KSM than
-> others from external process?
+> On 1/22/20 8:24 AM, Sekhar Nori wrote:
+>> On 22/01/20 7:05 PM, Dan Murphy wrote:
+>>> Faiz
+>>>
+>>> On 1/22/20 2:03 AM, Faiz Abbas wrote:
+>>>> The CAN transceiver on some boards has an STB pin which is
+>>>> used to control its standby mode. Add an optional property
+>>>> stb-gpios to toggle the same.
+>>>>
+>>>> Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
+>>>> Signed-off-by: Sekhar Nori <nsekhar@ti.com>
+>>>> ---
+>>>>    Documentation/devicetree/bindings/net/can/m_can.txt | 2 ++
+>>>>    1 file changed, 2 insertions(+)
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/net/can/m_can.txt
+>>>> b/Documentation/devicetree/bindings/net/can/m_can.txt
+>>>> index ed614383af9c..cc8ba3f7a2aa 100644
+>>>> --- a/Documentation/devicetree/bindings/net/can/m_can.txt
+>>>> +++ b/Documentation/devicetree/bindings/net/can/m_can.txt
+>>>> @@ -48,6 +48,8 @@ Optional Subnode:
+>>>>                  that can be used for CAN/CAN-FD modes. See
+>>>>                
+>>>> Documentation/devicetree/bindings/net/can/can-transceiver.txt
+>>>>                  for details.
+>>>> +stb-gpios        : gpio node to toggle the STB (standby) signal on
+>>>> the transceiver
+>>>> +
+>>> The m_can.txt is for the m_can framework.  If this is specific to the
+>>> platform then it really does not belong here.
+>>>
+>>> If the platform has specific nodes then maybe we need a
+>>> m_can_platform.txt binding for specific platform nodes.  But I leave
+>>> that decision to Rob.
+>> Since this is transceiver enable, should this not be in
+>> Documentation/devicetree/bindings/net/can/can-transceiver.txt?
+> 
 
-I think the info like this is kinda available via /proc/pid/smaps. It
-lists the ranges and the vmflags. But using it raises 2 concerns: one is
-the absence of guarantee the mappings won't change after smaps is read
-and the second one is that there's no separate vmflag for marking a vma
-as non-meregable (and IIRC from previous attempts on addressing this,
-we've already exhausted all the flags on 32-bit arches, so it is not
-something that can be trivially addressed).
+The transceiver node is just a node without an associated device. I had
+tried to convert it to a phy implementation but that idea got shot down
+here:
 
--- 
-  Best regards,
-    Oleksandr Natalenko (post-factum)
-    Senior Software Maintenance Engineer
+https://lore.kernel.org/patchwork/patch/1006238/
 
+Thanks,
+Faiz
