@@ -2,109 +2,123 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16D26C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 16:03:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DB87C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 16:08:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DECFE214AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 16:03:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VMc+2vTz"
+	by mail.kernel.org (Postfix) with ESMTP id 37A5D20684
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 16:08:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728855AbgAWQDF (ORCPT
+        id S1728792AbgAWQIC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 11:03:05 -0500
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:41718 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726231AbgAWQDE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 11:03:04 -0500
-Received: by mail-qk1-f194.google.com with SMTP id s187so1828481qke.8
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jan 2020 08:03:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=5Zrh7fW80iw6PG+VKgzM4cKv470tUdMXSG6k6nsxdjg=;
-        b=VMc+2vTzYUPzJTSit+Uy7zWxTON47r30EWeXHtQkYnjfqTAUCuPIkz/RJcrMaTaNo/
-         cezL0bjPwPb9Eb+ho9lUeQXOCAykEZD0bdaqanDZX3iNnow1gAyGTqEDVG5HQO6H5QUv
-         WiUC/jg4c04rjDiQucDTEQo9GarRy9clMqM5Gu1VU4FiO1D56vOZ/BOlcoE34HlVEu9W
-         N+XyBblBjVTRoZ2i0pXYvYpciyiCkC10Kd9WV1FaQCjKqUgw8PW5X0aBNm8NgPxyS5xQ
-         2v5jFQuTWLAP/IY3oRwpFej4XC4lNZzGpH1ALqFmvkk674mPMlzw+vOPLFY5z5AzCl48
-         +Q1Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=5Zrh7fW80iw6PG+VKgzM4cKv470tUdMXSG6k6nsxdjg=;
-        b=BHCTVfzKvLMozerXNzjafHulJFtqMCBCrC/aYgpB9CvIxNZSpuW5OR4o6GgfJfMB8h
-         2DQmYuuDRwAAznrIYbSKC8KtJORowuuzLfaXQxMGscM5hvw0yUnWQx6uHjo+ey/Bv+fJ
-         Epz4QtLHG9BwlPfVQPOFKbdwp7SzQpthjruTbiw0/hRVpW5KqHW3GzCIIM4Yzip3ZpiK
-         yvD//AuVLfVETszYf12Pns7Wr0tnNHq7Ia3BoISHMxcMFgo564cc7FpM9w/ivtogUwyP
-         Zy2bjtuemUKYlMNBAXvIRmagDNYsRQjF7AO6Ga48XUcL6729ZNOBXJIyk2LKezCe73gQ
-         QfJw==
-X-Gm-Message-State: APjAAAU2rtID2JmZdzOB1xx5emmh9Fx0hvd7GM8U1DvEX83imcofUo+H
-        imrYH/rPLOhOTZh7FfOUjVUxECFudtQs/dLSrGPWTA==
-X-Google-Smtp-Source: APXvYqwYqKelgW/DCAi+m0okiHtpUyEtiOw/0Z7pRVYCk/auFDOUzCIDIj9a6QxUoQGB4s0kFJuq2/zMZnMzR9iPrlM=
-X-Received: by 2002:a37:5841:: with SMTP id m62mr16346928qkb.256.1579795383649;
- Thu, 23 Jan 2020 08:03:03 -0800 (PST)
+        Thu, 23 Jan 2020 11:08:02 -0500
+Received: from foss.arm.com ([217.140.110.172]:41532 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726231AbgAWQIC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jan 2020 11:08:02 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 487961FB;
+        Thu, 23 Jan 2020 08:08:01 -0800 (PST)
+Received: from e112479-lin.arm.com (unknown [10.37.9.147])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5EA113F68E;
+        Thu, 23 Jan 2020 08:07:56 -0800 (PST)
+From:   James Clark <james.clark@arm.com>
+To:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     suzuki.poulose@arm.com, gengdongjiu@huawei.com,
+        wxf.wang@hisilicon.com, liwei391@huawei.com,
+        liuqi115@hisilicon.com, huawei.libin@huawei.com, nd@arm.com,
+        linux-perf-users@vger.kernel.org,
+        James Clark <james.clark@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Tan Xiaojun <tanxiaojun@huawei.com>,
+        Al Grant <al.grant@arm.com>, Namhyung Kim <namhyung@kernel.org>
+Subject: [PATCH v2 0/7] perf tools: Add support for some spe events and precise ip
+Date:   Thu, 23 Jan 2020 16:07:27 +0000
+Message-Id: <20200123160734.3775-1-james.clark@arm.com>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-References: <20200123160115.GA4202@embeddedor>
-In-Reply-To: <20200123160115.GA4202@embeddedor>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Thu, 23 Jan 2020 17:02:52 +0100
-Message-ID: <CACT4Y+bOxBb_fy3jak=prrznOPEbm+nfeq_yUC8yrU+-3RP2UA@mail.gmail.com>
-Subject: Re: [PATCH] lib/test_kasan.c: Fix memory leak in kmalloc_oob_krealloc_more()
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc:     Andrey Ryabinin <ryabinin.a.a@gmail.com>,
-        Alexander Potapenko <glider@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andrey Konovalov <adech.fo@gmail.com>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 23, 2020 at 4:59 PM Gustavo A. R. Silva
-<gustavo@embeddedor.com> wrote:
->
-> In case memory resources for _ptr2_ were allocated, release them
-> before return.
->
-> Notice that in case _ptr1_ happens to be NULL, krealloc() behaves
-> exactly like kmalloc().
+After the commit ffd3d18c20b8 ("perf tools: Add ARM Statistical
+Profiling Extensions (SPE) support") was merged, "perf record" and
+"perf report --dump-raw-trace" are supported. However, the
+raw data that is dumped cannot be used without parsing.
 
-Reviewed-by: Dmitry Vyukov <dvyukov@google.com>
+This patchset is to improve the "perf report" support for SPE, and
+further process the data. Currently, support for the three events
+of llc-miss, tlb-miss, branch-miss and remote-access is added.
 
-The scenario where ptr1 is NULL, but ptr2 is not NULL is not impossible indeed.
+The macro definition was modified under Jeremy's suggestion, and
+the "event:pp" approach was used under James' suggestion to achieve
+the precise ip of some events on arm64. Currently, only branch-misses
+are implemented, and other event support will be added later.
 
-> Addresses-Coverity-ID: 1490594 ("Resource leak")
-> Fixes: 3f15801cdc23 ("lib: add kasan test module")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-> ---
->  lib/test_kasan.c | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/lib/test_kasan.c b/lib/test_kasan.c
-> index 328d33beae36..3872d250ed2c 100644
-> --- a/lib/test_kasan.c
-> +++ b/lib/test_kasan.c
-> @@ -158,6 +158,7 @@ static noinline void __init kmalloc_oob_krealloc_more(void)
->         if (!ptr1 || !ptr2) {
->                 pr_err("Allocation failed\n");
->                 kfree(ptr1);
-> +               kfree(ptr2);
->                 return;
->         }
->
-> --
-> 2.25.0
->
+In addition, we also found that when recording large multi-threaded
+programs, ctrl + c could not end recording, so it was fixed and two
+patches were added.
+
+Cc: Will Deacon <will@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Tan Xiaojun <tanxiaojun@huawei.com>
+Cc: Al Grant <al.grant@arm.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+
+James Clark (1):
+  perf tools: Unset precise_ip when using SPE
+
+Tan Xiaojun (4):
+  perf tools: Move arm-spe-pkt-decoder.h/c to the new dir
+  perf tools: Add support for "report" for some spe events
+  perf report: Add --spe options for arm-spe
+  perf tools: Support "branch-misses:pp" on arm64
+
+Wei Li (2):
+  perf tools: add perf_evlist__terminate() for terminate
+  perf tools: arm-spe: fix record hang after being terminated
+
+ tools/perf/Documentation/perf-report.txt      |  10 +
+ tools/perf/arch/arm64/util/arm-spe.c          |  10 +-
+ tools/perf/builtin-record.c                   |   1 +
+ tools/perf/builtin-report.c                   |   5 +
+ tools/perf/util/Build                         |   2 +-
+ tools/perf/util/arm-spe-decoder/Build         |   1 +
+ .../util/arm-spe-decoder/arm-spe-decoder.c    | 225 +++++
+ .../util/arm-spe-decoder/arm-spe-decoder.h    |  66 ++
+ .../arm-spe-pkt-decoder.c                     |   0
+ .../arm-spe-pkt-decoder.h                     |   2 +
+ tools/perf/util/arm-spe.c                     | 789 +++++++++++++++++-
+ tools/perf/util/arm-spe.h                     |   3 +
+ tools/perf/util/auxtrace.c                    |  49 ++
+ tools/perf/util/auxtrace.h                    |  29 +
+ tools/perf/util/evlist.c                      |  16 +
+ tools/perf/util/evlist.h                      |   1 +
+ tools/perf/util/evsel.h                       |   1 +
+ tools/perf/util/session.h                     |   2 +
+ 18 files changed, 1170 insertions(+), 42 deletions(-)
+ create mode 100644 tools/perf/util/arm-spe-decoder/Build
+ create mode 100644 tools/perf/util/arm-spe-decoder/arm-spe-decoder.c
+ create mode 100644 tools/perf/util/arm-spe-decoder/arm-spe-decoder.h
+ rename tools/perf/util/{ => arm-spe-decoder}/arm-spe-pkt-decoder.c (100%)
+ rename tools/perf/util/{ => arm-spe-decoder}/arm-spe-pkt-decoder.h (96%)
+
+-- 
+2.25.0
+
