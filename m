@@ -7,70 +7,70 @@ X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D80CC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 16:16:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 906F8C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 16:16:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2FDE02071E
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 16:16:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6349A21835
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 16:16:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FTBX6Mgg"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OgPUz7Lm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728842AbgAWQQP (ORCPT
+        id S1729074AbgAWQQ3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 11:16:15 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:27146 "EHLO
+        Thu, 23 Jan 2020 11:16:29 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:37895 "EHLO
         us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726605AbgAWQQP (ORCPT
+        by vger.kernel.org with ESMTP id S1729009AbgAWQQ3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 11:16:15 -0500
+        Thu, 23 Jan 2020 11:16:29 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579796173;
+        s=mimecast20190719; t=1579796188;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=EIV/YyjsNHKvzfLLRkCsSAhXa/8ugLsBC1Uq238ttpo=;
-        b=FTBX6Mgggjswr7tcR6NC3OKAuxF4g1fgj1vD3uKHwU8F/plG4bX8xBB12YJIEWGYXL7gJp
-        oEqYtlmnSOkZ1eW2u339EYemj+Hs2ryGbO/FAD8cn/hkSdnlxEeT2KS7raTxVqhufR9b2i
-        y7T2MsIwntFy/ojnpY+e64OY0DBf6pw=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-302-22RGiMdpMsO3OeeOSU5W-w-1; Thu, 23 Jan 2020 11:16:08 -0500
-X-MC-Unique: 22RGiMdpMsO3OeeOSU5W-w-1
-Received: by mail-wr1-f69.google.com with SMTP id t3so2002290wrm.23
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jan 2020 08:16:08 -0800 (PST)
+        bh=5sIIr88lSbFA0BlG1nNmj6Enx5IlWKEvDOlX33MYcGs=;
+        b=OgPUz7LmUbGyz4fgdndoshzS2s2d6N4us8vnQsh3vRcHhV9t/iPw98bDJtsXQrDO11xrqA
+        QybRvn1qZWWiyGpDsUfkamP4Hw0uCTa+AEnkuWJXwMC+L2tJNU1w6XGCEHRU5D3y8cnZ3H
+        LluBH73yaxvF5vEoDQ7Ab8bX+wK9j/E=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-99-IjOkF_JHNOaY2oyOgRjHow-1; Thu, 23 Jan 2020 11:16:24 -0500
+X-MC-Unique: IjOkF_JHNOaY2oyOgRjHow-1
+Received: by mail-wm1-f69.google.com with SMTP id m21so729437wmg.6
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jan 2020 08:16:23 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=EIV/YyjsNHKvzfLLRkCsSAhXa/8ugLsBC1Uq238ttpo=;
-        b=nhyGE1U9eYmVjjGaM39q/sLiEF9cCir3p8H/RawuQ5Y5cynsvCFPwz9jquHmYmAnsk
-         yqNi1hSYIBSYKIXrrctB9xaSFl/VFMgBmyuuQ5+S7Kq9gzEgwpcSgFRobIimjhR+MNZ5
-         EifTDel3SZCem0zUdjsQD+R53tZ4mVRq53cpGrffYyUhBrgLUNeeYg238rQ7lzLylU9t
-         uSlDu+9N29fmmpVzmiG2dyWTxvdlBApnJhKd23TqyoZJ6WmFgKYkJsGryEII8nNCLnNa
-         LwTo9pfb2XtQWkoK7JR+Rnh/d86efbCWNMmZQYszaBP3rb/vtUEMoNqw8BPxTi5USshu
-         CI2A==
-X-Gm-Message-State: APjAAAUCEEVr5CNDDIXcqpa8NTWBTogYgM40/BkrrGofcruiP7jZwKJ7
-        Zq079COOeQIqDVF7pTlhHMYpDVpzwoZRlT3ZCi+V2bBW874E4BZBzxIKPUq3OQiRXZVmMoDQZOi
-        ANPr/Bi8EJFgcELT21Ea+Mr2R
-X-Received: by 2002:a7b:c3d8:: with SMTP id t24mr4902873wmj.175.1579796167373;
-        Thu, 23 Jan 2020 08:16:07 -0800 (PST)
-X-Google-Smtp-Source: APXvYqzVie/mIIlbsyC2TD4OU1SdHGQkoaSGWQtEsx5eV8zH3zTTSAH+2bwHeH80HjHcBrDABuEkxw==
-X-Received: by 2002:a7b:c3d8:: with SMTP id t24mr4902864wmj.175.1579796167187;
-        Thu, 23 Jan 2020 08:16:07 -0800 (PST)
+        bh=5sIIr88lSbFA0BlG1nNmj6Enx5IlWKEvDOlX33MYcGs=;
+        b=b8hFB7yd/VY34YSJH2gterawGT73pAxvxixe+IwbqNhzJtCwyqXcl5oG/m9v7gslL5
+         Rav/lhZoVYTF8LPU5pNlLjiA/4OrKFAJEU0J5SEmGOih8ofQex532PutSd8ijOR6Zn1v
+         BI4OG0729NvgJ6FzpABf7IPwqYWjfevVeb83/rfSB9yclG3pLjhZ4VacpgEGaLV9ppXm
+         FwX2lvCMMw4/zUyuqJ9iR8LLTH9RNmApn9n9dY0LhgoWbarrxieDKeqiE4YnG5gJNNWj
+         RRZyOGOhUmKYkypTd/2d9+RX4AjKdMzkvH14AjiLHy9O+j+aZHNRVfKxh6y5BCdu7YpS
+         v4sA==
+X-Gm-Message-State: APjAAAWrBn+CYVxMIvPLUVeFW3KICcFzsSp1u/gaInkxnD2c48RBnWsu
+        AH3krvhS0n89JXzZ8a9xMQrxzds5QAgLi8PnZcEm1aZCY0ijl2xRKirmsU4d6zmLd2RUN1bOf+C
+        Ql/BYqzC0gHdj46pWmewfHyp/
+X-Received: by 2002:a1c:1b42:: with SMTP id b63mr2167997wmb.16.1579796182461;
+        Thu, 23 Jan 2020 08:16:22 -0800 (PST)
+X-Google-Smtp-Source: APXvYqxSF26kJs+JPMSG10GEDEcJjNLaTdakZx0Dm0y+GVghiwYl96TqI7gbcuuqv9s25ojTDMfPCg==
+X-Received: by 2002:a1c:1b42:: with SMTP id b63mr2167981wmb.16.1579796182282;
+        Thu, 23 Jan 2020 08:16:22 -0800 (PST)
 Received: from ?IPv6:2001:b07:6468:f312:b8fe:679e:87eb:c059? ([2001:b07:6468:f312:b8fe:679e:87eb:c059])
-        by smtp.gmail.com with ESMTPSA id w19sm3056765wmc.22.2020.01.23.08.16.06
+        by smtp.gmail.com with ESMTPSA id a9sm3117714wmm.15.2020.01.23.08.16.21
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 23 Jan 2020 08:16:06 -0800 (PST)
+        Thu, 23 Jan 2020 08:16:21 -0800 (PST)
 Subject: Re: [RESEND] Atomic switch of MSR_IA32_UMWAIT_CONTROL
 To:     Sean Christopherson <sean.j.christopherson@intel.com>,
         Tao Xu <tao3.xu@intel.com>, Jingqi Liu <jingqi.liu@intel.com>
 Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org
 References: <20200123154526.GC13178@linux.intel.com>
 From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <c8371569-78f5-24bc-d4c0-2c7f8f3c1f14@redhat.com>
-Date:   Thu, 23 Jan 2020 17:16:06 +0100
+Message-ID: <0146cafa-9713-59a7-00b7-87add0ab0738@redhat.com>
+Date:   Thu, 23 Jan 2020 17:16:21 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.1.1
 MIME-Version: 1.0
@@ -91,8 +91,9 @@ On 23/01/20 16:45, Sean Christopherson wrote:
 > really shouldn't and AFAICT doesn't, isn't it better to use the shared MSR
 > mechanism to load the host value only when returning to userspace, and
 > reload the guest value on demand?
+> 
 
-Just laziness I guess.
+To clarify, laziness also on part of the reviewer, aka me.
 
 Paolo
 
