@@ -2,104 +2,117 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C5A6C3F68F
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 17:30:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8102DC33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 17:30:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4192C21569
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 17:30:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FAE321569
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 17:30:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ho+cihvv"
+	dkim=pass (2048-bit key) header.d=posteo.de header.i=@posteo.de header.b="B/+QAD5P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728904AbgAWRaI (ORCPT
+        id S1729049AbgAWRaM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 12:30:08 -0500
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:44838 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727296AbgAWRaI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 12:30:08 -0500
-Received: by mail-lf1-f66.google.com with SMTP id v201so2897786lfa.11;
-        Thu, 23 Jan 2020 09:30:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=biNgWadq5TqNu1DhgNYk+76jxCQnnKZxQCgzQcvk4WE=;
-        b=ho+cihvvm5qGd6cjf/bQfza0S/NPQnWeisIquDz2V5IYXaByfiEr1ppYLo1ABhYrKQ
-         Dtk61QxO8gdmUKuN6MJ1LrK5WcRp1pRm/iLklK7H+NwzlUlU/QbQqZvIFaR8Wxrds9/A
-         xatkgomlGvtSwJj+L0JBKoFG1CyQXdQw75N/SkdYw0CAjwPZzpHpAD9ELNNP4kZxl/I7
-         844zNpQidde5KD9VQaKM3UvJ7RbKxw1f0ootpKo8PYtnkALnraiH3aWrV+y3f7Nx7sh3
-         pwsU67k1CgOFiMNaTiAsPDoBx0GBKSGMQbU/jjwPQjwFPyHglrJnZUyx6RizfuKR3WO3
-         WoHA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=biNgWadq5TqNu1DhgNYk+76jxCQnnKZxQCgzQcvk4WE=;
-        b=YJ/HvN9Qj19fGHKFsHAYHKeX6bIDvoluJpWkVMgNyBjLVxh1O6jNkLuczcPOwgOt57
-         2vCI2ZGhOxGnVXziiwZdCQCCROftISfx915RrEVQD2wTa/KqohxbURin4kvOJEywWg0H
-         kvmJ3qaZ+++GqQ/qTNP1AYP0W73o/LfpjPayMpapZW+8OkfrCr/gvMTeMgG9nASI5W5y
-         7WoJbVLAZz/tVmYUMgL/lER00eGgQO48f9MWVPzi4G/rgA+vCrddhOwIgfCT9Nnuojku
-         W5vejLG+030NnMLnaqGTmnXqgeaOxGWdI8uhSvlaIcoX3WJhivvCVx0THxDNK5C2fdQr
-         rsIA==
-X-Gm-Message-State: APjAAAXedRwK5WMT2Vm1qYNbmn/ei4NNiQUJ+gYXfuK94gTF921th2bW
-        n9a/pL69HFhiN5Qpmgor5rA=
-X-Google-Smtp-Source: APXvYqyjvoR3stvPeCsW0baWBvB7O0BZozH/ovWybts0IXpKTrVH9LTL/4U8blSxm34xEpLH1MoepA==
-X-Received: by 2002:ac2:5f59:: with SMTP id 25mr5144118lfz.193.1579800605911;
-        Thu, 23 Jan 2020 09:30:05 -0800 (PST)
-Received: from localhost.localdomain (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.gmail.com with ESMTPSA id l8sm1609332ljh.65.2020.01.23.09.30.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Jan 2020 09:30:05 -0800 (PST)
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>
-Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v1] PM / devfreq: Replace strncpy with strscpy
-Date:   Thu, 23 Jan 2020 20:28:08 +0300
-Message-Id: <20200123172808.5316-1-digetx@gmail.com>
-X-Mailer: git-send-email 2.24.0
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        Thu, 23 Jan 2020 12:30:12 -0500
+Received: from mout02.posteo.de ([185.67.36.66]:57339 "EHLO mout02.posteo.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728911AbgAWRaK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jan 2020 12:30:10 -0500
+Received: from submission (posteo.de [89.146.220.130]) 
+        by mout02.posteo.de (Postfix) with ESMTPS id 2B8A0240100
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jan 2020 18:30:08 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.de; s=2017;
+        t=1579800608; bh=jswBLxzmjtwYk5Kuv4nAGpKgQNsVvBOU2fXHpQ4y5Gs=;
+        h=From:To:Cc:Subject:Date:From;
+        b=B/+QAD5PeIhk8ZzLMAIJLIf3n/rKfM3CU3W8F4FslYtVshYN8F+1kpTEn7+IrqA5G
+         XJ05YHac7uYguFVgEP8OF8ksjX8QCn9s+VvzFPGRTqV8mQQ+bEpH2aM7QVXcEGdMYE
+         YO/PZX68RhqNtZ9MZove5GVY2KaQinsMXLqFulaoewxct1IC3U5rRFUO9McT53dRN+
+         IRSGC2FM/w5Pkgh7RVn0PHy4BwA0RB9dQcWRuKNGuZvVrZCA2NJZNscR8wH25TZKCJ
+         LLCzB6WdzmxLOWK3LGRCEOr0+f89yBqt+rlmXnKhs9D/oI53YAznDfawUaqL4wmzKg
+         30VhPiBrLuEEQ==
+Received: from customer (localhost [127.0.0.1])
+        by submission (posteo.de) with ESMTPSA id 483Tmv4HFFz9rxM;
+        Thu, 23 Jan 2020 18:30:07 +0100 (CET)
+From:   Benjamin Thiel <b.thiel@posteo.de>
+To:     kvm@vger.kernel.org
+Cc:     X86 ML <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Benjamin Thiel <b.thiel@posteo.de>
+Subject: [PATCH v2] x86/cpu: Move prototype for get_umwait_control_msr() to global location
+Date:   Thu, 23 Jan 2020 18:29:45 +0100
+Message-Id: <20200123172945.7235-1-b.thiel@posteo.de>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-GCC produces this warning when kernel compiled using `make W=1`:
+.. in order to fix a -Wmissing-prototype warning.
 
-  warning: ‘strncpy’ specified bound 16 equals destination size [-Wstringop-truncation]
-  772 |  strncpy(devfreq->governor_name, governor_name, DEVFREQ_NAME_LEN);
+No functional change.
 
-The strncpy doesn't take care of NULL-termination of the destination
-buffer, while the strscpy does.
-
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+Signed-off-by: Benjamin Thiel <b.thiel@posteo.de>
 ---
- drivers/devfreq/devfreq.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/include/asm/mwait.h | 2 ++
+ arch/x86/kernel/cpu/umwait.c | 1 +
+ arch/x86/kvm/vmx/vmx.c       | 1 +
+ arch/x86/kvm/vmx/vmx.h       | 2 --
+ 4 files changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/devfreq/devfreq.c b/drivers/devfreq/devfreq.c
-index cceee8bc3c2f..f24d226f65c6 100644
---- a/drivers/devfreq/devfreq.c
-+++ b/drivers/devfreq/devfreq.c
-@@ -769,7 +769,7 @@ struct devfreq *devfreq_add_device(struct device *dev,
- 	devfreq->dev.release = devfreq_dev_release;
- 	INIT_LIST_HEAD(&devfreq->node);
- 	devfreq->profile = profile;
--	strncpy(devfreq->governor_name, governor_name, DEVFREQ_NAME_LEN);
-+	strscpy(devfreq->governor_name, governor_name, DEVFREQ_NAME_LEN);
- 	devfreq->previous_freq = profile->initial_freq;
- 	devfreq->last_status.current_frequency = profile->initial_freq;
- 	devfreq->data = data;
+diff --git a/arch/x86/include/asm/mwait.h b/arch/x86/include/asm/mwait.h
+index 9d5252c9685c..b809f117f3f4 100644
+--- a/arch/x86/include/asm/mwait.h
++++ b/arch/x86/include/asm/mwait.h
+@@ -23,6 +23,8 @@
+ #define MWAITX_MAX_LOOPS		((u32)-1)
+ #define MWAITX_DISABLE_CSTATES		0xf0
+ 
++u32 get_umwait_control_msr(void);
++
+ static inline void __monitor(const void *eax, unsigned long ecx,
+ 			     unsigned long edx)
+ {
+diff --git a/arch/x86/kernel/cpu/umwait.c b/arch/x86/kernel/cpu/umwait.c
+index c222f283b456..300e3fd5ade3 100644
+--- a/arch/x86/kernel/cpu/umwait.c
++++ b/arch/x86/kernel/cpu/umwait.c
+@@ -4,6 +4,7 @@
+ #include <linux/cpu.h>
+ 
+ #include <asm/msr.h>
++#include <asm/mwait.h>
+ 
+ #define UMWAIT_C02_ENABLE	0
+ 
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index e3394c839dea..11cd0242479b 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -41,6 +41,7 @@
+ #include <asm/mce.h>
+ #include <asm/mmu_context.h>
+ #include <asm/mshyperv.h>
++#include <asm/mwait.h>
+ #include <asm/spec-ctrl.h>
+ #include <asm/virtext.h>
+ #include <asm/vmx.h>
+diff --git a/arch/x86/kvm/vmx/vmx.h b/arch/x86/kvm/vmx/vmx.h
+index a4f7f737c5d4..db947076bf68 100644
+--- a/arch/x86/kvm/vmx/vmx.h
++++ b/arch/x86/kvm/vmx/vmx.h
+@@ -14,8 +14,6 @@
+ extern const u32 vmx_msr_index[];
+ extern u64 host_efer;
+ 
+-extern u32 get_umwait_control_msr(void);
+-
+ #define MSR_TYPE_R	1
+ #define MSR_TYPE_W	2
+ #define MSR_TYPE_RW	3
 -- 
-2.24.0
+2.17.1
 
