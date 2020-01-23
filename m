@@ -2,121 +2,134 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C02DCC33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 05:43:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D441EC33CAA
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 05:44:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9629324673
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 05:43:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4E6524673
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 05:44:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="d2azf7mo"
+	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="JCtjWNLj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726029AbgAWFnQ (ORCPT
+        id S1726135AbgAWFoe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 00:43:16 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:53703 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725535AbgAWFnQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 00:43:16 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 483B5F3FXwz9s1x;
-        Thu, 23 Jan 2020 16:43:13 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1579758193;
-        bh=QUWn6y5zPxlhHR/1mS+e4JFMgFp62v+3+GWV14dEtu4=;
-        h=Date:From:To:Cc:Subject:From;
-        b=d2azf7mosYLbvPEGvDzYHU1ZZw4pAN5g5ZuxF9rRWVDyT4wOee4F5RvQTC2CUFU0C
-         V5kPux6XyZqDkXOKDfjwsEPjOwVDl2wYeLsd5IyBZhBKN/J9TiDrw56MccMxJRoM4l
-         Hyy130jUyiq7uH1o/fSf0/rUECnpsZt6ccDtDiGRdIPT4RaeB+xJLtcN0G1lgPO6TF
-         inAw/129YI92OXBjCtL4UH3TpQAtbhkzA+3qHKyoV6W9vNRWVjvE3aA+3rzB7LR9Ml
-         hLKCkooMD/uYqimPW07ESyC0DlXDvDwE2O4cgLMCsDw7rhQeTpmYpEAv0ijq5YQuni
-         wRdDeKf5SfO6w==
-Date:   Thu, 23 Jan 2020 16:43:11 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Vladimir Murzin <vladimir.murzin@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
-Subject: linux-next: manual merge of the akpm tree with the arm64 tree
-Message-ID: <20200123164311.1e96c59a@canb.auug.org.au>
+        Thu, 23 Jan 2020 00:44:34 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:34849 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725535AbgAWFoe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jan 2020 00:44:34 -0500
+Received: by mail-wr1-f65.google.com with SMTP id g17so1696331wro.2
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jan 2020 21:44:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=UD2g3R6EAWCmOv3T2af3YKBLNY0Xvn+xHCncHmLKPFw=;
+        b=JCtjWNLjaIdA+tOfF5e30N6xC2R7EKBvmaDa2DeLl22ER2d0IuuWLEKyqXmriPYSJE
+         u47z7moP4wmVG7uBkdVZheNXzoLQgOfF5vnl6Dad9pS/SUcffBKjsbgts5aTPxM87qWw
+         nrH0jvVnL9LRDw/x9wuzLUlsp7y1lkYnqRf61oNVz2sVxuqxYoDgbSb3ap5rqN2dg3tI
+         aydMjz7P8ZvJ4EsjW6EsmLSKHW9G1EssOHnior+6cBteMWG6w/IjiMkFD/tT3AnJDEbm
+         a/UkkcZpfE5m6P4Jd20fsiCNz3IIhoCAF1ctZIMcgGMRn3blJFZhx73DWnthZyxwI2Mz
+         hwPw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=UD2g3R6EAWCmOv3T2af3YKBLNY0Xvn+xHCncHmLKPFw=;
+        b=gx9OjALbjPIHKbz7LyD7cGJaNqtHo4UbLPo+ucGPbFpgdDkSIsTYYfBFzsT5Sbs4hw
+         u6DNqD+p77LyIteHqKIyNYLJ/q7c6thirmK3OtDNNTHYSEp7SF5UF/lQwr8Lm3B5NrqA
+         +3pINuZjZx50/8cBGtS60yDT4bScp3+WzbUHP41GinQ/KKD4Giwi1pZ3R2jzZEWRCMpb
+         6YcD/wNvpnchbXrx67dcfRZPtOgRD/bB8X/kyYzsDfSCB5ybPMTXvKYD8ZWGnrxTLv5v
+         egTA3QhizrzGITUrAin8LZXZaqwIfF3VzIln4QNPFe8vWjhOkJ2eBVmFAzYsFGziYxQw
+         HPwg==
+X-Gm-Message-State: APjAAAX9nCUVp+2btiDLYzpxx7K5YU+ioOMX/ppubHYs1zmyRoPB7TOY
+        sDcIBI2TzdviLrgV+BazO1I041v+k9hLoqPU/4mJwg==
+X-Google-Smtp-Source: APXvYqyv+KlVKgjZla10G9aq/wBRqNXRZlBj1SqOqrDQKX4hSnOy90LI2wYMDDJ2iA9J2tC+0TnvKzxIf8yQ4C+omcI=
+X-Received: by 2002:a5d:5345:: with SMTP id t5mr16455678wrv.0.1579758272249;
+ Wed, 22 Jan 2020 21:44:32 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/T8AES2Lai6Vf=vXHwTSB6az";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+References: <20200116143029.31441-1-guoren@kernel.org>
+In-Reply-To: <20200116143029.31441-1-guoren@kernel.org>
+From:   Anup Patel <anup@brainfault.org>
+Date:   Thu, 23 Jan 2020 11:14:20 +0530
+Message-ID: <CAAhSdy0k2gb1+k214dW1Zk-YwvujNdui5GJE3zPb_NhDS9b_Rw@mail.gmail.com>
+Subject: Re: [PATCH V2 1/4] riscv: Separate patch for cflags and aflags
+To:     Guo Ren <guoren@kernel.org>
+Cc:     Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Anup Patel <Anup.Patel@wdc.com>,
+        Vincent Chen <vincent.chen@sifive.com>,
+        Zong Li <zong.li@sifive.com>,
+        Greentime Hu <greentime.hu@sifive.com>,
+        Bin Meng <bmeng.cn@gmail.com>,
+        Atish Patra <atish.patra@wdc.com>,
+        Andreas Schwab <schwab@linux-m68k.org>,
+        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
+        linux-arch@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        linux-csky@vger.kernel.org,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        Guo Ren <ren_guo@c-sky.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/T8AES2Lai6Vf=vXHwTSB6az
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Thu, Jan 16, 2020 at 8:01 PM <guoren@kernel.org> wrote:
+>
+> From: Guo Ren <ren_guo@c-sky.com>
+>
+> Use "subst fd" in Makefile is a hack way and it's not convenient
+> to add new ISA feature. Just separate them into riscv-march-cflags
+> and riscv-march-aflags.
+>
+> Signed-off-by: Guo Ren <ren_guo@c-sky.com>
+> Cc: Anup Patel <Anup.Patel@wdc.com>
+> ---
+>  arch/riscv/Makefile | 18 ++++++++++++------
+>  1 file changed, 12 insertions(+), 6 deletions(-)
+>
+> diff --git a/arch/riscv/Makefile b/arch/riscv/Makefile
+> index b9009a2fbaf5..6d09b53cf106 100644
+> --- a/arch/riscv/Makefile
+> +++ b/arch/riscv/Makefile
+> @@ -35,12 +35,18 @@ else
+>  endif
+>
+>  # ISA string setting
+> -riscv-march-$(CONFIG_ARCH_RV32I)       := rv32ima
+> -riscv-march-$(CONFIG_ARCH_RV64I)       := rv64ima
+> -riscv-march-$(CONFIG_FPU)              := $(riscv-march-y)fd
+> -riscv-march-$(CONFIG_RISCV_ISA_C)      := $(riscv-march-y)c
+> -KBUILD_CFLAGS += -march=$(subst fd,,$(riscv-march-y))
+> -KBUILD_AFLAGS += -march=$(riscv-march-y)
+> +riscv-march-cflags-$(CONFIG_ARCH_RV32I)                := rv32ima
+> +riscv-march-cflags-$(CONFIG_ARCH_RV64I)                := rv64ima
+> +riscv-march-$(CONFIG_FPU)                      := $(riscv-march-y)fd
+> +riscv-march-cflags-$(CONFIG_RISCV_ISA_C)       := $(riscv-march-cflags-y)c
+> +
+> +riscv-march-aflags-$(CONFIG_ARCH_RV32I)                := rv32ima
+> +riscv-march-aflags-$(CONFIG_ARCH_RV64I)                := rv64ima
+> +riscv-march-aflags-$(CONFIG_FPU)               := $(riscv-march-aflags-y)fd
+> +riscv-march-aflags-$(CONFIG_RISCV_ISA_C)       := $(riscv-march-aflags-y)c
+> +
+> +KBUILD_CFLAGS += -march=$(riscv-march-cflags-y)
+> +KBUILD_AFLAGS += -march=$(riscv-march-aflags-y)
+>
+>  KBUILD_CFLAGS += -mno-save-restore
+>  KBUILD_CFLAGS += -DCONFIG_PAGE_OFFSET=$(CONFIG_PAGE_OFFSET)
+> --
+> 2.17.0
+>
 
-Hi all,
+LGTM.
 
-Today's linux-next merge of the akpm tree got a conflict in:
+Reviewed-by: Anup Patel <anup@brainfault.org>
 
-  arch/arm64/Kconfig
-
-between commit:
-
-  983460233659 ("arm64: Kconfig: select HAVE_FUTEX_CMPXCHG")
-
-from the arm64 tree and commit:
-
-  2a6e68c2d781 ("asm-generic/tlb: rename HAVE_RCU_TABLE_FREE")
-
-from the akpm tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc arch/arm64/Kconfig
-index 21de6ffc3652,c050d2393610..000000000000
---- a/arch/arm64/Kconfig
-+++ b/arch/arm64/Kconfig
-@@@ -164,8 -164,7 +164,8 @@@ config ARM6
-  	select HAVE_PERF_USER_STACK_DUMP
-  	select HAVE_REGS_AND_STACK_ACCESS_API
-  	select HAVE_FUNCTION_ARG_ACCESS_API
- +	select HAVE_FUTEX_CMPXCHG if FUTEX
-- 	select HAVE_RCU_TABLE_FREE
-+ 	select MMU_GATHER_RCU_TABLE_FREE
-  	select HAVE_RSEQ
-  	select HAVE_STACKPROTECTOR
-  	select HAVE_SYSCALL_TRACEPOINTS
-
---Sig_/T8AES2Lai6Vf=vXHwTSB6az
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl4pMm8ACgkQAVBC80lX
-0GyViQgAlUrG4scij+tRuc9pb1J1YF4Yx/i5XRxmZjpiJ/G0xK4WzgxPqCq2gOJy
-L4Uu+f09SEKPz6Q++vxHQJvPoRW8sPLCdYnwKvObSl0M5ZLdv/QGMGBav4KUgMSJ
-sNL8G3t9UjM2KjP/psWdt3fkXGm0qeN0ybio83XezResbPdWT8RVKvo8t81NNEKm
-fBZUC7hZdhft5iQhRt73taTlbrErKc+L2W9yxwv9VOpphAYaU3GFTQuBv+5L3JsX
-ftMeFPZ2UuwlnnvmjMZB74Imdii/luDUjgjxwDcVDRKa/t3pghkhkCeJoa3Dlop7
-bIjW+aGTC/iytupZSdV0tzHowkcBCQ==
-=ZFvs
------END PGP SIGNATURE-----
-
---Sig_/T8AES2Lai6Vf=vXHwTSB6az--
+Regards,
+Anup
