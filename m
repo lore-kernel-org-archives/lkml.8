@@ -2,230 +2,120 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C751FC33CAA
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 05:13:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48C23C3F68F
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 05:19:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 922E62467B
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 05:13:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gibson.dropbear.id.au header.i=@gibson.dropbear.id.au header.b="Urb2nN2j"
+	by mail.kernel.org (Postfix) with ESMTP id 2B30724125
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 05:19:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726099AbgAWFNZ (ORCPT
+        id S1726141AbgAWFT2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 00:13:25 -0500
-Received: from ozlabs.org ([203.11.71.1]:53647 "EHLO ozlabs.org"
+        Thu, 23 Jan 2020 00:19:28 -0500
+Received: from mga01.intel.com ([192.55.52.88]:48637 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725535AbgAWFNZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 00:13:25 -0500
-Received: by ozlabs.org (Postfix, from userid 1007)
-        id 4839Qp1wQBz9sSL; Thu, 23 Jan 2020 16:13:22 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-        d=gibson.dropbear.id.au; s=201602; t=1579756402;
-        bh=EndBGkPODenb5XpA0SDzQL0qO6AOtb8zZmjrL1qSQkk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Urb2nN2jTgJpLIgiBgErMo0isifQ5rrFdnx6dTAXMhpVjfzi4umWLayu+/LtEAEoa
-         3XsZlrL0ItA+MlR1Kk4KuW42yuqMXcyXdCWYDkvIgdXj5WFQLKooRPRBVTYgMayQno
-         a6402Djr5CHoQFc5NIgLYX0Gn8I5xQ1w1vk14rMU=
-Date:   Thu, 23 Jan 2020 16:13:16 +1100
-From:   David Gibson <david@gibson.dropbear.id.au>
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Alexandre Torgue <alexandre.torgue@st.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Simon Glass <sjg@chromium.org>, devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Devicetree Compiler <devicetree-compiler@vger.kernel.org>,
-        Steve McIntyre <steve.mcintyre@linaro.org>
-Subject: Re: [RFC PATCH 1/3] dtc: Add dtb build information option
-Message-ID: <20200123051316.GP2347@umbus.fritz.box>
-References: <20200113181625.3130-1-alexandre.torgue@st.com>
- <20200113181625.3130-2-alexandre.torgue@st.com>
- <20200116005741.GB54439@umbus>
- <d2594b79-a45d-dcac-3642-90016a1408b8@st.com>
- <20200117090937.GU54439@umbus>
- <CAL_JsqKTsX9efYDMjGahFDxj0cEfzozeNrY1Nq1bECzgOZGqdQ@mail.gmail.com>
- <20200119063916.GD54439@umbus>
- <CAL_Jsq+-O0cpw9YtVGAjFWstu-=uXVgK0ccgyRj+bjR93gPriw@mail.gmail.com>
+        id S1725535AbgAWFT2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jan 2020 00:19:28 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Jan 2020 21:19:26 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,352,1574150400"; 
+   d="asc'?scan'208";a="216152482"
+Received: from zhen-hp.sh.intel.com (HELO zhen-hp) ([10.239.13.14])
+  by orsmga007.jf.intel.com with ESMTP; 22 Jan 2020 21:19:24 -0800
+Date:   Thu, 23 Jan 2020 13:07:27 +0800
+From:   Zhenyu Wang <zhenyuw@linux.intel.com>
+To:     Igor Druzhinin <igor.druzhinin@citrix.com>
+Cc:     intel-gvt-dev@lists.freedesktop.org,
+        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, zhenyuw@linux.intel.com,
+        zhi.a.wang@intel.com, jani.nikula@linux.intel.com,
+        joonas.lahtinen@linux.intel.com, rodrigo.vivi@intel.com,
+        airlied@linux.ie, daniel@ffwll.ch
+Subject: Re: [PATCH] drm/i915/gvt: fix high-order allocation failure on late
+ load
+Message-ID: <20200123050727.GA25905@zhen-hp.sh.intel.com>
+Reply-To: Zhenyu Wang <zhenyuw@linux.intel.com>
+References: <1579723824-25711-1-git-send-email-igor.druzhinin@citrix.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="b5sSX5qSQrSInIHt"
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="vkogqOf2sHV7VnPd"
 Content-Disposition: inline
-In-Reply-To: <CAL_Jsq+-O0cpw9YtVGAjFWstu-=uXVgK0ccgyRj+bjR93gPriw@mail.gmail.com>
+In-Reply-To: <1579723824-25711-1-git-send-email-igor.druzhinin@citrix.com>
+User-Agent: Mutt/1.10.0 (2018-05-17)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---b5sSX5qSQrSInIHt
+--vkogqOf2sHV7VnPd
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jan 21, 2020 at 09:59:44AM -0600, Rob Herring wrote:
-> On Sun, Jan 19, 2020 at 12:41 AM David Gibson
-> <david@gibson.dropbear.id.au> wrote:
-> >
-> > On Fri, Jan 17, 2020 at 08:43:23AM -0600, Rob Herring wrote:
-> > > On Fri, Jan 17, 2020 at 6:26 AM David Gibson
-> > > <david@gibson.dropbear.id.au> wrote:
-> > > >
-> > > > On Thu, Jan 16, 2020 at 09:58:23AM +0100, Alexandre Torgue wrote:
-> > > > > Hi David
-> > > > >
-> > > > > On 1/16/20 1:57 AM, David Gibson wrote:
-> > > > > > On Mon, Jan 13, 2020 at 07:16:23PM +0100, Alexandre Torgue wrot=
-e:
-> > > > > > > This commit adds the possibility to add build information for=
- a DTB.
-> > > > > > > Build information can be: build date, DTS version, "who built=
- the DTB"
-> > > > > > > (same kind of information that we get in Linux with the Linux=
- banner).
-> > > > > > >
-> > > > > > > To do this, an extra option "-B" using an information file as=
- argument
-> > > > > > > has been added. If this option is used, input device tree is =
-appended with
-> > > > > > > a new string property "Build-info". This property is built wi=
-th information
-> > > > > > > found in information file given as argument. This file has to=
- be generated
-> > > > > > > by user and shouldn't exceed 256 bytes.
-> > > > > > >
-> > > > > > > Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
-> > > > > >
-> > > > > > At the very least, this patch of the series will need to be sen=
-t to
-> > > > > > upstream dtc first.
-> > > > >
-> > > > > Ok sorry. I thought that sending all the series would give more
-> > > > > information.
-> > > >
-> > > > That's fair enough, but in order to merge, you'll need to post agai=
-nst
-> > > > upstream dtc.
-> > > >
-> > > > > > I'm also not terribly clear on what you're trying to accomplish=
- here,
-> > > > > > and why it's useful.
-> > > > >
-> > > > > Let's take Kernel boot at example (but could be extend to other D=
-TB "users"
-> > > > > like U-Boot). When Linux kernel booting we get a log that gives u=
-seful
-> > > > > information about kernel image: source version, build date, peopl=
-e who built
-> > > > > the kernel image, compiler version. This information is useful fo=
-r debug and
-> > > > > support. The aim is to get same kind of information but for the D=
-TB.
-> > > > >
-> > > > > > Since you're doing this specifically for use with dtbs built in=
- the
-> > > > > > kernel build, could you just use a:
-> > > > > >     Build-info =3D /incbin/ "build-info.txt";
-> > > > > > in each of the in-kernel .dts files?
-> > > > >
-> > > > > My first idea was to not modify all existing .dts files. Adding a=
-n extra
-> > > > > option in dtc is (for me) the softer way to do it. I mean, compile
-> > > > > information should come through compiler without modify .dts file=
-s outside
-> > > > > from dtc. In this way it will be easy to everybody using dtc (ins=
-ide our
-> > > > > outside Linux tree) to add dtb build info (even if they don't how=
- to write a
-> > > > > dts file).
-> > > >
-> > > > But you're not really having this information coming from the
-> > > > compiler.  Instead you're adding a compiler option that just force
-> > > > includes another file into the generated tree, and it's up to your
-> > > > build scripts to put something useful into that file.
-> > > >
-> > > > I don't really see that as preferable to modifying the .dts files.
-> > > >
-> > > > I also dislike the fact that the option as proposed is much more
-> > > > general than the name suggests, but also very similar too, but much
-> > > > more specific than the existing /incbin/ option.
-> > > >
-> > > > What might be better would be to have a dtc option which force appe=
-nds
-> > > > an extra .dts to the mail .dts compiled.  You can then put an overl=
-ay
-> > > > template in that file, something like:
-> > > >
-> > > > &{/} {
-> > > >         linux,build-info =3D /incbin/ "build-info.txt;
-> > > > }
-> > >
-> > > I like this suggestion either as an include another dts file or an
-> > > overlay.
-> >
-> > Sorry, to be clear what I'm talking about here is just including
-> > another dts file, and using the compile-type overlay syntax.  This is
-> > not the same as .dtbo style runtime overlays (though the final result
-> > is about the same in this case).
+On 2020.01.22 20:10:24 +0000, Igor Druzhinin wrote:
+> If the module happens to be loaded later at runtime there is a chance
+> memory is already fragmented enough to fail allocation of firmware
+> blob storage and consequently GVT init. Since it doesn't seem to be
+> necessary to have the blob contiguous, use vmalloc() instead to avoid
+> the issue.
 >=20
-> Ah, okay. That's probably easier to implement.
+> Signed-off-by: Igor Druzhinin <igor.druzhinin@citrix.com>
+> ---
+>  drivers/gpu/drm/i915/gvt/firmware.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 >=20
-> > > The latter could be useful as a way to maintain current dtb
-> > > files while splitting the source files into base and overlay dts
-> > > files.
-> > >
-> > > But no, let's not prepend this with 'linux'. It's not a property
-> > > specific for Linux to consume.
-> >
-> > It's not really about who consumes it.  It's about defining a
-> > namespace for the new property to exist in, since it's not part of a
-> > relevant standard (if we wanted to make it such, we should pin down
-> > what goes in there with much more precision).
->=20
-> I can't think of any cases of the 'linux' prefix not being about who
-> consumes it. And we often end up dropping 'linux' because it turns out
-> to not be Linux specific. I don't care to see u-boot,build-info,
-> freebsd,build-info, etc. when a given dtb can only have 1 of those.
+> diff --git a/drivers/gpu/drm/i915/gvt/firmware.c b/drivers/gpu/drm/i915/g=
+vt/firmware.c
+> index 049775e..b0c1fda 100644
+> --- a/drivers/gpu/drm/i915/gvt/firmware.c
+> +++ b/drivers/gpu/drm/i915/gvt/firmware.c
+> @@ -146,7 +146,7 @@ void intel_gvt_free_firmware(struct intel_gvt *gvt)
+>  		clean_firmware_sysfs(gvt);
+> =20
+>  	kfree(gvt->firmware.cfg_space);
+> -	kfree(gvt->firmware.mmio);
+> +	vfree(gvt->firmware.mmio);
+>  }
+> =20
+>  static int verify_firmware(struct intel_gvt *gvt,
+> @@ -229,7 +229,7 @@ int intel_gvt_load_firmware(struct intel_gvt *gvt)
+> =20
+>  	firmware->cfg_space =3D mem;
+> =20
+> -	mem =3D kmalloc(info->mmio_size, GFP_KERNEL);
+> +	mem =3D vmalloc(info->mmio_size);
+>  	if (!mem) {
+>  		kfree(path);
+>  		kfree(firmware->cfg_space);
+> --=20
+> 2.7.4
+>
 
-But all other vendor prefixes are about who generated or specified the
-information, not who consumes it, e.g. "ibm,XXX", "fsl,YYY", etc.
+Looks fine to me. Thanks!
 
-> My intent is this property name is added to the DT spec, but I don't
-> agree we should define what's in it beyond a string. It is information
-> that is useful for humans identifying what the dtb was built from.
->=20
-> Rob
->=20
+Reviewed-by: Zhenyu Wang <zhenyuw@linux.intel.com>
 
 --=20
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
+Open Source Technology Center, Intel ltd.
 
---b5sSX5qSQrSInIHt
+$gpg --keyserver wwwkeys.pgp.net --recv-keys 4D781827
+
+--vkogqOf2sHV7VnPd
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAEBCAAdFiEEdfRlhq5hpmzETofcbDjKyiDZs5IFAl4pK2wACgkQbDjKyiDZ
-s5LRthAAvnFwh1/QPJTb0Pk4hrdDgI4GYCc5H1CNQDjh9ROoEpnEJD2wOfkq7aGK
-qt0MyXulz6qZDYfmK19gCU+FSP76kij4OfX9aqh0C9gpnMRrqu9Shye0mbFT5iwR
-0DFHxmnwyc9xG6HGtVSi3i85yAOYOKubQ95uwgrj5jdXtONhCmYlnC6UeXd4ATDd
-ykta/FyqAR7lLOJz+9Mdu6lsWoeqOoKe4RWr5fGnQ9PFviJtxr0HCYGpwwuZ4+tQ
-sPzjBUZ8gJu5btg39Zok883IZi4iK148EpZH/9l+zlHfpMKzajx48cKrjgZO5Va4
-Rp0f6NOm8jBQZQ2DnuvN3BDR0WjAcGtUpyczxIf7LEPuLGd3e+LiAVrT7esbx2qc
-bi31Ci2IYed1YmtjfJLmaPmqtBU4/5f/IiYFD87c5JHJjTO33gp0eIELOG9FeQFF
-Yrgm1QknHecNd3BODgk8CObZnYGISy7d4hu1JY3/BMe1v2LCUZfahlyPIHF5qipK
-p98NCmbkzOjoE3C6J5RU7ewALKxauLJq1n1eUMBk8nR+TdsaxEIGkDVRA2upK0+U
-EgygPrWIu7LFp5cxMNEmZVXIHdzW+ZcCfOBxaO9Bp7zea5HTCLXS1HSFQbrc86wj
-nmcZjyWAqxtuxgjPOKdhEKLo0gO0c5jCnWQvecghxdNR7aFO/hs=
-=bV2o
+iF0EARECAB0WIQTXuabgHDW6LPt9CICxBBozTXgYJwUCXikqDwAKCRCxBBozTXgY
+J+4uAJ96YbLIY0cQA9wjsw2Zc/jXBf4gXwCeMpf5uwvjnowmgSrYjEle8958Ezw=
+=DlrF
 -----END PGP SIGNATURE-----
 
---b5sSX5qSQrSInIHt--
+--vkogqOf2sHV7VnPd--
