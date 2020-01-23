@@ -2,159 +2,118 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E964FC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 15:29:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDB7BC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 15:29:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA58B2064C
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 15:29:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDBD02064C
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 15:29:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kZmmZcLn"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="j1j6sCnf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728890AbgAWP3p (ORCPT
+        id S1728904AbgAWP3y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 10:29:45 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:33771 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726605AbgAWP3o (ORCPT
+        Thu, 23 Jan 2020 10:29:54 -0500
+Received: from merlin.infradead.org ([205.233.59.134]:34794 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727847AbgAWP3y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 10:29:44 -0500
-Received: by mail-lj1-f195.google.com with SMTP id y6so3954330lji.0
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jan 2020 07:29:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=hGe3quY2eM1LzswjO8uadoKz/qhRhLC7XH0fyTRmfIQ=;
-        b=kZmmZcLnBB/6+OoVmRStZyaY1vZDgraq1Y4osCxfYnkug17wt3Z8H7PIJcN2GPBnAp
-         O0y/+danf2adTO4N/3uPwFTKZzZ2XAMHrI/QYZ38X+z7i/93sU/f9DCLtKHS1qbH0ik/
-         0xhEeXZuAqhiMcAQ4VVYtrCesIN7j+KIF/yvhL5M2iAbnatzBMsy7SG/ES0Je+8g8MSN
-         2U4SMVkgzo63Ujfmq9u8ijkiLagrv3K5UcwkMELrv/DtlHlY7mzMuKxDd3CRu87y6Dcc
-         txdy/ilpzlbJBlJ1LdvNMA+whtA/9m/033U+eBsfZMA3X/vbeOOq8PNOxNn+GOvzC0yj
-         6d8A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=hGe3quY2eM1LzswjO8uadoKz/qhRhLC7XH0fyTRmfIQ=;
-        b=CdMEruS+2YpW9W0Ku3QZqom1idD+T90g1WlK0wLaC82iBjgA4AGFRylUEQzFMVtK4/
-         7qiIvLuiPcsXZ5ES18C2KQEV0OhFhNXSVWnfiTHlO9bxxKhWSMUS5LL0mZYJU6vYoIIL
-         oLq0jl7gXEEO9GvgiFKgiEH+BeAJm2dDRJgBGgR2Az/5xvqUl4fkyTnEr1Uk1+/XpeU/
-         a/e5GJCCotFFA6fNY84Y1gvopvEQpxx3cAcil0NymJf72R8fi4R8YFahdk6ILtqQ/xcI
-         5aKyvudDI6A3dhZCgUxCjTsM+R3KLpSxtVhvjGVmQizgmq9zOELjfN4P3uVwveYepF8u
-         1v9g==
-X-Gm-Message-State: APjAAAW/J54sEr9mJqsJQ7dLa6smlJxp9Ka6/lWv+iK6CrD9ZfrNclRj
-        6OvY0zcL3g33HwqHTdfGGomHf5mPOzm5lztmr6qOxg==
-X-Google-Smtp-Source: APXvYqyAo9QbCuj1ZRrdrCnwV0MRmiJ9cmkQGRldVrsy7R8hyn9coEr4fEciRA8CmIrO6Wc8kC6OmN+1PfuydxcHueI=
-X-Received: by 2002:a05:651c:111c:: with SMTP id d28mr24180974ljo.32.1579793382400;
- Thu, 23 Jan 2020 07:29:42 -0800 (PST)
+        Thu, 23 Jan 2020 10:29:54 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=B/n7W4E7uJv5pAkHx8ZqbqbrQSUi/FNUw9Ppcu+la6k=; b=j1j6sCnf43FehruEfnqskrYLt
+        Nn8vL0JG757sO7HS9jy/OW4qN7Xix2ztFpJGjhG0QLLNLKrSVprKwN1Sm3w4t2G1KuTivtLxuDNow
+        srmx8d4BRDA1cZVtL6pPeoES1PflMknut7Qo5+xQo4tgayMAJo90FilPtFtGDWghaDrVt4qeBqnX/
+        jkQYNsbBaH8pe2tklc/irJIS4pachSjxnlh9EF7llzHd7lOWKQaqSi5iO5UGtwVpOK2z8O/H++xNM
+        IUmNO6YlaNgdwixRiYPWm027TpZwMb8tRhf1G4ApegWcUN+G3gVCW7J+VmdIQ/F6/Es0/QM44NRFi
+        gDzwJ0FxA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iueQ6-0007ex-8F; Thu, 23 Jan 2020 15:29:22 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 2261E300693;
+        Thu, 23 Jan 2020 16:27:38 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 42C712B63FCAF; Thu, 23 Jan 2020 16:29:18 +0100 (CET)
+Date:   Thu, 23 Jan 2020 16:29:18 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Waiman Long <longman@redhat.com>
+Cc:     Alex Kogan <alex.kogan@oracle.com>, linux@armlinux.org.uk,
+        mingo@redhat.com, will.deacon@arm.com, arnd@arndb.de,
+        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, tglx@linutronix.de, bp@alien8.de,
+        hpa@zytor.com, x86@kernel.org, guohanjun@huawei.com,
+        jglauber@marvell.com, steven.sistare@oracle.com,
+        daniel.m.jordan@oracle.com, dave.dice@oracle.com
+Subject: Re: [PATCH v9 3/5] locking/qspinlock: Introduce CNA into the slow
+ path of qspinlock
+Message-ID: <20200123152918.GD14879@hirez.programming.kicks-ass.net>
+References: <20200115035920.54451-1-alex.kogan@oracle.com>
+ <20200115035920.54451-4-alex.kogan@oracle.com>
+ <d751a8ef-aae8-ca70-6a28-79dd8bee2324@redhat.com>
 MIME-Version: 1.0
-References: <20200121183748.68662-1-swboyd@chromium.org>
-In-Reply-To: <20200121183748.68662-1-swboyd@chromium.org>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 23 Jan 2020 16:29:31 +0100
-Message-ID: <CACRpkdbgfNuJCgOWMBGwf1FoF+9cpQACnGH7Uon5Y6X+kN+x_w@mail.gmail.com>
-Subject: Re: [PATCH] spmi: pmic-arb: Set lockdep class for hierarchical irq domains
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Brian Masney <masneyb@onstation.org>,
-        Lina Iyer <ilina@codeaurora.org>,
-        Maulik Shah <mkshah@codeaurora.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d751a8ef-aae8-ca70-6a28-79dd8bee2324@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 21, 2020 at 7:37 PM Stephen Boyd <swboyd@chromium.org> wrote:
+On Thu, Jan 23, 2020 at 09:15:55AM -0500, Waiman Long wrote:
+> On 1/14/20 10:59 PM, Alex Kogan wrote:
+> > +static int __init cna_init_nodes(void)
+> > +{
+> > +	unsigned int cpu;
+> > +
+> > +	/*
+> > +	 * this will break on 32bit architectures, so we restrict
+> > +	 * the use of CNA to 64bit only (see arch/x86/Kconfig)
+> > +	 */
+> > +	BUILD_BUG_ON(sizeof(struct cna_node) > sizeof(struct qnode));
+> > +	/* we store an ecoded tail word in the node's @locked field */
+> > +	BUILD_BUG_ON(sizeof(u32) > sizeof(unsigned int));
+> > +
+> > +	for_each_possible_cpu(cpu)
+> > +		cna_init_nodes_per_cpu(cpu);
+> > +
+> > +	return 0;
+> > +}
+> > +early_initcall(cna_init_nodes);
+> > +
+> 
+> I just realized that you shouldn't call cna_init_nodes as an
+> early_initcall. Instead,
+> 
+> > +/*
+> > + * Switch to the NUMA-friendly slow path for spinlocks when we have
+> > + * multiple NUMA nodes in native environment, unless the user has
+> > + * overridden this default behavior by setting the numa_spinlock flag.
+> > + */
+> > +void __init cna_configure_spin_lock_slowpath(void)
+> > +{
+> > +	if ((numa_spinlock_flag == 1) ||
+> > +	    (numa_spinlock_flag == 0 && nr_node_ids > 1 &&
+> > +		    pv_ops.lock.queued_spin_lock_slowpath ==
+> > +			native_queued_spin_lock_slowpath)) {
+> > +		pv_ops.lock.queued_spin_lock_slowpath =
+> > +		    __cna_queued_spin_lock_slowpath;
+> > +
+> > +		pr_info("Enabling CNA spinlock\n");
+> > +	}
+> > +}
+> 
+> call it when it is sure that CNA spinlock is going to be used. At this
+> point, the system is still in UP mode and the slowpath will not be called.
 
-> I see the following lockdep splat in the qcom pinctrl driver when
-> attempting to suspend the device.
->
->  WARNING: possible recursive locking detected
->  5.4.11 #3 Tainted: G        W
->  --------------------------------------------
->  cat/3074 is trying to acquire lock:
->  ffffff81f49804c0 (&irq_desc_lock_class){-.-.}, at: __irq_get_desc_lock+0x64/0x94
->
->  but task is already holding lock:
->  ffffff81f1cc10c0 (&irq_desc_lock_class){-.-.}, at: __irq_get_desc_lock+0x64/0x94
->
->  other info that might help us debug this:
->   Possible unsafe locking scenario:
->
->         CPU0
->         ----
->    lock(&irq_desc_lock_class);
->    lock(&irq_desc_lock_class);
->
->   *** DEADLOCK ***
->
->   May be due to missing lock nesting notation
->
->  6 locks held by cat/3074:
->   #0: ffffff81f01d9420 (sb_writers#7){.+.+}, at: vfs_write+0xd0/0x1a4
->   #1: ffffff81bd7d2080 (&of->mutex){+.+.}, at: kernfs_fop_write+0x12c/0x1fc
->   #2: ffffff81f4c322f0 (kn->count#337){.+.+}, at: kernfs_fop_write+0x134/0x1fc
->   #3: ffffffe411a41d60 (system_transition_mutex){+.+.}, at: pm_suspend+0x108/0x348
->   #4: ffffff81f1c5e970 (&dev->mutex){....}, at: __device_suspend+0x168/0x41c
->   #5: ffffff81f1cc10c0 (&irq_desc_lock_class){-.-.}, at: __irq_get_desc_lock+0x64/0x94
->
->  stack backtrace:
->  CPU: 5 PID: 3074 Comm: cat Tainted: G        W         5.4.11 #3
->  Hardware name: Google Cheza (rev3+) (DT)
->  Call trace:
->   dump_backtrace+0x0/0x174
->   show_stack+0x20/0x2c
->   dump_stack+0xc8/0x124
->   __lock_acquire+0x460/0x2388
->   lock_acquire+0x1cc/0x210
->   _raw_spin_lock_irqsave+0x64/0x80
->   __irq_get_desc_lock+0x64/0x94
->   irq_set_irq_wake+0x40/0x144
->   qpnpint_irq_set_wake+0x28/0x34
->   set_irq_wake_real+0x40/0x5c
->   irq_set_irq_wake+0x70/0x144
->   pm8941_pwrkey_suspend+0x34/0x44
->   platform_pm_suspend+0x34/0x60
->   dpm_run_callback+0x64/0xcc
->   __device_suspend+0x310/0x41c
->   dpm_suspend+0xf8/0x298
->   dpm_suspend_start+0x84/0xb4
->   suspend_devices_and_enter+0xbc/0x620
->   pm_suspend+0x210/0x348
->   state_store+0xb0/0x108
->   kobj_attr_store+0x14/0x24
->   sysfs_kf_write+0x4c/0x64
->   kernfs_fop_write+0x15c/0x1fc
->   __vfs_write+0x54/0x18c
->   vfs_write+0xe4/0x1a4
->   ksys_write+0x7c/0xe4
->   __arm64_sys_write+0x20/0x2c
->   el0_svc_common+0xa8/0x160
->   el0_svc_handler+0x7c/0x98
->   el0_svc+0x8/0xc
->
-> Set a lockdep class when we map the irq so that irq_set_wake() doesn't
-> warn about a lockdep bug that doesn't exist.
->
-> Fixes: 12a9eeaebba3 ("spmi: pmic-arb: convert to v2 irq interfaces to support hierarchical IRQ chips")
-> Cc: Douglas Anderson <dianders@chromium.org>
-> Cc: Brian Masney <masneyb@onstation.org>
-> Cc: Lina Iyer <ilina@codeaurora.org>
-> Cc: Maulik Shah <mkshah@codeaurora.org>
-> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
-
-LGTM
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-
-Yours,
-Linus Walleij
+Indeed, let me go fix that!
