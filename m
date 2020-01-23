@@ -2,166 +2,98 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4709EC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 16:55:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A148C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 16:56:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07A902071E
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 16:55:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="dRbH+Z4D"
+	by mail.kernel.org (Postfix) with ESMTP id D722B21D7E
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 16:56:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579798582;
+	bh=MSOvB9Ez+GU+Pkc0XJ8/972rCHvs2v7owDXEQdOJ5OQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=UWX5mTg/JMHPoQDDR5yv38FEMn2MRxcvAKXub8l2MzwHDGK+82+pzGqw6YNPsWSha
+	 3coRN82+J08b4j6l/G+TMPMIcueSOAfZ2OBRiKP2ehV9rkIl1c9P131kYaDgn12mBQ
+	 f4nLvUxOxzUzqmYvnx0+wZICns4vIyKDdMMsk0SA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729253AbgAWQzb (ORCPT
+        id S1729335AbgAWQ4V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 11:55:31 -0500
-Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:57621 "EHLO
-        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729221AbgAWQzb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 11:55:31 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1579798530; x=1611334530;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=mdM50JhuE89n4g3vElfEZYKWgxShNtcICnTpm8dSINE=;
-  b=dRbH+Z4DF8DslCf7wJ9xLuyIdT9NcZaLfWgtNYu4+jwpqGQPYyOmrQWF
-   sqfvhLRmrfN9Q9owtvIaK3lcBlTkfLY+2sB1RNxLP5sZJFibldiGtzr2j
-   UnvV/vylrpeKZtNaIoRXTPldYwTiLHPboq/6XS8Bodyk/AFIn7JWeDxCQ
-   Q=;
-IronPort-SDR: SLCpVvXbRwcr5o+gS8iV+L24OSauaZCgRuuGr8zRYDFBu0tEQzPVcKxVA5vPKgnveYbs03Y/w4
- PGw12I1RLZRg==
-X-IronPort-AV: E=Sophos;i="5.70,354,1574121600"; 
-   d="scan'208";a="21995785"
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1a-807d4a99.us-east-1.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 23 Jan 2020 16:55:18 +0000
-Received: from EX13MTAUWC001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
-        by email-inbound-relay-1a-807d4a99.us-east-1.amazon.com (Postfix) with ESMTPS id F0230A2AE9;
-        Thu, 23 Jan 2020 16:55:08 +0000 (UTC)
-Received: from EX13D20UWC001.ant.amazon.com (10.43.162.244) by
- EX13MTAUWC001.ant.amazon.com (10.43.162.135) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Thu, 23 Jan 2020 16:55:07 +0000
-Received: from 38f9d3867b82.ant.amazon.com (10.43.161.78) by
- EX13D20UWC001.ant.amazon.com (10.43.162.244) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Thu, 23 Jan 2020 16:55:01 +0000
-Subject: Re: [PATCH v16.1 0/9] mm / virtio: Provide support for free page
- reporting
-To:     Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        Alexander Duyck <alexander.duyck@gmail.com>,
-        <kvm@vger.kernel.org>, <mst@redhat.com>,
-        <linux-kernel@vger.kernel.org>, <willy@infradead.org>,
-        <mhocko@kernel.org>, <linux-mm@kvack.org>,
-        <akpm@linux-foundation.org>, <mgorman@techsingularity.net>,
-        <vbabka@suse.cz>
-CC:     <yang.zhang.wz@gmail.com>, <nitesh@redhat.com>,
-        <konrad.wilk@oracle.com>, <david@redhat.com>, <pagupta@redhat.com>,
-        <riel@surriel.com>, <lcapitulino@redhat.com>,
-        <dave.hansen@intel.com>, <wei.w.wang@intel.com>,
-        <aarcange@redhat.com>, <pbonzini@redhat.com>,
-        <dan.j.williams@intel.com>, <osalvador@suse.de>,
-        "Paterson-Jones, Roland" <rolandp@amazon.com>,
-        <hannes@cmpxchg.org>, <hare@suse.com>
-References: <20200122173040.6142.39116.stgit@localhost.localdomain>
- <914aa4c3-c814-45e0-830b-02796b00b762@amazon.com>
- <af0b12780092e0007ec9e6dbfc92bc15b604b8f4.camel@linux.intel.com>
-From:   Alexander Graf <graf@amazon.com>
-Message-ID: <ad73c0c8-3a9c-8ffd-9a31-7e9a5cd5f246@amazon.com>
-Date:   Thu, 23 Jan 2020 17:54:59 +0100
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
- Gecko/20100101 Thunderbird/68.3.1
+        Thu, 23 Jan 2020 11:56:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45522 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729308AbgAWQ4U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jan 2020 11:56:20 -0500
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E2BB021569;
+        Thu, 23 Jan 2020 16:56:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579798580;
+        bh=MSOvB9Ez+GU+Pkc0XJ8/972rCHvs2v7owDXEQdOJ5OQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=q+TtOV4tbUrPSn3Gk4mwwbwCxHA8ZjpNbBNWtTs3aXqLLcoSrO/LjJAzTiG4nQxCd
+         mL63iyR5GiKt9QQuNj+uC/+aRwbbnxz/27bWPGf8znZzWIktJXWAhcu/hV+7oMKR4+
+         se+rQLlgCsD3delxx1vWAqt6fqgUIK1zUygX3/kQ=
+Date:   Thu, 23 Jan 2020 16:56:15 +0000
+From:   Will Deacon <will@kernel.org>
+To:     Qian Cai <cai@lca.pw>
+Cc:     peterz@infradead.org, longman@redhat.com, mingo@redhat.com,
+        catalin.marinas@arm.com, clang-built-linux@googlegroups.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH -next] arm64/spinlock: fix a -Wunused-function warning
+Message-ID: <20200123165614.GA20126@willie-the-truck>
+References: <20200123162945.7705-1-cai@lca.pw>
 MIME-Version: 1.0
-In-Reply-To: <af0b12780092e0007ec9e6dbfc92bc15b604b8f4.camel@linux.intel.com>
-Content-Language: en-US
-X-Originating-IP: [10.43.161.78]
-X-ClientProxiedBy: EX13D28UWB004.ant.amazon.com (10.43.161.56) To
- EX13D20UWC001.ant.amazon.com (10.43.162.244)
-Content-Type: text/plain; charset="utf-8"; format="flowed"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200123162945.7705-1-cai@lca.pw>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-CgpPbiAyMy4wMS4yMCAxNzoyNiwgQWxleGFuZGVyIER1eWNrIHdyb3RlOgo+IE9uIFRodSwgMjAy
-MC0wMS0yMyBhdCAxMToyMCArMDEwMCwgQWxleGFuZGVyIEdyYWYgd3JvdGU6Cj4+IEhpIEFsZXgs
-Cj4+Cj4+IE9uIDIyLjAxLjIwIDE4OjQzLCBBbGV4YW5kZXIgRHV5Y2sgd3JvdGU6ClsuLi5dCj4+
-PiBUaGUgb3ZlcmFsbCBndWVzdCBzaXplIGlzIGtlcHQgZmFpcmx5IHNtYWxsIHRvIG9ubHkgYSBm
-ZXcgR0Igd2hpbGUgdGhlIHRlc3QKPj4+IGlzIHJ1bm5pbmcuIElmIHRoZSBob3N0IG1lbW9yeSB3
-ZXJlIG92ZXJzdWJzY3JpYmVkIHRoaXMgcGF0Y2ggc2V0IHNob3VsZAo+Pj4gcmVzdWx0IGluIGEg
-cGVyZm9ybWFuY2UgaW1wcm92ZW1lbnQgYXMgc3dhcHBpbmcgbWVtb3J5IGluIHRoZSBob3N0IGNh
-biBiZQo+Pj4gYXZvaWRlZC4KPj4KPj4gSSByZWFsbHkgbGlrZSB0aGUgYXBwcm9hY2ggb3ZlcmFs
-bC4gVm9sdW50YXJpbHkgcHJvcGFnYXRpbmcgZnJlZSBtZW1vcnkKPj4gZnJvbSBhIGd1ZXN0IHRv
-IHRoZSBob3N0IGhhcyBiZWVuIGEgc29yZSBwb2ludCBldmVyIHNpbmNlIEtWTSB3YXMKPj4gYXJv
-dW5kLiBUaGlzIHNvbHV0aW9uIGxvb2tzIGxpa2UgYSB2ZXJ5IGVsZWdhbnQgd2F5IHRvIGRvIHNv
-Lgo+Pgo+PiBUaGUgYmlnIHBpZWNlIEknbSBtaXNzaW5nIGlzIHRoZSBwYWdlIGNhY2hlLiBMaW51
-eCB3aWxsIGJ5IGRlZmF1bHQgdHJ5Cj4+IHRvIGtlZXAgdGhlIGZyZWUgbGlzdCBhcyBzbWFsbCBh
-cyBpdCBjYW4gaW4gZmF2b3Igb2YgcGFnZSBjYWNoZSwgc28gbW9zdAo+PiBvZiB0aGUgYmVuZWZp
-dCBvZiB0aGlzIHBhdGNoIHNldCB3aWxsIGJlIHZvaWQgaW4gcmVhbCB3b3JsZCBzY2VuYXJpb3Mu
-Cj4gCj4gQWdyZWVkLiBUaGlzIGlzIGEgdGhlIG5leHQgcGllY2Ugb2YgdGhpcyBJIHBsYW4gdG8g
-d29yayBvbiBvbmNlIHRoaXMgaXMKPiBhY2NlcHRlZC4gRm9yIG5vdyB0aGUgcXVpY2sgYW5kIGRp
-cnR5IGFwcHJvYWNoIGlzIHRvIGVzc2VudGlhbGx5IG1ha2UgdXNlCj4gb2YgdGhlIC9wcm9jL3N5
-cy92bS9kcm9wX2NhY2hlcyBpbnRlcmZhY2UgaW4gdGhlIGd1ZXN0IGJ5IGVpdGhlciBwdXR0aW5n
-Cj4gaXQgaW4gYSBjcm9uam9iIHNvbWV3aGVyZSBvciB0byBoYXZlIGl0IGFmdGVyIG1lbW9yeSBp
-bnRlbnNpdmUgd29ya2xvYWRzLgo+IAo+PiBUcmFkaXRpb25hbGx5LCB0aGlzIHdhcyBzb2x2ZWQg
-YnkgY3JlYXRpbmcgcHJlc3N1cmUgZnJvbSB0aGUgaG9zdAo+PiB0aHJvdWdoIHZpcnRpby1iYWxs
-b29uOiBFeGFjdGx5IHRoZSBwaWVjZSB0aGF0IHRoaXMgcGF0Y2ggc2V0IGdldHMgYXdheQo+PiB3
-aXRoLiBJIG5ldmVyIGxpa2VkICJiYWxsb29uaW5nIiwgYmVjYXVzZSB0aGUgaG9zdCBoYXMgdmVy
-eSBsaW1pdGVkCj4+IHZpc2liaWxpdHkgaW50byB0aGUgYWN0dWFsIG1lbW9yeSB1dGlsaXR5IG9m
-IGl0cyBndWVzdHMuIFNvIGxlYXZpbmcgdGhlCj4+IGRlY2lzaW9uIG9uIGhvdyBtdWNoIG1lbW9y
-eSBpcyBhY3R1YWxseSBuZWVkZWQgYXQgYSBnaXZlbiBwb2ludCBpbiB0aW1lCj4+IHNob3VsZCBp
-ZGVhbGx5IHN0YXkgd2l0aCB0aGUgZ3Vlc3QuCj4+Cj4+IFdoYXQgd291bGQga2VlcCB1cyBmcm9t
-IGFwcGx5aW5nIHRoZSBwYWdlIGhpbnRpbmcgYXBwcm9hY2ggdG8gaW5hY3RpdmUsCj4+IGNsZWFu
-IHBhZ2UgY2FjaGUgcGFnZXM/IFdpdGggd3JpdGViYWNrIGluIHBsYWNlIGFzIHdlbGwsIHdlIHdv
-dWxkIHNsb3dseQo+PiBwcm9wYWdhdGUgcGFnZXMgZnJvbQo+Pgo+PiAgICAgZGlydHkgLT4gY2xl
-YW4gLT4gY2xlYW4sIGluYWN0aXZlIC0+IGZyZWUgLT4gaG9zdCBvd25lZAo+Pgo+PiB3aGljaCBn
-aXZlcyBhIGd1ZXN0IGEgbmF0dXJhbCBwYXRoIHRvIGdpdmUgdXAgIm5vdCBpbXBvcnRhbnQiIG1l
-bW9yeS4KPiAKPiBJIGNvbnNpZGVyZWQgc29tZXRoaW5nIHNpbWlsYXIuIEJhc2ljYWxseSBvbmUg
-dGhvdWdodCBJIGhhZCB3YXMgdG8KPiBlc3NlbnRpYWxseSBsb29rIGF0IHB1dHRpbmcgdG9nZXRo
-ZXIgc29tZSBzb3J0IG9mIGVwb2NoLiBXaGVuIHRoZSBob3N0IGlzCj4gdW5kZXIgbWVtb3J5IHBy
-ZXNzdXJlIGl0IHdvdWxkIG5lZWQgdG8gc29tZWhvdyBub3RpZnkgdGhlIGd1ZXN0IGFuZCB0aGVu
-Cj4gdGhlIGd1ZXN0IHdvdWxkIHN0YXJ0IG1vdmluZyB0aGUgZXBvY2ggZm9yd2FyZCBzbyB0aGF0
-IHdlIHN0YXJ0IGV2aWN0aW5nCj4gcGFnZXMgb3V0IG9mIHRoZSBwYWdlIGNhY2hlIHdoZW4gdGhl
-IGhvc3QgaXMgdW5kZXIgbWVtb3J5IHByZXNzdXJlLgoKSSB0aGluayB3ZSB3YW50IHRvIGNvbnNp
-ZGVyIGFuIGludGVyZmFjZSBpbiB3aGljaCB0aGUgaG9zdCBhY3RpdmVseSBhc2tzIApndWVzdHMg
-dG8gcHVyZ2UgcGFnZXMgdG8gYmUgb24gdGhlIHNhbWUgbGluZSBhcyBzd2FwcGluZzogVGhlIGxh
-c3QgbGluZSAKb2YgZGVmZW5zZS4KCkluIHRoZSBub3JtYWwgbW9kZSBvZiBvcGVyYXRpb24sIHlv
-dSBzdGlsbCB3YW50IHRvIHNocmluayBkb3duIAp2b2x1bnRhcmlseSwgc28gdGhhdCBldmVyeW9u
-ZSBjb29wZXJhdGl2ZWx5IHRyaWVzIHRvIG1ha2UgZnJlZSBmb3IgbmV3IApndWVzdHMgeW91IGNv
-dWxkIHBvdGVudGlhbGx5IHJ1biBvbiB0aGUgc2FtZSBob3N0LgoKSWYgeW91IHN0YXJ0IHRvIGFw
-cGx5IHByZXNzdXJlIHRvIGd1ZXN0cyB0byBmaW5kIG91dCBvZiB0aGV5IG1pZ2h0IGhhdmUgCnNv
-bWUgcGFnZXMgdG8gc3BhcmUsIHdlJ3JlIGFsbW9zdCBiYWNrIHRvIHRoZSBvbGQgc3R5bGUgYmFs
-bG9vbmluZyBhcHByb2FjaC4KCkJ0dywgaGF2ZSB5b3UgZXZlciBsb29rZWQgYXQgQ01NMiBbMV0/
-IFdpdGggdGhhdCwgdGhlIGhvc3QgY2FuIAplc3NlbnRpYWxseSBqdXN0ICJzdGVhbCIgcGFnZXMg
-ZnJvbSB0aGUgZ3Vlc3Qgd2hlbiBpdCBuZWVkcyBhbnksIHdpdGhvdXQgCnRoZSBuZWVkIHRvIGV4
-ZWN1dGUgdGhlIGd1ZXN0IG1lYW53aGlsZS4gVGhhdCBtZWFucyBpbnNpZGUgdGhlIGhvc3QgCnN3
-YXBwaW5nIHBhdGgsIENNTTIgY2FuIGp1c3QgZXZpY3QgZ3Vlc3QgcGFnZSBjYWNoZSBwYWdlcyBh
-cyBlYXNpbHkgYXMgCndlIGV2aWN0IGhvc3QgcGFnZSBjYWNoZSBwYWdlcy4gVG8gbWUsIHRoYXQn
-cyBldmVuIG1vcmUgYXR0cmFjdGl2ZSBpbiAKdGhlIHN3YXAgLyBlbWVyZ2VuY3kgY2FzZSB0aGFu
-IGFuIGludGVyZmFjZSB3aGljaCByZXF1aXJlcyB0aGUgZ3Vlc3QgdG8gCnByb2FjdGl2ZWx5IGV4
-ZWN1dGUgd2hpbGUgd2UgYXJlIGluIGEgbG93IG1lbSBzaXR1YXRpb24uCgo+PiBUaGUgYmlnIHBy
-b2JsZW0gSSBzZWUgaXMgdGhhdCB3aGF0IEkgcmVhbGx5IHdhbnQgZnJvbSBhIHVzZXIncyBwb2lu
-dCBvZgo+PiB2aWV3IGlzIGEgdHVuZWFibGUgdGhhdCBzYXlzICJBdXRvbWF0aWNhbGx5IGZyZWUg
-Y2xlYW4gcGFnZSBjYWNoZSBwYWdlcwo+PiB0aGF0IHdlcmUgbm90IGFjY2Vzc2VkIGluIHRoZSBs
-YXN0IFggbWludXRlcyIuIE90aGVyd2lzZSB3ZSBtYXkgcnVuIGludG8KPj4gdGhlIHJpc2sgb2Yg
-ZXZpY3Rpbmcgc29tZSB0aW1lcyBpbiB1c2UgcGFnZSBjYWNoZSBwYWdlcy4KPj4KPj4gSSBoYXZl
-IGEgaGFyZCB0aW1lIGdyYXNwaW5nIHRoZSBtbSBjb2RlIHRvIHVuZGVyc3RhbmQgaG93IGhhcmQg
-dGhhdAo+PiB3b3VsZCBiZSB0byBpbXBsZW1lbnQgdGhhdCB0aG91Z2ggOikuCj4+Cj4+Cj4+IEFs
-ZXgKPiAKPiBZZWFoLCBJIGFtIG5vdCBleGFjdGx5IGFuIGV4cGVydCBvbiB0aGlzIGVpdGhlciBh
-cyBJIGhhdmUgb25seSBiZWVuCj4gd29ya2luZyBpbnQgaGUgTU0gdHJlZSBmb3IgYWJvdXQgYSB5
-ZWFyIG5vdy4KPiAKPiBJIGhhdmUgc3VibWl0dGVkIHRoaXMgYXMgYSB0b3BpYyBmb3IgTFNGL01N
-IHN1bW1pdFsxXSBhbmQgSSBhbSBob3BpbmcgdG8KPiBnZXQgc29tZSBmZWVkYmFjayBvbiB0aGUg
-YmVzdCB3YXkgdG8gYXBwbHkgcHJvYWN0aXZlIG1lbW9yeSBwcmVzc3VyZSBhcwo+IG9uZSBvZiB0
-aGUgc3VidG9waWNzIGlmIGl0IGlzIHNlbGVjdGVkLgoKVGhhdCdzIGEgZ3JlYXQgaWRlYSEgSGFu
-bmVzIGp1c3QgbWVudGlvbmVkIExTRi9NTSBhcyBhIGdvb2QgZm9ydW0gdG8gCmRpc2N1c3MgdGhp
-cyBhdCBsYXN0IG5pZ2h0LCBJJ20gZ2xhZCB0byBzZWUgeW91IGFscmVhZHkgcGlja2VkIHVwIG9u
-IGl0IDopLgoKCkFsZXgKClsxXSBodHRwczovL3d3dy5rZXJuZWwub3JnL2RvYy9vbHMvMjAwNi9v
-bHMyMDA2djItcGFnZXMtMzIxLTMzNi5wZGYKCgoKQW1hem9uIERldmVsb3BtZW50IENlbnRlciBH
-ZXJtYW55IEdtYkgKS3JhdXNlbnN0ci4gMzgKMTAxMTcgQmVybGluCkdlc2NoYWVmdHNmdWVocnVu
-ZzogQ2hyaXN0aWFuIFNjaGxhZWdlciwgSm9uYXRoYW4gV2Vpc3MKRWluZ2V0cmFnZW4gYW0gQW10
-c2dlcmljaHQgQ2hhcmxvdHRlbmJ1cmcgdW50ZXIgSFJCIDE0OTE3MyBCClNpdHo6IEJlcmxpbgpV
-c3QtSUQ6IERFIDI4OSAyMzcgODc5CgoK
+On Thu, Jan 23, 2020 at 11:29:45AM -0500, Qian Cai wrote:
+> The commit f5bfdc8e3947 ("locking/osq: Use optimized spinning loop for
+> arm64") introduced a warning from Clang because vcpu_is_preempted() is
+> compiled away,
+> 
+> kernel/locking/osq_lock.c:25:19: warning: unused function 'node_cpu'
+> [-Wunused-function]
+> static inline int node_cpu(struct optimistic_spin_node *node)
+>                   ^
+> 1 warning generated.
+> 
+> Since vcpu_is_preempted() had already been defined in
+> include/linux/sched.h as false, just comment out the redundant macro, so
+> it can still be served for the documentation purpose.
+> 
+> Fixes: f5bfdc8e3947 ("locking/osq: Use optimized spinning loop for arm64")
+> Signed-off-by: Qian Cai <cai@lca.pw>
+> ---
+>  arch/arm64/include/asm/spinlock.h | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm64/include/asm/spinlock.h b/arch/arm64/include/asm/spinlock.h
+> index 102404dc1e13..b05f82e8ba19 100644
+> --- a/arch/arm64/include/asm/spinlock.h
+> +++ b/arch/arm64/include/asm/spinlock.h
+> @@ -17,7 +17,8 @@
+>   *
+>   * See:
+>   * https://lore.kernel.org/lkml/20200110100612.GC2827@hirez.programming.kicks-ass.net
+> + *
+> + * #define vcpu_is_preempted(cpu)	false
+>   */
+> -#define vcpu_is_preempted(cpu)	false
 
+Damn, the whole point of this was to warn in the case that
+vcpu_is_preempted() does get defined for arm64. Can we force it to evaluate
+the macro argument instead (e.g. ({ (cpu), false; }) or something)?
+
+Will
