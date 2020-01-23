@@ -6,94 +6,90 @@ X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C43AC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 15:26:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD741C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 15:28:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 337EB2064C
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 15:26:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94E8F2064C
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 15:28:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Zc2zmdqV"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iGZFnSn+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728916AbgAWP0Z (ORCPT
+        id S1728816AbgAWP2l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 10:26:25 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:37164 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726968AbgAWP0Y (ORCPT
+        Thu, 23 Jan 2020 10:28:41 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:46414 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726792AbgAWP2l (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 10:26:24 -0500
-Received: by mail-lj1-f196.google.com with SMTP id o13so3913278ljg.4
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jan 2020 07:26:23 -0800 (PST)
+        Thu, 23 Jan 2020 10:28:41 -0500
+Received: by mail-lj1-f194.google.com with SMTP id m26so3855994ljc.13
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jan 2020 07:28:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=JixvNa3T/Sm8CzR3MAMKQQKV9fkYDtItlBYnPybWoa4=;
-        b=Zc2zmdqVVcMyTbKJk/OfPLvHkbDHUuyhXy1GzDGIH+DWyi7nlu+TzXS047DhqM4iYL
-         k6DlWXmVECAGHakWQb6g4YBiX/aDLjp7jzYVfdCBTpYIClBMko+/vU8CyzRnbvn/+CkD
-         A9Din0hPMTKhHDbByOcZGCXnF/wWejyE7BPZoVm+ev0SZMMmc4krnSBxYkZOzuyKdqP2
-         c3pRw/8my1rLDkUyZuNSPhXOi4Xp8B+Mglx0qvtoYt8850IMiDGtB1vUjirnqk99mFGW
-         vT1hBGvsTrwOWGUixxHPnxQxw1ztDctwT5yflrguwXwwv8D6cMdSAqP1vsQ+hLQ1vk9K
-         LCWg==
+        bh=+Qr9BdbkkgkuLaABxg1maqPFbi8IH41Lo7L1VxAqiyw=;
+        b=iGZFnSn+vi28+z3do2lW+WbQQJIwuMVk+nTR6JGwyfDav1RKSSd7CcJ6KK6LcpVCo2
+         0fiNppfjuAfjdpSLuQenKgpCS4QV+Vufpcl2FY4z+ARDLnP0QoKMSlqBVFoiIMk4AcaP
+         lY10C7psqauI55WjsxDwb5YlBe6knaX/slmuyLZvhmUMmFDoRBFAadi1km59bjfF5J4d
+         kWzkfEIo6Hyh8axepy05Q0Y0SukHwLD8Y5KSTFVXhwDfNAMU65YRWb91H4NB0tbBm1YZ
+         /lXTng/W2mJRJ1Q/Wi2BdLzvpkQQ6oKyIgnKelSCPWF84hqCw0+9+1BojMj7gyxKItx7
+         jPEA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=JixvNa3T/Sm8CzR3MAMKQQKV9fkYDtItlBYnPybWoa4=;
-        b=V1M3UEOma3M12adBcCn3rtfN/NMmgKY3LEAbFf+LWHm5mfcuf8iyuTj+QSvwNZzlli
-         da3WE3k+wHAN3NJrXoWvQB93DDJzUewqPey4s/NAjWUuFmPC6oqjBuzYvj6be8IjZVl7
-         DlyBmn3kWNPr7zz4SsClN0no4Jb8AsQeGujPbtxSZLAINF5mHoNJZeSzbxEoFypiySoR
-         xopqfscYa2ySlHAO+RzXiaDe2vyy1T2LInzqQ25ZDDi/d/yQUqoqNFZyec9UxqL+ykq1
-         dhh1jAjtWCIeR5yZgXtTn9hcFHpAHr7x6i8AV9EsDG3xLft+04A/xrtYT0aHEw0+HsA6
-         IreQ==
-X-Gm-Message-State: APjAAAVODik376Ks0q63JQbchlX7qD3UDC/uuPx2BY19jg9jj0ETFyXO
-        gGMt4axuhbkXY4LcU0J5xjJASSZ5I/52A+lIZ+djZQ==
-X-Google-Smtp-Source: APXvYqxCD/64PYoNS7bPDfDqCy95gkiLu2aKyXaqySoWYyeZZbHp2gAVXZpYdev9k0/srjWcnvPk0rqLcDqsBw9H4qs=
-X-Received: by 2002:a2e:960f:: with SMTP id v15mr23760075ljh.265.1579793182804;
- Thu, 23 Jan 2020 07:26:22 -0800 (PST)
+        bh=+Qr9BdbkkgkuLaABxg1maqPFbi8IH41Lo7L1VxAqiyw=;
+        b=qChdnpytxiJh0c9F3BqGNRALO50aR8zuZnvJGHh6O/wQJ6Hg4k03QYEfabPj/a+A5C
+         3iiGta5Tlg85L4RnlWaB/5toVOrE8pBkMFCre0J8bwEwUZ6GZwz6isDJ97jif9CDW7h7
+         vpkeq65rFRySbpsE0CIIFydbTlDRr3aOn/gBAU/Vgr1iPaf8JufQnZmBXz4ElolO1hDX
+         h7/UPJHAhgLDMFVWY5m2MfHMxmPVGpsWuuIQzfPGhhgni5BhuXmRPz2mXal4VdmjWj+l
+         Sylzlq/TJHUxTKzucxfkelmTN7qjDqsQl293vBvUdXczlQRcfdA80Vzkr/cwLnG8u7pp
+         DCRg==
+X-Gm-Message-State: APjAAAVr45jCjvQPd4sXTiP6e/VS8770Y7evPnfaXoU7wWbqX8j0EQih
+        MJcbCRf6yavbeGHTkprBVb3Ym/3frmKkRPECv9Wtfg==
+X-Google-Smtp-Source: APXvYqz9aT6DBqL1eSjmsf3APA52AKWR+11VI/tOJBRr1Zl3oa9tmU2n9K3uxQplpdd8BuXZX19EDE3gZHHtzgDtTcc=
+X-Received: by 2002:a2e:81c3:: with SMTP id s3mr23654693ljg.168.1579793319446;
+ Thu, 23 Jan 2020 07:28:39 -0800 (PST)
 MIME-Version: 1.0
-References: <20200121001216.15964-1-dan.callaghan@opengear.com>
-In-Reply-To: <20200121001216.15964-1-dan.callaghan@opengear.com>
+References: <20200121161757.1498082-1-colin.king@canonical.com>
+In-Reply-To: <20200121161757.1498082-1-colin.king@canonical.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 23 Jan 2020 16:26:11 +0100
-Message-ID: <CACRpkdYGED-YU8PGUFwK-Arrs0Vp1=Oc-Nx=MvjuygLJvzQPkg@mail.gmail.com>
-Subject: Re: [PATCH RESEND] gpiolib: hold gpio devices lock until ->descs
- array is initialised
-To:     Dan Callaghan <dan.callaghan@opengear.com>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
+Date:   Thu, 23 Jan 2020 16:28:28 +0100
+Message-ID: <CACRpkdYzd13xu9ETj_a4eWrm4FMrVnF1NQ5G+=d_Ch=6SzRoxA@mail.gmail.com>
+Subject: Re: [PATCH][next] iio: st_sensors: handle memory allocation failure
+ to fix null pointer dereference
+To:     Colin King <colin.king@canonical.com>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        kernel-janitors@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 21, 2020 at 1:13 AM Dan Callaghan
-<dan.callaghan@opengear.com> wrote:
+On Tue, Jan 21, 2020 at 5:18 PM Colin King <colin.king@canonical.com> wrote:
 
-> If a driver consuming the GPIO chip is being probed at the same time as
-> the GPIO driver is registering the chip, it is possible for the
-> consuming driver to see the ->descs array in an uninitialised state.
-> For example, the gpio-keys-polled driver can fail like this:
+> From: Colin Ian King <colin.king@canonical.com>
 >
->     kernel: gpiod_request: invalid GPIO (no device)
->     kernel: gpio-keys-polled PRP0001:07: failed to get gpio: -22
->     kernel: gpio-keys-polled: probe of PRP0001:07 failed with error -22
+> A null pointer deference on pdata can occur if the allocation of
+> pdata fails.  Fix this by adding a null pointer check and handle
+> the -ENOMEM failure in the caller.
 >
-> This patch makes gpiochip_add() hold the lock protecting gpio_devices
-> until it has finished setting desc->gdev on the newly inserted list
-> entry.
->
-> Signed-off-by: Dan Callaghan <dan.callaghan@opengear.com>
-> ---
-> Resending this one because I failed to cc the maintainers on the
-> original posting, sorry about that.
+> Addresses-Coverity: ("Dereference null return value")
 
-This makes a lot of sense, I'm impressed that you managed to
-provoke this error!
+That's a weirdo tag, but I suppose you have aligned with the maintainers
+about this.
 
-Patch applied.
+> Fixes: 3ce85cc4fbb7 ("iio: st_sensors: get platform data from device tree")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
 Yours,
 Linus Walleij
