@@ -2,135 +2,91 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E471C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 12:36:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A45A2C33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 12:42:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 128572253D
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 12:36:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579782993;
-	bh=6MZipMcG3CnFPAqLgP1ekrnzJKc9XV/gDlgoc18BAZQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=Twb8RjQgAy1qkYnpoLvTT9PQRJi9ipchOtodPo2CEZPmOMa/i8vt9SnVZEsV01DV3
-	 3l4RmjoKHo3ZK1mrxQyeAZ23XBlnm8tyGRcdr6eSpIkw0kTQgWyYfVnC+mdmE1NbSE
-	 PxxXX9r4yJEYPNF5oJ88Maq3lrhg+Hr3ajljc9/Y=
+	by mail.kernel.org (Postfix) with ESMTP id 780FC24655
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 12:42:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728779AbgAWMgc (ORCPT
+        id S1726885AbgAWMmv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 07:36:32 -0500
-Received: from foss.arm.com ([217.140.110.172]:39016 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726170AbgAWMgc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 07:36:32 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 57A8D328;
-        Thu, 23 Jan 2020 04:36:31 -0800 (PST)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CA11D3F6C4;
-        Thu, 23 Jan 2020 04:36:30 -0800 (PST)
-Date:   Thu, 23 Jan 2020 12:36:29 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Tomer Maimon <tmaimon77@gmail.com>
-Cc:     avifishman70@gmail.com, benjaminfair@google.com,
-        broonie@kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
-        Mark Brown <broonie@kernel.org>, mark.rutland@arm.com,
-        openbmc@lists.ozlabs.org, robh+dt@kernel.org,
-        Rob Herring <robh@kernel.org>, tali.perry1@gmail.com,
-        venture@google.com, yuenn@google.com
-Subject: Applied "dt-binding: spi: add NPCM PSPI reset binding" to the spi tree
-In-Reply-To: <20200115162301.235926-4-tmaimon77@gmail.com>
-Message-Id: <applied-20200115162301.235926-4-tmaimon77@gmail.com>
-X-Patchwork-Hint: ignore
+        Thu, 23 Jan 2020 07:42:51 -0500
+Received: from alexa-out-blr-01.qualcomm.com ([103.229.18.197]:27165 "EHLO
+        alexa-out-blr-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726170AbgAWMmv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jan 2020 07:42:51 -0500
+Received: from ironmsg01-blr.qualcomm.com ([10.86.208.130])
+  by alexa-out-blr-01.qualcomm.com with ESMTP/TLS/AES256-SHA; 23 Jan 2020 18:12:15 +0530
+Received: from c-rojay-linux.qualcomm.com ([10.206.21.80])
+  by ironmsg01-blr.qualcomm.com with ESMTP; 23 Jan 2020 18:11:54 +0530
+Received: by c-rojay-linux.qualcomm.com (Postfix, from userid 88981)
+        id C230A26EB; Thu, 23 Jan 2020 18:11:53 +0530 (IST)
+From:   Roja Rani Yarubandi <rojay@codeaurora.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     akashast@codeaurora.org, msavaliy@qti.qualcomm.com,
+        mgautam@codeaurora.org, skakit@codeaurora.org,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Jiri Slaby <jslaby@suse.com>, linux-arm-msm@vger.kernel.org,
+        linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Roja Rani Yarubandi <rojay@codeaurora.org>
+Subject: [PATCH 1/1] tty: serial: qcom_geni_serial: Configure UART_IO_MACRO_CTRL register
+Date:   Thu, 23 Jan 2020 18:11:50 +0530
+Message-Id: <20200123124150.19176-2-rojay@codeaurora.org>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200123124150.19176-1-rojay@codeaurora.org>
+References: <20200123124150.19176-1-rojay@codeaurora.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The patch
+Configure UART_IO_MACRO_CTRL register if UART lines are swapped.
 
-   dt-binding: spi: add NPCM PSPI reset binding
-
-has been applied to the spi tree at
-
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-5.6
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
-From a5362b84bdff1def10c136e36ef2126f7f545b2c Mon Sep 17 00:00:00 2001
-From: Tomer Maimon <tmaimon77@gmail.com>
-Date: Wed, 15 Jan 2020 18:23:00 +0200
-Subject: [PATCH] dt-binding: spi: add NPCM PSPI reset binding
-
-Add NPCM Peripheral SPI reset binding documentation,
-Removing unnecessary aliases use.
-
-Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
-Acked-by: Rob Herring <robh@kernel.org>
-Link: https://lore.kernel.org/r/20200115162301.235926-4-tmaimon77@gmail.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Roja Rani Yarubandi <rojay@codeaurora.org>
 ---
- .../devicetree/bindings/spi/nuvoton,npcm-pspi.txt    | 12 ++----------
- 1 file changed, 2 insertions(+), 10 deletions(-)
+ drivers/tty/serial/qcom_geni_serial.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/spi/nuvoton,npcm-pspi.txt b/Documentation/devicetree/bindings/spi/nuvoton,npcm-pspi.txt
-index 1fd9a4406a1d..b98203ca656d 100644
---- a/Documentation/devicetree/bindings/spi/nuvoton,npcm-pspi.txt
-+++ b/Documentation/devicetree/bindings/spi/nuvoton,npcm-pspi.txt
-@@ -12,6 +12,7 @@ Required properties:
-  - clock-names: Should be "clk_apb5".
-  - pinctrl-names : a pinctrl state named "default" must be defined.
-  - pinctrl-0 : phandle referencing pin configuration of the device.
-+ - resets : phandle to the reset control for this device.
-  - cs-gpios: Specifies the gpio pins to be used for chipselects.
-             See: Documentation/devicetree/bindings/spi/spi-bus.txt
+diff --git a/drivers/tty/serial/qcom_geni_serial.c b/drivers/tty/serial/qcom_geni_serial.c
+index ff63728a95f4..68b11b6ad3be 100644
+--- a/drivers/tty/serial/qcom_geni_serial.c
++++ b/drivers/tty/serial/qcom_geni_serial.c
+@@ -24,6 +24,7 @@
  
-@@ -19,16 +20,6 @@ Optional properties:
- - clock-frequency : Input clock frequency to the PSPI block in Hz.
- 		    Default is 25000000 Hz.
+ /* UART specific GENI registers */
+ #define SE_UART_LOOPBACK_CFG		0x22c
++#define SE_UART_IO_MACRO_CTRL           0x240
+ #define SE_UART_TX_TRANS_CFG		0x25c
+ #define SE_UART_TX_WORD_LEN		0x268
+ #define SE_UART_TX_STOP_BIT_LEN		0x26c
+@@ -1260,6 +1261,7 @@ static int qcom_geni_serial_probe(struct platform_device *pdev)
+ 	int irq;
+ 	bool console = false;
+ 	struct uart_driver *drv;
++	u32 val;
  
--Aliases:
--- All the SPI controller nodes should be represented in the aliases node using
--  the following format 'spi{n}' withe the correct numbered in "aliases" node.
--
--Example:
--
--aliases {
--	spi0 = &spi0;
--};
--
- spi0: spi@f0200000 {
- 	compatible = "nuvoton,npcm750-pspi";
- 	reg = <0xf0200000 0x1000>;
-@@ -39,5 +30,6 @@ spi0: spi@f0200000 {
- 	interrupts = <GIC_SPI 31 IRQ_TYPE_LEVEL_HIGH>;
- 	clocks = <&clk NPCM7XX_CLK_APB5>;
- 	clock-names = "clk_apb5";
-+	resets = <&rstc NPCM7XX_RESET_IPSRST2 NPCM7XX_RESET_PSPI1>
- 	cs-gpios = <&gpio6 11 GPIO_ACTIVE_LOW>;
- };
+ 	if (of_device_is_compatible(pdev->dev.of_node, "qcom,geni-debug-uart"))
+ 		console = true;
+@@ -1309,6 +1311,10 @@ static int qcom_geni_serial_probe(struct platform_device *pdev)
+ 		return irq;
+ 	uport->irq = irq;
+ 
++	ret = of_property_read_u32(pdev->dev.of_node, "qcom,pin_inverse", &val);
++	if (!ret)
++		writel(val, uport->membase + SE_UART_IO_MACRO_CTRL);
++
+ 	irq_set_status_flags(uport->irq, IRQ_NOAUTOEN);
+ 	ret = devm_request_irq(uport->dev, uport->irq, qcom_geni_serial_isr,
+ 			IRQF_TRIGGER_HIGH, port->name, uport);
 -- 
-2.20.1
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of the Code Aurora Forum, hosted by The Linux Foundation
 
