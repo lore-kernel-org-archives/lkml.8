@@ -2,189 +2,242 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABE5BC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 10:56:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 300C2C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 10:58:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E4A52253D
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 10:56:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="p0zZUQK2"
+	by mail.kernel.org (Postfix) with ESMTP id 032DF2253D
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 10:58:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726743AbgAWK4c (ORCPT
+        id S1726911AbgAWK6i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 05:56:32 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:46578 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726099AbgAWK4c (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 05:56:32 -0500
-Received: by mail-pl1-f193.google.com with SMTP id y8so1181471pll.13
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jan 2020 02:56:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=oByV9jS19XUdDiBoEYoJppft+pgA1ruNja8UqbGBYtw=;
-        b=p0zZUQK2o/KCW+4o30fIUN/lMhc5wyk7rjFxdymsD/9yKOtL0dQKQ/kr6sGmDp4e8i
-         y/7WfkxJYlFwKSkEHXAU+SW4rYNA/FXQZyFsoapCTKYlV8d/ZE0d6crs1SL2hesLhb/Y
-         jXlH5F0IZ3JbsHNAS2FU454q+7flFQi4R67AJCAhkFTxWWCngxmnxIYXDO4CXdbquvv/
-         PK/kNk4ZPWf2uVgmytCoGxMBM9s6h4kaOidhHg6+YvFJBLNNqm8nBrzv0Mr+Zu1Kzoq6
-         4B5UUZi+lIvnBvPU8clHQK+RT8FjD/dRXnuHjbfzu38ODMV9JNh9onPCzShZG5AWsI8A
-         9afw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=oByV9jS19XUdDiBoEYoJppft+pgA1ruNja8UqbGBYtw=;
-        b=HlWTvbJN3OfcaCu3gc5kUgf7HrLYcjPm672GiKBMRjz7VwquceldUyTnbDBlO9j5m4
-         23ljOm6cK4q4JjKO6Jx5qrDBpMNzojMo3wmse484KxJx1IS1L35P58WiB/vZlla0YeKj
-         LtmaYQEYOaSYJnKs1uOuyibKAzMiYfQrfnQi0WC8bX/Vqei/8NNHms5HhfiPLSJ1wZ4g
-         4xjmZTT0wKVKzMhLXx/iFB+qi85w/t5wTOaT7rgHaBvzJiFiPSZFOAq6WAgL81l96TLB
-         QYTzxKs7YzL9Ifmv7pLqVd19K3TqXEFhYjORQtQ9VnnmsATgbS4gzZr9/fdHXpG77vOp
-         +1ig==
-X-Gm-Message-State: APjAAAWX7WAMlnBU8YDG9qsu2qy5eZVe1Rt1f+ZtzEt7tF9kdiPTZAVC
-        9JFwxMAWzweujJF+25bVfIE=
-X-Google-Smtp-Source: APXvYqzYIpqVZym13Fd2MB5wj2VVWikRKu0vfV9+28NKjwFVyXeKLBxAYZ05+RHiR8v10ZxV8HpliA==
-X-Received: by 2002:a17:90a:e646:: with SMTP id ep6mr4049302pjb.58.1579776991167;
-        Thu, 23 Jan 2020 02:56:31 -0800 (PST)
-Received: from localhost.localdomain ([103.211.17.138])
-        by smtp.googlemail.com with ESMTPSA id m71sm5441372pje.0.2020.01.23.02.56.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Jan 2020 02:56:30 -0800 (PST)
-From:   Amol Grover <frextrite@gmail.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>
-Cc:     linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        Amol Grover <frextrite@gmail.com>
-Subject: [PATCH] lockdep: Pass lockdep expression to RCU lists
-Date:   Thu, 23 Jan 2020 16:24:42 +0530
-Message-Id: <20200123105441.22182-1-frextrite@gmail.com>
-X-Mailer: git-send-email 2.24.1
+        Thu, 23 Jan 2020 05:58:38 -0500
+Received: from foss.arm.com ([217.140.110.172]:37720 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726099AbgAWK6h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jan 2020 05:58:37 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E298931B;
+        Thu, 23 Jan 2020 02:58:35 -0800 (PST)
+Received: from [10.1.197.50] (e120937-lin.cambridge.arm.com [10.1.197.50])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3D4DC3F6C4;
+        Thu, 23 Jan 2020 02:58:35 -0800 (PST)
+Subject: Re: [RFC PATCH 03/11] firmware: arm_scmi: Add support for
+ notifications message processing
+To:     Jim Quinlan <james.quinlan@broadcom.com>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc:     sudeep.holla@arm.com, lukasz.luba@arm.com
+References: <20200120122333.46217-1-cristian.marussi@arm.com>
+ <20200120122333.46217-4-cristian.marussi@arm.com>
+ <4c59008e-6010-fb98-d7bf-8677454d1e4f@broadcom.com>
+From:   Cristian Marussi <cristian.marussi@arm.com>
+Message-ID: <049bac5a-dbc2-f3a2-a039-1dcf4c503103@arm.com>
+Date:   Thu, 23 Jan 2020 10:58:33 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
+In-Reply-To: <4c59008e-6010-fb98-d7bf-8677454d1e4f@broadcom.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Data is traversed using hlist_for_each_entry_rcu outside an
-RCU read-side critical section but under the protection
-of either lockdep_lock or with irqs disabled.
+Hi Jim
 
-Hence, add corresponding lockdep expression to silence false-positive
-lockdep warnings, and harden RCU lists. Also add macro for
-corresponding lockdep expression.
+On 22/01/2020 23:27, Jim Quinlan wrote:
+> Hi,
+> 
+> I tried "git am" on an mbox file  from these commits and get stuck on
+> 
+>     Applying: firmware: arm_scmi: Add receive buffer support for notifications
+>     Applying: firmware: arm_scmi: Update protocol commands and notification list
+>     Applying: firmware: arm_scmi: Add support for notifications message processing
+>     error: patch failed: drivers/firmware/arm_scmi/driver.c:355
+>     error: drivers/firmware/arm_scmi/driver.c: patch does not apply
+> 
+> 
+> Could you please apply this email patchset and let me know if it works for you?  I am doing this onto
+> 
+>     257d0e20ec4f include: trace: Add SCMI header with trace events     
+> 
+> 
 
-Two things to note:
-- RCU traversals protected under both, irqs disabled and
-graph lock, have both the checks in the lockdep expression.
-- RCU traversals under the protection of just disabled irqs
-don't have a corresponding lockdep expression as it is implicitly
-checked for.
+Sorry... my fault .. it is on top of the following commit on that same branch in fact:
 
-Signed-off-by: Amol Grover <frextrite@gmail.com>
----
- kernel/locking/lockdep.c | 21 +++++++++++++--------
- 1 file changed, 13 insertions(+), 8 deletions(-)
+729d3530a504 drivers: firmware: scmi: Extend SCMI transport layer by trace events
 
-diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-index 32282e7112d3..696ad5d4daed 100644
---- a/kernel/locking/lockdep.c
-+++ b/kernel/locking/lockdep.c
-@@ -85,6 +85,8 @@ module_param(lock_stat, int, 0644);
-  * code to recurse back into the lockdep code...
-  */
- static arch_spinlock_t lockdep_lock = (arch_spinlock_t)__ARCH_SPIN_LOCK_UNLOCKED;
-+#define graph_lock_held() \
-+	arch_spin_is_locked(&lockdep_lock)
- static struct task_struct *lockdep_selftest_task_struct;
- 
- static int graph_lock(void)
-@@ -1009,7 +1011,7 @@ static bool __check_data_structures(void)
- 	/* Check the chain_key of all lock chains. */
- 	for (i = 0; i < ARRAY_SIZE(chainhash_table); i++) {
- 		head = chainhash_table + i;
--		hlist_for_each_entry_rcu(chain, head, entry) {
-+		hlist_for_each_entry_rcu(chain, head, entry, graph_lock_held()) {
- 			if (!check_lock_chain_key(chain))
- 				return false;
- 		}
-@@ -1124,7 +1126,8 @@ void lockdep_register_key(struct lock_class_key *key)
- 	raw_local_irq_save(flags);
- 	if (!graph_lock())
- 		goto restore_irqs;
--	hlist_for_each_entry_rcu(k, hash_head, hash_entry) {
-+	hlist_for_each_entry_rcu(k, hash_head, hash_entry,
-+				 irqs_disabled() && graph_lock_held()) {
- 		if (WARN_ON_ONCE(k == key))
- 			goto out_unlock;
- 	}
-@@ -1203,7 +1206,8 @@ register_lock_class(struct lockdep_map *lock, unsigned int subclass, int force)
- 	 * We have to do the hash-walk again, to avoid races
- 	 * with another CPU:
- 	 */
--	hlist_for_each_entry_rcu(class, hash_head, hash_entry) {
-+	hlist_for_each_entry_rcu(class, hash_head, hash_entry,
-+				 irqs_disabled() && graph_lock_held()) {
- 		if (class->key == key)
- 			goto out_unlock_set;
- 	}
-@@ -2858,7 +2862,7 @@ static inline struct lock_chain *lookup_chain_cache(u64 chain_key)
- 	struct hlist_head *hash_head = chainhashentry(chain_key);
- 	struct lock_chain *chain;
- 
--	hlist_for_each_entry_rcu(chain, hash_head, entry) {
-+	hlist_for_each_entry_rcu(chain, hash_head, entry, graph_lock_held()) {
- 		if (READ_ONCE(chain->chain_key) == chain_key) {
- 			debug_atomic_inc(chain_lookup_hits);
- 			return chain;
-@@ -4833,7 +4837,7 @@ static void remove_class_from_lock_chains(struct pending_free *pf,
- 
- 	for (i = 0; i < ARRAY_SIZE(chainhash_table); i++) {
- 		head = chainhash_table + i;
--		hlist_for_each_entry_rcu(chain, head, entry) {
-+		hlist_for_each_entry_rcu(chain, head, entry, graph_lock_held()) {
- 			remove_class_from_lock_chain(pf, chain, class);
- 		}
- 	}
-@@ -4993,7 +4997,7 @@ static void __lockdep_free_key_range(struct pending_free *pf, void *start,
- 	/* Unhash all classes that were created by a module. */
- 	for (i = 0; i < CLASSHASH_SIZE; i++) {
- 		head = classhash_table + i;
--		hlist_for_each_entry_rcu(class, head, hash_entry) {
-+		hlist_for_each_entry_rcu(class, head, hash_entry, graph_lock_held()) {
- 			if (!within(class->key, start, size) &&
- 			    !within(class->name, start, size))
- 				continue;
-@@ -5076,7 +5080,7 @@ static bool lock_class_cache_is_registered(struct lockdep_map *lock)
- 
- 	for (i = 0; i < CLASSHASH_SIZE; i++) {
- 		head = classhash_table + i;
--		hlist_for_each_entry_rcu(class, head, hash_entry) {
-+		hlist_for_each_entry_rcu(class, head, hash_entry, graph_lock_held()) {
- 			for (j = 0; j < NR_LOCKDEP_CACHING_CLASSES; j++)
- 				if (lock->class_cache[j] == class)
- 					return true;
-@@ -5181,7 +5185,8 @@ void lockdep_unregister_key(struct lock_class_key *key)
- 		goto out_irq;
- 
- 	pf = get_pending_free();
--	hlist_for_each_entry_rcu(k, hash_head, hash_entry) {
-+	hlist_for_each_entry_rcu(k, hash_head, hash_entry,
-+				 irqs_disabled() && graph_lock_held()) {
- 		if (k == key) {
- 			hlist_del_rcu(&k->hash_entry);
- 			found = true;
--- 
-2.24.1
+10:51 $ git am patch_scmi_notif/ext_V1/final/00*                          
+Applying: firmware: arm_scmi: Add receive buffer support for notifications
+Applying: firmware: arm_scmi: Update protocol commands and notification list         
+Applying: firmware: arm_scmi: Add support for notifications message processing
+Applying: firmware: arm_scmi: Add core notifications support                    
+Applying: firmware: arm_scmi: Add notifications anti-tampering                                 
+Applying: firmware: arm_scmi: Enable core notifications                  
+Applying: firmware: arm_scmi: Add Power notifications support             
+Applying: firmware: arm_scmi: Add Perf notifications support                
+Applying: firmware: arm_scmi: Add Sensor notifications support             
+Applying: firmware: arm_scmi: Add Reset notifications support                  
+Applying: firmware: arm_scmi: Add Base notifications support            
+
+I'll follow up to my cover to warn about this.
+
+Thanks for trying it out.
+
+Regards
+
+Cristian
+
+> as you directed.
+> 
+> Thanks,
+> Jim
+> 
+> 
+> 
+> On 1/20/20 7:23 AM, Cristian Marussi wrote:
+>> From: Sudeep Holla <sudeep.holla@arm.com>
+>>
+>> Add the mechanisms to distinguish notifications from delayed responses and
+>> to properly fetch notification messages upon reception: notifications
+>> processing does not continue further after the fetch phase.
+>>
+>> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+>> Signed-off-by: Cristian Marussi <cristian.marussi@arm.com>
+>> ---
+>>  drivers/firmware/arm_scmi/driver.c | 92 +++++++++++++++++++++---------
+>>  1 file changed, 65 insertions(+), 27 deletions(-)
+>>
+>> diff --git a/drivers/firmware/arm_scmi/driver.c b/drivers/firmware/arm_scmi/driver.c
+>> index 9611e8037d77..28ed1f0cb417 100644
+>> --- a/drivers/firmware/arm_scmi/driver.c
+>> +++ b/drivers/firmware/arm_scmi/driver.c
+>> @@ -212,6 +212,15 @@ static void scmi_fetch_response(struct scmi_xfer *xfer,
+>>  	memcpy_fromio(xfer->rx.buf, mem->msg_payload + 4, xfer->rx.len);
+>>  }
+>>  
+>> +static void scmi_fetch_notification(struct scmi_xfer *xfer, size_t max_len,
+>> +				    struct scmi_shared_mem __iomem *mem)
+>> +{
+>> +	/* Skip only length of header in payload area i.e 4 bytes */
+>> +	xfer->rx.len = min_t(size_t, max_len, ioread32(&mem->length) - 4);
+>> +
+>> +	memcpy_fromio(xfer->rx.buf, mem->msg_payload, xfer->rx.len);
+>> +}
+>> +
+>>  /**
+>>   * pack_scmi_header() - packs and returns 32-bit header
+>>   *
+>> @@ -339,6 +348,58 @@ __scmi_xfer_put(struct scmi_xfers_info *minfo, struct scmi_xfer *xfer)
+>>  	spin_unlock_irqrestore(&minfo->xfer_lock, flags);
+>>  }
+>>  
+>> +static void scmi_handle_notification(struct scmi_chan_info *cinfo, u32 msg_hdr)
+>> +{
+>> +	struct scmi_xfer *xfer;
+>> +	struct device *dev = cinfo->dev;
+>> +	struct scmi_info *info = handle_to_scmi_info(cinfo->handle);
+>> +	struct scmi_xfers_info *minfo = &info->rx_minfo;
+>> +	struct scmi_shared_mem __iomem *mem = cinfo->payload;
+>> +
+>> +	xfer = scmi_xfer_get(cinfo->handle, minfo);
+>> +	if (IS_ERR(xfer)) {
+>> +		dev_err(dev, "failed to get free message slot (%ld)\n",
+>> +			PTR_ERR(xfer));
+>> +		iowrite32(SCMI_SHMEM_CHAN_STAT_CHANNEL_FREE,
+>> +			  &mem->channel_status);
+>> +		return;
+>> +	}
+>> +
+>> +	unpack_scmi_header(msg_hdr, &xfer->hdr);
+>> +	scmi_dump_header_dbg(dev, &xfer->hdr);
+>> +	scmi_fetch_notification(xfer, info->desc->max_msg_size, mem);
+>> +	__scmi_xfer_put(minfo, xfer);
+>> +
+>> +	iowrite32(SCMI_SHMEM_CHAN_STAT_CHANNEL_FREE, &mem->channel_status);
+>> +}
+>> +
+>> +static void scmi_handle_xfer_delayed_resp(struct scmi_chan_info *cinfo,
+>> +					  u16 xfer_id, bool delayed_resp)
+>> +{
+>> +	struct scmi_xfer *xfer;
+>> +	struct device *dev = cinfo->dev;
+>> +	struct scmi_info *info = handle_to_scmi_info(cinfo->handle);
+>> +	struct scmi_xfers_info *minfo = &info->tx_minfo;
+>> +	struct scmi_shared_mem __iomem *mem = cinfo->payload;
+>> +
+>> +	/* Are we even expecting this? */
+>> +	if (!test_bit(xfer_id, minfo->xfer_alloc_table)) {
+>> +		dev_err(dev, "message for %d is not expected!\n", xfer_id);
+>> +		return;
+>> +	}
+>> +
+>> +	xfer = &minfo->xfer_block[xfer_id];
+>> +
+>> +	scmi_dump_header_dbg(dev, &xfer->hdr);
+>> +
+>> +	scmi_fetch_response(xfer, mem);
+>> +
+>> +	if (delayed_resp)
+>> +		complete(xfer->async_done);
+>> +	else
+>> +		complete(&xfer->done);
+>> +}
+>> +
+>>  /**
+>>   * scmi_rx_callback() - mailbox client callback for receive messages
+>>   *
+>> @@ -355,41 +416,18 @@ static void scmi_rx_callback(struct mbox_client *cl, void *m)
+>>  {
+>>  	u8 msg_type;
+>>  	u32 msg_hdr;
+>> -	u16 xfer_id;
+>> -	struct scmi_xfer *xfer;
+>>  	struct scmi_chan_info *cinfo = client_to_scmi_chan_info(cl);
+>> -	struct device *dev = cinfo->dev;
+>> -	struct scmi_info *info = handle_to_scmi_info(cinfo->handle);
+>> -	struct scmi_xfers_info *minfo = &info->tx_minfo;
+>>  	struct scmi_shared_mem __iomem *mem = cinfo->payload;
+>>  
+>>  	msg_hdr = ioread32(&mem->msg_header);
+>>  	msg_type = MSG_XTRACT_TYPE(msg_hdr);
+>> -	xfer_id = MSG_XTRACT_TOKEN(msg_hdr);
+>>  
+>>  	if (msg_type == MSG_TYPE_NOTIFICATION)
+>> -		return; /* Notifications not yet supported */
+>> -
+>> -	/* Are we even expecting this? */
+>> -	if (!test_bit(xfer_id, minfo->xfer_alloc_table)) {
+>> -		dev_err(dev, "message for %d is not expected!\n", xfer_id);
+>> -		return;
+>> -	}
+>> -
+>> -	xfer = &minfo->xfer_block[xfer_id];
+>> -
+>> -	scmi_dump_header_dbg(dev, &xfer->hdr);
+>> -
+>> -	scmi_fetch_response(xfer, mem);
+>> -
+>> -	trace_scmi_rx_done(xfer->transfer_id, xfer->hdr.id,
+>> -			   xfer->hdr.protocol_id, xfer->hdr.seq,
+>> -			   msg_type);
+>> -
+>> -	if (msg_type == MSG_TYPE_DELAYED_RESP)
+>> -		complete(xfer->async_done);
+>> +		scmi_handle_notification(cinfo, msg_hdr);
+>>  	else
+>> -		complete(&xfer->done);
+>> +		scmi_handle_xfer_delayed_resp(cinfo, MSG_XTRACT_TOKEN(msg_hdr),
+>> +					      msg_type);
+>> +
+>>  }
+>>  
+>>  /**
+> 
+> 
 
