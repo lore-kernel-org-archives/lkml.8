@@ -2,183 +2,86 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 006E5C33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 15:12:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0AE1C3F68F
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 15:14:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA79A21D7D
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 15:12:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Liw91XNp"
+	by mail.kernel.org (Postfix) with ESMTP id C85A921D7D
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 15:14:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728984AbgAWPMK (ORCPT
+        id S1728988AbgAWPOT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 10:12:10 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:60737 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728904AbgAWPMK (ORCPT
+        Thu, 23 Jan 2020 10:14:19 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:43608 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727278AbgAWPOS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 10:12:10 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579792329;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=TOTDTwuaI0Kk0LUy5rbPDT0f6tV/bdzpgd5A51iAmQw=;
-        b=Liw91XNpW2Keht2Q1ClXCZRASkSQSrbbFXovrJg/eoSftPuVRrPTVROh56KtVBukmsKYQ8
-        ukzjF39WdaasFdnPCRrFDGbUV8enhva+T6FdJ/tB7ocu+QX6jDutvGNybly36j43iyq3vv
-        /8gPWvnKtrXZBCmCyraUHglegnx6sjE=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-207-dY3-Hz3EOVSB5G3kVMwjQA-1; Thu, 23 Jan 2020 10:12:04 -0500
-X-MC-Unique: dY3-Hz3EOVSB5G3kVMwjQA-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id EED9D18B5F95;
-        Thu, 23 Jan 2020 15:12:02 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-49.rdu2.redhat.com [10.10.120.49])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id A3DED8CCCB;
-        Thu, 23 Jan 2020 15:12:01 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <8ee40192da117d9cdf4eab1e63ab5f77b359801c.camel@btinternet.com>
-References: <8ee40192da117d9cdf4eab1e63ab5f77b359801c.camel@btinternet.com>
-To:     Stephen Smalley <sds@tycho.nsa.gov>
-Cc:     dhowells@redhat.com,
-        Richard Haines <richard_c_haines@btinternet.com>,
-        keyrings@vger.kernel.org, selinux@vger.kernel.org,
-        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: SELinux: How to split permissions for keys?
+        Thu, 23 Jan 2020 10:14:18 -0500
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1iueBK-0001Dl-AD; Thu, 23 Jan 2020 15:14:06 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        "Michael J . Ruhl" <michael.j.ruhl@intel.com>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Tvrtko Ursulin <tvrtko.ursulin@intel.com>,
+        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH][next] drm/i915/gem: fix null pointer dereference on vm
+Date:   Thu, 23 Jan 2020 15:14:06 +0000
+Message-Id: <20200123151406.51679-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <4057699.1579792320.1@warthog.procyon.org.uk>
-Content-Transfer-Encoding: quoted-printable
-Date:   Thu, 23 Jan 2020 15:12:00 +0000
-Message-ID: <4057700.1579792320@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Stephen,
+From: Colin Ian King <colin.king@canonical.com>
 
-I have patches to split the permissions that are used for keys to make the=
-m a
-bit finer grained and easier to use - and also to move to ACLs rather than
-fixed masks.  See patch "keys: Replace uid/gid/perm permissions checking w=
-ith
-an ACL" here:
+Currently if the call to function context_get_vm_rcu returns
+a null pointer for vm then the error exit path via label err_put
+will call i915_vm_put on the null vm, causing a null pointer
+dereference.  Fix this by adding a null check on vm and returning
+without calling the i915_vm_put.
 
-	https://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git/log=
-/?h=3Dkeys-acl
-
-However, I may not have managed the permission mask transformation inside
-SELinux correctly.  Could you lend an eyeball?  The change to the permissi=
-ons
-model is as follows:
-
-    The SETATTR permission is split to create two new permissions:
-    =
-
-     (1) SET_SECURITY - which allows the key's owner, group and ACL to be
-         changed and a restriction to be placed on a keyring.
-    =
-
-     (2) REVOKE - which allows a key to be revoked.
-    =
-
-    The SEARCH permission is split to create:
-    =
-
-     (1) SEARCH - which allows a keyring to be search and a key to be foun=
-d.
-    =
-
-     (2) JOIN - which allows a keyring to be joined as a session keyring.
-    =
-
-     (3) INVAL - which allows a key to be invalidated.
-    =
-
-    The WRITE permission is also split to create:
-    =
-
-     (1) WRITE - which allows a key's content to be altered and links to b=
-e
-         added, removed and replaced in a keyring.
-    =
-
-     (2) CLEAR - which allows a keyring to be cleared completely.  This is
-         split out to make it possible to give just this to an administrat=
-or.
-    =
-
-     (3) REVOKE - see above.
-
-The change to SELinux is attached below.
-
-Should the split be pushed down into the SELinux policy rather than trying=
- to
-calculate it?
-
-Thanks,
-David
+Fixes: 5dbd2b7be61e ("drm/i915/gem: Convert vm idr to xarray")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
 ---
-diff --git a/security/selinux/hooks.c b/security/selinux/hooks.c
-index 116b4d644f68..c8db5235b01f 100644
---- a/security/selinux/hooks.c
-+++ b/security/selinux/hooks.c
-@@ -6556,6 +6556,7 @@ static int selinux_key_permission(key_ref_t key_ref,
- {
- 	struct key *key;
- 	struct key_security_struct *ksec;
-+	unsigned oldstyle_perm;
- 	u32 sid;
- =
+ drivers/gpu/drm/i915/gem/i915_gem_context.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
- 	/* if no specific permissions are requested, we skip the
-@@ -6564,13 +6565,26 @@ static int selinux_key_permission(key_ref_t key_re=
-f,
- 	if (perm =3D=3D 0)
- 		return 0;
- =
-
-+	oldstyle_perm =3D perm & (KEY_NEED_VIEW | KEY_NEED_READ | KEY_NEED_WRITE=
- |
-+				KEY_NEED_SEARCH | KEY_NEED_LINK);
-+	if (perm & KEY_NEED_SETSEC)
-+		oldstyle_perm |=3D OLD_KEY_NEED_SETATTR;
-+	if (perm & KEY_NEED_INVAL)
-+		oldstyle_perm |=3D KEY_NEED_SEARCH;
-+	if (perm & KEY_NEED_REVOKE && !(perm & OLD_KEY_NEED_SETATTR))
-+		oldstyle_perm |=3D KEY_NEED_WRITE;
-+	if (perm & KEY_NEED_JOIN)
-+		oldstyle_perm |=3D KEY_NEED_SEARCH;
-+	if (perm & KEY_NEED_CLEAR)
-+		oldstyle_perm |=3D KEY_NEED_WRITE;
-+
- 	sid =3D cred_sid(cred);
- =
-
- 	key =3D key_ref_to_ptr(key_ref);
- 	ksec =3D key->security;
- =
-
- 	return avc_has_perm(&selinux_state,
--			    sid, ksec->sid, SECCLASS_KEY, perm, NULL);
-+			    sid, ksec->sid, SECCLASS_KEY, oldstyle_perm, NULL);
- }
- =
-
- static int selinux_key_getsecurity(struct key *key, char **_buffer)
+diff --git a/drivers/gpu/drm/i915/gem/i915_gem_context.c b/drivers/gpu/drm/i915/gem/i915_gem_context.c
+index 5d4157e1ccf7..3e6e34ec9fa8 100644
+--- a/drivers/gpu/drm/i915/gem/i915_gem_context.c
++++ b/drivers/gpu/drm/i915/gem/i915_gem_context.c
+@@ -1005,9 +1005,12 @@ static int get_ppgtt(struct drm_i915_file_private *file_priv,
+ 	err = -ENODEV;
+ 	rcu_read_lock();
+ 	vm = context_get_vm_rcu(ctx);
+-	if (vm)
+-		err = xa_alloc(&file_priv->vm_xa, &id, vm,
+-			       xa_limit_32b, GFP_KERNEL);
++	if (!vm) {
++		rcu_read_unlock();
++		return err;
++	}
++	err = xa_alloc(&file_priv->vm_xa, &id, vm,
++		       xa_limit_32b, GFP_KERNEL);
+ 	rcu_read_unlock();
+ 	if (err)
+ 		goto err_put;
+-- 
+2.24.0
 
