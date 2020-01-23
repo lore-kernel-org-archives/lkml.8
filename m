@@ -2,136 +2,100 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC5B5C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 12:16:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42BACC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 12:17:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A32A6217F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 12:16:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14B09217F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 12:17:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="6R+2t5ZS"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OIHqybvz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729028AbgAWMQZ (ORCPT
+        id S1729050AbgAWMRD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 07:16:25 -0500
-Received: from mx0b-00128a01.pphosted.com ([148.163.139.77]:18548 "EHLO
-        mx0b-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726260AbgAWMQY (ORCPT
+        Thu, 23 Jan 2020 07:17:03 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:21181 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726026AbgAWMRC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 07:16:24 -0500
-Received: from pps.filterd (m0167091.ppops.net [127.0.0.1])
-        by mx0b-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00NCAXfC006081;
-        Thu, 23 Jan 2020 07:16:04 -0500
-Received: from nam10-dm6-obe.outbound.protection.outlook.com (mail-dm6nam10lp2105.outbound.protection.outlook.com [104.47.58.105])
-        by mx0b-00128a01.pphosted.com with ESMTP id 2xkvnfnn80-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 23 Jan 2020 07:16:04 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=RnxxAUSlxQpLPtysdFcThDKdo5qk4Mp0MAmaS0GZlke1F09SnqgjfRT3wg9yw1KLp5KSFaRpDqcI1wkYDb9v9cGQ2bXIFJmlnzmLIvAdc47wqf4LoKHz6xLIcr63lF8irCIJZPono4c3yIsRmFnZKj7d+jpuRpP4gxJfZYJh64hjEyrBVMPJRkXyogfuW7sGvceYdHOuvIIkFjPnOKucewkjbGLivXdgcMEBUtduavREQve44WldIZm2YB0cwSg2o0UMWVoUSqZEalrzPXDP3GMt3P2E5mmQG+qJZeTjsEaQtOQnSr4KFhGISMxijbW0we1k3b+v3phcL+JWoK6XYQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=b3K/vK92riidWeUCR96kAdqloUtnTdU4FLOt1dJlXzk=;
- b=Ic/e3A8iM7X9N175fLePLX9W1PjY6VrzgsxJk6c8UPmStG8DcMZVn5+ezBRFhRQzcb60jt4u6KT4NlrmGN5wUHsGt1kSHSUOmj0Q/NFI7Ab7S5Aajc5efgZ6gAXCWndcVvaJA1H8IP/EnkluobrFGO66aB4nWM1hx+YM0cTjfSmF3E3UDYSdEteHx1J3vAK/5gMJMJDoxpwSzi81bFoLcxVmB+UG64RbD1xWNLvk9S8PucLIPxgAAgDiTBPO8tXhNVK8LDLOMCNvxSS2S7IoZwheSyKETcxYqxxucogFfb6aCxj27urLpJF0VGvCRvtUSb8F8OhPp9hKZdgtaqpgNg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=analog.com; dmarc=pass action=none header.from=analog.com;
- dkim=pass header.d=analog.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=b3K/vK92riidWeUCR96kAdqloUtnTdU4FLOt1dJlXzk=;
- b=6R+2t5ZSPJ6+0Kt4eaYx5Ar8BiTXJh0uEdIeR00JioXyXoV/ZgxmRZ91yq/BvoRXRNZzyGxqMZV1CoLUwpZtEXi1AFwRiUN7o3L5Q2i1iODbUGgPzoZbNlC/uiR5vQKzAQO4C5/v+9c3I8vfmytN7WVVv7FKJNvRShBKMTT/HF0=
-Received: from CH2PR03MB5192.namprd03.prod.outlook.com (20.180.12.152) by
- CH2PR03MB5174.namprd03.prod.outlook.com (20.180.4.83) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2644.19; Thu, 23 Jan 2020 12:16:03 +0000
-Received: from CH2PR03MB5192.namprd03.prod.outlook.com
- ([fe80::dce7:7fec:f33f:ad39]) by CH2PR03MB5192.namprd03.prod.outlook.com
- ([fe80::dce7:7fec:f33f:ad39%7]) with mapi id 15.20.2665.017; Thu, 23 Jan 2020
- 12:16:03 +0000
-From:   "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
-To:     "zzzzPopa, zzzzStefan Serban" <StefanSerban.Popa@analog.com>,
-        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
-        "jic23@kernel.org" <jic23@kernel.org>,
-        "colin.king@canonical.com" <colin.king@canonical.com>,
-        "Hennerich, Michael" <Michael.Hennerich@analog.com>,
-        "lars@metafoo.de" <lars@metafoo.de>,
-        "knaack.h@gmx.de" <knaack.h@gmx.de>,
-        "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>
-CC:     "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH][V2] iio: ad5755: fix spelling mistake "to" -> "too" and
- grammar
-Thread-Topic: [PATCH][V2] iio: ad5755: fix spelling mistake "to" -> "too" and
- grammar
-Thread-Index: AQHV0c5ZypUSLkSV6060pzkn0y8YJ6f4KskA
-Date:   Thu, 23 Jan 2020 12:16:03 +0000
-Message-ID: <aae729269a5ab110fae379f88b72a8cbca6c8b13.camel@analog.com>
-References: <20200123091954.10506-1-colin.king@canonical.com>
-In-Reply-To: <20200123091954.10506-1-colin.king@canonical.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [137.71.226.54]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: f4085ad4-785a-46eb-97b4-08d79ffe03ed
-x-ms-traffictypediagnostic: CH2PR03MB5174:
-x-ld-processed: eaa689b4-8f87-40e0-9c6f-7228de4d754a,ExtAddr
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <CH2PR03MB51744D781A41F1AC9F07B11AF90F0@CH2PR03MB5174.namprd03.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:5516;
-x-forefront-prvs: 029174C036
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(39860400002)(366004)(346002)(396003)(376002)(199004)(189003)(4744005)(5660300002)(81156014)(36756003)(8676002)(2906002)(81166006)(4326008)(6512007)(8936002)(54906003)(86362001)(2616005)(6506007)(186003)(316002)(26005)(110136005)(66476007)(478600001)(76116006)(66556008)(64756008)(6486002)(71200400001)(66946007)(66446008)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:CH2PR03MB5174;H:CH2PR03MB5192.namprd03.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: analog.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: iK1fX5QrPMhVLl7cR6DjlwAjM3rTEG+KbjXVV2D21Ad6wCr93UcHG5Rh5g9C7l1EW+hBF5IOhcR3yLbwDXrle1k0yZv1VIEe0JgZpMupIxGyiHCsAW48HpwseJ8wnPnu0D6e3aB8EnTsLAta+QM5XrI6QRMmG/W9bB8B+QYd8tsd/bysrLe6vaxkoRDEilz0IfVmq8kmd4Ug0+vZt57imK567ldwSC0R9Hxu0UhwR5J45VT8G1yu6k8E0xojRtP6YdRrtLi4eeZ5iJdAIc11nYJ7mw3+AdoyRGSKAssQWDFeWfbynDPHZJaSjywysm+9xgEkvIVISaf1iuxyJHr+xke6EqyhfDlkN3L5rLb6TbDif0qHx2/Bvn0Gjc3/++GWyRVZCZYrGEhTMzCa/fyrkHOb2mcD9+RtTK4DV4V8Gzghn1Cz3QvRPOi8KoffSljf39D5det+yYxvuk6XcEFPDKt8qPz954ivtURNLLxKkOE0XXR89sI2GLchHJr5LtVg
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <5DF19E837EB5674EA591FB0A5C9060EE@namprd03.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Thu, 23 Jan 2020 07:17:02 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579781821;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=eh4yN5hoXKIHr0Y4kKL2j19glvafCP0ncaEOaLM+6RU=;
+        b=OIHqybvzlTzyp+dl7Qlc3mq4wr9yakzV8RgHfDgbYDCp6uTlNKOX1yiLU0ntwtD8zH9BiD
+        smOr0uXKX0TuvJOs+fTtDm8TaQyzOxmFr5jizMsyTKdm08lduUT2Hnx9kRlGERAwYdRQ5Q
+        LkvdKCihnR6ALUGBTygkBontmg7v1Ho=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-226-rXMdXEbtPJCxpziHqwzLPw-1; Thu, 23 Jan 2020 07:16:58 -0500
+X-MC-Unique: rXMdXEbtPJCxpziHqwzLPw-1
+Received: by mail-wr1-f71.google.com with SMTP id f15so1633960wrr.2
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jan 2020 04:16:58 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=eh4yN5hoXKIHr0Y4kKL2j19glvafCP0ncaEOaLM+6RU=;
+        b=fUU0r5dDVLc824EQTc4PUdUudILQLiLvVA3o9oN9rVO3rkT4JqXlNdC01THF3PcLOg
+         rzQ7VYCtOhPnXdrNLrN0BzMpPpW5LB5QzSZHFRSJyljbq6jrdKw+Cb9+B5XQqLY0cPGo
+         k1WAUkhrQBU5X+Pp+wR0UBX3Fm+UdewGjgZKOCbVteb2HmoWl9lS41M9htIUQ7gecMco
+         f8u8mvJ3vqShrgTBLLz1vLls1ALBfZr95ujRVOK3xbWlo7CvqCNckOUv6ENwXtQMS8sW
+         NNkC6mWOKwa2l1bTcVt9nGu8o+EmmlDSroo8fLKUkVtr3BFPlwG9wFHVjCsjIoqodE90
+         Oy+g==
+X-Gm-Message-State: APjAAAVUY4IvTahQ9oxApybVzL9BgcReO562yoQ4NErm32KgVRQvttwI
+        qmf1WRY0zeJhENxWGjVn4OUTJWgLVfZsIpm4XBg7VLp+yNEyWh0jQtb/LUNaxPag0nzIPw62x6Q
+        w1zUTTEukhTNIXHQwUI5Ktasu
+X-Received: by 2002:a05:600c:210b:: with SMTP id u11mr3888525wml.43.1579781817255;
+        Thu, 23 Jan 2020 04:16:57 -0800 (PST)
+X-Google-Smtp-Source: APXvYqwjrSg8QS3n58Hsbb+jpFpGNeljke+sE5P4DKFi46EAMGGsbNN5r4mMO0nv0ERsa+/0bhSuTA==
+X-Received: by 2002:a05:600c:210b:: with SMTP id u11mr3888510wml.43.1579781817032;
+        Thu, 23 Jan 2020 04:16:57 -0800 (PST)
+Received: from ?IPv6:2001:b07:6468:f312:b8fe:679e:87eb:c059? ([2001:b07:6468:f312:b8fe:679e:87eb:c059])
+        by smtp.gmail.com with ESMTPSA id t25sm2489035wmj.19.2020.01.23.04.16.55
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 23 Jan 2020 04:16:56 -0800 (PST)
+Subject: Re: [PATCH] KVM: x86: fix overlap between SPTE_MMIO_MASK and
+ generation
+To:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Ben Gardon <bgardon@google.com>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+References: <1579623061-47141-1-git-send-email-pbonzini@redhat.com>
+ <CANgfPd8fq7pWe00fKm7QEiOAVFuubSQ-jJxEM1sCKzqJk9rSzw@mail.gmail.com>
+ <20200121210405.GA12692@linux.intel.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <533d3dd4-aa8e-07d0-2e8a-991fa758a366@redhat.com>
+Date:   Thu, 23 Jan 2020 13:16:53 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-X-OriginatorOrg: analog.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f4085ad4-785a-46eb-97b4-08d79ffe03ed
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Jan 2020 12:16:03.0485
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: nFZmEOfsHZxjUVvAIv3P8qfLpNR0b4rIwrvKoNYnDUK/Brbmtep99UZcBI5W5Y5ek5UEWnEtdNNJjTR0DaZpDelcQJqwvnjIyDDUjHEwoGc=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR03MB5174
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-01-23_08:2020-01-23,2020-01-23 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 clxscore=1015 mlxlogscore=999 phishscore=0
- lowpriorityscore=0 spamscore=0 mlxscore=0 impostorscore=0 adultscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-2001230105
+In-Reply-To: <20200121210405.GA12692@linux.intel.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gVGh1LCAyMDIwLTAxLTIzIGF0IDA5OjE5ICswMDAwLCBDb2xpbiBLaW5nIHdyb3RlOg0KPiBG
-cm9tOiBDb2xpbiBJYW4gS2luZyA8Y29saW4ua2luZ0BjYW5vbmljYWwuY29tPg0KPiANCj4gVGhl
-cmUgaXMgYSBzcGVsbGluZyBtaXN0YWtlIGFuZCBncmFtbWFyIG1pc3Rha2UgaW4gYSBkZXZfZXJy
-DQo+IG1lc3NhZ2UuIEZpeCBpdC4NCj4gDQoNClJldmlld2VkLWJ5OiBBbGV4YW5kcnUgQXJkZWxl
-YW4gPGFsZXhhbmRydS5hcmRlbGVhbkBhbmFsb2cuY29tPg0KDQo+IFNpZ25lZC1vZmYtYnk6IENv
-bGluIElhbiBLaW5nIDxjb2xpbi5raW5nQGNhbm9uaWNhbC5jb20+DQo+IC0tLQ0KPiBWMjogZml4
-IGdyYW1tYXIgdG9vLCB0aGFua3MgdG8gQWxleGFuZHJ1IEFyZGVsZWFuIGZvciBzcG90dGluZyB0
-aGlzLg0KPiAtLS0NCj4gIGRyaXZlcnMvaWlvL2RhYy9hZDU3NTUuYyB8IDIgKy0NCj4gIDEgZmls
-ZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKSwgMSBkZWxldGlvbigtKQ0KPiANCj4gZGlmZiAtLWdp
-dCBhL2RyaXZlcnMvaWlvL2RhYy9hZDU3NTUuYyBiL2RyaXZlcnMvaWlvL2RhYy9hZDU3NTUuYw0K
-PiBpbmRleCBiOTE3NWZiNGM4YWIuLjEzNTlhMWE5MmZkYyAxMDA2NDQNCj4gLS0tIGEvZHJpdmVy
-cy9paW8vZGFjL2FkNTc1NS5jDQo+ICsrKyBiL2RyaXZlcnMvaWlvL2RhYy9hZDU3NTUuYw0KPiBA
-QCAtNjU1LDcgKzY1NSw3IEBAIHN0YXRpYyBzdHJ1Y3QgYWQ1NzU1X3BsYXRmb3JtX2RhdGEgKmFk
-NTc1NV9wYXJzZV9kdChzdHJ1Y3QNCj4gZGV2aWNlICpkZXYpDQo+ICAJZm9yX2VhY2hfY2hpbGRf
-b2Zfbm9kZShucCwgcHApIHsNCj4gIAkJaWYgKGRldm5yID49IEFENTc1NV9OVU1fQ0hBTk5FTFMp
-IHsNCj4gIAkJCWRldl9lcnIoZGV2LA0KPiAtCQkJCSJUaGVyZSBpcyB0byBtYW55IGNoYW5uZWxz
-IGRlZmluZWQgaW4gRFRcbiIpOw0KPiArCQkJCSJUaGVyZSBhcmUgdG9vIG1hbnkgY2hhbm5lbHMg
-ZGVmaW5lZCBpbiBEVFxuIik7DQo+ICAJCQlnb3RvIGVycm9yX291dDsNCj4gIAkJfQ0KPiAgDQo=
+On 21/01/20 22:04, Sean Christopherson wrote:
+>> Alternatively, BUILD_BUG_ON((MMIO_SPTE_GEN_HIGH_MASK |
+>> MMIO_SPTE_GEN_LOW_MASK) & SPTE_(MMIO and/or SPECIAL)_MASK)
+> Or add both BUILD_BUG_ONs.
+
+In the end I decided to revert MMIO_SPTE_GEN_HIGH_START to
+PT64_SECOND_AVAIL_BITS_SHIFT (it makes sense since we use it for
+shadow_acc_track_saved_bits_shift, and whether to use
+shadow_acc_track_saved_bits_shift or MMIO_SPTE_GEN_HIGH_START depends on
+the SPTE_SPECIAL_MASK bits) and use Ben's suggested BUILD_BUG_ON.
+
+Paolo
+
