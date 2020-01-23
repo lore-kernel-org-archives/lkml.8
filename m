@@ -2,86 +2,181 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6FC7C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 20:05:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B05F4C3F68F
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 20:07:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 972DC21D7D
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 20:05:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8405921D7E
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 20:07:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NEFtawHL"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="reOOCz/i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729262AbgAWUFm (ORCPT
+        id S1729268AbgAWUHF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 15:05:42 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:37394 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726167AbgAWUFm (ORCPT
+        Thu, 23 Jan 2020 15:07:05 -0500
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:44925 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726219AbgAWUHE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 15:05:42 -0500
-Received: by mail-oi1-f193.google.com with SMTP id z64so4164948oia.4
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jan 2020 12:05:42 -0800 (PST)
+        Thu, 23 Jan 2020 15:07:04 -0500
+Received: by mail-qt1-f194.google.com with SMTP id w8so3475059qts.11;
+        Thu, 23 Jan 2020 12:07:04 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=VyznYH5jQ6Vy0xxWHMJMOnmd05+7Te8s8tuSLOem1vc=;
-        b=NEFtawHLgzySPes5yhMKn043r+gEGRFGKhG2aJibWy+YdIIw0CJVynUf/h7t5SDCAn
-         YCLGg0okwgHeebwoD2fSmlXxTPzE+8OqgOFxOfSXKIjZI6xLy+zqNphZwdd2Tl3HNdb9
-         F+bOjMFMa/rjrcxnOi4Uv4WZy/wdxN2W8Nb0aKewvUoYFlPfCCwLGvMXURaKpP3IPhAy
-         Vp7d3t7P3GCpDZy5GL/uWB/BtJVgZPiTYeU3t+OjdbL0MzYC+L/KPsM2qvjVN1iPjPEf
-         Ccr0Fq0QlZZfD85rtYSLJWpgC5B4L6fMT7Gk1Ub9GJZ/JSAOlZbDhxtdfgH8LTyMuqxP
-         +XHQ==
+        bh=FpS8SNmX9i1WKyCuqTNSk92t9OSwIsxjQWYeVC963ns=;
+        b=reOOCz/iEMCRfrK6f3Qh2y4cWrG3wG5z1scR2wWmlL9XTCqpKz3OOtUwLG6q+mh2q1
+         geiNGfk/ycRwsXOPm0sz9xIwM5/oshWd9Q/3+YgDVqKm1s5ORBLeHrn/zxwgy9XkB69C
+         +tmGx+RjODrgMZF7aB0yzccf9EY+kDW6J1L5djLIUXyQkoyMHDEpOrG8Ckg7+z2KDP7w
+         XEiP3f6VY/C7RayEM0C2XtXMhssIQYk7cusr2ewST7YwyPELv220I2otF/J/5sM8SoZo
+         gpwM1WfuSYNH1sPW8UNQnhul6Ik4scRLxZECPJt5HZ2NDLCX/srtmw9RdDQhaowUnqoq
+         ws+Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=VyznYH5jQ6Vy0xxWHMJMOnmd05+7Te8s8tuSLOem1vc=;
-        b=lDGLfjAnPmcz3PdabhYIbDpMiIdXSAuTtaGwmc1N2Q95ZPWpmwYZSVuDk62QijvdM1
-         WfqMI4K1jo/WzgaBlPKGQKUme6B1GCUBkGxGpgZjQ679lwuURtzhTczLGoN275a5rzv/
-         8AU5VzMYp2AMu/GeDWySZZYYNKL4DhSk5I2FvAEeMd0/k1pVju4+LYfumW3NnMC3+B33
-         gSZJCGVr3U2n0FlLA/gENUxOpsuQR3uLeyvNeIwcITCDMxtr2J3ZoriPcoXPEGAxSbJp
-         pA06Xzj/9/96nw5I43EUdit8Q/Wsn2OXXPTSU27VX4u1g/6NiQXLBbv5TDsUQefHf8F6
-         HeeQ==
-X-Gm-Message-State: APjAAAU/huSoYaDbb1yKfbcKZqPMvQIghckJZat5paiSUpBu0U5WpdtN
-        IZdhMZkFeRKrjWWr3hI8KljfSbmEV8eFVMwUdOt7oc4A
-X-Google-Smtp-Source: APXvYqwiRj0OJ5VwDvTDPamb1fxJTDNZ4OLpyrc6B4XIYJ2G1RIHK15Xy+a0L15Xtv0x5GzGRu8QZoxzo7UGUwseUng=
-X-Received: by 2002:aca:b3d6:: with SMTP id c205mr12152720oif.67.1579809941388;
- Thu, 23 Jan 2020 12:05:41 -0800 (PST)
+        bh=FpS8SNmX9i1WKyCuqTNSk92t9OSwIsxjQWYeVC963ns=;
+        b=Fopx9y3iPeyGNMwMJ/jq8It8sIVVEIcUN6uKzXm0eTaMs9B1GlwW1jmzXRH5RtWdEQ
+         0YiVcs+ZZJOEjDmNZ74B6iqQKErS2a+90w8E5s80fo3cylyhCaEZ3eIssAaCGjPD+yUk
+         61KLQNxBmzprWJvF5SuOmqw6dtm7hMw0zjtvnR1y+DLFQVWeX6hXHZ7c3s1+HzTuE54/
+         sToxbdl5lFCOA+CPleUmIS2CAiHoM1Pjbd9AJpvthjDFeNAhbDTEEZY9sjyW5xNHIlcL
+         rHGKwOMoDY/+IpwGiYRBMVXe7JsN8bw+PyfKnKW+FA8q6KkYftY0QAXlSUfu/+EYHpLv
+         k8AA==
+X-Gm-Message-State: APjAAAUFkYMJaD7i8WIMuKuyNNA2fZhDorgQtiBtIV4A+zTFEhGkLbUa
+        /doubPbeGy9EujkZtt5EUbjLgCsDJLKdD3+J4lE=
+X-Google-Smtp-Source: APXvYqxUAU1Dzpe4sekFIwJerqWcBXSxsB4ohvhBCArOKrV8UaCBhMNs2trwSrWlOruAu9t7zoLAbsvs8+aMEOco4u4=
+X-Received: by 2002:ac8:7b29:: with SMTP id l9mr17456358qtu.141.1579810023325;
+ Thu, 23 Jan 2020 12:07:03 -0800 (PST)
 MIME-Version: 1.0
-References: <20200115012651.228058-1-almasrymina@google.com>
- <20200115012651.228058-7-almasrymina@google.com> <7ce6d59f-fd73-c529-2ad6-edda9937966d@linux.ibm.com>
-In-Reply-To: <7ce6d59f-fd73-c529-2ad6-edda9937966d@linux.ibm.com>
-From:   Mina Almasry <almasrymina@google.com>
-Date:   Thu, 23 Jan 2020 12:05:30 -0800
-Message-ID: <CAHS8izNmhxja_0+b2DudpXB+1DQfpnjUu+Qak+wnsApgYrvU=Q@mail.gmail.com>
-Subject: Re: [PATCH v10 7/8] hugetlb_cgroup: Add hugetlb_cgroup reservation tests
-To:     Sandipan Das <sandipan@linux.ibm.com>
-Cc:     Mike Kravetz <mike.kravetz@oracle.com>,
-        David Rientjes <rientjes@google.com>,
-        Shakeel Butt <shakeelb@google.com>, shuah <shuah@kernel.org>,
-        Greg Thelen <gthelen@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        open list <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
-        linux-kselftest@vger.kernel.org, cgroups@vger.kernel.org,
-        Aneesh Kumar <aneesh.kumar@linux.vnet.ibm.com>
+References: <20200123152440.28956-1-kpsingh@chromium.org> <20200123152440.28956-2-kpsingh@chromium.org>
+In-Reply-To: <20200123152440.28956-2-kpsingh@chromium.org>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Thu, 23 Jan 2020 12:06:51 -0800
+Message-ID: <CAEf4BzbBAM1+E3j6pBaLjBwnvOVKV=oWrnANONEm8SCoGj=ZbQ@mail.gmail.com>
+Subject: Re: [PATCH bpf-next v3 01/10] bpf: btf: Add btf_type_by_name_kind
+To:     KP Singh <kpsingh@chromium.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        bpf <bpf@vger.kernel.org>, linux-security-module@vger.kernel.org,
+        Brendan Jackman <jackmanb@google.com>,
+        Florent Revest <revest@google.com>,
+        Thomas Garnier <thgarnie@google.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        James Morris <jmorris@namei.org>,
+        Kees Cook <keescook@chromium.org>,
+        Thomas Garnier <thgarnie@chromium.org>,
+        Michael Halcrow <mhalcrow@google.com>,
+        Paul Turner <pjt@google.com>,
+        Brendan Gregg <brendan.d.gregg@gmail.com>,
+        Jann Horn <jannh@google.com>,
+        Matthew Garrett <mjg59@google.com>,
+        Christian Brauner <christian@brauner.io>,
+        =?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mic@digikod.net>,
+        Florent Revest <revest@chromium.org>,
+        Brendan Jackman <jackmanb@chromium.org>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Stanislav Fomichev <sdf@google.com>,
+        Quentin Monnet <quentin.monnet@netronome.com>,
+        Andrey Ignatov <rdna@fb.com>, Joe Stringer <joe@wand.net.nz>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 23, 2020 at 1:15 AM Sandipan Das <sandipan@linux.ibm.com> wrote:
+On Thu, Jan 23, 2020 at 7:25 AM KP Singh <kpsingh@chromium.org> wrote:
 >
-> For powerpc64, either 16MB/16GB or 2MB/1GB huge pages are supported depending
-> on the MMU type (Hash or Radix). I was just running these tests on a powerpc64
-> system with Hash MMU and ran into problems because the tests assume that the
-> hugepage size is always 2MB. Can you determine the huge page size at runtime?
+> From: KP Singh <kpsingh@google.com>
 >
+> - The LSM code does the combination of btf_find_by_name_kind and
+>   btf_type_by_id a couple of times to figure out the BTF type for
+>   security_hook_heads and security_list_options.
+> - Add an extern for btf_vmlinux in btf.h
+>
+> Signed-off-by: KP Singh <kpsingh@google.com>
+> Reviewed-by: Brendan Jackman <jackmanb@google.com>
+> Reviewed-by: Florent Revest <revest@google.com>
+> Reviewed-by: Thomas Garnier <thgarnie@google.com>
+> ---
+>  include/linux/btf.h |  3 +++
+>  kernel/bpf/btf.c    | 12 ++++++++++++
+>  2 files changed, 15 insertions(+)
+>
+> diff --git a/include/linux/btf.h b/include/linux/btf.h
+> index 5c1ea99b480f..d4e859f90a39 100644
+> --- a/include/linux/btf.h
+> +++ b/include/linux/btf.h
+> @@ -15,6 +15,7 @@ struct btf_type;
+>  union bpf_attr;
+>
+>  extern const struct file_operations btf_fops;
+> +extern struct btf *btf_vmlinux;
+>
+>  void btf_put(struct btf *btf);
+>  int btf_new_fd(const union bpf_attr *attr);
+> @@ -66,6 +67,8 @@ const struct btf_type *
+>  btf_resolve_size(const struct btf *btf, const struct btf_type *type,
+>                  u32 *type_size, const struct btf_type **elem_type,
+>                  u32 *total_nelems);
+> +const struct btf_type *btf_type_by_name_kind(
+> +       struct btf *btf, const char *name, u8 kind);
+>
+>  #define for_each_member(i, struct_type, member)                        \
+>         for (i = 0, member = btf_type_member(struct_type);      \
+> diff --git a/kernel/bpf/btf.c b/kernel/bpf/btf.c
+> index 32963b6d5a9c..ea53c16802cb 100644
+> --- a/kernel/bpf/btf.c
+> +++ b/kernel/bpf/btf.c
+> @@ -441,6 +441,18 @@ const struct btf_type *btf_type_resolve_func_ptr(const struct btf *btf,
+>         return NULL;
+>  }
+>
+> +const struct btf_type *btf_type_by_name_kind(
+> +       struct btf *btf, const char *name, u8 kind)
+> +{
+> +       s32 type_id;
+> +
+> +       type_id = btf_find_by_name_kind(btf, name, kind);
+> +       if (type_id < 0)
+> +               return ERR_PTR(type_id);
+> +
+> +       return btf_type_by_id(btf, type_id);
+> +}
+> +
 
-Absolutely. Let me try to reproduce this failure and it should be
-fixed in the next patchset version.
+is it worth having this as a separate global function? If
+btf_find_by_name_kind returns valid ID, then you don't really need to
+check btf_type_by_id result, it is always going to be valid. So the
+pattern becomes:
+
+type_id = btf_find_by_name_kind(btf, name, kind);
+if (type_id < 0)
+  goto handle_error;
+t = btf_type_by_id(btf, type_id);
+/* now just use t */
+
+which is not much more verbose than:
+
+t = btf_type_by_name_kind(btf, name, kind);
+if (IS_ERR(t))
+  goto handle_error
+/* now use t */
+
+
+>  /* Types that act only as a source, not sink or intermediate
+>   * type when resolving.
+>   */
+> --
+> 2.20.1
+>
