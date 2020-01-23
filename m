@@ -2,166 +2,568 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6369BC33CAA
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 04:23:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31AB4C33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 04:24:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29DC524125
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 04:23:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8CD124125
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 04:24:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="deYP7rvl"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="vEX7Zp6E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726164AbgAWEVi (ORCPT
+        id S1726729AbgAWEYT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 23:21:38 -0500
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:34310 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725989AbgAWEVh (ORCPT
+        Wed, 22 Jan 2020 23:24:19 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:35322 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725989AbgAWEYT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 23:21:37 -0500
-Received: by mail-qk1-f195.google.com with SMTP id d10so2199263qke.1
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jan 2020 20:21:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=NJZYXNkYKZkhdbjX5VTpNG7GvBHLD7E4tbdC/yVx8LU=;
-        b=deYP7rvlgkx32IcJceLZuj0sSiWVHVRHUx7qZ4xGiLi9L5FYOjJUzHAs/SPDn3vvpQ
-         kPfuhw2DNt22KCx4y11E5O8Tphht2L86e8yUJWrTo0prf+Edu1wD6ooygvkZjKoXbDsR
-         IvZI8ZuSBY3Y0z/KOTZnNv4AXBMUtOe7EqUZSL2RWiCym3BKq/QO0KF8YCEjfLhSaaOP
-         OsXjGeZeVPopBghrhCaKnSa/EUrk6Bbd0gRGraq4G+7fa0AgXKUp6SkozaILFlA+npTU
-         RkgOnNPgdTqIS59KehVsg2KhTQAmuWtdze/rKsATGkB8McGBVFTIM7yDvUbrYNXmcKoJ
-         rpOA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=NJZYXNkYKZkhdbjX5VTpNG7GvBHLD7E4tbdC/yVx8LU=;
-        b=BT2rtgKrwVHf/CkJURo+Ts5rmkPWkgbuNaSwCFGLyxTUYl6q/EWOjBSxUJefg/DrTa
-         Pfndy2iBXvKPhxwmgxefwpfSDHBaeE3wzhczVWNi9J5LwuqKXWbQrIaAeQloaail6fXB
-         AvehPYLGF+HnlEnCea2Hj59h6tTsT6g+f7eseuK2h0h8Om9o/6+hH5250cqREjhau0tn
-         mkGvUH4rqivKIFk+kT5aue1MBdgMxDfgsTp2SOz1d3wJgW8ygHD1YOPSRm2KoNbAD+ov
-         1+nTsw4MunPGxGPNsPfLVeTfgDFaBO8qbUUVth91A89MmTfsGQH4+iGLuknHW1tEcw0W
-         N7HQ==
-X-Gm-Message-State: APjAAAXvDAYrdbu+aSkzKJjv3a6X6Vj8slDnr+IK8NrnAhsHZmInwEuk
-        IDhfnOn2Bg3fBMJfayOls1M=
-X-Google-Smtp-Source: APXvYqxAUasEVTs8HL635O+YWvWJJt0sYi2Li/KE/B/s8GBq9nMjPz6HsJr3dHnh55aFS8P3lR6F7A==
-X-Received: by 2002:a05:620a:110c:: with SMTP id o12mr12806521qkk.66.1579753296212;
-        Wed, 22 Jan 2020 20:21:36 -0800 (PST)
-Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id b35sm409399qtc.9.2020.01.22.20.21.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Jan 2020 20:21:35 -0800 (PST)
-From:   Arvind Sankar <nivedita@alum.mit.edu>
-X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
-Date:   Wed, 22 Jan 2020 23:21:33 -0500
-To:     "Luck, Tony" <tony.luck@intel.com>
-Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        "Yu, Fenghua" <fenghua.yu@intel.com>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        H Peter Anvin <hpa@zytor.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Shankar, Ravi V" <ravi.v.shankar@intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>, x86 <x86@kernel.org>
-Subject: Re: [PATCH v12] x86/split_lock: Enable split lock detection by kernel
-Message-ID: <20200123042132.GA2448175@rani.riverdale.lan>
-References: <20191212085948.GS2827@hirez.programming.kicks-ass.net>
- <20200110192409.GA23315@agluck-desk2.amr.corp.intel.com>
- <20200114055521.GI14928@linux.intel.com>
- <20200115222754.GA13804@agluck-desk2.amr.corp.intel.com>
- <20200115225724.GA18268@linux.intel.com>
- <20200122185514.GA16010@agluck-desk2.amr.corp.intel.com>
- <20200122224245.GA2331824@rani.riverdale.lan>
- <3908561D78D1C84285E8C5FCA982C28F7F54887A@ORSMSX114.amr.corp.intel.com>
- <20200123004507.GA2403906@rani.riverdale.lan>
- <20200123012317.GA21843@agluck-desk2.amr.corp.intel.com>
+        Wed, 22 Jan 2020 23:24:19 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00N4NkAx124300;
+        Wed, 22 Jan 2020 22:23:46 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1579753426;
+        bh=PAIatr9x7pXdyPfuUMV0gvvyQBiahoXgOeeVvuGNxrU=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=vEX7Zp6E82L2UWMCymVA4Qc1CD+/H2suB/NrkZDjz25oCAI+N4dvd9HGER1y5Zp/S
+         M6iF1XKyFPZJtpFRh2xapvwUsYLssaL1zMz73c4AZYR6ZzAievifIFCBlFtR/KY2sL
+         xYAgQhx+/XcDPDCQqMFlS887JanZTfp99CK6FcwY=
+Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00N4NkUS038544
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 22 Jan 2020 22:23:46 -0600
+Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 22
+ Jan 2020 22:23:45 -0600
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE101.ent.ti.com
+ (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Wed, 22 Jan 2020 22:23:45 -0600
+Received: from [172.24.145.136] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00N4NePl095997;
+        Wed, 22 Jan 2020 22:23:41 -0600
+Subject: Re: [PATCH v1 11/11] mtd: new support oops logger based on pstore/blk
+To:     WeiXiong Liao <liaoweixiong@allwinnertech.com>,
+        Kees Cook <keescook@chromium.org>,
+        Anton Vorontsov <anton@enomsg.org>,
+        Colin Cross <ccross@android.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+CC:     <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-mtd@lists.infradead.org>
+References: <1579482233-2672-1-git-send-email-liaoweixiong@allwinnertech.com>
+ <1579482233-2672-12-git-send-email-liaoweixiong@allwinnertech.com>
+From:   Vignesh Raghavendra <vigneshr@ti.com>
+Message-ID: <de3659ad-10bc-f14c-169d-d004c8726316@ti.com>
+Date:   Thu, 23 Jan 2020 09:54:09 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200123012317.GA21843@agluck-desk2.amr.corp.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1579482233-2672-12-git-send-email-liaoweixiong@allwinnertech.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 22, 2020 at 05:23:17PM -0800, Luck, Tony wrote:
-> On Wed, Jan 22, 2020 at 07:45:08PM -0500, Arvind Sankar wrote:
-> > On Wed, Jan 22, 2020 at 11:24:34PM +0000, Luck, Tony wrote:
-> > > >> +static enum split_lock_detect_state sld_state = sld_warn;
-> > > >> +
-> > > >
-> > > > This sets sld_state to sld_warn even on CPUs that don't support
-> > > > split-lock detection. split_lock_init will then try to read/write the
-> > > > MSR to turn it on. Would it be better to initialize it to sld_off and
-> > > > set it to sld_warn in split_lock_setup instead, which is only called if
-> > > > the CPU supports the feature?
-> > > 
-> > > I've lost some bits of this patch series somewhere along the way :-(  There
-> > > was once code to decide whether the feature was supported (either with
-> > > x86_match_cpu() for a couple of models, or using the architectural test
-> > > based on some MSR bits.  I need to dig that out and put it back in. Then
-> > > stuff can check X86_FEATURE_SPLIT_LOCK before wandering into code
-> > > that messes with MSRs
-> > 
-> > That code is still there (cpu_set_core_cap_bits). The issue is that with
-> > the initialization here, nothing ever sets sld_state to sld_off if the
-> > feature isn't supported.
-> > 
-> > v10 had a corresponding split_lock_detect_enabled that was
-> > 0-initialized, but Peter's patch as he sent out had the flag initialized
-> > to sld_warn.
-> 
-> Ah yes. Maybe the problem is that split_lock_init() is only
-> called on systems that support split loc detect, while we call
-> split_lock_init() unconditionally.
+Hi
 
-It was unconditional in v10 too?
+On 20/01/20 6:33 am, WeiXiong Liao wrote:
+[...]
+> +static inline int mtdpstore_panic_block_isbad(struct mtdpstore_context *cxt,
+> +		loff_t off)
+> +{
+> +	struct mtd_info *mtd = cxt->mtd;
+> +	u64 blknum = div_u64(off, mtd->erasesize);
+> +
+> +	return test_bit(blknum, cxt->badmap);
+> +}
+> +
+> +static inline void mtdpstore_mark_used(struct mtdpstore_context *cxt,
+> +		loff_t off)
+> +{
+> +	u64 zonenum = div_u64(off, cxt->bo_info.dmesg_size);
+> +
+> +	pr_debug("mark zone %llu used\n", zonenum);
 
-> 
-> What if we start with sld_state = sld_off, and then have split_lock_setup
-> set it to either sld_warn, or whatever the user chose on the command
-> line.  Patch below (on top of patch so you can see what I'm saying,
-> but will just merge it in for next version.
+Please replace pr_*() with dev_*() throughout the patch. Device pointer
+should be available via struct mtd_info
 
-Yep, that's what I suggested.
+Regards
+Vignesh
 
-> 
-> -Tony
-> 
-> 
-> diff --git a/arch/x86/kernel/cpu/intel.c b/arch/x86/kernel/cpu/intel.c
-> index 7478bebcd735..b6046ccfa372 100644
-> --- a/arch/x86/kernel/cpu/intel.c
-> +++ b/arch/x86/kernel/cpu/intel.c
-> @@ -39,7 +39,13 @@ enum split_lock_detect_state {
->  	sld_fatal,
->  };
->  
-> -static enum split_lock_detect_state sld_state = sld_warn;
+> +	set_bit(zonenum, cxt->usedmap);
+> +}
+> +
+> +static inline void mtdpstore_mark_unused(struct mtdpstore_context *cxt,
+> +		loff_t off)
+> +{
+> +	u64 zonenum = div_u64(off, cxt->bo_info.dmesg_size);
+> +
+> +	pr_debug("mark zone %llu unused\n", zonenum);
+> +	clear_bit(zonenum, cxt->usedmap);
+> +}
+> +
+> +static inline void mtdpstore_block_mark_unused(struct mtdpstore_context *cxt,
+> +		loff_t off)
+> +{
+> +	u64 zonenum = div_u64(off, cxt->bo_info.dmesg_size);
+> +	u32 zonecnt = cxt->mtd->erasesize / cxt->bo_info.dmesg_size;
+> +
+> +	while (zonecnt > 0) {
+> +		pr_debug("mark zone %llu unused\n", zonenum);
+> +		clear_bit(zonenum, cxt->usedmap);
+> +		zonenum++;
+> +		zonecnt--;
+> +	}
+> +}
+> +
+> +static inline int mtdpstore_is_used(struct mtdpstore_context *cxt, loff_t off)
+> +{
+> +	u64 zonenum = div_u64(off, cxt->bo_info.dmesg_size);
+> +	u64 blknum = div_u64(off, cxt->mtd->erasesize);
+> +
+> +	if (test_bit(blknum, cxt->badmap))
+> +		return true;
+> +	return test_bit(zonenum, cxt->usedmap);
+> +}
+> +
+> +static int mtdpstore_block_is_used(struct mtdpstore_context *cxt,
+> +		loff_t off)
+> +{
+> +	u64 zonenum = div_u64(off, cxt->bo_info.dmesg_size);
+> +	u32 zonecnt = cxt->mtd->erasesize / cxt->bo_info.dmesg_size;
+> +
+> +	while (zonecnt > 0) {
+> +		if (test_bit(zonenum, cxt->usedmap))
+> +			return true;
+> +		zonenum++;
+> +		zonecnt--;
+> +	}
+> +	return false;
+> +}
+> +
+> +static int mtdpstore_is_empty(struct mtdpstore_context *cxt, char *buf,
+> +		size_t size)
+> +{
+> +	struct mtd_info *mtd = cxt->mtd;
+> +	size_t sz;
+> +	int i;
+> +
+> +	sz = min_t(uint32_t, size, mtd->writesize / 4);
+> +	for (i = 0; i < sz; i++) {
+> +		if (buf[i] != (char)0xFF)
+> +			return false;
+> +	}
+> +	return true;
+> +}
+> +
+> +static void mtdpstore_mark_removed(struct mtdpstore_context *cxt, loff_t off)
+> +{
+> +	u64 zonenum = div_u64(off, cxt->bo_info.dmesg_size);
+> +
+> +	pr_debug("mark zone %llu removed\n", zonenum);
+> +	set_bit(zonenum, cxt->rmmap);
+> +}
+> +
+> +static void mtdpstore_block_clear_removed(struct mtdpstore_context *cxt,
+> +		loff_t off)
+> +{
+> +	u64 zonenum = div_u64(off, cxt->bo_info.dmesg_size);
+> +	u32 zonecnt = cxt->mtd->erasesize / cxt->bo_info.dmesg_size;
+> +
+> +	while (zonecnt > 0) {
+> +		clear_bit(zonenum, cxt->rmmap);
+> +		zonenum++;
+> +		zonecnt--;
+> +	}
+> +}
+> +
+> +static int mtdpstore_block_is_removed(struct mtdpstore_context *cxt,
+> +		loff_t off)
+> +{
+> +	u64 zonenum = div_u64(off, cxt->bo_info.dmesg_size);
+> +	u32 zonecnt = cxt->mtd->erasesize / cxt->bo_info.dmesg_size;
+> +
+> +	while (zonecnt > 0) {
+> +		if (test_bit(zonenum, cxt->rmmap))
+> +			return true;
+> +		zonenum++;
+> +		zonecnt--;
+> +	}
+> +	return false;
+> +}
+> +
+> +static int mtdpstore_erase_do(struct mtdpstore_context *cxt, loff_t off)
+> +{
+> +	struct erase_info erase;
+> +	int ret;
+> +
+> +	pr_debug("try to erase off 0x%llx\n", off);
+> +	erase.len = cxt->mtd->erasesize;
+> +	erase.addr = off;
+> +	ret = mtd_erase(cxt->mtd, &erase);
+> +	if (!ret)
+> +		mtdpstore_block_clear_removed(cxt, off);
+> +	else
+> +		pr_err("erase of region [0x%llx, 0x%llx] on \"%s\" failed\n",
+> +		       (unsigned long long)erase.addr,
+> +		       (unsigned long long)erase.len, cxt->bo_info.device);
+> +	return ret;
+> +}
+> +
 > +/*
-> + * Default to sld_off because most systems do not support
-> + * split lock detection. split_lock_setup() will switch this
-> + * to sld_warn, and then check to see if there is a command
-> + * line override.
+> + * called while removing file
+> + *
+> + * Avoiding over erasing, do erase only when all zones are removed or unused.
+> + * Ensure to remove when unregister by reading, erasing and wrtiing back.
 > + */
-> +static enum split_lock_detect_state sld_state = sld_off;
->  
->  /*
->   * Just in case our CPU detection goes bad, or you have a weird system,
-> @@ -1017,10 +1023,11 @@ static inline bool match_option(const char *arg, int arglen, const char *opt)
->  
->  static void __init split_lock_setup(void)
->  {
-> -	enum split_lock_detect_state sld = sld_state;
-> +	enum split_lock_detect_state sld;
+> +static ssize_t mtdpstore_erase(size_t size, loff_t off)
+> +{
+> +	struct mtdpstore_context *cxt = &oops_cxt;
+> +
+> +	if (mtdpstore_block_isbad(cxt, off))
+> +		return -EIO;
+> +
+> +	mtdpstore_mark_unused(cxt, off);
+> +
+> +	if (likely(mtdpstore_block_is_used(cxt, off))) {
+> +		mtdpstore_mark_removed(cxt, off);
+> +		return 0;
+> +	}
+> +
+> +	/* all zones are unused, erase it */
+> +	off = ALIGN_DOWN(off, cxt->mtd->erasesize);
+> +	return mtdpstore_erase_do(cxt, off);
+> +}
+> +
+> +/*
+> + * What is securety for mtdpstore?
+> + * As there is no erase for panic case, we should ensure at least one zone
+> + * is writable. Otherwise, panic write will be failed.
+> + * If zone is used, write operation will return -ENEXT, which means that
+> + * pstore/blk will try one by one until get a empty zone. So, it's no need
+> + * to ensure next zone is empty, but at least one.
+> + */
+> +static int mtdpstore_security(struct mtdpstore_context *cxt, loff_t off)
+> +{
+> +	int ret = 0, i;
+> +	u32 zonenum = (u32)div_u64(off, cxt->bo_info.dmesg_size);
+> +	u32 zonecnt = (u32)div_u64(cxt->mtd->size, cxt->bo_info.dmesg_size);
+> +	u32 blkcnt = (u32)div_u64(cxt->mtd->size, cxt->mtd->erasesize);
+> +	u32 erasesize = cxt->mtd->erasesize;
+> +
+> +	for (i = 0; i < zonecnt; i++) {
+> +		u32 num = (zonenum + i) % zonecnt;
+> +
+> +		/* found empty zone */
+> +		if (!test_bit(num, cxt->usedmap))
+> +			return 0;
+> +	}
+> +
+> +	/* If there is no any empty zone, we have no way but to do erase */
+> +	off = ALIGN_DOWN(off, erasesize);
+> +	while (blkcnt--) {
+> +		div64_u64_rem(off + erasesize, cxt->mtd->size, (u64 *)&off);
+> +
+> +		if (mtdpstore_block_isbad(cxt, off))
+> +			continue;
+> +
+> +		ret = mtdpstore_erase_do(cxt, off);
+> +		if (!ret) {
+> +			mtdpstore_block_mark_unused(cxt, off);
+> +			break;
+> +		}
+> +	}
+> +
+> +	if (ret)
+> +		pr_err("all blocks bad!\n");
+> +	pr_debug("end security\n");
+> +	return ret;
+> +}
+> +
+> +static ssize_t mtdpstore_write(const char *buf, size_t size, loff_t off)
+> +{
+> +	struct mtdpstore_context *cxt = &oops_cxt;
+> +	size_t retlen;
+> +	int ret;
+> +
+> +	if (mtdpstore_block_isbad(cxt, off))
+> +		return -ENEXT;
+> +
+> +	/* zone is used, please try next one */
+> +	if (mtdpstore_is_used(cxt, off))
+> +		return -ENEXT;
+> +
+> +	pr_debug("try to write off 0x%llx size %zu\n", off, size);
+> +	ret = mtd_write(cxt->mtd, off, size, &retlen, (u_char *)buf);
+> +	if (ret < 0 || retlen != size) {
+> +		pr_err("write failure at %lld (%zu of %zu written), err %d\n",
+> +				off, retlen, size, ret);
+> +		return -EIO;
+> +	}
+> +	mtdpstore_mark_used(cxt, off);
+> +
+> +	mtdpstore_security(cxt, off);
+> +	return retlen;
+> +}
+> +
+> +/*
+> + * All zones will be read as pstore/blk will read zone one by one when do
+> + * recover.
+> + */
+> +static ssize_t mtdpstore_read(char *buf, size_t size, loff_t off)
+> +{
+> +	struct mtdpstore_context *cxt = &oops_cxt;
+> +	size_t retlen;
+> +	int ret;
+> +
+> +	if (mtdpstore_block_isbad(cxt, off))
+> +		return -ENEXT;
+> +
+> +	pr_debug("try to read off 0x%llx size %zu\n", off, size);
+> +	ret = mtd_read(cxt->mtd, off, size, &retlen, (u_char *)buf);
+> +	if ((ret < 0 && !mtd_is_bitflip(ret)) || size != retlen)  {
+> +		pr_err("read failure at %lld (%zu of %zu read), err %d\n",
+> +				off, retlen, size, ret);
+> +		return -EIO;
+> +	}
+> +
+> +	if (mtdpstore_is_empty(cxt, buf, size))
+> +		mtdpstore_mark_unused(cxt, off);
+> +	else
+> +		mtdpstore_mark_used(cxt, off);
+> +
+> +	mtdpstore_security(cxt, off);
+> +	return retlen;
+> +}
+> +
+> +static ssize_t mtdpstore_panic_write(const char *buf, size_t size, loff_t off)
+> +{
+> +	struct mtdpstore_context *cxt = &oops_cxt;
+> +	size_t retlen;
+> +	int ret;
+> +
+> +	if (mtdpstore_panic_block_isbad(cxt, off))
+> +		return -ENEXT;
+> +
+> +	/* zone is used, please try next one */
+> +	if (mtdpstore_is_used(cxt, off))
+> +		return -ENEXT;
+> +
+> +	ret = mtd_panic_write(cxt->mtd, off, size, &retlen, (u_char *)buf);
+> +	if (ret < 0 || size != retlen) {
+> +		pr_err("panic write failure at %lld (%zu of %zu read), err %d\n",
+> +				off, retlen, size, ret);
+> +		return -EIO;
+> +	}
+> +	mtdpstore_mark_used(cxt, off);
+> +
+> +	return retlen;
+> +}
+> +
+> +static void mtdpstore_notify_add(struct mtd_info *mtd)
+> +{
+> +	int ret;
+> +	struct mtdpstore_context *cxt = &oops_cxt;
+> +	struct blkoops_info *info = &cxt->bo_info;
+> +	unsigned long longcnt;
+> +
+> +	if (!strcmp(mtd->name, info->device))
+> +		cxt->index = mtd->index;
+> +
+> +	if (mtd->index != cxt->index || cxt->index < 0)
+> +		return;
+> +
+> +	pr_debug("found matching MTD device %s\n", mtd->name);
+> +
+> +	if (mtd->size < info->dmesg_size * 2) {
+> +		pr_err("MTD partition %d not big enough\n", mtd->index);
+> +		return;
+> +	}
+> +	if (mtd->erasesize < info->dmesg_size) {
+> +		pr_err("eraseblock size of MTD partition %d too small\n",
+> +				mtd->index);
+> +		return;
+> +	}
+> +	if (unlikely(info->dmesg_size % mtd->writesize)) {
+> +		pr_err("record size %lu KB must align to write size %d KB\n",
+> +				info->dmesg_size / 1024,
+> +				mtd->writesize / 1024);
+> +		return;
+> +	}
+> +	if (unlikely(mtd->size > MTDPSTORE_MAX_MTD_SIZE)) {
+> +		pr_err("mtd%d is too large (limit is %d MiB)\n",
+> +				mtd->index,
+> +				MTDPSTORE_MAX_MTD_SIZE / 1024 / 1024);
+> +		return;
+> +	}
+> +
+> +	longcnt = BITS_TO_LONGS(div_u64(mtd->size, info->dmesg_size));
+> +	cxt->rmmap = kcalloc(longcnt, sizeof(long), GFP_KERNEL);
+> +	cxt->usedmap = kcalloc(longcnt, sizeof(long), GFP_KERNEL);
+> +
+> +	longcnt = BITS_TO_LONGS(div_u64(mtd->size, mtd->erasesize));
+> +	cxt->badmap = kcalloc(longcnt, sizeof(long), GFP_KERNEL);
+> +
+> +	cxt->bo_dev.total_size = mtd->size;
+> +	/* just support dmesg right now */
+> +	cxt->bo_dev.flags = BLKOOPS_DEV_SUPPORT_DMESG;
+> +	cxt->bo_dev.read = mtdpstore_read;
+> +	cxt->bo_dev.write = mtdpstore_write;
+> +	cxt->bo_dev.erase = mtdpstore_erase;
+> +	cxt->bo_dev.panic_write = mtdpstore_panic_write;
+> +
+> +	ret = blkoops_register_device(&cxt->bo_dev);
+> +	if (ret) {
+> +		pr_err("mtd%d register to blkoops failed\n", mtd->index);
+> +		return;
+> +	}
+> +	cxt->mtd = mtd;
+> +	pr_info("Attached to MTD device %d\n", mtd->index);
+> +}
+> +
+> +static int mtdpstore_flush_removed_do(struct mtdpstore_context *cxt,
+> +		loff_t off, size_t size)
+> +{
+> +	struct mtd_info *mtd = cxt->mtd;
+> +	u_char *buf;
+> +	int ret;
+> +	size_t retlen;
+> +	struct erase_info erase;
+> +
+> +	buf = kmalloc(mtd->erasesize, GFP_KERNEL);
+> +	if (!buf)
+> +		return -ENOMEM;
+> +
+> +	/* 1st. read to cache */
+> +	ret = mtd_read(mtd, off, mtd->erasesize, &retlen, buf);
+> +	if (ret || retlen != mtd->erasesize)
+> +		goto free;
+> +
+> +	/* 2nd. erase block */
+> +	erase.len = mtd->erasesize;
+> +	erase.addr = off;
+> +	ret = mtd_erase(mtd, &erase);
+> +	if (ret)
+> +		goto free;
+> +
+> +	/* 3rd. write back */
+> +	while (size) {
+> +		unsigned int zonesize = cxt->bo_info.dmesg_size;
+> +
+> +		/* remove must clear used bit */
+> +		if (mtdpstore_is_used(cxt, off))
+> +			mtd_write(mtd, off, zonesize, &retlen, buf);
+> +
+> +		off += zonesize;
+> +		size -= min_t(unsigned int, zonesize, size);
+> +	}
+> +
+> +free:
+> +	kfree(buf);
+> +	return ret;
+> +}
+> +
+> +static int mtdpstore_flush_removed(struct mtdpstore_context *cxt)
+> +{
+> +	struct mtd_info *mtd = cxt->mtd;
+> +	int ret;
+> +	loff_t off;
+> +	u32 blkcnt = (u32)div_u64(mtd->size, mtd->erasesize);
+> +
+> +	for (off = 0; blkcnt > 0; blkcnt--, off += mtd->erasesize) {
+> +		ret = mtdpstore_block_is_removed(cxt, off);
+> +		if (!ret) {
+> +			off += mtd->erasesize;
+> +			continue;
+> +		}
+> +
+> +		ret = mtdpstore_flush_removed_do(cxt, off, mtd->erasesize);
+> +		if (ret)
+> +			return ret;
+> +	}
+> +	return 0;
+> +}
+> +
+> +static void mtdpstore_notify_remove(struct mtd_info *mtd)
+> +{
+> +	struct mtdpstore_context *cxt = &oops_cxt;
+> +
+> +	if (mtd->index != cxt->index || cxt->index < 0)
+> +		return;
+> +
+> +	mtdpstore_flush_removed(cxt);
+> +
+> +	blkoops_unregister_device(&cxt->bo_dev);
+> +	kfree(cxt->badmap);
+> +	kfree(cxt->usedmap);
+> +	kfree(cxt->rmmap);
+> +	cxt->mtd = NULL;
+> +	cxt->index = -1;
+> +}
+> +
+> +static struct mtd_notifier mtdpstore_notifier = {
+> +	.add	= mtdpstore_notify_add,
+> +	.remove	= mtdpstore_notify_remove,
+> +};
+> +
+> +static int __init mtdpstore_init(void)
+> +{
+> +	int ret;
+> +	struct mtdpstore_context *cxt = &oops_cxt;
+> +	struct blkoops_info *info = &cxt->bo_info;
+> +
+> +	ret = blkoops_info(info);
+> +	if (unlikely(ret))
+> +		return ret;
+> +
+> +	if (strlen(info->device) == 0) {
+> +		pr_err("mtd device must be supplied\n");
+> +		return -EINVAL;
+> +	}
+> +	if (!info->dmesg_size) {
+> +		pr_err("no recorder enabled\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	/* Setup the MTD device to use */
+> +	ret = kstrtoint((char *)info->device, 0, &cxt->index);
+> +	if (ret)
+> +		cxt->index = -1;
+> +
+> +	register_mtd_user(&mtdpstore_notifier);
+> +	return 0;
+> +}
+> +module_init(mtdpstore_init);
+> +
+> +static void __exit mtdpstore_exit(void)
+> +{
+> +	unregister_mtd_user(&mtdpstore_notifier);
+> +}
+> +module_exit(mtdpstore_exit);
+> +
+> +MODULE_LICENSE("GPL");
+> +MODULE_AUTHOR("WeiXiong Liao <liaoweixiong@allwinnertech.com>");
+> +MODULE_DESCRIPTION("MTD Oops/Panic console logger/driver");
+> 
 
-This is bike-shedding, but initializing sld = sld_warn here would have
-been enough with no other changes to the patch I think?
+-- 
+Regards
+Vignesh
