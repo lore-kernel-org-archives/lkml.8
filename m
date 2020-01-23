@@ -6,58 +6,58 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D441EC33CAA
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 05:44:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AAAAC33CAA
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 05:45:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4E6524673
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 05:44:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D21192467B
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 05:45:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="JCtjWNLj"
+	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="Dl9gZ/DJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726135AbgAWFoe (ORCPT
+        id S1726227AbgAWFo7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 00:44:34 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:34849 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725535AbgAWFoe (ORCPT
+        Thu, 23 Jan 2020 00:44:59 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:34882 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725818AbgAWFo7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 00:44:34 -0500
-Received: by mail-wr1-f65.google.com with SMTP id g17so1696331wro.2
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jan 2020 21:44:33 -0800 (PST)
+        Thu, 23 Jan 2020 00:44:59 -0500
+Received: by mail-wr1-f67.google.com with SMTP id g17so1697003wro.2
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jan 2020 21:44:58 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=brainfault-org.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=UD2g3R6EAWCmOv3T2af3YKBLNY0Xvn+xHCncHmLKPFw=;
-        b=JCtjWNLjaIdA+tOfF5e30N6xC2R7EKBvmaDa2DeLl22ER2d0IuuWLEKyqXmriPYSJE
-         u47z7moP4wmVG7uBkdVZheNXzoLQgOfF5vnl6Dad9pS/SUcffBKjsbgts5aTPxM87qWw
-         nrH0jvVnL9LRDw/x9wuzLUlsp7y1lkYnqRf61oNVz2sVxuqxYoDgbSb3ap5rqN2dg3tI
-         aydMjz7P8ZvJ4EsjW6EsmLSKHW9G1EssOHnior+6cBteMWG6w/IjiMkFD/tT3AnJDEbm
-         a/UkkcZpfE5m6P4Jd20fsiCNz3IIhoCAF1ctZIMcgGMRn3blJFZhx73DWnthZyxwI2Mz
-         hwPw==
+        bh=eQFSVaPDWWaPdmtn/1E6R2bbXGcBvm7LU1/hWkgtmnw=;
+        b=Dl9gZ/DJ2AT3Xr/0RRA+Sbi3NK5lX+C8MO+aZhLy/zYhEKXK3+OILOcnsaxaWZsy2C
+         LoxiyVtwZTA4NxUjH0q4ytf13LPxizT+eiZmnyv9IwJ32EFXc1eWAazN+9Xbjmw6JZvl
+         XSXVv8yBmxD4tEc2h4jtwDBf8vMeoFJI5hprg1IElHZh0Cvr2Kw7mHDNHKY5z/oc84Fb
+         6pTS2P2vplQQdKQLJC5DiWiTjAdBwdow9wCdYplVq0TcXR87xhjJAoKz569QLYvExuaB
+         aFxdh4XOTH7jHVeJ0KXHU1cfvuQF9N02WXsVKo+qUfKnWRfBXvhh4ma03KSZA2poBlEi
+         PtzQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=UD2g3R6EAWCmOv3T2af3YKBLNY0Xvn+xHCncHmLKPFw=;
-        b=gx9OjALbjPIHKbz7LyD7cGJaNqtHo4UbLPo+ucGPbFpgdDkSIsTYYfBFzsT5Sbs4hw
-         u6DNqD+p77LyIteHqKIyNYLJ/q7c6thirmK3OtDNNTHYSEp7SF5UF/lQwr8Lm3B5NrqA
-         +3pINuZjZx50/8cBGtS60yDT4bScp3+WzbUHP41GinQ/KKD4Giwi1pZ3R2jzZEWRCMpb
-         6YcD/wNvpnchbXrx67dcfRZPtOgRD/bB8X/kyYzsDfSCB5ybPMTXvKYD8ZWGnrxTLv5v
-         egTA3QhizrzGITUrAin8LZXZaqwIfF3VzIln4QNPFe8vWjhOkJ2eBVmFAzYsFGziYxQw
-         HPwg==
-X-Gm-Message-State: APjAAAX9nCUVp+2btiDLYzpxx7K5YU+ioOMX/ppubHYs1zmyRoPB7TOY
-        sDcIBI2TzdviLrgV+BazO1I041v+k9hLoqPU/4mJwg==
-X-Google-Smtp-Source: APXvYqyv+KlVKgjZla10G9aq/wBRqNXRZlBj1SqOqrDQKX4hSnOy90LI2wYMDDJ2iA9J2tC+0TnvKzxIf8yQ4C+omcI=
-X-Received: by 2002:a5d:5345:: with SMTP id t5mr16455678wrv.0.1579758272249;
- Wed, 22 Jan 2020 21:44:32 -0800 (PST)
+        bh=eQFSVaPDWWaPdmtn/1E6R2bbXGcBvm7LU1/hWkgtmnw=;
+        b=tTSN2GIh0lMdXFnf+P9TU8fslAc9XnxRCnubmbrUtJYblakx3oEHhLMKPmJFVnYb2c
+         EqmfY2w/F72eKqVURNaMrGtDxLTjeRcAZakcl05rs3TMXkYTEO5fC/Z+WnRRmQV4tmK6
+         /cKsXT5MXeuq1M/G/g2kx1JIcuU0Ufxhc2D9hk2mtrW+6wCZFOR/70bLCrRB19nBornV
+         raTLjrEAZApDnaKJAz9UuXDXYITq9V06cp2OrhXxdZ7mf1JdIGnU0CL60s/hX9AqoC0K
+         l/bqjcdefB+cOQ0OxiCCBikdtwYf/pnLLWZ8wjtHAiYzwUtl0qh2yvII6ydXQTmNqIZ+
+         N1ug==
+X-Gm-Message-State: APjAAAXr5HiFp8x/ura3jwCTG2GXVLhz6NQqM8ZuMjOqvecq/hR2cjTF
+        ul/SF/fwMhM7PsqR2e3QAS4kimiymll1Lc5Sp8MqRg==
+X-Google-Smtp-Source: APXvYqxFx3acHhfHKtlNettHSRNPLnlsI6PD2cRjHTPUId0DG7CREieo2bxT1jP74Wv0NcoVtafTFyY9u+09F5aObD8=
+X-Received: by 2002:a5d:620b:: with SMTP id y11mr15177157wru.230.1579758297609;
+ Wed, 22 Jan 2020 21:44:57 -0800 (PST)
 MIME-Version: 1.0
-References: <20200116143029.31441-1-guoren@kernel.org>
-In-Reply-To: <20200116143029.31441-1-guoren@kernel.org>
+References: <20200116143029.31441-1-guoren@kernel.org> <20200116143029.31441-2-guoren@kernel.org>
+In-Reply-To: <20200116143029.31441-2-guoren@kernel.org>
 From:   Anup Patel <anup@brainfault.org>
-Date:   Thu, 23 Jan 2020 11:14:20 +0530
-Message-ID: <CAAhSdy0k2gb1+k214dW1Zk-YwvujNdui5GJE3zPb_NhDS9b_Rw@mail.gmail.com>
-Subject: Re: [PATCH V2 1/4] riscv: Separate patch for cflags and aflags
+Date:   Thu, 23 Jan 2020 11:14:46 +0530
+Message-ID: <CAAhSdy3pe4NNS4Gv3dxfe36mMQAB4wis3+wN2OzBmVF7BehK=A@mail.gmail.com>
+Subject: Re: [PATCH V2 2/4] riscv: Rename __switch_to_aux -> fpu
 To:     Guo Ren <guoren@kernel.org>
 Cc:     Paul Walmsley <paul.walmsley@sifive.com>,
         Palmer Dabbelt <palmer@dabbelt.com>,
@@ -84,45 +84,47 @@ On Thu, Jan 16, 2020 at 8:01 PM <guoren@kernel.org> wrote:
 >
 > From: Guo Ren <ren_guo@c-sky.com>
 >
-> Use "subst fd" in Makefile is a hack way and it's not convenient
-> to add new ISA feature. Just separate them into riscv-march-cflags
-> and riscv-march-aflags.
+> The name of __switch_to_aux is not clear and rename it with the
+> determine function: __switch_to_fpu. Next we could add other regs'
+> switch.
 >
 > Signed-off-by: Guo Ren <ren_guo@c-sky.com>
 > Cc: Anup Patel <Anup.Patel@wdc.com>
 > ---
->  arch/riscv/Makefile | 18 ++++++++++++------
->  1 file changed, 12 insertions(+), 6 deletions(-)
+>  arch/riscv/include/asm/switch_to.h | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
 >
-> diff --git a/arch/riscv/Makefile b/arch/riscv/Makefile
-> index b9009a2fbaf5..6d09b53cf106 100644
-> --- a/arch/riscv/Makefile
-> +++ b/arch/riscv/Makefile
-> @@ -35,12 +35,18 @@ else
->  endif
+> diff --git a/arch/riscv/include/asm/switch_to.h b/arch/riscv/include/asm/switch_to.h
+> index 407bcc96a710..b9234e7178d0 100644
+> --- a/arch/riscv/include/asm/switch_to.h
+> +++ b/arch/riscv/include/asm/switch_to.h
+> @@ -44,7 +44,7 @@ static inline void fstate_restore(struct task_struct *task,
+>         }
+>  }
 >
->  # ISA string setting
-> -riscv-march-$(CONFIG_ARCH_RV32I)       := rv32ima
-> -riscv-march-$(CONFIG_ARCH_RV64I)       := rv64ima
-> -riscv-march-$(CONFIG_FPU)              := $(riscv-march-y)fd
-> -riscv-march-$(CONFIG_RISCV_ISA_C)      := $(riscv-march-y)c
-> -KBUILD_CFLAGS += -march=$(subst fd,,$(riscv-march-y))
-> -KBUILD_AFLAGS += -march=$(riscv-march-y)
-> +riscv-march-cflags-$(CONFIG_ARCH_RV32I)                := rv32ima
-> +riscv-march-cflags-$(CONFIG_ARCH_RV64I)                := rv64ima
-> +riscv-march-$(CONFIG_FPU)                      := $(riscv-march-y)fd
-> +riscv-march-cflags-$(CONFIG_RISCV_ISA_C)       := $(riscv-march-cflags-y)c
-> +
-> +riscv-march-aflags-$(CONFIG_ARCH_RV32I)                := rv32ima
-> +riscv-march-aflags-$(CONFIG_ARCH_RV64I)                := rv64ima
-> +riscv-march-aflags-$(CONFIG_FPU)               := $(riscv-march-aflags-y)fd
-> +riscv-march-aflags-$(CONFIG_RISCV_ISA_C)       := $(riscv-march-aflags-y)c
-> +
-> +KBUILD_CFLAGS += -march=$(riscv-march-cflags-y)
-> +KBUILD_AFLAGS += -march=$(riscv-march-aflags-y)
+> -static inline void __switch_to_aux(struct task_struct *prev,
+> +static inline void __switch_to_fpu(struct task_struct *prev,
+>                                    struct task_struct *next)
+>  {
+>         struct pt_regs *regs;
+> @@ -60,7 +60,7 @@ extern bool has_fpu;
+>  #define has_fpu false
+>  #define fstate_save(task, regs) do { } while (0)
+>  #define fstate_restore(task, regs) do { } while (0)
+> -#define __switch_to_aux(__prev, __next) do { } while (0)
+> +#define __switch_to_fpu(__prev, __next) do { } while (0)
+>  #endif
 >
->  KBUILD_CFLAGS += -mno-save-restore
->  KBUILD_CFLAGS += -DCONFIG_PAGE_OFFSET=$(CONFIG_PAGE_OFFSET)
+>  extern struct task_struct *__switch_to(struct task_struct *,
+> @@ -71,7 +71,7 @@ do {                                                  \
+>         struct task_struct *__prev = (prev);            \
+>         struct task_struct *__next = (next);            \
+>         if (has_fpu)                                    \
+> -               __switch_to_aux(__prev, __next);        \
+> +               __switch_to_fpu(__prev, __next);        \
+>         ((last) = __switch_to(__prev, __next));         \
+>  } while (0)
+>
 > --
 > 2.17.0
 >
