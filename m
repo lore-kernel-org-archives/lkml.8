@@ -2,125 +2,235 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF21EC32771
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 03:02:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E125C33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 03:10:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 921F624673
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 03:02:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="J6gYOfoW"
+	by mail.kernel.org (Postfix) with ESMTP id 35B352467A
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 03:10:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579749020;
+	bh=jE1seowcy+brAksEFaMaECr46SwpPDyV4bwh8QqOans=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=1oPV3f6vvpSKksJDQMvJnnhRYSOC1p/aPSMgFZWDvb1S1qe3iUfQQ79d+Gk67d4w6
+	 P1kOIrCJuw/mQmwZbYQB/L4fVTMBhtjf4QJtJL9C6ynzb8Kjr/W3FA6xtTQqRoeNSe
+	 BNel8bfhpxOgMYbzTA/0CkXrPYHt/55XLdjCNSiI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726219AbgAWDCN (ORCPT
+        id S1726227AbgAWDKT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 22:02:13 -0500
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:34948 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725911AbgAWDCM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 22:02:12 -0500
-Received: by mail-pl1-f196.google.com with SMTP id g6so709464plt.2
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jan 2020 19:02:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
-        h=content-transfer-encoding:from:mime-version:subject:date:message-id
-         :references:cc:in-reply-to:to;
-        bh=QHwD3xJbxA6Bj+Yx1EYQsUkr/yHSHTopSLaHf+HB1LQ=;
-        b=J6gYOfoWW7D94l0Y7ebAoY3D9qsp2ivY4bRoViRNM2t+ygjSQ7c98hfo1U/XlqYySc
-         JojfwPv88Mja6A6xQTlrtoPOT36SxrfCvfj3t5/EqQfJCxSo0NcL1czveIgtaa7lDe95
-         L+vwHoDMjlgDTN7MvU7EIxsiGv1L9+qITCvUNfrbshL2PKCeiVc7vZB3qVeSzAkQSp+S
-         8VGp43i/tm1uGMM+3zQEztlAgfEXgCGnbBuZ/2w1MEV7J62DVCLiS10G//0E58+SgMsx
-         w946YabfAyizOwSP6vU1vxY35l/0xrrc1X+/j0QklraJ0iAJO6pkB3c74LgNhr3Brd1z
-         5FJg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=QHwD3xJbxA6Bj+Yx1EYQsUkr/yHSHTopSLaHf+HB1LQ=;
-        b=hj8kVrnW9jSp4rHCHeBP9dAuLZa4aFUUoUUGZfQ6vrb62YAB9Utc2mpFEY5WXQIY7K
-         iU2WKD/Fzk0QKIgbkkjIv5KJwfV0a7dx0Lr2NQGI+awMHMhiuazUTbTMweHsT4fnHeq8
-         Ze8x81Z+ZsfNgSnNdTV+znqo2Mva3YRh8BBV4rZiVViHGjazezgsVSuHShgFFrZ5PHXS
-         RISZlf+SfJl6E/PU6k2NTwD7IMbY09kJ1IeMAuZZWoWpAQytCcHMv4zb8bBhtE5C3USX
-         //4Z56Qcw9xCU3q09dKFjlXDKoQhZdyhTdcZvyN3NbUgRwmxVwltheWJwOIdu0LA7Gte
-         8yHQ==
-X-Gm-Message-State: APjAAAXzyY9j30ITIVR5kTnbrAoIyri3pX4DyLDlntLzDNzFz+hw1v16
-        CCngAa6zLGV3DLsmDBGRZ0yPaQ==
-X-Google-Smtp-Source: APXvYqx0ztp78PhfwAEOpZE9YOyLcEj6xDbpjw3B4QFYco9brX2bu9A5MvQuDHkORMpB6ZNtfDJ0aw==
-X-Received: by 2002:a17:90a:5215:: with SMTP id v21mr2014316pjh.31.1579748532131;
-        Wed, 22 Jan 2020 19:02:12 -0800 (PST)
-Received: from ?IPv6:2600:1010:b025:c4e4:c9ce:11e3:9a9e:90f0? ([2600:1010:b025:c4e4:c9ce:11e3:9a9e:90f0])
-        by smtp.gmail.com with ESMTPSA id y203sm312460pfb.65.2020.01.22.19.02.11
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 22 Jan 2020 19:02:11 -0800 (PST)
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-From:   Andy Lutomirski <luto@amacapital.net>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH] mm: Add MREMAP_DONTUNMAP to mremap().
-Date:   Wed, 22 Jan 2020 19:02:08 -0800
-Message-Id: <CD5EA896-7364-40E2-8709-A014973FFBC8@amacapital.net>
-References: <20200123014627.71720-1-bgeffon@google.com>
-Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Arnd Bergmann <arnd@arndb.de>, Sonny Rao <sonnyrao@google.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Lokesh Gidra <lokeshgidra@google.com>,
-        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-        Yu Zhao <yuzhao@google.com>, Jesse Barnes <jsbarnes@google.com>
-In-Reply-To: <20200123014627.71720-1-bgeffon@google.com>
-To:     Brian Geffon <bgeffon@google.com>
-X-Mailer: iPhone Mail (17C54)
+        Wed, 22 Jan 2020 22:10:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59844 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725911AbgAWDKT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 22:10:19 -0500
+Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 238432465B;
+        Thu, 23 Jan 2020 03:10:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579749018;
+        bh=jE1seowcy+brAksEFaMaECr46SwpPDyV4bwh8QqOans=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=uHPTxDB0bJ6oR20gCh8YIOxcGXYKKaQW8tp2F0rNk4je/C9bK59GABeMk96kmk9nb
+         wS2xBPd4aMd8PZds33j1I+ZQ8brf0+0vdqkRyoH68lRk6ublsED729ZQnjpuwHOOw0
+         QTHNaCrbsyJOhiIJXlLkxtaCxilu6YMqjmwxuCd4=
+Date:   Wed, 22 Jan 2020 21:10:16 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ashok.raj@intel.com, Keith Busch <keith.busch@intel.com>
+Subject: Re: [PATCH v13 2/8] PCI/DPC: Allow dpc_probe() even if firmware
+ first mode is enabled
+Message-ID: <20200123031016.GA68788@google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <88420093-59aa-b713-c2e3-2872b4c5474b@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Jan 22, 2020 at 04:42:48PM -0800, Kuppuswamy Sathyanarayanan wrote:
+> Hi Bjorn,
+> 
+> On 1/22/20 3:17 PM, Bjorn Helgaas wrote:
+> > On Sat, Jan 18, 2020 at 08:00:31PM -0800, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
+> > > From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> > > 
+> > > As per ACPI specification v6.3, sec 5.6.6, Error Disconnect Recover
+> > > (EDR) notification used by firmware to let OS know about the DPC event
+> > > and permit OS to perform error recovery when processing the EDR
+> > > notification.
+> > I want to clear up some of this description because this is a very
+> > confusing area and we should follow the spec carefully so we all
+> > understand each other.
+> > 
+> > > Also, as per PCI firmware specification r3.2 Downstream
+> > > Port Containment Related Enhancements ECN, sec 4.5.1, table 4-6, if DPC
+> > > is controlled by firmware (firmware first mode), it's responsible for
+> > > initializing Downstream Port Containment Extended Capability Structures
+> > > per firmware policy.
+> > The above is actually not what the ECN says.  What it does say is
+> > this:
+> > 
+> >    If control of this feature [DPC configuration] was requested and
+> >    denied, firmware is responsible for initializing Downstream Port
+> >    Containment Extended Capability Structures per firmware policy.
+> > 
+> > Neither the PCI Firmware Spec (r3.2) nor the ECN contains any
+> > reference to "firmware first".  As far as I can tell, "Firmware First"
+> > is defined by the ACPI spec, and the FIRMWARE_FIRST bit in various
+> > HEST entries (sec 18.3.2) is what tells us when a device is in
+> > firmware-first mode.
+> > 
+> > That's a really long way of saying that from a spec point of view, DPC
+> > being controlled by firmware does NOT imply anything about
+> > firmware-first mode.
+>
+> But current AER and DPC driver uses ACPI FIRMWARE_FIRST bit
+> (in pcie_aer_get_firmware_first()) to decide whether AER/DPC is
+> controlled by firmware or OS. That's why I used the term
+> "firmware first mode" interchangeably with a mode in which
+> DPC/AER is controlled by firmware.
 
+Yes.  I think the current use of pcie_aer_get_firmware_first() there
+is probably not optimal and we should change that so it corresponds
+better with the spec.
 
-> On Jan 22, 2020, at 5:46 PM, Brian Geffon <bgeffon@google.com> wrote:
->=20
-> =EF=BB=BFMREMAP_DONTUNMAP is an additional flag that can be used with
-> MREMAP_FIXED to move a mapping to a new address. Normally, mremap(2)
-> would then tear down the old vma so subsequent accesses to the vma
-> cause a segfault. However, with this new flag it will keep the old
-> vma with zapping PTEs so any access to the old VMA after that point
-> will result in a pagefault.
+> > > And, OS is permitted to read or write DPC Control
+> > > and Status registers of a port while processing an Error Disconnect
+> > > Recover (EDR) notification from firmware on that port.
+> > > 
+> > > Currently, if firmware controls DPC (firmware first mode), OS will not
+> > > create/enumerate DPC PCIe port services. But, if OS supports EDR
+> > > feature, then as mentioned in above spec references, it should permit
+> > > enumeration of DPC driver and also support handling ACPI EDR
+> > > notification. So as first step, allow dpc_probe() to continue even if
+> > > firmware first mode is enabled. Also add appropriate checks to ensure
+> > > device registers are not modified outside EDR notification window in
+> > > firmware first mode. This is a preparatory patch for adding EDR support.
+> > > 
+> > > Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> > > Acked-by: Keith Busch <keith.busch@intel.com>
+> > > ---
+> > >   drivers/pci/pcie/dpc.c | 74 ++++++++++++++++++++++++++++++++++--------
+> > >   1 file changed, 61 insertions(+), 13 deletions(-)
+> > > 
+> > > diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
+> > > index e06f42f58d3d..c583a90fa90d 100644
+> > > --- a/drivers/pci/pcie/dpc.c
+> > > +++ b/drivers/pci/pcie/dpc.c
+> > > @@ -22,6 +22,7 @@ struct dpc_dev {
+> > >   	u16			cap_pos;
+> > >   	bool			rp_extensions;
+> > >   	u8			rp_log_size;
+> > > +	bool			edr_enabled; /* EDR mode is supported */
+> > This needs a better name, or perhaps it should be removed completely.
+> Any suggestions ? native_mode or firmware_dpc ?
+> > EDR is not a mode that can be enabled or disabled.  The _OSC "EDR
+> > supported" bit tells the firmware whether the OS supports EDR
+> > notification, but there's no corresponding bit that tells the OS
+> > whether firmware will actually *send* those notifications.
+> I agree that EDR is not a mode. But with EDR support, DPC driver functions
+> can be triggered/executed in two contexts.
+> 
+> 1. DPC is controlled by OS.
+> 2. Via EDR notification if DPC is controlled by firmware.
+> 
+> Since we want to use same code for both scenarios, we need some method
+> to detect which context is currently in use.
 
-This needs a vastly better description. Perhaps:
+I haven't gotten as far as looking at the actual EDR support yet, but
+I wonder if this could be rearranged so that dpc.c contained two
+things: (1) the existing DPC driver that claims DPC capability via
+dpc_probe() and (2) a few functions exported for use by the EDR path.
+Then maybe the EDR path could live in pci-acpi.c (or maybe a new edr.c
+file) and would not depend on dpc_probe() actually *claiming* the
+capability.
 
-When remapping an anonymous, private mapping, if MREMAP_DONTUNMAP is set, th=
-e source mapping will not be removed. Instead it will be cleared as if a bra=
-nd new anonymous, private mapping had been created atomically as part of the=
- mremap() call.  If a userfaultfd was watching the source, it will continue t=
-o watch the new mapping.  For a mapping that is shared or not anonymous, MRE=
-MAP_DONTUNMAP will cause the mremap() call to fail.
+> > Also, EDR is an ACPI concept, and dpc.c is a generic driver not
+> > specific to ACPI, so we should try to avoid polluting it with
+> > ACPI-isms.
+> > 
+> > >   };
+> > >   static const char * const rp_pio_error_string[] = {
+> > > @@ -69,6 +70,14 @@ void pci_save_dpc_state(struct pci_dev *dev)
+> > >   	if (!dpc)
+> > >   		return;
+> > > +	/*
+> > > +	 * If DPC is controlled by firmware then save/restore tasks are also
+> > > +	 * controlled by firmware. So skip rest of the function if DPC is
+> > > +	 * controlled by firmware.
+> > > +	 */
+> > > +	if (dpc->edr_enabled)
+> > > +		return;
+> > I think this should be something like:
+> > 
+> >    if (!host->native_dpc)
+> >      return;
+> > 
+> > That's what the spec says: if firmware does not grant control of DPC
+> > to the OS via _OSC, the OS may not read/write the DPC capability.
+> > 
+> > The usual situation would be that if firmware doesn't grant the OS
+> > permission to use DPC, we wouldn't use the dpc.c driver at all.
+> > 
+> > But IIUC, the point of this EDR stuff is that we're adding a case
+> > where the OS doesn't have permission to use DPC, but we *do* want to
+> > use parts of dpc.c in limited cases while handling EDR notifications.
+> Yes, your assumption is correct.
+> > 
+> > I think you should probably take the DPC-related _OSC stuff from the
+> > last patch ("PCI/ACPI: Enable EDR support") and move it before this
+> > patch, so it *only* negotiates DPC ownership, per the ECN.  That would
+> > probably result in dpc.c being used only if _OSC grants DPC ownership
+> > to the OS.
 
-Or is it something else?
+> Patch titled ("PCI/ACPI: Enable EDR support") exposes EDR support to
+> firmware in _OSC negotiation. So you wanted me to move this patch to
+> the end of the series to make sure we don't expose EDR support until
+> we have necessary code changes in kernel.
 
->=20
-> This feature will find a use in ChromeOS along with userfaultfd.
-> Specifically we will want to register a VMA with userfaultfd and then
-> pull it out from under a running process. By using MREMAP_DONTUNMAP we
-> don't have to worry about mprotecting and then potentially racing with
-> VMA permission changes from a running process.
+It actually does *two* things: (1) adds OSC_PCI_EXPRESS_DPC_CONTROL
+and native_dpc, and (2) adds OSC_PCI_EDR_SUPPORT and related code.  I
+think these should be split into two patches, and part 1 is what I
+think could be done early before adding EDR support.
 
-Does this mean you yank it out but you want to replace it simultaneously?
+> > > +	 * As per PCIe r5.0, sec 6.2.10, implementation note titled
+> > > +	 * "Determination of DPC Control", to avoid conflicts over whether
+> > > +	 * platform firmware or the operating system have control of DPC,
+> > > +	 * it is recommended that platform firmware and operating systems
+> > > +	 * always link the control of DPC to the control of Advanced Error
+> > > +	 * Reporting.
+> > > +	 *
+> > > +	 * So use AER FF mode check API pcie_aer_get_firmware_first() to decide
+> > > +	 * whether DPC is controlled by software or firmware.
 
->=20
-> This feature also has a use case in Android, Lokesh Gidra has said
-> that "As part of using userfaultfd for GC, We'll have to move the physical=
+> > AFAICT, this is not what the spec says.  Firmware-first is not what
+> > tells us whether DPC is controlled by firmware or the OS.  For ACPI
+> > systems, _OSC tells us whether the OS is allowed control of DPC.
 
-> pages of the java heap to a separate location. For this purpose mremap
-> will be used. Without the MREMAP_DONTUNMAP flag, when I mremap the java
-> heap, its virtual mapping will be removed as well. Therefore, we'll
-> require performing mmap immediately after. This is not only time consuming=
+> But current DPC/AER driver use FIRMWARE_FIRST bit (in
+> pcie_aer_get_firmware_first()) determine firmware/OS ownership.
 
-> but also opens a time window where a native thread may call mmap and
-> reserve the java heap's address range for its own usage. This flag
-> solves the problem."
+I think that's a problem and we should fix it.  It's arguably a little
+bit of feature creep to do that in this series, but it makes it very
+confusing when the specs talk about ownership negotiated via _OSC and
+the code talks about "firmware-first" and makes assumptions about
+connections between the two.
 
-Cute.=
+Those things may very well *be* related in the firmware
+implementation, but assuming those connections in Linux makes the code
+hard to read and maintain.  This series adds quite a bit of
+ACPI-related stuff, and I think we should untangle confusions like
+this before we add more.
+
+Bjorn
