@@ -2,188 +2,130 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BFA9C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 22:06:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0720AC33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 22:07:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA0E7207FF
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 22:06:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="T96LxjAo"
+	by mail.kernel.org (Postfix) with ESMTP id CA43C20718
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 22:07:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579817272;
+	bh=QlwrFB/8SQuEz72x5eJ/IwwmULMw3LNCA6dsBx7N75U=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=qx8BhMym08XPLlGpj+5YvJ4N3v0m4Ef5CWMHMS95rTkfqzp8hhsxaE8v+xXY6St0M
+	 vbdYbzhkXRpocjAf2luvQ9N2OLWs8OQuVq4edGh3A4IKfgwvhQahcorxef7jJlG7C2
+	 qKXG0Qrxh+efY+scqMt0Alu85Fiwwc3W6R2CWrdQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729423AbgAWWGJ (ORCPT
+        id S1729106AbgAWWHw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 17:06:09 -0500
-Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:37895 "EHLO
-        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729410AbgAWWGH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 17:06:07 -0500
-Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 5C075891DB;
-        Fri, 24 Jan 2020 11:06:04 +1300 (NZDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-        s=mail181024; t=1579817164;
-        bh=zeFePKo6fhbCcfDQ2OhTCgA3upjarST3rYiHMVEi89M=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=T96LxjAonFKEQfv57yLPlGmLq1HjQaGIYBK7aQhMdoAuzyyShj6dRKSN6JLpboqIT
-         tp1qLeOOBEVgwZIYeJ7yGeaiblMzJSJe3nEIDGNiJPe/xaUqJiRt+KIUVQbSD657jK
-         ol1uDYE9Lj0CHc7dnicoVCJ6HqsgfVyiG9kY9ebJrrIHeTDm8+UH2pUOTgwgsQg4ol
-         ObfZzrORJpFPx9SSo0yFl6mvuqv00CxWstUTqPnXdyBvdypJ1rAjZBY14vMsr1b0tA
-         FHcZ8eoVFTuw5K5TKv3K86ulvM+Oyssel6MEMETqnVar7fejq264lL6DDOsvOvG+D1
-         xHpRM2tk3yyoA==
-Received: from smtp (Not Verified[10.32.16.33]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
-        id <B5e2a18cb0000>; Fri, 24 Jan 2020 11:06:03 +1300
-Received: from logans-dl.ws.atlnz.lc (logans-dl.ws.atlnz.lc [10.33.25.61])
-        by smtp (Postfix) with ESMTP id 057A813EEC9;
-        Fri, 24 Jan 2020 11:06:01 +1300 (NZDT)
-Received: by logans-dl.ws.atlnz.lc (Postfix, from userid 1820)
-        id 1DFF7C0DF6; Fri, 24 Jan 2020 11:06:03 +1300 (NZDT)
-From:   Logan Shaw <logan.shaw@alliedtelesis.co.nz>
-To:     linux@roeck-us.net, jdelvare@suse.com, robh+dt@kernel.org
-Cc:     linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, Joshua.Scott@alliedtelesis.co.nz,
-        Chris.Packham@alliedtelesis.co.nz, logan.shaw@alliedtelesis.co.nz
-Subject: [PATCH v5 2/2] dt-bindings: hwmon: (adt7475) Added missing adt7475 doccumentation
-Date:   Fri, 24 Jan 2020 11:05:33 +1300
-Message-Id: <20200123220533.2228-3-logan.shaw@alliedtelesis.co.nz>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200123220533.2228-1-logan.shaw@alliedtelesis.co.nz>
-References: <20200123220533.2228-1-logan.shaw@alliedtelesis.co.nz>
+        Thu, 23 Jan 2020 17:07:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52962 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726232AbgAWWHw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jan 2020 17:07:52 -0500
+Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 792EB21734;
+        Thu, 23 Jan 2020 22:07:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579817270;
+        bh=QlwrFB/8SQuEz72x5eJ/IwwmULMw3LNCA6dsBx7N75U=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=JLUm1d1nZ3Ot8n7cZT2wO+oEqAb8ecDHj+2YmMHmDw461svQo2lhvJ8Uie/M/2Ehu
+         +Y3C5f3ghUA5lmBaBkWnqUrJX1zjMmBmygXBa4uk6NeZgnanX2J0A4u+9eLTLJ1dbJ
+         XVTjHfUYxMyDGpA8yfTM9lNlWLjr1lGuHwZxSzd4=
+Received: by mail-qt1-f182.google.com with SMTP id e12so22326qto.2;
+        Thu, 23 Jan 2020 14:07:50 -0800 (PST)
+X-Gm-Message-State: APjAAAXC71H3286DlFJoP8L+yz9WmJl21/aiFDKE47olirPLj933HVxe
+        v+nS8TU9T9ukTSDxyGqDklCi0rwaJeJ4EXib9Q==
+X-Google-Smtp-Source: APXvYqxzfWxfFKwXzKXbl8qhH8ZiP9eveL4Sd9dFSyn/yz3xnENA89DFYjvHnIiSUkXEweXnfPoeCbjrCT3FHrpjlZI=
+X-Received: by 2002:ac8:59:: with SMTP id i25mr419976qtg.110.1579817269622;
+ Thu, 23 Jan 2020 14:07:49 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-x-atlnz-ls: pat
+References: <20191227053215.423811-1-bjorn.andersson@linaro.org>
+ <20191227053215.423811-2-bjorn.andersson@linaro.org> <20200104213804.GA30385@bogus>
+ <20200104221752.GW549437@yoga>
+In-Reply-To: <20200104221752.GW549437@yoga>
+From:   Rob Herring <robh@kernel.org>
+Date:   Thu, 23 Jan 2020 16:07:38 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqJEq-eX-LoRiHHot8De4RbRS4-Np+hisTk4TWpehqsRwg@mail.gmail.com>
+Message-ID: <CAL_JsqJEq-eX-LoRiHHot8De4RbRS4-Np+hisTk4TWpehqsRwg@mail.gmail.com>
+Subject: Re: [PATCH v2 1/8] dt-bindings: remoteproc: Add Qualcomm PIL info binding
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Ohad Ben-Cohen <ohad@wizery.com>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:REMOTE PROCESSOR (REMOTEPROC) SUBSYSTEM" 
+        <linux-remoteproc@vger.kernel.org>,
+        Sibi Sankar <sibis@codeaurora.org>,
+        Rishabh Bhatnagar <rishabhb@codeaurora.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Added a new file documenting the adt7475 devicetree and added the four
-new properties to it.
+On Sat, Jan 4, 2020 at 3:17 PM Bjorn Andersson
+<bjorn.andersson@linaro.org> wrote:
+>
+> On Sat 04 Jan 13:38 PST 2020, Rob Herring wrote:
+>
+> > On Thu, Dec 26, 2019 at 09:32:08PM -0800, Bjorn Andersson wrote:
+> > > Add a devicetree binding for the Qualcomm periperal image loader
+> > > relocation info region found in the IMEM.
+> > >
+> > > Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> > > ---
+> > >
+> > > Changes since v1:
+> > > - New patch
+> > >
+> > >  .../bindings/remoteproc/qcom,pil-info.yaml    | 35 +++++++++++++++++++
+> > >  1 file changed, 35 insertions(+)
+> > >  create mode 100644 Documentation/devicetree/bindings/remoteproc/qcom,pil-info.yaml
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/remoteproc/qcom,pil-info.yaml b/Documentation/devicetree/bindings/remoteproc/qcom,pil-info.yaml
+> > > new file mode 100644
+> > > index 000000000000..715945c683ed
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/remoteproc/qcom,pil-info.yaml
+> > > @@ -0,0 +1,35 @@
+> > > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> > > +%YAML 1.2
+> > > +---
+> > > +$id: "http://devicetree.org/schemas/remoteproc/qcom,pil-info.yaml#"
+> > > +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> > > +
+> > > +title: Qualcomm peripheral image loader relocation info binding
+> > > +
+> > > +description:
+> > > +  This document defines the binding for describing the Qualcomm peripheral
+> > > +  image loader relocation memory region, in IMEM, which is used for post mortem
+> > > +  debugging of remoteprocs.
+> > > +
+> > > +maintainers:
+> > > +  - Bjorn Andersson <bjorn.andersson@linaro.org>
+> > > +
+> > > +properties:
+> > > +  compatible:
+> > > +    const: qcom,pil-reloc-info
+> > > +
+> > > +  offset:
+> > > +    $ref: /schemas/types.yaml#/definitions/uint32
+> > > +    description: Offset in the register map for the memory region
+> >
+> > Why not use 'reg' instead?
+> >
+>
+> Because we have one prior example of subdevice of "imem", which is
+> compatible "syscon-reboot-mode" and that binding uses "offset".
 
-Signed-off-by: Logan Shaw <logan.shaw@alliedtelesis.co.nz>
----
----
- .../devicetree/bindings/hwmon/adt7475.yaml    | 95 +++++++++++++++++++
- 1 file changed, 95 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/hwmon/adt7475.yaml
+Not that I'm proposing this, but nothing should prevent both from coexisting.
 
-diff --git a/Documentation/devicetree/bindings/hwmon/adt7475.yaml b/Docum=
-entation/devicetree/bindings/hwmon/adt7475.yaml
-new file mode 100644
-index 000000000000..450da5e66e07
---- /dev/null
-+++ b/Documentation/devicetree/bindings/hwmon/adt7475.yaml
-@@ -0,0 +1,95 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/adt7475.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: ADT7475 hwmon sensor
-+
-+maintainers:
-+  - Jean Delvare <jdelvare@suse.com>
-+
-+description: |
-+  The ADT7473, ADT7475, ADT7476, and ADT7490 are thermal monitors and mu=
-ltiple
-+  PWN fan controllers.
-+
-+  They support monitoring and controlling up to four fans (the ADT7490 c=
-an only
-+  control up to three). They support reading a single on chip temperatur=
-e
-+  sensor and two off chip temperature sensors (the ADT7490 additionally
-+  supports measuring up to three current external temperature sensors wi=
-th
-+  series resistance cancellation (SRC)).
-+
-+  Datasheets:
-+  https://www.onsemi.com/pub/Collateral/ADT7473-D.PDF
-+  https://www.onsemi.com/pub/Collateral/ADT7475-D.PDF
-+  https://www.onsemi.com/pub/Collateral/ADT7476-D.PDF
-+  https://www.onsemi.com/pub/Collateral/ADT7490-D.PDF
-+
-+  Description taken from omsemiconductors specification sheets, with min=
-or
-+  rephrasing.
-+
-+properties:
-+  compatible:
-+    enum:
-+      - adi,adt7473
-+      - adi,adt7475
-+      - adi,adt7476
-+      - adi,adt7490
-+
-+  reg:
-+    maxItems: 1
-+
-+  bypass-attenuator-in0:
-+    description: |
-+      Configures bypassing the individual voltage input
-+      attenuator, on in0. This is supported on the ADT7476 and ADT7490.
-+      If set to a non-zero integer the attenuator is bypassed, if set to
-+      zero the attenuator is not bypassed. If the property is absent the=
-n
-+      the config register is not modified.
-+    maxItems: 1
-+
-+  bypass-attenuator-in1:
-+    description: |
-+      Configures bypassing the individual voltage input
-+      attenuator, on in1. This is supported on the ADT7473, ADT7475,
-+      ADT7476 and ADT7490. If set to a non-zero integer the attenuator
-+      is bypassed, if set to zero the attenuator is not bypassed. If the
-+      property is absent then the config register is not modified.
-+    maxItems: 1
-+
-+  bypass-attenuator-in3:
-+    description: |
-+      Configures bypassing the individual voltage input
-+      attenuator, on in3. This is supported on the ADT7476 and ADT7490.
-+      If set to a non-zero integer the attenuator is bypassed, if set to
-+      zero the attenuator is not bypassed. If the property is absent the=
-n
-+      the config register is not modified.
-+    maxItems: 1
-+
-+  bypass-attenuator-in4:
-+    description: |
-+      Configures bypassing the individual voltage input
-+      attenuator, on in4. This is supported on the ADT7476 and ADT7490.
-+      If set to a non-zero integer the attenuator is bypassed, if set to
-+      zero the attenuator is not bypassed. If the property is absent the=
-n
-+      the config register is not modified.
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+
-+examples:
-+  - |
-+    i2c {
-+      #address-cells =3D <1>;
-+      #size-cells =3D <0>;
-+
-+      hwmon@2e {
-+        compatible =3D "adi,adt7476";
-+        reg =3D <0x2e>;
-+        bypass-attenuator-in0 =3D <1>;
-+        bypass-attenuator-in1 =3D <0>;
-+      };
-+    };
-+...
---=20
-2.25.0
-
+Rob
