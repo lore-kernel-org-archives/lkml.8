@@ -2,159 +2,189 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B150DC33CAA
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 22:54:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBB00C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 22:55:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F4C520718
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 22:54:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89CF420718
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 22:55:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=micron.com header.i=@micron.com header.b="4cWDWbC/"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JYMcOHTd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729545AbgAWWyv (ORCPT
+        id S1729575AbgAWWzI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 17:54:51 -0500
-Received: from mail-bn8nam11on2047.outbound.protection.outlook.com ([40.107.236.47]:48609
-        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729259AbgAWWyv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 17:54:51 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=amas9H55vodIFokZUM2TgTOCEk6hBzWpEUIWU5JcE0++WLBC+xyBgkWPk9YdapR/F4gDIBF7/w87rinr5MZ8SHrvLieJLnsMFicgWxGmy1pGgXHacZuQcIulHSreOqBVmpKeB/zxUnSALb49LFBFh7mXNVVhf+eACwZiP+1gg6lEisb1v/Q7cZri49hYmtTnd1lMHyJicTboW1xlHz4Dut+znGBqI1AVwXbM9m65wAgbSc6QcxnAocKG1HJ+k0/jvWH28HnIgfZEvstwpn6POK7I6yv1DJ4UuthWtY9WXuqbgpuvvPpvD64NiyF8gJNu/uDYAZ6+iSk3OcMPimx8mg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=WQHSGT8zZtT+nSYPAo9CVLpbIisIDPJSrcBn9qzV4Xs=;
- b=I7tlRDZ+OoSM98nUW0INfAmaq5iC3NfM+YwZz6Oi+1d3ofkVvSiCLHUFsUCF0e7vo1ENNCgLE+XiobILPPNdt/KhPLDrve0QwSzQXFSHzG7m7L23kuV0rISZIpqwlaN6GP2+Qf1PwdfVxbHyFq0wKNayqNdYW8gpuB1GLZU05zoD8gDBdN7MjNJoMcctyTItHah/tcsYjVR31Elvu6n2sCCrc5/aGPLXVJvdQ+pfyFnULXt+0o2i3w0yGZCh11e9e8ZMzDC6Yi4lwepyc0BNiXbn8lbujTP5bvRYADX7ZHVp5elhG034XxWWIcfXzlbGD4w7T4WX1Z9mJvt0XY5cHg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=micron.com; dmarc=pass action=none header.from=micron.com;
- dkim=pass header.d=micron.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=micron.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=WQHSGT8zZtT+nSYPAo9CVLpbIisIDPJSrcBn9qzV4Xs=;
- b=4cWDWbC/ADfmJ00hcrIKFxVrZ4nMkgSYHfR9q6VIOMw0ZkxAs5YZprnjl6BqCN2PWmerwm8Yq3ZCRClqEUb44eUhjRZ31VuJs+yTCxdKq1Hyg/Szu2lo5bt906qsUyWL9aOSD7Amq3hmX3xiv42MwL9KLSdBiUHWciyzkWUcXAQ=
-Received: from BN7PR08MB5684.namprd08.prod.outlook.com (20.176.179.87) by
- BN7PR08MB4051.namprd08.prod.outlook.com (52.132.216.147) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2665.20; Thu, 23 Jan 2020 22:54:48 +0000
-Received: from BN7PR08MB5684.namprd08.prod.outlook.com
- ([fe80::981f:90d7:d45f:fd11]) by BN7PR08MB5684.namprd08.prod.outlook.com
- ([fe80::981f:90d7:d45f:fd11%7]) with mapi id 15.20.2665.017; Thu, 23 Jan 2020
- 22:54:47 +0000
-From:   "Bean Huo (beanhuo)" <beanhuo@micron.com>
-To:     Can Guo <cang@codeaurora.org>,
-        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
-        "nguyenb@codeaurora.org" <nguyenb@codeaurora.org>,
-        "hongwus@codeaurora.org" <hongwus@codeaurora.org>,
-        "rnayak@codeaurora.org" <rnayak@codeaurora.org>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "kernel-team@android.com" <kernel-team@android.com>,
-        "saravanak@google.com" <saravanak@google.com>,
-        "salyzyn@google.com" <salyzyn@google.com>
-CC:     Sayali Lokhande <sayalil@codeaurora.org>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        Pedro Sousa <pedrom.sousa@synopsys.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Stanley Chu <stanley.chu@mediatek.com>,
-        Venkat Gopalakrishnan <venkatg@codeaurora.org>,
-        Tomas Winkler <tomas.winkler@intel.com>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: RE: [EXT] [PATCH v3 1/8] scsi: ufs: Flush exception event before
- suspend
-Thread-Topic: [EXT] [PATCH v3 1/8] scsi: ufs: Flush exception event before
- suspend
-Thread-Index: AQHV0bQixOXh4tVDZ0qqd1mgEtErcqf43D8A
-Date:   Thu, 23 Jan 2020 22:54:47 +0000
-Message-ID: <BN7PR08MB568498BD4EEF948B38FCC0A1DB0F0@BN7PR08MB5684.namprd08.prod.outlook.com>
-References: <1579759946-5448-1-git-send-email-cang@codeaurora.org>
- <1579759946-5448-2-git-send-email-cang@codeaurora.org>
-In-Reply-To: <1579759946-5448-2-git-send-email-cang@codeaurora.org>
-Accept-Language: en-150, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-dg-ref: PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNcYmVhbmh1b1xhcHBkYXRhXHJvYW1pbmdcMDlkODQ5YjYtMzJkMy00YTQwLTg1ZWUtNmI4NGJhMjllMzViXG1zZ3NcbXNnLTU3ZWU3Yjc4LTNlMzMtMTFlYS04Yjg5LWRjNzE5NjFmOWRkM1xhbWUtdGVzdFw1N2VlN2I3YS0zZTMzLTExZWEtOGI4OS1kYzcxOTYxZjlkZDNib2R5LnR4dCIgc3o9IjE0MDYiIHQ9IjEzMjI0MjkzNjgzODI3MDY5OCIgaD0iVWhESVhNQzdVVFlZTm5VaUhQUlBpREJSa0dNPSIgaWQ9IiIgYmw9IjAiIGJvPSIxIiBjaT0iY0FBQUFFUkhVMVJTUlVGTkNnVUFBSEFBQUFEcXJrd2FRTkxWQVNPaE9taXEwcFB3STZFNmFLclNrL0FBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFCQUFBQkFBQUEvaFRDdndBQUFBQUFBQUFBQUFBQUFBPT0iLz48L21ldGE+
-x-dg-rorf: true
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=beanhuo@micron.com; 
-x-originating-ip: [165.225.86.90]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 3aac9745-7f5b-4b7e-955a-08d7a0573f1d
-x-ms-traffictypediagnostic: BN7PR08MB4051:|BN7PR08MB4051:|BN7PR08MB4051:
-x-microsoft-antispam-prvs: <BN7PR08MB4051AE1B01EE97BE35CE3BA3DB0F0@BN7PR08MB4051.namprd08.prod.outlook.com>
-x-ms-exchange-transport-forked: True
-x-ms-oob-tlc-oobclassifiers: OLM:1051;
-x-forefront-prvs: 029174C036
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(396003)(136003)(376002)(346002)(366004)(189003)(199004)(478600001)(8936002)(8676002)(71200400001)(86362001)(81156014)(81166006)(6506007)(7696005)(66556008)(55236004)(76116006)(66446008)(66946007)(64756008)(66476007)(316002)(110136005)(54906003)(15650500001)(9686003)(4326008)(55016002)(2906002)(7416002)(5660300002)(33656002)(186003)(52536014)(26005);DIR:OUT;SFP:1101;SCL:1;SRVR:BN7PR08MB4051;H:BN7PR08MB5684.namprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: micron.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: tpFT8C2VRkL3wvSdWSXoRQat5c5M6myZwCxMebRhaQYdyTS6DHgStNkVsGI+2SYYkydz7ztSOol1lDl1Locp37XDjW/KUgbJ4BVa5Bak/0Jzi46KHZUczn8UBKiwZ2yfekXKSauwQ7rxGrfOjajAxdJYugyB+1x66W/6jS6DpjsjCLhQsy37ks/YCbMZ1bE421p0qmqUBLSQIGSdwHZSm758GyAThsLNa9W92KVhUswBmdO630CWmwwiLuG0lfu4wPZnq5qmM8nrnKh3JmZRj0nn8p29b3O2nOJRtFJJ7FAJqYB+LcP7+Kh84AAbrMrVRteQbmzor/GW6FUteb2GIO5cRnLvV1hCFeYs/lgJ0kqlY1JXe8KThy5e6zbi/JXIBHXG+GBwn5kNpjDppa34l37MroIvtBrKUD7ZDV5A8IaiMuEN+C38eqWUffW/QZ1n
-x-ms-exchange-antispam-messagedata: A0ZA8iEI4UOwwSsNerkLdmtyVTwIHlGFljOXxlCoi2ghUTePsE3Na7x5u+ghHt90vxkUXun5lGp1QrwGwIJwmVTHCiHgEO9nyUDBObT2BvIWkp82D/MmYL9WuZA4DXwazmpyVj7TMDZGrKjF6X+MDQ==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 23 Jan 2020 17:55:08 -0500
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:39674 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729259AbgAWWzH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jan 2020 17:55:07 -0500
+Received: by mail-pj1-f66.google.com with SMTP id e11so156912pjt.4
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jan 2020 14:55:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=bdR2VIngUyNsUGbPsP+UPl746ALnDu+ORGiYpHLsy/M=;
+        b=JYMcOHTdAKO6qaAxt2V6dRl499d2oCBChvSKIPRVWm/EJYVbbKZob8zLiyhHlveyrk
+         p+KvC/twgDmyuyPk4TqU6B4LjpV3xHxY03utbDuKBU6lhgSNxvHuoSu/JTiR4cyLZ6rk
+         9oVRRwxoX2c6oxsLLaLz9PYzd4kpQQiuYN/K2ecvoS766fFWpFNMIEYDHx8ebGAd0eir
+         OkwhLZFL4pUC0U41ljkGgZ3MUEvNQwNCk8ilet4PeJDEIZLq3ZN9SZjBVSSWs1j8sh6g
+         1mBUxNyR5Zd+s2FiiiY/8Ss9qP69I2CyNbfhQxwnpP4ttaB+8MrwJ4bst6KAhAUDRkCJ
+         7qUw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=bdR2VIngUyNsUGbPsP+UPl746ALnDu+ORGiYpHLsy/M=;
+        b=kXo3JadAhf0sS2CUJiTS0xOa1yWFJvL6v9Nibb5qRuWKV3p64PzVBYBA5xB+b+PGRl
+         o24BFmc/ZLUS30z9aNK4aYoz0je4zjtiQnc5uUjMfqQ39JQgdVjmO1UL8xeGPCbKnMBO
+         i9dqyx+JYXlAUQfoawLAJb7BVzXUUqiKB4XUn25Mi4Y6X0c7nXn5naq0pXkjsoy1835x
+         h7N8EOlYUjo02K5wd+SPq0HR3Bt3CwdBadJIY8kkqcv7wHQOA4b5QybSUXyWIm3o6wEL
+         xPQb/sJ8ZPMNxcyeiGEons5lxOhVZTcUUSa5kNv/C/bfWNc6qRQ1Kwdx0QCgHzFwC2bg
+         alvw==
+X-Gm-Message-State: APjAAAVowCerjwZbZ3DObOh8e+32RA0RJiVNsXRKLOcVyDf5eRnaEtH6
+        CxfdD//a4y5bEZw0dOD9AnfY9I+ErgNBWJFIZTdJNw==
+X-Google-Smtp-Source: APXvYqzdbpR7pO8euiReITGLrsk+/Oy+gyJrt9hmrf3x4sUM9Laf+reGcryH8NHCxinjRW4t04WOyzPtBwugde0z+ec=
+X-Received: by 2002:a17:902:9f98:: with SMTP id g24mr423318plq.325.1579820106653;
+ Thu, 23 Jan 2020 14:55:06 -0800 (PST)
 MIME-Version: 1.0
-X-OriginatorOrg: micron.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3aac9745-7f5b-4b7e-955a-08d7a0573f1d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Jan 2020 22:54:47.4458
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: f38a5ecd-2813-4862-b11b-ac1d563c806f
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: RfxxzRxOnXBECGnFgh9OZk9HxySFh4L5TOKl65yrLEnJCna6ah8UBjtnWxrh8BnSU9prADEkpCqETYlxzzZvkw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN7PR08MB4051
+References: <20191216220555.245089-1-brendanhiggins@google.com>
+ <20191216220555.245089-4-brendanhiggins@google.com> <20191217080408.0E805207FF@mail.kernel.org>
+In-Reply-To: <20191217080408.0E805207FF@mail.kernel.org>
+From:   Brendan Higgins <brendanhiggins@google.com>
+Date:   Thu, 23 Jan 2020 14:54:55 -0800
+Message-ID: <CAFd5g44Wh9kwXsY_M4GfMp0+wzN_3HhVfa360J-tF48aQ_KADg@mail.gmail.com>
+Subject: Re: [RFC v1 3/6] kunit: test: create a single centralized executor
+ for all tests
+To:     Stephen Boyd <sboyd@kernel.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Alan Maguire <alan.maguire@oracle.com>,
+        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+        Arnd Bergmann <arnd@arndb.de>, David Gow <davidgow@google.com>,
+        Jeff Dike <jdike@addtoit.com>,
+        Kees Cook <keescook@chromium.org>,
+        Richard Weinberger <richard@nod.at>, rppt@linux.ibm.com,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Knut Omang <knut.omang@oracle.com>,
+        linux-um <linux-um@lists.infradead.org>,
+        linux-arch@vger.kernel.org,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        KUnit Development <kunit-dev@googlegroups.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Can
+On Tue, Dec 17, 2019 at 12:04 AM Stephen Boyd <sboyd@kernel.org> wrote:
+>
+> Quoting Brendan Higgins (2019-12-16 14:05:52)
+> > diff --git a/include/kunit/test.h b/include/kunit/test.h
+> > index dba48304b3bd3..c070798ebb765 100644
+> > --- a/include/kunit/test.h
+> > +++ b/include/kunit/test.h
+> > @@ -217,11 +217,8 @@ int kunit_run_tests(struct kunit_suite *suite);
+> >   * everything else is definitely initialized.
+> >   */
+> >  #define kunit_test_suite(suite)                                                       \
+> > -       static int kunit_suite_init##suite(void)                               \
+>
+> Oh this should have been __init before.
 
->  			 * UFS device needs urgent BKOPs.
->  			 */
->  			if (!hba->pm_op_in_progress &&
-> -			    ufshcd_is_exception_event(lrbp->ucd_rsp_ptr))
-> -				schedule_work(&hba->eeh_work);
-> +			    ufshcd_is_exception_event(lrbp->ucd_rsp_ptr)) {
-> +				/*
-> +				 * Prevent suspend once eeh_work is scheduled
-> +				 * to avoid deadlock between ufshcd_suspend
-> +				 * and exception event handler.
-> +				 */
-> +				if (schedule_work(&hba->eeh_work))
-> +					pm_runtime_get_noresume(hba->dev);
-> +			}
->  			break;
->  		case UPIU_TRANSACTION_REJECT_UPIU:
->  			/* TODO: handle Reject UPIU Response */ @@ -5215,7
-> +5222,14 @@ static void ufshcd_exception_event_handler(struct work_struct
-> *work)
->=20
->  out:
->  	scsi_unblock_requests(hba->host);
-> -	pm_runtime_put_sync(hba->dev);
-> +	/*
-> +	 * pm_runtime_get_noresume is called while scheduling
-> +	 * eeh_work to avoid suspend racing with exception work.
-> +	 * Hence decrement usage counter using pm_runtime_put_noidle
-> +	 * to allow suspend on completion of exception event handler.
-> +	 */
-> +	pm_runtime_put_noidle(hba->dev);
-> +	pm_runtime_put(hba->dev);
->  	return;
->  }
->=20
+No, the stuff in this patch shouldn't be init. With the work that Alan
+has been doing (adding support for modules, debugfs); the test code
+can run after booting, so init in any of this code is incorrect.
 
-You should rebase your this series patch, I installed your patches, it fail=
-ed, there are several conflicts.
+> > -       {                                                                      \
+> > -               return kunit_run_tests(&suite);                                \
+> > -       }                                                                      \
+> > -       late_initcall(kunit_suite_init##suite)
+> > +       static struct kunit_suite *__kunit_suite_##suite                       \
+> > +       __used __aligned(8) __section(.kunit_test_suites) = &suite
+> >
+> >  /*
+> >   * Like kunit_alloc_resource() below, but returns the struct kunit_resource
+> > diff --git a/lib/kunit/executor.c b/lib/kunit/executor.c
+> > new file mode 100644
+> > index 0000000000000..978086cfd257d
+> > --- /dev/null
+> > +++ b/lib/kunit/executor.c
+> > @@ -0,0 +1,43 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + * Base unit test (KUnit) API.
+> > + *
+> > + * Copyright (C) 2019, Google LLC.
+> > + * Author: Brendan Higgins <brendanhiggins@google.com>
+> > + */
+> > +
+> > +#include <linux/init.h>
+> > +#include <linux/printk.h>
+> > +#include <kunit/test.h>
+> > +
+> > +/*
+> > + * These symbols point to the .kunit_test_suites section and are defined in
+> > + * include/asm-generic/vmlinux.lds.h, and consequently must be extern.
+> > + */
+> > +extern struct kunit_suite *__kunit_suites_start[];
+> > +extern struct kunit_suite *__kunit_suites_end[];
+> > +
+> > +static bool kunit_run_all_tests(void)
+>
+> Should be __init?
 
-Thanks,
+It could be, I think. Alan's code doesn't call this, so for now we
+might as well make it __init.
 
-//Bean
+> > +{
+> > +       struct kunit_suite **suite;
+>
+> Can this be const? And the linker references above too?
+
+Good catch. Will fix.
+
+> > +       bool has_test_failed = false;
+> > +
+> > +       for (suite = __kunit_suites_start;
+> > +            suite < __kunit_suites_end;
+> > +            ++suite) {
+> > +               if (kunit_run_tests(*suite))
+> > +                       has_test_failed = true;
+> > +       }
+> > +
+> > +       return !has_test_failed;
+> > +}
+> > +
+> > +static int kunit_executor_init(void)
+>
+> Should be __init?
+
+Will do.
+
+> > +{
+> > +       if (kunit_run_all_tests())
+> > +               return 0;
+> > +       else
+> > +               return -EFAULT;
+>
+> Why two functions instead of just one that is the target of the
+> late_initcall? Nitpick: deindent that last return and take it out of the
+> else.
+
+Yeah, it probably makes more sense to just call kunit_run_all_tests
+and have it return an int.
+
+> > +}
+> > +
+> > +late_initcall(kunit_executor_init);
