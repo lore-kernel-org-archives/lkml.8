@@ -2,124 +2,229 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1FF7C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 13:56:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC6BFC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 13:59:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C36F920684
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 13:56:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A02D82077C
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 13:59:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RyUGKTMc"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DRhn3f7f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728731AbgAWN4r (ORCPT
+        id S1728205AbgAWN7n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 08:56:47 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:54592 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727312AbgAWN4q (ORCPT
+        Thu, 23 Jan 2020 08:59:43 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:46903 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726605AbgAWN7n (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 08:56:46 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579787805;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=mHr+dKKy6YFY8CdkcCg0p7DmA174EWGz4sMjLUwEXGU=;
-        b=RyUGKTMcPBvTu7s8pxcjZeUwbdHPKclHkkTNLPW1wH/nELK4NwWlZmPai2zIHAoCzhBQS4
-        K/QdSDiUcvyw9y/huVdeGROB2x9sMvUWJfQz8Yp3fgyAKpDP3NAxCo10ZFjiBN9R8VJ2KX
-        QOMbiM6S93yYu6rubmUjYtU7XIY8V64=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-352-rEhbHhUVN_GO2ta-z4iWdg-1; Thu, 23 Jan 2020 08:56:43 -0500
-X-MC-Unique: rEhbHhUVN_GO2ta-z4iWdg-1
-Received: by mail-wm1-f70.google.com with SMTP id 18so1071460wmp.0
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jan 2020 05:56:43 -0800 (PST)
+        Thu, 23 Jan 2020 08:59:43 -0500
+Received: by mail-pf1-f195.google.com with SMTP id n9so1569862pff.13
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jan 2020 05:59:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=sjMzd5d5O5klno2N+Q8qNePFE0MzXCnzEzQkYIfaX68=;
+        b=DRhn3f7fOhZAhxvCubwI7OXXkPSAdfpLKnJSfcZm5+ofpn5kl4WV0M91FAQrY4Nkci
+         Lf952EZxGyIURUJkzJC5qSK//dRCmPv4As4HsHpzWdIp2j6oiksJ5sUiL7b9pECYRFFl
+         FWMMXyyH9p1NJOrmn3pNyyc1glNmOWKj9Kfcn7Uk50PucZkM9UVMqwR0r4y7Hn5cZqK0
+         qede5U8xu559B2wz+eYovfAcRwg4DNGTsuuXVXpIL5ZnbzgiyhW9++N7uP/LT37/Vfpx
+         6XQ0f3Jk2vHSF/JfxmRtrbCAZcsu+qYlbbkyhA4ubikPG9gTzHjXRwMXjEsFdMJPjdiN
+         HXwA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=mHr+dKKy6YFY8CdkcCg0p7DmA174EWGz4sMjLUwEXGU=;
-        b=eDhEH0gvaQ3qEesR3r6QjDhtf9UElzxBu+318X3UBx9iW9Z92Py9ZbueMVh75iOQav
-         5B3YWw2EMN/XN0/hLb+vvSV55xw1Sy4ljGAK3kWff5dc4Yx2qrBHwGty4hLwocpsA8qh
-         EdFXXEBeMW4V/+xbMkj1jAWK1lpPdOh9cjf9yiYMiYnCi97ccF9emzSdQfcOHYsfJojC
-         ZXZWUSNuEt36ju1ecAGIIOoDc1Z0GZUUJ37C9cjgJrfLHXPEM38K1sr0kXS/uzbF61R2
-         d4Ny2XYFV/tjTTJDCoJ8lBgyeH+MsN0fcNzvTNFgCw/vOaYirKGsidlpvvnNi2NDSCpa
-         XG6w==
-X-Gm-Message-State: APjAAAWGUjftBIud8shMHqOSrRcreerSvMXodUssH0mhbNqmaaN1EuWs
-        dyJV3zLTCiUQtfmxpavT5rZPy9Of4DNLhJv5Vh/8A4jBiMNOk9omQ5ysb76cfwKn55sqZSAHTOW
-        zs7CyYjbtJ3D3PC5UaJcNZ9Jq
-X-Received: by 2002:a5d:4805:: with SMTP id l5mr17456360wrq.3.1579787802235;
-        Thu, 23 Jan 2020 05:56:42 -0800 (PST)
-X-Google-Smtp-Source: APXvYqxZC7YBx84D1F36G8gvu21bmP7ysQY2lzIRWZ71Z2AzAlJvArAH8hVVcrlvIvltJI2Auz8fqA==
-X-Received: by 2002:a5d:4805:: with SMTP id l5mr17456334wrq.3.1579787801943;
-        Thu, 23 Jan 2020 05:56:41 -0800 (PST)
-Received: from [192.168.1.81] (host81-140-166-164.range81-140.btcentralplus.com. [81.140.166.164])
-        by smtp.gmail.com with ESMTPSA id l17sm3148064wro.77.2020.01.23.05.56.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 23 Jan 2020 05:56:40 -0800 (PST)
-Subject: Re: [RFC v5 00/57] objtool: Add support for arm64
-To:     Josh Poimboeuf <jpoimboe@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        raphael.gault@arm.com, catalin.marinas@arm.com, will@kernel.org
-References: <20200109160300.26150-1-jthierry@redhat.com>
- <20200120150711.GD14897@hirez.programming.kicks-ass.net>
- <20200121175001.5jltrjuxrjklq5o2@treble>
-From:   Julien Thierry <jthierry@redhat.com>
-Message-ID: <ec4dc8a9-da6e-7269-dbda-3721b2dc50fd@redhat.com>
-Date:   Thu, 23 Jan 2020 13:56:38 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=sjMzd5d5O5klno2N+Q8qNePFE0MzXCnzEzQkYIfaX68=;
+        b=bCOY+nmRNs2tFZFj0zxDNo5+WM1pp1ZuiMaK0Q6+8jSLvKerGOnVS1OChxRRgjfdWR
+         NWl6RWgEuq7zD2OiKEqPPKt08ATbrw1JvMss0IdTCBIZ0FTho3CGBI5EQ7SVIDjEq4A6
+         jIQkrD/JJom7gPr75qJ3Ql2xxsrEVSKYqn6HTToyzTJuqY8HAJOIoKVw8Phd/6rsRWly
+         s6A0NmEtWBLRI1KJAfZeGH4mbFTIZPWb7X1Isrk3GN9SdzTUUBBw21Wj7G3vRo9LWRLB
+         wSb/qOSZai5BDIC6rg+0LvK9ICOo9lVNe+Dg0v/ayFjck+++GIZfkrfiM5w14TRc8dtY
+         dB1w==
+X-Gm-Message-State: APjAAAVVhMZEgu4ClnQ0wC1DVvLjeIZgK7Akiej+eYsKd7gqOoi9R2O8
+        1O1TPR/r39XuIwHI6wtTlV98bGxdNBHBB5qmCSBQaw==
+X-Google-Smtp-Source: APXvYqydwMjOqmRZvj9hXXOEAV6Zabu4cg9dtHiBE17VpcHJ/ZagXcDhNfdim+R2ctxLDX/pemrsZ3ZumdooAr6QL00=
+X-Received: by 2002:a63:358a:: with SMTP id c132mr4228502pga.286.1579787982282;
+ Thu, 23 Jan 2020 05:59:42 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200121175001.5jltrjuxrjklq5o2@treble>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <0000000000007ce1f40596c3651f@google.com> <CAAeHK+yqy+xJSe8RyBoZYNbG729rCwOMz6UCJ3zONhsA2004Cw@mail.gmail.com>
+In-Reply-To: <CAAeHK+yqy+xJSe8RyBoZYNbG729rCwOMz6UCJ3zONhsA2004Cw@mail.gmail.com>
+From:   Andrey Konovalov <andreyknvl@google.com>
+Date:   Thu, 23 Jan 2020 14:59:31 +0100
+Message-ID: <CAAeHK+wKdT07t=FBedvBxGyu=97pFdFABU_sGgEhw38KX6C3PA@mail.gmail.com>
+Subject: Re: KASAN: slab-out-of-bounds Read in build_audio_procunit (2)
+To:     syzbot <syzbot+622d4ecb979f45c6a775@syzkaller.appspotmail.com>
+Cc:     Allison Randal <allison@lohutok.net>, alsa-devel@alsa-project.org,
+        =?UTF-8?B?5b2t6L6J?= <benquike@gmail.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        USB list <linux-usb@vger.kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Richard Fontana <rfontana@redhat.com>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Takashi Iwai <tiwai@suse.com>, wang6495@umn.edu,
+        yuehaibing@huawei.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Dec 3, 2019 at 3:04 PM Andrey Konovalov <andreyknvl@google.com> wrote:
+>
+> On Thu, Nov 7, 2019 at 4:34 PM syzbot
+> <syzbot+622d4ecb979f45c6a775@syzkaller.appspotmail.com> wrote:
+> >
+> > Hello,
+> >
+> > syzbot found the following crash on:
+> >
+> > HEAD commit:    d60bbfea usb: raw: add raw-gadget interface
+> > git tree:       https://github.com/google/kasan.git usb-fuzzer
+> > console output: https://syzkaller.appspot.com/x/log.txt?x=132e5bcce00000
+> > kernel config:  https://syzkaller.appspot.com/x/.config?x=79de80330003b5f7
+> > dashboard link: https://syzkaller.appspot.com/bug?extid=622d4ecb979f45c6a775
+> > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1478c6b4e00000
+> > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=117cbf8ae00000
+> >
+> > IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> > Reported-by: syzbot+622d4ecb979f45c6a775@syzkaller.appspotmail.com
+> >
+> > usb 1-1: New USB device strings: Mfr=1, Product=2, SerialNumber=3
+> > usb 1-1: Product: syz
+> > usb 1-1: Manufacturer: syz
+> > usb 1-1: SerialNumber: syz
+> > usb 1-1: 0:2 : does not exist
+> > ==================================================================
+> > BUG: KASAN: slab-out-of-bounds in uac_extension_unit_iExtension
+> > include/uapi/linux/usb/audio.h:483 [inline]
+> > BUG: KASAN: slab-out-of-bounds in build_audio_procunit+0xeab/0x13f0
+> > sound/usb/mixer.c:2434
+> > Read of size 1 at addr ffff8881d4aaa735 by task kworker/1:2/83
+> >
+> > CPU: 1 PID: 83 Comm: kworker/1:2 Not tainted 5.4.0-rc6+ #0
+> > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
+> > Google 01/01/2011
+> > Workqueue: usb_hub_wq hub_event
+> > Call Trace:
+> >   __dump_stack lib/dump_stack.c:77 [inline]
+> >   dump_stack+0xca/0x13e lib/dump_stack.c:113
+> >   print_address_description.constprop.0+0x36/0x50 mm/kasan/report.c:374
+> >   __kasan_report.cold+0x1a/0x33 mm/kasan/report.c:506
+> >   kasan_report+0xe/0x20 mm/kasan/common.c:634
+> >   uac_extension_unit_iExtension include/uapi/linux/usb/audio.h:483 [inline]
+> >   build_audio_procunit+0xeab/0x13f0 sound/usb/mixer.c:2434
+> >   parse_audio_extension_unit sound/usb/mixer.c:2483 [inline]
+> >   parse_audio_unit+0x1812/0x36f0 sound/usb/mixer.c:2761
+> >   snd_usb_mixer_controls+0x715/0xb90 sound/usb/mixer.c:3095
+> >   snd_usb_create_mixer+0x2b5/0x1890 sound/usb/mixer.c:3445
+> >   usb_audio_probe+0xc76/0x2010 sound/usb/card.c:653
+> >   usb_probe_interface+0x305/0x7a0 drivers/usb/core/driver.c:361
+> >   really_probe+0x281/0x6d0 drivers/base/dd.c:548
+> >   driver_probe_device+0x104/0x210 drivers/base/dd.c:721
+> >   __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:828
+> >   bus_for_each_drv+0x162/0x1e0 drivers/base/bus.c:430
+> >   __device_attach+0x217/0x360 drivers/base/dd.c:894
+> >   bus_probe_device+0x1e4/0x290 drivers/base/bus.c:490
+> >   device_add+0xae6/0x16f0 drivers/base/core.c:2202
+> >   usb_set_configuration+0xdf6/0x1670 drivers/usb/core/message.c:2023
+> >   generic_probe+0x9d/0xd5 drivers/usb/core/generic.c:210
+> >   usb_probe_device+0x99/0x100 drivers/usb/core/driver.c:266
+> >   really_probe+0x281/0x6d0 drivers/base/dd.c:548
+> >   driver_probe_device+0x104/0x210 drivers/base/dd.c:721
+> >   __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:828
+> >   bus_for_each_drv+0x162/0x1e0 drivers/base/bus.c:430
+> >   __device_attach+0x217/0x360 drivers/base/dd.c:894
+> >   bus_probe_device+0x1e4/0x290 drivers/base/bus.c:490
+> >   device_add+0xae6/0x16f0 drivers/base/core.c:2202
+> >   usb_new_device.cold+0x6a4/0xe79 drivers/usb/core/hub.c:2537
+> >   hub_port_connect drivers/usb/core/hub.c:5184 [inline]
+> >   hub_port_connect_change drivers/usb/core/hub.c:5324 [inline]
+> >   port_event drivers/usb/core/hub.c:5470 [inline]
+> >   hub_event+0x1df8/0x3800 drivers/usb/core/hub.c:5552
+> >   process_one_work+0x92b/0x1530 kernel/workqueue.c:2269
+> >   worker_thread+0x96/0xe20 kernel/workqueue.c:2415
+> >   kthread+0x318/0x420 kernel/kthread.c:255
+> >   ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+> >
+> > Allocated by task 83:
+> >   save_stack+0x1b/0x80 mm/kasan/common.c:69
+> >   set_track mm/kasan/common.c:77 [inline]
+> >   __kasan_kmalloc mm/kasan/common.c:510 [inline]
+> >   __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:483
+> >   kmalloc include/linux/slab.h:561 [inline]
+> >   usb_get_configuration+0x311/0x3100 drivers/usb/core/config.c:862
+> >   usb_enumerate_device drivers/usb/core/hub.c:2370 [inline]
+> >   usb_new_device+0xd3/0x160 drivers/usb/core/hub.c:2506
+> >   hub_port_connect drivers/usb/core/hub.c:5184 [inline]
+> >   hub_port_connect_change drivers/usb/core/hub.c:5324 [inline]
+> >   port_event drivers/usb/core/hub.c:5470 [inline]
+> >   hub_event+0x1df8/0x3800 drivers/usb/core/hub.c:5552
+> >   process_one_work+0x92b/0x1530 kernel/workqueue.c:2269
+> >   worker_thread+0x96/0xe20 kernel/workqueue.c:2415
+> >   kthread+0x318/0x420 kernel/kthread.c:255
+> >   ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+> >
+> > Freed by task 211:
+> >   save_stack+0x1b/0x80 mm/kasan/common.c:69
+> >   set_track mm/kasan/common.c:77 [inline]
+> >   kasan_set_free_info mm/kasan/common.c:332 [inline]
+> >   __kasan_slab_free+0x130/0x180 mm/kasan/common.c:471
+> >   slab_free_hook mm/slub.c:1424 [inline]
+> >   slab_free_freelist_hook mm/slub.c:1475 [inline]
+> >   slab_free mm/slub.c:3025 [inline]
+> >   kfree+0xe4/0x320 mm/slub.c:3977
+> >   do_new_mount fs/namespace.c:2827 [inline]
+> >   do_mount+0x68a/0x1bf0 fs/namespace.c:3143
+> >   ksys_mount+0xd7/0x150 fs/namespace.c:3352
+> >   __do_sys_mount fs/namespace.c:3366 [inline]
+> >   __se_sys_mount fs/namespace.c:3363 [inline]
+> >   __x64_sys_mount+0xba/0x150 fs/namespace.c:3363
+> >   do_syscall_64+0xb7/0x580 arch/x86/entry/common.c:290
+> >   entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> >
+> > The buggy address belongs to the object at ffff8881d4aaa600
+> >   which belongs to the cache kmalloc-256 of size 256
+> > The buggy address is located 53 bytes to the right of
+> >   256-byte region [ffff8881d4aaa600, ffff8881d4aaa700)
+> > The buggy address belongs to the page:
+> > page:ffffea000752aa80 refcount:1 mapcount:0 mapping:ffff8881da002780
+> > index:0x0 compound_mapcount: 0
+> > flags: 0x200000000010200(slab|head)
+> > raw: 0200000000010200 ffffea000752c900 0000000a0000000a ffff8881da002780
+> > raw: 0000000000000000 0000000000100010 00000001ffffffff 0000000000000000
+> > page dumped because: kasan: bad access detected
+> >
+> > Memory state around the buggy address:
+> >   ffff8881d4aaa600: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+> >   ffff8881d4aaa680: 00 00 00 00 00 00 00 00 00 00 00 00 00 fc fc fc
+> > > ffff8881d4aaa700: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+> >                                       ^
+> >   ffff8881d4aaa780: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+> >   ffff8881d4aaa800: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+> > ==================================================================
+> >
+> >
+> > ---
+> > This bug is generated by a bot. It may contain errors.
+> > See https://goo.gl/tpsmEJ for more information about syzbot.
+> > syzbot engineers can be reached at syzkaller@googlegroups.com.
+> >
+> > syzbot will keep track of this bug report. See:
+> > https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> > syzbot can test patches for this bug, for details see:
+> > https://goo.gl/tpsmEJ#testing-patches
+>
+> #syz fix: ALSA: usb-audio: Fix incorrect size check for
+> processing/extension units
 
-
-On 1/21/20 5:50 PM, Josh Poimboeuf wrote:
-> On Mon, Jan 20, 2020 at 04:07:11PM +0100, Peter Zijlstra wrote:
->> On Thu, Jan 09, 2020 at 04:02:03PM +0000, Julien Thierry wrote:
->>> In the mean time, any feedback on the current state is appreciated.
->>>
->>> * Patches 1 to 18 adapts the current objtool code to make it easier to
->>>    support new architectures.
->>
->> In the interrest of moving things along; I've looked through these
->> and 1-14,16 look good to me, 17,18 hurt my brain.
->>
->> Josh, what say you?
-> 
-> Agreed.
-> 
-> Julien, thanks a lot for splitting these up nicely.  If you post 1-14
-> (updated based on the recent comments), we can look at merging those
-> sooner.
-> 
-
-Sure, I'll repost the refactoring patches separately once I've updated them.
-
-> 15-18 also hurt my brain -- probably a symptom of the existing fragile
-> mess -- so I'll need to spend more time staring at them.
-> 
-
-Yes, the whole state update code hurt quite a lot as well. It took me a 
-while to convince myself that my changes felt correct (to me at least, 
-it might be that I got things wrong :) ).
-
-Thanks,
-
--- 
-Julien Thierry
-
+#syz fix:
+ALSA: usb-audio: Fix incorrect size check for processing/extension units
