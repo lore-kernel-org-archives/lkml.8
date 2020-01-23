@@ -2,134 +2,197 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 472B4C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 11:27:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C669DC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 11:32:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0BB9A24655
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 11:27:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DBF82467E
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 11:32:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="S1BxwFk1"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YpyeOcCL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727307AbgAWL1Q (ORCPT
+        id S1726968AbgAWLcx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 06:27:16 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:40301 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726026AbgAWL1P (ORCPT
+        Thu, 23 Jan 2020 06:32:53 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:33685 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726194AbgAWLcx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 06:27:15 -0500
-Received: by mail-pf1-f196.google.com with SMTP id q8so1402110pfh.7
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jan 2020 03:27:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=23Kori0Gfe9jOVOSUcpuHeH/VuCobIg4HsEBeoKpTcQ=;
-        b=S1BxwFk16LfetRAqa0xbnN8dmEDW8TfeJvGPGJ3HzwW6EGkA1O4xcEukXhL+Lm+nha
-         a8Cat4SC+RLR4kTDPllxAO3BDP2yEW05ADEDeDFKpUbNkNYLySWUZCSVEN2sDl1RLRZ0
-         XdgFD9S1Sko7YJWDDgF7HtdSWLu/wXLWkS8WJdOxRaP1VoMiqbfKXn4w4VV8w1jZTZSE
-         iDIf22PKz2Q+JvckiEoUBwW8g6cfdUSvcKnjVA9AJS8fBX54fmF7TGvc81TLsqqXjOWL
-         B5D/eePQZ0NHYQcZYMJSb4Xx7i5Tbl1LUlwt4FVOHcQr9UtOEvjS935/AHuO0reivjIb
-         jpCA==
+        Thu, 23 Jan 2020 06:32:53 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579779172;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=8xpwabDUT9AeCxzSh2+fjHnI/NjiznPGltneNwagA8c=;
+        b=YpyeOcCLgQEYVQRu+CfLwVnrNn17lMc1hO94cyqHJpvDOEEwZXbuA7WJXtSIENlt9ruleg
+        f08w+ONWEbSYNh2uKvMuJPm6wgF5pqPqUPER3dwgdMX3Leez85NYYIVHYdt8JeyM6QffoA
+        D5ANB05zRjK9n0RgB2ZpNG2wShExXvQ=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-194-haE8SUtYPP-2_FzzaeuIpA-1; Thu, 23 Jan 2020 06:32:48 -0500
+X-MC-Unique: haE8SUtYPP-2_FzzaeuIpA-1
+Received: by mail-wm1-f69.google.com with SMTP id g26so462529wmk.6
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jan 2020 03:32:48 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=23Kori0Gfe9jOVOSUcpuHeH/VuCobIg4HsEBeoKpTcQ=;
-        b=SSt2fu93FJw4fagwKDPXC4NEI2FhDYersom4P1u5MtnOf4aklF6aJq2UQlCQQMpTqH
-         lv1X62t1eV4Pjrwwk7R1a5Z5GlBFP2z8SXF4JOzh5nTJJxXZZO7Hr8H1Sp8wTY1Pcw48
-         r6LM1gIhw5tJgctLLxLpxozrbheivW+4XYzZ/iKJ9As/ZwycxgtynMHSZQjPHC6kQJdR
-         gPM6XHfHh50kDCQKNTWq8wNxNLYsXTjJ/YHRGRQrnh1ISlBAzQVQ1+d+NFk/j1hVfnhM
-         5zD43BYfDmABuga1zrxGaWS7ORrdGaW+nwSdC0OiXjLIEXOLDwfvozSNmze2HNsKaEvK
-         4TcA==
-X-Gm-Message-State: APjAAAVrITS3Trx5ZA+pRFp/rsBJcg4cnmLKXknrOYHBQNw8KyTQ6CLW
-        TGqWNDT2PEYoOWGPC/fVH8ueOw==
-X-Google-Smtp-Source: APXvYqwFcaJ7cDsKUK568k6SWVVjcFL3dxY1Jxtf4pRha6JvGIBbMX6IW0bxP7CvbORMkaJwFafBTg==
-X-Received: by 2002:a63:5f84:: with SMTP id t126mr3357593pgb.71.1579778834828;
-        Thu, 23 Jan 2020 03:27:14 -0800 (PST)
-Received: from localhost ([122.167.18.14])
-        by smtp.gmail.com with ESMTPSA id b42sm2531675pjc.27.2020.01.23.03.27.13
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 23 Jan 2020 03:27:14 -0800 (PST)
-Date:   Thu, 23 Jan 2020 16:57:11 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Sudeep Holla <sudeep.holla@arm.com>
-Cc:     arnd@arndb.de, jassisinghbrar@gmail.com, cristian.marussi@arm.com,
-        peng.fan@nxp.com, peter.hilber@opensynergy.com,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH V4] firmware: arm_scmi: Make scmi core independent of the
- transport type
-Message-ID: <20200123112711.mggm7ayxcqnr54yf@vireshk-i7>
-References: <20200121183818.GA11522@bogus>
- <a9ec58818b5e0c982810e74efe3f5f22b930ae40.1579660436.git.viresh.kumar@linaro.org>
- <20200122121538.GA31240@bogus>
- <20200123103033.GA7511@bogus>
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=8xpwabDUT9AeCxzSh2+fjHnI/NjiznPGltneNwagA8c=;
+        b=lpP4jWpGdXrlFx/GOaz2MF9rvfw79+nmyVh2mJOrOaU9ZXTlFvUswseMMPgUV/G41L
+         Nb+8Cc6whreH0K1qNpa3an7zamHNg1USNaXlhUY/PlfO5ZgYKGo+i52LEWMe++08S28p
+         TUYBMfAXoI4lxnl5EvTEhQhq6jqSsKC5QHmd9X3lJ1oox1pg7QmHlrQzMkri10Hf0EJP
+         MkuJDeuic+9Dos/KVmFbQtCvGaohIdJe7Huha9dv8WBcr8sjH3ZgrYXm87X9+ROkMQZ1
+         tmc+U6jtepbi8yZOIrCLeEcHvaLDaCOZbuLwK96IjhrJtWiepWgtPkrujVlHhUxz3RzG
+         ijWg==
+X-Gm-Message-State: APjAAAXbCXdSnNdxSYIq2Ymlneg4Q3uA5seSXodZ4dG814J+sxw6rjZB
+        32azDddSjpRrYnhxBLBeVgHLubpFUdzSR4kX4rjuk/9dZ2kbIbTEJq+b0lCQQfFlUVuiISONuHI
+        XghGgFPuxrduDdd41IDR6KkiT
+X-Received: by 2002:adf:fa50:: with SMTP id y16mr16312016wrr.183.1579779167459;
+        Thu, 23 Jan 2020 03:32:47 -0800 (PST)
+X-Google-Smtp-Source: APXvYqwjx4XjBbNEv6xdmfv7CxRtTLPUvw+HlKG7WH2EnglXtX4rCtufRGwWlTXAZQdTM6mGq1DQjA==
+X-Received: by 2002:adf:fa50:: with SMTP id y16mr16311990wrr.183.1579779167185;
+        Thu, 23 Jan 2020 03:32:47 -0800 (PST)
+Received: from vitty.brq.redhat.com (cst-prg-91-164.cust.vodafone.cz. [46.135.91.164])
+        by smtp.gmail.com with ESMTPSA id o16sm2627249wmc.18.2020.01.23.03.32.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 23 Jan 2020 03:32:46 -0800 (PST)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     mtosatti@redhat.com, stable@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Subject: Re: [PATCH 1/2] KVM: x86: reorganize pvclock_gtod_data members
+In-Reply-To: <1579702953-24184-2-git-send-email-pbonzini@redhat.com>
+References: <1579702953-24184-1-git-send-email-pbonzini@redhat.com> <1579702953-24184-2-git-send-email-pbonzini@redhat.com>
+Date:   Thu, 23 Jan 2020 12:32:44 +0100
+Message-ID: <87tv4mqug3.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200123103033.GA7511@bogus>
-User-Agent: NeoMutt/20180716-391-311a52
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 23-01-20, 10:30, Sudeep Holla wrote:
-> On Wed, Jan 22, 2020 at 12:15:38PM +0000, Sudeep Holla wrote:
-> > On Wed, Jan 22, 2020 at 08:06:23AM +0530, Viresh Kumar wrote:
-> >
-> 
-> [...]
-> 
-> > > Can you please help me getting this tested, now that I have rebased it
-> > > as well :) ?
-> > >
-> >
-> > Sure, I will give it a go on my Juno. Thanks for the rebase, makes it
-> > simpler.
-> >
-> 
-> Sorry for the delay. I gave this a spin on my Juno. I am seeing below
-> warning once on boot but it continues and everything seem to work fine.
-> Also the warning is not related to this change I believe and this patch
-> is just helping to hit some corner case with deferred probe and devres.
-> I need to spend some time to debug it.
-> 
-> Regards,
-> Sudeep
-> 
-> --->8
-> 
-> WARNING: CPU: 1 PID: 187 at drivers/base/dd.c:519 really_probe+0x11c/0x418
-> Modules linked in:
-> CPU: 1 PID: 187 Comm: kworker/1:2 Not tainted 5.5.0-rc7-00026-gf7231cd3108d-dirty #20
-> Hardware name: ARM LTD ARM Juno Development Platform/ARM Juno Development Platform, BIOS EDK II Jan 16 2020
-> Workqueue: events deferred_probe_work_func
-> pstate: 80000005 (Nzcv daif -PAN -UAO)
-> pc : really_probe+0x11c/0x418
-> lr : really_probe+0x10c/0x418
-> Call trace:
->  really_probe+0x11c/0x418
->  driver_probe_device+0xe4/0x138
->  __device_attach_driver+0x90/0x110
->  bus_for_each_drv+0x80/0xd0
->  __device_attach+0xdc/0x160
->  device_initial_probe+0x18/0x20
->  bus_probe_device+0x98/0xa0
->  deferred_probe_work_func+0x90/0xe0
->  process_one_work+0x1ec/0x4a8
->  worker_thread+0x210/0x490
->  kthread+0x110/0x118
->  ret_from_fork+0x10/0x18
-> ---[ end trace 06f96d55ce6093a8 ]---
+Paolo Bonzini <pbonzini@redhat.com> writes:
 
-Still it looks strange that the warning comes only after my patch :)
+> We will need a copy of tk->offs_boot in the next patch.  Store it and
+> cleanup the struct: instead of storing tk->tkr_xxx.base with the tk->offs_boot
+> included, store the raw value in struct pvclock_clock and sum tk->offs_boot
+> in do_monotonic_raw and do_realtime.   tk->tkr_xxx.xtime_nsec also moves
+> to struct pvclock_clock.
+>
+> While at it, fix a (usually harmless) typo in do_monotonic_raw, which
+> was using gtod->clock.shift instead of gtod->raw_clock.shift.
+>
+> Fixes: 53fafdbb8b21f ("KVM: x86: switch KVMCLOCK base to monotonic raw clock")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+> ---
+>  arch/x86/kvm/x86.c | 29 ++++++++++++-----------------
+>  1 file changed, 12 insertions(+), 17 deletions(-)
+>
+> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> index 89621025577a..1b4273cce63c 100644
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -1532,6 +1532,8 @@ struct pvclock_clock {
+>  	u64 mask;
+>  	u32 mult;
+>  	u32 shift;
+> +	u64 base_cycles;
+> +	u64 offset;
+>  };
+>  
+>  struct pvclock_gtod_data {
+> @@ -1540,11 +1542,8 @@ struct pvclock_gtod_data {
+>  	struct pvclock_clock clock; /* extract of a clocksource struct */
+>  	struct pvclock_clock raw_clock; /* extract of a clocksource struct */
+>  
+> -	u64		boot_ns_raw;
+> -	u64		boot_ns;
+> -	u64		nsec_base;
+> +	ktime_t		offs_boot;
+>  	u64		wall_time_sec;
+> -	u64		monotonic_raw_nsec;
+>  };
+>  
+>  static struct pvclock_gtod_data pvclock_gtod_data;
+> @@ -1552,10 +1551,6 @@ struct pvclock_gtod_data {
+>  static void update_pvclock_gtod(struct timekeeper *tk)
+>  {
+>  	struct pvclock_gtod_data *vdata = &pvclock_gtod_data;
+> -	u64 boot_ns, boot_ns_raw;
+> -
+> -	boot_ns = ktime_to_ns(ktime_add(tk->tkr_mono.base, tk->offs_boot));
+> -	boot_ns_raw = ktime_to_ns(ktime_add(tk->tkr_raw.base, tk->offs_boot));
+>  
+>  	write_seqcount_begin(&vdata->seq);
+>  
+> @@ -1565,20 +1560,20 @@ static void update_pvclock_gtod(struct timekeeper *tk)
+>  	vdata->clock.mask		= tk->tkr_mono.mask;
+>  	vdata->clock.mult		= tk->tkr_mono.mult;
+>  	vdata->clock.shift		= tk->tkr_mono.shift;
+> +	vdata->clock.base_cycles	= tk->tkr_mono.xtime_nsec;
+> +	vdata->clock.offset		= tk->tkr_mono.base;
+>  
+>  	vdata->raw_clock.vclock_mode	= tk->tkr_raw.clock->archdata.vclock_mode;
+>  	vdata->raw_clock.cycle_last	= tk->tkr_raw.cycle_last;
+>  	vdata->raw_clock.mask		= tk->tkr_raw.mask;
+>  	vdata->raw_clock.mult		= tk->tkr_raw.mult;
+>  	vdata->raw_clock.shift		= tk->tkr_raw.shift;
+> -
+> -	vdata->boot_ns			= boot_ns;
+> -	vdata->nsec_base		= tk->tkr_mono.xtime_nsec;
+> +	vdata->raw_clock.base_cycles	= tk->tkr_raw.xtime_nsec;
+> +	vdata->raw_clock.offset		= tk->tkr_raw.base;
 
-Should I send V5 (fixed few comments after reviews) now ?
+Likely a personal preference but the suggested naming is a bit
+confusing: we use 'base_cycles' to keep 'xtime_nsec' and 'offset' to
+keep ... 'base'. Not that I think that 'struct timekeeper' is perfect
+but at least it is documented. Should we maybe just stick to it (and
+name 'struct pvclock_clock' fields accordingly?)
+
+>  
+>  	vdata->wall_time_sec            = tk->xtime_sec;
+>  
+> -	vdata->boot_ns_raw		= boot_ns_raw;
+> -	vdata->monotonic_raw_nsec	= tk->tkr_raw.xtime_nsec;
+> +	vdata->offs_boot		= tk->offs_boot;
+>  
+>  	write_seqcount_end(&vdata->seq);
+>  }
+> @@ -2048,10 +2043,10 @@ static int do_monotonic_raw(s64 *t, u64 *tsc_timestamp)
+>  
+>  	do {
+>  		seq = read_seqcount_begin(&gtod->seq);
+> -		ns = gtod->monotonic_raw_nsec;
+> +		ns = gtod->raw_clock.base_cycles;
+>  		ns += vgettsc(&gtod->raw_clock, tsc_timestamp, &mode);
+> -		ns >>= gtod->clock.shift;
+> -		ns += gtod->boot_ns_raw;
+> +		ns >>= gtod->raw_clock.shift;
+> +		ns += ktime_to_ns(ktime_add(gtod->raw_clock.offset, gtod->offs_boot));
+>  	} while (unlikely(read_seqcount_retry(&gtod->seq, seq)));
+>  	*t = ns;
+>  
+> @@ -2068,7 +2063,7 @@ static int do_realtime(struct timespec64 *ts, u64 *tsc_timestamp)
+>  	do {
+>  		seq = read_seqcount_begin(&gtod->seq);
+>  		ts->tv_sec = gtod->wall_time_sec;
+> -		ns = gtod->nsec_base;
+> +		ns = gtod->clock.base_cycles;
+>  		ns += vgettsc(&gtod->clock, tsc_timestamp, &mode);
+>  		ns >>= gtod->clock.shift;
+>  	} while (unlikely(read_seqcount_retry(&gtod->seq, seq)));
+
+FWIW,
+
+Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
 
 -- 
-viresh
+Vitaly
+
