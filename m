@@ -2,117 +2,121 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59C3CC33CAA
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 07:56:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3284C33CAA
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 08:01:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25FBD24686
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 07:56:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DF0A2467E
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 08:01:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WpbRkF0g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726219AbgAWHz7 (ORCPT
+        id S1726191AbgAWIBb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 02:55:59 -0500
-Received: from terminus.zytor.com ([198.137.202.136]:37879 "EHLO
-        mail.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725785AbgAWHz7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 02:55:59 -0500
-Received: from carbon-x1.hos.anvin.org ([IPv6:2601:646:8600:3281:e7ea:4585:74bd:2ff0])
-        (authenticated bits=0)
-        by mail.zytor.com (8.15.2/8.15.2) with ESMTPSA id 00N7s0r21387140
-        (version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-        Wed, 22 Jan 2020 23:54:00 -0800
-Subject: Re: [RFC PATCH v1] pin_on_cpu: Introduce thread CPU pinning system
- call
-To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Chris Lameter <cl@linux.com>
-Cc:     Jann Horn <jannh@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
+        Thu, 23 Jan 2020 03:01:31 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:38806 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725785AbgAWIBb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jan 2020 03:01:31 -0500
+Received: by mail-wr1-f68.google.com with SMTP id y17so1978052wrh.5
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jan 2020 00:01:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=R+FbpZ9Vb49+TjvLZCwmovH5x+NpT0b9MCXQeRi4iaw=;
+        b=WpbRkF0gd/AHPTow/6O4uJYyullaxBVlxFlo899UJgx8grcJ2ArsnoUrjQfO7rM1uU
+         w6TuQ9tjZcwoQJOosgtcXcutXa4FhjX0+5MWUZ6xGZQUnKmtb9vS3r+kZEBzoZTkmnAl
+         PNKEGuSCt5Nok/9UJdqABRb2sW4ICZo1PZ7sM2DRiPaiaOaDyf2sLVF0pRw8h5gZU83A
+         gv6ME43amhCy88bJKCVHSO0e6kHsU3QowDaz+8c0TqSjPGj2T8ew2HQdACFkS3gsmCIz
+         /WQSKWmEoDWLrD02HXTjnV2+7LmeRNCzAwh1DGC5tgAxbRx+B7SGDWDQT5ZsGHXGI8gS
+         tDRw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=R+FbpZ9Vb49+TjvLZCwmovH5x+NpT0b9MCXQeRi4iaw=;
+        b=Irr8oikxcRKjyRIA0BNmvTdGG6qXq9iKyrRj/lTi1pDAcGxEe/oQi91a+yNh0RMlSK
+         SW1xFdsl5y7aoJu/PlBZbx4m86flPJgBGsCtUr1kkcgATli/lJL9xSDO7m36W5/AOVsj
+         HwgGx/iKxRLz5r2IE42WrVXdPbZGxBSV4dnqoMmQbcjD95k5BeFN7G5+Gjrh0DSngO/t
+         UY7H3qts00qZe1k+fae7ubVgj92R8AutnMqsT2U/1qyTOxp3CxZiIETVG4Ej7G5mvRqZ
+         i6uKuUW1C5E6YaGzklJtzB4XB+n6v0eQKMRIuyNr0XZP5yy3XQD6ccKbEVSaDDO2yHGv
+         kwVQ==
+X-Gm-Message-State: APjAAAXVfrmP3BUw7tB2SnASD4Ohb8SRYlNh01vGaNfhFarQwDsAeHV3
+        V5VkdJNbcdTLwFQcZjK2kxMX2g==
+X-Google-Smtp-Source: APXvYqwj5eR+g+mDnB5c9lVZNCKpo5UV/rYlef1uJMqn0W4226bEd71KH95SIuuF96EgTkH5Bl9CaA==
+X-Received: by 2002:adf:f885:: with SMTP id u5mr16166384wrp.359.1579766489342;
+        Thu, 23 Jan 2020 00:01:29 -0800 (PST)
+Received: from dell ([2.27.35.227])
+        by smtp.gmail.com with ESMTPSA id w22sm1552914wmk.34.2020.01.23.00.01.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 23 Jan 2020 00:01:28 -0800 (PST)
+Date:   Thu, 23 Jan 2020 08:01:42 +0000
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Darren Hart <dvhart@infradead.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Joel Fernandes <joelaf@google.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Dave Watson <davejwatson@fb.com>,
-        Will Deacon <will.deacon@arm.com>, shuah <shuah@kernel.org>,
-        Andi Kleen <andi@firstfloor.org>,
-        linux-kselftest <linux-kselftest@vger.kernel.org>,
-        Russell King <linux@arm.linux.org.uk>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        Paul <paulmck@linux.vnet.ibm.com>, Paul Turner <pjt@google.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Josh Triplett <josh@joshtriplett.org>,
-        rostedt <rostedt@goodmis.org>, Ben Maurer <bmaurer@fb.com>,
-        linux-api <linux-api@vger.kernel.org>,
-        Andy Lutomirski <luto@amacapital.net>
-References: <20200121160312.26545-1-mathieu.desnoyers@efficios.com>
- <CAG48ez2bQdoT9y7HkyU06DTazysUDdPdJe+gyV-NxgQA7JWQVQ@mail.gmail.com>
- <430172781.596271.1579636021412.JavaMail.zimbra@efficios.com>
- <CAG48ez2Z5CesMfandNK+S32Rrgp_QGQHqQ1Fpd5-YTsCWGfHeg@mail.gmail.com>
- <2049164886.596497.1579641536619.JavaMail.zimbra@efficios.com>
- <alpine.DEB.2.21.2001212141590.1231@www.lameter.com>
- <1648013936.596672.1579655468604.JavaMail.zimbra@efficios.com>
-From:   "H. Peter Anvin" <hpa@zytor.com>
-Message-ID: <ead7a565-9a23-a7d7-904d-c4860f63952a@zytor.com>
-Date:   Wed, 22 Jan 2020 23:53:54 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Zha Qipeng <qipeng.zha@intel.com>,
+        "David E . Box" <david.e.box@linux.intel.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Mark Brown <broonie@kernel.org>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 37/38] platform/x86: intel_pmc_ipc: Convert to MFD
+Message-ID: <20200123080142.GP15507@dell>
+References: <20200121160114.60007-1-mika.westerberg@linux.intel.com>
+ <20200121160114.60007-38-mika.westerberg@linux.intel.com>
+ <20200122123454.GL15507@dell>
+ <20200122125300.GO2665@lahna.fi.intel.com>
+ <20200122132757.GM15507@dell>
+ <20200122144523.GX2665@lahna.fi.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <1648013936.596672.1579655468604.JavaMail.zimbra@efficios.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200122144523.GX2665@lahna.fi.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-01-21 17:11, Mathieu Desnoyers wrote:
-> ----- On Jan 21, 2020, at 4:44 PM, Chris Lameter cl@linux.com wrote:
-> 
->> These scenarios are all pretty complex and will be difficult to understand
->> for the user of these APIs.
->>
->> I think the easiest solution (and most comprehensible) is for the user
->> space process that does per cpu operations to get some sort of signal. If
->> its not able to handle that then terminate it. The code makes a basic
->> assumption after all that the process is running on a specific cpu. If
->> this is no longer the case then its better to abort if the process cannot
->> handle moving to a different processor.
-> 
-> The point of pin_on_cpu() is to allow threads to access per-cpu data
-> structures belonging to a given CPU even if they cannot run on that
-> CPU (because it is offline).
-> 
-> I am not sure what scenario your signal delivery proposal aims to cover.
-> 
-> Just to try to put this into the context of a specific scenario to see
-> if I understand your point, is the following what you have in mind ?
-> 
-> 1. Thread A issues pin_on_cpu(5),
-> 2. Thread B issues sched_setaffinity removing cpu 5 from thread A's
->    affinity mask,
-> 3. Noticing that it would generate an invalid combination, rather than
->    failing sched_setaffinity, it would send a SIGSEGV (or other) signal
->    to thread A.
-> 
-> Or so you have something entirely different in mind ?
-> 
+On Wed, 22 Jan 2020, Mika Westerberg wrote:
 
-I would agree that this seems like the only sane option, or you will be in a
-world of hurt because of conflicting semantics. It is not just offlining, but
-what happens if a policy manager calls sched_setaffinity() on another thread
--- and now the universe breaks because a library is updated to use this new
-system call which collides with the expectations of the policy manager.
+> On Wed, Jan 22, 2020 at 01:27:57PM +0000, Lee Jones wrote:
+> > > Which type of device you suggest here? And which bus it should be
+> > > registered to? I think we can make this create a platform_device but
+> > > then we would need to do that from the PCI driver as well which seems
+> > > unnecessary since we already have the struct pci_dev.
+> > 
+> > What kind of device is it?
+> 
+> It is either part of an ACPI device (platform_device) or a PCI device
+> depending on the platform.
+> 
+> > Refrain from using platform device, unless it is one please.
+> 
+> OK.
+> 
+> Greg suggested making the SCU IPC functionality a class and I think it
+> fits here nicely so I'm going to try that next if nobody objects. I'll
+> send the first cleanup patches separately.
 
-There doesn't seem to be any way to get this to be a local event which doesn't
-break assumptions elsewhere in the system without making this an abort event
-of some type. However, signals are painful in their own right, mostly because
-of the lack of any infrastructure for allocating signals to libraries in user
-space. I was actually thinking about exactly that issue just this weekend.
+Sounds good.
 
-	-hpa
-
-
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
