@@ -2,175 +2,88 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73281C33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 18:41:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AE7DC33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 18:41:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E70D21D7E
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 18:41:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C99E521D7E
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 18:41:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CXNEFTP2"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="qrnuqwTb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728925AbgAWSld (ORCPT
+        id S1729021AbgAWSl5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 13:41:33 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:33955 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728767AbgAWSld (ORCPT
+        Thu, 23 Jan 2020 13:41:57 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:42384 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728899AbgAWSl4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 13:41:33 -0500
-Received: by mail-pf1-f196.google.com with SMTP id i6so1947648pfc.1
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jan 2020 10:41:32 -0800 (PST)
+        Thu, 23 Jan 2020 13:41:56 -0500
+Received: by mail-pg1-f194.google.com with SMTP id s64so1791509pgb.9
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jan 2020 10:41:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=j0uL3hKYvtloUNrrY22cT3PaCoUxzpbH8NZr/Q8o0KA=;
-        b=CXNEFTP2R4F8SHBCz2/5Zzdx0sFdYTih2TDfK4G9t9F6FHZEmAQKe0jRZsvWKlCcZm
-         GsCdp4VMOvYqWBylaMYFz3jK3aq5yW7KLIk9EOW1a+lhEGwwJc5UTxUJw4vSEFwE3swT
-         5fpKlAPcs1LsnegZtNxXem+dbUFnvIaJ2Yw4bNrTE5ryTxqMyHEiBhBrmnGjzJulXbM4
-         pU2tl6X779VkXBEvQvwcJO9VT38bD2quKReEXD+esMMg1qNlTCjuwBlnXoboXpi5UAJd
-         1Sp1m/j9HlOv1HBL4587gw6zAFpwao4JsPMNwWlunVSVhcrE8gzHY1z0Q8W5h1bl5RYV
-         Av7A==
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=hVVJiVofuq6jqT8tysqA5aMKgAsODtyC1uhbEikyAQ8=;
+        b=qrnuqwTbuWLKb92ONC2CXaYTQWIYfF8DxdwKhjeaVXX6GAs7puvD94VO3ij/4IcOsk
+         QliauhYOoWF4e4na4cD1Pve2IFiHHDPMc/r9o7NLl9AuTRiu7gJ4AKJYo4OsLW5LRV4F
+         1IiT1yR8dcgGaLN4wfGR6Kn4vky0fGbPGMXf9Soc5VsFaWCemq0stfHFjiPn/U5KSQLS
+         +wS24wFzJm21kkj+wSckN6tilYc98lc4PfKRh/EXA5g9/Hte1mxFZuaF6rBqGqIUPnpX
+         aFnQaE/NxMZna4tB6oAf7PkQ4EVqDvyyj6g9Sa59qLEG+NaXcBS9/cokO/DAU/GA27EH
+         Im7A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=j0uL3hKYvtloUNrrY22cT3PaCoUxzpbH8NZr/Q8o0KA=;
-        b=Ju7D/dyzag6XX8VZahtFkWX6Z/C+1t/EwWN7BkKuwTWRcvbYNB2tfrTrf8+PfvKih5
-         1nvILkBFj8drRk9oElEae+3QMDpHlbSP9gumyGAgArxXcYCVMygl7XdB1VrpxWEGf45Q
-         0niWLgkZ2IWanNYM0ZR6/E2Y32KMBVyOVoNsdh2kLtpJMWiaMWNTWoTbEu6Y3BXfQb0M
-         4g7Q8bWZwHuasIIxCKcnM+MBsvB9UPsmVFXlyj5aJcVRiw758nvQ8B24kMX8MjwKkh7I
-         OMuN3DNoHTpQmc6x2IiF2n79mV4buFAuXzf02+bbTi+nNdl9NLFTtSGs/b7Ei/W24Aht
-         V2Ww==
-X-Gm-Message-State: APjAAAWWPB5S5Px9etK6u0xhkbbYirRfNJSuBVRh/CtjSwhHvlO2ybOj
-        qMBSdb2ZDvactnZymxkdSi79TQ==
-X-Google-Smtp-Source: APXvYqx+qa1v2W0iU2GnJArGqft14UWP8j2yatf2YzptCIB13C6YZQGrwUgPc9NPu/VFtVapmAU0PA==
-X-Received: by 2002:a63:1807:: with SMTP id y7mr182102pgl.94.1579804892350;
-        Thu, 23 Jan 2020 10:41:32 -0800 (PST)
-Received: from yoga (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id g24sm3547441pfk.92.2020.01.23.10.41.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Jan 2020 10:41:31 -0800 (PST)
-Date:   Thu, 23 Jan 2020 10:41:29 -0800
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Harigovindan P <harigovi@codeaurora.org>
-Cc:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
-        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, robdclark@gmail.com,
-        seanpaul@chromium.org, hoegsberg@chromium.org,
-        kalyan_t@codeaurora.org, nganji@codeaurora.org
-Subject: Re: [v2] arm64: dts: sc7180: add display dt nodes
-Message-ID: <20200123184129.GW1511@yoga>
-References: <1579781700-7253-1-git-send-email-harigovi@codeaurora.org>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=hVVJiVofuq6jqT8tysqA5aMKgAsODtyC1uhbEikyAQ8=;
+        b=ZcAtUcGi9lCyZcthyESI8Ho/kvnT6JP6wMNjGMFzpbXY4hjomqeteTKI07g0DP6z3w
+         sO97DHDir68YoBoOs/KmcfwFectKBp4wG3YIDK/Ey0EGaooixlxxJCW/oqHJV1avC2Fi
+         vGSEI0yxydC95V351jixr4QfQZOCCdvEx2/CiDUPcwVbcz6pR+SajbK2kaoOIdNdy9lg
+         u1xVOjAhR4gaLlrmLye7Hpjwo/iT18AuvhtlGlW1XeOfx+J81t2LGRTFENwqH1lgwTB6
+         MfrhZPMYqmd1Pwjx0oM+x4aOPvkj3qQFJ+TJfDsfydcxJWGzPL9J5c29BKcKzto9p0Wh
+         6AJw==
+X-Gm-Message-State: APjAAAUG3CKmjF4Y0V1UPHZdejvx2frV6zfOy9dP4m4rXeigdl+b5fxk
+        67nQMnHu8fre7xi2JOHBREhaABQ4ryi5Sw==
+X-Google-Smtp-Source: APXvYqxyUlS85/lEfnr4wwXVf6rmaypUzEXpVAItiquKi8D7EUEX0nSWXUwQiG3fuTzpGObtNiSJDQ==
+X-Received: by 2002:a63:1210:: with SMTP id h16mr139816pgl.171.1579804915805;
+        Thu, 23 Jan 2020 10:41:55 -0800 (PST)
+Received: from ?IPv6:2600:380:4562:fb25:b980:6664:b71f:35b5? ([2600:380:4562:fb25:b980:6664:b71f:35b5])
+        by smtp.gmail.com with ESMTPSA id s26sm3520454pfe.166.2020.01.23.10.41.54
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 23 Jan 2020 10:41:55 -0800 (PST)
+Subject: Re: [PATCH] partitions/ldm: fix spelling mistake "to" -> "too"
+To:     Colin King <colin.king@canonical.com>,
+        Richard Russon <ldm@flatcap.org>,
+        linux-ntfs-dev@lists.sourceforge.net, linux-block@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200123002921.2832716-1-colin.king@canonical.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <0d383b8a-b2c5-7669-f989-4239531d3fc0@kernel.dk>
+Date:   Thu, 23 Jan 2020 11:41:53 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1579781700-7253-1-git-send-email-harigovi@codeaurora.org>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <20200123002921.2832716-1-colin.king@canonical.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 23 Jan 04:15 PST 2020, Harigovindan P wrote:
-
-> Add display, DSI hardware DT nodes for sc7180.
+On 1/22/20 5:29 PM, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
 > 
-> Changes in v1:
-> 	-Added display DT nodes for sc7180
-> Changes in v2:
-> 	-Renamed node names
-> 	-Corrected code alignments
-> 	-Removed extra new line
+> There is a spelling mistake in a ldm_error message. Fix it.
 
-Please keep the changelist after the '---' for the dts patches.
+Applied, thanks.
 
-> 
-> Signed-off-by: Harigovindan P <harigovi@codeaurora.org>
-> ---
->  arch/arm64/boot/dts/qcom/sc7180-idp.dts |  57 +++++++++++++++
->  arch/arm64/boot/dts/qcom/sc7180.dtsi    | 125 ++++++++++++++++++++++++++++++++
->  2 files changed, 182 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-> index 388f50a..f410614 100644
-> --- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-> +++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-> @@ -232,6 +232,50 @@
->  	};
->  };
->  
-> +&dsi_controller {
-> +	status = "okay";
-> +
-> +	vdda-supply = <&vreg_l3c_1p2>;
-> +
-> +	panel@0 {
-> +		compatible = "visionox,rm69299-1080p-display";
-> +		reg = <0>;
-> +
-> +		vdda-supply = <&vreg_l8c_1p8>;
-> +		vdd3p3-supply = <&vreg_l18a_2p8>;
-> +
-> +		pinctrl-names = "default", "suspend";
-> +		pinctrl-0 = <&disp_pins_default>;
-> +		pinctrl-1 = <&disp_pins_default>;
-> +
-> +		reset-gpios = <&pm6150l_gpio 3 0>;
+-- 
+Jens Axboe
 
-Please replace the 0 here with GPIO_ACTIVE_HIGH
-
-> +
-> +		ports {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			port@0 {
-> +				reg = <0>;
-> +				panel0_in: endpoint {
-> +					remote-endpoint = <&dsi0_out>;
-> +				};
-> +			};
-> +		};
-> +	};
-[..]
-> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> index 3bc3f64..81c3aab 100644
-> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> @@ -1184,6 +1184,131 @@
->  			#power-domain-cells = <1>;
->  		};
->  
-> +		display_subsystem: mdss@ae00000 {
-
-It was the name, not the label, that Stephen asked you to make generic.
-
-> +			compatible = "qcom,sc7180-mdss";
-> +			reg = <0 0x0ae00000 0 0x1000>;
-> +			reg-names = "mdss";
-> +
-[..]
-> +			display_controller: mdp@ae00000 {
-
-mdp: display-controller@ae00000 {
-
-[..]
-> +			};
-> +
-> +			dsi_controller: qcom,mdss_dsi_ctrl0@ae94000 {
-
-In particular you shouldn't have qcom, in the node name.
-
-[..]
-> +
-> +			dsi_phy: dsi-phy0@ae94400 {
-
-phy@ae94400
-
-Regards,
-Bjorn
