@@ -2,46 +2,47 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1D69C3F68F
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 13:13:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 389F6C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 13:13:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B90924676
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 13:13:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B9D724655
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 13:13:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="oX5hYg6V"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="QeFapJ65"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728831AbgAWNND (ORCPT
+        id S1728901AbgAWNNG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 08:13:03 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:20883 "EHLO
+        Thu, 23 Jan 2020 08:13:06 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:34011 "EHLO
         mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726761AbgAWNM7 (ORCPT
+        by vger.kernel.org with ESMTP id S1728792AbgAWNNC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 08:12:59 -0500
+        Thu, 23 Jan 2020 08:13:02 -0500
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1579785178; h=Content-Transfer-Encoding: MIME-Version:
- Message-Id: Date: Subject: Cc: To: From: Sender;
- bh=dJUiHDrAH4zx5c0H7WtmCINZ82HtU0D5rEpE/ztuV5w=; b=oX5hYg6VZdpNYnI/lvmdeuVRaEo/BFfYl/hLApQaRpFcWhNuAVEPv75b2w8RcvG97svx7DiG
- zvnKYeIJ6C7jElUMTq5WaFtrYNQJlyWl2Benmwy27WAtjNHycZfrax4icsR5+vxndsU4vHdV
- NkLZXnNZEySbpD7ifFaW+QjhDMs=
+ s=smtp; t=1579785182; h=Content-Transfer-Encoding: MIME-Version:
+ References: In-Reply-To: Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=HQkB2ZhFnCLma0netfVRRuYUjdLJFslhBm5LAJ36CLI=; b=QeFapJ65gZwGDXUaX9JW4M+mbC1Fh+AchvZtKZbECfHpEcPKmKIHwQtEWITUN62vqXSFu8Sz
+ ZBfJjxFdC4kVEQWfusPIS4vkCEcKxrCqbwScTWQy4qUzqcBMy37F9JLHzEdjWQ050MlW74Wj
+ IC8mwWOIS5dGjq4j/spxEri0CeU=
 X-Mailgun-Sending-Ip: 104.130.122.26
 X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
 Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e299bd7.7f52251e85e0-smtp-out-n01;
- Thu, 23 Jan 2020 13:12:55 -0000 (UTC)
+ by mxa.mailgun.org with ESMTP id 5e299bdd.7fa62d251420-smtp-out-n02;
+ Thu, 23 Jan 2020 13:13:01 -0000 (UTC)
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 1F44BC433A2; Thu, 23 Jan 2020 13:12:55 +0000 (UTC)
+        id DFEC2C433CB; Thu, 23 Jan 2020 13:13:00 +0000 (UTC)
 Received: from blr-ubuntu-87.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: sibis)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 796A8C43383;
-        Thu, 23 Jan 2020 13:12:50 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 796A8C43383
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 5A88AC447A1;
+        Thu, 23 Jan 2020 13:12:57 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 5A88AC447A1
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sibis@codeaurora.org
 From:   Sibi Sankar <sibis@codeaurora.org>
@@ -50,10 +51,12 @@ To:     bjorn.andersson@linaro.org, evgreen@chromium.org,
 Cc:     ohad@wizery.com, linux-arm-msm@vger.kernel.org,
         linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org,
         agross@kernel.org, Sibi Sankar <sibis@codeaurora.org>
-Subject: [PATCH v2 0/2] Improve general readability of MSS on SC7180
-Date:   Thu, 23 Jan 2020 18:42:34 +0530
-Message-Id: <20200123131236.1078-1-sibis@codeaurora.org>
+Subject: [PATCH v2 2/2] remoteproc: qcom: q6v5-mss: Improve readability of reset_assert
+Date:   Thu, 23 Jan 2020 18:42:36 +0530
+Message-Id: <20200123131236.1078-3-sibis@codeaurora.org>
 X-Mailer: git-send-email 2.22.1
+In-Reply-To: <20200123131236.1078-1-sibis@codeaurora.org>
+References: <20200123131236.1078-1-sibis@codeaurora.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -61,22 +64,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This series aims to improve the general readability of the mss reset
-sequence on SC7180 SoCs. No functional change intended.
+Define AXI_GATING_VALID_OVERRIDE and fixup comments to improve readability
+of Q6 modem reset sequence on SC7180 SoCs.
 
-v2:
- * Use regmap_read_poll_timeout for halt_nav and halt_axi
- * Redefine CONN_BOX_SPARE_0 to AXI_GATING_VALID_OVERRIDE
- * Update more details about pipeline glitch issue
- * Drop 2,3 patches from v1
+Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+---
+ drivers/remoteproc/qcom_q6v5_mss.c | 15 ++++++++++++---
+ 1 file changed, 12 insertions(+), 3 deletions(-)
 
-Sibi Sankar (2):
-  remoteproc: qcom: q6v5-mss: Use regmap_read_poll_timeout
-  remoteproc: qcom: q6v5-mss: Improve readability of reset_assert
-
- drivers/remoteproc/qcom_q6v5_mss.c | 42 ++++++++++++++----------------
- 1 file changed, 19 insertions(+), 23 deletions(-)
-
+diff --git a/drivers/remoteproc/qcom_q6v5_mss.c b/drivers/remoteproc/qcom_q6v5_mss.c
+index 89ab96c21a44a..a1cc9cbe038f1 100644
+--- a/drivers/remoteproc/qcom_q6v5_mss.c
++++ b/drivers/remoteproc/qcom_q6v5_mss.c
+@@ -71,6 +71,7 @@
+ #define NAV_AXI_HALTREQ_BIT		BIT(0)
+ #define NAV_AXI_HALTACK_BIT		BIT(1)
+ #define NAV_AXI_IDLE_BIT		BIT(2)
++#define AXI_GATING_VALID_OVERRIDE	BIT(0)
+ 
+ #define HALT_ACK_TIMEOUT_US		100000
+ #define NAV_HALT_ACK_TIMEOUT_US		200
+@@ -415,16 +416,24 @@ static int q6v5_reset_assert(struct q6v5 *qproc)
+ 		ret = reset_control_reset(qproc->mss_restart);
+ 		reset_control_deassert(qproc->pdc_reset);
+ 	} else if (qproc->has_halt_nav) {
+-		/* SWAR using CONN_BOX_SPARE_0 for pipeline glitch issue */
++		/*
++		 * When the AXI pipeline is being reset with the Q6 modem partly
++		 * operational there is possibility of AXI valid signal to
++		 * glitch, leading to spurious transactions and Q6 hangs. A work
++		 * around is employed by asserting the AXI_GATING_VALID_OVERRIDE
++		 * BIT before triggering Q6 MSS reset. Both the HALTREQ and
++		 * AXI_GATING_VALID_OVERRIDE are withdrawn post MSS assert
++		 * followed by a MSS deassert, while holding the PDC reset.
++		 */
+ 		reset_control_assert(qproc->pdc_reset);
+ 		regmap_update_bits(qproc->conn_map, qproc->conn_box,
+-				   BIT(0), BIT(0));
++				   AXI_GATING_VALID_OVERRIDE, 1);
+ 		regmap_update_bits(qproc->halt_nav_map, qproc->halt_nav,
+ 				   NAV_AXI_HALTREQ_BIT, 0);
+ 		reset_control_assert(qproc->mss_restart);
+ 		reset_control_deassert(qproc->pdc_reset);
+ 		regmap_update_bits(qproc->conn_map, qproc->conn_box,
+-				   BIT(0), 0);
++				   AXI_GATING_VALID_OVERRIDE, 0);
+ 		ret = reset_control_deassert(qproc->mss_restart);
+ 	} else {
+ 		ret = reset_control_assert(qproc->mss_restart);
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
