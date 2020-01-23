@@ -2,123 +2,326 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5249EC3F68F
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 03:33:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78AE2C33CAA
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 03:35:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2940224673
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 03:33:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 338F92465A
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 03:35:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=rubrik.com header.i=@rubrik.com header.b="BYJ2qNI+"
+	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="NKd7GaMv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726811AbgAWDdU (ORCPT
+        id S1727453AbgAWDfA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 22:33:20 -0500
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:34842 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726061AbgAWDdU (ORCPT
+        Wed, 22 Jan 2020 22:35:00 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:35201 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725933AbgAWDfA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 22:33:20 -0500
-Received: by mail-ed1-f67.google.com with SMTP id f8so1904995edv.2
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jan 2020 19:33:19 -0800 (PST)
+        Wed, 22 Jan 2020 22:35:00 -0500
+Received: by mail-wr1-f68.google.com with SMTP id g17so1514608wro.2
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jan 2020 19:34:58 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rubrik.com; s=google;
+        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=RxdFDkgAn9D7lbbl4yJylyYxkkQhJf8CMYw3SePBV9o=;
-        b=BYJ2qNI+dBv9tMqAzPkNiFA8z9l53d8vo0bg/tFL47LkX+SYG7a2xh0ziiWtuZWBZO
-         7l+/irlHAIPylkhRRyb2CWJvZXrzhBhvjKecPZ0Vap+X0mH/k4ZxxE3jITGNBimF17Kh
-         Y4rrnRxqYRANwYYsT4Kq6aj9NXFU65B1qvrOg=
+        bh=8VB/kti/fUoeko/8qBTt1uUwHz9R7akb1/naXKY5Y1s=;
+        b=NKd7GaMvnPzTIbtCz10Kch4dNW/4QeSPm2sUrjmZI3gqDPEFsIEuxwegQz6v2MwVob
+         lit8Z44MPXDVIKDOAIJf68vPeNgmYFdtJMfKC5/j8ezegRRZ6XmdiiQOVtBpOqbSMHDh
+         qH0X+9aOT6RecTaIyeofdeDL7hGLdWQB80TO5PJ3pgW/s+6mQoL56/rsV/S23NmF4Izi
+         Gw2fDo1bDOwE/taNLeoO1Xt5c6IJLfoQA+BR9BNbxB3hiL86NcBX0CPD96yHXnqYtfp4
+         CcqMn/K0Pr7q+ldofJs8fow6q26trng125YmA4ovJis80tv4GEkHyENZGUOY53e4OHX7
+         fvKA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=RxdFDkgAn9D7lbbl4yJylyYxkkQhJf8CMYw3SePBV9o=;
-        b=MD0I/6IS0DHt/BHDqcFT/3Aa8VsqWUmrIYb7cldUH3tkxtSHxA9+MhokKWgVVfUaGt
-         y5eqevzudCoGdM6nCVhooh3YKDbuAA0xD3vLu8aET4H2JJcrlGacVrPFMrwbKZb60obF
-         qLPDLVmk7kiamBe1eDC1AdR5J+OEgVFIt55mOW/cPe5K2wp+bl/11WcIuhMrnbFLsIFo
-         Kv5R9FBE2wUfeKZBgWXgqM3i+fpSH77nVEOguqHbI6iIK41XZhCSXNfq4h8vHLDchEP9
-         S4oTSofGJ7fKvlSh9dCH99i/HNdOmvvvxTe7KTQ63XSo7WTdDbNryT8i/A+WRVtTHOzN
-         ohhA==
-X-Gm-Message-State: APjAAAU5LkkzCee1yWt5XHWXEGb+usnftoLT8BnfNv+uxDNo9ehE9EcB
-        KlmU3U2/btSQdu5rXub5hi53Xzs0CGyAzehpi8GQ
-X-Google-Smtp-Source: APXvYqycVOOWGXD+ceqgNbTn/M8d3+G6sfdK5uFfduIwWtpp8ImIQnOEv61nRLthSRKl/bCxoTYSTAPdc1ifUVWhamY=
-X-Received: by 2002:a17:906:404:: with SMTP id d4mr5358857eja.326.1579750398495;
- Wed, 22 Jan 2020 19:33:18 -0800 (PST)
+        bh=8VB/kti/fUoeko/8qBTt1uUwHz9R7akb1/naXKY5Y1s=;
+        b=XuBneMixS52/cVvat6JRUT68tkCMq29QMer3+YKqIQ3agYQiGiwPqVNpHcHMZlZFwY
+         Xi635P8mYbZhuQI0BvaQyObUDn3FD7A8CvS9/1EZ9y0vL5xd+geM1NdzKJCdmq9PM5Z2
+         ubqJWvoR4o8DlzRfn7w8qo6vecJnnR38pW/HGf/2NqnZqBWsdIiZGnXUOZIO4mk0T8cS
+         8zSd/N0DsaGCrEwFreazkT+hsAFHZloNtW1YEwGtZVVKJQvg9q/r/shylB++sMl/6dxn
+         SFSz7LJMaYsRLZUhM7+VqDq9Yw9Kzx6VL7FQtsPSwYHAACiOSBHHsW4bQg9jssFh+0Gk
+         lPvw==
+X-Gm-Message-State: APjAAAWKXyBg5sozD2rGKat4sVz3yvTBBuaiQEu5ZlP/WQ8lGU5HKxGi
+        j99BhTevqBhLVZjp1ttOzjixluVay4lqRKgc91VE0Q==
+X-Google-Smtp-Source: APXvYqxKABLKoYwIQXsFCKEw9z64v4bXCODeazyZHBfwq8J4Mb6WqPz1BhXXNeJ5uYCgQjQeYwizlULhJ1phv4pOdfI=
+X-Received: by 2002:a5d:50cf:: with SMTP id f15mr14021933wrt.381.1579750497394;
+ Wed, 22 Jan 2020 19:34:57 -0800 (PST)
 MIME-Version: 1.0
-References: <DM6PR04MB5754D8E261B4200AA62D442D860D0@DM6PR04MB5754.namprd04.prod.outlook.com>
- <20200121201014.52345-1-muraliraja.muniraju@rubrik.com> <CACVXFVN2QteGv=mWpVimZ9y2yzLZOOthB9muFsxTG3LkWWpwfA@mail.gmail.com>
-In-Reply-To: <CACVXFVN2QteGv=mWpVimZ9y2yzLZOOthB9muFsxTG3LkWWpwfA@mail.gmail.com>
-From:   Muraliraja Muniraju <muraliraja.muniraju@rubrik.com>
-Date:   Wed, 22 Jan 2020 19:33:07 -0800
-Message-ID: <CAByjrT-9GZs=zdWaT+_ZhV-q05P27jB16xHJGnP3KC5tNJsY+A@mail.gmail.com>
-Subject: Re: Re [PATCH] Adding multiple workers to the loop device.
-To:     Ming Lei <tom.leiming@gmail.com>
-Cc:     Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        linux-block <linux-block@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20191223113443.68969-1-anup.patel@wdc.com> <20191223113443.68969-6-anup.patel@wdc.com>
+ <mhng-0ada7fd5-2e39-48ff-80fd-32b91b96282f@palmerdabbelt-glaptop>
+In-Reply-To: <mhng-0ada7fd5-2e39-48ff-80fd-32b91b96282f@palmerdabbelt-glaptop>
+From:   Anup Patel <anup@brainfault.org>
+Date:   Thu, 23 Jan 2020 09:04:46 +0530
+Message-ID: <CAAhSdy2OaNCwbpSbQy=-Q2hPiHZR7-QVxJyM6qraWiVdxvLK_g@mail.gmail.com>
+Subject: Re: [PATCH v10 05/19] RISC-V: KVM: Implement VCPU create, init and
+ destroy functions
+To:     Palmer Dabbelt <palmerdabbelt@google.com>
+Cc:     Anup Patel <Anup.Patel@wdc.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim K <rkrcmar@redhat.com>, Alexander Graf <graf@amazon.com>,
+        Atish Patra <Atish.Patra@wdc.com>,
+        Alistair Francis <Alistair.Francis@wdc.com>,
+        Damien Le Moal <Damien.LeMoal@wdc.com>,
+        Christoph Hellwig <hch@lst.de>,
+        KVM General <kvm@vger.kernel.org>,
+        kvm-riscv@lists.infradead.org,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I used dd to test
-            dd if=/tmp/mount/home/ubuntu/os_disk_partition/genesisTool/4Fz
-of=/dev/null bs=1M count=53687091200 skip=0
-iflag=skip_bytes,count_bytes,direct &
-
-            dd if=/tmp/mount/home/ubuntu/os_disk_partition/genesisTool/4Fz
-of=/dev/null  bs=1M count=53687091200 skip=53687091200
-iflag=skip_bytes,count_bytes,direct &
-
-            dd if=/tmp/mount/home/ubuntu/os_disk_partition/genesisTool/4Fz
-of=/dev/null  bs=1M count=53687091200 skip=107374182400
-iflag=skip_bytes,count_bytes,direct &
-
-            dd if=/tmp/mount/home/ubuntu/os_disk_partition/genesisTool/4Fz
-of=/dev/null  bs=1M count=53687091200 skip=161061273600
-iflag=skip_bytes,count_bytes,direct &
-
-Here the file /tmp/mount/home/ubuntu/os_disk_partition/genesisTool/4Fz
-is a file in the ext4 file system that is accessed via a loop device.
-
-Also in the above change we have the default version to be always 1
-worker. One can change the number of workers to handle the performance
-to their needs. In our case we saw that we got good performance with 4
-threads even for sequential io.
-
-On Wed, Jan 22, 2020 at 5:40 PM Ming Lei <tom.leiming@gmail.com> wrote:
+On Thu, Jan 23, 2020 at 12:34 AM Palmer Dabbelt
+<palmerdabbelt@google.com> wrote:
 >
-> On Wed, Jan 22, 2020 at 4:11 AM muraliraja.muniraju
-> <muraliraja.muniraju@rubrik.com> wrote:
+> On Mon, 23 Dec 2019 03:35:55 PST (-0800), Anup Patel wrote:
+> > This patch implements VCPU create, init and destroy functions
+> > required by generic KVM module. We don't have much dynamic
+> > resources in struct kvm_vcpu_arch so these functions are quite
+> > simple for KVM RISC-V.
 > >
-> > Below is the dd results that I ran with the worker and without the worker changes.
-> > Enhanced Loop has the changes and ran with 1,2,3,4 workers with 4 dds running on the same loop device.
-> > Normal Loop is 1 worker(the existing code) with 4 dd's running on the same loop device.
-> > Enhanced loop
-> > 1 - READ: io=21981MB, aggrb=187558KB/s, minb=187558KB/s, maxb=187558KB/s, mint=120008msec, maxt=120008msec
-> > 2 - READ: io=41109MB, aggrb=350785KB/s, minb=350785KB/s, maxb=350785KB/s, mint=120004msec, maxt=120004msec
-> > 3 - READ: io=45927MB, aggrb=391802KB/s, minb=391802KB/s, maxb=391802KB/s, mint=120033msec, maxt=120033msec
-> > 4 - READ: io=45771MB, aggrb=390543KB/s, minb=390543KB/s, maxb=390543KB/s, mint=120011msec, maxt=120011msec
-> > Normal loop
-> > 1 - READ: io=18432MB, aggrb=157201KB/s, minb=157201KB/s, maxb=157201KB/s, mint=120065msec, maxt=120065msec
-> > 2 - READ: io=18762MB, aggrb=160035KB/s, minb=160035KB/s, maxb=160035KB/s, mint=120050msec, maxt=120050msec
-> > 3 - READ: io=18174MB, aggrb=155058KB/s, minb=155058KB/s, maxb=155058KB/s, mint=120020msec, maxt=120020msec
-> > 4 - READ: io=20559MB, aggrb=175407KB/s, minb=175407KB/s, maxb=175407KB/s, mint=120020msec, maxt=120020msec
+> > Signed-off-by: Anup Patel <anup.patel@wdc.com>
+> > Acked-by: Paolo Bonzini <pbonzini@redhat.com>
+> > Reviewed-by: Paolo Bonzini <pbonzini@redhat.com>
+> > Reviewed-by: Alexander Graf <graf@amazon.com>
+> > ---
+> >  arch/riscv/include/asm/kvm_host.h | 68 +++++++++++++++++++++++++++++++
+> >  arch/riscv/kvm/vcpu.c             | 68 +++++++++++++++++++++++++++++--
+> >  2 files changed, 132 insertions(+), 4 deletions(-)
+> >
+> > diff --git a/arch/riscv/include/asm/kvm_host.h b/arch/riscv/include/asm/kvm_host.h
+> > index e0b633f616a4..297431660be6 100644
+> > --- a/arch/riscv/include/asm/kvm_host.h
+> > +++ b/arch/riscv/include/asm/kvm_host.h
+> > @@ -53,7 +53,75 @@ struct kvm_arch {
+> >       phys_addr_t pgd_phys;
+> >  };
+> >
+> > +struct kvm_cpu_context {
+> > +     unsigned long zero;
+> > +     unsigned long ra;
+> > +     unsigned long sp;
+> > +     unsigned long gp;
+> > +     unsigned long tp;
+> > +     unsigned long t0;
+> > +     unsigned long t1;
+> > +     unsigned long t2;
+> > +     unsigned long s0;
+> > +     unsigned long s1;
+> > +     unsigned long a0;
+> > +     unsigned long a1;
+> > +     unsigned long a2;
+> > +     unsigned long a3;
+> > +     unsigned long a4;
+> > +     unsigned long a5;
+> > +     unsigned long a6;
+> > +     unsigned long a7;
+> > +     unsigned long s2;
+> > +     unsigned long s3;
+> > +     unsigned long s4;
+> > +     unsigned long s5;
+> > +     unsigned long s6;
+> > +     unsigned long s7;
+> > +     unsigned long s8;
+> > +     unsigned long s9;
+> > +     unsigned long s10;
+> > +     unsigned long s11;
+> > +     unsigned long t3;
+> > +     unsigned long t4;
+> > +     unsigned long t5;
+> > +     unsigned long t6;
+> > +     unsigned long sepc;
+> > +     unsigned long sstatus;
+> > +     unsigned long hstatus;
+> > +};
 >
-> Could you share your exact test command?
+> Looks like pretty much everyone else is putting 'struct kvm_regs' at the start
+> of 'struct kvm_cpu_context', which I'm assuming avoids duplication when
+> implementing KVM_{GET,SET}_REGS.  That would probably be cleaner, but if I
+> think it'd be best to just have this match our mcontext.
+
+The "struct kvm_cpu_context" is internal to KVM RISC-V whereas the
+"struct kvm_vcpu_arch" is expected by core KVM
+
 >
-> Multiple jobs may hurt performance in case of sequential IOs on HDD backend.
-> Also the 1st version of the loop dio patch uses normal wq, I remembered that
-> random IOperformance isn't improved much, meantime sequential IO perf drops
-> with normal wq, whentesting SSD backend.
+> > +
+> > +struct kvm_vcpu_csr {
+> > +     unsigned long vsstatus;
+> > +     unsigned long hie;
+> > +     unsigned long vstvec;
+> > +     unsigned long vsscratch;
+> > +     unsigned long vsepc;
+> > +     unsigned long vscause;
+> > +     unsigned long vstval;
+> > +     unsigned long hip;
+> > +     unsigned long vsatp;
+> > +};
+> > +
+> >  struct kvm_vcpu_arch {
+> > +     /* VCPU ran atleast once */
+> > +     bool ran_atleast_once;
+> > +
+> > +     /* ISA feature bits (similar to MISA) */
+> > +     unsigned long isa;
+> > +
+> > +     /* CPU context of Guest VCPU */
+> > +     struct kvm_cpu_context guest_context;
+> > +
+> > +     /* CPU CSR context of Guest VCPU */
+> > +     struct kvm_vcpu_csr guest_csr;
 >
-> So I took kthread worker.
+> It looks like other architectures either put the entire CPU state in 'struct
+> kvm_cpu_context' (arm64, for example) or inline all the definitions (mips, for
+> example).  I'd lean the arm64 way here, but I haven't gotten sufficiently far
+> until the user ABI to figure out if this would help in a meaningful fashion.
+
+It's an implementation choice. We don't need flow KVM ARM64.
+
+In fact, having separate "struct kvm_cpu_context" and "struct kvm_vcpu_csr"
+is much cleaner.
+
 >
-> Thanks,
-> Ming Lei
+> > +     /* CPU context upon Guest VCPU reset */
+> > +     struct kvm_cpu_context guest_reset_context;
+> > +
+> > +     /* CPU CSR context upon Guest VCPU reset */
+> > +     struct kvm_vcpu_csr guest_reset_csr;
+> > +
+> >       /* Don't run the VCPU (blocked) */
+> >       bool pause;
+> >
+> > diff --git a/arch/riscv/kvm/vcpu.c b/arch/riscv/kvm/vcpu.c
+> > index bd7d6b154f61..cf8ca8d4a9ea 100644
+> > --- a/arch/riscv/kvm/vcpu.c
+> > +++ b/arch/riscv/kvm/vcpu.c
+> > @@ -31,10 +31,48 @@ struct kvm_stats_debugfs_item debugfs_entries[] = {
+> >       { NULL }
+> >  };
+> >
+> > +#define KVM_RISCV_ISA_ALLOWED        (riscv_isa_extension_mask(a) | \
+> > +                              riscv_isa_extension_mask(c) | \
+> > +                              riscv_isa_extension_mask(d) | \
+> > +                              riscv_isa_extension_mask(f) | \
+> > +                              riscv_isa_extension_mask(i) | \
+> > +                              riscv_isa_extension_mask(m) | \
+> > +                              riscv_isa_extension_mask(s) | \
+> > +                              riscv_isa_extension_mask(u))
+> > +
+> > +static void kvm_riscv_reset_vcpu(struct kvm_vcpu *vcpu)
+> > +{
+> > +     struct kvm_vcpu_csr *csr = &vcpu->arch.guest_csr;
+> > +     struct kvm_vcpu_csr *reset_csr = &vcpu->arch.guest_reset_csr;
+> > +     struct kvm_cpu_context *cntx = &vcpu->arch.guest_context;
+> > +     struct kvm_cpu_context *reset_cntx = &vcpu->arch.guest_reset_context;
+> > +
+> > +     memcpy(csr, reset_csr, sizeof(*csr));
+> > +
+> > +     memcpy(cntx, reset_cntx, sizeof(*cntx));
+> > +}
+> > +
+> >  struct kvm_vcpu *kvm_arch_vcpu_create(struct kvm *kvm, unsigned int id)
+> >  {
+> > -     /* TODO: */
+> > -     return NULL;
+> > +     int err;
+> > +     struct kvm_vcpu *vcpu;
+> > +
+> > +     vcpu = kmem_cache_zalloc(kvm_vcpu_cache, GFP_KERNEL);
+> > +     if (!vcpu) {
+> > +             err = -ENOMEM;
+> > +             goto out;
+> > +     }
+> > +
+> > +     err = kvm_vcpu_init(vcpu, kvm, id);
+> > +     if (err)
+> > +             goto free_vcpu;
+> > +
+> > +     return vcpu;
+> > +
+> > +free_vcpu:
+> > +     kmem_cache_free(kvm_vcpu_cache, vcpu);
+> > +out:
+> > +     return ERR_PTR(err);
+> >  }
+> >
+> >  int kvm_arch_vcpu_setup(struct kvm_vcpu *vcpu)
+> > @@ -48,13 +86,32 @@ void kvm_arch_vcpu_postcreate(struct kvm_vcpu *vcpu)
+> >
+> >  int kvm_arch_vcpu_init(struct kvm_vcpu *vcpu)
+> >  {
+> > -     /* TODO: */
+> > +     struct kvm_cpu_context *cntx;
+> > +
+> > +     /* Mark this VCPU never ran */
+> > +     vcpu->arch.ran_atleast_once = false;
+> > +
+> > +     /* Setup ISA features available to VCPU */
+> > +     vcpu->arch.isa = riscv_isa_extension_base(NULL) & KVM_RISCV_ISA_ALLOWED;
+> > +
+> > +     /* Setup reset state of shadow SSTATUS and HSTATUS CSRs */
+> > +     cntx = &vcpu->arch.guest_reset_context;
+> > +     cntx->sstatus = SR_SPP | SR_SPIE;
+> > +     cntx->hstatus = 0;
+> > +     cntx->hstatus |= HSTATUS_SP2V;
+> > +     cntx->hstatus |= HSTATUS_SP2P;
+> > +     cntx->hstatus |= HSTATUS_SPV;
+> > +
+> > +     /* Reset VCPU */
+> > +     kvm_riscv_reset_vcpu(vcpu);
+> > +
+> >       return 0;
+> >  }
+> >
+> >  void kvm_arch_vcpu_destroy(struct kvm_vcpu *vcpu)
+> >  {
+> > -     /* TODO: */
+> > +     kvm_riscv_stage2_flush_cache(vcpu);
+>
+> There needs to be a comment as to why there's a flush here.
+>
+> The definition of kvm_riscv_stage2_flush_cache() should also have a comment
+> describing what it actually does.
+
+From the implementation its pretty obvious but I will add single line
+comment anyway.
+
+>
+> > +     kmem_cache_free(kvm_vcpu_cache, vcpu);
+> >  }
+> >
+> >  int kvm_cpu_has_pending_timer(struct kvm_vcpu *vcpu)
+> > @@ -199,6 +256,9 @@ int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu, struct kvm_run *run)
+> >       int ret;
+> >       unsigned long scause, stval, htval, htinst;
+> >
+> > +     /* Mark this VCPU ran atleast once */
+> > +     vcpu->arch.ran_atleast_once = true;
+>
+> I'm having some trouble figuring out how this doesn't have a race condition,
+> but that's probably more applicable to the patch that uses it.  Also, a bit of
+> a nit pick: "at least" is two words.  I don't care that much about the variable
+> name, but the comments should use real words.
+
+This variable touched from a single thread only hence no need for protection.
+
+I will fix the comment like you suggested.
+
+>
+> > +
+> >       vcpu->arch.srcu_idx = srcu_read_lock(&vcpu->kvm->srcu);
+> >
+> >       /* Process MMIO value returned from user-space */
+> > --
+> > 2.17.1
+
+Regards,
+Anup
