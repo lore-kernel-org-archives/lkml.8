@@ -2,82 +2,94 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65F1CC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 15:59:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDEF2C33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 15:59:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3AB0E20704
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 15:59:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A69D20704
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 15:59:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e9QuWKow"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728913AbgAWP7W (ORCPT
+        id S1729019AbgAWP72 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 10:59:22 -0500
-Received: from www62.your-server.de ([213.133.104.62]:37840 "EHLO
-        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726231AbgAWP7V (ORCPT
+        Thu, 23 Jan 2020 10:59:28 -0500
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:55710 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726231AbgAWP72 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 10:59:21 -0500
-Received: from sslproxy02.your-server.de ([78.47.166.47])
-        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89_1)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1iuesw-0002U1-Du; Thu, 23 Jan 2020 16:59:10 +0100
-Received: from [2001:1620:665:0:5795:5b0a:e5d5:5944] (helo=linux-3.fritz.box)
-        by sslproxy02.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1iuesv-0002p8-Si; Thu, 23 Jan 2020 16:59:09 +0100
-Subject: Re: [PATCH] bpf: devmap: Pass lockdep expression to RCU lists
-To:     =?UTF-8?Q?Toke_H=c3=b8iland-J=c3=b8rgensen?= <toke@redhat.com>,
-        Amol Grover <frextrite@gmail.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>
-Cc:     netdev@vger.kernel.org, bpf@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>,
-        "Paul E . McKenney" <paulmck@kernel.org>
-References: <20200123120437.26506-1-frextrite@gmail.com>
- <87d0ba9ttp.fsf@toke.dk>
-From:   Daniel Borkmann <daniel@iogearbox.net>
-Message-ID: <b019ff62-08f5-1536-48f3-484b9dc2e064@iogearbox.net>
-Date:   Thu, 23 Jan 2020 16:59:09 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
-MIME-Version: 1.0
-In-Reply-To: <87d0ba9ttp.fsf@toke.dk>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Authenticated-Sender: daniel@iogearbox.net
-X-Virus-Scanned: Clear (ClamAV 0.101.4/25704/Thu Jan 23 12:37:43 2020)
+        Thu, 23 Jan 2020 10:59:28 -0500
+Received: by mail-pj1-f68.google.com with SMTP id d5so1387794pjz.5;
+        Thu, 23 Jan 2020 07:59:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=3lwWLGkfzAovdDMrWkQasFS2HMs+aMhOk+szSNNm5TI=;
+        b=e9QuWKowpgho/99fE038B4BI67PJoG0yVJzwQbrf0SF8zcC22iiiwEkYzVEXnZ8UnZ
+         NihkXRJu0waCssSZ97VJ4NXm21Er7F/xn3bxPTRh7SmkvvANdePnaoq3m7hzZlJsXONj
+         nLBgdJmjgQtMWOe80/T514wehUnNPMleiJKIn9mz8a5k6OQ5S5bcLgUKMGF4qLruv6MV
+         +M4B87DHciOVKCFBBj7uSzi1MvLs272F6MsUwwJg9i/kmH4HM+sH5mCaP3ba8xr9o62S
+         2wwCABmUYb6/RRdNQZM9RXM4kJK1rMVrndsdAnfOk1wkl51ApBUZJmvxKrdfDgd0OBd7
+         OlhA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=3lwWLGkfzAovdDMrWkQasFS2HMs+aMhOk+szSNNm5TI=;
+        b=DeQp5B+B/GREi4XcKKoRtNt7HDC0fHq0yXKHEAdyIR20vfRZZM8gUE7dmXiMwXQqlk
+         ANp8kBMb0ZhY9/k0qPa2DtvUect8HIBRpHOKDlrFqbRE+HERIMPwuzTRcrJcU6WZu1Zq
+         Pijw7nDjF4gA+j6AT6Btaj0GQyW/yCd4xRvMu4qK1BrCfQGNV4gEY5hhNLzKWFwYdQhH
+         kT+WKN8oYqcIuHW8tXMHVHIvVnkGG4R+ShexcygdW/XitjwyOjkuGvWYE4jNVqeERlnq
+         0Rrms6fURrw+UBGnKBOOUV72aZHbZ99HgsxPW0It7VU2MXaYULImmNR15cLd51CQrN85
+         ujgQ==
+X-Gm-Message-State: APjAAAVGsbvzXNG4na1ZPSGMcvuCemU7R5jNjjjMPvSuBmyDnMCyfA9q
+        /ZMYz8IqF5/vUIex+R37A9M=
+X-Google-Smtp-Source: APXvYqxNZZFq/QoM9B6a3Phq48DxWGP5jYfjvkqKQQD6OOmolCYMybdfaXv3Uqqm8cObqqU5ZgA7hw==
+X-Received: by 2002:a17:902:6904:: with SMTP id j4mr17588463plk.88.1579795167218;
+        Thu, 23 Jan 2020 07:59:27 -0800 (PST)
+Received: from localhost.localdomain ([118.150.8.24])
+        by smtp.gmail.com with ESMTPSA id h3sm3456254pjs.0.2020.01.23.07.59.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 23 Jan 2020 07:59:26 -0800 (PST)
+From:   pierre Kuo <vichy.kuo@gmail.com>
+To:     myungjoo.ham@samsung.com, kyungmin.park@samsung.com,
+        cw00.choi@samsung.com
+Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        pierre Kuo <vichy.kuo@gmail.com>
+Subject: [PATCH] PM / devfreq: use constant name of userspace governor
+Date:   Thu, 23 Jan 2020 23:59:12 +0800
+Message-Id: <20200123155912.22160-1-vichy.kuo@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/23/20 2:38 PM, Toke Høiland-Jørgensen wrote:
-> Amol Grover <frextrite@gmail.com> writes:
-> 
->> head is traversed using hlist_for_each_entry_rcu outside an
->> RCU read-side critical section but under the protection
->> of dtab->index_lock.
->>
->> Hence, add corresponding lockdep expression to silence false-positive
->> lockdep warnings, and harden RCU lists.
->>
->> Signed-off-by: Amol Grover <frextrite@gmail.com>
-> 
-> Could you please add an appropriate Fixes: tag?
+Based on commit aa7c352f9841 ("PM / devfreq: Define the constant governor
+name"), use constant name for userspace governor.
 
-+1, please reply with Fixes: tag (no need to resend).
+Signed-off-by: pierre Kuo <vichy.kuo@gmail.com>
+---
+ drivers/devfreq/governor_userspace.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/devfreq/governor_userspace.c b/drivers/devfreq/governor_userspace.c
+index af94942fcf95..0fd6c4851071 100644
+--- a/drivers/devfreq/governor_userspace.c
++++ b/drivers/devfreq/governor_userspace.c
+@@ -131,7 +131,7 @@ static int devfreq_userspace_handler(struct devfreq *devfreq,
+ }
+ 
+ static struct devfreq_governor devfreq_userspace = {
+-	.name = "userspace",
++	.name = DEVFREQ_GOV_USERSPACE,
+ 	.get_target_freq = devfreq_userspace_func,
+ 	.event_handler = devfreq_userspace_handler,
+ };
+-- 
+2.17.1
+
