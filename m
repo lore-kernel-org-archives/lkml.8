@@ -2,221 +2,315 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E47BCC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 10:40:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49592C33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 10:47:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE7992467E
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 10:40:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fR4TsOo8"
+	by mail.kernel.org (Postfix) with ESMTP id 2906C24125
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 10:47:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726871AbgAWKkN (ORCPT
+        id S1726871AbgAWKrl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 05:40:13 -0500
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:37264 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726026AbgAWKkM (ORCPT
+        Thu, 23 Jan 2020 05:47:41 -0500
+Received: from relay6-d.mail.gandi.net ([217.70.183.198]:51239 "EHLO
+        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726099AbgAWKrl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 05:40:12 -0500
-Received: by mail-qt1-f196.google.com with SMTP id w47so2061153qtk.4;
-        Thu, 23 Jan 2020 02:40:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=IDcQGglpaul1tPS+GCmx20FNALyPlED6w9cqoaLS8mU=;
-        b=fR4TsOo87FGGZXrttxAbeEpOCX1chbBMJBjQVjOD0knypYOYbHwOVBwSjlqjtrHumF
-         tGFxV/yrY/gto/6WYnkE2hSa4K//Q3JUdbdEmPg7UUrYC1xUC9E7KIEYVc69PcCg9HWa
-         gu4Itf82JY5MSWlmGYO4CdxZZ/LeZQoJIie3L3v/N7KNVGRZw5U790FeI7dJls79vxXn
-         YTwTtTChRmKe6sDH92jHsXO+FajFVJ54MvgvouLKXPSi5pDVMsEGxkQzkQ90lbkg4CJd
-         2brvlGfbf4vxqTp6w8LYDYAVdRK/3he0/ZHiIMYqt2NYoz8HMO/xj3kl3H0zG8pkhh17
-         iXBw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=IDcQGglpaul1tPS+GCmx20FNALyPlED6w9cqoaLS8mU=;
-        b=PRr2OxgYm6MwVHNEKRzWoDX11L3bVR8MD+j6v/RqI+VF4J8SKTLGB98fXYYw3bHxHc
-         ZafAtSW2JiM54+46Gd87UxInmxa212fEkF57pAF7sbyRJ1c7/+HfieaAZkE76ukALSjO
-         x0Ug83jcXhLwIgkiWg3/jWQ/pFPGZAgYqcmYRR+K5Lu7mTBjkD0E4ZUsUDzvgjBln8dF
-         PdReyDaW8LBgRxT9fnRj6GOSP5yfvxPEIzC/DrLG0yCCkALfsUslhi/4lmRpQQrq1qiD
-         ns19o0aQJMu5XpHtFWJneknZ+BjF57axoHuL1Xdnma6M/A1iOixofHgCA5gsDI2DwJsA
-         BvMg==
-X-Gm-Message-State: APjAAAWRWE8jj7hzeEgaGeh4fZPqRPcoBed17wbJeo0+ZljjN9NMJqVN
-        6HbFyK2UeH/jpaWMqPcH+vc=
-X-Google-Smtp-Source: APXvYqxew/CEDapez6dF5/McKNlZA9U6YEbQY0A19f8GX4NviQ99xw9pTwdp012PbULYqmb7ktISUw==
-X-Received: by 2002:ac8:7356:: with SMTP id q22mr15119734qtp.162.1579776011333;
-        Thu, 23 Jan 2020 02:40:11 -0800 (PST)
-Received: from auth2-smtp.messagingengine.com (auth2-smtp.messagingengine.com. [66.111.4.228])
-        by smtp.gmail.com with ESMTPSA id u4sm668037qkh.59.2020.01.23.02.40.10
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 23 Jan 2020 02:40:10 -0800 (PST)
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
-        by mailauth.nyi.internal (Postfix) with ESMTP id 2FA0F21AEF;
-        Thu, 23 Jan 2020 05:40:10 -0500 (EST)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute6.internal (MEProxy); Thu, 23 Jan 2020 05:40:10 -0500
-X-ME-Sender: <xms:CXgpXt8ROVDUikj5RrZ6vXMJbD7g2XQ37UXIW-sznFJP5BAW2uFGmQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrvddvgddukecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepuehoqhhunhcu
-    hfgvnhhguceosghoqhhunhdrfhgvnhhgsehgmhgrihhlrdgtohhmqeenucfkphephedvrd
-    duheehrdduuddurdejudenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgr
-    ihhlfhhrohhmpegsohhquhhnodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqd
-    eiledvgeehtdeigedqudejjeekheehhedvqdgsohhquhhnrdhfvghngheppehgmhgrihhl
-    rdgtohhmsehfihigmhgvrdhnrghmvg
-X-ME-Proxy: <xmx:CXgpXuL0IYlP24rOfxk7qhDaMJrXHFgjGQrKJ43q0lGLdmAL_nL_iA>
-    <xmx:CXgpXizYdlqEJMgY0PeIV1kM-3h6tDqVMHpB7XLFanm_JV0LQrK-Wg>
-    <xmx:CXgpXiXtpgeV3GLbdRYiFvbYFcD4ugRsU0qE-NIkdKzfvd_WgfVtIw>
-    <xmx:CngpXpiNQQRwLD6lR6mqcBNzNgRcmNC6R7AIY1X6GDpNz55tgFbnVpwt-hk>
-Received: from localhost (unknown [52.155.111.71])
-        by mail.messagingengine.com (Postfix) with ESMTPA id F320F3280063;
-        Thu, 23 Jan 2020 05:40:08 -0500 (EST)
-Date:   Thu, 23 Jan 2020 18:40:07 +0800
-From:   Boqun Feng <boqun.feng@gmail.com>
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     Michael Kelley <mikelley@microsoft.com>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        Thu, 23 Jan 2020 05:47:41 -0500
+X-Originating-IP: 88.190.179.123
+Received: from localhost (unknown [88.190.179.123])
+        (Authenticated sender: repk@triplefau.lt)
+        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id 88472C0005;
+        Thu, 23 Jan 2020 10:47:35 +0000 (UTC)
+Date:   Thu, 23 Jan 2020 11:56:01 +0100
+From:   Remi Pommarel <repk@triplefau.lt>
+To:     Jerome Brunet <jbrunet@baylibre.com>
+Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Yue Wang <yue.wang@amlogic.com>,
+        Kevin Hilman <khilman@baylibre.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <andrew.murray@arm.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        "open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS" 
-        <linux-pci@vger.kernel.org>, linux-hyperv@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] pci: hyperv: Move retarget related struct
- definitions into tlfs
-Message-ID: <20200123104007.GB55410@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
-References: <20200121015713.69691-1-boqun.feng@gmail.com>
- <20200121015713.69691-2-boqun.feng@gmail.com>
- <87blqxf9es.fsf@vitty.brq.redhat.com>
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH v5 6/7] phy: amlogic: Add Amlogic AXG PCIE PHY Driver
+Message-ID: <20200123105601.GR1803@voidbox>
+References: <20200116111850.23690-1-repk@triplefau.lt>
+ <20200116111850.23690-7-repk@triplefau.lt>
+ <1jzheev75g.fsf@starbuckisacylon.baylibre.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <87blqxf9es.fsf@vitty.brq.redhat.com>
+In-Reply-To: <1jzheev75g.fsf@starbuckisacylon.baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 21, 2020 at 10:25:47AM +0100, Vitaly Kuznetsov wrote:
-[...]
+On Thu, Jan 23, 2020 at 10:44:43AM +0100, Jerome Brunet wrote:
+> 
+> On Thu 16 Jan 2020 at 12:18, Remi Pommarel <repk@triplefau.lt> wrote:
+> 
+> > This adds support for the PCI PHY found in the Amlogic AXG SoC Family.
+> > This will allow to mutualize code in pci-meson.c between AXG and G12A
+> > SoC.
+> >
+> > This PHY can chain and use an optional analog PHY, which is used on
+> > AXG platform to have reliable PCIe communication.
+> >
+> > Signed-off-by: Remi Pommarel <repk@triplefau.lt>
+> > ---
+> >  drivers/phy/amlogic/Kconfig              |  11 ++
+> >  drivers/phy/amlogic/Makefile             |   1 +
+> >  drivers/phy/amlogic/phy-meson-axg-pcie.c | 192 +++++++++++++++++++++++
+> >  3 files changed, 204 insertions(+)
+> >  create mode 100644 drivers/phy/amlogic/phy-meson-axg-pcie.c
+> >
+> > diff --git a/drivers/phy/amlogic/Kconfig b/drivers/phy/amlogic/Kconfig
+> > index 8c9cf2403591..71801e30d601 100644
+> > --- a/drivers/phy/amlogic/Kconfig
+> > +++ b/drivers/phy/amlogic/Kconfig
+> > @@ -60,6 +60,17 @@ config PHY_MESON_G12A_USB3_PCIE
+> >  	  in Meson G12A SoCs.
+> >  	  If unsure, say N.
 > >  
-> > +#if IS_ENABLED(CONFIG_PCI_HYPERV)
-> > +#define hv_set_msi_address_from_desc(msi_entry, msi_desc)	\
-> > +do {								\
-> > +	(msi_entry)->address = (msi_desc)->msg.address_lo;	\
-> > +} while (0)
+> > +config PHY_MESON_AXG_PCIE
+> > +	tristate "Meson AXG PCIE PHY driver"
+> > +	default ARCH_MESON
+> > +	depends on OF && (ARCH_MESON || COMPILE_TEST)
+> > +	select GENERIC_PHY
+> > +	select REGMAP_MMIO
+> > +	help
+> > +	  Enable this to support the Meson MIPI + PCIE PHY found
+> > +	  in Meson AXG SoCs.
+> > +	  If unsure, say N.
 > > +
-> > +#endif /* CONFIG_PCI_HYPERV */
+> >  config PHY_MESON_AXG_MIPI_PCIE_ANALOG
+> >  	tristate "Meson AXG MIPI + PCIE analog PHY driver"
+> >  	default ARCH_MESON
+> > diff --git a/drivers/phy/amlogic/Makefile b/drivers/phy/amlogic/Makefile
+> > index 0aecf92d796a..e2baa133f7af 100644
+> > --- a/drivers/phy/amlogic/Makefile
+> > +++ b/drivers/phy/amlogic/Makefile
+> > @@ -4,4 +4,5 @@ obj-$(CONFIG_PHY_MESON_GXL_USB2)		+= phy-meson-gxl-usb2.o
+> >  obj-$(CONFIG_PHY_MESON_G12A_USB2)		+= phy-meson-g12a-usb2.o
+> >  obj-$(CONFIG_PHY_MESON_GXL_USB3)		+= phy-meson-gxl-usb3.o
+> >  obj-$(CONFIG_PHY_MESON_G12A_USB3_PCIE)		+= phy-meson-g12a-usb3-pcie.o
+> > +obj-$(CONFIG_PHY_MESON_AXG_PCIE)		+= phy-meson-axg-pcie.o
+> >  obj-$(CONFIG_PHY_MESON_AXG_MIPI_PCIE_ANALOG)	+= phy-meson-axg-mipi-pcie-analog.o
+> > diff --git a/drivers/phy/amlogic/phy-meson-axg-pcie.c b/drivers/phy/amlogic/phy-meson-axg-pcie.c
+> > new file mode 100644
+> > index 000000000000..0c5d0732cd1c
+> > --- /dev/null
+> > +++ b/drivers/phy/amlogic/phy-meson-axg-pcie.c
+> > @@ -0,0 +1,192 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + * Amlogic AXG PCIE PHY driver
+> > + *
+> > + * Copyright (C) 2020 Remi Pommarel <repk@triplefau.lt>
+> > + */
+> > +#include <linux/module.h>
+> > +#include <linux/phy/phy.h>
+> > +#include <linux/regmap.h>
+> > +#include <linux/reset.h>
+> > +#include <linux/platform_device.h>
+> > +#include <linux/bitfield.h>
+> > +#include <dt-bindings/phy/phy.h>
+> > +
+> > +#define MESON_PCIE_REG0 0x00
+> > +#define		MESON_PCIE_COMMON_CLK	BIT(4)
+> > +#define		MESON_PCIE_PORT_SEL	GENMASK(3, 2)
+> > +#define		MESON_PCIE_CLK		BIT(1)
+> > +#define		MESON_PCIE_POWERDOWN	BIT(0)
+> > +
+> > +#define MESON_PCIE_TWO_X1		FIELD_PREP(MESON_PCIE_PORT_SEL, 0x3)
+> > +#define MESON_PCIE_COMMON_REF_CLK	FIELD_PREP(MESON_PCIE_COMMON_CLK, 0x1)
+> > +#define MESON_PCIE_PHY_INIT		(MESON_PCIE_TWO_X1 |		\
+> > +					 MESON_PCIE_COMMON_REF_CLK)
+> > +#define MESON_PCIE_RESET_DELAY		500
+> > +
+> > +struct phy_axg_pcie_priv {
+> > +	struct phy *phy;
+> > +	struct phy *analog;
+> > +	struct regmap *regmap;
+> > +	struct reset_control *reset;
+> > +};
+> > +
+> > +static const struct regmap_config phy_axg_pcie_regmap_conf = {
+> > +	.reg_bits = 8,
+> > +	.val_bits = 32,
+> > +	.reg_stride = 4,
+> > +	.max_register = MESON_PCIE_REG0,
+> > +};
+> > +
+> > +static int phy_axg_pcie_power_on(struct phy *phy)
+> > +{
+> > +	struct phy_axg_pcie_priv *priv = phy_get_drvdata(phy);
+> > +	int ret;
+> > +
+> > +	ret = phy_power_on(priv->analog);
+> > +	if (ret != 0)
+> > +		return ret;
+> > +
+> > +	regmap_update_bits(priv->regmap, MESON_PCIE_REG0,
+> > +			   MESON_PCIE_POWERDOWN, 0);
+> > +	return 0;
+> > +}
+> > +
+> > +static int phy_axg_pcie_power_off(struct phy *phy)
+> > +{
+> > +	struct phy_axg_pcie_priv *priv = phy_get_drvdata(phy);
+> > +	int ret;
+> > +
+> > +	ret = phy_power_off(priv->analog);
+> > +	if (ret != 0)
+> > +		return ret;
+> > +
+> > +	regmap_update_bits(priv->regmap, MESON_PCIE_REG0,
+> > +			   MESON_PCIE_POWERDOWN, 1);
+> > +	return 0;
+> > +}
+> > +
+> > +static int phy_axg_pcie_init(struct phy *phy)
+> > +{
+> > +	struct phy_axg_pcie_priv *priv = phy_get_drvdata(phy);
+> > +	int ret;
+> > +
+> > +	ret = phy_init(priv->analog);
+> > +	if (ret != 0)
+> > +		return ret;
+> > +
+> > +	regmap_write(priv->regmap, MESON_PCIE_REG0, MESON_PCIE_PHY_INIT);
+> > +	return reset_control_reset(priv->reset);
+> > +}
+> > +
+> > +static int phy_axg_pcie_exit(struct phy *phy)
+> > +{
+> > +	struct phy_axg_pcie_priv *priv = phy_get_drvdata(phy);
+> > +	int ret;
+> > +
+> > +	ret = phy_exit(priv->analog);
+> > +	if (ret != 0)
+> > +		return ret;
+> > +
+> > +	return reset_control_reset(priv->reset);
+> > +}
+> > +
+> > +static int phy_axg_pcie_reset(struct phy *phy)
+> > +{
+> > +	struct phy_axg_pcie_priv *priv = phy_get_drvdata(phy);
+> > +	int ret = 0;
+> > +
+> > +	ret = phy_reset(priv->analog);
+> > +	if (ret != 0)
+> > +		goto out;
+> > +
+> > +	ret = reset_control_assert(priv->reset);
+> > +	if (ret != 0)
+> > +		goto out;
+> > +	udelay(MESON_PCIE_RESET_DELAY);
+> > +
+> > +	ret = reset_control_deassert(priv->reset);
+> > +	if (ret != 0)
+> > +		goto out;
+> > +	udelay(MESON_PCIE_RESET_DELAY);
+> > +
+> > +out:
+> > +	return ret;
+> > +}
+> > +
+> > +static const struct phy_ops phy_axg_pcie_ops = {
+> > +	.init = phy_axg_pcie_init,
+> > +	.exit = phy_axg_pcie_exit,
+> > +	.power_on = phy_axg_pcie_power_on,
+> > +	.power_off = phy_axg_pcie_power_off,
+> > +	.reset = phy_axg_pcie_reset,
+> > +	.owner = THIS_MODULE,
+> > +};
+> > +
+> > +static int phy_axg_pcie_probe(struct platform_device *pdev)
+> > +{
+> > +	struct phy_provider *pphy;
+> > +	struct device *dev = &pdev->dev;
+> > +	struct phy_axg_pcie_priv *priv;
+> > +	struct device_node *np = dev->of_node;
+> > +	struct resource *res;
+> > +	void __iomem *base;
+> > +	int ret;
+> > +
+> > +	priv = devm_kmalloc(dev, sizeof(*priv), GFP_KERNEL);
+> > +	if (!priv)
+> > +		return -ENOMEM;
+> > +
+> > +	priv->phy = devm_phy_create(dev, np, &phy_axg_pcie_ops);
+> > +	if (IS_ERR(priv->phy)) {
+> > +		ret = PTR_ERR(priv->phy);
+> > +		if (ret != -EPROBE_DEFER)
+> > +			dev_err(dev, "failed to create PHY\n");
+> > +		return ret;
+> > +	}
+> > +
+> > +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> > +	base = devm_ioremap_resource(dev, res);
+> > +	if (IS_ERR(base))
+> > +		return PTR_ERR(base);
+> > +
+> > +	priv->regmap = devm_regmap_init_mmio(dev, base,
+> > +					     &phy_axg_pcie_regmap_conf);
+> > +	if (IS_ERR(priv->regmap))
+> > +		return PTR_ERR(priv->regmap);
+> > +
+> > +	priv->reset = devm_reset_control_array_get(dev, false, false);
+> > +	if (IS_ERR(priv->reset))
+> > +		return PTR_ERR(priv->reset);
+> > +
+> > +	priv->analog = devm_phy_optional_get(dev, "analog");
+> > +	if (IS_ERR(priv->analog))
+> > +		return PTR_ERR(priv->analog);
 > 
-> It seems to be pointless to put defines under #if IS_ENABLED(): in case
-> it is not enabled and used you'll get a compilation error, in case it is
-> enabled and not used no code is going to be generated anyways.
+> Isn't required for on the axg platform for the pcie to work reliably ?
+> Does this driver support another SoC ?
 > 
 
-OK I will remove the #if IS_ENABLED() in the next version.
+That is just me being overly cautious here. It is indeed required on AXG
+SoC to have pcie working reliably.
+
+Will change that in next patchset version.
+
+Thanks.
 
 > > +
-> >  #else /* CONFIG_HYPERV */
-> >  static inline void hyperv_init(void) {}
-> >  static inline void hyperv_setup_mmu_ops(void) {}
-> > diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
-> > index aacfcc90d929..2240f2b3643e 100644
-> > --- a/drivers/pci/controller/pci-hyperv.c
-> > +++ b/drivers/pci/controller/pci-hyperv.c
-> > @@ -406,36 +406,6 @@ struct pci_eject_response {
-> >  
-> >  static int pci_ring_size = (4 * PAGE_SIZE);
-> >  
-> > -struct hv_interrupt_entry {
-> > -	u32	source;			/* 1 for MSI(-X) */
-> > -	u32	reserved1;
-> > -	u32	address;
-> > -	u32	data;
-> > -};
-> > -
-> > -/*
-> > - * flags for hv_device_interrupt_target.flags
-> > - */
-> > -#define HV_DEVICE_INTERRUPT_TARGET_MULTICAST		1
-> > -#define HV_DEVICE_INTERRUPT_TARGET_PROCESSOR_SET	2
-> > -
-> > -struct hv_device_interrupt_target {
-> > -	u32	vector;
-> > -	u32	flags;
-> > -	union {
-> > -		u64		 vp_mask;
-> > -		struct hv_vpset vp_set;
-> > -	};
-> > -};
-> > -
-> > -struct retarget_msi_interrupt {
-> > -	u64	partition_id;		/* use "self" */
-> > -	u64	device_id;
-> > -	struct hv_interrupt_entry int_entry;
-> > -	u64	reserved2;
-> > -	struct hv_device_interrupt_target int_target;
-> > -} __packed __aligned(8);
-> > -
-> >  /*
-> >   * Driver specific state.
-> >   */
-> > @@ -482,7 +452,7 @@ struct hv_pcibus_device {
-> >  	struct workqueue_struct *wq;
-> >  
-> >  	/* hypercall arg, must not cross page boundary */
-> > -	struct retarget_msi_interrupt retarget_msi_interrupt_params;
-> > +	struct hv_retarget_device_interrupt retarget_msi_interrupt_params;
-> >  
-> >  	/*
-> >  	 * Don't put anything here: retarget_msi_interrupt_params must be last
-> > @@ -1178,7 +1148,7 @@ static void hv_irq_unmask(struct irq_data *data)
-> >  {
-> >  	struct msi_desc *msi_desc = irq_data_get_msi_desc(data);
-> >  	struct irq_cfg *cfg = irqd_cfg(data);
-> > -	struct retarget_msi_interrupt *params;
-> > +	struct hv_retarget_device_interrupt *params;
-> >  	struct hv_pcibus_device *hbus;
-> >  	struct cpumask *dest;
-> >  	cpumask_var_t tmp;
-> > @@ -1200,8 +1170,8 @@ static void hv_irq_unmask(struct irq_data *data)
-> >  	memset(params, 0, sizeof(*params));
-> >  	params->partition_id = HV_PARTITION_ID_SELF;
-> >  	params->int_entry.source = 1; /* MSI(-X) */
-> > -	params->int_entry.address = msi_desc->msg.address_lo;
-> > -	params->int_entry.data = msi_desc->msg.data;
-> > +	hv_set_msi_address_from_desc(&params->int_entry.msi_entry, msi_desc);
-> 
-> I don't quite see why this hv_set_msi_address_from_desc() is needed at
-> all.
-> 
-
-I will add some description in the next version, the reason that
-hv_set_msi_address_from_desc() is arm64 and x86 have different
-hv_interrupt_entry formats. So a generic interface is needed so that
-archs can have different ways to set ->address field from msi_desc.
-
-Regards,
-Boqun
-
-> > +	params->int_entry.msi_entry.data = msi_desc->msg.data;
-> >  	params->device_id = (hbus->hdev->dev_instance.b[5] << 24) |
-> >  			   (hbus->hdev->dev_instance.b[4] << 16) |
-> >  			   (hbus->hdev->dev_instance.b[7] << 8) |
-> 
-> -- 
-> Vitaly
+> > +	phy_set_drvdata(priv->phy, priv);
+> > +	dev_set_drvdata(dev, priv);
+> > +	pphy = devm_of_phy_provider_register(dev, of_phy_simple_xlate);
+> > +
+> > +	return PTR_ERR_OR_ZERO(pphy);
+> > +}
+> > +
+> > +static const struct of_device_id phy_axg_pcie_of_match[] = {
+> > +	{
+> > +		.compatible = "amlogic,axg-pcie-phy",
+> > +	},
+> > +	{ },
+> > +};
+> > +MODULE_DEVICE_TABLE(of, phy_axg_pcie_of_match);
+> > +
+> > +static struct platform_driver phy_axg_pcie_driver = {
+> > +	.probe = phy_axg_pcie_probe,
+> > +	.driver = {
+> > +		.name = "phy-axg-pcie",
+> > +		.of_match_table = phy_axg_pcie_of_match,
+> > +	},
+> > +};
+> > +module_platform_driver(phy_axg_pcie_driver);
+> > +
+> > +MODULE_AUTHOR("Remi Pommarel <repk@triplefau.lt>");
+> > +MODULE_DESCRIPTION("Amlogic AXG PCIE PHY driver");
+> > +MODULE_LICENSE("GPL v2");
 > 
