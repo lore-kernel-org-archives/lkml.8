@@ -2,165 +2,92 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C09E5C3F68F
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 17:56:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4451DC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 17:57:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91FE12467E
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 17:56:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="NK4+dXDp"
+	by mail.kernel.org (Postfix) with ESMTP id 107942253D
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 17:57:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579802222;
+	bh=UX5aAj3i0cMnShTuwFcZJbc1mI9/uhZDN210Dt+lKhc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=UgRBPNcduRCblFDXDoBA8qjyo9zILAWggTRFN5qpJ6v332DlWBAr5OXHUGM8wB0qq
+	 stZA9EPYQtTfYCFTiGfY2IW/sYjJL9CbH+nBZCO24ZqnitZaiuPsTS0OfmkYwiYhYz
+	 XdlPDsf2+/BPc2Q/G09lEw+b9FEbOQAlwCzRen8E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728992AbgAWR4V (ORCPT
+        id S1729017AbgAWR5B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 12:56:21 -0500
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:36454 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726621AbgAWR4U (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 12:56:20 -0500
-Received: by mail-lf1-f66.google.com with SMTP id f24so3020159lfh.3
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jan 2020 09:56:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=tbUt6go+kLuXKXQ0VzJ6Mhyl0zSlPzgGsNDFNiXJt7g=;
-        b=NK4+dXDpNBbzPh3b80IEDt5inscQTCvjYG7+GPJ5WUbiU+W/8YhHNLVwGhxs57FIS4
-         fK7JN1NswFF2h0zIXnkR7Xk+qgzuLlEZVN6S32B+6w20Ygvnm09GYcbJgAJZKjeKpTGc
-         792wHEdxRwurEfdqWJVhjVFcefHoQJugA+IyI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=tbUt6go+kLuXKXQ0VzJ6Mhyl0zSlPzgGsNDFNiXJt7g=;
-        b=HbBeZ38yXuWPElfNaRsPw/ss1YAxZ8OFrF/zRSB/lZ/nCFpRyWdRIRz49ngNZGPMlh
-         /dUJgEBAaxot/fuvF0auK80+3KXQwQ/8z76ukW4QAMCfv6lFTbFPjcsSI/2pXD0LjnsK
-         G1kmoCZnWm/+nMgYaOwqqdKpFXWFIkkDp9ZB3b3TD8E7PAikdWdFRKbHN3aZajEHgo90
-         vhPJlTcDOZnNGDIcRuavw67+FPCz5VByyxa/PttbEFQ+0S85YVFRyWEHLFBNaUgM4OI8
-         KXGrZnYAXrdt6s5rDWt9hvS9RT3+5axvPkRUqixuMKb5Z64VeVU3UQxLpiWzwVVRwNOk
-         NeFA==
-X-Gm-Message-State: APjAAAUd+l0KZ+CdAFVY2K/F3hloV1zapUbWizEZc4qMxyKgbDR0vvvv
-        Zj9/LQdHcjpA1FPeRAfHiiDrC0nlLlg=
-X-Google-Smtp-Source: APXvYqzTBj4kZDmNLLjuYQ0Y8nAgf93cDy01vB5IM3Bopk3X2vbaJoXVD1I9EdWS8Mw6R4xfaFZBXA==
-X-Received: by 2002:ac2:44bc:: with SMTP id c28mr4749572lfm.72.1579802177333;
-        Thu, 23 Jan 2020 09:56:17 -0800 (PST)
-Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com. [209.85.208.174])
-        by smtp.gmail.com with ESMTPSA id x10sm79734ljd.68.2020.01.23.09.56.16
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 23 Jan 2020 09:56:16 -0800 (PST)
-Received: by mail-lj1-f174.google.com with SMTP id o13so4582551ljg.4
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jan 2020 09:56:16 -0800 (PST)
-X-Received: by 2002:a2e:b017:: with SMTP id y23mr24733117ljk.229.1579802175831;
- Thu, 23 Jan 2020 09:56:15 -0800 (PST)
+        Thu, 23 Jan 2020 12:57:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49654 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728760AbgAWR5B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jan 2020 12:57:01 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 45E6322464;
+        Thu, 23 Jan 2020 17:57:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579802220;
+        bh=UX5aAj3i0cMnShTuwFcZJbc1mI9/uhZDN210Dt+lKhc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=opki2cQV9oHqEY81fAkgOf0GQ1xUqFx0BLN94x3wm4zVRCCgxy4ViPrYJNR1hcSO7
+         wy9eQil7hONEEMJjSscTJ7AFRtuxSZxaeelM0qG59flAu8XtQB1WgK4ZxZXE9dHCgi
+         wuM2xk7vZ6eydOVCJJxbjwPyPhVV2zVs6A+/12EE=
+Date:   Thu, 23 Jan 2020 18:56:58 +0100
+From:   "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
+To:     "Daniel Baluta (OSS)" <daniel.baluta@oss.nxp.com>
+Cc:     "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "info@metux.net" <info@metux.net>,
+        "ztuowen@gmail.com" <ztuowen@gmail.com>,
+        "sergei.shtylyov@cogentembedded.com" 
+        <sergei.shtylyov@cogentembedded.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Daniel Baluta <daniel.baluta@nxp.com>
+Subject: Re: [PATCH] lib: devres: Export devm_ioremap_resource_wc
+Message-ID: <20200123175658.GB1796501@kroah.com>
+References: <20200123154706.5831-1-daniel.baluta@oss.nxp.com>
 MIME-Version: 1.0
-References: <20200116133102.1.I9c7e72144ef639cc135ea33ef332852a6b33730f@changeid>
- <20200122172816.GA139285@google.com> <CAE=gft6hvO7G2OrxFGXeSDctz-21ryiu8JSBWT0g2fRFss-pxA@mail.gmail.com>
- <875zh3ukoy.fsf@nanos.tec.linutronix.de> <CAE=gft7ukQOxHmJT_tkWzA3u2cecmV0Jiq-ukAu-1OR+sPnTtg@mail.gmail.com>
- <871rrqva0t.fsf@nanos.tec.linutronix.de>
-In-Reply-To: <871rrqva0t.fsf@nanos.tec.linutronix.de>
-From:   Evan Green <evgreen@chromium.org>
-Date:   Thu, 23 Jan 2020 09:55:39 -0800
-X-Gmail-Original-Message-ID: <CAE=gft77xmkc6-4+h3WAp_4C7ra8XKSxcsqrVkBrYgXE0JPeSw@mail.gmail.com>
-Message-ID: <CAE=gft77xmkc6-4+h3WAp_4C7ra8XKSxcsqrVkBrYgXE0JPeSw@mail.gmail.com>
-Subject: Re: [PATCH] PCI/MSI: Avoid torn updates to MSI pairs
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Marc Zyngier <maz@kernel.org>, Christoph Hellwig <hch@lst.de>,
-        Rajat Jain <rajatxjain@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200123154706.5831-1-daniel.baluta@oss.nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 23, 2020 at 12:42 AM Thomas Gleixner <tglx@linutronix.de> wrote:
->
-> Evan Green <evgreen@chromium.org> writes:
-> > On Wed, Jan 22, 2020 at 3:37 PM Thomas Gleixner <tglx@linutronix.de> wrote:
-> >> > One other way you could avoid torn MSI writes would be to ensure that
-> >> > if you migrate IRQs across cores, you keep the same x86 vector number.
-> >> > That way the address portion would be updated, and data doesn't
-> >> > change, so there's no window. But that may not actually be feasible.
-> >>
-> >> That's not possible simply because the x86 vector space is limited. If
-> >> we would have to guarantee that then we'd end up with a max of ~220
-> >> interrupts per system. Sufficient for your notebook, but the big iron
-> >> people would be not amused.
-> >
-> > Right, that occurred to me as well. The actual requirement isn't quite
-> > as restrictive. What you really need is the old vector to be
-> > registered on both the old CPU and the new CPU. Then once the
-> > interrupt is confirmed to have moved we could release both the old
-> > vector both CPUs, leaving only the new vector on the new CPU.
->
-> Sure, and how can you guarantee that without reserving the vector on all
-> CPUs in the first place? If you don't do that then if the vector is not
-> available affinity setting would fail every so often and it would pretty
-> much prevent hotplug if a to be migrated vector is not available on at
-> least one online CPU.
->
-> > In that world some SMP affinity transitions might fail, which is a
-> > bummer. To avoid that, you could first migrate to a vector that's
-> > available on both the source and destination CPUs, keeping affinity
-> > the same. Then change affinity in a separate step.
->
-> Good luck with doing that at the end of the hotplug routine where the
-> CPU is about to vanish.
->
-> > Or alternatively, you could permanently designate a "transit" vector.
-> > If an interrupt fires on this vector, then we call all ISRs currently
-> > in transit between CPUs. You might end up calling ISRs that didn't
-> > actually need service, but at least that's better than missing edges.
->
-> I don't think we need that. While walking the dogs I thought about
-> invoking a force migrated interrupt on the target CPU, but haven't
-> thought it through yet.
+On Thu, Jan 23, 2020 at 03:47:21PM +0000, Daniel Baluta (OSS) wrote:
+> From: Daniel Baluta <daniel.baluta@nxp.com>
+> 
+> So that modules can also use it.
+> 
+> Fixes: b873af620e58863b ("lib: devres: provide devm_ioremap_resource_wc()")
+> Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
+> ---
+>  lib/devres.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/lib/devres.c b/lib/devres.c
+> index 6ef51f159c54..7fe2bd75dfa3 100644
+> --- a/lib/devres.c
+> +++ b/lib/devres.c
+> @@ -182,6 +182,7 @@ void __iomem *devm_ioremap_resource_wc(struct device *dev,
+>  {
+>  	return __devm_ioremap_resource(dev, res, DEVM_IOREMAP_WC);
+>  }
+> +EXPORT_SYMBOL(devm_ioremap_resource_wc);
 
-Yeah, I think the Intel folks did that in some tree of theirs too.
+EXPORT_SYMBOL_GPL() perhaps?
 
->
-> >> 'lscpci -vvv' and 'cat /proc/interrupts'
-> >
-> > Here it is:
-> > https://pastebin.com/YyxBUvQ2
->
-> Hrm:
->
->         Capabilities: [80] MSI-X: Enable+ Count=16 Masked-
->
-> So this is weird. We mask it before moving it, so the tear issue should
-> not happen on MSI-X. So the tearing might be just a red herring.
+What in-tree driver needs this?
 
-Mmm... sorry what? This is the complete entry for xhci:
+thanks,
 
-00:14.0 USB controller: Intel Corporation Device 02ed (prog-if 30 [XHCI])
-        Subsystem: Intel Corporation Device 7270
-        Control: I/O- Mem+ BusMaster- SpecCycle- MemWINV- VGASnoop-
-ParErr- Stepping- SERR- FastB2B- DisINTx+
-        Status: Cap+ 66MHz- UDF- FastB2B+ ParErr- DEVSEL=medium
->TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
-        Interrupt: pin A routed to IRQ 124
-        Region 0: Memory at d1200000 (64-bit, non-prefetchable) [size=64K]
-        Capabilities: [70] Power Management version 2
-                Flags: PMEClk- DSI- D1- D2- AuxCurrent=375mA
-PME(D0-,D1-,D2-,D3hot+,D3cold+)
-                Status: D3 NoSoftRst+ PME-Enable+ DSel=0 DScale=0 PME-
-        Capabilities: [80] MSI: Enable+ Count=1/8 Maskable- 64bit+
-                Address: 00000000fee10004  Data: 402a
-        Capabilities: [90] Vendor Specific Information: Len=14 <?>
-        Kernel driver in use: xhci_hcd
-
-
->
-> Let me stare into the code a bit.
-
-Thanks, I appreciate the help.
-
--Evan
+greg k-h
