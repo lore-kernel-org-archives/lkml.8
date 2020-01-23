@@ -2,171 +2,118 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AE3DC32771
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 01:41:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BF6DC32771
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 01:43:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3738A24673
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 01:41:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B2832465B
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 01:43:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579743801;
+	bh=pbV8L57NJMLaJwFWTDrasYkVxAEkXQ2z8toB7ZPCci4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Ljnk1Cxp41kVLFcAy3Y0jtO/f++rrsCK7LliDoT0iPu5fuTyKbljyPfpw1PKM274W
+	 q9nv94JfgGtUJZeKY5jZM6N+4IUH1AVlGPtOThUwF0t/32pXK5uBC+muQb4AM89MLj
+	 ptr4CK0pm3nMqdZmRa2D8H5/XJO22XbpUZ3DBsZA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728928AbgAWBl5 (ORCPT
+        id S1726911AbgAWBnU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 20:41:57 -0500
-Received: from mail.cn.fujitsu.com ([183.91.158.132]:44226 "EHLO
-        heian.cn.fujitsu.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725911AbgAWBlx (ORCPT
+        Wed, 22 Jan 2020 20:43:20 -0500
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:55983 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726164AbgAWBnU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 20:41:53 -0500
-X-IronPort-AV: E=Sophos;i="5.70,351,1574092800"; 
-   d="scan'208";a="82502321"
-Received: from unknown (HELO cn.fujitsu.com) ([10.167.33.5])
-  by heian.cn.fujitsu.com with ESMTP; 23 Jan 2020 09:41:48 +0800
-Received: from G08CNEXMBPEKD04.g08.fujitsu.local (unknown [10.167.33.201])
-        by cn.fujitsu.com (Postfix) with ESMTP id C100A50A9970;
-        Thu, 23 Jan 2020 09:32:35 +0800 (CST)
-Received: from G08CNEXCHPEKD05.g08.fujitsu.local (10.167.33.203) by
- G08CNEXMBPEKD04.g08.fujitsu.local (10.167.33.201) with Microsoft SMTP Server
- (TLS) id 15.0.1395.4; Thu, 23 Jan 2020 09:41:48 +0800
-Received: from TEST.g08.fujitsu.local (10.167.226.147) by
- G08CNEXCHPEKD05.g08.fujitsu.local (10.167.33.209) with Microsoft SMTP Server
- id 15.0.1395.4 via Frontend Transport; Thu, 23 Jan 2020 09:41:47 +0800
-From:   Cao jin <caoj.fnst@cn.fujitsu.com>
-To:     <x86@kernel.org>, <linux-pm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-acpi@vger.kernel.org>
-CC:     <rjw@rjwysocki.net>, <len.brown@intel.com>, <pavel@ucw.cz>,
-        <tglx@linutronix.de>, <mingo@redhat.com>, <hpa@zytor.com>
-Subject: [RFC PATCH 2/2] x86/acpi: Cleanup acpi_process_madt()
-Date:   Thu, 23 Jan 2020 09:41:44 +0800
-Message-ID: <20200123014144.19155-3-caoj.fnst@cn.fujitsu.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20200123014144.19155-1-caoj.fnst@cn.fujitsu.com>
-References: <20200123014144.19155-1-caoj.fnst@cn.fujitsu.com>
+        Wed, 22 Jan 2020 20:43:20 -0500
+Received: by mail-pj1-f66.google.com with SMTP id d5so417234pjz.5;
+        Wed, 22 Jan 2020 17:43:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=nA4RMqX5haJ1ua8Yhgc4HIMDyOGoyPdaKIKHYrYlVmk=;
+        b=BhHdW1DPSWyzW2/+yWG5oEft9hG4f7HTQrTpV1jtz96GioQx6Jnb4tHm5qGNgoDSVH
+         uYpR1N7Tc+PiZNplBbA1oCeZ0OiTJK0J++qRoXnOg3SricR9U9+ZE73Cd3IIYhGdpWF6
+         8Bl7Z0CXf2tb0hOow02SnKKKEOloD270mzLEUYrs6LLI1PELah9c9bWMUSDtOMUVF97R
+         NsUjuCSfOjnthdeM3+o2NzmzpRSBq+8qaxwXf/HhrFmrE89nm+btgUWZWPRfjWX5M2ZF
+         /9O3yUQ/8jVHBXLs9vG+yYqki6/hf1T1Q3ilAel8jdza6GzUuCdtx7fWp/To/d+2veBK
+         uKOw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=nA4RMqX5haJ1ua8Yhgc4HIMDyOGoyPdaKIKHYrYlVmk=;
+        b=FwhSSun40VVCHTKi4lzHGP43G95m75+5hX3855agWziLyazpkoFBwUu4qSvx7BPlob
+         QciJq2DaT2VzkgRhSj9iG5ESfhdWwWLmJBsu/Y5KH5nLHh7gePiDwyEm+x5fsaVG6JoD
+         RE9YXy/J8hsd/hLX1zdi2uXpYs5/6GUg+kde+c1jou2NpHYTn00NWJf+/vrQA3+vK8ZF
+         tEJPfZ09tON/eMnTipTWQPmfLwTNdkxtikDkHkbzuT/lE7DjA28xQdjvljq4ky5df66z
+         iIPhH9Sy1sock1J5iH4gBsLGG2aimWWGD4VSBA1kJsJFSQfk/Ynf7mdk5iESWY3QxJo8
+         P1Hg==
+X-Gm-Message-State: APjAAAUvx7Sh0nGWSJOa/ymLBJyFE/AdPEiSaGYOWtz+pNl7XgRtAMJp
+        KS8k7G71zeDK5CwCkZWddYAMyHDw
+X-Google-Smtp-Source: APXvYqzq1S4H4X9XLJt3DcWAS97wjkB2xs3kqJ7LItoh0aaUXnndPh+1V3NJYWlsEx82aRhUkp6bBw==
+X-Received: by 2002:a17:90a:300b:: with SMTP id g11mr1583571pjb.123.1579743799340;
+        Wed, 22 Jan 2020 17:43:19 -0800 (PST)
+Received: from google.com ([2620:15c:211:1:3e01:2939:5992:52da])
+        by smtp.gmail.com with ESMTPSA id j17sm199787pfa.28.2020.01.22.17.43.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 22 Jan 2020 17:43:18 -0800 (PST)
+Date:   Wed, 22 Jan 2020 17:43:16 -0800
+From:   Minchan Kim <minchan@kernel.org>
+To:     Oleksandr Natalenko <oleksandr@redhat.com>
+Cc:     "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Michal Hocko <mhocko@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>, linux-api@vger.kernel.org,
+        Suren Baghdasaryan <surenb@google.com>,
+        Tim Murray <timmurray@google.com>,
+        Daniel Colascione <dancol@google.com>,
+        Sandeep Patil <sspatil@google.com>,
+        Sonny Rao <sonnyrao@google.com>,
+        Brian Geffon <bgeffon@google.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        John Dias <joaodias@google.com>, ktkhai@virtuozzo.com,
+        christian.brauner@ubuntu.com, sjpark@amazon.de
+Subject: Re: [PATCH v2 2/5] mm: introduce external memory hinting API
+Message-ID: <20200123014316.GB249784@google.com>
+References: <20200116235953.163318-1-minchan@kernel.org>
+ <20200116235953.163318-3-minchan@kernel.org>
+ <20200117115225.GV19428@dhcp22.suse.cz>
+ <20200117155837.bowyjpndfiym6cgs@box>
+ <20200117173239.GB140922@google.com>
+ <20200117212653.7uftw3lk35oykkmb@box>
+ <20200121181113.GE140922@google.com>
+ <20200122104424.7gvrfivymjvdous4@butterfly.localdomain>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-yoursite-MailScanner-ID: C100A50A9970.A8DA6
-X-yoursite-MailScanner: Found to be clean
-X-yoursite-MailScanner-From: caoj.fnst@cn.fujitsu.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200122104424.7gvrfivymjvdous4@butterfly.localdomain>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-After many duct-taped patches, the readablity of these code chunks are
-really hard. This patch does following improvements:
+On Wed, Jan 22, 2020 at 11:44:24AM +0100, Oleksandr Natalenko wrote:
+> Hello.
+> 
+> On Tue, Jan 21, 2020 at 10:11:13AM -0800, Minchan Kim wrote:
+> > > > I also think people don't want to give an KSM hint to non-mergeable area.
+> > > 
+> > > And how the manager knows which data is mergable?
+> > 
+> > Oleksandr, could you say your thought why you need address range based
+> > API?
+> 
+> It seems I've overlooked an important piece of this submission: one
+> cannot apply the hint to all the anonymous mapping regardless of address
+> range. For KSM I'd rather either have a possibility to hint all the
+> anonymous mappings, or, as it was suggested previously, be able to iterate
+> over existing mappings using some (fd-based?) API.
 
-  1. Drop unnecessary comment that is self-documented by function name,
-     while supply with necessary comments.
-  2. Drop duplicated code: acpi_process_madt() has already been called
-     in early madt processing, acpi_lapic & smp_found_config is also
-     initialized there.
-  3. Fix code logic: variable count's usage is quite confusing now, and
-     some code logic is wrong, like count & x2count will never be negative
-     after assigned from madt_proc[n].count
-
-Signed-off-by: Cao jin <caoj.fnst@cn.fujitsu.com>
----
- arch/x86/kernel/acpi/boot.c | 44 +++++++++++++++----------------------
- 1 file changed, 18 insertions(+), 26 deletions(-)
-
-diff --git a/arch/x86/kernel/acpi/boot.c b/arch/x86/kernel/acpi/boot.c
-index 2131035bba98..844fc9f26064 100644
---- a/arch/x86/kernel/acpi/boot.c
-+++ b/arch/x86/kernel/acpi/boot.c
-@@ -1026,9 +1026,10 @@ static int __init early_acpi_parse_madt_lapic_addr_ovr(void)
- 	return count;
- }
- 
-+/* Returns 0 on success, < 0 on error. */
- static int __init acpi_parse_madt_lapic_entries(void)
- {
--	int count;
-+	int count = 0;
- 	int x2count = 0;
- 	int ret;
- 	struct acpi_subtable_proc madt_proc[2];
-@@ -1036,10 +1037,13 @@ static int __init acpi_parse_madt_lapic_entries(void)
- 	if (!boot_cpu_has(X86_FEATURE_APIC))
- 		return -ENODEV;
- 
--	count = acpi_table_parse_madt(ACPI_MADT_TYPE_LOCAL_SAPIC,
--				      acpi_parse_sapic, MAX_LOCAL_APIC);
-+	/* SAPIC is commonly found on Intel Itanium processor. */
-+	ret = acpi_table_parse_madt(ACPI_MADT_TYPE_LOCAL_SAPIC,
-+				    acpi_parse_sapic, MAX_LOCAL_APIC);
- 
--	if (!count) {
-+
-+	/* No SAPIC entries implies it is not Itanium processor. */
-+	if (!ret) {
- 		memset(madt_proc, 0, sizeof(madt_proc));
- 		madt_proc[0].id = ACPI_MADT_TYPE_LOCAL_APIC;
- 		madt_proc[0].handler = acpi_parse_lapic;
-@@ -1056,15 +1060,14 @@ static int __init acpi_parse_madt_lapic_entries(void)
- 
- 		count = madt_proc[0].count;
- 		x2count = madt_proc[1].count;
--	}
--	if (!count && !x2count) {
--		printk(KERN_ERR PREFIX "No LAPIC entries present\n");
--		/* TBD: Cleanup to allow fallback to MPS */
--		return -ENODEV;
--	} else if (count < 0 || x2count < 0) {
--		printk(KERN_ERR PREFIX "Error parsing LAPIC entry\n");
--		/* TBD: Cleanup to allow fallback to MPS */
--		return count;
-+		if (!count && !x2count) {
-+			printk(KERN_ERR PREFIX "No LAPIC entries present\n");
-+			/* TBD: Cleanup to allow fallback to MPS */
-+			return -ENODEV;
-+		}
-+	} else if (ret < 0) {
-+		printk(KERN_ERR PREFIX "Error parsing SAPIC entries\n");
-+		return ret;
- 	}
- 
- 	x2count = acpi_table_parse_madt(ACPI_MADT_TYPE_LOCAL_X2APIC_NMI,
-@@ -1074,7 +1077,7 @@ static int __init acpi_parse_madt_lapic_entries(void)
- 	if (count < 0 || x2count < 0) {
- 		printk(KERN_ERR PREFIX "Error parsing LAPIC NMI entry\n");
- 		/* TBD: Cleanup to allow fallback to MPS */
--		return count;
-+		return (count < 0) ? count : x2count;
- 	}
- 	return 0;
- }
-@@ -1255,25 +1258,14 @@ static void __init acpi_process_madt(void)
- #ifdef CONFIG_X86_LOCAL_APIC
- 	int error;
- 
--	if (!acpi_table_parse(ACPI_SIG_MADT, acpi_parse_madt)) {
--
--		/*
--		 * Parse MADT LAPIC entries
--		 */
-+	if (acpi_lapic) {
- 		error = acpi_parse_madt_lapic_entries();
- 		if (!error) {
--			acpi_lapic = 1;
--
--			/*
--			 * Parse MADT IO-APIC entries
--			 */
- 			mutex_lock(&acpi_ioapic_lock);
- 			error = acpi_parse_madt_ioapic_entries();
- 			mutex_unlock(&acpi_ioapic_lock);
- 			if (!error) {
- 				acpi_set_irq_model_ioapic();
--
--				smp_found_config = 1;
- 			}
- 		}
- 		if (error == -EINVAL) {
--- 
-2.21.0
-
-
-
+Thing is how you could identify a certan range is better for KSM than
+others from external process?
