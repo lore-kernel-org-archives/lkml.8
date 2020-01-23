@@ -2,110 +2,104 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8759EC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 09:36:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10B7BC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 09:36:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55C1924684
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 09:36:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DAC0E22522
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 09:36:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579772198;
+	bh=gyt2Y4k10a3KJebAv2MMSWVNSPdTsVts58bB8fCDjL8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=fha4jxFwf9hnvbZnTrIh9qX40iUvXL1rzjUc8uZJ2lMvXjNUkJcaPGElUzlWTakNn
+	 NwuUGRM2hTVvUIF28LXNuqOcegnPkiwCP9zJy76EUTkQ12dt18RKLvwZiY8LUwXoLd
+	 1S1DOTyjFbBD5Ms8T4jCxiMSQYOzCuRC0YSwWmgk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726911AbgAWJge (ORCPT
+        id S1727093AbgAWJgi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Thu, 23 Jan 2020 04:36:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45370 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726234AbgAWJge (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 23 Jan 2020 04:36:34 -0500
-Received: from szxga08-in.huawei.com ([45.249.212.255]:45680 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726026AbgAWJgd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 04:36:33 -0500
-Received: from DGGEMM401-HUB.china.huawei.com (unknown [172.30.72.56])
-        by Forcepoint Email with ESMTP id 58B8F9300ED82D6FD96C;
-        Thu, 23 Jan 2020 17:36:31 +0800 (CST)
-Received: from dggeme713-chm.china.huawei.com (10.1.199.109) by
- DGGEMM401-HUB.china.huawei.com (10.3.20.209) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Thu, 23 Jan 2020 17:36:30 +0800
-Received: from dggeme763-chm.china.huawei.com (10.3.19.109) by
- dggeme713-chm.china.huawei.com (10.1.199.109) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1713.5; Thu, 23 Jan 2020 17:36:30 +0800
-Received: from dggeme763-chm.china.huawei.com ([10.6.66.36]) by
- dggeme763-chm.china.huawei.com ([10.6.66.36]) with mapi id 15.01.1713.004;
- Thu, 23 Jan 2020 17:36:30 +0800
-From:   linmiaohe <linmiaohe@huawei.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>
-CC:     "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "rkrcmar@redhat.com" <rkrcmar@redhat.com>,
-        "sean.j.christopherson@intel.com" <sean.j.christopherson@intel.com>,
-        "wanpengli@tencent.com" <wanpengli@tencent.com>,
-        "jmattson@google.com" <jmattson@google.com>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "bp@alien8.de" <bp@alien8.de>, "hpa@zytor.com" <hpa@zytor.com>
-Subject: Re: [PATCH] KVM: nVMX: set rflags to specify success in
- handle_invvpid() default case
-Thread-Topic: [PATCH] KVM: nVMX: set rflags to specify success in
- handle_invvpid() default case
-Thread-Index: AdXRz6RAoVCeZerqGEOd3DyH2pYaqQ==
-Date:   Thu, 23 Jan 2020 09:36:30 +0000
-Message-ID: <a3eb519e5831459db1c926776ad97cca@huawei.com>
-Accept-Language: en-US
-Content-Language: zh-CN
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.173.221.158]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7F44F22522;
+        Thu, 23 Jan 2020 09:36:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579772193;
+        bh=gyt2Y4k10a3KJebAv2MMSWVNSPdTsVts58bB8fCDjL8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=tf4QUMKz4/iknb74dTGe//f79onqkHHOGUngMEcibhz+JKsK+yfhUP5cOxiln+/UX
+         aD9Vdm7G6BwbcU5K4jvPMh1ZBsUjXgWEn7X2xyKquMAw1Sio6ZDnJN+AlJ22RcK7CZ
+         1+NwCRTz9RlboaYose8yTkUgmZHncZ1d8PrpRjPM=
+Date:   Thu, 23 Jan 2020 09:36:28 +0000
+From:   Will Deacon <will@kernel.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Jason Baron <jbaron@akamai.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        linux-kernel@vger.kernel.org, kernel-team@android.com
+Subject: Re: [PATCH v4] dynamic_debug: allow to work if debugfs is disabled
+Message-ID: <20200123093628.GA18991@willie-the-truck>
+References: <20200122074343.GA2099098@kroah.com>
+ <20200122080352.GA15354@willie-the-truck>
+ <20200122081205.GA2227985@kroah.com>
+ <20200122135352.GA9458@kroah.com>
+ <8d68b75c-05b8-b403-0a10-d17b94a73ba7@akamai.com>
+ <20200122192940.GA88549@kroah.com>
+ <20200122193118.GA88722@kroah.com>
+ <ef1172ac-ea78-146e-575e-93e2d65b4606@infradead.org>
+ <20200123084847.GA435637@kroah.com>
+ <20200123085015.GA436361@kroah.com>
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200123085015.GA436361@kroah.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-UGFvbG8gQm9uemluaSA8cGJvbnppbmlAcmVkaGF0LmNvbT4gd3JvdGU6DQo+IE9uIDIzLzAxLzIw
-IDA5OjU1LCBWaXRhbHkgS3V6bmV0c292IHdyb3RlOg0KPiA+IFlvdXIgcGF0Y2ggc2VlbXMgdG8g
-ZG8gdGhlIHJpZ2h0IHRoaW5nLCBob3dldmVyLCBJIHN0YXJ0ZWQgd29uZGVyaW5nIA0KPiA+IGlm
-DQo+ID4gV0FSTl9PTl9PTkNFKCkgaXMgdGhlIHJpZ2h0IHRoaW5nIHRvIGRvLiBTRE0gc2F5cyB0
-aGF0ICJJZiBhbiANCj4gPiB1bnN1cHBvcnRlZCBJTlZWUElEIHR5cGUgaXMgc3BlY2lmaWVkLCB0
-aGUgaW5zdHJ1Y3Rpb24gZmFpbHMuIiBhbmQgDQo+ID4gdGhpcyBpcyBzaW1pbGFyIHRvIElOVkVQ
-VCBhbmQgSSBkZWNpZGVkIHRvIGNoZWNrIHdoYXQgaGFuZGxlX2ludmVwdCgpIA0KPiA+IGRvZXMu
-IFdlbGwsIGl0IGRvZXMgQlVHX09OKCkuDQo+ID4gDQo+ID4gQXJlIHdlIGRvaW5nIHRoZSByaWdo
-dCB0aGluZyBpbiBhbnkgb2YgdGhlc2UgY2FzZXM/DQo+DQo+IFllcywgYm90aCBJTlZFUFQgYW5k
-IElOVlZQSUQgY2F0Y2ggdGhpcyBlYXJsaWVyLg0KPg0KPiBGb3IgSU5WRVBUOg0KPg0KPiAgICAg
-ICAgIHR5cGVzID0gKHZteC0+bmVzdGVkLm1zcnMuZXB0X2NhcHMgPj4gVk1YX0VQVF9FWFRFTlRf
-U0hJRlQpICYgNjsNCj4NCj4gICAgICAgICBpZiAodHlwZSA+PSAzMiB8fCAhKHR5cGVzICYgKDEg
-PDwgdHlwZSkpKQ0KPiAgICAgICAgICAgICAgICAgcmV0dXJuIG5lc3RlZF92bXhfZmFpbFZhbGlk
-KHZjcHUsDQo+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgVk1YRVJSX0lOVkFMSURf
-T1BFUkFORF9UT19JTlZFUFRfSU5WVlBJRCk7DQo+DQo+DQo+DQo+IEZvciBJTlZWUElEOg0KPg0K
-PiAgICAgICAgIHR5cGVzID0gKHZteC0+bmVzdGVkLm1zcnMudnBpZF9jYXBzICYNCj4gICAgICAg
-ICAgICAgICAgICAgICAgICAgVk1YX1ZQSURfRVhURU5UX1NVUFBPUlRFRF9NQVNLKSA+PiA4Ow0K
-Pg0KPiAgICAgICAgIGlmICh0eXBlID49IDMyIHx8ICEodHlwZXMgJiAoMSA8PCB0eXBlKSkpDQo+
-ICAgICAgICAgICAgICAgICByZXR1cm4gbmVzdGVkX3ZteF9mYWlsVmFsaWQodmNwdSwNCj4gICAg
-ICAgICAgICAgICAgICAgICAgICAgVk1YRVJSX0lOVkFMSURfT1BFUkFORF9UT19JTlZFUFRfSU5W
-VlBJRCk7DQo+DQo+IFNvIEknbSBsZWFuaW5nIHRvd2FyZHMgbm90IGFwcGx5aW5nIE1pYW9oZSdz
-IHBhdGNoLiAgSGFwcHkgTW91c2UgWWVhciB0byBldmVyeW9uZSwgaGVyZSBpcyBhbiBBU0NJSSBh
-cnQgKGV4Y2VwdCBmb3Igb25lIFVuaWNvZGUgY2hhcmFjdGVyKSBtb3VzZToNCj4NCj4NCj4gICAg
-ICAgIF9fKCkoKQ0KPiAgICAgICAvICAgICBvKQ0KPiAgIH5+fn5cXyxfXyxfPsKwDQo+DQo+IFRo
-YW5rcywNCg0KWWVzLCBpdCBzZWVtcyBteSBwYXRjaCBpcyBtZWFuaW5nbGVzcy4gQW5kIHRoYW5r
-cyBmb3IgYm90aCBvZiB5b3VyIHJldmlldyBhbmQgcmVwbHkuDQpIYXBweSBNb3VzZSBZZWFyIGFu
-ZCBJIGNhdGNoIGEgbWlja2V5IG1vdXNlOg0KDQogICAjIyMjIyMjIyMjIw0KICAjIyMjIyMjIyMj
-IyMjIyMgICAgICAgIF9fLS0tLS1fXyAgICAgICAgICAjIw0KIyMjIyMjIyMjIyMjIyMjIyMjICAg
-ICMjIyAgICAgICAgICBcICAgICAgICMjIyMNCiMjIyMjIyMjIyMjIyMjIyMjIyAjIyMjICMgICAg
-ICAgICAgICBcICAgICAjICMjDQogIyMjIyMjIyMjIyMjIyMjIyMjIyMgICAgICAgICAgICBcfn5c
-ICBcICAgLCMjIiwNCiAgIyMjIyMjIyMjIyMjIyMjIyMgICAgICAgL35+XCAgICBcIyMgXCAgXCIg
-ICAgIDoNCiAgICAjIyMjIyMjIyMjIyMjIyMgICAgICAgXCAgICBcICAgXCMjIiAvICAgICAgIDoN
-CiAgICAgICAgICAgICAgIyMjIyMjIyAgICAgICBcIyMjIFwgICAgLyAgICAgICAgIDoNCiAgICAg
-ICAgICAgICAgIyMjIyMjIyMjIyMjIyAgXCMjIy8gICAgICAgICAgICAgOg0KICAgICAgICAgICAg
-ICAgIyMjIyMjIyMgICAgICAgICAgICAgICAgICAgICAgIDoNCiAgICAgICAgICAgICAgICAjIyMj
-IyMgICBfXyAgICAgICAgICAgICAgICAgIDoNCiAgICAgICAgICAgICAgICAgIyMjIyAgIC9cICAg
-ICAgICAgICAgICAgICAgLw0KICAgICAgIyMjIyMjIyMjIyMjICMjIyAgICBcXF9fX19fX19fX19f
-X19fL3wNCiAgICAjIyMjIyMjIyMjIyMjIyMjIyMgICAgIFwgX18gICAgICAgICAvIC8NCiAgIyMj
-IyMjIyMjIyMjIyMjIyMjIyNcX18gICAgXCAgXC0tLVwsLyAvDQogICMjIyMjIyMjIyMjIyMjIyMj
-IyMgICAgXCAgICAgXF9fX19fLyAvDQogICAjIyMjIyMjIyMjIyMjIyMjIyAgICAgICBcX19fX19f
-X19fLw0KICAgICMjIyMjIyMjIyMjIyMjIw0KICAgICAgIyMjIyMjIyMjIyMNCg0KVGhhbmtzIGJv
-dGggYWdhaW4uDQo=
+On Thu, Jan 23, 2020 at 09:50:15AM +0100, Greg Kroah-Hartman wrote:
+> With the realization that having debugfs enabled on "production" systems is
+> generally not a good idea, debugfs is being disabled from more and more
+> platforms over time.  However, the functionality of dynamic debugging still is
+> needed at times, and since it relies on debugfs for its user api, having
+> debugfs disabled also forces dynamic debug to be disabled.
+> 
+> To get around this, move the "control" file for dynamic_debug to procfs IFF
+> debugfs is disabled.  This lets people turn on debugging as needed at runtime
+> for individual driverfs and subsystems.
+> 
+> Reported-by: many different companies
+> Cc: Jason Baron <jbaron@akamai.com>
+> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> ---
+> v4: tweaks to the .rst text thanks to Randy's review
+> v3: rename init function as it is now no longer just for debugfs, thanks
+>     to Jason for the review.
+>     Fix build warning for debugfs_initialized call.
+> v2: Fix up octal permissions and add procfs reference to the Kconfig
+>     entry, thanks to Will for the review.
+> 
+>  .../admin-guide/dynamic-debug-howto.rst       |  3 +++
+>  lib/Kconfig.debug                             |  7 ++++---
+>  lib/dynamic_debug.c                           | 21 ++++++++++++++-----
+>  3 files changed, 23 insertions(+), 8 deletions(-)
+
+I had a brief "oh crap" moment when I thought you were exposing both the
+procfs and debugfs interfaces at the same time, but thankfully that's not
+the case. Whilst it's a bit of a shame that it's come to this, the code
+looks pretty decent to me, so:
+
+Acked-by: Will Deacon <will@kernel.org>
+
+Thanks,
+
+Will
