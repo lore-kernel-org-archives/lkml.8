@@ -2,122 +2,110 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3DC1C3F68F
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 12:43:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1EA9C3F68F
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 12:44:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A836524655
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 12:43:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="M+c4fJVZ"
+	by mail.kernel.org (Postfix) with ESMTP id 7BB9A21835
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 12:44:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728709AbgAWMnK (ORCPT
+        id S1727307AbgAWMov (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 07:43:10 -0500
-Received: from pegase1.c-s.fr ([93.17.236.30]:51628 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726761AbgAWMnJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 07:43:09 -0500
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 483MPk32vtz9vB4D;
-        Thu, 23 Jan 2020 13:43:06 +0100 (CET)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=M+c4fJVZ; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id MKcSH7ytUAbU; Thu, 23 Jan 2020 13:43:06 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 483MPk1fHkz9vB4C;
-        Thu, 23 Jan 2020 13:43:06 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1579783386; bh=5u98EOtP2WKcTg/wP4g+30sC+JrkYBCOJLlRu95fhRc=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=M+c4fJVZVBnhS3LrJqZpaNaPKS4omcdwek4cx3zgeBhOVTUQxWipdFpZ3dDE3jsb7
-         0vzFt2dnk9ceZD4rJtPz5HH55nBprFw7Z9bgGytv+K2FL9rBFrU7xN6VvBJEmk9AqC
-         23kWu25GIwSDC3iQWt5qcsPySMvP0N41mgpbhqEk=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 5537F8B82B;
-        Thu, 23 Jan 2020 13:43:07 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id IWp1L7UGbtAy; Thu, 23 Jan 2020 13:43:07 +0100 (CET)
-Received: from [192.168.4.90] (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 871D98B826;
-        Thu, 23 Jan 2020 13:43:06 +0100 (CET)
-Subject: Re: [PATCH v2 1/6] fs/readdir: Fix filldir() and filldir64() use of
- user_access_begin()
-To:     Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org
-References: <12a4be679e43de1eca6e5e2173163f27e2f25236.1579715466.git.christophe.leroy@c-s.fr>
- <87muaeidyc.fsf@mpe.ellerman.id.au> <87k15iidrq.fsf@mpe.ellerman.id.au>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <f7b34529-0548-dc0d-c263-549acbb26ddc@c-s.fr>
-Date:   Thu, 23 Jan 2020 13:43:06 +0100
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        Thu, 23 Jan 2020 07:44:51 -0500
+Received: from mout.kundenserver.de ([212.227.126.133]:50131 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726590AbgAWMov (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jan 2020 07:44:51 -0500
+Received: from mail-qk1-f182.google.com ([209.85.222.182]) by
+ mrelayeu.kundenserver.de (mreue009 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1MZTyo-1j9XgV2pyo-00WZMJ; Thu, 23 Jan 2020 13:44:49 +0100
+Received: by mail-qk1-f182.google.com with SMTP id c16so3228162qko.6;
+        Thu, 23 Jan 2020 04:44:49 -0800 (PST)
+X-Gm-Message-State: APjAAAWSsaYAsKt+GzTkmZhCFhtn/77VIYL+qn/YIEiLTNeVFOhPjKpX
+        CAWB4mW1LmjVv5cSu/VkhHn+hc8I0ffOJH8Di0c=
+X-Google-Smtp-Source: APXvYqy+NPjU7L2Ush8SrU0PNW4EjDwGSpHPHcwq1X5SrasivaFHMX8DrhVGiPzkXicpyHiCBQUB2c/r5ISm9gultj4=
+X-Received: by 2002:a05:620a:cef:: with SMTP id c15mr15915962qkj.352.1579783488505;
+ Thu, 23 Jan 2020 04:44:48 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <87k15iidrq.fsf@mpe.ellerman.id.au>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+References: <20200123111836.7414-1-manivannan.sadhasivam@linaro.org>
+ <20200123111836.7414-6-manivannan.sadhasivam@linaro.org> <CAK8P3a2pZEdsAi6YQ5z3YD=zD1iZLu+WPirhwmxeZ33k7sjkeg@mail.gmail.com>
+ <20200123120050.GB8937@mani>
+In-Reply-To: <20200123120050.GB8937@mani>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Thu, 23 Jan 2020 13:44:32 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a1ACFdUdEywEQRAJ=HRYOp+0Y051ffNgAgqvSgjOEGyMA@mail.gmail.com>
+Message-ID: <CAK8P3a1ACFdUdEywEQRAJ=HRYOp+0Y051ffNgAgqvSgjOEGyMA@mail.gmail.com>
+Subject: Re: [PATCH 05/16] bus: mhi: core: Add support for ringing
+ channel/event ring doorbells
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc:     gregkh <gregkh@linuxfoundation.org>, smohanad@codeaurora.org,
+        Jeffrey Hugo <jhugo@codeaurora.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        hemantk@codeaurora.org,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:rQjjAaxqBLcTJuGIXiBzYUo71KJX2y4OhWCrnKx/6zbuUipRE4Z
+ BgVgRGladtFrnVXZDZpWaZDDL6SfubMNNYi7UghHc0kRWK/AwCuffjUdlcP8u+LgmO02mgT
+ SWDUXKYmoMLGx9W9B7k/9qWOpmm3/MM2M9AgWxdM5gJ9mYHbTPNYcs4f3ZxS/HXGY6hM+n0
+ slOTbxg9bbZXs5cXcE5VA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:hPSUIdGuHW4=:ZkvAzSqYdikgAL2XeamqfB
+ xdSeTKveI9OiObfo2W/MQ89ZMZZDbMSV2xvKkgHEA8cku/qK60hFUMqTM5/0O8QfqXcxYqMOk
+ BU1/BS+N0lmz+Zz6fuZLrxYN1BwYygYVs61l/yTIOl/GxKjUj0Hw62PlhGN2ZvHBnj8BUfT1J
+ wo87NgOg60H2CgzESXrFqHHfCkWSFO7W6okOMYlCMLHBN56tGPzCzHRQ2CP8qOTmyUlVTAXEz
+ mzHwlYt7pnJ1hC+d79me4trDdIwIz4OWtuWE/b70vwL4Fv6LrgyXHzlPOxW8t6MM71VYllzl9
+ j4xqPCWAdJ3JtFwg204prFW/Yb0qJI9gDiWyd1Xov+fTXcipEdVQXcBPg4HkBgUmc3TL81G59
+ OSd4J/iY22US0M8JmF1Rm7z6KAZ03XFofF9Wlb1BHcqf4doSupjw6SqFE95Y+Qv8st3nw++96
+ pEJI1IkO6kXA2BxRe9KdhZCaTOZkgk1JIJviJUYdsA65iUmbNRz8GVnVSIidh++cg9o43+6Vy
+ LklD2Ru0kc6sCA9fjF2PgvfM0KfiWhVyPuSVwxby1RWz+AYFHX5mEw7wcg/G/PfakdC8sMkRa
+ 5sdMEzm/qPwyIRS5DSGVFlRFeSovOjvu6eIbFG/zItGUBBV9CVesyUwRrkB2Db+NAr4BZhBwc
+ TYj3aU+m6tVgl63U5fUWvEFZU+ddJr2+pTOK5PPDKcS8a8CeW65l8s6EXyOhNrQwJU7hAhSXa
+ B+b4fnJMA4izuIQSdS793poSe4PeqF1Ed9+VLv7I0tTGcjOQ09Xoa0uSQ2zJ4VwDQb+2zTbZ0
+ 1rwfTkKqBzieGpeVSGLvvT/GLztKLeh4SCWJ9sZNd2R17HDE08=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Jan 23, 2020 at 1:01 PM Manivannan Sadhasivam
+<manivannan.sadhasivam@linaro.org> wrote:
+> On Thu, Jan 23, 2020 at 12:39:06PM +0100, Arnd Bergmann wrote:
+> > On Thu, Jan 23, 2020 at 12:19 PM Manivannan Sadhasivam
+> > <manivannan.sadhasivam@linaro.org> wrote:
+> >
+> > > +int __must_check mhi_read_reg(struct mhi_controller *mhi_cntrl,
+> > > +                             void __iomem *base, u32 offset, u32 *out)
+> > > +{
+> > > +       u32 tmp = readl_relaxed(base + offset);
+> > ....
+> > > +void mhi_write_reg(struct mhi_controller *mhi_cntrl, void __iomem *base,
+> > > +                  u32 offset, u32 val)
+> > > +{
+> > > +       writel_relaxed(val, base + offset);
+> >
+> > Please avoid using _relaxed accessors by default, and use the regular
+> > ones instead. There are a number of things that can go wrong with
+> > the relaxed version, so ideally each caller should have a comment
+> > explaining why this instance is safe without the barriers and why it
+> > matters to not have it.
+> >
+> > If there are performance critical callers of mhi_read_reg/mhi_write_reg,
+> > you could add mhi_read_reg_relaxed/mhi_write_reg_relaxed for those
+> > and apply the same rules there.
+> >
+> > Usually most mmio accesses are only needed for reconfiguration or
+> > other slow paths.
+> >
+>
+> Fair point. I'll defer to readl/writel APIs and I also need to add
+> le32_to_cpu/cpu_to_le32 to them.
 
+What do you need the byteswap for? All of the above already
+assume that the registers are little-endian.
 
-Le 23/01/2020 à 13:00, Michael Ellerman a écrit :
-> Michael Ellerman <mpe@ellerman.id.au> writes:
->> Hi Christophe,
->>
->> This patch is independent of the rest of the series AFAICS
-> 
-> And of course having hit send I immediately realise that's not true.
-
-Without this, book3s/32 fails booting. (And without patch 2, it even 
-hangs, looping forever in do_page_fault()).
-
-
-> 
->> So I'll take patches 2-6 via powerpc and assume this patch will go via
->> Linus or Al or elsewhere.
-> 
-> So I guess I'll wait and see what happens with patch 1.
-
-We could eventually opt out user_access_begin() for 
-CONFIG_PPC_BOOK3S_32, then you could take patches 3 and 6. That's enough 
-to have user_access_begin() and stuff for 8xx and RADIX.
-
-Patch 2 should be taken as well as a fix, and can be kept independant of 
-the series (once we have patch 1, we normally don't hit the problem 
-fixed by patch 2).
-
-Won't don't need patch 4 until we want user_access_begin() supported by 
-book3s/32
-
-
-However, I'm about to send out a v3 with a different approach. It 
-modifies the core part where user_access_begin() is returning an opaque 
-value used by user_access_end(). And it also tells user_access_begin() 
-whether it's a read or a write, so that we can limit unlocking to write 
-acccesses on book3s/32, and fine grain rights on book3s/64.
-
-Maybe you would prefer this change on top of first step, in which case 
-I'll be able to make a v4 rebasing all this on top of patch 3 and 6 of 
-v3 series. Tell me what you prefer.
-
-Christophe
+       Arnd
