@@ -2,111 +2,117 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59D15C33CAA
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 06:50:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3658C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 06:52:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E5E424676
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 06:50:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A96CD24655
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 06:52:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="hO6SQkaX"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="X48zT7VW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726026AbgAWGuW (ORCPT
+        id S1726083AbgAWGwX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 01:50:22 -0500
-Received: from mail25.static.mailgun.info ([104.130.122.25]:30870 "EHLO
-        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725785AbgAWGuV (ORCPT
+        Thu, 23 Jan 2020 01:52:23 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:35866 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725535AbgAWGwX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 01:50:21 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1579762221; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=bswcAiv/CdeJKAnXJ38wrotIhNQOHnYzuVA95WQWG8w=;
- b=hO6SQkaXFj3fFR3S1Sne/hbgE+1LZggtzRCWsKRHbeqNUCccoLtGwnDMmyAegoqReDj5mKzC
- EPAPtabhhw9CZKsH7QGDcZgODd8tb5McJ4n1/9aT/ip6l3L9KFxfshjjm0KSWkSIfkPEBLNJ
- EKSCtE+Q4HPDH64sk0uvAB+/wkU=
-X-Mailgun-Sending-Ip: 104.130.122.25
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e29422b.7feba64c59d0-smtp-out-n02;
- Thu, 23 Jan 2020 06:50:19 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 939F9C433A2; Thu, 23 Jan 2020 06:50:18 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: hongwus)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id A5249C43383;
-        Thu, 23 Jan 2020 06:50:16 +0000 (UTC)
+        Thu, 23 Jan 2020 01:52:23 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00N6iNau091086;
+        Thu, 23 Jan 2020 06:52:16 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ content-transfer-encoding : in-reply-to; s=corp-2019-08-05;
+ bh=NuRcXMlTm8Bb5dohmxmth9jGE9hSFEME+bJF931/IlY=;
+ b=X48zT7VWXjkmD8/T/ZcSh3QdpAlYNFaOBryEn4nUdJ9m447I9rpzp+bVvA48pqyH8tbu
+ XWyLwYF+6+xukcX0Jq98Lie60CHAyXIslNVItjdGxTyvqGdurUqrK3SEbSxCW1iblvRW
+ ECNFGDz/vbBOLnfWHxh3qJXYkE50laFe7+DC3w+6J0KjWwX4l6fen7WXvRFJrpqrQNum
+ TDiTl7oltyDh1j7bXx2equjI+Qj0cLgRVsV4UeBP3RggEUKqTpo4Epq9Pp5a/VcXZQ7R
+ dqJjd3X1Z7VRFm8YbS9L5FKPMJ3p5sGDEnlaFiqNoNbQpoDCTz4G+FTPZyv/nLVFPteG rg== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2120.oracle.com with ESMTP id 2xksyqg8nf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 23 Jan 2020 06:52:16 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00N6iI3l097074;
+        Thu, 23 Jan 2020 06:52:16 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3030.oracle.com with ESMTP id 2xpq0vs8rj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 23 Jan 2020 06:52:15 +0000
+Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 00N6qEhW020600;
+        Thu, 23 Jan 2020 06:52:14 GMT
+Received: from kadam (/129.205.23.165)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 22 Jan 2020 22:52:13 -0800
+Date:   Thu, 23 Jan 2020 09:52:05 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     "Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp" 
+        <Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp>
+Cc:     "'Greg Kroah-Hartman'" <gregkh@linuxfoundation.org>,
+        "'devel@driverdev.osuosl.org'" <devel@driverdev.osuosl.org>,
+        "'Valdis Kletnieks'" <valdis.kletnieks@vt.edu>,
+        "Motai.Hirotaka@aj.MitsubishiElectric.co.jp" 
+        <Motai.Hirotaka@aj.MitsubishiElectric.co.jp>,
+        "'linux-kernel@vger.kernel.org'" <linux-kernel@vger.kernel.org>,
+        "Mori.Takahiro@ab.MitsubishiElectric.co.jp" 
+        <Mori.Takahiro@ab.MitsubishiElectric.co.jp>,
+        "'linux-fsdevel@vger.kernel.org'" <linux-fsdevel@vger.kernel.org>
+Subject: Re: [PATCH] staging: exfat: remove fs_func struct.
+Message-ID: <20200123065205.GH1847@kadam>
+References: <20200117062046.20491-1-Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp>
+ <20200122085737.GA2511011@kroah.com>
+ <OSAPR01MB1569F24512678DEA1C175504900F0@OSAPR01MB1569.jpnprd01.prod.outlook.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Thu, 23 Jan 2020 14:50:16 +0800
-From:   hongwus@codeaurora.org
-To:     Can Guo <cang@codeaurora.org>
-Cc:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
-        rnayak@codeaurora.org, linux-scsi@vger.kernel.org,
-        kernel-team@android.com, saravanak@google.com, salyzyn@google.com,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        Pedro Sousa <pedrom.sousa@synopsys.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Stanley Chu <stanley.chu@mediatek.com>,
-        Venkat Gopalakrishnan <venkatg@codeaurora.org>,
-        Tomas Winkler <tomas.winkler@intel.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 5/8] scsi: ufs: Fix ufshcd_hold() caused scheduling
- while atomic
-In-Reply-To: <1579759946-5448-6-git-send-email-cang@codeaurora.org>
-References: <1579759946-5448-1-git-send-email-cang@codeaurora.org>
- <1579759946-5448-6-git-send-email-cang@codeaurora.org>
-Message-ID: <8b8347dbb9a32c71ba2e6992f30a974c@codeaurora.org>
-X-Sender: hongwus@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <OSAPR01MB1569F24512678DEA1C175504900F0@OSAPR01MB1569.jpnprd01.prod.outlook.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9508 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-2001230057
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9508 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-2001230057
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Can,
-
-On 2020-01-23 14:12, Can Guo wrote:
-> The async version of ufshcd_hold(async == true), which is only called
-> in queuecommand path as for now, is expected to work in atomic context,
-> thus it should not sleep or schedule out. When it runs into the 
-> condition
-> that clocks are ON but link is still in hibern8 state, it should bail 
-> out
-> without flushing the clock ungate work.
+On Thu, Jan 23, 2020 at 06:38:53AM +0000, Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp wrote:
+> Hello, Greg.
 > 
-> Signed-off-by: Can Guo <cang@codeaurora.org>
-> ---
->  drivers/scsi/ufs/ufshcd.c | 5 +++++
->  1 file changed, 5 insertions(+)
+> Thank you for the quick reply.
 > 
-> diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-> index 4dfd705..c316a07 100644
-> --- a/drivers/scsi/ufs/ufshcd.c
-> +++ b/drivers/scsi/ufs/ufshcd.c
-> @@ -1542,6 +1542,11 @@ int ufshcd_hold(struct ufs_hba *hba, bool async)
->  		 */
->  		if (ufshcd_can_hibern8_during_gating(hba) &&
->  		    ufshcd_is_link_hibern8(hba)) {
-> +			if (async) {
-> +				rc = -EAGAIN;
-> +				hba->clk_gating.active_reqs--;
-> +				break;
-> +			}
->  			spin_unlock_irqrestore(hba->host->host_lock, flags);
->  			flush_work(&hba->clk_gating.ungate_work);
->  			spin_lock_irqsave(hba->host->host_lock, flags);
+> > Also the patch does not apply to the linux-next tree at all, so I can't take it.
+> The patch I sent was based on the master branch of “https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/staging.git/”
+> and its tag was v5.5-rc6.
+> 
+> > Also the patch does not apply to the linux-next tree at all, so I can't take it.  Please rebase and resend.
+> I will send a new patch based on the latest master branch of “https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git”.
+> 
+> 
+> By the way, could you answer below questions for my sending patches in future?
+> 1. Which repository and branch should be based when creating a new patch?
+> 2. How do I inform you about a base on which I create a patch?
 
-It looks good to me.
+Always base it on staging-next or linux-next.
 
-Reviewed-by: Hongwu Su <hongwus@codeaurora.org>
+No need to inform us.  If it doesn't apply Greg will email you.
+
+regards,
+dan carpenter
+
