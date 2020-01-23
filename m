@@ -6,93 +6,89 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 863ABC33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 12:30:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5809BC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 12:31:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59BE024655
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 12:30:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E44F24655
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 12:31:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iPWd6aqZ"
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="XcDFF1F6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728799AbgAWMaJ (ORCPT
+        id S1728890AbgAWMbH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 07:30:09 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:40028 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728655AbgAWMaI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 07:30:08 -0500
-Received: by mail-wm1-f65.google.com with SMTP id t14so2334320wmi.5
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jan 2020 04:30:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=fGSddkn2oPOfmTp45og+40fbCbT5YOVg/hcLGMG+SRk=;
-        b=iPWd6aqZDSVrowqY+yXr1t9T8eaRJ1u9DG41qvU1O/8NZKaepvdruPPR1G72He/3ab
-         DgGnv0WNIMRDUFPC+37qhVZjcINw1xTizwvb6gP5948KHncNbjO03x2lN7Kyr27i9Pux
-         I63pzRi/28bAVU0gr1Aa1lXXrvT+KZH5r3zB7YYjqctolvbmW3nCsYXepFsDnwxloaMU
-         uzWlqF2sjgPrSFenojEg1eDKzz81bJYbYP6WWoDs0QtB+1ImRZOeUmVT1snmvSDlLq0Q
-         kyKoS6w4efa6VYEQKGe5MOuYkO8HEOe8VJL28Lj7v9eWiUjXMNkwqZ8oFEl54l/aGAPg
-         5n/w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=fGSddkn2oPOfmTp45og+40fbCbT5YOVg/hcLGMG+SRk=;
-        b=BO4cFy8N+k/ubo+ImybPPhPoEvBMHG95aPOUAh9b/ZcMUILe2/K8ImHa8CV6Rk8OPI
-         shouqGzJJBZtaBo80S6w+Ih8GMuI3lhR99ybHODO194PESYcXjgttCXi5Ho0jRsfjyQL
-         GIGgA67EH+wdOYeZOJ+m/mVSxXZHVig3WMQDq5aU42ASOIM222olBAosZ4TIkDMU3vAl
-         t6TTU5JNh5suMB1ftsaORIDUt2xocyflBALVq2tIzWGWn1woi3Uk3Felgfj7Dldqw/mw
-         FWEa1iUHV612ErBwqnKZMeQRsO1QyzLQ7oclx8ZwbGWB5PpY4VOO86FuyOAV5wpbpgDz
-         jSvA==
-X-Gm-Message-State: APjAAAUDMvGuCYYkvNKsCoH1NhyBZYodaqe3t2RnOcVFW7RqILWPvGCo
-        PWGg4txc75+A+W9vtjqhPCxW8wPI6Sug7Uqhcn+Jtw3aMhU=
-X-Google-Smtp-Source: APXvYqwRdDw6IKpVxqtsb6wHOmHsoYFzKFkd0ur/MlxkxDjV/8oc+nyjFNKke74ZHCyQ/IDGPGm8XXZQ+xfwl2i5HHk=
-X-Received: by 2002:a05:600c:248:: with SMTP id 8mr2273208wmj.1.1579782606500;
- Thu, 23 Jan 2020 04:30:06 -0800 (PST)
+        Thu, 23 Jan 2020 07:31:07 -0500
+Received: from bilbo.ozlabs.org ([203.11.71.1]:48401 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726260AbgAWMbG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jan 2020 07:31:06 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 483M7r0bhgz9sSH;
+        Thu, 23 Jan 2020 23:31:04 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
+        s=201909; t=1579782664;
+        bh=vvHlt/x8yUKYf+nz2OV13dtkaSiK0JSgmAVt6B2ldwU=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=XcDFF1F6y3fTk8tq1K8XQWrclXCC3LBJX5o7RCzFiNdgBW2TQ0S3QmB9AqGLHxrk9
+         2Mjirn0e1OnxQ5oedT0kG1SYJZFPYdacZ+mU4aUSTRZ7ULER+33hVi1FDJtisTetC0
+         s8ix3OdHy+NqsDBBHVmqpZR+YphcDFOhfMy5xUR7Tn2x0cjHgrWbJicQyEKzSYKM68
+         IW6GqA06/2gL7IrO6MWwCd/B9NVeCAWgmJnZfOZaEm1HK+sqo1LBQZQY8XNNGL8dky
+         TVM9IaaQC1iIxowbHFjZdKrpwL297gUB5DF+isxN3rcEMAIkgADPk4M3Q1ZqGGnWED
+         TvCrztQ+nOF/A==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Christophe Leroy <christophe.leroy@c-s.fr>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [PATCH v2 6/6] powerpc: Implement user_access_begin and friends
+In-Reply-To: <87iml2idi9.fsf@mpe.ellerman.id.au>
+References: <12a4be679e43de1eca6e5e2173163f27e2f25236.1579715466.git.christophe.leroy@c-s.fr> <2a20d19776faba4d85dbe51ae00a5f6ac5ac0969.1579715466.git.christophe.leroy@c-s.fr> <87iml2idi9.fsf@mpe.ellerman.id.au>
+Date:   Thu, 23 Jan 2020 23:31:03 +1100
+Message-ID: <87ftg6icc8.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-References: <20200114141647.109347-1-ardb@kernel.org> <20200114141647.109347-3-ardb@kernel.org>
- <ada03416b1b362fa255feb45257414655d8ab023.camel@linux.intel.com>
-In-Reply-To: <ada03416b1b362fa255feb45257414655d8ab023.camel@linux.intel.com>
-From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date:   Thu, 23 Jan 2020 13:29:55 +0100
-Message-ID: <CAKv+Gu-9KvzLEcNQnRfsOkU=5oc1otY_NS15fR5Oi4Z4UVvurw@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] tpm: tis: add support for MMIO TPM on SynQuacer
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     Ard Biesheuvel <ardb@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Masahisa Kojima <masahisa.kojima@linaro.org>,
-        Devicetree List <devicetree@vger.kernel.org>,
-        linux-integrity <linux-integrity@vger.kernel.org>,
-        =?UTF-8?Q?Peter_H=C3=BCwe?= <peterhuewe@gmx.de>,
-        Jason Gunthorpe <jgg@ziepe.ca>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 23 Jan 2020 at 13:27, Jarkko Sakkinen
-<jarkko.sakkinen@linux.intel.com> wrote:
+Michael Ellerman <mpe@ellerman.id.au> writes:
+> Christophe Leroy <christophe.leroy@c-s.fr> writes:
+>> Today, when a function like strncpy_from_user() is called,
+>> the userspace access protection is de-activated and re-activated
+>> for every word read.
+>>
+>> By implementing user_access_begin and friends, the protection
+>> is de-activated at the beginning of the copy and re-activated at the
+>> end.
+>>
+>> Implement user_access_begin(), user_access_end() and
+>> unsafe_get_user(), unsafe_put_user() and unsafe_copy_to_user()
+>>
+>> For the time being, we keep user_access_save() and
+>> user_access_restore() as nops.
 >
-> On Tue, 2020-01-14 at 15:16 +0100, Ard Biesheuvel wrote:
-> > When fitted, the SynQuacer platform exposes its SPI TPM via a MMIO
-> > window that is backed by the SPI command sequencer in the SPI bus
-> > controller. This arrangement has the limitation that only byte size
-> > accesses are supported, and so we'll need to provide a separate set
-> > of read and write accessors that take this into account.
+> That means we will run with user access enabled in a few more places, but
+> it's only used sparingly AFAICS:
 >
-> What is SynQuacer platform?
+>   kernel/trace/trace_branch.c:    unsigned long flags = user_access_save();
+>   lib/ubsan.c:    unsigned long flags = user_access_save();
+>   lib/ubsan.c:    unsigned long ua_flags = user_access_save();
+>   mm/kasan/common.c:      unsigned long flags = user_access_save();
 >
+> And we don't have objtool checking that user access enablement isn't
+> leaking in the first place, so I guess it's OK for us not to implement
+> these to begin with?
 
-It is an arm64 SoC manufactured by Socionext.
+It looks like we can implement them on on all three KUAP
+implementations.
 
-> I'm also missing a resolution why tpm_tis.c is extended to handle both
-> and not add tpm_tis_something.c instead. It does not follow the pattern
-> we have in place (e.g. look up tpm_tis_spi.c).
->
+For radix and 8xx we just return/set the relevant SPR.
 
-We could easily do that instead, if preferred. It's just that it would
-duplicate a bit of code.
+For book3s/32/kup.h I think we'd just need to add a KUAP_CURRENT case to
+allow_user_access()?
+
+cheers
