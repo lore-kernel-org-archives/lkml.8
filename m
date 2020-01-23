@@ -2,122 +2,104 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56DDAC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 17:28:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C5A6C3F68F
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 17:30:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2FB8421569
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 17:28:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4192C21569
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 17:30:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YySNIKSZ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ho+cihvv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728853AbgAWR2b (ORCPT
+        id S1728904AbgAWRaI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 12:28:31 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:21331 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727590AbgAWR2b (ORCPT
+        Thu, 23 Jan 2020 12:30:08 -0500
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:44838 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727296AbgAWRaI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 12:28:31 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579800510;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=uOo86XYx2XlckK7VO6n+fr3sTCswBT7TBWfyx1cJOOc=;
-        b=YySNIKSZuBkRGdSaBl99+UpdJzCz87HiA7jMNnhllosix6PS+HdLc2/6GX7iwmun9WBCVp
-        NeIa4SUTZAYdJnCa+8FU3cr3Y5sxz0gh+I20dNXnZ4D1icZ5wJyAn4Tc9+HSlVqxgqE7q+
-        kQQUkk5pHIjmS11KWaJL8TokmDYkY08=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-276-e2SK6Eb_PMGXILK14ERXWA-1; Thu, 23 Jan 2020 12:28:21 -0500
-X-MC-Unique: e2SK6Eb_PMGXILK14ERXWA-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D46061137858;
-        Thu, 23 Jan 2020 17:28:19 +0000 (UTC)
-Received: from localhost (unknown [10.18.25.174])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 2C8058CCEC;
-        Thu, 23 Jan 2020 17:28:17 +0000 (UTC)
-Date:   Thu, 23 Jan 2020 12:28:16 -0500
-From:   Mike Snitzer <snitzer@redhat.com>
-To:     Stefan Bader <stefan.bader@canonical.com>
-Cc:     Jens Axboe <axboe@kernel.dk>, linux-kernel@vger.kernel.org,
-        linux-block@vger.kernel.org, dm-devel@redhat.com,
-        Tyler Hicks <tyler.hicks@canonical.com>,
-        Alasdair Kergon <agk@redhat.com>
-Subject: Re: [PATCH 1/1] blk/core: Gracefully handle unset make_request_fn
-Message-ID: <20200123172816.GA31063@redhat.com>
-References: <20200123091713.12623-1-stefan.bader@canonical.com>
- <20200123091713.12623-2-stefan.bader@canonical.com>
- <20200123103541.GA28102@redhat.com>
+        Thu, 23 Jan 2020 12:30:08 -0500
+Received: by mail-lf1-f66.google.com with SMTP id v201so2897786lfa.11;
+        Thu, 23 Jan 2020 09:30:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=biNgWadq5TqNu1DhgNYk+76jxCQnnKZxQCgzQcvk4WE=;
+        b=ho+cihvvm5qGd6cjf/bQfza0S/NPQnWeisIquDz2V5IYXaByfiEr1ppYLo1ABhYrKQ
+         Dtk61QxO8gdmUKuN6MJ1LrK5WcRp1pRm/iLklK7H+NwzlUlU/QbQqZvIFaR8Wxrds9/A
+         xatkgomlGvtSwJj+L0JBKoFG1CyQXdQw75N/SkdYw0CAjwPZzpHpAD9ELNNP4kZxl/I7
+         844zNpQidde5KD9VQaKM3UvJ7RbKxw1f0ootpKo8PYtnkALnraiH3aWrV+y3f7Nx7sh3
+         pwsU67k1CgOFiMNaTiAsPDoBx0GBKSGMQbU/jjwPQjwFPyHglrJnZUyx6RizfuKR3WO3
+         WoHA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=biNgWadq5TqNu1DhgNYk+76jxCQnnKZxQCgzQcvk4WE=;
+        b=YJ/HvN9Qj19fGHKFsHAYHKeX6bIDvoluJpWkVMgNyBjLVxh1O6jNkLuczcPOwgOt57
+         2vCI2ZGhOxGnVXziiwZdCQCCROftISfx915RrEVQD2wTa/KqohxbURin4kvOJEywWg0H
+         kvmJ3qaZ+++GqQ/qTNP1AYP0W73o/LfpjPayMpapZW+8OkfrCr/gvMTeMgG9nASI5W5y
+         7WoJbVLAZz/tVmYUMgL/lER00eGgQO48f9MWVPzi4G/rgA+vCrddhOwIgfCT9Nnuojku
+         W5vejLG+030NnMLnaqGTmnXqgeaOxGWdI8uhSvlaIcoX3WJhivvCVx0THxDNK5C2fdQr
+         rsIA==
+X-Gm-Message-State: APjAAAXedRwK5WMT2Vm1qYNbmn/ei4NNiQUJ+gYXfuK94gTF921th2bW
+        n9a/pL69HFhiN5Qpmgor5rA=
+X-Google-Smtp-Source: APXvYqyjvoR3stvPeCsW0baWBvB7O0BZozH/ovWybts0IXpKTrVH9LTL/4U8blSxm34xEpLH1MoepA==
+X-Received: by 2002:ac2:5f59:: with SMTP id 25mr5144118lfz.193.1579800605911;
+        Thu, 23 Jan 2020 09:30:05 -0800 (PST)
+Received: from localhost.localdomain (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
+        by smtp.gmail.com with ESMTPSA id l8sm1609332ljh.65.2020.01.23.09.30.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 23 Jan 2020 09:30:05 -0800 (PST)
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>
+Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v1] PM / devfreq: Replace strncpy with strscpy
+Date:   Thu, 23 Jan 2020 20:28:08 +0300
+Message-Id: <20200123172808.5316-1-digetx@gmail.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200123103541.GA28102@redhat.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 23 2020 at  5:35am -0500,
-Mike Snitzer <snitzer@redhat.com> wrote:
+GCC produces this warning when kernel compiled using `make W=1`:
 
-> On Thu, Jan 23 2020 at  4:17am -0500,
-> Stefan Bader <stefan.bader@canonical.com> wrote:
-> 
-> > When device-mapper adapted for multi-queue functionality, they
-> > also re-organized the way the make-request function was set.
-> > Before, this happened when the device-mapper logical device was
-> > created. Now it is done once the mapping table gets loaded the
-> > first time (this also decides whether the block device is request
-> > or bio based).
-> > 
-> > However in generic_make_request(), the request function gets used
-> > without further checks and this happens if one tries to mount such
-> > a partially set up device.
-> > 
-> > This can easily be reproduced with the following steps:
-> >  - dmsetup create -n test
-> >  - mount /dev/dm-<#> /mnt
-> > 
-> > This maybe is something which also should be fixed up in device-
-> > mapper.
-> 
-> I'll look closer at other options.
-> 
-> > But given there is already a check for an unset queue
-> > pointer and potentially there could be other drivers which do or
-> > might do the same, it sounds like a good move to add another check
-> > to generic_make_request_checks() and to bail out if the request
-> > function has not been set, yet.
-> > 
-> > BugLink: https://bugs.launchpad.net/bugs/1860231
-> 
-> >From that bug;
-> "The currently proposed fix introduces no chance of stability
-> regressions. There is a chance of a very small performance regression
-> since an additional pointer comparison is performed on each block layer
-> request but this is unlikely to be noticeable."
-> 
-> This captures my immediate concern: slowing down everyone for this DM
-> edge-case isn't desirable.
+  warning: ‘strncpy’ specified bound 16 equals destination size [-Wstringop-truncation]
+  772 |  strncpy(devfreq->governor_name, governor_name, DEVFREQ_NAME_LEN);
 
-SO I had a look and there isn't anything easier than adding the proposed
-NULL check in generic_make_request_checks().  Given the many
-conditionals in that  function.. what's one more? ;)
+The strncpy doesn't take care of NULL-termination of the destination
+buffer, while the strscpy does.
 
-I looked at marking the queue frozen to prevent IO via
-blk_queue_enter()'s existing cheeck -- but that quickly felt like an
-abuse, especially in that there isn't a queue unfreeze for bio-based.
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+---
+ drivers/devfreq/devfreq.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Jens, I'll defer to you to judge this patch further.  If you're OK with
-it: cool.  If not, I'm open to suggestions for how to proceed.  
+diff --git a/drivers/devfreq/devfreq.c b/drivers/devfreq/devfreq.c
+index cceee8bc3c2f..f24d226f65c6 100644
+--- a/drivers/devfreq/devfreq.c
++++ b/drivers/devfreq/devfreq.c
+@@ -769,7 +769,7 @@ struct devfreq *devfreq_add_device(struct device *dev,
+ 	devfreq->dev.release = devfreq_dev_release;
+ 	INIT_LIST_HEAD(&devfreq->node);
+ 	devfreq->profile = profile;
+-	strncpy(devfreq->governor_name, governor_name, DEVFREQ_NAME_LEN);
++	strscpy(devfreq->governor_name, governor_name, DEVFREQ_NAME_LEN);
+ 	devfreq->previous_freq = profile->initial_freq;
+ 	devfreq->last_status.current_frequency = profile->initial_freq;
+ 	devfreq->data = data;
+-- 
+2.24.0
 
