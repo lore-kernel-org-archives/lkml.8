@@ -2,131 +2,127 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18419C33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 18:54:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 468A4C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 18:56:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF0FC2467B
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 18:54:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F76A21569
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 18:56:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579805774;
+	bh=ntVLWfAQ4HN6TI0EcJB4auZ7w0f1L4NqXYySckaiR44=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=WGEp2I+wQ2vH+V9VxdBbiIkk+En0orblaXxlHJvvRsmpQBZEyuWrU+PrQUIf/Qbvz
+	 btS4whZ+xiAIg4PQ3sWmcSmV7ElpJkKFtuSuuKIF+MvvaxapXgxoVBFG/0CFWDqZWv
+	 Brwlqw5/PMfbDSgpKXZZc78joBkljUrvws+kOzio=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728901AbgAWSyR convert rfc822-to-8bit (ORCPT
+        id S1728904AbgAWS4N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 13:54:17 -0500
-Received: from mga05.intel.com ([192.55.52.43]:59071 "EHLO mga05.intel.com"
+        Thu, 23 Jan 2020 13:56:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55104 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727590AbgAWSyQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 13:54:16 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Jan 2020 10:54:16 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,354,1574150400"; 
-   d="scan'208";a="221697238"
-Received: from orsmsx103.amr.corp.intel.com ([10.22.225.130])
-  by fmsmga007.fm.intel.com with ESMTP; 23 Jan 2020 10:54:15 -0800
-Received: from orsmsx102.amr.corp.intel.com ([169.254.3.100]) by
- ORSMSX103.amr.corp.intel.com ([169.254.5.147]) with mapi id 14.03.0439.000;
- Thu, 23 Jan 2020 10:54:15 -0800
-From:   "Yang, Fei" <fei.yang@intel.com>
-To:     Felipe Balbi <balbi@kernel.org>,
-        John Stultz <john.stultz@linaro.org>,
-        lkml <linux-kernel@vger.kernel.org>
-CC:     Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>,
-        Thinh Nguyen <thinhn@synopsys.com>,
-        Tejas Joglekar <tejas.joglekar@synopsys.com>,
-        "Andrzej Pietrasiewicz" <andrzej.p@collabora.com>,
-        Jack Pham <jackp@codeaurora.org>, Todd Kjos <tkjos@google.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        "Linux USB List" <linux-usb@vger.kernel.org>,
-        stable <stable@vger.kernel.org>,
-        "John Stultz" <john.stultz@linaro.org>
-Subject: RE: [RFC][PATCH 1/2] usb: dwc3: gadget: Check for IOC/LST bit in
- both event->status and TRB->ctrl fields
-Thread-Topic: [RFC][PATCH 1/2] usb: dwc3: gadget: Check for IOC/LST bit in
- both event->status and TRB->ctrl fields
-Thread-Index: AQHV0XMMDal2ka/y0kSxMT/Pi5VKVaf4X3SAgAA3SWA=
-Date:   Thu, 23 Jan 2020 18:54:15 +0000
-Message-ID: <02E7334B1630744CBDC55DA8586225837F9EE439@ORSMSX102.amr.corp.intel.com>
-References: <20200122222645.38805-1-john.stultz@linaro.org>
- <20200122222645.38805-2-john.stultz@linaro.org> <87tv4m4ov2.fsf@kernel.org>
-In-Reply-To: <87tv4m4ov2.fsf@kernel.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-originating-ip: [10.22.254.138]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        id S1727022AbgAWS4N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jan 2020 13:56:13 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 93C9922464;
+        Thu, 23 Jan 2020 18:56:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579805772;
+        bh=ntVLWfAQ4HN6TI0EcJB4auZ7w0f1L4NqXYySckaiR44=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=cxpNMLpN+juRbN63ywA8YrYyxbcr5NlorR9Fc0aaadi3UqBC4eT0sF0OE5ZeYrBQi
+         cDV8M/YXdywC01dAOolO2rFCg7Dhr9k8l2PFq16zFyo+kd9BuTmW0QJE9DLIN3zThk
+         6YYsC6IONp+Qwc5p2ijMwlXR6j477W16aMKHAOfE=
+Date:   Thu, 23 Jan 2020 19:56:09 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc:     Clemens Ladisch <clemens@ladisch.de>,
+        Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] char: hpet: Use flexible-array member
+Message-ID: <20200123185609.GA2075008@kroah.com>
+References: <20200120235326.GA29231@embeddedor.com>
+ <20200123182545.GA1954152@kroah.com>
+ <7bf963ff-94b1-7efe-747e-4153081d1947@embeddedor.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7bf963ff-94b1-7efe-747e-4153081d1947@embeddedor.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->> The present code in dwc3_gadget_ep_reclaim_completed_trb() will check 
->> for IOC/LST bit in the event->status and returns if IOC/LST bit is 
->> set. This logic doesn't work if multiple TRBs are queued per request 
->> and the IOC/LST bit is set on the last TRB of that request.
->> Consider an example where a queued request has multiple queued TRBs 
->> and IOC/LST bit is set only for the last TRB. In this case, the Core 
->> generates XferComplete/XferInProgress events only for the last TRB 
->> (since IOC/LST are set only for the last TRB). As per the logic in
->> dwc3_gadget_ep_reclaim_completed_trb() event->status is checked for 
->> IOC/LST bit and returns on the first TRB. This makes the remaining 
->> TRBs left unhandled.
->> To aviod this, changed the code to check for IOC/LST bits in both
->     avoid
->
->> event->status & TRB->ctrl. This patch does the same.
->
-> We don't need to check both. It's very likely that checking the TRB is enough.
->
->> At a practical level, this patch resolves USB transfer stalls seen 
->> with adb on dwc3 based HiKey960 after functionfs gadget added 
->> scatter-gather support around v4.20.
->
-> Right, I remember asking for tracepoint data showing this problem happening. It's the best way to figure out what's really going on.
->
-> Before we accept these two patches, could you collect dwc3 tracepoint data and share here?
+On Thu, Jan 23, 2020 at 12:46:42PM -0600, Gustavo A. R. Silva wrote:
+> 
+> 
+> On 1/23/20 12:25, Greg Kroah-Hartman wrote:
+> > On Mon, Jan 20, 2020 at 05:53:26PM -0600, Gustavo A. R. Silva wrote:
+> >> Old code in the kernel uses 1-byte and 0-byte arrays to indicate the
+> >> presence of a "variable length array":
+> >>
+> >> struct something {
+> >>     int length;
+> >>     u8 data[1];
+> >> };
+> >>
+> >> struct something *instance;
+> >>
+> >> instance = kmalloc(sizeof(*instance) + size, GFP_KERNEL);
+> >> instance->length = size;
+> >> memcpy(instance->data, source, size);
+> >>
+> >> There is also 0-byte arrays. Both cases pose confusion for things like
+> >> sizeof(), CONFIG_FORTIFY_SOURCE, etc.[1] Instead, the preferred mechanism
+> >> to declare variable-length types such as the one above is a flexible array
+> >> member[2] which need to be the last member of a structure and empty-sized:
+> >>
+> >> struct something {
+> >>         int stuff;
+> >>         u8 data[];
+> >> };
+> >>
+> >> Also, by making use of the mechanism above, we will get a compiler warning
+> >> in case the flexible array does not occur last in the structure, which
+> >> will help us prevent some kind of undefined behavior bugs from being
+> >> unadvertenly introduced[3] to the codebase from now on.
+> >>
+> >> [1] https://github.com/KSPP/linux/issues/21
+> >> [2] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+> >> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+> >>
+> >> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+> >> ---
+> >>  drivers/char/hpet.c | 2 +-
+> >>  1 file changed, 1 insertion(+), 1 deletion(-)
+> >>
+> >> diff --git a/drivers/char/hpet.c b/drivers/char/hpet.c
+> >> index 9ac6671bb514..aed2c45f7968 100644
+> >> --- a/drivers/char/hpet.c
+> >> +++ b/drivers/char/hpet.c
+> >> @@ -110,7 +110,7 @@ struct hpets {
+> >>  	unsigned long hp_delta;
+> >>  	unsigned int hp_ntimer;
+> >>  	unsigned int hp_which;
+> >> -	struct hpet_dev hp_dev[1];
+> >> +	struct hpet_dev hp_dev[];
+> > 
+> > Are you sure the allocation size is the same again?  Much like the
+> > n_hdlc patch was, I think you need to adjust the variable size here.
+> > Maybe, it's a bit of a pain to figure out at a quick glance, I just want
+> > to make sure you at least do look at that :)
+> > 
+> 
+> Yep. The allocation thing was already handled almost a year ago by the
+> following patch, and it didn't require to increase the size at that time:
+> 
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=401c9bd10beef4b030eb9e34d16b5341dc6c683b
 
-I should have replied to this one. Sorry for the confusion on the other thread.
-I have sent tracepoints long time ago for this problem, but the tracepoints did help much on debugging the issue, so I'm not going to send again.
+Great, thanks for verifying, I'll go queue this up now.
 
-But the problem is really obvious though. In function dwc3_gadget_ep_reclaim_trb_sg(), the for_each_sg loop doesn't get a chance to iterate through all TRBs in the sg list, because this function only gets called when the last TRB in the list is completed (because of setting IOC), so at this moment event->status has IOC bit set. The consequence is that, when the for_each_sg loop trying to reclaim the first TRB in the sg list, the call dwc3_gadget_ep_reclaim_completed_trb() returns 1 (if (event-status & DEPEVT_STATUS_IOC) return 1;), thus the for loop is terminated before the rest of the TRBs are reclaimed.
-
-static int dwc3_gadget_ep_reclaim_trb_sg(struct dwc3_ep *dep,
-                struct dwc3_request *req, const struct dwc3_event_depevt *event,
-                int status)
-{
-        struct dwc3_trb *trb = &dep->trb_pool[dep->trb_dequeue];
-        struct scatterlist *sg = req->sg;
-        struct scatterlist *s;
-        unsigned int pending = req->num_pending_sgs;
-        unsigned int i;
-        int ret = 0;
-
-        for_each_sg(sg, s, pending, i) {
-                trb = &dep->trb_pool[dep->trb_dequeue];
-
-                if (trb->ctrl & DWC3_TRB_CTRL_HWO)
-                        break;
-
-                req->sg = sg_next(s);
-                req->num_pending_sgs--;
-
-                ret = dwc3_gadget_ep_reclaim_completed_trb(dep, req,
-                                trb, event, status, true);
-                if (ret)
-                        break;
-        }
-
-        return ret;
-}
- 
+greg k-h
