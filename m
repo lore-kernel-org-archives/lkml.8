@@ -4,35 +4,35 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EE71C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 14:58:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9D6BC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 14:58:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3FA5321835
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 14:58:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82EE621835
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 14:58:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729365AbgAWO6t (ORCPT
+        id S1729397AbgAWO6v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 09:58:49 -0500
-Received: from hostingweb31-40.netsons.net ([89.40.174.40]:43818 "EHLO
+        Thu, 23 Jan 2020 09:58:51 -0500
+Received: from hostingweb31-40.netsons.net ([89.40.174.40]:44901 "EHLO
         hostingweb31-40.netsons.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729019AbgAWO6L (ORCPT
+        by vger.kernel.org with ESMTP id S1729108AbgAWO6L (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 23 Jan 2020 09:58:11 -0500
 Received: from [109.168.11.45] (port=47594 helo=pc-ceresoli.dev.aim)
         by hostingweb31.netsons.net with esmtpa (Exim 4.92)
         (envelope-from <luca@lucaceresoli.net>)
-        id 1iudvs-0005F5-GT; Thu, 23 Jan 2020 15:58:08 +0100
+        id 1iudvt-0005F5-8T; Thu, 23 Jan 2020 15:58:09 +0100
 From:   Luca Ceresoli <luca@lucaceresoli.net>
 To:     linux-i2c@vger.kernel.org, linux-doc@vger.kernel.org
 Cc:     Luca Ceresoli <luca@lucaceresoli.net>,
         Wolfram Sang <wsa@the-dreams.de>,
         Jean Delvare <jdelvare@suse.de>, Peter Rosin <peda@axentia.se>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v2 19/28] docs: i2c: smbus-protocol: improve I2C Block transactions description
-Date:   Thu, 23 Jan 2020 15:56:17 +0100
-Message-Id: <20200123145626.8102-6-luca@lucaceresoli.net>
+Subject: [PATCH v2 22/28] docs: i2c: instantiating-devices: use monospace for sysfs attributes
+Date:   Thu, 23 Jan 2020 15:56:20 +0100
+Message-Id: <20200123145626.8102-9-luca@lucaceresoli.net>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200123145626.8102-1-luca@lucaceresoli.net>
 References: <20200123135103.20540-1-luca@lucaceresoli.net>
@@ -54,33 +54,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Clarify from the beginning what these transactions are, and specifically
-how they differ from the SMBus counterparts, i.e. the lack of a Count byte.
+Use a monospace (literal) formatting for better readability of sysfs
+attributes.
 
 Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
 Reviewed-by: Jean Delvare <jdelvare@suse.de>
----
- Documentation/i2c/smbus-protocol.rst | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/Documentation/i2c/smbus-protocol.rst b/Documentation/i2c/smbus-protocol.rst
-index 7350e4b2c2fa..0edaf6069ac1 100644
---- a/Documentation/i2c/smbus-protocol.rst
-+++ b/Documentation/i2c/smbus-protocol.rst
-@@ -282,9 +282,10 @@ This is implemented the following way in the Linux kernel:
- I2C Block Transactions
- ======================
+---
+
+Changes in v2:
+ - reword commit message to not mention filenames
+---
+ Documentation/i2c/instantiating-devices.rst | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
+
+diff --git a/Documentation/i2c/instantiating-devices.rst b/Documentation/i2c/instantiating-devices.rst
+index 665bf00792ba..e558e0a77e0c 100644
+--- a/Documentation/i2c/instantiating-devices.rst
++++ b/Documentation/i2c/instantiating-devices.rst
+@@ -225,15 +225,15 @@ In general, the kernel should know which I2C devices are connected and
+ what addresses they live at. However, in certain cases, it does not, so a
+ sysfs interface was added to let the user provide the information. This
+ interface is made of 2 attribute files which are created in every I2C bus
+-directory: new_device and delete_device. Both files are write only and you
+-must write the right parameters to them in order to properly instantiate,
+-respectively delete, an I2C device.
++directory: ``new_device`` and ``delete_device``. Both files are write
++only and you must write the right parameters to them in order to properly
++instantiate, respectively delete, an I2C device.
  
--The following I2C block transactions are supported by the
--SMBus layer and are described here for completeness.
--They are *NOT* defined by the SMBus specification.
-+The following I2C block transactions are similar to the SMBus Block Read
-+and Write operations, except these do not have a Count byte. They are
-+supported by the SMBus layer and are described here for completeness, but
-+they are *NOT* defined by the SMBus specification.
+-File new_device takes 2 parameters: the name of the I2C device (a string)
+-and the address of the I2C device (a number, typically expressed in
+-hexadecimal starting with 0x, but can also be expressed in decimal.)
++File ``new_device`` takes 2 parameters: the name of the I2C device (a
++string) and the address of the I2C device (a number, typically expressed
++in hexadecimal starting with 0x, but can also be expressed in decimal.)
  
- I2C block transactions do not limit the number of bytes transferred
- but the SMBus layer places a limit of 32 bytes.
+-File delete_device takes a single parameter: the address of the I2C
++File ``delete_device`` takes a single parameter: the address of the I2C
+ device. As no two devices can live at the same address on a given I2C
+ segment, the address is sufficient to uniquely identify the device to be
+ deleted.
 -- 
 2.25.0
 
