@@ -2,176 +2,121 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79826C3F68F
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 18:00:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79EDFC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 18:02:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 527B420718
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 18:00:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AyFF7cdv"
+	by mail.kernel.org (Postfix) with ESMTP id 4F09624655
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 18:02:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579802576;
+	bh=QlTBNP6TZNzi2X5VtLqQmjrH8iIvqT1D0WMVKVLJ0Q4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=iOHCTfsBBIxfXe5q7jCZ2YegepuxT+Xq40vGyxTWljtfLnAk7l3VG+tAdAuzaY+oR
+	 XD1pW5VlewjdxfLN02CiwAPV3mxhPjhstqT5kwX4KEVu+wEujiUNWefQCgu7feDeBo
+	 oZmvhLNDGJRQiL/Wk3jMILAsaQwyemzP05FO0rqU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729066AbgAWSAw (ORCPT
+        id S1728928AbgAWSCz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 13:00:52 -0500
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:44406 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727278AbgAWSAw (ORCPT
+        Thu, 23 Jan 2020 13:02:55 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:38151 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728665AbgAWSCy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 13:00:52 -0500
-Received: by mail-qk1-f193.google.com with SMTP id v195so4280050qkb.11;
-        Thu, 23 Jan 2020 10:00:51 -0800 (PST)
+        Thu, 23 Jan 2020 13:02:54 -0500
+Received: by mail-lj1-f195.google.com with SMTP id w1so4601924ljh.5
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jan 2020 10:02:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=linux-foundation.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=TjajhBuUHgmsUmSOzJHuUV6Zb4Qt2oP329J3QSODkhs=;
-        b=AyFF7cdv99soMyTaRXnu+Z5Db/pAg2xMOJRoJ+y/wzJosfTzilFHht/1w6KWm055qT
-         LBDkFuCMDYC5+zm3ixghCDggrQogGF5D1O4YMLpHNH1/h39nA2v25cPesevzGFwqqnKv
-         bu1SA7hpordVgK/c/xYIr6DQ21oebGyBqQBqnCZ+xr+H/AZHtg4KKiAzgubIUFGESl8f
-         Ok6IGfoTFV+0jwTm5NKJrYb3APGEha2ctps9d0CiEB7dJbXK5Rl4/qwaN/KfuJJesAHO
-         +JDmLXLHFCjA4FCFh0FIltvtPgsPP+VUoPzXd84hQk6nK1ksXlGOSbXSMu5Kxio5Mi2O
-         fpTw==
+        bh=eDGhNOsnfRqZ1FkvFFgvc9AjFE5Ddur1Pg9CKAfnAxU=;
+        b=R8rUnlTAVJ23suSGKIAk3x/NWMyIV1571Zyk795MWw02ibpxnwpaVKBgIpemglXFyP
+         UyAn/M4pPrtxudOzb1Yimjimwf7PBh+D79Avp2N7YtdpAxKItUKS5GifZRNjNI8G6ljo
+         pty5cnSbJVgpFW0/1axLB6FvRc4gFKR+F0mc8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=TjajhBuUHgmsUmSOzJHuUV6Zb4Qt2oP329J3QSODkhs=;
-        b=Ll/aIywT5t01dipImFSrdSepHlQblt8UvsVRta68PBKp5Z8VWVznkmP4wkcKXOkRI4
-         zrRN9J+cPJgCCM+EBOnIDthgduCCYrWHh+HEclVWpsSwxYl7sV3UrerH0HaasZqJBpaD
-         3U/fL4MrfknhogC5jEoUdmCJkEvtmUl7vpgKyUkFY+hK4R+3Yy15/A50Lul4eSgpMYok
-         qBn5Q/lXEFVNLNWQFsx1HK+dtZ9ny4e6BZgqcg2xNwPk5rsSVO36nwwuB0q4eCOdqY95
-         Mno+EpUxtD8sgbVPh4nntubWSQ5SBRkTNNhdSpU1TYjqy5LDIglxSfUbHoLE/fSc2NAr
-         FAwA==
-X-Gm-Message-State: APjAAAV2g6Mym+8c08WdDCDPoyoFxgPW0LpbqsqEKTvElojIyU9Znd/v
-        +t+UTau6bPN/sFRekw9VqMaDwNGywKYHMRF5mbY=
-X-Google-Smtp-Source: APXvYqzTbm7nV2a/ShavuV2TKnmHRmJ7wzGMM3QJ7cfNiA3ZBb4lNlsX9/ki1ngSIWhs23JMSjqg4hOZfHIs3t8qzAI=
-X-Received: by 2002:a37:a685:: with SMTP id p127mr18070215qke.449.1579802450607;
- Thu, 23 Jan 2020 10:00:50 -0800 (PST)
+        bh=eDGhNOsnfRqZ1FkvFFgvc9AjFE5Ddur1Pg9CKAfnAxU=;
+        b=F8z74mr/Rcl1/mUAcTcKSeeifiOXqVWfAnTXAT44BLiFk3nvOTHVlAAyvMAj+I4Vh9
+         RUOHmtV332CarnXZfQB1/10b4SFxH8+FGM2oGAO1YSKd1ckOUuaEBgvXyuko/pWV8S6Z
+         GuhZdRAMnVCe8ruC0/h8eoRFTaZwm6GwjrUOrL9aXkYgIJqKXsNQZPNPxLQKUxl1gND2
+         FmX3QzZZFUNtoW67BinZj6vSZIcEeFPIDaRBdMS0kbPIBRxEfXlPGgRsZ8ezgyD1Fsz+
+         UG+3tJ0eX39IZStdY+kQqsqjLklJcpw2J6SHwdeigot+A+2xrfpZIRefC8d0+V9qqR8o
+         5mrA==
+X-Gm-Message-State: APjAAAWihUOvf0a63KDitTdNt2Mi+oa1pWbq1e95mHvoYKi7oH+/uy/3
+        z1kG1HGXqa23Mk1silNQ9+iGGH9Rws8=
+X-Google-Smtp-Source: APXvYqw+6uLLR8MqOx+EGvqOjfuMTYpF98lYZBp3jqq9zH4vTvCceVRBF/5hld1RyyYfAjrI9KGuwA==
+X-Received: by 2002:a2e:94c8:: with SMTP id r8mr24299472ljh.28.1579802571087;
+        Thu, 23 Jan 2020 10:02:51 -0800 (PST)
+Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com. [209.85.208.171])
+        by smtp.gmail.com with ESMTPSA id r21sm1700435ljn.64.2020.01.23.10.02.50
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 23 Jan 2020 10:02:50 -0800 (PST)
+Received: by mail-lj1-f171.google.com with SMTP id y6so4636965lji.0
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jan 2020 10:02:50 -0800 (PST)
+X-Received: by 2002:a05:651c:282:: with SMTP id b2mr23878285ljo.41.1579802569766;
+ Thu, 23 Jan 2020 10:02:49 -0800 (PST)
 MIME-Version: 1.0
-References: <20200123152440.28956-1-kpsingh@chromium.org> <20200123152440.28956-9-kpsingh@chromium.org>
-In-Reply-To: <20200123152440.28956-9-kpsingh@chromium.org>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Thu, 23 Jan 2020 10:00:39 -0800
-Message-ID: <CAEf4BzZ7gmCTzxw4f=fp=j2_buBQ3rV8m3qWH8s-ySY6sGVPzw@mail.gmail.com>
-Subject: Re: [PATCH bpf-next v3 08/10] tools/libbpf: Add support for BPF_PROG_TYPE_LSM
-To:     KP Singh <kpsingh@chromium.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>, linux-security-module@vger.kernel.org,
-        Brendan Jackman <jackmanb@google.com>,
-        Florent Revest <revest@google.com>,
-        Thomas Garnier <thgarnie@google.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        James Morris <jmorris@namei.org>,
-        Kees Cook <keescook@chromium.org>,
-        Thomas Garnier <thgarnie@chromium.org>,
-        Michael Halcrow <mhalcrow@google.com>,
-        Paul Turner <pjt@google.com>,
-        Brendan Gregg <brendan.d.gregg@gmail.com>,
-        Jann Horn <jannh@google.com>,
-        Matthew Garrett <mjg59@google.com>,
-        Christian Brauner <christian@brauner.io>,
-        =?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mic@digikod.net>,
-        Florent Revest <revest@chromium.org>,
-        Brendan Jackman <jackmanb@chromium.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Stanislav Fomichev <sdf@google.com>,
-        Quentin Monnet <quentin.monnet@netronome.com>,
-        Andrey Ignatov <rdna@fb.com>, Joe Stringer <joe@wand.net.nz>
+References: <fed4f49349913cb6739dac647ba6a61d56b989d2.1579783936.git.christophe.leroy@c-s.fr>
+ <e11a8f0670251267f87e3114e0bdbacb1eb72980.1579783936.git.christophe.leroy@c-s.fr>
+In-Reply-To: <e11a8f0670251267f87e3114e0bdbacb1eb72980.1579783936.git.christophe.leroy@c-s.fr>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Thu, 23 Jan 2020 10:02:33 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wg4HEABOZdjxMzbembNmxs1zYfrNAEc2L+JS9FBSnM8JA@mail.gmail.com>
+Message-ID: <CAHk-=wg4HEABOZdjxMzbembNmxs1zYfrNAEc2L+JS9FBSnM8JA@mail.gmail.com>
+Subject: Re: [PATCH v3 2/7] uaccess: Tell user_access_begin() if it's for a
+ write or not
+To:     Christophe Leroy <christophe.leroy@c-s.fr>
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 23, 2020 at 7:25 AM KP Singh <kpsingh@chromium.org> wrote:
+On Thu, Jan 23, 2020 at 4:59 AM Christophe Leroy
+<christophe.leroy@c-s.fr> wrote:
 >
-> From: KP Singh <kpsingh@google.com>
->
-> * Add functionality in libbpf to attach eBPF program to LSM hooks
-> * Lookup the index of the LSM hook in security_hook_heads and pass it in
->   attr->lsm_hook_idx
->
-> Signed-off-by: KP Singh <kpsingh@google.com>
-> Reviewed-by: Brendan Jackman <jackmanb@google.com>
-> Reviewed-by: Florent Revest <revest@google.com>
-> Reviewed-by: Thomas Garnier <thgarnie@google.com>
-> ---
+> On 32 bits powerPC (book3s/32), only write accesses to user are
+> protected and there is no point spending time on unlocking for reads.
 
-Looks good, but see few nits below.
+Honestly, I'm starting to think that 32-bit ppc just needs to look
+more like everybody else, than make these changes.
 
-Acked-by: Andrii Nakryiko <andriin@fb.com>
+We used to have a read/write argument to the old "verify_area()" and
+"access_ok()" model, and it was a mistake. It was due to odd i386 user
+access issues. We got rid of it. I'm not convinced this is any better
+- it looks very similar and for odd ppc access issues.
 
->  tools/lib/bpf/bpf.c      |   6 ++-
->  tools/lib/bpf/bpf.h      |   1 +
->  tools/lib/bpf/libbpf.c   | 104 +++++++++++++++++++++++++++++++++++++--
->  tools/lib/bpf/libbpf.h   |   4 ++
->  tools/lib/bpf/libbpf.map |   3 ++
->  5 files changed, 114 insertions(+), 4 deletions(-)
->
+But if we really do want to do this, then:
 
-[...]
+> Add an argument to user_access_begin() to tell when it's for write and
+> return an opaque key that will be used by user_access_end() to know
+> what was done by user_access_begin().
 
-> @@ -5084,6 +5099,8 @@ __bpf_object__open(const char *path, const void *obj_buf, size_t obj_buf_sz,
->                 if (prog->type != BPF_PROG_TYPE_UNSPEC)
->                         continue;
->
-> +
-> +
+You should make it more opaque than "unsigned long".
 
-why these extra lines?
+Also, it shouldn't be a "is this a write". What if it's a read _and_ a
+write? Only a write? Only a read?
 
->                 err = libbpf_prog_type_by_name(prog->section_name, &prog_type,
->                                                &attach_type);
->                 if (err == -ESRCH)
-> @@ -6160,6 +6177,7 @@ bool bpf_program__is_##NAME(const struct bpf_program *prog)       \
->  }                                                              \
->
->  BPF_PROG_TYPE_FNS(socket_filter, BPF_PROG_TYPE_SOCKET_FILTER);
-> +BPF_PROG_TYPE_FNS(lsm, BPF_PROG_TYPE_LSM);
->  BPF_PROG_TYPE_FNS(kprobe, BPF_PROG_TYPE_KPROBE);
->  BPF_PROG_TYPE_FNS(sched_cls, BPF_PROG_TYPE_SCHED_CLS);
->  BPF_PROG_TYPE_FNS(sched_act, BPF_PROG_TYPE_SCHED_ACT);
-> @@ -6226,6 +6244,8 @@ static struct bpf_link *attach_raw_tp(const struct bpf_sec_def *sec,
->                                       struct bpf_program *prog);
->  static struct bpf_link *attach_trace(const struct bpf_sec_def *sec,
->                                      struct bpf_program *prog);
-> +static struct bpf_link *attach_lsm(const struct bpf_sec_def *sec,
-> +                                  struct bpf_program *prog);
->
->  struct bpf_sec_def {
->         const char *sec;
-> @@ -6272,6 +6292,9 @@ static const struct bpf_sec_def section_defs[] = {
->         SEC_DEF("freplace/", EXT,
->                 .is_attach_btf = true,
->                 .attach_fn = attach_trace),
-> +       SEC_DEF("lsm/", LSM,
-> +               .expected_attach_type = BPF_LSM_MAC,
-
-curious, will there be non-MAC LSM programs? if yes, how they are
-going to be different and which prefix will we use then?
-
-> +               .attach_fn = attach_lsm),
->         BPF_PROG_SEC("xdp",                     BPF_PROG_TYPE_XDP),
->         BPF_PROG_SEC("perf_event",              BPF_PROG_TYPE_PERF_EVENT),
->         BPF_PROG_SEC("lwt_in",                  BPF_PROG_TYPE_LWT_IN),
-> @@ -6533,6 +6556,44 @@ static int bpf_object__collect_struct_ops_map_reloc(struct bpf_object *obj,
->         return -EINVAL;
->  }
->
-> +static __s32 find_lsm_hook_idx(struct bpf_program *prog)
-
-nit: I'd stick to int for return result, we barely ever use __s32 in libbpf.c
-
-[...]
+                    Linus
