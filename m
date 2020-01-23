@@ -2,850 +2,157 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41E8EC33CAA
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 23:11:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C750C33CAA
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 23:11:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D99EC2071E
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 23:11:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2895A2071E
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 23:11:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L9bEgBMj"
+	dkim=pass (1024-bit key) header.d=micron.com header.i=@micron.com header.b="ERI4ttiZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730059AbgAWXL1 (ORCPT
+        id S1730090AbgAWXLc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 18:11:27 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:50440 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729856AbgAWXK5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 18:10:57 -0500
-Received: by mail-wm1-f67.google.com with SMTP id a5so4383913wmb.0;
-        Thu, 23 Jan 2020 15:10:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=yUd6lpyTU/7Nm+cwLJMDV54bolqX/wMqfpfAeQdOYdQ=;
-        b=L9bEgBMj598tCf55MJ/PoD7jJDy/P6S6H8W57irEOGNat86JhLQ96p08GPr6rOVrij
-         G78b9thZr2/7sBGtKO6RsYUwPW5aJmtKMvnS5xb81oycX9ZuChbBe8EEtb3mqGm7Xjuy
-         +9mDBGlsZENQjwvq0RLBPDOthuU1Rs5VGXdj2capQ58IUweQcEE12KtJL47L/A2Jl2QL
-         4EpkwQ/SZfMO4DnoFFbRVABMr0lN2/FZPGvh3Ri3AqCAVLmT4htXERTGCciQLBmVT2vo
-         Lk1IBs/ifl3t2kl9qC/fN/fDDpXZrLOwe4hwDg/qLZ5Pm5pKGZP8xneOZF10vHwTeZkZ
-         O4mA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=yUd6lpyTU/7Nm+cwLJMDV54bolqX/wMqfpfAeQdOYdQ=;
-        b=KIy1chedXygTxfxVeucUCudujJzrzMB2+XkkbP83UFkIZf4cakiTiUr3Sw90/Er1es
-         A+z+ZEWY63noyl465HbzG5ZzCLMx/UJgYDwZejQR+dS2LLqHmvkl4L3nF+qBwR4Cblz2
-         Lma4iUOXgBe6xbx2Fri0ilr2TSnFo+k36l6Hi3EWxJ9O4FzExhMhPJZtg7WIeM2nGl7P
-         PLTUFstgsdvMLrkAxufECtN1ZIXn2WdhC/G5JNj1ZIusKr6gGzxe1P4VVZqL6mEl0fml
-         za9jqe+qAbhA+lBdGJhUxwADssF+dnXIkEqedgEcijdJluXhklpa4iJ4SJ37FPB2wQm1
-         eZUA==
-X-Gm-Message-State: APjAAAVucj64kYmDoj4GaKFptMvs0Lc9mlYHYaiavku2rjCUpYZfFU7q
-        oTlCSkyfgurQ6lBqpGQLudQ=
-X-Google-Smtp-Source: APXvYqwU8nFXG6uunw9dLYkGZLJt5Zg3saWPtYIUfKf3pogvpiyVO1S7I7TCd1YlVKmQXw4INlv24Q==
-X-Received: by 2002:a1c:b789:: with SMTP id h131mr267096wmf.148.1579821053752;
-        Thu, 23 Jan 2020 15:10:53 -0800 (PST)
-Received: from localhost.localdomain (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.gmail.com with ESMTPSA id z6sm5105552wrw.36.2020.01.23.15.10.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Jan 2020 15:10:53 -0800 (PST)
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Laxman Dewangan <ldewangan@nvidia.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>
-Cc:     dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v5 08/14] dmaengine: tegra-apb: Fix coding style problems
-Date:   Fri, 24 Jan 2020 02:03:19 +0300
-Message-Id: <20200123230325.3037-9-digetx@gmail.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20200123230325.3037-1-digetx@gmail.com>
-References: <20200123230325.3037-1-digetx@gmail.com>
+        Thu, 23 Jan 2020 18:11:32 -0500
+Received: from mail-dm6nam10on2069.outbound.protection.outlook.com ([40.107.93.69]:6122
+        "EHLO NAM10-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729856AbgAWXLa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jan 2020 18:11:30 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=GCu0UJ0z3mmmXoAQcN6taGZIb+tGVcNbaPr6IsWgcBP5ZM7LZpYeUMPeFNPh93YM/uw9fkmZRGSSP5TM/x2m3CkATth9YVRfq/83Gb5CZKMBfGIGxT13vWGtI8SJKsdcAOCBJGK1NH4CyK4PeD2qnwr9Rqmo1VSmC3C84FWbR9qYLbXMqireWw1iiTxPpxEGMwl9XSQY+HzOmLKADqATqY+OBPjYImVdnMwdjuzuqWmj7WyEeFdjlag7cDOdoqIxM/dBiUFvy5O23SFib6IABEn7GBPWHncCxjD/COJU3Wp6V+5H5rhWBKkK5eygSBlDPc0Q41SMdpSfAnKdpzHKJg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=c7kB4iEppudzQFEQ7mXbjjcX57yhENgppXLNQtCq7Xs=;
+ b=La/YL5XNkxj5N9M8ZvDLX+QaCAUessSGnjB9/I2AuYezCWcGFQiFC5I/MuEAGK/3ixXO+PanYZ9TN4iML2I/caKcqenA7O5hpP1Vv31xAzaEQatICCMUhijNTN7wf8pSnbZDpB+3iYcvavnHL6lNkF1Npy8tGUjv+IYb83t2egFjnbFTmp+kzaM6eyIxvhlFqle06aQErQL88Oy5+Rqpylq/gvOYPsH8cECeq7Tz9q8Kbzk2yjHfl8ujPItQ0S+uz6xtRo6bjB/p78UN0ewiYjOtParKPWjgGOtLRBR+NMXyssTCNvl4qhIBq8I9zMDeChI5apEiwJHFeJvHRewmDQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=micron.com; dmarc=pass action=none header.from=micron.com;
+ dkim=pass header.d=micron.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=micron.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=c7kB4iEppudzQFEQ7mXbjjcX57yhENgppXLNQtCq7Xs=;
+ b=ERI4ttiZtJZAGhw+kDV1w+9zT9rNUXACDaH9c1r7ZDMXRn57W+DXSgWMjzOIzU8TSDoKNLJ8QMvSL5irzZCLwQFE5iQr1KYIDIpWIbjFC9+5Pn5b4pg82nxIlrNhQSB+p6lqpGMfRnH9InHrSe/MFH6XF7pAc21CCHRcaAeDXrU=
+Received: from BN7PR08MB5684.namprd08.prod.outlook.com (20.176.179.87) by
+ BN7PR08MB5218.namprd08.prod.outlook.com (20.176.26.217) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2644.19; Thu, 23 Jan 2020 23:11:26 +0000
+Received: from BN7PR08MB5684.namprd08.prod.outlook.com
+ ([fe80::981f:90d7:d45f:fd11]) by BN7PR08MB5684.namprd08.prod.outlook.com
+ ([fe80::981f:90d7:d45f:fd11%7]) with mapi id 15.20.2665.017; Thu, 23 Jan 2020
+ 23:11:26 +0000
+From:   "Bean Huo (beanhuo)" <beanhuo@micron.com>
+To:     Can Guo <cang@codeaurora.org>,
+        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
+        "nguyenb@codeaurora.org" <nguyenb@codeaurora.org>,
+        "hongwus@codeaurora.org" <hongwus@codeaurora.org>,
+        "rnayak@codeaurora.org" <rnayak@codeaurora.org>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "kernel-team@android.com" <kernel-team@android.com>,
+        "saravanak@google.com" <saravanak@google.com>,
+        "salyzyn@google.com" <salyzyn@google.com>
+CC:     Alim Akhtar <alim.akhtar@samsung.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        Pedro Sousa <pedrom.sousa@synopsys.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Tomas Winkler <tomas.winkler@intel.com>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        Venkat Gopalakrishnan <venkatg@codeaurora.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: RE: [EXT] [PATCH v4 6/8] scsi: ufs: Add dev ref clock gating wait
+ time support
+Thread-Topic: [EXT] [PATCH v4 6/8] scsi: ufs: Add dev ref clock gating wait
+ time support
+Thread-Index: AQHV0b5x4/fsh3ghJ0K+tlX/zBIPzaf44R8g
+Date:   Thu, 23 Jan 2020 23:11:26 +0000
+Message-ID: <BN7PR08MB568451D6C66F4C6FB11E6EEBDB0F0@BN7PR08MB5684.namprd08.prod.outlook.com>
+References: <1579764349-15578-1-git-send-email-cang@codeaurora.org>
+ <1579764349-15578-7-git-send-email-cang@codeaurora.org>
+In-Reply-To: <1579764349-15578-7-git-send-email-cang@codeaurora.org>
+Accept-Language: en-150, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-dg-ref: PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNcYmVhbmh1b1xhcHBkYXRhXHJvYW1pbmdcMDlkODQ5YjYtMzJkMy00YTQwLTg1ZWUtNmI4NGJhMjllMzViXG1zZ3NcbXNnLWFiZmI3YTdkLTNlMzUtMTFlYS04Yjg5LWRjNzE5NjFmOWRkM1xhbWUtdGVzdFxhYmZiN2E3Zi0zZTM1LTExZWEtOGI4OS1kYzcxOTYxZjlkZDNib2R5LnR4dCIgc3o9IjEzNTgiIHQ9IjEzMjI0Mjk0NjgzODE1MjczNCIgaD0iMzQwMEh5NEZ4bFBORUFLcDQwRGsxWW1zV0xZPSIgaWQ9IiIgYmw9IjAiIGJvPSIxIiBjaT0iY0FBQUFFUkhVMVJTUlVGTkNnVUFBSEFBQUFBZXhsWnVRdExWQVdqcDhsR3o2bnc2YU9ueVViUHFmRG9BQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFCQUFBQkFBQUEvaFRDdndBQUFBQUFBQUFBQUFBQUFBPT0iLz48L21ldGE+
+x-dg-rorf: true
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=beanhuo@micron.com; 
+x-originating-ip: [165.225.86.90]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 7490bbb8-96cd-4b72-12b5-08d7a0599244
+x-ms-traffictypediagnostic: BN7PR08MB5218:|BN7PR08MB5218:|BN7PR08MB5218:
+x-microsoft-antispam-prvs: <BN7PR08MB5218FB29581E54D3581F110CDB0F0@BN7PR08MB5218.namprd08.prod.outlook.com>
+x-ms-exchange-transport-forked: True
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 029174C036
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(366004)(39860400002)(346002)(376002)(396003)(189003)(199004)(8936002)(81166006)(81156014)(8676002)(66946007)(5660300002)(55236004)(478600001)(66556008)(2906002)(33656002)(7696005)(6506007)(71200400001)(52536014)(66476007)(7416002)(54906003)(110136005)(186003)(64756008)(66446008)(9686003)(55016002)(4326008)(76116006)(26005)(86362001)(316002);DIR:OUT;SFP:1101;SCL:1;SRVR:BN7PR08MB5218;H:BN7PR08MB5684.namprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: micron.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: rqzFSOkp6Gt2Qpe/2bXChqrC/G+G0+GL5dd9zsvpGinhQlACbM5Pnf1Rq3sB18FtMqHjUGT3x1cH3ZU3cVjcapIWSbbA6cQ02RZnABnxMAmyeP8EcWT26IlzTOIN8Dg5ZN/YJ7bcWd9VNfM3f+LtOloq79PIG3gFiuZF072ZKn3aYtMdlGGnSqoDaaDesEwEu9KVFB0mFTEij0u2cXRXMFLCtHehBq6Y3W20nIZ6UXqlFy6Ao2zb9OsGxztEPrJVV6JeuXIyEwboKmbts1RoYlGnToE2OIbtvZc/AM4OiNfG1p6Qk+gFFp3CpJQWhud1QMyTdC1RmDc1MVaASp4mcmIt+BNxoJJ79ZEjK48v2CWh2KQu6qz+EoA3QX2VKN58Dz5oBtG6Sa3qXQCvoxdxA52qixUF4y2UrYh2/jJZHcm7o3Z6cpc1hN3888N7yEnT
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: micron.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7490bbb8-96cd-4b72-12b5-08d7a0599244
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Jan 2020 23:11:26.0314
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: f38a5ecd-2813-4862-b11b-ac1d563c806f
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: QXUw3PrOvffGJtoUD6MWfX1U5bVJfQU+pH2WJYsFt2w2ReHaE6Jxian1zdtZXFezrjuaItiqgTFrVppDc2fVEw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN7PR08MB5218
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch fixes few dozens of coding style problems reported by
-checkpatch and prettifies code where makes sense.
+Hi,  Can
 
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
----
- drivers/dma/tegra20-apb-dma.c | 276 ++++++++++++++++++----------------
- 1 file changed, 144 insertions(+), 132 deletions(-)
+>=20
+> In UFS version 3.0, a newly added attribute bRefClkGatingWaitTime defines=
+ the
+> minimum time for which the reference clock is required by device during
+> transition to LS-MODE or HIBERN8 state. Make this change to reflect the n=
+ew
+> requirement by adding delays before turning off the clock.
+>=20
+> Signed-off-by: Can Guo <cang@codeaurora.org>
+> ---
+>  drivers/scsi/ufs/ufs.h    |  3 +++
+>  drivers/scsi/ufs/ufshcd.c | 41
+> +++++++++++++++++++++++++++++++++++++++++
+>  2 files changed, 44 insertions(+)
+>=20
+> diff --git a/drivers/scsi/ufs/ufs.h b/drivers/scsi/ufs/ufs.h index
+> 3327981..385bac8 100644
+> --- a/drivers/scsi/ufs/ufs.h
+> +++ b/drivers/scsi/ufs/ufs.h
+> @@ -168,6 +168,7 @@ enum attr_idn {
+>  	QUERY_ATTR_IDN_FFU_STATUS		=3D 0x14,
+>  	QUERY_ATTR_IDN_PSA_STATE		=3D 0x15,
+>  	QUERY_ATTR_IDN_PSA_DATA_SIZE		=3D 0x16,
+> +	QUERY_ATTR_IDN_REF_CLK_GATING_WAIT_TIME	=3D 0x17,
+>  };
+>=20
+>  /* Descriptor idn for Query requests */ @@ -530,6 +531,8 @@ struct
+> ufs_dev_info {
+>  	bool f_power_on_wp_en;
+>  	/* Keeps information if any of the LU is power on write protected */
+>  	bool is_lu_power_on_wp;
+> +	u16 spec_version;
+> +	u32 clk_gating_wait_us;
+>  };
+>=20
+This one also need rebase
 
-diff --git a/drivers/dma/tegra20-apb-dma.c b/drivers/dma/tegra20-apb-dma.c
-index dff21e80ffa4..7158bd3145c4 100644
---- a/drivers/dma/tegra20-apb-dma.c
-+++ b/drivers/dma/tegra20-apb-dma.c
-@@ -59,7 +59,7 @@
- #define TEGRA_APBDMA_STATUS_COUNT_MASK		0xFFFC
- 
- #define TEGRA_APBDMA_CHAN_CSRE			0x00C
--#define TEGRA_APBDMA_CHAN_CSRE_PAUSE		(1 << 31)
-+#define TEGRA_APBDMA_CHAN_CSRE_PAUSE		BIT(31)
- 
- /* AHB memory address */
- #define TEGRA_APBDMA_CHAN_AHBPTR		0x010
-@@ -120,21 +120,21 @@ struct tegra_dma;
-  * @support_separate_wcount_reg: Support separate word count register.
-  */
- struct tegra_dma_chip_data {
--	int nr_channels;
--	int channel_reg_size;
--	int max_dma_count;
-+	unsigned int nr_channels;
-+	unsigned int channel_reg_size;
-+	unsigned int max_dma_count;
- 	bool support_channel_pause;
- 	bool support_separate_wcount_reg;
- };
- 
- /* DMA channel registers */
- struct tegra_dma_channel_regs {
--	unsigned long	csr;
--	unsigned long	ahb_ptr;
--	unsigned long	apb_ptr;
--	unsigned long	ahb_seq;
--	unsigned long	apb_seq;
--	unsigned long	wcount;
-+	u32 csr;
-+	u32 ahb_ptr;
-+	u32 apb_ptr;
-+	u32 ahb_seq;
-+	u32 apb_seq;
-+	u32 wcount;
- };
- 
- /*
-@@ -168,7 +168,7 @@ struct tegra_dma_desc {
- 	struct list_head		node;
- 	struct list_head		tx_list;
- 	struct list_head		cb_node;
--	int				cb_count;
-+	unsigned int			cb_count;
- };
- 
- struct tegra_dma_channel;
-@@ -181,7 +181,7 @@ struct tegra_dma_channel {
- 	struct dma_chan		dma_chan;
- 	char			name[12];
- 	bool			config_init;
--	int			id;
-+	unsigned int		id;
- 	void __iomem		*chan_addr;
- 	spinlock_t		lock;
- 	bool			busy;
-@@ -201,7 +201,7 @@ struct tegra_dma_channel {
- 	/* Channel-slave specific configuration */
- 	unsigned int slave_id;
- 	struct dma_slave_config dma_sconfig;
--	struct tegra_dma_channel_regs	channel_reg;
-+	struct tegra_dma_channel_regs channel_reg;
- };
- 
- /* tegra_dma: Tegra DMA specific information */
-@@ -239,7 +239,7 @@ static inline u32 tdma_read(struct tegra_dma *tdma, u32 reg)
- }
- 
- static inline void tdc_write(struct tegra_dma_channel *tdc,
--		u32 reg, u32 val)
-+			     u32 reg, u32 val)
- {
- 	writel(val, tdc->chan_addr + reg);
- }
-@@ -254,8 +254,8 @@ static inline struct tegra_dma_channel *to_tegra_dma_chan(struct dma_chan *dc)
- 	return container_of(dc, struct tegra_dma_channel, dma_chan);
- }
- 
--static inline struct tegra_dma_desc *txd_to_tegra_dma_desc(
--		struct dma_async_tx_descriptor *td)
-+static inline struct tegra_dma_desc *
-+txd_to_tegra_dma_desc(struct dma_async_tx_descriptor *td)
- {
- 	return container_of(td, struct tegra_dma_desc, txd);
- }
-@@ -270,8 +270,7 @@ static int tegra_dma_runtime_suspend(struct device *dev);
- static int tegra_dma_runtime_resume(struct device *dev);
- 
- /* Get DMA desc from free list, if not there then allocate it.  */
--static struct tegra_dma_desc *tegra_dma_desc_get(
--		struct tegra_dma_channel *tdc)
-+static struct tegra_dma_desc *tegra_dma_desc_get(struct tegra_dma_channel *tdc)
- {
- 	struct tegra_dma_desc *dma_desc;
- 	unsigned long flags;
-@@ -298,11 +297,12 @@ static struct tegra_dma_desc *tegra_dma_desc_get(
- 	dma_async_tx_descriptor_init(&dma_desc->txd, &tdc->dma_chan);
- 	dma_desc->txd.tx_submit = tegra_dma_tx_submit;
- 	dma_desc->txd.flags = 0;
-+
- 	return dma_desc;
- }
- 
- static void tegra_dma_desc_put(struct tegra_dma_channel *tdc,
--		struct tegra_dma_desc *dma_desc)
-+			       struct tegra_dma_desc *dma_desc)
- {
- 	unsigned long flags;
- 
-@@ -313,29 +313,29 @@ static void tegra_dma_desc_put(struct tegra_dma_channel *tdc,
- 	spin_unlock_irqrestore(&tdc->lock, flags);
- }
- 
--static struct tegra_dma_sg_req *tegra_dma_sg_req_get(
--		struct tegra_dma_channel *tdc)
-+static struct tegra_dma_sg_req *
-+tegra_dma_sg_req_get(struct tegra_dma_channel *tdc)
- {
--	struct tegra_dma_sg_req *sg_req = NULL;
-+	struct tegra_dma_sg_req *sg_req;
- 	unsigned long flags;
- 
- 	spin_lock_irqsave(&tdc->lock, flags);
- 	if (!list_empty(&tdc->free_sg_req)) {
--		sg_req = list_first_entry(&tdc->free_sg_req,
--					typeof(*sg_req), node);
-+		sg_req = list_first_entry(&tdc->free_sg_req, typeof(*sg_req),
-+					  node);
- 		list_del(&sg_req->node);
- 		spin_unlock_irqrestore(&tdc->lock, flags);
- 		return sg_req;
- 	}
- 	spin_unlock_irqrestore(&tdc->lock, flags);
- 
--	sg_req = kzalloc(sizeof(struct tegra_dma_sg_req), GFP_NOWAIT);
-+	sg_req = kzalloc(sizeof(*sg_req), GFP_NOWAIT);
- 
- 	return sg_req;
- }
- 
- static int tegra_dma_slave_config(struct dma_chan *dc,
--		struct dma_slave_config *sconfig)
-+				  struct dma_slave_config *sconfig)
- {
- 	struct tegra_dma_channel *tdc = to_tegra_dma_chan(dc);
- 
-@@ -352,11 +352,12 @@ static int tegra_dma_slave_config(struct dma_chan *dc,
- 		tdc->slave_id = sconfig->slave_id;
- 	}
- 	tdc->config_init = true;
-+
- 	return 0;
- }
- 
- static void tegra_dma_global_pause(struct tegra_dma_channel *tdc,
--	bool wait_for_burst_complete)
-+				   bool wait_for_burst_complete)
- {
- 	struct tegra_dma *tdma = tdc->tdma;
- 
-@@ -391,13 +392,13 @@ static void tegra_dma_global_resume(struct tegra_dma_channel *tdc)
- }
- 
- static void tegra_dma_pause(struct tegra_dma_channel *tdc,
--	bool wait_for_burst_complete)
-+			    bool wait_for_burst_complete)
- {
- 	struct tegra_dma *tdma = tdc->tdma;
- 
- 	if (tdma->chip_data->support_channel_pause) {
- 		tdc_write(tdc, TEGRA_APBDMA_CHAN_CSRE,
--				TEGRA_APBDMA_CHAN_CSRE_PAUSE);
-+			  TEGRA_APBDMA_CHAN_CSRE_PAUSE);
- 		if (wait_for_burst_complete)
- 			udelay(TEGRA_APBDMA_BURST_COMPLETE_TIME);
- 	} else {
-@@ -409,17 +410,15 @@ static void tegra_dma_resume(struct tegra_dma_channel *tdc)
- {
- 	struct tegra_dma *tdma = tdc->tdma;
- 
--	if (tdma->chip_data->support_channel_pause) {
-+	if (tdma->chip_data->support_channel_pause)
- 		tdc_write(tdc, TEGRA_APBDMA_CHAN_CSRE, 0);
--	} else {
-+	else
- 		tegra_dma_global_resume(tdc);
--	}
- }
- 
- static void tegra_dma_stop(struct tegra_dma_channel *tdc)
- {
--	u32 csr;
--	u32 status;
-+	u32 csr, status;
- 
- 	/* Disable interrupts */
- 	csr = tdc_read(tdc, TEGRA_APBDMA_CHAN_CSR);
-@@ -440,7 +439,7 @@ static void tegra_dma_stop(struct tegra_dma_channel *tdc)
- }
- 
- static void tegra_dma_start(struct tegra_dma_channel *tdc,
--		struct tegra_dma_sg_req *sg_req)
-+			    struct tegra_dma_sg_req *sg_req)
- {
- 	struct tegra_dma_channel_regs *ch_regs = &sg_req->ch_regs;
- 
-@@ -454,11 +453,11 @@ static void tegra_dma_start(struct tegra_dma_channel *tdc,
- 
- 	/* Start DMA */
- 	tdc_write(tdc, TEGRA_APBDMA_CHAN_CSR,
--				ch_regs->csr | TEGRA_APBDMA_CSR_ENB);
-+		  ch_regs->csr | TEGRA_APBDMA_CSR_ENB);
- }
- 
- static void tegra_dma_configure_for_next(struct tegra_dma_channel *tdc,
--		struct tegra_dma_sg_req *nsg_req)
-+					 struct tegra_dma_sg_req *nsg_req)
- {
- 	unsigned long status;
- 
-@@ -492,9 +491,9 @@ static void tegra_dma_configure_for_next(struct tegra_dma_channel *tdc,
- 	tdc_write(tdc, TEGRA_APBDMA_CHAN_AHBPTR, nsg_req->ch_regs.ahb_ptr);
- 	if (tdc->tdma->chip_data->support_separate_wcount_reg)
- 		tdc_write(tdc, TEGRA_APBDMA_CHAN_WCOUNT,
--						nsg_req->ch_regs.wcount);
-+			  nsg_req->ch_regs.wcount);
- 	tdc_write(tdc, TEGRA_APBDMA_CHAN_CSR,
--				nsg_req->ch_regs.csr | TEGRA_APBDMA_CSR_ENB);
-+		  nsg_req->ch_regs.csr | TEGRA_APBDMA_CSR_ENB);
- 	nsg_req->configured = true;
- 	nsg_req->words_xferred = 0;
- 
-@@ -508,8 +507,7 @@ static void tdc_start_head_req(struct tegra_dma_channel *tdc)
- 	if (list_empty(&tdc->pending_sg_req))
- 		return;
- 
--	sg_req = list_first_entry(&tdc->pending_sg_req,
--					typeof(*sg_req), node);
-+	sg_req = list_first_entry(&tdc->pending_sg_req, typeof(*sg_req), node);
- 	tegra_dma_start(tdc, sg_req);
- 	sg_req->configured = true;
- 	sg_req->words_xferred = 0;
-@@ -518,34 +516,35 @@ static void tdc_start_head_req(struct tegra_dma_channel *tdc)
- 
- static void tdc_configure_next_head_desc(struct tegra_dma_channel *tdc)
- {
--	struct tegra_dma_sg_req *hsgreq;
--	struct tegra_dma_sg_req *hnsgreq;
-+	struct tegra_dma_sg_req *hsgreq, *hnsgreq;
- 
- 	if (list_empty(&tdc->pending_sg_req))
- 		return;
- 
- 	hsgreq = list_first_entry(&tdc->pending_sg_req, typeof(*hsgreq), node);
- 	if (!list_is_last(&hsgreq->node, &tdc->pending_sg_req)) {
--		hnsgreq = list_first_entry(&hsgreq->node,
--					typeof(*hnsgreq), node);
-+		hnsgreq = list_first_entry(&hsgreq->node, typeof(*hnsgreq),
-+					   node);
- 		tegra_dma_configure_for_next(tdc, hnsgreq);
- 	}
- }
- 
--static inline int get_current_xferred_count(struct tegra_dma_channel *tdc,
--	struct tegra_dma_sg_req *sg_req, unsigned long status)
-+static inline unsigned int
-+get_current_xferred_count(struct tegra_dma_channel *tdc,
-+			  struct tegra_dma_sg_req *sg_req,
-+			  unsigned long status)
- {
- 	return sg_req->req_len - (status & TEGRA_APBDMA_STATUS_COUNT_MASK) - 4;
- }
- 
- static void tegra_dma_abort_all(struct tegra_dma_channel *tdc)
- {
--	struct tegra_dma_sg_req *sgreq;
- 	struct tegra_dma_desc *dma_desc;
-+	struct tegra_dma_sg_req *sgreq;
- 
- 	while (!list_empty(&tdc->pending_sg_req)) {
--		sgreq = list_first_entry(&tdc->pending_sg_req,
--						typeof(*sgreq), node);
-+		sgreq = list_first_entry(&tdc->pending_sg_req, typeof(*sgreq),
-+					 node);
- 		list_move_tail(&sgreq->node, &tdc->free_sg_req);
- 		if (sgreq->last_sg) {
- 			dma_desc = sgreq->dma_desc;
-@@ -555,7 +554,7 @@ static void tegra_dma_abort_all(struct tegra_dma_channel *tdc)
- 			/* Add in cb list if it is not there. */
- 			if (!dma_desc->cb_count)
- 				list_add_tail(&dma_desc->cb_node,
--							&tdc->cb_desc);
-+					      &tdc->cb_desc);
- 			dma_desc->cb_count++;
- 		}
- 	}
-@@ -563,9 +562,10 @@ static void tegra_dma_abort_all(struct tegra_dma_channel *tdc)
- }
- 
- static bool handle_continuous_head_request(struct tegra_dma_channel *tdc,
--		struct tegra_dma_sg_req *last_sg_req, bool to_terminate)
-+					   struct tegra_dma_sg_req *last_sg_req,
-+					   bool to_terminate)
- {
--	struct tegra_dma_sg_req *hsgreq = NULL;
-+	struct tegra_dma_sg_req *hsgreq;
- 
- 	if (list_empty(&tdc->pending_sg_req)) {
- 		dev_err(tdc2dev(tdc), "DMA is running without req\n");
-@@ -589,14 +589,15 @@ static bool handle_continuous_head_request(struct tegra_dma_channel *tdc,
- 	/* Configure next request */
- 	if (!to_terminate)
- 		tdc_configure_next_head_desc(tdc);
-+
- 	return true;
- }
- 
- static void handle_once_dma_done(struct tegra_dma_channel *tdc,
--	bool to_terminate)
-+				 bool to_terminate)
- {
--	struct tegra_dma_sg_req *sgreq;
- 	struct tegra_dma_desc *dma_desc;
-+	struct tegra_dma_sg_req *sgreq;
- 
- 	tdc->busy = false;
- 	sgreq = list_first_entry(&tdc->pending_sg_req, typeof(*sgreq), node);
-@@ -622,10 +623,10 @@ static void handle_once_dma_done(struct tegra_dma_channel *tdc,
- }
- 
- static void handle_cont_sngl_cycle_dma_done(struct tegra_dma_channel *tdc,
--		bool to_terminate)
-+					    bool to_terminate)
- {
--	struct tegra_dma_sg_req *sgreq;
- 	struct tegra_dma_desc *dma_desc;
-+	struct tegra_dma_sg_req *sgreq;
- 	bool st;
- 
- 	sgreq = list_first_entry(&tdc->pending_sg_req, typeof(*sgreq), node);
-@@ -657,13 +658,13 @@ static void tegra_dma_tasklet(unsigned long data)
- 	struct tegra_dma_channel *tdc = (struct tegra_dma_channel *)data;
- 	struct dmaengine_desc_callback cb;
- 	struct tegra_dma_desc *dma_desc;
-+	unsigned int cb_count;
- 	unsigned long flags;
--	int cb_count;
- 
- 	spin_lock_irqsave(&tdc->lock, flags);
- 	while (!list_empty(&tdc->cb_desc)) {
--		dma_desc  = list_first_entry(&tdc->cb_desc,
--					typeof(*dma_desc), cb_node);
-+		dma_desc = list_first_entry(&tdc->cb_desc, typeof(*dma_desc),
-+					    cb_node);
- 		list_del(&dma_desc->cb_node);
- 		dmaengine_desc_get_callback(&dma_desc->txd, &cb);
- 		cb_count = dma_desc->cb_count;
-@@ -681,8 +682,8 @@ static void tegra_dma_tasklet(unsigned long data)
- static irqreturn_t tegra_dma_isr(int irq, void *dev_id)
- {
- 	struct tegra_dma_channel *tdc = dev_id;
--	unsigned long status;
- 	unsigned long flags;
-+	u32 status;
- 
- 	spin_lock_irqsave(&tdc->lock, flags);
- 
-@@ -697,8 +698,9 @@ static irqreturn_t tegra_dma_isr(int irq, void *dev_id)
- 	}
- 
- 	spin_unlock_irqrestore(&tdc->lock, flags);
--	dev_info(tdc2dev(tdc),
--		"Interrupt already served status 0x%08lx\n", status);
-+	dev_info(tdc2dev(tdc), "Interrupt already served status 0x%08x\n",
-+		 status);
-+
- 	return IRQ_NONE;
- }
- 
-@@ -714,6 +716,7 @@ static dma_cookie_t tegra_dma_tx_submit(struct dma_async_tx_descriptor *txd)
- 	cookie = dma_cookie_assign(&dma_desc->txd);
- 	list_splice_tail_init(&dma_desc->tx_list, &tdc->pending_sg_req);
- 	spin_unlock_irqrestore(&tdc->lock, flags);
-+
- 	return cookie;
- }
- 
-@@ -747,11 +750,10 @@ static void tegra_dma_issue_pending(struct dma_chan *dc)
- static int tegra_dma_terminate_all(struct dma_chan *dc)
- {
- 	struct tegra_dma_channel *tdc = to_tegra_dma_chan(dc);
--	struct tegra_dma_sg_req *sgreq;
- 	struct tegra_dma_desc *dma_desc;
-+	struct tegra_dma_sg_req *sgreq;
- 	unsigned long flags;
--	unsigned long status;
--	unsigned long wcount;
-+	u32 status, wcount;
- 	bool was_busy;
- 
- 	spin_lock_irqsave(&tdc->lock, flags);
-@@ -777,8 +779,8 @@ static int tegra_dma_terminate_all(struct dma_chan *dc)
- 	tegra_dma_stop(tdc);
- 
- 	if (!list_empty(&tdc->pending_sg_req) && was_busy) {
--		sgreq = list_first_entry(&tdc->pending_sg_req,
--					typeof(*sgreq), node);
-+		sgreq = list_first_entry(&tdc->pending_sg_req, typeof(*sgreq),
-+					 node);
- 		sgreq->dma_desc->bytes_transferred +=
- 				get_current_xferred_count(tdc, sgreq, wcount);
- 	}
-@@ -788,12 +790,13 @@ static int tegra_dma_terminate_all(struct dma_chan *dc)
- 	tegra_dma_abort_all(tdc);
- 
- 	while (!list_empty(&tdc->cb_desc)) {
--		dma_desc  = list_first_entry(&tdc->cb_desc,
--					typeof(*dma_desc), cb_node);
-+		dma_desc = list_first_entry(&tdc->cb_desc, typeof(*dma_desc),
-+					    cb_node);
- 		list_del(&dma_desc->cb_node);
- 		dma_desc->cb_count = 0;
- 	}
- 	spin_unlock_irqrestore(&tdc->lock, flags);
-+
- 	return 0;
- }
- 
-@@ -807,7 +810,7 @@ static void tegra_dma_synchronize(struct dma_chan *dc)
- static unsigned int tegra_dma_sg_bytes_xferred(struct tegra_dma_channel *tdc,
- 					       struct tegra_dma_sg_req *sg_req)
- {
--	unsigned long status, wcount = 0;
-+	u32 status, wcount = 0;
- 
- 	if (!list_is_first(&sg_req->node, &tdc->pending_sg_req))
- 		return 0;
-@@ -864,7 +867,8 @@ static unsigned int tegra_dma_sg_bytes_xferred(struct tegra_dma_channel *tdc,
- }
- 
- static enum dma_status tegra_dma_tx_status(struct dma_chan *dc,
--	dma_cookie_t cookie, struct dma_tx_state *txstate)
-+					   dma_cookie_t cookie,
-+					   struct dma_tx_state *txstate)
- {
- 	struct tegra_dma_channel *tdc = to_tegra_dma_chan(dc);
- 	struct tegra_dma_desc *dma_desc;
-@@ -911,11 +915,12 @@ static enum dma_status tegra_dma_tx_status(struct dma_chan *dc,
- 
- 	trace_tegra_dma_tx_status(&tdc->dma_chan, cookie, txstate);
- 	spin_unlock_irqrestore(&tdc->lock, flags);
-+
- 	return ret;
- }
- 
--static inline int get_bus_width(struct tegra_dma_channel *tdc,
--		enum dma_slave_buswidth slave_bw)
-+static inline unsigned int get_bus_width(struct tegra_dma_channel *tdc,
-+					 enum dma_slave_buswidth slave_bw)
- {
- 	switch (slave_bw) {
- 	case DMA_SLAVE_BUSWIDTH_1_BYTE:
-@@ -928,16 +933,17 @@ static inline int get_bus_width(struct tegra_dma_channel *tdc,
- 		return TEGRA_APBDMA_APBSEQ_BUS_WIDTH_64;
- 	default:
- 		dev_warn(tdc2dev(tdc),
--			"slave bw is not supported, using 32bits\n");
-+			 "slave bw is not supported, using 32bits\n");
- 		return TEGRA_APBDMA_APBSEQ_BUS_WIDTH_32;
- 	}
- }
- 
--static inline int get_burst_size(struct tegra_dma_channel *tdc,
--	u32 burst_size, enum dma_slave_buswidth slave_bw, int len)
-+static inline unsigned int get_burst_size(struct tegra_dma_channel *tdc,
-+					  u32 burst_size,
-+					  enum dma_slave_buswidth slave_bw,
-+					  u32 len)
- {
--	int burst_byte;
--	int burst_ahb_width;
-+	unsigned int burst_byte, burst_ahb_width;
- 
- 	/*
- 	 * burst_size from client is in terms of the bus_width.
-@@ -964,9 +970,12 @@ static inline int get_burst_size(struct tegra_dma_channel *tdc,
- }
- 
- static int get_transfer_param(struct tegra_dma_channel *tdc,
--	enum dma_transfer_direction direction, unsigned long *apb_addr,
--	unsigned long *apb_seq,	unsigned long *csr, unsigned int *burst_size,
--	enum dma_slave_buswidth *slave_bw)
-+			      enum dma_transfer_direction direction,
-+			      u32 *apb_addr,
-+			      u32 *apb_seq,
-+			      u32 *csr,
-+			      unsigned int *burst_size,
-+			      enum dma_slave_buswidth *slave_bw)
- {
- 	switch (direction) {
- 	case DMA_MEM_TO_DEV:
-@@ -987,13 +996,15 @@ static int get_transfer_param(struct tegra_dma_channel *tdc,
- 
- 	default:
- 		dev_err(tdc2dev(tdc), "DMA direction is not supported\n");
--		return -EINVAL;
-+		break;
- 	}
-+
- 	return -EINVAL;
- }
- 
- static void tegra_dma_prep_wcount(struct tegra_dma_channel *tdc,
--	struct tegra_dma_channel_regs *ch_regs, u32 len)
-+				  struct tegra_dma_channel_regs *ch_regs,
-+				  u32 len)
- {
- 	u32 len_field = (len - 4) & 0xFFFC;
- 
-@@ -1003,20 +1014,23 @@ static void tegra_dma_prep_wcount(struct tegra_dma_channel *tdc,
- 		ch_regs->csr |= len_field;
- }
- 
--static struct dma_async_tx_descriptor *tegra_dma_prep_slave_sg(
--	struct dma_chan *dc, struct scatterlist *sgl, unsigned int sg_len,
--	enum dma_transfer_direction direction, unsigned long flags,
--	void *context)
-+static struct dma_async_tx_descriptor *
-+tegra_dma_prep_slave_sg(struct dma_chan *dc,
-+			struct scatterlist *sgl,
-+			unsigned int sg_len,
-+			enum dma_transfer_direction direction,
-+			unsigned long flags,
-+			void *context)
- {
- 	struct tegra_dma_channel *tdc = to_tegra_dma_chan(dc);
-+	struct tegra_dma_sg_req *sg_req = NULL;
-+	u32 csr, ahb_seq, apb_ptr, apb_seq;
-+	enum dma_slave_buswidth slave_bw;
- 	struct tegra_dma_desc *dma_desc;
--	unsigned int i;
--	struct scatterlist *sg;
--	unsigned long csr, ahb_seq, apb_ptr, apb_seq;
- 	struct list_head req_list;
--	struct tegra_dma_sg_req  *sg_req = NULL;
--	u32 burst_size;
--	enum dma_slave_buswidth slave_bw;
-+	struct scatterlist *sg;
-+	unsigned int burst_size;
-+	unsigned int i;
- 
- 	if (!tdc->config_init) {
- 		dev_err(tdc2dev(tdc), "DMA channel is not configured\n");
-@@ -1028,7 +1042,7 @@ static struct dma_async_tx_descriptor *tegra_dma_prep_slave_sg(
- 	}
- 
- 	if (get_transfer_param(tdc, direction, &apb_ptr, &apb_seq, &csr,
--				&burst_size, &slave_bw) < 0)
-+			       &burst_size, &slave_bw) < 0)
- 		return NULL;
- 
- 	INIT_LIST_HEAD(&req_list);
-@@ -1074,7 +1088,7 @@ static struct dma_async_tx_descriptor *tegra_dma_prep_slave_sg(
- 		len = sg_dma_len(sg);
- 
- 		if ((len & 3) || (mem & 3) ||
--				(len > tdc->tdma->chip_data->max_dma_count)) {
-+		    len > tdc->tdma->chip_data->max_dma_count) {
- 			dev_err(tdc2dev(tdc),
- 				"DMA length/memory address is not supported\n");
- 			tegra_dma_desc_put(tdc, dma_desc);
-@@ -1126,20 +1140,21 @@ static struct dma_async_tx_descriptor *tegra_dma_prep_slave_sg(
- 	return &dma_desc->txd;
- }
- 
--static struct dma_async_tx_descriptor *tegra_dma_prep_dma_cyclic(
--	struct dma_chan *dc, dma_addr_t buf_addr, size_t buf_len,
--	size_t period_len, enum dma_transfer_direction direction,
--	unsigned long flags)
-+static struct dma_async_tx_descriptor *
-+tegra_dma_prep_dma_cyclic(struct dma_chan *dc, dma_addr_t buf_addr,
-+			  size_t buf_len,
-+			  size_t period_len,
-+			  enum dma_transfer_direction direction,
-+			  unsigned long flags)
- {
- 	struct tegra_dma_channel *tdc = to_tegra_dma_chan(dc);
--	struct tegra_dma_desc *dma_desc = NULL;
- 	struct tegra_dma_sg_req *sg_req = NULL;
--	unsigned long csr, ahb_seq, apb_ptr, apb_seq;
--	int len;
--	size_t remain_len;
--	dma_addr_t mem = buf_addr;
--	u32 burst_size;
-+	u32 csr, ahb_seq, apb_ptr, apb_seq;
- 	enum dma_slave_buswidth slave_bw;
-+	struct tegra_dma_desc *dma_desc;
-+	dma_addr_t mem = buf_addr;
-+	unsigned int burst_size;
-+	size_t len, remain_len;
- 
- 	if (!buf_len || !period_len) {
- 		dev_err(tdc2dev(tdc), "Invalid buffer/period len\n");
-@@ -1173,13 +1188,13 @@ static struct dma_async_tx_descriptor *tegra_dma_prep_dma_cyclic(
- 
- 	len = period_len;
- 	if ((len & 3) || (buf_addr & 3) ||
--			(len > tdc->tdma->chip_data->max_dma_count)) {
-+	    len > tdc->tdma->chip_data->max_dma_count) {
- 		dev_err(tdc2dev(tdc), "Req len/mem address is not correct\n");
- 		return NULL;
- 	}
- 
- 	if (get_transfer_param(tdc, direction, &apb_ptr, &apb_seq, &csr,
--				&burst_size, &slave_bw) < 0)
-+			       &burst_size, &slave_bw) < 0)
- 		return NULL;
- 
- 	ahb_seq = TEGRA_APBDMA_AHBSEQ_INTR_ENB;
-@@ -1269,7 +1284,6 @@ static int tegra_dma_alloc_chan_resources(struct dma_chan *dc)
- 	int ret;
- 
- 	dma_cookie_init(&tdc->dma_chan);
--	tdc->config_init = false;
- 
- 	ret = pm_runtime_get_sync(tdma->dev);
- 	if (ret < 0)
-@@ -1303,8 +1317,8 @@ static void tegra_dma_free_chan_resources(struct dma_chan *dc)
- 	tdc->isr_handler = NULL;
- 
- 	while (!list_empty(&dma_desc_list)) {
--		dma_desc = list_first_entry(&dma_desc_list,
--					typeof(*dma_desc), node);
-+		dma_desc = list_first_entry(&dma_desc_list, typeof(*dma_desc),
-+					    node);
- 		list_del(&dma_desc->node);
- 		kfree(dma_desc);
- 	}
-@@ -1323,8 +1337,8 @@ static struct dma_chan *tegra_dma_of_xlate(struct of_phandle_args *dma_spec,
- 					   struct of_dma *ofdma)
- {
- 	struct tegra_dma *tdma = ofdma->of_dma_data;
--	struct dma_chan *chan;
- 	struct tegra_dma_channel *tdc;
-+	struct dma_chan *chan;
- 
- 	if (dma_spec->args[0] > TEGRA_APBDMA_CSR_REQ_SEL_MASK) {
- 		dev_err(tdma->dev, "Invalid slave id: %d\n", dma_spec->args[0]);
-@@ -1379,20 +1393,16 @@ static const struct tegra_dma_chip_data tegra148_dma_chip_data = {
- 
- static int tegra_dma_probe(struct platform_device *pdev)
- {
-+	const struct tegra_dma_chip_data *cdata;
- 	struct tegra_dma *tdma;
-+	unsigned int i;
-+	size_t size;
- 	int ret;
--	int i;
--	const struct tegra_dma_chip_data *cdata;
- 
- 	cdata = of_device_get_match_data(&pdev->dev);
--	if (!cdata) {
--		dev_err(&pdev->dev, "Error: No device match data found\n");
--		return -ENODEV;
--	}
-+	size = struct_size(tdma, channels, cdata->nr_channels);
- 
--	tdma = devm_kzalloc(&pdev->dev,
--			    struct_size(tdma, channels, cdata->nr_channels),
--			    GFP_KERNEL);
-+	tdma = devm_kzalloc(&pdev->dev, size, GFP_KERNEL);
- 	if (!tdma)
- 		return -ENOMEM;
- 
-@@ -1424,10 +1434,8 @@ static int tegra_dma_probe(struct platform_device *pdev)
- 	else
- 		ret = pm_runtime_get_sync(&pdev->dev);
- 
--	if (ret < 0) {
--		pm_runtime_disable(&pdev->dev);
--		return ret;
--	}
-+	if (ret < 0)
-+		goto err_pm_disable;
- 
- 	/* Reset DMA controller */
- 	reset_control_assert(tdma->rst);
-@@ -1470,13 +1478,13 @@ static int tegra_dma_probe(struct platform_device *pdev)
- 		tdc->dma_chan.device = &tdma->dma_dev;
- 		dma_cookie_init(&tdc->dma_chan);
- 		list_add_tail(&tdc->dma_chan.device_node,
--				&tdma->dma_dev.channels);
-+			      &tdma->dma_dev.channels);
- 		tdc->tdma = tdma;
- 		tdc->id = i;
- 		tdc->slave_id = TEGRA_APBDMA_SLAVE_ID_INVALID;
- 
- 		tasklet_init(&tdc->tasklet, tegra_dma_tasklet,
--				(unsigned long)tdc);
-+			     (unsigned long)tdc);
- 		spin_lock_init(&tdc->lock);
- 
- 		INIT_LIST_HEAD(&tdc->pending_sg_req);
-@@ -1528,16 +1536,19 @@ static int tegra_dma_probe(struct platform_device *pdev)
- 		goto err_unregister_dma_dev;
- 	}
- 
--	dev_info(&pdev->dev, "Tegra20 APB DMA driver register %d channels\n",
--			cdata->nr_channels);
-+	dev_info(&pdev->dev, "Tegra20 APB DMA driver registered %u channels\n",
-+		 cdata->nr_channels);
-+
- 	return 0;
- 
- err_unregister_dma_dev:
- 	dma_async_device_unregister(&tdma->dma_dev);
-+
- err_pm_disable:
- 	pm_runtime_disable(&pdev->dev);
- 	if (!pm_runtime_status_suspended(&pdev->dev))
- 		tegra_dma_runtime_suspend(&pdev->dev);
-+
- 	return ret;
- }
- 
-@@ -1557,7 +1568,7 @@ static int tegra_dma_remove(struct platform_device *pdev)
- static int tegra_dma_runtime_suspend(struct device *dev)
- {
- 	struct tegra_dma *tdma = dev_get_drvdata(dev);
--	int i;
-+	unsigned int i;
- 
- 	tdma->reg_gen = tdma_read(tdma, TEGRA_APBDMA_GENERAL);
- 	for (i = 0; i < tdma->chip_data->nr_channels; i++) {
-@@ -1586,7 +1597,8 @@ static int tegra_dma_runtime_suspend(struct device *dev)
- static int tegra_dma_runtime_resume(struct device *dev)
- {
- 	struct tegra_dma *tdma = dev_get_drvdata(dev);
--	int i, ret;
-+	unsigned int i;
-+	int ret;
- 
- 	ret = clk_prepare_enable(tdma->dma_clk);
- 	if (ret < 0) {
-@@ -1614,7 +1626,7 @@ static int tegra_dma_runtime_resume(struct device *dev)
- 		tdc_write(tdc, TEGRA_APBDMA_CHAN_AHBSEQ, ch_reg->ahb_seq);
- 		tdc_write(tdc, TEGRA_APBDMA_CHAN_AHBPTR, ch_reg->ahb_ptr);
- 		tdc_write(tdc, TEGRA_APBDMA_CHAN_CSR,
--			(ch_reg->csr & ~TEGRA_APBDMA_CSR_ENB));
-+			  ch_reg->csr & ~TEGRA_APBDMA_CSR_ENB);
- 	}
- 
- 	return 0;
--- 
-2.24.0
+Thanks,
 
+//Bean
