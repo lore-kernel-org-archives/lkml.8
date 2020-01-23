@@ -2,214 +2,221 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D59FBC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 11:54:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3CE5C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 11:55:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B564224655
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 11:54:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C177A24655
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 11:55:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728811AbgAWLy6 (ORCPT
+        id S1727523AbgAWLy5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 06:54:58 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:39803 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726026AbgAWLy5 (ORCPT
+        Thu, 23 Jan 2020 06:54:57 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:57889 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726219AbgAWLy5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 23 Jan 2020 06:54:57 -0500
-Received: from [5.158.153.53] (helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1iub4X-0007Xb-T4; Thu, 23 Jan 2020 12:54:54 +0100
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 838C0101594; Thu, 23 Jan 2020 12:54:53 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     x86@kernel.org, Anthony Buckley <tony.buckley000@gmail.com>,
-        Daniel Drake <drake@endlessm.com>
-Subject: [PATCH] x86/timer: Don't skip PIT setup when APIC is disabled or in legacy mode
-Date:   Thu, 23 Jan 2020 12:54:53 +0100
-Message-ID: <87sgk6tmk2.fsf@nanos.tec.linutronix.de>
+Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=bjornoya.blackshift.org)
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mkl@pengutronix.de>)
+        id 1iub4G-0007cn-FW; Thu, 23 Jan 2020 12:54:36 +0100
+Received: from [IPv6:2a03:f580:87bc:d400:197e:2d9b:882c:b51d] (unknown [IPv6:2a03:f580:87bc:d400:197e:2d9b:882c:b51d])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits) server-digest SHA256
+         client-signature RSA-PSS (4096 bits) client-digest SHA256)
+        (Client CN "mkl@blackshift.org", Issuer "StartCom Class 1 Client CA" (not verified))
+        (Authenticated sender: mkl@blackshift.org)
+        by smtp.blackshift.org (Postfix) with ESMTPSA id 23BAF4A8E22;
+        Thu, 23 Jan 2020 11:54:32 +0000 (UTC)
+To:     Faiz Abbas <faiz_abbas@ti.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, netdev@vger.kernel.org,
+        linux-can@vger.kernel.org
+Cc:     catalin.marinas@arm.com, mark.rutland@arm.com, robh+dt@kernel.org,
+        davem@davemloft.net, wg@grandegger.com, sriram.dash@samsung.com,
+        dmurphy@ti.com, nm@ti.com, t-kristo@ti.com
+References: <20200122080310.24653-1-faiz_abbas@ti.com>
+ <e3025ab6-04b5-3eba-5e0d-70caabee26fb@pengutronix.de>
+ <f6bf75f0-68ea-0b61-ed43-9ad894016cfd@ti.com>
+From:   Marc Kleine-Budde <mkl@pengutronix.de>
+Openpgp: preference=signencrypt
+Autocrypt: addr=mkl@pengutronix.de; prefer-encrypt=mutual; keydata=
+ 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
+Subject: Re: [PATCH 0/3] Add Support for MCAN in AM654x-idk
+Message-ID: <8316b645-72a8-7348-ad4c-1a84535b8b3f@pengutronix.de>
+Date:   Thu, 23 Jan 2020 12:54:27 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+In-Reply-To: <f6bf75f0-68ea-0b61-ed43-9ad894016cfd@ti.com>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+ protocol="application/pgp-signature";
+ boundary="ZekFneOlWau0d0DimzpZ8ix6vmezbf04K"
+X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
+X-SA-Exim-Mail-From: mkl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Tony reported a boot regression caused by the recent workaround for systems
-which have a disabled (clock gate off) PIT.
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--ZekFneOlWau0d0DimzpZ8ix6vmezbf04K
+Content-Type: multipart/mixed; boundary="dZh96g5yZPeAk3UDgD43pvfcj6xxa9jF3";
+ protected-headers="v1"
+From: Marc Kleine-Budde <mkl@pengutronix.de>
+To: Faiz Abbas <faiz_abbas@ti.com>, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+ netdev@vger.kernel.org, linux-can@vger.kernel.org
+Cc: catalin.marinas@arm.com, mark.rutland@arm.com, robh+dt@kernel.org,
+ davem@davemloft.net, wg@grandegger.com, sriram.dash@samsung.com,
+ dmurphy@ti.com, nm@ti.com, t-kristo@ti.com
+Message-ID: <8316b645-72a8-7348-ad4c-1a84535b8b3f@pengutronix.de>
+Subject: Re: [PATCH 0/3] Add Support for MCAN in AM654x-idk
+References: <20200122080310.24653-1-faiz_abbas@ti.com>
+ <e3025ab6-04b5-3eba-5e0d-70caabee26fb@pengutronix.de>
+ <f6bf75f0-68ea-0b61-ed43-9ad894016cfd@ti.com>
+In-Reply-To: <f6bf75f0-68ea-0b61-ed43-9ad894016cfd@ti.com>
 
-On his machine the kernel fails to initialize the PIT because
-apic_needs_pit() does not take into account whether the local APIC
-interrupt delivery mode will actually allow to setup and use the local
-APIC timer. This should be easily to reproduce with acpi=off on the
-command line which also disables HPET.
+--dZh96g5yZPeAk3UDgD43pvfcj6xxa9jF3
+Content-Type: text/plain; charset=utf-8
+Content-Language: de-DE
+Content-Transfer-Encoding: quoted-printable
 
-Due to the way the PIT/HPET and APIC setup ordering works (APIC setup can
-require working PIT/HPET) the information is not available at the point
-where apic_needs_pit() makes this decision.
-
-To address this split out the interrupt mode selection from
-apic_intr_mode_init(), invoke the selection before making the decision
-whether PIT is required or not and add the missing checks into
-apic_needs_pit().
-
-Fixes: c8c4076723da ("x86/timer: Skip PIT initialization on modern chipsets")
-Reported-by: Anthony Buckley <tony.buckley000@gmail.com> 
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=206125
----
-
-Note:
-
-I don't have access to my test boxes right now so this is untested. But
-it works perfectly fine in my brain based x86 emulator :)
-
----
- arch/x86/include/asm/apic.h     |    2 ++
- arch/x86/include/asm/x86_init.h |    2 ++
- arch/x86/kernel/apic/apic.c     |   23 ++++++++++++++++++-----
- arch/x86/kernel/time.c          |   12 ++++++++++--
- arch/x86/kernel/x86_init.c      |    1 +
- arch/x86/xen/enlighten_pv.c     |    1 +
- 6 files changed, 34 insertions(+), 7 deletions(-)
-
---- a/arch/x86/include/asm/apic.h
-+++ b/arch/x86/include/asm/apic.h
-@@ -140,6 +140,7 @@ extern void apic_soft_disable(void);
- extern void lapic_shutdown(void);
- extern void sync_Arb_IDs(void);
- extern void init_bsp_APIC(void);
-+extern void apic_intr_mode_select(void);
- extern void apic_intr_mode_init(void);
- extern void init_apic_mappings(void);
- void register_lapic_address(unsigned long address);
-@@ -188,6 +189,7 @@ static inline void disable_local_APIC(vo
- # define setup_secondary_APIC_clock x86_init_noop
- static inline void lapic_update_tsc_freq(void) { }
- static inline void init_bsp_APIC(void) { }
-+static inline void apic_intr_mode_select(void) { }
- static inline void apic_intr_mode_init(void) { }
- static inline void lapic_assign_system_vectors(void) { }
- static inline void lapic_assign_legacy_vector(unsigned int i, bool r) { }
---- a/arch/x86/include/asm/x86_init.h
-+++ b/arch/x86/include/asm/x86_init.h
-@@ -51,12 +51,14 @@ struct x86_init_resources {
-  *				are set up.
-  * @intr_init:			interrupt init code
-  * @trap_init:			platform specific trap setup
-+ * @intr_mode_select:		interrupt delivery mode selection
-  * @intr_mode_init:		interrupt delivery mode setup
-  */
- struct x86_init_irqs {
- 	void (*pre_vector_init)(void);
- 	void (*intr_init)(void);
- 	void (*trap_init)(void);
-+	void (*intr_mode_select)(void);
- 	void (*intr_mode_init)(void);
- };
- 
---- a/arch/x86/kernel/apic/apic.c
-+++ b/arch/x86/kernel/apic/apic.c
-@@ -830,8 +830,17 @@ bool __init apic_needs_pit(void)
- 	if (!tsc_khz || !cpu_khz)
- 		return true;
- 
--	/* Is there an APIC at all? */
--	if (!boot_cpu_has(X86_FEATURE_APIC))
-+	/* Is there an APIC at all or is it disabled? */
-+	if (!boot_cpu_has(X86_FEATURE_APIC) || disable_apic)
-+		return true;
+On 1/23/20 12:46 PM, Faiz Abbas wrote:
+> Marc,
+>=20
+> On 23/01/20 4:47 pm, Marc Kleine-Budde wrote:
+>> On 1/22/20 9:03 AM, Faiz Abbas wrote:
+>>> This series adds driver patches to support MCAN in TI's AM654x-idk.
+>>>
+>>> Faiz Abbas (3):
+>>>   dt-bindings: net: can: m_can: Add Documentation for stb-gpios
+>>>   can: m_can: m_can_platform: Add support for enabling transceiver
+>>>     through the STB line
+>>>   arm64: defconfig: Add Support for Bosch M_CAN controllers
+>>>
+>>>  Documentation/devicetree/bindings/net/can/m_can.txt |  2 ++
+>>>  arch/arm64/configs/defconfig                        |  3 +++
+>>>  drivers/net/can/m_can/m_can_platform.c              | 12 +++++++++++=
 +
-+	/*
-+	 * If interrupt delivery mode is legacy PIC or virtual wire without
-+	 * configuration the local APIC timer wont be set up. Make sure
-+	 * that the PIT is initialized.
-+	 */
-+	if (apic_intr_mode == APIC_PIC ||
-+	    apic_intr_mode == APIC_VIRTUAL_WIRE_NO_CONFIG)
- 		return true;
- 
- 	/* Virt guests may lack ARAT, but still have DEADLINE */
-@@ -1322,7 +1331,7 @@ void __init sync_Arb_IDs(void)
- 
- enum apic_intr_mode_id apic_intr_mode __ro_after_init;
- 
--static int __init apic_intr_mode_select(void)
-+static int __init __apic_intr_mode_select(void)
- {
- 	/* Check kernel option */
- 	if (disable_apic) {
-@@ -1384,6 +1393,12 @@ static int __init apic_intr_mode_select(
- 	return APIC_SYMMETRIC_IO;
- }
- 
-+/* Select the interrupt delivery mode for the BSP */
-+void __init apic_intr_mode_select(void)
-+{
-+	apic_intr_mode = __apic_intr_mode_select();
-+}
-+
- /*
-  * An initial setup of the virtual wire mode.
-  */
-@@ -1440,8 +1455,6 @@ void __init apic_intr_mode_init(void)
- {
- 	bool upmode = IS_ENABLED(CONFIG_UP_LATE_INIT);
- 
--	apic_intr_mode = apic_intr_mode_select();
--
- 	switch (apic_intr_mode) {
- 	case APIC_PIC:
- 		pr_info("APIC: Keep in PIC mode(8259)\n");
---- a/arch/x86/kernel/time.c
-+++ b/arch/x86/kernel/time.c
-@@ -91,10 +91,18 @@ void __init hpet_time_init(void)
- 
- static __init void x86_late_time_init(void)
- {
-+	/*
-+	 * Before PIT/HPET init, select the interrupt mode. This is required
-+	 * to make the decision whether PIT should be initialized correct.
-+	 */
-+	x86_init.irqs.intr_mode_select();
-+
-+	/* Setup the legacy timers */
- 	x86_init.timers.timer_init();
-+
- 	/*
--	 * After PIT/HPET timers init, select and setup
--	 * the final interrupt mode for delivering IRQs.
-+	 * After PIT/HPET timers init, setup the final interrupt mode for
-+	 * delivering IRQs.
- 	 */
- 	x86_init.irqs.intr_mode_init();
- 	tsc_init();
---- a/arch/x86/kernel/x86_init.c
-+++ b/arch/x86/kernel/x86_init.c
-@@ -80,6 +80,7 @@ struct x86_init_ops x86_init __initdata
- 		.pre_vector_init	= init_ISA_irqs,
- 		.intr_init		= native_init_IRQ,
- 		.trap_init		= x86_init_noop,
-+		.intr_mode_select	= apic_intr_mode_select,
- 		.intr_mode_init		= apic_intr_mode_init
- 	},
- 
---- a/arch/x86/xen/enlighten_pv.c
-+++ b/arch/x86/xen/enlighten_pv.c
-@@ -1205,6 +1205,7 @@ asmlinkage __visible void __init xen_sta
- 	x86_platform.get_nmi_reason = xen_get_nmi_reason;
- 
- 	x86_init.resources.memory_setup = xen_memory_setup;
-+	x86_init.irqs.intr_mode_select	= x86_init_noop;
- 	x86_init.irqs.intr_mode_init	= x86_init_noop;
- 	x86_init.oem.arch_setup = xen_arch_setup;
- 	x86_init.oem.banner = xen_banner;
+>>>  3 files changed, 17 insertions(+)
+>>
+>> What about adding support for xceiver-supply as done in several other
+>> drivers (ti_hecc.c, flexcan.c, mcp251x.c)? And using this for the stb =
+line?
+>=20
+> Looks like you had given this feedback a long time ago and I forgot
+> about it. Sorry about that :-)
+>=20
+> https://lore.kernel.org/patchwork/patch/1006238/
+>=20
+> But now that I think about it, its kinda weird that we are modelling
+> part of the transceiver as a separate child node
+> (Documentation/devicetree/bindings/net/can/can-transceiver.txt) and the=
+
+> other parts as a regulator.
+
+We need a regulator, as there are dual phy chips with a single enable lin=
+e.
+
+> Anyone looking at the transceiver node would figure thats where the
+> enable gpio/regulator node needs to go instead of the parent node.
+> Shouldn't we have all transceiver properties under the same node?
+
+Feel free to add support for the regulator to the transceiver node and
+convert the existing drivers to accept both bindings.
+
+Marc
+
+--=20
+Pengutronix e.K.                 | Marc Kleine-Budde           |
+Embedded Linux                   | https://www.pengutronix.de  |
+Vertretung West/Dortmund         | Phone: +49-231-2826-924     |
+Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-5555 |
+
+
+--dZh96g5yZPeAk3UDgD43pvfcj6xxa9jF3--
+
+--ZekFneOlWau0d0DimzpZ8ix6vmezbf04K
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCgAdFiEEmvEkXzgOfc881GuFWsYho5HknSAFAl4piXMACgkQWsYho5Hk
+nSDbYQf9FulmhfP1PMrOxVuC+lmRBuENjjVM3uSBabZp45CsDtFmdtNkuZzC49V5
+UmJ+iQda6TF3lki1QR4qjPV2zsjh7Gu/b6YKGryqKsieWNoQ6fwmpltKSqHw4YA/
+fSZzbIalXxRQ1M8hMhpR06IP0PR91Ge4f/ABv4To72wKAaEMeC0bVCWKUNPpisHT
+rObprWj1W2gh/Bh5vMg6zPHY5+HQYzr8qcsbt1l5LbxQMN7kiwuDHp4/fWA7RemE
+21nv/dd6B24RIJ3b0Urq4zXVvXguoZbQmH0Ay1T8xo4ck64RVDfP2rK6oK1lgIqq
+TCfcyvxUxGE2tusFiMy/PV/ps7uvfQ==
+=vRTh
+-----END PGP SIGNATURE-----
+
+--ZekFneOlWau0d0DimzpZ8ix6vmezbf04K--
