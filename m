@@ -2,121 +2,493 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 562B6C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 14:45:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65904C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 14:47:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E742020704
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 14:45:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32BB32073A
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 14:47:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=axentia.se header.i=@axentia.se header.b="TV4nOYNj"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="VRBmk66E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728904AbgAWOpd (ORCPT
+        id S1728913AbgAWOrn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 09:45:33 -0500
-Received: from mail-am6eur05on2116.outbound.protection.outlook.com ([40.107.22.116]:13249
-        "EHLO EUR05-AM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726240AbgAWOpc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 09:45:32 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Ie6al1RmL5nWswLTHQxrAKkHyWNhdd1KlBp9QkWsLdYIl4Si5yrU8oFJY03vB28iA6gXxj7tFypVZIuYwHmgZf1r18vZ7GMHIhmJ8mIz2YDvSDqNNYID0ILxlMV9+xkP5PrN4ngG0WVOTvN1K1h7V6k9xqGljoJhVl2j52MG/Vr3BQ7Sa487AK2rIXy9RTvjfYAL6JByMg6YumzX3R7H+opNjC0t00f40uHrbrDbJmWuW3KE1769An+GnvukjtCHSHVXQ6sgm1S2ldJMky8HGEIAL6rwx4+35pyVQjekooQWMEkBQfUHLA9vks+d+R0iMR7zKIofbLrpsw4gPh92Rg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=mFsGCrLedaPH7ntniz0lqgtuCFCWTxRCSv6KwxszsHc=;
- b=bC1/jfQf/nYyHTXafvppFc7c1T7t8rQCAck61/LZTjZbhkKm/WdD60Nj+nARKjC88hgP/KBw9w+CsvJPB+u+JRryWmd/mIb4+ZwKE0eMRElAxQ4L+b33yQj4iejY7M/EShGRSLHCd82Eccc4iV54P5WpVAhVvb+9BpiYmEZwRHv9Wgv71XvuIkDRyUuGP/kIjhCAW0xRaubTTLgsqDDb1l9RDbKY12hOS0/JQPheYpZ0+cpigGm1mvT/AaVIA+sfB7zegBdGdLgrvccZDylHI0mYd9nRkEBUyA8KBheqZsaq86lCjQ4FsdYyxbDTRF9Lvin4NcoJX7soyzvhvbUyuQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=axentia.se; dmarc=pass action=none header.from=axentia.se;
- dkim=pass header.d=axentia.se; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axentia.se;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=mFsGCrLedaPH7ntniz0lqgtuCFCWTxRCSv6KwxszsHc=;
- b=TV4nOYNji4n0HJFRR/7q+AWDgXikL1tnBMzmy3FB57QiNH+o5cysbt9KoQWuF5qkQWWN81gxrCw8Yysy0Sb6ahJU2Fti/w7PXi3FvoLFtdn57tw+ar8BkzcP37paDG4IGBleiVSG14IxLyd5/ZYTIkIb8EpvxX0oll7llbJbjq4=
-Received: from DB3PR0202MB3434.eurprd02.prod.outlook.com (52.134.66.158) by
- DB3PR0202MB3338.eurprd02.prod.outlook.com (52.134.72.156) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2644.25; Thu, 23 Jan 2020 14:45:28 +0000
-Received: from DB3PR0202MB3434.eurprd02.prod.outlook.com
- ([fe80::cd85:a8a5:da14:db13]) by DB3PR0202MB3434.eurprd02.prod.outlook.com
- ([fe80::cd85:a8a5:da14:db13%7]) with mapi id 15.20.2644.027; Thu, 23 Jan 2020
- 14:45:28 +0000
-Received: from [192.168.13.3] (213.112.138.4) by HE1P18901CA0019.EURP189.PROD.OUTLOOK.COM (2603:10a6:3:8b::29) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2644.20 via Frontend Transport; Thu, 23 Jan 2020 14:45:28 +0000
-From:   Peter Rosin <peda@axentia.se>
-To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
-CC:     Nicolas Ferre <nicolas.ferre@microchip.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] ARM: dts: at91: nattis 2: remove unnecessary include
-Thread-Topic: [PATCH] ARM: dts: at91: nattis 2: remove unnecessary include
-Thread-Index: AQHVvod43Bw201Hu2UKhmyhbyxCTNqf4em+A
-Date:   Thu, 23 Jan 2020 14:45:28 +0000
-Message-ID: <a0d80517-5528-8646-91c1-60a7c24511f9@axentia.se>
-References: <20191229203503.336593-1-alexandre.belloni@bootlin.com>
-In-Reply-To: <20191229203503.336593-1-alexandre.belloni@bootlin.com>
-Accept-Language: en-US, sv-SE
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-x-originating-ip: [213.112.138.4]
-x-clientproxiedby: HE1P18901CA0019.EURP189.PROD.OUTLOOK.COM
- (2603:10a6:3:8b::29) To DB3PR0202MB3434.eurprd02.prod.outlook.com
- (2603:10a6:8:5::30)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=peda@axentia.se; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: ddfe978a-40c1-49a6-a0d1-08d7a012e3a2
-x-ms-traffictypediagnostic: DB3PR0202MB3338:
-x-microsoft-antispam-prvs: <DB3PR0202MB3338AF0CAA0CD68069F6FFC3BC0F0@DB3PR0202MB3338.eurprd02.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:5236;
-x-forefront-prvs: 029174C036
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(136003)(366004)(376002)(39830400003)(346002)(189003)(199004)(26005)(508600001)(66476007)(66946007)(4326008)(66446008)(64756008)(66556008)(16526019)(53546011)(6486002)(36756003)(6916009)(2906002)(52116002)(186003)(956004)(2616005)(81166006)(4744005)(8936002)(54906003)(5660300002)(71200400001)(4001150100001)(31686004)(316002)(81156014)(8676002)(31696002)(86362001)(16576012);DIR:OUT;SFP:1102;SCL:1;SRVR:DB3PR0202MB3338;H:DB3PR0202MB3434.eurprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: axentia.se does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: SU5htzVeZCSH3UvBUWC6YWl/y1g7ntWcj/5LVk/Ulum/AovnzP5LIDKXYP0aZCifipg4qytMseabXkLPI4Be+nKcI9haCMNJFVFTS4xjeN30Cc2nVP+hIcSBRELhWBptTI7Uo9Jdjf9GeVKXC5USiHTxkQwk4MPw4cREfMsOMFE319p6U5ei2ZeJnO7ByHkap7OhEn3Ad7j4TFubnm4Dq/YNvd62B03RFiEcXl6kQ78YC+NCwGUoCEUqwrjlmaOaU2vmDY4AjEuG2L2q3zz9GSkILfFplXYAZnyTaKR3WtMGdMldz3bDiuwakmN10B3pkw9gfcmJnuC/ApD4bScNbu6uh+/vZIJwaXwqiFrCx7OvGi5Uq1WO+X7Nu3ET7C5aGhJ9Mn/lONi5KVrQHSI/1HteBx5fX77FqJJsvjHFW8LMrIIZNJ6/NgsyUy8GDoo/
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <95C48D244022944F9746CC17890F5003@eurprd02.prod.outlook.com>
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-OriginatorOrg: axentia.se
-X-MS-Exchange-CrossTenant-Network-Message-Id: ddfe978a-40c1-49a6-a0d1-08d7a012e3a2
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Jan 2020 14:45:28.7035
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 4ee68585-03e1-4785-942a-df9c1871a234
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: KysZujrL1/8uxUKfo5xRoZPV5lBgw++drh0slssKMy9Jq95KnHiMfJjllKMUVcp6
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0202MB3338
+        Thu, 23 Jan 2020 09:47:43 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:46128 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727235AbgAWOrm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jan 2020 09:47:42 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00NERddH119730;
+        Thu, 23 Jan 2020 14:47:37 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references; s=corp-2019-08-05;
+ bh=lRWecnHBhGftPr0G0USX+at+/U4EPMsIEQJU7VqrFEM=;
+ b=VRBmk66E0pN1BHcLDoAd5yC0VM2RB9npFrI9yuEaItSGbVsKoGkFtzzcEUc0wx57uwtl
+ kWfj+/SgeJ25V+0wnpQf9hL9D0F6AKkd8o5jcliCREBUtik7/bnLuRnKof6wWcpuWMOu
+ rQrBtSvVGIcKihja5yKdEG+agAinhaJF8E9ycb5BFCY3aL3xCn1yD3Q6TixZZu46LHA7
+ gzUhgzRY9QDRe6zW0V+oS7lJ2YpUXqTEBGxeutgVDzkq2iKVMjr7iyHIHexl3jbStAWc
+ tu4yyYrnN7IaOncP8sqwy5IN3g62HZ5B8wsM688PxGaL2D1n2bxBqec5Y8Bf9rvqYccS ww== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 2xkseuttpv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 23 Jan 2020 14:47:36 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00NET594007741;
+        Thu, 23 Jan 2020 14:47:36 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3030.oracle.com with ESMTP id 2xpq7mw42x-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 23 Jan 2020 14:47:36 +0000
+Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 00NElZDA031861;
+        Thu, 23 Jan 2020 14:47:35 GMT
+Received: from dhcp-10-175-173-105.vpn.oracle.com (/10.175.173.105)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 23 Jan 2020 06:47:35 -0800
+From:   Alan Maguire <alan.maguire@oracle.com>
+To:     brendanhiggins@google.com
+Cc:     corbet@lwn.net, linux-kselftest@vger.kernel.org,
+        kunit-dev@googlegroups.com, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Alan Maguire <alan.maguire@oracle.com>
+Subject: [PATCH kunit 1/3] kunit: add debugfs /sys/kernel/debug/kunit/<suite>/results display
+Date:   Thu, 23 Jan 2020 14:47:18 +0000
+Message-Id: <1579790840-27009-2-git-send-email-alan.maguire@oracle.com>
+X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <1579790840-27009-1-git-send-email-alan.maguire@oracle.com>
+References: <1579790840-27009-1-git-send-email-alan.maguire@oracle.com>
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9508 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=18 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-2001230124
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9508 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=18 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-2001230124
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gMjAxOS0xMi0yOSAyMTozNSwgQWxleGFuZHJlIEJlbGxvbmkgd3JvdGU6DQo+IHNhbWE1ZDNf
-bGNkLmR0c2kgaXMgYWxyZWFkeSBpbmNsdWRlZCBieSBzYW1hNWQzMS5kdHNpLCBpdHNlbGYgaW5j
-bHVkZWQgYnkNCj4gYXQ5MS1saW5lYS5kdHNpLg0KDQpSaWdodCwgZ29vZCBjYXRjaC4NCg0KQWNr
-ZWQtYnk6IFBldGVyIFJvc2luIDxwZWRhQGF4ZW50aWEuc2U+DQoNCkNoZWVycywNClBldGVyDQoN
-CltTb3JyeSBmb3IgdGhlIGRlbGF5LCB0aGUgcGF0Y2ggd2FzIG1hcmtlZCBhcyBzcGFtIG92ZXIg
-aGVyZSBhbmQgSSBmYWlsZWQgdG8NCm5vdGljZSBpdCB1bnRpbCBub3cuLi5dDQoNCj4gU2lnbmVk
-LW9mZi1ieTogQWxleGFuZHJlIEJlbGxvbmkgPGFsZXhhbmRyZS5iZWxsb25pQGJvb3RsaW4uY29t
-Pg0KPiAtLS0NCj4gIGFyY2gvYXJtL2Jvb3QvZHRzL2F0OTEtbmF0dGlzLTItbmF0dGUtMi5kdHMg
-fCAxIC0NCj4gIDEgZmlsZSBjaGFuZ2VkLCAxIGRlbGV0aW9uKC0pDQo+IA0KPiBkaWZmIC0tZ2l0
-IGEvYXJjaC9hcm0vYm9vdC9kdHMvYXQ5MS1uYXR0aXMtMi1uYXR0ZS0yLmR0cyBiL2FyY2gvYXJt
-L2Jvb3QvZHRzL2F0OTEtbmF0dGlzLTItbmF0dGUtMi5kdHMNCj4gaW5kZXggZjI0NTk0NGJkNWQ3
-Li40ZjEyMzQ3N2U2MzEgMTAwNjQ0DQo+IC0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRzL2F0OTEtbmF0
-dGlzLTItbmF0dGUtMi5kdHMNCj4gKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvYXQ5MS1uYXR0aXMt
-Mi1uYXR0ZS0yLmR0cw0KPiBAQCAtOCw3ICs4LDYgQEANCj4gICAqLw0KPiAgL2R0cy12MS87DQo+
-ICAjaW5jbHVkZSAiYXQ5MS1saW5lYS5kdHNpIg0KPiAtI2luY2x1ZGUgInNhbWE1ZDNfbGNkLmR0
-c2kiDQo+ICAjaW5jbHVkZSAiYXQ5MS1uYXR0ZS5kdHNpIg0KPiAgDQo+ICAvIHsNCj4gDQoNCg==
+add debugfs support for displaying kunit test suite results; this is
+especially useful for module-loaded tests to allow disentangling of
+test result display from other dmesg events.
+
+Signed-off-by: Alan Maguire <alan.maguire@oracle.com>
+---
+ include/kunit/test.h |  21 +++++++---
+ lib/kunit/Makefile   |   3 +-
+ lib/kunit/debugfs.c  | 111 +++++++++++++++++++++++++++++++++++++++++++++++++++
+ lib/kunit/debugfs.h  |  11 +++++
+ lib/kunit/test.c     |  88 ++++++++++++++++++++++++++++++----------
+ 5 files changed, 206 insertions(+), 28 deletions(-)
+ create mode 100644 lib/kunit/debugfs.c
+ create mode 100644 lib/kunit/debugfs.h
+
+diff --git a/include/kunit/test.h b/include/kunit/test.h
+index 2dfb550..37219b8a 100644
+--- a/include/kunit/test.h
++++ b/include/kunit/test.h
+@@ -125,6 +125,8 @@ struct kunit_case {
+ 	bool success;
+ };
+ 
++#define	kunit_status2str(status)	(status ? "ok" : "not ok")
++
+ /**
+  * KUNIT_CASE - A helper for creating a &struct kunit_case
+  *
+@@ -157,6 +159,9 @@ struct kunit_suite {
+ 	int (*init)(struct kunit *test);
+ 	void (*exit)(struct kunit *test);
+ 	struct kunit_case *test_cases;
++
++	/* private - internal use only */
++	struct dentry *debugfs;
+ };
+ 
+ /**
+@@ -197,6 +202,15 @@ struct kunit {
+ 
+ int kunit_run_tests(struct kunit_suite *suite);
+ 
++size_t kunit_suite_num_test_cases(struct kunit_suite *suite);
++
++unsigned int kunit_test_case_num(struct kunit_suite *suite,
++				 struct kunit_case *test_case);
++
++int __kunit_test_suites_init(struct kunit_suite **suites);
++
++void __kunit_test_suites_exit(struct kunit_suite **suites);
++
+ /**
+  * kunit_test_suites() - used to register one or more &struct kunit_suite
+  *			 with KUnit.
+@@ -226,15 +240,12 @@ struct kunit {
+ 	static struct kunit_suite *suites[] = { __VA_ARGS__, NULL};	\
+ 	static int kunit_test_suites_init(void)				\
+ 	{								\
+-		unsigned int i;						\
+-		for (i = 0; suites[i] != NULL; i++)			\
+-			kunit_run_tests(suites[i]);			\
+-		return 0;						\
++		return __kunit_test_suites_init(suites);		\
+ 	}								\
+ 	late_initcall(kunit_test_suites_init);				\
+ 	static void __exit kunit_test_suites_exit(void)			\
+ 	{								\
+-		return;							\
++		return __kunit_test_suites_exit(suites);		\
+ 	}								\
+ 	module_exit(kunit_test_suites_exit)
+ 
+diff --git a/lib/kunit/Makefile b/lib/kunit/Makefile
+index fab5564..869aab0 100644
+--- a/lib/kunit/Makefile
++++ b/lib/kunit/Makefile
+@@ -3,7 +3,8 @@ obj-$(CONFIG_KUNIT) +=			kunit.o
+ kunit-objs +=				test.o \
+ 					string-stream.o \
+ 					assert.o \
+-					try-catch.o
++					try-catch.o \
++					debugfs.o
+ 
+ obj-$(CONFIG_KUNIT_TEST) +=		kunit-test.o
+ 
+diff --git a/lib/kunit/debugfs.c b/lib/kunit/debugfs.c
+new file mode 100644
+index 0000000..5994f32
+--- /dev/null
++++ b/lib/kunit/debugfs.c
+@@ -0,0 +1,111 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (c) 2020, Oracle and/or its affiliates.
++ *    Author: Alan Maguire <alan.maguire@oracle.com>
++ */
++#include <asm/unistd.h>
++#include <linux/debugfs.h>
++#include <linux/module.h>
++#include <linux/time.h>
++
++#include <uapi/linux/limits.h>
++#include <kunit/test.h>
++
++#include "string-stream.h"
++
++#define KUNIT_DEBUGFS_ROOT             "kunit"
++#define KUNIT_DEBUGFS_RESULTS          "results"
++
++/*
++ * Create a debugfs representation of test suites:
++ *
++ * Path						Semantics
++ * /sys/kernel/debug/kunit/<testsuite>/results	Show results of last run for
++ *						testsuite
++ *
++ */
++
++static struct dentry *debugfs_rootdir;
++
++void debugfs_cleanup(void)
++{
++	debugfs_remove(debugfs_rootdir);
++}
++
++int debugfs_init(void)
++{
++	if (!debugfs_rootdir)
++		debugfs_rootdir = debugfs_create_dir(KUNIT_DEBUGFS_ROOT, NULL);
++	if (IS_ERR(debugfs_rootdir))
++		return PTR_ERR(debugfs_rootdir);
++	return 0;
++}
++
++static void debugfs_print_result(struct seq_file *seq,
++				 struct kunit_suite *suite,
++				 struct kunit_case *test_case)
++{
++	if (!test_case)
++		return;
++
++	seq_printf(seq, "\t%s %d - %s\n", kunit_status2str(test_case->success),
++		   kunit_test_case_num(suite, test_case), test_case->name);
++}
++
++/*
++ * /sys/kernel/debug/kunit/<testsuite>/results shows all results for testsuite.
++ */
++static int debugfs_print_results(struct seq_file *seq, void *v)
++{
++	struct kunit_suite *suite = (struct kunit_suite *)seq->private;
++	struct kunit_case *test_case;
++
++	if (!suite)
++		return 0;
++
++	seq_printf(seq, "\t# Subtest: %s\n", suite->name);
++	seq_printf(seq, "\t1..%zd\n", kunit_suite_num_test_cases(suite));
++
++	for (test_case = suite->test_cases; test_case->run_case; test_case++)
++		debugfs_print_result(seq, suite, test_case);
++
++	return 0;
++}
++
++static int debugfs_release(struct inode *inode, struct file *file)
++{
++	return single_release(inode, file);
++}
++
++static int debugfs_results_open(struct inode *inode, struct file *file)
++{
++	struct kunit_suite *suite;
++
++	suite = (struct kunit_suite *)inode->i_private;
++
++	return single_open(file, debugfs_print_results, suite);
++}
++
++static const struct file_operations debugfs_results_fops = {
++	.open = debugfs_results_open,
++	.read = seq_read,
++	.llseek = seq_lseek,
++	.release = debugfs_release,
++};
++
++void debugfs_create_suite(struct kunit_suite *suite)
++{
++	/* First add /sys/kernel/debug/kunit/<testsuite> */
++	suite->debugfs = debugfs_create_dir(suite->name, debugfs_rootdir);
++	if (IS_ERR(suite->debugfs))
++		return;
++
++	debugfs_create_file(KUNIT_DEBUGFS_RESULTS, S_IFREG | 0444,
++			    suite->debugfs,
++			    suite, &debugfs_results_fops);
++}
++
++void debugfs_destroy_suite(struct kunit_suite *suite)
++{
++	debugfs_remove_recursive(suite->debugfs);
++}
+diff --git a/lib/kunit/debugfs.h b/lib/kunit/debugfs.h
+new file mode 100644
+index 0000000..d74e8a4
+--- /dev/null
++++ b/lib/kunit/debugfs.h
+@@ -0,0 +1,11 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Copyright (C) 2020, Oracle and/or its affiliates.
++ */
++
++#include <kunit/test.h>
++
++void debugfs_create_suite(struct kunit_suite *suite);
++void debugfs_destroy_suite(struct kunit_suite *suite);
++int debugfs_init(void);
++void debugfs_cleanup(void);
+diff --git a/lib/kunit/test.c b/lib/kunit/test.c
+index 9242f93..efb05ba 100644
+--- a/lib/kunit/test.c
++++ b/lib/kunit/test.c
+@@ -10,6 +10,7 @@
+ #include <linux/kernel.h>
+ #include <linux/sched/debug.h>
+ 
++#include "debugfs.h"
+ #include "string-stream.h"
+ #include "try-catch-impl.h"
+ 
+@@ -28,22 +29,24 @@ static void kunit_print_tap_version(void)
+ 	}
+ }
+ 
+-static size_t kunit_test_cases_len(struct kunit_case *test_cases)
++size_t kunit_suite_num_test_cases(struct kunit_suite *suite)
+ {
+-	struct kunit_case *test_case;
++	struct kunit_case *test_case, *test_cases = suite->test_cases;
+ 	size_t len = 0;
+ 
+-	for (test_case = test_cases; test_case->run_case; test_case++)
++	for (test_case = test_cases; test_case && test_case->run_case;
++	     test_case++)
+ 		len++;
+ 
+ 	return len;
+ }
++EXPORT_SYMBOL_GPL(kunit_suite_num_test_cases);
+ 
+ static void kunit_print_subtest_start(struct kunit_suite *suite)
+ {
+ 	kunit_print_tap_version();
+ 	pr_info("\t# Subtest: %s\n", suite->name);
+-	pr_info("\t1..%zd\n", kunit_test_cases_len(suite->test_cases));
++	pr_info("\t1..%zd\n", kunit_suite_num_test_cases(suite));
+ }
+ 
+ static void kunit_print_ok_not_ok(bool should_indent,
+@@ -51,19 +54,15 @@ static void kunit_print_ok_not_ok(bool should_indent,
+ 				  size_t test_number,
+ 				  const char *description)
+ {
+-	const char *indent, *ok_not_ok;
++	const char *indent;
+ 
+ 	if (should_indent)
+ 		indent = "\t";
+ 	else
+ 		indent = "";
+ 
+-	if (is_ok)
+-		ok_not_ok = "ok";
+-	else
+-		ok_not_ok = "not ok";
+-
+-	pr_info("%s%s %zd - %s\n", indent, ok_not_ok, test_number, description);
++	pr_info("%s%s %zd - %s\n", indent, kunit_status2str(is_ok),
++		test_number, description);
+ }
+ 
+ static bool kunit_suite_has_succeeded(struct kunit_suite *suite)
+@@ -87,14 +86,20 @@ static void kunit_print_subtest_end(struct kunit_suite *suite)
+ 			      suite->name);
+ }
+ 
+-static void kunit_print_test_case_ok_not_ok(struct kunit_case *test_case,
+-					    size_t test_number)
++unsigned int kunit_test_case_num(struct kunit_suite *suite,
++				 struct kunit_case *test_case)
+ {
+-	kunit_print_ok_not_ok(true,
+-			      test_case->success,
+-			      test_number,
+-			      test_case->name);
++	struct kunit_case *tc;
++	unsigned int i;
++
++	for (i = 1, tc = suite->test_cases; tc->run_case; tc++, i++) {
++		if (tc == test_case)
++			return i;
++	}
++
++	return 0;
+ }
++EXPORT_SYMBOL_GPL(kunit_test_case_num);
+ 
+ static void kunit_print_string_stream(struct kunit *test,
+ 				      struct string_stream *stream)
+@@ -102,6 +107,9 @@ static void kunit_print_string_stream(struct kunit *test,
+ 	struct string_stream_fragment *fragment;
+ 	char *buf;
+ 
++	if (string_stream_is_empty(stream))
++		return;
++
+ 	buf = string_stream_get_string(stream);
+ 	if (!buf) {
+ 		kunit_err(test,
+@@ -303,19 +311,20 @@ static void kunit_run_case_catch_errors(struct kunit_suite *suite,
+ 	kunit_try_catch_run(try_catch, &context);
+ 
+ 	test_case->success = test.success;
++
++	kunit_print_ok_not_ok(true, test_case->success,
++			      kunit_test_case_num(suite, test_case),
++			      test_case->name);
+ }
+ 
+ int kunit_run_tests(struct kunit_suite *suite)
+ {
+ 	struct kunit_case *test_case;
+-	size_t test_case_count = 1;
+ 
+ 	kunit_print_subtest_start(suite);
+ 
+-	for (test_case = suite->test_cases; test_case->run_case; test_case++) {
++	for (test_case = suite->test_cases; test_case->run_case; test_case++)
+ 		kunit_run_case_catch_errors(suite, test_case);
+-		kunit_print_test_case_ok_not_ok(test_case, test_case_count++);
+-	}
+ 
+ 	kunit_print_subtest_end(suite);
+ 
+@@ -323,6 +332,37 @@ int kunit_run_tests(struct kunit_suite *suite)
+ }
+ EXPORT_SYMBOL_GPL(kunit_run_tests);
+ 
++static void kunit_init_suite(struct kunit_suite *suite)
++{
++	debugfs_create_suite(suite);
++}
++
++int __kunit_test_suites_init(struct kunit_suite **suites)
++{
++	unsigned int i;
++
++	for (i = 0; suites[i] != NULL; i++) {
++		kunit_init_suite(suites[i]);
++		kunit_run_tests(suites[i]);
++	}
++	return 0;
++}
++EXPORT_SYMBOL_GPL(__kunit_test_suites_init);
++
++static void kunit_exit_suite(struct kunit_suite *suite)
++{
++	debugfs_destroy_suite(suite);
++}
++
++void __kunit_test_suites_exit(struct kunit_suite **suites)
++{
++	unsigned int i;
++
++	for (i = 0; suites[i] != NULL; i++)
++		kunit_exit_suite(suites[i]);
++}
++EXPORT_SYMBOL_GPL(__kunit_test_suites_exit);
++
+ struct kunit_resource *kunit_alloc_and_get_resource(struct kunit *test,
+ 						    kunit_resource_init_t init,
+ 						    kunit_resource_free_t free,
+@@ -398,6 +438,9 @@ int kunit_resource_destroy(struct kunit *test,
+ {
+ 	struct kunit_resource *resource;
+ 
++	if (!test)
++		kfree(match_data);
++
+ 	resource = kunit_resource_remove(test, match, free, match_data);
+ 
+ 	if (!resource)
+@@ -489,12 +532,13 @@ void kunit_cleanup(struct kunit *test)
+ 
+ static int __init kunit_init(void)
+ {
+-	return 0;
++	return debugfs_init();
+ }
+ late_initcall(kunit_init);
+ 
+ static void __exit kunit_exit(void)
+ {
++	debugfs_cleanup();
+ }
+ module_exit(kunit_exit);
+ 
+-- 
+1.8.3.1
+
