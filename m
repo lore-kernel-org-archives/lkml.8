@@ -2,97 +2,141 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6811C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 10:30:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E5C5C33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 10:32:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E68C24125
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 10:30:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E9B324673
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 10:32:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726761AbgAWKal (ORCPT
+        id S1726968AbgAWKcp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 05:30:41 -0500
-Received: from foss.arm.com ([217.140.110.172]:37506 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726194AbgAWKal (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 05:30:41 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A3C1431B;
-        Thu, 23 Jan 2020 02:30:40 -0800 (PST)
-Received: from bogus (e103737-lin.cambridge.arm.com [10.1.197.49])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 64F903F6C4;
-        Thu, 23 Jan 2020 02:30:39 -0800 (PST)
-Date:   Thu, 23 Jan 2020 10:30:33 +0000
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     arnd@arndb.de, jassisinghbrar@gmail.com, cristian.marussi@arm.com,
-        peng.fan@nxp.com, peter.hilber@opensynergy.com,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH V4] firmware: arm_scmi: Make scmi core independent of the
- transport type
-Message-ID: <20200123103033.GA7511@bogus>
-References: <20200121183818.GA11522@bogus>
- <a9ec58818b5e0c982810e74efe3f5f22b930ae40.1579660436.git.viresh.kumar@linaro.org>
- <20200122121538.GA31240@bogus>
+        Thu, 23 Jan 2020 05:32:45 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:40164 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726191AbgAWKco (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jan 2020 05:32:44 -0500
+Received: by mail-oi1-f196.google.com with SMTP id c77so2432627oib.7;
+        Thu, 23 Jan 2020 02:32:44 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=QcZp4gfVUSDInEQle12WovyUYPuFeimVii8rBuqstqk=;
+        b=aioYFC+j2S0XmHJhDY6v/Qh7liRYfsoaXL9M6CfktN4Se/8PTtPXoOtYtwabONctmJ
+         dzu7jKsh8ZcjztB4lElzRHVzphEHgguRFJbZFfogC9ezQxd7WIU0yifEp8cMr7uO6rDl
+         dwg6aFqkuTdTyp82nao/JyoISOcdFGZP0tVNAPspjJdA1kAOUVr2fRBfBkR+Kflv+oyu
+         kcWI/q+/Iw0lVMI5Sx4vRPNH1mNNh/2vNEk7tjY62kvY4FVtjgwH03azNZ+X7+2ZcgTT
+         j5XsCnNB6FfMSzhk6wPKPtPpWyxwysrZY/WOY7dCSgsaRwBoj/AlRUZr4fuk9cZKRlia
+         cJ/A==
+X-Gm-Message-State: APjAAAWlEprQ3noA9n7m/4UQ0+2tDlbT7HJO9fHPV1wI22HEVUaKcvr3
+        hUmGLFpjJ/r/tYNkfLXNra4tiWS1nZo2BDa9T3w=
+X-Google-Smtp-Source: APXvYqy2H34MWaUdGdf1bbSGCmjx+hi8NQGrCSPpVJ9h7cLecMi626nnbrNMNEVvCTAVxOtrtW3m1l6awh+14xF2ZtM=
+X-Received: by 2002:aca:1a06:: with SMTP id a6mr9548275oia.148.1579775564167;
+ Thu, 23 Jan 2020 02:32:44 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200122121538.GA31240@bogus>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <56c7b6d5-1248-15bd-8441-5d80557455b3@free.fr> <CAMuHMdX3kZoEfCeGamreeWq0-Tu2+Mw8MYEbRUZV8wBS+e2K=A@mail.gmail.com>
+ <8f1f01a1-b0c7-77d5-7d01-dd53811fa217@free.fr>
+In-Reply-To: <8f1f01a1-b0c7-77d5-7d01-dd53811fa217@free.fr>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Thu, 23 Jan 2020 11:32:32 +0100
+Message-ID: <CAMuHMdW=0Qf=bdE8Vy75wySRV5wzWhgM=-vhXjc0RhLGwomF_g@mail.gmail.com>
+Subject: Re: [RFC PATCH v2] clk: Use a new helper in managed functions
+To:     Marc Gonzalez <marc.w.gonzalez@free.fr>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 22, 2020 at 12:15:38PM +0000, Sudeep Holla wrote:
-> On Wed, Jan 22, 2020 at 08:06:23AM +0530, Viresh Kumar wrote:
->
+Hi Marc,
 
-[...]
+On Thu, Jan 23, 2020 at 11:13 AM Marc Gonzalez <marc.w.gonzalez@free.fr> wrote:
+> On 22/01/2020 14:33, Geert Uytterhoeven wrote:
+> > On Wed, Jan 22, 2020 at 2:02 PM Marc Gonzalez wrote:
+> >> Introduce devm_add() to factorize devres_alloc/devres_add calls.
+> >>
+> >> Using that helper produces simpler code and smaller object size:
+> >>
+> >> 1 file changed, 27 insertions(+), 66 deletions(-)
+> >>
+> >>     text           data     bss     dec     hex filename
+> >> -   1708             80       0    1788     6fc drivers/clk/clk-devres.o
+> >> +   1508             80       0    1588     634 drivers/clk/clk-devres.o
+> >>
+> >> Signed-off-by: Marc Gonzalez <marc.w.gonzalez@free.fr>
 
-> > Can you please help me getting this tested, now that I have rebased it
-> > as well :) ?
+> >> --- a/drivers/base/devres.c
+> >> +++ b/drivers/base/devres.c
+> >> @@ -685,6 +685,20 @@ int devres_release_group(struct device *dev, void *id)
+> >>  }
+> >>  EXPORT_SYMBOL_GPL(devres_release_group);
+> >>
+> >> +void *devm_add(struct device *dev, dr_release_t func, void *arg, size_t size)
 > >
+> > Is there any advantage of using dr_release_t over "void (*action)(void *)",
+> > like devm_add_action() does?  The latter lacks the "device *" parameter.
 >
-> Sure, I will give it a go on my Juno. Thanks for the rebase, makes it
-> simpler.
+> (I did forget to mention that v1 used devm_add_action.)
+> https://patchwork.kernel.org/patch/11262685/
 >
+> A limitation of devm_add_action is that it stores the void *data argument "as is".
+> Users cannot pass the address of a struct on the stack. devm_add() addresses that
+> specific use-case, while being a minimal wrapper around devres_alloc + devres_add.
+> (devm_add_action adds an extra level of indirection.)
 
-Sorry for the delay. I gave this a spin on my Juno. I am seeing below
-warning once on boot but it continues and everything seem to work fine.
-Also the warning is not related to this change I believe and this patch
-is just helping to hit some corner case with deferred probe and devres.
-I need to spend some time to debug it.
+I didn't mean the advantage of devm_add() over devm_add_action(),
+but the advantage of dr_release_t, which has a device pointer.
 
-Regards,
-Sudeep
+> >> +{
+> >> +       void *data = devres_alloc(func, size, GFP_KERNEL);
+> >> +
+> >> +       if (data) {
+> >> +               memcpy(data, arg, size);
+> >> +               devres_add(dev, data);
+> >> +       } else
+> >> +               func(dev, arg);
+> >> +
+> >> +       return data;
+> >
+> > Why return data or NULL, instead of 0 or -Efoo, like devm_add_action()?
+>
+> My intent is to make devm_add a minimal wrapper (it even started out as
+> a macro). As such, I just transparently pass the result of devres_alloc.
+>
+> Do you see an advantage in processing the result?
 
---->8
+There are actually two questions to consider here:
+  1. Is there a use case for returning the data pointer?
+     I.e. will the caller ever use it?
+  2. Can there be another failure mode than out-of-memory?
+     Changing from NULL to ERR_PTR() later means that all callers
+     need to be updated.
 
-WARNING: CPU: 1 PID: 187 at drivers/base/dd.c:519 really_probe+0x11c/0x418
-Modules linked in:
-CPU: 1 PID: 187 Comm: kworker/1:2 Not tainted 5.5.0-rc7-00026-gf7231cd3108d-dirty #20
-Hardware name: ARM LTD ARM Juno Development Platform/ARM Juno Development Platform, BIOS EDK II Jan 16 2020
-Workqueue: events deferred_probe_work_func
-pstate: 80000005 (Nzcv daif -PAN -UAO)
-pc : really_probe+0x11c/0x418
-lr : really_probe+0x10c/0x418
-Call trace:
- really_probe+0x11c/0x418
- driver_probe_device+0xe4/0x138
- __device_attach_driver+0x90/0x110
- bus_for_each_drv+0x80/0xd0
- __device_attach+0xdc/0x160
- device_initial_probe+0x18/0x20
- bus_probe_device+0x98/0xa0
- deferred_probe_work_func+0x90/0xe0
- process_one_work+0x1ec/0x4a8
- worker_thread+0x210/0x490
- kthread+0x110/0x118
- ret_from_fork+0x10/0x18
----[ end trace 06f96d55ce6093a8 ]---
+Gr{oetje,eeting}s,
 
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
