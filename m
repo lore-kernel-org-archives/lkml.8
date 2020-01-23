@@ -2,101 +2,114 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76D1FC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 18:14:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78B02C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 18:16:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D52A2467F
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 18:14:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 519F421569
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 18:16:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fsfzk5mA"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PBWUy2bh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729037AbgAWSOx (ORCPT
+        id S1728904AbgAWSQs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 13:14:53 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:42500 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727278AbgAWSOx (ORCPT
+        Thu, 23 Jan 2020 13:16:48 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:39430 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727278AbgAWSQs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 13:14:53 -0500
-Received: by mail-ot1-f65.google.com with SMTP id 66so3624011otd.9;
-        Thu, 23 Jan 2020 10:14:52 -0800 (PST)
+        Thu, 23 Jan 2020 13:16:48 -0500
+Received: by mail-wm1-f67.google.com with SMTP id 20so3516798wmj.4
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jan 2020 10:16:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=QiY1d7i7CA5Tav17hx32IsMyqd7CfjaBpQNb7C5kBuw=;
-        b=fsfzk5mArV7ZcorT1o9PQKB9wdAMbgqF6PRn/aUZfOx0XfSoa3hebW2GJvaUPHnJP2
-         63jLNVbDZ+5I8xqjdLwD084Egu3c6rzhpxHGBgodeNT2HDUefNDKE5J0zSTBSpSSu3ix
-         YS6Sj5oLLAqy+7WRO16x7Iwptqrqzp2B19IveaCXaXHhd7e5kicoyfmr3EN6MbvvGeYx
-         oRHLceJV6ZtGa61JTf1hV+UzCzkqwUXLY7Fei/8aUeRerbdPPaVa4vnLwH3TmufPwrU6
-         gvd8quYw2cqDyLkOJ2NAZumi+0J6hBSEorjkDLovPFv6QFsQxV2FkJCWjxzh0nunCZ9g
-         5WNw==
+        bh=wA0Wlh+bd+MxRm3pbZVk/Z3ATg06ui/SAg+IeXpD4OE=;
+        b=PBWUy2bhRdikggryP8vrrfs3us8jT66cGBG5UclsBcCOs55TitHn/AqOsbVMM8s+JC
+         YhOdYvXE58Q6IEU7ZHXgZKpOMmV7WED4iplM/r9eq+5r+BebcB2VOxBdoENXeU01abfb
+         ZkMRMxJIhNmHAY8WHyx4PWkAZaB8awa/PNMgaDtlUBogkdXz11wk2V1HG+5o+RETq5eb
+         xHMRXyp+kM2yyzQ7Wmrcib0v7RW7JlkVN7aBIUfBAZvO9AzJQmVyI8Xy5fLYOO0pDdkW
+         nzHJk80MGXYxaAuVDl8ABfFKdtccGsPVYVlWOaKkQqosxP26SrXZFCunZpEOxNZiAJQn
+         6rAA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=QiY1d7i7CA5Tav17hx32IsMyqd7CfjaBpQNb7C5kBuw=;
-        b=iuU+AnRVMd3Rs+kBfnOIG25PiWKikK6LeDM0cuOIgT2fdVTVMpd4+I4QfBfPAqFyto
-         ++J4Fi69yyyq+h6+wYshT3rs7chA0WVXDjrX4onRtfIrekqt619jGfn38TFm79OhKnAV
-         CDANbr8HxtcCsblvYC5ItLZ6234/b8YZshoNNSDLAPcgz0tVf/P1cCtmdpNmGgB3KONA
-         MjDGxHwpUlOGqtZdaaPpEWw5ykxgxpP61+90ThUObz61uAW6zY92JDysALkyn9XUdymt
-         Hw7rkrPmSZc4oRxIBueKRrxPAK4wPhYTdjqe+abvH9+TPP1Ik1EaW8Oes375GC4hXD4h
-         z+ag==
-X-Gm-Message-State: APjAAAWCWcMdN4Xh9un7DQM/R57ceVBagWlqMl90Ip+BQxiiDgIT8hgx
-        eSyqP/lqlz8OoRz4DJKKlS03A58Y5P76fs8QrNk=
-X-Google-Smtp-Source: APXvYqwJjFmJNIjrARE0noxL4rB+Lw5AseD4BssMsVsC+uhiQLAVzM103SDmmU7/8SdHCFKnOl0AwIGP0+ZPEj6keBo=
-X-Received: by 2002:a9d:da2:: with SMTP id 31mr11837551ots.319.1579803291997;
- Thu, 23 Jan 2020 10:14:51 -0800 (PST)
+        bh=wA0Wlh+bd+MxRm3pbZVk/Z3ATg06ui/SAg+IeXpD4OE=;
+        b=o15Kr2uNR4nj8ZC5fZsQlZYwbPN8DBKOBEw53hXdaRJt9YCq51XNcDKkf5gWTzoGuN
+         lFyR/RmB+Tpra7KcLaprKoS7RMxIVP9vnioWxnrs2loVhUgHNOIkJXXKveU9VkTYTEAe
+         GjYY+yCk3dgAImtxMyyZUjZUsd6lhthDrFn4wAJR50/nWYP3q2ekTg3+8Y6ii5EVnwBU
+         hpMIcBInlbh2xsz0tzHGtN5J+pGuW8LOp71JXigno8xiIS5oYSbDtjA0Or0KJgHVcl/F
+         uoO3887gTXK3qCur+91b00AM8EtMOer264R2u1JymYN9QSf54RrIUYFJ8OeqvsbBsd+Q
+         EQxg==
+X-Gm-Message-State: APjAAAUKEW0HSV1q0n6Ccv7Z1cUwibXs/qdqYUeJl/9bhzZ+Xpk7aqnL
+        N49nId3wES8gBNAeFd7TST+GoL2t3AYcFh5giA4=
+X-Google-Smtp-Source: APXvYqxMWRfg6O8UAm4VcJ2/Kqy36PAXmSCue2SezbqRmFiaWzZoOYrtkoYatbjzAKCy47K1rRrcJZQ3n4v9DdWFepE=
+X-Received: by 2002:a7b:cfc2:: with SMTP id f2mr5207959wmm.44.1579803406444;
+ Thu, 23 Jan 2020 10:16:46 -0800 (PST)
 MIME-Version: 1.0
-References: <0000000000007c3ba2059cb50843@google.com>
-In-Reply-To: <0000000000007c3ba2059cb50843@google.com>
-From:   Cong Wang <xiyou.wangcong@gmail.com>
-Date:   Thu, 23 Jan 2020 10:14:41 -0800
-Message-ID: <CAM_iQpUHHmJGQfVFf2C=b_-QNwLG7WMK=z=PpiEtVHvX7HkzGA@mail.gmail.com>
-Subject: Re: WARNING in cbq_destroy
-To:     syzbot <syzbot+63bdb6006961d8c917c6@syzkaller.appspotmail.com>
-Cc:     David Miller <davem@davemloft.net>,
-        Jamal Hadi Salim <jhs@mojatatu.com>,
-        Jiri Pirko <jiri@resnulli.us>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux Kernel Network Developers <netdev@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+References: <20200123154706.5831-1-daniel.baluta@oss.nxp.com> <20200123175658.GB1796501@kroah.com>
+In-Reply-To: <20200123175658.GB1796501@kroah.com>
+From:   Daniel Baluta <daniel.baluta@gmail.com>
+Date:   Thu, 23 Jan 2020 20:16:35 +0200
+Message-ID: <CAEnQRZAnfT0kBCmir+-cTkg+8bgO0pk+1S-rSfUVobf=Hzxz7g@mail.gmail.com>
+Subject: Re: [PATCH] lib: devres: Export devm_ioremap_resource_wc
+To:     "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
+Cc:     "Daniel Baluta (OSS)" <daniel.baluta@oss.nxp.com>,
+        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "info@metux.net" <info@metux.net>,
+        "ztuowen@gmail.com" <ztuowen@gmail.com>,
+        "sergei.shtylyov@cogentembedded.com" 
+        <sergei.shtylyov@cogentembedded.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Daniel Baluta <daniel.baluta@nxp.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 21, 2020 at 10:57 PM syzbot
-<syzbot+63bdb6006961d8c917c6@syzkaller.appspotmail.com> wrote:
+On Thu, Jan 23, 2020 at 7:57 PM gregkh@linuxfoundation.org
+<gregkh@linuxfoundation.org> wrote:
 >
-> Hello,
+> On Thu, Jan 23, 2020 at 03:47:21PM +0000, Daniel Baluta (OSS) wrote:
+> > From: Daniel Baluta <daniel.baluta@nxp.com>
+> >
+> > So that modules can also use it.
+> >
+> > Fixes: b873af620e58863b ("lib: devres: provide devm_ioremap_resource_wc()")
+> > Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
+> > ---
+> >  lib/devres.c | 1 +
+> >  1 file changed, 1 insertion(+)
+> >
+> > diff --git a/lib/devres.c b/lib/devres.c
+> > index 6ef51f159c54..7fe2bd75dfa3 100644
+> > --- a/lib/devres.c
+> > +++ b/lib/devres.c
+> > @@ -182,6 +182,7 @@ void __iomem *devm_ioremap_resource_wc(struct device *dev,
+> >  {
+> >       return __devm_ioremap_resource(dev, res, DEVM_IOREMAP_WC);
+> >  }
+> > +EXPORT_SYMBOL(devm_ioremap_resource_wc);
 >
-> syzbot found the following crash on:
+> EXPORT_SYMBOL_GPL() perhaps?
 >
-> HEAD commit:    d96d875e Merge tag 'fixes_for_v5.5-rc8' of git://git.kerne..
-> git tree:       upstream
-> console output: https://syzkaller.appspot.com/x/log.txt?x=144f7601e00000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=83c00afca9cf5153
-> dashboard link: https://syzkaller.appspot.com/bug?extid=63bdb6006961d8c917c6
-> compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17a1a721e00000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=11a91a95e00000
->
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+63bdb6006961d8c917c6@syzkaller.appspotmail.com
->
-> netlink: 96 bytes leftover after parsing attributes in process `syz-executor899'.
-> ------------[ cut here ]------------
-> WARNING: CPU: 1 PID: 8828 at net/sched/sch_cbq.c:1437 cbq_destroy_class net/sched/sch_cbq.c:1437 [inline]
-> WARNING: CPU: 1 PID: 8828 at net/sched/sch_cbq.c:1437 cbq_destroy+0x324/0x400 net/sched/sch_cbq.c:1471
+> What in-tree driver needs this?
 
+I was experimenting with an out of tree driver and I also was using it wrong :D.
+Indeed looks like there is no real potential user so far in the kernel tree.
 
-Just FYI: I am still working on a fix, which is more complicated than I thought.
+Perhaps: drivers/net/ethernet/amazon/ena/ena_netdev.c
 
-Thanks.
+Also, I chose EXPORT_SYMBOL because the same way its cousin
+devm_ioremap_resource.
+
+Daniel.
