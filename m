@@ -2,197 +2,130 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28A21C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 16:42:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1690C3F68F
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 16:47:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC2DD21569
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 16:42:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A924224125
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 16:47:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="s2zri2TS"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Fr/exgfH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728890AbgAWQmt (ORCPT
+        id S1728205AbgAWQre (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 11:42:49 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:60370 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726621AbgAWQms (ORCPT
+        Thu, 23 Jan 2020 11:47:34 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:43594 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727847AbgAWQrd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 11:42:48 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1579797768; h=Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=ptRas4jwa9ygjLeLDjT7j5xI302MWi2R8Z9TLbhwROw=; b=s2zri2TShQl7m9i84x5N9w/jD3hrhYpFUBPHGjdUnvs421TnK85fgqNAGPAteeXVZccMtxLv
- jcMBAT0swK6VdpyWdWX/dNTCamuPdbRbeUxzdklab6EZa3Ts2dGZ2Ebet/scGp4plrwj+HBM
- N0jjw6x8vB3c5yc7FQEiwY4owJo=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e29cd03.7fdd789381f0-smtp-out-n01;
- Thu, 23 Jan 2020 16:42:43 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 81854C433A2; Thu, 23 Jan 2020 16:42:43 +0000 (UTC)
-Received: from jcrouse1-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: jcrouse)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 73D4BC43383;
-        Thu, 23 Jan 2020 16:42:40 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 73D4BC43383
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
-From:   Jordan Crouse <jcrouse@codeaurora.org>
-To:     linux-arm-msm@vger.kernel.org
-Cc:     Sean Paul <sean@poorly.run>,
-        Sharat Masetty <smasetty@codeaurora.org>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        Douglas Anderson <dianders@chromium.org>,
-        Rob Clark <robdclark@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Georgi Djakov <georgi.djakov@linaro.org>,
-        freedreno@lists.freedesktop.org, Daniel Vetter <daniel@ffwll.ch>
-Subject: [PATCH] drm/msm: Fix a6xx GMU shutdown sequence
-Date:   Thu, 23 Jan 2020 09:42:36 -0700
-Message-Id: <1579797756-10292-1-git-send-email-jcrouse@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
+        Thu, 23 Jan 2020 11:47:33 -0500
+Received: by mail-pg1-f193.google.com with SMTP id u131so1639534pgc.10;
+        Thu, 23 Jan 2020 08:47:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=BnpsU6StHPAIstw2JpFgpCJVlQcTQuWju7U53QdQrnE=;
+        b=Fr/exgfHRSXeszkt7vWrJOJ2Sw6g4HEa60n79E5aaUrt2D0zH2kfcXLFqICWsIkP5D
+         oRLAm1xSKgGmjiJRhHXMuegRtQjWKeLbgTItkAbxAwOAIAqT01xhXE6TJrd+lD7Gb1Qh
+         zlQzNJqTpuk7YODsJHjQRvJkPCjskaxSdiklkNq3MHY1QrIY+fE1naLNaspl7L6q70qD
+         0iJwLjy0+NfIXYXXyEyQGytMxG2A+TQuuTbh8oWhfi6U40S+0OX1v2cYtCYEi50BxkDs
+         sPP7VvBVMZLcMDMf3gX3t5rMzqRX8JjXBi7MbpuIV47/6VDhP2atBOcpsLoqfbAs528b
+         Yvow==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=BnpsU6StHPAIstw2JpFgpCJVlQcTQuWju7U53QdQrnE=;
+        b=ei5R/39zXl8HKDTZdQEEDhfFn0MSFV83uRpbWuwdvxhtSR+GJX8oFq30q6VxIlw6Cf
+         w3tJkWYk95q0cFeuoTlqlFub2cHf1xgi794f/GVhq7QvUzmhGF6u6kmFnIvI1vu9KkdY
+         DXv55EFow6WqP5Ypit23vk78FjjF60Uxls8jy6Taf3kkzCnk4D+OuBcahdWjGWoCe9Vg
+         PZzQ7j7jXlFimHq7HhZsAD7iEup1vVEgDXEIp1DwtPmEXu+QR5EKa0D4PrsNQThzbRHD
+         xcJ5/pbElgomT5I1dVij2h7dnY4nXGLBDsjJCADMDA8YsJyhTfhtxM+31Ic+xjWJKG/g
+         24Fg==
+X-Gm-Message-State: APjAAAUDqBgJGRyTuX482fWw6OGTRX7Sj+HXmte8aGUNtsw1jXhA04eV
+        n7nBJO07vhnGx7oi6qoeqmc=
+X-Google-Smtp-Source: APXvYqyzFRPW1W5MSOcz5elsS1/zgpJTEP1GHlsITj9vbpwWAg1eKE9Kf6/CCL4dmRPBHY1JfBp41g==
+X-Received: by 2002:aa7:9aa5:: with SMTP id x5mr8259716pfi.131.1579798052959;
+        Thu, 23 Jan 2020 08:47:32 -0800 (PST)
+Received: from ?IPv6:2001:4898:d8:28:140e:bf9b:65a6:dd72? ([2001:4898:80e8:8:941d:bf9b:65a6:dd72])
+        by smtp.gmail.com with ESMTPSA id d4sm3421232pjz.12.2020.01.23.08.47.31
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 23 Jan 2020 08:47:32 -0800 (PST)
+Subject: Re: [PATCH v10 1/2] dt-bindings: edac: dmc-520.yaml
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     James Morse <james.morse@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        linux-edac <linux-edac@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, hangl@microsoft.com,
+        Lei Wang <lewan@microsoft.com>, ruizhao@microsoft.com,
+        shji@microsoft.com, Scott Branden <scott.branden@broadcom.com>,
+        Yuqing Shen <yuqing.shen@broadcom.com>
+References: <09a2fe69-842f-01cf-1cfa-d5fc639b158a@gmail.com>
+ <20200123082322.GB10328@zn.tnic>
+From:   Shiping Ji <shiping.linux@gmail.com>
+Message-ID: <4165bb52-6dda-60e9-c248-428822167476@gmail.com>
+Date:   Thu, 23 Jan 2020 08:47:31 -0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
+MIME-Version: 1.0
+In-Reply-To: <20200123082322.GB10328@zn.tnic>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit e812744c5f95 ("drm: msm: a6xx: Add support for A618") missed
-updating the VBIF flush in a6xx_gmu_shutdown and instead
-inserted the new sequence into a6xx_pm_suspend along with a redundant
-GMU idle.
+On 1/23/2020 12:23 AM, Borislav Petkov wrote:
+> On Wed, Jan 22, 2020 at 04:31:07PM -0800, Shiping Ji wrote:
+>> This is the device tree bindings for new EDAC driver dmc520_edac.c.
+>>
+>> From: Lei Wang <leiwang_git@outlook.com>
+>>
+>> Signed-off-by: Lei Wang <leiwang_git@outlook.com>
+>> Signed-off-by: Shiping Ji <shiping.linux@gmail.com>
+>> Reviewed-by: James Morse <james.morse@arm.com>
+>>
+>> ---
+>>      Changes in v10:
+>>          - Convert to the YAML format for binding description
+> 
+> So you've changed this patch considerably. If you do so, you cannot keep
+> Reviewed-by tags.
+> 
+> Also, AFAICT, you've written a completely *new* patch which would mean
+> that this time you're the author. Correct?
+> 
+> If so, you don't need to keep Lei's From.
 
-Move a6xx_bus_clear_pending_transactions to a6xx_gmu.c and use it in
-the appropriate place in the shutdown routine and remove the redundant
-idle call.
+Boris, we'd still like to keep her as the author since this patch is just updating to a new documentation format where the content being documented was still designed by Lei. I hope this is OK.
 
-Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
----
+> In any case, please take some time to read this:
+> 
+> https://www.kernel.org/doc/html/latest/process/index.html
+> 
+> It is a lot so do concentrate on the whole process, i.e., this:
+> 
+> https://www.kernel.org/doc/html/latest/process/development-process.html
+> 
+> so that you have a basic idea.
+> 
+> If you have questions, I'm sure Sasha would be willing to answer them
+> even if he's away now.
 
- drivers/gpu/drm/msm/adreno/a6xx_gmu.c | 36 +++++++++++++++++++++++++----
- drivers/gpu/drm/msm/adreno/a6xx_gpu.c | 43 -----------------------------------
- 2 files changed, 31 insertions(+), 48 deletions(-)
+Thanks! I'll certainly read this.
 
-diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
-index 983afea..f371227 100644
---- a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
-+++ b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
-@@ -796,6 +796,36 @@ bool a6xx_gmu_isidle(struct a6xx_gmu *gmu)
- 	return true;
- }
- 
-+#define GBIF_CLIENT_HALT_MASK             BIT(0)
-+#define GBIF_ARB_HALT_MASK                BIT(1)
-+
-+static void a6xx_bus_clear_pending_transactions(struct adreno_gpu *adreno_gpu)
-+{
-+	struct msm_gpu *gpu = &adreno_gpu->base;
-+
-+	if (!a6xx_has_gbif(adreno_gpu)) {
-+		gpu_write(gpu, REG_A6XX_VBIF_XIN_HALT_CTRL0, 0xf);
-+		spin_until((gpu_read(gpu, REG_A6XX_VBIF_XIN_HALT_CTRL1) &
-+								0xf) == 0xf);
-+		gpu_write(gpu, REG_A6XX_VBIF_XIN_HALT_CTRL0, 0);
-+
-+		return;
-+	}
-+
-+	/* Halt new client requests on GBIF */
-+	gpu_write(gpu, REG_A6XX_GBIF_HALT, GBIF_CLIENT_HALT_MASK);
-+	spin_until((gpu_read(gpu, REG_A6XX_GBIF_HALT_ACK) &
-+			(GBIF_CLIENT_HALT_MASK)) == GBIF_CLIENT_HALT_MASK);
-+
-+	/* Halt all AXI requests on GBIF */
-+	gpu_write(gpu, REG_A6XX_GBIF_HALT, GBIF_ARB_HALT_MASK);
-+	spin_until((gpu_read(gpu,  REG_A6XX_GBIF_HALT_ACK) &
-+			(GBIF_ARB_HALT_MASK)) == GBIF_ARB_HALT_MASK);
-+
-+	/* The GBIF halt needs to be explicitly cleared */
-+	gpu_write(gpu, REG_A6XX_GBIF_HALT, 0x0);
-+}
-+
- /* Gracefully try to shut down the GMU and by extension the GPU */
- static void a6xx_gmu_shutdown(struct a6xx_gmu *gmu)
- {
-@@ -819,11 +849,7 @@ static void a6xx_gmu_shutdown(struct a6xx_gmu *gmu)
- 			return;
- 		}
- 
--		/* Clear the VBIF pipe before shutting down */
--		gpu_write(gpu, REG_A6XX_VBIF_XIN_HALT_CTRL0, 0xf);
--		spin_until((gpu_read(gpu, REG_A6XX_VBIF_XIN_HALT_CTRL1) & 0xf)
--			== 0xf);
--		gpu_write(gpu, REG_A6XX_VBIF_XIN_HALT_CTRL0, 0);
-+		a6xx_bus_clear_pending_transactions(adreno_gpu);
- 
- 		/* tell the GMU we want to slumber */
- 		a6xx_gmu_notify_slumber(gmu);
-diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-index daf0780..b580e47 100644
---- a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-+++ b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-@@ -748,39 +748,6 @@ static const u32 a6xx_register_offsets[REG_ADRENO_REGISTER_MAX] = {
- 	REG_ADRENO_DEFINE(REG_ADRENO_CP_RB_CNTL, REG_A6XX_CP_RB_CNTL),
- };
- 
--#define GBIF_CLIENT_HALT_MASK             BIT(0)
--#define GBIF_ARB_HALT_MASK                BIT(1)
--
--static void a6xx_bus_clear_pending_transactions(struct adreno_gpu *adreno_gpu)
--{
--	struct msm_gpu *gpu = &adreno_gpu->base;
--
--	if(!a6xx_has_gbif(adreno_gpu)){
--		gpu_write(gpu, REG_A6XX_VBIF_XIN_HALT_CTRL0, 0xf);
--		spin_until((gpu_read(gpu, REG_A6XX_VBIF_XIN_HALT_CTRL1) &
--								0xf) == 0xf);
--		gpu_write(gpu, REG_A6XX_VBIF_XIN_HALT_CTRL0, 0);
--
--		return;
--	}
--
--	/* Halt new client requests on GBIF */
--	gpu_write(gpu, REG_A6XX_GBIF_HALT, GBIF_CLIENT_HALT_MASK);
--	spin_until((gpu_read(gpu, REG_A6XX_GBIF_HALT_ACK) &
--			(GBIF_CLIENT_HALT_MASK)) == GBIF_CLIENT_HALT_MASK);
--
--	/* Halt all AXI requests on GBIF */
--	gpu_write(gpu, REG_A6XX_GBIF_HALT, GBIF_ARB_HALT_MASK);
--	spin_until((gpu_read(gpu,  REG_A6XX_GBIF_HALT_ACK) &
--			(GBIF_ARB_HALT_MASK)) == GBIF_ARB_HALT_MASK);
--
--	/*
--	 * GMU needs DDR access in slumber path. Deassert GBIF halt now
--	 * to allow for GMU to access system memory.
--	 */
--	gpu_write(gpu, REG_A6XX_GBIF_HALT, 0x0);
--}
--
- static int a6xx_pm_resume(struct msm_gpu *gpu)
- {
- 	struct adreno_gpu *adreno_gpu = to_adreno_gpu(gpu);
-@@ -805,16 +772,6 @@ static int a6xx_pm_suspend(struct msm_gpu *gpu)
- 
- 	devfreq_suspend_device(gpu->devfreq.devfreq);
- 
--	/*
--	 * Make sure the GMU is idle before continuing (because some transitions
--	 * may use VBIF
--	 */
--	a6xx_gmu_wait_for_idle(&a6xx_gpu->gmu);
--
--	/* Clear the VBIF pipe before shutting down */
--	/* FIXME: This accesses the GPU - do we need to make sure it is on? */
--	a6xx_bus_clear_pending_transactions(adreno_gpu);
--
- 	return a6xx_gmu_stop(a6xx_gpu);
- }
- 
 -- 
-2.7.4
+Best regards,
+Shiping Ji
