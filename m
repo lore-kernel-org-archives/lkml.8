@@ -2,215 +2,85 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1444AC33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 22:40:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C041C33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 22:40:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7BCF207FF
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 22:40:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JJZJSgBA"
+	by mail.kernel.org (Postfix) with ESMTP id 2264421835
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 22:40:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729423AbgAWWko (ORCPT
+        id S1729464AbgAWWkw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 17:40:44 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:45516 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729263AbgAWWko (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 17:40:44 -0500
-Received: by mail-pg1-f193.google.com with SMTP id b9so2102381pgk.12
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jan 2020 14:40:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=KEO5RRq71hnfJzVbmmj/bta230sQfzGD9Q3CFZNo8bQ=;
-        b=JJZJSgBA4/GNyFP89Pda6hSb1oTAE22vcl/FqnmgKFp+rlhP52bXisMa5Z1YpG2ayF
-         02BwEJjwJq6gfLI8kFYia/lvubDLgINiKn1k2/rxdutHAgRfgIXvdFNfUSVEClXYIFfx
-         aJMDzF803GbX9uQj7bR8+GZI5SsddDIa64sVLMbb8ztlS7Pb7IOlOMGpAehw/dNW/u3C
-         x0Uftjah9HTIHs6iTqyG7KURJeCFBp0uehfmASOSu8ZM2cMZkHHcMGWHGPCICA1R9ET4
-         OY4WwV85BuU8sgOAJUctUTI1u45UcC+SU1dxu/aMVMTRg6x+QCTReEX6TjgHYPo/7Z2f
-         mQCQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=KEO5RRq71hnfJzVbmmj/bta230sQfzGD9Q3CFZNo8bQ=;
-        b=PtgdV/TIWix/X5IRriyXNdkalsBMHQCM9CQnX3Sij9Hxn8PWN6/e801ojkMeZWlk6M
-         3WeFXSHWSofvQUNkh3CrVzmV2Pe5r89cVe/E6Z2LB92Tik87MkDct9Cm7f7XnEAcA9Ze
-         Ssnfgs/rvzrfgBzscjF4aWacJT4UNVvKiAXu3WRp98g9ftcjgeWEJkPzoaMODn4dc3De
-         hRTbeYZ3ZGOo01V3cLRjzrSDY2TbPklXFvompxRMl/uAdmkxEAEvEVubXtz0YL8FoDrg
-         I5go3nSxDLD9skUrj/CpUUfBVU92fRp5ejL5rTYkZaPpfsBpnCBSoQTgj11u8BeZSdgK
-         VqwA==
-X-Gm-Message-State: APjAAAW+MTDIp+bxrqh9/cC7AX6g4ebiwUaQK5pHLJ9MEMnI4sIEdMUB
-        218pQDM6GhvSCNCyJaLtZexBD8VOzhI/cMOiyaV6+Q==
-X-Google-Smtp-Source: APXvYqwc5+ImnRduKdxPTBPywNf0s9F86ySTTxo9u4cZHfgljqhVhzLbRX6dzr7ZeLApaJLaf6jrkPiJpeVQi3MwCJg=
-X-Received: by 2002:a63:597:: with SMTP id 145mr651932pgf.384.1579819242951;
- Thu, 23 Jan 2020 14:40:42 -0800 (PST)
+        Thu, 23 Jan 2020 17:40:52 -0500
+Received: from mga07.intel.com ([134.134.136.100]:24202 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729263AbgAWWkw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jan 2020 17:40:52 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Jan 2020 14:40:25 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,355,1574150400"; 
+   d="scan'208";a="222474270"
+Received: from richard.sh.intel.com (HELO localhost) ([10.239.159.54])
+  by fmsmga008.fm.intel.com with ESMTP; 23 Jan 2020 14:40:24 -0800
+Date:   Fri, 24 Jan 2020 06:40:35 +0800
+From:   Wei Yang <richardw.yang@linux.intel.com>
+To:     Yang Shi <yang.shi@linux.alibaba.com>
+Cc:     Wei Yang <richardw.yang@linux.intel.com>, mhocko@suse.com,
+        akpm@linux-foundation.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [v2 PATCH] mm: move_pages: report the number of non-attempted
+ pages
+Message-ID: <20200123224035.GA29851@richard>
+Reply-To: Wei Yang <richardw.yang@linux.intel.com>
+References: <1579736331-85494-1-git-send-email-yang.shi@linux.alibaba.com>
+ <20200123032736.GA22196@richard>
+ <01fc1c6b-1cab-7f7e-7879-4fc7b0e4a231@linux.alibaba.com>
 MIME-Version: 1.0
-References: <20191216220555.245089-1-brendanhiggins@google.com> <20200106224022.GX11244@42.do-not-panic.com>
-In-Reply-To: <20200106224022.GX11244@42.do-not-panic.com>
-From:   Brendan Higgins <brendanhiggins@google.com>
-Date:   Thu, 23 Jan 2020 14:40:31 -0800
-Message-ID: <CAFd5g456c2Zs7rCvRPgio83G=SrtPGi25zbqAUyTBHspHwtu4w@mail.gmail.com>
-Subject: Re: [RFC v1 0/6] kunit: create a centralized executor to dispatch all
- KUnit tests
-To:     Luis Chamberlain <mcgrof@kernel.org>
-Cc:     Jeff Dike <jdike@addtoit.com>, Richard Weinberger <richard@nod.at>,
-        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Kees Cook <keescook@chromium.org>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Alan Maguire <alan.maguire@oracle.com>,
-        Iurii Zaikin <yzaikin@google.com>,
-        David Gow <davidgow@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>, rppt@linux.ibm.com,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Knut Omang <knut.omang@oracle.com>,
-        linux-um <linux-um@lists.infradead.org>,
-        linux-arch@vger.kernel.org,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        KUnit Development <kunit-dev@googlegroups.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <01fc1c6b-1cab-7f7e-7879-4fc7b0e4a231@linux.alibaba.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sorry for the late reply. I am still catching up from being on vacation.
-
-On Mon, Jan 6, 2020 at 2:40 PM Luis Chamberlain <mcgrof@kernel.org> wrote:
+On Wed, Jan 22, 2020 at 07:56:50PM -0800, Yang Shi wrote:
 >
-> On Mon, Dec 16, 2019 at 02:05:49PM -0800, Brendan Higgins wrote:
-> > ## TL;DR
-> >
-> > This patchset adds a centralized executor to dispatch tests rather than
-> > relying on late_initcall to schedule each test suite separately along
-> > with a couple of new features that depend on it.
-> >
-> > ## What am I trying to do?
-> >
-> > Conceptually, I am trying to provide a mechanism by which test suites
-> > can be grouped together so that they can be reasoned about collectively.
-> > The last two patches in this series add features which depend on this:
-> >
-> > RFC 5/6 Prints out a test plan right before KUnit tests are run[1]; this
-> >         is valuable because it makes it possible for a test harness to
-> >         detect whether the number of tests run matches the number of
-> >         tests expected to be run, ensuring that no tests silently
-> >         failed.
-> >
-> > RFC 6/6 Add a new kernel command-line option which allows the user to
-> >         specify that the kernel poweroff, halt, or reboot after
-> >         completing all KUnit tests; this is very handy for running KUnit
-> >         tests on UML or a VM so that the UML/VM process exits cleanly
-> >         immediately after running all tests without needing a special
-> >         initramfs.
 >
-> The approach seems sensible to me given that it separates from a
-> semantics perspective kernel subsystem init work from *testing*, and
-> so we are sure we'd run the *test* stuff *after* all subsystem init
-> stuff.
-
-Cool, I thought you would find this interesting.
-
-> Dispatching, however is still immediate, and with a bit of work, this
-> dispatcher could be configurable to run at an arbirary time after boot.
-> If there are not immediate use cases for that though, then I suppose
-> this is not a requirement for the dispatcher. But since there exists
-> another modular test framework with its own dispatcher and it seems the
-> goal is to merge the work long term, this might preempt the requirement
-> to define how and when we can dispatch tests post boot.
+>On 1/22/20 7:27 PM, Wei Yang wrote:
+>> On Thu, Jan 23, 2020 at 07:38:51AM +0800, Yang Shi wrote:
+>> > Since commit a49bd4d71637 ("mm, numa: rework do_pages_move"),
+>> > the semantic of move_pages() was changed to return the number of
+>> > non-migrated pages (failed to migration) and the call would be aborted
+>> > immediately if migrate_pages() returns positive value.  But it didn't
+>> > report the number of pages that we even haven't attempted to migrate.
+>> > So, fix it by including non-attempted pages in the return value.
+>> > 
+>> First, we want to change the semantic of move_pages(2). The return value
+>> indicates the number of pages we didn't managed to migrate?
 >
-> And, if we're going to do that, I can suggest that a data structure
-> instead of just a function init call be used to describe tests to be
-> placed into an ELF section. With my linker table work this would be
-> easy, I define section ranges for code describing only executable
-> routines, but it defines linker tables for when a component in the
-> kernel would define a data structure, part of which can be a callback.
-> Such data structure stuffed into an ELF section could allow dynamic
-> configuration of the dipsatching, even post boot.
-
-The linker table work does sound interesting. Do you have a link?
-
-I was thinking about dynamic dispatching, actually. I thought it would
-be handy to be able to build all tests into a single kernel and then
-run different tests on different invocations.
-
-Also, for post boot dynamic dispatching, you should check out Alan's
-debugfs patches:
-
-https://lore.kernel.org/linux-kselftest/CAFd5g46657gZ36PaP8Pi999hPPgBU2Kz94nrMspS-AzGwdBF+g@mail.gmail.com/T/#m210cadbeee267e5c5a9253d83b7b7ca723d1f871
-
-They look pretty handy!
-
-> I think this is a good stepping stone forward then, and to allow
-> dynamic configuration of the dispatcher could mean eventual extensions
-> to kunit's init stuff to stuff init calls into a data structure which
-> can then allow configuration of the dispatching. One benefit that the
-> linker table work *may* be able to help here with is that it allows
-> an easy way to create kunit specific ordering, at linker time.
-> There is also an example of addressing / generalizing dynamic / run time
-> changes of ordering, by using the x86 IOMMU initialization as an
-> example case. We don't have an easy way to do this today, but if kunit
-> could benefit from such framework, it'd be another use case for
-> the linker table work. That is, the ability to easilly allow
-> dynamically modifying run time ordering of code through ELF sections.
+>This is my understanding.
 >
-> > In addition, by dispatching tests from a single location, we can
-> > guarantee that all KUnit tests run after late_init is complete, which
-> > was a concern during the initial KUnit patchset review (this has not
-> > been a problem in practice, but resolving with certainty is nevertheless
-> > desirable).
+>> 
+>> Second, the return value from migrate_pages() doesn't mean the number of pages
+>> we failed to migrate. For example, one -ENOMEM is returned on the first page,
+>> migrate_pages() would return 1. But actually, no page successfully migrated.
 >
-> Indeed, the concern is just a real semantics limitations. With the tests
-> *always* running after all subsystem init stuff, we know we'd have a
-> real full kernel ready.
-
-Yep.
-
-> It does beg the question if this means kunit is happy to not be a tool
-> to test pre basic setup stuff (terminology used in init.c, meaning prior
-> to running all init levels). I suspect this is the case.
-
-Not sure. I still haven't seen any cases where this is necessary, so I
-am not super worried about it. Regardless, I don't think this patchset
-really changes anything in that regard, we are moving from late_init
-to after late_init, so it isn't that big of a change for most use
-cases.
-
-Please share if you can think of some things that need to be tested in
-early init.
-
-> > Other use cases for this exist, but the above features should provide an
-> > idea of the value that this could provide.
-> >
-> > ## What work remains to be done?
-> >
-> > These patches were based on patches in our non-upstream branch[2], so we
-> > have a pretty good idea that they are useable as presented;
-> > nevertheless, some of the changes done in this patchset could
-> > *definitely* use some review by subsystem experts (linker scripts, init,
-> > etc), and will likely change a lot after getting feedback.
-> >
-> > The biggest thing that I know will require additional attention is
-> > integrating this patchset with the KUnit module support patchset[3]. I
-> > have not even attempted to build these patches on top of the module
-> > support patches as I would like to get people's initial thoughts first
-> > (especially Alan's :-) ). I think that making these patches work with
-> > module support should be fairly straight forward, nevertheless.
+>This would not happen at all since migrate_pages() would just return -ENOMEM
+>instead of a positive value, right?
 >
-> Modules just have their own sections too. That's all. So it'd be a
-> matter of extending the linker script for modules too. But a module's
-> init is different than the core kernel's for vmlinux.
 
-Truth. It seems as though Alan has already fixed this for me, however.
+Oh, you are right.
+
+
+-- 
+Wei Yang
+Help you, Help me
