@@ -2,105 +2,742 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3F84C33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 18:49:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B272AC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 18:51:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CCCF21D7E
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 18:49:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A2CA24655
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 18:51:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="r/+wEX2s"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="p2zBPTkU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729019AbgAWStB (ORCPT
+        id S1728842AbgAWSvz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 13:49:01 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:54274 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728057AbgAWStB (ORCPT
+        Thu, 23 Jan 2020 13:51:55 -0500
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:35545 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727022AbgAWSvz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 13:49:01 -0500
-Received: by mail-wm1-f66.google.com with SMTP id b19so3653891wmj.4;
-        Thu, 23 Jan 2020 10:49:00 -0800 (PST)
+        Thu, 23 Jan 2020 13:51:55 -0500
+Received: by mail-pj1-f68.google.com with SMTP id s7so1741187pjc.0
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jan 2020 10:51:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=yh9nHowTnaSL47uvaYVVI7m+jnVxsZ/MKQRfRY8pD64=;
-        b=r/+wEX2sGMhxBivDFH6tLvn76xPqD6EJ77Z5JtUVYxe1XwkWOgRpxy4XGCt6utVBc9
-         jvPQlz6XyGa/k6uadaduIsa6SgSx+OYVoGQKNV1+Ymi+itNbdDTHaEyE2nqp3AGTMEWd
-         140ypqgfm6iHna39SyP76RoI9KcQa+6PT+i3oklISTj2o05hH0ces9bZsqGYq/f9cXfC
-         tzMY/84kf0a6OdZLYjjYH9G9DYWNH64sl3hHR+RGgpScUOz5Y+0n46qiAeN0X7OyKi0C
-         d9cM9SZg1xxRq17QweH4rQcp+RjFvOSZ65ZfUCw5SflDDq3rFsHVA3mMqTa/11eVg0bn
-         aAOA==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0gL7AU81+xKC6oLfO/RkZ2xN61j3bzTYD5bI5nqNqL0=;
+        b=p2zBPTkUHV/uH/EXp8Mpu0cKl1PUn3Gfrv7NdRcq1JbO577zx5AQipVzHe+IU8diQo
+         QkA3n8L8LyJYfr30AFinjOP7jS0eU30QNx8Hd2zOWBtOMM6tEY7YcHqI5zxxnu89ks+E
+         gAAbADi1woEjnNQy9SPASDwa9zTISXlvhtzt7g/3bY4uzRcibjQTuOFIkcoO0gkyn46p
+         DYtF3tuXCZLDO3r3Xp0xkuS1DKZx19JF5NIjBtPF48mfR+G6BfSNEJWRxmHDPmnbJW1L
+         /Tq7T7DKpeIMcaXTRlqGe23DwqVIH2xRJLbNdGK1wwoege0S50/YsDn9ymWUIEju54sG
+         zMOA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=yh9nHowTnaSL47uvaYVVI7m+jnVxsZ/MKQRfRY8pD64=;
-        b=rnFuQYzw5Xj+nGv8fAiALqf+kB7TL+C3tONt2NQmVDACO9aS8bSBEDUbrGl0m4/kQQ
-         /9PVyqshYd29GzrgcawNlsWAJwgT5Ld8hQ+ZB/XHq97xtmZAAln3dDkxTl30qCC16j1L
-         jrqYmVkLFUtBqhjaeQj5Z288FklyiU1zwCRBTbjUXlpxKGydbsNNa571N6baEHjx9fOU
-         FaANkp4q1aBsptAC8D/YTvpPQgbF2nhRyTh6OcZ1DGSwfS5yjg9RoqHBnpNHT3ju/5kW
-         NETUCFnTD3jRrbCX/D/j74A6vUrJj2WaAlBJiHaJZ+oPob0aQ4CtgnJ28bPTKt27PlaY
-         CpqA==
-X-Gm-Message-State: APjAAAW7954AetOSEWi0a7vphRYUfwdavkxB/VZ/jvGjgZee0/pWNMWL
-        z0GiDrqsOYaRnSyZOwda37V1gx6K
-X-Google-Smtp-Source: APXvYqwALRz1ZVvn8odzLEaelMFb0G2tlfq1y9vSXNCZ3Fn+vvguhzaJeCepEwgfTF78hiTLBr5nvg==
-X-Received: by 2002:a1c:9602:: with SMTP id y2mr5385058wmd.23.1579805339789;
-        Thu, 23 Jan 2020 10:48:59 -0800 (PST)
-Received: from [192.168.0.104] (p5B3F68EB.dip0.t-ipconnect.de. [91.63.104.235])
-        by smtp.gmail.com with ESMTPSA id q3sm4167784wrn.33.2020.01.23.10.48.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 23 Jan 2020 10:48:59 -0800 (PST)
-Subject: Re: [PATCH v8] dt-bindings: regulator: add document bindings for
- mpq7920
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <mripard@kernel.org>, devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20200122174005.17257-1-sravanhome@gmail.com>
- <CAL_JsqLq5XFdVRJa-XuTDbA_s=hpu3P4VGou=XfmSJs5NFAQqQ@mail.gmail.com>
-From:   saravanan sekar <sravanhome@gmail.com>
-Message-ID: <01c2d052-5e98-6fa6-dc66-08de194c491f@gmail.com>
-Date:   Thu, 23 Jan 2020 19:48:58 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0gL7AU81+xKC6oLfO/RkZ2xN61j3bzTYD5bI5nqNqL0=;
+        b=QG6CL8u5zELvmd+OUrp/1Z5EAmg8QpVCMtLA3fs+rXVn+zQ4htMmf/QL0PL4h//VTH
+         d+qbCI0COtQ+NqSosYu0dAKuiU2QMLoLvntyz6DYunysowMK9qk47rdSbHDOz/Vibdzq
+         lEVE47AnG0dyo16ruLR8qg9wu+Yo6splc6xzpbNZK8srE05gWoXiWTgzR8d16ngSHjv/
+         yOMRBfiYultmusz/h2yumW3KvwGY4wZAviY24yQiqo6UQwFQ/epBMSWiNUCsaYcCtTOU
+         +TbIqr3zYqEAymECM16VBD57Vwf5ufs+5XdmNr+E8IquRgzaKrtZKug74rpCBsx6JDa5
+         nGqg==
+X-Gm-Message-State: APjAAAWwJBPGI+3rFfcCcCq/NIFo78vdGb1Ky1dUkxglAy49qr1XfxeE
+        gUrlJPHdUjfx4n10fOm2QQ0xbjQYhK7/+Rn4uf6pog==
+X-Google-Smtp-Source: APXvYqz3yRqER3Dj4f0C2Waqjnk9WigfbBWpLXcaScVrWSB1wDi7I+bjIr1gq9YD+3uU5Uy3xX8r1E5C+m6wFEfNH8w=
+X-Received: by 2002:a17:90b:30c8:: with SMTP id hi8mr6041304pjb.73.1579805513693;
+ Thu, 23 Jan 2020 10:51:53 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <CAL_JsqLq5XFdVRJa-XuTDbA_s=hpu3P4VGou=XfmSJs5NFAQqQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+References: <20200123153341.19947-1-will@kernel.org> <20200123153341.19947-11-will@kernel.org>
+In-Reply-To: <20200123153341.19947-11-will@kernel.org>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Thu, 23 Jan 2020 10:51:41 -0800
+Message-ID: <CAKwvOdnDh0FbYNPG0FZ6BR1BgVQZ3Z_stJvP_j_sQfbD92MNKA@mail.gmail.com>
+Subject: Re: [PATCH v2 10/10] gcov: Remove old GCC 3.4 support
+To:     Will Deacon <will@kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        kernel-team <kernel-team@android.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Segher Boessenkool <segher@kernel.crashing.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Peter Oberparleiter <oberpar@linux.ibm.com>,
+        Masahiro Yamada <masahiroy@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Jan 23, 2020 at 7:34 AM Will Deacon <will@kernel.org> wrote:
+>
+> The kernel requires at least GCC 4.8 in order to build, and so there is
+> no need to cater for the pre-4.7 gcov format.
 
-On 22/01/20 11:16 pm, Rob Herring wrote:
-> On Wed, Jan 22, 2020 at 11:40 AM Saravanan Sekar <sravanhome@gmail.com> wrote:
->> Add device tree binding information for mpq7920 regulator driver.
->> Example bindings for mpq7920 are added.
->>
->> Signed-off-by: Saravanan Sekar <sravanhome@gmail.com>
->> ---
->>
->> Notes:
->>      Changes on v8 :
->>        - fixed error reported by dt_binding_check
-> Still broken. :(
+Thanks for the cleanup! Deleting such a large volume of code is great!
+
+>
+> Remove the obsolete code.
+>
+> Cc: Peter Oberparleiter <oberpar@linux.ibm.com>
+> Signed-off-by: Will Deacon <will@kernel.org>
+> ---
+>  kernel/gcov/Kconfig   |  24 --
+>  kernel/gcov/Makefile  |   3 +-
+>  kernel/gcov/gcc_3_4.c | 573 ------------------------------------------
+>  3 files changed, 1 insertion(+), 599 deletions(-)
+>  delete mode 100644 kernel/gcov/gcc_3_4.c
+>
+> diff --git a/kernel/gcov/Kconfig b/kernel/gcov/Kconfig
+> index 060e8e726755..8df7fad82df8 100644
+> --- a/kernel/gcov/Kconfig
+> +++ b/kernel/gcov/Kconfig
+> @@ -51,28 +51,4 @@ config GCOV_PROFILE_ALL
+>         larger and run slower. Also be sure to exclude files from profiling
+>         which are not linked to the kernel image to prevent linker errors.
+>
+> -choice
+> -       prompt "Specify GCOV format"
+> -       depends on GCOV_KERNEL
+> -       depends on CC_IS_GCC
+> -       ---help---
+> -       The gcov format is usually determined by the GCC version, and the
+> -       default is chosen according to your GCC version. However, there are
+> -       exceptions where format changes are integrated in lower-version GCCs.
+> -       In such a case, change this option to adjust the format used in the
+> -       kernel accordingly.
+> -
+> -config GCOV_FORMAT_3_4
+> -       bool "GCC 3.4 format"
+> -       depends on GCC_VERSION < 40700
+
+I was thinking this patch could be independant of the series, until I
+saw this; before the series GCC 4.6+ is still supported, after GCC
+4.8+ is.  So NVM.
+
+> -       ---help---
+> -       Select this option to use the format defined by GCC 3.4.
+> -
+> -config GCOV_FORMAT_4_7
+> -       bool "GCC 4.7 format"
+> -       ---help---
+> -       Select this option to use the format defined by GCC 4.7.
+> -
+> -endchoice
+> -
+>  endmenu
+> diff --git a/kernel/gcov/Makefile b/kernel/gcov/Makefile
+> index d66a74b0f100..16f8ecc7d882 100644
+> --- a/kernel/gcov/Makefile
+> +++ b/kernel/gcov/Makefile
+> @@ -2,6 +2,5 @@
+>  ccflags-y := -DSRCTREE='"$(srctree)"' -DOBJTREE='"$(objtree)"'
+>
+>  obj-y := base.o fs.o
+> -obj-$(CONFIG_GCOV_FORMAT_3_4) += gcc_base.o gcc_3_4.o
+> -obj-$(CONFIG_GCOV_FORMAT_4_7) += gcc_base.o gcc_4_7.o
+> +obj-$(CONFIG_CC_IS_GCC) += gcc_base.o gcc_4_7.o
+
+For further refactoring/cleanups, the split between gcc_base.c and
+gcc_4_7.c can now be combined into one source file.  gcc_base.c just
+shared code with either 3.4 or 4.7, but I'll leave that as work that
+can be done another day.  Thanks for the patch.
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+
+>  obj-$(CONFIG_CC_IS_CLANG) += clang.o
+> diff --git a/kernel/gcov/gcc_3_4.c b/kernel/gcov/gcc_3_4.c
+> deleted file mode 100644
+> index 801ee4b0b969..000000000000
+> --- a/kernel/gcov/gcc_3_4.c
+> +++ /dev/null
+> @@ -1,573 +0,0 @@
+> -// SPDX-License-Identifier: GPL-2.0
+> -/*
+> - *  This code provides functions to handle gcc's profiling data format
+> - *  introduced with gcc 3.4. Future versions of gcc may change the gcov
+> - *  format (as happened before), so all format-specific information needs
+> - *  to be kept modular and easily exchangeable.
+> - *
+> - *  This file is based on gcc-internal definitions. Functions and data
+> - *  structures are defined to be compatible with gcc counterparts.
+> - *  For a better understanding, refer to gcc source: gcc/gcov-io.h.
+> - *
+> - *    Copyright IBM Corp. 2009
+> - *    Author(s): Peter Oberparleiter <oberpar@linux.vnet.ibm.com>
+> - *
+> - *    Uses gcc-internal data definitions.
+> - */
+> -
+> -#include <linux/errno.h>
+> -#include <linux/slab.h>
+> -#include <linux/string.h>
+> -#include <linux/seq_file.h>
+> -#include <linux/vmalloc.h>
+> -#include "gcov.h"
+> -
+> -#define GCOV_COUNTERS          5
+> -
+> -static struct gcov_info *gcov_info_head;
+> -
+> -/**
+> - * struct gcov_fn_info - profiling meta data per function
+> - * @ident: object file-unique function identifier
+> - * @checksum: function checksum
+> - * @n_ctrs: number of values per counter type belonging to this function
+> - *
+> - * This data is generated by gcc during compilation and doesn't change
+> - * at run-time.
+> - */
+> -struct gcov_fn_info {
+> -       unsigned int ident;
+> -       unsigned int checksum;
+> -       unsigned int n_ctrs[0];
+> -};
+> -
+> -/**
+> - * struct gcov_ctr_info - profiling data per counter type
+> - * @num: number of counter values for this type
+> - * @values: array of counter values for this type
+> - * @merge: merge function for counter values of this type (unused)
+> - *
+> - * This data is generated by gcc during compilation and doesn't change
+> - * at run-time with the exception of the values array.
+> - */
+> -struct gcov_ctr_info {
+> -       unsigned int    num;
+> -       gcov_type       *values;
+> -       void            (*merge)(gcov_type *, unsigned int);
+> -};
+> -
+> -/**
+> - * struct gcov_info - profiling data per object file
+> - * @version: gcov version magic indicating the gcc version used for compilation
+> - * @next: list head for a singly-linked list
+> - * @stamp: time stamp
+> - * @filename: name of the associated gcov data file
+> - * @n_functions: number of instrumented functions
+> - * @functions: function data
+> - * @ctr_mask: mask specifying which counter types are active
+> - * @counts: counter data per counter type
+> - *
+> - * This data is generated by gcc during compilation and doesn't change
+> - * at run-time with the exception of the next pointer.
+> - */
+> -struct gcov_info {
+> -       unsigned int                    version;
+> -       struct gcov_info                *next;
+> -       unsigned int                    stamp;
+> -       const char                      *filename;
+> -       unsigned int                    n_functions;
+> -       const struct gcov_fn_info       *functions;
+> -       unsigned int                    ctr_mask;
+> -       struct gcov_ctr_info            counts[0];
+> -};
+> -
+> -/**
+> - * gcov_info_filename - return info filename
+> - * @info: profiling data set
+> - */
+> -const char *gcov_info_filename(struct gcov_info *info)
+> -{
+> -       return info->filename;
+> -}
+> -
+> -/**
+> - * gcov_info_version - return info version
+> - * @info: profiling data set
+> - */
+> -unsigned int gcov_info_version(struct gcov_info *info)
+> -{
+> -       return info->version;
+> -}
+> -
+> -/**
+> - * gcov_info_next - return next profiling data set
+> - * @info: profiling data set
+> - *
+> - * Returns next gcov_info following @info or first gcov_info in the chain if
+> - * @info is %NULL.
+> - */
+> -struct gcov_info *gcov_info_next(struct gcov_info *info)
+> -{
+> -       if (!info)
+> -               return gcov_info_head;
+> -
+> -       return info->next;
+> -}
+> -
+> -/**
+> - * gcov_info_link - link/add profiling data set to the list
+> - * @info: profiling data set
+> - */
+> -void gcov_info_link(struct gcov_info *info)
+> -{
+> -       info->next = gcov_info_head;
+> -       gcov_info_head = info;
+> -}
+> -
+> -/**
+> - * gcov_info_unlink - unlink/remove profiling data set from the list
+> - * @prev: previous profiling data set
+> - * @info: profiling data set
+> - */
+> -void gcov_info_unlink(struct gcov_info *prev, struct gcov_info *info)
+> -{
+> -       if (prev)
+> -               prev->next = info->next;
+> -       else
+> -               gcov_info_head = info->next;
+> -}
+> -
+> -/**
+> - * gcov_info_within_module - check if a profiling data set belongs to a module
+> - * @info: profiling data set
+> - * @mod: module
+> - *
+> - * Returns true if profiling data belongs module, false otherwise.
+> - */
+> -bool gcov_info_within_module(struct gcov_info *info, struct module *mod)
+> -{
+> -       return within_module((unsigned long)info, mod);
+> -}
+> -
+> -/* Symbolic links to be created for each profiling data file. */
+> -const struct gcov_link gcov_link[] = {
+> -       { OBJ_TREE, "gcno" },   /* Link to .gcno file in $(objtree). */
+> -       { 0, NULL},
+> -};
+> -
+> -/*
+> - * Determine whether a counter is active. Based on gcc magic. Doesn't change
+> - * at run-time.
+> - */
+> -static int counter_active(struct gcov_info *info, unsigned int type)
+> -{
+> -       return (1 << type) & info->ctr_mask;
+> -}
+> -
+> -/* Determine number of active counters. Based on gcc magic. */
+> -static unsigned int num_counter_active(struct gcov_info *info)
+> -{
+> -       unsigned int i;
+> -       unsigned int result = 0;
+> -
+> -       for (i = 0; i < GCOV_COUNTERS; i++) {
+> -               if (counter_active(info, i))
+> -                       result++;
+> -       }
+> -       return result;
+> -}
+> -
+> -/**
+> - * gcov_info_reset - reset profiling data to zero
+> - * @info: profiling data set
+> - */
+> -void gcov_info_reset(struct gcov_info *info)
+> -{
+> -       unsigned int active = num_counter_active(info);
+> -       unsigned int i;
+> -
+> -       for (i = 0; i < active; i++) {
+> -               memset(info->counts[i].values, 0,
+> -                      info->counts[i].num * sizeof(gcov_type));
+> -       }
+> -}
+> -
+> -/**
+> - * gcov_info_is_compatible - check if profiling data can be added
+> - * @info1: first profiling data set
+> - * @info2: second profiling data set
+> - *
+> - * Returns non-zero if profiling data can be added, zero otherwise.
+> - */
+> -int gcov_info_is_compatible(struct gcov_info *info1, struct gcov_info *info2)
+> -{
+> -       return (info1->stamp == info2->stamp);
+> -}
+> -
+> -/**
+> - * gcov_info_add - add up profiling data
+> - * @dest: profiling data set to which data is added
+> - * @source: profiling data set which is added
+> - *
+> - * Adds profiling counts of @source to @dest.
+> - */
+> -void gcov_info_add(struct gcov_info *dest, struct gcov_info *source)
+> -{
+> -       unsigned int i;
+> -       unsigned int j;
+> -
+> -       for (i = 0; i < num_counter_active(dest); i++) {
+> -               for (j = 0; j < dest->counts[i].num; j++) {
+> -                       dest->counts[i].values[j] +=
+> -                               source->counts[i].values[j];
+> -               }
+> -       }
+> -}
+> -
+> -/* Get size of function info entry. Based on gcc magic. */
+> -static size_t get_fn_size(struct gcov_info *info)
+> -{
+> -       size_t size;
+> -
+> -       size = sizeof(struct gcov_fn_info) + num_counter_active(info) *
+> -              sizeof(unsigned int);
+> -       if (__alignof__(struct gcov_fn_info) > sizeof(unsigned int))
+> -               size = ALIGN(size, __alignof__(struct gcov_fn_info));
+> -       return size;
+> -}
+> -
+> -/* Get address of function info entry. Based on gcc magic. */
+> -static struct gcov_fn_info *get_fn_info(struct gcov_info *info, unsigned int fn)
+> -{
+> -       return (struct gcov_fn_info *)
+> -               ((char *) info->functions + fn * get_fn_size(info));
+> -}
+> -
+> -/**
+> - * gcov_info_dup - duplicate profiling data set
+> - * @info: profiling data set to duplicate
+> - *
+> - * Return newly allocated duplicate on success, %NULL on error.
+> - */
+> -struct gcov_info *gcov_info_dup(struct gcov_info *info)
+> -{
+> -       struct gcov_info *dup;
+> -       unsigned int i;
+> -       unsigned int active;
+> -
+> -       /* Duplicate gcov_info. */
+> -       active = num_counter_active(info);
+> -       dup = kzalloc(struct_size(dup, counts, active), GFP_KERNEL);
+> -       if (!dup)
+> -               return NULL;
+> -       dup->version            = info->version;
+> -       dup->stamp              = info->stamp;
+> -       dup->n_functions        = info->n_functions;
+> -       dup->ctr_mask           = info->ctr_mask;
+> -       /* Duplicate filename. */
+> -       dup->filename           = kstrdup(info->filename, GFP_KERNEL);
+> -       if (!dup->filename)
+> -               goto err_free;
+> -       /* Duplicate table of functions. */
+> -       dup->functions = kmemdup(info->functions, info->n_functions *
+> -                                get_fn_size(info), GFP_KERNEL);
+> -       if (!dup->functions)
+> -               goto err_free;
+> -       /* Duplicate counter arrays. */
+> -       for (i = 0; i < active ; i++) {
+> -               struct gcov_ctr_info *ctr = &info->counts[i];
+> -               size_t size = ctr->num * sizeof(gcov_type);
+> -
+> -               dup->counts[i].num = ctr->num;
+> -               dup->counts[i].merge = ctr->merge;
+> -               dup->counts[i].values = vmalloc(size);
+> -               if (!dup->counts[i].values)
+> -                       goto err_free;
+> -               memcpy(dup->counts[i].values, ctr->values, size);
+> -       }
+> -       return dup;
+> -
+> -err_free:
+> -       gcov_info_free(dup);
+> -       return NULL;
+> -}
+> -
+> -/**
+> - * gcov_info_free - release memory for profiling data set duplicate
+> - * @info: profiling data set duplicate to free
+> - */
+> -void gcov_info_free(struct gcov_info *info)
+> -{
+> -       unsigned int active = num_counter_active(info);
+> -       unsigned int i;
+> -
+> -       for (i = 0; i < active ; i++)
+> -               vfree(info->counts[i].values);
+> -       kfree(info->functions);
+> -       kfree(info->filename);
+> -       kfree(info);
+> -}
+> -
+> -/**
+> - * struct type_info - iterator helper array
+> - * @ctr_type: counter type
+> - * @offset: index of the first value of the current function for this type
+> - *
+> - * This array is needed to convert the in-memory data format into the in-file
+> - * data format:
+> - *
+> - * In-memory:
+> - *   for each counter type
+> - *     for each function
+> - *       values
+> - *
+> - * In-file:
+> - *   for each function
+> - *     for each counter type
+> - *       values
+> - *
+> - * See gcc source gcc/gcov-io.h for more information on data organization.
+> - */
+> -struct type_info {
+> -       int ctr_type;
+> -       unsigned int offset;
+> -};
+> -
+> -/**
+> - * struct gcov_iterator - specifies current file position in logical records
+> - * @info: associated profiling data
+> - * @record: record type
+> - * @function: function number
+> - * @type: counter type
+> - * @count: index into values array
+> - * @num_types: number of counter types
+> - * @type_info: helper array to get values-array offset for current function
+> - */
+> -struct gcov_iterator {
+> -       struct gcov_info *info;
+> -
+> -       int record;
+> -       unsigned int function;
+> -       unsigned int type;
+> -       unsigned int count;
+> -
+> -       int num_types;
+> -       struct type_info type_info[0];
+> -};
+> -
+> -static struct gcov_fn_info *get_func(struct gcov_iterator *iter)
+> -{
+> -       return get_fn_info(iter->info, iter->function);
+> -}
+> -
+> -static struct type_info *get_type(struct gcov_iterator *iter)
+> -{
+> -       return &iter->type_info[iter->type];
+> -}
+> -
+> -/**
+> - * gcov_iter_new - allocate and initialize profiling data iterator
+> - * @info: profiling data set to be iterated
+> - *
+> - * Return file iterator on success, %NULL otherwise.
+> - */
+> -struct gcov_iterator *gcov_iter_new(struct gcov_info *info)
+> -{
+> -       struct gcov_iterator *iter;
+> -
+> -       iter = kzalloc(struct_size(iter, type_info, num_counter_active(info)),
+> -                      GFP_KERNEL);
+> -       if (iter)
+> -               iter->info = info;
+> -
+> -       return iter;
+> -}
+> -
+> -/**
+> - * gcov_iter_free - release memory for iterator
+> - * @iter: file iterator to free
+> - */
+> -void gcov_iter_free(struct gcov_iterator *iter)
+> -{
+> -       kfree(iter);
+> -}
+> -
+> -/**
+> - * gcov_iter_get_info - return profiling data set for given file iterator
+> - * @iter: file iterator
+> - */
+> -struct gcov_info *gcov_iter_get_info(struct gcov_iterator *iter)
+> -{
+> -       return iter->info;
+> -}
+> -
+> -/**
+> - * gcov_iter_start - reset file iterator to starting position
+> - * @iter: file iterator
+> - */
+> -void gcov_iter_start(struct gcov_iterator *iter)
+> -{
+> -       int i;
+> -
+> -       iter->record = 0;
+> -       iter->function = 0;
+> -       iter->type = 0;
+> -       iter->count = 0;
+> -       iter->num_types = 0;
+> -       for (i = 0; i < GCOV_COUNTERS; i++) {
+> -               if (counter_active(iter->info, i)) {
+> -                       iter->type_info[iter->num_types].ctr_type = i;
+> -                       iter->type_info[iter->num_types++].offset = 0;
+> -               }
+> -       }
+> -}
+> -
+> -/* Mapping of logical record number to actual file content. */
+> -#define RECORD_FILE_MAGIC      0
+> -#define RECORD_GCOV_VERSION    1
+> -#define RECORD_TIME_STAMP      2
+> -#define RECORD_FUNCTION_TAG    3
+> -#define RECORD_FUNCTON_TAG_LEN 4
+> -#define RECORD_FUNCTION_IDENT  5
+> -#define RECORD_FUNCTION_CHECK  6
+> -#define RECORD_COUNT_TAG       7
+> -#define RECORD_COUNT_LEN       8
+> -#define RECORD_COUNT           9
+> -
+> -/**
+> - * gcov_iter_next - advance file iterator to next logical record
+> - * @iter: file iterator
+> - *
+> - * Return zero if new position is valid, non-zero if iterator has reached end.
+> - */
+> -int gcov_iter_next(struct gcov_iterator *iter)
+> -{
+> -       switch (iter->record) {
+> -       case RECORD_FILE_MAGIC:
+> -       case RECORD_GCOV_VERSION:
+> -       case RECORD_FUNCTION_TAG:
+> -       case RECORD_FUNCTON_TAG_LEN:
+> -       case RECORD_FUNCTION_IDENT:
+> -       case RECORD_COUNT_TAG:
+> -               /* Advance to next record */
+> -               iter->record++;
+> -               break;
+> -       case RECORD_COUNT:
+> -               /* Advance to next count */
+> -               iter->count++;
+> -               /* fall through */
+> -       case RECORD_COUNT_LEN:
+> -               if (iter->count < get_func(iter)->n_ctrs[iter->type]) {
+> -                       iter->record = 9;
+> -                       break;
+> -               }
+> -               /* Advance to next counter type */
+> -               get_type(iter)->offset += iter->count;
+> -               iter->count = 0;
+> -               iter->type++;
+> -               /* fall through */
+> -       case RECORD_FUNCTION_CHECK:
+> -               if (iter->type < iter->num_types) {
+> -                       iter->record = 7;
+> -                       break;
+> -               }
+> -               /* Advance to next function */
+> -               iter->type = 0;
+> -               iter->function++;
+> -               /* fall through */
+> -       case RECORD_TIME_STAMP:
+> -               if (iter->function < iter->info->n_functions)
+> -                       iter->record = 3;
+> -               else
+> -                       iter->record = -1;
+> -               break;
+> -       }
+> -       /* Check for EOF. */
+> -       if (iter->record == -1)
+> -               return -EINVAL;
+> -       else
+> -               return 0;
+> -}
+> -
+> -/**
+> - * seq_write_gcov_u32 - write 32 bit number in gcov format to seq_file
+> - * @seq: seq_file handle
+> - * @v: value to be stored
+> - *
+> - * Number format defined by gcc: numbers are recorded in the 32 bit
+> - * unsigned binary form of the endianness of the machine generating the
+> - * file.
+> - */
+> -static int seq_write_gcov_u32(struct seq_file *seq, u32 v)
+> -{
+> -       return seq_write(seq, &v, sizeof(v));
+> -}
+> -
+> -/**
+> - * seq_write_gcov_u64 - write 64 bit number in gcov format to seq_file
+> - * @seq: seq_file handle
+> - * @v: value to be stored
+> - *
+> - * Number format defined by gcc: numbers are recorded in the 32 bit
+> - * unsigned binary form of the endianness of the machine generating the
+> - * file. 64 bit numbers are stored as two 32 bit numbers, the low part
+> - * first.
+> - */
+> -static int seq_write_gcov_u64(struct seq_file *seq, u64 v)
+> -{
+> -       u32 data[2];
+> -
+> -       data[0] = (v & 0xffffffffUL);
+> -       data[1] = (v >> 32);
+> -       return seq_write(seq, data, sizeof(data));
+> -}
+> -
+> -/**
+> - * gcov_iter_write - write data for current pos to seq_file
+> - * @iter: file iterator
+> - * @seq: seq_file handle
+> - *
+> - * Return zero on success, non-zero otherwise.
+> - */
+> -int gcov_iter_write(struct gcov_iterator *iter, struct seq_file *seq)
+> -{
+> -       int rc = -EINVAL;
+> -
+> -       switch (iter->record) {
+> -       case RECORD_FILE_MAGIC:
+> -               rc = seq_write_gcov_u32(seq, GCOV_DATA_MAGIC);
+> -               break;
+> -       case RECORD_GCOV_VERSION:
+> -               rc = seq_write_gcov_u32(seq, iter->info->version);
+> -               break;
+> -       case RECORD_TIME_STAMP:
+> -               rc = seq_write_gcov_u32(seq, iter->info->stamp);
+> -               break;
+> -       case RECORD_FUNCTION_TAG:
+> -               rc = seq_write_gcov_u32(seq, GCOV_TAG_FUNCTION);
+> -               break;
+> -       case RECORD_FUNCTON_TAG_LEN:
+> -               rc = seq_write_gcov_u32(seq, 2);
+> -               break;
+> -       case RECORD_FUNCTION_IDENT:
+> -               rc = seq_write_gcov_u32(seq, get_func(iter)->ident);
+> -               break;
+> -       case RECORD_FUNCTION_CHECK:
+> -               rc = seq_write_gcov_u32(seq, get_func(iter)->checksum);
+> -               break;
+> -       case RECORD_COUNT_TAG:
+> -               rc = seq_write_gcov_u32(seq,
+> -                       GCOV_TAG_FOR_COUNTER(get_type(iter)->ctr_type));
+> -               break;
+> -       case RECORD_COUNT_LEN:
+> -               rc = seq_write_gcov_u32(seq,
+> -                               get_func(iter)->n_ctrs[iter->type] * 2);
+> -               break;
+> -       case RECORD_COUNT:
+> -               rc = seq_write_gcov_u64(seq,
+> -                       iter->info->counts[iter->type].
+> -                               values[iter->count + get_type(iter)->offset]);
+> -               break;
+> -       }
+> -       return rc;
+> -}
+> --
+> 2.25.0.341.g760bfbb309-goog
+>
 
 
-Sorry I cannot reproduce any error, yaml is parsed and 
-mps,mpq7920.example.dts is generated
-   CHKDT Documentation/devicetree/bindings/regulator/mps,mpq7920.yaml
-Please help me giving more detail
-
-> Rob
+-- 
+Thanks,
+~Nick Desaulniers
