@@ -2,141 +2,131 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54E64C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 13:52:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79B13C3F68F
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 13:53:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22D6520684
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 13:52:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="jWnQ47Uu"
+	by mail.kernel.org (Postfix) with ESMTP id 5878F20684
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 13:53:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729154AbgAWNw0 (ORCPT
+        id S1728925AbgAWNxD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 08:52:26 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:59892 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726729AbgAWNw0 (ORCPT
+        Thu, 23 Jan 2020 08:53:03 -0500
+Received: from hostingweb31-40.netsons.net ([89.40.174.40]:47618 "EHLO
+        hostingweb31-40.netsons.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726729AbgAWNxD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 08:52:26 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579787544;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=FzK0nabFcVqCxu+Dc6EYvtOWvTDLB9MHtbAW7toY8PA=;
-        b=jWnQ47Uuuy0UR+AUB7Gahh6BG9xCfkBLDQnVXMAcI1zh5dh6ggD/Wwj9qSDVaOYSwa3mgn
-        UOZer9hlg5TG83SyCD6dtYb/syw91vKSAOUU9shFlPnaxBG8LKnSy3WXNZDtsBfJ1r5CR4
-        FS9Z3YIXkhxStQL2nAvDdyy1wYjTUAA=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-174-ZiJkwW3FOwyTA2V4ZCYDKw-1; Thu, 23 Jan 2020 08:52:22 -0500
-X-MC-Unique: ZiJkwW3FOwyTA2V4ZCYDKw-1
-Received: by mail-wm1-f72.google.com with SMTP id t16so1056598wmt.4
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jan 2020 05:52:21 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=FzK0nabFcVqCxu+Dc6EYvtOWvTDLB9MHtbAW7toY8PA=;
-        b=fa/bYEMi7qEoe27cvQjh/80ppOCX5+fvtUHvOlMFG+eqrsX80Q64qmyP1AzEx8KJ8T
-         WhWNVNfFP75rJUQxp0Pw6zkAU2jOzfgOYJ1RoYwPiA2w7VaOfyn5+GhSjyX5ZJHbQXi+
-         YUcsOBDoClEZkgJlKSbYladPeIaVnT/RdF7AaudIqSv1Qru1MkTpzp1GURy8eEHa+Ycl
-         I49sWDyXvT/OzHt/kE90ILJAPjpfPO6W2JsbgsEoqABhaPqTgUeEc0g2SYwivcd1A6EX
-         3DtfSwPTbOgRkASRCQBx20ATIJRrUa1VXkuTL3VvgS+3D8+i9WUWDWySnGD6A5ant5Bu
-         MHZg==
-X-Gm-Message-State: APjAAAUU9ysxa91odNet3r6atbaeWI/JGdX1ARbdqrkdM3+2kjwTDh0J
-        5DqHKppavfEHjMsg5U50nXAGrtYGbMomptvcLUh0hwvAEc4/Dm4SbkUYK9f4+phdxcEI/JXS50A
-        udX58URmEdt5Q1TPxPmgSKDI3
-X-Received: by 2002:a1c:4008:: with SMTP id n8mr4342413wma.121.1579787540984;
-        Thu, 23 Jan 2020 05:52:20 -0800 (PST)
-X-Google-Smtp-Source: APXvYqwwuAHOv3mQdajAOj8Wx0mgp4dKgh3ugzrnb0nmfg+V0M9H/8uW8obx7N/CZnGLglD/gLhKTg==
-X-Received: by 2002:a1c:4008:: with SMTP id n8mr4342396wma.121.1579787540799;
-        Thu, 23 Jan 2020 05:52:20 -0800 (PST)
-Received: from [192.168.1.81] (host81-140-166-164.range81-140.btcentralplus.com. [81.140.166.164])
-        by smtp.gmail.com with ESMTPSA id l3sm3135558wrt.29.2020.01.23.05.52.19
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 23 Jan 2020 05:52:20 -0800 (PST)
-Subject: Re: [RFC v5 00/57] objtool: Add support for arm64
-To:     Will Deacon <will@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        jpoimboe@redhat.com, peterz@infradead.org, raphael.gault@arm.com,
-        catalin.marinas@arm.com
-References: <20200109160300.26150-1-jthierry@redhat.com>
- <20200121103025.GC11154@willie-the-truck>
-From:   Julien Thierry <jthierry@redhat.com>
-Message-ID: <400d402d-c964-6f0c-2954-6f6afcb94635@redhat.com>
-Date:   Thu, 23 Jan 2020 13:52:17 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Thu, 23 Jan 2020 08:53:03 -0500
+Received: from [109.168.11.45] (port=47192 helo=pc-ceresoli.dev.aim)
+        by hostingweb31.netsons.net with esmtpa (Exim 4.92)
+        (envelope-from <luca@lucaceresoli.net>)
+        id 1iucuq-000CNg-UL; Thu, 23 Jan 2020 14:53:00 +0100
+From:   Luca Ceresoli <luca@lucaceresoli.net>
+To:     linux-i2c@vger.kernel.org, linux-doc@vger.kernel.org
+Cc:     Luca Ceresoli <luca@lucaceresoli.net>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Jean Delvare <jdelvare@suse.de>, Peter Rosin <peda@axentia.se>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2 06/28] docs: i2c: replace "I2C-transfer" -> "I2C transfer" consistently
+Date:   Thu, 23 Jan 2020 14:50:41 +0100
+Message-Id: <20200123135103.20540-7-luca@lucaceresoli.net>
+X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200123135103.20540-1-luca@lucaceresoli.net>
+References: <20200123135103.20540-1-luca@lucaceresoli.net>
 MIME-Version: 1.0
-In-Reply-To: <20200121103025.GC11154@willie-the-truck>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - hostingweb31.netsons.net
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - lucaceresoli.net
+X-Get-Message-Sender-Via: hostingweb31.netsons.net: authenticated_id: luca+lucaceresoli.net/only user confirmed/virtual account not confirmed
+X-Authenticated-Sender: hostingweb31.netsons.net: luca@lucaceresoli.net
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+"I2C transfer" is a legitimate english sentence, no need for a hyphen
+between the two words, as as such it is used in most of the
+documentation. Remove the hyphen in the few places where it is present.
 
+Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
+Acked-by: Peter Rosin <peda@axentia.se>
+Reviewed-by: Jean Delvare <jdelvare@suse.de>
+---
+ Documentation/i2c/i2c-topology.rst | 24 ++++++++++++------------
+ 1 file changed, 12 insertions(+), 12 deletions(-)
 
-On 1/21/20 10:30 AM, Will Deacon wrote:
-> On Thu, Jan 09, 2020 at 04:02:03PM +0000, Julien Thierry wrote:
->> This patch series is the continuation of Raphael's work [1]. All the
->> patches can be retrieved from:
->> git clone -b arm64-objtool-v5 https://github.com/julien-thierry/linux.git
-> 
-> [...]
-> 
->>    objtool: arm64: Decode unknown instructions
->>    objtool: arm64: Decode simple data processing instructions
->>    objtool: arm64: Decode add/sub immediate instructions
->>    objtool: arm64: Decode logical data processing instructions
->>    objtool: arm64: Decode system instructions not affecting the flow
->>    objtool: arm64: Decode calls to higher EL
->>    objtool: arm64: Decode brk instruction
->>    objtool: arm64: Decode instruction triggering context switch
->>    objtool: arm64: Decode branch instructions with PC relative immediates
->>    objtool: arm64: Decode branch to register instruction
->>    objtool: arm64: Decode basic load/stores
->>    objtool: arm64: Decode load/store with register offset
->>    objtool: arm64: Decode load/store register pair instructions
->>    objtool: arm64: Decode FP/SIMD load/store instructions
->>    objtool: arm64: Decode load/store exclusive
->>    objtool: arm64: Decode atomic load/store
->>    objtool: arm64: Decode pointer auth load instructions
->>    objtool: arm64: Decode load acquire/store release
->>    objtool: arm64: Decode load/store with memory tag
->>    objtool: arm64: Decode load literal
->>    objtool: arm64: Decode register data processing instructions
->>    objtool: arm64: Decode FP/SIMD data processing instructions
->>    objtool: arm64: Decode SVE instructions
-> 
-> That's a lot of decoding logic which we already have in
-> arch/arm64/{kernel/insn.c,include/asm/insn.h}. I'd prefer to see this stuff
-> reused or generated from a single source, since it's really easy to get it
-> wrong, has a tendency to bitrot and is nasty to debug.
-> 
-
-The thing is that the code in those files is mostly encoding logic 
-(motivated by BPF) rather than decoding (except for the instruction that 
-might be trapped, but these rarely overlap with instructions that 
-objtools cares about). I agree that ideally the decoding/encoding should 
-be under arch/arm64/lib, I was just a bit weary introducing a lot of 
-decoding code under arch/arm64 that wouldn't even be used in kernel code.
-
-But I can make an attempt for the encode/decode lib and post it as part 
-of the next version.
-
-Cheers,
-
+diff --git a/Documentation/i2c/i2c-topology.rst b/Documentation/i2c/i2c-topology.rst
+index b413ef6a6773..2a18b53e3508 100644
+--- a/Documentation/i2c/i2c-topology.rst
++++ b/Documentation/i2c/i2c-topology.rst
+@@ -137,14 +137,14 @@ Mux-locked Example
+ 
+ When there is an access to D1, this happens:
+ 
+- 1. Someone issues an I2C-transfer to D1.
++ 1. Someone issues an I2C transfer to D1.
+  2. M1 locks muxes on its parent (the root adapter in this case).
+  3. M1 calls ->select to ready the mux.
+- 4. M1 (presumably) does some I2C-transfers as part of its select.
+-    These transfers are normal I2C-transfers that locks the parent
++ 4. M1 (presumably) does some I2C transfers as part of its select.
++    These transfers are normal I2C transfers that locks the parent
+     adapter.
+- 5. M1 feeds the I2C-transfer from step 1 to its parent adapter as a
+-    normal I2C-transfer that locks the parent adapter.
++ 5. M1 feeds the I2C transfer from step 1 to its parent adapter as a
++    normal I2C transfer that locks the parent adapter.
+  6. M1 calls ->deselect, if it has one.
+  7. Same rules as in step 4, but for ->deselect.
+  8. M1 unlocks muxes on its parent.
+@@ -169,7 +169,7 @@ PL1. If you build a topology with a parent-locked mux being the child
+      of another mux, this might break a possible assumption from the
+      child mux that the root adapter is unused between its select op
+      and the actual transfer (e.g. if the child mux is auto-closing
+-     and the parent mux issues I2C-transfers as part of its select).
++     and the parent mux issues I2C transfers as part of its select).
+      This is especially the case if the parent mux is mux-locked, but
+      it may also happen if the parent mux is parent-locked.
+ 
+@@ -197,15 +197,15 @@ Parent-locked Example
+ 
+ When there is an access to D1, this happens:
+ 
+- 1.  Someone issues an I2C-transfer to D1.
++ 1.  Someone issues an I2C transfer to D1.
+  2.  M1 locks muxes on its parent (the root adapter in this case).
+  3.  M1 locks its parent adapter.
+  4.  M1 calls ->select to ready the mux.
+- 5.  If M1 does any I2C-transfers (on this root adapter) as part of
+-     its select, those transfers must be unlocked I2C-transfers so
++ 5.  If M1 does any I2C transfers (on this root adapter) as part of
++     its select, those transfers must be unlocked I2C transfers so
+      that they do not deadlock the root adapter.
+- 6.  M1 feeds the I2C-transfer from step 1 to the root adapter as an
+-     unlocked I2C-transfer, so that it does not deadlock the parent
++ 6.  M1 feeds the I2C transfer from step 1 to the root adapter as an
++     unlocked I2C transfer, so that it does not deadlock the parent
+      adapter.
+  7.  M1 calls ->deselect, if it has one.
+  8.  Same rules as in step 5, but for ->deselect.
+@@ -293,7 +293,7 @@ device lockups and/or other problems.
+ 
+ The topology is especially troublesome if M2 is an auto-closing
+ mux. In that case, any interleaved accesses to D4 might close M2
+-prematurely, as might any I2C-transfers part of M1->select.
++prematurely, as might any I2C transfers part of M1->select.
+ 
+ But if M2 is not making the above stated assumption, and if M2 is not
+ auto-closing, the topology is fine.
 -- 
-Julien Thierry
+2.25.0
 
