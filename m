@@ -2,107 +2,106 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95D21C33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 08:42:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C47A2C3F68F
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 08:42:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7638F2073A
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 08:42:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A58A12467E
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 08:42:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727093AbgAWImr (ORCPT
+        id S1727816AbgAWImz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 03:42:47 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:39342 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726061AbgAWImr (ORCPT
+        Thu, 23 Jan 2020 03:42:55 -0500
+Received: from alexa-out-blr-01.qualcomm.com ([103.229.18.197]:47000 "EHLO
+        alexa-out-blr-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726061AbgAWImy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 03:42:47 -0500
-Received: from p5b06da22.dip0.t-ipconnect.de ([91.6.218.34] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1iuY4Y-0004Fo-LO; Thu, 23 Jan 2020 09:42:42 +0100
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 0B0641008DD; Thu, 23 Jan 2020 09:42:42 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Evan Green <evgreen@chromium.org>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Marc Zyngier <maz@kernel.org>, Christoph Hellwig <hch@lst.de>,
-        Rajat Jain <rajatxjain@gmail.com>
-Subject: Re: [PATCH] PCI/MSI: Avoid torn updates to MSI pairs
-In-Reply-To: <CAE=gft7ukQOxHmJT_tkWzA3u2cecmV0Jiq-ukAu-1OR+sPnTtg@mail.gmail.com>
-References: <20200116133102.1.I9c7e72144ef639cc135ea33ef332852a6b33730f@changeid> <20200122172816.GA139285@google.com> <CAE=gft6hvO7G2OrxFGXeSDctz-21ryiu8JSBWT0g2fRFss-pxA@mail.gmail.com> <875zh3ukoy.fsf@nanos.tec.linutronix.de> <CAE=gft7ukQOxHmJT_tkWzA3u2cecmV0Jiq-ukAu-1OR+sPnTtg@mail.gmail.com>
-Date:   Thu, 23 Jan 2020 09:42:42 +0100
-Message-ID: <871rrqva0t.fsf@nanos.tec.linutronix.de>
+        Thu, 23 Jan 2020 03:42:54 -0500
+Received: from ironmsg01-blr.qualcomm.com ([10.86.208.130])
+  by alexa-out-blr-01.qualcomm.com with ESMTP/TLS/AES256-SHA; 23 Jan 2020 14:12:02 +0530
+Received: from c-rojay-linux.qualcomm.com ([10.206.21.80])
+  by ironmsg01-blr.qualcomm.com with ESMTP; 23 Jan 2020 14:11:40 +0530
+Received: by c-rojay-linux.qualcomm.com (Postfix, from userid 88981)
+        id 3D99C26E5; Thu, 23 Jan 2020 14:11:40 +0530 (IST)
+From:   Roja Rani Yarubandi <rojay@codeaurora.org>
+To:     akashast@codeaurora.org, msavaliy@qti.qualcomm.com,
+        mgautam@codeaurora.org, Andy Gross <agross@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>
+Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org,
+        Roja Rani Yarubandi <rojay@codeaurora.org>
+Subject: [PATCH 1/1] tty: serial: qcom_geni_serial: Configure UART_IO_MACRO_CTRL register
+Date:   Thu, 23 Jan 2020 14:11:32 +0530
+Message-Id: <20200123084132.11802-2-rojay@codeaurora.org>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200123084132.11802-1-rojay@codeaurora.org>
+References: <20200123084132.11802-1-rojay@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Evan Green <evgreen@chromium.org> writes:
-> On Wed, Jan 22, 2020 at 3:37 PM Thomas Gleixner <tglx@linutronix.de> wrote:
->> > One other way you could avoid torn MSI writes would be to ensure that
->> > if you migrate IRQs across cores, you keep the same x86 vector number.
->> > That way the address portion would be updated, and data doesn't
->> > change, so there's no window. But that may not actually be feasible.
->>
->> That's not possible simply because the x86 vector space is limited. If
->> we would have to guarantee that then we'd end up with a max of ~220
->> interrupts per system. Sufficient for your notebook, but the big iron
->> people would be not amused.
->
-> Right, that occurred to me as well. The actual requirement isn't quite
-> as restrictive. What you really need is the old vector to be
-> registered on both the old CPU and the new CPU. Then once the
-> interrupt is confirmed to have moved we could release both the old
-> vector both CPUs, leaving only the new vector on the new CPU.
+Configure UART_IO_MACRO_CTRL register if UART lines are swapped.
 
-Sure, and how can you guarantee that without reserving the vector on all
-CPUs in the first place? If you don't do that then if the vector is not
-available affinity setting would fail every so often and it would pretty
-much prevent hotplug if a to be migrated vector is not available on at
-least one online CPU.
+Change-Id: I8e82c2395bf4cdc51b3677c3c54f5be3f390a888
+Signed-off-by: Roja Rani Yarubandi <rojay@codeaurora.org>
+---
+ arch/arm64/boot/dts/qcom/sc7180-trogdor.dtsi | 1 +
+ drivers/tty/serial/qcom_geni_serial.c        | 6 ++++++
+ 2 files changed, 7 insertions(+)
 
-> In that world some SMP affinity transitions might fail, which is a
-> bummer. To avoid that, you could first migrate to a vector that's
-> available on both the source and destination CPUs, keeping affinity
-> the same. Then change affinity in a separate step.
+diff --git a/arch/arm64/boot/dts/qcom/sc7180-trogdor.dtsi b/arch/arm64/boot/dts/qcom/sc7180-trogdor.dtsi
+index 7143cb2dbc05..8a8497ca0ec0 100644
+--- a/arch/arm64/boot/dts/qcom/sc7180-trogdor.dtsi
++++ b/arch/arm64/boot/dts/qcom/sc7180-trogdor.dtsi
+@@ -675,6 +675,7 @@ ap_spi_fp: &spi10 {
+ 
+ &uart3 {
+ 	status = "okay";
++	qcom,pin_inverse = <0x4643>;
+ 
+ 	bluetooth: bluetooth {
+ 		compatible = "qcom,wcn3991-bt";
+diff --git a/drivers/tty/serial/qcom_geni_serial.c b/drivers/tty/serial/qcom_geni_serial.c
+index e1767359cc64..939592ca437c 100644
+--- a/drivers/tty/serial/qcom_geni_serial.c
++++ b/drivers/tty/serial/qcom_geni_serial.c
+@@ -25,6 +25,7 @@
+ 
+ /* UART specific GENI registers */
+ #define SE_UART_LOOPBACK_CFG		0x22c
++#define SE_UART_IO_MACRO_CTRL		0x240
+ #define SE_UART_TX_TRANS_CFG		0x25c
+ #define SE_UART_TX_WORD_LEN		0x268
+ #define SE_UART_TX_STOP_BIT_LEN		0x26c
+@@ -1240,6 +1241,7 @@ static int qcom_geni_serial_probe(struct platform_device *pdev)
+ 	int irq;
+ 	bool console = false;
+ 	struct uart_driver *drv;
++	u32 val;
+ 
+ 	if (of_device_is_compatible(pdev->dev.of_node, "qcom,geni-debug-uart"))
+ 		console = true;
+@@ -1313,6 +1315,10 @@ static int qcom_geni_serial_probe(struct platform_device *pdev)
+ 	if (ret)
+ 		return ret;
+ 
++	ret = of_property_read_u32(pdev->dev.of_node, "qcom,pin_inverse", &val);
++	if (!ret)
++		writel(val, uport->membase + SE_UART_IO_MACRO_CTRL);
++
+ 	irq_set_status_flags(uport->irq, IRQ_NOAUTOEN);
+ 	ret = devm_request_irq(uport->dev, uport->irq, qcom_geni_serial_isr,
+ 			IRQF_TRIGGER_HIGH, port->name, uport);
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of the Code Aurora Forum, hosted by The Linux Foundation
 
-Good luck with doing that at the end of the hotplug routine where the
-CPU is about to vanish.
-
-> Or alternatively, you could permanently designate a "transit" vector.
-> If an interrupt fires on this vector, then we call all ISRs currently
-> in transit between CPUs. You might end up calling ISRs that didn't
-> actually need service, but at least that's better than missing edges.
-
-I don't think we need that. While walking the dogs I thought about
-invoking a force migrated interrupt on the target CPU, but haven't
-thought it through yet.
-
->> 'lscpci -vvv' and 'cat /proc/interrupts'
->
-> Here it is:
-> https://pastebin.com/YyxBUvQ2
-
-Hrm:
-
-        Capabilities: [80] MSI-X: Enable+ Count=16 Masked-
-
-So this is weird. We mask it before moving it, so the tear issue should
-not happen on MSI-X. So the tearing might be just a red herring.
-
-Let me stare into the code a bit.
-
-Thanks,
-
-        tglx
