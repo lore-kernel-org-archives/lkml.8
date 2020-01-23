@@ -2,109 +2,221 @@ Return-Path: <SRS0=EowN=3M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69462C33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 10:35:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E47BCC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 10:40:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3AF4424125
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 10:35:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE7992467E
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jan 2020 10:40:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HuMXlEXe"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fR4TsOo8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728609AbgAWKfv (ORCPT
+        id S1726871AbgAWKkN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 05:35:51 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:39254 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726026AbgAWKfv (ORCPT
+        Thu, 23 Jan 2020 05:40:13 -0500
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:37264 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726026AbgAWKkM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 05:35:51 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579775750;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=6L8nK/yXsf3UzKXoncofWr4RqyR/vIboyAU6KZ/JiM0=;
-        b=HuMXlEXeU5LNBReMk2Z6CEFabOm1UEPJgQFFEYRY4iUCYnjpjZ0q94Xh7qHzJ03riqMyAX
-        KJL946CpGzSKppVgJ9uxN0Bzg7yL7z5gVutijNpAgtdbDfSf4EvGavK7J74UEir23EruCE
-        ChgbUJihSd95xECBODazof3M30ydkXk=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-248-0nX-IX36P9yjx0TPhlR4iQ-1; Thu, 23 Jan 2020 05:35:46 -0500
-X-MC-Unique: 0nX-IX36P9yjx0TPhlR4iQ-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 18C1F477;
-        Thu, 23 Jan 2020 10:35:45 +0000 (UTC)
-Received: from localhost (unknown [10.18.25.174])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 4742F85757;
-        Thu, 23 Jan 2020 10:35:42 +0000 (UTC)
-Date:   Thu, 23 Jan 2020 05:35:41 -0500
-From:   Mike Snitzer <snitzer@redhat.com>
-To:     Stefan Bader <stefan.bader@canonical.com>
-Cc:     linux-kernel@vger.kernel.org, dm-devel@redhat.com,
-        linux-block@vger.kernel.org, Alasdair Kergon <agk@redhat.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        Tyler Hicks <tyler.hicks@canonical.com>
-Subject: Re: [PATCH 1/1] blk/core: Gracefully handle unset make_request_fn
-Message-ID: <20200123103541.GA28102@redhat.com>
-References: <20200123091713.12623-1-stefan.bader@canonical.com>
- <20200123091713.12623-2-stefan.bader@canonical.com>
+        Thu, 23 Jan 2020 05:40:12 -0500
+Received: by mail-qt1-f196.google.com with SMTP id w47so2061153qtk.4;
+        Thu, 23 Jan 2020 02:40:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=IDcQGglpaul1tPS+GCmx20FNALyPlED6w9cqoaLS8mU=;
+        b=fR4TsOo87FGGZXrttxAbeEpOCX1chbBMJBjQVjOD0knypYOYbHwOVBwSjlqjtrHumF
+         tGFxV/yrY/gto/6WYnkE2hSa4K//Q3JUdbdEmPg7UUrYC1xUC9E7KIEYVc69PcCg9HWa
+         gu4Itf82JY5MSWlmGYO4CdxZZ/LeZQoJIie3L3v/N7KNVGRZw5U790FeI7dJls79vxXn
+         YTwTtTChRmKe6sDH92jHsXO+FajFVJ54MvgvouLKXPSi5pDVMsEGxkQzkQ90lbkg4CJd
+         2brvlGfbf4vxqTp6w8LYDYAVdRK/3he0/ZHiIMYqt2NYoz8HMO/xj3kl3H0zG8pkhh17
+         iXBw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=IDcQGglpaul1tPS+GCmx20FNALyPlED6w9cqoaLS8mU=;
+        b=PRr2OxgYm6MwVHNEKRzWoDX11L3bVR8MD+j6v/RqI+VF4J8SKTLGB98fXYYw3bHxHc
+         ZafAtSW2JiM54+46Gd87UxInmxa212fEkF57pAF7sbyRJ1c7/+HfieaAZkE76ukALSjO
+         x0Ug83jcXhLwIgkiWg3/jWQ/pFPGZAgYqcmYRR+K5Lu7mTBjkD0E4ZUsUDzvgjBln8dF
+         PdReyDaW8LBgRxT9fnRj6GOSP5yfvxPEIzC/DrLG0yCCkALfsUslhi/4lmRpQQrq1qiD
+         ns19o0aQJMu5XpHtFWJneknZ+BjF57axoHuL1Xdnma6M/A1iOixofHgCA5gsDI2DwJsA
+         BvMg==
+X-Gm-Message-State: APjAAAWRWE8jj7hzeEgaGeh4fZPqRPcoBed17wbJeo0+ZljjN9NMJqVN
+        6HbFyK2UeH/jpaWMqPcH+vc=
+X-Google-Smtp-Source: APXvYqxew/CEDapez6dF5/McKNlZA9U6YEbQY0A19f8GX4NviQ99xw9pTwdp012PbULYqmb7ktISUw==
+X-Received: by 2002:ac8:7356:: with SMTP id q22mr15119734qtp.162.1579776011333;
+        Thu, 23 Jan 2020 02:40:11 -0800 (PST)
+Received: from auth2-smtp.messagingengine.com (auth2-smtp.messagingengine.com. [66.111.4.228])
+        by smtp.gmail.com with ESMTPSA id u4sm668037qkh.59.2020.01.23.02.40.10
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 23 Jan 2020 02:40:10 -0800 (PST)
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
+        by mailauth.nyi.internal (Postfix) with ESMTP id 2FA0F21AEF;
+        Thu, 23 Jan 2020 05:40:10 -0500 (EST)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute6.internal (MEProxy); Thu, 23 Jan 2020 05:40:10 -0500
+X-ME-Sender: <xms:CXgpXt8ROVDUikj5RrZ6vXMJbD7g2XQ37UXIW-sznFJP5BAW2uFGmQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrvddvgddukecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepuehoqhhunhcu
+    hfgvnhhguceosghoqhhunhdrfhgvnhhgsehgmhgrihhlrdgtohhmqeenucfkphephedvrd
+    duheehrdduuddurdejudenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgr
+    ihhlfhhrohhmpegsohhquhhnodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqd
+    eiledvgeehtdeigedqudejjeekheehhedvqdgsohhquhhnrdhfvghngheppehgmhgrihhl
+    rdgtohhmsehfihigmhgvrdhnrghmvg
+X-ME-Proxy: <xmx:CXgpXuL0IYlP24rOfxk7qhDaMJrXHFgjGQrKJ43q0lGLdmAL_nL_iA>
+    <xmx:CXgpXizYdlqEJMgY0PeIV1kM-3h6tDqVMHpB7XLFanm_JV0LQrK-Wg>
+    <xmx:CXgpXiXtpgeV3GLbdRYiFvbYFcD4ugRsU0qE-NIkdKzfvd_WgfVtIw>
+    <xmx:CngpXpiNQQRwLD6lR6mqcBNzNgRcmNC6R7AIY1X6GDpNz55tgFbnVpwt-hk>
+Received: from localhost (unknown [52.155.111.71])
+        by mail.messagingengine.com (Postfix) with ESMTPA id F320F3280063;
+        Thu, 23 Jan 2020 05:40:08 -0500 (EST)
+Date:   Thu, 23 Jan 2020 18:40:07 +0800
+From:   Boqun Feng <boqun.feng@gmail.com>
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     Michael Kelley <mikelley@microsoft.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS" 
+        <linux-pci@vger.kernel.org>, linux-hyperv@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] pci: hyperv: Move retarget related struct
+ definitions into tlfs
+Message-ID: <20200123104007.GB55410@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
+References: <20200121015713.69691-1-boqun.feng@gmail.com>
+ <20200121015713.69691-2-boqun.feng@gmail.com>
+ <87blqxf9es.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200123091713.12623-2-stefan.bader@canonical.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+In-Reply-To: <87blqxf9es.fsf@vitty.brq.redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 23 2020 at  4:17am -0500,
-Stefan Bader <stefan.bader@canonical.com> wrote:
-
-> When device-mapper adapted for multi-queue functionality, they
-> also re-organized the way the make-request function was set.
-> Before, this happened when the device-mapper logical device was
-> created. Now it is done once the mapping table gets loaded the
-> first time (this also decides whether the block device is request
-> or bio based).
+On Tue, Jan 21, 2020 at 10:25:47AM +0100, Vitaly Kuznetsov wrote:
+[...]
+> >  
+> > +#if IS_ENABLED(CONFIG_PCI_HYPERV)
+> > +#define hv_set_msi_address_from_desc(msi_entry, msi_desc)	\
+> > +do {								\
+> > +	(msi_entry)->address = (msi_desc)->msg.address_lo;	\
+> > +} while (0)
+> > +
+> > +#endif /* CONFIG_PCI_HYPERV */
 > 
-> However in generic_make_request(), the request function gets used
-> without further checks and this happens if one tries to mount such
-> a partially set up device.
+> It seems to be pointless to put defines under #if IS_ENABLED(): in case
+> it is not enabled and used you'll get a compilation error, in case it is
+> enabled and not used no code is going to be generated anyways.
 > 
-> This can easily be reproduced with the following steps:
->  - dmsetup create -n test
->  - mount /dev/dm-<#> /mnt
+
+OK I will remove the #if IS_ENABLED() in the next version.
+
+> > +
+> >  #else /* CONFIG_HYPERV */
+> >  static inline void hyperv_init(void) {}
+> >  static inline void hyperv_setup_mmu_ops(void) {}
+> > diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+> > index aacfcc90d929..2240f2b3643e 100644
+> > --- a/drivers/pci/controller/pci-hyperv.c
+> > +++ b/drivers/pci/controller/pci-hyperv.c
+> > @@ -406,36 +406,6 @@ struct pci_eject_response {
+> >  
+> >  static int pci_ring_size = (4 * PAGE_SIZE);
+> >  
+> > -struct hv_interrupt_entry {
+> > -	u32	source;			/* 1 for MSI(-X) */
+> > -	u32	reserved1;
+> > -	u32	address;
+> > -	u32	data;
+> > -};
+> > -
+> > -/*
+> > - * flags for hv_device_interrupt_target.flags
+> > - */
+> > -#define HV_DEVICE_INTERRUPT_TARGET_MULTICAST		1
+> > -#define HV_DEVICE_INTERRUPT_TARGET_PROCESSOR_SET	2
+> > -
+> > -struct hv_device_interrupt_target {
+> > -	u32	vector;
+> > -	u32	flags;
+> > -	union {
+> > -		u64		 vp_mask;
+> > -		struct hv_vpset vp_set;
+> > -	};
+> > -};
+> > -
+> > -struct retarget_msi_interrupt {
+> > -	u64	partition_id;		/* use "self" */
+> > -	u64	device_id;
+> > -	struct hv_interrupt_entry int_entry;
+> > -	u64	reserved2;
+> > -	struct hv_device_interrupt_target int_target;
+> > -} __packed __aligned(8);
+> > -
+> >  /*
+> >   * Driver specific state.
+> >   */
+> > @@ -482,7 +452,7 @@ struct hv_pcibus_device {
+> >  	struct workqueue_struct *wq;
+> >  
+> >  	/* hypercall arg, must not cross page boundary */
+> > -	struct retarget_msi_interrupt retarget_msi_interrupt_params;
+> > +	struct hv_retarget_device_interrupt retarget_msi_interrupt_params;
+> >  
+> >  	/*
+> >  	 * Don't put anything here: retarget_msi_interrupt_params must be last
+> > @@ -1178,7 +1148,7 @@ static void hv_irq_unmask(struct irq_data *data)
+> >  {
+> >  	struct msi_desc *msi_desc = irq_data_get_msi_desc(data);
+> >  	struct irq_cfg *cfg = irqd_cfg(data);
+> > -	struct retarget_msi_interrupt *params;
+> > +	struct hv_retarget_device_interrupt *params;
+> >  	struct hv_pcibus_device *hbus;
+> >  	struct cpumask *dest;
+> >  	cpumask_var_t tmp;
+> > @@ -1200,8 +1170,8 @@ static void hv_irq_unmask(struct irq_data *data)
+> >  	memset(params, 0, sizeof(*params));
+> >  	params->partition_id = HV_PARTITION_ID_SELF;
+> >  	params->int_entry.source = 1; /* MSI(-X) */
+> > -	params->int_entry.address = msi_desc->msg.address_lo;
+> > -	params->int_entry.data = msi_desc->msg.data;
+> > +	hv_set_msi_address_from_desc(&params->int_entry.msi_entry, msi_desc);
 > 
-> This maybe is something which also should be fixed up in device-
-> mapper.
-
-I'll look closer at other options.
-
-> But given there is already a check for an unset queue
-> pointer and potentially there could be other drivers which do or
-> might do the same, it sounds like a good move to add another check
-> to generic_make_request_checks() and to bail out if the request
-> function has not been set, yet.
+> I don't quite see why this hv_set_msi_address_from_desc() is needed at
+> all.
 > 
-> BugLink: https://bugs.launchpad.net/bugs/1860231
 
-From that bug;
-"The currently proposed fix introduces no chance of stability
-regressions. There is a chance of a very small performance regression
-since an additional pointer comparison is performed on each block layer
-request but this is unlikely to be noticeable."
+I will add some description in the next version, the reason that
+hv_set_msi_address_from_desc() is arm64 and x86 have different
+hv_interrupt_entry formats. So a generic interface is needed so that
+archs can have different ways to set ->address field from msi_desc.
 
-This captures my immediate concern: slowing down everyone for this DM
-edge-case isn't desirable.
+Regards,
+Boqun
 
-Mike
-
+> > +	params->int_entry.msi_entry.data = msi_desc->msg.data;
+> >  	params->device_id = (hbus->hdev->dev_instance.b[5] << 24) |
+> >  			   (hbus->hdev->dev_instance.b[4] << 16) |
+> >  			   (hbus->hdev->dev_instance.b[7] << 8) |
+> 
+> -- 
+> Vitaly
+> 
