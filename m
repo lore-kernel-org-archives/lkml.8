@@ -7,47 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07159C35240
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 01:17:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 794AEC35240
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 01:17:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BEC2522464
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 01:17:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D7E62253D
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 01:17:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579828666;
-	bh=yi3SPWfrdUc2hmBaEB9c9QudFRVizN2qqqi3ustrzIU=;
+	s=default; t=1579828669;
+	bh=AFL1qKM9zkNwovEGBFMBJ83gzXsaN62cIGTEMx7HV5g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LQdlAcG6o2Tc6kjehobtTKb/WElJdXFEUUj6gynE3M7NIZNhJhIltBxiMIf6IhmrD
-	 Pk3szEPHROCJIQsBOytdbgY/jXunXFnaHRyQkMag48gMLTqGhW/Goku9/EmTkVYW3s
-	 6pQxrIx0OCbXNUpOXv0qrRX08DF+u3suutgIv4Sg=
+	b=c6O8emqKn5NAXYitW8E+CDNdjCPQCM7UQRXemkUIvPnm8p/Q/dr2GK6BphIJ8KppN
+	 WPSLXmZlR9xchsymE7hqVHiXyWbwVkkc1BB8J6bksn9p3WQrXtV/1J//Mxg/Vh9DKz
+	 wtvkchFxf4u25FIRJhiPtdcGS8EaYS5mbQBQ1Y7M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730741AbgAXBRq (ORCPT
+        id S1730763AbgAXBRs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 20:17:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60856 "EHLO mail.kernel.org"
+        Thu, 23 Jan 2020 20:17:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60960 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730684AbgAXBRl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 20:17:41 -0500
+        id S1730738AbgAXBRq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jan 2020 20:17:46 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5DB4D2467E;
-        Fri, 24 Jan 2020 01:17:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A1E5F21D7D;
+        Fri, 24 Jan 2020 01:17:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579828661;
-        bh=yi3SPWfrdUc2hmBaEB9c9QudFRVizN2qqqi3ustrzIU=;
+        s=default; t=1579828665;
+        bh=AFL1qKM9zkNwovEGBFMBJ83gzXsaN62cIGTEMx7HV5g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Zatxfaj0W2RlSuKJSVrjxITHkBgbhvydFnHszMq4GNjdWMJYk9E4S6W78bVPiZqTf
-         sANufA6NyV1ohgqh4iCAVJL+eIwXdLFNcJ9jlVhW+EBhFHEwmWjJPbCKZDVRJLTaKD
-         4CEGX1ZpnKJi5GNwB5UF1fH0Zm7sqyP8QXDYW5fo=
+        b=yFaCsm1xGJWHMbaV+PzJddlnZzgqL6XK+MiZBte7gfYwIZ4dKuHEu+AcckrutMRa7
+         EQWzWQKaq6oQN9HC16mSFYczebEaTNqjqCYCzaXzpHWnRB6yFdmfM07C2GcrxLeMJ2
+         2m+nACtf7QQPRAa9zFpsfWXWLP/wDCFl/YVND0sc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andre Heider <a.heider@gmail.com>,
-        Marcel Holtmann <marcel@holtmann.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-bluetooth@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 28/33] Bluetooth: btbcm: Use the BDADDR_PROPERTY quirk
-Date:   Thu, 23 Jan 2020 20:17:03 -0500
-Message-Id: <20200124011708.18232-28-sashal@kernel.org>
+Cc:     Pavel Balan <admin@kryma.net>, Jiri Kosina <jkosina@suse.cz>,
+        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 32/33] HID: Add quirk for incorrect input length on Lenovo Y720
+Date:   Thu, 23 Jan 2020 20:17:07 -0500
+Message-Id: <20200124011708.18232-32-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200124011708.18232-1-sashal@kernel.org>
 References: <20200124011708.18232-1-sashal@kernel.org>
@@ -60,39 +58,97 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andre Heider <a.heider@gmail.com>
+From: Pavel Balan <admin@kryma.net>
 
-[ Upstream commit a4f95f31a9f38d9bb1fd313fcc2d0c0d48116ee3 ]
+[ Upstream commit fd0913768701612fc2b8ab9c8a5c019133e8d978 ]
 
-Some devices ship with the controller default address, like the
-Orange Pi 3 (BCM4345C5).
+Apply it to the Lenovo Y720 gaming laptop I2C peripheral then.
 
-Allow the bootloader to set a valid address through the device tree.
+This fixes dmesg being flooded with errors visible on un-suspend
+in Linux Mint 19 Cinnamon.
 
-Signed-off-by: Andre Heider <a.heider@gmail.com>
-Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+Example of error log:
+
+<...>
+[    4.326588] i2c_hid i2c-ITE33D1:00: i2c_hid_get_input: incomplete report (2/4)
+[    4.326845] i2c_hid i2c-ITE33D1:00: i2c_hid_get_input: incomplete report (2/4)
+[    4.327095] i2c_hid i2c-ITE33D1:00: i2c_hid_get_input: incomplete report (2/4)
+[    4.327341] i2c_hid i2c-ITE33D1:00: i2c_hid_get_input: incomplete report (2/4)
+[    4.327609] i2c_hid i2c-ITE33D1:00: i2c_hid_get_input: incomplete report (2/4)
+<...>
+
+Example of fixed log (debug on)
+
+<...>
+[ 3731.333183] i2c_hid i2c-ITE33D1:00: input: 02 00
+[ 3731.333581] i2c_hid i2c-ITE33D1:00: input: 02 00
+[ 3731.333842] i2c_hid i2c-ITE33D1:00: input: 02 00
+[ 3731.334107] i2c_hid i2c-ITE33D1:00: input: 02 00
+[ 3731.334367] i2c_hid i2c-ITE33D1:00: input: 02 00
+<...>
+
+[jkosina@suse.cz: rebase onto more recent codebase]
+Signed-off-by: Pavel Balan <admin@kryma.net>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/bluetooth/btbcm.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/hid/hid-ids.h              |  1 +
+ drivers/hid/i2c-hid/i2c-hid-core.c | 16 +++++++++++++---
+ 2 files changed, 14 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/bluetooth/btbcm.c b/drivers/bluetooth/btbcm.c
-index 2d2e6d8620681..f02a4bdc0ca75 100644
---- a/drivers/bluetooth/btbcm.c
-+++ b/drivers/bluetooth/btbcm.c
-@@ -440,6 +440,12 @@ int btbcm_finalize(struct hci_dev *hdev)
+diff --git a/drivers/hid/hid-ids.h b/drivers/hid/hid-ids.h
+index c99d56308fbc9..df786df0c0ab9 100644
+--- a/drivers/hid/hid-ids.h
++++ b/drivers/hid/hid-ids.h
+@@ -631,6 +631,7 @@
+ #define USB_VENDOR_ID_ITE               0x048d
+ #define USB_DEVICE_ID_ITE_LENOVO_YOGA   0x8386
+ #define USB_DEVICE_ID_ITE_LENOVO_YOGA2  0x8350
++#define I2C_DEVICE_ID_ITE_LENOVO_LEGION_Y720	0x837a
+ #define USB_DEVICE_ID_ITE_LENOVO_YOGA900	0x8396
+ #define USB_DEVICE_ID_ITE8595		0x8595
  
- 	set_bit(HCI_QUIRK_STRICT_DUPLICATE_FILTER, &hdev->quirks);
- 
-+	/* Some devices ship with the controller default address.
-+	 * Allow the bootloader to set a valid address through the
-+	 * device tree.
-+	 */
-+	set_bit(HCI_QUIRK_USE_BDADDR_PROPERTY, &hdev->quirks);
+diff --git a/drivers/hid/i2c-hid/i2c-hid-core.c b/drivers/hid/i2c-hid/i2c-hid-core.c
+index ac44bf752ff1f..479934f7d2411 100644
+--- a/drivers/hid/i2c-hid/i2c-hid-core.c
++++ b/drivers/hid/i2c-hid/i2c-hid-core.c
+@@ -49,6 +49,8 @@
+ #define I2C_HID_QUIRK_NO_IRQ_AFTER_RESET	BIT(1)
+ #define I2C_HID_QUIRK_BOGUS_IRQ			BIT(4)
+ #define I2C_HID_QUIRK_RESET_ON_RESUME		BIT(5)
++#define I2C_HID_QUIRK_BAD_INPUT_SIZE		BIT(6)
 +
- 	return 0;
- }
- EXPORT_SYMBOL_GPL(btbcm_finalize);
+ 
+ /* flags */
+ #define I2C_HID_STARTED		0
+@@ -177,6 +179,8 @@ static const struct i2c_hid_quirks {
+ 		 I2C_HID_QUIRK_BOGUS_IRQ },
+ 	{ USB_VENDOR_ID_ALPS_JP, HID_ANY_ID,
+ 		 I2C_HID_QUIRK_RESET_ON_RESUME },
++	{ USB_VENDOR_ID_ITE, I2C_DEVICE_ID_ITE_LENOVO_LEGION_Y720,
++		I2C_HID_QUIRK_BAD_INPUT_SIZE },
+ 	{ 0, 0 }
+ };
+ 
+@@ -498,9 +502,15 @@ static void i2c_hid_get_input(struct i2c_hid *ihid)
+ 	}
+ 
+ 	if ((ret_size > size) || (ret_size < 2)) {
+-		dev_err(&ihid->client->dev, "%s: incomplete report (%d/%d)\n",
+-			__func__, size, ret_size);
+-		return;
++		if (ihid->quirks & I2C_HID_QUIRK_BAD_INPUT_SIZE) {
++			ihid->inbuf[0] = size & 0xff;
++			ihid->inbuf[1] = size >> 8;
++			ret_size = size;
++		} else {
++			dev_err(&ihid->client->dev, "%s: incomplete report (%d/%d)\n",
++				__func__, size, ret_size);
++			return;
++		}
+ 	}
+ 
+ 	i2c_hid_dbg(ihid, "input: %*ph\n", ret_size, ihid->inbuf);
 -- 
 2.20.1
 
