@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1DEAC35242
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:59:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2A9EC3F68F
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:59:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87E0222464
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:59:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0BD02075D
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:59:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579859943;
-	bh=V17FOFBhQMw7H/CMqK3iVIUxvr67I2gD0LXf7BT/M6w=;
+	s=default; t=1579859957;
+	bh=By4OvHUTQ9bKhUDXqtTxktQSyR3+kTd2EvfP69EFbJY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zPBQmJxdvb5b0iNdOA4502Zbpu+9UYQwyhxD3WEV0iPAD+Ihbi3eoZsA91jnqeCcH
-	 /11gffDFzHGOPUgsCwHvP+D+d6cAF6pPMSMk/aJmtA+PH5sqnzryAZbdnmE1nRArEJ
-	 PZWstzj4jLWUH6rx0253SiKlwko9G3utyeDnNGeo=
+	b=w64HjZxqucfmxi5nJKdo8um3buhV10e3cpADki8kgwnDMitVWPSUH4EpT4Ruevua4
+	 M+B7oesuM7vbt+mH8wGKG/xLE8Nchx7FLj4wTU+TZbMhlWIITAHBTikUFDRQLz8WBA
+	 LxLGl8MooxbRY2Kf4MuZZ0ixujv01CzDXtgn26aA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388654AbgAXJ7D (ORCPT
+        id S2388511AbgAXJ7R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 04:59:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34610 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 04:59:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34756 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725821AbgAXJ7C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 04:59:02 -0500
+        id S1725821AbgAXJ7Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 04:59:16 -0500
 Received: from localhost (unknown [145.15.244.15])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 781CE222C2;
-        Fri, 24 Jan 2020 09:59:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 518DC20718;
+        Fri, 24 Jan 2020 09:59:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579859941;
-        bh=V17FOFBhQMw7H/CMqK3iVIUxvr67I2gD0LXf7BT/M6w=;
+        s=default; t=1579859956;
+        bh=By4OvHUTQ9bKhUDXqtTxktQSyR3+kTd2EvfP69EFbJY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xTFUr3KHd2kJaqSojBMGdUPME652r3leJ/cOTPLzEKLUvlExrrqmEMWkbg6AWTVj0
-         l0s+Lv/kQ+afhEzLEWUnuX8aO4G95KeYt4qimtMItDV1EBTlj4qAUZgQ+9eiLXHeip
-         cmvcfpnvnV7H8KepVB8jYwETpJXc6LgdcX51c3dA=
+        b=XEjKaUEJ53L20aIEdXL9/BpmmS4HVpAQ8mY3rYKh6GPld9j1ZfeUOwKrgVOfnMUvg
+         SD1tBJDKk5Lvur/pgOHCCdSSX+MZ+jY7fPTD+pntsDZBhHILjiuI3spWV/V+GJ9Brk
+         9taPETZKJAyxeYwWUvxGdJ5ppLz8PsUvPCU5fMc0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        stable@vger.kernel.org, Stephen Hemminger <sthemmin@microsoft.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 226/343] inet: frags: call inet_frags_fini() after unregister_pernet_subsys()
-Date:   Fri, 24 Jan 2020 10:30:44 +0100
-Message-Id: <20200124092949.894179815@linuxfoundation.org>
+Subject: [PATCH 4.14 227/343] netvsc: unshare skb in VF rx handler
+Date:   Fri, 24 Jan 2020 10:30:45 +0100
+Message-Id: <20200124092950.009980706@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124092919.490687572@linuxfoundation.org>
 References: <20200124092919.490687572@linuxfoundation.org>
@@ -60,54 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Stephen Hemminger <stephen@networkplumber.org>
 
-[ Upstream commit ae7352d384a552d8c799c242e74a934809990a71 ]
+[ Upstream commit 996ed04741467f6d1552440c92988b132a9487ec ]
 
-Both IPv6 and 6lowpan are calling inet_frags_fini() too soon.
+The netvsc VF skb handler should make sure that skb is not
+shared. Similar logic already exists in bonding and team device
+drivers.
 
-inet_frags_fini() is dismantling a kmem_cache, that might be needed
-later when unregister_pernet_subsys() eventually has to remove
-frags queues from hash tables and free them.
+This is not an issue in practice because the VF devicex
+does not send up shared skb's. But the netvsc driver
+should do the right thing if it did.
 
-This fixes potential use-after-free, and is a prereq for the following patch.
-
-Fixes: d4ad4d22e7ac ("inet: frags: use kmem_cache for inet_frag_queue")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
+Fixes: 0c195567a8f6 ("netvsc: transparent VF management")
+Signed-off-by: Stephen Hemminger <sthemmin@microsoft.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/ieee802154/6lowpan/reassembly.c | 2 +-
- net/ipv6/reassembly.c               | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/hyperv/netvsc_drv.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/net/ieee802154/6lowpan/reassembly.c b/net/ieee802154/6lowpan/reassembly.c
-index ec7a5da561290..e873a6a007f2a 100644
---- a/net/ieee802154/6lowpan/reassembly.c
-+++ b/net/ieee802154/6lowpan/reassembly.c
-@@ -634,7 +634,7 @@ err_sysctl:
+diff --git a/drivers/net/hyperv/netvsc_drv.c b/drivers/net/hyperv/netvsc_drv.c
+index a89de5752a8c2..9e48855f64074 100644
+--- a/drivers/net/hyperv/netvsc_drv.c
++++ b/drivers/net/hyperv/netvsc_drv.c
+@@ -1840,6 +1840,12 @@ static rx_handler_result_t netvsc_vf_handle_frame(struct sk_buff **pskb)
+ 	struct netvsc_vf_pcpu_stats *pcpu_stats
+ 		 = this_cpu_ptr(ndev_ctx->vf_stats);
  
- void lowpan_net_frag_exit(void)
- {
--	inet_frags_fini(&lowpan_frags);
- 	lowpan_frags_sysctl_unregister();
- 	unregister_pernet_subsys(&lowpan_frags_ops);
-+	inet_frags_fini(&lowpan_frags);
- }
-diff --git a/net/ipv6/reassembly.c b/net/ipv6/reassembly.c
-index fe797b29ca89d..6dea6e92e6863 100644
---- a/net/ipv6/reassembly.c
-+++ b/net/ipv6/reassembly.c
-@@ -593,8 +593,8 @@ err_protocol:
++	skb = skb_share_check(skb, GFP_ATOMIC);
++	if (unlikely(!skb))
++		return RX_HANDLER_CONSUMED;
++
++	*pskb = skb;
++
+ 	skb->dev = ndev;
  
- void ipv6_frag_exit(void)
- {
--	inet_frags_fini(&ip6_frags);
- 	ip6_frags_sysctl_unregister();
- 	unregister_pernet_subsys(&ip6_frags_ops);
- 	inet6_del_protocol(&frag_protocol, IPPROTO_FRAGMENT);
-+	inet_frags_fini(&ip6_frags);
- }
+ 	u64_stats_update_begin(&pcpu_stats->syncp);
 -- 
 2.20.1
 
