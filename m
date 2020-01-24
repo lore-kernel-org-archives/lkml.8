@@ -4,54 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F7E6C35242
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:21:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A92D2C35242
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:21:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0766A214DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:21:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F56E2077C
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:21:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579875661;
-	bh=8rZPD1fDsTiZSk1q3pg0ekniULI15x+icV5YagCTmEo=;
+	s=default; t=1579875668;
+	bh=Lm4TMMTrCrjyhWS8DD1qBTELzqdN6Jn68xYLu48n62M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AkzSqPsdPFXJtOMqOjwE3drDM6B+shKT8vrRmv5H7iigaZZy6x+5IGKujdRj7RYPE
-	 wGXX4h/JCf4U5bQcz0KLEnocwhDDlEYmAbrz2TJ1ZONxY531oYGD/i3q6D9+BzeZlI
-	 ILm5RU0+sju7DFGvrb2ryRc7xAOMaD/8VXwWIb64=
+	b=ZSd4JoZD7wmoT5MZCroH29lQRRt7Q9enuPamXcOofxcJnamFGd2ie99J0jSaVu4Un
+	 N+16BEgUhSHk5Knp3wfB/W8RAWWn/Gt721iU/Scl/xg67suh5uKkvDgLCUMNyieQcz
+	 cFvgU7a5vMCSfRIckr29V1ko9jtZaItTk/NGfBC4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392161AbgAXOVA (ORCPT
+        id S2405202AbgAXOVH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 09:21:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42278 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 09:21:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42528 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405090AbgAXOUy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 09:20:54 -0500
+        id S2405162AbgAXOVE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 09:21:04 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A6C352077C;
-        Fri, 24 Jan 2020 14:20:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 471642087E;
+        Fri, 24 Jan 2020 14:21:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579875653;
-        bh=8rZPD1fDsTiZSk1q3pg0ekniULI15x+icV5YagCTmEo=;
+        s=default; t=1579875664;
+        bh=Lm4TMMTrCrjyhWS8DD1qBTELzqdN6Jn68xYLu48n62M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SCVxO1XZlLjdsAEOzE2asvkqFXSDIQNnCI+RekR2abze/YkGO5X0QhMSxnBaUTX2F
-         +6PlQOKk1Qn2qdn689feCQIqb1Z+4kHlUdcqGQawc6yciCPynUm1pIe7khuCu3DQ8a
-         gh0PaOkrN1MJhSf8yb+u/gX9ILEHropdGvMfdJcc=
+        b=u0pvxSWzUiF5z5Z2+cQOk4v83iIbQA29hItLbMoWpZcU4ekPWibA+4wJnN8j38UiX
+         s+uSdXdta/O/8DdCS7H7bCJuThcSV72otMRbHBSkIAefAp/cVDtvF2FkuaLQ4xcCt/
+         pzBZ/36jI0Ok12Q59Y7TX9umDSDC/SUQ90nPh/zA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Eric Dumazet <edumazet@google.com>,
-        RENARD Pierre-Francois <pfrenard@gmail.com>,
-        Stefan Wahren <stefan.wahren@i2se.com>,
-        Woojung Huh <woojung.huh@microchip.com>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+Cc:     Mohammed Gamal <mgamal@redhat.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
         "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org,
+        Sasha Levin <sashal@kernel.org>, devel@linuxdriverproject.org,
         netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 35/56] net: usb: lan78xx: limit size of local TSO packets
-Date:   Fri, 24 Jan 2020 09:19:51 -0500
-Message-Id: <20200124142012.29752-35-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 44/56] hv_netvsc: Fix memory leak when removing rndis device
+Date:   Fri, 24 Jan 2020 09:20:00 -0500
+Message-Id: <20200124142012.29752-44-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200124142012.29752-1-sashal@kernel.org>
 References: <20200124142012.29752-1-sashal@kernel.org>
@@ -64,49 +61,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Mohammed Gamal <mgamal@redhat.com>
 
-[ Upstream commit f8d7408a4d7f60f8b2df0f81decdc882dd9c20dc ]
+[ Upstream commit 536dc5df2808efbefc5acee334d3c4f701790ec0 ]
 
-lan78xx_tx_bh() makes sure to not exceed MAX_SINGLE_PACKET_SIZE
-bytes in the aggregated packets it builds, but does
-nothing to prevent large GSO packets being submitted.
+kmemleak detects the following memory leak when hot removing
+a network device:
 
-Pierre-Francois reported various hangs when/if TSO is enabled.
+unreferenced object 0xffff888083f63600 (size 256):
+  comm "kworker/0:1", pid 12, jiffies 4294831717 (age 1113.676s)
+  hex dump (first 32 bytes):
+    00 40 c7 33 80 88 ff ff 00 00 00 00 10 00 00 00  .@.3............
+    00 00 00 00 ad 4e ad de ff ff ff ff 00 00 00 00  .....N..........
+  backtrace:
+    [<00000000d4a8f5be>] rndis_filter_device_add+0x117/0x11c0 [hv_netvsc]
+    [<000000009c02d75b>] netvsc_probe+0x5e7/0xbf0 [hv_netvsc]
+    [<00000000ddafce23>] vmbus_probe+0x74/0x170 [hv_vmbus]
+    [<00000000046e64f1>] really_probe+0x22f/0xb50
+    [<000000005cc35eb7>] driver_probe_device+0x25e/0x370
+    [<0000000043c642b2>] bus_for_each_drv+0x11f/0x1b0
+    [<000000005e3d09f0>] __device_attach+0x1c6/0x2f0
+    [<00000000a72c362f>] bus_probe_device+0x1a6/0x260
+    [<0000000008478399>] device_add+0x10a3/0x18e0
+    [<00000000cf07b48c>] vmbus_device_register+0xe7/0x1e0 [hv_vmbus]
+    [<00000000d46cf032>] vmbus_add_channel_work+0x8ab/0x1770 [hv_vmbus]
+    [<000000002c94bb64>] process_one_work+0x919/0x17d0
+    [<0000000096de6781>] worker_thread+0x87/0xb40
+    [<00000000fbe7397e>] kthread+0x333/0x3f0
+    [<000000004f844269>] ret_from_fork+0x3a/0x50
 
-For localy generated packets, we can use netif_set_gso_max_size()
-to limit the size of TSO packets.
+rndis_filter_device_add() allocates an instance of struct rndis_device
+which never gets deallocated as rndis_filter_device_remove() sets
+net_device->extension which points to the rndis_device struct to NULL,
+leaving the rndis_device dangling.
 
-Note that forwarded packets could still hit the issue,
-so a complete fix might require implementing .ndo_features_check
-for this driver, forcing a software segmentation if the size
-of the TSO packet exceeds MAX_SINGLE_PACKET_SIZE.
+Since net_device->extension is eventually freed in free_netvsc_device(),
+we refrain from setting it to NULL inside rndis_filter_device_remove()
 
-Fixes: 55d7de9de6c3 ("Microchip's LAN7800 family USB 2/3 to 10/100/1000 Ethernet device driver")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: RENARD Pierre-Francois <pfrenard@gmail.com>
-Tested-by: RENARD Pierre-Francois <pfrenard@gmail.com>
-Cc: Stefan Wahren <stefan.wahren@i2se.com>
-Cc: Woojung Huh <woojung.huh@microchip.com>
-Cc: Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>
+Signed-off-by: Mohammed Gamal <mgamal@redhat.com>
+Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/usb/lan78xx.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/hyperv/rndis_filter.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/drivers/net/usb/lan78xx.c b/drivers/net/usb/lan78xx.c
-index 42715520c0706..7d708aeb45763 100644
---- a/drivers/net/usb/lan78xx.c
-+++ b/drivers/net/usb/lan78xx.c
-@@ -3769,6 +3769,7 @@ static int lan78xx_probe(struct usb_interface *intf,
+diff --git a/drivers/net/hyperv/rndis_filter.c b/drivers/net/hyperv/rndis_filter.c
+index f47e36ac42a7f..dd91834f841d5 100644
+--- a/drivers/net/hyperv/rndis_filter.c
++++ b/drivers/net/hyperv/rndis_filter.c
+@@ -1375,8 +1375,6 @@ void rndis_filter_device_remove(struct hv_device *dev,
+ 	/* Halt and release the rndis device */
+ 	rndis_filter_halt_device(net_dev, rndis_dev);
  
- 	/* MTU range: 68 - 9000 */
- 	netdev->max_mtu = MAX_SINGLE_PACKET_SIZE;
-+	netif_set_gso_max_size(netdev, MAX_SINGLE_PACKET_SIZE - MAX_HEADER);
+-	net_dev->extension = NULL;
+-
+ 	netvsc_device_remove(dev);
+ }
  
- 	dev->ep_blkin = (intf->cur_altsetting)->endpoint + 0;
- 	dev->ep_blkout = (intf->cur_altsetting)->endpoint + 1;
 -- 
 2.20.1
 
