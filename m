@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 128F6C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:10:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CEC4C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:10:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1B5C20708
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:10:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFC3220663
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:10:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579864219;
-	bh=34CGEDwQVpo3q95fWBpZyxIiBzhS61USDwdmzfGZqis=;
+	s=default; t=1579864223;
+	bh=dEjCshnAMgQvTt6+U47YF3VdCKBBxdglUNTqHcrCngc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tx8qFdiHXaTBBOjIWtASvwF1qzR0kxPtqnTCh9q1Yg3swBzrT5+5PlC09zyeowzcz
-	 o1/b+ik8VMpVoFs2BcSKSobRVwd9dixoD91qr0grEGR+qxAaSZjwAlUB7VkFz6uTfv
-	 /YSLZBJ5vkxLyl3IMPsTD62ng905NstGrtebZ5rI=
+	b=PqzkfSLLuSqHZRHWwbccakIoN61WqKBL04O/3jNUWPh6AyO1OT/KKcrPfJt3s5smk
+	 h3gFrU0zF6IUEk6Fx7ltN0QpvcBr22PCZ8FnJhzT0gTagrFWRJRQSK+zXZJXQMIyVa
+	 t/9GCv6ndtxWrQrPlxbIgxIFH5PS7xiXEHeE9Ky0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388352AbgAXLKS (ORCPT
+        id S2389842AbgAXLKW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:10:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45990 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 06:10:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46052 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731494AbgAXLKQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:10:16 -0500
+        id S1731494AbgAXLKT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:10:19 -0500
 Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C925220663;
-        Fri, 24 Jan 2020 11:10:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C2B9720663;
+        Fri, 24 Jan 2020 11:10:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579864215;
-        bh=34CGEDwQVpo3q95fWBpZyxIiBzhS61USDwdmzfGZqis=;
+        s=default; t=1579864219;
+        bh=dEjCshnAMgQvTt6+U47YF3VdCKBBxdglUNTqHcrCngc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wlIUY++lIxHtzG8JRUj9RAmQNIpr9RUnLz/7+MrSZGSQXbFMwvhE5RJ8iLPZX9uwp
-         mNAhPuMXb6wRIzfBVeCb1g1lZB0BOdEd7Hds/OdWuAPPSL5itFPehkWxZ18JZ0cbhk
-         AE3rRtOlGwdR0ex28gL9xPTu6a16alf0OZXhQNHk=
+        b=AoansvlGVY4D4C1fQKztHNH/p2JLc/IC57bYLJ0hF7ChbXV8f28pAlNusY3FbnUkH
+         jMVXtZInacfbTJ+WowtQSt/n9fEGHTegfX0IcMFc22h13MLnZq+LzxTTTi1sLJEhot
+         BFel8ALP3jZxt5nC/yD5447VZeIkQ8/g7EmI7BW0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -46,9 +46,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Geert Uytterhoeven <geert+renesas@glider.be>,
         Simon Horman <horms+renesas@verge.net.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 191/639] pinctrl: sh-pfc: r8a7791: Fix scifb2_data_c pin group
-Date:   Fri, 24 Jan 2020 10:26:01 +0100
-Message-Id: <20200124093111.023064883@linuxfoundation.org>
+Subject: [PATCH 4.19 192/639] pinctrl: sh-pfc: r8a7792: Fix vin1_data18_b pin group
+Date:   Fri, 24 Jan 2020 10:26:02 +0100
+Message-Id: <20200124093111.140719781@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
 References: <20200124093047.008739095@linuxfoundation.org>
@@ -63,32 +63,31 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-[ Upstream commit a4b0350047f1b10207e25e72d7cd3f7826e93769 ]
+[ Upstream commit b9fd50488b4939ce5b3a026d29e752e17c2d1800 ]
 
-The entry for "scifb2_data_c" in the SCIFB2 pin group array contains a
-typo, thus the group cannot be selected.
+The vin1_data18_b pin group itself is present, but it is not listed in
+the VIN1 pin group array, and thus cannot be selected.
 
-Fixes: 5088451962389924 ("pinctrl: sh-pfc: r8a7791 PFC support")
+Fixes: 7dd74bb1f058786e ("pinctrl: sh-pfc: r8a7792: Add VIN pin groups")
 Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/sh-pfc/pfc-r8a7791.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/pinctrl/sh-pfc/pfc-r8a7792.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/pinctrl/sh-pfc/pfc-r8a7791.c b/drivers/pinctrl/sh-pfc/pfc-r8a7791.c
-index 6236ac55c65d3..9eb860c8f9174 100644
---- a/drivers/pinctrl/sh-pfc/pfc-r8a7791.c
-+++ b/drivers/pinctrl/sh-pfc/pfc-r8a7791.c
-@@ -5239,7 +5239,7 @@ static const char * const scifb2_groups[] = {
- 	"scifb2_data_b",
- 	"scifb2_clk_b",
- 	"scifb2_ctrl_b",
--	"scifb0_data_c",
-+	"scifb2_data_c",
- 	"scifb2_clk_c",
- 	"scifb2_data_d",
- };
+diff --git a/drivers/pinctrl/sh-pfc/pfc-r8a7792.c b/drivers/pinctrl/sh-pfc/pfc-r8a7792.c
+index cc3597f66605a..46c41ca6ea38b 100644
+--- a/drivers/pinctrl/sh-pfc/pfc-r8a7792.c
++++ b/drivers/pinctrl/sh-pfc/pfc-r8a7792.c
+@@ -1916,6 +1916,7 @@ static const char * const vin1_groups[] = {
+ 	"vin1_data8",
+ 	"vin1_data24_b",
+ 	"vin1_data20_b",
++	"vin1_data18_b",
+ 	"vin1_data16_b",
+ 	"vin1_sync",
+ 	"vin1_field",
 -- 
 2.20.1
 
