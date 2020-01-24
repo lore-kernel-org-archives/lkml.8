@@ -2,51 +2,51 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,TVD_SUBJ_WIPE_DEBT,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51C38C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:19:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F5DCC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:19:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C1612087E
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:19:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56AF2214AF
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:19:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579875540;
-	bh=9ty3tMdqE5fKLEoeDFTtG79USBsuNwJvzjucfUNDR0E=;
+	s=default; t=1579875545;
+	bh=6Epxpc7tl8HXEJ7/ssKcZMb59aAWu7qJwPZuYnk8YMI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Q6/0b76OPs+p1M8MP1anABwJ7q9liLtKwWj71sWSAlDJqWr7jC7zAm+Az7lMBkd9r
-	 HETQiZ73xg9fQG3qBQIdsOsPfYpb6Yj7rGzv/0oOmkocKZi6mKyp5RJNTFgMfS8FwO
-	 egT641ViffgtH+OiW7kzBOHC4vIY4xG22rpeXRIo=
+	b=EeDlNSsPob67QW+nRJ817AAq2d9Se7O2jXfWV1Cne7lTvntK2K1ScrT0RbLey+gZl
+	 87YwQFckZT/wSZ59yCzDshWixZrf+HPghPvWTfCO+RWjJhswLvPvzfeO3eV5eSwLZs
+	 V3RTbt37jxXA7G4Pm7HOSK6+MdzJSqPqpcsOwnpE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391192AbgAXOS6 (ORCPT
+        id S2391286AbgAXOTE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 09:18:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38802 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 09:19:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38974 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391150AbgAXOSw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 09:18:52 -0500
+        id S2391184AbgAXOS6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 09:18:58 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E130622527;
-        Fri, 24 Jan 2020 14:18:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B61922077C;
+        Fri, 24 Jan 2020 14:18:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579875531;
-        bh=9ty3tMdqE5fKLEoeDFTtG79USBsuNwJvzjucfUNDR0E=;
+        s=default; t=1579875537;
+        bh=6Epxpc7tl8HXEJ7/ssKcZMb59aAWu7qJwPZuYnk8YMI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tAoRFBJDO+KJYVhQ4mXu1+X4q5ueRrCR1fujjSsNzjnSrXBJkOVAj2a05mLkKNakG
-         K85KezOevp9Kr2EbpaU2JY8iih7dVMrbuUkbfcNtjyGENyYH3vKA4KgYe/lpaR3r4m
-         KJwmB5Zz+9VZmQQhOoxicupLHDTH3kWnfVcxrZb0=
+        b=FKepulQ4B95LRtUJdmcu4vr54pPTHvWkjvaVIidoG5GKAuQl8ELNUAdU38FahU9e4
+         fcqVvrdOI7b5MyMkZlcifhabEGQ2SpS406rlnXjTiPnBIxedtfRJuaa6lvaZ4mN74S
+         UNbXg7gY+WKx3nPFRYQWqnYix407T5HQqcjaSwwQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dmitry Osipenko <digetx@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
-Subject: [PATCH AUTOSEL 5.4 029/107] ASoC: rt5640: Fix NULL dereference on module unload
-Date:   Fri, 24 Jan 2020 09:16:59 -0500
-Message-Id: <20200124141817.28793-29-sashal@kernel.org>
+Cc:     Anson Huang <Anson.Huang@nxp.com>, Shawn Guo <shawnguo@kernel.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 034/107] ARM: dts: imx6sll-evk: Remove incorrect power supply assignment
+Date:   Fri, 24 Jan 2020 09:17:04 -0500
+Message-Id: <20200124141817.28793-34-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200124141817.28793-1-sashal@kernel.org>
 References: <20200124141817.28793-1-sashal@kernel.org>
@@ -59,39 +59,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dmitry Osipenko <digetx@gmail.com>
+From: Anson Huang <Anson.Huang@nxp.com>
 
-[ Upstream commit 89b71b3f02d8ae5a08a1dd6f4a2098b7b868d498 ]
+[ Upstream commit 3479b2843c78ffb60247f522226ba68f93aee355 ]
 
-The rt5640->jack is NULL if jack is already disabled at the time of
-driver's module unloading.
+The vdd3p0 LDO's input should be from external USB VBUS directly, NOT
+PMIC's power supply, the vdd3p0 LDO's target output voltage can be
+controlled by SW, and it requires input voltage to be high enough, with
+incorrect power supply assigned, if the power supply's voltage is lower
+than the LDO target output voltage, it will return fail and skip the LDO
+voltage adjustment, so remove the power supply assignment for vdd3p0 to
+avoid such scenario.
 
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-Link: https://lore.kernel.org/r/20200106014707.11378-1-digetx@gmail.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fixes: 96a9169cf621 ("ARM: dts: imx6sll-evk: Assign corresponding power supply for vdd3p0")
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/codecs/rt5640.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ arch/arm/boot/dts/imx6sll-evk.dts | 4 ----
+ 1 file changed, 4 deletions(-)
 
-diff --git a/sound/soc/codecs/rt5640.c b/sound/soc/codecs/rt5640.c
-index adbae1f36a8af..747ca248bf10c 100644
---- a/sound/soc/codecs/rt5640.c
-+++ b/sound/soc/codecs/rt5640.c
-@@ -2432,6 +2432,13 @@ static void rt5640_disable_jack_detect(struct snd_soc_component *component)
- {
- 	struct rt5640_priv *rt5640 = snd_soc_component_get_drvdata(component);
+diff --git a/arch/arm/boot/dts/imx6sll-evk.dts b/arch/arm/boot/dts/imx6sll-evk.dts
+index 3e1d32fdf4b85..5ace9e6acf85c 100644
+--- a/arch/arm/boot/dts/imx6sll-evk.dts
++++ b/arch/arm/boot/dts/imx6sll-evk.dts
+@@ -265,10 +265,6 @@
+ 	status = "okay";
+ };
  
-+	/*
-+	 * soc_remove_component() force-disables jack and thus rt5640->jack
-+	 * could be NULL at the time of driver's module unloading.
-+	 */
-+	if (!rt5640->jack)
-+		return;
-+
- 	disable_irq(rt5640->irq);
- 	rt5640_cancel_work(rt5640);
- 
+-&reg_3p0 {
+-	vin-supply = <&sw2_reg>;
+-};
+-
+ &snvs_poweroff {
+ 	status = "okay";
+ };
 -- 
 2.20.1
 
