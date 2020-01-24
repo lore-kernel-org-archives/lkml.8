@@ -4,53 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99AE8C35242
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:38:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF615C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:39:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6570D206F0
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:38:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93005206D4
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:39:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579865930;
-	bh=oi+MjKGkj+3amReMtz4+25L60nkOW7AVttiic5YxrXc=;
+	s=default; t=1579865941;
+	bh=AWANv358SCCe+zsonAa1awzaNFZZS6khwqstwCg5sCA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tJIGIHGaTQD/HwMpdGtwehjGYIW612EeDSromUcknVkT7CqeTaSfuqRRac/D4l2V/
-	 3bTjDkX3hAuJ1cK2au3qFh+wZ0VaLMVtONdJAW5V7c6l3EVioUTbYgEehOI2ev0jtH
-	 pWBujCr+TYdd7QLbVKWtOB54K1FnhB2ZeHyzEOMc=
+	b=wKT89h4Y6oar/EEDLs3fFskyYIJhztXecB97Gr0PMAhj7oeqk/xhjhsqI9mUXOzQa
+	 5sSkdqMYbIvax4UAhBiK/WcC/eJkp0AkE+VWzhGmQa2HObBddT3ifIus2i2npTrWd4
+	 Ui3RCa+DqvBJfftVMYBzLfg2uvUvRpJuVBFJadAc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391997AbgAXLit (ORCPT
+        id S2403816AbgAXL1N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:38:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58696 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 06:27:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42430 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391987AbgAXLip (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:38:45 -0500
+        id S2391619AbgAXL1G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:27:06 -0500
 Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8763920708;
-        Fri, 24 Jan 2020 11:38:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C64772075D;
+        Fri, 24 Jan 2020 11:27:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579865925;
-        bh=oi+MjKGkj+3amReMtz4+25L60nkOW7AVttiic5YxrXc=;
+        s=default; t=1579865226;
+        bh=AWANv358SCCe+zsonAa1awzaNFZZS6khwqstwCg5sCA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IB11vlMxIZIToYeudOngQ7CIbk+pDWr+vleRl4YbBbjv3PoLMzclRDAPF5kDFnsTx
-         MzQQr3JDz+h2k5O6+vS8alfazY2en1ryTlXXWFtF5bXWB51vZ4xldNdmJuMVv0l3fD
-         tEG1AuqbA4jZv1HJHmOUCzdPK7X8osnFpoVtI6oI=
+        b=Iim5cYshtLJ2Dtoe2ZCRn+UhT9WeCRf0dpCUt682fgmy/xIJX6FC01gNU4n+3LF2u
+         QZBXRaD1F/z4CAjLOl9Pa1+RwwGocW3CcX9Dhi6p4Qexfr+EbFrqPHKqWNHnjK1KYm
+         ZkCjYN5Rq3eExmk3AA9bkfd7uFMzuZbax2F1h8eE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Lad, Prabhakar" <prabhakar.csengg@gmail.com>,
-        Akinobu Mita <akinobu.mita@gmail.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        stable@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 321/639] media: ov2659: fix unbalanced mutex_lock/unlock
-Date:   Fri, 24 Jan 2020 10:28:11 +0100
-Message-Id: <20200124093127.242991179@linuxfoundation.org>
+Subject: [PATCH 4.19 488/639] x86/kgbd: Use NMI_VECTOR not APIC_DM_NMI
+Date:   Fri, 24 Jan 2020 10:30:58 +0100
+Message-Id: <20200124093149.844652070@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
 References: <20200124093047.008739095@linuxfoundation.org>
@@ -63,37 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Akinobu Mita <akinobu.mita@gmail.com>
+From: Thomas Gleixner <tglx@linutronix.de>
 
-[ Upstream commit 384538bda10913e5c94ec5b5d34bd3075931bcf4 ]
+[ Upstream commit 2591bc4e8d70b4e1330d327fb7e3921f4e070a51 ]
 
-Avoid returning with mutex locked.
+apic->send_IPI_allbutself() takes a vector number as argument.
 
-Fixes: fa8cb6444c32 ("[media] ov2659: Don't depend on subdev API")
+APIC_DM_NMI is clearly not a vector number. It's defined to 0x400 which is
+outside the vector space.
 
-Cc: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Signed-off-by: Akinobu Mita <akinobu.mita@gmail.com>
-Acked-by: Lad, Prabhakar <prabhakar.csengg@gmail.com>
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Use NMI_VECTOR instead as that's what it is intended to be.
+
+Fixes: 82da3ff89dc2 ("x86: kgdb support")
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Link: https://lkml.kernel.org/r/20190722105218.855189979@linutronix.de
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/i2c/ov2659.c | 2 +-
+ arch/x86/kernel/kgdb.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/media/i2c/ov2659.c b/drivers/media/i2c/ov2659.c
-index 4b6be3b0fd528..5cdda9d6ca31e 100644
---- a/drivers/media/i2c/ov2659.c
-+++ b/drivers/media/i2c/ov2659.c
-@@ -1136,7 +1136,7 @@ static int ov2659_set_fmt(struct v4l2_subdev *sd,
- 		mf = v4l2_subdev_get_try_format(sd, cfg, fmt->pad);
- 		*mf = fmt->format;
- #else
--		return -ENOTTY;
-+		ret = -ENOTTY;
+diff --git a/arch/x86/kernel/kgdb.c b/arch/x86/kernel/kgdb.c
+index 8e36f249646e2..904e18bb38c52 100644
+--- a/arch/x86/kernel/kgdb.c
++++ b/arch/x86/kernel/kgdb.c
+@@ -438,7 +438,7 @@ static void kgdb_disable_hw_debug(struct pt_regs *regs)
+  */
+ void kgdb_roundup_cpus(unsigned long flags)
+ {
+-	apic->send_IPI_allbutself(APIC_DM_NMI);
++	apic->send_IPI_allbutself(NMI_VECTOR);
+ }
  #endif
- 	} else {
- 		s64 val;
+ 
 -- 
 2.20.1
 
