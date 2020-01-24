@@ -2,148 +2,281 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 919A9C32771
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 19:17:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B35FC3F68F
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 19:20:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69ADE2075D
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 19:17:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 338422075D
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 19:20:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=tycho.nsa.gov header.i=@tycho.nsa.gov header.b="WcFSI9aJ"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="Ffw+RR9U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403992AbgAXTRs (ORCPT
+        id S2391798AbgAXTUe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 14:17:48 -0500
-Received: from UPDC19PA23.eemsg.mail.mil ([214.24.27.198]:55952 "EHLO
-        UPDC19PA23.eemsg.mail.mil" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387683AbgAXTRs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 14:17:48 -0500
-X-EEMSG-check-017: 49683028|UPDC19PA23_ESA_OUT05.csd.disa.mil
-X-IronPort-AV: E=Sophos;i="5.70,358,1574121600"; 
-   d="scan'208";a="49683028"
-Received: from emsm-gh1-uea11.ncsc.mil ([214.29.60.3])
-  by UPDC19PA23.eemsg.mail.mil with ESMTP/TLS/DHE-RSA-AES256-SHA256; 24 Jan 2020 19:17:44 +0000
+        Fri, 24 Jan 2020 14:20:34 -0500
+Received: from mail-bn8nam11on2056.outbound.protection.outlook.com ([40.107.236.56]:58229
+        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2387683AbgAXTUe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 14:20:34 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=AsX6BFoRUZwn0iw72ZYRqdBMvRNpGr6QsUQBAr6lwEuE8mL8T/YEPB5jgbRyw0Keqp3BeqdlmBXW+TS4TUJHL1wWrNsWwKMgInWG35Cfqfw/9Kh0WwPb04ODdaib9POnMFJUDjfGkLCFeznMjOxd4KGd1XUtQW+2LyLNcyPh7tUvfuyCra+yoZRATCWroJf+O2Rz+0L1wgH8SCAjgY0cfv5itmQPofjRbQiC4yP0T1uExs9Vxb+3tZ3njFA5+Ht4cEZ0hJi4nEZ89pjM9opVOMR0b7zRfBy66Gd6/yn0mVLUMIsfQ4fF2T3ceP2NDirs70TioTQjBAYofPVLRHznZQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=i2mZs5WlFaz3tkODBem6We1gPHN7i2iAXaMa+aS8XgY=;
+ b=VfH/QvG6GjJf9ZYQldLnaj+4zzPA9a/Y75ADdNHcYX0wpiGdscASnogakshuu0S+JJU/velKY6Ez41lbhPUZLKfSZFBEXJMr9sHhvg41gwRzKMoxI5uT8uBv//+usQPZlhyDHSL2UAZJsTv9kLD5jel3YfKED8YEhBj1o1hvPenyn8gJlwz4m9ZUsy2XNANBjMionU9qBoanpESZwZGidWEL9+8qPqUUsLDrP6MYcjl2gnaEg7aH1V+NpG2Z+c1pH/OPx9e1EEGQrQtgWAOiB9QU35AFCRT+3nFE7ndaa2C+/MtdAN5OmCW0p4h30oOqwO8Aw1MLGfzs/v/zDULzRw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=tycho.nsa.gov; i=@tycho.nsa.gov; q=dns/txt;
-  s=tycho.nsa.gov; t=1579893465; x=1611429465;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=mPB9u/uhdGu9rQ/Z5OEHbf30QUIhRwm/YqMegRKZ/zY=;
-  b=WcFSI9aJVZspaaks+DmbZV2gX1GkejayEVll3tk5gYKEvvtFAKEMKBHj
-   NztuGPixp6ulrJ/nTwjEKrlxMSryzZcZP7UgxovFEZWidw+mamyL/tPPh
-   dikCKh3DRqW/mU6lF36eoaN1+T/x2R8i5P0KlmOjWOu7A9fHygpG5Z8jz
-   tquSR25OqUjv7I027BkuCFUTpU444abeeraBBDjpWfLdIyybcAWnzCC7Z
-   HM90Z2kor9em+VtBNWZ6lmizklJiRxv+v/BSQIOCxLLGrYVHjIyLlE9Xf
-   dhGnKxk05x2bMjJ9IIGC94vRfOfLh1aTH5i2yY92mEwoNF4uZvVnGyHfE
-   Q==;
-X-IronPort-AV: E=Sophos;i="5.70,358,1574121600"; 
-   d="scan'208";a="38228349"
-IronPort-PHdr: =?us-ascii?q?9a23=3Ar2D1YhPHST0k8U5ssHMl6mtUPXoX/o7sNwtQ0K?=
- =?us-ascii?q?IMzox0K/39ocbcNUDSrc9gkEXOFd2Cra4d16yM7+u5AzRIoc7Y9ixbK9oUD1?=
- =?us-ascii?q?5NoP5VtjRoONSCB0z/IayiRA0BN+MGamVY+WqmO1NeAsf0ag6aiHSz6TkPBk?=
- =?us-ascii?q?e3blItdaz6FYHIksu4yf259YHNbAVUnjq9Zq55IAmroQnLucQanIRvJrwvxh?=
- =?us-ascii?q?bGrXdEZvpayX91Ll6Xgxrw+9288ZF+/yleof4t69JMXaDndKkkULJUCygrPX?=
- =?us-ascii?q?oo78PxrxnDSgWP5noYUmoIlxdDHhbI4hLnUJrvqyX2ruVy1jWUMs3wVrA0RC?=
- =?us-ascii?q?+t77x3Rx/yiScILCA2/WfKgcFtlq1boRahpxtiw47IZYyeKfRzcr/Bcd4cWG?=
- =?us-ascii?q?FMRdhaWTBfDYygbosPF+sBMvher4nhvFsFsB+yCRCxCO/z1jNEg3n70qMg0+?=
- =?us-ascii?q?QlDArIwgouEdwTu3jQtdn4OqMfXeWzwaLVzzvMculW1C/g5obWfBAvofKCU7?=
- =?us-ascii?q?x+fsXey0YgCwzLg06MqYHmJT6ZyvgBvmaZ4udmSOmhi3QnqwZ0ojW328kslp?=
- =?us-ascii?q?fGhpoVyl/a8yVy3Zs7JdiiR05/Zd6rDptRvDydOottX8wiWHpluDo6y7IauZ?=
- =?us-ascii?q?67ezIGyJI8xxHFcfCHfI+I4gz6WeuXPDx2h2pldaqiixu9/kWs0O3xWtSu3F?=
- =?us-ascii?q?pUoSdJjMPAum0L2hfO8MaIUOF98V2k2TuX0gDT7fxLLl4smKrALp4h3qYwlp?=
- =?us-ascii?q?0OsUTfBiP2mFv5jKuRdkg85uin8f7nYrT7pp+HLYN0iwf+MqopmsykH+s3Lh?=
- =?us-ascii?q?ICX3Sb+Oug1L3j+lf1QLNWgf0tjqbVqpXaJcUfpqKhAg9V1Jgs6wqnAju739?=
- =?us-ascii?q?kVkmMLIVJYdB6dkYTkNE/CLOrlAfunhlSjijZrx/TIPr37BZXNK2DOkKz8cr?=
- =?us-ascii?q?Zm8ENc1Aoywsxf55JTEL0BJunzVVXruNzXCR85LRS4w/z7B9VlyoMeRWWPD7?=
- =?us-ascii?q?eFP6PdsF6I4eQvLPeXZIIOtzb9LP8l5/HqjXAnnF8SZ6ip3Z8NZH+kGfRmJl?=
- =?us-ascii?q?2TYWDwjdcZDWcKog0+QfTyiFKYTD5TY22/X7om6TEmDIKqFILDRoeqgLybwi?=
- =?us-ascii?q?i3BIFZZmdDClqUC3fna52EW+sQaCKVOsJujCQEWqK7S48gzhGjrxf6xKB9Lu?=
- =?us-ascii?q?rV4S0YrZbj28Jp6OLNjx0y8iZ0D8uF2WGXU250hn8IRyMx3K1npkx9z1CD0b?=
- =?us-ascii?q?N+g/NCCdNc+ehEUh0kOpHBz+x1EczyVhjdcdeOTVasWs+mDi0pTtIt398OZF?=
- =?us-ascii?q?5wG868gRDH3iqqBaIVlrOQCZwq/aLTwWLxK9x+y3nYzqkhiUcpQs9VOW2hnK?=
- =?us-ascii?q?5/+BDZB5TVnEWBi6aqaaMc0TbJ9GeCy2qOoU5ZXBdzUarbR3AfYFXZrdDi60?=
- =?us-ascii?q?PcQL+hF64nPhFCycGcMKtKbMPmjVFcSPfkItTebDH5p2DlLhaSx6iQbYPsTE?=
- =?us-ascii?q?qDwDnGA0gJ21QY8mSBMwUlLiimpG3aATlnFFapaETpp7pQsnS+G3QowhmKYk?=
- =?us-ascii?q?sp7L+8/hoYlLTIUP8I9q4Vsycm7TNvFRCy2MyAWInInBZoYKgJOYB121xAz2?=
- =?us-ascii?q?+M8lUmb5E=3D?=
-X-IPAS-Result: =?us-ascii?q?A2BtAgD0QSte/wHyM5BlHAEBAQEBBwEBEQEEBAEBgXuBf?=
- =?us-ascii?q?YFtIBIqhBKJA4Z5BoE3iW+RSQkBAQEBAQEBAQE3AQGEQAKCRjgTAhABAQEEA?=
- =?us-ascii?q?QEBAQEFAwEBbIVDgjspAYJ5AQEBAQIBIwQLAQVBEAsYAgImAgJXBg0GAgEBg?=
- =?us-ascii?q?mM/gksDCQUgrTV1fzOFSoJLDWKBPoEOKowxeYEHgTgPgl0+ghuCBwGDNoJeB?=
- =?us-ascii?q?JZTgSeIKo80gkOCTJNlBhuafKt+IoFYKwgCGAghD4MnUBgNiA0XjkEjAzCLE?=
- =?us-ascii?q?wEnghsBAQ?=
-Received: from tarius.tycho.ncsc.mil (HELO tarius.infosec.tycho.ncsc.mil) ([144.51.242.1])
-  by emsm-gh1-uea11.NCSC.MIL with ESMTP; 24 Jan 2020 19:17:43 +0000
-Received: from moss-pluto.infosec.tycho.ncsc.mil (moss-pluto [192.168.25.131])
-        by tarius.infosec.tycho.ncsc.mil (8.14.7/8.14.4) with ESMTP id 00OJGw2g110896;
-        Fri, 24 Jan 2020 14:17:01 -0500
-Subject: Re: [PATCH] selinux: allow kernfs symlinks to inherit parent
- directory context
-To:     =?UTF-8?Q?Christian_G=c3=b6ttsche?= <cgzones@googlemail.com>
-Cc:     Paul Moore <paul@paul-moore.com>,
-        Eric Paris <eparis@parisplace.org>,
-        Ondrej Mosnacek <omosnace@redhat.com>, selinux@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200124184221.322248-1-cgzones@googlemail.com>
- <6e33cbcd-31fd-2d50-5d0f-70eb475f9811@tycho.nsa.gov>
- <CAJ2a_DcS8e8OjRRHjbYhCphsLi3u=KxX5XorCEA_=5vfN+5q8g@mail.gmail.com>
-From:   Stephen Smalley <sds@tycho.nsa.gov>
-Message-ID: <259f3abe-5d15-ea8d-98b6-765f1e5959dd@tycho.nsa.gov>
-Date:   Fri, 24 Jan 2020 14:18:25 -0500
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=i2mZs5WlFaz3tkODBem6We1gPHN7i2iAXaMa+aS8XgY=;
+ b=Ffw+RR9UbUCKc3WxU1NLVpqwBjqLeJkw5Cuq7hsLcCaLxKkGYgnFRg8sIK9pAxbOdVyEvJZVWe6iKG6nn+z9ueCBhZC/MLfgkXUBMeCISHFq3fWWRdRs201vTVnPgshz8JCaFY0DA2p+3NTMoVcqsQbf2QPrNPTzFBaHh1G/688=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=Mikita.Lipski@amd.com; 
+Received: from DM6PR12MB2906.namprd12.prod.outlook.com (20.179.71.212) by
+ DM6PR12MB2620.namprd12.prod.outlook.com (20.176.118.33) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2665.20; Fri, 24 Jan 2020 19:20:23 +0000
+Received: from DM6PR12MB2906.namprd12.prod.outlook.com
+ ([fe80::c4f1:5ec7:7314:75bf]) by DM6PR12MB2906.namprd12.prod.outlook.com
+ ([fe80::c4f1:5ec7:7314:75bf%7]) with mapi id 15.20.2644.028; Fri, 24 Jan 2020
+ 19:20:23 +0000
+Subject: Re: [PATCH v2] drm/amd/dm/mst: Ignore payload update failures
+To:     Lyude Paul <lyude@redhat.com>, amd-gfx@lists.freedesktop.org
+Cc:     Harry Wentland <harry.wentland@amd.com>, stable@vger.kernel.org,
+        Leo Li <sunpeng.li@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
+        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
+        Mikita Lipski <mikita.lipski@amd.com>,
+        Martin Tsai <martin.tsai@amd.com>,
+        David Francis <David.Francis@amd.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Alvin Lee <alvin.lee2@amd.com>,
+        Jean Delvare <jdelvare@suse.de>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+References: <20200124000643.99859-1-lyude@redhat.com>
+ <20200124191047.120064-1-lyude@redhat.com>
+From:   Mikita Lipski <mlipski@amd.com>
+Organization: AMD
+Message-ID: <abc8346d-2b27-7f8f-a54d-9f22cba82b84@amd.com>
+Date:   Fri, 24 Jan 2020 14:20:21 -0500
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
-MIME-Version: 1.0
-In-Reply-To: <CAJ2a_DcS8e8OjRRHjbYhCphsLi3u=KxX5XorCEA_=5vfN+5q8g@mail.gmail.com>
+ Thunderbird/68.4.1
+In-Reply-To: <20200124191047.120064-1-lyude@redhat.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: YT1PR01CA0029.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b01::42)
+ To DM6PR12MB2906.namprd12.prod.outlook.com (2603:10b6:5:15f::20)
+MIME-Version: 1.0
+Received: from [172.29.224.72] (165.204.55.250) by YT1PR01CA0029.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b01::42) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2665.22 via Frontend Transport; Fri, 24 Jan 2020 19:20:22 +0000
+X-Originating-IP: [165.204.55.250]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: e748da3b-a395-4894-c506-08d7a1027588
+X-MS-TrafficTypeDiagnostic: DM6PR12MB2620:|DM6PR12MB2620:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <DM6PR12MB26204E4D80188498E642867FE40E0@DM6PR12MB2620.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:2582;
+X-Forefront-PRVS: 02929ECF07
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(39860400002)(396003)(346002)(376002)(366004)(189003)(199004)(8936002)(36756003)(8676002)(81156014)(81166006)(66946007)(66476007)(66556008)(52116002)(15650500001)(6486002)(45080400002)(53546011)(31696002)(16526019)(26005)(186003)(2906002)(478600001)(31686004)(956004)(5660300002)(316002)(16576012)(36916002)(4326008)(54906003)(2616005);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR12MB2620;H:DM6PR12MB2906.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+Received-SPF: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: YvvQgmwpzGMSQ4VExK7BOiexfaH9D3v+BW/s6GAS0MBk/9Tqe4MqmdTYpoK8XRPEQZB/BhbvYJXh+gwt7I/JvDin5p9mVEQI6FVGKd+qgKDQFhtPK4nHz4igRe9nB3BLAssOz12AjHX6BW30+1MaxRR45JGHQ3c7dpPLRKr5IeN5ib6w1OKTHaek2g4Xuf2D3vZ+c6bRoooaUiM4nS4IoCwb8C1BM7XfYS3JNJyj0WcsICAGycODqqWR7qoTo/bngcUCvYnyjXiKec0xFCWTOZPym+JjY/u7kqZhrIqdOiAL7hdk93aDQXp9jZ6ebOdc6ZeVYSItg1Te6as7ZTfTAjM4YeTm2pPMhVpM4upOwSL/Nf5NfybopfG+sA1HLrAEUs3buG6LYxFTWCMv4dTPKcJBlnLwELOnQBAJx26Iyb9oYq6hiYuXU4qdQQBKvHgS
+X-MS-Exchange-AntiSpam-MessageData: qpMluPLgUdre/VKq9eSMBZE2RRViqZPBXoncX+ECpJMphZzIWBKnLSJAKZwbXe++w1pw9Wh85XQUjakwPQWnytRrJreZdqSwZBiL+OaZnc9w5lTTrXrqFLro140OW2XwoOcQXUpG+9S9bHvaQxEnYg==
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e748da3b-a395-4894-c506-08d7a1027588
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Jan 2020 19:20:23.2537
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: CZ2jj/oEseXmuzCUKDHZ+W2QDyaj2yX1CULtfoPctvZNeD5m5gK9ID1tIl16+7pI
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB2620
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/24/20 2:08 PM, Christian Göttsche wrote:
-> Am Fr., 24. Jan. 2020 um 19:53 Uhr schrieb Stephen Smalley <sds@tycho.nsa.gov>:
->>
->> On 1/24/20 1:42 PM, Christian Göttsche wrote:
->>> Currently symlinks on kernel filesystems, like sysfs, are labeled on
->>> creation with the parent fs root sid.
->>>
->>> Allow symlinks to inherit the parent directory context, so fine-grained
->>> kernfs labeling can be applied to symlinks too and checking contexts
->>> doesn't complain about them.
->>>
->>> For backward-compatibility this behavior is contained in a new policy
->>> capability: kernfs_sovereign_symlinks
->>>
->>> Signed-off-by: Christian Göttsche <cgzones@googlemail.com>
->>> ---
-
->> Not fond of the name.  1) kernfs is a kernel implementation detail,
->> shouldn't be exposed to policy; genfs is the policy construct 2)
->> sovereign doesn't seem to fit the meaning of this capability; seclabel
->> would be more appropriate.
+On 1/24/20 2:10 PM, Lyude Paul wrote:
+> Disabling a display on MST can potentially happen after the entire MST
+> topology has been removed, which means that we can't communicate with
+> the topology at all in this scenario. Likewise, this also means that we
+> can't properly update payloads on the topology and as such, it's a good
+> idea to ignore payload update failures when disabling displays.
+> Currently, amdgpu makes the mistake of halting the payload update
+> process when any payload update failures occur, resulting in leaving
+> DC's local copies of the payload tables out of date.
 > 
-> Something like genfs_seclabel_symlinks?
-
-Works for me.
-
+> This ends up causing problems with hotplugging MST topologies, and
+> causes modesets on the second hotplug to fail like so:
 > 
->>> +                  (sbsec->flags & SE_SBGENFS_XATTR))) {
->>
->> Why limit this to SE_SBGENFS_XATTR filesystems?  Why not just make the test:
->>          if ((sbsec->flags & SE_SBGENFS) && (!S_ISLNK(inode->i_mode) ||
->> selinux_policycap_genfs_symlinkseclabel()))
->> or similar.
+> [drm] Failed to updateMST allocation table forpipe idx:1
+> ------------[ cut here ]------------
+> WARNING: CPU: 5 PID: 1511 at
+> drivers/gpu/drm/amd/amdgpu/../display/dc/core/dc_link.c:2677
+> update_mst_stream_alloc_table+0x11e/0x130 [amdgpu]
+> Modules linked in: cdc_ether usbnet fuse xt_conntrack nf_conntrack
+> nf_defrag_ipv6 libcrc32c nf_defrag_ipv4 ipt_REJECT nf_reject_ipv4
+> nft_counter nft_compat nf_tables nfnetlink tun bridge stp llc sunrpc
+> vfat fat wmi_bmof uvcvideo snd_hda_codec_realtek snd_hda_codec_generic
+> snd_hda_codec_hdmi videobuf2_vmalloc snd_hda_intel videobuf2_memops
+> videobuf2_v4l2 snd_intel_dspcfg videobuf2_common crct10dif_pclmul
+> snd_hda_codec videodev crc32_pclmul snd_hwdep snd_hda_core
+> ghash_clmulni_intel snd_seq mc joydev pcspkr snd_seq_device snd_pcm
+> sp5100_tco k10temp i2c_piix4 snd_timer thinkpad_acpi ledtrig_audio snd
+> wmi soundcore video i2c_scmi acpi_cpufreq ip_tables amdgpu(O)
+> rtsx_pci_sdmmc amd_iommu_v2 gpu_sched mmc_core i2c_algo_bit ttm
+> drm_kms_helper syscopyarea sysfillrect sysimgblt fb_sys_fops cec drm
+> crc32c_intel serio_raw hid_multitouch r8152 mii nvme r8169 nvme_core
+> rtsx_pci pinctrl_amd
+> CPU: 5 PID: 1511 Comm: gnome-shell Tainted: G           O      5.5.0-rc7Lyude-Test+ #4
+> Hardware name: LENOVO FA495SIT26/FA495SIT26, BIOS R12ET22W(0.22 ) 01/31/2019
+> RIP: 0010:update_mst_stream_alloc_table+0x11e/0x130 [amdgpu]
+> Code: 28 00 00 00 75 2b 48 8d 65 e0 5b 41 5c 41 5d 41 5e 5d c3 0f b6 06
+> 49 89 1c 24 41 88 44 24 08 0f b6 46 01 41 88 44 24 09 eb 93 <0f> 0b e9
+> 2f ff ff ff e8 a6 82 a3 c2 66 0f 1f 44 00 00 0f 1f 44 00
+> RSP: 0018:ffffac428127f5b0 EFLAGS: 00010202
+> RAX: 0000000000000002 RBX: ffff8d1e166eee80 RCX: 0000000000000000
+> RDX: ffffac428127f668 RSI: ffff8d1e166eee80 RDI: ffffac428127f610
+> RBP: ffffac428127f640 R08: ffffffffc03d94a8 R09: 0000000000000000
+> R10: ffff8d1e24b02000 R11: ffffac428127f5b0 R12: ffff8d1e1b83d000
+> R13: ffff8d1e1bea0b08 R14: 0000000000000002 R15: 0000000000000002
+> FS:  00007fab23ffcd80(0000) GS:ffff8d1e28b40000(0000) knlGS:0000000000000000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: 00007f151f1711e8 CR3: 00000005997c0000 CR4: 00000000003406e0
+> Call Trace:
+>   ? mutex_lock+0xe/0x30
+>   dc_link_allocate_mst_payload+0x9a/0x210 [amdgpu]
+>   ? dm_read_reg_func+0x39/0xb0 [amdgpu]
+>   ? core_link_enable_stream+0x656/0x730 [amdgpu]
+>   core_link_enable_stream+0x656/0x730 [amdgpu]
+>   dce110_apply_ctx_to_hw+0x58e/0x5d0 [amdgpu]
+>   ? dcn10_verify_allow_pstate_change_high+0x1d/0x280 [amdgpu]
+>   ? dcn10_wait_for_mpcc_disconnect+0x3c/0x130 [amdgpu]
+>   dc_commit_state+0x292/0x770 [amdgpu]
+>   ? add_timer+0x101/0x1f0
+>   ? ttm_bo_put+0x1a1/0x2f0 [ttm]
+>   amdgpu_dm_atomic_commit_tail+0xb59/0x1ff0 [amdgpu]
+>   ? amdgpu_move_blit.constprop.0+0xb8/0x1f0 [amdgpu]
+>   ? amdgpu_bo_move+0x16d/0x2b0 [amdgpu]
+>   ? ttm_bo_handle_move_mem+0x118/0x570 [ttm]
+>   ? ttm_bo_validate+0x134/0x150 [ttm]
+>   ? dm_plane_helper_prepare_fb+0x1b9/0x2a0 [amdgpu]
+>   ? _cond_resched+0x15/0x30
+>   ? wait_for_completion_timeout+0x38/0x160
+>   ? _cond_resched+0x15/0x30
+>   ? wait_for_completion_interruptible+0x33/0x190
+>   commit_tail+0x94/0x130 [drm_kms_helper]
+>   drm_atomic_helper_commit+0x113/0x140 [drm_kms_helper]
+>   drm_atomic_helper_set_config+0x70/0xb0 [drm_kms_helper]
+>   drm_mode_setcrtc+0x194/0x6a0 [drm]
+>   ? _cond_resched+0x15/0x30
+>   ? mutex_lock+0xe/0x30
+>   ? drm_mode_getcrtc+0x180/0x180 [drm]
+>   drm_ioctl_kernel+0xaa/0xf0 [drm]
+>   drm_ioctl+0x208/0x390 [drm]
+>   ? drm_mode_getcrtc+0x180/0x180 [drm]
+>   amdgpu_drm_ioctl+0x49/0x80 [amdgpu]
+>   do_vfs_ioctl+0x458/0x6d0
+>   ksys_ioctl+0x5e/0x90
+>   __x64_sys_ioctl+0x16/0x20
+>   do_syscall_64+0x55/0x1b0
+>   entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> RIP: 0033:0x7fab2121f87b
+> Code: 0f 1e fa 48 8b 05 0d 96 2c 00 64 c7 00 26 00 00 00 48 c7 c0 ff ff
+> ff ff c3 66 0f 1f 44 00 00 f3 0f 1e fa b8 10 00 00 00 0f 05 <48> 3d 01
+> f0 ff ff 73 01 c3 48 8b 0d dd 95 2c 00 f7 d8 64 89 01 48
+> RSP: 002b:00007ffd045f9068 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+> RAX: ffffffffffffffda RBX: 00007ffd045f90a0 RCX: 00007fab2121f87b
+> RDX: 00007ffd045f90a0 RSI: 00000000c06864a2 RDI: 000000000000000b
+> RBP: 00007ffd045f90a0 R08: 0000000000000000 R09: 000055dbd2985d10
+> R10: 000055dbd2196280 R11: 0000000000000246 R12: 00000000c06864a2
+> R13: 000000000000000b R14: 0000000000000000 R15: 000055dbd2196280
+> ---[ end trace 6ea888c24d2059cd ]---
 > 
-> I somehow thought that this functionality is limited to filesystems
-> with SE_SBGENFS_XATTR;
-> so I can expand the check to SE_SBGENFS.
+> Note as well, I have only been able to reproduce this on setups with 2
+> MST displays.
+> 
+> Changes since v1:
+> * Don't return false when part 1 or part 2 of updating the payloads
+>    fails, we don't want to abort at any step of the process even if
+>    things fail
+> 
+> Signed-off-by: Lyude Paul <lyude@redhat.com>
+> Acked-by: Harry Wentland <harry.wentland@amd.com>
+> Cc: stable@vger.kernel.org
+> ---
+>   .../drm/amd/display/amdgpu_dm/amdgpu_dm_helpers.c   | 13 ++++---------
+>   1 file changed, 4 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_helpers.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_helpers.c
+> index 069b7a6f5597..318b474ff20e 100644
+> --- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_helpers.c
+> +++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_helpers.c
+> @@ -216,7 +216,8 @@ bool dm_helpers_dp_mst_write_payload_allocation_table(
+>   		drm_dp_mst_reset_vcpi_slots(mst_mgr, mst_port);
+>   	}
+>   
+> -	ret = drm_dp_update_payload_part1(mst_mgr);
+> +	/* It's OK for this to fail */
+> +	drm_dp_update_payload_part1(mst_mgr);
+>   
+>   	/* mst_mgr->->payloads are VC payload notify MST branch using DPCD or
+>   	 * AUX message. The sequence is slot 1-63 allocated sequence for each
+> @@ -225,9 +226,6 @@ bool dm_helpers_dp_mst_write_payload_allocation_table(
+>   
+>   	get_payload_table(aconnector, proposed_table);
+>   
+> -	if (ret)
+> -		return false;
+> -
 
-I could be wrong but I don't see why it would need to be limited in that 
-way.
+Sorry for being picky, but I think this might cause compilation error on 
+some systems for having unused variable (int ret). Its better just to 
+strip out both ret integer declarations.
+
+Otherwise the patch is good. Thanks again!
+
+Reviewed-by: Mikita Lipski <Mikita.Lipski@amd.com>
+
+Mikita
+
+>   	return true;
+>   }
+>   
+> @@ -285,7 +283,6 @@ bool dm_helpers_dp_mst_send_payload_allocation(
+>   	struct amdgpu_dm_connector *aconnector;
+>   	struct drm_dp_mst_topology_mgr *mst_mgr;
+>   	struct drm_dp_mst_port *mst_port;
+> -	int ret;
+>   
+>   	aconnector = (struct amdgpu_dm_connector *)stream->dm_stream_context;
+>   
+> @@ -299,10 +296,8 @@ bool dm_helpers_dp_mst_send_payload_allocation(
+>   	if (!mst_mgr->mst_state)
+>   		return false;
+>   
+> -	ret = drm_dp_update_payload_part2(mst_mgr);
+> -
+> -	if (ret)
+> -		return false;
+> +	/* It's OK for this to fail */
+> +	drm_dp_update_payload_part2(mst_mgr);
+>   
+>   	if (!enable)
+>   		drm_dp_mst_deallocate_vcpi(mst_mgr, mst_port);
+> 
