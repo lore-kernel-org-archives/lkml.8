@@ -4,55 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44917C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:30:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87105C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:30:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15A51214AF
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:30:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5571E214AF
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:30:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579876206;
-	bh=MepvgZWRn42fd+rCUdxQRVnBHHPf5FpQs2mJ+e+l62A=;
+	s=default; t=1579876209;
+	bh=12HEvJehZ/Jgk+eTbKkqViC4hFoUbZr3wcNHfpAyxPQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=m3bnr31vbIeTcYLnclW2DEeaMzNIxjrKnWGM8Bqws2uB06NRcDdKRyCJWVJ49kq08
-	 iJnuxpjgJMqxVBGkattBb/pCKdz7wS8Cylq29mrMy+iOv6ug05nmVrOsgjNkriYMSW
-	 2MTu9JYOgx9MbMkMDa5B8CaA6fuyuQCvKRu+YScA=
+	b=0tz1FpPp9PVzAjRrH3CmOI7xCmeXySAzfaeW7u8OpoIyXUlYfkxZ+ObX/DbE2YLL4
+	 xC/cGebLe4s72hvWsGuZJXaqhXihefXNVm+iXNQStwZNncu8odtjG1ZTgODf7RrlZI
+	 scYMh/VaN3OofiSEumEiOc7tV5cCVmFEN7Q5u7ME=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405059AbgAXOUt (ORCPT
+        id S2392226AbgAXOaI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 09:20:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41832 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 09:30:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42188 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404930AbgAXOUi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 09:20:38 -0500
+        id S2405061AbgAXOUt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 09:20:49 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A745E2077C;
-        Fri, 24 Jan 2020 14:20:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3032A20661;
+        Fri, 24 Jan 2020 14:20:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579875637;
-        bh=MepvgZWRn42fd+rCUdxQRVnBHHPf5FpQs2mJ+e+l62A=;
+        s=default; t=1579875649;
+        bh=12HEvJehZ/Jgk+eTbKkqViC4hFoUbZr3wcNHfpAyxPQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Wofoee+FH81s8xjxaE9KgSRKG8ep0b16UTmjKwbNliRJVDVIvqzFXX0ZIBQeoOovT
-         XT2cDkUL7hXne15kQuafaDraCKSvkqxRgMqXQP+JdM4TjGre3ZQwHUHiO/twais3iy
-         xI1CqNBArwfcYN4Ovvmz3a04WxEMG5kp5IuMdDVc=
+        b=Yw2kEGDb7qrq/XB/qSOqpJ2gJD09Kqq70dL8XjfvxEG3FEOn2Eyq3oq5JvY2KGm+J
+         3utRjviRfgIq4+4LKRkRyAOpPtTH3RSV1HT+gefCO8u0sqz6zC8R4q931RvGWj3cvz
+         OL0GDo4CrwhjvRlGM4U7l2py0gA8dxjy5O83klGU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Cambda Zhu <cambda@linux.alibaba.com>,
-        Andrew Bowers <andrewx.bowers@intel.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        Sasha Levin <sashal@kernel.org>,
-        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 21/56] ixgbe: Fix calculation of queue with VFs and flow director on interface flap
-Date:   Fri, 24 Jan 2020 09:19:37 -0500
-Message-Id: <20200124142012.29752-21-sashal@kernel.org>
+Cc:     Kristian Evensen <kristian.evensen@gmail.com>,
+        =?UTF-8?q?Bj=C3=B8rn=20Mork?= <bjorn@mork.no>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 31/56] qmi_wwan: Add support for Quectel RM500Q
+Date:   Fri, 24 Jan 2020 09:19:47 -0500
+Message-Id: <20200124142012.29752-31-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200124142012.29752-1-sashal@kernel.org>
 References: <20200124142012.29752-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -61,81 +62,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Cambda Zhu <cambda@linux.alibaba.com>
+From: Kristian Evensen <kristian.evensen@gmail.com>
 
-[ Upstream commit 4fad78ad6422d9bca62135bbed8b6abc4cbb85b8 ]
+[ Upstream commit a9ff44f0e61d074f29770413fef6a5452be7b83e ]
 
-This patch fixes the calculation of queue when we restore flow director
-filters after resetting adapter. In ixgbe_fdir_filter_restore(), filter's
-vf may be zero which makes the queue outside of the rx_ring array.
+RM500Q is a 5G module from Quectel, supporting both standalone and
+non-standalone modes. The normal Quectel quirks apply (DTR and dynamic
+interface numbers).
 
-The calculation is changed to the same as ixgbe_add_ethtool_fdir_entry().
-
-Signed-off-by: Cambda Zhu <cambda@linux.alibaba.com>
-Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Signed-off-by: Kristian Evensen <kristian.evensen@gmail.com>
+Acked-by: Bjørn Mork <bjorn@mork.no>
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/intel/ixgbe/ixgbe_main.c | 37 ++++++++++++++-----
- 1 file changed, 27 insertions(+), 10 deletions(-)
+ drivers/net/usb/qmi_wwan.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c b/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
-index de65ca1e65580..7db8a05de861a 100644
---- a/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
-+++ b/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
-@@ -5187,7 +5187,7 @@ static void ixgbe_fdir_filter_restore(struct ixgbe_adapter *adapter)
- 	struct ixgbe_hw *hw = &adapter->hw;
- 	struct hlist_node *node2;
- 	struct ixgbe_fdir_filter *filter;
--	u64 action;
-+	u8 queue;
+diff --git a/drivers/net/usb/qmi_wwan.c b/drivers/net/usb/qmi_wwan.c
+index b55fd76348f9f..13c8788e3b6b2 100644
+--- a/drivers/net/usb/qmi_wwan.c
++++ b/drivers/net/usb/qmi_wwan.c
+@@ -999,6 +999,7 @@ static const struct usb_device_id products[] = {
+ 	{QMI_QUIRK_QUECTEL_DYNCFG(0x2c7c, 0x0125)},	/* Quectel EC25, EC20 R2.0  Mini PCIe */
+ 	{QMI_QUIRK_QUECTEL_DYNCFG(0x2c7c, 0x0306)},	/* Quectel EP06/EG06/EM06 */
+ 	{QMI_QUIRK_QUECTEL_DYNCFG(0x2c7c, 0x0512)},	/* Quectel EG12/EM12 */
++	{QMI_QUIRK_QUECTEL_DYNCFG(0x2c7c, 0x0800)},	/* Quectel RM500Q-GL */
  
- 	spin_lock(&adapter->fdir_perfect_lock);
- 
-@@ -5196,17 +5196,34 @@ static void ixgbe_fdir_filter_restore(struct ixgbe_adapter *adapter)
- 
- 	hlist_for_each_entry_safe(filter, node2,
- 				  &adapter->fdir_filter_list, fdir_node) {
--		action = filter->action;
--		if (action != IXGBE_FDIR_DROP_QUEUE && action != 0)
--			action =
--			(action >> ETHTOOL_RX_FLOW_SPEC_RING_VF_OFF) - 1;
-+		if (filter->action == IXGBE_FDIR_DROP_QUEUE) {
-+			queue = IXGBE_FDIR_DROP_QUEUE;
-+		} else {
-+			u32 ring = ethtool_get_flow_spec_ring(filter->action);
-+			u8 vf = ethtool_get_flow_spec_ring_vf(filter->action);
-+
-+			if (!vf && (ring >= adapter->num_rx_queues)) {
-+				e_err(drv, "FDIR restore failed without VF, ring: %u\n",
-+				      ring);
-+				continue;
-+			} else if (vf &&
-+				   ((vf > adapter->num_vfs) ||
-+				     ring >= adapter->num_rx_queues_per_pool)) {
-+				e_err(drv, "FDIR restore failed with VF, vf: %hhu, ring: %u\n",
-+				      vf, ring);
-+				continue;
-+			}
-+
-+			/* Map the ring onto the absolute queue index */
-+			if (!vf)
-+				queue = adapter->rx_ring[ring]->reg_idx;
-+			else
-+				queue = ((vf - 1) *
-+					adapter->num_rx_queues_per_pool) + ring;
-+		}
- 
- 		ixgbe_fdir_write_perfect_filter_82599(hw,
--				&filter->filter,
--				filter->sw_idx,
--				(action == IXGBE_FDIR_DROP_QUEUE) ?
--				IXGBE_FDIR_DROP_QUEUE :
--				adapter->rx_ring[action]->reg_idx);
-+				&filter->filter, filter->sw_idx, queue);
- 	}
- 
- 	spin_unlock(&adapter->fdir_perfect_lock);
+ 	/* 3. Combined interface devices matching on interface number */
+ 	{QMI_FIXED_INTF(0x0408, 0xea42, 4)},	/* Yota / Megafon M100-1 */
 -- 
 2.20.1
 
