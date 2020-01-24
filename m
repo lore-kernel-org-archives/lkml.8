@@ -4,48 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48F6AC35240
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 01:19:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C83DC35240
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 01:20:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15074206A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 01:19:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22B3722464
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 01:20:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579828797;
-	bh=Pt57xNn7PwEg7RGA+JlsfMYabBJJPJkE2lr3e5SGsSs=;
+	s=default; t=1579828803;
+	bh=g5WpGPKoyfEqCm6F7JEqL0fGq3xpDnVGuTwzVQXbujM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SQto3ooWVvH6b0vRACAFdbv5X5Z0egBr870lEYUTo5YOy0amOBxw6GvZMuHI20ZPK
-	 8Zf0zw5JOxGKMNAtL+mC6X6gCwrTBFhLmJ95iwCNDpL+5PmFaRGZiVIvk8JvNRbXwb
-	 pqW8V82+nJ+hAw8cdv3gKNbNnZpAYFAtl2Bi6lFA=
+	b=vUDXe5AEoqK+fNcjP5kBRsA6NnDAsHf40bQBAENufg6h7+ILNl3Az8EGT6MoGU9a7
+	 XWuOXERORW0TUmAkzOkAnrPxVgH53B7BoSi9tVQgXwccKibBcZr7IaL75Rapeq3Y/N
+	 NX6ebXuRLdkHAIjwX1n3ZttysHa62kJPzIH0+IOE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729827AbgAXBT4 (ORCPT
+        id S1730602AbgAXBRe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 20:19:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60778 "EHLO mail.kernel.org"
+        Thu, 23 Jan 2020 20:17:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60594 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730661AbgAXBRj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 20:17:39 -0500
+        id S1730511AbgAXBRb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jan 2020 20:17:31 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1224C22464;
-        Fri, 24 Jan 2020 01:17:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 15D7B2071E;
+        Fri, 24 Jan 2020 01:17:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579828658;
-        bh=Pt57xNn7PwEg7RGA+JlsfMYabBJJPJkE2lr3e5SGsSs=;
+        s=default; t=1579828650;
+        bh=g5WpGPKoyfEqCm6F7JEqL0fGq3xpDnVGuTwzVQXbujM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=G/wLQSCoMWcFD6yqaQ5VUH4v4QQwUqUGXHtwSfBa05oI2ceBdeTQPVb+c2PjiF1ox
-         nXwe1BGOS120pRGWqGZN6wNJ7gkOFwb0JJLqHAboqMK3OGPm3usUPBdRHLyxSbv0Z3
-         imAmxH8wRe1v6Yf715mt22x9g4M/mm5Q8leFay2Y=
+        b=KoFXWORmZpucT7W0C+TThyFP2WJEruKnM1hLDc0gqROVrN7gkdrmh1oLOgjPTylSv
+         AovRhcz7iuLA2XcASXIASIDAHeqoFtJa6ahYnXLTuwy302CVDlGGW7of39bmM0RmDf
+         NpSDJEU4oO+/v3dgMovhbwe1WVwi5lroGMRDrHIY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hui Wang <hui.wang@canonical.com>, Takashi Iwai <tiwai@suse.de>,
-        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
-Subject: [PATCH AUTOSEL 5.4 26/33] ALSA: hda/realtek - Move some alc236 pintbls to fallback table
-Date:   Thu, 23 Jan 2020 20:17:01 -0500
-Message-Id: <20200124011708.18232-26-sashal@kernel.org>
+Cc:     Ben Dooks <ben.dooks@codethink.co.uk>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 19/33] ARM: OMAP2+: SmartReflex: add omap_sr_pdata definition
+Date:   Thu, 23 Jan 2020 20:16:54 -0500
+Message-Id: <20200124011708.18232-19-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200124011708.18232-1-sashal@kernel.org>
 References: <20200124011708.18232-1-sashal@kernel.org>
@@ -58,58 +59,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hui Wang <hui.wang@canonical.com>
+From: Ben Dooks <ben.dooks@codethink.co.uk>
 
-[ Upstream commit d64ebdbfd4f71406f58210f5ccb16977b4cd31d2 ]
+[ Upstream commit 2079fe6ea8cbd2fb2fbadba911f1eca6c362eb9b ]
 
-We have a new Dell machine which needs to apply the quirk
-ALC255_FIXUP_DELL1_MIC_NO_PRESENCE, try to use the fallback table
-to fix it this time. And we could remove all pintbls of alc236
-for applying DELL1_MIC_NO_PRESENCE on Dell machines.
+The omap_sr_pdata is not declared but is exported, so add a
+define for it to fix the following warning:
 
-Signed-off-by: Hui Wang <hui.wang@canonical.com>
-Link: https://lore.kernel.org/r/20191121022644.8078-2-hui.wang@canonical.com
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+arch/arm/mach-omap2/pdata-quirks.c:609:36: warning: symbol 'omap_sr_pdata' was not declared. Should it be static?
+
+Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/pci/hda/patch_realtek.c | 17 +++--------------
- 1 file changed, 3 insertions(+), 14 deletions(-)
+ include/linux/power/smartreflex.h | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
-index d293488dc3dd3..68832f52c1ad2 100644
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -7563,20 +7563,6 @@ static const struct snd_hda_pin_quirk alc269_pin_fixup_tbl[] = {
- 		{0x19, 0x02a11020},
- 		{0x1a, 0x02a11030},
- 		{0x21, 0x0221101f}),
--	SND_HDA_PIN_QUIRK(0x10ec0236, 0x1028, "Dell", ALC255_FIXUP_DELL1_MIC_NO_PRESENCE,
--		{0x12, 0x90a60140},
--		{0x14, 0x90170110},
--		{0x21, 0x02211020}),
--	SND_HDA_PIN_QUIRK(0x10ec0236, 0x1028, "Dell", ALC255_FIXUP_DELL1_MIC_NO_PRESENCE,
--		{0x12, 0x90a60140},
--		{0x14, 0x90170150},
--		{0x21, 0x02211020}),
--	SND_HDA_PIN_QUIRK(0x10ec0236, 0x1028, "Dell", ALC255_FIXUP_DELL1_MIC_NO_PRESENCE,
--		{0x21, 0x02211020}),
--	SND_HDA_PIN_QUIRK(0x10ec0236, 0x1028, "Dell", ALC255_FIXUP_DELL1_MIC_NO_PRESENCE,
--		{0x12, 0x40000000},
--		{0x14, 0x90170110},
--		{0x21, 0x02211020}),
- 	SND_HDA_PIN_QUIRK(0x10ec0255, 0x1028, "Dell", ALC255_FIXUP_DELL2_MIC_NO_PRESENCE,
- 		{0x14, 0x90170110},
- 		{0x21, 0x02211020}),
-@@ -7901,6 +7887,9 @@ static const struct snd_hda_pin_quirk alc269_fallback_pin_fixup_tbl[] = {
- 	SND_HDA_PIN_QUIRK(0x10ec0274, 0x1028, "Dell", ALC274_FIXUP_DELL_AIO_LINEOUT_VERB,
- 		{0x19, 0x40000000},
- 		{0x1a, 0x40000000}),
-+	SND_HDA_PIN_QUIRK(0x10ec0236, 0x1028, "Dell", ALC255_FIXUP_DELL1_MIC_NO_PRESENCE,
-+		{0x19, 0x40000000},
-+		{0x1a, 0x40000000}),
- 	{}
+diff --git a/include/linux/power/smartreflex.h b/include/linux/power/smartreflex.h
+index d0b37e9370372..971c9264179ee 100644
+--- a/include/linux/power/smartreflex.h
++++ b/include/linux/power/smartreflex.h
+@@ -293,6 +293,9 @@ struct omap_sr_data {
+ 	struct voltagedomain		*voltdm;
  };
  
++
++extern struct omap_sr_data omap_sr_pdata[OMAP_SR_NR];
++
+ #ifdef CONFIG_POWER_AVS_OMAP
+ 
+ /* Smartreflex module enable/disable interface */
 -- 
 2.20.1
 
