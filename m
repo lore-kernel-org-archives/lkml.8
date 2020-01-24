@@ -2,108 +2,113 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C9FBC35242
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 18:05:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BA2EC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 18:06:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA0362072C
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 18:05:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D99782072C
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 18:06:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="JPa2uVHT"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Yqe3fCW4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391203AbgAXSFE (ORCPT
+        id S2391019AbgAXSGA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 13:05:04 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:40584 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389886AbgAXSFD (ORCPT
+        Fri, 24 Jan 2020 13:06:00 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:50582 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390710AbgAXSF7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 13:05:03 -0500
-Received: by mail-ot1-f66.google.com with SMTP id w21so2458416otj.7
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Jan 2020 10:05:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=jRTNXnXM7oz5Drw0JUEzLHf8Tl/lM2SK6ojzvbVm3Do=;
-        b=JPa2uVHTQnO/DXnNRVd8XmoPi8VpJuIDhI+MwREr6Mb8Ij5HVUDpA6TxomyZ+Lff6W
-         Y0DI9Cm0csX4gVNf0fT2szWUMfB8PaOM+JHgiQ6lHgp2HYGhZ1FLuEQr0mFTp/UHZGEJ
-         4+wmRzEAsVw/5tyikkUBaJSaYwn1dj9gvK9c5x/AxAQpvh0podrIffNwzqKp0EkArmJ1
-         oMwVvXtqQAlFZUlPokk+ed89Py3Hp2N12VOLnaJO0t5fYarr08YbsRzuILrxgeCojT/8
-         rcUiO4nPjlpm1y4ofxPB9A4MFUjfm6TIH4pRlXvUZhWjjbyJWGoW4+7jNw2e/p4KVf8Q
-         t5qw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=jRTNXnXM7oz5Drw0JUEzLHf8Tl/lM2SK6ojzvbVm3Do=;
-        b=hE7M51HD278fQ77kDjyEkaDXtll8ITd44Mku7rAJ90vDxQ4nm7OG2t60bh7MmErh5a
-         Ee3WODqKnUyXMlHjmsVpD5DF4SJpXeTQP+ugaYqknFQLv9WSAgMI1DLpbHu6Wo6Z7Tib
-         CKk8DKURFXnWJlzYFizGNsqA0zZ1H2AwlAeX5o40JjlCtPyVubTwDL1oD2h1aJPd7C5c
-         nhFhq5Wn/qggKe5jUM8UcKhu7tuS1bclBJ/BNJ6S3XpTcs+Q0n67KULNFiNq02QMXw8b
-         coslbNcnWilYMqirCyiHfOxIOS7FfwCEf5tTOFWvdJP3hJ1/q7mcc/DC3ZuFDSic1M66
-         wnVg==
-X-Gm-Message-State: APjAAAX3Yy/yBYOeNAPqatVImFNFDgH8ryVX/Oj3K3ibj1RqDejjBqr6
-        QRlsvLL8/RlHNDiHhfbxiUkPChf9/bCjvNkDg/YkGw==
-X-Google-Smtp-Source: APXvYqzFJoNGdvBkNazI2Gmjmm0Jg7CrgLUOGYJxHStstoF4GHQEZ08I0ffdQ1SOyeaigHkZmgGXPCfxHkNpYgjxS48=
-X-Received: by 2002:a9d:68d3:: with SMTP id i19mr3393231oto.71.1579889102817;
- Fri, 24 Jan 2020 10:05:02 -0800 (PST)
+        Fri, 24 Jan 2020 13:05:59 -0500
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00OI5kqa057284;
+        Fri, 24 Jan 2020 12:05:46 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1579889146;
+        bh=OTh91vvqx5FkwJrVpzCRzAv6h7V2/gVJYW+HKZ6IZhk=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=Yqe3fCW4F0O3F0vumSdxgo2GnRdaUfq0AWbDcXGU+dqLjOP3xlCcCBhJ16Aca+MfL
+         E/gWOMP7bcC4dGea61P/6/F39CAi8K9HbX6fOPyFH5TvUw0Se9JHvDYgeqOaV9e16M
+         /I5Dwto69rOrxwTdIuOOXDUdv3BAdtg7tMD4dp9w=
+Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00OI5kiS098350;
+        Fri, 24 Jan 2020 12:05:46 -0600
+Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 24
+ Jan 2020 12:05:45 -0600
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Fri, 24 Jan 2020 12:05:45 -0600
+Received: from [192.168.2.10] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00OI5gfU118628;
+        Fri, 24 Jan 2020 12:05:43 -0600
+Subject: Re: [PATCH for-next] arm64: defconfig: Set bcm2835-dma as built-in
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+CC:     <f.fainelli@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-rpi-kernel@lists.infradead.org>,
+        Will Deacon <will@kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+References: <C043QOCZ7SMB.2XXX2ESS1ZJ98@linux-9qgx>
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+Message-ID: <e29e23fd-cb60-56b9-e53d-ecbafc12bf8c@ti.com>
+Date:   Fri, 24 Jan 2020 20:07:51 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <e60e64f9-894b-4121-d97b-fb61459cbbe5@redhat.com>
- <CAPcyv4jm=fmP=-5vbo2jxzMe2qXqZP=zDYF8G_rs3X6_Om0wPg@mail.gmail.com>
- <4d0334e2-c4e7-6d3f-99ba-2ca0495e1549@redhat.com> <CAPcyv4jixmv8fJ5FiYE=97Jud3Mc+6QzRX1txceSYU+WY_0rQA@mail.gmail.com>
- <fc0cfb97-5a60-7e73-4f85-d8e6947c5e28@redhat.com> <CAPcyv4jVpN26RGQLRn4BewYtzHDoQfvh37DEdEBq1dd4-BP0kw@mail.gmail.com>
- <64902066-51dd-9693-53fc-4a5975c58409@redhat.com> <CAPcyv4hcDNeQO3CfnqTRou+6R5gZwyi4pVUMxp1DadAOp7kJGQ@mail.gmail.com>
- <516aa930-9b64-b377-557c-5413ed9fe336@redhat.com> <CAPcyv4iiYtN6iGt=rVuNR=O=H9YcY1b1yWp+5TuDhu0QoVqT_A@mail.gmail.com>
- <20200124124512.GT29276@dhcp22.suse.cz>
-In-Reply-To: <20200124124512.GT29276@dhcp22.suse.cz>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Fri, 24 Jan 2020 10:04:52 -0800
-Message-ID: <CAPcyv4jcCnfGy5HcYimxcyF6v_Anw4nMdaNHQt4tMrqUaN70Rg@mail.gmail.com>
-Subject: Re: [PATCH] mm/memory_hotplug: Fix remove_memory() lockdep splat
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     David Hildenbrand <david@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        stable <stable@vger.kernel.org>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Linux MM <linux-mm@kvack.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <C043QOCZ7SMB.2XXX2ESS1ZJ98@linux-9qgx>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 24, 2020 at 4:56 AM Michal Hocko <mhocko@kernel.org> wrote:
->
-> On Fri 10-01-20 13:27:24, Dan Williams wrote:
-> > On Fri, Jan 10, 2020 at 9:42 AM David Hildenbrand <david@redhat.com> wrote:
-> [...]
-> > > For your reference (roughly 5 months ago, so not that old)
-> > >
-> > > https://lkml.kernel.org/r/20190724143017.12841-1-david@redhat.com
-> >
-> > Oh, now I see the problem. You need to add that lock so far away from
-> > the __add_memory() to avoid lock inversion problems with the
-> > acpi_scan_lock. The organization I was envisioning would not work
-> > without deeper refactoring.
->
-> Sorry to come back to this late. Has this been resolved?
+Hi Nicolas,
 
-The mem_hotplug_lock lockdep splat fix in this patch has not landed.
-David and I have not quite come to consensus on how to resolve online
-racing removal. IIUC David wants that invalidation to be
-pages_correctly_probed(), I would prefer it to be directly tied to the
-object, struct memory_block, that remove_memory_block_devices() has
-modified, mem->section_count = 0.
+On 1/24/20 4:47 PM, Nicolas Saenz Julienne wrote:
+>> If you need MMC rootfs then the DMA needs to be built in or have initrd
+>> with the modules.
+>> The driver expects to have DMA channel and it is going to wait for it to
+>> appear unless the request fails.
+>>
+>> Without moving the DMA as built in and removing the deferred probe
+>> handling form the MMC driver, one can just remove the DMA support from
+>> the mmc-bcm2835 as it is not used at all.
+> 
+> Oh sorry, I meant to ask if the 'Fixes:' tag was really needed.
 
-...or are you referring to the discussion about acpi_scan_lock()? I
-came around to agreeing with your position that documenting was better
-than adding superfluous locking especially because the
-acpi_scan_lock() is take so far away from where the device_hotplug
-lock is needed.
+Complements: or Needed-for: would be better, but with the Fixed tag this
+patch would be picked in case the dma_request_chan() conversion patch
+gets backported for stable.
+
+> The
+> patch itself is very much needed since not everyone uses initrds in the
+> RPi world, and we want to keep being compatible as much as possible with
+> older device-trees.
+
+Sure. Just checked on my RPi with libreELEC that at least they have the
+DMA built in, I assume other distros do the same.
+
+It would be great if this patch would make it to linux-next as soon as
+it is possible for sure.
+
+>> I wonder why this is not signaled by automated boot testing, if any
+>> exists for bcm2835>
+> Actually now that you mention it, it's failing since today here:
+> https://kernelci.org/boot/bcm2837-rpi-3-b/
+
+Oh, so you can even have a bug report to back this patch ;)
+
+- Peter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
