@@ -6,37 +6,37 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14518C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 15:17:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39A0BC35242
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 15:17:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2C47214AF
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 15:17:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15F23214AF
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 15:17:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388896AbgAXPRm (ORCPT
+        id S2388774AbgAXPRk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 10:17:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34118 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 10:17:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34276 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387730AbgAXPR1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2387953AbgAXPR1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 24 Jan 2020 10:17:27 -0500
 Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9485C2077C;
-        Fri, 24 Jan 2020 15:17:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2E90222522;
+        Fri, 24 Jan 2020 15:17:27 +0000 (UTC)
 Received: from rostedt by gandalf.local.home with local (Exim 4.93)
         (envelope-from <rostedt@goodmis.org>)
-        id 1iv0i5-000qEg-Ht; Fri, 24 Jan 2020 10:17:25 -0500
-Message-Id: <20200124151725.438207089@goodmis.org>
+        id 1iv0i6-000qGc-3d; Fri, 24 Jan 2020 10:17:26 -0500
+Message-Id: <20200124151725.996608776@goodmis.org>
 User-Agent: quilt/0.65
-Date:   Fri, 24 Jan 2020 10:16:59 -0500
+Date:   Fri, 24 Jan 2020 10:17:03 -0500
 From:   Steven Rostedt <rostedt@goodmis.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Ingo Molnar <mingo@kernel.org>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>
-Subject: [for-next][PATCH 08/14] Documentation: tracing: Fix typos in boot-time tracing documentation
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>
+Subject: [for-next][PATCH 12/14] tracing/boot: Fix an IS_ERR() vs NULL bug
 References: <20200124151651.852781301@goodmis.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-15
@@ -45,87 +45,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masami Hiramatsu <mhiramat@kernel.org>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-Fix typos in boottime-trace.rst according to Randy's suggestions.
+The trace_array_get_by_name() function doesn't return error pointers,
+it returns NULL on error.
 
-Link: http://lkml.kernel.org/r/157949060335.25888.13153184562531693684.stgit@devnote2
+Link: http://lkml.kernel.org/r/20200117053007.5h2juv272pokqhtq@kili.mountain
 
-Suggested-by: Randy Dunlap <rdunlap@infradead.org>
-Acked-by: Randy Dunlap <rdunlap@infradead.org>
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Fixes: 4f712a4d04a4 ("tracing/boot: Add instance node support")
+Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
 Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 ---
- Documentation/trace/boottime-trace.rst | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
+ kernel/trace/trace_boot.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/trace/boottime-trace.rst b/Documentation/trace/boottime-trace.rst
-index 1d10fdebf1b2..dcb390075ca1 100644
---- a/Documentation/trace/boottime-trace.rst
-+++ b/Documentation/trace/boottime-trace.rst
-@@ -13,7 +13,7 @@ Boot-time tracing allows users to trace boot-time process including
- device initialization with full features of ftrace including per-event
- filter and actions, histograms, kprobe-events and synthetic-events,
- and trace instances.
--Since kernel cmdline is not enough to control these complex features,
-+Since kernel command line is not enough to control these complex features,
- this uses bootconfig file to describe tracing feature programming.
+diff --git a/kernel/trace/trace_boot.c b/kernel/trace/trace_boot.c
+index fa9603dc6469..cd541ac1cbc1 100644
+--- a/kernel/trace/trace_boot.c
++++ b/kernel/trace/trace_boot.c
+@@ -322,7 +322,7 @@ trace_boot_init_instances(struct xbc_node *node)
+ 			continue;
  
- Options in the Boot Config
-@@ -21,7 +21,7 @@ Options in the Boot Config
- 
- Here is the list of available options list for boot time tracing in
- boot config file [1]_. All options are under "ftrace." or "kernel."
--refix. See kernel parameters for the options which starts
-+prefix. See kernel parameters for the options which starts
- with "kernel." prefix [2]_.
- 
- .. [1] See :ref:`Documentation/admin-guide/bootconfig.rst <bootconfig>`
-@@ -50,7 +50,7 @@ kernel.fgraph_filters = FILTER[, FILTER2...]
-    Add fgraph tracing function filters.
- 
- kernel.fgraph_notraces = FILTER[, FILTER2...]
--   Add fgraph non tracing function filters.
-+   Add fgraph non-tracing function filters.
- 
- 
- Ftrace Per-instance Options
-@@ -81,10 +81,10 @@ ftrace.[instance.INSTANCE.]tracer = TRACER
-    Set TRACER to current tracer on boot. (e.g. function)
- 
- ftrace.[instance.INSTANCE.]ftrace.filters
--   This will take an array of tracing function filter rules
-+   This will take an array of tracing function filter rules.
- 
- ftrace.[instance.INSTANCE.]ftrace.notraces
--   This will take an array of NON-tracing function filter rules
-+   This will take an array of NON-tracing function filter rules.
- 
- 
- Ftrace Per-Event Options
-@@ -93,7 +93,7 @@ Ftrace Per-Event Options
- These options are setting per-event options.
- 
- ftrace.[instance.INSTANCE.]event.GROUP.EVENT.enable
--   Enables GROUP:EVENT tracing.
-+   Enable GROUP:EVENT tracing.
- 
- ftrace.[instance.INSTANCE.]event.GROUP.EVENT.filter = FILTER
-    Set FILTER rule to the GROUP:EVENT.
-@@ -145,10 +145,10 @@ below::
-         }
-   }
- 
--Also, boottime tracing supports "instance" node, which allows us to run
-+Also, boot-time tracing supports "instance" node, which allows us to run
- several tracers for different purpose at once. For example, one tracer
--is for tracing functions start with "user\_", and others tracing "kernel\_"
--functions, you can write boot config as below::
-+is for tracing functions starting with "user\_", and others tracing
-+"kernel\_" functions, you can write boot config as below::
- 
-   ftrace.instance {
-         foo {
+ 		tr = trace_array_get_by_name(p);
+-		if (IS_ERR(tr)) {
++		if (!tr) {
+ 			pr_err("Failed to get trace instance %s\n", p);
+ 			continue;
+ 		}
 -- 
 2.24.1
 
