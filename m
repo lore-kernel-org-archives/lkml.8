@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2A2AC32771
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:51:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D81BC35242
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:51:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D7D22070A
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:51:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14845214AF
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:51:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579859471;
-	bh=hwYgZxHcGlSrfshCP7E4zwCzcEnaVE/lx8syiNUeXQw=;
+	s=default; t=1579859476;
+	bh=E0IC9ExeDYq24uIjpOHqlMMq+cnmSCI5V04gzU4UAQ8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZFqOx8VHI/KRHRA2R0c6Lc4tBccNIo0OCvsZnEScaD9xOe6clVwFI09X8U7iy5ss8
-	 dU3scFXqgL3J9KkY4DSd3pKzqOhfvdXL7FTIEZgBujR33QBhBs5OC4i2vQbKK62mv3
-	 rlznrH3AAiIPUbcMQL1JjR/f9MwaLNegAwHciYQE=
+	b=Ee6V3p/2XWVUloNZZAVxn2VV0QqEibY3ukiFHkBfuurge5TCKZYpAYuMNxova1npa
+	 Uve2FgE72qyFnSH2JBH2RYcC5kuemR7JTGNg9sDF4+sXHMjFprFJ43IR/g6/iUO+gk
+	 9xXO+OTlL+gYIMir9qGxqqxrE1oCNOZEy157jZxM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388005AbgAXJvK (ORCPT
+        id S2388010AbgAXJvP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 04:51:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52240 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 04:51:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52358 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730738AbgAXJvJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 04:51:09 -0500
+        id S1730738AbgAXJvO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 04:51:14 -0500
 Received: from localhost (unknown [145.15.244.15])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 649F0214AF;
-        Fri, 24 Jan 2020 09:51:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EF5DC214AF;
+        Fri, 24 Jan 2020 09:51:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579859469;
-        bh=hwYgZxHcGlSrfshCP7E4zwCzcEnaVE/lx8syiNUeXQw=;
+        s=default; t=1579859473;
+        bh=E0IC9ExeDYq24uIjpOHqlMMq+cnmSCI5V04gzU4UAQ8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=knt5FIzIC4fycAiDYzo7JyxIgGrJGoiBbGzMlOv7MWfVAlRHwnKTYN/RwLJ3Cjq2S
-         wj1z384utvJ1p3m+3e6/hoaV2jkm//kXbTmQVkBPneGSWESTnN/ZBp04n2TJqLuYJS
-         /EVrjZ8GlsWGLyQGhgHSjc7LWII2H5uo7f5XVvgQ=
+        b=Mot1pbovG24+PCG6LEANG/qoAezfIs3TPBwpBSxQf17ogGlXI+guKSo7lVUyKZyNs
+         /x5Nh4hemgX4W1LGPOmmxHPMVE+xG6SnOvJHVSwU6wNkp/K/8OacCzZb3s+hYOQABJ
+         n5Z4VRiDlNheMzoUFshryOhLehSwJ4xd+0bpGiHk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Axel Lin <axel.lin@ingics.com>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 115/343] regulator: pv88080: Fix array out-of-bounds access
-Date:   Fri, 24 Jan 2020 10:28:53 +0100
-Message-Id: <20200124092935.163328828@linuxfoundation.org>
+Subject: [PATCH 4.14 124/343] NFS: Fix a soft lockup in the delegation recovery code
+Date:   Fri, 24 Jan 2020 10:29:02 +0100
+Message-Id: <20200124092936.305935173@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124092919.490687572@linuxfoundation.org>
 References: <20200124092919.490687572@linuxfoundation.org>
@@ -60,34 +60,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Axel Lin <axel.lin@ingics.com>
+From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-[ Upstream commit 3c413f594c4f9df40061445667ca11a12bc8ee34 ]
+[ Upstream commit 6f9449be53f3ce383caed797708b332ede8d952c ]
 
-Fix off-by-one while iterating current_limits array.
-The valid index should be 0 ~ n_current_limits -1.
+Fix a soft lockup when NFS client delegation recovery is attempted
+but the inode is in the process of being freed. When the
+igrab(inode) call fails, and we have to restart the recovery process,
+we need to ensure that we won't attempt to recover the same delegation
+again.
 
-Fixes: 99cf3af5e2d5 ("regulator: pv88080: new regulator driver")
-Signed-off-by: Axel Lin <axel.lin@ingics.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fixes: 45870d6909d5a ("NFSv4.1: Test delegation stateids when server...")
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/regulator/pv88080-regulator.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/nfs/delegation.c | 20 ++++++++++++--------
+ fs/nfs/delegation.h |  1 +
+ 2 files changed, 13 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/regulator/pv88080-regulator.c b/drivers/regulator/pv88080-regulator.c
-index 9a08cb2de501e..6770e4de20978 100644
---- a/drivers/regulator/pv88080-regulator.c
-+++ b/drivers/regulator/pv88080-regulator.c
-@@ -279,7 +279,7 @@ static int pv88080_set_current_limit(struct regulator_dev *rdev, int min,
- 	int i;
+diff --git a/fs/nfs/delegation.c b/fs/nfs/delegation.c
+index 04d57e11577e0..09b3bcb86d328 100644
+--- a/fs/nfs/delegation.c
++++ b/fs/nfs/delegation.c
+@@ -234,6 +234,8 @@ static struct inode *nfs_delegation_grab_inode(struct nfs_delegation *delegation
+ 	spin_lock(&delegation->lock);
+ 	if (delegation->inode != NULL)
+ 		inode = igrab(delegation->inode);
++	if (!inode)
++		set_bit(NFS_DELEGATION_INODE_FREEING, &delegation->flags);
+ 	spin_unlock(&delegation->lock);
+ 	return inode;
+ }
+@@ -863,10 +865,11 @@ restart:
+ 	list_for_each_entry_rcu(server, &clp->cl_superblocks, client_link) {
+ 		list_for_each_entry_rcu(delegation, &server->delegations,
+ 								super_list) {
+-			if (test_bit(NFS_DELEGATION_RETURNING,
+-						&delegation->flags))
+-				continue;
+-			if (test_bit(NFS_DELEGATION_NEED_RECLAIM,
++			if (test_bit(NFS_DELEGATION_INODE_FREEING,
++						&delegation->flags) ||
++			    test_bit(NFS_DELEGATION_RETURNING,
++						&delegation->flags) ||
++			    test_bit(NFS_DELEGATION_NEED_RECLAIM,
+ 						&delegation->flags) == 0)
+ 				continue;
+ 			if (!nfs_sb_active(server->super))
+@@ -971,10 +974,11 @@ restart:
+ 	list_for_each_entry_rcu(server, &clp->cl_superblocks, client_link) {
+ 		list_for_each_entry_rcu(delegation, &server->delegations,
+ 								super_list) {
+-			if (test_bit(NFS_DELEGATION_RETURNING,
+-						&delegation->flags))
+-				continue;
+-			if (test_bit(NFS_DELEGATION_TEST_EXPIRED,
++			if (test_bit(NFS_DELEGATION_INODE_FREEING,
++						&delegation->flags) ||
++			    test_bit(NFS_DELEGATION_RETURNING,
++						&delegation->flags) ||
++			    test_bit(NFS_DELEGATION_TEST_EXPIRED,
+ 						&delegation->flags) == 0)
+ 				continue;
+ 			if (!nfs_sb_active(server->super))
+diff --git a/fs/nfs/delegation.h b/fs/nfs/delegation.h
+index df41d16dc6ab4..510c9edcc712d 100644
+--- a/fs/nfs/delegation.h
++++ b/fs/nfs/delegation.h
+@@ -34,6 +34,7 @@ enum {
+ 	NFS_DELEGATION_RETURNING,
+ 	NFS_DELEGATION_REVOKED,
+ 	NFS_DELEGATION_TEST_EXPIRED,
++	NFS_DELEGATION_INODE_FREEING,
+ };
  
- 	/* search for closest to maximum */
--	for (i = info->n_current_limits; i >= 0; i--) {
-+	for (i = info->n_current_limits - 1; i >= 0; i--) {
- 		if (min <= info->current_limits[i]
- 			&& max >= info->current_limits[i]) {
- 				return regmap_update_bits(rdev->regmap,
+ int nfs_inode_set_delegation(struct inode *inode, struct rpc_cred *cred, struct nfs_openres *res);
 -- 
 2.20.1
 
