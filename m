@@ -7,50 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 353CCC35242
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:58:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B821C35242
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:58:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0069920709
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:58:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11BE620709
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:58:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579859906;
-	bh=bS3BpH1jsiAl5BZqxsk4NeHi/IKq3LT4SMF9wXBNaoU=;
+	s=default; t=1579859915;
+	bh=YZQj15HykUfkx12S9MAongzeegBHADwge2FK/tjmt2k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ys+7mabodyj2KY/QRk/8GZt7EU1cKWuD8zhz2SRkVm9I5fJ7H+1o1YOW/3QsGVpdd
-	 GwRJ/TyfBiG/2E73riDrvMbtXWOpnQmIpazjpiPBMQtJronj/lHhrc2dVt4GPwceBv
-	 MRedA61aN9kM8NYMKKd1kw2Tp20cAOv17Lx3mbLM=
+	b=bpB8BbNShZkLCUVa4rsxbNeCUpjq+bzm3ElBYmmAmy4ij6c++tG0G5Ap/PlfCz1Ye
+	 KKnG5vxP6Hi9BQ2WkH0/SdOqUxP2Fz8ebKtfM36ffgPoQVujMJ3uP4X3wo9tJNdsgj
+	 pTPuNBXevV/qUgR+U1Z6oTdxDUnMyhZl5Sj9f/OQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388489AbgAXJ6Z (ORCPT
+        id S2388547AbgAXJ6e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 04:58:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33938 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 04:58:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34032 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725821AbgAXJ6Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 04:58:24 -0500
+        id S1725821AbgAXJ6d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 04:58:33 -0500
 Received: from localhost (unknown [145.15.244.15])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 949AD20718;
-        Fri, 24 Jan 2020 09:58:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 257B620709;
+        Fri, 24 Jan 2020 09:58:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579859903;
-        bh=bS3BpH1jsiAl5BZqxsk4NeHi/IKq3LT4SMF9wXBNaoU=;
+        s=default; t=1579859912;
+        bh=YZQj15HykUfkx12S9MAongzeegBHADwge2FK/tjmt2k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tkgmu2i8Ly6X3me6SrO4MhSleakmEVwXZuv1SahmA1p6837yQBBrWt0Z8AISfaaWB
-         xZYHrzjM4xIeHLLpDS+kXYD7/nBQ+b6v77ExnSMq0eLd7FSVU6DKxdc+kOKCib/tZP
-         uRTGgsP3n0ABq6se92fNzmJnC7oKc8FaahnmdzfA=
+        b=vo7vKxIAygQ1hHeYfwZGeNE3zMzeP/qZP96oVRzfPDLJ7bkQralL6wZng99HkU/ws
+         uzBt67TecdevcQEwUmW7T2LyrRhrKQeVM/Sc4u1FduNHPTNU1Tj6yevHC/dthAC4yS
+         yCpGDNDllqhoLDfuwjnzZ/kD+DOggfQA9qzv/iCU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Cornelia Huck <cohuck@redhat.com>,
-        Kirti Wankhede <kwankhede@nvidia.com>,
-        Maxim Levitsky <mlevitsk@redhat.com>,
-        Parav Pandit <parav@mellanox.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 196/343] vfio/mdev: Avoid release parent reference during error path
-Date:   Fri, 24 Jan 2020 10:30:14 +0100
-Message-Id: <20200124092945.761803829@linuxfoundation.org>
+        stable@vger.kernel.org, Jon Hunter <jonathanh@nvidia.com>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 212/343] dmaengine: tegra210-adma: Fix crash during probe
+Date:   Fri, 24 Jan 2020 10:30:30 +0100
+Message-Id: <20200124092947.960310264@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124092919.490687572@linuxfoundation.org>
 References: <20200124092919.490687572@linuxfoundation.org>
@@ -63,38 +59,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Parav Pandit <parav@mellanox.com>
+From: Jon Hunter <jonathanh@nvidia.com>
 
-[ Upstream commit 60e7f2c3fe9919cee9534b422865eed49f4efb15 ]
+[ Upstream commit b53611fb1ce9b1786bd18205473e0c1d6bfa8934 ]
 
-During mdev parent registration in mdev_register_device(),
-if parent device is duplicate, it releases the reference of existing
-parent device.
-This is incorrect. Existing parent device should not be touched.
+Commit f33e7bb3eb92 ("dmaengine: tegra210-adma: restore channel status")
+added support to save and restore the DMA channel registers when runtime
+suspending the ADMA. This change is causing the kernel to crash when
+probing the ADMA, if the device is probed deferred when looking up the
+channel interrupts. The crash occurs because not all of the channel base
+addresses have been setup at this point and in the clean-up path of the
+probe, pm_runtime_suspend() is called invoking its callback which
+expects all the channel base addresses to be initialised.
 
-Fixes: 7b96953bc640 ("vfio: Mediated device Core driver")
-Reviewed-by: Cornelia Huck <cohuck@redhat.com>
-Reviewed-by: Kirti Wankhede <kwankhede@nvidia.com>
-Reviewed-by: Maxim Levitsky <mlevitsk@redhat.com>
-Signed-off-by: Parav Pandit <parav@mellanox.com>
-Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
+Although this could be fixed by simply checking for a NULL address, on
+further review of the driver it seems more appropriate that we only call
+pm_runtime_get_sync() after all the channel interrupts and base
+addresses have been configured. Therefore, fix this crash by moving the
+calls to pm_runtime_enable(), pm_runtime_get_sync() and
+tegra_adma_init() after the DMA channels have been initialised.
+
+Fixes: f33e7bb3eb92 ("dmaengine: tegra210-adma: restore channel status")
+
+Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/vfio/mdev/mdev_core.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/dma/tegra210-adma.c | 26 +++++++++++++-------------
+ 1 file changed, 13 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/vfio/mdev/mdev_core.c b/drivers/vfio/mdev/mdev_core.c
-index 0212f0ee8aea7..8cfa712308773 100644
---- a/drivers/vfio/mdev/mdev_core.c
-+++ b/drivers/vfio/mdev/mdev_core.c
-@@ -182,6 +182,7 @@ int mdev_register_device(struct device *dev, const struct mdev_parent_ops *ops)
- 	/* Check for duplicate */
- 	parent = __find_parent_device(dev);
- 	if (parent) {
-+		parent = NULL;
- 		ret = -EEXIST;
- 		goto add_dev_err;
+diff --git a/drivers/dma/tegra210-adma.c b/drivers/dma/tegra210-adma.c
+index ac2a6b800db3e..4f4733d831a1a 100644
+--- a/drivers/dma/tegra210-adma.c
++++ b/drivers/dma/tegra210-adma.c
+@@ -744,16 +744,6 @@ static int tegra_adma_probe(struct platform_device *pdev)
+ 		return PTR_ERR(tdma->ahub_clk);
  	}
+ 
+-	pm_runtime_enable(&pdev->dev);
+-
+-	ret = pm_runtime_get_sync(&pdev->dev);
+-	if (ret < 0)
+-		goto rpm_disable;
+-
+-	ret = tegra_adma_init(tdma);
+-	if (ret)
+-		goto rpm_put;
+-
+ 	INIT_LIST_HEAD(&tdma->dma_dev.channels);
+ 	for (i = 0; i < tdma->nr_channels; i++) {
+ 		struct tegra_adma_chan *tdc = &tdma->channels[i];
+@@ -771,6 +761,16 @@ static int tegra_adma_probe(struct platform_device *pdev)
+ 		tdc->tdma = tdma;
+ 	}
+ 
++	pm_runtime_enable(&pdev->dev);
++
++	ret = pm_runtime_get_sync(&pdev->dev);
++	if (ret < 0)
++		goto rpm_disable;
++
++	ret = tegra_adma_init(tdma);
++	if (ret)
++		goto rpm_put;
++
+ 	dma_cap_set(DMA_SLAVE, tdma->dma_dev.cap_mask);
+ 	dma_cap_set(DMA_PRIVATE, tdma->dma_dev.cap_mask);
+ 	dma_cap_set(DMA_CYCLIC, tdma->dma_dev.cap_mask);
+@@ -812,13 +812,13 @@ static int tegra_adma_probe(struct platform_device *pdev)
+ 
+ dma_remove:
+ 	dma_async_device_unregister(&tdma->dma_dev);
+-irq_dispose:
+-	while (--i >= 0)
+-		irq_dispose_mapping(tdma->channels[i].irq);
+ rpm_put:
+ 	pm_runtime_put_sync(&pdev->dev);
+ rpm_disable:
+ 	pm_runtime_disable(&pdev->dev);
++irq_dispose:
++	while (--i >= 0)
++		irq_dispose_mapping(tdma->channels[i].irq);
+ 
+ 	return ret;
+ }
 -- 
 2.20.1
 
