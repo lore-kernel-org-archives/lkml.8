@@ -2,91 +2,101 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC914C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:42:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D16CC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:42:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88ACF206F0
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:42:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CGzKQsaT"
+	by mail.kernel.org (Postfix) with ESMTP id 63653206F0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:42:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579866165;
+	bh=/n7YcuZlOmzfYT8zxRWGW7Iz53ruotEq+5osQ/b2GX4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=jToqkKY2JSnF/HipE2fZtbWEwbTbN0h0WdpL9BIpGzHqsp1+9FdzhkPYVOolrkp8k
+	 KgvaHnGU6TpBNJaU0HW77WJrHkjd3tcaJadtR8ril+GF2mUwRnFdvMfgmrZHAqgBbh
+	 Svr69NkfjDQyPCCFIDE8d92TtgKJlypJxhydDev8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391239AbgAXLml (ORCPT
+        id S2389896AbgAXLLj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:42:41 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:56044 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729991AbgAXLLx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:11:53 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579864312;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:in-reply-to:in-reply-to:references:references;
-        bh=Ch982V+umlLpw6I38JUNUVDMopuxgmpFcPRNY4jO2GY=;
-        b=CGzKQsaTcSfXPQP+TvTbr/Sf+zpEp9XNTKmfAqtNW71I9Vzl/nt9WilzkMTeGXrnAjnxlH
-        2R74bJq9V0dKdRyfsHIGqYia85dW00HuAfvdkw2yBGiRaK7ueav7H1ZpU4RKetE7uh9KmV
-        B+EtKfa1tp6BJ6DPLBgZ6ff2L12kI60=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-226-nbWU-IMmMe6XTE5Fhmb2YA-1; Fri, 24 Jan 2020 06:11:50 -0500
-X-MC-Unique: nbWU-IMmMe6XTE5Fhmb2YA-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Fri, 24 Jan 2020 06:11:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47588 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388283AbgAXLLe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:11:34 -0500
+Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 805B3DB60;
-        Fri, 24 Jan 2020 11:11:49 +0000 (UTC)
-Received: from intel-purley-fpgabmp-02.ml3.eng.bos.redhat.com (intel-purley-fpgabmp-02.ml3.eng.bos.redhat.com [10.19.176.206])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C93221001925;
-        Fri, 24 Jan 2020 11:11:48 +0000 (UTC)
-From:   Scott Wood <swood@redhat.com>
-To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc:     linux-rt-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Scott Wood <swood@redhat.com>
-Subject: [PATCH RT 2/2] sched: migrate_enable: Remove __schedule() call
-Date:   Fri, 24 Jan 2020 06:11:47 -0500
-Message-Id: <1579864307-13093-2-git-send-email-swood@redhat.com>
-In-Reply-To: <1579864307-13093-1-git-send-email-swood@redhat.com>
-References: <1579864307-13093-1-git-send-email-swood@redhat.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+        by mail.kernel.org (Postfix) with ESMTPSA id 232B82075D;
+        Fri, 24 Jan 2020 11:11:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579864293;
+        bh=/n7YcuZlOmzfYT8zxRWGW7Iz53ruotEq+5osQ/b2GX4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=r2dTPYwEw5acbkJ1FsW8HjpTfA1jshwGQg0gWDJ8Bmbe+5bTsmL6nG94MQ9RhdEqV
+         XfmLKU/8vgz7dN4r31WnwhH7pCUds4QwwTBBpk7ix3zHbv2DyF+Mdog4aUxrqcuQq8
+         uGs43MeIk3OxcS360oS8pWRl2p4JvHdRaZ4Ao4iE=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 218/639] drm/nouveau/bios/ramcfg: fix missing parentheses when calculating RON
+Date:   Fri, 24 Jan 2020 10:26:28 +0100
+Message-Id: <20200124093114.264419728@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
+References: <20200124093047.008739095@linuxfoundation.org>
+User-Agent: quilt/0.66
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We can rely on preempt_enable() to schedule.  Besides simplifying the
-code, this potentially allows sequences such as the following to be
-permitted:
+From: Colin Ian King <colin.king@canonical.com>
 
-migrate_disable();
-preempt_disable();
-migrate_enable();
-preempt_enable();
+[ Upstream commit 13649101a25c53c87f4ab98a076dfe61f3636ab1 ]
 
-Suggested-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Signed-off-by: Scott Wood <swood@redhat.com>
+Currently, the expression for calculating RON is always going to result
+in zero no matter the value of ram->mr[1] because the ! operator has
+higher precedence than the shift >> operator.  I believe the missing
+parentheses around the expression before appying the ! operator will
+result in the desired result.
+
+[ Note, not tested ]
+
+Detected by CoveritScan, CID#1324005 ("Operands don't affect result")
+
+Fixes: c25bf7b6155c ("drm/nouveau/bios/ramcfg: Separate out RON pull value")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/sched/core.c | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/gpu/drm/nouveau/nvkm/subdev/fb/gddr3.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 7713e9c34ad1..ea0536461981 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -8248,7 +8248,6 @@ void migrate_enable(void)
- 
- 		stop_one_cpu_nowait(task_cpu(p), migration_cpu_stop,
- 				    arg, work);
--		__schedule(true);
- 	}
- 
- out:
+diff --git a/drivers/gpu/drm/nouveau/nvkm/subdev/fb/gddr3.c b/drivers/gpu/drm/nouveau/nvkm/subdev/fb/gddr3.c
+index 60ece0a8a2e1b..1d2d6bae73cd1 100644
+--- a/drivers/gpu/drm/nouveau/nvkm/subdev/fb/gddr3.c
++++ b/drivers/gpu/drm/nouveau/nvkm/subdev/fb/gddr3.c
+@@ -87,7 +87,7 @@ nvkm_gddr3_calc(struct nvkm_ram *ram)
+ 		WR  = (ram->next->bios.timing[2] & 0x007f0000) >> 16;
+ 		/* XXX: Get these values from the VBIOS instead */
+ 		DLL = !(ram->mr[1] & 0x1);
+-		RON = !(ram->mr[1] & 0x300) >> 8;
++		RON = !((ram->mr[1] & 0x300) >> 8);
+ 		break;
+ 	default:
+ 		return -ENOSYS;
 -- 
-1.8.3.1
+2.20.1
+
+
 
