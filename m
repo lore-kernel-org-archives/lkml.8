@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CCCBC32771
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:11:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20487C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:11:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E610214AF
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:11:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7D9E21569
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:11:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579864286;
-	bh=xvwWUmBNjpW8jI4djRKxnSLiyzzUVkdt2qgoPNZyf+A=;
+	s=default; t=1579864291;
+	bh=A2VtvgBGwinZJGuqt+W1zTJyz8M9bihwlos2OX8OKeg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ntaObcNQzo+seRVdv6bz9uwvvx3al6LDrswrsqzPe7vVIRY8gVdOC39iD7EBtPNh1
-	 cs27ybYpDqYTHcJwPiDbfg2hExCdj9IW3A60TIU7YoyDwhFYHR7QAJiVa39+KIyksJ
-	 gqdh0zIoFDKQBT41+FG2tE8zv54y6cK8VCbtqLpw=
+	b=t5tRWqAZ15wUZhZpzQJthgt9TOba0SGqldNJibCXXl4uVOSDrAJq6HdjwTi0SNd9x
+	 iyt3tecCdQsCGThObXfgZ33sA6UyDwXbN4vG7U+Zf9qhCMMpeqGkaF72Fsbwp4hrn5
+	 zBseGTsrswaKPnkYkTkuIzd5A/rDWzBS4DBTcNiU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389887AbgAXLLZ (ORCPT
+        id S2388434AbgAXLLa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:11:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47228 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 06:11:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47336 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387621AbgAXLLU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:11:20 -0500
+        id S2387621AbgAXLL1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:11:27 -0500
 Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0B19E2071A;
-        Fri, 24 Jan 2020 11:11:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 033E02075D;
+        Fri, 24 Jan 2020 11:11:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579864279;
-        bh=xvwWUmBNjpW8jI4djRKxnSLiyzzUVkdt2qgoPNZyf+A=;
+        s=default; t=1579864286;
+        bh=A2VtvgBGwinZJGuqt+W1zTJyz8M9bihwlos2OX8OKeg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oUCMiwbPy57mUqA1XJ0EAGFBu2L0D+R15wmnSNO+rwHHQyKiyaK7ksKQM39CvCyby
-         1kFQ+Bh1miAgMMQddlZvXLgzswTWRmexobfqqIEBlFJrGujvJARkYjbkFwzBye9tg6
-         C0X76Sz06IWFxSrqevGaPYBTOYxXPTrIueP2NExg=
+        b=hVgy5te8nmjMIsSmxs3bEpEPAZeAZsNm1oijDthOG+qviQBBLusRXBSQh45WtEOyP
+         /PXUmIrDh2aW0L5c5n6C65Or9ZZamBbXSLV57qcvR3tUVD0IhjJTnIkVL0sp0SYl6M
+         6HPXf1P+6aFdd5/xu+706f8G0+NyNPMWrf/3I0h4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, John David Anglin <dave.anglin@bell.net>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 210/639] dmaengine: mv_xor: Use correct device for DMA API
-Date:   Fri, 24 Jan 2020 10:26:20 +0100
-Message-Id: <20200124093113.305666712@linuxfoundation.org>
+        stable@vger.kernel.org, Russel King <linux@armlinux.org.uk>,
+        Franky Lin <franky.lin@broadcom.com>,
+        Arend van Spriel <arend.vanspriel@broadcom.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 212/639] brcmfmac: create debugfs files for bus-specific layer
+Date:   Fri, 24 Jan 2020 10:26:22 +0100
+Message-Id: <20200124093113.542375721@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
 References: <20200124093047.008739095@linuxfoundation.org>
@@ -61,51 +62,113 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Robin Murphy <robin.murphy@arm.com>
+From: Arend van Spriel <arend.vanspriel@broadcom.com>
 
-[ Upstream commit 3e5daee5ecf314da33a890fabaa2404244cd2a36 ]
+[ Upstream commit aaf6a5e86e36766abbeedf220462bde8031f9a72 ]
 
-Using dma_dev->dev for mappings before it's assigned with the correct
-device is unlikely to work as expected, and with future dma-direct
-changes, passing a NULL device may end up crashing entirely. I don't
-know enough about this hardware or the mv_xor_prep_dma_interrupt()
-operation to implement the appropriate error-handling logic that would
-have revealed those dma_map_single() calls failing on arm64 for as long
-as the driver has been enabled there, but moving the assignment earlier
-will at least make the current code operate as intended.
+Since we moved the drivers debugfs directory under ieee80211 debugfs the
+debugfs entries need to be added after wiphy_register() has been called.
+For most part that has been done accordingly, but for the debugfs entries
+added by SDIO it was not and failed silently. This patch fixes that by
+adding a bus-layer callback for it.
 
-Fixes: 22843545b200 ("dma: mv_xor: Add support for DMA_INTERRUPT")
-Reported-by: John David Anglin <dave.anglin@bell.net>
-Tested-by: John David Anglin <dave.anglin@bell.net>
-Signed-off-by: Robin Murphy <robin.murphy@arm.com>
-Acked-by: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Tested-by: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Fixes: 856d5a011c86 ("brcmfmac: allocate struct brcmf_pub instance using wiphy_new()")
+Reported-by: Russel King <linux@armlinux.org.uk>
+Reviewed-by: Franky Lin <franky.lin@broadcom.com>
+Signed-off-by: Arend van Spriel <arend.vanspriel@broadcom.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/mv_xor.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ .../net/wireless/broadcom/brcm80211/brcmfmac/bus.h   | 10 ++++++++++
+ .../net/wireless/broadcom/brcm80211/brcmfmac/core.c  |  1 +
+ .../net/wireless/broadcom/brcm80211/brcmfmac/sdio.c  | 12 +++++++-----
+ 3 files changed, 18 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/dma/mv_xor.c b/drivers/dma/mv_xor.c
-index 969534c1a6c63..abc8d3e0487b8 100644
---- a/drivers/dma/mv_xor.c
-+++ b/drivers/dma/mv_xor.c
-@@ -1059,6 +1059,7 @@ mv_xor_channel_add(struct mv_xor_device *xordev,
- 		mv_chan->op_in_desc = XOR_MODE_IN_DESC;
+diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/bus.h b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/bus.h
+index c4965184cdf37..3d441c5c745cc 100644
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/bus.h
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/bus.h
+@@ -90,6 +90,7 @@ struct brcmf_bus_ops {
+ 	int (*get_memdump)(struct device *dev, void *data, size_t len);
+ 	int (*get_fwname)(struct device *dev, const char *ext,
+ 			  unsigned char *fw_name);
++	void (*debugfs_create)(struct device *dev);
+ };
  
- 	dma_dev = &mv_chan->dmadev;
-+	dma_dev->dev = &pdev->dev;
- 	mv_chan->xordev = xordev;
  
- 	/*
-@@ -1091,7 +1092,6 @@ mv_xor_channel_add(struct mv_xor_device *xordev,
- 	dma_dev->device_free_chan_resources = mv_xor_free_chan_resources;
- 	dma_dev->device_tx_status = mv_xor_status;
- 	dma_dev->device_issue_pending = mv_xor_issue_pending;
--	dma_dev->dev = &pdev->dev;
+@@ -235,6 +236,15 @@ int brcmf_bus_get_fwname(struct brcmf_bus *bus, const char *ext,
+ 	return bus->ops->get_fwname(bus->dev, ext, fw_name);
+ }
  
- 	/* set prep routines based on capability */
- 	if (dma_has_cap(DMA_INTERRUPT, dma_dev->cap_mask))
++static inline
++void brcmf_bus_debugfs_create(struct brcmf_bus *bus)
++{
++	if (!bus->ops->debugfs_create)
++		return;
++
++	return bus->ops->debugfs_create(bus->dev);
++}
++
+ /*
+  * interface functions from common layer
+  */
+diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/core.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/core.c
+index 584e05fdca6ad..9d7b8834b8545 100644
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/core.c
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/core.c
+@@ -1105,6 +1105,7 @@ static int brcmf_bus_started(struct brcmf_pub *drvr, struct cfg80211_ops *ops)
+ 	brcmf_debugfs_add_entry(drvr, "revinfo", brcmf_revinfo_read);
+ 	brcmf_feat_debugfs_create(drvr);
+ 	brcmf_proto_debugfs_create(drvr);
++	brcmf_bus_debugfs_create(bus_if);
+ 
+ 	return 0;
+ 
+diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
+index abaed2fa2defd..5c3b62e619807 100644
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
+@@ -3131,9 +3131,12 @@ static int brcmf_debugfs_sdio_count_read(struct seq_file *seq, void *data)
+ 	return 0;
+ }
+ 
+-static void brcmf_sdio_debugfs_create(struct brcmf_sdio *bus)
++static void brcmf_sdio_debugfs_create(struct device *dev)
+ {
+-	struct brcmf_pub *drvr = bus->sdiodev->bus_if->drvr;
++	struct brcmf_bus *bus_if = dev_get_drvdata(dev);
++	struct brcmf_pub *drvr = bus_if->drvr;
++	struct brcmf_sdio_dev *sdiodev = bus_if->bus_priv.sdio;
++	struct brcmf_sdio *bus = sdiodev->bus;
+ 	struct dentry *dentry = brcmf_debugfs_get_devdir(drvr);
+ 
+ 	if (IS_ERR_OR_NULL(dentry))
+@@ -3153,7 +3156,7 @@ static int brcmf_sdio_checkdied(struct brcmf_sdio *bus)
+ 	return 0;
+ }
+ 
+-static void brcmf_sdio_debugfs_create(struct brcmf_sdio *bus)
++static void brcmf_sdio_debugfs_create(struct device *dev)
+ {
+ }
+ #endif /* DEBUG */
+@@ -3438,8 +3441,6 @@ static int brcmf_sdio_bus_preinit(struct device *dev)
+ 	if (bus->rxbuf)
+ 		bus->rxblen = value;
+ 
+-	brcmf_sdio_debugfs_create(bus);
+-
+ 	/* the commands below use the terms tx and rx from
+ 	 * a device perspective, ie. bus:txglom affects the
+ 	 * bus transfers from device to host.
+@@ -4050,6 +4051,7 @@ static const struct brcmf_bus_ops brcmf_sdio_bus_ops = {
+ 	.get_ramsize = brcmf_sdio_bus_get_ramsize,
+ 	.get_memdump = brcmf_sdio_bus_get_memdump,
+ 	.get_fwname = brcmf_sdio_get_fwname,
++	.debugfs_create = brcmf_sdio_debugfs_create
+ };
+ 
+ #define BRCMF_SDIO_FW_CODE	0
 -- 
 2.20.1
 
