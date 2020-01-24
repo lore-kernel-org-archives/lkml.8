@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1058C32771
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:25:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E93BC35244
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:25:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A585F22522
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:25:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55C5C2072C
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:25:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579875910;
-	bh=JacYCh+mGWW/F/w+j0QpaISIlwxB72yrB1+Wv1wznAU=;
+	s=default; t=1579875914;
+	bh=t7xgp0eBt/9ZJZ3LBVQDnnhYCOpd/zyuwsptUk1VxEI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=V0/HEez/UKNwjlu8WyAMETlLd1pqhsH0o6ClSXha3yUP6uM97TtBGQSxefS3LnvQu
-	 Z4lhdn4h6ssYM+nGKJaHXE11q6puo6r43Auh/IiMcRT0VV3rai0fSeziKcpoPnjl4I
-	 8xwRLCR4wPzNuzFSZMEzlFjqvLYaPyCjREL/VgAQ=
+	b=s0D2rVxwNxvOnaa4pkYgB87CORZ8fe91FH4FiNFRDSJbpXszfb4Z7P1XgPfb4RrHT
+	 dt9t2jdTSnx+b6QHxSCbiAMh+pHKIVW87dLIK5pdbuN7WACkRwPSaENrJrG/twX6Sg
+	 wbvipHRAlNtNnMian6TZ28a72cMyIIQDvP9ihx5Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392276AbgAXOV4 (ORCPT
+        id S2392496AbgAXOZN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 09:21:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43884 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 09:25:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43972 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392244AbgAXOVw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 09:21:52 -0500
+        id S2392266AbgAXOVz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 09:21:55 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C946321556;
-        Fri, 24 Jan 2020 14:21:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5B16E218AC;
+        Fri, 24 Jan 2020 14:21:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579875711;
-        bh=JacYCh+mGWW/F/w+j0QpaISIlwxB72yrB1+Wv1wznAU=;
+        s=default; t=1579875715;
+        bh=t7xgp0eBt/9ZJZ3LBVQDnnhYCOpd/zyuwsptUk1VxEI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1YALEhSrm+7/TqfiGbiZLaOgOUYtYmFnOXevbzK16AHkYPexjjKpgpHJj3+ZWx5s8
-         3LTsJ0H0qYSxF4ZMKzjTzExHPOn/ygEiZYK7MxNisbsIBVllgnHU067ZYkjypOrXZu
-         aMDpWi+lBb/WjYuiev+91jh8ad0y0+9TvjV2Jd0A=
+        b=hXJ4MBnfR7iVM3bbzKitUnOC6uZIyAUERbnBqJdTuOdYrNf5hoCw2/e5IxjSchF2e
+         cLDQpZAk+2K9Ng+0FaqazHgpqa/5gYTzdy527kqZCDpsVUBCUNZmB9pxb1w6SKRPRC
+         EBKjqeBeDOP89sVNZCcUUcDGCS+zMQxyWbO0JKEc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mohammed Gamal <mgamal@redhat.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
+Cc:     Yonglong Liu <liuyonglong@huawei.com>,
         "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, devel@linuxdriverproject.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 27/32] hv_netvsc: Fix memory leak when removing rndis device
-Date:   Fri, 24 Jan 2020 09:21:14 -0500
-Message-Id: <20200124142119.30484-27-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 30/32] net: hns: fix soft lockup when there is not enough memory
+Date:   Fri, 24 Jan 2020 09:21:17 -0500
+Message-Id: <20200124142119.30484-30-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200124142119.30484-1-sashal@kernel.org>
 References: <20200124142119.30484-1-sashal@kernel.org>
@@ -61,63 +59,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mohammed Gamal <mgamal@redhat.com>
+From: Yonglong Liu <liuyonglong@huawei.com>
 
-[ Upstream commit 536dc5df2808efbefc5acee334d3c4f701790ec0 ]
+[ Upstream commit 49edd6a2c456150870ddcef5b7ed11b21d849e13 ]
 
-kmemleak detects the following memory leak when hot removing
-a network device:
+When there is not enough memory and napi_alloc_skb() return NULL,
+the HNS driver will print error message, and than try again, if
+the memory is not enough for a while, huge error message and the
+retry operation will cause soft lockup.
 
-unreferenced object 0xffff888083f63600 (size 256):
-  comm "kworker/0:1", pid 12, jiffies 4294831717 (age 1113.676s)
-  hex dump (first 32 bytes):
-    00 40 c7 33 80 88 ff ff 00 00 00 00 10 00 00 00  .@.3............
-    00 00 00 00 ad 4e ad de ff ff ff ff 00 00 00 00  .....N..........
-  backtrace:
-    [<00000000d4a8f5be>] rndis_filter_device_add+0x117/0x11c0 [hv_netvsc]
-    [<000000009c02d75b>] netvsc_probe+0x5e7/0xbf0 [hv_netvsc]
-    [<00000000ddafce23>] vmbus_probe+0x74/0x170 [hv_vmbus]
-    [<00000000046e64f1>] really_probe+0x22f/0xb50
-    [<000000005cc35eb7>] driver_probe_device+0x25e/0x370
-    [<0000000043c642b2>] bus_for_each_drv+0x11f/0x1b0
-    [<000000005e3d09f0>] __device_attach+0x1c6/0x2f0
-    [<00000000a72c362f>] bus_probe_device+0x1a6/0x260
-    [<0000000008478399>] device_add+0x10a3/0x18e0
-    [<00000000cf07b48c>] vmbus_device_register+0xe7/0x1e0 [hv_vmbus]
-    [<00000000d46cf032>] vmbus_add_channel_work+0x8ab/0x1770 [hv_vmbus]
-    [<000000002c94bb64>] process_one_work+0x919/0x17d0
-    [<0000000096de6781>] worker_thread+0x87/0xb40
-    [<00000000fbe7397e>] kthread+0x333/0x3f0
-    [<000000004f844269>] ret_from_fork+0x3a/0x50
+When napi_alloc_skb() return NULL because of no memory, we can
+get a warn_alloc() call trace, so this patch deletes the error
+message. We already use polling mode to handle irq, but the
+retry operation will render the polling weight inactive, this
+patch just return budget when the rx is not completed to avoid
+dead loop.
 
-rndis_filter_device_add() allocates an instance of struct rndis_device
-which never gets deallocated as rndis_filter_device_remove() sets
-net_device->extension which points to the rndis_device struct to NULL,
-leaving the rndis_device dangling.
-
-Since net_device->extension is eventually freed in free_netvsc_device(),
-we refrain from setting it to NULL inside rndis_filter_device_remove()
-
-Signed-off-by: Mohammed Gamal <mgamal@redhat.com>
-Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
+Fixes: 36eedfde1a36 ("net: hns: Optimize hns_nic_common_poll for better performance")
+Fixes: b5996f11ea54 ("net: add Hisilicon Network Subsystem basic ethernet support")
+Signed-off-by: Yonglong Liu <liuyonglong@huawei.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/hyperv/rndis_filter.c | 2 --
- 1 file changed, 2 deletions(-)
+ drivers/net/ethernet/hisilicon/hns/hns_enet.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/drivers/net/hyperv/rndis_filter.c b/drivers/net/hyperv/rndis_filter.c
-index b19557c035f25..aa0bbffe49005 100644
---- a/drivers/net/hyperv/rndis_filter.c
-+++ b/drivers/net/hyperv/rndis_filter.c
-@@ -1331,8 +1331,6 @@ void rndis_filter_device_remove(struct hv_device *dev,
- 	/* Halt and release the rndis device */
- 	rndis_filter_halt_device(rndis_dev);
+diff --git a/drivers/net/ethernet/hisilicon/hns/hns_enet.c b/drivers/net/ethernet/hisilicon/hns/hns_enet.c
+index b681c07b33fb6..0733745f4be6c 100644
+--- a/drivers/net/ethernet/hisilicon/hns/hns_enet.c
++++ b/drivers/net/ethernet/hisilicon/hns/hns_enet.c
+@@ -669,7 +669,6 @@ static int hns_nic_poll_rx_skb(struct hns_nic_ring_data *ring_data,
+ 	skb = *out_skb = napi_alloc_skb(&ring_data->napi,
+ 					HNS_RX_HEAD_SIZE);
+ 	if (unlikely(!skb)) {
+-		netdev_err(ndev, "alloc rx skb fail\n");
+ 		ring->stats.sw_err_cnt++;
+ 		return -ENOMEM;
+ 	}
+@@ -1180,7 +1179,6 @@ static int hns_nic_common_poll(struct napi_struct *napi, int budget)
+ 		container_of(napi, struct hns_nic_ring_data, napi);
+ 	struct hnae_ring *ring = ring_data->ring;
  
--	net_dev->extension = NULL;
--
- 	netvsc_device_remove(dev);
- }
+-try_again:
+ 	clean_complete += ring_data->poll_one(
+ 				ring_data, budget - clean_complete,
+ 				ring_data->ex_process);
+@@ -1190,7 +1188,7 @@ try_again:
+ 			napi_complete(napi);
+ 			ring->q->handle->dev->ops->toggle_ring_irq(ring, 0);
+ 		} else {
+-			goto try_again;
++			return budget;
+ 		}
+ 	}
  
 -- 
 2.20.1
