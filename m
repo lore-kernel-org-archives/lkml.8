@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25DDEC35242
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 10:06:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13794C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 10:06:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F115020709
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 10:06:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBE752077C
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 10:06:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579860388;
-	bh=HtL+lCOZsA0ZW34FVazRHijkWwrTjCjjW+sTlvrtEko=;
+	s=default; t=1579860392;
+	bh=umHWFYJzusd7HZcknXVUAHc3SH/nj0EXnjr3zi4b2nU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RIMAgeKjia4NzxReJGWGxXDLU9MOWsYYrjsN7YLoZQOtttOyCv70PYIZsv3J1R7JJ
-	 g/EA2aROwlDTgoLmFasX5MXxf/06UoWrUMvvWgkm1C9bLnF8OVwXbNUUO0Nowf1hEW
-	 yUMSolf8yMVqfDvRXx1I/h6Uc/+9+ZiBvFjho0Bw=
+	b=kkVlgS1j+aVws4ZPzDRks6a1iuYSFObGXdXfDRkRV78q75BLgGFIhlY0mrpH7DI4f
+	 qMYAX2c3mj4VK4bcLiGf/VVUWH4N2RRwZvs9JU0YtylJ6gJYTYFKbuHNXNg/STgZ/C
+	 XEzjlUBYIdo6egwe1kY4arOTaeYEq3F9DGbQBZvw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389296AbgAXKG1 (ORCPT
+        id S2389304AbgAXKGc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 05:06:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42996 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 05:06:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43068 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388684AbgAXKG0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 05:06:26 -0500
+        id S2388684AbgAXKGa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 05:06:30 -0500
 Received: from localhost (unknown [145.15.244.15])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 90A8720709;
-        Fri, 24 Jan 2020 10:06:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 757CC20709;
+        Fri, 24 Jan 2020 10:06:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579860385;
-        bh=HtL+lCOZsA0ZW34FVazRHijkWwrTjCjjW+sTlvrtEko=;
+        s=default; t=1579860389;
+        bh=umHWFYJzusd7HZcknXVUAHc3SH/nj0EXnjr3zi4b2nU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=O+kLQhx6ASpFoVSPDB6GsgK1mfaEIL9PHSdOGoeHcteXCS9qOxnDcBOh6gDX5IqKa
-         ZJ+hYUVtGW0V920jH0LjZmoly8HwSaKN0+I4z+Z1Pb39YmjhdL7AYBZLEEb2FCIQxu
-         OGUWEEboycOXyIrXx6d07zW1LwSTeScOs+Dh9eyw=
+        b=C1sydOmPQROSjvBgSiMILVILoupZiKfOkNFhZeYdpix938HHJD9StJAN5KnfmThxL
+         5A6NUIDdvc01nKqFNt3qPX302xCGaa9sGtRGiKN7IgpmGJ8LLEa2+9JUqtr5gGzEzT
+         1Hrd8j1ZvumaF+E+m31+jIw0tzisoyxHqplPNXGI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hai Li <hali@codeaurora.org>,
-        Rob Clark <robdclark@gmail.com>,
-        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
-        Sean Paul <sean@poorly.run>, Sean Paul <seanpaul@chromium.org>,
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Igor Russkikh <igor.russkikh@aquantia.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 325/343] drm/msm/dsi: Implement reset correctly
-Date:   Fri, 24 Jan 2020 10:32:23 +0100
-Message-Id: <20200124093002.523935510@linuxfoundation.org>
+Subject: [PATCH 4.14 308/343] net: aquantia: Fix aq_vec_isr_legacy() return value
+Date:   Fri, 24 Jan 2020 10:32:06 +0100
+Message-Id: <20200124093000.388554139@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124092919.490687572@linuxfoundation.org>
 References: <20200124092919.490687572@linuxfoundation.org>
@@ -62,71 +61,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit 78e31c42261779a01bc73472d0f65f15378e9de3 ]
+[ Upstream commit 31aefe14bc9f56566041303d733fda511d3a1c3e ]
 
-On msm8998, vblank timeouts are observed because the DSI controller is not
-reset properly, which ends up stalling the MDP.  This is because the reset
-logic is not correct per the hardware documentation.
+The irqreturn_t type is an enum or an unsigned int in GCC.  That
+creates to problems because it can't detect if the
+self->aq_hw_ops->hw_irq_read() call fails and at the end the function
+always returns IRQ_HANDLED.
 
-The documentation states that after asserting reset, software should wait
-some time (no indication of how long), or poll the status register until it
-returns 0 before deasserting reset.
+drivers/net/ethernet/aquantia/atlantic/aq_vec.c:316 aq_vec_isr_legacy() warn: unsigned 'err' is never less than zero.
+drivers/net/ethernet/aquantia/atlantic/aq_vec.c:329 aq_vec_isr_legacy() warn: always true condition '(err >= 0) => (0-u32max >= 0)'
 
-wmb() is insufficient for this purpose since it just ensures ordering, not
-timing between writes.  Since asserting and deasserting reset occurs on the
-same register, ordering is already guaranteed by the architecture, making
-the wmb extraneous.
-
-Since we would define a timeout for polling the status register to avoid a
-possible infinite loop, lets just use a static delay of 20 ms, since 16.666
-ms is the time available to process one frame at 60 fps.
-
-Fixes: a689554ba6ed ("drm/msm: Initial add DSI connector support")
-Cc: Hai Li <hali@codeaurora.org>
-Cc: Rob Clark <robdclark@gmail.com>
-Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Reviewed-by: Sean Paul <sean@poorly.run>
-[seanpaul renamed RESET_DELAY to DSI_RESET_TOGGLE_DELAY_MS]
-Signed-off-by: Sean Paul <seanpaul@chromium.org>
-Link: https://patchwork.freedesktop.org/patch/msgid/20191011133939.16551-1-jeffrey.l.hugo@gmail.com
+Fixes: 970a2e9864b0 ("net: ethernet: aquantia: Vector operations")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Reviewed-by: Igor Russkikh <igor.russkikh@aquantia.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/msm/dsi/dsi_host.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/aquantia/atlantic/aq_vec.c | 15 ++++++---------
+ 1 file changed, 6 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/gpu/drm/msm/dsi/dsi_host.c b/drivers/gpu/drm/msm/dsi/dsi_host.c
-index a9a0b56f1fbc5..b9cb7c09e05a6 100644
---- a/drivers/gpu/drm/msm/dsi/dsi_host.c
-+++ b/drivers/gpu/drm/msm/dsi/dsi_host.c
-@@ -34,6 +34,8 @@
- #include "dsi_cfg.h"
- #include "msm_kms.h"
- 
-+#define DSI_RESET_TOGGLE_DELAY_MS 20
-+
- static int dsi_get_version(const void __iomem *base, u32 *major, u32 *minor)
+diff --git a/drivers/net/ethernet/aquantia/atlantic/aq_vec.c b/drivers/net/ethernet/aquantia/atlantic/aq_vec.c
+index 5fecc9a099ef7..bb2894a333f20 100644
+--- a/drivers/net/ethernet/aquantia/atlantic/aq_vec.c
++++ b/drivers/net/ethernet/aquantia/atlantic/aq_vec.c
+@@ -310,15 +310,13 @@ irqreturn_t aq_vec_isr_legacy(int irq, void *private)
  {
- 	u32 ver;
-@@ -906,7 +908,7 @@ static void dsi_sw_reset(struct msm_dsi_host *msm_host)
- 	wmb(); /* clocks need to be enabled before reset */
+ 	struct aq_vec_s *self = private;
+ 	u64 irq_mask = 0U;
+-	irqreturn_t err = 0;
++	int err;
  
- 	dsi_write(msm_host, REG_DSI_RESET, 1);
--	wmb(); /* make sure reset happen */
-+	msleep(DSI_RESET_TOGGLE_DELAY_MS); /* make sure reset happen */
- 	dsi_write(msm_host, REG_DSI_RESET, 0);
+-	if (!self) {
+-		err = -EINVAL;
+-		goto err_exit;
+-	}
++	if (!self)
++		return IRQ_NONE;
+ 	err = self->aq_hw_ops->hw_irq_read(self->aq_hw, &irq_mask);
+ 	if (err < 0)
+-		goto err_exit;
++		return IRQ_NONE;
+ 
+ 	if (irq_mask) {
+ 		self->aq_hw_ops->hw_irq_disable(self->aq_hw,
+@@ -326,11 +324,10 @@ irqreturn_t aq_vec_isr_legacy(int irq, void *private)
+ 		napi_schedule(&self->napi);
+ 	} else {
+ 		self->aq_hw_ops->hw_irq_enable(self->aq_hw, 1U);
+-		err = IRQ_NONE;
++		return IRQ_NONE;
+ 	}
+ 
+-err_exit:
+-	return err >= 0 ? IRQ_HANDLED : IRQ_NONE;
++	return IRQ_HANDLED;
  }
  
-@@ -1288,7 +1290,7 @@ static void dsi_sw_reset_restore(struct msm_dsi_host *msm_host)
- 
- 	/* dsi controller can only be reset while clocks are running */
- 	dsi_write(msm_host, REG_DSI_RESET, 1);
--	wmb();	/* make sure reset happen */
-+	msleep(DSI_RESET_TOGGLE_DELAY_MS); /* make sure reset happen */
- 	dsi_write(msm_host, REG_DSI_RESET, 0);
- 	wmb();	/* controller out of reset */
- 	dsi_write(msm_host, REG_DSI_CTRL, data0);
+ cpumask_t *aq_vec_get_affinity_mask(struct aq_vec_s *self)
 -- 
 2.20.1
 
