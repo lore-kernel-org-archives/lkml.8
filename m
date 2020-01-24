@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAC73C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:26:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 042E5C32771
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:27:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D5FE2077C
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:26:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE7162075D
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:27:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579876014;
-	bh=0uOWnKSh83fXudGqMAovmHVwNS2NZDD+nPINkoIHYG4=;
+	s=default; t=1579876020;
+	bh=WVyEU8IhAmfPSmrdkGr81oNgEZB1bM0U16h/M92NwuM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=v9JxXlwL31Kr6oGOUUlXbN6Y9tHL4SEHWvbaF1luQJNSMegof0t/EQhMMtm4JgGZh
-	 tH5c1AOkNmEuRAVED1agdxTuW048D2+fKH5wrUEech1+l6LvhNZ9XQT+nyeZ2q8ZE0
-	 XDpy2igaX180fnZJNKHH2X53AkVVFHXB84MuM7IM=
+	b=sYIoCDGshmskKhBxjeRy437YTMvsS7edI7fqo4ULTUTh5QI+asGq9CXGyIFEeWgjt
+	 7QzqQwZotW5ZZ1sP30F8w5gYCrsbNOdJzYxEHbwU5eucjPmkNzNH/QF22lgIeXJrXK
+	 9p5dcIhd8bwHLfK8UE7nc8VYcfdco5UQCHXJBekQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390093AbgAXO0x (ORCPT
+        id S2390310AbgAXO07 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 09:26:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43428 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 09:26:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43286 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405329AbgAXOVe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 09:21:34 -0500
+        id S2405303AbgAXOVc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 09:21:32 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D7B9A22464;
-        Fri, 24 Jan 2020 14:21:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5C5F62087E;
+        Fri, 24 Jan 2020 14:21:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579875694;
-        bh=0uOWnKSh83fXudGqMAovmHVwNS2NZDD+nPINkoIHYG4=;
+        s=default; t=1579875691;
+        bh=WVyEU8IhAmfPSmrdkGr81oNgEZB1bM0U16h/M92NwuM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0ynLyuMnh93SZdlmlWXK10H1F1EcrxynLxRwZSGGVPtME0SkiIeAm24UrJjZfIlr+
-         9IwDZkVCRuvnfRmUQIOs+oCz7CMchWCbsclBUThU+UonKya2Hc7pUmAEL6u9K30CzV
-         3Ai7QeXV4d8SkD5tH37iXHLO7UvChgSYE364KsVc=
+        b=IFNU7JYIP1O9wJ7xm+QJEWM1R72x2ah0UXH65phZ9jLCVY5tEXMqaH+PMw7gbxWCo
+         L4D77nZfwN+akrbB9OISD2xpQtoctzpnJ3p8vCNyynw8JTUjLXNmTfa5H/Cz+hXPi5
+         nBOuOtha6EylcalQ023N0L2r6CPg4Fcyo1qjgMW8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Arnaud Pouliquen <arnaud.pouliquen@st.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
-Subject: [PATCH AUTOSEL 4.14 13/32] ASoC: sti: fix possible sleep-in-atomic
-Date:   Fri, 24 Jan 2020 09:21:00 -0500
-Message-Id: <20200124142119.30484-13-sashal@kernel.org>
+Cc:     Cambda Zhu <cambda@linux.alibaba.com>,
+        Andrew Bowers <andrewx.bowers@intel.com>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 10/32] ixgbe: Fix calculation of queue with VFs and flow director on interface flap
+Date:   Fri, 24 Jan 2020 09:20:57 -0500
+Message-Id: <20200124142119.30484-10-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200124142119.30484-1-sashal@kernel.org>
 References: <20200124142119.30484-1-sashal@kernel.org>
@@ -59,69 +61,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnaud Pouliquen <arnaud.pouliquen@st.com>
+From: Cambda Zhu <cambda@linux.alibaba.com>
 
-[ Upstream commit ce780a47c3c01e1e179d0792df6b853a913928f1 ]
+[ Upstream commit 4fad78ad6422d9bca62135bbed8b6abc4cbb85b8 ]
 
-Change mutex and spinlock management to avoid sleep
-in atomic issue.
+This patch fixes the calculation of queue when we restore flow director
+filters after resetting adapter. In ixgbe_fdir_filter_restore(), filter's
+vf may be zero which makes the queue outside of the rx_ring array.
 
-Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
-Link: https://lore.kernel.org/r/20200113100400.30472-1-arnaud.pouliquen@st.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+The calculation is changed to the same as ixgbe_add_ethtool_fdir_entry().
+
+Signed-off-by: Cambda Zhu <cambda@linux.alibaba.com>
+Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
+Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/sti/uniperif_player.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/intel/ixgbe/ixgbe_main.c | 37 ++++++++++++++-----
+ 1 file changed, 27 insertions(+), 10 deletions(-)
 
-diff --git a/sound/soc/sti/uniperif_player.c b/sound/soc/sti/uniperif_player.c
-index d8b6936e544e3..908f13623f8cd 100644
---- a/sound/soc/sti/uniperif_player.c
-+++ b/sound/soc/sti/uniperif_player.c
-@@ -226,7 +226,6 @@ static void uni_player_set_channel_status(struct uniperif *player,
- 	 * sampling frequency. If no sample rate is already specified, then
- 	 * set one.
- 	 */
--	mutex_lock(&player->ctrl_lock);
- 	if (runtime) {
- 		switch (runtime->rate) {
- 		case 22050:
-@@ -303,7 +302,6 @@ static void uni_player_set_channel_status(struct uniperif *player,
- 		player->stream_settings.iec958.status[3 + (n * 4)] << 24;
- 		SET_UNIPERIF_CHANNEL_STA_REGN(player, n, status);
- 	}
--	mutex_unlock(&player->ctrl_lock);
+diff --git a/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c b/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
+index 0edfd199937d5..865038792db6b 100644
+--- a/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
++++ b/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
+@@ -5129,7 +5129,7 @@ static void ixgbe_fdir_filter_restore(struct ixgbe_adapter *adapter)
+ 	struct ixgbe_hw *hw = &adapter->hw;
+ 	struct hlist_node *node2;
+ 	struct ixgbe_fdir_filter *filter;
+-	u64 action;
++	u8 queue;
  
- 	/* Update the channel status */
- 	if (player->ver < SND_ST_UNIPERIF_VERSION_UNI_PLR_TOP_1_0)
-@@ -365,8 +363,10 @@ static int uni_player_prepare_iec958(struct uniperif *player,
+ 	spin_lock(&adapter->fdir_perfect_lock);
  
- 	SET_UNIPERIF_CTRL_ZERO_STUFF_HW(player);
+@@ -5138,17 +5138,34 @@ static void ixgbe_fdir_filter_restore(struct ixgbe_adapter *adapter)
  
-+	mutex_lock(&player->ctrl_lock);
- 	/* Update the channel status */
- 	uni_player_set_channel_status(player, runtime);
-+	mutex_unlock(&player->ctrl_lock);
- 
- 	/* Clear the user validity user bits */
- 	SET_UNIPERIF_USER_VALIDITY_VALIDITY_LR(player, 0);
-@@ -598,7 +598,6 @@ static int uni_player_ctl_iec958_put(struct snd_kcontrol *kcontrol,
- 	iec958->status[1] = ucontrol->value.iec958.status[1];
- 	iec958->status[2] = ucontrol->value.iec958.status[2];
- 	iec958->status[3] = ucontrol->value.iec958.status[3];
--	mutex_unlock(&player->ctrl_lock);
- 
- 	spin_lock_irqsave(&player->irq_lock, flags);
- 	if (player->substream && player->substream->runtime)
-@@ -608,6 +607,8 @@ static int uni_player_ctl_iec958_put(struct snd_kcontrol *kcontrol,
- 		uni_player_set_channel_status(player, NULL);
- 
- 	spin_unlock_irqrestore(&player->irq_lock, flags);
-+	mutex_unlock(&player->ctrl_lock);
+ 	hlist_for_each_entry_safe(filter, node2,
+ 				  &adapter->fdir_filter_list, fdir_node) {
+-		action = filter->action;
+-		if (action != IXGBE_FDIR_DROP_QUEUE && action != 0)
+-			action =
+-			(action >> ETHTOOL_RX_FLOW_SPEC_RING_VF_OFF) - 1;
++		if (filter->action == IXGBE_FDIR_DROP_QUEUE) {
++			queue = IXGBE_FDIR_DROP_QUEUE;
++		} else {
++			u32 ring = ethtool_get_flow_spec_ring(filter->action);
++			u8 vf = ethtool_get_flow_spec_ring_vf(filter->action);
 +
- 	return 0;
- }
++			if (!vf && (ring >= adapter->num_rx_queues)) {
++				e_err(drv, "FDIR restore failed without VF, ring: %u\n",
++				      ring);
++				continue;
++			} else if (vf &&
++				   ((vf > adapter->num_vfs) ||
++				     ring >= adapter->num_rx_queues_per_pool)) {
++				e_err(drv, "FDIR restore failed with VF, vf: %hhu, ring: %u\n",
++				      vf, ring);
++				continue;
++			}
++
++			/* Map the ring onto the absolute queue index */
++			if (!vf)
++				queue = adapter->rx_ring[ring]->reg_idx;
++			else
++				queue = ((vf - 1) *
++					adapter->num_rx_queues_per_pool) + ring;
++		}
  
+ 		ixgbe_fdir_write_perfect_filter_82599(hw,
+-				&filter->filter,
+-				filter->sw_idx,
+-				(action == IXGBE_FDIR_DROP_QUEUE) ?
+-				IXGBE_FDIR_DROP_QUEUE :
+-				adapter->rx_ring[action]->reg_idx);
++				&filter->filter, filter->sw_idx, queue);
+ 	}
+ 
+ 	spin_unlock(&adapter->fdir_perfect_lock);
 -- 
 2.20.1
 
