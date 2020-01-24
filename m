@@ -2,114 +2,94 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97AD7C35242
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 18:27:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A35FFC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 18:29:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71B8B20709
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 18:27:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6EDB52075D
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 18:29:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="mgzWwWgz"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qe6QhTRt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391194AbgAXS1E (ORCPT
+        id S2391357AbgAXS3B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 13:27:04 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:27648 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2387714AbgAXS1E (ORCPT
+        Fri, 24 Jan 2020 13:29:01 -0500
+Received: from mail-il1-f194.google.com ([209.85.166.194]:43685 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387714AbgAXS3B (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 13:27:04 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1579890423; h=In-Reply-To: Content-Type: MIME-Version:
- References: Message-ID: Subject: Cc: To: From: Date: Sender;
- bh=vIZY+m9EMe+TETKYgTmMIG1//fE/Z8Pwfi9rqiJvXtM=; b=mgzWwWgzcHeWzXmoy79e+amL4vjdiMQutH6ok6U6o2y8lhLBcWKfv3X75aHoqzE17NUnnl0u
- 5yG2rMWGAsb7Ek3DMDygJfjoCk/X0UEuHeYX7RRUc282A1Forx3w7QR2yTyJJrKM+NXXx1l0
- 3fWbj5D+6UnoXfx0HwUrSkJlX7w=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e2b36f2.7fe52fedf148-smtp-out-n03;
- Fri, 24 Jan 2020 18:26:58 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 5D5C4C4479C; Fri, 24 Jan 2020 18:26:57 +0000 (UTC)
-Received: from jcrouse1-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: jcrouse)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 54D3AC433CB;
-        Fri, 24 Jan 2020 18:26:56 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 54D3AC433CB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
-Date:   Fri, 24 Jan 2020 11:26:54 -0700
-From:   Jordan Crouse <jcrouse@codeaurora.org>
-To:     Akhil P Oommen <akhilpo@codeaurora.org>
-Cc:     freedreno@lists.freedesktop.org, dri-devel@freedesktop.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        smasetty@codeaurora.org
-Subject: Re: [PATCH] drm/msm/a6xx: Correct the highestbank configuration
-Message-ID: <20200124182654.GA17149@jcrouse1-lnx.qualcomm.com>
-Mail-Followup-To: Akhil P Oommen <akhilpo@codeaurora.org>,
-        freedreno@lists.freedesktop.org, dri-devel@freedesktop.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        smasetty@codeaurora.org
-References: <1579868411-20837-1-git-send-email-akhilpo@codeaurora.org>
+        Fri, 24 Jan 2020 13:29:01 -0500
+Received: by mail-il1-f194.google.com with SMTP id o13so1723796ilg.10
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jan 2020 10:29:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=MzOM8tQ3sP2cY0Y79Mb3RBeF9aKri/D2BrjJwln0ZMk=;
+        b=qe6QhTRtRrfS7XZjwODUAHPJVsjCM7EAv1BjXiq8vM+wyGaCkf4ErXr1JG2IlwFwOD
+         u9RXwRrLDgt+3Al0S/p2qQa78Jqw8xeD6aw7OKJTdzYfO21xbkAMxuIBwXxB5oGdJDOR
+         vgC7zdZzKXIxKofOKx4A4zZFsoy8v/4Vsv6ZFNGBkXSMNzkUBvMWq1x88QB6YZ8tLWDN
+         PxgSBlWQpLAQDRCyl5VvPuB56xlaqSqwFl69bfgH2FHRS2YVyqD5fiP5lzC0g/RizWfR
+         grFWnAsZ7bfZoCsMIIHYNFamLzeNBsDIigyYkDnz73UXkrbz/nLMOhHe8fwYy41V3B6X
+         beNw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=MzOM8tQ3sP2cY0Y79Mb3RBeF9aKri/D2BrjJwln0ZMk=;
+        b=ZR9TaEiY901IlbgDduritiLADBJvsmLi27es362EQd1IZoGbCcntFu0F2N+VtnqQWT
+         7cHwKjwrXd65Roxnn7BbaK8q4Lt1/MHU3GiCt7fto3rfLQUFkWwocazrOK+T3gRsdbhV
+         H7rseRBC3GICBaPyxd6UGUjPDtSqOLwQXqR/O9oudOyEXCQOW5lli3pcIs8N1xWZYn2+
+         7MIYo2tfxCOw98lL5M+Y+4pDs4qhKe+4TJtg7XI/6MdjE8+2fTJ/ywqofB6NcpKfwlkn
+         1/8KY5d28awUh3ADyFRk4y3L94cYIDBigyfmKZ7Ggqr/NKA3T/bR57kg+wwziW2k+Ti3
+         a+hA==
+X-Gm-Message-State: APjAAAWskBCLNiklMnOcORVz0+J+H+WAc94nNuEi1SbGfYDfhnkg2gNe
+        +dUa36ZGJoB1J7l+Ja0KYnxa1x8FeoNnpDrC3+4=
+X-Google-Smtp-Source: APXvYqxaAPHLhuxZk4MZgvxEeRmsPUpBjqMp5p2m0Tmj39XLUqYOZMT9HvIrl7aTnzyNTIZx4Cg0AGdcAuoquaxzo80=
+X-Received: by 2002:a92:bf10:: with SMTP id z16mr4386101ilh.87.1579890540913;
+ Fri, 24 Jan 2020 10:29:00 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1579868411-20837-1-git-send-email-akhilpo@codeaurora.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+References: <20200121183818.GA11522@bogus> <a9ec58818b5e0c982810e74efe3f5f22b930ae40.1579660436.git.viresh.kumar@linaro.org>
+ <82e1181a-b1ff-eccc-d61d-2da0e7afec25@opensynergy.com>
+In-Reply-To: <82e1181a-b1ff-eccc-d61d-2da0e7afec25@opensynergy.com>
+From:   Jassi Brar <jassisinghbrar@gmail.com>
+Date:   Fri, 24 Jan 2020 12:28:50 -0600
+Message-ID: <CABb+yY3ZrzgH8q8Nz+VGjz9X9GOs+1_RxB7qgtyeLTZd8BR_0w@mail.gmail.com>
+Subject: Re: [PATCH V4] firmware: arm_scmi: Make scmi core independent of the
+ transport type
+To:     Peter Hilber <peter.hilber@opensynergy.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Sudeep Holla <Sudeep.Holla@arm.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Cristian Marussi <cristian.marussi@arm.com>,
+        Peng Fan <peng.fan@nxp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        ALKML <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 24, 2020 at 05:50:11PM +0530, Akhil P Oommen wrote:
-> Highest bank bit configuration is different for a618 gpu. Update
-> it with the correct configuration which is the reset value incidentally.
-> 
-> Signed-off-by: Akhil P Oommen <akhilpo@codeaurora.org>
-> Signed-off-by: Sharat Masetty <smasetty@codeaurora.org>
-> ---
->  drivers/gpu/drm/msm/adreno/a6xx_gpu.c | 10 ++++++----
->  1 file changed, 6 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-> index daf0780..536d196 100644
-> --- a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-> +++ b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-> @@ -470,10 +470,12 @@ static int a6xx_hw_init(struct msm_gpu *gpu)
->  	/* Select CP0 to always count cycles */
->  	gpu_write(gpu, REG_A6XX_CP_PERFCTR_CP_SEL_0, PERF_CP_ALWAYS_COUNT);
->  
-> -	gpu_write(gpu, REG_A6XX_RB_NC_MODE_CNTL, 2 << 1);
-> -	gpu_write(gpu, REG_A6XX_TPL1_NC_MODE_CNTL, 2 << 1);
-> -	gpu_write(gpu, REG_A6XX_SP_NC_MODE_CNTL, 2 << 1);
-> -	gpu_write(gpu, REG_A6XX_UCHE_MODE_CNTL, 2 << 21);
-> +	if (adreno_is_a630(adreno_gpu)) {
-> +		gpu_write(gpu, REG_A6XX_RB_NC_MODE_CNTL, 2 << 1);
-> +		gpu_write(gpu, REG_A6XX_TPL1_NC_MODE_CNTL, 2 << 1);
-> +		gpu_write(gpu, REG_A6XX_SP_NC_MODE_CNTL, 2 << 1);
-> +		gpu_write(gpu, REG_A6XX_UCHE_MODE_CNTL, 2 << 21);
-> +	}
-
-it shouldn't come as a surprise that everything in the a6xx family is going to
-have a highest bank bit setting. Even though the a618 uses the reset value, I
-think it would be less confusing to future folks if we explicitly program it:
-
-if (adreno_is_a630(adreno_dev))
-  hbb = 2;
-else
-  hbb = 0;
-
+On Fri, Jan 24, 2020 at 6:15 AM Peter Hilber
+<peter.hilber@opensynergy.com> wrote:
 ....
-
-Jordan
-
--- 
-The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+>
+> I would have preferred (to have an option) to use as data passing
+> interface to the transport just the struct scmi_xfer. A transport using
+> this option would not implement ops (read|write)32 and memcpy_(from|to).
+> The transport would also not call scmi_tx_prepare(), but instead take
+> data from struct scmi_xfer directly. The transport would use a modified
+> scmi_rx_callback() to notify that it updated the struct scmi_xfer. A
+> helper to derive the struct scmi_xfer * from the message header would be
+> extracted from scmi_rx_callback(). The scmi_xfer_poll_done() would
+> become an (optional) transport op.
+>
++1
+I have pointed out many times the SCMI needs to realize not every
+transport layer can conform to its expectations, the scmi_xfer must
+have some transport specific element to it. Or there would be
+emulation/pretend modes implemented in controller drivers.
