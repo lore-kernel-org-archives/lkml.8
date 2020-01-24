@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B53FC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:19:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A40B1C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:19:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63E2E2077C
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:19:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BBBD20708
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:19:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579864745;
-	bh=jchwoRYGdw5u05s9Q3W2XMDv3EKFMsWmDZcOvPvSGSQ=;
+	s=default; t=1579864748;
+	bh=opLE3wfI+Lp//yznFkRRvzNM6aKCNoVlcd0Pyau7/rU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=A/uW3p3kWvGGg5IC3Mke3/I5hUUDySGZsacm7X6NdWfVyUbpNifldjvuk/wKPT38s
-	 /+PZjzxZKWO/8TEBBsPicZCiuawQQ27oa5PHcV8endDWlVIs/9dlKSiSv4kpKHCecj
-	 YUWPdWG23kH8pM+Gd43jz0dwxcXZfgiZyyrmuQPE=
+	b=GHgg4BqEvfGbJtiQzacUk3+hhRvXuP/wHdR8S3gmrRT7/cY2glJsvXEZeiu4lSpHO
+	 gmVRo/vbp9nA8l7ktIh9UY0xOFPDswypRajnL0lHaWA+xAtWVs7VEB7p3GQPiam2xA
+	 gK6W2F7fAHbo3dwNxAE2BBDEs1R6Ll11lDUAmcU8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390146AbgAXLTD (ORCPT
+        id S2390745AbgAXLTH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:19:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56358 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 06:19:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56450 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390732AbgAXLS7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:18:59 -0500
+        id S2390738AbgAXLTC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:19:02 -0500
 Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 629912077C;
-        Fri, 24 Jan 2020 11:18:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A99B62075D;
+        Fri, 24 Jan 2020 11:19:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579864739;
-        bh=jchwoRYGdw5u05s9Q3W2XMDv3EKFMsWmDZcOvPvSGSQ=;
+        s=default; t=1579864742;
+        bh=opLE3wfI+Lp//yznFkRRvzNM6aKCNoVlcd0Pyau7/rU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=agdUuy5q2pX/mUu8fM9AxUHneS97zZzf1n4k21Z8piCHKK/9KSRNnxb1errLN6SBw
-         ELuaZoy6UOhoKGQYpAOZUfElDtpgtsHziR63niIWBy8pMvvBopn4FcJhKTQ5d811u9
-         EHrFk1adFx9Nd+ZofqTbQjIfJcqnx9y1qEfofHgg=
+        b=iUr0UebsIgdpMmE7GsG09mzlYkPMIz0vwHHnCryuhxpMyE9WEd0OJiz+VID+QwCio
+         TVoa7K4lqmV/5yJUI9s2XluewYqvsvq++e8VAaynKONoim3o8J+Uc8QQXyDE4j7hOp
+         Nq6JQ4gSWkygSlZiDwXjVX6CmCqgstNQt3B1NZwE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Igor Konopko <igor.j.konopko@intel.com>,
-        =?UTF-8?q?Javier=20Gonz=C3=A1lez?= <javier@javigon.com>,
-        Hans Holmberg <hans.holmberg@cnexlabs.com>,
-        =?UTF-8?q?Matias=20Bj=C3=B8rling?= <mb@lightnvm.io>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 352/639] lightnvm: pblk: fix lock order in pblk_rb_tear_down_check
-Date:   Fri, 24 Jan 2020 10:28:42 +0100
-Message-Id: <20200124093131.204616416@linuxfoundation.org>
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 340/639] usb: gadget: fsl: fix link error against usb-gadget module
+Date:   Fri, 24 Jan 2020 10:28:30 +0100
+Message-Id: <20200124093129.746711294@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
 References: <20200124093047.008739095@linuxfoundation.org>
@@ -62,38 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Igor Konopko <igor.j.konopko@intel.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit 486b5aac85f6ec0b2df3e82a6a629d5eb7804db5 ]
+[ Upstream commit 2100e3ca3676e894fa48b8f6f01d01733387fe81 ]
 
-In pblk_rb_tear_down_check() the spinlock functions are not
-called in proper order.
+The dependency to ensure this driver links correctly fails since
+it can not be a loadable module:
 
-Fixes: a4bd217 ("lightnvm: physical block device (pblk) target")
-Signed-off-by: Igor Konopko <igor.j.konopko@intel.com>
-Reviewed-by: Javier González <javier@javigon.com>
-Reviewed-by: Hans Holmberg <hans.holmberg@cnexlabs.com>
-Signed-off-by: Matias Bjørling <mb@lightnvm.io>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+drivers/usb/phy/phy-fsl-usb.o: In function `fsl_otg_set_peripheral':
+phy-fsl-usb.c:(.text+0x2224): undefined reference to `usb_gadget_vbus_disconnect'
+
+Make the option 'tristate' so it can work correctly.
+
+Fixes: 5a8d651a2bde ("usb: gadget: move gadget API functions to udc-core")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/lightnvm/pblk-rb.c | 2 +-
+ drivers/usb/phy/Kconfig | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/lightnvm/pblk-rb.c b/drivers/lightnvm/pblk-rb.c
-index f6eec0212dfcf..d22c13b556221 100644
---- a/drivers/lightnvm/pblk-rb.c
-+++ b/drivers/lightnvm/pblk-rb.c
-@@ -784,8 +784,8 @@ int pblk_rb_tear_down_check(struct pblk_rb *rb)
- 	}
+diff --git a/drivers/usb/phy/Kconfig b/drivers/usb/phy/Kconfig
+index 91ea3083e7ad9..affb5393c4c6d 100644
+--- a/drivers/usb/phy/Kconfig
++++ b/drivers/usb/phy/Kconfig
+@@ -20,7 +20,7 @@ config AB8500_USB
+ 	  in host mode, low speed.
  
- out:
--	spin_unlock(&rb->w_lock);
- 	spin_unlock_irq(&rb->s_lock);
-+	spin_unlock(&rb->w_lock);
- 
- 	return ret;
- }
+ config FSL_USB2_OTG
+-	bool "Freescale USB OTG Transceiver Driver"
++	tristate "Freescale USB OTG Transceiver Driver"
+ 	depends on USB_EHCI_FSL && USB_FSL_USB2 && USB_OTG_FSM=y && PM
+ 	depends on USB_GADGET || !USB_GADGET # if USB_GADGET=m, this can't be 'y'
+ 	select USB_PHY
 -- 
 2.20.1
 
