@@ -2,140 +2,104 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56C9CC35241
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 00:49:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E7EAC35242
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 00:50:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23034206D4
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 00:49:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Yzd78GKa"
+	by mail.kernel.org (Postfix) with ESMTP id 6A814214AF
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 00:50:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730218AbgAXAtP (ORCPT
+        id S1730225AbgAXAuk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 19:49:15 -0500
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:52003 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729762AbgAXAtO (ORCPT
+        Thu, 23 Jan 2020 19:50:40 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:41242 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729425AbgAXAuk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 19:49:14 -0500
-Received: by mail-pj1-f67.google.com with SMTP id d15so270134pjw.1;
-        Thu, 23 Jan 2020 16:49:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:message-id:in-reply-to:references:subject
-         :mime-version:content-transfer-encoding;
-        bh=3Zx+AN61IF0BQ3ZHWJ/I2PLD8xvxqj6iim/6I3vz3zw=;
-        b=Yzd78GKae8Ooi+1HUPZVAw+/bAYHPIMRFCvNe4V61CsX+jHr4USPVYyTe0e6ngif/x
-         IcShJiJUF8BCLvyAO02ZYtKwWFCne6X5UAUgIVGE/7urJ2jwrQvGBZ56fo//WkNP0BlB
-         doSU4Et5KDETuCYItPhOgBK3jMThO0NM0f92T0eB2eAXhkleXjPYzvWpKHc6WcF7V6qK
-         kWas6xK15lHM3u2z0/+FM7cbpvrP2GiBCdrZ+lOeUlTGP8039cacWHvjQmWaXBfP2j/X
-         2G+GH58wOUGfzCnX76haTFusPr7bRVU2YG490ezC1yW7au9LoWS1nCve6f2lAwG1hkul
-         X++w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:message-id:in-reply-to
-         :references:subject:mime-version:content-transfer-encoding;
-        bh=3Zx+AN61IF0BQ3ZHWJ/I2PLD8xvxqj6iim/6I3vz3zw=;
-        b=HFfAxbbt8OloBoITA6BDWmxNrh8IKaMd48vVZ4qEQytgE0Gb9I3GjcGUdrNN8t9DYj
-         e2Qo29jZbn/Cu+J0KcmcJ6Yf7T6tpBHsce5fQF3/3RwZUhq5l/rt21qk+ka/NdUigOml
-         lcH+etIFqfQ439Qwm3X1Pb+f2B4kgg+H2gs+Hg9dyd/8I7GQrsTCj82uEUNpyoIw2tGY
-         BI7RvRqrzBbgGMTXcNUC5uYdo6rI++f6e9qmGQerCF38r5n+ndFjzLT9gQwtXfdgBLCQ
-         cCc49OC1ZFVS5QxHqdnTA81Z1skSweKUxQ4sEmcqGQgsNiMJ2e3a3faFCM8dumYjE/EG
-         aICg==
-X-Gm-Message-State: APjAAAVQoH2m615dawuzXoJBDy8YYrh1tOz0wf4O/WLEjTaSAXJRlGzA
-        LArugMltJ/qid87uRjze6eo=
-X-Google-Smtp-Source: APXvYqxeOEdtBqoGfGjt1LQYFG7OXtStPNaOgaC3aOuy04Tu4/ylUatDRmOB8bUL4eSc0sglolUMfQ==
-X-Received: by 2002:a17:902:d205:: with SMTP id t5mr886567ply.138.1579826954054;
-        Thu, 23 Jan 2020 16:49:14 -0800 (PST)
-Received: from localhost ([184.63.162.180])
-        by smtp.gmail.com with ESMTPSA id u11sm4076591pjn.2.2020.01.23.16.49.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Jan 2020 16:49:13 -0800 (PST)
-Date:   Thu, 23 Jan 2020 16:49:04 -0800
-From:   John Fastabend <john.fastabend@gmail.com>
-To:     Daniel Xu <dxu@dxuuu.xyz>, bpf@vger.kernel.org, ast@kernel.org,
-        daniel@iogearbox.net, songliubraving@fb.com, yhs@fb.com,
-        andriin@fb.com
-Cc:     Daniel Xu <dxu@dxuuu.xyz>, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com, peterz@infradead.org, mingo@redhat.com,
-        acme@kernel.org
-Message-ID: <5e2a3f00a996a_7f9e2ab8c3f9e5c4a6@john-XPS-13-9370.notmuch>
-In-Reply-To: <20200123212312.3963-2-dxu@dxuuu.xyz>
-References: <20200123212312.3963-1-dxu@dxuuu.xyz>
- <20200123212312.3963-2-dxu@dxuuu.xyz>
-Subject: RE: [PATCH v3 bpf-next 1/3] bpf: Add bpf_perf_prog_read_branches()
- helper
-Mime-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: 7bit
+        Thu, 23 Jan 2020 19:50:40 -0500
+Received: from p5b06da22.dip0.t-ipconnect.de ([91.6.218.34] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1iunBF-00026p-5F; Fri, 24 Jan 2020 01:50:37 +0100
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id 4A553100490; Fri, 24 Jan 2020 01:50:36 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Evan Green <evgreen@chromium.org>
+Cc:     Rajat Jain <rajatja@google.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] PCI/MSI: Avoid torn updates to MSI pairs
+In-Reply-To: <CAE=gft5xta4XCJtctWe=R3w=kVr598JCbk9VSRue04nzKAk3CQ@mail.gmail.com>
+References: <20200117162444.v2.1.I9c7e72144ef639cc135ea33ef332852a6b33730f@changeid> <CACK8Z6Ft95qj4e_fsA32r_bcz2SsHOW1xxqZJt3_DBAJw=NMGA@mail.gmail.com> <CAE=gft6fKQWExW-=xjZGzXs30XohfpA5SKggvL2WtYXAHmzMew@mail.gmail.com> <87y2tytv5i.fsf@nanos.tec.linutronix.de> <87eevqkpgn.fsf@nanos.tec.linutronix.de> <CAE=gft6YiM5S1A7iJYJTd5zmaAa8=nhLE3B94JtWa+XW-qVSqQ@mail.gmail.com> <CAE=gft5xta4XCJtctWe=R3w=kVr598JCbk9VSRue04nzKAk3CQ@mail.gmail.com>
+Date:   Fri, 24 Jan 2020 01:50:36 +0100
+Message-ID: <87pnf91xur.fsf@nanos.tec.linutronix.de>
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Daniel Xu wrote:
-> Branch records are a CPU feature that can be configured to record
-> certain branches that are taken during code execution. This data is
-> particularly interesting for profile guided optimizations. perf has had
-> branch record support for a while but the data collection can be a bit
-> coarse grained.
-> 
-> We (Facebook) have seen in experiments that associating metadata with
-> branch records can improve results (after postprocessing). We generally
-> use bpf_probe_read_*() to get metadata out of userspace. That's why bpf
-> support for branch records is useful.
-> 
-> Aside from this particular use case, having branch data available to bpf
-> progs can be useful to get stack traces out of userspace applications
-> that omit frame pointers.
-> 
-> Signed-off-by: Daniel Xu <dxu@dxuuu.xyz>
-> ---
->  include/uapi/linux/bpf.h | 15 ++++++++++++++-
->  kernel/trace/bpf_trace.c | 31 +++++++++++++++++++++++++++++++
->  2 files changed, 45 insertions(+), 1 deletion(-)
-> 
+Evan Green <evgreen@chromium.org> writes:
+> On Thu, Jan 23, 2020 at 12:59 PM Evan Green <evgreen@chromium.org> wrote:
+>>
+>> On Thu, Jan 23, 2020 at 10:17 AM Thomas Gleixner <tglx@linutronix.de> wrote:
+>> >
+>> > Evan,
+>> >
+>> > Thomas Gleixner <tglx@linutronix.de> writes:
+>> > > This is not yet debugged fully and as this is happening on MSI-X I'm not
+>> > > really convinced yet that your 'torn write' theory holds.
 
-[...]
+As you pointed out that this is not on MSI-X I'm considering the torn
+write theory to be more likely. :)
 
->   * function eBPF program intends to call
-> diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
-> index 19e793aa441a..24c51272a1f7 100644
-> --- a/kernel/trace/bpf_trace.c
-> +++ b/kernel/trace/bpf_trace.c
-> @@ -1028,6 +1028,35 @@ static const struct bpf_func_proto bpf_perf_prog_read_value_proto = {
->           .arg3_type      = ARG_CONST_SIZE,
->  };
->  
-> +BPF_CALL_3(bpf_perf_prog_read_branches, struct bpf_perf_event_data_kern *, ctx,
-> +	   void *, buf, u32, size)
-> +{
-> +	struct perf_branch_stack *br_stack = ctx->data->br_stack;
-> +	u32 to_copy = 0, to_clear = size;
-> +	int err = -EINVAL;
-> +
-> +	if (unlikely(!br_stack))
-> +		goto clear;
-> +
-> +	to_copy = min_t(u32, br_stack->nr * sizeof(struct perf_branch_entry), size);
-> +	to_clear -= to_copy;
-> +
-> +	memcpy(buf, br_stack->entries, to_copy);
-> +	err = to_copy;
-> +clear:
+>> > can you please apply the debug patch below and run your test. When the
+>> > failure happens, stop the tracer and collect the trace.
+>> >
+>> > Another question. Did you ever try to change the affinity of that
+>> > interrupt without hotplug rapidly while the device makes traffic? If
+>> > not, it would be interesting whether this leads to a failure as well.
+>>
+>> Thanks for the patch. Looks pretty familiar :)
+>> I ran into issues where trace_printks on offlined cores seem to
+>> disappear. I even made sure the cores were back online when I
+>> collected the trace. So your logs might not be useful. Known issue
+>> with the tracer?
 
-There appears to be agreement to clear the extra buffer on error but what about
-in the non-error case? I expect one usage pattern is to submit a fairly large
-buffer, large enough to handle worse case nr, in this case we end up zero'ing
-memory even in the succesful case. Can we skip the clear in this case? Maybe
-its not too important either way but seems unnecessary.
+No. I tried the patch myself to verify that it does what I want.
 
-> +	memset(buf + to_copy, 0, to_clear);
-> +	return err;
-> +}
+The only information I'm missing right now is the interrupt number to
+look for. But I'll stare at it with brain awake tomorrow morning again.
+
+>> I also tried changing the affinity rapidly without CPU hotplug, but
+>> didn't see the issue, at least not in the few minutes I waited
+>> (normally repros easily within 1 minute). An interesting datapoint.
+
+That's what I expected. The main difference is that the vector
+modification happens at a point where a device is not supposed to send
+an interrupt. They happen when the interrupt of the device is serviced
+before the driver handler is invoked and at that point the device should
+not send another one.
+
+> One additional datapoint. The intel guys suggested enabling
+> CONFIG_IRQ_REMAP, which does seem to eliminate the issue for me. I'm
+> still hoping there's a smaller fix so I don't have to add all that in.
+
+Right, I wanted to ask you that as well and forgot. With interrupt
+remapping the migration happens at the remapping unit which does not
+have the horrible 'move it while servicing' requirement and it suppports
+proper masking.
+
+Thanks,
+
+        tglx
+
