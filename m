@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EABD7C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:25:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65C01C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:25:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C12AA206D4
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:25:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C92820718
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:25:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579865132;
-	bh=WuuGUHllKEaRwTEewQ4s8Vxp9Zxuk3Sxd+JLm9SsTvg=;
+	s=default; t=1579865138;
+	bh=q8FEEnP4A9fr6JDFaxyd6h/aYNGub3Ui9XeBx/s1D5E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HpkxdRl16iE/mfSyqsmVrODVY/Jfk6JMhyBfarG5hKVQIxBGGnubsQBMQgLthcEzM
-	 CsEYnbrZDE9bkKGxlg5nFmYryknG9bpLOxxOf6i5riQ0iK8ivIwm1ZTE8QQJcOU+bF
-	 DXZL0Nf5VrEyIeXb2CNdEP/70LqqjpIFClSuH40Q=
+	b=L4h5iQP78Uz0AIo4jc4dkda+km6mYhsHl7/tF90c9DyVkQdvAbNtrI8aCvuf5fDYX
+	 ZmLOYjcC6/e2srJGQqZ+GF5l4VgdG6JHUNEaFF4pCQrujcfb8edjVhrs66kCxn2A2R
+	 rAKXgsE+wRN0ekUmg2N8UfXyywkYLRZRr2PUlzXI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391395AbgAXLZb (ORCPT
+        id S2391511AbgAXLZh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:25:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39574 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 06:25:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39646 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391499AbgAXLZ3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:25:29 -0500
+        id S2391062AbgAXLZc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:25:32 -0500
 Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 539252075D;
-        Fri, 24 Jan 2020 11:25:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 93ACF2077C;
+        Fri, 24 Jan 2020 11:25:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579865128;
-        bh=WuuGUHllKEaRwTEewQ4s8Vxp9Zxuk3Sxd+JLm9SsTvg=;
+        s=default; t=1579865132;
+        bh=q8FEEnP4A9fr6JDFaxyd6h/aYNGub3Ui9XeBx/s1D5E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UZKju/xItapc3lJDGzxe6h6b0jZIsQ2ETOVoXLuu6vW79FUl75BI/Y76iwuK7gw1F
-         yb++opzPFSFACTAjxJRBoDYEHfFo26/c83u3vIU+aYpgdZRQnZlNwC/GEPVqnKgSVt
-         L4/Pbt57BkdkDGMFppld8hny7PS/g0OQa0VwHIJ0=
+        b=z5lTQafKciN3QzLRZ8m1OtUuL+6/Ad+FsTeshmP3cvVsMZ2a4arEmh523wcheebhr
+         EOVAq1VboB40xYVd/Aeahr8e9Xbh/piOpLGKZP1MNaoMELWWytvQ0xwiqvvyIw2Kpp
+         CAxD4s3T0iBVjls+3NNYjhAFDxM8Odi/RInLwNN8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jouni Malinen <j@w1.fi>,
-        Johannes Berg <johannes.berg@intel.com>,
-        Richard Weinberger <richard@nod.at>,
+        stable@vger.kernel.org, Stefano Brivio <sbrivio@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 461/639] um: Fix IRQ controller regression on console read
-Date:   Fri, 24 Jan 2020 10:30:31 +0100
-Message-Id: <20200124093144.965717733@linuxfoundation.org>
+Subject: [PATCH 4.19 446/639] ip6_fib: Dont discard nodes with valid routing information in fib6_locate_1()
+Date:   Fri, 24 Jan 2020 10:30:16 +0100
+Message-Id: <20200124093142.891105179@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
 References: <20200124093047.008739095@linuxfoundation.org>
@@ -61,119 +60,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jouni Malinen <j@w1.fi>
+From: Stefano Brivio <sbrivio@redhat.com>
 
-[ Upstream commit bebe4681d0e7e1be2608282dc86645728bc7f623 ]
+[ Upstream commit 40cb35d5dc04e7f89cbc7b1fc9b4b48d9f1e5343 ]
 
-The conversion of UML to use epoll based IRQ controller claimed that
-clone_one_chan() can safely call um_free_irq() while starting to ignore
-the delay_free_irq parameter that explicitly noted that the IRQ cannot
-be freed because this is being called from chan_interrupt(). This
-resulted in free_irq() getting called in interrupt context ("Trying to
-free IRQ 6 from IRQ context!").
+When we perform an inexact match on FIB nodes via fib6_locate_1(), longer
+prefixes will be preferred to shorter ones. However, it might happen that
+a node, with higher fn_bit value than some other, has no valid routing
+information.
 
-Fix this by restoring previously used delay_free_irq processing.
+In this case, we'll pick that node, but it will be discarded by the check
+on RTN_RTINFO in fib6_locate(), and we might miss nodes with valid routing
+information but with lower fn_bit value.
 
-Fixes: ff6a17989c08 ("Epoll based IRQ controller")
-Signed-off-by: Jouni Malinen <j@w1.fi>
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
-Signed-off-by: Richard Weinberger <richard@nod.at>
+This is apparent when a routing exception is created for a default route:
+ # ip -6 route list
+ fc00:1::/64 dev veth_A-R1 proto kernel metric 256 pref medium
+ fc00:2::/64 dev veth_A-R2 proto kernel metric 256 pref medium
+ fc00:4::1 via fc00:2::2 dev veth_A-R2 metric 1024 pref medium
+ fe80::/64 dev veth_A-R1 proto kernel metric 256 pref medium
+ fe80::/64 dev veth_A-R2 proto kernel metric 256 pref medium
+ default via fc00:1::2 dev veth_A-R1 metric 1024 pref medium
+ # ip -6 route list cache
+ fc00:4::1 via fc00:2::2 dev veth_A-R2 metric 1024 expires 593sec mtu 1500 pref medium
+ fc00:3::1 via fc00:1::2 dev veth_A-R1 metric 1024 expires 593sec mtu 1500 pref medium
+ # ip -6 route flush cache    # node for default route is discarded
+ Failed to send flush request: No such process
+ # ip -6 route list cache
+ fc00:3::1 via fc00:1::2 dev veth_A-R1 metric 1024 expires 586sec mtu 1500 pref medium
+
+Check right away if the node has a RTN_RTINFO flag, before replacing the
+'prev' pointer, that indicates the longest matching prefix found so far.
+
+Fixes: 38fbeeeeccdb ("ipv6: prepare fib6_locate() for exception table")
+Signed-off-by: Stefano Brivio <sbrivio@redhat.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/um/drivers/chan_kern.c | 52 +++++++++++++++++++++++++++++++------
- arch/um/kernel/irq.c        |  4 +++
- 2 files changed, 48 insertions(+), 8 deletions(-)
+ net/ipv6/ip6_fib.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/um/drivers/chan_kern.c b/arch/um/drivers/chan_kern.c
-index 05588f9466c7f..13ba195f9c9c8 100644
---- a/arch/um/drivers/chan_kern.c
-+++ b/arch/um/drivers/chan_kern.c
-@@ -171,19 +171,55 @@ int enable_chan(struct line *line)
- 	return err;
- }
+diff --git a/net/ipv6/ip6_fib.c b/net/ipv6/ip6_fib.c
+index bbb5ffb3397d8..7091568b9f630 100644
+--- a/net/ipv6/ip6_fib.c
++++ b/net/ipv6/ip6_fib.c
+@@ -1529,7 +1529,8 @@ static struct fib6_node *fib6_locate_1(struct fib6_node *root,
+ 		if (plen == fn->fn_bit)
+ 			return fn;
  
-+/* Items are added in IRQ context, when free_irq can't be called, and
-+ * removed in process context, when it can.
-+ * This handles interrupt sources which disappear, and which need to
-+ * be permanently disabled.  This is discovered in IRQ context, but
-+ * the freeing of the IRQ must be done later.
-+ */
-+static DEFINE_SPINLOCK(irqs_to_free_lock);
-+static LIST_HEAD(irqs_to_free);
-+
-+void free_irqs(void)
-+{
-+	struct chan *chan;
-+	LIST_HEAD(list);
-+	struct list_head *ele;
-+	unsigned long flags;
-+
-+	spin_lock_irqsave(&irqs_to_free_lock, flags);
-+	list_splice_init(&irqs_to_free, &list);
-+	spin_unlock_irqrestore(&irqs_to_free_lock, flags);
-+
-+	list_for_each(ele, &list) {
-+		chan = list_entry(ele, struct chan, free_list);
-+
-+		if (chan->input && chan->enabled)
-+			um_free_irq(chan->line->driver->read_irq, chan);
-+		if (chan->output && chan->enabled)
-+			um_free_irq(chan->line->driver->write_irq, chan);
-+		chan->enabled = 0;
-+	}
-+}
-+
- static void close_one_chan(struct chan *chan, int delay_free_irq)
- {
-+	unsigned long flags;
-+
- 	if (!chan->opened)
- 		return;
+-		prev = fn;
++		if (fn->fn_flags & RTN_RTINFO)
++			prev = fn;
  
--    /* we can safely call free now - it will be marked
--     *  as free and freed once the IRQ stopped processing
--     */
--	if (chan->input && chan->enabled)
--		um_free_irq(chan->line->driver->read_irq, chan);
--	if (chan->output && chan->enabled)
--		um_free_irq(chan->line->driver->write_irq, chan);
--	chan->enabled = 0;
-+	if (delay_free_irq) {
-+		spin_lock_irqsave(&irqs_to_free_lock, flags);
-+		list_add(&chan->free_list, &irqs_to_free);
-+		spin_unlock_irqrestore(&irqs_to_free_lock, flags);
-+	} else {
-+		if (chan->input && chan->enabled)
-+			um_free_irq(chan->line->driver->read_irq, chan);
-+		if (chan->output && chan->enabled)
-+			um_free_irq(chan->line->driver->write_irq, chan);
-+		chan->enabled = 0;
-+	}
- 	if (chan->ops->close != NULL)
- 		(*chan->ops->close)(chan->fd, chan->data);
- 
-diff --git a/arch/um/kernel/irq.c b/arch/um/kernel/irq.c
-index 6b7f3827d6e4a..2753718d31b9d 100644
---- a/arch/um/kernel/irq.c
-+++ b/arch/um/kernel/irq.c
-@@ -21,6 +21,8 @@
- #include <irq_user.h>
- 
- 
-+extern void free_irqs(void);
-+
- /* When epoll triggers we do not know why it did so
-  * we can also have different IRQs for read and write.
-  * This is why we keep a small irq_fd array for each fd -
-@@ -100,6 +102,8 @@ void sigio_handler(int sig, struct siginfo *unused_si, struct uml_pt_regs *regs)
- 			}
- 		}
- 	}
-+
-+	free_irqs();
- }
- 
- static int assign_epoll_events_to_irq(struct irq_entry *irq_entry)
+ next:
+ 		/*
 -- 
 2.20.1
 
