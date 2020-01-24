@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68DCCC32771
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:23:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB4C5C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:23:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4047F2072C
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:23:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1CA42072C
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:23:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579875832;
-	bh=rOC8U+f1daTPhWJ4bxWs0HkmJ05pAb0NOy3PkAdNkRg=;
+	s=default; t=1579875835;
+	bh=DVeTexbQjnRUs8BKffsTZRZmM7OK3bSgOL09DHl0+fY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Q6cgho4C+UkiR3DZlHaXcr/m49TpvY5ejTZ/b4tbRuUz641SwyRfqNVM3scbi9TUk
-	 /c0CWe31xRLQBdpunR4VoOI7oIcVTQxavu4xQzOL/dQP/HvDXlxmdDksFM0wicBCAX
-	 6+5kjpQawl9zoNj9Ooff5VsL7srX5kKFqqYe1KsE=
+	b=uF4+r8C1jobNAl5IlmHpgB/TihQkaIX0R57b7U9zIAGVWfW1Nz6dhsG+s9TRG+/5j
+	 MRDOZRmjj8dBdzE7c2EBRVMpNoi3jfPNDQeAj+A8DhKRGx7ufzQkzwF0CoIiQDYO5b
+	 jZaFsPxj3MojePwkDENVc3BFg1SvtG64WZm9cQnI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389781AbgAXOXu (ORCPT
+        id S2392330AbgAXOWQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 09:23:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44324 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392327AbgAXOWQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 24 Jan 2020 09:22:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44148 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730177AbgAXOWG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 09:22:06 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1E81D2072C;
-        Fri, 24 Jan 2020 14:22:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4D1FB24676;
+        Fri, 24 Jan 2020 14:22:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579875735;
-        bh=rOC8U+f1daTPhWJ4bxWs0HkmJ05pAb0NOy3PkAdNkRg=;
+        s=default; t=1579875726;
+        bh=DVeTexbQjnRUs8BKffsTZRZmM7OK3bSgOL09DHl0+fY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tZ6FVEGXtTiJvrtPIp0NFq8s2iGb9EoLCSxkET6POs+teDikkFsJ2hCXHYDi3tq+I
-         aBKw1yclB9DjrxTi2Jh6B0rQpJGJO8ctOQGVAGcfF8PUGPujdAPNijoPQr6lBBCWFl
-         f6MX83UPMyw0vu4yL5SRd+Nol8o6QrLVWm9mor/A=
+        b=HeHPy4e39xkakBXur/v+yf4tgPmZ1XQWNXEj59l0v+wrflYBsG3Pis/VRQ07X2d2d
+         fvaS//VkC+/hg9l6+8XKLhdn6+Aa5EtnOc7xF2h08+/bzEw/QzCBxvi2ddZ/BJqXh5
+         5eKom8xOclNtHAg1GY0NbK/laHuICJbea0/thzi8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jouni Malinen <j@w1.fi>, Johannes Berg <johannes.berg@intel.com>,
+Cc:     Markus Theil <markus.theil@tu-ilmenau.de>,
+        Johannes Berg <johannes.berg@intel.com>,
         Sasha Levin <sashal@kernel.org>,
         linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 14/18] mac80211: Fix TKIP replay protection immediately after key setup
-Date:   Fri, 24 Jan 2020 09:21:53 -0500
-Message-Id: <20200124142157.30931-14-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 06/18] mac80211: mesh: restrict airtime metric to peered established plinks
+Date:   Fri, 24 Jan 2020 09:21:45 -0500
+Message-Id: <20200124142157.30931-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200124142157.30931-1-sashal@kernel.org>
 References: <20200124142157.30931-1-sashal@kernel.org>
@@ -59,62 +60,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jouni Malinen <j@w1.fi>
+From: Markus Theil <markus.theil@tu-ilmenau.de>
 
-[ Upstream commit 6f601265215a421f425ba3a4850a35861d024643 ]
+[ Upstream commit 02a614499600af836137c3fbc4404cd96365fff2 ]
 
-TKIP replay protection was skipped for the very first frame received
-after a new key is configured. While this is potentially needed to avoid
-dropping a frame in some cases, this does leave a window for replay
-attacks with group-addressed frames at the station side. Any earlier
-frame sent by the AP using the same key would be accepted as a valid
-frame and the internal RSC would then be updated to the TSC from that
-frame. This would allow multiple previously transmitted group-addressed
-frames to be replayed until the next valid new group-addressed frame
-from the AP is received by the station.
+The following warning is triggered every time an unestablished mesh peer
+gets dumped. Checks if a peer link is established before retrieving the
+airtime link metric.
 
-Fix this by limiting the no-replay-protection exception to apply only
-for the case where TSC=0, i.e., when this is for the very first frame
-protected using the new key, and the local RSC had not been set to a
-higher value when configuring the key (which may happen with GTK).
+[ 9563.022567] WARNING: CPU: 0 PID: 6287 at net/mac80211/mesh_hwmp.c:345
+               airtime_link_metric_get+0xa2/0xb0 [mac80211]
+[ 9563.022697] Hardware name: PC Engines apu2/apu2, BIOS v4.10.0.3
+[ 9563.022756] RIP: 0010:airtime_link_metric_get+0xa2/0xb0 [mac80211]
+[ 9563.022838] Call Trace:
+[ 9563.022897]  sta_set_sinfo+0x936/0xa10 [mac80211]
+[ 9563.022964]  ieee80211_dump_station+0x6d/0x90 [mac80211]
+[ 9563.023062]  nl80211_dump_station+0x154/0x2a0 [cfg80211]
+[ 9563.023120]  netlink_dump+0x17b/0x370
+[ 9563.023130]  netlink_recvmsg+0x2a4/0x480
+[ 9563.023140]  ____sys_recvmsg+0xa6/0x160
+[ 9563.023154]  ___sys_recvmsg+0x93/0xe0
+[ 9563.023169]  __sys_recvmsg+0x7e/0xd0
+[ 9563.023210]  do_syscall_64+0x4e/0x140
+[ 9563.023217]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-Signed-off-by: Jouni Malinen <j@w1.fi>
-Link: https://lore.kernel.org/r/20200107153545.10934-1-j@w1.fi
+Signed-off-by: Markus Theil <markus.theil@tu-ilmenau.de>
+Link: https://lore.kernel.org/r/20191203180644.70653-1-markus.theil@tu-ilmenau.de
+[rewrite commit message]
 Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/mac80211/tkip.c | 18 +++++++++++++++---
- 1 file changed, 15 insertions(+), 3 deletions(-)
+ net/mac80211/mesh_hwmp.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/net/mac80211/tkip.c b/net/mac80211/tkip.c
-index b3622823bad23..ebd66e8f46b3f 100644
---- a/net/mac80211/tkip.c
-+++ b/net/mac80211/tkip.c
-@@ -266,9 +266,21 @@ int ieee80211_tkip_decrypt_data(struct crypto_cipher *tfm,
- 	if ((keyid >> 6) != key->conf.keyidx)
- 		return TKIP_DECRYPT_INVALID_KEYIDX;
+diff --git a/net/mac80211/mesh_hwmp.c b/net/mac80211/mesh_hwmp.c
+index b0acb2961e805..5f4c228b82e56 100644
+--- a/net/mac80211/mesh_hwmp.c
++++ b/net/mac80211/mesh_hwmp.c
+@@ -326,6 +326,9 @@ static u32 airtime_link_metric_get(struct ieee80211_local *local,
+ 	u32 tx_time, estimated_retx;
+ 	u64 result;
  
--	if (rx_ctx->ctx.state != TKIP_STATE_NOT_INIT &&
--	    (iv32 < rx_ctx->iv32 ||
--	     (iv32 == rx_ctx->iv32 && iv16 <= rx_ctx->iv16)))
-+	/* Reject replays if the received TSC is smaller than or equal to the
-+	 * last received value in a valid message, but with an exception for
-+	 * the case where a new key has been set and no valid frame using that
-+	 * key has yet received and the local RSC was initialized to 0. This
-+	 * exception allows the very first frame sent by the transmitter to be
-+	 * accepted even if that transmitter were to use TSC 0 (IEEE 802.11
-+	 * described TSC to be initialized to 1 whenever a new key is taken into
-+	 * use).
-+	 */
-+	if (iv32 < rx_ctx->iv32 ||
-+	    (iv32 == rx_ctx->iv32 &&
-+	     (iv16 < rx_ctx->iv16 ||
-+	      (iv16 == rx_ctx->iv16 &&
-+	       (rx_ctx->iv32 || rx_ctx->iv16 ||
-+		rx_ctx->ctx.state != TKIP_STATE_NOT_INIT)))))
- 		return TKIP_DECRYPT_REPLAY;
- 
- 	if (only_iv) {
++	if (sta->mesh->plink_state != NL80211_PLINK_ESTAB)
++		return MAX_METRIC;
++
+ 	/* Try to get rate based on HW/SW RC algorithm.
+ 	 * Rate is returned in units of Kbps, correct this
+ 	 * to comply with airtime calculation units
 -- 
 2.20.1
 
