@@ -2,106 +2,97 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20372C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 08:58:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B2CCC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 08:58:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E61CC20709
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 08:58:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="duDiNRBf"
+	by mail.kernel.org (Postfix) with ESMTP id F270D20709
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 08:58:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729887AbgAXI6e (ORCPT
+        id S1729946AbgAXI6u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 03:58:34 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:37024 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725787AbgAXI6d (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 03:58:33 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579856312;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=JWz6aqGdHx35tZOwvGlucXWByVJJ94BypUpYqdf0YTw=;
-        b=duDiNRBf3n8ySGaO3KOap+FBRXDv8N2Y1/Bmg+ZIjjaHeAYseb04wVvjv0YVbj2f6YO2QW
-        AA0vOefuRcopssDx6pVYuYHnLU8haOyxzgt9vE1sIhXXWlnO/8swux29JiDoJ213o1IlSs
-        oWaFJK0ShqrA6XXPOoSwMQh+eZ6My4g=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-359-2wB_VS0uMCqChjAWPffPlg-1; Fri, 24 Jan 2020 03:58:30 -0500
-X-MC-Unique: 2wB_VS0uMCqChjAWPffPlg-1
-Received: by mail-wr1-f69.google.com with SMTP id w6so834701wrm.16
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Jan 2020 00:58:30 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=JWz6aqGdHx35tZOwvGlucXWByVJJ94BypUpYqdf0YTw=;
-        b=ht8cdYerVoQa48ngoRersoLWSGEADhkn7eppRXj+Q0j7Jt0duWO3MbFTfkTDcuA1aO
-         BL0kDxObkwz2YWKTUpsyJMD8oWY5lcEGDXbyJmyDkahj4oQFyCLVoyBRlbtbNF0mproD
-         rEGr+VjIa+QVjqL+/FEGGWiPfoFelfmL+q+hdHN6ojO4sm6hiL6YNmwl39Fv7yCsA+Zq
-         RN9+lbY01x/FumQQOdHcVgsiCm+Nu3vljnqShqgiPCOBv2wISUpqBuJxnnKtQL9o5iA3
-         Y4bVSPww7oHY3OfkdaEotRRpWxzZ/iQ9O89Cl3BP0N+kAJShcuifhiyWXxG/NadQumM6
-         MW4g==
-X-Gm-Message-State: APjAAAV5sXA8BbP07/vV5DnGQi3H5nbqg08K2o5XgoT+1gJyLfwoGA7T
-        mkax3akHoGbUpi0zZVMmR2u98i8FKIcjusMqMG0RAYxj+u4u9/n2N1zPSPS/j8Hm8Tw5kEFvv+r
-        ABvMmqTJIW5VnGjpies3Qq53/
-X-Received: by 2002:a05:600c:2215:: with SMTP id z21mr2280687wml.55.1579856309503;
-        Fri, 24 Jan 2020 00:58:29 -0800 (PST)
-X-Google-Smtp-Source: APXvYqwTG/Fx0cb6GxNxRaHqdTQSp/V/QSRYrq3Q3gtSptcEB3HrPrpH3UPGtIS+5Ympfmx+cp9+QA==
-X-Received: by 2002:a05:600c:2215:: with SMTP id z21mr2280663wml.55.1579856309137;
-        Fri, 24 Jan 2020 00:58:29 -0800 (PST)
-Received: from ?IPv6:2001:b07:6468:f312:b8fe:679e:87eb:c059? ([2001:b07:6468:f312:b8fe:679e:87eb:c059])
-        by smtp.gmail.com with ESMTPSA id c5sm6219331wmb.9.2020.01.24.00.58.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 24 Jan 2020 00:58:28 -0800 (PST)
-Subject: Re: [PATCH v4 09/10] KVM: selftests: Stop memslot creation in KVM
- internal memslot region
-To:     Ben Gardon <bgardon@google.com>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, linux-kselftest@vger.kernel.org
-Cc:     Cannon Matthews <cannonmatthews@google.com>,
-        Peter Xu <peterx@redhat.com>,
-        Andrew Jones <drjones@redhat.com>,
-        Peter Shier <pshier@google.com>,
-        Oliver Upton <oupton@google.com>
-References: <20200123180436.99487-1-bgardon@google.com>
- <20200123180436.99487-10-bgardon@google.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <92042648-e43a-d996-dc38-aded106b976b@redhat.com>
-Date:   Fri, 24 Jan 2020 09:58:27 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
-MIME-Version: 1.0
-In-Reply-To: <20200123180436.99487-10-bgardon@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Fri, 24 Jan 2020 03:58:50 -0500
+Received: from gate.crashing.org ([63.228.1.57]:42470 "EHLO gate.crashing.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725887AbgAXI6t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 03:58:49 -0500
+Received: from gate.crashing.org (localhost.localdomain [127.0.0.1])
+        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id 00O8wVx7016348;
+        Fri, 24 Jan 2020 02:58:31 -0600
+Received: (from segher@localhost)
+        by gate.crashing.org (8.14.1/8.14.1/Submit) id 00O8wU1T016347;
+        Fri, 24 Jan 2020 02:58:30 -0600
+X-Authentication-Warning: gate.crashing.org: segher set sender to segher@kernel.crashing.org using -f
+Date:   Fri, 24 Jan 2020 02:58:30 -0600
+From:   Segher Boessenkool <segher@kernel.crashing.org>
+To:     Christophe Leroy <christophe.leroy@c-s.fr>
+Cc:     Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] powerpc/irq: don't use current_stack_pointer() in check_stack_overflow()
+Message-ID: <20200124085830.GT3191@gate.crashing.org>
+References: <bae3e75a0c7f9037e4012ee547842c04cd527931.1575871613.git.christophe.leroy@c-s.fr> <87d0b9iez3.fsf@mpe.ellerman.id.au> <f4196f83-82ac-4df0-8c15-267a2c6c07ba@c-s.fr> <74cb4227-1a24-6fe1-2df4-3d4b069453c4@c-s.fr>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <74cb4227-1a24-6fe1-2df4-3d4b069453c4@c-s.fr>
+User-Agent: Mutt/1.4.2.3i
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 23/01/20 19:04, Ben Gardon wrote:
-> KVM creates internal memslots covering the region between 3G and 4G in
-> the guest physical address space, when the first vCPU is created.
-> Mapping this region before creation of the first vCPU causes vCPU
-> creation to fail. Prohibit tests from creating such a memslot and fail
-> with a helpful warning when they try to.
+On Fri, Jan 24, 2020 at 07:03:36AM +0000, Christophe Leroy wrote:
+> >Le 24/01/2020 à 06:46, Michael Ellerman a écrit :
+> >>
+> >>If I do this it seems to work, but feels a little dicey:
+> >>
+> >>    asm ("" : "=r" (r1));
+> >>    sp = r1 & (THREAD_SIZE - 1);
+> >
+> >
+> >Or we could do add in asm/reg.h what we have in boot/reg.h:
+> >
+> >register void *__stack_pointer asm("r1");
+> >#define get_sp()    (__stack_pointer)
+> >
+> >And use get_sp()
+> >
 > 
-> Signed-off-by: Ben Gardon <bgardon@google.com>
-> ---
+> It works, and I guess doing it this way is acceptable as it's exactly 
+> what's done for current in asm/current.h with register r2.
 
-The internal memslots are much higher than this (0xfffbc000 and
-0xfee00000).  I'm changing the patch to block 0xfe0000000 and above,
-otherwise it breaks vmx_dirty_log_test.
+That is a *global* register variable.  That works.  We still need to
+document a bit better what it does exactly, but this is the expected
+use case, so that will work.
 
-Paolo
+> Now I (still) get:
+> 
+> 	sp = get_sp() & (THREAD_SIZE - 1);
+>  b9c:	54 24 04 fe 	clrlwi  r4,r1,19
+> 	if (unlikely(sp < 2048)) {
+>  ba4:	2f 84 07 ff 	cmpwi   cr7,r4,2047
+> 
+> Allthough GCC 8.1 what doing exactly the same with the form CLANG don't 
+> like:
+> 
+> 	register unsigned long r1 asm("r1");
+> 	long sp = r1 & (THREAD_SIZE - 1);
+>  b84:	54 24 04 fe 	clrlwi  r4,r1,19
+> 	if (unlikely(sp < 2048)) {
+>  b8c:	2f 84 07 ff 	cmpwi   cr7,r4,2047
 
+Sure, if it did what you expected, things will usually work out fine ;-)
+
+(Pity that the compiler didn't come up with
+    rlwinm. r4,r1,0,19,20
+    bne bad
+Or are the low bits of r4 used later again?)
+
+
+Segher
