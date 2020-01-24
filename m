@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DC3AC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:56:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7C89C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:56:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE89C20718
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:56:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93BE62075D
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:56:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579859761;
-	bh=u9lGm3ZNsosapsCamEje2KnrWoGfYLnkqmz7zWrPbV0=;
+	s=default; t=1579859766;
+	bh=ZgCg7PwdWQQ51VpUPtQrqvjOkoDFiL+F8qHs3fwrhZw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YPxk7/k37QRDT0kpIuLxr3bS3e4RYCWYbDyDvjU8ps6iaZPE/IgZeT8kJopQ7qPfU
-	 nmBlseY3NiNm4+meg5OZHJOFf4JgwamhlcAZS97YkCH+GQCNJzo0BefNJGxae/X3fV
-	 VXZSd0ZjNN/u6xZIhCSSWY2qfYXIDgCqa648omM0=
+	b=ZvSdQRnYJNnXRqQybIaPDe3jBuk015LTlYnhI9jabxhhtrAcI4IEqcRj6RopD65uD
+	 fONZIGkFNmPikVe6E7AW9rbdGTiXdTCYOcuHakpXpaKeOskzhSr/KZMJhmXURfSpLB
+	 DgRADic4LkQ+eP9CASqoWjoI6QSS0XlJsQWPg9WQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388448AbgAXJ4B (ORCPT
+        id S2388498AbgAXJ4F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 04:56:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59644 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 04:56:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59710 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731830AbgAXJ4A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 04:56:00 -0500
+        id S1731830AbgAXJ4E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 04:56:04 -0500
 Received: from localhost (unknown [145.15.244.15])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7EBEC20718;
-        Fri, 24 Jan 2020 09:55:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8040A20718;
+        Fri, 24 Jan 2020 09:56:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579859759;
-        bh=u9lGm3ZNsosapsCamEje2KnrWoGfYLnkqmz7zWrPbV0=;
+        s=default; t=1579859763;
+        bh=ZgCg7PwdWQQ51VpUPtQrqvjOkoDFiL+F8qHs3fwrhZw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jmwoLeCYRD6gQQtEVL6/CF/vIxztK85B6llLy9HkWWuX8bwN6DMyIle7ZZlnNnLxX
-         30NlCQgfEcWA4HgqajIpd+BsB9VT7H9KRRt4HMsxmfB5xSnPDYfso0t+fDW6gXgnUw
-         SIc9dw9mtC39x251Qmj/K4m8jHOXyR7z1VeU6uIQ=
+        b=yLY4CAJidnsgwumtYMCTrilncvprKB3+9l6kH3M7B0SuK+4r/LQccEnCOR1ku1m7c
+         IzSIbN9TgLFhI7wGIj6g1IBBE545GbBnufHgCGDPkavaifdQFpYgVLOstSrVmru92g
+         zXfFmrQMa7HWfv/IoN+0MAP4XG2q030csJhAtTNY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Himanshu Madhani <hmadhani@marvell.com>,
-        Giridhar Malavali <giridhar.malavali@qlogic.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org, YueHaibing <yuehaibing@huawei.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 164/343] scsi: qla2xxx: Unregister chrdev if module initialization fails
-Date:   Fri, 24 Jan 2020 10:29:42 +0100
-Message-Id: <20200124092941.532413613@linuxfoundation.org>
+Subject: [PATCH 4.14 155/343] media: tw5864: Fix possible NULL pointer dereference in tw5864_handle_frame
+Date:   Fri, 24 Jan 2020 10:29:33 +0100
+Message-Id: <20200124092940.367465716@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124092919.490687572@linuxfoundation.org>
 References: <20200124092919.490687572@linuxfoundation.org>
@@ -62,98 +61,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bart Van Assche <bvanassche@acm.org>
+From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit c794d24ec9eb6658909955772e70f34bef5b5b91 ]
+[ Upstream commit 2e7682ebfc750177a4944eeb56e97a3f05734528 ]
 
-If module initialization fails after the character device has been
-registered, unregister the character device. Additionally, avoid
-duplicating error path code.
+'vb' null check should be done before dereferencing it in
+tw5864_handle_frame, otherwise a NULL pointer dereference
+may occur.
 
-Cc: Himanshu Madhani <hmadhani@marvell.com>
-Cc: Giridhar Malavali <giridhar.malavali@qlogic.com>
-Fixes: 6a03b4cd78f3 ("[SCSI] qla2xxx: Add char device to increase driver use count") # v2.6.35.
-Signed-off-by: Bart Van Assche <bvanassche@acm.org>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Fixes: 34d1324edd31 ("[media] pci: Add tw5864 driver")
+
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/qla2xxx/qla_os.c | 34 +++++++++++++++++++++-------------
- 1 file changed, 21 insertions(+), 13 deletions(-)
+ drivers/media/pci/tw5864/tw5864-video.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/scsi/qla2xxx/qla_os.c b/drivers/scsi/qla2xxx/qla_os.c
-index 5617bb18c2335..5f9d4dbc4a98e 100644
---- a/drivers/scsi/qla2xxx/qla_os.c
-+++ b/drivers/scsi/qla2xxx/qla_os.c
-@@ -6714,8 +6714,7 @@ qla2x00_module_init(void)
- 	/* Initialize target kmem_cache and mem_pools */
- 	ret = qlt_init();
- 	if (ret < 0) {
--		kmem_cache_destroy(srb_cachep);
--		return ret;
-+		goto destroy_cache;
- 	} else if (ret > 0) {
- 		/*
- 		 * If initiator mode is explictly disabled by qlt_init(),
-@@ -6736,11 +6735,10 @@ qla2x00_module_init(void)
- 	qla2xxx_transport_template =
- 	    fc_attach_transport(&qla2xxx_transport_functions);
- 	if (!qla2xxx_transport_template) {
--		kmem_cache_destroy(srb_cachep);
- 		ql_log(ql_log_fatal, NULL, 0x0002,
- 		    "fc_attach_transport failed...Failing load!.\n");
--		qlt_exit();
--		return -ENODEV;
-+		ret = -ENODEV;
-+		goto qlt_exit;
+diff --git a/drivers/media/pci/tw5864/tw5864-video.c b/drivers/media/pci/tw5864/tw5864-video.c
+index e7bd2b8484e3d..ee1230440b397 100644
+--- a/drivers/media/pci/tw5864/tw5864-video.c
++++ b/drivers/media/pci/tw5864/tw5864-video.c
+@@ -1395,13 +1395,13 @@ static void tw5864_handle_frame(struct tw5864_h264_frame *frame)
+ 	input->vb = NULL;
+ 	spin_unlock_irqrestore(&input->slock, flags);
+ 
+-	v4l2_buf = to_vb2_v4l2_buffer(&vb->vb.vb2_buf);
+-
+ 	if (!vb) { /* Gone because of disabling */
+ 		dev_dbg(&dev->pci->dev, "vb is empty, dropping frame\n");
+ 		return;
  	}
  
- 	apidev_major = register_chrdev(0, QLA2XXX_APIDEV, &apidev_fops);
-@@ -6752,27 +6750,37 @@ qla2x00_module_init(void)
- 	qla2xxx_transport_vport_template =
- 	    fc_attach_transport(&qla2xxx_transport_vport_functions);
- 	if (!qla2xxx_transport_vport_template) {
--		kmem_cache_destroy(srb_cachep);
--		qlt_exit();
--		fc_release_transport(qla2xxx_transport_template);
- 		ql_log(ql_log_fatal, NULL, 0x0004,
- 		    "fc_attach_transport vport failed...Failing load!.\n");
--		return -ENODEV;
-+		ret = -ENODEV;
-+		goto unreg_chrdev;
- 	}
- 	ql_log(ql_log_info, NULL, 0x0005,
- 	    "QLogic Fibre Channel HBA Driver: %s.\n",
- 	    qla2x00_version_str);
- 	ret = pci_register_driver(&qla2xxx_pci_driver);
- 	if (ret) {
--		kmem_cache_destroy(srb_cachep);
--		qlt_exit();
--		fc_release_transport(qla2xxx_transport_template);
--		fc_release_transport(qla2xxx_transport_vport_template);
- 		ql_log(ql_log_fatal, NULL, 0x0006,
- 		    "pci_register_driver failed...ret=%d Failing load!.\n",
- 		    ret);
-+		goto release_vport_transport;
- 	}
- 	return ret;
++	v4l2_buf = to_vb2_v4l2_buffer(&vb->vb.vb2_buf);
 +
-+release_vport_transport:
-+	fc_release_transport(qla2xxx_transport_vport_template);
-+
-+unreg_chrdev:
-+	if (apidev_major >= 0)
-+		unregister_chrdev(apidev_major, QLA2XXX_APIDEV);
-+	fc_release_transport(qla2xxx_transport_template);
-+
-+qlt_exit:
-+	qlt_exit();
-+
-+destroy_cache:
-+	kmem_cache_destroy(srb_cachep);
-+	return ret;
- }
- 
- /**
+ 	/*
+ 	 * Check for space.
+ 	 * Mind the overhead of startcode emulation prevention.
 -- 
 2.20.1
 
