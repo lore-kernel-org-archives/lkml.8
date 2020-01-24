@@ -2,320 +2,114 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB106C35240
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 01:19:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48F6AC35240
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 01:19:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B20DF2087E
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 01:19:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15074206A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 01:19:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579828797;
+	bh=Pt57xNn7PwEg7RGA+JlsfMYabBJJPJkE2lr3e5SGsSs=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=SQto3ooWVvH6b0vRACAFdbv5X5Z0egBr870lEYUTo5YOy0amOBxw6GvZMuHI20ZPK
+	 8Zf0zw5JOxGKMNAtL+mC6X6gCwrTBFhLmJ95iwCNDpL+5PmFaRGZiVIvk8JvNRbXwb
+	 pqW8V82+nJ+hAw8cdv3gKNbNnZpAYFAtl2Bi6lFA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731237AbgAXBTp (ORCPT
+        id S1729827AbgAXBT4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 20:19:45 -0500
-Received: from foss.arm.com ([217.140.110.172]:45854 "EHLO foss.arm.com"
+        Thu, 23 Jan 2020 20:19:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60778 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730478AbgAXBTk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 20:19:40 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CE6A6328;
-        Thu, 23 Jan 2020 17:19:38 -0800 (PST)
-Received: from [10.37.12.50] (unknown [10.37.12.50])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A0D2E3F68E;
-        Thu, 23 Jan 2020 17:19:35 -0800 (PST)
-Subject: Re: [PATCH v2 6/6] arm64: use activity monitors for frequency
- invariance
-To:     Ionela Voinescu <ionela.voinescu@arm.com>
-Cc:     catalin.marinas@arm.com, will@kernel.org, mark.rutland@arm.com,
-        maz@kernel.org, suzuki.poulose@arm.com, sudeep.holla@arm.com,
-        dietmar.eggemann@arm.com, peterz@infradead.org, mingo@redhat.com,
-        ggherdovich@suse.cz, vincent.guittot@linaro.org,
-        linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20191218182607.21607-1-ionela.voinescu@arm.com>
- <20191218182607.21607-7-ionela.voinescu@arm.com>
- <0ca05a2d-918b-0c70-6dc6-ef1f5f58f388@arm.com>
- <20200123170716.GA28719@arm.com>
-From:   Lukasz Luba <lukasz.luba@arm.com>
-Message-ID: <bddfdb83-c6cb-a809-8781-80e1117a2d6c@arm.com>
-Date:   Fri, 24 Jan 2020 01:19:31 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        id S1730661AbgAXBRj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jan 2020 20:17:39 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1224C22464;
+        Fri, 24 Jan 2020 01:17:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579828658;
+        bh=Pt57xNn7PwEg7RGA+JlsfMYabBJJPJkE2lr3e5SGsSs=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=G/wLQSCoMWcFD6yqaQ5VUH4v4QQwUqUGXHtwSfBa05oI2ceBdeTQPVb+c2PjiF1ox
+         nXwe1BGOS120pRGWqGZN6wNJ7gkOFwb0JJLqHAboqMK3OGPm3usUPBdRHLyxSbv0Z3
+         imAmxH8wRe1v6Yf715mt22x9g4M/mm5Q8leFay2Y=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Hui Wang <hui.wang@canonical.com>, Takashi Iwai <tiwai@suse.de>,
+        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
+Subject: [PATCH AUTOSEL 5.4 26/33] ALSA: hda/realtek - Move some alc236 pintbls to fallback table
+Date:   Thu, 23 Jan 2020 20:17:01 -0500
+Message-Id: <20200124011708.18232-26-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200124011708.18232-1-sashal@kernel.org>
+References: <20200124011708.18232-1-sashal@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20200123170716.GA28719@arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Hui Wang <hui.wang@canonical.com>
 
+[ Upstream commit d64ebdbfd4f71406f58210f5ccb16977b4cd31d2 ]
 
-On 1/23/20 5:07 PM, Ionela Voinescu wrote:
-> Hi Lukasz,
-> 
-> Thank you for taking a look over the patches.
-> 
-> On Thursday 23 Jan 2020 at 11:49:29 (+0000), Lukasz Luba wrote:
->> Hi Ionela,
->>
->> Please find my few comments below.
->>
->> On 12/18/19 6:26 PM, Ionela Voinescu wrote:
->>> The Frequency Invariance Engine (FIE) is providing a frequency
->>> scaling correction factor that helps achieve more accurate
->>> load-tracking.
->>>
->>> So far, for arm and arm64 platforms, this scale factor has been
->>> obtained based on the ratio between the current frequency and the
->>> maximum supported frequency recorded by the cpufreq policy. The
->>> setting of this scale factor is triggered from cpufreq drivers by
->>> calling arch_set_freq_scale. The current frequency used in computation
->>> is the frequency requested by a governor, but it may not be the
->>> frequency that was implemented by the platform.
->>>
->>> This correction factor can also be obtained using a core counter and a
->>> constant counter to get information on the performance (frequency based
->>> only) obtained in a period of time. This will more accurately reflect
->>> the actual current frequency of the CPU, compared with the alternative
->>> implementation that reflects the request of a performance level from
->>> the OS.
->>>
->>> Therefore, implement arch_scale_freq_tick to use activity monitors, if
->>> present, for the computation of the frequency scale factor.
->>>
->>> The use of AMU counters depends on:
->>>    - CONFIG_ARM64_AMU_EXTN - depents on the AMU extension being present
->>>    - CONFIG_CPU_FREQ - the current frequency obtained using counter
->>>      information is divided by the maximum frequency obtained from the
->>>      cpufreq policy.
->>>
->>> While it is possible to have a combination of CPUs in the system with
->>> and without support for activity monitors, the use of counters for
->>> frequency invariance is only enabled for a CPU, if all related CPUs
->>> (CPUs in the same frequency domain) support and have enabled the core
->>
->> This looks like an edge case scenario, for which we are designing the
->> whole machinery with workqueues. AFAIU we cannot run the code in
->> arch_set_freq_scale() and you want to be check all CPUs upfront.
->>
-> 
-> Unfortunately, I don't believe it to be be an edge-case. Given that this
-> is an optional feature, I do believe that people might skip on
-> implementing it on some CPUs(LITTLEs) while keeping it for CPUs(bigs)
-> where power and thermal mitigation is more probable to happen in firmware.
-> This is the main reason to be conservative in the validation of CPUs and
-> cpufreq policies.
-> 
-> In regards to arch_set_freq_scale, I want to be able to tell, when that
-> function is called, if I should return a scale factor based on cpufreq
-> for the current policy. If activity monitors are useable for the CPUs in
-> the full policy, than I'm bailing out and leave the AMU FIE machinery
-> set the scale factor. Unfortunately this works at policy granularity.
-> 
-> This could  be done in a nicer way by setting the scale factor per cpu
-> and not for all CPUs in a policy in this arch_set_freq_scale function.
-> But this would require some rewriting for the full frequency invariance
-> support in drivers which we've talked about for a while but it was not
-> the purpose of this patch set. But it would eliminate the policy
-> verification I do with the second workqueue.
-> 
->> Maybe you can just wait till all CPUs boot and then set the proper
->> flags and finish initialization. Something like:
->> per_cpu(s8, amu_feat) /* form the patch 1/6 */
->> OR
->> per_cpu(u8, amu_scale_freq) /* from this patch */
->> with maybe some values:
->> 0 - not checked yet
->> 1 - checked and present
->> -1 - checked and not available
->> -2 - checked but in conflict with others in the freq domain
->> -3..-k - other odd configurations
->>
->> could potentially eliminate the need of workqueues.
->>
->> Then, if we could trigger this from i.e. late_initcall, the CPUs
->> should be online and you can validate them.
->>
-> 
-> I did initially give such a state machine a try but it proved to be
-> quite messy. A big reason for this is that the activity monitors unit
-> has multiple counters that can be used for different purposes.
-> 
-> The amu_feat per_cpu variable only flags that you have the AMU present
-> for potential users (in this case FIE) to validate the counters they
-> need for their respective usecase. For this reason I don't want to
-> overload the meaning of amu_feat. For the same reason I'm not doing the
-> validation of the counters in a generic way, but I'm tying it to the
-> usecase for particular counters. For example, it would not matter if
-> the instructions retired counter is not enabled from firmware for the
-> usecase of FIE. For frequency invariance we only need the core and
-> constant cycle counters and I'm making it the job of the user (arm64
-> topology code) to do the checking.
-> 
-> Secondly, for amu_scale_freq I could have added such a state machine,
-> but I did not think it was useful. The only thing it would change is
-> that I would not have to use the cpu_amu_fie variable in the data
-> structure that gets passed to the work functions. The only way I would
-> eliminate the second workqueue was if I did not do a check of all CPUs
-> in a policy, as described above, and rewrite frequency invariance to
-> work at CPU granularity and not policy granularity. This would eliminate
-> the dependency on cpufreq policy all-together, so it would be worth
-> doing if only for this reason alone :).
-> 
-> But even in that case, it's probably not needed to have more than two
-> states for amu_freq_scale.
-> 
-> What do you think?
+We have a new Dell machine which needs to apply the quirk
+ALC255_FIXUP_DELL1_MIC_NO_PRESENCE, try to use the fallback table
+to fix it this time. And we could remove all pintbls of alc236
+for applying DELL1_MIC_NO_PRESENCE on Dell machines.
 
-I think currently we are the only users for this AMU and if there will
-be another in the future, then we can start thinking about his proposed
-changes. Let's cross that bridge when we come to it.
+Signed-off-by: Hui Wang <hui.wang@canonical.com>
+Link: https://lore.kernel.org/r/20191121022644.8078-2-hui.wang@canonical.com
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ sound/pci/hda/patch_realtek.c | 17 +++--------------
+ 1 file changed, 3 insertions(+), 14 deletions(-)
 
-Regarding the code, in the arch/arm64/cpufeature.c you can already
-read the cycle registers. All the CPUs are going through that code
-during start. If you use this fact in the late_initcall() all CPUs
-should be checked and you can just ask for cpufreq policy, calculate the 
-max_freq ratio, set the per cpu config value to 'ready' state.
+diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
+index d293488dc3dd3..68832f52c1ad2 100644
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -7563,20 +7563,6 @@ static const struct snd_hda_pin_quirk alc269_pin_fixup_tbl[] = {
+ 		{0x19, 0x02a11020},
+ 		{0x1a, 0x02a11030},
+ 		{0x21, 0x0221101f}),
+-	SND_HDA_PIN_QUIRK(0x10ec0236, 0x1028, "Dell", ALC255_FIXUP_DELL1_MIC_NO_PRESENCE,
+-		{0x12, 0x90a60140},
+-		{0x14, 0x90170110},
+-		{0x21, 0x02211020}),
+-	SND_HDA_PIN_QUIRK(0x10ec0236, 0x1028, "Dell", ALC255_FIXUP_DELL1_MIC_NO_PRESENCE,
+-		{0x12, 0x90a60140},
+-		{0x14, 0x90170150},
+-		{0x21, 0x02211020}),
+-	SND_HDA_PIN_QUIRK(0x10ec0236, 0x1028, "Dell", ALC255_FIXUP_DELL1_MIC_NO_PRESENCE,
+-		{0x21, 0x02211020}),
+-	SND_HDA_PIN_QUIRK(0x10ec0236, 0x1028, "Dell", ALC255_FIXUP_DELL1_MIC_NO_PRESENCE,
+-		{0x12, 0x40000000},
+-		{0x14, 0x90170110},
+-		{0x21, 0x02211020}),
+ 	SND_HDA_PIN_QUIRK(0x10ec0255, 0x1028, "Dell", ALC255_FIXUP_DELL2_MIC_NO_PRESENCE,
+ 		{0x14, 0x90170110},
+ 		{0x21, 0x02211020}),
+@@ -7901,6 +7887,9 @@ static const struct snd_hda_pin_quirk alc269_fallback_pin_fixup_tbl[] = {
+ 	SND_HDA_PIN_QUIRK(0x10ec0274, 0x1028, "Dell", ALC274_FIXUP_DELL_AIO_LINEOUT_VERB,
+ 		{0x19, 0x40000000},
+ 		{0x1a, 0x40000000}),
++	SND_HDA_PIN_QUIRK(0x10ec0236, 0x1028, "Dell", ALC255_FIXUP_DELL1_MIC_NO_PRESENCE,
++		{0x19, 0x40000000},
++		{0x1a, 0x40000000}),
+ 	{}
+ };
+ 
+-- 
+2.20.1
 
-Something like in the code below, it is on top of your patch set.
-
------------------------->8-------------------------------------
-
-
-diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
-index c639b3e052d7..837ea46d8867 100644
---- a/arch/arm64/kernel/cpufeature.c
-+++ b/arch/arm64/kernel/cpufeature.c
-@@ -1168,19 +1168,26 @@ static bool has_hw_dbm(const struct 
-arm64_cpu_capabilities *cap,
-   * from the current cpu.
-   *  - cpu_has_amu_feat()
-   */
--static DEFINE_PER_CPU_READ_MOSTLY(u8, amu_feat);
--
--inline bool cpu_has_amu_feat(void)
--{
--	return !!this_cpu_read(amu_feat);
--}
-+DECLARE_PER_CPU(u64, arch_const_cycles_prev);
-+DECLARE_PER_CPU(u64, arch_core_cycles_prev);
-+DECLARE_PER_CPU(u8, amu_scale_freq);
-
-  static void cpu_amu_enable(struct arm64_cpu_capabilities const *cap)
-  {
-+	u64 core_cnt, const_cnt;
-+
-  	if (has_cpuid_feature(cap, SCOPE_LOCAL_CPU)) {
-  		pr_info("detected CPU%d: Activity Monitors Unit (AMU)\n",
-  			smp_processor_id());
--		this_cpu_write(amu_feat, 1);
-+		core_cnt = read_sysreg_s(SYS_AMEVCNTR0_CORE_EL0);
-+		const_cnt = read_sysreg_s(SYS_AMEVCNTR0_CONST_EL0);
-+
-+		this_cpu_write(arch_core_cycles_prev, core_cnt);
-+		this_cpu_write(arch_const_cycles_prev, const_cnt);
-+
-+		this_cpu_write(amu_scale_freq, 1);
-+	} else {
-+		this_cpu_write(amu_scale_freq, 2);
-  	}
-  }
-
-diff --git a/arch/arm64/kernel/topology.c b/arch/arm64/kernel/topology.c
-index 61f8264afec9..95b34085ae64 100644
---- a/arch/arm64/kernel/topology.c
-+++ b/arch/arm64/kernel/topology.c
-@@ -144,8 +144,8 @@ static struct cpu_amu_work __percpu *works;
-  static cpumask_var_t cpus_to_visit;
-
-  static DEFINE_PER_CPU_READ_MOSTLY(unsigned long, arch_max_freq_scale);
--static DEFINE_PER_CPU(u64, arch_const_cycles_prev);
--static DEFINE_PER_CPU(u64, arch_core_cycles_prev);
-+DEFINE_PER_CPU(u64, arch_const_cycles_prev);
-+DEFINE_PER_CPU(u64, arch_core_cycles_prev);
-  DECLARE_PER_CPU(u8, amu_scale_freq);
-
-  static void cpu_amu_fie_init_workfn(struct work_struct *work)
-@@ -323,12 +323,64 @@ static int __init 
-register_fie_counters_cpufreq_notifier(void)
-  }
-  core_initcall(register_fie_counters_cpufreq_notifier);
-
-+static int __init init_amu_feature(void)
-+{
-+	struct cpufreq_policy *policy;
-+	struct cpumask *checked_cpus;
-+	int count, total;
-+	int cpu, i;
-+	s8 amu_config;
-+	u64 ratio;
-+
-+	checked_cpus = kzalloc(cpumask_size(), GFP_KERNEL);
-+	if (!checked_cpus)
-+		return -ENOMEM;
-+
-+	for_each_possible_cpu(cpu) {
-+		if (cpumask_test_cpu(cpu, checked_cpus))
-+			continue;
-+
-+		policy = cpufreq_cpu_get(cpu);
-+		if (!policy) {
-+			pr_warn("No cpufreq policy found for CPU%d\n", cpu);
-+			continue;
-+		}
-+
-+		count = total = 0;
-+
-+		for_each_cpu(i, policy->related_cpus) {
-+			amu_config = per_cpu(amu_scale_freq, i);
-+			if (amu_config == 1)
-+				count++;
-+			total++;
-+		}
-+
-+		amu_config = (total == count) ? 3 : 4;
-+
-+		ratio = (u64)arch_timer_get_rate() << (2 * SCHED_CAPACITY_SHIFT);
-+		ratio = div64_u64(ratio, policy->cpuinfo.max_freq * 1000);
-+
-+		for_each_cpu(i, policy->related_cpus) {
-+			per_cpu(arch_max_freq_scale, i) = (unsigned long)ratio;
-+			per_cpu(amu_scale_freq, i) = amu_config;
-+			cpumask_set_cpu(i, checked_cpus);
-+		}
-+
-+		cpufreq_cpu_put(policy);
-+	}
-+
-+	kfree(checked_cpus);
-+
-+	return 0;
-+}
-+late_initcall(init_amu_feature);
-+
-  void topology_scale_freq_tick(void)
-  {
-  	u64 prev_core_cnt, prev_const_cnt;
-  	u64 core_cnt, const_cnt, scale;
-
--	if (!this_cpu_read(amu_scale_freq))
-+	if (this_cpu_read(amu_scale_freq) != 3)
-  		return;
-
-  	const_cnt = read_sysreg_s(SYS_AMEVCNTR0_CONST_EL0);
-
-
--------------------------8<------------------------------------
-
-Regards,
-Lukasz
-
-> 
-> Thank you,
-> Ionela.
-> 
