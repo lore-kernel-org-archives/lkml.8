@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11D76C35242
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 01:17:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9432AC35240
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 01:17:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5C53206A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 01:17:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68042206A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 01:17:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579828635;
-	bh=i+98cbl9FjfX50LGd+5BHlXUspumzNbAKtB6PD24HZ8=;
+	s=default; t=1579828638;
+	bh=AUJ7Mi/W3UD5YTk3TevtD9PxZSR5axwLwf8CCIlNtWM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZH3w68mmx2kJF/hQdSfo3E3dXvOp7AGIpPrUD3NurX4oUPC58qfMNNT/jNOnZWrwg
-	 LHwvpGzosofkOqmo2I9OJek5L84NA0K6ngd3U3xezqA6YtM5LQ5IfMJL87OfT2rpwo
-	 cOtQsTDED1m6m2wtzuh7FblSFv5MFZOUyFu+iGAY=
+	b=KgkEq1O/TzbBb5iC+JWY505STdDmoKmWGMBF24KLstRQn6RBh9JHsF2KWASBY1gPH
+	 5+hFfDuWcM4QywN8TDylkK0+BLB8MlYe9CIgFaRq9uYCtsmxcAfDaH4Y/dlXOU2SIp
+	 5dePuC5S6ybVWAnykyFuVQ1K7XHBSagozXxuvNxU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730335AbgAXBRP (ORCPT
+        id S1730357AbgAXBRR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 20:17:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59978 "EHLO mail.kernel.org"
+        Thu, 23 Jan 2020 20:17:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60070 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729009AbgAXBRM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 20:17:12 -0500
+        id S1730325AbgAXBRO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jan 2020 20:17:14 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F0C0C2087E;
-        Fri, 24 Jan 2020 01:17:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 324BB206A2;
+        Fri, 24 Jan 2020 01:17:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579828631;
-        bh=i+98cbl9FjfX50LGd+5BHlXUspumzNbAKtB6PD24HZ8=;
+        s=default; t=1579828633;
+        bh=AUJ7Mi/W3UD5YTk3TevtD9PxZSR5axwLwf8CCIlNtWM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NhOnag8JNv025A/xLFzi/ABwjmSe+Kii4CIeh2Z8egD8X5fBG7B/vWDg06DAUNbvm
-         2sFgcw3hrlfXPdQjUZJ8k97ubm6tPMWuIsys4jaT6TWE4STwNX7rS0ld+ffdOkgSai
-         1rX+M/6dbEK4uhhTem8JeoZ46JBaBY/y0gxj1V/o=
+        b=So66+xsJYNV9ZT/TEa74XH9MIJc/X7/1A2vWMrEK9jdlObHnQPBy9t/u1xt4YljxF
+         EG7GRHBIxgQ9IGKTGqOFneBRRsmRrUImWAyyC4NiEaVBxrbVgBf1jn4d6Zik7PBXjQ
+         VP/7xz2tHeL6vOrIlMaiOl8irAfcyAD0o5dB8+HE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sam McNally <sammc@chromium.org>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
-Subject: [PATCH AUTOSEL 5.4 02/33] ASoC: Intel: cht_bsw_rt5645: Add quirk for boards using pmc_plt_clk_0
-Date:   Thu, 23 Jan 2020 20:16:37 -0500
-Message-Id: <20200124011708.18232-2-sashal@kernel.org>
+Cc:     Andrii Nakryiko <andriin@fb.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-api@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 04/33] libbpf: Fix BTF-defined map's __type macro handling of arrays
+Date:   Thu, 23 Jan 2020 20:16:39 -0500
+Message-Id: <20200124011708.18232-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200124011708.18232-1-sashal@kernel.org>
 References: <20200124011708.18232-1-sashal@kernel.org>
@@ -60,106 +59,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sam McNally <sammc@chromium.org>
+From: Andrii Nakryiko <andriin@fb.com>
 
-[ Upstream commit adebb11139029ddf1fba6f796c4a476f17eacddc ]
+[ Upstream commit a53ba15d81995868651dd28a85d8045aef3d4e20 ]
 
-As of commit 648e921888ad ("clk: x86: Stop marking clocks as
-CLK_IS_CRITICAL"), the cht_bsw_rt5645 driver needs to enable the clock
-it's using for the codec's mclk. It does this from commit 7735bce05a9c
-("ASoC: Intel: boards: use devm_clk_get() unconditionally"), enabling
-pmc_plt_clk_3. However, Strago family Chromebooks use pmc_plt_clk_0 for
-the codec mclk, resulting in white noise with some digital microphones.
-Add a DMI-based quirk for Strago family Chromebooks to use pmc_plt_clk_0
-instead - mirroring the changes made to cht_bsw_max98090_ti in
-commit a182ecd3809c ("ASoC: intel: cht_bsw_max98090_ti: Add quirk for
-boards using pmc_plt_clk_0") and making use of the existing
-dmi_check_system() call and related infrastructure added in
-commit 22af29114eb4 ("ASoC: Intel: cht-bsw-rt5645: add quirks for
-SSP0/AIF1/AIF2 routing").
+Due to a quirky C syntax of declaring pointers to array or function
+prototype, existing __type() macro doesn't work with map key/value types
+that are array or function prototype. One has to create a typedef first
+and use it to specify key/value type for a BPF map.  By using typeof(),
+pointer to type is now handled uniformly for all kinds of types. Convert
+one of self-tests as a demonstration.
 
-Signed-off-by: Sam McNally <sammc@chromium.org>
-Acked-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Link: https://lore.kernel.org/r/20190917054933.209335-1-sammc@chromium.org
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Andrii Nakryiko <andriin@fb.com>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Link: https://lore.kernel.org/bpf/20191004040211.2434033-1-andriin@fb.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/intel/boards/cht_bsw_rt5645.c | 26 +++++++++++++++++++------
- 1 file changed, 20 insertions(+), 6 deletions(-)
+ tools/testing/selftests/bpf/bpf_helpers.h                | 2 +-
+ tools/testing/selftests/bpf/progs/test_get_stack_rawtp.c | 3 +--
+ 2 files changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/sound/soc/intel/boards/cht_bsw_rt5645.c b/sound/soc/intel/boards/cht_bsw_rt5645.c
-index 8879c3be29d5a..c68a5b85a4a03 100644
---- a/sound/soc/intel/boards/cht_bsw_rt5645.c
-+++ b/sound/soc/intel/boards/cht_bsw_rt5645.c
-@@ -48,6 +48,7 @@ struct cht_mc_private {
- #define CHT_RT5645_SSP2_AIF2     BIT(16) /* default is using AIF1  */
- #define CHT_RT5645_SSP0_AIF1     BIT(17)
- #define CHT_RT5645_SSP0_AIF2     BIT(18)
-+#define CHT_RT5645_PMC_PLT_CLK_0 BIT(19)
+diff --git a/tools/testing/selftests/bpf/bpf_helpers.h b/tools/testing/selftests/bpf/bpf_helpers.h
+index 54a50699bbfda..9f77cbaac01c1 100644
+--- a/tools/testing/selftests/bpf/bpf_helpers.h
++++ b/tools/testing/selftests/bpf/bpf_helpers.h
+@@ -3,7 +3,7 @@
+ #define __BPF_HELPERS__
  
- static unsigned long cht_rt5645_quirk = 0;
+ #define __uint(name, val) int (*name)[val]
+-#define __type(name, val) val *name
++#define __type(name, val) typeof(val) *name
  
-@@ -59,6 +60,8 @@ static void log_quirks(struct device *dev)
- 		dev_info(dev, "quirk SSP0_AIF1 enabled");
- 	if (cht_rt5645_quirk & CHT_RT5645_SSP0_AIF2)
- 		dev_info(dev, "quirk SSP0_AIF2 enabled");
-+	if (cht_rt5645_quirk & CHT_RT5645_PMC_PLT_CLK_0)
-+		dev_info(dev, "quirk PMC_PLT_CLK_0 enabled");
- }
+ /* helper macro to print out debug messages */
+ #define bpf_printk(fmt, ...)				\
+diff --git a/tools/testing/selftests/bpf/progs/test_get_stack_rawtp.c b/tools/testing/selftests/bpf/progs/test_get_stack_rawtp.c
+index f8ffa3f3d44bb..6cc4479ac9df6 100644
+--- a/tools/testing/selftests/bpf/progs/test_get_stack_rawtp.c
++++ b/tools/testing/selftests/bpf/progs/test_get_stack_rawtp.c
+@@ -47,12 +47,11 @@ struct {
+  * issue and avoid complicated C programming massaging.
+  * This is an acceptable workaround since there is one entry here.
+  */
+-typedef __u64 raw_stack_trace_t[2 * MAX_STACK_RAWTP];
+ struct {
+ 	__uint(type, BPF_MAP_TYPE_PERCPU_ARRAY);
+ 	__uint(max_entries, 1);
+ 	__type(key, __u32);
+-	__type(value, raw_stack_trace_t);
++	__type(value, __u64[2 * MAX_STACK_RAWTP]);
+ } rawdata_map SEC(".maps");
  
- static int platform_clock_control(struct snd_soc_dapm_widget *w,
-@@ -226,15 +229,21 @@ static int cht_aif1_hw_params(struct snd_pcm_substream *substream,
- 	return 0;
- }
- 
--/* uncomment when we have a real quirk
- static int cht_rt5645_quirk_cb(const struct dmi_system_id *id)
- {
- 	cht_rt5645_quirk = (unsigned long)id->driver_data;
- 	return 1;
- }
--*/
- 
- static const struct dmi_system_id cht_rt5645_quirk_table[] = {
-+	{
-+		/* Strago family Chromebooks */
-+		.callback = cht_rt5645_quirk_cb,
-+		.matches = {
-+			DMI_MATCH(DMI_PRODUCT_FAMILY, "Intel_Strago"),
-+		},
-+		.driver_data = (void *)CHT_RT5645_PMC_PLT_CLK_0,
-+	},
- 	{
- 	},
- };
-@@ -526,6 +535,7 @@ static int snd_cht_mc_probe(struct platform_device *pdev)
- 	int dai_index = 0;
- 	int ret_val = 0;
- 	int i;
-+	const char *mclk_name;
- 
- 	drv = devm_kzalloc(&pdev->dev, sizeof(*drv), GFP_KERNEL);
- 	if (!drv)
-@@ -662,11 +672,15 @@ static int snd_cht_mc_probe(struct platform_device *pdev)
- 	if (ret_val)
- 		return ret_val;
- 
--	drv->mclk = devm_clk_get(&pdev->dev, "pmc_plt_clk_3");
-+	if (cht_rt5645_quirk & CHT_RT5645_PMC_PLT_CLK_0)
-+		mclk_name = "pmc_plt_clk_0";
-+	else
-+		mclk_name = "pmc_plt_clk_3";
-+
-+	drv->mclk = devm_clk_get(&pdev->dev, mclk_name);
- 	if (IS_ERR(drv->mclk)) {
--		dev_err(&pdev->dev,
--			"Failed to get MCLK from pmc_plt_clk_3: %ld\n",
--			PTR_ERR(drv->mclk));
-+		dev_err(&pdev->dev, "Failed to get MCLK from %s: %ld\n",
-+			mclk_name, PTR_ERR(drv->mclk));
- 		return PTR_ERR(drv->mclk);
- 	}
- 
+ SEC("raw_tracepoint/sys_enter")
 -- 
 2.20.1
 
