@@ -7,46 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1009EC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:32:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5833AC32771
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:32:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D553F20661
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:32:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A30E20661
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:32:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579876331;
-	bh=wW37xeSHEyfPIA3RkVnLPNbuRX83NGYj75tTHY5f1i4=;
+	s=default; t=1579876337;
+	bh=qr7owESt+Vz2/tX7+VYaDm15p8ZqK9HnMkAvEEwOEdE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CJ+mgDKQhaqesXw5iB2g1I3vSOtw5WgCNngEVZpYmdSVqumdlj9ux2MAk7L7spVds
-	 Eu3umxcq2iIqOTREhCCpnjJPYiyba+BLnCkRpNzfoVkxwYOuEJM9IFhjfGhw8Qbxa0
-	 ESWj+//WgAlAzhJ+7eYIVvhCHSq2FadJyGsY2FeM=
+	b=MQjYELgsxMJS0NbYwrppd7OG/1Iy9jUm16x+2+uJC/0gFpcMtwJhv3ZNaGgGuYSvg
+	 c2EdCtlqpFNSFnnYbBQuptfrT2PQVB+qHd9zfHyQtI5pjFhaSvDAMkYHlFnt5WA1OQ
+	 8T+Np+Tz/fInVuYAqeL2XFWkLwCo4JpcM+6t1GBU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392664AbgAXOcK (ORCPT
+        id S2392675AbgAXOcQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 09:32:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41000 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 09:32:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40970 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404537AbgAXOUK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 09:20:10 -0500
+        id S2404519AbgAXOUJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 09:20:09 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E3138222D9;
-        Fri, 24 Jan 2020 14:20:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 89EA12087E;
+        Fri, 24 Jan 2020 14:20:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579875609;
-        bh=wW37xeSHEyfPIA3RkVnLPNbuRX83NGYj75tTHY5f1i4=;
+        s=default; t=1579875608;
+        bh=qr7owESt+Vz2/tX7+VYaDm15p8ZqK9HnMkAvEEwOEdE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yGICmCqZrIPTLNaQh78hvwvkzjvEe+Itv4vkT39LvlWdT6XUsLiaE8GBzRiiMqIf0
-         bQfparZ0hErGtFTTOaDOQSK68Ij2EgdoftyBJVgMsNH8SsocW1hCWQihj/1q9jkyHw
-         yoRiFe1oakgy7sfAMNzITTgStvV81Ne8HaGIW/1g=
+        b=pFeesanWnc5onbTFnqKIqonB25WbRplYlpvBNSxXFmJ794842z26N5nX9w1pRdW1F
+         aNnYd/u0X/tn5T6U2lBVXTz8Qha2N+1jAQ5sd4zVyEMSF4mMJ+83DDeao2m27k9j3L
+         D4lsonkUPqL+9sEIhIgW4+87Yz+NqdEouZbDDjSI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Yonglong Liu <liuyonglong@huawei.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 096/107] net: hns: fix soft lockup when there is not enough memory
-Date:   Fri, 24 Jan 2020 09:18:06 -0500
-Message-Id: <20200124141817.28793-96-sashal@kernel.org>
+Cc:     Eyal Birger <eyal.birger@gmail.com>,
+        Shmulik Ladkani <shmulik.ladkani@gmail.com>,
+        Florian Westphal <fw@strlen.de>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Sasha Levin <sashal@kernel.org>,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 095/107] netfilter: nat: fix ICMP header corruption on ICMP errors
+Date:   Fri, 24 Jan 2020 09:18:05 -0500
+Message-Id: <20200124141817.28793-95-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200124141817.28793-1-sashal@kernel.org>
 References: <20200124141817.28793-1-sashal@kernel.org>
@@ -59,60 +63,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yonglong Liu <liuyonglong@huawei.com>
+From: Eyal Birger <eyal.birger@gmail.com>
 
-[ Upstream commit 49edd6a2c456150870ddcef5b7ed11b21d849e13 ]
+[ Upstream commit 61177e911dad660df86a4553eb01c95ece2f6a82 ]
 
-When there is not enough memory and napi_alloc_skb() return NULL,
-the HNS driver will print error message, and than try again, if
-the memory is not enough for a while, huge error message and the
-retry operation will cause soft lockup.
+Commit 8303b7e8f018 ("netfilter: nat: fix spurious connection timeouts")
+made nf_nat_icmp_reply_translation() use icmp_manip_pkt() as the l4
+manipulation function for the outer packet on ICMP errors.
 
-When napi_alloc_skb() return NULL because of no memory, we can
-get a warn_alloc() call trace, so this patch deletes the error
-message. We already use polling mode to handle irq, but the
-retry operation will render the polling weight inactive, this
-patch just return budget when the rx is not completed to avoid
-dead loop.
+However, icmp_manip_pkt() assumes the packet has an 'id' field which
+is not correct for all types of ICMP messages.
 
-Fixes: 36eedfde1a36 ("net: hns: Optimize hns_nic_common_poll for better performance")
-Fixes: b5996f11ea54 ("net: add Hisilicon Network Subsystem basic ethernet support")
-Signed-off-by: Yonglong Liu <liuyonglong@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+This is not correct for ICMP error packets, and leads to bogus bytes
+being written the ICMP header, which can be wrongfully regarded as
+'length' bytes by RFC 4884 compliant receivers.
+
+Fix by assigning the 'id' field only for ICMP messages that have this
+semantic.
+
+Reported-by: Shmulik Ladkani <shmulik.ladkani@gmail.com>
+Fixes: 8303b7e8f018 ("netfilter: nat: fix spurious connection timeouts")
+Signed-off-by: Eyal Birger <eyal.birger@gmail.com>
+Acked-by: Florian Westphal <fw@strlen.de>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/hisilicon/hns/hns_enet.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ net/netfilter/nf_nat_proto.c | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns/hns_enet.c b/drivers/net/ethernet/hisilicon/hns/hns_enet.c
-index 14ab20491fd02..eb69e5c81a4d0 100644
---- a/drivers/net/ethernet/hisilicon/hns/hns_enet.c
-+++ b/drivers/net/ethernet/hisilicon/hns/hns_enet.c
-@@ -565,7 +565,6 @@ static int hns_nic_poll_rx_skb(struct hns_nic_ring_data *ring_data,
- 	skb = *out_skb = napi_alloc_skb(&ring_data->napi,
- 					HNS_RX_HEAD_SIZE);
- 	if (unlikely(!skb)) {
--		netdev_err(ndev, "alloc rx skb fail\n");
- 		ring->stats.sw_err_cnt++;
- 		return -ENOMEM;
- 	}
-@@ -1056,7 +1055,6 @@ static int hns_nic_common_poll(struct napi_struct *napi, int budget)
- 		container_of(napi, struct hns_nic_ring_data, napi);
- 	struct hnae_ring *ring = ring_data->ring;
+diff --git a/net/netfilter/nf_nat_proto.c b/net/netfilter/nf_nat_proto.c
+index 0a59c14b51776..64eedc17037ad 100644
+--- a/net/netfilter/nf_nat_proto.c
++++ b/net/netfilter/nf_nat_proto.c
+@@ -233,6 +233,19 @@ icmp_manip_pkt(struct sk_buff *skb,
+ 		return false;
  
--try_again:
- 	clean_complete += ring_data->poll_one(
- 				ring_data, budget - clean_complete,
- 				ring_data->ex_process);
-@@ -1066,7 +1064,7 @@ try_again:
- 			napi_complete(napi);
- 			ring->q->handle->dev->ops->toggle_ring_irq(ring, 0);
- 		} else {
--			goto try_again;
-+			return budget;
- 		}
- 	}
- 
+ 	hdr = (struct icmphdr *)(skb->data + hdroff);
++	switch (hdr->type) {
++	case ICMP_ECHO:
++	case ICMP_ECHOREPLY:
++	case ICMP_TIMESTAMP:
++	case ICMP_TIMESTAMPREPLY:
++	case ICMP_INFO_REQUEST:
++	case ICMP_INFO_REPLY:
++	case ICMP_ADDRESS:
++	case ICMP_ADDRESSREPLY:
++		break;
++	default:
++		return true;
++	}
+ 	inet_proto_csum_replace2(&hdr->checksum, skb,
+ 				 hdr->un.echo.id, tuple->src.u.icmp.id, false);
+ 	hdr->un.echo.id = tuple->src.u.icmp.id;
 -- 
 2.20.1
 
