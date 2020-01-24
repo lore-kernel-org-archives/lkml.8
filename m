@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80EDEC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:26:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 596B2C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:26:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E9FB206D4
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:26:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2137C2075D
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:26:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579865211;
-	bh=OGxVUGjvj5du1rg7UWcWQJE0Kmdun1QAZUtLSwOl7Sw=;
+	s=default; t=1579865215;
+	bh=CHakN+mBFNg7zyA+oUB7U/ojbnS3nlpGBy8uEgjSruU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tSlo5g/OnTsbNQIICUga1gmXA0wcMY7MX6AcizDohglHXvMV0HtwH7UrfMfeiNIZz
-	 oav4mPO5vvfSOXoPBdifFsCp0ykwPOTAdGxm8H0/lb1ySHAmyry5J9/Xyh9Z2n+LxO
-	 PhHhZWz2mpZhA57mwn49cPDcB9ddFIuGU9jBudi8=
+	b=WZ/Gk8wP5T/kqLEoTEuT2j4LyYQi12UIXYv2qKdKFjCpqd5kSZhHQek5UI61arlRK
+	 TbinONl8ENX+F13INWJOnCCI2//4iwqBIZnevtf6NExm8LIMEnF0Ov4S/9DruzS+cb
+	 d+AATSfNoW3IrA48wY8VkpYo339Gyiie8i3gTZ5Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391596AbgAXL0u (ORCPT
+        id S2391605AbgAXL0x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:26:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41816 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 06:26:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41964 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391588AbgAXL0q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:26:46 -0500
+        id S2391469AbgAXL0u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:26:50 -0500
 Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5B45C2075D;
-        Fri, 24 Jan 2020 11:26:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D6E2620718;
+        Fri, 24 Jan 2020 11:26:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579865206;
-        bh=OGxVUGjvj5du1rg7UWcWQJE0Kmdun1QAZUtLSwOl7Sw=;
+        s=default; t=1579865209;
+        bh=CHakN+mBFNg7zyA+oUB7U/ojbnS3nlpGBy8uEgjSruU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FFTOmS8nczD08Z4ILtazRnmR/zt4EZGmtozFMuJpQjSnM8LDhwNiBBjb4p38tFVrR
-         IHUWR+5kW5kezWnvB2CFNfHdVdHGKFHSvyJTs6zme3HGOtRDCHCF2/Vi4PilHszMJc
-         oEJd3/cA6rHckeobiRFD3usoxOgYCwu4XeoUyCoU=
+        b=WKCxgz+W1P2OE1p9s+ZWPcUa2pSg/nYZxSOLa+zNTA/CxZYgEcDBr7J2sTlu7xkf8
+         EcpXaAR2r1uZQKeYdNIhKlPzsukhhkUNY8e8T+INRMxBQG7wXxzUVqh9tA5IFuvN9g
+         j48mWDigvUDxbcltL2HfWb5dpJqTakc0UKVVwAdY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -46,9 +46,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Minghuan Lian <Minghuan.Lian@nxp.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 469/639] PCI: mobiveil: Remove the flag MSI_FLAG_MULTI_PCI_MSI
-Date:   Fri, 24 Jan 2020 10:30:39 +0100
-Message-Id: <20200124093146.185771483@linuxfoundation.org>
+Subject: [PATCH 4.19 470/639] PCI: mobiveil: Fix devfn check in mobiveil_pcie_valid_device()
+Date:   Fri, 24 Jan 2020 10:30:40 +0100
+Message-Id: <20200124093146.309905812@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
 References: <20200124093047.008739095@linuxfoundation.org>
@@ -63,21 +63,17 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
 
-[ Upstream commit a131fb6364c1be0924dcb969ecf6b988c556a5d5 ]
+[ Upstream commit cbd50b3ca3964c79dac65fda277637577e029e8c ]
 
-The Mobiveil internal MSI controller requires separate target addresses,
-one per MSI vector; this is clearly incompatible with the Multiple MSI
-feature, which requires the same target address for all vectors
-requested by an endpoint (ie the Message Address field in the MSI
-Capability structure), so the multi MSI feature is clearly not
-supported by the host controller driver.
+Current check for devfn number in mobiveil_pci_valid_device() is
+wrong in that it flags as invalid functions present in PCI device 0
+in the root bus while it is perfectly valid to access all functions
+in PCI device 0 in the root bus.
 
-Remove the flag MSI_FLAG_MULTI_PCI_MSI and with it multi MSI support,
-fixing the misconfiguration.
+Update the check in mobiveil_pci_valid_device() to fix the issue.
 
-Fixes: 1e913e58335f ("PCI: mobiveil: Add MSI support")
+Fixes: 9af6bcb11e12 ("PCI: mobiveil: Add Mobiveil PCIe Host Bridge IP driver")
 Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-[lorenzo.pieralisi@arm.com: commit log]
 Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 Reviewed-by: Minghuan Lian <Minghuan.Lian@nxp.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
@@ -86,18 +82,18 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/pci/controller/pcie-mobiveil.c b/drivers/pci/controller/pcie-mobiveil.c
-index a2d1e89d48674..dc228eb500edd 100644
+index dc228eb500edd..476be4f3c7f6e 100644
 --- a/drivers/pci/controller/pcie-mobiveil.c
 +++ b/drivers/pci/controller/pcie-mobiveil.c
-@@ -643,7 +643,7 @@ static struct irq_chip mobiveil_msi_irq_chip = {
+@@ -174,7 +174,7 @@ static bool mobiveil_pcie_valid_device(struct pci_bus *bus, unsigned int devfn)
+ 	 * Do not read more than one device on the bus directly
+ 	 * attached to RC
+ 	 */
+-	if ((bus->primary == pcie->root_bus_nr) && (devfn > 0))
++	if ((bus->primary == pcie->root_bus_nr) && (PCI_SLOT(devfn) > 0))
+ 		return false;
  
- static struct msi_domain_info mobiveil_msi_domain_info = {
- 	.flags	= (MSI_FLAG_USE_DEF_DOM_OPS | MSI_FLAG_USE_DEF_CHIP_OPS |
--		MSI_FLAG_MULTI_PCI_MSI | MSI_FLAG_PCI_MSIX),
-+		   MSI_FLAG_PCI_MSIX),
- 	.chip	= &mobiveil_msi_irq_chip,
- };
- 
+ 	return true;
 -- 
 2.20.1
 
