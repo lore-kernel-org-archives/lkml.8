@@ -2,80 +2,236 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 713CEC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 19:04:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FFF0C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 19:06:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 378202071E
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 19:04:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55CF420709
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 19:06:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GAywwj8U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391806AbgAXTEh (ORCPT
+        id S2391660AbgAXTGc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 14:04:37 -0500
-Received: from correo.us.es ([193.147.175.20]:44614 "EHLO mail.us.es"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387973AbgAXTEh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 14:04:37 -0500
-Received: from antivirus1-rhel7.int (unknown [192.168.2.11])
-        by mail.us.es (Postfix) with ESMTP id 405D6BAEFE
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Jan 2020 20:04:36 +0100 (CET)
-Received: from antivirus1-rhel7.int (localhost [127.0.0.1])
-        by antivirus1-rhel7.int (Postfix) with ESMTP id 2E317DA702
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Jan 2020 20:04:36 +0100 (CET)
-Received: by antivirus1-rhel7.int (Postfix, from userid 99)
-        id 15BE2DA713; Fri, 24 Jan 2020 20:04:36 +0100 (CET)
-Received: from antivirus1-rhel7.int (localhost [127.0.0.1])
-        by antivirus1-rhel7.int (Postfix) with ESMTP id 159ABDA707;
-        Fri, 24 Jan 2020 20:04:34 +0100 (CET)
-Received: from 192.168.1.97 (192.168.1.97)
- by antivirus1-rhel7.int (F-Secure/fsigk_smtp/550/antivirus1-rhel7.int);
- Fri, 24 Jan 2020 20:04:34 +0100 (CET)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/550/antivirus1-rhel7.int)
-Received: from us.es (unknown [90.77.255.23])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: 1984lsi)
-        by entrada.int (Postfix) with ESMTPSA id E8D5342EE38E;
-        Fri, 24 Jan 2020 20:04:33 +0100 (CET)
-Date:   Fri, 24 Jan 2020 20:04:32 +0100
-X-SMTPAUTHUS: auth mail.us.es
-From:   Pablo Neira Ayuso <pablo@netfilter.org>
-To:     Praveen Chaudhary <praveen5582@gmail.com>
-Cc:     fw@strlen.de, davem@davemloft.net, kadlec@netfilter.org,
-        netfilter-devel@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Zhenggen Xu <zxu@linkedin.com>,
-        Andy Stracner <astracner@linkedin.com>
-Subject: Re: [PATCH v4] [net]: Fix skb->csum update in
- inet_proto_csum_replace16().
-Message-ID: <20200124190432.vxcnnds3ypqa4hzh@salvia>
-References: <20200123142929.GV795@breakpoint.cc>
- <1579811608-688-1-git-send-email-pchaudhary@linkedin.com>
- <1579811608-688-2-git-send-email-pchaudhary@linkedin.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1579811608-688-2-git-send-email-pchaudhary@linkedin.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Fri, 24 Jan 2020 14:06:32 -0500
+Received: from mail-pj1-f74.google.com ([209.85.216.74]:53701 "EHLO
+        mail-pj1-f74.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387973AbgAXTGc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 14:06:32 -0500
+Received: by mail-pj1-f74.google.com with SMTP id h6so272285pju.3
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jan 2020 11:06:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=krkqAlKRhIMp0ArvlpDhRd7dHWq318OqpoSyF8/KVxw=;
+        b=GAywwj8UJhwxiqNgWIKKSNIBEkjgCb13ZvmIkbgvw3a62UZT9wx4bs2L9qmSU3ApoM
+         7PD72PhLgZhEqmrQVMDh0QfmdpfL80pW8KBieoiCd48rL/OjP5j5lFKCOP1sfKkvwNJA
+         +xGfaRc8hQxhz5oQ4dGwxqy8O6hIBiF13MIyAYLgOv42e3kfnTOe2fqkw2sbIYg6MsZP
+         iI9O/XCli30VFBvTFH6miWnkPrkRzCYFM3vOhPNmLi4bnaFG9Ex0KnGovbb+71Wf73kA
+         zOxsE8QnPRM9HVyNDzafepg3w8FlTAiCFQPW5FOKe3uaMrHWxo/bUFwHk53FhRpWl42j
+         gV8A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=krkqAlKRhIMp0ArvlpDhRd7dHWq318OqpoSyF8/KVxw=;
+        b=fpnkMwxvQwUZutI70uYEi2myMVxDq/8w2HX79PnZ5wn4QhFlYaukiiq3qtg8xcavRx
+         UzyHYMjOLkOcK2PLkvfd6+aWQW02kheo+HgAdTvSnGKgtHnzEO50D5ODWXoJFmtoX42F
+         Zkjy4EcWpIQBUBYvmH8Xde2DIiH8m/yBGm1STlmPItrW6VPMSJOv3Y1kDfwSYBqycR4D
+         vkMsOHnAkXDUyuaPLPgYpk1rM4hud+V3zaOAJ76DvRcXzpta8Qc6+FSbQYC88GL6100g
+         jXX07JXGrzfZCvxAcFHkMPbytSoAu+H+NOTnKTnbn/+6MPMWEEeJRUC3x1TjM3TzNxnF
+         wkOQ==
+X-Gm-Message-State: APjAAAUHQJpfPDpkkNnK8T1H91P38QGgZE8rAyhDlj4S2w4KG8emsxYs
+        ttxKH1s/CeZchNtXQOo2VYMe2bcLOZPj
+X-Google-Smtp-Source: APXvYqwUGyYBQ1naFt1fLtO0IzJ+NPIeVbJYvV7OkP/zeyNBFbhu8a6UF1qp1yGFe6Wf4852PPxO11lrb/vb
+X-Received: by 2002:a63:6d05:: with SMTP id i5mr5925764pgc.120.1579892791226;
+ Fri, 24 Jan 2020 11:06:31 -0800 (PST)
+Date:   Fri, 24 Jan 2020 11:06:25 -0800
+In-Reply-To: <20200123014627.71720-1-bgeffon@google.com>
+Message-Id: <20200124190625.257659-1-bgeffon@google.com>
+Mime-Version: 1.0
+References: <20200123014627.71720-1-bgeffon@google.com>
+X-Mailer: git-send-email 2.25.0.341.g760bfbb309-goog
+Subject: [PATCH v2] mm: Add MREMAP_DONTUNMAP to mremap().
+From:   Brian Geffon <bgeffon@google.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     "Michael S . Tsirkin" <mst@redhat.com>,
+        Brian Geffon <bgeffon@google.com>,
+        Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-api@vger.kernel.org,
+        Andy Lutomirski <luto@amacapital.net>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Sonny Rao <sonnyrao@google.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Yu Zhao <yuzhao@google.com>, Jesse Barnes <jsbarnes@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 23, 2020 at 12:33:28PM -0800, Praveen Chaudhary wrote:
-> skb->csum is updated incorrectly, when manipulation for NF_NAT_MANIP_SRC\DST
-> is done on IPV6 packet.
-> 
-> Fix:
-> There is no need to update skb->csum in inet_proto_csum_replace16(), because
-> update in two fields a.) IPv6 src/dst address and b.) L4 header checksum
-> cancels each other for skb->csum calculation.
-> Whereas inet_proto_csum_replace4 function needs to update skb->csum,
-> because update in 3 fields a.) IPv4 src/dst address, b.) IPv4 Header checksum
-> and c.) L4 header checksum results in same diff as L4 Header checksum for
-> skb->csum calculation.
+When remapping an anonymous, private mapping, if MREMAP_DONTUNMAP is
+set, the source mapping will not be removed. Instead it will be
+cleared as if a brand new anonymous, private mapping had been created
+atomically as part of the mremap() call.  If a userfaultfd was watching
+the source, it will continue to watch the new mapping.  For a mapping
+that is shared or not anonymous, MREMAP_DONTUNMAP will cause the
+mremap() call to fail. MREMAP_DONTUNMAP implies that MREMAP_FIXED is
+also used. The final result is two equally sized VMAs where the
+destination contains the PTEs of the source.
 
-Applied, thanks.
+We hope to use this in Chrome OS where with userfaultfd we could write
+an anonymous mapping to disk without having to STOP the process or worry
+about VMA permission changes.
+
+This feature also has a use case in Android, Lokesh Gidra has said
+that "As part of using userfaultfd for GC, We'll have to move the physical
+pages of the java heap to a separate location. For this purpose mremap
+will be used. Without the MREMAP_DONTUNMAP flag, when I mremap the java
+heap, its virtual mapping will be removed as well. Therefore, we'll
+require performing mmap immediately after. This is not only time consuming
+but also opens a time window where a native thread may call mmap and
+reserve the java heap's address range for its own usage. This flag
+solves the problem."
+
+Signed-off-by: Brian Geffon <bgeffon@google.com>
+---
+ include/uapi/linux/mman.h |  5 +++--
+ mm/mremap.c               | 37 ++++++++++++++++++++++++++++++-------
+ 2 files changed, 33 insertions(+), 9 deletions(-)
+
+diff --git a/include/uapi/linux/mman.h b/include/uapi/linux/mman.h
+index fc1a64c3447b..923cc162609c 100644
+--- a/include/uapi/linux/mman.h
++++ b/include/uapi/linux/mman.h
+@@ -5,8 +5,9 @@
+ #include <asm/mman.h>
+ #include <asm-generic/hugetlb_encode.h>
+ 
+-#define MREMAP_MAYMOVE	1
+-#define MREMAP_FIXED	2
++#define MREMAP_MAYMOVE		1
++#define MREMAP_FIXED		2
++#define MREMAP_DONTUNMAP	4
+ 
+ #define OVERCOMMIT_GUESS		0
+ #define OVERCOMMIT_ALWAYS		1
+diff --git a/mm/mremap.c b/mm/mremap.c
+index 122938dcec15..bf97c3eb538b 100644
+--- a/mm/mremap.c
++++ b/mm/mremap.c
+@@ -318,8 +318,8 @@ unsigned long move_page_tables(struct vm_area_struct *vma,
+ static unsigned long move_vma(struct vm_area_struct *vma,
+ 		unsigned long old_addr, unsigned long old_len,
+ 		unsigned long new_len, unsigned long new_addr,
+-		bool *locked, struct vm_userfaultfd_ctx *uf,
+-		struct list_head *uf_unmap)
++		bool *locked, unsigned long flags,
++		struct vm_userfaultfd_ctx *uf, struct list_head *uf_unmap)
+ {
+ 	struct mm_struct *mm = vma->vm_mm;
+ 	struct vm_area_struct *new_vma;
+@@ -408,6 +408,13 @@ static unsigned long move_vma(struct vm_area_struct *vma,
+ 	if (unlikely(vma->vm_flags & VM_PFNMAP))
+ 		untrack_pfn_moved(vma);
+ 
++	if (unlikely(!err && (flags & MREMAP_DONTUNMAP))) {
++		if (vm_flags & VM_ACCOUNT)
++			vma->vm_flags |= VM_ACCOUNT;
++
++		goto out;
++	}
++
+ 	if (do_munmap(mm, old_addr, old_len, uf_unmap) < 0) {
+ 		/* OOM: unable to split vma, just get accounts right */
+ 		vm_unacct_memory(excess >> PAGE_SHIFT);
+@@ -422,6 +429,7 @@ static unsigned long move_vma(struct vm_area_struct *vma,
+ 			vma->vm_next->vm_flags |= VM_ACCOUNT;
+ 	}
+ 
++out:
+ 	if (vm_flags & VM_LOCKED) {
+ 		mm->locked_vm += new_len >> PAGE_SHIFT;
+ 		*locked = true;
+@@ -497,7 +505,7 @@ static struct vm_area_struct *vma_to_resize(unsigned long addr,
+ 
+ static unsigned long mremap_to(unsigned long addr, unsigned long old_len,
+ 		unsigned long new_addr, unsigned long new_len, bool *locked,
+-		struct vm_userfaultfd_ctx *uf,
++		unsigned long flags, struct vm_userfaultfd_ctx *uf,
+ 		struct list_head *uf_unmap_early,
+ 		struct list_head *uf_unmap)
+ {
+@@ -545,6 +553,17 @@ static unsigned long mremap_to(unsigned long addr, unsigned long old_len,
+ 		old_len = new_len;
+ 	}
+ 
++	/*
++	 * MREMAP_DONTUNMAP expands by old_len + (new_len - old_len), we will
++	 * check that we can expand by old_len and vma_to_resize will handle
++	 * the vma growing.
++	 */
++	if (unlikely(flags & MREMAP_DONTUNMAP && !may_expand_vm(mm,
++				vma->vm_flags, old_len >> PAGE_SHIFT))) {
++		ret = -ENOMEM;
++		goto out;
++	}
++
+ 	vma = vma_to_resize(addr, old_len, new_len, &charged);
+ 	if (IS_ERR(vma)) {
+ 		ret = PTR_ERR(vma);
+@@ -561,7 +580,7 @@ static unsigned long mremap_to(unsigned long addr, unsigned long old_len,
+ 	if (IS_ERR_VALUE(ret))
+ 		goto out1;
+ 
+-	ret = move_vma(vma, addr, old_len, new_len, new_addr, locked, uf,
++	ret = move_vma(vma, addr, old_len, new_len, new_addr, locked, flags, uf,
+ 		       uf_unmap);
+ 	if (!(offset_in_page(ret)))
+ 		goto out;
+@@ -609,12 +628,15 @@ SYSCALL_DEFINE5(mremap, unsigned long, addr, unsigned long, old_len,
+ 	addr = untagged_addr(addr);
+ 	new_addr = untagged_addr(new_addr);
+ 
+-	if (flags & ~(MREMAP_FIXED | MREMAP_MAYMOVE))
++	if (flags & ~(MREMAP_FIXED | MREMAP_MAYMOVE | MREMAP_DONTUNMAP))
+ 		return ret;
+ 
+ 	if (flags & MREMAP_FIXED && !(flags & MREMAP_MAYMOVE))
+ 		return ret;
+ 
++	if (flags & MREMAP_DONTUNMAP && !(flags & MREMAP_FIXED))
++		return ret;
++
+ 	if (offset_in_page(addr))
+ 		return ret;
+ 
+@@ -634,7 +656,8 @@ SYSCALL_DEFINE5(mremap, unsigned long, addr, unsigned long, old_len,
+ 
+ 	if (flags & MREMAP_FIXED) {
+ 		ret = mremap_to(addr, old_len, new_addr, new_len,
+-				&locked, &uf, &uf_unmap_early, &uf_unmap);
++				&locked, flags, &uf, &uf_unmap_early,
++				&uf_unmap);
+ 		goto out;
+ 	}
+ 
+@@ -712,7 +735,7 @@ SYSCALL_DEFINE5(mremap, unsigned long, addr, unsigned long, old_len,
+ 		}
+ 
+ 		ret = move_vma(vma, addr, old_len, new_len, new_addr,
+-			       &locked, &uf, &uf_unmap);
++			       &locked, flags, &uf, &uf_unmap);
+ 	}
+ out:
+ 	if (offset_in_page(ret)) {
+-- 
+2.25.0.341.g760bfbb309-goog
+
