@@ -4,51 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 226E9C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:10:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A33BC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:10:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2F882075D
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:10:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56BEE20708
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:10:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579864228;
-	bh=Gy61lJNjfXtdKm2b3rJsnE7QTY9RZ0Pcx8tVpo4S7Yk=;
+	s=default; t=1579864231;
+	bh=NxKSitTLrFjxskMIQYHG79kRZzyxU4AyPUZPCgK1PQ4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uMQK5kYNthTDh1NyaVBiANeopPjZQVT/syQKIvIQSVCh1B4hWl0ybsQkBqGKb3Ufk
-	 nliUK3s8KdHzGHyq4/0077Zmr/YTrth9GpoJQYioAFXFU7D1EMWufkmskhCNruRv6J
-	 50heLACK9jVhVHdTgJ8WtSUsiWtwEaolU94sxzv4=
+	b=VXsnK47/v7Eq1lGmFDlacSAsasa8xacG0nG2unIFNHqBBr/fVtCb0U2atb4oHS4yY
+	 9ge0nUHGRU9hmnzaRHiMb0w3GfWuuenetTxZFrSXge1c5ktqabGpdKqHSIe4x5watB
+	 u7niNKVbBDUhAojemcreMpHpUhRMkRL3pnziz/rY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387743AbgAXLK0 (ORCPT
+        id S2387832AbgAXLKa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:10:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46144 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 06:10:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46210 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731494AbgAXLKX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:10:23 -0500
+        id S2387777AbgAXLK0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:10:26 -0500
 Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4BBC52071A;
-        Fri, 24 Jan 2020 11:10:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AEE8220708;
+        Fri, 24 Jan 2020 11:10:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579864222;
-        bh=Gy61lJNjfXtdKm2b3rJsnE7QTY9RZ0Pcx8tVpo4S7Yk=;
+        s=default; t=1579864226;
+        bh=NxKSitTLrFjxskMIQYHG79kRZzyxU4AyPUZPCgK1PQ4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=F6tclycT7eeVGhTxyJ/vjDAbxsWykz3QOrPX6C8YFQiKNP2CTgxV0Ya5h859jiRJU
-         hzdu1NC2QCkACb1fyrvQsJdWzC1RRvvZH1EUVyTU2kUwYX+Fmz1pj7p/0HN/gQjn+H
-         LdZ2++8gyCsaxnFIUCiv/3iPHtE115mT47TtFl+0=
+        b=KWPuvBFr+i3TFdLoF6H+afi4L6EkCq7WYCMf4z+ha8jBl1o8VBYtcqnpDGHkv81cy
+         3zeuXmKldWKp+unLa0xn/JKDsvOWLzHcjzqOluoSDOtLzDE26mJ5CnTUdyJs11bilt
+         qN8C/1++lh1HRCqOeSNjFfwVi39tkJML0VJl/FCY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Simon Horman <horms+renesas@verge.net.au>,
+        stable@vger.kernel.org, Mark Bloch <markb@mellanox.com>,
+        Bodong Wang <bodong@mellanox.com>,
+        =?UTF-8?q?H=C3=A5kon=20Bugge?= <haakon.bugge@oracle.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 193/639] pinctrl: sh-pfc: sh73a0: Fix fsic_spdif pin groups
-Date:   Fri, 24 Jan 2020 10:26:03 +0100
-Message-Id: <20200124093111.258174756@linuxfoundation.org>
+Subject: [PATCH 4.19 194/639] RDMA/mlx5: Fix memory leak in case we fail to add an IB device
+Date:   Fri, 24 Jan 2020 10:26:04 +0100
+Message-Id: <20200124093111.376671852@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
 References: <20200124093047.008739095@linuxfoundation.org>
@@ -61,35 +63,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+From: Mark Bloch <markb@mellanox.com>
 
-[ Upstream commit 0e6e448bdcf896d001a289a6112a704542d51516 ]
+[ Upstream commit fc9e4477f924e84d7798f7a1d41401d699de1219 ]
 
-There are two pin groups for the FSIC SPDIF signal, but the FSIC pin
-group array lists only one, and it refers to a nonexistent group.
+Make sure the IB device is freed on failure.
 
-Fixes: 2ecd4154c906b7d6 ("sh-pfc: sh73a0: Add FSI pin groups and functions")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+Fixes: b5ca15ad7e61 ("IB/mlx5: Add proper representors support")
+Signed-off-by: Mark Bloch <markb@mellanox.com>
+Reviewed-by: Bodong Wang <bodong@mellanox.com>
+Reviewed-by: Håkon Bugge <haakon.bugge@oracle.com>
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/sh-pfc/pfc-sh73a0.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/infiniband/hw/mlx5/ib_rep.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/pinctrl/sh-pfc/pfc-sh73a0.c b/drivers/pinctrl/sh-pfc/pfc-sh73a0.c
-index f8fbedb46585d..6dca760f9f280 100644
---- a/drivers/pinctrl/sh-pfc/pfc-sh73a0.c
-+++ b/drivers/pinctrl/sh-pfc/pfc-sh73a0.c
-@@ -3367,7 +3367,8 @@ static const char * const fsic_groups[] = {
- 	"fsic_sclk_out",
- 	"fsic_data_in",
- 	"fsic_data_out",
--	"fsic_spdif",
-+	"fsic_spdif_0",
-+	"fsic_spdif_1",
- };
+diff --git a/drivers/infiniband/hw/mlx5/ib_rep.c b/drivers/infiniband/hw/mlx5/ib_rep.c
+index 35a0e04c38f28..b841589c27c9c 100644
+--- a/drivers/infiniband/hw/mlx5/ib_rep.c
++++ b/drivers/infiniband/hw/mlx5/ib_rep.c
+@@ -69,8 +69,10 @@ mlx5_ib_vport_rep_load(struct mlx5_core_dev *dev, struct mlx5_eswitch_rep *rep)
+ 	ibdev->mdev = dev;
+ 	ibdev->num_ports = max(MLX5_CAP_GEN(dev, num_ports),
+ 			       MLX5_CAP_GEN(dev, num_vhca_ports));
+-	if (!__mlx5_ib_add(ibdev, &rep_profile))
++	if (!__mlx5_ib_add(ibdev, &rep_profile)) {
++		ib_dealloc_device(&ibdev->ib_dev);
+ 		return -EINVAL;
++	}
  
- static const char * const fsid_groups[] = {
+ 	rep->rep_if[REP_IB].priv = ibdev;
+ 
 -- 
 2.20.1
 
