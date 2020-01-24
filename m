@@ -4,50 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56548C32771
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:26:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 711F5C35242
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:26:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21BC521734
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:26:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BBE6206F0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:26:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579875989;
-	bh=EPmA2zirvc5Pz7HNThNXC1RSd9j2S88QrrFYdgTC6bA=;
+	s=default; t=1579876000;
+	bh=4A02OZQtCnmk/4AORUiKn+upIKfOZbzV/wc9V16rDiE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=O3S8y/+F+ClkV0F5HEyVNtU/ReQVhkDGjHTy1tKFAtAFvfvF1igJ+93VZG9a5lfK3
-	 J9YIv1ul2gMKHhCheJ3HpNg6v42rQ7YjiaT9sidLt4NdxAdEzn/IQixXqq6Xhm/r77
-	 SJZbbjr62e8ZpVYjFLiq9OzoDdWRS9qvJb0iKkf0=
+	b=RTEWoyJxsLzpwgd5BAF3j4XOK5OWpaeNmKo05TqSJ52iORedm8XBn0hoxWozwzRjp
+	 uzQPHfZw7az/Pb9hZkoDCZ156qZb1dEgdtO2f2JRzjePyNQaJ1fXbTJC1t7gIlCC5O
+	 jLyal4UIlBiswpeGQKAR6tMnIYLT9WtW1yiYpe2s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389922AbgAXO02 (ORCPT
+        id S2390284AbgAXO0j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 09:26:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43594 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 09:26:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43464 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405365AbgAXOVk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 09:21:40 -0500
+        id S2405339AbgAXOVg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 09:21:36 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A95C224682;
-        Fri, 24 Jan 2020 14:21:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D7C7324686;
+        Fri, 24 Jan 2020 14:21:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579875699;
-        bh=EPmA2zirvc5Pz7HNThNXC1RSd9j2S88QrrFYdgTC6bA=;
+        s=default; t=1579875695;
+        bh=4A02OZQtCnmk/4AORUiKn+upIKfOZbzV/wc9V16rDiE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VxtULot+6qY9p3kedech8zVOJjOrMSRGHkZf0uPy3gjwpS9QA+ufv0O/T+5DdrJBf
-         thTI0XqX+G8DSG1NLx7Z+bA5ZAGrs+6bJ2FgUAYvmyMh35AhjwUChqGwRC5woipi/L
-         FFyNuJoGkoR1WKwwg/L3CxoAhgksHlycfaphzP8U=
+        b=pgVUQoD/GaQmzDuUaixuJuUrVc2KYF0LfgnRPvLO+ivkkaFWn2NBCikVJ5gUrWbmh
+         MIlCvOYwua8vJQPZA7DYFuCzbsRYsYP9udVfs8aDcngb9BRZ33aWuhUjeS+mAil2j2
+         CDDDW16Lq+9R1bhAB3OUU0LOlxwgRw+JWLEdO7gg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Johan Hovold <johan@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-wireless@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 17/32] NFC: pn533: fix bulk-message timeout
-Date:   Fri, 24 Jan 2020 09:21:04 -0500
-Message-Id: <20200124142119.30484-17-sashal@kernel.org>
+Cc:     Cong Wang <xiyou.wangcong@gmail.com>,
+        syzbot+4c3cc6dbe7259dbf9054@syzkaller.appspotmail.com,
+        Jozsef Kadlecsik <kadlec@netfilter.org>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Sasha Levin <sashal@kernel.org>,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 14/32] netfilter: fix a use-after-free in mtype_destroy()
+Date:   Fri, 24 Jan 2020 09:21:01 -0500
+Message-Id: <20200124142119.30484-14-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200124142119.30484-1-sashal@kernel.org>
 References: <20200124142119.30484-1-sashal@kernel.org>
@@ -60,40 +63,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+From: Cong Wang <xiyou.wangcong@gmail.com>
 
-[ Upstream commit a112adafcb47760feff959ee1ecd10b74d2c5467 ]
+[ Upstream commit c120959387efa51479056fd01dc90adfba7a590c ]
 
-The driver was doing a synchronous uninterruptible bulk-transfer without
-using a timeout. This could lead to the driver hanging on probe due to a
-malfunctioning (or malicious) device until the device is physically
-disconnected. While sleeping in probe the driver prevents other devices
-connected to the same hub from being added to (or removed from) the bus.
+map->members is freed by ip_set_free() right before using it in
+mtype_ext_cleanup() again. So we just have to move it down.
 
-An arbitrary limit of five seconds should be more than enough.
-
-Fixes: dbafc28955fa ("NFC: pn533: don't send USB data off of the stack")
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+Reported-by: syzbot+4c3cc6dbe7259dbf9054@syzkaller.appspotmail.com
+Fixes: 40cd63bf33b2 ("netfilter: ipset: Support extensions which need a per data destroy function")
+Acked-by: Jozsef Kadlecsik <kadlec@netfilter.org>
+Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nfc/pn533/usb.c | 2 +-
+ net/netfilter/ipset/ip_set_bitmap_gen.h | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/nfc/pn533/usb.c b/drivers/nfc/pn533/usb.c
-index fcb57d64d97e6..a2c9b3f3bc232 100644
---- a/drivers/nfc/pn533/usb.c
-+++ b/drivers/nfc/pn533/usb.c
-@@ -403,7 +403,7 @@ static int pn533_acr122_poweron_rdr(struct pn533_usb_phy *phy)
- 		       cmd, sizeof(cmd), false);
+diff --git a/net/netfilter/ipset/ip_set_bitmap_gen.h b/net/netfilter/ipset/ip_set_bitmap_gen.h
+index 8ad2b52a0b328..b0701f6259cc9 100644
+--- a/net/netfilter/ipset/ip_set_bitmap_gen.h
++++ b/net/netfilter/ipset/ip_set_bitmap_gen.h
+@@ -64,9 +64,9 @@ mtype_destroy(struct ip_set *set)
+ 	if (SET_WITH_TIMEOUT(set))
+ 		del_timer_sync(&map->gc);
  
- 	rc = usb_bulk_msg(phy->udev, phy->out_urb->pipe, buffer, sizeof(cmd),
--			  &transferred, 0);
-+			  &transferred, 5000);
- 	kfree(buffer);
- 	if (rc || (transferred != sizeof(cmd))) {
- 		nfc_err(&phy->udev->dev,
+-	ip_set_free(map->members);
+ 	if (set->dsize && set->extensions & IPSET_EXT_DESTROY)
+ 		mtype_ext_cleanup(set);
++	ip_set_free(map->members);
+ 	ip_set_free(map);
+ 
+ 	set->data = NULL;
 -- 
 2.20.1
 
