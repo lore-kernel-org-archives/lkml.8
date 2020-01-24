@@ -2,204 +2,118 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92346C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 13:30:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0841CC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 13:30:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 576982075D
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 13:30:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UzmkXSPK"
+	by mail.kernel.org (Postfix) with ESMTP id DD5472077C
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 13:30:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388118AbgAXN37 (ORCPT
+        id S2389621AbgAXNaW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 08:29:59 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:56564 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2387464AbgAXN37 (ORCPT
+        Fri, 24 Jan 2020 08:30:22 -0500
+Received: from albert.telenet-ops.be ([195.130.137.90]:56150 "EHLO
+        albert.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389582AbgAXNaT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 08:29:59 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579872597;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=ywgJvo41VUcq2Rw4L8xAmaK8G9WRHkKY+FI453b1BZA=;
-        b=UzmkXSPKq5bAMbBaU799+pLyVZdVgmyZRGB5iu91BqGHUBzJUSkD3bHB1+YK0E2gqPGC44
-        hJbNzFxu0BVujNmQ7SXY/RFLTAO75fbhgfmsPnrGWY3tMnRkujIVbaGBuCZEbZ2UK/PLhr
-        zOwLntig/tcXEXODIaP3ILdEJ8l7efo=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-36-NnNw0X2qOw2TparXTFNxOg-1; Fri, 24 Jan 2020 08:29:53 -0500
-X-MC-Unique: NnNw0X2qOw2TparXTFNxOg-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 036A0DBA3;
-        Fri, 24 Jan 2020 13:29:52 +0000 (UTC)
-Received: from [10.36.116.39] (ovpn-116-39.ams2.redhat.com [10.36.116.39])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 37B0E8DC00;
-        Fri, 24 Jan 2020 13:29:50 +0000 (UTC)
-Subject: Re: [PATCH v1] driver core: check for dead devices before
- onlining/offlining
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Saravana Kannan <saravanak@google.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Michal Hocko <mhocko@kernel.org>
-References: <20200120104909.13991-1-david@redhat.com>
- <20200124090052.GA2958140@kroah.com>
- <6dd0ea5a-e5c3-c4b6-2b2e-93537571d7d6@redhat.com>
- <CAJZ5v0iJJfTjZ6mZRDJSkZp+Cn1+VjFz=D8nLM15r6WtTRa88w@mail.gmail.com>
-From:   David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
-Organization: Red Hat GmbH
-Message-ID: <2f4a34b8-3e39-7051-3cf8-595ab638375a@redhat.com>
-Date:   Fri, 24 Jan 2020 14:29:49 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
-MIME-Version: 1.0
-In-Reply-To: <CAJZ5v0iJJfTjZ6mZRDJSkZp+Cn1+VjFz=D8nLM15r6WtTRa88w@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+        Fri, 24 Jan 2020 08:30:19 -0500
+Received: from ramsan ([84.195.182.253])
+        by albert.telenet-ops.be with bizsmtp
+        id uDW42100T5USYZQ06DW4VA; Fri, 24 Jan 2020 14:30:17 +0100
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan with esmtp (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1iuz2C-0007bH-D3; Fri, 24 Jan 2020 14:30:04 +0100
+Received: from geert by rox.of.borg with local (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1iuz2C-00047C-Ba; Fri, 24 Jan 2020 14:30:04 +0100
+From:   Geert Uytterhoeven <geert+renesas@glider.be>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Gilad Ben-Yossef <gilad@benyossef.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S . Miller" <davem@davemloft.net>,
+        "Rafael J . Wysocki" <rafael@kernel.org>
+Cc:     Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+        Felipe Balbi <balbi@kernel.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Mathias Nyman <mathias.nyman@intel.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        Bin Liu <b-liu@ti.com>, linux-crypto@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH 1/2] debugfs: regset32: Add Runtime PM support
+Date:   Fri, 24 Jan 2020 14:29:56 +0100
+Message-Id: <20200124132957.15769-2-geert+renesas@glider.be>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200124132957.15769-1-geert+renesas@glider.be>
+References: <20200124132957.15769-1-geert+renesas@glider.be>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 24.01.20 10:38, Rafael J. Wysocki wrote:
-> On Fri, Jan 24, 2020 at 10:09 AM David Hildenbrand <david@redhat.com> wrote:
->>
->> On 24.01.20 10:00, Greg Kroah-Hartman wrote:
->>> On Mon, Jan 20, 2020 at 11:49:09AM +0100, David Hildenbrand wrote:
->>>> We can have rare cases where the removal of a device races with
->>>> somebody trying to online it (esp. via sysfs). We can simply check
->>>> if the device is already removed or getting removed under the dev->lock.
->>>>
->>>> E.g., right now, if memory block devices are removed (remove_memory()),
->>>> we do a:
->>>>
->>>> remove_memory() -> lock_device_hotplug() -> mem_hotplug_begin() ->
->>>> lock_device() -> dev->dead = true
->>>>
->>>> Somebody coming via sysfs (/sys/devices/system/memory/memoryX/online)
->>>> triggers a:
->>>>
->>>> lock_device_hotplug_sysfs() -> device_online() -> lock_device() ...
->>>>
->>>> So if we made it just before the lock_device_hotplug_sysfs() but get
->>>> delayed until remove_memory() released all locks, we will continue
->>>> taking locks and trying to online the device - which is then a zombie
->>>> device.
->>>>
->>>> Note that at least the memory onlining path seems to be protected by
->>>> checking if all memory sections are still present (something we can then
->>>> get rid of). We do have other sysfs attributes
->>>> (e.g., /sys/devices/system/memory/memoryX/valid_zones) that don't do any
->>>> such locking yet and might race with memory removal in a similar way. For
->>>> these users, we can then do a
->>>>
->>>> device_lock(dev);
->>>> if (!device_is_dead(dev)) {
->>>>      /* magic /*
->>>> }
->>>> device_unlock(dev);
->>>>
->>>> Introduce and use device_is_dead() right away.
->>>>
->>>> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
->>>> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
->>>> Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
->>>> Cc: Saravana Kannan <saravanak@google.com>
->>>> Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>
->>>> Cc: Dan Williams <dan.j.williams@intel.com>
->>>> Cc: Michal Hocko <mhocko@kernel.org>
->>>> Signed-off-by: David Hildenbrand <david@redhat.com>
->>>> ---
->>>>
->>>> Am I missing any obvious mechanism in the device core that handles
->>>> something like this already? (especially also for other sysfs attributes?)
->>>
->>> So is a sysfs attribute causing the device itself to go away?  We have
->>
->> nope, removal is triggered via the driver, not via a sysfs attribute.
->>
->> Regarding this patch: Is there anything prohibiting the possible
->> scenario I document above (IOW, is this patch applicable, or is there
->> another way to fence it properly (e.g., the "specific call" you mentioned))?
-> 
-> For the devices that support online/offline (like CPUs in memory), the
-> idea is that calling device_del() on them while they are in use may
-> cause problems like data loss to occur and note that device_del()
-> itself cannot fail (because it needs to handle surprise removal too).
-> However, offline can fail, so the rule of thumb is to do the offline
-> (and handle the errors possibly returned by it) and only call
-> device_del() if that is successful.
-> 
-> Of course, if surprise removal is possible, offline is kind of
-> pointless, but if it is supported anyway it should return success when
-> the device is physically not present already.
+Hardware registers of devices under control of power management cannot
+be accessed at all times.  If such a device is suspended, register
+accesses may lead to undefined behavior, like reading bogus values, or
+causing exceptions or system locks.
 
-Just to clarify: This is not about removing devices that are still
-online (surprise removal). This is about possible race with user space
-*while* removing an offline device. I think Greg pointed me into the
-right direction regarding avoiding that ...
+Extend struct debugfs_regset32 with an optional field to let device
+drivers specify the device the registers in the set belong to.  This
+allows debugfs_show_regset32() to make sure the device is resumed while
+its registers are being read.
 
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+ fs/debugfs/file.c       | 8 ++++++++
+ include/linux/debugfs.h | 1 +
+ 2 files changed, 9 insertions(+)
 
+diff --git a/fs/debugfs/file.c b/fs/debugfs/file.c
+index dede25247b81f72a..5e52d68421c678f2 100644
+--- a/fs/debugfs/file.c
++++ b/fs/debugfs/file.c
+@@ -18,6 +18,7 @@
+ #include <linux/slab.h>
+ #include <linux/atomic.h>
+ #include <linux/device.h>
++#include <linux/pm_runtime.h>
+ #include <linux/poll.h>
+ #include <linux/security.h>
+ 
+@@ -1057,7 +1058,14 @@ static int debugfs_show_regset32(struct seq_file *s, void *data)
+ {
+ 	struct debugfs_regset32 *regset = s->private;
+ 
++	if (regset->dev)
++		pm_runtime_get_sync(regset->dev);
++
+ 	debugfs_print_regs32(s, regset->regs, regset->nregs, regset->base, "");
++
++	if (regset->dev)
++		pm_runtime_put(regset->dev);
++
+ 	return 0;
+ }
+ 
+diff --git a/include/linux/debugfs.h b/include/linux/debugfs.h
+index bf9b6cafa4c26a68..5d0783ae09f365ac 100644
+--- a/include/linux/debugfs.h
++++ b/include/linux/debugfs.h
+@@ -35,6 +35,7 @@ struct debugfs_regset32 {
+ 	const struct debugfs_reg32 *regs;
+ 	int nregs;
+ 	void __iomem *base;
++	struct device *dev;	/* Optional device for Runtime PM */
+ };
+ 
+ extern struct dentry *arch_debugfs_dir;
 -- 
-Thanks,
-
-David / dhildenb
+2.17.1
 
