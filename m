@@ -2,108 +2,130 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1791CC32771
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 21:16:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E344C35242
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 21:17:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC0DA2072C
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 21:16:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 333542072C
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 21:17:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=dxuuu.xyz header.i=@dxuuu.xyz header.b="a/UCmknw";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="ot3R/rVk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729603AbgAXVQu (ORCPT
+        id S2387401AbgAXVRV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 16:16:50 -0500
-Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:55401 "EHLO
-        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725765AbgAXVQu (ORCPT
+        Fri, 24 Jan 2020 16:17:21 -0500
+Received: from new2-smtp.messagingengine.com ([66.111.4.224]:57303 "EHLO
+        new2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725765AbgAXVRV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 16:16:50 -0500
-Received: from dread.disaster.area (pa49-195-162-125.pa.nsw.optusnet.com.au [49.195.162.125])
-        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 991D1820C75;
-        Sat, 25 Jan 2020 08:16:44 +1100 (AEDT)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1iv6Jm-00079w-Ii; Sat, 25 Jan 2020 08:16:42 +1100
-Date:   Sat, 25 Jan 2020 08:16:42 +1100
-From:   Dave Chinner <david@fromorbit.com>
-To:     Mike Christie <mchristi@redhat.com>
-Cc:     Shakeel Butt <shakeelb@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-api@vger.kernel.org, idryomov@gmail.com,
-        Michal Hocko <mhocko@kernel.org>,
-        Linux MM <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>, linux-scsi@vger.kernel.org,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-block@vger.kernel.org, martin@urbackup.org,
-        Damien.LeMoal@wdc.com, Michal Hocko <mhocko@suse.com>,
-        Masato Suzuki <masato.suzuki@wdc.com>
-Subject: Re: [PATCH] Add prctl support for controlling mem reclaim V4
-Message-ID: <20200124211642.GB7216@dread.disaster.area>
-References: <20191112001900.9206-1-mchristi@redhat.com>
- <CALvZod47XyD2x8TuZcb9PgeVY14JBwNhsUpN3RAeAt+RJJC=hg@mail.gmail.com>
- <5E2B19C9.6080907@redhat.com>
+        Fri, 24 Jan 2020 16:17:21 -0500
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 2999C6DD5;
+        Fri, 24 Jan 2020 16:17:20 -0500 (EST)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute4.internal (MEProxy); Fri, 24 Jan 2020 16:17:20 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dxuuu.xyz; h=
+        from:to:cc:subject:date:message-id:mime-version
+        :content-transfer-encoding; s=fm2; bh=2yZpLnjkYKiLbhzMXMoZBXj5Eb
+        //kZPHeDc+rQSoN2o=; b=a/UCmknwvjyY2L2/ogiELy5HyeuoT1x8HybshTVHAh
+        I38CeZgO0rrnXyr1eAjaMjZx81imBMzt+gkBW9ft8P6sATiQ3z8ph5sNsTL8l2c3
+        +zGfZp4KVtdOPOaK+Dn6dijnNHHQLgkUBkMf3iEjSHoNYL6wQS4EJL6Cf6rNJDnn
+        oNv2o6rhYmzLmp4uDfFkH1m2co8KW/Ew5r5j1Frg1LbRHCvz3NGa3+VQ0T/6x+Pt
+        FvPh3Ta8RvOJ4fsGhB3s14D643juYbh5WEzc1iX7VZ2BmFRDu+gQ6njj75myeU4p
+        WPx4obizVC8/l6379ypzqYBgQL2CWjrludHn4SRNw/Mw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:date:from
+        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
+        :x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=2yZpLnjkYKiLbhzMX
+        MoZBXj5Eb//kZPHeDc+rQSoN2o=; b=ot3R/rVkPCkrwh5YRAxPWSob3b9ADgxaG
+        k9OL9Cj1dEOiiSVcHY9kflUGm38xlLTG0HpEewV9z3c45vc18Gb2HdNN0Xo388Rt
+        BxZ2GkpQzl7juOmEL+p4+CZ+gwSOBtb1Pa/JM8z074Gi8KVbdP/Wc1woXfh8y8tT
+        zQaVquPV0EP6nfroWnAdTTjJpYxWrA7oRRtlG8HXKZpukL08piVDUqYP6y7ckmVN
+        RPnJmJneNrsVHoLZGWxZkS1Om3R5VQhWUU5AALOSXV6eHQYScpK6QO6NpO/jw8rT
+        DGKJ7keQ/YhRYt+CPsWG4bcFqMChh5qywoXBnHYVVOrP0uHB445lg==
+X-ME-Sender: <xms:314rXgRLXxou0pkafzmYRud4NZrMqFL9f_MPvu26-Oyw22U7WInJnA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrvdehgdduvdcutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecufghrlhcuvffnffculdejtddmnecujfgurhephffvuf
+    ffkffoggfgsedtkeertdertddtnecuhfhrohhmpeffrghnihgvlhcuighuuceougiguhes
+    ugiguhhuuhdrgiihiieqnecukfhppeduleelrddvtddurdeigedrgeenucevlhhushhtvg
+    hrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegugihusegugihuuhhurdig
+    hiii
+X-ME-Proxy: <xmx:314rXvQkijrc73YmAD3bMbelu_9kmdWjWQJ6LUpr3SB6564AvXxpww>
+    <xmx:314rXrfMmtWFYVildvQst8fEsU34hmpCHVj4dA66tsvxRi5QW0eCyw>
+    <xmx:314rXrdGSX5dn0sfmUMDKSW_PLtaMXEqIQGW9wfBuAn2738za8Gwyw>
+    <xmx:4F4rXqn7x3mIdAUtZy8ORV8b2VrAuiQFgH7N1o54WBiq9FNlqiizaw>
+Received: from dlxu-fedora-R90QNFJV.thefacebook.com (prnvpn05.thefacebook.com [199.201.64.4])
+        by mail.messagingengine.com (Postfix) with ESMTPA id EBC583062B10;
+        Fri, 24 Jan 2020 16:17:17 -0500 (EST)
+From:   Daniel Xu <dxu@dxuuu.xyz>
+To:     bpf@vger.kernel.org, ast@kernel.org, daniel@iogearbox.net,
+        songliubraving@fb.com, yhs@fb.com, andriin@fb.com
+Cc:     Daniel Xu <dxu@dxuuu.xyz>, linux-kernel@vger.kernel.org,
+        kernel-team@fb.com, peterz@infradead.org, mingo@redhat.com,
+        acme@kernel.org
+Subject: [PATCH v4 bpf-next 0/3] Add bpf_perf_prog_read_branches() helper
+Date:   Fri, 24 Jan 2020 13:17:02 -0800
+Message-Id: <20200124211705.24759-1-dxu@dxuuu.xyz>
+X-Mailer: git-send-email 2.21.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5E2B19C9.6080907@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=LYdCFQXi c=1 sm=1 tr=0
-        a=eqEhQ2W7mF93FbYHClaXRw==:117 a=eqEhQ2W7mF93FbYHClaXRw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=Jdjhy38mL1oA:10
-        a=20KFwNOVAAAA:8 a=iox4zFpeAAAA:8 a=JF9118EUAAAA:8 a=VwQbUJbxAAAA:8
-        a=7-415B0cAAAA:8 a=3XgbrJ93Oiw9jx1WlK8A:9 a=CjuIK1q_8ugA:10
-        a=WzC6qhA0u3u7Ye7llzcV:22 a=xVlTc564ipvMDusKsbsT:22
-        a=AjGcO6oz07-iQ99wixmX:22 a=biEYGPWJfzWAr4FL6Ov7:22
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 24, 2020 at 10:22:33AM -0600, Mike Christie wrote:
-> On 12/05/2019 04:43 PM, Shakeel Butt wrote:
-> > On Mon, Nov 11, 2019 at 4:19 PM Mike Christie <mchristi@redhat.com> wrote:
-> >> This patch adds a new prctl command that daemons can use after they have
-> >> done their initial setup, and before they start to do allocations that
-> >> are in the IO path. It sets the PF_MEMALLOC_NOIO and PF_LESS_THROTTLE
-> >> flags so both userspace block and FS threads can use it to avoid the
-> >> allocation recursion and try to prevent from being throttled while
-> >> writing out data to free up memory.
-> >>
-> >> Signed-off-by: Mike Christie <mchristi@redhat.com>
-> >> Acked-by: Michal Hocko <mhocko@suse.com>
-> >> Tested-by: Masato Suzuki <masato.suzuki@wdc.com>
-> >> Reviewed-by: Damien Le Moal <damien.lemoal@wdc.com>
-> > 
-> > I suppose this patch should be routed through MM tree, so, CCing Andrew.
-> >
-> 
-> Andrew and other mm/storage developers,
-> 
-> Do I need to handle anything else for this patch, or are there any other
-> concerns? Is this maybe something we want to talk about at a quick LSF
-> session?
-> 
-> I have retested it with Linus's current tree. It still applies cleanly
-> (just some offsets), and fixes the problem described above we have been
-> hitting.
+Branch records are a CPU feature that can be configured to record
+certain branches that are taken during code execution. This data is
+particularly interesting for profile guided optimizations. perf has had
+branch record support for a while but the data collection can be a bit
+coarse grained.
 
-I must have missed this version being posted (just looked it up on
-lore.kernel.org). As far as I'm concerned this is good to go and it
-is absolutely necessary for userspace IO stacks to function
-correctly.
+We (Facebook) have seen in experiments that associating metadata with
+branch records can improve results (after postprocessing). We generally
+use bpf_probe_read_*() to get metadata out of userspace. That's why bpf
+support for branch records is useful.
 
-Reviewed-by: Dave Chinner <dchinner@redhat.com>
+Aside from this particular use case, having branch data available to bpf
+progs can be useful to get stack traces out of userspace applications
+that omit frame pointers.
 
-If no manintainer picks it up before the next merge window, then I
-recommend resending the latest version to Linus asking him to merge
-it.
+Changes in v4:
+- Add BPF_F_GET_BR_SIZE flag
+- Return -ENOENT on unsupported architectures
+- Only accept initialized memory in helper
+- Check buffer size is multiple of sizeof(struct perf_branch_entry)
+- Use bpf skeleton in selftest
+- Add commit messages
+- Spelling and formatting
 
-Cheers,
+Changes in v3:
+- Document filling unused buffer with zero
+- Formatting fixes
+- Rebase
 
-Dave.
+Changes in v2:
+- Change to a bpf helper instead of context access
+- Avoid mentioning Intel specific things
+
+Daniel Xu (3):
+  bpf: Add bpf_perf_prog_read_branches() helper
+  tools/bpf: Sync uapi header bpf.h
+  selftests/bpf: add bpf_perf_prog_read_branches() selftest
+
+ include/uapi/linux/bpf.h                      |  25 +++-
+ kernel/trace/bpf_trace.c                      |  41 +++++++
+ tools/include/uapi/linux/bpf.h                |  25 +++-
+ .../selftests/bpf/prog_tests/perf_branches.c  | 112 ++++++++++++++++++
+ .../selftests/bpf/progs/test_perf_branches.c  |  74 ++++++++++++
+ 5 files changed, 275 insertions(+), 2 deletions(-)
+ create mode 100644 tools/testing/selftests/bpf/prog_tests/perf_branches.c
+ create mode 100644 tools/testing/selftests/bpf/progs/test_perf_branches.c
+
 -- 
-Dave Chinner
-david@fromorbit.com
+2.21.1
+
