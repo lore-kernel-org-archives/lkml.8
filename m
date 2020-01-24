@@ -2,109 +2,100 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC4A3C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 20:12:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69D9AC35242
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 20:14:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFBB72071E
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 20:12:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Cv6dYDuV"
+	by mail.kernel.org (Postfix) with ESMTP id 3811F2077C
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 20:14:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579896846;
+	bh=BXwKT7PuUAxXdQBtcYCaPasA/6uX1OMir4E6yh0LA3k=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=AjO3nRxKStbbwqXYxdIb/JSs67nZMT9HRS8UaJwy0vnjsjDihmIRMBhB0b4EjatBW
+	 yPdXQ0WX9S46itL9YFC/46Ia3n9OVxRTNKHX9lFmzfG9a1ziRxoJRfdqEwiUF67WWq
+	 +EjLSFwMHwTnkx5wLxv0ujg/szpesY+hrEv7flcw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404257AbgAXUMm (ORCPT
+        id S2404279AbgAXUOF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 15:12:42 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:50447 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404237AbgAXUMj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 15:12:39 -0500
-Received: by mail-wm1-f66.google.com with SMTP id a5so673624wmb.0
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Jan 2020 12:12:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=vGbQnLomT2aL9ymHA2JYgr/2Hjo++MPrBSVpPt1u9L8=;
-        b=Cv6dYDuVI4HDMQ1Gb0DgdKlfDV5tNc7zZBCipBctbv0S6787hwRBrLZga1Nid5CX4U
-         7oBbWOrrtZwXduVVJu1UBt1ossSW2L9TfYsVfnS2dV51w2QKsjp0yEDMw9+CODAlKUcJ
-         DMIthNSr5Ews9CDaXHi4QTtPT0tA9NUhfQFbNn9Jak1hrhfXu+ZQHdzhIcnfhYbTXWbT
-         InaUAlsyrvS5p1or6nXvdZngdGlEU8i7rzdWlDj6lM/dM354ImRfDMIWn3AQ2QKOS8Ac
-         uFJfOSzBlhnmw9R7UU1UEzJkfHwltdYePiX6D5mYTsJgEqdXKy295rRemcsp4mxeOYhI
-         aCaw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=vGbQnLomT2aL9ymHA2JYgr/2Hjo++MPrBSVpPt1u9L8=;
-        b=fmnOb/4+MVFIDNzvFRHxeW8rd8GyqJO3wCZw2MoJ8je3EE+zZORrdJTlyYE2Gm7zRI
-         uKPAlyrB2BzVe4GNxnFm4j5qIQouCmoHLCHqQh3EvoxzPcdt0tgaBUNFYYs9aZ8wopYO
-         oynQTrrSpCfF3a65njT/AO/nPmXCqPVMxnfIZWBGoRkjSsJsWMN7YiP6D5SnljCJS3/M
-         eBasaBtgxxbcUbEyZXAI4JtrnjG+Gxb8y5SNHnepbViwiy9SMOv4aUDOK7zoC/7+3ky2
-         fXUzv6H7fK+ZU351+jWZvgHxh8af+YO+nHkmgNIt0ruei3IaR2oIg8eL76fxX9f9aY92
-         bSRA==
-X-Gm-Message-State: APjAAAUoDTU6ftrnA4Gf+0DE3YnZsrxk3xZw/hSKYSn2qdF0S77iRoN3
-        qldT2Pm5CK8QKe6952mG+g==
-X-Google-Smtp-Source: APXvYqxwcBfj68Aa84T1/BrX2GAF8rW1UKxr4deCJeZnxjD28LHHPH+s2yb3ZtDJjCwWvdv4HxhFqA==
-X-Received: by 2002:a05:600c:d6:: with SMTP id u22mr789089wmm.77.1579896756313;
-        Fri, 24 Jan 2020 12:12:36 -0800 (PST)
-Received: from ninjahub.lan (host-92-15-174-87.as43234.net. [92.15.174.87])
-        by smtp.googlemail.com with ESMTPSA id i204sm6897654wma.44.2020.01.24.12.12.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 Jan 2020 12:12:35 -0800 (PST)
-From:   Jules Irenge <jbi.octave@gmail.com>
-Cc:     boqun.feng@gmail.com, Jules Irenge <jbi.octave@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 1/3] time: Add missing annotation to lock_hrtimer_base()
-Date:   Fri, 24 Jan 2020 20:12:21 +0000
-Message-Id: <31c31ca2d78d9368d38e1a5909bc0c9a7be5dc98.1579893447.git.jbi.octave@gmail.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <cover.1579893447.git.jbi.octave@gmail.com>
-References: <0/3> <cover.1579893447.git.jbi.octave@gmail.com>
+        Fri, 24 Jan 2020 15:14:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49004 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387535AbgAXUOF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 15:14:05 -0500
+Received: from gmail.com (unknown [104.132.1.77])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1F8CF2071E;
+        Fri, 24 Jan 2020 20:14:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579896844;
+        bh=BXwKT7PuUAxXdQBtcYCaPasA/6uX1OMir4E6yh0LA3k=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=1ag7/2DSoxG5KYU0EMVWB64o75K0btoF+qRMCO5k9cTMqUywqJBdCg/sUprpKIHv/
+         9MepeQSjc6pe8xJdw8+LoNAgcQY5x8NUgXg6RHWOLoXD7dmmnthVG6ewye8WF1rbAv
+         53XYtcyTT0ewAW3ULL2QSG0sBV/ytCRp6aZzLJeA=
+Date:   Fri, 24 Jan 2020 12:14:02 -0800
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Richard Weinberger <richard@nod.at>, linux-mtd@lists.infradead.org
+Cc:     Daniel Rosenberg <drosen@google.com>,
+        Gabriel Krisman Bertazi <krisman@collabora.com>,
+        linux-kernel@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net,
+        linux-fscrypt@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-ext4@vger.kernel.org, kernel-team@android.com
+Subject: Re: [PATCH v5 4/6] ubifs: don't trigger assertion on invalid no-key
+ filename
+Message-ID: <20200124201317.GC41762@gmail.com>
+References: <20200120223201.241390-1-ebiggers@kernel.org>
+ <20200120223201.241390-5-ebiggers@kernel.org>
+ <20200122003014.GA180824@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200122003014.GA180824@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sparse reports a warning at lock_hrtimer_base()
+On Tue, Jan 21, 2020 at 04:30:15PM -0800, Eric Biggers wrote:
+> On Mon, Jan 20, 2020 at 02:31:59PM -0800, Eric Biggers wrote:
+> > From: Eric Biggers <ebiggers@google.com>
+> > 
+> > If userspace provides an invalid fscrypt no-key filename which encodes a
+> > hash value with any of the UBIFS node type bits set (i.e. the high 3
+> > bits), gracefully report ENOENT rather than triggering ubifs_assert().
+> > 
+> > Test case with kvm-xfstests shell:
+> > 
+> >     . fs/ubifs/config
+> >     . ~/xfstests/common/encrypt
+> >     dev=$(__blkdev_to_ubi_volume /dev/vdc)
+> >     ubiupdatevol $dev -t
+> >     mount $dev /mnt -t ubifs
+> >     mkdir /mnt/edir
+> >     xfs_io -c set_encpolicy /mnt/edir
+> >     rm /mnt/edir/_,,,,,DAAAAAAAAAAAAAAAAAAAAAAAAAA
+> > 
+> > With the bug, the following assertion fails on the 'rm' command:
+> > 
+> >     [   19.066048] UBIFS error (ubi0:0 pid 379): ubifs_assert_failed: UBIFS assert failed: !(hash & ~UBIFS_S_KEY_HASH_MASK), in fs/ubifs/key.h:170
+> > 
+> > Fixes: f4f61d2cc6d8 ("ubifs: Implement encrypted filenames")
+> > Cc: <stable@vger.kernel.org> # v4.10+
+> > Signed-off-by: Eric Biggers <ebiggers@google.com>
+> 
+> Richard, can you review the two UBIFS patches in this series, and if you're okay
+> with them, provide Acked-by's so that we can take them through the fscrypt tree?
+> They don't conflict with anything currently in the UBIFS tree.
+> 
 
-|warning: context imbalance in lock_hrtimer_base() - wrong count at exit
-|warning: context imbalance in hrtimer_start_range_ns() - unexpected unlock
-|warning: context imbalance in hrtimer_try_to_cancel() - unexpected unlock
-|warning: context imbalance in __hrtimer_get_remaining()
-|- unexpected unlock
+Richard, any objection to us taking these patches through the fscrypt tree?
 
-To fix this , an __acquires(timer) annotation is added.
-Given that lock_hrtimer_base() does actually call READ_ONCE(timer->base).
-This not only fixes the warnings
-but also improves on readability of the code.
-
-Signed-off-by: Jules Irenge <jbi.octave@gmail.com>
----
- kernel/time/hrtimer.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/kernel/time/hrtimer.c b/kernel/time/hrtimer.c
-index 8de90ea31280..8f555b49395a 100644
---- a/kernel/time/hrtimer.c
-+++ b/kernel/time/hrtimer.c
-@@ -160,6 +160,7 @@ static inline bool is_migration_base(struct hrtimer_clock_base *base)
- static
- struct hrtimer_clock_base *lock_hrtimer_base(const struct hrtimer *timer,
- 					     unsigned long *flags)
-+	__acquires(timer)
- {
- 	struct hrtimer_clock_base *base;
- 
--- 
-2.24.1
-
+- Eric
