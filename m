@@ -2,86 +2,119 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDDB2C35242
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:00:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A22B4C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:00:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A420220709
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:00:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b="SYiA638T"
+	by mail.kernel.org (Postfix) with ESMTP id 7260620709
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:00:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579856458;
+	bh=Hl4kEm4grSzZIXP2uT1VKvKMUMvMS1624hf5PeMeYUA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=T2un678AtOBQdbbgRLjqTrRwzDX1LLBvxCye7GI4GhnNYX3HEDLTG/aHGIt5/rX3Y
+	 M3WO0mi+t48BuTluMZOzaOFXtqqKoeR/i5CGQ6rGmQfHvYMzZK9CAloDTTUcV2rs/A
+	 c7utZlgqmgb4zv+6lDxxM462r3MENIruw0aSsUNU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730056AbgAXJAQ (ORCPT
+        id S1729623AbgAXJA5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 04:00:16 -0500
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:44885 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729205AbgAXJAP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 04:00:15 -0500
-Received: by mail-oi1-f196.google.com with SMTP id d62so1165018oia.11
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Jan 2020 01:00:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cloudflare.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=y5EdAX4jkVg2iEO+KKBvYFZ7L2IwmUhmxABZtxwTDV0=;
-        b=SYiA638TtjKWHVPo9XbMk9DzdWhGr1CIMjfL5RmNwAC2FuJ6BOftRJALOXEDQiOQgD
-         0fjQoQpuqFcsjWawODT6waRgT8tHbtcT5JbVS8ovS/gCJVG1G3aXBRiiXbpoEpsTruoE
-         k8771UvRA3plyOhzpLxUGm4QDuiJyGVU7AgoI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=y5EdAX4jkVg2iEO+KKBvYFZ7L2IwmUhmxABZtxwTDV0=;
-        b=mvd8msfm/DjiQxygeeGJQL2kvyORts9aZa/ZUOjTYcQT1SKENxoasSS+RugahmInLU
-         +mQo0LZyPy0IrEI/iK6BQ65glMNqVaXyUXlvOUcCif6LITq77mw85PcFxnFuiR9Joq9A
-         lWC/Q30Jcsp6ebssiLPgWIM6dRNby0BXydThaFQ7JYEU5ubovpIFLtKBjxJgfmtr9+0k
-         y5VeN73oDvp2dDRv1q+bxeFzXV5qdeIatSGDzLN5zNhVWgA/YCaYKF08m4yAKOJbflkS
-         yiyAw5Rr7WMGn/k2MEZU9eWXZQIw5l1G9/0DXnVP3SNRkeWMYRaHKrorOg00GAvMJkxF
-         OVpA==
-X-Gm-Message-State: APjAAAWbEkdOO2m5TwDI2KgaBBDQBuX8x+7TEl0MvwBesBmsFm1B6tT1
-        +qrZnmwQux6ZGCarLhcOOBYtNV7onJp6QuTVWXJNnw==
-X-Google-Smtp-Source: APXvYqwCWyvS3/fUmsDI0shGPjRGN1rHYxo1MRumsxADvX5K0fx2R5oslkof/sexUronmyCand4NPkj0N/nR2Fj0XYs=
-X-Received: by 2002:aca:2419:: with SMTP id n25mr1382621oic.13.1579856414929;
- Fri, 24 Jan 2020 01:00:14 -0800 (PST)
+        Fri, 24 Jan 2020 04:00:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45470 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725787AbgAXJA5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 04:00:57 -0500
+Received: from localhost (unknown [145.15.244.15])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AA59D20702;
+        Fri, 24 Jan 2020 09:00:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579856456;
+        bh=Hl4kEm4grSzZIXP2uT1VKvKMUMvMS1624hf5PeMeYUA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Gpd/00s7q56kKB8rWf7TiUspunVnyDMWVE0KRtiv6D0/KPg+epV5l94A4kVhGr2cZ
+         ZfJs+4moUKqyanNchL0aFDjTq8cb4DeoJZBa5o/hg7VeLv0nwLBxWW8BvFXWS3xEKn
+         4S46RZe1TrwD/2g2TaecmO7bqTqL/Maph1gyfKJI=
+Date:   Fri, 24 Jan 2020 10:00:52 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     linux-kernel@vger.kernel.org,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Saravana Kannan <saravanak@google.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Michal Hocko <mhocko@kernel.org>
+Subject: Re: [PATCH v1] driver core: check for dead devices before
+ onlining/offlining
+Message-ID: <20200124090052.GA2958140@kroah.com>
+References: <20200120104909.13991-1-david@redhat.com>
 MIME-Version: 1.0
-References: <20200123165934.9584-1-lmb@cloudflare.com> <20200123165934.9584-3-lmb@cloudflare.com>
- <20200123215348.zql3d5xpg2if7v6q@kafai-mbp.dhcp.thefacebook.com>
-In-Reply-To: <20200123215348.zql3d5xpg2if7v6q@kafai-mbp.dhcp.thefacebook.com>
-From:   Lorenz Bauer <lmb@cloudflare.com>
-Date:   Fri, 24 Jan 2020 09:00:03 +0000
-Message-ID: <CACAyw9_OGBbsXepTcp=1frEHB7Q2cD9BVXTbgt7Ci_eFyV2Egg@mail.gmail.com>
-Subject: Re: [PATCH bpf 2/4] selftests: bpf: ignore RST packets for reuseport tests
-To:     Martin Lau <kafai@fb.com>
-Cc:     Shuah Khan <shuah@kernel.org>, Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200120104909.13991-1-david@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 23 Jan 2020 at 21:54, Martin Lau <kafai@fb.com> wrote:
->
-> btw, it needs a Fixes tag.
->
-> Patch 4 and Patch 1 also need a Fixes tag.
+On Mon, Jan 20, 2020 at 11:49:09AM +0100, David Hildenbrand wrote:
+> We can have rare cases where the removal of a device races with
+> somebody trying to online it (esp. via sysfs). We can simply check
+> if the device is already removed or getting removed under the dev->lock.
+> 
+> E.g., right now, if memory block devices are removed (remove_memory()),
+> we do a:
+> 
+> remove_memory() -> lock_device_hotplug() -> mem_hotplug_begin() ->
+> lock_device() -> dev->dead = true
+> 
+> Somebody coming via sysfs (/sys/devices/system/memory/memoryX/online)
+> triggers a:
+> 
+> lock_device_hotplug_sysfs() -> device_online() -> lock_device() ...
+> 
+> So if we made it just before the lock_device_hotplug_sysfs() but get
+> delayed until remove_memory() released all locks, we will continue
+> taking locks and trying to online the device - which is then a zombie
+> device.
+> 
+> Note that at least the memory onlining path seems to be protected by
+> checking if all memory sections are still present (something we can then
+> get rid of). We do have other sysfs attributes
+> (e.g., /sys/devices/system/memory/memoryX/valid_zones) that don't do any
+> such locking yet and might race with memory removal in a similar way. For
+> these users, we can then do a
+> 
+> device_lock(dev);
+> if (!device_is_dead(dev)) {
+> 	/* magic /*
+> }
+> device_unlock(dev);
+> 
+> Introduce and use device_is_dead() right away.
+> 
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+> Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
+> Cc: Saravana Kannan <saravanak@google.com>
+> Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+> Cc: Dan Williams <dan.j.williams@intel.com>
+> Cc: Michal Hocko <mhocko@kernel.org>
+> Signed-off-by: David Hildenbrand <david@redhat.com>
+> ---
+> 
+> Am I missing any obvious mechanism in the device core that handles
+> something like this already? (especially also for other sysfs attributes?)
 
-This makes me wonder, should these go via bpf or bpf-next? Do I have
-to split the series then?
+So is a sysfs attribute causing the device itself to go away?  We have
+problems with that in the past, look at how the scsi layer handled it, I
+think there's a specific call you should be making instead of trying to
+rely on this "dead" flag.
 
--- 
-Lorenz Bauer  |  Systems Engineer
-6th Floor, County Hall/The Riverside Building, SE1 7PB, UK
+thanks,
 
-www.cloudflare.com
+greg k-h
