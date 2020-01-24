@@ -4,53 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1FF0C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:40:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 244DDC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:40:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6213208C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:40:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED2F8208C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:40:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579858808;
-	bh=14siYZSO9Gnx/JKTpNTZO/Ck4Uyg4bLyMf/9qF8vPhM=;
+	s=default; t=1579858811;
+	bh=HIhvtltE0jmuJ32MPiF+CHYwbmqxye5QcbU6Yoq552k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RIh3n4QDNeP1nDX7ofxrEGobPwAMpT6zNVdrqSXnE0URelAChhYw7ZqiuYgkqWgra
-	 CdWCRNQTEVhquUpMnOLqq6UwpvKD3zQOOoDS5cZXeXM7qoPC3DWXP5AEcr4JeiiNoR
-	 j1T61kcfh6S1h9l5OIXBQtq8an2qLVFD21hpEhcI=
+	b=pxZ07Z0Cyd1/lmgVAgdKoOg26iycUSvdr9ld/CDhLPfdt8H/LD7XLurSUViAwxDro
+	 y9bfj2KCxZTYIUwycp8m8s+W++FGQ/0k3XG6JG2PKr0z1RntmSwkRHNdCe7F8gcOo9
+	 ZX53pPQNtWOddMhF3lXWujCAC8OIyIFv+AdKICgc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732134AbgAXJkE (ORCPT
+        id S1732293AbgAXJkK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 04:40:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37266 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 04:40:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37402 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731991AbgAXJkB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 04:40:01 -0500
+        id S1732126AbgAXJkH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 04:40:07 -0500
 Received: from localhost (unknown [145.15.244.15])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 98E842070A;
-        Fri, 24 Jan 2020 09:39:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E4C9920709;
+        Fri, 24 Jan 2020 09:40:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579858800;
-        bh=14siYZSO9Gnx/JKTpNTZO/Ck4Uyg4bLyMf/9qF8vPhM=;
+        s=default; t=1579858806;
+        bh=HIhvtltE0jmuJ32MPiF+CHYwbmqxye5QcbU6Yoq552k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LhbRJSlqrVV4TufD3zqTpoblCZDdx26UAyf+++RstnZsNF20asFN8Nt2c+Dv/vvco
-         T6UDMGfg6aykw7CykEv4rYKYHz3kzKT3WH2STNMH1qz6F+gTe9vhIUDNR6Y7jRrMQp
-         9bViBtzINUL8qHQ3Dpe+MwTcXAGOqTzN3yJQ8/Xg=
+        b=VQo8Oz6ilu17LwVj8lNt3KFAi92DFRyDqBvcMsUpySeBzZnOEGSRZwkCTUAL/OcQX
+         A34Xz3QqjBNlTFXUSkQqVlQYonrMh/l4l9TmvN/KFT1tGk+qSwFDZUUsr+E2ULVvAY
+         tpKCBkAL/1LfZBtTJc3S0x1+jo1INC8M7q6skXxY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Ulrich Hecht <uli+renesas@fpond.eu>,
-        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 059/102] drm: rcar_lvds: Fix color mismatches on R-Car H2 ES2.0 and later
-Date:   Fri, 24 Jan 2020 10:31:00 +0100
-Message-Id: <20200124092815.243746922@linuxfoundation.org>
+Subject: [PATCH 5.4 061/102] ACPI: platform: Unregister stale platform devices
+Date:   Fri, 24 Jan 2020 10:31:02 +0100
+Message-Id: <20200124092815.541731799@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124092806.004582306@linuxfoundation.org>
 References: <20200124092806.004582306@linuxfoundation.org>
@@ -63,101 +61,104 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-[ Upstream commit 3986457110a054466bf02f9c4a85aa2bba96177b ]
+[ Upstream commit cb0701acfa7e3fe9e919cf2aa2aa939b7fd603c2 ]
 
-Commit 5cca30ebe089be23 ("drm/rcar-du: Add LVDS_LANES quirk") states
-that LVDS lanes 1 and 3 are inverted on R-Car H2 ES1 only, and that the
-problem has been fixed in newer revisions.
+When commit 68bdb6773289 ("ACPI: add support for ACPI reconfiguration
+notifiers") introduced reconfiguration notifiers, it missed the point
+that the ACPI table, which might be loaded and then unloaded via
+ConfigFS, could contain devices that were not enumerated by their
+parents.
 
-However, the code didn't take into account the actual hardware revision,
-thus applying the quirk also on newer hardware revisions, causing green
-color reversals.
+In such cases, the stale platform device is dangling in the system
+while the rest of the devices from the same table are already gone.
 
-Fix this by applying the quirk when running on R-Car H2 ES1.x only.
+Introduce acpi_platform_device_remove_notify() notifier that, in
+similar way to I²C or SPI buses, unregisters the platform devices
+on table removal event.
 
-Reported-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Fixes: 5cca30ebe089be23 ("drm/rcar-du: Add LVDS_LANES quirk")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Tested-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Reviewed-by: Ulrich Hecht <uli+renesas@fpond.eu>
-Reviewed-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+Fixes: 68bdb6773289 ("ACPI: add support for ACPI reconfiguration notifiers")
+Depends-on: 00500147cbd3 ("drivers: Introduce device lookup variants by ACPI_COMPANION device")
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+[ rjw: Changelog & function rename ]
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/rcar-du/rcar_lvds.c | 28 +++++++++++++++++++++-------
- 1 file changed, 21 insertions(+), 7 deletions(-)
+ drivers/acpi/acpi_platform.c | 43 ++++++++++++++++++++++++++++++++++++
+ drivers/acpi/scan.c          |  1 +
+ 2 files changed, 44 insertions(+)
 
-diff --git a/drivers/gpu/drm/rcar-du/rcar_lvds.c b/drivers/gpu/drm/rcar-du/rcar_lvds.c
-index 3fc7e6899cab5..50c11a7f0467f 100644
---- a/drivers/gpu/drm/rcar-du/rcar_lvds.c
-+++ b/drivers/gpu/drm/rcar-du/rcar_lvds.c
-@@ -16,6 +16,7 @@
- #include <linux/of_graph.h>
- #include <linux/platform_device.h>
- #include <linux/slab.h>
-+#include <linux/sys_soc.h>
- 
- #include <drm/drm_atomic.h>
- #include <drm/drm_atomic_helper.h>
-@@ -842,8 +843,23 @@ static int rcar_lvds_get_clocks(struct rcar_lvds *lvds)
- 	return 0;
- }
- 
-+static const struct rcar_lvds_device_info rcar_lvds_r8a7790es1_info = {
-+	.gen = 2,
-+	.quirks = RCAR_LVDS_QUIRK_LANES,
-+	.pll_setup = rcar_lvds_pll_setup_gen2,
-+};
-+
-+static const struct soc_device_attribute lvds_quirk_matches[] = {
-+	{
-+		.soc_id = "r8a7790", .revision = "ES1.*",
-+		.data = &rcar_lvds_r8a7790es1_info,
-+	},
-+	{ /* sentinel */ }
-+};
-+
- static int rcar_lvds_probe(struct platform_device *pdev)
- {
-+	const struct soc_device_attribute *attr;
- 	struct rcar_lvds *lvds;
- 	struct resource *mem;
- 	int ret;
-@@ -857,6 +873,10 @@ static int rcar_lvds_probe(struct platform_device *pdev)
- 	lvds->dev = &pdev->dev;
- 	lvds->info = of_device_get_match_data(&pdev->dev);
- 
-+	attr = soc_device_match(lvds_quirk_matches);
-+	if (attr)
-+		lvds->info = attr->data;
-+
- 	ret = rcar_lvds_parse_dt(lvds);
- 	if (ret < 0)
- 		return ret;
-@@ -893,12 +913,6 @@ static const struct rcar_lvds_device_info rcar_lvds_gen2_info = {
- 	.pll_setup = rcar_lvds_pll_setup_gen2,
+diff --git a/drivers/acpi/acpi_platform.c b/drivers/acpi/acpi_platform.c
+index 00ec4f2bf0157..c05050f474cd3 100644
+--- a/drivers/acpi/acpi_platform.c
++++ b/drivers/acpi/acpi_platform.c
+@@ -31,6 +31,44 @@ static const struct acpi_device_id forbidden_id_list[] = {
+ 	{"", 0},
  };
  
--static const struct rcar_lvds_device_info rcar_lvds_r8a7790_info = {
--	.gen = 2,
--	.quirks = RCAR_LVDS_QUIRK_LANES,
--	.pll_setup = rcar_lvds_pll_setup_gen2,
--};
--
- static const struct rcar_lvds_device_info rcar_lvds_gen3_info = {
- 	.gen = 3,
- 	.quirks = RCAR_LVDS_QUIRK_PWD,
-@@ -930,7 +944,7 @@ static const struct of_device_id rcar_lvds_of_table[] = {
- 	{ .compatible = "renesas,r8a7744-lvds", .data = &rcar_lvds_gen2_info },
- 	{ .compatible = "renesas,r8a774a1-lvds", .data = &rcar_lvds_gen3_info },
- 	{ .compatible = "renesas,r8a774c0-lvds", .data = &rcar_lvds_r8a77990_info },
--	{ .compatible = "renesas,r8a7790-lvds", .data = &rcar_lvds_r8a7790_info },
-+	{ .compatible = "renesas,r8a7790-lvds", .data = &rcar_lvds_gen2_info },
- 	{ .compatible = "renesas,r8a7791-lvds", .data = &rcar_lvds_gen2_info },
- 	{ .compatible = "renesas,r8a7793-lvds", .data = &rcar_lvds_gen2_info },
- 	{ .compatible = "renesas,r8a7795-lvds", .data = &rcar_lvds_gen3_info },
++static struct platform_device *acpi_platform_device_find_by_companion(struct acpi_device *adev)
++{
++	struct device *dev;
++
++	dev = bus_find_device_by_acpi_dev(&platform_bus_type, adev);
++	return dev ? to_platform_device(dev) : NULL;
++}
++
++static int acpi_platform_device_remove_notify(struct notifier_block *nb,
++					      unsigned long value, void *arg)
++{
++	struct acpi_device *adev = arg;
++	struct platform_device *pdev;
++
++	switch (value) {
++	case ACPI_RECONFIG_DEVICE_ADD:
++		/* Nothing to do here */
++		break;
++	case ACPI_RECONFIG_DEVICE_REMOVE:
++		if (!acpi_device_enumerated(adev))
++			break;
++
++		pdev = acpi_platform_device_find_by_companion(adev);
++		if (!pdev)
++			break;
++
++		platform_device_unregister(pdev);
++		put_device(&pdev->dev);
++		break;
++	}
++
++	return NOTIFY_OK;
++}
++
++static struct notifier_block acpi_platform_notifier = {
++	.notifier_call = acpi_platform_device_remove_notify,
++};
++
+ static void acpi_platform_fill_resource(struct acpi_device *adev,
+ 	const struct resource *src, struct resource *dest)
+ {
+@@ -130,3 +168,8 @@ struct platform_device *acpi_create_platform_device(struct acpi_device *adev,
+ 	return pdev;
+ }
+ EXPORT_SYMBOL_GPL(acpi_create_platform_device);
++
++void __init acpi_platform_init(void)
++{
++	acpi_reconfig_notifier_register(&acpi_platform_notifier);
++}
+diff --git a/drivers/acpi/scan.c b/drivers/acpi/scan.c
+index aad6be5c0af0a..915650bf519f8 100644
+--- a/drivers/acpi/scan.c
++++ b/drivers/acpi/scan.c
+@@ -2174,6 +2174,7 @@ int __init acpi_scan_init(void)
+ 	acpi_pci_root_init();
+ 	acpi_pci_link_init();
+ 	acpi_processor_init();
++	acpi_platform_init();
+ 	acpi_lpss_init();
+ 	acpi_apd_init();
+ 	acpi_cmos_rtc_init();
 -- 
 2.20.1
 
