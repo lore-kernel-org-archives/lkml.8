@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34FCFC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:29:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78440C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:29:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C84122522
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:29:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 492A1214AF
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:29:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579865393;
-	bh=h8UpbCSI7U696KqtZ7M6siVRoIRZJSzbxGDPRlX24pc=;
+	s=default; t=1579865399;
+	bh=DfmKTsA14Lz/UZZvlOnpT5dIOIhTL3C6AddBbWu8GnY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vcxIpd4Q1D5JhoyCsMQ0yfJgFOwGgabjapO5XrKH8DseTk3Tiyo9PhmiP1mbwaRoi
-	 VeGna/Dom1dZELmgTnKCRbvzWlxwQfYmn891n8ZGepa+QWi1/PXYytQidg9Cp4ysfO
-	 o0fhGrM8h4z7mDo8rTjut1WHLyjrWBeGSt2x61Ko=
+	b=iVDI4glfhvjlH77+SNKFZxIa3OMqtAozLWtGlS2SF5m1f0pZG8mjUJm7kLQwDh6yM
+	 dONay8/sMAXhW9Ny/vq8YTY5JV6U+nmB8uCfFhovZYUmFvgVZpIlbW66BrNHk60JKJ
+	 Z/0TGHLoxdz5PK+pcQ6Qd/g3axULPRzARSFLxOgQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404114AbgAXL3w (ORCPT
+        id S2404138AbgAXL36 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:29:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46920 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 06:29:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47058 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404094AbgAXL3s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:29:48 -0500
+        id S2404113AbgAXL3w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:29:52 -0500
 Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C56782077C;
-        Fri, 24 Jan 2020 11:29:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 096D820704;
+        Fri, 24 Jan 2020 11:29:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579865387;
-        bh=h8UpbCSI7U696KqtZ7M6siVRoIRZJSzbxGDPRlX24pc=;
+        s=default; t=1579865391;
+        bh=DfmKTsA14Lz/UZZvlOnpT5dIOIhTL3C6AddBbWu8GnY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bmDyDyKletNNTBCG/+YLDe3S0908M/mZC+eA946Hp/OE0izhT28MQ1t8bNy9R8nj4
-         AvJMNO1vQ+zCCydzXYwInu+jcYbmiv4COR2EiqdXP/Uyhs03FEBqeTVgFFNVb3M47r
-         QC23nAvEyAH9c6tVU1PI5OLoksjV+z7zW0arPVHw=
+        b=f5AYV8i8a34JE2HsaJfxzJIKouzbvGERQpxdBhlCi+N7kG1T7pF9lC/yaFXmWTrpd
+         JxnuDOC4jcdBD2N5m7e2HqiMq2SFZ+BzS5BneAYz82Mc+a7pRyGDtZRuxgyINE4EjV
+         mo38yqiUw6k93g7dSzP3j2ybvW4fBWtUGxP2SXZg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Rui Miguel Silva <rmfrfs@gmail.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 532/639] staging: greybus: light: fix a couple double frees
-Date:   Fri, 24 Jan 2020 10:31:42 +0100
-Message-Id: <20200124093155.533344333@linuxfoundation.org>
+        stable@vger.kernel.org, Lili Deng <v-lide@microsoft.com>,
+        Dexuan Cui <decui@microsoft.com>,
+        Marc Zyngier <maz@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 533/639] irqdomain: Add the missing assignment of domain->fwnode for named fwnode
+Date:   Fri, 24 Jan 2020 10:31:43 +0100
+Message-Id: <20200124093155.736363173@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
 References: <20200124093047.008739095@linuxfoundation.org>
@@ -60,67 +60,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Dexuan Cui <decui@microsoft.com>
 
-[ Upstream commit 329101244f214952606359d254ae883b7109e1a5 ]
+[ Upstream commit 711419e504ebd68c8f03656616829c8ad7829389 ]
 
-The problem is in gb_lights_request_handler().  If we get a request to
-change the config then we release the light with gb_lights_light_release()
-and re-allocated it.  However, if the allocation fails part way through
-then we call gb_lights_light_release() again.  This can lead to a couple
-different double frees where we haven't cleared out the original values:
+Recently device pass-through stops working for Linux VM running on Hyper-V.
 
-	gb_lights_light_v4l2_unregister(light);
-	...
-	kfree(light->channels);
-	kfree(light->name);
+git-bisect shows the regression is caused by the recent commit
+467a3bb97432 ("PCI: hv: Allocate a named fwnode ..."), but the root cause
+is that the commit d59f6617eef0 forgets to set the domain->fwnode for
+IRQCHIP_FWNODE_NAMED*, and as a result:
 
-I also made a small change to how we set "light->channels_count = 0;".
-The original code handled this part fine and did not cause a use after
-free but it was sort of complicated to read.
+1. The domain->fwnode remains to be NULL.
 
-Fixes: 2870b52bae4c ("greybus: lights: add lights implementation")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Acked-by: Rui Miguel Silva <rmfrfs@gmail.com>
-Link: https://lore.kernel.org/r/20190829122839.GA20116@mwanda
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+2. irq_find_matching_fwspec() returns NULL since "h->fwnode == fwnode" is
+false, and pci_set_bus_msi_domain() sets the Hyper-V PCI root bus's
+msi_domain to NULL.
+
+3. When the device is added onto the root bus, the device's dev->msi_domain
+is set to NULL in pci_set_msi_domain().
+
+4. When a device driver tries to enable MSI-X, pci_msi_setup_msi_irqs()
+calls arch_setup_msi_irqs(), which uses the native MSI chip (i.e.
+arch/x86/kernel/apic/msi.c: pci_msi_controller) to set up the irqs, but
+actually pci_msi_setup_msi_irqs() is supposed to call
+msi_domain_alloc_irqs() with the hbus->irq_domain, which is created in
+hv_pcie_init_irq_domain() and is associated with the Hyper-V chip
+hv_msi_irq_chip. Consequently, the irq line is not properly set up, and
+the device driver can not receive any interrupt.
+
+Fixes: d59f6617eef0 ("genirq: Allow fwnode to carry name information only")
+Fixes: 467a3bb97432 ("PCI: hv: Allocate a named fwnode instead of an address-based one")
+Reported-by: Lili Deng <v-lide@microsoft.com>
+Signed-off-by: Dexuan Cui <decui@microsoft.com>
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+Link: https://lore.kernel.org/r/PU1P153MB01694D9AF625AC335C600C5FBFBE0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/staging/greybus/light.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ kernel/irq/irqdomain.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/staging/greybus/light.c b/drivers/staging/greybus/light.c
-index 010ae1e9c7fbf..40680eaf3974f 100644
---- a/drivers/staging/greybus/light.c
-+++ b/drivers/staging/greybus/light.c
-@@ -1098,21 +1098,21 @@ static void gb_lights_channel_release(struct gb_channel *channel)
- static void gb_lights_light_release(struct gb_light *light)
- {
- 	int i;
--	int count;
- 
- 	light->ready = false;
- 
--	count = light->channels_count;
--
- 	if (light->has_flash)
- 		gb_lights_light_v4l2_unregister(light);
-+	light->has_flash = false;
- 
--	for (i = 0; i < count; i++) {
-+	for (i = 0; i < light->channels_count; i++)
- 		gb_lights_channel_release(&light->channels[i]);
--		light->channels_count--;
--	}
-+	light->channels_count = 0;
-+
- 	kfree(light->channels);
-+	light->channels = NULL;
- 	kfree(light->name);
-+	light->name = NULL;
- }
- 
- static void gb_lights_release(struct gb_lights *glights)
+diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
+index 0b90be3607249..6e8520a81dd86 100644
+--- a/kernel/irq/irqdomain.c
++++ b/kernel/irq/irqdomain.c
+@@ -148,6 +148,7 @@ struct irq_domain *__irq_domain_add(struct fwnode_handle *fwnode, int size,
+ 		switch (fwid->type) {
+ 		case IRQCHIP_FWNODE_NAMED:
+ 		case IRQCHIP_FWNODE_NAMED_ID:
++			domain->fwnode = fwnode;
+ 			domain->name = kstrdup(fwid->name, GFP_KERNEL);
+ 			if (!domain->name) {
+ 				kfree(domain);
 -- 
 2.20.1
 
