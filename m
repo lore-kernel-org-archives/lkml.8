@@ -4,57 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59378C35242
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:33:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34C46C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:33:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 239742077C
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:33:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00AC1214AF
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:33:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579858402;
-	bh=0UfI9b962cnRCfSw5F5UHZmv4pcUiuBfAMKCbmnbSI0=;
+	s=default; t=1579858407;
+	bh=k6hM2ffp9xfbNIFXsjABnq/7bBzSMoNDBNeX2sLKJfk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FMN4Byx5yXX6ksMyRZuBaKpQza7hxpgp4lio7PuH5noW+cpkLNOmw/M9xlAw5YLMc
-	 XjTPerpghPe3AAOuAox8BWwkDk6quL/dSkzrH5SiDVfw8soXQxHsif3ifpQ1QMvbNR
-	 896UGQEkmalARb5tuUtfqjYSsU5aDTR6luCwxXqE=
+	b=GlkTiqiGF4488oLgOoU+CszCbbSIM05VgBMyizmq0PAy0x3N1ZJKeOzh/QQku4qrm
+	 XJiULH95FscFVSjAsG5RhRvFFQBECF2G0U8yvOy7h6zADxCBgcuGX15yyQYBGvQjON
+	 P/mhw6Up/rt/29smhzadGV+iT+APkVB14sLju/94=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729714AbgAXJdV (ORCPT
+        id S1729850AbgAXJd0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 04:33:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59724 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 04:33:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59814 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725821AbgAXJdV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 04:33:21 -0500
+        id S1729715AbgAXJdY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 04:33:24 -0500
 Received: from localhost (unknown [145.15.244.15])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 878D32070A;
-        Fri, 24 Jan 2020 09:33:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A5FDF208C4;
+        Fri, 24 Jan 2020 09:33:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579858400;
-        bh=0UfI9b962cnRCfSw5F5UHZmv4pcUiuBfAMKCbmnbSI0=;
+        s=default; t=1579858403;
+        bh=k6hM2ffp9xfbNIFXsjABnq/7bBzSMoNDBNeX2sLKJfk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WNsotn+CTa7DWvTomCRNE7JcMw0MHtmfnU3ti6Y6gFYNfTsAEnsu7+bMtcYNWeltZ
-         wBlCtVsUnBXwQ4CUQTPq+Ymo9bQFrFMELnuZk/6kuZMwJCq02JtI4dVI40GUHVbYXD
-         JJ4bvTteYDeNHh6nnASQqR4ttV5Z9aW8oQtabia0=
+        b=yOi8JAlFmIR90491rwMamNJuQTCsHTgTU3RdPakv91aOrCH32CQz9DPRHKXZF/mzV
+         w+uQPqcCheOLc2Aw3mJBRsPoG2HmDuqgsvSvQclicL6GOHFX58XWPQqsdGs11nRp4p
+         Bj2IGtdSABetCnjzs8PX3D7RZfdfYhs98rlN9R6s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tvrtko Ursulin <tvrtko.ursulin@intel.com>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        Mika Kuoppala <mika.kuoppala@intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
-Subject: [PATCH 5.4 001/102] drm/i915: Fix pid leak with banned clients
-Date:   Fri, 24 Jan 2020 10:30:02 +0100
-Message-Id: <20200124092806.288933727@linuxfoundation.org>
+        stable@vger.kernel.org, Jesper Dangaard Brouer <brouer@redhat.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        =?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
+        Andrii Nakryiko <andriin@fb.com>
+Subject: [PATCH 5.4 010/102] samples/bpf: Fix broken xdp_rxq_info due to map order assumptions
+Date:   Fri, 24 Jan 2020 10:30:11 +0100
+Message-Id: <20200124092807.703448130@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124092806.004582306@linuxfoundation.org>
 References: <20200124092806.004582306@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -63,42 +61,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tvrtko Ursulin <tvrtko.ursulin@intel.com>
+From: Jesper Dangaard Brouer <brouer@redhat.com>
 
-commit f0f3a6cecf3b98990985cd42f7bf5a0313894822 upstream.
+commit edbca120a8cdfa5a5793707e33497aa5185875ca upstream.
 
-Get_pid_task() needs to be paired with a put_pid or we leak a pid
-reference every time a banned client tries to create a context.
+In the days of using bpf_load.c the order in which the 'maps' sections
+were defines in BPF side (*_kern.c) file, were used by userspace side
+to identify the map via using the map order as an index. In effect the
+order-index is created based on the order the maps sections are stored
+in the ELF-object file, by the LLVM compiler.
 
-v2:
- * task_pid_nr helper exists! (Chris)
+This have also carried over in libbpf via API bpf_map__next(NULL, obj)
+to extract maps in the order libbpf parsed the ELF-object file.
 
-Signed-off-by: Tvrtko Ursulin <tvrtko.ursulin@intel.com>
-Fixes: b083a0870c79 ("drm/i915: Add per client max context ban limit")
-Cc: Chris Wilson <chris@chris-wilson.co.uk>
-Cc: Mika Kuoppala <mika.kuoppala@intel.com>
-Reviewed-by: Chris Wilson <chris@chris-wilson.co.uk>
-Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
-Link: https://patchwork.freedesktop.org/patch/msgid/20191217170933.8108-1-tvrtko.ursulin@linux.intel.com
-(cherry picked from commit ba16a48af797db124ac100417f9229b1650ce1fb)
-Signed-off-by: Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
+When BTF based maps were introduced a new section type ".maps" were
+created. I found that the LLVM compiler doesn't create the ".maps"
+sections in the order they are defined in the C-file. The order in the
+ELF file is based on the order the map pointer is referenced in the code.
+
+This combination of changes lead to xdp_rxq_info mixing up the map
+file-descriptors in userspace, resulting in very broken behaviour, but
+without warning the user.
+
+This patch fix issue by instead using bpf_object__find_map_by_name()
+to find maps via their names. (Note, this is the ELF name, which can
+be longer than the name the kernel retains).
+
+Fixes: be5bca44aa6b ("samples: bpf: convert some XDP samples from bpf_load to libbpf")
+Fixes: 451d1dc886b5 ("samples: bpf: update map definition to new syntax BTF-defined map")
+Signed-off-by: Jesper Dangaard Brouer <brouer@redhat.com>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Acked-by: Toke Høiland-Jørgensen <toke@redhat.com>
+Acked-by: Andrii Nakryiko <andriin@fb.com>
+Link: https://lore.kernel.org/bpf/157529025128.29832.5953245340679936909.stgit@firesoul
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/i915/gem/i915_gem_context.c |    3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ samples/bpf/xdp_rxq_info_user.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/drivers/gpu/drm/i915/gem/i915_gem_context.c
-+++ b/drivers/gpu/drm/i915/gem/i915_gem_context.c
-@@ -2094,8 +2094,7 @@ int i915_gem_context_create_ioctl(struct
- 	ext_data.fpriv = file->driver_priv;
- 	if (client_is_banned(ext_data.fpriv)) {
- 		DRM_DEBUG("client %s[%d] banned from creating ctx\n",
--			  current->comm,
--			  pid_nr(get_task_pid(current, PIDTYPE_PID)));
-+			  current->comm, task_pid_nr(current));
- 		return -EIO;
- 	}
+--- a/samples/bpf/xdp_rxq_info_user.c
++++ b/samples/bpf/xdp_rxq_info_user.c
+@@ -489,9 +489,9 @@ int main(int argc, char **argv)
+ 	if (bpf_prog_load_xattr(&prog_load_attr, &obj, &prog_fd))
+ 		return EXIT_FAIL;
  
+-	map = bpf_map__next(NULL, obj);
+-	stats_global_map = bpf_map__next(map, obj);
+-	rx_queue_index_map = bpf_map__next(stats_global_map, obj);
++	map =  bpf_object__find_map_by_name(obj, "config_map");
++	stats_global_map = bpf_object__find_map_by_name(obj, "stats_global_map");
++	rx_queue_index_map = bpf_object__find_map_by_name(obj, "rx_queue_index_map");
+ 	if (!map || !stats_global_map || !rx_queue_index_map) {
+ 		printf("finding a map in obj file failed\n");
+ 		return EXIT_FAIL;
 
 
