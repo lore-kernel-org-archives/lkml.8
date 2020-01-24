@@ -2,160 +2,115 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E9B8C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:41:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41BA1C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:41:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9E4420678
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:41:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579866110;
-	bh=k/czbYxF4bnobyYal/I8K+luZWw3QnlhrGOKRtVi+L0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qdR2PzzQVOjE53WvUG+AHXpS2/Y7qzfPIcxRUjT6or9UFAmH6tCIbjqQ1hIq+bXQK
-	 2TUK3C4sgqmhuRlzcTv5kInDrDE86LBqU2JTwt1W3BKcuFas44GsKcV1jfaLyWbwxT
-	 ybbGrp4ucOBIs9Qr9SA7emQnnM4e82kbrx01wl4Q=
+	by mail.kernel.org (Postfix) with ESMTP id 1851B20678
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:41:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="UiiEOmI5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390401AbgAXLQm (ORCPT
+        id S2392104AbgAXLl4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:16:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53440 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390381AbgAXLQh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:16:37 -0500
-Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DDC9A20704;
-        Fri, 24 Jan 2020 11:16:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579864596;
-        bh=k/czbYxF4bnobyYal/I8K+luZWw3QnlhrGOKRtVi+L0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IHEnUXNXSQz/x7HKZgr/cn+kdu9MOs4jXsc7cj/31dyDHlWLrjXq8qXnYcJ4PiXic
-         rFxpiGQXwC5cSyFpWU0B9RYDtO1NZxJNSAZK7FMc3NI/YxPg/KjeNyZGE+3BMXiYzJ
-         mGEumDUGmrFJKSmPCMi2e7lwcL+iZfqtiq0yrEIg=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Himanshu Madhani <hmadhani@marvell.com>,
-        Giridhar Malavali <giridhar.malavali@qlogic.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 297/639] scsi: qla2xxx: Unregister chrdev if module initialization fails
-Date:   Fri, 24 Jan 2020 10:27:47 +0100
-Message-Id: <20200124093124.130769714@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
-References: <20200124093047.008739095@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Fri, 24 Jan 2020 06:41:56 -0500
+Received: from mail-lj1-f178.google.com ([209.85.208.178]:40855 "EHLO
+        mail-lj1-f178.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390001AbgAXLQW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:16:22 -0500
+Received: by mail-lj1-f178.google.com with SMTP id n18so2049245ljo.7
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jan 2020 03:16:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rasmusvillemoes.dk; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=WPh74pEP+nQ76ELzYt+TrcyRCi7yaoOoadSkrfPnPw0=;
+        b=UiiEOmI5crrZFnXah+iBEOCV1kFA6HM7uH0AeaaVeCmEY0JQFlbkI5t8sr83qk61jO
+         ENI1Xm1UUUGXlAoQn+AgsSPXkmL1Hx34lQhSF7FiDCi+8GlB7JdN5aVzcdCM/RbQbz0T
+         gr+P+irrrT+iCw23HnU+FbiaxS5z0yDBgxLkk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=WPh74pEP+nQ76ELzYt+TrcyRCi7yaoOoadSkrfPnPw0=;
+        b=WvdgzlQ4b9zCkglQ3OhahnLeoLoeTAUvryWDkjuGve3rAFGVAgosCQBvi2Zvf8E9Pc
+         wOSJkIfy4tumY7cqiVsmeG4WOr4mwYLLJxgxmegu8E5Zf/hC5R1A3g0WzateUSMSMem8
+         vhj3ixtEbf/FxJFnMJzxCztZw0DRaYY2rLX7WfsCTnhW214JNFYxLFh9yW1tANGzmq7s
+         nxF9rNJbZMpUB1hDb3H1Z7RGueQVPzPsPnVvgksDGQvqaP1uk9TLv7379oPSUac5PlI+
+         fzVha6i5ZckWshLqnKBDMK2+61EewF36KTjabPqaROQjw7Tj7SCuuWe1EsH2TYNhLmz/
+         Ltyg==
+X-Gm-Message-State: APjAAAW1iee1OKR8wHCjYBKprggfwZ3zQrIQqBE4IdRJ54lotbagjaH1
+        LbaEZDgDg662DSVn4a6KgxTNHHe9J8MLik9O
+X-Google-Smtp-Source: APXvYqwhcWeDSkhp2yrEeOy7QBdhQdx7TS6ALPFnsE1YmPPh0m3SZYBK+yeJxbdM4du+1HhZ1HMVbQ==
+X-Received: by 2002:a2e:7a07:: with SMTP id v7mr1853505ljc.271.1579864580100;
+        Fri, 24 Jan 2020 03:16:20 -0800 (PST)
+Received: from [172.16.11.50] ([81.216.59.226])
+        by smtp.gmail.com with ESMTPSA id t1sm2947207lji.98.2020.01.24.03.16.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 24 Jan 2020 03:16:19 -0800 (PST)
+Subject: Re: vmlinux ELF header sometimes corrupt
+To:     Michael Ellerman <mpe@ellerman.id.au>,
+        LKML <linux-kernel@vger.kernel.org>
+Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
+References: <71aa76d0-a3b8-b4f3-a7c3-766cfb75412f@rasmusvillemoes.dk>
+ <875zh1i0wj.fsf@mpe.ellerman.id.au>
+From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Message-ID: <b5f6ab1c-337e-c5e4-6449-0cf73413e1be@rasmusvillemoes.dk>
+Date:   Fri, 24 Jan 2020 12:16:17 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <875zh1i0wj.fsf@mpe.ellerman.id.au>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bart Van Assche <bvanassche@acm.org>
+On 24/01/2020 11.50, Michael Ellerman wrote:
+> Rasmus Villemoes <linux@rasmusvillemoes.dk> writes:
+>> I'm building for a ppc32 (mpc8309) target using Yocto, and I'm hitting a
+>> very hard to debug problem that maybe someone else has encountered. This
+>> doesn't happen always, perhaps 1 in 8 times or something like that.
+>>
+>> The issue is that when the build gets to do "${CROSS}objcopy -O binary
+>> ... vmlinux", vmlinux is not (no longer) a proper ELF file, so naturally
+>> that fails with
+>>
+>>   powerpc-oe-linux-objcopy:vmlinux: file format not recognized
+>>
+>>
+>> Any ideas?
+> 
+> Not really sorry. Haven't seen or heard of that before.
+> 
+> Are you doing a parallel make? If so does -j 1 fix it?
 
-[ Upstream commit c794d24ec9eb6658909955772e70f34bef5b5b91 ]
+Hard to say, I'll have to try that a number of times to see if it can be
+reproduced with that setting.
 
-If module initialization fails after the character device has been
-registered, unregister the character device. Additionally, avoid
-duplicating error path code.
+> If it seems like sortextable is at fault then strace'ing it would be my
+> next step.
 
-Cc: Himanshu Madhani <hmadhani@marvell.com>
-Cc: Giridhar Malavali <giridhar.malavali@qlogic.com>
-Fixes: 6a03b4cd78f3 ("[SCSI] qla2xxx: Add char device to increase driver use count") # v2.6.35.
-Signed-off-by: Bart Van Assche <bvanassche@acm.org>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/scsi/qla2xxx/qla_os.c | 34 +++++++++++++++++++++-------------
- 1 file changed, 21 insertions(+), 13 deletions(-)
+I don't think sortextable is at fault, that was just my first "I know
+that at least pokes around in the ELF file". I do "cp vmlinux
+vmlinux.before_sort" and "cp vmlinux vmlinux.after_sort", and both of
+those copies are proper ELF files - and the .after_sort is identical to
+the corrupt vmlinux apart from vmlinux ending up with its ELF header wiped.
 
-diff --git a/drivers/scsi/qla2xxx/qla_os.c b/drivers/scsi/qla2xxx/qla_os.c
-index bb20a4a228cfe..fff20a3707677 100644
---- a/drivers/scsi/qla2xxx/qla_os.c
-+++ b/drivers/scsi/qla2xxx/qla_os.c
-@@ -6967,8 +6967,7 @@ qla2x00_module_init(void)
- 	/* Initialize target kmem_cache and mem_pools */
- 	ret = qlt_init();
- 	if (ret < 0) {
--		kmem_cache_destroy(srb_cachep);
--		return ret;
-+		goto destroy_cache;
- 	} else if (ret > 0) {
- 		/*
- 		 * If initiator mode is explictly disabled by qlt_init(),
-@@ -6989,11 +6988,10 @@ qla2x00_module_init(void)
- 	qla2xxx_transport_template =
- 	    fc_attach_transport(&qla2xxx_transport_functions);
- 	if (!qla2xxx_transport_template) {
--		kmem_cache_destroy(srb_cachep);
- 		ql_log(ql_log_fatal, NULL, 0x0002,
- 		    "fc_attach_transport failed...Failing load!.\n");
--		qlt_exit();
--		return -ENODEV;
-+		ret = -ENODEV;
-+		goto qlt_exit;
- 	}
- 
- 	apidev_major = register_chrdev(0, QLA2XXX_APIDEV, &apidev_fops);
-@@ -7005,27 +7003,37 @@ qla2x00_module_init(void)
- 	qla2xxx_transport_vport_template =
- 	    fc_attach_transport(&qla2xxx_transport_vport_functions);
- 	if (!qla2xxx_transport_vport_template) {
--		kmem_cache_destroy(srb_cachep);
--		qlt_exit();
--		fc_release_transport(qla2xxx_transport_template);
- 		ql_log(ql_log_fatal, NULL, 0x0004,
- 		    "fc_attach_transport vport failed...Failing load!.\n");
--		return -ENODEV;
-+		ret = -ENODEV;
-+		goto unreg_chrdev;
- 	}
- 	ql_log(ql_log_info, NULL, 0x0005,
- 	    "QLogic Fibre Channel HBA Driver: %s.\n",
- 	    qla2x00_version_str);
- 	ret = pci_register_driver(&qla2xxx_pci_driver);
- 	if (ret) {
--		kmem_cache_destroy(srb_cachep);
--		qlt_exit();
--		fc_release_transport(qla2xxx_transport_template);
--		fc_release_transport(qla2xxx_transport_vport_template);
- 		ql_log(ql_log_fatal, NULL, 0x0006,
- 		    "pci_register_driver failed...ret=%d Failing load!.\n",
- 		    ret);
-+		goto release_vport_transport;
- 	}
- 	return ret;
-+
-+release_vport_transport:
-+	fc_release_transport(qla2xxx_transport_vport_template);
-+
-+unreg_chrdev:
-+	if (apidev_major >= 0)
-+		unregister_chrdev(apidev_major, QLA2XXX_APIDEV);
-+	fc_release_transport(qla2xxx_transport_template);
-+
-+qlt_exit:
-+	qlt_exit();
-+
-+destroy_cache:
-+	kmem_cache_destroy(srb_cachep);
-+	return ret;
- }
- 
- /**
--- 
-2.20.1
+So it's something that happens during some later build step (Yocto has a
+lot of steps), perhaps "make modules" or "make modules_install" or
+something ends up somehow deciding "hey, vmlinux isn't quite uptodate,
+let's nuke it". I'm not even sure it's a Kbuild problem, but I've seen
+the same thing happen using another meta-build system called oe-lite,
+which is why I'm not primarily suspecting the Yocto logic.
 
-
-
+Rasmus
