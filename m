@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE454C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:34:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA064C32771
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:34:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C506F20838
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:34:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A881624658
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:34:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579865650;
-	bh=hCci7xL188rP8q58jiWbyf8ua8a7lzyy8rDNwkk9cXQ=;
+	s=default; t=1579865653;
+	bh=DDgwxmpgZHqtYN9cYku5TJUbMJs+80MNzlI7cbgWTS8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2AgCGRrwWHn9hH+bj8WVjE3w/8rJTYIbeIE4VyI278CV8EeOIbxGzB73Zkq8iFGUX
-	 gJZ4fsV6BJQ1aZSV7lRdH2CHR5mLamd7W1jE/jTiRxdbU4/gMk649Vfzta2kXdKEzf
-	 Q+OhyJUAIdRwwXChxA05T4EVVnSpmG7OZDmVLzWU=
+	b=J0ea9yD9xWxS90Bla9+kQBqrA9TrpmAjKrFUGWJ80hVNPoILq/gOaLOj8pWZ2si1f
+	 B9L7EIxmTyU/220XCQIhEnSGuSVk3L7Z9K1ok7g5uS1pZJ3hrWk+z9NmMtrWMHtzY7
+	 YOTXoEmfEkwyfQgr1WdDxPKWQz+C655ONZdiYQ98=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404690AbgAXLeJ (ORCPT
+        id S2404211AbgAXLeN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:34:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53922 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 06:34:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53996 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404680AbgAXLeF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:34:05 -0500
+        id S2404691AbgAXLeJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:34:09 -0500
 Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CBFB9206D4;
-        Fri, 24 Jan 2020 11:34:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A2C9E20704;
+        Fri, 24 Jan 2020 11:34:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579865645;
-        bh=hCci7xL188rP8q58jiWbyf8ua8a7lzyy8rDNwkk9cXQ=;
+        s=default; t=1579865649;
+        bh=DDgwxmpgZHqtYN9cYku5TJUbMJs+80MNzlI7cbgWTS8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hkUw9YhfronqWyx/yeChn9P54Pt8l4k5NaU+tNXdC0DcPqA3M5sPmtNNQJSQv4E1y
-         SIce2g44p/d2cEgD5LFM9RRR1hCTY8psAjNC8Dqw9p/oJqFA37XE75YmWrKdODnA8T
-         Zbq9hAgka+CSVusJHJ99pS9SAXgRfqyd0ywcKYBE=
+        b=NqUcaO4uw17EcimLoDuPT7roEnXrT280GsI2m5mEiANM3gwdI62kD/KR2wqSQVEE2
+         LkR6p5WXAg8+ACTtSZ3PAoXTTERqkGbRJXgxbo8pqJs1DOO1iRDxEtZf8laxmpcOD2
+         f+JFuGFrYOWbG7c7uEozE0cn2bV8ADwwXf9R093M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 582/639] of: mdio: Fix a signedness bug in of_phy_get_and_connect()
-Date:   Fri, 24 Jan 2020 10:32:32 +0100
-Message-Id: <20200124093202.379677585@linuxfoundation.org>
+Subject: [PATCH 4.19 583/639] net: nixge: Fix a signedness bug in nixge_probe()
+Date:   Fri, 24 Jan 2020 10:32:33 +0100
+Message-Id: <20200124093202.505897670@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
 References: <20200124093047.008739095@linuxfoundation.org>
@@ -62,32 +62,32 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit d7eb651212fdbafa82d485d8e76095ac3b14c193 ]
+[ Upstream commit 1a4b62a0b8a3b81eca24366f63e214a7144b9f02 ]
 
-The "iface" variable is an enum and in this context GCC treats it as
-an unsigned int so the error handling is never triggered.
+The "priv->phy_mode" is an enum and in this context GCC will treat it
+as an unsigned int so it can never be less than zero.
 
-Fixes: b78624125304 ("of_mdio: Abstract a general interface for phy connect")
+Fixes: 492caffa8a1a ("net: ethernet: nixge: Add support for National Instruments XGE netdev")
 Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/of/of_mdio.c | 2 +-
+ drivers/net/ethernet/ni/nixge.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/of/of_mdio.c b/drivers/of/of_mdio.c
-index 5ad1342f56825..7d2bc22680d90 100644
---- a/drivers/of/of_mdio.c
-+++ b/drivers/of/of_mdio.c
-@@ -370,7 +370,7 @@ struct phy_device *of_phy_get_and_connect(struct net_device *dev,
- 	int ret;
+diff --git a/drivers/net/ethernet/ni/nixge.c b/drivers/net/ethernet/ni/nixge.c
+index 76efed058f334..a791d7932b0ef 100644
+--- a/drivers/net/ethernet/ni/nixge.c
++++ b/drivers/net/ethernet/ni/nixge.c
+@@ -1233,7 +1233,7 @@ static int nixge_probe(struct platform_device *pdev)
+ 	}
  
- 	iface = of_get_phy_mode(np);
--	if (iface < 0)
-+	if ((int)iface < 0)
- 		return NULL;
- 	if (of_phy_is_fixed_link(np)) {
- 		ret = of_phy_register_fixed_link(np);
+ 	priv->phy_mode = of_get_phy_mode(pdev->dev.of_node);
+-	if (priv->phy_mode < 0) {
++	if ((int)priv->phy_mode < 0) {
+ 		netdev_err(ndev, "not find \"phy-mode\" property\n");
+ 		err = -EINVAL;
+ 		goto unregister_mdio;
 -- 
 2.20.1
 
