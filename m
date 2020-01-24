@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 898A8C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:12:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66233C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:12:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C3BD2075D
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:12:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30EBB20708
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:12:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579864344;
-	bh=eoXkUvFQwNVPjPMdgw0BLZDOs2KDr63btJjFbxhKXhk=;
+	s=default; t=1579864348;
+	bh=c6gzUqxlvOJ9c3CTRw7aCZ/FwMvPQlg8CdOj1USoyRE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hlLST337LgOcL8c/6bxn2vR47YB0FrHnFsQKGvcaiVOACn41FYYDvv3A+qLpe+48t
-	 8a7tzC8Oa160p83h0eOAj5sh8Ws8a9xs1ZjdAzpAV27u7wpJMENwENIj2vaIE2oSiy
-	 r9Hn84m0N2dZ6Ges3e3NevUo7yjmtsaz0k5Kfh58=
+	b=CKpu2ZneO2a2KThK7h2xHyr+VFckDGOuhTKJ0x3rnloC1S5nHxpSxFeWl7DFgym6a
+	 hS3TEks+sNb/S8DsCu94s/4GKT1d+3onwEOoQ43t7stPUUqn9YvNpWIXZq8ciMflHh
+	 R0JKf03yGD/SwUYBmAjNTo9EtC7WUMFqSKrhOrgw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389303AbgAXLMW (ORCPT
+        id S2389990AbgAXLM1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:12:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48606 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 06:12:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48688 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388374AbgAXLMU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:12:20 -0500
+        id S2388374AbgAXLMX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:12:23 -0500
 Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3DB9020708;
-        Fri, 24 Jan 2020 11:12:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9805A20663;
+        Fri, 24 Jan 2020 11:12:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579864339;
-        bh=eoXkUvFQwNVPjPMdgw0BLZDOs2KDr63btJjFbxhKXhk=;
+        s=default; t=1579864343;
+        bh=c6gzUqxlvOJ9c3CTRw7aCZ/FwMvPQlg8CdOj1USoyRE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TkO8z1Adt9IOQHYYU+UoZa5kbb17AhOZafrRNVyVM4vBZUpZ4MZZg3J0VfWETYRiE
-         0etAqruV/wDRTOd5OiJ2+tWWJD2PZUwz0ILCbTsJenHsSQZ3GhNnvyVmS4qRhZLxl3
-         3URivpnmyvGfOpMoiqOaFz+w77FszGpVxHom7t88=
+        b=YqiCbFItUREyd9HAcEVHhn2R4hU8jih+Ukd5oYUjow4jvqAVAIk+AK06wiOBHHrnO
+         SFIRlt2QbiN5HAm+ZhbRmfY9P+KubJxEkdDFTBM1OZ5RSuTLCJzYowOvYgSNt8xMsS
+         Sd0aSNKPO4v1gR2NKKHBrOGtC/sV5H/zI9DQj80c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Segher Boessenkool <segher@kernel.crashing.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Andrew Donnellan <andrew.donnellan@au1.ibm.com>,
+        stable@vger.kernel.org, Leon Romanovsky <leonro@mellanox.com>,
+        Saeed Mahameed <saeedm@mellanox.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 226/639] powerpc/64s: Fix logic when handling unknown CPU features
-Date:   Fri, 24 Jan 2020 10:26:36 +0100
-Message-Id: <20200124093115.203454910@linuxfoundation.org>
+Subject: [PATCH 4.19 217/639] net/mlx5: Delete unused FPGA QPN variable
+Date:   Fri, 24 Jan 2020 10:26:27 +0100
+Message-Id: <20200124093114.144719822@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
 References: <20200124093047.008739095@linuxfoundation.org>
@@ -62,78 +60,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Ellerman <mpe@ellerman.id.au>
+From: Leon Romanovsky <leonro@mellanox.com>
 
-[ Upstream commit 8cfaf106918a8c13abb24c641556172afbb9545c ]
+[ Upstream commit 566428375a53619196e31803130dd1a7010c4d7f ]
 
-In cpufeatures_process_feature(), if a provided CPU feature is unknown and
-enable_unknown is false, we erroneously print that the feature is being
-enabled and return true, even though no feature has been enabled, and
-may also set feature bits based on the last entry in the match table.
+fpga_qpn was assigned but never used and compilation with W=1
+produced the following warning:
 
-Fix this so that we only set feature bits from the match table if we have
-actually enabled a feature from that table, and when failing to enable an
-unknown feature, always print the "not enabling" message and return false.
+drivers/net/ethernet/mellanox/mlx5/core/fpga/core.c: In function _mlx5_fpga_event_:
+drivers/net/ethernet/mellanox/mlx5/core/fpga/core.c:320:6: warning:
+variable _fpga_qpn_ set but not used [-Wunused-but-set-variable]
+  u32 fpga_qpn;
+      ^~~~~~~~
 
-Coincidentally, some older gccs (<GCC 7), when invoked with
--fsanitize-coverage=trace-pc, cause a spurious uninitialised variable
-warning in this function:
-
-  arch/powerpc/kernel/dt_cpu_ftrs.c: In function ‘cpufeatures_process_feature’:
-  arch/powerpc/kernel/dt_cpu_ftrs.c:686:7: warning: ‘m’ may be used uninitialized in this function [-Wmaybe-uninitialized]
-    if (m->cpu_ftr_bit_mask)
-
-An upcoming patch will enable support for kcov, which requires this option.
-This patch avoids the warning.
-
-Fixes: 5a61ef74f269 ("powerpc/64s: Support new device tree binding for discovering CPU features")
-Reported-by: Segher Boessenkool <segher@kernel.crashing.org>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-[ajd: add commit message]
-Signed-off-by: Andrew Donnellan <andrew.donnellan@au1.ibm.com>
+Fixes: 98db16bab59f ("net/mlx5: FPGA, Handle QP error event")
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/kernel/dt_cpu_ftrs.c | 17 +++++++----------
- 1 file changed, 7 insertions(+), 10 deletions(-)
+ drivers/net/ethernet/mellanox/mlx5/core/fpga/core.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/arch/powerpc/kernel/dt_cpu_ftrs.c b/arch/powerpc/kernel/dt_cpu_ftrs.c
-index c6f41907f0d71..a4b31e17492d3 100644
---- a/arch/powerpc/kernel/dt_cpu_ftrs.c
-+++ b/arch/powerpc/kernel/dt_cpu_ftrs.c
-@@ -666,8 +666,10 @@ static bool __init cpufeatures_process_feature(struct dt_cpu_feature *f)
- 		m = &dt_cpu_feature_match_table[i];
- 		if (!strcmp(f->name, m->name)) {
- 			known = true;
--			if (m->enable(f))
-+			if (m->enable(f)) {
-+				cur_cpu_spec->cpu_features |= m->cpu_ftr_bit_mask;
- 				break;
-+			}
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/fpga/core.c b/drivers/net/ethernet/mellanox/mlx5/core/fpga/core.c
+index 436a8136f26ff..310f9e7d83200 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/fpga/core.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/fpga/core.c
+@@ -289,7 +289,6 @@ void mlx5_fpga_event(struct mlx5_core_dev *mdev, u8 event, void *data)
+ 	const char *event_name;
+ 	bool teardown = false;
+ 	unsigned long flags;
+-	u32 fpga_qpn;
+ 	u8 syndrome;
  
- 			pr_info("not enabling: %s (disabled or unsupported by kernel)\n",
- 				f->name);
-@@ -675,17 +677,12 @@ static bool __init cpufeatures_process_feature(struct dt_cpu_feature *f)
- 		}
- 	}
- 
--	if (!known && enable_unknown) {
--		if (!feat_try_enable_unknown(f)) {
--			pr_info("not enabling: %s (unknown and unsupported by kernel)\n",
--				f->name);
--			return false;
--		}
-+	if (!known && (!enable_unknown || !feat_try_enable_unknown(f))) {
-+		pr_info("not enabling: %s (unknown and unsupported by kernel)\n",
-+			f->name);
-+		return false;
- 	}
- 
--	if (m->cpu_ftr_bit_mask)
--		cur_cpu_spec->cpu_features |= m->cpu_ftr_bit_mask;
--
- 	if (known)
- 		pr_debug("enabling: %s\n", f->name);
- 	else
+ 	switch (event) {
+@@ -300,7 +299,6 @@ void mlx5_fpga_event(struct mlx5_core_dev *mdev, u8 event, void *data)
+ 	case MLX5_EVENT_TYPE_FPGA_QP_ERROR:
+ 		syndrome = MLX5_GET(fpga_qp_error_event, data, syndrome);
+ 		event_name = mlx5_fpga_qp_syndrome_to_string(syndrome);
+-		fpga_qpn = MLX5_GET(fpga_qp_error_event, data, fpga_qpn);
+ 		break;
+ 	default:
+ 		mlx5_fpga_warn_ratelimited(fdev, "Unexpected event %u\n",
 -- 
 2.20.1
 
