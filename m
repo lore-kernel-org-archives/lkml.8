@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E163DC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:33:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F05FEC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:33:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B50D0206D4
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:33:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDFEC214DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:33:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579865614;
-	bh=flJwwwCdA1MuCU3Ef6u9H7RxMiKCjf58mlmLmNHoAI4=;
+	s=default; t=1579865617;
+	bh=ajMoI1rRS1dhfGS4GJMcyEeeC49VpvBGmLonN1/VUdA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QMEtNPrfcOI/i3ldkLoI+Pyw4G+nPXPJma7Dg5Egp7vUwRydrgjSnWPlexu32nbuu
-	 Dyk4U8Pe9QKF1t636TnA9y7pDALRwVPa3YKzdqZ/W/xJOJLPa+nJjsxyap0oiMF3u+
-	 Q3QBbN+rS49Dz1nVIOyDFnnHjnXKwOutZfmKjkH0=
+	b=x48uRA/qWKo62Eovf2mFMSC/yzwbWxZPkDZUwl7NnhJ1xQR4a3p4zad2av1wjKLka
+	 GfdlRjrYCYrLJAHe6jvGT8fnqWNfiNsrgFWy+NeGWCfU6UhtV9D/aIXmiwu7FRp/q7
+	 39lr4cr/s4HHelEqu5RZsaVZSuJ8nLQMnCPSbMHk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404604AbgAXLdd (ORCPT
+        id S2404614AbgAXLdg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:33:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53056 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 06:33:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53148 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404595AbgAXLdb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:33:31 -0500
+        id S2404595AbgAXLde (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:33:34 -0500
 Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9FC85214AF;
-        Fri, 24 Jan 2020 11:33:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 52020214AF;
+        Fri, 24 Jan 2020 11:33:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579865610;
-        bh=flJwwwCdA1MuCU3Ef6u9H7RxMiKCjf58mlmLmNHoAI4=;
+        s=default; t=1579865613;
+        bh=ajMoI1rRS1dhfGS4GJMcyEeeC49VpvBGmLonN1/VUdA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CZFrDsmD6AM1GWXL8L+epWvsuVyDuKbt9NPwvuqu77L1sBpu25whM3ZtjQAOHdgBE
-         e0OgsM9JkRi50ZLETf0ybpSlnncoJkcV+49hicCyMEFB87GcPj8CM6uGVN0uPHrWe7
-         h++r4l6cfslx3QV15gWcCeL1eSyxg35KC6r7xB5M=
+        b=MYBInmrxY/x0FTh5mhiaV5v8B/Kw2Lz81NMjmVZXzR0B7eGttFKujVu3IOjgtjFJw
+         +0yB7BuFpmopy29xG86ujYWZnPkSvqcZtq1h/YJqq31RvK6gHxIi6s6VlbJAUzj64N
+         qIPotRLBRYxEOKrqNZlL2umCrWjLcawyOUv8uRuc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Antonio Borneo <antonio.borneo@st.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 593/639] net: stmmac: fix length of PTP clocks name string
-Date:   Fri, 24 Jan 2020 10:32:43 +0100
-Message-Id: <20200124093203.686485470@linuxfoundation.org>
+Subject: [PATCH 4.19 576/639] net: hisilicon: Fix signedness bug in hix5hd2_dev_probe()
+Date:   Fri, 24 Jan 2020 10:32:26 +0100
+Message-Id: <20200124093201.604948176@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
 References: <20200124093047.008739095@linuxfoundation.org>
@@ -60,49 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Antonio Borneo <antonio.borneo@st.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit 5da202c88f8c355ad79bc2e8eb582e6d433060e7 ]
+[ Upstream commit 002dfe8085255b7bf1e0758c3d195c5412d35be9 ]
 
-The field "name" in struct ptp_clock_info has a fixed size of 16
-chars and is used as zero terminated string by clock_name_show()
-in drivers/ptp/ptp_sysfs.c
-The current initialization value requires 17 chars to fit also the
-null termination, and this causes overflow to the next bytes in
-the struct when the string is read as null terminated:
-	hexdump -C /sys/class/ptp/ptp0/clock_name
-	00000000  73 74 6d 6d 61 63 5f 70  74 70 5f 63 6c 6f 63 6b  |stmmac_ptp_clock|
-	00000010  a0 ac b9 03 0a                                    |.....|
-where the extra 4 bytes (excluding the newline) after the string
-represent the integer 0x03b9aca0 = 62500000 assigned to the field
-"max_adj" that follows "name" in the same struct.
+The "priv->phy_mode" variable is an enum and in this context GCC will
+treat it as unsigned to the error handling will never trigger.
 
-There is no strict requirement for the "name" content and in the
-comment in ptp_clock_kernel.h it's reported it should just be 'A
-short "friendly name" to identify the clock'.
-Replace it with "stmmac ptp".
-
-Signed-off-by: Antonio Borneo <antonio.borneo@st.com>
-Fixes: 92ba6888510c ("stmmac: add the support for PTP hw clock driver")
-Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+Fixes: 57c5bc9ad7d7 ("net: hisilicon: add hix5hd2 mac driver")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/stmicro/stmmac/stmmac_ptp.c | 2 +-
+ drivers/net/ethernet/hisilicon/hix5hd2_gmac.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_ptp.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_ptp.c
-index cc60b3fb08927..8f8b8f381ffd4 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_ptp.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_ptp.c
-@@ -174,7 +174,7 @@ static int stmmac_enable(struct ptp_clock_info *ptp,
- /* structure describing a PTP hardware clock */
- static struct ptp_clock_info stmmac_ptp_clock_ops = {
- 	.owner = THIS_MODULE,
--	.name = "stmmac_ptp_clock",
-+	.name = "stmmac ptp",
- 	.max_adj = 62500000,
- 	.n_alarm = 0,
- 	.n_ext_ts = 0,
+diff --git a/drivers/net/ethernet/hisilicon/hix5hd2_gmac.c b/drivers/net/ethernet/hisilicon/hix5hd2_gmac.c
+index 471805ea363b6..b63871ef8a403 100644
+--- a/drivers/net/ethernet/hisilicon/hix5hd2_gmac.c
++++ b/drivers/net/ethernet/hisilicon/hix5hd2_gmac.c
+@@ -1201,7 +1201,7 @@ static int hix5hd2_dev_probe(struct platform_device *pdev)
+ 		goto err_free_mdio;
+ 
+ 	priv->phy_mode = of_get_phy_mode(node);
+-	if (priv->phy_mode < 0) {
++	if ((int)priv->phy_mode < 0) {
+ 		netdev_err(ndev, "not find phy-mode\n");
+ 		ret = -EINVAL;
+ 		goto err_mdiobus;
 -- 
 2.20.1
 
