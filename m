@@ -2,338 +2,139 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3B98C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:16:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06589C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:16:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A1EB02075D
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:16:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9FA92075D
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:16:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=shipmail.org header.i=@shipmail.org header.b="OfjyUN0p"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VQOkVf10"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730220AbgAXJQw (ORCPT
+        id S1730348AbgAXJQ4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 04:16:52 -0500
-Received: from ste-pvt-msa2.bahnhof.se ([213.80.101.71]:9305 "EHLO
-        ste-pvt-msa2.bahnhof.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729942AbgAXJQu (ORCPT
+        Fri, 24 Jan 2020 04:16:56 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:55914 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1730287AbgAXJQy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 04:16:50 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by ste-pvt-msa2.bahnhof.se (Postfix) with ESMTP id 4C7163F72A;
-        Fri, 24 Jan 2020 10:09:56 +0100 (CET)
-Authentication-Results: ste-pvt-msa2.bahnhof.se;
-        dkim=pass (1024-bit key; unprotected) header.d=shipmail.org header.i=@shipmail.org header.b=OfjyUN0p;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at bahnhof.se
-Authentication-Results: ste-ftg-msa2.bahnhof.se (amavisd-new);
-        dkim=pass (1024-bit key) header.d=shipmail.org
-Received: from ste-pvt-msa2.bahnhof.se ([127.0.0.1])
-        by localhost (ste-ftg-msa2.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id HWelp0yngpkY; Fri, 24 Jan 2020 10:09:50 +0100 (CET)
-Received: from mail1.shipmail.org (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
-        (Authenticated sender: mb878879)
-        by ste-pvt-msa2.bahnhof.se (Postfix) with ESMTPA id 8BF4F3F6AC;
-        Fri, 24 Jan 2020 10:09:50 +0100 (CET)
-Received: from localhost.localdomain.localdomain (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
-        by mail1.shipmail.org (Postfix) with ESMTPSA id 3779A36065F;
-        Fri, 24 Jan 2020 10:09:48 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=shipmail.org; s=mail;
-        t=1579856988; bh=463+tP6m2Ktw+6/G5q0gRLiuKfDYtDq4dJFl1MBk+B4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OfjyUN0pghPj7GssynL8Wle7HhSjH+eTmepdlRP9NZumU1uM4TGUPDhYUTAXn7pp+
-         UIFZCXInZBuX9JmwblqDkBKrHeX1u7hBBVFN3nspMKTfBRk7Cp14v8JiBbj8vA1IcU
-         hCfkXW96g+iGuo+gjsNorVaSngFJy/yMBpqwJDRY=
-From:   =?UTF-8?q?Thomas=20Hellstr=C3=B6m=20=28VMware=29?= 
-        <thomas_os@shipmail.org>
-To:     linux-mm@kvack.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-Cc:     pv-drivers@vmware.com, linux-graphics-maintainer@vmware.com,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Ralph Campbell <rcampbell@nvidia.com>,
-        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Roland Scheidegger <sroland@vmware.com>
-Subject: [PATCH 5/9] mm, drm/ttm, drm/vmwgfx: Support huge TTM pagefaults
-Date:   Fri, 24 Jan 2020 10:09:36 +0100
-Message-Id: <20200124090940.26571-6-thomas_os@shipmail.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20200124090940.26571-1-thomas_os@shipmail.org>
-References: <20200124090940.26571-1-thomas_os@shipmail.org>
+        Fri, 24 Jan 2020 04:16:54 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579857413;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=eVwp3U5GzOX2o0jWqVHj3WHwgjI/zlg9dOk4xt7JmuA=;
+        b=VQOkVf103fQn8r2Iy5fiqFBIMOqqer1SkL9v9y4w8NF9hT/dA+OeXhMEwlCaR/hecFS5Jx
+        EV9gwXK/uBV6SMHq8oFvmbRxwY3PgitLDIlkCJPoX+bCD/u82VPrSF21z5RrCjGIj3ZnIR
+        Ib6sXLf5CY7iKz+BHjaTRIzbn0IcbzA=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-169-1Q_BTgs6Mj2Nl56QR7PAPQ-1; Fri, 24 Jan 2020 04:16:52 -0500
+X-MC-Unique: 1Q_BTgs6Mj2Nl56QR7PAPQ-1
+Received: by mail-wm1-f70.google.com with SMTP id p26so288230wmg.5
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jan 2020 01:16:52 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=eVwp3U5GzOX2o0jWqVHj3WHwgjI/zlg9dOk4xt7JmuA=;
+        b=r8RB6D9JcCfceRWEiG/Jzvji0Nqq3mPPRltrU7QWIv0BvFAnIrliZboxapIeNfylVx
+         N3qysFKJYtDv3mc50IFT3L1EGiltITTePmyRgKSDk838Kc+F+sUNlF1T89FjnXBRFaz/
+         inPxM3MOeMaoSwUdhRTwmG0bXDs5ScoZrOjl3t/S7IQzQen/1Fgno2G4YLPQV7aCADvu
+         NFvgaORoeq622VjDpFfKOfd0Zj8FaQgkH8LkuEN7YS5zxKGrGCGfef9wGl3GVqePnHzz
+         w2K3qgVBZAqoMb5WE3Nij0/Fd9QfUwV21Ekfw7kml64gB0Zt33qIb+CpxGyh7QKCEHvv
+         yGwA==
+X-Gm-Message-State: APjAAAXZrbMhS8fjWNas89goB84mB1eypEjXCK2tG1iKPZSikPQucGpo
+        hO5JhD8qQ7wfK1V+TQsK0GUsXyy/cOLsEYr0mPWzzmAjN/uSVU7rEm3VUOgvuC/ciTTI/NiobCQ
+        4NQI2WWIo4v+7ESD+fAZ8PkLD
+X-Received: by 2002:a1c:a445:: with SMTP id n66mr2460521wme.151.1579857411356;
+        Fri, 24 Jan 2020 01:16:51 -0800 (PST)
+X-Google-Smtp-Source: APXvYqxUiU565WJyxONGgI7w4xQRq/ENXZEynENvjhqk4CBvmo8g5IcgWmw96rLrMcfuNGJKf9m74A==
+X-Received: by 2002:a1c:a445:: with SMTP id n66mr2460489wme.151.1579857411156;
+        Fri, 24 Jan 2020 01:16:51 -0800 (PST)
+Received: from localhost.localdomain ([109.38.141.136])
+        by smtp.gmail.com with ESMTPSA id a132sm6060770wme.3.2020.01.24.01.16.49
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 24 Jan 2020 01:16:50 -0800 (PST)
+Subject: Re: [PATCH v12 03/10] firmware: Rename FW_OPT_NOFALLBACK to
+ FW_OPT_NOFALLBACK_SYSFS
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Lutomirski <luto@kernel.org>
+Cc:     Ard Biesheuvel <ardb@kernel.org>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Peter Jones <pjones@redhat.com>,
+        Dave Olsthoorn <dave@bewaar.me>, x86@kernel.org,
+        platform-driver-x86@vger.kernel.org, linux-efi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-input@vger.kernel.org
+References: <20200115163554.101315-1-hdegoede@redhat.com>
+ <20200115163554.101315-4-hdegoede@redhat.com>
+ <20200124085751.GA2957916@kroah.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <d25d5d6e-0348-b19f-539e-048cfa70d6a6@redhat.com>
+Date:   Fri, 24 Jan 2020 10:16:48 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200124085751.GA2957916@kroah.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Hellstrom <thellstrom@vmware.com>
+Hi,
 
-Support huge (PMD-size and PUD-size) page-table entries by providing a
-huge_fault() callback.
-We still support private mappings and write-notify by splitting the huge
-page-table entries on write-access.
+On 1/24/20 9:57 AM, Greg Kroah-Hartman wrote:
+> On Wed, Jan 15, 2020 at 05:35:47PM +0100, Hans de Goede wrote:
+>> This is a preparation patch for adding a new platform fallback mechanism,
+>> which will have its own enable/disable FW_OPT_xxx option.
+>>
+>> Note this also fixes a typo in one of the re-wordwrapped comments:
+>> enfoce -> enforce.
+>>
+>> Acked-by: Luis Chamberlain <mcgrof@kernel.org>
+>> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> 
+> I've taken this in my tree for now in a quest to try to get others to
+> pay attention to this series...
 
-Note that for huge page-faults to occur, either the kernel needs to be
-compiled with trans-huge-pages always enabled, or the kernel needs to be
-compiled with trans-huge-pages enabled using madvise, and the user-space
-app needs to call madvise() to enable trans-huge pages on a per-mapping
-basis.
+Thank you.
 
-Furthermore huge page-faults will not succeed unless buffer objects and
-user-space addresses are aligned on huge page size boundaries.
+As mentioned before I believe that this series is ready for merging now.
 
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: "Matthew Wilcox (Oracle)" <willy@infradead.org>
-Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Cc: Ralph Campbell <rcampbell@nvidia.com>
-Cc: "Jérôme Glisse" <jglisse@redhat.com>
-Cc: "Christian König" <christian.koenig@amd.com>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Signed-off-by: Thomas Hellstrom <thellstrom@vmware.com>
-Reviewed-by: Roland Scheidegger <sroland@vmware.com>
----
- drivers/gpu/drm/ttm/ttm_bo_vm.c            | 145 ++++++++++++++++++++-
- drivers/gpu/drm/vmwgfx/vmwgfx_page_dirty.c |   2 +-
- include/drm/ttm/ttm_bo_api.h               |   3 +-
- 3 files changed, 145 insertions(+), 5 deletions(-)
+Andy Lutomirski had one last change request for v12 of the second
+patch in the series, specifically to replace the loop searching for
+the prefix with a memem, but the kernel does not have memmem.
 
-diff --git a/drivers/gpu/drm/ttm/ttm_bo_vm.c b/drivers/gpu/drm/ttm/ttm_bo_vm.c
-index 389128b8c4dd..49704261a00d 100644
---- a/drivers/gpu/drm/ttm/ttm_bo_vm.c
-+++ b/drivers/gpu/drm/ttm/ttm_bo_vm.c
-@@ -156,6 +156,89 @@ vm_fault_t ttm_bo_vm_reserve(struct ttm_buffer_object *bo,
- }
- EXPORT_SYMBOL(ttm_bo_vm_reserve);
- 
-+#ifdef CONFIG_TRANSPARENT_HUGEPAGE
-+/**
-+ * ttm_bo_vm_insert_huge - Insert a pfn for PUD or PMD faults
-+ * @vmf: Fault data
-+ * @bo: The buffer object
-+ * @page_offset: Page offset from bo start
-+ * @fault_page_size: The size of the fault in pages.
-+ * @pgprot: The page protections.
-+ * Does additional checking whether it's possible to insert a PUD or PMD
-+ * pfn and performs the insertion.
-+ *
-+ * Return: VM_FAULT_NOPAGE on successful insertion, VM_FAULT_FALLBACK if
-+ * a huge fault was not possible, and a VM_FAULT_ERROR code otherwise.
-+ */
-+static vm_fault_t ttm_bo_vm_insert_huge(struct vm_fault *vmf,
-+					struct ttm_buffer_object *bo,
-+					pgoff_t page_offset,
-+					pgoff_t fault_page_size,
-+					pgprot_t pgprot)
-+{
-+	pgoff_t i;
-+	vm_fault_t ret;
-+	unsigned long pfn;
-+	pfn_t pfnt;
-+	struct ttm_tt *ttm = bo->ttm;
-+	bool write = vmf->flags & FAULT_FLAG_WRITE;
-+
-+	/* Fault should not cross bo boundary. */
-+	page_offset &= ~(fault_page_size - 1);
-+	if (page_offset + fault_page_size > bo->num_pages)
-+		goto out_fallback;
-+
-+	if (bo->mem.bus.is_iomem)
-+		pfn = ttm_bo_io_mem_pfn(bo, page_offset);
-+	else
-+		pfn = page_to_pfn(ttm->pages[page_offset]);
-+
-+	/* pfn must be fault_page_size aligned. */
-+	if ((pfn & (fault_page_size - 1)) != 0)
-+		goto out_fallback;
-+
-+	/* Check that memory is contiguous. */
-+	if (!bo->mem.bus.is_iomem)
-+		for (i = 1; i < fault_page_size; ++i) {
-+			if (page_to_pfn(ttm->pages[page_offset + i]) != pfn + i)
-+				goto out_fallback;
-+		}
-+	/* IO mem without the io_mem_pfn callback is always contiguous. */
-+	else if (bo->bdev->driver->io_mem_pfn)
-+		for (i = 1; i < fault_page_size; ++i) {
-+			if (ttm_bo_io_mem_pfn(bo, page_offset + i) != pfn + i)
-+				goto out_fallback;
-+		}
-+
-+	pfnt = __pfn_to_pfn_t(pfn, PFN_DEV);
-+	if (fault_page_size == (HPAGE_PMD_SIZE >> PAGE_SHIFT))
-+		ret = vmf_insert_pfn_pmd_prot(vmf, pfnt, pgprot, write);
-+#ifdef CONFIG_HAVE_ARCH_TRANSPARENT_HUGEPAGE_PUD
-+	else if (fault_page_size == (HPAGE_PUD_SIZE >> PAGE_SHIFT))
-+		ret = vmf_insert_pfn_pud_prot(vmf, pfnt, pgprot, write);
-+#endif
-+	else
-+		WARN_ON_ONCE(ret = VM_FAULT_FALLBACK);
-+
-+	if (ret != VM_FAULT_NOPAGE)
-+		goto out_fallback;
-+
-+	return VM_FAULT_NOPAGE;
-+out_fallback:
-+	count_vm_event(THP_FAULT_FALLBACK);
-+	return VM_FAULT_FALLBACK;
-+}
-+#else
-+static vm_fault_t ttm_bo_vm_insert_huge(struct vm_fault *vmf,
-+					struct ttm_buffer_object *bo,
-+					pgoff_t page_offset,
-+					pgoff_t fault_page_size,
-+					pgprot_t pgprot)
-+{
-+	return VM_FAULT_NOPAGE;
-+}
-+#endif
-+
- /**
-  * ttm_bo_vm_fault_reserved - TTM fault helper
-  * @vmf: The struct vm_fault given as argument to the fault callback
-@@ -163,6 +246,7 @@ EXPORT_SYMBOL(ttm_bo_vm_reserve);
-  * @num_prefault: Maximum number of prefault pages. The caller may want to
-  * specify this based on madvice settings and the size of the GPU object
-  * backed by the memory.
-+ * @fault_page_size: The size of the fault in pages.
-  *
-  * This function inserts one or more page table entries pointing to the
-  * memory backing the buffer object, and then returns a return code
-@@ -176,7 +260,8 @@ EXPORT_SYMBOL(ttm_bo_vm_reserve);
-  */
- vm_fault_t ttm_bo_vm_fault_reserved(struct vm_fault *vmf,
- 				    pgprot_t prot,
--				    pgoff_t num_prefault)
-+				    pgoff_t num_prefault,
-+				    pgoff_t fault_page_size)
- {
- 	struct vm_area_struct *vma = vmf->vma;
- 	struct ttm_buffer_object *bo = vma->vm_private_data;
-@@ -268,6 +353,13 @@ vm_fault_t ttm_bo_vm_fault_reserved(struct vm_fault *vmf,
- 		prot = pgprot_decrypted(prot);
- 	}
- 
-+	/* We don't prefault on huge faults. Yet. */
-+	if (IS_ENABLED(CONFIG_TRANSPARENT_HUGEPAGE) && fault_page_size != 1) {
-+		ret = ttm_bo_vm_insert_huge(vmf, bo, page_offset,
-+					    fault_page_size, prot);
-+		goto out_io_unlock;
-+	}
-+
- 	/*
- 	 * Speculatively prefault a number of pages. Only error on
- 	 * first page.
-@@ -334,7 +426,7 @@ vm_fault_t ttm_bo_vm_fault(struct vm_fault *vmf)
- 		return ret;
- 
- 	prot = vma->vm_page_prot;
--	ret = ttm_bo_vm_fault_reserved(vmf, prot, TTM_BO_VM_NUM_PREFAULT);
-+	ret = ttm_bo_vm_fault_reserved(vmf, prot, TTM_BO_VM_NUM_PREFAULT, 1);
- 	if (ret == VM_FAULT_RETRY && !(vmf->flags & FAULT_FLAG_RETRY_NOWAIT))
- 		return ret;
- 
-@@ -344,6 +436,50 @@ vm_fault_t ttm_bo_vm_fault(struct vm_fault *vmf)
- }
- EXPORT_SYMBOL(ttm_bo_vm_fault);
- 
-+#ifdef CONFIG_TRANSPARENT_HUGEPAGE
-+static vm_fault_t ttm_bo_vm_huge_fault(struct vm_fault *vmf,
-+				       enum page_entry_size pe_size)
-+{
-+	struct vm_area_struct *vma = vmf->vma;
-+	pgprot_t prot;
-+	struct ttm_buffer_object *bo = vma->vm_private_data;
-+	vm_fault_t ret;
-+	pgoff_t fault_page_size = 0;
-+	bool write = vmf->flags & FAULT_FLAG_WRITE;
-+
-+	switch (pe_size) {
-+	case PE_SIZE_PMD:
-+		fault_page_size = HPAGE_PMD_SIZE >> PAGE_SHIFT;
-+		break;
-+#ifdef CONFIG_HAVE_ARCH_TRANSPARENT_HUGEPAGE_PUD
-+	case PE_SIZE_PUD:
-+		fault_page_size = HPAGE_PUD_SIZE >> PAGE_SHIFT;
-+		break;
-+#endif
-+	default:
-+		WARN_ON_ONCE(1);
-+		return VM_FAULT_FALLBACK;
-+	}
-+
-+	/* Fallback on write dirty-tracking or COW */
-+	if (write && !(pgprot_val(vmf->vma->vm_page_prot) & _PAGE_RW))
-+		return VM_FAULT_FALLBACK;
-+
-+	ret = ttm_bo_vm_reserve(bo, vmf);
-+	if (ret)
-+		return ret;
-+
-+	prot = vm_get_page_prot(vma->vm_flags);
-+	ret = ttm_bo_vm_fault_reserved(vmf, prot, 1, fault_page_size);
-+	if (ret == VM_FAULT_RETRY && !(vmf->flags & FAULT_FLAG_RETRY_NOWAIT))
-+		return ret;
-+
-+	dma_resv_unlock(bo->base.resv);
-+
-+	return ret;
-+}
-+#endif
-+
- void ttm_bo_vm_open(struct vm_area_struct *vma)
- {
- 	struct ttm_buffer_object *bo = vma->vm_private_data;
-@@ -445,7 +581,10 @@ static const struct vm_operations_struct ttm_bo_vm_ops = {
- 	.fault = ttm_bo_vm_fault,
- 	.open = ttm_bo_vm_open,
- 	.close = ttm_bo_vm_close,
--	.access = ttm_bo_vm_access
-+	.access = ttm_bo_vm_access,
-+#ifdef CONFIG_TRANSPARENT_HUGEPAGE
-+	.huge_fault = ttm_bo_vm_huge_fault,
-+#endif
- };
- 
- static struct ttm_buffer_object *ttm_bo_vm_lookup(struct ttm_bo_device *bdev,
-diff --git a/drivers/gpu/drm/vmwgfx/vmwgfx_page_dirty.c b/drivers/gpu/drm/vmwgfx/vmwgfx_page_dirty.c
-index f07aa857587c..17a5dca7b921 100644
---- a/drivers/gpu/drm/vmwgfx/vmwgfx_page_dirty.c
-+++ b/drivers/gpu/drm/vmwgfx/vmwgfx_page_dirty.c
-@@ -477,7 +477,7 @@ vm_fault_t vmw_bo_vm_fault(struct vm_fault *vmf)
- 	else
- 		prot = vm_get_page_prot(vma->vm_flags);
- 
--	ret = ttm_bo_vm_fault_reserved(vmf, prot, num_prefault);
-+	ret = ttm_bo_vm_fault_reserved(vmf, prot, num_prefault, 1);
- 	if (ret == VM_FAULT_RETRY && !(vmf->flags & FAULT_FLAG_RETRY_NOWAIT))
- 		return ret;
- 
-diff --git a/include/drm/ttm/ttm_bo_api.h b/include/drm/ttm/ttm_bo_api.h
-index 66ca49db9633..4fc90d53aa15 100644
---- a/include/drm/ttm/ttm_bo_api.h
-+++ b/include/drm/ttm/ttm_bo_api.h
-@@ -732,7 +732,8 @@ vm_fault_t ttm_bo_vm_reserve(struct ttm_buffer_object *bo,
- 
- vm_fault_t ttm_bo_vm_fault_reserved(struct vm_fault *vmf,
- 				    pgprot_t prot,
--				    pgoff_t num_prefault);
-+				    pgoff_t num_prefault,
-+				    pgoff_t fault_page_size);
- 
- vm_fault_t ttm_bo_vm_fault(struct vm_fault *vmf);
- 
--- 
-2.21.0
+Andy, are you ok with v12 as is, given that we don't have memmem ?
+
+Assuming Andy is ok with v12 as is, then to merge this we need
+to probably wait for 5.6-rc1 and then have the x86/efi folks do
+an immutable branch with the first 2 patches of the series.
+
+After that you (Greg) can merge patches 3-10 (after merging the
+branch) and the platform/drivers/x86 folks can take 11 and 12
+(also after merging the branch).
+
+Regards,
+
+Hans
 
