@@ -7,50 +7,50 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBC11C35242
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:38:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99AE8C35242
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:38:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2970206F0
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:38:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6570D206F0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:38:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579865926;
-	bh=T2msdhaNQCsm0T6KFI8eG9oaSDpjsXAisNKeTEz1U7g=;
+	s=default; t=1579865930;
+	bh=oi+MjKGkj+3amReMtz4+25L60nkOW7AVttiic5YxrXc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=djm0w/JZV6V/P/ZHoZKgktsvbStzniXPXg3PNsD0yjmXpHk6+bb4w+MrV1PZNeKeV
-	 8KBXgKMuOv8vCJPwN1dVd2sOUzjO/x3N3z1+sX7MIABeSAxe3nJXka8Uh1v5s9BPBL
-	 HGrbJck9NGgRnqqBTag9AI8dnsbkhRxQErt9Dc7Q=
+	b=tJIGIHGaTQD/HwMpdGtwehjGYIW612EeDSromUcknVkT7CqeTaSfuqRRac/D4l2V/
+	 3bTjDkX3hAuJ1cK2au3qFh+wZ0VaLMVtONdJAW5V7c6l3EVioUTbYgEehOI2ev0jtH
+	 pWBujCr+TYdd7QLbVKWtOB54K1FnhB2ZeHyzEOMc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391986AbgAXLiq (ORCPT
+        id S2391997AbgAXLit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:38:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58624 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 06:38:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58696 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388814AbgAXLim (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:38:42 -0500
+        id S2391987AbgAXLip (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:38:45 -0500
 Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 21E52206F0;
-        Fri, 24 Jan 2020 11:38:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8763920708;
+        Fri, 24 Jan 2020 11:38:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579865921;
-        bh=T2msdhaNQCsm0T6KFI8eG9oaSDpjsXAisNKeTEz1U7g=;
+        s=default; t=1579865925;
+        bh=oi+MjKGkj+3amReMtz4+25L60nkOW7AVttiic5YxrXc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=G8Dll1/Tl08wGgZvQpyFTswsXMVmtc8B/zy2fLeUxsuAkQSfngh8dgHqqWGqk0xeK
-         0tzGd/ybJ7NI0lwfETNOKR5fvReOFZWgOk+QKxxzPS/dp4sqceOgU/Ryk5kY43WIsk
-         +XQ3vH4o57VaW8mqJSbVRFe8piunTYlMK9q9LtWI=
+        b=IB11vlMxIZIToYeudOngQ7CIbk+pDWr+vleRl4YbBbjv3PoLMzclRDAPF5kDFnsTx
+         MzQQr3JDz+h2k5O6+vS8alfazY2en1ryTlXXWFtF5bXWB51vZ4xldNdmJuMVv0l3fD
+         tEG1AuqbA4jZv1HJHmOUCzdPK7X8osnFpoVtI6oI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Nathan Chancellor <natechancellor@gmail.com>,
+        stable@vger.kernel.org,
         "Lad, Prabhakar" <prabhakar.csengg@gmail.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Akinobu Mita <akinobu.mita@gmail.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
         Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 280/639] media: davinci-isif: avoid uninitialized variable use
-Date:   Fri, 24 Jan 2020 10:27:30 +0100
-Message-Id: <20200124093121.894530370@linuxfoundation.org>
+Subject: [PATCH 4.19 321/639] media: ov2659: fix unbalanced mutex_lock/unlock
+Date:   Fri, 24 Jan 2020 10:28:11 +0100
+Message-Id: <20200124093127.242991179@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
 References: <20200124093047.008739095@linuxfoundation.org>
@@ -63,76 +63,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Akinobu Mita <akinobu.mita@gmail.com>
 
-[ Upstream commit 0e633f97162c1c74c68e2eb20bbd9259dce87cd9 ]
+[ Upstream commit 384538bda10913e5c94ec5b5d34bd3075931bcf4 ]
 
-clang warns about a possible variable use that gcc never
-complained about:
+Avoid returning with mutex locked.
 
-drivers/media/platform/davinci/isif.c:982:32: error: variable 'frame_size' is uninitialized when used here
-      [-Werror,-Wuninitialized]
-                dm365_vpss_set_pg_frame_size(frame_size);
-                                             ^~~~~~~~~~
-drivers/media/platform/davinci/isif.c:887:2: note: variable 'frame_size' is declared here
-        struct vpss_pg_frame_size frame_size;
-        ^
-1 error generated.
+Fixes: fa8cb6444c32 ("[media] ov2659: Don't depend on subdev API")
 
-There is no initialization for this variable at all, and there
-has never been one in the mainline kernel, so we really should
-not put that stack data into an mmio register.
-
-On the other hand, I suspect that gcc checks the condition
-more closely and notices that the global
-isif_cfg.bayer.config_params.test_pat_gen flag is initialized
-to zero and never written to from any code path, so anything
-depending on it can be eliminated.
-
-To shut up the clang warning, just remove the dead code manually,
-it has probably never been used because any attempt to do so
-would have resulted in undefined behavior.
-
-Fixes: 63e3ab142fa3 ("V4L/DVB: V4L - vpfe capture - source for ISIF driver on DM365")
-
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+Cc: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Signed-off-by: Akinobu Mita <akinobu.mita@gmail.com>
 Acked-by: Lad, Prabhakar <prabhakar.csengg@gmail.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/davinci/isif.c | 9 ---------
- 1 file changed, 9 deletions(-)
+ drivers/media/i2c/ov2659.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/media/platform/davinci/isif.c b/drivers/media/platform/davinci/isif.c
-index 340f8218f54d3..80fa60a4c4489 100644
---- a/drivers/media/platform/davinci/isif.c
-+++ b/drivers/media/platform/davinci/isif.c
-@@ -884,9 +884,7 @@ static int isif_set_hw_if_params(struct vpfe_hw_if_param *params)
- static int isif_config_ycbcr(void)
- {
- 	struct isif_ycbcr_config *params = &isif_cfg.ycbcr;
--	struct vpss_pg_frame_size frame_size;
- 	u32 modeset = 0, ccdcfg = 0;
--	struct vpss_sync_pol sync;
- 
- 	dev_dbg(isif_cfg.dev, "\nStarting isif_config_ycbcr...");
- 
-@@ -974,13 +972,6 @@ static int isif_config_ycbcr(void)
- 		/* two fields are interleaved in memory */
- 		regw(0x00000249, SDOFST);
- 
--	/* Setup test pattern if enabled */
--	if (isif_cfg.bayer.config_params.test_pat_gen) {
--		sync.ccdpg_hdpol = params->hd_pol;
--		sync.ccdpg_vdpol = params->vd_pol;
--		dm365_vpss_set_sync_pol(sync);
--		dm365_vpss_set_pg_frame_size(frame_size);
--	}
- 	return 0;
- }
- 
+diff --git a/drivers/media/i2c/ov2659.c b/drivers/media/i2c/ov2659.c
+index 4b6be3b0fd528..5cdda9d6ca31e 100644
+--- a/drivers/media/i2c/ov2659.c
++++ b/drivers/media/i2c/ov2659.c
+@@ -1136,7 +1136,7 @@ static int ov2659_set_fmt(struct v4l2_subdev *sd,
+ 		mf = v4l2_subdev_get_try_format(sd, cfg, fmt->pad);
+ 		*mf = fmt->format;
+ #else
+-		return -ENOTTY;
++		ret = -ENOTTY;
+ #endif
+ 	} else {
+ 		s64 val;
 -- 
 2.20.1
 
