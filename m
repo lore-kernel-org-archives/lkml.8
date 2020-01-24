@@ -7,40 +7,39 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F158EC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 19:12:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86C9DC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 19:12:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6BBA2075D
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 19:12:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 652222075D
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 19:12:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404183AbgAXTMZ (ORCPT
+        id S2404201AbgAXTMb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 14:12:25 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:43048 "EHLO
+        Fri, 24 Jan 2020 14:12:31 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:43033 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404026AbgAXTLV (ORCPT
+        with ESMTP id S2403992AbgAXTLT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 14:11:21 -0500
+        Fri, 24 Jan 2020 14:11:19 -0500
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1iv4MP-0007e3-DL; Fri, 24 Jan 2020 20:11:17 +0100
+        id 1iv4MN-0007bU-9x; Fri, 24 Jan 2020 20:11:15 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 7552B1C1A68;
-        Fri, 24 Jan 2020 20:11:11 +0100 (CET)
-Date:   Fri, 24 Jan 2020 19:11:11 -0000
-From:   "tip-bot2 for Qianggui Song" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 0241D1C1A64;
+        Fri, 24 Jan 2020 20:11:09 +0100 (CET)
+Date:   Fri, 24 Jan 2020 19:11:08 -0000
+From:   "tip-bot2 for Marc Zyngier" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: irq/core] irqchip/meson-gpio: Add support for meson a1 SoCs
-Cc:     Qianggui Song <qianggui.song@amlogic.com>,
-        Marc Zyngier <maz@kernel.org>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20191216123645.10099-4-qianggui.song@amlogic.com>
-References: <20191216123645.10099-4-qianggui.song@amlogic.com>
+Subject: [tip: irq/core] irqchip/gic-v4.1: Implement the v4.1 flavour of VMAPP
+Cc:     Marc Zyngier <maz@kernel.org>, Zenghui Yu <yuzenghui@huawei.com>,
+        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20191224111055.11836-7-maz@kernel.org>
+References: <20191224111055.11836-7-maz@kernel.org>
 MIME-Version: 1.0
-Message-ID: <157989307130.396.17626728958086987704.tip-bot2@tip-bot2>
+Message-ID: <157989306879.396.10193516386323964815.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -56,131 +55,162 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the irq/core branch of tip:
 
-Commit-ID:     8f78bd62bdd7a7b0a9906c4827245bf17056f781
-Gitweb:        https://git.kernel.org/tip/8f78bd62bdd7a7b0a9906c4827245bf17056f781
-Author:        Qianggui Song <qianggui.song@amlogic.com>
-AuthorDate:    Mon, 16 Dec 2019 20:36:44 +08:00
+Commit-ID:     64edfaa9a2342a3ce34f8cb982c2c2df84db4de3
+Gitweb:        https://git.kernel.org/tip/64edfaa9a2342a3ce34f8cb982c2c2df84db4de3
+Author:        Marc Zyngier <maz@kernel.org>
+AuthorDate:    Tue, 24 Dec 2019 11:10:29 
 Committer:     Marc Zyngier <maz@kernel.org>
-CommitterDate: Mon, 20 Jan 2020 19:10:05 
+CommitterDate: Wed, 22 Jan 2020 14:22:19 
 
-irqchip/meson-gpio: Add support for meson a1 SoCs
+irqchip/gic-v4.1: Implement the v4.1 flavour of VMAPP
 
-The meson a1 Socs have some changes compared with previous
-chips. For A113L, it contains 62 pins and can be spied on:
+The ITS VMAPP command gains some new fields with GICv4.1:
+- a default doorbell, which allows a single doorbell to be used for
+  all the VLPIs routed to a given VPE
+- a pointer to the configuration table (instead of having it in a register
+  that gets context switched)
+- a flag indicating whether this is the first map or the last unmap for
+  this particular VPE
+- a flag indicating whether the pending table is known to be zeroed, or not
 
-- 62:128 undefined
-- 61:50 12 pins on bank A
-- 49:37 13 pins on bank F
-- 36:20 17 pins on bank X
-- 19:13 7  pins on bank B
-- 12:0  13 pins on bank P
+Plumb in the new fields in the VMAPP builder, and add the map/unmap
+refcounting so that the ITS can do the right thing.
 
-There are five relative registers for gpio interrupt controller,
-details are as below:
-
-- PADCTRL_GPIO_IRQ_CTRL0
-  bit[31]:    enable/disable the whole irq lines
-  bit[16-23]: both edge trigger
-  bit[8-15]:  single edge trigger
-  bit[0-7]:   pol trigger
-
-- PADCTRL_GPIO_IRQ_CTRL[X]
-  bit[0-6]:   7 bits to choose gpio source for irq line 2*[X] - 2
-  bit[16-22]: 7 bits to choose gpio source for irq line 2*[X] - 1
-  where X =1,2,3,4
-
-Signed-off-by: Qianggui Song <qianggui.song@amlogic.com>
 Signed-off-by: Marc Zyngier <maz@kernel.org>
-Link: https://lore.kernel.org/r/20191216123645.10099-4-qianggui.song@amlogic.com
+Reviewed-by: Zenghui Yu <yuzenghui@huawei.com>
+Link: https://lore.kernel.org/r/20191224111055.11836-7-maz@kernel.org
 ---
- drivers/irqchip/irq-meson-gpio.c | 42 +++++++++++++++++++++++++++++++-
- 1 file changed, 42 insertions(+)
+ drivers/irqchip/irq-gic-v3-its.c   | 60 ++++++++++++++++++++++++++---
+ include/linux/irqchip/arm-gic-v4.h | 18 +++++++--
+ 2 files changed, 69 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/irqchip/irq-meson-gpio.c b/drivers/irqchip/irq-meson-gpio.c
-index 5a1a59e..ccc7f82 100644
---- a/drivers/irqchip/irq-meson-gpio.c
-+++ b/drivers/irqchip/irq-meson-gpio.c
-@@ -24,6 +24,9 @@
- #define REG_PIN_47_SEL	0x08
- #define REG_FILTER_SEL	0x0c
- 
-+/* use for A1 like chips */
-+#define REG_PIN_A1_SEL	0x04
-+
- /*
-  * Note: The S905X3 datasheet reports that BOTH_EDGE is controlled by
-  * bits 24 to 31. Tests on the actual HW show that these bits are
-@@ -44,6 +47,10 @@ struct meson_gpio_irq_controller;
- static void meson8_gpio_irq_sel_pin(struct meson_gpio_irq_controller *ctl,
- 				    unsigned int channel, unsigned long hwirq);
- static void meson_gpio_irq_init_dummy(struct meson_gpio_irq_controller *ctl);
-+static void meson_a1_gpio_irq_sel_pin(struct meson_gpio_irq_controller *ctl,
-+				      unsigned int channel,
-+				      unsigned long hwirq);
-+static void meson_a1_gpio_irq_init(struct meson_gpio_irq_controller *ctl);
- 
- struct irq_ctl_ops {
- 	void (*gpio_irq_sel_pin)(struct meson_gpio_irq_controller *ctl,
-@@ -75,6 +82,15 @@ struct meson_gpio_irq_params {
- 	.pol_low_offset = 16,					\
- 	.pin_sel_mask = 0xff,					\
- 
-+#define INIT_MESON_A1_COMMON_DATA(irqs)				\
-+	INIT_MESON_COMMON(irqs, meson_a1_gpio_irq_init,		\
-+			  meson_a1_gpio_irq_sel_pin)		\
-+	.support_edge_both = true,				\
-+	.edge_both_offset = 16,					\
-+	.edge_single_offset = 8,				\
-+	.pol_low_offset = 0,					\
-+	.pin_sel_mask = 0x7f,					\
-+
- static const struct meson_gpio_irq_params meson8_params = {
- 	INIT_MESON8_COMMON_DATA(134)
- };
-@@ -101,6 +117,10 @@ static const struct meson_gpio_irq_params sm1_params = {
- 	.edge_both_offset = 8,
- };
- 
-+static const struct meson_gpio_irq_params a1_params = {
-+	INIT_MESON_A1_COMMON_DATA(62)
-+};
-+
- static const struct of_device_id meson_irq_gpio_matches[] = {
- 	{ .compatible = "amlogic,meson8-gpio-intc", .data = &meson8_params },
- 	{ .compatible = "amlogic,meson8b-gpio-intc", .data = &meson8b_params },
-@@ -109,6 +129,7 @@ static const struct of_device_id meson_irq_gpio_matches[] = {
- 	{ .compatible = "amlogic,meson-axg-gpio-intc", .data = &axg_params },
- 	{ .compatible = "amlogic,meson-g12a-gpio-intc", .data = &axg_params },
- 	{ .compatible = "amlogic,meson-sm1-gpio-intc", .data = &sm1_params },
-+	{ .compatible = "amlogic,meson-a1-gpio-intc", .data = &a1_params },
- 	{ }
- };
- 
-@@ -149,6 +170,27 @@ static void meson8_gpio_irq_sel_pin(struct meson_gpio_irq_controller *ctl,
- 				   hwirq << bit_offset);
+diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
+index 9124f7f..fbf4ca7 100644
+--- a/drivers/irqchip/irq-gic-v3-its.c
++++ b/drivers/irqchip/irq-gic-v3-its.c
+@@ -449,6 +449,27 @@ static void its_encode_vpt_size(struct its_cmd_block *cmd, u8 vpt_size)
+ 	its_mask_encode(&cmd->raw_cmd[3], vpt_size, 4, 0);
  }
  
-+static void meson_a1_gpio_irq_sel_pin(struct meson_gpio_irq_controller *ctl,
-+				      unsigned int channel,
-+				      unsigned long hwirq)
++static void its_encode_vconf_addr(struct its_cmd_block *cmd, u64 vconf_pa)
 +{
-+	unsigned int reg_offset;
-+	unsigned int bit_offset;
-+
-+	bit_offset = ((channel % 2) == 0) ? 0 : 16;
-+	reg_offset = REG_PIN_A1_SEL + ((channel / 2) << 2);
-+
-+	meson_gpio_irq_update_bits(ctl, reg_offset,
-+				   ctl->params->pin_sel_mask << bit_offset,
-+				   hwirq << bit_offset);
++	its_mask_encode(&cmd->raw_cmd[0], vconf_pa >> 16, 51, 16);
 +}
 +
-+/* For a1 or later chips like a1 there is a switch to enable/disable irq */
-+static void meson_a1_gpio_irq_init(struct meson_gpio_irq_controller *ctl)
++static void its_encode_alloc(struct its_cmd_block *cmd, bool alloc)
 +{
-+	meson_gpio_irq_update_bits(ctl, REG_EDGE_POL, BIT(31), BIT(31));
++	its_mask_encode(&cmd->raw_cmd[0], alloc, 8, 8);
 +}
 +
- static int
- meson_gpio_irq_request_channel(struct meson_gpio_irq_controller *ctl,
- 			       unsigned long  hwirq,
++static void its_encode_ptz(struct its_cmd_block *cmd, bool ptz)
++{
++	its_mask_encode(&cmd->raw_cmd[0], ptz, 9, 9);
++}
++
++static void its_encode_vmapp_default_db(struct its_cmd_block *cmd,
++					u32 vpe_db_lpi)
++{
++	its_mask_encode(&cmd->raw_cmd[1], vpe_db_lpi, 31, 0);
++}
++
+ static inline void its_fixup_cmd(struct its_cmd_block *cmd)
+ {
+ 	/* Let's fixup BE commands */
+@@ -632,19 +653,45 @@ static struct its_vpe *its_build_vmapp_cmd(struct its_node *its,
+ 					   struct its_cmd_block *cmd,
+ 					   struct its_cmd_desc *desc)
+ {
+-	unsigned long vpt_addr;
++	unsigned long vpt_addr, vconf_addr;
+ 	u64 target;
+-
+-	vpt_addr = virt_to_phys(page_address(desc->its_vmapp_cmd.vpe->vpt_page));
+-	target = desc->its_vmapp_cmd.col->target_address + its->vlpi_redist_offset;
++	bool alloc;
+ 
+ 	its_encode_cmd(cmd, GITS_CMD_VMAPP);
+ 	its_encode_vpeid(cmd, desc->its_vmapp_cmd.vpe->vpe_id);
+ 	its_encode_valid(cmd, desc->its_vmapp_cmd.valid);
++
++	if (!desc->its_vmapp_cmd.valid) {
++		if (is_v4_1(its)) {
++			alloc = !atomic_dec_return(&desc->its_vmapp_cmd.vpe->vmapp_count);
++			its_encode_alloc(cmd, alloc);
++		}
++
++		goto out;
++	}
++
++	vpt_addr = virt_to_phys(page_address(desc->its_vmapp_cmd.vpe->vpt_page));
++	target = desc->its_vmapp_cmd.col->target_address + its->vlpi_redist_offset;
++
+ 	its_encode_target(cmd, target);
+ 	its_encode_vpt_addr(cmd, vpt_addr);
+ 	its_encode_vpt_size(cmd, LPI_NRBITS - 1);
+ 
++	if (!is_v4_1(its))
++		goto out;
++
++	vconf_addr = virt_to_phys(page_address(desc->its_vmapp_cmd.vpe->its_vm->vprop_page));
++
++	alloc = !atomic_fetch_inc(&desc->its_vmapp_cmd.vpe->vmapp_count);
++
++	its_encode_alloc(cmd, alloc);
++
++	/* We can only signal PTZ when alloc==1. Why do we have two bits? */
++	its_encode_ptz(cmd, alloc);
++	its_encode_vconf_addr(cmd, vconf_addr);
++	its_encode_vmapp_default_db(cmd, desc->its_vmapp_cmd.vpe->vpe_db_lpi);
++
++out:
+ 	its_fixup_cmd(cmd);
+ 
+ 	return valid_vpe(its, desc->its_vmapp_cmd.vpe);
+@@ -3492,7 +3539,10 @@ static int its_vpe_init(struct its_vpe *vpe)
+ 
+ 	vpe->vpe_id = vpe_id;
+ 	vpe->vpt_page = vpt_page;
+-	vpe->vpe_proxy_event = -1;
++	if (gic_rdists->has_rvpeid)
++		atomic_set(&vpe->vmapp_count, 0);
++	else
++		vpe->vpe_proxy_event = -1;
+ 
+ 	return 0;
+ }
+diff --git a/include/linux/irqchip/arm-gic-v4.h b/include/linux/irqchip/arm-gic-v4.h
+index 5dbcfc6..498e523 100644
+--- a/include/linux/irqchip/arm-gic-v4.h
++++ b/include/linux/irqchip/arm-gic-v4.h
+@@ -39,8 +39,20 @@ struct its_vpe {
+ 	irq_hw_number_t		vpe_db_lpi;
+ 	/* VPE resident */
+ 	bool			resident;
+-	/* VPE proxy mapping */
+-	int			vpe_proxy_event;
++	union {
++		/* GICv4.0 implementations */
++		struct {
++			/* VPE proxy mapping */
++			int	vpe_proxy_event;
++			/* Implementation Defined Area Invalid */
++			bool	idai;
++		};
++		/* GICv4.1 implementations */
++		struct {
++			atomic_t vmapp_count;
++		};
++	};
++
+ 	/*
+ 	 * This collection ID is used to indirect the target
+ 	 * redistributor for this VPE. The ID itself isn't involved in
+@@ -49,8 +61,6 @@ struct its_vpe {
+ 	u16			col_idx;
+ 	/* Unique (system-wide) VPE identifier */
+ 	u16			vpe_id;
+-	/* Implementation Defined Area Invalid */
+-	bool			idai;
+ 	/* Pending VLPIs on schedule out? */
+ 	bool			pending_last;
+ };
