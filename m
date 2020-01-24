@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 692AEC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:27:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48DF3C32771
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:27:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36174206D4
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:27:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B2E820718
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:27:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579865253;
-	bh=UG6DVkPTkCDOyF+/gG97qzFQZgKFrvVKu/YlrXfwUQw=;
+	s=default; t=1579865255;
+	bh=HFJ7BZem848oSa/jykeAVRQgQXt05YXCrmrc91jDKzU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=b+2nzbJACVa2MZ9jWaNGSKJtBWE3b2jshL1lkQSkthrwbKBo7okQ550p33bsa17pW
-	 KWPtcwzx5/YTrup/KNyPMWKmXDox6E+SI3lplccQXtzZsKIDMrsRKp6iaNa6IGZFJZ
-	 g7GAv0arP8TWGgUza8FQaLju89g7D3oHqzYyisiA=
+	b=lyfZw9s3DSQtrAoQw9d99fi9J/sd4Z+DCCGQASgLc/nw2m/On0qPovMyycvoJCTDl
+	 dx8wybxgEzOZGNmg+DOe53MqUhtSPwqpWk8dqEnjMbwGPMBOZiF8BICH37xNBwJ7Ap
+	 AebL0+IhKe/YnD7+BxYnctdKatyXzFoJLbAuLWB8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391642AbgAXL1b (ORCPT
+        id S2391650AbgAXL1e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:27:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42882 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 06:27:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42988 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391630AbgAXL1Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:27:25 -0500
+        id S2403970AbgAXL12 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:27:28 -0500
 Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DD099206D4;
-        Fri, 24 Jan 2020 11:27:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 33C4A20704;
+        Fri, 24 Jan 2020 11:27:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579865244;
-        bh=UG6DVkPTkCDOyF+/gG97qzFQZgKFrvVKu/YlrXfwUQw=;
+        s=default; t=1579865247;
+        bh=HFJ7BZem848oSa/jykeAVRQgQXt05YXCrmrc91jDKzU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LZL04jboQ8v9mMDCOwjMaoXf6WcJ6gwz1zxugCkABNnG2QxbexI3Tz8heijAwSSIB
-         DGOt3anVifwf3mU3JPhKwn9Y/RJSkwFPs2WAuKdQ0QiYuKLdmocMNnYCSTR0YYvkLO
-         +aG/jjh/LCA5siNDBbGcLfz720nCD/exkprz8ROA=
+        b=Pn7iEfnFZVcuh/nlas2t8Vit5XtCIbj+QrAg2vosDgi0IOviMRcAGlZsQya+FNeyH
+         lACAzCOZ4XdMhDQJZirwKxYJZ88k42t3mwiKu2v2+J8yqxXB1pO5IBZvmQLf1iqKRb
+         UtaaoQPKF4KlyJMychPheXiwdJD08/xz0QD96B1Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jani Nikula <jani.nikula@intel.com>,
-        Thierry Reding <treding@nvidia.com>,
-        Sam Ravnborg <sam@ravnborg.org>, Sean Paul <sean@poorly.run>,
-        Boris Brezillon <bbrezillon@kernel.org>,
+        stable@vger.kernel.org, Icenowy Zheng <icenowy@aosc.io>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 480/639] drm/panel: make drm_panel.h self-contained
-Date:   Fri, 24 Jan 2020 10:30:50 +0100
-Message-Id: <20200124093148.439717975@linuxfoundation.org>
+Subject: [PATCH 4.19 481/639] clk: sunxi-ng: v3s: add the missing PLL_DDR1
+Date:   Fri, 24 Jan 2020 10:30:51 +0100
+Message-Id: <20200124093148.700600217@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
 References: <20200124093047.008739095@linuxfoundation.org>
@@ -62,46 +60,112 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jani Nikula <jani.nikula@intel.com>
+From: Icenowy Zheng <icenowy@aosc.io>
 
-[ Upstream commit bf3f5e98559360661a3d2af340d46522512c0b00 ]
+[ Upstream commit c5ed9475c22c89d5409402055142372e35d26a3f ]
 
-Fix build warning if drm_panel.h is built with CONFIG_OF=n or
-CONFIG_DRM_PANEL=n and included without the prerequisite err.h:
+The user manual of V3/V3s/S3 declares a PLL_DDR1, however it's forgot
+when developing the V3s CCU driver.
 
-./include/drm/drm_panel.h: In function ‘of_drm_find_panel’:
-./include/drm/drm_panel.h:203:9: error: implicit declaration of function ‘ERR_PTR’ [-Werror=implicit-function-declaration]
-  return ERR_PTR(-ENODEV);
-         ^~~~~~~
-./include/drm/drm_panel.h:203:9: error: returning ‘int’ from a function with return type ‘struct drm_panel *’ makes pointer from integer without a cast [-Werror=int-conversion]
-  return ERR_PTR(-ENODEV);
-         ^~~~~~~~~~~~~~~~
+Add back the missing PLL_DDR1.
 
-Fixes: 5fa8e4a22182 ("drm/panel: Make of_drm_find_panel() return an ERR_PTR() instead of NULL")
-Signed-off-by: Jani Nikula <jani.nikula@intel.com>
-Acked-by: Thierry Reding <treding@nvidia.com>
-Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
-Reviewed-by: Sean Paul <sean@poorly.run>
-Cc: Boris Brezillon <bbrezillon@kernel.org>
-Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190718161507.2047-2-sam@ravnborg.org
+Fixes: d0f11d14b0bc ("clk: sunxi-ng: add support for V3s CCU")
+Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/drm/drm_panel.h | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/clk/sunxi-ng/ccu-sun8i-v3s.c | 19 +++++++++++++++----
+ drivers/clk/sunxi-ng/ccu-sun8i-v3s.h |  6 ++++--
+ 2 files changed, 19 insertions(+), 6 deletions(-)
 
-diff --git a/include/drm/drm_panel.h b/include/drm/drm_panel.h
-index 777814755fa62..675aa1e876ce6 100644
---- a/include/drm/drm_panel.h
-+++ b/include/drm/drm_panel.h
-@@ -24,6 +24,7 @@
- #ifndef __DRM_PANEL_H__
- #define __DRM_PANEL_H__
+diff --git a/drivers/clk/sunxi-ng/ccu-sun8i-v3s.c b/drivers/clk/sunxi-ng/ccu-sun8i-v3s.c
+index 9e3f4088724b4..c7f9d974b10d5 100644
+--- a/drivers/clk/sunxi-ng/ccu-sun8i-v3s.c
++++ b/drivers/clk/sunxi-ng/ccu-sun8i-v3s.c
+@@ -84,7 +84,7 @@ static SUNXI_CCU_NM_WITH_FRAC_GATE_LOCK(pll_ve_clk, "pll-ve",
+ 					BIT(28),	/* lock */
+ 					0);
  
-+#include <linux/err.h>
- #include <linux/errno.h>
- #include <linux/list.h>
+-static SUNXI_CCU_NKM_WITH_GATE_LOCK(pll_ddr_clk, "pll-ddr",
++static SUNXI_CCU_NKM_WITH_GATE_LOCK(pll_ddr0_clk, "pll-ddr0",
+ 				    "osc24M", 0x020,
+ 				    8, 5,	/* N */
+ 				    4, 2,	/* K */
+@@ -123,6 +123,14 @@ static SUNXI_CCU_NK_WITH_GATE_LOCK_POSTDIV(pll_periph1_clk, "pll-periph1",
+ 					   2,		/* post-div */
+ 					   0);
  
++static SUNXI_CCU_NM_WITH_GATE_LOCK(pll_ddr1_clk, "pll-ddr1",
++				   "osc24M", 0x04c,
++				   8, 7,	/* N */
++				   0, 2,	/* M */
++				   BIT(31),	/* gate */
++				   BIT(28),	/* lock */
++				   0);
++
+ static const char * const cpu_parents[] = { "osc32k", "osc24M",
+ 					     "pll-cpu", "pll-cpu" };
+ static SUNXI_CCU_MUX(cpu_clk, "cpu", cpu_parents,
+@@ -310,7 +318,8 @@ static SUNXI_CCU_GATE(usb_phy0_clk,	"usb-phy0",	"osc24M",
+ static SUNXI_CCU_GATE(usb_ohci0_clk,	"usb-ohci0",	"osc24M",
+ 		      0x0cc, BIT(16), 0);
+ 
+-static const char * const dram_parents[] = { "pll-ddr", "pll-periph0-2x" };
++static const char * const dram_parents[] = { "pll-ddr0", "pll-ddr1",
++					     "pll-periph0-2x" };
+ static SUNXI_CCU_M_WITH_MUX(dram_clk, "dram", dram_parents,
+ 			    0x0f4, 0, 4, 20, 2, CLK_IS_CRITICAL);
+ 
+@@ -369,10 +378,11 @@ static struct ccu_common *sun8i_v3s_ccu_clks[] = {
+ 	&pll_audio_base_clk.common,
+ 	&pll_video_clk.common,
+ 	&pll_ve_clk.common,
+-	&pll_ddr_clk.common,
++	&pll_ddr0_clk.common,
+ 	&pll_periph0_clk.common,
+ 	&pll_isp_clk.common,
+ 	&pll_periph1_clk.common,
++	&pll_ddr1_clk.common,
+ 	&cpu_clk.common,
+ 	&axi_clk.common,
+ 	&ahb1_clk.common,
+@@ -457,11 +467,12 @@ static struct clk_hw_onecell_data sun8i_v3s_hw_clks = {
+ 		[CLK_PLL_AUDIO_8X]	= &pll_audio_8x_clk.hw,
+ 		[CLK_PLL_VIDEO]		= &pll_video_clk.common.hw,
+ 		[CLK_PLL_VE]		= &pll_ve_clk.common.hw,
+-		[CLK_PLL_DDR]		= &pll_ddr_clk.common.hw,
++		[CLK_PLL_DDR0]		= &pll_ddr0_clk.common.hw,
+ 		[CLK_PLL_PERIPH0]	= &pll_periph0_clk.common.hw,
+ 		[CLK_PLL_PERIPH0_2X]	= &pll_periph0_2x_clk.hw,
+ 		[CLK_PLL_ISP]		= &pll_isp_clk.common.hw,
+ 		[CLK_PLL_PERIPH1]	= &pll_periph1_clk.common.hw,
++		[CLK_PLL_DDR1]		= &pll_ddr1_clk.common.hw,
+ 		[CLK_CPU]		= &cpu_clk.common.hw,
+ 		[CLK_AXI]		= &axi_clk.common.hw,
+ 		[CLK_AHB1]		= &ahb1_clk.common.hw,
+diff --git a/drivers/clk/sunxi-ng/ccu-sun8i-v3s.h b/drivers/clk/sunxi-ng/ccu-sun8i-v3s.h
+index 4a4d36fdad960..a091b7217dfd5 100644
+--- a/drivers/clk/sunxi-ng/ccu-sun8i-v3s.h
++++ b/drivers/clk/sunxi-ng/ccu-sun8i-v3s.h
+@@ -29,7 +29,7 @@
+ #define CLK_PLL_AUDIO_8X	5
+ #define CLK_PLL_VIDEO		6
+ #define CLK_PLL_VE		7
+-#define CLK_PLL_DDR		8
++#define CLK_PLL_DDR0		8
+ #define CLK_PLL_PERIPH0		9
+ #define CLK_PLL_PERIPH0_2X	10
+ #define CLK_PLL_ISP		11
+@@ -58,6 +58,8 @@
+ 
+ /* And the GPU module clock is exported */
+ 
+-#define CLK_NUMBER		(CLK_MIPI_CSI + 1)
++#define CLK_PLL_DDR1		74
++
++#define CLK_NUMBER		(CLK_PLL_DDR1 + 1)
+ 
+ #endif /* _CCU_SUN8I_H3_H_ */
 -- 
 2.20.1
 
