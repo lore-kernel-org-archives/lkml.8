@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 721D2C32771
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:32:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76B4FC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:33:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E2002077C
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:32:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43779206F0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:33:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579876375;
-	bh=W1jirwlr7v13jTCfr7mNvWD5BBnGeEGhhW1PMP2SgVE=;
+	s=default; t=1579876381;
+	bh=peG90AS9ZDtmx9LNzgkZlVUVNKdIT4nncIOFQGFTU5A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Cv2oIglv0MPOpz+XRnPvo7jwakdgtfsRmEDh++oe/wtSzQByG3+3zGBR60Fci5laL
-	 6DhtVS8tWvuWPU8T69FPILlzHU/xAAHsahvhKr/QHGUFoYazeDaUeQ3KSZahU+f2Xo
-	 U04cTEeKqhR3RIVta4OUCaHii6EcwXVB69tSDG4w=
+	b=SfpYAHv9hHgSzWPAwHHjJQXkveiZOcgmzdQj7xLpfDLTYv2ZOVHHxbvsFaBdB9oDM
+	 AGEuIs948u6ym/QwYAwP5HcC4oKbLLG4lp0EWL1Godv+MKFYk8KO/Ve7IhrxRWNgp/
+	 zyP5StGPWHcTVSoI9TW5ccRbZyhdHt5cI9dGalIE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392739AbgAXOcx (ORCPT
+        id S2392142AbgAXOUA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 09:32:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40748 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389436AbgAXOUA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 24 Jan 2020 09:20:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40204 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389436AbgAXOTm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 09:19:42 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2E4D424676;
-        Fri, 24 Jan 2020 14:19:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8F46E2465B;
+        Fri, 24 Jan 2020 14:19:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579875599;
-        bh=W1jirwlr7v13jTCfr7mNvWD5BBnGeEGhhW1PMP2SgVE=;
+        s=default; t=1579875581;
+        bh=peG90AS9ZDtmx9LNzgkZlVUVNKdIT4nncIOFQGFTU5A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Rv+glKT5ASCt+RuILq7Xr44EhCIBtgUMl5U08o/f0+jDBBk7/JvZyxjRaa0wKgyRL
-         8kjRgasKiGN+mkslDQ92jK3u3QVs8X5+tDtZ9KqZQAQdpvFr1mH9qHMUomuMLnRx65
-         /FQLynTRh7HC7QY8VXD16wxnl5ist/p8XVFcdD4A=
+        b=ktjOC5TF1FaDBfIgRLdC4QsWXRi0djbe8Y7a3MrTyP52A1t3epv3WpGMAQttOwspe
+         12gdUX1QLwwADgIYKTtgizNR3+oO8vDhu8lOFO+dYxNtHTtddVeej69Z4eNcaA14sH
+         dCt/xABghY6JO4ROirxrtxrI3iQzFTdQzXggTg5c=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Yunsheng Lin <linyunsheng@huawei.com>,
-        Huazhong Tan <tanhuazhong@huawei.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 088/107] net: hns3: pad the short frame before sending to the hardware
-Date:   Fri, 24 Jan 2020 09:17:58 -0500
-Message-Id: <20200124141817.28793-88-sashal@kernel.org>
+Cc:     Johannes Berg <johannes.berg@intel.com>,
+        syzbot+e8a797964a4180eb57d5@syzkaller.appspotmail.com,
+        syzbot+34b582cf32c1db008f8e@syzkaller.appspotmail.com,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 072/107] cfg80211: check for set_wiphy_params
+Date:   Fri, 24 Jan 2020 09:17:42 -0500
+Message-Id: <20200124141817.28793-72-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200124141817.28793-1-sashal@kernel.org>
 References: <20200124141817.28793-1-sashal@kernel.org>
@@ -60,50 +61,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yunsheng Lin <linyunsheng@huawei.com>
+From: Johannes Berg <johannes.berg@intel.com>
 
-[ Upstream commit 36c67349a1a1c88b9cf11d7ca7762ababdb38867 ]
+[ Upstream commit 24953de0a5e31dcca7e82c8a3c79abc2dfe8fb6e ]
 
-The hardware can not handle short frames below or equal to 32
-bytes according to the hardware user manual, and it will trigger
-a RAS error when the frame's length is below 33 bytes.
+Check if set_wiphy_params is assigned and return an error if not,
+some drivers (e.g. virt_wifi where syzbot reported it) don't have
+it.
 
-This patch pads the SKB when skb->len is below 33 bytes before
-sending it to hardware.
-
-Fixes: 76ad4f0ee747 ("net: hns3: Add support of HNS3 Ethernet Driver for hip08 SoC")
-Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
-Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Reported-by: syzbot+e8a797964a4180eb57d5@syzkaller.appspotmail.com
+Reported-by: syzbot+34b582cf32c1db008f8e@syzkaller.appspotmail.com
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Link: https://lore.kernel.org/r/20200113125358.ac07f276efff.Ibd85ee1b12e47b9efb00a2adc5cd3fac50da791a@changeid
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/hisilicon/hns3/hns3_enet.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ net/wireless/rdev-ops.h | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-index 84d8816c8681b..0c8d2269bc46e 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-@@ -54,6 +54,8 @@ MODULE_PARM_DESC(debug, " Network interface message level setting");
- #define HNS3_INNER_VLAN_TAG	1
- #define HNS3_OUTER_VLAN_TAG	2
- 
-+#define HNS3_MIN_TX_LEN		33U
-+
- /* hns3_pci_tbl - PCI Device ID Table
-  *
-  * Last entry must be all 0s
-@@ -1329,6 +1331,10 @@ netdev_tx_t hns3_nic_net_xmit(struct sk_buff *skb, struct net_device *netdev)
+diff --git a/net/wireless/rdev-ops.h b/net/wireless/rdev-ops.h
+index 663c0d3127a43..e0d34f796d0b3 100644
+--- a/net/wireless/rdev-ops.h
++++ b/net/wireless/rdev-ops.h
+@@ -538,6 +538,10 @@ static inline int
+ rdev_set_wiphy_params(struct cfg80211_registered_device *rdev, u32 changed)
+ {
  	int ret;
- 	int i;
- 
-+	/* Hardware can only handle short frames above 32 bytes */
-+	if (skb_put_padto(skb, HNS3_MIN_TX_LEN))
-+		return NETDEV_TX_OK;
 +
- 	/* Prefetch the data used later */
- 	prefetch(skb->data);
- 
++	if (!rdev->ops->set_wiphy_params)
++		return -EOPNOTSUPP;
++
+ 	trace_rdev_set_wiphy_params(&rdev->wiphy, changed);
+ 	ret = rdev->ops->set_wiphy_params(&rdev->wiphy, changed);
+ 	trace_rdev_return_int(&rdev->wiphy, ret);
 -- 
 2.20.1
 
