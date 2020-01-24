@@ -4,55 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAE8EC35240
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 01:19:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98DD7C35240
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 01:19:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A933A2087E
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 01:19:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62F642087E
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 01:19:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579828757;
-	bh=HAP1qeT1fMGgx/Oo/Gp+yGVNtUk2NbKLKvDDB7a2iFY=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=mR9XJpNqcdkYb1QE5BS3TQkLrFApkX00KX6r+WtxyJVkLoGsgaM2OH19Rzped30zB
-	 Z9By+j7+Cc1Pc+MkT1E9BATBg8//0ldY7Qaz9Ucj43GEGdskKnv5ZWXLlgOT1NSJ5i
-	 6FMubB8MM4i4iDDEwEUxcRGD0Ne/uZHYl6wEahxg=
+	s=default; t=1579828765;
+	bh=jSi2K8Cntbb9yx7Mu1bcUyqGvRImCI1x4WcFEMTeGhQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=XTGAmrVQX3cMBfQSdkoQUAktOJn0PjRu0L2AEGnzbQS6v48TjuG66+HMeG8BPjiSP
+	 MqYWvLYxjWyTWMRImqUWrVTcwl4vBMP8tCl8LhJ3XYRtNpKNPUUXa9yTjuG3F8Q3dw
+	 S7yTc5cCoEybngSvkkE4x9l0gNzfOFHjgBHOkDIg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731193AbgAXBTQ (ORCPT
+        id S1731216AbgAXBTX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 20:19:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:32824 "EHLO mail.kernel.org"
+        Thu, 23 Jan 2020 20:19:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60924 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726232AbgAXBRt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 20:17:49 -0500
+        id S1730656AbgAXBRp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jan 2020 20:17:45 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 54A0221D7D;
-        Fri, 24 Jan 2020 01:17:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8D6AF2467E;
+        Fri, 24 Jan 2020 01:17:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579828669;
-        bh=HAP1qeT1fMGgx/Oo/Gp+yGVNtUk2NbKLKvDDB7a2iFY=;
-        h=From:To:Cc:Subject:Date:From;
-        b=bbPlniBzVnAuF19hyrf2iEAh/ikwoj3PFbl/wzF5qQRpEt3Te/8Jf3QpkJu71NBuP
-         ORw8phyPnhQGHnMuf+FjT0poAtmBn5Zu1kypNNvH2IrUHMkgK0gq4XOvhWf5aJTGDi
-         BcGdoXVYCalLqPhrxVrNAW3S/r6ZRCeSYAoAefhw=
+        s=default; t=1579828664;
+        bh=jSi2K8Cntbb9yx7Mu1bcUyqGvRImCI1x4WcFEMTeGhQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=RVpaCtujGmvy3b5XwdSMnnR9AqAMeLpi45aD2hB3SLeSaKxQ/xZF0nVt8+s2pX8bC
+         oJA78Y+gJoRnjhVcn0ABu3AQTnlKpq8f1qFN5WKZQw8DvVKu/nct/B3YI1qG+YdozY
+         sEoEHqVy5dqMO4VdA9nl492YR1zoL34TW8pS2dRo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Pacien TRAN-GIRARD <pacien.trangirard@pacien.net>,
-        Mario Limonciello <mario.limonciello@dell.com>,
-        =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Sasha Levin <sashal@kernel.org>,
-        platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 01/11] platform/x86: dell-laptop: disable kbd backlight on Inspiron 10xx
-Date:   Thu, 23 Jan 2020 20:17:37 -0500
-Message-Id: <20200124011747.18575-1-sashal@kernel.org>
+Cc:     Hans de Goede <hdegoede@redhat.com>, Jiri Kosina <jkosina@suse.cz>,
+        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 31/33] HID: ite: Add USB id match for Acer SW5-012 keyboard dock
+Date:   Thu, 23 Jan 2020 20:17:06 -0500
+Message-Id: <20200124011708.18232-31-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200124011708.18232-1-sashal@kernel.org>
+References: <20200124011708.18232-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -61,86 +58,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pacien TRAN-GIRARD <pacien.trangirard@pacien.net>
+From: Hans de Goede <hdegoede@redhat.com>
 
-[ Upstream commit 10b65e2915b2fcc606d173e98a972850101fb4c4 ]
+[ Upstream commit 8f18eca9ebc57d6b150237033f6439242907e0ba ]
 
-This patch adds a quirk disabling keyboard backlight support for the
-Dell Inspiron 1012 and 1018.
+The Acer SW5-012 2-in-1 keyboard dock uses a Synaptics S91028 touchpad
+which is connected to an ITE 8595 USB keyboard controller chip.
 
-Those models wrongly report supporting keyboard backlight control
-features (through SMBIOS tokens) even though they're not equipped with
-a backlit keyboard. This led to broken controls being exposed
-through sysfs by this driver which froze the system when used.
+This keyboard has the same quirk for its rfkill / airplane mode hotkey as
+other keyboards with the ITE 8595 chip, it only sends a single release
+event when pressed and released, it never sends a press event.
 
-Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=107651
-Signed-off-by: Pacien TRAN-GIRARD <pacien.trangirard@pacien.net>
-Reviewed-by: Mario Limonciello <mario.limonciello@dell.com>
-Reviewed-by: Pali Rohár <pali.rohar@gmail.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+This commit adds this keyboards USB id to the hid-ite id-table, fixing
+the rfkill key not working on this keyboard.
+
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/x86/dell-laptop.c | 26 ++++++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
+ drivers/hid/hid-ids.h | 1 +
+ drivers/hid/hid-ite.c | 3 +++
+ 2 files changed, 4 insertions(+)
 
-diff --git a/drivers/platform/x86/dell-laptop.c b/drivers/platform/x86/dell-laptop.c
-index 3433986d52200..949dbc8aab413 100644
---- a/drivers/platform/x86/dell-laptop.c
-+++ b/drivers/platform/x86/dell-laptop.c
-@@ -37,6 +37,7 @@
+diff --git a/drivers/hid/hid-ids.h b/drivers/hid/hid-ids.h
+index 6273e7178e785..c99d56308fbc9 100644
+--- a/drivers/hid/hid-ids.h
++++ b/drivers/hid/hid-ids.h
+@@ -1098,6 +1098,7 @@
+ #define USB_DEVICE_ID_SYNAPTICS_LTS2	0x1d10
+ #define USB_DEVICE_ID_SYNAPTICS_HD	0x0ac3
+ #define USB_DEVICE_ID_SYNAPTICS_QUAD_HD	0x1ac3
++#define USB_DEVICE_ID_SYNAPTICS_ACER_SWITCH5_012	0x2968
+ #define USB_DEVICE_ID_SYNAPTICS_TP_V103	0x5710
+ #define USB_DEVICE_ID_SYNAPTICS_ACER_SWITCH5	0x81a7
  
- struct quirk_entry {
- 	bool touchpad_led;
-+	bool kbd_led_not_present;
- 	bool kbd_led_levels_off_1;
- 	bool kbd_missing_ac_tag;
- 
-@@ -77,6 +78,10 @@ static struct quirk_entry quirk_dell_latitude_e6410 = {
- 	.kbd_led_levels_off_1 = true,
- };
- 
-+static struct quirk_entry quirk_dell_inspiron_1012 = {
-+	.kbd_led_not_present = true,
-+};
-+
- static struct platform_driver platform_driver = {
- 	.driver = {
- 		.name = "dell-laptop",
-@@ -314,6 +319,24 @@ static const struct dmi_system_id dell_quirks[] __initconst = {
- 		},
- 		.driver_data = &quirk_dell_latitude_e6410,
- 	},
-+	{
-+		.callback = dmi_matched,
-+		.ident = "Dell Inspiron 1012",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "Inspiron 1012"),
-+		},
-+		.driver_data = &quirk_dell_inspiron_1012,
-+	},
-+	{
-+		.callback = dmi_matched,
-+		.ident = "Dell Inspiron 1018",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "Inspiron 1018"),
-+		},
-+		.driver_data = &quirk_dell_inspiron_1012,
-+	},
+diff --git a/drivers/hid/hid-ite.c b/drivers/hid/hid-ite.c
+index a45f2352618d3..c436e12feb233 100644
+--- a/drivers/hid/hid-ite.c
++++ b/drivers/hid/hid-ite.c
+@@ -40,6 +40,9 @@ static int ite_event(struct hid_device *hdev, struct hid_field *field,
+ static const struct hid_device_id ite_devices[] = {
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_ITE, USB_DEVICE_ID_ITE8595) },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_258A, USB_DEVICE_ID_258A_6A88) },
++	/* ITE8595 USB kbd ctlr, with Synaptics touchpad connected to it. */
++	{ HID_USB_DEVICE(USB_VENDOR_ID_SYNAPTICS,
++			 USB_DEVICE_ID_SYNAPTICS_ACER_SWITCH5_012) },
  	{ }
  };
- 
-@@ -1497,6 +1520,9 @@ static void kbd_init(void)
- {
- 	int ret;
- 
-+	if (quirks && quirks->kbd_led_not_present)
-+		return;
-+
- 	ret = kbd_init_info();
- 	kbd_init_tokens();
- 
+ MODULE_DEVICE_TABLE(hid, ite_devices);
 -- 
 2.20.1
 
