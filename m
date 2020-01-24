@@ -2,92 +2,114 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CFC3C35242
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 01:20:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B4DFC35242
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 01:21:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CEA7B22464
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 01:20:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579828859;
-	bh=1CJUUDFCemZcrasaD10onhLEDNjLB5/mzrNSPYQzFng=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=He3WnwtSHGlY8O6dFR/6lJ3YWamz54iOY8YD9ede9eB7DZgWtutUNHpbfbWCvE58z
-	 SzruW+CIagUvk2bDAqnbHyyRWqihcwfTJhPnhAGz7yigsgNICpxmavv1qKveseeG2u
-	 z+OaBVB9b+S3l9Ib/BvQds79fjCBzK1nmKtXMQsU=
+	by mail.kernel.org (Postfix) with ESMTP id 3D3E221D7E
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 01:21:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=jms.id.au header.i=@jms.id.au header.b="T9dkl4o2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731060AbgAXBU6 (ORCPT
+        id S1729797AbgAXBVy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 20:20:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60020 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730312AbgAXBRN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 20:17:13 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2891F2071E;
-        Fri, 24 Jan 2020 01:17:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579828632;
-        bh=1CJUUDFCemZcrasaD10onhLEDNjLB5/mzrNSPYQzFng=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mDRyc0UN4oOdc4IAh5SxLexhxvj7PjImy8AdXcTMCYVnX9bFWsRgWHhDg8539kv3n
-         Sfpory52RTxJE9ziDcUt8vjBDk4ncuKfTNvQ0oKsVjMSxGPPbxmPoo2pDjfBzKeWOM
-         BMMNut7CANqz2qcg7KeXOgji8oFNAjNoUBEITH24=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jiange Zhao <Jiange.Zhao@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.4 03/33] drm/amdgpu/SRIOV: add navi12 pci id for SRIOV (v2)
-Date:   Thu, 23 Jan 2020 20:16:38 -0500
-Message-Id: <20200124011708.18232-3-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200124011708.18232-1-sashal@kernel.org>
-References: <20200124011708.18232-1-sashal@kernel.org>
+        Thu, 23 Jan 2020 20:21:54 -0500
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:46024 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729151AbgAXBVy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jan 2020 20:21:54 -0500
+Received: by mail-qk1-f195.google.com with SMTP id x1so498595qkl.12;
+        Thu, 23 Jan 2020 17:21:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=jms.id.au; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=17LlDvr3P+aPnbiTd/Xv0AEpyX3plN5wLIAiiiLM3JM=;
+        b=T9dkl4o2yEUKj+mpTrje5F4r+Sy39rUUnsVelGI8H1iTPAY9q6tnTk2rdnu78ranin
+         99U0gCXbQ0OQCO7ibpHdBQz5Lw/mACQcGZDkkH7VDcUUYiR1rmPWJNCcorE5kEOsIyuF
+         +HWUw6W8WnOVeB5jH81Wh5l37Sh4JwGP9V1JI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=17LlDvr3P+aPnbiTd/Xv0AEpyX3plN5wLIAiiiLM3JM=;
+        b=akU+C7mBcc5+ter5WfeUy+xN0D4WEBDkrJljnfGYxmip0g2ruy3umkoc+We320cPrp
+         XD8GsuQwJfX7sCXBXIiyrYilEUwVfiGF4taVcvgXI60hvhAXErOdWjyJIRCUag5lEbBq
+         QmzekYemCPLNSk0KV03oUD2Cd0nnODDj/nZiQXeStwJCXcVFnb4wFziU7zkDlu6tLK5t
+         iyCsl/LcYr7qf3AHe6nbfPgaj0Qsgvo1wOcfxiZTRebmSa1deXCLKiXOWE6Eb8V7JPSY
+         LmfYR0rj49EQdc4NSv1qqrkpuCpZU3dYEZCBD/vH55dfrkvlfg4r0AtOLe7EgmsHbZyu
+         oLqw==
+X-Gm-Message-State: APjAAAVuSUsxHknsOyWfziVgRfAolI4Ihw8Bnb0pRPFdCr4dgMa9zj0s
+        Wi9jp4jV5CS+f1sBFlfOUpWQ8WpjOP7Exm7W8p4=
+X-Google-Smtp-Source: APXvYqyNwDovBIOpVeX3aeLO2sskA0EZZmPzVBRqgbojfXQFpYEHw2wY9F00g8420CfluzcZbzVJOCQFPD7svOkBKtQ=
+X-Received: by 2002:a37:9dc8:: with SMTP id g191mr322080qke.171.1579828913107;
+ Thu, 23 Jan 2020 17:21:53 -0800 (PST)
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+References: <20200124011747.18575-1-sashal@kernel.org> <20200124011747.18575-5-sashal@kernel.org>
+In-Reply-To: <20200124011747.18575-5-sashal@kernel.org>
+From:   Joel Stanley <joel@jms.id.au>
+Date:   Fri, 24 Jan 2020 01:21:40 +0000
+Message-ID: <CACPK8XeGLW6cm9UV7gqrOF18BzsRBppzLQLY6G=Y2MDj2Yrnhw@mail.gmail.com>
+Subject: Re: [PATCH AUTOSEL 4.19 05/11] ARM: config: aspeed-g5: Enable 8250_DW quirks
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        stable@vger.kernel.org,
+        =?UTF-8?Q?C=C3=A9dric_Le_Goater?= <clg@kaod.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-aspeed <linux-aspeed@lists.ozlabs.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiange Zhao <Jiange.Zhao@amd.com>
+HI Sasha,
 
-[ Upstream commit 57d4f3b7fd65b56f98b62817f27c461142c0bc2a ]
+On Fri, 24 Jan 2020 at 01:17, Sasha Levin <sashal@kernel.org> wrote:
+>
+> From: Joel Stanley <joel@jms.id.au>
+>
+> [ Upstream commit a5331a7a87ec81d5228b7421acf831b2d0c0de26 ]
+>
+> This driver option is used by the AST2600 A0 boards to work around a
+> hardware issue.
 
-Add Navi12 PCI id support.
+This hardware was only supported from 5.4+, so I think we can drop this pat=
+ch.
 
-v2: flag as experimental for now (Alex)
+Cheers,
 
-Signed-off-by: Jiange Zhao <Jiange.Zhao@amd.com>
-Reviewed-by: Alex Deucher <alexander.deucher@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c | 1 +
- 1 file changed, 1 insertion(+)
+Joel
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c
-index 33a1099e2f33e..bb9a2771a0f9e 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c
-@@ -1023,6 +1023,7 @@ static const struct pci_device_id pciidlist[] = {
- 
- 	/* Navi12 */
- 	{0x1002, 0x7360, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_NAVI12|AMD_EXP_HW_SUPPORT},
-+	{0x1002, 0x7362, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_NAVI12|AMD_EXP_HW_SUPPORT},
- 
- 	{0, 0, 0}
- };
--- 
-2.20.1
-
+>
+> Reviewed-by: C=C3=A9dric Le Goater <clg@kaod.org>
+> Acked-by: Arnd Bergmann <arnd@arndb.de>
+> Signed-off-by: Joel Stanley <joel@jms.id.au>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
+> ---
+>  arch/arm/configs/aspeed_g5_defconfig | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/arch/arm/configs/aspeed_g5_defconfig b/arch/arm/configs/aspe=
+ed_g5_defconfig
+> index 02fa3a41add5c..247be6c23d2c6 100644
+> --- a/arch/arm/configs/aspeed_g5_defconfig
+> +++ b/arch/arm/configs/aspeed_g5_defconfig
+> @@ -138,6 +138,7 @@ CONFIG_SERIAL_8250_RUNTIME_UARTS=3D6
+>  CONFIG_SERIAL_8250_EXTENDED=3Dy
+>  CONFIG_SERIAL_8250_ASPEED_VUART=3Dy
+>  CONFIG_SERIAL_8250_SHARE_IRQ=3Dy
+> +CONFIG_SERIAL_8250_DW=3Dy
+>  CONFIG_SERIAL_OF_PLATFORM=3Dy
+>  CONFIG_ASPEED_KCS_IPMI_BMC=3Dy
+>  CONFIG_ASPEED_BT_IPMI_BMC=3Dy
+> --
+> 2.20.1
+>
