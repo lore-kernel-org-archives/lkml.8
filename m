@@ -2,91 +2,122 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33029C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 04:21:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9899DC3F68F
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 04:25:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 021C42071A
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 04:21:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64F6024125
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 04:25:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="BjIdZtvS"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Yqgm/L6R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730302AbgAXEVi (ORCPT
+        id S1730372AbgAXEZO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 23:21:38 -0500
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:34506 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729797AbgAXEVh (ORCPT
+        Thu, 23 Jan 2020 23:25:14 -0500
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:40241 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730314AbgAXEZO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 23:21:37 -0500
-Received: by mail-qk1-f194.google.com with SMTP id d10so882729qke.1
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jan 2020 20:21:37 -0800 (PST)
+        Thu, 23 Jan 2020 23:25:14 -0500
+Received: by mail-lf1-f65.google.com with SMTP id c23so289119lfi.7;
+        Thu, 23 Jan 2020 20:25:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=content-transfer-encoding:from:mime-version:subject:date:message-id
-         :references:cc:in-reply-to:to;
-        bh=Qq7FacF5xTUSGTg0s7TEeVM38rbm3n3Bf5N/b8BLGs4=;
-        b=BjIdZtvSGt0iGJ2gHLmhXWfi74+Ve/1rj3yiUk1IJdxGyiQnj8yk9oFRz2N+eQ1OxE
-         yTLV/mk0hbFKdSdw+vLO7F8cvyzEO/urcp76TQPFPCJ/le8aMiZyw8CY5CUuOyuqB2JM
-         Z5pc0KSHEgn2+NnqgHbw/TUipqPsSq15JM5tszkUbHwio3R4S1ZQaAp1uu72CfIfP1Co
-         Y2l1xStSvJILFjikGVOdsn9GXUsvIEGuWw4iOUl8qH66EBIs+T9M2fyMROj9Dj99pnRS
-         PyJ628DWi9fpQqabdXAoIIS5k8oDkhEXADwCTZCQX/XcqhnIW8uH8YVARm1VSL36lzyE
-         gwvg==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=nqvrrfgH50F3heDUQV2TPxvyGIm9jjs0IGrVe+RwimE=;
+        b=Yqgm/L6R0clKVYrscixlwYJrmLydO6eTZXRSwbpSsJkZRcKp28C3d7HqPnhXE8vqbH
+         9VdqiMw/4NEz4lxzg9g1A42L97lUsDUtkTs++ZjGiv/9mjFmGPsmezm7L5YrcZ7J7zNi
+         SNZQwMmcFdpRp9XNelnkzmBRgDQU3K10FIKouhjNx01IweB+AvH7YZGLomp67wp5V5KR
+         V1o9EcoAUzA28Q+wzAt43MypyA3faknk8Lp9HDE0raVbiy/DqAzutS+E/Cdm5LhWucoB
+         5AZ2SuyKr+7/6x+uDIg6v3vszDyYk8tq1/kw86qyWf/5VrEDXmifItnWblE2nraMF4ii
+         pkGw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=Qq7FacF5xTUSGTg0s7TEeVM38rbm3n3Bf5N/b8BLGs4=;
-        b=APTpAChm1sjcKyt2dBt9xhYUf2P/DEaqbhZ+Yrfc952bNMegAN4CFajkIBU8qQoaFD
-         /JdlcOT00UivxGgTGSZ7ZirRswhznMSm3EkIaesUEQCSV5NCjp6TLn+HruIIVDPR5lQO
-         CJD8bm+woUPh7+TnMAS1/As/5hL4DByOZ1gLjXr2C9akye9IGjtsgMjj3YPRe1RAy1J1
-         +6HAxFbB+hdGnNBsZo6cyBm+dpMhSbVsKdIvj8OKc7q31LcgA77I/P01ORcXmip1tF/n
-         wyDJp5d2Lv/KiqHM2ODQM5i2OL0n5Sbkc8hU7VejKcG+x3rR6NI3F1Xw26kFT61Cxb8Q
-         oBsg==
-X-Gm-Message-State: APjAAAUzRVQeAfuOOEjQ9Ivd1ePhrJjckhxy33T17EAKuEDIGxafymNE
-        eWzpov090UpkC5IaTujvshvoaw==
-X-Google-Smtp-Source: APXvYqxh27xeGjjhHmqAZfbtAVe354clbRfI9zM/dA1zQGEkhxU5l/6LUKzOnZuO3mfSzlu2szfAiQ==
-X-Received: by 2002:a05:620a:166a:: with SMTP id d10mr840663qko.37.1579839697038;
-        Thu, 23 Jan 2020 20:21:37 -0800 (PST)
-Received: from [192.168.1.183] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id q5sm2277936qkf.14.2020.01.23.20.21.36
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=nqvrrfgH50F3heDUQV2TPxvyGIm9jjs0IGrVe+RwimE=;
+        b=pWp2svEHcSJ7jtDuslQCy9tbBz5Md+XLabCWhL3rIC4EF4CiCxOpPR2jlomPZ+g01+
+         S3ppLxEAbw+MLAUXoneqeb0U8TTtE/esJjodav6OO8Zx/bVk2CqJ4/QbIBvEfqUvDam8
+         lJ+/VWs2AwDMOJVd8vK61yCNEyGiebf4uaiha8RhxPZt61XIaq+nLC8nIPHq3h/liomW
+         DPJ5TpMJES3GrN60vzv1g85gA8MN2gxJBmLJ28zm5B15gh6ICkesbEp9lXapRGLNCIjN
+         aeZVuq1xrXJ1q1/X1LVhOfVAr9OuSROZgiwb4Nl+Hw6/cau/RWsN8x/sLIPwNXw8DRHh
+         7SHA==
+X-Gm-Message-State: APjAAAWjCFnDP85/eT2q9/SF9HB1tdqlb3tzIlK4rgihvxQ0i8mmpoGu
+        MG3Iwv3xskW60NIzioHD4nFAoMwN
+X-Google-Smtp-Source: APXvYqz9HRXIowhnShk3uHeDO/07QPAIONMd8ODEb7ccArNqgO+S9/aB3Jd/HegdKDhotT/9ZK1LTw==
+X-Received: by 2002:ac2:523c:: with SMTP id i28mr487778lfl.104.1579839912004;
+        Thu, 23 Jan 2020 20:25:12 -0800 (PST)
+Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
+        by smtp.googlemail.com with ESMTPSA id f30sm2282977ljp.31.2020.01.23.20.25.10
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 23 Jan 2020 20:21:36 -0800 (PST)
+        Thu, 23 Jan 2020 20:25:11 -0800 (PST)
+Subject: Re: [alsa-devel] [PATCH 7/9] ASoC: tegra: add Tegra210 based ADMAIF
+ driver
+To:     Sameer Pujar <spujar@nvidia.com>, perex@perex.cz, tiwai@suse.com,
+        robh+dt@kernel.org
+Cc:     devicetree@vger.kernel.org, alsa-devel@alsa-project.org,
+        atalambedu@nvidia.com, linux-kernel@vger.kernel.org,
+        lgirdwood@gmail.com, jonathanh@nvidia.com, viswanathl@nvidia.com,
+        sharadg@nvidia.com, broonie@kernel.org, thierry.reding@gmail.com,
+        linux-tegra@vger.kernel.org, rlokhande@nvidia.com,
+        mkumard@nvidia.com, dramesh@nvidia.com
+References: <1579530198-13431-1-git-send-email-spujar@nvidia.com>
+ <1579530198-13431-8-git-send-email-spujar@nvidia.com>
+ <743d6d7d-f29c-191a-853b-414250ca38df@gmail.com>
+ <3759aa0b-9e56-0fb4-27b7-4f98898d4e22@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <8a3259b7-6875-236a-b16c-cd8e023cc8b2@gmail.com>
+Date:   Fri, 24 Jan 2020 07:25:08 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
+MIME-Version: 1.0
+In-Reply-To: <3759aa0b-9e56-0fb4-27b7-4f98898d4e22@nvidia.com>
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-From:   Qian Cai <cai@lca.pw>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH v2] sched/core: fix illegal RCU from offline CPUs
-Date:   Thu, 23 Jan 2020 23:21:35 -0500
-Message-Id: <A72A7F42-A166-4403-B12C-32B2D7A662C4@lca.pw>
-References: <20200121103506.GH14914@hirez.programming.kicks-ass.net>
-Cc:     mingo@redhat.com, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
-        paulmck@kernel.org, tglx@linutronix.de, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-In-Reply-To: <20200121103506.GH14914@hirez.programming.kicks-ass.net>
-To:     Peter Zijlstra <peterz@infradead.org>
-X-Mailer: iPhone Mail (17C54)
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+24.01.2020 06:27, Sameer Pujar пишет:
+> 
+> 
+> On 1/24/2020 6:58 AM, Dmitry Osipenko wrote:
+>> External email: Use caution opening links or attachments
+>>
+>>
+>> 20.01.2020 17:23, Sameer Pujar пишет:
+>> [snip]
+>>> +static bool tegra_admaif_wr_reg(struct device *dev, unsigned int reg)
+>>> +{
+>>> +     struct tegra_admaif *admaif = dev_get_drvdata(dev);
+>>> +     unsigned int ch_stride = TEGRA_ADMAIF_CHANNEL_REG_STRIDE;
+>>> +     unsigned int num_ch = admaif->soc_data->num_ch;
+>>> +     unsigned int rx_base = admaif->soc_data->rx_base;
+>>> +     unsigned int tx_base = admaif->soc_data->tx_base;
+>>> +     unsigned int global_base = admaif->soc_data->global_base;
+>>> +     unsigned int reg_max =
+>>> admaif->soc_data->regmap_conf->max_register;
+>>> +     unsigned int rx_max = rx_base + (num_ch * ch_stride);
+>>> +     unsigned int tx_max = tx_base + (num_ch * ch_stride);
+>>> +
+>>> +     if ((reg >= rx_base) && (reg < rx_max)) {
+>> The braces are not needed around the comparisons because they precede
+>> the AND. Same for all other similar occurrences in the code.
+> 
+> While that is true, some prefer to use explicit braces to make it more
+> readable.
+> In the past I was told to use explicitly in such cases.
 
-
-> On Jan 21, 2020, at 5:35 AM, Peter Zijlstra <peterz@infradead.org> wrote:
->=20
-> Something like this; except you'll need to go audit archs to make sure
-> they all call idle_task_exit() and/or put in comments on why they don't
-> have to (perhaps their bringup switches them to &init_mm unconditionally
-> and the switch_mm() is not required).
-
-Damn, I am having a hard time to motivate myself to learn all about those tw=
-o =E2=80=9Cdead=E2=80=9C arches from scratch. I suppose the first step we co=
-uld put a dummy finish_cpu() for alpha and parisc if they don=E2=80=99t call=
- idle_task_exit() in the first place anyway, so if it is a bug there it is a=
-nother issue that could be dealt with in a separate patch later?=
+At least most of code in kernel (I've seen) doesn't have superfluous
+parens (the curvy thingies actually should be the braces). Readability
+is arguable in this case, I'm finding such code a bit more difficult to
+read, although in some cases parens and spacing may help to read more
+complex constructions.
