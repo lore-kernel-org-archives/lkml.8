@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B821C35242
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:58:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AF3AC32771
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:58:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11BE620709
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:58:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0041F20709
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:58:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579859915;
-	bh=YZQj15HykUfkx12S9MAongzeegBHADwge2FK/tjmt2k=;
+	s=default; t=1579859920;
+	bh=iWoXhCMUB9QhnuZRPgJzYxwW+NaabxJQo6QOZKoCrqk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bpB8BbNShZkLCUVa4rsxbNeCUpjq+bzm3ElBYmmAmy4ij6c++tG0G5Ap/PlfCz1Ye
-	 KKnG5vxP6Hi9BQ2WkH0/SdOqUxP2Fz8ebKtfM36ffgPoQVujMJ3uP4X3wo9tJNdsgj
-	 pTPuNBXevV/qUgR+U1Z6oTdxDUnMyhZl5Sj9f/OQ=
+	b=hppBCsIXnrKbVi6PtvOinUbVs24LDprwhs0bWS0Pf/VyO724soYgRJR+XbmoZXDcj
+	 751G8YctOoHVXcMt0b3p1nyMJncf3pRVNHLccrKof5jyOlLbvRoJkJfy+Nlw43Gz84
+	 kY4xHSRjhGEpQZEkTJFA+13sYyH1U4lZSDzDo4TI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388547AbgAXJ6e (ORCPT
+        id S2388580AbgAXJ6j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 04:58:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34032 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 04:58:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34138 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725821AbgAXJ6d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 04:58:33 -0500
+        id S1725821AbgAXJ6h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 04:58:37 -0500
 Received: from localhost (unknown [145.15.244.15])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 257B620709;
-        Fri, 24 Jan 2020 09:58:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C41DF20718;
+        Fri, 24 Jan 2020 09:58:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579859912;
-        bh=YZQj15HykUfkx12S9MAongzeegBHADwge2FK/tjmt2k=;
+        s=default; t=1579859916;
+        bh=iWoXhCMUB9QhnuZRPgJzYxwW+NaabxJQo6QOZKoCrqk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vo7vKxIAygQ1hHeYfwZGeNE3zMzeP/qZP96oVRzfPDLJ7bkQralL6wZng99HkU/ws
-         uzBt67TecdevcQEwUmW7T2LyrRhrKQeVM/Sc4u1FduNHPTNU1Tj6yevHC/dthAC4yS
-         yCpGDNDllqhoLDfuwjnzZ/kD+DOggfQA9qzv/iCU=
+        b=rhGOYOjayuwcy8YXC5TANR23FB17tZLaeu48zQL9VGFDXaKtcPwJMkKJLk8P3B0OF
+         CCzkRhXJ8ewgTu+/ZDtkt7xB55sUSYcIsNPRO/tcxbE51Y5A5Xfyxkzu0cBxLKJdAg
+         Jjfr/4D4xGPg1Dlopba666bEaD2Sq+9taYhvfWts=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jon Hunter <jonathanh@nvidia.com>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 212/343] dmaengine: tegra210-adma: Fix crash during probe
-Date:   Fri, 24 Jan 2020 10:30:30 +0100
-Message-Id: <20200124092947.960310264@linuxfoundation.org>
+        stable@vger.kernel.org, Erwan Le Ray <erwan.leray@st.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 221/343] serial: stm32: fix wakeup source initialization
+Date:   Fri, 24 Jan 2020 10:30:39 +0100
+Message-Id: <20200124092949.105281315@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124092919.490687572@linuxfoundation.org>
 References: <20200124092919.490687572@linuxfoundation.org>
@@ -59,90 +59,100 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jon Hunter <jonathanh@nvidia.com>
+From: Erwan Le Ray <erwan.leray@st.com>
 
-[ Upstream commit b53611fb1ce9b1786bd18205473e0c1d6bfa8934 ]
+[ Upstream commit 5297f274e8b61ceb9676cba6649d3de9d03387ad ]
 
-Commit f33e7bb3eb92 ("dmaengine: tegra210-adma: restore channel status")
-added support to save and restore the DMA channel registers when runtime
-suspending the ADMA. This change is causing the kernel to crash when
-probing the ADMA, if the device is probed deferred when looking up the
-channel interrupts. The crash occurs because not all of the channel base
-addresses have been setup at this point and in the clean-up path of the
-probe, pm_runtime_suspend() is called invoking its callback which
-expects all the channel base addresses to be initialised.
+Fixes dedicated_irq_wakeup issue and deactivated uart as wakeup source by
+default.
 
-Although this could be fixed by simply checking for a NULL address, on
-further review of the driver it seems more appropriate that we only call
-pm_runtime_get_sync() after all the channel interrupts and base
-addresses have been configured. Therefore, fix this crash by moving the
-calls to pm_runtime_enable(), pm_runtime_get_sync() and
-tegra_adma_init() after the DMA channels have been initialised.
-
-Fixes: f33e7bb3eb92 ("dmaengine: tegra210-adma: restore channel status")
-
-Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Fixes: 270e5a74fe4c ("serial: stm32: add wakeup mechanism")
+Signed-off-by: Erwan Le Ray <erwan.leray@st.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/tegra210-adma.c | 26 +++++++++++++-------------
- 1 file changed, 13 insertions(+), 13 deletions(-)
+ drivers/tty/serial/stm32-usart.c | 28 +++++++++++++++-------------
+ 1 file changed, 15 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/dma/tegra210-adma.c b/drivers/dma/tegra210-adma.c
-index ac2a6b800db3e..4f4733d831a1a 100644
---- a/drivers/dma/tegra210-adma.c
-+++ b/drivers/dma/tegra210-adma.c
-@@ -744,16 +744,6 @@ static int tegra_adma_probe(struct platform_device *pdev)
- 		return PTR_ERR(tdma->ahub_clk);
- 	}
+diff --git a/drivers/tty/serial/stm32-usart.c b/drivers/tty/serial/stm32-usart.c
+index 2384f786b76d1..f8f3f8fafd9f0 100644
+--- a/drivers/tty/serial/stm32-usart.c
++++ b/drivers/tty/serial/stm32-usart.c
+@@ -447,7 +447,6 @@ static int stm32_startup(struct uart_port *port)
+ {
+ 	struct stm32_port *stm32_port = to_stm32_port(port);
+ 	struct stm32_usart_offsets *ofs = &stm32_port->info->ofs;
+-	struct stm32_usart_config *cfg = &stm32_port->info->cfg;
+ 	const char *name = to_platform_device(port->dev)->name;
+ 	u32 val;
+ 	int ret;
+@@ -458,15 +457,6 @@ static int stm32_startup(struct uart_port *port)
+ 	if (ret)
+ 		return ret;
  
--	pm_runtime_enable(&pdev->dev);
+-	if (cfg->has_wakeup && stm32_port->wakeirq >= 0) {
+-		ret = dev_pm_set_dedicated_wake_irq(port->dev,
+-						    stm32_port->wakeirq);
+-		if (ret) {
+-			free_irq(port->irq, port);
+-			return ret;
+-		}
+-	}
 -
--	ret = pm_runtime_get_sync(&pdev->dev);
--	if (ret < 0)
--		goto rpm_disable;
--
--	ret = tegra_adma_init(tdma);
--	if (ret)
--		goto rpm_put;
--
- 	INIT_LIST_HEAD(&tdma->dma_dev.channels);
- 	for (i = 0; i < tdma->nr_channels; i++) {
- 		struct tegra_adma_chan *tdc = &tdma->channels[i];
-@@ -771,6 +761,16 @@ static int tegra_adma_probe(struct platform_device *pdev)
- 		tdc->tdma = tdma;
- 	}
+ 	val = USART_CR1_RXNEIE | USART_CR1_TE | USART_CR1_RE;
+ 	if (stm32_port->fifoen)
+ 		val |= USART_CR1_FIFOEN;
+@@ -497,7 +487,6 @@ static void stm32_shutdown(struct uart_port *port)
  
-+	pm_runtime_enable(&pdev->dev);
-+
-+	ret = pm_runtime_get_sync(&pdev->dev);
-+	if (ret < 0)
-+		goto rpm_disable;
-+
-+	ret = tegra_adma_init(tdma);
-+	if (ret)
-+		goto rpm_put;
-+
- 	dma_cap_set(DMA_SLAVE, tdma->dma_dev.cap_mask);
- 	dma_cap_set(DMA_PRIVATE, tdma->dma_dev.cap_mask);
- 	dma_cap_set(DMA_CYCLIC, tdma->dma_dev.cap_mask);
-@@ -812,13 +812,13 @@ static int tegra_adma_probe(struct platform_device *pdev)
+ 	stm32_clr_bits(port, ofs->cr1, val);
  
- dma_remove:
- 	dma_async_device_unregister(&tdma->dma_dev);
--irq_dispose:
--	while (--i >= 0)
--		irq_dispose_mapping(tdma->channels[i].irq);
- rpm_put:
- 	pm_runtime_put_sync(&pdev->dev);
- rpm_disable:
- 	pm_runtime_disable(&pdev->dev);
-+irq_dispose:
-+	while (--i >= 0)
-+		irq_dispose_mapping(tdma->channels[i].irq);
- 
- 	return ret;
+-	dev_pm_clear_wake_irq(port->dev);
+ 	free_irq(port->irq, port);
  }
+ 
+@@ -904,11 +893,18 @@ static int stm32_serial_probe(struct platform_device *pdev)
+ 		ret = device_init_wakeup(&pdev->dev, true);
+ 		if (ret)
+ 			goto err_uninit;
++
++		ret = dev_pm_set_dedicated_wake_irq(&pdev->dev,
++						    stm32port->wakeirq);
++		if (ret)
++			goto err_nowup;
++
++		device_set_wakeup_enable(&pdev->dev, false);
+ 	}
+ 
+ 	ret = uart_add_one_port(&stm32_usart_driver, &stm32port->port);
+ 	if (ret)
+-		goto err_nowup;
++		goto err_wirq;
+ 
+ 	ret = stm32_of_dma_rx_probe(stm32port, pdev);
+ 	if (ret)
+@@ -922,6 +918,10 @@ static int stm32_serial_probe(struct platform_device *pdev)
+ 
+ 	return 0;
+ 
++err_wirq:
++	if (stm32port->info->cfg.has_wakeup && stm32port->wakeirq >= 0)
++		dev_pm_clear_wake_irq(&pdev->dev);
++
+ err_nowup:
+ 	if (stm32port->info->cfg.has_wakeup && stm32port->wakeirq >= 0)
+ 		device_init_wakeup(&pdev->dev, false);
+@@ -959,8 +959,10 @@ static int stm32_serial_remove(struct platform_device *pdev)
+ 				  TX_BUF_L, stm32_port->tx_buf,
+ 				  stm32_port->tx_dma_buf);
+ 
+-	if (cfg->has_wakeup && stm32_port->wakeirq >= 0)
++	if (cfg->has_wakeup && stm32_port->wakeirq >= 0) {
++		dev_pm_clear_wake_irq(&pdev->dev);
+ 		device_init_wakeup(&pdev->dev, false);
++	}
+ 
+ 	clk_disable_unprepare(stm32_port->clk);
+ 
 -- 
 2.20.1
 
