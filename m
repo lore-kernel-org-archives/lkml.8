@@ -2,54 +2,52 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC17EC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:34:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D82C9C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:34:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B361322527
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:34:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0E5722527
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:34:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579865688;
-	bh=n5ZmNn9yr+VyTjdRfRECzyXjrN/8A92sOV9eRCm9MFY=;
+	s=default; t=1579865692;
+	bh=W2BbV80fV5kcpEqWWvIsJPKoZwQoUK2B7KmrxaYr6+g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YTpPOe2OPww12O4C4q7npBkkRmU2/VRtS3cTZWTFc1ZeFO+gTKcZ5Isrw6kyS6NiN
-	 6coWKJ6cRh87+jvwWim8dzvgOezQabZzQo+rPVk/zIztx5lLQuKf3OXaY3GKPsSdSE
-	 uFSfJISQ0fPEc5YZnk11pohB+7NKNNF751UhUQXg=
+	b=IukgrdFpLQMVx7FiXNs5A0bW40dUKAC95gXdvxR8Pnf/DRlxT8Y1i3Bw8KWhKGnQH
+	 SuJXZES5h5HQ5Z+5dNY0sqRfwnJ5auf1980Hb7EIosOzE7X32bKFsgUZfEXnRiV1Nb
+	 Za4gMcRoA+TGtKVrh80jMEQVUiNzmK028FSHyM4M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404751AbgAXLen (ORCPT
+        id S2404578AbgAXLev (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:34:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54582 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 06:34:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54732 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404737AbgAXLej (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:34:39 -0500
+        id S2404554AbgAXLer (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:34:47 -0500
 Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 12BA62077C;
-        Fri, 24 Jan 2020 11:34:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3B8D1214AF;
+        Fri, 24 Jan 2020 11:34:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579865678;
-        bh=n5ZmNn9yr+VyTjdRfRECzyXjrN/8A92sOV9eRCm9MFY=;
+        s=default; t=1579865687;
+        bh=W2BbV80fV5kcpEqWWvIsJPKoZwQoUK2B7KmrxaYr6+g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Gn3i2xCeGVZ+DPBKSPYtYSbtOm5Ug2CBfCQf7JkzWvnnG5uv8nef0M9RtO+FBOsPZ
-         wjOk5rDXckG29gFpwoueTAANY0U/g1965qWxNa3n9iCObWwZnE/km7ayP3ocPR0SOi
-         V9E7mposCQKk0rA1VALoCCQ7psJ3F9XDYP366COI=
+        b=CH/kY4ncBRM26DCEy/Qgm/Rw9V3ZOVmgxGNifz3B37gCJSgIpUSd1jpp4IZNrz11U
+         IK49omo9md3H6fHt6plBoxJe5XQZ/13nfsZ6SQe6UzoKAzT7jehTThnaSJIjA+2LnW
+         KesJjiLg/XBko6iwKke/x34cXmwpZP/zXo61G1ug=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
         Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Simon Horman <simon.horman@netronome.com>,
-        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 610/639] net: netem: correct the parents backlog when corrupted packet was dropped
-Date:   Fri, 24 Jan 2020 10:33:00 +0100
-Message-Id: <20200124093205.870688745@linuxfoundation.org>
+Subject: [PATCH 4.19 599/639] net: avoid possible false sharing in sk_leave_memory_pressure()
+Date:   Fri, 24 Jan 2020 10:32:49 +0100
+Message-Id: <20200124093204.391643194@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
 References: <20200124093047.008739095@linuxfoundation.org>
@@ -62,37 +60,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jakub Kicinski <jakub.kicinski@netronome.com>
+From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit e0ad032e144731a5928f2d75e91c2064ba1a764c ]
+[ Upstream commit 503978aca46124cd714703e180b9c8292ba50ba7 ]
 
-If packet corruption failed we jump to finish_segs and return
-NET_XMIT_SUCCESS. Seeing success will make the parent qdisc
-increment its backlog, that's incorrect - we need to return
-NET_XMIT_DROP.
+As mentioned in https://github.com/google/ktsan/wiki/READ_ONCE-and-WRITE_ONCE#it-may-improve-performance
+a C compiler can legally transform :
 
-Fixes: 6071bd1aa13e ("netem: Segment GSO packets on enqueue")
+if (memory_pressure && *memory_pressure)
+        *memory_pressure = 0;
+
+to :
+
+if (memory_pressure)
+        *memory_pressure = 0;
+
+Fixes: 0604475119de ("tcp: add TCPMemoryPressuresChrono counter")
+Fixes: 180d8cd942ce ("foundations of per-cgroup memory pressure controlling.")
+Fixes: 3ab224be6d69 ("[NET] CORE: Introducing new memory accounting interface.")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
 Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
-Reviewed-by: Simon Horman <simon.horman@netronome.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/sched/sch_netem.c | 2 ++
- 1 file changed, 2 insertions(+)
+ net/core/sock.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/net/sched/sch_netem.c b/net/sched/sch_netem.c
-index 7660aa5b80da8..014a28d8dd4fa 100644
---- a/net/sched/sch_netem.c
-+++ b/net/sched/sch_netem.c
-@@ -607,6 +607,8 @@ finish_segs:
- 		}
- 		/* Parent qdiscs accounted for 1 skb of size @prev_len */
- 		qdisc_tree_reduce_backlog(sch, -(nb - 1), -(len - prev_len));
-+	} else if (!skb) {
-+		return NET_XMIT_DROP;
+diff --git a/net/core/sock.c b/net/core/sock.c
+index bbde5f6a7dc91..b9ec14f2c729a 100644
+--- a/net/core/sock.c
++++ b/net/core/sock.c
+@@ -2179,8 +2179,8 @@ static void sk_leave_memory_pressure(struct sock *sk)
+ 	} else {
+ 		unsigned long *memory_pressure = sk->sk_prot->memory_pressure;
+ 
+-		if (memory_pressure && *memory_pressure)
+-			*memory_pressure = 0;
++		if (memory_pressure && READ_ONCE(*memory_pressure))
++			WRITE_ONCE(*memory_pressure, 0);
  	}
- 	return NET_XMIT_SUCCESS;
  }
+ 
 -- 
 2.20.1
 
