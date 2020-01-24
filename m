@@ -4,54 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61B8DC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:21:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 469DCC35242
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:21:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 353EB22464
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:21:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D3592087E
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:21:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579875706;
-	bh=k5OAPK/Q9V2qMlz9alH4BM1w8L1wut7OFR8509l6y2s=;
+	s=default; t=1579875710;
+	bh=IJCDwsZ4sqrojp7q6Ut5B996TTxXGw4vFPVQ02U1p58=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OsxeAnpRj8ICbCFddj6/V100byp58EZI8pzqUZXm0/C/G5E8ZahrAYOXgKXwXfZDl
-	 UGpWTaF/b5cWY2Iq/FAhBvOmzEcJaBGXSQ8p+vBHUaK7fguqPqN8hjpTFhY8eJ4MFZ
-	 MIe4EOOOLE7rIFPy2v/D9Vh0aLX41QCShWfoE41s=
+	b=iXXioO7sHHv9COEusxMxeOXjeEp9LGqCzqOXa/1R6bh6HF7paopkjSimQb5Q9pVUH
+	 m/KL+bBbZ/ujkr0TXqY+cp5Kn/23a5tzH/dcGoB4OrcwjuqOS/tLdcUqMz/OTpd73P
+	 dm0e2jcvFvQmdvzVJXRXzyQBdUhcP5Z+lmGROprg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392212AbgAXOVo (ORCPT
+        id S2387987AbgAXOVs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 09:21:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43664 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 09:21:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43700 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387774AbgAXOVm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 09:21:42 -0500
+        id S2390595AbgAXOVp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 09:21:45 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EFC83222C2;
-        Fri, 24 Jan 2020 14:21:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 921F524682;
+        Fri, 24 Jan 2020 14:21:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579875702;
-        bh=k5OAPK/Q9V2qMlz9alH4BM1w8L1wut7OFR8509l6y2s=;
+        s=default; t=1579875704;
+        bh=IJCDwsZ4sqrojp7q6Ut5B996TTxXGw4vFPVQ02U1p58=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0FsK2cSg/VpT4w+0k2Bmd4W3iLOpTmigx+S5Un1QOsI5echHDveMPcXQbTO2mYnqK
-         dilYAxhr1ormm9Qx88v/KnGGj6HflRgdoVp+gMWGBkdSA4dA2g94LtJu8HSu/1egEm
-         pSdZ+G7YZwxlJrVFQd0WCTEFOiI9I8sBUm+u00m4=
+        b=sS4/aS9td+4dpmUy55nDiZKeifk8Bsmkioos9hJyQ6Fqu4ZDtebA1O3J1K9F9OVUB
+         f2GtnMceT1Uez0ZeBj2Q3voMJ6Xwt3r7pa7oZ1bHbbPmx3uPX4XkLDezJ53EQ06X5d
+         wSsXocCf3J3zyFQ+Lr6C+h5O8+fVJ2SmIzlpi8QY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Eric Dumazet <edumazet@google.com>,
-        RENARD Pierre-Francois <pfrenard@gmail.com>,
-        Stefan Wahren <stefan.wahren@i2se.com>,
-        Woojung Huh <woojung.huh@microchip.com>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 19/32] net: usb: lan78xx: limit size of local TSO packets
-Date:   Fri, 24 Jan 2020 09:21:06 -0500
-Message-Id: <20200124142119.30484-19-sashal@kernel.org>
+Cc:     Ganapathi Bhat <ganapathi.bhat@nxp.com>,
+        Cathy Luo <xiaohua.luo@nxp.com>,
+        Johannes Berg <johannes.berg@intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 21/32] wireless: fix enabling channel 12 for custom regulatory domain
+Date:   Fri, 24 Jan 2020 09:21:08 -0500
+Message-Id: <20200124142119.30484-21-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200124142119.30484-1-sashal@kernel.org>
 References: <20200124142119.30484-1-sashal@kernel.org>
@@ -64,49 +61,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Ganapathi Bhat <ganapathi.bhat@nxp.com>
 
-[ Upstream commit f8d7408a4d7f60f8b2df0f81decdc882dd9c20dc ]
+[ Upstream commit c4b9d655e445a8be0bff624aedea190606b5ebbc ]
 
-lan78xx_tx_bh() makes sure to not exceed MAX_SINGLE_PACKET_SIZE
-bytes in the aggregated packets it builds, but does
-nothing to prevent large GSO packets being submitted.
+Commit e33e2241e272 ("Revert "cfg80211: Use 5MHz bandwidth by
+default when checking usable channels"") fixed a broken
+regulatory (leaving channel 12 open for AP where not permitted).
+Apply a similar fix to custom regulatory domain processing.
 
-Pierre-Francois reported various hangs when/if TSO is enabled.
-
-For localy generated packets, we can use netif_set_gso_max_size()
-to limit the size of TSO packets.
-
-Note that forwarded packets could still hit the issue,
-so a complete fix might require implementing .ndo_features_check
-for this driver, forcing a software segmentation if the size
-of the TSO packet exceeds MAX_SINGLE_PACKET_SIZE.
-
-Fixes: 55d7de9de6c3 ("Microchip's LAN7800 family USB 2/3 to 10/100/1000 Ethernet device driver")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: RENARD Pierre-Francois <pfrenard@gmail.com>
-Tested-by: RENARD Pierre-Francois <pfrenard@gmail.com>
-Cc: Stefan Wahren <stefan.wahren@i2se.com>
-Cc: Woojung Huh <woojung.huh@microchip.com>
-Cc: Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Cathy Luo <xiaohua.luo@nxp.com>
+Signed-off-by: Ganapathi Bhat <ganapathi.bhat@nxp.com>
+Link: https://lore.kernel.org/r/1576836859-8945-1-git-send-email-ganapathi.bhat@nxp.com
+[reword commit message, fix coding style, add a comment]
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/usb/lan78xx.c | 1 +
- 1 file changed, 1 insertion(+)
+ net/wireless/reg.c | 13 ++++++++++---
+ 1 file changed, 10 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/usb/lan78xx.c b/drivers/net/usb/lan78xx.c
-index c23f35dba7188..ee7194a9e2315 100644
---- a/drivers/net/usb/lan78xx.c
-+++ b/drivers/net/usb/lan78xx.c
-@@ -3612,6 +3612,7 @@ static int lan78xx_probe(struct usb_interface *intf,
+diff --git a/net/wireless/reg.c b/net/wireless/reg.c
+index 804eac073b6b9..e60a7dedfbf1b 100644
+--- a/net/wireless/reg.c
++++ b/net/wireless/reg.c
+@@ -1718,14 +1718,15 @@ static void update_all_wiphy_regulatory(enum nl80211_reg_initiator initiator)
  
- 	/* MTU range: 68 - 9000 */
- 	netdev->max_mtu = MAX_SINGLE_PACKET_SIZE;
-+	netif_set_gso_max_size(netdev, MAX_SINGLE_PACKET_SIZE - MAX_HEADER);
+ static void handle_channel_custom(struct wiphy *wiphy,
+ 				  struct ieee80211_channel *chan,
+-				  const struct ieee80211_regdomain *regd)
++				  const struct ieee80211_regdomain *regd,
++				  u32 min_bw)
+ {
+ 	u32 bw_flags = 0;
+ 	const struct ieee80211_reg_rule *reg_rule = NULL;
+ 	const struct ieee80211_power_rule *power_rule = NULL;
+ 	u32 bw;
  
- 	dev->ep_blkin = (intf->cur_altsetting)->endpoint + 0;
- 	dev->ep_blkout = (intf->cur_altsetting)->endpoint + 1;
+-	for (bw = MHZ_TO_KHZ(20); bw >= MHZ_TO_KHZ(5); bw = bw / 2) {
++	for (bw = MHZ_TO_KHZ(20); bw >= min_bw; bw = bw / 2) {
+ 		reg_rule = freq_reg_info_regd(MHZ_TO_KHZ(chan->center_freq),
+ 					      regd, bw);
+ 		if (!IS_ERR(reg_rule))
+@@ -1781,8 +1782,14 @@ static void handle_band_custom(struct wiphy *wiphy,
+ 	if (!sband)
+ 		return;
+ 
++	/*
++	 * We currently assume that you always want at least 20 MHz,
++	 * otherwise channel 12 might get enabled if this rule is
++	 * compatible to US, which permits 2402 - 2472 MHz.
++	 */
+ 	for (i = 0; i < sband->n_channels; i++)
+-		handle_channel_custom(wiphy, &sband->channels[i], regd);
++		handle_channel_custom(wiphy, &sband->channels[i], regd,
++				      MHZ_TO_KHZ(20));
+ }
+ 
+ /* Used by drivers prior to wiphy registration */
 -- 
 2.20.1
 
