@@ -2,370 +2,94 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19BCEC32771
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 18:23:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A205AC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 18:24:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6F412075D
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 18:23:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71FC420709
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 18:24:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XFZcXr0M"
+	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="RAz2XKqz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390825AbgAXSXx (ORCPT
+        id S2391344AbgAXSY0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 13:23:53 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:34159 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388820AbgAXSXw (ORCPT
+        Fri, 24 Jan 2020 13:24:26 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:39518 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388688AbgAXSY0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 13:23:52 -0500
-Received: by mail-pg1-f196.google.com with SMTP id r11so1547453pgf.1
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Jan 2020 10:23:52 -0800 (PST)
+        Fri, 24 Jan 2020 13:24:26 -0500
+Received: by mail-pl1-f193.google.com with SMTP id g6so1121324plp.6
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jan 2020 10:24:26 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=FB73mrqCt92PRkoMgIfHIc3i5DaF5mIVmuVGa3E/Zk4=;
-        b=XFZcXr0Mbc9cbXxGWD3t1l6day+SDmBaxkV8o9BrmVLP5YJHiTh4wpvYbDW1QvBUhg
-         l9EkR3A/a5y3hitEA22h7qxctPDvJJHPiz1kMl13Mxniv9WILqfsh3rlU2teOXBya9M9
-         QsyLYwGJ9PK/B9Ex+lLtMZBaZOnkBzL527E6SQ4AmpLmTz/3lKPHC/y6gzdhaPFYGOD+
-         HjSFLT/s0zfQx3aUtom/9Jh5BWdjTic3+VMQ7okNDbhA2eNriQs4m0NbVtFAF0cQ8hc0
-         6RR6auwYkDA45byQqwDFEZ3TQDwxj1wuoPXVDLS8GX3uasMUcrWfaEADnsbZkRr/ktWI
-         J+ug==
+        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
+        h=content-transfer-encoding:from:mime-version:subject:date:message-id
+         :references:cc:in-reply-to:to;
+        bh=9mhOOBaln1zZhror14LKgz2QMImQbKxsvSx5EqJTYco=;
+        b=RAz2XKqzUHmBbVViY3hzlE3l8UVNZTFV4R+rsWtCs2WWvWycSFgjQB0QbRKtiuHx8Q
+         7mzLNFFxaoX9TPngj3lekw2U83W5j/BbhKwipJC/tZ0ewoJvxDhqykwnehGnL0DcMzUm
+         j2BtFGCkgtb1YZEpyd3vipcrhZScVHRs1AS4JzOpWO2Ic9cYMs7pEiMCVjVZS2Tgl20v
+         QDsYWsaGTmJy0sxi9VP+gy6ou4hQL0cMoa1/dLDPmZ1K7j4Brnj7cEGiRQu1zL9aKFc+
+         TrXVsEV+WlozkDDHAUIlrsHu29qHKZSl66fzKVmLznnZOLGs8Ae7nO+dtl8rS8GeHKzQ
+         tsIw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=FB73mrqCt92PRkoMgIfHIc3i5DaF5mIVmuVGa3E/Zk4=;
-        b=tp4YfD+WItrpID0ZC2gW0O3BYmZp6NwV6JDc1IA8cLEjnqim1NPnMiTuWStPsRSUqE
-         vd1mnra5EqhxptlA+LZHJCLmn4KvNlMYIqAXWI52yfuZoHaExiyQm4NENAtpqc4Oosw8
-         RKCMeAym7gCx67by2RYsmv4yKwzNzNMlDSE4/ewySIL4ilK38fXsWUJp4xCr/Bjx/osD
-         slSxZ5yPS9DVcARgi3x7TD9iOvDcGtzd+RUpuQ8ENM/ZAcIL0yZ9Q9aPCna/1SUV231r
-         aDbmxgSSdt1+IVnGqFHVWUuCvrGsHPmDPFQ5YN7Lg1M1A5ReRh9w6vn9mNud92pAZc5H
-         Aw1A==
-X-Gm-Message-State: APjAAAXeKxGNiXdb4xJ183SoqyUYzCwgn9DrDmtr04YA/cX+FfhAmkbe
-        S0y2QaedizWHfbdkFhQgRmjQOg==
-X-Google-Smtp-Source: APXvYqz+mIWwzZXw57O+sNrAidLZN2GI6xpihZh/hdYdGqTTlvmKRqU9w936u1y0CiYalDrE4ff+fA==
-X-Received: by 2002:a63:2901:: with SMTP id p1mr5370846pgp.396.1579890231782;
-        Fri, 24 Jan 2020 10:23:51 -0800 (PST)
-Received: from ripper (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id b1sm7146058pjw.4.2020.01.24.10.23.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 Jan 2020 10:23:51 -0800 (PST)
-Date:   Fri, 24 Jan 2020 10:23:16 -0800
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>
-Cc:     agross@kernel.org, mturquette@baylibre.com, sboyd@kernel.org,
-        robh+dt@kernel.org, mark.rutland@arm.com, vinod.koul@linaro.org,
-        psodagud@codeaurora.org, tsoni@codeaurora.org,
-        jshriram@codeaurora.org, tdas@codeaurora.org,
-        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 4/7] clk: qcom: clk-alpha-pll: Add support for
- controlling Lucid PLLs
-Message-ID: <20200124182316.GU1908628@ripper>
-References: <1579217994-22219-1-git-send-email-vnkgutta@codeaurora.org>
- <1579217994-22219-5-git-send-email-vnkgutta@codeaurora.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1579217994-22219-5-git-send-email-vnkgutta@codeaurora.org>
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=9mhOOBaln1zZhror14LKgz2QMImQbKxsvSx5EqJTYco=;
+        b=gk2RPvXMSdyqsg1RABqh8AZh9KGWnlwChMyZMaKxYV1XSvGr+Nk04JpBPhMpIcFf4e
+         tZk+JS0tIalk4FXnQ20vgWNEmVKmrxo9n3uGv3pcnLIqyGYU203boEZxCEut7fQxvAri
+         kGF2ZhwlPoOKJEcOLt7z16nh0zTyd4MAK6dGKDqpr97rYNKmT48KOEMu5M8QPftSKg5f
+         yCkDWzaKhaqKB6VqT4G2RLTOXm9YuVISiJvBf6Pfab4jJNcffgLhwRuAK4HUIER/3p7D
+         zKy9B31SzGZPLBqwDVIgPNoS9C3TIG4kDLs0DcNBOxSw2FimLzm5u+jbUdZOXUDXuHah
+         9HcA==
+X-Gm-Message-State: APjAAAX9LBHH0ti7fOUAcAPt4BNwVFhWXUprKhfe+RoqVLhyjfKYCrif
+        bjkEpw2xuzXE8c6Ts280k983xqUNTZU=
+X-Google-Smtp-Source: APXvYqz/Nn0EvR3fZ/8XzkbrpbepHfprN5iqIfzR2ty5TkA9H8LjZP+imqSS7DLm7+F4I1f7Vr1Gyw==
+X-Received: by 2002:a17:90a:1785:: with SMTP id q5mr534719pja.143.1579890265307;
+        Fri, 24 Jan 2020 10:24:25 -0800 (PST)
+Received: from ?IPv6:2600:1012:b014:f2f6:cce4:b529:529e:9b98? ([2600:1012:b014:f2f6:cce4:b529:529e:9b98])
+        by smtp.gmail.com with ESMTPSA id l2sm7153286pjt.31.2020.01.24.10.24.24
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 24 Jan 2020 10:24:24 -0800 (PST)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+From:   Andy Lutomirski <luto@amacapital.net>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH] x86: Don't clare __force_order in kaslr_64.c
+Date:   Fri, 24 Jan 2020 10:24:19 -0800
+Message-Id: <E184715B-30CD-4951-BAF4-E95135AEE938@amacapital.net>
+References: <20200124181811.4780-1-hjl.tools@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Yu-cheng Yu <yu-cheng.yu@intel.com>
+In-Reply-To: <20200124181811.4780-1-hjl.tools@gmail.com>
+To:     "H.J. Lu" <hjl.tools@gmail.com>
+X-Mailer: iPhone Mail (17C54)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 16 Jan 15:39 PST 2020, Venkata Narendra Kumar Gutta wrote:
 
-> From: Taniya Das <tdas@codeaurora.org>
-> 
-> Add programming sequence support for managing the Lucid PLLs.
-> 
-> Signed-off-by: Taniya Das <tdas@codeaurora.org>
-> Signed-off-by: Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>
 
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> On Jan 24, 2020, at 10:18 AM, H.J. Lu <hjl.tools@gmail.com> wrote:
+>=20
+> =EF=BB=BFGCC 10 changed the default to -fno-common, which leads to
+>=20
+>  LD      arch/x86/boot/compressed/vmlinux
+> ld: arch/x86/boot/compressed/pgtable_64.o:(.bss+0x0): multiple definition o=
+f `__force_order'; arch/x86/boot/compressed/kaslr_64.o:(.bss+0x0): first def=
+ined here
+> make[2]: *** [arch/x86/boot/compressed/Makefile:119: arch/x86/boot/compres=
+sed/vmlinux] Error 1
+>=20
+> Since __force_order is already provided in pgtable_64.c, there is no
+> need to declare __force_order in kaslr_64.c.
 
-> ---
->  drivers/clk/qcom/clk-alpha-pll.c | 190 +++++++++++++++++++++++++++++++++++++++
->  drivers/clk/qcom/clk-alpha-pll.h |  12 +++
->  2 files changed, 202 insertions(+)
-> 
-> diff --git a/drivers/clk/qcom/clk-alpha-pll.c b/drivers/clk/qcom/clk-alpha-pll.c
-> index 1b073b2..4258ab0 100644
-> --- a/drivers/clk/qcom/clk-alpha-pll.c
-> +++ b/drivers/clk/qcom/clk-alpha-pll.c
-> @@ -52,6 +52,7 @@
->  #define PLL_CONFIG_CTL_U1(p)	((p)->offset + (p)->regs[PLL_OFF_CONFIG_CTL_U1])
->  #define PLL_TEST_CTL(p)		((p)->offset + (p)->regs[PLL_OFF_TEST_CTL])
->  #define PLL_TEST_CTL_U(p)	((p)->offset + (p)->regs[PLL_OFF_TEST_CTL_U])
-> +#define PLL_TEST_CTL_U1(p)     ((p)->offset + (p)->regs[PLL_OFF_TEST_CTL_U1])
->  #define PLL_STATUS(p)		((p)->offset + (p)->regs[PLL_OFF_STATUS])
->  #define PLL_OPMODE(p)		((p)->offset + (p)->regs[PLL_OFF_OPMODE])
->  #define PLL_FRAC(p)		((p)->offset + (p)->regs[PLL_OFF_FRAC])
-> @@ -116,6 +117,22 @@
->  		[PLL_OFF_ALPHA_VAL] = 0x40,
->  		[PLL_OFF_CAL_VAL] = 0x44,
->  	},
-> +	[CLK_ALPHA_PLL_TYPE_LUCID] =  {
-> +		[PLL_OFF_L_VAL] = 0x04,
-> +		[PLL_OFF_CAL_L_VAL] = 0x08,
-> +		[PLL_OFF_USER_CTL] = 0x0c,
-> +		[PLL_OFF_USER_CTL_U] = 0x10,
-> +		[PLL_OFF_USER_CTL_U1] = 0x14,
-> +		[PLL_OFF_CONFIG_CTL] = 0x18,
-> +		[PLL_OFF_CONFIG_CTL_U] = 0x1c,
-> +		[PLL_OFF_CONFIG_CTL_U1] = 0x20,
-> +		[PLL_OFF_TEST_CTL] = 0x24,
-> +		[PLL_OFF_TEST_CTL_U] = 0x28,
-> +		[PLL_OFF_TEST_CTL_U1] = 0x2c,
-> +		[PLL_OFF_STATUS] = 0x30,
-> +		[PLL_OFF_OPMODE] = 0x38,
-> +		[PLL_OFF_ALPHA_VAL] = 0x40,
-> +	},
->  };
->  EXPORT_SYMBOL_GPL(clk_alpha_pll_regs);
->  
-> @@ -139,6 +156,10 @@
->  #define PLL_OUT_MASK		0x7
->  #define PLL_RATE_MARGIN		500
->  
-> +/* LUCID PLL specific settings and offsets */
-> +#define LUCID_PLL_CAL_VAL	0x44
-> +#define LUCID_PCAL_DONE		BIT(26)
-> +
->  #define pll_alpha_width(p)					\
->  		((PLL_ALPHA_VAL_U(p) - PLL_ALPHA_VAL(p) == 4) ?	\
->  				 ALPHA_REG_BITWIDTH : ALPHA_REG_16BIT_WIDTH)
-> @@ -1367,3 +1388,172 @@ static int clk_alpha_pll_postdiv_fabia_set_rate(struct clk_hw *hw,
->  	.set_rate = clk_alpha_pll_postdiv_fabia_set_rate,
->  };
->  EXPORT_SYMBOL_GPL(clk_alpha_pll_postdiv_fabia_ops);
-> +
-> +void clk_lucid_pll_configure(struct clk_alpha_pll *pll, struct regmap *regmap,
-> +			     const struct alpha_pll_config *config)
-> +{
-> +	if (config->l)
-> +		regmap_write(regmap, PLL_L_VAL(pll), config->l);
-> +
-> +	regmap_write(regmap, PLL_CAL_L_VAL(pll), LUCID_PLL_CAL_VAL);
-> +
-> +	if (config->alpha)
-> +		regmap_write(regmap, PLL_ALPHA_VAL(pll), config->alpha);
-> +
-> +	if (config->config_ctl_val)
-> +		regmap_write(regmap, PLL_CONFIG_CTL(pll),
-> +			     config->config_ctl_val);
-> +
-> +	if (config->config_ctl_hi_val)
-> +		regmap_write(regmap, PLL_CONFIG_CTL_U(pll),
-> +			     config->config_ctl_hi_val);
-> +
-> +	if (config->config_ctl_hi1_val)
-> +		regmap_write(regmap, PLL_CONFIG_CTL_U1(pll),
-> +			     config->config_ctl_hi1_val);
-> +
-> +	if (config->user_ctl_val)
-> +		regmap_write(regmap, PLL_USER_CTL(pll),
-> +			     config->user_ctl_val);
-> +
-> +	if (config->user_ctl_hi_val)
-> +		regmap_write(regmap, PLL_USER_CTL_U(pll),
-> +			     config->user_ctl_hi_val);
-> +
-> +	if (config->user_ctl_hi1_val)
-> +		regmap_write(regmap, PLL_USER_CTL_U1(pll),
-> +			     config->user_ctl_hi1_val);
-> +
-> +	if (config->test_ctl_val)
-> +		regmap_write(regmap, PLL_TEST_CTL(pll),
-> +			     config->test_ctl_val);
-> +
-> +	if (config->test_ctl_hi_val)
-> +		regmap_write(regmap, PLL_TEST_CTL_U(pll),
-> +			     config->test_ctl_hi_val);
-> +
-> +	if (config->test_ctl_hi1_val)
-> +		regmap_write(regmap, PLL_TEST_CTL_U1(pll),
-> +			     config->test_ctl_hi1_val);
-> +
-> +	regmap_update_bits(regmap, PLL_MODE(pll), PLL_UPDATE_BYPASS,
-> +			   PLL_UPDATE_BYPASS);
-> +
-> +	/* Disable PLL output */
-> +	regmap_update_bits(regmap, PLL_MODE(pll),  PLL_OUTCTRL, 0);
-> +
-> +	/* Set operation mode to OFF */
-> +	regmap_write(regmap, PLL_OPMODE(pll), PLL_STANDBY);
-> +
-> +	/* PLL should be in OFF mode before continuing */
-> +	wmb();
-> +
-> +	/* Place the PLL in STANDBY mode */
-> +	regmap_update_bits(regmap, PLL_MODE(pll), PLL_RESET_N, PLL_RESET_N);
-> +}
-> +EXPORT_SYMBOL_GPL(clk_lucid_pll_configure);
-> +
-> +/*
-> + * The Lucid PLL requires a power-on self-calibration which happens when the
-> + * PLL comes out of reset. Calibrate in case it is not completed.
-> + */
-> +static int alpha_pll_lucid_prepare(struct clk_hw *hw)
-> +{
-> +	struct clk_alpha_pll *pll = to_clk_alpha_pll(hw);
-> +	u32 regval;
-> +	int ret;
-> +
-> +	/* Return early if calibration is not needed. */
-> +	regmap_read(pll->clkr.regmap, PLL_STATUS(pll), &regval);
-> +	if (regval & LUCID_PCAL_DONE)
-> +		return 0;
-> +
-> +	ret = clk_trion_pll_enable(hw);
-> +	if (ret)
-> +		return ret;
-> +
-> +	clk_trion_pll_disable(hw);
-> +
-> +	return 0;
-> +}
-> +
-> +static int alpha_pll_lucid_set_rate(struct clk_hw *hw, unsigned long rate,
-> +				    unsigned long prate)
-> +{
-> +	struct clk_alpha_pll *pll = to_clk_alpha_pll(hw);
-> +	unsigned long rrate;
-> +	u32 regval, l, alpha_width = pll_alpha_width(pll);
-> +	u64 a;
-> +	int ret;
-> +
-> +	rrate = alpha_pll_round_rate(rate, prate, &l, &a, alpha_width);
-> +
-> +	/*
-> +	 * Due to a limited number of bits for fractional rate programming, the
-> +	 * rounded up rate could be marginally higher than the requested rate.
-> +	 */
-> +	if (rrate > (rate + PLL_RATE_MARGIN) || rrate < rate) {
-> +		pr_err("Call set rate on the PLL with rounded rates!\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	regmap_write(pll->clkr.regmap, PLL_L_VAL(pll), l);
-> +	regmap_write(pll->clkr.regmap, PLL_ALPHA_VAL(pll), a);
-> +
-> +	/* Latch the PLL input */
-> +	ret = regmap_update_bits(pll->clkr.regmap, PLL_MODE(pll),
-> +				 PLL_UPDATE, PLL_UPDATE);
-> +	if (ret)
-> +		return ret;
-> +
-> +	/* Wait for 2 reference cycles before checking the ACK bit. */
-> +	udelay(1);
-> +	regmap_read(pll->clkr.regmap, PLL_MODE(pll), &regval);
-> +	if (!(regval & ALPHA_PLL_ACK_LATCH)) {
-> +		WARN(1, "PLL latch failed. Output may be unstable!\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	/* Return the latch input to 0 */
-> +	ret = regmap_update_bits(pll->clkr.regmap, PLL_MODE(pll),
-> +				 PLL_UPDATE, 0);
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (clk_hw_is_enabled(hw)) {
-> +		ret = wait_for_pll_enable_lock(pll);
-> +		if (ret)
-> +			return ret;
-> +	}
-> +
-> +	/* Wait for PLL output to stabilize */
-> +	udelay(100);
-> +	return 0;
-> +}
-> +
-> +const struct clk_ops clk_alpha_pll_lucid_ops = {
-> +	.prepare = alpha_pll_lucid_prepare,
-> +	.enable = clk_trion_pll_enable,
-> +	.disable = clk_trion_pll_disable,
-> +	.is_enabled = clk_trion_pll_is_enabled,
-> +	.recalc_rate = clk_trion_pll_recalc_rate,
-> +	.round_rate = clk_alpha_pll_round_rate,
-> +	.set_rate = alpha_pll_lucid_set_rate,
-> +};
-> +EXPORT_SYMBOL_GPL(clk_alpha_pll_lucid_ops);
-> +
-> +const struct clk_ops clk_alpha_pll_fixed_lucid_ops = {
-> +	.enable = clk_trion_pll_enable,
-> +	.disable = clk_trion_pll_disable,
-> +	.is_enabled = clk_trion_pll_is_enabled,
-> +	.recalc_rate = clk_trion_pll_recalc_rate,
-> +	.round_rate = clk_alpha_pll_round_rate,
-> +};
-> +EXPORT_SYMBOL_GPL(clk_alpha_pll_fixed_lucid_ops);
-> +
-> +const struct clk_ops clk_alpha_pll_postdiv_lucid_ops = {
-> +	.recalc_rate = clk_alpha_pll_postdiv_fabia_recalc_rate,
-> +	.round_rate = clk_alpha_pll_postdiv_fabia_round_rate,
-> +	.set_rate = clk_alpha_pll_postdiv_fabia_set_rate,
-> +};
-> +EXPORT_SYMBOL_GPL(clk_alpha_pll_postdiv_lucid_ops);
-> diff --git a/drivers/clk/qcom/clk-alpha-pll.h b/drivers/clk/qcom/clk-alpha-pll.h
-> index fbc1f67..704674a 100644
-> --- a/drivers/clk/qcom/clk-alpha-pll.h
-> +++ b/drivers/clk/qcom/clk-alpha-pll.h
-> @@ -14,6 +14,7 @@ enum {
->  	CLK_ALPHA_PLL_TYPE_BRAMMO,
->  	CLK_ALPHA_PLL_TYPE_FABIA,
->  	CLK_ALPHA_PLL_TYPE_TRION,
-> +	CLK_ALPHA_PLL_TYPE_LUCID,
->  	CLK_ALPHA_PLL_TYPE_MAX,
->  };
->  
-> @@ -30,6 +31,7 @@ enum {
->  	PLL_OFF_CONFIG_CTL_U1,
->  	PLL_OFF_TEST_CTL,
->  	PLL_OFF_TEST_CTL_U,
-> +	PLL_OFF_TEST_CTL_U1,
->  	PLL_OFF_STATUS,
->  	PLL_OFF_OPMODE,
->  	PLL_OFF_FRAC,
-> @@ -94,10 +96,13 @@ struct alpha_pll_config {
->  	u32 alpha_hi;
->  	u32 config_ctl_val;
->  	u32 config_ctl_hi_val;
-> +	u32 config_ctl_hi1_val;
->  	u32 user_ctl_val;
->  	u32 user_ctl_hi_val;
-> +	u32 user_ctl_hi1_val;
->  	u32 test_ctl_val;
->  	u32 test_ctl_hi_val;
-> +	u32 test_ctl_hi1_val;
->  	u32 main_output_mask;
->  	u32 aux_output_mask;
->  	u32 aux2_output_mask;
-> @@ -123,10 +128,17 @@ struct alpha_pll_config {
->  extern const struct clk_ops clk_alpha_pll_fixed_fabia_ops;
->  extern const struct clk_ops clk_alpha_pll_postdiv_fabia_ops;
->  
-> +extern const struct clk_ops clk_alpha_pll_lucid_ops;
-> +extern const struct clk_ops clk_alpha_pll_fixed_lucid_ops;
-> +extern const struct clk_ops clk_alpha_pll_postdiv_lucid_ops;
-> +
->  void clk_alpha_pll_configure(struct clk_alpha_pll *pll, struct regmap *regmap,
->  			     const struct alpha_pll_config *config);
->  void clk_fabia_pll_configure(struct clk_alpha_pll *pll, struct regmap *regmap,
->  				const struct alpha_pll_config *config);
-> +void clk_lucid_pll_configure(struct clk_alpha_pll *pll, struct regmap *regmap,
-> +			     const struct alpha_pll_config *config);
-> +
->  extern const struct clk_ops clk_trion_fixed_pll_ops;
->  extern const struct clk_ops clk_trion_pll_postdiv_ops;
->  
-> -- 
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> a Linux Foundation Collaborative Project
+Why does anything actually define that variable?  Surely any actual referenc=
+es are just an outright bug.  Is it needed for LTO?=
