@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA6ABC35242
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:38:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEE00C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:38:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A1397206F0
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:38:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A8F9206F0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:38:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579876713;
-	bh=AmEqEAEwhWaxYqsep9Gus/Ym4kZ63m22rEoB5FCfM7k=;
+	s=default; t=1579876717;
+	bh=vQ+VRUWqZvHfu70GmDAAlI1wZqRONm9x3XytVHCr2A4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RC3ZgaBsYFR+pTIXK+iD+EtDO5r2/slDQvhu083RdRfHffmI8ZEdJOW2BeuiAe253
-	 5mOEsRmbgfuiHGGMbMiC/aAqBXP+bwCYyrr9qEGlaWH/rjJ0piuKwnlvqhVJN3yFZI
-	 INqK+zYBZkJCDIzznXJeX7Bavwojt8CM1dG7lZUU=
+	b=cL7CL/t9TfHcMqrwbhVR4A/L+41byXAdKbu/NT0TJUDK/cIrMogyD6vT/Vc9wJpf7
+	 h6YqJ8K0DHgfWic0Pr3V+1GYKIpcHMBSHBWNHJJqP9icaKLxbDsJU+T7gYF/bN1o99
+	 B/QT6HxhmCE+t1PeOoBC/B7eNduMuPdFs6y4EF80=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403755AbgAXOSo (ORCPT
+        id S2388688AbgAXOig (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 09:18:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38316 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 09:38:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38494 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390973AbgAXOSk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 09:18:40 -0500
+        id S2389267AbgAXOSo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 09:18:44 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1AE4A218AC;
-        Fri, 24 Jan 2020 14:18:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0413C208C4;
+        Fri, 24 Jan 2020 14:18:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579875519;
-        bh=AmEqEAEwhWaxYqsep9Gus/Ym4kZ63m22rEoB5FCfM7k=;
+        s=default; t=1579875523;
+        bh=vQ+VRUWqZvHfu70GmDAAlI1wZqRONm9x3XytVHCr2A4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=P73BQOve2iRv5lWKILfxqKIvoVsQ1YrbvVcdlF6wMcCiU+KeViENELaWRo/hVueOj
-         GYMqrbDHgZzkXVpkBEu28Wrd6XZnoEjAe0kP2iTeZMVkcRhm9wBwEKqfSG9XychtMt
-         vxOI/uQ4t+SmZCMGtHbmO5fT6+QJrkt4VSFFnZgo=
+        b=m/C2jBPsTzKbWMqVEyktoIBy60KaO24eiClo8U/EE/RW7MKSzUP0j1LATGcWLss+w
+         D6sR+b4D35iNJ4Kz79/0X+jnrW9R+U3PyHNrYeP4gYSaGzPxpk2c0/3HtOuHHZox4+
+         hERPDqzKMs4dfqAAooeSttHRdwPUB5GmTx0uLBPU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.4 019/107] rseq: Unregister rseq for clone CLONE_VM
-Date:   Fri, 24 Jan 2020 09:16:49 -0500
-Message-Id: <20200124141817.28793-19-sashal@kernel.org>
+Cc:     Guenter Roeck <linux@roeck-us.net>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-clk@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 022/107] clk: Don't try to enable critical clocks if prepare failed
+Date:   Fri, 24 Jan 2020 09:16:52 -0500
+Message-Id: <20200124141817.28793-22-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200124141817.28793-1-sashal@kernel.org>
 References: <20200124141817.28793-1-sashal@kernel.org>
@@ -61,69 +60,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+From: Guenter Roeck <linux@roeck-us.net>
 
-[ Upstream commit 463f550fb47bede3a5d7d5177f363a6c3b45d50b ]
+[ Upstream commit 12ead77432f2ce32dea797742316d15c5800cb32 ]
 
-It has been reported by Google that rseq is not behaving properly
-with respect to clone when CLONE_VM is used without CLONE_THREAD.
+The following traceback is seen if a critical clock fails to prepare.
 
-It keeps the prior thread's rseq TLS registered when the TLS of the
-thread has moved, so the kernel can corrupt the TLS of the parent.
+bcm2835-clk 3f101000.cprman: plld: couldn't lock PLL
+------------[ cut here ]------------
+Enabling unprepared plld_per
+WARNING: CPU: 1 PID: 1 at drivers/clk/clk.c:1014 clk_core_enable+0xcc/0x2c0
+...
+Call trace:
+ clk_core_enable+0xcc/0x2c0
+ __clk_register+0x5c4/0x788
+ devm_clk_hw_register+0x4c/0xb0
+ bcm2835_register_pll_divider+0xc0/0x150
+ bcm2835_clk_probe+0x134/0x1e8
+ platform_drv_probe+0x50/0xa0
+ really_probe+0xd4/0x308
+ driver_probe_device+0x54/0xe8
+ device_driver_attach+0x6c/0x78
+ __driver_attach+0x54/0xd8
+...
 
-The approach of clearing the per task-struct rseq registration
-on clone with CLONE_THREAD flag is incomplete. It does not cover
-the use-case of clone with CLONE_VM set, but without CLONE_THREAD.
+Check return values from clk_core_prepare() and clk_core_enable() and
+bail out if any of those functions returns an error.
 
-Here is the rationale for unregistering rseq on clone with CLONE_VM
-flag set:
-
-1) CLONE_THREAD requires CLONE_SIGHAND, which requires CLONE_VM to be
-   set. Therefore, just checking for CLONE_VM covers all CLONE_THREAD
-   uses. There is no point in checking for both CLONE_THREAD and
-   CLONE_VM,
-
-2) There is the possibility of an unlikely scenario where CLONE_SETTLS
-   is used without CLONE_VM. In order to be an issue, it would require
-   that the rseq TLS is in a shared memory area.
-
-   I do not plan on adding CLONE_SETTLS to the set of clone flags which
-   unregister RSEQ, because it would require that we also unregister RSEQ
-   on set_thread_area(2) and arch_prctl(2) ARCH_SET_FS for completeness.
-   So rather than doing a partial solution, it appears better to let
-   user-space explicitly perform rseq unregistration across clone if
-   needed in scenarios where CLONE_VM is not set.
-
-Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/20191211161713.4490-3-mathieu.desnoyers@efficios.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Cc: Jerome Brunet <jbrunet@baylibre.com>
+Fixes: 99652a469df1 ("clk: migrate the count of orphaned clocks at init")
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Link: https://lkml.kernel.org/r/20191225163429.29694-1-linux@roeck-us.net
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/sched.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/clk/clk.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/include/linux/sched.h b/include/linux/sched.h
-index 775503573ed70..b968d736833bb 100644
---- a/include/linux/sched.h
-+++ b/include/linux/sched.h
-@@ -1915,11 +1915,11 @@ static inline void rseq_migrate(struct task_struct *t)
+diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
+index 4fc294c2f9e8f..67f592fa083ab 100644
+--- a/drivers/clk/clk.c
++++ b/drivers/clk/clk.c
+@@ -3408,11 +3408,17 @@ static int __clk_core_init(struct clk_core *core)
+ 	if (core->flags & CLK_IS_CRITICAL) {
+ 		unsigned long flags;
  
- /*
-  * If parent process has a registered restartable sequences area, the
-- * child inherits. Only applies when forking a process, not a thread.
-+ * child inherits. Unregister rseq for a clone with CLONE_VM set.
-  */
- static inline void rseq_fork(struct task_struct *t, unsigned long clone_flags)
- {
--	if (clone_flags & CLONE_THREAD) {
-+	if (clone_flags & CLONE_VM) {
- 		t->rseq = NULL;
- 		t->rseq_sig = 0;
- 		t->rseq_event_mask = 0;
+-		clk_core_prepare(core);
++		ret = clk_core_prepare(core);
++		if (ret)
++			goto out;
+ 
+ 		flags = clk_enable_lock();
+-		clk_core_enable(core);
++		ret = clk_core_enable(core);
+ 		clk_enable_unlock(flags);
++		if (ret) {
++			clk_core_unprepare(core);
++			goto out;
++		}
+ 	}
+ 
+ 	clk_core_reparent_orphans_nolock();
 -- 
 2.20.1
 
