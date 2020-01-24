@@ -2,271 +2,117 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75070C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 19:59:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFD88C35242
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 20:08:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4667A20702
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 19:59:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2D512087E
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 20:08:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391872AbgAXT7E (ORCPT
+        id S2392411AbgAXUIK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 14:59:04 -0500
-Received: from mga05.intel.com ([192.55.52.43]:12968 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388974AbgAXT7E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 14:59:04 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Jan 2020 11:59:03 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,358,1574150400"; 
-   d="scan'208";a="260351273"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga002.fm.intel.com with ESMTP; 24 Jan 2020 11:59:01 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 40B2C107; Fri, 24 Jan 2020 21:58:59 +0200 (EET)
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Michal Simek <monstr@monstr.eu>, linux-kernel@vger.kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        linux-kbuild@vger.kernel.org,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v1] kbuild: Fix off-by-one error when generate a new version
-Date:   Fri, 24 Jan 2020 21:58:59 +0200
-Message-Id: <20200124195859.86991-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.24.1
+        Fri, 24 Jan 2020 15:08:10 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:43599 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388136AbgAXUIJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 15:08:09 -0500
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1iv5FM-0000vj-IJ; Fri, 24 Jan 2020 21:08:04 +0100
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id B3B821C1A6A;
+        Fri, 24 Jan 2020 21:08:03 +0100 (CET)
+Date:   Fri, 24 Jan 2020 20:08:03 -0000
+From:   "tip-bot2 for Stephen Boyd" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: timers/core] alarmtimer: Make alarmtimer_get_rtcdev() a stub
+ when CONFIG_RTC_CLASS=n
+Cc:     Stephen Boyd <swboyd@chromium.org>,
+        Thomas Gleixner <tglx@linutronix.de>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200124055849.154411-4-swboyd@chromium.org>
+References: <20200124055849.154411-4-swboyd@chromium.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Message-ID: <157989648346.396.15024320326165143197.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When build on, for example, x86 using `make O=... -j64` the version
-in the built kernel comes from include/generated/compile.h, which is:
+The following commit has been merged into the timers/core branch of tip:
 
-	#define UTS_VERSION "#351 SMP Fri Jan 24 18:46:34 EET 2020"
+Commit-ID:     fd928f3e32ba09381b287f8b732418434d932855
+Gitweb:        https://git.kernel.org/tip/fd928f3e32ba09381b287f8b732418434d932855
+Author:        Stephen Boyd <swboyd@chromium.org>
+AuthorDate:    Thu, 23 Jan 2020 21:58:48 -08:00
+Committer:     Thomas Gleixner <tglx@linutronix.de>
+CommitterDate: Fri, 24 Jan 2020 21:03:53 +01:00
 
-While at the end the x86 specific Makefile prints the contents of
-the .version file:
+alarmtimer: Make alarmtimer_get_rtcdev() a stub when CONFIG_RTC_CLASS=n
 
-	Kernel: arch/x86/boot/bzImage is ready  (#352)
+The stubbed version of alarmtimer_get_rtcdev() is not exported.
+so this won't work if this function is used in a module when
+CONFIG_RTC_CLASS=n.
 
-Obviously the latter is not true. This happens because we first
-check compile.h and update it and then generate new version, which is
-incorrect flow:
+Move the stub function to the header file and make it inline so that
+callers don't have to worry about linking against this symbol.
 
-  CHK     include/generated/compile.h
-  UPD     include/generated/compile.h
-  ...
-  GEN     .version
+rtcdev isn't used outside of this ifdef so it's not required to be
+redefined to NULL. Drop that while touching this area.
 
-In order to fix this, move the version generation from link-vmlinux.sh
-to scripts/version.sh and re-use it in init/Makefile.
-
-Additionally provide a unified way to get the current version of the build
-and use this in few callers. This will respect the KBUILD_BUILD_VERSION
-in case it's provided.
-
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lore.kernel.org/r/20200124055849.154411-4-swboyd@chromium.org
 ---
- arch/microblaze/Makefile |  4 ++--
- arch/x86/boot/Makefile   |  2 +-
- init/Makefile            |  8 ++++++-
- scripts/kversion.sh      | 45 ++++++++++++++++++++++++++++++++++++++++
- scripts/link-vmlinux.sh  | 10 ---------
- scripts/mkcompile_h      |  9 +++-----
- scripts/package/mkdebian |  2 +-
- scripts/package/mkspec   |  2 +-
- 8 files changed, 60 insertions(+), 22 deletions(-)
- create mode 100755 scripts/kversion.sh
+ include/linux/alarmtimer.h | 4 ++++
+ kernel/time/alarmtimer.c   | 5 -----
+ 2 files changed, 4 insertions(+), 5 deletions(-)
 
-diff --git a/arch/microblaze/Makefile b/arch/microblaze/Makefile
-index 7b340a35b194..eead2533e2b7 100644
---- a/arch/microblaze/Makefile
-+++ b/arch/microblaze/Makefile
-@@ -87,12 +87,12 @@ linux.bin.ub linux.bin.gz: linux.bin
- linux.bin: vmlinux
- linux.bin linux.bin.gz linux.bin.ub:
- 	$(Q)$(MAKE) $(build)=$(boot) $(boot)/$@
--	@echo 'Kernel: $(boot)/$@ is ready' ' (#'`cat .version`')'
-+	@echo 'Kernel: $(boot)/$@ is ready' ' (#'`$(srctree)/scripts/kversion.sh --show`')'
+diff --git a/include/linux/alarmtimer.h b/include/linux/alarmtimer.h
+index 74748e3..05e758b 100644
+--- a/include/linux/alarmtimer.h
++++ b/include/linux/alarmtimer.h
+@@ -60,7 +60,11 @@ u64 alarm_forward(struct alarm *alarm, ktime_t now, ktime_t interval);
+ u64 alarm_forward_now(struct alarm *alarm, ktime_t interval);
+ ktime_t alarm_expires_remaining(const struct alarm *alarm);
  
- PHONY += simpleImage.$(DTB)
- simpleImage.$(DTB): vmlinux
- 	$(Q)$(MAKE) $(build)=$(boot) $(addprefix $(boot)/$@., ub unstrip strip)
--	@echo 'Kernel: $(boot)/$@ is ready' ' (#'`cat .version`')'
-+	@echo 'Kernel: $(boot)/$@ is ready' ' (#'`$(srctree)/scripts/kversion.sh --show`')'
++#ifdef CONFIG_RTC_CLASS
+ /* Provide way to access the rtc device being used by alarmtimers */
+ struct rtc_device *alarmtimer_get_rtcdev(void);
++#else
++static inline struct rtc_device *alarmtimer_get_rtcdev(void) { return NULL; }
++#endif
  
- define archhelp
-   echo '* linux.bin    - Create raw binary'
-diff --git a/arch/x86/boot/Makefile b/arch/x86/boot/Makefile
-index 9ba7557863e7..2ff13d835cb8 100644
---- a/arch/x86/boot/Makefile
-+++ b/arch/x86/boot/Makefile
-@@ -82,7 +82,7 @@ cmd_image = $(obj)/tools/build $(obj)/setup.bin $(obj)/vmlinux.bin \
- 
- $(obj)/bzImage: $(obj)/setup.bin $(obj)/vmlinux.bin $(obj)/tools/build FORCE
- 	$(call if_changed,image)
--	@$(kecho) 'Kernel: $@ is ready' ' (#'`cat .version`')'
-+	@$(kecho) 'Kernel: $@ is ready' ' (#'`$(srctree)/scripts/kversion.sh --show`')'
- 
- OBJCOPYFLAGS_vmlinux.bin := -O binary -R .note -R .comment -S
- $(obj)/vmlinux.bin: $(obj)/compressed/vmlinux FORCE
-diff --git a/init/Makefile b/init/Makefile
-index 6246a06364d0..f544aeb27901 100644
---- a/init/Makefile
-+++ b/init/Makefile
-@@ -31,8 +31,14 @@ $(obj)/version.o: include/generated/compile.h
-        chk_compile.h = :
-  quiet_chk_compile.h = echo '  CHK     $@'
- silent_chk_compile.h = :
--include/generated/compile.h: FORCE
-+include/generated/compile.h: kversion FORCE
- 	@$($(quiet)chk_compile.h)
- 	$(Q)$(CONFIG_SHELL) $(srctree)/scripts/mkcompile_h $@	\
- 	"$(UTS_MACHINE)" "$(CONFIG_SMP)" "$(CONFIG_PREEMPT)"	\
- 	"$(CONFIG_PREEMPT_RT)" "$(CC) $(KBUILD_CFLAGS)"
-+
-+quiet_cmd_kversion = CALL    $<
-+      cmd_kversion = $(CONFIG_SHELL) $< --update
-+
-+kversion: $(srctree)/scripts/kversion.sh FORCE
-+	$(call cmd,kversion)
-diff --git a/scripts/kversion.sh b/scripts/kversion.sh
-new file mode 100755
-index 000000000000..8d9000cd5b62
---- /dev/null
-+++ b/scripts/kversion.sh
-@@ -0,0 +1,45 @@
-+#!/bin/sh -e
-+
-+show_version() {
-+	local dotversion="$1"; shift
-+
-+	# Check if special build version is requested
-+	if [ -n "$KBUILD_BUILD_VERSION" ]; then
-+		echo "$KBUILD_BUILD_VERSION"
-+	else
-+		cat $dotversion 2>/dev/null || echo 1
-+	fi
-+}
-+
-+update_version() {
-+	local dotversion="$1"; shift
-+
-+	# Don't update local version if special build version is requested
-+	if [ -n "$KBUILD_BUILD_VERSION" ]; then return; fi
-+
-+	if [ -r $dotversion ]; then
-+		local version="$(expr 0$(cat $dotversion) + 1)"
-+		echo "$version" > $dotversion
-+	else
-+		rm -f $dotversion
-+		echo "1" > $dotversion
-+	fi
-+}
-+
-+VERSION_FILE_NAME=".version"
-+
-+show=
-+update=
-+while [ "$#" -ge "1" ]; do
-+	case "$1" in
-+		--show) show=1 ;;
-+		--update) update=1 ;;
-+		--) break ;;
-+	esac
-+	shift
-+done
-+
-+if [ -n "$1" ]; then VERSION_FILE_NAME="$1"; fi
-+
-+if [ -n "$show" ]; then show_version "$VERSION_FILE_NAME"; fi
-+if [ -n "$update" ]; then update_version "$VERSION_FILE_NAME"; fi
-diff --git a/scripts/link-vmlinux.sh b/scripts/link-vmlinux.sh
-index 1919c311c149..c9a1b4f44f47 100755
---- a/scripts/link-vmlinux.sh
-+++ b/scripts/link-vmlinux.sh
-@@ -228,16 +228,6 @@ fi
- # We need access to CONFIG_ symbols
- . include/config/auto.conf
- 
--# Update version
--info GEN .version
--if [ -r .version ]; then
--	VERSION=$(expr 0$(cat .version) + 1)
--	echo $VERSION > .version
--else
--	rm -f .version
--	echo 1 > .version
--fi;
--
- # final build of init/
- ${MAKE} -f "${srctree}/scripts/Makefile.build" obj=init
- 
-diff --git a/scripts/mkcompile_h b/scripts/mkcompile_h
-index 3a5a4b210c86..ef9085a63a04 100755
---- a/scripts/mkcompile_h
-+++ b/scripts/mkcompile_h
-@@ -28,12 +28,6 @@ set -f
- LC_ALL=C
- export LC_ALL
- 
--if [ -z "$KBUILD_BUILD_VERSION" ]; then
--	VERSION=$(cat .version 2>/dev/null || echo 1)
--else
--	VERSION=$KBUILD_BUILD_VERSION
--fi
--
- if [ -z "$KBUILD_BUILD_TIMESTAMP" ]; then
- 	TIMESTAMP=`date`
- else
-@@ -50,7 +44,10 @@ else
- 	LINUX_COMPILE_HOST=$KBUILD_BUILD_HOST
- fi
- 
-+VERSION=$($srctree/scripts/kversion.sh --show)
-+
- UTS_VERSION="#$VERSION"
-+
- CONFIG_FLAGS=""
- if [ -n "$SMP" ] ; then CONFIG_FLAGS="SMP"; fi
- if [ -n "$PREEMPT" ] ; then CONFIG_FLAGS="$CONFIG_FLAGS PREEMPT"; fi
-diff --git a/scripts/package/mkdebian b/scripts/package/mkdebian
-index 357dc56bcf30..a4ef9c6c7d35 100755
---- a/scripts/package/mkdebian
-+++ b/scripts/package/mkdebian
-@@ -90,7 +90,7 @@ if [ -n "$KDEB_PKGVERSION" ]; then
- 	packageversion=$KDEB_PKGVERSION
- 	revision=${packageversion##*-}
- else
--	revision=$(cat .version 2>/dev/null||echo 1)
-+	revision=$($srctree/scripts/kversion.sh --show)
- 	packageversion=$version-$revision
- fi
- sourcename=$KDEB_SOURCENAME
-diff --git a/scripts/package/mkspec b/scripts/package/mkspec
-index 8640c278f1aa..0039eb9d62bd 100755
---- a/scripts/package/mkspec
-+++ b/scripts/package/mkspec
-@@ -42,7 +42,7 @@ sed -e '/^DEL/d' -e 's/^\t*//' <<EOF
- 	Name: kernel
- 	Summary: The Linux Kernel
- 	Version: $__KERNELRELEASE
--	Release: $(cat .version 2>/dev/null || echo 1)
-+	Release: $($srctree/scripts/kversion.sh --show)
- 	License: GPL
- 	Group: System Environment/Kernel
- 	Vendor: The Linux Community
--- 
-2.24.1
-
+ #endif
+diff --git a/kernel/time/alarmtimer.c b/kernel/time/alarmtimer.c
+index 685ff57..2ffb466 100644
+--- a/kernel/time/alarmtimer.c
++++ b/kernel/time/alarmtimer.c
+@@ -143,11 +143,6 @@ static void alarmtimer_rtc_interface_remove(void)
+ 	class_interface_unregister(&alarmtimer_rtc_interface);
+ }
+ #else
+-struct rtc_device *alarmtimer_get_rtcdev(void)
+-{
+-	return NULL;
+-}
+-#define rtcdev (NULL)
+ static inline int alarmtimer_rtc_interface_setup(void) { return 0; }
+ static inline void alarmtimer_rtc_interface_remove(void) { }
+ static inline void alarmtimer_rtc_timer_init(void) { }
