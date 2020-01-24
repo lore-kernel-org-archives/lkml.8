@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22C9AC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:29:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E216CC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:29:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0BA22077C
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:29:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9438206F0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:29:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579876189;
-	bh=pYJmhRfn9YOi7piJCSMO3M5A4Rv0EXDHpAb2QRyajSE=;
+	s=default; t=1579876192;
+	bh=32scT0FsrqoEUDsjYgI0W3WcQWq84g2u+JpsOBapiMo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JWF0KK46FeQMsOSSJLODyJqEhWZa31KOPfP8GstCzVcJ/JkYcun7wZ5cXneuygSFe
-	 I5Y8U2dXBg0uT05TRPW61+wARHacZQ4EZ3jYh2MxCyk9OBzDNvDbovsj4Pw+RDg7nI
-	 PWC+zlIVr9hWBAXPC29882e5/8+azIUmn5lULh3Q=
+	b=UYUkEFKn9QNU0GCMHnSZ6TYTQ3q63Rw2znbRVXhxyU1EK9Tx1/t1X4EHMd6eEqpWV
+	 wvQGT3gbyz9wxpO20fJ8+bfN4ra7ZBX5vp/No8QbzZF/FhOxIhqGF/ijBKbgYNfwhP
+	 oBzs0mhtjljwF0yGk+YseOL09ZJsV8TSu2k04tpw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405087AbgAXOUx (ORCPT
+        id S2391550AbgAXO3v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 09:20:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41978 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 09:29:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42246 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404964AbgAXOUl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 09:20:41 -0500
+        id S2405083AbgAXOUx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 09:20:53 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 35F4722527;
-        Fri, 24 Jan 2020 14:20:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7E690214DB;
+        Fri, 24 Jan 2020 14:20:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579875641;
-        bh=pYJmhRfn9YOi7piJCSMO3M5A4Rv0EXDHpAb2QRyajSE=;
+        s=default; t=1579875652;
+        bh=32scT0FsrqoEUDsjYgI0W3WcQWq84g2u+JpsOBapiMo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZfbPKGV8vO+0HYTRvfBiZcYUvAtAz+TN9E5j3TXddgrDY5idKwqEyNBhTQeZG96O8
-         MNvF0otU9FrPqRrN8vP18Uq4X0oe7pMBR4yB2nq639HLgrKQVxyNTsqT4WQ5MaFcaM
-         lsBhO3ig2vUGz1sh2Rn3YrpM866yzP8XoHgSpIds=
+        b=UXV+x2Tj649zxGwmThQ6Fxox/rVxlwUR0DLX6iN3SvmDfA0ijHvh5NZ1A3MkIKY6h
+         fODwZ8Ta5OoCtKjSPtNHcTwEYM/RQBQuObvcuAvY3uKRXaglIo4aXx0gDUxic3MKQz
+         AlUX2epcE3gn2bD7F+p9bCsA31HBOjzxAgsegjgQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Jason Anderson <jasona.594@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Sasha Levin <sashal@kernel.org>,
-        platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 24/56] platform/x86: GPD pocket fan: Allow somewhat lower/higher temperature limits
-Date:   Fri, 24 Jan 2020 09:19:40 -0500
-Message-Id: <20200124142012.29752-24-sashal@kernel.org>
+Cc:     Vladis Dronov <vdronov@redhat.com>,
+        Antti Laakso <antti.laakso@intel.com>,
+        Richard Cochran <richardcochran@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 34/56] ptp: free ptp device pin descriptors properly
+Date:   Fri, 24 Jan 2020 09:19:50 -0500
+Message-Id: <20200124142012.29752-34-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200124142012.29752-1-sashal@kernel.org>
 References: <20200124142012.29752-1-sashal@kernel.org>
@@ -61,37 +61,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Vladis Dronov <vdronov@redhat.com>
 
-[ Upstream commit 1f27dbd8265dbb379926c8f6a4453fe7fe26d7a3 ]
+[ Upstream commit 75718584cb3c64e6269109d4d54f888ac5a5fd15 ]
 
-Allow the user to configure the fan to turn on / speed-up at lower
-thresholds then before (20 degrees Celcius as minimum instead of 40) and
-likewise also allow the user to delay the fan speeding-up till the
-temperature hits 90 degrees Celcius (was 70).
+There is a bug in ptp_clock_unregister(), where ptp_cleanup_pin_groups()
+first frees ptp->pin_{,dev_}attr, but then posix_clock_unregister() needs
+them to destroy a related sysfs device.
 
-Cc: Jason Anderson <jasona.594@gmail.com>
-Reported-by: Jason Anderson <jasona.594@gmail.com>
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+These functions can not be just swapped, as posix_clock_unregister() frees
+ptp which is needed in the ptp_cleanup_pin_groups(). Fix this by calling
+ptp_cleanup_pin_groups() in ptp_clock_release(), right before ptp is freed.
+
+This makes this patch fix an UAF bug in a patch which fixes an UAF bug.
+
+Reported-by: Antti Laakso <antti.laakso@intel.com>
+Fixes: a33121e5487b ("ptp: fix the race between the release of ptp_clock and cdev")
+Link: https://lore.kernel.org/netdev/3d2bd09735dbdaf003585ca376b7c1e5b69a19bd.camel@intel.com/
+Signed-off-by: Vladis Dronov <vdronov@redhat.com>
+Acked-by: Richard Cochran <richardcochran@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/x86/gpd-pocket-fan.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/ptp/ptp_clock.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/platform/x86/gpd-pocket-fan.c b/drivers/platform/x86/gpd-pocket-fan.c
-index 73eb1572b9662..b471b86c28fe8 100644
---- a/drivers/platform/x86/gpd-pocket-fan.c
-+++ b/drivers/platform/x86/gpd-pocket-fan.c
-@@ -127,7 +127,7 @@ static int gpd_pocket_fan_probe(struct platform_device *pdev)
- 	int i;
+diff --git a/drivers/ptp/ptp_clock.c b/drivers/ptp/ptp_clock.c
+index b818f65480c15..e232233beb8f2 100644
+--- a/drivers/ptp/ptp_clock.c
++++ b/drivers/ptp/ptp_clock.c
+@@ -179,6 +179,7 @@ static void ptp_clock_release(struct device *dev)
+ {
+ 	struct ptp_clock *ptp = container_of(dev, struct ptp_clock, dev);
  
- 	for (i = 0; i < ARRAY_SIZE(temp_limits); i++) {
--		if (temp_limits[i] < 40000 || temp_limits[i] > 70000) {
-+		if (temp_limits[i] < 20000 || temp_limits[i] > 90000) {
- 			dev_err(&pdev->dev, "Invalid temp-limit %d (must be between 40000 and 70000)\n",
- 				temp_limits[i]);
- 			temp_limits[0] = TEMP_LIMIT0_DEFAULT;
++	ptp_cleanup_pin_groups(ptp);
+ 	mutex_destroy(&ptp->tsevq_mux);
+ 	mutex_destroy(&ptp->pincfg_mux);
+ 	ida_simple_remove(&ptp_clocks_map, ptp->index);
+@@ -315,9 +316,8 @@ int ptp_clock_unregister(struct ptp_clock *ptp)
+ 	if (ptp->pps_source)
+ 		pps_unregister_source(ptp->pps_source);
+ 
+-	ptp_cleanup_pin_groups(ptp);
+-
+ 	posix_clock_unregister(&ptp->clock);
++
+ 	return 0;
+ }
+ EXPORT_SYMBOL(ptp_clock_unregister);
 -- 
 2.20.1
 
