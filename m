@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E099C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:06:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69E13C35242
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:06:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29A8B20838
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:06:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 364E8214DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:06:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579863989;
-	bh=+usNTdRjwYvntG+3pkqYcKVDxPiWH6pWpC3z81O3kAo=;
+	s=default; t=1579863992;
+	bh=NKeTSNWNmQgOu5h4juEW+mYtxddKWMiT736Bhp0Bkp8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hzBOA7QznVJPlz8bAHlIrbnOyLxVhWACj3yRffFAcDIfYOB8jg2YysPRsmNitApui
-	 o0b9M3y3vyptWGtPq5Jj/H+CxQPiIDxOMy659ipunwKQiXdjdnKNtPwIAtCzVFzgUJ
-	 osGX8GJBmSnIOzKVEcK6xsQkugM1v96j1nK5sPMk=
+	b=mxeoix8NQLLG20AJKXY3gVcO0xLrG6rmKiwp3ChcPpwk+3KMMWh0O7WN1XSSZNcAd
+	 g62Za4D11WOsd8T8iWTgq/DllhFNuQiklvXJqLNjnf6hx+Mf0DGDiOHmC/ZkoVqljT
+	 BlvI/yU7Wg/jTPxE8LSCRtp8LlgMAdT/tJs6G+i4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389163AbgAXLG2 (ORCPT
+        id S2389189AbgAXLGb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:06:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41108 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 06:06:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41206 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730222AbgAXLGZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:06:25 -0500
+        id S1730222AbgAXLG3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:06:29 -0500
 Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 69C4E2071A;
-        Fri, 24 Jan 2020 11:06:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E40E22075D;
+        Fri, 24 Jan 2020 11:06:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579863985;
-        bh=+usNTdRjwYvntG+3pkqYcKVDxPiWH6pWpC3z81O3kAo=;
+        s=default; t=1579863988;
+        bh=NKeTSNWNmQgOu5h4juEW+mYtxddKWMiT736Bhp0Bkp8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZGmEckPjbNqdi7H/l1AqPzNeBbHQrZdQds2N+TznHhr9Nn755E0O74+Se4dmDPKrB
-         WRhqDOQEx0CqGZ+7xmbsZFoBLe84htIt4uLBVQH52yYyHsTAjQgt/u8/OO+KSqOMm/
-         2WrP+0ObQhLmM/Abr3nBER2oIudYrLPaOfDo/qbM=
+        b=BsWdl1eIWPeOFriK4wHPlEhY1jRkjP/uqGzcdqs+BvUqW2FiR3J4yri5+TyiRcntU
+         KCFtVJ70paMxr+LRlFUByYZSdbqSikGbKDd9tSDyE2i8o0pETshxKHD2X6UThMJWe9
+         7x7uxxOaJGLa7B6J0gBHnmqYMpUAMThkcHQ0rf78=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Gal Pressman <galpress@amazon.com>,
+        Michal Kalderon <michal.kalderon@marvell.com>,
         Jason Gunthorpe <jgg@mellanox.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 125/639] RDMA/ocrdma: Fix out of bounds index check in query pkey
-Date:   Fri, 24 Jan 2020 10:24:55 +0100
-Message-Id: <20200124093102.963229325@linuxfoundation.org>
+Subject: [PATCH 4.19 126/639] RDMA/qedr: Fix out of bounds index check in query pkey
+Date:   Fri, 24 Jan 2020 10:24:56 +0100
+Message-Id: <20200124093103.087033879@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
 References: <20200124093047.008739095@linuxfoundation.org>
@@ -62,32 +63,33 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Gal Pressman <galpress@amazon.com>
 
-[ Upstream commit b188940796c7be31c1b8c25a9a0e0842c2e7a49e ]
+[ Upstream commit dbe30dae487e1a232158c24b432d45281c2805b7 ]
 
-The pkey table size is one element, index should be tested for > 0 instead
-of > 1.
+The pkey table size is QEDR_ROCE_PKEY_TABLE_LEN, index should be tested
+for >= QEDR_ROCE_PKEY_TABLE_LEN instead of > QEDR_ROCE_PKEY_TABLE_LEN.
 
-Fixes: fe2caefcdf58 ("RDMA/ocrdma: Add driver for Emulex OneConnect IBoE RDMA adapter")
+Fixes: a7efd7773e31 ("qedr: Add support for PD,PKEY and CQ verbs")
 Signed-off-by: Gal Pressman <galpress@amazon.com>
+Acked-by: Michal Kalderon <michal.kalderon@marvell.com>
 Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/ocrdma/ocrdma_verbs.c | 2 +-
+ drivers/infiniband/hw/qedr/verbs.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/infiniband/hw/ocrdma/ocrdma_verbs.c b/drivers/infiniband/hw/ocrdma/ocrdma_verbs.c
-index c158ca9fde6dc..08271fce0b9e4 100644
---- a/drivers/infiniband/hw/ocrdma/ocrdma_verbs.c
-+++ b/drivers/infiniband/hw/ocrdma/ocrdma_verbs.c
-@@ -55,7 +55,7 @@
+diff --git a/drivers/infiniband/hw/qedr/verbs.c b/drivers/infiniband/hw/qedr/verbs.c
+index 9167a1c40bcf5..8fd8b97348bfe 100644
+--- a/drivers/infiniband/hw/qedr/verbs.c
++++ b/drivers/infiniband/hw/qedr/verbs.c
+@@ -67,7 +67,7 @@ static inline int qedr_ib_copy_to_udata(struct ib_udata *udata, void *src,
  
- int ocrdma_query_pkey(struct ib_device *ibdev, u8 port, u16 index, u16 *pkey)
+ int qedr_query_pkey(struct ib_device *ibdev, u8 port, u16 index, u16 *pkey)
  {
--	if (index > 1)
-+	if (index > 0)
+-	if (index > QEDR_ROCE_PKEY_TABLE_LEN)
++	if (index >= QEDR_ROCE_PKEY_TABLE_LEN)
  		return -EINVAL;
  
- 	*pkey = 0xffff;
+ 	*pkey = QEDR_ROCE_PKEY_DEFAULT;
 -- 
 2.20.1
 
