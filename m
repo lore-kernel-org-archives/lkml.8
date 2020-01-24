@@ -2,213 +2,101 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A4E0C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 21:32:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7196C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 21:33:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C83DA2071A
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 21:32:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="Zhqc3Oc2"
+	by mail.kernel.org (Postfix) with ESMTP id 74FAA2071A
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 21:33:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728842AbgAXVcF (ORCPT
+        id S1726545AbgAXVdx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 16:32:05 -0500
-Received: from gateway31.websitewelcome.com ([192.185.143.36]:11231 "EHLO
-        gateway31.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726204AbgAXVcE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 16:32:04 -0500
-Received: from cm12.websitewelcome.com (cm12.websitewelcome.com [100.42.49.8])
-        by gateway31.websitewelcome.com (Postfix) with ESMTP id 0A31F18C83
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Jan 2020 15:10:56 -0600 (CST)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id v6EBiGt2ZvYkQv6ECi87Da; Fri, 24 Jan 2020 15:10:56 -0600
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=1EpH8LoV2wKCDxmGEvKAlzcq+d1bdGaTLz6SBk7EsoA=; b=Zhqc3Oc2s9jnh7Gj4BALhfaPFG
-        B4vX/BUf9Nk3wzOtLdOt9kxZXSKhaLG03cHatyCg9VUf4uIaGZOxFR6P1B/miQ4WxfIHEsIVk95au
-        ol1pV7iI+9Gav6L+F0cR8EzpcS4Q1oCm2UTW/Hi1X+OpMi0zcaptzizCrgWSTQ1GBii56FX/o6cxG
-        pEvA/TF4t53F3/KJZObRoZ3qr3agLf0NaNda/+sm3MogW7qHwtkd6/QeBfysQblAhLytp/8QsQuOf
-        RwlfLJXJL3dqY48PlnmujZjwo4iC22LtQ2ZiN+Z/m5/C9aMN2l6VxzLh2e5PcY9TsSKf/uTMp3iGp
-        PcUF4SMw==;
-Received: from [201.162.161.199] (port=60838 helo=[192.168.43.131])
-        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1iv6EB-001MCI-B1; Fri, 24 Jan 2020 15:10:55 -0600
-Subject: Re: [PATCH] drbd fifo_alloc: use struct_size
-To:     Stephen Kitt <steve@sk2.org>,
-        Philipp Reisner <philipp.reisner@linbit.com>,
-        Lars Ellenberg <lars.ellenberg@linbit.com>,
-        Jens Axboe <axboe@kernel.dk>, drbd-dev@lists.linbit.com
-Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200124200307.1808593-1-steve@sk2.org>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Autocrypt: addr=gustavo@embeddedor.com; keydata=
- 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
- VtSixD1uOgytAP7RWS474w==
-Message-ID: <6016329a-4dac-ac23-9e6f-5da3dd3fefa0@embeddedor.com>
-Date:   Fri, 24 Jan 2020 15:12:59 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Fri, 24 Jan 2020 16:33:53 -0500
+Received: from mga06.intel.com ([134.134.136.31]:18199 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725821AbgAXVdx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 16:33:53 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Jan 2020 13:33:26 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,359,1574150400"; 
+   d="scan'208";a="428415627"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by fmsmga006.fm.intel.com with ESMTP; 24 Jan 2020 13:33:26 -0800
+Date:   Fri, 24 Jan 2020 13:33:26 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, KVM <kvm@vger.kernel.org>
+Subject: Re: linux-next: Tree for Jan 24 (kvm)
+Message-ID: <20200124213326.GQ2109@linux.intel.com>
+References: <20200124173302.2c3228b2@canb.auug.org.au>
+ <38d53302-b700-b162-e766-2e2a461fc569@infradead.org>
+ <8f6e1118-85ef-6e0d-b023-1277e7d42a1c@infradead.org>
 MIME-Version: 1.0
-In-Reply-To: <20200124200307.1808593-1-steve@sk2.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 201.162.161.199
-X-Source-L: No
-X-Exim-ID: 1iv6EB-001MCI-B1
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.43.131]) [201.162.161.199]:60838
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 7
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8f6e1118-85ef-6e0d-b023-1277e7d42a1c@infradead.org>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 1/24/20 14:03, Stephen Kitt wrote:
-> Switching to struct_size for the allocation in fifo_alloc avoids
-> hard-coding the type of fifo_buffer.values in fifo_alloc. It also
-> provides overflow protection; to avoid pessimistic code being
-> generated by the compiler as a result, this patch also switches
-> fifo_size to unsigned, propagating the change as appropriate.
+On Fri, Jan 24, 2020 at 12:59:56PM -0800, Randy Dunlap wrote:
+> On 1/24/20 12:51 PM, Randy Dunlap wrote:
+> > On 1/23/20 10:33 PM, Stephen Rothwell wrote:
+> >> Hi all,
+> >>
+> >> Changes since 20200123:
+> >>
+> >> The kvm tree gained a conflict against Linus' tree.
+> >>
+> > 
+> > on i386:
+> > 
+> > ../arch/x86/kvm/x86.h:363:16: warning: right shift count >= width of type [-Wshift-count-overflow]
+> > 
+> > 
 > 
-> Signed-off-by: Stephen Kitt <steve@sk2.org>
-
-Reviewed-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-
-Thanks
---
-Gustavo
-
-> ---
->  drivers/block/drbd/drbd_int.h      | 2 +-
->  drivers/block/drbd/drbd_nl.c       | 3 ++-
->  drivers/block/drbd/drbd_receiver.c | 2 +-
->  drivers/block/drbd/drbd_worker.c   | 4 ++--
->  4 files changed, 6 insertions(+), 5 deletions(-)
+> Sorry, I missed these 2 warnings:
 > 
-> diff --git a/drivers/block/drbd/drbd_int.h b/drivers/block/drbd/drbd_int.h
-> index ddbf56014c51..aae99a2d7bd4 100644
-> --- a/drivers/block/drbd/drbd_int.h
-> +++ b/drivers/block/drbd/drbd_int.h
-> @@ -622,7 +622,7 @@ struct fifo_buffer {
->  	int total; /* sum of all values */
->  	int values[0];
->  };
-> -extern struct fifo_buffer *fifo_alloc(int fifo_size);
-> +extern struct fifo_buffer *fifo_alloc(unsigned int fifo_size);
->  
->  /* flag bits per connection */
->  enum {
-> diff --git a/drivers/block/drbd/drbd_nl.c b/drivers/block/drbd/drbd_nl.c
-> index de2f94d0103a..da4a3ebe04ef 100644
-> --- a/drivers/block/drbd/drbd_nl.c
-> +++ b/drivers/block/drbd/drbd_nl.c
-> @@ -1575,7 +1575,8 @@ int drbd_adm_disk_opts(struct sk_buff *skb, struct genl_info *info)
->  	struct drbd_device *device;
->  	struct disk_conf *new_disk_conf, *old_disk_conf;
->  	struct fifo_buffer *old_plan = NULL, *new_plan = NULL;
-> -	int err, fifo_size;
-> +	int err;
-> +	unsigned int fifo_size;
->  
->  	retcode = drbd_adm_prepare(&adm_ctx, skb, info, DRBD_ADM_NEED_MINOR);
->  	if (!adm_ctx.reply_skb)
-> diff --git a/drivers/block/drbd/drbd_receiver.c b/drivers/block/drbd/drbd_receiver.c
-> index 2b3103c30857..79e216446030 100644
-> --- a/drivers/block/drbd/drbd_receiver.c
-> +++ b/drivers/block/drbd/drbd_receiver.c
-> @@ -3887,7 +3887,7 @@ static int receive_SyncParam(struct drbd_connection *connection, struct packet_i
->  	struct disk_conf *old_disk_conf = NULL, *new_disk_conf = NULL;
->  	const int apv = connection->agreed_pro_version;
->  	struct fifo_buffer *old_plan = NULL, *new_plan = NULL;
-> -	int fifo_size = 0;
-> +	unsigned int fifo_size = 0;
->  	int err;
->  
->  	peer_device = conn_peer_device(connection, pi->vnr);
-> diff --git a/drivers/block/drbd/drbd_worker.c b/drivers/block/drbd/drbd_worker.c
-> index 5bdcc70ad589..b7f605c6e231 100644
-> --- a/drivers/block/drbd/drbd_worker.c
-> +++ b/drivers/block/drbd/drbd_worker.c
-> @@ -482,11 +482,11 @@ static void fifo_add_val(struct fifo_buffer *fb, int value)
->  		fb->values[i] += value;
->  }
->  
-> -struct fifo_buffer *fifo_alloc(int fifo_size)
-> +struct fifo_buffer *fifo_alloc(unsigned int fifo_size)
->  {
->  	struct fifo_buffer *fb;
->  
-> -	fb = kzalloc(sizeof(struct fifo_buffer) + sizeof(int) * fifo_size, GFP_NOIO);
-> +	fb = kzalloc(struct_size(fb, values, fifo_size), GFP_NOIO);
->  	if (!fb)
->  		return NULL;
->  
+> ../arch/x86/kvm/vmx/vmx.c: In function 'vmx_set_msr':
+> ../arch/x86/kvm/vmx/vmx.c:2001:14: warning: '~' on a boolean expression [-Wbool-operation]
+>    if (data & ~kvm_spec_ctrl_valid_bits(vcpu))
+>               ^
+> 
+> 
+> ../arch/x86/kvm/svm.c: In function 'svm_set_msr':
+> ../arch/x86/kvm/svm.c:4289:14: warning: '~' on a boolean expression [-Wbool-operation]
+>    if (data & ~kvm_spec_ctrl_valid_bits(vcpu))
+>               ^
+> ../arch/x86/kvm/svm.c:4289:14: note: did you mean to use logical not?
+>    if (data & ~kvm_spec_ctrl_valid_bits(vcpu))
+>               ^
+>               !
+
+Paolo has a fix in the works for this[1], pretty sure he's going to fixup
+the offending commit directly[2].
+
+Thanks!
+
+[1] https://lkml.kernel.org/r/6b725990-f0c2-6577-be7e-44e101e540b5@redhat.com
+[2] https://lkml.kernel.org/r/8f43bd04-9f4e-5c06-8d1d-cb84bba40278@redhat.com
+
+> 
+> -- 
+> ~Randy
 > 
