@@ -2,138 +2,127 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FE9AC35242
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 02:41:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5E5AC35240
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 02:47:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43F0724676
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 02:41:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4A1C21835
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 02:47:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="mDqooZlE"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="gQMy796V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730328AbgAXCla (ORCPT
+        id S1730355AbgAXCrL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 21:41:30 -0500
-Received: from ozlabs.org ([203.11.71.1]:36167 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729340AbgAXCla (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 21:41:30 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 483k123CbTz9sRK;
-        Fri, 24 Jan 2020 13:41:25 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1579833686;
-        bh=FcO1sEsS142OWFXaWw24W2vXKioXSusedr8yViPSC8g=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=mDqooZlEmHUrv/1H/5rFaLtf32F3LEIl4un/rdy2XoNEnazWDx+8f1F8CbYt/Lna+
-         p2CTjr2d0dpJwO6pxH+X3RorPK6anx2roN6RtRg6kjlX+3J/s8wBNRsUfZ3niqmq3B
-         PE7Gj0nTBFwBoyvTaQmbvWBeJO4T4uroldTtY52rS/KMlEEU7Uo8WORP7s88+JLWfX
-         nLX9EM+XH5spkUxgWwwefwP/3XPSwNOsmyN84B+BCKS4qU6z1LnRauDXwU7GhMZW6V
-         OnurWaprxcKdzhsKKCIVycnSkgDhoaQdjTNka6m9iW9LfIRRBX7jEejQXnCkS253aL
-         fkHmDD0uDN4lQ==
-Date:   Fri, 24 Jan 2020 13:41:24 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Al Viro <viro@ZenIV.linux.org.uk>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Carlos Maiolino <cmaiolino@redhat.com>
-Subject: Re: linux-next: build failure after merge of the vfs tree
-Message-ID: <20200124134124.57759b06@canb.auug.org.au>
-In-Reply-To: <20200110175729.3b5d2338@canb.auug.org.au>
-References: <20200110175729.3b5d2338@canb.auug.org.au>
+        Thu, 23 Jan 2020 21:47:11 -0500
+Received: from conssluserg-01.nifty.com ([210.131.2.80]:47861 "EHLO
+        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730335AbgAXCrL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jan 2020 21:47:11 -0500
+Received: from mail-vs1-f45.google.com (mail-vs1-f45.google.com [209.85.217.45]) (authenticated)
+        by conssluserg-01.nifty.com with ESMTP id 00O2kqei029172
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jan 2020 11:46:52 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com 00O2kqei029172
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1579834014;
+        bh=+EzVSJ88AM6VtQOKMl81qWyrjKidBjG7lFGZaq37WKk=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=gQMy796VuPmOKP36jF1oyMAK0h18OnO5/G2T5ZEvXJDvysfYvoL/EIn+yTEZ6bOQL
+         kXk+A0pAIaB7mkPyuJLKvfVIm94ajpjdL1f+6YLyXNdkEMeMqPvQLQCebeTyqzCn2W
+         hTxOmNhv08tBGx22LISXl9HATJtf9PPxN9tj88HWJQuAECKgmhbytjJfvKCq93b9b7
+         UlyvamIn1qDM2GpqGXJIGoEdaY7fowr0ybs9+Nb4Vl0lqrXF3IwwH0tObiyXSaETJ8
+         vvj0qdu8Y1kFSk4hj30xCGfOidU/pZaRBW0ZjR6K4ot43Q0CPh992od65QN9v3V0gW
+         tqsjtUltd1ZNQ==
+X-Nifty-SrcIP: [209.85.217.45]
+Received: by mail-vs1-f45.google.com with SMTP id b79so349337vsd.9
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jan 2020 18:46:52 -0800 (PST)
+X-Gm-Message-State: APjAAAX1gO5Ae0YR80XpnyEFdPhUs491A7kild8BvT0UZG5yffLVeZ5R
+        8xEDjT6s/6PKbMjqmpoluSDEasXGrkI5r8Ld4TY=
+X-Google-Smtp-Source: APXvYqyNJHWo8CL9vRIwpnUvgr5kzniDUpyOSGA0K3qHXpVn2R+Rv9XBqnrEpWYZowgKPN086DVKKSpRLiqbARoN7RM=
+X-Received: by 2002:a67:f8ca:: with SMTP id c10mr938838vsp.54.1579834011513;
+ Thu, 23 Jan 2020 18:46:51 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/dj5/oQ=7f9hsgkLwC.+H_UT";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+References: <CAK7LNASSVYHunCn154ktOVDm=MOe+jhEq8Xc8g0JAtCjjJRHwQ@mail.gmail.com>
+In-Reply-To: <CAK7LNASSVYHunCn154ktOVDm=MOe+jhEq8Xc8g0JAtCjjJRHwQ@mail.gmail.com>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Fri, 24 Jan 2020 11:46:15 +0900
+X-Gmail-Original-Message-ID: <CAK7LNARy9eDNHWDYNKAJKGu8U9AChpMPPTLhmTu9bp+VpNhWfw@mail.gmail.com>
+Message-ID: <CAK7LNARy9eDNHWDYNKAJKGu8U9AChpMPPTLhmTu9bp+VpNhWfw@mail.gmail.com>
+Subject: Re: [GIT PULL] ARM: dts: uniphier: UniPhier DT updates for v5.6
+To:     Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>
+Cc:     linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Masahiro Yamada <masahiroy@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/dj5/oQ=7f9hsgkLwC.+H_UT
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hi Arnd and Olof,
 
-Hi all,
+I know it is already -rc7, but
+it would be nice if you could pull this for the next MW.
 
-On Fri, 10 Jan 2020 17:57:29 +1100 Stephen Rothwell <sfr@canb.auug.org.au> =
-wrote:
+Thanks
+Masahiro
+
+
+On Sat, Jan 18, 2020 at 1:16 AM Masahiro Yamada
+<yamada.masahiro@socionext.com> wrote:
 >
-> After merging the vfs tree, today's linux-next build (x86_64 allnoconfig)
-> failed like this:
->=20
-> fs/inode.c:1615:5: error: redefinition of 'bmap'
->  1615 | int bmap(struct inode *inode, sector_t *block)
->       |     ^~~~
-> In file included from fs/inode.c:7:
-> include/linux/fs.h:2867:19: note: previous definition of 'bmap' was here
->  2867 | static inline int bmap(struct inode *inode,  sector_t *block)
->       |                   ^~~~
->=20
-> Caused by commit
->=20
->   65a805fdd75f ("fibmap: Use bmap instead of ->bmap method in ioctl_fibma=
-p")
->=20
-> I have added this patch for today:
->=20
-> From: Stephen Rothwell <sfr@canb.auug.org.au>
-> Date: Fri, 10 Jan 2020 17:53:19 +1100
-> Subject: [PATCH] fs: fix up for !CONFIG_BLOCK and bmap
->=20
-> Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
-> ---
->  fs/inode.c | 2 ++
->  1 file changed, 2 insertions(+)
->=20
-> diff --git a/fs/inode.c b/fs/inode.c
-> index 9f894b25af2b..590f36daa006 100644
-> --- a/fs/inode.c
-> +++ b/fs/inode.c
-> @@ -1598,6 +1598,7 @@ void iput(struct inode *inode)
->  }
->  EXPORT_SYMBOL(iput);
-> =20
-> +#ifdef CONFIG_BLOCK
->  /**
->   *	bmap	- find a block number in a file
->   *	@inode:  inode owning the block number being requested
-> @@ -1621,6 +1622,7 @@ int bmap(struct inode *inode, sector_t *block)
->  	return 0;
->  }
->  EXPORT_SYMBOL(bmap);
-> +#endif
-> =20
->  /*
->   * With relative atime, only update atime if the previous atime is
-> --=20
-> 2.24.0
+> Hi Arnd, Olof,
+>
+> Here are UniPhier DT (32bit) updates for the v5.6 merge window.
+> Please pull!
+>
+>
+>
+> The following changes since commit e42617b825f8073569da76dc4510bfa019b1c35a:
+>
+>   Linux 5.5-rc1 (2019-12-08 14:57:55 -0800)
+>
+> are available in the Git repository at:
+>
+>   git://git.kernel.org/pub/scm/linux/kernel/git/masahiroy/linux-uniphier.git
+> tags/uniphier-dt-v5.6
+>
+> for you to fetch changes up to 37f3e0096f716b06338a4771633b32b8e2a36f7f:
+>
+>   ARM: dts: uniphier: add reset-names to NAND controller node
+> (2020-01-18 00:56:09 +0900)
+>
+> ----------------------------------------------------------------
+> UniPhier ARM SoC DT updates for v5.6
+>
+> - Add pinmux nodes for I2C ch5, ch6
+>
+> - Add reset-names to NAND controller node
+>
+> ----------------------------------------------------------------
+> Masahiro Yamada (2):
+>       ARM: dts: uniphier: add pinmux nodes for I2C ch5, ch6
+>       ARM: dts: uniphier: add reset-names to NAND controller node
+>
+>  arch/arm/boot/dts/uniphier-ld4.dtsi     |  3 ++-
+>  arch/arm/boot/dts/uniphier-pinctrl.dtsi | 10 ++++++++++
+>  arch/arm/boot/dts/uniphier-pro4.dtsi    |  3 ++-
+>  arch/arm/boot/dts/uniphier-pro5.dtsi    |  3 ++-
+>  arch/arm/boot/dts/uniphier-pxs2.dtsi    |  3 ++-
+>  arch/arm/boot/dts/uniphier-sld8.dtsi    |  3 ++-
+>  6 files changed, 20 insertions(+), 5 deletions(-)
+>
+>
+> --
+> Best Regards
+> Masahiro Yamada
 
-I am still applying this patch each day ...
---=20
-Cheers,
-Stephen Rothwell
 
---Sig_/dj5/oQ=7f9hsgkLwC.+H_UT
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl4qWVQACgkQAVBC80lX
-0Gx+Swf+JuM1TIB5DvgWdYg0D+lCNr+DSWs/JD5Kgfy6f8nhkB/D48NP4ciRpkMB
-HkEdj1nbacp57JMCqKZfqQoMsMR2IuVozH6q9/nTWWoKDLALrJlxLSVIED7B9k7I
-Mqz23r/m7vkl6hb+9r3tvudqnCT+jz8v+Z59vk+8ZdUXmtJCXxeXyw2mwBYRNHTh
-8VJ8oABdrMBhb40Tlmv8l++SP4Fy/edTHYHrpeQU+ZaDM5FcQhB5OmPvlpwstqaP
-l1/VGzaec7Mp1+unMruQNl+XDh+/6RI6g5eyqo923H64lPjvkiJ/H7H4fBHlWN34
-YXndiZOvDnhPOJHvl1/MRP8UBFjNxw==
-=DERz
------END PGP SIGNATURE-----
-
---Sig_/dj5/oQ=7f9hsgkLwC.+H_UT--
+-- 
+Best Regards
+Masahiro Yamada
