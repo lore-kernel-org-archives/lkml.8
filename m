@@ -2,89 +2,183 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	HK_RANDOM_FROM,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 165A7C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 07:53:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3D2FC3F68F
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 08:02:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA7652071E
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 07:53:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="WE2DXd5V"
+	by mail.kernel.org (Postfix) with ESMTP id 90F772071E
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 08:02:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729431AbgAXHxY (ORCPT
+        id S1729693AbgAXIAV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 02:53:24 -0500
-Received: from merlin.infradead.org ([205.233.59.134]:39454 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725817AbgAXHxX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 02:53:23 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=yuA59Cq86QbpEr2GrOS1my19i2Wm0DAniBfPEadru+E=; b=WE2DXd5VdOovwJVSYxSxfE6QZ
-        n8413ndR5tjBKdTrfkMnM1yGlzr/9L1/JgTH7UQVY4LLbgWeYruwww37tzvLPwLtIE9vPisE2Yv4c
-        DANqteyAoXxYNXLvTzGTavbTIzem6CUyASrfJ9n6t86d4eSHxE3WmmxVxMsHoHnSjzareP2xR3Qn9
-        fiLecZ8TgJvMBrimrxxWmNfEUXgpFK3FtGPOUR8zXXCleY8JD+iISEOLUgOw7pOdZa+01SK07b0oP
-        VzZUunaCiW0otMSA818I140pkS8tKQVFzYpHEwLZ3ydHTofSySmjR0BuAwoxWFtszk4/eJZWVe1z5
-        X0FXVJN3w==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iutlf-0001Zl-48; Fri, 24 Jan 2020 07:52:39 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 4165F300677;
-        Fri, 24 Jan 2020 08:50:55 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id AC2352B716B08; Fri, 24 Jan 2020 08:52:35 +0100 (CET)
-Date:   Fri, 24 Jan 2020 08:52:35 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Alex Kogan <alex.kogan@oracle.com>
-Cc:     Waiman Long <longman@redhat.com>, linux@armlinux.org.uk,
-        Ingo Molnar <mingo@redhat.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>, linux-arch@vger.kernel.org,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>, hpa@zytor.com, x86@kernel.org,
-        Hanjun Guo <guohanjun@huawei.com>,
-        Jan Glauber <jglauber@marvell.com>,
-        Steven Sistare <steven.sistare@oracle.com>,
-        Daniel Jordan <daniel.m.jordan@oracle.com>,
-        dave.dice@oracle.com
-Subject: Re: [PATCH v8 4/5] locking/qspinlock: Introduce starvation avoidance
- into CNA
-Message-ID: <20200124075235.GX14914@hirez.programming.kicks-ass.net>
-References: <20191230194042.67789-1-alex.kogan@oracle.com>
- <20191230194042.67789-5-alex.kogan@oracle.com>
- <20200121132949.GL14914@hirez.programming.kicks-ass.net>
- <cfdf635d-be2e-9d4b-c4ca-6bcbddc6868f@redhat.com>
- <3862F8A1-FF9B-40AD-A88E-2C0BA7AF6F58@oracle.com>
+        Fri, 24 Jan 2020 03:00:21 -0500
+Received: from mga14.intel.com ([192.55.52.115]:56308 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726173AbgAXIAU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 03:00:20 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Jan 2020 00:00:19 -0800
+X-IronPort-AV: E=Sophos;i="5.70,357,1574150400"; 
+   d="scan'208";a="220948305"
+Received: from xiaoyaol-mobl.ccr.corp.intel.com (HELO [10.249.171.129]) ([10.249.171.129])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-SHA; 24 Jan 2020 00:00:17 -0800
+Subject: Re: [PATCH] KVM: x86: avoid incorrect writes to host
+ MSR_IA32_SPEC_CTRL
+To:     Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org
+Cc:     Jim Mattson <jmattson@redhat.com>
+References: <1579614487-44583-3-git-send-email-pbonzini@redhat.com>
+From:   Xiaoyao Li <xiaoyao.li@intel.com>
+Message-ID: <8b960dfe-620b-b649-d377-e5bb1556bb48@intel.com>
+Date:   Fri, 24 Jan 2020 16:00:15 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3862F8A1-FF9B-40AD-A88E-2C0BA7AF6F58@oracle.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1579614487-44583-3-git-send-email-pbonzini@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 23, 2020 at 04:33:54PM -0500, Alex Kogan wrote:
-> Let me put this question to you. What do you think the number should be?
+On 1/21/2020 9:48 PM, Paolo Bonzini wrote:
+> If the guest is configured to have SPEC_CTRL but the host does not
+> (which is a nonsensical configuration but these are not explicitly
+> forbidden) then a host-initiated MSR write can write vmx->spec_ctrl
+> (respectively svm->spec_ctrl) and trigger a #GP when KVM tries to
+> restore the host value of the MSR.  Add a more comprehensive check
+> for valid bits of SPEC_CTRL, covering host CPUID flags and,
+> since we are at it and it is more correct that way, guest CPUID
+> flags too.
+> 
+> For AMD, remove the unnecessary is_guest_mode check around setting
+> the MSR interception bitmap, so that the code looks the same as
+> for Intel.
+> 
+> Cc: Jim Mattson <jmattson@redhat.com>
+> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+> ---
+>   arch/x86/kvm/svm.c     |  9 +++------
+>   arch/x86/kvm/vmx/vmx.c |  7 +++----
+>   arch/x86/kvm/x86.c     | 22 ++++++++++++++++++++++
+>   arch/x86/kvm/x86.h     |  1 +
+>   4 files changed, 29 insertions(+), 10 deletions(-)
+> 
+> diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
+> index b7c5369c7998..235a7e51de96 100644
+> --- a/arch/x86/kvm/svm.c
+> +++ b/arch/x86/kvm/svm.c
+> @@ -4324,12 +4324,10 @@ static int svm_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr)
+>   		    !guest_cpuid_has(vcpu, X86_FEATURE_AMD_SSBD))
+>   			return 1;
+>   
+> -		/* The STIBP bit doesn't fault even if it's not advertised */
+> -		if (data & ~(SPEC_CTRL_IBRS | SPEC_CTRL_STIBP | SPEC_CTRL_SSBD))
+> +		if (data & ~kvm_spec_ctrl_valid_bits(vcpu))
+>   			return 1;
+>   
+>   		svm->spec_ctrl = data;
+> -
+>   		if (!data)
+>   			break;
+>   
+> @@ -4353,13 +4351,12 @@ static int svm_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr)
+>   
+>   		if (data & ~PRED_CMD_IBPB)
+>   			return 1;
+> -
+> +		if (!boot_cpu_has(X86_FEATURE_AMD_IBPB))
+> +			return 1;
+>   		if (!data)
+>   			break;
+>   
+>   		wrmsrl(MSR_IA32_PRED_CMD, PRED_CMD_IBPB);
+> -		if (is_guest_mode(vcpu))
+> -			break;
+>   		set_msr_interception(svm->msrpm, MSR_IA32_PRED_CMD, 0, 1);
+>   		break;
+>   	case MSR_AMD64_VIRT_SPEC_CTRL:
+> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> index bdbf27e92851..112d2314231d 100644
+> --- a/arch/x86/kvm/vmx/vmx.c
+> +++ b/arch/x86/kvm/vmx/vmx.c
+> @@ -1998,12 +1998,10 @@ static int vmx_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+>   		    !guest_cpuid_has(vcpu, X86_FEATURE_SPEC_CTRL))
+>   			return 1;
+>   
+> -		/* The STIBP bit doesn't fault even if it's not advertised */
+> -		if (data & ~(SPEC_CTRL_IBRS | SPEC_CTRL_STIBP | SPEC_CTRL_SSBD))
+> +		if (data & ~kvm_spec_ctrl_valid_bits(vcpu))
+>   			return 1;
+>   
+>   		vmx->spec_ctrl = data;
+> -
+>   		if (!data)
+>   			break;
+>   
+> @@ -2037,7 +2035,8 @@ static int vmx_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+>   
+>   		if (data & ~PRED_CMD_IBPB)
+>   			return 1;
+> -
+> +		if (!boot_cpu_has(X86_FEATURE_SPEC_CTRL))
+> +			return 1;
+>   		if (!data)
+>   			break;
+>   
+> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> index 9f24f5d16854..141fb129c6bf 100644
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -10389,6 +10389,28 @@ bool kvm_arch_no_poll(struct kvm_vcpu *vcpu)
+>   }
+>   EXPORT_SYMBOL_GPL(kvm_arch_no_poll);
+>   
+> +bool kvm_spec_ctrl_valid_bits(struct kvm_vcpu *vcpu)
 
-I think it would be very good to keep the inter-node latency below 1ms.
+The return type should be u64.
 
-But to realize that we need data on the lock hold times. Specifically
-for the heavily contended locks that make CNA worth it in the first
-place.
+> +{
+> +	uint64_t bits = SPEC_CTRL_IBRS | SPEC_CTRL_STIBP | SPEC_CTRL_SSBD;
+> +
+> +	/* The STIBP bit doesn't fault even if it's not advertised */
+> +	if (!guest_cpuid_has(vcpu, X86_FEATURE_SPEC_CTRL) &&
+> +	    !guest_cpuid_has(vcpu, X86_FEATURE_AMD_IBRS))
+> +		bits &= ~(SPEC_CTRL_IBRS | SPEC_CTRL_STIBP);
+> +	if (!boot_cpu_has(X86_FEATURE_SPEC_CTRL) &&
+> +	    !boot_cpu_has(X86_FEATURE_AMD_IBRS))
+> +		bits &= ~(SPEC_CTRL_IBRS | SPEC_CTRL_STIBP);
+> +
+> +	if (!guest_cpuid_has(vcpu, X86_FEATURE_SPEC_CTRL_SSBD) &&
+> +	    !guest_cpuid_has(vcpu, X86_FEATURE_AMD_SSBD))
+> +		bits &= ~SPEC_CTRL_SSBD;
+> +	if (!boot_cpu_has(X86_FEATURE_SPEC_CTRL_SSBD) &&
+> +	    !boot_cpu_has(X86_FEATURE_AMD_SSBD))
+> +		bits &= ~SPEC_CTRL_SSBD;
+> +
+> +	return bits;
+> +}
+> +EXPORT_SYMBOL_GPL(kvm_spec_ctrl_valid_bits);
+>   
+>   EXPORT_TRACEPOINT_SYMBOL_GPL(kvm_exit);
+>   EXPORT_TRACEPOINT_SYMBOL_GPL(kvm_fast_mmio);
+> diff --git a/arch/x86/kvm/x86.h b/arch/x86/kvm/x86.h
+> index ab715cee3653..bc38ac695776 100644
+> --- a/arch/x86/kvm/x86.h
+> +++ b/arch/x86/kvm/x86.h
+> @@ -367,5 +367,6 @@ static inline bool kvm_pat_valid(u64 data)
+>   
+>   void kvm_load_guest_xsave_state(struct kvm_vcpu *vcpu);
+>   void kvm_load_host_xsave_state(struct kvm_vcpu *vcpu);
+> +bool kvm_spec_ctrl_valid_bits(struct kvm_vcpu *vcpu);
+>   
+>   #endif
+> 
 
-I don't see that data, so I don't see how we can argue about this let
-alone call something reasonable.
