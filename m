@@ -2,111 +2,208 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.3 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 633FBC3F68F
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 12:55:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B044FC35242
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 12:58:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3AACF20708
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 12:55:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="aqxG94s1"
+	by mail.kernel.org (Postfix) with ESMTP id 91FB62077C
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 12:58:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388431AbgAXMzh (ORCPT
+        id S2388723AbgAXM6j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 07:55:37 -0500
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:26578 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2387393AbgAXMzh (ORCPT
+        Fri, 24 Jan 2020 07:58:39 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:58532 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387393AbgAXM6i (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 07:55:37 -0500
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00OCsTCw012368;
-        Fri, 24 Jan 2020 13:55:24 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=HsT5XOh0k0Oip5e4q1QwfFV3XVw3YKpi81ECZxj8y6Q=;
- b=aqxG94s1vaUPEi7oDUwgOsYy3ksvsgGOaWryEalFEw+6Zgdpn66PA45Wk9YnaG06YC0O
- aBklNAsLyjk63X/6JayBKfFWnPoajK64SDY5dhXmGZ5SYJXnDEuGIwkrxaDGKW7Lqoxu
- 5imLP6Ba6rd3VLxeGfE5eELqunxfwIp/TEo6qOT1oIRrHt8ADdzIe97YYl01EGefCZ68
- 8tbO7EMpd0mYn/mc8D923WscSRyQv2abfuiZbik1+S7JawA9NuI1C8Ct9ZKLLcp5B7N1
- ApvOKGuEbrfLmwvcTx3KpafV0loMaKPLNCmf9fnU1DQyWTdhTUdaAVSVhzPPor7hJXBG Cw== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2xkrc5g12e-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 24 Jan 2020 13:55:24 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id CE8E310002A;
-        Fri, 24 Jan 2020 13:55:23 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag6node1.st.com [10.75.127.16])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id B75A72A847D;
-        Fri, 24 Jan 2020 13:55:23 +0100 (CET)
-Received: from lmecxl0923.lme.st.com (10.75.127.48) by SFHDAG6NODE1.st.com
- (10.75.127.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 24 Jan
- 2020 13:55:23 +0100
-Subject: Re: [PATCH 0/9] mmc: mmci: sdmmc: add sdr104 support
-To:     Ulf Hansson <ulf.hansson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>
-CC:     <srinivas.kandagatla@linaro.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-mmc@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>
-References: <20200110134823.14882-1-ludovic.barre@st.com>
-From:   Ludovic BARRE <ludovic.barre@st.com>
-Message-ID: <6d859def-351e-abd7-0d5f-962ad935dff2@st.com>
-Date:   Fri, 24 Jan 2020 13:55:22 +0100
+        Fri, 24 Jan 2020 07:58:38 -0500
+Received: from [IPv6:2a00:5f00:102:0:8b5:67ff:fe5d:5a19] (unknown [IPv6:2a00:5f00:102:0:8b5:67ff:fe5d:5a19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: gtucker)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 570E8294B1B;
+        Fri, 24 Jan 2020 12:58:35 +0000 (GMT)
+Subject: Re: stable-rc/linux-4.19.y bisection: baseline.login on
+ sun8i-h3-libretech-all-h3-cc
+To:     Linus Walleij <linus.walleij@linaro.org>
+References: <5e2ad951.1c69fb81.6d762.dd8e@mx.google.com>
+Cc:     khilman@baylibre.com, tomeu.vizoso@collabora.com,
+        mgalka@collabora.com, enric.balletbo@collabora.com,
+        broonie@kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        stable@vger.kernel.org, Sasha Levin <sashal@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+From:   Guillaume Tucker <guillaume.tucker@collabora.com>
+Message-ID: <0ed4668a-fb29-fca8-558e-385ef118d432@collabora.com>
+Date:   Fri, 24 Jan 2020 12:58:32 +0000
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.0
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <20200110134823.14882-1-ludovic.barre@st.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.75.127.48]
-X-ClientProxiedBy: SFHDAG1NODE2.st.com (10.75.127.2) To SFHDAG6NODE1.st.com
- (10.75.127.16)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-01-24_03:2020-01-24,2020-01-24 signatures=0
+In-Reply-To: <5e2ad951.1c69fb81.6d762.dd8e@mx.google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-hi Ulf
+Hi Linus,
 
-Just a "gentleman ping" on this series
-https://lkml.org/lkml/2020/1/10/392
+Please see the bisection report below about a boot failure, it
+looks legit as this commit was made today:
 
-Regards
-Ludo
 
-Le 1/10/20 à 2:48 PM, Ludovic Barre a écrit :
-> To support the sdr104 mode, sdmmc variant needs:
-> -Hardware delay block support for sdmmc variant
->   with tuning procedure
-> -Voltage switch callbacks
-> -sdmmc revision 2.0
+commit 5f9277249f9b126f815e23c3078cff3b69ce2715
+Author:     Linus Walleij <linus.walleij@linaro.org>
+AuthorDate: Mon Oct 1 22:43:46 2018 +0200
+Commit:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CommitDate: Fri Jan 24 10:27:24 2020 +0100
+
+    regulator: fixed: Default enable high on DT regulators
+    
+    [ Upstream commit 28be5f15df2ee6882b0a122693159c96a28203c7 ]
+
+
+KernelCI bisection reports are not publicly sent at the moment
+while we're trialing some new bisection features.
+
+Thanks,
+Guillaume
+
+On 24/01/2020 11:47, kernelci.org bot wrote:
+> * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+> * This automated bisection report was sent to you on the basis  *
+> * that you may be involved with the breaking commit it has      *
+> * found.  No manual investigation has been done to verify it,   *
+> * and the root cause of the problem may be somewhere else.      *
+> *                                                               *
+> * If you do send a fix, please include this trailer:            *
+> *   Reported-by: "kernelci.org bot" <bot@kernelci.org>          *
+> *                                                               *
+> * Hope this helps!                                              *
+> * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 > 
-> Ludovic Barre (9):
->    mmc: mmci: sdmmc: replace sg_dma_xxx macros
->    mmc: mmci: sdmmc: rename sdmmc_priv struct to sdmmc_idma
->    mmc: mmci: add a reference at mmc_host_ops in mmci struct
->    mmc: mmci: add private pointer for variant
->    dt-bindings: mmc: mmci: add delay block base register for sdmmc
->    mmc: mmci: sdmmc: add execute tuning with delay block
->    mmc: mmci: add volt_switch callbacks
->    mmc: mmci: sdmmc: add voltage switch functions
->    mmc: mmci: add sdmmc variant revision 2.0
+> stable-rc/linux-4.19.y bisection: baseline.login on sun8i-h3-libretech-all-h3-cc
 > 
->   .../devicetree/bindings/mmc/mmci.txt          |   2 +
->   drivers/mmc/host/mmci.c                       |  39 ++++
->   drivers/mmc/host/mmci.h                       |   8 +
->   drivers/mmc/host/mmci_stm32_sdmmc.c           | 199 +++++++++++++++++-
->   4 files changed, 241 insertions(+), 7 deletions(-)
+> Summary:
+>   Start:      be6fe2fc68d0 Linux 4.19.99-rc1
+>   Plain log:  https://storage.kernelci.org//stable-rc/linux-4.19.y/v4.19.98-640-gbe6fe2fc68d0/arm/sunxi_defconfig/gcc-8/lab-baylibre/baseline-sun8i-h3-libretech-all-h3-cc.txt
+>   HTML log:   https://storage.kernelci.org//stable-rc/linux-4.19.y/v4.19.98-640-gbe6fe2fc68d0/arm/sunxi_defconfig/gcc-8/lab-baylibre/baseline-sun8i-h3-libretech-all-h3-cc.html
+>   Result:     250d67d6bc05 regulator: fixed: Default enable high on DT regulators
 > 
+> Checks:
+>   revert:     PASS
+>   verify:     PASS
+> 
+> Parameters:
+>   Tree:       stable-rc
+>   URL:        https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+>   Branch:     linux-4.19.y
+>   Target:     sun8i-h3-libretech-all-h3-cc
+>   CPU arch:   arm
+>   Lab:        lab-baylibre
+>   Compiler:   gcc-8
+>   Config:     sunxi_defconfig
+>   Test case:  baseline.login
+> 
+> Breaking commit found:
+> 
+> -------------------------------------------------------------------------------
+> commit 250d67d6bc0597c0c0de47b3ea32dc6d4e3f9322
+> Author: Linus Walleij <linus.walleij@linaro.org>
+> Date:   Mon Oct 1 22:43:46 2018 +0200
+> 
+>     regulator: fixed: Default enable high on DT regulators
+>     
+>     [ Upstream commit 28be5f15df2ee6882b0a122693159c96a28203c7 ]
+>     
+>     commit efdfeb079cc3
+>     ("regulator: fixed: Convert to use GPIO descriptor only")
+>     switched to use gpiod_get() to look up the regulator from the
+>     gpiolib core whether that is device tree or boardfile.
+>     
+>     This meant that we activate the code in
+>     a603a2b8d86e ("gpio: of: Add special quirk to parse regulator flags")
+>     which means the descriptors coming from the device tree already
+>     have the right inversion and open drain semantics set up from
+>     the gpiolib core.
+>     
+>     As the fixed regulator was inspected again we got the
+>     inverted inversion and things broke.
+>     
+>     Fix it by ignoring the config in the device tree for now: the
+>     later patches in the series will push all inversion handling
+>     over to the gpiolib core and set it up properly in the
+>     boardfiles for legacy devices, but I did not finish that
+>     for this kernel cycle.
+>     
+>     Fixes: commit efdfeb079cc3 ("regulator: fixed: Convert to use GPIO descriptor only")
+>     Reported-by: Leonard Crestez <leonard.crestez@nxp.com>
+>     Reported-by: Fabio Estevam <festevam@gmail.com>
+>     Reported-by: John Stultz <john.stultz@linaro.org>
+>     Reported-by: Anders Roxell <anders.roxell@linaro.org>
+>     Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+>     Tested-by: John Stultz <john.stultz@linaro.org>
+>     Signed-off-by: Mark Brown <broonie@kernel.org>
+>     Signed-off-by: Sasha Levin <sashal@kernel.org>
+> 
+> diff --git a/drivers/regulator/fixed.c b/drivers/regulator/fixed.c
+> index 988a7472c2ab..d68ff65a5adc 100644
+> --- a/drivers/regulator/fixed.c
+> +++ b/drivers/regulator/fixed.c
+> @@ -84,9 +84,14 @@ of_get_fixed_voltage_config(struct device *dev,
+>  
+>  	of_property_read_u32(np, "startup-delay-us", &config->startup_delay);
+>  
+> -	config->enable_high = of_property_read_bool(np, "enable-active-high");
+> -	config->gpio_is_open_drain = of_property_read_bool(np,
+> -							   "gpio-open-drain");
+> +	/*
+> +	 * FIXME: we pulled active low/high and open drain handling into
+> +	 * gpiolib so it will be handled there. Delete this in the second
+> +	 * step when we also remove the custom inversion handling for all
+> +	 * legacy boardfiles.
+> +	 */
+> +	config->enable_high = 1;
+> +	config->gpio_is_open_drain = 0;
+>  
+>  	if (of_find_property(np, "vin-supply", NULL))
+>  		config->input_supply = "vin";
+> -------------------------------------------------------------------------------
+> 
+> 
+> Git bisection log:
+> 
+> -------------------------------------------------------------------------------
+> git bisect start
+> # good: [d183c8e2647a7d45202c14a33631f6c09020f8ac] Linux 4.19.98
+> git bisect good d183c8e2647a7d45202c14a33631f6c09020f8ac
+> # bad: [be6fe2fc68d0d7571c06b5fc11d2282a6544ec0f] Linux 4.19.99-rc1
+> git bisect bad be6fe2fc68d0d7571c06b5fc11d2282a6544ec0f
+> # bad: [62715658388c5d59c35c4f7fdcffbc8e8772f39e] ARM: dts: ls1021: Fix SGMII PCS link remaining down after PHY disconnect
+> git bisect bad 62715658388c5d59c35c4f7fdcffbc8e8772f39e
+> # bad: [2d2f9b317958a34ebecf731ac7510c649a2ab33c] driver core: Do not resume suppliers under device_links_write_lock()
+> git bisect bad 2d2f9b317958a34ebecf731ac7510c649a2ab33c
+> # bad: [83ab4275fc5a25992200a394c692542ad8584276] mailbox: ti-msgmgr: Off by one in ti_msgmgr_of_xlate()
+> git bisect bad 83ab4275fc5a25992200a394c692542ad8584276
+> # good: [864d924463eb890af4ea92cbb4108ebcba42bd6c] usb: gadget: fsl_udc_core: check allocation return value and cleanup on failure
+> git bisect good 864d924463eb890af4ea92cbb4108ebcba42bd6c
+> # bad: [51ee3169bec81a0f48bdb0a7402bfa1d863d6006] mlxsw: reg: QEEC: Add minimum shaper fields
+> git bisect bad 51ee3169bec81a0f48bdb0a7402bfa1d863d6006
+> # bad: [bf4a2476e727c5a302c40a0e66e1702c2c135b7c] pwm: lpss: Release runtime-pm reference from the driver's remove callback
+> git bisect bad bf4a2476e727c5a302c40a0e66e1702c2c135b7c
+> # bad: [d54e7094b7bd73384d64cc328a0c979522e3cb67] of: Fix property name in of_node_get_device_type
+> git bisect bad d54e7094b7bd73384d64cc328a0c979522e3cb67
+> # bad: [250d67d6bc0597c0c0de47b3ea32dc6d4e3f9322] regulator: fixed: Default enable high on DT regulators
+> git bisect bad 250d67d6bc0597c0c0de47b3ea32dc6d4e3f9322
+> # good: [9b2060c15a1b2524fb4ac3f3cc2cf5dcbc293955] cfg80211: regulatory: make initialization more robust
+> git bisect good 9b2060c15a1b2524fb4ac3f3cc2cf5dcbc293955
+> # first bad commit: [250d67d6bc0597c0c0de47b3ea32dc6d4e3f9322] regulator: fixed: Default enable high on DT regulators
+> -------------------------------------------------------------------------------
+> 
+
