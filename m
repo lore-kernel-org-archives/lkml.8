@@ -7,49 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 144ECC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:20:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33A37C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:20:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB57024125
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:20:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF7302077C
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:20:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579875623;
-	bh=6J0/GOKN5YQoNJVfktllwsQTAUpa12zICp72WrsWBdM=;
+	s=default; t=1579875631;
+	bh=qrQvkU+aV1DaKdMny9iBbnqh9o3QeD2Mk64oFml+xUo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qIAWID9HfoDEF09GdzYtSyQMyXEOZVf2wK5gY/DVt/9PqQ21v00c3J3fvGuEDxqSM
-	 F+kmz0YPg3x/+4RP7Q4hlb+UwN2ZKoVrUIJxFSmLZFHO4xMzp3MuPHaNKFmxkahOXa
-	 etd05UM6Vyz8MN7Dwcnq3PlLUiWdvSrOTBhEK3S0=
+	b=tjsfcY0N/rPjiAoaLkX7hgJfEa43HdfqFUSoGCd6wOVkm5QfsNPO2W9aBKJoz7tQ0
+	 LNja8eBYZIB2k2fKJ4bw6fw0I2szOuteVXzqKWpuFZIlTFAR4cSSXq8AN/SGLJK8XA
+	 cH/EzohSJI2hv+ivAkKNU4MQdch4bB2UABAXUF2o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404813AbgAXOUX (ORCPT
+        id S1731313AbgAXOUa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 09:20:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40760 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 09:20:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41202 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404345AbgAXOUB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 09:20:01 -0500
+        id S2404184AbgAXOUR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 09:20:17 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4B89F222D9;
-        Fri, 24 Jan 2020 14:20:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D8C1821734;
+        Fri, 24 Jan 2020 14:20:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579875601;
-        bh=6J0/GOKN5YQoNJVfktllwsQTAUpa12zICp72WrsWBdM=;
+        s=default; t=1579875616;
+        bh=qrQvkU+aV1DaKdMny9iBbnqh9o3QeD2Mk64oFml+xUo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qInIpqUUNvHTjH4hAwuY3rvUWkhm4bxb0gbluN2SGRoA0IcKD7H08DHAGiJsKGoGk
-         mOOc5Zv7AbUHv2VvIbQDgA+JjZPJ3inUi5I/fn6kIblgw54vucs+pfWXQAT8G7ja36
-         I8Hvckc5/InNbQaNiK0REkD4GHN95gN34DvIfRig=
+        b=aKUW1Cv+jxlMgr9ObMMHkjAKMQmnySWZBwy83oq212DMoV0wqiOF0f9eywCxmOqLz
+         j3i7jeGfZ1X9fWnVaujOWaIq95X0NQRI9kyHZR20QFDMwBXg61YlC8fW0o1XiRCfUh
+         AWd94AVu9AuVegrfK7OV6qB7LTqp3SVHSxbh0KyQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 089/107] net: ethernet: ave: Avoid lockdep warning
-Date:   Fri, 24 Jan 2020 09:17:59 -0500
-Message-Id: <20200124141817.28793-89-sashal@kernel.org>
+Cc:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.19 03/56] dt-bindings: reset: meson8b: fix duplicate reset IDs
+Date:   Fri, 24 Jan 2020 09:19:19 -0500
+Message-Id: <20200124142012.29752-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200124141817.28793-1-sashal@kernel.org>
-References: <20200124141817.28793-1-sashal@kernel.org>
+In-Reply-To: <20200124142012.29752-1-sashal@kernel.org>
+References: <20200124142012.29752-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,81 +60,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 
-[ Upstream commit 82d5d6a638cbd12b7dfe8acafd9efd87a656cc06 ]
+[ Upstream commit 4881873f4cc1460f63d85fa81363d56be328ccdc ]
 
-When building with PROVE_LOCKING=y, lockdep shows the following
-dump message.
+According to the public S805 datasheet the RESET2 register uses the
+following bits for the PIC_DC, PSC and NAND reset lines:
+- PIC_DC is at bit 3 (meaning: RESET_VD_RMEM + 3)
+- PSC is at bit 4 (meaning: RESET_VD_RMEM + 4)
+- NAND is at bit 5 (meaning: RESET_VD_RMEM + 4)
 
-    INFO: trying to register non-static key.
-    the code is fine but needs lockdep annotation.
-    turning off the locking correctness validator.
-     ...
+Update the reset IDs of these three reset lines so they don't conflict
+with PIC_DC and map to the actual hardware reset lines.
 
-Calling device_set_wakeup_enable() directly occurs this issue,
-and it isn't necessary for initialization, so this patch creates
-internal function __ave_ethtool_set_wol() and replaces with this
-in ave_init() and ave_resume().
-
-Fixes: 7200f2e3c9e2 ("net: ethernet: ave: Set initial wol state to disabled")
-Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 79795e20a184eb ("dt-bindings: reset: Add bindings for the Meson SoC Reset Controller")
+Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Signed-off-by: Kevin Hilman <khilman@baylibre.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/socionext/sni_ave.c | 20 +++++++++++++-------
- 1 file changed, 13 insertions(+), 7 deletions(-)
+ include/dt-bindings/reset/amlogic,meson8b-reset.h | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/ethernet/socionext/sni_ave.c b/drivers/net/ethernet/socionext/sni_ave.c
-index 6e984d5a729fe..38d39c4b5ac83 100644
---- a/drivers/net/ethernet/socionext/sni_ave.c
-+++ b/drivers/net/ethernet/socionext/sni_ave.c
-@@ -424,16 +424,22 @@ static void ave_ethtool_get_wol(struct net_device *ndev,
- 		phy_ethtool_get_wol(ndev->phydev, wol);
- }
- 
--static int ave_ethtool_set_wol(struct net_device *ndev,
--			       struct ethtool_wolinfo *wol)
-+static int __ave_ethtool_set_wol(struct net_device *ndev,
-+				 struct ethtool_wolinfo *wol)
- {
--	int ret;
--
- 	if (!ndev->phydev ||
- 	    (wol->wolopts & (WAKE_ARP | WAKE_MAGICSECURE)))
- 		return -EOPNOTSUPP;
- 
--	ret = phy_ethtool_set_wol(ndev->phydev, wol);
-+	return phy_ethtool_set_wol(ndev->phydev, wol);
-+}
-+
-+static int ave_ethtool_set_wol(struct net_device *ndev,
-+			       struct ethtool_wolinfo *wol)
-+{
-+	int ret;
-+
-+	ret = __ave_ethtool_set_wol(ndev, wol);
- 	if (!ret)
- 		device_set_wakeup_enable(&ndev->dev, !!wol->wolopts);
- 
-@@ -1216,7 +1222,7 @@ static int ave_init(struct net_device *ndev)
- 
- 	/* set wol initial state disabled */
- 	wol.wolopts = 0;
--	ave_ethtool_set_wol(ndev, &wol);
-+	__ave_ethtool_set_wol(ndev, &wol);
- 
- 	if (!phy_interface_is_rgmii(phydev))
- 		phy_set_max_speed(phydev, SPEED_100);
-@@ -1768,7 +1774,7 @@ static int ave_resume(struct device *dev)
- 
- 	ave_ethtool_get_wol(ndev, &wol);
- 	wol.wolopts = priv->wolopts;
--	ave_ethtool_set_wol(ndev, &wol);
-+	__ave_ethtool_set_wol(ndev, &wol);
- 
- 	if (ndev->phydev) {
- 		ret = phy_resume(ndev->phydev);
+diff --git a/include/dt-bindings/reset/amlogic,meson8b-reset.h b/include/dt-bindings/reset/amlogic,meson8b-reset.h
+index 614aff2c7affe..a03e86fe2c570 100644
+--- a/include/dt-bindings/reset/amlogic,meson8b-reset.h
++++ b/include/dt-bindings/reset/amlogic,meson8b-reset.h
+@@ -95,9 +95,9 @@
+ #define RESET_VD_RMEM			64
+ #define RESET_AUDIN			65
+ #define RESET_DBLK			66
+-#define RESET_PIC_DC			66
+-#define RESET_PSC			66
+-#define RESET_NAND			66
++#define RESET_PIC_DC			67
++#define RESET_PSC			68
++#define RESET_NAND			69
+ #define RESET_GE2D			70
+ #define RESET_PARSER_REG		71
+ #define RESET_PARSER_FETCH		72
 -- 
 2.20.1
 
