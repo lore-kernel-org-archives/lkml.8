@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAAB5C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:43:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A816CC32771
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:43:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D8FF20718
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:43:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74E0521556
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:43:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579859021;
-	bh=5sc1dXdFGuhNAx5DM9UjZg9os1fM7VyBzbB+TYU6nGk=;
+	s=default; t=1579859024;
+	bh=KAzaguREQ3RaeAQy55+/Xuv+pFlbqm53eOVOgzlveEM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=z5OUKfDr6xKhy86gfZGLQJhky5JVHXBJN2X92ibMp0+q3tLgHBSkHVcuPcSru1sXg
-	 E+QKoKpXW8czxtdlzOSE6nPcy0KgTqBvv4setL2ZN/ll+fnzkDfKrwDVtzEuCJgZbp
-	 L1Qk+SN6feK0vENhzysEr4D+ufp284H3oLRIBEWQ=
+	b=xPjRGm1uRshnedoMfxepRIjthqadAunRGWipFLOZ8x1vCWsgQHZkMa1lwY7mAJFce
+	 qpjg28g+wDvZTlu5AwRmPE3gTnrXP2EovqCLkM7S4x5Eg1OrbfD2OkXfrRPL8t8a2l
+	 6UWxVOM78Fg7QNcSMBbyz6QO5zlcu5gZK8Ih6+Ns=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733235AbgAXJnk (ORCPT
+        id S1733213AbgAXJn2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 04:43:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41738 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 04:43:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41348 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733222AbgAXJni (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 04:43:38 -0500
+        id S1733082AbgAXJnW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 04:43:22 -0500
 Received: from localhost (unknown [145.15.244.15])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7FAB9222D9;
-        Fri, 24 Jan 2020 09:43:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6554020718;
+        Fri, 24 Jan 2020 09:43:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579859017;
-        bh=5sc1dXdFGuhNAx5DM9UjZg9os1fM7VyBzbB+TYU6nGk=;
+        s=default; t=1579859001;
+        bh=KAzaguREQ3RaeAQy55+/Xuv+pFlbqm53eOVOgzlveEM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Lv1IgX7B6Fq74RxgZU5Jn7EMsawPaLBEP9py1Eo5LKjUQQfGxtBIIczSmQdqcxljZ
-         TehqSBrl9KNyyoq5lxC3KabktBBWXyiGxbwlqV9nVVqT5tZtN8w++vhpThl6xcADFX
-         u0757rOsyr1tXFoO2sTE1xf5m2lcb/wEif5Q1bzY=
+        b=r0AW0ZPDwDg3BrCIPUBsu1jbR80FWUVRt48NRK1CyXlID9x6Ak4Zdc62d6MtZ2cvN
+         rKycpKtZPlohlk0zLmpVpbMFFZmDZTgzxJcM6BYGuXqCzRM3bCDOnzwd9zUPlxC64x
+         SeO1e1r4vHToOf1mxWsBrZGfuBWaQbq/MCJ2XdRQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Jon Mason <jdmason@kudzu.us>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 023/343] NTB: ntb_hw_idt: replace IS_ERR_OR_NULL with regular NULL checks
-Date:   Fri, 24 Jan 2020 10:27:21 +0100
-Message-Id: <20200124092922.647523449@linuxfoundation.org>
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 019/343] pwm: lpss: Release runtime-pm reference from the drivers remove callback
+Date:   Fri, 24 Jan 2020 10:27:17 +0100
+Message-Id: <20200124092922.155017203@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124092919.490687572@linuxfoundation.org>
 References: <20200124092919.490687572@linuxfoundation.org>
@@ -60,52 +62,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gustavo A. R. Silva <gustavo@embeddedor.com>
+From: Hans de Goede <hdegoede@redhat.com>
 
-[ Upstream commit 1b7619828d0c341612f58683e73f279c37e70bbc ]
+[ Upstream commit 42885551cedb45961879d2fc3dc3c4dc545cc23e ]
 
-Both devm_kcalloc() and devm_kzalloc() return NULL on error. They
-never return error pointers.
+For each pwm output which gets enabled through pwm_lpss_apply(), we do a
+pm_runtime_get_sync().
 
-The use of IS_ERR_OR_NULL is currently applied to the wrong
-context.
+This commit adds pm_runtime_put() calls to pwm_lpss_remove() to balance
+these when the driver gets removed with some of the outputs still enabled.
 
-Fix this by replacing IS_ERR_OR_NULL with regular NULL checks.
-
-Fixes: bf2a952d31d2 ("NTB: Add IDT 89HPESxNTx PCIe-switches support")
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-Signed-off-by: Jon Mason <jdmason@kudzu.us>
+Fixes: f080be27d7d9 ("pwm: lpss: Add support for runtime PM")
+Acked-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/ntb/hw/idt/ntb_hw_idt.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/pwm/pwm-lpss.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/ntb/hw/idt/ntb_hw_idt.c b/drivers/ntb/hw/idt/ntb_hw_idt.c
-index d44d7ef38fe88..b68e2cad74cc7 100644
---- a/drivers/ntb/hw/idt/ntb_hw_idt.c
-+++ b/drivers/ntb/hw/idt/ntb_hw_idt.c
-@@ -1105,9 +1105,9 @@ static struct idt_mw_cfg *idt_scan_mws(struct idt_ntb_dev *ndev, int port,
- 	}
+diff --git a/drivers/pwm/pwm-lpss.c b/drivers/pwm/pwm-lpss.c
+index 1e69c1c9ec096..7a4a6406cf69a 100644
+--- a/drivers/pwm/pwm-lpss.c
++++ b/drivers/pwm/pwm-lpss.c
+@@ -216,6 +216,12 @@ EXPORT_SYMBOL_GPL(pwm_lpss_probe);
  
- 	/* Allocate memory for memory window descriptors */
--	ret_mws = devm_kcalloc(&ndev->ntb.pdev->dev, *mw_cnt,
--				sizeof(*ret_mws), GFP_KERNEL);
--	if (IS_ERR_OR_NULL(ret_mws))
-+	ret_mws = devm_kcalloc(&ndev->ntb.pdev->dev, *mw_cnt, sizeof(*ret_mws),
-+			       GFP_KERNEL);
-+	if (!ret_mws)
- 		return ERR_PTR(-ENOMEM);
- 
- 	/* Copy the info of detected memory windows */
-@@ -2393,7 +2393,7 @@ static struct idt_ntb_dev *idt_create_dev(struct pci_dev *pdev,
- 
- 	/* Allocate memory for the IDT PCIe-device descriptor */
- 	ndev = devm_kzalloc(&pdev->dev, sizeof(*ndev), GFP_KERNEL);
--	if (IS_ERR_OR_NULL(ndev)) {
-+	if (!ndev) {
- 		dev_err(&pdev->dev, "Memory allocation failed for descriptor");
- 		return ERR_PTR(-ENOMEM);
- 	}
+ int pwm_lpss_remove(struct pwm_lpss_chip *lpwm)
+ {
++	int i;
++
++	for (i = 0; i < lpwm->info->npwm; i++) {
++		if (pwm_is_enabled(&lpwm->chip.pwms[i]))
++			pm_runtime_put(lpwm->chip.dev);
++	}
+ 	return pwmchip_remove(&lpwm->chip);
+ }
+ EXPORT_SYMBOL_GPL(pwm_lpss_remove);
 -- 
 2.20.1
 
