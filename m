@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE9EEC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:56:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A155BC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:56:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A392E20718
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:56:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DFC120718
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:56:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579859792;
-	bh=GT79FooQqGTj/KIsUOKgKa9dqw9ObSDXS8vyvK6kufQ=;
+	s=default; t=1579859794;
+	bh=Wyt7kKObs3IeoCChhvP5yUkQWJnhvUrcliU7CHUkkbE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mngEb4GDhg5yDI9O1SUcF2N8QN8i5K3gHVPv4GDBP/phj2J2MDn3ToUBQdk0dWHo9
-	 Prm1nGR2KSd+MRD4+xkQJsXAaaacNml4GW4E2wEzOu6lDuN22BW+gJg3RFy/5PV5nx
-	 HvAah2YxRPMb56zSw3YrtiANa5OYzyTOMvp73LJc=
+	b=k7aNaADlpBYxO751UWwrv80zkHoleeeGnE75Ej8uwAm34fqZgFYusVTPlIFVJxr+i
+	 LnKWC89/TF/IV6qSGnQB6MGuF2mJtk5Fr6SdjQ8axNJtKczej/JDAdV4r1Nq5mum5J
+	 H+OYXGEH22/z+tdYrw0NSqRt+Q1I7hKVsMBU+0J8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388317AbgAXJ4b (ORCPT
+        id S2388551AbgAXJ4d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 04:56:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60208 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 04:56:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60256 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731098AbgAXJ42 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 04:56:28 -0500
+        id S1731098AbgAXJ4c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 04:56:32 -0500
 Received: from localhost (unknown [145.15.244.15])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DDF6620718;
-        Fri, 24 Jan 2020 09:56:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A6DD120718;
+        Fri, 24 Jan 2020 09:56:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579859787;
-        bh=GT79FooQqGTj/KIsUOKgKa9dqw9ObSDXS8vyvK6kufQ=;
+        s=default; t=1579859791;
+        bh=Wyt7kKObs3IeoCChhvP5yUkQWJnhvUrcliU7CHUkkbE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eFl0b07mu7Y8f2ycp/M7hxGt9nbovQe1ilM/zR0XQ3BeyYpHd01flzM3ceWlHf/NS
-         SvO81fxZnz8rP3g6KmbZu4DLQCzXzfy/KsEJjxoJ+jtRHTEPHSF5AIBr02fb7xlTSS
-         wP/ZCTA7Of/yCsrDOPULcS6eIC2WlJajF7eI9Jpc=
+        b=qu45g/qzuvXUw5iA5UOXSv04OXU4s6Rs17Ph2yfXpt6c/jlaeH8jjz4LzhtGtPb9V
+         x/YGUa8tM171RF553bFdfj2LpmIDFUcqUiQNe3AVc0l5nrA6maaae6p2Tcgz7BueDM
+         jeRFCbgnj+tFbz+e84OUnapVI8g6XmHMj8p5L5ik=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Howells <dhowells@redhat.com>,
+        stable@vger.kernel.org, Jerome Brunet <jbrunet@baylibre.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 195/343] afs: Fix the afs.cell and afs.volume xattr handlers
-Date:   Fri, 24 Jan 2020 10:30:13 +0100
-Message-Id: <20200124092945.633348648@linuxfoundation.org>
+Subject: [PATCH 4.14 183/343] ASoC: fix valid stream condition
+Date:   Fri, 24 Jan 2020 10:30:01 +0100
+Message-Id: <20200124092944.102585804@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124092919.490687572@linuxfoundation.org>
 References: <20200124092919.490687572@linuxfoundation.org>
@@ -59,44 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Howells <dhowells@redhat.com>
+From: Jerome Brunet <jbrunet@baylibre.com>
 
-[ Upstream commit c73aa4102f5b9f261a907c3b3df94cd2c478504d ]
+[ Upstream commit 6a7c59c6d9f3b280e81d7a04bbe4e55e90152dce ]
 
-Fix the ->get handlers for the afs.cell and afs.volume xattrs to pass the
-source data size to memcpy() rather than target buffer size.
+A stream may specify a rate range using 'rate_min' and 'rate_max', so a
+stream may be valid and not specify any rates. However, as stream cannot
+be valid and not have any channel. Let's use this condition instead to
+determine if a stream is valid or not.
 
-Overcopying the source data occasionally causes the kernel to oops.
-
-Fixes: d3e3b7eac886 ("afs: Add metadata xattrs")
-Signed-off-by: David Howells <dhowells@redhat.com>
+Fixes: cde79035c6cf ("ASoC: Handle multiple codecs with split playback / capture")
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/afs/xattr.c | 4 ++--
+ sound/soc/soc-pcm.c | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/fs/afs/xattr.c b/fs/afs/xattr.c
-index 2830e4f48d854..7c6b62a94e7e7 100644
---- a/fs/afs/xattr.c
-+++ b/fs/afs/xattr.c
-@@ -50,7 +50,7 @@ static int afs_xattr_get_cell(const struct xattr_handler *handler,
- 		return namelen;
- 	if (namelen > size)
- 		return -ERANGE;
--	memcpy(buffer, cell->name, size);
-+	memcpy(buffer, cell->name, namelen);
- 	return namelen;
+diff --git a/sound/soc/soc-pcm.c b/sound/soc/soc-pcm.c
+index 24047375c2fbb..70e1a60a2e980 100644
+--- a/sound/soc/soc-pcm.c
++++ b/sound/soc/soc-pcm.c
+@@ -48,8 +48,8 @@ static bool snd_soc_dai_stream_valid(struct snd_soc_dai *dai, int stream)
+ 	else
+ 		codec_stream = &dai->driver->capture;
+ 
+-	/* If the codec specifies any rate at all, it supports the stream. */
+-	return codec_stream->rates;
++	/* If the codec specifies any channels at all, it supports the stream */
++	return codec_stream->channels_min;
  }
  
-@@ -104,7 +104,7 @@ static int afs_xattr_get_volume(const struct xattr_handler *handler,
- 		return namelen;
- 	if (namelen > size)
- 		return -ERANGE;
--	memcpy(buffer, volname, size);
-+	memcpy(buffer, volname, namelen);
- 	return namelen;
- }
- 
+ /**
 -- 
 2.20.1
 
