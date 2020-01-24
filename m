@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC2D7C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:14:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DCABC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:14:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3DD620708
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:14:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E81720663
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:14:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579864464;
-	bh=JOxZ0ziLXjL9ubJpAZJpStg/NXLDy1/ruPLAELkwuwk=;
+	s=default; t=1579864467;
+	bh=Pc5plNTBdOt4iXwllo3T+KsUYOvZwVgJfibXjj9EwVw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1qLgEX6FR1z+RH37IMr2HjtQzQ37DmbsOAgHhg07fbBJ2+49lMKu77S2vrgOqP42k
-	 GU1x6yhG8CZncoZaUaxV2KTMSckvTVCSylndbu8VCIB0DFyzrxEr6Q/ZdQb5EkgpGM
-	 KSZj/vtnAG/2MsYv9JCDQIcP3OAakiSk9EhLrKEo=
+	b=Bg4PEtC/e/B/g6ECtfYfqcz2fbdHvJaCtmNg1s1M9x90ZItBlD1Bznp5ErzuDQIby
+	 2lXAv7lUfP6Hp4pHGITi0ceTwe2ye5h8ATFM/yx9dI9rRWou4Z4LT++r1UuEQG+K1M
+	 oHaQCe7Rr4x8fN0PwkMjBHvmVt0cDEBWbdOjulbo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731672AbgAXLOX (ORCPT
+        id S2390137AbgAXLO0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:14:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50732 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 06:14:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50780 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390125AbgAXLOU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:14:20 -0500
+        id S2390130AbgAXLOX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:14:23 -0500
 Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5992920663;
-        Fri, 24 Jan 2020 11:14:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DA72920663;
+        Fri, 24 Jan 2020 11:14:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579864459;
-        bh=JOxZ0ziLXjL9ubJpAZJpStg/NXLDy1/ruPLAELkwuwk=;
+        s=default; t=1579864462;
+        bh=Pc5plNTBdOt4iXwllo3T+KsUYOvZwVgJfibXjj9EwVw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FgBqaOtX+T5GF1tLgRrA6AsyOAhYYFCLjA/dN2b+31uPf9QVMvZptJOGKpt/8oZjm
-         3ZzYufDsDqYCWS6zk82IZNN0dZ7VLjmlTtsUfc3jiqeN0EEWswykJEAAE71SuIn5RT
-         TZq0y7bzN2V9NVIh3lDxyOs1qtC+QdX/4vbLvJ+4=
+        b=GtS/NUd3+DxmkctEhttmjeiEG5j1wGJvlX3Bh/e++N1fmfe1TJjd2mSQofqb5TtNa
+         Ji85L3T+pVTZIKCgi9vdgm1W4QwmcK7mFtCtXQ9fePb+hv5mlNLidgQDjGtLJuxlag
+         yOqFnust/4Sw6pCKoCSvqtzvL0rYs0+NDHBCs3ZQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Neil Armstrong <narmstrong@baylibre.com>,
-        Kevin Hilman <khilman@baylibre.com>,
+        stable@vger.kernel.org, Finn Thain <fthain@telegraphics.com.au>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 263/639] soc: amlogic: gx-socinfo: Add mask for each SoC packages
-Date:   Fri, 24 Jan 2020 10:27:13 +0100
-Message-Id: <20200124093119.683197544@linuxfoundation.org>
+Subject: [PATCH 4.19 272/639] m68k: mac: Fix VIA timer counter accesses
+Date:   Fri, 24 Jan 2020 10:27:22 +0100
+Message-Id: <20200124093120.775464626@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
 References: <20200124093047.008739095@linuxfoundation.org>
@@ -60,93 +60,154 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Neil Armstrong <narmstrong@baylibre.com>
+From: Finn Thain <fthain@telegraphics.com.au>
 
-[ Upstream commit dce47aed20c7de3ee2011b7a63e67f08e9dcfb5e ]
+[ Upstream commit 0ca7ce7db771580433bf24454f7a1542bd326078 ]
 
-When updated IDs on f842c41adc04 ("amlogic: meson-gx-socinfo: Update soc ids")
-we introduced packages ids using the full 8bit value, but in the function
-socinfo_to_package_id() the id was filtered with the 0xf0 mask.
+This resolves some bugs that affect VIA timer counter accesses.
+Avoid lost interrupts caused by reading the counter low byte register.
+Make allowance for the fact that the counter will be decremented to
+0xFFFF before being reloaded.
 
-While the 0xf0 mask is valid for most board, it filters out the lower
-4 bits which encodes some characteristics of the chip.
-
-This patch moves the mask into the meson_gx_package_id table to be applied
-on each package name independently and add the correct mask for some
-specific entries.
-
-An example is the S905, in the vendor code the S905 is package_id
-different from 0x20, and S905M is exactly 0x20.
-
-Another example are the The Wetek Hub & Play2 boards using a S905-H
-variant, which is the S905 SoC with some licence bits enabled.
-These licence bits are encoded in the lower 4bits, so to detect
-the -H variant, we must detect the id == 0x3 with the 0xf mask.
-
-Fixes: f842c41adc04 ("amlogic: meson-gx-socinfo: Update soc ids")
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-Signed-off-by: Kevin Hilman <khilman@baylibre.com>
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
+Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/soc/amlogic/meson-gx-socinfo.c | 32 ++++++++++++++------------
- 1 file changed, 17 insertions(+), 15 deletions(-)
+ arch/m68k/mac/via.c | 102 +++++++++++++++++++++++---------------------
+ 1 file changed, 53 insertions(+), 49 deletions(-)
 
-diff --git a/drivers/soc/amlogic/meson-gx-socinfo.c b/drivers/soc/amlogic/meson-gx-socinfo.c
-index 37ea0a1c24c82..1ae339f5eadbd 100644
---- a/drivers/soc/amlogic/meson-gx-socinfo.c
-+++ b/drivers/soc/amlogic/meson-gx-socinfo.c
-@@ -43,20 +43,21 @@ static const struct meson_gx_package_id {
- 	const char *name;
- 	unsigned int major_id;
- 	unsigned int pack_id;
-+	unsigned int pack_mask;
- } soc_packages[] = {
--	{ "S905", 0x1f, 0 },
--	{ "S905H", 0x1f, 0x13 },
--	{ "S905M", 0x1f, 0x20 },
--	{ "S905D", 0x21, 0 },
--	{ "S905X", 0x21, 0x80 },
--	{ "S905W", 0x21, 0xa0 },
--	{ "S905L", 0x21, 0xc0 },
--	{ "S905M2", 0x21, 0xe0 },
--	{ "S912", 0x22, 0 },
--	{ "962X", 0x24, 0x10 },
--	{ "962E", 0x24, 0x20 },
--	{ "A113X", 0x25, 0x37 },
--	{ "A113D", 0x25, 0x22 },
-+	{ "S905", 0x1f, 0, 0x20 }, /* pack_id != 0x20 */
-+	{ "S905H", 0x1f, 0x3, 0xf }, /* pack_id & 0xf == 0x3 */
-+	{ "S905M", 0x1f, 0x20, 0xf0 }, /* pack_id == 0x20 */
-+	{ "S905D", 0x21, 0, 0xf0 },
-+	{ "S905X", 0x21, 0x80, 0xf0 },
-+	{ "S905W", 0x21, 0xa0, 0xf0 },
-+	{ "S905L", 0x21, 0xc0, 0xf0 },
-+	{ "S905M2", 0x21, 0xe0, 0xf0 },
-+	{ "S912", 0x22, 0, 0x0 }, /* Only S912 is known for GXM */
-+	{ "962X", 0x24, 0x10, 0xf0 },
-+	{ "962E", 0x24, 0x20, 0xf0 },
-+	{ "A113X", 0x25, 0x37, 0xff },
-+	{ "A113D", 0x25, 0x22, 0xff },
- };
+diff --git a/arch/m68k/mac/via.c b/arch/m68k/mac/via.c
+index acdabbeecfd2e..288ec3aa5b575 100644
+--- a/arch/m68k/mac/via.c
++++ b/arch/m68k/mac/via.c
+@@ -54,16 +54,6 @@ static __u8 rbv_clear;
  
- static inline unsigned int socinfo_to_major(u32 socinfo)
-@@ -81,13 +82,14 @@ static inline unsigned int socinfo_to_misc(u32 socinfo)
+ static int gIER,gIFR,gBufA,gBufB;
  
- static const char *socinfo_to_package_id(u32 socinfo)
- {
--	unsigned int pack = socinfo_to_pack(socinfo) & 0xf0;
-+	unsigned int pack = socinfo_to_pack(socinfo);
- 	unsigned int major = socinfo_to_major(socinfo);
- 	int i;
- 
- 	for (i = 0 ; i < ARRAY_SIZE(soc_packages) ; ++i) {
- 		if (soc_packages[i].major_id == major &&
--		    soc_packages[i].pack_id == pack)
-+		    soc_packages[i].pack_id ==
-+				(pack & soc_packages[i].pack_mask))
- 			return soc_packages[i].name;
+-/*
+- * Timer defs.
+- */
+-
+-#define TICK_SIZE		10000
+-#define MAC_CLOCK_TICK		(783300/HZ)		/* ticks per HZ */
+-#define MAC_CLOCK_LOW		(MAC_CLOCK_TICK&0xFF)
+-#define MAC_CLOCK_HIGH		(MAC_CLOCK_TICK>>8)
+-
+-
+ /*
+  * On Macs with a genuine VIA chip there is no way to mask an individual slot
+  * interrupt. This limitation also seems to apply to VIA clone logic cores in
+@@ -267,22 +257,6 @@ void __init via_init(void)
  	}
+ }
  
+-/*
+- * Start the 100 Hz clock
+- */
+-
+-void __init via_init_clock(irq_handler_t func)
+-{
+-	via1[vACR] |= 0x40;
+-	via1[vT1LL] = MAC_CLOCK_LOW;
+-	via1[vT1LH] = MAC_CLOCK_HIGH;
+-	via1[vT1CL] = MAC_CLOCK_LOW;
+-	via1[vT1CH] = MAC_CLOCK_HIGH;
+-
+-	if (request_irq(IRQ_MAC_TIMER_1, func, 0, "timer", func))
+-		pr_err("Couldn't register %s interrupt\n", "timer");
+-}
+-
+ /*
+  * Debugging dump, used in various places to see what's going on.
+  */
+@@ -310,29 +284,6 @@ void via_debug_dump(void)
+ 	}
+ }
+ 
+-/*
+- * This is always executed with interrupts disabled.
+- *
+- * TBI: get time offset between scheduling timer ticks
+- */
+-
+-u32 mac_gettimeoffset(void)
+-{
+-	unsigned long ticks, offset = 0;
+-
+-	/* read VIA1 timer 2 current value */
+-	ticks = via1[vT1CL] | (via1[vT1CH] << 8);
+-	/* The probability of underflow is less than 2% */
+-	if (ticks > MAC_CLOCK_TICK - MAC_CLOCK_TICK / 50)
+-		/* Check for pending timer interrupt in VIA1 IFR */
+-		if (via1[vIFR] & 0x40) offset = TICK_SIZE;
+-
+-	ticks = MAC_CLOCK_TICK - ticks;
+-	ticks = ticks * 10000L / MAC_CLOCK_TICK;
+-
+-	return (ticks + offset) * 1000;
+-}
+-
+ /*
+  * Flush the L2 cache on Macs that have it by flipping
+  * the system into 24-bit mode for an instant.
+@@ -601,3 +552,56 @@ int via2_scsi_drq_pending(void)
+ 	return via2[gIFR] & (1 << IRQ_IDX(IRQ_MAC_SCSIDRQ));
+ }
+ EXPORT_SYMBOL(via2_scsi_drq_pending);
++
++/* timer and clock source */
++
++#define VIA_CLOCK_FREQ     783360                /* VIA "phase 2" clock in Hz */
++#define VIA_TIMER_INTERVAL (1000000 / HZ)        /* microseconds per jiffy */
++#define VIA_TIMER_CYCLES   (VIA_CLOCK_FREQ / HZ) /* clock cycles per jiffy */
++
++#define VIA_TC             (VIA_TIMER_CYCLES - 2) /* including 0 and -1 */
++#define VIA_TC_LOW         (VIA_TC & 0xFF)
++#define VIA_TC_HIGH        (VIA_TC >> 8)
++
++void __init via_init_clock(irq_handler_t timer_routine)
++{
++	if (request_irq(IRQ_MAC_TIMER_1, timer_routine, 0, "timer", NULL)) {
++		pr_err("Couldn't register %s interrupt\n", "timer");
++		return;
++	}
++
++	via1[vT1LL] = VIA_TC_LOW;
++	via1[vT1LH] = VIA_TC_HIGH;
++	via1[vT1CL] = VIA_TC_LOW;
++	via1[vT1CH] = VIA_TC_HIGH;
++	via1[vACR] |= 0x40;
++}
++
++u32 mac_gettimeoffset(void)
++{
++	unsigned long flags;
++	u8 count_high;
++	u16 count, offset = 0;
++
++	/*
++	 * Timer counter wrap-around is detected with the timer interrupt flag
++	 * but reading the counter low byte (vT1CL) would reset the flag.
++	 * Also, accessing both counter registers is essentially a data race.
++	 * These problems are avoided by ignoring the low byte. Clock accuracy
++	 * is 256 times worse (error can reach 0.327 ms) but CPU overhead is
++	 * reduced by avoiding slow VIA register accesses.
++	 */
++
++	local_irq_save(flags);
++	count_high = via1[vT1CH];
++	if (count_high == 0xFF)
++		count_high = 0;
++	if (count_high > 0 && (via1[vIFR] & VIA_TIMER_1_INT))
++		offset = VIA_TIMER_CYCLES;
++	local_irq_restore(flags);
++
++	count = count_high << 8;
++	count = VIA_TIMER_CYCLES - count + offset;
++
++	return ((count * VIA_TIMER_INTERVAL) / VIA_TIMER_CYCLES) * 1000;
++}
 -- 
 2.20.1
 
