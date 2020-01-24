@@ -7,38 +7,39 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3A64C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:13:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 390B9C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:13:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C36221556
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:13:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FD2D2071A
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:13:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730134AbgAXJNf (ORCPT
+        id S1730338AbgAXJNk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 04:13:35 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:41849 "EHLO
+        Fri, 24 Jan 2020 04:13:40 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:41856 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729384AbgAXJNf (ORCPT
+        with ESMTP id S1730135AbgAXJNi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 04:13:35 -0500
+        Fri, 24 Jan 2020 04:13:38 -0500
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1iuv1u-0007dG-0r; Fri, 24 Jan 2020 10:13:30 +0100
+        id 1iuv1v-0007dp-4K; Fri, 24 Jan 2020 10:13:31 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 935C31C010B;
-        Fri, 24 Jan 2020 10:13:29 +0100 (CET)
-Date:   Fri, 24 Jan 2020 09:13:29 -0000
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id B2DF51C1A4E;
+        Fri, 24 Jan 2020 10:13:30 +0100 (CET)
+Date:   Fri, 24 Jan 2020 09:13:30 -0000
 From:   "tip-bot2 for Marco Elver" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: locking/kcsan] kcsan: Add __no_kcsan function attribute
-Cc:     Marco Elver <elver@google.com>,
+Subject: [tip: locking/kcsan] kcsan, ubsan: Make KCSAN+UBSAN work together
+Cc:     Randy Dunlap <rdunlap@infradead.org>,
+        Marco Elver <elver@google.com>,
         "Paul E. McKenney" <paulmck@kernel.org>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <157985720930.396.9116600155349788527.tip-bot2@tip-bot2>
+Message-ID: <157985721055.396.8618031890943312175.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -54,64 +55,48 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the locking/kcsan branch of tip:
 
-Commit-ID:     e33f9a169747880a008dd5e7b934fc592e91cd63
-Gitweb:        https://git.kernel.org/tip/e33f9a169747880a008dd5e7b934fc592e91cd63
+Commit-ID:     d47715f50e833f12c5e829ce9dcc4a65104fa74f
+Gitweb:        https://git.kernel.org/tip/d47715f50e833f12c5e829ce9dcc4a65104fa74f
 Author:        Marco Elver <elver@google.com>
-AuthorDate:    Thu, 12 Dec 2019 01:07:09 +01:00
+AuthorDate:    Tue, 19 Nov 2019 19:57:42 +01:00
 Committer:     Paul E. McKenney <paulmck@kernel.org>
 CommitterDate: Tue, 07 Jan 2020 07:47:23 -08:00
 
-kcsan: Add __no_kcsan function attribute
+kcsan, ubsan: Make KCSAN+UBSAN work together
 
-Since the use of -fsanitize=thread is an implementation detail of KCSAN,
-the name __no_sanitize_thread could be misleading if used widely.
-Instead, we introduce the __no_kcsan attribute which is shorter and more
-accurate in the context of KCSAN.
+Context:
+http://lkml.kernel.org/r/fb7e25d8-aba4-3dcf-7761-cb7ecb3ebb71@infradead.org
 
-This matches the attribute name __no_kcsan_or_inline. The use of
-__kcsan_or_inline itself is still required for __always_inline functions
-to retain compatibility with older compilers.
-
+Reported-by: Randy Dunlap <rdunlap@infradead.org>
 Signed-off-by: Marco Elver <elver@google.com>
+Acked-by: Randy Dunlap <rdunlap@infradead.org> # build-tested
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 ---
- include/linux/compiler-gcc.h | 3 +--
- include/linux/compiler.h     | 7 +++++--
- 2 files changed, 6 insertions(+), 4 deletions(-)
+ kernel/kcsan/Makefile | 1 +
+ lib/Makefile          | 1 +
+ 2 files changed, 2 insertions(+)
 
-diff --git a/include/linux/compiler-gcc.h b/include/linux/compiler-gcc.h
-index 0eb2a1c..cf294fa 100644
---- a/include/linux/compiler-gcc.h
-+++ b/include/linux/compiler-gcc.h
-@@ -146,8 +146,7 @@
- #endif
+diff --git a/kernel/kcsan/Makefile b/kernel/kcsan/Makefile
+index dd15b62..df6b779 100644
+--- a/kernel/kcsan/Makefile
++++ b/kernel/kcsan/Makefile
+@@ -1,6 +1,7 @@
+ # SPDX-License-Identifier: GPL-2.0
+ KCSAN_SANITIZE := n
+ KCOV_INSTRUMENT := n
++UBSAN_SANITIZE := n
  
- #if defined(__SANITIZE_THREAD__) && __has_attribute(__no_sanitize_thread__)
--#define __no_sanitize_thread                                                   \
--	__attribute__((__noinline__)) __attribute__((no_sanitize_thread))
-+#define __no_sanitize_thread __attribute__((no_sanitize_thread))
- #else
- #define __no_sanitize_thread
- #endif
-diff --git a/include/linux/compiler.h b/include/linux/compiler.h
-index ad8c761..8c0beb1 100644
---- a/include/linux/compiler.h
-+++ b/include/linux/compiler.h
-@@ -207,12 +207,15 @@ void ftrace_likely_update(struct ftrace_likely_data *f, int val,
- # define __no_kasan_or_inline __always_inline
- #endif
+ CFLAGS_REMOVE_core.o = $(CC_FLAGS_FTRACE)
  
-+#define __no_kcsan __no_sanitize_thread
- #ifdef __SANITIZE_THREAD__
- /*
-  * Rely on __SANITIZE_THREAD__ instead of CONFIG_KCSAN, to avoid not inlining in
-- * compilation units where instrumentation is disabled.
-+ * compilation units where instrumentation is disabled. The attribute 'noinline'
-+ * is required for older compilers, where implicit inlining of very small
-+ * functions renders __no_sanitize_thread ineffective.
-  */
--# define __no_kcsan_or_inline __no_sanitize_thread notrace __maybe_unused
-+# define __no_kcsan_or_inline __no_kcsan noinline notrace __maybe_unused
- # define __no_sanitize_or_inline __no_kcsan_or_inline
- #else
- # define __no_kcsan_or_inline __always_inline
+diff --git a/lib/Makefile b/lib/Makefile
+index 778ab70..9d5bda9 100644
+--- a/lib/Makefile
++++ b/lib/Makefile
+@@ -279,6 +279,7 @@ obj-$(CONFIG_UBSAN) += ubsan.o
+ 
+ UBSAN_SANITIZE_ubsan.o := n
+ KASAN_SANITIZE_ubsan.o := n
++KCSAN_SANITIZE_ubsan.o := n
+ CFLAGS_ubsan.o := $(call cc-option, -fno-stack-protector) $(DISABLE_STACKLEAK_PLUGIN)
+ 
+ obj-$(CONFIG_SBITMAP) += sbitmap.o
