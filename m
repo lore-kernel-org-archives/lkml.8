@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F2C3C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:43:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7658DC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:44:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73B9620704
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:43:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DF9720678
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:44:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579866231;
-	bh=8SstP88sVbDvinBmAl97JPTxSgO6mrA6hEdHJmhpsiY=;
+	s=default; t=1579866241;
+	bh=R42p8EilbRbVFkTD4UNRS3mWkYYHpNPIw5FbffRX+gQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yd2+jRcAkl8Jnig+d+qoGTiai36O+Y2wa9iwwPn2W4VWkWzckB1q9bzB3FmNHhMlx
-	 cNpEoPQEJ4+nxn1IA0kHY4QUoHBX5BwxJmYsDR7ECsTIZWfbIoAIecYYECd09Fcr79
-	 tcoItob6cZCL+xNhwkZKkAQF+O6jMfSbLcBajSd4=
+	b=XoytaM4ARsu2zOxh5x4DVIlvmJAqy/MQXW5wn5QEZKvO63F5qoRPtEhr0Oif2JCwR
+	 tyDdWfFI12c69fevp4tVPo0J5hQ54K4ErT8eXx2A+KgS9ppf1hBLrTrEGZholvEVLA
+	 LpeH0S4/RRuELKcviyWeoFRQHxpoIqwrgH2yIW8w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388298AbgAXLDb (ORCPT
+        id S2392129AbgAXLn7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:03:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37222 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 06:43:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34850 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732311AbgAXLDZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:03:25 -0500
+        id S2387775AbgAXLBr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:01:47 -0500
 Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C16CC2071A;
-        Fri, 24 Jan 2020 11:03:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 246C32075D;
+        Fri, 24 Jan 2020 11:01:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579863804;
-        bh=8SstP88sVbDvinBmAl97JPTxSgO6mrA6hEdHJmhpsiY=;
+        s=default; t=1579863706;
+        bh=R42p8EilbRbVFkTD4UNRS3mWkYYHpNPIw5FbffRX+gQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2UISt19xzQkvcJV8mX6jpxfmVjcCDiMX6224MUWnyY1ePTYicb4ejjOq7kNqnKjZE
-         zNS+EbkiQ4PVIaQvBKIfhzkvij65QP8huHOdYBDo1dumdW16LXW9XMAEIbaBWzobI+
-         zwunMNGEypzz9mIfj7xEvJyo7cFAIwMTiT1HDusM=
+        b=xCURA0MPHLuT8IT8TY1Goj7Y2itYBfpKN8nUV6P65tVs20VNdmPNjApAHizeB59ik
+         fT/nnChQRoSGgQyZCs9QNXH3HmjtPq3ziFwOPhaTADlBELqFA1R6LBc8aGP051Lzjz
+         K2BXPqN5A0ug3colISHLA640yfatc7Yws87GQIY0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Simon Horman <horms+renesas@verge.net.au>,
+        stable@vger.kernel.org, Selvin Xavier <selvin.xavier@broadcom.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 092/639] pinctrl: sh-pfc: r8a77980: Add missing MOD_SEL0 field
-Date:   Fri, 24 Jan 2020 10:24:22 +0100
-Message-Id: <20200124093058.855289030@linuxfoundation.org>
+Subject: [PATCH 4.19 053/639] RDMA/bnxt_re: Add missing spin lock initialization
+Date:   Fri, 24 Jan 2020 10:23:43 +0100
+Message-Id: <20200124093054.050445323@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
 References: <20200124093047.008739095@linuxfoundation.org>
@@ -61,35 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+From: Selvin Xavier <selvin.xavier@broadcom.com>
 
-[ Upstream commit b0f77269f6bba385f1f4dce44e7756cf8fbc0176 ]
+[ Upstream commit 5a23e0b1dd51fe0efae666b03fdb15e1301f437a ]
 
-The Module Select Register 0 contains 20 (= 5 x 4) reserved bits, and 12
-single-bit fields, but the variable field descriptor lacks a field of 4
-reserved bits.
+Add the missing initalization of the cq_lock and qplib.flush_lock.
 
-Fixes: f59125248a691dfe ("pinctrl: sh-pfc: Add R8A77980 PFC support")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+Fixes: 942c9b6ca8de ("RDMA/bnxt_re: Avoid Hard lockup during error CQE processing")
+Signed-off-by: Selvin Xavier <selvin.xavier@broadcom.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/sh-pfc/pfc-r8a77980.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/infiniband/hw/bnxt_re/ib_verbs.c | 1 +
+ drivers/infiniband/hw/bnxt_re/qplib_fp.c | 1 +
+ 2 files changed, 2 insertions(+)
 
-diff --git a/drivers/pinctrl/sh-pfc/pfc-r8a77980.c b/drivers/pinctrl/sh-pfc/pfc-r8a77980.c
-index 3f6967331f646..81a710bb8555e 100644
---- a/drivers/pinctrl/sh-pfc/pfc-r8a77980.c
-+++ b/drivers/pinctrl/sh-pfc/pfc-r8a77980.c
-@@ -2751,7 +2751,7 @@ static const struct pinmux_cfg_reg pinmux_config_regs[] = {
- #define F_(x, y)	x,
- #define FM(x)		FN_##x,
- 	{ PINMUX_CFG_REG_VAR("MOD_SEL0", 0xe6060500, 32,
--			     4, 4, 4, 4,
-+			     4, 4, 4, 4, 4,
- 			     1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1) {
- 		/* RESERVED 31, 30, 29, 28 */
- 		0, 0, 0, 0, 0, 0, 0, 0,	0, 0, 0, 0, 0, 0, 0, 0,
+diff --git a/drivers/infiniband/hw/bnxt_re/ib_verbs.c b/drivers/infiniband/hw/bnxt_re/ib_verbs.c
+index a69632f1fab0b..c9af2d139f5cb 100644
+--- a/drivers/infiniband/hw/bnxt_re/ib_verbs.c
++++ b/drivers/infiniband/hw/bnxt_re/ib_verbs.c
+@@ -2664,6 +2664,7 @@ struct ib_cq *bnxt_re_create_cq(struct ib_device *ibdev,
+ 	nq->budget++;
+ 
+ 	atomic_inc(&rdev->cq_count);
++	spin_lock_init(&cq->cq_lock);
+ 
+ 	if (context) {
+ 		struct bnxt_re_cq_resp resp;
+diff --git a/drivers/infiniband/hw/bnxt_re/qplib_fp.c b/drivers/infiniband/hw/bnxt_re/qplib_fp.c
+index c15335dc8f614..60f2fb7e7dbfe 100644
+--- a/drivers/infiniband/hw/bnxt_re/qplib_fp.c
++++ b/drivers/infiniband/hw/bnxt_re/qplib_fp.c
+@@ -1970,6 +1970,7 @@ int bnxt_qplib_create_cq(struct bnxt_qplib_res *res, struct bnxt_qplib_cq *cq)
+ 	INIT_LIST_HEAD(&cq->sqf_head);
+ 	INIT_LIST_HEAD(&cq->rqf_head);
+ 	spin_lock_init(&cq->compl_lock);
++	spin_lock_init(&cq->flush_lock);
+ 
+ 	bnxt_qplib_arm_cq_enable(cq);
+ 	return 0;
 -- 
 2.20.1
 
