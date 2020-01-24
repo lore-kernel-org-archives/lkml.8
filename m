@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D735C32771
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:39:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDF09C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:39:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67603222D9
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:39:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1DBE2070A
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:39:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579858796;
-	bh=iflJxlVj9GP6HYMkPZJAfQd+eNQgJamxdRr6nK2NHJI=;
+	s=default; t=1579858797;
+	bh=ejhYGlJz29qxxXkISQoQ1D5EU/HBA6lMprgq1m3Zw8k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DJ6bFCkgtqSf78m8VYZ7WQZhlzks1/kmgzt9b+bJET73ZsD/n583XQfj/z5kafKUo
-	 DI82BhtTLENwdICPJVOAuEvKWY0n7EaOfCZkQtljDAoAS8Pgn+Nw2UVdokYJWwCpLY
-	 Tj1aeiu1qDeP3fXdT8xTSNPdIXxQjGUZyy+B/vfM=
+	b=n5aD++a6IFtjsCl30SGNeYlze9V7/xbOEB/hJiRXJsz153Z6TmhzYdCJEBx5SJ9w2
+	 91VSsCqeRx1VXex196jrsuB3IEGEznndac/ueNq30IYeCklwIpkYyw8RWSLifXjyVF
+	 52fKA4rpMcPZth7sdCQPK2+md7vvFneN+T3Vt/ho=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731666AbgAXJj1 (ORCPT
+        id S1731618AbgAXJjW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 04:39:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36564 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 04:39:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36440 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731634AbgAXJjX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 04:39:23 -0500
+        id S1731589AbgAXJjQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 04:39:16 -0500
 Received: from localhost (unknown [145.15.244.15])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 40EEC20838;
-        Fri, 24 Jan 2020 09:39:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BF6F120838;
+        Fri, 24 Jan 2020 09:39:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579858762;
-        bh=iflJxlVj9GP6HYMkPZJAfQd+eNQgJamxdRr6nK2NHJI=;
+        s=default; t=1579858755;
+        bh=ejhYGlJz29qxxXkISQoQ1D5EU/HBA6lMprgq1m3Zw8k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KOcT5Ug6DvT+wHuUPByyIR9TJx/DCj3Q9HhSUvHU9NOTxxjorFUSPkkyZs3/+s5B+
-         Xw/vWILaHS0QGX95u7FVhfpjG+/HCR8cP44Y+GBsYZ6iMd9wxWe6LzDlTHcTTBwX+Z
-         TG2XecQoHzn8pqN5iHeYCKDPz2RMthKVAryocBCY=
+        b=Exai8LaWVl5cCsTHlt8HlyGM1b4evtisH2b7KiH1DxCfDIh08D/wTeEPFhEN9hpOV
+         /uJOsiWUnZ4ONLyXKHmOsU57FtTycPX8Yhwq5ACSxjpwPUSOcwjuebGD/JYbjIQ7X5
+         dbujnhfBbA2xCU2urKkQWxyzq399eVzZMiY/SMIg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jakub Kicinski <kubakici@wp.pl>,
-        Lorenzo Bianconi <lorenzo@kernel.org>,
-        Kalle Valo <kvalo@codeaurora.org>
-Subject: [PATCH 5.4 033/102] mt7601u: fix bbp version check in mt7601u_wait_bbp_ready
-Date:   Fri, 24 Jan 2020 10:30:34 +0100
-Message-Id: <20200124092811.239592861@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH 5.4 048/102] gpiolib: No need to call gpiochip_remove_pin_ranges() twice
+Date:   Fri, 24 Jan 2020 10:30:49 +0100
+Message-Id: <20200124092813.549446778@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124092806.004582306@linuxfoundation.org>
 References: <20200124092806.004582306@linuxfoundation.org>
@@ -60,38 +61,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lorenzo Bianconi <lorenzo@kernel.org>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-commit 15e14f76f85f4f0eab3b8146e1cd3c58ce272823 upstream.
+commit 2f4133bb5f14f49a99acf0cc55b84996dbfb4dff upstream.
 
-Fix bbp ready check in mt7601u_wait_bbp_ready. The issue is reported by
-coverity with the following error:
+of_gpiochip_add(), when fails, calls gpiochip_remove_pin_ranges().
 
-Logical vs. bitwise operator
-The expression's value does not depend on the operands; inadvertent use
-of the wrong operator is a likely logic error.
+ADD:
+  gpiochip_add_data_with_key() ->
+    of_gpiochip_add() -> (ERROR path)
+      gpiochip_remove_pin_ranges()
 
-Addresses-Coverity-ID: 1309441 ("Logical vs. bitwise operator")
-Fixes: c869f77d6abb ("add mt7601u driver")
-Acked-by: Jakub Kicinski <kubakici@wp.pl>
-Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+At the same time of_gpiochip_remove() calls exactly the above mentioned
+function unconditionally and so does gpiochip_remove().
+
+REMOVE:
+  gpiochip_remove() ->
+    gpiochip_remove_pin_ranges()
+    of_gpiochip_remove() ->
+      gpiochip_remove_pin_ranges()
+
+Since gpiochip_remove() calls gpiochip_remove_pin_ranges() unconditionally,
+we have duplicate call to the same function when it's not necessary.
+
+Move gpiochip_remove_pin_ranges() from of_gpiochip_add() to gpiochip_add()
+to avoid duplicate calls and be consistent with the explicit call in
+gpiochip_remove().
+
+Fixes: e93fa3f24353 ("gpiolib: remove duplicate pin range code")
+Depends-on: f7299d441a4d ("gpio: of: Fix of_gpiochip_add() error path")
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/wireless/mediatek/mt7601u/phy.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpio/gpiolib-of.c |    5 +----
+ drivers/gpio/gpiolib.c    |    3 ++-
+ 2 files changed, 3 insertions(+), 5 deletions(-)
 
---- a/drivers/net/wireless/mediatek/mt7601u/phy.c
-+++ b/drivers/net/wireless/mediatek/mt7601u/phy.c
-@@ -213,7 +213,7 @@ int mt7601u_wait_bbp_ready(struct mt7601
+--- a/drivers/gpio/gpiolib-of.c
++++ b/drivers/gpio/gpiolib-of.c
+@@ -909,16 +909,13 @@ int of_gpiochip_add(struct gpio_chip *ch
+ 	of_node_get(chip->of_node);
  
- 	do {
- 		val = mt7601u_bbp_rr(dev, MT_BBP_REG_VERSION);
--		if (val && ~val)
-+		if (val && val != 0xff)
- 			break;
- 	} while (--i);
+ 	ret = of_gpiochip_scan_gpios(chip);
+-	if (ret) {
++	if (ret)
+ 		of_node_put(chip->of_node);
+-		gpiochip_remove_pin_ranges(chip);
+-	}
  
+ 	return ret;
+ }
+ 
+ void of_gpiochip_remove(struct gpio_chip *chip)
+ {
+-	gpiochip_remove_pin_ranges(chip);
+ 	of_node_put(chip->of_node);
+ }
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -1452,6 +1452,7 @@ err_remove_of_chip:
+ 	gpiochip_free_hogs(chip);
+ 	of_gpiochip_remove(chip);
+ err_free_gpiochip_mask:
++	gpiochip_remove_pin_ranges(chip);
+ 	gpiochip_free_valid_mask(chip);
+ err_remove_from_list:
+ 	spin_lock_irqsave(&gpio_lock, flags);
+@@ -1507,8 +1508,8 @@ void gpiochip_remove(struct gpio_chip *c
+ 	gdev->chip = NULL;
+ 	gpiochip_irqchip_remove(chip);
+ 	acpi_gpiochip_remove(chip);
+-	gpiochip_remove_pin_ranges(chip);
+ 	of_gpiochip_remove(chip);
++	gpiochip_remove_pin_ranges(chip);
+ 	gpiochip_free_valid_mask(chip);
+ 	/*
+ 	 * We accept no more calls into the driver from this point, so
 
 
