@@ -2,88 +2,126 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C67C8C32771
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 08:46:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81907C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 08:48:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 977052070A
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 08:46:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DAEA2070A
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 08:48:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="WMEmUFFa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729751AbgAXIqe (ORCPT
+        id S1729814AbgAXIsR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 03:46:34 -0500
-Received: from hostingweb31-40.netsons.net ([89.40.174.40]:52023 "EHLO
-        hostingweb31-40.netsons.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729604AbgAXIqd (ORCPT
+        Fri, 24 Jan 2020 03:48:17 -0500
+Received: from mail25.static.mailgun.info ([104.130.122.25]:24507 "EHLO
+        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725843AbgAXIsR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 03:46:33 -0500
-Received: from [109.168.11.45] (port=51208 helo=[192.168.101.73])
-        by hostingweb31.netsons.net with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.92)
-        (envelope-from <luca@lucaceresoli.net>)
-        id 1iuubk-0004bC-SO; Fri, 24 Jan 2020 09:46:28 +0100
-Subject: Re: [PATCH] iwlwifi: fix config variable name in comment
-To:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Cc:     Johannes Berg <johannes.berg@intel.com>,
-        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
-        Luca Coelho <luciano.coelho@intel.com>,
-        Intel Linux Wireless <linuxwifi@intel.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-kernel@vger.kernel.org
-References: <20191202101339.24265-1-luca@lucaceresoli.net>
-From:   Luca Ceresoli <luca@lucaceresoli.net>
-Message-ID: <bcf538ea-cfbd-c6b7-5fbe-dd647b6a7e9c@lucaceresoli.net>
-Date:   Fri, 24 Jan 2020 09:46:28 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Fri, 24 Jan 2020 03:48:17 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1579855696; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=qJBBtjitA++VUyWFDcRJ0WyV5UvQnNj9dtREvFgLIhA=;
+ b=WMEmUFFaWgG+AGTYdZ6w/we1phjdv77x3M0D7Lx35wpg68teFTFUdWAF4b/aMYC3PttjuMne
+ 4SVeThzb0z7heHqFp9k/uh6yVYBMUXidFEmPNUNb/mtU75ALz+AUFZp8uVYKNp4hyLcdrHfi
+ zDIXJYc6Sese6ECjCpAUbReZQrE=
+X-Mailgun-Sending-Ip: 104.130.122.25
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e2aaf4f.7ff60a107df8-smtp-out-n01;
+ Fri, 24 Jan 2020 08:48:15 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 15E17C4479C; Fri, 24 Jan 2020 08:48:15 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: saiprakash.ranjan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 529C6C43383;
+        Fri, 24 Jan 2020 08:48:14 +0000 (UTC)
 MIME-Version: 1.0
-In-Reply-To: <20191202101339.24265-1-luca@lucaceresoli.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - hostingweb31.netsons.net
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - lucaceresoli.net
-X-Get-Message-Sender-Via: hostingweb31.netsons.net: authenticated_id: luca+lucaceresoli.net/only user confirmed/virtual account not confirmed
-X-Authenticated-Sender: hostingweb31.netsons.net: luca@lucaceresoli.net
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+Date:   Fri, 24 Jan 2020 14:18:14 +0530
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     Anton Vorontsov <anton@enomsg.org>,
+        Colin Cross <ccross@android.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Kees Cook <keescook@chromium.org>,
+        Tony Luck <tony.luck@intel.com>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org,
+        Douglas Anderson <dianders@chromium.org>
+Subject: Re: [PATCH] pstore: Fix printing of duplicate boot messages to
+ console
+In-Reply-To: <5e29f8df.1c69fb81.fc97b.8df8@mx.google.com>
+References: <20200123160031.9853-1-saiprakash.ranjan@codeaurora.org>
+ <5e29f8df.1c69fb81.fc97b.8df8@mx.google.com>
+Message-ID: <80957b8f069b513fd2b6f031a94a3474@codeaurora.org>
+X-Sender: saiprakash.ranjan@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On 02/12/19 11:13, Luca Ceresoli wrote:
-> The correct variable name was replaced here by mistake.
+On 2020-01-24 01:19, Stephen Boyd wrote:
+> Quoting Sai Prakash Ranjan (2020-01-23 08:00:31)
+>> Since commit f92b070f2dc8 ("printk: Do not miss new messages
+>> when replaying the log"), CON_PRINTBUFFER flag causes the
+>> duplicate boot messages to be printed on the console when
+>> PSTORE_CONSOLE and earlycon (boot console) is enabled.
+>> Pstore console registers to boot console when earlycon is
+>> enabled during pstore_register_console as a part of ramoops
+>> initialization in postcore_initcall and the printk core
+>> checks for CON_PRINTBUFFER flag and replays the log buffer
+>> to registered console (in this case pstore console which
+>> just registered to boot console) causing duplicate messages
+>> to be printed. Remove the CON_PRINTBUFFER flag from pstore
+>> console since pstore is not concerned with the printing of
+>> buffer to console but with writing of the buffer to the
+>> backend.
+>> 
+>> Console log with earlycon and pstore console enabled:
+>> 
+>> [    0.008342] Console: colour dummy device 80x25
+>> [    0.000000] Booting Linux on physical CPU 0x0000000000 [0x51df805e]
+>> ...
+>> [    1.244049] hw-breakpoint: found 6 breakpoint and 4 watchpoint 
+>> registers.
+>> [    0.000000] Booting Linux on physical CPU 0x0000000000 [0x51df805e]
+>> 
+>> Fixes: f92b070f2dc8 ("printk: Do not miss new messages when replaying 
+>> the log")
+>> Reported-by: Douglas Anderson <dianders@chromium.org>
+>> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+>> ---
 > 
-> Fixes: ab27926d9e4a ("iwlwifi: fix devices with PCI Device ID 0x34F0 and 11ac RF modules")
-> Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
-> ---
->  drivers/net/wireless/intel/iwlwifi/iwl-config.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> While I like the idea, it seems that this breaks console-ramoops by
+> removing all the text that is printed in the kernel log before this
+> console is registered. I reboot and see that
+> /sys/fs/pstore/console-ramoops-1 starts like this now:
 > 
-> diff --git a/drivers/net/wireless/intel/iwlwifi/iwl-config.h b/drivers/net/wireless/intel/iwlwifi/iwl-config.h
-> index 317eac066082..fb6838527e28 100644
-> --- a/drivers/net/wireless/intel/iwlwifi/iwl-config.h
-> +++ b/drivers/net/wireless/intel/iwlwifi/iwl-config.h
-> @@ -636,6 +636,6 @@ extern const struct iwl_cfg iwlax210_2ax_cfg_so_hr_a0;
->  extern const struct iwl_cfg iwlax211_2ax_cfg_so_gf_a0;
->  extern const struct iwl_cfg iwlax210_2ax_cfg_ty_gf_a0;
->  extern const struct iwl_cfg iwlax411_2ax_cfg_so_gf4_a0;
-> -#endif /* CPTCFG_IWLMVM || CPTCFG_IWLFMAC */
-> +#endif /* CONFIG_IWLMVM */
+> 	localhost ~ # cat /sys/fs/pstore/console-ramoops-0
+> 	[    0.943472] printk: console [pstore-1] enabled
+> 
+> Maybe this console can be "special" and not require anything to be
+> printed out to visible consoles but still get the entire log contents?
+> Or we should just not worry about it.
 
-A gentle ping about this patch.
+Thanks for testing this out Stephen, I should have tested this some 
+more.
+Lets drop this patch.
 
-Thanks,
+-Sai
+
 -- 
-Luca
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
+member
+of Code Aurora Forum, hosted by The Linux Foundation
