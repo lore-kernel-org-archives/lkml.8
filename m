@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20FF9C3F68F
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:40:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 281B6C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:40:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9A4E21569
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:40:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E53A320838
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:40:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579858825;
-	bh=TWoRDpwZvRipbJUFqnEf8OEHQIHpv21Q8sPzcDoVIz8=;
+	s=default; t=1579858831;
+	bh=BIPbnlO9fACMo7/V30+Oas84K0C6QSVwu8VSeWhTK3s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=M0CXy8p8AjIU6YvkRdB9IKRSvc81+LTw5hYvSMrtNsHaTcRM6MMVoOW0cG8CdegXJ
-	 QHbxE2N33OvlYorH8ruQS+MkUB4ouwW+8N7VLQGewHChmWnDsTWvJnoOX59FUll1rg
-	 TYV77/iSES+WWhBHC+tnd0K0Ji/3GDFclJPadSkc=
+	b=x83gIe1x8AukTS8HCveunQ94dj9D9lihm4JRIgSZhDaHtAE6CfXXOdx3TAsR7nCCB
+	 N1GWgPle2k7McHwiy4C6Ia3s5xn+ENVMR/m02ppgvvRnk0OcKQOMp/dN5+DFz4N4ia
+	 Hg8PTcKnT7LV0Lg2b6DPEAn1Q/ZwLH/2AugqruS8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732428AbgAXJkY (ORCPT
+        id S1732448AbgAXJka (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 04:40:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37714 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 04:40:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37782 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731041AbgAXJkV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 04:40:21 -0500
+        id S1731041AbgAXJkY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 04:40:24 -0500
 Received: from localhost (unknown [145.15.244.15])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3D9742087E;
-        Fri, 24 Jan 2020 09:40:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 92CCF208C4;
+        Fri, 24 Jan 2020 09:40:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579858820;
-        bh=TWoRDpwZvRipbJUFqnEf8OEHQIHpv21Q8sPzcDoVIz8=;
+        s=default; t=1579858824;
+        bh=BIPbnlO9fACMo7/V30+Oas84K0C6QSVwu8VSeWhTK3s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DG1ZPmpx3UAKx/fLDtfGFkhDCaQh01AnZG48VXNRA3VQPibGZ4E7tfnnlRFY14dRT
-         VQCW+kz8tyOZQgSMzBB00DTN4zOuSsUyOboNxCRLdrnqCqi5NPWV6b0br7LKa3oRrF
-         Fir2OVU5bjyOpuhxXwZYTQUEpEVU8S0FVIuokyCM=
+        b=ca1pr1bUbRmQs+5rBlGVlBDYhKPGcNCGAigR6DebDpxFZfrG47gBPZT29IxVQW2bt
+         FS3GuMPr7M2zFjPqaPMasfG1yByavyT4VVJrrwBBYAAyLfhgFlKAjSSj1u00dEALod
+         /SZk070UzLF6EkYiCgrtfNO0GqrOKQTe/I+XjPFc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
-        Sebastian Reichel <sebastian.reichel@collabora.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 065/102] power: supply: bd70528: Add MODULE_ALIAS to allow module auto loading
-Date:   Fri, 24 Jan 2020 10:31:06 +0100
-Message-Id: <20200124092816.197109313@linuxfoundation.org>
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Steven Price <steven.price@arm.com>,
+        Rob Herring <robh@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 051/102] drm/panfrost: Add missing check for pfdev->regulator
+Date:   Fri, 24 Jan 2020 10:30:52 +0100
+Message-Id: <20200124092814.017324612@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124092806.004582306@linuxfoundation.org>
 References: <20200124092806.004582306@linuxfoundation.org>
@@ -61,31 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+From: Steven Price <steven.price@arm.com>
 
-[ Upstream commit 9480029fe5c24d482efad38dc631bd555fc7afe2 ]
+[ Upstream commit 52282163dfa651849e905886845bcf6850dd83c2 ]
 
-The bd70528 charger driver is probed by MFD driver. Add MODULE_ALIAS
-in order to allow udev to load the module when MFD sub-device cell for
-charger is added.
+When modifying panfrost_devfreq_target() to support a device without a
+regulator defined I missed the check on the error path. Let's add it.
 
-Fixes: f8c7f7ddd8ef0 ("power: supply: Initial support for ROHM BD70528 PMIC charger block")
-Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+Fixes: e21dd290881b ("drm/panfrost: Enable devfreq to work without regulator")
+Signed-off-by: Steven Price <steven.price@arm.com>
+Signed-off-by: Rob Herring <robh@kernel.org>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190822093218.26014-1-steven.price@arm.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/power/supply/bd70528-charger.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/gpu/drm/panfrost/panfrost_devfreq.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/power/supply/bd70528-charger.c b/drivers/power/supply/bd70528-charger.c
-index 1bb32b7226d74..b8e1ec106627f 100644
---- a/drivers/power/supply/bd70528-charger.c
-+++ b/drivers/power/supply/bd70528-charger.c
-@@ -741,3 +741,4 @@ module_platform_driver(bd70528_power);
- MODULE_AUTHOR("Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>");
- MODULE_DESCRIPTION("BD70528 power-supply driver");
- MODULE_LICENSE("GPL");
-+MODULE_ALIAS("platform:bd70528-power");
+diff --git a/drivers/gpu/drm/panfrost/panfrost_devfreq.c b/drivers/gpu/drm/panfrost/panfrost_devfreq.c
+index 12ff77dacc954..c1eb8cfe6aeb3 100644
+--- a/drivers/gpu/drm/panfrost/panfrost_devfreq.c
++++ b/drivers/gpu/drm/panfrost/panfrost_devfreq.c
+@@ -53,8 +53,10 @@ static int panfrost_devfreq_target(struct device *dev, unsigned long *freq,
+ 	if (err) {
+ 		dev_err(dev, "Cannot set frequency %lu (%d)\n", target_rate,
+ 			err);
+-		regulator_set_voltage(pfdev->regulator, pfdev->devfreq.cur_volt,
+-				      pfdev->devfreq.cur_volt);
++		if (pfdev->regulator)
++			regulator_set_voltage(pfdev->regulator,
++					      pfdev->devfreq.cur_volt,
++					      pfdev->devfreq.cur_volt);
+ 		return err;
+ 	}
+ 
 -- 
 2.20.1
 
