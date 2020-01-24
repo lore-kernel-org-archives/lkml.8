@@ -4,49 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C588CC35240
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 01:19:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A88BC35240
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 01:19:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88A872087E
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 01:19:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3249D21D7E
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 01:19:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579828768;
-	bh=E0awQwTam+1n25uIcPvb3MI3juss7eRUO4EghGen+rs=;
+	s=default; t=1579828771;
+	bh=ODhOgXBkgDKqiZWuJ6tXJ5epKpG4Qzm8ZTpAoglS7Bo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iqYuz/PCkUMjnybTaxLB/aHpHEnFWB1Iw6Qxem5XqCbLHpu1Mj6nT+CXbQ/okk9At
-	 IPTDJJPui2l+tR7l/QEzqCxd+bZ8hoo/MsaNTVjjcTAK1CmQRUAvp6D1FuyaRC6WMx
-	 +72Hrvb4vPo1wIpOwXYPXyNMehkvB1kQVPtpzMsY=
+	b=1eaiFv9r2raRwNPLiDRL/vgfB0EKN8EiCvZ9q4aoUFfKUo16nwwCEIMdUKNfeJr89
+	 EGgxrKY9LsahZjFPu/pScF/p5aiewfit6QKkZBIUugrc/Xno1kYieGlIvEo0wof9Hx
+	 1zHoU+DUoTeqjqr8Ag8KI3t0rp8ABgVdDRp6uD98=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730705AbgAXBRn (ORCPT
+        id S1729425AbgAXBTa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 20:17:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60716 "EHLO mail.kernel.org"
+        Thu, 23 Jan 2020 20:19:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60908 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730540AbgAXBRg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 20:17:36 -0500
+        id S1730709AbgAXBRn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jan 2020 20:17:43 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A53022467E;
-        Fri, 24 Jan 2020 01:17:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6B7CA2071E;
+        Fri, 24 Jan 2020 01:17:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579828656;
-        bh=E0awQwTam+1n25uIcPvb3MI3juss7eRUO4EghGen+rs=;
+        s=default; t=1579828663;
+        bh=ODhOgXBkgDKqiZWuJ6tXJ5epKpG4Qzm8ZTpAoglS7Bo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=znA0DuXbodEf0gBTFYekrABxloKNS/03GdIQ4uOpYXzqI6P9ow9CRxS8xrYMnPgQM
-         u/E2Y9kLVZ9mJPSOEXpHCLD+VToNR0A8rIg+UPo8yH7gZWs9YVgPBMkkhkj4L2vTXL
-         i9SOExu7IJp8cWFQU15f/nn2FGdgv0CgEh5tzSvY=
+        b=you1LtzDhzevc53BU81uVQTPsboEsBek1EzX3vUmsj3yv5KhDOXtpUwDWDagSO3jJ
+         2+1jJSM03pUMfoSilb7Amzhe53S8bHwxJK0QouJCsAQi0l02j/DsFphLBx7DXKULlZ
+         oU4o5GHPm0dUDgdxibjrH6/FS2P++88LNOQfdkNA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "H. Nikolaus Schaller" <hns@goldelico.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-mmc@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 24/33] mmc: core: fix wl1251 sdio quirks
-Date:   Thu, 23 Jan 2020 20:16:59 -0500
-Message-Id: <20200124011708.18232-24-sashal@kernel.org>
+Cc:     Priit Laes <plaes@plaes.org>, Jiri Kosina <jkosina@suse.cz>,
+        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 30/33] HID: Add quirk for Xin-Mo Dual Controller
+Date:   Thu, 23 Jan 2020 20:17:05 -0500
+Message-Id: <20200124011708.18232-30-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200124011708.18232-1-sashal@kernel.org>
 References: <20200124011708.18232-1-sashal@kernel.org>
@@ -59,41 +58,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "H. Nikolaus Schaller" <hns@goldelico.com>
+From: Priit Laes <plaes@plaes.org>
 
-[ Upstream commit 16568b4a4f0c34bd35cfadac63303c7af7812764 ]
+[ Upstream commit c62f7cd8ed066a93a243643ebf57ca99f754388e ]
 
-wl1251 and wl1271 have different vendor id and device id.
-So we need to handle both with sdio quirks.
+Without the quirk, joystick shows up as single controller
+for both first and second player pads/pins.
 
-Fixes: 884f38607897 ("mmc: core: move some sdio IDs out of quirks file")
-Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
-Cc: <stable@vger.kernel.org> # v4.11+
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Signed-off-by: Priit Laes <plaes@plaes.org>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mmc/core/quirks.h | 7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/hid/hid-quirks.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/mmc/core/quirks.h b/drivers/mmc/core/quirks.h
-index 2d2d9ea8be4f3..3dba15bccce25 100644
---- a/drivers/mmc/core/quirks.h
-+++ b/drivers/mmc/core/quirks.h
-@@ -119,7 +119,14 @@ static const struct mmc_fixup mmc_ext_csd_fixups[] = {
- 	END_FIXUP
+diff --git a/drivers/hid/hid-quirks.c b/drivers/hid/hid-quirks.c
+index 9a35af1e26623..fa58a7cbb3ff2 100644
+--- a/drivers/hid/hid-quirks.c
++++ b/drivers/hid/hid-quirks.c
+@@ -174,6 +174,7 @@ static const struct hid_device_id hid_quirks[] = {
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_WALTOP, USB_DEVICE_ID_WALTOP_SIRIUS_BATTERY_FREE_TABLET), HID_QUIRK_MULTI_INPUT },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_WISEGROUP_LTD2, USB_DEVICE_ID_SMARTJOY_DUAL_PLUS), HID_QUIRK_NOGET | HID_QUIRK_MULTI_INPUT },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_WISEGROUP, USB_DEVICE_ID_QUAD_USB_JOYPAD), HID_QUIRK_NOGET | HID_QUIRK_MULTI_INPUT },
++	{ HID_USB_DEVICE(USB_VENDOR_ID_XIN_MO, USB_DEVICE_ID_XIN_MO_DUAL_ARCADE), HID_QUIRK_MULTI_INPUT },
+ 
+ 	{ 0 }
  };
- 
-+
- static const struct mmc_fixup sdio_fixup_methods[] = {
-+	SDIO_FIXUP(SDIO_VENDOR_ID_TI_WL1251, SDIO_DEVICE_ID_TI_WL1251,
-+		   add_quirk, MMC_QUIRK_NONSTD_FUNC_IF),
-+
-+	SDIO_FIXUP(SDIO_VENDOR_ID_TI_WL1251, SDIO_DEVICE_ID_TI_WL1251,
-+		   add_quirk, MMC_QUIRK_DISABLE_CD),
-+
- 	SDIO_FIXUP(SDIO_VENDOR_ID_TI, SDIO_DEVICE_ID_TI_WL1271,
- 		   add_quirk, MMC_QUIRK_NONSTD_FUNC_IF),
- 
 -- 
 2.20.1
 
