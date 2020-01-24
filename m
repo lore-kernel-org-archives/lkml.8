@@ -2,111 +2,81 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9F1AC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 23:44:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60410C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 23:45:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9316206D4
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 23:44:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="TB5aRvye"
+	by mail.kernel.org (Postfix) with ESMTP id 3C34A2072C
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 23:45:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729551AbgAXXoh (ORCPT
+        id S1729612AbgAXXpF convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 18:44:37 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:58664 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729147AbgAXXoh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 18:44:37 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=5wmuqZHJ0qjX/S2LwVb/rXLGz5kyAVoKbDfXUhdGJdI=; b=TB5aRvyexEVLTORwua6Ovuia9
-        0eOc3wsqmfUeXA3Ox4CsevvHi5qpJdZXPX/zQIAn5KmRtt8TA/O42Dx0MuWZf3TIF9Q13l0UZ8RsB
-        HjlmHVDSXPkQ01XmxRijrou6QK2lwtY+ZLVftYalZbt8c4OKl01iE+b56BcQ5X8DizRD08i5n77bq
-        hIP9tsM7Mhj9i2Lu8pJMbWssEbdhLRCxbhtjquHzeQ0B3jmTeGdZ8khKuR1Nf37xvvzpRxDO74XkL
-        YcWWe3ToBkZEIVBm0XwuWlvFV/cAY89eECtiv0mm4DbQVUSEFGHn2aptw3XTnsrBHY4fvJcgkrfmK
-        I/MHCDITg==;
-Received: from [2601:1c0:6280:3f0::ed68]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iv8cn-0002lu-RU; Fri, 24 Jan 2020 23:44:29 +0000
-Subject: Re: [PATCH] KVM: x86: Take a u64 when checking for a valid dr7 value
-To:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Krish Sadhukhan <krish.sadhukhan@oracle.com>
-References: <20200124230722.8964-1-sean.j.christopherson@intel.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <bcd1b46c-15eb-f28a-c8c0-ed2fb103a25f@infradead.org>
-Date:   Fri, 24 Jan 2020 15:44:28 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Fri, 24 Jan 2020 18:45:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42234 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729147AbgAXXpF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 18:45:05 -0500
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 70267206D4;
+        Fri, 24 Jan 2020 23:45:04 +0000 (UTC)
+Date:   Fri, 24 Jan 2020 18:45:02 -0500
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Al Viro <viro@ZenIV.linux.org.uk>
+Cc:     linux-kernel@vger.kernel.org
+Subject: Re: [RFC][PATCHES] constifying ftrace globs
+Message-ID: <20200124184502.6e4683f3@gandalf.local.home>
+In-Reply-To: <20150205194914.GR29656@ZenIV.linux.org.uk>
+References: <20150205194914.GR29656@ZenIV.linux.org.uk>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20200124230722.8964-1-sean.j.christopherson@intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/24/20 3:07 PM, Sean Christopherson wrote:
-> Take a u64 instead of an unsigned long in kvm_dr7_valid() to fix a build
-> warning on i386 due to right-shifting a 32-bit value by 32 when checking
-> for bits being set in dr7[63:32].
+
+Seems that this series fell through the cracks. Is it worth
+resurrecting?
+
+-- Steve
+
+
+On Thu, 5 Feb 2015 19:49:14 +0000
+Al Viro <viro@ZenIV.linux.org.uk> wrote:
+
+> 	We don't really need to NUL-terminate the substring we are
+> matching against; all it takes is introducing memmem(3) and using it
+> instead of str[n]str().
 > 
-> Alternatively, the warning could be resolved by rewriting the check to
-> use an i386-friendly method, but taking a u64 fixes another oddity on
-> 32-bit KVM.  Beause KVM implements natural width VMCS fields as u64s to
-> avoid layout issues between 32-bit and 64-bit, a devious guest can stuff
-> vmcs12->guest_dr7 with a 64-bit value even when both the guest and host
-> are 32-bit kernels.  KVM eventually drops vmcs12->guest_dr7[63:32] when
-> propagating vmcs12->guest_dr7 to vmcs02, but ideally KVM would not rely
-> on that behavior for correctness.
+> 	It's not that much work - see vfs.git#ftrace_glob.  The reason
+> I went there is rather amusing; it all started with making do_execve()
+> take arrays of const strings for argv and envp.  After all, we never
+> change them *and* we often enough pass arrays of string literals that
+> way.  It exploded into a series of 75 commits, with the final ripple
+> being argv_split() and argv_free().  OK, turns out that ftrace is
+> using those as well, fortunately it's done to get arrays of regexes,
+> so it should be trivial to constify as well, right?  Imagine the amount of
+> swearing when I noticed that it *does* modify the resulting strings...
 > 
-> Cc: Jim Mattson <jmattson@google.com>
-> Cc: Krish Sadhukhan <krish.sadhukhan@oracle.com>
-> Fixes: ecb697d10f70 ("KVM: nVMX: Check GUEST_DR7 on vmentry of nested guests")
-> Reported-by: Randy Dunlap <rdunlap@infradead.org>
-> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-
-Acked-by: Randy Dunlap <rdunlap@infradead.org> # build-tested
-
-Thanks.
-
-> ---
->  arch/x86/kvm/x86.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> 	This series deals with that problem, providing the missing prereq for
+> the patchbomb from hell...
 > 
-> diff --git a/arch/x86/kvm/x86.h b/arch/x86/kvm/x86.h
-> index 2d2ff855773b..3624665acee4 100644
-> --- a/arch/x86/kvm/x86.h
-> +++ b/arch/x86/kvm/x86.h
-> @@ -357,7 +357,7 @@ static inline bool kvm_pat_valid(u64 data)
->  	return (data | ((data & 0x0202020202020202ull) << 1)) == data;
->  }
->  
-> -static inline bool kvm_dr7_valid(unsigned long data)
-> +static inline bool kvm_dr7_valid(u64 data)
->  {
->  	/* Bits [63:32] are reserved */
->  	return !(data >> 32);
+> 	Could you review #ftrace_glob?  It's not large - seven commits,
+> boiling down to
+>  include/linux/ftrace.h             |  8 ++---
+>  include/linux/string.h             |  1 +
+>  kernel/trace/ftrace.c              | 68 ++++++++++++++++++--------------------
+>  kernel/trace/trace.h               |  2 +-
+>  kernel/trace/trace_events_filter.c | 26 +++++++++------
+>  lib/string.c                       | 34 ++++++++++++-------
+>  6 files changed, 75 insertions(+), 64 deletions(-)
 > 
+> Patches in followups.
 
-
--- 
-~Randy
-Reported-by: Randy Dunlap <rdunlap@infradead.org>
