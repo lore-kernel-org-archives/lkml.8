@@ -7,51 +7,51 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8258C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:26:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DB1FC35242
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:26:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9542120838
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:26:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D5B720838
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:26:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LFrV84A7"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gCA6bZXy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390206AbgAXO0A (ORCPT
+        id S2392515AbgAXO0D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 09:26:00 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:37879 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2389790AbgAXOZx (ORCPT
+        Fri, 24 Jan 2020 09:26:03 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:38834 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390008AbgAXO0A (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 09:25:53 -0500
+        Fri, 24 Jan 2020 09:26:00 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579875952;
+        s=mimecast20190719; t=1579875959;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=ZfbqCEGb1Hozb97Wquprp+GaP9A0aUtFnhQN/uvV2os=;
-        b=LFrV84A7VQ/eUyMGP6182CfhMjGOBbGUWGJonp+uJFqnLhTKqVnPAPcOho/2ZIwjswyGpR
-        S8ADWdrbn7cMLPhY6zJnbSeNMaXRakw1KF3P9kFpLVoKJ1d+UKTOVFphJQtnoXIcfHphFm
-        8LfaxGvv75Dc5KtO03S08P5thQOyGno=
+        bh=S+xkkLcGvn4l2z374gMhccJvWqyhAjGkRVHUTmNEzYI=;
+        b=gCA6bZXy5/Y8HE4csEk0UZnccpy9d0qpGHCMhyTmcdS3RJquMwASfUS0hC6l+I3nJHMW9V
+        KG0to65p2tpbvOdqoQ+1bJAJqdrrzzKsFiQscDrdUQREhvoRyXz1FGFAYWx6DSt1+B255o
+        jW5s4yWL6XNTEKpTUHumv48bU8QYXic=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-283-3FfZJy17PoKvPLfhp7L94A-1; Fri, 24 Jan 2020 09:25:50 -0500
-X-MC-Unique: 3FfZJy17PoKvPLfhp7L94A-1
+ us-mta-12-4vA9tXH4PUyVOE6thtzQvw-1; Fri, 24 Jan 2020 09:25:57 -0500
+X-MC-Unique: 4vA9tXH4PUyVOE6thtzQvw-1
 Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CC690800D41;
-        Fri, 24 Jan 2020 14:25:48 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7D082800D41;
+        Fri, 24 Jan 2020 14:25:55 +0000 (UTC)
 Received: from laptop.redhat.com (ovpn-116-37.ams2.redhat.com [10.36.116.37])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 46DF119C69;
-        Fri, 24 Jan 2020 14:25:44 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 8528319C69;
+        Fri, 24 Jan 2020 14:25:52 +0000 (UTC)
 From:   Eric Auger <eric.auger@redhat.com>
 To:     eric.auger.pro@gmail.com, eric.auger@redhat.com, maz@kernel.org,
         linux-kernel@vger.kernel.org, kvmarm@lists.cs.columbia.edu
 Cc:     andrew.murray@arm.com
-Subject: [PATCH 1/4] KVM: arm64: pmu: Don't increment SW_INCR if PMCR.E is unset
-Date:   Fri, 24 Jan 2020 15:25:32 +0100
-Message-Id: <20200124142535.29386-2-eric.auger@redhat.com>
+Subject: [PATCH 3/4] KVM: arm64: pmu: Fix chained SW_INCR counters
+Date:   Fri, 24 Jan 2020 15:25:34 +0100
+Message-Id: <20200124142535.29386-4-eric.auger@redhat.com>
 In-Reply-To: <20200124142535.29386-1-eric.auger@redhat.com>
 References: <20200124142535.29386-1-eric.auger@redhat.com>
 MIME-Version: 1.0
@@ -62,37 +62,91 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The specification says PMSWINC increments PMEVCNTR<n>_EL1 by 1
-if PMEVCNTR<n>_EL0 is enabled and configured to count SW_INCR.
+At the moment a SW_INCR counter always overflows on 32-bit
+boundary, independently on whether the n+1th counter is
+programmed as CHAIN.
 
-For PMEVCNTR<n>_EL0 to be enabled, we need both PMCNTENSET to
-be set for the corresponding event counter but we also need
-the PMCR.E bit to be set.
+Check whether the SW_INCR counter is a 64b counter and if so,
+implement the 64b logic.
 
-Fixes: 7a0adc7064b8 ("arm64: KVM: Add access handler for PMSWINC register=
-")
+Fixes: 80f393a23be6 ("KVM: arm/arm64: Support chained PMU counters")
 Signed-off-by: Eric Auger <eric.auger@redhat.com>
-Reviewed-by: Andrew Murray <andrew.murray@arm.com>
-Acked-by: Marc Zyngier <maz@kernel.org>
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+
 ---
- virt/kvm/arm/pmu.c | 3 +++
- 1 file changed, 3 insertions(+)
+
+v1 -> v2:
+- Reorganize the kvm_pmu_software_increment() flow as suggested by
+  Marc. At the exception I did not use kvm_pmu_get_counter_value()
+  as it returns only the right half of the 64b counter.
+---
+ virt/kvm/arm/pmu.c | 43 ++++++++++++++++++++++++++++++-------------
+ 1 file changed, 30 insertions(+), 13 deletions(-)
 
 diff --git a/virt/kvm/arm/pmu.c b/virt/kvm/arm/pmu.c
-index 8731dfeced8b..c3f8b059881e 100644
+index 9f605e0b8dd7..560db6282137 100644
 --- a/virt/kvm/arm/pmu.c
 +++ b/virt/kvm/arm/pmu.c
-@@ -486,6 +486,9 @@ void kvm_pmu_software_increment(struct kvm_vcpu *vcpu=
-, u64 val)
- 	if (val =3D=3D 0)
+@@ -477,28 +477,45 @@ static void kvm_pmu_perf_overflow(struct perf_event=
+ *perf_event,
+  */
+ void kvm_pmu_software_increment(struct kvm_vcpu *vcpu, u64 val)
+ {
++	struct kvm_pmu *pmu =3D &vcpu->arch.pmu;
+ 	int i;
+-	u64 type, enable, reg;
+-
+-	if (val =3D=3D 0)
+-		return;
+=20
+ 	if (!(__vcpu_sys_reg(vcpu, PMCR_EL0) & ARMV8_PMU_PMCR_E))
  		return;
 =20
-+	if (!(__vcpu_sys_reg(vcpu, PMCR_EL0) & ARMV8_PMU_PMCR_E))
-+		return;
+-	enable =3D __vcpu_sys_reg(vcpu, PMCNTENSET_EL0);
++	/* Weed out disabled counters */
++	val &=3D __vcpu_sys_reg(vcpu, PMCNTENSET_EL0);
 +
- 	enable =3D __vcpu_sys_reg(vcpu, PMCNTENSET_EL0);
  	for (i =3D 0; i < ARMV8_PMU_CYCLE_IDX; i++) {
++		u64 type, reg;
++
  		if (!(val & BIT(i)))
+ 			continue;
+-		type =3D __vcpu_sys_reg(vcpu, PMEVTYPER0_EL0 + i)
+-		       & ARMV8_PMU_EVTYPE_EVENT;
+-		if ((type =3D=3D ARMV8_PMUV3_PERFCTR_SW_INCR)
+-		    && (enable & BIT(i))) {
+-			reg =3D __vcpu_sys_reg(vcpu, PMEVCNTR0_EL0 + i) + 1;
++
++		/* PMSWINC only applies to ... SW_INC! */
++		type =3D __vcpu_sys_reg(vcpu, PMEVTYPER0_EL0 + i);
++		type &=3D ARMV8_PMU_EVTYPE_EVENT;
++		if (type !=3D ARMV8_PMUV3_PERFCTR_SW_INCR)
++			continue;
++
++		/* increment this even SW_INC counter */
++		reg =3D __vcpu_sys_reg(vcpu, PMEVCNTR0_EL0 + i) + 1;
++		reg =3D lower_32_bits(reg);
++		__vcpu_sys_reg(vcpu, PMEVCNTR0_EL0 + i) =3D reg;
++
++		if (reg) /* no overflow on the low part */
++			continue;
++
++		if (kvm_pmu_pmc_is_chained(&pmu->pmc[i])) {
++			/* increment the high counter */
++			reg =3D __vcpu_sys_reg(vcpu, PMEVCNTR0_EL0 + i + 1) + 1;
+ 			reg =3D lower_32_bits(reg);
+-			__vcpu_sys_reg(vcpu, PMEVCNTR0_EL0 + i) =3D reg;
+-			if (!reg)
+-				__vcpu_sys_reg(vcpu, PMOVSSET_EL0) |=3D BIT(i);
++			__vcpu_sys_reg(vcpu, PMEVCNTR0_EL0 + i + 1) =3D reg;
++			if (!reg) /* mark overflow on the high counter */
++				__vcpu_sys_reg(vcpu, PMOVSSET_EL0) |=3D BIT(i + 1);
++		} else {
++			/* mark overflow on low counter */
++			__vcpu_sys_reg(vcpu, PMOVSSET_EL0) |=3D BIT(i);
+ 		}
+ 	}
+ }
 --=20
 2.20.1
 
