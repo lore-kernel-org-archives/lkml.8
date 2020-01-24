@@ -7,48 +7,51 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8003C35242
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 10:06:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F3FAC32771
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 10:06:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C8B1206F0
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 10:06:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54B54206F0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 10:06:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579860396;
-	bh=NKMd2mTXX+ITE6414q9uYi6ObRfBC1DrRpQT84Fgbss=;
+	s=default; t=1579860405;
+	bh=0QG0zH6wWOR7JZVKQGlb5ilL0eSMs4NI5aN7KMm81Gc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SrzvyU6jUKD6NMsiOL8hp+q7+MWBCLzAtiDo9ga/8mPsTmJJ15XBBCyO/euPGT9Sq
-	 +/MiRDW/CObqs7wcomSGZI4S3RXowOiSVTgIFytqaui2fO1IA9BrWkJM7hdfY5j8Vg
-	 PRd438Hk2ujkP1kAOCtlUCDBvPOfb5Ms++bxqptU=
+	b=2bNvh4B/MwU+UEyuHFYpHuu9BqEmxIj52HQYVlMkjV0a7Gv68QZIvjYXpNVf194Ra
+	 ej0URxsCTH6MvzL1qx0xC7W9EP3pR/e6wuZdLETpT3G6j9tp9gxIOl/crnSV/wowKA
+	 10SgEe9atpoMRk6P5kWgtBtTuDhupDGfrCFmGh8g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389314AbgAXKGf (ORCPT
+        id S2389316AbgAXKGo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 05:06:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43144 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 05:06:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43236 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388684AbgAXKGd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 05:06:33 -0500
+        id S1730766AbgAXKGn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 05:06:43 -0500
 Received: from localhost (unknown [145.15.244.15])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 796EF20709;
-        Fri, 24 Jan 2020 10:06:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 31CA0206F0;
+        Fri, 24 Jan 2020 10:06:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579860393;
-        bh=NKMd2mTXX+ITE6414q9uYi6ObRfBC1DrRpQT84Fgbss=;
+        s=default; t=1579860402;
+        bh=0QG0zH6wWOR7JZVKQGlb5ilL0eSMs4NI5aN7KMm81Gc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Xny3RMOn+ZCsbDtJPMzZbW2h1ohneP1S/XswtjJSztkN1z37Wg6RF1cp2vP/RI0NL
-         gIBJiwLKgiT+MS2HBks1GI0LBSO+gsUgHYqCNxsMY1dMuxnP6FIrff1PuE2lJnGeC0
-         kWPMI6Q9DBhfSzrq7tuBOOA1nwk2mJuULi034cYs=
+        b=otaDPVhUfKAnkJUNMlWHcnsyplj3Ur0/ACRpDAxOMRX/ZRpwKRd6Z3ClpZOmJ6M1h
+         eEhVawpWD5Pcg9lmlI0fDf1mDAVB28LziHB62dwhmek6BHu5n5wC1ZWovcE9Pr/VYh
+         UW6DVZkmOG2kK2/4C7u37X+Ex4R9YJU3UKwXe7rc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, stable@vger.kernel,
-        Robin Gong <yibin.gong@nxp.com>,
-        Jurgen Lambrecht <J.Lambrecht@TELEVIC.com>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 326/343] dmaengine: imx-sdma: fix size check for sdma script_number
-Date:   Fri, 24 Jan 2020 10:32:24 +0100
-Message-Id: <20200124093002.651594899@linuxfoundation.org>
+        stable@vger.kernel.org, kbuild test robot <lkp@intel.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Ben Hutchings <ben@decadent.org.uk>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Simon Horman <simon.horman@netronome.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 327/343] net: netem: fix error path for corrupted GSO frames
+Date:   Fri, 24 Jan 2020 10:32:25 +0100
+Message-Id: <20200124093002.831762846@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124092919.490687572@linuxfoundation.org>
 References: <20200124092919.490687572@linuxfoundation.org>
@@ -61,71 +64,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Robin Gong <yibin.gong@nxp.com>
+From: Jakub Kicinski <jakub.kicinski@netronome.com>
 
-[ Upstream commit bd73dfabdda280fc5f05bdec79b6721b4b2f035f ]
+[ Upstream commit a7fa12d15855904aff1716e1fc723c03ba38c5cc ]
 
-Illegal memory will be touch if SDMA_SCRIPT_ADDRS_ARRAY_SIZE_V3
-(41) exceed the size of structure sdma_script_start_addrs(40),
-thus cause memory corrupt such as slob block header so that kernel
-trap into while() loop forever in slob_free(). Please refer to below
-code piece in imx-sdma.c:
-for (i = 0; i < sdma->script_number; i++)
-	if (addr_arr[i] > 0)
-		saddr_arr[i] = addr_arr[i]; /* memory corrupt here */
-That issue was brought by commit a572460be9cf ("dmaengine: imx-sdma: Add
-support for version 3 firmware") because SDMA_SCRIPT_ADDRS_ARRAY_SIZE_V3
-(38->41 3 scripts added) not align with script number added in
-sdma_script_start_addrs(2 scripts).
+To corrupt a GSO frame we first perform segmentation.  We then
+proceed using the first segment instead of the full GSO skb and
+requeue the rest of the segments as separate packets.
 
-Fixes: a572460be9cf ("dmaengine: imx-sdma: Add support for version 3 firmware")
-Cc: stable@vger.kernel
-Link: https://www.spinics.net/lists/arm-kernel/msg754895.html
-Signed-off-by: Robin Gong <yibin.gong@nxp.com>
-Reported-by: Jurgen Lambrecht <J.Lambrecht@TELEVIC.com>
-Link: https://lore.kernel.org/r/1569347584-3478-1-git-send-email-yibin.gong@nxp.com
-[vkoul: update the patch title]
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+If there are any issues with processing the first segment we
+still want to process the rest, therefore we jump to the
+finish_segs label.
+
+Commit 177b8007463c ("net: netem: fix backlog accounting for
+corrupted GSO frames") started using the pointer to the first
+segment in the "rest of segments processing", but as mentioned
+above the first segment may had already been freed at this point.
+
+Backlog corrections for parent qdiscs have to be adjusted.
+
+Fixes: 177b8007463c ("net: netem: fix backlog accounting for corrupted GSO frames")
+Reported-by: kbuild test robot <lkp@intel.com>
+Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+Reported-by: Ben Hutchings <ben@decadent.org.uk>
+Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+Reviewed-by: Simon Horman <simon.horman@netronome.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/imx-sdma.c                     | 8 ++++++++
- include/linux/platform_data/dma-imx-sdma.h | 3 +++
- 2 files changed, 11 insertions(+)
+ net/sched/sch_netem.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c
-index 0fc12a8783e39..99f3f22ed6476 100644
---- a/drivers/dma/imx-sdma.c
-+++ b/drivers/dma/imx-sdma.c
-@@ -1441,6 +1441,14 @@ static void sdma_add_scripts(struct sdma_engine *sdma,
- 	if (!sdma->script_number)
- 		sdma->script_number = SDMA_SCRIPT_ADDRS_ARRAY_SIZE_V1;
+diff --git a/net/sched/sch_netem.c b/net/sched/sch_netem.c
+index ede0a24e67eb8..64c3cfa357363 100644
+--- a/net/sched/sch_netem.c
++++ b/net/sched/sch_netem.c
+@@ -504,6 +504,7 @@ static int netem_enqueue(struct sk_buff *skb, struct Qdisc *sch,
+ 		if (skb->ip_summed == CHECKSUM_PARTIAL &&
+ 		    skb_checksum_help(skb)) {
+ 			qdisc_drop(skb, sch, to_free);
++			skb = NULL;
+ 			goto finish_segs;
+ 		}
  
-+	if (sdma->script_number > sizeof(struct sdma_script_start_addrs)
-+				  / sizeof(s32)) {
-+		dev_err(sdma->dev,
-+			"SDMA script number %d not match with firmware.\n",
-+			sdma->script_number);
-+		return;
-+	}
-+
- 	for (i = 0; i < sdma->script_number; i++)
- 		if (addr_arr[i] > 0)
- 			saddr_arr[i] = addr_arr[i];
-diff --git a/include/linux/platform_data/dma-imx-sdma.h b/include/linux/platform_data/dma-imx-sdma.h
-index 6eaa53cef0bd2..30e676b36b247 100644
---- a/include/linux/platform_data/dma-imx-sdma.h
-+++ b/include/linux/platform_data/dma-imx-sdma.h
-@@ -51,7 +51,10 @@ struct sdma_script_start_addrs {
- 	/* End of v2 array */
- 	s32 zcanfd_2_mcu_addr;
- 	s32 zqspi_2_mcu_addr;
-+	s32 mcu_2_ecspi_addr;
- 	/* End of v3 array */
-+	s32 mcu_2_zqspi_addr;
-+	/* End of v4 array */
- };
+@@ -580,9 +581,10 @@ static int netem_enqueue(struct sk_buff *skb, struct Qdisc *sch,
+ finish_segs:
+ 	if (segs) {
+ 		unsigned int len, last_len;
+-		int nb = 0;
++		int nb;
  
- /**
+-		len = skb->len;
++		len = skb ? skb->len : 0;
++		nb = skb ? 1 : 0;
+ 
+ 		while (segs) {
+ 			skb2 = segs->next;
+@@ -599,7 +601,8 @@ finish_segs:
+ 			}
+ 			segs = skb2;
+ 		}
+-		qdisc_tree_reduce_backlog(sch, -nb, prev_len - len);
++		/* Parent qdiscs accounted for 1 skb of size @prev_len */
++		qdisc_tree_reduce_backlog(sch, -(nb - 1), -(len - prev_len));
+ 	}
+ 	return NET_XMIT_SUCCESS;
+ }
 -- 
 2.20.1
 
