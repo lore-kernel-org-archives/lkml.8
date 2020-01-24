@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87C59C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:15:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E400C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:15:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53D7B2077C
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:15:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 253A62075D
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:15:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579864520;
-	bh=DWHxIEmlcXQtbk9/JbT7Rb496vClcmVlnlGlJ4BO0WU=;
+	s=default; t=1579864523;
+	bh=ztfWTztdcnxZ1a1tfcGHBT4KWpxZNOI7vTZ7JTbpUpo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PsYIA5FvZkJr+xJ9tVYFEB7WRAhS1rwLqXn/dRrDkSuVjjtx0QxygoSpZxN5dsv0i
-	 9cRDusVrswqty4YEMEEyYuima9j3wl6ksgxpcBEQdy4rpQxob0wgakmrVHr/wfiv4F
-	 aGC1QJoNbtnU9OnEyoDzoPCA4C5QGvrs8G/h51VI=
+	b=m7h7ZbmK7lqo+VY5NSTP3PRCJWSRmUtVYnoQA78m3S+EaQuxbDcS4vvWEPZAXaJtt
+	 gqrFwwkBXeokI92gMqLL3UNm61aPud5njm0KXTMT9sbOhvQxFFZq4CBrI/0R2PVQDp
+	 jhVhquqMYXb9+Hvs665CMV7F9P8Z2JAZHeSVuzmU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390258AbgAXLPS (ORCPT
+        id S2390266AbgAXLPW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:15:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51788 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 06:15:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51856 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390252AbgAXLPP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:15:15 -0500
+        id S2390259AbgAXLPT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:15:19 -0500
 Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DEF6A20708;
-        Fri, 24 Jan 2020 11:15:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ADA2F2075D;
+        Fri, 24 Jan 2020 11:15:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579864514;
-        bh=DWHxIEmlcXQtbk9/JbT7Rb496vClcmVlnlGlJ4BO0WU=;
+        s=default; t=1579864518;
+        bh=ztfWTztdcnxZ1a1tfcGHBT4KWpxZNOI7vTZ7JTbpUpo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1rckyuJ/WZ5EWnhip+6bQBAPCv7AW14TXuYqUEo5zBwPr31RajviOHhgCdpxHtW0e
-         yVGQKW2ucperd7QoA7qVa2k4VQFF1S8cKYHGetYaCYs8VRQWXxBuddfVI3vkkbKbJ1
-         YvmqHHXyaFVShOXjHTUYHjh9JRaf+skOoSmTFHkI=
+        b=tOfpeSlS6JqSHsGJHh2JLpTsGlWQgou/XFe5KW5LXID/KvlPT7kvhvMagWYzfPApO
+         TXd266r1bdOP9nEQrHPFIn20nH7OYzgb96aS4857kh3RK+FQllgL5e3n4yqco0li9W
+         Fz2HPviCB6NtGF2KkrUA6ZP3xlh456huTfkQHpBU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <andy.gross@linaro.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 279/639] soc: qcom: cmd-db: Fix an error code in cmd_db_dev_probe()
-Date:   Fri, 24 Jan 2020 10:27:29 +0100
-Message-Id: <20200124093121.775556132@linuxfoundation.org>
+        Li Yang <leoyang.li@nxp.com>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 288/639] soc/fsl/qe: Fix an error code in qe_pin_request()
+Date:   Fri, 24 Jan 2020 10:27:38 +0100
+Message-Id: <20200124093122.965651407@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
 References: <20200124093047.008739095@linuxfoundation.org>
@@ -63,36 +61,34 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit 93b260528020792032e50725383f27a27897bb0f ]
+[ Upstream commit 5674a92ca4b7e5a6a19231edd10298d30324cd27 ]
 
-The memremap() function doesn't return error pointers, it returns NULL.
-This code is returning "ret = PTR_ERR(NULL);" which is success, but it
-should return -ENOMEM.
+We forgot to set "err" on this error path.
 
-Fixes: 312416d9171a ("drivers: qcom: add command DB driver")
+Fixes: 1a2d397a6eb5 ("gpio/powerpc: Eliminate duplication of of_get_named_gpio_flags()")
 Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Signed-off-by: Andy Gross <andy.gross@linaro.org>
+Signed-off-by: Li Yang <leoyang.li@nxp.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/soc/qcom/cmd-db.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/soc/fsl/qe/gpio.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/soc/qcom/cmd-db.c b/drivers/soc/qcom/cmd-db.c
-index a6f646295f067..78d73ec587e11 100644
---- a/drivers/soc/qcom/cmd-db.c
-+++ b/drivers/soc/qcom/cmd-db.c
-@@ -283,8 +283,8 @@ static int cmd_db_dev_probe(struct platform_device *pdev)
- 	}
+diff --git a/drivers/soc/fsl/qe/gpio.c b/drivers/soc/fsl/qe/gpio.c
+index 819bed0f56679..51b3a47b5a559 100644
+--- a/drivers/soc/fsl/qe/gpio.c
++++ b/drivers/soc/fsl/qe/gpio.c
+@@ -179,8 +179,10 @@ struct qe_pin *qe_pin_request(struct device_node *np, int index)
+ 	if (err < 0)
+ 		goto err0;
+ 	gc = gpio_to_chip(err);
+-	if (WARN_ON(!gc))
++	if (WARN_ON(!gc)) {
++		err = -ENODEV;
+ 		goto err0;
++	}
  
- 	cmd_db_header = memremap(rmem->base, rmem->size, MEMREMAP_WB);
--	if (IS_ERR_OR_NULL(cmd_db_header)) {
--		ret = PTR_ERR(cmd_db_header);
-+	if (!cmd_db_header) {
-+		ret = -ENOMEM;
- 		cmd_db_header = NULL;
- 		return ret;
- 	}
+ 	if (!of_device_is_compatible(gc->of_node, "fsl,mpc8323-qe-pario-bank")) {
+ 		pr_debug("%s: tried to get a non-qe pin\n", __func__);
 -- 
 2.20.1
 
