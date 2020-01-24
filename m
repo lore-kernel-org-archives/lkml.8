@@ -2,166 +2,70 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9634C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 21:53:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87459C35242
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 21:55:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F1E02072C
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 21:53:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Y6MEqGsh"
+	by mail.kernel.org (Postfix) with ESMTP id 65F702072C
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 21:55:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728797AbgAXVx5 (ORCPT
+        id S1729199AbgAXVzf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 16:53:57 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:39872 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725821AbgAXVx4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 16:53:56 -0500
-Received: by mail-lj1-f193.google.com with SMTP id o11so4256644ljc.6
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Jan 2020 13:53:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=3HJT7W/WRXdBhAlKmOBifhojKSqvdoUdaUmLJgJ9MdU=;
-        b=Y6MEqGsh7k/zNskKHAS+ylILiPoWb+Xn+ki0mKYgKGyQMZ8ZE5YJRsYzhXQtKnZVBZ
-         3Zn4D2XQ9BZp8C/u2g41Jwdldu0dMd0Y3uPzS9Un5bPlzINSi+NEETRD/7n90FMnOG+K
-         A0WIHrq7VoC/sx/OV9KPfd6RS9XHnh+aubq88=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=3HJT7W/WRXdBhAlKmOBifhojKSqvdoUdaUmLJgJ9MdU=;
-        b=YALOff43V/MhgMVy+GE/DLkRvt2a075+LjPXy5f5Q+XfcpnAeHSLn4fpGZTFEaS2Gq
-         benBTFstFmX8uBrpyhl2hyeCiyUGsmd9KuK4SwIuPhZS+iWhRmQuXYc3nhIgjG1WGpwz
-         sL3ZZE2V2hjxSfhX/vlc1OVSIzAGG5Lh8X5VrF/WlefXh66qWfIw4kdF+mV/wepb/8RX
-         2BEmjHYUZcHrEG0d6GhtYpx6RaQcaNxTqfWLh3m2k9xohLo4Oe8e299Oas7CwvzZflXb
-         HPIq+YHvL8ZDmzbq0vtFeowre/PjDufG20TVVhlRKw/vbGWd8JDB0XsB0+v/oJyfW4T9
-         CoEw==
-X-Gm-Message-State: APjAAAVFwLA0LHmWkkf143cd9mAoJAO3xoIvbV2Kk3KukbbBJoLdToIw
-        MKSl2YyvKtaOwLz8/b59OCAuq5Nwsho=
-X-Google-Smtp-Source: APXvYqw2LEBhaPll+dn2AYyUJ4Dtf4Bwqs70+51ScvPFqnR4xfUPSQi95S7ZopsO7IrYu4t6WNPTTw==
-X-Received: by 2002:a2e:3309:: with SMTP id d9mr3358171ljc.262.1579902833549;
-        Fri, 24 Jan 2020 13:53:53 -0800 (PST)
-Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com. [209.85.167.44])
-        by smtp.gmail.com with ESMTPSA id c22sm3388457lfc.93.2020.01.24.13.53.52
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 24 Jan 2020 13:53:52 -0800 (PST)
-Received: by mail-lf1-f44.google.com with SMTP id t23so2192105lfk.6
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Jan 2020 13:53:52 -0800 (PST)
-X-Received: by 2002:a05:6512:2035:: with SMTP id s21mr2229303lfs.99.1579902831885;
- Fri, 24 Jan 2020 13:53:51 -0800 (PST)
+        Fri, 24 Jan 2020 16:55:35 -0500
+Received: from namei.org ([65.99.196.166]:59698 "EHLO namei.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729152AbgAXVzc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 16:55:32 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by namei.org (8.14.4/8.14.4) with ESMTP id 00OLtNMn007070;
+        Fri, 24 Jan 2020 21:55:23 GMT
+Date:   Sat, 25 Jan 2020 08:55:23 +1100 (AEDT)
+From:   James Morris <jmorris@namei.org>
+To:     KP Singh <kpsingh@chromium.org>
+cc:     Casey Schaufler <casey@schaufler-ca.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux Security Module list 
+        <linux-security-module@vger.kernel.org>, bpf@vger.kernel.org
+Subject: Re: [PATCH bpf-next v3 04/10] bpf: lsm: Add mutable hooks list for
+ the BPF LSM
+In-Reply-To: <20200124012501.GA8709@chromium.org>
+Message-ID: <alpine.LRH.2.21.2001250852070.6744@namei.org>
+References: <20200123152440.28956-1-kpsingh@chromium.org> <20200123152440.28956-5-kpsingh@chromium.org> <29157a88-7049-906e-fe92-b7a1e2183c6b@schaufler-ca.com> <20200123175942.GA131348@google.com> <5004b3f4-ca5b-a546-4e87-b852cc248079@schaufler-ca.com>
+ <20200123222436.GA1598@chromium.org> <f571b719-e11f-416e-4232-f99036e38f15@schaufler-ca.com> <20200124012501.GA8709@chromium.org>
+User-Agent: Alpine 2.21 (LRH 202 2017-01-01)
 MIME-Version: 1.0
-References: <20200117162444.v2.1.I9c7e72144ef639cc135ea33ef332852a6b33730f@changeid>
- <CACK8Z6Ft95qj4e_fsA32r_bcz2SsHOW1xxqZJt3_DBAJw=NMGA@mail.gmail.com>
- <CAE=gft6fKQWExW-=xjZGzXs30XohfpA5SKggvL2WtYXAHmzMew@mail.gmail.com>
- <87y2tytv5i.fsf@nanos.tec.linutronix.de> <87eevqkpgn.fsf@nanos.tec.linutronix.de>
- <CAE=gft6YiM5S1A7iJYJTd5zmaAa8=nhLE3B94JtWa+XW-qVSqQ@mail.gmail.com>
- <CAE=gft5xta4XCJtctWe=R3w=kVr598JCbk9VSRue04nzKAk3CQ@mail.gmail.com>
- <CAE=gft7MqQ3Mej5oCT=gw6ZLMSTHoSyMGOFz=-hae-eRZvXLxA@mail.gmail.com> <87d0b82a9o.fsf@nanos.tec.linutronix.de>
-In-Reply-To: <87d0b82a9o.fsf@nanos.tec.linutronix.de>
-From:   Evan Green <evgreen@chromium.org>
-Date:   Fri, 24 Jan 2020 13:53:15 -0800
-X-Gmail-Original-Message-ID: <CAE=gft7C5HTmcTLsXqXbCtcYDeKG6bCJ0gmgwVNc0PDHLJ5y_A@mail.gmail.com>
-Message-ID: <CAE=gft7C5HTmcTLsXqXbCtcYDeKG6bCJ0gmgwVNc0PDHLJ5y_A@mail.gmail.com>
-Subject: Re: [PATCH v2] PCI/MSI: Avoid torn updates to MSI pairs
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Rajat Jain <rajatja@google.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        x86@kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 24, 2020 at 6:34 AM Thomas Gleixner <tglx@linutronix.de> wrote:
->
-> Evan,
->
-> Evan Green <evgreen@chromium.org> writes:
-> > I did another experiment that I think lends credibility to my torn MSI
-> > hypothesis. I have the following change:
-> >
-> > And indeed, I get a machine check, despite the fact that MSI_DATA is
-> > overwritten just after address is updated.
->
-> I don't have to understand why a SoC released in 2019 still has
-> unmaskable MSI especially as Inhell's own XHCI spec clearly documents
-> and recommends MSI-X.
->
-> While your workaround (disabling MSI) works in this particular case it's
-> not really a good option:
->
->  1) Quite some devices have a bug where the legacy INTX disable does not
->     work reliably or is outright broken. That means MSI disable will
->     reroute to INTX.
->
->  2) I digged out old debug data which confirms that some silly devices
->     lose interrupts accross MSI disable/reenable if the INTX fallback is
->     disabled.
->
->     And no, it's not a random weird device, it's part of a chipset which
->     was pretty popular a few years ago. I leave it as an excercise for
->     the reader to guess the vendor.
->
-> Can you please apply the patch below? It enforces an IPI to the new
-> vector/target CPU when the interrupt is MSI w/o masking. It should
-> cure the issue. It goes without saying that I'm not proud of it.
+On Thu, 23 Jan 2020, KP Singh wrote:
 
-I'll feel just as dirty putting a tested-by on it :)
+> 
+> > If you want to put mutable hook handling in the infrastructure
+> > you need to make it general mutable hook handling as opposed to
+> > BPF hook handling. I don't know if that would be acceptable for
+> > all the reasons called out about dynamic module loading.
+> 
+> We can have generic mutable hook handling and if an LSM doesn't
+--> provide a mutable security_hook_heads, it would not allow dynamic
+> hooks / dynamic module loading.
+> 
+> So, in practice it will just be the BPF LSM that allows mutable hooks
+> and the other existing LSMs won't. I guess it will be cleaner than
+> calling the BPF hooks directly from the LSM code (i.e in security.c)
 
-I don't think this patch is complete. As written, it creates "recovery
-interrupts" for MSIs that are not maskable, however through the
-pci_msi_domain_write_msg() path, which is the one I seem to use, we
-make no effort to mask the MSI while changing affinity. So at the very
-least it would need a follow-on patch that attempts to mask the MSI,
-for MSIs that are maskable. __pci_restore_msi_state(), called in the
-resume path, does have this masking, but for some reason not
-pci_msi_domain_write_msg().
+I'm inclined to only have mutable hooks for KRSI, not for all LSMs. This 
+is a special case and we don't need to provide this for anyone else.
 
-I'm also a bit concerned about all the spurious interrupts we'll be
-introducing. Not just the retriggering introduced here, but the fact
-that we never dealt with the torn interrupt. So in my case, XHCI will
-be sending an interrupt on the old vector to the new CPU, which could
-be registered to anything. I'm worried that not every driver in the
-system is hardened to receiving interrupts it's not prepared for.
-Perhaps the driver misbehaves, or perhaps it's a "bad" interrupt like
-the MCE interrupt that takes the system down. (I realize the MCE
-interrupt itself is not in the device vector region, but some other
-bad interrupt then).
+Btw, folks, PLEASE trim replies.
 
-Now that you're on board with the torn write theory, what do you think
-about my "transit vector" proposal? The idea is this:
- - Reserve a single vector number on all CPUs for interrupts in
-transit between CPUs.
- - Interrupts in transit between CPUs are added to some sort of list,
-or maybe the transit vector itself.
- - __pci_msi_write_msg() would, after proper abstractions, essentially
-be doing this:
-    pci_write(MSI_DATA, TRANSIT_VECTOR);
-    pci_write(MSI_ADDRESS, new_affinity);
-    pci_write(MSI_DATA, new_vector);
- - In the rare torn case I've found here, the interrupt will come in
-on <new CPU, transit_vector>, or <old CPU, transit_vector>.
- - The ISR for TRANSIT_VECTOR would go through and call the ISR for
-every IRQ in transit across CPUs. This does still result in a couple
-extra ISR calls, since multiple interrupts might be in transit across
-CPUs, but at least it's very rare.
- - CPU hotplug would keep the same logic it already has, retriggering
-TRANSIT_VECTOR if it happened to land on <old CPU, old vector>.
- - When the interrupt is confirmed on <new CPU, new vector>, remove
-the ISR from the TRANSIT_VECTOR list.
 
-If you think it's a worthwhile idea I can try to code it up.
+-- 
+James Morris
+<jmorris@namei.org>
 
-I've been running your patch for about 30 minutes, with no repro case.
--Evan
