@@ -2,179 +2,186 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A037C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:06:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6E03C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:07:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C8A42071A
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:06:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85E882071A
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:07:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="OFoQ1sCh";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.onmicrosoft.com header.i=@synopsys.onmicrosoft.com header.b="BITs6nje"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="QwVgTRUk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730082AbgAXJGw (ORCPT
+        id S1729863AbgAXJHd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 04:06:52 -0500
-Received: from us03-smtprelay2.synopsys.com ([149.117.87.133]:59790 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725787AbgAXJGw (ORCPT
+        Fri, 24 Jan 2020 04:07:33 -0500
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:8311 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725787AbgAXJHd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 04:06:52 -0500
-Received: from mailhost.synopsys.com (badc-mailhost1.synopsys.com [10.192.0.17])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id D80D6C05F9;
-        Fri, 24 Jan 2020 09:06:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1579856810; bh=B9/ix+mmZdCz/VXSDmoaZAfDiv67BVzD4gXN3dS/60Q=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
-        b=OFoQ1sChZPAiWGhaZwuZdmwJ11ekPMc4e0y3PmIsJ/dhbJ+F2sy3HR2pMAWGBSFl7
-         514AdUFVULbqyc85dligEgNA64NwSboUh+40FSekyEP4qEx1mgqGmx4mJT651yAClf
-         h6kEZaKtjqoY/mz5ILnUA3n/89sEzQPli460rAYRij9QexgIaCVqO2IAZyuLgP6GOZ
-         Jvxie3kH7fT7Q3Ytc4L4LxhxB5dLmoU8CDzE/5zhY7XQG4p8DjBlFB0ZMq0EAw2k/Q
-         JO9rdbrTK8xcTv6qQc8aPhbI/WPzcyZA+r8eywkF+ARsMj/JJS3rblKZdcfAHE2HQG
-         RujL9sd4erkmg==
-Received: from US01WEHTC3.internal.synopsys.com (us01wehtc3.internal.synopsys.com [10.15.84.232])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mailhost.synopsys.com (Postfix) with ESMTPS id 2BF19A008A;
-        Fri, 24 Jan 2020 09:06:47 +0000 (UTC)
-Received: from us01hybrid1.internal.synopsys.com (10.200.27.51) by
- US01WEHTC3.internal.synopsys.com (10.15.84.232) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Fri, 24 Jan 2020 01:06:40 -0800
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (10.202.3.67) by
- mrs.synopsys.com (10.200.27.51) with Microsoft SMTP Server (TLS) id
- 14.3.408.0; Fri, 24 Jan 2020 01:06:40 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=fIgasLu9ykdjPTJzz6ECyi9reVwbu2daz4cIpjDUxDRk1xCg31ce2nofGkkGD2VA3nDD2OazRwsq1LmUsAt97GFtBAAfY573v5HmyF3f8S0iMKJvaJ/dPWxhKYphtLylgl60o52YO54nODSvONEr4bRGjneA4zsNtupQz8V8QvXmBz0daKZFUAY/Sd/fb9WMLZg+586R49mNUqBr9hPhrBQCNoikiIbmWQiaGxWBCC6tTqaO7R0nuFZZU1KB/zZouwb2vjGFF0dXZ9oIKFkQgFTgDNmk2+1CmNIZLx1bEDkeCjIWqIUWcz9kYOp+SZmTTnDmR8ywj+bXvO3bySkzYQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=sZ6tZH+lMeJ6McxmODpH4utPlwV/0M+XLYLcSMxQlYE=;
- b=gTzj4/Qv0ESaRRL0WKBnbZAtKlELPh268g1L93+7TxC9fBOUEyVdQyt3gJOVqy3Xhp7m7/iFqe67gre10+3k4I4LO+qxCzwrfUl363hgakWso8kkfs/vy3liKft0sjPM00aubPm85MDSXQ5t2SaSIFMZAY9Z3fenJqiHBoUSAy8CpZ70EpKz+kEuVKl3sQV6YDEHlDlkLUYr2U3fm/179kAp0JGqrLlF1VeeSk1hkTd9cFdDaWvh2jMVTW+3SsMlu76Iy6R0y0sjFmWCMqSW5prpuXV4f5ureJANZqBk3M4i+RWNWHHUnEIUkMg7pm1gMhnhnUNaDD8QqDKXLEdzWQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=synopsys.com; dmarc=pass action=none header.from=synopsys.com;
- dkim=pass header.d=synopsys.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=synopsys.onmicrosoft.com; s=selector2-synopsys-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=sZ6tZH+lMeJ6McxmODpH4utPlwV/0M+XLYLcSMxQlYE=;
- b=BITs6njeVA3+yw56vEonftR6Me02RSBPsJ7TRziUTty7u6xEp37msBf4H/3iiQ+gJhYFsY0H2ha6uVtYcTfHiIj+CvFh+7A6ArX7UsuXCEphBG9gAiD34tkqDvx0Ouubra+esiepe7n/H2YLaWaCPgA6ikWbp5nd9VKt3vJl6Lg=
-Received: from BN8PR12MB3266.namprd12.prod.outlook.com (20.179.67.145) by
- BN8PR12MB3394.namprd12.prod.outlook.com (20.178.212.88) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2644.20; Fri, 24 Jan 2020 09:06:38 +0000
-Received: from BN8PR12MB3266.namprd12.prod.outlook.com
- ([fe80::c62:b247:6963:9da2]) by BN8PR12MB3266.namprd12.prod.outlook.com
- ([fe80::c62:b247:6963:9da2%6]) with mapi id 15.20.2644.027; Fri, 24 Jan 2020
- 09:06:38 +0000
-From:   Jose Abreu <Jose.Abreu@synopsys.com>
-To:     "Ong, Boon Leong" <boon.leong.ong@intel.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-CC:     "Tan, Tee Min" <tee.min.tan@intel.com>,
-        "Voon, Weifeng" <weifeng.voon@intel.com>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre TORGUE <alexandre.torgue@st.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        "Joao Pinto" <Joao.Pinto@synopsys.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "Alexandru Ardelean" <alexandru.ardelean@analog.com>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH net v3 1/5] net: stmmac: Fix incorrect location to set
- real_num_rx|tx_queues
-Thread-Topic: [PATCH net v3 1/5] net: stmmac: Fix incorrect location to set
- real_num_rx|tx_queues
-Thread-Index: AQHV0QPdI0TP73liMkC6zs86z0tb/af2cgbQgAMURgCAAAEuIA==
-Date:   Fri, 24 Jan 2020 09:06:38 +0000
-Message-ID: <BN8PR12MB3266EC19F5E12FE94FF153E4D30E0@BN8PR12MB3266.namprd12.prod.outlook.com>
-References: <20200122090936.28555-1-boon.leong.ong@intel.com>
- <20200122090936.28555-2-boon.leong.ong@intel.com>
- <BN8PR12MB3266F0534CE20CE906AA3C06D30C0@BN8PR12MB3266.namprd12.prod.outlook.com>
- <AF233D1473C1364ABD51D28909A1B1B75C488EDC@pgsmsx114.gar.corp.intel.com>
-In-Reply-To: <AF233D1473C1364ABD51D28909A1B1B75C488EDC@pgsmsx114.gar.corp.intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=joabreu@synopsys.com; 
-x-originating-ip: [83.174.63.141]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 4935d33f-db7d-4c3f-e1ff-08d7a0acb87e
-x-ms-traffictypediagnostic: BN8PR12MB3394:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BN8PR12MB3394240809E66EC095599FA3D30E0@BN8PR12MB3394.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 02929ECF07
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(136003)(366004)(346002)(376002)(39860400002)(189003)(199004)(7416002)(76116006)(4326008)(7696005)(6506007)(71200400001)(52536014)(9686003)(110136005)(81166006)(5660300002)(8936002)(81156014)(478600001)(33656002)(8676002)(66446008)(64756008)(2906002)(26005)(54906003)(66556008)(186003)(66946007)(55016002)(66476007)(86362001)(316002);DIR:OUT;SFP:1102;SCL:1;SRVR:BN8PR12MB3394;H:BN8PR12MB3266.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: synopsys.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: ET15XBS2zOx3O4bTd0xbkXQkOKBbXxUcKsqFmuQsytXZm6qcZtn6L36fQ1Q29TNL4hxxBojmML6ByhFTFVtI/wzPwGQpfKmAgTQpbbaVjWmd4fsF3TXGmmUs8O/4KP0Jz5scbIEHuaJLc2vvYvZn/RmHf3wk17/Pl1BbO3iiC7cElPxnoqSDhgnozarHKrJ18AKot/l3Fq783L9btfDujlC0SBj05HaJ5d4Q5Aj1bbDTyO1TH9dQaIv4WQJXCWpMZc1MROq9ul0sGpR2Bf0ax27POn5XP2vHtMsmjhMXP3Pf0SyAFSCZXWtewIDYcaCTr5IF0QWmtxT7oSH//0AVYt0JhNshJioMUiBULd5m0OtfoUxAEnTqqsHq5/xkLrdtWYihs2dbYOIDUZf4xNIeH7Q7zYarBDEC5DuSkh21GzYq0zQcLygHcxQPI/HpaV40
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Fri, 24 Jan 2020 04:07:33 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e2ab3a20000>; Fri, 24 Jan 2020 01:06:46 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Fri, 24 Jan 2020 01:07:32 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Fri, 24 Jan 2020 01:07:32 -0800
+Received: from [10.21.133.51] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 24 Jan
+ 2020 09:07:24 +0000
+Subject: Re: [alsa-devel] [PATCH 4/9] ASoC: tegra: add Tegra210 based I2S
+ driver
+To:     Dmitry Osipenko <digetx@gmail.com>,
+        Sameer Pujar <spujar@nvidia.com>
+CC:     <devicetree@vger.kernel.org>, <alsa-devel@alsa-project.org>,
+        <lgirdwood@gmail.com>, <linux-kernel@vger.kernel.org>,
+        <broonie@kernel.org>, <atalambedu@nvidia.com>, <tiwai@suse.com>,
+        <viswanathl@nvidia.com>, <linux-tegra@vger.kernel.org>,
+        <robh+dt@kernel.org>, <thierry.reding@gmail.com>,
+        <sharadg@nvidia.com>, <rlokhande@nvidia.com>, <mkumard@nvidia.com>,
+        <dramesh@nvidia.com>
+References: <1579530198-13431-1-git-send-email-spujar@nvidia.com>
+ <1579530198-13431-5-git-send-email-spujar@nvidia.com>
+ <a440d105-8db9-ecf1-3718-e58804ce14b8@gmail.com>
+ <0c571858-d72c-97c2-2d6a-ead6fdde06eb@nvidia.com>
+ <444731da-c4cd-8578-a732-c803eef31ef0@gmail.com>
+ <bdc749bc-b62c-a041-c17c-33fd49fe8e2e@nvidia.com>
+ <598fe377-5b95-d30a-eb64-89a645166d42@gmail.com>
+ <3f51939d-cf4b-f69b-728a-7eb99bbae458@nvidia.com>
+ <34ac1fd3-ae0f-07f2-555f-a55087a2c9dc@nvidia.com>
+ <1a84b393-938f-8bed-d08e-cc3bb6ed4844@gmail.com>
+ <0fc814c2-0dc6-7741-b954-463381ff7fb9@nvidia.com>
+ <b5c581b9-17af-d004-33fb-2cc782ab820a@gmail.com>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <9f73afdf-1e9a-cdbd-f972-a022d503ef51@nvidia.com>
+Date:   Fri, 24 Jan 2020 09:07:22 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4935d33f-db7d-4c3f-e1ff-08d7a0acb87e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Jan 2020 09:06:38.4537
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: FbPiWQ2F45ekCFb1grbzy+Zi1QViF0KEKdXE6OiOMX77Yu6jw32jp4n1rzceEr9PzuNouvqDdSN/NyayXj1TgQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR12MB3394
-X-OriginatorOrg: synopsys.com
+In-Reply-To: <b5c581b9-17af-d004-33fb-2cc782ab820a@gmail.com>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1579856806; bh=7aoEWgOMrsENsyCSERE4iOvClQ10ZBvAeKGx7j04F0Y=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=QwVgTRUkTeKYuVdIF7IWb8Lx6v4QxDRL3CI5bRnrYOJwXFYDVgMmPs5XFiEQ0Qfk4
+         wqx0DGl28wvYoC4xC0tkZah++mlIsfR8UrL12MvIgBntdJ0oA57208JrBcXNZRb2xF
+         bxrjLt4MAxLDlMn5/rcnn5er2CGH8stTdmDBAOImYAtrUnk2DOBgU7xWuuOyBrqesr
+         rOkiqEckCbQJwpbwZgu+MuDnK2VVPRFAAitb253LPKwCb3SFyUV1vjYzXrw2hosS7R
+         MZciu+P9Zy8jm+skB8HZ97Q2LK9OiU77dRSKfnIM4aQj72Mnb7bHsjN/hOgGr6jHGA
+         KVmJjRE4Uf0dA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ong, Boon Leong <boon.leong.ong@intel.com>
-Date: Jan/24/2020, 08:56:28 (UTC+00:00)
 
-> >Why not use rtnl_is_locked() instead of the boolean ?
+On 23/01/2020 15:16, Dmitry Osipenko wrote:
+> 23.01.2020 12:22, Sameer Pujar =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>
+>>
+>> On 1/22/2020 9:57 PM, Dmitry Osipenko wrote:
+>>> External email: Use caution opening links or attachments
+>>>
+>>>
+>>> 22.01.2020 14:52, Jon Hunter =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>>> On 22/01/2020 07:16, Sameer Pujar wrote:
+>>>>
+>>>> ...
+>>>>
+>>>>>>>>>>> +static int tegra210_i2s_remove(struct platform_device *pdev)
+>>>>>>>>>>> +{
+>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0 pm_runtime_disable(&pdev->dev);
+>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0 if (!pm_runtime_status_suspended(&pde=
+v->dev))
+>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0 tegra210_i2s_runtime_suspend(&pdev->dev);
+>>>>>>>>>> This breaks device's RPM refcounting if it was disabled in the
+>>>>>>>>>> active
+>>>>>>>>>> state. This code should be removed. At most you could warn
+>>>>>>>>>> about the
+>>>>>>>>>> unxpected RPM state here, but it shouldn't be necessary.
+>>>>>>>>> I guess this was added for safety and explicit suspend keeps cloc=
+k
+>>>>>>>>> disabled.
+>>>>>>>>> Not sure if ref-counting of the device matters when runtime PM is
+>>>>>>>>> disabled and device is removed.
+>>>>>>>>> I see few drivers using this way.
+>>>>>>>> It should matter (if I'm not missing something) because RPM should
+>>>>>>>> be in
+>>>>>>>> a wrecked state once you'll try to re-load the driver's module.
+>>>>>>>> Likely
+>>>>>>>> that those few other drivers are wrong.
+>>>>>>>>
+>>>>>>>> [snip]
+>>>>>>> Once the driver is re-loaded and RPM is enabled, I don't think it
+>>>>>>> would use
+>>>>>>> the same 'dev' and the corresponding ref count. Doesn't it use the
+>>>>>>> new
+>>>>>>> counters?
+>>>>>>> If RPM is not working for some reason, most likely it would be the
+>>>>>>> case
+>>>>>>> for other
+>>>>>>> devices. What best driver can do is probably do a force suspend
+>>>>>>> during
+>>>>>>> removal if
+>>>>>>> already not done. I would prefer to keep, since multiple drivers
+>>>>>>> still
+>>>>>>> have it,
+>>>>>>> unless there is a real harm in doing so.
+>>>>>> I took a closer look and looks like the counter actually should be
+>>>>>> reset. Still I don't think that it's a good practice to make changes
+>>>>>> underneath of RPM, it may strike back.
+>>>>> If RPM is broken, it probably would have been caught during device
+>>>>> usage.
+>>>>> I will remove explicit suspend here if no any concerns from other
+>>>>> folks.
+>>>>> Thanks.
+>>>> I recall that this was the preferred way of doing this from the RPM
+>>>> folks. Tegra30 I2S driver does the same and Stephen had pointed me to
+>>>> this as a reference.
+>>>> I believe that this is meant to ensure that the
+>>>> device is always powered-off regardless of it RPM is enabled or not an=
+d
+>>>> what the current state is.
+>>> Yes, it was kinda actual for the case of unavailable RPM.
+>>
+>>> Anyways, /I think/ variant like this should have been more preferred:
+>>>
+>>> if (!pm_runtime_enabled(&pdev->dev))
+>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 tegra210_i2s_runtime_s=
+uspend(&pdev->dev);
+>>> else
+>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pm_runtime_disable(&pd=
+ev->dev);
+>>
+>> I think it looks to be similar to what is there already.
+>>
+>> pm_runtime_disable(&pdev->dev); // it would turn out to be a dummy call
+>> if !RPM
+>> if (!pm_runtime_status_suspended(&pdev->dev)) // it is true always if !R=
+PM
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 tegra210_i2s_runtime_suspend(=
+&pdev->dev);
 >=20
-> We know that stmmac_open() is called with rtnl_mutex locked by caller.
-> And, stmmac_resume() is called without rtnl_mutex is locked by caller.
-> If we replace the boolean with rtnl_is_locked(), then we will have the
-> following logics in stmmac_hw_setup():-
->=20
->      if (!rtnl_is_locked)   ---- (A)
->          rtnl_lock();
->      netif_set_real_num_rx_queues();
->      netif_set_real_num_tx_queues();
->      if (!rtnl_is_locked)   ---- (B)
->          rtnl_unlock();
->=20
-> For stmmac_open(), (A) is false but (B) is true.=20
-> So, the stmmac_open() exits with rtnl_mutex is released.
-> Here, the above logic does not perserve the original rtnl_mutex
-> is locked when stmmac_open() is called.
->=20
-> For stmmac_resume(), (A) is true, and (B) is also true.
-> So, the stmmac_resume() exits with rtnl_mutex is released.
-> Here, the above logic works well as the original rtnl_mutex is released
-> when stmmac_resume() is called.
-> =20
-> So, as far as I can see, the proposed boolean approach works fine for bot=
-h
-> stmmac_open() and stmmac_resume().
->=20
-> Do you agree?=20
+> Maybe this is fine for !RPM, but not really fine in a case of enabled
+> RPM. Device could be in resumed state after pm_runtime_disable() if it
+> wasn't suspended before the disabling.
 
-Can't you just wrap all the HW related logic in stmmac_resume() and=20
-stmmac_suspend() with the rtnl lock ? Seems like the right thing to do and=
-=20
-you won't need the boolean.
+I don't see any problem with this for the !RPM case.
 
----
-Thanks,
-Jose Miguel Abreu
+Jon
+
+--=20
+nvpublic
