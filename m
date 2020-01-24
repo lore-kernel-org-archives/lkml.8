@@ -7,50 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01A4EC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:22:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1038C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:22:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF74E2087E
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:22:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD4662087E
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:22:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579875757;
-	bh=BCF3DENsae70C9wEJ6TwFWjlWYssD7mrLzFYTpJrthg=;
+	s=default; t=1579875761;
+	bh=f5G9M2bfRPENqIZETu+WJru2mS490joqvuuJ5DRGrxU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GLBddvbD8/3uvt1vRNwpsnJdahANTqZOyHSnXQZk6vVxBi3UyhawzHeSK5CtbJwTr
-	 VeNDju2cDFLO3XN7hJfHNOSdOpm/IIyKhokQ2VM7jHzjAODaU9D2X2Hl8PKgNjNW/p
-	 mpUviYxK4DPmBXTRLwWrZ2jxqQ0pn3Mx10lvhpl8=
+	b=VYmcKo5MdbyEF9JB9FkTC93mIqUXeHIKew4CfR+skohR4xJW/2QzuPdUwViO2O7A6
+	 FnrKUnRI6+eXrp3XNyRu/trb4b/g1twp6ZK9NuJCDes9DVY+oCQufWqRIMJ2wAM2io
+	 J9ori7af3nDL7ZtvsBfZ5dLJahJoemkOemGisfwY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392413AbgAXOWh (ORCPT
+        id S2392420AbgAXOWk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 09:22:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44586 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 09:22:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44668 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405448AbgAXOW2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 09:22:28 -0500
+        id S2387708AbgAXOWc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 09:22:32 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0047422527;
-        Fri, 24 Jan 2020 14:22:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8841824682;
+        Fri, 24 Jan 2020 14:22:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579875748;
-        bh=BCF3DENsae70C9wEJ6TwFWjlWYssD7mrLzFYTpJrthg=;
+        s=default; t=1579875751;
+        bh=f5G9M2bfRPENqIZETu+WJru2mS490joqvuuJ5DRGrxU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rg++z94EEKuyC74YADpC+DNMCWpdgQi9Xyp5KKFa5DkR3ufMRHzmYbU/q1L0iBe4t
-         XhcoYZ9hg3/DZ65PBNTEogBvBP1VSIhgkuNoK12WWGx8pAYr3Kmhh0m6+s+XvNIggv
-         c3TL7mCS4b1zq0WwujAErZFh+AJwfOeR49u3Mez4=
+        b=Yl+KTiTmhu3WvqVJ5Nd3jWq8WSIm+O4m6U45g4LxdhEMZJW/lArEXwQQJifJimoXT
+         wiG888BLz0E9dGaWeTvSpfjxkZrD8bIci2zW/ogfxdNvVH0iFsK6VsYeM6QPwuJaqy
+         cOLCtl6y4sZSdrhgaOgu1iGtk1bELn9rmMd1Nwts=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Cong Wang <xiyou.wangcong@gmail.com>,
-        syzbot+4c3cc6dbe7259dbf9054@syzkaller.appspotmail.com,
-        Jozsef Kadlecsik <kadlec@netfilter.org>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
+Cc:     Johannes Berg <johannes.berg@intel.com>,
+        syzbot+e8a797964a4180eb57d5@syzkaller.appspotmail.com,
+        syzbot+34b582cf32c1db008f8e@syzkaller.appspotmail.com,
         Sasha Levin <sashal@kernel.org>,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 5/9] netfilter: fix a use-after-free in mtype_destroy()
-Date:   Fri, 24 Jan 2020 09:22:17 -0500
-Message-Id: <20200124142221.31201-5-sashal@kernel.org>
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 8/9] cfg80211: check for set_wiphy_params
+Date:   Fri, 24 Jan 2020 09:22:20 -0500
+Message-Id: <20200124142221.31201-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200124142221.31201-1-sashal@kernel.org>
 References: <20200124142221.31201-1-sashal@kernel.org>
@@ -63,38 +61,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Cong Wang <xiyou.wangcong@gmail.com>
+From: Johannes Berg <johannes.berg@intel.com>
 
-[ Upstream commit c120959387efa51479056fd01dc90adfba7a590c ]
+[ Upstream commit 24953de0a5e31dcca7e82c8a3c79abc2dfe8fb6e ]
 
-map->members is freed by ip_set_free() right before using it in
-mtype_ext_cleanup() again. So we just have to move it down.
+Check if set_wiphy_params is assigned and return an error if not,
+some drivers (e.g. virt_wifi where syzbot reported it) don't have
+it.
 
-Reported-by: syzbot+4c3cc6dbe7259dbf9054@syzkaller.appspotmail.com
-Fixes: 40cd63bf33b2 ("netfilter: ipset: Support extensions which need a per data destroy function")
-Acked-by: Jozsef Kadlecsik <kadlec@netfilter.org>
-Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Reported-by: syzbot+e8a797964a4180eb57d5@syzkaller.appspotmail.com
+Reported-by: syzbot+34b582cf32c1db008f8e@syzkaller.appspotmail.com
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Link: https://lore.kernel.org/r/20200113125358.ac07f276efff.Ibd85ee1b12e47b9efb00a2adc5cd3fac50da791a@changeid
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/ipset/ip_set_bitmap_gen.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/wireless/rdev-ops.h | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/net/netfilter/ipset/ip_set_bitmap_gen.h b/net/netfilter/ipset/ip_set_bitmap_gen.h
-index b0bc475f641e3..adc703ccd68bd 100644
---- a/net/netfilter/ipset/ip_set_bitmap_gen.h
-+++ b/net/netfilter/ipset/ip_set_bitmap_gen.h
-@@ -66,9 +66,9 @@ mtype_destroy(struct ip_set *set)
- 	if (SET_WITH_TIMEOUT(set))
- 		del_timer_sync(&map->gc);
- 
--	ip_set_free(map->members);
- 	if (set->dsize && set->extensions & IPSET_EXT_DESTROY)
- 		mtype_ext_cleanup(set);
-+	ip_set_free(map->members);
- 	ip_set_free(map);
- 
- 	set->data = NULL;
+diff --git a/net/wireless/rdev-ops.h b/net/wireless/rdev-ops.h
+index c23516d0f8079..b3a60c3e19341 100644
+--- a/net/wireless/rdev-ops.h
++++ b/net/wireless/rdev-ops.h
+@@ -517,6 +517,10 @@ static inline int
+ rdev_set_wiphy_params(struct cfg80211_registered_device *rdev, u32 changed)
+ {
+ 	int ret;
++
++	if (!rdev->ops->set_wiphy_params)
++		return -EOPNOTSUPP;
++
+ 	trace_rdev_set_wiphy_params(&rdev->wiphy, changed);
+ 	ret = rdev->ops->set_wiphy_params(&rdev->wiphy, changed);
+ 	trace_rdev_return_int(&rdev->wiphy, ret);
 -- 
 2.20.1
 
