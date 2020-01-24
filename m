@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADCCBC3F68F
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:18:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 467F2C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:18:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B0852075D
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:18:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12F3B20704
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:18:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579864721;
-	bh=3SRzaMwcdBamF7xF1o8992iLruhVXeqpGpMiK6xp+Lk=;
+	s=default; t=1579864724;
+	bh=wl46h8xH0MNLOtJJAKLbQ0NeYdDKkopa5Lk/Zu06bvs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uBUnu317fzsD1iWRVQ6Aly9GNuGMrgoXkDhjr+h7E1ID3wSwd5y8ow2qer2OVfW3f
-	 5RUfZBudGxszh/+Mhcd75PdcXKHVygV3/XEkRaO4W+X/90T6OcuGUrTy8xfs3V6DjJ
-	 SSkdbRj1YcXG1QSvAzb34hyP1HHII6hLVRX2GbgA=
+	b=Yh2Lcp04eYuL8RXp2CtBGbYt8Uqs+T+5EKgrSSYT2RVrxtFX5B+i7ihfigb04rfPm
+	 cuyMaD4a5aj1C9/AT/hsW8qagSThmq0+VN40kpiPDlOYHEAOiJfC4CQAOzxJQke0LJ
+	 0cxtjoMY/nswbvHf5j5xGcsC0uIGlQE1/DY2CX0I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390676AbgAXLSk (ORCPT
+        id S2390686AbgAXLSn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:18:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55764 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 06:18:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55854 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390315AbgAXLSf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:18:35 -0500
+        id S2390668AbgAXLSj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:18:39 -0500
 Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BF73B20704;
-        Fri, 24 Jan 2020 11:18:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 44D6C2087E;
+        Fri, 24 Jan 2020 11:18:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579864715;
-        bh=3SRzaMwcdBamF7xF1o8992iLruhVXeqpGpMiK6xp+Lk=;
+        s=default; t=1579864719;
+        bh=wl46h8xH0MNLOtJJAKLbQ0NeYdDKkopa5Lk/Zu06bvs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0WBXUGDMQNIE1Qux5vgK/C3owJLuLaN9mVNj2cdY1Ew2hdnQe5K/LRVrwA+NSQV+3
-         glGl+de8mVIrW07oDBAHN9EO3RieRI+0H6HoxaIGlqy12fW1/y+iEOVxY+Tc1i71MG
-         NOc2TOwMvfrEYmJPN47xiR0kpWWpbYXr6JqYA2/A=
+        b=SRhoxFQLn0T8nh4zIbiYLeakUjkrPWXXRVy316JG9+fyG9ut/1lZVwutQQ29wsKlW
+         anjQjm9Vn6dfeBQLJN653IukYY7+qeLalvFlCIDFe6AOduSzp4alJJoGNSUx+ybSsi
+         vNvGgSNh/HXOWM4W7VNH2iY9K/2J0rpfU18SEtBQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Himanshu Madhani <hmadhani@marvell.com>,
-        Giridhar Malavali <gmalavali@marvell.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 332/639] scsi: qla2xxx: Fix error handling in qlt_alloc_qfull_cmd()
-Date:   Fri, 24 Jan 2020 10:28:22 +0100
-Message-Id: <20200124093128.693385771@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 323/639] dmaengine: axi-dmac: Dont check the number of frames for alignment
+Date:   Fri, 24 Jan 2020 10:28:13 +0100
+Message-Id: <20200124093127.517693429@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
 References: <20200124093047.008739095@linuxfoundation.org>
@@ -62,50 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bart Van Assche <bvanassche@acm.org>
+From: Alexandru Ardelean <alexandru.ardelean@analog.com>
 
-[ Upstream commit c04466c17142d5eb566984372b9a5003d1900fe3 ]
+[ Upstream commit 648865a79d8ee3d1aa64aab5eb2a9d12eeed14f9 ]
 
-The test "if (!cmd)" is not useful because it is guaranteed that cmd !=
-NULL.  Instead of testing the cmd pointer, rely on the tag to decide
-whether or not command allocation failed.
+In 2D transfers (for the AXI DMAC), the number of frames (numf) represents
+Y_LENGTH, and the length of a frame is X_LENGTH. 2D transfers are useful
+for video transfers where screen resolutions ( X * Y ) are typically
+aligned for X, but not for Y.
 
-Cc: Himanshu Madhani <hmadhani@marvell.com>
-Cc: Giridhar Malavali <gmalavali@marvell.com>
-Fixes: 33e799775593 ("qla2xxx: Add support for QFull throttling and Term Exchange retry") # v3.18.
-Signed-off-by: Bart Van Assche <bvanassche@acm.org>
-Acked-by: Himanshu Madhani <hmadhani@marvell.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+There is no requirement for Y_LENGTH to be aligned to the bus-width (or
+anything), and this is also true for AXI DMAC.
+
+Checking the Y_LENGTH for alignment causes false errors when initiating DMA
+transfers. This change fixes this by checking only that the Y_LENGTH is
+non-zero.
+
+Fixes: 0e3b67b348b8 ("dmaengine: Add support for the Analog Devices AXI-DMAC DMA controller")
+Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/qla2xxx/qla_target.c | 7 ++-----
- 1 file changed, 2 insertions(+), 5 deletions(-)
+ drivers/dma/dma-axi-dmac.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/qla2xxx/qla_target.c b/drivers/scsi/qla2xxx/qla_target.c
-index bbbe1996620bf..c925ca7875374 100644
---- a/drivers/scsi/qla2xxx/qla_target.c
-+++ b/drivers/scsi/qla2xxx/qla_target.c
-@@ -5334,11 +5334,7 @@ qlt_alloc_qfull_cmd(struct scsi_qla_host *vha,
- 	se_sess = sess->se_sess;
+diff --git a/drivers/dma/dma-axi-dmac.c b/drivers/dma/dma-axi-dmac.c
+index 15b2453d2647f..b2c755b74bea0 100644
+--- a/drivers/dma/dma-axi-dmac.c
++++ b/drivers/dma/dma-axi-dmac.c
+@@ -486,7 +486,7 @@ static struct dma_async_tx_descriptor *axi_dmac_prep_interleaved(
  
- 	tag = sbitmap_queue_get(&se_sess->sess_tag_pool, &cpu);
--	if (tag < 0)
--		return;
--
--	cmd = &((struct qla_tgt_cmd *)se_sess->sess_cmd_map)[tag];
--	if (!cmd) {
-+	if (tag < 0) {
- 		ql_dbg(ql_dbg_io, vha, 0x3009,
- 			"qla_target(%d): %s: Allocation of cmd failed\n",
- 			vha->vp_idx, __func__);
-@@ -5353,6 +5349,7 @@ qlt_alloc_qfull_cmd(struct scsi_qla_host *vha,
- 		return;
- 	}
- 
-+	cmd = &((struct qla_tgt_cmd *)se_sess->sess_cmd_map)[tag];
- 	memset(cmd, 0, sizeof(struct qla_tgt_cmd));
- 
- 	qlt_incr_num_pend_cmds(vha);
+ 	if (chan->hw_2d) {
+ 		if (!axi_dmac_check_len(chan, xt->sgl[0].size) ||
+-		    !axi_dmac_check_len(chan, xt->numf))
++		    xt->numf == 0)
+ 			return NULL;
+ 		if (xt->sgl[0].size + dst_icg > chan->max_length ||
+ 		    xt->sgl[0].size + src_icg > chan->max_length)
 -- 
 2.20.1
 
