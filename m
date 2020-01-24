@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECCF7C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 10:04:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E420DC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 10:05:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3152208C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 10:04:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEDF020709
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 10:05:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579860298;
-	bh=WluDZNJoOkYrM0jjuxAO17edhMR31xyv2AuDKdbBwuU=;
+	s=default; t=1579860301;
+	bh=2EVrWCtV4R8qwsgK4ihB0a1LC1msbnOCLce3h+hbXMc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pl7H7gsuZd4uGfuEUdppCJWhAZl0gbx1uA4ahlgGej/a6+O5V7qNEg/56nmtNqP7I
-	 KkVmuyG3WmdV/gteL03h6Zdk7g3DNvRuHkTo12hZmtxjyOQ6JsreGaj6n/Ww9QUJj8
-	 XxohmMyl1Z3rZw0JK10MjBCx8OUsbhQ5kvvgEhCU=
+	b=HA1OryB1POLvpR3diwelP8QesmwkKR73O48RDsyUGcfCPnJuwFL6oa2d4UiRdFI3A
+	 1AKjf8D1ZUAJxyhw2fauNMvvkvl1ia9J0r75L/RCu04z2yKsJlCRYLfoSSOLlxyxFA
+	 cLeL5l4j054UJoQSP3IE3+O8WmIbd/PcsACuCsM4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388902AbgAXKE5 (ORCPT
+        id S2389181AbgAXKFA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 05:04:57 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41340 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 05:05:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41486 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389162AbgAXKEw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 05:04:52 -0500
+        id S2388994AbgAXKE6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 05:04:58 -0500
 Received: from localhost (unknown [145.15.244.15])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D9C4A21556;
-        Fri, 24 Jan 2020 10:04:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 09DDD222D9;
+        Fri, 24 Jan 2020 10:04:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579860291;
-        bh=WluDZNJoOkYrM0jjuxAO17edhMR31xyv2AuDKdbBwuU=;
+        s=default; t=1579860297;
+        bh=2EVrWCtV4R8qwsgK4ihB0a1LC1msbnOCLce3h+hbXMc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VLOsreLoEwd0b7whdISrVfGNdIrTJ4YdxGhnplzkZxtCDtnaUQcgP9LU955AbuFS8
-         mriqXQZ/oPk7QBVQnYVzXyqJpTF0tEfyKIpuYIOkVXx5frFXycmST0iR+80UdVrz2V
-         2QCj6v94S+mQBYOi2hmmp/U1cp/UXxkjBG3P0y1w=
+        b=JMogTaWz7cap5vhQ4YUJgHgOUKECJrrNjh5wS9OaCCeE61HhA6m4yOyUvMfUQs5Z5
+         V7IQRJMnI8drQ+j/Nl5aDvOavUQ5//mZLAQisG+OZeOll0ofWeRE6f1FZRAG4N58rL
+         0Y6EVYdb8RABPxEnIEcq4q4uPbna4UOZwPY5ZEZY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nicolas Boichat <drinkcat@chromium.org>,
-        Wen Gong <wgong@codeaurora.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
+        stable@vger.kernel.org,
+        Iker Perez del Palomar Sustatxa 
+        <iker.perez@codethink.co.uk>, Guenter Roeck <linux@roeck-us.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 304/343] ath10k: adjust skb length in ath10k_sdio_mbox_rx_packet
-Date:   Fri, 24 Jan 2020 10:32:02 +0100
-Message-Id: <20200124092959.858371802@linuxfoundation.org>
+Subject: [PATCH 4.14 285/343] hwmon: (lm75) Fix write operations for negative temperatures
+Date:   Fri, 24 Jan 2020 10:31:43 +0100
+Message-Id: <20200124092957.525701097@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124092919.490687572@linuxfoundation.org>
 References: <20200124092919.490687572@linuxfoundation.org>
@@ -61,99 +61,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nicolas Boichat <drinkcat@chromium.org>
+From: Guenter Roeck <linux@roeck-us.net>
 
-[ Upstream commit b7139960832eb56fa15d390a4b5c8c5739bd0d1a ]
+[ Upstream commit 7d82fcc9d9e81241778aaa22fda7be753e237d86 ]
 
-When the FW bundles multiple packets, pkt->act_len may be incorrect
-as it refers to the first packet only (however, the FW will only
-bundle packets that fit into the same pkt->alloc_len).
+Writes into limit registers fail if the temperature written is negative.
+The regmap write operation checks the value range, regmap_write accepts
+an unsigned int as parameter, and the temperature value passed to
+regmap_write is kept in a variable declared as long. Negative values
+are converted large unsigned integers, which fails the range check.
+Fix by type casting the temperature to u16 when calling regmap_write().
 
-Before this patch, the skb length would be set (incorrectly) to
-pkt->act_len in ath10k_sdio_mbox_rx_packet, and then later manually
-adjusted in ath10k_sdio_mbox_rx_process_packet.
-
-The first problem is that ath10k_sdio_mbox_rx_process_packet does not
-use proper skb_put commands to adjust the length (it directly changes
-skb->len), so we end up with a mismatch between skb->head + skb->tail
-and skb->data + skb->len. This is quite serious, and causes corruptions
-in the TCP stack, as the stack tries to coalesce packets, and relies
-on skb->tail being correct (that is, skb_tail_pointer must point to
-the first byte_after_ the data).
-
-Instead of re-adjusting the size in ath10k_sdio_mbox_rx_process_packet,
-this moves the code to ath10k_sdio_mbox_rx_packet, and also add a
-bounds check, as skb_put would crash the kernel if not enough space is
-available.
-
-Tested with QCA6174 SDIO with firmware
-WLAN.RMH.4.4.1-00007-QCARMSWP-1.
-
-Fixes: 8530b4e7b22bc3b ("ath10k: sdio: set skb len for all rx packets")
-Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
-Signed-off-by: Wen Gong <wgong@codeaurora.org>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Cc: Iker Perez del Palomar Sustatxa <iker.perez@codethink.co.uk>
+Fixes: e65365fed87f ("hwmon: (lm75) Convert to use regmap")
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/ath/ath10k/sdio.c | 29 +++++++++++++++++++-------
- 1 file changed, 21 insertions(+), 8 deletions(-)
+ drivers/hwmon/lm75.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/ath/ath10k/sdio.c b/drivers/net/wireless/ath/ath10k/sdio.c
-index 0a1248ebccf5f..f49b21b137c13 100644
---- a/drivers/net/wireless/ath/ath10k/sdio.c
-+++ b/drivers/net/wireless/ath/ath10k/sdio.c
-@@ -392,16 +392,11 @@ static int ath10k_sdio_mbox_rx_process_packet(struct ath10k *ar,
- 	struct ath10k_htc_hdr *htc_hdr = (struct ath10k_htc_hdr *)skb->data;
- 	bool trailer_present = htc_hdr->flags & ATH10K_HTC_FLAG_TRAILER_PRESENT;
- 	enum ath10k_htc_ep_id eid;
--	u16 payload_len;
- 	u8 *trailer;
- 	int ret;
+diff --git a/drivers/hwmon/lm75.c b/drivers/hwmon/lm75.c
+index 005ffb5ffa92d..1737bb5fbaafe 100644
+--- a/drivers/hwmon/lm75.c
++++ b/drivers/hwmon/lm75.c
+@@ -165,7 +165,7 @@ static int lm75_write(struct device *dev, enum hwmon_sensor_types type,
+ 	temp = DIV_ROUND_CLOSEST(temp  << (resolution - 8),
+ 				 1000) << (16 - resolution);
  
--	payload_len = le16_to_cpu(htc_hdr->len);
--	skb->len = payload_len + sizeof(struct ath10k_htc_hdr);
--
- 	if (trailer_present) {
--		trailer = skb->data + sizeof(*htc_hdr) +
--			  payload_len - htc_hdr->trailer_len;
-+		trailer = skb->data + skb->len - htc_hdr->trailer_len;
- 
- 		eid = pipe_id_to_eid(htc_hdr->eid);
- 
-@@ -635,13 +630,31 @@ static int ath10k_sdio_mbox_rx_packet(struct ath10k *ar,
- {
- 	struct ath10k_sdio *ar_sdio = ath10k_sdio_priv(ar);
- 	struct sk_buff *skb = pkt->skb;
-+	struct ath10k_htc_hdr *htc_hdr;
- 	int ret;
- 
- 	ret = ath10k_sdio_readsb(ar, ar_sdio->mbox_info.htc_addr,
- 				 skb->data, pkt->alloc_len);
-+	if (ret)
-+		goto out;
-+
-+	/* Update actual length. The original length may be incorrect,
-+	 * as the FW will bundle multiple packets as long as their sizes
-+	 * fit within the same aligned length (pkt->alloc_len).
-+	 */
-+	htc_hdr = (struct ath10k_htc_hdr *)skb->data;
-+	pkt->act_len = le16_to_cpu(htc_hdr->len) + sizeof(*htc_hdr);
-+	if (pkt->act_len > pkt->alloc_len) {
-+		ath10k_warn(ar, "rx packet too large (%zu > %zu)\n",
-+			    pkt->act_len, pkt->alloc_len);
-+		ret = -EMSGSIZE;
-+		goto out;
-+	}
-+
-+	skb_put(skb, pkt->act_len);
-+
-+out:
- 	pkt->status = ret;
--	if (!ret)
--		skb_put(skb, pkt->act_len);
- 
- 	return ret;
+-	return regmap_write(data->regmap, reg, temp);
++	return regmap_write(data->regmap, reg, (u16)temp);
  }
+ 
+ static umode_t lm75_is_visible(const void *data, enum hwmon_sensor_types type,
 -- 
 2.20.1
 
