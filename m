@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2DDBC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:46:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D67F8C35242
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:46:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79A5821734
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:46:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1F79222C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:46:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579859192;
-	bh=DMawGORGw/GHzM9qUcSUjMhFK4aAx1nQqfwLv03Q3sA=;
+	s=default; t=1579859195;
+	bh=+6ITeo2PDIUhzNARjYzusiMuQUvcbHpmFeNWausG/Dk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=U0VMDE1/rLFcP56TQtVUA8SpcklzTVr5x0v+SVgXgPjO5AK041waLG30qw4nRSM/k
-	 2P7AcDm4Tqp+zfY3sjj09KPI12EnOW10byPcm1cVIGdrNIojtq3GqJUuyNTwp55PrK
-	 HKG/KwWc0IHoPKb+OmViqzmZ0vhRI9dL6lap84Tc=
+	b=WpJgxNZQ5SvWzEYJ4o1IruTup8jsrsV134p8Qm0bafjEFG7dejbg6pEsYO2gErzUu
+	 AWak+uaxUPK7Jhjez0PiP+lO3l7UwIs8qcy9hZBVp6i5i6kAzbxFnwKbYs/rpeufKY
+	 XUOrVJz2SWKR8urssFoz6TEp7q3jEMbLEx29bcOA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387581AbgAXJqb (ORCPT
+        id S1731547AbgAXJqf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 04:46:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45852 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 04:46:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45940 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387565AbgAXJq3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 04:46:29 -0500
+        id S1731991AbgAXJqc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 04:46:32 -0500
 Received: from localhost (unknown [145.15.244.15])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 085C0208C4;
-        Fri, 24 Jan 2020 09:46:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C1FC6208C4;
+        Fri, 24 Jan 2020 09:46:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579859188;
-        bh=DMawGORGw/GHzM9qUcSUjMhFK4aAx1nQqfwLv03Q3sA=;
+        s=default; t=1579859192;
+        bh=+6ITeo2PDIUhzNARjYzusiMuQUvcbHpmFeNWausG/Dk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NyUXwMMbJb+kLbgnQQGkApsFrRCdN0qDkIcjw8CyDV9aMWFIs1oDn3l2wpXEi4oud
-         PRIyUQTg0wHnnd+Ur/jIiVdtPUZB7W9ljfQXlNJ5hRlot/NUiJSXHzh6CVOsi/8fRa
-         7dvv9s6uVJAFa1PZCEFrHgCEj1aKi+XnHHy8o/Hs=
+        b=Jyg15YxN81jeKLrt4d+bGuicASvYMn/YA8ybdIwYSQJ0lTBkIU75FUDvq93Em0RWu
+         41tBtjS7vxPlLEHpZ95tjXlVTTDhrX3+v8L5TdfJjZI7vbGyQXNPk/YRj29D5a6l9b
+         4et8gI4pc706ysySebXw0WAJGy3CrqdSOUtPrUqw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yangtao Li <tiny.windzz@gmail.com>,
-        Gregory CLEMENT <gregory.clement@bootlin.com>,
-        Stephen Boyd <sboyd@kernel.org>,
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 055/343] clk: dove: fix refcount leak in dove_clk_init()
-Date:   Fri, 24 Jan 2020 10:27:53 +0100
-Message-Id: <20200124092927.109998162@linuxfoundation.org>
+Subject: [PATCH 4.14 064/343] drm/etnaviv: NULL vs IS_ERR() buf in etnaviv_core_dump()
+Date:   Fri, 24 Jan 2020 10:28:02 +0100
+Message-Id: <20200124092928.229078983@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124092919.490687572@linuxfoundation.org>
 References: <20200124092919.490687572@linuxfoundation.org>
@@ -61,45 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yangtao Li <tiny.windzz@gmail.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit 8d726c5128298386b907963033be93407b0c4275 ]
+[ Upstream commit f8261c376e7f8cb9024af5a6c54be540c7f9108e ]
 
-The of_find_compatible_node() returns a node pointer with refcount
-incremented, but there is the lack of use of the of_node_put() when
-done. Add the missing of_node_put() to release the refcount.
+The etnaviv_gem_get_pages() never returns NULL.  It returns error
+pointers on error.
 
-Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
-Reviewed-by: Gregory CLEMENT <gregory.clement@bootlin.com>
-Fixes: 8f7fc5450b64 ("clk: mvebu: dove: maintain clock init order")
-Fixes: 63b8d92c793f ("clk: add Dove PLL divider support for GPU, VMeta and AXI clocks")
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+Fixes: a8c21a5451d8 ("drm/etnaviv: add initial etnaviv DRM driver")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/mvebu/dove.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/etnaviv/etnaviv_dump.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/clk/mvebu/dove.c b/drivers/clk/mvebu/dove.c
-index 59fad9546c847..5f258c9bb68bf 100644
---- a/drivers/clk/mvebu/dove.c
-+++ b/drivers/clk/mvebu/dove.c
-@@ -190,10 +190,14 @@ static void __init dove_clk_init(struct device_node *np)
+diff --git a/drivers/gpu/drm/etnaviv/etnaviv_dump.c b/drivers/gpu/drm/etnaviv/etnaviv_dump.c
+index 2d955d7d7b6d8..e154e6fb64dac 100644
+--- a/drivers/gpu/drm/etnaviv/etnaviv_dump.c
++++ b/drivers/gpu/drm/etnaviv/etnaviv_dump.c
+@@ -207,7 +207,7 @@ void etnaviv_core_dump(struct etnaviv_gpu *gpu)
+ 		mutex_lock(&obj->lock);
+ 		pages = etnaviv_gem_get_pages(obj);
+ 		mutex_unlock(&obj->lock);
+-		if (pages) {
++		if (!IS_ERR(pages)) {
+ 			int j;
  
- 	mvebu_coreclk_setup(np, &dove_coreclks);
- 
--	if (ddnp)
-+	if (ddnp) {
- 		dove_divider_clk_init(ddnp);
-+		of_node_put(ddnp);
-+	}
- 
--	if (cgnp)
-+	if (cgnp) {
- 		mvebu_clk_gating_setup(cgnp, dove_gating_desc);
-+		of_node_put(cgnp);
-+	}
- }
- CLK_OF_DECLARE(dove_clk, "marvell,dove-core-clock", dove_clk_init);
+ 			iter.hdr->data[0] = bomap - bomap_start;
 -- 
 2.20.1
 
