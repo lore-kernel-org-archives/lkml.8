@@ -6,32 +6,32 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC41CC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:47:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AABA4C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:47:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CD80206F0
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:47:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88398206F0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:47:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388851AbgAXOqk (ORCPT
+        id S2389674AbgAXOrj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 09:46:40 -0500
-Received: from mx2.suse.de ([195.135.220.15]:43400 "EHLO mx2.suse.de"
+        Fri, 24 Jan 2020 09:47:39 -0500
+Received: from mx2.suse.de ([195.135.220.15]:43432 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388040AbgAXOqc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 09:46:32 -0500
+        id S2388834AbgAXOql (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 09:46:41 -0500
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id D33D4AFBF;
-        Fri, 24 Jan 2020 14:46:30 +0000 (UTC)
+        by mx2.suse.de (Postfix) with ESMTP id 007D5AFA8;
+        Fri, 24 Jan 2020 14:46:39 +0000 (UTC)
 From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 To:     gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org
 Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
         bcm-kernel-feedback-list@broadcom.com,
         linux-rpi-kernel@lists.infradead.org,
         linux-arm-kernel@lists.infradead.org, devel@driverdev.osuosl.org
-Subject: [PATCH 02/22] staging: vc04_services: Get rid of resume_blocked in struct vchiq_arm_state
-Date:   Fri, 24 Jan 2020 15:45:56 +0100
-Message-Id: <20200124144617.2213-3-nsaenzjulienne@suse.de>
+Subject: [PATCH 12/22] staging: vc04_services: Get rid of vchiq_arm_vcsuspend()
+Date:   Fri, 24 Jan 2020 15:46:06 +0100
+Message-Id: <20200124144617.2213-13-nsaenzjulienne@suse.de>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124144617.2213-1-nsaenzjulienne@suse.de>
 References: <20200124144617.2213-1-nsaenzjulienne@suse.de>
@@ -42,109 +42,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The boolean value is never set to true, hence remove it and all the code that
-depends on it.
+It's not used.
 
 Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 ---
- .../interface/vchiq_arm/vchiq_arm.c           | 51 +------------------
- .../interface/vchiq_arm/vchiq_arm.h           |  1 -
- 2 files changed, 2 insertions(+), 50 deletions(-)
+ .../interface/vchiq_arm/vchiq_arm.c           | 51 -------------------
+ .../interface/vchiq_arm/vchiq_arm.h           |  3 --
+ 2 files changed, 54 deletions(-)
 
 diff --git a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_arm.c b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_arm.c
-index 4458c1e60fa3..af4dc23f5510 100644
+index dbe403f9291b..55a5b77e7abd 100644
 --- a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_arm.c
 +++ b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_arm.c
-@@ -2270,10 +2270,7 @@ vchiq_videocore_wanted(struct vchiq_state *state)
- 		return 1;
- 	else if (!arm_state->videocore_use_count)
- 		/* usage count zero - check for override unless we're forcing */
--		if (arm_state->resume_blocked)
--			return 0;
--		else
--			return vchiq_platform_videocore_wanted(state);
-+		return vchiq_platform_videocore_wanted(state);
- 	else
- 		/* non-zero usage count - videocore still required */
- 		return 1;
-@@ -2567,7 +2564,6 @@ static inline void
- unblock_resume(struct vchiq_arm_state *arm_state)
- {
- 	complete_all(&arm_state->resume_blocker);
--	arm_state->resume_blocked = 0;
+@@ -2500,57 +2500,6 @@ need_resume(struct vchiq_state *state)
+ 			(arm_state->vc_resume_state < VC_RESUME_REQUESTED);
  }
  
- /* Initiate suspend via slot handler. Should be called with the write lock
-@@ -2724,46 +2720,6 @@ vchiq_use_internal(struct vchiq_state *state, struct vchiq_service *service,
- 	}
- 
- 	write_lock_bh(&arm_state->susp_res_lock);
--	while (arm_state->resume_blocked) {
--		/* If we call 'use' while force suspend is waiting for suspend,
--		 * then we're about to block the thread which the force is
--		 * waiting to complete, so we're bound to just time out. In this
--		 * case, set the suspend state such that the wait will be
--		 * canceled, so we can complete as quickly as possible. */
--		if (arm_state->resume_blocked && arm_state->vc_suspend_state ==
--				VC_SUSPEND_IDLE) {
--			set_suspend_state(arm_state, VC_SUSPEND_FORCE_CANCELED);
--			break;
--		}
--		/* If suspend is already in progress then we need to block */
--		if (!try_wait_for_completion(&arm_state->resume_blocker)) {
--			/* Indicate that there are threads waiting on the resume
--			 * blocker.  These need to be allowed to complete before
--			 * a _second_ call to force suspend can complete,
--			 * otherwise low priority threads might never actually
--			 * continue */
--			arm_state->blocked_count++;
--			write_unlock_bh(&arm_state->susp_res_lock);
--			vchiq_log_info(vchiq_susp_log_level, "%s %s resume "
--				"blocked - waiting...", __func__, entity);
--			if (wait_for_completion_killable(
--					&arm_state->resume_blocker)) {
--				vchiq_log_error(vchiq_susp_log_level, "%s %s "
--					"wait for resume blocker interrupted",
--					__func__, entity);
--				ret = VCHIQ_ERROR;
--				write_lock_bh(&arm_state->susp_res_lock);
--				arm_state->blocked_count--;
--				write_unlock_bh(&arm_state->susp_res_lock);
--				goto out;
--			}
--			vchiq_log_info(vchiq_susp_log_level, "%s %s resume "
--				"unblocked", __func__, entity);
--			write_lock_bh(&arm_state->susp_res_lock);
--			if (--arm_state->blocked_count == 0)
--				complete_all(&arm_state->blocked_blocker);
--		}
+-/* Initiate suspend via slot handler. Should be called with the write lock
+- * held */
+-enum vchiq_status
+-vchiq_arm_vcsuspend(struct vchiq_state *state)
+-{
+-	enum vchiq_status status = VCHIQ_ERROR;
+-	struct vchiq_arm_state *arm_state = vchiq_platform_get_arm_state(state);
+-
+-	if (!arm_state)
+-		goto out;
+-
+-	vchiq_log_trace(vchiq_susp_log_level, "%s", __func__);
+-	status = VCHIQ_SUCCESS;
+-
+-	switch (arm_state->vc_suspend_state) {
+-	case VC_SUSPEND_REQUESTED:
+-		vchiq_log_info(vchiq_susp_log_level, "%s: suspend already "
+-			"requested", __func__);
+-		break;
+-	case VC_SUSPEND_IN_PROGRESS:
+-		vchiq_log_info(vchiq_susp_log_level, "%s: suspend already in "
+-			"progress", __func__);
+-		break;
+-
+-	default:
+-		/* We don't expect to be in other states, so log but continue
+-		 * anyway */
+-		vchiq_log_error(vchiq_susp_log_level,
+-			"%s unexpected suspend state %s", __func__,
+-			suspend_state_names[arm_state->vc_suspend_state +
+-						VC_SUSPEND_NUM_OFFSET]);
+-		/* fall through */
+-	case VC_SUSPEND_REJECTED:
+-	case VC_SUSPEND_FAILED:
+-		/* Ensure any idle state actions have been run */
+-		set_suspend_state(arm_state, VC_SUSPEND_IDLE);
+-		/* fall through */
+-	case VC_SUSPEND_IDLE:
+-		vchiq_log_info(vchiq_susp_log_level,
+-			"%s: suspending", __func__);
+-		set_suspend_state(arm_state, VC_SUSPEND_REQUESTED);
+-		/* kick the slot handler thread to initiate suspend */
+-		request_poll(state, NULL, 0);
+-		break;
 -	}
- 
- 	stop_suspend_timer(arm_state);
- 
-@@ -2861,10 +2817,7 @@ vchiq_release_internal(struct vchiq_state *state, struct vchiq_service *service)
- 	--(*entity_uc);
- 
- 	if (!vchiq_videocore_wanted(state)) {
--		if (vchiq_platform_use_suspend_timer() &&
--				!arm_state->resume_blocked) {
--			/* Only use the timer if we're not trying to force
--			 * suspend (=> resume_blocked) */
-+		if (vchiq_platform_use_suspend_timer()) {
- 			start_suspend_timer(arm_state);
- 		} else {
- 			vchiq_log_info(vchiq_susp_log_level,
+-
+-out:
+-	vchiq_log_trace(vchiq_susp_log_level, "%s exit %d", __func__, status);
+-	return status;
+-}
+-
+ void
+ vchiq_platform_check_suspend(struct vchiq_state *state)
+ {
 diff --git a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_arm.h b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_arm.h
-index f0044289b6bc..c904f7be9084 100644
+index beac1469d54d..0f69956c221e 100644
 --- a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_arm.h
 +++ b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_arm.h
-@@ -74,7 +74,6 @@ struct vchiq_arm_state {
- 	** ARM is suspending
- 	*/
- 	struct completion resume_blocker;
--	int resume_blocked;
- 	struct completion blocked_blocker;
- 	int blocked_count;
+@@ -88,9 +88,6 @@ int vchiq_platform_init(struct platform_device *pdev,
+ extern struct vchiq_state *
+ vchiq_get_state(void);
+ 
+-extern enum vchiq_status
+-vchiq_arm_vcsuspend(struct vchiq_state *state);
+-
+ extern enum vchiq_status
+ vchiq_arm_vcresume(struct vchiq_state *state);
  
 -- 
 2.25.0
