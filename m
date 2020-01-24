@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90224C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:01:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E80EC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:01:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6558C214AF
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:01:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4722F2075D
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:01:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579863694;
-	bh=6vN8yAvuv2mIxnl69qt0BC6aB8iw1WxfoMTr+3DNk/4=;
+	s=default; t=1579863698;
+	bh=CaPSLJry4eH8fezUaYIRpq7wcgRRX9Af99I3++DJUfk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eWW6dbvglsZMCryPOqUqRAgf8aumYKOxQT7HJZOCcPn3KScOb4PsekCcQ7jC4TtKw
-	 2fmSWQUhsoLofD9yMXS8izN8uYmHcXEAwtbw7RboyFD0WVsanoZZf306y/2oguOm0E
-	 HnAt5GXrCR7/lpxL4idHyVQ55gEX6QfbO5ZdFVV4=
+	b=eHy9N7X4qh1DiSeR1DTexca0/lIsiRHkbnPEnwSeqsociv58Bkc7fkl6sqGfIapXL
+	 jYJ5R4WB1csNWkzKcMQKa+Zju5Hmi489snkAqv7UaXJemWqWGugjsOPvtrDXVOOxLj
+	 wbxTAOKsYjhPh947SPPqwySJdOATifDsN5dMMRgw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387709AbgAXLBd (ORCPT
+        id S2387728AbgAXLBh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:01:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34332 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 06:01:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34432 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730614AbgAXLBa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:01:30 -0500
+        id S2387703AbgAXLBd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:01:33 -0500
 Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A83A92075D;
-        Fri, 24 Jan 2020 11:01:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 395D62077C;
+        Fri, 24 Jan 2020 11:01:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579863689;
-        bh=6vN8yAvuv2mIxnl69qt0BC6aB8iw1WxfoMTr+3DNk/4=;
+        s=default; t=1579863693;
+        bh=CaPSLJry4eH8fezUaYIRpq7wcgRRX9Af99I3++DJUfk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gatTKJ6AkFA05ghqpCftzKmHWc4WG79Pj8sYm0aI6ED6sD+CM2lChaVMBj+pTkRgu
-         z9mL780MeNNTxJKIhCpPUD70qP2Yfsn1COvx/rgSlAakInWjlGdDmsUvP9flE/vuVb
-         8I/gCQ5XIPijPbdF14DYMrnWPAalovyzBviY2aWI=
+        b=e/952ieCP1N4Yd55HCtgwio0XoUhG5OGhzf7LUqFoYpOOKvWX8fBBCiskJhV4Thu1
+         2S1oiUCQ/X2q9ueWsEwb7PMSnmU6pTRLVOVLcOUbhWwX6ajowsJtKMhnSGvknV99HF
+         ut8OU0GHJUo2c0R+diZASgbxTKSoVaRuVg/pSEVo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Petr Machata <petrm@mellanox.com>,
-        Ido Schimmel <idosch@mellanox.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 061/639] mlxsw: spectrum: Set minimum shaper on MC TCs
-Date:   Fri, 24 Jan 2020 10:23:51 +0100
-Message-Id: <20200124093055.057770252@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Jon Mason <jdmason@kudzu.us>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 062/639] NTB: ntb_hw_idt: replace IS_ERR_OR_NULL with regular NULL checks
+Date:   Fri, 24 Jan 2020 10:23:52 +0100
+Message-Id: <20200124093055.181255257@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
 References: <20200124093047.008739095@linuxfoundation.org>
@@ -61,81 +60,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Petr Machata <petrm@mellanox.com>
+From: Gustavo A. R. Silva <gustavo@embeddedor.com>
 
-[ Upstream commit 0fe64023162aef123de2f1993ba13a35a786e1de ]
+[ Upstream commit 1b7619828d0c341612f58683e73f279c37e70bbc ]
 
-An MC-aware mode was introduced in commit 7b8195306694 ("mlxsw:
-spectrum: Configure MC-aware mode on mlxsw ports"). In MC-aware mode,
-BUM traffic gets a special treatment by being assigned to a separate set
-of traffic classes 8..15. Pairs of TCs 0 and 8, 1 and 9, etc., are then
-configured to strictly prioritize the lower-numbered ones. The intention
-is to prevent BUM traffic from flooding the switch and push out all UC
-traffic, which would otherwise happen, and instead give UC traffic
-precedence.
+Both devm_kcalloc() and devm_kzalloc() return NULL on error. They
+never return error pointers.
 
-However strictly prioritizing UC traffic has the effect that UC overload
-pushes out all BUM traffic, such as legitimate ARP queries. These
-packets are kept in queues for a while, but under sustained UC overload,
-their lifetime eventually expires and these packets are dropped. That is
-detrimental to network performance as well.
+The use of IS_ERR_OR_NULL is currently applied to the wrong
+context.
 
-Therefore configure the MC TCs (8..15) with minimum shaper of 200Mbps (a
-minimum permitted value) to allow a trickle of necessary control traffic
-to get through.
+Fix this by replacing IS_ERR_OR_NULL with regular NULL checks.
 
-Fixes: 7b8195306694 ("mlxsw: spectrum: Configure MC-aware mode on mlxsw ports")
-Signed-off-by: Petr Machata <petrm@mellanox.com>
-Signed-off-by: Ido Schimmel <idosch@mellanox.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: bf2a952d31d2 ("NTB: Add IDT 89HPESxNTx PCIe-switches support")
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+Signed-off-by: Jon Mason <jdmason@kudzu.us>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../net/ethernet/mellanox/mlxsw/spectrum.c    | 25 +++++++++++++++++++
- 1 file changed, 25 insertions(+)
+ drivers/ntb/hw/idt/ntb_hw_idt.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/ethernet/mellanox/mlxsw/spectrum.c b/drivers/net/ethernet/mellanox/mlxsw/spectrum.c
-index 30ef318b3d68d..5df9b25cab27d 100644
---- a/drivers/net/ethernet/mellanox/mlxsw/spectrum.c
-+++ b/drivers/net/ethernet/mellanox/mlxsw/spectrum.c
-@@ -2753,6 +2753,21 @@ int mlxsw_sp_port_ets_maxrate_set(struct mlxsw_sp_port *mlxsw_sp_port,
- 	return mlxsw_reg_write(mlxsw_sp->core, MLXSW_REG(qeec), qeec_pl);
- }
- 
-+static int mlxsw_sp_port_min_bw_set(struct mlxsw_sp_port *mlxsw_sp_port,
-+				    enum mlxsw_reg_qeec_hr hr, u8 index,
-+				    u8 next_index, u32 minrate)
-+{
-+	struct mlxsw_sp *mlxsw_sp = mlxsw_sp_port->mlxsw_sp;
-+	char qeec_pl[MLXSW_REG_QEEC_LEN];
-+
-+	mlxsw_reg_qeec_pack(qeec_pl, mlxsw_sp_port->local_port, hr, index,
-+			    next_index);
-+	mlxsw_reg_qeec_mise_set(qeec_pl, true);
-+	mlxsw_reg_qeec_min_shaper_rate_set(qeec_pl, minrate);
-+
-+	return mlxsw_reg_write(mlxsw_sp->core, MLXSW_REG(qeec), qeec_pl);
-+}
-+
- int mlxsw_sp_port_prio_tc_set(struct mlxsw_sp_port *mlxsw_sp_port,
- 			      u8 switch_prio, u8 tclass)
- {
-@@ -2830,6 +2845,16 @@ static int mlxsw_sp_port_ets_init(struct mlxsw_sp_port *mlxsw_sp_port)
- 			return err;
+diff --git a/drivers/ntb/hw/idt/ntb_hw_idt.c b/drivers/ntb/hw/idt/ntb_hw_idt.c
+index dbe72f116017a..a67ef23e81bca 100644
+--- a/drivers/ntb/hw/idt/ntb_hw_idt.c
++++ b/drivers/ntb/hw/idt/ntb_hw_idt.c
+@@ -1105,9 +1105,9 @@ static struct idt_mw_cfg *idt_scan_mws(struct idt_ntb_dev *ndev, int port,
  	}
  
-+	/* Configure the min shaper for multicast TCs. */
-+	for (i = 0; i < IEEE_8021QAZ_MAX_TCS; i++) {
-+		err = mlxsw_sp_port_min_bw_set(mlxsw_sp_port,
-+					       MLXSW_REG_QEEC_HIERARCY_TC,
-+					       i + 8, i,
-+					       MLXSW_REG_QEEC_MIS_MIN);
-+		if (err)
-+			return err;
-+	}
-+
- 	/* Map all priorities to traffic class 0. */
- 	for (i = 0; i < IEEE_8021QAZ_MAX_TCS; i++) {
- 		err = mlxsw_sp_port_prio_tc_set(mlxsw_sp_port, i, 0);
+ 	/* Allocate memory for memory window descriptors */
+-	ret_mws = devm_kcalloc(&ndev->ntb.pdev->dev, *mw_cnt,
+-				sizeof(*ret_mws), GFP_KERNEL);
+-	if (IS_ERR_OR_NULL(ret_mws))
++	ret_mws = devm_kcalloc(&ndev->ntb.pdev->dev, *mw_cnt, sizeof(*ret_mws),
++			       GFP_KERNEL);
++	if (!ret_mws)
+ 		return ERR_PTR(-ENOMEM);
+ 
+ 	/* Copy the info of detected memory windows */
+@@ -2390,7 +2390,7 @@ static struct idt_ntb_dev *idt_create_dev(struct pci_dev *pdev,
+ 
+ 	/* Allocate memory for the IDT PCIe-device descriptor */
+ 	ndev = devm_kzalloc(&pdev->dev, sizeof(*ndev), GFP_KERNEL);
+-	if (IS_ERR_OR_NULL(ndev)) {
++	if (!ndev) {
+ 		dev_err(&pdev->dev, "Memory allocation failed for descriptor");
+ 		return ERR_PTR(-ENOMEM);
+ 	}
 -- 
 2.20.1
 
