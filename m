@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D92C0C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:16:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3231DC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:16:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0CC220663
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:16:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF6B320663
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:16:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579864567;
-	bh=fT27P53UADxBLx/ulqZt3KGFVu3oyoXYVqDZc4Uu5hg=;
+	s=default; t=1579864573;
+	bh=S+15ekyvUcoyUnAGtcngyR3cjXrCYgJWPkKFXT+8vlM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2MPzLUJr+ZidKxikQJsTPd6qJEj3DAP07V1GgEKEBkZn4FsWY0LV8JEf0hLKqj9MC
-	 BsIGAHdmEIc5CeHU9/QppDxtlNdsNzJlITpINl0K55Frh9ricCRG0bMvfFHB4ZrVTA
-	 WGPKsE0Lfa6dfbAeCxWgUTYFAoPYQ1jKtD4ZMJjk=
+	b=ok64XQp4Ff6TKMxT7COu+jOZsROq7LJmP+LaDok9kWHC1PDEmoY/lxFFmFq4Lfr3P
+	 TflTI+ld/g/ACnlrsjme52QT8gBH2XIQvtL9hHjz3hFLAwToFR03OPCSvXeGWMv0qF
+	 BOdZwdocRpF9tb3SQLaLahl6abnMKQM7HlOkHghU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390326AbgAXLQH (ORCPT
+        id S2390335AbgAXLQM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:16:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52794 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 06:16:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52844 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388173AbgAXLQF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:16:05 -0500
+        id S2388173AbgAXLQJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:16:09 -0500
 Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BA3C72071A;
-        Fri, 24 Jan 2020 11:16:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4726720663;
+        Fri, 24 Jan 2020 11:16:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579864565;
-        bh=fT27P53UADxBLx/ulqZt3KGFVu3oyoXYVqDZc4Uu5hg=;
+        s=default; t=1579864569;
+        bh=S+15ekyvUcoyUnAGtcngyR3cjXrCYgJWPkKFXT+8vlM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZqBLxOTc6ijfIgzj2v6VCRF2Hq7/AeDOLaXOTuW1j29L9tbb7tTeX/0U7VrPL56aG
-         6jQyuCGY9oj0ySIu+/uaOcbFFOEmhNVnTefsG4bUCTEGD4dYDzHFg87eyAY9sBtUku
-         A7RbqUMJxKlQfsBfog7qzjFFcQvBs35MEwePwLZs=
+        b=cM+KQM383z1bQdUyCPiepJ0I7pHezoAs6YMOQsd0lDGi5NsJU+kKoH2JLoXn3EOEz
+         ykkx+bxgPMHjcTlQh2MIYABT2pyLt5Qad2ye0ebyq8Y8ZYzfTaP4S1ciTTQ5H+5/7c
+         fxHXrz+HFqzUMTYojuI0COorMjrax2Boj+bDlGgM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vladimir Oltean <olteanv@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
+        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Mukesh Ojha <mojha@codeaurora.org>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 278/639] net: dsa: Avoid null pointer when failing to connect to PHY
-Date:   Fri, 24 Jan 2020 10:27:28 +0100
-Message-Id: <20200124093121.657361201@linuxfoundation.org>
+Subject: [PATCH 4.19 294/639] ehea: Fix a copy-paste err in ehea_init_port_res
+Date:   Fri, 24 Jan 2020 10:27:44 +0100
+Message-Id: <20200124093123.723961372@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
 References: <20200124093047.008739095@linuxfoundation.org>
@@ -61,53 +62,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vladimir Oltean <olteanv@gmail.com>
+From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit 6146dd453e235c487d85ae4dc6cc08978a1c890f ]
+[ Upstream commit c8f191282f819ab4e9b47b22a65c6c29734cefce ]
 
-When phylink_of_phy_connect fails, dsa_slave_phy_setup tries to save the
-day by connecting to an alternative PHY, none other than a PHY on the
-switch's internal MDIO bus, at an address equal to the port's index.
+pr->tx_bytes should be assigned to tx_bytes other than
+rx_bytes.
 
-However this does not take into consideration the scenario when the
-switch that failed to probe an external PHY does not have an internal
-MDIO bus at all.
-
-Fixes: aab9c4067d23 ("net: dsa: Plug in PHYLINK support")
-Signed-off-by: Vladimir Oltean <olteanv@gmail.com>
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Fixes: ce45b873028f ("ehea: Fixing statistics")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/dsa/slave.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/net/ethernet/ibm/ehea/ehea_main.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/dsa/slave.c b/net/dsa/slave.c
-index b39720d0995d3..8ee28b6016d82 100644
---- a/net/dsa/slave.c
-+++ b/net/dsa/slave.c
-@@ -1219,9 +1219,9 @@ static int dsa_slave_phy_setup(struct net_device *slave_dev)
- 		phy_flags = ds->ops->get_phy_flags(ds, dp->index);
+diff --git a/drivers/net/ethernet/ibm/ehea/ehea_main.c b/drivers/net/ethernet/ibm/ehea/ehea_main.c
+index e8ee69d4e4d34..0f799e8e093cd 100644
+--- a/drivers/net/ethernet/ibm/ehea/ehea_main.c
++++ b/drivers/net/ethernet/ibm/ehea/ehea_main.c
+@@ -1464,7 +1464,7 @@ static int ehea_init_port_res(struct ehea_port *port, struct ehea_port_res *pr,
  
- 	ret = phylink_of_phy_connect(dp->pl, port_dn, phy_flags);
--	if (ret == -ENODEV) {
--		/* We could not connect to a designated PHY or SFP, so use the
--		 * switch internal MDIO bus instead
-+	if (ret == -ENODEV && ds->slave_mii_bus) {
-+		/* We could not connect to a designated PHY or SFP, so try to
-+		 * use the switch internal MDIO bus instead
- 		 */
- 		ret = dsa_slave_phy_connect(slave_dev, dp->index);
- 		if (ret) {
-@@ -1233,7 +1233,7 @@ static int dsa_slave_phy_setup(struct net_device *slave_dev)
- 		}
- 	}
+ 	memset(pr, 0, sizeof(struct ehea_port_res));
  
--	return 0;
-+	return ret;
- }
- 
- static struct lock_class_key dsa_slave_netdev_xmit_lock_key;
+-	pr->tx_bytes = rx_bytes;
++	pr->tx_bytes = tx_bytes;
+ 	pr->tx_packets = tx_packets;
+ 	pr->rx_bytes = rx_bytes;
+ 	pr->rx_packets = rx_packets;
 -- 
 2.20.1
 
