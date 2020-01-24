@@ -2,103 +2,77 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6F63C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:23:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 284BBC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:26:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7DB7420838
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:23:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="qB2R50uM"
+	by mail.kernel.org (Postfix) with ESMTP id 00FFD20838
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:26:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730313AbgAXJXa (ORCPT
+        id S1730540AbgAXJZ7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 04:23:30 -0500
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:46790 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729880AbgAXJXa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 04:23:30 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00O9NIeA077545;
-        Fri, 24 Jan 2020 03:23:19 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1579857799;
-        bh=PKLdQgBAWNuEFj6zeHDzEvtdhk+JONPJ53CQRbLkK7o=;
-        h=From:To:CC:Subject:Date;
-        b=qB2R50uM8lvgd9HrgAw1crklWgJ/1JeTDp2i4GFDVFeXJb3XmerFA9esw/q3h5yCj
-         mWzp3YJ7OxErIGUTiTiz0gdxfaSAOIoCdBBkv/+3naDSnrp5vIQ47QUD8HTv/SPtfv
-         MuoLB4Y49JXvqNIL0bxTX8v1aeuy2dlQLVojVVFA=
-Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00O9NIYU045144
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 24 Jan 2020 03:23:18 -0600
-Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 24
- Jan 2020 03:23:18 -0600
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Fri, 24 Jan 2020 03:23:18 -0600
-Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00O9NF73007440;
-        Fri, 24 Jan 2020 03:23:16 -0600
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-To:     <catalin.marinas@arm.com>, <will@kernel.org>
-CC:     <olof@lixom.net>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <t-kristo@ti.com>,
-        <vkoul@kernel.org>, <alexandre.belloni@bootlin.com>,
-        <arnd@arndb.de>, <soc@kernel.org>
-Subject: [PATCH] arm64: defconfig: Enable Texas Instruments UDMA driver
-Date:   Fri, 24 Jan 2020 11:23:59 +0200
-Message-ID: <20200124092359.12429-1-peter.ujfalusi@ti.com>
-X-Mailer: git-send-email 2.25.0
+        Fri, 24 Jan 2020 04:25:59 -0500
+Received: from mga05.intel.com ([192.55.52.43]:14069 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729593AbgAXJZ7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 04:25:59 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Jan 2020 01:25:58 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,357,1574150400"; 
+   d="scan'208";a="260181466"
+Received: from um.fi.intel.com (HELO um) ([10.237.72.57])
+  by fmsmga002.fm.intel.com with ESMTP; 24 Jan 2020 01:25:56 -0800
+From:   Alexander Shishkin <alexander.shishkin@linux.intel.com>
+To:     Song Liu <songliubraving@fb.com>, linux-kernel@vger.kernel.org
+Cc:     kernel-team@fb.com, Song Liu <songliubraving@fb.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        alexander.shishkin@linux.intel.com
+Subject: Re: [PATCH v3] perf/core: fix mlock accounting in perf_mmap()
+In-Reply-To: <20200123181146.2238074-1-songliubraving@fb.com>
+References: <20200123181146.2238074-1-songliubraving@fb.com>
+Date:   Fri, 24 Jan 2020 11:25:55 +0200
+Message-ID: <87zhed9pek.fsf@ashishki-desk.ger.corp.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The UDMA driver is used on K3 platforms (am654 and j721e).
+Song Liu <songliubraving@fb.com> writes:
 
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
----
-Hi,
+> Eecreasing sysctl_perf_event_mlock between two consecutive perf_mmap()s of
 
-The drivers for UDMA are already in linu-next and the DT patches are going to be
-also heading for 5.6.
-The only missing piece is to enable the drivers in defconfig so clients can use
-the DMA.
+Typo: "Decreasing".
 
-Regards,
-Peter
+> a perf ring buffer may lead to an integer underflow in locked memory
+> accounting. This may lead to the undesired behaviors, such as failures in
+> BPF map creation.
+>
+> Address this by adjusting the accounting logic to take into account the
+> possibility that the amount of already locked memory may exceed the
+> current limit.
+>
+> Fixes: c4b75479741c ("perf/core: Make the mlock accounting simple again")
+> Signed-off-by: Song Liu <songliubraving@fb.com>
+> Suggested-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+> Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+> Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
+> Cc: Jiri Olsa <jolsa@kernel.org>
+> Cc: Peter Zijlstra <peterz@infradead.org>
 
- arch/arm64/configs/defconfig | 1 +
- 1 file changed, 1 insertion(+)
+Other than that,
 
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index 4631a1190719..a325a296d94c 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -698,6 +698,7 @@ CONFIG_QCOM_HIDMA_MGMT=y
- CONFIG_QCOM_HIDMA=y
- CONFIG_RCAR_DMAC=y
- CONFIG_RENESAS_USB_DMAC=m
-+CONFIG_TI_K3_UDMA=y
- CONFIG_VFIO=y
- CONFIG_VFIO_PCI=y
- CONFIG_VIRTIO_PCI=y
--- 
-Peter
+Acked-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
-
+Thanks,
+--
+Alex
