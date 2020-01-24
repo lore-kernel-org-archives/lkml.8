@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23FABC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:23:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 279E9C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:24:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0FA12072C
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:23:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1AAF222C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:24:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579875839;
-	bh=QoKHv3rBnUe/lR2P6PAbjkqsqRT5HPz8zic5VYobNI8=;
+	s=default; t=1579875843;
+	bh=mHQFP/vtoC7Zz+C7h04SYqUhhYKg5fKVuKYZAuh6FrA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yrPG8qE2BlGvOSl3w49Xr7gMtFvQNbta6T8blhutsuTxeHqL0Z3d37txFVjcrFxjf
-	 TGcG9g4le2WO8NKXe3aIKZ2PqDDr6Hr86D3YiZhcq5sq+C2RLC0grnyUbhst+IMEzO
-	 ZKsJtRUEM2JPwYMiX+s482XwDaku2ZWoW9NioNdY=
+	b=hzfZLUwd0evr1i9h3Pe8mddl0O8gjFewB7g7cUdCEBrieI6fwDtowUpya34E38Oco
+	 A6bFsNug16TRPDF5imvWq873c8R49VP5V0cjR3o0ta+0fq6Vl5yE2htj7EG4qAyqEn
+	 Z83a2SxSIQhM8UAgUciz0muIcyskgYrYXAZfoxaA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392319AbgAXOWP (ORCPT
+        id S2392447AbgAXOYC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 09:22:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44130 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 09:24:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44300 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729789AbgAXOWF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 09:22:05 -0500
+        id S2392315AbgAXOWP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 09:22:15 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3559722527;
-        Fri, 24 Jan 2020 14:22:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D385F21734;
+        Fri, 24 Jan 2020 14:22:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579875725;
-        bh=QoKHv3rBnUe/lR2P6PAbjkqsqRT5HPz8zic5VYobNI8=;
+        s=default; t=1579875734;
+        bh=mHQFP/vtoC7Zz+C7h04SYqUhhYKg5fKVuKYZAuh6FrA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zEcGiWL9jIm0Yc60HelnKHKPaaBL78CxVaJtlM3XY+mtHptlQ4CM8pWz8FdQ9oO7E
-         FstHBCH/FaWSEGVWRI2dEEos4hUlr41QIw0RzqRD6WRCZibaM274KQ99wPf7517n0y
-         xKJZNJtQBN8AUwAJVVQ2/YgzQraFRIrzqFPQLBDI=
+        b=qFV7JeKyrtU2z4HnwrMjO8aQNHACLJOh2IpEEiz2GK8WgbdNDRHfFXieRZe4vKyxm
+         pr6C/DpwXttR+C5v9zH3y0Ep2eX5ewRSQkIWFAAXIFuKL66wARTS2Sk6scrWHxRrx2
+         jz6IOMHmxQzBpXOcU+T8qR7tOxTmWqB66MtXhSb8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Guenter Roeck <linux@roeck-us.net>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-clk@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 05/18] clk: Don't try to enable critical clocks if prepare failed
-Date:   Fri, 24 Jan 2020 09:21:44 -0500
-Message-Id: <20200124142157.30931-5-sashal@kernel.org>
+Cc:     Ganapathi Bhat <ganapathi.bhat@nxp.com>,
+        Cathy Luo <xiaohua.luo@nxp.com>,
+        Johannes Berg <johannes.berg@intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 13/18] wireless: fix enabling channel 12 for custom regulatory domain
+Date:   Fri, 24 Jan 2020 09:21:52 -0500
+Message-Id: <20200124142157.30931-13-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200124142157.30931-1-sashal@kernel.org>
 References: <20200124142157.30931-1-sashal@kernel.org>
@@ -60,67 +61,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guenter Roeck <linux@roeck-us.net>
+From: Ganapathi Bhat <ganapathi.bhat@nxp.com>
 
-[ Upstream commit 12ead77432f2ce32dea797742316d15c5800cb32 ]
+[ Upstream commit c4b9d655e445a8be0bff624aedea190606b5ebbc ]
 
-The following traceback is seen if a critical clock fails to prepare.
+Commit e33e2241e272 ("Revert "cfg80211: Use 5MHz bandwidth by
+default when checking usable channels"") fixed a broken
+regulatory (leaving channel 12 open for AP where not permitted).
+Apply a similar fix to custom regulatory domain processing.
 
-bcm2835-clk 3f101000.cprman: plld: couldn't lock PLL
-------------[ cut here ]------------
-Enabling unprepared plld_per
-WARNING: CPU: 1 PID: 1 at drivers/clk/clk.c:1014 clk_core_enable+0xcc/0x2c0
-...
-Call trace:
- clk_core_enable+0xcc/0x2c0
- __clk_register+0x5c4/0x788
- devm_clk_hw_register+0x4c/0xb0
- bcm2835_register_pll_divider+0xc0/0x150
- bcm2835_clk_probe+0x134/0x1e8
- platform_drv_probe+0x50/0xa0
- really_probe+0xd4/0x308
- driver_probe_device+0x54/0xe8
- device_driver_attach+0x6c/0x78
- __driver_attach+0x54/0xd8
-...
-
-Check return values from clk_core_prepare() and clk_core_enable() and
-bail out if any of those functions returns an error.
-
-Cc: Jerome Brunet <jbrunet@baylibre.com>
-Fixes: 99652a469df1 ("clk: migrate the count of orphaned clocks at init")
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-Link: https://lkml.kernel.org/r/20191225163429.29694-1-linux@roeck-us.net
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+Signed-off-by: Cathy Luo <xiaohua.luo@nxp.com>
+Signed-off-by: Ganapathi Bhat <ganapathi.bhat@nxp.com>
+Link: https://lore.kernel.org/r/1576836859-8945-1-git-send-email-ganapathi.bhat@nxp.com
+[reword commit message, fix coding style, add a comment]
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/clk.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ net/wireless/reg.c | 13 ++++++++++---
+ 1 file changed, 10 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
-index c745dad7f85e9..af4f2ffc4fc50 100644
---- a/drivers/clk/clk.c
-+++ b/drivers/clk/clk.c
-@@ -2448,11 +2448,17 @@ static int __clk_core_init(struct clk_core *core)
- 	if (core->flags & CLK_IS_CRITICAL) {
- 		unsigned long flags;
+diff --git a/net/wireless/reg.c b/net/wireless/reg.c
+index dde741f298de7..0e66768427ba7 100644
+--- a/net/wireless/reg.c
++++ b/net/wireless/reg.c
+@@ -1715,14 +1715,15 @@ static void update_all_wiphy_regulatory(enum nl80211_reg_initiator initiator)
  
--		clk_core_prepare(core);
-+		ret = clk_core_prepare(core);
-+		if (ret)
-+			goto out;
+ static void handle_channel_custom(struct wiphy *wiphy,
+ 				  struct ieee80211_channel *chan,
+-				  const struct ieee80211_regdomain *regd)
++				  const struct ieee80211_regdomain *regd,
++				  u32 min_bw)
+ {
+ 	u32 bw_flags = 0;
+ 	const struct ieee80211_reg_rule *reg_rule = NULL;
+ 	const struct ieee80211_power_rule *power_rule = NULL;
+ 	u32 bw;
  
- 		flags = clk_enable_lock();
--		clk_core_enable(core);
-+		ret = clk_core_enable(core);
- 		clk_enable_unlock(flags);
-+		if (ret) {
-+			clk_core_unprepare(core);
-+			goto out;
-+		}
- 	}
+-	for (bw = MHZ_TO_KHZ(20); bw >= MHZ_TO_KHZ(5); bw = bw / 2) {
++	for (bw = MHZ_TO_KHZ(20); bw >= min_bw; bw = bw / 2) {
+ 		reg_rule = freq_reg_info_regd(MHZ_TO_KHZ(chan->center_freq),
+ 					      regd, bw);
+ 		if (!IS_ERR(reg_rule))
+@@ -1778,8 +1779,14 @@ static void handle_band_custom(struct wiphy *wiphy,
+ 	if (!sband)
+ 		return;
  
- 	/*
++	/*
++	 * We currently assume that you always want at least 20 MHz,
++	 * otherwise channel 12 might get enabled if this rule is
++	 * compatible to US, which permits 2402 - 2472 MHz.
++	 */
+ 	for (i = 0; i < sband->n_channels; i++)
+-		handle_channel_custom(wiphy, &sband->channels[i], regd);
++		handle_channel_custom(wiphy, &sband->channels[i], regd,
++				      MHZ_TO_KHZ(20));
+ }
+ 
+ /* Used by drivers prior to wiphy registration */
 -- 
 2.20.1
 
