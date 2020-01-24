@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B83CC32771
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:51:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2A2AC32771
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:51:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A1C6214AF
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:51:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D7D22070A
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:51:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579859468;
-	bh=hHQnTI/fZocNtpaKKw3mSDU3iQ/BXJSK2ON7LgSsyo4=;
+	s=default; t=1579859471;
+	bh=hwYgZxHcGlSrfshCP7E4zwCzcEnaVE/lx8syiNUeXQw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sgELNM/YRg1mZVXV8kebyxR2Pw/n9RR38k9g+ldanulMELH2QDm6G5QWyyqK80LTa
-	 BGIjHgOEu6agWBE5LWkCOi/mu98/Nvt3xstSYvNij6qOv5MJwZE+QtKUKVQZhmCiNd
-	 z/SlhRL7AKJNN69JXDLfrng/sR2chhLozL9zJVWE=
+	b=ZFqOx8VHI/KRHRA2R0c6Lc4tBccNIo0OCvsZnEScaD9xOe6clVwFI09X8U7iy5ss8
+	 dU3scFXqgL3J9KkY4DSd3pKzqOhfvdXL7FTIEZgBujR33QBhBs5OC4i2vQbKK62mv3
+	 rlznrH3AAiIPUbcMQL1JjR/f9MwaLNegAwHciYQE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387995AbgAXJvH (ORCPT
+        id S2388005AbgAXJvK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 04:51:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52152 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 04:51:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52240 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730738AbgAXJvG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 04:51:06 -0500
+        id S1730738AbgAXJvJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 04:51:09 -0500
 Received: from localhost (unknown [145.15.244.15])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5475321556;
-        Fri, 24 Jan 2020 09:51:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 649F0214AF;
+        Fri, 24 Jan 2020 09:51:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579859465;
-        bh=hHQnTI/fZocNtpaKKw3mSDU3iQ/BXJSK2ON7LgSsyo4=;
+        s=default; t=1579859469;
+        bh=hwYgZxHcGlSrfshCP7E4zwCzcEnaVE/lx8syiNUeXQw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Kl7shB5Z5ZxbJ4k2GD4eGMQrOOPTT5xwYFcl0qkniIRx6voNyCzrpUAC+m10lajhK
-         77rABdzSYXMXQQmkJ7mF7ARgdtUVdmDL+czxpPXdw4G0FK3AViQeyYkqKxjXFtGu0+
-         dkOJmxNYiT4SbJppqIcdPGAyJ/uTF05kDBK7uiSI=
+        b=knt5FIzIC4fycAiDYzo7JyxIgGrJGoiBbGzMlOv7MWfVAlRHwnKTYN/RwLJ3Cjq2S
+         wj1z384utvJ1p3m+3e6/hoaV2jkm//kXbTmQVkBPneGSWESTnN/ZBp04n2TJqLuYJS
+         /EVrjZ8GlsWGLyQGhgHSjc7LWII2H5uo7f5XVvgQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Christian Gmeiner <christian.gmeiner@gmail.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
+        stable@vger.kernel.org, Axel Lin <axel.lin@ingics.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 099/343] drm/etnaviv: potential NULL dereference
-Date:   Fri, 24 Jan 2020 10:28:37 +0100
-Message-Id: <20200124092933.079661717@linuxfoundation.org>
+Subject: [PATCH 4.14 115/343] regulator: pv88080: Fix array out-of-bounds access
+Date:   Fri, 24 Jan 2020 10:28:53 +0100
+Message-Id: <20200124092935.163328828@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124092919.490687572@linuxfoundation.org>
 References: <20200124092919.490687572@linuxfoundation.org>
@@ -61,36 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Axel Lin <axel.lin@ingics.com>
 
-[ Upstream commit 9e05352340d3a3e68c144136db9810b26ebb88c3 ]
+[ Upstream commit 3c413f594c4f9df40061445667ca11a12bc8ee34 ]
 
-The etnaviv_gem_prime_get_sg_table() is supposed to return error
-pointers.  Otherwise it can lead to a NULL dereference when it's called
-from drm_gem_map_dma_buf().
+Fix off-by-one while iterating current_limits array.
+The valid index should be 0 ~ n_current_limits -1.
 
-Fixes: 5f4a4a73f437 ("drm/etnaviv: fix gem_prime_get_sg_table to return new SG table")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Reviewed-by: Christian Gmeiner <christian.gmeiner@gmail.com>
-Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
+Fixes: 99cf3af5e2d5 ("regulator: pv88080: new regulator driver")
+Signed-off-by: Axel Lin <axel.lin@ingics.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/etnaviv/etnaviv_gem_prime.c | 2 +-
+ drivers/regulator/pv88080-regulator.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/etnaviv/etnaviv_gem_prime.c b/drivers/gpu/drm/etnaviv/etnaviv_gem_prime.c
-index ae884723e9b1b..880b95511b987 100644
---- a/drivers/gpu/drm/etnaviv/etnaviv_gem_prime.c
-+++ b/drivers/gpu/drm/etnaviv/etnaviv_gem_prime.c
-@@ -26,7 +26,7 @@ struct sg_table *etnaviv_gem_prime_get_sg_table(struct drm_gem_object *obj)
- 	int npages = obj->size >> PAGE_SHIFT;
+diff --git a/drivers/regulator/pv88080-regulator.c b/drivers/regulator/pv88080-regulator.c
+index 9a08cb2de501e..6770e4de20978 100644
+--- a/drivers/regulator/pv88080-regulator.c
++++ b/drivers/regulator/pv88080-regulator.c
+@@ -279,7 +279,7 @@ static int pv88080_set_current_limit(struct regulator_dev *rdev, int min,
+ 	int i;
  
- 	if (WARN_ON(!etnaviv_obj->pages))  /* should have already pinned! */
--		return NULL;
-+		return ERR_PTR(-EINVAL);
- 
- 	return drm_prime_pages_to_sg(etnaviv_obj->pages, npages);
- }
+ 	/* search for closest to maximum */
+-	for (i = info->n_current_limits; i >= 0; i--) {
++	for (i = info->n_current_limits - 1; i >= 0; i--) {
+ 		if (min <= info->current_limits[i]
+ 			&& max >= info->current_limits[i]) {
+ 				return regmap_update_bits(rdev->regmap,
 -- 
 2.20.1
 
