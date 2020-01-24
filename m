@@ -2,91 +2,290 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35929C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 22:00:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56E61C47409
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 22:01:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 049312072C
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 22:00:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 217E92087E
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 22:01:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="XxSKomYe"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AQ1Cch5d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728205AbgAXWAZ (ORCPT
+        id S1728205AbgAXWBn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 17:00:25 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:48208 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725821AbgAXWAZ (ORCPT
+        Fri, 24 Jan 2020 17:01:43 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:48881 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725821AbgAXWBn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 17:00:25 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=EHG6Q1AO3iuT6O0CXN+hQkY2MviKsXG45P08g3eUA9c=; b=XxSKomYe9qO2pHUJ4g7F1egF8
-        OgnONfKVG8tW+PkImifBcGdo/lXupljgt8slZrTeik8u+eSsfMIX4CAjPc/XYd9ZMc/mUp7LmrTwb
-        JpdAJulhZ0CABJTU5zKI6ou6Snfxih/bM1V77We8ZJEYde4+fRZHEG8BssTOsmQnR4r2SHln/Jqnm
-        Ao/GbN7p1DZYOss+cgDc3U9lY4V1k4suTJ4TVEAIwB+g3tREepaqhkTix0x1XrWnv5YNZ+MpyR2wx
-        uoI66X9rt1Hhf5zPqMHqJ/zbpTZRhHQh6bjKa7eLmrHwyM1vp/TGXp+f0igWG7iRvAwizy04Dx42w
-        ljPPZs2aA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iv6zr-00014k-16; Fri, 24 Jan 2020 22:00:11 +0000
-Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 316FF980E48; Fri, 24 Jan 2020 23:00:08 +0100 (CET)
-Date:   Fri, 24 Jan 2020 23:00:08 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Nick Desaulniers <ndesaulniers@google.com>,
-        Will Deacon <will@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        kernel-team <kernel-team@android.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Segher Boessenkool <segher@kernel.crashing.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Peter Oberparleiter <oberpar@linux.ibm.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Jozsef Kadlecsik <kadlec@netfilter.org>,
-        Florian Westphal <fw@strlen.de>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: Re: [PATCH v2 02/10] netfilter: Avoid assigning 'const' pointer to
- non-const pointer
-Message-ID: <20200124220008.GS11457@worktop.programming.kicks-ass.net>
-References: <20200123153341.19947-1-will@kernel.org>
- <20200123153341.19947-3-will@kernel.org>
- <CAKwvOdm2snorniFunMF=0nDH8-RFwm7wtjYK_Tcwkd+JZinYPg@mail.gmail.com>
- <20200124082443.GY14914@hirez.programming.kicks-ass.net>
- <CAHk-=wgbAfG6UZYd3PY3fmh5nCE191gY76Fn_g_D8nO64mdx-A@mail.gmail.com>
+        Fri, 24 Jan 2020 17:01:43 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579903300;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=ALKUhOC6zNHGTIzRkGhueak3QYPpFQMz2UUv+FpBOKA=;
+        b=AQ1Cch5dZzbht+CNI8PL6wevyid/1AXXW9buH2jcJoGHjwvi4Q2ANBcHPv1vEnjCyAKdBS
+        23385xXXG1fWJ2MGBtOE875JKMgK1xKXrHFkuV4Re+YOx5SNKvvael5dZ/1AQ3/vCf4N2Q
+        Wu8260rLPR7LLBOCvklwmQjULq0ClGc=
+Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
+ [209.85.160.198]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-184-JFUyPQskNay3QqASo9XrMw-1; Fri, 24 Jan 2020 17:01:38 -0500
+X-MC-Unique: JFUyPQskNay3QqASo9XrMw-1
+Received: by mail-qt1-f198.google.com with SMTP id l25so2299932qtu.0
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jan 2020 14:01:38 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:organization:user-agent:mime-version
+         :content-transfer-encoding;
+        bh=ALKUhOC6zNHGTIzRkGhueak3QYPpFQMz2UUv+FpBOKA=;
+        b=CPXHUNqV16frEgt/NKqFoSudlw/jBAio98IfZILykL8VGka/ewBDFNIUvkyitSJHkB
+         UyQmaTVSInS/anNuXkcp8tJNpMmWZUgXKevATR71Qq0NHPsuigbHy5VExqCXglhHIeJb
+         ELYGQYoO4/f9IgHE4CiEj6+BD1aopE1fNSkqhWSnN3fJ4KJ+W0PqeCDmQKFLWaolukHp
+         WcENSSiLOrkzrzOhxIlsTDjWvdNLxkAQihAqiIV+PqnawvSLz3bMneAosfRnKKc+DaT5
+         4DIVO+czqvjd086njIraK8xxpPXYqc5c4Y/jCQ+jJuhDcH1XpTXG2sPRxmVbKru59Jy4
+         v8dg==
+X-Gm-Message-State: APjAAAUrtFW5BPNLkBCpjsByUCGdbzKn7SAGuGAREsF/whIsxlvOEiuh
+        9SRaLUmjfP6PXH659Gb8KlYIXeeML2Vr/te5AijtNrYY96+fk1e7ebQ11HylCDVL8nctBy+/hdO
+        FF2JosS/lheYMMXpLP/ROeXoM
+X-Received: by 2002:ac8:787:: with SMTP id l7mr4320250qth.99.1579903298210;
+        Fri, 24 Jan 2020 14:01:38 -0800 (PST)
+X-Google-Smtp-Source: APXvYqy6yAmS8Th5LPV7sZmm9CYxoJKWfWikia8Yo9HBMcw+0yJFLBpyW27FvYEYmnZqiccWdbxqIQ==
+X-Received: by 2002:ac8:787:: with SMTP id l7mr4320203qth.99.1579903297790;
+        Fri, 24 Jan 2020 14:01:37 -0800 (PST)
+Received: from dhcp-10-20-1-90.bss.redhat.com ([144.121.20.162])
+        by smtp.gmail.com with ESMTPSA id g52sm4471215qta.58.2020.01.24.14.01.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 24 Jan 2020 14:01:37 -0800 (PST)
+Message-ID: <b0de278c822cadd94dda121c7e3ef1370191f6d5.camel@redhat.com>
+Subject: Re: [PATCH v2] drm/amd/dm/mst: Ignore payload update failures
+From:   Lyude Paul <lyude@redhat.com>
+To:     Mikita Lipski <mlipski@amd.com>, amd-gfx@lists.freedesktop.org
+Cc:     Harry Wentland <harry.wentland@amd.com>, stable@vger.kernel.org,
+        Leo Li <sunpeng.li@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Christian =?ISO-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
+        Mikita Lipski <mikita.lipski@amd.com>,
+        Martin Tsai <martin.tsai@amd.com>,
+        David Francis <David.Francis@amd.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Alvin Lee <alvin.lee2@amd.com>,
+        Jean Delvare <jdelvare@suse.de>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Date:   Fri, 24 Jan 2020 17:01:35 -0500
+In-Reply-To: <8189d38480b6457efe2af94020c27e03c1f2de0a.camel@redhat.com>
+References: <20200124000643.99859-1-lyude@redhat.com>
+         <20200124191047.120064-1-lyude@redhat.com>
+         <abc8346d-2b27-7f8f-a54d-9f22cba82b84@amd.com>
+         <8189d38480b6457efe2af94020c27e03c1f2de0a.camel@redhat.com>
+Organization: Red Hat
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.3 (3.34.3-1.fc31) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wgbAfG6UZYd3PY3fmh5nCE191gY76Fn_g_D8nO64mdx-A@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 24, 2020 at 09:36:54AM -0800, Linus Torvalds wrote:
-> On Fri, Jan 24, 2020 at 12:25 AM Peter Zijlstra <peterz@infradead.org> wrote:
-> >
-> > Just for curiosity's sake. What does clang actually do in that case?
+On Fri, 2020-01-24 at 16:46 -0500, Lyude Paul wrote:
+> On Fri, 2020-01-24 at 14:20 -0500, Mikita Lipski wrote:
+> > On 1/24/20 2:10 PM, Lyude Paul wrote:
+> > > Disabling a display on MST can potentially happen after the entire MST
+> > > topology has been removed, which means that we can't communicate with
+> > > the topology at all in this scenario. Likewise, this also means that we
+> > > can't properly update payloads on the topology and as such, it's a good
+> > > idea to ignore payload update failures when disabling displays.
+> > > Currently, amdgpu makes the mistake of halting the payload update
+> > > process when any payload update failures occur, resulting in leaving
+> > > DC's local copies of the payload tables out of date.
+> > > 
+> > > This ends up causing problems with hotplugging MST topologies, and
+> > > causes modesets on the second hotplug to fail like so:
+> > > 
+> > > [drm] Failed to updateMST allocation table forpipe idx:1
+> > > ------------[ cut here ]------------
+> > > WARNING: CPU: 5 PID: 1511 at
+> > > drivers/gpu/drm/amd/amdgpu/../display/dc/core/dc_link.c:2677
+> > > update_mst_stream_alloc_table+0x11e/0x130 [amdgpu]
+> > > Modules linked in: cdc_ether usbnet fuse xt_conntrack nf_conntrack
+> > > nf_defrag_ipv6 libcrc32c nf_defrag_ipv4 ipt_REJECT nf_reject_ipv4
+> > > nft_counter nft_compat nf_tables nfnetlink tun bridge stp llc sunrpc
+> > > vfat fat wmi_bmof uvcvideo snd_hda_codec_realtek snd_hda_codec_generic
+> > > snd_hda_codec_hdmi videobuf2_vmalloc snd_hda_intel videobuf2_memops
+> > > videobuf2_v4l2 snd_intel_dspcfg videobuf2_common crct10dif_pclmul
+> > > snd_hda_codec videodev crc32_pclmul snd_hwdep snd_hda_core
+> > > ghash_clmulni_intel snd_seq mc joydev pcspkr snd_seq_device snd_pcm
+> > > sp5100_tco k10temp i2c_piix4 snd_timer thinkpad_acpi ledtrig_audio snd
+> > > wmi soundcore video i2c_scmi acpi_cpufreq ip_tables amdgpu(O)
+> > > rtsx_pci_sdmmc amd_iommu_v2 gpu_sched mmc_core i2c_algo_bit ttm
+> > > drm_kms_helper syscopyarea sysfillrect sysimgblt fb_sys_fops cec drm
+> > > crc32c_intel serio_raw hid_multitouch r8152 mii nvme r8169 nvme_core
+> > > rtsx_pci pinctrl_amd
+> > > CPU: 5 PID: 1511 Comm: gnome-shell Tainted: G           O      5.5.0-
+> > > rc7Lyude-Test+ #4
+> > > Hardware name: LENOVO FA495SIT26/FA495SIT26, BIOS R12ET22W(0.22 )
+> > > 01/31/2019
+> > > RIP: 0010:update_mst_stream_alloc_table+0x11e/0x130 [amdgpu]
+> > > Code: 28 00 00 00 75 2b 48 8d 65 e0 5b 41 5c 41 5d 41 5e 5d c3 0f b6 06
+> > > 49 89 1c 24 41 88 44 24 08 0f b6 46 01 41 88 44 24 09 eb 93 <0f> 0b e9
+> > > 2f ff ff ff e8 a6 82 a3 c2 66 0f 1f 44 00 00 0f 1f 44 00
+> > > RSP: 0018:ffffac428127f5b0 EFLAGS: 00010202
+> > > RAX: 0000000000000002 RBX: ffff8d1e166eee80 RCX: 0000000000000000
+> > > RDX: ffffac428127f668 RSI: ffff8d1e166eee80 RDI: ffffac428127f610
+> > > RBP: ffffac428127f640 R08: ffffffffc03d94a8 R09: 0000000000000000
+> > > R10: ffff8d1e24b02000 R11: ffffac428127f5b0 R12: ffff8d1e1b83d000
+> > > R13: ffff8d1e1bea0b08 R14: 0000000000000002 R15: 0000000000000002
+> > > FS:  00007fab23ffcd80(0000) GS:ffff8d1e28b40000(0000)
+> > > knlGS:0000000000000000
+> > > CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> > > CR2: 00007f151f1711e8 CR3: 00000005997c0000 CR4: 00000000003406e0
+> > > Call Trace:
+> > >   ? mutex_lock+0xe/0x30
+> > >   dc_link_allocate_mst_payload+0x9a/0x210 [amdgpu]
+> > >   ? dm_read_reg_func+0x39/0xb0 [amdgpu]
+> > >   ? core_link_enable_stream+0x656/0x730 [amdgpu]
+> > >   core_link_enable_stream+0x656/0x730 [amdgpu]
+> > >   dce110_apply_ctx_to_hw+0x58e/0x5d0 [amdgpu]
+> > >   ? dcn10_verify_allow_pstate_change_high+0x1d/0x280 [amdgpu]
+> > >   ? dcn10_wait_for_mpcc_disconnect+0x3c/0x130 [amdgpu]
+> > >   dc_commit_state+0x292/0x770 [amdgpu]
+> > >   ? add_timer+0x101/0x1f0
+> > >   ? ttm_bo_put+0x1a1/0x2f0 [ttm]
+> > >   amdgpu_dm_atomic_commit_tail+0xb59/0x1ff0 [amdgpu]
+> > >   ? amdgpu_move_blit.constprop.0+0xb8/0x1f0 [amdgpu]
+> > >   ? amdgpu_bo_move+0x16d/0x2b0 [amdgpu]
+> > >   ? ttm_bo_handle_move_mem+0x118/0x570 [ttm]
+> > >   ? ttm_bo_validate+0x134/0x150 [ttm]
+> > >   ? dm_plane_helper_prepare_fb+0x1b9/0x2a0 [amdgpu]
+> > >   ? _cond_resched+0x15/0x30
+> > >   ? wait_for_completion_timeout+0x38/0x160
+> > >   ? _cond_resched+0x15/0x30
+> > >   ? wait_for_completion_interruptible+0x33/0x190
+> > >   commit_tail+0x94/0x130 [drm_kms_helper]
+> > >   drm_atomic_helper_commit+0x113/0x140 [drm_kms_helper]
+> > >   drm_atomic_helper_set_config+0x70/0xb0 [drm_kms_helper]
+> > >   drm_mode_setcrtc+0x194/0x6a0 [drm]
+> > >   ? _cond_resched+0x15/0x30
+> > >   ? mutex_lock+0xe/0x30
+> > >   ? drm_mode_getcrtc+0x180/0x180 [drm]
+> > >   drm_ioctl_kernel+0xaa/0xf0 [drm]
+> > >   drm_ioctl+0x208/0x390 [drm]
+> > >   ? drm_mode_getcrtc+0x180/0x180 [drm]
+> > >   amdgpu_drm_ioctl+0x49/0x80 [amdgpu]
+> > >   do_vfs_ioctl+0x458/0x6d0
+> > >   ksys_ioctl+0x5e/0x90
+> > >   __x64_sys_ioctl+0x16/0x20
+> > >   do_syscall_64+0x55/0x1b0
+> > >   entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> > > RIP: 0033:0x7fab2121f87b
+> > > Code: 0f 1e fa 48 8b 05 0d 96 2c 00 64 c7 00 26 00 00 00 48 c7 c0 ff ff
+> > > ff ff c3 66 0f 1f 44 00 00 f3 0f 1e fa b8 10 00 00 00 0f 05 <48> 3d 01
+> > > f0 ff ff 73 01 c3 48 8b 0d dd 95 2c 00 f7 d8 64 89 01 48
+> > > RSP: 002b:00007ffd045f9068 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+> > > RAX: ffffffffffffffda RBX: 00007ffd045f90a0 RCX: 00007fab2121f87b
+> > > RDX: 00007ffd045f90a0 RSI: 00000000c06864a2 RDI: 000000000000000b
+> > > RBP: 00007ffd045f90a0 R08: 0000000000000000 R09: 000055dbd2985d10
+> > > R10: 000055dbd2196280 R11: 0000000000000246 R12: 00000000c06864a2
+> > > R13: 000000000000000b R14: 0000000000000000 R15: 000055dbd2196280
+> > > ---[ end trace 6ea888c24d2059cd ]---
+> > > 
+> > > Note as well, I have only been able to reproduce this on setups with 2
+> > > MST displays.
+> > > 
+> > > Changes since v1:
+> > > * Don't return false when part 1 or part 2 of updating the payloads
+> > >    fails, we don't want to abort at any step of the process even if
+> > >    things fail
+> > > 
+> > > Signed-off-by: Lyude Paul <lyude@redhat.com>
+> > > Acked-by: Harry Wentland <harry.wentland@amd.com>
+> > > Cc: stable@vger.kernel.org
+> > > ---
+> > >   .../drm/amd/display/amdgpu_dm/amdgpu_dm_helpers.c   | 13 ++++---------
+> > >   1 file changed, 4 insertions(+), 9 deletions(-)
+> > > 
+> > > diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_helpers.c
+> > > b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_helpers.c
+> > > index 069b7a6f5597..318b474ff20e 100644
+> > > --- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_helpers.c
+> > > +++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_helpers.c
+> > > @@ -216,7 +216,8 @@ bool
+> > > dm_helpers_dp_mst_write_payload_allocation_table(
+> > >   		drm_dp_mst_reset_vcpi_slots(mst_mgr, mst_port);
+> > >   	}
+> > >   
+> > > -	ret = drm_dp_update_payload_part1(mst_mgr);
+> > > +	/* It's OK for this to fail */
+> > > +	drm_dp_update_payload_part1(mst_mgr);
+> > >   
+> > >   	/* mst_mgr->->payloads are VC payload notify MST branch using
+> > > DPCD or
+> > >   	 * AUX message. The sequence is slot 1-63 allocated sequence
+> > > for each
+> > > @@ -225,9 +226,6 @@ bool
+> > > dm_helpers_dp_mst_write_payload_allocation_table(
+> > >   
+> > >   	get_payload_table(aconnector, proposed_table);
+> > >   
+> > > -	if (ret)
+> > > -		return false;
+> > > -
+> > 
+> > Sorry for being picky, but I think this might cause compilation error on 
+> > some systems for having unused variable (int ret). Its better just to 
+> > strip out both ret integer declarations.
 > 
-> This shouldn't necessarily be clang-specific. If the variable itself
-> is 'const', it might go into a read-only section. So trying to modify
-> it will quite possibly hit a SIGSEGV in user space (and in kernel
-> space cause an oops).
+> No problem! It wouldn't be fair if I was the only one who got to be picky
+> anyway ;)
 
-Quite; but I worried clang would use the UB to omit the access entirely,
-and therefore rob us of the well deserved crash or something.
+Actually, I think you might have made a mistake here - ret is still used in
+this function, mind double checking?
 
-Let me go read Nick's email tho, see what it actually does.
+> 
+> > Otherwise the patch is good. Thanks again!
+> > 
+> > Reviewed-by: Mikita Lipski <Mikita.Lipski@amd.com>
+> > 
+> > Mikita
+> > 
+> > >   	return true;
+> > >   }
+> > >   
+> > > @@ -285,7 +283,6 @@ bool dm_helpers_dp_mst_send_payload_allocation(
+> > >   	struct amdgpu_dm_connector *aconnector;
+> > >   	struct drm_dp_mst_topology_mgr *mst_mgr;
+> > >   	struct drm_dp_mst_port *mst_port;
+> > > -	int ret;
+> > >   
+> > >   	aconnector = (struct amdgpu_dm_connector *)stream-
+> > > >dm_stream_context;
+> > >   
+> > > @@ -299,10 +296,8 @@ bool dm_helpers_dp_mst_send_payload_allocation(
+> > >   	if (!mst_mgr->mst_state)
+> > >   		return false;
+> > >   
+> > > -	ret = drm_dp_update_payload_part2(mst_mgr);
+> > > -
+> > > -	if (ret)
+> > > -		return false;
+> > > +	/* It's OK for this to fail */
+> > > +	drm_dp_update_payload_part2(mst_mgr);
+> > >   
+> > >   	if (!enable)
+> > >   		drm_dp_mst_deallocate_vcpi(mst_mgr, mst_port);
+> > > 
+-- 
+Cheers,
+	Lyude Paul
+
