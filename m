@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F66DC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:28:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78F5FC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:28:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0EE7620704
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:28:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 467B420704
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:28:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579865296;
-	bh=v0KaQj/4lCbT9772pLn9i1i8cmdQpagh76KDE2nXRJk=;
+	s=default; t=1579865300;
+	bh=W8O85DiBEzqBgzMahDt+ZMPXsPA78j++WGEZ/A6mn4c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lRG+KHIJxPAh9fuFOzd+aAwWgbtlcKJzbG5dmCBW1SlR6QcKxxFydkPwfdjMREbPv
-	 AOn4sJhSzAxOqnDgYWQS8bQAW3ntkqEJ3pVexE2upklrZXq8TSic77E+HDs7j8P6Rc
-	 nDHzOaciJMXkTJWUJGoBPfdh2nBvcLxrum9GGG8w=
+	b=b5+WaRYburqr/mwXcbt+S1CYXNA/kLpj/qoujX5Yur9eVwYEU7jQF/Cu3sTwpwb5u
+	 PTBM8tyxeupUmGND16ECn5LAVsvBD2dxJ15/Prrp3IYSBNXJiWV0MOw+1yIddyuboV
+	 h/AAMArl2uuNxXiAFwVH6wj1Rjw1UzsLhMb5O6xo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404017AbgAXL2P (ORCPT
+        id S2404054AbgAXL2T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:28:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44232 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 06:28:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44338 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404024AbgAXL2L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:28:11 -0500
+        id S2404042AbgAXL2O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:28:14 -0500
 Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3B9562075D;
-        Fri, 24 Jan 2020 11:28:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E21AD206D4;
+        Fri, 24 Jan 2020 11:28:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579865291;
-        bh=v0KaQj/4lCbT9772pLn9i1i8cmdQpagh76KDE2nXRJk=;
+        s=default; t=1579865294;
+        bh=W8O85DiBEzqBgzMahDt+ZMPXsPA78j++WGEZ/A6mn4c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ucuve+9+OCiXn9RiVhkQQSMl3SR9BGG/aiehoAqNbOLKSELG6i2XLSwZXhmN7rmUw
-         Q4Dm9+8elr+OTn6qhYQoVjnSkUaErko691ryxZAnXslHlqwPVJody4/gRGa8xs10Nq
-         Zo6/JN4i4jaJuxwKIkukdmllyFLVifd4Nrk8ss/0=
+        b=RsQxM+ATfojP+YnW9tHn4e6voDGO3SJghGopeZA5DtCK7A9v4SX/s07UK+IHiCiY0
+         5m+OSxg9p+XH2EzncVtMpViqkdrWecU1LSbbTC6QsyB4sPJXbUWzcPCL3mYwIBB8YF
+         NTmGOSZ7KpxbgZhwc/vYwMD9KANBuWuj14kcUilE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Charles Keepax <ckeepax@opensource.cirrus.com>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, Mark Zhang <markz@mellanox.com>,
+        Yishai Hadas <yishaih@mellanox.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 506/639] ASoC: wm8737: Fix copy-paste error in wm8737_snd_controls
-Date:   Fri, 24 Jan 2020 10:31:16 +0100
-Message-Id: <20200124093152.190752874@linuxfoundation.org>
+Subject: [PATCH 4.19 494/639] net/mlx5: Fix mlx5_ifc_query_lag_out_bits
+Date:   Fri, 24 Jan 2020 10:31:04 +0100
+Message-Id: <20200124093150.643004221@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
 References: <20200124093047.008739095@linuxfoundation.org>
@@ -62,39 +61,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Mark Zhang <markz@mellanox.com>
 
-[ Upstream commit 554b75bde64bcad9662530726d1483f7ef012069 ]
+[ Upstream commit ea77388b02270b0af8dc57f668f311235ea068f0 ]
 
-sound/soc/codecs/wm8737.c:112:29: warning:
- high_3d defined but not used [-Wunused-const-variable=]
+Remove the "reserved_at_40" field to match the device specification.
 
-'high_3d' should be used for 3D High Cut-off.
-
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Fixes: 2a9ae13a2641 ("ASoC: Add initial WM8737 driver")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Acked-by: Charles Keepax <ckeepax@opensource.cirrus.com>
-Link: https://lore.kernel.org/r/20190815091920.64480-1-yuehaibing@huawei.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fixes: 84df61ebc69b ("net/mlx5: Add HW interfaces used by LAG")
+Signed-off-by: Mark Zhang <markz@mellanox.com>
+Reviewed-by: Yishai Hadas <yishaih@mellanox.com>
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/codecs/wm8737.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/linux/mlx5/mlx5_ifc.h | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/sound/soc/codecs/wm8737.c b/sound/soc/codecs/wm8737.c
-index e9ae821e76098..568b77692f5f0 100644
---- a/sound/soc/codecs/wm8737.c
-+++ b/sound/soc/codecs/wm8737.c
-@@ -170,7 +170,7 @@ SOC_DOUBLE("Polarity Invert Switch", WM8737_ADC_CONTROL, 5, 6, 1, 0),
- SOC_SINGLE("3D Switch", WM8737_3D_ENHANCE, 0, 1, 0),
- SOC_SINGLE("3D Depth", WM8737_3D_ENHANCE, 1, 15, 0),
- SOC_ENUM("3D Low Cut-off", low_3d),
--SOC_ENUM("3D High Cut-off", low_3d),
-+SOC_ENUM("3D High Cut-off", high_3d),
- SOC_SINGLE_TLV("3D ADC Volume", WM8737_3D_ENHANCE, 7, 1, 1, adc_tlv),
+diff --git a/include/linux/mlx5/mlx5_ifc.h b/include/linux/mlx5/mlx5_ifc.h
+index 177f11c96187b..76b76b6aa83d0 100644
+--- a/include/linux/mlx5/mlx5_ifc.h
++++ b/include/linux/mlx5/mlx5_ifc.h
+@@ -9053,8 +9053,6 @@ struct mlx5_ifc_query_lag_out_bits {
  
- SOC_SINGLE("Noise Gate Switch", WM8737_NOISE_GATE, 0, 1, 0),
+ 	u8         syndrome[0x20];
+ 
+-	u8         reserved_at_40[0x40];
+-
+ 	struct mlx5_ifc_lagc_bits ctx;
+ };
+ 
 -- 
 2.20.1
 
