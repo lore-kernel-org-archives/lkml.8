@@ -2,121 +2,170 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DD88C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 17:20:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41F0FC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 17:25:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71D092072C
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 17:20:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="a4dVXxPu"
+	by mail.kernel.org (Postfix) with ESMTP id 1D8DC2071A
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 17:25:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387987AbgAXRU0 (ORCPT
+        id S2388924AbgAXRZO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 12:20:26 -0500
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:36580 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387531AbgAXRU0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 12:20:26 -0500
-Received: by mail-pg1-f195.google.com with SMTP id k3so1453407pgc.3
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Jan 2020 09:20:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=3bs90XjUYMO1YPG7bJhgYggIHQGa3xCMAwvskxDOh3k=;
-        b=a4dVXxPuiruxw8rtFKoZ6kNGVafNrVqCDVUh1UJ1FoRsnV+PG4E0bhfBBpHRaoSonQ
-         YaZB3M2bC2FY582MMMref3d3YaYxNd3pp0uYPOUsF7b577uC7nTSX4UMKlkrLR+rucPm
-         Z8hSY2J2ao1kz2eoCsXaw5ersUa6NnnQbMt8vX1kbBaSzCWJoO9na6YNogES4989qy+1
-         CrFjGBEkkkgHi9bTCsWDRhnFPO9EDSmMcu9m7Dvxm1GBj3E7H6Imv/pL2GSPgeziqe8l
-         f8+yOk+9oNubYAbSOGdQ/ZGnsh459B0gxgIQlWgPd0aUJ3vukEFvRiKEskT7Q5RLtTGX
-         5akg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=3bs90XjUYMO1YPG7bJhgYggIHQGa3xCMAwvskxDOh3k=;
-        b=T2a3fDwz5nmEEcIF0nOjHw+2U8YSEuS3vYfAnCWNZ14tjUQ8e1G8FhJEh/Xqaqe2Qk
-         s2MB3eoN4V1AoNaUFAztvyHU7vHJvRGjL5NO+kMJwp816mvJt6VVQr+jbH0vgdooX+XG
-         GxCFviKySTdG5k+GxIbcalH6mi+LESjVyFWRZaz9KPywznnV8qlE+0Yk1IK1I2fW/8fn
-         XG2cDnjGI1EiaRXSJUeARLVfRQuLicfwPCNo4w0GJRhZak59zNBh/7oZOHIXB3IKkcpG
-         VZgTRuTsWZqHLlJqQfcPYfVW7L9fpIdnfxKob/BZi4ONr4GfvxdbRue8tdZRizTrGSl5
-         /F3A==
-X-Gm-Message-State: APjAAAWGhKl5e/DxnNmcZzqprnQhrOA2JX3+aQnufm9MxSuS//tjuebD
-        R7BzRs05xEnUfiY2iJ7qzADC6Qthsybmph/e6Yq0jQ==
-X-Google-Smtp-Source: APXvYqyPC1tuztho8bkaXOVF7RDbM0R+AbuQOx09meijPzDaIhSpkrDwTE+Ulpx+9k7fdY23v3w7uXyyKDv7Ew3hXkM=
-X-Received: by 2002:a62:e215:: with SMTP id a21mr4264005pfi.3.1579886425680;
- Fri, 24 Jan 2020 09:20:25 -0800 (PST)
+        Fri, 24 Jan 2020 12:25:14 -0500
+Received: from mga12.intel.com ([192.55.52.136]:30597 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388028AbgAXRZO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 12:25:14 -0500
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Jan 2020 09:25:13 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,358,1574150400"; 
+   d="scan'208";a="308178111"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by orsmga001.jf.intel.com with ESMTP; 24 Jan 2020 09:25:12 -0800
+Date:   Fri, 24 Jan 2020 09:25:12 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
+        Jim Mattson <jmattson@google.com>,
+        linux-kernel@vger.kernel.org, Liran Alon <liran.alon@oracle.com>,
+        Roman Kagan <rkagan@virtuozzo.com>
+Subject: Re: [PATCH RFC 2/3] x86/kvm/hyper-v: move VMX controls sanitization
+ out of nested_enable_evmcs()
+Message-ID: <20200124172512.GJ2109@linux.intel.com>
+References: <20200115171014.56405-3-vkuznets@redhat.com>
+ <6c4bdb57-08fb-2c2d-9234-b7efffeb72ed@redhat.com>
+ <20200122054724.GD18513@linux.intel.com>
+ <9c126d75-225b-3b1b-d97a-bcec1f189e02@redhat.com>
+ <87eevrsf3s.fsf@vitty.brq.redhat.com>
+ <20200122155108.GA7201@linux.intel.com>
+ <87blqvsbcy.fsf@vitty.brq.redhat.com>
+ <f15d9e98-25e9-2031-2db5-6aaa6c78c0eb@redhat.com>
+ <87zheer0si.fsf@vitty.brq.redhat.com>
+ <87lfpyq9bk.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-References: <20200123153341.19947-1-will@kernel.org> <20200123153341.19947-3-will@kernel.org>
- <CAKwvOdm2snorniFunMF=0nDH8-RFwm7wtjYK_Tcwkd+JZinYPg@mail.gmail.com> <20200124082443.GY14914@hirez.programming.kicks-ass.net>
-In-Reply-To: <20200124082443.GY14914@hirez.programming.kicks-ass.net>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Fri, 24 Jan 2020 09:20:14 -0800
-Message-ID: <CAKwvOdmTOoTXCGN9NaO5_+sqDsK364=oCiVO_D5=btj1GsJrnw@mail.gmail.com>
-Subject: Re: [PATCH v2 02/10] netfilter: Avoid assigning 'const' pointer to
- non-const pointer
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Will Deacon <will@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        kernel-team <kernel-team@android.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Segher Boessenkool <segher@kernel.crashing.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Peter Oberparleiter <oberpar@linux.ibm.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Jozsef Kadlecsik <kadlec@netfilter.org>,
-        Florian Westphal <fw@strlen.de>,
-        "David S. Miller" <davem@davemloft.net>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87lfpyq9bk.fsf@vitty.brq.redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 24, 2020 at 12:24 AM Peter Zijlstra <peterz@infradead.org> wrote:
->
-> On Thu, Jan 23, 2020 at 11:07:59AM -0800, Nick Desaulniers wrote:
->
-> > Good thing it's the variable being modified was not declared const; I
-> > get spooked when I see -Wdiscarded-qualifiers because of Section
-> > 6.7.3.6 of the ISO C11 draft spec:
+On Thu, Jan 23, 2020 at 08:09:03PM +0100, Vitaly Kuznetsov wrote:
+> Vitaly Kuznetsov <vkuznets@redhat.com> writes:
+> 
+> > Paolo Bonzini <pbonzini@redhat.com> writes:
 > >
-> > ```
-> > If an attempt is made to modify an object defined with a
-> > const-qualified type through use
-> > of an lvalue with non-const-qualified type, the behavior is undefined.
-> > If an attempt is
-> > made to refer to an object defined with a volatile-qualified type
-> > through use of an lvalue
-> > with non-volatile-qualified type, the behavior is undefined.133)
+> >> On 22/01/20 17:29, Vitaly Kuznetsov wrote:
+> >>> Yes, in case we're back to the idea to filter things out in QEMU we can
+> >>> do this. What I don't like is that every other userspace which decides
+> >>> to enable eVMCS will have to perform the exact same surgery as in case
+> >>> it sets allow_unsupported_controls=0 it'll have to know (hardcode) the
+> >>> filtering (or KVM_SET_MSRS will fail) and in case it opts for
+> >>> allow_unsupported_controls=1 Windows guests just won't boot without the
+> >>> filtering.
+> >>> 
+> >>> It seems to be 1:1, eVMCSv1 requires the filter.
+> >>
+> >> Yes, that's the point.  It *is* a hack in KVM, but it is generally
+> >> preferrable to have an easier API for userspace, if there's only one way
+> >> to do it.
+> >>
+> >> Though we could be a bit more "surgical" and only remove
+> >> SECONDARY_EXEC_VIRTUALIZE_APIC_ACCESSES---thus minimizing the impact on
+> >> non-eVMCS guests.  Vitaly, can you prepare a v2 that does that and adds
+> >> a huge "hack alert" comment that explains the discussion?
 > >
-> > 133) This applies to those objects that behave as if they were defined
-> > with qualified types, even if they are
-> > never actually defined as objects in the program (such as an object at
-> > a memory-mapped input/output
-> > address).
-> > ```
-> >
-> > Which is about the modification of a const-declared variable (explicit
-> > UB which Clang actively exploits),
->
-> Just for curiosity's sake. What does clang actually do in that case?
->
+> > Yes, sure. I'd like to do more testing to make sure filtering out
+> > SECONDARY_EXEC_VIRTUALIZE_APIC_ACCESSES is enough for other Hyper-V
+> > versions too (who knows how many bugs are there :-)
+> 
+> ... and the answer is -- more than one :-)
+> 
+> I've tested Hyper-V 2016/2019 BIOS and UEFI-booted and the minimal
+> viable set seems to be:
+> 
+> MSR_IA32_VMX_PROCBASED_CTLS2: 
+> 	~SECONDARY_EXEC_VIRTUALIZE_APIC_ACCESSES
+> 
+> MSR_IA32_VMX_ENTRY_CTLS/MSR_IA32_VMX_TRUE_ENTRY_CTLS:
+> 	~VM_ENTRY_LOAD_IA32_PERF_GLOBAL_CTRL
+> 
+> MSR_IA32_VMX_EXIT_CTLS/MSR_IA32_VMX_TRUE_EXIT_CTLS:
+> 	~VM_EXIT_LOAD_IA32_PERF_GLOBAL_CTRL
+>  
+> with these filtered out all 4 versions are at least able to boot with >1
+> vCPU and run a nested guest (different from Windows management
+> partition).
+> 
+> This still feels a bit fragile as who knows under which circumstances
+> Hyper-V might want to enable additional (missing) controls.
 
-https://bugs.llvm.org/show_bug.cgi?id=42763
-I was playing around with this in godbolt but couldn't quickly come up
-with a simple reproducer.  IIRC, I've fixed maybe 3 instances of this
-recently in code though.
--- 
-Thanks,
-~Nick Desaulniers
+No strong opinion, I'm good either way.
+
+> If there are no objections and if we still think it would be beneficial
+> to minimize the list of controls we filter out (and not go with the full
+> set like my RFC suggests), I'll prepare v2. (v1, actually, this was RFC).
+
+One last idea, can we keep the MSR filtering as is and add the hack in
+vmx_restore_control_msr()?  That way the (userspace) host and guest see
+the same values when reading the affected MSRs, and eVMCS wouldn't need
+it's own hook to do consistency checks.
+
+@@ -1181,28 +1181,38 @@ static int
+ vmx_restore_control_msr(struct vcpu_vmx *vmx, u32 msr_index, u64 data)
+ {
+        u64 supported;
+-       u32 *lowp, *highp;
++       u32 *lowp, *highp, evmcs_unsupported;
+
+        switch (msr_index) {
+        case MSR_IA32_VMX_TRUE_PINBASED_CTLS:
+                lowp = &vmx->nested.msrs.pinbased_ctls_low;
+                highp = &vmx->nested.msrs.pinbased_ctls_high;
++               if (vmx->nested.enlightened_vmcs_enabled)
++                       evmcs_unsupported = EVMCS1_UNSUPPORTED_PINCTRL;
+                break;
+        case MSR_IA32_VMX_TRUE_PROCBASED_CTLS:
+                lowp = &vmx->nested.msrs.procbased_ctls_low;
+                highp = &vmx->nested.msrs.procbased_ctls_high;
++               if (vmx->nested.enlightened_vmcs_enabled)
++                       evmcs_unsupported = 0;
+                break;
+        case MSR_IA32_VMX_TRUE_EXIT_CTLS:
+                lowp = &vmx->nested.msrs.exit_ctls_low;
+                highp = &vmx->nested.msrs.exit_ctls_high;
++               if (vmx->nested.enlightened_vmcs_enabled)
++                       evmcs_unsupported = EVMCS1_UNSUPPORTED_VMEXIT_CTRL;
+                break;
+        case MSR_IA32_VMX_TRUE_ENTRY_CTLS:
+                lowp = &vmx->nested.msrs.entry_ctls_low;
+                highp = &vmx->nested.msrs.entry_ctls_high;
++               if (vmx->nested.enlightened_vmcs_enabled)
++                       evmcs_unsupported = EVMCS1_UNSUPPORTED_VMENTRY_CTRL;
+                break;
+        case MSR_IA32_VMX_PROCBASED_CTLS2:
+                lowp = &vmx->nested.msrs.secondary_ctls_low;
+                highp = &vmx->nested.msrs.secondary_ctls_high;
++               if (vmx->nested.enlightened_vmcs_enabled)
++                       evmcs_unsupported = EVMCS1_UNSUPPORTED_2NDEXEC;
+                break;
+        default:
+                BUG();
+@@ -1210,6 +1220,9 @@ vmx_restore_control_msr(struct vcpu_vmx *vmx, u32 msr_index, u64 data)
+
+        supported = vmx_control_msr(*lowp, *highp);
+
++       /* HACK! */
++       data &= ~(u64)evmcs_unsupported << 32;
++
+        /* Check must-be-1 bits are still 1. */
+        if (!is_bitwise_subset(data, supported, GENMASK_ULL(31, 0)))
+
