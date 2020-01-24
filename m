@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D7C0C35242
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 01:17:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBEA4C35240
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 01:17:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5157D2071E
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 01:17:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD6D724655
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 01:17:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579828648;
-	bh=dpSH7wm6P98BNVbE4Ngg343Teh85IXSxwMZFTo00bpY=;
+	s=default; t=1579828652;
+	bh=EdaxlxNioT7INiZrUk3Gj5CiZ2MoNSzxkO3BpJhuZm8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zeOY71NtNkbNfPnrpS0n4AhN/UcMjklIQ4nUxzRQXo6onoCMrqYoU7QWr8/yufEND
-	 32cIAr4MYrVUP7lr2lOhXuNyt2faABWY/4HdAVhwtqbKLYSqjpkSutxEuvVH0sq05Q
-	 mdQ3BMemoJRvS5aC4MzIA3WuoJwiBLd5TRxZyEaw=
+	b=mbjWzpnmdHwJ35Z6F4N+7GZwvMU/9F5DeFj48LLRPtAIYpgspEnB7aPFipUBiGgFE
+	 jlohuambhC5ZN+8H6XFYL4CYhRgJzE/zBLthH6sWNATEsLgTIOa5MXP6/3pzXvpGut
+	 Dig8YD3gGnLOK7//Ggze+r4VVdlvd6vzE2QtFhIA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730461AbgAXBR1 (ORCPT
+        id S1730537AbgAXBRc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 20:17:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60292 "EHLO mail.kernel.org"
+        Thu, 23 Jan 2020 20:17:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60522 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730378AbgAXBRU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 20:17:20 -0500
+        id S1730479AbgAXBR3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jan 2020 20:17:29 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E542E22522;
-        Fri, 24 Jan 2020 01:17:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D7CFA22464;
+        Fri, 24 Jan 2020 01:17:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579828639;
-        bh=dpSH7wm6P98BNVbE4Ngg343Teh85IXSxwMZFTo00bpY=;
+        s=default; t=1579828648;
+        bh=EdaxlxNioT7INiZrUk3Gj5CiZ2MoNSzxkO3BpJhuZm8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=k6H7s39f5ZeJroC4q82leH12w8RFXbPV9G1W/CfV8kxb2qMl3T6zcZ3d68rI3viu/
-         9O/x8zYgBjUqcpjgCsp4hu4IYftnz+2c3BkSb+sgD4bZeiizxlMtX0a1ZJGcQiA74+
-         BZLE4VfqxOpN1s/CNjSbtD5TRgQxtlq/pgaDy3xU=
+        b=KknBhClq6CrjwY5qY9jQKuJhxkiBuDHrOsKIF2nKjQ+fSgXFzUDzO0nICBbswnB23
+         JCHYuzcdByzcdunuq6jhqECypW2S3ieEdKh5psAnlb8+Bhr5mfe/tCUdl8udwxjOxG
+         hlGCW0OEWuCZbhvJjlDsXgvpkDa6XvN7Uk02mt0E=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Thomas Voegtle <tv@lio96.de>, Jan Pieter van Woerkom <jp@jpvw.nl>,
-        Sean Young <sean@mess.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 09/33] media: dvbsky: add support for eyeTV Geniatech T2 lite
-Date:   Thu, 23 Jan 2020 20:16:44 -0500
-Message-Id: <20200124011708.18232-9-sashal@kernel.org>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 17/33] mfd: intel-lpss: Add Intel Comet Lake PCH-H PCI IDs
+Date:   Thu, 23 Jan 2020 20:16:52 -0500
+Message-Id: <20200124011708.18232-17-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200124011708.18232-1-sashal@kernel.org>
 References: <20200124011708.18232-1-sashal@kernel.org>
@@ -60,49 +59,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Voegtle <tv@lio96.de>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-[ Upstream commit 14494583336880640654300c76d0f5df3360d85f ]
+[ Upstream commit dd047dce3a6f5233b98e792e2287cc549da35879 ]
 
-Adds USB ID for the eyeTV Geniatech T2 lite to the dvbsky driver.
-This is a Geniatech T230C based stick without IR and a different USB ID.
+Intel Comet Lake PCH-H has the same LPSS than Intel Cannon Lake.
+Add the new IDs to the list of supported devices.
 
-Signed-off-by: Thomas Voegtle <tv@lio96.de>
-Tested-by: Jan Pieter van Woerkom <jp@jpvw.nl>
-Signed-off-by: Sean Young <sean@mess.org>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/usb/dvb-usb-v2/dvbsky.c | 3 +++
- include/media/dvb-usb-ids.h           | 1 +
- 2 files changed, 4 insertions(+)
+ drivers/mfd/intel-lpss-pci.c | 13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/media/usb/dvb-usb-v2/dvbsky.c b/drivers/media/usb/dvb-usb-v2/dvbsky.c
-index 617a306f6815d..dc380c0c95369 100644
---- a/drivers/media/usb/dvb-usb-v2/dvbsky.c
-+++ b/drivers/media/usb/dvb-usb-v2/dvbsky.c
-@@ -792,6 +792,9 @@ static const struct usb_device_id dvbsky_id_table[] = {
- 	{ DVB_USB_DEVICE(USB_VID_CONEXANT, USB_PID_MYGICA_T230C,
- 		&mygica_t230c_props, "MyGica Mini DVB-T2 USB Stick T230C",
- 		RC_MAP_TOTAL_MEDIA_IN_HAND_02) },
-+	{ DVB_USB_DEVICE(USB_VID_CONEXANT, USB_PID_MYGICA_T230C_LITE,
-+		&mygica_t230c_props, "MyGica Mini DVB-T2 USB Stick T230C Lite",
-+		NULL) },
- 	{ DVB_USB_DEVICE(USB_VID_CONEXANT, USB_PID_MYGICA_T230C2,
- 		&mygica_t230c_props, "MyGica Mini DVB-T2 USB Stick T230C v2",
- 		RC_MAP_TOTAL_MEDIA_IN_HAND_02) },
-diff --git a/include/media/dvb-usb-ids.h b/include/media/dvb-usb-ids.h
-index 7ce4e83324219..1409230ad3a4c 100644
---- a/include/media/dvb-usb-ids.h
-+++ b/include/media/dvb-usb-ids.h
-@@ -389,6 +389,7 @@
- #define USB_PID_MYGICA_T230				0xc688
- #define USB_PID_MYGICA_T230C				0xc689
- #define USB_PID_MYGICA_T230C2				0xc68a
-+#define USB_PID_MYGICA_T230C_LITE			0xc699
- #define USB_PID_ELGATO_EYETV_DIVERSITY			0x0011
- #define USB_PID_ELGATO_EYETV_DTT			0x0021
- #define USB_PID_ELGATO_EYETV_DTT_2			0x003f
+diff --git a/drivers/mfd/intel-lpss-pci.c b/drivers/mfd/intel-lpss-pci.c
+index 1767f30a16761..b33030e3385c7 100644
+--- a/drivers/mfd/intel-lpss-pci.c
++++ b/drivers/mfd/intel-lpss-pci.c
+@@ -140,7 +140,7 @@ static const struct intel_lpss_platform_info cnl_i2c_info = {
+ };
+ 
+ static const struct pci_device_id intel_lpss_pci_ids[] = {
+-	/* CML */
++	/* CML-LP */
+ 	{ PCI_VDEVICE(INTEL, 0x02a8), (kernel_ulong_t)&spt_uart_info },
+ 	{ PCI_VDEVICE(INTEL, 0x02a9), (kernel_ulong_t)&spt_uart_info },
+ 	{ PCI_VDEVICE(INTEL, 0x02aa), (kernel_ulong_t)&spt_info },
+@@ -153,6 +153,17 @@ static const struct pci_device_id intel_lpss_pci_ids[] = {
+ 	{ PCI_VDEVICE(INTEL, 0x02ea), (kernel_ulong_t)&cnl_i2c_info },
+ 	{ PCI_VDEVICE(INTEL, 0x02eb), (kernel_ulong_t)&cnl_i2c_info },
+ 	{ PCI_VDEVICE(INTEL, 0x02fb), (kernel_ulong_t)&spt_info },
++	/* CML-H */
++	{ PCI_VDEVICE(INTEL, 0x06a8), (kernel_ulong_t)&spt_uart_info },
++	{ PCI_VDEVICE(INTEL, 0x06a9), (kernel_ulong_t)&spt_uart_info },
++	{ PCI_VDEVICE(INTEL, 0x06aa), (kernel_ulong_t)&spt_info },
++	{ PCI_VDEVICE(INTEL, 0x06ab), (kernel_ulong_t)&spt_info },
++	{ PCI_VDEVICE(INTEL, 0x06c7), (kernel_ulong_t)&spt_uart_info },
++	{ PCI_VDEVICE(INTEL, 0x06e8), (kernel_ulong_t)&cnl_i2c_info },
++	{ PCI_VDEVICE(INTEL, 0x06e9), (kernel_ulong_t)&cnl_i2c_info },
++	{ PCI_VDEVICE(INTEL, 0x06ea), (kernel_ulong_t)&cnl_i2c_info },
++	{ PCI_VDEVICE(INTEL, 0x06eb), (kernel_ulong_t)&cnl_i2c_info },
++	{ PCI_VDEVICE(INTEL, 0x06fb), (kernel_ulong_t)&spt_info },
+ 	/* BXT A-Step */
+ 	{ PCI_VDEVICE(INTEL, 0x0aac), (kernel_ulong_t)&bxt_i2c_info },
+ 	{ PCI_VDEVICE(INTEL, 0x0aae), (kernel_ulong_t)&bxt_i2c_info },
 -- 
 2.20.1
 
