@@ -2,269 +2,384 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6692C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 23:21:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 367B0C35242
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 23:21:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D6282071A
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 23:21:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F032E2077C
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 23:21:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="eZcDQrVR"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="NacjkgaM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387673AbgAXXV3 (ORCPT
+        id S1729536AbgAXXVp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 18:21:29 -0500
-Received: from mail-vs1-f66.google.com ([209.85.217.66]:40230 "EHLO
-        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387576AbgAXXV3 (ORCPT
+        Fri, 24 Jan 2020 18:21:45 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:39168 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729147AbgAXXVo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 18:21:29 -0500
-Received: by mail-vs1-f66.google.com with SMTP id g23so2330967vsr.7
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Jan 2020 15:21:28 -0800 (PST)
+        Fri, 24 Jan 2020 18:21:44 -0500
+Received: by mail-pf1-f195.google.com with SMTP id q10so1836367pfs.6
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jan 2020 15:21:43 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=SRJ461+G7MgpwUQU9s+T4wtNvR/tD3NyDdbo7eqA7AI=;
-        b=eZcDQrVRmmgUua8irA6uwUmZChO1NI87dboSLB2KeMzZ7JR5gsRbghI4LgN0exPQaG
-         wHHGvu0c0RiHR1HnL/WKGm1NRBd7MGYwLUPDYXttvh8VvVu0+YYWqCxhGxwiU7uPt9Jy
-         3VN3tqCAta+mZolHhOTXrqvhq69f6dnCWbGt0=
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=g62W9zyRnLaJvDqXWj9zO8N5kgKMPJ8ADRZEejZYC2Q=;
+        b=NacjkgaMLSdt+bsZ95POQ3P8F3AcKOaUf16/7ejq/BM3me1p5THLD3dOZQPhl8/0HY
+         ZSGcc47t42ZxfBVVNOGc7hAj8y8QhLz4C+jTWChwtGlWcryTzna5cuT5g5uXRUyyZSWF
+         J6ikdpifo/xuobAzVSTAX1zb7k9lCco3O4L6c=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=SRJ461+G7MgpwUQU9s+T4wtNvR/tD3NyDdbo7eqA7AI=;
-        b=hAV+Ed4QXxMWtVhellLEuRkWeUplFN/SeHsoUEkgMGFG89MhCPh/a5L2Cepebtbvt4
-         gNhxMSVaU/0UYPzqzphrw/FXceyDCRwY+a98Z1UrRH3c0ZX7lVB2+aBuP1EQtHio5aRf
-         2FhYmiL+Eb19PVMb9WE5bsQQNxxKmAC81viqzTIJVECFk94Gq+DLjdd9PvWcSMmCc6Kz
-         qGAmsBc877G6hwJFbXypq7RsOnuempn3zfZEACxgGPmz3rP3QB0KN2tYqCw8hk08KqaF
-         mV/35nDgyA2IhzzJmZJr98DzRcTe8Ied1pSio/e9+RDbTiHUFcDY+TbLrI5b3HhHwUDo
-         AFpA==
-X-Gm-Message-State: APjAAAWhlNBdfxFYaWl6hRTYEh1f20XvRa5QnIL7Q1CR336CDXZhlhuX
-        +BON2346C3rDDeyErAa+HiMTZvQL6/I=
-X-Google-Smtp-Source: APXvYqzXSwsfZ394+P4rMPRHWrc3S3RBaifqFW0RcOYqnRclN8TcuNYAJsH4cf77HuW4d8JPYHpQtQ==
-X-Received: by 2002:a67:8716:: with SMTP id j22mr4186639vsd.177.1579908087496;
-        Fri, 24 Jan 2020 15:21:27 -0800 (PST)
-Received: from mail-vs1-f46.google.com (mail-vs1-f46.google.com. [209.85.217.46])
-        by smtp.gmail.com with ESMTPSA id m10sm1717948vsr.19.2020.01.24.15.21.26
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 24 Jan 2020 15:21:26 -0800 (PST)
-Received: by mail-vs1-f46.google.com with SMTP id b4so2313752vsa.12
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Jan 2020 15:21:26 -0800 (PST)
-X-Received: by 2002:a05:6102:2d8:: with SMTP id h24mr4063725vsh.169.1579908086214;
- Fri, 24 Jan 2020 15:21:26 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=g62W9zyRnLaJvDqXWj9zO8N5kgKMPJ8ADRZEejZYC2Q=;
+        b=MmvvVecZZk7yqvNBhD4ULHd7CTQo33f3HA4OxZ5/bxa0JqcmnPrbaeBcQYIFIXdMMA
+         exa+wdpbIaDe58aV9Eb+GywdjThm87MQLlZcZDguMkSH0/GRThnKQrmtEuDxHoEVXjvT
+         FmmhmULvGUdwHBBdnDmKtxlFdq8uulVuO6cH0vJPJw1VqkzPmWlxfd8AB6dhwayUNKg4
+         2Va7yqslzHIs9iW/U0GIBiqhS+uyZ4K1HtACBDIMdlqogyRrdQWq3lstaEl+9YNoesiK
+         ayZDpRw+qhKhFvfIqedD1fdgqYzW2SGGshNf9/95dF1sUnimBEFF+xuyt91w2/cPx23A
+         U5FA==
+X-Gm-Message-State: APjAAAVq3mQCYsniaQnClq5tnDy/yzKhodLTeFbHIM6sWP5bBam+HtU0
+        j1kRigJd0ruzVaygzf5F5s+98A==
+X-Google-Smtp-Source: APXvYqzzQ2d9Yma0Fs4fWCdE079O/MMZDb2R3jVairL1yz4v+98wPBb4ze64gBctzviVo3BaJwfYLQ==
+X-Received: by 2002:a62:cece:: with SMTP id y197mr5690912pfg.9.1579908102978;
+        Fri, 24 Jan 2020 15:21:42 -0800 (PST)
+Received: from pmalani2.mtv.corp.google.com ([2620:15c:202:201:172e:4646:c089:ce59])
+        by smtp.gmail.com with ESMTPSA id b12sm2823103pfr.26.2020.01.24.15.21.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 24 Jan 2020 15:21:42 -0800 (PST)
+From:   Prashant Malani <pmalani@chromium.org>
+To:     enric.balletbo@collabora.com, groeck@chromium.org,
+        bleung@chromium.org, lee.jones@linaro.org, sre@kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        Jon Flatley <jflat@chromium.org>,
+        Prashant Malani <pmalani@chromium.org>,
+        Gwendal Grignou <gwendal@chromium.org>
+Subject: [PATCH v8 1/4] platform: chrome: Add cros-usbpd-notify driver
+Date:   Fri, 24 Jan 2020 15:18:32 -0800
+Message-Id: <20200124231834.63628-1-pmalani@chromium.org>
+X-Mailer: git-send-email 2.25.0.341.g760bfbb309-goog
 MIME-Version: 1.0
-References: <1579867572-17188-1-git-send-email-harigovi@codeaurora.org>
-In-Reply-To: <1579867572-17188-1-git-send-email-harigovi@codeaurora.org>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Fri, 24 Jan 2020 15:21:14 -0800
-X-Gmail-Original-Message-ID: <CAD=FV=WKVGq+x1XFvZQvBcKVPdcVxQWJJmsqpAxY3t4dorvMYg@mail.gmail.com>
-Message-ID: <CAD=FV=WKVGq+x1XFvZQvBcKVPdcVxQWJJmsqpAxY3t4dorvMYg@mail.gmail.com>
-Subject: Re: [v3] arm64: dts: sc7180: add display dt nodes
-To:     Harigovindan P <harigovi@codeaurora.org>
-Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Rob Clark <robdclark@gmail.com>,
-        Sean Paul <seanpaul@chromium.org>,
-        "Kristian H. Kristensen" <hoegsberg@chromium.org>,
-        kalyan_t@codeaurora.org, nganji@codeaurora.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+From: Jon Flatley <jflat@chromium.org>
 
-On Fri, Jan 24, 2020 at 4:07 AM Harigovindan P <harigovi@codeaurora.org> wrote:
->
-> Add display, DSI hardware DT nodes for sc7180.
->
-> Signed-off-by: Harigovindan P <harigovi@codeaurora.org>
-> ---
->
-> Changes in v1:
->         -Added display DT nodes for sc7180
-> Changes in v2:
->         -Renamed node names
->         -Corrected code alignments
->         -Removed extra new line
->         -Added DISP AHB clock for register access
->         under display_subsystem node for global settings
-> Changes in v3:
->         -Modified node names
->         -Modified hard coded values
->         -Removed mdss reg entry
->
->  arch/arm64/boot/dts/qcom/sc7180-idp.dts |  58 +++++++++++++++
->  arch/arm64/boot/dts/qcom/sc7180.dtsi    | 124 ++++++++++++++++++++++++++++++++
->  2 files changed, 182 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-> index 388f50a..c77aab7 100644
-> --- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-> +++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-> @@ -7,6 +7,7 @@
->
->  /dts-v1/;
->
-> +#include <dt-bindings/gpio/gpio.h>
->  #include <dt-bindings/regulator/qcom,rpmh-regulator.h>
->  #include "sc7180.dtsi"
->  #include "pm6150.dtsi"
-> @@ -232,6 +233,50 @@
->         };
->  };
->
-> +&dsi_controller {
-> +       status = "okay";
-> +
-> +       vdda-supply = <&vreg_l3c_1p2>;
-> +
-> +       panel@0 {
-> +               compatible = "visionox,rm69299-1080p-display";
+ChromiumOS uses ACPI device with HID "GOOG0003" for power delivery
+related events. The existing cros-usbpd-charger driver relies on these
+events without ever actually receiving them on ACPI platforms. This is
+because in the ChromeOS kernel trees, the GOOG0003 device is owned by an
+ACPI driver that offers firmware updates to USB-C chargers.
 
-I don't think the bindings for this panel have landed anywhere, have
-they?  Maybe keep the IDP patch separate from the main sc7180 patch so
-that we can land the main sc7180 patch even if the idp patch isn't
-quite ready?  ...and maybe ping whoever is supposed to add support for
-this panel to tell them to get working on it.
+Introduce a new platform driver under cros-ec, the ChromeOS embedded
+controller, that handles these PD events and dispatches them
+appropriately over a notifier chain to all drivers that use them.
 
+On platforms that don't have the ACPI device defined, the driver gets
+instantiated for ECs which support the EC_FEATURE_USB_PD feature bit,
+and the notification events will get delivered using the MKBP event
+handling mechanism.
 
-> +               reg = <0>;
-> +
-> +               vdda-supply = <&vreg_l8c_1p8>;
-> +               vdd3p3-supply = <&vreg_l18a_2p8>;
-> +
-> +               pinctrl-names = "default", "suspend";
-> +               pinctrl-0 = <&disp_pins_default>;
-> +               pinctrl-1 = <&disp_pins_default>;
-> +
-> +               reset-gpios = <&pm6150l_gpio 3 GPIO_ACTIVE_HIGH>;
-> +
-> +               ports {
-> +                       #address-cells = <1>;
-> +                       #size-cells = <0>;
-> +                       port@0 {
-> +                               reg = <0>;
-> +                               panel0_in: endpoint {
-> +                                       remote-endpoint = <&dsi0_out>;
-> +                               };
-> +                       };
-> +               };
-> +       };
-> +
-> +       ports {
-> +               port@1 {
-> +                       endpoint {
-> +                               remote-endpoint = <&panel0_in>;
-> +                               data-lanes = <0 1 2 3>;
-> +                       };
-> +               };
-> +       };
-> +};
-> +
-> +&dsi_phy {
-> +       status = "okay";
+Co-Developed-by: Prashant Malani <pmalani@chromium.org>
+Reviewed-by: Gwendal Grignou <gwendal@chromium.org>
+Reviewed-by: Benson Leung <bleung@chromium.org>
+Signed-off-by: Jon Flatley <jflat@chromium.org>
+Signed-off-by: Prashant Malani <pmalani@chromium.org>
+---
 
-The above doesn't do anything because the dsi_phy you add to
-sc7180.dtsi doesn't have a
-  status = "disabled";
+Changes in v8(pmalani@chromium.org):
+- Fix style nits.
+- Remove unrequired header.
+- Remove #ifdef CONFIG_OF dependency for platform driver registration.
+- Add module compile text to Kconfig help section.
 
-...but probably it (and most of the other components that you're
-adding) should.  The idea is that if it ever makes sense that a board
-might be built with this SoC but _not_ hook up a given component that
-it should start out "disabled" in the main SoC dtsi file.
+Changes in v7(pmalani@chromium.org):
+- Removed use of module_platform_driver() and module_acpi_driver() since
+  that was causing redefinition compilation errors on arm64 defconfig.
+  Instead, explicitly defined the init and exit routines and
+  register/unregister the platform and ACPI drivers there.
+- Alphabetize #include header.
 
-> +};
-> +
->  &qspi {
->         status = "okay";
->         pinctrl-names = "default";
-> @@ -289,6 +334,19 @@
->
->  /* PINCTRL - additions to nodes defined in sc7180.dtsi */
->
-> +&pm6150l_gpio {
-> +       disp_pins {
-> +               disp_pins_default: disp_pins_default{
+Changes in v6(pmalani@chromium.org):
+- Fix build error from typo in cros_usbpd_notify_acpi_device_ids
+  variable name.
 
-As Bjorn mentioned, node name should use "-" instead of "_".  Also add
-a space before your "{"
+Changes in v5(pmalani@chromium.org):
+- Split the driver into platform and ACPI variants, each enclosed by
+  CONFIG_OF and CONFIG_ACPI #ifdefs respectively.
+- Updated the copyright year to 2020.
+- Reworded the commit message and Kconfig description to incorporate
+  the modified driver structure.
 
+Changes in v4(pmalani@chromium.org):
+- No code changes, but added new version so that versioning is
+  consistent with the next patch in the series.
 
-> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> index 3bc3f64..3ebc45b 100644
-> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> @@ -1184,6 +1184,130 @@
->                         #power-domain-cells = <1>;
->                 };
->
-> +               mdss: display_subsystem@ae00000 {
-> +                       compatible = "qcom,sc7180-mdss";
-> +                       reg = <0 0x0ae00000 0 0x1000>;
-> +                       reg-names = "mdss";
-> +
-> +                       power-domains = <&dispcc MDSS_GDSC>;
+Changes in v3 (pmalani@chromium.org):
+- Renamed driver and files from "cros_ec_pd_notify" to
+  "cros_usbpd_notify" to be more consistent with other naming.
+- Moved the change to include cros-usbpd-notify in the charger MFD
+  into a separate follow-on patch.
 
-You definitely can't land your patch until the "dispcc" node is added,
-but it's not.  You should be mentioning somewhere (after the cut?)
-that you depend on the series to add dispcc.
+Changes in v2 (pmalani@chromium.org):
+- Removed dependency on DT entry; instead, we will instantiate
+  the driver on detecting EC_FEATURE_USB_PD for non-ACPI platforms.
+- Modified the cros-ec-pd-notify device to be an mfd_cell under
+  usbpdcharger for non-ACPI platforms. Altered the platform_probe() call
+  to derive the cros EC structs appropriately.
+- Replaced "usbpd_notify" with "pd_notify" in functions and structures.
+- Addressed comments from upstream maintainer.
 
-...speaking of which, I just posted up a v2 of that.  See:
+ drivers/platform/chrome/Kconfig               |  13 ++
+ drivers/platform/chrome/Makefile              |   1 +
+ drivers/platform/chrome/cros_usbpd_notify.c   | 170 ++++++++++++++++++
+ .../linux/platform_data/cros_usbpd_notify.h   |  17 ++
+ 4 files changed, 201 insertions(+)
+ create mode 100644 drivers/platform/chrome/cros_usbpd_notify.c
+ create mode 100644 include/linux/platform_data/cros_usbpd_notify.h
 
-https://lore.kernel.org/r/20200124144154.v2.10.I1a4b93fb005791e29a9dcf288fc8bd459a555a59@changeid
+diff --git a/drivers/platform/chrome/Kconfig b/drivers/platform/chrome/Kconfig
+index 5f57282a28da0..e45e0fe057586 100644
+--- a/drivers/platform/chrome/Kconfig
++++ b/drivers/platform/chrome/Kconfig
+@@ -226,6 +226,19 @@ config CROS_USBPD_LOGGER
+ 	  To compile this driver as a module, choose M here: the
+ 	  module will be called cros_usbpd_logger.
+ 
++config CROS_USBPD_NOTIFY
++	tristate "ChromeOS Type-C power delivery event notifier"
++	depends on CROS_EC
++	help
++	  If you say Y here, you get support for Type-C PD event notifications
++	  from the ChromeOS EC. On ACPI platorms this driver will bind to the
++	  GOOG0003 ACPI device, and on platforms which don't have this device it
++	  will get initialized on ECs which support the feature
++	  EC_FEATURE_USB_PD.
++
++	  To compile this driver as a module, choose M here: the
++	  module will be called cros_usbpd_notify.
++
+ source "drivers/platform/chrome/wilco_ec/Kconfig"
+ 
+ endif # CHROMEOS_PLATFORMS
+diff --git a/drivers/platform/chrome/Makefile b/drivers/platform/chrome/Makefile
+index aacd5920d8a18..f6465f8ef0b5e 100644
+--- a/drivers/platform/chrome/Makefile
++++ b/drivers/platform/chrome/Makefile
+@@ -22,5 +22,6 @@ obj-$(CONFIG_CROS_EC_DEBUGFS)		+= cros_ec_debugfs.o
+ obj-$(CONFIG_CROS_EC_SENSORHUB)		+= cros_ec_sensorhub.o
+ obj-$(CONFIG_CROS_EC_SYSFS)		+= cros_ec_sysfs.o
+ obj-$(CONFIG_CROS_USBPD_LOGGER)		+= cros_usbpd_logger.o
++obj-$(CONFIG_CROS_USBPD_NOTIFY)		+= cros_usbpd_notify.o
+ 
+ obj-$(CONFIG_WILCO_EC)			+= wilco_ec/
+diff --git a/drivers/platform/chrome/cros_usbpd_notify.c b/drivers/platform/chrome/cros_usbpd_notify.c
+new file mode 100644
+index 0000000000000..6ead5c62b3c5f
+--- /dev/null
++++ b/drivers/platform/chrome/cros_usbpd_notify.c
+@@ -0,0 +1,170 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * Copyright 2020 Google LLC
++ *
++ * This driver serves as the receiver of cros_ec PD host events.
++ */
++
++#include <linux/acpi.h>
++#include <linux/module.h>
++#include <linux/mfd/cros_ec.h>
++#include <linux/platform_data/cros_ec_proto.h>
++#include <linux/platform_data/cros_usbpd_notify.h>
++#include <linux/platform_device.h>
++
++#define DRV_NAME "cros-usbpd-notify"
++#define ACPI_DRV_NAME "GOOG0003"
++
++static BLOCKING_NOTIFIER_HEAD(cros_usbpd_notifier_list);
++
++/**
++ * cros_usbpd_register_notify - Register a notifier callback for PD events.
++ * @nb: Notifier block pointer to register
++ *
++ * On ACPI platforms this corresponds to host events on the ECPD
++ * "GOOG0003" ACPI device. On non-ACPI platforms this will filter mkbp events
++ * for USB PD events.
++ *
++ * Return: 0 on success or negative error code.
++ */
++int cros_usbpd_register_notify(struct notifier_block *nb)
++{
++	return blocking_notifier_chain_register(&cros_usbpd_notifier_list,
++						nb);
++}
++EXPORT_SYMBOL_GPL(cros_usbpd_register_notify);
++
++/**
++ * cros_usbpd_unregister_notify - Unregister notifier callback for PD events.
++ * @nb: Notifier block pointer to unregister
++ *
++ * Unregister a notifier callback that was previously registered with
++ * cros_usbpd_register_notify().
++ */
++void cros_usbpd_unregister_notify(struct notifier_block *nb)
++{
++	blocking_notifier_chain_unregister(&cros_usbpd_notifier_list, nb);
++}
++EXPORT_SYMBOL_GPL(cros_usbpd_unregister_notify);
++
++#ifdef CONFIG_ACPI
++
++static int cros_usbpd_notify_add_acpi(struct acpi_device *adev)
++{
++	return 0;
++}
++
++static void cros_usbpd_notify_acpi(struct acpi_device *adev, u32 event)
++{
++	blocking_notifier_call_chain(&cros_usbpd_notifier_list, event, NULL);
++}
++
++static const struct acpi_device_id cros_usbpd_notify_acpi_device_ids[] = {
++	{ ACPI_DRV_NAME, 0 },
++	{ }
++};
++MODULE_DEVICE_TABLE(acpi, cros_usbpd_notify_acpi_device_ids);
++
++static struct acpi_driver cros_usbpd_notify_acpi_driver = {
++	.name = DRV_NAME,
++	.class = DRV_NAME,
++	.ids = cros_usbpd_notify_acpi_device_ids,
++	.ops = {
++		.add = cros_usbpd_notify_add_acpi,
++		.notify = cros_usbpd_notify_acpi,
++	},
++};
++
++#endif /* CONFIG_ACPI */
++
++static int cros_usbpd_notify_plat(struct notifier_block *nb,
++				  unsigned long queued_during_suspend,
++				  void *data)
++{
++	struct cros_ec_device *ec_dev = (struct cros_ec_device *)data;
++	u32 host_event = cros_ec_get_host_event(ec_dev);
++
++	if (!host_event)
++		return NOTIFY_BAD;
++
++	if (host_event & EC_HOST_EVENT_MASK(EC_HOST_EVENT_PD_MCU)) {
++		blocking_notifier_call_chain(&cros_usbpd_notifier_list,
++					     host_event, NULL);
++		return NOTIFY_OK;
++	}
++	return NOTIFY_DONE;
++}
++
++static int cros_usbpd_notify_probe_plat(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct cros_ec_dev *ecdev = dev_get_drvdata(dev->parent);
++	struct notifier_block *nb;
++	int ret;
++
++	nb = devm_kzalloc(dev, sizeof(*nb), GFP_KERNEL);
++	if (!nb)
++		return -ENOMEM;
++
++	nb->notifier_call = cros_usbpd_notify_plat;
++	dev_set_drvdata(dev, nb);
++
++	ret = blocking_notifier_chain_register(&ecdev->ec_dev->event_notifier,
++					       nb);
++	if (ret < 0) {
++		dev_err(dev, "Failed to register notifier\n");
++		return ret;
++	}
++
++	return 0;
++}
++
++static int cros_usbpd_notify_remove_plat(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct cros_ec_dev *ecdev = dev_get_drvdata(dev->parent);
++	struct notifier_block *nb =
++		(struct notifier_block *)dev_get_drvdata(dev);
++
++	blocking_notifier_chain_unregister(&ecdev->ec_dev->event_notifier, nb);
++
++	return 0;
++}
++
++static struct platform_driver cros_usbpd_notify_plat_driver = {
++	.driver = {
++		.name = DRV_NAME,
++	},
++	.probe = cros_usbpd_notify_probe_plat,
++	.remove = cros_usbpd_notify_remove_plat,
++};
++
++static int __init cros_usbpd_notify_init(void)
++{
++	int ret;
++
++	ret = platform_driver_register(&cros_usbpd_notify_plat_driver);
++	if (ret < 0)
++		return ret;
++
++#ifdef CONFIG_ACPI
++	acpi_bus_register_driver(&cros_usbpd_notify_acpi_driver);
++#endif
++	return 0;
++}
++
++static void __exit cros_usbpd_notify_exit(void)
++{
++#ifdef CONFIG_ACPI
++	acpi_bus_unregister_driver(&cros_usbpd_notify_acpi_driver);
++#endif
++	platform_driver_unregister(&cros_usbpd_notify_plat_driver);
++}
++
++module_init(cros_usbpd_notify_init);
++module_exit(cros_usbpd_notify_exit);
++
++MODULE_LICENSE("GPL");
++MODULE_DESCRIPTION("ChromeOS power delivery notifier device");
++MODULE_AUTHOR("Jon Flatley <jflat@chromium.org>");
++MODULE_ALIAS("platform:" DRV_NAME);
+diff --git a/include/linux/platform_data/cros_usbpd_notify.h b/include/linux/platform_data/cros_usbpd_notify.h
+new file mode 100644
+index 0000000000000..4f2791722b6d3
+--- /dev/null
++++ b/include/linux/platform_data/cros_usbpd_notify.h
+@@ -0,0 +1,17 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * ChromeOS EC Power Delivery Notifier Driver
++ *
++ * Copyright 2020 Google LLC
++ */
++
++#ifndef __LINUX_PLATFORM_DATA_CROS_USBPD_NOTIFY_H
++#define __LINUX_PLATFORM_DATA_CROS_USBPD_NOTIFY_H
++
++#include <linux/notifier.h>
++
++int cros_usbpd_register_notify(struct notifier_block *nb);
++
++void cros_usbpd_unregister_notify(struct notifier_block *nb);
++
++#endif  /* __LINUX_PLATFORM_DATA_CROS_USBPD_NOTIFY_H */
+-- 
+2.25.0.341.g760bfbb309-goog
 
-...speaking of which, can you please change your patch to replace the
-bogus <0> in the dispcc for the DSI PHY, providing the clocks for
-"dsi_phy_pll_byte" and "dsi_phy_pll_pixel"?  See
-<https://crrev.com/c/2017974/3>
-
-
-> +
-> +                       clocks = <&gcc GCC_DISP_AHB_CLK>,
-> +                                <&gcc GCC_DISP_HF_AXI_CLK>,
-> +                                <&dispcc DISP_CC_MDSS_AHB_CLK>,
-> +                                <&dispcc DISP_CC_MDSS_MDP_CLK>;
-> +                       clock-names = "iface", "gcc_bus", "ahb", "core";
-> +
-> +                       assigned-clocks = <&dispcc DISP_CC_MDSS_MDP_CLK>;
-> +                       assigned-clock-rates = <300000000>;
-> +
-> +                       interrupts = <GIC_SPI 83 IRQ_TYPE_LEVEL_HIGH>;
-> +                       interrupt-controller;
-> +                       #interrupt-cells = <1>;
-> +
-> +                       iommus = <&apps_smmu 0x800 0x2>;
-> +
-> +                       #address-cells = <2>;
-> +                       #size-cells = <2>;
-> +                       ranges;
-> +
-> +                       mdp: display_controller@ae01000 {
-
-Did you test this?  As far I can tell this change between v2 and v3
-broke things because the node name "mdp" is magic.  In
-"drivers/gpu/drm/msm/msm_drv.c" you can find the function:
-
-static int compare_name_mdp(struct device *dev, void *data)
-{
-  return (strstr(dev_name(dev), "mdp") != NULL);
-}
-
-...so unless that function changes your device tree won't work.  Maybe
-Bjorn can comment since I think he's the one that suggested you change
-this, but IMO change it back to "mdp@ae01000" for now and then start a
-separate patch series about transitioning this if people still want
-it.  See <https://crrev.com/c/2020395/1>.
-
--Doug
