@@ -2,129 +2,166 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 687EEC35242
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 21:53:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9634C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 21:53:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3559520838
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 21:53:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F1E02072C
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 21:53:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="hdSRR6y3"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Y6MEqGsh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727163AbgAXVxG (ORCPT
+        id S1728797AbgAXVx5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 16:53:06 -0500
-Received: from mail-qv1-f65.google.com ([209.85.219.65]:40890 "EHLO
-        mail-qv1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725821AbgAXVxG (ORCPT
+        Fri, 24 Jan 2020 16:53:57 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:39872 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725821AbgAXVx4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 16:53:06 -0500
-Received: by mail-qv1-f65.google.com with SMTP id dp13so1661587qvb.7
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Jan 2020 13:53:05 -0800 (PST)
+        Fri, 24 Jan 2020 16:53:56 -0500
+Received: by mail-lj1-f193.google.com with SMTP id o11so4256644ljc.6
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jan 2020 13:53:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=EwPE2uTviQEjsE1utp28wLeHm+u6Nm1mopOXiGOBzew=;
-        b=hdSRR6y3yyYN5tacXi+RUq0t2z4YfE1ePsXUhGNpUWKTMDRZTr0wsZPXDXhVSa8tA3
-         CAW1ZeaBTTIg/bnTiHLkBV0tSmf2R9eAHjlHSvTCE3u0S4VczhZas42sBXaqKOA0K1WF
-         OzJBeZRPvezT+6eL4IyyN1n8kytHgbLrRA+jk=
+        bh=3HJT7W/WRXdBhAlKmOBifhojKSqvdoUdaUmLJgJ9MdU=;
+        b=Y6MEqGsh7k/zNskKHAS+ylILiPoWb+Xn+ki0mKYgKGyQMZ8ZE5YJRsYzhXQtKnZVBZ
+         3Zn4D2XQ9BZp8C/u2g41Jwdldu0dMd0Y3uPzS9Un5bPlzINSi+NEETRD/7n90FMnOG+K
+         A0WIHrq7VoC/sx/OV9KPfd6RS9XHnh+aubq88=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=EwPE2uTviQEjsE1utp28wLeHm+u6Nm1mopOXiGOBzew=;
-        b=Jr6OJUhOtNHr58K7yfEBwD2Mzyeh4vioYlWiUpOCR38M3Q9B9r1f45H28bSCWNloPi
-         dtehB8G1te2bFTj4O8xt3N+A2lg9Klkl3paihFWZF1+y+Dv/o1SQ0KcTl5pkrBeXj7+R
-         Ud5fTp+PlpqeTwBQKcgRduCXZVazRkPyMlyvqEWU4a3+p4I9ZsSX4Hk9kq4wnbOFXoHJ
-         Oy92DDb1lu/qK8A4uxHvJtIrfKrWuyhWcgnTASqV1+oXaA+++s42fSDbOy+qC4YOr2xx
-         g9sFHa/LNb0o+0W0s2TtEuKDnY128v3oMQcpNmGo1Sh6nGW7rVv/ehoqL05J/gUKHjcx
-         OPug==
-X-Gm-Message-State: APjAAAXjDy95+GxhzjkmG0FPsuHC79uc9CTdAkRypnlSXpNrbKrcfh+I
-        vg+6TIXoLPumn9GpwKQQ+hH8w1kGe1zUUQWQPiTMzg==
-X-Google-Smtp-Source: APXvYqwaEBzde+nCZdruWwVj8c3DUWHnDaZLJU9IaZnAYEkiij1P43wPznbHTec6Ot4T0ZERdsB+1brEdVsmz/xobxI=
-X-Received: by 2002:a05:6214:bc6:: with SMTP id ff6mr5098954qvb.133.1579902784863;
- Fri, 24 Jan 2020 13:53:04 -0800 (PST)
+        bh=3HJT7W/WRXdBhAlKmOBifhojKSqvdoUdaUmLJgJ9MdU=;
+        b=YALOff43V/MhgMVy+GE/DLkRvt2a075+LjPXy5f5Q+XfcpnAeHSLn4fpGZTFEaS2Gq
+         benBTFstFmX8uBrpyhl2hyeCiyUGsmd9KuK4SwIuPhZS+iWhRmQuXYc3nhIgjG1WGpwz
+         sL3ZZE2V2hjxSfhX/vlc1OVSIzAGG5Lh8X5VrF/WlefXh66qWfIw4kdF+mV/wepb/8RX
+         2BEmjHYUZcHrEG0d6GhtYpx6RaQcaNxTqfWLh3m2k9xohLo4Oe8e299Oas7CwvzZflXb
+         HPIq+YHvL8ZDmzbq0vtFeowre/PjDufG20TVVhlRKw/vbGWd8JDB0XsB0+v/oJyfW4T9
+         CoEw==
+X-Gm-Message-State: APjAAAVFwLA0LHmWkkf143cd9mAoJAO3xoIvbV2Kk3KukbbBJoLdToIw
+        MKSl2YyvKtaOwLz8/b59OCAuq5Nwsho=
+X-Google-Smtp-Source: APXvYqw2LEBhaPll+dn2AYyUJ4Dtf4Bwqs70+51ScvPFqnR4xfUPSQi95S7ZopsO7IrYu4t6WNPTTw==
+X-Received: by 2002:a2e:3309:: with SMTP id d9mr3358171ljc.262.1579902833549;
+        Fri, 24 Jan 2020 13:53:53 -0800 (PST)
+Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com. [209.85.167.44])
+        by smtp.gmail.com with ESMTPSA id c22sm3388457lfc.93.2020.01.24.13.53.52
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 24 Jan 2020 13:53:52 -0800 (PST)
+Received: by mail-lf1-f44.google.com with SMTP id t23so2192105lfk.6
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jan 2020 13:53:52 -0800 (PST)
+X-Received: by 2002:a05:6512:2035:: with SMTP id s21mr2229303lfs.99.1579902831885;
+ Fri, 24 Jan 2020 13:53:51 -0800 (PST)
 MIME-Version: 1.0
-References: <20200117002820.56872-1-pmalani@chromium.org> <c338d46d-5600-a53e-5a04-12100f5628b1@collabora.com>
- <CACeCKafMOUgLgrO-VwAH5so-O7ALZXdTaiC_=2E9M91mhfFt6g@mail.gmail.com> <75dc83a6-c183-6808-c668-d31a71a31682@collabora.com>
-In-Reply-To: <75dc83a6-c183-6808-c668-d31a71a31682@collabora.com>
-From:   Prashant Malani <pmalani@chromium.org>
-Date:   Fri, 24 Jan 2020 13:52:54 -0800
-Message-ID: <CACeCKafersQp9gx_zSYNczNTbB7u-2UYdxsrrgPhAmpW_nC2rQ@mail.gmail.com>
-Subject: Re: [PATCH v7 1/3] platform: chrome: Add cros-usbpd-notify driver
-To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Cc:     Guenter Roeck <groeck@chromium.org>,
-        Benson Leung <bleung@chromium.org>,
-        Lee Jones <lee.jones@linaro.org>, sre@kernel.org,
+References: <20200117162444.v2.1.I9c7e72144ef639cc135ea33ef332852a6b33730f@changeid>
+ <CACK8Z6Ft95qj4e_fsA32r_bcz2SsHOW1xxqZJt3_DBAJw=NMGA@mail.gmail.com>
+ <CAE=gft6fKQWExW-=xjZGzXs30XohfpA5SKggvL2WtYXAHmzMew@mail.gmail.com>
+ <87y2tytv5i.fsf@nanos.tec.linutronix.de> <87eevqkpgn.fsf@nanos.tec.linutronix.de>
+ <CAE=gft6YiM5S1A7iJYJTd5zmaAa8=nhLE3B94JtWa+XW-qVSqQ@mail.gmail.com>
+ <CAE=gft5xta4XCJtctWe=R3w=kVr598JCbk9VSRue04nzKAk3CQ@mail.gmail.com>
+ <CAE=gft7MqQ3Mej5oCT=gw6ZLMSTHoSyMGOFz=-hae-eRZvXLxA@mail.gmail.com> <87d0b82a9o.fsf@nanos.tec.linutronix.de>
+In-Reply-To: <87d0b82a9o.fsf@nanos.tec.linutronix.de>
+From:   Evan Green <evgreen@chromium.org>
+Date:   Fri, 24 Jan 2020 13:53:15 -0800
+X-Gmail-Original-Message-ID: <CAE=gft7C5HTmcTLsXqXbCtcYDeKG6bCJ0gmgwVNc0PDHLJ5y_A@mail.gmail.com>
+Message-ID: <CAE=gft7C5HTmcTLsXqXbCtcYDeKG6bCJ0gmgwVNc0PDHLJ5y_A@mail.gmail.com>
+Subject: Re: [PATCH v2] PCI/MSI: Avoid torn updates to MSI pairs
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Rajat Jain <rajatja@google.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-pci <linux-pci@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-pm@vger.kernel.org, Jon Flatley <jflat@chromium.org>,
-        Gwendal Grignou <gwendal@chromium.org>
+        x86@kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Enric
+On Fri, Jan 24, 2020 at 6:34 AM Thomas Gleixner <tglx@linutronix.de> wrote:
+>
+> Evan,
+>
+> Evan Green <evgreen@chromium.org> writes:
+> > I did another experiment that I think lends credibility to my torn MSI
+> > hypothesis. I have the following change:
+> >
+> > And indeed, I get a machine check, despite the fact that MSI_DATA is
+> > overwritten just after address is updated.
+>
+> I don't have to understand why a SoC released in 2019 still has
+> unmaskable MSI especially as Inhell's own XHCI spec clearly documents
+> and recommends MSI-X.
+>
+> While your workaround (disabling MSI) works in this particular case it's
+> not really a good option:
+>
+>  1) Quite some devices have a bug where the legacy INTX disable does not
+>     work reliably or is outright broken. That means MSI disable will
+>     reroute to INTX.
+>
+>  2) I digged out old debug data which confirms that some silly devices
+>     lose interrupts accross MSI disable/reenable if the INTX fallback is
+>     disabled.
+>
+>     And no, it's not a random weird device, it's part of a chipset which
+>     was pretty popular a few years ago. I leave it as an excercise for
+>     the reader to guess the vendor.
+>
+> Can you please apply the patch below? It enforces an IPI to the new
+> vector/target CPU when the interrupt is MSI w/o masking. It should
+> cure the issue. It goes without saying that I'm not proud of it.
 
-(removed lot of the context text to keep the message length small)
-> > So, in summary, my proposed additions to the edits you suggested are:
-> > - Remove IS_ENABLED(CONFIG_OF)... checks from
-> > cros_usbpd_notify_probe_plat() and cros_usbpd_notify_remove_plat()
-> > - Change check in cros_ec_dev to be:
-> >               if (IS_ENABLED(CONFIG_OF) && ec->ec_dev->dev->of_node)
-> >
-> > WDYT? Could you kindly try this on your kevin configuration? I've
-> > tried it for the cases "CONFIG_OF && !CONFIG_ACPI" and "!CONFIG_OF &&
-> > CONFIG_ACPI" but not the third one (CONFIG_OF && CONFIG_ACPI) since I
-> > don't have an environment to test with (I can confirm it builds).
-> >
-> > Thanks as always for helping iterate on this.
-> >
-> >
->
-> Let's continue talking with a new version. Could you send another one and I can
-> check. I have now setup both systems one with ACPi and another one with OF.
-Sounds good. Will push a new version. Thanks.
->
-> Thanks,
->  Enric
->
->
-> >>                 if (cros_ec_check_features(ec, EC_FEATURE_USB_PD)) {
-> >>                         retval = mfd_add_hotplug_devices(ec->dev,
-> >>                                         cros_usbpd_notify_cells,
-> >>
-> >>
-> >>> diff --git a/include/linux/platform_data/cros_usbpd_notify.h b/include/linux/platform_data/cros_usbpd_notify.h
-> >>> new file mode 100644
-> >>> index 0000000000000..4f2791722b6d3
-> >>> --- /dev/null
-> >>> +++ b/include/linux/platform_data/cros_usbpd_notify.h
-> >>> @@ -0,0 +1,17 @@
-> >>> +// SPDX-License-Identifier: GPL-2.0-only
-> >>> +/*
-> >>> + * ChromeOS EC Power Delivery Notifier Driver
-> >>> + *
-> >>> + * Copyright 2020 Google LLC
-> >>> + */
-> >>> +
-> >>> +#ifndef __LINUX_PLATFORM_DATA_CROS_USBPD_NOTIFY_H
-> >>> +#define __LINUX_PLATFORM_DATA_CROS_USBPD_NOTIFY_H
-> >>> +
-> >>> +#include <linux/notifier.h>
-> >>> +
-> >>> +int cros_usbpd_register_notify(struct notifier_block *nb);
-> >>> +
-> >>> +void cros_usbpd_unregister_notify(struct notifier_block *nb);
-> >>> +
-> >>> +#endif  /* __LINUX_PLATFORM_DATA_CROS_USBPD_NOTIFY_H */
-> >>>
-> >>
-> >> Cheers,
-> >>  Enric
+I'll feel just as dirty putting a tested-by on it :)
+
+I don't think this patch is complete. As written, it creates "recovery
+interrupts" for MSIs that are not maskable, however through the
+pci_msi_domain_write_msg() path, which is the one I seem to use, we
+make no effort to mask the MSI while changing affinity. So at the very
+least it would need a follow-on patch that attempts to mask the MSI,
+for MSIs that are maskable. __pci_restore_msi_state(), called in the
+resume path, does have this masking, but for some reason not
+pci_msi_domain_write_msg().
+
+I'm also a bit concerned about all the spurious interrupts we'll be
+introducing. Not just the retriggering introduced here, but the fact
+that we never dealt with the torn interrupt. So in my case, XHCI will
+be sending an interrupt on the old vector to the new CPU, which could
+be registered to anything. I'm worried that not every driver in the
+system is hardened to receiving interrupts it's not prepared for.
+Perhaps the driver misbehaves, or perhaps it's a "bad" interrupt like
+the MCE interrupt that takes the system down. (I realize the MCE
+interrupt itself is not in the device vector region, but some other
+bad interrupt then).
+
+Now that you're on board with the torn write theory, what do you think
+about my "transit vector" proposal? The idea is this:
+ - Reserve a single vector number on all CPUs for interrupts in
+transit between CPUs.
+ - Interrupts in transit between CPUs are added to some sort of list,
+or maybe the transit vector itself.
+ - __pci_msi_write_msg() would, after proper abstractions, essentially
+be doing this:
+    pci_write(MSI_DATA, TRANSIT_VECTOR);
+    pci_write(MSI_ADDRESS, new_affinity);
+    pci_write(MSI_DATA, new_vector);
+ - In the rare torn case I've found here, the interrupt will come in
+on <new CPU, transit_vector>, or <old CPU, transit_vector>.
+ - The ISR for TRANSIT_VECTOR would go through and call the ISR for
+every IRQ in transit across CPUs. This does still result in a couple
+extra ISR calls, since multiple interrupts might be in transit across
+CPUs, but at least it's very rare.
+ - CPU hotplug would keep the same logic it already has, retriggering
+TRANSIT_VECTOR if it happened to land on <old CPU, old vector>.
+ - When the interrupt is confirmed on <new CPU, new vector>, remove
+the ISR from the TRANSIT_VECTOR list.
+
+If you think it's a worthwhile idea I can try to code it up.
+
+I've been running your patch for about 30 minutes, with no repro case.
+-Evan
