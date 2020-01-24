@@ -2,98 +2,105 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66E50C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:37:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A03BFC32771
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:37:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 370D021556
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:37:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XsaJ/DyU"
+	by mail.kernel.org (Postfix) with ESMTP id 6A5332087E
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:37:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579858654;
+	bh=LdMtAhIRiJYllcyWrGJwebZShdEmQUxBWrHKPuLMNuA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=gWqG2q7bzzQuszVlWf+rGXAcxBH3rrtT5fgZNTFssLGoWwMuZAppUChHvtVrR7uj8
+	 IfSo553H0J7cSxGDjOjv1R3QM+z1tL2U1USgfTvvMn1lKNgef6157nploW/kd/fq2h
+	 ZvpLu0K1y6EoHDn2+pIfJDQrXpokGKrMqimw4Oqc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731122AbgAXJhc (ORCPT
+        id S1731160AbgAXJhe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Fri, 24 Jan 2020 04:37:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34776 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731117AbgAXJhc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 24 Jan 2020 04:37:32 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:37559 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1731041AbgAXJhb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 04:37:31 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579858650;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=QugXP++tX2QdF2BlYh+oWt5d/1+WjAi+1riPy4DfzEI=;
-        b=XsaJ/DyUjXSvnPyZs3/fZtppGSEM7b3lT1cvKYUIru3cDpcrzpDnXAfiojLTe1YBJTRI07
-        z7ntmACyGv+TPErmjIatZyXyydTJlWOlkZPfIbNfirtljKqU8vr29eAcwuN7SoeD3tovWQ
-        nt4HQjhGQoj8WByAKenbu8yMYJAZkg0=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-157-5EmjIe8IMX62BrAeobcsDg-1; Fri, 24 Jan 2020 04:37:26 -0500
-X-MC-Unique: 5EmjIe8IMX62BrAeobcsDg-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+Received: from localhost (unknown [145.15.244.15])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3F306DB23;
-        Fri, 24 Jan 2020 09:37:25 +0000 (UTC)
-Received: from oldenburg2.str.redhat.com (dhcp-192-227.str.redhat.com [10.33.192.227])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 253A210016EB;
-        Fri, 24 Jan 2020 09:37:23 +0000 (UTC)
-From:   Florian Weimer <fweimer@redhat.com>
-To:     Rich Felker <dalias@libc.org>
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-api@vger.kernel.org, Alexander Viro <viro@zeniv.linux.org.uk>
-Subject: Re: Proposal to fix pwrite with O_APPEND via pwritev2 flag
-References: <20200124000243.GA12112@brightrain.aerifal.cx>
-Date:   Fri, 24 Jan 2020 10:37:22 +0100
-In-Reply-To: <20200124000243.GA12112@brightrain.aerifal.cx> (Rich Felker's
-        message of "Thu, 23 Jan 2020 19:02:43 -0500")
-Message-ID: <87d0b942lp.fsf@oldenburg2.str.redhat.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.3 (gnu/linux)
+        by mail.kernel.org (Postfix) with ESMTPSA id 26C7520838;
+        Fri, 24 Jan 2020 09:37:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579858652;
+        bh=LdMtAhIRiJYllcyWrGJwebZShdEmQUxBWrHKPuLMNuA=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=ZEm1EGLJbKyyPgc0Eb+7puxW0tu8/CL0+lJEacJm6I/wbX/m8QaWivnG/Dx/u+7En
+         8ztPzNw1Uu2BI28KPkfE75dttb08jMczP+6Jczm5iM5hAhvfIEok4kv61jtAK7+u4M
+         97Op4SwjRc0blpapjGBeBvWt/UYCsiLVUMl/W488=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Chris Wilson <chris@chris-wilson.co.uk>,
+        Waiman Long <longman@redhat.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-efi@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 001/639] Revert "efi: Fix debugobjects warning on efi_rts_work"
+Date:   Fri, 24 Jan 2020 10:22:51 +0100
+Message-Id: <20200124093047.257102718@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
+References: <20200124093047.008739095@linuxfoundation.org>
+User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Rich Felker:
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-> There's a longstanding unfixable (due to API stability) bug in the
-> pwrite syscall:
->
-> http://man7.org/linux/man-pages/man2/pwrite.2.html#BUGS
->
-> whereby it wrongly honors O_APPEND if set, ignoring the caller-passed
-> offset. Now that there's a pwritev2 syscall that takes a flags
-> argument, it's possible to fix this without breaking stability by
-> adding a new RWF_NOAPPEND flag, which callers that want the fixed
-> behavior can then pass.
->
-> I have a completely untested patch to add such a flag, but would like
-> to get a feel for whether the concept is acceptable before putting
-> time into testing it. If so, I'll submit this as a proper patch with
-> detailed commit message etc. Draft is below.
+This reverts commit 3e6b472f474accf757e107919f8ee42e7315ac0d which is
+commit ef1491e791308317bb9851a0ad380c4a68b58d54 upstream.
 
-Has this come up before?
+Chris reports that this commit has problems and should not have been
+backported to 4.19.y
 
-I had already written a test case and it turns out that an O_APPEND
-descriptor does not protect the previously written data in the file:
+Reported-by: Chris Wilson <chris@chris-wilson.co.uk>
+Cc: Waiman Long <longman@redhat.com>
+Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc: Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: linux-efi@vger.kernel.org
+Cc: Ingo Molnar <mingo@kernel.org>
+Cc: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ drivers/firmware/efi/runtime-wrappers.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-openat(AT_FDCWD, "/tmp/append-truncateuoRexJ", O_RDWR|O_CREAT|O_EXCL, 0600) = 3
-write(3, "@", 1)                        = 1
-close(3)                                = 0
-openat(AT_FDCWD, "/tmp/append-truncateuoRexJ", O_WRONLY|O_APPEND) = 3
-ftruncate(3, 0)                         = 0
+--- a/drivers/firmware/efi/runtime-wrappers.c
++++ b/drivers/firmware/efi/runtime-wrappers.c
+@@ -95,7 +95,7 @@ struct efi_runtime_work {
+ 	efi_rts_work.status = EFI_ABORTED;				\
+ 									\
+ 	init_completion(&efi_rts_work.efi_rts_comp);			\
+-	INIT_WORK(&efi_rts_work.work, efi_call_rts);			\
++	INIT_WORK_ONSTACK(&efi_rts_work.work, efi_call_rts);		\
+ 	efi_rts_work.arg1 = _arg1;					\
+ 	efi_rts_work.arg2 = _arg2;					\
+ 	efi_rts_work.arg3 = _arg3;					\
 
-So at least it looks like there is no security issue in adding a
-RWF_NOAPPEND flag.
-
-Thanks,
-Florian
 
