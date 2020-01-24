@@ -7,50 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B847C35242
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:45:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BF22C32771
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:45:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32EC621556
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:45:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63020208C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:45:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579859136;
-	bh=s59BRxijTEUCu39v09OpCLzOXjouZAJvuVrlGK0ORFI=;
+	s=default; t=1579859140;
+	bh=Al7dob067UuC/vr6Pcu7T93wYJXmJZTIrO1OFP3TziI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wwd/8uGbVHr1FLpIK8y4GmYmzf8KPXcGNRr/YwSc1TVIEulljAnULRWNvFMx0GOmZ
-	 RyhSHeE5xCrsDP4zaEjUt0oQetWwLO9g9v7NwACaQjrp1tlbtRyUkJkiC4lsbH31py
-	 DE6cMfIsxF/Ztcu6OvYjJcaWCIg5IQQo1JD5gcB8=
+	b=wJ0Uwqb30WgiuNHmVTt19cQDwm9/P88X3LDEs0PGeIZNwWrmn8seNdus3rnaakFTg
+	 8c2fymcAiG5JB9Q+9es1Fq2q5vtSPPh8CiR8nu4sUYGyCKaCW7sqzOhnfQuS8/oDxH
+	 Qobgh0HHcGnCcrsmHmlTpHvv6QD5SjQBfIjx2o/k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733172AbgAXJnD (ORCPT
+        id S1733273AbgAXJpj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 04:43:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40800 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 04:45:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40546 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729990AbgAXJm6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 04:42:58 -0500
+        id S1732804AbgAXJmt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 04:42:49 -0500
 Received: from localhost (unknown [145.15.244.15])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EC066208C4;
-        Fri, 24 Jan 2020 09:42:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A19C120718;
+        Fri, 24 Jan 2020 09:42:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579858977;
-        bh=s59BRxijTEUCu39v09OpCLzOXjouZAJvuVrlGK0ORFI=;
+        s=default; t=1579858968;
+        bh=Al7dob067UuC/vr6Pcu7T93wYJXmJZTIrO1OFP3TziI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=j5AqGUBc6rxvpz2+EdlLZqjfPFKmcbEVcn/FFPeIdppVcW+rkFgayEwB3L3xOAaSK
-         9L5B0wiGxQPZif/ZBGiyMw25zD70embHoV2cT0zG73B7gOOlh4hMnd08z7Z3W9fQcp
-         hR7gVR3pj6VfnawNLqkbIXaMzv+32gcuJ+nbhCxY=
+        b=yrjOOI2g2tpKTFrVlj95LP9x1cD1FuyBRIedt7ElXqWpu2eJYLiOLx1o9cO8V5Gmf
+         nl32tqcFdMQOCGvWixpKBmFkXn+5HM0yspMGw/YZvMaWcSPGeod+EW/hF5suCsOrNO
+         UeRYbgmLr9C0zd9tOBAx7HbhDQKolQpQ+6wWTESM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        =?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>,
+        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
+        zhengbin <zhengbin13@huawei.com>,
+        David Howells <dhowells@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 095/102] xdp: Fix cleanup on map free for devmap_hash map type
-Date:   Fri, 24 Jan 2020 10:31:36 +0100
-Message-Id: <20200124092821.060974951@linuxfoundation.org>
+Subject: [PATCH 5.4 092/102] afs: Remove set but not used variables before, after
+Date:   Fri, 24 Jan 2020 10:31:33 +0100
+Message-Id: <20200124092820.580997462@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124092806.004582306@linuxfoundation.org>
 References: <20200124092806.004582306@linuxfoundation.org>
@@ -63,169 +61,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Toke Høiland-Jørgensen <toke@redhat.com>
+From: zhengbin <zhengbin13@huawei.com>
 
-[ Upstream commit 071cdecec57fb5d5df78e6a12114ad7bccea5b0e ]
+[ Upstream commit 51590df4f3306cb1f43dca54e3ccdd121ab89594 ]
 
-Tetsuo pointed out that it was not only the device unregister hook that was
-broken for devmap_hash types, it was also cleanup on map free. So better
-fix this as well.
+Fixes gcc '-Wunused-but-set-variable' warning:
 
-While we're at it, there's no reason to allocate the netdev_map array for
-DEVMAP_HASH, so skip that and adjust the cost accordingly.
+fs/afs/dir_edit.c: In function afs_set_contig_bits:
+fs/afs/dir_edit.c:75:20: warning: variable after set but not used [-Wunused-but-set-variable]
+fs/afs/dir_edit.c: In function afs_set_contig_bits:
+fs/afs/dir_edit.c:75:12: warning: variable before set but not used [-Wunused-but-set-variable]
+fs/afs/dir_edit.c: In function afs_clear_contig_bits:
+fs/afs/dir_edit.c:100:20: warning: variable after set but not used [-Wunused-but-set-variable]
+fs/afs/dir_edit.c: In function afs_clear_contig_bits:
+fs/afs/dir_edit.c:100:12: warning: variable before set but not used [-Wunused-but-set-variable]
 
-Fixes: 6f9d451ab1a3 ("xdp: Add devmap_hash map type for looking up devices by hashed index")
-Reported-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-Signed-off-by: Toke Høiland-Jørgensen <toke@redhat.com>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
-Acked-by: John Fastabend <john.fastabend@gmail.com>
-Link: https://lore.kernel.org/bpf/20191121133612.430414-1-toke@redhat.com
+They are never used since commit 63a4681ff39c.
+
+Fixes: 63a4681ff39c ("afs: Locally edit directory data for mkdir/create/unlink/...")
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: zhengbin <zhengbin13@huawei.com>
+Signed-off-by: David Howells <dhowells@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/bpf/devmap.c | 74 ++++++++++++++++++++++++++++-----------------
- 1 file changed, 46 insertions(+), 28 deletions(-)
+ fs/afs/dir_edit.c | 12 ++----------
+ 1 file changed, 2 insertions(+), 10 deletions(-)
 
-diff --git a/kernel/bpf/devmap.c b/kernel/bpf/devmap.c
-index 3867864cdc2fb..3d3d61b5985b0 100644
---- a/kernel/bpf/devmap.c
-+++ b/kernel/bpf/devmap.c
-@@ -74,7 +74,7 @@ struct bpf_dtab_netdev {
- 
- struct bpf_dtab {
- 	struct bpf_map map;
--	struct bpf_dtab_netdev **netdev_map;
-+	struct bpf_dtab_netdev **netdev_map; /* DEVMAP type only */
- 	struct list_head __percpu *flush_list;
- 	struct list_head list;
- 
-@@ -101,6 +101,12 @@ static struct hlist_head *dev_map_create_hash(unsigned int entries)
- 	return hash;
- }
- 
-+static inline struct hlist_head *dev_map_index_hash(struct bpf_dtab *dtab,
-+						    int idx)
-+{
-+	return &dtab->dev_index_head[idx & (dtab->n_buckets - 1)];
-+}
-+
- static int dev_map_init_map(struct bpf_dtab *dtab, union bpf_attr *attr)
+diff --git a/fs/afs/dir_edit.c b/fs/afs/dir_edit.c
+index d4fbe5f85f1b2..b108528bf010d 100644
+--- a/fs/afs/dir_edit.c
++++ b/fs/afs/dir_edit.c
+@@ -68,13 +68,11 @@ static int afs_find_contig_bits(union afs_xdr_dir_block *block, unsigned int nr_
+ static void afs_set_contig_bits(union afs_xdr_dir_block *block,
+ 				int bit, unsigned int nr_slots)
  {
- 	int err, cpu;
-@@ -120,8 +126,7 @@ static int dev_map_init_map(struct bpf_dtab *dtab, union bpf_attr *attr)
- 	bpf_map_init_from_attr(&dtab->map, attr);
+-	u64 mask, before, after;
++	u64 mask;
  
- 	/* make sure page count doesn't overflow */
--	cost = (u64) dtab->map.max_entries * sizeof(struct bpf_dtab_netdev *);
--	cost += sizeof(struct list_head) * num_possible_cpus();
-+	cost = (u64) sizeof(struct list_head) * num_possible_cpus();
+ 	mask = (1 << nr_slots) - 1;
+ 	mask <<= bit;
  
- 	if (attr->map_type == BPF_MAP_TYPE_DEVMAP_HASH) {
- 		dtab->n_buckets = roundup_pow_of_two(dtab->map.max_entries);
-@@ -129,6 +134,8 @@ static int dev_map_init_map(struct bpf_dtab *dtab, union bpf_attr *attr)
- 		if (!dtab->n_buckets) /* Overflow check */
- 			return -EINVAL;
- 		cost += (u64) sizeof(struct hlist_head) * dtab->n_buckets;
-+	} else {
-+		cost += (u64) dtab->map.max_entries * sizeof(struct bpf_dtab_netdev *);
- 	}
- 
- 	/* if map size is larger than memlock limit, reject it */
-@@ -143,24 +150,22 @@ static int dev_map_init_map(struct bpf_dtab *dtab, union bpf_attr *attr)
- 	for_each_possible_cpu(cpu)
- 		INIT_LIST_HEAD(per_cpu_ptr(dtab->flush_list, cpu));
- 
--	dtab->netdev_map = bpf_map_area_alloc(dtab->map.max_entries *
--					      sizeof(struct bpf_dtab_netdev *),
--					      dtab->map.numa_node);
--	if (!dtab->netdev_map)
--		goto free_percpu;
+-	before = *(u64 *)block->hdr.bitmap;
 -
- 	if (attr->map_type == BPF_MAP_TYPE_DEVMAP_HASH) {
- 		dtab->dev_index_head = dev_map_create_hash(dtab->n_buckets);
- 		if (!dtab->dev_index_head)
--			goto free_map_area;
-+			goto free_percpu;
- 
- 		spin_lock_init(&dtab->index_lock);
-+	} else {
-+		dtab->netdev_map = bpf_map_area_alloc(dtab->map.max_entries *
-+						      sizeof(struct bpf_dtab_netdev *),
-+						      dtab->map.numa_node);
-+		if (!dtab->netdev_map)
-+			goto free_percpu;
- 	}
- 
- 	return 0;
- 
--free_map_area:
--	bpf_map_area_free(dtab->netdev_map);
- free_percpu:
- 	free_percpu(dtab->flush_list);
- free_charge:
-@@ -228,21 +233,40 @@ static void dev_map_free(struct bpf_map *map)
- 			cond_resched();
- 	}
- 
--	for (i = 0; i < dtab->map.max_entries; i++) {
--		struct bpf_dtab_netdev *dev;
-+	if (dtab->map.map_type == BPF_MAP_TYPE_DEVMAP_HASH) {
-+		for (i = 0; i < dtab->n_buckets; i++) {
-+			struct bpf_dtab_netdev *dev;
-+			struct hlist_head *head;
-+			struct hlist_node *next;
- 
--		dev = dtab->netdev_map[i];
--		if (!dev)
--			continue;
-+			head = dev_map_index_hash(dtab, i);
- 
--		free_percpu(dev->bulkq);
--		dev_put(dev->dev);
--		kfree(dev);
-+			hlist_for_each_entry_safe(dev, next, head, index_hlist) {
-+				hlist_del_rcu(&dev->index_hlist);
-+				free_percpu(dev->bulkq);
-+				dev_put(dev->dev);
-+				kfree(dev);
-+			}
-+		}
-+
-+		kfree(dtab->dev_index_head);
-+	} else {
-+		for (i = 0; i < dtab->map.max_entries; i++) {
-+			struct bpf_dtab_netdev *dev;
-+
-+			dev = dtab->netdev_map[i];
-+			if (!dev)
-+				continue;
-+
-+			free_percpu(dev->bulkq);
-+			dev_put(dev->dev);
-+			kfree(dev);
-+		}
-+
-+		bpf_map_area_free(dtab->netdev_map);
- 	}
- 
- 	free_percpu(dtab->flush_list);
--	bpf_map_area_free(dtab->netdev_map);
--	kfree(dtab->dev_index_head);
- 	kfree(dtab);
+ 	block->hdr.bitmap[0] |= (u8)(mask >> 0 * 8);
+ 	block->hdr.bitmap[1] |= (u8)(mask >> 1 * 8);
+ 	block->hdr.bitmap[2] |= (u8)(mask >> 2 * 8);
+@@ -83,8 +81,6 @@ static void afs_set_contig_bits(union afs_xdr_dir_block *block,
+ 	block->hdr.bitmap[5] |= (u8)(mask >> 5 * 8);
+ 	block->hdr.bitmap[6] |= (u8)(mask >> 6 * 8);
+ 	block->hdr.bitmap[7] |= (u8)(mask >> 7 * 8);
+-
+-	after = *(u64 *)block->hdr.bitmap;
  }
  
-@@ -263,12 +287,6 @@ static int dev_map_get_next_key(struct bpf_map *map, void *key, void *next_key)
- 	return 0;
- }
- 
--static inline struct hlist_head *dev_map_index_hash(struct bpf_dtab *dtab,
--						    int idx)
--{
--	return &dtab->dev_index_head[idx & (dtab->n_buckets - 1)];
--}
--
- struct bpf_dtab_netdev *__dev_map_hash_lookup_elem(struct bpf_map *map, u32 key)
+ /*
+@@ -93,13 +89,11 @@ static void afs_set_contig_bits(union afs_xdr_dir_block *block,
+ static void afs_clear_contig_bits(union afs_xdr_dir_block *block,
+ 				  int bit, unsigned int nr_slots)
  {
- 	struct bpf_dtab *dtab = container_of(map, struct bpf_dtab, map);
+-	u64 mask, before, after;
++	u64 mask;
+ 
+ 	mask = (1 << nr_slots) - 1;
+ 	mask <<= bit;
+ 
+-	before = *(u64 *)block->hdr.bitmap;
+-
+ 	block->hdr.bitmap[0] &= ~(u8)(mask >> 0 * 8);
+ 	block->hdr.bitmap[1] &= ~(u8)(mask >> 1 * 8);
+ 	block->hdr.bitmap[2] &= ~(u8)(mask >> 2 * 8);
+@@ -108,8 +102,6 @@ static void afs_clear_contig_bits(union afs_xdr_dir_block *block,
+ 	block->hdr.bitmap[5] &= ~(u8)(mask >> 5 * 8);
+ 	block->hdr.bitmap[6] &= ~(u8)(mask >> 6 * 8);
+ 	block->hdr.bitmap[7] &= ~(u8)(mask >> 7 * 8);
+-
+-	after = *(u64 *)block->hdr.bitmap;
+ }
+ 
+ /*
 -- 
 2.20.1
 
