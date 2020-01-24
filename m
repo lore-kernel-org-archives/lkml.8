@@ -2,188 +2,87 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA4E3C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 15:07:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F19FC35243
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 15:07:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B5E120838
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 15:07:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16A7220709
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 15:07:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="mS39qVeA"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="cGzH+OaL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390193AbgAXPHw (ORCPT
+        id S2390147AbgAXPHz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 10:07:52 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:45639 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2388641AbgAXPHw (ORCPT
+        Fri, 24 Jan 2020 10:07:55 -0500
+Received: from mailgw02.mediatek.com ([210.61.82.184]:16837 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2388706AbgAXPHx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 10:07:52 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1579878471; h=Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=V/z/hpUlTROc4VymAW3Gg8iFQOabyB5bs0q3YT2E7aw=; b=mS39qVeAWytE/JrKVxrmiDkk51CG5EkjBWMhW1MwKEg+MxaMW+vjuV7ULlck+kLrfHbRmCjZ
- cYl6errJeh/cPPCYagy7LP28G+Pt3BnkGfGi9n8yPJAu5jIRgfmjt2ukIhlM2CcGR0uKDfaN
- e/vOr0x1jAPhShSXq3yi0nToGR0=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e2b0840.7f32b782be68-smtp-out-n03;
- Fri, 24 Jan 2020 15:07:44 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id DD207C4479F; Fri, 24 Jan 2020 15:07:43 +0000 (UTC)
-Received: from prsood-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: prsood)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 4D71DC43383;
-        Fri, 24 Jan 2020 15:07:41 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 4D71DC43383
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=prsood@codeaurora.org
-From:   Prateek Sood <prsood@codeaurora.org>
-To:     tj@kernel.org, peterz@infradead.org
-Cc:     cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Prateek Sood <prsood@codeaurora.org>
-Subject: [PATCH] cpuset: Make cpuset hotplug synchronous
-Date:   Fri, 24 Jan 2020 20:37:29 +0530
-Message-Id: <1579878449-10164-1-git-send-email-prsood@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
+        Fri, 24 Jan 2020 10:07:53 -0500
+X-UUID: ee2e554c01a54ce1bbc95255378a87ab-20200124
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=/iGSD+wjvNgUnG2Paki6e43ca0HmiXdtKRWjFiR1Rb8=;
+        b=cGzH+OaLobPqypEYxX0PCuZoOjfqtM0gP8DHVwIU31bSRw/iJBYdJ+OihmXue1ErQyJp/sm63XGmGDGlBg1YZ4b5s+Ui4S063nJQEqr5I8I29sBsGyahGvOzFVpzHy3delefH9Mfi9m1w88Kuc4sknRBtcQDKAjELPKphMxxGt0=;
+X-UUID: ee2e554c01a54ce1bbc95255378a87ab-20200124
+Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw02.mediatek.com
+        (envelope-from <stanley.chu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 2098108915; Fri, 24 Jan 2020 23:07:47 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs05n1.mediatek.inc (172.21.101.15) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Fri, 24 Jan 2020 23:07:09 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Fri, 24 Jan 2020 23:07:16 +0800
+From:   Stanley Chu <stanley.chu@mediatek.com>
+To:     <linux-scsi@vger.kernel.org>, <martin.petersen@oracle.com>,
+        <avri.altman@wdc.com>, <alim.akhtar@samsung.com>,
+        <jejb@linux.ibm.com>
+CC:     <beanhuo@micron.com>, <asutoshd@codeaurora.org>,
+        <cang@codeaurora.org>, <matthias.bgg@gmail.com>,
+        <bvanassche@acm.org>, <linux-mediatek@lists.infradead.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <kuohong.wang@mediatek.com>,
+        <peter.wang@mediatek.com>, <chun-hung.wu@mediatek.com>,
+        <andy.teng@mediatek.com>, Stanley Chu <stanley.chu@mediatek.com>
+Subject: [PATCH v2 3/5] scsi: ufs: add ufshcd_is_auto_hibern8_enabled facility
+Date:   Fri, 24 Jan 2020 23:07:41 +0800
+Message-ID: <20200124150743.15110-4-stanley.chu@mediatek.com>
+X-Mailer: git-send-email 2.18.0
+In-Reply-To: <20200124150743.15110-1-stanley.chu@mediatek.com>
+References: <20200124150743.15110-1-stanley.chu@mediatek.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Tejun & Peter,
+QXV0by1IaWJlcm44IG1heSBiZSBkaXNhYmxlZCBieSBzb21lIHZlbmRvcnMgb3Igc3lzZnMNCmlu
+IHJ1bnRpbWUgZXZlbiBpZiBBdXRvLUhpYmVybjggY2FwYWJpbGl0eSBpcyBzdXBwb3J0ZWQNCmJ5
+IGhvc3QuIFRodXMgcHJvdmlkZSBhIHdheSB0byBkZXRlY3QgaWYgQXV0by1IaWJlcm44IGlzDQph
+Y3R1YWxseSBlbmFibGVkIGZvciBmdXR1cmUgcmVsYXRlZCBoYW5kbGluZ3MuDQoNClNpZ25lZC1v
+ZmYtYnk6IFN0YW5sZXkgQ2h1IDxzdGFubGV5LmNodUBtZWRpYXRlay5jb20+DQotLS0NCiBkcml2
+ZXJzL3Njc2kvdWZzL3Vmc2hjZC5oIHwgNiArKysrKysNCiAxIGZpbGUgY2hhbmdlZCwgNiBpbnNl
+cnRpb25zKCspDQoNCmRpZmYgLS1naXQgYS9kcml2ZXJzL3Njc2kvdWZzL3Vmc2hjZC5oIGIvZHJp
+dmVycy9zY3NpL3Vmcy91ZnNoY2QuaA0KaW5kZXggMmFlNmM3Yzg1MjhjLi44MWM3MWEzZTM0NzQg
+MTAwNjQ0DQotLS0gYS9kcml2ZXJzL3Njc2kvdWZzL3Vmc2hjZC5oDQorKysgYi9kcml2ZXJzL3Nj
+c2kvdWZzL3Vmc2hjZC5oDQpAQCAtNTUsNiArNTUsNyBAQA0KICNpbmNsdWRlIDxsaW51eC9jbGsu
+aD4NCiAjaW5jbHVkZSA8bGludXgvY29tcGxldGlvbi5oPg0KICNpbmNsdWRlIDxsaW51eC9yZWd1
+bGF0b3IvY29uc3VtZXIuaD4NCisjaW5jbHVkZSA8bGludXgvYml0ZmllbGQuaD4NCiAjaW5jbHVk
+ZSAidW5pcHJvLmgiDQogDQogI2luY2x1ZGUgPGFzbS9pcnEuaD4NCkBAIC03NzMsNiArNzc0LDEx
+IEBAIHN0YXRpYyBpbmxpbmUgYm9vbCB1ZnNoY2RfaXNfYXV0b19oaWJlcm44X3N1cHBvcnRlZChz
+dHJ1Y3QgdWZzX2hiYSAqaGJhKQ0KIAlyZXR1cm4gKGhiYS0+Y2FwYWJpbGl0aWVzICYgTUFTS19B
+VVRPX0hJQkVSTjhfU1VQUE9SVCk7DQogfQ0KIA0KK3N0YXRpYyBpbmxpbmUgYm9vbCB1ZnNoY2Rf
+aXNfYXV0b19oaWJlcm44X2VuYWJsZWQoc3RydWN0IHVmc19oYmEgKmhiYSkNCit7DQorCXJldHVy
+biBGSUVMRF9HRVQoVUZTSENJX0FISUJFUk44X1RJTUVSX01BU0ssIGhiYS0+YWhpdCkgPyB0cnVl
+IDogZmFsc2U7DQorfQ0KKw0KICNkZWZpbmUgdWZzaGNkX3dyaXRlbChoYmEsIHZhbCwgcmVnKQlc
+DQogCXdyaXRlbCgodmFsKSwgKGhiYSktPm1taW9fYmFzZSArIChyZWcpKQ0KICNkZWZpbmUgdWZz
+aGNkX3JlYWRsKGhiYSwgcmVnKQlcDQotLSANCjIuMTguMA0K
 
-It seems that after following patch we can make cpuset_hotplug_workfn
-synchronous:
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/kernel/cgroup/cpuset.c?h=v5.5-rc7&id=d74b27d63a8bebe2fe634944e4ebdc7b10db7a39
-
-
-Could you please share your opinion on the same and below patch. 
-
-Thanks,
-Prateek
-
->8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8
-
-Convert cpuset_hotplug_workfn() into synchronous call for cpu hotplug
-path. For memory hotplug path it still gets queued as a work item.
-
-Since cpuset_hotplug_workfn() can be made synchronous for cpu hotplug
-path, it is not required to wait for cpuset hotplug while thawing
-processes.
-
-Signed-off-by: Prateek Sood <prsood@codeaurora.org>
----
- include/linux/cpuset.h |  3 ---
- kernel/cgroup/cpuset.c | 31 +++++++++++++++++++------------
- kernel/power/process.c |  2 --
- 3 files changed, 19 insertions(+), 17 deletions(-)
-
-diff --git a/include/linux/cpuset.h b/include/linux/cpuset.h
-index 04c20de66..cede4cb 100644
---- a/include/linux/cpuset.h
-+++ b/include/linux/cpuset.h
-@@ -54,7 +54,6 @@ static inline void cpuset_dec(void)
- extern void cpuset_init_smp(void);
- extern void cpuset_force_rebuild(void);
- extern void cpuset_update_active_cpus(void);
--extern void cpuset_wait_for_hotplug(void);
- extern void cpuset_read_lock(void);
- extern void cpuset_read_unlock(void);
- extern void cpuset_cpus_allowed(struct task_struct *p, struct cpumask *mask);
-@@ -176,8 +175,6 @@ static inline void cpuset_update_active_cpus(void)
- 	partition_sched_domains(1, NULL, NULL);
- }
- 
--static inline void cpuset_wait_for_hotplug(void) { }
--
- static inline void cpuset_read_lock(void) { }
- static inline void cpuset_read_unlock(void) { }
- 
-diff --git a/kernel/cgroup/cpuset.c b/kernel/cgroup/cpuset.c
-index 58f5073..cafd4d2 100644
---- a/kernel/cgroup/cpuset.c
-+++ b/kernel/cgroup/cpuset.c
-@@ -3101,7 +3101,7 @@ static void cpuset_hotplug_update_tasks(struct cpuset *cs, struct tmpmasks *tmp)
- }
- 
- /**
-- * cpuset_hotplug_workfn - handle CPU/memory hotunplug for a cpuset
-+ * cpuset_hotplug - handle CPU/memory hotunplug for a cpuset
-  *
-  * This function is called after either CPU or memory configuration has
-  * changed and updates cpuset accordingly.  The top_cpuset is always
-@@ -3116,7 +3116,7 @@ static void cpuset_hotplug_update_tasks(struct cpuset *cs, struct tmpmasks *tmp)
-  * Note that CPU offlining during suspend is ignored.  We don't modify
-  * cpusets across suspend/resume cycles at all.
-  */
--static void cpuset_hotplug_workfn(struct work_struct *work)
-+static void cpuset_hotplug(bool use_cpu_hp_lock)
- {
- 	static cpumask_t new_cpus;
- 	static nodemask_t new_mems;
-@@ -3201,25 +3201,32 @@ static void cpuset_hotplug_workfn(struct work_struct *work)
- 	/* rebuild sched domains if cpus_allowed has changed */
- 	if (cpus_updated || force_rebuild) {
- 		force_rebuild = false;
--		rebuild_sched_domains();
-+		if (use_cpu_hp_lock)
-+			rebuild_sched_domains();
-+		else {
-+			/* Acquiring cpu_hotplug_lock is not required.
-+			 * When cpuset_hotplug() is called in hotplug path,
-+			 * cpu_hotplug_lock is held by the hotplug context
-+			 * which is waiting for cpuhp_thread_fun to indicate
-+			 * completion of callback.
-+			*/
-+			percpu_down_write(&cpuset_rwsem);
-+			rebuild_sched_domains_locked();
-+			percpu_up_write(&cpuset_rwsem);
-+		}
- 	}
- 
- 	free_cpumasks(NULL, ptmp);
- }
- 
--void cpuset_update_active_cpus(void)
-+static void cpuset_hotplug_workfn(struct work_struct *work)
- {
--	/*
--	 * We're inside cpu hotplug critical region which usually nests
--	 * inside cgroup synchronization.  Bounce actual hotplug processing
--	 * to a work item to avoid reverse locking order.
--	 */
--	schedule_work(&cpuset_hotplug_work);
-+	cpuset_hotplug(true);
- }
- 
--void cpuset_wait_for_hotplug(void)
-+void cpuset_update_active_cpus(void)
- {
--	flush_work(&cpuset_hotplug_work);
-+	cpuset_hotplug(false);
- }
- 
- /*
-diff --git a/kernel/power/process.c b/kernel/power/process.c
-index 4b6a54d..08f7019 100644
---- a/kernel/power/process.c
-+++ b/kernel/power/process.c
-@@ -204,8 +204,6 @@ void thaw_processes(void)
- 	__usermodehelper_set_disable_depth(UMH_FREEZING);
- 	thaw_workqueues();
- 
--	cpuset_wait_for_hotplug();
--
- 	read_lock(&tasklist_lock);
- 	for_each_process_thread(g, p) {
- 		/* No other threads should have PF_SUSPEND_TASK set */
--- 
-Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc., 
-is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
