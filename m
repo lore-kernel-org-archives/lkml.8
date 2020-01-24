@@ -2,154 +2,108 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71580C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 21:12:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1791CC32771
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 21:16:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 431432087E
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 21:12:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PIg2gflQ"
+	by mail.kernel.org (Postfix) with ESMTP id EC0DA2072C
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 21:16:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728767AbgAXVMl (ORCPT
+        id S1729603AbgAXVQu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 16:12:41 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:47764 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725747AbgAXVMl (ORCPT
+        Fri, 24 Jan 2020 16:16:50 -0500
+Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:55401 "EHLO
+        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725765AbgAXVQu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 16:12:41 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579900360;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=r88FQ3jP4tbWAociS00rg3LER5v2m7ImuFP1hdddwiI=;
-        b=PIg2gflQcuvfi4kx1aRZwF4LlegAknhYbI6a++gt3+Mh11psbes0kRk05UOnZ3x3Ns+ent
-        HnNj8JAjD4hi0bmPjuqoK5phhS1mXJEUmcZWetQdRNGyP22twwY1dwSA3qd1Uc8xOgeyOf
-        IQ9ctWyh1OOf8yPDD5Y9z4zkc3kIkpQ=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-195-ZycLx2YZN7We8FdE4kvvzg-1; Fri, 24 Jan 2020 16:12:35 -0500
-X-MC-Unique: ZycLx2YZN7We8FdE4kvvzg-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B89218017CC;
-        Fri, 24 Jan 2020 21:12:32 +0000 (UTC)
-Received: from llong.remote.csb (ovpn-124-92.rdu2.redhat.com [10.10.124.92])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id E6C20859AA;
-        Fri, 24 Jan 2020 21:12:29 +0000 (UTC)
-Subject: Re: [PATCH v8 4/5] locking/qspinlock: Introduce starvation avoidance
- into CNA
-To:     Alex Kogan <alex.kogan@oracle.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>, linux@armlinux.org.uk,
-        Ingo Molnar <mingo@redhat.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>, linux-arch@vger.kernel.org,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>, hpa@zytor.com, x86@kernel.org,
-        Hanjun Guo <guohanjun@huawei.com>,
-        Jan Glauber <jglauber@marvell.com>,
-        Steven Sistare <steven.sistare@oracle.com>,
-        Daniel Jordan <daniel.m.jordan@oracle.com>,
-        dave.dice@oracle.com
-References: <20191230194042.67789-1-alex.kogan@oracle.com>
- <20191230194042.67789-5-alex.kogan@oracle.com>
- <20200121132949.GL14914@hirez.programming.kicks-ass.net>
- <cfdf635d-be2e-9d4b-c4ca-6bcbddc6868f@redhat.com>
- <3862F8A1-FF9B-40AD-A88E-2C0BA7AF6F58@oracle.com>
- <20200124075235.GX14914@hirez.programming.kicks-ass.net>
- <2c6741c5-d89d-4b2c-cebe-a7c7f6eed884@redhat.com>
- <48ce49e5-98a7-23cd-09f4-8290a65abbb5@redhat.com>
- <8D3AFB47-B595-418C-9568-08780DDC58FF@oracle.com>
- <714892cd-d96f-4d41-ae8b-d7b7642a6e3c@redhat.com>
- <1669BFDE-A1A5-4ED8-B586-035460BBF68A@oracle.com>
- <45660873-731a-a810-8c57-1a5a19d266b4@redhat.com>
- <693E6287-E37C-4C5D-BE33-B3D813BE505D@oracle.com>
-From:   Waiman Long <longman@redhat.com>
-Organization: Red Hat
-Message-ID: <edc53126-bfe4-5102-d2eb-2332bf3a68e5@redhat.com>
-Date:   Fri, 24 Jan 2020 16:12:30 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Fri, 24 Jan 2020 16:16:50 -0500
+Received: from dread.disaster.area (pa49-195-162-125.pa.nsw.optusnet.com.au [49.195.162.125])
+        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 991D1820C75;
+        Sat, 25 Jan 2020 08:16:44 +1100 (AEDT)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1iv6Jm-00079w-Ii; Sat, 25 Jan 2020 08:16:42 +1100
+Date:   Sat, 25 Jan 2020 08:16:42 +1100
+From:   Dave Chinner <david@fromorbit.com>
+To:     Mike Christie <mchristi@redhat.com>
+Cc:     Shakeel Butt <shakeelb@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-api@vger.kernel.org, idryomov@gmail.com,
+        Michal Hocko <mhocko@kernel.org>,
+        Linux MM <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>, linux-scsi@vger.kernel.org,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-block@vger.kernel.org, martin@urbackup.org,
+        Damien.LeMoal@wdc.com, Michal Hocko <mhocko@suse.com>,
+        Masato Suzuki <masato.suzuki@wdc.com>
+Subject: Re: [PATCH] Add prctl support for controlling mem reclaim V4
+Message-ID: <20200124211642.GB7216@dread.disaster.area>
+References: <20191112001900.9206-1-mchristi@redhat.com>
+ <CALvZod47XyD2x8TuZcb9PgeVY14JBwNhsUpN3RAeAt+RJJC=hg@mail.gmail.com>
+ <5E2B19C9.6080907@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <693E6287-E37C-4C5D-BE33-B3D813BE505D@oracle.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5E2B19C9.6080907@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.3 cv=LYdCFQXi c=1 sm=1 tr=0
+        a=eqEhQ2W7mF93FbYHClaXRw==:117 a=eqEhQ2W7mF93FbYHClaXRw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=Jdjhy38mL1oA:10
+        a=20KFwNOVAAAA:8 a=iox4zFpeAAAA:8 a=JF9118EUAAAA:8 a=VwQbUJbxAAAA:8
+        a=7-415B0cAAAA:8 a=3XgbrJ93Oiw9jx1WlK8A:9 a=CjuIK1q_8ugA:10
+        a=WzC6qhA0u3u7Ye7llzcV:22 a=xVlTc564ipvMDusKsbsT:22
+        a=AjGcO6oz07-iQ99wixmX:22 a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/24/20 3:09 PM, Alex Kogan wrote:
->>> We also probably do not want those =E2=80=9Cprioritized=E2=80=9D thre=
-ads to disrupt
->>> normal
->>> CNA operation. E.g., if the main queue looks like T1_1, P2_1, T1_2,
->>> =E2=80=A6, where
->>> T1_x is a thread running on node 1 and P2_1 is a prioritized thread
->>> running
->>> on node 2, we want to pass the lock from T1_1 to P2_1 and then to T1_=
-2
->>> (rather than have P2_1 to scan for another thread on node 2).
->>>
->>> There is a way to achieve that =E2=80=94 when we pass the lock to P2_=
-1,
->>> we can set its numa node field to 1. This means that we need to
->>> reset the numa
->>> node field in cna_init_node(), but AFAICT this is relatively cheap.
->>> The rest
->>> of the CNA logic should not change.
->>
->> I won't recommend doing that. If the lock cacheline has been moved
->> from node 1 to 2, I will say it is better to stick with node 2 rather
->> than switching back to node 1. That will mean that the secondary
->> queue may contain lock waiters from the same nodes, but they will
->> eventually be flushed back to the primary queue.
->>
-> That=E2=80=99s right, assuming we do not reset intra_node count when
-> transferring the
-> lock to a prioritized thread from another node. Otherwise, we may starv=
-e
-> waiters in the secondary queue.=C2=A0
->
-> Still, that can make the lock even less fair to non-prioritized
-> threads. When
-> you flush the secondary queue, the preference may remain with the same
-> node. This will not happen in the current form of CNA, as we never get=C2=
-=A0
-> threads from the preferred node in the secondary queue.
+On Fri, Jan 24, 2020 at 10:22:33AM -0600, Mike Christie wrote:
+> On 12/05/2019 04:43 PM, Shakeel Butt wrote:
+> > On Mon, Nov 11, 2019 at 4:19 PM Mike Christie <mchristi@redhat.com> wrote:
+> >> This patch adds a new prctl command that daemons can use after they have
+> >> done their initial setup, and before they start to do allocations that
+> >> are in the IO path. It sets the PF_MEMALLOC_NOIO and PF_LESS_THROTTLE
+> >> flags so both userspace block and FS threads can use it to avoid the
+> >> allocation recursion and try to prevent from being throttled while
+> >> writing out data to free up memory.
+> >>
+> >> Signed-off-by: Mike Christie <mchristi@redhat.com>
+> >> Acked-by: Michal Hocko <mhocko@suse.com>
+> >> Tested-by: Masato Suzuki <masato.suzuki@wdc.com>
+> >> Reviewed-by: Damien Le Moal <damien.lemoal@wdc.com>
+> > 
+> > I suppose this patch should be routed through MM tree, so, CCing Andrew.
+> >
+> 
+> Andrew and other mm/storage developers,
+> 
+> Do I need to handle anything else for this patch, or are there any other
+> concerns? Is this maybe something we want to talk about at a quick LSF
+> session?
+> 
+> I have retested it with Linus's current tree. It still applies cleanly
+> (just some offsets), and fixes the problem described above we have been
+> hitting.
 
-That is true.
+I must have missed this version being posted (just looked it up on
+lore.kernel.org). As far as I'm concerned this is good to go and it
+is absolutely necessary for userspace IO stacks to function
+correctly.
 
-However, it is no different from the current scheme that a waiter from
-another node may have to wait for 64k other waiters to go first before
-it has a chance to get it. Now that waiter can be from the same node as
-well.
+Reviewed-by: Dave Chinner <dchinner@redhat.com>
 
->
-> Besides, I think that will decrease the benefit of CNA, especially if s=
-uch
-> prioritized threads are frequent, switching the preference from one nod=
-e
-> to another. But this is something I can evaluate, unless
-> there is some fundamental objection to the idea of tweaking the numa
-> node of prioritized threads.
-
-Usually the locks used in interrupt context are not that contended to
-the point that CNA can kick in. Of course, there are exceptions in some
-circumstances and we do not want to introduce additional latency to
-their lock waiting time.
+If no manintainer picks it up before the next merge window, then I
+recommend resending the latest version to Linus asking him to merge
+it.
 
 Cheers,
-Longman
 
+Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
