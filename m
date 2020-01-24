@@ -2,88 +2,111 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45F25C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 23:30:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9F1AC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 23:44:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 157F02087E
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 23:30:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9316206D4
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 23:44:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="RR7oUSIY"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="TB5aRvye"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387462AbgAXXaH (ORCPT
+        id S1729551AbgAXXoh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 18:30:07 -0500
-Received: from merlin.infradead.org ([205.233.59.134]:48520 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729236AbgAXXaH (ORCPT
+        Fri, 24 Jan 2020 18:44:37 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:58664 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729147AbgAXXoh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 18:30:07 -0500
+        Fri, 24 Jan 2020 18:44:37 -0500
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
         List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=GQD3BQz3vSPm3PJCcPo+ZtpbdrNbmpXcX6AYSCSwISE=; b=RR7oUSIYp+FOJFH5abXvOvxm0
-        u6RKkgum/CPfS4XL6VtVX11m1X6UVi8fMgeatVLtp9w8i/YIysZa9sRSSZN6sTZILwal8WFZkGtyO
-        fF12c2B8zDJ/Sjx9+C3ZIHxeqbOh8hIn/sMcHZ0fp2kfh/iTItAmonIfVWViXFn6Fm2FMmpFm77Qh
-        J8chmJpScK2YujFuwqCuYdCsT180uDmF1VLeIkpBfPt+XPP7p4UN9bVJdhqtg8rF3XoRo2/R3q5mo
-        F+XHHOlkV59VgIrP2eYvgFHkIlC+89YgnSY91yUQW6FCr0toXPDUcaGE9A2Jg9qBFL9BOBwfbruwK
-        TjiRYOq3Q==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iv8Oa-0006Ec-FT; Fri, 24 Jan 2020 23:29:48 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 4FB85302526;
-        Sat, 25 Jan 2020 00:28:04 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id ECBEE209DB0E3; Sat, 25 Jan 2020 00:29:44 +0100 (CET)
-Date:   Sat, 25 Jan 2020 00:29:44 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Will Deacon <will@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        kernel-team <kernel-team@android.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Segher Boessenkool <segher@kernel.crashing.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Peter Oberparleiter <oberpar@linux.ibm.com>,
-        Masahiro Yamada <masahiroy@kernel.org>
-Subject: Re: [PATCH v2 09/10] compiler/gcc: Raise minimum GCC version for
- kernel builds to 4.8
-Message-ID: <20200124232944.GD14914@hirez.programming.kicks-ass.net>
-References: <20200123153341.19947-1-will@kernel.org>
- <20200123153341.19947-10-will@kernel.org>
- <CAKwvOd=Bp+FWXHUKZnk+_dN=jTYZGdc_QVhErC3N-Frpk4mssQ@mail.gmail.com>
- <20200124082637.GZ14914@hirez.programming.kicks-ass.net>
- <CAKwvOdmFMnCgr3rP5vNkj_H1SnBJ6drdBP1RSGxzfYzSiWGfLg@mail.gmail.com>
+         bh=5wmuqZHJ0qjX/S2LwVb/rXLGz5kyAVoKbDfXUhdGJdI=; b=TB5aRvyexEVLTORwua6Ovuia9
+        0eOc3wsqmfUeXA3Ox4CsevvHi5qpJdZXPX/zQIAn5KmRtt8TA/O42Dx0MuWZf3TIF9Q13l0UZ8RsB
+        HjlmHVDSXPkQ01XmxRijrou6QK2lwtY+ZLVftYalZbt8c4OKl01iE+b56BcQ5X8DizRD08i5n77bq
+        hIP9tsM7Mhj9i2Lu8pJMbWssEbdhLRCxbhtjquHzeQ0B3jmTeGdZ8khKuR1Nf37xvvzpRxDO74XkL
+        YcWWe3ToBkZEIVBm0XwuWlvFV/cAY89eECtiv0mm4DbQVUSEFGHn2aptw3XTnsrBHY4fvJcgkrfmK
+        I/MHCDITg==;
+Received: from [2601:1c0:6280:3f0::ed68]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iv8cn-0002lu-RU; Fri, 24 Jan 2020 23:44:29 +0000
+Subject: Re: [PATCH] KVM: x86: Take a u64 when checking for a valid dr7 value
+To:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Krish Sadhukhan <krish.sadhukhan@oracle.com>
+References: <20200124230722.8964-1-sean.j.christopherson@intel.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <bcd1b46c-15eb-f28a-c8c0-ed2fb103a25f@infradead.org>
+Date:   Fri, 24 Jan 2020 15:44:28 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAKwvOdmFMnCgr3rP5vNkj_H1SnBJ6drdBP1RSGxzfYzSiWGfLg@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200124230722.8964-1-sean.j.christopherson@intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 24, 2020 at 09:05:27AM -0800, Nick Desaulniers wrote:
+On 1/24/20 3:07 PM, Sean Christopherson wrote:
+> Take a u64 instead of an unsigned long in kvm_dr7_valid() to fix a build
+> warning on i386 due to right-shifting a 32-bit value by 32 when checking
+> for bits being set in dr7[63:32].
+> 
+> Alternatively, the warning could be resolved by rewriting the check to
+> use an i386-friendly method, but taking a u64 fixes another oddity on
+> 32-bit KVM.  Beause KVM implements natural width VMCS fields as u64s to
+> avoid layout issues between 32-bit and 64-bit, a devious guest can stuff
+> vmcs12->guest_dr7 with a 64-bit value even when both the guest and host
+> are 32-bit kernels.  KVM eventually drops vmcs12->guest_dr7[63:32] when
+> propagating vmcs12->guest_dr7 to vmcs02, but ideally KVM would not rely
+> on that behavior for correctness.
+> 
+> Cc: Jim Mattson <jmattson@google.com>
+> Cc: Krish Sadhukhan <krish.sadhukhan@oracle.com>
+> Fixes: ecb697d10f70 ("KVM: nVMX: Check GUEST_DR7 on vmentry of nested guests")
+> Reported-by: Randy Dunlap <rdunlap@infradead.org>
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 
-> Ack. Do maintainers have tools for fetching patch series and
-> automating collecting Reviewed-by tags, or is it all extremely manual?
+Acked-by: Randy Dunlap <rdunlap@infradead.org> # build-tested
 
-Both; I'm currently still doing it manually, but I know that for example
-Thomas's scripts are a lot smarter and do it for him.
+Thanks.
 
-I'm meaning to switch to his scripts, but I suppose there's some inertia
-at play :-)
+> ---
+>  arch/x86/kvm/x86.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/x86/kvm/x86.h b/arch/x86/kvm/x86.h
+> index 2d2ff855773b..3624665acee4 100644
+> --- a/arch/x86/kvm/x86.h
+> +++ b/arch/x86/kvm/x86.h
+> @@ -357,7 +357,7 @@ static inline bool kvm_pat_valid(u64 data)
+>  	return (data | ((data & 0x0202020202020202ull) << 1)) == data;
+>  }
+>  
+> -static inline bool kvm_dr7_valid(unsigned long data)
+> +static inline bool kvm_dr7_valid(u64 data)
+>  {
+>  	/* Bits [63:32] are reserved */
+>  	return !(data >> 32);
+> 
 
+
+-- 
+~Randy
+Reported-by: Randy Dunlap <rdunlap@infradead.org>
