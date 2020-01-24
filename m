@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 576C8C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:13:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 968B4C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:13:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E37B2075D
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:13:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D3F62071A
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:13:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579864401;
-	bh=fR8gmILwklJ0B5AsOs/paTIsTkLdDPRN3rqApDv41+c=;
+	s=default; t=1579864405;
+	bh=uqr3kV4f44YrbbtVXEpfN1XuCVbICB6sCwdFeb0jBHg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EKeTy/IXsWJE9Dj/EBbGae3h/Z3lgQWi3sEFdi8p9hLjlnodlFJs4R0AMdcqI4tEE
-	 hhBFEnwdi9+i1UOLmyUFg0q0gAwHMo0k9V+bcODPKy1bm9y9owJJpAZFQllGtETU0/
-	 dvY4Kj/q/QPCZbPkLQ9kcYmOC35eLBldrRjdN6jU=
+	b=ZbdVi31VsxG1jMh3hhcFoXO1YL0BmdvTJWs9RXWHsMs7LbIcUk/VFPk457dVVpCZ3
+	 6Svuix8xsbrEX2i/kbpIf6CX/Q2tHH4/xCr431pve4xF3W7d/TBtr5I7/8ubrLC4Yo
+	 NiYKXYKr27XXSsXhEIM69c2T/+MsVUlR/M9qFHR8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390043AbgAXLNT (ORCPT
+        id S2390049AbgAXLNY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:13:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49582 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 06:13:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49644 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389575AbgAXLNQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:13:16 -0500
+        id S2388638AbgAXLNV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:13:21 -0500
 Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5CE312075D;
-        Fri, 24 Jan 2020 11:13:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D642C20708;
+        Fri, 24 Jan 2020 11:13:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579864396;
-        bh=fR8gmILwklJ0B5AsOs/paTIsTkLdDPRN3rqApDv41+c=;
+        s=default; t=1579864400;
+        bh=uqr3kV4f44YrbbtVXEpfN1XuCVbICB6sCwdFeb0jBHg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lhaiplsT+pxbJ7hbBI4KyeQZfkyFugfHzoji+XJUeDQXL/SnGRAW/L1eE/pS5WR8B
-         MzmmsPMzR+F4o8DzqOHPiuA5qY4Ij1jfLTlG3e5g5iyJWhsh+eyYjMHnHV59SqBeea
-         mAiTgWgGfQhkUBmLPo6oei1wUgJiWRZlJj/Mi5Uo=
+        b=vDqugwuKC2SKD08GyzYh4+XP9bdKViY+2kytCLgJabxy74iFPtOgO4VNs2uv4c5c9
+         NUfbnA5LThMd3Nmg5zgPfQvqCF3+AnG5wtAzUCZyiTJhHBccr9QHiI2dxCZFULe6aJ
+         mOdifYhmDubfCHgimH0IE92SKORX2LXy3H80TaT8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Surabhi Vishnoi <svishnoi@codeaurora.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
+        stable@vger.kernel.org, Florian Westphal <fw@strlen.de>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 240/639] ath10k: Fix length of wmi tlv command for protected mgmt frames
-Date:   Fri, 24 Jan 2020 10:26:50 +0100
-Message-Id: <20200124093116.884954590@linuxfoundation.org>
+Subject: [PATCH 4.19 241/639] netfilter: nft_set_hash: fix lookups with fixed size hash on big endian
+Date:   Fri, 24 Jan 2020 10:26:51 +0100
+Message-Id: <20200124093117.002911952@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
 References: <20200124093047.008739095@linuxfoundation.org>
@@ -60,47 +60,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Surabhi Vishnoi <svishnoi@codeaurora.org>
+From: Pablo Neira Ayuso <pablo@netfilter.org>
 
-[ Upstream commit 761156ff573d1002983416e4fd1fe8d3489c4bd8 ]
+[ Upstream commit 3b02b0adc242a72b5e46019b6a9e4f84823592f6 ]
 
-The length of wmi tlv command for management tx send is calculated
-incorrectly in case of protected management frames as there is addition
-of IEEE80211_CCMP_MIC_LEN twice. This leads to improper behaviour of
-firmware as the wmi tlv mgmt tx send command for protected mgmt frames
-is formed wrongly.
+Call jhash_1word() for the 4-bytes key case from the insertion and
+deactivation path, otherwise big endian arch set lookups fail.
 
-Fix the length calculation of wmi tlv command for mgmt tx send in case
-of protected management frames by adding the IEEE80211_CCMP_MIC_LEN only
-once.
-
-Tested HW: WCN3990
-Tested FW: WLAN.HL.3.1-00784-QCAHLSWMTPLZ-1
-
-Fixes: 1807da49733e "ath10k: wmi: add management tx by reference support over wmi"
-Signed-off-by: Surabhi Vishnoi <svishnoi@codeaurora.org>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Fixes: 446a8268b7f5 ("netfilter: nft_set_hash: add lookup variant for fixed size hashtable")
+Reported-by: Florian Westphal <fw@strlen.de>
+Tested-by: Florian Westphal <fw@strlen.de>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/ath/ath10k/wmi-tlv.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ net/netfilter/nft_set_hash.c | 23 +++++++++++++++++++----
+ 1 file changed, 19 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/wireless/ath/ath10k/wmi-tlv.c b/drivers/net/wireless/ath/ath10k/wmi-tlv.c
-index cdc1e64d52ad5..a90990b8008de 100644
---- a/drivers/net/wireless/ath/ath10k/wmi-tlv.c
-+++ b/drivers/net/wireless/ath/ath10k/wmi-tlv.c
-@@ -2692,10 +2692,8 @@ ath10k_wmi_tlv_op_gen_mgmt_tx_send(struct ath10k *ar, struct sk_buff *msdu,
- 	if ((ieee80211_is_action(hdr->frame_control) ||
- 	     ieee80211_is_deauth(hdr->frame_control) ||
- 	     ieee80211_is_disassoc(hdr->frame_control)) &&
--	     ieee80211_has_protected(hdr->frame_control)) {
--		len += IEEE80211_CCMP_MIC_LEN;
-+	     ieee80211_has_protected(hdr->frame_control))
- 		buf_len += IEEE80211_CCMP_MIC_LEN;
--	}
+diff --git a/net/netfilter/nft_set_hash.c b/net/netfilter/nft_set_hash.c
+index 015124e649cbd..8dde4bfe8b8a4 100644
+--- a/net/netfilter/nft_set_hash.c
++++ b/net/netfilter/nft_set_hash.c
+@@ -488,6 +488,23 @@ static bool nft_hash_lookup_fast(const struct net *net,
+ 	return false;
+ }
  
- 	buf_len = min_t(u32, buf_len, WMI_TLV_MGMT_TX_FRAME_MAX_LEN);
- 	buf_len = round_up(buf_len, 4);
++static u32 nft_jhash(const struct nft_set *set, const struct nft_hash *priv,
++		     const struct nft_set_ext *ext)
++{
++	const struct nft_data *key = nft_set_ext_key(ext);
++	u32 hash, k1;
++
++	if (set->klen == 4) {
++		k1 = *(u32 *)key;
++		hash = jhash_1word(k1, priv->seed);
++	} else {
++		hash = jhash(key, set->klen, priv->seed);
++	}
++	hash = reciprocal_scale(hash, priv->buckets);
++
++	return hash;
++}
++
+ static int nft_hash_insert(const struct net *net, const struct nft_set *set,
+ 			   const struct nft_set_elem *elem,
+ 			   struct nft_set_ext **ext)
+@@ -497,8 +514,7 @@ static int nft_hash_insert(const struct net *net, const struct nft_set *set,
+ 	u8 genmask = nft_genmask_next(net);
+ 	u32 hash;
+ 
+-	hash = jhash(nft_set_ext_key(&this->ext), set->klen, priv->seed);
+-	hash = reciprocal_scale(hash, priv->buckets);
++	hash = nft_jhash(set, priv, &this->ext);
+ 	hlist_for_each_entry(he, &priv->table[hash], node) {
+ 		if (!memcmp(nft_set_ext_key(&this->ext),
+ 			    nft_set_ext_key(&he->ext), set->klen) &&
+@@ -537,8 +553,7 @@ static void *nft_hash_deactivate(const struct net *net,
+ 	u8 genmask = nft_genmask_next(net);
+ 	u32 hash;
+ 
+-	hash = jhash(nft_set_ext_key(&this->ext), set->klen, priv->seed);
+-	hash = reciprocal_scale(hash, priv->buckets);
++	hash = nft_jhash(set, priv, &this->ext);
+ 	hlist_for_each_entry(he, &priv->table[hash], node) {
+ 		if (!memcmp(nft_set_ext_key(&this->ext), &elem->key.val,
+ 			    set->klen) &&
 -- 
 2.20.1
 
