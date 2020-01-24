@@ -2,110 +2,142 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28AA3C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:14:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3744AC35242
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:15:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E782720838
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:14:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BAD42087E
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:15:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="ZO49T1yL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390240AbgAXOOu (ORCPT
+        id S2390273AbgAXOPI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 09:14:50 -0500
-Received: from foss.arm.com ([217.140.110.172]:51946 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390216AbgAXOOt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 09:14:49 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 65A311FB;
-        Fri, 24 Jan 2020 06:14:49 -0800 (PST)
-Received: from [10.1.194.46] (e113632-lin.cambridge.arm.com [10.1.194.46])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6364E3F6C4;
-        Fri, 24 Jan 2020 06:14:48 -0800 (PST)
-Subject: Re: [PATCH v2 1/3] sched/fair: Add asymmetric CPU capacity wakeup
- scan
-From:   Valentin Schneider <valentin.schneider@arm.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     mingo@redhat.com, peterz@infradead.org, vincent.guittot@linaro.org,
-        dietmar.eggemann@arm.com, morten.rasmussen@arm.com,
-        qperret@google.com, adharmap@codeaurora.org
-References: <20200124130213.24886-1-valentin.schneider@arm.com>
- <20200124130213.24886-2-valentin.schneider@arm.com>
-Message-ID: <00aa64e8-5e75-181e-a4f4-72c2ac64081c@arm.com>
-Date:   Fri, 24 Jan 2020 14:14:47 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Fri, 24 Jan 2020 09:15:08 -0500
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:60344 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388691AbgAXOPH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 09:15:07 -0500
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200124141506euoutp01c3d54f5c64ecdc6dc6d4abcc920409fe~s2DiEWH161495614956euoutp01e
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jan 2020 14:15:06 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200124141506euoutp01c3d54f5c64ecdc6dc6d4abcc920409fe~s2DiEWH161495614956euoutp01e
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1579875306;
+        bh=gUt0xdJYsjZMQC8Hykq0BgkZD7XebHRDKl7WMh5ImJE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=ZO49T1yL06/mM2n5FsBo810KcxfRGw8xy28NTxLBfn/w4rw8nAiqes9lOIaXBjWSR
+         oCDFyvpZKq793vZqIp4a1o9BehyeFBH50ScK5jCULTHAOfPU2AHkKgiYFZnnkK9yEF
+         Z7H5I4DAyseRsgxtuKWURo3aK0xAQfZHw21crvik=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20200124141506eucas1p21db2b7c7be7c579acfc5fae3595436cc~s2Dh5JXm41251612516eucas1p2q;
+        Fri, 24 Jan 2020 14:15:06 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id CB.AE.60698.AEBFA2E5; Fri, 24
+        Jan 2020 14:15:06 +0000 (GMT)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20200124141506eucas1p2da00cf4424a6b5e5e6d3e245eda586a5~s2DhoVgFe1252312523eucas1p2f;
+        Fri, 24 Jan 2020 14:15:06 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200124141506eusmtrp2e052e19e4278ccea00a85bb157bf775c~s2Dhnpy7W1590315903eusmtrp2u;
+        Fri, 24 Jan 2020 14:15:06 +0000 (GMT)
+X-AuditID: cbfec7f5-a29ff7000001ed1a-0c-5e2afbeae9b0
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id 7D.E1.08375.9EBFA2E5; Fri, 24
+        Jan 2020 14:15:06 +0000 (GMT)
+Received: from AMDC3218.digital.local (unknown [106.120.51.18]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20200124141505eusmtip16ceddbc58b4567e65dfa3a0e0decfdd6~s2Dg_cmfc3274532745eusmtip1e;
+        Fri, 24 Jan 2020 14:15:05 +0000 (GMT)
+From:   Kamil Konieczny <k.konieczny@samsung.com>
+To:     k.konieczny@samsung.com
+Cc:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Kukjin Kim <kgene@kernel.org>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>
+Subject: [PATCH RESEND 1/3] PM / devfreq: exynos-nocp: fix debug print type
+Date:   Fri, 24 Jan 2020 15:14:47 +0100
+Message-Id: <20200124141449.19844-2-k.konieczny@samsung.com>
+X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200124141449.19844-1-k.konieczny@samsung.com>
 MIME-Version: 1.0
-In-Reply-To: <20200124130213.24886-2-valentin.schneider@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA01Sa0hTcRTvv3t373U4u87B/rgwXPhBIzXsw4W0EhIW9kEIhISsW15U2qbs
+        Tpcm+cp3qWXpfOET1Fk+lprug+GaiU6dFZr20EDF8kU6C9LKdFfLb+ec3+scOAQiMvBdiWiV
+        hlGraIUME6Bdr35aTyxueYX7Fo6KqXZdK596t7HAp6rXdXyqYHYJoazWNpwaSVvGKcPsBJ96
+        a6zAKNt9M6B01l4e9dT8Cac+pDZi5xzlBn0OJn9WnyzP79ADuc3gFoKGCfwjGEV0PKP2OXNN
+        EFWd8hKPzcdvWYva0RSQg+UCBwKSp2BNzWs0FwgIEdkIYGfeOMY1GwBOz78AXGMDcCWvir8v
+        WW+e4nFAA4BptgzwT2Kc/wZ2WRjpA/tGBtHdWkxKYU7tA7sCIQ0InFlatQMuZDDc7Bm1C1DS
+        A45V1tq3EpL+MMtYvxd3FJanWuxzBzIA6of1OMdxhoOlc3YfZIeT3lmO7AZAUo9D83LmThqx
+        05yH7WlqzscFLg504Fx9BG73VPG4Wgvna/JxTnsXwM9ZaygHnIYfRzexXR+E9IStRh9uHAgH
+        KiZRzt4JTq44cys4wYddJQg3FsLsTBHH9oALQ/f2kqQwd7tl7yo5fDLdjxUC97IDx5QdOKbs
+        f241QPRAwsSxykiG9VMxWm+WVrJxqkjvGzFKA9j5JMufge/doPfXdRMgCSBzFOqmvcJFfDqe
+        TVCaACQQmVgIQj3DRcIIOiGRUcdcVccpGNYEpAQqkwj9ar9eEZGRtIa5yTCxjHof5REOrikg
+        dIScqRQ8Ygd1U4e7ZvuDve7oLpzNlkjMTotfimtaGtwrmsKOhdC/tRcbVeK6pLGJtIbZ0kN1
+        C/Vbl5Mx94DmYguCNagSm7ShZEHQ8/zVIKy/WxOJHB9aG3e7ZJkL/+Eb2Ja+9r5o+PbjSX0G
+        bUIKpCUmUvxGwUvyqOxr1MhQNoo+6YWoWfovHS5wd0UDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrAIsWRmVeSWpSXmKPExsVy+t/xu7qvfmvFGazdymSxccZ6VovrX56z
+        Wiz4NIPVov/xa2aL8+c3sFucbXrDbrHp8TVWi8u75rBZfO49wmgx4/w+Jou1R+6yW9xuXMHm
+        wOOxaVUnm8fmJfUefVtWMXp83iQXwBKlZ1OUX1qSqpCRX1xiqxRtaGGkZ2hpoWdkYqlnaGwe
+        a2VkqqRvZ5OSmpNZllqkb5egl7Gg4TB7QR97xfnJG1kaGDvZuhg5OSQETCQ+rb7J1MXIxSEk
+        sJRRoql7PxNEQlqi8fRqKFtY4s+1LrAGIYFPjBJb7wWC2GwC+hIHz55kAbFFgOo7F00EG8Qs
+        sItZYsW02cwgCWEBb4lfO88xgtgsAqoSF+YuAhvEK2Aj0b5rCSvEAnmJ2Y2nweKcArYSq86s
+        YodYZiMxZesqRoh6QYmTM5+ALWMGqm/eOpt5AqPALCSpWUhSCxiZVjGKpJYW56bnFhvqFSfm
+        Fpfmpesl5+duYgTGzrZjPzfvYLy0MfgQowAHoxIP74x7WnFCrIllxZW5hxglOJiVRHgZwzTj
+        hHhTEiurUovy44tKc1KLDzGaAj0xkVlKNDkfGNd5JfGGpobmFpaG5sbmxmYWSuK8HQIHY4QE
+        0hNLUrNTUwtSi2D6mDg4pRoYZTJFuBVvr5A4rVkyz2vv8ul52ZMkVn7NY3ql1aOixL5kppbn
+        vQqLV3VMzbsvW3TFBXLOtGRpdtaadaYn/ohTzGX+7any3MEc2t9lLYJ+PO9ibDSaKZolJX1N
+        Qm5vueXKaR9+xvG0LDjY6v6fx3wV68m0oNPz9vHf5JpjYKBy6+z7KytLa7mVWIozEg21mIuK
+        EwHshtpWswIAAA==
+X-CMS-MailID: 20200124141506eucas1p2da00cf4424a6b5e5e6d3e245eda586a5
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20200124141506eucas1p2da00cf4424a6b5e5e6d3e245eda586a5
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200124141506eucas1p2da00cf4424a6b5e5e6d3e245eda586a5
+References: <20200124141449.19844-1-k.konieczny@samsung.com>
+        <CGME20200124141506eucas1p2da00cf4424a6b5e5e6d3e245eda586a5@eucas1p2.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-(copied over from the v1 thread)
+Values printed in dev_dbg are both unsigned long, but were
+printed as signed decimals. Change this to unsigned long.
 
-On 24/01/2020 12:59, Quentin Perret wrote:
-> Hey Valentin,
-> 
-> On Friday 24 Jan 2020 at 12:42:53 (+0000), Valentin Schneider wrote:
->> +/*
->> + * Scan the asym_capacity domain for idle CPUs; pick the first idle one on which
->> + * the task fits.
->> + */
->> +static int select_idle_capacity(struct task_struct *p, int target)
->> +{
->> +	struct sched_domain *sd;
->> +	struct cpumask *cpus;
->> +	int cpu;
->> +
->> +	if (!static_branch_unlikely(&sched_asym_cpucapacity))
->> +		return -1;
->> +
->> +	sd = rcu_dereference(per_cpu(sd_asym_cpucapacity, target));
->> +	if (!sd)
->> +		return -1;
->> +
-> 
-> You might want 'sync_entity_load_avg(&p->se)' here no ?
-> find_idlest_cpu() and wake_cap() need one, but since we're going to use
-> them, you'll want to sync here too I think.
-> 
+Signed-off-by: Kamil Konieczny <k.konieczny@samsung.com>
+---
+ drivers/devfreq/event/exynos-nocp.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Yeah, I think you're right, it's the exact same scenario here.
+diff --git a/drivers/devfreq/event/exynos-nocp.c b/drivers/devfreq/event/exynos-nocp.c
+index ccc531ee6938..ebe9cdf94f54 100644
+--- a/drivers/devfreq/event/exynos-nocp.c
++++ b/drivers/devfreq/event/exynos-nocp.c
+@@ -167,7 +167,7 @@ static int exynos_nocp_get_event(struct devfreq_event_dev *edev,
+ 	edata->load_count = ((counter[1] << 16) | counter[0]);
+ 	edata->total_count = ((counter[3] << 16) | counter[2]);
+ 
+-	dev_dbg(&edev->dev, "%s (event: %ld/%ld)\n", edev->desc->name,
++	dev_dbg(&edev->dev, "%s (event: %lu/%lu)\n", edev->desc->name,
+ 					edata->load_count, edata->total_count);
+ 
+ 	return 0;
+-- 
+2.25.0
 
->> +	cpus = this_cpu_cpumask_var_ptr(select_idle_mask);
->> +	cpumask_and(cpus, sched_domain_span(sd), p->cpus_ptr);
->> +
->> +	for_each_cpu_wrap(cpu, cpus, target) {
->> +		if (!available_idle_cpu(cpu))
->> +			continue;
->> +		if (!task_fits_capacity(p, capacity_of(cpu)))
->> +			continue;
->> +
->> +		return cpu;
-> 
-> If we found an idle CPU, but not one big enough, should we still go
-> ahead and choose it ? Misfit / idle balance will fix that later when a
-> big CPU does become available.
-> 
-
-If we fail to find a big enough CPU, we'll just fallback to the rest of
-select_idle_sibling() which will pick an idle CPU, just without caring
-about capacity.
-
-Now an alternative here would be to:
-- return the first idle CPU on which the task fits (what the above does)
-- else, return the biggest idle CPU we found (this could e.g. still steer
-  the task towards a medium on a tri-capacity system)
-
-I think what we were trying to go with here is to not entirely hijack
-select_idle_sibling(). If we go with the above alternative, topologies
-with sched_asym_cpucapacity enabled would only ever see
-select_idle_capacity() and not the rest of select_idle_sibling(). Not sure
-if it's a bad thing or not, but it's something to ponder over.
