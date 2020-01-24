@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1385C35242
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:24:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2993C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:24:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDCF72077C
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:24:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 790F122527
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:24:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579875876;
-	bh=vJS8x5vAhv5+CbfqIyNvJ4Xv6cnGxwPpgEtFwP/weY0=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=QOFb6JcgVbRYVfDgg8F5LTRVbzai5DkAenTKRczrnrSxwvJg5Q01ol8Vx1nyJbIKR
-	 nTUyKCyNH8jzLTST/if3k237dYD60XOcD9ery30BoMMBhqkcG6XgOzs114S9gkoK4O
-	 2FyWiZYLCX6uwnGcKoRyxSoStIE4Whg1L4a2L9Wk=
+	s=default; t=1579875878;
+	bh=Li8LrGSYb/x5zKMQjBqf/caqYNBfuICQvy7Z9Uro0Mo=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=IPOjR5/dqqHMVYwjdR7Z2M2pn1MRETxjEjJ9iRySB9Cxyh5rX9bW3Vb29F3MgzMHt
+	 SeSY+CQHBYKBDhZoLYfc02LoVhwA5DZjWaD/smaU1p58NbOEE0GJ6U1eJ0FJDM0XHL
+	 Nw7XK5boD0kI2XnfqYrxVDGFXKFoHRRfLC47WSdk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729606AbgAXOWE (ORCPT
+        id S2405436AbgAXOWD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 09:22:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44038 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 09:22:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44002 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405410AbgAXOWA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 09:22:00 -0500
+        id S2392281AbgAXOV5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 09:21:57 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 05C3121556;
-        Fri, 24 Jan 2020 14:21:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6149122464;
+        Fri, 24 Jan 2020 14:21:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579875719;
-        bh=vJS8x5vAhv5+CbfqIyNvJ4Xv6cnGxwPpgEtFwP/weY0=;
-        h=From:To:Cc:Subject:Date:From;
-        b=A5Tx7pAvIIMfrtFpFjq+MobevJOooo/HMvgQFqxumfxcnoHh/nAo7DQlUtbHLpKhg
-         7KV6dhQipuqMEty5K2GlS9PI53XoYUtrJ4YWRd52q3MqbkS6EPYr5yy78NE/Had/5a
-         +iFyOrR1Upa05kWyGoDZqAxEHOR+HVurf9U+bbkM=
+        s=default; t=1579875717;
+        bh=Li8LrGSYb/x5zKMQjBqf/caqYNBfuICQvy7Z9Uro0Mo=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=FZ9MrsbVv2p0YZCNe5sY5IexohERSHzp8vkHOWMDF7gSCLNb0GHbczsaAPBZb4RqZ
+         2v34HvcddgMhdeQUdEV9a6gh0jn/LcrTibwO/nHyUaYdWv7FLfAmC8/0TOeU8FcF3/
+         oOERPhzRoT8dfnR/0SAXOgLdtvZiDE6z7bdOBgEI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sven Eckelmann <sven@narfation.org>,
-        Simon Wunderlich <sw@simonwunderlich.de>,
-        Sasha Levin <sashal@kernel.org>,
-        b.a.t.m.a.n@lists.open-mesh.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 01/18] batman-adv: Fix DAT candidate selection on little endian systems
-Date:   Fri, 24 Jan 2020 09:21:40 -0500
-Message-Id: <20200124142157.30931-1-sashal@kernel.org>
+Cc:     Michael Chan <michael.chan@broadcom.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 32/32] bnxt_en: Fix ipv6 RFS filter matching logic.
+Date:   Fri, 24 Jan 2020 09:21:19 -0500
+Message-Id: <20200124142119.30484-32-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200124142119.30484-1-sashal@kernel.org>
+References: <20200124142119.30484-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -58,51 +59,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sven Eckelmann <sven@narfation.org>
+From: Michael Chan <michael.chan@broadcom.com>
 
-[ Upstream commit 4cc4a1708903f404d2ca0dfde30e71e052c6cbc9 ]
+[ Upstream commit 6fc7caa84e713f7627e171ab1e7c4b5be0dc9b3d ]
 
-The distributed arp table is using a DHT to store and retrieve MAC address
-information for an IP address. This is done using unicast messages to
-selected peers. The potential peers are looked up using the IP address and
-the VID.
+Fix bnxt_fltr_match() to match ipv6 source and destination addresses.
+The function currently only checks ipv4 addresses and will not work
+corrently on ipv6 filters.
 
-While the IP address is always stored in big endian byte order, this is not
-the case of the VID. It can (depending on the host system) either be big
-endian or little endian. The host must therefore always convert it to big
-endian to ensure that all devices calculate the same peers for the same
-lookup data.
-
-Fixes: be1db4f6615b ("batman-adv: make the Distributed ARP Table vlan aware")
-Signed-off-by: Sven Eckelmann <sven@narfation.org>
-Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
+Fixes: c0c050c58d84 ("bnxt_en: New Broadcom ethernet driver.")
+Signed-off-by: Michael Chan <michael.chan@broadcom.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/batman-adv/distributed-arp-table.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/broadcom/bnxt/bnxt.c | 22 +++++++++++++++++-----
+ 1 file changed, 17 insertions(+), 5 deletions(-)
 
-diff --git a/net/batman-adv/distributed-arp-table.c b/net/batman-adv/distributed-arp-table.c
-index df7c6a0801885..3b440b8d7c052 100644
---- a/net/batman-adv/distributed-arp-table.c
-+++ b/net/batman-adv/distributed-arp-table.c
-@@ -242,6 +242,7 @@ static u32 batadv_hash_dat(const void *data, u32 size)
- 	u32 hash = 0;
- 	const struct batadv_dat_entry *dat = data;
- 	const unsigned char *key;
-+	__be16 vid;
- 	u32 i;
+diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt.c b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
+index 38ee7692132c5..7461e7b9eaae5 100644
+--- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
++++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
+@@ -7402,11 +7402,23 @@ static bool bnxt_fltr_match(struct bnxt_ntuple_filter *f1,
+ 	struct flow_keys *keys1 = &f1->fkeys;
+ 	struct flow_keys *keys2 = &f2->fkeys;
  
- 	key = (const unsigned char *)&dat->ip;
-@@ -251,7 +252,8 @@ static u32 batadv_hash_dat(const void *data, u32 size)
- 		hash ^= (hash >> 6);
- 	}
- 
--	key = (const unsigned char *)&dat->vid;
-+	vid = htons(dat->vid);
-+	key = (__force const unsigned char *)&vid;
- 	for (i = 0; i < sizeof(dat->vid); i++) {
- 		hash += key[i];
- 		hash += (hash << 10);
+-	if (keys1->addrs.v4addrs.src == keys2->addrs.v4addrs.src &&
+-	    keys1->addrs.v4addrs.dst == keys2->addrs.v4addrs.dst &&
+-	    keys1->ports.ports == keys2->ports.ports &&
+-	    keys1->basic.ip_proto == keys2->basic.ip_proto &&
+-	    keys1->basic.n_proto == keys2->basic.n_proto &&
++	if (keys1->basic.n_proto != keys2->basic.n_proto ||
++	    keys1->basic.ip_proto != keys2->basic.ip_proto)
++		return false;
++
++	if (keys1->basic.n_proto == htons(ETH_P_IP)) {
++		if (keys1->addrs.v4addrs.src != keys2->addrs.v4addrs.src ||
++		    keys1->addrs.v4addrs.dst != keys2->addrs.v4addrs.dst)
++			return false;
++	} else {
++		if (memcmp(&keys1->addrs.v6addrs.src, &keys2->addrs.v6addrs.src,
++			   sizeof(keys1->addrs.v6addrs.src)) ||
++		    memcmp(&keys1->addrs.v6addrs.dst, &keys2->addrs.v6addrs.dst,
++			   sizeof(keys1->addrs.v6addrs.dst)))
++			return false;
++	}
++
++	if (keys1->ports.ports == keys2->ports.ports &&
+ 	    keys1->control.flags == keys2->control.flags &&
+ 	    ether_addr_equal(f1->src_mac_addr, f2->src_mac_addr) &&
+ 	    ether_addr_equal(f1->dst_mac_addr, f2->dst_mac_addr))
 -- 
 2.20.1
 
