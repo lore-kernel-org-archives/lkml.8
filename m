@@ -6,63 +6,63 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56902C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 18:00:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92751C35242
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 18:00:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D2BD2072C
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 18:00:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C1512072C
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 18:00:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579888811;
-	bh=pTt5/4nJC64IRziuSrsQeLEAm3Ls4N5MKo4AbO+HsEs=;
+	s=default; t=1579888812;
+	bh=Nubgd0VnKoemhsq3MYyl9oVwFq/tKKocTSnqxjr2ugo=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=0bs7JoGp5/IDbSTb6hIjLZyAhVWPQs/VJjebt0B0xbpGjeFDypHb+DxjrgJAvclvR
-	 mK0DnyzKPcm3BlluXMrVJfn02qlb3c5tvp48wiLkOXwG1S/wr29gKO8/UUkmoZNSGy
-	 vRrJPF/SjNnbS/07nVbxepcip8s9U9Zw9OKdCtUg=
+	b=wCvbCwt4hdjpIxILm+zoZFrLbdd1BMCaw7FPu5j/lLrbDEIpLNZ55HH6utdfTh+Dr
+	 NqOnHbjtNgDcOKfs+1WrTJ5cs/gmjKLjcGk8cYDEIPdC2+DFGT2uazMECJySOU2l5I
+	 vQhpZdCPG25Ex/LSx+/5xM4IqJZFNScCeXpbYQrk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391018AbgAXSAF (ORCPT
+        id S2391075AbgAXSAK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 13:00:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41714 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 13:00:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41698 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390537AbgAXSAE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2390538AbgAXSAE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 24 Jan 2020 13:00:04 -0500
-Subject: Re: [GIT PULL] Please pull powerpc/linux.git powerpc-5.5-6 tag
+Subject: Re: [git pull] drm fixes for 5.5-rc8/final
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579888804;
-        bh=pTt5/4nJC64IRziuSrsQeLEAm3Ls4N5MKo4AbO+HsEs=;
+        s=default; t=1579888803;
+        bh=Nubgd0VnKoemhsq3MYyl9oVwFq/tKKocTSnqxjr2ugo=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=DMS+QMLSmyZw3ozsXl0FgwSkgp/moUiKpsIj4zrbthu2g86uST5vsfLTjsDdlCFIN
-         T1QvIyAebferbrguPeApi0n9W3S2/4ARu/PSRDgISkSkz8wXXkq4cxvtckfSzBK5qZ
-         Dv4cJ6onH+x1omRxJ4mxf97r4UdsJUSp9y9eF4dM=
+        b=xzAQYkoSgymiCK+fx7yMP07TZEghDlGzoTPa65lnZnzPrIBNyHlYlN+bqNIJYjpSo
+         JntS324sCNy9W0QHjgFE3bK4TtBBXfR8vRxjXHCGkALk472FGV5vjm7QYC/38TVyXR
+         k1DaXM7BNTHQk8iTqrtB97CpWVx8ePtlN++4k5o0=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <87zhedgihh.fsf@mpe.ellerman.id.au>
-References: <87zhedgihh.fsf@mpe.ellerman.id.au>
+In-Reply-To: <CAPM=9ty8zJzPMuvaO4=AuvviKjqMO-VXbZgs+f93wiPFFhg0kw@mail.gmail.com>
+References: <CAPM=9ty8zJzPMuvaO4=AuvviKjqMO-VXbZgs+f93wiPFFhg0kw@mail.gmail.com>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <87zhedgihh.fsf@mpe.ellerman.id.au>
-X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/powerpc/linux.git
- tags/powerpc-5.5-6
-X-PR-Tracked-Commit-Id: 5d2e5dd5849b4ef5e8ec35e812cdb732c13cd27e
+X-PR-Tracked-Message-Id: <CAPM=9ty8zJzPMuvaO4=AuvviKjqMO-VXbZgs+f93wiPFFhg0kw@mail.gmail.com>
+X-PR-Tracked-Remote: git://anongit.freedesktop.org/drm/drm
+ tags/drm-fixes-2020-01-24
+X-PR-Tracked-Commit-Id: 49412f6636bab17dbdc25e36d6482013e4188c88
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 3c45d7510cf563be2ebc04f6864b70bc69f68cb9
-Message-Id: <157988880438.9531.13004040647699970908.pr-tracker-bot@kernel.org>
-Date:   Fri, 24 Jan 2020 18:00:04 +0000
-To:     Michael Ellerman <mpe@ellerman.id.au>
+X-PR-Merge-Commit-Id: 274adbff45e3c26c65b2e103581d2ab5834b0b7c
+Message-Id: <157988880389.9531.3140625412730040133.pr-tracker-bot@kernel.org>
+Date:   Fri, 24 Jan 2020 18:00:03 +0000
+To:     Dave Airlie <airlied@gmail.com>
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        aneesh.kumar@linux.ibm.com, bharata@linux.ibm.com,
-        fbarrat@linux.ibm.com, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Fri, 24 Jan 2020 23:13:30 +1100:
+The pull request you sent on Fri, 24 Jan 2020 16:03:04 +1000:
 
-> https://git.kernel.org/pub/scm/linux/kernel/git/powerpc/linux.git tags/powerpc-5.5-6
+> git://anongit.freedesktop.org/drm/drm tags/drm-fixes-2020-01-24
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/3c45d7510cf563be2ebc04f6864b70bc69f68cb9
+https://git.kernel.org/torvalds/c/274adbff45e3c26c65b2e103581d2ab5834b0b7c
 
 Thank you!
 
