@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90E93C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:20:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F2F7C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:20:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E56820702
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:20:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A1D1206D5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:20:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579864847;
-	bh=1xuk9SclsKPSSLHRSNWv9CKiEn1sSwg2WfxhtdB5fns=;
+	s=default; t=1579864851;
+	bh=eWyQCUum57864Lrr+ixe+YZ2NxOYY9VKc0e8YZEM39o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=v7Q2lwr35GJSDcegqpEk8RCzXYjCWCKiJcs03qv7ty3nVfddZ474SncWJDo3DK7TU
-	 JTBpEVsw/yA+A11Yc8R6qZ11pId+Y6HY80+GjWYwepPV2kvNVyRNUyG6gJyg4bYaZ3
-	 a+a5vOvIUEVkIQYcFppO059o/qjEvDr7H6NuqOg4=
+	b=otgEUamyzb/lA1KJN57zNf0SmMnlq9Sts74HUogaQSnLuQA3Ok2o64Hbw9YIVZ9Xq
+	 j1ElBCy33wF7hoCXiWLcusX1czaEr+2NCdnvappd+CNP44W3wcuBY9tSPkWr0a/7r+
+	 dNQ/M5EQ+xCGv9w9vczVPSAB1WX7iX/AND38Ok/0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390970AbgAXLUq (ORCPT
+        id S2390637AbgAXLUt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:20:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58546 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 06:20:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58622 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390751AbgAXLUn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:20:43 -0500
+        id S2390751AbgAXLUr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:20:47 -0500
 Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B93A520704;
-        Fri, 24 Jan 2020 11:20:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DC657206D4;
+        Fri, 24 Jan 2020 11:20:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579864843;
-        bh=1xuk9SclsKPSSLHRSNWv9CKiEn1sSwg2WfxhtdB5fns=;
+        s=default; t=1579864846;
+        bh=eWyQCUum57864Lrr+ixe+YZ2NxOYY9VKc0e8YZEM39o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YW4FEXC7JGkkrlpX1p46NThLd16IAEazV9T0k6BwkcuyQxfPYC8JB8SZcQN5b2mdv
-         p3yJsDYF4z0u0REZ8lRu73baUDd/aHTIdv7S6W+s3bswkHolGsdgQfFkWrIbmUcQBt
-         2SpJEoaj+E4Oy79kWJoLh18Iy8zlzHNMbuRU59vE=
+        b=VKhigGQOy/3wcMUtqQZAMivXbDNBBfnFlka7WCaNie02nTrBiq/VHLJ8rQHKd7JIl
+         /jeUJGdNyIkLuI2mA1vl24QSHlG6GDLRL5/GUHZN7JtlgqA7IIstObYml+uhjrVntB
+         5Sc8oOulzPYf9Vi5T3RjAOaFPlHG3ST+BfA/cqKI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jerome Brunet <jbrunet@baylibre.com>,
+        stable@vger.kernel.org, Florian Westphal <fw@strlen.de>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 381/639] clk: meson: axg: spread spectrum is on mpll2
-Date:   Fri, 24 Jan 2020 10:29:11 +0100
-Message-Id: <20200124093134.707110667@linuxfoundation.org>
+Subject: [PATCH 4.19 370/639] netfilter: nf_tables: correct NFT_LOGLEVEL_MAX value
+Date:   Fri, 24 Jan 2020 10:29:00 +0100
+Message-Id: <20200124093133.398042147@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
 References: <20200124093047.008739095@linuxfoundation.org>
@@ -59,48 +60,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jerome Brunet <jbrunet@baylibre.com>
+From: Florian Westphal <fw@strlen.de>
 
-[ Upstream commit dc4e62d373f881cbf51513296a6db7806516a01a ]
+[ Upstream commit 92285a079eedfe104a773a7c4293f77a01f456fb ]
 
-After testing, it appears that the SSEN bit controls the spread
-spectrum function on MPLL2, not MPLL0.
+should be same as NFT_LOGLEVEL_AUDIT, so use -, not +.
 
-Fixes: 78b4af312f91 ("clk: meson-axg: add clock controller drivers")
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+Fixes: 7eced5ab5a73 ("netfilter: nf_tables: add NFT_LOGLEVEL_* enumeration and use it")
+Signed-off-by: Florian Westphal <fw@strlen.de>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/meson/axg.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ include/uapi/linux/netfilter/nf_tables.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/clk/meson/axg.c b/drivers/clk/meson/axg.c
-index 02229d051d778..4e7dac24948b8 100644
---- a/drivers/clk/meson/axg.c
-+++ b/drivers/clk/meson/axg.c
-@@ -461,11 +461,6 @@ static struct clk_regmap axg_mpll0_div = {
- 			.shift   = 16,
- 			.width   = 9,
- 		},
--		.ssen = {
--			.reg_off = HHI_MPLL_CNTL,
--			.shift   = 25,
--			.width	 = 1,
--		},
- 		.misc = {
- 			.reg_off = HHI_PLL_TOP_MISC,
- 			.shift   = 0,
-@@ -560,6 +555,11 @@ static struct clk_regmap axg_mpll2_div = {
- 			.shift   = 16,
- 			.width   = 9,
- 		},
-+		.ssen = {
-+			.reg_off = HHI_MPLL_CNTL,
-+			.shift   = 25,
-+			.width	 = 1,
-+		},
- 		.misc = {
- 			.reg_off = HHI_PLL_TOP_MISC,
- 			.shift   = 2,
+diff --git a/include/uapi/linux/netfilter/nf_tables.h b/include/uapi/linux/netfilter/nf_tables.h
+index 325ec6ef0a764..5eac62e1b68d5 100644
+--- a/include/uapi/linux/netfilter/nf_tables.h
++++ b/include/uapi/linux/netfilter/nf_tables.h
+@@ -1128,7 +1128,7 @@ enum nft_log_level {
+ 	NFT_LOGLEVEL_AUDIT,
+ 	__NFT_LOGLEVEL_MAX
+ };
+-#define NFT_LOGLEVEL_MAX	(__NFT_LOGLEVEL_MAX + 1)
++#define NFT_LOGLEVEL_MAX	(__NFT_LOGLEVEL_MAX - 1)
+ 
+ /**
+  * enum nft_queue_attributes - nf_tables queue expression netlink attributes
 -- 
 2.20.1
 
