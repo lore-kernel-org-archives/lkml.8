@@ -2,101 +2,171 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B65B5C35242
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 08:54:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8446C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 08:56:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A5172075D
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 08:54:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579856088;
-	bh=0xY6x9V00TP+QraY/L7nzfuOqHEO6nvqTQwrER0e3Ys=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=TaK6z6lv7yj5Ofuny8noUlNvqrVhkYPVog9bnF4LD6ESbli7lWjBB9RZ2dHR+e3qu
-	 k6Oj798Xyp2Dj9wGsrWjS8zCuBLGU8ejuQ+tSJNaGOZt8K1Rkm3x+4giSpvg+lkjlS
-	 VQ6iy2ov6r06DWvBeJ59vRNfBZ6fEGvtg2Hm4EcE=
+	by mail.kernel.org (Postfix) with ESMTP id 7D30820709
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 08:56:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729924AbgAXIyr (ORCPT
+        id S1728767AbgAXI4W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 03:54:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40090 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 03:56:22 -0500
+Received: from honk.sigxcpu.org ([24.134.29.49]:58882 "EHLO honk.sigxcpu.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729225AbgAXIyr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 03:54:47 -0500
-Received: from localhost (unknown [145.15.244.15])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 05D7020709;
-        Fri, 24 Jan 2020 08:54:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579856086;
-        bh=0xY6x9V00TP+QraY/L7nzfuOqHEO6nvqTQwrER0e3Ys=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=LuIt2JgMidLItMGSneEjOjLaEAmYbQDtNOSJ77X4jm6dMcS6nNqRhW2jKfOejaUnq
-         XEbKamI2R/rlHE3qvk8NnzcMCKYRCvWaztzt5ZFioGwAHCBMjhHLQ7pC/0uP117+i6
-         jBZ+Ka6opDx+8LncDFqJh2y964etJCfDYctenPpI=
-Date:   Fri, 24 Jan 2020 09:54:43 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc:     Linux PM <linux-pm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Chanho Min <chanho.min@lge.com>,
-        Daewoong Kim <daewoong00.kim@lge.com>,
-        Seokjoo Lee <seokjoo.lee@lge.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>
-Subject: Re: [PATCH] PM: core: Fix handling of devices deleted during
- system-wide resume
-Message-ID: <20200124085443.GA2936887@kroah.com>
-References: <2601275.1tEomSadG4@kreacher>
+        id S1725787AbgAXI4W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 03:56:22 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by honk.sigxcpu.org (Postfix) with ESMTP id 2FE9AFB03;
+        Fri, 24 Jan 2020 09:56:19 +0100 (CET)
+X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
+Received: from honk.sigxcpu.org ([127.0.0.1])
+        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id A1xqAaP3-9sk; Fri, 24 Jan 2020 09:56:17 +0100 (CET)
+Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
+        id CF798406B7; Fri, 24 Jan 2020 09:56:16 +0100 (CET)
+Date:   Fri, 24 Jan 2020 09:56:16 +0100
+From:   Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Christian Gmeiner <christian.gmeiner@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Sam Ravnborg <sam@ravnborg.org>, Rob Herring <robh@kernel.org>,
+        Emil Velikov <emil.velikov@collabora.com>,
+        The etnaviv authors <etnaviv@lists.freedesktop.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] drm/etnaviv: only reject timeouts with tv_nsec >= 2
+ seconds
+Message-ID: <20200124085616.GA5680@bogon.m.sigxcpu.org>
+References: <20200121114553.2667556-1-arnd@arndb.de>
+ <20200121125546.GA71415@bogon.m.sigxcpu.org>
+ <1971902c68ff805ee0b4a66f558afe06e6edf0c5.camel@pengutronix.de>
+ <CAK8P3a2E__zHPPEL37JwK=uHb_v-=C+-+zGaL3XoW5PZ+BUN5g@mail.gmail.com>
+ <20200122103034.GA67385@bogon.m.sigxcpu.org>
+ <20200122103553.GN25745@shell.armlinux.org.uk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <2601275.1tEomSadG4@kreacher>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200122103553.GN25745@shell.armlinux.org.uk>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 23, 2020 at 12:11:24AM +0100, Rafael J. Wysocki wrote:
-> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Hi Russel,
+On Wed, Jan 22, 2020 at 10:35:53AM +0000, Russell King - ARM Linux admin wrote:
+> On Wed, Jan 22, 2020 at 11:30:34AM +0100, Guido Günther wrote:
+> > Hi,
+> > On Tue, Jan 21, 2020 at 08:05:27PM +0100, Arnd Bergmann wrote:
+> > > On Tue, Jan 21, 2020 at 5:10 PM Lucas Stach <l.stach@pengutronix.de> wrote:
+> > > >
+> > > > Hi Guido,
+> > > >
+> > > > On Di, 2020-01-21 at 13:55 +0100, Guido Günther wrote:
+> > > > > Hi,
+> > > > > On Tue, Jan 21, 2020 at 12:45:25PM +0100, Arnd Bergmann wrote:
+> > > > > > As Guido Günther reported, get_abs_timeout() in the etnaviv user space
+> > > > > > sometimes passes timeouts with nanosecond values larger than 1000000000,
+> > > > > > which gets rejected after my first patch.
+> > > > > >
+> > > > > > To avoid breaking this, while also not allowing completely arbitrary
+> > > > > > values, set the limit to 1999999999 and use set_normalized_timespec64()
+> > > > > > to get the correct format before comparing it.
+> > > > >
+> > > > > I'm seeing values up to 5 seconds so I need
+> > > > >
+> > > > >      if (args->timeout.tv_nsec > (5 * NSEC_PER_SEC))
+> > > > >
+> > > > > to unbreak rendering. Which seems to match what mesa's get_abs_timeout()
+> > > > > does and how it's invoked.
+> > > >
+> > > > I have not tested this myself yet, only looked at the code. From the
+> > > > code I quoted earlier, I don't see how we end up with 5 * NSEC_PER_SEC
+> > > > in the tv_nsec member, even if the timeout passed to get_abs_timeout()
+> > > > is 5 seconds.
+> > > 
+> > > I can think of two different ways you'd end up with around five seconds here:
+> > > 
+> > > a) you have a completely arbitrary 32-bit number through truncation,
+> > >     which is up to 4.2 seconds
+> > > b) you have the same kind of 32-bit number, but add up to another 999999999
+> > >     nanoseconds, so you get up to 5.2 seconds in the 64-bit field.
+> > 
+> > I've dumped out some values tv_nsec values with current mesa git on arm64:
+> > 
+> > [   33.699652] etnaviv_ioctl_gem_cpu_prep: 4990449401
+> > [   33.813081] etnaviv_ioctl_gem_cpu_prep: 5103872445
+> > [   33.822936] etnaviv_ioctl_gem_cpu_prep: 5113731286
+> > [   33.840963] etnaviv_ioctl_gem_cpu_prep: 5131762726
+> > [   33.854120] etnaviv_ioctl_gem_cpu_prep: 5144920127
+> > [   33.861426] etnaviv_ioctl_gem_cpu_prep: 5152227527
+> > [   33.872666] etnaviv_ioctl_gem_cpu_prep: 5163466968
+> > [   33.879485] etnaviv_ioctl_gem_cpu_prep: 5170286808
+> > 
+> > The problem is that in mesa/libdrm
+> > 
+> > static inline void get_abs_timeout(struct drm_etnaviv_timespec *tv, uint64_t ns)
+> > {
+> >         struct timespec t;
+> >         uint32_t s = ns / 1000000000;
+> >         clock_gettime(CLOCK_MONOTONIC, &t);
+> >         tv->tv_sec = t.tv_sec + s;
+> >         tv->tv_nsec = t.tv_nsec + ns - (s * 1000000000);
+> >                                         ^^^^^^^^^^^^^^^
+> >    this overflows (since `s` is `uint_32t` and hence we substract a way
+> >    too small value with ns = 5000000000 which mesa uses in
+> >    etna_bo_cpu_prep.
+> > }
+> > 
+> > So with current mesa/libdrm (which needs to be fixed) we'd have a maximum
+> > 
+> >       t.tv_nsec + ns         - (s_max * 1000000000)
+> > 
+> >       999999999 + 5000000000 - 705032704            = 5294967295
+> > 
+> > Does that make sense? If so that'd be the possible upper bound for the
+> > kernel. Note that this only applies to etnaviv_ioctl_gem_cpu_prep. While
+> > etnaviv_ioctl_wait_fence and etnaviv_ioctl_gem_wait are affected too
+> > i've not yet seen user space passing in larger values.
 > 
-> If a device is deleted by one of its system-wide resume callbacks
-> (for example, because it does not appear to be present or accessible
-> any more) along with its children, the resume of the children may
-> continue leading to use-after-free errors and other issues
-> (potentially).
-> 
-> Namely, if the device's children are resumed asynchronously, their
-> resume may have been scheduled already before the device's callback
-> runs and so the device may be deleted while dpm_wait_for_superior()
-> is being executed for them.  The memory taken up by the parent device
-> object may be freed then while dpm_wait() is waiting for the parent's
-> resume callback to complete, which leads to a use-after-free.
-> Moreover, the resume of the children is really not expected to
-> continue after they have been unregistered, so it must be terminated
-> right away in that case.
-> 
-> To address this problem, modify dpm_wait_for_superior() to check
-> if the target device is still there in the system-wide PM list of
-> devices and if so, to increment its parent's reference counter, both
-> under dpm_list_mtx which prevents device_del() running for the child
-> from dropping the parent's reference counter prematurely.
-> 
-> If the device is not present in the system-wide PM list of devices
-> any more, the resume of it cannot continue, so check that again after
-> dpm_wait() returns, which means that the parent's callback has been
-> completed, and pass the result of that check to the caller of
-> dpm_wait_for_superior() to allow it to abort the device's resume
-> if it is not there any more.
-> 
-> Link: https://lore.kernel.org/linux-pm/1579568452-27253-1-git-send-email-chanho.min@lge.com
-> Reported-by: Chanho Min <chanho.min@lge.com>
-> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> ---
->  drivers/base/power/main.c |   42 +++++++++++++++++++++++++++++++++++++-----
->  1 file changed, 37 insertions(+), 5 deletions(-)
+> Except the fact that the calculation being done above is buggy.
+> Not only do we end up with tv_sec incremented by 5 seconds, but
+> we also end up with tv_nsec containing around 5 seconds in
+> nanoseconds, which means we end up with about a 10 second timeout.
 
-Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+yes.
+
+> 
+> I think it would probably be better for the kernel to print a
+> warning once when noticing over-large nsec values, suggesting a
+> userspace upgrade is in order, but continue the existing behaviour.
+
+That makes sense to me. This also makes sure we don't break other (non
+mesa using) stuff accidentally. We have
+
+  https://gitlab.freedesktop.org/mesa/mesa/commit/d817f2c69615cf37b78f484a25b7831ebe9dbe6f
+
+and
+
+  https://gitlab.freedesktop.org/mesa/mesa/merge_requests/3534
+
+to normalize nsec to [0..999999999] now.
+
+Cheers,
+ -- Guido
+
+> 
+> -- 
+> RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+> FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+> According to speedtest.net: 11.9Mbps down 500kbps up
+> 
