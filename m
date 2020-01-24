@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1385C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:28:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1443AC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:28:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86EB92075D
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:28:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEE5D2075D
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:28:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579876096;
-	bh=FLm3Uz2e1NgLQ98EN0hfrjWR9RO3k06VTrjpsPvRQ4U=;
+	s=default; t=1579876106;
+	bh=nyhqYZ2PKnkSJHtAEF+tZFuupg870oMZtfArp2fKPAc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Hfdco/ACvCcqRg55mhRFAT8hW6t9VkYu1oKjEi502kYMoznXjUiKG+X4KqwzIhnF9
-	 kfDnDQxWdOUQmfuhI9mvXV39A+LLIssLRK92krY7RatMr0s+PRMocwn2G536gSLU+P
-	 O82VGFVlG+rz/kn2xYEVNV+mJ25FGyPtfPwNGA2U=
+	b=frRV87za8ECFeNDK42iF/JlAMzKmxg7pQhlXumBZXBpPFdDE80t2ViBd92nhjW/E8
+	 slzLl3tsLZLqEIlUA9jPThhMYjRwxQNqaSSvC91Qf+4yDs+JXV0adTo+lYTl4aEAY6
+	 Z7YXlq63xNrat6VaImXLoc12fO6NktVei/auT9ZA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390851AbgAXO2P (ORCPT
+        id S2390931AbgAXO2Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 09:28:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42774 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 09:28:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42634 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405247AbgAXOVO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 09:21:14 -0500
+        id S2405203AbgAXOVK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 09:21:10 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 210C121556;
-        Fri, 24 Jan 2020 14:21:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 398BB214DB;
+        Fri, 24 Jan 2020 14:21:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579875674;
-        bh=FLm3Uz2e1NgLQ98EN0hfrjWR9RO3k06VTrjpsPvRQ4U=;
+        s=default; t=1579875669;
+        bh=nyhqYZ2PKnkSJHtAEF+tZFuupg870oMZtfArp2fKPAc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SR67Q6gCy1Vg/NMJyryjJzdZZPUZ/A0wgc/w+U+9ZAEZ0d4CTvpJHIeJa+ZiFFSUj
-         RSnYf2+mr5ebe739PpRdqpvR/5ET6YK3YdjPb7mSwtZ3mt83AzpcpMIkSkLxBbKFJX
-         hPhjLF/HZH1f8z+feIRmre3t9KCtfn6+WlB3NOhU=
+        b=RoFnPRFlyTT6Mv7Gn7dubIQ0qz/t7yvapYzc1+jPAdHX/5ITGqG4YFfDjBwAC4rNy
+         CNykTBu4YsRVPNu2frD3+mlPabPsC5PQO2Zj02TAP0wAnG0QeDJmy2AtNktNTciSXU
+         buozRHgHZKH1AENmIrsNoNuV350dwo3NtGh6Oi9k=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Florian Westphal <fw@strlen.de>,
-        syzbot+37a6804945a3a13b1572@syzkaller.appspotmail.com,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
+Cc:     Pablo Neira Ayuso <pablo@netfilter.org>,
+        Marco Oliverio <marco.oliverio@tanaza.com>,
         Sasha Levin <sashal@kernel.org>,
         netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
         netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 52/56] netfilter: nf_tables: fix flowtable list del corruption
-Date:   Fri, 24 Jan 2020 09:20:08 -0500
-Message-Id: <20200124142012.29752-52-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 48/56] netfilter: nf_tables: store transaction list locally while requesting module
+Date:   Fri, 24 Jan 2020 09:20:04 -0500
+Message-Id: <20200124142012.29752-48-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200124142012.29752-1-sashal@kernel.org>
 References: <20200124142012.29752-1-sashal@kernel.org>
@@ -62,73 +61,100 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Westphal <fw@strlen.de>
+From: Pablo Neira Ayuso <pablo@netfilter.org>
 
-[ Upstream commit 335178d5429c4cee61b58f4ac80688f556630818 ]
+[ Upstream commit ec7470b834fe7b5d7eff11b6677f5d7fdf5e9a91 ]
 
-syzbot reported following crash:
+This patch fixes a WARN_ON in nft_set_destroy() due to missing
+set reference count drop from the preparation phase. This is triggered
+by the module autoload path. Do not exercise the abort path from
+nft_request_module() while preparation phase cleaning up is still
+pending.
 
-  list_del corruption, ffff88808c9bb000->prev is LIST_POISON2 (dead000000000122)
-  [..]
-  Call Trace:
-   __list_del_entry include/linux/list.h:131 [inline]
-   list_del_rcu include/linux/rculist.h:148 [inline]
-   nf_tables_commit+0x1068/0x3b30 net/netfilter/nf_tables_api.c:7183
-   [..]
+ WARNING: CPU: 3 PID: 3456 at net/netfilter/nf_tables_api.c:3740 nft_set_destroy+0x45/0x50 [nf_tables]
+ [...]
+ CPU: 3 PID: 3456 Comm: nft Not tainted 5.4.6-arch3-1 #1
+ RIP: 0010:nft_set_destroy+0x45/0x50 [nf_tables]
+ Code: e8 30 eb 83 c6 48 8b 85 80 00 00 00 48 8b b8 90 00 00 00 e8 dd 6b d7 c5 48 8b 7d 30 e8 24 dd eb c5 48 89 ef 5d e9 6b c6 e5 c5 <0f> 0b c3 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 48 8b 7f 10 e9 52
+ RSP: 0018:ffffac4f43e53700 EFLAGS: 00010202
+ RAX: 0000000000000001 RBX: ffff99d63a154d80 RCX: 0000000001f88e03
+ RDX: 0000000001f88c03 RSI: ffff99d6560ef0c0 RDI: ffff99d63a101200
+ RBP: ffff99d617721de0 R08: 0000000000000000 R09: 0000000000000318
+ R10: 00000000f0000000 R11: 0000000000000001 R12: ffffffff880fabf0
+ R13: dead000000000122 R14: dead000000000100 R15: ffff99d63a154d80
+ FS:  00007ff3dbd5b740(0000) GS:ffff99d6560c0000(0000) knlGS:0000000000000000
+ CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+ CR2: 00001cb5de6a9000 CR3: 000000016eb6a004 CR4: 00000000001606e0
+ Call Trace:
+  __nf_tables_abort+0x3e3/0x6d0 [nf_tables]
+  nft_request_module+0x6f/0x110 [nf_tables]
+  nft_expr_type_request_module+0x28/0x50 [nf_tables]
+  nf_tables_expr_parse+0x198/0x1f0 [nf_tables]
+  nft_expr_init+0x3b/0xf0 [nf_tables]
+  nft_dynset_init+0x1e2/0x410 [nf_tables]
+  nf_tables_newrule+0x30a/0x930 [nf_tables]
+  nfnetlink_rcv_batch+0x2a0/0x640 [nfnetlink]
+  nfnetlink_rcv+0x125/0x171 [nfnetlink]
+  netlink_unicast+0x179/0x210
+  netlink_sendmsg+0x208/0x3d0
+  sock_sendmsg+0x5e/0x60
+  ____sys_sendmsg+0x21b/0x290
 
-The commit transaction list has:
+Update comment on the code to describe the new behaviour.
 
-NFT_MSG_NEWTABLE
-NFT_MSG_NEWFLOWTABLE
-NFT_MSG_DELFLOWTABLE
-NFT_MSG_DELTABLE
-
-A missing generation check during DELTABLE processing causes it to queue
-the DELFLOWTABLE operation a second time, so we corrupt the list here:
-
-  case NFT_MSG_DELFLOWTABLE:
-     list_del_rcu(&nft_trans_flowtable(trans)->list);
-     nf_tables_flowtable_notify(&trans->ctx,
-
-because we have two different DELFLOWTABLE transactions for the same
-flowtable.  We then call list_del_rcu() twice for the same flowtable->list.
-
-The object handling seems to suffer from the same bug so add a generation
-check too and only queue delete transactions for flowtables/objects that
-are still active in the next generation.
-
-Reported-by: syzbot+37a6804945a3a13b1572@syzkaller.appspotmail.com
-Fixes: 3b49e2e94e6eb ("netfilter: nf_tables: add flow table netlink frontend")
-Signed-off-by: Florian Westphal <fw@strlen.de>
+Reported-by: Marco Oliverio <marco.oliverio@tanaza.com>
+Fixes: 452238e8d5ff ("netfilter: nf_tables: add and use helper for module autoload")
 Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/nf_tables_api.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ net/netfilter/nf_tables_api.c | 19 ++++++++++---------
+ 1 file changed, 10 insertions(+), 9 deletions(-)
 
 diff --git a/net/netfilter/nf_tables_api.c b/net/netfilter/nf_tables_api.c
-index 79b88467606db..7f0d3ffd54697 100644
+index 4711a8b56f32f..f7d1f66b29483 100644
 --- a/net/netfilter/nf_tables_api.c
 +++ b/net/netfilter/nf_tables_api.c
-@@ -936,12 +936,18 @@ static int nft_flush_table(struct nft_ctx *ctx)
- 	}
+@@ -483,23 +483,21 @@ __nf_tables_chain_type_lookup(const struct nlattr *nla, u8 family)
+ }
  
- 	list_for_each_entry_safe(flowtable, nft, &ctx->table->flowtables, list) {
-+		if (!nft_is_active_next(ctx->net, flowtable))
-+			continue;
-+
- 		err = nft_delflowtable(ctx, flowtable);
- 		if (err < 0)
- 			goto out;
- 	}
+ /*
+- * Loading a module requires dropping mutex that guards the
+- * transaction.
+- * We first need to abort any pending transactions as once
+- * mutex is unlocked a different client could start a new
+- * transaction.  It must not see any 'future generation'
+- * changes * as these changes will never happen.
++ * Loading a module requires dropping mutex that guards the transaction.
++ * A different client might race to start a new transaction meanwhile. Zap the
++ * list of pending transaction and then restore it once the mutex is grabbed
++ * again. Users of this function return EAGAIN which implicitly triggers the
++ * transaction abort path to clean up the list of pending transactions.
+  */
+ #ifdef CONFIG_MODULES
+-static int __nf_tables_abort(struct net *net);
+-
+ static void nft_request_module(struct net *net, const char *fmt, ...)
+ {
+ 	char module_name[MODULE_NAME_LEN];
++	LIST_HEAD(commit_list);
+ 	va_list args;
+ 	int ret;
  
- 	list_for_each_entry_safe(obj, ne, &ctx->table->objects, list) {
-+		if (!nft_is_active_next(ctx->net, obj))
-+			continue;
+-	__nf_tables_abort(net);
++	list_splice_init(&net->nft.commit_list, &commit_list);
+ 
+ 	va_start(args, fmt);
+ 	ret = vsnprintf(module_name, MODULE_NAME_LEN, fmt, args);
+@@ -510,6 +508,9 @@ static void nft_request_module(struct net *net, const char *fmt, ...)
+ 	mutex_unlock(&net->nft.commit_mutex);
+ 	request_module("%s", module_name);
+ 	mutex_lock(&net->nft.commit_mutex);
 +
- 		err = nft_delobj(ctx, obj);
- 		if (err < 0)
- 			goto out;
++	WARN_ON_ONCE(!list_empty(&net->nft.commit_list));
++	list_splice(&commit_list, &net->nft.commit_list);
+ }
+ #endif
+ 
 -- 
 2.20.1
 
