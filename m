@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFCDAC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:35:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F5FCC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:35:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F32C20661
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:35:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25AAF2077C
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:35:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579876520;
-	bh=jQ+TaHHThZHA3Y8tm3ijmMsa/OkFMve527Jlx5shKTc=;
+	s=default; t=1579876529;
+	bh=VliAeT8Po/eV+MTczlUWIup6JgY6fmjh0jhjULFIku0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UHegc0FmP/uVRRE+TAhJoAalHy46mdDVBxRGnBW8D1S00mjGqm08rxBNwtfY/BZFB
-	 blUM/AdofvrvDmdIc0EoICHjEkZ4ta5wl/bS2zLdF01oT38iNlghZ6VFcgKYWIMCOs
-	 VcNGKdCw2+VYrWaZGJ84oSEFFLWTX0W0N5OYn/1o=
+	b=GfB9H8CsQWPhka2W4uxZwhPTlbo0MkTRPIhlnrhLeSZ0cgAqTxV5TJqh5xhc1sbnW
+	 2p+914x6c3AzGvFD2cMk72MS60TcwkJoHPueMEb90ND5Vhncm6TKK4tFmD4VnVzkYC
+	 ltJDumX9fhxLnB1IE0omijZjqBsgnSPsSp/duqoU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392000AbgAXOfT (ORCPT
+        id S2391845AbgAXOTf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 09:35:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40070 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 09:19:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39554 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404039AbgAXOTh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 09:19:37 -0500
+        id S2391518AbgAXOTT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 09:19:19 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C8BB9208C4;
-        Fri, 24 Jan 2020 14:19:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3C2E120838;
+        Fri, 24 Jan 2020 14:19:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579875576;
-        bh=jQ+TaHHThZHA3Y8tm3ijmMsa/OkFMve527Jlx5shKTc=;
+        s=default; t=1579875559;
+        bh=VliAeT8Po/eV+MTczlUWIup6JgY6fmjh0jhjULFIku0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cUwMMU5PaFALncXKoZj3mSKIqAXNwes7sYxYTa/+8qWJNvGsdmgHfS0GifJgNltGP
-         hUXja7SdkKJ8yjMk8sMsFHGtdabbdwYIxO/g0hU+7cdPfQ2Q0GgJisyi5P0aACswrO
-         enu2OyeODtiWJ941DqP0Jo0sKsoP/WagsvO4fKzs=
+        b=DQF6eejBL21HMrBLloIcOE1RUwIudjS34LONfAivMIRtCwrLVEtcikKflKJmvf/0T
+         lDVPwERfhVH6ZqoI3ymU4AXs0kJQU+Z6m5HPlOvewRDE6a2PCnDk2j4sYVO/eC6xyp
+         umSkp1NzdD23pvsxdHbX1zCK051pF/MHBv07kXVI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ganapathi Bhat <ganapathi.bhat@nxp.com>,
-        Cathy Luo <xiaohua.luo@nxp.com>,
-        Johannes Berg <johannes.berg@intel.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 068/107] wireless: fix enabling channel 12 for custom regulatory domain
-Date:   Fri, 24 Jan 2020 09:17:38 -0500
-Message-Id: <20200124141817.28793-68-sashal@kernel.org>
+Cc:     Kai Vehmanen <kai.vehmanen@linux.intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
+Subject: [PATCH AUTOSEL 5.4 053/107] ASoC: SOF: Intel: fix HDA codec driver probe with multiple controllers
+Date:   Fri, 24 Jan 2020 09:17:23 -0500
+Message-Id: <20200124141817.28793-53-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200124141817.28793-1-sashal@kernel.org>
 References: <20200124141817.28793-1-sashal@kernel.org>
@@ -61,63 +60,88 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ganapathi Bhat <ganapathi.bhat@nxp.com>
+From: Kai Vehmanen <kai.vehmanen@linux.intel.com>
 
-[ Upstream commit c4b9d655e445a8be0bff624aedea190606b5ebbc ]
+[ Upstream commit 2c63bea714780f8e1fc9cb7bc10deda26fada25b ]
 
-Commit e33e2241e272 ("Revert "cfg80211: Use 5MHz bandwidth by
-default when checking usable channels"") fixed a broken
-regulatory (leaving channel 12 open for AP where not permitted).
-Apply a similar fix to custom regulatory domain processing.
+In case system has multiple HDA controllers, it can happen that
+same HDA codec driver is used for codecs of multiple controllers.
+In this case, SOF may fail to probe the HDA driver and SOF
+initialization fails.
 
-Signed-off-by: Cathy Luo <xiaohua.luo@nxp.com>
-Signed-off-by: Ganapathi Bhat <ganapathi.bhat@nxp.com>
-Link: https://lore.kernel.org/r/1576836859-8945-1-git-send-email-ganapathi.bhat@nxp.com
-[reword commit message, fix coding style, add a comment]
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+SOF HDA code currently relies that a call to request_module() will
+also run device matching logic to attach driver to the codec instance.
+However if driver for another HDA controller was already loaded and it
+already loaded the HDA codec driver, this breaks current logic in SOF.
+In this case the request_module() SOF does becomes a no-op and HDA
+Codec driver is not attached to the codec instance sitting on the HDA
+bus SOF is controlling. Typical scenario would be a system with both
+external and internal GPUs, with driver of the external GPU loaded
+first.
+
+Fix this by adding similar logic as is used in legacy HDA driver
+where an explicit device_attach() call is done after request_module().
+
+Also add logic to propagate errors reported by device_attach() back
+to caller. This also works in the case where drivers are not built
+as modules.
+
+Signed-off-by: Kai Vehmanen <kai.vehmanen@linux.intel.com>
+Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Link: https://lore.kernel.org/r/20200110235751.3404-8-pierre-louis.bossart@linux.intel.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/wireless/reg.c | 13 ++++++++++---
- 1 file changed, 10 insertions(+), 3 deletions(-)
+ sound/soc/sof/intel/hda-codec.c | 19 ++++++++++++-------
+ 1 file changed, 12 insertions(+), 7 deletions(-)
 
-diff --git a/net/wireless/reg.c b/net/wireless/reg.c
-index 446c76d44e65a..3c2070040277d 100644
---- a/net/wireless/reg.c
-+++ b/net/wireless/reg.c
-@@ -2261,14 +2261,15 @@ static void update_all_wiphy_regulatory(enum nl80211_reg_initiator initiator)
+diff --git a/sound/soc/sof/intel/hda-codec.c b/sound/soc/sof/intel/hda-codec.c
+index 3ca6795a89ba3..9e8233c10d860 100644
+--- a/sound/soc/sof/intel/hda-codec.c
++++ b/sound/soc/sof/intel/hda-codec.c
+@@ -24,19 +24,18 @@
+ #define IDISP_VID_INTEL	0x80860000
  
- static void handle_channel_custom(struct wiphy *wiphy,
- 				  struct ieee80211_channel *chan,
--				  const struct ieee80211_regdomain *regd)
-+				  const struct ieee80211_regdomain *regd,
-+				  u32 min_bw)
+ /* load the legacy HDA codec driver */
+-#ifdef MODULE
+-static void hda_codec_load_module(struct hda_codec *codec)
++static int hda_codec_load_module(struct hda_codec *codec)
  {
- 	u32 bw_flags = 0;
- 	const struct ieee80211_reg_rule *reg_rule = NULL;
- 	const struct ieee80211_power_rule *power_rule = NULL;
- 	u32 bw;
++#ifdef MODULE
+ 	char alias[MODULE_NAME_LEN];
+ 	const char *module = alias;
  
--	for (bw = MHZ_TO_KHZ(20); bw >= MHZ_TO_KHZ(5); bw = bw / 2) {
-+	for (bw = MHZ_TO_KHZ(20); bw >= min_bw; bw = bw / 2) {
- 		reg_rule = freq_reg_info_regd(MHZ_TO_KHZ(chan->center_freq),
- 					      regd, bw);
- 		if (!IS_ERR(reg_rule))
-@@ -2324,8 +2325,14 @@ static void handle_band_custom(struct wiphy *wiphy,
- 	if (!sband)
- 		return;
+ 	snd_hdac_codec_modalias(&codec->core, alias, sizeof(alias));
+ 	dev_dbg(&codec->core.dev, "loading codec module: %s\n", module);
+ 	request_module(module);
+-}
+-#else
+-static void hda_codec_load_module(struct hda_codec *codec) {}
+ #endif
++	return device_attach(hda_codec_dev(codec));
++}
  
-+	/*
-+	 * We currently assume that you always want at least 20 MHz,
-+	 * otherwise channel 12 might get enabled if this rule is
-+	 * compatible to US, which permits 2402 - 2472 MHz.
-+	 */
- 	for (i = 0; i < sband->n_channels; i++)
--		handle_channel_custom(wiphy, &sband->channels[i], regd);
-+		handle_channel_custom(wiphy, &sband->channels[i], regd,
-+				      MHZ_TO_KHZ(20));
- }
+ /* enable controller wake up event for all codecs with jack connectors */
+ void hda_codec_jack_wake_enable(struct snd_sof_dev *sdev)
+@@ -116,10 +115,16 @@ static int hda_codec_probe(struct snd_sof_dev *sdev, int address)
+ 	/* use legacy bus only for HDA codecs, idisp uses ext bus */
+ 	if ((resp & 0xFFFF0000) != IDISP_VID_INTEL) {
+ 		hdev->type = HDA_DEV_LEGACY;
+-		hda_codec_load_module(&hda_priv->codec);
++		ret = hda_codec_load_module(&hda_priv->codec);
++		/*
++		 * handle ret==0 (no driver bound) as an error, but pass
++		 * other return codes without modification
++		 */
++		if (ret == 0)
++			ret = -ENOENT;
+ 	}
  
- /* Used by drivers prior to wiphy registration */
+-	return 0;
++	return ret;
+ #else
+ 	hdev = devm_kzalloc(sdev->dev, sizeof(*hdev), GFP_KERNEL);
+ 	if (!hdev)
 -- 
 2.20.1
 
