@@ -7,50 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 723C2C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:31:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73A0EC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:31:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 492EF2075D
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:31:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47FD3206F0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:31:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579876306;
-	bh=NrobwdqGaNU0yOau8EcxQ97LyAVOpcmmB++1rcAI2n4=;
+	s=default; t=1579876310;
+	bh=EjpoKTcnU0pwJ5XjcH6CvI+6ThgKGdm5gNCySFfzE3k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sQdzd2x+x89NVRe8s58AhiiIcTgdp9gjQx7uqtPCUjRE8Oh/sKoqaNt8AXhB0Sbfv
-	 xdPs2/VGKBpNFq5Hf03pW4TUSlKjWPFWhgyLQ05fnSeWoRegPhLn1lktizZqsrX75y
-	 MrAY2OImRp36yKKgECZJnEY3IRiveeHsN/c1Ga4g=
+	b=czje1UCsClWEKiHYRcHlGh/3gJ9V1Gw/4kvtIpC50ivyuTBLAzv7XZl20j6MIAQz+
+	 6V3zu6lY57tZFmhDKRFGfocukiRZDO1W9idMGZxE5IZ0t8cJYkA57/606C88HRfRQk
+	 46KmU9Xl6FuyHCCzy2ncmdj9qS/Xp5amV0xfmI20=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392583AbgAXObm (ORCPT
+        id S2404653AbgAXOUQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 09:31:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41320 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 09:20:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40616 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404734AbgAXOUU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 09:20:20 -0500
+        id S2404184AbgAXOT4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 09:19:56 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3F1CE21569;
-        Fri, 24 Jan 2020 14:20:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9076C22527;
+        Fri, 24 Jan 2020 14:19:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579875620;
-        bh=NrobwdqGaNU0yOau8EcxQ97LyAVOpcmmB++1rcAI2n4=;
+        s=default; t=1579875595;
+        bh=EjpoKTcnU0pwJ5XjcH6CvI+6ThgKGdm5gNCySFfzE3k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zdVUufX9DJT1Z4I18buVOtzHr3l3tzDfB5DAPhdSEh8UQDq8WOW1D22HZnt6oxd4t
-         TgRmnBRUAtAXXMpn2oDE6Yc2yY+3+owqOS3KheKq52MKOW0O6UOsVU+pL6MS6HfUFA
-         1FugVEDAZI5NPemhcZ8+2hGskVxWnDwd/VUx82BI=
+        b=o77kV+9QOJSck3jkvp6CxsUZeeyctpry5dnMkCX2SsC+8dMGHrcpkBxPq5QmG+9UH
+         A+XlVKQtCY8zbl5S/DHJKLIMX54EWdUq3Rvg9V92BQXxjEQlsXavqlzsIAHV4lbGt5
+         EzlSJ8z1wMiawSE75aLxC2qgPc4RCS6wcjCMLu+Y=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.19 06/56] ARM: dts: beagle-x15-common: Model 5V0 regulator
-Date:   Fri, 24 Jan 2020 09:19:22 -0500
-Message-Id: <20200124142012.29752-6-sashal@kernel.org>
+Cc:     Jose Abreu <Jose.Abreu@synopsys.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 084/107] net: stmmac: selftests: Make it work in Synopsys AXS101 boards
+Date:   Fri, 24 Jan 2020 09:17:54 -0500
+Message-Id: <20200124141817.28793-84-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200124142012.29752-1-sashal@kernel.org>
-References: <20200124142012.29752-1-sashal@kernel.org>
+In-Reply-To: <20200124141817.28793-1-sashal@kernel.org>
+References: <20200124141817.28793-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,54 +59,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kishon Vijay Abraham I <kishon@ti.com>
+From: Jose Abreu <Jose.Abreu@synopsys.com>
 
-[ Upstream commit e17e7c498d4f734df93c300441e100818ed58168 ]
+[ Upstream commit 0b9f932edc1a461933bfde08e620362e2190e0dd ]
 
-On am57xx-beagle-x15, 5V0 is connected to P16, P17, P18 and P19
-connectors. On am57xx-evm, 5V0 regulator is used to get 3V6 regulator
-which is connected to the COMQ port. Model 5V0 regulator here in order
-for it to be used in am57xx-evm to model 3V6 regulator.
+Synopsys AXS101 boards do not support unaligned memory loads or stores.
+Change the selftests mechanism to explicity:
+- Not add extra alignment in TX SKB
+- Use the unaligned version of ether_addr_equal()
 
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+Fixes: 091810dbded9 ("net: stmmac: Introduce selftests support")
+Signed-off-by: Jose Abreu <Jose.Abreu@synopsys.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../boot/dts/am57xx-beagle-x15-common.dtsi    | 21 +++++++++++++++++++
- 1 file changed, 21 insertions(+)
+ .../stmicro/stmmac/stmmac_selftests.c         | 20 ++++++++++---------
+ 1 file changed, 11 insertions(+), 9 deletions(-)
 
-diff --git a/arch/arm/boot/dts/am57xx-beagle-x15-common.dtsi b/arch/arm/boot/dts/am57xx-beagle-x15-common.dtsi
-index 872382bd043f8..0051b2e05c2d5 100644
---- a/arch/arm/boot/dts/am57xx-beagle-x15-common.dtsi
-+++ b/arch/arm/boot/dts/am57xx-beagle-x15-common.dtsi
-@@ -32,6 +32,27 @@
- 		reg = <0x0 0x80000000 0x0 0x80000000>;
- 	};
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c
+index 3679d123a2ab7..36ef8bee5fcfd 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c
+@@ -80,7 +80,7 @@ static struct sk_buff *stmmac_test_get_udp_skb(struct stmmac_priv *priv,
+ 	if (attr->max_size && (attr->max_size > size))
+ 		size = attr->max_size;
  
-+	main_12v0: fixedregulator-main_12v0 {
-+		/* main supply */
-+		compatible = "regulator-fixed";
-+		regulator-name = "main_12v0";
-+		regulator-min-microvolt = <12000000>;
-+		regulator-max-microvolt = <12000000>;
-+		regulator-always-on;
-+		regulator-boot-on;
-+	};
-+
-+	evm_5v0: fixedregulator-evm_5v0 {
-+		/* Output of TPS54531D */
-+		compatible = "regulator-fixed";
-+		regulator-name = "evm_5v0";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		vin-supply = <&main_12v0>;
-+		regulator-always-on;
-+		regulator-boot-on;
-+	};
-+
- 	vdd_3v3: fixedregulator-vdd_3v3 {
- 		compatible = "regulator-fixed";
- 		regulator-name = "vdd_3v3";
+-	skb = netdev_alloc_skb_ip_align(priv->dev, size);
++	skb = netdev_alloc_skb(priv->dev, size);
+ 	if (!skb)
+ 		return NULL;
+ 
+@@ -244,6 +244,8 @@ static int stmmac_test_loopback_validate(struct sk_buff *skb,
+ 					 struct net_device *orig_ndev)
+ {
+ 	struct stmmac_test_priv *tpriv = pt->af_packet_priv;
++	unsigned char *src = tpriv->packet->src;
++	unsigned char *dst = tpriv->packet->dst;
+ 	struct stmmachdr *shdr;
+ 	struct ethhdr *ehdr;
+ 	struct udphdr *uhdr;
+@@ -260,15 +262,15 @@ static int stmmac_test_loopback_validate(struct sk_buff *skb,
+ 		goto out;
+ 
+ 	ehdr = (struct ethhdr *)skb_mac_header(skb);
+-	if (tpriv->packet->dst) {
+-		if (!ether_addr_equal(ehdr->h_dest, tpriv->packet->dst))
++	if (dst) {
++		if (!ether_addr_equal_unaligned(ehdr->h_dest, dst))
+ 			goto out;
+ 	}
+ 	if (tpriv->packet->sarc) {
+-		if (!ether_addr_equal(ehdr->h_source, ehdr->h_dest))
++		if (!ether_addr_equal_unaligned(ehdr->h_source, ehdr->h_dest))
+ 			goto out;
+-	} else if (tpriv->packet->src) {
+-		if (!ether_addr_equal(ehdr->h_source, tpriv->packet->src))
++	} else if (src) {
++		if (!ether_addr_equal_unaligned(ehdr->h_source, src))
+ 			goto out;
+ 	}
+ 
+@@ -714,7 +716,7 @@ static int stmmac_test_flowctrl_validate(struct sk_buff *skb,
+ 	struct ethhdr *ehdr;
+ 
+ 	ehdr = (struct ethhdr *)skb_mac_header(skb);
+-	if (!ether_addr_equal(ehdr->h_source, orig_ndev->dev_addr))
++	if (!ether_addr_equal_unaligned(ehdr->h_source, orig_ndev->dev_addr))
+ 		goto out;
+ 	if (ehdr->h_proto != htons(ETH_P_PAUSE))
+ 		goto out;
+@@ -856,7 +858,7 @@ static int stmmac_test_vlan_validate(struct sk_buff *skb,
+ 	}
+ 
+ 	ehdr = (struct ethhdr *)skb_mac_header(skb);
+-	if (!ether_addr_equal(ehdr->h_dest, tpriv->packet->dst))
++	if (!ether_addr_equal_unaligned(ehdr->h_dest, tpriv->packet->dst))
+ 		goto out;
+ 
+ 	ihdr = ip_hdr(skb);
+@@ -1554,7 +1556,7 @@ static int stmmac_test_arp_validate(struct sk_buff *skb,
+ 	struct arphdr *ahdr;
+ 
+ 	ehdr = (struct ethhdr *)skb_mac_header(skb);
+-	if (!ether_addr_equal(ehdr->h_dest, tpriv->packet->src))
++	if (!ether_addr_equal_unaligned(ehdr->h_dest, tpriv->packet->src))
+ 		goto out;
+ 
+ 	ahdr = arp_hdr(skb);
 -- 
 2.20.1
 
