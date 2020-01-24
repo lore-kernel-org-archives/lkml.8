@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76BB6C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:19:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6555AC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:19:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E4542077C
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:19:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3267C20704
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:19:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579864753;
-	bh=2nD3AHmA8rJjgimj4IK7RHcoUgTeaT2e9TwzyW/IHxE=;
+	s=default; t=1579864758;
+	bh=UelN6tDKfbM0VyU4uVtgi7SNJR2wna7rh/JGw2VMtgA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mZ5y/LanC85oye1RLlclZfwJaFzsp3Kqtlme54IAY0zuJlg6vOveQKHEKOhRcvTvk
-	 npTuZOH3WoFse4SULgCtDWdSBMc52wRKOX3Y6sclHoglTjG0Dw2lXfbrmfIuYwJPXm
-	 pqF+wLr7DfDTn1OGhavdDiFBtx6YZwHl6PJTO6hY=
+	b=LtsRfNeGmqIAcL4YZVw+XdbcD6Ybxt0/c3Ai3wuI3FVS25X3Bl3FZfXfV1RbhrvqY
+	 GdUCLXKLzm7Q6B99FlQsjEXEi/Az/eWjXtQ0VRWer3Cv78FhcZsbt4fgY36c9XkHk7
+	 gbzGXUxF/G8ajNzdfUwTfyeGvF3T+BawisNuXKYc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390528AbgAXLTM (ORCPT
+        id S2390767AbgAXLTR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:19:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56494 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 06:19:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56602 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390741AbgAXLTG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:19:06 -0500
+        id S2390741AbgAXLTN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:19:13 -0500
 Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E4C222075D;
-        Fri, 24 Jan 2020 11:19:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E85B320708;
+        Fri, 24 Jan 2020 11:19:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579864745;
-        bh=2nD3AHmA8rJjgimj4IK7RHcoUgTeaT2e9TwzyW/IHxE=;
+        s=default; t=1579864752;
+        bh=UelN6tDKfbM0VyU4uVtgi7SNJR2wna7rh/JGw2VMtgA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fiGd6bu5dQW8pGZfSuD2Ca6FDrsDwFW/agKilCC2/FY96sVgheTH42h+/1I5zQ2ab
-         j0wQpQeSXGaW5u5Fm0cnf8qJJfESflPoYkE9sURwxP8dMaPJj0GrpMT5Wkht4vOK1M
-         fbPkJB2H8VMidsAjwkUME9L7Cqbo/G4KkOqN7dCo=
+        b=0eDBSOKrzhpUYlBBL+KMYoseRKVRVbcAbRSmngz2lBAepiGTBhoBMz7Dun6S6RViH
+         X/9wnTKTI2o8MJKQ6L8ArCO1kmQtH2p2QhRwJ2nFVKNIm/NqfHVS4F1wCidW+AgsnN
+         r93wR1cKNiDcwAViiAMaYKaUY80j+p7bsxFo8KE4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Minas Harutyunyan <hminas@synopsys.com>,
-        Felipe Balbi <felipe.balbi@linux.intel.com>,
+        stable@vger.kernel.org, Parav Pandit <parav@mellanox.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 341/639] dwc2: gadget: Fix completed transfer size calculation in DDMA
-Date:   Fri, 24 Jan 2020 10:28:31 +0100
-Message-Id: <20200124093129.863870628@linuxfoundation.org>
+Subject: [PATCH 4.19 343/639] RDMA/rxe: Consider skb reserve space based on netdev of GID
+Date:   Fri, 24 Jan 2020 10:28:33 +0100
+Message-Id: <20200124093130.097354236@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
 References: <20200124093047.008739095@linuxfoundation.org>
@@ -60,37 +61,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Minas Harutyunyan <minas.harutyunyan@synopsys.com>
+From: Parav Pandit <parav@mellanox.com>
 
-[ Upstream commit 5acb4b970184d189d901192d075997c933b82260 ]
+[ Upstream commit 3bf3e2b881c1412d0329ce9376dfe1518489b8fc ]
 
-Fix calculation of transfer size on completion in function
-dwc2_gadget_get_xfersize_ddma().
+Always consider the skb reserve space based on netdevice of the GID
+attribute, regardless of vlan or non vlan netdevice.
 
-Added increment of descriptor pointer to move to next descriptor in
-the loop.
-
-Fixes: aa3e8bc81311 ("usb: dwc2: gadget: DDMA transfer start and complete")
-
-Signed-off-by: Minas Harutyunyan <hminas@synopsys.com>
-Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
+Fixes: 43c9fc509fa5 ("rdma_rxe: make rxe work over 802.1q VLAN devices")
+Signed-off-by: Parav Pandit <parav@mellanox.com>
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/dwc2/gadget.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/infiniband/sw/rxe/rxe_net.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/usb/dwc2/gadget.c b/drivers/usb/dwc2/gadget.c
-index 3f68edde0f03a..f64d1cd08fb67 100644
---- a/drivers/usb/dwc2/gadget.c
-+++ b/drivers/usb/dwc2/gadget.c
-@@ -2230,6 +2230,7 @@ static unsigned int dwc2_gadget_get_xfersize_ddma(struct dwc2_hsotg_ep *hs_ep)
- 		if (status & DEV_DMA_STS_MASK)
- 			dev_err(hsotg->dev, "descriptor %d closed with %x\n",
- 				i, status & DEV_DMA_STS_MASK);
-+		desc++;
- 	}
+diff --git a/drivers/infiniband/sw/rxe/rxe_net.c b/drivers/infiniband/sw/rxe/rxe_net.c
+index 8094cbaa54a9e..54add70c22b5c 100644
+--- a/drivers/infiniband/sw/rxe/rxe_net.c
++++ b/drivers/infiniband/sw/rxe/rxe_net.c
+@@ -533,8 +533,9 @@ struct sk_buff *rxe_init_packet(struct rxe_dev *rxe, struct rxe_av *av,
+ 	if (unlikely(!skb))
+ 		goto out;
  
- 	return bytes_rem;
+-	skb_reserve(skb, hdr_len + LL_RESERVED_SPACE(rxe->ndev));
++	skb_reserve(skb, hdr_len + LL_RESERVED_SPACE(ndev));
+ 
++	/* FIXME: hold reference to this netdev until life of this skb. */
+ 	skb->dev	= ndev;
+ 	if (av->network_type == RDMA_NETWORK_IPV4)
+ 		skb->protocol = htons(ETH_P_IP);
 -- 
 2.20.1
 
