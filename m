@@ -7,49 +7,52 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D10B5C35240
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 01:18:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7095BC35242
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 01:18:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A38CA206A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 01:18:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38CB52087E
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 01:18:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579828710;
-	bh=d97+DNOiVfSHCsLfElaDRBIQhu0ScRku/iaDxOT3hWg=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=hGnJYRh7zz6xJNu3esFQsTdWQsahckO7ooThiFkn6zLu8TVdUxWJ8BH6SpBQe58FD
-	 ZHsIaFDTuk8EPAngLlT0XLQOrXevce0Z1Uv9C3ZDQ/1tMb37+0F+hU81rPV16IYGBi
-	 P/BEAuq8rkEsPrLsovQJOO0b5e/w0Liird2qqacg=
+	s=default; t=1579828715;
+	bh=Mwbos0zWY2rX9HbtysjU/n4dNOCI04QklGPwEbcFCp4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=V7y5Xp61mVCBLuzqDFmbL5p9uv3FED0R0Fc09r5jeAaicR7Z+SDoVsq3bno3aFeMC
+	 wPfu0NIGnKYvODbTPBgfKE4LPHHcxJRixqkb37A2c6ESixY0LiBNX4AoIV2a3NjAMt
+	 m2jq2iOrPdv9tHI3Qj47bYtKEDDmduXeUKE9vLO8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730992AbgAXBSI (ORCPT
+        id S1731051AbgAXBSe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 20:18:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33206 "EHLO mail.kernel.org"
+        Thu, 23 Jan 2020 20:18:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33252 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730914AbgAXBSE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 20:18:04 -0500
+        id S1730953AbgAXBSG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jan 2020 20:18:06 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5E7FD2087E;
-        Fri, 24 Jan 2020 01:18:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A409322464;
+        Fri, 24 Jan 2020 01:18:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579828683;
-        bh=d97+DNOiVfSHCsLfElaDRBIQhu0ScRku/iaDxOT3hWg=;
-        h=From:To:Cc:Subject:Date:From;
-        b=stXSQbSjsEJBFgYaZdAjNeIxLFP5ZmtQTWjybdk20mLVoP8JOV9Je7hMtYf89N0j4
-         F4MhZVdA4fghFKfrilavQlxUhj4ZKifq8zJqnyp5QDSBQmnKEKOzmibOkoYG+//H1e
-         MA6N/YTLQXIUTJwyE2Gi0Wy0cbYQVGop7IrFN/QI=
+        s=default; t=1579828685;
+        bh=Mwbos0zWY2rX9HbtysjU/n4dNOCI04QklGPwEbcFCp4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=wG+3tRAwpXoF0/4lmmfmYFyGCIPJ1IFG7R3GM52LDRZEnY2eV/SP9rdP9NymCXxJJ
+         R0ykqekTTLNuM1zn+YYIiK9o0QOsuk1zZZlK9/5asbbjkYH+yNjvVDYGq++LC9tIQQ
+         BTVWJB8a7RJKq6K5iP87ZbWq0Bs4Xz92UNBIppPE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Slawomir Pawlowski <slawomir.pawlowski@intel.com>,
-        Przemek Kitszel <przemyslawx.kitszel@intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 1/5] PCI: Add DMA alias quirk for Intel VCA NTB
-Date:   Thu, 23 Jan 2020 20:17:57 -0500
-Message-Id: <20200124011801.18712-1-sashal@kernel.org>
+Cc:     Joel Stanley <joel@jms.id.au>,
+        =?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg@kaod.org>,
+        Arnd Bergmann <arnd@arndb.de>, Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 4.14 3/5] ARM: config: aspeed-g5: Enable 8250_DW quirks
+Date:   Thu, 23 Jan 2020 20:17:59 -0500
+Message-Id: <20200124011801.18712-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200124011801.18712-1-sashal@kernel.org>
+References: <20200124011801.18712-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -58,78 +61,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Slawomir Pawlowski <slawomir.pawlowski@intel.com>
+From: Joel Stanley <joel@jms.id.au>
 
-[ Upstream commit 56b4cd4b7da9ee95778eb5c8abea49f641ebfd91 ]
+[ Upstream commit a5331a7a87ec81d5228b7421acf831b2d0c0de26 ]
 
-Intel Visual Compute Accelerator (VCA) is a family of PCIe add-in devices
-exposing computational units via Non Transparent Bridges (NTB, PEX 87xx).
+This driver option is used by the AST2600 A0 boards to work around a
+hardware issue.
 
-Similarly to MIC x200, we need to add DMA aliases to allow buffer access
-when IOMMU is enabled.
-
-Add aliases to allow computational unit access to host memory.  These
-aliases mark the whole VCA device as one IOMMU group.
-
-All possible slot numbers (0x20) are used, since we are unable to tell what
-slot is used on other side.  This quirk is intended for both host and
-computational unit sides.  The VCA devices have up to five functions: four
-for DMA channels and one additional.
-
-Link: https://lore.kernel.org/r/5683A335CC8BE1438C3C30C49DCC38DF637CED8E@IRSMSX102.ger.corp.intel.com
-Signed-off-by: Slawomir Pawlowski <slawomir.pawlowski@intel.com>
-Signed-off-by: Przemek Kitszel <przemyslawx.kitszel@intel.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Reviewed-by: Cédric Le Goater <clg@kaod.org>
+Acked-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Joel Stanley <joel@jms.id.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/quirks.c | 34 ++++++++++++++++++++++++++++++++++
- 1 file changed, 34 insertions(+)
+ arch/arm/configs/aspeed_g5_defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index 90df085e9f925..e7ed051ec125e 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -4019,6 +4019,40 @@ static void quirk_mic_x200_dma_alias(struct pci_dev *pdev)
- DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x2260, quirk_mic_x200_dma_alias);
- DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x2264, quirk_mic_x200_dma_alias);
- 
-+/*
-+ * Intel Visual Compute Accelerator (VCA) is a family of PCIe add-in devices
-+ * exposing computational units via Non Transparent Bridges (NTB, PEX 87xx).
-+ *
-+ * Similarly to MIC x200, we need to add DMA aliases to allow buffer access
-+ * when IOMMU is enabled.  These aliases allow computational unit access to
-+ * host memory.  These aliases mark the whole VCA device as one IOMMU
-+ * group.
-+ *
-+ * All possible slot numbers (0x20) are used, since we are unable to tell
-+ * what slot is used on other side.  This quirk is intended for both host
-+ * and computational unit sides.  The VCA devices have up to five functions
-+ * (four for DMA channels and one additional).
-+ */
-+static void quirk_pex_vca_alias(struct pci_dev *pdev)
-+{
-+	const unsigned int num_pci_slots = 0x20;
-+	unsigned int slot;
-+
-+	for (slot = 0; slot < num_pci_slots; slot++) {
-+		pci_add_dma_alias(pdev, PCI_DEVFN(slot, 0x0));
-+		pci_add_dma_alias(pdev, PCI_DEVFN(slot, 0x1));
-+		pci_add_dma_alias(pdev, PCI_DEVFN(slot, 0x2));
-+		pci_add_dma_alias(pdev, PCI_DEVFN(slot, 0x3));
-+		pci_add_dma_alias(pdev, PCI_DEVFN(slot, 0x4));
-+	}
-+}
-+DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x2954, quirk_pex_vca_alias);
-+DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x2955, quirk_pex_vca_alias);
-+DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x2956, quirk_pex_vca_alias);
-+DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x2958, quirk_pex_vca_alias);
-+DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x2959, quirk_pex_vca_alias);
-+DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x295A, quirk_pex_vca_alias);
-+
- /*
-  * The IOMMU and interrupt controller on Broadcom Vulcan/Cavium ThunderX2 are
-  * associated not at the root bus, but at a bridge below. This quirk avoids
+diff --git a/arch/arm/configs/aspeed_g5_defconfig b/arch/arm/configs/aspeed_g5_defconfig
+index c0ad7b82086bd..cb23f8ade3e2b 100644
+--- a/arch/arm/configs/aspeed_g5_defconfig
++++ b/arch/arm/configs/aspeed_g5_defconfig
+@@ -110,6 +110,7 @@ CONFIG_SERIAL_8250_RUNTIME_UARTS=6
+ CONFIG_SERIAL_8250_EXTENDED=y
+ CONFIG_SERIAL_8250_ASPEED_VUART=y
+ CONFIG_SERIAL_8250_SHARE_IRQ=y
++CONFIG_SERIAL_8250_DW=y
+ CONFIG_SERIAL_OF_PLATFORM=y
+ CONFIG_ASPEED_BT_IPMI_BMC=y
+ # CONFIG_HW_RANDOM is not set
 -- 
 2.20.1
 
