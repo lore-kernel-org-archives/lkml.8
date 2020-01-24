@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31D5BC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:50:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5AB1C32771
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:50:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EAF2D21556
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:50:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 835A4208C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:50:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579859423;
-	bh=37rXhZGNRoB2mPBAkMrE4GN7tlMk7RX9B6XaAhF4PWI=;
+	s=default; t=1579859425;
+	bh=anGjEavxDAVndEEd2jjMGpGe3gxZ5U15XOEBjmT9l88=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=e0kgVMwaWU3N4Uq1ieSSnrNh0Qo5GY0pRyJtXXIOiU/Rt8yYUqMdCwdcPRaN1JS7m
-	 wIoFDjZp9felcHWVh/Y/ZinPtvzV6/K7/TnW8NkhmS9hpcY2gQ0NEJvJlBY4jrOk57
-	 MztM+oUdW7xKweOepvOqZgQwqQx2LzYOD5tdLmK8=
+	b=pp5QwGrxvxmdQ1SpOy1tuK5jB+2LrFITYknz4wQq6w8nBNCCGrK0oZmlD8cRBmhkA
+	 YM1OZPBs/atcgGmOu46OHc28m9dwWicL0/QjunM7wjx3U1Ghp5MgP7YZaZgjkiCrzg
+	 0Z1KaQYllgBJMWOb+nq5ronql5WTUxOUdRQ7ki88=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387936AbgAXJuW (ORCPT
+        id S2387946AbgAXJuY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 04:50:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51012 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 04:50:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51138 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387920AbgAXJuR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 04:50:17 -0500
+        id S2387933AbgAXJuV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 04:50:21 -0500
 Received: from localhost (unknown [145.15.244.15])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 417B421556;
-        Fri, 24 Jan 2020 09:50:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D1186208C4;
+        Fri, 24 Jan 2020 09:50:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579859417;
-        bh=37rXhZGNRoB2mPBAkMrE4GN7tlMk7RX9B6XaAhF4PWI=;
+        s=default; t=1579859421;
+        bh=anGjEavxDAVndEEd2jjMGpGe3gxZ5U15XOEBjmT9l88=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fE/6ukgysRynJaSsx55tcnV4mrMcXF2ts9C/2u5Cq3rZ9hbM1y3FTMLyMgkmi9FU7
-         WeCONYKqn2e5ayh6yRRPOCrWhBnrn095wG0j0cCfAlOp6314v3rxMjHUqu5ejoCMWD
-         lGk/UYacsnpdroVDcLJkxPQhlu0EhqGCwhVQ8hAY=
+        b=AG4wBfMVMn+/m2XOvJ63c5kMnYAT42h5Cw0jCniXHeddwradxUu9xdQ52VXezr8wZ
+         nPcAxceb7jqsVPLOBqG3BTigmXV70f1USPAy99j3YH/pdbodOoOQGx/LeUlV5mkeGg
+         Qmf2KO0TWSZ7vFxKFfl1KwIgI1fkEOAlwrA8atAI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, YueHaibing <yuehaibing@huawei.com>,
+        stable@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Simon Horman <horms+renesas@verge.net.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 113/343] cdc-wdm: pass return value of recover_from_urb_loss
-Date:   Fri, 24 Jan 2020 10:28:51 +0100
-Message-Id: <20200124092934.895015110@linuxfoundation.org>
+Subject: [PATCH 4.14 101/343] pinctrl: sh-pfc: r8a7791: Fix scifb2_data_c pin group
+Date:   Fri, 24 Jan 2020 10:28:39 +0100
+Message-Id: <20200124092933.331861880@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124092919.490687572@linuxfoundation.org>
 References: <20200124092919.490687572@linuxfoundation.org>
@@ -59,33 +61,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-[ Upstream commit 0742a338f5b3446a26de551ad8273fb41b2787f2 ]
+[ Upstream commit a4b0350047f1b10207e25e72d7cd3f7826e93769 ]
 
-'rv' is the correct return value, pass it upstream instead of 0
+The entry for "scifb2_data_c" in the SCIFB2 pin group array contains a
+typo, thus the group cannot be selected.
 
-Fixes: 17d80d562fd7 ("USB: autosuspend for cdc-wdm")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 5088451962389924 ("pinctrl: sh-pfc: r8a7791 PFC support")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/class/cdc-wdm.c | 2 +-
+ drivers/pinctrl/sh-pfc/pfc-r8a7791.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/usb/class/cdc-wdm.c b/drivers/usb/class/cdc-wdm.c
-index a593cdfc897fd..d5d42dccda10a 100644
---- a/drivers/usb/class/cdc-wdm.c
-+++ b/drivers/usb/class/cdc-wdm.c
-@@ -1085,7 +1085,7 @@ static int wdm_post_reset(struct usb_interface *intf)
- 	rv = recover_from_urb_loss(desc);
- 	mutex_unlock(&desc->wlock);
- 	mutex_unlock(&desc->rlock);
--	return 0;
-+	return rv;
- }
- 
- static struct usb_driver wdm_driver = {
+diff --git a/drivers/pinctrl/sh-pfc/pfc-r8a7791.c b/drivers/pinctrl/sh-pfc/pfc-r8a7791.c
+index d34982ea66bf1..e4774b2200405 100644
+--- a/drivers/pinctrl/sh-pfc/pfc-r8a7791.c
++++ b/drivers/pinctrl/sh-pfc/pfc-r8a7791.c
+@@ -5209,7 +5209,7 @@ static const char * const scifb2_groups[] = {
+ 	"scifb2_data_b",
+ 	"scifb2_clk_b",
+ 	"scifb2_ctrl_b",
+-	"scifb0_data_c",
++	"scifb2_data_c",
+ 	"scifb2_clk_c",
+ 	"scifb2_data_d",
+ };
 -- 
 2.20.1
 
