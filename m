@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A0E2C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:40:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C96EC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:40:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52554206D4
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:40:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C97FA206D4
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:40:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579866007;
-	bh=QuLnnKDn/OU0rM9V+Dnb0xKOJJwr2DKUZ0JuC/ZyCow=;
+	s=default; t=1579866013;
+	bh=8grAFjD+86gBdd7bfi1B44QwdNP+iPzlA2hT81xdcCk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=e8Ob5VfssP0xJ3odFbQgEOvdjxTK2Eif8LmzMKhEHDM8FOZ7Tfa+Cm7OhWcPcWKdj
-	 lEewYLaQNQDoxV00FX1WqKh4ZhMxFOkNZJam8K8xlVo+H11w4eCIp7nNl7lAjxHX3G
-	 H4hvI4dJDomxtw71VozDDsfQ19zTRj/S3/qMp/XE=
+	b=Mj87BiHDzFsoOlP5oHRsNqGZCoADSd068pUGD/RMc7geLku5rTv0YV8Yl+6Yen63I
+	 SBcGPzFyF2TqTPvhVcS7IcCAYZRnQeFaWUn+d4frLIYBkCFYCNiMzIL5sz/y4B1bFu
+	 nOmnf7eCtf7bKK/tnWQGSsJMBeA88c+UovgxEQFQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403916AbgAXLkG (ORCPT
+        id S2404030AbgAXLkM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:40:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35618 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 06:40:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34712 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391294AbgAXLXO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:23:14 -0500
+        id S2391244AbgAXLWq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:22:46 -0500
 Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EB89A214DB;
-        Fri, 24 Jan 2020 11:23:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E484F20704;
+        Fri, 24 Jan 2020 11:22:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579864993;
-        bh=QuLnnKDn/OU0rM9V+Dnb0xKOJJwr2DKUZ0JuC/ZyCow=;
+        s=default; t=1579864965;
+        bh=8grAFjD+86gBdd7bfi1B44QwdNP+iPzlA2hT81xdcCk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=S/M+/4+mbLbWH6urbO6wwEsnBFbE3qP6EPfD+VBRC35cLmkEd9b/Tue69AKnUne2m
-         lHCdggEQqJqzhOqDxPSHSpBg+bB5H1KzgQ/Fqc2aH3hvwaHZrKyTKxS4GjaqSHqRfx
-         jDRfy8iXNBOT2KdhPbiPHRFQioyY7P6sM2P6Qe8M=
+        b=0AJsG8u3EqjMY+Uif5lfTr1wl4HpEIShACgqcdTgUXn8owGzjXuBfcAodzMeIjmlf
+         Gw/5ZgjqeaCqtxS6oRRx+rm8l/K4Vvb8iZTI2ayNMch1UX/JAnPx2Kcri7jaE2w4O/
+         GkDmTwR01HatY+fOiT0oSX737fbvrfyKRIa3EN18=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Peng Fan <peng.fan@nxp.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
+        stable@vger.kernel.org,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 423/639] firmware: arm_scmi: update rate_discrete in clock_describe_rates_get
-Date:   Fri, 24 Jan 2020 10:29:53 +0100
-Message-Id: <20200124093140.036895698@linuxfoundation.org>
+Subject: [PATCH 4.19 402/639] media: Staging: media: Release the correct resource in an error handling path
+Date:   Fri, 24 Jan 2020 10:29:32 +0100
+Message-Id: <20200124093137.297261658@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
 References: <20200124093047.008739095@linuxfoundation.org>
@@ -60,37 +61,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peng Fan <peng.fan@nxp.com>
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-[ Upstream commit c0759b9b5d411ab27c479125cee9bae391a96436 ]
+[ Upstream commit 3b6471c7becd06325eb5e701cc2602b2edbbc7b6 ]
 
-The boolean rate_discrete needs to be assigned to clk->rate_discrete,
-so that clock driver can distinguish between the continuous range and
-discrete rates. It uses this in scmi_clk_round_rate could get the
-rounded value if it's a continuous range.
+'res' is reassigned several times in the function and if we 'goto
+error_unmap', its value is not the returned value of 'request_mem_region()'
+anymore.
 
-Fixes: 5f6c6430e904 ("firmware: arm_scmi: add initial support for clock protocol")
-Signed-off-by: Peng Fan <peng.fan@nxp.com>
-[sudeep.holla: updated commit message]
-Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+Introduce a new 'struct resource *' variable (i.e. res2) to keep a pointer
+to the right resource, if needed in the error handling path.
+
+Fixes: 4b4eda001704 ("Staging: media: Unmap and release region obtained by ioremap_nocache")
+
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/firmware/arm_scmi/clock.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/staging/media/davinci_vpfe/dm365_ipipe.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/firmware/arm_scmi/clock.c b/drivers/firmware/arm_scmi/clock.c
-index 30fc04e284312..0a194af924385 100644
---- a/drivers/firmware/arm_scmi/clock.c
-+++ b/drivers/firmware/arm_scmi/clock.c
-@@ -185,6 +185,8 @@ scmi_clock_describe_rates_get(const struct scmi_handle *handle, u32 clk_id,
- 	if (rate_discrete)
- 		clk->list.num_rates = tot_rate_cnt;
+diff --git a/drivers/staging/media/davinci_vpfe/dm365_ipipe.c b/drivers/staging/media/davinci_vpfe/dm365_ipipe.c
+index 95942768639cd..7bf2648affc0c 100644
+--- a/drivers/staging/media/davinci_vpfe/dm365_ipipe.c
++++ b/drivers/staging/media/davinci_vpfe/dm365_ipipe.c
+@@ -1777,7 +1777,7 @@ vpfe_ipipe_init(struct vpfe_ipipe_device *ipipe, struct platform_device *pdev)
+ 	struct media_pad *pads = &ipipe->pads[0];
+ 	struct v4l2_subdev *sd = &ipipe->subdev;
+ 	struct media_entity *me = &sd->entity;
+-	struct resource *res, *memres;
++	struct resource *res, *res2, *memres;
  
-+	clk->rate_discrete = rate_discrete;
-+
- err:
- 	scmi_xfer_put(handle, t);
- 	return ret;
+ 	res = platform_get_resource(pdev, IORESOURCE_MEM, 4);
+ 	if (!res)
+@@ -1791,11 +1791,11 @@ vpfe_ipipe_init(struct vpfe_ipipe_device *ipipe, struct platform_device *pdev)
+ 	if (!ipipe->base_addr)
+ 		goto error_release;
+ 
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 6);
+-	if (!res)
++	res2 = platform_get_resource(pdev, IORESOURCE_MEM, 6);
++	if (!res2)
+ 		goto error_unmap;
+-	ipipe->isp5_base_addr = ioremap_nocache(res->start,
+-						resource_size(res));
++	ipipe->isp5_base_addr = ioremap_nocache(res2->start,
++						resource_size(res2));
+ 	if (!ipipe->isp5_base_addr)
+ 		goto error_unmap;
+ 
 -- 
 2.20.1
 
