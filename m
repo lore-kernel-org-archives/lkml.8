@@ -2,110 +2,78 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBEC0C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 13:03:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05A36C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 13:03:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC5912072C
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 13:03:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D70792072C
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 13:03:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389082AbgAXNDy (ORCPT
+        id S2389130AbgAXND6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 08:03:54 -0500
-Received: from foss.arm.com ([217.140.110.172]:51472 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388993AbgAXNDr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 08:03:47 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 98D5F1063;
-        Fri, 24 Jan 2020 05:03:47 -0800 (PST)
-Received: from e113632-lin.cambridge.arm.com (e113632-lin.cambridge.arm.com [10.1.194.46])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 6524B3F68E;
-        Fri, 24 Jan 2020 05:03:46 -0800 (PST)
-From:   Valentin Schneider <valentin.schneider@arm.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     mingo@redhat.com, peterz@infradead.org, vincent.guittot@linaro.org,
-        dietmar.eggemann@arm.com, morten.rasmussen@arm.com,
-        qperret@google.com, adharmap@codeaurora.org
-Subject: [PATCH v2 3/3] sched/fair: Kill wake_cap()
-Date:   Fri, 24 Jan 2020 13:02:13 +0000
-Message-Id: <20200124130213.24886-4-valentin.schneider@arm.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20200124130213.24886-1-valentin.schneider@arm.com>
-References: <20200124130213.24886-1-valentin.schneider@arm.com>
+        Fri, 24 Jan 2020 08:03:58 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:33317 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387994AbgAXNDo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 08:03:44 -0500
+Received: from litschi.hi.pengutronix.de ([2001:67c:670:100:feaa:14ff:fe6a:8db5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <m.tretter@pengutronix.de>)
+        id 1iuycb-0002Uo-Lp; Fri, 24 Jan 2020 14:03:37 +0100
+Date:   Fri, 24 Jan 2020 14:03:35 +0100
+From:   Michael Tretter <m.tretter@pengutronix.de>
+To:     Colin King <colin.king@canonical.com>
+Cc:     Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-media@vger.kernel.org, devel@driverdev.osuosl.org,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] media: allegro: fix spelling mistake "to" -> "too"
+Message-ID: <20200124140335.1900eef7@litschi.hi.pengutronix.de>
+In-Reply-To: <20200123010643.2834801-1-colin.king@canonical.com>
+References: <20200123010643.2834801-1-colin.king@canonical.com>
+Organization: Pengutronix
+X-Mailer: Claws Mail 3.14.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:feaa:14ff:fe6a:8db5
+X-SA-Exim-Mail-From: m.tretter@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Morten Rasmussen <morten.rasmussen@arm.com>
+On Thu, 23 Jan 2020 01:06:43 +0000, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
+> 
+> There is a spelling mistake in a v4l2_err message. Fix it.
+> 
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
 
-Capacity-awareness in the wake-up path previously involved disabling
-wake_affine in certain scenarios. We have just made select_idle_sibling()
-capacity-aware, so this isn't needed anymore.
+Reviewed-by: Michael Tretter <m.tretter@pengutronix.de>
 
-Remove wake_cap() entirely.
-
-Signed-off-by: Morten Rasmussen <morten.rasmussen@arm.com>
-[Changelog tweaks]
-Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
----
- kernel/sched/fair.c | 30 +-----------------------------
- 1 file changed, 1 insertion(+), 29 deletions(-)
-
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index c44b135f61ad0..8097a279ee7dd 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -6124,33 +6124,6 @@ static unsigned long cpu_util_without(int cpu, struct task_struct *p)
- 	return min_t(unsigned long, util, capacity_orig_of(cpu));
- }
- 
--/*
-- * Disable WAKE_AFFINE in the case where task @p doesn't fit in the
-- * capacity of either the waking CPU @cpu or the previous CPU @prev_cpu.
-- *
-- * In that case WAKE_AFFINE doesn't make sense and we'll let
-- * BALANCE_WAKE sort things out.
-- */
--static int wake_cap(struct task_struct *p, int cpu, int prev_cpu)
--{
--	long min_cap, max_cap;
--
--	if (!static_branch_unlikely(&sched_asym_cpucapacity))
--		return 0;
--
--	min_cap = min(capacity_orig_of(prev_cpu), capacity_orig_of(cpu));
--	max_cap = cpu_rq(cpu)->rd->max_cpu_capacity;
--
--	/* Minimum capacity is close to max, no need to abort wake_affine */
--	if (max_cap - min_cap < max_cap >> 3)
--		return 0;
--
--	/* Bring task utilization in sync with prev_cpu */
--	sync_entity_load_avg(&p->se);
--
--	return !task_fits_capacity(p, min_cap);
--}
--
- /*
-  * Predicts what cpu_util(@cpu) would return if @p was migrated (and enqueued)
-  * to @dst_cpu.
-@@ -6415,8 +6388,7 @@ select_task_rq_fair(struct task_struct *p, int prev_cpu, int sd_flag, int wake_f
- 			new_cpu = prev_cpu;
- 		}
- 
--		want_affine = !wake_wide(p) && !wake_cap(p, cpu, prev_cpu) &&
--			      cpumask_test_cpu(cpu, p->cpus_ptr);
-+		want_affine = !wake_wide(p) && cpumask_test_cpu(cpu, p->cpus_ptr);
- 	}
- 
- 	rcu_read_lock();
--- 
-2.24.0
-
+> ---
+>  drivers/staging/media/allegro-dvt/allegro-core.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/staging/media/allegro-dvt/allegro-core.c b/drivers/staging/media/allegro-dvt/allegro-core.c
+> index 3be41698df4c..9908d851d4be 100644
+> --- a/drivers/staging/media/allegro-dvt/allegro-core.c
+> +++ b/drivers/staging/media/allegro-dvt/allegro-core.c
+> @@ -781,7 +781,7 @@ static int allegro_mbox_write(struct allegro_dev *dev,
+>  
+>  	if (size > mbox->size) {
+>  		v4l2_err(&dev->v4l2_dev,
+> -			 "message (%zu bytes) to large for mailbox (%zu bytes)\n",
+> +			 "message (%zu bytes) too large for mailbox (%zu bytes)\n",
+>  			 size, mbox->size);
+>  		return -EINVAL;
+>  	}
