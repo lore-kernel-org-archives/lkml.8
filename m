@@ -4,52 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D73EC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:13:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C40F0C35242
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:13:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 723332087E
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:13:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9200A20663
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:13:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579864413;
-	bh=XY215XUO9c8E57PJyQfFKHKFTaPma3O7mFZV3Xb8Z9Q=;
+	s=default; t=1579864417;
+	bh=dZTUZ43rZtLVx6WjxbjKYrBOrk1kquAKKQ3mzcwZK8c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kOKaczaF64B0bIZLwDrGVdXyldSe/BzHGFuyfNJxjMgyAB5XHw32njkSdyFSqjYyv
-	 0vPdZ+I5SN91ESDNFsyt0Z7YO7uCQ1X70sU5IOdw+ixh7h4p45w63MXIuoNQ3FJq0l
-	 /mrkVzZWgHBoQSGnCd5ILhpUNd27Sv9Fgjd1vOCs=
+	b=n/+W7YRk6aAiKLlhrxCah2UfGKP1ey90MuRu8oRJeBg9Vguv0kQpm+h0SqtoBxCBS
+	 QX6OjituaYeFA07ymuruGnAoquaHhPzyHZY5GwtT1OLMI720Ko902Pp1If9ONrFpPE
+	 CYPWvG/kakBEaB9yWeuPT0TwT5gIkmMS25HB1eqY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390059AbgAXLNc (ORCPT
+        id S2390068AbgAXLNg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:13:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49782 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 06:13:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49848 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389042AbgAXLN2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:13:28 -0500
+        id S2389454AbgAXLNb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:13:31 -0500
 Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D9ECF2071A;
-        Fri, 24 Jan 2020 11:13:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 902F02071A;
+        Fri, 24 Jan 2020 11:13:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579864407;
-        bh=XY215XUO9c8E57PJyQfFKHKFTaPma3O7mFZV3Xb8Z9Q=;
+        s=default; t=1579864411;
+        bh=dZTUZ43rZtLVx6WjxbjKYrBOrk1kquAKKQ3mzcwZK8c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fbXgazzjliWKFffF2D+PMuMMVRZjdLrgjLG+V5QBJdyxYxIAHv/X+EbVUYd5gqVb6
-         WXHzRtWso9wgy7TBeRhBMCCttLH3/8up9AJgysAFfNKPz8C7W46YuZbjYVhdDLapxm
-         4WaDk68wegYWiAqPEYNSM6mYLjZigINAL3cgU6NY=
+        b=Dl36whVLIf2bthUF0qEqVKl1TchCO/9IcS9x1oxqe8sO4TbMUPuCQeLmj66aB3OcB
+         1KoVkSwqipxRM569Hwtpf4E0vwVSXqiG6gXtLg4CYp/2F4CRDsf5ipW2mwpw6E1T/r
+         3wVSa5V5P2KUUpgz02D0Kx57tVsnrNYamIHdkXyc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Nikita Danilov <nikita.danilov@aquantia.com>,
-        Igor Russkikh <igor.russkikh@aquantia.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Matt Porter <mporter@kernel.crashing.org>,
+        Alexandre Bounine <alexandre.bounine@idt.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 248/639] net: aquantia: fixed instack structure overflow
-Date:   Fri, 24 Jan 2020 10:26:58 +0100
-Message-Id: <20200124093117.825342615@linuxfoundation.org>
+Subject: [PATCH 4.19 257/639] drivers/rapidio/rio_cm.c: fix potential oops in riocm_ch_listen()
+Date:   Fri, 24 Jan 2020 10:27:07 +0100
+Message-Id: <20200124093118.893903512@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
 References: <20200124093047.008739095@linuxfoundation.org>
@@ -62,56 +63,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Igor Russkikh <Igor.Russkikh@aquantia.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit 8006e3730b6e900319411e35cee85b4513d298df ]
+[ Upstream commit 5ac188b12e7cbdd92dee60877d1fac913fc1d074 ]
 
-This is a real stack undercorruption found by kasan build.
+If riocm_get_channel() fails, then we should just return -EINVAL.
+Calling riocm_put_channel() will trigger a NULL dereference and
+generally we should call put() if the get() didn't succeed.
 
-The issue did no harm normally because it only overflowed
-2 bytes after `bitary` array which on most architectures
-were mapped into `err` local.
-
-Fixes: bab6de8fd180 ("net: ethernet: aquantia: Atlantic A0 and B0 specific functions.")
-Signed-off-by: Nikita Danilov <nikita.danilov@aquantia.com>
-Signed-off-by: Igor Russkikh <igor.russkikh@aquantia.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Link: http://lkml.kernel.org/r/20190110130230.GB27017@kadam
+Fixes: b6e8d4aa1110 ("rapidio: add RapidIO channelized messaging driver")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
+Cc: Matt Porter <mporter@kernel.crashing.org>
+Cc: Alexandre Bounine <alexandre.bounine@idt.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_a0.c | 4 ++--
- drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_b0.c | 4 ++--
- 2 files changed, 4 insertions(+), 4 deletions(-)
+ drivers/rapidio/rio_cm.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_a0.c b/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_a0.c
-index 97addfa6f8956..dab5891b97145 100644
---- a/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_a0.c
-+++ b/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_a0.c
-@@ -207,8 +207,8 @@ static int hw_atl_a0_hw_rss_set(struct aq_hw_s *self,
- 	u32 i = 0U;
- 	u32 num_rss_queues = max(1U, self->aq_nic_cfg->num_rss_queues);
- 	int err = 0;
--	u16 bitary[(HW_ATL_A0_RSS_REDIRECTION_MAX *
--					HW_ATL_A0_RSS_REDIRECTION_BITS / 16U)];
-+	u16 bitary[1 + (HW_ATL_A0_RSS_REDIRECTION_MAX *
-+		   HW_ATL_A0_RSS_REDIRECTION_BITS / 16U)];
+diff --git a/drivers/rapidio/rio_cm.c b/drivers/rapidio/rio_cm.c
+index ef989a15aefc4..b29fc258eeba4 100644
+--- a/drivers/rapidio/rio_cm.c
++++ b/drivers/rapidio/rio_cm.c
+@@ -1215,7 +1215,9 @@ static int riocm_ch_listen(u16 ch_id)
+ 	riocm_debug(CHOP, "(ch_%d)", ch_id);
  
- 	memset(bitary, 0, sizeof(bitary));
- 
-diff --git a/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_b0.c b/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_b0.c
-index 51cd1f98bcf07..c4f914a29c385 100644
---- a/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_b0.c
-+++ b/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_b0.c
-@@ -192,8 +192,8 @@ static int hw_atl_b0_hw_rss_set(struct aq_hw_s *self,
- 	u32 i = 0U;
- 	u32 num_rss_queues = max(1U, self->aq_nic_cfg->num_rss_queues);
- 	int err = 0;
--	u16 bitary[(HW_ATL_B0_RSS_REDIRECTION_MAX *
--					HW_ATL_B0_RSS_REDIRECTION_BITS / 16U)];
-+	u16 bitary[1 + (HW_ATL_B0_RSS_REDIRECTION_MAX *
-+		   HW_ATL_B0_RSS_REDIRECTION_BITS / 16U)];
- 
- 	memset(bitary, 0, sizeof(bitary));
- 
+ 	ch = riocm_get_channel(ch_id);
+-	if (!ch || !riocm_cmp_exch(ch, RIO_CM_CHAN_BOUND, RIO_CM_LISTEN))
++	if (!ch)
++		return -EINVAL;
++	if (!riocm_cmp_exch(ch, RIO_CM_CHAN_BOUND, RIO_CM_LISTEN))
+ 		ret = -EINVAL;
+ 	riocm_put_channel(ch);
+ 	return ret;
 -- 
 2.20.1
 
