@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86B6EC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:46:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 930E9C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:46:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5368421556
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:46:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A7F2208C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:46:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579859188;
-	bh=lHxq1JqKdhfX11T30D6KrSNCcT0eUQzGVvzSbMAAPNw=;
+	s=default; t=1579859190;
+	bh=xmqf4R/yqaxyn6B/aXLkj6ePZROjIT/6cr9njFDMExI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wHQs8Lj+HKBi8D3V9ztT569Oat52CSxRTnelbbYsDUadCG5vziB3Wb2qsW58vKmKj
-	 poTgmNe9em++168a+bYVuDmuIx9cZRu4uOgZeJcNx6fdStFV+7LNOelHvJkT4xdv7u
-	 r7Kvtftbi/OC0bNzGo4hYhYswcf3O9C0Xd7M4LGw=
+	b=cePl2mLIHsjaPL+Ov5zHbcG5tsCXKr32Q/y0lmrPv60bL0jyNwmWYmYxEkO1ac1zf
+	 H2wqh6JA09swqu7QMH2TWWJbTvKQqY0/TqxVqWzkSeiI99THjXz3enqO/I/NnAMASn
+	 kE4mSmB8tM6HyAVl6T9/PoFZ3STGdhhUQUoppmFQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387563AbgAXJq1 (ORCPT
+        id S1733218AbgAXJq3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 04:46:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45668 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 04:46:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45766 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729308AbgAXJqW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 04:46:22 -0500
+        id S1731036AbgAXJqZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 04:46:25 -0500
 Received: from localhost (unknown [145.15.244.15])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 87E9C208C4;
-        Fri, 24 Jan 2020 09:46:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A716A22522;
+        Fri, 24 Jan 2020 09:46:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579859182;
-        bh=lHxq1JqKdhfX11T30D6KrSNCcT0eUQzGVvzSbMAAPNw=;
+        s=default; t=1579859185;
+        bh=xmqf4R/yqaxyn6B/aXLkj6ePZROjIT/6cr9njFDMExI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bW7IQv7VQFYUAv6uYKYqnypInYXDULAnSWNYtqFcrwBgRJKHWtZn4JWh7hdDxvHqD
-         dklg1x6tujb6U96W9I27bSxRjUGKwJpscMorM4SzsPZq6TojYGPebvLeQ37wfoBBCv
-         s91WpdV2clv4SMEKJh/S9okDSy8cILYs4nmp0Zp8=
+        b=evXpDkCfIHyxiJByG90tvEco44OMkbhqtD9rd5+8hzIG8ScR53k9yqiyc/Cdvk7ZL
+         IKW87C+qA6N9Pqz9XOu8E7naKuEg1Lh8fo30COtaaG8xHo5jyQA64AgvFS1AKXukdl
+         Etaawt1Auyhl7vfi7HpB2Ok2ZSlHMq9J/0heQScQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yangtao Li <tiny.windzz@gmail.com>,
-        Stephen Boyd <sboyd@kernel.org>,
+        stable@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Simon Horman <horms+renesas@verge.net.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 048/343] clk: imx6sx: fix refcount leak in imx6sx_clocks_init()
-Date:   Fri, 24 Jan 2020 10:27:46 +0100
-Message-Id: <20200124092926.053576455@linuxfoundation.org>
+Subject: [PATCH 4.14 039/343] pinctrl: sh-pfc: sh7269: Add missing PCIOR0 field
+Date:   Fri, 24 Jan 2020 10:27:37 +0100
+Message-Id: <20200124092924.949560221@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124092919.490687572@linuxfoundation.org>
 References: <20200124092919.490687572@linuxfoundation.org>
@@ -60,34 +61,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yangtao Li <tiny.windzz@gmail.com>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-[ Upstream commit 1731e14fb30212dd8c1e9f8fc1af061e56498c55 ]
+[ Upstream commit 9540cbdfcd861caf67a6f0e4bb7f46d41c4aad86 ]
 
-The of_find_compatible_node() returns a node pointer with refcount
-incremented, but there is the lack of use of the of_node_put() when
-done. Add the missing of_node_put() to release the refcount.
+The Port C I/O Register 0 contains 7 reserved bits, but the descriptor
+contains only dummy configuration values for 6 reserved bits, thus
+breaking the configuration of all subsequent fields in the register.
 
-Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
-Fixes: d55135689019 ("ARM: imx: add clock driver for imx6sx")
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+Fix this by adding the two missing configuration values.
+
+Fixes: f5e811f2a43117b2 ("sh-pfc: Add sh7269 pinmux support")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/imx/clk-imx6sx.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/pinctrl/sh-pfc/pfc-sh7269.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/clk/imx/clk-imx6sx.c b/drivers/clk/imx/clk-imx6sx.c
-index e6d389e333d7d..baa07553a0ddc 100644
---- a/drivers/clk/imx/clk-imx6sx.c
-+++ b/drivers/clk/imx/clk-imx6sx.c
-@@ -164,6 +164,7 @@ static void __init imx6sx_clocks_init(struct device_node *ccm_node)
- 	np = of_find_compatible_node(NULL, NULL, "fsl,imx6sx-anatop");
- 	base = of_iomap(np, 0);
- 	WARN_ON(!base);
-+	of_node_put(np);
+diff --git a/drivers/pinctrl/sh-pfc/pfc-sh7269.c b/drivers/pinctrl/sh-pfc/pfc-sh7269.c
+index a50d22bef1f44..cfdb4fc177c3e 100644
+--- a/drivers/pinctrl/sh-pfc/pfc-sh7269.c
++++ b/drivers/pinctrl/sh-pfc/pfc-sh7269.c
+@@ -2119,7 +2119,7 @@ static const struct pinmux_cfg_reg pinmux_config_regs[] = {
+ 	},
  
- 	clks[IMX6SX_PLL1_BYPASS_SRC] = imx_clk_mux("pll1_bypass_src", base + 0x00, 14, 1, pll_bypass_src_sels, ARRAY_SIZE(pll_bypass_src_sels));
- 	clks[IMX6SX_PLL2_BYPASS_SRC] = imx_clk_mux("pll2_bypass_src", base + 0x30, 14, 1, pll_bypass_src_sels, ARRAY_SIZE(pll_bypass_src_sels));
+ 	{ PINMUX_CFG_REG("PCIOR0", 0xfffe3852, 16, 1) {
+-		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
++		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+ 		PC8_IN, PC8_OUT,
+ 		PC7_IN, PC7_OUT,
+ 		PC6_IN, PC6_OUT,
 -- 
 2.20.1
 
