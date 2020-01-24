@@ -2,167 +2,99 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08F60C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 12:35:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95A07C32771
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 12:40:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D91762077C
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 12:35:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C12E2071A
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 12:40:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733228AbgAXMfv (ORCPT
+        id S1732760AbgAXMkH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 07:35:51 -0500
-Received: from mx2.suse.de ([195.135.220.15]:55108 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729774AbgAXMfv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 07:35:51 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id D8738ADB5;
-        Fri, 24 Jan 2020 12:35:49 +0000 (UTC)
-Date:   Fri, 24 Jan 2020 13:35:48 +0100
-From:   Jean Delvare <jdelvare@suse.de>
-To:     Luca Ceresoli <luca@lucaceresoli.net>
-Cc:     linux-i2c@vger.kernel.org, linux-doc@vger.kernel.org,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Peter Rosin <peda@axentia.se>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 01/28] docs: i2c: sort index logically
-Message-ID: <20200124133548.7f01344a@endymion>
-In-Reply-To: <20200123135103.20540-2-luca@lucaceresoli.net>
-References: <20200123135103.20540-1-luca@lucaceresoli.net>
-        <20200123135103.20540-2-luca@lucaceresoli.net>
-Organization: SUSE Linux
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-suse-linux-gnu)
+        Fri, 24 Jan 2020 07:40:07 -0500
+Received: from szxga06-in.huawei.com ([45.249.212.32]:55450 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729774AbgAXMkH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 07:40:07 -0500
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 397EE532D99C1BB561E2;
+        Fri, 24 Jan 2020 20:40:05 +0800 (CST)
+Received: from DESKTOP-6T4S3DQ.china.huawei.com (10.47.84.245) by
+ DGGEMS413-HUB.china.huawei.com (10.3.19.213) with Microsoft SMTP Server id
+ 14.3.439.0; Fri, 24 Jan 2020 20:39:58 +0800
+From:   Shiju Jose <shiju.jose@huawei.com>
+To:     <linux-acpi@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <rjw@rjwysocki.net>,
+        <helgaas@kernel.org>, <lenb@kernel.org>, <bp@alien8.de>,
+        <james.morse@arm.com>, <tony.luck@intel.com>,
+        <gregkh@linuxfoundation.org>, <zhangliguang@linux.alibaba.com>,
+        <tglx@linutronix.de>
+CC:     <linuxarm@huawei.com>, <jonathan.cameron@huawei.com>,
+        <tanxiaofei@huawei.com>, <yangyicong@hisilicon.com>,
+        Shiju Jose <shiju.jose@huawei.com>
+Subject: [PATCH v2 0/2] ACPI: APEI: Add support to notify the vendor specific HW errors
+Date:   Fri, 24 Jan 2020 12:39:36 +0000
+Message-ID: <20200124123938.16524-1-shiju.jose@huawei.com>
+X-Mailer: git-send-email 2.19.2.windows.1
+In-Reply-To: <Shiju Jose>
+References: <Shiju Jose>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.47.84.245]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 23 Jan 2020 14:50:36 +0100, Luca Ceresoli wrote:
-> The index page currently lists sections in alphabetical file order without
-> caring about their content. Sort sections based on their content logically,
-> according to the following structure:
-> 
->  * Intro to I2C/SMBus and their usage in Linux: summary, i2c-protocol,
->    smbus-protocol, instantiating-devices, busses/index, i2c-topology,
->    muxes/i2c-mux-gpio
->  * Implementing drivers: writing-clients, dev-interface,
->    dma-considerations, fault-codes, functionality
->  * Debugging: gpio-fault-injection, i2c-stub
->  * Slave I2C: slave-interface, slave-eeprom-backend
->  * Advanced: ten-bit-addresses
->  * Obsolete info: upgrading-clients, old-module-parameters
-> 
-> Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
-> Reviewed-by: Jean Delvare <jdelvare@suse.de>
-> 
-> ---
-> 
-> Changes in v2:
->  - split sections in groups (suggested by Jean Delvare)
->  - remove consecutive blank lines (reported by Jean Delvare)
-> ---
->  Documentation/i2c/index.rst | 59 ++++++++++++++++++++++++++++++-------
->  1 file changed, 48 insertions(+), 11 deletions(-)
-> 
-> diff --git a/Documentation/i2c/index.rst b/Documentation/i2c/index.rst
-> index a0fbaf6d0675..f0f3b9c97abb 100644
-> --- a/Documentation/i2c/index.rst
-> +++ b/Documentation/i2c/index.rst
-> @@ -4,30 +4,67 @@
->  I2C/SMBus Subsystem
->  ===================
->  
-> +Introduction
-> +============
-> +
-> +.. toctree::
-> +   :maxdepth: 1
-> +
-> +   summary
-> +   i2c-protocol
-> +   smbus-protocol
-> +   instantiating-devices
-> +   busses/index
-> +   i2c-topology
-> +   muxes/i2c-mux-gpio
-> +
-> +
+Presently the vendor drivers are unable to do the recovery for the vendor specific
+recoverable HW errors, reported to the APEI driver in the vendor defined sections,
+because APEI driver does not support reporting the same to the vendor drivers.
 
-You still have a double blank line here, not sure if this is intended?
+This patch set
+1. add an interface to the APEI driver to enable the vendor
+drivers to register the event handling functions for the corresponding
+vendor specific HW errors and report the error to the vendor driver.
 
-Looks good otherwise.
+2. add driver to handle HiSilicon hip08 PCIe controller's errors
+   which is an example application of the above APEI interface.
 
-Reviewed-by: Jean Delvare <jdelvare@suse.de>
+Changes:
 
-> +Writing device drivers
-> +======================
-> +
->  .. toctree::
->     :maxdepth: 1
->  
-> +   writing-clients
->     dev-interface
->     dma-considerations
->     fault-codes
->     functionality
-> +
-> +Debugging
-> +=========
-> +
-> +.. toctree::
-> +   :maxdepth: 1
-> +
->     gpio-fault-injection
-> -   i2c-protocol
->     i2c-stub
-> -   i2c-topology
-> -   instantiating-devices
-> -   old-module-parameters
-> -   slave-eeprom-backend
-> +
-> +Slave I2C
-> +=========
-> +
-> +.. toctree::
-> +   :maxdepth: 1
-> +
->     slave-interface
-> -   smbus-protocol
-> -   summary
-> +   slave-eeprom-backend
-> +
-> +Advanced topics
-> +===============
-> +
-> +.. toctree::
-> +   :maxdepth: 1
-> +
->     ten-bit-addresses
-> -   upgrading-clients
-> -   writing-clients
->  
-> -   muxes/i2c-mux-gpio
-> +Legacy documentation
-> +====================
->  
-> -   busses/index
-> +.. toctree::
-> +   :maxdepth: 1
-> +
-> +   upgrading-clients
-> +   old-module-parameters
->  
->  .. only::  subproject and html
->  
+V2:
+1. Changes in the HiSilicon PCIe controller's error handling driver
+   for the comments from Bjorn Helgaas.
+   
+2. Changes in the APEI interface to support reporting the vendor error
+   for module with multiple devices, but use the same section type.
+   In the error handler will use socket id/sub module id etc to distinguish
+   the device.
 
+V1:  
+1. Fix comments from James Morse.
+
+2. add driver to handle HiSilicon hip08 PCIe controller's errors,
+   which is an application of the above interface.
+
+Shiju Jose (1):
+  ACPI: APEI: Add support to notify the vendor specific HW errors
+
+Yicong Yang (1):
+  PCI: hip: Add handling of HiSilicon hip PCIe controller's errors
+
+ drivers/acpi/apei/ghes.c                 | 116 ++++++++++-
+ drivers/pci/controller/Kconfig           |   8 +
+ drivers/pci/controller/Makefile          |   1 +
+ drivers/pci/controller/pcie-hisi-error.c | 336 +++++++++++++++++++++++++++++++
+ include/acpi/ghes.h                      |  56 ++++++
+ 5 files changed, 512 insertions(+), 5 deletions(-)
+ create mode 100644 drivers/pci/controller/pcie-hisi-error.c
 
 -- 
-Jean Delvare
-SUSE L3 Support
+1.9.1
+
+
