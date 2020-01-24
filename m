@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55331C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:13:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00E36C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:13:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1962320663
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:13:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF4E220663
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:13:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579864432;
-	bh=Wl+4tBgZ6i0GU45PjF3ZMJatJ//vYjtv7Qkg3ij7kFI=;
+	s=default; t=1579864435;
+	bh=KTP3KPkmh3b47+y7caXigZqoUifvCyiuK6/vP1+T3eg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UT9H75ru2ZHgJhN4GA5uE0mjP6LBQZ3MlmL9TmX7ZhUmi/v7qDEr4efMabpWaO1dS
-	 rf75Ih50zJob05LnjjQnsSK17wCqaKH/AYKNI2dNIvkFvvYUezmuU/CCzd30M4egGD
-	 cq1yBWKnYkXWghH3w3vJOoApdSeEb2iZ47vKn228=
+	b=DM4bsOVxlsPgZwL3xZ/HxzygQHn9CfW+1LTkqJQfRhtRLV5sCsq7YzySywwc6pL0j
+	 0ZU7MqHgXBAPETFx8MgMFx590JoYtDfx3sLdfeXpHmWoCGiaSK3sp/zl62wXYxAgbW
+	 hEH0uV+q5OV3wsSm63+Y193Prv3V34dPN34+dU14=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731677AbgAXLNv (ORCPT
+        id S2390092AbgAXLNy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:13:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50086 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 06:13:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50150 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389600AbgAXLNp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:13:45 -0500
+        id S1732571AbgAXLNs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:13:48 -0500
 Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DE7B72075D;
-        Fri, 24 Jan 2020 11:13:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4DA3F20663;
+        Fri, 24 Jan 2020 11:13:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579864424;
-        bh=Wl+4tBgZ6i0GU45PjF3ZMJatJ//vYjtv7Qkg3ij7kFI=;
+        s=default; t=1579864427;
+        bh=KTP3KPkmh3b47+y7caXigZqoUifvCyiuK6/vP1+T3eg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZpTcqC//nIZeBledM5tZicw3HmM4sEF3J2RF+5IPZcdZjDcrFe1eFfDuWu725GlHV
-         SSyjcrQnHmcit5UizuKpC7rtaUa5wLXBliv27viD/VuMwp1q1xlKXI5yIvgmmiUvX8
-         oWOa0z3wAs+OU73TyIPuoI7k+dzu3VmfFhSx0s7c=
+        b=MELZH6hJTxyaFvOfAFtHwlxqm//svHzYbd6j4R2TCnE/3mKYb8uy0TVdzEVwB66f7
+         cxsgbnFsTEII/1Ok9Gmeq1fDdZyqk05wt0k0fk7/lLgMYuEtStIB0LFrOvnTRSkg9a
+         fjk2MsG/A15kXmxiUQg3Jlgffz/ZI7PigBu/aPjY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kangjie Lu <kjlu@umn.edu>,
-        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Rashmica Gupta <rashmica.g@gmail.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 261/639] net: sh_eth: fix a missing check of of_get_phy_mode
-Date:   Fri, 24 Jan 2020 10:27:11 +0100
-Message-Id: <20200124093119.433125547@linuxfoundation.org>
+Subject: [PATCH 4.19 249/639] powerpc/mm: Check secondary hash page table
+Date:   Fri, 24 Jan 2020 10:26:59 +0100
+Message-Id: <20200124093117.943700335@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
 References: <20200124093047.008739095@linuxfoundation.org>
@@ -62,47 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kangjie Lu <kjlu@umn.edu>
+From: Rashmica Gupta <rashmica.g@gmail.com>
 
-[ Upstream commit 035a14e71f27eefa50087963b94cbdb3580d08bf ]
+[ Upstream commit 790845e2f12709d273d08ea7a2af7c2593689519 ]
 
-of_get_phy_mode may fail and return a negative error code;
-the fix checks the return value of of_get_phy_mode and
-returns NULL of it fails.
+We were always calling base_hpte_find() with primary = true,
+even when we wanted to check the secondary table.
 
-Fixes: b356e978e92f ("sh_eth: add device tree support")
-Signed-off-by: Kangjie Lu <kjlu@umn.edu>
-Reviewed-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+mpe: I broke this when refactoring Rashmica's original patch.
+
+Fixes: 1515ab932156 ("powerpc/mm: Dump hash table")
+Signed-off-by: Rashmica Gupta <rashmica.g@gmail.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/renesas/sh_eth.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ arch/powerpc/mm/dump_hashpagetable.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/renesas/sh_eth.c b/drivers/net/ethernet/renesas/sh_eth.c
-index 6068e96f5ac1e..441643670ac0e 100644
---- a/drivers/net/ethernet/renesas/sh_eth.c
-+++ b/drivers/net/ethernet/renesas/sh_eth.c
-@@ -3133,12 +3133,16 @@ static struct sh_eth_plat_data *sh_eth_parse_dt(struct device *dev)
- 	struct device_node *np = dev->of_node;
- 	struct sh_eth_plat_data *pdata;
- 	const char *mac_addr;
-+	int ret;
+diff --git a/arch/powerpc/mm/dump_hashpagetable.c b/arch/powerpc/mm/dump_hashpagetable.c
+index 8692946950485..b430e4e08af69 100644
+--- a/arch/powerpc/mm/dump_hashpagetable.c
++++ b/arch/powerpc/mm/dump_hashpagetable.c
+@@ -342,7 +342,7 @@ static unsigned long hpte_find(struct pg_state *st, unsigned long ea, int psize)
  
- 	pdata = devm_kzalloc(dev, sizeof(*pdata), GFP_KERNEL);
- 	if (!pdata)
- 		return NULL;
+ 	/* Look in secondary table */
+ 	if (slot == -1)
+-		slot = base_hpte_find(ea, psize, true, &v, &r);
++		slot = base_hpte_find(ea, psize, false, &v, &r);
  
--	pdata->phy_interface = of_get_phy_mode(np);
-+	ret = of_get_phy_mode(np);
-+	if (ret < 0)
-+		return NULL;
-+	pdata->phy_interface = ret;
- 
- 	mac_addr = of_get_mac_address(np);
- 	if (mac_addr)
+ 	/* No entry found */
+ 	if (slot == -1)
 -- 
 2.20.1
 
