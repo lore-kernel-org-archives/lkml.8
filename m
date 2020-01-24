@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66233C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:12:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6671DC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:12:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30EBB20708
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:12:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E16220663
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:12:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579864348;
-	bh=c6gzUqxlvOJ9c3CTRw7aCZ/FwMvPQlg8CdOj1USoyRE=;
+	s=default; t=1579864351;
+	bh=jzdAnmJhqZAwFDofb0u3FOnieuJfpHmP2aP980ZkB9w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CKpu2ZneO2a2KThK7h2xHyr+VFckDGOuhTKJ0x3rnloC1S5nHxpSxFeWl7DFgym6a
-	 hS3TEks+sNb/S8DsCu94s/4GKT1d+3onwEOoQ43t7stPUUqn9YvNpWIXZq8ciMflHh
-	 R0JKf03yGD/SwUYBmAjNTo9EtC7WUMFqSKrhOrgw=
+	b=IFZB/AVW98eL3kJPPfmL+wwm8jPSTYjEtJ0qegQG2j7GD2BgB7ms/LTDn2Sv5dRBk
+	 64350lJJUJa6dORZjr0nTfz2VI4tk0eQrfLjPzGAVRqZdojl6QhqAFpzQwtrvSOb2g
+	 CVWs8LOzTue7kXxsVIiqcPD9diz/Wd7DT07Rw/Uw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389990AbgAXLM1 (ORCPT
+        id S2389039AbgAXLMa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:12:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48688 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 06:12:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48766 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388374AbgAXLMX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:12:23 -0500
+        id S2389989AbgAXLM1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:12:27 -0500
 Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9805A20663;
-        Fri, 24 Jan 2020 11:12:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0A6F620663;
+        Fri, 24 Jan 2020 11:12:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579864343;
-        bh=c6gzUqxlvOJ9c3CTRw7aCZ/FwMvPQlg8CdOj1USoyRE=;
+        s=default; t=1579864346;
+        bh=jzdAnmJhqZAwFDofb0u3FOnieuJfpHmP2aP980ZkB9w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YqiCbFItUREyd9HAcEVHhn2R4hU8jih+Ukd5oYUjow4jvqAVAIk+AK06wiOBHHrnO
-         SFIRlt2QbiN5HAm+ZhbRmfY9P+KubJxEkdDFTBM1OZ5RSuTLCJzYowOvYgSNt8xMsS
-         Sd0aSNKPO4v1gR2NKKHBrOGtC/sV5H/zI9DQj80c=
+        b=G6t1+KT1LfOmpuxyurbEb9CRn0rFu0RoZILW5SuirzEs+JLisRT+Wev7GCq7/mZjj
+         9Y8JJ6MxArt/4pKZJKSyZtsfl6zUnFnekks1l/1AiHaWOKJ0TEDaHJe8BLsXDaiaGi
+         b8Iznsyfl0FTnPqT6vf5a5OW7FZj+mg9mnNUITXc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Leon Romanovsky <leonro@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>,
+        stable@vger.kernel.org,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 217/639] net/mlx5: Delete unused FPGA QPN variable
-Date:   Fri, 24 Jan 2020 10:26:27 +0100
-Message-Id: <20200124093114.144719822@linuxfoundation.org>
+Subject: [PATCH 4.19 233/639] NFS/pnfs: Bulk destroy of layouts needs to be safe w.r.t. umount
+Date:   Fri, 24 Jan 2020 10:26:43 +0100
+Message-Id: <20200124093116.029927375@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
 References: <20200124093047.008739095@linuxfoundation.org>
@@ -60,47 +60,92 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Leon Romanovsky <leonro@mellanox.com>
+From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-[ Upstream commit 566428375a53619196e31803130dd1a7010c4d7f ]
+[ Upstream commit 5085607d209102b37b169bc94d0aa39566a9842a ]
 
-fpga_qpn was assigned but never used and compilation with W=1
-produced the following warning:
+If a bulk layout recall or a metadata server reboot coincides with a
+umount, then holding a reference to an inode is unsafe unless we
+also hold a reference to the super block.
 
-drivers/net/ethernet/mellanox/mlx5/core/fpga/core.c: In function _mlx5_fpga_event_:
-drivers/net/ethernet/mellanox/mlx5/core/fpga/core.c:320:6: warning:
-variable _fpga_qpn_ set but not used [-Wunused-but-set-variable]
-  u32 fpga_qpn;
-      ^~~~~~~~
-
-Fixes: 98db16bab59f ("net/mlx5: FPGA, Handle QP error event")
-Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
-Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
+Fixes: fd9a8d7160937 ("NFSv4.1: Fix bulk recall and destroy of layouts")
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/mellanox/mlx5/core/fpga/core.c | 2 --
- 1 file changed, 2 deletions(-)
+ fs/nfs/pnfs.c | 33 +++++++++++++++++++++++----------
+ fs/nfs/pnfs.h |  1 +
+ 2 files changed, 24 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/fpga/core.c b/drivers/net/ethernet/mellanox/mlx5/core/fpga/core.c
-index 436a8136f26ff..310f9e7d83200 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/fpga/core.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/fpga/core.c
-@@ -289,7 +289,6 @@ void mlx5_fpga_event(struct mlx5_core_dev *mdev, u8 event, void *data)
- 	const char *event_name;
- 	bool teardown = false;
- 	unsigned long flags;
--	u32 fpga_qpn;
- 	u8 syndrome;
+diff --git a/fs/nfs/pnfs.c b/fs/nfs/pnfs.c
+index c818f9886f618..66f699e18755c 100644
+--- a/fs/nfs/pnfs.c
++++ b/fs/nfs/pnfs.c
+@@ -758,22 +758,35 @@ static int
+ pnfs_layout_bulk_destroy_byserver_locked(struct nfs_client *clp,
+ 		struct nfs_server *server,
+ 		struct list_head *layout_list)
++	__must_hold(&clp->cl_lock)
++	__must_hold(RCU)
+ {
+ 	struct pnfs_layout_hdr *lo, *next;
+ 	struct inode *inode;
  
- 	switch (event) {
-@@ -300,7 +299,6 @@ void mlx5_fpga_event(struct mlx5_core_dev *mdev, u8 event, void *data)
- 	case MLX5_EVENT_TYPE_FPGA_QP_ERROR:
- 		syndrome = MLX5_GET(fpga_qp_error_event, data, syndrome);
- 		event_name = mlx5_fpga_qp_syndrome_to_string(syndrome);
--		fpga_qpn = MLX5_GET(fpga_qp_error_event, data, fpga_qpn);
- 		break;
- 	default:
- 		mlx5_fpga_warn_ratelimited(fdev, "Unexpected event %u\n",
+ 	list_for_each_entry_safe(lo, next, &server->layouts, plh_layouts) {
+-		if (test_bit(NFS_LAYOUT_INVALID_STID, &lo->plh_flags))
++		if (test_bit(NFS_LAYOUT_INVALID_STID, &lo->plh_flags) ||
++		    test_bit(NFS_LAYOUT_INODE_FREEING, &lo->plh_flags) ||
++		    !list_empty(&lo->plh_bulk_destroy))
+ 			continue;
++		/* If the sb is being destroyed, just bail */
++		if (!nfs_sb_active(server->super))
++			break;
+ 		inode = igrab(lo->plh_inode);
+-		if (inode == NULL)
+-			continue;
+-		list_del_init(&lo->plh_layouts);
+-		if (pnfs_layout_add_bulk_destroy_list(inode, layout_list))
+-			continue;
+-		rcu_read_unlock();
+-		spin_unlock(&clp->cl_lock);
+-		iput(inode);
++		if (inode != NULL) {
++			list_del_init(&lo->plh_layouts);
++			if (pnfs_layout_add_bulk_destroy_list(inode,
++						layout_list))
++				continue;
++			rcu_read_unlock();
++			spin_unlock(&clp->cl_lock);
++			iput(inode);
++		} else {
++			rcu_read_unlock();
++			spin_unlock(&clp->cl_lock);
++			set_bit(NFS_LAYOUT_INODE_FREEING, &lo->plh_flags);
++		}
++		nfs_sb_deactive(server->super);
+ 		spin_lock(&clp->cl_lock);
+ 		rcu_read_lock();
+ 		return -EAGAIN;
+@@ -811,7 +824,7 @@ pnfs_layout_free_bulk_destroy_list(struct list_head *layout_list,
+ 		/* Free all lsegs that are attached to commit buckets */
+ 		nfs_commit_inode(inode, 0);
+ 		pnfs_put_layout_hdr(lo);
+-		iput(inode);
++		nfs_iput_and_deactive(inode);
+ 	}
+ 	return ret;
+ }
+diff --git a/fs/nfs/pnfs.h b/fs/nfs/pnfs.h
+index ece367ebde692..3ba44819a88ae 100644
+--- a/fs/nfs/pnfs.h
++++ b/fs/nfs/pnfs.h
+@@ -104,6 +104,7 @@ enum {
+ 	NFS_LAYOUT_RETURN_REQUESTED,	/* Return this layout ASAP */
+ 	NFS_LAYOUT_INVALID_STID,	/* layout stateid id is invalid */
+ 	NFS_LAYOUT_FIRST_LAYOUTGET,	/* Serialize first layoutget */
++	NFS_LAYOUT_INODE_FREEING,	/* The inode is being freed */
+ };
+ 
+ enum layoutdriver_policy_flags {
 -- 
 2.20.1
 
