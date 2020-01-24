@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08603C32771
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:41:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30B68C32771
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:41:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C81C220718
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:41:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03ADC208C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:41:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579858898;
-	bh=tSOs9vBLSvpqOlgLYN1HfY7+L8HdAKMmDVMNCl8Xkk4=;
+	s=default; t=1579858901;
+	bh=IqcEnoa0m9WxUpsSqFPhQNy2NQ8Zp/Lkojade5w8z4g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LKrX4WfruEinko8fL46ca0CMqCNKG8nn6OIA21GFmjRuzOEN4iRoA7aDoCucNT9Yl
-	 IGsxzYtFw9Y74crs+2wXaaZh5FUkH/LrQLo6yMP3qQMX5mL/HUNGX+jYsFXz0by1vf
-	 LzXeFtHzqoYGQF1u4QqH26fSfsUxKj4kRtvPQo74=
+	b=NpU6uup+I6oMpHzlyLqmqLqAsjYYhHoej5gj/GdSB1b6BJBHi3+iPXyTwsibEucjK
+	 N/DlfGgJmodOG0f6E/DcTvltcUL4KDvB4U0kWzqPBfx7bdECkNlN0Sos+yVwYbbwz7
+	 WoPo/rGKn20KbVBMGhKL2aAZfhBsKeHop4Lmu6a0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732965AbgAXJli (ORCPT
+        id S1733012AbgAXJlk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 04:41:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39036 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 04:41:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39120 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732273AbgAXJle (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 04:41:34 -0500
+        id S1732273AbgAXJli (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 04:41:38 -0500
 Received: from localhost (unknown [145.15.244.15])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 523D6208C4;
-        Fri, 24 Jan 2020 09:41:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CC874214DB;
+        Fri, 24 Jan 2020 09:41:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579858893;
-        bh=tSOs9vBLSvpqOlgLYN1HfY7+L8HdAKMmDVMNCl8Xkk4=;
+        s=default; t=1579858897;
+        bh=IqcEnoa0m9WxUpsSqFPhQNy2NQ8Zp/Lkojade5w8z4g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xW+lHV55q1JWq8Kp1hi8+lTV3IhuiM7psAdCDBTHo5wzFsxWWaJje7urlsudkqjFF
-         RePl5zqHtpiIoPfrTbdKBcM/K+4QG6YSXa+fQiY6IYBabEAKOuGLgOOJAtpYhAaSPL
-         QxgpVWg5fs9E/05zGORCTa8Z/Yap1CADbpRuRXHQ=
+        b=BYxf6Qx299c/bRS/FyS7/uW4eAhGM8QAkAFiEETeRlAvQiWoX1fxHD7rYNnOLzgaq
+         4d2j32/5UG+yEAEjW+ir/2awS4djumb1sTPEiGgoIVl0Use3p2f5Tv7kMGFBzWKukR
+         lmMx6ouRfodBPjxYP9CR3chEHXWXfonmxBUGnQR0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wei Yongjun <weiyongjun1@huawei.com>,
-        Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 076/102] net: axienet: Fix error return code in axienet_probe()
-Date:   Fri, 24 Jan 2020 10:31:17 +0100
-Message-Id: <20200124092818.129800710@linuxfoundation.org>
+        stable@vger.kernel.org, Bean Huo <beanhuo@micron.com>,
+        Can Guo <cang@codeaurora.org>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, avri.altman@wdc.com
+Subject: [PATCH 5.4 071/102] scsi: ufs: delete redundant function ufshcd_def_desc_sizes()
+Date:   Fri, 24 Jan 2020 10:31:12 +0100
+Message-Id: <20200124092817.335596567@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124092806.004582306@linuxfoundation.org>
 References: <20200124092806.004582306@linuxfoundation.org>
@@ -61,38 +61,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wei Yongjun <weiyongjun1@huawei.com>
+From: Bean Huo <beanhuo@micron.com>
 
-[ Upstream commit eb34e98baf4ce269423948dacefea6747e963b48 ]
+[ Upstream commit 059efd847a4097c67817782d8ff65397e369e69b ]
 
-In the DMA memory resource get failed case, the error is not
-set and 0 will be returned. Fix it by removing redundant check
-since devm_ioremap_resource() will handle it.
+There is no need to call ufshcd_def_desc_sizes() in ufshcd_init(), since
+descriptor lengths will be checked and initialized later in
+ufshcd_init_desc_sizes().
 
-Fixes: 28ef9ebdb64c ("net: axienet: make use of axistream-connected attribute optional")
-Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
-Reviewed-by: Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: a4b0e8a4e92b1b(scsi: ufs: Factor out ufshcd_read_desc_param)
+Link: https://lore.kernel.org/r/BN7PR08MB5684A3ACE214C3D4792CE729DB610@BN7PR08MB5684.namprd08.prod.outlook.com
+Signed-off-by: Bean Huo <beanhuo@micron.com>
+Acked-by: Avri Altman <avri.altman.wdc.com>
+Reviewed-by: Can Guo <cang@codeaurora.org>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/xilinx/xilinx_axienet_main.c | 4 ----
- 1 file changed, 4 deletions(-)
+ drivers/scsi/ufs/ufshcd.c | 15 +--------------
+ 1 file changed, 1 insertion(+), 14 deletions(-)
 
-diff --git a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
-index 676006f32f913..479325eeaf8a0 100644
---- a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
-+++ b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
-@@ -1790,10 +1790,6 @@ static int axienet_probe(struct platform_device *pdev)
- 		/* Check for these resources directly on the Ethernet node. */
- 		struct resource *res = platform_get_resource(pdev,
- 							     IORESOURCE_MEM, 1);
--		if (!res) {
--			dev_err(&pdev->dev, "unable to get DMA memory resource\n");
--			goto free_netdev;
--		}
- 		lp->dma_regs = devm_ioremap_resource(&pdev->dev, res);
- 		lp->rx_irq = platform_get_irq(pdev, 1);
- 		lp->tx_irq = platform_get_irq(pdev, 0);
+diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+index 25a6a25b17a28..1e38bb967871d 100644
+--- a/drivers/scsi/ufs/ufshcd.c
++++ b/drivers/scsi/ufs/ufshcd.c
+@@ -6779,23 +6779,13 @@ static void ufshcd_init_desc_sizes(struct ufs_hba *hba)
+ 		&hba->desc_size.geom_desc);
+ 	if (err)
+ 		hba->desc_size.geom_desc = QUERY_DESC_GEOMETRY_DEF_SIZE;
++
+ 	err = ufshcd_read_desc_length(hba, QUERY_DESC_IDN_HEALTH, 0,
+ 		&hba->desc_size.hlth_desc);
+ 	if (err)
+ 		hba->desc_size.hlth_desc = QUERY_DESC_HEALTH_DEF_SIZE;
+ }
+ 
+-static void ufshcd_def_desc_sizes(struct ufs_hba *hba)
+-{
+-	hba->desc_size.dev_desc = QUERY_DESC_DEVICE_DEF_SIZE;
+-	hba->desc_size.pwr_desc = QUERY_DESC_POWER_DEF_SIZE;
+-	hba->desc_size.interc_desc = QUERY_DESC_INTERCONNECT_DEF_SIZE;
+-	hba->desc_size.conf_desc = QUERY_DESC_CONFIGURATION_DEF_SIZE;
+-	hba->desc_size.unit_desc = QUERY_DESC_UNIT_DEF_SIZE;
+-	hba->desc_size.geom_desc = QUERY_DESC_GEOMETRY_DEF_SIZE;
+-	hba->desc_size.hlth_desc = QUERY_DESC_HEALTH_DEF_SIZE;
+-}
+-
+ static struct ufs_ref_clk ufs_ref_clk_freqs[] = {
+ 	{19200000, REF_CLK_FREQ_19_2_MHZ},
+ 	{26000000, REF_CLK_FREQ_26_MHZ},
+@@ -8283,9 +8273,6 @@ int ufshcd_init(struct ufs_hba *hba, void __iomem *mmio_base, unsigned int irq)
+ 	hba->mmio_base = mmio_base;
+ 	hba->irq = irq;
+ 
+-	/* Set descriptor lengths to specification defaults */
+-	ufshcd_def_desc_sizes(hba);
+-
+ 	err = ufshcd_hba_init(hba);
+ 	if (err)
+ 		goto out_error;
 -- 
 2.20.1
 
