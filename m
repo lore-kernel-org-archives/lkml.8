@@ -7,48 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3445BC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:21:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E842BC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:21:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F31AE22522
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:21:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B58D321556
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:21:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579875689;
-	bh=gbSUbp2Y+lwHdwPhmX4qakw92SmAT6LU7/lz0wpkvoE=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=MjlLjhlY2dzcYf4UBuYPApB4WsF3NluyyO39OSePFL6w6vQ2PBufrC7D6MpBi6eta
-	 naPrBTklMbVNwalxrfyeWS6q+X6CE4DHlcbVhO4WFoVH/mEENYElh27ZmHKAKVcnSo
-	 YDcTuA6RBfUXeDnwLBHWOC1+Dtq0TgNyFVUAqtis=
+	s=default; t=1579875691;
+	bh=R9PPw+MuKGRlmrJ5z10igS3e5wXHKMN8f8pyzN9abaU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=pMP36z1JSC7rUk+2uFDh1oDDOe6QAtU8/goNneAojWdqxmDXJAsDTY8IF6Xcy4zXb
+	 yD44YS/TbQA5d4zKku/FjDD7/MOp5ejJOVNfpshT9e+h5sGxfdf0sx5jxqbLBsrbl1
+	 57/HQM8guR+Tw2wmDx9LAumBYmt+6hMxACDrh7Iw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392204AbgAXOV2 (ORCPT
+        id S2405300AbgAXOVb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 09:21:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43026 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 09:21:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43152 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387438AbgAXOVV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 09:21:21 -0500
+        id S2388366AbgAXOV1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 09:21:27 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4390520661;
-        Fri, 24 Jan 2020 14:21:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EB7AC22527;
+        Fri, 24 Jan 2020 14:21:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579875681;
-        bh=gbSUbp2Y+lwHdwPhmX4qakw92SmAT6LU7/lz0wpkvoE=;
-        h=From:To:Cc:Subject:Date:From;
-        b=iNvib8P4xgHXDvO+yujxMVfxOXxeeG/qNJFsdSieLaDIMYJRXksz0dhX/343yjZBk
-         +982aIIQdqNqX/Oo8uRpyb2y6y7oJjh3g0Eexf7quNaHzSXVbTj64L/GRTMl2ZT8D4
-         t19RrIj0tw/4beNmphD+VehdxQ2AH/aOsgaF4s5E=
+        s=default; t=1579875686;
+        bh=R9PPw+MuKGRlmrJ5z10igS3e5wXHKMN8f8pyzN9abaU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=z1akMufq4BN3EcyRBbyndxEAZu1X7STUaA8rUzqA4kO+kR//axp70hb4ppXjGMIUl
+         yElOfHxEW8x2xjlJiMf9b8rjrLP8NE+F1t0hQ5HxW+nl3/Y5G872haYpfzcNUpFRAG
+         Y81Lg5dGrHYyIJyFWhqJyQzxxaf5usJleoKLrUbw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sven Eckelmann <sven@narfation.org>,
-        Simon Wunderlich <sw@simonwunderlich.de>,
-        Sasha Levin <sashal@kernel.org>,
-        b.a.t.m.a.n@lists.open-mesh.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 01/32] batman-adv: Fix DAT candidate selection on little endian systems
-Date:   Fri, 24 Jan 2020 09:20:48 -0500
-Message-Id: <20200124142119.30484-1-sashal@kernel.org>
+Cc:     Guenter Roeck <linux@roeck-us.net>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-clk@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 06/32] clk: Don't try to enable critical clocks if prepare failed
+Date:   Fri, 24 Jan 2020 09:20:53 -0500
+Message-Id: <20200124142119.30484-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200124142119.30484-1-sashal@kernel.org>
+References: <20200124142119.30484-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -58,51 +60,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sven Eckelmann <sven@narfation.org>
+From: Guenter Roeck <linux@roeck-us.net>
 
-[ Upstream commit 4cc4a1708903f404d2ca0dfde30e71e052c6cbc9 ]
+[ Upstream commit 12ead77432f2ce32dea797742316d15c5800cb32 ]
 
-The distributed arp table is using a DHT to store and retrieve MAC address
-information for an IP address. This is done using unicast messages to
-selected peers. The potential peers are looked up using the IP address and
-the VID.
+The following traceback is seen if a critical clock fails to prepare.
 
-While the IP address is always stored in big endian byte order, this is not
-the case of the VID. It can (depending on the host system) either be big
-endian or little endian. The host must therefore always convert it to big
-endian to ensure that all devices calculate the same peers for the same
-lookup data.
+bcm2835-clk 3f101000.cprman: plld: couldn't lock PLL
+------------[ cut here ]------------
+Enabling unprepared plld_per
+WARNING: CPU: 1 PID: 1 at drivers/clk/clk.c:1014 clk_core_enable+0xcc/0x2c0
+...
+Call trace:
+ clk_core_enable+0xcc/0x2c0
+ __clk_register+0x5c4/0x788
+ devm_clk_hw_register+0x4c/0xb0
+ bcm2835_register_pll_divider+0xc0/0x150
+ bcm2835_clk_probe+0x134/0x1e8
+ platform_drv_probe+0x50/0xa0
+ really_probe+0xd4/0x308
+ driver_probe_device+0x54/0xe8
+ device_driver_attach+0x6c/0x78
+ __driver_attach+0x54/0xd8
+...
 
-Fixes: be1db4f6615b ("batman-adv: make the Distributed ARP Table vlan aware")
-Signed-off-by: Sven Eckelmann <sven@narfation.org>
-Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
+Check return values from clk_core_prepare() and clk_core_enable() and
+bail out if any of those functions returns an error.
+
+Cc: Jerome Brunet <jbrunet@baylibre.com>
+Fixes: 99652a469df1 ("clk: migrate the count of orphaned clocks at init")
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Link: https://lkml.kernel.org/r/20191225163429.29694-1-linux@roeck-us.net
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/batman-adv/distributed-arp-table.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/clk/clk.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/net/batman-adv/distributed-arp-table.c b/net/batman-adv/distributed-arp-table.c
-index 8d1d0fdb157e7..1519cbf70150b 100644
---- a/net/batman-adv/distributed-arp-table.c
-+++ b/net/batman-adv/distributed-arp-table.c
-@@ -243,6 +243,7 @@ static u32 batadv_hash_dat(const void *data, u32 size)
- 	u32 hash = 0;
- 	const struct batadv_dat_entry *dat = data;
- 	const unsigned char *key;
-+	__be16 vid;
- 	u32 i;
+diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
+index a3f52f6782115..8341a128dab1d 100644
+--- a/drivers/clk/clk.c
++++ b/drivers/clk/clk.c
+@@ -2482,11 +2482,17 @@ static int __clk_core_init(struct clk_core *core)
+ 	if (core->flags & CLK_IS_CRITICAL) {
+ 		unsigned long flags;
  
- 	key = (const unsigned char *)&dat->ip;
-@@ -252,7 +253,8 @@ static u32 batadv_hash_dat(const void *data, u32 size)
- 		hash ^= (hash >> 6);
+-		clk_core_prepare(core);
++		ret = clk_core_prepare(core);
++		if (ret)
++			goto out;
+ 
+ 		flags = clk_enable_lock();
+-		clk_core_enable(core);
++		ret = clk_core_enable(core);
+ 		clk_enable_unlock(flags);
++		if (ret) {
++			clk_core_unprepare(core);
++			goto out;
++		}
  	}
  
--	key = (const unsigned char *)&dat->vid;
-+	vid = htons(dat->vid);
-+	key = (__force const unsigned char *)&vid;
- 	for (i = 0; i < sizeof(dat->vid); i++) {
- 		hash += key[i];
- 		hash += (hash << 10);
+ 	/*
 -- 
 2.20.1
 
