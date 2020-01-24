@@ -2,113 +2,116 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
-	USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37CFFC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 15:11:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5334BC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 15:13:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A59020709
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 15:11:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21ED220709
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 15:13:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PkQyoXHR"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="W3qX1D7e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730996AbgAXPLl (ORCPT
+        id S1731184AbgAXPNu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 10:11:41 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:37351 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726293AbgAXPLk (ORCPT
+        Fri, 24 Jan 2020 10:13:50 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:48224 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726293AbgAXPNt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 10:11:40 -0500
-Received: by mail-wm1-f68.google.com with SMTP id f129so2031984wmf.2
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Jan 2020 07:11:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=MSzP1nd3Kx7vqywPp/7dbG7LJqsHWNmVUH7rdmRZlsg=;
-        b=PkQyoXHRsVemhUe8B3wM2zzk7+xwN6OAx1TCiUF8l7X7+Jkc+0tdr0gA/10Lci+Ahd
-         1EqMTOGp6F1eloojVizeqiAcruwIc458ZPYmyE90xF2GILWzqnqMPocalexRNTZt7MjO
-         Bc28VK86QDyNmH61Csn5CQ80VkV9e8MhjHMgYWBiIU3QIUjgtx6VTRXfGigL1HH7LXXG
-         BRpDYL3OxNbaktw9fi7uKFCAQVaPGY0eXHmrb6OZ6oOquZGWvZDre1Od4XMHESA2v6u0
-         SF23fDIG2Du4HogPNmfF/xdofQdv3l67Zpzszxi5J5t6/qaF1wS5o+gNI+uXVxhJGVck
-         AF0g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=MSzP1nd3Kx7vqywPp/7dbG7LJqsHWNmVUH7rdmRZlsg=;
-        b=qmxXRSD5SF4jNIMQPjzbVNmgwtMaLrjo1ujiVYkZvhWKAqTXZOQmXWupzvZj0sW8nc
-         t0QqJxaMeTVbHRZhlgsjbCrlvrDrLjRHp8hW8ZM+OeiLzk/fPz4PUq4YevKgewLtuuO2
-         jNLRrvBn/ZPdfYbh5d5vYWzKUXvL6dFAyC5VSDtmilC763/k5GzODCmOsB2BD5s9koXD
-         MMkHauBQtbEgusDTHmJiUdKJCdcyKXhWUbzd5C+E0LG4+BCyF5rPJf8GITUbSoR5pOCt
-         TJUzrWKbTQsoQdvBHgJJsQM7qqPxfjVfqsvFIpJ8CPT/shg4R8mgwmtdAgI4NwmN1CxC
-         1PGg==
-X-Gm-Message-State: APjAAAWwu3ELrqHCVrcXmyxIJk/GENWNbwfbdR6cavk0hxZcOwCwcHK3
-        ofmNuSjT02a/QzGjk2lnkcXaHg==
-X-Google-Smtp-Source: APXvYqw6UxJDrFMRJMkWe2BNZvRd9O9oDldxc/xQ52qDwaZiCwxDtawacqgBkV37GnbU7Jf0rwTaeQ==
-X-Received: by 2002:a1c:6755:: with SMTP id b82mr3548042wmc.127.1579878698529;
-        Fri, 24 Jan 2020 07:11:38 -0800 (PST)
-Received: from google.com ([2a00:79e0:d:110:d6cc:2030:37c1:9964])
-        by smtp.gmail.com with ESMTPSA id o2sm6401901wmh.46.2020.01.24.07.11.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 Jan 2020 07:11:37 -0800 (PST)
-Date:   Fri, 24 Jan 2020 15:11:34 +0000
-From:   Quentin Perret <qperret@google.com>
-To:     Valentin Schneider <valentin.schneider@arm.com>
-Cc:     linux-kernel@vger.kernel.org, mingo@redhat.com,
-        peterz@infradead.org, vincent.guittot@linaro.org,
-        dietmar.eggemann@arm.com, morten.rasmussen@arm.com,
-        adharmap@codeaurora.org
-Subject: Re: [PATCH v2 1/3] sched/fair: Add asymmetric CPU capacity wakeup
- scan
-Message-ID: <20200124151134.GB221730@google.com>
-References: <20200124130213.24886-1-valentin.schneider@arm.com>
- <20200124130213.24886-2-valentin.schneider@arm.com>
- <00aa64e8-5e75-181e-a4f4-72c2ac64081c@arm.com>
+        Fri, 24 Jan 2020 10:13:49 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=35gCEfpxVAtjI0TfMCZ1JhtcqIkWEo2HG4/U2DcwoqA=; b=W3qX1D7eKIlfLC6pgoA9hEyYm
+        AJ3QDv5UwmVIhwcakfZzw+VrHsNExGoljlLqgbrtiokyNRGEkGZQrFFnygTlaj9ZlBZnvXUB3+g2M
+        I/dgy/eQnq38v47EWpW+gKk0tJ1jSmN2DOio8ltCdwjJZ1lTAg53pO/bmLRl5BXQbjbh/l8d5G8YE
+        L+0zhq/GvAYo/asdkBTOU31ZGwmb1op68byQ2U+R5cU7a4gCAsDcKyNeT0AicZPLeR785qtJNDGD0
+        XgDS+sl3pZusZgrxRZdf9ezFTYwk/LWT8vsFw1Z73vn2QsbTTZbeWbk1c5FeekrarX9l+3cLDg6FY
+        ihbNnrDNg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iv0e0-0007Qp-QC; Fri, 24 Jan 2020 15:13:12 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 63A913012DC;
+        Fri, 24 Jan 2020 16:11:29 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id E889620AFECE6; Fri, 24 Jan 2020 16:13:09 +0100 (CET)
+Date:   Fri, 24 Jan 2020 16:13:09 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Waiman Long <longman@redhat.com>
+Cc:     Alex Kogan <alex.kogan@oracle.com>, linux@armlinux.org.uk,
+        Ingo Molnar <mingo@redhat.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>, linux-arch@vger.kernel.org,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>, hpa@zytor.com, x86@kernel.org,
+        Hanjun Guo <guohanjun@huawei.com>,
+        Jan Glauber <jglauber@marvell.com>,
+        Steven Sistare <steven.sistare@oracle.com>,
+        Daniel Jordan <daniel.m.jordan@oracle.com>,
+        dave.dice@oracle.com
+Subject: Re: [PATCH v8 4/5] locking/qspinlock: Introduce starvation avoidance
+ into CNA
+Message-ID: <20200124151309.GE14879@hirez.programming.kicks-ass.net>
+References: <20191230194042.67789-1-alex.kogan@oracle.com>
+ <20191230194042.67789-5-alex.kogan@oracle.com>
+ <20200121132949.GL14914@hirez.programming.kicks-ass.net>
+ <cfdf635d-be2e-9d4b-c4ca-6bcbddc6868f@redhat.com>
+ <3862F8A1-FF9B-40AD-A88E-2C0BA7AF6F58@oracle.com>
+ <20200124075235.GX14914@hirez.programming.kicks-ass.net>
+ <2c6741c5-d89d-4b2c-cebe-a7c7f6eed884@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <00aa64e8-5e75-181e-a4f4-72c2ac64081c@arm.com>
+In-Reply-To: <2c6741c5-d89d-4b2c-cebe-a7c7f6eed884@redhat.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Friday 24 Jan 2020 at 14:14:47 (+0000), Valentin Schneider wrote:
-> If we fail to find a big enough CPU, we'll just fallback to the rest of
-> select_idle_sibling() which will pick an idle CPU, just without caring
-> about capacity.
-> 
-> Now an alternative here would be to:
-> - return the first idle CPU on which the task fits (what the above does)
-> - else, return the biggest idle CPU we found (this could e.g. still steer
->   the task towards a medium on a tri-capacity system)
+On Fri, Jan 24, 2020 at 09:42:42AM -0500, Waiman Long wrote:
+> On 1/24/20 2:52 AM, Peter Zijlstra wrote:
+> > On Thu, Jan 23, 2020 at 04:33:54PM -0500, Alex Kogan wrote:
+> >> Let me put this question to you. What do you think the number should be?
+> > I think it would be very good to keep the inter-node latency below 1ms.
+> It is hard to guarantee that given that lock hold times can vary quite a
+> lot depending on the workload. What we can control is just how many
+> later lock waiters can jump ahead before a given waiter.
 
-Sounds reasonable to me.
+We're not into this for easy. And exactly because it depends on a lot we
+need a lot of data.
 
-> I think what we were trying to go with here is to not entirely hijack
-> select_idle_sibling(). If we go with the above alternative, topologies
-> with sched_asym_cpucapacity enabled would only ever see
-> select_idle_capacity() and not the rest of select_idle_sibling(). Not sure
-> if it's a bad thing or not, but it's something to ponder over.
+Worst case lock acquisition times directly translate into worst case
+IRQ-off latencies, and even the most die hard throughput oriented
+workloads don't like to experience multiple ticks worth of irq-off
+latencies.
 
-Right, I would think your suggestion above is a pretty sensible policy
-for asymmetric systems, and I don't think the rest of
-select_idle_sibling() will do a much better job on such systems at
-finding an idle CPU than select_idle_capacity() would do, but I see
-your point.
+> > But to realize that we need data on the lock hold times. Specifically
+> > for the heavily contended locks that make CNA worth it in the first
+> > place.
+> >
+> > I don't see that data, so I don't see how we can argue about this let
+> > alone call something reasonable.
+> >
+> In essence, CNA lock is for improving throughput on NUMA machines at the
+> expense of increasing worst case latency. If low latency is important,
 
-Now, not having to re-iterate over the CPUs again might keep the wakeup
-latency a bit lower -- perhaps something noticeable with hackbench ?
-Worth a try.
+Latency is _always_ important. Otherwise we'd never have put so much
+time and effort into fair locks to begin with. Unbounded latency sucks
+unconditionally.
 
-In any case, no strong opinion. With that missing call to
-sync_entity_load_avg() fixed, the patch looks pretty decent to me.
+> it should be disabled. If CONFIG_PREEMPT_RT is on,
+> CONFIG_NUMA_AWARE_SPINLOCKS should be off.
 
-Thanks,
-Quentin
+You're spouting nonsense. You cannot claim any random number is
+reasonable without argument.
