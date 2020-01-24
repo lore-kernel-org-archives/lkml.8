@@ -4,54 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 941CBC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:34:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0548EC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:34:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 654752077C
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:34:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1476222D9
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:34:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579865680;
-	bh=bdxtbrgnseGx16inRyQIv6YLr/3AdmcOXdYek/M70Og=;
+	s=default; t=1579865686;
+	bh=gt9bph1GrJGHkztpsT4H/EYp/BQ6SfJCH9lx63DYKUs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=D1jh1aKeWPAeeyOxk8Dz9aS5sgM9JTIePSTdODZ1LzqSzTXO4Cmz79ktJuKWmUiOL
-	 yTAH0DEXHY9j1Hg+omafGT5Y3rh8zEuCKezuVyJpYjnYPVrgOrU0Ot7hnIupEaG3K2
-	 YzTYG+FX/AEZaInOLYjVAt9xXtCnRFfExhC8Zfxg=
+	b=reVkHupywqVk8N7PS62kdVgC8VJIGVnac3ax5KlyYSu/3gSz95aEegu4qNRZMBs8n
+	 J0tx1BlWma6jxXw7F57oiCo4BzvC/9V6vHLUWlRYgYtklHDOwU3+4eJaCQCSCX6NmD
+	 CV0F0mBgpNyQnkKt1u1eGVihe1e2f/Zf4Hcj3uKg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404743AbgAXLej (ORCPT
+        id S2404491AbgAXLep (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:34:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54494 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 06:34:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54668 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390190AbgAXLef (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:34:35 -0500
+        id S2404747AbgAXLen (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:34:43 -0500
 Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 82885214DB;
-        Fri, 24 Jan 2020 11:34:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 84AA8222D9;
+        Fri, 24 Jan 2020 11:34:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579865675;
-        bh=bdxtbrgnseGx16inRyQIv6YLr/3AdmcOXdYek/M70Og=;
+        s=default; t=1579865683;
+        bh=gt9bph1GrJGHkztpsT4H/EYp/BQ6SfJCH9lx63DYKUs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zc50qQthAHoNBPIOGreQcTTvlciJZTKgRvpF/mj7tvxKWMG9GIwSsAW21Zwjk4+fL
-         aEnQBblJR7ihHw9CMrMN4jdrkinkZg+3zME2Q50zSgr2Jp4BFvWk28Zs81q2lZLhAa
-         DHLuYj42qQn1YUm9GoU2FwxtV6Lo2lXWnEuxvpog=
+        b=UUEIoMe7mgdFWln8kMl0dYoqn4RywPAP+2oXn3LtClqjaF9D1PYvh5Z/KHvaJMSqS
+         0Tnej3JEw2hP21+/4wtWyI7JdOwHsIuZ1yFJ8ZYihd6Zdm4lH8q9RacF4uOro47mpt
+         lDudG51o3aAdWq9j5zSIR+i4pcn/ehvcGmXL7NvY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, kbuild test robot <lkp@intel.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Ben Hutchings <ben@decadent.org.uk>,
+        stable@vger.kernel.org, YueHaibing <yuehaibing@huawei.com>,
         Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Simon Horman <simon.horman@netronome.com>,
-        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 609/639] net: netem: fix error path for corrupted GSO frames
-Date:   Fri, 24 Jan 2020 10:32:59 +0100
-Message-Id: <20200124093205.754524640@linuxfoundation.org>
+Subject: [PATCH 4.19 598/639] act_mirred: Fix mirred_init_module error handling
+Date:   Fri, 24 Jan 2020 10:32:48 +0100
+Message-Id: <20200124093204.256421216@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
 References: <20200124093047.008739095@linuxfoundation.org>
@@ -64,72 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jakub Kicinski <jakub.kicinski@netronome.com>
+From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit a7fa12d15855904aff1716e1fc723c03ba38c5cc ]
+[ Upstream commit 11c9a7d38af524217efb7a176ad322b97ac2f163 ]
 
-To corrupt a GSO frame we first perform segmentation.  We then
-proceed using the first segment instead of the full GSO skb and
-requeue the rest of the segments as separate packets.
+If tcf_register_action failed, mirred_device_notifier
+should be unregistered.
 
-If there are any issues with processing the first segment we
-still want to process the rest, therefore we jump to the
-finish_segs label.
-
-Commit 177b8007463c ("net: netem: fix backlog accounting for
-corrupted GSO frames") started using the pointer to the first
-segment in the "rest of segments processing", but as mentioned
-above the first segment may had already been freed at this point.
-
-Backlog corrections for parent qdiscs have to be adjusted.
-
-Fixes: 177b8007463c ("net: netem: fix backlog accounting for corrupted GSO frames")
-Reported-by: kbuild test robot <lkp@intel.com>
-Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-Reported-by: Ben Hutchings <ben@decadent.org.uk>
+Fixes: 3b87956ea645 ("net sched: fix race in mirred device removal")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
-Reviewed-by: Simon Horman <simon.horman@netronome.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/sched/sch_netem.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ net/sched/act_mirred.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/net/sched/sch_netem.c b/net/sched/sch_netem.c
-index 1cd7266140e6a..7660aa5b80da8 100644
---- a/net/sched/sch_netem.c
-+++ b/net/sched/sch_netem.c
-@@ -509,6 +509,7 @@ static int netem_enqueue(struct sk_buff *skb, struct Qdisc *sch,
- 		if (skb->ip_summed == CHECKSUM_PARTIAL &&
- 		    skb_checksum_help(skb)) {
- 			qdisc_drop(skb, sch, to_free);
-+			skb = NULL;
- 			goto finish_segs;
- 		}
+diff --git a/net/sched/act_mirred.c b/net/sched/act_mirred.c
+index 399e3beae6cf4..a30c17a282819 100644
+--- a/net/sched/act_mirred.c
++++ b/net/sched/act_mirred.c
+@@ -445,7 +445,11 @@ static int __init mirred_init_module(void)
+ 		return err;
  
-@@ -584,9 +585,10 @@ static int netem_enqueue(struct sk_buff *skb, struct Qdisc *sch,
- finish_segs:
- 	if (segs) {
- 		unsigned int len, last_len;
--		int nb = 0;
-+		int nb;
- 
--		len = skb->len;
-+		len = skb ? skb->len : 0;
-+		nb = skb ? 1 : 0;
- 
- 		while (segs) {
- 			skb2 = segs->next;
-@@ -603,7 +605,8 @@ finish_segs:
- 			}
- 			segs = skb2;
- 		}
--		qdisc_tree_reduce_backlog(sch, -nb, prev_len - len);
-+		/* Parent qdiscs accounted for 1 skb of size @prev_len */
-+		qdisc_tree_reduce_backlog(sch, -(nb - 1), -(len - prev_len));
- 	}
- 	return NET_XMIT_SUCCESS;
+ 	pr_info("Mirror/redirect action on\n");
+-	return tcf_register_action(&act_mirred_ops, &mirred_net_ops);
++	err = tcf_register_action(&act_mirred_ops, &mirred_net_ops);
++	if (err)
++		unregister_netdevice_notifier(&mirred_device_notifier);
++
++	return err;
  }
+ 
+ static void __exit mirred_cleanup_module(void)
 -- 
 2.20.1
 
