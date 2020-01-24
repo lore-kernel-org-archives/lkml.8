@@ -2,457 +2,253 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74C08C35242
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 12:40:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8B1DC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 12:41:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4BA5E2070A
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 12:40:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 985402070A
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 12:41:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fdaKR2SL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387891AbgAXMkT (ORCPT
+        id S1733157AbgAXMlS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 07:40:19 -0500
-Received: from szxga07-in.huawei.com ([45.249.212.35]:43440 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729774AbgAXMkS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 07:40:18 -0500
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 5BA2A80E1470387F85FD;
-        Fri, 24 Jan 2020 20:40:15 +0800 (CST)
-Received: from DESKTOP-6T4S3DQ.china.huawei.com (10.47.84.245) by
- DGGEMS413-HUB.china.huawei.com (10.3.19.213) with Microsoft SMTP Server id
- 14.3.439.0; Fri, 24 Jan 2020 20:40:08 +0800
-From:   Shiju Jose <shiju.jose@huawei.com>
-To:     <linux-acpi@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <rjw@rjwysocki.net>,
-        <helgaas@kernel.org>, <lenb@kernel.org>, <bp@alien8.de>,
-        <james.morse@arm.com>, <tony.luck@intel.com>,
-        <gregkh@linuxfoundation.org>, <zhangliguang@linux.alibaba.com>,
-        <tglx@linutronix.de>
-CC:     <linuxarm@huawei.com>, <jonathan.cameron@huawei.com>,
-        <tanxiaofei@huawei.com>, <yangyicong@hisilicon.com>,
-        Shiju Jose <shiju.jose@huawei.com>
-Subject: [PATCH v2 2/2] PCI: hip: Add handling of HiSilicon hip PCIe controller's errors
-Date:   Fri, 24 Jan 2020 12:39:38 +0000
-Message-ID: <20200124123938.16524-3-shiju.jose@huawei.com>
-X-Mailer: git-send-email 2.19.2.windows.1
-In-Reply-To: <20200124123938.16524-1-shiju.jose@huawei.com>
-References: <Shiju Jose>
- <20200124123938.16524-1-shiju.jose@huawei.com>
+        Fri, 24 Jan 2020 07:41:18 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:34695 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729774AbgAXMlS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 07:41:18 -0500
+Received: by mail-pf1-f195.google.com with SMTP id i6so1058855pfc.1
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jan 2020 04:41:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=znYwEP8BlT5JhAqIxI23u4NVyVYxwHFg1esi8lZ0b3I=;
+        b=fdaKR2SLA5vNu+qBklTanXoToNYa6WgLoP22kqdCYdS3CvCCGl1MaVzdq0R/BSs/Gj
+         +NdsCcir6+RhE8r/7nww9QwERmL3s4rZ+WLCzKKVmB2emp2sh87RyRYw9QTsZRjBrEj5
+         fwIYq3k9B/WqoYYcPn8Az9gEH6fvU1QNAURlf0liOeGr8kYXPrv98mUy7Q6zkp0YbV8d
+         iTXcsRobQxfsjrr5E3e+V+cr/dGnyK0pNyvGisNxKxyG1iNq9hICQBNiuivcYMojTEIJ
+         FsO+YzEXggI8E48jcAzSpNQm33LvsIjgMYaSW93GqEapvqnmBY/Ac6jGcXjoVhhMyl4V
+         VzOA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=znYwEP8BlT5JhAqIxI23u4NVyVYxwHFg1esi8lZ0b3I=;
+        b=JITqXVW5wcsDoETwsCTHnIt/6wVauSNggo21jKgvE7q29iMGfLoj0k+l4u7L0tDyiL
+         6nfxCGLnxsOr9SSJ+PyT9T3ThELwID5K8nb2T44qrgC86Goikzx3AXj+vD7uuvYU/alI
+         43lbkkP9WrL2vXwMe1PckKzJrP5P/pSG5XepFl1nzI7bcZw74kfNPrJISivFTqe91ByO
+         LsonOmZm7qQF8v04ntNP6eErb27T61zoZ0d6Dfp/B1xc70bVVBl97+67YqBirg5d9z4w
+         hkTsCemx8Gx/3vJk6aTMmAQpCOIum2V8ZwxpLUByMkVWp9XZbLUGbrR7m4S2sSi23KOM
+         zFtQ==
+X-Gm-Message-State: APjAAAXGuZQ+W8WnFuyOPKHwWdoTDofhZznNKqbakJYjxnK92eUGkaDh
+        AEwjJgIx5CI7NvPjZtYbbdrw0kk06Q5jqX4wQ1FKFQ==
+X-Google-Smtp-Source: APXvYqzid1qXDZZJNwycxElhu5/AfgZByrUXYujmLVPV1dVARwiXBDpF6hO1aoMHSiS205Uo0dD3VVOFhGH4Eunowts=
+X-Received: by 2002:a63:358a:: with SMTP id c132mr4045045pga.286.1579869677153;
+ Fri, 24 Jan 2020 04:41:17 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.47.84.245]
-X-CFilter-Loop: Reflected
+References: <000000000000de50d7059ba6acd5@google.com> <20200123102707.2596-1-hdanton@sina.com>
+ <20200124022847.11244-1-hdanton@sina.com>
+In-Reply-To: <20200124022847.11244-1-hdanton@sina.com>
+From:   Andrey Konovalov <andreyknvl@google.com>
+Date:   Fri, 24 Jan 2020 13:41:05 +0100
+Message-ID: <CAAeHK+whRFCF9WzUr55MoMiFsn83Ykr9jGGUFE4CTKVbBsZu6Q@mail.gmail.com>
+Subject: Re: KASAN: use-after-free Read in v4l2_release (3)
+To:     Hillf Danton <hdanton@sina.com>
+Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        syzbot <syzbot+75287f75e2fedd69d680@syzkaller.appspotmail.com>,
+        bnvandana@gmail.com, hverkuil-cisco@xs4all.nl,
+        LKML <linux-kernel@vger.kernel.org>, linux-media@vger.kernel.org,
+        USB list <linux-usb@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Hans Verkuil <hans.verkuil@cisco.com>
+Content-Type: multipart/mixed; boundary="000000000000e671c4059ce2127a"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yicong Yang <yangyicong@hisilicon.com>
+--000000000000e671c4059ce2127a
+Content-Type: text/plain; charset="UTF-8"
 
-The error handling driver logs and reports hip PCIe controller's
-recoverable errors.
-Perform root port reset and restore link status for the recovery.
+On Fri, Jan 24, 2020 at 3:29 AM Hillf Danton <hdanton@sina.com> wrote:
+>
+>
+> On Thu, 23 Jan 2020 14:19:47 +0200 Laurent Pinchart wrote:
+> > On Thu, Jan 23, 2020 at 06:27:07PM +0800, Hillf Danton wrote:
+> > > Wed, 22 Jan 2020 14:58:08 -0800 (PST)
+> > > > syzbot has found a reproducer for the following crash on:
+> > > >
+> > > > HEAD commit:    4cc301ee usb: gadget: add raw-gadget interface
+> > > > git tree:       https://github.com/google/kasan.git usb-fuzzer
+> > > > console output: https://syzkaller.appspot.com/x/log.txt?x=17f5a721e00000
+> > > > kernel config:  https://syzkaller.appspot.com/x/.config?x=9ba75825443d54bd
+> > > > dashboard link: https://syzkaller.appspot.com/bug?extid=75287f75e2fedd69d680
+> > > > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> > > > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16a0b6f1e00000
+> > > > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1327dd76e00000
+> > > >
+> > > > IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> > > > Reported-by: syzbot+75287f75e2fedd69d680@syzkaller.appspotmail.com
+> > > >
+> > > > usbvision_set_audio: can't write iopin register for audio switching
+> > > > usbvision_radio_close: Final disconnect
+> > > > ==================================================================
+> > > > BUG: KASAN: use-after-free in v4l2_release+0x2f1/0x390 drivers/media/v4l2-core/v4l2-dev.c:459
+> > > > Read of size 4 at addr ffff8881caba1068 by task v4l_id/1913
+>
+> <snip>
+>
+> > > Add the release callback for usbvision video device and use it to release
+> > > resources when the last reference to the device goes away.
+> >
+> > Would you be able to submit this with a commit message and your
+> > Signed-off-by line ?
+>
+> ---8<---
+> Subject: [PATCH] media: usbvision: add the release callback for video device
+> From: Hillf Danton <hdanton@sina.com>
+>
+> To fix the UAF syzbot reported,
+>
+> BUG: KASAN: use-after-free in v4l2_release+0x2f1/0x390 drivers/media/v4l2-core/v4l2-dev.c:459
+>
+> a release cb which is a simple wrapper of usbvision_release() is added
+> for releasing resources as the last reference to the usbvision video
+> device goes away.
+>
+> Reported-by: syzbot <syzbot+75287f75e2fedd69d680@syzkaller.appspotmail.com>
+> Fixes: 2aa689dd8057 ("[media] usbvision: embed video_device")
+> Cc: Hans Verkuil <hans.verkuil@cisco.com>
+> Signed-off-by: Hillf Danton <hdanton@sina.com>
+> ---
+>
+> --- a/drivers/media/usb/usbvision/usbvision-video.c
+> +++ b/drivers/media/usb/usbvision/usbvision-video.c
+> @@ -401,7 +401,6 @@ static int usbvision_v4l2_close(struct f
+>
+>         if (r) {
+>                 printk(KERN_INFO "%s: Final disconnect\n", __func__);
+> -               usbvision_release(usbvision);
+>                 return 0;
+>         }
+>
+> @@ -409,6 +408,11 @@ static int usbvision_v4l2_close(struct f
+>         return v4l2_fh_release(file);
+>  }
+>
+> +static void usbvision_video_device_release(struct video_device *vdev)
+> +{
+> +       struct usb_usbvision *usbvision = video_get_drvdata(vdev);
+> +       usbvision_release(usbvision);
+> +}
+>
+>  /*
+>   * usbvision_ioctl()
+> @@ -1181,7 +1185,7 @@ static struct video_device usbvision_vid
+>         .fops           = &usbvision_fops,
+>         .ioctl_ops      = &usbvision_ioctl_ops,
+>         .name           = "usbvision-video",
+> -       .release        = video_device_release_empty,
+> +       .release        = usbvision_video_device_release,
+>         .tvnorms        = USBVISION_NORMS,
+>  };
+>
+> --- a/drivers/media/v4l2-core/v4l2-dev.c
+> +++ b/drivers/media/v4l2-core/v4l2-dev.c
+> @@ -206,7 +206,10 @@ static void v4l2_device_release(struct d
+>         }
+>  #endif
+>
+> -       /* Do not call v4l2_device_put if there is no release callback set.
+> +       /*
+> +        * Decrease v4l2_device refcount
+> +        *
+> +        * Do not call v4l2_device_put if there is no release callback set.
+>          * Drivers that have no v4l2_device release callback might free the
+>          * v4l2_dev instance in the video_device release callback below, so we
+>          * must perform this check here.
+> @@ -214,16 +217,12 @@ static void v4l2_device_release(struct d
+>          * TODO: In the long run all drivers that use v4l2_device should use the
+>          * v4l2_device release callback. This check will then be unnecessary.
+>          */
+> -       if (v4l2_dev->release == NULL)
+> -               v4l2_dev = NULL;
+> +       if (v4l2_dev->release)
+> +               v4l2_device_put(v4l2_dev);
+>
+>         /* Release video_device and perform other
+>            cleanups as needed. */
+>         vdev->release(vdev);
+> -
+> -       /* Decrease v4l2_device refcount */
+> -       if (v4l2_dev)
+> -               v4l2_device_put(v4l2_dev);
+>  }
+>
+>  static struct class video_class = {
+> --
 
-Following are some of the PCIe controller's recoverable errors
-1. completion transmission timeout error.
-2. CRS retry counter over the threshold error.
-3. ECC 2 bit errors
-4. AXI bresponse/rresponse errors etc.
+#syz test: https://github.com/google/kasan.git ae179410
 
-Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
-Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
---
- drivers/pci/controller/Kconfig           |   8 +
- drivers/pci/controller/Makefile          |   1 +
- drivers/pci/controller/pcie-hisi-error.c | 336 +++++++++++++++++++++++++++++++
- 3 files changed, 345 insertions(+)
- create mode 100644 drivers/pci/controller/pcie-hisi-error.c
----
- drivers/pci/controller/Kconfig           |   8 +
- drivers/pci/controller/Makefile          |   1 +
- drivers/pci/controller/pcie-hisi-error.c | 336 +++++++++++++++++++++++++++++++
- 3 files changed, 345 insertions(+)
- create mode 100644 drivers/pci/controller/pcie-hisi-error.c
+--000000000000e671c4059ce2127a
+Content-Type: application/x-patch; name="usbvision.patch"
+Content-Disposition: attachment; filename="usbvision.patch"
+Content-Transfer-Encoding: base64
+Content-ID: <f_k5s5l7xp0>
+X-Attachment-Id: f_k5s5l7xp0
 
-diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
-index c77069c..769fce7 100644
---- a/drivers/pci/controller/Kconfig
-+++ b/drivers/pci/controller/Kconfig
-@@ -260,6 +260,14 @@ config PCI_HYPERV_INTERFACE
- 	  The Hyper-V PCI Interface is a helper driver allows other drivers to
- 	  have a common interface with the Hyper-V PCI frontend driver.
- 
-+config PCIE_HISI_ERR
-+	depends on ARM64 || COMPILE_TEST
-+	depends on (ACPI && PCI_QUIRKS)
-+	bool "HiSilicon hip PCIe controller error handling driver"
-+	help
-+	  Say Y here if you want error handling support
-+	  for the PCIe controller's errors on HiSilicon hip SoCs
-+
- source "drivers/pci/controller/dwc/Kconfig"
- source "drivers/pci/controller/cadence/Kconfig"
- endmenu
-diff --git a/drivers/pci/controller/Makefile b/drivers/pci/controller/Makefile
-index 3d4f597..2d1565f 100644
---- a/drivers/pci/controller/Makefile
-+++ b/drivers/pci/controller/Makefile
-@@ -28,6 +28,7 @@ obj-$(CONFIG_PCIE_MEDIATEK) += pcie-mediatek.o
- obj-$(CONFIG_PCIE_MOBIVEIL) += pcie-mobiveil.o
- obj-$(CONFIG_PCIE_TANGO_SMP8759) += pcie-tango.o
- obj-$(CONFIG_VMD) += vmd.o
-+obj-$(CONFIG_PCIE_HISI_ERR) += pcie-hisi-error.o
- # pcie-hisi.o quirks are needed even without CONFIG_PCIE_DW
- obj-y				+= dwc/
- 
-diff --git a/drivers/pci/controller/pcie-hisi-error.c b/drivers/pci/controller/pcie-hisi-error.c
-new file mode 100644
-index 0000000..27520ad
---- /dev/null
-+++ b/drivers/pci/controller/pcie-hisi-error.c
-@@ -0,0 +1,336 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Driver for handling the PCIe controller's errors on
-+ * HiSilicon hip SoCs.
-+ *
-+ * Copyright (c) 2018-2019 HiSilicon Limited.
-+ */
-+
-+#include <linux/acpi.h>
-+#include <acpi/ghes.h>
-+#include <linux/bitfield.h>
-+#include <linux/bitops.h>
-+#include <linux/delay.h>
-+#include <linux/irq.h>
-+#include <linux/irqdomain.h>
-+#include <linux/list.h>
-+#include <linux/pci.h>
-+#include <linux/platform_device.h>
-+#include <linux/resource.h>
-+#include <linux/kfifo.h>
-+#include <linux/spinlock.h>
-+
-+#include "../pci.h"
-+
-+#define HISI_PCIE_ERR_RECOVER_RING_SIZE           16
-+#define	HISI_PCIE_ERR_INFO_SIZE	1024
-+
-+/* HISI PCIe controller's error definitions */
-+#define HISI_PCIE_ERR_MISC_REGS	33
-+
-+#define HISI_PCIE_SUB_MODULE_ID_AP	0
-+#define HISI_PCIE_SUB_MODULE_ID_TL	1
-+#define HISI_PCIE_SUB_MODULE_ID_MAC	2
-+#define HISI_PCIE_SUB_MODULE_ID_DL	3
-+#define HISI_PCIE_SUB_MODULE_ID_SDI	4
-+
-+#define HISI_PCIE_LOCAL_VALID_VERSION		BIT(0)
-+#define HISI_PCIE_LOCAL_VALID_SOC_ID		BIT(1)
-+#define HISI_PCIE_LOCAL_VALID_SOCKET_ID		BIT(2)
-+#define HISI_PCIE_LOCAL_VALID_NIMBUS_ID		BIT(3)
-+#define HISI_PCIE_LOCAL_VALID_SUB_MODULE_ID	BIT(4)
-+#define HISI_PCIE_LOCAL_VALID_CORE_ID		BIT(5)
-+#define HISI_PCIE_LOCAL_VALID_PORT_ID		BIT(6)
-+#define HISI_PCIE_LOCAL_VALID_ERR_TYPE		BIT(7)
-+#define HISI_PCIE_LOCAL_VALID_ERR_SEVERITY	BIT(8)
-+#define HISI_PCIE_LOCAL_VALID_ERR_MISC		9
-+
-+#define HISI_ERR_SEV_RECOVERABLE	0
-+#define HISI_ERR_SEV_FATAL		1
-+#define HISI_ERR_SEV_CORRECTED		2
-+#define HISI_ERR_SEV_NONE		3
-+
-+guid_t hisi_pcie_sec_type = GUID_INIT(0xB2889FC9, 0xE7D7, 0x4F9D, 0xA8, 0x67,
-+				       0xAF, 0x42, 0xE9, 0x8B, 0xE7, 0x72);
-+
-+#define HISI_PCIE_CORE_ID(v)             ((v) >> 3)
-+#define HISI_PCIE_PORT_ID(core, v)       (((v) >> 1) + ((core) << 3))
-+#define HISI_PCIE_CORE_PORT_ID(v)        (((v) % 8) << 1)
-+
-+struct hisi_pcie_err_data {
-+	u64   val_bits;
-+	u8    version;
-+	u8    soc_id;
-+	u8    socket_id;
-+	u8    nimbus_id;
-+	u8    sub_module_id;
-+	u8    core_id;
-+	u8    port_id;
-+	u8    err_severity;
-+	u16   err_type;
-+	u8    reserv[2];
-+	u32   err_misc[HISI_PCIE_ERR_MISC_REGS];
-+};
-+
-+struct hisi_pcie_err_info {
-+	struct hisi_pcie_err_data err_data;
-+	struct platform_device *pdev;
-+};
-+
-+static char *hisi_pcie_sub_module_name(u8 id)
-+{
-+	switch (id) {
-+	case HISI_PCIE_SUB_MODULE_ID_AP: return "AP Layer";
-+	case HISI_PCIE_SUB_MODULE_ID_TL: return "TL Layer";
-+	case HISI_PCIE_SUB_MODULE_ID_MAC: return "MAC Layer";
-+	case HISI_PCIE_SUB_MODULE_ID_DL: return "DL Layer";
-+	case HISI_PCIE_SUB_MODULE_ID_SDI: return "SDI Layer";
-+	}
-+
-+	return "unknown";
-+}
-+
-+static char *hisi_pcie_err_severity(u8 err_sev)
-+{
-+	switch (err_sev) {
-+	case HISI_ERR_SEV_RECOVERABLE: return "recoverable";
-+	case HISI_ERR_SEV_FATAL: return "fatal";
-+	case HISI_ERR_SEV_CORRECTED: return "corrected";
-+	case HISI_ERR_SEV_NONE: return "none";
-+	}
-+
-+	return "unknown";
-+}
-+
-+static int hisi_pcie_port_reset(struct platform_device *pdev,
-+					u32 chip_id, u32 port_id)
-+{
-+	acpi_status s;
-+	union acpi_object arg[3];
-+	unsigned long long data = 0;
-+	struct device *dev = &pdev->dev;
-+	struct acpi_object_list arg_list;
-+	acpi_handle handle = ACPI_HANDLE(dev);
-+
-+	if (!handle) {
-+		dev_err(dev, "No Reset method\n");
-+		return -EINVAL;
-+	}
-+
-+	arg[0].type = ACPI_TYPE_INTEGER;
-+	arg[0].integer.value = chip_id;
-+	arg[1].type = ACPI_TYPE_INTEGER;
-+	arg[1].integer.value = HISI_PCIE_CORE_ID(port_id);
-+	arg[2].type = ACPI_TYPE_INTEGER;
-+	arg[2].integer.value = HISI_PCIE_CORE_PORT_ID(port_id);
-+
-+	arg_list.count = 3;
-+	arg_list.pointer = arg;
-+
-+	/* Call the ACPI handle to reset root port  */
-+	s = acpi_evaluate_integer(handle, "RST", &arg_list, &data);
-+	if (ACPI_FAILURE(s)) {
-+		dev_err(dev, "No Reset method\n");
-+		return -EIO;
-+	}
-+
-+	if (data) {
-+		dev_err(dev, "Failed to Reset\n");
-+		return -EIO;
-+	}
-+
-+	return 0;
-+}
-+
-+static int hisi_pcie_port_do_recovery(struct platform_device *dev,
-+				      u32 chip_id, u32 port_id)
-+{
-+	u32 busnr, devfn;
-+	struct pci_dev *pdev;
-+	struct pci_bus *root_bus;
-+
-+	devfn = PCI_DEVFN(port_id, 0);
-+	if (device_property_read_u32(&dev->dev, "busnr", &busnr))
-+		goto failed;
-+
-+	pdev = pci_get_domain_bus_and_slot(0, busnr, devfn);
-+	if (!pdev)
-+		goto failed;
-+
-+	root_bus = pdev->bus;
-+
-+	pci_stop_and_remove_bus_device_locked(pdev);
-+	pci_dev_put(pdev);
-+
-+	if (hisi_pcie_port_reset(dev, chip_id, port_id))
-+		return -EIO;
-+
-+	/**
-+	 * In pci_reset_secondary_bus(), using 1s delay before subordinates
-+	 * devices to be re-initialized. Use the same delay here to ensure
-+	 * we can get all the devices after root port reset.
-+	 **/
-+	ssleep(1UL);
-+
-+	/* add root port and downstream devices */
-+	pci_lock_rescan_remove();
-+	pci_rescan_bus(root_bus);
-+	pci_unlock_rescan_remove();
-+
-+	return 0;
-+
-+failed:
-+	dev_info(&(dev->dev), "Fail to get root port device\n");
-+	return -ENODEV;
-+}
-+
-+static void hisi_pcie_handle_one_error(const struct hisi_pcie_err_data *err,
-+				    struct platform_device *pdev)
-+{
-+	char buf[HISI_PCIE_ERR_INFO_SIZE];
-+	char *p = buf, *end = buf + sizeof(buf);
-+	struct device *dev = &pdev->dev;
-+	u32 i;
-+	int rc;
-+
-+	if (err->val_bits == 0) {
-+		dev_warn(dev, "%s: no valid error information\n", __func__);
-+		return;
-+	}
-+
-+	/* Logging */
-+	p += snprintf(p, end - p, "[ Table version=%d ", err->version);
-+	if (err->val_bits & HISI_PCIE_LOCAL_VALID_SOC_ID)
-+		p += snprintf(p, end - p, "SOC ID=%d ", err->soc_id);
-+
-+	if (err->val_bits & HISI_PCIE_LOCAL_VALID_SOCKET_ID)
-+		p += snprintf(p, end - p, "socket ID=%d ", err->socket_id);
-+
-+	if (err->val_bits & HISI_PCIE_LOCAL_VALID_NIMBUS_ID)
-+		p += snprintf(p, end - p, "nimbus ID=%d ", err->nimbus_id);
-+
-+	if (err->val_bits & HISI_PCIE_LOCAL_VALID_SUB_MODULE_ID)
-+		p += snprintf(p, end - p, "sub module=%s ",
-+			      hisi_pcie_sub_module_name(err->sub_module_id));
-+
-+	if (err->val_bits & HISI_PCIE_LOCAL_VALID_CORE_ID)
-+		p += snprintf(p, end - p, "core ID=core%d ", err->core_id);
-+
-+	if (err->val_bits & HISI_PCIE_LOCAL_VALID_PORT_ID)
-+		p += snprintf(p, end - p, "port ID=port%d ", err->port_id);
-+
-+	if (err->val_bits & HISI_PCIE_LOCAL_VALID_ERR_SEVERITY)
-+		p += snprintf(p, end - p, "error severity=%s ",
-+			      hisi_pcie_err_severity(err->err_severity));
-+
-+	if (err->val_bits & HISI_PCIE_LOCAL_VALID_ERR_TYPE)
-+		p += snprintf(p, end - p, "error type=0x%x ", err->err_type);
-+
-+	p += snprintf(p, end - p, "]\n");
-+	dev_info(dev, "\nHISI : hip : PCIe controller's error\n");
-+	dev_info(dev, "%s\n", buf);
-+
-+	dev_info(dev, "Reg Dump:\n");
-+	for (i = 0; i < HISI_PCIE_ERR_MISC_REGS; i++) {
-+		if (err->val_bits & BIT(HISI_PCIE_LOCAL_VALID_ERR_MISC + i))
-+			dev_info(dev,
-+				 "ERR_MISC_%d=0x%x\n", i, err->err_misc[i]);
-+	}
-+
-+	/* Recovery for the PCIe controller's errors */
-+	if (err->err_severity == HISI_ERR_SEV_RECOVERABLE) {
-+		/* try reset PCI port for the error recovery */
-+		rc = hisi_pcie_port_do_recovery(pdev, err->socket_id,
-+				HISI_PCIE_PORT_ID(err->core_id, err->port_id));
-+		if (rc) {
-+			dev_info(dev, "fail to do hisi pcie port reset\n");
-+			return;
-+		}
-+	}
-+}
-+
-+static DEFINE_KFIFO(hisi_pcie_err_recover_ring, struct hisi_pcie_err_info,
-+		    HISI_PCIE_ERR_RECOVER_RING_SIZE);
-+static DEFINE_SPINLOCK(hisi_pcie_err_recover_ring_lock);
-+
-+static void hisi_pcie_err_recover_work_func(struct work_struct *work)
-+{
-+	struct hisi_pcie_err_info pcie_err_entry;
-+
-+	while (kfifo_get(&hisi_pcie_err_recover_ring, &pcie_err_entry)) {
-+		hisi_pcie_handle_one_error(&pcie_err_entry.err_data,
-+					pcie_err_entry.pdev);
-+	}
-+}
-+
-+static DECLARE_WORK(hisi_pcie_err_recover_work,
-+		    hisi_pcie_err_recover_work_func);
-+
-+static int hisi_pcie_error_handle(struct acpi_hest_generic_data *gdata,
-+				  int sev, void *data)
-+{
-+	const struct hisi_pcie_err_data *err_data =
-+					acpi_hest_get_payload(gdata);
-+	struct hisi_pcie_err_info err_info;
-+	struct platform_device *pdev = data;
-+	struct device *dev = &pdev->dev;
-+	u8 socket;
-+
-+	if (device_property_read_u8(dev, "socket", &socket))
-+		return GHES_EVENT_NONE;
-+
-+	if (err_data->socket_id != socket)
-+		return GHES_EVENT_NONE;
-+
-+	memcpy(&err_info.err_data, err_data, sizeof(*err_data));
-+	err_info.pdev = pdev;
-+
-+	if (kfifo_in_spinlocked(&hisi_pcie_err_recover_ring, &err_info, 1,
-+				&hisi_pcie_err_recover_ring_lock))
-+		schedule_work(&hisi_pcie_err_recover_work);
-+	else
-+		dev_warn(dev, "queue full when recovering PCIe controller's error\n");
-+
-+	return GHES_EVENT_HANDLED;
-+}
-+
-+static int hisi_pcie_err_handler_probe(struct platform_device *pdev)
-+{
-+	int ret;
-+
-+	ret = ghes_register_event_handler(hisi_pcie_sec_type,
-+					  hisi_pcie_error_handle, pdev);
-+	if (ret) {
-+		dev_err(&pdev->dev, "%s : ghes_register_event_handler fail\n",
-+			__func__);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static int hisi_pcie_err_handler_remove(struct platform_device *pdev)
-+{
-+	ghes_unregister_event_handler(hisi_pcie_sec_type, pdev);
-+
-+	return 0;
-+}
-+
-+static const struct acpi_device_id hisi_pcie_acpi_match[] = {
-+	{ "HISI0361", 0 },
-+	{ }
-+};
-+
-+static struct platform_driver hisi_pcie_err_handler_driver = {
-+	.driver = {
-+		.name	= "hisi-pcie-err-handler",
-+		.acpi_match_table = hisi_pcie_acpi_match,
-+	},
-+	.probe		= hisi_pcie_err_handler_probe,
-+	.remove		= hisi_pcie_err_handler_remove,
-+};
-+module_platform_driver(hisi_pcie_err_handler_driver);
-+
-+MODULE_DESCRIPTION("HiSilicon hip PCIe controller's error handling driver");
-+MODULE_LICENSE("GPL v2");
-+
--- 
-1.9.1
-
-
+U3ViamVjdDogW1BBVENIXSBtZWRpYTogdXNidmlzaW9uOiBhZGQgdGhlIHJlbGVhc2UgY2FsbGJh
+Y2sgZm9yIHZpZGVvIGRldmljZQpGcm9tOiBIaWxsZiBEYW50b24gPGhkYW50b25Ac2luYS5jb20+
+CgpUbyBmaXggdGhlIFVBRiBzeXpib3QgcmVwb3J0ZWQsCgpCVUc6IEtBU0FOOiB1c2UtYWZ0ZXIt
+ZnJlZSBpbiB2NGwyX3JlbGVhc2UrMHgyZjEvMHgzOTAgZHJpdmVycy9tZWRpYS92NGwyLWNvcmUv
+djRsMi1kZXYuYzo0NTkKCmEgcmVsZWFzZSBjYiB3aGljaCBpcyBhIHNpbXBsZSB3cmFwcGVyIG9m
+IHVzYnZpc2lvbl9yZWxlYXNlKCkgaXMgYWRkZWQKZm9yIHJlbGVhc2luZyByZXNvdXJjZXMgYXMg
+dGhlIGxhc3QgcmVmZXJlbmNlIHRvIHRoZSB1c2J2aXNpb24gdmlkZW8KZGV2aWNlIGdvZXMgYXdh
+eS4KClJlcG9ydGVkLWJ5OiBzeXpib3QgPHN5emJvdCs3NTI4N2Y3NWUyZmVkZDY5ZDY4MEBzeXpr
+YWxsZXIuYXBwc3BvdG1haWwuY29tPgpGaXhlczogMmFhNjg5ZGQ4MDU3ICgiW21lZGlhXSB1c2J2
+aXNpb246IGVtYmVkIHZpZGVvX2RldmljZSIpCkNjOiBIYW5zIFZlcmt1aWwgPGhhbnMudmVya3Vp
+bEBjaXNjby5jb20+ClNpZ25lZC1vZmYtYnk6IEhpbGxmIERhbnRvbiA8aGRhbnRvbkBzaW5hLmNv
+bT4KLS0tCgotLS0gYS9kcml2ZXJzL21lZGlhL3VzYi91c2J2aXNpb24vdXNidmlzaW9uLXZpZGVv
+LmMKKysrIGIvZHJpdmVycy9tZWRpYS91c2IvdXNidmlzaW9uL3VzYnZpc2lvbi12aWRlby5jCkBA
+IC00MDEsNyArNDAxLDYgQEAgc3RhdGljIGludCB1c2J2aXNpb25fdjRsMl9jbG9zZShzdHJ1Y3Qg
+ZgogCiAJaWYgKHIpIHsKIAkJcHJpbnRrKEtFUk5fSU5GTyAiJXM6IEZpbmFsIGRpc2Nvbm5lY3Rc
+biIsIF9fZnVuY19fKTsKLQkJdXNidmlzaW9uX3JlbGVhc2UodXNidmlzaW9uKTsKIAkJcmV0dXJu
+IDA7CiAJfQogCkBAIC00MDksNiArNDA4LDExIEBAIHN0YXRpYyBpbnQgdXNidmlzaW9uX3Y0bDJf
+Y2xvc2Uoc3RydWN0IGYKIAlyZXR1cm4gdjRsMl9maF9yZWxlYXNlKGZpbGUpOwogfQogCitzdGF0
+aWMgdm9pZCB1c2J2aXNpb25fdmlkZW9fZGV2aWNlX3JlbGVhc2Uoc3RydWN0IHZpZGVvX2Rldmlj
+ZSAqdmRldikKK3sKKwlzdHJ1Y3QgdXNiX3VzYnZpc2lvbiAqdXNidmlzaW9uID0gdmlkZW9fZ2V0
+X2RydmRhdGEodmRldik7CisJdXNidmlzaW9uX3JlbGVhc2UodXNidmlzaW9uKTsKK30KIAogLyoK
+ICAqIHVzYnZpc2lvbl9pb2N0bCgpCkBAIC0xMTgxLDcgKzExODUsNyBAQCBzdGF0aWMgc3RydWN0
+IHZpZGVvX2RldmljZSB1c2J2aXNpb25fdmlkCiAJLmZvcHMJCT0gJnVzYnZpc2lvbl9mb3BzLAog
+CS5pb2N0bF9vcHMJPSAmdXNidmlzaW9uX2lvY3RsX29wcywKIAkubmFtZSAgICAgICAgICAgPSAi
+dXNidmlzaW9uLXZpZGVvIiwKLQkucmVsZWFzZQk9IHZpZGVvX2RldmljZV9yZWxlYXNlX2VtcHR5
+LAorCS5yZWxlYXNlCT0gdXNidmlzaW9uX3ZpZGVvX2RldmljZV9yZWxlYXNlLAogCS50dm5vcm1z
+ICAgICAgICA9IFVTQlZJU0lPTl9OT1JNUywKIH07CiAKLS0tIGEvZHJpdmVycy9tZWRpYS92NGwy
+LWNvcmUvdjRsMi1kZXYuYworKysgYi9kcml2ZXJzL21lZGlhL3Y0bDItY29yZS92NGwyLWRldi5j
+CkBAIC0yMDYsNyArMjA2LDEwIEBAIHN0YXRpYyB2b2lkIHY0bDJfZGV2aWNlX3JlbGVhc2Uoc3Ry
+dWN0IGQKIAl9CiAjZW5kaWYKIAotCS8qIERvIG5vdCBjYWxsIHY0bDJfZGV2aWNlX3B1dCBpZiB0
+aGVyZSBpcyBubyByZWxlYXNlIGNhbGxiYWNrIHNldC4KKwkvKgorCSAqIERlY3JlYXNlIHY0bDJf
+ZGV2aWNlIHJlZmNvdW50CisJICoKKwkgKiBEbyBub3QgY2FsbCB2NGwyX2RldmljZV9wdXQgaWYg
+dGhlcmUgaXMgbm8gcmVsZWFzZSBjYWxsYmFjayBzZXQuCiAJICogRHJpdmVycyB0aGF0IGhhdmUg
+bm8gdjRsMl9kZXZpY2UgcmVsZWFzZSBjYWxsYmFjayBtaWdodCBmcmVlIHRoZQogCSAqIHY0bDJf
+ZGV2IGluc3RhbmNlIGluIHRoZSB2aWRlb19kZXZpY2UgcmVsZWFzZSBjYWxsYmFjayBiZWxvdywg
+c28gd2UKIAkgKiBtdXN0IHBlcmZvcm0gdGhpcyBjaGVjayBoZXJlLgpAQCAtMjE0LDE2ICsyMTcs
+MTIgQEAgc3RhdGljIHZvaWQgdjRsMl9kZXZpY2VfcmVsZWFzZShzdHJ1Y3QgZAogCSAqIFRPRE86
+IEluIHRoZSBsb25nIHJ1biBhbGwgZHJpdmVycyB0aGF0IHVzZSB2NGwyX2RldmljZSBzaG91bGQg
+dXNlIHRoZQogCSAqIHY0bDJfZGV2aWNlIHJlbGVhc2UgY2FsbGJhY2suIFRoaXMgY2hlY2sgd2ls
+bCB0aGVuIGJlIHVubmVjZXNzYXJ5LgogCSAqLwotCWlmICh2NGwyX2Rldi0+cmVsZWFzZSA9PSBO
+VUxMKQotCQl2NGwyX2RldiA9IE5VTEw7CisJaWYgKHY0bDJfZGV2LT5yZWxlYXNlKQorCQl2NGwy
+X2RldmljZV9wdXQodjRsMl9kZXYpOwogCiAJLyogUmVsZWFzZSB2aWRlb19kZXZpY2UgYW5kIHBl
+cmZvcm0gb3RoZXIKIAkgICBjbGVhbnVwcyBhcyBuZWVkZWQuICovCiAJdmRldi0+cmVsZWFzZSh2
+ZGV2KTsKLQotCS8qIERlY3JlYXNlIHY0bDJfZGV2aWNlIHJlZmNvdW50ICovCi0JaWYgKHY0bDJf
+ZGV2KQotCQl2NGwyX2RldmljZV9wdXQodjRsMl9kZXYpOwogfQogCiBzdGF0aWMgc3RydWN0IGNs
+YXNzIHZpZGVvX2NsYXNzID0gewo=
+--000000000000e671c4059ce2127a--
