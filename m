@@ -2,106 +2,106 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F303AC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 08:25:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AE1EC3F68F
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 08:25:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0CE02071A
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 08:25:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="uBLKCo33"
+	by mail.kernel.org (Postfix) with ESMTP id 4F4EF214DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 08:25:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729679AbgAXIZC (ORCPT
+        id S1729593AbgAXIZo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 03:25:02 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:51026 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725843AbgAXIZB (ORCPT
+        Fri, 24 Jan 2020 03:25:44 -0500
+Received: from relay6-d.mail.gandi.net ([217.70.183.198]:60731 "EHLO
+        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725843AbgAXIZo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 03:25:01 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=MfZNgigap++SfcaKWRzfoqJPEpL+dov/O+r0KNAVxwQ=; b=uBLKCo33khmwALe/1RXZcFcwk
-        v9dGORHO68bVdfVE7Xqu3Xq4h0tBy7dKMAgtK6R2pAPhSyuhD15UDyu5APvU8PY7FbPl4ptgiaYDT
-        VqvpfyCBk1RLWedPG5+nenFO2snsyblPPL3G5ci+SfDYNkZ0KxjfH6gioAn/ywsxMoER9H6MRwzWw
-        e7YiSRfdSAN0GsCsalOVa3GsoGwfrWBEb2/67wCvC78cI8CBtcAxtc37wYs++HoGUdDSyswEOrXMB
-        ogDk4glPVUBACG7RNuEJzZ07dbz++lo6HUM2Z77yTlvYItaDKRfI4+vK+Ic6SJW3g0DmMvRbg20KE
-        MzRR0SP0g==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iuuGl-0007yU-3M; Fri, 24 Jan 2020 08:24:47 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 31B113012DC;
-        Fri, 24 Jan 2020 09:23:03 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 7D3D02B713683; Fri, 24 Jan 2020 09:24:43 +0100 (CET)
-Date:   Fri, 24 Jan 2020 09:24:43 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Will Deacon <will@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        kernel-team <kernel-team@android.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Segher Boessenkool <segher@kernel.crashing.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Peter Oberparleiter <oberpar@linux.ibm.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Jozsef Kadlecsik <kadlec@netfilter.org>,
-        Florian Westphal <fw@strlen.de>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: Re: [PATCH v2 02/10] netfilter: Avoid assigning 'const' pointer to
- non-const pointer
-Message-ID: <20200124082443.GY14914@hirez.programming.kicks-ass.net>
-References: <20200123153341.19947-1-will@kernel.org>
- <20200123153341.19947-3-will@kernel.org>
- <CAKwvOdm2snorniFunMF=0nDH8-RFwm7wtjYK_Tcwkd+JZinYPg@mail.gmail.com>
+        Fri, 24 Jan 2020 03:25:44 -0500
+X-Originating-IP: 88.190.179.123
+Received: from localhost (unknown [88.190.179.123])
+        (Authenticated sender: repk@triplefau.lt)
+        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id 63EFEC0016;
+        Fri, 24 Jan 2020 08:25:41 +0000 (UTC)
+Date:   Fri, 24 Jan 2020 09:34:05 +0100
+From:   Remi Pommarel <repk@triplefau.lt>
+To:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Yue Wang <yue.wang@amlogic.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     Jerome Brunet <jbrunet@baylibre.com>,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v6 4/7] arm64: dts: meson-axg: Add PCIE PHY nodes
+Message-ID: <20200124083405.GW1803@voidbox>
+References: <20200123232943.10229-1-repk@triplefau.lt>
+ <20200123232943.10229-5-repk@triplefau.lt>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAKwvOdm2snorniFunMF=0nDH8-RFwm7wtjYK_Tcwkd+JZinYPg@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200123232943.10229-5-repk@triplefau.lt>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 23, 2020 at 11:07:59AM -0800, Nick Desaulniers wrote:
+Add missing Reviewed/Acked-by from v5.
 
-> Good thing it's the variable being modified was not declared const; I
-> get spooked when I see -Wdiscarded-qualifiers because of Section
-> 6.7.3.6 of the ISO C11 draft spec:
+On Fri, Jan 24, 2020 at 12:29:40AM +0100, Remi Pommarel wrote:
+> Enable both PCIE and shared MIPI/PCIE PHY nodes in order to make PCIE
+> reliable on AXG SoC.
 > 
-> ```
-> If an attempt is made to modify an object defined with a
-> const-qualified type through use
-> of an lvalue with non-const-qualified type, the behavior is undefined.
-> If an attempt is
-> made to refer to an object defined with a volatile-qualified type
-> through use of an lvalue
-> with non-volatile-qualified type, the behavior is undefined.133)
+> Signed-off-by: Remi Pommarel <repk@triplefau.lt>
+> ---
+>  arch/arm64/boot/dts/amlogic/meson-axg.dtsi | 16 ++++++++++++++++
+>  1 file changed, 16 insertions(+)
 > 
-> 133) This applies to those objects that behave as if they were defined
-> with qualified types, even if they are
-> never actually defined as objects in the program (such as an object at
-> a memory-mapped input/output
-> address).
-> ```
-> 
-> Which is about the modification of a const-declared variable (explicit
-> UB which Clang actively exploits), 
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
+> index 04803c3bccfa..08a178aa0133 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
+> +++ b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
+> @@ -12,6 +12,7 @@
+>  #include <dt-bindings/interrupt-controller/arm-gic.h>
+>  #include <dt-bindings/reset/amlogic,meson-axg-audio-arb.h>
+>  #include <dt-bindings/reset/amlogic,meson-axg-reset.h>
+> +#include <dt-bindings/phy/phy.h>
+>  
+>  / {
+>  	compatible = "amlogic,meson-axg";
+> @@ -1104,6 +1105,12 @@ hiubus: bus@ff63c000 {
+>  			#size-cells = <2>;
+>  			ranges = <0x0 0x0 0x0 0xff63c000 0x0 0x1c00>;
+>  
+> +			mipi_analog_phy: phy@0 {
+> +				compatible = "amlogic,axg-mipi-pcie-analog-phy";
+> +				reg = <0x0 0x0 0x0 0xc>;
+> +				#phy-cells = <1>;
+> +			};
+> +
+>  			sysctrl: system-controller@0 {
+>  				compatible = "amlogic,meson-axg-hhi-sysctrl",
+>  					     "simple-mfd", "syscon";
+> @@ -1356,6 +1363,15 @@ tdmout_c: audio-controller@580 {
+>  			};
+>  		};
+>  
+> +		pcie_phy: bus@ff644000 {
+> +			compatible = "amlogic,axg-pcie-phy";
+> +			reg = <0x0 0xff644000 0x0 0x1c>;
+> +			resets = <&reset RESET_PCIE_PHY>;
+> +			phys = <&mipi_analog_phy PHY_TYPE_PCIE>;
+> +			phy-names = "analog";
+> +			#phy-cells = <0>;
+> +		};
+> +
+>  		aobus: bus@ff800000 {
+>  			compatible = "simple-bus";
+>  			reg = <0x0 0xff800000 0x0 0x100000>;
 
-Just for curiosity's sake. What does clang actually do in that case?
-
+Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
