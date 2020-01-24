@@ -2,77 +2,103 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD270C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:32:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59378C35242
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:33:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 949122070A
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:32:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 239742077C
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:33:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579858402;
+	bh=0UfI9b962cnRCfSw5F5UHZmv4pcUiuBfAMKCbmnbSI0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=FMN4Byx5yXX6ksMyRZuBaKpQza7hxpgp4lio7PuH5noW+cpkLNOmw/M9xlAw5YLMc
+	 XjTPerpghPe3AAOuAox8BWwkDk6quL/dSkzrH5SiDVfw8soXQxHsif3ifpQ1QMvbNR
+	 896UGQEkmalARb5tuUtfqjYSsU5aDTR6luCwxXqE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729459AbgAXJce (ORCPT
+        id S1729714AbgAXJdV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 04:32:34 -0500
-Received: from www62.your-server.de ([213.133.104.62]:45784 "EHLO
-        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725821AbgAXJcd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 04:32:33 -0500
-Received: from sslproxy03.your-server.de ([88.198.220.132])
-        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89_1)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1iuvKG-0006Dq-UV; Fri, 24 Jan 2020 10:32:29 +0100
-Received: from [2001:1620:665:0:5795:5b0a:e5d5:5944] (helo=linux-3.fritz.box)
-        by sslproxy03.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1iuvKG-000Bp8-I2; Fri, 24 Jan 2020 10:32:28 +0100
-Subject: Re: [PATCH bpf 2/4] selftests: bpf: ignore RST packets for reuseport
- tests
-To:     Lorenz Bauer <lmb@cloudflare.com>, Martin Lau <kafai@fb.com>
-Cc:     Shuah Khan <shuah@kernel.org>, Alexei Starovoitov <ast@kernel.org>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20200123165934.9584-1-lmb@cloudflare.com>
- <20200123165934.9584-3-lmb@cloudflare.com>
- <20200123215348.zql3d5xpg2if7v6q@kafai-mbp.dhcp.thefacebook.com>
- <CACAyw9_OGBbsXepTcp=1frEHB7Q2cD9BVXTbgt7Ci_eFyV2Egg@mail.gmail.com>
-From:   Daniel Borkmann <daniel@iogearbox.net>
-Message-ID: <d5d230bd-6d62-3bb4-f663-8cec751b38a4@iogearbox.net>
-Date:   Fri, 24 Jan 2020 10:32:27 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Fri, 24 Jan 2020 04:33:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59724 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725821AbgAXJdV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 04:33:21 -0500
+Received: from localhost (unknown [145.15.244.15])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 878D32070A;
+        Fri, 24 Jan 2020 09:33:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579858400;
+        bh=0UfI9b962cnRCfSw5F5UHZmv4pcUiuBfAMKCbmnbSI0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=WNsotn+CTa7DWvTomCRNE7JcMw0MHtmfnU3ti6Y6gFYNfTsAEnsu7+bMtcYNWeltZ
+         wBlCtVsUnBXwQ4CUQTPq+Ymo9bQFrFMELnuZk/6kuZMwJCq02JtI4dVI40GUHVbYXD
+         JJ4bvTteYDeNHh6nnASQqR4ttV5Z9aW8oQtabia0=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Tvrtko Ursulin <tvrtko.ursulin@intel.com>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Mika Kuoppala <mika.kuoppala@intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
+Subject: [PATCH 5.4 001/102] drm/i915: Fix pid leak with banned clients
+Date:   Fri, 24 Jan 2020 10:30:02 +0100
+Message-Id: <20200124092806.288933727@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200124092806.004582306@linuxfoundation.org>
+References: <20200124092806.004582306@linuxfoundation.org>
+User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
-In-Reply-To: <CACAyw9_OGBbsXepTcp=1frEHB7Q2cD9BVXTbgt7Ci_eFyV2Egg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Authenticated-Sender: daniel@iogearbox.net
-X-Virus-Scanned: Clear (ClamAV 0.101.4/25704/Thu Jan 23 12:37:43 2020)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/24/20 10:00 AM, Lorenz Bauer wrote:
-> On Thu, 23 Jan 2020 at 21:54, Martin Lau <kafai@fb.com> wrote:
->>
->> btw, it needs a Fixes tag.
->>
->> Patch 4 and Patch 1 also need a Fixes tag.
-> 
-> This makes me wonder, should these go via bpf or bpf-next? Do I have
-> to split the series then?
+From: Tvrtko Ursulin <tvrtko.ursulin@intel.com>
 
-Lets do all of these for bpf-next since timing is very close before v5.5 release.
-If needed, we can later have them picked up for 5.5 stable.
+commit f0f3a6cecf3b98990985cd42f7bf5a0313894822 upstream.
 
-Thanks,
-Daniel
+Get_pid_task() needs to be paired with a put_pid or we leak a pid
+reference every time a banned client tries to create a context.
+
+v2:
+ * task_pid_nr helper exists! (Chris)
+
+Signed-off-by: Tvrtko Ursulin <tvrtko.ursulin@intel.com>
+Fixes: b083a0870c79 ("drm/i915: Add per client max context ban limit")
+Cc: Chris Wilson <chris@chris-wilson.co.uk>
+Cc: Mika Kuoppala <mika.kuoppala@intel.com>
+Reviewed-by: Chris Wilson <chris@chris-wilson.co.uk>
+Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
+Link: https://patchwork.freedesktop.org/patch/msgid/20191217170933.8108-1-tvrtko.ursulin@linux.intel.com
+(cherry picked from commit ba16a48af797db124ac100417f9229b1650ce1fb)
+Signed-off-by: Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ drivers/gpu/drm/i915/gem/i915_gem_context.c |    3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+--- a/drivers/gpu/drm/i915/gem/i915_gem_context.c
++++ b/drivers/gpu/drm/i915/gem/i915_gem_context.c
+@@ -2094,8 +2094,7 @@ int i915_gem_context_create_ioctl(struct
+ 	ext_data.fpriv = file->driver_priv;
+ 	if (client_is_banned(ext_data.fpriv)) {
+ 		DRM_DEBUG("client %s[%d] banned from creating ctx\n",
+-			  current->comm,
+-			  pid_nr(get_task_pid(current, PIDTYPE_PID)));
++			  current->comm, task_pid_nr(current));
+ 		return -EIO;
+ 	}
+ 
+
+
