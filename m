@@ -2,139 +2,274 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06589C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:16:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C274C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:16:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9FA92075D
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:16:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34DA12077C
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:16:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VQOkVf10"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=shipmail.org header.i=@shipmail.org header.b="kv/B/672"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730348AbgAXJQ4 (ORCPT
+        id S1730379AbgAXJQ6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 04:16:56 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:55914 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730287AbgAXJQy (ORCPT
+        Fri, 24 Jan 2020 04:16:58 -0500
+Received: from ste-pvt-msa1.bahnhof.se ([213.80.101.70]:22586 "EHLO
+        ste-pvt-msa1.bahnhof.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730275AbgAXJQy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 24 Jan 2020 04:16:54 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579857413;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=eVwp3U5GzOX2o0jWqVHj3WHwgjI/zlg9dOk4xt7JmuA=;
-        b=VQOkVf103fQn8r2Iy5fiqFBIMOqqer1SkL9v9y4w8NF9hT/dA+OeXhMEwlCaR/hecFS5Jx
-        EV9gwXK/uBV6SMHq8oFvmbRxwY3PgitLDIlkCJPoX+bCD/u82VPrSF21z5RrCjGIj3ZnIR
-        Ib6sXLf5CY7iKz+BHjaTRIzbn0IcbzA=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-169-1Q_BTgs6Mj2Nl56QR7PAPQ-1; Fri, 24 Jan 2020 04:16:52 -0500
-X-MC-Unique: 1Q_BTgs6Mj2Nl56QR7PAPQ-1
-Received: by mail-wm1-f70.google.com with SMTP id p26so288230wmg.5
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Jan 2020 01:16:52 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=eVwp3U5GzOX2o0jWqVHj3WHwgjI/zlg9dOk4xt7JmuA=;
-        b=r8RB6D9JcCfceRWEiG/Jzvji0Nqq3mPPRltrU7QWIv0BvFAnIrliZboxapIeNfylVx
-         N3qysFKJYtDv3mc50IFT3L1EGiltITTePmyRgKSDk838Kc+F+sUNlF1T89FjnXBRFaz/
-         inPxM3MOeMaoSwUdhRTwmG0bXDs5ScoZrOjl3t/S7IQzQen/1Fgno2G4YLPQV7aCADvu
-         NFvgaORoeq622VjDpFfKOfd0Zj8FaQgkH8LkuEN7YS5zxKGrGCGfef9wGl3GVqePnHzz
-         w2K3qgVBZAqoMb5WE3Nij0/Fd9QfUwV21Ekfw7kml64gB0Zt33qIb+CpxGyh7QKCEHvv
-         yGwA==
-X-Gm-Message-State: APjAAAXZrbMhS8fjWNas89goB84mB1eypEjXCK2tG1iKPZSikPQucGpo
-        hO5JhD8qQ7wfK1V+TQsK0GUsXyy/cOLsEYr0mPWzzmAjN/uSVU7rEm3VUOgvuC/ciTTI/NiobCQ
-        4NQI2WWIo4v+7ESD+fAZ8PkLD
-X-Received: by 2002:a1c:a445:: with SMTP id n66mr2460521wme.151.1579857411356;
-        Fri, 24 Jan 2020 01:16:51 -0800 (PST)
-X-Google-Smtp-Source: APXvYqxUiU565WJyxONGgI7w4xQRq/ENXZEynENvjhqk4CBvmo8g5IcgWmw96rLrMcfuNGJKf9m74A==
-X-Received: by 2002:a1c:a445:: with SMTP id n66mr2460489wme.151.1579857411156;
-        Fri, 24 Jan 2020 01:16:51 -0800 (PST)
-Received: from localhost.localdomain ([109.38.141.136])
-        by smtp.gmail.com with ESMTPSA id a132sm6060770wme.3.2020.01.24.01.16.49
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 24 Jan 2020 01:16:50 -0800 (PST)
-Subject: Re: [PATCH v12 03/10] firmware: Rename FW_OPT_NOFALLBACK to
- FW_OPT_NOFALLBACK_SYSFS
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Lutomirski <luto@kernel.org>
-Cc:     Ard Biesheuvel <ardb@kernel.org>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Peter Jones <pjones@redhat.com>,
-        Dave Olsthoorn <dave@bewaar.me>, x86@kernel.org,
-        platform-driver-x86@vger.kernel.org, linux-efi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-input@vger.kernel.org
-References: <20200115163554.101315-1-hdegoede@redhat.com>
- <20200115163554.101315-4-hdegoede@redhat.com>
- <20200124085751.GA2957916@kroah.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <d25d5d6e-0348-b19f-539e-048cfa70d6a6@redhat.com>
-Date:   Fri, 24 Jan 2020 10:16:48 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+Received: from localhost (localhost [127.0.0.1])
+        by ste-pvt-msa1.bahnhof.se (Postfix) with ESMTP id 24B9D3FBF0;
+        Fri, 24 Jan 2020 10:09:52 +0100 (CET)
+Authentication-Results: ste-pvt-msa1.bahnhof.se;
+        dkim=pass (1024-bit key; unprotected) header.d=shipmail.org header.i=@shipmail.org header.b=kv/B/672;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at bahnhof.se
+Received: from ste-pvt-msa1.bahnhof.se ([127.0.0.1])
+        by localhost (ste-pvt-msa1.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id vJeOJo-A_qqK; Fri, 24 Jan 2020 10:09:51 +0100 (CET)
+Received: from mail1.shipmail.org (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
+        (Authenticated sender: mb878879)
+        by ste-pvt-msa1.bahnhof.se (Postfix) with ESMTPA id 8E3BE3FAB5;
+        Fri, 24 Jan 2020 10:09:50 +0100 (CET)
+Received: from localhost.localdomain.localdomain (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
+        by mail1.shipmail.org (Postfix) with ESMTPSA id 887813606FE;
+        Fri, 24 Jan 2020 10:09:48 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=shipmail.org; s=mail;
+        t=1579856988; bh=HQpUd+ULti7GdgpbkO6XNhwTdXvGWgVp/GjNDtqB5xs=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=kv/B/672nMkkxIUyhxihEF52+GpsiOL5nbPP5WxtjfHrbgCPJsShGNpjTlzCuG+rt
+         DjMfxWNpK5qk4RoVQn6qOUuCVo++MMA0oDmXvAks5v9F74d9qmjv/JemjAkCA90nnP
+         U89i9dYrM2h6kmJb9WNTEiBIoZ4W9pJkgZMXfiBU=
+From:   =?UTF-8?q?Thomas=20Hellstr=C3=B6m=20=28VMware=29?= 
+        <thomas_os@shipmail.org>
+To:     linux-mm@kvack.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+Cc:     pv-drivers@vmware.com, linux-graphics-maintainer@vmware.com,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Roland Scheidegger <sroland@vmware.com>
+Subject: [PATCH 7/9] drm: Add a drm_get_unmapped_area() helper
+Date:   Fri, 24 Jan 2020 10:09:38 +0100
+Message-Id: <20200124090940.26571-8-thomas_os@shipmail.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20200124090940.26571-1-thomas_os@shipmail.org>
+References: <20200124090940.26571-1-thomas_os@shipmail.org>
 MIME-Version: 1.0
-In-Reply-To: <20200124085751.GA2957916@kroah.com>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+From: Thomas Hellstrom <thellstrom@vmware.com>
 
-On 1/24/20 9:57 AM, Greg Kroah-Hartman wrote:
-> On Wed, Jan 15, 2020 at 05:35:47PM +0100, Hans de Goede wrote:
->> This is a preparation patch for adding a new platform fallback mechanism,
->> which will have its own enable/disable FW_OPT_xxx option.
->>
->> Note this also fixes a typo in one of the re-wordwrapped comments:
->> enfoce -> enforce.
->>
->> Acked-by: Luis Chamberlain <mcgrof@kernel.org>
->> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> 
-> I've taken this in my tree for now in a quest to try to get others to
-> pay attention to this series...
+Unaligned virtual addresses makes it unlikely that huge page-table entries
+can be used.
+So align virtual buffer object address huge page boundaries to the
+underlying physical address huge page boundaries taking buffer object
+sizes into account to determine when it might be possible to use huge
+page-table entries.
 
-Thank you.
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Cc: Ralph Campbell <rcampbell@nvidia.com>
+Cc: "Jérôme Glisse" <jglisse@redhat.com>
+Cc: "Christian König" <christian.koenig@amd.com>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Signed-off-by: Thomas Hellstrom <thellstrom@vmware.com>
+Reviewed-by: Roland Scheidegger <sroland@vmware.com>
+---
+ drivers/gpu/drm/drm_file.c | 136 +++++++++++++++++++++++++++++++++++++
+ include/drm/drm_file.h     |   5 ++
+ 2 files changed, 141 insertions(+)
 
-As mentioned before I believe that this series is ready for merging now.
-
-Andy Lutomirski had one last change request for v12 of the second
-patch in the series, specifically to replace the loop searching for
-the prefix with a memem, but the kernel does not have memmem.
-
-Andy, are you ok with v12 as is, given that we don't have memmem ?
-
-Assuming Andy is ok with v12 as is, then to merge this we need
-to probably wait for 5.6-rc1 and then have the x86/efi folks do
-an immutable branch with the first 2 patches of the series.
-
-After that you (Greg) can merge patches 3-10 (after merging the
-branch) and the platform/drivers/x86 folks can take 11 and 12
-(also after merging the branch).
-
-Regards,
-
-Hans
+diff --git a/drivers/gpu/drm/drm_file.c b/drivers/gpu/drm/drm_file.c
+index 92d16724f949..40fae356d202 100644
+--- a/drivers/gpu/drm/drm_file.c
++++ b/drivers/gpu/drm/drm_file.c
+@@ -39,10 +39,13 @@
+ #include <linux/poll.h>
+ #include <linux/slab.h>
+ 
++#include <uapi/asm/mman.h>
++
+ #include <drm/drm_client.h>
+ #include <drm/drm_drv.h>
+ #include <drm/drm_file.h>
+ #include <drm/drm_print.h>
++#include <drm/drm_vma_manager.h>
+ 
+ #include "drm_crtc_internal.h"
+ #include "drm_internal.h"
+@@ -796,3 +799,136 @@ struct file *mock_drm_getfile(struct drm_minor *minor, unsigned int flags)
+ 	return file;
+ }
+ EXPORT_SYMBOL_FOR_TESTS_ONLY(mock_drm_getfile);
++
++#ifdef CONFIG_TRANSPARENT_HUGEPAGE
++/*
++ * drm_addr_inflate() attempts to construct an aligned area by inflating
++ * the area size and skipping the unaligned start of the area.
++ * adapted from shmem_get_unmapped_area()
++ */
++static unsigned long drm_addr_inflate(unsigned long addr,
++				      unsigned long len,
++				      unsigned long pgoff,
++				      unsigned long flags,
++				      unsigned long huge_size)
++{
++	unsigned long offset, inflated_len;
++	unsigned long inflated_addr;
++	unsigned long inflated_offset;
++
++	offset = (pgoff << PAGE_SHIFT) & (huge_size - 1);
++	if (offset && offset + len < 2 * huge_size)
++		return addr;
++	if ((addr & (huge_size - 1)) == offset)
++		return addr;
++
++	inflated_len = len + huge_size - PAGE_SIZE;
++	if (inflated_len > TASK_SIZE)
++		return addr;
++	if (inflated_len < len)
++		return addr;
++
++	inflated_addr = current->mm->get_unmapped_area(NULL, 0, inflated_len,
++						       0, flags);
++	if (IS_ERR_VALUE(inflated_addr))
++		return addr;
++	if (inflated_addr & ~PAGE_MASK)
++		return addr;
++
++	inflated_offset = inflated_addr & (huge_size - 1);
++	inflated_addr += offset - inflated_offset;
++	if (inflated_offset > offset)
++		inflated_addr += huge_size;
++
++	if (inflated_addr > TASK_SIZE - len)
++		return addr;
++
++	return inflated_addr;
++}
++
++/**
++ * drm_get_unmapped_area() - Get an unused user-space virtual memory area
++ * suitable for huge page table entries.
++ * @file: The struct file representing the address space being mmap()'d.
++ * @uaddr: Start address suggested by user-space.
++ * @len: Length of the area.
++ * @pgoff: The page offset into the address space.
++ * @flags: mmap flags
++ * @mgr: The address space manager used by the drm driver. This argument can
++ * probably be removed at some point when all drivers use the same
++ * address space manager.
++ *
++ * This function attempts to find an unused user-space virtual memory area
++ * that can accommodate the size we want to map, and that is properly
++ * aligned to facilitate huge page table entries matching actual
++ * huge pages or huge page aligned memory in buffer objects. Buffer objects
++ * are assumed to start at huge page boundary pfns (io memory) or be
++ * populated by huge pages aligned to the start of the buffer object
++ * (system- or coherent memory). Adapted from shmem_get_unmapped_area.
++ *
++ * Return: aligned user-space address.
++ */
++unsigned long drm_get_unmapped_area(struct file *file,
++				    unsigned long uaddr, unsigned long len,
++				    unsigned long pgoff, unsigned long flags,
++				    struct drm_vma_offset_manager *mgr)
++{
++	unsigned long addr;
++	unsigned long inflated_addr;
++	struct drm_vma_offset_node *node;
++
++	if (len > TASK_SIZE)
++		return -ENOMEM;
++
++	/*
++	 * @pgoff is the file page-offset the huge page boundaries of
++	 * which typically aligns to physical address huge page boundaries.
++	 * That's not true for DRM, however, where physical address huge
++	 * page boundaries instead are aligned with the offset from
++	 * buffer object start. So adjust @pgoff to be the offset from
++	 * buffer object start.
++	 */
++	drm_vma_offset_lock_lookup(mgr);
++	node = drm_vma_offset_lookup_locked(mgr, pgoff, 1);
++	if (node)
++		pgoff -= node->vm_node.start;
++	drm_vma_offset_unlock_lookup(mgr);
++
++	addr = current->mm->get_unmapped_area(file, uaddr, len, pgoff, flags);
++	if (IS_ERR_VALUE(addr))
++		return addr;
++	if (addr & ~PAGE_MASK)
++		return addr;
++	if (addr > TASK_SIZE - len)
++		return addr;
++
++	if (len < HPAGE_PMD_SIZE)
++		return addr;
++	if (flags & MAP_FIXED)
++		return addr;
++	/*
++	 * Our priority is to support MAP_SHARED mapped hugely;
++	 * and support MAP_PRIVATE mapped hugely too, until it is COWed.
++	 * But if caller specified an address hint, respect that as before.
++	 */
++	if (uaddr)
++		return addr;
++
++	inflated_addr = drm_addr_inflate(addr, len, pgoff, flags,
++					 HPAGE_PMD_SIZE);
++
++	if (IS_ENABLED(CONFIG_HAVE_ARCH_TRANSPARENT_HUGEPAGE_PUD) &&
++	    len >= HPAGE_PUD_SIZE)
++		inflated_addr = drm_addr_inflate(inflated_addr, len, pgoff,
++						 flags, HPAGE_PUD_SIZE);
++	return inflated_addr;
++}
++#else /* CONFIG_TRANSPARENT_HUGEPAGE */
++unsigned long drm_get_unmapped_area(struct file *file,
++				    unsigned long uaddr, unsigned long len,
++				    unsigned long pgoff, unsigned long flags,
++				    struct drm_vma_offset_manager *mgr)
++{
++	return current->mm->get_unmapped_area(file, uaddr, len, pgoff, flags);
++}
++#endif /* CONFIG_TRANSPARENT_HUGEPAGE */
+diff --git a/include/drm/drm_file.h b/include/drm/drm_file.h
+index 8b099b347817..06fe3da09b27 100644
+--- a/include/drm/drm_file.h
++++ b/include/drm/drm_file.h
+@@ -387,6 +387,11 @@ void drm_event_cancel_free(struct drm_device *dev,
+ 			   struct drm_pending_event *p);
+ void drm_send_event_locked(struct drm_device *dev, struct drm_pending_event *e);
+ void drm_send_event(struct drm_device *dev, struct drm_pending_event *e);
++struct drm_vma_offset_manager;
++unsigned long drm_get_unmapped_area(struct file *file,
++				    unsigned long uaddr, unsigned long len,
++				    unsigned long pgoff, unsigned long flags,
++				    struct drm_vma_offset_manager *mgr);
+ 
+ struct file *mock_drm_getfile(struct drm_minor *minor, unsigned int flags);
+ 
+-- 
+2.21.0
 
