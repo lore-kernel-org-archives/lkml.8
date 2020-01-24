@@ -7,47 +7,50 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E66BC35242
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 10:01:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9594BC35242
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 10:01:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 178AC214DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 10:01:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E24C206D5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 10:01:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579860074;
-	bh=TUJ0KRCeqMmnh+ZN/Rv4Y/URCU1bF2q4D6buvfRgvCc=;
+	s=default; t=1579860078;
+	bh=Dv5aHDA25DzakiqjJ0W1I+IMiL5AgHDRLEhxG7fXrGM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qgkGvx/pdHt1FYAhEQ1bh9iVaUNXM8x74FuBLRwC2hdEB3jNGQ1OS0LRO37vVvXfO
-	 D6DsyZwAbijvPfK8/fe+UhCd810wmnxGffKv6ZJayPTlHTWkYwXWKVGRIPYHcitXTJ
-	 TWQolg2NiTmD+UrLrxCAgsOLUtgk/csfgWEPwqpU=
+	b=wWhvZFegLcwJItzO5UJfHlWTJ2CSjVFWAHfPvVR+Sk2SWR6ZLRvcP6ipefH5JIDZz
+	 RsEeuj4lGBG911oKw7M4450IgSlSVUbHri88Qh5Ult4ms7Pte5qnmCHEfweabPwfsM
+	 KF6qFdzrRkufciTkgspNsWTrtJbXcrDIEXHbVBLw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388829AbgAXKBN (ORCPT
+        id S2388837AbgAXKBR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 05:01:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36602 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 05:01:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36676 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727215AbgAXKBM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 05:01:12 -0500
+        id S1727215AbgAXKBQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 05:01:16 -0500
 Received: from localhost (unknown [145.15.244.15])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6E364206D5;
-        Fri, 24 Jan 2020 10:01:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 88D97214DB;
+        Fri, 24 Jan 2020 10:01:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579860072;
-        bh=TUJ0KRCeqMmnh+ZN/Rv4Y/URCU1bF2q4D6buvfRgvCc=;
+        s=default; t=1579860076;
+        bh=Dv5aHDA25DzakiqjJ0W1I+IMiL5AgHDRLEhxG7fXrGM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=k5HlN0/GNCrqrcVIfL15pk6RcmqrBH1aUFK4sdg2qP2Y7uDEARsf7UI8/I3ghBmfg
-         ALqEUvY6njDhvJcYUJNdzNOAItLY0aKtGyypN7KdNjoTppUs7q5T42kAH9mdPUMP3x
-         27fnOMDolRj9NF30BtRG4fnyi2sGwayRtS+tGoo8=
+        b=GdMLAt7uIuuWAN26LtyiAEVzKP9cqZRtlOEykn7zcr8nYj8lcSFW4vwNteKBZB+wl
+         zgV9lakbUUkR0I+rZKAPt+C4oksVQ2r1zc+lOnj5df0dYHRpiHWowacKTKSkl9aQpl
+         X2b0RtKn4aMGTF0h9tZjj6WbDdNmqUUa8DLLBR1U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xi Wang <wangxi11@huawei.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
+        stable@vger.kernel.org, Wen Yang <wen.yang99@zte.com.cn>,
+        "David S. Miller" <davem@davemloft.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>, netdev@vger.kernel.org,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 252/343] RDMA/hns: Fixs hw access invalid dma memory error
-Date:   Fri, 24 Jan 2020 10:31:10 +0100
-Message-Id: <20200124092953.211705914@linuxfoundation.org>
+Subject: [PATCH 4.14 253/343] net: pasemi: fix an use-after-free in pasemi_mac_phy_init()
+Date:   Fri, 24 Jan 2020 10:31:11 +0100
+Message-Id: <20200124092953.342615997@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124092919.490687572@linuxfoundation.org>
 References: <20200124092919.490687572@linuxfoundation.org>
@@ -60,46 +63,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xi Wang <wangxi11@huawei.com>
+From: Wen Yang <wen.yang99@zte.com.cn>
 
-[ Upstream commit ec5bc2cc69b4fc494e04d10fc5226f6f9cf67c56 ]
+[ Upstream commit faf5577f2498cea23011b5c785ef853ded22700b ]
 
-When smmu is enable, if execute the perftest command and then use 'kill
--9' to exit, follow this operation repeatedly, the kernel will have a high
-probability to print the following smmu event:
+The phy_dn variable is still being used in of_phy_connect() after the
+of_node_put() call, which may result in use-after-free.
 
-  arm-smmu-v3 arm-smmu-v3.1.auto: event 0x10 received:
-  arm-smmu-v3 arm-smmu-v3.1.auto:  0x00007d0000000010
-  arm-smmu-v3 arm-smmu-v3.1.auto:  0x0000020900000080
-  arm-smmu-v3 arm-smmu-v3.1.auto:  0x00000000f47cf000
-  arm-smmu-v3 arm-smmu-v3.1.auto:  0x00000000f47cf000
-
-This is because the hw will periodically refresh the qpc cache until the
-next reset.
-
-This patch fixed it by removing the action that release qpc memory in the
-'hns_roce_qp_free' function.
-
-Fixes: 9a4435375cd1 ("IB/hns: Add driver files for hns RoCE driver")
-Signed-off-by: Xi Wang <wangxi11@huawei.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Fixes: 1dd2d06c0459 ("net: Rework pasemi_mac driver to use of_mdio infrastructure")
+Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Luis Chamberlain <mcgrof@kernel.org>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: netdev@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/hns/hns_roce_qp.c | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/net/ethernet/pasemi/pasemi_mac.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/infiniband/hw/hns/hns_roce_qp.c b/drivers/infiniband/hw/hns/hns_roce_qp.c
-index 3a37d26889df1..281e9987ffc83 100644
---- a/drivers/infiniband/hw/hns/hns_roce_qp.c
-+++ b/drivers/infiniband/hw/hns/hns_roce_qp.c
-@@ -241,7 +241,6 @@ void hns_roce_qp_free(struct hns_roce_dev *hr_dev, struct hns_roce_qp *hr_qp)
+diff --git a/drivers/net/ethernet/pasemi/pasemi_mac.c b/drivers/net/ethernet/pasemi/pasemi_mac.c
+index 49591d9c2e1b9..c9b4ac9d3330a 100644
+--- a/drivers/net/ethernet/pasemi/pasemi_mac.c
++++ b/drivers/net/ethernet/pasemi/pasemi_mac.c
+@@ -1053,7 +1053,6 @@ static int pasemi_mac_phy_init(struct net_device *dev)
  
- 	if ((hr_qp->ibqp.qp_type) != IB_QPT_GSI) {
- 		hns_roce_table_put(hr_dev, &qp_table->irrl_table, hr_qp->qpn);
--		hns_roce_table_put(hr_dev, &qp_table->qp_table, hr_qp->qpn);
- 	}
- }
+ 	dn = pci_device_to_OF_node(mac->pdev);
+ 	phy_dn = of_parse_phandle(dn, "phy-handle", 0);
+-	of_node_put(phy_dn);
  
+ 	mac->link = 0;
+ 	mac->speed = 0;
+@@ -1062,6 +1061,7 @@ static int pasemi_mac_phy_init(struct net_device *dev)
+ 	phydev = of_phy_connect(dev, phy_dn, &pasemi_adjust_link, 0,
+ 				PHY_INTERFACE_MODE_SGMII);
+ 
++	of_node_put(phy_dn);
+ 	if (!phydev) {
+ 		printk(KERN_ERR "%s: Could not attach to phy\n", dev->name);
+ 		return -ENODEV;
 -- 
 2.20.1
 
