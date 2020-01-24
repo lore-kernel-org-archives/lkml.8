@@ -4,50 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 573D1C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:10:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B705C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:10:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 215CE2071A
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:10:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0289620708
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:10:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579864235;
-	bh=3g8VxYYMBbUKo7H8/lJK7Wxzeg7zkM6m4KMWPfQV9pk=;
+	s=default; t=1579864238;
+	bh=cKJUaldp19Cl94RAqGRylCP48OpAtKBvhX1cqyV2YUQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gxgr8yD0IhZninyul++Id6tvboXL13A8tVyKQI6LuTVT3R3zrCkGo13CWsOh28uye
-	 P2vwVF/77ZgG11OEDaF1g5RbZDBzEWzK9R28VyOcy/LmCC9nIu5uItW527qg8bPFkC
-	 2AFudoIoIZ9KHHwaehwOf91mxdWnBLh/XZrSR/yw=
+	b=bUSDNmJvYyQfXT+aAHv2Z03S4GzQ7seroJ/FD1lJYy9Tx+hj3PVqDeF2Jku9GmtL4
+	 rKDzOYG78v6zSvXCXufv5K/io3K+eVAoUZwp7gvK3GL+B5fpTSdcn5o6chmO743V8s
+	 tXrJNo6l5WtxX72ufSY6YHiqdmftwwcAuNg+JpB4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389843AbgAXLKe (ORCPT
+        id S2387990AbgAXLKh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:10:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46292 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 06:10:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46360 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387827AbgAXLKa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:10:30 -0500
+        id S2387889AbgAXLKd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:10:33 -0500
 Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5448520708;
-        Fri, 24 Jan 2020 11:10:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CBDC020708;
+        Fri, 24 Jan 2020 11:10:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579864230;
-        bh=3g8VxYYMBbUKo7H8/lJK7Wxzeg7zkM6m4KMWPfQV9pk=;
+        s=default; t=1579864233;
+        bh=cKJUaldp19Cl94RAqGRylCP48OpAtKBvhX1cqyV2YUQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kFv6pg+GvgRViP6c+w+Sna9FFdoRmHx3V4TnCKGl19rg8623qq/4Ncc1lFQ+iDPLz
-         6xwDu5W3KBDmLOnJdlb+zAGupSKActanWrgQpNPv00a5/e3FsGiiw81rSsaJ0Ycjrq
-         8d+qgrBWwhMHFgbdD2vutcq+WakS34JCQL7msSEw=
+        b=zHsC01G5sCJrcvdQ3YKKdFuLi7uR1sLc8xlO+RKdr76kf70Y1RRQ/vba4ZDSgW7E+
+         CX0Gicmco0X7YWHRzRQ6qVD4074EbSR7lkykWzapZ05F1w6KmnRGxsG0YHe9lNa2lU
+         8ayuPY7Vo5GSIWgnrpOAT9PWnywNXmn8fXggpWwk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 195/639] driver core: Fix possible supplier PM-usage counter imbalance
-Date:   Fri, 24 Jan 2020 10:26:05 +0100
-Message-Id: <20200124093111.493405954@linuxfoundation.org>
+        stable@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>,
+        Wen Yang <wen.yang99@zte.com.cn>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Niklas Cassel <niklas.cassel@axis.com>,
+        Cyrille Pitchen <cyrille.pitchen@free-electrons.com>,
+        linux-pci@vger.kernel.org, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 196/639] PCI: endpoint: functions: Use memcpy_fromio()/memcpy_toio()
+Date:   Fri, 24 Jan 2020 10:26:06 +0100
+Message-Id: <20200124093111.612954211@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
 References: <20200124093047.008739095@linuxfoundation.org>
@@ -60,177 +65,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+From: Wen Yang <wen.yang99@zte.com.cn>
 
-[ Upstream commit 4c06c4e6cf63d7f3d5dfe62593a073253d750a59 ]
+[ Upstream commit 726dabfde6aa35a4f1508e235ae37edbbf9fbc65 ]
 
-If a stateless device link to a certain supplier with
-DL_FLAG_PM_RUNTIME set in the flags is added and then removed by the
-consumer driver's probe callback, the supplier's PM-runtime usage
-counter will be nonzero after that which effectively causes the
-supplier to remain "always on" going forward.
+Functions copying from/to IO addresses should use the
+memcpy_fromio()/memcpy_toio() API rather than plain memcpy().
 
-Namely, device_link_add() called to add the link invokes
-device_link_rpm_prepare() which notices that the consumer driver is
-probing, so it increments the supplier's PM-runtime usage counter
-with the assumption that the link will stay around until
-pm_runtime_put_suppliers() is called by driver_probe_device(),
-but if the link goes away before that point, the supplier's
-PM-runtime usage counter will remain nonzero.
+Fix the issue detected through the sparse tool.
 
-To prevent that from happening, first rework pm_runtime_get_suppliers()
-and pm_runtime_put_suppliers() to use the rpm_active refounts of device
-links and make the latter only drop rpm_active and the supplier's
-PM-runtime usage counter for each link by one, unless rpm_active is
-one already for it.  Next, modify device_link_add() to bump up the
-new link's rpm_active refcount and the suppliers PM-runtime usage
-counter by two, to prevent pm_runtime_put_suppliers(), if it is
-called subsequently, from suspending the supplier prematurely (in
-case its PM-runtime usage counter goes down to 0 in there).
-
-Due to the way rpm_put_suppliers() works, this change does not
-affect runtime suspend of the consumer ends of new device links (or,
-generally, device links for which DL_FLAG_PM_RUNTIME has just been
-set).
-
-Fixes: e2f3cd831a28 ("driver core: Fix handling of runtime PM flags in device_link_add()")
-Reported-by: Ulf Hansson <ulf.hansson@linaro.org>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
-Tested-by: Ulf Hansson <ulf.hansson@linaro.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 349e7a85b25f ("PCI: endpoint: functions: Add an EP function to test PCI")
+Suggested-by: Kishon Vijay Abraham I <kishon@ti.com>
+Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
+[lorenzo.pieralisi@arm.com: updated log]
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
+CC: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+CC: Bjorn Helgaas <bhelgaas@google.com>
+CC: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+CC: Niklas Cassel <niklas.cassel@axis.com>
+CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CC: Cyrille Pitchen <cyrille.pitchen@free-electrons.com>
+CC: linux-pci@vger.kernel.org
+CC: linux-kernel@vger.kernel.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/base/core.c          | 21 ++++-----------------
- drivers/base/power/runtime.c | 27 +++++++++++++++++++++++++--
- include/linux/pm_runtime.h   |  4 ++++
- 3 files changed, 33 insertions(+), 19 deletions(-)
+ drivers/pci/endpoint/functions/pci-epf-test.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/base/core.c b/drivers/base/core.c
-index 7599147d5f83c..ab08211ba5d2d 100644
---- a/drivers/base/core.c
-+++ b/drivers/base/core.c
-@@ -165,19 +165,6 @@ void device_pm_move_to_tail(struct device *dev)
- 	device_links_read_unlock(idx);
- }
- 
--static void device_link_rpm_prepare(struct device *consumer,
--				    struct device *supplier)
--{
--	pm_runtime_new_link(consumer);
--	/*
--	 * If the link is being added by the consumer driver at probe time,
--	 * balance the decrementation of the supplier's runtime PM usage counter
--	 * after consumer probe in driver_probe_device().
--	 */
--	if (consumer->links.status == DL_DEV_PROBING)
--		pm_runtime_get_noresume(supplier);
--}
--
- /**
-  * device_link_add - Create a link between two devices.
-  * @consumer: Consumer end of the link.
-@@ -262,11 +249,11 @@ struct device_link *device_link_add(struct device *consumer,
- 
- 		if (flags & DL_FLAG_PM_RUNTIME) {
- 			if (!(link->flags & DL_FLAG_PM_RUNTIME)) {
--				device_link_rpm_prepare(consumer, supplier);
-+				pm_runtime_new_link(consumer);
- 				link->flags |= DL_FLAG_PM_RUNTIME;
- 			}
- 			if (flags & DL_FLAG_RPM_ACTIVE)
--				refcount_inc(&link->rpm_active);
-+				pm_runtime_active_link(link, supplier);
- 		}
- 
- 		kref_get(&link->kref);
-@@ -281,9 +268,9 @@ struct device_link *device_link_add(struct device *consumer,
- 
- 	if (flags & DL_FLAG_PM_RUNTIME) {
- 		if (flags & DL_FLAG_RPM_ACTIVE)
--			refcount_inc(&link->rpm_active);
-+			pm_runtime_active_link(link, supplier);
- 
--		device_link_rpm_prepare(consumer, supplier);
-+		pm_runtime_new_link(consumer);
+diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
+index 3e86fa3c7da32..4bbd26e8a9e2f 100644
+--- a/drivers/pci/endpoint/functions/pci-epf-test.c
++++ b/drivers/pci/endpoint/functions/pci-epf-test.c
+@@ -175,7 +175,7 @@ static int pci_epf_test_read(struct pci_epf_test *epf_test)
+ 		goto err_map_addr;
  	}
  
- 	get_device(supplier);
-diff --git a/drivers/base/power/runtime.c b/drivers/base/power/runtime.c
-index ab454c4533ba1..0527890b4c191 100644
---- a/drivers/base/power/runtime.c
-+++ b/drivers/base/power/runtime.c
-@@ -1570,8 +1570,10 @@ void pm_runtime_get_suppliers(struct device *dev)
- 	idx = device_links_read_lock();
+-	memcpy(buf, src_addr, reg->size);
++	memcpy_fromio(buf, src_addr, reg->size);
  
- 	list_for_each_entry_rcu(link, &dev->links.suppliers, c_node)
--		if (link->flags & DL_FLAG_PM_RUNTIME)
-+		if (link->flags & DL_FLAG_PM_RUNTIME) {
-+			refcount_inc(&link->rpm_active);
- 			pm_runtime_get_sync(link->supplier);
-+		}
+ 	crc32 = crc32_le(~0, buf, reg->size);
+ 	if (crc32 != reg->checksum)
+@@ -230,7 +230,7 @@ static int pci_epf_test_write(struct pci_epf_test *epf_test)
+ 	get_random_bytes(buf, reg->size);
+ 	reg->checksum = crc32_le(~0, buf, reg->size);
  
- 	device_links_read_unlock(idx);
- }
-@@ -1588,7 +1590,8 @@ void pm_runtime_put_suppliers(struct device *dev)
- 	idx = device_links_read_lock();
+-	memcpy(dst_addr, buf, reg->size);
++	memcpy_toio(dst_addr, buf, reg->size);
  
- 	list_for_each_entry_rcu(link, &dev->links.suppliers, c_node)
--		if (link->flags & DL_FLAG_PM_RUNTIME)
-+		if (link->flags & DL_FLAG_PM_RUNTIME &&
-+		    refcount_dec_not_one(&link->rpm_active))
- 			pm_runtime_put(link->supplier);
- 
- 	device_links_read_unlock(idx);
-@@ -1601,6 +1604,26 @@ void pm_runtime_new_link(struct device *dev)
- 	spin_unlock_irq(&dev->power.lock);
- }
- 
-+/**
-+ * pm_runtime_active_link - Set up new device link as active for PM-runtime.
-+ * @link: Device link to be set up as active.
-+ * @supplier: Supplier end of the link.
-+ *
-+ * Add 2 to the rpm_active refcount of @link and increment the PM-runtime
-+ * usage counter of @supplier once more in case the link is being added while
-+ * the consumer driver is probing and pm_runtime_put_suppliers() will be called
-+ * subsequently.
-+ *
-+ * Note that this doesn't prevent rpm_put_suppliers() from decreasing the link's
-+ * rpm_active refcount down to one, so runtime suspend of the consumer end of
-+ * @link is not affected.
-+ */
-+void pm_runtime_active_link(struct device_link *link, struct device *supplier)
-+{
-+	refcount_add(2, &link->rpm_active);
-+	pm_runtime_get_noresume(supplier);
-+}
-+
- void pm_runtime_drop_link(struct device *dev)
- {
- 	spin_lock_irq(&dev->power.lock);
-diff --git a/include/linux/pm_runtime.h b/include/linux/pm_runtime.h
-index f0fc4700b6ff5..bace7df51af4d 100644
---- a/include/linux/pm_runtime.h
-+++ b/include/linux/pm_runtime.h
-@@ -59,6 +59,8 @@ extern void pm_runtime_clean_up_links(struct device *dev);
- extern void pm_runtime_get_suppliers(struct device *dev);
- extern void pm_runtime_put_suppliers(struct device *dev);
- extern void pm_runtime_new_link(struct device *dev);
-+extern void pm_runtime_active_link(struct device_link *link,
-+				   struct device *supplier);
- extern void pm_runtime_drop_link(struct device *dev);
- 
- static inline void pm_suspend_ignore_children(struct device *dev, bool enable)
-@@ -176,6 +178,8 @@ static inline void pm_runtime_clean_up_links(struct device *dev) {}
- static inline void pm_runtime_get_suppliers(struct device *dev) {}
- static inline void pm_runtime_put_suppliers(struct device *dev) {}
- static inline void pm_runtime_new_link(struct device *dev) {}
-+static inline void pm_runtime_active_link(struct device_link *link,
-+					  struct device *supplier) {}
- static inline void pm_runtime_drop_link(struct device *dev) {}
- 
- #endif /* !CONFIG_PM */
+ 	/*
+ 	 * wait 1ms inorder for the write to complete. Without this delay L3
 -- 
 2.20.1
 
