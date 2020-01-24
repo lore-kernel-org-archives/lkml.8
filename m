@@ -2,52 +2,56 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C796C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:40:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1D48C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:40:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28D8420718
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:40:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BAAE2070A
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:40:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579858854;
-	bh=FEh1asvKYX2d5QT2M+nBLZZ/po92KWCs/jgkLKOV3VA=;
+	s=default; t=1579858856;
+	bh=fpY12Lb8/uYEbyDI/+r1P0YaZpo/v1IHuJbuIh3KUMA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mNYLnbmPEe3Wpej0UQi/YFO3gzdVid9m47RXHytKi0Imer6CXLWvuitiTCq7PtQwd
-	 YTccGjEdqxrX3LLX0S0luLLbR7N6/7CO6aLMTEDNBUCetNfNLZlizmwnYbNY5dgXfA
-	 zD1KBZMPmp4ZSwqQKDQEwdiRFv5ijoXVwtZ3nY4g=
+	b=LbgvkxHWRoqzhegl2/EFS7si5g7Fz1HkXL/qOYmdFjK2kT1G6M4FePZ/1K/7OUO5f
+	 l62HrfVEyU0cRXvJoWP6a1Y/gbtX1hPaOyAl9Bb9HGz2QPHNxKFnM4ud/yTPDUqrU4
+	 TI8OSBMu3jRsFktCaDLKYYKl3cJbQ2r/R/8Py93s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730384AbgAXJkt (ORCPT
+        id S1732674AbgAXJkz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 04:40:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38178 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 04:40:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38312 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729816AbgAXJkp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 04:40:45 -0500
+        id S1732654AbgAXJkx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 04:40:53 -0500
 Received: from localhost (unknown [145.15.244.15])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8B8CA20709;
-        Fri, 24 Jan 2020 09:40:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 75F052070A;
+        Fri, 24 Jan 2020 09:40:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579858844;
-        bh=FEh1asvKYX2d5QT2M+nBLZZ/po92KWCs/jgkLKOV3VA=;
+        s=default; t=1579858852;
+        bh=fpY12Lb8/uYEbyDI/+r1P0YaZpo/v1IHuJbuIh3KUMA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=F5yvWcMp2m2HXW1MocOIAHOO7uZzMdg+ZOwivYIHoPfjBcxWw6T3/ZGmKPH6LP0kf
-         surpiHWoxZq7vGx/+YgzHV7TiS43WG+Dc6BYlCmKQmWVwnGLbwugx+AKtEGgyP+XMY
-         5hCiHu1quXXdBEzA9CAgIT8czOnvWM7wxu2ZDZSc=
+        b=kwy7YFqAheo1q9PKDyUailWyefmV1S6sbJ4jsaAxtTvPhUI2sAR00KscL354KLCrt
+         vHkKQLcB3GPMlja2XeeILYoDaj216/ULFvCA6CAPep2uB69EDYTJ6RgaNfDTbLShbI
+         mIU+PyC+w1JyMvtIWGmhdXwD6kM67ZilHd22wKAM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Douglas Anderson <dianders@chromium.org>,
-        Sean Paul <seanpaul@chromium.org>,
+        stable@vger.kernel.org, Kefeng Wang <wangkefeng.wang@huawei.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Hou Zhiqiang <Zhiqiang.Hou@nxp.com>,
+        Minghuan Lian <Minghuan.Lian@nxp.com>,
+        Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 056/102] drm/rockchip: Round up _before_ giving to the clock framework
-Date:   Fri, 24 Jan 2020 10:30:57 +0100
-Message-Id: <20200124092814.815114198@linuxfoundation.org>
+Subject: [PATCH 5.4 058/102] PCI: mobiveil: Fix csr_read()/write() build issue
+Date:   Fri, 24 Jan 2020 10:30:59 +0100
+Message-Id: <20200124092815.102113818@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124092806.004582306@linuxfoundation.org>
 References: <20200124092806.004582306@linuxfoundation.org>
@@ -60,112 +64,309 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Douglas Anderson <dianders@chromium.org>
+From: Kefeng Wang <wangkefeng.wang@huawei.com>
 
-[ Upstream commit 287422a95fe28e05c1952de0472e0dfdffa6caae ]
+[ Upstream commit 4906c05b87d44c19b225935e24d62e4480ca556d ]
 
-I'm embarassed to say that even though I've touched
-vop_crtc_mode_fixup() twice and I swear I tested it, there's still a
-stupid glaring bug in it.  Specifically, on veyron_minnie (with all
-the latest display timings) we want to be setting our pixel clock to
-66,666,666.67 Hz and we tell userspace that's what we set, but we're
-actually choosing 66,000,000 Hz.  This is confirmed by looking at the
-clock tree.
+RISCV has csr_read()/write() macros in arch/riscv/include/asm/csr.h.
 
-The problem is that in drm_display_mode_from_videomode() we convert
-from Hz to kHz with:
+The same function naming is used in the PCI mobiveil driver thus
+causing build error.
 
-  dmode->clock = vm->pixelclock / 1000;
+Rename csr_[read,write][l,] to mobiveil_csr_read()/write() to fix it.
 
-...and drm_display_mode_from_videomode() is called from panel-simple
-when we have an "override_mode" like we do on veyron_minnie.  See
-commit 123643e5c40a ("ARM: dts: rockchip: Specify
-rk3288-veyron-minnie's display timings").
+drivers/pci/controller/pcie-mobiveil.c:238:69: error: macro "csr_read" passed 3 arguments, but takes just 1
+ static u32 csr_read(struct mobiveil_pcie *pcie, u32 off, size_t size)
 
-...so when the device tree specifies a clock of 66666667 for the panel
-then DRM translates that to 66666000.  The clock framework will always
-pick a clock that is _lower_ than the one requested, so it will refuse
-to pick 66666667 and we'll end up at 66000000.
+drivers/pci/controller/pcie-mobiveil.c:253:80: error: macro "csr_write" passed 4 arguments, but takes just 2
+ static void csr_write(struct mobiveil_pcie *pcie, u32 val, u32 off, size_t size)
 
-While we could try to fix drm_display_mode_from_videomode() to round
-to the nearest kHz and it would fix our problem, it wouldn't help if
-the clock we actually needed was 60,000,001 Hz.  We could
-alternatively have DRM always round up, but maybe this would break
-someone else who already baked in the assumption that DRM rounds down.
-Specifically note that clock drivers are not consistent about whether
-they round up or round down when you call clk_set_rate().  We know how
-Rockchip's clock driver works, but (for instance) you can see that on
-most Qualcomm clocks the default is clk_rcg2_ops which rounds up.
-
-Let's solve this by just adding 999 Hz before calling
-clk_round_rate().  This should be safe and work everywhere.  As
-discussed in more detail in comments in the commit, Rockchip's PLLs
-are configured in a way that there shouldn't be another PLL setting
-that is only a few kHz off so we won't get mixed up.
-
-NOTE: if this is picked to stable, it's probably easiest to first pick
-commit 527e4ca3b6d1 ("drm/rockchip: Base adjustments of the mode based
-on prev adjustments") which shouldn't hurt in stable.
-
-Fixes: b59b8de31497 ("drm/rockchip: return a true clock rate to adjusted_mode")
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
-Reviewed-by: Sean Paul <seanpaul@chromium.org>
-Signed-off-by: Sean Paul <seanpaul@chromium.org>
-Link: https://patchwork.freedesktop.org/patch/msgid/20191003114726.v2.1.Ib233b3e706cf6317858384264d5b0ed35657456e@changeid
+Fixes: bcbe0d9a8d93 ("PCI: mobiveil: Unify register accessors")
+Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Reviewed-by: Andrew Murray <andrew.murray@arm.com>
+Cc: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: Minghuan Lian <Minghuan.Lian@nxp.com>
+Cc: Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>
+Cc: Andrew Murray <andrew.murray@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/rockchip/rockchip_drm_vop.c | 37 +++++++++++++++++++--
- 1 file changed, 34 insertions(+), 3 deletions(-)
+ drivers/pci/controller/pcie-mobiveil.c | 119 +++++++++++++------------
+ 1 file changed, 62 insertions(+), 57 deletions(-)
 
-diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_vop.c b/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
-index 613404f86668d..84e3decb17b1f 100644
---- a/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
-+++ b/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
-@@ -1040,10 +1040,41 @@ static bool vop_crtc_mode_fixup(struct drm_crtc *crtc,
- 				struct drm_display_mode *adjusted_mode)
- {
- 	struct vop *vop = to_vop(crtc);
-+	unsigned long rate;
- 
--	adjusted_mode->clock =
--		DIV_ROUND_UP(clk_round_rate(vop->dclk,
--					    adjusted_mode->clock * 1000), 1000);
-+	/*
-+	 * Clock craziness.
-+	 *
-+	 * Key points:
-+	 *
-+	 * - DRM works in in kHz.
-+	 * - Clock framework works in Hz.
-+	 * - Rockchip's clock driver picks the clock rate that is the
-+	 *   same _OR LOWER_ than the one requested.
-+	 *
-+	 * Action plan:
-+	 *
-+	 * 1. When DRM gives us a mode, we should add 999 Hz to it.  That way
-+	 *    if the clock we need is 60000001 Hz (~60 MHz) and DRM tells us to
-+	 *    make 60000 kHz then the clock framework will actually give us
-+	 *    the right clock.
-+	 *
-+	 *    NOTE: if the PLL (maybe through a divider) could actually make
-+	 *    a clock rate 999 Hz higher instead of the one we want then this
-+	 *    could be a problem.  Unfortunately there's not much we can do
-+	 *    since it's baked into DRM to use kHz.  It shouldn't matter in
-+	 *    practice since Rockchip PLLs are controlled by tables and
-+	 *    even if there is a divider in the middle I wouldn't expect PLL
-+	 *    rates in the table that are just a few kHz different.
-+	 *
-+	 * 2. Get the clock framework to round the rate for us to tell us
-+	 *    what it will actually make.
-+	 *
-+	 * 3. Store the rounded up rate so that we don't need to worry about
-+	 *    this in the actual clk_set_rate().
-+	 */
-+	rate = clk_round_rate(vop->dclk, adjusted_mode->clock * 1000 + 999);
-+	adjusted_mode->clock = DIV_ROUND_UP(rate, 1000);
- 
- 	return true;
+diff --git a/drivers/pci/controller/pcie-mobiveil.c b/drivers/pci/controller/pcie-mobiveil.c
+index a45a6447b01d9..32f37d08d5bc7 100644
+--- a/drivers/pci/controller/pcie-mobiveil.c
++++ b/drivers/pci/controller/pcie-mobiveil.c
+@@ -235,7 +235,7 @@ static int mobiveil_pcie_write(void __iomem *addr, int size, u32 val)
+ 	return PCIBIOS_SUCCESSFUL;
  }
+ 
+-static u32 csr_read(struct mobiveil_pcie *pcie, u32 off, size_t size)
++static u32 mobiveil_csr_read(struct mobiveil_pcie *pcie, u32 off, size_t size)
+ {
+ 	void *addr;
+ 	u32 val;
+@@ -250,7 +250,8 @@ static u32 csr_read(struct mobiveil_pcie *pcie, u32 off, size_t size)
+ 	return val;
+ }
+ 
+-static void csr_write(struct mobiveil_pcie *pcie, u32 val, u32 off, size_t size)
++static void mobiveil_csr_write(struct mobiveil_pcie *pcie, u32 val, u32 off,
++			       size_t size)
+ {
+ 	void *addr;
+ 	int ret;
+@@ -262,19 +263,19 @@ static void csr_write(struct mobiveil_pcie *pcie, u32 val, u32 off, size_t size)
+ 		dev_err(&pcie->pdev->dev, "write CSR address failed\n");
+ }
+ 
+-static u32 csr_readl(struct mobiveil_pcie *pcie, u32 off)
++static u32 mobiveil_csr_readl(struct mobiveil_pcie *pcie, u32 off)
+ {
+-	return csr_read(pcie, off, 0x4);
++	return mobiveil_csr_read(pcie, off, 0x4);
+ }
+ 
+-static void csr_writel(struct mobiveil_pcie *pcie, u32 val, u32 off)
++static void mobiveil_csr_writel(struct mobiveil_pcie *pcie, u32 val, u32 off)
+ {
+-	csr_write(pcie, val, off, 0x4);
++	mobiveil_csr_write(pcie, val, off, 0x4);
+ }
+ 
+ static bool mobiveil_pcie_link_up(struct mobiveil_pcie *pcie)
+ {
+-	return (csr_readl(pcie, LTSSM_STATUS) &
++	return (mobiveil_csr_readl(pcie, LTSSM_STATUS) &
+ 		LTSSM_STATUS_L0_MASK) == LTSSM_STATUS_L0;
+ }
+ 
+@@ -323,7 +324,7 @@ static void __iomem *mobiveil_pcie_map_bus(struct pci_bus *bus,
+ 		PCI_SLOT(devfn) << PAB_DEVICE_SHIFT |
+ 		PCI_FUNC(devfn) << PAB_FUNCTION_SHIFT;
+ 
+-	csr_writel(pcie, value, PAB_AXI_AMAP_PEX_WIN_L(WIN_NUM_0));
++	mobiveil_csr_writel(pcie, value, PAB_AXI_AMAP_PEX_WIN_L(WIN_NUM_0));
+ 
+ 	return pcie->config_axi_slave_base + where;
+ }
+@@ -353,13 +354,14 @@ static void mobiveil_pcie_isr(struct irq_desc *desc)
+ 	chained_irq_enter(chip, desc);
+ 
+ 	/* read INTx status */
+-	val = csr_readl(pcie, PAB_INTP_AMBA_MISC_STAT);
+-	mask = csr_readl(pcie, PAB_INTP_AMBA_MISC_ENB);
++	val = mobiveil_csr_readl(pcie, PAB_INTP_AMBA_MISC_STAT);
++	mask = mobiveil_csr_readl(pcie, PAB_INTP_AMBA_MISC_ENB);
+ 	intr_status = val & mask;
+ 
+ 	/* Handle INTx */
+ 	if (intr_status & PAB_INTP_INTX_MASK) {
+-		shifted_status = csr_readl(pcie, PAB_INTP_AMBA_MISC_STAT);
++		shifted_status = mobiveil_csr_readl(pcie,
++						    PAB_INTP_AMBA_MISC_STAT);
+ 		shifted_status &= PAB_INTP_INTX_MASK;
+ 		shifted_status >>= PAB_INTX_START;
+ 		do {
+@@ -373,12 +375,13 @@ static void mobiveil_pcie_isr(struct irq_desc *desc)
+ 							    bit);
+ 
+ 				/* clear interrupt handled */
+-				csr_writel(pcie, 1 << (PAB_INTX_START + bit),
+-					   PAB_INTP_AMBA_MISC_STAT);
++				mobiveil_csr_writel(pcie,
++						    1 << (PAB_INTX_START + bit),
++						    PAB_INTP_AMBA_MISC_STAT);
+ 			}
+ 
+-			shifted_status = csr_readl(pcie,
+-						   PAB_INTP_AMBA_MISC_STAT);
++			shifted_status = mobiveil_csr_readl(pcie,
++							    PAB_INTP_AMBA_MISC_STAT);
+ 			shifted_status &= PAB_INTP_INTX_MASK;
+ 			shifted_status >>= PAB_INTX_START;
+ 		} while (shifted_status != 0);
+@@ -413,7 +416,7 @@ static void mobiveil_pcie_isr(struct irq_desc *desc)
+ 	}
+ 
+ 	/* Clear the interrupt status */
+-	csr_writel(pcie, intr_status, PAB_INTP_AMBA_MISC_STAT);
++	mobiveil_csr_writel(pcie, intr_status, PAB_INTP_AMBA_MISC_STAT);
+ 	chained_irq_exit(chip, desc);
+ }
+ 
+@@ -474,24 +477,24 @@ static void program_ib_windows(struct mobiveil_pcie *pcie, int win_num,
+ 		return;
+ 	}
+ 
+-	value = csr_readl(pcie, PAB_PEX_AMAP_CTRL(win_num));
++	value = mobiveil_csr_readl(pcie, PAB_PEX_AMAP_CTRL(win_num));
+ 	value &= ~(AMAP_CTRL_TYPE_MASK << AMAP_CTRL_TYPE_SHIFT | WIN_SIZE_MASK);
+ 	value |= type << AMAP_CTRL_TYPE_SHIFT | 1 << AMAP_CTRL_EN_SHIFT |
+ 		 (lower_32_bits(size64) & WIN_SIZE_MASK);
+-	csr_writel(pcie, value, PAB_PEX_AMAP_CTRL(win_num));
++	mobiveil_csr_writel(pcie, value, PAB_PEX_AMAP_CTRL(win_num));
+ 
+-	csr_writel(pcie, upper_32_bits(size64),
+-		   PAB_EXT_PEX_AMAP_SIZEN(win_num));
++	mobiveil_csr_writel(pcie, upper_32_bits(size64),
++			    PAB_EXT_PEX_AMAP_SIZEN(win_num));
+ 
+-	csr_writel(pcie, lower_32_bits(cpu_addr),
+-		   PAB_PEX_AMAP_AXI_WIN(win_num));
+-	csr_writel(pcie, upper_32_bits(cpu_addr),
+-		   PAB_EXT_PEX_AMAP_AXI_WIN(win_num));
++	mobiveil_csr_writel(pcie, lower_32_bits(cpu_addr),
++			    PAB_PEX_AMAP_AXI_WIN(win_num));
++	mobiveil_csr_writel(pcie, upper_32_bits(cpu_addr),
++			    PAB_EXT_PEX_AMAP_AXI_WIN(win_num));
+ 
+-	csr_writel(pcie, lower_32_bits(pci_addr),
+-		   PAB_PEX_AMAP_PEX_WIN_L(win_num));
+-	csr_writel(pcie, upper_32_bits(pci_addr),
+-		   PAB_PEX_AMAP_PEX_WIN_H(win_num));
++	mobiveil_csr_writel(pcie, lower_32_bits(pci_addr),
++			    PAB_PEX_AMAP_PEX_WIN_L(win_num));
++	mobiveil_csr_writel(pcie, upper_32_bits(pci_addr),
++			    PAB_PEX_AMAP_PEX_WIN_H(win_num));
+ 
+ 	pcie->ib_wins_configured++;
+ }
+@@ -515,27 +518,29 @@ static void program_ob_windows(struct mobiveil_pcie *pcie, int win_num,
+ 	 * program Enable Bit to 1, Type Bit to (00) base 2, AXI Window Size Bit
+ 	 * to 4 KB in PAB_AXI_AMAP_CTRL register
+ 	 */
+-	value = csr_readl(pcie, PAB_AXI_AMAP_CTRL(win_num));
++	value = mobiveil_csr_readl(pcie, PAB_AXI_AMAP_CTRL(win_num));
+ 	value &= ~(WIN_TYPE_MASK << WIN_TYPE_SHIFT | WIN_SIZE_MASK);
+ 	value |= 1 << WIN_ENABLE_SHIFT | type << WIN_TYPE_SHIFT |
+ 		 (lower_32_bits(size64) & WIN_SIZE_MASK);
+-	csr_writel(pcie, value, PAB_AXI_AMAP_CTRL(win_num));
++	mobiveil_csr_writel(pcie, value, PAB_AXI_AMAP_CTRL(win_num));
+ 
+-	csr_writel(pcie, upper_32_bits(size64), PAB_EXT_AXI_AMAP_SIZE(win_num));
++	mobiveil_csr_writel(pcie, upper_32_bits(size64),
++			    PAB_EXT_AXI_AMAP_SIZE(win_num));
+ 
+ 	/*
+ 	 * program AXI window base with appropriate value in
+ 	 * PAB_AXI_AMAP_AXI_WIN0 register
+ 	 */
+-	csr_writel(pcie, lower_32_bits(cpu_addr) & (~AXI_WINDOW_ALIGN_MASK),
+-		   PAB_AXI_AMAP_AXI_WIN(win_num));
+-	csr_writel(pcie, upper_32_bits(cpu_addr),
+-		   PAB_EXT_AXI_AMAP_AXI_WIN(win_num));
++	mobiveil_csr_writel(pcie,
++			    lower_32_bits(cpu_addr) & (~AXI_WINDOW_ALIGN_MASK),
++			    PAB_AXI_AMAP_AXI_WIN(win_num));
++	mobiveil_csr_writel(pcie, upper_32_bits(cpu_addr),
++			    PAB_EXT_AXI_AMAP_AXI_WIN(win_num));
+ 
+-	csr_writel(pcie, lower_32_bits(pci_addr),
+-		   PAB_AXI_AMAP_PEX_WIN_L(win_num));
+-	csr_writel(pcie, upper_32_bits(pci_addr),
+-		   PAB_AXI_AMAP_PEX_WIN_H(win_num));
++	mobiveil_csr_writel(pcie, lower_32_bits(pci_addr),
++			    PAB_AXI_AMAP_PEX_WIN_L(win_num));
++	mobiveil_csr_writel(pcie, upper_32_bits(pci_addr),
++			    PAB_AXI_AMAP_PEX_WIN_H(win_num));
+ 
+ 	pcie->ob_wins_configured++;
+ }
+@@ -579,42 +584,42 @@ static int mobiveil_host_init(struct mobiveil_pcie *pcie)
+ 	struct resource_entry *win;
+ 
+ 	/* setup bus numbers */
+-	value = csr_readl(pcie, PCI_PRIMARY_BUS);
++	value = mobiveil_csr_readl(pcie, PCI_PRIMARY_BUS);
+ 	value &= 0xff000000;
+ 	value |= 0x00ff0100;
+-	csr_writel(pcie, value, PCI_PRIMARY_BUS);
++	mobiveil_csr_writel(pcie, value, PCI_PRIMARY_BUS);
+ 
+ 	/*
+ 	 * program Bus Master Enable Bit in Command Register in PAB Config
+ 	 * Space
+ 	 */
+-	value = csr_readl(pcie, PCI_COMMAND);
++	value = mobiveil_csr_readl(pcie, PCI_COMMAND);
+ 	value |= PCI_COMMAND_IO | PCI_COMMAND_MEMORY | PCI_COMMAND_MASTER;
+-	csr_writel(pcie, value, PCI_COMMAND);
++	mobiveil_csr_writel(pcie, value, PCI_COMMAND);
+ 
+ 	/*
+ 	 * program PIO Enable Bit to 1 (and PEX PIO Enable to 1) in PAB_CTRL
+ 	 * register
+ 	 */
+-	pab_ctrl = csr_readl(pcie, PAB_CTRL);
++	pab_ctrl = mobiveil_csr_readl(pcie, PAB_CTRL);
+ 	pab_ctrl |= (1 << AMBA_PIO_ENABLE_SHIFT) | (1 << PEX_PIO_ENABLE_SHIFT);
+-	csr_writel(pcie, pab_ctrl, PAB_CTRL);
++	mobiveil_csr_writel(pcie, pab_ctrl, PAB_CTRL);
+ 
+-	csr_writel(pcie, (PAB_INTP_INTX_MASK | PAB_INTP_MSI_MASK),
+-		   PAB_INTP_AMBA_MISC_ENB);
++	mobiveil_csr_writel(pcie, (PAB_INTP_INTX_MASK | PAB_INTP_MSI_MASK),
++			    PAB_INTP_AMBA_MISC_ENB);
+ 
+ 	/*
+ 	 * program PIO Enable Bit to 1 and Config Window Enable Bit to 1 in
+ 	 * PAB_AXI_PIO_CTRL Register
+ 	 */
+-	value = csr_readl(pcie, PAB_AXI_PIO_CTRL);
++	value = mobiveil_csr_readl(pcie, PAB_AXI_PIO_CTRL);
+ 	value |= APIO_EN_MASK;
+-	csr_writel(pcie, value, PAB_AXI_PIO_CTRL);
++	mobiveil_csr_writel(pcie, value, PAB_AXI_PIO_CTRL);
+ 
+ 	/* Enable PCIe PIO master */
+-	value = csr_readl(pcie, PAB_PEX_PIO_CTRL);
++	value = mobiveil_csr_readl(pcie, PAB_PEX_PIO_CTRL);
+ 	value |= 1 << PIO_ENABLE_SHIFT;
+-	csr_writel(pcie, value, PAB_PEX_PIO_CTRL);
++	mobiveil_csr_writel(pcie, value, PAB_PEX_PIO_CTRL);
+ 
+ 	/*
+ 	 * we'll program one outbound window for config reads and
+@@ -647,10 +652,10 @@ static int mobiveil_host_init(struct mobiveil_pcie *pcie)
+ 	}
+ 
+ 	/* fixup for PCIe class register */
+-	value = csr_readl(pcie, PAB_INTP_AXI_PIO_CLASS);
++	value = mobiveil_csr_readl(pcie, PAB_INTP_AXI_PIO_CLASS);
+ 	value &= 0xff;
+ 	value |= (PCI_CLASS_BRIDGE_PCI << 16);
+-	csr_writel(pcie, value, PAB_INTP_AXI_PIO_CLASS);
++	mobiveil_csr_writel(pcie, value, PAB_INTP_AXI_PIO_CLASS);
+ 
+ 	/* setup MSI hardware registers */
+ 	mobiveil_pcie_enable_msi(pcie);
+@@ -668,9 +673,9 @@ static void mobiveil_mask_intx_irq(struct irq_data *data)
+ 	pcie = irq_desc_get_chip_data(desc);
+ 	mask = 1 << ((data->hwirq + PAB_INTX_START) - 1);
+ 	raw_spin_lock_irqsave(&pcie->intx_mask_lock, flags);
+-	shifted_val = csr_readl(pcie, PAB_INTP_AMBA_MISC_ENB);
++	shifted_val = mobiveil_csr_readl(pcie, PAB_INTP_AMBA_MISC_ENB);
+ 	shifted_val &= ~mask;
+-	csr_writel(pcie, shifted_val, PAB_INTP_AMBA_MISC_ENB);
++	mobiveil_csr_writel(pcie, shifted_val, PAB_INTP_AMBA_MISC_ENB);
+ 	raw_spin_unlock_irqrestore(&pcie->intx_mask_lock, flags);
+ }
+ 
+@@ -684,9 +689,9 @@ static void mobiveil_unmask_intx_irq(struct irq_data *data)
+ 	pcie = irq_desc_get_chip_data(desc);
+ 	mask = 1 << ((data->hwirq + PAB_INTX_START) - 1);
+ 	raw_spin_lock_irqsave(&pcie->intx_mask_lock, flags);
+-	shifted_val = csr_readl(pcie, PAB_INTP_AMBA_MISC_ENB);
++	shifted_val = mobiveil_csr_readl(pcie, PAB_INTP_AMBA_MISC_ENB);
+ 	shifted_val |= mask;
+-	csr_writel(pcie, shifted_val, PAB_INTP_AMBA_MISC_ENB);
++	mobiveil_csr_writel(pcie, shifted_val, PAB_INTP_AMBA_MISC_ENB);
+ 	raw_spin_unlock_irqrestore(&pcie->intx_mask_lock, flags);
+ }
+ 
 -- 
 2.20.1
 
