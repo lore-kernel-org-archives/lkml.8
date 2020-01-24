@@ -2,129 +2,125 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 219A3C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 18:11:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AFCEC35242
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 18:13:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E73E92071A
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 18:11:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52C3B2071A
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 18:13:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uzuCpiQ1"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="ubUPEF6y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403850AbgAXSLP (ORCPT
+        id S2403897AbgAXSNB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 13:11:15 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:37233 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391387AbgAXSLO (ORCPT
+        Fri, 24 Jan 2020 13:13:01 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:14393 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2391247AbgAXSNB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 13:11:14 -0500
-Received: by mail-pg1-f196.google.com with SMTP id q127so1523985pga.4
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Jan 2020 10:11:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=CCzHBAiUYjP95wXU9mQYF0+uRIjsah9R0x3etmFDEY8=;
-        b=uzuCpiQ1dVOxOATCBmj/20+gDUOt209BcA+heoKERHrfdcxyD0qK7Z/1MBXKGiYEks
-         LkNEYoBpenGK/UH4ifMIEOjMo3i+7E9v/lWp4xuxqcDUy8XCWE1qbxielOXaeARQaNVx
-         lRuUCqxsaUPLe4WutYnCry7oWsAjM8k8OULNh4QNAoAmOzJzHH3pBufaBygZDluJP28Y
-         +8erbrSDHEcl8qpyn4yXMbQNf/+TRMpBjkC2T0jmYJl/Ky6+wZqSiqbyXY+eU4h0eWig
-         YPg5I6Z6PvpubcCLMkSayFiyK5O/EdjLBiQb2Au4dbwOlPWliDHx3IbiXU924Z2tRlF2
-         /EBQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=CCzHBAiUYjP95wXU9mQYF0+uRIjsah9R0x3etmFDEY8=;
-        b=CjvUNS79UlMOOReVib4Uspol0MigFZFBj5cH3pTPRuu2B1HXu+J7gQdtmaZIR0BBpL
-         5iCVZlZ2yPJsS+R3T3eQDrtbaLsCBkxFdS0wZw4Jca1CV7E7C4HbSKHUOU3dEMhotVts
-         QbqucKx2MSKSnPMCDuXzLVzERAu40gBqyi3UwuWDn1Dc9MSYiDVYadCXjN3gKsftVAbD
-         DRzfZY03JHsQ27aggiSP63ADPYbNlNFzmm8pqHw0p7OZYoycJF6Yku6xiTg9YtEQUnnq
-         FuYCiowdmq+RtjlfoxCeZcq5WAmlcrfa4xmkidUD1RK9Cg+UuwGtEwj5EbiyidehPwMm
-         kVjA==
-X-Gm-Message-State: APjAAAWVxxhaK65VMKlMak7N7BsM9eh9UVGpDOF+8+ypTuHhhVuyUPnx
-        UX8rqH0URnsuS5DrckpipVQtng==
-X-Google-Smtp-Source: APXvYqyTSOAONtxOW8uB55Jrl2pFdLa+MIt408ryWT8YmFFBz4VJXa1j5fC2Tg+CV6A+4pzPJib2Pw==
-X-Received: by 2002:a62:ed19:: with SMTP id u25mr4477271pfh.173.1579889473847;
-        Fri, 24 Jan 2020 10:11:13 -0800 (PST)
-Received: from ripper (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id q6sm7209136pgt.47.2020.01.24.10.11.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 Jan 2020 10:11:13 -0800 (PST)
-Date:   Fri, 24 Jan 2020 10:10:38 -0800
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>
-Cc:     agross@kernel.org, mturquette@baylibre.com, sboyd@kernel.org,
-        robh+dt@kernel.org, mark.rutland@arm.com, vinod.koul@linaro.org,
-        psodagud@codeaurora.org, tsoni@codeaurora.org,
-        jshriram@codeaurora.org, tdas@codeaurora.org,
-        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/7] dt-bindings: clock: Add RPMHCC bindings for SM8250
-Message-ID: <20200124181038.GS1908628@ripper>
-References: <1579217994-22219-1-git-send-email-vnkgutta@codeaurora.org>
- <1579217994-22219-2-git-send-email-vnkgutta@codeaurora.org>
+        Fri, 24 Jan 2020 13:13:01 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1579889580; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=b3rQPo2ZO9T4a2ztTx0JcuZNEwjKNFB8Ft1Jm7KJLrw=; b=ubUPEF6yJqrqS5xC4ASozuSC3UOBS42l5b4zACRh06rj9oHiSF8Myl+B3G4IMliX3UZzewVF
+ iEPFd9PYapCpr5BOpHKopXeRtobJiuYOqrjOIiv2PwEQijUeFjsE6cvkNFASVVFzjakraTMV
+ lPD7Vks0ABkx/GowX/eI2eudIL4=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e2b33ab.7f7dca68cce0-smtp-out-n01;
+ Fri, 24 Jan 2020 18:12:59 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 0F2BFC447A1; Fri, 24 Jan 2020 18:12:59 +0000 (UTC)
+Received: from [10.226.58.28] (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: jhugo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 1724FC447A9;
+        Fri, 24 Jan 2020 18:12:58 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 1724FC447A9
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jhugo@codeaurora.org
+Subject: Re: [PATCH 02/16] bus: mhi: core: Add support for registering MHI
+ controllers
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        arnd@arndb.de, smohanad@codeaurora.org, kvalo@codeaurora.org,
+        bjorn.andersson@linaro.org, hemantk@codeaurora.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200123111836.7414-1-manivannan.sadhasivam@linaro.org>
+ <20200123111836.7414-3-manivannan.sadhasivam@linaro.org>
+ <20200124082939.GA2921617@kroah.com>
+ <42c79181-9d97-3542-c6b0-1e37f9b2ff39@codeaurora.org>
+ <20200124174707.GB3417153@kroah.com>
+From:   Jeffrey Hugo <jhugo@codeaurora.org>
+Message-ID: <e32b0a53-ce95-6d73-46c6-76d17af37146@codeaurora.org>
+Date:   Fri, 24 Jan 2020 11:12:57 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1579217994-22219-2-git-send-email-vnkgutta@codeaurora.org>
+In-Reply-To: <20200124174707.GB3417153@kroah.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 16 Jan 15:39 PST 2020, Venkata Narendra Kumar Gutta wrote:
-
-> From: Taniya Das <tdas@codeaurora.org>
+On 1/24/2020 10:47 AM, Greg KH wrote:
+> On Fri, Jan 24, 2020 at 07:24:43AM -0700, Jeffrey Hugo wrote:
+>>>> +/**
+>>>> + * struct mhi_result - Completed buffer information
+>>>> + * @buf_addr: Address of data buffer
+>>>> + * @dir: Channel direction
+>>>> + * @bytes_xfer: # of bytes transferred
+>>>> + * @transaction_status: Status of last transaction
+>>>> + */
+>>>> +struct mhi_result {
+>>>> +	void *buf_addr;
+>>>
+>>> Why void *?
+>>
+>> Because its not possible to resolve this more clearly.  The client provides
+>> the buffer and knows what the structure is.  The bus does not. Its just an
+>> opaque pointer (hence void *) to the bus, and the client needs to decode it.
+>> This is the struct that is handed to the client to allow them to decode the
+>> activity (either a received buf, or a confirmation that a transmitted buf
+>> has been consumed).
 > 
-> Add bindings and update documentation for clock rpmh driver on SM8250.
-> 
-> Signed-off-by: Taniya Das <tdas@codeaurora.org>
-> Signed-off-by: Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>
+> Then shouldn't this be a "u8 *" instead as you are saying how many bytes
+> are here?
 
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+I'm sorry, I don't see the benefit of that.  Can you elaborate on why 
+you think that u8 * is a better type?
 
-> ---
->  Documentation/devicetree/bindings/clock/qcom,rpmhcc.yaml | 1 +
->  include/dt-bindings/clock/qcom,rpmh.h                    | 4 +++-
->  2 files changed, 4 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/clock/qcom,rpmhcc.yaml b/Documentation/devicetree/bindings/clock/qcom,rpmhcc.yaml
-> index 94e2f14..21398d1 100644
-> --- a/Documentation/devicetree/bindings/clock/qcom,rpmhcc.yaml
-> +++ b/Documentation/devicetree/bindings/clock/qcom,rpmhcc.yaml
-> @@ -20,6 +20,7 @@ properties:
->        - qcom,sc7180-rpmh-clk
->        - qcom,sdm845-rpmh-clk
->        - qcom,sm8150-rpmh-clk
-> +      - qcom,sm8250-rpmh-clk
->  
->    clocks:
->      maxItems: 1
-> diff --git a/include/dt-bindings/clock/qcom,rpmh.h b/include/dt-bindings/clock/qcom,rpmh.h
-> index edcab3f..2e6c54e 100644
-> --- a/include/dt-bindings/clock/qcom,rpmh.h
-> +++ b/include/dt-bindings/clock/qcom,rpmh.h
-> @@ -1,5 +1,5 @@
->  /* SPDX-License-Identifier: GPL-2.0 */
-> -/* Copyright (c) 2018, The Linux Foundation. All rights reserved. */
-> +/* Copyright (c) 2018, 2020, The Linux Foundation. All rights reserved. */
->  
->  
->  #ifndef _DT_BINDINGS_CLK_MSM_RPMH_H
-> @@ -19,5 +19,7 @@
->  #define RPMH_RF_CLK3				10
->  #define RPMH_RF_CLK3_A				11
->  #define RPMH_IPA_CLK				12
-> +#define RPMH_LN_BB_CLK1				13
-> +#define RPMH_LN_BB_CLK1_A			14
->  
->  #endif
-> -- 
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> a Linux Foundation Collaborative Project
+Sure, its an arbitrary byte stream from the perspective of the bus, but 
+to the client, 99% of the time its going to have some structure.
+
+In the call back, the first thing the client is likely to do is:
+struct my_struct *s = buf_addr;
+
+This works great when its a void *.  If buf_addr is a u8 *, that's not 
+valid, and will result in a compiler error (at-least per gcc 5.4.0).
+With u8 *, the client has to do:
+struct my_struct *s = (struct my_struct *)buf_addr;
+
+I don't see a benefit to u8 * over void * in this case.
+
+The only possibly benefit I might see is if the client wants to use 
+buf_addr as an array to poke into it and maybe check a magic number, but 
+that assumes said magic number is a u8.  Otherwise the client has to do 
+an explicit cast.  It seems like such a small amount of the time that 
+usecase would be valid, that its not worth it to cater to it.
+
+rpmsg, as one example, does the exact same thing where the received 
+buffer is a void *, and there is a size parameter.
+
+-- 
+Jeffrey Hugo
+Qualcomm Technologies, Inc. is a member of the
+Code Aurora Forum, a Linux Foundation Collaborative Project.
