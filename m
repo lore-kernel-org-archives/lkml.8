@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C5A0C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:30:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0056DC32771
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:31:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6D2D20661
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:30:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BAA3E20661
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:30:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579876252;
-	bh=3W4e0XKZhhaF9tAaPYZ+RQC+VzFFoSU+Mwv6uq38g9o=;
+	s=default; t=1579876259;
+	bh=M3igxGJbPwWLFddQF1W+xeYwC2g5LtR0ImoWkxG7tLg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jStmgZMC2+TwXxca1ZTv0XI1y1ALFIG/560nhsfTPJbOVVHRHvTVNf/Ak0HgKHYHJ
-	 AHl4JUILUs/DDkJ4MMMjrAqSJYU1JIe89wbEXddahTO/796o6MxhNk+6it/PT7zPAl
-	 KOuhSin8/337D1FZbQL+s9lJZLf8TEIvOsHwnPCs=
+	b=yuOzzaoxsJ0BmwiSIOtpytfkvFQRqvIOGzwuH6HfUiBWCdjI1YnbfEBjJepLATzAE
+	 hhkbpC3tXNE08olFy8xYeIACg+tfuUT4HWZMSfphNEdMYyO7xTXnpAs4n7qA+Oor4C
+	 ztvCVFuksuGsHpGlBrP7e9qibvtqD48ihU1Y3peM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391772AbgAXOav (ORCPT
+        id S2392565AbgAXOa7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 09:30:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41938 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 09:30:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41786 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731597AbgAXOUk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 09:20:40 -0500
+        id S2404916AbgAXOUg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 09:20:36 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1D4212087E;
-        Fri, 24 Jan 2020 14:20:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 79BE122527;
+        Fri, 24 Jan 2020 14:20:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579875639;
-        bh=3W4e0XKZhhaF9tAaPYZ+RQC+VzFFoSU+Mwv6uq38g9o=;
+        s=default; t=1579875636;
+        bh=M3igxGJbPwWLFddQF1W+xeYwC2g5LtR0ImoWkxG7tLg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=i22zTd5awPNs/YXFw2e07AQZ7J4sa/y0s4PMI1G4hwHpWAjgyGtGSjRWSPrtHW8dI
-         rRFhYJvAuay6V+tNqN/37w4j73OPXpc0Me14MOJhyH1rIbVsug0LnAnFLOP4eK4TJF
-         ZU3fMA4MGBdJuhtvLYX9ScU6/oP6oTXxm+2IiRx8=
+        b=cWJIcHFG3cIpsic/ODTwrBpN/uUrUuS1Y2+yUAVL94f0vVp1D4RYvr+o9kqDGV9y2
+         J9mruHVMHcQ6B9wgAUImRZ8LgRA/abe4ejOctG6AChdaT5G5bL+JQE5tLisSrlCDBE
+         jjpYuoh5m/FBjaR0/Wymxj3cDL2Rprip04ucl5dQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        linux-sh@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 23/56] sh_eth: check sh_eth_cpu_data::dual_port when dumping registers
-Date:   Fri, 24 Jan 2020 09:19:39 -0500
-Message-Id: <20200124142012.29752-23-sashal@kernel.org>
+Cc:     Radoslaw Tyl <radoslawx.tyl@intel.com>,
+        Paul Menzel <pmenzel@molgen.mpg.de>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 20/56] ixgbevf: Remove limit of 10 entries for unicast filter list
+Date:   Fri, 24 Jan 2020 09:19:36 -0500
+Message-Id: <20200124142012.29752-20-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200124142012.29752-1-sashal@kernel.org>
 References: <20200124142012.29752-1-sashal@kernel.org>
@@ -60,72 +61,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+From: Radoslaw Tyl <radoslawx.tyl@intel.com>
 
-[ Upstream commit 3249b1e442a1be1a6b9f1026785b519d1443f807 ]
+[ Upstream commit aa604651d523b1493988d0bf6710339f3ee60272 ]
 
-When adding the sh_eth_cpu_data::dual_port flag I forgot to add the flag
-checks to __sh_eth_get_regs(), causing the non-existing TSU registers to
-be dumped by 'ethtool' on the single port Ether controllers having TSU...
+Currently, though the FDB entry is added to VF, it does not appear in
+RAR filters. VF driver only allows to add 10 entries. Attempting to add
+another causes an error. This patch removes limitation and allows use of
+all free RAR entries for the FDB if needed.
 
-Fixes: a94cf2a614f8 ("sh_eth: fix TSU init on SH7734/R8A7740")
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 46ec20ff7d ("ixgbevf: Add macvlan support in the set rx mode op")
+Signed-off-by: Radoslaw Tyl <radoslawx.tyl@intel.com>
+Acked-by: Paul Menzel <pmenzel@molgen.mpg.de>
+Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/renesas/sh_eth.c | 38 +++++++++++++++------------
- 1 file changed, 21 insertions(+), 17 deletions(-)
+ drivers/net/ethernet/intel/ixgbevf/ixgbevf_main.c | 5 -----
+ 1 file changed, 5 deletions(-)
 
-diff --git a/drivers/net/ethernet/renesas/sh_eth.c b/drivers/net/ethernet/renesas/sh_eth.c
-index 5e3e6e262ba37..6068e96f5ac1e 100644
---- a/drivers/net/ethernet/renesas/sh_eth.c
-+++ b/drivers/net/ethernet/renesas/sh_eth.c
-@@ -2184,24 +2184,28 @@ static size_t __sh_eth_get_regs(struct net_device *ndev, u32 *buf)
- 	if (cd->tsu) {
- 		add_tsu_reg(ARSTR);
- 		add_tsu_reg(TSU_CTRST);
--		add_tsu_reg(TSU_FWEN0);
--		add_tsu_reg(TSU_FWEN1);
--		add_tsu_reg(TSU_FCM);
--		add_tsu_reg(TSU_BSYSL0);
--		add_tsu_reg(TSU_BSYSL1);
--		add_tsu_reg(TSU_PRISL0);
--		add_tsu_reg(TSU_PRISL1);
--		add_tsu_reg(TSU_FWSL0);
--		add_tsu_reg(TSU_FWSL1);
-+		if (cd->dual_port) {
-+			add_tsu_reg(TSU_FWEN0);
-+			add_tsu_reg(TSU_FWEN1);
-+			add_tsu_reg(TSU_FCM);
-+			add_tsu_reg(TSU_BSYSL0);
-+			add_tsu_reg(TSU_BSYSL1);
-+			add_tsu_reg(TSU_PRISL0);
-+			add_tsu_reg(TSU_PRISL1);
-+			add_tsu_reg(TSU_FWSL0);
-+			add_tsu_reg(TSU_FWSL1);
-+		}
- 		add_tsu_reg(TSU_FWSLC);
--		add_tsu_reg(TSU_QTAGM0);
--		add_tsu_reg(TSU_QTAGM1);
--		add_tsu_reg(TSU_FWSR);
--		add_tsu_reg(TSU_FWINMK);
--		add_tsu_reg(TSU_ADQT0);
--		add_tsu_reg(TSU_ADQT1);
--		add_tsu_reg(TSU_VTAG0);
--		add_tsu_reg(TSU_VTAG1);
-+		if (cd->dual_port) {
-+			add_tsu_reg(TSU_QTAGM0);
-+			add_tsu_reg(TSU_QTAGM1);
-+			add_tsu_reg(TSU_FWSR);
-+			add_tsu_reg(TSU_FWINMK);
-+			add_tsu_reg(TSU_ADQT0);
-+			add_tsu_reg(TSU_ADQT1);
-+			add_tsu_reg(TSU_VTAG0);
-+			add_tsu_reg(TSU_VTAG1);
-+		}
- 		add_tsu_reg(TSU_ADSBSY);
- 		add_tsu_reg(TSU_TEN);
- 		add_tsu_reg(TSU_POST1);
+diff --git a/drivers/net/ethernet/intel/ixgbevf/ixgbevf_main.c b/drivers/net/ethernet/intel/ixgbevf/ixgbevf_main.c
+index 4093a9c52c182..a10756f0b0d8b 100644
+--- a/drivers/net/ethernet/intel/ixgbevf/ixgbevf_main.c
++++ b/drivers/net/ethernet/intel/ixgbevf/ixgbevf_main.c
+@@ -2066,11 +2066,6 @@ static int ixgbevf_write_uc_addr_list(struct net_device *netdev)
+ 	struct ixgbe_hw *hw = &adapter->hw;
+ 	int count = 0;
+ 
+-	if ((netdev_uc_count(netdev)) > 10) {
+-		pr_err("Too many unicast filters - No Space\n");
+-		return -ENOSPC;
+-	}
+-
+ 	if (!netdev_uc_empty(netdev)) {
+ 		struct netdev_hw_addr *ha;
+ 
 -- 
 2.20.1
 
