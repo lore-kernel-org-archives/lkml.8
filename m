@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A27F4C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:30:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BC80C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:30:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78CBC2087E
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:30:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 219CC206F0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:30:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579876220;
-	bh=E6Fv9O+OegQ5OgqHUfaQME7FUO6QA7TWUMPDerY7pLQ=;
+	s=default; t=1579876227;
+	bh=0JWmRm7twNzWFAnJhWYBpGSoOmzLET+276Z/o2Em/DI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ycs6RnXcwE28+S/YgQE6I4G05ySDFbfxRfJt6WA/f+je1w23UNk5+yhw9xt4PM9BA
-	 bWvehwabH+SganrLCpvH9a4j85daAo4CCOrhpslsBBvZat/yhpo2KUVOwYqVYqICcl
-	 kTxzt0oBeu7hV4pPJ2eZYtzqfFBV8sfdDhMR36TM=
+	b=GT58/LU77Kt9/WExuUtK0r7k/5GLH5UKF9PHWECQY8kBDr3zZXJZo2V/88EAju1H3
+	 BNZA3c7a8pQZGSm8o34PDSqjdno5T1+OOoGNDSuub/c5CID56mfwR70Mw6B+6q6I47
+	 uQKBDT/vdndMXxZXm7A8Y/9JPkboc4PadBgU2ZmA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391838AbgAXOaT (ORCPT
+        id S2392525AbgAXOa0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 09:30:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42074 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 09:30:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42066 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405032AbgAXOUp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 09:20:45 -0500
+        id S2405020AbgAXOUo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 09:20:44 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 73AC324676;
-        Fri, 24 Jan 2020 14:20:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 606CC2467E;
+        Fri, 24 Jan 2020 14:20:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579875645;
-        bh=E6Fv9O+OegQ5OgqHUfaQME7FUO6QA7TWUMPDerY7pLQ=;
+        s=default; t=1579875644;
+        bh=0JWmRm7twNzWFAnJhWYBpGSoOmzLET+276Z/o2Em/DI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rNN/ICvjPLO354inOVoDOAx+Cm20TzM7vV9ckyfxYiwGPwvE6ET+UxPKusuLEqu+d
-         misNPT0PFUnVfGmlMf0x30usUyy+q/WEIslIE57LR56d5dRQWzy2oeiBY3lLABBjlj
-         esbdli3O91owtR1CTZo9vvuyk3C/VOP8hR6qpWrc=
+        b=YspxQqvTap+A81506yh4zYRuxEykM3CKvBarMrPJmKik7VlJoDjxuJIA7bMW5ROfD
+         AmPg0FKsFmQoNSisKBVhDsvekaP6YIpXHQSXrNHbeiMXhlYypAbUv1BHAw28y8KRWX
+         vOPrq+XzoXr1jTC77Lyn+C6y2rrHWjcZv4df/JHs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Stephan Gerhold <stephan@gerhold.net>,
         Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
         Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
-Subject: [PATCH AUTOSEL 4.19 28/56] ASoC: msm8916-wcd-digital: Reset RX interpolation path after use
-Date:   Fri, 24 Jan 2020 09:19:44 -0500
-Message-Id: <20200124142012.29752-28-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 27/56] ASoC: msm8916-wcd-analog: Fix MIC BIAS Internal1
+Date:   Fri, 24 Jan 2020 09:19:43 -0500
+Message-Id: <20200124142012.29752-27-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200124142012.29752-1-sashal@kernel.org>
 References: <20200124142012.29752-1-sashal@kernel.org>
@@ -62,52 +62,67 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Stephan Gerhold <stephan@gerhold.net>
 
-[ Upstream commit 85578bbd642f65065039b1765ebe1a867d5435b0 ]
+[ Upstream commit 057efcf9faea4769cf1020677d93d040db9b23f3 ]
 
-For some reason, attempting to route audio through QDSP6 on MSM8916
-causes the RX interpolation path to get "stuck" after playing audio
-a few times. In this situation, the analog codec part is still working,
-but the RX path in the digital codec stops working, so you only hear
-the analog parts powering up. After a reboot everything works again.
+MIC BIAS Internal1 is broken at the moment because we always
+enable the internal rbias resistor to the TX2 line (connected to
+the headset microphone), rather than enabling the resistor connected
+to TX1.
 
-So far I was not able to reproduce the problem when using lpass-cpu.
+Move the RBIAS code to pm8916_wcd_analog_enable_micbias_int1/2()
+to fix this.
 
-The downstream kernel driver avoids this by resetting the RX
-interpolation path after use. In mainline we do something similar
-for the TX decimator (LPASS_CDC_CLK_TX_RESET_B1_CTL), but the
-interpolator reset (LPASS_CDC_CLK_RX_RESET_CTL) got lost when the
-msm8916-wcd driver was split into analog and digital.
-
-Fix this problem by adding the reset to
-msm8916_wcd_digital_enable_interpolator().
-
-Fixes: 150db8c5afa1 ("ASoC: codecs: Add msm8916-wcd digital codec")
+Fixes: 585e881e5b9e ("ASoC: codecs: Add msm8916-wcd analog codec")
 Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
-Link: https://lore.kernel.org/r/20200105102753.83108-1-stephan@gerhold.net
+Link: https://lore.kernel.org/r/20200111164006.43074-3-stephan@gerhold.net
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/codecs/msm8916-wcd-digital.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ sound/soc/codecs/msm8916-wcd-analog.c | 16 +++++++++++++---
+ 1 file changed, 13 insertions(+), 3 deletions(-)
 
-diff --git a/sound/soc/codecs/msm8916-wcd-digital.c b/sound/soc/codecs/msm8916-wcd-digital.c
-index 3063dedd21cff..6de2ab6f97068 100644
---- a/sound/soc/codecs/msm8916-wcd-digital.c
-+++ b/sound/soc/codecs/msm8916-wcd-digital.c
-@@ -357,6 +357,12 @@ static int msm8916_wcd_digital_enable_interpolator(
- 		snd_soc_component_write(component, rx_gain_reg[w->shift],
- 			      snd_soc_component_read32(component, rx_gain_reg[w->shift]));
- 		break;
-+	case SND_SOC_DAPM_POST_PMD:
-+		snd_soc_component_update_bits(component, LPASS_CDC_CLK_RX_RESET_CTL,
-+					      1 << w->shift, 1 << w->shift);
-+		snd_soc_component_update_bits(component, LPASS_CDC_CLK_RX_RESET_CTL,
-+					      1 << w->shift, 0x0);
+diff --git a/sound/soc/codecs/msm8916-wcd-analog.c b/sound/soc/codecs/msm8916-wcd-analog.c
+index 6083b44ce1c6c..cbdb6d4bb91ef 100644
+--- a/sound/soc/codecs/msm8916-wcd-analog.c
++++ b/sound/soc/codecs/msm8916-wcd-analog.c
+@@ -388,9 +388,6 @@ static int pm8916_wcd_analog_enable_micbias_int(struct snd_soc_component
+ 
+ 	switch (event) {
+ 	case SND_SOC_DAPM_PRE_PMU:
+-		snd_soc_component_update_bits(component, CDC_A_MICB_1_INT_RBIAS,
+-				    MICB_1_INT_TX2_INT_RBIAS_EN_MASK,
+-				    MICB_1_INT_TX2_INT_RBIAS_EN_ENABLE);
+ 		snd_soc_component_update_bits(component, reg, MICB_1_EN_PULL_DOWN_EN_MASK, 0);
+ 		snd_soc_component_update_bits(component, CDC_A_MICB_1_EN,
+ 				    MICB_1_EN_OPA_STG2_TAIL_CURR_MASK,
+@@ -440,6 +437,14 @@ static int pm8916_wcd_analog_enable_micbias_int1(struct
+ 	struct snd_soc_component *component = snd_soc_dapm_to_component(w->dapm);
+ 	struct pm8916_wcd_analog_priv *wcd = snd_soc_component_get_drvdata(component);
+ 
++	switch (event) {
++	case SND_SOC_DAPM_PRE_PMU:
++		snd_soc_component_update_bits(component, CDC_A_MICB_1_INT_RBIAS,
++				    MICB_1_INT_TX1_INT_RBIAS_EN_MASK,
++				    MICB_1_INT_TX1_INT_RBIAS_EN_ENABLE);
 +		break;
- 	}
- 	return 0;
++	}
++
+ 	return pm8916_wcd_analog_enable_micbias_int(component, event, w->reg,
+ 						     wcd->micbias1_cap_mode);
  }
+@@ -550,6 +555,11 @@ static int pm8916_wcd_analog_enable_micbias_int2(struct
+ 	struct pm8916_wcd_analog_priv *wcd = snd_soc_component_get_drvdata(component);
+ 
+ 	switch (event) {
++	case SND_SOC_DAPM_PRE_PMU:
++		snd_soc_component_update_bits(component, CDC_A_MICB_1_INT_RBIAS,
++				    MICB_1_INT_TX2_INT_RBIAS_EN_MASK,
++				    MICB_1_INT_TX2_INT_RBIAS_EN_ENABLE);
++		break;
+ 	case SND_SOC_DAPM_POST_PMU:
+ 		pm8916_mbhc_configure_bias(wcd, true);
+ 		break;
 -- 
 2.20.1
 
