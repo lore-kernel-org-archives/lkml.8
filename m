@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F291C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:27:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97AFEC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:27:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA94B20718
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:27:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61C812075D
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:27:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579865264;
-	bh=1SEoUkiEVPW15R7ka6+LcKQYHYEqhbO4L6sxXiYVNgk=;
+	s=default; t=1579865268;
+	bh=xWk2oEJWg+aEf/TJMfstF2XmROQRtAxpW4vgKbueuwc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Y6AbOO3s/ZbOpYdiJDTDaPiH3A7rSnGL9fNS97a+tz+Oj0OAD//ucgZLqvIvJLMR5
-	 gQUpSgXMB/RahZLqZq9VDBEvBgeVAiW8IQ6bBtc4EKvZ7OyNNj4YEFIcg08YdBUwnr
-	 /6w8yPL7mL/h2JjbvJTC01YG/fk+ofxwrAXYyANI=
+	b=exk31IVVpY6KcbFZp1pcenvG2cLec0D1M9N8SBl1ulH5GesTTfskae6Ck5pGHnY0Y
+	 /FkV5DY1FFcMka7OxtBb0MUsja3w03LvHYU2H7tHZ3EL40814U/46IEMxfCBPwBh8Z
+	 fZjUqgd8mQdHJ9l0/q6kjjty4aLbCS8jLc+wrb5U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391351AbgAXL1o (ORCPT
+        id S2391677AbgAXL1r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:27:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43332 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 06:27:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43456 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391655AbgAXL1l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:27:41 -0500
+        id S2391661AbgAXL1n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:27:43 -0500
 Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1AC8D20718;
-        Fri, 24 Jan 2020 11:27:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5BEA02075D;
+        Fri, 24 Jan 2020 11:27:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579865259;
-        bh=1SEoUkiEVPW15R7ka6+LcKQYHYEqhbO4L6sxXiYVNgk=;
+        s=default; t=1579865263;
+        bh=xWk2oEJWg+aEf/TJMfstF2XmROQRtAxpW4vgKbueuwc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ey2mzf2XX8yQI4zGA+xlOaqLGZQBU5O+hmTAH0S92V14FlAf4VP0uX6bovhUNq7/j
-         NXejWSuOMtbFE2ICWZxSkQ+kzsAgk93eFXPTqbJu+5ntV952zXOvT2I2y3TQndYq03
-         e5Yy6ob8wP1cESDpku1FootLkvKYxPUT2z9/Hnyk=
+        b=KN5kCCmSAeacpd+iM7G29xcTzhKgj5nI495gyIejgIN26o1onEw83R9wuyjgiUzpf
+         JQueJxQvoFlRJd6uYIZUcbvAlpSO1dsBrj/j+fctnDvY6oRfVp1g7GWXWJ9tkqfTgX
+         r8QCfBX4anxNrk9/C+6uxr2NJ5AekHeBjwyHcPrU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org,
+        Mathias Nyman <mathias.nyman@linux.intel.com>,
+        Ruslan Bilovol <ruslan.bilovol@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 484/639] qed: reduce maximum stack frame size
-Date:   Fri, 24 Jan 2020 10:30:54 +0100
-Message-Id: <20200124093149.295633610@linuxfoundation.org>
+Subject: [PATCH 4.19 485/639] usb: host: xhci-hub: fix extra endianness conversion
+Date:   Fri, 24 Jan 2020 10:30:55 +0100
+Message-Id: <20200124093149.481211942@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
 References: <20200124093047.008739095@linuxfoundation.org>
@@ -60,101 +61,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Ruslan Bilovol <ruslan.bilovol@gmail.com>
 
-[ Upstream commit 7c116e02a4a7575c8c62bfd2106e3e3ec8fb99dc ]
+[ Upstream commit 6269e4c76eacabaea0d0099200ae1a455768d208 ]
 
-clang warns about an overly large stack frame in one function
-when it decides to inline all __qed_get_vport_*() functions into
-__qed_get_vport_stats():
+Don't do extra cpu_to_le32 conversion for
+put_unaligned_le32 because it is already implemented
+in this function.
 
-drivers/net/ethernet/qlogic/qed/qed_l2.c:1889:13: error: stack frame size of 1128 bytes in function '_qed_get_vport_stats' [-Werror,-Wframe-larger-than=]
+Fixes sparse error:
+xhci-hub.c:1152:44: warning: incorrect type in argument 1 (different base types)
+xhci-hub.c:1152:44:    expected unsigned int [usertype] val
+xhci-hub.c:1152:44:    got restricted __le32 [usertype]
 
-Use a noinline_for_stack annotation to prevent clang from inlining
-these, which keeps the maximum stack usage at around half of that
-in the worst case, similar to what we get with gcc.
-
-Fixes: 86622ee75312 ("qed: Move statistics to L2 code")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 395f540 "xhci: support new USB 3.1 hub request to get extended port status"
+Cc: Mathias Nyman <mathias.nyman@linux.intel.com>
+Signed-off-by: Ruslan Bilovol <ruslan.bilovol@gmail.com>
+Link: https://lore.kernel.org/r/1562501839-26522-1-git-send-email-ruslan.bilovol@gmail.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/qlogic/qed/qed_l2.c | 34 +++++++++++-------------
- 1 file changed, 15 insertions(+), 19 deletions(-)
+ drivers/usb/host/xhci-hub.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/qlogic/qed/qed_l2.c b/drivers/net/ethernet/qlogic/qed/qed_l2.c
-index 64ac95ca4df21..d921b991dbdb5 100644
---- a/drivers/net/ethernet/qlogic/qed/qed_l2.c
-+++ b/drivers/net/ethernet/qlogic/qed/qed_l2.c
-@@ -1631,10 +1631,9 @@ static void __qed_get_vport_pstats_addrlen(struct qed_hwfn *p_hwfn,
- 	}
- }
- 
--static void __qed_get_vport_pstats(struct qed_hwfn *p_hwfn,
--				   struct qed_ptt *p_ptt,
--				   struct qed_eth_stats *p_stats,
--				   u16 statistics_bin)
-+static noinline_for_stack void
-+__qed_get_vport_pstats(struct qed_hwfn *p_hwfn, struct qed_ptt *p_ptt,
-+		       struct qed_eth_stats *p_stats, u16 statistics_bin)
- {
- 	struct eth_pstorm_per_queue_stat pstats;
- 	u32 pstats_addr = 0, pstats_len = 0;
-@@ -1661,10 +1660,9 @@ static void __qed_get_vport_pstats(struct qed_hwfn *p_hwfn,
- 	    HILO_64_REGPAIR(pstats.error_drop_pkts);
- }
- 
--static void __qed_get_vport_tstats(struct qed_hwfn *p_hwfn,
--				   struct qed_ptt *p_ptt,
--				   struct qed_eth_stats *p_stats,
--				   u16 statistics_bin)
-+static noinline_for_stack void
-+__qed_get_vport_tstats(struct qed_hwfn *p_hwfn, struct qed_ptt *p_ptt,
-+		       struct qed_eth_stats *p_stats, u16 statistics_bin)
- {
- 	struct tstorm_per_port_stat tstats;
- 	u32 tstats_addr, tstats_len;
-@@ -1709,10 +1707,9 @@ static void __qed_get_vport_ustats_addrlen(struct qed_hwfn *p_hwfn,
- 	}
- }
- 
--static void __qed_get_vport_ustats(struct qed_hwfn *p_hwfn,
--				   struct qed_ptt *p_ptt,
--				   struct qed_eth_stats *p_stats,
--				   u16 statistics_bin)
-+static noinline_for_stack
-+void __qed_get_vport_ustats(struct qed_hwfn *p_hwfn, struct qed_ptt *p_ptt,
-+			    struct qed_eth_stats *p_stats, u16 statistics_bin)
- {
- 	struct eth_ustorm_per_queue_stat ustats;
- 	u32 ustats_addr = 0, ustats_len = 0;
-@@ -1751,10 +1748,9 @@ static void __qed_get_vport_mstats_addrlen(struct qed_hwfn *p_hwfn,
- 	}
- }
- 
--static void __qed_get_vport_mstats(struct qed_hwfn *p_hwfn,
--				   struct qed_ptt *p_ptt,
--				   struct qed_eth_stats *p_stats,
--				   u16 statistics_bin)
-+static noinline_for_stack void
-+__qed_get_vport_mstats(struct qed_hwfn *p_hwfn, struct qed_ptt *p_ptt,
-+		       struct qed_eth_stats *p_stats, u16 statistics_bin)
- {
- 	struct eth_mstorm_per_queue_stat mstats;
- 	u32 mstats_addr = 0, mstats_len = 0;
-@@ -1780,9 +1776,9 @@ static void __qed_get_vport_mstats(struct qed_hwfn *p_hwfn,
- 	    HILO_64_REGPAIR(mstats.tpa_coalesced_bytes);
- }
- 
--static void __qed_get_vport_port_stats(struct qed_hwfn *p_hwfn,
--				       struct qed_ptt *p_ptt,
--				       struct qed_eth_stats *p_stats)
-+static noinline_for_stack void
-+__qed_get_vport_port_stats(struct qed_hwfn *p_hwfn, struct qed_ptt *p_ptt,
-+			   struct qed_eth_stats *p_stats)
- {
- 	struct qed_eth_stats_common *p_common = &p_stats->common;
- 	struct port_stats port_stats;
+diff --git a/drivers/usb/host/xhci-hub.c b/drivers/usb/host/xhci-hub.c
+index 8f180bf7561a2..9772c0de59b7d 100644
+--- a/drivers/usb/host/xhci-hub.c
++++ b/drivers/usb/host/xhci-hub.c
+@@ -1104,7 +1104,7 @@ int xhci_hub_control(struct usb_hcd *hcd, u16 typeReq, u16 wValue,
+ 			}
+ 			port_li = readl(ports[wIndex]->addr + PORTLI);
+ 			status = xhci_get_ext_port_status(temp, port_li);
+-			put_unaligned_le32(cpu_to_le32(status), &buf[4]);
++			put_unaligned_le32(status, &buf[4]);
+ 		}
+ 		break;
+ 	case SetPortFeature:
 -- 
 2.20.1
 
