@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03D67C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:24:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04C14C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:24:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC6B8206D4
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:24:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6B62214AF
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:24:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579865052;
-	bh=6quDXAEcDFWwvkH1NVh1WWRbSlIvzWXMFot7EM9sOwA=;
+	s=default; t=1579865055;
+	bh=PsUIB5tB+C+Df+Kwo1yLhlbZhI8IM4nS7whCi62dcBk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=A0hwvbdgk+A80AKj3ST/jirQNzk9p8VfvcpaCAXtTDk1isRsztcwd/VjUGoK9Qc9d
-	 HcwX3uPMTU2snU4CZA+n7V3bHvVvlyZPOuas5Jmh9aLPhT7wvao+GYWLgEcqGhsErf
-	 rb+wVowAnrcrfKdwsVbP2dXkOcQiW9xM4dLtY0zI=
+	b=YhAX+dzrH5EDuOYiKlC4ZXFxAogZvSJGlEDFAEYrDHVLqWdGNTL3Ybwn6a+IuaeYu
+	 IEo964qo87PhLgUaC1N1C0pU0qIYIsCD+5FzccwC9cqNpE7qG4cc8pqStNOkQJMgXx
+	 qqnI3+TotlhHoeYDKT61Achj2W5A8ngbWH7t3nWs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403756AbgAXLYL (ORCPT
+        id S2403770AbgAXLYP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:24:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37278 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 06:24:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37400 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391401AbgAXLYI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:24:08 -0500
+        id S2403755AbgAXLYM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:24:12 -0500
 Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 22BC2206D4;
-        Fri, 24 Jan 2020 11:24:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B6411206D4;
+        Fri, 24 Jan 2020 11:24:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579865047;
-        bh=6quDXAEcDFWwvkH1NVh1WWRbSlIvzWXMFot7EM9sOwA=;
+        s=default; t=1579865051;
+        bh=PsUIB5tB+C+Df+Kwo1yLhlbZhI8IM4nS7whCi62dcBk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Cu1ufpgckEGtYnSImXtgvQxlNjp2owSkd8NlUzqq5Ru7ngCpI6UX1Kykr3hne++DF
-         wcL5aqHPHT4B+xdz/T2HW9awbS2NS+XeOpRGkf7RHNWKNXCahyKxkDnFdKgQbyjD5L
-         FGyGdpOliRdjMLjhRdvEiGuemGJ+OMAY9wcQPar0=
+        b=oDFYOGPauHyecCUFycwcrJq6elAszRlbIQU8cguLXhzixOYUCHU1OOU0CN68pIwfr
+         FCtzm1KB1RBEqTLDTpg2G22vFgig04r0mSxdLxWnXeA0rjY+s6BquMP64cThUzJ3yO
+         maELDQblY44SSYt/cF128v76O4aDQklWpt0Ytg0Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nathan Lynch <nathanl@linux.ibm.com>,
-        "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
+        stable@vger.kernel.org, Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 430/639] powerpc/cacheinfo: add cacheinfo_teardown, cacheinfo_rebuild
-Date:   Fri, 24 Jan 2020 10:30:00 +0100
-Message-Id: <20200124093140.873383873@linuxfoundation.org>
+Subject: [PATCH 4.19 439/639] ASoC: ti: davinci-mcasp: Fix slot mask settings when using multiple AXRs
+Date:   Fri, 24 Jan 2020 10:30:09 +0100
+Message-Id: <20200124093142.028458462@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
 References: <20200124093047.008739095@linuxfoundation.org>
@@ -61,69 +60,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Lynch <nathanl@linux.ibm.com>
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
 
-[ Upstream commit d4aa219a074a5abaf95a756b9f0d190b5c03a945 ]
+[ Upstream commit fd14f4436fd47d5418023c90e933e66d3645552e ]
 
-Allow external callers to force the cacheinfo code to release all its
-references to cache nodes, e.g. before processing device tree updates
-post-migration, and to rebuild the hierarchy afterward.
+If multiple serializers are connected in the system and the number of
+channels will need to use more than one serializer the mask to enable the
+serializers were left to 0 if tdm_mask is provided
 
-CPU online/offline must be blocked by callers; enforce this.
+Fixes: dd55ff8346a97 ("ASoC: davinci-mcasp: Add set_tdm_slots() support")
 
-Fixes: 410bccf97881 ("powerpc/pseries: Partition migration in the kernel")
-Signed-off-by: Nathan Lynch <nathanl@linux.ibm.com>
-Reviewed-by: Gautham R. Shenoy <ego@linux.vnet.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/kernel/cacheinfo.c | 21 +++++++++++++++++++++
- arch/powerpc/kernel/cacheinfo.h |  4 ++++
- 2 files changed, 25 insertions(+)
+ sound/soc/davinci/davinci-mcasp.c | 13 ++++++-------
+ 1 file changed, 6 insertions(+), 7 deletions(-)
 
-diff --git a/arch/powerpc/kernel/cacheinfo.c b/arch/powerpc/kernel/cacheinfo.c
-index a8f20e5928e13..9edb454301336 100644
---- a/arch/powerpc/kernel/cacheinfo.c
-+++ b/arch/powerpc/kernel/cacheinfo.c
-@@ -865,4 +865,25 @@ void cacheinfo_cpu_offline(unsigned int cpu_id)
- 	if (cache)
- 		cache_cpu_clear(cache, cpu_id);
- }
-+
-+void cacheinfo_teardown(void)
-+{
-+	unsigned int cpu;
-+
-+	lockdep_assert_cpus_held();
-+
-+	for_each_online_cpu(cpu)
-+		cacheinfo_cpu_offline(cpu);
-+}
-+
-+void cacheinfo_rebuild(void)
-+{
-+	unsigned int cpu;
-+
-+	lockdep_assert_cpus_held();
-+
-+	for_each_online_cpu(cpu)
-+		cacheinfo_cpu_online(cpu);
-+}
-+
- #endif /* (CONFIG_PPC_PSERIES && CONFIG_SUSPEND) || CONFIG_HOTPLUG_CPU */
-diff --git a/arch/powerpc/kernel/cacheinfo.h b/arch/powerpc/kernel/cacheinfo.h
-index 955f5e999f1b8..52bd3fc6642da 100644
---- a/arch/powerpc/kernel/cacheinfo.h
-+++ b/arch/powerpc/kernel/cacheinfo.h
-@@ -6,4 +6,8 @@
- extern void cacheinfo_cpu_online(unsigned int cpu_id);
- extern void cacheinfo_cpu_offline(unsigned int cpu_id);
- 
-+/* Allow migration/suspend to tear down and rebuild the hierarchy. */
-+extern void cacheinfo_teardown(void);
-+extern void cacheinfo_rebuild(void);
-+
- #endif /* _PPC_CACHEINFO_H */
+diff --git a/sound/soc/davinci/davinci-mcasp.c b/sound/soc/davinci/davinci-mcasp.c
+index 6a8c279a4b20b..14ab16e1369f8 100644
+--- a/sound/soc/davinci/davinci-mcasp.c
++++ b/sound/soc/davinci/davinci-mcasp.c
+@@ -874,14 +874,13 @@ static int mcasp_i2s_hw_param(struct davinci_mcasp *mcasp, int stream,
+ 		active_slots = hweight32(mcasp->tdm_mask[stream]);
+ 		active_serializers = (channels + active_slots - 1) /
+ 			active_slots;
+-		if (active_serializers == 1) {
++		if (active_serializers == 1)
+ 			active_slots = channels;
+-			for (i = 0; i < total_slots; i++) {
+-				if ((1 << i) & mcasp->tdm_mask[stream]) {
+-					mask |= (1 << i);
+-					if (--active_slots <= 0)
+-						break;
+-				}
++		for (i = 0; i < total_slots; i++) {
++			if ((1 << i) & mcasp->tdm_mask[stream]) {
++				mask |= (1 << i);
++				if (--active_slots <= 0)
++					break;
+ 			}
+ 		}
+ 	} else {
 -- 
 2.20.1
 
