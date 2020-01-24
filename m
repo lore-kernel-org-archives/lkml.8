@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B880C35242
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 10:05:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76D4FC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 10:05:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32B91218AC
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 10:05:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41FC720709
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 10:05:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579860336;
-	bh=Q7xx4an71vgm8Q6EkjRqPJlrk6EEGeC4kkytaZEHXeQ=;
+	s=default; t=1579860343;
+	bh=x2wnJ8OUjPAxL2CD9D+kFE/pTOwvfYrmM6VQmvOedIw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pWghNyCWfWK4THOOrBBH/3olZV4fYk+NK+4BKWG/EMz0vnsbPbBfnPE6wu2O7Zeab
-	 o6nJuauKaV921/MH5VUqwRZZ42wHYp1lh/A439Zrxh3KKeyb/FXKVJ6yT/YiKjeB+9
-	 KVPyq+JgkTdCKP4rBFn8Z4u63p/Zs/lko/RZRY2s=
+	b=BBXG6EWWg1OLl7ENMa3FhrybU/i2diRR402wWekJ+Sk6u+hGpcwz1kBhhq8tyzAT2
+	 kAX6kOszCWx2nDgKKDtg+OFsdjsFZli1nK+jg0pGd/rEI3RnrJL+IIFmNlriWnzsit
+	 MK9zw2+bVZg5QsF+JsV+nssHAxcsfv4X2DC561Aw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389234AbgAXKFf (ORCPT
+        id S2389247AbgAXKFl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 05:05:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42038 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 05:05:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42148 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731030AbgAXKFa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 05:05:30 -0500
+        id S2389237AbgAXKFg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 05:05:36 -0500
 Received: from localhost (unknown [145.15.244.15])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C1172214DB;
-        Fri, 24 Jan 2020 10:05:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 824BC208C4;
+        Fri, 24 Jan 2020 10:05:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579860329;
-        bh=Q7xx4an71vgm8Q6EkjRqPJlrk6EEGeC4kkytaZEHXeQ=;
+        s=default; t=1579860336;
+        bh=x2wnJ8OUjPAxL2CD9D+kFE/pTOwvfYrmM6VQmvOedIw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rYg0baYu7AlvsLTxCyK7fmOkWTfRGGISnPpVNOq69G5GLxLaxa/4wJ4opFtrqvA10
-         MwcEw1/6oGJd5ztmU7K24OZqQBOgpGSceu4brtmv+bhk5t9WAAauJgkMKmuP1LPDae
-         3loNMWQNvG75eL1ddX5Nd8jN3nXEwxOrJAs3iqqE=
+        b=VAnB9VcxTynW+9UhDW2bnM2Smw6Dx+lernkG/Yt8yCNavuhU/i9TeHatQUReHIN16
+         ng3E2bRZuDIRMd+i83QM1kDHdCI5gh6wcPVZ7HYcSZwSPghn4Qk9KoXbbz3fBDyeuH
+         OJFn1YgPat+uwGKWekUfHH/pv3h/LDC3XBgy/QoE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yong Wu <yong.wu@mediatek.com>,
-        Joerg Roedel <jroedel@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 282/343] iommu/mediatek: Fix iova_to_phys PA start for 4GB mode
-Date:   Fri, 24 Jan 2020 10:31:40 +0100
-Message-Id: <20200124092957.142184323@linuxfoundation.org>
+        stable@vger.kernel.org, Jose Abreu <Jose.Abreu@synopsys.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 316/343] net: stmmac: gmac4+: Not all Unicast addresses may be available
+Date:   Fri, 24 Jan 2020 10:32:14 +0100
+Message-Id: <20200124093001.429064085@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124092919.490687572@linuxfoundation.org>
 References: <20200124092919.490687572@linuxfoundation.org>
@@ -59,94 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yong Wu <yong.wu@mediatek.com>
+From: Jose Abreu <Jose.Abreu@synopsys.com>
 
-[ Upstream commit 76ce65464fcd2c21db84391572b7938b716aceb0 ]
+[ Upstream commit 25683bab09a70542b9f8e3e28f79b3369e56701f ]
 
-In M4U 4GB mode, the physical address is remapped as below:
+Some setups may not have all Unicast addresses filters available. Check
+the number of available filters before trying to setup it.
 
-CPU Physical address:
-
-====================
-
-0      1G       2G     3G       4G     5G
-|---A---|---B---|---C---|---D---|---E---|
-+--I/O--+------------Memory-------------+
-
-IOMMU output physical address:
- =============================
-
-                                4G      5G     6G      7G      8G
-                                |---E---|---B---|---C---|---D---|
-                                +------------Memory-------------+
-
-The Region 'A'(I/O) can not be mapped by M4U; For Region 'B'/'C'/'D', the
-bit32 of the CPU physical address always is needed to set, and for Region
-'E', the CPU physical address keep as is. something looks like this:
-CPU PA         ->    M4U OUTPUT PA
-0x4000_0000          0x1_4000_0000 (Add bit32)
-0x8000_0000          0x1_8000_0000 ...
-0xc000_0000          0x1_c000_0000 ...
-0x1_0000_0000        0x1_0000_0000 (No change)
-
-Additionally, the iommu consumers always use the CPU phyiscal address.
-
-The PA in the iova_to_phys that is got from v7s always is u32, But
-from the CPU point of view, PA only need add BIT(32) when PA < 0x4000_0000.
-
-Fixes: 30e2fccf9512 ("iommu/mediatek: Enlarge the validate PA range
-for 4GB mode")
-Signed-off-by: Yong Wu <yong.wu@mediatek.com>
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Fixes: 477286b53f55 ("stmmac: add GMAC4 core support")
+Signed-off-by: Jose Abreu <Jose.Abreu@synopsys.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iommu/mtk_iommu.c | 26 +++++++++++++++++++++++++-
- 1 file changed, 25 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/iommu/mtk_iommu.c b/drivers/iommu/mtk_iommu.c
-index c30f627004315..0f99e95a1a739 100644
---- a/drivers/iommu/mtk_iommu.c
-+++ b/drivers/iommu/mtk_iommu.c
-@@ -115,6 +115,30 @@ struct mtk_iommu_domain {
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c b/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
+index 8445af580cb69..e5566c121525d 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
+@@ -438,7 +438,7 @@ static void dwmac4_set_filter(struct mac_device_info *hw,
+ 	}
  
- static struct iommu_ops mtk_iommu_ops;
- 
-+/*
-+ * In M4U 4GB mode, the physical address is remapped as below:
-+ *
-+ * CPU Physical address:
-+ * ====================
-+ *
-+ * 0      1G       2G     3G       4G     5G
-+ * |---A---|---B---|---C---|---D---|---E---|
-+ * +--I/O--+------------Memory-------------+
-+ *
-+ * IOMMU output physical address:
-+ *  =============================
-+ *
-+ *                                 4G      5G     6G      7G      8G
-+ *                                 |---E---|---B---|---C---|---D---|
-+ *                                 +------------Memory-------------+
-+ *
-+ * The Region 'A'(I/O) can NOT be mapped by M4U; For Region 'B'/'C'/'D', the
-+ * bit32 of the CPU physical address always is needed to set, and for Region
-+ * 'E', the CPU physical address keep as is.
-+ * Additionally, The iommu consumers always use the CPU phyiscal address.
-+ */
-+#define MTK_IOMMU_4GB_MODE_REMAP_BASE	 0x40000000
-+
- static LIST_HEAD(m4ulist);	/* List all the M4U HWs */
- 
- #define for_each_m4u(data)	list_for_each_entry(data, &m4ulist, list)
-@@ -404,7 +428,7 @@ static phys_addr_t mtk_iommu_iova_to_phys(struct iommu_domain *domain,
- 	pa = dom->iop->iova_to_phys(dom->iop, iova);
- 	spin_unlock_irqrestore(&dom->pgtlock, flags);
- 
--	if (data->enable_4GB)
-+	if (data->enable_4GB && pa < MTK_IOMMU_4GB_MODE_REMAP_BASE)
- 		pa |= BIT_ULL(32);
- 
- 	return pa;
+ 	/* Handle multiple unicast addresses */
+-	if (netdev_uc_count(dev) > GMAC_MAX_PERFECT_ADDRESSES) {
++	if (netdev_uc_count(dev) > hw->unicast_filter_entries) {
+ 		/* Switch to promiscuous mode if more than 128 addrs
+ 		 * are required
+ 		 */
 -- 
 2.20.1
 
