@@ -4,54 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BF22C32771
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:45:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D97EEC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:45:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63020208C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:45:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1681218AC
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:45:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579859140;
-	bh=Al7dob067UuC/vr6Pcu7T93wYJXmJZTIrO1OFP3TziI=;
+	s=default; t=1579859143;
+	bh=MZybGdJlM213r2t3wD1EpjiuBzvm690e2krq9nvSH0w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wJ0Uwqb30WgiuNHmVTt19cQDwm9/P88X3LDEs0PGeIZNwWrmn8seNdus3rnaakFTg
-	 8c2fymcAiG5JB9Q+9es1Fq2q5vtSPPh8CiR8nu4sUYGyCKaCW7sqzOhnfQuS8/oDxH
-	 Qobgh0HHcGnCcrsmHmlTpHvv6QD5SjQBfIjx2o/k=
+	b=EaKTKNO9LuhwmavTIBsFzSWzr/Svp3idnJi5HZs598fqavTIwKRrWxvBPHQGnZpg2
+	 qv43nDMKCwzGAzNgdaWl+DSqKxUjSkeGcJ6N3HqV1LyMHkORxn2UDN6zKK4wZQH0n9
+	 1lTEKC03lqax/pbvuesDWJvMjfZgv4HW9JSeQqxA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733273AbgAXJpj (ORCPT
+        id S2387480AbgAXJpm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 04:45:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40546 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 04:45:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44610 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732804AbgAXJmt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 04:42:49 -0500
+        id S1730712AbgAXJpi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 04:45:38 -0500
 Received: from localhost (unknown [145.15.244.15])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A19C120718;
-        Fri, 24 Jan 2020 09:42:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5F19B21569;
+        Fri, 24 Jan 2020 09:45:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579858968;
-        bh=Al7dob067UuC/vr6Pcu7T93wYJXmJZTIrO1OFP3TziI=;
+        s=default; t=1579859138;
+        bh=MZybGdJlM213r2t3wD1EpjiuBzvm690e2krq9nvSH0w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yrjOOI2g2tpKTFrVlj95LP9x1cD1FuyBRIedt7ElXqWpu2eJYLiOLx1o9cO8V5Gmf
-         nl32tqcFdMQOCGvWixpKBmFkXn+5HM0yspMGw/YZvMaWcSPGeod+EW/hF5suCsOrNO
-         UeRYbgmLr9C0zd9tOBAx7HbhDQKolQpQ+6wWTESM=
+        b=vNe1D5lydpcO0XcDh6AQjhQ9WcS1MjIW32cOMrF85VRZr+bivIkQW4Rz7IOEnUYas
+         Vgplm5y2Vqky2xadz3+2USwrsB3iSQcZLFbLhVptWBxUEgDgiM0N7N8WEe1f5w7kbp
+         xDv5SUiHcmjiNYVgw6Eau6RpOtLlyAo7Tplg91kM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
-        zhengbin <zhengbin13@huawei.com>,
-        David Howells <dhowells@redhat.com>,
+        stable@vger.kernel.org, Yangtao Li <tiny.windzz@gmail.com>,
+        Stephen Boyd <sboyd@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 092/102] afs: Remove set but not used variables before, after
-Date:   Fri, 24 Jan 2020 10:31:33 +0100
-Message-Id: <20200124092820.580997462@linuxfoundation.org>
+Subject: [PATCH 4.14 050/343] clk: vf610: fix refcount leak in vf610_clocks_init()
+Date:   Fri, 24 Jan 2020 10:27:48 +0100
+Message-Id: <20200124092926.302712968@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200124092806.004582306@linuxfoundation.org>
-References: <20200124092806.004582306@linuxfoundation.org>
+In-Reply-To: <20200124092919.490687572@linuxfoundation.org>
+References: <20200124092919.490687572@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -61,84 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: zhengbin <zhengbin13@huawei.com>
+From: Yangtao Li <tiny.windzz@gmail.com>
 
-[ Upstream commit 51590df4f3306cb1f43dca54e3ccdd121ab89594 ]
+[ Upstream commit 567177024e0313e4f0dcba7ba10c0732e50e655d ]
 
-Fixes gcc '-Wunused-but-set-variable' warning:
+The of_find_compatible_node() returns a node pointer with refcount
+incremented, but there is the lack of use of the of_node_put() when
+done. Add the missing of_node_put() to release the refcount.
 
-fs/afs/dir_edit.c: In function afs_set_contig_bits:
-fs/afs/dir_edit.c:75:20: warning: variable after set but not used [-Wunused-but-set-variable]
-fs/afs/dir_edit.c: In function afs_set_contig_bits:
-fs/afs/dir_edit.c:75:12: warning: variable before set but not used [-Wunused-but-set-variable]
-fs/afs/dir_edit.c: In function afs_clear_contig_bits:
-fs/afs/dir_edit.c:100:20: warning: variable after set but not used [-Wunused-but-set-variable]
-fs/afs/dir_edit.c: In function afs_clear_contig_bits:
-fs/afs/dir_edit.c:100:12: warning: variable before set but not used [-Wunused-but-set-variable]
-
-They are never used since commit 63a4681ff39c.
-
-Fixes: 63a4681ff39c ("afs: Locally edit directory data for mkdir/create/unlink/...")
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: zhengbin <zhengbin13@huawei.com>
-Signed-off-by: David Howells <dhowells@redhat.com>
+Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
+Fixes: 1f2c5fd5f048 ("ARM: imx: add VF610 clock support")
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/afs/dir_edit.c | 12 ++----------
- 1 file changed, 2 insertions(+), 10 deletions(-)
+ drivers/clk/imx/clk-vf610.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/fs/afs/dir_edit.c b/fs/afs/dir_edit.c
-index d4fbe5f85f1b2..b108528bf010d 100644
---- a/fs/afs/dir_edit.c
-+++ b/fs/afs/dir_edit.c
-@@ -68,13 +68,11 @@ static int afs_find_contig_bits(union afs_xdr_dir_block *block, unsigned int nr_
- static void afs_set_contig_bits(union afs_xdr_dir_block *block,
- 				int bit, unsigned int nr_slots)
- {
--	u64 mask, before, after;
-+	u64 mask;
+diff --git a/drivers/clk/imx/clk-vf610.c b/drivers/clk/imx/clk-vf610.c
+index 6dae54325a91d..a334667c450a1 100644
+--- a/drivers/clk/imx/clk-vf610.c
++++ b/drivers/clk/imx/clk-vf610.c
+@@ -203,6 +203,7 @@ static void __init vf610_clocks_init(struct device_node *ccm_node)
+ 	np = of_find_compatible_node(NULL, NULL, "fsl,vf610-anatop");
+ 	anatop_base = of_iomap(np, 0);
+ 	BUG_ON(!anatop_base);
++	of_node_put(np);
  
- 	mask = (1 << nr_slots) - 1;
- 	mask <<= bit;
- 
--	before = *(u64 *)block->hdr.bitmap;
--
- 	block->hdr.bitmap[0] |= (u8)(mask >> 0 * 8);
- 	block->hdr.bitmap[1] |= (u8)(mask >> 1 * 8);
- 	block->hdr.bitmap[2] |= (u8)(mask >> 2 * 8);
-@@ -83,8 +81,6 @@ static void afs_set_contig_bits(union afs_xdr_dir_block *block,
- 	block->hdr.bitmap[5] |= (u8)(mask >> 5 * 8);
- 	block->hdr.bitmap[6] |= (u8)(mask >> 6 * 8);
- 	block->hdr.bitmap[7] |= (u8)(mask >> 7 * 8);
--
--	after = *(u64 *)block->hdr.bitmap;
- }
- 
- /*
-@@ -93,13 +89,11 @@ static void afs_set_contig_bits(union afs_xdr_dir_block *block,
- static void afs_clear_contig_bits(union afs_xdr_dir_block *block,
- 				  int bit, unsigned int nr_slots)
- {
--	u64 mask, before, after;
-+	u64 mask;
- 
- 	mask = (1 << nr_slots) - 1;
- 	mask <<= bit;
- 
--	before = *(u64 *)block->hdr.bitmap;
--
- 	block->hdr.bitmap[0] &= ~(u8)(mask >> 0 * 8);
- 	block->hdr.bitmap[1] &= ~(u8)(mask >> 1 * 8);
- 	block->hdr.bitmap[2] &= ~(u8)(mask >> 2 * 8);
-@@ -108,8 +102,6 @@ static void afs_clear_contig_bits(union afs_xdr_dir_block *block,
- 	block->hdr.bitmap[5] &= ~(u8)(mask >> 5 * 8);
- 	block->hdr.bitmap[6] &= ~(u8)(mask >> 6 * 8);
- 	block->hdr.bitmap[7] &= ~(u8)(mask >> 7 * 8);
--
--	after = *(u64 *)block->hdr.bitmap;
- }
- 
- /*
+ 	np = ccm_node;
+ 	ccm_base = of_iomap(np, 0);
 -- 
 2.20.1
 
