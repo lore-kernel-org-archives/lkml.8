@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E73A0C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:02:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 365CEC35242
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:02:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA4A52075D
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:02:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08E902075D
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:02:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579863757;
-	bh=qz9DazI9OkcyP03T0kcBKG8MUWNZiyP5VX2500Ls8DM=;
+	s=default; t=1579863762;
+	bh=rBrSTr++073TbHtN/5lZ5NdS+N8p2wX8huWZpIDsgzc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OAE5YQhc/+A1UIYKq02vsSgUUcs9Ye2GenIyA4wWJVdkjWADLltic/5k5wPg5+Umy
-	 sRaFK7w6RAPiDL0a6ZJNBa5GlU/g9zsM0Za9OVpSkKCOaZhIh3q7XER1CkHFYSOBVF
-	 6bLUVPVT57331ZC152w+od8ppm8YVP/D3SpUsCT0=
+	b=SlgbybfLquGUizMOkMtcJjFrqko//CpvGGNsxVKHKItQuRwl7hZ8UVu/KnyB8kfI0
+	 exOx2aGG8gzn4N5wdct9is/7kYa9LTLnS5MUeSgCk0Dk7wg8hJEweeDqjbsEi2YXuu
+	 d1n0/kGBLZgfEnG01M21VP5OSslFK/2I4DHAmoWE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388100AbgAXLCg (ORCPT
+        id S2388105AbgAXLCl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:02:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36122 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 06:02:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36188 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731019AbgAXLCe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:02:34 -0500
+        id S1731019AbgAXLCi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:02:38 -0500
 Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1EFC72087E;
-        Fri, 24 Jan 2020 11:02:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 55BA82071A;
+        Fri, 24 Jan 2020 11:02:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579863754;
-        bh=qz9DazI9OkcyP03T0kcBKG8MUWNZiyP5VX2500Ls8DM=;
+        s=default; t=1579863757;
+        bh=rBrSTr++073TbHtN/5lZ5NdS+N8p2wX8huWZpIDsgzc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=M9wkthPoQwLcgg5/XoMP1SXGUGxkMnTcgkJMsMngorDfXzwg/wWXcyqrFgUv+ctes
-         1gvxEy93Vf9daUJHjO6QjET6HU+UZN8NuJ9MjVgacsFlLrA6u+j4UjooZbDsGzj1/g
-         96cbVTYizA+j0ocT7LIBS98NwaZ+F98D1yUnBTns=
+        b=1K3DHqZTZJ+UC9cpo9qzYRj1ltceoa5yMYuxq3kQ78xZp852vRRXuAL1IC2dQtmNh
+         m+0qZCzV9QwIkGvhQ8NC8QTf96U1mbJy0roktK1ZPDn6+3ugIzi8S567GYv/hTWQS2
+         ToB9ZiO+iYErUMkFr25SRMxfvnw86HKjxE4AtaJc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vasily Khoruzhick <anarsoul@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, Neil Armstrong <narmstrong@baylibre.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 066/639] ASoC: sun8i-codec: add missing route for ADC
-Date:   Fri, 24 Jan 2020 10:23:56 +0100
-Message-Id: <20200124093055.674363334@linuxfoundation.org>
+Subject: [PATCH 4.19 067/639] pinctrl: meson-gxl: remove invalid GPIOX tsin_a pins
+Date:   Fri, 24 Jan 2020 10:23:57 +0100
+Message-Id: <20200124093055.804234781@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
 References: <20200124093047.008739095@linuxfoundation.org>
@@ -60,38 +60,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vasily Khoruzhick <anarsoul@gmail.com>
+From: Neil Armstrong <narmstrong@baylibre.com>
 
-[ Upstream commit 9ee325d029c4abb75716851ce38863845911d605 ]
+[ Upstream commit d801064cb871806e6843738ecad38993646f53f7 ]
 
-sun8i-codec misses a route from ADC to AIF1 Slot 0 ADC. Add it
-to the driver to avoid adding it to every dts.
+The GPIOX tsin_a pins wrongly uses the SDCard pinctrl bits, this
+patch completely removes these pins entries until we find out what
+are the correct bits and registers to be used instead.
 
-Fixes: eda85d1fee05d ("ASoC: sun8i-codec: Add ADC support for a33")
-Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fixes: 5a6ae9b80139 ("pinctrl: meson-gxl: add tsin_a pins")
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/sunxi/sun8i-codec.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/pinctrl/meson/pinctrl-meson-gxl.c | 12 ++----------
+ 1 file changed, 2 insertions(+), 10 deletions(-)
 
-diff --git a/sound/soc/sunxi/sun8i-codec.c b/sound/soc/sunxi/sun8i-codec.c
-index bf615fa16dc8a..a3db6a68dfe6d 100644
---- a/sound/soc/sunxi/sun8i-codec.c
-+++ b/sound/soc/sunxi/sun8i-codec.c
-@@ -465,7 +465,11 @@ static const struct snd_soc_dapm_route sun8i_codec_dapm_routes[] = {
- 	{ "Right Digital DAC Mixer", "AIF1 Slot 0 Digital DAC Playback Switch",
- 	  "AIF1 Slot 0 Right"},
+diff --git a/drivers/pinctrl/meson/pinctrl-meson-gxl.c b/drivers/pinctrl/meson/pinctrl-meson-gxl.c
+index 158f618f16957..0c0a5018102b0 100644
+--- a/drivers/pinctrl/meson/pinctrl-meson-gxl.c
++++ b/drivers/pinctrl/meson/pinctrl-meson-gxl.c
+@@ -239,13 +239,9 @@ static const unsigned int eth_link_led_pins[]	= { GPIOZ_14 };
+ static const unsigned int eth_act_led_pins[]	= { GPIOZ_15 };
  
--	/* ADC routes */
-+	/* ADC Routes */
-+	{ "AIF1 Slot 0 Right ADC", NULL, "ADC" },
-+	{ "AIF1 Slot 0 Left ADC", NULL, "ADC" },
-+
-+	/* ADC Mixer Routes */
- 	{ "Left Digital ADC Mixer", "AIF1 Data Digital ADC Capture Switch",
- 	  "AIF1 Slot 0 Left ADC" },
- 	{ "Right Digital ADC Mixer", "AIF1 Data Digital ADC Capture Switch",
+ static const unsigned int tsin_a_d0_pins[]	= { GPIODV_0 };
+-static const unsigned int tsin_a_d0_x_pins[]	= { GPIOX_10 };
+ static const unsigned int tsin_a_clk_pins[]	= { GPIODV_8 };
+-static const unsigned int tsin_a_clk_x_pins[]	= { GPIOX_11 };
+ static const unsigned int tsin_a_sop_pins[]	= { GPIODV_9 };
+-static const unsigned int tsin_a_sop_x_pins[]	= { GPIOX_8 };
+ static const unsigned int tsin_a_d_valid_pins[] = { GPIODV_10 };
+-static const unsigned int tsin_a_d_valid_x_pins[] = { GPIOX_9 };
+ static const unsigned int tsin_a_fail_pins[]	= { GPIODV_11 };
+ static const unsigned int tsin_a_dp_pins[] = {
+ 	GPIODV_1, GPIODV_2, GPIODV_3, GPIODV_4, GPIODV_5, GPIODV_6, GPIODV_7,
+@@ -432,10 +428,6 @@ static struct meson_pmx_group meson_gxl_periphs_groups[] = {
+ 	GROUP(spi_miso,		5,	2),
+ 	GROUP(spi_ss0,		5,	1),
+ 	GROUP(spi_sclk,		5,	0),
+-	GROUP(tsin_a_sop_x,	6,	3),
+-	GROUP(tsin_a_d_valid_x,	6,	2),
+-	GROUP(tsin_a_d0_x,	6,	1),
+-	GROUP(tsin_a_clk_x,	6,	0),
+ 
+ 	/* Bank Z */
+ 	GROUP(eth_mdio,		4,	23),
+@@ -698,8 +690,8 @@ static const char * const eth_led_groups[] = {
+ };
+ 
+ static const char * const tsin_a_groups[] = {
+-	"tsin_a_clk", "tsin_a_clk_x", "tsin_a_sop", "tsin_a_sop_x",
+-	"tsin_a_d_valid", "tsin_a_d_valid_x", "tsin_a_d0", "tsin_a_d0_x",
++	"tsin_a_clk", "tsin_a_sop",
++	"tsin_a_d_valid", "tsin_a_d0",
+ 	"tsin_a_dp", "tsin_a_fail",
+ };
+ 
 -- 
 2.20.1
 
