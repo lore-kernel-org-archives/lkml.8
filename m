@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C48D7C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 10:03:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE802C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 10:03:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98D29206D5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 10:03:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A68B22075D
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 10:03:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579860205;
-	bh=axqToh/DbSW01UKLnZ53M7BWxxBuK0lbFgSzF4K2ono=;
+	s=default; t=1579860208;
+	bh=2gLoL4rxof/UHV1wgyhkh9ljj0IUj1fXQyfEo7OIhRc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tPoQWQnR5adHMarSB3dAmzxOUQsyr/3v9GYw7PtGoiOaVYg/YJNKw5QO4g9qvKHpa
-	 Cx4juTRQU9kG2pw5M7djY4XLqM2mg2A5jN239hROni7GWdToip+E/rKQ6ymKZtk9KK
-	 7PdfYxvOPChkxmToNxtdKY8MTNa07tRyGVVJ0Ohc=
+	b=QE2IrANagjCGMxYu3GdhGLEn6PfAqaXhfsDTyyW5GNwL1Ge7t+vGTabTz+tv1+ZYS
+	 E5y5tuiwpgyMr3sOFxxjgJvjRYfUM18iOOaO34Gg/fq+MXMkQNf0+gqdqL6gcwfhOd
+	 QusBvMsaizbnCsW3MXqAp9e1jQifQ/StlTeUtXuc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389027AbgAXKDZ (ORCPT
+        id S2389032AbgAXKD1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 05:03:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39000 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 05:03:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39166 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388702AbgAXKDS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 05:03:18 -0500
+        id S2388265AbgAXKDZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 05:03:25 -0500
 Received: from localhost (unknown [145.15.244.15])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AB19D214DB;
-        Fri, 24 Jan 2020 10:03:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 15E11214DB;
+        Fri, 24 Jan 2020 10:03:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579860197;
-        bh=axqToh/DbSW01UKLnZ53M7BWxxBuK0lbFgSzF4K2ono=;
+        s=default; t=1579860204;
+        bh=2gLoL4rxof/UHV1wgyhkh9ljj0IUj1fXQyfEo7OIhRc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JGwgN2QrxmKxSG2O4KTSCxw4bWuppkIdTpiCn3tk4F0r5piKorOEi4uJ0cq5wppNO
-         7KnuM5PGPNI1eyyNjXW3qElrU9kRWmLqeJX6AcHn2WssO9d5HEytJr0BTKC2DRSetb
-         okECSo76qPjpdA9RMEhWRRLEtiSc3KNttpAxEkvI=
+        b=F2ynNE2Kt6cmRHrX+zwiX3PiCYjs6CU1aQWKdD5kd9DeHENKNGn+PT1ibNj5cqPQr
+         5cArITaBUeEcbrR06fKXWaeUJyHoH5mVt6JjCfJjTVHy+NCs+/+QdwPkSQqD5hxHBX
+         ctS9O/ndTPdcOk6HOeh+PX7LpnwB2oh7KlK34ppA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tung Nguyen <tung.q.nguyen@dektech.com.au>,
-        Ying Xue <ying.xue@windriver.com>,
-        Jon Maloy <jon.maloy@ericsson.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Mark Zhang <markz@mellanox.com>,
+        Yishai Hadas <yishaih@mellanox.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 264/343] tipc: reduce risk of wakeup queue starvation
-Date:   Fri, 24 Jan 2020 10:31:22 +0100
-Message-Id: <20200124092954.733946292@linuxfoundation.org>
+Subject: [PATCH 4.14 266/343] net/mlx5: Fix mlx5_ifc_query_lag_out_bits
+Date:   Fri, 24 Jan 2020 10:31:24 +0100
+Message-Id: <20200124092954.972723244@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124092919.490687572@linuxfoundation.org>
 References: <20200124092919.490687572@linuxfoundation.org>
@@ -62,84 +61,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jon Maloy <jon.maloy@ericsson.com>
+From: Mark Zhang <markz@mellanox.com>
 
-[ Upstream commit 7c5b42055964f587e55bd87ef334c3a27e95d144 ]
+[ Upstream commit ea77388b02270b0af8dc57f668f311235ea068f0 ]
 
-In commit 365ad353c256 ("tipc: reduce risk of user starvation during
-link congestion") we allowed senders to add exactly one list of extra
-buffers to the link backlog queues during link congestion (aka
-"oversubscription"). However, the criteria for when to stop adding
-wakeup messages to the input queue when the overload abates is
-inaccurate, and may cause starvation problems during very high load.
+Remove the "reserved_at_40" field to match the device specification.
 
-Currently, we stop adding wakeup messages after 10 total failed attempts
-where we find that there is no space left in the backlog queue for a
-certain importance level. The counter for this is accumulated across all
-levels, which may lead the algorithm to leave the loop prematurely,
-although there may still be plenty of space available at some levels.
-The result is sometimes that messages near the wakeup queue tail are not
-added to the input queue as they should be.
-
-We now introduce a more exact algorithm, where we keep adding wakeup
-messages to a level as long as the backlog queue has free slots for
-the corresponding level, and stop at the moment there are no more such
-slots or when there are no more wakeup messages to dequeue.
-
-Fixes: 365ad35 ("tipc: reduce risk of user starvation during link congestion")
-Reported-by: Tung Nguyen <tung.q.nguyen@dektech.com.au>
-Acked-by: Ying Xue <ying.xue@windriver.com>
-Signed-off-by: Jon Maloy <jon.maloy@ericsson.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 84df61ebc69b ("net/mlx5: Add HW interfaces used by LAG")
+Signed-off-by: Mark Zhang <markz@mellanox.com>
+Reviewed-by: Yishai Hadas <yishaih@mellanox.com>
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/tipc/link.c | 29 +++++++++++++++++++++--------
- 1 file changed, 21 insertions(+), 8 deletions(-)
+ include/linux/mlx5/mlx5_ifc.h | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/net/tipc/link.c b/net/tipc/link.c
-index da749916faac4..82e4e0e152d16 100644
---- a/net/tipc/link.c
-+++ b/net/tipc/link.c
-@@ -811,18 +811,31 @@ static int link_schedule_user(struct tipc_link *l, struct tipc_msg *hdr)
-  */
- void link_prepare_wakeup(struct tipc_link *l)
- {
-+	struct sk_buff_head *wakeupq = &l->wakeupq;
-+	struct sk_buff_head *inputq = l->inputq;
- 	struct sk_buff *skb, *tmp;
--	int imp, i = 0;
-+	struct sk_buff_head tmpq;
-+	int avail[5] = {0,};
-+	int imp = 0;
-+
-+	__skb_queue_head_init(&tmpq);
+diff --git a/include/linux/mlx5/mlx5_ifc.h b/include/linux/mlx5/mlx5_ifc.h
+index 1d793d86d55fa..6ffa181598e61 100644
+--- a/include/linux/mlx5/mlx5_ifc.h
++++ b/include/linux/mlx5/mlx5_ifc.h
+@@ -8671,8 +8671,6 @@ struct mlx5_ifc_query_lag_out_bits {
  
--	skb_queue_walk_safe(&l->wakeupq, skb, tmp) {
-+	for (; imp <= TIPC_SYSTEM_IMPORTANCE; imp++)
-+		avail[imp] = l->backlog[imp].limit - l->backlog[imp].len;
-+
-+	skb_queue_walk_safe(wakeupq, skb, tmp) {
- 		imp = TIPC_SKB_CB(skb)->chain_imp;
--		if (l->backlog[imp].len < l->backlog[imp].limit) {
--			skb_unlink(skb, &l->wakeupq);
--			skb_queue_tail(l->inputq, skb);
--		} else if (i++ > 10) {
--			break;
--		}
-+		if (avail[imp] <= 0)
-+			continue;
-+		avail[imp]--;
-+		__skb_unlink(skb, wakeupq);
-+		__skb_queue_tail(&tmpq, skb);
- 	}
-+
-+	spin_lock_bh(&inputq->lock);
-+	skb_queue_splice_tail(&tmpq, inputq);
-+	spin_unlock_bh(&inputq->lock);
-+
- }
+ 	u8         syndrome[0x20];
  
- void tipc_link_reset(struct tipc_link *l)
+-	u8         reserved_at_40[0x40];
+-
+ 	struct mlx5_ifc_lagc_bits ctx;
+ };
+ 
 -- 
 2.20.1
 
