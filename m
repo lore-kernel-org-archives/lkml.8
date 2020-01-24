@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1CCFC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:36:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DA29C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:36:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8719206F0
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:36:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4791B206F0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:36:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579876582;
-	bh=h0JhtyW6D8uUqk3WShVgnkV5IWhdc1Jwop7akn+Ke+Q=;
+	s=default; t=1579876596;
+	bh=Pn9ScWTH0zprbEN/kgqNSjE7Dcize02YCTsDYoWUOAo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=p6iKW3XxsnYiYL/UUXFzrxAgrO9t7gwPU1hY2WEE+1IGRshcBJKAnzyp6PH3FrDDg
-	 87VXTGEn6yUKWkmsMoAxBdVxFe7qdWQRVzaq0TJBZSYnu4DMp6Bwjq+FWVvTy4AD+W
-	 P9yotrGETUBpfdX3YAhQqHWn8dBQnXhFC9oSc+/M=
+	b=scTcwtiyDg/l8tSzsDGmG8ZXf/ik8+QsTYHlSblmDuRETVku3pE2aVmp+MUCEEau9
+	 qw41HglsdBT5ncWjhmSGmz1bzPQFekSjl4Xs1/XproUXFWcWAWIgikbSMn10GpxmJc
+	 JmHTH5jZuvmEY7u2k+5fxuIdLjSLVYbGFgPhuoD4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388606AbgAXOgV (ORCPT
+        id S2391339AbgAXOTL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 09:36:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39404 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 09:19:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39138 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391410AbgAXOTO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 09:19:14 -0500
+        id S2391270AbgAXOTE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 09:19:04 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1952321569;
-        Fri, 24 Jan 2020 14:19:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7AC592087E;
+        Fri, 24 Jan 2020 14:19:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579875553;
-        bh=h0JhtyW6D8uUqk3WShVgnkV5IWhdc1Jwop7akn+Ke+Q=;
+        s=default; t=1579875543;
+        bh=Pn9ScWTH0zprbEN/kgqNSjE7Dcize02YCTsDYoWUOAo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pKJfPs8HCenHVO3KuzGbwN71Ub89siElLE9Z+8ozJoq/Rc1Fbqn90txbMUQ1VLsBz
-         g3qg5e76qK5FEEfihjfRcYkpiqjlqQXSARhP2IBCI07z1og6u42s5Y/9Gj1/QkVikd
-         tFbIx1HpBch6bIM2xyQTcU3BwCgz4neHes6ilhUc=
+        b=fYWmynhAWAsKANyoqJr+RSAuqK92xAMQI/7vJOcxhBdyk5PlFYbr4r8UWID4Wwt+4
+         wMg/QYb6fSbTJqebYcqctS+guLDnASPQbEdhbHfuiVgTOVkT5sobCP1GzRxxUry+GX
+         vUGPTcqr/vhyp5uRIco2Dh3izVBuTDhyTScQ/0Rk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jose Abreu <Jose.Abreu@synopsys.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 048/107] net: stmmac: selftests: Update status when disabling RSS
-Date:   Fri, 24 Jan 2020 09:17:18 -0500
-Message-Id: <20200124141817.28793-48-sashal@kernel.org>
+Cc:     Radoslaw Tyl <radoslawx.tyl@intel.com>,
+        Paul Menzel <pmenzel@molgen.mpg.de>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 039/107] ixgbevf: Remove limit of 10 entries for unicast filter list
+Date:   Fri, 24 Jan 2020 09:17:09 -0500
+Message-Id: <20200124141817.28793-39-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200124141817.28793-1-sashal@kernel.org>
 References: <20200124141817.28793-1-sashal@kernel.org>
@@ -59,90 +61,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jose Abreu <Jose.Abreu@synopsys.com>
+From: Radoslaw Tyl <radoslawx.tyl@intel.com>
 
-[ Upstream commit e715d74504352968cf24ac95476706bc911a69cd ]
+[ Upstream commit aa604651d523b1493988d0bf6710339f3ee60272 ]
 
-We are disabling RSS on HW but not updating the internal private status
-to the 'disabled' state. This is needed for next tc commit that will
-check if RSS is disabled before trying to apply filters.
+Currently, though the FDB entry is added to VF, it does not appear in
+RAR filters. VF driver only allows to add 10 entries. Attempting to add
+another causes an error. This patch removes limitation and allows use of
+all free RAR entries for the FDB if needed.
 
-Fixes: 4647e021193d ("net: stmmac: selftests: Add selftest for L3/L4 Filters")
-Signed-off-by: Jose Abreu <Jose.Abreu@synopsys.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 46ec20ff7d ("ixgbevf: Add macvlan support in the set rx mode op")
+Signed-off-by: Radoslaw Tyl <radoslawx.tyl@intel.com>
+Acked-by: Paul Menzel <pmenzel@molgen.mpg.de>
+Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../stmicro/stmmac/stmmac_selftests.c         | 20 +++++++++++++------
- 1 file changed, 14 insertions(+), 6 deletions(-)
+ drivers/net/ethernet/intel/ixgbevf/ixgbevf_main.c | 5 -----
+ 1 file changed, 5 deletions(-)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c
-index a0513deab1a04..3679d123a2ab7 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c
-@@ -1291,16 +1291,19 @@ static int __stmmac_test_l3filt(struct stmmac_priv *priv, u32 dst, u32 src,
- 	struct stmmac_packet_attrs attr = { };
- 	struct flow_dissector *dissector;
- 	struct flow_cls_offload *cls;
-+	int ret, old_enable = 0;
- 	struct flow_rule *rule;
--	int ret;
+diff --git a/drivers/net/ethernet/intel/ixgbevf/ixgbevf_main.c b/drivers/net/ethernet/intel/ixgbevf/ixgbevf_main.c
+index 076f2da36f278..64ec0e7c64b49 100644
+--- a/drivers/net/ethernet/intel/ixgbevf/ixgbevf_main.c
++++ b/drivers/net/ethernet/intel/ixgbevf/ixgbevf_main.c
+@@ -2081,11 +2081,6 @@ static int ixgbevf_write_uc_addr_list(struct net_device *netdev)
+ 	struct ixgbe_hw *hw = &adapter->hw;
+ 	int count = 0;
  
- 	if (!tc_can_offload(priv->dev))
- 		return -EOPNOTSUPP;
- 	if (!priv->dma_cap.l3l4fnum)
- 		return -EOPNOTSUPP;
--	if (priv->rss.enable)
-+	if (priv->rss.enable) {
-+		old_enable = priv->rss.enable;
-+		priv->rss.enable = false;
- 		stmmac_rss_configure(priv, priv->hw, NULL,
- 				     priv->plat->rx_queues_to_use);
-+	}
+-	if ((netdev_uc_count(netdev)) > 10) {
+-		pr_err("Too many unicast filters - No Space\n");
+-		return -ENOSPC;
+-	}
+-
+ 	if (!netdev_uc_empty(netdev)) {
+ 		struct netdev_hw_addr *ha;
  
- 	dissector = kzalloc(sizeof(*dissector), GFP_KERNEL);
- 	if (!dissector) {
-@@ -1367,7 +1370,8 @@ cleanup_cls:
- cleanup_dissector:
- 	kfree(dissector);
- cleanup_rss:
--	if (priv->rss.enable) {
-+	if (old_enable) {
-+		priv->rss.enable = old_enable;
- 		stmmac_rss_configure(priv, priv->hw, &priv->rss,
- 				     priv->plat->rx_queues_to_use);
- 	}
-@@ -1412,16 +1416,19 @@ static int __stmmac_test_l4filt(struct stmmac_priv *priv, u32 dst, u32 src,
- 	struct stmmac_packet_attrs attr = { };
- 	struct flow_dissector *dissector;
- 	struct flow_cls_offload *cls;
-+	int ret, old_enable = 0;
- 	struct flow_rule *rule;
--	int ret;
- 
- 	if (!tc_can_offload(priv->dev))
- 		return -EOPNOTSUPP;
- 	if (!priv->dma_cap.l3l4fnum)
- 		return -EOPNOTSUPP;
--	if (priv->rss.enable)
-+	if (priv->rss.enable) {
-+		old_enable = priv->rss.enable;
-+		priv->rss.enable = false;
- 		stmmac_rss_configure(priv, priv->hw, NULL,
- 				     priv->plat->rx_queues_to_use);
-+	}
- 
- 	dissector = kzalloc(sizeof(*dissector), GFP_KERNEL);
- 	if (!dissector) {
-@@ -1493,7 +1500,8 @@ cleanup_cls:
- cleanup_dissector:
- 	kfree(dissector);
- cleanup_rss:
--	if (priv->rss.enable) {
-+	if (old_enable) {
-+		priv->rss.enable = old_enable;
- 		stmmac_rss_configure(priv, priv->hw, &priv->rss,
- 				     priv->plat->rx_queues_to_use);
- 	}
 -- 
 2.20.1
 
