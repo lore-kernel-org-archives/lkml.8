@@ -7,40 +7,41 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43F5BC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 19:11:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3635DC35242
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 19:11:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04BE821734
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 19:11:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 080B020880
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 19:11:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404045AbgAXTLV (ORCPT
+        id S2404059AbgAXTLX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 14:11:21 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:43022 "EHLO
+        Fri, 24 Jan 2020 14:11:23 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:43030 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2403967AbgAXTLR (ORCPT
+        with ESMTP id S2403988AbgAXTLS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 14:11:17 -0500
+        Fri, 24 Jan 2020 14:11:18 -0500
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1iv4ML-0007d0-UM; Fri, 24 Jan 2020 20:11:14 +0100
+        id 1iv4MN-0007dd-9z; Fri, 24 Jan 2020 20:11:15 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 6B7F41C1A66;
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id E1DAC1C1A5F;
         Fri, 24 Jan 2020 20:11:10 +0100 (CET)
 Date:   Fri, 24 Jan 2020 19:11:10 -0000
-From:   "tip-bot2 for Kevin Hao" <tip-bot2@linutronix.de>
+From:   "tip-bot2 for Joakim Zhang" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: irq/core] irqdomain: Fix a memory leak in irq_domain_push_irq()
-Cc:     Kevin Hao <haokexin@gmail.com>, Marc Zyngier <maz@kernel.org>,
-        stable@vger.kernel.org, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200120043547.22271-1-haokexin@gmail.com>
-References: <20200120043547.22271-1-haokexin@gmail.com>
+Subject: [tip: irq/core] dt-bindings: interrupt-controller: Add binding for
+ NXP INTMUX interrupt multiplexer
+Cc:     Joakim Zhang <qiangqing.zhang@nxp.com>,
+        Marc Zyngier <maz@kernel.org>, Rob Herring <robh@kernel.org>,
+        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200117060653.27485-2-qiangqing.zhang@nxp.com>
+References: <20200117060653.27485-2-qiangqing.zhang@nxp.com>
 MIME-Version: 1.0
-Message-ID: <157989307023.396.17538071242529894019.tip-bot2@tip-bot2>
+Message-ID: <157989307074.396.8522984149728788486.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -56,57 +57,98 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the irq/core branch of tip:
 
-Commit-ID:     0f394daef89b38d58c91118a2b08b8a1b316703b
-Gitweb:        https://git.kernel.org/tip/0f394daef89b38d58c91118a2b08b8a1b316703b
-Author:        Kevin Hao <haokexin@gmail.com>
-AuthorDate:    Mon, 20 Jan 2020 12:35:47 +08:00
+Commit-ID:     618ea6275b9806909ef384c6d57f40641d7985d2
+Gitweb:        https://git.kernel.org/tip/618ea6275b9806909ef384c6d57f40641d7985d2
+Author:        Joakim Zhang <qiangqing.zhang@nxp.com>
+AuthorDate:    Fri, 17 Jan 2020 06:10:05 
 Committer:     Marc Zyngier <maz@kernel.org>
 CommitterDate: Mon, 20 Jan 2020 19:10:05 
 
-irqdomain: Fix a memory leak in irq_domain_push_irq()
+dt-bindings: interrupt-controller: Add binding for NXP INTMUX interrupt multiplexer
 
-Fix a memory leak reported by kmemleak:
-unreferenced object 0xffff000bc6f50e80 (size 128):
-  comm "kworker/23:2", pid 201, jiffies 4294894947 (age 942.132s)
-  hex dump (first 32 bytes):
-    00 00 00 00 41 00 00 00 86 c0 03 00 00 00 00 00  ....A...........
-    00 a0 b2 c6 0b 00 ff ff 40 51 fd 10 00 80 ff ff  ........@Q......
-  backtrace:
-    [<00000000e62d2240>] kmem_cache_alloc_trace+0x1a4/0x320
-    [<00000000279143c9>] irq_domain_push_irq+0x7c/0x188
-    [<00000000d9f4c154>] thunderx_gpio_probe+0x3ac/0x438
-    [<00000000fd09ec22>] pci_device_probe+0xe4/0x198
-    [<00000000d43eca75>] really_probe+0xdc/0x320
-    [<00000000d3ebab09>] driver_probe_device+0x5c/0xf0
-    [<000000005b3ecaa0>] __device_attach_driver+0x88/0xc0
-    [<000000004e5915f5>] bus_for_each_drv+0x7c/0xc8
-    [<0000000079d4db41>] __device_attach+0xe4/0x140
-    [<00000000883bbda9>] device_initial_probe+0x18/0x20
-    [<000000003be59ef6>] bus_probe_device+0x98/0xa0
-    [<0000000039b03d3f>] deferred_probe_work_func+0x74/0xa8
-    [<00000000870934ce>] process_one_work+0x1c8/0x470
-    [<00000000e3cce570>] worker_thread+0x1f8/0x428
-    [<000000005d64975e>] kthread+0xfc/0x128
-    [<00000000f0eaa764>] ret_from_fork+0x10/0x18
+This patch adds the DT bindings for the NXP INTMUX interrupt multiplexer
+for i.MX8 family SoCs.
 
-Fixes: 495c38d3001f ("irqdomain: Add irq_domain_{push,pop}_irq() functions")
-Signed-off-by: Kevin Hao <haokexin@gmail.com>
+Signed-off-by: Joakim Zhang <qiangqing.zhang@nxp.com>
 Signed-off-by: Marc Zyngier <maz@kernel.org>
-Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/20200120043547.22271-1-haokexin@gmail.com
+Reviewed-by: Rob Herring <robh@kernel.org>
+Link: https://lore.kernel.org/r/20200117060653.27485-2-qiangqing.zhang@nxp.com
 ---
- kernel/irq/irqdomain.c | 1 +
- 1 file changed, 1 insertion(+)
+ Documentation/devicetree/bindings/interrupt-controller/fsl,intmux.yaml | 68 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 68 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/fsl,intmux.yaml
 
-diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
-index 7a8808c..7527e5e 100644
---- a/kernel/irq/irqdomain.c
-+++ b/kernel/irq/irqdomain.c
-@@ -1476,6 +1476,7 @@ int irq_domain_push_irq(struct irq_domain *domain, int virq, void *arg)
- 	if (rv) {
- 		/* Restore the original irq_data. */
- 		*root_irq_data = *child_irq_data;
-+		kfree(child_irq_data);
- 		goto error;
- 	}
- 
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/fsl,intmux.yaml b/Documentation/devicetree/bindings/interrupt-controller/fsl,intmux.yaml
+new file mode 100644
+index 0000000..43c6eff
+--- /dev/null
++++ b/Documentation/devicetree/bindings/interrupt-controller/fsl,intmux.yaml
+@@ -0,0 +1,68 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/interrupt-controller/fsl,intmux.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Freescale INTMUX interrupt multiplexer
++
++maintainers:
++  - Joakim Zhang <qiangqing.zhang@nxp.com>
++
++properties:
++  compatible:
++    const: fsl,imx-intmux
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    minItems: 1
++    maxItems: 8
++    description: |
++      Should contain the parent interrupt lines (up to 8) used to multiplex
++      the input interrupts.
++
++  interrupt-controller: true
++
++  '#interrupt-cells':
++    const: 2
++    description: |
++      The 1st cell is hw interrupt number, the 2nd cell is channel index.
++
++  clocks:
++    description: ipg clock.
++
++  clock-names:
++    const: ipg
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - interrupt-controller
++  - '#interrupt-cells'
++  - clocks
++  - clock-names
++
++additionalProperties: false
++
++examples:
++  - |
++    interrupt-controller@37400000 {
++        compatible = "fsl,imx-intmux";
++        reg = <0x37400000 0x1000>;
++        interrupts = <0 16 4>,
++                     <0 17 4>,
++                     <0 18 4>,
++                     <0 19 4>,
++                     <0 20 4>,
++                     <0 21 4>,
++                     <0 22 4>,
++                     <0 23 4>;
++        interrupt-controller;
++        interrupt-parent = <&gic>;
++        #interrupt-cells = <2>;
++        clocks = <&clk>;
++        clock-names = "ipg";
++    };
