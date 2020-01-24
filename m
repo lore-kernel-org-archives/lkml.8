@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E82DBC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:29:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E727EC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:29:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1AF120704
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:29:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE1BB20704
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:29:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579865383;
-	bh=n7Dxbm6t548y2aRIJm/87HDLAthkUP1D6Haxu98aAJQ=;
+	s=default; t=1579865390;
+	bh=TSq3zEB7WHFu7lvifN1fBCHZjm7ttEDT0Y57Sg8gLvg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ev6kK4ubH97NwI1o08it4XhcLMBeAZ2AXnag2yoBj5DkiZcFJ8+D0R3OnRUrwqFVc
-	 M3M0SIYXshWap3tmt9K/RLQRvs351gV/bOheTe4H068WXblgBFx/zi8x3JCUI9CQNR
-	 fejF4fOsBHA+oe96Tiybb3eD7aRjHsZGWiCx7yLI=
+	b=nknf7eL+gcqETsHieyaeB7vhaljfFVRlonqo/qf0K2blbDL3iGlXqK5Z7zTYlt3XA
+	 h2t2TUhNrKC7IElRHpOT13JqHe8wgbi1bjSTXQVccA06hwLlJQMvLzni6d8EZsAaNG
+	 8bdsxv/6fNK3M9Mpz/56i+nFjUnmfqRkmaKyxAyE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404038AbgAXL3n (ORCPT
+        id S2404102AbgAXL3t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:29:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46696 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 06:29:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46812 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391822AbgAXL3k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:29:40 -0500
+        id S2404066AbgAXL3p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:29:45 -0500
 Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6724220704;
-        Fri, 24 Jan 2020 11:29:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 32D15206D4;
+        Fri, 24 Jan 2020 11:29:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579865380;
-        bh=n7Dxbm6t548y2aRIJm/87HDLAthkUP1D6Haxu98aAJQ=;
+        s=default; t=1579865383;
+        bh=TSq3zEB7WHFu7lvifN1fBCHZjm7ttEDT0Y57Sg8gLvg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qGuPcHig/tDaBUQHABZHAqmxmKeRJOnfC+dNTLyBePaSbqcmUHnw3fkxMevMsew4V
-         2g9vLpD0zQEmv1ZVfSqznAN4GTAmeaYBXQdjzG84ZU7fvlq4ypTP3sW+cWQlIalj5U
-         vyz7gVu53l5gWSnwIyq4cgTM0SjUG3dGjhgpbNlQ=
+        b=KcThQKsNOgQUu+3i4k3Sqx5Nfl3TK/OXENvLyrTn3q3Q3z1AT6Oj5JIcPgIXvB0Kd
+         vhVkBhCGWWUmSoZaAbIZNWInaFuM3bXhOmTV/maHEZ8JDDSNa8ugUe2p6es1ztl/sm
+         IXidAzYbFOxLUlSOaLImsURSfRQhlMSws4jb9Dok=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Gerd Rausch <gerd.rausch@oracle.com>,
-        Santosh Shilimkar <santosh.shilimkar@oracle.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org,
+        Markus Elfring <elfring@users.sourceforge.net>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 507/639] net/rds: Add a few missing rds_stat_names entries
-Date:   Fri, 24 Jan 2020 10:31:17 +0100
-Message-Id: <20200124093152.308003569@linuxfoundation.org>
+Subject: [PATCH 4.19 523/639] media: em28xx: Fix exception handling in em28xx_alloc_urbs()
+Date:   Fri, 24 Jan 2020 10:31:33 +0100
+Message-Id: <20200124093154.303190735@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
 References: <20200124093047.008739095@linuxfoundation.org>
@@ -61,42 +62,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gerd Rausch <gerd.rausch@oracle.com>
+From: Markus Elfring <elfring@users.sourceforge.net>
 
-[ Upstream commit 55c70ca00c982fbc0df4c4d3e31747fb73f4ddb5 ]
+[ Upstream commit ecbce48f1ff2442371ebcd12ec0ecddb431fbd72 ]
 
-In a previous commit, fields were added to "struct rds_statistics"
-but array "rds_stat_names" was not updated accordingly.
+A null pointer would be passed to a call of the function "kfree" directly
+after a call of the function "kcalloc" failed at one place.
+Pass the data structure member "urb" instead for which memory
+was allocated before (so that this resource will be properly cleaned up).
 
-Please note the inconsistent naming of the string representations
-that is done in the name of compatibility
-with the Oracle internal code-base.
+This issue was detected by using the Coccinelle software.
 
-s_recv_bytes_added_to_socket     -> "recv_bytes_added_to_sock"
-s_recv_bytes_removed_from_socket -> "recv_bytes_freed_fromsock"
-
-Fixes: 192a798f5299 ("RDS: add stat for socket recv memory usage")
-Signed-off-by: Gerd Rausch <gerd.rausch@oracle.com>
-Acked-by: Santosh Shilimkar <santosh.shilimkar@oracle.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: d571b592c6206d33731f41aa710fa0f69ac8611b ("media: em28xx: don't use coherent buffer for DMA transfers")
+Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/rds/stats.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/media/usb/em28xx/em28xx-core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/rds/stats.c b/net/rds/stats.c
-index 73be187d389ed..6bbab4d74c4fe 100644
---- a/net/rds/stats.c
-+++ b/net/rds/stats.c
-@@ -76,6 +76,8 @@ static const char *const rds_stat_names[] = {
- 	"cong_update_received",
- 	"cong_send_error",
- 	"cong_send_blocked",
-+	"recv_bytes_added_to_sock",
-+	"recv_bytes_freed_fromsock",
- };
+diff --git a/drivers/media/usb/em28xx/em28xx-core.c b/drivers/media/usb/em28xx/em28xx-core.c
+index 5657f8710ca6b..69445c8e38e28 100644
+--- a/drivers/media/usb/em28xx/em28xx-core.c
++++ b/drivers/media/usb/em28xx/em28xx-core.c
+@@ -930,7 +930,7 @@ int em28xx_alloc_urbs(struct em28xx *dev, enum em28xx_mode mode, int xfer_bulk,
  
- void rds_stats_info_copy(struct rds_info_iterator *iter,
+ 	usb_bufs->buf = kcalloc(num_bufs, sizeof(void *), GFP_KERNEL);
+ 	if (!usb_bufs->buf) {
+-		kfree(usb_bufs->buf);
++		kfree(usb_bufs->urb);
+ 		return -ENOMEM;
+ 	}
+ 
 -- 
 2.20.1
 
