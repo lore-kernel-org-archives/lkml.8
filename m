@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13551C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:00:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AF73C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:00:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5EEF2075D
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:00:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B30020838
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:00:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579863625;
-	bh=UWl/S2js9Wg1+AuLTYSHxvlC9MVnFZjfyWK5de/QnHg=;
+	s=default; t=1579863629;
+	bh=SxPgSaC3Z9OSyuIBN90jXVJ5S8zcRTzhZAnQKqLR6pM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FwChwo/9II6HMND0tRf7C3bnn6O9qxXEIvFdDkew3QgqNczXNQ+xAOWarDk4g8NCa
-	 me0OP5PxQdNTW9Hio+k8IrN4ciJqOyI0Gc+24z7ktqj+It5TyUvmW6GcOJ3uLDmJal
-	 68IvcBC7xSoxI1ewgq9e9dpuOMDf62fwpgRzIdWs=
+	b=xQqMCgHt501qFpboWAwRJGkVJy7dIzTeJ0v6I5YQuzZqq+dcDSg6HpRiqPjmJUPwz
+	 8EpvWUWjcccwsXDYI52m4Ko1FBShMTxHGoR5uXO+kF7vArVk11/Z97Ssu3MpD/0zIn
+	 B2Jp0s/t/N5Q3NQnNSH+aBojGhhoXZjCMU4vQFdw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733186AbgAXLAZ (ORCPT
+        id S1733206AbgAXLA2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:00:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59610 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 06:00:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59796 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732904AbgAXLAW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:00:22 -0500
+        id S1733185AbgAXLAZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:00:25 -0500
 Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5BFDC20838;
-        Fri, 24 Jan 2020 11:00:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 52C692071A;
+        Fri, 24 Jan 2020 11:00:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579863621;
-        bh=UWl/S2js9Wg1+AuLTYSHxvlC9MVnFZjfyWK5de/QnHg=;
+        s=default; t=1579863625;
+        bh=SxPgSaC3Z9OSyuIBN90jXVJ5S8zcRTzhZAnQKqLR6pM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YP65Cj592Fvwzu4VI6bHvfTKljC6Q2OvJYb2K7T4dGj+OinOSLP6wHnUWTriYCGGd
-         B2rNA0ksOriNAEuf2II3HSGGWGwMHFomn/pj6Wce1z21PufbOfx0WCkcyYNKk1XuB8
-         TuXPGMKfoTJSO6qzRCyOfv/u85ECcHHxJAJjlUTY=
+        b=PEokW19ESH8H0MND86uYmzSFmfGgh0C6x2tnFWuUMbm45vxyzdNY9rSzYgLoP2msM
+         /NKhVbHOFTuMiF2BEEfd1QIzoD+wxPl4fYITnz07r3yyZcNh6ZditFHTBz5plHX3VT
+         QO1vImz/6jgyJzu9z16Y5xclEPKU1IcT1dUjkxWA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Peter Rosin <peda@axentia.se>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Houlong Wei <houlong.wei@mediatek.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Jassi Brar <jaswinder.singh@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 019/639] ARM: dts: at91: nattis: set the PRLUD and HIPOW signals low
-Date:   Fri, 24 Jan 2020 10:23:09 +0100
-Message-Id: <20200124093049.605522294@linuxfoundation.org>
+Subject: [PATCH 4.19 035/639] mailbox: mediatek: Add check for possible failure of kzalloc
+Date:   Fri, 24 Jan 2020 10:23:25 +0100
+Message-Id: <20200124093051.838285303@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
 References: <20200124093047.008739095@linuxfoundation.org>
@@ -60,44 +62,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Rosin <peda@axentia.se>
+From: Houlong Wei <houlong.wei@mediatek.com>
 
-[ Upstream commit 29feb2c960ab32fc24249443d4434194ce96f083 ]
+[ Upstream commit 9f0a0a381c5db56e7922dbeea6831f27db58372f ]
 
-AT91_PINCTRL_OUTPUT_VAL(0) without AT91_PINCTRL_OUTPUT is a no-op, so
-make sure the pins really output a zero.
+The patch 623a6143a845("mailbox: mediatek: Add Mediatek CMDQ driver")
+introduce the following static checker warning:
+  drivers/mailbox/mtk-cmdq-mailbox.c:366 cmdq_mbox_send_data()
+  error: potential null dereference 'task'.  (kzalloc returns null)
 
-Fixes: 0e4323899973 ("ARM: dts: at91: add devicetree for the Axentia Nattis with Natte power")
-Signed-off-by: Peter Rosin <peda@axentia.se>
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Fixes: 623a6143a845 ("mailbox: mediatek: Add Mediatek CMDQ driver")
+Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Houlong Wei <houlong.wei@mediatek.com>
+Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
+Signed-off-by: Jassi Brar <jaswinder.singh@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/at91-nattis-2-natte-2.dts | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/mailbox/mtk-cmdq-mailbox.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/arch/arm/boot/dts/at91-nattis-2-natte-2.dts b/arch/arm/boot/dts/at91-nattis-2-natte-2.dts
-index af9f38456d04e..bfa5815a07214 100644
---- a/arch/arm/boot/dts/at91-nattis-2-natte-2.dts
-+++ b/arch/arm/boot/dts/at91-nattis-2-natte-2.dts
-@@ -38,14 +38,16 @@
- 						atmel,pins =
- 							<AT91_PIOA 21
- 							 AT91_PERIPH_GPIO
--							 AT91_PINCTRL_OUTPUT_VAL(0)>;
-+							 (AT91_PINCTRL_OUTPUT |
-+							  AT91_PINCTRL_OUTPUT_VAL(0))>;
- 					};
+diff --git a/drivers/mailbox/mtk-cmdq-mailbox.c b/drivers/mailbox/mtk-cmdq-mailbox.c
+index aec46d5d35061..f7cc29c00302a 100644
+--- a/drivers/mailbox/mtk-cmdq-mailbox.c
++++ b/drivers/mailbox/mtk-cmdq-mailbox.c
+@@ -363,6 +363,9 @@ static int cmdq_mbox_send_data(struct mbox_chan *chan, void *data)
+ 	WARN_ON(cmdq->suspended);
  
- 					pinctrl_lcd_hipow0: lcd_hipow0 {
- 						atmel,pins =
- 							<AT91_PIOA 23
- 							 AT91_PERIPH_GPIO
--							 AT91_PINCTRL_OUTPUT_VAL(0)>;
-+							 (AT91_PINCTRL_OUTPUT |
-+							  AT91_PINCTRL_OUTPUT_VAL(0))>;
- 					};
- 				};
- 			};
+ 	task = kzalloc(sizeof(*task), GFP_ATOMIC);
++	if (!task)
++		return -ENOMEM;
++
+ 	task->cmdq = cmdq;
+ 	INIT_LIST_HEAD(&task->list_entry);
+ 	task->pa_base = pkt->pa_base;
 -- 
 2.20.1
 
