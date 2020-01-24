@@ -2,154 +2,129 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F4C0C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:10:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C08AC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:10:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7557520663
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:10:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579864207;
-	bh=AJcb+fpv4vT7OwUY85kfR67AG/2ZUu9M8DTVDDCTCds=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yOzcL/DScTfpYyOibBnxGKguSNpecJvffqN3G65m1ZWj4Py2x1UI1llTqSuSoX9gt
-	 H5QRnt7jD4AkQMv9kMHsTG41ElqRHD/TY5JyR4GfX8uCnT675YcGFa5ubQxuMbaqDq
-	 VPmk7x1XEjnouLFAF8bgO4qN4F8cTkzdLaXTLRdo=
+	by mail.kernel.org (Postfix) with ESMTP id 5FFC12075D
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:10:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TOVb3qFW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389819AbgAXLKG (ORCPT
+        id S2387592AbgAXLKM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Fri, 24 Jan 2020 06:10:12 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:22166 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1731494AbgAXLKG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 24 Jan 2020 06:10:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45740 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731494AbgAXLKC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:10:02 -0500
-Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579864205;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc; bh=K3NBi6Sf5iK2lQ6XY2SqwGkLxd++w8nf2TJFIHAXCmc=;
+        b=TOVb3qFW03Z/V2wVqevx61AOe5//RWwCoENSHfssSXHyiO4mKyddb0K/94y+ivi+ytporM
+        9t7cmQlj8XxwIIy9s3EBT8okn5P+DPIkfLpe7y10XQujJB5CMPMwvVIW3BXQ9CA2XVwKaY
+        iWkK0GYxP9HLqPdGQABgYkW2cVtN7KE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-343-THEMo_z8NGO3QyxfJlrVUQ-1; Fri, 24 Jan 2020 06:10:02 -0500
+X-MC-Unique: THEMo_z8NGO3QyxfJlrVUQ-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0E78220663;
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id F32658017CC;
         Fri, 24 Jan 2020 11:10:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579864201;
-        bh=AJcb+fpv4vT7OwUY85kfR67AG/2ZUu9M8DTVDDCTCds=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dfgKBe15mw67Ecmbrv24dHR0WEm+Ogm/gCd7O2aTW8sjj2gJIK9zcFXCVFdV66v/+
-         3zjTUZDNQOPneCKvZHmJinTalxF6E9Mc6Yj8nIYgCnBLY46rw+ZnvUn1y+ZWIoA2GS
-         Sjg1piRtrlTJbKaXLxCt+rlLy2HwsrAPIUpU+ZuQ=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 200/639] net: dsa: b53: Fix default VLAN ID
-Date:   Fri, 24 Jan 2020 10:26:10 +0100
-Message-Id: <20200124093112.105839069@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
-References: <20200124093047.008739095@linuxfoundation.org>
-User-Agent: quilt/0.66
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Received: from intel-purley-fpgabmp-02.ml3.eng.bos.redhat.com (intel-purley-fpgabmp-02.ml3.eng.bos.redhat.com [10.19.176.206])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 352A219C69;
+        Fri, 24 Jan 2020 11:10:00 +0000 (UTC)
+From:   Scott Wood <swood@redhat.com>
+To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc:     linux-rt-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Scott Wood <swood@redhat.com>
+Subject: [PATCH 1/2] sched: migrate_enable: Use per-cpu cpu_stop_work
+Date:   Fri, 24 Jan 2020 06:09:58 -0500
+Message-Id: <1579864199-13036-1-git-send-email-swood@redhat.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Fainelli <f.fainelli@gmail.com>
+Commit e6c287b1512d ("sched: migrate_enable: Use stop_one_cpu_nowait()")
+adds a busy wait to deal with an edge case where the migrated thread
+can resume running on another CPU before the stopper has consumed
+cpu_stop_work.  However, this is done with preemption disabled and can
+potentially lead to deadlock.
 
-[ Upstream commit fea83353177a55540c71c140887737c282137aa2 ]
+While it is not guaranteed that the cpu_stop_work will be consumed before
+the migrating thread resumes and exits the stack frame, it is guaranteed
+that nothing other than the stopper can run on the old cpu between the
+migrating thread scheduling out and the cpu_stop_work being consumed.
+Thus, we can store cpu_stop_work in per-cpu data without it being
+reused too early.
 
-We were not consistent in how the default VID of a given port was
-defined, b53_br_leave() would make sure the VLAN ID would be either 0/1
-depending on the switch generation, but b53_configure_vlan(), which is
-the default configuration would unconditionally set it to 1. The correct
-value is 1 for 5325/5365 series and 0 otherwise. To avoid repeating that
-mistake ever again, introduce a helper function: b53_default_pvid() to
-factor that out.
-
-Fixes: 967dd82ffc52 ("net: dsa: b53: Add support for Broadcom RoboSwitch")
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: e6c287b1512d ("sched: migrate_enable: Use stop_one_cpu_nowait()")
+Suggested-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Signed-off-by: Scott Wood <swood@redhat.com>
 ---
- drivers/net/dsa/b53/b53_common.c | 29 ++++++++++++++++-------------
- 1 file changed, 16 insertions(+), 13 deletions(-)
+ kernel/sched/core.c | 22 ++++++++++++++--------
+ 1 file changed, 14 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/net/dsa/b53/b53_common.c b/drivers/net/dsa/b53/b53_common.c
-index 2d3a2cb026d26..bceda1e884426 100644
---- a/drivers/net/dsa/b53/b53_common.c
-+++ b/drivers/net/dsa/b53/b53_common.c
-@@ -622,15 +622,25 @@ static void b53_enable_mib(struct b53_device *dev)
- 	b53_write8(dev, B53_MGMT_PAGE, B53_GLOBAL_CONFIG, gc);
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 754f6afb438d..7713e9c34ad1 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -8189,6 +8189,9 @@ static void migrate_disabled_sched(struct task_struct *p)
+ 	p->migrate_disable_scheduled = 1;
  }
  
-+static u16 b53_default_pvid(struct b53_device *dev)
-+{
-+	if (is5325(dev) || is5365(dev))
-+		return 1;
-+	else
-+		return 0;
-+}
++static DEFINE_PER_CPU(struct cpu_stop_work, migrate_work);
++static DEFINE_PER_CPU(struct migration_arg, migrate_arg);
 +
- int b53_configure_vlan(struct dsa_switch *ds)
+ void migrate_enable(void)
  {
- 	struct b53_device *dev = ds->priv;
- 	struct b53_vlan vl = { 0 };
--	int i;
-+	int i, def_vid;
+ 	struct task_struct *p = current;
+@@ -8227,22 +8230,25 @@ void migrate_enable(void)
+ 
+ 	WARN_ON(smp_processor_id() != cpu);
+ 	if (!is_cpu_allowed(p, cpu)) {
+-		struct migration_arg arg = { .task = p };
+-		struct cpu_stop_work work;
++		struct migration_arg __percpu *arg;
++		struct cpu_stop_work __percpu *work;
+ 		struct rq_flags rf;
+ 
++		work = this_cpu_ptr(&migrate_work);
++		arg = this_cpu_ptr(&migrate_arg);
++		WARN_ON_ONCE(!arg->done && !work->disabled && work->arg);
 +
-+	def_vid = b53_default_pvid(dev);
++		arg->task = p;
++		arg->done = false;
++
+ 		rq = task_rq_lock(p, &rf);
+ 		update_rq_clock(rq);
+-		arg.dest_cpu = select_fallback_rq(cpu, p);
++		arg->dest_cpu = select_fallback_rq(cpu, p);
+ 		task_rq_unlock(rq, p, &rf);
  
- 	/* clear all vlan entries */
- 	if (is5325(dev) || is5365(dev)) {
--		for (i = 1; i < dev->num_vlans; i++)
-+		for (i = def_vid; i < dev->num_vlans; i++)
- 			b53_set_vlan_entry(dev, i, &vl);
- 	} else {
- 		b53_do_vlan_op(dev, VTA_CMD_CLEAR);
-@@ -640,7 +650,7 @@ int b53_configure_vlan(struct dsa_switch *ds)
- 
- 	b53_for_each_port(dev, i)
- 		b53_write16(dev, B53_VLAN_PAGE,
--			    B53_VLAN_PORT_DEF_TAG(i), 1);
-+			    B53_VLAN_PORT_DEF_TAG(i), def_vid);
- 
- 	if (!is5325(dev) && !is5365(dev))
- 		b53_set_jumbo(dev, dev->enable_jumbo, false);
-@@ -1142,12 +1152,8 @@ int b53_vlan_del(struct dsa_switch *ds, int port,
- 
- 		vl->members &= ~BIT(port);
- 
--		if (pvid == vid) {
--			if (is5325(dev) || is5365(dev))
--				pvid = 1;
--			else
--				pvid = 0;
+ 		stop_one_cpu_nowait(task_cpu(p), migration_cpu_stop,
+-				    &arg, &work);
++				    arg, work);
+ 		__schedule(true);
+-		if (!work.disabled) {
+-			while (!arg.done)
+-				cpu_relax();
 -		}
-+		if (pvid == vid)
-+			pvid = b53_default_pvid(dev);
+ 	}
  
- 		if (untagged && !dsa_is_cpu_port(ds, port))
- 			vl->untag &= ~(BIT(port));
-@@ -1460,10 +1466,7 @@ void b53_br_leave(struct dsa_switch *ds, int port, struct net_device *br)
- 	b53_write16(dev, B53_PVLAN_PAGE, B53_PVLAN_PORT_MASK(port), pvlan);
- 	dev->ports[port].vlan_ctl_mask = pvlan;
- 
--	if (is5325(dev) || is5365(dev))
--		pvid = 1;
--	else
--		pvid = 0;
-+	pvid = b53_default_pvid(dev);
- 
- 	/* Make this port join all VLANs without VLAN entries */
- 	if (is58xx(dev)) {
+ out:
 -- 
-2.20.1
-
-
+1.8.3.1
 
