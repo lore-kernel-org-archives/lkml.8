@@ -6,42 +6,40 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0AE6C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 15:57:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E34DC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 15:57:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99F0E2072C
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 15:57:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 290CD2071E
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 15:57:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730472AbgAXP5k (ORCPT
+        id S1730707AbgAXP5q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 10:57:40 -0500
-Received: from mga12.intel.com ([192.55.52.136]:23179 "EHLO mga12.intel.com"
+        Fri, 24 Jan 2020 10:57:46 -0500
+Received: from mga17.intel.com ([192.55.52.151]:53173 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730037AbgAXP5i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 10:57:38 -0500
+        id S1729225AbgAXP5h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 10:57:37 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Jan 2020 07:57:37 -0800
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Jan 2020 07:57:37 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,358,1574150400"; 
-   d="scan'208";a="308157100"
+   d="scan'208";a="375542487"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga001.jf.intel.com with ESMTP; 24 Jan 2020 07:57:35 -0800
+  by orsmga004.jf.intel.com with ESMTP; 24 Jan 2020 07:57:34 -0800
 Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id ADDA338F; Fri, 24 Jan 2020 17:57:33 +0200 (EET)
+        id 8A7CC115; Fri, 24 Jan 2020 17:57:33 +0200 (EET)
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To:     Petr Mladek <pmladek@suse.com>,
         Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
         Steven Rostedt <rostedt@goodmis.org>,
         linux-kernel@vger.kernel.org
 Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v2 4/5] console: Avoid positive return code from unregister_console()
-Date:   Fri, 24 Jan 2020 17:57:31 +0200
-Message-Id: <20200124155733.54799-4-andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v2 1/5] console: Don't perform test for CON_BRL flag twice
+Date:   Fri, 24 Jan 2020 17:57:28 +0200
+Message-Id: <20200124155733.54799-1-andriy.shevchenko@linux.intel.com>
 X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200124155733.54799-1-andriy.shevchenko@linux.intel.com>
-References: <20200124155733.54799-1-andriy.shevchenko@linux.intel.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -49,49 +47,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are two callers which use the returned code from unregister_console().
-In some cases, i.e. successfully unregistered Braille console or when console
-has not been enabled the return code is 1. This code is ambiguous and also
-prevents callers to distinguish successful operation.
+The braille_unregister_console() already tests for console to have
+CON_BRL flag. No need to repeat this in _braille_unregister_console().
 
-Replace this logic to return only negative error codes or 0 when console,
-either enabled, disabled or Braille has been successfully unregistered.
+However, we need to check for that flag at the beginning of the function
+to avoid any regressions in the callers.
 
 Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
 v2: new patch
- kernel/printk/printk.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ drivers/accessibility/braille/braille_console.c | 4 ++--
+ kernel/printk/braille.c                         | 5 +----
+ 2 files changed, 3 insertions(+), 6 deletions(-)
 
-diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
-index d40a316908da..da6a9bdf76b6 100644
---- a/kernel/printk/printk.c
-+++ b/kernel/printk/printk.c
-@@ -2817,10 +2817,12 @@ int unregister_console(struct console *console)
- 		console->name, console->index);
+diff --git a/drivers/accessibility/braille/braille_console.c b/drivers/accessibility/braille/braille_console.c
+index 1339c586bf64..f0ffccfb6bb7 100644
+--- a/drivers/accessibility/braille/braille_console.c
++++ b/drivers/accessibility/braille/braille_console.c
+@@ -369,10 +369,10 @@ int braille_register_console(struct console *console, int index,
  
- 	res = _braille_unregister_console(console);
--	if (res)
-+	if (res < 0)
- 		return res;
-+	if (res > 0)
-+		return 0;
- 
--	res = 1;
-+	res = -ENODEV;
- 	console_lock();
- 	if (console_drivers == console) {
- 		console_drivers=console->next;
-@@ -2838,6 +2840,9 @@ int unregister_console(struct console *console)
- 	if (!res && (console->flags & CON_EXTENDED))
- 		nr_ext_console_drivers--;
- 
-+	if (res && !(console->flags & CON_ENABLED))
-+		res = 0;
-+
- 	/*
- 	 * If this isn't the last console and it has CON_CONSDEV set, we
- 	 * need to set it on the next preferred console.
+ int braille_unregister_console(struct console *console)
+ {
+-	if (braille_co != console)
+-		return -EINVAL;
+ 	if (!(console->flags & CON_BRL))
+ 		return 0;
++	if (braille_co != console)
++		return -EINVAL;
+ 	unregister_keyboard_notifier(&keyboard_notifier_block);
+ 	unregister_vt_notifier(&vt_notifier_block);
+ 	braille_co = NULL;
+diff --git a/kernel/printk/braille.c b/kernel/printk/braille.c
+index 17a9591e54ff..2ec42173890f 100644
+--- a/kernel/printk/braille.c
++++ b/kernel/printk/braille.c
+@@ -51,8 +51,5 @@ _braille_register_console(struct console *console, struct console_cmdline *c)
+ int
+ _braille_unregister_console(struct console *console)
+ {
+-	if (console->flags & CON_BRL)
+-		return braille_unregister_console(console);
+-
+-	return 0;
++	return braille_unregister_console(console);
+ }
 -- 
 2.24.1
 
