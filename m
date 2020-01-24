@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7AB8C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:41:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A417CC32771
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:41:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A47DD20678
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:41:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BB112075D
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:41:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579866070;
-	bh=mHea0e1HD+THVTVgUwDuDWhMJFJReXvdt1noQdUacTs=;
+	s=default; t=1579866078;
+	bh=RsSscILTKOs8mlW0g1H+l53z9HZnW/+PEIyKsx4W3Ns=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GmzlnGzSC4Xno8drixD1bIht3eU29yIANPAageJnmv6z5e+LTQ2U2ygS/2yOhJSug
-	 nqHoSOl9GcJx7y7LgE6TNCQ0vIFU9W4bE8ntB90neif5LxhL0vtiXwnnNgcIJuEEP8
-	 7mLP1D2w27CL4zg73QE4KjhH7A7TGKWvLrzzxT0c=
+	b=wGhI4kMunjy6AZej9f/jSVtD+XH/B5cz+a6rbItu3fvcQnMKck8/a0WJtTNnIcnqE
+	 NTj+CbEU6wclRIFzdltQDI8wEQVq9Bbd8xhwk2QMs1qGvtpOV3NXqoWYBnnn3yHCjv
+	 9RQ6QI+mkWFQ67xtvaO8m+NtEJuhu6madtgzM6uo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390953AbgAXLUm (ORCPT
+        id S2391930AbgAXLlR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:20:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58402 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 06:41:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56928 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390938AbgAXLUh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:20:37 -0500
+        id S2390797AbgAXLTc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:19:32 -0500
 Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 02A9620704;
-        Fri, 24 Jan 2020 11:20:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 619C320704;
+        Fri, 24 Jan 2020 11:19:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579864836;
-        bh=mHea0e1HD+THVTVgUwDuDWhMJFJReXvdt1noQdUacTs=;
+        s=default; t=1579864771;
+        bh=RsSscILTKOs8mlW0g1H+l53z9HZnW/+PEIyKsx4W3Ns=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=R4oYht4r0/cKhPMn4UaoFYltbBdcftzcx+tbTdG32UU07QtbhBO+55W4ID4N+AmG4
-         YQbpT+xDjDeLSpBPSNIPpMUUh3DPPZ8tKcDoa/MlUFibzQji5sSFuubeXEm0UyzloJ
-         ZNufzyTwlTzUJLh3GsPBS2uDBdNt2MYL5JyT4tRY=
+        b=qMcxSYPBnDMEIcUa5nU8aSAtVxAMTJOJIf/cx+HE6Wkjohyd4lhQWgXx3MhPxwRg6
+         XIZ3nb+Cei2v45+mYahOJJ++2SjtcWHYUvyyHEgJZyHWVfC9ymZdQZhBVTEAHsyngZ
+         nUK3egjsW9U9GcRCOYWC55vFYZpZQ0mGsKmDAYgc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jernej Skrabec <jernej.skrabec@siol.net>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
+        stable@vger.kernel.org, David Laight <David.Laight@aculab.com>,
+        Willem de Bruijn <willemb@google.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 379/639] ARM: dts: sun8i-h3: Fix wifi in Beelink X2 DT
-Date:   Fri, 24 Jan 2020 10:29:09 +0100
-Message-Id: <20200124093134.467309992@linuxfoundation.org>
+Subject: [PATCH 4.19 338/639] packet: in recvmsg msg_name return at least sizeof sockaddr_ll
+Date:   Fri, 24 Jan 2020 10:28:28 +0100
+Message-Id: <20200124093129.467118520@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
 References: <20200124093047.008739095@linuxfoundation.org>
@@ -60,48 +61,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jernej Skrabec <jernej.skrabec@siol.net>
+From: Willem de Bruijn <willemb@google.com>
 
-[ Upstream commit ca0961011db57e39880df0b5708df8aa3339dc6f ]
+[ Upstream commit b2cf86e1563e33a14a1c69b3e508d15dc12f804c ]
 
-mmc1 node where wifi module is connected doesn't have properly defined
-power supplies so wifi module is never powered up. Fix that by
-specifying additional power supplies.
+Packet send checks that msg_name is at least sizeof sockaddr_ll.
+Packet recv must return at least this length, so that its output
+can be passed unmodified to packet send.
 
-Additionally, this STB may have either Realtek or Broadcom based wifi
-module. One based on Broadcom module also needs external clock to work
-properly. Fix that by adding clock property to wifi_pwrseq node.
+This ceased to be true since adding support for lladdr longer than
+sll_addr. Since, the return value uses true address length.
 
-Fixes: e582b47a9252 ("ARM: dts: sun8i-h3: Add dts for the Beelink X2 STB")
-Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+Always return at least sizeof sockaddr_ll, even if address length
+is shorter. Zero the padding bytes.
+
+Change v1->v2: do not overwrite zeroed padding again. use copy_len.
+
+Fixes: 0fb375fb9b93 ("[AF_PACKET]: Allow for > 8 byte hardware addresses.")
+Suggested-by: David Laight <David.Laight@aculab.com>
+Signed-off-by: Willem de Bruijn <willemb@google.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/sun8i-h3-beelink-x2.dts | 4 ++++
- 1 file changed, 4 insertions(+)
+ net/packet/af_packet.c | 13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/sun8i-h3-beelink-x2.dts b/arch/arm/boot/dts/sun8i-h3-beelink-x2.dts
-index 25540b7694d59..6523d81dd9c49 100644
---- a/arch/arm/boot/dts/sun8i-h3-beelink-x2.dts
-+++ b/arch/arm/boot/dts/sun8i-h3-beelink-x2.dts
-@@ -90,6 +90,8 @@
- 	wifi_pwrseq: wifi_pwrseq {
- 		compatible = "mmc-pwrseq-simple";
- 		reset-gpios = <&r_pio 0 7 GPIO_ACTIVE_LOW>; /* PL7 */
-+		clocks = <&rtc 1>;
-+		clock-names = "ext_clock";
- 	};
+diff --git a/net/packet/af_packet.c b/net/packet/af_packet.c
+index ac65e66d1d727..60ba18a4bb0ff 100644
+--- a/net/packet/af_packet.c
++++ b/net/packet/af_packet.c
+@@ -3371,20 +3371,29 @@ static int packet_recvmsg(struct socket *sock, struct msghdr *msg, size_t len,
+ 	sock_recv_ts_and_drops(msg, sk, skb);
  
- 	sound_spdif {
-@@ -155,6 +157,8 @@
+ 	if (msg->msg_name) {
++		int copy_len;
++
+ 		/* If the address length field is there to be filled
+ 		 * in, we fill it in now.
+ 		 */
+ 		if (sock->type == SOCK_PACKET) {
+ 			__sockaddr_check_size(sizeof(struct sockaddr_pkt));
+ 			msg->msg_namelen = sizeof(struct sockaddr_pkt);
++			copy_len = msg->msg_namelen;
+ 		} else {
+ 			struct sockaddr_ll *sll = &PACKET_SKB_CB(skb)->sa.ll;
  
- &mmc1 {
- 	vmmc-supply = <&reg_vcc3v3>;
-+	vqmmc-supply = <&reg_vcc3v3>;
-+	mmc-pwrseq = <&wifi_pwrseq>;
- 	bus-width = <4>;
- 	non-removable;
- 	status = "okay";
+ 			msg->msg_namelen = sll->sll_halen +
+ 				offsetof(struct sockaddr_ll, sll_addr);
++			copy_len = msg->msg_namelen;
++			if (msg->msg_namelen < sizeof(struct sockaddr_ll)) {
++				memset(msg->msg_name +
++				       offsetof(struct sockaddr_ll, sll_addr),
++				       0, sizeof(sll->sll_addr));
++				msg->msg_namelen = sizeof(struct sockaddr_ll);
++			}
+ 		}
+-		memcpy(msg->msg_name, &PACKET_SKB_CB(skb)->sa,
+-		       msg->msg_namelen);
++		memcpy(msg->msg_name, &PACKET_SKB_CB(skb)->sa, copy_len);
+ 	}
+ 
+ 	if (pkt_sk(sk)->auxdata) {
 -- 
 2.20.1
 
