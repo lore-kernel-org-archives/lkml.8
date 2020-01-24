@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DF03C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:34:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DA26C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:34:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB556214AF
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:34:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E48A52070A
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:34:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579858461;
-	bh=YZ4f4ks6O71W6NH+POUMPFFhchcU7/jfnUU11yW58IU=;
+	s=default; t=1579858466;
+	bh=zI7qUngKh+tUhgdBh+cZES1MNpGRy0cIuLzw8UMt0H0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uNmFb/5+RtYrYZF0jNv6613mhcQPYs8MVJ0kqsIW6fwIvLty7iubLQwYANCU8Kcps
-	 J+gRIAj5qhQnCJFi4NRDNzhajMErAB2p2df7GldzykoFpL4WGLfkG0iFQo0yDLiTKI
-	 1pA7TYarxETyZ/AW5IrIclok41MkJoZRtGvc9EL8=
+	b=rZnE1H9AojngXxkqEVF8u/PAeBNoztjBq/jvcooQwsC9OP9sjtsL67gf+LhkjUCk3
+	 52vWwLHkhSiq3fMDwhZIxPyncQ7eiIuHbGgZMgGWmNMzDqKDq2ENxWYDWCZ/OMn2sZ
+	 DRiqM2T29sm5loY4gIjHNIlANuO/2B+y1JVMKlCw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730867AbgAXJeU (ORCPT
+        id S1729852AbgAXJeY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 04:34:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60964 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 04:34:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:32772 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727520AbgAXJeS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 04:34:18 -0500
+        id S1727233AbgAXJeW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 04:34:22 -0500
 Received: from localhost (unknown [145.15.244.15])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8058521556;
-        Fri, 24 Jan 2020 09:34:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 428382070A;
+        Fri, 24 Jan 2020 09:34:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579858458;
-        bh=YZ4f4ks6O71W6NH+POUMPFFhchcU7/jfnUU11yW58IU=;
+        s=default; t=1579858461;
+        bh=zI7qUngKh+tUhgdBh+cZES1MNpGRy0cIuLzw8UMt0H0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tY5vjMM85oR9j7ce1vYmJLxDN07rMuIwPSgrOFtv+VfWpChwGbpfzM+MX7CjA2BC7
-         YpSCmeBr/Z2nHpG9KQJMLyDcbJT23qps37swwdjApmr2p0PYBZa4cgZguHXbJiIaZr
-         H/y6oiFKUoIoyM4Uob+L4QEPmOPKZLY+jd8XY55w=
+        b=EvQMpfnId4nleR21iXRx7xEcWoU1x2SMzcIGrrwHgxdZSObyJUv09wMhW3bVeyUyi
+         uIHmv+4fLVYj9Tj3UWjzvKzdm4LrcMt20W8iDNcfD1UdNWu9trTUSMUuDaMJYB8X6c
+         U+G8BnGFrSMH4Xpn9Qm3k3yqU07r7Sil41UhSDy0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Jon Maloy <jon.maloy@ericsson.com>,
         Hoang Le <hoang.h.le@dektech.com.au>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 023/102] tipc: reduce sensitive to retransmit failures
-Date:   Fri, 24 Jan 2020 10:30:24 +0100
-Message-Id: <20200124092809.645342452@linuxfoundation.org>
+Subject: [PATCH 5.4 024/102] tipc: update mons self addr when node addr generated
+Date:   Fri, 24 Jan 2020 10:30:25 +0100
+Message-Id: <20200124092809.787574883@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124092806.004582306@linuxfoundation.org>
 References: <20200124092806.004582306@linuxfoundation.org>
@@ -62,38 +62,81 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Hoang Le <hoang.h.le@dektech.com.au>
 
-commit 426071f1f3995d7e9603246bffdcbf344cd31719 upstream.
+commit 46cb01eeeb86fca6afe24dda1167b0cb95424e29 upstream.
 
-With huge cluster (e.g >200nodes), the amount of that flow:
-gap -> retransmit packet -> acked will take time in case of STATE_MSG
-dropped/delayed because a lot of traffic. This lead to 1.5 sec tolerance
-value criteria made link easy failure around 2nd, 3rd of failed
-retransmission attempts.
+In commit 25b0b9c4e835 ("tipc: handle collisions of 32-bit node address
+hash values"), the 32-bit node address only generated after one second
+trial period expired. However the self's addr in struct tipc_monitor do
+not update according to node address generated. This lead to it is
+always zero as initial value. As result, sorting algorithm using this
+value does not work as expected, neither neighbor monitoring framework.
 
-Instead of re-introduced criteria of 99 faled retransmissions to fix the
-issue, we increase failure detection timer to ten times tolerance value.
+In this commit, we add a fix to update self's addr when 32-bit node
+address generated.
 
-Fixes: 77cf8edbc0e7 ("tipc: simplify stale link failure criteria")
+Fixes: 25b0b9c4e835 ("tipc: handle collisions of 32-bit node address hash values")
 Acked-by: Jon Maloy <jon.maloy@ericsson.com>
 Signed-off-by: Hoang Le <hoang.h.le@dektech.com.au>
-Acked-by: Jon
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/tipc/link.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/tipc/monitor.c |   15 +++++++++++++++
+ net/tipc/monitor.h |    1 +
+ net/tipc/net.c     |    2 ++
+ 3 files changed, 18 insertions(+)
 
---- a/net/tipc/link.c
-+++ b/net/tipc/link.c
-@@ -1084,7 +1084,7 @@ static bool link_retransmit_failure(stru
- 		return false;
+--- a/net/tipc/monitor.c
++++ b/net/tipc/monitor.c
+@@ -665,6 +665,21 @@ void tipc_mon_delete(struct net *net, in
+ 	kfree(mon);
+ }
  
- 	if (!time_after(jiffies, TIPC_SKB_CB(skb)->retr_stamp +
--			msecs_to_jiffies(r->tolerance)))
-+			msecs_to_jiffies(r->tolerance * 10)))
- 		return false;
++void tipc_mon_reinit_self(struct net *net)
++{
++	struct tipc_monitor *mon;
++	int bearer_id;
++
++	for (bearer_id = 0; bearer_id < MAX_BEARERS; bearer_id++) {
++		mon = tipc_monitor(net, bearer_id);
++		if (!mon)
++			continue;
++		write_lock_bh(&mon->lock);
++		mon->self->addr = tipc_own_addr(net);
++		write_unlock_bh(&mon->lock);
++	}
++}
++
+ int tipc_nl_monitor_set_threshold(struct net *net, u32 cluster_size)
+ {
+ 	struct tipc_net *tn = tipc_net(net);
+--- a/net/tipc/monitor.h
++++ b/net/tipc/monitor.h
+@@ -77,6 +77,7 @@ int __tipc_nl_add_monitor(struct net *ne
+ 			  u32 bearer_id);
+ int tipc_nl_add_monitor_peer(struct net *net, struct tipc_nl_msg *msg,
+ 			     u32 bearer_id, u32 *prev_node);
++void tipc_mon_reinit_self(struct net *net);
  
- 	hdr = buf_msg(skb);
+ extern const int tipc_max_domain_size;
+ #endif
+--- a/net/tipc/net.c
++++ b/net/tipc/net.c
+@@ -42,6 +42,7 @@
+ #include "node.h"
+ #include "bcast.h"
+ #include "netlink.h"
++#include "monitor.h"
+ 
+ /*
+  * The TIPC locking policy is designed to ensure a very fine locking
+@@ -136,6 +137,7 @@ static void tipc_net_finalize(struct net
+ 	tipc_set_node_addr(net, addr);
+ 	tipc_named_reinit(net);
+ 	tipc_sk_reinit(net);
++	tipc_mon_reinit_self(net);
+ 	tipc_nametbl_publish(net, TIPC_CFG_SRV, addr, addr,
+ 			     TIPC_CLUSTER_SCOPE, 0, addr);
+ }
 
 
