@@ -2,163 +2,102 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0583C3F68F
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 16:24:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F208C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 16:26:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C76C62081E
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 16:24:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09AEB20704
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 16:26:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ragnatech-se.20150623.gappssmtp.com header.i=@ragnatech-se.20150623.gappssmtp.com header.b="1mGfJTx6"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QnYaxXVB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388194AbgAXQY5 (ORCPT
+        id S2388285AbgAXQ0Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 11:24:57 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:34106 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388131AbgAXQY4 (ORCPT
+        Fri, 24 Jan 2020 11:26:25 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:52005 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2388131AbgAXQ0Z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 11:24:56 -0500
-Received: by mail-lj1-f194.google.com with SMTP id x7so3094360ljc.1
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Jan 2020 08:24:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ragnatech-se.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=2ZKQV9EUYn6O4Dwbxq9ZK3GxrnLNGiu/KoVo8Ur0eNc=;
-        b=1mGfJTx6KGaWGxumVkRlwu8JFX/T7ZxAi/ZPOibqWqzJC0d3Q6qE/tOOl1kSg0+arG
-         D+PfJu2DBY2lwp7fRrB9iFZ8Kr5f8m1MnAXwgNUfBLiHhOplxnUQLiRv/XHQI6S+EYuH
-         rpbt9IJH9DSh8+FVausrel1GvuhSQ6rZXs5HYp/wKDRdwASexD4MFTHeJ/MlErj+G0Dl
-         KFa4TU/4uMQL8oFQEGVlSczqhIBQiIhhNyMfoLHbPL6rVEBHh/jdu4mapAPNAS/p5I6M
-         VQgNDC1USFdKJQfbBnSsLWvtMEcip/ygylNCs8Vloj9hboY9ZfPNvoEYtqHp2P4ZcRCK
-         D51A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=2ZKQV9EUYn6O4Dwbxq9ZK3GxrnLNGiu/KoVo8Ur0eNc=;
-        b=C97aLnE+71YFGemmLTnmy+RfKo2zozXiVHyGkP44XmyaUiTXz1AdfCpYUk9cjK+ADb
-         g+H2oTfl6CVyuC356E11y+jYpYniyccfDsN6W0hOVSLlOO1LdOa6DX4hlLW/ZV1i6WF1
-         TTN794Q5jpanFltDlmHaMbH2wuUAxG5+NpWqJqEtnFTEYrv7X9ndkxOlU3SRZ7TrlZhS
-         ZCNBjZKW0CqfWlnehCo5i4Dj//SaRLc7jI7XiM8KD6CQrc2Ypc2U4zSMVeYBAv5AHXmH
-         ROD/8kTOEUfpTy6NW2XJD3cctrfJdFdWMQM3kgXpcOKSOw7sQq9ajLWt75hP+SluFzKQ
-         5Qjg==
-X-Gm-Message-State: APjAAAUYXkbjksOhmQJymU9mnrYxWfz8dplbjsTbWi/GjLDUzzOht4rU
-        LWkqfPQhEI/7TFm8/i0Nz/Cmxw==
-X-Google-Smtp-Source: APXvYqwD3R6qmy6UAfp7uxu+afZInN2SHuLh7/0SKxfwyTm+CAMduCTdKlx73HrpU5r6GS5WWyvYzQ==
-X-Received: by 2002:a2e:3a13:: with SMTP id h19mr2778997lja.16.1579883094015;
-        Fri, 24 Jan 2020 08:24:54 -0800 (PST)
-Received: from localhost (h-93-159.A463.priv.bahnhof.se. [46.59.93.159])
-        by smtp.gmail.com with ESMTPSA id q14sm2974605lfc.60.2020.01.24.08.24.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 Jan 2020 08:24:53 -0800 (PST)
-Date:   Fri, 24 Jan 2020 17:24:52 +0100
-From:   Niklas =?iso-8859-1?Q?S=F6derlund?= 
-        <niklas.soderlund@ragnatech.se>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Gilad Ben-Yossef <gilad@benyossef.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S . Miller" <davem@davemloft.net>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
-        Felipe Balbi <balbi@kernel.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Mathias Nyman <mathias.nyman@intel.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Bin Liu <b-liu@ti.com>, linux-crypto@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/2] Fix debugfs register access while suspended
-Message-ID: <20200124162452.GC286344@oden.dyn.berto.se>
-References: <20200124132957.15769-1-geert+renesas@glider.be>
+        Fri, 24 Jan 2020 11:26:25 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579883183;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=iP5kUzj/MjjYp8gqP+NZWwU5OGdgr2jRpmH4EARLI/g=;
+        b=QnYaxXVB92QAsAYYgMSMit1XPfVsmivPPskolfKCSYbOu2yChZvLnzyUiHh1dueDdWntFN
+        4dMBg7b/LRyIFgbmO4CbA3lpU9c+v2PJOuN4Qh7uMDoJyAngo/L3ZDTkJ1EMXFUXuFFU5u
+        p4LWYR5XurcQ/pjpCqwCrZ+zMY6mYYA=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-120-KqwGgzqlMdit2ebtrV91vQ-1; Fri, 24 Jan 2020 11:26:18 -0500
+X-MC-Unique: KqwGgzqlMdit2ebtrV91vQ-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0A40C109576C;
+        Fri, 24 Jan 2020 16:26:17 +0000 (UTC)
+Received: from llong.remote.csb (ovpn-124-92.rdu2.redhat.com [10.10.124.92])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 1676010016E8;
+        Fri, 24 Jan 2020 16:26:15 +0000 (UTC)
+Subject: Re: [PATCH 7/7] sysvipc_find_ipc should increase position index
+To:     Vasily Averin <vvs@virtuozzo.com>, linux-kernel@vger.kernel.org
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        NeilBrown <neilb@suse.com>, Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Oberparleiter <oberpar@linux.ibm.com>
+References: <b7a20945-e315-8bb0-21e6-3875c14a8494@virtuozzo.com>
+From:   Waiman Long <longman@redhat.com>
+Organization: Red Hat
+Message-ID: <8ed2850e-7cec-ebeb-4e15-21da3715c42a@redhat.com>
+Date:   Fri, 24 Jan 2020 11:26:16 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200124132957.15769-1-geert+renesas@glider.be>
+In-Reply-To: <b7a20945-e315-8bb0-21e6-3875c14a8494@virtuozzo.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Geert,
+On 1/24/20 2:03 AM, Vasily Averin wrote:
+> if seq_file .next fuction does not change position index,
+> read after some lseek can generate unexpected output.
+>
+> https://bugzilla.kernel.org/show_bug.cgi?id=206283
+> Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
+> ---
+>  ipc/util.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/ipc/util.c b/ipc/util.c
+> index 915eacb..7a3ab2e 100644
+> --- a/ipc/util.c
+> +++ b/ipc/util.c
+> @@ -764,13 +764,13 @@ static struct kern_ipc_perm *sysvipc_find_ipc(struct ipc_ids *ids, loff_t pos,
+>  			total++;
+>  	}
+>  
+> +	*new_pos = pos + 1;
+>  	if (total >= ids->in_use)
+>  		return NULL;
+>  
+>  	for (; pos < ipc_mni; pos++) {
+>  		ipc = idr_find(&ids->ipcs_idr, pos);
+>  		if (ipc != NULL) {
+> -			*new_pos = pos + 1;
+>  			rcu_read_lock();
+>  			ipc_lock_object(ipc);
+>  			return ipc;
 
-Thanks for your series.
+Acked-by: Waiman Long <longman@redhat.com>
 
-On 2020-01-24 14:29:55 +0100, Geert Uytterhoeven wrote:
-> 	Hi all,
-> 
-> While comparing register values read from debugfs files under
-> /sys/kernel/debug/ccree/, I noticed some oddities.
-> Apparently there is no guarantee these registers are read from the
-> device while it is resumed.  This may lead to bogus values, or crashes
-> and lock-ups.
-> 
-> This patch series:
->   1. Allows debugfs_create_regset32() to be used for devices whose
->      registers must be accessed when resumed,
->   2. Fixes the CCREE driver to make use of this.
-> 
-> I have identified several other drivers that may be affected (i.e.
-> using debugfs_create_regset32() and pm_runtime_*()):
->   - drivers/gpu/drm/msm/disp/dpu1
->   - drivers/usb/dwc3
->   - drivers/usb/host/ehci-omap.c
->   - drivers/usb/host/ehci-tegra.c
->   - drivers/usb/host/ohci-platform.c
->   - drivers/usb/host/xhci.c
->   - drivers/usb/host/xhci-dbgcap.c
->   - drivers/usb/host/xhci-histb.c
->   - drivers/usb/host/xhci-hub.c
->   - drivers/usb/host/xhci-mtk.c
->   - drivers/usb/host/xhci-pci.c
->   - drivers/usb/host/xhci-plat.c
->   - drivers/usb/host/xhci-tegra.c
->   - drivers/usb/mtu3
->   - drivers/usb/musb
-> 
-> Some of these call pm_runtime_forbid(), but given the comment "users
-> should enable runtime pm using power/control in sysfs", this can be
-> overridden from userspace, so these are unsafe, too?
-> 
-> Thanks for your comments!
-
-Looks good to me,
-
-Reviewed-by: Niklas Söderlund <niklas.soderlund@ragnatech.se>
-
-> 
-> Geert Uytterhoeven (2):
->   debugfs: regset32: Add Runtime PM support
->   crypto: ccree - fix debugfs register access while suspended
-> 
->  drivers/crypto/ccree/cc_debugfs.c | 2 ++
->  fs/debugfs/file.c                 | 8 ++++++++
->  include/linux/debugfs.h           | 1 +
->  3 files changed, 11 insertions(+)
-> 
-> -- 
-> 2.17.1
-> 
-> Gr{oetje,eeting}s,
-> 
-> 						Geert
-> 
-> --
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-> 
-> In personal conversations with technical people, I call myself a hacker. But
-> when I'm talking to journalists I just say "programmer" or something like that.
-> 							    -- Linus Torvalds
-
--- 
-Regards,
-Niklas Söderlund
