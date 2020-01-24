@@ -2,211 +2,109 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0D82C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 19:45:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBF03C35242
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 19:46:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4C4C20838
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 19:45:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3C3A20702
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 19:46:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="aCZohpD/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404219AbgAXTpi (ORCPT
+        id S2392296AbgAXTqH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 14:45:38 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:43565 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2392270AbgAXTpb (ORCPT
+        Fri, 24 Jan 2020 14:46:07 -0500
+Received: from mail-pf1-f202.google.com ([209.85.210.202]:46362 "EHLO
+        mail-pf1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391472AbgAXTqG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 14:45:31 -0500
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1iv4tO-0000Br-Vs; Fri, 24 Jan 2020 20:45:23 +0100
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 90AA61C1A6A;
-        Fri, 24 Jan 2020 20:45:22 +0100 (CET)
-Date:   Fri, 24 Jan 2020 19:45:22 -0000
-From:   "tip-bot2 for Sebastian Andrzej Siewior" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: smp/core] smp: Add a smp_cond_func_t argument to
- smp_call_function_many()
-Cc:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200117090137.1205765-3-bigeasy@linutronix.de>
-References: <20200117090137.1205765-3-bigeasy@linutronix.de>
-MIME-Version: 1.0
-Message-ID: <157989512234.396.13725764794800050132.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+        Fri, 24 Jan 2020 14:46:06 -0500
+Received: by mail-pf1-f202.google.com with SMTP id i6so1842071pfa.13
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jan 2020 11:46:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=ysPE3p2XWj7/TrBPX839YWYofjGrv+ukgcnjipDcxD8=;
+        b=aCZohpD/BNjKcM0p5BeVlgSIAu0Fky6Y7QlkpQiQf9vAdhay2bbYnRC33O8zXWenq+
+         ldnpRcpscbd3/HIraLq4gNlexORFSjxyCzZ5fnQSJWQWyMjVq1dRqRUEo8QXJqBsLe0j
+         NoRYG+9BMIPCxApCuMuDLIP7nAfnW0qPG7KJtUvyOLVCD07qjOgpmcGlaGQkWeTgwdE0
+         jjLEJyKnRfS4QSNobPBxTCDQmyS/DFHVNHwpALgT3oQ9NYxsuoO3WY9pWVAUZwu+6297
+         k+bxm6TQ4QCwfLDJhq3cr+KxSNphoknTX0eoHX99oDIOkWkkv3B3YLhhaGTbEUy/v/8p
+         EqUQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=ysPE3p2XWj7/TrBPX839YWYofjGrv+ukgcnjipDcxD8=;
+        b=pH846WNWJvstPfscBlYeSjRCse9bxfxSJZc5pq91LVJcjHKk0sklDk7fA/PjDYiXMd
+         Otg1mA1fmk8pRp/Ub6qLIPghVbfcxNcZsgRbaWsf26Co1zgaZDb+aeR8WcA0Q9vEcIuz
+         w5Tu+PH8zEJ6RPC80P7rlERJBFmqbbcg8XnhdzHBKuOcs6HQBtzAE8gZOaJczHuRwHBG
+         8fnOfWvhWxy4aWYzxmx2JaOV5VJwXHb1NULSpwDkUmTOvqCeVGuvvWUgZ9os3TiJBPMm
+         AGQ4D3bDcD7SjIN5rdYboUcazqVdMhp+T37NtmiDy2F9tY8OdTyGwaoUSp2wxmwt8BB9
+         T4sg==
+X-Gm-Message-State: APjAAAX1DZhluiFi35KHgrhD6SrQCje4TtDf9VzO9FDxCQ6Ar6bvOIBM
+        bF+Kca3+j2kMD1xZUULhCLfV69DH1W2srg==
+X-Google-Smtp-Source: APXvYqzTY7ykbizKR0RAfuVrvyVq5J9PCRIf8OWRPAufh0sITlthsUInKorHE/ZIw0kWBpH17bTEoG7KzqkHxg==
+X-Received: by 2002:a63:778c:: with SMTP id s134mr5650896pgc.451.1579895165698;
+ Fri, 24 Jan 2020 11:46:05 -0800 (PST)
+Date:   Fri, 24 Jan 2020 11:45:08 -0800
+Message-Id: <20200124194507.34121-1-davidgow@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.25.0.341.g760bfbb309-goog
+Subject: [PATCH] Fix linked-list KUnit test when run multiple times
+From:   David Gow <davidgow@google.com>
+To:     brendanhiggins@google.com, shuah@kernel.org
+Cc:     kunit-dev@googlegroups.com, linux-kselftest@vger.kernel.org,
+        linux-kernel@vger.kernel.org, alan.maguire@oracle.com,
+        David Gow <davidgow@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the smp/core branch of tip:
+A few of the lists used in the linked-list KUnit tests (the
+for_each_entry{,_reverse} tests) are declared 'static', and so are
+not-reinitialised if the test runs multiple times. This was not a
+problem when KUnit tests were run once on startup, but when tests are
+able to be run manually (e.g. from debugfs[1]), this is no longer the
+case.
 
-Commit-ID:     67719ef25eeb2048b11befa6a757aeb3848b5df1
-Gitweb:        https://git.kernel.org/tip/67719ef25eeb2048b11befa6a757aeb3848b5df1
-Author:        Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-AuthorDate:    Fri, 17 Jan 2020 10:01:36 +01:00
-Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Fri, 24 Jan 2020 20:40:09 +01:00
+Making these lists no longer 'static' causes the lists to be
+reinitialised, and the test passes each time it is run. While there may
+be some value in testing that initialising static lists works, the
+for_each_entry_* tests are unlikely to be the right place for it.
 
-smp: Add a smp_cond_func_t argument to smp_call_function_many()
-
-on_each_cpu_cond_mask() allocates a new CPU mask. The newly allocated
-mask is a subset of the provided mask based on the conditional function.
-
-This memory allocation can be avoided by extending smp_call_function_many()
-with the conditional function and performing the remote function call based
-on the mask and the conditional function.
-
-Rename smp_call_function_many() to smp_call_function_many_cond() and add
-the smp_cond_func_t argument. If smp_cond_func_t is provided then it is
-used before invoking the function.  Provide smp_call_function_many() with
-cond_func set to NULL.  Let on_each_cpu_cond_mask() use
-smp_call_function_many_cond().
-
-Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lore.kernel.org/r/20200117090137.1205765-3-bigeasy@linutronix.de
-
+Signed-off-by: David Gow <davidgow@google.com>
 ---
- kernel/smp.c | 81 +++++++++++++++++++++++----------------------------
- 1 file changed, 38 insertions(+), 43 deletions(-)
+ lib/list-test.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/smp.c b/kernel/smp.c
-index c64044d..e17e634 100644
---- a/kernel/smp.c
-+++ b/kernel/smp.c
-@@ -395,22 +395,9 @@ call:
- }
- EXPORT_SYMBOL_GPL(smp_call_function_any);
- 
--/**
-- * smp_call_function_many(): Run a function on a set of other CPUs.
-- * @mask: The set of cpus to run on (only runs on online subset).
-- * @func: The function to run. This must be fast and non-blocking.
-- * @info: An arbitrary pointer to pass to the function.
-- * @wait: If true, wait (atomically) until function has completed
-- *        on other CPUs.
-- *
-- * If @wait is true, then returns once @func has returned.
-- *
-- * You must not call this function with disabled interrupts or from a
-- * hardware interrupt handler or from a bottom half handler. Preemption
-- * must be disabled when calling this function.
-- */
--void smp_call_function_many(const struct cpumask *mask,
--			    smp_call_func_t func, void *info, bool wait)
-+static void smp_call_function_many_cond(const struct cpumask *mask,
-+					smp_call_func_t func, void *info,
-+					bool wait, smp_cond_func_t cond_func)
+diff --git a/lib/list-test.c b/lib/list-test.c
+index 76babb1df889..ee09505df16f 100644
+--- a/lib/list-test.c
++++ b/lib/list-test.c
+@@ -659,7 +659,7 @@ static void list_test_list_for_each_prev_safe(struct kunit *test)
+ static void list_test_list_for_each_entry(struct kunit *test)
  {
- 	struct call_function_data *cfd;
- 	int cpu, next_cpu, this_cpu = smp_processor_id();
-@@ -448,7 +435,8 @@ void smp_call_function_many(const struct cpumask *mask,
+ 	struct list_test_struct entries[5], *cur;
+-	static LIST_HEAD(list);
++	LIST_HEAD(list);
+ 	int i = 0;
  
- 	/* Fastpath: do that cpu by itself. */
- 	if (next_cpu >= nr_cpu_ids) {
--		smp_call_function_single(cpu, func, info, wait);
-+		if (!cond_func || (cond_func && cond_func(cpu, info)))
-+			smp_call_function_single(cpu, func, info, wait);
- 		return;
- 	}
- 
-@@ -465,6 +453,9 @@ void smp_call_function_many(const struct cpumask *mask,
- 	for_each_cpu(cpu, cfd->cpumask) {
- 		call_single_data_t *csd = per_cpu_ptr(cfd->csd, cpu);
- 
-+		if (cond_func && !cond_func(cpu, info))
-+			continue;
-+
- 		csd_lock(csd);
- 		if (wait)
- 			csd->flags |= CSD_FLAG_SYNCHRONOUS;
-@@ -486,6 +477,26 @@ void smp_call_function_many(const struct cpumask *mask,
- 		}
- 	}
- }
-+
-+/**
-+ * smp_call_function_many(): Run a function on a set of other CPUs.
-+ * @mask: The set of cpus to run on (only runs on online subset).
-+ * @func: The function to run. This must be fast and non-blocking.
-+ * @info: An arbitrary pointer to pass to the function.
-+ * @wait: If true, wait (atomically) until function has completed
-+ *        on other CPUs.
-+ *
-+ * If @wait is true, then returns once @func has returned.
-+ *
-+ * You must not call this function with disabled interrupts or from a
-+ * hardware interrupt handler or from a bottom half handler. Preemption
-+ * must be disabled when calling this function.
-+ */
-+void smp_call_function_many(const struct cpumask *mask,
-+			    smp_call_func_t func, void *info, bool wait)
-+{
-+	smp_call_function_many_cond(mask, func, info, wait, NULL);
-+}
- EXPORT_SYMBOL(smp_call_function_many);
- 
- /**
-@@ -684,33 +695,17 @@ void on_each_cpu_cond_mask(smp_cond_func_t cond_func, smp_call_func_t func,
- 			   void *info, bool wait, gfp_t gfp_flags,
- 			   const struct cpumask *mask)
+ 	for (i = 0; i < 5; ++i) {
+@@ -680,7 +680,7 @@ static void list_test_list_for_each_entry(struct kunit *test)
+ static void list_test_list_for_each_entry_reverse(struct kunit *test)
  {
--	cpumask_var_t cpus;
--	int cpu, ret;
--
--	might_sleep_if(gfpflags_allow_blocking(gfp_flags));
--
--	if (likely(zalloc_cpumask_var(&cpus, (gfp_flags|__GFP_NOWARN)))) {
--		preempt_disable();
--		for_each_cpu(cpu, mask)
--			if (cond_func(cpu, info))
--				__cpumask_set_cpu(cpu, cpus);
--		on_each_cpu_mask(cpus, func, info, wait);
--		preempt_enable();
--		free_cpumask_var(cpus);
--	} else {
--		/*
--		 * No free cpumask, bother. No matter, we'll
--		 * just have to IPI them one by one.
--		 */
--		preempt_disable();
--		for_each_cpu(cpu, mask)
--			if (cond_func(cpu, info)) {
--				ret = smp_call_function_single(cpu, func,
--								info, wait);
--				WARN_ON_ONCE(ret);
--			}
--		preempt_enable();
-+	int cpu = get_cpu();
-+
-+	smp_call_function_many_cond(mask, func, info, wait, cond_func);
-+	if (cpumask_test_cpu(cpu, mask) && cond_func(cpu, info)) {
-+		unsigned long flags;
-+
-+		local_irq_save(flags);
-+		func(info);
-+		local_irq_restore(flags);
- 	}
-+	put_cpu();
- }
- EXPORT_SYMBOL(on_each_cpu_cond_mask);
+ 	struct list_test_struct entries[5], *cur;
+-	static LIST_HEAD(list);
++	LIST_HEAD(list);
+ 	int i = 0;
  
+ 	for (i = 0; i < 5; ++i) {
+-- 
+2.25.0.341.g760bfbb309-goog
+
