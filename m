@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76688C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:46:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14D58C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:46:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43F262087E
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:46:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2968206D5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:46:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579859213;
-	bh=UpmcHSnUc8E62hyYWj8ClyaU2/BTlDYrix38raABp5Y=;
+	s=default; t=1579859217;
+	bh=FjKs7kj1QyIdMdGW6JMz6tb12uo0pJoik3pgWS1XT2M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RgaJeaGBQvUAdQJCCs01CBwOa598xhgxFXtjxmWgJiZjNCEnzc+nBxV7qEVaY0I0H
-	 2Ov7VYq6Jc60pA+561G148vw/SZjucjnLGxVVhHvmU0xrW33eEX32UvLrk8+czfDDs
-	 Br6psAobZTV3g8KYeMSzv+UGEwbH4OGO1htb969s=
+	b=Y6ztL5Jjc38MFnOuWlRZ+shi/OSXKVdbKXahFX5DKUMHRvvHWOz0IJzrf7nTZODzo
+	 oMm7m5eDdhdgtvqw6+mKWaMeHxmx5SdKsztSxqHSF4aI/o+z9UXMw5ss6o33WX+wq9
+	 /yuBcuqiQ074Nb9ng4BUydwEekUcRmRO056YYYO8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387603AbgAXJqw (ORCPT
+        id S2387612AbgAXJq4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 04:46:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46366 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 04:46:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46498 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730743AbgAXJqt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 04:46:49 -0500
+        id S1730743AbgAXJqz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 04:46:55 -0500
 Received: from localhost (unknown [145.15.244.15])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6683B206D5;
-        Fri, 24 Jan 2020 09:46:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4D4BF206D5;
+        Fri, 24 Jan 2020 09:46:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579859209;
-        bh=UpmcHSnUc8E62hyYWj8ClyaU2/BTlDYrix38raABp5Y=;
+        s=default; t=1579859214;
+        bh=FjKs7kj1QyIdMdGW6JMz6tb12uo0pJoik3pgWS1XT2M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BFvBV76sqW+gcG2cAno69+XZVNMIqU9Iv3hO322jgJtO+mmq0a+k/RTsKpvPukKSl
-         0fFDPGg5H/hIcom2tdD1QCTTaO8LlTpTjP4xK8rTG7NU6/bCZnux7usdbs5XXBKDOt
-         Yuvb9TQOhbsH8JdJXAXnzysRPLKDLZ7rPrcD4gmo=
+        b=IL1Y44HuwfDkvM/hl/aCsdgU5Il8+c90nW0imsKTlTQrFN47gSq6A105XSdb/3QMF
+         c0l2EaHmzSuP+aUKS/wKjzmm0/XAt+nTQcLf4iLH4Z7fzNmX9xvQ0xAW7J/U3P0kEZ
+         dOMSLArBoxQt5mAeChrxeJhT52EvuqmuBRplZang=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, YueHaibing <yuehaibing@huawei.com>,
-        Raveendra Padasalagi <raveendra.padasalagi@broadcom.com>,
+        stable@vger.kernel.org, Eric Biggers <ebiggers@google.com>,
         Herbert Xu <herbert@gondor.apana.org.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 067/343] crypto: brcm - Fix some set-but-not-used warning
-Date:   Fri, 24 Jan 2020 10:28:05 +0100
-Message-Id: <20200124092928.617723961@linuxfoundation.org>
+Subject: [PATCH 4.14 068/343] crypto: tgr192 - fix unaligned memory access
+Date:   Fri, 24 Jan 2020 10:28:06 +0100
+Message-Id: <20200124092928.762588405@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124092919.490687572@linuxfoundation.org>
 References: <20200124092919.490687572@linuxfoundation.org>
@@ -61,63 +60,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Eric Biggers <ebiggers@google.com>
 
-[ Upstream commit 707d0cf8f7cff6dfee9197002859912310532c4f ]
+[ Upstream commit f990f7fb58ac8ac9a43316f09a48cff1a49dda42 ]
 
-Fixes gcc '-Wunused-but-set-variable' warning:
+Fix an unaligned memory access in tgr192_transform() by using the
+unaligned access helpers.
 
-drivers/crypto/bcm/cipher.c: In function 'handle_ahash_req':
-drivers/crypto/bcm/cipher.c:720:15: warning:
- variable 'chunk_start' set but not used [-Wunused-but-set-variable]
-
-drivers/crypto/bcm/cipher.c: In function 'spu_rx_callback':
-drivers/crypto/bcm/cipher.c:1679:31: warning:
- variable 'areq' set but not used [-Wunused-but-set-variable]
-
-drivers/crypto/bcm/cipher.c:1678:22: warning:
- variable 'ctx' set but not used [-Wunused-but-set-variable]
-
-Fixes: 9d12ba86f818 ("crypto: brcm - Add Broadcom SPU driver")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Reviewed-by: Raveendra Padasalagi <raveendra.padasalagi@broadcom.com>
+Fixes: 06ace7a9bafe ("[CRYPTO] Use standard byte order macros wherever possible")
+Signed-off-by: Eric Biggers <ebiggers@google.com>
 Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/crypto/bcm/cipher.c | 6 +-----
- 1 file changed, 1 insertion(+), 5 deletions(-)
+ crypto/tgr192.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/crypto/bcm/cipher.c b/drivers/crypto/bcm/cipher.c
-index 84422435f39b4..279e907590e98 100644
---- a/drivers/crypto/bcm/cipher.c
-+++ b/drivers/crypto/bcm/cipher.c
-@@ -718,7 +718,7 @@ static int handle_ahash_req(struct iproc_reqctx_s *rctx)
- 	 */
- 	unsigned int new_data_len;
+diff --git a/crypto/tgr192.c b/crypto/tgr192.c
+index 321bc6ff2a9d1..904c8444aa0a2 100644
+--- a/crypto/tgr192.c
++++ b/crypto/tgr192.c
+@@ -25,8 +25,9 @@
+ #include <linux/init.h>
+ #include <linux/module.h>
+ #include <linux/mm.h>
+-#include <asm/byteorder.h>
+ #include <linux/types.h>
++#include <asm/byteorder.h>
++#include <asm/unaligned.h>
  
--	unsigned int chunk_start = 0;
-+	unsigned int __maybe_unused chunk_start = 0;
- 	u32 db_size;	 /* Length of data field, incl gcm and hash padding */
- 	int pad_len = 0; /* total pad len, including gcm, hash, stat padding */
- 	u32 data_pad_len = 0;	/* length of GCM/CCM padding */
-@@ -1676,8 +1676,6 @@ static void spu_rx_callback(struct mbox_client *cl, void *msg)
- 	struct spu_hw *spu = &iproc_priv.spu;
- 	struct brcm_message *mssg = msg;
- 	struct iproc_reqctx_s *rctx;
--	struct iproc_ctx_s *ctx;
--	struct crypto_async_request *areq;
- 	int err = 0;
+ #define TGR192_DIGEST_SIZE 24
+ #define TGR160_DIGEST_SIZE 20
+@@ -468,10 +469,9 @@ static void tgr192_transform(struct tgr192_ctx *tctx, const u8 * data)
+ 	u64 a, b, c, aa, bb, cc;
+ 	u64 x[8];
+ 	int i;
+-	const __le64 *ptr = (const __le64 *)data;
  
- 	rctx = mssg->ctx;
-@@ -1687,8 +1685,6 @@ static void spu_rx_callback(struct mbox_client *cl, void *msg)
- 		err = -EFAULT;
- 		goto cb_finish;
- 	}
--	areq = rctx->parent;
--	ctx = rctx->ctx;
+ 	for (i = 0; i < 8; i++)
+-		x[i] = le64_to_cpu(ptr[i]);
++		x[i] = get_unaligned_le64(data + i * sizeof(__le64));
  
- 	/* process the SPU status */
- 	err = spu->spu_status_process(rctx->msg_buf.rx_stat);
+ 	/* save */
+ 	a = aa = tctx->a;
 -- 
 2.20.1
 
