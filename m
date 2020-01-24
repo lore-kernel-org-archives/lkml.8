@@ -2,121 +2,138 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21475C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:37:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8A28C35242
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:37:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9D782075D
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:37:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="DrXgy2oe"
+	by mail.kernel.org (Postfix) with ESMTP id 7F667206D4
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:37:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579865862;
+	bh=e2hI6TDdl6NlCXYKgFLpcZeyOdP5byPgHqaf2nDS708=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=udnsgKV7X0J5Dnu7YqdG8ZYS2+doHUIbPauUNVidqyYbHv0NfqpDhu9pd1+jYOZBV
+	 1QHrO9hkh9aL1boJly0w/CWmwfrUBo3+BcLOMNwuTJKee13MzPwAoPIJDk3ZMZAmn+
+	 QcfervaPTdXss+Le+QMNwKpfqIkP2OIVs2TkKJco=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404959AbgAXLhg (ORCPT
+        id S2404393AbgAXLcD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:37:36 -0500
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:49162 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404431AbgAXLc0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:32:26 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00OBWNEE042050;
-        Fri, 24 Jan 2020 05:32:23 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1579865543;
-        bh=UIHuy/MWjXgfz5O1NZVKDjd//Yhws3+i5WP1cnU1b7w=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=DrXgy2oe0n7cJlR1oU4k1x9RB0p5+P4HV4+XXZTgGThy0mQY5kmh2t1y3O4bXkhMB
-         TuztgQA7V7l6uXEtUGTlIdWduf3VcHejGlwM3vGkIsD1x44glvpbPRxRJLdnugUIyY
-         uN72q3VvmGo9HKDQAEJ00g28Pta1UoHqP/wb8VUs=
-Received: from DFLE108.ent.ti.com (dfle108.ent.ti.com [10.64.6.29])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00OBWNkM127450
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 24 Jan 2020 05:32:23 -0600
-Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 24
- Jan 2020 05:32:22 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE106.ent.ti.com
- (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Fri, 24 Jan 2020 05:32:22 -0600
-Received: from [127.0.0.1] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00OBWJff098690;
-        Fri, 24 Jan 2020 05:32:20 -0600
-Subject: Re: [Patch v4 09/10] arm64: dts: k3-am65-main Add CAL node
-To:     Benoit Parrot <bparrot@ti.com>, Tony Lindgren <tony@atomide.com>,
-        <linux-omap@vger.kernel.org>, <linux-clk@vger.kernel.org>
-CC:     Rob Herring <robh+dt@kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20191211140558.10407-1-bparrot@ti.com>
- <20191211140558.10407-10-bparrot@ti.com>
-From:   Tero Kristo <t-kristo@ti.com>
-Message-ID: <dd203eea-f467-07a0-c578-cc6eeb512032@ti.com>
-Date:   Fri, 24 Jan 2020 13:32:19 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Fri, 24 Jan 2020 06:32:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50402 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2404365AbgAXLbv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:31:51 -0500
+Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 74803206D4;
+        Fri, 24 Jan 2020 11:31:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579865510;
+        bh=e2hI6TDdl6NlCXYKgFLpcZeyOdP5byPgHqaf2nDS708=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=VqbYKtr5cnwSjfoP01IyhJLlUI2cliCqslBbplgkds0IQT8snasFj4rfSaaPr1np8
+         iryrRVuvPl7s29P6DIl/ZvHR9sa3SDvDjbTohy2JbcDudetC8IX2deJ58gEGHKtLiR
+         +cJS4bkQHeTp9cP8kIGbxWsW8+gJfvb0MSLUcVu0=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Firo Yang <firo.yang@suse.com>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        Andrew Bowers <andrewx.bowers@intel.com>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 557/639] ixgbe: sync the first fragment unconditionally
+Date:   Fri, 24 Jan 2020 10:32:07 +0100
+Message-Id: <20200124093159.070242339@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
+References: <20200124093047.008739095@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-In-Reply-To: <20191211140558.10407-10-bparrot@ti.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/12/2019 16:05, Benoit Parrot wrote:
-> Add CAL dtsi node for AM654 device. Including proper power-domains and
-> clock properties.
-> 
-> Signed-off-by: Benoit Parrot <bparrot@ti.com>
+From: Firo Yang <firo.yang@suse.com>
 
-Queued this and patch #10 up for 5.6, thanks.
+[ Upstream commit e7ba676c6188d394a0133fc4b9bcd7ee50d54b7f ]
 
--Tero
+In Xen environment, if Xen-swiotlb is enabled, ixgbe driver
+could possibly allocate a page, DMA memory buffer, for the first
+fragment which is not suitable for Xen-swiotlb to do DMA operations.
+Xen-swiotlb have to internally allocate another page for doing DMA
+operations. This mechanism requires syncing the data from the internal
+page to the page which ixgbe sends to upper network stack. However,
+since commit f3213d932173 ("ixgbe: Update driver to make use of DMA
+attributes in Rx path"), the unmap operation is performed with
+DMA_ATTR_SKIP_CPU_SYNC. As a result, the sync is not performed.
+Since the sync isn't performed, the upper network stack could receive
+a incomplete network packet. By incomplete, it means the linear data
+on the first fragment(between skb->head and skb->end) is invalid. So
+we have to copy the data from the internal xen-swiotlb page to the page
+which ixgbe sends to upper network stack through the sync operation.
 
-> ---
->   arch/arm64/boot/dts/ti/k3-am65-main.dtsi | 22 ++++++++++++++++++++++
->   1 file changed, 22 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
-> index efb24579922c..551adcefcc83 100644
-> --- a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
-> +++ b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
-> @@ -624,4 +624,26 @@
->   		dma-coherent;
->   		interrupts = <GIC_SPI 355 IRQ_TYPE_EDGE_RISING>;
->   	};
-> +
-> +	cal: cal@6f03000 {
-> +		compatible = "ti,am654-cal";
-> +		reg = <0x0 0x06f03000 0x0 0x400>,
-> +		      <0x0 0x06f03800 0x0 0x40>;
-> +		reg-names = "cal_top",
-> +			    "cal_rx_core0";
-> +		interrupts = <GIC_SPI 152 IRQ_TYPE_LEVEL_HIGH>;
-> +		ti,camerrx-control = <&scm_conf 0x40c0>;
-> +		clock-names = "fck";
-> +		clocks = <&k3_clks 2 0>;
-> +		power-domains = <&k3_pds 2 TI_SCI_PD_EXCLUSIVE>;
-> +
-> +		ports {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +
-> +			csi2_0: port@0 {
-> +				reg = <0>;
-> +			};
-> +		};
-> +	};
->   };
-> 
+More details from Alexander Duyck:
+Specifically since we are mapping the frame with
+DMA_ATTR_SKIP_CPU_SYNC we have to unmap with that as well. As a result
+a sync is not performed on an unmap and must be done manually as we
+skipped it for the first frag. As such we need to always sync before
+possibly performing a page unmap operation.
 
---
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+Fixes: f3213d932173 ("ixgbe: Update driver to make use of DMA attributes in Rx path")
+Signed-off-by: Firo Yang <firo.yang@suse.com>
+Reviewed-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
+Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/net/ethernet/intel/ixgbe/ixgbe_main.c | 16 +++++++++-------
+ 1 file changed, 9 insertions(+), 7 deletions(-)
+
+diff --git a/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c b/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
+index de65ca1e65580..51cd58fbab695 100644
+--- a/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
++++ b/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
+@@ -1822,13 +1822,7 @@ static void ixgbe_pull_tail(struct ixgbe_ring *rx_ring,
+ static void ixgbe_dma_sync_frag(struct ixgbe_ring *rx_ring,
+ 				struct sk_buff *skb)
+ {
+-	/* if the page was released unmap it, else just sync our portion */
+-	if (unlikely(IXGBE_CB(skb)->page_released)) {
+-		dma_unmap_page_attrs(rx_ring->dev, IXGBE_CB(skb)->dma,
+-				     ixgbe_rx_pg_size(rx_ring),
+-				     DMA_FROM_DEVICE,
+-				     IXGBE_RX_DMA_ATTR);
+-	} else if (ring_uses_build_skb(rx_ring)) {
++	if (ring_uses_build_skb(rx_ring)) {
+ 		unsigned long offset = (unsigned long)(skb->data) & ~PAGE_MASK;
+ 
+ 		dma_sync_single_range_for_cpu(rx_ring->dev,
+@@ -1845,6 +1839,14 @@ static void ixgbe_dma_sync_frag(struct ixgbe_ring *rx_ring,
+ 					      skb_frag_size(frag),
+ 					      DMA_FROM_DEVICE);
+ 	}
++
++	/* If the page was released, just unmap it. */
++	if (unlikely(IXGBE_CB(skb)->page_released)) {
++		dma_unmap_page_attrs(rx_ring->dev, IXGBE_CB(skb)->dma,
++				     ixgbe_rx_pg_size(rx_ring),
++				     DMA_FROM_DEVICE,
++				     IXGBE_RX_DMA_ATTR);
++	}
+ }
+ 
+ /**
+-- 
+2.20.1
+
+
+
