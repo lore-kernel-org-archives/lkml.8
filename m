@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 569FFC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:43:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F2C3C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:43:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2411F206D4
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:43:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73B9620704
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:43:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579866228;
-	bh=0yewvMhf8AqFzUJFiC+c4tjGMKVsBQlw6gbehAq0MtE=;
+	s=default; t=1579866231;
+	bh=8SstP88sVbDvinBmAl97JPTxSgO6mrA6hEdHJmhpsiY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cVQPYsHsnBIBMVRWpYjImO8MNLtdsHFfC7QCyIx76wiGKvjI38A4/RHRa28Lxw5L8
-	 GTm6JudX3S7djGZ+NXBIMDNOeyoE/Icq9EBNHzQN5ZBfdHegMh9/k7R7WQzrj+g0Xb
-	 NprcHmlD0xO8lBQZlZgcKD6FEMSEzCA2pUdm/Bvk=
+	b=yd2+jRcAkl8Jnig+d+qoGTiai36O+Y2wa9iwwPn2W4VWkWzckB1q9bzB3FmNHhMlx
+	 cNpEoPQEJ4+nxn1IA0kHY4QUoHBX5BwxJmYsDR7ECsTIZWfbIoAIecYYECd09Fcr79
+	 tcoItob6cZCL+xNhwkZKkAQF+O6jMfSbLcBajSd4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391028AbgAXLnr (ORCPT
+        id S2388298AbgAXLDb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:43:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37552 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 06:03:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37222 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387683AbgAXLDk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:03:40 -0500
+        id S1732311AbgAXLDZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:03:25 -0500
 Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 436C22071A;
-        Fri, 24 Jan 2020 11:03:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C16CC2071A;
+        Fri, 24 Jan 2020 11:03:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579863819;
-        bh=0yewvMhf8AqFzUJFiC+c4tjGMKVsBQlw6gbehAq0MtE=;
+        s=default; t=1579863804;
+        bh=8SstP88sVbDvinBmAl97JPTxSgO6mrA6hEdHJmhpsiY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Rf7kEW83T1kTw7iJ/CHx6hzbb6Q8ub5wrR618cHuI7qLBXKU1N4P+CrHtE61hhClu
-         EPM5QU0TfaeiUW7d2iVZ7qiE+ZKrVDRs2iCJYeFrQD83PPvGW/hYZR1IFeo4gE18Er
-         HgacD1P/eu2+8aLIzq5O4aFz8y2EadlqCdyxVGiU=
+        b=2UISt19xzQkvcJV8mX6jpxfmVjcCDiMX6224MUWnyY1ePTYicb4ejjOq7kNqnKjZE
+         zNS+EbkiQ4PVIaQvBKIfhzkvij65QP8huHOdYBDo1dumdW16LXW9XMAEIbaBWzobI+
+         zwunMNGEypzz9mIfj7xEvJyo7cFAIwMTiT1HDusM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Willem de Bruijn <willemb@google.com>,
-        Soheil Hassas Yeganeh <soheil@google.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Simon Horman <horms+renesas@verge.net.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 084/639] ipv6: add missing tx timestamping on IPPROTO_RAW
-Date:   Fri, 24 Jan 2020 10:24:14 +0100
-Message-Id: <20200124093057.889176715@linuxfoundation.org>
+Subject: [PATCH 4.19 092/639] pinctrl: sh-pfc: r8a77980: Add missing MOD_SEL0 field
+Date:   Fri, 24 Jan 2020 10:24:22 +0100
+Message-Id: <20200124093058.855289030@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
 References: <20200124093047.008739095@linuxfoundation.org>
@@ -61,38 +61,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Willem de Bruijn <willemb@google.com>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-[ Upstream commit fbfb2321e950918b430e7225546296b2dcadf725 ]
+[ Upstream commit b0f77269f6bba385f1f4dce44e7756cf8fbc0176 ]
 
-Raw sockets support tx timestamping, but one case is missing.
+The Module Select Register 0 contains 20 (= 5 x 4) reserved bits, and 12
+single-bit fields, but the variable field descriptor lacks a field of 4
+reserved bits.
 
-IPPROTO_RAW takes a separate packet construction path. raw_send_hdrinc
-has an explicit call to sock_tx_timestamp, but rawv6_send_hdrinc does
-not. Add it.
-
-Fixes: 11878b40ed5c ("net-timestamp: SOCK_RAW and PING timestamping")
-Signed-off-by: Willem de Bruijn <willemb@google.com>
-Acked-by: Soheil Hassas Yeganeh <soheil@google.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: f59125248a691dfe ("pinctrl: sh-pfc: Add R8A77980 PFC support")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/ipv6/raw.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/pinctrl/sh-pfc/pfc-r8a77980.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/ipv6/raw.c b/net/ipv6/raw.c
-index 4856d9320b28e..a41156a00dd44 100644
---- a/net/ipv6/raw.c
-+++ b/net/ipv6/raw.c
-@@ -660,6 +660,8 @@ static int rawv6_send_hdrinc(struct sock *sk, struct msghdr *msg, int length,
- 
- 	skb->ip_summed = CHECKSUM_NONE;
- 
-+	sock_tx_timestamp(sk, sockc->tsflags, &skb_shinfo(skb)->tx_flags);
-+
- 	if (flags & MSG_CONFIRM)
- 		skb_set_dst_pending_confirm(skb, 1);
- 
+diff --git a/drivers/pinctrl/sh-pfc/pfc-r8a77980.c b/drivers/pinctrl/sh-pfc/pfc-r8a77980.c
+index 3f6967331f646..81a710bb8555e 100644
+--- a/drivers/pinctrl/sh-pfc/pfc-r8a77980.c
++++ b/drivers/pinctrl/sh-pfc/pfc-r8a77980.c
+@@ -2751,7 +2751,7 @@ static const struct pinmux_cfg_reg pinmux_config_regs[] = {
+ #define F_(x, y)	x,
+ #define FM(x)		FN_##x,
+ 	{ PINMUX_CFG_REG_VAR("MOD_SEL0", 0xe6060500, 32,
+-			     4, 4, 4, 4,
++			     4, 4, 4, 4, 4,
+ 			     1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1) {
+ 		/* RESERVED 31, 30, 29, 28 */
+ 		0, 0, 0, 0, 0, 0, 0, 0,	0, 0, 0, 0, 0, 0, 0, 0,
 -- 
 2.20.1
 
