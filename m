@@ -2,86 +2,173 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 714DDC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 18:03:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A153BC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 18:03:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B11D2072C
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 18:03:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75BE42081E
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 18:03:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=tycho-ws.20150623.gappssmtp.com header.i=@tycho-ws.20150623.gappssmtp.com header.b="QLBgRrCR"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="dUsFWZYM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391164AbgAXSDe (ORCPT
+        id S2391173AbgAXSD4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 13:03:34 -0500
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:35238 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391132AbgAXSDd (ORCPT
+        Fri, 24 Jan 2020 13:03:56 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:31338 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2390696AbgAXSD4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 13:03:33 -0500
-Received: by mail-pj1-f67.google.com with SMTP id q39so176304pjc.0
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Jan 2020 10:03:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tycho-ws.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=KYYV9rcdEb+nT+n76T9IL2Mvjnz++gVjwO67Ed6lDIA=;
-        b=QLBgRrCRV3Qrx7BRCpYBc1z6C+go7OJtBBMTk2vteQruNfk+Jb4+PlqJWk6jwdNFO9
-         Vw2yUcc/MCqfZTQ7O6Iqm/RGOxZOBFCNJ6kCB7uJEIIlLDpt/qm2YX1+QHI0GYc6jiTu
-         +qzBhavepYUedI7ys2+YwQW/Bl+IVfsxJR0cnDnVJ9ED/qsqfOra6kyi8LhDIYt4kxy7
-         5Xj2aDsQ4WI17egTXDEFzF/O4IuypL8PFT07s029KMwqFmjLcdgGszHc7iny2Ynu33ot
-         cLpN+/Ki10iyRJlbelw5tEM189ZIgkpyZlt5eCKwGw+flz72N+3qAgZ0fIZpiTfHgC+G
-         DToA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=KYYV9rcdEb+nT+n76T9IL2Mvjnz++gVjwO67Ed6lDIA=;
-        b=Fi/9neNZYzd4a7Mmm8G5pXKWE8D4vFkOxNDH7hdqZYm7AEWTjLpIcYckVpSigLi3OR
-         UWeac2/qaBPLLQYj0i+ZXrloHc3o3nEli6fBqELQyYEkpArH4F+1xhZIQQL6+cuZYxR0
-         mQR1pQ54LQSszeQIi2OvuIGpMHikv9DvWsMnoOVzaLwreXa4bA7ufVJE77c0Un7DqsVn
-         piBZnqw93ZU6AVJ28RZD61vooKulnvJoDl6l+IEdG3MLi/eZvpbMUovDuUB52nXhOOEC
-         nGQIowbLc/HcYQ4cp7+HztEKHs3rK8CFMjdaMqVpmMzUOuT7dhVGsLiQT5dEws/GDdTH
-         AaOQ==
-X-Gm-Message-State: APjAAAUcx+O3yF7a5Gsmb0ua9thZeoMsTx0462F7VfvBcQpb2hAjVyCb
-        x+/z7PbNdTEVs5sXXlmH1uGkaQ==
-X-Google-Smtp-Source: APXvYqxzwjaX46e/1fUSjuFqRje3gg6dT16MaHtJeX4pLiTiDcr2YsyJMPFPS/RCb7fTnNGkezX5Jw==
-X-Received: by 2002:a17:90a:2763:: with SMTP id o90mr459921pje.110.1579889012413;
-        Fri, 24 Jan 2020 10:03:32 -0800 (PST)
-Received: from cisco ([69.162.16.18])
-        by smtp.gmail.com with ESMTPSA id v15sm7022881pju.15.2020.01.24.10.03.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 Jan 2020 10:03:31 -0800 (PST)
-Date:   Fri, 24 Jan 2020 10:03:32 -0800
-From:   Tycho Andersen <tycho@tycho.ws>
-To:     Sargun Dhillon <sargun@sargun.me>
-Cc:     linux-kernel@vger.kernel.org,
-        containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, christian.brauner@ubuntu.com
-Subject: Re: [PATCH 3/4] seccomp: Add SECCOMP_USER_NOTIF_FLAG_PIDFD to get
- pidfd on listener trap
-Message-ID: <20200124180332.GA4151@cisco>
-References: <20200124091743.3357-1-sargun@sargun.me>
- <20200124091743.3357-4-sargun@sargun.me>
+        Fri, 24 Jan 2020 13:03:56 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1579889035; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=/wvlJaRdxr+I0mnJPd3iMiQ1F3dK2CPJjaJ02DPirBo=; b=dUsFWZYM7cvoAuE+4xejBcXaNDY+nAx/2uaqr05Bk+Dr6sp7Yh6AsCVyWusz7nqHgLv0M5Af
+ yLZQq/T5GaLSp2DX3sz8o4RWNCXGH6gr4jymER9o1Pce4dx9yaoNn908hTzmmjewnlR6qLMF
+ i9XG88X0xe4SI9xxUr8QqqV3RjA=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e2b317b.7f0189c55bc8-smtp-out-n02;
+ Fri, 24 Jan 2020 18:03:39 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 344B6C447B2; Fri, 24 Jan 2020 18:03:37 +0000 (UTC)
+Received: from [10.46.161.159] (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: asutoshd)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id EC3A1C447A2;
+        Fri, 24 Jan 2020 18:03:35 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org EC3A1C447A2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=asutoshd@codeaurora.org
+Subject: Re: [PATCH v4 8/8] scsi: ufs: Select INITIAL adapt for HS Gear4
+To:     Can Guo <cang@codeaurora.org>, nguyenb@codeaurora.org,
+        hongwus@codeaurora.org, rnayak@codeaurora.org,
+        linux-scsi@vger.kernel.org, kernel-team@android.com,
+        saravanak@google.com, salyzyn@google.com
+Cc:     Alim Akhtar <alim.akhtar@samsung.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        Pedro Sousa <pedrom.sousa@synopsys.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        Venkat Gopalakrishnan <venkatg@codeaurora.org>,
+        Tomas Winkler <tomas.winkler@intel.com>,
+        Bean Huo <beanhuo@micron.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Allison Randal <allison@lohutok.net>,
+        open list <linux-kernel@vger.kernel.org>
+References: <1579764349-15578-1-git-send-email-cang@codeaurora.org>
+ <1579764349-15578-9-git-send-email-cang@codeaurora.org>
+From:   "Asutosh Das (asd)" <asutoshd@codeaurora.org>
+Message-ID: <ce8a29c0-cc96-7f9d-9cb2-c18e537a6bef@codeaurora.org>
+Date:   Fri, 24 Jan 2020 10:03:35 -0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200124091743.3357-4-sargun@sargun.me>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1579764349-15578-9-git-send-email-cang@codeaurora.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 24, 2020 at 01:17:42AM -0800, Sargun Dhillon wrote:
-> Currently, this just opens the group leader of the thread that triggere
-> the event, as pidfds (currently) are limited to group leaders.
+On 1/22/2020 11:25 PM, Can Guo wrote:
+> ADAPT is added specifically for HS Gear4 mode only, select INITIAL adapt
+> before do power mode change to G4 and select no adapt before switch to
+> non-G4 modes.
+> 
+> Signed-off-by: Can Guo <cang@codeaurora.org>
+> ---
 
-I don't love the semantics of this; when they're not limited to thread
-group leaders any more, we won't be able to change this. Is that work
-far off?
+LGTM.
 
-Tycho
+Reviewed-by: Asutosh Das <asutoshd@codeaurora.org>
+
+>   drivers/scsi/ufs/ufshcd.c | 14 +++++++++++++-
+>   drivers/scsi/ufs/ufshci.h |  1 +
+>   drivers/scsi/ufs/unipro.h |  7 +++++++
+>   3 files changed, 21 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+> index 1ee2187..f6d4828 100644
+> --- a/drivers/scsi/ufs/ufshcd.c
+> +++ b/drivers/scsi/ufs/ufshcd.c
+> @@ -4134,6 +4134,17 @@ static int ufshcd_change_power_mode(struct ufs_hba *hba,
+>   		ufshcd_dme_set(hba, UIC_ARG_MIB(PA_HSSERIES),
+>   						pwr_mode->hs_rate);
+>   
+> +	if (hba->ufs_version >= UFSHCI_VERSION_30) {
+> +		if (pwr_mode->gear_tx == UFS_HS_G4)
+> +			/* INITIAL ADAPT */
+> +			ufshcd_dme_set(hba, UIC_ARG_MIB(PA_TXHSADAPTTYPE),
+> +					PA_INITIAL_ADAPT);
+> +		else
+> +			/* NO ADAPT */
+> +			ufshcd_dme_set(hba, UIC_ARG_MIB(PA_TXHSADAPTTYPE),
+> +					PA_NO_ADAPT);
+> +	}
+> +
+>   	ret = ufshcd_uic_change_pwr_mode(hba, pwr_mode->pwr_rx << 4
+>   			| pwr_mode->pwr_tx);
+>   
+> @@ -8422,7 +8433,8 @@ int ufshcd_init(struct ufs_hba *hba, void __iomem *mmio_base, unsigned int irq)
+>   	if ((hba->ufs_version != UFSHCI_VERSION_10) &&
+>   	    (hba->ufs_version != UFSHCI_VERSION_11) &&
+>   	    (hba->ufs_version != UFSHCI_VERSION_20) &&
+> -	    (hba->ufs_version != UFSHCI_VERSION_21))
+> +	    (hba->ufs_version != UFSHCI_VERSION_21) &&
+> +	    (hba->ufs_version != UFSHCI_VERSION_30))
+>   		dev_err(hba->dev, "invalid UFS version 0x%x\n",
+>   			hba->ufs_version);
+>   
+> diff --git a/drivers/scsi/ufs/ufshci.h b/drivers/scsi/ufs/ufshci.h
+> index dbb75cd..95b4b03 100644
+> --- a/drivers/scsi/ufs/ufshci.h
+> +++ b/drivers/scsi/ufs/ufshci.h
+> @@ -104,6 +104,7 @@ enum {
+>   	UFSHCI_VERSION_11 = 0x00010100, /* 1.1 */
+>   	UFSHCI_VERSION_20 = 0x00000200, /* 2.0 */
+>   	UFSHCI_VERSION_21 = 0x00000210, /* 2.1 */
+> +	UFSHCI_VERSION_30 = 0x00000300, /* 3.0 */
+>   };
+>   
+>   /*
+> diff --git a/drivers/scsi/ufs/unipro.h b/drivers/scsi/ufs/unipro.h
+> index f539f87..960d175 100644
+> --- a/drivers/scsi/ufs/unipro.h
+> +++ b/drivers/scsi/ufs/unipro.h
+> @@ -146,6 +146,12 @@
+>   #define PA_SLEEPNOCONFIGTIME	0x15A2
+>   #define PA_STALLNOCONFIGTIME	0x15A3
+>   #define PA_SAVECONFIGTIME	0x15A4
+> +#define PA_TXHSADAPTTYPE	0x15D4
+> +
+> +/* Adpat type for PA_TXHSADAPTTYPE attribute */
+> +#define PA_REFRESH_ADAPT	0x00
+> +#define PA_INITIAL_ADAPT	0x01
+> +#define PA_NO_ADAPT		0x03
+>   
+>   #define PA_TACTIVATE_TIME_UNIT_US	10
+>   #define PA_HIBERN8_TIME_UNIT_US		100
+> @@ -192,6 +198,7 @@ enum ufs_hs_gear_tag {
+>   	UFS_HS_G1,		/* HS Gear 1 (default for reset) */
+>   	UFS_HS_G2,		/* HS Gear 2 */
+>   	UFS_HS_G3,		/* HS Gear 3 */
+> +	UFS_HS_G4,		/* HS Gear 4 */
+>   };
+>   
+>   enum ufs_unipro_ver {
+> 
+
+
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+Linux Foundation Collaborative Project
