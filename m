@@ -2,115 +2,198 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42DF5C35242
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 13:47:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09B79C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 13:48:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A1D02072C
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 13:47:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C755622464
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 13:48:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="J6a8hcII"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="d/YiwtWd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388554AbgAXNrf (ORCPT
+        id S2390011AbgAXNsa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 08:47:35 -0500
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:44283 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387592AbgAXNrf (ORCPT
+        Fri, 24 Jan 2020 08:48:30 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:38719 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2387592AbgAXNsa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 08:47:35 -0500
-Received: by mail-lf1-f65.google.com with SMTP id v201so1137346lfa.11
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Jan 2020 05:47:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=QuykXdQgCukrm1B7kCx5H9azkbpe9JqxdJC6IEPLP7E=;
-        b=J6a8hcIIm8TiHH7TFIWcKGNByxaxpGVHUBzfqcswFSaQJIo67XSe+jI/5Aig5QGp4s
-         8XAFZy0uXAlv4BOPy6Nwt4EsB7ZUkY0d1YxQYyue+MTYwG3flz/z5ihFeuf3WZ8J6CIP
-         8hwkBKpr/ICPb57F9QAD17waDv9EeQa/p0d+RZ1Mnu+2XyUzTayfF0I7zLCsASBZ4Nml
-         +86CQYFlR6CTNLxUB/FSwpAj6OmSZL3Eg9Eg6iHx6H3ctM9+43zA2HvmS+ONA99hROS5
-         uyxyVQm4aZioTXCoKkIoapHgljJESHoNAa5iE+sfndupMYXEJAjKiX6BCCAkJnu36xGm
-         N4TA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=QuykXdQgCukrm1B7kCx5H9azkbpe9JqxdJC6IEPLP7E=;
-        b=rqhIhgxRKZ5SEJ7rMSJx0IGlZ/bF7nQ8OfeJH2q2WivaaeRH+p8n+bOSgxiR9ojaRr
-         5MQQ/54Yp7w3f58/+Pz5skvIl0t9A9Pojtm/t4o8t7L4IeCuC+0VkcHVxvWQFaQgEkRF
-         /c8NJGMj+DR3JowgWR8jstbNQ0l026MyEY3E1dcwSxeAaQbhUBPLTyYVXSKAf3afjyA0
-         AmSn+h77Rw6a+gkNa7s7gitjbVmllC9diCywWe9odWctLunU82LHxiicmkkW7OnaWRb/
-         iY3387o2bgLKFgjRBwX+UCPGnNWElmXEL+0BmGEhGjT+CShQjBbjB/PJVWagjD59UqfE
-         34wQ==
-X-Gm-Message-State: APjAAAVm1anZiaaOmBGx0SxJct5dNQfiH7Li42i70yK/HgMZRIISw0kH
-        tAbp/R/SXxvgnQFfam7S8ahOrTHIg5JptBVdCg3l8w==
-X-Google-Smtp-Source: APXvYqxSRivfVrVbecQRjiQSIldNxUXvYMaxmjaf7gMkpNKfFesNvQYGQkxZKCv7eNPDJcp9U+KT9AiBpzwGKyEexqQ=
-X-Received: by 2002:ac2:5b41:: with SMTP id i1mr1457644lfp.82.1579873652504;
- Fri, 24 Jan 2020 05:47:32 -0800 (PST)
-MIME-Version: 1.0
-References: <20200124092806.004582306@linuxfoundation.org>
-In-Reply-To: <20200124092806.004582306@linuxfoundation.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Fri, 24 Jan 2020 19:17:21 +0530
-Message-ID: <CA+G9fYtxRoK6D1_oMf9zQj8MW0JtPdphDDO1NHcYQcoFNL5pjw@mail.gmail.com>
-Subject: Re: [PATCH 5.4 000/102] 5.4.15-stable review
+        Fri, 24 Jan 2020 08:48:30 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579873708;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+        bh=KvmhSDHhrMTdDP9Vr2OkCvFf0wdB6GMHex83pKYYzbc=;
+        b=d/YiwtWdmEmFa7Ay596bBaS8MQOiLzj2CLdn0LYE9she3Lys8FyhtotzJSlmzzmmQU/3d3
+        tv1he687PL6ZJI2lHj5IFA34LATBNJYEJ84LR6h2jkpjJCnZFYbmgWiW3ARgYpn6q00W0i
+        CDjFblEhQplvSaUTwTKQ1DKkSkctddY=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-132-qfhxiFrkM9aogSsvuSLWSg-1; Fri, 24 Jan 2020 08:48:24 -0500
+X-MC-Unique: qfhxiFrkM9aogSsvuSLWSg-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BE6F38010C5;
+        Fri, 24 Jan 2020 13:48:22 +0000 (UTC)
+Received: from [10.36.116.39] (ovpn-116-39.ams2.redhat.com [10.36.116.39])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id BC84D60BEC;
+        Fri, 24 Jan 2020 13:48:20 +0000 (UTC)
+Subject: Re: [PATCH v1] driver core: check for dead devices before
+ onlining/offlining
+From:   David Hildenbrand <david@redhat.com>
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Cc:     linux-kernel@vger.kernel.org,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Saravana Kannan <saravanak@google.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Michal Hocko <mhocko@kernel.org>
+References: <20200120104909.13991-1-david@redhat.com>
+ <20200124090052.GA2958140@kroah.com>
+ <6dd0ea5a-e5c3-c4b6-2b2e-93537571d7d6@redhat.com>
+ <20200124091221.GA2983380@kroah.com>
+ <bda4fa77-3e58-bcab-8881-9f6512b0bd15@redhat.com>
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+Organization: Red Hat GmbH
+Message-ID: <a37a0017-97ac-5fbb-6fc2-6b659cafa9e9@redhat.com>
+Date:   Fri, 24 Jan 2020 14:48:19 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.1
+MIME-Version: 1.0
+In-Reply-To: <bda4fa77-3e58-bcab-8881-9f6512b0bd15@redhat.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 24 Jan 2020 at 15:04, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 5.4.15 release.
-> There are 102 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Sun, 26 Jan 2020 09:26:29 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.15-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.4.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
->
-> Andrii Nakryiko <andriin@fb.com>
->     libbpf: Fix call relocation offset calculation bug
+On 24.01.20 14:31, David Hildenbrand wrote:
+> On 24.01.20 10:12, Greg Kroah-Hartman wrote:
+>> On Fri, Jan 24, 2020 at 10:09:03AM +0100, David Hildenbrand wrote:
+>>> On 24.01.20 10:00, Greg Kroah-Hartman wrote:
+>>>> On Mon, Jan 20, 2020 at 11:49:09AM +0100, David Hildenbrand wrote:
+>>>>> We can have rare cases where the removal of a device races with
+>>>>> somebody trying to online it (esp. via sysfs). We can simply check
+>>>>> if the device is already removed or getting removed under the dev->lock.
+>>>>>
+>>>>> E.g., right now, if memory block devices are removed (remove_memory()),
+>>>>> we do a:
+>>>>>
+>>>>> remove_memory() -> lock_device_hotplug() -> mem_hotplug_begin() ->
+>>>>> lock_device() -> dev->dead = true
+>>>>>
+>>>>> Somebody coming via sysfs (/sys/devices/system/memory/memoryX/online)
+>>>>> triggers a:
+>>>>>
+>>>>> lock_device_hotplug_sysfs() -> device_online() -> lock_device() ...
+>>>>>
+>>>>> So if we made it just before the lock_device_hotplug_sysfs() but get
+>>>>> delayed until remove_memory() released all locks, we will continue
+>>>>> taking locks and trying to online the device - which is then a zombie
+>>>>> device.
+>>>>>
+>>>>> Note that at least the memory onlining path seems to be protected by
+>>>>> checking if all memory sections are still present (something we can then
+>>>>> get rid of). We do have other sysfs attributes
+>>>>> (e.g., /sys/devices/system/memory/memoryX/valid_zones) that don't do any
+>>>>> such locking yet and might race with memory removal in a similar way. For
+>>>>> these users, we can then do a
+>>>>>
+>>>>> device_lock(dev);
+>>>>> if (!device_is_dead(dev)) {
+>>>>> 	/* magic /*
+>>>>> }
+>>>>> device_unlock(dev);
+>>>>>
+>>>>> Introduce and use device_is_dead() right away.
+>>>>>
+>>>>> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+>>>>> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+>>>>> Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
+>>>>> Cc: Saravana Kannan <saravanak@google.com>
+>>>>> Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+>>>>> Cc: Dan Williams <dan.j.williams@intel.com>
+>>>>> Cc: Michal Hocko <mhocko@kernel.org>
+>>>>> Signed-off-by: David Hildenbrand <david@redhat.com>
+>>>>> ---
+>>>>>
+>>>>> Am I missing any obvious mechanism in the device core that handles
+>>>>> something like this already? (especially also for other sysfs attributes?)
+>>>>
+>>>> So is a sysfs attribute causing the device itself to go away?  We have
+>>>
+>>> nope, removal is triggered via the driver, not via a sysfs attribute.
+>>
+>> But the idea is the same, it comes from the driver, not the driver core.
+>>
+>>> Regarding this patch: Is there anything prohibiting the possible
+>>> scenario I document above (IOW, is this patch applicable, or is there
+>>> another way to fence it properly (e.g., the "specific call" you mentioned))?
+>>
+>> I think it's the same thing, look at how scsi does it.
+> 
+> I think you are talking about doing a "transport_remove_device(dev)"
+> before doing the "device_del(dev)", combined with proper locking.
+> 
+> Will look into that for the memory subsystem ...
 
-Perf build failed on stable-rc 5.4 branch for arm, arm64, x86_64 and i386.
-
-libbpf.c: In function 'bpf_program__collect_reloc':
-libbpf.c:1795:5: error: implicit declaration of function 'pr_warn';
-did you mean 'pr_warning'? [-Werror=implicit-function-declaration]
-     pr_warn("bad call relo offset: %lu\n", sym.st_value);
-     ^~~~~~~
-     pr_warning
-libbpf.c:1795:5: error: nested extern declaration of 'pr_warn'
-[-Werror=nested-externs]
-Makefile:653: arch/arm64/Makefile: No such file or directory
-cc1: all warnings being treated as errors
+... looking into transports, it most probably does not apply here, hmm ...
 
 -- 
-Linaro LKFT
-https://lkft.linaro.org
+Thanks,
+
+David / dhildenb
+
