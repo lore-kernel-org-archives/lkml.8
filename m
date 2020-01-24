@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02430C35240
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 01:17:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07159C35240
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 01:17:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5CBA24655
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 01:17:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BEC2522464
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 01:17:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579828664;
-	bh=xjiIuT2evy8epx2GISn700fzYHTLGE7gpt2NB0cwO60=;
+	s=default; t=1579828666;
+	bh=yi3SPWfrdUc2hmBaEB9c9QudFRVizN2qqqi3ustrzIU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=E/wrPN3Gr4iMbngcUnt957zQ8rj9i9hyMuGtNuaxn3fnZkWzZCUonwAgRADNnhB8a
-	 cSjEnGkgHiW2IiO/BQ+UvqWcJhbnI8bvcr7EWTkWq2U6m4VdjhRmCBPMCfQayvTQUF
-	 9o4E1Jk+IEFp5BiiMOKA3Ie9OvwprbuBjcFB9JeE=
+	b=LQdlAcG6o2Tc6kjehobtTKb/WElJdXFEUUj6gynE3M7NIZNhJhIltBxiMIf6IhmrD
+	 Pk3szEPHROCJIQsBOytdbgY/jXunXFnaHRyQkMag48gMLTqGhW/Goku9/EmTkVYW3s
+	 6pQxrIx0OCbXNUpOXv0qrRX08DF+u3suutgIv4Sg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730720AbgAXBRo (ORCPT
+        id S1730741AbgAXBRq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 20:17:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60738 "EHLO mail.kernel.org"
+        Thu, 23 Jan 2020 20:17:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60856 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730656AbgAXBRi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 20:17:38 -0500
+        id S1730684AbgAXBRl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jan 2020 20:17:41 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B21A4206A2;
-        Fri, 24 Jan 2020 01:17:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5DB4D2467E;
+        Fri, 24 Jan 2020 01:17:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579828657;
-        bh=xjiIuT2evy8epx2GISn700fzYHTLGE7gpt2NB0cwO60=;
+        s=default; t=1579828661;
+        bh=yi3SPWfrdUc2hmBaEB9c9QudFRVizN2qqqi3ustrzIU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mhf8VvsmofmyoN59NrisBDNTQnqteliPkpphYbdsZM6QzjujQPf1Jpnc71lkO4rS1
-         bjmsJ0feVsuNUP2CjdXTqKKDzqQ0I5bmmZ5K0cCHbzI3+UjJJZYV1kq5In3wthPYNn
-         5c0uR97qiS+PADpieIqjaCaahFg5P2euq1wWoWNM=
+        b=Zatxfaj0W2RlSuKJSVrjxITHkBgbhvydFnHszMq4GNjdWMJYk9E4S6W78bVPiZqTf
+         sANufA6NyV1ohgqh4iCAVJL+eIwXdLFNcJ9jlVhW+EBhFHEwmWjJPbCKZDVRJLTaKD
+         4CEGX1ZpnKJi5GNwB5UF1fH0Zm7sqyP8QXDYW5fo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Laura Abbott <labbott@fedoraproject.org>,
-        Steven Ellis <sellis@redhat.com>,
-        Pacho Ramos <pachoramos@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org,
-        usb-storage@lists.one-eyed-alien.net
-Subject: [PATCH AUTOSEL 5.4 25/33] usb-storage: Disable UAS on JMicron SATA enclosure
-Date:   Thu, 23 Jan 2020 20:17:00 -0500
-Message-Id: <20200124011708.18232-25-sashal@kernel.org>
+Cc:     Andre Heider <a.heider@gmail.com>,
+        Marcel Holtmann <marcel@holtmann.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-bluetooth@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 28/33] Bluetooth: btbcm: Use the BDADDR_PROPERTY quirk
+Date:   Thu, 23 Jan 2020 20:17:03 -0500
+Message-Id: <20200124011708.18232-28-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200124011708.18232-1-sashal@kernel.org>
 References: <20200124011708.18232-1-sashal@kernel.org>
@@ -62,45 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Laura Abbott <labbott@fedoraproject.org>
+From: Andre Heider <a.heider@gmail.com>
 
-[ Upstream commit bc3bdb12bbb3492067c8719011576370e959a2e6 ]
+[ Upstream commit a4f95f31a9f38d9bb1fd313fcc2d0c0d48116ee3 ]
 
-Steve Ellis reported incorrect block sizes and alignement
-offsets with a SATA enclosure. Adding a quirk to disable
-UAS fixes the problems.
+Some devices ship with the controller default address, like the
+Orange Pi 3 (BCM4345C5).
 
-Reported-by: Steven Ellis <sellis@redhat.com>
-Cc: Pacho Ramos <pachoramos@gmail.com>
-Signed-off-by: Laura Abbott <labbott@fedoraproject.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Allow the bootloader to set a valid address through the device tree.
+
+Signed-off-by: Andre Heider <a.heider@gmail.com>
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/storage/unusual_uas.h | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ drivers/bluetooth/btbcm.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/usb/storage/unusual_uas.h b/drivers/usb/storage/unusual_uas.h
-index d0bdebd87ce3a..1b23741036ee8 100644
---- a/drivers/usb/storage/unusual_uas.h
-+++ b/drivers/usb/storage/unusual_uas.h
-@@ -87,12 +87,15 @@ UNUSUAL_DEV(0x2537, 0x1068, 0x0000, 0x9999,
- 		USB_SC_DEVICE, USB_PR_DEVICE, NULL,
- 		US_FL_IGNORE_UAS),
+diff --git a/drivers/bluetooth/btbcm.c b/drivers/bluetooth/btbcm.c
+index 2d2e6d8620681..f02a4bdc0ca75 100644
+--- a/drivers/bluetooth/btbcm.c
++++ b/drivers/bluetooth/btbcm.c
+@@ -440,6 +440,12 @@ int btbcm_finalize(struct hci_dev *hdev)
  
--/* Reported-by: Takeo Nakayama <javhera@gmx.com> */
-+/*
-+ * Initially Reported-by: Takeo Nakayama <javhera@gmx.com>
-+ * UAS Ignore Reported by Steven Ellis <sellis@redhat.com>
-+ */
- UNUSUAL_DEV(0x357d, 0x7788, 0x0000, 0x9999,
- 		"JMicron",
- 		"JMS566",
- 		USB_SC_DEVICE, USB_PR_DEVICE, NULL,
--		US_FL_NO_REPORT_OPCODES),
-+		US_FL_NO_REPORT_OPCODES | US_FL_IGNORE_UAS),
+ 	set_bit(HCI_QUIRK_STRICT_DUPLICATE_FILTER, &hdev->quirks);
  
- /* Reported-by: Hans de Goede <hdegoede@redhat.com> */
- UNUSUAL_DEV(0x4971, 0x1012, 0x0000, 0x9999,
++	/* Some devices ship with the controller default address.
++	 * Allow the bootloader to set a valid address through the
++	 * device tree.
++	 */
++	set_bit(HCI_QUIRK_USE_BDADDR_PROPERTY, &hdev->quirks);
++
+ 	return 0;
+ }
+ EXPORT_SYMBOL_GPL(btbcm_finalize);
 -- 
 2.20.1
 
