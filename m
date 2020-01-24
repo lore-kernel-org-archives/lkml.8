@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3C79C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:12:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B34DC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:12:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81D802071A
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:12:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 108302077C
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:12:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579864368;
-	bh=79BzIEImy9GA1cgjPsnC4XGO1UI7iCCrXjwEuGO0WPY=;
+	s=default; t=1579864377;
+	bh=vEm1+NPJNQEMaNckZljDmlqsaG7Su1fq4a6m5EJQ1FA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=083k2jB68lKF3weoxSlaGnWFuRv7VGz1InEQO1mxFKxw1y+6CVglQGRzWwsjWxs2t
-	 /HbiLbuAguxYhvRMrV55bz4XCuHR56/elIf3a6K1OVASBLHyaS9HF7SAgSr/WRl39L
-	 dulD7e7eCD8+QOSI/0B9OG5+6lEFTVgp3Zbx3CSg=
+	b=kg1IfnEVn38pPS+FBoMrP768MJMV082MaX5H8aPndNB/majs+slTVeJfCggjJEqha
+	 KKfQmebk5C39+PnmqjjWyf2uIzHifCBFe438m9mB88WSD6mgXy91l4nZEDvFKtVt8X
+	 1kQw3ZpGzB7l8Oe/rr5LacJFlrP5Ph/4ILEdivEE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390004AbgAXLMe (ORCPT
+        id S2389345AbgAXLMz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:12:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48838 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 06:12:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49092 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387877AbgAXLMa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:12:30 -0500
+        id S2389259AbgAXLMp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:12:45 -0500
 Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 37F4120708;
-        Fri, 24 Jan 2020 11:12:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4F53220708;
+        Fri, 24 Jan 2020 11:12:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579864350;
-        bh=79BzIEImy9GA1cgjPsnC4XGO1UI7iCCrXjwEuGO0WPY=;
+        s=default; t=1579864364;
+        bh=vEm1+NPJNQEMaNckZljDmlqsaG7Su1fq4a6m5EJQ1FA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZM3Q9UwdkmoqWk+l76ibyhuTLEyITnNrNDPtK8uttd+zmD7S/uMt+iR9ZyZ0VHX+H
-         tjKFnBKCjSNCcwu5Aikc52C+mxjqy5pZRMRXCg8UstUNzrEywYCwgSj0ckcnA5+JF+
-         E2qnDndhgHsosJTZe/un441EfYMLfH6QfL2ZjhSs=
+        b=R4YfztREjgM5TlUWBoqt4dZh+GZjpc2QsGoDwp7GnEDnITdr3kTkVUZttcWGvIFai
+         EiiwSKM76XDZ2elwQgQw3hTVBjs7P/sDK+zLg+NIqmJnKpSjUoNSRGfgViEEXVQTdP
+         yfo87SKNQCsgZuy2Hl8gyw57EawtJlX/T/IYpUeA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Florian Westphal <fw@strlen.de>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
+        stable@vger.kernel.org, Anna Schumaker <Anna.Schumaker@Netapp.com>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 242/639] netfilter: nft_set_hash: bogus element self comparison from deactivation path
-Date:   Fri, 24 Jan 2020 10:26:52 +0100
-Message-Id: <20200124093117.120261624@linuxfoundation.org>
+Subject: [PATCH 4.19 246/639] NFS: Add missing encode / decode sequence_maxsz to v4.2 operations
+Date:   Fri, 24 Jan 2020 10:26:56 +0100
+Message-Id: <20200124093117.589155216@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
 References: <20200124093047.008739095@linuxfoundation.org>
@@ -60,35 +60,86 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pablo Neira Ayuso <pablo@netfilter.org>
+From: Anna Schumaker <Anna.Schumaker@Netapp.com>
 
-[ Upstream commit a01cbae57ec29b161d42ee1caa4ffffda5d519c2 ]
+[ Upstream commit 1a3466aed3a17eed41cd9411f89eb637f58349b0 ]
 
-Use the element from the loop iteration, not the same element we want to
-deactivate otherwise this branch always evaluates true.
+These really should have been there from the beginning, but we never
+noticed because there was enough slack in the RPC request for the extra
+bytes. Chuck's recent patch to use au_cslack and au_rslack to compute
+buffer size shrunk the buffer enough that this was now a problem for
+SEEK operations on my test client.
 
-Fixes: 6c03ae210ce3 ("netfilter: nft_set_hash: add non-resizable hashtable implementation")
-Reported-by: Florian Westphal <fw@strlen.de>
-Tested-by: Florian Westphal <fw@strlen.de>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Fixes: f4ac1674f5da4 ("nfs: Add ALLOCATE support")
+Fixes: 2e72448b07dc3 ("NFS: Add COPY nfs operation")
+Fixes: cb95deea0b4aa ("NFS OFFLOAD_CANCEL xdr")
+Fixes: 624bd5b7b683c ("nfs: Add DEALLOCATE support")
+Fixes: 1c6dcbe5ceff8 ("NFS: Implement SEEK")
+Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/nft_set_hash.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/nfs/nfs42xdr.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/net/netfilter/nft_set_hash.c b/net/netfilter/nft_set_hash.c
-index 8dde4bfe8b8a4..05118e03c3e48 100644
---- a/net/netfilter/nft_set_hash.c
-+++ b/net/netfilter/nft_set_hash.c
-@@ -555,7 +555,7 @@ static void *nft_hash_deactivate(const struct net *net,
+diff --git a/fs/nfs/nfs42xdr.c b/fs/nfs/nfs42xdr.c
+index 69f72ed2bf879..ec9803088f6b8 100644
+--- a/fs/nfs/nfs42xdr.c
++++ b/fs/nfs/nfs42xdr.c
+@@ -59,43 +59,53 @@
+ #define decode_clone_maxsz		(op_decode_hdr_maxsz)
  
- 	hash = nft_jhash(set, priv, &this->ext);
- 	hlist_for_each_entry(he, &priv->table[hash], node) {
--		if (!memcmp(nft_set_ext_key(&this->ext), &elem->key.val,
-+		if (!memcmp(nft_set_ext_key(&he->ext), &elem->key.val,
- 			    set->klen) &&
- 		    nft_set_elem_active(&he->ext, genmask)) {
- 			nft_set_elem_change_active(net, set, &he->ext);
+ #define NFS4_enc_allocate_sz		(compound_encode_hdr_maxsz + \
++					 encode_sequence_maxsz + \
+ 					 encode_putfh_maxsz + \
+ 					 encode_allocate_maxsz + \
+ 					 encode_getattr_maxsz)
+ #define NFS4_dec_allocate_sz		(compound_decode_hdr_maxsz + \
++					 decode_sequence_maxsz + \
+ 					 decode_putfh_maxsz + \
+ 					 decode_allocate_maxsz + \
+ 					 decode_getattr_maxsz)
+ #define NFS4_enc_copy_sz		(compound_encode_hdr_maxsz + \
++					 encode_sequence_maxsz + \
+ 					 encode_putfh_maxsz + \
+ 					 encode_savefh_maxsz + \
+ 					 encode_putfh_maxsz + \
+ 					 encode_copy_maxsz + \
+ 					 encode_commit_maxsz)
+ #define NFS4_dec_copy_sz		(compound_decode_hdr_maxsz + \
++					 decode_sequence_maxsz + \
+ 					 decode_putfh_maxsz + \
+ 					 decode_savefh_maxsz + \
+ 					 decode_putfh_maxsz + \
+ 					 decode_copy_maxsz + \
+ 					 decode_commit_maxsz)
+ #define NFS4_enc_offload_cancel_sz	(compound_encode_hdr_maxsz + \
++					 encode_sequence_maxsz + \
+ 					 encode_putfh_maxsz + \
+ 					 encode_offload_cancel_maxsz)
+ #define NFS4_dec_offload_cancel_sz	(compound_decode_hdr_maxsz + \
++					 decode_sequence_maxsz + \
+ 					 decode_putfh_maxsz + \
+ 					 decode_offload_cancel_maxsz)
+ #define NFS4_enc_deallocate_sz		(compound_encode_hdr_maxsz + \
++					 encode_sequence_maxsz + \
+ 					 encode_putfh_maxsz + \
+ 					 encode_deallocate_maxsz + \
+ 					 encode_getattr_maxsz)
+ #define NFS4_dec_deallocate_sz		(compound_decode_hdr_maxsz + \
++					 decode_sequence_maxsz + \
+ 					 decode_putfh_maxsz + \
+ 					 decode_deallocate_maxsz + \
+ 					 decode_getattr_maxsz)
+ #define NFS4_enc_seek_sz		(compound_encode_hdr_maxsz + \
++					 encode_sequence_maxsz + \
+ 					 encode_putfh_maxsz + \
+ 					 encode_seek_maxsz)
+ #define NFS4_dec_seek_sz		(compound_decode_hdr_maxsz + \
++					 decode_sequence_maxsz + \
+ 					 decode_putfh_maxsz + \
+ 					 decode_seek_maxsz)
+ #define NFS4_enc_layoutstats_sz		(compound_encode_hdr_maxsz + \
 -- 
 2.20.1
 
