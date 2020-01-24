@@ -7,49 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9FA3C32771
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:21:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 225D9C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:21:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7457820661
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:21:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0377218AC
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:21:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579875678;
-	bh=tk6Byy/9gnS9TvzqixnbCarFVB/TnhObViSxEp0c7KE=;
+	s=default; t=1579875686;
+	bh=KCRqnPrC1zoA3FxXCtQkGkNTNDI8yiqkX4GiR5ndBRc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=giN4/5YPZNE0RkwTcnc3qwwlzr8MWeRP9oQhoYipZy73yqJoPppH/Rjvvbz2D/PZ+
-	 60BZJAkvOBpf+sF/lJAHfmnsfXaZVWy+a3EGlg9vdOZ/0MygAJ/Shpt4nRLaEeZ46Q
-	 y5p5i8PFnUEO1Ey3lKyYfpc64lQJuCXLCyBANuLQ=
+	b=rKuYAaGSBgwo3Vxz+qzMAwb+Ew7t6TB9XUAB+Pl71ygQL6z0CUxxGu4RicYJ5hABl
+	 9lh6c+JUJ3ljgi9OZWeW5wqMWgViqLX+ri/hAu9yTDB33a1L2sbxl9BIF59kPMFucM
+	 BKTnKPizcENkyGwKkRQKlyoLGLg+0YxN0NKm+M6c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405267AbgAXOVR (ORCPT
+        id S2392196AbgAXOVZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 09:21:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42658 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 09:21:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42932 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405223AbgAXOVK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 09:21:10 -0500
+        id S2405270AbgAXOVS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 09:21:18 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 635C721556;
-        Fri, 24 Jan 2020 14:21:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5EB1F2077C;
+        Fri, 24 Jan 2020 14:21:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579875670;
-        bh=tk6Byy/9gnS9TvzqixnbCarFVB/TnhObViSxEp0c7KE=;
+        s=default; t=1579875677;
+        bh=KCRqnPrC1zoA3FxXCtQkGkNTNDI8yiqkX4GiR5ndBRc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BjraEXxyOKUvg1F+QBpe5KYK2k6DvJeIwEcrdfSjUYgHC5juywnGVYuQkjX22hXl0
-         vz3oN4nd3HQQIKvCPT6I9X1I+3XPJt3fNPy9mqITONzQlXQrX64jvCUw1wj28XrbYq
-         C5itHxiFtOp2TcY9qhFE7iDW/IKyO2KNvJu7FNDI=
+        b=lc1QAqh6C8QomWQdq62u6UcKpVE+M9+WEMhJ55vfvx1lZAmRonGY3ADuBTQi9gORb
+         8GJJuaHUIXws2p0E51zm3g58HNttI23mqS5HXz1MXSWj3uFvMRCLp2D/YUkwpYS9Mg
+         2CilCDsaqUkgIwg6J5TTzvJNzaJi+gVsXrJuz9Q8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Florian Westphal <fw@strlen.de>,
-        syzbot+76d0b80493ac881ff77b@syzkaller.appspotmail.com,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Sasha Levin <sashal@kernel.org>,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 49/56] netfilter: nft_tunnel: fix null-attribute check
-Date:   Fri, 24 Jan 2020 09:20:05 -0500
-Message-Id: <20200124142012.29752-49-sashal@kernel.org>
+Cc:     Ilie Halip <ilie.halip@gmail.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 56/56] riscv: delete temporary files
+Date:   Fri, 24 Jan 2020 09:20:12 -0500
+Message-Id: <20200124142012.29752-56-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200124142012.29752-1-sashal@kernel.org>
 References: <20200124142012.29752-1-sashal@kernel.org>
@@ -62,35 +59,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Westphal <fw@strlen.de>
+From: Ilie Halip <ilie.halip@gmail.com>
 
-[ Upstream commit 1c702bf902bd37349f6d91cd7f4b372b1e46d0ed ]
+[ Upstream commit 95f4d9cced96afa9c69b3da8e79e96102c84fc60 ]
 
-else we get null deref when one of the attributes is missing, both
-must be non-null.
+Temporary files used in the VDSO build process linger on even after make
+mrproper: vdso-dummy.o.tmp, vdso.so.dbg.tmp.
 
-Reported-by: syzbot+76d0b80493ac881ff77b@syzkaller.appspotmail.com
-Fixes: aaecfdb5c5dd8ba ("netfilter: nf_tables: match on tunnel metadata")
-Signed-off-by: Florian Westphal <fw@strlen.de>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Delete them once they're no longer needed.
+
+Signed-off-by: Ilie Halip <ilie.halip@gmail.com>
+Signed-off-by: Paul Walmsley <paul.walmsley@sifive.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/nft_tunnel.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/riscv/kernel/vdso/Makefile | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/net/netfilter/nft_tunnel.c b/net/netfilter/nft_tunnel.c
-index 3a15f219e4e7f..09441bbb0166f 100644
---- a/net/netfilter/nft_tunnel.c
-+++ b/net/netfilter/nft_tunnel.c
-@@ -56,7 +56,7 @@ static int nft_tunnel_get_init(const struct nft_ctx *ctx,
- 	struct nft_tunnel *priv = nft_expr_priv(expr);
- 	u32 len;
+diff --git a/arch/riscv/kernel/vdso/Makefile b/arch/riscv/kernel/vdso/Makefile
+index eed1c137f6183..87f71a6cd3ef8 100644
+--- a/arch/riscv/kernel/vdso/Makefile
++++ b/arch/riscv/kernel/vdso/Makefile
+@@ -55,7 +55,8 @@ quiet_cmd_vdsold = VDSOLD  $@
+       cmd_vdsold = $(CC) $(KBUILD_CFLAGS) $(call cc-option, -no-pie) -nostdlib -nostartfiles $(SYSCFLAGS_$(@F)) \
+                            -Wl,-T,$(filter-out FORCE,$^) -o $@.tmp && \
+                    $(CROSS_COMPILE)objcopy \
+-                           $(patsubst %, -G __vdso_%, $(vdso-syms)) $@.tmp $@
++                           $(patsubst %, -G __vdso_%, $(vdso-syms)) $@.tmp $@ && \
++                   rm $@.tmp
  
--	if (!tb[NFTA_TUNNEL_KEY] &&
-+	if (!tb[NFTA_TUNNEL_KEY] ||
- 	    !tb[NFTA_TUNNEL_DREG])
- 		return -EINVAL;
- 
+ # install commands for the unstripped file
+ quiet_cmd_vdso_install = INSTALL $@
 -- 
 2.20.1
 
