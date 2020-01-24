@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66542C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:53:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B74B9C35242
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:54:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33BB7214AF
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:53:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 842B4206D5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:54:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579859639;
-	bh=Q3mESUXUhBBdKU3NQ32ZC/6o2RFPDyned+9barBgp4k=;
+	s=default; t=1579859645;
+	bh=kKrsRJvjV2pYirmKjjV3sByo0K9LXiyXcWpNm3rB+pE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Nyiwu5vogdTNtm9UQ1hKbeEnsj9skPmlXtMHZeufJu8a0JNYFHSgR29+ibvxQOxL8
-	 p8Mn54SvGol1AwWZZQqctN3NMXHULqXlc33+tkI0ifvlE3ZF2rPgWicLpeRzYLDYOP
-	 frmyxmxG7Etq9C0ZGEvxLttyQ6IzIYJ+Lj4ZKi5w=
+	b=qLvC1XC6DuqhpRpjoeK0yRzwhYcoFEc/fIzNWfxun/twrYfheckSA1x0tIyyziwTT
+	 x14mzAFylJYgYZuLAE4eoeV+zjGbcHy6IRs6TN7fLA2Nq8fVXKmt3MG4OodL1cLI1f
+	 JwhT+54XCwtSdyvuFwDGy8/GDTmGbV1swROPOUlA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388333AbgAXJx6 (ORCPT
+        id S2388340AbgAXJyE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 04:53:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56826 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 04:54:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56920 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730133AbgAXJx4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 04:53:56 -0500
+        id S1730133AbgAXJyA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 04:54:00 -0500
 Received: from localhost (unknown [145.15.244.15])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 38482214AF;
-        Fri, 24 Jan 2020 09:53:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1B87820718;
+        Fri, 24 Jan 2020 09:53:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579859635;
-        bh=Q3mESUXUhBBdKU3NQ32ZC/6o2RFPDyned+9barBgp4k=;
+        s=default; t=1579859639;
+        bh=kKrsRJvjV2pYirmKjjV3sByo0K9LXiyXcWpNm3rB+pE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=O83l7aT064PHYmlWfhKXb56FeWGgrJFs+ZDuGNaiGqfCltodk3OZujjMeyi4LtUDg
-         TAnr4KMPvxpIBjf9smTMXPDoOCTrV5tmZsxoxIrsdSE6QjKI6PNiqAZgD3RQau1waH
-         q72a6H58FLEfDmiFGDAwjasW1mbZzrGyizdWNe9I=
+        b=h+PyHj5GmRvJl7MnGROBMjXW/UrZYCn+nP6Z26pzZDgKJ06oRvf3z0x3REqoXVp1q
+         Dgxz/iY6m2JiMP3UDjNaJGsLKDi7+sut5mdjKyR3Tp1x/pdLomUiqUavYql2/fQ8qA
+         2y+Din84QsYZWqidTM+S4RTs6jBxc2KAGBdXI8Lc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stefan Wahren <stefan.wahren@i2se.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
+        stable@vger.kernel.org,
+        Sowjanya Komatineni <skomatineni@nvidia.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 129/343] mmc: sdhci-brcmstb: handle mmc_of_parse() errors during probe
-Date:   Fri, 24 Jan 2020 10:29:07 +0100
-Message-Id: <20200124092936.940069625@linuxfoundation.org>
+Subject: [PATCH 4.14 156/343] spi: tegra114: clear packed bit for unpacked mode
+Date:   Fri, 24 Jan 2020 10:29:34 +0100
+Message-Id: <20200124092940.493754980@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124092919.490687572@linuxfoundation.org>
 References: <20200124092919.490687572@linuxfoundation.org>
@@ -60,36 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stefan Wahren <stefan.wahren@i2se.com>
+From: Sowjanya Komatineni <skomatineni@nvidia.com>
 
-[ Upstream commit 1e20186e706da8446f9435f2924cd65ab1397e73 ]
+[ Upstream commit 7b3d10cdf54b8bc1dc0da21faed9789ac4da3684 ]
 
-We need to handle mmc_of_parse() errors during probe otherwise the
-MMC driver could start without proper initialization (e.g. power sequence).
+Fixes: Clear packed bit when not using packed mode.
 
-Fixes: 476bf3d62d5c ("mmc: sdhci-brcmstb: Add driver for Broadcom BRCMSTB SoCs")
-Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Packed bit is not cleared when not using packed mode. This results
+in transfer timeouts for the unpacked mode transfers followed by the
+packed mode transfers.
+
+Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mmc/host/sdhci-brcmstb.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/spi/spi-tegra114.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/mmc/host/sdhci-brcmstb.c b/drivers/mmc/host/sdhci-brcmstb.c
-index 552bddc5096ce..1cd10356fc14f 100644
---- a/drivers/mmc/host/sdhci-brcmstb.c
-+++ b/drivers/mmc/host/sdhci-brcmstb.c
-@@ -55,7 +55,9 @@ static int sdhci_brcmstb_probe(struct platform_device *pdev)
- 	}
+diff --git a/drivers/spi/spi-tegra114.c b/drivers/spi/spi-tegra114.c
+index 2ad04796ef298..3a6b202dfffe0 100644
+--- a/drivers/spi/spi-tegra114.c
++++ b/drivers/spi/spi-tegra114.c
+@@ -730,6 +730,8 @@ static int tegra_spi_start_transfer_one(struct spi_device *spi,
  
- 	sdhci_get_of_property(pdev);
--	mmc_of_parse(host->mmc);
-+	res = mmc_of_parse(host->mmc);
-+	if (res)
-+		goto err;
+ 	if (tspi->is_packed)
+ 		command1 |= SPI_PACKED;
++	else
++		command1 &= ~SPI_PACKED;
  
- 	/*
- 	 * Supply the existing CAPS, but clear the UHS modes. This
+ 	command1 &= ~(SPI_CS_SEL_MASK | SPI_TX_EN | SPI_RX_EN);
+ 	tspi->cur_direction = 0;
 -- 
 2.20.1
 
