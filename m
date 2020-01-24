@@ -2,136 +2,211 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11990C35242
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF733C35243
 	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 08:02:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B782C2071A
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 08:02:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8305124682
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 08:02:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="oD1NuICW"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="yYskb3nR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729863AbgAXIAW (ORCPT
+        id S1729946AbgAXICS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 03:00:22 -0500
-Received: from mail-eopbgr60088.outbound.protection.outlook.com ([40.107.6.88]:52708
-        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727163AbgAXIAW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 03:00:22 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ZQC1ScTqWQ/4N1ooTrCIjZhPz9cLrjI87YPJTScDUInrLKwx5pYbvrDq0fRyQUkNPgln9iuPrqatrmAoiTeCLwAiGFEzoxOoQnpQtlOGgtmKnKdIBGwTyAnQ3zZk0OxPyx0xbWpsb9JTh8ysLYovlrI2ur9sgHrR9LN0lrMxSCXg0JfVaqXBkv1R1q8GANU4pvawQ48SI26BBwQwByfm/Pcl3AI+zx+zQQ0LjdpCDVbQn9UTGw0wsPShFGhN18makYnVRHAXbXA1j07h02LoJgjZpkMUIKdPJBHcQejrZCC4nFWm7bE8UOC1efiXu5YlrYmH7c6HAKK/2bjPBdSAGg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=b0aVPJBTZdS5S0ZtXKiO1FwMd5KxZ0WjhluC8SryCNc=;
- b=XiN0zDFx9NzslBEOUI3NE/MZUIZb7HZfu+U9Bc4rRcLrCq/rvFcMSTHjw6zZ+qJ2k9u1Y6Ss6hVgnVVP81RNshG77Q+DMvGvjeOwiAo+68czh9sZuTKl7zFCCgBVhnPK1zXDw7M+9PkiKKkrPWeMpClTwBFLKEkfDuXxz+99M1PzIgubBBsrY+YPyrVq3gkeiHwcGz0SdK/PzWY5kyrL14fCMGV2l7kQ6I5mJ2v12qsxgKk7C0t1HPycJ4VwfZ7370QYzs9sEGK3R8e1cM4h3Z/UfxaHZpjCJaZU622EoLcfngUCcaOdESy2EmnsZq4+flDhamLspD8kd3GDaKPgiw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=b0aVPJBTZdS5S0ZtXKiO1FwMd5KxZ0WjhluC8SryCNc=;
- b=oD1NuICWcFB4EfsAbzykDlcLS0xeikZuODI0ZaJvjl//JC3XXXfUaIHDloT57lWtE/g9SwpufcdN6IxgfNFGJcrVnzyjbgZPJuQoJavuVGJ0mHkwBpBMd2k31YnUWOuzrmUjDThoe/VrD/r9fTXdozoucvB5XKFDe7lNDOwspIE=
-Received: from AM0PR04MB5089.eurprd04.prod.outlook.com (52.134.89.85) by
- AM0PR04MB4769.eurprd04.prod.outlook.com (20.177.41.209) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2644.24; Fri, 24 Jan 2020 08:00:17 +0000
-Received: from AM0PR04MB5089.eurprd04.prod.outlook.com
- ([fe80::6105:a475:df04:bfb1]) by AM0PR04MB5089.eurprd04.prod.outlook.com
- ([fe80::6105:a475:df04:bfb1%7]) with mapi id 15.20.2644.027; Fri, 24 Jan 2020
- 08:00:17 +0000
-From:   Pankaj Gupta <pankaj.gupta@nxp.com>
-To:     Horia Geanta <horia.geanta@nxp.com>,
-        Aymen Sghaier <aymen.sghaier@nxp.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     Arun Pathak <arun.pathak@nxp.com>
-Subject: RE: [PATCH] add support for TLS1.2 algorithms offload
-Thread-Topic: [PATCH] add support for TLS1.2 algorithms offload
-Thread-Index: AQHV0d9fpUp9vdyUr0ua541zV8eJN6f5crpw
-Date:   Fri, 24 Jan 2020 08:00:17 +0000
-Message-ID: <AM0PR04MB5089CE1A958D7FF52BBD8D5F950E0@AM0PR04MB5089.eurprd04.prod.outlook.com>
-References: <20200123110413.23064-1-pankaj.gupta@nxp.com>
- <VI1PR0402MB34855705F10BB498911FEF78980F0@VI1PR0402MB3485.eurprd04.prod.outlook.com>
-In-Reply-To: <VI1PR0402MB34855705F10BB498911FEF78980F0@VI1PR0402MB3485.eurprd04.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=pankaj.gupta@nxp.com; 
-x-originating-ip: [92.120.1.67]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 5ea0b38d-e9bf-43a4-2d8c-08d7a0a37395
-x-ms-traffictypediagnostic: AM0PR04MB4769:|AM0PR04MB4769:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM0PR04MB476937C82E7F553966FF391B950E0@AM0PR04MB4769.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
-x-forefront-prvs: 02929ECF07
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(396003)(376002)(136003)(366004)(39860400002)(199004)(189003)(76116006)(66946007)(64756008)(71200400001)(316002)(44832011)(66476007)(66446008)(8936002)(81166006)(66556008)(81156014)(9686003)(8676002)(55016002)(6506007)(86362001)(26005)(966005)(110136005)(53546011)(7696005)(5660300002)(186003)(33656002)(52536014)(2906002)(4326008)(478600001)(4744005);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB4769;H:AM0PR04MB5089.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: q9bqI6RcafyOtzY1wE9t+s/4R6NjQTEi6DJsfudm2xxfe0P5vhHmOinVLcQd2roeIXOGGZr/K+x5aPT90fCBpMhGu7bzTVt6htcQwX1WHdHCM8+RntgL7vsuzDiE0LIpqM1fJPjAToaNi1hu48Qr7oY5/jmZ914WaXkKkn+r8SR95M3H6pKn0rwZq5V38uyxJxMJxtbgx/bOkxNcaYPQuyDaIoOpSCJOINozDva1z304XlntffEmscyhBDJHJhYynLs/zZjxY4GBYle3gdgnIfYFj7mDTqjjQn8fWwDuNDtr9COytJ7PXgmAT90bAyNaxW05wQYRMzcKlh+6UKb+0tqLb8+E6GmXllMhV+7oBuEzBW62V1s11+YjftLKV0w9KGNwIANP/rR4M0NWnjsMqS6eNv0AF+xFWcicA9t2DySK1AYfnUz0ZCV6NUIIo+Bv/LY9aQ+QZuhGWFwTEjwCDOiHpC3HMuW4eZ/nyZ0W9F4=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Fri, 24 Jan 2020 03:02:18 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:39718 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727163AbgAXICR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 03:02:17 -0500
+Received: by mail-wr1-f68.google.com with SMTP id y11so823039wrt.6
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jan 2020 00:02:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:autocrypt:organization:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=OlLbxKAm24kk7BqwIB6TdUq5++JUPjcTVNPlce6GGcA=;
+        b=yYskb3nRQojn0YR1a1/P0UHdl5YnI3pCUdr4PPlNU5LW0kRu1w3guS8Ad6Z3JSiCyx
+         /gE+u5fYheiNhvXdQYXXJReZrGE36JOdZApYsKt6rlQ2V71bSakZ+hxzFdiu0pnPB9w4
+         SPwrcVj7Pa6Ex7DwmVPDOpp1NEQElepcVu/GVtHzF6NdPeFeOI3VzAMXQ/34f4Bvu0aW
+         feJh3i9mUJuyShUjnLBz2BKn0yjstr9M8ASaDXDMmPUPzIMgKfIRQ51VxNuiuJjGxP0x
+         7zGobXhRWAmeJ6mKNpYcqy7g8XHLqSA7o6PrxAivqHVguWFNWbhVjqqiFtchypjYFL1s
+         ci3w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :organization:message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=OlLbxKAm24kk7BqwIB6TdUq5++JUPjcTVNPlce6GGcA=;
+        b=iOQA5HoCT+BIQvDSUixEzt/6DEGGac0d0Xl24YZHfZq0tAGjRhsZb0GOG43T6xQvlT
+         SK1MwAqJSO+OTe/8f+skkz0M2jjlvmjGraNfZMrX9lEU55B3M7XufkDlAXOhFUA0jPA6
+         oRGU4DRErikzV2sNdBs3JuYj0m3G5ndNrgREgmzvJEF8xx3BTGWvPhZ9j+0WOJi0E0or
+         oDREDcwdMYMeyWAy3rZPJSDGglvqIFWCgV3eN3uIbHiejcKIlppJ0QDGwE5B0Nrw2uOx
+         vwRQW3s3Pk1sTxZPJT6/WYHJF2hI3KyOBU8PCMvlzmYqJCFMi7sBPnpAS79QzwSuSTED
+         zHhQ==
+X-Gm-Message-State: APjAAAXhZdwbKn3tmAtrYCujQUvPIg6UgCoiUe+WfVhUCyD7UKm+QxCc
+        2BcEwjCyx9YAd49PcKQoLBLKJg==
+X-Google-Smtp-Source: APXvYqxwSfBAgmCTm7xqCMMitgplyqDCqW9WDbMLGahzpXS0qBQbOZ0sOoYUFZGwCGy9tpKozf5t7A==
+X-Received: by 2002:adf:ec0d:: with SMTP id x13mr2722298wrn.400.1579852934189;
+        Fri, 24 Jan 2020 00:02:14 -0800 (PST)
+Received: from [10.1.2.12] (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id p5sm6201089wrt.79.2020.01.24.00.02.13
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 24 Jan 2020 00:02:13 -0800 (PST)
+Subject: Re: [PATCH v6 0/7] PCI: amlogic: Make PCIe working reliably on AXG
+ platforms
+To:     Remi Pommarel <repk@triplefau.lt>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Yue Wang <yue.wang@Amlogic.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     Jerome Brunet <jbrunet@baylibre.com>,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-pci@vger.kernel.org
+References: <20200123232943.10229-1-repk@triplefau.lt>
+From:   Neil Armstrong <narmstrong@baylibre.com>
+Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
+ 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
+ BSwxi7g3Mu7u5kUByanqHyA=
+Organization: Baylibre
+Message-ID: <64b5d857-569a-ab2e-a467-9cdb47cf20e4@baylibre.com>
+Date:   Fri, 24 Jan 2020 09:02:12 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5ea0b38d-e9bf-43a4-2d8c-08d7a0a37395
-X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Jan 2020 08:00:17.4604
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Q5WSB1JML8UsVnGD2u7hb55Hzm7p4XWJFRtPiBtnBvtUUsnnWPufEQSiy9DB2SWzx/G5A5dDkjdAjhl4rf78TA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB4769
+In-Reply-To: <20200123232943.10229-1-repk@triplefau.lt>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Horia,
+Hi,
 
-Thanks for review comment.
-Yes, rightly said.
+On 24/01/2020 00:29, Remi Pommarel wrote:
+> PCIe device probing failures have been seen on AXG platforms and were
+> due to unreliable clock signal output. Setting HHI_MIPI_CNTL0[26] bit
+> in MIPI's PHY registers solved the problem. This bit controls band gap
+> reference.
+> 
+> As discussed here [1] one of these shared MIPI/PCIE analog PHY register
+> bits was implemented in the clock driver as CLKID_MIPI_ENABLE. This adds
+> a PHY driver to control this bit instead, as well as setting the band
+> gap one in order to get reliable PCIE communication.
+> 
+> While at it add another PHY driver to control PCIE only PHY registers,
+> making AXG code more similar to G12A platform thus allowing to remove
+> some specific platform handling in pci-meson driver.
+> 
+> Please note that CLKID_MIPI_ENABLE removable will be done in a different
+> serie.
+> 
+> Changes since v5:
+>  - Add additionalProperties in device tree binding documentation
+>  - Make analog PHY required
+> 
+> Changes since v4:
+>  - Rename the shared MIPI/PCIe PHY to analog
+>  - Chain the MIPI/PCIe PHY to the PCIe one
+> 
+> Changes since v3:
+>  - Go back to the shared MIPI/PCIe phy driver solution from v2
+>  - Remove syscon usage
+>  - Add all dt-bindings documentation
+> 
+> Changes since v2:
+>  - Remove shared MIPI/PCIE device driver and use syscon to access register
+>    in PCIE only driver instead
+>  - Include devicetree documentation
+> 
+> Changes sinve v1:
+>  - Move HHI_MIPI_CNTL0 bit control in its own PHY driver
+>  - Add a PHY driver for PCIE_PHY registers
+>  - Modify pci-meson.c to make use of both PHYs and remove specific
+>    handling for AXG and G12A
+> 
+> [1] https://lkml.org/lkml/2019/12/16/119
+> 
+> Remi Pommarel (7):
+>   dt-bindings: Add AXG PCIE PHY bindings
+>   dt-bindings: Add AXG shared MIPI/PCIE analog PHY bindings
+>   dt-bindings: PCI: meson: Update PCIE bindings documentation
+>   arm64: dts: meson-axg: Add PCIE PHY nodes
+>   phy: amlogic: Add Amlogic AXG MIPI/PCIE analog PHY Driver
+>   phy: amlogic: Add Amlogic AXG PCIE PHY Driver
+>   PCI: amlogic: Use AXG PCIE
+> 
+>  .../bindings/pci/amlogic,meson-pcie.txt       |  22 +-
+>  .../amlogic,meson-axg-mipi-pcie-analog.yaml   |  35 ++++
+>  .../bindings/phy/amlogic,meson-axg-pcie.yaml  |  52 +++++
+>  arch/arm64/boot/dts/amlogic/meson-axg.dtsi    |  16 ++
+>  drivers/pci/controller/dwc/pci-meson.c        | 116 ++---------
+>  drivers/phy/amlogic/Kconfig                   |  22 ++
+>  drivers/phy/amlogic/Makefile                  |  12 +-
+>  .../amlogic/phy-meson-axg-mipi-pcie-analog.c  | 188 +++++++++++++++++
+>  drivers/phy/amlogic/phy-meson-axg-pcie.c      | 192 ++++++++++++++++++
+>  9 files changed, 543 insertions(+), 112 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/phy/amlogic,meson-axg-mipi-pcie-analog.yaml
+>  create mode 100644 Documentation/devicetree/bindings/phy/amlogic,meson-axg-pcie.yaml
+>  create mode 100644 drivers/phy/amlogic/phy-meson-axg-mipi-pcie-analog.c
+>  create mode 100644 drivers/phy/amlogic/phy-meson-axg-pcie.c
+> 
 
-I will re-work and update.
+You forgot to keep the Reviewed-by/Acked-by tags from the previous reviews.
 
-Regards
-Pankaj
-
------Original Message-----
-From: Horia Geanta <horia.geanta@nxp.com>=20
-Sent: Thursday, January 23, 2020 8:18 PM
-To: Pankaj Gupta <pankaj.gupta@nxp.com>; Aymen Sghaier <aymen.sghaier@nxp.c=
-om>; Herbert Xu <herbert@gondor.apana.org.au>; David S. Miller <davem@davem=
-loft.net>; linux-crypto@vger.kernel.org; linux-kernel@vger.kernel.org
-Cc: Arun Pathak <arun.pathak@nxp.com>
-Subject: Re: [PATCH] add support for TLS1.2 algorithms offload
-
-On 1/23/2020 1:22 PM, Pankaj Gupta wrote:
->         - aes-128-cbc-hmac-sha256
->         - aes-256-cbc-hmac-sha256
->=20
-> Enabled the support of TLS1.1 algorithms offload
->=20
->         - aes-128-cbc-hmac-sha1
->         - aes-256-cbc-hmac-sha1
->=20
-Patch does not apply, since there's no specific tls support in upstream caa=
-m drivers.
-
-caam drivers register crypto algorithms to the crypto API, and ktls uses wh=
-atever it pleases:
-https://www.kernel.org/doc/html/latest/networking/tls-offload.html
-https://www.kernel.org/doc/html/latest/networking/tls.html
-
-Horia
+Neil
