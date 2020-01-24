@@ -2,88 +2,144 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22E9EC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 23:07:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CD0FC35242
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 23:08:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E421B2075D
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 23:07:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 407072072C
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 23:08:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="jDbSAA0T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729375AbgAXXHZ (ORCPT
+        id S1729516AbgAXXIN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 18:07:25 -0500
-Received: from mga05.intel.com ([192.55.52.43]:25112 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729182AbgAXXHZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 18:07:25 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Jan 2020 15:07:24 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,359,1574150400"; 
-   d="scan'208";a="221171775"
-Received: from sjchrist-coffee.jf.intel.com ([10.54.74.202])
-  by orsmga008.jf.intel.com with ESMTP; 24 Jan 2020 15:07:23 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Krish Sadhukhan <krish.sadhukhan@oracle.com>,
-        Randy Dunlap <rdunlap@infradead.org>
-Subject: [PATCH] KVM: x86: Take a u64 when checking for a valid dr7 value
-Date:   Fri, 24 Jan 2020 15:07:22 -0800
-Message-Id: <20200124230722.8964-1-sean.j.christopherson@intel.com>
-X-Mailer: git-send-email 2.24.1
+        Fri, 24 Jan 2020 18:08:13 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:58017 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729293AbgAXXIM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 18:08:12 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579907291;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=+pQMYieQNovVhRg3Nj/s2qkdJCjR5iAcrsF/1uR16VA=;
+        b=jDbSAA0T8SbSMZbEoOrqoF3SLP4tGx5qIWEXYrSHw/irAlmUvnLgijN0DsnzD3kvmREYyP
+        NHC9wgTQ6mzJDWMDSfjy73LOs5kivTrdiZ+skLJSgPQ4va43amEvcMpQks3WP81X3I9EnA
+        4mUeSbJ/l0jlhbW81PkudncfYDOqE3Q=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-337-gAWFFvPeNi-kbmFD8NKbCw-1; Fri, 24 Jan 2020 18:08:07 -0500
+X-MC-Unique: gAWFFvPeNi-kbmFD8NKbCw-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id EA878107ACCD;
+        Fri, 24 Jan 2020 23:08:05 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-120-49.rdu2.redhat.com [10.10.120.49])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 2F2D33CCA;
+        Fri, 24 Jan 2020 23:08:05 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+Subject: [PATCH net] rxrpc: Fix use-after-free in rxrpc_receive_data()
+From:   David Howells <dhowells@redhat.com>
+To:     netdev@vger.kernel.org
+Cc:     dhowells@redhat.com, linux-afs@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Date:   Fri, 24 Jan 2020 23:08:04 +0000
+Message-ID: <157990728440.1173687.14473656600696398776.stgit@warthog.procyon.org.uk>
+User-Agent: StGit/0.19
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Take a u64 instead of an unsigned long in kvm_dr7_valid() to fix a build
-warning on i386 due to right-shifting a 32-bit value by 32 when checking
-for bits being set in dr7[63:32].
+The subpacket scanning loop in rxrpc_receive_data() references the
+subpacket count in the private data part of the sk_buff in the loop
+termination condition.  However, when the final subpacket is pasted into
+the ring buffer, the function is no longer has a ref on the sk_buff and
+should not be looking at sp->* any more.  This point is actually marked in
+the code when skb is cleared (but sp is not - which is an error).
 
-Alternatively, the warning could be resolved by rewriting the check to
-use an i386-friendly method, but taking a u64 fixes another oddity on
-32-bit KVM.  Beause KVM implements natural width VMCS fields as u64s to
-avoid layout issues between 32-bit and 64-bit, a devious guest can stuff
-vmcs12->guest_dr7 with a 64-bit value even when both the guest and host
-are 32-bit kernels.  KVM eventually drops vmcs12->guest_dr7[63:32] when
-propagating vmcs12->guest_dr7 to vmcs02, but ideally KVM would not rely
-on that behavior for correctness.
+Fix this by caching sp->nr_subpackets in a local variable and using that
+instead.
 
-Cc: Jim Mattson <jmattson@google.com>
-Cc: Krish Sadhukhan <krish.sadhukhan@oracle.com>
-Fixes: ecb697d10f70 ("KVM: nVMX: Check GUEST_DR7 on vmentry of nested guests")
-Reported-by: Randy Dunlap <rdunlap@infradead.org>
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Also clear 'sp' to catch accesses after that point.
+
+This can show up as an oops in rxrpc_get_skb() if sp->nr_subpackets gets
+trashed by the sk_buff getting freed and reused in the meantime.
+
+Fixes: e2de6c404898 ("rxrpc: Use info in skbuff instead of reparsing a jumbo packet")
+Signed-off-by: David Howells <dhowells@redhat.com>
 ---
- arch/x86/kvm/x86.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/x86/kvm/x86.h b/arch/x86/kvm/x86.h
-index 2d2ff855773b..3624665acee4 100644
---- a/arch/x86/kvm/x86.h
-+++ b/arch/x86/kvm/x86.h
-@@ -357,7 +357,7 @@ static inline bool kvm_pat_valid(u64 data)
- 	return (data | ((data & 0x0202020202020202ull) << 1)) == data;
- }
- 
--static inline bool kvm_dr7_valid(unsigned long data)
-+static inline bool kvm_dr7_valid(u64 data)
+ net/rxrpc/input.c |   12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
+
+diff --git a/net/rxrpc/input.c b/net/rxrpc/input.c
+index 86bd133b4fa0..96d54e5bf7bc 100644
+--- a/net/rxrpc/input.c
++++ b/net/rxrpc/input.c
+@@ -413,7 +413,7 @@ static void rxrpc_input_data(struct rxrpc_call *call, struct sk_buff *skb)
  {
- 	/* Bits [63:32] are reserved */
- 	return !(data >> 32);
--- 
-2.24.1
+ 	struct rxrpc_skb_priv *sp = rxrpc_skb(skb);
+ 	enum rxrpc_call_state state;
+-	unsigned int j;
++	unsigned int j, nr_subpackets;
+ 	rxrpc_serial_t serial = sp->hdr.serial, ack_serial = 0;
+ 	rxrpc_seq_t seq0 = sp->hdr.seq, hard_ack;
+ 	bool immediate_ack = false, jumbo_bad = false;
+@@ -457,7 +457,8 @@ static void rxrpc_input_data(struct rxrpc_call *call, struct sk_buff *skb)
+ 	call->ackr_prev_seq = seq0;
+ 	hard_ack = READ_ONCE(call->rx_hard_ack);
+ 
+-	if (sp->nr_subpackets > 1) {
++	nr_subpackets = sp->nr_subpackets;
++	if (nr_subpackets > 1) {
+ 		if (call->nr_jumbo_bad > 3) {
+ 			ack = RXRPC_ACK_NOSPACE;
+ 			ack_serial = serial;
+@@ -465,11 +466,11 @@ static void rxrpc_input_data(struct rxrpc_call *call, struct sk_buff *skb)
+ 		}
+ 	}
+ 
+-	for (j = 0; j < sp->nr_subpackets; j++) {
++	for (j = 0; j < nr_subpackets; j++) {
+ 		rxrpc_serial_t serial = sp->hdr.serial + j;
+ 		rxrpc_seq_t seq = seq0 + j;
+ 		unsigned int ix = seq & RXRPC_RXTX_BUFF_MASK;
+-		bool terminal = (j == sp->nr_subpackets - 1);
++		bool terminal = (j == nr_subpackets - 1);
+ 		bool last = terminal && (sp->rx_flags & RXRPC_SKB_INCL_LAST);
+ 		u8 flags, annotation = j;
+ 
+@@ -506,7 +507,7 @@ static void rxrpc_input_data(struct rxrpc_call *call, struct sk_buff *skb)
+ 		}
+ 
+ 		if (call->rxtx_buffer[ix]) {
+-			rxrpc_input_dup_data(call, seq, sp->nr_subpackets > 1,
++			rxrpc_input_dup_data(call, seq, nr_subpackets > 1,
+ 					     &jumbo_bad);
+ 			if (ack != RXRPC_ACK_DUPLICATE) {
+ 				ack = RXRPC_ACK_DUPLICATE;
+@@ -564,6 +565,7 @@ static void rxrpc_input_data(struct rxrpc_call *call, struct sk_buff *skb)
+ 			 * ring.
+ 			 */
+ 			skb = NULL;
++			sp = NULL;
+ 		}
+ 
+ 		if (last) {
+
 
