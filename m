@@ -2,100 +2,126 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDB99C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:32:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20AF2C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:32:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85AD02075D
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:32:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579865567;
-	bh=kYOTZMMPUzAsJV4PFZKe+9p7J/Cyp2HCN9vnXUCCBRs=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KeE7HcRMJ67rrofZiAKlOJ3TCdpStlXDb+euYCnf2O6/r+EyJ6HhHaXegvMAd/h8Q
-	 boSkVrTLE/8Vg0mOGpTB/r27PN6ThnMoVA1INB73/17kXgf1QtiVAiZXqdwXWufye1
-	 mzgMOMj0ERNBXtccM3KrsXnCO7SdWdcFJ6cAX8gA=
+	by mail.kernel.org (Postfix) with ESMTP id F081A214DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:32:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404489AbgAXLcq (ORCPT
+        id S2404499AbgAXLct (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:32:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51686 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 06:32:49 -0500
+Received: from foss.arm.com ([217.140.110.172]:50280 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404467AbgAXLcl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:32:41 -0500
-Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A91FE20718;
-        Fri, 24 Jan 2020 11:32:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579865560;
-        bh=kYOTZMMPUzAsJV4PFZKe+9p7J/Cyp2HCN9vnXUCCBRs=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tXdkge8p/HwhH4HXYZ0HNPey6KInBsY3ftpzzUdImDN6G2C8RyWqIfD/2NxpGlpI4
-         jKvTXhjJCXRSZeC6yEptikYpyVVrHTTJZPoTUG9S9oqkc5my9BeXUaiETQWzuAswwl
-         O7CXAxLA5P58IppV8R1I8KB6n1y05u4h9XP4COkg=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?H=C3=A5kon=20Bugge?= <haakon.bugge@oracle.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 563/639] RDMA/cma: Fix false error message
-Date:   Fri, 24 Jan 2020 10:32:13 +0100
-Message-Id: <20200124093159.879798109@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
-References: <20200124093047.008739095@linuxfoundation.org>
-User-Agent: quilt/0.66
+        id S2404479AbgAXLcn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:32:43 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4DCCF31B;
+        Fri, 24 Jan 2020 03:32:43 -0800 (PST)
+Received: from bogus (e103737-lin.cambridge.arm.com [10.1.197.49])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BC53B3F68E;
+        Fri, 24 Jan 2020 03:32:41 -0800 (PST)
+Date:   Fri, 24 Jan 2020 11:32:39 +0000
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     Greg KH <gregkh@linuxfoundation.org>,
+        Jolly Shah <JOLLYS@xilinx.com>
+Cc:     "ard.biesheuvel@linaro.org" <ard.biesheuvel@linaro.org>,
+        "mingo@kernel.org" <mingo@kernel.org>,
+        "matt@codeblueprint.co.uk" <matt@codeblueprint.co.uk>,
+        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
+        "keescook@chromium.org" <keescook@chromium.org>,
+        "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>,
+        Michal Simek <michals@xilinx.com>,
+        Rajan Vaja <RAJANV@xilinx.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 1/4] firmware: xilinx: Add sysfs interface
+Message-ID: <20200124113239.GB40307@bogus>
+References: <1578527663-10243-1-git-send-email-jolly.shah@xilinx.com>
+ <1578527663-10243-2-git-send-email-jolly.shah@xilinx.com>
+ <20200114145257.GA1910108@kroah.com>
+ <BYAPR02MB5992FC37E0D2AD9946414417B80F0@BYAPR02MB5992.namprd02.prod.outlook.com>
+ <20200124060339.GB2906795@kroah.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200124060339.GB2906795@kroah.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Håkon Bugge <haakon.bugge@oracle.com>
+Hi Greg,
 
-[ Upstream commit a6e4d254c19b541a58caced322111084b27a7788 ]
+Thanks for raising various issues that I have repeatedly asked and
+constantly ignored.
 
-In addr_handler(), assuming status == 0 and the device already has been
-acquired (id_priv->cma_dev != NULL), we get the following incorrect
-"error" message:
+On Fri, Jan 24, 2020 at 07:03:39AM +0100, Greg KH wrote:
+> On Thu, Jan 23, 2020 at 11:47:57PM +0000, Jolly Shah wrote:
+> > Hi Greg,
+> >
 
-RDMA CM: ADDR_ERROR: failed to resolve IP. status 0
+[...]
 
-Fixes: 498683c6a7ee ("IB/cma: Add debug messages to error flows")
-Link: https://lore.kernel.org/r/20190902092731.1055757-1-haakon.bugge@oracle.com
-Signed-off-by: Håkon Bugge <haakon.bugge@oracle.com>
-Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/infiniband/core/cma.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> > Firmware driver was changed later to be platform driver but these
+> > interfaces were defined earlier and are in use.
+>
+> Defined and in use where?  Not in the upstream kernel tree, right?  Or
+> am I missing them somewhere else?
+>
 
-diff --git a/drivers/infiniband/core/cma.c b/drivers/infiniband/core/cma.c
-index 319bfef00a4a8..e16872e0724ff 100644
---- a/drivers/infiniband/core/cma.c
-+++ b/drivers/infiniband/core/cma.c
-@@ -2889,7 +2889,7 @@ static void addr_handler(int status, struct sockaddr *src_addr,
- 		if (status)
- 			pr_debug_ratelimited("RDMA CM: ADDR_ERROR: failed to acquire device. status %d\n",
- 					     status);
--	} else {
-+	} else if (status) {
- 		pr_debug_ratelimited("RDMA CM: ADDR_ERROR: failed to resolve IP. status %d\n", status);
- 	}
- 
--- 
-2.20.1
+Exactly and they keep saying there partners are using these for 3-4 years
+and they want to retain that. I have told them to change several times.
+
+> > > > +	ret = kstrtol(tok, 16, &value);
+> > > > +	if (ret) {
+> > > > +		ret = -EFAULT;
+> > > > +		goto err;
+> > > > +	}
+> > > > +
+> > > > +	ret = eemi_ops->ioctl(0, read_ioctl, reg, 0, ret_payload);
+> > >
+> > > This feels "tricky", if you tie this to the device you have your driver
+> > > bound to, will this make it easier instead of having to go through the
+> > > ioctl callback?
+> > >
+> >
+> > GGS(general global storage) registers are in PMU space and linux doesn't have access to it
+> > Hence ioctl is used.
+>
+> Why not just a "real" call to the driver to make this type of reading?
+> You don't have ioctls within the kernel for other drivers to call,
+> that's not needed at all.
+>
+
+Oh yes, this is so broken in design. This firmware is designed to abstract
+the power and configuration management on their platform, but they decided
+to add direct register access to some registers anyway. Weird use case,
+don't even ask. But I strongly objected such interface in sysfs even if
+they moved under platform device. If they need this at any cost, I have
+suggested debugfs.
 
 
+[...]
 
+> >
+> > Agree it will be simpler but to as firmware driver was changed to be
+> > platform driver, to keep paths same, we used sysfs.
+>
+> Keep them same from what?  Use the platform device as that is what it is
+> there for, do not go create new apis when they are not needed at all.
+>
+
++1, and please don't add any sysfs that can read/write those GGS registers
+directly from userspace. Move them to debugfs if you are desperate to have
+something.
+
+--
+Regards,
+Sudeep
