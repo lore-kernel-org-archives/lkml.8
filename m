@@ -2,103 +2,121 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCE3AC35242
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 17:00:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B35CEC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 17:03:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B914120709
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 17:00:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86C252072C
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 17:03:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="A3qsmNly"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390466AbgAXRAm (ORCPT
+        id S2390368AbgAXRD5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 12:00:42 -0500
-Received: from ms.lwn.net ([45.79.88.28]:46224 "EHLO ms.lwn.net"
+        Fri, 24 Jan 2020 12:03:57 -0500
+Received: from pegase1.c-s.fr ([93.17.236.30]:7227 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389999AbgAXRAl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 12:00:41 -0500
-Received: from lwn.net (localhost [127.0.0.1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ms.lwn.net (Postfix) with ESMTPSA id 9A4DD2D6;
-        Fri, 24 Jan 2020 17:00:40 +0000 (UTC)
-Date:   Fri, 24 Jan 2020 10:00:39 -0700
-From:   Jonathan Corbet <corbet@lwn.net>
-To:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Cc:     andy@infradead.org, dvhart@infradead.org, lenb@kernel.org,
-        andy@kernel.org, linux-kernel@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, linux-doc@vger.kernel.org
-Subject: Re: [PATCH v2] admin guide/pm: Admin guide for Intel Uncore
- Frequency limits
-Message-ID: <20200124100039.70116459@lwn.net>
-In-Reply-To: <20200113040143.1419770-1-srinivas.pandruvada@linux.intel.com>
-References: <20200113040143.1419770-1-srinivas.pandruvada@linux.intel.com>
-Organization: LWN.net
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        id S2387710AbgAXRD5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 12:03:57 -0500
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 48458B3zJfz9v0MC;
+        Fri, 24 Jan 2020 18:03:54 +0100 (CET)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=A3qsmNly; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id PlrBI8ncfS8t; Fri, 24 Jan 2020 18:03:54 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 48458B1zkFz9v0M8;
+        Fri, 24 Jan 2020 18:03:54 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1579885434; bh=mrhcIGGf29wPqKelAuVacdgsgYagP0iavvcKEGj+5FI=;
+        h=From:Subject:To:Cc:Date:From;
+        b=A3qsmNlyynmqC5scs6xaMpM8BusLtOt/41xLmy7BykDfEOf4zxA3bllbpVQoyOXhk
+         Eb+sQYh0jfA/rV3WrY5uwNVoadrNFv5HZHgZrvhPd65yfhokdfuNAydFR/8nJkP5cf
+         KZZHCT1tLe8KSp+agMP7XVYhGic0VJP3i5gNbmpI=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 680488B86A;
+        Fri, 24 Jan 2020 18:03:54 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id FQF1SzBxpfT8; Fri, 24 Jan 2020 18:03:54 +0100 (CET)
+Received: from po14934vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 46D5E8B86B;
+        Fri, 24 Jan 2020 18:03:49 +0100 (CET)
+Received: by po14934vm.idsi0.si.c-s.fr (Postfix, from userid 0)
+        id 3C582651F6; Fri, 24 Jan 2020 17:03:48 +0000 (UTC)
+Message-Id: <872477f7c7552d3bb7baf0b302398fcd42c5fcfd.1579885334.git.christophe.leroy@c-s.fr>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Subject: [PATCH] powerpc/32: Add missing context synchronisation with
+ CONFIG_VMAP_STACK
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Date:   Fri, 24 Jan 2020 17:03:48 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 12 Jan 2020 20:01:43 -0800
-Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com> wrote:
+After reactivation of data translation by modifying MSR[DR], a isync
+is required to ensure the translation is effective.
 
-> Added documentation for the attributes to control uncore frequency
-> selection.
-> 
-> Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-> ---
-> v2:
->  - Split the documentation patch to another patch to merge via different
->     tree
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+---
+Rebased on powerpc/merge-test
 
-Which tree did you have in mind?  PM stuff tends to go through Rafael's
-tree, normally, which is fine.
+@mpe: If not too late:
+- change to head_32.h should be squashed into "powerpc/32: prepare for CONFIG_VMAP_STACK"
+- change to head_32.S should be squashed into "powerpc/32s: Enable CONFIG_VMAP_STACK"
 
->  Documentation/admin-guide/pm/intel_uncore.rst | 23 +++++++++++++++++++
->  .../admin-guide/pm/working-state.rst          |  1 +
->  2 files changed, 24 insertions(+)
->  create mode 100644 Documentation/admin-guide/pm/intel_uncore.rst
-> 
-> diff --git a/Documentation/admin-guide/pm/intel_uncore.rst b/Documentation/admin-guide/pm/intel_uncore.rst
-> new file mode 100644
-> index 000000000000..d75be65fb16a
-> --- /dev/null
-> +++ b/Documentation/admin-guide/pm/intel_uncore.rst
-> @@ -0,0 +1,23 @@
-> +.. SPDX-License-Identifier: GPL-2.0
-> +
-> +=========================================================
-> +Intel® Uncore Frequency Selection
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+---
+ arch/powerpc/kernel/head_32.S | 1 +
+ arch/powerpc/kernel/head_32.h | 2 ++
+ 2 files changed, 3 insertions(+)
 
-I would really like to avoid adding ® symbols throughout the docs.  I get
-grief for non-ASCII symbols that actually have a need to be there; this
-isn't one of those.  
-
-> +=========================================================
-> +
-> +The uncore frequency in the Intel(R) hardware is selected based on internal heuristics, which uses the current selected performance state and various system power constraints. In majority of the cases this selection is the most optimal, so there is no need for placing external constraints from the Operating System.
-
-I would say that this violates the 80-character limit by a character or
-two...  The entire patch has this problem.
-
-> +
-> +But there are some customers who wants less jitters from dynamic uncore frequency selection. For them, power saving is much lower priority than consistent performance. Currently these customers uses MSR 0x620, to place hard limits on the maximum and the minimum uncore frequency. They can now use Linux sysfs to place these limits and also have additional capability to place hard limits under power constraint scenario.
-
-less jitter (singular)
-
-> +
-> +The Uncore frequency section attributes are present under "/sys/devices/system/cpu/intel_uncore_frequency".
-> +The scope of these attributes is per die in multi-die systems or package wide in non multi-die systems. There is a unique folder for each die or package. For example:
-> +"package_00_die_00" for package 0 and die 0.
-
-This may not render as you would like; use an RST literal block here.
-
-Thanks,
-
-jon
+diff --git a/arch/powerpc/kernel/head_32.S b/arch/powerpc/kernel/head_32.S
+index cb7864091641..0493fcac6409 100644
+--- a/arch/powerpc/kernel/head_32.S
++++ b/arch/powerpc/kernel/head_32.S
+@@ -277,6 +277,7 @@ MachineCheck:
+ #ifdef CONFIG_VMAP_STACK
+ 	li	r11, MSR_KERNEL & ~(MSR_IR | MSR_RI) /* can take DTLB miss */
+ 	mtmsr	r11
++	isync
+ #endif
+ #ifdef CONFIG_PPC_CHRP
+ 	mfspr	r11, SPRN_SPRG_THREAD
+diff --git a/arch/powerpc/kernel/head_32.h b/arch/powerpc/kernel/head_32.h
+index 73a035b40dbf..a6a5fbbf8504 100644
+--- a/arch/powerpc/kernel/head_32.h
++++ b/arch/powerpc/kernel/head_32.h
+@@ -43,6 +43,7 @@
+ 	.ifeq	\for_rtas
+ 	li	r11, MSR_KERNEL & ~(MSR_IR | MSR_RI) /* can take DTLB miss */
+ 	mtmsr	r11
++	isync
+ 	.endif
+ 	subi	r11, r1, INT_FRAME_SIZE		/* use r1 if kernel */
+ #else
+@@ -123,6 +124,7 @@
+ #ifdef CONFIG_VMAP_STACK
+ 	li	r9, MSR_KERNEL & ~(MSR_IR | MSR_RI) /* can take DTLB miss */
+ 	mtmsr	r9
++	isync
+ #endif
+ 	tovirt_vmstack r12, r12
+ 	tophys_novmstack r11, r11
+-- 
+2.25.0
 
