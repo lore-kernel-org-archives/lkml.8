@@ -4,53 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1896C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:24:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ADE9C35242
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:24:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C832020718
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:24:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02B85206D4
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:24:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579865087;
-	bh=2qLNSVlKCzjET/toYUlwu2CpfwILDJlUSxqs0/7lDGU=;
+	s=default; t=1579865091;
+	bh=INEsZP7PXDWtOvMsGz1Rlra28S6OdJ1WEjF2pXAB404=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RFkMRxgZn1ZV76vuT8F8JXKKJ+g30QeoQNWIo0/5aikcdXda9/3vBPXpnnOxrXG6C
-	 OqZSxVK3i7Ma6RS8iT/l3hvOrimM8/iHYcsnzSQ5mJ+DZ5g2hRI48cxji+y1/ztjgQ
-	 q/ibpRziYGCHdw+wgAh+53uGaWP0+lINQty35JPs=
+	b=epfMAlnUXybhA0SUxZHrkhlhRsI3lBj7LddigG75e6ef8sXxhb5rmg8aj6HL9Eq0v
+	 RmrHQH2Ddt3aFQLMt4B6ew7eXyiMQrwCAZZVcHFm+dY9NjIFJHewheyWEiHnwXgAju
+	 mBub8KIvjDbjcJq8UsWu64bqimhTnOp5CJXFW1Hg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391291AbgAXLYr (ORCPT
+        id S2403819AbgAXLYu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:24:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38342 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 06:24:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38442 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403806AbgAXLYn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:24:43 -0500
+        id S2390795AbgAXLYq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:24:46 -0500
 Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D973020718;
-        Fri, 24 Jan 2020 11:24:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3869820704;
+        Fri, 24 Jan 2020 11:24:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579865082;
-        bh=2qLNSVlKCzjET/toYUlwu2CpfwILDJlUSxqs0/7lDGU=;
+        s=default; t=1579865085;
+        bh=INEsZP7PXDWtOvMsGz1Rlra28S6OdJ1WEjF2pXAB404=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kX3aJ1yBGvfzAd4qxzjvQMS4Oczqsdxh+77Ihgh9Qxs339WIpw/fYyvbZR3Q4Y+Pu
-         RN4c+puOnkesxAsFSWkbTTJSGKBh/7LbjwEtaU8V0skE4Xz/8NzJAgGTKA4QpP04r4
-         S8d6cXL5uYw0tn0sUbOKCpNmXAmkqi4qnsDd8n+o=
+        b=bIr2Lfp5pkAUfycHu53p7Bo8nnvZcgP6cbU0TWDpBCiikiU4WlyzP4+Afhit+SbYH
+         UpTxHjB2Xt5/Fs/vw8vyEAfZ8E/cryDsdaMy561U6qXHpleU1cz5h9hNlFrE1PiGJx
+         p5ym9o/nxs6Isas8b6HilDys9oHKS2H+sTJmpeCA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Dirk van der Merwe <dirk.vandermerwe@netronome.com>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
+        stable@vger.kernel.org, Fred Klassen <fklassen@appneta.com>,
+        Willem de Bruijn <willemb@google.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 435/639] net: netem: fix backlog accounting for corrupted GSO frames
-Date:   Fri, 24 Jan 2020 10:30:05 +0100
-Message-Id: <20200124093141.503539537@linuxfoundation.org>
+Subject: [PATCH 4.19 436/639] net/udp_gso: Allow TX timestamp with UDP GSO
+Date:   Fri, 24 Jan 2020 10:30:06 +0100
+Message-Id: <20200124093141.620234674@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
 References: <20200124093047.008739095@linuxfoundation.org>
@@ -63,82 +61,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jakub Kicinski <jakub.kicinski@netronome.com>
+From: Fred Klassen <fklassen@appneta.com>
 
-[ Upstream commit 177b8007463c4f36c9a2c7ce7aa9875a4cad9bd5 ]
+[ Upstream commit 76e21533a48bb42d1fa894f93f6233bf4554f45e ]
 
-When GSO frame has to be corrupted netem uses skb_gso_segment()
-to produce the list of frames, and re-enqueues the segments one
-by one.  The backlog length has to be adjusted to account for
-new frames.
+Fixes an issue where TX Timestamps are not arriving on the error queue
+when UDP_SEGMENT CMSG type is combined with CMSG type SO_TIMESTAMPING.
+This can be illustrated with an updated updgso_bench_tx program which
+includes the '-T' option to test for this condition. It also introduces
+the '-P' option which will call poll() before reading the error queue.
 
-The current calculation is incorrect, leading to wrong backlog
-lengths in the parent qdisc (both bytes and packets), and
-incorrect packet backlog count in netem itself.
+    ./udpgso_bench_tx -4ucTPv -S 1472 -l2 -D 172.16.120.18
+    poll timeout
+    udp tx:      0 MB/s        1 calls/s      1 msg/s
 
-Parent backlog goes negative, netem's packet backlog counts
-all non-first segments twice (thus remaining non-zero even
-after qdisc is emptied).
+The "poll timeout" message above indicates that TX timestamp never
+arrived.
 
-Move the variables used to count the adjustment into local
-scope to make 100% sure they aren't used at any stage in
-backports.
+This patch preserves tx_flags for the first UDP GSO segment. Only the
+first segment is timestamped, even though in some cases there may be
+benefital in timestamping both the first and last segment.
 
-Fixes: 6071bd1aa13e ("netem: Segment GSO packets on enqueue")
-Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
-Reviewed-by: Dirk van der Merwe <dirk.vandermerwe@netronome.com>
-Acked-by: Cong Wang <xiyou.wangcong@gmail.com>
+Factors in deciding on first segment timestamp only:
+
+- Timestamping both first and last segmented is not feasible. Hardware
+can only have one outstanding TS request at a time.
+
+- Timestamping last segment may under report network latency of the
+previous segments. Even though the doorbell is suppressed, the ring
+producer counter has been incremented.
+
+- Timestamping the first segment has the upside in that it reports
+timestamps from the application's view, e.g. RTT.
+
+- Timestamping the first segment has the downside that it may
+underreport tx host network latency. It appears that we have to pick
+one or the other. And possibly follow-up with a config flag to choose
+behavior.
+
+v2: Remove tests as noted by Willem de Bruijn <willemb@google.com>
+    Moving tests from net to net-next
+
+v3: Update only relevant tx_flag bits as per
+    Willem de Bruijn <willemb@google.com>
+
+v4: Update comments and commit message as per
+    Willem de Bruijn <willemb@google.com>
+
+Fixes: ee80d1ebe5ba ("udp: add udp gso")
+Signed-off-by: Fred Klassen <fklassen@appneta.com>
+Acked-by: Willem de Bruijn <willemb@google.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/sched/sch_netem.c | 13 ++++++++-----
- 1 file changed, 8 insertions(+), 5 deletions(-)
+ net/ipv4/udp_offload.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/net/sched/sch_netem.c b/net/sched/sch_netem.c
-index 15f8f24c190d4..1cd7266140e6a 100644
---- a/net/sched/sch_netem.c
-+++ b/net/sched/sch_netem.c
-@@ -436,8 +436,7 @@ static int netem_enqueue(struct sk_buff *skb, struct Qdisc *sch,
- 	struct netem_skb_cb *cb;
- 	struct sk_buff *skb2;
- 	struct sk_buff *segs = NULL;
--	unsigned int len = 0, last_len, prev_len = qdisc_pkt_len(skb);
--	int nb = 0;
-+	unsigned int prev_len = qdisc_pkt_len(skb);
- 	int count = 1;
- 	int rc = NET_XMIT_SUCCESS;
- 	int rc_drop = NET_XMIT_DROP;
-@@ -494,6 +493,7 @@ static int netem_enqueue(struct sk_buff *skb, struct Qdisc *sch,
- 			segs = netem_segment(skb, sch, to_free);
- 			if (!segs)
- 				return rc_drop;
-+			qdisc_skb_cb(segs)->pkt_len = segs->len;
- 		} else {
- 			segs = skb;
- 		}
-@@ -583,6 +583,11 @@ static int netem_enqueue(struct sk_buff *skb, struct Qdisc *sch,
+diff --git a/net/ipv4/udp_offload.c b/net/ipv4/udp_offload.c
+index 0c0522b79b43f..aa343654abfc0 100644
+--- a/net/ipv4/udp_offload.c
++++ b/net/ipv4/udp_offload.c
+@@ -227,6 +227,11 @@ struct sk_buff *__udp_gso_segment(struct sk_buff *gso_skb,
+ 	seg = segs;
+ 	uh = udp_hdr(seg);
  
- finish_segs:
- 	if (segs) {
-+		unsigned int len, last_len;
-+		int nb = 0;
++	/* preserve TX timestamp flags and TS key for first segment */
++	skb_shinfo(seg)->tskey = skb_shinfo(gso_skb)->tskey;
++	skb_shinfo(seg)->tx_flags |=
++			(skb_shinfo(gso_skb)->tx_flags & SKBTX_ANY_TSTAMP);
 +
-+		len = skb->len;
-+
- 		while (segs) {
- 			skb2 = segs->next;
- 			segs->next = NULL;
-@@ -598,9 +603,7 @@ finish_segs:
- 			}
- 			segs = skb2;
- 		}
--		sch->q.qlen += nb;
--		if (nb > 1)
--			qdisc_tree_reduce_backlog(sch, 1 - nb, prev_len - len);
-+		qdisc_tree_reduce_backlog(sch, -nb, prev_len - len);
- 	}
- 	return NET_XMIT_SUCCESS;
- }
+ 	/* compute checksum adjustment based on old length versus new */
+ 	newlen = htons(sizeof(*uh) + mss);
+ 	check = csum16_add(csum16_sub(uh->check, uh->len), newlen);
 -- 
 2.20.1
 
