@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5279C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:12:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3C79C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:12:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9ED982087E
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:12:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81D802071A
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:12:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579864365;
-	bh=1107wFI5AHf/usbvPCIjUBbMTwp3G6mZlbYIHoG3RpE=;
+	s=default; t=1579864368;
+	bh=79BzIEImy9GA1cgjPsnC4XGO1UI7iCCrXjwEuGO0WPY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0Y3Glgp+TimD0Q0+ML9zUVqiS3TTy2A1KMXDTrcXzIpkTvbEOnwOrvE7s8+5c7G5p
-	 mPTorfVG6/wC/Eiecq/VeDcnsz0qGHGf/+8qgBlLtZMQQP9U6WC0ij1pWFd0zl3Wuv
-	 DTYMXLya5GESH3mb0blqHz4quZ3C8E1N3sX8KfaY=
+	b=083k2jB68lKF3weoxSlaGnWFuRv7VGz1InEQO1mxFKxw1y+6CVglQGRzWwsjWxs2t
+	 /HbiLbuAguxYhvRMrV55bz4XCuHR56/elIf3a6K1OVASBLHyaS9HF7SAgSr/WRl39L
+	 dulD7e7eCD8+QOSI/0B9OG5+6lEFTVgp3Zbx3CSg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390013AbgAXLMo (ORCPT
+        id S2390004AbgAXLMe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:12:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49050 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 06:12:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48838 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387873AbgAXLMl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:12:41 -0500
+        id S2387877AbgAXLMa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:12:30 -0500
 Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B267720708;
-        Fri, 24 Jan 2020 11:12:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 37F4120708;
+        Fri, 24 Jan 2020 11:12:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579864360;
-        bh=1107wFI5AHf/usbvPCIjUBbMTwp3G6mZlbYIHoG3RpE=;
+        s=default; t=1579864350;
+        bh=79BzIEImy9GA1cgjPsnC4XGO1UI7iCCrXjwEuGO0WPY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HVCF99YxjGAOEuvRn5Epp7iiAH01acZSykQ7IPmeyQURDSjJbvz4WQ90T/locQkNo
-         g1sSmiSzP95PkIGKbe/1emSKoDplPoni3VtugcLJFK5aGPDr6JlNJWIJoNU3uW0Mkw
-         8uyZheIYsv4gvCAHNRE3jc2OXRnIOdLaOW7V58nk=
+        b=ZM3Q9UwdkmoqWk+l76ibyhuTLEyITnNrNDPtK8uttd+zmD7S/uMt+iR9ZyZ0VHX+H
+         tjKFnBKCjSNCcwu5Aikc52C+mxjqy5pZRMRXCg8UstUNzrEywYCwgSj0ckcnA5+JF+
+         E2qnDndhgHsosJTZe/un441EfYMLfH6QfL2ZjhSs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ashok Raj <ashok.raj@intel.com>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Joerg Roedel <jroedel@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 245/639] iommu/vt-d: Fix NULL pointer reference in intel_svm_bind_mm()
-Date:   Fri, 24 Jan 2020 10:26:55 +0100
-Message-Id: <20200124093117.470691497@linuxfoundation.org>
+        stable@vger.kernel.org, Florian Westphal <fw@strlen.de>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 242/639] netfilter: nft_set_hash: bogus element self comparison from deactivation path
+Date:   Fri, 24 Jan 2020 10:26:52 +0100
+Message-Id: <20200124093117.120261624@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
 References: <20200124093047.008739095@linuxfoundation.org>
@@ -62,41 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lu Baolu <baolu.lu@linux.intel.com>
+From: Pablo Neira Ayuso <pablo@netfilter.org>
 
-[ Upstream commit c56cba5daf45d2d091ef1cfe2f1d6a930446687b ]
+[ Upstream commit a01cbae57ec29b161d42ee1caa4ffffda5d519c2 ]
 
-Intel IOMMU could be turned off with intel_iommu=off. If Intel
-IOMMU is off,  the intel_iommu struct will not be initialized.
-When device drivers call intel_svm_bind_mm(), the NULL pointer
-reference will happen there.
+Use the element from the loop iteration, not the same element we want to
+deactivate otherwise this branch always evaluates true.
 
-Add dmar_disabled check to avoid NULL pointer reference.
-
-Cc: Ashok Raj <ashok.raj@intel.com>
-Cc: Jacob Pan <jacob.jun.pan@linux.intel.com>
-Reported-by: Dave Jiang <dave.jiang@intel.com>
-Fixes: 2f26e0a9c9860 ("iommu/vt-d: Add basic SVM PASID support")
-Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Fixes: 6c03ae210ce3 ("netfilter: nft_set_hash: add non-resizable hashtable implementation")
+Reported-by: Florian Westphal <fw@strlen.de>
+Tested-by: Florian Westphal <fw@strlen.de>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iommu/intel-svm.c | 2 +-
+ net/netfilter/nft_set_hash.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/iommu/intel-svm.c b/drivers/iommu/intel-svm.c
-index 188f4eaed6e59..fd8730b2cd46e 100644
---- a/drivers/iommu/intel-svm.c
-+++ b/drivers/iommu/intel-svm.c
-@@ -293,7 +293,7 @@ int intel_svm_bind_mm(struct device *dev, int *pasid, int flags, struct svm_dev_
- 	int pasid_max;
- 	int ret;
+diff --git a/net/netfilter/nft_set_hash.c b/net/netfilter/nft_set_hash.c
+index 8dde4bfe8b8a4..05118e03c3e48 100644
+--- a/net/netfilter/nft_set_hash.c
++++ b/net/netfilter/nft_set_hash.c
+@@ -555,7 +555,7 @@ static void *nft_hash_deactivate(const struct net *net,
  
--	if (!iommu)
-+	if (!iommu || dmar_disabled)
- 		return -EINVAL;
- 
- 	if (dev_is_pci(dev)) {
+ 	hash = nft_jhash(set, priv, &this->ext);
+ 	hlist_for_each_entry(he, &priv->table[hash], node) {
+-		if (!memcmp(nft_set_ext_key(&this->ext), &elem->key.val,
++		if (!memcmp(nft_set_ext_key(&he->ext), &elem->key.val,
+ 			    set->klen) &&
+ 		    nft_set_elem_active(&he->ext, genmask)) {
+ 			nft_set_elem_change_active(net, set, &he->ext);
 -- 
 2.20.1
 
