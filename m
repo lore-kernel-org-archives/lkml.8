@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED2D8C35242
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:34:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B959DC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:34:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BBAD721734
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:34:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81C0D21734
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:34:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579865672;
-	bh=1EsJ6qn9dEwaKmDyj1yN7qxoHEKJa6koM+zwdvlK2Y8=;
+	s=default; t=1579865675;
+	bh=csRWAztyFgtKu6hrVl88CS566rdxacTIQKhsD+jkpHU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=T83XERs7ssB8pID0OYrFcRCRxFRGEMdszZspbRVGpzqCedgBWPcgDezJ6Qy0+ZCZL
-	 DiQPCjUso4ox40224ho9ygLCS7/PyZxTFJUXWv///n5NOhxUy65R164JzFQUEzv7lE
-	 ToEC9E0nHYqzXFmzTfr7dE4pYLARcsAzKpFGR3pU=
+	b=0HcwWRf3YoCUhCjskPac7wyZAzIvKHtpGdYwQhD43P/FKrbdW18FtrUR6AQnxjcPO
+	 16X8EWvHcTrVCVWXLvs24fLQzhTS4JsrXhXuET4amXutB8FRcSS7+/PVfSg046/3hx
+	 K9SIZAPU3yo8gdmwtReyqzMFgprzbqXLbqMBt+iE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403975AbgAXLdN (ORCPT
+        id S2391842AbgAXLee (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:33:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52502 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 06:34:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54404 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404544AbgAXLdJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:33:09 -0500
+        id S2390190AbgAXLec (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:34:32 -0500
 Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3938320704;
-        Fri, 24 Jan 2020 11:33:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D0BD6214DB;
+        Fri, 24 Jan 2020 11:34:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579865588;
-        bh=1EsJ6qn9dEwaKmDyj1yN7qxoHEKJa6koM+zwdvlK2Y8=;
+        s=default; t=1579865671;
+        bh=csRWAztyFgtKu6hrVl88CS566rdxacTIQKhsD+jkpHU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=R2kd5aLzT0VxhpwQplXXLBzUaq+lEhuqUGRHIOEjT8hwFJ4BH/qJJDe1AAz5XKx/h
-         83rp0HjKzjrHz8Dub9VBPQAsm4l6aXN8Jw2ss1W5Bo/Xv7YnBuUPXxsnkWb6Uvr82B
-         OatblQC4/30YEWNN629f9j4GsiJxcKDh1ntmfiRY=
+        b=YRzX2G7tzCC5+mfXhHg9ygP4OpFyZmRaOoa3JWDSscVgoeRkL6MwlW41JBtoncvBY
+         T/L4x01G1GPsFZYzlmWVkzRoV0x44sVe/AiQD2UjO3Jtotz8YfqVjRM+AIAFS+185g
+         tPqlrJA1IPsutn87BhLd8cdcsgoE5AUL8aKVrFiA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jose Abreu <Jose.Abreu@synopsys.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 587/639] net: stmmac: gmac4+: Not all Unicast addresses may be available
-Date:   Fri, 24 Jan 2020 10:32:37 +0100
-Message-Id: <20200124093202.992850194@linuxfoundation.org>
+        stable@vger.kernel.org, James Morse <james.morse@arm.com>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Will Deacon <will@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 608/639] arm64: hibernate: check pgd table allocation
+Date:   Fri, 24 Jan 2020 10:32:58 +0100
+Message-Id: <20200124093205.638785890@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
 References: <20200124093047.008739095@linuxfoundation.org>
@@ -60,34 +60,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jose Abreu <Jose.Abreu@synopsys.com>
+From: Pavel Tatashin <pasha.tatashin@soleen.com>
 
-[ Upstream commit 25683bab09a70542b9f8e3e28f79b3369e56701f ]
+[ Upstream commit 8c551f919a73c1dfa690a70a691be1da394145e8 ]
 
-Some setups may not have all Unicast addresses filters available. Check
-the number of available filters before trying to setup it.
+There is a bug in create_safe_exec_page(), when page table is allocated
+it is not checked that table is allocated successfully:
 
-Fixes: 477286b53f55 ("stmmac: add GMAC4 core support")
-Signed-off-by: Jose Abreu <Jose.Abreu@synopsys.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+But it is dereferenced in: pgd_none(READ_ONCE(*pgdp)).  Check that
+allocation was successful.
+
+Fixes: 82869ac57b5d ("arm64: kernel: Add support for hibernate/suspend-to-disk")
+Reviewed-by: James Morse <james.morse@arm.com>
+Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
+Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/kernel/hibernate.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c b/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
-index 48cf5e2b24417..bc8871e7351f2 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
-@@ -443,7 +443,7 @@ static void dwmac4_set_filter(struct mac_device_info *hw,
- 	}
+diff --git a/arch/arm64/kernel/hibernate.c b/arch/arm64/kernel/hibernate.c
+index 9859e1178e6be..dbeeeffdb9c9e 100644
+--- a/arch/arm64/kernel/hibernate.c
++++ b/arch/arm64/kernel/hibernate.c
+@@ -202,6 +202,7 @@ static int create_safe_exec_page(void *src_start, size_t length,
+ 				 gfp_t mask)
+ {
+ 	int rc = 0;
++	pgd_t *trans_pgd;
+ 	pgd_t *pgdp;
+ 	pud_t *pudp;
+ 	pmd_t *pmdp;
+@@ -216,7 +217,13 @@ static int create_safe_exec_page(void *src_start, size_t length,
+ 	memcpy((void *)dst, src_start, length);
+ 	__flush_icache_range(dst, dst + length);
  
- 	/* Handle multiple unicast addresses */
--	if (netdev_uc_count(dev) > GMAC_MAX_PERFECT_ADDRESSES) {
-+	if (netdev_uc_count(dev) > hw->unicast_filter_entries) {
- 		/* Switch to promiscuous mode if more than 128 addrs
- 		 * are required
- 		 */
+-	pgdp = pgd_offset_raw(allocator(mask), dst_addr);
++	trans_pgd = allocator(mask);
++	if (!trans_pgd) {
++		rc = -ENOMEM;
++		goto out;
++	}
++
++	pgdp = pgd_offset_raw(trans_pgd, dst_addr);
+ 	if (pgd_none(READ_ONCE(*pgdp))) {
+ 		pudp = allocator(mask);
+ 		if (!pudp) {
 -- 
 2.20.1
 
