@@ -2,108 +2,138 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48C31C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 10:02:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A7AEC35242
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 10:02:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E909206D5
+	by mail.kernel.org (Postfix) with ESMTP id E69F8206D5
 	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 10:02:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579860127;
-	bh=GME4SvE16yHu/b08LBF62iPKRn02uhpZO4GHRYETIoc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ocGitjBkK5oIT20U8wH0D1h5CBoRKlFb5IBtE9OuE/rzxNYjNT1PN7M1xXTIcz3WI
-	 Dvx51a/h6ylmy+zZiV+T5rV/7vZLwhbzPbhvERlGsJjvwlIlmH5Xj/wUQ4yiuN1A7n
-	 fg+Hzcog0OKm3g9gVakYpUR1d/n6dl27px90Cixg=
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hFHNcdEL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388768AbgAXKCG (ORCPT
+        id S2388736AbgAXKCA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 05:02:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37418 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388518AbgAXKCD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 05:02:03 -0500
-Received: from localhost (unknown [145.15.244.15])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Fri, 24 Jan 2020 05:02:00 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:46151 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1730743AbgAXKB6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 05:01:58 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579860118;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=PMJRKqMk2D6RalzmkNddIEyqjvW23GFO/6wjGDDka/U=;
+        b=hFHNcdELgWpet0E1ObeDWznH/WaTAwepa0+3pH6YTSb+sv0NDm92RY3JM7y6lIN5ew/WNl
+        QHPnWFv4LXcoYvB0ulzOYgeGtIhVPXS0fMjZzOiaBjkkQ+UbsLQopVExX7nhVS2WpD6/UY
+        9TlYN3XtNo/GEaUbHRvsrq2fqB1Ky2M=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-92-a1tmzfSVNUKLmQfftrL5aw-1; Fri, 24 Jan 2020 05:01:56 -0500
+X-MC-Unique: a1tmzfSVNUKLmQfftrL5aw-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0968B20709;
-        Fri, 24 Jan 2020 10:02:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579860122;
-        bh=GME4SvE16yHu/b08LBF62iPKRn02uhpZO4GHRYETIoc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qFsv3BEBY1Hh+o0m/CnWPqRpWK4r3FRNrsp1TzgcBdtpMfNW/i37cGuzlXq+VxawG
-         h05Eh71D1UghszjxgEHfVMiGiUYGoVZGcn2gH/Y3fx9NUc3kNCvptoLMtS6wpAx8hh
-         oV1l+W6FB6QR5X/DNZbC5PN0nJ9+SGaFMwKVy9o8=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 239/343] ASoC: ti: davinci-mcasp: Fix slot mask settings when using multiple AXRs
-Date:   Fri, 24 Jan 2020 10:30:57 +0100
-Message-Id: <20200124092951.572749792@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200124092919.490687572@linuxfoundation.org>
-References: <20200124092919.490687572@linuxfoundation.org>
-User-Agent: quilt/0.66
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id DE0F21882CC7;
+        Fri, 24 Jan 2020 10:01:54 +0000 (UTC)
+Received: from kamzik.brq.redhat.com (unknown [10.43.2.160])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 9AC9260BE1;
+        Fri, 24 Jan 2020 10:01:50 +0000 (UTC)
+Date:   Fri, 24 Jan 2020 11:01:47 +0100
+From:   Andrew Jones <drjones@redhat.com>
+To:     Ben Gardon <bgardon@google.com>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        linux-kselftest@vger.kernel.org,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Cannon Matthews <cannonmatthews@google.com>,
+        Peter Xu <peterx@redhat.com>, Peter Shier <pshier@google.com>,
+        Oliver Upton <oupton@google.com>
+Subject: Re: [PATCH v4 04/10] KVM: selftests: Add memory size parameter to
+ the demand paging test
+Message-ID: <20200124100147.p5tlpsgu6phauygv@kamzik.brq.redhat.com>
+References: <20200123180436.99487-1-bgardon@google.com>
+ <20200123180436.99487-5-bgardon@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200123180436.99487-5-bgardon@google.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+> diff --git a/tools/testing/selftests/kvm/lib/test_util.c b/tools/testing/selftests/kvm/lib/test_util.c
+> new file mode 100644
+> index 0000000000000..706e0f963a44b
+> --- /dev/null
+> +++ b/tools/testing/selftests/kvm/lib/test_util.c
+> @@ -0,0 +1,61 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * tools/testing/selftests/kvm/lib/test_util.c
+> + *
+> + * Copyright (C) 2020, Google LLC.
+> + */
+> +
+> +#include "test_util.h"
+> +
+> +#include <ctype.h>
+> +
+> +/*
+> + * Parses "[0-9]+[kmgt]?".
+> + */
+> +size_t parse_size(const char *size)
+> +{
+> +	size_t len = strlen(size);
+> +	size_t i;
+> +	size_t scale_shift = 0;
+> +	size_t base;
+> +
+> +	TEST_ASSERT(len > 0, "Need at least 1 digit in '%s'", size);
+> +
+> +	/* Find the first letter in the string, indicating scale. */
+> +	for (i = 0; i < len; i++) {
+> +		if (!isdigit(size[i])) {
+> +			TEST_ASSERT(i > 0, "Need at least 1 digit in '%s'",
+> +				    size);
+> +			TEST_ASSERT(i == len - 1,
+> +				    "Expected letter at the end in '%s'.",
+> +				    size);
+> +			switch (tolower(size[i])) {
+> +			case 't':
+> +				scale_shift = 40;
+> +				break;
+> +			case 'g':
+> +				scale_shift = 30;
+> +				break;
+> +			case 'm':
+> +				scale_shift = 20;
+> +				break;
+> +			case 'k':
+> +				scale_shift = 10;
+> +				break;
+> +			default:
+> +				TEST_ASSERT(false, "Unknown size letter %c",
+> +					    size[i]);
+> +			}
+> +		}
+> +	}
+> +
+> +	TEST_ASSERT(scale_shift < 8 * sizeof(size_t),
+> +		    "Overflow parsing scale!");
+> +
+> +	base = atoi(size);
 
-[ Upstream commit fd14f4436fd47d5418023c90e933e66d3645552e ]
+I'd use strtoull(size, NULL, 0), allowing the user to input full 0x...
+sizes too. And, if the strtoull is done before the scale parsing, then
+you could supply a non-null endptr and avoid the need for the for loop.
 
-If multiple serializers are connected in the system and the number of
-channels will need to use more than one serializer the mask to enable the
-serializers were left to 0 if tdm_mask is provided
-
-Fixes: dd55ff8346a97 ("ASoC: davinci-mcasp: Add set_tdm_slots() support")
-
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- sound/soc/davinci/davinci-mcasp.c | 13 ++++++-------
- 1 file changed, 6 insertions(+), 7 deletions(-)
-
-diff --git a/sound/soc/davinci/davinci-mcasp.c b/sound/soc/davinci/davinci-mcasp.c
-index 07bac9ea65c41..e10e03800cce5 100644
---- a/sound/soc/davinci/davinci-mcasp.c
-+++ b/sound/soc/davinci/davinci-mcasp.c
-@@ -882,14 +882,13 @@ static int mcasp_i2s_hw_param(struct davinci_mcasp *mcasp, int stream,
- 		active_slots = hweight32(mcasp->tdm_mask[stream]);
- 		active_serializers = (channels + active_slots - 1) /
- 			active_slots;
--		if (active_serializers == 1) {
-+		if (active_serializers == 1)
- 			active_slots = channels;
--			for (i = 0; i < total_slots; i++) {
--				if ((1 << i) & mcasp->tdm_mask[stream]) {
--					mask |= (1 << i);
--					if (--active_slots <= 0)
--						break;
--				}
-+		for (i = 0; i < total_slots; i++) {
-+			if ((1 << i) & mcasp->tdm_mask[stream]) {
-+				mask |= (1 << i);
-+				if (--active_slots <= 0)
-+					break;
- 			}
- 		}
- 	} else {
--- 
-2.20.1
-
-
+Thanks,
+drew
 
