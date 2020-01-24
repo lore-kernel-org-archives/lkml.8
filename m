@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20487C2D0DB
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51B04C35242
 	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:11:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7D9E21569
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:11:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F270214AF
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:11:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=default; t=1579864291;
-	bh=A2VtvgBGwinZJGuqt+W1zTJyz8M9bihwlos2OX8OKeg=;
+	bh=Aj9msqVAVmTezlKExZH+VTX5nRmOUPm/Ywm8Vkk5XRY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=t5tRWqAZ15wUZhZpzQJthgt9TOba0SGqldNJibCXXl4uVOSDrAJq6HdjwTi0SNd9x
-	 iyt3tecCdQsCGThObXfgZ33sA6UyDwXbN4vG7U+Zf9qhCMMpeqGkaF72Fsbwp4hrn5
-	 zBseGTsrswaKPnkYkTkuIzd5A/rDWzBS4DBTcNiU=
+	b=pS/sFQ6ED4g5XBKR92dr4gEqfnewaAP8VrG4TphFR+IV0IWvc8+iVqzYwp3PUQiEe
+	 waKBPylJiu7rxMhSkE3SrXa9Wxo1cws3ZWNqtN8kZu1p1Km97g6+qm/6IxwzYDC8FM
+	 kI7mNcuUo6OWEPiC3Ik/5w40wlaPth3JpAFg+QaY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388434AbgAXLLa (ORCPT
+        id S1731750AbgAXLJb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:11:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47336 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 06:09:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45062 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387621AbgAXLL1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:11:27 -0500
+        id S1730882AbgAXLJ2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:09:28 -0500
 Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 033E02075D;
-        Fri, 24 Jan 2020 11:11:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 79C1020663;
+        Fri, 24 Jan 2020 11:09:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579864286;
-        bh=A2VtvgBGwinZJGuqt+W1zTJyz8M9bihwlos2OX8OKeg=;
+        s=default; t=1579864167;
+        bh=Aj9msqVAVmTezlKExZH+VTX5nRmOUPm/Ywm8Vkk5XRY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hVgy5te8nmjMIsSmxs3bEpEPAZeAZsNm1oijDthOG+qviQBBLusRXBSQh45WtEOyP
-         /PXUmIrDh2aW0L5c5n6C65Or9ZZamBbXSLV57qcvR3tUVD0IhjJTnIkVL0sp0SYl6M
-         6HPXf1P+6aFdd5/xu+706f8G0+NyNPMWrf/3I0h4=
+        b=2mBDRr/P5YzFggLhVjgHW2c2cCyVfpZH7joQsZ8wiWwCNcKfbWWD0bFzj0rlnrT9Z
+         7aHYpVZEto1Evo9nKHwCkpegr/3YsR8EgWy5lpNbJk/T48326cSeQeNP4jr/umK1hU
+         4L2azRBOkH3SQxc+ypump2+1NlpUog8mdYdjddns=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Russel King <linux@armlinux.org.uk>,
-        Franky Lin <franky.lin@broadcom.com>,
-        Arend van Spriel <arend.vanspriel@broadcom.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
+        stable@vger.kernel.org,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 212/639] brcmfmac: create debugfs files for bus-specific layer
-Date:   Fri, 24 Jan 2020 10:26:22 +0100
-Message-Id: <20200124093113.542375721@linuxfoundation.org>
+Subject: [PATCH 4.19 177/639] rtc: ds1307: rx8130: Fix alarm handling
+Date:   Fri, 24 Jan 2020 10:25:47 +0100
+Message-Id: <20200124093109.349854130@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
 References: <20200124093047.008739095@linuxfoundation.org>
@@ -62,113 +62,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arend van Spriel <arend.vanspriel@broadcom.com>
+From: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 
-[ Upstream commit aaf6a5e86e36766abbeedf220462bde8031f9a72 ]
+[ Upstream commit 3f929cad943380370b6db31fcb7a38d898d91089 ]
 
-Since we moved the drivers debugfs directory under ieee80211 debugfs the
-debugfs entries need to be added after wiphy_register() has been called.
-For most part that has been done accordingly, but for the debugfs entries
-added by SDIO it was not and failed silently. This patch fixes that by
-adding a bus-layer callback for it.
+When the EXTENSION.WADA bit is set, register 0x19 contains a bitmap of
+week days, not a day of month. As Linux only handles a single alarm
+without repetition using day of month is more flexible, so clear this
+bit. (Otherwise a value depending on time.tm_wday would have to be
+written to register 0x19.)
 
-Fixes: 856d5a011c86 ("brcmfmac: allocate struct brcmf_pub instance using wiphy_new()")
-Reported-by: Russel King <linux@armlinux.org.uk>
-Reviewed-by: Franky Lin <franky.lin@broadcom.com>
-Signed-off-by: Arend van Spriel <arend.vanspriel@broadcom.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Also optimize setting the AIE bit to use a single register write instead
+of a bulk write of three registers.
+
+Fixes: ee0981be7704 ("rtc: ds1307: Add support for Epson RX8130CE")
+Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../net/wireless/broadcom/brcm80211/brcmfmac/bus.h   | 10 ++++++++++
- .../net/wireless/broadcom/brcm80211/brcmfmac/core.c  |  1 +
- .../net/wireless/broadcom/brcm80211/brcmfmac/sdio.c  | 12 +++++++-----
- 3 files changed, 18 insertions(+), 5 deletions(-)
+ drivers/rtc/rtc-ds1307.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/bus.h b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/bus.h
-index c4965184cdf37..3d441c5c745cc 100644
---- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/bus.h
-+++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/bus.h
-@@ -90,6 +90,7 @@ struct brcmf_bus_ops {
- 	int (*get_memdump)(struct device *dev, void *data, size_t len);
- 	int (*get_fwname)(struct device *dev, const char *ext,
- 			  unsigned char *fw_name);
-+	void (*debugfs_create)(struct device *dev);
- };
+diff --git a/drivers/rtc/rtc-ds1307.c b/drivers/rtc/rtc-ds1307.c
+index 71396b62dc52b..ebd59e86a567b 100644
+--- a/drivers/rtc/rtc-ds1307.c
++++ b/drivers/rtc/rtc-ds1307.c
+@@ -749,8 +749,8 @@ static int rx8130_set_alarm(struct device *dev, struct rtc_wkalrm *t)
+ 	if (ret < 0)
+ 		return ret;
  
+-	ctl[0] &= ~RX8130_REG_EXTENSION_WADA;
+-	ctl[1] |= RX8130_REG_FLAG_AF;
++	ctl[0] &= RX8130_REG_EXTENSION_WADA;
++	ctl[1] &= ~RX8130_REG_FLAG_AF;
+ 	ctl[2] &= ~RX8130_REG_CONTROL0_AIE;
  
-@@ -235,6 +236,15 @@ int brcmf_bus_get_fwname(struct brcmf_bus *bus, const char *ext,
- 	return bus->ops->get_fwname(bus->dev, ext, fw_name);
+ 	ret = regmap_bulk_write(ds1307->regmap, RX8130_REG_EXTENSION, ctl,
+@@ -773,8 +773,7 @@ static int rx8130_set_alarm(struct device *dev, struct rtc_wkalrm *t)
+ 
+ 	ctl[2] |= RX8130_REG_CONTROL0_AIE;
+ 
+-	return regmap_bulk_write(ds1307->regmap, RX8130_REG_EXTENSION, ctl,
+-				 sizeof(ctl));
++	return regmap_write(ds1307->regmap, RX8130_REG_CONTROL0, ctl[2]);
  }
  
-+static inline
-+void brcmf_bus_debugfs_create(struct brcmf_bus *bus)
-+{
-+	if (!bus->ops->debugfs_create)
-+		return;
-+
-+	return bus->ops->debugfs_create(bus->dev);
-+}
-+
- /*
-  * interface functions from common layer
-  */
-diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/core.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/core.c
-index 584e05fdca6ad..9d7b8834b8545 100644
---- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/core.c
-+++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/core.c
-@@ -1105,6 +1105,7 @@ static int brcmf_bus_started(struct brcmf_pub *drvr, struct cfg80211_ops *ops)
- 	brcmf_debugfs_add_entry(drvr, "revinfo", brcmf_revinfo_read);
- 	brcmf_feat_debugfs_create(drvr);
- 	brcmf_proto_debugfs_create(drvr);
-+	brcmf_bus_debugfs_create(bus_if);
- 
- 	return 0;
- 
-diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
-index abaed2fa2defd..5c3b62e619807 100644
---- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
-+++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
-@@ -3131,9 +3131,12 @@ static int brcmf_debugfs_sdio_count_read(struct seq_file *seq, void *data)
- 	return 0;
- }
- 
--static void brcmf_sdio_debugfs_create(struct brcmf_sdio *bus)
-+static void brcmf_sdio_debugfs_create(struct device *dev)
- {
--	struct brcmf_pub *drvr = bus->sdiodev->bus_if->drvr;
-+	struct brcmf_bus *bus_if = dev_get_drvdata(dev);
-+	struct brcmf_pub *drvr = bus_if->drvr;
-+	struct brcmf_sdio_dev *sdiodev = bus_if->bus_priv.sdio;
-+	struct brcmf_sdio *bus = sdiodev->bus;
- 	struct dentry *dentry = brcmf_debugfs_get_devdir(drvr);
- 
- 	if (IS_ERR_OR_NULL(dentry))
-@@ -3153,7 +3156,7 @@ static int brcmf_sdio_checkdied(struct brcmf_sdio *bus)
- 	return 0;
- }
- 
--static void brcmf_sdio_debugfs_create(struct brcmf_sdio *bus)
-+static void brcmf_sdio_debugfs_create(struct device *dev)
- {
- }
- #endif /* DEBUG */
-@@ -3438,8 +3441,6 @@ static int brcmf_sdio_bus_preinit(struct device *dev)
- 	if (bus->rxbuf)
- 		bus->rxblen = value;
- 
--	brcmf_sdio_debugfs_create(bus);
--
- 	/* the commands below use the terms tx and rx from
- 	 * a device perspective, ie. bus:txglom affects the
- 	 * bus transfers from device to host.
-@@ -4050,6 +4051,7 @@ static const struct brcmf_bus_ops brcmf_sdio_bus_ops = {
- 	.get_ramsize = brcmf_sdio_bus_get_ramsize,
- 	.get_memdump = brcmf_sdio_bus_get_memdump,
- 	.get_fwname = brcmf_sdio_get_fwname,
-+	.debugfs_create = brcmf_sdio_debugfs_create
- };
- 
- #define BRCMF_SDIO_FW_CODE	0
+ static int rx8130_alarm_irq_enable(struct device *dev, unsigned int enabled)
 -- 
 2.20.1
 
