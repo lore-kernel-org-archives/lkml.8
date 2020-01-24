@@ -7,47 +7,50 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E869C32771
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:40:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16610C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:40:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD31C206D4
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:40:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2F8F2467E
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:40:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579866001;
-	bh=YdAfbQfol7iLVmy1tcVmFriFRtKJyYqLD0iEgrL2Xkc=;
+	s=default; t=1579866003;
+	bh=fSSok5hBjffsitoix8gKd/IeQ82rHfBLnkFOx6NV3B4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0dhdyl8B/tPJ8JNGBkKvSdsxEdMfx28dnFQuN90Beriq9eWmUTvaU1UiYN1yxYUrV
-	 +3wcRQd4Mv5pNEvvuuh2xnFIZU23m2AONgueJlhw1VVRqPqFTna7qG2qOWtPHgDZYc
-	 pfHEBxGQgLIGG8IXttyiTaVv3asfhD93BBvdiIeY=
+	b=kffYA6+uOxJk+4WpGGFkqoiWiBZ9XFecrs6ccDxx5gQtAXaZ99t2bgV/FNQkqRp8w
+	 UYIHDfTn8wJk4PVus4m31JXKfJRddU/qxxBTIVjiz+QLi64KCIh5nOQyCroH7h44CS
+	 +E+DLTlffhgJlrtpTrnUZYcrClPyHNaUaWg6ttG4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392036AbgAXLkA (ORCPT
+        id S2391296AbgAXLXP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:40:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35684 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 06:23:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35270 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391302AbgAXLXS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:23:18 -0500
+        id S2391279AbgAXLXE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:23:04 -0500
 Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 70F8A2075D;
-        Fri, 24 Jan 2020 11:23:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 976142467E;
+        Fri, 24 Jan 2020 11:23:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579864998;
-        bh=YdAfbQfol7iLVmy1tcVmFriFRtKJyYqLD0iEgrL2Xkc=;
+        s=default; t=1579864983;
+        bh=fSSok5hBjffsitoix8gKd/IeQ82rHfBLnkFOx6NV3B4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AKkt3B4v4L4k22rIcE0bj58+0rF16/7sENjVQKbw4yyRUBVqVTiqLA1NVbeqXVNT6
-         hGfZqgqkkA4GWvfH5vbEP3nqL7jlFidaewsO24UaNShTv+SJY0v5ck4DKBfBX9G943
-         kk//ykEpzkpSU5Cipcb9FvSY1o9gifHCs0ryyQps=
+        b=jD+z7BXUtbUu1Vj4EcL2UytIIpGzLZXnzYZVJPsvQ/siJq9aCSGF8XNI8pWFFFWt+
+         EUQBVOdK9epFoLfIQLrDyQiwVtiKlSMzXdSFjBhW5ovUAdcebqZRoHSHqpp6puNtg2
+         UtE2uf5mPnbssimjOwE0qS5G8g7Ffx+QYGeCthZM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Jon Mason <jdmason@kudzu.us>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 424/639] ntb_hw_switchtec: potential shift wrapping bug in switchtec_ntb_init_sndev()
-Date:   Fri, 24 Jan 2020 10:29:54 +0100
-Message-Id: <20200124093140.149032964@linuxfoundation.org>
+        stable@vger.kernel.org,
+        David Beckett <david.beckett@netronome.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Dirk van der Merwe <dirk.vandermerwe@netronome.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 407/639] net: dont clear sock->sk early to avoid trouble in strparser
+Date:   Fri, 24 Jan 2020 10:29:37 +0100
+Message-Id: <20200124093138.047155592@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
 References: <20200124093047.008739095@linuxfoundation.org>
@@ -60,40 +63,83 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Jakub Kicinski <jakub.kicinski@netronome.com>
 
-[ Upstream commit ff148d8ac53e59802645bd3200c811620317eb9f ]
+[ Upstream commit 2b81f8161dfeda4017cef4f2498ccb64b13f0d61 ]
 
-This code triggers a Smatch warning:
+af_inet sets sock->sk to NULL which trips strparser over:
 
-    drivers/ntb/hw/mscc/ntb_hw_switchtec.c:884 switchtec_ntb_init_sndev()
-    warn: should '(1 << sndev->peer_partition)' be a 64 bit type?
+BUG: kernel NULL pointer dereference, address: 0000000000000012
+PGD 0 P4D 0
+Oops: 0000 [#1] SMP PTI
+CPU: 7 PID: 0 Comm: swapper/7 Not tainted 5.2.0-rc1-00139-g14629453a6d3 #21
+RIP: 0010:tcp_peek_len+0x10/0x60
+RSP: 0018:ffffc02e41c54b98 EFLAGS: 00010246
+RAX: 0000000000000000 RBX: ffff9cf924c4e030 RCX: 0000000000000051
+RDX: 0000000000000000 RSI: 000000000000000c RDI: ffff9cf97128f480
+RBP: ffff9cf9365e0300 R08: ffff9cf94fe7d2c0 R09: 0000000000000000
+R10: 000000000000036b R11: ffff9cf939735e00 R12: ffff9cf91ad9ae40
+R13: ffff9cf924c4e000 R14: ffff9cf9a8fcbaae R15: 0000000000000020
+FS: 0000000000000000(0000) GS:ffff9cf9af7c0000(0000) knlGS:0000000000000000
+CS: 0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000000000012 CR3: 000000013920a003 CR4: 00000000003606e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+ Call Trace:
+ <IRQ>
+ strp_data_ready+0x48/0x90
+ tls_data_ready+0x22/0xd0 [tls]
+ tcp_rcv_established+0x569/0x620
+ tcp_v4_do_rcv+0x127/0x1e0
+ tcp_v4_rcv+0xad7/0xbf0
+ ip_protocol_deliver_rcu+0x2c/0x1c0
+ ip_local_deliver_finish+0x41/0x50
+ ip_local_deliver+0x6b/0xe0
+ ? ip_protocol_deliver_rcu+0x1c0/0x1c0
+ ip_rcv+0x52/0xd0
+ ? ip_rcv_finish_core.isra.20+0x380/0x380
+ __netif_receive_skb_one_core+0x7e/0x90
+ netif_receive_skb_internal+0x42/0xf0
+ napi_gro_receive+0xed/0x150
+ nfp_net_poll+0x7a2/0xd30 [nfp]
+ ? kmem_cache_free_bulk+0x286/0x310
+ net_rx_action+0x149/0x3b0
+ __do_softirq+0xe3/0x30a
+ ? handle_irq_event_percpu+0x6a/0x80
+ irq_exit+0xe8/0xf0
+ do_IRQ+0x85/0xd0
+ common_interrupt+0xf/0xf
+ </IRQ>
+RIP: 0010:cpuidle_enter_state+0xbc/0x450
 
-The "part_map" and "tpart_vec" variables are u64 type so this seems like
-a valid warning.
+To avoid this issue set sock->sk after sk_prot->close.
+My grepping and testing did not discover any code which
+would depend on the current behaviour.
 
-Fixes: 3df54c870f52 ("ntb_hw_switchtec: Allow using Switchtec NTB in multi-partition setups")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
-Signed-off-by: Jon Mason <jdmason@kudzu.us>
+Fixes: c46234ebb4d1 ("tls: RX path for ktls")
+Reported-by: David Beckett <david.beckett@netronome.com>
+Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+Reviewed-by: Dirk van der Merwe <dirk.vandermerwe@netronome.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/ntb/hw/mscc/ntb_hw_switchtec.c | 2 +-
+ net/ipv4/af_inet.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/ntb/hw/mscc/ntb_hw_switchtec.c b/drivers/ntb/hw/mscc/ntb_hw_switchtec.c
-index 9916bc5b6759a..313f6258c4249 100644
---- a/drivers/ntb/hw/mscc/ntb_hw_switchtec.c
-+++ b/drivers/ntb/hw/mscc/ntb_hw_switchtec.c
-@@ -899,7 +899,7 @@ static int switchtec_ntb_init_sndev(struct switchtec_ntb *sndev)
- 		}
- 
- 		sndev->peer_partition = ffs(tpart_vec) - 1;
--		if (!(part_map & (1 << sndev->peer_partition))) {
-+		if (!(part_map & (1ULL << sndev->peer_partition))) {
- 			dev_err(&sndev->stdev->dev,
- 				"ntb target partition is not NT partition\n");
- 			return -ENODEV;
+diff --git a/net/ipv4/af_inet.c b/net/ipv4/af_inet.c
+index 1fbe2f815474c..bbf3b3daa9994 100644
+--- a/net/ipv4/af_inet.c
++++ b/net/ipv4/af_inet.c
+@@ -424,8 +424,8 @@ int inet_release(struct socket *sock)
+ 		if (sock_flag(sk, SOCK_LINGER) &&
+ 		    !(current->flags & PF_EXITING))
+ 			timeout = sk->sk_lingertime;
+-		sock->sk = NULL;
+ 		sk->sk_prot->close(sk, timeout);
++		sock->sk = NULL;
+ 	}
+ 	return 0;
+ }
 -- 
 2.20.1
 
