@@ -2,96 +2,93 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BD9AC35242
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:30:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81F36C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:31:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BB5820718
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:30:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53A3820718
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:31:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579865460;
+	bh=ZS6jI65e74Mv6Xy/85nheZaEHl6XJF/PPFGmlmUx6S4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=fXH1YawtoYWOZhgREBrA6BY9YIi30KzmypTS9VGYBrxzmLBALyGvoGKlJRIsSrsyL
+	 nk/ASwTNo/2nbNRkI6jCU2jZOY8PCmWoX4XYQhjWLyz93I3Z/tsoYteAKyZEy0a/9B
+	 Fuon4rGDkF9KCKK+aq1+VgAIfu+Qyd9K8Fu4LoBo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404330AbgAXLa5 (ORCPT
+        id S2404339AbgAXLa7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:30:57 -0500
-Received: from foss.arm.com ([217.140.110.172]:50188 "EHLO foss.arm.com"
+        Fri, 24 Jan 2020 06:30:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48980 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404317AbgAXLa4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:30:56 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B1A99328;
-        Fri, 24 Jan 2020 03:30:55 -0800 (PST)
-Received: from e107158-lin (e107158-lin.cambridge.arm.com [10.1.195.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EAB613F68E;
-        Fri, 24 Jan 2020 03:30:53 -0800 (PST)
-Date:   Fri, 24 Jan 2020 11:30:51 +0000
-From:   Qais Yousef <qais.yousef@arm.com>
-To:     Valentin Schneider <valentin.schneider@arm.com>
-Cc:     Quentin Perret <qperret@google.com>, Wei Wang <wvw@google.com>,
-        wei.vince.wang@gmail.com, dietmar.eggemann@arm.com,
-        chris.redpath@arm.com, Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] [RFC] sched: restrict iowait boost for boosted task only
-Message-ID: <20200124113050.i6ovkibcmutypm3q@e107158-lin>
-References: <20200124002811.228334-1-wvw@google.com>
- <20200124025238.jsf36n6w4rrn2ehc@e107158-lin>
- <20200124095125.GA121494@google.com>
- <849cc9f0-f4ae-f2b6-8449-f55697928cf5@arm.com>
+        id S2388654AbgAXLa5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:30:57 -0500
+Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C0646206D4;
+        Fri, 24 Jan 2020 11:30:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579865456;
+        bh=ZS6jI65e74Mv6Xy/85nheZaEHl6XJF/PPFGmlmUx6S4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=CbQCgiKNQn9tg+wuxwuC+x0HXN89iGO/e8NV7hTQobQZbseUfXKrJ6eYAl9LiqO/i
+         afWyvnzmpp3EUAq1xHVtkf+i9oIE2rJANbyae29DUT+omxMb8jelQh1op6o+q7ljln
+         /GT0aYmJMyWLkEM/rrXf/NKhnujtDoFwalL0rJxU=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Chao Yu <yuchao0@huawei.com>,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 551/639] f2fs: fix error path of f2fs_convert_inline_page()
+Date:   Fri, 24 Jan 2020 10:32:01 +0100
+Message-Id: <20200124093158.210786925@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
+References: <20200124093047.008739095@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <849cc9f0-f4ae-f2b6-8449-f55697928cf5@arm.com>
-User-Agent: NeoMutt/20171215
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 01/24/20 11:01, Valentin Schneider wrote:
-> On 24/01/2020 09:51, Quentin Perret wrote:
-> >>> +static inline bool iowait_boosted(struct task_struct *p)
-> >>> +{
-> >>> +	return p->in_iowait && uclamp_eff_value(p, UCLAMP_MIN) > 0;
-> >>
-> >> I think this is overloading the usage of util clamp. You're basically using
-> >> cpu.uclamp.min to temporarily switch iowait boost on/off.
-> >>
-> >> Isn't it better to add a new cgroup attribute to toggle this feature?
-> >>
-> >> The problem does seem generic enough and could benefit other battery-powered
-> >> devices outside of the Android world. I don't think the dependency on uclamp &&
-> >> energy model are necessary to solve this.
-> > 
-> > I think using uclamp is not a bad idea here, but perhaps we could do
-> > things differently. As of today the iowait boost escapes the clamping
-> > mechanism, so one option would be to change that. That would let us set
-> > a low max clamp in the 'background' cgroup, which in turns would limit
-> > the frequency request for those tasks even if they're IO-intensive.
-> > 
-> 
-> So I'm pretty sure we *do* want tasks with the default clamps to get iowait
-> boost'd. What we don't want are background tasks driving up the frequency,
-> and that should be via uclamp.max (as Quentin is suggesting) rather than
-> uclamp.min (as is suggested in the patch).
-> 
-> Now, whether that is overloading the usage of uclamp... I'm not sure.
-> One of the argument for uclamp was actually frequency selection, so if
-> we just make iowait boost respect that, IOW not boost further than
-> uclamp.max (which is a bit better than a simple on/off switch), that
-> wouldn't be too crazy I think.
+From: Chao Yu <yuchao0@huawei.com>
 
-Capping iowait boost value in schedutil based on uclamp makes sense indeed.
+[ Upstream commit e8c82c11c93d586d03d80305959527bcac383555 ]
 
-What didn't make sense to me is the use of uclamp as a switch to toggle iowait
-boost on/off.
+In error path of f2fs_convert_inline_page(), we missed to truncate newly
+reserved block in .i_addrs[0] once we failed in get_node_info(), fix it.
 
-Cheers
+Fixes: 7735730d39d7 ("f2fs: fix to propagate error from __get_meta_page()")
+Signed-off-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ fs/f2fs/inline.c | 1 +
+ 1 file changed, 1 insertion(+)
 
---
-Qais Yousef
+diff --git a/fs/f2fs/inline.c b/fs/f2fs/inline.c
+index 6bbb5f6801e26..3fe0dd5313903 100644
+--- a/fs/f2fs/inline.c
++++ b/fs/f2fs/inline.c
+@@ -133,6 +133,7 @@ int f2fs_convert_inline_page(struct dnode_of_data *dn, struct page *page)
+ 
+ 	err = f2fs_get_node_info(fio.sbi, dn->nid, &ni);
+ 	if (err) {
++		f2fs_truncate_data_blocks_range(dn, 1);
+ 		f2fs_put_dnode(dn);
+ 		return err;
+ 	}
+-- 
+2.20.1
+
+
+
