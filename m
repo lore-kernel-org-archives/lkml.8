@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD186C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:31:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1009EC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:32:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95950206F0
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:31:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D553F20661
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:32:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579876319;
-	bh=k0wiRCu1a2igqDZM9EqBr14Bpm2bdspGE7jmVAYkT1g=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=CBr2fz1yF9/YRhJeIQN3IAc8KxU7YP7ZL+Gos78HkqiF/OrQpZDQ+p4ukfpLEkFC3
-	 /AFDOSx43/fJjUAG3pOgpvyDakjDAZGHKv29SuHGnGpjdIBDJw0Tw1fycdvfv0NjTq
-	 msfYhYhzcLMtm/yIR2vAohAaxtRWZErbM/QEDgzk=
+	s=default; t=1579876331;
+	bh=wW37xeSHEyfPIA3RkVnLPNbuRX83NGYj75tTHY5f1i4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=CJ+mgDKQhaqesXw5iB2g1I3vSOtw5WgCNngEVZpYmdSVqumdlj9ux2MAk7L7spVds
+	 Eu3umxcq2iIqOTREhCCpnjJPYiyba+BLnCkRpNzfoVkxwYOuEJM9IFhjfGhw8Qbxa0
+	 ESWj+//WgAlAzhJ+7eYIVvhCHSq2FadJyGsY2FeM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392638AbgAXOb6 (ORCPT
+        id S2392664AbgAXOcK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 09:31:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41102 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 09:32:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41000 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404594AbgAXOUP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 09:20:15 -0500
+        id S2404537AbgAXOUK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 09:20:10 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A793720838;
-        Fri, 24 Jan 2020 14:20:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E3138222D9;
+        Fri, 24 Jan 2020 14:20:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579875614;
-        bh=k0wiRCu1a2igqDZM9EqBr14Bpm2bdspGE7jmVAYkT1g=;
-        h=From:To:Cc:Subject:Date:From;
-        b=lTpDDWfEzbf9lh6a5Dkea6aHf5YXb/+VPjayAJePYzLutKQFptVGF3OECfh0hLsrZ
-         RHLhxws1gkGTFUDSLl2erEOgMVrUdb00b8Lb1pfUgnQrC7WvnbmND+GF2oj0iGvZbm
-         qYCOubc9IO7sp2PhhdP2YCc/toFoccnY8LIfJSNM=
+        s=default; t=1579875609;
+        bh=wW37xeSHEyfPIA3RkVnLPNbuRX83NGYj75tTHY5f1i4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=yGICmCqZrIPTLNaQh78hvwvkzjvEe+Itv4vkT39LvlWdT6XUsLiaE8GBzRiiMqIf0
+         bQfparZ0hErGtFTTOaDOQSK68Ij2EgdoftyBJVgMsNH8SsocW1hCWQihj/1q9jkyHw
+         yoRiFe1oakgy7sfAMNzITTgStvV81Ne8HaGIW/1g=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sven Eckelmann <sven@narfation.org>,
-        Simon Wunderlich <sw@simonwunderlich.de>,
-        Sasha Levin <sashal@kernel.org>,
-        b.a.t.m.a.n@lists.open-mesh.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 01/56] batman-adv: Fix DAT candidate selection on little endian systems
-Date:   Fri, 24 Jan 2020 09:19:17 -0500
-Message-Id: <20200124142012.29752-1-sashal@kernel.org>
+Cc:     Yonglong Liu <liuyonglong@huawei.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 096/107] net: hns: fix soft lockup when there is not enough memory
+Date:   Fri, 24 Jan 2020 09:18:06 -0500
+Message-Id: <20200124141817.28793-96-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200124141817.28793-1-sashal@kernel.org>
+References: <20200124141817.28793-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -58,51 +59,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sven Eckelmann <sven@narfation.org>
+From: Yonglong Liu <liuyonglong@huawei.com>
 
-[ Upstream commit 4cc4a1708903f404d2ca0dfde30e71e052c6cbc9 ]
+[ Upstream commit 49edd6a2c456150870ddcef5b7ed11b21d849e13 ]
 
-The distributed arp table is using a DHT to store and retrieve MAC address
-information for an IP address. This is done using unicast messages to
-selected peers. The potential peers are looked up using the IP address and
-the VID.
+When there is not enough memory and napi_alloc_skb() return NULL,
+the HNS driver will print error message, and than try again, if
+the memory is not enough for a while, huge error message and the
+retry operation will cause soft lockup.
 
-While the IP address is always stored in big endian byte order, this is not
-the case of the VID. It can (depending on the host system) either be big
-endian or little endian. The host must therefore always convert it to big
-endian to ensure that all devices calculate the same peers for the same
-lookup data.
+When napi_alloc_skb() return NULL because of no memory, we can
+get a warn_alloc() call trace, so this patch deletes the error
+message. We already use polling mode to handle irq, but the
+retry operation will render the polling weight inactive, this
+patch just return budget when the rx is not completed to avoid
+dead loop.
 
-Fixes: be1db4f6615b ("batman-adv: make the Distributed ARP Table vlan aware")
-Signed-off-by: Sven Eckelmann <sven@narfation.org>
-Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
+Fixes: 36eedfde1a36 ("net: hns: Optimize hns_nic_common_poll for better performance")
+Fixes: b5996f11ea54 ("net: add Hisilicon Network Subsystem basic ethernet support")
+Signed-off-by: Yonglong Liu <liuyonglong@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/batman-adv/distributed-arp-table.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/hisilicon/hns/hns_enet.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/net/batman-adv/distributed-arp-table.c b/net/batman-adv/distributed-arp-table.c
-index 2895e3b26e930..f2dc7499d2663 100644
---- a/net/batman-adv/distributed-arp-table.c
-+++ b/net/batman-adv/distributed-arp-table.c
-@@ -251,6 +251,7 @@ static u32 batadv_hash_dat(const void *data, u32 size)
- 	u32 hash = 0;
- 	const struct batadv_dat_entry *dat = data;
- 	const unsigned char *key;
-+	__be16 vid;
- 	u32 i;
+diff --git a/drivers/net/ethernet/hisilicon/hns/hns_enet.c b/drivers/net/ethernet/hisilicon/hns/hns_enet.c
+index 14ab20491fd02..eb69e5c81a4d0 100644
+--- a/drivers/net/ethernet/hisilicon/hns/hns_enet.c
++++ b/drivers/net/ethernet/hisilicon/hns/hns_enet.c
+@@ -565,7 +565,6 @@ static int hns_nic_poll_rx_skb(struct hns_nic_ring_data *ring_data,
+ 	skb = *out_skb = napi_alloc_skb(&ring_data->napi,
+ 					HNS_RX_HEAD_SIZE);
+ 	if (unlikely(!skb)) {
+-		netdev_err(ndev, "alloc rx skb fail\n");
+ 		ring->stats.sw_err_cnt++;
+ 		return -ENOMEM;
+ 	}
+@@ -1056,7 +1055,6 @@ static int hns_nic_common_poll(struct napi_struct *napi, int budget)
+ 		container_of(napi, struct hns_nic_ring_data, napi);
+ 	struct hnae_ring *ring = ring_data->ring;
  
- 	key = (const unsigned char *)&dat->ip;
-@@ -260,7 +261,8 @@ static u32 batadv_hash_dat(const void *data, u32 size)
- 		hash ^= (hash >> 6);
+-try_again:
+ 	clean_complete += ring_data->poll_one(
+ 				ring_data, budget - clean_complete,
+ 				ring_data->ex_process);
+@@ -1066,7 +1064,7 @@ try_again:
+ 			napi_complete(napi);
+ 			ring->q->handle->dev->ops->toggle_ring_irq(ring, 0);
+ 		} else {
+-			goto try_again;
++			return budget;
+ 		}
  	}
  
--	key = (const unsigned char *)&dat->vid;
-+	vid = htons(dat->vid);
-+	key = (__force const unsigned char *)&vid;
- 	for (i = 0; i < sizeof(dat->vid); i++) {
- 		hash += key[i];
- 		hash += (hash << 10);
 -- 
 2.20.1
 
