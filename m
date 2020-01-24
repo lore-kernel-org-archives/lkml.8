@@ -2,179 +2,110 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
+	USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADFE9C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:37:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA0B1C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:37:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E842206F0
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:37:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579876629;
-	bh=1uzgcsSaJZLu+0KgecdYIA0XH7hSo+0oomAqGGk7dBg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=huz1xqgcVfiHZxaXWenrJqbzmpP/5vw8v8+LmHfxrMGX1TZbZbPdw8hGUfvAtXeX8
-	 Yhs2Ry+hpkNOoylyX+uC83hX2FZgIUYTN+LJJjr9Rr4ES8SrINxw9VfAbDHVALQkgv
-	 0s77n7wekTKPJgMoa26mZRhW5x7nEVmKE9O5IRKo=
+	by mail.kernel.org (Postfix) with ESMTP id BF7B720704
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:37:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="G4PCXCZv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387648AbgAXOhI (ORCPT
+        id S2387755AbgAXOhP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 09:37:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39242 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403889AbgAXOTI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 09:19:08 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 37A19222D9;
-        Fri, 24 Jan 2020 14:19:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579875547;
-        bh=1uzgcsSaJZLu+0KgecdYIA0XH7hSo+0oomAqGGk7dBg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jUtB5O9n/xPvquu3MCRL4357fy8UvcneUz5fig3E8d7BvmNVgjwWDZ9LQyyyX7Wy7
-         0L29jnnRzXQPSF0R0Yy2kyx3YiUhs6WyResImVr+oz8fR2G7QRFLZLERazDexeh9HO
-         y/xOwpVqH//GBe/EI95kcjqZNKkfpxmALLKNqoZ4=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Stefan Assmann <sassmann@kpanic.de>,
-        Andrew Bowers <andrewx.bowers@intel.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        Sasha Levin <sashal@kernel.org>,
-        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 042/107] iavf: remove current MAC address filter on VF reset
-Date:   Fri, 24 Jan 2020 09:17:12 -0500
-Message-Id: <20200124141817.28793-42-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200124141817.28793-1-sashal@kernel.org>
-References: <20200124141817.28793-1-sashal@kernel.org>
+        Fri, 24 Jan 2020 09:37:15 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:35988 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387676AbgAXOhK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 09:37:10 -0500
+Received: by mail-wm1-f68.google.com with SMTP id p17so1925289wma.1
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jan 2020 06:37:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=dzsZn5YGBm3wUhQPoMDUJ14zEU+MEc78x4rzaBDLSP0=;
+        b=G4PCXCZvqK2HNyrqpe/9EKycb+jQXw97AZkRxWS9FasZLV3pYn+fkJ1xa1QmczUANh
+         PZQWXmEaQFOnW9EpzrRP/J7zOtCN7iy2MIdoGWSpUPdIoxynMQ3KWZh6W9fxM1w55urS
+         oCRqjJmrd9DrJRcfO1teS8g8zNr/5XJJycB8t40LS4sHy9sVgls/wyDfKwVPK8sq4PbD
+         Z/n+2MMHuoCSzBI6hRHHirCQyy33Axe6x/gM7tn+Q96IKsdn7lOSybmec5hqZ29PRzSt
+         J4J3bpoBYjTnNWrT9kMH6N08+3+irqZ547Dx1GLy99S0ZVBl7v4cdRzBAvCaZYbKTJC6
+         NasA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=dzsZn5YGBm3wUhQPoMDUJ14zEU+MEc78x4rzaBDLSP0=;
+        b=IQ/CRyflM3WGmsrPFn0+BDO6trCfyLAdWhXBEjZDn+QRebXreCpq2r4yeyMgFA30XE
+         t3EtSqmdl0DqUoeV7vZsMroeOyKlYW8P3qjKzXVWaExd4oqQveHakKhvYlxjc2xahBwl
+         AC1NIjca146wJcQA6/Y1Tjk1SQpz0SPonwxYTyyYELbVuhVlc3lanKwxv1PHcnYhsJE3
+         yHWxVqVORJg9kaQgKcSUdxX6y/8qWREtqEXrW42cKPJ3JRwOjJy5YCt7ixCYQ1//WzVr
+         Yt8uC6jFPipn0CcnvI6cSwRsLIpGh2/KHutntV0JJBuenXcTd4i2FgUrwPQtYCHa2yKZ
+         FHMg==
+X-Gm-Message-State: APjAAAUpCdWUYsbadK6HEubMl9cqD3QWbj2J4/PQfzlU11OlCVhwFLok
+        WGARNsvr1jF01Cu1mCyme3cPe7oV9UrwTQ==
+X-Google-Smtp-Source: APXvYqyMVfaMhToiGNn5b34BkYqDXlqLtMg4JBeFdVJpPM+zLlKRZ/0/+kA99MsGFZbIep1CF9uRPA==
+X-Received: by 2002:a1c:9602:: with SMTP id y2mr3569784wmd.23.1579876628063;
+        Fri, 24 Jan 2020 06:37:08 -0800 (PST)
+Received: from google.com ([2a00:79e0:d:110:d6cc:2030:37c1:9964])
+        by smtp.gmail.com with ESMTPSA id s19sm6831173wmj.33.2020.01.24.06.37.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 24 Jan 2020 06:37:07 -0800 (PST)
+Date:   Fri, 24 Jan 2020 14:37:04 +0000
+From:   Quentin Perret <qperret@google.com>
+To:     Douglas Raillard <douglas.raillard@arm.com>
+Cc:     linux-kernel@vger.kernel.org, rjw@rjwysocki.net,
+        viresh.kumar@linaro.org, peterz@infradead.org,
+        juri.lelli@redhat.com, vincent.guittot@linaro.org,
+        dietmar.eggemann@arm.com, linux-pm@vger.kernel.org
+Subject: Re: [RFC PATCH v4 3/6] sched/cpufreq: Hook em_pd_get_higher_power()
+ into get_next_freq()
+Message-ID: <20200124143704.GA215244@google.com>
+References: <20200122173538.1142069-1-douglas.raillard@arm.com>
+ <20200122173538.1142069-4-douglas.raillard@arm.com>
+ <20200123161644.GA144523@google.com>
+ <5a2af4e7-f9eb-4f23-908a-fab2c7395a99@arm.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5a2af4e7-f9eb-4f23-908a-fab2c7395a99@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stefan Assmann <sassmann@kpanic.de>
+On Thursday 23 Jan 2020 at 17:52:53 (+0000), Douglas Raillard wrote:
+> We can't really move the call to em_pd_get_higher_freq() into
+> cpufreq_driver_resolve_freq() since that's a schedutil-specific feature,
+> and we would loose the !sg_policy->need_freq_update optimization.
 
-[ Upstream commit 9e05229190380f6b8f702da39aaeb97a0fc80dc3 ]
+Depends how you do it. You could add a new method to cpufreq_policy that
+is defined only for sugov or something along those lines. And you'd call
+that instead of cpufreq_frequency_table_target() when that makes sense.
 
-Currently MAC filters are not altered during a VF reset event. This may
-lead to a stale filter when an administratively set MAC is forced by the
-PF.
+> Maybe we can add a flag to cpufreq_driver_resolve_freq() that promises
+> that the frequency is already a valid one. We have to be careful though,
+> since a number of things can make that untrue:
+>  - em_pd_get_higher_freq() will return the passed freq verbatim if it's
+> higher than the max freq, so em_pd_get_higher_freq() will have to set
+> the flag itself in case that logic changes.
+>  - policy limits can change the value
+>  - future things could tinker with the freq and forget to reset the flag.
+> 
+> If you think it's worth it I can make these changes.
 
-For an administratively set MAC the PF driver deletes the VFs filters,
-overwrites the VFs MAC address and triggers a VF reset. However
-the VF driver itself is not aware of the filter removal, which is what
-the VF reset is for.
-The VF reset queues all filters present in the VF driver to be re-added
-to the PF filter list (including the filter for the now stale VF MAC
-address) and triggers a VIRTCHNL_OP_GET_VF_RESOURCES event, which
-provides the new MAC address to the VF.
+The thing is, not only with the current patch we end up iterating the
+frequencies twice for nothing, but also I think it'd be interesting to
+use the EM for consistency with EAS. It'd be nice to use the same data
+structure for the predictions we do in compute_energy() and for the
+actual request.
 
-When this happens i40e will complain and reject the stale MAC filter,
-at least in the untrusted VF case.
-i40e 0000:08:00.0: Setting MAC 3c:fa:fa:fa:fa:01 on VF 0
-iavf 0000:08:02.0: Reset warning received from the PF
-iavf 0000:08:02.0: Scheduling reset task
-i40e 0000:08:00.0: Bring down and up the VF interface to make this change effective.
-i40e 0000:08:00.0: VF attempting to override administratively set MAC address, bring down and up the VF interface to resume normal operation
-i40e 0000:08:00.0: VF 0 failed opcode 10, retval: -1
-iavf 0000:08:02.0: Failed to add MAC filter, error IAVF_ERR_NVM
+Thoughts ?
 
-To avoid re-adding the stale MAC filter it needs to be removed from the
-VF driver's filter list before queuing the existing filters. Then during
-the VIRTCHNL_OP_GET_VF_RESOURCES event the correct filter needs to be
-added again, at which point the MAC address has been updated.
-
-As a bonus this change makes bringing the VF down and up again
-superfluous for the administratively set MAC case.
-
-Signed-off-by: Stefan Assmann <sassmann@kpanic.de>
-Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/net/ethernet/intel/iavf/iavf.h          |  2 ++
- drivers/net/ethernet/intel/iavf/iavf_main.c     | 17 +++++++++++++----
- drivers/net/ethernet/intel/iavf/iavf_virtchnl.c |  3 +++
- 3 files changed, 18 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/net/ethernet/intel/iavf/iavf.h b/drivers/net/ethernet/intel/iavf/iavf.h
-index 29de3ae96ef22..bd1b1ed323f4f 100644
---- a/drivers/net/ethernet/intel/iavf/iavf.h
-+++ b/drivers/net/ethernet/intel/iavf/iavf.h
-@@ -415,4 +415,6 @@ void iavf_enable_channels(struct iavf_adapter *adapter);
- void iavf_disable_channels(struct iavf_adapter *adapter);
- void iavf_add_cloud_filter(struct iavf_adapter *adapter);
- void iavf_del_cloud_filter(struct iavf_adapter *adapter);
-+struct iavf_mac_filter *iavf_add_filter(struct iavf_adapter *adapter,
-+					const u8 *macaddr);
- #endif /* _IAVF_H_ */
-diff --git a/drivers/net/ethernet/intel/iavf/iavf_main.c b/drivers/net/ethernet/intel/iavf/iavf_main.c
-index 821987da5698a..8e16be960e96b 100644
---- a/drivers/net/ethernet/intel/iavf/iavf_main.c
-+++ b/drivers/net/ethernet/intel/iavf/iavf_main.c
-@@ -743,9 +743,8 @@ iavf_mac_filter *iavf_find_filter(struct iavf_adapter *adapter,
-  *
-  * Returns ptr to the filter object or NULL when no memory available.
-  **/
--static struct
--iavf_mac_filter *iavf_add_filter(struct iavf_adapter *adapter,
--				 const u8 *macaddr)
-+struct iavf_mac_filter *iavf_add_filter(struct iavf_adapter *adapter,
-+					const u8 *macaddr)
- {
- 	struct iavf_mac_filter *f;
- 
-@@ -2065,9 +2064,9 @@ static void iavf_reset_task(struct work_struct *work)
- 	struct virtchnl_vf_resource *vfres = adapter->vf_res;
- 	struct net_device *netdev = adapter->netdev;
- 	struct iavf_hw *hw = &adapter->hw;
-+	struct iavf_mac_filter *f, *ftmp;
- 	struct iavf_vlan_filter *vlf;
- 	struct iavf_cloud_filter *cf;
--	struct iavf_mac_filter *f;
- 	u32 reg_val;
- 	int i = 0, err;
- 	bool running;
-@@ -2181,6 +2180,16 @@ continue_reset:
- 
- 	spin_lock_bh(&adapter->mac_vlan_list_lock);
- 
-+	/* Delete filter for the current MAC address, it could have
-+	 * been changed by the PF via administratively set MAC.
-+	 * Will be re-added via VIRTCHNL_OP_GET_VF_RESOURCES.
-+	 */
-+	list_for_each_entry_safe(f, ftmp, &adapter->mac_filter_list, list) {
-+		if (ether_addr_equal(f->macaddr, adapter->hw.mac.addr)) {
-+			list_del(&f->list);
-+			kfree(f);
-+		}
-+	}
- 	/* re-add all MAC filters */
- 	list_for_each_entry(f, &adapter->mac_filter_list, list) {
- 		f->add = true;
-diff --git a/drivers/net/ethernet/intel/iavf/iavf_virtchnl.c b/drivers/net/ethernet/intel/iavf/iavf_virtchnl.c
-index c46770eba320e..1ab9cb339acb4 100644
---- a/drivers/net/ethernet/intel/iavf/iavf_virtchnl.c
-+++ b/drivers/net/ethernet/intel/iavf/iavf_virtchnl.c
-@@ -1359,6 +1359,9 @@ void iavf_virtchnl_completion(struct iavf_adapter *adapter,
- 			ether_addr_copy(netdev->perm_addr,
- 					adapter->hw.mac.addr);
- 		}
-+		spin_lock_bh(&adapter->mac_vlan_list_lock);
-+		iavf_add_filter(adapter, adapter->hw.mac.addr);
-+		spin_unlock_bh(&adapter->mac_vlan_list_lock);
- 		iavf_process_config(adapter);
- 		}
- 		break;
--- 
-2.20.1
-
+Quentin
