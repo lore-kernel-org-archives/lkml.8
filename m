@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50536C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 22:56:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1718C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 22:56:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1BE6F208C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 22:56:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5497218AC
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 22:56:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579906598;
-	bh=Gppq/OgdKWDrK9B39fQzgB6mbvFtgkgHVMSqV4oKDTY=;
+	s=default; t=1579906600;
+	bh=gKS74XNSJ0ZIzUPEXVieFZQBl37c0+/sacrIo/yI9Lw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
 	 References:List-ID:From;
-	b=nrEbB8T96Mu1tpWEqxsy5udo6ImJ+UlyXoIvh1VoMQxViQdkckGoqp4wYlBAagRqS
-	 iRd3ZPcBY1AKqmUoGZXsUDvFqNTUQubZ9C1eyGlhUwc1o8BNVUda8gOfFBGDCY4DYZ
-	 lcwAMNwUv379siSItrlvjJW82ihb/STK5o0Ff5i4=
+	b=XFBfYFzMROXLXEv+R4HACcRIR9d9baA9+t8eG0BwymqX8wx9UgRBHICZ8JlQX6Vh9
+	 agyKJ1VyuWnpEi0ZKzxtYWd6/BgUvsj1KiWixsWh0lLObd4oVUxzNhTexKksXS7fdG
+	 2dTtetNts3gVaK0wzp4fdkIaCFsWYpdRWddzrY90=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729388AbgAXW4h (ORCPT
+        id S1729429AbgAXW4j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 17:56:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39378 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 17:56:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39416 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729297AbgAXW4f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 17:56:35 -0500
+        id S1729339AbgAXW4g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 17:56:36 -0500
 Received: from localhost.localdomain (c-98-220-238-81.hsd1.il.comcast.net [98.220.238.81])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 04A172075D;
-        Fri, 24 Jan 2020 22:56:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 62FA52081E;
+        Fri, 24 Jan 2020 22:56:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579906593;
-        bh=Gppq/OgdKWDrK9B39fQzgB6mbvFtgkgHVMSqV4oKDTY=;
+        s=default; t=1579906595;
+        bh=gKS74XNSJ0ZIzUPEXVieFZQBl37c0+/sacrIo/yI9Lw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
          References:From;
-        b=OBrRVxXTIPfOkqjg4BjKvNDzRT7DaaVpJR7UhD9KyGSW3cjPHQZaamrZ9UVwIFWOP
-         A/wQ38OcqHHsf1Q3I5BCv0YAeIhFrpkO8tVRzcWVUAq20rPPzrn9H8jQwffpSqYfsC
-         h25BfpramN/JMTvLI33oooYVPPgdwmUxh20/tr4o=
+        b=ysjamxK2Id8j1JQyk2usCSknr2J98/6c2rn4/N7YGZlc/S7ipG4/srHzjIf0WsSXn
+         0ukQdAs1UBwz6gfx1IVVKa6YXY2HFPraeOE8zEIbY8NoosrgHSvp1GXRc4yEQ2gMFB
+         omwK7pBZ/GcpiwcDeb+Z2J1zNwE/FC7jYqdJrWCg=
 From:   Tom Zanussi <zanussi@kernel.org>
 To:     rostedt@goodmis.org
 Cc:     artem.bityutskiy@linux.intel.com, mhiramat@kernel.org,
         linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org,
         ndesaulniers@google.com
-Subject: [PATCH v3 02/12] tracing: Add trace_get/put_event_file()
-Date:   Fri, 24 Jan 2020 16:56:13 -0600
-Message-Id: <ec82da7de7689bdebbb447c83d9182c05efb0ba6.1579904761.git.zanussi@kernel.org>
+Subject: [PATCH v3 03/12] tracing: Add synth_event_delete()
+Date:   Fri, 24 Jan 2020 16:56:14 -0600
+Message-Id: <fb1828de7e276c5589071fe34f509a6cfba83cf7.1579904761.git.zanussi@kernel.org>
 X-Mailer: git-send-email 2.14.1
 In-Reply-To: <cover.1579904761.git.zanussi@kernel.org>
 References: <cover.1579904761.git.zanussi@kernel.org>
@@ -59,134 +59,107 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a function to get an event file and prevent it from going away on
-module or instance removal.
+create_or_delete_synth_event() contains code to delete a synthetic
+event, which would be useful on its own - specifically, it would be
+useful to allow event-creating modules to call it separately.
 
-trace_get_event_file() will find an event file in a given instance (if
-instance is NULL, it assumes the top trace array) and return it,
-pinning the instance's trace array as well as the event's module, if
-applicable, so they won't go away while in use.
-
-trace_put_event_file() does the matching release.
+Separate out the delete code from that function and create an exported
+function named synth_event_delete().
 
 Signed-off-by: Tom Zanussi <zanussi@kernel.org>
 ---
- include/linux/trace_events.h |  5 +++
- kernel/trace/trace_events.c  | 85 ++++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 90 insertions(+)
+ include/linux/trace_events.h     |  2 ++
+ kernel/trace/trace_events_hist.c | 57 +++++++++++++++++++++++++++++-----------
+ 2 files changed, 43 insertions(+), 16 deletions(-)
 
 diff --git a/include/linux/trace_events.h b/include/linux/trace_events.h
-index 20948ee56f8c..8d621a73c97e 100644
+index 8d621a73c97e..25fe743bcbaf 100644
 --- a/include/linux/trace_events.h
 +++ b/include/linux/trace_events.h
-@@ -349,6 +349,11 @@ enum {
- 	EVENT_FILE_FL_WAS_ENABLED_BIT,
- };
+@@ -354,6 +354,8 @@ extern struct trace_event_file *trace_get_event_file(const char *instance,
+ 						     const char *event);
+ extern void trace_put_event_file(struct trace_event_file *file);
  
-+extern struct trace_event_file *trace_get_event_file(const char *instance,
-+						     const char *system,
-+						     const char *event);
-+extern void trace_put_event_file(struct trace_event_file *file);
++extern int synth_event_delete(const char *name);
 +
  /*
   * Event file flags:
   *  ENABLED	  - The event is enabled
-diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
-index dfb736a964d6..402426a82cfb 100644
---- a/kernel/trace/trace_events.c
-+++ b/kernel/trace/trace_events.c
-@@ -2536,6 +2536,91 @@ find_event_file(struct trace_array *tr, const char *system, const char *event)
- 	return file;
+diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
+index 117a1202a6b9..94ee1e576a1e 100644
+--- a/kernel/trace/trace_events_hist.c
++++ b/kernel/trace/trace_events_hist.c
+@@ -1354,29 +1354,54 @@ static int __create_synth_event(int argc, const char *name, const char **argv)
+ 	goto out;
  }
  
-+/**
-+ * trace_get_event_file - Find and return a trace event file
-+ * @instance: The name of the trace instance containing the event
-+ * @system: The name of the system containing the event
-+ * @event: The name of the event
-+ *
-+ * Return a trace event file given the trace instance name, trace
-+ * system, and trace event name.  If the instance name is NULL, it
-+ * refers to the top-level trace array.
-+ *
-+ * This function will look it up and return it if found, after calling
-+ * trace_array_get() to prevent the instance from going away, and
-+ * increment the event's module refcount to prevent it from being
-+ * removed.
-+ *
-+ * To release the file, call trace_put_event_file(), which will call
-+ * trace_array_put() and decrement the event's module refcount.
-+ *
-+ * Return: The trace event on success, ERR_PTR otherwise.
-+ */
-+struct trace_event_file *trace_get_event_file(const char *instance,
-+					      const char *system,
-+					      const char *event)
++static int destroy_synth_event(struct synth_event *se)
 +{
-+	struct trace_array *tr = top_trace_array();
-+	struct trace_event_file *file = NULL;
-+	int ret = -EINVAL;
++	int ret;
 +
-+	if (instance) {
-+		tr = trace_array_find_get(instance);
-+		if (!tr)
-+			return ERR_PTR(-ENOENT);
-+	} else {
-+		ret = trace_array_get(tr);
-+		if (ret)
-+			return ERR_PTR(ret);
-+	}
-+
-+	mutex_lock(&event_mutex);
-+
-+	file = find_event_file(tr, system, event);
-+	if (!file) {
-+		trace_array_put(tr);
-+		ret = -EINVAL;
-+		goto out;
-+	}
-+
-+	/* Don't let event modules unload while in use */
-+	ret = try_module_get(file->event_call->mod);
-+	if (!ret) {
-+		trace_array_put(tr);
++	if (se->ref)
 +		ret = -EBUSY;
-+		goto out;
++	else {
++		ret = unregister_synth_event(se);
++		if (!ret) {
++			dyn_event_remove(&se->devent);
++			free_synth_event(se);
++		}
 +	}
 +
-+	ret = 0;
-+ out:
-+	mutex_unlock(&event_mutex);
-+
-+	if (ret)
-+		file = ERR_PTR(ret);
-+
-+	return file;
++	return ret;
 +}
-+EXPORT_SYMBOL_GPL(trace_get_event_file);
 +
 +/**
-+ * trace_put_event_file - Release a file from trace_get_event_file()
-+ * @file: The trace event file
++ * synth_event_delete - Delete a synthetic event
++ * @event_name: The name of the new sythetic event
 + *
-+ * If a file was retrieved using trace_get_event_file(), this should
-+ * be called when it's no longer needed.  It will cancel the previous
-+ * trace_array_get() called by that function, and decrement the
-+ * event's module refcount.
++ * Delete a synthetic event that was created with synth_event_create().
++ *
++ * Return: 0 if successful, error otherwise.
 + */
-+void trace_put_event_file(struct trace_event_file *file)
++int synth_event_delete(const char *event_name)
 +{
-+	trace_array_put(file->tr);
++	struct synth_event *se = NULL;
++	int ret = -ENOENT;
 +
 +	mutex_lock(&event_mutex);
-+	module_put(file->event_call->mod);
++	se = find_synth_event(event_name);
++	if (se)
++		ret = destroy_synth_event(se);
 +	mutex_unlock(&event_mutex);
-+}
-+EXPORT_SYMBOL_GPL(trace_put_event_file);
 +
- #ifdef CONFIG_DYNAMIC_FTRACE
++	return ret;
++}
++EXPORT_SYMBOL_GPL(synth_event_delete);
++
+ static int create_or_delete_synth_event(int argc, char **argv)
+ {
+ 	const char *name = argv[0];
+-	struct synth_event *event = NULL;
+ 	int ret;
  
- /* Avoid typos */
+ 	/* trace_run_command() ensures argc != 0 */
+ 	if (name[0] == '!') {
+-		mutex_lock(&event_mutex);
+-		event = find_synth_event(name + 1);
+-		if (event) {
+-			if (event->ref)
+-				ret = -EBUSY;
+-			else {
+-				ret = unregister_synth_event(event);
+-				if (!ret) {
+-					dyn_event_remove(&event->devent);
+-					free_synth_event(event);
+-				}
+-			}
+-		} else
+-			ret = -ENOENT;
+-		mutex_unlock(&event_mutex);
++		ret = synth_event_delete(name + 1);
+ 		return ret;
+ 	}
+ 
 -- 
 2.14.1
 
