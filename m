@@ -7,49 +7,50 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8BDDC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:58:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 353CCC35242
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:58:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90E9D20709
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:58:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0069920709
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:58:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579859902;
-	bh=+2g9AqdB+HbWQ6IxOSw80hrAf5/7XChX9Fm7zN8J8Ao=;
+	s=default; t=1579859906;
+	bh=bS3BpH1jsiAl5BZqxsk4NeHi/IKq3LT4SMF9wXBNaoU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LGFRmQyVATSfJErBrFcfs6qw1F6vGXPHE9B2P421JqpEDcmTWl9/XC3UKzLbbb1v8
-	 KA8gFi9CwBV56PV/oVHi5h6k37HZNnQEPrWOo0tyIKYj+s598MAO6G4x0sUV9ewD9A
-	 iG29KnbcGcn0LVIsE0R0ETGVEb9HP4/w+ZSim2Fo=
+	b=Ys+7mabodyj2KY/QRk/8GZt7EU1cKWuD8zhz2SRkVm9I5fJ7H+1o1YOW/3QsGVpdd
+	 GwRJ/TyfBiG/2E73riDrvMbtXWOpnQmIpazjpiPBMQtJronj/lHhrc2dVt4GPwceBv
+	 MRedA61aN9kM8NYMKKd1kw2Tp20cAOv17Lx3mbLM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388128AbgAXJ6V (ORCPT
+        id S2388489AbgAXJ6Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 04:58:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33850 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 04:58:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33938 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725821AbgAXJ6T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 04:58:19 -0500
+        id S1725821AbgAXJ6Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 04:58:24 -0500
 Received: from localhost (unknown [145.15.244.15])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7CCDB20709;
-        Fri, 24 Jan 2020 09:58:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 949AD20718;
+        Fri, 24 Jan 2020 09:58:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579859899;
-        bh=+2g9AqdB+HbWQ6IxOSw80hrAf5/7XChX9Fm7zN8J8Ao=;
+        s=default; t=1579859903;
+        bh=bS3BpH1jsiAl5BZqxsk4NeHi/IKq3LT4SMF9wXBNaoU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IfHxF+Zbn2efo7XJnl33xHgf8w8HLWSpFDtQO2tP3zI8/OuggCkfla2Siu95An5tQ
-         ioy8OdWpqDiH6Rsl7cTlk6IcM75CakrrViHy0qhB9ToMccQNLHEzpv5Ck+V3YgcqRg
-         FnbYJZO6inOS4P6uNpTJ+cusSL2QJ+kkMTqdAs0A=
+        b=tkgmu2i8Ly6X3me6SrO4MhSleakmEVwXZuv1SahmA1p6837yQBBrWt0Z8AISfaaWB
+         xZYHrzjM4xIeHLLpDS+kXYD7/nBQ+b6v77ExnSMq0eLd7FSVU6DKxdc+kOKCib/tZP
+         uRTGgsP3n0ABq6se92fNzmJnC7oKc8FaahnmdzfA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Bichao Zheng <bichao.zheng@amlogic.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
+        stable@vger.kernel.org, Cornelia Huck <cohuck@redhat.com>,
+        Kirti Wankhede <kwankhede@nvidia.com>,
+        Maxim Levitsky <mlevitsk@redhat.com>,
+        Parav Pandit <parav@mellanox.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 205/343] pwm: meson: Dont disable PWM when setting duty repeatedly
-Date:   Fri, 24 Jan 2020 10:30:23 +0100
-Message-Id: <20200124092946.983064282@linuxfoundation.org>
+Subject: [PATCH 4.14 196/343] vfio/mdev: Avoid release parent reference during error path
+Date:   Fri, 24 Jan 2020 10:30:14 +0100
+Message-Id: <20200124092945.761803829@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124092919.490687572@linuxfoundation.org>
 References: <20200124092919.490687572@linuxfoundation.org>
@@ -62,41 +63,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bichao Zheng <bichao.zheng@amlogic.com>
+From: Parav Pandit <parav@mellanox.com>
 
-[ Upstream commit a279345807e1e0ae79567a52cfdd9d30c9174a3c ]
+[ Upstream commit 60e7f2c3fe9919cee9534b422865eed49f4efb15 ]
 
-There is an abnormally low about 20ms,when setting duty repeatedly.
-Because setting the duty will disable PWM and then enable. Delete
-this operation now.
+During mdev parent registration in mdev_register_device(),
+if parent device is duplicate, it releases the reference of existing
+parent device.
+This is incorrect. Existing parent device should not be touched.
 
-Fixes: 211ed630753d2f ("pwm: Add support for Meson PWM Controller")
-Signed-off-by: Bichao Zheng <bichao.zheng@amlogic.com>
-[ Dropped code instead of hiding it behind a comment ]
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
-Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
+Fixes: 7b96953bc640 ("vfio: Mediated device Core driver")
+Reviewed-by: Cornelia Huck <cohuck@redhat.com>
+Reviewed-by: Kirti Wankhede <kwankhede@nvidia.com>
+Reviewed-by: Maxim Levitsky <mlevitsk@redhat.com>
+Signed-off-by: Parav Pandit <parav@mellanox.com>
+Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pwm/pwm-meson.c | 5 -----
- 1 file changed, 5 deletions(-)
+ drivers/vfio/mdev/mdev_core.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/pwm/pwm-meson.c b/drivers/pwm/pwm-meson.c
-index 9551f896dd6f3..3d2c36963a4fc 100644
---- a/drivers/pwm/pwm-meson.c
-+++ b/drivers/pwm/pwm-meson.c
-@@ -325,11 +325,6 @@ static int meson_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
- 	if (state->period != channel->state.period ||
- 	    state->duty_cycle != channel->state.duty_cycle ||
- 	    state->polarity != channel->state.polarity) {
--		if (channel->state.enabled) {
--			meson_pwm_disable(meson, pwm->hwpwm);
--			channel->state.enabled = false;
--		}
--
- 		if (state->polarity != channel->state.polarity) {
- 			if (state->polarity == PWM_POLARITY_NORMAL)
- 				meson->inverter_mask |= BIT(pwm->hwpwm);
+diff --git a/drivers/vfio/mdev/mdev_core.c b/drivers/vfio/mdev/mdev_core.c
+index 0212f0ee8aea7..8cfa712308773 100644
+--- a/drivers/vfio/mdev/mdev_core.c
++++ b/drivers/vfio/mdev/mdev_core.c
+@@ -182,6 +182,7 @@ int mdev_register_device(struct device *dev, const struct mdev_parent_ops *ops)
+ 	/* Check for duplicate */
+ 	parent = __find_parent_device(dev);
+ 	if (parent) {
++		parent = NULL;
+ 		ret = -EEXIST;
+ 		goto add_dev_err;
+ 	}
 -- 
 2.20.1
 
