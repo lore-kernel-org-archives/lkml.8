@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40646C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:36:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EB5CC35242
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:36:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1470D214DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:36:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF929214DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:36:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579865769;
-	bh=Vz+8ySk8/JqfeQpQdhnb8ESGs9uIfLc8o33J0GjDuzw=;
+	s=default; t=1579865771;
+	bh=8xtYyg7+SDIEx0EaTtvEbsD9NmTNykgngsI7aLmLz3A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JUMyJz4O/2nE1SGS6i9e9/V3lJtni4rgH8KMmXmdiqJeoT853imB64sxuDwfAdTNs
-	 p+qkbNN8TB6qm14LDlk3ySobQNbTIVqPAxHTYM6coHxRWnIt8i0NNsj8zZwp3q5n0f
-	 1iCGeYb+QTZSyqFftW6syakgjqtVDFmyoAgtETzM=
+	b=mq7ukUKvzw66gSIT2FFrgseQ2/DJROZJvTZBSH2Xi52UiP/prEHXgNJy2+cLc7ycx
+	 +fkL5a1Bd/Qw2BSwFsC7tQwhhjtBapbURFBhdpFEbo9bgY5TiHoSMdVohV+Oz9vlfa
+	 jqsVUyLMGhytNtXSt+aUmTGpvJjmJ4yFA30t19Fk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404897AbgAXLgI (ORCPT
+        id S2404522AbgAXLc5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:36:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56256 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 06:32:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52024 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404887AbgAXLgG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:36:06 -0500
+        id S2404504AbgAXLcv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:32:51 -0500
 Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 55A44206F0;
-        Fri, 24 Jan 2020 11:36:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6324B2075D;
+        Fri, 24 Jan 2020 11:32:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579865765;
-        bh=Vz+8ySk8/JqfeQpQdhnb8ESGs9uIfLc8o33J0GjDuzw=;
+        s=default; t=1579865571;
+        bh=8xtYyg7+SDIEx0EaTtvEbsD9NmTNykgngsI7aLmLz3A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cc2xGwpZSVG7glZnOotM/W2oTdQpvQQQ5/pr7uxDPO0hrTbUPGZaAWYlgcacZ7Ccw
-         MpB1Xf2dunwB1zCbjuzr7Bezi8P7TqJbKqNCbntv7sZmUqEDmjVT7v37GCBNYlCQ4G
-         X0Nxii2GZPEFIknpnqbQv9MMa8FwLtC0dGyJFkGY=
+        b=uOlrbJDpDpxMeU6Kxo2LRM8nm/2KeM0bb7xYn0NLxoOi0ID8mjuUbrLBavjM98roh
+         McRJ80sfIduy/YjUAWTDUHCH4GrzR2k/dS3hbciL+xhKUAahrppywZI65sEmD16c7t
+         X78b+uhxAvCu2bHyKcoH/NUBTcigBYu+PujK0gzY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Haiyang Zhang <haiyangz@microsoft.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
+        Omar Sandoval <osandov@fb.com>,
+        David Sterba <dsterba@suse.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 615/639] hv_netvsc: Fix offset usage in netvsc_send_table()
-Date:   Fri, 24 Jan 2020 10:33:05 +0100
-Message-Id: <20200124093206.551007581@linuxfoundation.org>
+Subject: [PATCH 4.19 556/639] btrfs: use correct count in btrfs_file_write_iter()
+Date:   Fri, 24 Jan 2020 10:32:06 +0100
+Message-Id: <20200124093158.919118869@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
 References: <20200124093047.008739095@linuxfoundation.org>
@@ -60,114 +61,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Haiyang Zhang <haiyangz@microsoft.com>
+From: Omar Sandoval <osandov@fb.com>
 
-[ Upstream commit 71f21959dd5516031db4f011e15e9a9508b93a7d ]
+[ Upstream commit c09767a8960ca0500fb636bf73686723337debf4 ]
 
-To reach the data region, the existing code adds offset in struct
-nvsp_5_send_indirect_table on the beginning of this struct. But the
-offset should be based on the beginning of its container,
-struct nvsp_message. This bug causes the first table entry missing,
-and adds an extra zero from the zero pad after the data region.
-This can put extra burden on the channel 0.
+generic_write_checks() may modify iov_iter_count(), so we must get the
+count after the call, not before. Using the wrong one has a couple of
+consequences:
 
-So, correct the offset usage. Also add a boundary check to ensure
-not reading beyond data region.
+1. We check a longer range in check_can_nocow() for nowait than we're
+   actually writing.
+2. We create extra hole extent maps in btrfs_cont_expand(). As far as I
+   can tell, this is harmless, but I might be missing something.
 
-Fixes: 5b54dac856cb ("hyperv: Add support for virtual Receive Side Scaling (vRSS)")
-Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+These issues are pretty minor, but let's fix it before something more
+important trips on it.
+
+Fixes: edf064e7c6fe ("btrfs: nowait aio support")
+Reviewed-by: Josef Bacik <josef@toxicpanda.com>
+Signed-off-by: Omar Sandoval <osandov@fb.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/hyperv/hyperv_net.h |  3 ++-
- drivers/net/hyperv/netvsc.c     | 26 ++++++++++++++++++--------
- 2 files changed, 20 insertions(+), 9 deletions(-)
+ fs/btrfs/file.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/hyperv/hyperv_net.h b/drivers/net/hyperv/hyperv_net.h
-index 50709c76b6725..dfa801315da6b 100644
---- a/drivers/net/hyperv/hyperv_net.h
-+++ b/drivers/net/hyperv/hyperv_net.h
-@@ -616,7 +616,8 @@ struct nvsp_5_send_indirect_table {
- 	/* The number of entries in the send indirection table */
- 	u32 count;
+diff --git a/fs/btrfs/file.c b/fs/btrfs/file.c
+index 78490e544c91e..c2c93fe9d7fd5 100644
+--- a/fs/btrfs/file.c
++++ b/fs/btrfs/file.c
+@@ -1895,7 +1895,7 @@ static ssize_t btrfs_file_write_iter(struct kiocb *iocb,
+ 	bool sync = (file->f_flags & O_DSYNC) || IS_SYNC(file->f_mapping->host);
+ 	ssize_t err;
+ 	loff_t pos;
+-	size_t count = iov_iter_count(from);
++	size_t count;
+ 	loff_t oldsize;
+ 	int clean_page = 0;
  
--	/* The offset of the send indirection table from top of this struct.
-+	/* The offset of the send indirection table from the beginning of
-+	 * struct nvsp_message.
- 	 * The send indirection table tells which channel to put the send
- 	 * traffic on. Each entry is a channel number.
- 	 */
-diff --git a/drivers/net/hyperv/netvsc.c b/drivers/net/hyperv/netvsc.c
-index 35413041dcf81..68c23a64e565f 100644
---- a/drivers/net/hyperv/netvsc.c
-+++ b/drivers/net/hyperv/netvsc.c
-@@ -1182,20 +1182,28 @@ static int netvsc_receive(struct net_device *ndev,
- }
- 
- static void netvsc_send_table(struct net_device *ndev,
--			      const struct nvsp_message *nvmsg)
-+			      const struct nvsp_message *nvmsg,
-+			      u32 msglen)
- {
- 	struct net_device_context *net_device_ctx = netdev_priv(ndev);
--	u32 count, *tab;
-+	u32 count, offset, *tab;
- 	int i;
- 
- 	count = nvmsg->msg.v5_msg.send_table.count;
-+	offset = nvmsg->msg.v5_msg.send_table.offset;
-+
- 	if (count != VRSS_SEND_TAB_SIZE) {
- 		netdev_err(ndev, "Received wrong send-table size:%u\n", count);
- 		return;
+@@ -1917,6 +1917,7 @@ static ssize_t btrfs_file_write_iter(struct kiocb *iocb,
  	}
  
--	tab = (u32 *)((unsigned long)&nvmsg->msg.v5_msg.send_table +
--		      nvmsg->msg.v5_msg.send_table.offset);
-+	if (offset > msglen - count * sizeof(u32)) {
-+		netdev_err(ndev, "Received send-table offset too big:%u\n",
-+			   offset);
-+		return;
-+	}
-+
-+	tab = (void *)nvmsg + offset;
- 
- 	for (i = 0; i < count; i++)
- 		net_device_ctx->tx_table[i] = tab[i];
-@@ -1213,12 +1221,13 @@ static void netvsc_send_vf(struct net_device *ndev,
- 		    net_device_ctx->vf_alloc ? "added" : "removed");
- }
- 
--static  void netvsc_receive_inband(struct net_device *ndev,
--				   const struct nvsp_message *nvmsg)
-+static void netvsc_receive_inband(struct net_device *ndev,
-+				  const struct nvsp_message *nvmsg,
-+				  u32 msglen)
- {
- 	switch (nvmsg->hdr.msg_type) {
- 	case NVSP_MSG5_TYPE_SEND_INDIRECTION_TABLE:
--		netvsc_send_table(ndev, nvmsg);
-+		netvsc_send_table(ndev, nvmsg, msglen);
- 		break;
- 
- 	case NVSP_MSG4_TYPE_SEND_VF_ASSOCIATION:
-@@ -1235,6 +1244,7 @@ static int netvsc_process_raw_pkt(struct hv_device *device,
- 				  int budget)
- {
- 	const struct nvsp_message *nvmsg = hv_pkt_data(desc);
-+	u32 msglen = hv_pkt_datalen(desc);
- 
- 	trace_nvsp_recv(ndev, channel, nvmsg);
- 
-@@ -1250,7 +1260,7 @@ static int netvsc_process_raw_pkt(struct hv_device *device,
- 		break;
- 
- 	case VM_PKT_DATA_INBAND:
--		netvsc_receive_inband(ndev, nvmsg);
-+		netvsc_receive_inband(ndev, nvmsg, msglen);
- 		break;
- 
- 	default:
+ 	pos = iocb->ki_pos;
++	count = iov_iter_count(from);
+ 	if (iocb->ki_flags & IOCB_NOWAIT) {
+ 		/*
+ 		 * We will allocate space in case nodatacow is not set,
 -- 
 2.20.1
 
