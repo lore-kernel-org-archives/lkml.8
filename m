@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 060C0C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:29:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E787DC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:29:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE58A214AF
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:29:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF15F2075D
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:29:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579865350;
-	bh=wYHxvfwfMIstK+bjZVbJrphYldx61C3diu4CSphrbOY=;
+	s=default; t=1579865353;
+	bh=JisEXm0TUh55h7GUN8hs6vvZy75I/g9W1srvuez+k60=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=o5039iAdfNWMEGqdeOxK++pcmdyTQgjpTpUwmvFHsrNho6lZ7OE6+P3wrLUJtfegg
-	 cpoJmF9ldbKNlAZmTg5Pp4bTcL00fiwzC0EoJBnyuyb71yYNfZ0NcNXmVPkXFFZ7aK
-	 LWA6QLriqCw116fb6jXEZrIHYalt1FL1lk4obV74=
+	b=CBLOy3eX/Qbl47BdNu9GRLeH22b1oIU0SM4WGJ+++Ru6CL2ZdkfBC7B9u4OhTaA7e
+	 30+GN0gexT6WsIWSIbLdqjWt7fh/TXb188GVzJTMtXLoFQIe0OVH8Xe8zsjgw3r+iS
+	 XBEhdUZtuIYeK5+oWkwFA1Wwr1AG0fFm0WpKApdE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404085AbgAXL3K (ORCPT
+        id S2391512AbgAXL3N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:29:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45694 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 06:29:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45796 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404066AbgAXL3H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:29:07 -0500
+        id S2404066AbgAXL3L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:29:11 -0500
 Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 43AD120718;
-        Fri, 24 Jan 2020 11:29:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E03C120704;
+        Fri, 24 Jan 2020 11:29:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579865346;
-        bh=wYHxvfwfMIstK+bjZVbJrphYldx61C3diu4CSphrbOY=;
+        s=default; t=1579865350;
+        bh=JisEXm0TUh55h7GUN8hs6vvZy75I/g9W1srvuez+k60=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YJHj1tBQZGcg+THl7ZBspxCPpZ8kMKOCs48kaCGwgekvyf56lIfPgeYwHnrOfv1bz
-         pEbrIkhrS+QeFQbzcvYRBdSelXV9aislp3kVRdoXfx3xgPogQ1FiyyWCz8P1dcRYRR
-         HY1ERZEQjkp1ALRkXetBuVwVnJ/ba2i8kifB5SqM=
+        b=xBdLH8lyJ8C0MfMe2yOL+z4Eok0Gb1GQVauJOVdN13QYb0+hSp8Ndgk/x1eWUD4iJ
+         hzlb5bcgleuhUbKwzhiKYPzCeqyMMucQsKWRgap3AwNjMwnVfF1FfyJizB99ZiYgQa
+         EAx/Q/pnqNMYbdCYu5UPLQuohJQEWhuBrNnwOlME=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Bruno Thomsen <bruno.thomsen@gmail.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        stable@vger.kernel.org,
+        Quentin Monnet <quentin.monnet@netronome.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Alexei Starovoitov <ast@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 521/639] rtc: pcf2127: bugfix: read rtc disables watchdog
-Date:   Fri, 24 Jan 2020 10:31:31 +0100
-Message-Id: <20200124093154.044998307@linuxfoundation.org>
+Subject: [PATCH 4.19 509/639] tools: bpftool: fix format strings and arguments for jsonw_printf()
+Date:   Fri, 24 Jan 2020 10:31:19 +0100
+Message-Id: <20200124093152.542796676@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
 References: <20200124093047.008739095@linuxfoundation.org>
@@ -60,89 +62,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bruno Thomsen <bruno.thomsen@gmail.com>
+From: Quentin Monnet <quentin.monnet@netronome.com>
 
-[ Upstream commit 7f43020e3bdb63d65661ed377682702f8b34d3ea ]
+[ Upstream commit 22c349e8db89df86804d3ba23cef037ccd44a8bf ]
 
-The previous fix listed bulk read of registers as root cause of
-accendential disabling of watchdog, since the watchdog counter
-register (WD_VAL) was zeroed.
+There are some mismatches between format strings and arguments passed to
+jsonw_printf() in the BTF dumper for bpftool, which seems harmless but
+may result in warnings if the "__printf()" attribute is used correctly
+for jsonw_printf(). Let's fix relevant format strings and type cast.
 
-Fixes: 3769a375ab83 rtc: pcf2127: bulk read only date and time registers.
-
-Tested with the same PCF2127 chip as Sean reveled root cause
-of WD_VAL register value zeroing was caused by reading CTRL2
-register which is one of the watchdog feature control registers.
-
-So the solution is to not read the first two control registers
-(CTRL1 and CTRL2) in pcf2127_rtc_read_time as they are not
-needed anyway. Size of local buf variable is kept to allow
-easy usage of register defines to improve readability of code.
-
-Debug trace line was updated after CTRL1 and CTRL2 are no longer
-read from the chip. Also replaced magic numbers in buf access
-with register defines.
-
-Signed-off-by: Bruno Thomsen <bruno.thomsen@gmail.com>
-Link: https://lore.kernel.org/r/20190822131936.18772-3-bruno.thomsen@gmail.com
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Fixes: b12d6ec09730 ("bpf: btf: add btf print functionality")
+Signed-off-by: Quentin Monnet <quentin.monnet@netronome.com>
+Reviewed-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/rtc/rtc-pcf2127.c | 32 ++++++++++++--------------------
- 1 file changed, 12 insertions(+), 20 deletions(-)
+ tools/bpf/bpftool/btf_dumper.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/rtc/rtc-pcf2127.c b/drivers/rtc/rtc-pcf2127.c
-index 7cb786d76e3c1..8c62406f92dd1 100644
---- a/drivers/rtc/rtc-pcf2127.c
-+++ b/drivers/rtc/rtc-pcf2127.c
-@@ -57,20 +57,14 @@ static int pcf2127_rtc_read_time(struct device *dev, struct rtc_time *tm)
- 	struct pcf2127 *pcf2127 = dev_get_drvdata(dev);
- 	unsigned char buf[10];
- 	int ret;
--	int i;
+diff --git a/tools/bpf/bpftool/btf_dumper.c b/tools/bpf/bpftool/btf_dumper.c
+index e4e6e2b3fd847..ff0cc3c171411 100644
+--- a/tools/bpf/bpftool/btf_dumper.c
++++ b/tools/bpf/bpftool/btf_dumper.c
+@@ -26,9 +26,9 @@ static void btf_dumper_ptr(const void *data, json_writer_t *jw,
+ 			   bool is_plain_text)
+ {
+ 	if (is_plain_text)
+-		jsonw_printf(jw, "%p", *(unsigned long *)data);
++		jsonw_printf(jw, "%p", data);
+ 	else
+-		jsonw_printf(jw, "%u", *(unsigned long *)data);
++		jsonw_printf(jw, "%lu", *(unsigned long *)data);
+ }
  
--	for (i = 0; i <= PCF2127_REG_CTRL3; i++) {
--		ret = regmap_read(pcf2127->regmap, PCF2127_REG_CTRL1 + i,
--				  (unsigned int *)(buf + i));
--		if (ret) {
--			dev_err(dev, "%s: read error\n", __func__);
--			return ret;
--		}
--	}
--
--	ret = regmap_bulk_read(pcf2127->regmap, PCF2127_REG_SC,
--			       (buf + PCF2127_REG_SC),
--			       ARRAY_SIZE(buf) - PCF2127_REG_SC);
-+	/*
-+	 * Avoid reading CTRL2 register as it causes WD_VAL register
-+	 * value to reset to 0 which means watchdog is stopped.
-+	 */
-+	ret = regmap_bulk_read(pcf2127->regmap, PCF2127_REG_CTRL3,
-+			       (buf + PCF2127_REG_CTRL3),
-+			       ARRAY_SIZE(buf) - PCF2127_REG_CTRL3);
- 	if (ret) {
- 		dev_err(dev, "%s: read error\n", __func__);
- 		return ret;
-@@ -91,14 +85,12 @@ static int pcf2127_rtc_read_time(struct device *dev, struct rtc_time *tm)
- 	}
- 
- 	dev_dbg(dev,
--		"%s: raw data is cr1=%02x, cr2=%02x, cr3=%02x, "
--		"sec=%02x, min=%02x, hr=%02x, "
-+		"%s: raw data is cr3=%02x, sec=%02x, min=%02x, hr=%02x, "
- 		"mday=%02x, wday=%02x, mon=%02x, year=%02x\n",
--		__func__,
--		buf[0], buf[1], buf[2],
--		buf[3], buf[4], buf[5],
--		buf[6], buf[7], buf[8], buf[9]);
--
-+		__func__, buf[PCF2127_REG_CTRL3], buf[PCF2127_REG_SC],
-+		buf[PCF2127_REG_MN], buf[PCF2127_REG_HR],
-+		buf[PCF2127_REG_DM], buf[PCF2127_REG_DW],
-+		buf[PCF2127_REG_MO], buf[PCF2127_REG_YR]);
- 
- 	tm->tm_sec = bcd2bin(buf[PCF2127_REG_SC] & 0x7F);
- 	tm->tm_min = bcd2bin(buf[PCF2127_REG_MN] & 0x7F);
+ static int btf_dumper_modifier(const struct btf_dumper *d, __u32 type_id,
+@@ -129,7 +129,7 @@ static int btf_dumper_int(const struct btf_type *t, __u8 bit_offset,
+ 	switch (BTF_INT_ENCODING(*int_type)) {
+ 	case 0:
+ 		if (BTF_INT_BITS(*int_type) == 64)
+-			jsonw_printf(jw, "%lu", *(__u64 *)data);
++			jsonw_printf(jw, "%llu", *(__u64 *)data);
+ 		else if (BTF_INT_BITS(*int_type) == 32)
+ 			jsonw_printf(jw, "%u", *(__u32 *)data);
+ 		else if (BTF_INT_BITS(*int_type) == 16)
+@@ -142,7 +142,7 @@ static int btf_dumper_int(const struct btf_type *t, __u8 bit_offset,
+ 		break;
+ 	case BTF_INT_SIGNED:
+ 		if (BTF_INT_BITS(*int_type) == 64)
+-			jsonw_printf(jw, "%ld", *(long long *)data);
++			jsonw_printf(jw, "%lld", *(long long *)data);
+ 		else if (BTF_INT_BITS(*int_type) == 32)
+ 			jsonw_printf(jw, "%d", *(int *)data);
+ 		else if (BTF_INT_BITS(*int_type) == 16)
 -- 
 2.20.1
 
