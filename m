@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81F04C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:56:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90921C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:56:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5291F214DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:56:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C7B22075D
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:56:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579859782;
-	bh=RaM3AQNDx5keEU/B0Ed8iNvzoZfpatDZnrpwchZzY4Q=;
+	s=default; t=1579859787;
+	bh=Nym0iD4z5NaCeFn5Wys1xYI74+4vhLSYjFRC9SEUaek=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OJpbdH4z13gQcTRvcNB1Ai0589EOxutUY4DciIWcv7illM2HQDck5oNbvA8Ps8pSb
-	 rgzpEk2GXONuOYZIWzpG/JtqZwyeXbnD1ZrwsLka8O9Kdw6Upl3YfxCepOLHxXjz5Q
-	 6RmRqjkUp0xxHyDLvcFZLMHRNHMZ8x9pmlFrsuI8=
+	b=XsQjYVSpDNTRTxsLcXTWiyiNO684Dd+EcTecf95EzsewKps24A+GgMdkbUnQm/wS/
+	 9L1KFfD/pApYp0PUm+HB3C9P+DgTl8XSrX95nJmHdxy8cjVg+lBFUHaaDq8Jnj+YUQ
+	 NLzVDKy8dUCucOufegMwPchHVe7gHW/ytKj1yZt0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388532AbgAXJ4V (ORCPT
+        id S2388542AbgAXJ40 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 04:56:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60050 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 04:56:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60126 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387619AbgAXJ4T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 04:56:19 -0500
+        id S1733156AbgAXJ4Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 04:56:24 -0500
 Received: from localhost (unknown [145.15.244.15])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 77A212075D;
-        Fri, 24 Jan 2020 09:56:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7C60D20718;
+        Fri, 24 Jan 2020 09:56:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579859779;
-        bh=RaM3AQNDx5keEU/B0Ed8iNvzoZfpatDZnrpwchZzY4Q=;
+        s=default; t=1579859783;
+        bh=Nym0iD4z5NaCeFn5Wys1xYI74+4vhLSYjFRC9SEUaek=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cMGlv8HZrd60UZkSiavSowEqvQRXe9/NZZzWJyu3aRfTPQGdmsIrX/RFITk19O+FU
-         zCmJ6Jn6hdTuzuf1vvPhYtjfsc4uMIZJoHbPcNpcj3mAIJLLe1M1DiD+t3mSRTrd6a
-         aYV3ep5V/1eWxLnoT6X5gzqnoZlPm4bXSbSMEqbQ=
+        b=2oefFpxuUt4z3jBM3kM84L/2QTUCPid0IFm64oHMfBOoZLrUdr3+OIzis31F2xEa9
+         rYRcT5lQk42g+oHn2jjeAbagKdJR2pudTYAlW0Zw2IeSZBC+jVLV1KPUzDWMPY75Nt
+         dZ8pnum9Gqib+7hbfmTxFRCZIWpQTmWvfRHGlrPQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pan Bian <bianpan2016@163.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 193/343] mmc: core: fix possible use after free of host
-Date:   Fri, 24 Jan 2020 10:30:11 +0100
-Message-Id: <20200124092945.367908383@linuxfoundation.org>
+        stable@vger.kernel.org, Igor Konopko <igor.j.konopko@intel.com>,
+        =?UTF-8?q?Javier=20Gonz=C3=A1lez?= <javier@javigon.com>,
+        Hans Holmberg <hans.holmberg@cnexlabs.com>,
+        =?UTF-8?q?Matias=20Bj=C3=B8rling?= <mb@lightnvm.io>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 194/343] lightnvm: pblk: fix lock order in pblk_rb_tear_down_check
+Date:   Fri, 24 Jan 2020 10:30:12 +0100
+Message-Id: <20200124092945.501276564@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124092919.490687572@linuxfoundation.org>
 References: <20200124092919.490687572@linuxfoundation.org>
@@ -60,38 +62,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pan Bian <bianpan2016@163.com>
+From: Igor Konopko <igor.j.konopko@intel.com>
 
-[ Upstream commit 8e1943af2986db42bee2b8dddf49a36cdb2e9219 ]
+[ Upstream commit 486b5aac85f6ec0b2df3e82a6a629d5eb7804db5 ]
 
-In the function mmc_alloc_host, the function put_device is called to
-release allocated resources when mmc_gpio_alloc fails. Finally, the
-function pointed by host->class_dev.class->dev_release (i.e.,
-mmc_host_classdev_release) is used to release resources including the
-host structure. However, after put_device, host is used and released
-again. Resulting in a use-after-free bug.
+In pblk_rb_tear_down_check() the spinlock functions are not
+called in proper order.
 
-Fixes: 1ed217194488 ("mmc: core: fix error path in mmc_host_alloc")
-Signed-off-by: Pan Bian <bianpan2016@163.com>
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Fixes: a4bd217 ("lightnvm: physical block device (pblk) target")
+Signed-off-by: Igor Konopko <igor.j.konopko@intel.com>
+Reviewed-by: Javier González <javier@javigon.com>
+Reviewed-by: Hans Holmberg <hans.holmberg@cnexlabs.com>
+Signed-off-by: Matias Bjørling <mb@lightnvm.io>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mmc/core/host.c | 2 --
- 1 file changed, 2 deletions(-)
+ drivers/lightnvm/pblk-rb.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/mmc/core/host.c b/drivers/mmc/core/host.c
-index ad88deb2e8f3b..3740fb0052a49 100644
---- a/drivers/mmc/core/host.c
-+++ b/drivers/mmc/core/host.c
-@@ -376,8 +376,6 @@ struct mmc_host *mmc_alloc_host(int extra, struct device *dev)
- 
- 	if (mmc_gpio_alloc(host)) {
- 		put_device(&host->class_dev);
--		ida_simple_remove(&mmc_host_ida, host->index);
--		kfree(host);
- 		return NULL;
+diff --git a/drivers/lightnvm/pblk-rb.c b/drivers/lightnvm/pblk-rb.c
+index c0dd17a821709..73de2deaba673 100644
+--- a/drivers/lightnvm/pblk-rb.c
++++ b/drivers/lightnvm/pblk-rb.c
+@@ -825,8 +825,8 @@ int pblk_rb_tear_down_check(struct pblk_rb *rb)
  	}
  
+ out:
+-	spin_unlock(&rb->w_lock);
+ 	spin_unlock_irq(&rb->s_lock);
++	spin_unlock(&rb->w_lock);
+ 
+ 	return ret;
+ }
 -- 
 2.20.1
 
