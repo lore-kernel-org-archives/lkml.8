@@ -4,49 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D3C6C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:17:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94625C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:17:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 538762075D
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:17:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DDDE2087E
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:17:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579864625;
-	bh=7WnE8vfcqVIJ7DTZB67pcN8JJ5DA6UefddLEp9aCzco=;
+	s=default; t=1579864627;
+	bh=dt2aUeAnOuR6nsScLL5PS0QdtRNnLCddn33jhGEuJJE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Vc/xvLxo/4gBWDlF4BVWBwRfkzj0w32G7Sb8WtfJzQo1eJoVDHe5q1bvKtMQ5BIfZ
-	 TbzwMlnBQ027zI7jQbYkxQ75I71kckxdSsVopjsq0PMmtZgTdXtS0COeOiTHSCz7Fo
-	 HDvHUKLaScWlWyQvd3cZ21oGsM3wEn/1TcO86844=
+	b=XhtCLDKm4uyAro8yfDDJh8sWAw+YGDWwl4eCBbEiWPPR49fput0JeS1Y2JD7fnLIB
+	 nx6PJvpOy/bhHhv/wmeg94oDFobHmHXW2xLtUnQH+xN0Xl6rR+uNrgikwrTlEBGJpK
+	 HyOXWlzdmRmnPnO2vrvQZCnXhrJkYxQaiAr80I6A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390457AbgAXLRE (ORCPT
+        id S2390466AbgAXLRG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:17:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53876 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 06:17:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53936 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389098AbgAXLRB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:17:01 -0500
+        id S2390104AbgAXLRE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:17:04 -0500
 Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CF33820704;
-        Fri, 24 Jan 2020 11:16:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 681C820708;
+        Fri, 24 Jan 2020 11:17:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579864620;
-        bh=7WnE8vfcqVIJ7DTZB67pcN8JJ5DA6UefddLEp9aCzco=;
+        s=default; t=1579864624;
+        bh=dt2aUeAnOuR6nsScLL5PS0QdtRNnLCddn33jhGEuJJE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qQZSiHtWrmlQS6292QJ5WypETDZrfYIDBIgN/GeOCAPb4sFCqqq9HWfPMOD8h86J/
-         kUTddIJ0Hf5759bvX93cM2imCjynu8dVWiSUlpQ3I48NmAwU+a2W5zszEse8KuzDyU
-         BuktNbJOWpkgxhlo5bo7Ie51zjmN8+aEac4dultQ=
+        b=fDnK054l6CCILchWFwuJuzLYgo+0XFRJQEIZZiBwpmMyaC6QUm+OUcHx6KyHY7UJO
+         zR5MpTs+GNlqxVmTw9pcUqtYVAEpMYNaXvaa/1Po3q00PatLT+6LXH+tmwOJ2gd9Tz
+         kWpP9cu4070QP6tsr6q7EjO8+5EP8WUnWar0dPyE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>,
+        stable@vger.kernel.org, Jian Shen <shenjian15@huawei.com>,
+        Peng Li <lipeng321@huawei.com>,
+        Huazhong Tan <tanhuazhong@huawei.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 309/639] hwmon: (w83627hf) Use request_muxed_region for Super-IO accesses
-Date:   Fri, 24 Jan 2020 10:27:59 +0100
-Message-Id: <20200124093125.642179022@linuxfoundation.org>
+Subject: [PATCH 4.19 318/639] net: hns3: fix loop condition of hns3_get_tx_timeo_queue_info()
+Date:   Fri, 24 Jan 2020 10:28:08 +0100
+Message-Id: <20200124093126.856911532@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
 References: <20200124093047.008739095@linuxfoundation.org>
@@ -59,119 +62,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guenter Roeck <linux@roeck-us.net>
+From: Jian Shen <shenjian15@huawei.com>
 
-[ Upstream commit e95fd518d05bfc087da6fcdea4900a57cfb083bd ]
+[ Upstream commit fa6c4084b98b82c98cada0f0d5c9f8577579f962 ]
 
-Super-IO accesses may fail on a system with no or unmapped LPC bus.
+In function hns3_get_tx_timeo_queue_info(), it should use
+netdev->num_tx_queues, instead of netdve->real_num_tx_queues
+as the loop limitation.
 
-Also, other drivers may attempt to access the LPC bus at the same time,
-resulting in undefined behavior.
-
-Use request_muxed_region() to ensure that IO access on the requested
-address space is supported, and to ensure that access by multiple drivers
-is synchronized.
-
-Fixes: b72656dbc491 ("hwmon: (w83627hf) Stop using globals for I/O port numbers")
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Fixes: 424eb834a9be ("net: hns3: Unified HNS3 {VF|PF} Ethernet Driver for hip08 SoC")
+Signed-off-by: Jian Shen <shenjian15@huawei.com>
+Signed-off-by: Peng Li <lipeng321@huawei.com>
+Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hwmon/w83627hf.c | 42 +++++++++++++++++++++++++++++++++++-----
- 1 file changed, 37 insertions(+), 5 deletions(-)
+ drivers/net/ethernet/hisilicon/hns3/hns3_enet.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/hwmon/w83627hf.c b/drivers/hwmon/w83627hf.c
-index 8ac89d0781ccc..a575e1cdb81a8 100644
---- a/drivers/hwmon/w83627hf.c
-+++ b/drivers/hwmon/w83627hf.c
-@@ -130,17 +130,23 @@ superio_select(struct w83627hf_sio_data *sio, int ld)
- 	outb(ld,  sio->sioaddr + 1);
- }
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
+index 10fa7f5df57e7..3eb8b85f6afb6 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
+@@ -1464,7 +1464,7 @@ static bool hns3_get_tx_timeo_queue_info(struct net_device *ndev)
+ 	int i;
  
--static inline void
-+static inline int
- superio_enter(struct w83627hf_sio_data *sio)
- {
-+	if (!request_muxed_region(sio->sioaddr, 2, DRVNAME))
-+		return -EBUSY;
-+
- 	outb(0x87, sio->sioaddr);
- 	outb(0x87, sio->sioaddr);
-+
-+	return 0;
- }
+ 	/* Find the stopped queue the same way the stack does */
+-	for (i = 0; i < ndev->real_num_tx_queues; i++) {
++	for (i = 0; i < ndev->num_tx_queues; i++) {
+ 		struct netdev_queue *q;
+ 		unsigned long trans_start;
  
- static inline void
- superio_exit(struct w83627hf_sio_data *sio)
- {
- 	outb(0xAA, sio->sioaddr);
-+	release_region(sio->sioaddr, 2);
- }
- 
- #define W627_DEVID 0x52
-@@ -1278,7 +1284,7 @@ static DEVICE_ATTR_RO(name);
- static int __init w83627hf_find(int sioaddr, unsigned short *addr,
- 				struct w83627hf_sio_data *sio_data)
- {
--	int err = -ENODEV;
-+	int err;
- 	u16 val;
- 
- 	static __initconst char *const names[] = {
-@@ -1290,7 +1296,11 @@ static int __init w83627hf_find(int sioaddr, unsigned short *addr,
- 	};
- 
- 	sio_data->sioaddr = sioaddr;
--	superio_enter(sio_data);
-+	err = superio_enter(sio_data);
-+	if (err)
-+		return err;
-+
-+	err = -ENODEV;
- 	val = force_id ? force_id : superio_inb(sio_data, DEVID);
- 	switch (val) {
- 	case W627_DEVID:
-@@ -1644,9 +1654,21 @@ static int w83627thf_read_gpio5(struct platform_device *pdev)
- 	struct w83627hf_sio_data *sio_data = dev_get_platdata(&pdev->dev);
- 	int res = 0xff, sel;
- 
--	superio_enter(sio_data);
-+	if (superio_enter(sio_data)) {
-+		/*
-+		 * Some other driver reserved the address space for itself.
-+		 * We don't want to fail driver instantiation because of that,
-+		 * so display a warning and keep going.
-+		 */
-+		dev_warn(&pdev->dev,
-+			 "Can not read VID data: Failed to enable SuperIO access\n");
-+		return res;
-+	}
-+
- 	superio_select(sio_data, W83627HF_LD_GPIO5);
- 
-+	res = 0xff;
-+
- 	/* Make sure these GPIO pins are enabled */
- 	if (!(superio_inb(sio_data, W83627THF_GPIO5_EN) & (1<<3))) {
- 		dev_dbg(&pdev->dev, "GPIO5 disabled, no VID function\n");
-@@ -1677,7 +1699,17 @@ static int w83687thf_read_vid(struct platform_device *pdev)
- 	struct w83627hf_sio_data *sio_data = dev_get_platdata(&pdev->dev);
- 	int res = 0xff;
- 
--	superio_enter(sio_data);
-+	if (superio_enter(sio_data)) {
-+		/*
-+		 * Some other driver reserved the address space for itself.
-+		 * We don't want to fail driver instantiation because of that,
-+		 * so display a warning and keep going.
-+		 */
-+		dev_warn(&pdev->dev,
-+			 "Can not read VID data: Failed to enable SuperIO access\n");
-+		return res;
-+	}
-+
- 	superio_select(sio_data, W83627HF_LD_HWM);
- 
- 	/* Make sure these GPIO pins are enabled */
 -- 
 2.20.1
 
