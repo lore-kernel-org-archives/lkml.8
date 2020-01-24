@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94E0BC32771
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 22:57:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C4ECC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 22:57:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55BC32071A
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 22:57:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32CAD2071E
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 22:57:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579906636;
-	bh=JcwO8t5MqEUO1UY/eKGRn7RlCg6o6bmyr1iXtHOtXLs=;
+	s=default; t=1579906643;
+	bh=uEwRyd/kCuzxK41onqOdXQyVYqH3TKGRLcUJ7YQGFkQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
 	 References:List-ID:From;
-	b=gxgOVG0dBpxrPEmhZAHt60mQgN73NAeBotHqc2qd9yqRhHnGgcu/NC3lxHGo+F739
-	 KgwNm0bNAogqvYFbsK9C8EQnuet0mQ5FEWfehXPvHn0GTlLXHZnyhhwprRZNdmataP
-	 0xw6UsxPF+2e9cW+TF2zC/VwbU5PWzF0AoEx0auI=
+	b=Acs/RAhpyeKXdzgdP7yQiCJnMPYyvUqqsheikwnwTC82g5KJPPvqDF7zU6u6ltGQL
+	 6/iUK1RhYuRJR9lDdc+lQ/1di7mJTrYKE82vKYvckIJ15Uq5m8MMMpE9EPctAZNrFb
+	 UGpVRdRt2469yJ7mPehIlnlR7eVIm/mrICdDP5nc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387523AbgAXW5P (ORCPT
+        id S2387544AbgAXW5W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 17:57:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39654 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 17:57:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39478 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729456AbgAXW4m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 17:56:42 -0500
+        id S1729355AbgAXW4h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 17:56:37 -0500
 Received: from localhost.localdomain (c-98-220-238-81.hsd1.il.comcast.net [98.220.238.81])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 87432214DB;
-        Fri, 24 Jan 2020 22:56:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D19E420880;
+        Fri, 24 Jan 2020 22:56:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579906601;
-        bh=JcwO8t5MqEUO1UY/eKGRn7RlCg6o6bmyr1iXtHOtXLs=;
+        s=default; t=1579906596;
+        bh=uEwRyd/kCuzxK41onqOdXQyVYqH3TKGRLcUJ7YQGFkQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
          References:From;
-        b=qapF5tYHX0x2CbDpYCH7a2jwVnu+G5OA4bwnCsJWp6pBO/evRwCoI4m/3GZ4GEMn4
-         fnqBPRcxnK9eEkPcqbhvtLGxkh0ZB5/4TftRuyXVFwNsjv6doixLNXyyXGi+AnrRMb
-         0MOzKZVtOdzvl8RNP4G4dHsp2iyoIVWatzI1Gl9g=
+        b=L3NTExagokzBLMxf3AK3dtSa6wyZuXnSo4wMB6tYGaw9MbuU0C+/YVAWB4yPrbWSW
+         MQmfX5n7i/3qsYhgWwPUak5A9B6LsKAj3Mp4RhRG7ffrXh+m/dM7yZQ1q/xTrIbRtQ
+         D1JzVdWmpsi/dD+bkY6kAbpudw96dxYF19lc6YAI=
 From:   Tom Zanussi <zanussi@kernel.org>
 To:     rostedt@goodmis.org
 Cc:     artem.bityutskiy@linux.intel.com, mhiramat@kernel.org,
         linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org,
         ndesaulniers@google.com
-Subject: [PATCH v3 07/12] tracing: Add synth_event_trace() and related functions
-Date:   Fri, 24 Jan 2020 16:56:18 -0600
-Message-Id: <d2a7b3ea9ba99af9b1798618517f606378ce196c.1579904761.git.zanussi@kernel.org>
+Subject: [PATCH v3 04/12] tracing: Add dynamic event command creation interface
+Date:   Fri, 24 Jan 2020 16:56:15 -0600
+Message-Id: <4a38478f56b9e831803500f82af896bda92a5370.1579904761.git.zanussi@kernel.org>
 X-Mailer: git-send-email 2.14.1
 In-Reply-To: <cover.1579904761.git.zanussi@kernel.org>
 References: <cover.1579904761.git.zanussi@kernel.org>
@@ -59,546 +59,362 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add an exported function named synth_event_trace(), allowing modules
-or other kernel code to trace synthetic events.
+Add an interface used to build up dynamic event creation commands,
+such as synthetic and kprobe events.  Interfaces specific to those
+particular types of events and others can be built on top of this
+interface.
 
-Also added are several functions that allow the same functionality to
-be broken out in a piecewise fashion, which are useful in situations
-where tracing an event from a full array of values would be
-cumbersome.  Those functions are synth_event_trace_start/end() and
-synth_event_add_(next)_val().
+Command creation is started by first using the dynevent_cmd_init()
+function to initialize the dynevent_cmd object.  Following that, args
+are appended and optionally checked by the dynevent_arg_add() and
+dynevent_arg_pair_add() functions, which use objects representing
+arguments and pairs of arguments, initialized respectively by
+dynevent_arg_init() and dynevent_arg_pair_init().  Finally, once all
+args have been successfully added, the command is finalized and
+actually created using dynevent_create().
+
+The code here for actually printing into the dyn_event->cmd buffer
+using snprintf() etc was adapted from v4 of Masami's 'tracing/boot:
+Add synthetic event support' patch.
 
 Signed-off-by: Tom Zanussi <zanussi@kernel.org>
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
 ---
- include/linux/trace_events.h     |  26 +++
- kernel/trace/trace_events_hist.c | 463 +++++++++++++++++++++++++++++++++++++++
- 2 files changed, 489 insertions(+)
+ include/linux/trace_events.h |  23 +++++
+ kernel/trace/trace.h         |  34 ++++++
+ kernel/trace/trace_events.c  | 240 +++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 297 insertions(+)
 
 diff --git a/include/linux/trace_events.h b/include/linux/trace_events.h
-index 07b83532a3c6..bf03d12efb28 100644
+index 25fe743bcbaf..651b03d5e272 100644
 --- a/include/linux/trace_events.h
 +++ b/include/linux/trace_events.h
-@@ -416,6 +416,32 @@ extern int synth_event_add_fields(struct dynevent_cmd *cmd,
- #define synth_event_gen_cmd_end(cmd)	\
- 	dynevent_create(cmd)
+@@ -354,6 +354,29 @@ extern struct trace_event_file *trace_get_event_file(const char *instance,
+ 						     const char *event);
+ extern void trace_put_event_file(struct trace_event_file *file);
  
-+struct synth_event;
++#define MAX_DYNEVENT_CMD_LEN	(2048)
 +
-+struct synth_event_trace_state {
-+	struct trace_event_buffer fbuffer;
-+	struct synth_trace_event *entry;
-+	struct trace_buffer *buffer;
-+	struct synth_event *event;
-+	unsigned int cur_field;
-+	unsigned int n_u64;
-+	bool enabled;
-+	bool add_next;
-+	bool add_name;
++enum dynevent_type {
++	DYNEVENT_TYPE_NONE,
 +};
 +
-+extern int synth_event_trace(struct trace_event_file *file,
-+			     unsigned int n_vals, ...);
-+extern int synth_event_trace_array(struct trace_event_file *file, u64 *vals,
-+				   unsigned int n_vals);
-+extern int synth_event_trace_start(struct trace_event_file *file,
-+				   struct synth_event_trace_state *trace_state);
-+extern int synth_event_add_next_val(u64 val,
-+				    struct synth_event_trace_state *trace_state);
-+extern int synth_event_add_val(const char *field_name, u64 val,
-+			       struct synth_event_trace_state *trace_state);
-+extern int synth_event_trace_end(struct synth_event_trace_state *trace_state);
++struct dynevent_cmd;
 +
++typedef int (*dynevent_create_fn_t)(struct dynevent_cmd *cmd);
++
++struct dynevent_cmd {
++	char			*buf;
++	const char		*event_name;
++	int			maxlen;
++	int			remaining;
++	unsigned int		n_fields;
++	enum dynevent_type	type;
++	dynevent_create_fn_t	run_command;
++	void			*private_data;
++};
++
++extern int dynevent_create(struct dynevent_cmd *cmd);
++
+ extern int synth_event_delete(const char *name);
+ 
  /*
-  * Event file flags:
-  *  ENABLED	  - The event is enabled
-diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
-index 41a82f5c5be5..b1b42ca1cf13 100644
---- a/kernel/trace/trace_events_hist.c
-+++ b/kernel/trace/trace_events_hist.c
-@@ -393,6 +393,7 @@ struct synth_field {
- 	char *type;
- 	char *name;
- 	size_t size;
-+	unsigned int offset;
- 	bool is_signed;
- 	bool is_string;
- };
-@@ -662,6 +663,8 @@ static int synth_event_define_fields(struct trace_event_call *call)
- 		if (ret)
- 			break;
+diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
+index 8fe3b16c8cec..0e8afc32d972 100644
+--- a/kernel/trace/trace.h
++++ b/kernel/trace/trace.h
+@@ -1877,6 +1877,40 @@ static inline bool event_command_needs_rec(struct event_command *cmd_ops)
  
-+		event->fields[i]->offset = n_u64;
+ extern int trace_event_enable_disable(struct trace_event_file *file,
+ 				      int enable, int soft_disable);
 +
- 		if (event->fields[i]->is_string) {
- 			offset += STR_VAR_LEN_MAX;
- 			n_u64 += STR_VAR_LEN_MAX / sizeof(u64);
-@@ -1780,6 +1783,466 @@ void synth_event_cmd_init(struct dynevent_cmd *cmd, char *buf, int maxlen)
++extern void dynevent_cmd_init(struct dynevent_cmd *cmd, char *buf, int maxlen,
++			      enum dynevent_type type,
++			      dynevent_create_fn_t run_command);
++
++typedef int (*dynevent_check_arg_fn_t)(void *data);
++
++struct dynevent_arg {
++	const char		*str;
++	char			separator; /* e.g. ';', ',', or nothing */
++	dynevent_check_arg_fn_t	check_arg;
++};
++
++extern void dynevent_arg_init(struct dynevent_arg *arg,
++			      dynevent_check_arg_fn_t check_arg,
++			      char separator);
++extern int dynevent_arg_add(struct dynevent_cmd *cmd,
++			    struct dynevent_arg *arg);
++
++struct dynevent_arg_pair {
++	const char		*lhs;
++	const char		*rhs;
++	char			operator; /* e.g. '=' or nothing */
++	char			separator; /* e.g. ';', ',', or nothing */
++	dynevent_check_arg_fn_t	check_arg;
++};
++
++extern void dynevent_arg_pair_init(struct dynevent_arg_pair *arg_pair,
++				   dynevent_check_arg_fn_t check_arg,
++				   char operator, char separator);
++extern int dynevent_arg_pair_add(struct dynevent_cmd *cmd,
++				 struct dynevent_arg_pair *arg_pair);
++extern int dynevent_str_add(struct dynevent_cmd *cmd, const char *str);
++
+ extern int tracing_alloc_snapshot(void);
+ extern void tracing_snapshot_cond(struct trace_array *tr, void *cond_data);
+ extern int tracing_snapshot_cond_enable(struct trace_array *tr, void *cond_data, cond_update_fn_t update);
+diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
+index 402426a82cfb..aa56bb6ff6ca 100644
+--- a/kernel/trace/trace_events.c
++++ b/kernel/trace/trace_events.c
+@@ -3300,6 +3300,246 @@ void __init trace_event_init(void)
+ 	event_trace_enable();
  }
- EXPORT_SYMBOL_GPL(synth_event_cmd_init);
  
 +/**
-+ * synth_event_trace - Trace a synthetic event
-+ * @file: The trace_event_file representing the synthetic event
-+ * @n_vals: The number of values in vals
-+ * @args: Variable number of args containing the event values
++ * dynevent_arg_add - Add an arg to a dynevent_cmd
++ * @cmd: A pointer to the dynevent_cmd struct representing the new event cmd
++ * @arg: The argument to append to the current cmd
 + *
-+ * Trace a synthetic event using the values passed in the variable
-+ * argument list.
++ * Append an argument to a dynevent_cmd.  The argument string will be
++ * appended to the current cmd string, followed by a separator, if
++ * applicable.  Before the argument is added, the check_arg()
++ * function, if defined, is called.
 + *
-+ * The argument list should be a list 'n_vals' u64 values.  The number
-+ * of vals must match the number of field in the synthetic event, and
-+ * must be in the same order as the synthetic event fields.
++ * The cmd string, separator, and check_arg() function should be set
++ * using the dynevent_arg_init() before any arguments are added using
++ * this function.
 + *
-+ * All vals should be cast to u64, and string vals are just pointers
-+ * to strings, cast to u64.  Strings will be copied into space
-+ * reserved in the event for the string, using these pointers.
-+ *
-+ * Return: 0 on success, err otherwise.
++ * Return: 0 if successful, error otherwise.
 + */
-+int synth_event_trace(struct trace_event_file *file, unsigned int n_vals, ...)
++int dynevent_arg_add(struct dynevent_cmd *cmd,
++		     struct dynevent_arg *arg)
 +{
-+	struct trace_event_buffer fbuffer;
-+	struct synth_trace_event *entry;
-+	struct trace_buffer *buffer;
-+	struct synth_event *event;
-+	unsigned int i, n_u64;
-+	int fields_size = 0;
-+	va_list args;
 +	int ret = 0;
++	int delta;
++	char *q;
 +
-+	/*
-+	 * Normal event generation doesn't get called at all unless
-+	 * the ENABLED bit is set (which attaches the probe thus
-+	 * allowing this code to be called, etc).  Because this is
-+	 * called directly by the user, we don't have that but we
-+	 * still need to honor not logging when disabled.
-+	 */
-+	if (!(file->flags & EVENT_FILE_FL_ENABLED))
-+		return 0;
-+
-+	event = file->event_call->data;
-+
-+	if (n_vals != event->n_fields)
-+		return -EINVAL;
-+
-+	if (trace_trigger_soft_disabled(file))
-+		return -EINVAL;
-+
-+	fields_size = event->n_u64 * sizeof(u64);
-+
-+	/*
-+	 * Avoid ring buffer recursion detection, as this event
-+	 * is being performed within another event.
-+	 */
-+	buffer = file->tr->array_buffer.buffer;
-+	ring_buffer_nest_start(buffer);
-+
-+	entry = trace_event_buffer_reserve(&fbuffer, file,
-+					   sizeof(*entry) + fields_size);
-+	if (!entry) {
-+		ret = -EINVAL;
-+		goto out;
++	if (arg->check_arg) {
++		ret = arg->check_arg(arg);
++		if (ret)
++			return ret;
 +	}
 +
-+	va_start(args, n_vals);
-+	for (i = 0, n_u64 = 0; i < event->n_fields; i++) {
-+		u64 val;
++	q = cmd->buf + (cmd->maxlen - cmd->remaining);
 +
-+		val = va_arg(args, u64);
-+
-+		if (event->fields[i]->is_string) {
-+			char *str_val = (char *)(long)val;
-+			char *str_field = (char *)&entry->fields[n_u64];
-+
-+			strscpy(str_field, str_val, STR_VAR_LEN_MAX);
-+			n_u64 += STR_VAR_LEN_MAX / sizeof(u64);
-+		} else {
-+			entry->fields[n_u64] = val;
-+			n_u64++;
-+		}
++	delta = snprintf(q, cmd->remaining, " %s%c", arg->str, arg->separator);
++	if (delta >= cmd->remaining) {
++		pr_err("String is too long: %s\n", arg->str);
++		return -E2BIG;
 +	}
-+	va_end(args);
-+
-+	trace_event_buffer_commit(&fbuffer);
-+out:
-+	ring_buffer_nest_end(buffer);
++	cmd->remaining -= delta;
 +
 +	return ret;
 +}
-+EXPORT_SYMBOL_GPL(synth_event_trace);
 +
 +/**
-+ * synth_event_trace_array - Trace a synthetic event from an array
-+ * @file: The trace_event_file representing the synthetic event
-+ * @vals: Array of values
-+ * @n_vals: The number of values in vals
++ * dynevent_arg_pair_add - Add an arg pair to a dynevent_cmd
++ * @cmd: A pointer to the dynevent_cmd struct representing the new event cmd
++ * @arg_pair: The argument pair to append to the current cmd
 + *
-+ * Trace a synthetic event using the values passed in as 'vals'.
++ * Append an argument pair to a dynevent_cmd.  An argument pair
++ * consists of a left-hand-side argument and a right-hand-side
++ * argument separated by an operator, which can be whitespace, all
++ * followed by a separator, if applicable.  This can be used to add
++ * arguments of the form 'type variable_name;' or 'x+y'.
 + *
-+ * The 'vals' array is just an array of 'n_vals' u64.  The number of
-+ * vals must match the number of field in the synthetic event, and
-+ * must be in the same order as the synthetic event fields.
++ * The lhs argument string will be appended to the current cmd string,
++ * followed by an operator, if applicable, followd by the rhs string,
++ * followed finally by a separator, if applicable.  Before anything is
++ * added, the check_arg() function, if defined, is called.
 + *
-+ * All vals should be cast to u64, and string vals are just pointers
-+ * to strings, cast to u64.  Strings will be copied into space
-+ * reserved in the event for the string, using these pointers.
++ * The cmd strings, operator, separator, and check_arg() function
++ * should be set using the dynevent_arg_pair_init() before any arguments
++ * are added using this function.
 + *
-+ * Return: 0 on success, err otherwise.
++ * Return: 0 if successful, error otherwise.
 + */
-+int synth_event_trace_array(struct trace_event_file *file, u64 *vals,
-+			    unsigned int n_vals)
++int dynevent_arg_pair_add(struct dynevent_cmd *cmd,
++			  struct dynevent_arg_pair *arg_pair)
 +{
-+	struct trace_event_buffer fbuffer;
-+	struct synth_trace_event *entry;
-+	struct trace_buffer *buffer;
-+	struct synth_event *event;
-+	unsigned int i, n_u64;
-+	int fields_size = 0;
 +	int ret = 0;
++	int delta;
++	char *q;
 +
-+	/*
-+	 * Normal event generation doesn't get called at all unless
-+	 * the ENABLED bit is set (which attaches the probe thus
-+	 * allowing this code to be called, etc).  Because this is
-+	 * called directly by the user, we don't have that but we
-+	 * still need to honor not logging when disabled.
-+	 */
-+	if (!(file->flags & EVENT_FILE_FL_ENABLED))
-+		return 0;
-+
-+	event = file->event_call->data;
-+
-+	if (n_vals != event->n_fields)
-+		return -EINVAL;
-+
-+	if (trace_trigger_soft_disabled(file))
-+		return -EINVAL;
-+
-+	fields_size = event->n_u64 * sizeof(u64);
-+
-+	/*
-+	 * Avoid ring buffer recursion detection, as this event
-+	 * is being performed within another event.
-+	 */
-+	buffer = file->tr->array_buffer.buffer;
-+	ring_buffer_nest_start(buffer);
-+
-+	entry = trace_event_buffer_reserve(&fbuffer, file,
-+					   sizeof(*entry) + fields_size);
-+	if (!entry) {
-+		ret = -EINVAL;
-+		goto out;
++	if (arg_pair->check_arg) {
++		ret = arg_pair->check_arg(arg_pair);
++		if (ret)
++			return ret;
 +	}
 +
-+	for (i = 0, n_u64 = 0; i < event->n_fields; i++) {
-+		if (event->fields[i]->is_string) {
-+			char *str_val = (char *)(long)vals[i];
-+			char *str_field = (char *)&entry->fields[n_u64];
++	q = cmd->buf + (cmd->maxlen - cmd->remaining);
 +
-+			strscpy(str_field, str_val, STR_VAR_LEN_MAX);
-+			n_u64 += STR_VAR_LEN_MAX / sizeof(u64);
-+		} else {
-+			entry->fields[n_u64] = vals[i];
-+			n_u64++;
-+		}
++	delta = snprintf(q, cmd->remaining, " %s%c", arg_pair->lhs,
++			 arg_pair->operator);
++	if (delta >= cmd->remaining) {
++		pr_err("field string is too long: %s\n", arg_pair->lhs);
++		return -E2BIG;
 +	}
++	cmd->remaining -= delta; q += delta;
 +
-+	trace_event_buffer_commit(&fbuffer);
-+out:
-+	ring_buffer_nest_end(buffer);
++	delta = snprintf(q, cmd->remaining, "%s%c", arg_pair->rhs,
++			 arg_pair->separator);
++	if (delta >= cmd->remaining) {
++		pr_err("field string is too long: %s\n", arg_pair->rhs);
++		return -E2BIG;
++	}
++	cmd->remaining -= delta; q += delta;
 +
 +	return ret;
 +}
-+EXPORT_SYMBOL_GPL(synth_event_trace_array);
 +
 +/**
-+ * synth_event_trace_start - Start piecewise synthetic event trace
-+ * @file: The trace_event_file representing the synthetic event
-+ * @trace_state: A pointer to object tracking the piecewise trace state
++ * dynevent_str_add - Add a string to a dynevent_cmd
++ * @cmd: A pointer to the dynevent_cmd struct representing the new event cmd
++ * @str: The string to append to the current cmd
 + *
-+ * Start the trace of a synthetic event field-by-field rather than all
-+ * at once.
++ * Append a string to a dynevent_cmd.  The string will be appended to
++ * the current cmd string as-is, with nothing prepended or appended.
 + *
-+ * This function 'opens' an event trace, which means space is reserved
-+ * for the event in the trace buffer, after which the event's
-+ * individual field values can be set through either
-+ * synth_event_add_next_val() or synth_event_add_val().
-+ *
-+ * A pointer to a trace_state object is passed in, which will keep
-+ * track of the current event trace state until the event trace is
-+ * closed (and the event finally traced) using
-+ * synth_event_trace_end().
-+ *
-+ * Note that synth_event_trace_end() must be called after all values
-+ * have been added for each event trace, regardless of whether adding
-+ * all field values succeeded or not.
-+ *
-+ * Note also that for a given event trace, all fields must be added
-+ * using either synth_event_add_next_val() or synth_event_add_val()
-+ * but not both together or interleaved.
-+ *
-+ * Return: 0 on success, err otherwise.
++ * Return: 0 if successful, error otherwise.
 + */
-+int synth_event_trace_start(struct trace_event_file *file,
-+			    struct synth_event_trace_state *trace_state)
++int dynevent_str_add(struct dynevent_cmd *cmd, const char *str)
 +{
-+	struct synth_trace_event *entry;
-+	int fields_size = 0;
 +	int ret = 0;
++	int delta;
++	char *q;
 +
-+	if (!trace_state) {
-+		ret = -EINVAL;
-+		goto out;
++	q = cmd->buf + (cmd->maxlen - cmd->remaining);
++
++	delta = snprintf(q, cmd->remaining, "%s", str);
++	if (delta >= cmd->remaining) {
++		pr_err("String is too long: %s\n", str);
++		return -E2BIG;
 +	}
++	cmd->remaining -= delta;
 +
-+	memset(trace_state, '\0', sizeof(*trace_state));
-+
-+	/*
-+	 * Normal event tracing doesn't get called at all unless the
-+	 * ENABLED bit is set (which attaches the probe thus allowing
-+	 * this code to be called, etc).  Because this is called
-+	 * directly by the user, we don't have that but we still need
-+	 * to honor not logging when disabled.  For the the iterated
-+	 * trace case, we save the enabed state upon start and just
-+	 * ignore the following data calls.
-+	 */
-+	if (!(file->flags & EVENT_FILE_FL_ENABLED)) {
-+		trace_state->enabled = false;
-+		goto out;
-+	}
-+
-+	trace_state->enabled = true;
-+
-+	trace_state->event = file->event_call->data;
-+
-+	if (trace_trigger_soft_disabled(file)) {
-+		ret = -EINVAL;
-+		goto out;
-+	}
-+
-+	fields_size = trace_state->event->n_u64 * sizeof(u64);
-+
-+	/*
-+	 * Avoid ring buffer recursion detection, as this event
-+	 * is being performed within another event.
-+	 */
-+	trace_state->buffer = file->tr->array_buffer.buffer;
-+	ring_buffer_nest_start(trace_state->buffer);
-+
-+	entry = trace_event_buffer_reserve(&trace_state->fbuffer, file,
-+					   sizeof(*entry) + fields_size);
-+	if (!entry) {
-+		ret = -EINVAL;
-+		goto out;
-+	}
-+
-+	trace_state->entry = entry;
-+out:
 +	return ret;
 +}
-+EXPORT_SYMBOL_GPL(synth_event_trace_start);
 +
-+static int save_synth_val(struct synth_field *field, u64 val,
-+			  struct synth_event_trace_state *trace_state)
++/**
++ * dynevent_cmd_init - Initialize a dynevent_cmd object
++ * @cmd: A pointer to the dynevent_cmd struct representing the cmd
++ * @buf: A pointer to the buffer to generate the command into
++ * @maxlen: The length of the buffer the command will be generated into
++ * @type: The type of the cmd, checked against further operations
++ * @run_command: The type-specific function that will actually run the command
++ *
++ * Initialize a dynevent_cmd.  A dynevent_cmd is used to build up and
++ * run dynamic event creation commands, such as commands for creating
++ * synthetic and kprobe events.  Before calling any of the functions
++ * used to build the command, a dynevent_cmd object should be
++ * instantiated and initialized using this function.
++ *
++ * The initialization sets things up by saving a pointer to the
++ * user-supplied buffer and its length via the @buf and @maxlen
++ * params, and by saving the cmd-specific @type and @run_command
++ * params which are used to check subsequent dynevent_cmd operations
++ * and actually run the command when complete.
++ */
++void dynevent_cmd_init(struct dynevent_cmd *cmd, char *buf, int maxlen,
++		       enum dynevent_type type,
++		       dynevent_create_fn_t run_command)
 +{
-+	struct synth_trace_event *entry = trace_state->entry;
++	memset(cmd, '\0', sizeof(*cmd));
 +
-+	if (field->is_string) {
-+		char *str_val = (char *)(long)val;
-+		char *str_field;
-+
-+		if (!str_val)
-+			return -EINVAL;
-+
-+		str_field = (char *)&entry->fields[field->offset];
-+		strscpy(str_field, str_val, STR_VAR_LEN_MAX);
-+	} else
-+		entry->fields[field->offset] = val;
-+
-+	return 0;
++	cmd->buf = buf;
++	cmd->maxlen = maxlen;
++	cmd->remaining = cmd->maxlen;
++	cmd->type = type;
++	cmd->run_command = run_command;
 +}
 +
 +/**
-+ * synth_event_add_next_val - Add the next field's value to an open synth trace
-+ * @val: The value to set the next field to
-+ * @trace_state: A pointer to object tracking the piecewise trace state
++ * dynevent_arg_init - Initialize a dynevent_arg object
++ * @arg: A pointer to the dynevent_arg struct representing the arg
++ * @check_arg: An (optional) pointer to a function checking arg sanity
++ * @separator: An (optional) separator, appended after adding the arg
 + *
-+ * Set the value of the next field in an event that's been opened by
-+ * synth_event_trace_start().
-+ *
-+ * The val param should be the value cast to u64.  If the value points
-+ * to a string, the val param should be a char * cast to u64.
-+ *
-+ * This function assumes all the fields in an event are to be set one
-+ * after another - successive calls to this function are made, one for
-+ * each field, in the order of the fields in the event, until all
-+ * fields have been set.  If you'd rather set each field individually
-+ * without regard to ordering, synth_event_add_val() can be used
-+ * instead.
-+ *
-+ * Note however that synth_event_add_next_val() and
-+ * synth_event_add_val() can't be intermixed for a given event trace -
-+ * one or the other but not both can be used at the same time.
-+ *
-+ * Note also that synth_event_trace_end() must be called after all
-+ * values have been added for each event trace, regardless of whether
-+ * adding all field values succeeded or not.
-+ *
-+ * Return: 0 on success, err otherwise.
++ * Initialize a dynevent_arg object.  A dynevent_arg represents an
++ * object used to append single arguments to the current command
++ * string.  The @check_arg function, if present, will be used to check
++ * the sanity of the current arg string (which is directly set by the
++ * caller).  After the arg string is successfully appended to the
++ * command string, the optional @separator is appended.  If no
++ * separator was specified when initializing the arg, a space will be
++ * appended.
 + */
-+int synth_event_add_next_val(u64 val,
-+			     struct synth_event_trace_state *trace_state)
++void dynevent_arg_init(struct dynevent_arg *arg,
++		       dynevent_check_arg_fn_t check_arg,
++		       char separator)
 +{
-+	struct synth_field *field;
-+	struct synth_event *event;
-+	int ret = 0;
++	memset(arg, '\0', sizeof(*arg));
 +
-+	if (!trace_state) {
-+		ret = -EINVAL;
-+		goto out;
-+	}
++	if (!separator)
++		separator = ' ';
++	arg->separator = separator;
 +
-+	/* can't mix add_next_synth_val() with add_synth_val() */
-+	if (trace_state->add_name) {
-+		ret = -EINVAL;
-+		goto out;
-+	}
-+	trace_state->add_next = true;
-+
-+	if (!trace_state->enabled)
-+		goto out;
-+
-+	event = trace_state->event;
-+
-+	if (trace_state->cur_field >= event->n_fields) {
-+		ret = -EINVAL;
-+		goto out;
-+	}
-+
-+	field = event->fields[trace_state->cur_field++];
-+	ret = save_synth_val(field, val, trace_state);
-+ out:
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(synth_event_add_next_val);
-+
-+static struct synth_field *find_synth_field(struct synth_event *event,
-+					    const char *field_name)
-+{
-+	struct synth_field *field = NULL;
-+	unsigned int i;
-+
-+	for (i = 0; i < event->n_fields; i++) {
-+		field = event->fields[i];
-+		if (strcmp(field->name, field_name) == 0)
-+			return field;
-+	}
-+
-+	return NULL;
++	arg->check_arg = check_arg;
 +}
 +
 +/**
-+ * synth_event_add_val - Add a named field's value to an open synth trace
-+ * @field_name: The name of the synthetic event field value to set
-+ * @val: The value to set the next field to
-+ * @trace_state: A pointer to object tracking the piecewise trace state
++ * dynevent_arg_pair_init - Initialize a dynevent_arg_pair object
++ * @arg_pair: A pointer to the dynevent_arg_pair struct representing the arg
++ * @check_arg: An (optional) pointer to a function checking arg sanity
++ * @operator: An (optional) operator, appended after adding the first arg
++ * @separator: An (optional) separator, appended after adding the second arg
 + *
-+ * Set the value of the named field in an event that's been opened by
-+ * synth_event_trace_start().
-+ *
-+ * The val param should be the value cast to u64.  If the value points
-+ * to a string, the val param should be a char * cast to u64.
-+ *
-+ * This function looks up the field name, and if found, sets the field
-+ * to the specified value.  This lookup makes this function more
-+ * expensive than synth_event_add_next_val(), so use that or the
-+ * none-piecewise synth_event_trace() instead if efficiency is more
-+ * important.
-+ *
-+ * Note however that synth_event_add_next_val() and
-+ * synth_event_add_val() can't be intermixed for a given event trace -
-+ * one or the other but not both can be used at the same time.
-+ *
-+ * Note also that synth_event_trace_end() must be called after all
-+ * values have been added for each event trace, regardless of whether
-+ * adding all field values succeeded or not.
-+ *
-+ * Return: 0 on success, err otherwise.
++ * Initialize a dynevent_arg_pair object.  A dynevent_arg_pair
++ * represents an object used to append argument pairs such as 'type
++ * variable_name;' or 'x+y' to the current command string.  An
++ * argument pair consists of a left-hand-side argument and a
++ * right-hand-side argument separated by an operator, which can be
++ * whitespace, all followed by a separator, if applicable. The
++ * @check_arg function, if present, will be used to check the sanity
++ * of the current arg strings (which is directly set by the caller).
++ * After the first arg string is successfully appended to the command
++ * string, the optional @operator is appended, followed by the second
++ * arg and and optional @separator.  If no separator was specified
++ * when initializing the arg, a space will be appended.
 + */
-+int synth_event_add_val(const char *field_name, u64 val,
-+			struct synth_event_trace_state *trace_state)
++void dynevent_arg_pair_init(struct dynevent_arg_pair *arg_pair,
++			    dynevent_check_arg_fn_t check_arg,
++			    char operator, char separator)
 +{
-+	struct synth_trace_event *entry;
-+	struct synth_event *event;
-+	struct synth_field *field;
-+	int ret = 0;
++	memset(arg_pair, '\0', sizeof(*arg_pair));
 +
-+	if (!trace_state) {
-+		ret = -EINVAL;
-+		goto out;
-+	}
++	if (!operator)
++		operator = ' ';
++	arg_pair->operator = operator;
 +
-+	/* can't mix add_next_synth_val() with add_synth_val() */
-+	if (trace_state->add_next) {
-+		ret = -EINVAL;
-+		goto out;
-+	}
-+	trace_state->add_name = true;
++	if (!separator)
++		separator = ' ';
++	arg_pair->separator = separator;
 +
-+	if (!trace_state->enabled)
-+		goto out;
-+
-+	event = trace_state->event;
-+	entry = trace_state->entry;
-+
-+	field = find_synth_field(event, field_name);
-+	if (!field) {
-+		ret = -EINVAL;
-+		goto out;
-+	}
-+
-+	ret = save_synth_val(field, val, trace_state);
-+ out:
-+	return ret;
++	arg_pair->check_arg = check_arg;
 +}
-+EXPORT_SYMBOL_GPL(synth_event_add_val);
 +
 +/**
-+ * synth_event_trace_end - End piecewise synthetic event trace
-+ * @trace_state: A pointer to object tracking the piecewise trace state
++ * dynevent_create - Create the dynamic event contained in dynevent_cmd
++ * @cmd: The dynevent_cmd object containing the dynamic event creation command
 + *
-+ * End the trace of a synthetic event opened by
-+ * synth_event_trace__start().
++ * Once a dynevent_cmd object has been successfully built up via the
++ * dynevent_cmd_init(), dynevent_arg_add() and dynevent_arg_pair_add()
++ * functions, this function runs the final command to actually create
++ * the event.
 + *
-+ * This function 'closes' an event trace, which basically means that
-+ * it commits the reserved event and cleans up other loose ends.
-+ *
-+ * A pointer to a trace_state object is passed in, which will keep
-+ * track of the current event trace state opened with
-+ * synth_event_trace_start().
-+ *
-+ * Note that this function must be called after all values have been
-+ * added for each event trace, regardless of whether adding all field
-+ * values succeeded or not.
-+ *
-+ * Return: 0 on success, err otherwise.
++ * Return: 0 if the event was successfully created, error otherwise.
 + */
-+int synth_event_trace_end(struct synth_event_trace_state *trace_state)
++int dynevent_create(struct dynevent_cmd *cmd)
 +{
-+	if (!trace_state)
-+		return -EINVAL;
-+
-+	trace_event_buffer_commit(&trace_state->fbuffer);
-+
-+	ring_buffer_nest_end(trace_state->buffer);
-+
-+	return 0;
++	return cmd->run_command(cmd);
 +}
-+EXPORT_SYMBOL_GPL(synth_event_trace_end);
++EXPORT_SYMBOL_GPL(dynevent_create);
 +
- static int create_synth_event(int argc, const char **argv)
- {
- 	const char *name = argv[0];
+ #ifdef CONFIG_EVENT_TRACE_STARTUP_TEST
+ 
+ static DEFINE_SPINLOCK(test_spinlock);
 -- 
 2.14.1
 
