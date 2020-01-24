@@ -2,110 +2,124 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 353AEC35242
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 04:31:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1149C32771
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 04:31:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 081B32075D
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 04:31:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DA422071A
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 04:31:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KDHO7h9B"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k4C/N7dZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730627AbgAXEbD (ORCPT
+        id S1730656AbgAXEbS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 23:31:03 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:34522 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730558AbgAXEbC (ORCPT
+        Thu, 23 Jan 2020 23:31:18 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:40117 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729017AbgAXEbS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 23:31:02 -0500
-Received: by mail-lj1-f195.google.com with SMTP id x7so867677ljc.1
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jan 2020 20:31:01 -0800 (PST)
+        Thu, 23 Jan 2020 23:31:18 -0500
+Received: by mail-pg1-f196.google.com with SMTP id k25so352638pgt.7;
+        Thu, 23 Jan 2020 20:31:18 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=YARMc3ae9hSUEoLGMas34bGpYXx9jRcQkvor0pcL47o=;
-        b=KDHO7h9B/b3mjy26Oj4EeSJIUNyQLYKaSj3d1nBNy4K7dVvqvhrzQt3G+uksHtglCC
-         GEn7l0fqTV7YiLooSM8wJDBDZ3zMa1NiXyT+I4cRb1BWaZgPHz2JpFTvojB+HO94ozad
-         MFaWKBQ9Zo4BEUhjLXI4paXN7kyNHtoN96Dwri5CF7MjQQUEfySc0AQBNxyC2R8iJZCg
-         guQxm94eI0DXd65SS/rnuHoJaoHhIN0BgEW5d7+6uC/9ey1p7B8TnBe/F7DCn8v2dGTO
-         IOVEJ7yvZF/HCRcAWrK9qPC6Itzo8kSjahJNwMYca4x2RJsn6vyrLjbauzKhHQ8haKAe
-         U9uw==
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=vAi/KPd03pktMu80W5NnBp6vIHB4ASH6MsDJKtQDurE=;
+        b=k4C/N7dZe/TMOaRdLeDTeD3N4gbKJp9jO141k9so9NNn2FFEp7NwMRw9tg0nHF2VI+
+         S33kGt1IYfl082YG0Db/7zTYSya3CFz8CZ4ja+UsPQPtZo4hE6YVVyegRV6yw2WlYceg
+         I6Ju++iLcb822zTTfrIiR4V9wVDGhvU1mjB83VwRkn4o0wzsLnLidr3kYjO8GlzSIG+r
+         0sDqBjV3kft3F4hzBXT6TbmU2AAZ5qeFCGTdNySs3fPQKMxTEU1KIVG90yNL1Dm5uPon
+         jxxvhF7bq7Lm9xEDT82sjh0lfzTJp56M+td9dnKCRDUVJ77k/hPtuOqV8PIucdqCE5wT
+         Ka/A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=YARMc3ae9hSUEoLGMas34bGpYXx9jRcQkvor0pcL47o=;
-        b=uTWLZV5cZFjJQJjrBeUMxGK6ynViL44Sx+PtJclnyxwcaDpSG0CAwHj+F3+WCL0FVl
-         2XECtCks9yq1mJwJgoigTQMxtRTUDw49rJAkIZINH/RpPSCbbna1UEd4QMA9ngPpMl6e
-         neBHj9boK/FTYm4KCYllRgowAiJVy+tOHjx+jm+nA02I02na1qsoYpDypXVF7WRktCxU
-         cGmcjoRRBlQQ9fKs5fTu9ZYZf7JvXlvcD7Pe/pu/pVprHKl9DNdJoAdLRNssKsSFigx/
-         arY8LaQ7oBeG45lLeRmbUR2ZLIh/ZXuHPx7cAw6OrLLuwO4MDmZSq8szuvsXrKaW/Tv0
-         yH+g==
-X-Gm-Message-State: APjAAAWTEiKihwcGN0Bvnj0t5f5kdmUgeWoF0jQxrvfwPjPS6EOaVyx8
-        +Rhw/d+yAUnnoPPVuQRqKsDJbMiAMIMU+6uJsV9Pvw==
-X-Google-Smtp-Source: APXvYqxDuXJqv/c/SqXLq4l0cAQvIWw6dIaAJm1RLNe4FSj10K4FMOIdAwv3/v/qIrOL5GnNI2cG/1NfCFFst9nvTGM=
-X-Received: by 2002:a2e:7816:: with SMTP id t22mr1024528ljc.161.1579840260417;
- Thu, 23 Jan 2020 20:31:00 -0800 (PST)
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=vAi/KPd03pktMu80W5NnBp6vIHB4ASH6MsDJKtQDurE=;
+        b=p48qSPNV7wS11S/xsylP3R9VbRmgK13MC/kr+ITeQ+aYhQiHHA846onQhNwUzWk6zb
+         wBFuB8NqzdaV6is8n66mi5iBXjCdNo0gv2FdRU4bKF+TwbnZr/FN0Z6O45sMhJX1SrQW
+         D2dqEfSqmQ1Tuqb/kSIonwn80uesKGQOWu1bMzUmU3safff9zDlH0zvpjEY8+XV2oUFB
+         qnlo5UfIau31VL3XyxOmMnLFSTygfNZYt9YaObjtyMa3wfJaFgwDMg1qqzHev3G8r1l/
+         3x9XZ6NvYPsNQuLwlJFL7gvfxmsZS4wu3ayN2HaoIVwmshr6Qm0XCXx9Bk0nac2xeOgp
+         nqaA==
+X-Gm-Message-State: APjAAAVZNsWEAkR3/+/TymljxwBy/YQkXNBzRpS4MBE3GvHhLz4HdQ/R
+        FrlZwRI0wnNnmFIJhLHFhw==
+X-Google-Smtp-Source: APXvYqwIE6tTVfRLqcQR3euqy9sQFs/bkaoB4uaYCS+t/A3tlB9kn9l0qF1C84AXee8W9GbZZlfwLQ==
+X-Received: by 2002:a63:2fc4:: with SMTP id v187mr1929780pgv.55.1579840277621;
+        Thu, 23 Jan 2020 20:31:17 -0800 (PST)
+Received: from madhuparna-HP-Notebook ([2402:3a80:1ee5:e37b:72:f3a9:f673:9aea])
+        by smtp.gmail.com with ESMTPSA id h6sm4271929pfo.175.2020.01.23.20.31.14
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 23 Jan 2020 20:31:17 -0800 (PST)
+From:   Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+X-Google-Original-From: Madhuparna Bhowmik <change_this_user_name@gmail.com>
+Date:   Fri, 24 Jan 2020 10:01:10 +0530
+To:     Jessica Yu <jeyu@kernel.org>
+Cc:     madhuparnabhowmik10@gmail.com, linux-kernel@vger.kernel.org,
+        joel@joelfernandes.org, frextrite@gmail.com, rcu@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org, paulmck@kernel.org
+Subject: Re: [PATCH] module.h: Annotate mod_kallsyms with __rcu
+Message-ID: <20200124043110.GD23699@madhuparna-HP-Notebook>
+References: <20200122170447.20539-1-madhuparnabhowmik10@gmail.com>
+ <20200123172257.GA14784@linux-8ccs>
 MIME-Version: 1.0
-References: <20200117214246.235591-1-drosen@google.com> <20200117214246.235591-6-drosen@google.com>
- <20200120013528.GY8904@ZenIV.linux.org.uk>
-In-Reply-To: <20200120013528.GY8904@ZenIV.linux.org.uk>
-From:   Daniel Rosenberg <drosen@google.com>
-Date:   Thu, 23 Jan 2020 20:30:49 -0800
-Message-ID: <CA+PiJmQPFG7OehStFfNQE_7MGwgozhaa0TxZd+aHL2cFLMFbsA@mail.gmail.com>
-Subject: Re: [PATCH v3 5/9] vfs: Fold casefolding into vfs
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     "Theodore Ts'o" <tytso@mit.edu>, linux-ext4@vger.kernel.org,
-        Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,
-        linux-f2fs-devel@lists.sourceforge.net,
-        Eric Biggers <ebiggers@kernel.org>,
-        linux-fscrypt@vger.kernel.org,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        Gabriel Krisman Bertazi <krisman@collabora.com>,
-        kernel-team@android.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200123172257.GA14784@linux-8ccs>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> ... buggering the filesystems (and boxen) that never planned to use
-> that garbage.
+On Thu, Jan 23, 2020 at 06:22:58PM +0100, Jessica Yu wrote:
+> +++ madhuparnabhowmik10@gmail.com [22/01/20 22:34 +0530]:
+> > From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+> > 
+> > This patch fixes the following sparse errors:
+> > 
+> > kernel/module.c:3623:9: error: incompatible types in comparison expression
+> > kernel/module.c:4060:41: error: incompatible types in comparison expression
+> > kernel/module.c:4203:28: error: incompatible types in comparison expression
+> > kernel/module.c:4225:41: error: incompatible types in comparison expression
+> > 
+> > Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+> 
+> Hi Madhuparna,
+> 
+> Thanks, I can confirm this patch fixes the sparse warnings. I've
+> applied it to modules-next.
 >
-I'm planning to rework this as dentry ops again. Your other comments
-point out some issues that also exist in the old dentry_operations, so
-that's a good opportunity to fix those up. How do you feel about just
-having the two entries in struct super_block? With them there, I can
-add the dentry_operations to fs/unicode where they won't bother anyone
-else, while not making every filesystem that uses it have to carry
-near identical code.
+Thank you Jessica.
 
->
-> Are you serious?
->         1) who said that ->d_inode is stable here?  If we are in RCU mode,
-> it won't be.
->         2) page-sized kmalloc/kfree *ON* *COMPONENT* *AFTER* *COMPONENT*?
->
+Regards,
+Madhuparna
 
-#2 is the part that made me the saddest in the patch. I'm planning to
-move this to the unicode subsystem so it can just walk through the
-name as it computes the hash without needing any allocation.
-
->
-> ... and again, you are pulling in a lot of cachelines.
->
-
-I probably should've just given it a DCACHE flag, like what fscrypt is
-using. A simple flag there would've done everything that I'm doing
-without making the cache super sad and making any attempts at making
-it actually work with RCU much simpler.
-
-> <understatement> IMO the whole thing is not a good idea. </understatement>
+> Jessica
+> 
+> > ---
+> > include/linux/module.h | 2 +-
+> > 1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/include/linux/module.h b/include/linux/module.h
+> > index bd165ba68617..dfdc8863e26a 100644
+> > --- a/include/linux/module.h
+> > +++ b/include/linux/module.h
+> > @@ -429,7 +429,7 @@ struct module {
+> > 
+> > #ifdef CONFIG_KALLSYMS
+> > 	/* Protected by RCU and/or module_mutex: use rcu_dereference() */
+> > -	struct mod_kallsyms *kallsyms;
+> > +	struct mod_kallsyms __rcu *kallsyms;
+> > 	struct mod_kallsyms core_kallsyms;
+> > 
+> > 	/* Section attributes */
+> > -- 
+> > 2.17.1
+> > 
