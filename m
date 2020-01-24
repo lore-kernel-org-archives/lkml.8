@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D574EC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:38:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA6ABC35242
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:38:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A59122087E
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:38:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1397206F0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:38:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579876706;
-	bh=qVSo41/s7T8HG9ndWY0t08ZWXbSoREZ6+XJRms8b+Lw=;
+	s=default; t=1579876713;
+	bh=AmEqEAEwhWaxYqsep9Gus/Ym4kZ63m22rEoB5FCfM7k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JSShWv6mxT1bb4puHGnTghc95V1n55UIlRaCrDhXrbxF2CJSfMmwScQHYXlRDRhhD
-	 iKBALP2Fdim1wMD8AwF7nOw7RYgKXCcpFkb/ydrI13dDkZGCo0bR7HVxahKQ8b1Djb
-	 f3lcU1Xpu9WdE39j74Rxr83oRUMjuB3Mu0EaPaz0=
+	b=RC3ZgaBsYFR+pTIXK+iD+EtDO5r2/slDQvhu083RdRfHffmI8ZEdJOW2BeuiAe253
+	 5mOEsRmbgfuiHGGMbMiC/aAqBXP+bwCYyrr9qEGlaWH/rjJ0piuKwnlvqhVJN3yFZI
+	 INqK+zYBZkJCDIzznXJeX7Bavwojt8CM1dG7lZUU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388656AbgAXOiZ (ORCPT
+        id S2403755AbgAXOSo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 09:38:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38640 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 09:18:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38316 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389176AbgAXOSr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 09:18:47 -0500
+        id S2390973AbgAXOSk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 09:18:40 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3BA0722527;
-        Fri, 24 Jan 2020 14:18:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1AE4A218AC;
+        Fri, 24 Jan 2020 14:18:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579875527;
-        bh=qVSo41/s7T8HG9ndWY0t08ZWXbSoREZ6+XJRms8b+Lw=;
+        s=default; t=1579875519;
+        bh=AmEqEAEwhWaxYqsep9Gus/Ym4kZ63m22rEoB5FCfM7k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yRrDN2qc5rZuPdOl/hcOzoZvJaUMxf/qSttT5miHDVuLjyituOVErNZqZTFptkYSG
-         7l6HbnrHNyZxMYgZRem0imRT4xlv5txFAJ0hU4dfMV8asZqeld/P6V4ts0IRfQN82B
-         M6b1JsWyjkLtQuhAEe8xxgTsM6HNfFlWhkbyYUIo=
+        b=P73BQOve2iRv5lWKILfxqKIvoVsQ1YrbvVcdlF6wMcCiU+KeViENELaWRo/hVueOj
+         GYMqrbDHgZzkXVpkBEu28Wrd6XZnoEjAe0kP2iTeZMVkcRhm9wBwEKqfSG9XychtMt
+         vxOI/uQ4t+SmZCMGtHbmO5fT6+QJrkt4VSFFnZgo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Markus Theil <markus.theil@tu-ilmenau.de>,
-        Johannes Berg <johannes.berg@intel.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 025/107] mac80211: mesh: restrict airtime metric to peered established plinks
-Date:   Fri, 24 Jan 2020 09:16:55 -0500
-Message-Id: <20200124141817.28793-25-sashal@kernel.org>
+Cc:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 019/107] rseq: Unregister rseq for clone CLONE_VM
+Date:   Fri, 24 Jan 2020 09:16:49 -0500
+Message-Id: <20200124141817.28793-19-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200124141817.28793-1-sashal@kernel.org>
 References: <20200124141817.28793-1-sashal@kernel.org>
@@ -60,53 +61,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Markus Theil <markus.theil@tu-ilmenau.de>
+From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
 
-[ Upstream commit 02a614499600af836137c3fbc4404cd96365fff2 ]
+[ Upstream commit 463f550fb47bede3a5d7d5177f363a6c3b45d50b ]
 
-The following warning is triggered every time an unestablished mesh peer
-gets dumped. Checks if a peer link is established before retrieving the
-airtime link metric.
+It has been reported by Google that rseq is not behaving properly
+with respect to clone when CLONE_VM is used without CLONE_THREAD.
 
-[ 9563.022567] WARNING: CPU: 0 PID: 6287 at net/mac80211/mesh_hwmp.c:345
-               airtime_link_metric_get+0xa2/0xb0 [mac80211]
-[ 9563.022697] Hardware name: PC Engines apu2/apu2, BIOS v4.10.0.3
-[ 9563.022756] RIP: 0010:airtime_link_metric_get+0xa2/0xb0 [mac80211]
-[ 9563.022838] Call Trace:
-[ 9563.022897]  sta_set_sinfo+0x936/0xa10 [mac80211]
-[ 9563.022964]  ieee80211_dump_station+0x6d/0x90 [mac80211]
-[ 9563.023062]  nl80211_dump_station+0x154/0x2a0 [cfg80211]
-[ 9563.023120]  netlink_dump+0x17b/0x370
-[ 9563.023130]  netlink_recvmsg+0x2a4/0x480
-[ 9563.023140]  ____sys_recvmsg+0xa6/0x160
-[ 9563.023154]  ___sys_recvmsg+0x93/0xe0
-[ 9563.023169]  __sys_recvmsg+0x7e/0xd0
-[ 9563.023210]  do_syscall_64+0x4e/0x140
-[ 9563.023217]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+It keeps the prior thread's rseq TLS registered when the TLS of the
+thread has moved, so the kernel can corrupt the TLS of the parent.
 
-Signed-off-by: Markus Theil <markus.theil@tu-ilmenau.de>
-Link: https://lore.kernel.org/r/20191203180644.70653-1-markus.theil@tu-ilmenau.de
-[rewrite commit message]
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+The approach of clearing the per task-struct rseq registration
+on clone with CLONE_THREAD flag is incomplete. It does not cover
+the use-case of clone with CLONE_VM set, but without CLONE_THREAD.
+
+Here is the rationale for unregistering rseq on clone with CLONE_VM
+flag set:
+
+1) CLONE_THREAD requires CLONE_SIGHAND, which requires CLONE_VM to be
+   set. Therefore, just checking for CLONE_VM covers all CLONE_THREAD
+   uses. There is no point in checking for both CLONE_THREAD and
+   CLONE_VM,
+
+2) There is the possibility of an unlikely scenario where CLONE_SETTLS
+   is used without CLONE_VM. In order to be an issue, it would require
+   that the rseq TLS is in a shared memory area.
+
+   I do not plan on adding CLONE_SETTLS to the set of clone flags which
+   unregister RSEQ, because it would require that we also unregister RSEQ
+   on set_thread_area(2) and arch_prctl(2) ARCH_SET_FS for completeness.
+   So rather than doing a partial solution, it appears better to let
+   user-space explicitly perform rseq unregistration across clone if
+   needed in scenarios where CLONE_VM is not set.
+
+Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/20191211161713.4490-3-mathieu.desnoyers@efficios.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/mac80211/mesh_hwmp.c | 3 +++
- 1 file changed, 3 insertions(+)
+ include/linux/sched.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/net/mac80211/mesh_hwmp.c b/net/mac80211/mesh_hwmp.c
-index 68af623063858..d699833703819 100644
---- a/net/mac80211/mesh_hwmp.c
-+++ b/net/mac80211/mesh_hwmp.c
-@@ -328,6 +328,9 @@ u32 airtime_link_metric_get(struct ieee80211_local *local,
- 	unsigned long fail_avg =
- 		ewma_mesh_fail_avg_read(&sta->mesh->fail_avg);
+diff --git a/include/linux/sched.h b/include/linux/sched.h
+index 775503573ed70..b968d736833bb 100644
+--- a/include/linux/sched.h
++++ b/include/linux/sched.h
+@@ -1915,11 +1915,11 @@ static inline void rseq_migrate(struct task_struct *t)
  
-+	if (sta->mesh->plink_state != NL80211_PLINK_ESTAB)
-+		return MAX_METRIC;
-+
- 	/* Try to get rate based on HW/SW RC algorithm.
- 	 * Rate is returned in units of Kbps, correct this
- 	 * to comply with airtime calculation units
+ /*
+  * If parent process has a registered restartable sequences area, the
+- * child inherits. Only applies when forking a process, not a thread.
++ * child inherits. Unregister rseq for a clone with CLONE_VM set.
+  */
+ static inline void rseq_fork(struct task_struct *t, unsigned long clone_flags)
+ {
+-	if (clone_flags & CLONE_THREAD) {
++	if (clone_flags & CLONE_VM) {
+ 		t->rseq = NULL;
+ 		t->rseq_sig = 0;
+ 		t->rseq_event_mask = 0;
 -- 
 2.20.1
 
