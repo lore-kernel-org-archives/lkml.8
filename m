@@ -7,45 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C5E4C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:39:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C26EDC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:39:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4215206F0
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:39:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F0E1206F0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:39:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579876784;
-	bh=/L54vVnnNVCgLi+l/otzPqeZ9ozHFoiiQUcEnjPcDwE=;
+	s=default; t=1579876788;
+	bh=8q1Jas/q+s5IaRxGYxL9jFMJFjlPUTIRXcKAPTYK13U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kUTRc3urEgePW2/65CA7tr6A56DMjjFRR3AfUcRkynVAyKUNUBTUeC8f0gLBvMW2r
-	 2YksshtKDlDkShNWQxv59Id+Rnnu/RqEHVkagFza7o7couTXM50tWrCANRGrxXtEU/
-	 ubtpjvR7IqDVnZZ3mTG2v6RKlOXY9HlsY8IsXiEQ=
+	b=mq0l65oGgYQmKtqr3tTJdM0yz7Czx6bGKFitOfUI9lVPyDE6U3cefwlAllL0Ae7y/
+	 8LyG5KkmO3jf9G6iMirunKPolM1Jt+d9ZHD3X5oAxWa0svCKe+fHgMGwmRAKnz1pxV
+	 ms4EsUGlaA0q5FA6chvvcKDLxqydUwH6DySh9Rxs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390677AbgAXOS3 (ORCPT
+        id S2387910AbgAXOjq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 09:18:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37726 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 09:39:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37776 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390527AbgAXOSZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 09:18:25 -0500
+        id S2390631AbgAXOS1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 09:18:27 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3B6112087E;
-        Fri, 24 Jan 2020 14:18:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1EB2A208C4;
+        Fri, 24 Jan 2020 14:18:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579875504;
-        bh=/L54vVnnNVCgLi+l/otzPqeZ9ozHFoiiQUcEnjPcDwE=;
+        s=default; t=1579875506;
+        bh=8q1Jas/q+s5IaRxGYxL9jFMJFjlPUTIRXcKAPTYK13U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BR15FaAWgs/x8d3vN5Eqvk4gHLF7i06aRuyaOGRgpfGAIMHAFRQ2fElmSZxzLyoAW
-         XG+LApijnUc3bn7MxVbs2daen77pAUhIL0G01K5MRPTXCG23ejuVIhkrqc3JPgbZBo
-         HfgUNO8o4y/PnjPvKx/cxU0MKE8loPJj5AHK7Hs8=
+        b=FdANWs9lue4ZKnuGHKGwQBAXbAWXwD6x+rJw+872BdsXQhJV8lNfMUR5EUF9WiJpR
+         a1dmmyajLxdQsc4XfRIZrT9tKk7oy/Ul2CnDRUOFCX63ctsXTQyndjE379V/Z/hLPZ
+         lDnwmWnvu1bAm5OIMbPgpMg2dSS7z2qsQa+6zWAo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tony Lindgren <tony@atomide.com>, Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 006/107] ARM: OMAP2+: Fix ti_sysc_find_one_clockdomain to check for to_clk_hw_omap
-Date:   Fri, 24 Jan 2020 09:16:36 -0500
-Message-Id: <20200124141817.28793-6-sashal@kernel.org>
+Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        Maxime Ripard <maxime@cerno.tech>,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.4 008/107] ARM: dts: sun8i: a83t: Correct USB3503 GPIOs polarity
+Date:   Fri, 24 Jan 2020 09:16:38 -0500
+Message-Id: <20200124141817.28793-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200124141817.28793-1-sashal@kernel.org>
 References: <20200124141817.28793-1-sashal@kernel.org>
@@ -58,49 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tony Lindgren <tony@atomide.com>
+From: Marek Szyprowski <m.szyprowski@samsung.com>
 
-[ Upstream commit 90bdfa0b05e3cc809a7c1aa3b1f162b46ea1b330 ]
+[ Upstream commit 1c226017d3ec93547b58082bdf778d9db7401c95 ]
 
-We must bail out early if the clock is not hw_omap. Otherwise we will
-try to access invalid address with hwclk->clkdm_name:
+Current USB3503 driver ignores GPIO polarity and always operates as if the
+GPIO lines were flagged as ACTIVE_HIGH. Fix the polarity for the existing
+USB3503 chip applications to match the chip specification and common
+convention for naming the pins. The only pin, which has to be ACTIVE_LOW
+is the reset pin. The remaining are ACTIVE_HIGH. This change allows later
+to fix the USB3503 driver to properly use generic GPIO bindings and read
+polarity from DT.
 
-Unable to handle kernel paging request at virtual address ffffffff
-Internal error: Oops: 27 [#1] ARM
-...
-(strcmp) from [<c011b348>] (clkdm_lookup+0x40/0x60)
-[<c011b348>] (clkdm_lookup) from [<c011cb84>] (ti_sysc_clkdm_init+0x5c/0x64)
-[<c011cb84>] (ti_sysc_clkdm_init) from [<c03680a8>] (sysc_probe+0x948/0x117c)
-[<c03680a8>] (sysc_probe) from [<c03d0af4>] (platform_drv_probe+0x48/0x98)
-...
-
-Fixes: 2b2f7def058a ("bus: ti-sysc: Add support for missing clockdomain handling")
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Signed-off-by: Maxime Ripard <maxime@cerno.tech>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/mach-omap2/pdata-quirks.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/sun8i-a83t-cubietruck-plus.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/mach-omap2/pdata-quirks.c b/arch/arm/mach-omap2/pdata-quirks.c
-index 1b7cf81ff0356..33688e1d9acf9 100644
---- a/arch/arm/mach-omap2/pdata-quirks.c
-+++ b/arch/arm/mach-omap2/pdata-quirks.c
-@@ -368,10 +368,14 @@ static void __init dra7x_evm_mmc_quirk(void)
- 
- static struct clockdomain *ti_sysc_find_one_clockdomain(struct clk *clk)
- {
-+	struct clk_hw *hw = __clk_get_hw(clk);
- 	struct clockdomain *clkdm = NULL;
- 	struct clk_hw_omap *hwclk;
- 
--	hwclk = to_clk_hw_omap(__clk_get_hw(clk));
-+	hwclk = to_clk_hw_omap(hw);
-+	if (!omap2_clk_is_hw_omap(hw))
-+		return NULL;
-+
- 	if (hwclk && hwclk->clkdm_name)
- 		clkdm = clkdm_lookup(hwclk->clkdm_name);
- 
+diff --git a/arch/arm/boot/dts/sun8i-a83t-cubietruck-plus.dts b/arch/arm/boot/dts/sun8i-a83t-cubietruck-plus.dts
+index fb928503ad45d..d9be511f054f0 100644
+--- a/arch/arm/boot/dts/sun8i-a83t-cubietruck-plus.dts
++++ b/arch/arm/boot/dts/sun8i-a83t-cubietruck-plus.dts
+@@ -101,7 +101,7 @@
+ 		initial-mode = <1>; /* initialize in HUB mode */
+ 		disabled-ports = <1>;
+ 		intn-gpios = <&pio 7 5 GPIO_ACTIVE_HIGH>; /* PH5 */
+-		reset-gpios = <&pio 4 16 GPIO_ACTIVE_HIGH>; /* PE16 */
++		reset-gpios = <&pio 4 16 GPIO_ACTIVE_LOW>; /* PE16 */
+ 		connect-gpios = <&pio 4 17 GPIO_ACTIVE_HIGH>; /* PE17 */
+ 		refclk-frequency = <19200000>;
+ 	};
 -- 
 2.20.1
 
