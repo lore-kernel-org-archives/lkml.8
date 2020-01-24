@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16867C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:49:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C370C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:49:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF5C921556
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:49:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F006206D5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:49:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579859360;
-	bh=de6GOiqLAJaWWG2EvgMbPEP2AjO6yvDcHgRQ+i6nb18=;
+	s=default; t=1579859363;
+	bh=4Y0FKpr75T4XiG+iehXJb+1P28xeBxWab08mWO88C7Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Uq/S2SmC87qKmfmWoLDopUje2/f0Or400UuYtAOgrZ4nhLkXVPlsgsePXVQKKaCB3
-	 OFPqIjOH/4uX0nqg2BOH9QqCmwo/wEbvlwomL3KTX18upi8poCONiCdn3hzgjm3eXV
-	 Z8e+anbxB+GtTHnm4FQklclBAbVx4DVpw2bdS6+w=
+	b=l1MY67H/eOFSggJseQS7gTFyCURZdtJca51uIS07nKszMGU6/kYUREY67QBss2N/5
+	 /utrdf0ULvmY/OLJtRLYXbh3awCTU8MnBKYGG012dqGhgJxakwnOBxT0OlNVe1nV0/
+	 AIfD51gzYvXQ0vpknkyKDrkAH9vP+PajyEkoVgzo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387500AbgAXJtT (ORCPT
+        id S2387665AbgAXJtW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 04:49:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49514 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 04:49:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49572 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731158AbgAXJtP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 04:49:15 -0500
+        id S2387436AbgAXJtT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 04:49:19 -0500
 Received: from localhost (unknown [145.15.244.15])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 82B26206D5;
-        Fri, 24 Jan 2020 09:49:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5A577206D5;
+        Fri, 24 Jan 2020 09:49:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579859355;
-        bh=de6GOiqLAJaWWG2EvgMbPEP2AjO6yvDcHgRQ+i6nb18=;
+        s=default; t=1579859359;
+        bh=4Y0FKpr75T4XiG+iehXJb+1P28xeBxWab08mWO88C7Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JcGfN5TyxiiC94Mq7g4NYGy13GQF1z1+ebyuosdFyoZ4pDSh1D65FmfstDMypfC9W
-         LQWRaRQsKNWC6QIN3GF5vn2aekAdJjKuVqtYXbif/WMz6sj89+dXfvbvctUSYYiKQF
-         T18ui/9c/ZIGuHLf3G0RCmWB1f2KvjwE01cEoNE4=
+        b=dGRIAJlrY4bvXU7zOYw/sd5q73G2fNkH2uqMk3p1hqFBQeZxTfhFYG96dFTnDYfsc
+         yaDupiKRaKZ/AiULvUB302eRAjaVo4VbbQGDT89lMy7c0q7CoD/R9dDkkPQ8LT2Gn3
+         vvUxHlJlMCZk/W9OUxZZZH6ErDDwW2eZ78z4FkUk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Steve Wise <swise@opengridcomputing.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
+        stable@vger.kernel.org, Vladimir Zapolskiy <vz@mleia.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 098/343] iw_cxgb4: use tos when finding ipv6 routes
-Date:   Fri, 24 Jan 2020 10:28:36 +0100
-Message-Id: <20200124092932.952839916@linuxfoundation.org>
+Subject: [PATCH 4.14 086/343] ARM: dts: lpc32xx: phy3250: fix SD card regulator voltage
+Date:   Fri, 24 Jan 2020 10:28:24 +0100
+Message-Id: <20200124092931.379466178@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124092919.490687572@linuxfoundation.org>
 References: <20200124092919.490687572@linuxfoundation.org>
@@ -60,44 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Steve Wise <swise@opengridcomputing.com>
+From: Vladimir Zapolskiy <vz@mleia.com>
 
-[ Upstream commit c8a7eb554a83214c3d8ee5cb322da8c72810d2dc ]
+[ Upstream commit dc141b99fc36cf910a1d8d5ee30f43f2442fd1bd ]
 
-When IPv6 support was added, the correct tos was not passed to
-cxgb_find_route6(). This potentially results in the wrong route entry.
+The fixed voltage regulator on Phytec phyCORE-LPC3250 board, which
+supplies SD/MMC card's power, has a constant output voltage level
+of either 3.15V or 3.3V, the actual value depends on JP4 position,
+the power rail is referenced as VCC_SDIO in the board hardware manual.
 
-Fixes: 830662f6f032 ("RDMA/cxgb4: Add support for active and passive open connection with IPv6 address")
-Signed-off-by: Steve Wise <swise@opengridcomputing.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Fixes: d06670e96267 ("arm: dts: phy3250: add SD fixed regulator")
+Signed-off-by: Vladimir Zapolskiy <vz@mleia.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/cxgb4/cm.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/lpc3250-phy3250.dts | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/infiniband/hw/cxgb4/cm.c b/drivers/infiniband/hw/cxgb4/cm.c
-index 942403e42dd0f..7eb1cc1b1aa04 100644
---- a/drivers/infiniband/hw/cxgb4/cm.c
-+++ b/drivers/infiniband/hw/cxgb4/cm.c
-@@ -2147,7 +2147,8 @@ static int c4iw_reconnect(struct c4iw_ep *ep)
- 					   laddr6->sin6_addr.s6_addr,
- 					   raddr6->sin6_addr.s6_addr,
- 					   laddr6->sin6_port,
--					   raddr6->sin6_port, 0,
-+					   raddr6->sin6_port,
-+					   ep->com.cm_id->tos,
- 					   raddr6->sin6_scope_id);
- 		iptype = 6;
- 		ra = (__u8 *)&raddr6->sin6_addr;
-@@ -3298,7 +3299,7 @@ int c4iw_connect(struct iw_cm_id *cm_id, struct iw_cm_conn_param *conn_param)
- 					   laddr6->sin6_addr.s6_addr,
- 					   raddr6->sin6_addr.s6_addr,
- 					   laddr6->sin6_port,
--					   raddr6->sin6_port, 0,
-+					   raddr6->sin6_port, cm_id->tos,
- 					   raddr6->sin6_scope_id);
- 	}
- 	if (!ep->dst) {
+diff --git a/arch/arm/boot/dts/lpc3250-phy3250.dts b/arch/arm/boot/dts/lpc3250-phy3250.dts
+index b7bd3a110a8dd..dd0bdf765599d 100644
+--- a/arch/arm/boot/dts/lpc3250-phy3250.dts
++++ b/arch/arm/boot/dts/lpc3250-phy3250.dts
+@@ -49,8 +49,8 @@
+ 		sd_reg: regulator@2 {
+ 			compatible = "regulator-fixed";
+ 			regulator-name = "sd_reg";
+-			regulator-min-microvolt = <1800000>;
+-			regulator-max-microvolt = <1800000>;
++			regulator-min-microvolt = <3300000>;
++			regulator-max-microvolt = <3300000>;
+ 			gpio = <&gpio 5 5 0>;
+ 			enable-active-high;
+ 		};
 -- 
 2.20.1
 
