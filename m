@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD19DC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:33:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99AE4C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:34:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D2DE20661
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:33:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D8D220661
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:34:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579876421;
-	bh=mIBq/oVgQ3DefE28irRPz7dQ58X7/RcszdAxoFwn8MA=;
+	s=default; t=1579876444;
+	bh=I3YhAYtUA+dx4sZaf7NotbW1nN9/6IuCJ2P8V1dw+P0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=v+ybdsly68Nr9Bddr2NACwWJQAeTx1f4hfGQydg6XTcVDmhkEtFYtFm2ovWqOTUOz
-	 x9YhzLQIf+5KFMhtX+Px4RsuRNUCTW2UXFFPby2+g5qoxFKXu7vKRFgxmsb43Sqh+N
-	 dU8253o8rb1XljK5JPJPhJdiyGN6e68wjUUrHZNA=
+	b=qdndgdlTE5NOukqxCVAjh6OiyozmA0gL6x/ARM1pvLJ8iiJFGgGK6l9ISWbyABiiz
+	 paW0M3/BxrvJc75WtqUCUNEN6qHQOxuB0wvpQwZykDXSh8iXeGIcSnCs/EyJ1UCd45
+	 DxaL3Cv6IAW7LtQWvp6r+GhkcKFZpTSH1HeX7Dcw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404544AbgAXOdk (ORCPT
+        id S2404642AbgAXOeD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 09:33:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40560 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 09:34:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40436 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404140AbgAXOTy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 09:19:54 -0500
+        id S2391785AbgAXOTv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 09:19:51 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8AC6D222D9;
-        Fri, 24 Jan 2020 14:19:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CE95B22464;
+        Fri, 24 Jan 2020 14:19:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579875594;
-        bh=mIBq/oVgQ3DefE28irRPz7dQ58X7/RcszdAxoFwn8MA=;
+        s=default; t=1579875590;
+        bh=I3YhAYtUA+dx4sZaf7NotbW1nN9/6IuCJ2P8V1dw+P0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=D5LGdhb/ZFFAG94z56LbjEipo/Ny4O4phf+pSjiASuGUv5Szs54m+UFKSF1g2e7A4
-         5E90PVOV2S671EDK3En961BTKL7RNvolDu1RH4t+Q9BDE3RxztgTnqNgEzmEAVRTGU
-         OWOtcfBxkGcstgh6wbuONQixLi1WpwdLD/jGR6Aw=
+        b=uMElebrLpadIPpyu5TLrZGZexNlg270r1cLsAIZOJVaECLCvW9/51MqPKZvRdIcBv
+         ld5dPfVmLrVcUftL9OV19MPrdWwHKOUu9sbDMUYajAGNxl//C2VtWcntHWufZ5n0b5
+         pOW2GsmpAoxYTdbLSA3MheuDDWXRi5LPGqwqMAjw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Colin Ian King <colin.king@canonical.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 083/107] net/wan/fsl_ucc_hdlc: fix out of bounds write on array utdm_info
-Date:   Fri, 24 Jan 2020 09:17:53 -0500
-Message-Id: <20200124141817.28793-83-sashal@kernel.org>
+Cc:     Jari Ruusu <jari.ruusu@gmail.com>, Borislav Petkov <bp@alien8.de>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Luis Chamberlain <mcgrof@kernel.org>, stable@kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 080/107] Fix built-in early-load Intel microcode alignment
+Date:   Fri, 24 Jan 2020 09:17:50 -0500
+Message-Id: <20200124141817.28793-80-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200124141817.28793-1-sashal@kernel.org>
 References: <20200124141817.28793-1-sashal@kernel.org>
@@ -59,38 +61,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Jari Ruusu <jari.ruusu@gmail.com>
 
-[ Upstream commit ddf420390526ede3b9ff559ac89f58cb59d9db2f ]
+[ Upstream commit f5ae2ea6347a308cfe91f53b53682ce635497d0d ]
 
-Array utdm_info is declared as an array of MAX_HDLC_NUM (4) elements
-however up to UCC_MAX_NUM (8) elements are potentially being written
-to it.  Currently we have an array out-of-bounds write error on the
-last 4 elements. Fix this by making utdm_info UCC_MAX_NUM elements in
-size.
+Intel Software Developer's Manual, volume 3, chapter 9.11.6 says:
 
-Addresses-Coverity: ("Out-of-bounds write")
-Fixes: c19b6d246a35 ("drivers/net: support hdlc function for QE-UCC")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+ "Note that the microcode update must be aligned on a 16-byte boundary
+  and the size of the microcode update must be 1-KByte granular"
+
+When early-load Intel microcode is loaded from initramfs, userspace tool
+'iucode_tool' has already 16-byte aligned those microcode bits in that
+initramfs image.  Image that was created something like this:
+
+ iucode_tool --write-earlyfw=FOO.cpio microcode-files...
+
+However, when early-load Intel microcode is loaded from built-in
+firmware BLOB using CONFIG_EXTRA_FIRMWARE= kernel config option, that
+16-byte alignment is not guaranteed.
+
+Fix this by forcing all built-in firmware BLOBs to 16-byte alignment.
+
+[ If we end up having other firmware with much bigger alignment
+  requirements, we might need to introduce some method for the firmware
+  to specify it, this is the minimal "just increase the alignment a bit
+  to account for this one special case" patch    - Linus ]
+
+Signed-off-by: Jari Ruusu <jari.ruusu@gmail.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Fenghua Yu <fenghua.yu@intel.com>
+Cc: Luis Chamberlain <mcgrof@kernel.org>
+Cc: stable@kernel.org
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wan/fsl_ucc_hdlc.c | 2 +-
+ drivers/base/firmware_loader/builtin/Makefile | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/wan/fsl_ucc_hdlc.c b/drivers/net/wan/fsl_ucc_hdlc.c
-index ca0f3be2b6bf8..aef7de225783f 100644
---- a/drivers/net/wan/fsl_ucc_hdlc.c
-+++ b/drivers/net/wan/fsl_ucc_hdlc.c
-@@ -73,7 +73,7 @@ static struct ucc_tdm_info utdm_primary_info = {
- 	},
- };
- 
--static struct ucc_tdm_info utdm_info[MAX_HDLC_NUM];
-+static struct ucc_tdm_info utdm_info[UCC_MAX_NUM];
- 
- static int uhdlc_init(struct ucc_hdlc_private *priv)
- {
+diff --git a/drivers/base/firmware_loader/builtin/Makefile b/drivers/base/firmware_loader/builtin/Makefile
+index 4a66888e7253d..5fa7ce3745a0d 100644
+--- a/drivers/base/firmware_loader/builtin/Makefile
++++ b/drivers/base/firmware_loader/builtin/Makefile
+@@ -17,7 +17,7 @@ PROGBITS  = $(if $(CONFIG_ARM),%,@)progbits
+ filechk_fwbin = \
+ 	echo "/* Generated by $(src)/Makefile */"		;\
+ 	echo "    .section .rodata"				;\
+-	echo "    .p2align $(ASM_ALIGN)"			;\
++	echo "    .p2align 4"					;\
+ 	echo "_fw_$(FWSTR)_bin:"				;\
+ 	echo "    .incbin \"$(fwdir)/$(FWNAME)\""		;\
+ 	echo "_fw_end:"						;\
 -- 
 2.20.1
 
