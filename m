@@ -2,184 +2,128 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCF97C32771
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:40:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22778C35242
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:40:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B722206F0
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:40:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECFC92075D
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:40:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="j2HbyfiE"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="iiu4nggJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392040AbgAXLk2 (ORCPT
+        id S2392054AbgAXLkc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:40:28 -0500
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:59227 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391200AbgAXLWZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:22:25 -0500
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200124112223euoutp01de9ba781425f64927778eef07afe1ff6~szsvLnJMv3148331483euoutp01Z
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Jan 2020 11:22:23 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200124112223euoutp01de9ba781425f64927778eef07afe1ff6~szsvLnJMv3148331483euoutp01Z
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1579864944;
-        bh=7gGcPJwJd/puSj7LZi16us9UvxlBRcOghdJ+QKXKrdE=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=j2HbyfiEpJlWfcLa4htJuVkGu00LorD0r61DzhxI2ALm/0uJEhh7+smjerjEDBAxn
-         k27cOlmJmzjMOHdH8h5tb8lGVu/9qRDS4fgulO8+Aob2q3JM4SdmTyT1puTCpmQH5x
-         4qn3ZdRNvhXmaxM8kfg113XMgbjcN/uKioXGKYWc=
-Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20200124112223eucas1p12ce3c0b8be44a47331317961f80efc9f~szsu5wh0u3241032410eucas1p1C;
-        Fri, 24 Jan 2020 11:22:23 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges3new.samsung.com (EUCPMTA) with SMTP id C9.A8.60698.F63DA2E5; Fri, 24
-        Jan 2020 11:22:23 +0000 (GMT)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20200124112223eucas1p1ff581c051a056b7517655a3eb9ec68de~szsuZclkv2709327093eucas1p1w;
-        Fri, 24 Jan 2020 11:22:23 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200124112223eusmtrp1e4b8f1c165f594e10570ca50f4a6e1a1~szsuYtXfM0086800868eusmtrp1f;
-        Fri, 24 Jan 2020 11:22:23 +0000 (GMT)
-X-AuditID: cbfec7f5-a0fff7000001ed1a-9c-5e2ad36f1c56
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id 87.FC.08375.F63DA2E5; Fri, 24
-        Jan 2020 11:22:23 +0000 (GMT)
-Received: from AMDC3555 (unknown [106.120.51.67]) by eusmtip2.samsung.com
-        (KnoxPortal) with ESMTPA id
-        20200124112222eusmtip2758daabb6f8219629e4888f27bc2e161~szstqcurH1453014530eusmtip2O;
-        Fri, 24 Jan 2020 11:22:22 +0000 (GMT)
-Message-ID: <669f89cddb185db7412a4012427fb5ccbaae2652.camel@samsung.com>
-Subject: Re: [RFC PATCH v3 4/7] arm: dts: exynos: Add interconnect bindings
- for Exynos4412
-From:   Artur =?UTF-8?Q?=C5=9Awigo=C5=84?= <a.swigon@samsung.com>
-To:     Georgi Djakov <georgi.djakov@linaro.org>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, dri-devel@lists.freedesktop.org
-Cc:     cw00.choi@samsung.com, myungjoo.ham@samsung.com,
-        inki.dae@samsung.com, sw0312.kim@samsung.com,
-        leonard.crestez@nxp.com, m.szyprowski@samsung.com,
-        b.zolnierkie@samsung.com, krzk@kernel.org
-Date:   Fri, 24 Jan 2020 12:22:22 +0100
-In-Reply-To: <747a1c94-8eee-f46a-fcc7-d111cd9df70d@linaro.org>
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-Mime-Version: 1.0
+        Fri, 24 Jan 2020 06:40:32 -0500
+Received: from pegase1.c-s.fr ([93.17.236.30]:10076 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2403843AbgAXLk0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:40:26 -0500
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 483xyt3Jbyz9tyMg;
+        Fri, 24 Jan 2020 12:40:22 +0100 (CET)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=iiu4nggJ; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id A3I6opIEV_tl; Fri, 24 Jan 2020 12:40:22 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 483xyt27bmz9tyMf;
+        Fri, 24 Jan 2020 12:40:22 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1579866022; bh=FHdRJ1lym9x5LZH3JKxzccvEq6M9sGBs3OTmqNRLhTU=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=iiu4nggJtlejyS9CxTCWd166SJF9J7eVXuwRZ7M2gotO68hUK81m+MR2Tstk3ho8B
+         Rj9fXdhonGjq/7IdTo1GHGLsriWmDEEd0f4c2HcS4bPl+9p+eVKJ1QKA/pX/XYHPtq
+         QQIRjBIznCVLXgOan515E+eWZeriwxtYhT7tVKTQ=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 885948B858;
+        Fri, 24 Jan 2020 12:40:23 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id Rd4xOECJWD9L; Fri, 24 Jan 2020 12:40:23 +0100 (CET)
+Received: from [172.25.230.111] (po15451.idsi0.si.c-s.fr [172.25.230.111])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 514BB8B84A;
+        Fri, 24 Jan 2020 12:40:23 +0100 (CET)
+Subject: Re: [PATCH v2 6/6] powerpc: Implement user_access_begin and friends
+To:     Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org
+References: <12a4be679e43de1eca6e5e2173163f27e2f25236.1579715466.git.christophe.leroy@c-s.fr>
+ <2a20d19776faba4d85dbe51ae00a5f6ac5ac0969.1579715466.git.christophe.leroy@c-s.fr>
+ <87iml2idi9.fsf@mpe.ellerman.id.au> <87ftg6icc8.fsf@mpe.ellerman.id.au>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <0c2855c2-a6d6-6b35-7f69-f55add58dfb8@c-s.fr>
+Date:   Fri, 24 Jan 2020 12:40:23 +0100
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
+MIME-Version: 1.0
+In-Reply-To: <87ftg6icc8.fsf@mpe.ellerman.id.au>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
 Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA01Sa0hTYRjm27nsuNz6mlFvFl1WEUlpocGBLrMLcggiRQzp6sqDRm7WTkvn
-        j9IsSy01JTIVL2Flq1BXhlmayVDRdMhEK7VR64LW7OK16LZ5FvbveZ73ed7ne+FjCGUn5csc
-        1h3n9TpNnIqWkQ+av1tXx9v89q/58mIZW51fSbG9ox8otsTSSbHdY59p9kq9mWZz7Tkka7VW
-        SdmKga8Ua3b0UKytrohmRy5aEJtvbZCwdy0DUrYvpYJm8/MG6eCZnNmUTnP9PY9pzp7ZIuHu
-        lZ/iqodrJVzWfRPiRswLQ6W7ZRui+bjDJ3h9wKYoWazNMkkeLcOJbxwrktEZeQbyYgAHQX3K
-        ZSIDyRglrkBg7y2WiGQUwdhLGxLJCIKSohH6X2SiK9szuIkg91OpVCTvXa6fZ5HbJcccWNNt
-        UwkfvBcKJu1SN6axGjr6xqc6ZuNvCDrKC6dWEdiC4OP4W9LtIvFyaM6rIdzYC2+CoeI+qdi9
-        CpxtWS4P42qYBb9qfdwygRdBak3h1BWAnVLIyXYSon8btBWlSkTsA0Mt9z17FkB73gVSxAK8
-        e2inxHAyAvMNiye8Hvo7f9DuMgKvhMq6AFHeDDUTmRK3DFgBz52zxDcoIPfBFUKU5XA+TSlC
-        FdRdVYhBgNO3ezy7OegqT6dy0JKC6VsK/rulYLq1FBEmNJc3CNoYXgjU8Qn+gkYrGHQx/ofi
-        tWbk+mXtv1vGalHDz4NNCDNI5S1vzFi5X0lpTghGbRMChlDNlqNdLkkerTEm8fr4A3pDHC80
-        ofkMqZorD7w2uE+JYzTH+SM8f5TX/5tKGC/fZBR5qdGKXiqeRnyY0R8WscfvTag1cfuh891R
-        T0Kc2leBrVWjscHzfw0b6qJ3SBM3PvKtjnz2J7P9k3XRrVJSgXTPjoU6Ux2OrcFo7bjJGWZ8
-        nW3D19PWBekTTMacO8sg5BLhrZ53uTVhTtnJgInwxfXrz4XvUS/daZSpJxu3JDnfqkghVrPW
-        j9ALmr9Pu97MYQMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrGIsWRmVeSWpSXmKPExsVy+t/xe7r5l7XiDOZcZLXYOGM9q8X1L89Z
-        LeYfOcdqceXrezaL6Xs3sVlMuj+BxeL8+Q3sFivufmS12PT4GqvF5V1z2Cw+9x5htJhxfh+T
-        xdojd9ktbjeuYLOYMfklmwO/x6ZVnWwed67tYfO4332cyWPzknqPje92MHn0bVnF6PF5k1wA
-        e5SeTVF+aUmqQkZ+cYmtUrShhZGeoaWFnpGJpZ6hsXmslZGpkr6dTUpqTmZZapG+XYJexuUj
-        P1gKFgpUPHqs3sDYwtvFyMkhIWAi8f1iP2MXIxeHkMBSRomfU9ayQiQkJD6uvwFlC0v8udbF
-        BlH0hFHi26apjCAJXgEPifOdl9lAbGGBGIlZP+6zg9hsAvYSZ29/YwJpEBH4zChxeNEnFhCH
-        WeAoo8SzExBVLAKqEscmb2UGsTkF7CRezbvNDrHiE6PE3/l3mUASzAKaEq3bf7ND3KEj8fZU
-        H9AkDqDVghJ/dwhDlMhLNG+dzTyBUXAWko5ZCFWzkFQtYGRexSiSWlqcm55bbKhXnJhbXJqX
-        rpecn7uJERin24793LyD8dLG4EOMAhyMSjy8Er2acUKsiWXFlbmHGCU4mJVEeBnDgEK8KYmV
-        ValF+fFFpTmpxYcYTYH+mcgsJZqcD0wheSXxhqaG5haWhubG5sZmFkrivB0CB2OEBNITS1Kz
-        U1MLUotg+pg4OKUaGCVWL7+stiLm/LNlh0KSAir8bIv8L/8yfBJisa5Uz6Nx+nUtyfvuGjsa
-        LmZnyk24Iv+7a2Gsw8bVnIveXV7AnDT9Y1incJmMoGTKXLkLsR+MF8VvfzD90lTPNt9k2ZlW
-        xc+dtvav3xGuxGbraO56PfK7q17IPAGpux0/UrNseA//vz69suZZlRJLcUaioRZzUXEiAMAO
-        xRfpAgAA
-X-CMS-MailID: 20200124112223eucas1p1ff581c051a056b7517655a3eb9ec68de
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20191220120144eucas1p119ececf161a6d45a6a194e432bbbd1f9
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20191220120144eucas1p119ececf161a6d45a6a194e432bbbd1f9
-References: <20191220115653.6487-1-a.swigon@samsung.com>
-        <CGME20191220120144eucas1p119ececf161a6d45a6a194e432bbbd1f9@eucas1p1.samsung.com>
-        <20191220115653.6487-5-a.swigon@samsung.com>
-        <747a1c94-8eee-f46a-fcc7-d111cd9df70d@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
 
-On Wed, 2020-01-22 at 18:54 +0200, Georgi Djakov wrote:
-> Hi Artur,
+
+Le 23/01/2020 à 13:31, Michael Ellerman a écrit :
+> Michael Ellerman <mpe@ellerman.id.au> writes:
+>> Christophe Leroy <christophe.leroy@c-s.fr> writes:
+>>> Today, when a function like strncpy_from_user() is called,
+>>> the userspace access protection is de-activated and re-activated
+>>> for every word read.
+>>>
+>>> By implementing user_access_begin and friends, the protection
+>>> is de-activated at the beginning of the copy and re-activated at the
+>>> end.
+>>>
+>>> Implement user_access_begin(), user_access_end() and
+>>> unsafe_get_user(), unsafe_put_user() and unsafe_copy_to_user()
+>>>
+>>> For the time being, we keep user_access_save() and
+>>> user_access_restore() as nops.
+>>
+>> That means we will run with user access enabled in a few more places, but
+>> it's only used sparingly AFAICS:
+>>
+>>    kernel/trace/trace_branch.c:    unsigned long flags = user_access_save();
+>>    lib/ubsan.c:    unsigned long flags = user_access_save();
+>>    lib/ubsan.c:    unsigned long ua_flags = user_access_save();
+>>    mm/kasan/common.c:      unsigned long flags = user_access_save();
+>>
+>> And we don't have objtool checking that user access enablement isn't
+>> leaking in the first place, so I guess it's OK for us not to implement
+>> these to begin with?
 > 
-> Thank you for your continuous work on this.
+> It looks like we can implement them on on all three KUAP
+> implementations.
 > 
-> On 12/20/19 13:56, Artur Świgoń wrote:
-> > This patch adds the following properties to the Exynos4412 DT:
-> >   - exynos,interconnect-parent-node: to declare connections between
-> >     nodes in order to guarantee PM QoS requirements between nodes;
+> For radix and 8xx we just return/set the relevant SPR.
 > 
-> Is this DT property documented somewhere? I believe that there should be a patch
-> to document it somewhere in Documentation/devicetree/bindings/ before using it.
+> For book3s/32/kup.h I think we'd just need to add a KUAP_CURRENT case to
+> allow_user_access()?
 
-It will be documented in Documentation/devicetree/bindings/devfreq/exynos-bus.txt
-in the next version.
+Can't do that, we don't want to keep the info in current->thread.kuap 
+after user_access_save(), otherwise we might unexpectedly re-open access 
+through an interrupt.
 
-> >   - #interconnect-cells: required by the interconnect framework.
-> > 
-> > Note that #interconnect-cells is always zero and node IDs are not
-> > hardcoded anywhere.
-> > 
-> > Signed-off-by: Artur Świgoń <a.swigon@samsung.com>
-> > ---
-> >  arch/arm/boot/dts/exynos4412-odroid-common.dtsi | 5 +++++
-> >  1 file changed, 5 insertions(+)
-> > 
-> > diff --git a/arch/arm/boot/dts/exynos4412-odroid-common.dtsi b/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
-> > index 4ce3d77a6704..d9d70eacfcaf 100644
-> > --- a/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
-> > +++ b/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
-> > @@ -90,6 +90,7 @@
-> >  &bus_dmc {
-> >  	exynos,ppmu-device = <&ppmu_dmc0_3>, <&ppmu_dmc1_3>;
-> >  	vdd-supply = <&buck1_reg>;
-> > +	#interconnect-cells = <0>;
-> >  	status = "okay";
-> >  };
-> >  
-> > @@ -106,6 +107,8 @@
-> >  &bus_leftbus {
-> >  	exynos,ppmu-device = <&ppmu_leftbus_3>, <&ppmu_rightbus_3>;
-> >  	vdd-supply = <&buck3_reg>;
-> > +	exynos,interconnect-parent-node = <&bus_dmc>;
-> > +	#interconnect-cells = <0>;
-> >  	status = "okay";
-> >  };
-> >  
-> > @@ -116,6 +119,8 @@
-> >  
-> >  &bus_display {
-> >  	exynos,parent-bus = <&bus_leftbus>;
-> > +	exynos,interconnect-parent-node = <&bus_leftbus>;
-> > +	#interconnect-cells = <0>;
-> >  	status = "okay";
-> >  };
+And if we use KUAP_CURRENT case of prevent_user_access(), it means we'll 
+read current->thread.kuap twice.
 
--- 
-Artur Świgoń
-Samsung R&D Institute Poland
-Samsung Electronics
+So, just regenerate addr and end from the flags, and use 
+allow_user_access() and prevent_user_access() as usual.
 
+I'll have it in v4
 
+Christophe
