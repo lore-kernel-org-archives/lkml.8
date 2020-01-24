@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FC2BC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:43:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 569FFC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:43:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 480CC206D4
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:43:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2411F206D4
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:43:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579866219;
-	bh=JpbGFaVqvCFMCutViGa8QSn9JWFJ0c7Uuy6gghZq4iM=;
+	s=default; t=1579866228;
+	bh=0yewvMhf8AqFzUJFiC+c4tjGMKVsBQlw6gbehAq0MtE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JRPNt4I9ft6pPYgKfl+IFi590jspox98humP+cTYfP/nja1K6z8nSKUGOOZNLFDgs
-	 yRzckPodpQqH6vjyHQpMZ4dJJ/JTki5D5J029YF1/W+QTt5o6RIZO73AeVchRgBMTP
-	 h0htBPcj8v3F58hvudFmC+QUj7usL/44cJh8p5bI=
+	b=cVQPYsHsnBIBMVRWpYjImO8MNLtdsHFfC7QCyIx76wiGKvjI38A4/RHRa28Lxw5L8
+	 GTm6JudX3S7djGZ+NXBIMDNOeyoE/Icq9EBNHzQN5ZBfdHegMh9/k7R7WQzrj+g0Xb
+	 NprcHmlD0xO8lBQZlZgcKD6FEMSEzCA2pUdm/Bvk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389553AbgAXLHk (ORCPT
+        id S2391028AbgAXLnr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:07:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42804 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 06:43:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37552 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732427AbgAXLHe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:07:34 -0500
+        id S2387683AbgAXLDk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:03:40 -0500
 Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 59FD72071A;
-        Fri, 24 Jan 2020 11:07:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 436C22071A;
+        Fri, 24 Jan 2020 11:03:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579864053;
-        bh=JpbGFaVqvCFMCutViGa8QSn9JWFJ0c7Uuy6gghZq4iM=;
+        s=default; t=1579863819;
+        bh=0yewvMhf8AqFzUJFiC+c4tjGMKVsBQlw6gbehAq0MtE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TbG0KQpmSqWsNLEPT8YqOrDdDJwYdeY1Ku6ygiPQU5uuRjKPK8Yd9QBcrbtrAXf9u
-         AxSY6O1dXPprpmN8t1mGDWwFymCeoZ0qeMaTwMxC99Pu7cAqA7csn8Xvq3GutrphOf
-         pOLVm9RRVewv7etYWl1LILsgJ0LfiZzXXjSGiLCQ=
+        b=Rf7kEW83T1kTw7iJ/CHx6hzbb6Q8ub5wrR618cHuI7qLBXKU1N4P+CrHtE61hhClu
+         EPM5QU0TfaeiUW7d2iVZ7qiE+ZKrVDRs2iCJYeFrQD83PPvGW/hYZR1IFeo4gE18Er
+         HgacD1P/eu2+8aLIzq5O4aFz8y2EadlqCdyxVGiU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Huazhong Tan <tanhuazhong@huawei.com>,
-        Peng Li <lipeng321@huawei.com>,
+        stable@vger.kernel.org, Willem de Bruijn <willemb@google.com>,
+        Soheil Hassas Yeganeh <soheil@google.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 145/639] net: hns3: fix bug of ethtool_ops.get_channels for VF
-Date:   Fri, 24 Jan 2020 10:25:15 +0100
-Message-Id: <20200124093105.406619516@linuxfoundation.org>
+Subject: [PATCH 4.19 084/639] ipv6: add missing tx timestamping on IPPROTO_RAW
+Date:   Fri, 24 Jan 2020 10:24:14 +0100
+Message-Id: <20200124093057.889176715@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
 References: <20200124093047.008739095@linuxfoundation.org>
@@ -61,49 +61,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Huazhong Tan <tanhuazhong@huawei.com>
+From: Willem de Bruijn <willemb@google.com>
 
-[ Upstream commit 8be7362186bd5ccb5f6f72be49751ad2778e2636 ]
+[ Upstream commit fbfb2321e950918b430e7225546296b2dcadf725 ]
 
-The current code returns the number of all queues that can be used and
-the number of queues that have been allocated, which is incorrect.
-What should be returned is the number of queues allocated for each enabled
-TC and the number of queues that can be allocated.
+Raw sockets support tx timestamping, but one case is missing.
 
-This patch fixes it.
+IPPROTO_RAW takes a separate packet construction path. raw_send_hdrinc
+has an explicit call to sock_tx_timestamp, but rawv6_send_hdrinc does
+not. Add it.
 
-Fixes: 849e46077689 ("net: hns3: add ethtool_ops.get_channels support for VF")
-Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
-Signed-off-by: Peng Li <lipeng321@huawei.com>
+Fixes: 11878b40ed5c ("net-timestamp: SOCK_RAW and PING timestamping")
+Signed-off-by: Willem de Bruijn <willemb@google.com>
+Acked-by: Soheil Hassas Yeganeh <soheil@google.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ net/ipv6/raw.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
-index 67db19709deaa..fd5375b5991bb 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
-@@ -1957,7 +1957,8 @@ static u32 hclgevf_get_max_channels(struct hclgevf_dev *hdev)
- 	struct hnae3_handle *nic = &hdev->nic;
- 	struct hnae3_knic_private_info *kinfo = &nic->kinfo;
+diff --git a/net/ipv6/raw.c b/net/ipv6/raw.c
+index 4856d9320b28e..a41156a00dd44 100644
+--- a/net/ipv6/raw.c
++++ b/net/ipv6/raw.c
+@@ -660,6 +660,8 @@ static int rawv6_send_hdrinc(struct sock *sk, struct msghdr *msg, int length,
  
--	return min_t(u32, hdev->rss_size_max * kinfo->num_tc, hdev->num_tqps);
-+	return min_t(u32, hdev->rss_size_max,
-+		     hdev->num_tqps / kinfo->num_tc);
- }
+ 	skb->ip_summed = CHECKSUM_NONE;
  
- /**
-@@ -1978,7 +1979,7 @@ static void hclgevf_get_channels(struct hnae3_handle *handle,
- 	ch->max_combined = hclgevf_get_max_channels(hdev);
- 	ch->other_count = 0;
- 	ch->max_other = 0;
--	ch->combined_count = hdev->num_tqps;
-+	ch->combined_count = handle->kinfo.rss_size;
- }
++	sock_tx_timestamp(sk, sockc->tsflags, &skb_shinfo(skb)->tx_flags);
++
+ 	if (flags & MSG_CONFIRM)
+ 		skb_set_dst_pending_confirm(skb, 1);
  
- static void hclgevf_get_tqps_and_rss_info(struct hnae3_handle *handle,
 -- 
 2.20.1
 
