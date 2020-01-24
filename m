@@ -2,139 +2,177 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E03B6C35240
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 00:28:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AE8FC35240
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 00:30:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A84832087E
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 00:28:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B75F02087E
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 00:30:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bPl7gh8j"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ksrlogme"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730140AbgAXA2Q (ORCPT
+        id S1730158AbgAXAaP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 19:28:16 -0500
-Received: from mail-pj1-f74.google.com ([209.85.216.74]:53659 "EHLO
-        mail-pj1-f74.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729400AbgAXA2P (ORCPT
+        Thu, 23 Jan 2020 19:30:15 -0500
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:43438 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729875AbgAXAaP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 19:28:15 -0500
-Received: by mail-pj1-f74.google.com with SMTP id h6so281387pju.3
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jan 2020 16:28:15 -0800 (PST)
+        Thu, 23 Jan 2020 19:30:15 -0500
+Received: by mail-lf1-f65.google.com with SMTP id 9so51418lfq.10
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jan 2020 16:30:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:cc;
-        bh=VU8CQ+7tyXbPwB/MfaFBdifEaVqhq62dpGmbsWu0ENU=;
-        b=bPl7gh8jS00llZ0eEa5mBTSGBetDXcShMlyhJLdfpefUnpZ4/ASQH4TFHzq6w0bwgr
-         a+8TeHx0y61jYbl32SSTqHF+HC5AzWKMYz16cUfBqhaE2X3HtWsrAiFW3TVdMnqqwxDj
-         IxASL4pfRS02MeAXjRwXIx/FUu9EMMd+LMSs1K9zOM3NXRRp5lxSGUJ0YfjVpq0ax/pZ
-         PxPBdIYMbxbHE0AmXI3t7kb/Ax4NPD7g+xyVeQZlpqNiTJDyD/gllFgfFt7jwAosw6bE
-         dNngBFdgmw2moyQXaPORh8iKsz8X65v2tv0ozUG1tH6A2TfXpu0E40GhM5dLCtd4EV9U
-         BZsQ==
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=e385S31i/qGwjac6oNxoCBIhYZUY/kvlHUmU1b+MVcM=;
+        b=ksrlogmefFSt4bVtJHfwxg17cwfPMKbdgjKSJjtnd/7zYUbNsEmAyaFqmpdZLkIUzY
+         5cmhzlPUNOTDcIvKH7a6XnntCxM+xCOWn6OnDdqvweyoNgyGE03hzTH2cCDAmBs/DT3L
+         ZWZBgKsM/Fxp2ZTUJlzOjFr7Q45pXVCJbP4+4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:cc;
-        bh=VU8CQ+7tyXbPwB/MfaFBdifEaVqhq62dpGmbsWu0ENU=;
-        b=IYSa9Og8/lSVUOlWPPOHUxSJtC5Qj0Fc6xCZ4S9WEtZrmX3dHzL3Cq75KUK6T1cmEC
-         zh62LGTtOJd6QWUhCXvBbZ5ez0G/FkrobiaxSlL7VeuLef4O+oJ2Z0JGF35mJwzC/D30
-         YYoWLERS9wJQyzJjZHR8IKS4TvZmpD7PctN0J7RlrXDUX4WFA3eSGF3Rw6+ruXeNWCGg
-         VYIwrpAXapIDGq7sMmO7NVaLK8Aq1ymN+VwuWRX/BbXSTxRASQavoRg8ZjqsfH6wjAkJ
-         ybtSdqQteH/YpGKcXw0C3UrTYoiGQHcHE7WRb/C+PmulnPmVsQkn4QpsuReEJtJQ7Duk
-         LeMg==
-X-Gm-Message-State: APjAAAVFf8TIzn2Wjj9rmm5aJnXQxBZW4TQziptnSnsbxNO/NrsxF0yu
-        Vm5r0ghFW5F5LuLheMzP0y+KkeU=
-X-Google-Smtp-Source: APXvYqxaSVsQSLY8QyXbQBvfUJ/MbO43rzgkc6v2uQ5AApjHQbopWAl2epZN67D8EUiyjsGwL5wmaPs=
-X-Received: by 2002:a63:5b0e:: with SMTP id p14mr1118542pgb.315.1579825694644;
- Thu, 23 Jan 2020 16:28:14 -0800 (PST)
-Date:   Thu, 23 Jan 2020 16:28:10 -0800
-Message-Id: <20200124002811.228334-1-wvw@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.25.0.341.g760bfbb309-goog
-Subject: [PATCH] [RFC] sched: restrict iowait boost for boosted task only
-From:   Wei Wang <wvw@google.com>
-Cc:     wei.vince.wang@gmail.com, qais.yousef@arm.com,
-        dietmar.eggemann@arm.com, valentin.schneider@arm.com,
-        chris.redpath@arm.com, qperret@google.com,
-        Wei Wang <wvw@google.com>, Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        linux-kernel@vger.kernel.org
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=e385S31i/qGwjac6oNxoCBIhYZUY/kvlHUmU1b+MVcM=;
+        b=aTsyWeWjjF3dEAj7rZPqQAQLFpO4zkiEkVSSZBzEaQErSSGlcyT8gxf5UjnHvoeZvE
+         Vk/IrD3+pT9pjY1zAxB8cIdkq6+qwZDJSa6Xz2MK9ePIsrTFdumnWJb+3pu3X/Ukwmta
+         NVZe2RgWnkW27M0WX1Q+9o3xcd+N1+GPZx6gfPosAjFvJDClR5ZPXWusLuMJbSw5Gv+K
+         ikEAk2DadIoV8TPrOB95AnlMVOxqdk8utUr+h/eMn6Zgfco/a52Jwfgw8wGzVau3vXv8
+         /iRqLKiu3UwSlClXXM+/4/wcdyM3Oe6gKb7a5bUALrn3iWd/+NY7H9rOG2HIHt+7YC8s
+         Mmww==
+X-Gm-Message-State: APjAAAUdMXpgWXUFVGd/OVFjVP/hwaTpS+TW3TS/18EZ8gbvlwmrpaYp
+        litUDM8bf4CbET9KwW4zB7hN/wYt4BQ=
+X-Google-Smtp-Source: APXvYqzxjwIiI2Y5YvPOQnjDPQ/cXEw+pGtdaqgm4hj4yKEi/1Ysl0TIMfhEAIkC9t1SM1sS8NjQiQ==
+X-Received: by 2002:a19:4208:: with SMTP id p8mr190659lfa.160.1579825812208;
+        Thu, 23 Jan 2020 16:30:12 -0800 (PST)
+Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com. [209.85.167.41])
+        by smtp.gmail.com with ESMTPSA id q26sm1826062lfp.85.2020.01.23.16.30.11
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 23 Jan 2020 16:30:11 -0800 (PST)
+Received: by mail-lf1-f41.google.com with SMTP id t23so62346lfk.6
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jan 2020 16:30:11 -0800 (PST)
+X-Received: by 2002:ac2:489b:: with SMTP id x27mr191071lfc.130.1579825810814;
+ Thu, 23 Jan 2020 16:30:10 -0800 (PST)
+MIME-Version: 1.0
+References: <20200117162444.v2.1.I9c7e72144ef639cc135ea33ef332852a6b33730f@changeid>
+ <CACK8Z6Ft95qj4e_fsA32r_bcz2SsHOW1xxqZJt3_DBAJw=NMGA@mail.gmail.com>
+ <CAE=gft6fKQWExW-=xjZGzXs30XohfpA5SKggvL2WtYXAHmzMew@mail.gmail.com>
+ <87y2tytv5i.fsf@nanos.tec.linutronix.de> <87eevqkpgn.fsf@nanos.tec.linutronix.de>
+ <CAE=gft6YiM5S1A7iJYJTd5zmaAa8=nhLE3B94JtWa+XW-qVSqQ@mail.gmail.com> <CAE=gft5xta4XCJtctWe=R3w=kVr598JCbk9VSRue04nzKAk3CQ@mail.gmail.com>
+In-Reply-To: <CAE=gft5xta4XCJtctWe=R3w=kVr598JCbk9VSRue04nzKAk3CQ@mail.gmail.com>
+From:   Evan Green <evgreen@chromium.org>
+Date:   Thu, 23 Jan 2020 16:29:34 -0800
+X-Gmail-Original-Message-ID: <CAE=gft7MqQ3Mej5oCT=gw6ZLMSTHoSyMGOFz=-hae-eRZvXLxA@mail.gmail.com>
+Message-ID: <CAE=gft7MqQ3Mej5oCT=gw6ZLMSTHoSyMGOFz=-hae-eRZvXLxA@mail.gmail.com>
+Subject: Re: [PATCH v2] PCI/MSI: Avoid torn updates to MSI pairs
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Rajat Jain <rajatja@google.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently iowait doesn't distinguish background/foreground tasks.
-This may not be a problem in servers but could impact devices that
-are more sensitive on energy consumption. [1]
-In Android world, we have seen many cases where device run to high and
-inefficient frequency unnecessarily when running some background task
-which are interacting I/O.
+On Thu, Jan 23, 2020 at 2:59 PM Evan Green <evgreen@chromium.org> wrote:
+>
+> On Thu, Jan 23, 2020 at 12:59 PM Evan Green <evgreen@chromium.org> wrote:
+> >
+> > On Thu, Jan 23, 2020 at 10:17 AM Thomas Gleixner <tglx@linutronix.de> wrote:
+> > >
+> > > Evan,
+> > >
+> > > Thomas Gleixner <tglx@linutronix.de> writes:
+> > > > This is not yet debugged fully and as this is happening on MSI-X I'm not
+> > > > really convinced yet that your 'torn write' theory holds.
+> > >
+> > > can you please apply the debug patch below and run your test. When the
+> > > failure happens, stop the tracer and collect the trace.
+> > >
+> > > Another question. Did you ever try to change the affinity of that
+> > > interrupt without hotplug rapidly while the device makes traffic? If
+> > > not, it would be interesting whether this leads to a failure as well.
+> >
+> > Thanks for the patch. Looks pretty familiar :)
+> > I ran into issues where trace_printks on offlined cores seem to
+> > disappear. I even made sure the cores were back online when I
+> > collected the trace. So your logs might not be useful. Known issue
+> > with the tracer?
+> >
+> > I figured I'd share my own debug chicken scratch, in case you could
+> > glean anything from it. The LOG entries print out timestamps (divide
+> > by 1000000) that you can match up back to earlier in the log (ie so
+> > the last XHCI MSI change occurred at 74.032501, the last interrupt
+> > came in at 74.032405). Forgive the mess.
+> >
+> > I also tried changing the affinity rapidly without CPU hotplug, but
+> > didn't see the issue, at least not in the few minutes I waited
+> > (normally repros easily within 1 minute). An interesting datapoint.
+>
+> One additional datapoint. The intel guys suggested enabling
+> CONFIG_IRQ_REMAP, which does seem to eliminate the issue for me. I'm
+> still hoping there's a smaller fix so I don't have to add all that in.
 
-The ultimate goal is to only apply iowait boost on UX related tasks and
-leave the rest for EAS scheduler for better efficiency.
+I did another experiment that I think lends credibility to my torn MSI
+hypothesis. I have the following change:
 
-This patch limits iowait boost for tasks which are associated with boost
-signal from user land. On Android specifically, those are foreground or
-top app tasks.
+diff --git a/arch/x86/kernel/cpu/mcheck/mce.c b/arch/x86/kernel/cpu/mcheck/mce.c
+index 1f69b12d5bb86..0336d23f9ba9a 100644
+--- a/arch/x86/kernel/cpu/mcheck/mce.c
++++ b/arch/x86/kernel/cpu/mcheck/mce.c
+@@ -1798,6 +1798,7 @@ void (*machine_check_vector)(struct pt_regs *,
+long error_code) =
 
-[1] ANDROID discussion:
-https://android-review.googlesource.com/c/kernel/common/+/1215695
-
-Signed-off-by: Wei Wang <wvw@google.com>
----
- kernel/sched/fair.c  |  4 +++-
- kernel/sched/sched.h | 12 ++++++++++++
- 2 files changed, 15 insertions(+), 1 deletion(-)
-
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index ba749f579714..221c0fbcea0e 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -5220,8 +5220,10 @@ enqueue_task_fair(struct rq *rq, struct task_struct *p, int flags)
- 	 * If in_iowait is set, the code below may not trigger any cpufreq
- 	 * utilization updates, so do it here explicitly with the IOWAIT flag
- 	 * passed.
-+	 * If CONFIG_ENERGY_MODEL and CONFIG_UCLAMP_TASK are both configured,
-+	 * only boost for tasks set with non-null min-clamp.
- 	 */
--	if (p->in_iowait)
-+	if (iowait_boosted(p))
- 		cpufreq_update_util(rq, SCHED_CPUFREQ_IOWAIT);
- 
- 	for_each_sched_entity(se) {
-diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-index 280a3c735935..a13d49d835ed 100644
---- a/kernel/sched/sched.h
-+++ b/kernel/sched/sched.h
-@@ -2341,6 +2341,18 @@ static inline unsigned int uclamp_util(struct rq *rq, unsigned int util)
+ dotraplinkage void do_mce(struct pt_regs *regs, long error_code)
+ {
++printk("EVAN MACHINE CHECK HC died");
+        machine_check_vector(regs, error_code);
  }
- #endif /* CONFIG_UCLAMP_TASK */
- 
-+#if defined(CONFIG_ENERGY_MODEL) && defined(CONFIG_UCLAMP_TASK)
-+static inline bool iowait_boosted(struct task_struct *p)
-+{
-+	return p->in_iowait && uclamp_eff_value(p, UCLAMP_MIN) > 0;
-+}
-+#else /* defined(CONFIG_ENERGY_MODEL) && defined(CONFIG_UCLAMP_TASK) */
-+static inline bool iowait_boosted(struct task_struct *p)
-+{
-+	return p->in_iowait;
-+}
-+#endif /* defined(CONFIG_ENERGY_MODEL) && defined(CONFIG_UCLAMP_TASK) */
-+
- #ifdef arch_scale_freq_capacity
- # ifndef arch_scale_freq_invariant
- #  define arch_scale_freq_invariant()	true
--- 
-2.25.0.341.g760bfbb309-goog
 
+diff --git a/drivers/pci/msi.c b/drivers/pci/msi.c
+index 23a363fd4c59c..31f683da857e3 100644
+--- a/drivers/pci/msi.c
++++ b/drivers/pci/msi.c
+@@ -315,6 +315,11 @@ void __pci_write_msi_msg(struct msi_desc *entry,
+struct msi_msg *msg)
+                msgctl |= entry->msi_attrib.multiple << 4;
+                pci_write_config_word(dev, pos + PCI_MSI_FLAGS, msgctl);
+
++if (entry->msi_attrib.is_64) {
++pci_write_config_word(dev, pos + PCI_MSI_DATA_64, 0x4012);
++} else {
++pci_write_config_word(dev, pos + PCI_MSI_DATA_32, 0x4012);
++}
+                pci_write_config_dword(dev, pos + PCI_MSI_ADDRESS_LO,
+                                       msg->address_lo);
+                if (entry->msi_attrib.is_64) {
+
+And indeed, I get a machine check, despite the fact that MSI_DATA is
+overwritten just after address is updated.
+
+[   79.937179] smpboot: CPU 1 is now offline
+[   80.001685] smpboot: CPU 3 is now offline
+[   80.025210] smpboot: CPU 5 is now offline
+[   80.049517] smpboot: CPU 7 is now offline
+[   80.094263] x86: Booting SMP configuration:
+[   80.099394] smpboot: Booting Node 0 Processor 1 APIC 0x1
+[   80.136233] smpboot: Booting Node 0 Processor 3 APIC 0x3
+[   80.155732] smpboot: Booting Node 0 Processor 5 APIC 0x5
+[   80.173632] smpboot: Booting Node 0 Processor 7 APIC 0x7
+[   80.297198] smpboot: CPU 1 is now offline
+[   80.331347] EVAN MACHINE CHECK HC died
+[   82.281555] Kernel panic - not syncing: Timeout: Not all CPUs
+entered broadcast exception handler
+[   82.295775] Kernel Offset: disabled
+[   82.301740] gsmi: Log Shutdown Reason 0x02
+[   82.313942] Rebooting in 30 seconds..
+[  112.204113] ACPI MEMORY or I/O RESET_REG.
+
+-Evan
