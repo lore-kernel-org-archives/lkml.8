@@ -2,129 +2,108 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8111C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:41:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7AB8C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:41:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEFA420678
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:41:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="uw5i2aWn"
+	by mail.kernel.org (Postfix) with ESMTP id A47DD20678
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:41:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579866070;
+	bh=mHea0e1HD+THVTVgUwDuDWhMJFJReXvdt1noQdUacTs=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=GmzlnGzSC4Xno8drixD1bIht3eU29yIANPAageJnmv6z5e+LTQ2U2ygS/2yOhJSug
+	 nqHoSOl9GcJx7y7LgE6TNCQ0vIFU9W4bE8ntB90neif5LxhL0vtiXwnnNgcIJuEEP8
+	 7mLP1D2w27CL4zg73QE4KjhH7A7TGKWvLrzzxT0c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391033AbgAXLVQ (ORCPT
+        id S2390953AbgAXLUm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:21:16 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:57382 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390799AbgAXLVP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:21:15 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=8NtwvVXwMbEeKGtQBpJWoIGytCazgM6ygP8M0AMB/oU=; b=uw5i2aWn7LL3opxrLL8s3yLU7
-        OlFhXFgymnVfWwiFsQv7xuY8rEzyIYDxDrHR1EfJUBpR7CaOxyBVzpag72ZwQO2HsATPjMEIsqnMx
-        FxGLIux7G5uCfbbZhltleiqFqOnQCntQkAm0DW8m4MmYDdbxw8O7gP6HVg9EeIiP0WRgTu1FdaMrp
-        sNjmWJFMBE4hR09qjY/ekkPZvjZt2jLDGLhd60fvpVg5yQRhlgUOINx0CfZL49q8mhHt7CRiDnSXO
-        6evHpbTq9I7kRdNX3bFlOnM+U412f1nq4ftd26DBGGCqqkRFB56va9jGFf2xU4ezJZL49Z2jGV82m
-        +eJ6gnGNQ==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iux1R-0002C3-Uo; Fri, 24 Jan 2020 11:21:09 +0000
-Date:   Fri, 24 Jan 2020 03:21:09 -0800
-From:   Matthew Wilcox <willy@infradead.org>
-To:     David Howells <dhowells@redhat.com>
-Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RFC][PATCH] iov_iter: Add ITER_MAPPING
-Message-ID: <20200124112109.GK4675@bombadil.infradead.org>
-References: <20200122193306.GB4675@bombadil.infradead.org>
- <3577430.1579705075@warthog.procyon.org.uk>
- <3785795.1579777499@warthog.procyon.org.uk>
+        Fri, 24 Jan 2020 06:20:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58402 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390938AbgAXLUh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:20:37 -0500
+Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 02A9620704;
+        Fri, 24 Jan 2020 11:20:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579864836;
+        bh=mHea0e1HD+THVTVgUwDuDWhMJFJReXvdt1noQdUacTs=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=R4oYht4r0/cKhPMn4UaoFYltbBdcftzcx+tbTdG32UU07QtbhBO+55W4ID4N+AmG4
+         YQbpT+xDjDeLSpBPSNIPpMUUh3DPPZ8tKcDoa/MlUFibzQji5sSFuubeXEm0UyzloJ
+         ZNufzyTwlTzUJLh3GsPBS2uDBdNt2MYL5JyT4tRY=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Jernej Skrabec <jernej.skrabec@siol.net>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 379/639] ARM: dts: sun8i-h3: Fix wifi in Beelink X2 DT
+Date:   Fri, 24 Jan 2020 10:29:09 +0100
+Message-Id: <20200124093134.467309992@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
+References: <20200124093047.008739095@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3785795.1579777499@warthog.procyon.org.uk>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 23, 2020 at 11:04:59AM +0000, David Howells wrote:
-> Matthew Wilcox <willy@infradead.org> wrote:
-> 
-> > It's perfectly legal to have compound pages in the page cache.  Call
-> > find_subpage(page, xas.xa_index) unconditionally.
-> 
-> Like this?
-> 
-> #define iterate_mapping(i, n, __v, skip, STEP) {		\
-> 	struct page *page;					\
-> 	size_t wanted = n, seg, offset;				\
-> 	loff_t start = i->mapping_start + skip;			\
-> 	pgoff_t index = start >> PAGE_SHIFT;			\
-> 								\
-> 	XA_STATE(xas, &i->mapping->i_pages, index);		\
-> 								\
-> 	rcu_read_lock();						\
-> 	xas_for_each(&xas, page, ULONG_MAX) {				\
+From: Jernej Skrabec <jernej.skrabec@siol.net>
 
-I actually quite liked the iterator you had before; I was thinking of
-wrapping it up as xas_for_each_contig().
+[ Upstream commit ca0961011db57e39880df0b5708df8aa3339dc6f ]
 
-> 		if (xas_retry(&xas, page) || xa_is_value(page)) {	\
-> 			WARN_ON(1);					\
-> 			break;						\
-> 		}							\
+mmc1 node where wifi module is connected doesn't have properly defined
+power supplies so wifi module is never powered up. Fix that by
+specifying additional power supplies.
 
-Actually, xas_retry() can happen, even with the page itself pinned.  It
-indicates the xarray data structure changed under you while walking it
-and you need to restart the walk from the top (arguably this shouldn't
-be exposed to callers at all, and in the future it may not be ... it's
-something inherited from the radix tree interface).
+Additionally, this STB may have either Realtek or Broadcom based wifi
+module. One based on Broadcom module also needs external clock to work
+properly. Fix that by adding clock property to wifi_pwrseq node.
 
-So this should be:
+Fixes: e582b47a9252 ("ARM: dts: sun8i-h3: Add dts for the Beelink X2 STB")
+Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/arm/boot/dts/sun8i-h3-beelink-x2.dts | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-		if (xas_retry(&xas, page))
-			continue;
-		if (WARN_ON(xa_is_value(page)))
-			break;
+diff --git a/arch/arm/boot/dts/sun8i-h3-beelink-x2.dts b/arch/arm/boot/dts/sun8i-h3-beelink-x2.dts
+index 25540b7694d59..6523d81dd9c49 100644
+--- a/arch/arm/boot/dts/sun8i-h3-beelink-x2.dts
++++ b/arch/arm/boot/dts/sun8i-h3-beelink-x2.dts
+@@ -90,6 +90,8 @@
+ 	wifi_pwrseq: wifi_pwrseq {
+ 		compatible = "mmc-pwrseq-simple";
+ 		reset-gpios = <&r_pio 0 7 GPIO_ACTIVE_LOW>; /* PL7 */
++		clocks = <&rtc 1>;
++		clock-names = "ext_clock";
+ 	};
+ 
+ 	sound_spdif {
+@@ -155,6 +157,8 @@
+ 
+ &mmc1 {
+ 	vmmc-supply = <&reg_vcc3v3>;
++	vqmmc-supply = <&reg_vcc3v3>;
++	mmc-pwrseq = <&wifi_pwrseq>;
+ 	bus-width = <4>;
+ 	non-removable;
+ 	status = "okay";
+-- 
+2.20.1
 
-> 		__v.bv_page = find_subpage(page, xas.xa_index);		\
 
-Yes.
 
-> 		offset = (i->mapping_start + skip) & ~PAGE_MASK;	\
-> 		seg = PAGE_SIZE - offset;			\
-> 		__v.bv_offset = offset;				\
-> 		__v.bv_len = min(n, seg);			\
-> 		(void)(STEP);					\
-> 		n -= __v.bv_len;				\
-> 		skip += __v.bv_len;				\
-> 		if (n == 0)					\
-> 			break;					\
-> 	}							\
-> 	rcu_read_unlock();					\
-> 	n = wanted - n;						\
-> }
-> 
-> Note that the walk is not restartable - and the array is supposed to have been
-> fully populated by the caller for the range specified - so I've made it print
-> a warning and end the loop if xas_retry() or xa_is_value() return true (which
-> takes care of the !page case too).  Possibly I could just leave it to fault in
-> this case and not check.
-> 
-> If PageHuge(page) is true, I presume I need to support that too.  How do I
-> find out how big the page is?
-
-PageHuge() is only going to be true for hugetlbfs mappings.  I'm OK
-with not supporting those for now ... eventually I want to get rid of
-the special cases in the page cache for hugetlbfs, but there's about
-six other projects standing between me and that.
