@@ -2,135 +2,127 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69631C32771
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 18:53:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D988BC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 18:54:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4DCE92071E
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 18:53:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC5142075D
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 18:54:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DAXjtZMQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391754AbgAXSxw (ORCPT
+        id S2391772AbgAXSyK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 13:53:52 -0500
-Received: from mga18.intel.com ([134.134.136.126]:51262 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391700AbgAXSxu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 13:53:50 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Jan 2020 10:53:50 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,358,1574150400"; 
-   d="scan'208";a="222692911"
-Received: from unknown (HELO gayuk-dev-mach.sc.intel.com) ([10.3.79.172])
-  by fmsmga008.fm.intel.com with ESMTP; 24 Jan 2020 10:53:49 -0800
-From:   Gayatri Kammela <gayatri.kammela@intel.com>
-To:     platform-driver-x86@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, vishwanath.somayaji@intel.com,
-        dvhart@infradead.org, mika.westerberg@intel.com,
-        peterz@infradead.org, charles.d.prestopine@intel.com,
-        Gayatri Kammela <gayatri.kammela@intel.com>,
-        Srinivas Pandruvada <srinivas.pandruvada@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "David E . Box" <david.e.box@intel.com>
-Subject: [PATCH v1 7/7] platform/x86: intel_pmc_core: Add debugfs support to access live status registers
-Date:   Fri, 24 Jan 2020 10:50:28 -0800
-Message-Id: <d83b86cb79b304b573cf27718bed685ee93489d2.1579890793.git.gayatri.kammela@intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <cover.1579890793.git.gayatri.kammela@intel.com>
-References: <cover.1579890793.git.gayatri.kammela@intel.com>
-In-Reply-To: <cover.1579890793.git.gayatri.kammela@intel.com>
-References: <cover.1579890793.git.gayatri.kammela@intel.com>
+        Fri, 24 Jan 2020 13:54:10 -0500
+Received: from mail-vk1-f193.google.com ([209.85.221.193]:37240 "EHLO
+        mail-vk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391148AbgAXSyK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 13:54:10 -0500
+Received: by mail-vk1-f193.google.com with SMTP id b129so845152vka.4
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jan 2020 10:54:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=k9IbFX230h+2YJkS//36Bone21Vlk4mvmv7ukUtwlrg=;
+        b=DAXjtZMQxree0LJO6fobOGURErQ0ju/inC8/fsZF0REb/T72vFjS7K0OhD0Y+lf2gK
+         lMPRw+NUBnFlszUuo1F/uLO7RoYDcq6CWVZ5BnXUxTgouURwMS2+PEcc6JnpM+rHv1lO
+         Q+wAY4Fvcu1Tt5CmyotNaXTNXtiYUbF2NVpmLkfbcJaUW2KVvuXLwarJvxsy/CmqxCzc
+         lF0yf3bRXw9OsO6bwUqmrWWhymuzSbWXcS4C1Yxq5LfRRbxfXuwQcB+KudGLC8h6tVTk
+         XaEai9+ATEb46ZczpqDbhaWNgUERSjbEX/rDpyXjd+8ejWhSyzbE4tkDbrAZZHxu2to0
+         jFjw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=k9IbFX230h+2YJkS//36Bone21Vlk4mvmv7ukUtwlrg=;
+        b=SuiJHoLdMiRLZI97I37El/5Damuy1gmsJzRB2w0gVOQqNAGSz64LV6+Ib9xxGPjqJ+
+         MK6+yl/wY3PJ7tVUlJHjN0r5PKSUAsFomgduY6/wjrVtwaJ7QeKQHhXazjksB0FQO6AV
+         MrKaX/ktehBLeG1gbnFBPxoiS/c0bPHFEg+4qP6jysRUwExOVwmdYEP1EcZR4O7w8oxj
+         oDZdJp4hGry21CRRGCDLtFxIYAK3Px1wq8sSdQsQ+YeGguWltKuDWw/dUIq8E0juV0kK
+         6V03UlnPCmnt8PUHtK4Lr/EW2PXZI6Zz39Fwqr/Unni0O+k/e/jedFXS4QlvLI5lQEQe
+         Nv1A==
+X-Gm-Message-State: APjAAAUuCiADwQHeh2uZir8A0rRlj1BXyIYFw7I21kevECf6VvLMfLtz
+        WvGxXsDWC75RKViz+NmASLlIbiDWv3CB9xF4acxPY09grdklUg==
+X-Google-Smtp-Source: APXvYqw2YjgP0ld3PdNvgZHc2Qrs2rZ5eSmsUx2bHhYUETj9IyOKKofaCjFO6+esQ4rua8ianeDtcJVIAImimd5dRp4=
+X-Received: by 2002:a1f:db81:: with SMTP id s123mr2936809vkg.45.1579892048933;
+ Fri, 24 Jan 2020 10:54:08 -0800 (PST)
+MIME-Version: 1.0
+References: <20200123180436.99487-1-bgardon@google.com> <20200123180436.99487-11-bgardon@google.com>
+ <aaf2afbb-1613-cc78-8b4f-6a7318acb22a@redhat.com>
+In-Reply-To: <aaf2afbb-1613-cc78-8b4f-6a7318acb22a@redhat.com>
+From:   Ben Gardon <bgardon@google.com>
+Date:   Fri, 24 Jan 2020 10:53:57 -0800
+Message-ID: <CANgfPd-cj4Bau4fYRoQY3hW0K4w19LaFr=6RjgyZGO65fZuq9g@mail.gmail.com>
+Subject: Re: [PATCH v4 10/10] KVM: selftests: Move memslot 0 above KVM
+ internal memslots
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        linux-kselftest@vger.kernel.org,
+        Cannon Matthews <cannonmatthews@google.com>,
+        Peter Xu <peterx@redhat.com>,
+        Andrew Jones <drjones@redhat.com>,
+        Peter Shier <pshier@google.com>,
+        Oliver Upton <oupton@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Just like status registers, Tiger Lake has another set of 6 registers
-that help with status of the low power mode requirements. They are
-latched on every PC10 entry/exit and S0ix.y entry/exit as well.
+On Fri, Jan 24, 2020 at 1:01 AM Paolo Bonzini <pbonzini@redhat.com> wrote:
+>
+> On 23/01/20 19:04, Ben Gardon wrote:
+> > KVM creates internal memslots between 3 and 4 GiB paddrs on the first
+> > vCPU creation. If memslot 0 is large enough it collides with these
+> > memslots an causes vCPU creation to fail. Instead of creating memslot 0
+> > at paddr 0, start it 4G into the guest physical address space.
+> >
+> > Signed-off-by: Ben Gardon <bgardon@google.com>
+> > ---
+> >  tools/testing/selftests/kvm/lib/kvm_util.c | 11 +++++++----
+> >  1 file changed, 7 insertions(+), 4 deletions(-)
+>
+> This breaks all tests for me:
+>
+>    $ ./state_test
+>    Testing guest mode: PA-bits:ANY, VA-bits:48,  4K pages
+>    Guest physical address width detected: 46
+>    ==== Test Assertion Failure ====
+>   lib/x86_64/processor.c:580: false
+>   pid=4873 tid=4873 - Success
+>      1  0x0000000000409996: addr_gva2gpa at processor.c:579
+>      2  0x0000000000406a38: addr_gva2hva at kvm_util.c:1636
+>      3  0x000000000041036c: kvm_vm_elf_load at elf.c:192
+>      4  0x0000000000409ea9: vm_create_default at processor.c:829
+>      5  0x0000000000400f6f: main at state_test.c:132
+>      6  0x00007f21bdf90494: ?? ??:0
+>      7  0x0000000000401287: _start at ??:?
+>   No mapping for vm virtual address, gva: 0x400000
 
-Though status and live status registers show the status of same list
-of requirements, live status registers show the status of the low power
-mode requirements at the time of reading.
+Uh oh, I obviously did not test this patch adequately. My apologies.
+I'll send another version of this patch after I've had time to test it
+better. The memslots between 3G and 4G are also somewhat x86 specific,
+so maybe this code should be elsewhere.
 
-Cc: Srinivas Pandruvada <srinivas.pandruvada@intel.com>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: David E. Box <david.e.box@intel.com>
-Signed-off-by: Gayatri Kammela <gayatri.kammela@intel.com>
----
- drivers/platform/x86/intel_pmc_core.c | 19 +++++++++++++++++++
- drivers/platform/x86/intel_pmc_core.h |  2 ++
- 2 files changed, 21 insertions(+)
+>
+> Memslot 0 should not be too large, so this patch should not be needed.
 
-diff --git a/drivers/platform/x86/intel_pmc_core.c b/drivers/platform/x86/intel_pmc_core.c
-index 92c9840b5029..d583cd5adb31 100644
---- a/drivers/platform/x86/intel_pmc_core.c
-+++ b/drivers/platform/x86/intel_pmc_core.c
-@@ -570,6 +570,7 @@ static const struct pmc_reg_map tgl_reg_map = {
- 	.lpm_residency_offset = TGL_LPM_RESIDENCY_OFFSET,
- 	.lpm_sts = tgl_lpm_maps,
- 	.lpm_status_offset = TGL_LPM_STATUS_OFFSET,
-+	.lpm_live_status_offset = TGL_LPM_LIVE_STATUS_OFFSET,
- };
- 
- static inline u8 pmc_core_reg_read_byte(struct pmc_dev *pmcdev, int offset)
-@@ -1018,6 +1019,18 @@ static int pmc_core_substate_sts_regs_show(struct seq_file *s, void *unused)
- }
- DEFINE_SHOW_ATTRIBUTE(pmc_core_substate_sts_regs);
- 
-+static int pmc_core_substate_l_sts_regs_show(struct seq_file *s, void *unused)
-+{
-+	struct pmc_dev *pmcdev = s->private;
-+	const struct pmc_bit_map **maps = pmcdev->map->lpm_sts;
-+	u32 offset = pmcdev->map->lpm_live_status_offset;
-+
-+	pmc_core_lpm_display(pmcdev, NULL, s, offset, "LIVE_STATUS", maps);
-+
-+	return 0;
-+}
-+DEFINE_SHOW_ATTRIBUTE(pmc_core_substate_l_sts_regs);
-+
- static int pmc_core_pkgc_show(struct seq_file *s, void *unused)
- {
- 	struct pmc_dev *pmcdev = s->private;
-@@ -1095,6 +1108,12 @@ static void pmc_core_dbgfs_register(struct pmc_dev *pmcdev)
- 				    pmcdev->dbgfs_dir, pmcdev,
- 				    &pmc_core_substate_sts_regs_fops);
- 	}
-+
-+	if (pmcdev->map->lpm_status_offset) {
-+		debugfs_create_file("substate_live_status_registers", 0444,
-+				    pmcdev->dbgfs_dir, pmcdev,
-+				    &pmc_core_substate_l_sts_regs_fops);
-+	}
- }
- #else
- static inline void pmc_core_dbgfs_register(struct pmc_dev *pmcdev)
-diff --git a/drivers/platform/x86/intel_pmc_core.h b/drivers/platform/x86/intel_pmc_core.h
-index 3fdf4735c56f..1bbdffe80bde 100644
---- a/drivers/platform/x86/intel_pmc_core.h
-+++ b/drivers/platform/x86/intel_pmc_core.h
-@@ -196,6 +196,7 @@ enum ppfear_regs {
- 
- /* Tigerlake Low Power Mode debug registers */
- #define TGL_LPM_STATUS_OFFSET			0x1C3C
-+#define TGL_LPM_LIVE_STATUS_OFFSET		0x1C5C
- 
- const char *lpm_modes[] = {
- 	"S0i2.0",
-@@ -257,6 +258,7 @@ struct pmc_reg_map {
- 	const u32 lpm_en_offset;
- 	const u32 lpm_residency_offset;
- 	const u32 lpm_status_offset;
-+	const u32 lpm_live_status_offset;
- };
- 
- /**
--- 
-2.17.1
+I found that 3GB was not sufficient for memslot zero in my testing
+because it needs to contain both the stack for every vCPU and the page
+tables for the VM. When I ran with 416 vCPUs and of 1.6TB of total
+ram, memslot zero needed to be substantially larger than 3G. Just the
+4K guest PTEs required to map 4G per-vCPU for 416 vCPUs require (((416
+* (4<<30)) / 4096) * 8) / (1<<30) = 3.25GB of memory.
+I suppose another slot could be used for the page tables, but that
+would complicate the implementation of any tests that want to run
+large VMs substantially.
 
+>
+> Paolo
+>
