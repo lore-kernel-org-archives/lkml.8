@@ -2,245 +2,177 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9887BC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 16:20:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D8B8C32771
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 16:22:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6110B2087E
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 16:20:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7DD82081E
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 16:22:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NT9sfgD+"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="U/xynMRK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387985AbgAXQUd (ORCPT
+        id S2387966AbgAXQWs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 11:20:33 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:51353 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2389697AbgAXQUa (ORCPT
+        Fri, 24 Jan 2020 11:22:48 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:43633 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730740AbgAXQWq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 11:20:30 -0500
+        Fri, 24 Jan 2020 11:22:46 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579882828;
+        s=mimecast20190719; t=1579882965;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=brz54vRaQ0/yHXZ/qNT1DPv+N2eYASm4IBhoPhiL4CI=;
-        b=NT9sfgD+KsW7p9il0wU2RFRClB8KNwnicu9RHlk6MNIG0Q3VkZCVOzTJHqXY5sc6EAxEMH
-        +0mEiWN59P4M+NJJXymIXc4+LRcr5N26eTy8yyKPrqJ3ElE1Sk0mc9Olf8t+mL6pM2nE3F
-        QMacV8kK47WKMv8RYsO/g1/Bltfk/ik=
+         in-reply-to:in-reply-to:references:references;
+        bh=zxZZMWVN9sCwtfhMOOkZma/glfhYI1JkiSjCb7Jkp9w=;
+        b=U/xynMRKMq285Uw5IZng0OY1lZzUhgx9y3dxCf0Hmo/9stGLC+IUkmM98SEaw2Mhth1JyN
+        wakncVuQaFOPzf16mkkqW2tH7fqkQlwghJxB4yc78cqdzWBWXJkB7zy0d85pbemDZsj3pl
+        3Xo2gh5GwQXoKWr1rK2t5XZockWZZvE=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-186-r2_ovX2VP0e4xPpNy3KAqA-1; Fri, 24 Jan 2020 11:20:24 -0500
-X-MC-Unique: r2_ovX2VP0e4xPpNy3KAqA-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+ us-mta-5-egqxvG0NOou3RdXE19F3uA-1; Fri, 24 Jan 2020 11:22:41 -0500
+X-MC-Unique: egqxvG0NOou3RdXE19F3uA-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D27BF186925C;
-        Fri, 24 Jan 2020 16:20:20 +0000 (UTC)
-Received: from [10.36.116.39] (ovpn-116-39.ams2.redhat.com [10.36.116.39])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 9785E10016E8;
-        Fri, 24 Jan 2020 16:20:01 +0000 (UTC)
-Subject: Re: [PATCH v16.1 0/9] mm / virtio: Provide support for free page
- reporting
-From:   David Hildenbrand <david@redhat.com>
-To:     Alexander Graf <graf@amazon.com>,
-        Alexander Duyck <alexander.duyck@gmail.com>,
-        kvm@vger.kernel.org, mst@redhat.com, linux-kernel@vger.kernel.org,
-        willy@infradead.org, mhocko@kernel.org, linux-mm@kvack.org,
-        akpm@linux-foundation.org, mgorman@techsingularity.net,
-        vbabka@suse.cz
-Cc:     yang.zhang.wz@gmail.com, nitesh@redhat.com, konrad.wilk@oracle.com,
-        pagupta@redhat.com, riel@surriel.com, lcapitulino@redhat.com,
-        dave.hansen@intel.com, wei.w.wang@intel.com, aarcange@redhat.com,
-        pbonzini@redhat.com, dan.j.williams@intel.com,
-        alexander.h.duyck@linux.intel.com, osalvador@suse.de,
-        "Paterson-Jones, Roland" <rolandp@amazon.com>, hannes@cmpxchg.org,
-        hare@suse.com
-References: <20200122173040.6142.39116.stgit@localhost.localdomain>
- <914aa4c3-c814-45e0-830b-02796b00b762@amazon.com>
- <0e2d04a8-af74-e2db-cab0-c67286e33a2a@redhat.com>
- <5d2daec8-985c-c0a4-4832-8e5493316306@amazon.com>
- <86dfc549-c5bc-e8b2-644d-4baceb8dc746@redhat.com>
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
-Organization: Red Hat GmbH
-Message-ID: <811dbba2-f542-04da-1a7f-00c3785a39d0@redhat.com>
-Date:   Fri, 24 Jan 2020 17:20:00 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7A91C90AFD5;
+        Fri, 24 Jan 2020 16:22:37 +0000 (UTC)
+Received: from [10.10.125.90] (ovpn-125-90.rdu2.redhat.com [10.10.125.90])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 896875C28D;
+        Fri, 24 Jan 2020 16:22:34 +0000 (UTC)
+Subject: Re: [PATCH] Add prctl support for controlling mem reclaim V4
+To:     Shakeel Butt <shakeelb@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+References: <20191112001900.9206-1-mchristi@redhat.com>
+ <CALvZod47XyD2x8TuZcb9PgeVY14JBwNhsUpN3RAeAt+RJJC=hg@mail.gmail.com>
+Cc:     linux-api@vger.kernel.org, idryomov@gmail.com,
+        Michal Hocko <mhocko@kernel.org>, david@fromorbit.com,
+        Linux MM <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>, linux-scsi@vger.kernel.org,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-block@vger.kernel.org, martin@urbackup.org,
+        Damien.LeMoal@wdc.com, Michal Hocko <mhocko@suse.com>,
+        Masato Suzuki <masato.suzuki@wdc.com>
+From:   Mike Christie <mchristi@redhat.com>
+Message-ID: <5E2B19C9.6080907@redhat.com>
+Date:   Fri, 24 Jan 2020 10:22:33 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
+ Thunderbird/38.6.0
 MIME-Version: 1.0
-In-Reply-To: <86dfc549-c5bc-e8b2-644d-4baceb8dc746@redhat.com>
+In-Reply-To: <CALvZod47XyD2x8TuZcb9PgeVY14JBwNhsUpN3RAeAt+RJJC=hg@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 24.01.20 14:25, David Hildenbrand wrote:
-> On 23.01.20 15:52, Alexander Graf wrote:
+On 12/05/2019 04:43 PM, Shakeel Butt wrote:
+> On Mon, Nov 11, 2019 at 4:19 PM Mike Christie <mchristi@redhat.com> wrote:
 >>
+>> There are several storage drivers like dm-multipath, iscsi, tcmu-runner,
+>> amd nbd that have userspace components that can run in the IO path. For
+>> example, iscsi and nbd's userspace deamons may need to recreate a socket
+>> and/or send IO on it, and dm-multipath's daemon multipathd may need to
+>> send SG IO or read/write IO to figure out the state of paths and re-set
+>> them up.
 >>
->> On 23.01.20 15:05, David Hildenbrand wrote:
->>> On 23.01.20 11:20, Alexander Graf wrote:
->>>> Hi Alex,
->>>>
->>>> On 22.01.20 18:43, Alexander Duyck wrote:
->>>>> This series provides an asynchronous means of reporting free guest pages
->>>>> to a hypervisor so that the memory associated with those pages can be
->>>>> dropped and reused by other processes and/or guests on the host. Using
->>>>> this it is possible to avoid unnecessary I/O to disk and greatly improve
->>>>> performance in the case of memory overcommit on the host.
->>>>>
->>>>> When enabled we will be performing a scan of free memory every 2 seconds
->>>>> while pages of sufficiently high order are being freed. In each pass at
->>>>> least one sixteenth of each free list will be reported. By doing this we
->>>>> avoid racing against other threads that may be causing a high amount of
->>>>> memory churn.
->>>>>
->>>>> The lowest page order currently scanned when reporting pages is
->>>>> pageblock_order so that this feature will not interfere with the use of
->>>>> Transparent Huge Pages in the case of virtualization.
->>>>>
->>>>> Currently this is only in use by virtio-balloon however there is the hope
->>>>> that at some point in the future other hypervisors might be able to make
->>>>> use of it. In the virtio-balloon/QEMU implementation the hypervisor is
->>>>> currently using MADV_DONTNEED to indicate to the host kernel that the page
->>>>> is currently free. It will be zeroed and faulted back into the guest the
->>>>> next time the page is accessed.
->>>>>
->>>>> To track if a page is reported or not the Uptodate flag was repurposed and
->>>>> used as a Reported flag for Buddy pages. We walk though the free list
->>>>> isolating pages and adding them to the scatterlist until we either
->>>>> encounter the end of the list, processed as many pages as were listed in
->>>>> nr_free prior to us starting, or have filled the scatterlist with pages to
->>>>> be reported. If we fill the scatterlist before we reach the end of the
->>>>> list we rotate the list so that the first unreported page we encounter is
->>>>> moved to the head of the list as that is where we will resume after we
->>>>> have freed the reported pages back into the tail of the list.
->>>>>
->>>>> Below are the results from various benchmarks. I primarily focused on two
->>>>> tests. The first is the will-it-scale/page_fault2 test, and the other is
->>>>> a modified version of will-it-scale/page_fault1 that was enabled to use
->>>>> THP. I did this as it allows for better visibility into different parts
->>>>> of the memory subsystem. The guest is running with 32G for RAM on one
->>>>> node of a E5-2630 v3. The host has had some features such as CPU turbo
->>>>> disabled in the BIOS.
->>>>>
->>>>> Test                   page_fault1 (THP)    page_fault2
->>>>> Name            tasks  Process Iter  STDEV  Process Iter  STDEV
->>>>> Baseline            1    1012402.50  0.14%     361855.25  0.81%
->>>>>                      16    8827457.25  0.09%    3282347.00  0.34%
->>>>>
->>>>> Patches Applied     1    1007897.00  0.23%     361887.00  0.26%
->>>>>                      16    8784741.75  0.39%    3240669.25  0.48%
->>>>>
->>>>> Patches Enabled     1    1010227.50  0.39%     359749.25  0.56%
->>>>>                      16    8756219.00  0.24%    3226608.75  0.97%
->>>>>
->>>>> Patches Enabled     1    1050982.00  4.26%     357966.25  0.14%
->>>>>    page shuffle      16    8672601.25  0.49%    3223177.75  0.40%
->>>>>
->>>>> Patches enabled     1    1003238.00  0.22%     360211.00  0.22%
->>>>>    shuffle w/ RFC    16    8767010.50  0.32%    3199874.00  0.71%
->>>>>
->>>>> The results above are for a baseline with a linux-next-20191219 kernel,
->>>>> that kernel with this patch set applied but page reporting disabled in
->>>>> virtio-balloon, the patches applied and page reporting fully enabled, the
->>>>> patches enabled with page shuffling enabled, and the patches applied with
->>>>> page shuffling enabled and an RFC patch that makes used of MADV_FREE in
->>>>> QEMU. These results include the deviation seen between the average value
->>>>> reported here versus the high and/or low value. I observed that during the
->>>>> test memory usage for the first three tests never dropped whereas with the
->>>>> patches fully enabled the VM would drop to using only a few GB of the
->>>>> host's memory when switching from memhog to page fault tests.
->>>>>
->>>>> Any of the overhead visible with this patch set enabled seems due to page
->>>>> faults caused by accessing the reported pages and the host zeroing the page
->>>>> before giving it back to the guest. This overhead is much more visible when
->>>>> using THP than with standard 4K pages. In addition page shuffling seemed to
->>>>> increase the amount of faults generated due to an increase in memory churn.
->>>>> The overhead is reduced when using MADV_FREE as we can avoid the extra
->>>>> zeroing of the pages when they are reintroduced to the host, as can be seen
->>>>> when the RFC is applied with shuffling enabled.
->>>>>
->>>>> The overall guest size is kept fairly small to only a few GB while the test
->>>>> is running. If the host memory were oversubscribed this patch set should
->>>>> result in a performance improvement as swapping memory in the host can be
->>>>> avoided.
->>>>
->>>>
->>>> I really like the approach overall. Voluntarily propagating free memory
->>>> from a guest to the host has been a sore point ever since KVM was
->>>> around. This solution looks like a very elegant way to do so.
->>>>
->>>> The big piece I'm missing is the page cache. Linux will by default try
->>>> to keep the free list as small as it can in favor of page cache, so most
->>>> of the benefit of this patch set will be void in real world scenarios.
->>>
->>> One approach is to move (parts of) the page cache from the guest to the
->>> hypervisor - e.g., using emulated NVDIMM or virtio-pmem.
+>> In the kernel these drivers have access to GFP_NOIO/GFP_NOFS and the
+>> memalloc_*_save/restore functions to control the allocation behavior,
+>> but for userspace we would end up hitting an allocation that ended up
+>> writing data back to the same device we are trying to allocate for.
+>> The device is then in a state of deadlock, because to execute IO the
+>> device needs to allocate memory, but to allocate memory the memory
+>> layers want execute IO to the device.
 >>
->> Whether you can do that depends heavily on your virtualization 
->> environment. On a host with single tenant VMs, that's definitely 
->> feasible. In a Kubernetes environment, it might also be feasible.
+>> Here is an example with nbd using a local userspace daemon that performs
+>> network IO to a remote server. We are using XFS on top of the nbd device,
+>> but it can happen with any FS or other modules layered on top of the nbd
+>> device that can write out data to free memory.  Here a nbd daemon helper
+>> thread, msgr-worker-1, is performing a write/sendmsg on a socket to execute
+>> a request. This kicks off a reclaim operation which results in a WRITE to
+>> the nbd device and the nbd thread calling back into the mm layer.
+>>
+>> [ 1626.609191] msgr-worker-1   D    0  1026      1 0x00004000
+>> [ 1626.609193] Call Trace:
+>> [ 1626.609195]  ? __schedule+0x29b/0x630
+>> [ 1626.609197]  ? wait_for_completion+0xe0/0x170
+>> [ 1626.609198]  schedule+0x30/0xb0
+>> [ 1626.609200]  schedule_timeout+0x1f6/0x2f0
+>> [ 1626.609202]  ? blk_finish_plug+0x21/0x2e
+>> [ 1626.609204]  ? _xfs_buf_ioapply+0x2e6/0x410
+>> [ 1626.609206]  ? wait_for_completion+0xe0/0x170
+>> [ 1626.609208]  wait_for_completion+0x108/0x170
+>> [ 1626.609210]  ? wake_up_q+0x70/0x70
+>> [ 1626.609212]  ? __xfs_buf_submit+0x12e/0x250
+>> [ 1626.609214]  ? xfs_bwrite+0x25/0x60
+>> [ 1626.609215]  xfs_buf_iowait+0x22/0xf0
+>> [ 1626.609218]  __xfs_buf_submit+0x12e/0x250
+>> [ 1626.609220]  xfs_bwrite+0x25/0x60
+>> [ 1626.609222]  xfs_reclaim_inode+0x2e8/0x310
+>> [ 1626.609224]  xfs_reclaim_inodes_ag+0x1b6/0x300
+>> [ 1626.609227]  xfs_reclaim_inodes_nr+0x31/0x40
+>> [ 1626.609228]  super_cache_scan+0x152/0x1a0
+>> [ 1626.609231]  do_shrink_slab+0x12c/0x2d0
+>> [ 1626.609233]  shrink_slab+0x9c/0x2a0
+>> [ 1626.609235]  shrink_node+0xd7/0x470
+>> [ 1626.609237]  do_try_to_free_pages+0xbf/0x380
+>> [ 1626.609240]  try_to_free_pages+0xd9/0x1f0
+>> [ 1626.609245]  __alloc_pages_slowpath+0x3a4/0xd30
+>> [ 1626.609251]  ? ___slab_alloc+0x238/0x560
+>> [ 1626.609254]  __alloc_pages_nodemask+0x30c/0x350
+>> [ 1626.609259]  skb_page_frag_refill+0x97/0xd0
+>> [ 1626.609274]  sk_page_frag_refill+0x1d/0x80
+>> [ 1626.609279]  tcp_sendmsg_locked+0x2bb/0xdd0
+>> [ 1626.609304]  tcp_sendmsg+0x27/0x40
+>> [ 1626.609307]  sock_sendmsg+0x54/0x60
+>> [ 1626.609308]  ___sys_sendmsg+0x29f/0x320
+>> [ 1626.609313]  ? sock_poll+0x66/0xb0
+>> [ 1626.609318]  ? ep_item_poll.isra.15+0x40/0xc0
+>> [ 1626.609320]  ? ep_send_events_proc+0xe6/0x230
+>> [ 1626.609322]  ? hrtimer_try_to_cancel+0x54/0xf0
+>> [ 1626.609324]  ? ep_read_events_proc+0xc0/0xc0
+>> [ 1626.609326]  ? _raw_write_unlock_irq+0xa/0x20
+>> [ 1626.609327]  ? ep_scan_ready_list.constprop.19+0x218/0x230
+>> [ 1626.609329]  ? __hrtimer_init+0xb0/0xb0
+>> [ 1626.609331]  ? _raw_spin_unlock_irq+0xa/0x20
+>> [ 1626.609334]  ? ep_poll+0x26c/0x4a0
+>> [ 1626.609337]  ? tcp_tsq_write.part.54+0xa0/0xa0
+>> [ 1626.609339]  ? release_sock+0x43/0x90
+>> [ 1626.609341]  ? _raw_spin_unlock_bh+0xa/0x20
+>> [ 1626.609342]  __sys_sendmsg+0x47/0x80
+>> [ 1626.609347]  do_syscall_64+0x5f/0x1c0
+>> [ 1626.609349]  ? prepare_exit_to_usermode+0x75/0xa0
+>> [ 1626.609351]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+>>
+>> This patch adds a new prctl command that daemons can use after they have
+>> done their initial setup, and before they start to do allocations that
+>> are in the IO path. It sets the PF_MEMALLOC_NOIO and PF_LESS_THROTTLE
+>> flags so both userspace block and FS threads can use it to avoid the
+>> allocation recursion and try to prevent from being throttled while
+>> writing out data to free up memory.
+>>
+>> Signed-off-by: Mike Christie <mchristi@redhat.com>
+>> Acked-by: Michal Hocko <mhocko@suse.com>
+>> Tested-by: Masato Suzuki <masato.suzuki@wdc.com>
+>> Reviewed-by: Damien Le Moal <damien.lemoal@wdc.com>
 > 
-> I would be interesting in which environments this is an actual problem
-> that can't be solved in the hypervisor (e.g., see below).
+> I suppose this patch should be routed through MM tree, so, CCing Andrew.
+>
 
-Okay, as Alex told me offline, (somewhat obvious) environments are where
-the hypervisor page cache is not involved (e.g., vfio etc.)
+Andrew and other mm/storage developers,
 
--- 
-Thanks,
+Do I need to handle anything else for this patch, or are there any other
+concerns? Is this maybe something we want to talk about at a quick LSF
+session?
 
-David / dhildenb
+I have retested it with Linus's current tree. It still applies cleanly
+(just some offsets), and fixes the problem described above we have been
+hitting.
 
