@@ -2,89 +2,105 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65600C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:42:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 543B5C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:42:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 336E724658
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:42:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="FcoKRz6i"
+	by mail.kernel.org (Postfix) with ESMTP id 1B05B222C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:42:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579858933;
+	bh=/XJ7uoeV3ZBLOj9+bODHJzvOanxWzqQdMHNnOhLskPA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Z4RrmMx7bOM4WJ/pfgM7pEWsMzUECV74OmXwJmK4fjqGo4XDOU52GbPK6jzc0JvWL
+	 3uGL9Ub7ns40cGhU59+LFEu34EjEVHmzA8H5mpvHAqy9X6qf/2Ne15b4Ff0Fbw0zGq
+	 QfnSSS0RjZ0+ToE2VVwunjsJkCQYUwJ7W8jJyseY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733114AbgAXJmG (ORCPT
+        id S1733131AbgAXJmL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 04:42:06 -0500
-Received: from ozlabs.org ([203.11.71.1]:60269 "EHLO ozlabs.org"
+        Fri, 24 Jan 2020 04:42:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39840 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731535AbgAXJmE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 04:42:04 -0500
-Received: by ozlabs.org (Postfix, from userid 1034)
-        id 483vLK1YJvz9sSb; Fri, 24 Jan 2020 20:42:01 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1579858921;
-        bh=ijs9DWaapmhyMwt/s0m86iyYYE/6ER+Falkp2AK4k1M=;
-        h=From:To:Cc:Subject:Date:From;
-        b=FcoKRz6iPslqhHKVdIsWR9rVztpcKIw7307asdvbyt1cd+nHvGdl/5gZ4Lri8dggx
-         CduFeUNsxqe0zinUssxanLSIfnJNYR5XM6iYK/rDVw2nSvfqj+kWa2TraA1PCCG3wl
-         xKZF8lPMlLsVJFAm8Ray3YvN+tc4wCToBJvIc31VhcYtflMhwBrKY4yn3+FhAefGw8
-         wgOpGb6+hXa9wNWhjdf9EVUbFrakNYGISydm2MgyZ5L9iPHp0j/JaYvmbiTtThCJEn
-         aN8u/8s1Tl82bjlGsaFFHGSMT2L2CGbrXu210NraO5C2P45zm+5SdD0KLwVXplkFn8
-         oqsD3HCOtq67g==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     netdev@vger.kernel.org
-Cc:     davem@davemloft.net, linux-kernel@vger.kernel.org,
-        security@kernel.org, ivansprundel@ioactive.com, vishal@chelsio.com
-Subject: [PATCH] net: cxgb3_main: Add CAP_NET_ADMIN check to CHELSIO_GET_MEM
-Date:   Fri, 24 Jan 2020 20:41:44 +1100
-Message-Id: <20200124094144.15831-1-mpe@ellerman.id.au>
-X-Mailer: git-send-email 2.21.1
+        id S1731535AbgAXJmJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 04:42:09 -0500
+Received: from localhost (unknown [145.15.244.15])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C2847222D9;
+        Fri, 24 Jan 2020 09:42:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579858928;
+        bh=/XJ7uoeV3ZBLOj9+bODHJzvOanxWzqQdMHNnOhLskPA=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=WP66bRFpkxW4hllPkG0Hwn8kK+hdwR6edFOBztYll6ctgl+P+7EUGKXHIYUkabGN3
+         5C7tmmeoin5UtEAeJIJMVQFco3MB/kQ9BC9zWnAQ3o4cXi8vu+GrWlFgdTNZ0XWAlF
+         Z8o43rbfzttxC1Xy15onVcb+3tiOs0ofpfe8hdSw=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
+        Zheng Yongjun <zhengyongjun3@huawei.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 082/102] firmware: arm_scmi: Fix doorbell ring logic for !CONFIG_64BIT
+Date:   Fri, 24 Jan 2020 10:31:23 +0100
+Message-Id: <20200124092819.042059075@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200124092806.004582306@linuxfoundation.org>
+References: <20200124092806.004582306@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The cxgb3 driver for "Chelsio T3-based gigabit and 10Gb Ethernet
-adapters" implements a custom ioctl as SIOCCHIOCTL/SIOCDEVPRIVATE in
-cxgb_extension_ioctl().
+From: Sudeep Holla <sudeep.holla@arm.com>
 
-One of the subcommands of the ioctl is CHELSIO_GET_MEM, which appears
-to read memory directly out of the adapter and return it to userspace.
-It's not entirely clear what the contents of the adapter memory
-contains, but the assumption is that it shouldn't be accessible to all
-users.
+[ Upstream commit 7bd39bc6bfdf96f5df0f92199bbc1a3ee2f2adb8 ]
 
-So add a CAP_NET_ADMIN check to the CHELSIO_GET_MEM case. Put it after
-the is_offload() check, which matches two of the other subcommands in
-the same function which also check for is_offload() and CAP_NET_ADMIN.
+The logic to ring the scmi performance fastchannel ignores the
+value read from the doorbell register in case of !CONFIG_64BIT.
+This bug also shows up as warning with '-Wunused-but-set-variable' gcc
+flag:
 
-Found by Ilja by code inspection, not tested as I don't have the
-required hardware.
+drivers/firmware/arm_scmi/perf.c: In function scmi_perf_fc_ring_db:
+drivers/firmware/arm_scmi/perf.c:323:7: warning: variable val set but
+			not used [-Wunused-but-set-variable]
 
-Reported-by: Ilja Van Sprundel <ivansprundel@ioactive.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Fix the same by aligning the logic with CONFIG_64BIT as used in the
+macro SCMI_PERF_FC_RING_DB().
+
+Fixes: 823839571d76 ("firmware: arm_scmi: Make use SCMI v2.0 fastchannel for performance protocol")
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Reported-by: Zheng Yongjun <zhengyongjun3@huawei.com>
+Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/chelsio/cxgb3/cxgb3_main.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/firmware/arm_scmi/perf.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/chelsio/cxgb3/cxgb3_main.c b/drivers/net/ethernet/chelsio/cxgb3/cxgb3_main.c
-index 58f89f6a040f..97ff8608f0ab 100644
---- a/drivers/net/ethernet/chelsio/cxgb3/cxgb3_main.c
-+++ b/drivers/net/ethernet/chelsio/cxgb3/cxgb3_main.c
-@@ -2448,6 +2448,8 @@ static int cxgb_extension_ioctl(struct net_device *dev, void __user *useraddr)
+diff --git a/drivers/firmware/arm_scmi/perf.c b/drivers/firmware/arm_scmi/perf.c
+index 4a8012e3cb8c3..601af4edad5e6 100644
+--- a/drivers/firmware/arm_scmi/perf.c
++++ b/drivers/firmware/arm_scmi/perf.c
+@@ -323,7 +323,7 @@ static void scmi_perf_fc_ring_db(struct scmi_fc_db_info *db)
  
- 		if (!is_offload(adapter))
- 			return -EOPNOTSUPP;
-+		if (!capable(CAP_NET_ADMIN))
-+			return -EPERM;
- 		if (!(adapter->flags & FULL_INIT_DONE))
- 			return -EIO;	/* need the memory controllers */
- 		if (copy_from_user(&t, useraddr, sizeof(t)))
+ 		if (db->mask)
+ 			val = ioread64_hi_lo(db->addr) & db->mask;
+-		iowrite64_hi_lo(db->set, db->addr);
++		iowrite64_hi_lo(db->set | val, db->addr);
+ 	}
+ #endif
+ }
 -- 
-2.21.1
+2.20.1
+
+
 
