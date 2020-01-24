@@ -2,226 +2,208 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B29AC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:35:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DE9EC32771
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:35:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5175214AF
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:35:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579858501;
-	bh=Zr280ZOvnlAAicf/2Lzpz+15QDtYrPxhqHiGWFiL/o8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=14+jvZr79zG6LqX95Jjk/aTzzcCLHY9wVP5z3nNYYu3RqAc5DBC+yoTsE1RHJs6p7
-	 ql5/2E+2vYOd1jheXh7WJYY/Bk7VpHdX1Il3wHH1Yn0TLhcQaPIXuEEgim1O1H5FFC
-	 Myuy07V2eHWxd3mEaxKZ20+2QLGF56FKtyY8wIwc=
+	by mail.kernel.org (Postfix) with ESMTP id 31AEA2070A
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:35:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IBmc5q1w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731108AbgAXJe7 (ORCPT
+        id S1729609AbgAXJf5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 04:34:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33438 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731030AbgAXJe5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 04:34:57 -0500
-Received: from localhost (unknown [145.15.244.15])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Fri, 24 Jan 2020 04:35:57 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:45466 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729180AbgAXJf5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 04:35:57 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579858556;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=KkR9XsyYszWewqqmOrVzZ1ik4TqqddD7Z9JTAAFoEcA=;
+        b=IBmc5q1wcP1F7aKhwG108GEyx/J3ix5QqeSus0dGe1VzSQ9lmiknffAu8PyEhMcXLo9VF+
+        CO5cQLsyJUetR6XRFfcHttpYnC/21kUdLMwL55wu85GFtNqt0WstnlRe8NcTmV75D60kds
+        YNQ6O6gVK0XFOrGsObg5a+l14lEIEvo=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-395-OIjQAVdYPbepnMZWON9ngw-1; Fri, 24 Jan 2020 04:35:52 -0500
+X-MC-Unique: OIjQAVdYPbepnMZWON9ngw-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9D3D62077C;
-        Fri, 24 Jan 2020 09:34:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579858497;
-        bh=Zr280ZOvnlAAicf/2Lzpz+15QDtYrPxhqHiGWFiL/o8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UPVG4OJ2j6yP8nJAb9AjSHRd+3nsh5Y5iNllwH8BiaB5b21LApAvLhq72lpLe7yuB
-         bjxsxgP8V8XzlDRDDFmdyQv4+Hb9sE9FfoDF9O8mEn4zadeHkVoEc43TyroYFMqoZN
-         aKDeR9WWpw0weKwL5OpZIIzNjJg71VgVtg1bf15Y=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>,
-        Bill Baker <bill.baker@oracle.com>,
-        Simo Sorce <simo@redhat.com>,
-        "J. Bruce Fields" <bfields@redhat.com>
-Subject: [PATCH 5.4 017/102] SUNRPC: Fix svcauth_gss_proxy_init()
-Date:   Fri, 24 Jan 2020 10:30:18 +0100
-Message-Id: <20200124092808.766566508@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200124092806.004582306@linuxfoundation.org>
-References: <20200124092806.004582306@linuxfoundation.org>
-User-Agent: quilt/0.66
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 84FB28C5C9B;
+        Fri, 24 Jan 2020 09:35:50 +0000 (UTC)
+Received: from kamzik.brq.redhat.com (unknown [10.43.2.160])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id EA1A6863BC;
+        Fri, 24 Jan 2020 09:35:45 +0000 (UTC)
+Date:   Fri, 24 Jan 2020 10:35:43 +0100
+From:   Andrew Jones <drjones@redhat.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Ben Gardon <bgardon@google.com>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        Cannon Matthews <cannonmatthews@google.com>,
+        Peter Xu <peterx@redhat.com>, Peter Shier <pshier@google.com>,
+        Oliver Upton <oupton@google.com>,
+        Marc Zyngier <Marc.Zyngier@arm.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>
+Subject: Re: [PATCH v4 06/10] KVM: selftests: Add support for vcpu_args_set
+ to aarch64 and s390x
+Message-ID: <20200124093543.m5oqo7fnjnc2scko@kamzik.brq.redhat.com>
+References: <20200123180436.99487-1-bgardon@google.com>
+ <20200123180436.99487-7-bgardon@google.com>
+ <4dbb6d1b-3162-d9b3-4ebb-5e4061776bb6@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4dbb6d1b-3162-d9b3-4ebb-5e4061776bb6@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chuck Lever <chuck.lever@oracle.com>
+On Fri, Jan 24, 2020 at 10:03:08AM +0100, Paolo Bonzini wrote:
+> CCing Marc, Conny and Christian (plus Thomas and Drew who were already
+> in the list) for review.
+> 
+> Thanks,
+> 
+> Paolo
+> 
+> On 23/01/20 19:04, Ben Gardon wrote:
+> > Currently vcpu_args_set is only implemented for x86. This makes writing
+> > tests with multiple vCPUs difficult as each guest vCPU must either a.)
+> > do the same thing or b.) derive some kind of unique token from it's
+> > registers or the architecture. To simplify the process of writing tests
+> > with multiple vCPUs for s390 and aarch64, add set args functions for
+> > those architectures.
 
-commit 5866efa8cbfbadf3905072798e96652faf02dbe8 upstream.
+It'd be nice to keep the separate architecture changes in separate
+patches. Otherwise I can't really give an r-b.
 
-gss_read_proxy_verf() assumes things about the XDR buffer containing
-the RPC Call that are not true for buffers generated by
-svc_rdma_recv().
+> > 
+> > Signed-off-by: Ben Gardon <bgardon@google.com>
+> > ---
+> >  .../selftests/kvm/lib/aarch64/processor.c     | 33 +++++++++++++++++
+> >  .../selftests/kvm/lib/s390x/processor.c       | 35 +++++++++++++++++++
+> >  2 files changed, 68 insertions(+)
+> > 
+> > diff --git a/tools/testing/selftests/kvm/lib/aarch64/processor.c b/tools/testing/selftests/kvm/lib/aarch64/processor.c
+> > index 86036a59a668e..a2ff90a75f326 100644
+> > --- a/tools/testing/selftests/kvm/lib/aarch64/processor.c
+> > +++ b/tools/testing/selftests/kvm/lib/aarch64/processor.c
+> > @@ -333,3 +333,36 @@ void vm_vcpu_add_default(struct kvm_vm *vm, uint32_t vcpuid, void *guest_code)
+> >  {
+> >  	aarch64_vcpu_add_default(vm, vcpuid, NULL, guest_code);
+> >  }
+> > +
+> > +/* VM VCPU Args Set
+> > + *
+> > + * Input Args:
+> > + *   vm - Virtual Machine
+> > + *   vcpuid - VCPU ID
+> > + *   num - number of arguments
+> > + *   ... - arguments, each of type uint64_t
+> > + *
+> > + * Output Args: None
+> > + *
+> > + * Return: None
+> > + *
+> > + * Sets the first num function input arguments to the values
+> > + * given as variable args.  Each of the variable args is expected to
+> > + * be of type uint64_t. The registers set by this function are r0-r7.
+> > + */
 
-RDMA's buffers look more like what the upper layer generates for
-sending: head is a kmalloc'd buffer; it does not point to a page
-whose contents are contiguous with the first page in the buffers'
-page array. The result is that ACCEPT_SEC_CONTEXT via RPC/RDMA has
-stopped working on Linux NFS servers that use gssproxy.
+lib/aarch64/processor.c so far doesn't have big function headers like
+this. Also, since this function is common for all architectures [now],
+I feel like the documentation should be in common code - so in the header
+file.
 
-This does not affect clients that use only TCP to send their
-ACCEPT_SEC_CONTEXT operation (that's all Linux clients). Other
-clients, like Solaris NFS clients, send ACCEPT_SEC_CONTEXT on the
-same transport as they send all other NFS operations. Such clients
-can send ACCEPT_SEC_CONTEXT via RPC/RDMA.
+> > +void vcpu_args_set(struct kvm_vm *vm, uint32_t vcpuid, unsigned int num, ...)
+> > +{
+> > +	va_list ap;
+> > +
+> > +	TEST_ASSERT(num >= 1 && num <= 8, "Unsupported number of args,\n"
+> > +		    "  num: %u\n",
+> > +		    num);
 
-I thought I had found every direct reference in the server RPC code
-to the rqstp->rq_pages field.
+Weird line breaking. I see it came from the x86 implementation, but it's
+weird there too... Personally I'd just put it all on one line, because
+my vt100 died two decades ago.
 
-Bug found at the 2019 Westford NFS bake-a-thon.
+> > +
+> > +	va_start(ap, num);
+> > +
+> > +	for (i = 0; i < num; i++)
+> > +		set_reg(vm, vcpuid, ARM64_CORE_REG(regs.regs[num]),
+                                                             ^^ should be 'i'
 
-Fixes: 3316f0631139 ("svcrdma: Persistently allocate and DMA- ... ")
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
-Tested-by: Bill Baker <bill.baker@oracle.com>
-Reviewed-by: Simo Sorce <simo@redhat.com>
-Signed-off-by: J. Bruce Fields <bfields@redhat.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > +			va_arg(ap, uint64_t));
 
----
- net/sunrpc/auth_gss/svcauth_gss.c |   84 ++++++++++++++++++++++++++++----------
- 1 file changed, 63 insertions(+), 21 deletions(-)
+nit: I'd use {} because of the line break. Or just not break the line and
+bust the 80 char "limit" (RIP vt100).
 
---- a/net/sunrpc/auth_gss/svcauth_gss.c
-+++ b/net/sunrpc/auth_gss/svcauth_gss.c
-@@ -1075,24 +1075,32 @@ gss_read_verf(struct rpc_gss_wire_cred *
- 	return 0;
- }
- 
--/* Ok this is really heavily depending on a set of semantics in
-- * how rqstp is set up by svc_recv and pages laid down by the
-- * server when reading a request. We are basically guaranteed that
-- * the token lays all down linearly across a set of pages, starting
-- * at iov_base in rq_arg.head[0] which happens to be the first of a
-- * set of pages stored in rq_pages[].
-- * rq_arg.head[0].iov_base will provide us the page_base to pass
-- * to the upcall.
-- */
--static inline int
--gss_read_proxy_verf(struct svc_rqst *rqstp,
--		    struct rpc_gss_wire_cred *gc, __be32 *authp,
--		    struct xdr_netobj *in_handle,
--		    struct gssp_in_token *in_token)
-+static void gss_free_in_token_pages(struct gssp_in_token *in_token)
- {
--	struct kvec *argv = &rqstp->rq_arg.head[0];
- 	u32 inlen;
--	int res;
-+	int i;
-+
-+	i = 0;
-+	inlen = in_token->page_len;
-+	while (inlen) {
-+		if (in_token->pages[i])
-+			put_page(in_token->pages[i]);
-+		inlen -= inlen > PAGE_SIZE ? PAGE_SIZE : inlen;
-+	}
-+
-+	kfree(in_token->pages);
-+	in_token->pages = NULL;
-+}
-+
-+static int gss_read_proxy_verf(struct svc_rqst *rqstp,
-+			       struct rpc_gss_wire_cred *gc, __be32 *authp,
-+			       struct xdr_netobj *in_handle,
-+			       struct gssp_in_token *in_token)
-+{
-+	struct kvec *argv = &rqstp->rq_arg.head[0];
-+	unsigned int page_base, length;
-+	int pages, i, res;
-+	size_t inlen;
- 
- 	res = gss_read_common_verf(gc, argv, authp, in_handle);
- 	if (res)
-@@ -1102,10 +1110,36 @@ gss_read_proxy_verf(struct svc_rqst *rqs
- 	if (inlen > (argv->iov_len + rqstp->rq_arg.page_len))
- 		return SVC_DENIED;
- 
--	in_token->pages = rqstp->rq_pages;
--	in_token->page_base = (ulong)argv->iov_base & ~PAGE_MASK;
-+	pages = DIV_ROUND_UP(inlen, PAGE_SIZE);
-+	in_token->pages = kcalloc(pages, sizeof(struct page *), GFP_KERNEL);
-+	if (!in_token->pages)
-+		return SVC_DENIED;
-+	in_token->page_base = 0;
- 	in_token->page_len = inlen;
-+	for (i = 0; i < pages; i++) {
-+		in_token->pages[i] = alloc_page(GFP_KERNEL);
-+		if (!in_token->pages[i]) {
-+			gss_free_in_token_pages(in_token);
-+			return SVC_DENIED;
-+		}
-+	}
- 
-+	length = min_t(unsigned int, inlen, argv->iov_len);
-+	memcpy(page_address(in_token->pages[0]), argv->iov_base, length);
-+	inlen -= length;
-+
-+	i = 1;
-+	page_base = rqstp->rq_arg.page_base;
-+	while (inlen) {
-+		length = min_t(unsigned int, inlen, PAGE_SIZE);
-+		memcpy(page_address(in_token->pages[i]),
-+		       page_address(rqstp->rq_arg.pages[i]) + page_base,
-+		       length);
-+
-+		inlen -= length;
-+		page_base = 0;
-+		i++;
-+	}
- 	return 0;
- }
- 
-@@ -1280,8 +1314,11 @@ static int svcauth_gss_proxy_init(struct
- 		break;
- 	case GSS_S_COMPLETE:
- 		status = gss_proxy_save_rsc(sn->rsc_cache, &ud, &handle);
--		if (status)
-+		if (status) {
-+			pr_info("%s: gss_proxy_save_rsc failed (%d)\n",
-+				__func__, status);
- 			goto out;
-+		}
- 		cli_handle.data = (u8 *)&handle;
- 		cli_handle.len = sizeof(handle);
- 		break;
-@@ -1292,15 +1329,20 @@ static int svcauth_gss_proxy_init(struct
- 
- 	/* Got an answer to the upcall; use it: */
- 	if (gss_write_init_verf(sn->rsc_cache, rqstp,
--				&cli_handle, &ud.major_status))
-+				&cli_handle, &ud.major_status)) {
-+		pr_info("%s: gss_write_init_verf failed\n", __func__);
- 		goto out;
-+	}
- 	if (gss_write_resv(resv, PAGE_SIZE,
- 			   &cli_handle, &ud.out_token,
--			   ud.major_status, ud.minor_status))
-+			   ud.major_status, ud.minor_status)) {
-+		pr_info("%s: gss_write_resv failed\n", __func__);
- 		goto out;
-+	}
- 
- 	ret = SVC_COMPLETE;
- out:
-+	gss_free_in_token_pages(&ud.in_token);
- 	gssp_free_upcall_data(&ud);
- 	return ret;
- }
+Thanks,
+drew
 
+> > +
+> > +	va_end(ap);
+> > +}
+> > diff --git a/tools/testing/selftests/kvm/lib/s390x/processor.c b/tools/testing/selftests/kvm/lib/s390x/processor.c
+> > index 32a02360b1eb0..680f37be9dbc9 100644
+> > --- a/tools/testing/selftests/kvm/lib/s390x/processor.c
+> > +++ b/tools/testing/selftests/kvm/lib/s390x/processor.c
+> > @@ -269,6 +269,41 @@ void vm_vcpu_add_default(struct kvm_vm *vm, uint32_t vcpuid, void *guest_code)
+> >  	run->psw_addr = (uintptr_t)guest_code;
+> >  }
+> >  
+> > +/* VM VCPU Args Set
+> > + *
+> > + * Input Args:
+> > + *   vm - Virtual Machine
+> > + *   vcpuid - VCPU ID
+> > + *   num - number of arguments
+> > + *   ... - arguments, each of type uint64_t
+> > + *
+> > + * Output Args: None
+> > + *
+> > + * Return: None
+> > + *
+> > + * Sets the first num function input arguments to the values
+> > + * given as variable args.  Each of the variable args is expected to
+> > + * be of type uint64_t. The registers set by this function are r2-r6.
+> > + */
+> > +void vcpu_args_set(struct kvm_vm *vm, uint32_t vcpuid, unsigned int num, ...)
+> > +{
+> > +	va_list ap;
+> > +	struct kvm_regs regs;
+> > +
+> > +	TEST_ASSERT(num >= 1 && num <= 5, "Unsupported number of args,\n"
+> > +		    "  num: %u\n",
+> > +		    num);
+> > +
+> > +	va_start(ap, num);
+> > +	vcpu_regs_get(vm, vcpuid, &regs);
+> > +
+> > +	for (i = 0; i < num; i++)
+> > +		regs.gprs[i + 2] = va_arg(ap, uint64_t);
+> > +
+> > +	vcpu_regs_set(vm, vcpuid, &regs);
+> > +	va_end(ap);
+> > +}
+> > +
+> >  void vcpu_dump(FILE *stream, struct kvm_vm *vm, uint32_t vcpuid, uint8_t indent)
+> >  {
+> >  	struct vcpu *vcpu = vm->vcpu_head;
+> > 
+> 
 
