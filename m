@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8695C32771
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:53:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25E29C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:53:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A098D20709
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:53:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE4BF214AF
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:53:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579859619;
-	bh=uQsHbokG9BAyFdZ45JbpzzPjVNWppD8Y4j3LNN/mQNA=;
+	s=default; t=1579859624;
+	bh=N8ed4tULIYYaxf3fIJAOMpnrwIDztcA4sCHL5h3U8Vg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oOWfmUyCbR2+LOF5nKXMB4fDvY0yper6fG0TMt9NMNWY7NSy/AVuhWcfKaZRedxuf
-	 /FduVWI73lqFmGsF2Ir/aydOiM2kpOTTuc/5BlUuc6knUBaJpU7u19BCxD6mwfzVBB
-	 z9fUETMVXdI4FE/cIiVHzbAzPA7W/jqXj+jMyb1g=
+	b=UJefvn34ALqp0InSDp97oTN1x3CWLtIXx6ePbXwbD8vCtTk3OnRjUBztMzprO3cX4
+	 vWlcCRZnkl8UYWodZGh7jX77Pc9znRKhUc7Zu64kLk6a/R4v7IFTjNwxEMSRCOmXmO
+	 WiRf22XLK6RruvfGFP1u6mbnWYLWnwbW/aCiAsnc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388291AbgAXJxj (ORCPT
+        id S2388299AbgAXJxm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 04:53:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56294 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 04:53:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56424 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388084AbgAXJxh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 04:53:37 -0500
+        id S1730133AbgAXJxl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 04:53:41 -0500
 Received: from localhost (unknown [145.15.244.15])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1C9C820709;
-        Fri, 24 Jan 2020 09:53:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F1FEB20709;
+        Fri, 24 Jan 2020 09:53:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579859616;
-        bh=uQsHbokG9BAyFdZ45JbpzzPjVNWppD8Y4j3LNN/mQNA=;
+        s=default; t=1579859620;
+        bh=N8ed4tULIYYaxf3fIJAOMpnrwIDztcA4sCHL5h3U8Vg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1/B0lULYl1H/uNAIwpk8XTcQo5s7DPpD4f5sN1LbyCQo2cR4NNLx5Yrmt6EZHePgj
-         3jS6doSA4BlWAEm+LvjGThpbTMez3EmyZmR1TJUqkggV+QroyPFi1BUIrKrI2Riq4w
-         G2DOCw4egdHZk0ExAjm8nrQBndaOYp0wZpDQGtcs=
+        b=fShQGmg73BZEgcJoQKHXy4Vcyo9hV65XzqpBGJtxMse3PGIx6PS7gVYKs6qz0Tno/
+         vpAel4ZsfJOYz0ArpD+/a8EJmV0SlZi5xH7t6yf1ylkawFFzOBaewUvco8nfALvN6m
+         PaIbxLuT0bvOV0e6z+MtP1dpSDnQUbLazno8+81g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Nikita Danilov <nikita.danilov@aquantia.com>,
+        Igor Russkikh <igor.russkikh@aquantia.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 134/343] NFSv4/flexfiles: Fix invalid deref in FF_LAYOUT_DEVID_NODE()
-Date:   Fri, 24 Jan 2020 10:29:12 +0100
-Message-Id: <20200124092937.606700724@linuxfoundation.org>
+Subject: [PATCH 4.14 135/343] net: aquantia: fixed instack structure overflow
+Date:   Fri, 24 Jan 2020 10:29:13 +0100
+Message-Id: <20200124092937.735809945@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124092919.490687572@linuxfoundation.org>
 References: <20200124092919.490687572@linuxfoundation.org>
@@ -60,71 +62,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Trond Myklebust <trond.myklebust@hammerspace.com>
+From: Igor Russkikh <Igor.Russkikh@aquantia.com>
 
-[ Upstream commit 108bb4afd351d65826648a47f11fa3104e250d9b ]
+[ Upstream commit 8006e3730b6e900319411e35cee85b4513d298df ]
 
-If the attempt to instantiate the mirror's layout DS pointer failed,
-then that pointer may hold a value of type ERR_PTR(), so we need
-to check that before we dereference it.
+This is a real stack undercorruption found by kasan build.
 
-Fixes: 65990d1afbd2d ("pNFS/flexfiles: Fix a deadlock on LAYOUTGET")
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+The issue did no harm normally because it only overflowed
+2 bytes after `bitary` array which on most architectures
+were mapped into `err` local.
+
+Fixes: bab6de8fd180 ("net: ethernet: aquantia: Atlantic A0 and B0 specific functions.")
+Signed-off-by: Nikita Danilov <nikita.danilov@aquantia.com>
+Signed-off-by: Igor Russkikh <igor.russkikh@aquantia.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/flexfilelayout/flexfilelayout.h | 32 +++++++++++++++-----------
- 1 file changed, 19 insertions(+), 13 deletions(-)
+ drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_a0.c | 4 ++--
+ drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_b0.c | 4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/fs/nfs/flexfilelayout/flexfilelayout.h b/fs/nfs/flexfilelayout/flexfilelayout.h
-index d6515f1584f3c..d78ec99b6c4ca 100644
---- a/fs/nfs/flexfilelayout/flexfilelayout.h
-+++ b/fs/nfs/flexfilelayout/flexfilelayout.h
-@@ -131,16 +131,6 @@ FF_LAYOUT_LSEG(struct pnfs_layout_segment *lseg)
- 			    generic_hdr);
- }
+diff --git a/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_a0.c b/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_a0.c
+index b0abd187cead9..b83ee74d28391 100644
+--- a/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_a0.c
++++ b/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_a0.c
+@@ -182,8 +182,8 @@ static int hw_atl_a0_hw_rss_set(struct aq_hw_s *self,
+ 	u32 i = 0U;
+ 	u32 num_rss_queues = max(1U, self->aq_nic_cfg->num_rss_queues);
+ 	int err = 0;
+-	u16 bitary[(HW_ATL_A0_RSS_REDIRECTION_MAX *
+-					HW_ATL_A0_RSS_REDIRECTION_BITS / 16U)];
++	u16 bitary[1 + (HW_ATL_A0_RSS_REDIRECTION_MAX *
++		   HW_ATL_A0_RSS_REDIRECTION_BITS / 16U)];
  
--static inline struct nfs4_deviceid_node *
--FF_LAYOUT_DEVID_NODE(struct pnfs_layout_segment *lseg, u32 idx)
--{
--	if (idx >= FF_LAYOUT_LSEG(lseg)->mirror_array_cnt ||
--	    FF_LAYOUT_LSEG(lseg)->mirror_array[idx] == NULL ||
--	    FF_LAYOUT_LSEG(lseg)->mirror_array[idx]->mirror_ds == NULL)
--		return NULL;
--	return &FF_LAYOUT_LSEG(lseg)->mirror_array[idx]->mirror_ds->id_node;
--}
--
- static inline struct nfs4_ff_layout_ds *
- FF_LAYOUT_MIRROR_DS(struct nfs4_deviceid_node *node)
- {
-@@ -150,9 +140,25 @@ FF_LAYOUT_MIRROR_DS(struct nfs4_deviceid_node *node)
- static inline struct nfs4_ff_layout_mirror *
- FF_LAYOUT_COMP(struct pnfs_layout_segment *lseg, u32 idx)
- {
--	if (idx >= FF_LAYOUT_LSEG(lseg)->mirror_array_cnt)
--		return NULL;
--	return FF_LAYOUT_LSEG(lseg)->mirror_array[idx];
-+	struct nfs4_ff_layout_segment *fls = FF_LAYOUT_LSEG(lseg);
-+
-+	if (idx < fls->mirror_array_cnt)
-+		return fls->mirror_array[idx];
-+	return NULL;
-+}
-+
-+static inline struct nfs4_deviceid_node *
-+FF_LAYOUT_DEVID_NODE(struct pnfs_layout_segment *lseg, u32 idx)
-+{
-+	struct nfs4_ff_layout_mirror *mirror = FF_LAYOUT_COMP(lseg, idx);
-+
-+	if (mirror != NULL) {
-+		struct nfs4_ff_layout_ds *mirror_ds = mirror->mirror_ds;
-+
-+		if (!IS_ERR_OR_NULL(mirror_ds))
-+			return &mirror_ds->id_node;
-+	}
-+	return NULL;
- }
+ 	memset(bitary, 0, sizeof(bitary));
  
- static inline u32
+diff --git a/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_b0.c b/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_b0.c
+index 236325f48ec9b..1c1bb074f6645 100644
+--- a/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_b0.c
++++ b/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_b0.c
+@@ -183,8 +183,8 @@ static int hw_atl_b0_hw_rss_set(struct aq_hw_s *self,
+ 	u32 i = 0U;
+ 	u32 num_rss_queues = max(1U, self->aq_nic_cfg->num_rss_queues);
+ 	int err = 0;
+-	u16 bitary[(HW_ATL_B0_RSS_REDIRECTION_MAX *
+-					HW_ATL_B0_RSS_REDIRECTION_BITS / 16U)];
++	u16 bitary[1 + (HW_ATL_B0_RSS_REDIRECTION_MAX *
++		   HW_ATL_B0_RSS_REDIRECTION_BITS / 16U)];
+ 
+ 	memset(bitary, 0, sizeof(bitary));
+ 
 -- 
 2.20.1
 
