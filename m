@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC05CC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:01:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A29FC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:01:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5484214DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:01:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F0F02077C
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:01:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579863700;
-	bh=TPdzRK4yi6WzRSGxw5I3i6Zr6dLsI48d/b7PBWZp19M=;
+	s=default; t=1579863704;
+	bh=f5u5Esc9Dg6kRn/+Eea2oLe0Ud7hYJKU4FUVAAQPc58=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CLkkCrnjgEjfZeCvoJA78H9mVE0TuYxjDAGkQXJFT3/Ck7HOnyxbDmu3QixThY4Dm
-	 T5Ix6xtebkF+MaORY5yfxCXjez60BPrmUFC+HaA0VtBkP48XyxRYlfWzD94KLZ3MD5
-	 lF72zdzZ5iu37EUpEGu+zk3GEp1tpGHTxR+inxjs=
+	b=H18IJZBWQLcSDhRw/AyInHJlmiOof/MqpMtqN1sYCrI69ps2UWOPWkoD6KIMvmD2B
+	 nkeobWWzw33iicLIeh6uAygqY6di2Up1JoZ/Fvaj6NwprpvzlzJDlx3OKoHW8ZAivE
+	 qGSTyLFce5/bt/qcJMz0+Vz+WiYAs8x1gAa0+XRE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387750AbgAXLBj (ORCPT
+        id S2387767AbgAXLBn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:01:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34542 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 06:01:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34628 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387719AbgAXLBh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:01:37 -0500
+        id S1731514AbgAXLBk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:01:40 -0500
 Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AC9E221569;
-        Fri, 24 Jan 2020 11:01:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 099642075D;
+        Fri, 24 Jan 2020 11:01:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579863696;
-        bh=TPdzRK4yi6WzRSGxw5I3i6Zr6dLsI48d/b7PBWZp19M=;
+        s=default; t=1579863699;
+        bh=f5u5Esc9Dg6kRn/+Eea2oLe0Ud7hYJKU4FUVAAQPc58=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TbALmTGFeRwdkoL6ibs36r9RttMe7kMoqAV3+r9wmDc+kOi/IZW374IWzbC1CIiCw
-         SB4Fh7HYWS6SfpASIO/f9Fta3mcw/CBk22i9jWxwPO3rfrten0DK/W6W8v9E0Zn/Ry
-         oxoOEEzB0Gq0vlqWfDk2HNPmb75GcvfU4Mq0c3ck=
+        b=Vo99PXKqXF1dm508Pr4/DUmvfaFLrUWLqYO1BRNUNTsSnMvt5xdb/rHftfZCSM6Cm
+         75xZT+K8inn238uj+kA2KztzMYx/k0ehTwn+IkBDDlwtdObpa6MDXPrEJ+tJAJ4qo+
+         2WiiA8E2juUoxlJO6ghlGJ6yaMiFoAH63a60JNb4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, YueHaibing <yuehaibing@huawei.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 063/639] ASoC: wm97xx: fix uninitialized regmap pointer problem
-Date:   Fri, 24 Jan 2020 10:23:53 +0100
-Message-Id: <20200124093055.300860548@linuxfoundation.org>
+Subject: [PATCH 4.19 051/639] powerpc/pseries/memory-hotplug: Fix return value type of find_aa_index
+Date:   Fri, 24 Jan 2020 10:23:41 +0100
+Message-Id: <20200124093053.800377097@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
 References: <20200124093047.008739095@linuxfoundation.org>
@@ -60,175 +60,136 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit 576ce4075bfa0f03e0e91a89eecc539b3b828b08 ]
+[ Upstream commit b45e9d761ba2d60044b610297e3ef9f947ac157f ]
 
-gcc notices that without either the ac97 bus or the pdata, we never
-initialize the regmap pointer, which leads to an uninitialized variable
-access:
+The variable 'aa_index' is defined as an unsigned value in
+update_lmb_associativity_index(), but find_aa_index() may return -1
+when dlpar_clone_property() fails. So change find_aa_index() to return
+a bool, which indicates whether 'aa_index' was found or not.
 
-sound/soc/codecs/wm9712.c: In function 'wm9712_soc_probe':
-sound/soc/codecs/wm9712.c:666:2: error: 'regmap' may be used uninitialized in this function [-Werror=maybe-uninitialized]
-
-Since that configuration is invalid, it's better to return an error
-here. I tried to avoid adding complexity to the conditions, and turned
-the #ifdef into a regular if(IS_ENABLED()) check for readability.
-This in turn requires moving some header file declarations out of
-an #ifdef.
-
-The same code is used in three drivers, all of which I'm changing
-the same way.
-
-Fixes: 2ed1a8e0ce8d ("ASoC: wm9712: add ac97 new bus support")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fixes: c05a5a40969e ("powerpc/pseries: Dynamic add entires to associativity lookup array")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Reviewed-by: Nathan Fontenot nfont@linux.vnet.ibm.com>
+[mpe: Tweak changelog, rename is_found to just found]
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/sound/soc.h       |  2 +-
- sound/soc/codecs/wm9705.c | 10 ++++------
- sound/soc/codecs/wm9712.c | 10 ++++------
- sound/soc/codecs/wm9713.c | 10 ++++------
- 4 files changed, 13 insertions(+), 19 deletions(-)
+ .../platforms/pseries/hotplug-memory.c        | 61 +++++++++----------
+ 1 file changed, 28 insertions(+), 33 deletions(-)
 
-diff --git a/include/sound/soc.h b/include/sound/soc.h
-index 41cec42fb456a..88aa48e5485f9 100644
---- a/include/sound/soc.h
-+++ b/include/sound/soc.h
-@@ -548,12 +548,12 @@ static inline void snd_soc_jack_free_gpios(struct snd_soc_jack *jack, int count,
+diff --git a/arch/powerpc/platforms/pseries/hotplug-memory.c b/arch/powerpc/platforms/pseries/hotplug-memory.c
+index 7f86bc3eaadec..62d3c72cd9316 100644
+--- a/arch/powerpc/platforms/pseries/hotplug-memory.c
++++ b/arch/powerpc/platforms/pseries/hotplug-memory.c
+@@ -101,11 +101,12 @@ static struct property *dlpar_clone_property(struct property *prop,
+ 	return new_prop;
  }
- #endif
  
--#ifdef CONFIG_SND_SOC_AC97_BUS
- struct snd_ac97 *snd_soc_alloc_ac97_component(struct snd_soc_component *component);
- struct snd_ac97 *snd_soc_new_ac97_component(struct snd_soc_component *component,
- 	unsigned int id, unsigned int id_mask);
- void snd_soc_free_ac97_component(struct snd_ac97 *ac97);
- 
-+#ifdef CONFIG_SND_SOC_AC97_BUS
- int snd_soc_set_ac97_ops(struct snd_ac97_bus_ops *ops);
- int snd_soc_set_ac97_ops_of_reset(struct snd_ac97_bus_ops *ops,
- 		struct platform_device *pdev);
-diff --git a/sound/soc/codecs/wm9705.c b/sound/soc/codecs/wm9705.c
-index ccdf088461b7f..54c306707c02c 100644
---- a/sound/soc/codecs/wm9705.c
-+++ b/sound/soc/codecs/wm9705.c
-@@ -325,8 +325,7 @@ static int wm9705_soc_probe(struct snd_soc_component *component)
- 	if (wm9705->mfd_pdata) {
- 		wm9705->ac97 = wm9705->mfd_pdata->ac97;
- 		regmap = wm9705->mfd_pdata->regmap;
--	} else {
--#ifdef CONFIG_SND_SOC_AC97_BUS
-+	} else if (IS_ENABLED(CONFIG_SND_SOC_AC97_BUS)) {
- 		wm9705->ac97 = snd_soc_new_ac97_component(component, WM9705_VENDOR_ID,
- 						      WM9705_VENDOR_ID_MASK);
- 		if (IS_ERR(wm9705->ac97)) {
-@@ -339,7 +338,8 @@ static int wm9705_soc_probe(struct snd_soc_component *component)
- 			snd_soc_free_ac97_component(wm9705->ac97);
- 			return PTR_ERR(regmap);
- 		}
--#endif
-+	} else {
-+		return -ENXIO;
- 	}
- 
- 	snd_soc_component_set_drvdata(component, wm9705->ac97);
-@@ -350,14 +350,12 @@ static int wm9705_soc_probe(struct snd_soc_component *component)
- 
- static void wm9705_soc_remove(struct snd_soc_component *component)
+-static u32 find_aa_index(struct device_node *dr_node,
+-			 struct property *ala_prop, const u32 *lmb_assoc)
++static bool find_aa_index(struct device_node *dr_node,
++			 struct property *ala_prop,
++			 const u32 *lmb_assoc, u32 *aa_index)
  {
--#ifdef CONFIG_SND_SOC_AC97_BUS
- 	struct wm9705_priv *wm9705 = snd_soc_component_get_drvdata(component);
+-	u32 *assoc_arrays;
+-	u32 aa_index;
++	u32 *assoc_arrays, new_prop_size;
++	struct property *new_prop;
+ 	int aa_arrays, aa_array_entries, aa_array_sz;
+ 	int i, index;
  
--	if (!wm9705->mfd_pdata) {
-+	if (IS_ENABLED(CONFIG_SND_SOC_AC97_BUS) && !wm9705->mfd_pdata) {
- 		snd_soc_component_exit_regmap(component);
- 		snd_soc_free_ac97_component(wm9705->ac97);
+@@ -121,46 +122,39 @@ static u32 find_aa_index(struct device_node *dr_node,
+ 	aa_array_entries = be32_to_cpu(assoc_arrays[1]);
+ 	aa_array_sz = aa_array_entries * sizeof(u32);
+ 
+-	aa_index = -1;
+ 	for (i = 0; i < aa_arrays; i++) {
+ 		index = (i * aa_array_entries) + 2;
+ 
+ 		if (memcmp(&assoc_arrays[index], &lmb_assoc[1], aa_array_sz))
+ 			continue;
+ 
+-		aa_index = i;
+-		break;
++		*aa_index = i;
++		return true;
  	}
--#endif
+ 
+-	if (aa_index == -1) {
+-		struct property *new_prop;
+-		u32 new_prop_size;
+-
+-		new_prop_size = ala_prop->length + aa_array_sz;
+-		new_prop = dlpar_clone_property(ala_prop, new_prop_size);
+-		if (!new_prop)
+-			return -1;
+-
+-		assoc_arrays = new_prop->value;
++	new_prop_size = ala_prop->length + aa_array_sz;
++	new_prop = dlpar_clone_property(ala_prop, new_prop_size);
++	if (!new_prop)
++		return false;
+ 
+-		/* increment the number of entries in the lookup array */
+-		assoc_arrays[0] = cpu_to_be32(aa_arrays + 1);
++	assoc_arrays = new_prop->value;
+ 
+-		/* copy the new associativity into the lookup array */
+-		index = aa_arrays * aa_array_entries + 2;
+-		memcpy(&assoc_arrays[index], &lmb_assoc[1], aa_array_sz);
++	/* increment the number of entries in the lookup array */
++	assoc_arrays[0] = cpu_to_be32(aa_arrays + 1);
+ 
+-		of_update_property(dr_node, new_prop);
++	/* copy the new associativity into the lookup array */
++	index = aa_arrays * aa_array_entries + 2;
++	memcpy(&assoc_arrays[index], &lmb_assoc[1], aa_array_sz);
+ 
+-		/*
+-		 * The associativity lookup array index for this lmb is
+-		 * number of entries - 1 since we added its associativity
+-		 * to the end of the lookup array.
+-		 */
+-		aa_index = be32_to_cpu(assoc_arrays[0]) - 1;
+-	}
++	of_update_property(dr_node, new_prop);
+ 
+-	return aa_index;
++	/*
++	 * The associativity lookup array index for this lmb is
++	 * number of entries - 1 since we added its associativity
++	 * to the end of the lookup array.
++	 */
++	*aa_index = be32_to_cpu(assoc_arrays[0]) - 1;
++	return true;
  }
  
- static const struct snd_soc_component_driver soc_component_dev_wm9705 = {
-diff --git a/sound/soc/codecs/wm9712.c b/sound/soc/codecs/wm9712.c
-index e873baa9e7780..01949eaba4fd4 100644
---- a/sound/soc/codecs/wm9712.c
-+++ b/sound/soc/codecs/wm9712.c
-@@ -642,8 +642,7 @@ static int wm9712_soc_probe(struct snd_soc_component *component)
- 	if (wm9712->mfd_pdata) {
- 		wm9712->ac97 = wm9712->mfd_pdata->ac97;
- 		regmap = wm9712->mfd_pdata->regmap;
--	} else {
--#ifdef CONFIG_SND_SOC_AC97_BUS
-+	} else if (IS_ENABLED(CONFIG_SND_SOC_AC97_BUS)) {
- 		int ret;
+ static int update_lmb_associativity_index(struct drmem_lmb *lmb)
+@@ -169,6 +163,7 @@ static int update_lmb_associativity_index(struct drmem_lmb *lmb)
+ 	struct property *ala_prop;
+ 	const u32 *lmb_assoc;
+ 	u32 aa_index;
++	bool found;
  
- 		wm9712->ac97 = snd_soc_new_ac97_component(component, WM9712_VENDOR_ID,
-@@ -660,7 +659,8 @@ static int wm9712_soc_probe(struct snd_soc_component *component)
- 			snd_soc_free_ac97_component(wm9712->ac97);
- 			return PTR_ERR(regmap);
- 		}
--#endif
-+	} else {
-+		return -ENXIO;
+ 	parent = of_find_node_by_path("/");
+ 	if (!parent)
+@@ -200,12 +195,12 @@ static int update_lmb_associativity_index(struct drmem_lmb *lmb)
+ 		return -ENODEV;
  	}
  
- 	snd_soc_component_init_regmap(component, regmap);
-@@ -673,14 +673,12 @@ static int wm9712_soc_probe(struct snd_soc_component *component)
+-	aa_index = find_aa_index(dr_node, ala_prop, lmb_assoc);
++	found = find_aa_index(dr_node, ala_prop, lmb_assoc, &aa_index);
  
- static void wm9712_soc_remove(struct snd_soc_component *component)
- {
--#ifdef CONFIG_SND_SOC_AC97_BUS
- 	struct wm9712_priv *wm9712 = snd_soc_component_get_drvdata(component);
+ 	of_node_put(dr_node);
+ 	dlpar_free_cc_nodes(lmb_node);
  
--	if (!wm9712->mfd_pdata) {
-+	if (IS_ENABLED(CONFIG_SND_SOC_AC97_BUS) && !wm9712->mfd_pdata) {
- 		snd_soc_component_exit_regmap(component);
- 		snd_soc_free_ac97_component(wm9712->ac97);
+-	if (aa_index < 0) {
++	if (!found) {
+ 		pr_err("Could not find LMB associativity\n");
+ 		return -1;
  	}
--#endif
- }
- 
- static const struct snd_soc_component_driver soc_component_dev_wm9712 = {
-diff --git a/sound/soc/codecs/wm9713.c b/sound/soc/codecs/wm9713.c
-index 643863bb32e0d..5a2fdf4f69bf3 100644
---- a/sound/soc/codecs/wm9713.c
-+++ b/sound/soc/codecs/wm9713.c
-@@ -1214,8 +1214,7 @@ static int wm9713_soc_probe(struct snd_soc_component *component)
- 	if (wm9713->mfd_pdata) {
- 		wm9713->ac97 = wm9713->mfd_pdata->ac97;
- 		regmap = wm9713->mfd_pdata->regmap;
--	} else {
--#ifdef CONFIG_SND_SOC_AC97_BUS
-+	} else if (IS_ENABLED(CONFIG_SND_SOC_AC97_BUS)) {
- 		wm9713->ac97 = snd_soc_new_ac97_component(component, WM9713_VENDOR_ID,
- 						      WM9713_VENDOR_ID_MASK);
- 		if (IS_ERR(wm9713->ac97))
-@@ -1225,7 +1224,8 @@ static int wm9713_soc_probe(struct snd_soc_component *component)
- 			snd_soc_free_ac97_component(wm9713->ac97);
- 			return PTR_ERR(regmap);
- 		}
--#endif
-+	} else {
-+		return -ENXIO;
- 	}
- 
- 	snd_soc_component_init_regmap(component, regmap);
-@@ -1238,14 +1238,12 @@ static int wm9713_soc_probe(struct snd_soc_component *component)
- 
- static void wm9713_soc_remove(struct snd_soc_component *component)
- {
--#ifdef CONFIG_SND_SOC_AC97_BUS
- 	struct wm9713_priv *wm9713 = snd_soc_component_get_drvdata(component);
- 
--	if (!wm9713->mfd_pdata) {
-+	if (IS_ENABLED(CONFIG_SND_SOC_AC97_BUS) && !wm9713->mfd_pdata) {
- 		snd_soc_component_exit_regmap(component);
- 		snd_soc_free_ac97_component(wm9713->ac97);
- 	}
--#endif
- }
- 
- static const struct snd_soc_component_driver soc_component_dev_wm9713 = {
 -- 
 2.20.1
 
