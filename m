@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DFE9C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:24:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03D67C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:24:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BE0C2075D
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:24:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC6B8206D4
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:24:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579865049;
-	bh=Es0usgRGQeBd944Q1FKLgDJqnl08UMmid7IPySRschc=;
+	s=default; t=1579865052;
+	bh=6quDXAEcDFWwvkH1NVh1WWRbSlIvzWXMFot7EM9sOwA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0xCBxu8IonRlM50JROClX0U/iIAMOYT1qrTpUinNJObVlUtI6sNIgXmHoE0dw7jSG
-	 sqfN1gmYwgvVbBEnBzpUVfkCXkgyTRm0lT4rdnq1dyDEdqFKQZnHexW7+RCsIswvCJ
-	 D3PQEc5us+IYVXf9/LaAzT9S95OngGMUUg8F+sPw=
+	b=A0hwvbdgk+A80AKj3ST/jirQNzk9p8VfvcpaCAXtTDk1isRsztcwd/VjUGoK9Qc9d
+	 HcwX3uPMTU2snU4CZA+n7V3bHvVvlyZPOuas5Jmh9aLPhT7wvao+GYWLgEcqGhsErf
+	 rb+wVowAnrcrfKdwsVbP2dXkOcQiW9xM4dLtY0zI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391405AbgAXLYI (ORCPT
+        id S2403756AbgAXLYL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:24:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37142 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 06:24:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37278 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388606AbgAXLYF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:24:05 -0500
+        id S2391401AbgAXLYI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:24:08 -0500
 Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DE24B206D4;
-        Fri, 24 Jan 2020 11:24:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 22BC2206D4;
+        Fri, 24 Jan 2020 11:24:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579865044;
-        bh=Es0usgRGQeBd944Q1FKLgDJqnl08UMmid7IPySRschc=;
+        s=default; t=1579865047;
+        bh=6quDXAEcDFWwvkH1NVh1WWRbSlIvzWXMFot7EM9sOwA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ifo3gD+qdME5GIpq5bxwIaw64rMuIg0jMh9iGS+KZQOFGJu1W+cqxFwA/q6XfsA4R
-         W3GMi7vg/zbhaX0dOt/tTD/SN7km+ERgLXah9I4Iu7+TR/djNFaE+PotiYAoKK8nYj
-         3cDjPNPQJra1Y6aVl5lwr9IpeDHbWu0YnCXjxA0Y=
+        b=Cu1ufpgckEGtYnSImXtgvQxlNjp2owSkd8NlUzqq5Ru7ngCpI6UX1Kykr3hne++DF
+         wcL5aqHPHT4B+xdz/T2HW9awbS2NS+XeOpRGkf7RHNWKNXCahyKxkDnFdKgQbyjD5L
+         FGyGdpOliRdjMLjhRdvEiGuemGJ+OMAY9wcQPar0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Antoine Tenart <antoine.tenart@bootlin.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
+        stable@vger.kernel.org, Nathan Lynch <nathanl@linux.ibm.com>,
+        "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 413/639] crypto: inside-secure - fix zeroing of the request in ahash_exit_inv
-Date:   Fri, 24 Jan 2020 10:29:43 +0100
-Message-Id: <20200124093138.765746594@linuxfoundation.org>
+Subject: [PATCH 4.19 430/639] powerpc/cacheinfo: add cacheinfo_teardown, cacheinfo_rebuild
+Date:   Fri, 24 Jan 2020 10:30:00 +0100
+Message-Id: <20200124093140.873383873@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
 References: <20200124093047.008739095@linuxfoundation.org>
@@ -61,36 +61,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Antoine Tenart <antoine.tenart@bootlin.com>
+From: Nathan Lynch <nathanl@linux.ibm.com>
 
-[ Upstream commit b926213d6fede9c9427d7c12eaf7d9f0895deb4e ]
+[ Upstream commit d4aa219a074a5abaf95a756b9f0d190b5c03a945 ]
 
-A request is zeroed in safexcel_ahash_exit_inv(). This request total
-size is EIP197_AHASH_REQ_SIZE while the memset zeroing it uses
-sizeof(struct ahash_request), which happens to be less than
-EIP197_AHASH_REQ_SIZE. This patch fixes it.
+Allow external callers to force the cacheinfo code to release all its
+references to cache nodes, e.g. before processing device tree updates
+post-migration, and to rebuild the hierarchy afterward.
 
-Fixes: f6beaea30487 ("crypto: inside-secure - authenc(hmac(sha256), cbc(aes)) support")
-Signed-off-by: Antoine Tenart <antoine.tenart@bootlin.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+CPU online/offline must be blocked by callers; enforce this.
+
+Fixes: 410bccf97881 ("powerpc/pseries: Partition migration in the kernel")
+Signed-off-by: Nathan Lynch <nathanl@linux.ibm.com>
+Reviewed-by: Gautham R. Shenoy <ego@linux.vnet.ibm.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/crypto/inside-secure/safexcel_hash.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/powerpc/kernel/cacheinfo.c | 21 +++++++++++++++++++++
+ arch/powerpc/kernel/cacheinfo.h |  4 ++++
+ 2 files changed, 25 insertions(+)
 
-diff --git a/drivers/crypto/inside-secure/safexcel_hash.c b/drivers/crypto/inside-secure/safexcel_hash.c
-index ac9282c1a5ec1..9a02f64a45b96 100644
---- a/drivers/crypto/inside-secure/safexcel_hash.c
-+++ b/drivers/crypto/inside-secure/safexcel_hash.c
-@@ -486,7 +486,7 @@ static int safexcel_ahash_exit_inv(struct crypto_tfm *tfm)
- 	struct safexcel_inv_result result = {};
- 	int ring = ctx->base.ring;
+diff --git a/arch/powerpc/kernel/cacheinfo.c b/arch/powerpc/kernel/cacheinfo.c
+index a8f20e5928e13..9edb454301336 100644
+--- a/arch/powerpc/kernel/cacheinfo.c
++++ b/arch/powerpc/kernel/cacheinfo.c
+@@ -865,4 +865,25 @@ void cacheinfo_cpu_offline(unsigned int cpu_id)
+ 	if (cache)
+ 		cache_cpu_clear(cache, cpu_id);
+ }
++
++void cacheinfo_teardown(void)
++{
++	unsigned int cpu;
++
++	lockdep_assert_cpus_held();
++
++	for_each_online_cpu(cpu)
++		cacheinfo_cpu_offline(cpu);
++}
++
++void cacheinfo_rebuild(void)
++{
++	unsigned int cpu;
++
++	lockdep_assert_cpus_held();
++
++	for_each_online_cpu(cpu)
++		cacheinfo_cpu_online(cpu);
++}
++
+ #endif /* (CONFIG_PPC_PSERIES && CONFIG_SUSPEND) || CONFIG_HOTPLUG_CPU */
+diff --git a/arch/powerpc/kernel/cacheinfo.h b/arch/powerpc/kernel/cacheinfo.h
+index 955f5e999f1b8..52bd3fc6642da 100644
+--- a/arch/powerpc/kernel/cacheinfo.h
++++ b/arch/powerpc/kernel/cacheinfo.h
+@@ -6,4 +6,8 @@
+ extern void cacheinfo_cpu_online(unsigned int cpu_id);
+ extern void cacheinfo_cpu_offline(unsigned int cpu_id);
  
--	memset(req, 0, sizeof(struct ahash_request));
-+	memset(req, 0, EIP197_AHASH_REQ_SIZE);
- 
- 	/* create invalidation request */
- 	init_completion(&result.completion);
++/* Allow migration/suspend to tear down and rebuild the hierarchy. */
++extern void cacheinfo_teardown(void);
++extern void cacheinfo_rebuild(void);
++
+ #endif /* _PPC_CACHEINFO_H */
 -- 
 2.20.1
 
