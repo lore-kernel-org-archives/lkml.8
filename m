@@ -2,150 +2,138 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAEBFC35240
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 02:26:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FE9AC35242
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 02:41:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B51772087E
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 02:26:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43F0724676
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 02:41:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="UK2NnWBX"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="mDqooZlE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730321AbgAXCZr (ORCPT
+        id S1730328AbgAXCla (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 21:25:47 -0500
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:35429 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729340AbgAXCZr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 21:25:47 -0500
-Received: by mail-pl1-f196.google.com with SMTP id g6so151815plt.2
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jan 2020 18:25:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=wZkNXk/j/FX4H35zLUUfeB6UVmty3DCVgibb2jFr+W8=;
-        b=UK2NnWBXt+4l5lehVqqDx8Y0/xUQNfAFnsRbtbMhYt8sGV95QRl7EXnoveOqh4TNa5
-         8CFJNYb04cwyZwxa8RgQdRIAfnPLIVhWGMFEcaES6aoKziZdpPfuFNoAPerOZP6CrWVU
-         W50XTuUuNfc65LzzwtOl1bpcYRxp4goeZjy70=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=wZkNXk/j/FX4H35zLUUfeB6UVmty3DCVgibb2jFr+W8=;
-        b=TvWMbd1Nl5Eo+EmXQ+DDMMgugN7LOL5kCIWlUtahqnrbILJoW7O/prllHO+2vdyWu3
-         KKa2XeB9PAlXYorc1OdNdMdUnE4uU67ISOx6LTYbf0eCyVb5KS1cguHoFBTRL/GssyFH
-         T86Bgo+ABPuAuoUVEEh4cGwNoEwbi56Q+d4GXXcF4wJ3TNZzGht0a9J+vbE2pSuAzhIX
-         yCuSM7I0Np8qxrput439XpocE2DS/20SJpsUXV4gUqasr3q4T+huU731NGzgRbeuhF8l
-         MqA27HgGptla7hpDKfQ2ymFUL3uL62eU7QaDSCsMQSA7gDQVNYrcZKm5jQEnTwwRgWcz
-         Mcbg==
-X-Gm-Message-State: APjAAAVLVHdWdZsZyJf1YAMv79UKz7hoxYYOcnrPwx6F1mFYMss0wRjK
-        EUqvR2zqX3v/cIwwQkXP28V7mA==
-X-Google-Smtp-Source: APXvYqx9X+PIiksskSh6s8xBYgkunxj4+mupFtRlAqSkOUrTwLCHtoJ9jpWIrA4YfcrFk9oLa8Ifng==
-X-Received: by 2002:a17:902:aa41:: with SMTP id c1mr1240730plr.105.1579832746732;
-        Thu, 23 Jan 2020 18:25:46 -0800 (PST)
-Received: from localhost ([2401:fa00:8f:203:5bbb:c872:f2b1:f53b])
-        by smtp.gmail.com with ESMTPSA id d23sm4004936pfo.176.2020.01.23.18.25.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Jan 2020 18:25:46 -0800 (PST)
-Date:   Fri, 24 Jan 2020 11:25:44 +0900
-From:   Sergey Senozhatsky <senozhatsky@chromium.org>
-To:     Hans Verkuil <hverkuil@xs4all.nl>
-Cc:     Sergey Senozhatsky <senozhatsky@chromium.org>,
-        Hans Verkuil <hans.verkuil@cisco.com>,
-        Tomasz Figa <tfiga@chromium.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Sakari Ailus <sakari.ailus@iki.fi>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Pawel Osciak <posciak@chromium.org>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC][PATCH 13/15] videobuf2: do not sync buffers for DMABUF
- queues
-Message-ID: <20200124022544.GD158382@google.com>
-References: <20191217032034.54897-1-senozhatsky@chromium.org>
- <20191217032034.54897-14-senozhatsky@chromium.org>
- <2d0e1a9b-6c5e-ff70-9862-32c8b8aaf65f@xs4all.nl>
- <20200122050515.GB49953@google.com>
- <57f711a0-6183-74f6-ab24-ebe414cb6881@xs4all.nl>
+        Thu, 23 Jan 2020 21:41:30 -0500
+Received: from ozlabs.org ([203.11.71.1]:36167 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729340AbgAXCla (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jan 2020 21:41:30 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 483k123CbTz9sRK;
+        Fri, 24 Jan 2020 13:41:25 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1579833686;
+        bh=FcO1sEsS142OWFXaWw24W2vXKioXSusedr8yViPSC8g=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=mDqooZlEmHUrv/1H/5rFaLtf32F3LEIl4un/rdy2XoNEnazWDx+8f1F8CbYt/Lna+
+         p2CTjr2d0dpJwO6pxH+X3RorPK6anx2roN6RtRg6kjlX+3J/s8wBNRsUfZ3niqmq3B
+         PE7Gj0nTBFwBoyvTaQmbvWBeJO4T4uroldTtY52rS/KMlEEU7Uo8WORP7s88+JLWfX
+         nLX9EM+XH5spkUxgWwwefwP/3XPSwNOsmyN84B+BCKS4qU6z1LnRauDXwU7GhMZW6V
+         OnurWaprxcKdzhsKKCIVycnSkgDhoaQdjTNka6m9iW9LfIRRBX7jEejQXnCkS253aL
+         fkHmDD0uDN4lQ==
+Date:   Fri, 24 Jan 2020 13:41:24 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Al Viro <viro@ZenIV.linux.org.uk>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Carlos Maiolino <cmaiolino@redhat.com>
+Subject: Re: linux-next: build failure after merge of the vfs tree
+Message-ID: <20200124134124.57759b06@canb.auug.org.au>
+In-Reply-To: <20200110175729.3b5d2338@canb.auug.org.au>
+References: <20200110175729.3b5d2338@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <57f711a0-6183-74f6-ab24-ebe414cb6881@xs4all.nl>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: multipart/signed; boundary="Sig_/dj5/oQ=7f9hsgkLwC.+H_UT";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On (20/01/23 12:35), Hans Verkuil wrote:
-> On 1/22/20 6:05 AM, Sergey Senozhatsky wrote:
-> > On (20/01/10 11:30), Hans Verkuil wrote:
+--Sig_/dj5/oQ=7f9hsgkLwC.+H_UT
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-[..]
+Hi all,
 
-> But whatever was written in the buffer is going to be overwritten anyway.
-> 
-> Unless I am mistaken the current situation is that the cache syncs are done
-> in both prepare and finish, regardless of the DMA direction.
-> 
-> I would keep that behavior to avoid introducing any unexpected regressions.
+On Fri, 10 Jan 2020 17:57:29 +1100 Stephen Rothwell <sfr@canb.auug.org.au> =
+wrote:
+>
+> After merging the vfs tree, today's linux-next build (x86_64 allnoconfig)
+> failed like this:
+>=20
+> fs/inode.c:1615:5: error: redefinition of 'bmap'
+>  1615 | int bmap(struct inode *inode, sector_t *block)
+>       |     ^~~~
+> In file included from fs/inode.c:7:
+> include/linux/fs.h:2867:19: note: previous definition of 'bmap' was here
+>  2867 | static inline int bmap(struct inode *inode,  sector_t *block)
+>       |                   ^~~~
+>=20
+> Caused by commit
+>=20
+>   65a805fdd75f ("fibmap: Use bmap instead of ->bmap method in ioctl_fibma=
+p")
+>=20
+> I have added this patch for today:
+>=20
+> From: Stephen Rothwell <sfr@canb.auug.org.au>
+> Date: Fri, 10 Jan 2020 17:53:19 +1100
+> Subject: [PATCH] fs: fix up for !CONFIG_BLOCK and bmap
+>=20
+> Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> ---
+>  fs/inode.c | 2 ++
+>  1 file changed, 2 insertions(+)
+>=20
+> diff --git a/fs/inode.c b/fs/inode.c
+> index 9f894b25af2b..590f36daa006 100644
+> --- a/fs/inode.c
+> +++ b/fs/inode.c
+> @@ -1598,6 +1598,7 @@ void iput(struct inode *inode)
+>  }
+>  EXPORT_SYMBOL(iput);
+> =20
+> +#ifdef CONFIG_BLOCK
+>  /**
+>   *	bmap	- find a block number in a file
+>   *	@inode:  inode owning the block number being requested
+> @@ -1621,6 +1622,7 @@ int bmap(struct inode *inode, sector_t *block)
+>  	return 0;
+>  }
+>  EXPORT_SYMBOL(bmap);
+> +#endif
+> =20
+>  /*
+>   * With relative atime, only update atime if the previous atime is
+> --=20
+> 2.24.0
 
-OK.
+I am still applying this patch each day ...
+--=20
+Cheers,
+Stephen Rothwell
 
-> Then, if q->allow_cache_hint is set, then default to a cache sync (cache clean)
-> in the prepare for OUTPUT buffers and a cache sync (cache invalidate) in the
-> finish for CAPTURE buffers.
+--Sig_/dj5/oQ=7f9hsgkLwC.+H_UT
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-We alter default cache sync behaviour based both on queue ->memory
-type and queue ->dma_dir. Shall both of those cases depend on
-->allow_cache_hints, or q->memory can be independent?
+-----BEGIN PGP SIGNATURE-----
 
-static void set_buffer_cache_hints(struct vb2_queue *q,
-				   struct vb2_buffer *vb,
-				   struct v4l2_buffer *b)
-{
-	if (!q->allow_cache_hints)
-		return;
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl4qWVQACgkQAVBC80lX
+0Gx+Swf+JuM1TIB5DvgWdYg0D+lCNr+DSWs/JD5Kgfy6f8nhkB/D48NP4ciRpkMB
+HkEdj1nbacp57JMCqKZfqQoMsMR2IuVozH6q9/nTWWoKDLALrJlxLSVIED7B9k7I
+Mqz23r/m7vkl6hb+9r3tvudqnCT+jz8v+Z59vk+8ZdUXmtJCXxeXyw2mwBYRNHTh
+8VJ8oABdrMBhb40Tlmv8l++SP4Fy/edTHYHrpeQU+ZaDM5FcQhB5OmPvlpwstqaP
+l1/VGzaec7Mp1+unMruQNl+XDh+/6RI6g5eyqo923H64lPjvkiJ/H7H4fBHlWN34
+YXndiZOvDnhPOJHvl1/MRP8UBFjNxw==
+=DERz
+-----END PGP SIGNATURE-----
 
-	/*
-	 * DMA exporter should take care of cache syncs, so we can avoid
-	 * explicit ->prepare()/->finish() syncs. For other ->memory types
-	 * we always need ->prepare() or/and ->finish() cache sync.
-	 */
-	if (q->memory == VB2_MEMORY_DMABUF) {
-		vb->need_cache_sync_on_finish = 0;
-		vb->need_cache_sync_on_prepare = 0;
-		return;
-	}
-
-	/*
-	 * ->finish() cache sync can be avoided when queue direction is
-	 * TO_DEVICE.
-	 */
-	if (q->dma_dir == DMA_TO_DEVICE)
-		vb->need_cache_sync_on_finish = 0;
-	else
-		vb->need_cache_sync_on_finish = 1;
-
-	/*
-	 * ->prepare() cache sync can be avoided when queue direction is
-	 * FROM_DEVICE.
-	 */
-	if (q->dma_dir == DMA_FROM_DEVICE)
-		vb->need_cache_sync_on_prepare = 0;
-	else
-		vb->need_cache_sync_on_prepare = 1;
-
-	if (b->flags & V4L2_BUF_FLAG_NO_CACHE_INVALIDATE)
-		vb->need_cache_sync_on_finish = 0;
-
-	if (b->flags & V4L2_BUF_FLAG_NO_CACHE_CLEAN)
-		vb->need_cache_sync_on_prepare = 0;
-}
+--Sig_/dj5/oQ=7f9hsgkLwC.+H_UT--
