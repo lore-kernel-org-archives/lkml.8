@@ -4,49 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92FF4C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:28:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1385C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:28:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 609102077C
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:28:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86EB92075D
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:28:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579876088;
-	bh=HBA1Sa1kde/HIZp5KczSgbLs5nHBQhTe0PfASzgy8o4=;
+	s=default; t=1579876096;
+	bh=FLm3Uz2e1NgLQ98EN0hfrjWR9RO3k06VTrjpsPvRQ4U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=z2+q+azuTNScocThDDgMzNllyTISeanx0UupIz3PtbBULBJ8MJj2BqD1DysKvv6B2
-	 c3e8eEK7xnx0FY+FM557bbYBOp1EoC3lffEJ2Yrxcx20bCkDkQKCYdHKK32kgKLJh6
-	 BQ0AgtH+W91iCIJ5SUR5EBTBgXHeZluRumdvq8HY=
+	b=Hfdco/ACvCcqRg55mhRFAT8hW6t9VkYu1oKjEi502kYMoznXjUiKG+X4KqwzIhnF9
+	 kfDnDQxWdOUQmfuhI9mvXV39A+LLIssLRK92krY7RatMr0s+PRMocwn2G536gSLU+P
+	 O82VGFVlG+rz/kn2xYEVNV+mJ25FGyPtfPwNGA2U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390749AbgAXO2H (ORCPT
+        id S2390851AbgAXO2P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 09:28:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42844 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 09:28:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42774 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405252AbgAXOVP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 09:21:15 -0500
+        id S2405247AbgAXOVO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 09:21:14 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5FAD722527;
-        Fri, 24 Jan 2020 14:21:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 210C121556;
+        Fri, 24 Jan 2020 14:21:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579875675;
-        bh=HBA1Sa1kde/HIZp5KczSgbLs5nHBQhTe0PfASzgy8o4=;
+        s=default; t=1579875674;
+        bh=FLm3Uz2e1NgLQ98EN0hfrjWR9RO3k06VTrjpsPvRQ4U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Udm9SezInktJBRBlRc2GLTsuwj4hmiu2SOpXLIqFPZ/dlXbcECeZwnlRRL+uBoMR7
-         A1C8cVJAnUgVuHuOuLWnTzdekIgsg4Aw+TS1tts82z0TcVJQLH1WkHs022l5gQRLZs
-         YKtVv+hbYJ9cvaDmp2CEgrH0oqu271HFQG4InnYs=
+        b=SR67Q6gCy1Vg/NMJyryjJzdZZPUZ/A0wgc/w+U+9ZAEZ0d4CTvpJHIeJa+ZiFFSUj
+         RSnYf2+mr5ebe739PpRdqpvR/5ET6YK3YdjPb7mSwtZ3mt83AzpcpMIkSkLxBbKFJX
+         hPhjLF/HZH1f8z+feIRmre3t9KCtfn6+WlB3NOhU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Yonglong Liu <liuyonglong@huawei.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 53/56] net: hns: fix soft lockup when there is not enough memory
-Date:   Fri, 24 Jan 2020 09:20:09 -0500
-Message-Id: <20200124142012.29752-53-sashal@kernel.org>
+Cc:     Florian Westphal <fw@strlen.de>,
+        syzbot+37a6804945a3a13b1572@syzkaller.appspotmail.com,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Sasha Levin <sashal@kernel.org>,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 52/56] netfilter: nf_tables: fix flowtable list del corruption
+Date:   Fri, 24 Jan 2020 09:20:08 -0500
+Message-Id: <20200124142012.29752-52-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200124142012.29752-1-sashal@kernel.org>
 References: <20200124142012.29752-1-sashal@kernel.org>
@@ -59,60 +62,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yonglong Liu <liuyonglong@huawei.com>
+From: Florian Westphal <fw@strlen.de>
 
-[ Upstream commit 49edd6a2c456150870ddcef5b7ed11b21d849e13 ]
+[ Upstream commit 335178d5429c4cee61b58f4ac80688f556630818 ]
 
-When there is not enough memory and napi_alloc_skb() return NULL,
-the HNS driver will print error message, and than try again, if
-the memory is not enough for a while, huge error message and the
-retry operation will cause soft lockup.
+syzbot reported following crash:
 
-When napi_alloc_skb() return NULL because of no memory, we can
-get a warn_alloc() call trace, so this patch deletes the error
-message. We already use polling mode to handle irq, but the
-retry operation will render the polling weight inactive, this
-patch just return budget when the rx is not completed to avoid
-dead loop.
+  list_del corruption, ffff88808c9bb000->prev is LIST_POISON2 (dead000000000122)
+  [..]
+  Call Trace:
+   __list_del_entry include/linux/list.h:131 [inline]
+   list_del_rcu include/linux/rculist.h:148 [inline]
+   nf_tables_commit+0x1068/0x3b30 net/netfilter/nf_tables_api.c:7183
+   [..]
 
-Fixes: 36eedfde1a36 ("net: hns: Optimize hns_nic_common_poll for better performance")
-Fixes: b5996f11ea54 ("net: add Hisilicon Network Subsystem basic ethernet support")
-Signed-off-by: Yonglong Liu <liuyonglong@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+The commit transaction list has:
+
+NFT_MSG_NEWTABLE
+NFT_MSG_NEWFLOWTABLE
+NFT_MSG_DELFLOWTABLE
+NFT_MSG_DELTABLE
+
+A missing generation check during DELTABLE processing causes it to queue
+the DELFLOWTABLE operation a second time, so we corrupt the list here:
+
+  case NFT_MSG_DELFLOWTABLE:
+     list_del_rcu(&nft_trans_flowtable(trans)->list);
+     nf_tables_flowtable_notify(&trans->ctx,
+
+because we have two different DELFLOWTABLE transactions for the same
+flowtable.  We then call list_del_rcu() twice for the same flowtable->list.
+
+The object handling seems to suffer from the same bug so add a generation
+check too and only queue delete transactions for flowtables/objects that
+are still active in the next generation.
+
+Reported-by: syzbot+37a6804945a3a13b1572@syzkaller.appspotmail.com
+Fixes: 3b49e2e94e6eb ("netfilter: nf_tables: add flow table netlink frontend")
+Signed-off-by: Florian Westphal <fw@strlen.de>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/hisilicon/hns/hns_enet.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ net/netfilter/nf_tables_api.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns/hns_enet.c b/drivers/net/ethernet/hisilicon/hns/hns_enet.c
-index 7f8cf809e02b5..024b08fafd3b2 100644
---- a/drivers/net/ethernet/hisilicon/hns/hns_enet.c
-+++ b/drivers/net/ethernet/hisilicon/hns/hns_enet.c
-@@ -569,7 +569,6 @@ static int hns_nic_poll_rx_skb(struct hns_nic_ring_data *ring_data,
- 	skb = *out_skb = napi_alloc_skb(&ring_data->napi,
- 					HNS_RX_HEAD_SIZE);
- 	if (unlikely(!skb)) {
--		netdev_err(ndev, "alloc rx skb fail\n");
- 		ring->stats.sw_err_cnt++;
- 		return -ENOMEM;
- 	}
-@@ -1060,7 +1059,6 @@ static int hns_nic_common_poll(struct napi_struct *napi, int budget)
- 		container_of(napi, struct hns_nic_ring_data, napi);
- 	struct hnae_ring *ring = ring_data->ring;
- 
--try_again:
- 	clean_complete += ring_data->poll_one(
- 				ring_data, budget - clean_complete,
- 				ring_data->ex_process);
-@@ -1070,7 +1068,7 @@ try_again:
- 			napi_complete(napi);
- 			ring->q->handle->dev->ops->toggle_ring_irq(ring, 0);
- 		} else {
--			goto try_again;
-+			return budget;
- 		}
+diff --git a/net/netfilter/nf_tables_api.c b/net/netfilter/nf_tables_api.c
+index 79b88467606db..7f0d3ffd54697 100644
+--- a/net/netfilter/nf_tables_api.c
++++ b/net/netfilter/nf_tables_api.c
+@@ -936,12 +936,18 @@ static int nft_flush_table(struct nft_ctx *ctx)
  	}
  
+ 	list_for_each_entry_safe(flowtable, nft, &ctx->table->flowtables, list) {
++		if (!nft_is_active_next(ctx->net, flowtable))
++			continue;
++
+ 		err = nft_delflowtable(ctx, flowtable);
+ 		if (err < 0)
+ 			goto out;
+ 	}
+ 
+ 	list_for_each_entry_safe(obj, ne, &ctx->table->objects, list) {
++		if (!nft_is_active_next(ctx->net, obj))
++			continue;
++
+ 		err = nft_delobj(ctx, obj);
+ 		if (err < 0)
+ 			goto out;
 -- 
 2.20.1
 
