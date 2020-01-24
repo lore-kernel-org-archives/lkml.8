@@ -2,242 +2,242 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C895EC32771
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 19:10:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C4A5C35243
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 19:11:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 928C620709
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 19:10:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18AEB2075D
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 19:11:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DHLeV5gR"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KHTdq39f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391859AbgAXTK1 (ORCPT
+        id S2403875AbgAXTLK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 14:10:27 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:33129 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387966AbgAXTKZ (ORCPT
+        Fri, 24 Jan 2020 14:11:10 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:28373 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2389077AbgAXTLJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 14:10:25 -0500
-Received: by mail-ot1-f67.google.com with SMTP id b18so2690675otp.0;
-        Fri, 24 Jan 2020 11:10:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=rZpWws5nLxdJWxF6Q8KGCMAI9TyfuMXc7iT6zDqb+GA=;
-        b=DHLeV5gRhvVzvCoRo2FHM2yTUaacNwWkVsx3Anj0cLRscA0gT1+DjtxUcKCefNL0/m
-         adUhtug3FU2K8bHDQRRp0Jkes3THuwIVr+ztO+ThiQ0dRRHt1dWwNeRRhedMYFcWDtng
-         xHAHYWjQiFZHFUbvuHrsii9aSIY8V7hVjMsuPYBgyOEiu3VNV5WgmPMKBJo7UfHvgOqG
-         a0+Rvp5NJFobpUoXf5B4957b206r+DHtOwa5oyw2uMii7KOfK2jlj5WmzTCXv3Q35a2M
-         yOLvDOLNOaUx1J32Mg76QV9oYV1BKbPvntKznBKmAAI7wnJlZ+/7MNgpy2u8JHueWF5v
-         w1aQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=rZpWws5nLxdJWxF6Q8KGCMAI9TyfuMXc7iT6zDqb+GA=;
-        b=FkLdDh4bjnWc271cYzeXOw2lFzQWmnEclowIKoIYnllvc5PzUi83UN4/aQYVy1Vlrb
-         yE4s9ZtZsMIqPFu56T8z81At+Z613fIbrG5qTSQ8LHmjz4lQVNPYWa6M0NuMlg1jcsY+
-         K/2tSDaxuKpeuYFRWAWc4LyR0nIj/Wpc079RcgJcrepTj6C2Apvhy4dDN3rrdzO70XM2
-         tIS5C2HtqbBaqseteb9g3FUNQEkmlKIqaELHsLTa0AJ7hvfU3w58g58SbmFfUaT1u72g
-         nb9p2mmLUaRUFXKriyxRrbOgO9m+V2RkRVH9HVo9jtl2P/1XfD/WUqmSmZaQMxXf+Odz
-         12UA==
-X-Gm-Message-State: APjAAAUxMu0RoDfv3llJWIS544RTzlG0FJCZk6k7fBEg1/KJZN7mISss
-        LuGQIvWw42F4XTZkZQiMSg==
-X-Google-Smtp-Source: APXvYqw83FvAE7X4iU36HKwq4flfcw4gdoNw+A1yGbKq21az3QaMN5lSol55uB7Fqwlq/0Ihi1OpHA==
-X-Received: by 2002:a9d:5888:: with SMTP id x8mr3616737otg.361.1579893024855;
-        Fri, 24 Jan 2020 11:10:24 -0800 (PST)
-Received: from [10.236.30.189] ([165.204.77.1])
-        by smtp.gmail.com with ESMTPSA id e17sm2233697otq.58.2020.01.24.11.10.23
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 24 Jan 2020 11:10:24 -0800 (PST)
-Subject: Re: [PATCH RFC] drivers/base/memory.c: indicate all memory blocks as
- removable
-To:     David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org
-Cc:     linux-mm@kvack.org, Michal Hocko <mhocko@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        powerpc-utils-devel@googlegroups.com, util-linux@vger.kernel.org,
-        Badari Pulavarty <pbadari@us.ibm.com>, ndfont@gmail.com,
-        Robert Jennings <rcj@linux.vnet.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Karel Zak <kzak@redhat.com>
-References: <20200124155336.17126-1-david@redhat.com>
-From:   "Fontenot, Nathan" <ndfont@gmail.com>
-Message-ID: <ddb71703-81fa-53fe-51de-c018612f2704@gmail.com>
-Date:   Fri, 24 Jan 2020 13:10:22 -0600
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Fri, 24 Jan 2020 14:11:09 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579893067;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=EKQnhB0x5paqPkR2bjGJpS9yq6B1XJfiM0y1xqkJf4Y=;
+        b=KHTdq39fWmrjghFisB3oQu3nieS/eRvZIdcTvw7121U9ZxQTtv3RMlISS2/eVEWrVi4gRV
+        BjKY3/LQeaW3bzIl22XWBU5LFprNOqLpT04YnmCFjBrvOggOU6yy8IGK5ZgOxMWtL7Ix6F
+        OykJq04Wjljp8/UJ8lx5zvlgPU48ia0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-349-mRUQpyS2MGCPjYgdvWC9gA-1; Fri, 24 Jan 2020 14:11:05 -0500
+X-MC-Unique: mRUQpyS2MGCPjYgdvWC9gA-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 36477107ACC7;
+        Fri, 24 Jan 2020 19:11:02 +0000 (UTC)
+Received: from malachite.bss.redhat.com (dhcp-10-20-1-90.bss.redhat.com [10.20.1.90])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 106171001B03;
+        Fri, 24 Jan 2020 19:10:55 +0000 (UTC)
+From:   Lyude Paul <lyude@redhat.com>
+To:     amd-gfx@lists.freedesktop.org
+Cc:     Mikita Lipski <mlipski@amd.com>,
+        Harry Wentland <harry.wentland@amd.com>,
+        stable@vger.kernel.org, Leo Li <sunpeng.li@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
+        Mikita Lipski <mikita.lipski@amd.com>,
+        Martin Tsai <martin.tsai@amd.com>,
+        David Francis <David.Francis@amd.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Alvin Lee <alvin.lee2@amd.com>,
+        Jean Delvare <jdelvare@suse.de>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2] drm/amd/dm/mst: Ignore payload update failures
+Date:   Fri, 24 Jan 2020 14:10:46 -0500
+Message-Id: <20200124191047.120064-1-lyude@redhat.com>
+In-Reply-To: <20200124000643.99859-1-lyude@redhat.com>
+References: <20200124000643.99859-1-lyude@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20200124155336.17126-1-david@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It's been awhile since I've looked at the powerpc-utils drmgr command and
-pseries DLPAR code but a quick scan makes and it appears that it hasn't changed
-too much. Given that, some thoughts.
+Disabling a display on MST can potentially happen after the entire MST
+topology has been removed, which means that we can't communicate with
+the topology at all in this scenario. Likewise, this also means that we
+can't properly update payloads on the topology and as such, it's a good
+idea to ignore payload update failures when disabling displays.
+Currently, amdgpu makes the mistake of halting the payload update
+process when any payload update failures occur, resulting in leaving
+DC's local copies of the payload tables out of date.
 
-The sysfs 'removable' file was a great help when memory DLPAR was driven
-from userspace in the powerpc-utils drmgr command. Having this check did improve
-performance though I can't point to any numbers.
+This ends up causing problems with hotplugging MST topologies, and
+causes modesets on the second hotplug to fail like so:
 
-Currently, memory DLPAR is done completely in the kernel. The request is
-initiated from drmgr writing to /sys/kernel/dlpar (for pHyp partitions)
-or from a hotplug interrupt (for guests). I don't believe the 'removable'
-sysfs file is used in either of these paths by drmgr. The only time it is
-used is on older kernels that do not support in-kernel memory DLPAR.
+[drm] Failed to updateMST allocation table forpipe idx:1
+------------[ cut here ]------------
+WARNING: CPU: 5 PID: 1511 at
+drivers/gpu/drm/amd/amdgpu/../display/dc/core/dc_link.c:2677
+update_mst_stream_alloc_table+0x11e/0x130 [amdgpu]
+Modules linked in: cdc_ether usbnet fuse xt_conntrack nf_conntrack
+nf_defrag_ipv6 libcrc32c nf_defrag_ipv4 ipt_REJECT nf_reject_ipv4
+nft_counter nft_compat nf_tables nfnetlink tun bridge stp llc sunrpc
+vfat fat wmi_bmof uvcvideo snd_hda_codec_realtek snd_hda_codec_generic
+snd_hda_codec_hdmi videobuf2_vmalloc snd_hda_intel videobuf2_memops
+videobuf2_v4l2 snd_intel_dspcfg videobuf2_common crct10dif_pclmul
+snd_hda_codec videodev crc32_pclmul snd_hwdep snd_hda_core
+ghash_clmulni_intel snd_seq mc joydev pcspkr snd_seq_device snd_pcm
+sp5100_tco k10temp i2c_piix4 snd_timer thinkpad_acpi ledtrig_audio snd
+wmi soundcore video i2c_scmi acpi_cpufreq ip_tables amdgpu(O)
+rtsx_pci_sdmmc amd_iommu_v2 gpu_sched mmc_core i2c_algo_bit ttm
+drm_kms_helper syscopyarea sysfillrect sysimgblt fb_sys_fops cec drm
+crc32c_intel serio_raw hid_multitouch r8152 mii nvme r8169 nvme_core
+rtsx_pci pinctrl_amd
+CPU: 5 PID: 1511 Comm: gnome-shell Tainted: G           O      5.5.0-rc7L=
+yude-Test+ #4
+Hardware name: LENOVO FA495SIT26/FA495SIT26, BIOS R12ET22W(0.22 ) 01/31/2=
+019
+RIP: 0010:update_mst_stream_alloc_table+0x11e/0x130 [amdgpu]
+Code: 28 00 00 00 75 2b 48 8d 65 e0 5b 41 5c 41 5d 41 5e 5d c3 0f b6 06
+49 89 1c 24 41 88 44 24 08 0f b6 46 01 41 88 44 24 09 eb 93 <0f> 0b e9
+2f ff ff ff e8 a6 82 a3 c2 66 0f 1f 44 00 00 0f 1f 44 00
+RSP: 0018:ffffac428127f5b0 EFLAGS: 00010202
+RAX: 0000000000000002 RBX: ffff8d1e166eee80 RCX: 0000000000000000
+RDX: ffffac428127f668 RSI: ffff8d1e166eee80 RDI: ffffac428127f610
+RBP: ffffac428127f640 R08: ffffffffc03d94a8 R09: 0000000000000000
+R10: ffff8d1e24b02000 R11: ffffac428127f5b0 R12: ffff8d1e1b83d000
+R13: ffff8d1e1bea0b08 R14: 0000000000000002 R15: 0000000000000002
+FS:  00007fab23ffcd80(0000) GS:ffff8d1e28b40000(0000) knlGS:0000000000000=
+000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f151f1711e8 CR3: 00000005997c0000 CR4: 00000000003406e0
+Call Trace:
+ ? mutex_lock+0xe/0x30
+ dc_link_allocate_mst_payload+0x9a/0x210 [amdgpu]
+ ? dm_read_reg_func+0x39/0xb0 [amdgpu]
+ ? core_link_enable_stream+0x656/0x730 [amdgpu]
+ core_link_enable_stream+0x656/0x730 [amdgpu]
+ dce110_apply_ctx_to_hw+0x58e/0x5d0 [amdgpu]
+ ? dcn10_verify_allow_pstate_change_high+0x1d/0x280 [amdgpu]
+ ? dcn10_wait_for_mpcc_disconnect+0x3c/0x130 [amdgpu]
+ dc_commit_state+0x292/0x770 [amdgpu]
+ ? add_timer+0x101/0x1f0
+ ? ttm_bo_put+0x1a1/0x2f0 [ttm]
+ amdgpu_dm_atomic_commit_tail+0xb59/0x1ff0 [amdgpu]
+ ? amdgpu_move_blit.constprop.0+0xb8/0x1f0 [amdgpu]
+ ? amdgpu_bo_move+0x16d/0x2b0 [amdgpu]
+ ? ttm_bo_handle_move_mem+0x118/0x570 [ttm]
+ ? ttm_bo_validate+0x134/0x150 [ttm]
+ ? dm_plane_helper_prepare_fb+0x1b9/0x2a0 [amdgpu]
+ ? _cond_resched+0x15/0x30
+ ? wait_for_completion_timeout+0x38/0x160
+ ? _cond_resched+0x15/0x30
+ ? wait_for_completion_interruptible+0x33/0x190
+ commit_tail+0x94/0x130 [drm_kms_helper]
+ drm_atomic_helper_commit+0x113/0x140 [drm_kms_helper]
+ drm_atomic_helper_set_config+0x70/0xb0 [drm_kms_helper]
+ drm_mode_setcrtc+0x194/0x6a0 [drm]
+ ? _cond_resched+0x15/0x30
+ ? mutex_lock+0xe/0x30
+ ? drm_mode_getcrtc+0x180/0x180 [drm]
+ drm_ioctl_kernel+0xaa/0xf0 [drm]
+ drm_ioctl+0x208/0x390 [drm]
+ ? drm_mode_getcrtc+0x180/0x180 [drm]
+ amdgpu_drm_ioctl+0x49/0x80 [amdgpu]
+ do_vfs_ioctl+0x458/0x6d0
+ ksys_ioctl+0x5e/0x90
+ __x64_sys_ioctl+0x16/0x20
+ do_syscall_64+0x55/0x1b0
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+RIP: 0033:0x7fab2121f87b
+Code: 0f 1e fa 48 8b 05 0d 96 2c 00 64 c7 00 26 00 00 00 48 c7 c0 ff ff
+ff ff c3 66 0f 1f 44 00 00 f3 0f 1e fa b8 10 00 00 00 0f 05 <48> 3d 01
+f0 ff ff 73 01 c3 48 8b 0d dd 95 2c 00 f7 d8 64 89 01 48
+RSP: 002b:00007ffd045f9068 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+RAX: ffffffffffffffda RBX: 00007ffd045f90a0 RCX: 00007fab2121f87b
+RDX: 00007ffd045f90a0 RSI: 00000000c06864a2 RDI: 000000000000000b
+RBP: 00007ffd045f90a0 R08: 0000000000000000 R09: 000055dbd2985d10
+R10: 000055dbd2196280 R11: 0000000000000246 R12: 00000000c06864a2
+R13: 000000000000000b R14: 0000000000000000 R15: 000055dbd2196280
+---[ end trace 6ea888c24d2059cd ]---
 
-Given this, I don't think removing the 'removable' sysfs file would cause any
-issues for the drmgr command. The only scenario I can think of is using an old
-version of drmgr that does not support in-kernel memory DLPAR on a new kernel
-where the 'removable' sysfs file has been removed. This doesn't seem likely
-though and drmgr could be updated to detect this.
+Note as well, I have only been able to reproduce this on setups with 2
+MST displays.
 
--Nathan Fontenot
+Changes since v1:
+* Don't return false when part 1 or part 2 of updating the payloads
+  fails, we don't want to abort at any step of the process even if
+  things fail
 
-On 1/24/2020 9:53 AM, David Hildenbrand wrote:
-> We see multiple issues with the implementation/interface to compute
-> whether a memory block can be offlined (exposed via
-> /sys/devices/system/memory/memoryX/removable) and would like to simplify
-> it (remove the implementation).
-> 
-> 1. It runs basically lockless. While this might be good for performance,
->    we see possible races with memory offlining/unplug that will require
->    at least some sort of locking to fix.
-> 
-> 2. Nowadays, more false positives are possible. No arch-specific checks
->    are performed that validate if memory offlining will not be denied
->    right away (and such check will require locking). For example, arm64
->    won't allow to offline any memory block that was added during boot -
->    which will imply a very high error rate. Other archs have other
->    constraints.
-> 
-> 3. The interface is inherently racy. E.g., if a memory block is
->    detected to be removable (and was not a false positive at that time),
->    there is still no guarantee that offlining will actually succeed. So
->    any caller already has to deal with false positives.
-> 
-> 4. It is unclear which performance benefit this interface actually
->    provides. The introducing commit 5c755e9fd813 ("memory-hotplug: add
->    sysfs removable attribute for hotplug memory remove") mentioned
-> 	"A user-level agent must be able to identify which sections of
-> 	 memory are likely to be removable before attempting the
-> 	 potentially expensive operation."
->    However, no actual performance comparison was included.
+Signed-off-by: Lyude Paul <lyude@redhat.com>
+Acked-by: Harry Wentland <harry.wentland@amd.com>
+Cc: stable@vger.kernel.org
+---
+ .../drm/amd/display/amdgpu_dm/amdgpu_dm_helpers.c   | 13 ++++---------
+ 1 file changed, 4 insertions(+), 9 deletions(-)
 
-> 
-> Known users:
-> - lsmem: Will group memory blocks based on the "removable" property. [1]
-> - chmem: Indirect user. It has a RANGE mode where one can specify
-> 	 removable ranges identified via lsmem to be offlined. However, it
-> 	 also has a "SIZE" mode, which allows a sysadmin to skip the manual
-> 	 "identify removable blocks" step. [2]
-> - powerpc-utils: Uses the "removable" attribute to skip some memory
-> 		 blocks right away when trying to find some to
-> 		 offline+remove. However, with ballooning enabled, it
-> 		 already skips this information completely (because it
-> 		 once resulted in many false negatives). Therefore, the
-> 		 implementation can deal with false positives properly
-> 		 already. [3]
-> 
-> With CONFIG_MEMORY_HOTREMOVE, always indicating "removable" should not
-> break any user space tool. We implement a very bad heuristic now. (in
-> contrast: always returning "not removable" would at least affect
-> powerpc-utils)
-> 
-> Without CONFIG_MEMORY_HOTREMOVE we cannot offline anything, so report
-> "not removable" as before.
-> 
-> Original discussion can be found in [4] ("[PATCH RFC v1] mm:
-> is_mem_section_removable() overhaul").
-> 
-> Other users of is_mem_section_removable() will be removed next, so that
-> we can remove is_mem_section_removable() completely.
-> 
-> [1] http://man7.org/linux/man-pages/man1/lsmem.1.html
-> [2] http://man7.org/linux/man-pages/man8/chmem.8.html
-> [3] https://github.com/ibm-power-utilities/powerpc-utils
-> [4] https://lkml.kernel.org/r/20200117105759.27905-1-david@redhat.com
-> 
-> Suggested-by: Michal Hocko <mhocko@kernel.org>
-> Cc: Dan Williams <dan.j.williams@intel.com>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: powerpc-utils-devel@googlegroups.com
-> Cc: util-linux@vger.kernel.org
-> Cc: Badari Pulavarty <pbadari@us.ibm.com>
-> Cc: Nathan Fontenot <nfont@linux.vnet.ibm.com>
-> Cc: Robert Jennings <rcj@linux.vnet.ibm.com>
-> Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
-> Cc: Karel Zak <kzak@redhat.com>
-> Signed-off-by: David Hildenbrand <david@redhat.com>
-> ---
-> 
-> 1. Are there any use cases that really require this interface to keep
->    producing "more reliable" results?
-> 
-> 2. Is there any real performance advantage when using this interface to
->    identify memory blocks to offline?
-> 
-> ---
->  drivers/base/memory.c | 27 +++++++--------------------
->  1 file changed, 7 insertions(+), 20 deletions(-)
-> 
-> diff --git a/drivers/base/memory.c b/drivers/base/memory.c
-> index 6503f5d0b749..d78a92f09984 100644
-> --- a/drivers/base/memory.c
-> +++ b/drivers/base/memory.c
-> @@ -105,30 +105,17 @@ static ssize_t phys_index_show(struct device *dev,
->  }
->  
->  /*
-> - * Show whether the memory block is likely to be offlineable (or is already
-> - * offline). Once offline, the memory block could be removed. The return
-> - * value does, however, not indicate that there is a way to remove the
-> - * memory block.
-> + * Legacy interface that we cannot remove. Always indicate "removable"
-> + * with CONFIG_MEMORY_HOTREMOVE - bad heuristic.
->   */
->  static ssize_t removable_show(struct device *dev, struct device_attribute *attr,
->  			      char *buf)
->  {
-> -	struct memory_block *mem = to_memory_block(dev);
-> -	unsigned long pfn;
-> -	int ret = 1, i;
-> -
-> -	if (mem->state != MEM_ONLINE)
-> -		goto out;
-> -
-> -	for (i = 0; i < sections_per_block; i++) {
-> -		if (!present_section_nr(mem->start_section_nr + i))
-> -			continue;
-> -		pfn = section_nr_to_pfn(mem->start_section_nr + i);
-> -		ret &= is_mem_section_removable(pfn, PAGES_PER_SECTION);
-> -	}
-> -
-> -out:
-> -	return sprintf(buf, "%d\n", ret);
-> +#ifdef CONFIG_MEMORY_HOTREMOVE
-> +	return sprintf(buf, "1\n");
-> +#else
-> +	return sprintf(buf, "0\n");
-> +#endif
->  }
->  
->  /*
-> 
+diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_helpers.c b/=
+drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_helpers.c
+index 069b7a6f5597..318b474ff20e 100644
+--- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_helpers.c
++++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_helpers.c
+@@ -216,7 +216,8 @@ bool dm_helpers_dp_mst_write_payload_allocation_table=
+(
+ 		drm_dp_mst_reset_vcpi_slots(mst_mgr, mst_port);
+ 	}
+=20
+-	ret =3D drm_dp_update_payload_part1(mst_mgr);
++	/* It's OK for this to fail */
++	drm_dp_update_payload_part1(mst_mgr);
+=20
+ 	/* mst_mgr->->payloads are VC payload notify MST branch using DPCD or
+ 	 * AUX message. The sequence is slot 1-63 allocated sequence for each
+@@ -225,9 +226,6 @@ bool dm_helpers_dp_mst_write_payload_allocation_table=
+(
+=20
+ 	get_payload_table(aconnector, proposed_table);
+=20
+-	if (ret)
+-		return false;
+-
+ 	return true;
+ }
+=20
+@@ -285,7 +283,6 @@ bool dm_helpers_dp_mst_send_payload_allocation(
+ 	struct amdgpu_dm_connector *aconnector;
+ 	struct drm_dp_mst_topology_mgr *mst_mgr;
+ 	struct drm_dp_mst_port *mst_port;
+-	int ret;
+=20
+ 	aconnector =3D (struct amdgpu_dm_connector *)stream->dm_stream_context;
+=20
+@@ -299,10 +296,8 @@ bool dm_helpers_dp_mst_send_payload_allocation(
+ 	if (!mst_mgr->mst_state)
+ 		return false;
+=20
+-	ret =3D drm_dp_update_payload_part2(mst_mgr);
+-
+-	if (ret)
+-		return false;
++	/* It's OK for this to fail */
++	drm_dp_update_payload_part2(mst_mgr);
+=20
+ 	if (!enable)
+ 		drm_dp_mst_deallocate_vcpi(mst_mgr, mst_port);
+--=20
+2.24.1
+
