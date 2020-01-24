@@ -2,244 +2,112 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3487C35242
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:25:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E197C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:25:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FCD72072C
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:25:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579875942;
-	bh=rGZCgt3WGgJwoEyFbmvWJrawYJcjyNi8TN0vwpWGSjM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yZjwF3TgS6B6uxfb9piIicpSCZoelmpCDtLN5zo30bl/DIWYTdU/ivWjfsx8Es7ea
-	 ojqHesBsAcmmu1po9c+vVkngcOOdSF9b9gxmbtQh+y52eks4EyNZSdFc5lorYXrtpV
-	 WjMuNqFxpZ2VkRaGfEyfiYoThwg0UIHhFZC/DLxk=
+	by mail.kernel.org (Postfix) with ESMTP id 077962075D
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:25:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="amgWxDk2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392508AbgAXOZh (ORCPT
+        id S2388965AbgAXOZy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 09:25:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43718 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392222AbgAXOVr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 09:21:47 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Fri, 24 Jan 2020 09:25:54 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:28040 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2387621AbgAXOZv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 09:25:51 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579875950;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=gFUS+IYpTMcPpriTfqC+Rs1/QtFWk7pC2ooCgkxv0Po=;
+        b=amgWxDk292hKUeEXyajV2l+frm3Fh/3pfFqN6hQFHSpGH5ox/kWnKO2BA/F6LDgC+/S4nI
+        Yu6w+dwFQ2hLEXS8xCgWc1VFGX7sMpNIaNeOUFl8VRSaRpiwRoipsWJc1PGof/Rk0862IM
+        zIJE5SzB3TqutYDJOIEVNqTz/J2HD8Y=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-116-8HkIZKcTMhqYNkxhYA9nDw-1; Fri, 24 Jan 2020 09:25:45 -0500
+X-MC-Unique: 8HkIZKcTMhqYNkxhYA9nDw-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 235DF21734;
-        Fri, 24 Jan 2020 14:21:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579875706;
-        bh=rGZCgt3WGgJwoEyFbmvWJrawYJcjyNi8TN0vwpWGSjM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TZCr7nwbtEv4MMPDxFVhyl0PDGtjlWrWcjSkHffECHpeCJ/J4Fkhxhv/7wExGXD/2
-         vo32bBplIjwqteED4R9u/n89EIcUGU+Mxn3UJL8y/jrAzOzV9SLpM8o67EOw+5yT0M
-         danHfKxvNf8EOmAxgbOiRs5VdFpWYeCEmYkUZKmM=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Orr Mazor <orr.mazor@tandemg.com>,
-        Orr Mazor <Orr.Mazor@tandemg.com>,
-        Sergey Matyukevich <sergey.matyukevich.os@quantenna.com>,
-        Johannes Berg <johannes.berg@intel.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 22/32] cfg80211: Fix radar event during another phy CAC
-Date:   Fri, 24 Jan 2020 09:21:09 -0500
-Message-Id: <20200124142119.30484-22-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200124142119.30484-1-sashal@kernel.org>
-References: <20200124142119.30484-1-sashal@kernel.org>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E23DB190D345;
+        Fri, 24 Jan 2020 14:25:43 +0000 (UTC)
+Received: from laptop.redhat.com (ovpn-116-37.ams2.redhat.com [10.36.116.37])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id BFFEC3B0;
+        Fri, 24 Jan 2020 14:25:38 +0000 (UTC)
+From:   Eric Auger <eric.auger@redhat.com>
+To:     eric.auger.pro@gmail.com, eric.auger@redhat.com, maz@kernel.org,
+        linux-kernel@vger.kernel.org, kvmarm@lists.cs.columbia.edu
+Cc:     andrew.murray@arm.com
+Subject: [PATCH 0/4] KVM/ARM: Misc PMU fixes
+Date:   Fri, 24 Jan 2020 15:25:31 +0100
+Message-Id: <20200124142535.29386-1-eric.auger@redhat.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Orr Mazor <orr.mazor@tandemg.com>
+While writing new PMUv3 event counter kvm-unit-tests I found
+some bugs related to the chained counter implementation:
 
-[ Upstream commit 26ec17a1dc5ecdd8d91aba63ead6f8b5ad5dea0d ]
+- the enable state of the high counter is not taken into account,
+- chain counters are not implemented along with SW_INCR type,
+- SW_INCR does not take into account the global enable state
 
-In case a radar event of CAC_FINISHED or RADAR_DETECTED
-happens during another phy is during CAC we might need
-to cancel that CAC.
+The last patch rather is an optimization that avoids manipulating
+non supported counters.
 
-If we got a radar in a channel that another phy is now
-doing CAC on then the CAC should be canceled there.
+Best Regards
 
-If, for example, 2 phys doing CAC on the same channels,
-or on comptable channels, once on of them will finish his
-CAC the other might need to cancel his CAC, since it is no
-longer relevant.
+Eric
 
-To fix that the commit adds an callback and implement it in
-mac80211 to end CAC.
-This commit also adds a call to said callback if after a radar
-event we see the CAC is no longer relevant
+This series can be found at:
+https://github.com/eauger/linux/tree/v5.5-rc7-pmu-fixes-v1
 
-Signed-off-by: Orr Mazor <Orr.Mazor@tandemg.com>
-Reviewed-by: Sergey Matyukevich <sergey.matyukevich.os@quantenna.com>
-Link: https://lore.kernel.org/r/20191222145449.15792-1-Orr.Mazor@tandemg.com
-[slightly reformat/reword commit message]
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- include/net/cfg80211.h  |  5 +++++
- net/mac80211/cfg.c      | 23 +++++++++++++++++++++++
- net/wireless/rdev-ops.h | 10 ++++++++++
- net/wireless/reg.c      | 23 ++++++++++++++++++++++-
- net/wireless/trace.h    |  5 +++++
- 5 files changed, 65 insertions(+), 1 deletion(-)
+Test:
+Tested with kvm-unit-tests [1]: all tests now pass,
+at the exception of one sub-test in pmu-chain-promotion
+but this is a bug in test.
 
-diff --git a/include/net/cfg80211.h b/include/net/cfg80211.h
-index a4c8e9d7dd063..030eea38f2581 100644
---- a/include/net/cfg80211.h
-+++ b/include/net/cfg80211.h
-@@ -2843,6 +2843,9 @@ struct cfg80211_pmk_conf {
-  *
-  * @start_radar_detection: Start radar detection in the driver.
-  *
-+ * @end_cac: End running CAC, probably because a related CAC
-+ *	was finished on another phy.
-+ *
-  * @update_ft_ies: Provide updated Fast BSS Transition information to the
-  *	driver. If the SME is in the driver/firmware, this information can be
-  *	used in building Authentication and Reassociation Request frames.
-@@ -3148,6 +3151,8 @@ struct cfg80211_ops {
- 					 struct net_device *dev,
- 					 struct cfg80211_chan_def *chandef,
- 					 u32 cac_time_ms);
-+	void	(*end_cac)(struct wiphy *wiphy,
-+				struct net_device *dev);
- 	int	(*update_ft_ies)(struct wiphy *wiphy, struct net_device *dev,
- 				 struct cfg80211_update_ft_ies_params *ftie);
- 	int	(*crit_proto_start)(struct wiphy *wiphy,
-diff --git a/net/mac80211/cfg.c b/net/mac80211/cfg.c
-index d437007b15bb2..b1484b8316e87 100644
---- a/net/mac80211/cfg.c
-+++ b/net/mac80211/cfg.c
-@@ -2800,6 +2800,28 @@ static int ieee80211_start_radar_detection(struct wiphy *wiphy,
- 	return err;
- }
- 
-+static void ieee80211_end_cac(struct wiphy *wiphy,
-+			      struct net_device *dev)
-+{
-+	struct ieee80211_sub_if_data *sdata = IEEE80211_DEV_TO_SUB_IF(dev);
-+	struct ieee80211_local *local = sdata->local;
-+
-+	mutex_lock(&local->mtx);
-+	list_for_each_entry(sdata, &local->interfaces, list) {
-+		/* it might be waiting for the local->mtx, but then
-+		 * by the time it gets it, sdata->wdev.cac_started
-+		 * will no longer be true
-+		 */
-+		cancel_delayed_work(&sdata->dfs_cac_timer_work);
-+
-+		if (sdata->wdev.cac_started) {
-+			ieee80211_vif_release_channel(sdata);
-+			sdata->wdev.cac_started = false;
-+		}
-+	}
-+	mutex_unlock(&local->mtx);
-+}
-+
- static struct cfg80211_beacon_data *
- cfg80211_beacon_dup(struct cfg80211_beacon_data *beacon)
- {
-@@ -3730,6 +3752,7 @@ const struct cfg80211_ops mac80211_config_ops = {
- #endif
- 	.get_channel = ieee80211_cfg_get_channel,
- 	.start_radar_detection = ieee80211_start_radar_detection,
-+	.end_cac = ieee80211_end_cac,
- 	.channel_switch = ieee80211_channel_switch,
- 	.set_qos_map = ieee80211_set_qos_map,
- 	.set_ap_chanwidth = ieee80211_set_ap_chanwidth,
-diff --git a/net/wireless/rdev-ops.h b/net/wireless/rdev-ops.h
-index 0c06240d25afc..96849357dd907 100644
---- a/net/wireless/rdev-ops.h
-+++ b/net/wireless/rdev-ops.h
-@@ -1139,6 +1139,16 @@ rdev_start_radar_detection(struct cfg80211_registered_device *rdev,
- 	return ret;
- }
- 
-+static inline void
-+rdev_end_cac(struct cfg80211_registered_device *rdev,
-+	     struct net_device *dev)
-+{
-+	trace_rdev_end_cac(&rdev->wiphy, dev);
-+	if (rdev->ops->end_cac)
-+		rdev->ops->end_cac(&rdev->wiphy, dev);
-+	trace_rdev_return_void(&rdev->wiphy);
-+}
-+
- static inline int
- rdev_set_mcast_rate(struct cfg80211_registered_device *rdev,
- 		    struct net_device *dev,
-diff --git a/net/wireless/reg.c b/net/wireless/reg.c
-index e60a7dedfbf1b..a520f433d4765 100644
---- a/net/wireless/reg.c
-+++ b/net/wireless/reg.c
-@@ -3303,6 +3303,25 @@ bool regulatory_pre_cac_allowed(struct wiphy *wiphy)
- 	return pre_cac_allowed;
- }
- 
-+static void cfg80211_check_and_end_cac(struct cfg80211_registered_device *rdev)
-+{
-+	struct wireless_dev *wdev;
-+	/* If we finished CAC or received radar, we should end any
-+	 * CAC running on the same channels.
-+	 * the check !cfg80211_chandef_dfs_usable contain 2 options:
-+	 * either all channels are available - those the CAC_FINISHED
-+	 * event has effected another wdev state, or there is a channel
-+	 * in unavailable state in wdev chandef - those the RADAR_DETECTED
-+	 * event has effected another wdev state.
-+	 * In both cases we should end the CAC on the wdev.
-+	 */
-+	list_for_each_entry(wdev, &rdev->wiphy.wdev_list, list) {
-+		if (wdev->cac_started &&
-+		    !cfg80211_chandef_dfs_usable(&rdev->wiphy, &wdev->chandef))
-+			rdev_end_cac(rdev, wdev->netdev);
-+	}
-+}
-+
- void regulatory_propagate_dfs_state(struct wiphy *wiphy,
- 				    struct cfg80211_chan_def *chandef,
- 				    enum nl80211_dfs_state dfs_state,
-@@ -3329,8 +3348,10 @@ void regulatory_propagate_dfs_state(struct wiphy *wiphy,
- 		cfg80211_set_dfs_state(&rdev->wiphy, chandef, dfs_state);
- 
- 		if (event == NL80211_RADAR_DETECTED ||
--		    event == NL80211_RADAR_CAC_FINISHED)
-+		    event == NL80211_RADAR_CAC_FINISHED) {
- 			cfg80211_sched_dfs_chan_update(rdev);
-+			cfg80211_check_and_end_cac(rdev);
-+		}
- 
- 		nl80211_radar_notify(rdev, chandef, event, NULL, GFP_KERNEL);
- 	}
-diff --git a/net/wireless/trace.h b/net/wireless/trace.h
-index f3353fe5b35b8..cd0a1c7c185d4 100644
---- a/net/wireless/trace.h
-+++ b/net/wireless/trace.h
-@@ -607,6 +607,11 @@ DEFINE_EVENT(wiphy_netdev_evt, rdev_flush_pmksa,
- 	TP_ARGS(wiphy, netdev)
- );
- 
-+DEFINE_EVENT(wiphy_netdev_evt, rdev_end_cac,
-+	     TP_PROTO(struct wiphy *wiphy, struct net_device *netdev),
-+	     TP_ARGS(wiphy, netdev)
-+);
-+
- DECLARE_EVENT_CLASS(station_add_change,
- 	TP_PROTO(struct wiphy *wiphy, struct net_device *netdev, u8 *mac,
- 		 struct station_parameters *params),
--- 
+Other testing at higher level (perf) appreciated.
+
+references:
+[1] KVM: arm64: PMUv3 Event Counter Tests
+(https://lore.kernel.org/kvmarm/c1831b6c-dc75-1bd3-6657-0375682c30af@redh=
+at.com/T/)
+
+History:
+
+RFC -> v1:
+- remove  [RFC 3/3] KVM: arm64: pmu: Enforce PMEVTYPER evtCount size
+- add KVM: arm64: pmu: Only handle supported event counters
+- Take into account the enable state of the CHAIN high counter
+- revisit kvm_pmu_software_increment() implementation as suggested
+  by Marc
+
+
+Eric Auger (4):
+  KVM: arm64: pmu: Don't increment SW_INCR if PMCR.E is unset
+  KVM: arm64: pmu: Don't mark a counter as chained if the odd one is
+    disabled
+  KVM: arm64: pmu: Fix chained SW_INCR counters
+  KVM: arm64: pmu: Only handle supported event counters
+
+ virt/kvm/arm/pmu.c | 114 +++++++++++++++++++++++++++------------------
+ 1 file changed, 69 insertions(+), 45 deletions(-)
+
+--=20
 2.20.1
 
