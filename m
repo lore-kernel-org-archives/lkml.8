@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF7A7C35240
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 01:19:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65FC1C35240
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 01:19:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C17CB22464
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 01:19:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3937F22464
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 01:19:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579828745;
-	bh=Zvq3xA5WimhGSfsrZocnatsPxP9rNoAqDVyqoRMYm+E=;
+	s=default; t=1579828751;
+	bh=/725mQE0pLiU1D6ulEOt18A2RFyO+sN4CjajKAlYmIU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZM7hLx3OK4sF8DQqwvp8HFCB5PES9d0ftsaw7Jbo7SKzvuGSXI7oJD0sZb/NraU1N
-	 KhuN1biOu97hlQlyAR7sdBSJxdfhTdRNb1h392druyHTxhrlAUi0BjaPAy43yGtEio
-	 Js59FjldIzPDiSrn2UkOJb6Bx8bieJTHPqEJZNpU=
+	b=ptGKfYdemljyiXuMIZV8JwN1K/Z7ertmc+ocHG56o4NSzZNC1jwZbHMBS70DLnGF9
+	 DSS4NNDKpOJdihwJf4MdOOGnIMtHzigHLSOJb4+WwL3kbo6MLFKSri4Jy+gh4KH0e9
+	 uW2LZlMHNifwVibMETAiWdJV60IIcxRHCSuXDOLU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731129AbgAXBTE (ORCPT
+        id S1729793AbgAXBTK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 20:19:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:32910 "EHLO mail.kernel.org"
+        Thu, 23 Jan 2020 20:19:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:32872 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730771AbgAXBRx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 20:17:53 -0500
+        id S1729504AbgAXBRv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jan 2020 20:17:51 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C8F2721D7E;
-        Fri, 24 Jan 2020 01:17:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8D77324691;
+        Fri, 24 Jan 2020 01:17:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579828672;
-        bh=Zvq3xA5WimhGSfsrZocnatsPxP9rNoAqDVyqoRMYm+E=;
+        s=default; t=1579828670;
+        bh=/725mQE0pLiU1D6ulEOt18A2RFyO+sN4CjajKAlYmIU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wgM++YBJOtCaYfsF+mGeM60+vRGXxr8og4TW13l4xKg9004jjVT/rVfSu1a8jgoNz
-         I3DxNF7Rpf/rzrZtsI9xaWdpVinpxwMREGKasbkcOhUlsRfJb8uBrljsL7Vm0UiHcv
-         NU5RbSxB6KGXD557IWyzwBsmpipdCIDYGywoSjgI=
+        b=Y48DWO7P5aTaF75pVueY78mNWZYTC2Ro0PiUlUMKN3nEo5lUy3VqedbR7XXcWQOtI
+         IbAzJ6o87Y9T3hUy2PfJR0YOTykDRdMrTlqW1Ums/ffS8yUjaYX0E95z05KBRMifmK
+         XfHMWuyj+L8Si2AaD37bMa9VNVB/zptbkuDUGEqE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        Chris Chiu <chiu@endlessm.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 04/11] mfd: intel-lpss: Add default I2C device properties for Gemini Lake
-Date:   Thu, 23 Jan 2020 20:17:40 -0500
-Message-Id: <20200124011747.18575-4-sashal@kernel.org>
+Cc:     Slawomir Pawlowski <slawomir.pawlowski@intel.com>,
+        Przemek Kitszel <przemyslawx.kitszel@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 02/11] PCI: Add DMA alias quirk for Intel VCA NTB
+Date:   Thu, 23 Jan 2020 20:17:38 -0500
+Message-Id: <20200124011747.18575-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200124011747.18575-1-sashal@kernel.org>
 References: <20200124011747.18575-1-sashal@kernel.org>
@@ -61,73 +60,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jarkko Nikula <jarkko.nikula@linux.intel.com>
+From: Slawomir Pawlowski <slawomir.pawlowski@intel.com>
 
-[ Upstream commit 3f31bc67e4dc6a555341dffefe328ddd58e8b431 ]
+[ Upstream commit 56b4cd4b7da9ee95778eb5c8abea49f641ebfd91 ]
 
-It turned out Intel Gemini Lake doesn't use the same I2C timing
-parameters as Broxton.
+Intel Visual Compute Accelerator (VCA) is a family of PCIe add-in devices
+exposing computational units via Non Transparent Bridges (NTB, PEX 87xx).
 
-I got confirmation from the Windows team that Gemini Lake systems should
-use updated timing parameters that differ from those used in Broxton
-based systems.
+Similarly to MIC x200, we need to add DMA aliases to allow buffer access
+when IOMMU is enabled.
 
-Fixes: f80e78aa11ad ("mfd: intel-lpss: Add Intel Gemini Lake PCI IDs")
-Tested-by: Chris Chiu <chiu@endlessm.com>
-Signed-off-by: Jarkko Nikula <jarkko.nikula@linux.intel.com>
-Acked-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
+Add aliases to allow computational unit access to host memory.  These
+aliases mark the whole VCA device as one IOMMU group.
+
+All possible slot numbers (0x20) are used, since we are unable to tell what
+slot is used on other side.  This quirk is intended for both host and
+computational unit sides.  The VCA devices have up to five functions: four
+for DMA channels and one additional.
+
+Link: https://lore.kernel.org/r/5683A335CC8BE1438C3C30C49DCC38DF637CED8E@IRSMSX102.ger.corp.intel.com
+Signed-off-by: Slawomir Pawlowski <slawomir.pawlowski@intel.com>
+Signed-off-by: Przemek Kitszel <przemyslawx.kitszel@intel.com>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mfd/intel-lpss-pci.c | 28 ++++++++++++++++++++--------
- 1 file changed, 20 insertions(+), 8 deletions(-)
+ drivers/pci/quirks.c | 34 ++++++++++++++++++++++++++++++++++
+ 1 file changed, 34 insertions(+)
 
-diff --git a/drivers/mfd/intel-lpss-pci.c b/drivers/mfd/intel-lpss-pci.c
-index c37c8bb860685..742d6c1973f4f 100644
---- a/drivers/mfd/intel-lpss-pci.c
-+++ b/drivers/mfd/intel-lpss-pci.c
-@@ -126,6 +126,18 @@ static const struct intel_lpss_platform_info apl_i2c_info = {
- 	.properties = apl_i2c_properties,
- };
+diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+index 20a57a48ae1e4..ae7b3a2ade0ef 100644
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -3986,6 +3986,40 @@ static void quirk_mic_x200_dma_alias(struct pci_dev *pdev)
+ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x2260, quirk_mic_x200_dma_alias);
+ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x2264, quirk_mic_x200_dma_alias);
  
-+static struct property_entry glk_i2c_properties[] = {
-+	PROPERTY_ENTRY_U32("i2c-sda-hold-time-ns", 313),
-+	PROPERTY_ENTRY_U32("i2c-sda-falling-time-ns", 171),
-+	PROPERTY_ENTRY_U32("i2c-scl-falling-time-ns", 290),
-+	{ },
-+};
++/*
++ * Intel Visual Compute Accelerator (VCA) is a family of PCIe add-in devices
++ * exposing computational units via Non Transparent Bridges (NTB, PEX 87xx).
++ *
++ * Similarly to MIC x200, we need to add DMA aliases to allow buffer access
++ * when IOMMU is enabled.  These aliases allow computational unit access to
++ * host memory.  These aliases mark the whole VCA device as one IOMMU
++ * group.
++ *
++ * All possible slot numbers (0x20) are used, since we are unable to tell
++ * what slot is used on other side.  This quirk is intended for both host
++ * and computational unit sides.  The VCA devices have up to five functions
++ * (four for DMA channels and one additional).
++ */
++static void quirk_pex_vca_alias(struct pci_dev *pdev)
++{
++	const unsigned int num_pci_slots = 0x20;
++	unsigned int slot;
 +
-+static const struct intel_lpss_platform_info glk_i2c_info = {
-+	.clk_rate = 133000000,
-+	.properties = glk_i2c_properties,
-+};
++	for (slot = 0; slot < num_pci_slots; slot++) {
++		pci_add_dma_alias(pdev, PCI_DEVFN(slot, 0x0));
++		pci_add_dma_alias(pdev, PCI_DEVFN(slot, 0x1));
++		pci_add_dma_alias(pdev, PCI_DEVFN(slot, 0x2));
++		pci_add_dma_alias(pdev, PCI_DEVFN(slot, 0x3));
++		pci_add_dma_alias(pdev, PCI_DEVFN(slot, 0x4));
++	}
++}
++DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x2954, quirk_pex_vca_alias);
++DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x2955, quirk_pex_vca_alias);
++DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x2956, quirk_pex_vca_alias);
++DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x2958, quirk_pex_vca_alias);
++DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x2959, quirk_pex_vca_alias);
++DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x295A, quirk_pex_vca_alias);
 +
- static const struct intel_lpss_platform_info cnl_i2c_info = {
- 	.clk_rate = 216000000,
- 	.properties = spt_i2c_properties,
-@@ -165,14 +177,14 @@ static const struct pci_device_id intel_lpss_pci_ids[] = {
- 	{ PCI_VDEVICE(INTEL, 0x1ac6), (kernel_ulong_t)&bxt_info },
- 	{ PCI_VDEVICE(INTEL, 0x1aee), (kernel_ulong_t)&bxt_uart_info },
- 	/* GLK */
--	{ PCI_VDEVICE(INTEL, 0x31ac), (kernel_ulong_t)&bxt_i2c_info },
--	{ PCI_VDEVICE(INTEL, 0x31ae), (kernel_ulong_t)&bxt_i2c_info },
--	{ PCI_VDEVICE(INTEL, 0x31b0), (kernel_ulong_t)&bxt_i2c_info },
--	{ PCI_VDEVICE(INTEL, 0x31b2), (kernel_ulong_t)&bxt_i2c_info },
--	{ PCI_VDEVICE(INTEL, 0x31b4), (kernel_ulong_t)&bxt_i2c_info },
--	{ PCI_VDEVICE(INTEL, 0x31b6), (kernel_ulong_t)&bxt_i2c_info },
--	{ PCI_VDEVICE(INTEL, 0x31b8), (kernel_ulong_t)&bxt_i2c_info },
--	{ PCI_VDEVICE(INTEL, 0x31ba), (kernel_ulong_t)&bxt_i2c_info },
-+	{ PCI_VDEVICE(INTEL, 0x31ac), (kernel_ulong_t)&glk_i2c_info },
-+	{ PCI_VDEVICE(INTEL, 0x31ae), (kernel_ulong_t)&glk_i2c_info },
-+	{ PCI_VDEVICE(INTEL, 0x31b0), (kernel_ulong_t)&glk_i2c_info },
-+	{ PCI_VDEVICE(INTEL, 0x31b2), (kernel_ulong_t)&glk_i2c_info },
-+	{ PCI_VDEVICE(INTEL, 0x31b4), (kernel_ulong_t)&glk_i2c_info },
-+	{ PCI_VDEVICE(INTEL, 0x31b6), (kernel_ulong_t)&glk_i2c_info },
-+	{ PCI_VDEVICE(INTEL, 0x31b8), (kernel_ulong_t)&glk_i2c_info },
-+	{ PCI_VDEVICE(INTEL, 0x31ba), (kernel_ulong_t)&glk_i2c_info },
- 	{ PCI_VDEVICE(INTEL, 0x31bc), (kernel_ulong_t)&bxt_uart_info },
- 	{ PCI_VDEVICE(INTEL, 0x31be), (kernel_ulong_t)&bxt_uart_info },
- 	{ PCI_VDEVICE(INTEL, 0x31c0), (kernel_ulong_t)&bxt_uart_info },
+ /*
+  * The IOMMU and interrupt controller on Broadcom Vulcan/Cavium ThunderX2 are
+  * associated not at the root bus, but at a bridge below. This quirk avoids
 -- 
 2.20.1
 
