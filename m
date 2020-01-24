@@ -7,49 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51B04C35242
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:11:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8948FC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:11:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F270214AF
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:11:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5803C214AF
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:11:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579864291;
-	bh=Aj9msqVAVmTezlKExZH+VTX5nRmOUPm/Ywm8Vkk5XRY=;
+	s=default; t=1579864293;
+	bh=kRjjym+Oi5oQ0A3Z3shLQZFUyj4Mjz1Bt6BEyaDWX+E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pS/sFQ6ED4g5XBKR92dr4gEqfnewaAP8VrG4TphFR+IV0IWvc8+iVqzYwp3PUQiEe
-	 waKBPylJiu7rxMhSkE3SrXa9Wxo1cws3ZWNqtN8kZu1p1Km97g6+qm/6IxwzYDC8FM
-	 kI7mNcuUo6OWEPiC3Ik/5w40wlaPth3JpAFg+QaY=
+	b=WCL9/mbbE/UDBuSqDPry8JGYE5K/Aa846YhXi74p3faEMVOUmaVpdJDhLaAKoi+H4
+	 BpDrZ4EvRdebQmmpVlst/YChfjrjqUPh7Ee4LJyzVyY99Y+QVWdM7wVO1Esjnm4aT9
+	 RRD+fa7wL49j1GgiXJS9tOEaoVW+V9k25vsUGY04=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731750AbgAXLJb (ORCPT
+        id S2389894AbgAXLLc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:09:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45062 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 06:11:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47336 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730882AbgAXLJ2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:09:28 -0500
+        id S2388283AbgAXLLX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:11:23 -0500
 Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 79C1020663;
-        Fri, 24 Jan 2020 11:09:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7C2632071A;
+        Fri, 24 Jan 2020 11:11:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579864167;
-        bh=Aj9msqVAVmTezlKExZH+VTX5nRmOUPm/Ywm8Vkk5XRY=;
+        s=default; t=1579864283;
+        bh=kRjjym+Oi5oQ0A3Z3shLQZFUyj4Mjz1Bt6BEyaDWX+E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2mBDRr/P5YzFggLhVjgHW2c2cCyVfpZH7joQsZ8wiWwCNcKfbWWD0bFzj0rlnrT9Z
-         7aHYpVZEto1Evo9nKHwCkpegr/3YsR8EgWy5lpNbJk/T48326cSeQeNP4jr/umK1hU
-         4L2azRBOkH3SQxc+ypump2+1NlpUog8mdYdjddns=
+        b=WSE4NmCKutzlx+T5HbWNpHxamAD6XL1zgh7MF+/O9y+ysc6K0+098/6laxXOijWei
+         0IrGws6P5wVGo70qGNlkD57vuGUQ1YTE9zMlkEZ8b7YyxQzgDTdtirFgPMNvFSxWL+
+         L9+NJEn7NJi1w72+7XBxlBTPcyt78LSYBvgEmXEk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        stable@vger.kernel.org, YueHaibing <yuehaibing@huawei.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 177/639] rtc: ds1307: rx8130: Fix alarm handling
-Date:   Fri, 24 Jan 2020 10:25:47 +0100
-Message-Id: <20200124093109.349854130@linuxfoundation.org>
+Subject: [PATCH 4.19 211/639] cdc-wdm: pass return value of recover_from_urb_loss
+Date:   Fri, 24 Jan 2020 10:26:21 +0100
+Message-Id: <20200124093113.424612048@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
 References: <20200124093047.008739095@linuxfoundation.org>
@@ -62,52 +59,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit 3f929cad943380370b6db31fcb7a38d898d91089 ]
+[ Upstream commit 0742a338f5b3446a26de551ad8273fb41b2787f2 ]
 
-When the EXTENSION.WADA bit is set, register 0x19 contains a bitmap of
-week days, not a day of month. As Linux only handles a single alarm
-without repetition using day of month is more flexible, so clear this
-bit. (Otherwise a value depending on time.tm_wday would have to be
-written to register 0x19.)
+'rv' is the correct return value, pass it upstream instead of 0
 
-Also optimize setting the AIE bit to use a single register write instead
-of a bulk write of three registers.
-
-Fixes: ee0981be7704 ("rtc: ds1307: Add support for Epson RX8130CE")
-Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Fixes: 17d80d562fd7 ("USB: autosuspend for cdc-wdm")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/rtc/rtc-ds1307.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ drivers/usb/class/cdc-wdm.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/rtc/rtc-ds1307.c b/drivers/rtc/rtc-ds1307.c
-index 71396b62dc52b..ebd59e86a567b 100644
---- a/drivers/rtc/rtc-ds1307.c
-+++ b/drivers/rtc/rtc-ds1307.c
-@@ -749,8 +749,8 @@ static int rx8130_set_alarm(struct device *dev, struct rtc_wkalrm *t)
- 	if (ret < 0)
- 		return ret;
- 
--	ctl[0] &= ~RX8130_REG_EXTENSION_WADA;
--	ctl[1] |= RX8130_REG_FLAG_AF;
-+	ctl[0] &= RX8130_REG_EXTENSION_WADA;
-+	ctl[1] &= ~RX8130_REG_FLAG_AF;
- 	ctl[2] &= ~RX8130_REG_CONTROL0_AIE;
- 
- 	ret = regmap_bulk_write(ds1307->regmap, RX8130_REG_EXTENSION, ctl,
-@@ -773,8 +773,7 @@ static int rx8130_set_alarm(struct device *dev, struct rtc_wkalrm *t)
- 
- 	ctl[2] |= RX8130_REG_CONTROL0_AIE;
- 
--	return regmap_bulk_write(ds1307->regmap, RX8130_REG_EXTENSION, ctl,
--				 sizeof(ctl));
-+	return regmap_write(ds1307->regmap, RX8130_REG_CONTROL0, ctl[2]);
+diff --git a/drivers/usb/class/cdc-wdm.c b/drivers/usb/class/cdc-wdm.c
+index b8a1fdefb5150..4929c58830688 100644
+--- a/drivers/usb/class/cdc-wdm.c
++++ b/drivers/usb/class/cdc-wdm.c
+@@ -1107,7 +1107,7 @@ static int wdm_post_reset(struct usb_interface *intf)
+ 	rv = recover_from_urb_loss(desc);
+ 	mutex_unlock(&desc->wlock);
+ 	mutex_unlock(&desc->rlock);
+-	return 0;
++	return rv;
  }
  
- static int rx8130_alarm_irq_enable(struct device *dev, unsigned int enabled)
+ static struct usb_driver wdm_driver = {
 -- 
 2.20.1
 
