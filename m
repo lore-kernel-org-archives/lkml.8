@@ -2,134 +2,106 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8091AC35242
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 19:51:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EA93C35242
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 19:53:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59CB520702
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 19:51:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DAE0C20702
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 19:53:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TmokgE0F"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="i11zhh4E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392321AbgAXTvD (ORCPT
+        id S2392328AbgAXTxT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 14:51:03 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:44952 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388136AbgAXTvD (ORCPT
+        Fri, 24 Jan 2020 14:53:19 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:33234 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391581AbgAXTxT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 14:51:03 -0500
-Received: by mail-pg1-f196.google.com with SMTP id x7so1636210pgl.11;
-        Fri, 24 Jan 2020 11:51:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:message-id:in-reply-to:references:subject
-         :mime-version:content-transfer-encoding;
-        bh=FTl3tMgOJleUeTXjL47OVwdU9mZx0RCQU/G9/ZS/7CA=;
-        b=TmokgE0FYDDv1w1Aui2sIKy3k6viFhFjnTdPCyvT9tCC3fJgqNHP+DvuVnFhK235kh
-         TDBMeMRoN4kUjHFpIqB9mTmKombLIFPreY2F9ZEuL4UV6s8gP4HbOPDDSWtVh5wMHXJw
-         Fk+HlOdBmbPXuWsauAnhHOZXG51X3gpQnLKeLoBBajGpTUUIv0bHluqhSzjk5E7TrHgx
-         LwcloEwWRwifEVPeOa8TuhYHeSxCTDIqsvELGdRL6/29xsXBfpWU++9HV7A94E/Pw43F
-         xqh/V+bEIyFLRX/RrOPJQE2h5waZorGXm/kWCBXH801pixD1+/kLcmspqBvULV3zc0pb
-         frDQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:message-id:in-reply-to
-         :references:subject:mime-version:content-transfer-encoding;
-        bh=FTl3tMgOJleUeTXjL47OVwdU9mZx0RCQU/G9/ZS/7CA=;
-        b=rfxjrMHKAPcz7P87werCO622Q4ikxjKTNOb78cbTL9RvbbqudE3qDSiU7CyQm2P9+U
-         Lju9pC2QozoNXZzpQYkRKJgsHcL3Vz/XrwRhiNgfuypPPvGKE37Dw3PYLYnBPnkX2yCj
-         G2m2ZcD44eJSQNg+2+Z05HkNc9FTkpQNroxGAulNw417ctOwnDC3zeObCsl2d6I/CK+G
-         AgytKxiMPMHgm/xPPKiczq8DMYQdSOik3uZLuNotpuuWjLtTp5pVqPyPn9SVEF7AGyv3
-         rnXkV8RP9nj5+vI8yA6pWLwVprndrfNGr2r9XN5zQI1dzfH8SseOEMW+k5+ny/qJ/WeS
-         gIKw==
-X-Gm-Message-State: APjAAAXky0df7mUueXWks8ikJdk6fPL8MmW7D7sCv+i89JvKAGTKTjNL
-        4W9Yqtp7UYmk3Jjueso1FD4=
-X-Google-Smtp-Source: APXvYqzEDh92A+dPDJQzW9k9TeaoLrhM0SExEb29iTV6mc7e6uHUO3W+iaVNUiPvZBBpMiQRKwaGhQ==
-X-Received: by 2002:a63:4303:: with SMTP id q3mr5809403pga.439.1579895462283;
-        Fri, 24 Jan 2020 11:51:02 -0800 (PST)
-Received: from localhost ([184.63.162.180])
-        by smtp.gmail.com with ESMTPSA id e1sm7278157pfl.98.2020.01.24.11.50.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 Jan 2020 11:51:01 -0800 (PST)
-Date:   Fri, 24 Jan 2020 11:50:54 -0800
-From:   John Fastabend <john.fastabend@gmail.com>
-To:     Martin Lau <kafai@fb.com>, Lorenz Bauer <lmb@cloudflare.com>,
-        John Fastabend <john.fastabend@gmail.com>
-Cc:     Shuah Khan <shuah@kernel.org>, Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Message-ID: <5e2b4a9e2028_551b2aaf5fbda5b8e1@john-XPS-13-9370.notmuch>
-In-Reply-To: <20200123183427.wsmwuheq3wcw3usm@kafai-mbp.dhcp.thefacebook.com>
-References: <20200123165934.9584-1-lmb@cloudflare.com>
- <20200123165934.9584-2-lmb@cloudflare.com>
- <20200123183427.wsmwuheq3wcw3usm@kafai-mbp.dhcp.thefacebook.com>
-Subject: Re: [PATCH bpf 1/4] selftests: bpf: use a temporary file in
- test_sockmap
-Mime-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: 7bit
+        Fri, 24 Jan 2020 14:53:19 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00OJrCoA082355;
+        Fri, 24 Jan 2020 13:53:12 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1579895592;
+        bh=vG3tvGD/QRBqdgtOXjx5zOUsGHCK/ABAITDFK51OWYc=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=i11zhh4EApu8nwWvLZH7bsEx134pNpg6OXOl7i64JLV/NRj9qIz7qcSgc02tmyWOD
+         DNPRTrWkaz0dGxoq1jvYVMwkhj4mcqh16wGhmxcUAck/L3wRso7+v+XI1s10nWbGGb
+         VlWO6CUV/tRJo44ctePh7SliyIxuyvhwy40VEWXc=
+Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00OJrCCX090059
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 24 Jan 2020 13:53:12 -0600
+Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 24
+ Jan 2020 13:53:12 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Fri, 24 Jan 2020 13:53:12 -0600
+Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00OJrCv1053018;
+        Fri, 24 Jan 2020 13:53:12 -0600
+Subject: Re: [PATCH v2] can: tcan4x5x: Turn on the power before parsing the
+ config
+To:     Marc Kleine-Budde <mkl@pengutronix.de>
+CC:     <linux-can@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>
+References: <20191210163204.28225-1-dmurphy@ti.com>
+ <4a2e80f0-13c5-df7b-65af-25f86ca48f2a@pengutronix.de>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <3a67743b-aec6-ba4e-14a6-c2ab327e1eae@ti.com>
+Date:   Fri, 24 Jan 2020 13:50:01 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
+MIME-Version: 1.0
+In-Reply-To: <4a2e80f0-13c5-df7b-65af-25f86ca48f2a@pengutronix.de>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Martin Lau wrote:
-> On Thu, Jan 23, 2020 at 04:59:30PM +0000, Lorenz Bauer wrote:
-> > Use a proper temporary file for sendpage tests. This means that running
-> > the tests doesn't clutter the working directory, and allows running the
-> > test on read-only filesystems.
-> > 
-> > Signed-off-by: Lorenz Bauer <lmb@cloudflare.com>
-> > ---
-> >  tools/testing/selftests/bpf/test_sockmap.c | 15 +++++----------
-> >  1 file changed, 5 insertions(+), 10 deletions(-)
-> > 
-> > diff --git a/tools/testing/selftests/bpf/test_sockmap.c b/tools/testing/selftests/bpf/test_sockmap.c
-> > index 4a851513c842..779e11da979c 100644
-> > --- a/tools/testing/selftests/bpf/test_sockmap.c
-> > +++ b/tools/testing/selftests/bpf/test_sockmap.c
-> > @@ -331,7 +331,7 @@ static int msg_loop_sendpage(int fd, int iov_length, int cnt,
-> >  	FILE *file;
-> >  	int i, fp;
-> >  
-> > -	file = fopen(".sendpage_tst.tmp", "w+");
-> > +	file = tmpfile();
-> >  	if (!file) {
-> >  		perror("create file for sendpage");
-> >  		return 1;
-> > @@ -340,13 +340,8 @@ static int msg_loop_sendpage(int fd, int iov_length, int cnt,
-> >  		fwrite(&k, sizeof(char), 1, file);
-> >  	fflush(file);
-> >  	fseek(file, 0, SEEK_SET);
-> > -	fclose(file);
-> >  
-> > -	fp = open(".sendpage_tst.tmp", O_RDONLY);
-> > -	if (fp < 0) {
-> > -		perror("reopen file for sendpage");
-> > -		return 1;
-> > -	}
-> > +	fp = fileno(file);
-> It may be better to keep fp == -1 check here.
-> It is not clear to me the original intention of reopen.
-> I would defer to John for comment.
-> 
+Marc
 
-Seeing fileno shouldn't fail seems OK to me.
+On 1/2/20 6:38 AM, Marc Kleine-Budde wrote:
+> On 12/10/19 5:32 PM, Dan Murphy wrote:
+>> The parse config function now performs action on the device either
+>> reading or writing and a reset.  If the regulator is managed it needs
+>> to be turned on.  So turn on the regulator if available if the parsing
+>> fails then turn off the regulator.
+> Another BTW:
+> Consider converting the switching of the vsup to runtime_pm.
+>
+> Yet another one:
+> Why do you disable the clocks in the error path of tcan4x5x_can_probe(),
+> but never enable them?
+>
+>> out_clk:
+>> 	if (!IS_ERR(mcan_class->cclk)) {
+>> 		clk_disable_unprepare(mcan_class->cclk);
+>> 		clk_disable_unprepare(mcan_class->hclk);
+>> 	}
+> - please move the clock handling from the m_can.c to the individual
+>    driver
+> - please move the clock handling to runtime_pm in the individual driver
+> - remove the obsolete m_can_class_get_clocks()
+> - make runtime_pm mandatory
 
-> >  
-> >  	clock_gettime(CLOCK_MONOTONIC, &s->start);
-> >  	for (i = 0; i < cnt; i++) {
+Ack to the above I have made these changes locally.  Will submit next week.
+
+Dan
 
 
-
+> regards,
+> Marc
+>
