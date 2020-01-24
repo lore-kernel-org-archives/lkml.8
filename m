@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C8EBC32771
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:26:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56548C32771
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:26:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 239CC21734
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:26:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21BC521734
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:26:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579875984;
-	bh=32scT0FsrqoEUDsjYgI0W3WcQWq84g2u+JpsOBapiMo=;
+	s=default; t=1579875989;
+	bh=EPmA2zirvc5Pz7HNThNXC1RSd9j2S88QrrFYdgTC6bA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ALeGGQYePT8e6YA9csWGhWNOytReTSy5LPQdoH7/9NYO2eY/HNF80jEB/Wlo8Omr3
-	 lbQpxIEcUcnOERr3CzqsDzDZ4tFMClvdzhqlliYK43RaI4aYBW2/2Jx2ZHAmHTqUML
-	 lDMwP9nTKDZlllxRfe9drHM/PTqP8i6zrkTK/53Q=
+	b=O3S8y/+F+ClkV0F5HEyVNtU/ReQVhkDGjHTy1tKFAtAFvfvF1igJ+93VZG9a5lfK3
+	 J9YIv1ul2gMKHhCheJ3HpNg6v42rQ7YjiaT9sidLt4NdxAdEzn/IQixXqq6Xhm/r77
+	 SJZbbjr62e8ZpVYjFLiq9OzoDdWRS9qvJb0iKkf0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389884AbgAXO0X (ORCPT
+        id S2389922AbgAXO02 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 09:26:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43612 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 09:26:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43594 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405375AbgAXOVl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 09:21:41 -0500
+        id S2405365AbgAXOVk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 09:21:40 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C191424685;
-        Fri, 24 Jan 2020 14:21:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A95C224682;
+        Fri, 24 Jan 2020 14:21:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579875700;
-        bh=32scT0FsrqoEUDsjYgI0W3WcQWq84g2u+JpsOBapiMo=;
+        s=default; t=1579875699;
+        bh=EPmA2zirvc5Pz7HNThNXC1RSd9j2S88QrrFYdgTC6bA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AMcIkld2WApIR89XuYfHAyQO3WnmOpcSTgREno8s8MJSjOBTdnjx4xwSibBvk8G2r
-         R5AqcrrBL+S+Ogh5ddAlo37Smb0jHlzoF56f0qjTrLFY3VR9cOE8+9KEL5FBSLc2tD
-         e5iWsSJR2xxAaFSNZjQbV/H5Fc9fFB1vYvnzWOBY=
+        b=VxtULot+6qY9p3kedech8zVOJjOrMSRGHkZf0uPy3gjwpS9QA+ufv0O/T+5DdrJBf
+         thTI0XqX+G8DSG1NLx7Z+bA5ZAGrs+6bJ2FgUAYvmyMh35AhjwUChqGwRC5woipi/L
+         FFyNuJoGkoR1WKwwg/L3CxoAhgksHlycfaphzP8U=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vladis Dronov <vdronov@redhat.com>,
-        Antti Laakso <antti.laakso@intel.com>,
-        Richard Cochran <richardcochran@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 18/32] ptp: free ptp device pin descriptors properly
-Date:   Fri, 24 Jan 2020 09:21:05 -0500
-Message-Id: <20200124142119.30484-18-sashal@kernel.org>
+Cc:     Johan Hovold <johan@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-wireless@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 17/32] NFC: pn533: fix bulk-message timeout
+Date:   Fri, 24 Jan 2020 09:21:04 -0500
+Message-Id: <20200124142119.30484-17-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200124142119.30484-1-sashal@kernel.org>
 References: <20200124142119.30484-1-sashal@kernel.org>
@@ -61,54 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vladis Dronov <vdronov@redhat.com>
+From: Johan Hovold <johan@kernel.org>
 
-[ Upstream commit 75718584cb3c64e6269109d4d54f888ac5a5fd15 ]
+[ Upstream commit a112adafcb47760feff959ee1ecd10b74d2c5467 ]
 
-There is a bug in ptp_clock_unregister(), where ptp_cleanup_pin_groups()
-first frees ptp->pin_{,dev_}attr, but then posix_clock_unregister() needs
-them to destroy a related sysfs device.
+The driver was doing a synchronous uninterruptible bulk-transfer without
+using a timeout. This could lead to the driver hanging on probe due to a
+malfunctioning (or malicious) device until the device is physically
+disconnected. While sleeping in probe the driver prevents other devices
+connected to the same hub from being added to (or removed from) the bus.
 
-These functions can not be just swapped, as posix_clock_unregister() frees
-ptp which is needed in the ptp_cleanup_pin_groups(). Fix this by calling
-ptp_cleanup_pin_groups() in ptp_clock_release(), right before ptp is freed.
+An arbitrary limit of five seconds should be more than enough.
 
-This makes this patch fix an UAF bug in a patch which fixes an UAF bug.
-
-Reported-by: Antti Laakso <antti.laakso@intel.com>
-Fixes: a33121e5487b ("ptp: fix the race between the release of ptp_clock and cdev")
-Link: https://lore.kernel.org/netdev/3d2bd09735dbdaf003585ca376b7c1e5b69a19bd.camel@intel.com/
-Signed-off-by: Vladis Dronov <vdronov@redhat.com>
-Acked-by: Richard Cochran <richardcochran@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: dbafc28955fa ("NFC: pn533: don't send USB data off of the stack")
+Signed-off-by: Johan Hovold <johan@kernel.org>
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/ptp/ptp_clock.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/nfc/pn533/usb.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/ptp/ptp_clock.c b/drivers/ptp/ptp_clock.c
-index b818f65480c15..e232233beb8f2 100644
---- a/drivers/ptp/ptp_clock.c
-+++ b/drivers/ptp/ptp_clock.c
-@@ -179,6 +179,7 @@ static void ptp_clock_release(struct device *dev)
- {
- 	struct ptp_clock *ptp = container_of(dev, struct ptp_clock, dev);
+diff --git a/drivers/nfc/pn533/usb.c b/drivers/nfc/pn533/usb.c
+index fcb57d64d97e6..a2c9b3f3bc232 100644
+--- a/drivers/nfc/pn533/usb.c
++++ b/drivers/nfc/pn533/usb.c
+@@ -403,7 +403,7 @@ static int pn533_acr122_poweron_rdr(struct pn533_usb_phy *phy)
+ 		       cmd, sizeof(cmd), false);
  
-+	ptp_cleanup_pin_groups(ptp);
- 	mutex_destroy(&ptp->tsevq_mux);
- 	mutex_destroy(&ptp->pincfg_mux);
- 	ida_simple_remove(&ptp_clocks_map, ptp->index);
-@@ -315,9 +316,8 @@ int ptp_clock_unregister(struct ptp_clock *ptp)
- 	if (ptp->pps_source)
- 		pps_unregister_source(ptp->pps_source);
- 
--	ptp_cleanup_pin_groups(ptp);
--
- 	posix_clock_unregister(&ptp->clock);
-+
- 	return 0;
- }
- EXPORT_SYMBOL(ptp_clock_unregister);
+ 	rc = usb_bulk_msg(phy->udev, phy->out_urb->pipe, buffer, sizeof(cmd),
+-			  &transferred, 0);
++			  &transferred, 5000);
+ 	kfree(buffer);
+ 	if (rc || (transferred != sizeof(cmd))) {
+ 		nfc_err(&phy->udev->dev,
 -- 
 2.20.1
 
