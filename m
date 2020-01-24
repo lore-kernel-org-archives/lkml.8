@@ -8,65 +8,64 @@ X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFEC0C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 20:12:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53CBCC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 20:12:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82AC42081E
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 20:12:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2ACF12071E
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 20:12:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b6nEs34L"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ltsInCDh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404219AbgAXUMg (ORCPT
+        id S2404238AbgAXUMi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 15:12:36 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:33841 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387535AbgAXUMg (ORCPT
+        Fri, 24 Jan 2020 15:12:38 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:42062 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2392047AbgAXUMh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 15:12:36 -0500
-Received: by mail-wr1-f66.google.com with SMTP id t2so3519283wrr.1
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Jan 2020 12:12:34 -0800 (PST)
+        Fri, 24 Jan 2020 15:12:37 -0500
+Received: by mail-wr1-f67.google.com with SMTP id q6so3477675wro.9
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jan 2020 12:12:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=rwO60z18tzr7WQ1TP+fRraEsg7xwuQbgnqSnqaMw5hc=;
-        b=b6nEs34Lez22ZBBp+RU/DKcDzy+B2KZikc59VGSL95cIqqFk5U4LW92rw3xrF/nYXA
-         A5Ig334+JLGJ6V298+KsUZthCMGiVqFYAipxMuMjyKBg+xXRR96a7Hfussm6OO2TBwic
-         tLyxTsl3XfBym5roX2ilHicefHn21awM/CUH2JChGjVfE0jb1smZcc6ImkvJbtyo2g/h
-         mAxRJ4AZUpMrU1PjdNg0nnfWR4bjNXLnStv5pdmuyexwyV92kqnofx+fLWDDptJKpZZ3
-         e38F3Yd8QuGS8HtuNQK1pbm7OzqzA6JX0nC7uRfEOw3r01gHhSm4bb5y5hfAt/4txkJG
-         aabg==
+        bh=rnZfmnfc0pdMs+T6EM9ZhemmIaH2rgKaKzRcGLzQZ9k=;
+        b=ltsInCDhajaw66MUZMfK29p2YHPoXGir+AkvjRXvaYbKfOAvVWqTnG0EzcIeAv6KkX
+         qIG1uW+vS30Jk4C4YKTyhMo+alYP+R5fGleQSuaPeIlPowqVM6vuwErPsKO3M+8e4rjG
+         6iukxV9xtYnFadsiWs+aXn6QN1b7iRgLgkZsZ5Crzj6x+zm45o9PLzEpx7yxpV5pEU4g
+         4HYkSSk63MnPpf4Snz2a5te87xRWkVaKzXjrDBnbH7pJSjKcSS2zk+kQq7O9x4+Hnr39
+         57pHiEpzFH3ZTgMkLBuvfzNVz1y7kxZUczTWxtc5liUszmG68QnGGnoUmGZIcrUErJV4
+         htYA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=rwO60z18tzr7WQ1TP+fRraEsg7xwuQbgnqSnqaMw5hc=;
-        b=LgAFQIYoIvuQpY1LKDZVr0toiul3oC9N6qhfTK6VULq9A7K+Kbkc0gsFFn9GcScs5P
-         cwcmDiWq45h2r3yniOXXclchGCNoFxiSh9raCS6SPV50N7r/pJ9vBKz3etwOWIFYC74i
-         qkESNk3QKgIUkeFcx9YDR2Zw2OTA6gUz2RWyF8AcJPnJ3qrf0TWmEJClRqC7Qnvqu3FW
-         cwgJFFLmQ+ZO4Ba1uqWh53ZyVyLHlqY8hM6GxiSbHuLYf/Tjz7T/Aj45aakkACGWerJD
-         d4ExQETk5DXOf0AMhiVY7pogOfAkve2qMBoRXg8GbQHrAOMj+7VWI29dPSAT6oLmiIdR
-         EoOA==
-X-Gm-Message-State: APjAAAXXvxxg9aP3rYeJ/rbjGG9O+O5OuLdnBVt44nLpYFZSWD+oeB9O
-        TergvluSvJcsHp/wb+Y0AH3DH82d7g==
-X-Google-Smtp-Source: APXvYqz1EKFYVnl5kf+N2sLKycLiAepUZcXUxPrVeHgff0oVBCNvs7vQ/jaV/lybZkvIfeEfeyE8eA==
-X-Received: by 2002:adf:f58a:: with SMTP id f10mr6573895wro.105.1579896754091;
-        Fri, 24 Jan 2020 12:12:34 -0800 (PST)
+        bh=rnZfmnfc0pdMs+T6EM9ZhemmIaH2rgKaKzRcGLzQZ9k=;
+        b=lrWT7eAntGZsR6FcNZ6+kC8ec19C8NZtfokG5lYwqQ2FFBZouXac+r4dkUUy3Yrybj
+         v29mUE1yBY3R8nN4Sihz0j8lGsmtrS4Bx9MsYl7TuFTseQl2f1t8X0MCZe20d/FMpJzn
+         kvYpUJ5t+6q45e3Eux7xN9Nj34DbRlKR/5vnSX060gnha0HcdwpCEkh/8UDiytQ3XEbs
+         /hglOEFJwAUriO9S2eU7gPukXV/GDt3uvpC34RN8SJElB6BHi8yxFWFZJZld3gwcEk5P
+         /AZjTSxkBUFo1jBmp/E3vpca5EaoJcYwjH8q055ydsRSaIN5UBFKq5Iu8r55Hp0gOpKG
+         Utxw==
+X-Gm-Message-State: APjAAAUZqB4VYhMX04oV2PlnYg8K7YplJEoN7YZtFoLs+nXOH1Lm/gpX
+        1XCOfP6KzWdYulJsfYrENw==
+X-Google-Smtp-Source: APXvYqwOTzONn14SM5w9ztBXTXgDQSkFLvGviHhpNBxRuwSo8oJmTtzdwwQv2p1do/XofKhHAZGitw==
+X-Received: by 2002:adf:dfc1:: with SMTP id q1mr6163608wrn.155.1579896755290;
+        Fri, 24 Jan 2020 12:12:35 -0800 (PST)
 Received: from ninjahub.lan (host-92-15-174-87.as43234.net. [92.15.174.87])
-        by smtp.googlemail.com with ESMTPSA id i204sm6897654wma.44.2020.01.24.12.12.33
+        by smtp.googlemail.com with ESMTPSA id i204sm6897654wma.44.2020.01.24.12.12.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 Jan 2020 12:12:33 -0800 (PST)
+        Fri, 24 Jan 2020 12:12:34 -0800 (PST)
 From:   Jules Irenge <jbi.octave@gmail.com>
 Cc:     boqun.feng@gmail.com, Jules Irenge <jbi.octave@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
         Peter Zijlstra <peterz@infradead.org>,
-        Darren Hart <dvhart@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 2/3] futex: Add missing annotation for wake_futex_pi()
-Date:   Fri, 24 Jan 2020 20:12:19 +0000
-Message-Id: <a3868cdf0328e5953d6c12fe1e94fb2d8932044b.1579893447.git.jbi.octave@gmail.com>
+Subject: [PATCH 3/3] mutex: Add missing annotations
+Date:   Fri, 24 Jan 2020 20:12:20 +0000
+Message-Id: <8e8d93ee2125c739caabe5986f40fa2156c8b4ce.1579893447.git.jbi.octave@gmail.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <cover.1579893447.git.jbi.octave@gmail.com>
 References: <0/3> <cover.1579893447.git.jbi.octave@gmail.com>
@@ -78,33 +77,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sparse reports a warning at wake_futex_pi()
+Sparse reports false warnings and hide real warnings
+where mutex_lock() and mutex_unlock() are used within the kernel
+An example is within the kernel cgroup files
+where the below warnings are found
+|warning: context imbalance in cgroup_lock_and_drain_offline()
+| - wrong count at exit
+|warning: context imbalance in cgroup_procs_write_finish()
+|- wrong count at exit
+|warning: context imbalance in cgroup_procs_write_start()
+|- wrong count at exit.
 
-|warning: context imbalance in wake_futex_pi() - unexpected unlock
-To fix this,
-a __releases(&pi_state->pi_mutex.wait_lock) annotation is added
-Given that wake_futex_pi() does actually call
-raw_spin_unlock_irq(&pi_state->pi_mutex.wait_lock)
-This not only fixes the warning
-but also improves on the readability of the code.
+To fix these,
+an __acquires(lock) is added to mutex_lock() declaration
+a __releases(lock) to mutex_unlock() declaration
 
 Signed-off-by: Jules Irenge <jbi.octave@gmail.com>
 ---
- kernel/futex.c | 1 +
- 1 file changed, 1 insertion(+)
+ include/linux/mutex.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/futex.c b/kernel/futex.c
-index 03c518e9747e..8bc288a7187f 100644
---- a/kernel/futex.c
-+++ b/kernel/futex.c
-@@ -1549,6 +1549,7 @@ static void mark_wake_futex(struct wake_q_head *wake_q, struct futex_q *q)
-  * Caller must hold a reference on @pi_state.
+diff --git a/include/linux/mutex.h b/include/linux/mutex.h
+index aca8f36dfac9..a8ab4029913e 100644
+--- a/include/linux/mutex.h
++++ b/include/linux/mutex.h
+@@ -162,7 +162,7 @@ do {									\
+ } while (0)
+ 
+ #else
+-extern void mutex_lock(struct mutex *lock);
++extern void mutex_lock(struct mutex *lock) __acquires(lock);
+ extern int __must_check mutex_lock_interruptible(struct mutex *lock);
+ extern int __must_check mutex_lock_killable(struct mutex *lock);
+ extern void mutex_lock_io(struct mutex *lock);
+@@ -181,7 +181,7 @@ extern void mutex_lock_io(struct mutex *lock);
+  * Returns 1 if the mutex has been acquired successfully, and 0 on contention.
   */
- static int wake_futex_pi(u32 __user *uaddr, u32 uval, struct futex_pi_state *pi_state)
-+	__releases(&pi_state->pi_mutex.wait_lock)
- {
- 	u32 uninitialized_var(curval), newval;
- 	struct task_struct *new_owner;
+ extern int mutex_trylock(struct mutex *lock);
+-extern void mutex_unlock(struct mutex *lock);
++extern void mutex_unlock(struct mutex *lock) __releases(lock);
+ 
+ extern int atomic_dec_and_mutex_lock(atomic_t *cnt, struct mutex *lock);
+ 
 -- 
 2.24.1
 
