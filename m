@@ -2,345 +2,156 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0109AC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 15:42:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ED8FC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 15:45:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA1512072C
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 15:42:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 614942072C
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 15:45:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="D458rqow"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Anmezv+U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388872AbgAXPmr (ORCPT
+        id S2388962AbgAXPp1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 10:42:47 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:44192 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2388413AbgAXPmq (ORCPT
+        Fri, 24 Jan 2020 10:45:27 -0500
+Received: from mail-lf1-f41.google.com ([209.85.167.41]:45244 "EHLO
+        mail-lf1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388035AbgAXPp1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 10:42:46 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579880564;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=x5bFuZ0SiT52ZPL/1PeCQU/YLgXCIyKTMGysNcGIN+4=;
-        b=D458rqowUHJRcUYeXsG6VLg9LaHZ/PpxcmoLELWsB8WH6FbQ0WDFi8un0S5Ty3G1u4XFoG
-        mlfJRk9ZtHn+XKkopB9slCDz99v1ox3shPYaTtNnub0GA0z0dQql6nEIKYgY6gJ3LperZM
-        0ceRdKYyocBaIPRh5YERIwGQ5u2jQoE=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-312-QjC-qiKAOdqYKeXyG8sOhQ-1; Fri, 24 Jan 2020 10:42:27 -0500
-X-MC-Unique: QjC-qiKAOdqYKeXyG8sOhQ-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A5B1013C2B9;
-        Fri, 24 Jan 2020 15:42:19 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.70])
-        by smtp.corp.redhat.com (Postfix) with SMTP id C81F15DA2C;
-        Fri, 24 Jan 2020 15:42:15 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-        oleg@redhat.com; Fri, 24 Jan 2020 16:42:19 +0100 (CET)
-Date:   Fri, 24 Jan 2020 16:42:15 +0100
-From:   Oleg Nesterov <oleg@redhat.com>
-To:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     Andrew Fox <afox@redhat.com>,
-        Stephen Johnston <sjohnsto@redhat.com>,
-        linux-kernel@vger.kernel.org,
-        Stanislaw Gruszka <sgruszka@redhat.com>
-Subject: Re: [PATCH] sched/cputime: make scale_stime() more precise
-Message-ID: <20200124154215.GA14714@redhat.com>
-References: <20190718131834.GA22211@redhat.com>
- <20200122164612.GA19818@redhat.com>
+        Fri, 24 Jan 2020 10:45:27 -0500
+Received: by mail-lf1-f41.google.com with SMTP id 203so1391846lfa.12
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jan 2020 07:45:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=kfyvQTn0g3NmbBob0j021PC/6QP6hYOFzKNdsQKaexo=;
+        b=Anmezv+USLZozR3HeoTec9bQ1bEx1V7DMcpOGGbCNGfCSEiZ+jlqTVtAY7bnzzSqGJ
+         iZbNQ3d18EJ8S+Ud93DpJ6wPQadTY3XQeEEymxX5lTWEFcpQpcc9lKFg6K86zJoWjfmb
+         +ZPq0Teprhkvia2HRDvLQQ+0YQ1mt+SLMuQipr/vrJmwlu+6Mk2/2gDTfsZXubWnroCu
+         iBPaQwNlyUlVfOr1Jw0Q5+ZFJDBKQXzTPPNkiHnZwfts6Q+L7zS/kSApua88PPrq3sor
+         68Ipbc+XI679/iw/ZwLF/UuXjAnt4neZBCa8tbPU79NKS0bfvPZhfIfzt7vIkzeSPC8v
+         DbIw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=kfyvQTn0g3NmbBob0j021PC/6QP6hYOFzKNdsQKaexo=;
+        b=Mn8mJAQZIqg7aY16K7LXZrwmIWaFkTqEhXOB5rw/kP4x2QgtQ4svMI5mBau5DIgRT4
+         dP9T5+ZcWWsJumQEqzsqjLjCVApJ2lLy8+fT6DjxPx22lR3WlP2Rs2C4f6O0evd1OR/x
+         XfmXN8IazSohs+HiAqB/WKYQP6fm5rE+e5smatCiIhA6Zk/TvaaVfPNqTBm+pAygf5LY
+         s6jUUePL7tBgR6v75/3K4YI6YPrd7iKCEEHHDOAood8+NHvJ91nw2Oa+0Fw3N1+ESy/7
+         NOzLHr/c/OpgbXpJWYrTmBpHmI8QbnkxdAf6Ig/j9yH0RUN8JpUeQAA4vKzHfar1UQxJ
+         aCOA==
+X-Gm-Message-State: APjAAAVfSoImOscZmN9jsFYFhaOUspmhGo+l2rV2qm2MkriJLRe94Xqb
+        2aLTIlURxgIHO06FS1agVBY7+K1SysmrOkaWRFwLZA==
+X-Google-Smtp-Source: APXvYqyP1USSorFbeLrXeR3Pp4110Hu1uNRNI2ZRC63AT5rIvlo2Ceobepi9xyQJhRxn2BTgUyMnLj0oW8MOvCtpOVw=
+X-Received: by 2002:a19:5504:: with SMTP id n4mr1578411lfe.25.1579880724795;
+ Fri, 24 Jan 2020 07:45:24 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200122164612.GA19818@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+References: <1579031859-18692-1-git-send-email-thara.gopinath@linaro.org>
+ <1579031859-18692-5-git-send-email-thara.gopinath@linaro.org>
+ <20200116151502.GQ2827@hirez.programming.kicks-ass.net> <CAKfTPtA-M_APhGzwADhuwABzW_M5YKjm_ONGzQjFNRoJ+qYBmg@mail.gmail.com>
+ <20200117145544.GE14879@hirez.programming.kicks-ass.net> <CAKfTPtAzgNAV5c_sTycSocmi8Y4oGGT5rDNSYmgL3tCjZ1RAQw@mail.gmail.com>
+ <e0ede843-4cb8-83d8-708b-87d96b6eb1c3@arm.com>
+In-Reply-To: <e0ede843-4cb8-83d8-708b-87d96b6eb1c3@arm.com>
+From:   Vincent Guittot <vincent.guittot@linaro.org>
+Date:   Fri, 24 Jan 2020 16:45:13 +0100
+Message-ID: <CAKfTPtA-pr9y2MuwY8vTAy=m4beqdhNCek0fgdZP7u0JT8ojvA@mail.gmail.com>
+Subject: Re: [Patch v8 4/7] sched/fair: Enable periodic update of average
+ thermal pressure
+To:     Dietmar Eggemann <dietmar.eggemann@arm.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Thara Gopinath <thara.gopinath@linaro.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Ionela Voinescu <ionela.voinescu@arm.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Quentin Perret <qperret@google.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        viresh kumar <viresh.kumar@linaro.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Amit Kachhap <amit.kachhap@gmail.com>,
+        Javi Merino <javi.merino@kernel.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 01/22, Oleg Nesterov wrote:
+On Fri, 24 Jan 2020 at 16:37, Dietmar Eggemann <dietmar.eggemann@arm.com> wrote:
 >
-> To remind, scale_stime(stime, rtime, total) is not precise, to say at
-> least. For example:
+> On 17/01/2020 16:39, Vincent Guittot wrote:
+> > On Fri, 17 Jan 2020 at 15:55, Peter Zijlstra <peterz@infradead.org> wrote:
+> >>
+> >> On Fri, Jan 17, 2020 at 02:22:51PM +0100, Vincent Guittot wrote:
+> >>> On Thu, 16 Jan 2020 at 16:15, Peter Zijlstra <peterz@infradead.org> wrote:
+> >>
+> >>>>
+> >>>> That there indentation trainwreck is a reason to rename the function.
+> >>>>
+> >>>>         decayed = update_rt_rq_load_avg(now, rq, curr_class == &rt_sched_class) |
+> >>>>                   update_dl_rq_load_avg(now, rq, curr_class == &dl_sched_class) |
+> >>>>                   update_thermal_load_avg(rq_clock_task(rq), rq, thermal_pressure) |
+> >>>>                   update_irq_load_avg(rq, 0);
+> >>>>
+> >>>> Is much better.
+> >>>>
+> >>>> But now that you made me look at that, I noticed it's using a different
+> >>>> clock -- it is _NOT_ using now/rq_clock_pelt(), which means it'll not be
+> >>>> in sync with the other averages.
+> >>>>
+> >>>> Is there a good reason for that?
+> >>>
+> >>> We don't need to apply frequency and cpu capacity invariance on the
+> >>> thermal capping signal which is  what rq_clock_pelt does
+> >>
+> >> Hmm, I suppose that is true, and that really could've done with a
+> >> comment. Now clock_pelt is sort-of in sync with clock_task, but won't it
+> >> still give weird artifacts by having it on a slightly different basis?
+> >
+> > No we should not. Weird artifacts happens when we
+> > add/subtract/propagate signals between each other and then apply pelt
+> > algorithm on the results. In the case of thermal signal, we only add
+> > it to others to update cpu_capacity but pelt algo is then not applied
+> > on it. The error because of some signals being at segment boundaries
+> > whereas others are not, is limited to 2% and doesn't accumulate over
+> > time.
+> >
+> >>
+> >> Anyway, looking at this, would it make sense to remove the @now argument
+> >> from update_*_load_avg()? All those functions already take @rq, and
+> >> rq_clock_*() are fairly trivial inlines.
+> >
+> > TBH I was thinking of doing the opposite for update_irq_load_avg which
+> > hides the clock that is used for irq_avg. This helps to easily
+> > identify which signals use the exact same clock and can be mixed to
+> > create a new pelt signal and which can't
 >
-> 	stime = -1ul/33333; total = stime*3; rtime = total*5555555555;
+> The 'now' argument is one thing but why not:
 >
-> scale_stime() returns 9067034312525142184 while the correct result is
-> 6148914688753325707.
+> -int update_thermal_load_avg(u64 now, struct rq *rq, u64 capacity)
+> +int update_thermal_load_avg(u64 now, struct rq *rq)
+>  {
+> +       u64 capacity = arch_cpu_thermal_pressure(cpu_of(rq));
+> +
+>         if (___update_load_sum(now, &rq->avg_thermal,
 >
-> OK, these random numbers are not realistic, usually the relative error
-> is small enough.
+> This would make the call-sites __update_blocked_others() and
+> task_tick(_fair)() cleaner.
+
+I prefer to keep the capacity as argument. This is more aligned with
+others that provides the value of the signal to apply
+
 >
-> However, even if the relative error is small, the absolute error can be
-> huge. And this means that if you watch /proc/$pid/status incrementally
-> to see how stime/utime grow, you can get the completely wrong numbers.
+> I guess the argument is not to pollute pelt.c. But it already contains
+
+you've got it. I don't want to pollute the pelt.c file with things not
+related to pelt but thermal as an example.
+
+> arch_scale_[freq|cpu]_capacity() for irq.
 >
-> Say, utime (or stime) can be frozen for unpredictably long time, as if
-> the monitored application "hangs" in kernel mode, while the real split
-> is 50/50.
-
-See another test-case below. Arguments:
-
-	start_time start_utime_percent inc_time inc_utime_percent
-
-For example,
-
-	$ ./test 8640000 50 600 50 | head
-
-simulates process which runs 100 days 50/50 in user/kernel mode, then it
-starts to check utime/stime every 600 seconds and print the difference.
-
-The output:
-
-               old               	               new
-               0:600000000000    	    300000000000:300000000000
-               0:600000000000    	    300000000000:300000000000
-               0:600000000000    	    300000000000:300000000000
-    600000000000:0               	    300000000000:300000000000
-    499469920248:100530079752    	    300000000000:300000000000
-               0:600000000000    	    300000000000:300000000000
-               0:600000000000    	    300000000000:300000000000
-    600000000000:0               	    300000000000:300000000000
-    499490181588:100509818412    	    300000000000:300000000000
-
-
-it looks as if this process can spend 20 minutes entirely in kernel mode.
-
-Oleg.
-
--------------------------------------------------------------------------------
-#include <stdlib.h>
-#include <stdio.h>
-#include <assert.h>
-
-#define   noinline                      __attribute__((__noinline__))
-
-typedef unsigned long long u64;
-typedef unsigned int u32;
-typedef unsigned __int128 u128;
-
-static inline u64 div_u64_rem(u64 dividend, u32 divisor, u32 *remainder)
-{
-	*remainder = dividend % divisor;
-	return dividend / divisor;
-}
-static inline u64 div64_u64_rem(u64 dividend, u64 divisor, u64 *remainder)
-{
-	*remainder = dividend % divisor;
-	return dividend / divisor;
-}
-static inline u64 div64_u64(u64 dividend, u64 divisor)
-{
-	return dividend / divisor;
-}
-static inline u64 div_u64(u64 dividend, u32 divisor)
-{
-	u32 remainder;
-	return div_u64_rem(dividend, divisor, &remainder);
-}
-
-static inline int fls64(u64 x)
-{
-	int bitpos = -1;
-	/*
-	 * AMD64 says BSRQ won't clobber the dest reg if x==0; Intel64 says the
-	 * dest reg is undefined if x==0, but their CPU architect says its
-	 * value is written to set it to the same as before.
-	 */
-	asm("bsrq %1,%q0"
-	    : "+r" (bitpos)
-	    : "rm" (x));
-	return bitpos + 1;
-}
-
-static inline int ilog2(u64 n)
-{
-	return fls64(n) - 1;
-}
-
-#define swap(a, b) \
-	do { typeof(a) __tmp = (a); (a) = (b); (b) = __tmp; } while (0)
-
-u64 scale_stime(u64 stime, u64 rtime, u64 total)
-{
-	u64 scaled;
-
-	for (;;) {
-		/* Make sure "rtime" is the bigger of stime/rtime */
-		if (stime > rtime)
-			swap(rtime, stime);
-
-		/* Make sure 'total' fits in 32 bits */
-		if (total >> 32)
-			goto drop_precision;
-
-		/* Does rtime (and thus stime) fit in 32 bits? */
-		if (!(rtime >> 32))
-			break;
-
-		/* Can we just balance rtime/stime rather than dropping bits? */
-		if (stime >> 31)
-			goto drop_precision;
-
-		/* We can grow stime and shrink rtime and try to make them both fit */
-		stime <<= 1;
-		rtime >>= 1;
-		continue;
-
-drop_precision:
-		/* We drop from rtime, it has more bits than stime */
-		rtime >>= 1;
-		total >>= 1;
-	}
-
-	/*
-	 * Make sure gcc understands that this is a 32x32->64 multiply,
-	 * followed by a 64/32->64 divide.
-	 */
-	scaled = div_u64((u64) (u32) stime * (u64) (u32) rtime, (u32)total);
-	return scaled;
-}
-
-u64 new_scale_stime(u64 stime, u64 rtime, u64 total)
-{
-	u64 res = 0, div, rem;
-
-	if (ilog2(stime) + ilog2(rtime) > 62) {
-		div = div64_u64_rem(rtime, total, &rem);
-		res = div * stime;
-		rtime = rem;
-
-		int shift = ilog2(stime) + ilog2(rtime) - 62;
-		if (shift > 0) {
-			rtime >>= shift;
-			total >>= shift;
-			if (!total)
-				return res;
-		}
-	}
-
-	return res + div64_u64(stime * rtime, total);
-}
-
-struct task_cputime {
-	u64				stime;
-	u64				utime;
-	unsigned long long		sum_exec_runtime;
-};
-struct prev_cputime {
-	u64				utime;
-	u64				stime;
-};
-
-void cputime_adjust(int new, struct task_cputime *curr, struct prev_cputime *prev,
-		    u64 *ut, u64 *st)
-{
-	u64 rtime, stime, utime;
-
-	rtime = curr->sum_exec_runtime;
-
-	if (prev->stime + prev->utime >= rtime)
-		goto out;
-
-	stime = curr->stime;
-	utime = curr->utime;
-
-	if (stime == 0) {
-		utime = rtime;
-		goto update;
-	}
-
-	if (utime == 0) {
-		stime = rtime;
-		goto update;
-	}
-
-	stime = (new ? new_scale_stime : scale_stime)(stime, rtime, stime + utime);
-
-update:
-	if (stime < prev->stime)
-		stime = prev->stime;
-	utime = rtime - stime;
-
-	if (utime < prev->utime) {
-		utime = prev->utime;
-		stime = rtime - utime;
-	}
-
-	prev->stime = stime;
-	prev->utime = utime;
-out:
-	*ut = prev->utime;
-	*st = prev->stime;
-}
-
-void prdiff(int new, struct task_cputime *curr, struct prev_cputime *prev)
-{
-	struct prev_cputime __prev = *prev;
-	u64 ut, st, ud, sd;
-
-	cputime_adjust(new, curr, prev, &ut, &st);
-	ud = ut - __prev.utime;
-	sd = st - __prev.stime;
-
-	printf("%16llu:%-16llu", ud, sd);
-}
-
-#define SEC	1000000000ULL
-
-void parse_cputime(struct task_cputime *t, char **argv)
-{
-	double total = strtod(argv[0], NULL) * SEC;
-	double utime = strtod(argv[1], NULL) / 100;
-
-	utime *= total;
-	t->utime = utime;
-	t->stime = total - utime;
-}
-
-int main(int argc, char **argv)
-{
-	struct prev_cputime old_prev = {};
-	struct prev_cputime new_prev = {};
-	struct task_cputime curr, diff;
-	u64 tmp;
-
-	if (argc != 5) {
-		printf("usage: %s start_time utime_percent inc_time utime_percent\n", argv[0]);
-		return 0;
-	}
-
-	parse_cputime(&curr, argv+1);
-	parse_cputime(&diff, argv+3);
-
-	curr.sum_exec_runtime = curr.utime + curr.stime;
-	cputime_adjust(0, &curr, &old_prev, &tmp, &tmp);
-	cputime_adjust(1, &curr, &new_prev, &tmp, &tmp);
-
-	printf("%18s%15s\t%18s\n", "old", "", "new");
-	for (;;) {
-		curr.utime += diff.utime;
-		curr.stime += diff.stime;
-		curr.sum_exec_runtime = curr.utime + curr.stime;
-
-		prdiff(0, &curr, &old_prev);
-		printf("\t");
-		prdiff(1, &curr, &new_prev);
-		printf("\n");
-	}
-
-	return 0;
-}
-
+>
