@@ -2,129 +2,116 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83E76C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 22:04:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E575C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 22:04:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4AC752071E
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 22:04:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="J0ZBKrpg"
+	by mail.kernel.org (Postfix) with ESMTP id 6887D2071E
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 22:04:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728853AbgAXWEI (ORCPT
+        id S1729019AbgAXWEz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 17:04:08 -0500
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:37003 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725821AbgAXWEH (ORCPT
+        Fri, 24 Jan 2020 17:04:55 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:43698 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725821AbgAXWEy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 17:04:07 -0500
-Received: by mail-pj1-f67.google.com with SMTP id m13so431154pjb.2
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Jan 2020 14:04:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=7Tu7fGYxh1w4JI5oDptrBZjDZV6uO5rpMw55TTrHWyY=;
-        b=J0ZBKrpgdlEKx7+rWEjWYTdZEwl9eqo6un876ziIUM+oZmGL7XmzfNWKx/+R3kGMxa
-         zO8U1tvFEW8q7rv4LRGGu2D/nUy/RpxDMypBdT5li6xFrLAIn/qmPyiR+u6qe/ILuLLe
-         uYILmbciBmATh272eNyXXe0kbM5oRQhOOGudkMoVkkcIfPxSRdepajsuiGdh0Jyyy7/x
-         rO7edwM0bdQSKTpd/K6QRvSLH/bsU9v4KEbYZB+Ak4GFR+/TgkAveltib29sxlJHs91q
-         2NY0183yD3ZaK8K1lJPvMzbXc9w569CdAqLaWw6iT1LmWw7tdsRrH75AZHOZrWw+EQck
-         Ym8Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=7Tu7fGYxh1w4JI5oDptrBZjDZV6uO5rpMw55TTrHWyY=;
-        b=T3g4sUNW1VKMMshdvE5Gd7L5R46pcTEVCMBGunnL/Oqe5LGqcUduOAxOHu7HAXU/w9
-         sAEV+sMBuSkI0tITRLKerGnZHA1QF7L9+/Px1Bff003P4dpIf7T+FfKp0603KDbZ6Md/
-         dvBpIjPFM0qqieronHjIWWJZ1mlc4JvM1xcs+0qsJ2/sEwXCk9h15WxF1QXrc4VYij6w
-         nOmmrDCzdHFYQj3U+fegKYN/ylplkbfIjTLVnoOj+Dc1uom2XVsJ+W8ycrbOo5WaDL+3
-         IQBnnpsm/t6xsu94Hw5gPXvucWsHGTY/TqgzZtZQmqXybeUd3V5oijHH25e1qq/xCzO0
-         YhXg==
-X-Gm-Message-State: APjAAAUEqvFX9iCoBcqGfD3OGP04wDUH6OluTA0BwK5MUkMwhvj/MwFk
-        +Oco+J3Oa/sXcC7nmmmSKC2aPmddjo4pNYrklNmOZA==
-X-Google-Smtp-Source: APXvYqxikH2q9A9mI6BFV5t+A/NdFiPPF/6168Oe1eoKJTtNWNvwqFN3FH2sGFO2somKD5beBz0zzVsBTH/2ZEp1m70=
-X-Received: by 2002:a17:902:9a4c:: with SMTP id x12mr5540413plv.297.1579903446870;
- Fri, 24 Jan 2020 14:04:06 -0800 (PST)
+        Fri, 24 Jan 2020 17:04:54 -0500
+Received: from p5b06da22.dip0.t-ipconnect.de ([91.6.218.34] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1iv74O-0002QG-5y; Fri, 24 Jan 2020 23:04:52 +0100
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id 947D710308A; Fri, 24 Jan 2020 23:04:51 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Jules Irenge <jbi.octave@gmail.com>
+Cc:     boqun.feng@gmail.com, Jules Irenge <jbi.octave@gmail.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] time: Add missing annotation to lock_hrtimer_base()
+In-Reply-To: <31c31ca2d78d9368d38e1a5909bc0c9a7be5dc98.1579893447.git.jbi.octave@gmail.com>
+References: <cover.1579893447.git.jbi.octave@gmail.com> <31c31ca2d78d9368d38e1a5909bc0c9a7be5dc98.1579893447.git.jbi.octave@gmail.com>
+Date:   Fri, 24 Jan 2020 23:04:51 +0100
+Message-ID: <87d0b8mry4.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-References: <20200123235914.223178-1-brendanhiggins@google.com> <CAMuHMdVLcMXyxnoFvoqkt3KbdmXXk+6Swveez9+A_yowFsWRAg@mail.gmail.com>
-In-Reply-To: <CAMuHMdVLcMXyxnoFvoqkt3KbdmXXk+6Swveez9+A_yowFsWRAg@mail.gmail.com>
-From:   Brendan Higgins <brendanhiggins@google.com>
-Date:   Fri, 24 Jan 2020 14:03:55 -0800
-Message-ID: <CAFd5g44u4CYg7RM4EqRhawMCu0FydemeD5akLn_kwWN+4nqWPA@mail.gmail.com>
-Subject: Re: [PATCH v2] uml: make CONFIG_STATIC_LINK actually static
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Jeff Dike <jdike@addtoit.com>, Richard Weinberger <richard@nod.at>,
-        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-        James McMechan <james_mcmechan@hotmail.com>,
-        linux-um <linux-um@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        David Gow <davidgow@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 23, 2020 at 11:51 PM Geert Uytterhoeven
-<geert@linux-m68k.org> wrote:
->
-> Hi Brendan,
->
-> On Fri, Jan 24, 2020 at 12:59 AM Brendan Higgins
-> <brendanhiggins@google.com> wrote:
-> > Currently, CONFIG_STATIC_LINK can be enabled with options which cannot
-> > be statically linked, namely UML_NET_VECTOR, UML_NET_VDE, and
-> > UML_NET_PCAP; this is because glibc tries to load NSS which does not
-> > support being statically linked. So make CONFIG_STATIC_LINK depend on
-> > !UML_NET_VECTOR && !UML_NET_VDE && !UML_NET_PCAP.
-> >
-> > Link: https://lore.kernel.org/lkml/f658f317-be54-ed75-8296-c373c2dcc697@cambridgegreys.com/#t
-> > Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
-> > ---
-> > Changes since last revision:
-> >
-> > Incorporated Geert Uytterhoeven's suggestion of using a separate
-> > FORBID_STATIC_LINK config option that each driver incompatible with
-> > static linking selects.
-> > ---
-> >  arch/um/Kconfig         | 7 +++++++
-> >  arch/um/drivers/Kconfig | 3 +++
-> >  2 files changed, 10 insertions(+)
-> >
-> > diff --git a/arch/um/Kconfig b/arch/um/Kconfig
-> > index 0917f8443c285..27a51e7dd59c6 100644
-> > --- a/arch/um/Kconfig
-> > +++ b/arch/um/Kconfig
-> > @@ -62,8 +62,12 @@ config NR_CPUS
-> >
-> >  source "arch/$(HEADER_ARCH)/um/Kconfig"
-> >
-> > +config FORBID_STATIC_LINK
-> > +       def_bool n
->
->     bool
->
-> ("n" is the default)
+Jules,
 
-Whoops, I always forget that.
+Jules Irenge <jbi.octave@gmail.com> writes:
 
-Thanks for catching that!
+Please use the proper subsystem prefixes when sending patches.
 
-> > +
-> >  config STATIC_LINK
-> >         bool "Force a static link"
-> > +       depends on !FORBID_STATIC_LINK
-> >         default n
+git log --oneline path/to/file
+
+gives you usally a pretty good hint.
+
+> Sparse reports a warning at lock_hrtimer_base()
 >
-> "default n" is the default (preexisting)
+> |warning: context imbalance in lock_hrtimer_base() - wrong count at exit
 
-I'll go ahead and fix that too, then.
+This leading '|' is pointless
 
-Thanks!
+> |warning: context imbalance in hrtimer_start_range_ns() - unexpected unlock
+> |warning: context imbalance in hrtimer_try_to_cancel() - unexpected unlock
+> |warning: context imbalance in __hrtimer_get_remaining()
+> |- unexpected unlock
+
+How are the last 3 related to:
+
+> Sparse reports a warning at lock_hrtimer_base()
+
+?
+
+> To fix this , an __acquires(timer) annotation is added.
+
+  Add the missing __acquires(timer) annotation.
+
+Is precise and follows the recommendations of Documentation/process/...
+
+> Given that lock_hrtimer_base() does actually call READ_ONCE(timer->base).
+
+Given that the above sentence uses 'Given that' it should not terminate
+right after explaining the 'Given'.
+
+> This not only fixes the warnings but also improves on readability of
+> the code.
+
+I tend to disagree. In fact the annotation disturbes the reading flow
+because it's on a separate line.
+
+Can you please stop using this boilerplate which is neither helping
+review nor giving someone who looks at the commit later on any useful
+information?
+
+Here is a suggestion for a change log for this:
+
+  Sparse reports several warnings;
+   warning: context imbalance in lock_hrtimer_base() - wrong count at exit
+   warning: context imbalance in hrtimer_start_range_ns() - unexpected unlock
+   warning: context imbalance in hrtimer_try_to_cancel() - unexpected unlock
+   warning: context imbalance in __hrtimer_get_remaining()- unexpected unlock
+
+  The root cause is a missing annotation of lock_hrtimer_base() which
+  causes also the 'unexpected unlock' warnings.
+  
+  Add the missing __acquires(timer) annotation.
+
+Hmm?
+
+The other 2 patches of this series have similar issues. The futex
+changelog is also horribly formatted.
+
+Thanks,
+
+        tglx
