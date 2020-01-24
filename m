@@ -7,52 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDE95C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:31:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3CD8C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:31:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0A7D2077C
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:31:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DD0A214AF
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:31:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579865493;
-	bh=HFwQb0O34aT0aoLhTP4YW3fAfKwbOI+s08VarianbpU=;
+	s=default; t=1579865499;
+	bh=92U63fqsL33Tu72ET5z/ng5mQ73l+6C1Rl4zMKJnV0o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qX7g/tqLcSEV9W1rg4AEmwEKPzlAA88ytoHkJfoM8m6Da/ZN9VTBlm+rWHkNFEG0m
-	 9J1E6D0MdfKPBIssDb9lwLFKqzPTWzCdHsl3yp8MYO0aNcFmV2mdKlnH/J2pQMNyGO
-	 OS6i4J2CMq9rXHYrwb8iNrqxgzbIwQP+/aM+3QxI=
+	b=soDTjSvpYe9frZLCPoeWoD8JQ3Ob+g8IEfSuKHaOz5bHylxHXIO7332n0lPauT3X+
+	 Q3FrqqIfdCRSIBoWxGrxzaIGQdQOBtwb9UxlNOvPTuCzk5O2x6v0xCtT4aGTIPuLc8
+	 WjGkFvBkamSl72QNTbZOjISbJ95Gi3zJFwFtSILA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391882AbgAXLb3 (ORCPT
+        id S2391902AbgAXLbi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:31:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49732 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 06:31:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49926 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391865AbgAXLbY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:31:24 -0500
+        id S2391877AbgAXLbb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:31:31 -0500
 Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B5FA8206D4;
-        Fri, 24 Jan 2020 11:31:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7646820704;
+        Fri, 24 Jan 2020 11:31:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579865483;
-        bh=HFwQb0O34aT0aoLhTP4YW3fAfKwbOI+s08VarianbpU=;
+        s=default; t=1579865491;
+        bh=92U63fqsL33Tu72ET5z/ng5mQ73l+6C1Rl4zMKJnV0o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BhJCykNg4/QnTvQ0ZXmEPDFshtzdAf+po94pStpnh1SPbiIkE9VjZab0HDnDCKrEM
-         N7ElcrBtoe1B7JKHHE0b0mbwFd3iBnRArQRioJWGm0eePeSTVCfn93atIWiMHTgjD7
-         jGmaLY0+y/nzOYv0IJAjcWecWuQ0TKpnZw61Qs7M=
+        b=BqcLyFuZykiWAJzfyJoEpi7FvBw0UtjY9rVj8ThFvXfPdN6THNf+75easaslBBFdT
+         ofbuuRXnZJejvO3rEdq/jHgTUqoIJt4rOK7yYz1s5zxN0bY0k+kqsXqqK9l5aEpz+0
+         N9gJIDxlGj8kH4+5xIpyBTvuks1lKPHUHJOzBJcM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Stefan Agner <stefan@agner.ch>,
-        Bhuvanchandra DV <bhuvanchandra.dv@toradex.com>,
-        Chris Healy <cphealy@gmail.com>,
-        Cory Tusar <cory.tusar@zii.aero>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Jiri Slaby <jslaby@suse.com>, linux-imx@nxp.com,
-        linux-serial@vger.kernel.org, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 541/639] tty: serial: fsl_lpuart: Use appropriate lpuart32_* I/O funcs
-Date:   Fri, 24 Jan 2020 10:31:51 +0100
-Message-Id: <20200124093156.779825916@linuxfoundation.org>
+        stable@vger.kernel.org, Jonathan Lemon <jonathan.lemon@gmail.com>,
+        =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn.topel@intel.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 543/639] xsk: avoid store-tearing when assigning queues
+Date:   Fri, 24 Jan 2020 10:31:53 +0100
+Message-Id: <20200124093157.095033868@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
 References: <20200124093047.008739095@linuxfoundation.org>
@@ -65,97 +61,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrey Smirnov <andrew.smirnov@gmail.com>
+From: Björn Töpel <bjorn.topel@intel.com>
 
-[ Upstream commit 1da17d7cf8e2c4b60163d54300f72c02f510327c ]
+[ Upstream commit 94a997637c5b562fa0ca44fca1d2cd02ec08236f ]
 
-When dealing with 32-bit variant of LPUART IP block appropriate I/O
-helpers have to be used to properly deal with endianness
-differences. Change all of the offending code to do that.
+Use WRITE_ONCE when doing the store of tx, rx, fq, and cq, to avoid
+potential store-tearing. These members are read outside of the control
+mutex in the mmap implementation.
 
-Fixes: a5fa2660d787 ("tty/serial/fsl_lpuart: Add CONSOLE_POLL support
-for lpuart32.")
-Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc: Stefan Agner <stefan@agner.ch>
-Cc: Bhuvanchandra DV <bhuvanchandra.dv@toradex.com>
-Cc: Chris Healy <cphealy@gmail.com>
-Cc: Cory Tusar <cory.tusar@zii.aero>
-Cc: Lucas Stach <l.stach@pengutronix.de>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Jiri Slaby <jslaby@suse.com>
-Cc: linux-imx@nxp.com
-Cc: linux-serial@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Link: https://lore.kernel.org/r/20190729195226.8862-14-andrew.smirnov@gmail.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Acked-by: Jonathan Lemon <jonathan.lemon@gmail.com>
+Fixes: 37b076933a8e ("xsk: add missing write- and data-dependency barrier")
+Signed-off-by: Björn Töpel <bjorn.topel@intel.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/serial/fsl_lpuart.c | 28 ++++++++++++++--------------
- 1 file changed, 14 insertions(+), 14 deletions(-)
+ net/xdp/xsk.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/tty/serial/fsl_lpuart.c b/drivers/tty/serial/fsl_lpuart.c
-index ee8a5cb61a5f1..2daccb10ae2f3 100644
---- a/drivers/tty/serial/fsl_lpuart.c
-+++ b/drivers/tty/serial/fsl_lpuart.c
-@@ -528,26 +528,26 @@ static int lpuart32_poll_init(struct uart_port *port)
- 	spin_lock_irqsave(&sport->port.lock, flags);
+diff --git a/net/xdp/xsk.c b/net/xdp/xsk.c
+index c90854bc3048e..b580078f04d15 100644
+--- a/net/xdp/xsk.c
++++ b/net/xdp/xsk.c
+@@ -320,7 +320,7 @@ static int xsk_init_queue(u32 entries, struct xsk_queue **queue,
  
- 	/* Disable Rx & Tx */
--	writel(0, sport->port.membase + UARTCTRL);
-+	lpuart32_write(&sport->port, UARTCTRL, 0);
- 
--	temp = readl(sport->port.membase + UARTFIFO);
-+	temp = lpuart32_read(&sport->port, UARTFIFO);
- 
- 	/* Enable Rx and Tx FIFO */
--	writel(temp | UARTFIFO_RXFE | UARTFIFO_TXFE,
--		   sport->port.membase + UARTFIFO);
-+	lpuart32_write(&sport->port, UARTFIFO,
-+		       temp | UARTFIFO_RXFE | UARTFIFO_TXFE);
- 
- 	/* flush Tx and Rx FIFO */
--	writel(UARTFIFO_TXFLUSH | UARTFIFO_RXFLUSH,
--			sport->port.membase + UARTFIFO);
-+	lpuart32_write(&sport->port, UARTFIFO,
-+		       UARTFIFO_TXFLUSH | UARTFIFO_RXFLUSH);
- 
- 	/* explicitly clear RDRF */
--	if (readl(sport->port.membase + UARTSTAT) & UARTSTAT_RDRF) {
--		readl(sport->port.membase + UARTDATA);
--		writel(UARTFIFO_RXUF, sport->port.membase + UARTFIFO);
-+	if (lpuart32_read(&sport->port, UARTSTAT) & UARTSTAT_RDRF) {
-+		lpuart32_read(&sport->port, UARTDATA);
-+		lpuart32_write(&sport->port, UARTFIFO, UARTFIFO_RXUF);
- 	}
- 
- 	/* Enable Rx and Tx */
--	writel(UARTCTRL_RE | UARTCTRL_TE, sport->port.membase + UARTCTRL);
-+	lpuart32_write(&sport->port, UARTCTRL, UARTCTRL_RE | UARTCTRL_TE);
- 	spin_unlock_irqrestore(&sport->port.lock, flags);
- 
+ 	/* Make sure queue is ready before it can be seen by others */
+ 	smp_wmb();
+-	*queue = q;
++	WRITE_ONCE(*queue, q);
  	return 0;
-@@ -555,18 +555,18 @@ static int lpuart32_poll_init(struct uart_port *port)
- 
- static void lpuart32_poll_put_char(struct uart_port *port, unsigned char c)
- {
--	while (!(readl(port->membase + UARTSTAT) & UARTSTAT_TDRE))
-+	while (!(lpuart32_read(port, UARTSTAT) & UARTSTAT_TDRE))
- 		barrier();
- 
--	writel(c, port->membase + UARTDATA);
-+	lpuart32_write(port, UARTDATA, c);
  }
- 
- static int lpuart32_poll_get_char(struct uart_port *port)
- {
--	if (!(readl(port->membase + UARTSTAT) & UARTSTAT_RDRF))
-+	if (!(lpuart32_read(port, UARTSTAT) & UARTSTAT_RDRF))
- 		return NO_POLL_CHAR;
- 
--	return readl(port->membase + UARTDATA);
-+	return lpuart32_read(port, UARTDATA);
- }
- #endif
  
 -- 
 2.20.1
