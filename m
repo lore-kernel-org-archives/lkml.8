@@ -2,102 +2,140 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F208C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 16:26:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 303CDC35242
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 16:29:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09AEB20704
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 16:26:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QnYaxXVB"
+	by mail.kernel.org (Postfix) with ESMTP id 0AAD420704
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 16:29:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388285AbgAXQ0Z (ORCPT
+        id S2388778AbgAXQ3M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 11:26:25 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:52005 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2388131AbgAXQ0Z (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 11:26:25 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579883183;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=iP5kUzj/MjjYp8gqP+NZWwU5OGdgr2jRpmH4EARLI/g=;
-        b=QnYaxXVB92QAsAYYgMSMit1XPfVsmivPPskolfKCSYbOu2yChZvLnzyUiHh1dueDdWntFN
-        4dMBg7b/LRyIFgbmO4CbA3lpU9c+v2PJOuN4Qh7uMDoJyAngo/L3ZDTkJ1EMXFUXuFFU5u
-        p4LWYR5XurcQ/pjpCqwCrZ+zMY6mYYA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-120-KqwGgzqlMdit2ebtrV91vQ-1; Fri, 24 Jan 2020 11:26:18 -0500
-X-MC-Unique: KqwGgzqlMdit2ebtrV91vQ-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0A40C109576C;
-        Fri, 24 Jan 2020 16:26:17 +0000 (UTC)
-Received: from llong.remote.csb (ovpn-124-92.rdu2.redhat.com [10.10.124.92])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 1676010016E8;
-        Fri, 24 Jan 2020 16:26:15 +0000 (UTC)
-Subject: Re: [PATCH 7/7] sysvipc_find_ipc should increase position index
-To:     Vasily Averin <vvs@virtuozzo.com>, linux-kernel@vger.kernel.org
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        NeilBrown <neilb@suse.com>, Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Oberparleiter <oberpar@linux.ibm.com>
-References: <b7a20945-e315-8bb0-21e6-3875c14a8494@virtuozzo.com>
-From:   Waiman Long <longman@redhat.com>
-Organization: Red Hat
-Message-ID: <8ed2850e-7cec-ebeb-4e15-21da3715c42a@redhat.com>
-Date:   Fri, 24 Jan 2020 11:26:16 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Fri, 24 Jan 2020 11:29:12 -0500
+Received: from foss.arm.com ([217.140.110.172]:54364 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388341AbgAXQ3M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 11:29:12 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F20621FB;
+        Fri, 24 Jan 2020 08:29:10 -0800 (PST)
+Received: from donnerap.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A13323F6C4;
+        Fri, 24 Jan 2020 08:29:09 -0800 (PST)
+Date:   Fri, 24 Jan 2020 16:29:03 +0000
+From:   Andre Przywara <andre.przywara@arm.com>
+To:     Rob Herring <robh@kernel.org>
+Cc:     "David S . Miller" <davem@davemloft.net>,
+        Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Robert Hancock <hancock@sedsystems.ca>, netdev@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+Subject: Re: [PATCH 14/14] net: axienet: Update devicetree binding
+ documentation
+Message-ID: <20200124162903.722468f1@donnerap.cambridge.arm.com>
+In-Reply-To: <20200121215109.GA26808@bogus>
+References: <20200110115415.75683-1-andre.przywara@arm.com>
+        <20200110115415.75683-15-andre.przywara@arm.com>
+        <20200121215109.GA26808@bogus>
+Organization: ARM
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; aarch64-unknown-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <b7a20945-e315-8bb0-21e6-3875c14a8494@virtuozzo.com>
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/24/20 2:03 AM, Vasily Averin wrote:
-> if seq_file .next fuction does not change position index,
-> read after some lseek can generate unexpected output.
->
-> https://bugzilla.kernel.org/show_bug.cgi?id=206283
-> Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
-> ---
->  ipc/util.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/ipc/util.c b/ipc/util.c
-> index 915eacb..7a3ab2e 100644
-> --- a/ipc/util.c
-> +++ b/ipc/util.c
-> @@ -764,13 +764,13 @@ static struct kern_ipc_perm *sysvipc_find_ipc(struct ipc_ids *ids, loff_t pos,
->  			total++;
->  	}
->  
-> +	*new_pos = pos + 1;
->  	if (total >= ids->in_use)
->  		return NULL;
->  
->  	for (; pos < ipc_mni; pos++) {
->  		ipc = idr_find(&ids->ipcs_idr, pos);
->  		if (ipc != NULL) {
-> -			*new_pos = pos + 1;
->  			rcu_read_lock();
->  			ipc_lock_object(ipc);
->  			return ipc;
+On Tue, 21 Jan 2020 15:51:09 -0600
+Rob Herring <robh@kernel.org> wrote:
 
-Acked-by: Waiman Long <longman@redhat.com>
+Hi Rob,
 
+thanks for having a look!
+
+> On Fri, Jan 10, 2020 at 11:54:15AM +0000, Andre Przywara wrote:
+> > This adds documentation about the newly introduced, optional
+> > "xlnx,addrwidth" property to the binding documentation.
+> > 
+> > While at it, clarify the wording on some properties, replace obsolete
+> > .txt file references with their new .yaml counterparts, and add a more
+> > modern example, using the axistream-connected property.
+> > 
+> > Cc: Rob Herring <robh+dt@kernel.org>
+> > Cc: Mark Rutland <mark.rutland@arm.com>
+> > Cc: devicetree@vger.kernel.org
+> > Signed-off-by: Andre Przywara <andre.przywara@arm.com>
+> > ---
+> >  .../bindings/net/xilinx_axienet.txt           | 57 ++++++++++++++++---
+> >  1 file changed, 50 insertions(+), 7 deletions(-)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/net/xilinx_axienet.txt b/Documentation/devicetree/bindings/net/xilinx_axienet.txt
+> > index 7360617cdedb..78c278c5200f 100644
+> > --- a/Documentation/devicetree/bindings/net/xilinx_axienet.txt
+> > +++ b/Documentation/devicetree/bindings/net/xilinx_axienet.txt
+> > @@ -12,7 +12,8 @@ sent and received through means of an AXI DMA controller. This driver
+> >  includes the DMA driver code, so this driver is incompatible with AXI DMA
+> >  driver.
+> >  
+> > -For more details about mdio please refer phy.txt file in the same directory.
+> > +For more details about mdio please refer to the ethernet-phy.yaml file in
+> > +the same directory.
+> >  
+> >  Required properties:
+> >  - compatible	: Must be one of "xlnx,axi-ethernet-1.00.a",
+> > @@ -27,14 +28,14 @@ Required properties:
+> >  		  instead, and only the Ethernet core interrupt is optionally
+> >  		  specified here.
+> >  - phy-handle	: Should point to the external phy device.
+> > -		  See ethernet.txt file in the same directory.
+> > -- xlnx,rxmem	: Set to allocated memory buffer for Rx/Tx in the hardware
+> > +		  See the ethernet-controller.yaml file in the same directory.
+> > +- xlnx,rxmem	: Size of the RXMEM buffer in the hardware, in bytes.
+> >  
+> >  Optional properties:
+> > -- phy-mode	: See ethernet.txt
+> > +- phy-mode	: See ethernet-controller.yaml.
+> >  - xlnx,phy-type	: Deprecated, do not use, but still accepted in preference
+> >  		  to phy-mode.
+> > -- xlnx,txcsum	: 0 or empty for disabling TX checksum offload,
+> > +- xlnx,txcsum	: 0 for disabling TX checksum offload (default if omitted),
+> >  		  1 to enable partial TX checksum offload,
+> >  		  2 to enable full TX checksum offload
+> >  - xlnx,rxcsum	: Same values as xlnx,txcsum but for RX checksum offload
+> > @@ -48,10 +49,20 @@ Optional properties:
+> >  		       If this is specified, the DMA-related resources from that
+> >  		       device (DMA registers and DMA TX/RX interrupts) rather
+> >  		       than this one will be used.
+> > - - mdio		: Child node for MDIO bus. Must be defined if PHY access is
+> > +- mdio		: Child node for MDIO bus. Must be defined if PHY access is
+> >  		  required through the core's MDIO interface (i.e. always,
+> >  		  unless the PHY is accessed through a different bus).
+> >  
+> > +Required properties for axistream-connected subnode:
+> > +- reg		: Address and length of the AXI DMA controller MMIO space.
+> > +- interrupts	: A list of 2 interrupts: TX DMA and RX DMA, in that order.
+> > +
+> > +Optional properties for axistream-connected subnode:
+> > +- xlnx,addrwidth: Specifies the configured address width of the DMA. Newer
+> > +		  versions of the IP allow setting this to a value between
+> > +		  32 and 64. Defaults to 32 bits if not specified.  
+> 
+> I think this should be expressed using dma-ranges. This is exactly the 
+> purpose of dma-ranges and we shouldn't need a device specific property 
+> for this sort of thing.
+
+OK, after talking to Robin about it, I think I will indeed drop the whole usage of xlnx,addrwidth altogether.
+Some thoughts:
+- An integrator would choose the addrwidth value in the IP to be big enough for the whole bus. In our case it's actually 40 bits, because this is the max address size the interconnect supports. So any possible physical address the kernel could come up with would be valid for the DMA IP.
+- Because of this we set the DMA mask to either 64-bit or 32-bit, depending on the auto detection of the MSB registers.
+- If some integrator screws this up anyway, they can always set dma-ranges in the parent to limit the address range. IIUC, no further code would be needed in the Ethernet driver, as this would be handled by some (DMA?) framework?
+
+Does that make sense?
+
+Cheers,
+Andre
