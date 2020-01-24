@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B34DC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:12:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04737C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:13:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 108302077C
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:12:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2BF92087E
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:13:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579864377;
-	bh=vEm1+NPJNQEMaNckZljDmlqsaG7Su1fq4a6m5EJQ1FA=;
+	s=default; t=1579864381;
+	bh=Q3mESUXUhBBdKU3NQ32ZC/6o2RFPDyned+9barBgp4k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kg1IfnEVn38pPS+FBoMrP768MJMV082MaX5H8aPndNB/majs+slTVeJfCggjJEqha
-	 KKfQmebk5C39+PnmqjjWyf2uIzHifCBFe438m9mB88WSD6mgXy91l4nZEDvFKtVt8X
-	 1kQw3ZpGzB7l8Oe/rr5LacJFlrP5Ph/4ILEdivEE=
+	b=ZGZLWvr5Kz3pyaB4R7v9t+DWPAvfLVSbxaOpmjR+tWe+zbeQdS2T1Ux272iW1QSs5
+	 gMJf+c8S88Q1M5LE5l+r766zqnMx6p8AL3J+L+FLiTM6jt8wR5K16yjuyqmaz82IOu
+	 Rrkz17pOeL+2n8dqKwzHd/NVTWLDTk8ZIlfDRLhg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389345AbgAXLMz (ORCPT
+        id S2389446AbgAXLM6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:12:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49092 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 06:12:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49162 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389259AbgAXLMp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:12:45 -0500
+        id S1732925AbgAXLMr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:12:47 -0500
 Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4F53220708;
-        Fri, 24 Jan 2020 11:12:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A1C7F2077C;
+        Fri, 24 Jan 2020 11:12:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579864364;
-        bh=vEm1+NPJNQEMaNckZljDmlqsaG7Su1fq4a6m5EJQ1FA=;
+        s=default; t=1579864367;
+        bh=Q3mESUXUhBBdKU3NQ32ZC/6o2RFPDyned+9barBgp4k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=R4YfztREjgM5TlUWBoqt4dZh+GZjpc2QsGoDwp7GnEDnITdr3kTkVUZttcWGvIFai
-         EiiwSKM76XDZ2elwQgQw3hTVBjs7P/sDK+zLg+NIqmJnKpSjUoNSRGfgViEEXVQTdP
-         yfo87SKNQCsgZuy2Hl8gyw57EawtJlX/T/IYpUeA=
+        b=X0zZ1sMdLevs0b5VBZXIuz7ADYVQ9NJCJS87zsK2JYfD3tAjPRmb9wuO16d3ZYwW/
+         tSg8ytZ2AG00eQVX9n24Sgy+A1klnvd77eMscbWFp11Kicr1/m9TL+9GXSHIAuqK0w
+         I9U03wKDWjRiCiA39ftXz4Hd4hwrcMgi6sLesV9Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Anna Schumaker <Anna.Schumaker@Netapp.com>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        stable@vger.kernel.org, Stefan Wahren <stefan.wahren@i2se.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 246/639] NFS: Add missing encode / decode sequence_maxsz to v4.2 operations
-Date:   Fri, 24 Jan 2020 10:26:56 +0100
-Message-Id: <20200124093117.589155216@linuxfoundation.org>
+Subject: [PATCH 4.19 234/639] mmc: sdhci-brcmstb: handle mmc_of_parse() errors during probe
+Date:   Fri, 24 Jan 2020 10:26:44 +0100
+Message-Id: <20200124093116.144901150@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
 References: <20200124093047.008739095@linuxfoundation.org>
@@ -60,86 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anna Schumaker <Anna.Schumaker@Netapp.com>
+From: Stefan Wahren <stefan.wahren@i2se.com>
 
-[ Upstream commit 1a3466aed3a17eed41cd9411f89eb637f58349b0 ]
+[ Upstream commit 1e20186e706da8446f9435f2924cd65ab1397e73 ]
 
-These really should have been there from the beginning, but we never
-noticed because there was enough slack in the RPC request for the extra
-bytes. Chuck's recent patch to use au_cslack and au_rslack to compute
-buffer size shrunk the buffer enough that this was now a problem for
-SEEK operations on my test client.
+We need to handle mmc_of_parse() errors during probe otherwise the
+MMC driver could start without proper initialization (e.g. power sequence).
 
-Fixes: f4ac1674f5da4 ("nfs: Add ALLOCATE support")
-Fixes: 2e72448b07dc3 ("NFS: Add COPY nfs operation")
-Fixes: cb95deea0b4aa ("NFS OFFLOAD_CANCEL xdr")
-Fixes: 624bd5b7b683c ("nfs: Add DEALLOCATE support")
-Fixes: 1c6dcbe5ceff8 ("NFS: Implement SEEK")
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+Fixes: 476bf3d62d5c ("mmc: sdhci-brcmstb: Add driver for Broadcom BRCMSTB SoCs")
+Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/nfs42xdr.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ drivers/mmc/host/sdhci-brcmstb.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/fs/nfs/nfs42xdr.c b/fs/nfs/nfs42xdr.c
-index 69f72ed2bf879..ec9803088f6b8 100644
---- a/fs/nfs/nfs42xdr.c
-+++ b/fs/nfs/nfs42xdr.c
-@@ -59,43 +59,53 @@
- #define decode_clone_maxsz		(op_decode_hdr_maxsz)
+diff --git a/drivers/mmc/host/sdhci-brcmstb.c b/drivers/mmc/host/sdhci-brcmstb.c
+index 552bddc5096ce..1cd10356fc14f 100644
+--- a/drivers/mmc/host/sdhci-brcmstb.c
++++ b/drivers/mmc/host/sdhci-brcmstb.c
+@@ -55,7 +55,9 @@ static int sdhci_brcmstb_probe(struct platform_device *pdev)
+ 	}
  
- #define NFS4_enc_allocate_sz		(compound_encode_hdr_maxsz + \
-+					 encode_sequence_maxsz + \
- 					 encode_putfh_maxsz + \
- 					 encode_allocate_maxsz + \
- 					 encode_getattr_maxsz)
- #define NFS4_dec_allocate_sz		(compound_decode_hdr_maxsz + \
-+					 decode_sequence_maxsz + \
- 					 decode_putfh_maxsz + \
- 					 decode_allocate_maxsz + \
- 					 decode_getattr_maxsz)
- #define NFS4_enc_copy_sz		(compound_encode_hdr_maxsz + \
-+					 encode_sequence_maxsz + \
- 					 encode_putfh_maxsz + \
- 					 encode_savefh_maxsz + \
- 					 encode_putfh_maxsz + \
- 					 encode_copy_maxsz + \
- 					 encode_commit_maxsz)
- #define NFS4_dec_copy_sz		(compound_decode_hdr_maxsz + \
-+					 decode_sequence_maxsz + \
- 					 decode_putfh_maxsz + \
- 					 decode_savefh_maxsz + \
- 					 decode_putfh_maxsz + \
- 					 decode_copy_maxsz + \
- 					 decode_commit_maxsz)
- #define NFS4_enc_offload_cancel_sz	(compound_encode_hdr_maxsz + \
-+					 encode_sequence_maxsz + \
- 					 encode_putfh_maxsz + \
- 					 encode_offload_cancel_maxsz)
- #define NFS4_dec_offload_cancel_sz	(compound_decode_hdr_maxsz + \
-+					 decode_sequence_maxsz + \
- 					 decode_putfh_maxsz + \
- 					 decode_offload_cancel_maxsz)
- #define NFS4_enc_deallocate_sz		(compound_encode_hdr_maxsz + \
-+					 encode_sequence_maxsz + \
- 					 encode_putfh_maxsz + \
- 					 encode_deallocate_maxsz + \
- 					 encode_getattr_maxsz)
- #define NFS4_dec_deallocate_sz		(compound_decode_hdr_maxsz + \
-+					 decode_sequence_maxsz + \
- 					 decode_putfh_maxsz + \
- 					 decode_deallocate_maxsz + \
- 					 decode_getattr_maxsz)
- #define NFS4_enc_seek_sz		(compound_encode_hdr_maxsz + \
-+					 encode_sequence_maxsz + \
- 					 encode_putfh_maxsz + \
- 					 encode_seek_maxsz)
- #define NFS4_dec_seek_sz		(compound_decode_hdr_maxsz + \
-+					 decode_sequence_maxsz + \
- 					 decode_putfh_maxsz + \
- 					 decode_seek_maxsz)
- #define NFS4_enc_layoutstats_sz		(compound_encode_hdr_maxsz + \
+ 	sdhci_get_of_property(pdev);
+-	mmc_of_parse(host->mmc);
++	res = mmc_of_parse(host->mmc);
++	if (res)
++		goto err;
+ 
+ 	/*
+ 	 * Supply the existing CAPS, but clear the UHS modes. This
 -- 
 2.20.1
 
