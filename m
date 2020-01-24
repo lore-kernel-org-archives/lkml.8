@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E191C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:22:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58087C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:22:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 627E220718
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:22:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25CD5206D4
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:22:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579864970;
-	bh=9+gfxXomcigT80VZmmhAS6uCU+w5O0zAbnaeaSPCv/0=;
+	s=default; t=1579864974;
+	bh=psMnxsfn8st93Lmgk+dsmBJVMPRDym1N2y1BmnOAGfU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vMcnbmIMHpsGYxjLbGYCkH8aMrbcKxx3aTw1He6OMdaIc5PBRMj2wBULPsaNAii5i
-	 5NdCjrHi0Mh7Hxl8ydoLEXs2jfogM83FgYY0D/9tFPmcDRvy3PzaoYuq/3mG3yPuKY
-	 OOHBNqKypuA0a7mT8I1IAitjEEhPdocIeoUcG9Lo=
+	b=NALcnIAY1rY5bXqDAfFbmNQKu+L4Tz0Qm2j3fDpyt5/pYvZdxRNeT82peq1rWZzeO
+	 oLWECSCuQLrYuh/6W//5gCwA3gl1+3d2vvPGeAcrm+3tdfXlHkWRago2ARVam1lklM
+	 7LwF4pPlqut7paG77EJDOSn4xd4TMJy91RFQzu/Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391251AbgAXLWt (ORCPT
+        id S2390835AbgAXLWx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:22:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34106 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 06:22:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34526 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390997AbgAXLWc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:22:32 -0500
+        id S2391011AbgAXLWm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:22:42 -0500
 Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D89B421569;
-        Fri, 24 Jan 2020 11:22:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8DA86206D4;
+        Fri, 24 Jan 2020 11:22:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579864951;
-        bh=9+gfxXomcigT80VZmmhAS6uCU+w5O0zAbnaeaSPCv/0=;
+        s=default; t=1579864962;
+        bh=psMnxsfn8st93Lmgk+dsmBJVMPRDym1N2y1BmnOAGfU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JEaE1eIEeEHsuKy+8jBwKZp/XitSpVVKoC/29RVAAM5HMxknRLQbFunU+VRdA2yZa
-         gJYRTscl1CQVmuMZ10TSLTDJB/+7PmeSOPaNZVjmoeLMOep9C1IblycaQ6oD3XzWku
-         ci6ENN2sd/W0fzL01n17zv3brNerN2A7HgUPQyuc=
+        b=hlmYif0EDiO50gnulqWKXH+FsA9tASuPn/Q3StHKOK1bnTv4jLrWT23NCp17WZfG1
+         N73/nowpFNVfteZu6q39joewuPRzSDh5H9buQe2MVUxiqttragTM2IAWcMbH2iwVXo
+         /4t6JAGT4786R87UId6QhXMa0KwFGnwzcixhVcc8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ondrej Jirman <megous@megous.com>,
-        =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
+        stable@vger.kernel.org, Huazhong Tan <tanhuazhong@huawei.com>,
+        Peng Li <lipeng321@huawei.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 411/639] clk: sunxi-ng: sun50i-h6-r: Fix incorrect W1 clock gate register
-Date:   Fri, 24 Jan 2020 10:29:41 +0100
-Message-Id: <20200124093138.523524508@linuxfoundation.org>
+Subject: [PATCH 4.19 401/639] net: hns3: fix a memory leak issue for hclge_map_unmap_ring_to_vf_vector
+Date:   Fri, 24 Jan 2020 10:29:31 +0100
+Message-Id: <20200124093137.178644422@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
 References: <20200124093047.008739095@linuxfoundation.org>
@@ -61,39 +61,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ondrej Jirman <megous@megous.com>
+From: Huazhong Tan <tanhuazhong@huawei.com>
 
-[ Upstream commit f167675486c37b88620d344fbb12d06e34f11d47 ]
+[ Upstream commit 49f971bd308571fe466687227130a7082b662d0e ]
 
-The current code defines W1 clock gate to be at 0x1cc, overlaying it
-with the IR gate.
+When hclge_bind_ring_with_vector() fails,
+hclge_map_unmap_ring_to_vf_vector() returns the error
+directly, so nobody will free the memory allocated by
+hclge_get_ring_chain_from_mbx().
 
-Clock gate for r-apb1-w1 is at 0x1ec. This fixes issues with IR receiver
-causing interrupt floods on H6 (because interrupt flags can't be cleared,
-due to IR module's bus being disabled).
+So hclge_free_vector_ring_chain() should be called no matter
+hclge_bind_ring_with_vector() fails or not.
 
-Fixes: b7c7b05065aa77ae ("clk: sunxi-ng: add support for H6 PRCM CCU")
-Signed-off-by: Ondrej Jirman <megous@megous.com>
-Acked-by: Clément Péron <peron.clem@gmail.com>
-Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+Fixes: 84e095d64ed9 ("net: hns3: Change PF to add ring-vect binding & resetQ to mailbox")
+Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
+Signed-off-by: Peng Li <lipeng321@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/sunxi-ng/ccu-sun50i-h6-r.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_mbx.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/drivers/clk/sunxi-ng/ccu-sun50i-h6-r.c b/drivers/clk/sunxi-ng/ccu-sun50i-h6-r.c
-index 27554eaf69298..8d05d4f1f8a1e 100644
---- a/drivers/clk/sunxi-ng/ccu-sun50i-h6-r.c
-+++ b/drivers/clk/sunxi-ng/ccu-sun50i-h6-r.c
-@@ -104,7 +104,7 @@ static SUNXI_CCU_GATE(r_apb2_i2c_clk,	"r-apb2-i2c",	"r-apb2",
- static SUNXI_CCU_GATE(r_apb1_ir_clk,	"r-apb1-ir",	"r-apb1",
- 		      0x1cc, BIT(0), 0);
- static SUNXI_CCU_GATE(r_apb1_w1_clk,	"r-apb1-w1",	"r-apb1",
--		      0x1cc, BIT(0), 0);
-+		      0x1ec, BIT(0), 0);
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_mbx.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_mbx.c
+index e08e82020402a..997ca79ed892b 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_mbx.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_mbx.c
+@@ -181,12 +181,10 @@ static int hclge_map_unmap_ring_to_vf_vector(struct hclge_vport *vport, bool en,
+ 		return ret;
  
- /* Information of IR(RX) mod clock is gathered from BSP source code */
- static const char * const r_mod0_default_parents[] = { "osc32k", "osc24M" };
+ 	ret = hclge_bind_ring_with_vector(vport, vector_id, en, &ring_chain);
+-	if (ret)
+-		return ret;
+ 
+ 	hclge_free_vector_ring_chain(&ring_chain);
+ 
+-	return 0;
++	return ret;
+ }
+ 
+ static int hclge_set_vf_promisc_mode(struct hclge_vport *vport,
 -- 
 2.20.1
 
