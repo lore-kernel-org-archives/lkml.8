@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83499C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:24:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D593C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:24:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C527214DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:24:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32439222C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:24:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579865069;
-	bh=uKfMRB8NddX5TTMWrBMiI8uFkS0llxEn0+7f7d0cg5c=;
+	s=default; t=1579865076;
+	bh=0M8wbBcq8ZoY45k6pcaYMDnGfdysss6JAKqWK7Awf8w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=f5OldcHCmd/1wq9dTjQ7haRa/WFdJwrOP/mCZ0bApNU869IRg1NXVK+j+D7/LeepW
-	 kSbochwO+D0Q8vT+ojkGT7Gv+ey6rHjPyAkuRmWQfWMRlgPEKL+wwvGj/zqMZJnkK7
-	 eQ1IzTUBBKRdZs32i0w/Nolt9dhY5axxkE8jTzMI=
+	b=IxHFBcVqWGWFPY7qLgsu0ub9AoUx8zmyHR9kq0gHpgYP4yZubk0ZK5KkPQbxHYSK/
+	 hw8klJXrLlHn6IhOs/exw6W9IE7ai83OPcB9RQ/Wg/AOI+xpEOV6YuECHPMEre5+Ao
+	 BoD31s2qVapbre3KcE6B2yw48Hh/Eecq3h02nodU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403780AbgAXLY2 (ORCPT
+        id S2391431AbgAXLYd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:24:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37802 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 06:24:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37916 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729635AbgAXLYZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:24:25 -0500
+        id S1729635AbgAXLY3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:24:29 -0500
 Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A99F720704;
-        Fri, 24 Jan 2020 11:24:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0A95620718;
+        Fri, 24 Jan 2020 11:24:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579865065;
-        bh=uKfMRB8NddX5TTMWrBMiI8uFkS0llxEn0+7f7d0cg5c=;
+        s=default; t=1579865068;
+        bh=0M8wbBcq8ZoY45k6pcaYMDnGfdysss6JAKqWK7Awf8w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2CrGJMWqqCQ6ityow3zGxKIca+Yc5fGKdgkivLXwyutLBtzj+XGTGdjUJvTrBOE9h
-         I+zZLzuPAZYRImkdvLT7WFKd3BeQ1AYxloKgsns7JQcknVojxMM2EHdOylx3uJhg6/
-         Zp0dXzE4fSgjTYVcniGp7o0M4cXS54UzHMub2TG8=
+        b=S6QAEop3vv8P4xWnzExy3pqJZfuS66VG3ctRaZJ2dgw9FD+7PW+H0SnkQkE+GrM5P
+         qqSj75sVxj3xaK1MhDtQ/f3G4BqW3mgIafZQf8Kr2tK7lUY9LLQoFenJyP1ulP7cRY
+         RZMTnjJSvwDCYOswnsctL5VGYW0DrYSMA/JhCkgI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Nathan Lynch <nathanl@linux.ibm.com>,
+        "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 443/639] net/sched: cbs: Fix error path of cbs_module_init
-Date:   Fri, 24 Jan 2020 10:30:13 +0100
-Message-Id: <20200124093142.539507834@linuxfoundation.org>
+Subject: [PATCH 4.19 431/639] powerpc/pseries/mobility: rebuild cacheinfo hierarchy post-migration
+Date:   Fri, 24 Jan 2020 10:30:01 +0100
+Message-Id: <20200124093141.001203486@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
 References: <20200124093047.008739095@linuxfoundation.org>
@@ -61,46 +61,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Nathan Lynch <nathanl@linux.ibm.com>
 
-[ Upstream commit 45d5cb137c3638b3a310f41b31d8e79daf647f14 ]
+[ Upstream commit e610a466d16a086e321f0bd421e2fc75cff28605 ]
 
-If register_qdisc fails, we should unregister
-netdevice notifier.
+It's common for the platform to replace the cache device nodes after a
+migration. Since the cacheinfo code is never informed about this, it
+never drops its references to the source system's cache nodes, causing
+it to wind up in an inconsistent state resulting in warnings and oopses
+as soon as CPU online/offline occurs after the migration, e.g.
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Fixes: e0a7683d30e9 ("net/sched: cbs: fix port_rate miscalculation")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+  cache for /cpus/l3-cache@3113(Unified) refers to cache for /cpus/l2-cache@200d(Unified)
+  WARNING: CPU: 15 PID: 86 at arch/powerpc/kernel/cacheinfo.c:176 release_cache+0x1bc/0x1d0
+  [...]
+  NIP release_cache+0x1bc/0x1d0
+  LR  release_cache+0x1b8/0x1d0
+  Call Trace:
+    release_cache+0x1b8/0x1d0 (unreliable)
+    cacheinfo_cpu_offline+0x1c4/0x2c0
+    unregister_cpu_online+0x1b8/0x260
+    cpuhp_invoke_callback+0x114/0xf40
+    cpuhp_thread_fun+0x270/0x310
+    smpboot_thread_fn+0x2c8/0x390
+    kthread+0x1b8/0x1c0
+    ret_from_kernel_thread+0x5c/0x68
+
+Using device tree notifiers won't work since we want to rebuild the
+hierarchy only after all the removals and additions have occurred and
+the device tree is in a consistent state. Call cacheinfo_teardown()
+before processing device tree updates, and rebuild the hierarchy
+afterward.
+
+Fixes: 410bccf97881 ("powerpc/pseries: Partition migration in the kernel")
+Signed-off-by: Nathan Lynch <nathanl@linux.ibm.com>
+Reviewed-by: Gautham R. Shenoy <ego@linux.vnet.ibm.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/sched/sch_cbs.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ arch/powerpc/platforms/pseries/mobility.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/net/sched/sch_cbs.c b/net/sched/sch_cbs.c
-index 81f84cb5dd23b..b3c8d04929df2 100644
---- a/net/sched/sch_cbs.c
-+++ b/net/sched/sch_cbs.c
-@@ -552,12 +552,17 @@ static struct notifier_block cbs_device_notifier = {
+diff --git a/arch/powerpc/platforms/pseries/mobility.c b/arch/powerpc/platforms/pseries/mobility.c
+index e4ea713833832..70744b4fbd9ed 100644
+--- a/arch/powerpc/platforms/pseries/mobility.c
++++ b/arch/powerpc/platforms/pseries/mobility.c
+@@ -24,6 +24,7 @@
+ #include <asm/machdep.h>
+ #include <asm/rtas.h>
+ #include "pseries.h"
++#include "../../kernel/cacheinfo.h"
  
- static int __init cbs_module_init(void)
- {
--	int err = register_netdevice_notifier(&cbs_device_notifier);
-+	int err;
+ static struct kobject *mobility_kobj;
  
-+	err = register_netdevice_notifier(&cbs_device_notifier);
- 	if (err)
- 		return err;
+@@ -360,11 +361,20 @@ void post_mobility_fixup(void)
+ 	 */
+ 	cpus_read_lock();
  
--	return register_qdisc(&cbs_qdisc_ops);
-+	err = register_qdisc(&cbs_qdisc_ops);
-+	if (err)
-+		unregister_netdevice_notifier(&cbs_device_notifier);
++	/*
++	 * It's common for the destination firmware to replace cache
++	 * nodes.  Release all of the cacheinfo hierarchy's references
++	 * before updating the device tree.
++	 */
++	cacheinfo_teardown();
 +
-+	return err;
- }
+ 	rc = pseries_devicetree_update(MIGRATION_SCOPE);
+ 	if (rc)
+ 		printk(KERN_ERR "Post-mobility device tree update "
+ 			"failed: %d\n", rc);
  
- static void __exit cbs_module_exit(void)
++	cacheinfo_rebuild();
++
+ 	cpus_read_unlock();
+ 
+ 	/* Possibly switch to a new RFI flush type */
 -- 
 2.20.1
 
