@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB334C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:29:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E82DBC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:29:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C316E20718
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:29:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1AF120704
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:29:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579865379;
-	bh=h+D3fc1X2bbvN0462OR0SmPlb60QQjyxnM4BJqv94BQ=;
+	s=default; t=1579865383;
+	bh=n7Dxbm6t548y2aRIJm/87HDLAthkUP1D6Haxu98aAJQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NsU3GeE9ZdS8KwurYgJoHOBx2hio6o707EcWIE8N+/JezXQIvpTL/RjO98/dbGFDh
-	 6DdaaA/nwwi2iXXLMxL9Fd+KG5K9bK8fagjbcO2BQGHcR8d5Q7uiR6BYGL9UEk/JCK
-	 eTASfzK5Ty66kNgD9b6lxSyLlOSiCyYQjilJ22HM=
+	b=ev6kK4ubH97NwI1o08it4XhcLMBeAZ2AXnag2yoBj5DkiZcFJ8+D0R3OnRUrwqFVc
+	 M3M0SIYXshWap3tmt9K/RLQRvs351gV/bOheTe4H068WXblgBFx/zi8x3JCUI9CQNR
+	 fejF4fOsBHA+oe96Tiybb3eD7aRjHsZGWiCx7yLI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391836AbgAXL3j (ORCPT
+        id S2404038AbgAXL3n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:29:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46566 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 06:29:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46696 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391822AbgAXL3h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:29:37 -0500
+        id S2391822AbgAXL3k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:29:40 -0500
 Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CA9C9206D4;
-        Fri, 24 Jan 2020 11:29:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6724220704;
+        Fri, 24 Jan 2020 11:29:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579865376;
-        bh=h+D3fc1X2bbvN0462OR0SmPlb60QQjyxnM4BJqv94BQ=;
+        s=default; t=1579865380;
+        bh=n7Dxbm6t548y2aRIJm/87HDLAthkUP1D6Haxu98aAJQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=USxv0Tfoa7GvIx2DdmYhJcmR7UBaxPqCUWr7TealHFXa4QQ06Bw5AC95je1NlKPwF
-         ft6eN4oNwbLuJSCUXLq/jEj1QifvAHMVpz6ZQRapNiq1sjI/jPBQJxHgzLvaN/rg5P
-         9Xh4XAQWLY1s7EJJGlmFoz20iHmRQwYO5OCW+rY8=
+        b=qGuPcHig/tDaBUQHABZHAqmxmKeRJOnfC+dNTLyBePaSbqcmUHnw3fkxMevMsew4V
+         2g9vLpD0zQEmv1ZVfSqznAN4GTAmeaYBXQdjzG84ZU7fvlq4ypTP3sW+cWQlIalj5U
+         vyz7gVu53l5gWSnwIyq4cgTM0SjUG3dGjhgpbNlQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tom Evans <tom.evans@motec.com.au>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        stable@vger.kernel.org, Gerd Rausch <gerd.rausch@oracle.com>,
+        Santosh Shilimkar <santosh.shilimkar@oracle.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 516/639] rtc: rv3029: revert error handling patch to rv3029_eeprom_write()
-Date:   Fri, 24 Jan 2020 10:31:26 +0100
-Message-Id: <20200124093153.439142590@linuxfoundation.org>
+Subject: [PATCH 4.19 507/639] net/rds: Add a few missing rds_stat_names entries
+Date:   Fri, 24 Jan 2020 10:31:17 +0100
+Message-Id: <20200124093152.308003569@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
 References: <20200124093047.008739095@linuxfoundation.org>
@@ -61,64 +61,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Gerd Rausch <gerd.rausch@oracle.com>
 
-[ Upstream commit a6f26606ddd03c5eab8b2132f1bfaa768c06158f ]
+[ Upstream commit 55c70ca00c982fbc0df4c4d3e31747fb73f4ddb5 ]
 
-My error handling "cleanup" was totally wrong.  Both the "err" and "ret"
-variables are required.  The "err" variable holds the error codes for
-rv3029_eeprom_enter/exit() and the "ret" variable holds the error codes
-for if actual write fails.  In my patch if the write failed, the
-function probably still returned success.
+In a previous commit, fields were added to "struct rds_statistics"
+but array "rds_stat_names" was not updated accordingly.
 
-Reported-by: Tom Evans <tom.evans@motec.com.au>
-Fixes: 97f5b0379c38 ("rtc: rv3029: Clean up error handling in rv3029_eeprom_write()")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Link: https://lore.kernel.org/r/20190817065604.GB29951@mwanda
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Please note the inconsistent naming of the string representations
+that is done in the name of compatibility
+with the Oracle internal code-base.
+
+s_recv_bytes_added_to_socket     -> "recv_bytes_added_to_sock"
+s_recv_bytes_removed_from_socket -> "recv_bytes_freed_fromsock"
+
+Fixes: 192a798f5299 ("RDS: add stat for socket recv memory usage")
+Signed-off-by: Gerd Rausch <gerd.rausch@oracle.com>
+Acked-by: Santosh Shilimkar <santosh.shilimkar@oracle.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/rtc/rtc-rv3029c2.c | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+ net/rds/stats.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/rtc/rtc-rv3029c2.c b/drivers/rtc/rtc-rv3029c2.c
-index 3d6174eb32f6a..cfe3aece51d17 100644
---- a/drivers/rtc/rtc-rv3029c2.c
-+++ b/drivers/rtc/rtc-rv3029c2.c
-@@ -282,13 +282,13 @@ static int rv3029_eeprom_read(struct device *dev, u8 reg,
- static int rv3029_eeprom_write(struct device *dev, u8 reg,
- 			       u8 const buf[], size_t len)
- {
--	int ret;
-+	int ret, err;
- 	size_t i;
- 	u8 tmp;
+diff --git a/net/rds/stats.c b/net/rds/stats.c
+index 73be187d389ed..6bbab4d74c4fe 100644
+--- a/net/rds/stats.c
++++ b/net/rds/stats.c
+@@ -76,6 +76,8 @@ static const char *const rds_stat_names[] = {
+ 	"cong_update_received",
+ 	"cong_send_error",
+ 	"cong_send_blocked",
++	"recv_bytes_added_to_sock",
++	"recv_bytes_freed_fromsock",
+ };
  
--	ret = rv3029_eeprom_enter(dev);
--	if (ret < 0)
--		return ret;
-+	err = rv3029_eeprom_enter(dev);
-+	if (err < 0)
-+		return err;
- 
- 	for (i = 0; i < len; i++, reg++) {
- 		ret = rv3029_read_regs(dev, reg, &tmp, 1);
-@@ -304,11 +304,11 @@ static int rv3029_eeprom_write(struct device *dev, u8 reg,
- 			break;
- 	}
- 
--	ret = rv3029_eeprom_exit(dev);
--	if (ret < 0)
--		return ret;
-+	err = rv3029_eeprom_exit(dev);
-+	if (err < 0)
-+		return err;
- 
--	return 0;
-+	return ret;
- }
- 
- static int rv3029_eeprom_update_bits(struct device *dev,
+ void rds_stats_info_copy(struct rds_info_iterator *iter,
 -- 
 2.20.1
 
