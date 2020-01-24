@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EE41C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 10:02:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48C31C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 10:02:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 637CE214DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 10:02:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E909206D5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 10:02:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579860122;
-	bh=AWANv358SCCe+zsonAa1awzaNFZZS6khwqstwCg5sCA=;
+	s=default; t=1579860127;
+	bh=GME4SvE16yHu/b08LBF62iPKRn02uhpZO4GHRYETIoc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=y4mOKEjPKcOeOW+fBrsmk6CDqh03R7GGkWU6jpvjH4cNU9pDQVwDMkJ/lC/wi0nmu
-	 aLdCpIuEWp7g95MrjAZ97IPngZ1TsYWVIC3HykdZnfp39JFrNGCIBQrFBqwSq9KuSf
-	 v1VH3I9w53bAXQ90o5/1PahQ3u0SALN2QGWlOU/w=
+	b=ocGitjBkK5oIT20U8wH0D1h5CBoRKlFb5IBtE9OuE/rzxNYjNT1PN7M1xXTIcz3WI
+	 Dvx51a/h6ylmy+zZiV+T5rV/7vZLwhbzPbhvERlGsJjvwlIlmH5Xj/wUQ4yiuN1A7n
+	 fg+Hzcog0OKm3g9gVakYpUR1d/n6dl27px90Cixg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388878AbgAXKCB (ORCPT
+        id S2388768AbgAXKCG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 05:02:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37354 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 05:02:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37418 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388518AbgAXKB7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 05:01:59 -0500
+        id S2388518AbgAXKCD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 05:02:03 -0500
 Received: from localhost (unknown [145.15.244.15])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 15543206D5;
-        Fri, 24 Jan 2020 10:01:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0968B20709;
+        Fri, 24 Jan 2020 10:02:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579860118;
-        bh=AWANv358SCCe+zsonAa1awzaNFZZS6khwqstwCg5sCA=;
+        s=default; t=1579860122;
+        bh=GME4SvE16yHu/b08LBF62iPKRn02uhpZO4GHRYETIoc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OdKE4CKMW1PcScGqc+6m+g4R4kvMMse6e8/Ufu57GvFudXwTpN8mIMh9mYYiUrZEb
-         lwBJj34cKS0m7Ikd7bLectb5+tTeMMtBzyyLsh2aiRBs62fdIewY0IjfGq6xdcUcCy
-         QpxB4ALDxKCQyt7hUSTc8V7+Py3C6LsxG+6OLzHw=
+        b=qFsv3BEBY1Hh+o0m/CnWPqRpWK4r3FRNrsp1TzgcBdtpMfNW/i37cGuzlXq+VxawG
+         h05Eh71D1UghszjxgEHfVMiGiUYGoVZGcn2gH/Y3fx9NUc3kNCvptoLMtS6wpAx8hh
+         oV1l+W6FB6QR5X/DNZbC5PN0nJ9+SGaFMwKVy9o8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        stable@vger.kernel.org, Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 261/343] x86/kgbd: Use NMI_VECTOR not APIC_DM_NMI
-Date:   Fri, 24 Jan 2020 10:31:19 +0100
-Message-Id: <20200124092954.374327251@linuxfoundation.org>
+Subject: [PATCH 4.14 239/343] ASoC: ti: davinci-mcasp: Fix slot mask settings when using multiple AXRs
+Date:   Fri, 24 Jan 2020 10:30:57 +0100
+Message-Id: <20200124092951.572749792@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124092919.490687572@linuxfoundation.org>
 References: <20200124092919.490687572@linuxfoundation.org>
@@ -60,39 +60,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Gleixner <tglx@linutronix.de>
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
 
-[ Upstream commit 2591bc4e8d70b4e1330d327fb7e3921f4e070a51 ]
+[ Upstream commit fd14f4436fd47d5418023c90e933e66d3645552e ]
 
-apic->send_IPI_allbutself() takes a vector number as argument.
+If multiple serializers are connected in the system and the number of
+channels will need to use more than one serializer the mask to enable the
+serializers were left to 0 if tdm_mask is provided
 
-APIC_DM_NMI is clearly not a vector number. It's defined to 0x400 which is
-outside the vector space.
+Fixes: dd55ff8346a97 ("ASoC: davinci-mcasp: Add set_tdm_slots() support")
 
-Use NMI_VECTOR instead as that's what it is intended to be.
-
-Fixes: 82da3ff89dc2 ("x86: kgdb support")
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/20190722105218.855189979@linutronix.de
+Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/kgdb.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/soc/davinci/davinci-mcasp.c | 13 ++++++-------
+ 1 file changed, 6 insertions(+), 7 deletions(-)
 
-diff --git a/arch/x86/kernel/kgdb.c b/arch/x86/kernel/kgdb.c
-index 8e36f249646e2..904e18bb38c52 100644
---- a/arch/x86/kernel/kgdb.c
-+++ b/arch/x86/kernel/kgdb.c
-@@ -438,7 +438,7 @@ static void kgdb_disable_hw_debug(struct pt_regs *regs)
-  */
- void kgdb_roundup_cpus(unsigned long flags)
- {
--	apic->send_IPI_allbutself(APIC_DM_NMI);
-+	apic->send_IPI_allbutself(NMI_VECTOR);
- }
- #endif
- 
+diff --git a/sound/soc/davinci/davinci-mcasp.c b/sound/soc/davinci/davinci-mcasp.c
+index 07bac9ea65c41..e10e03800cce5 100644
+--- a/sound/soc/davinci/davinci-mcasp.c
++++ b/sound/soc/davinci/davinci-mcasp.c
+@@ -882,14 +882,13 @@ static int mcasp_i2s_hw_param(struct davinci_mcasp *mcasp, int stream,
+ 		active_slots = hweight32(mcasp->tdm_mask[stream]);
+ 		active_serializers = (channels + active_slots - 1) /
+ 			active_slots;
+-		if (active_serializers == 1) {
++		if (active_serializers == 1)
+ 			active_slots = channels;
+-			for (i = 0; i < total_slots; i++) {
+-				if ((1 << i) & mcasp->tdm_mask[stream]) {
+-					mask |= (1 << i);
+-					if (--active_slots <= 0)
+-						break;
+-				}
++		for (i = 0; i < total_slots; i++) {
++			if ((1 << i) & mcasp->tdm_mask[stream]) {
++				mask |= (1 << i);
++				if (--active_slots <= 0)
++					break;
+ 			}
+ 		}
+ 	} else {
 -- 
 2.20.1
 
