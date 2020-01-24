@@ -2,112 +2,96 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E197C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:25:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 380B0C35242
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:25:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 077962075D
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:25:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="amgWxDk2"
+	by mail.kernel.org (Postfix) with ESMTP id 045C22077C
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:25:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579875959;
+	bh=Ufy2MMjY30X1FGM35OjV2uZmCn3u6e5Cout7ObfjLxE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=TkfIBiMigPLypJmIA8df5n457Yu/MpbcyMWQAoQq+SOQGLZUVPQ1kIlfrSBEDauax
+	 Oseiv5//puwBFUVwOs25cc9fCQq4ofSjl1nEtMOU6Y2mubpTZcmQylb0btjPkXd3FH
+	 8AO/qd41WtezAcjP9Y9WaAtFE9jGtWiTkhd4+Lgo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388965AbgAXOZy (ORCPT
+        id S2389958AbgAXOZ5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 09:25:54 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:28040 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2387621AbgAXOZv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 09:25:51 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579875950;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=gFUS+IYpTMcPpriTfqC+Rs1/QtFWk7pC2ooCgkxv0Po=;
-        b=amgWxDk292hKUeEXyajV2l+frm3Fh/3pfFqN6hQFHSpGH5ox/kWnKO2BA/F6LDgC+/S4nI
-        Yu6w+dwFQ2hLEXS8xCgWc1VFGX7sMpNIaNeOUFl8VRSaRpiwRoipsWJc1PGof/Rk0862IM
-        zIJE5SzB3TqutYDJOIEVNqTz/J2HD8Y=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-116-8HkIZKcTMhqYNkxhYA9nDw-1; Fri, 24 Jan 2020 09:25:45 -0500
-X-MC-Unique: 8HkIZKcTMhqYNkxhYA9nDw-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Fri, 24 Jan 2020 09:25:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43684 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388098AbgAXOVn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 09:21:43 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E23DB190D345;
-        Fri, 24 Jan 2020 14:25:43 +0000 (UTC)
-Received: from laptop.redhat.com (ovpn-116-37.ams2.redhat.com [10.36.116.37])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id BFFEC3B0;
-        Fri, 24 Jan 2020 14:25:38 +0000 (UTC)
-From:   Eric Auger <eric.auger@redhat.com>
-To:     eric.auger.pro@gmail.com, eric.auger@redhat.com, maz@kernel.org,
-        linux-kernel@vger.kernel.org, kvmarm@lists.cs.columbia.edu
-Cc:     andrew.murray@arm.com
-Subject: [PATCH 0/4] KVM/ARM: Misc PMU fixes
-Date:   Fri, 24 Jan 2020 15:25:31 +0100
-Message-Id: <20200124142535.29386-1-eric.auger@redhat.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 683B322464;
+        Fri, 24 Jan 2020 14:21:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579875703;
+        bh=Ufy2MMjY30X1FGM35OjV2uZmCn3u6e5Cout7ObfjLxE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=TG2gprGm4K68Y7Azl99Gm203/xD+3z6a3YRsCj4QrcH65UuIb6gEbfrQkRSIBlakR
+         MJMvwirO/XNwr6lBqHdn3CrJUyCd6PEMhb60RY9Xf35e4BkXGtA+uVVZJ/dhwpDbQ0
+         YhaGUYNet3lAqb7n5rRuOZRci1FUBD9r3ez/7uJs=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Johan Hovold <johan@kernel.org>, hayeswang <hayeswang@realtek.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 20/32] r8152: add missing endpoint sanity check
+Date:   Fri, 24 Jan 2020 09:21:07 -0500
+Message-Id: <20200124142119.30484-20-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200124142119.30484-1-sashal@kernel.org>
+References: <20200124142119.30484-1-sashal@kernel.org>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-Content-Transfer-Encoding: quoted-printable
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-While writing new PMUv3 event counter kvm-unit-tests I found
-some bugs related to the chained counter implementation:
+From: Johan Hovold <johan@kernel.org>
 
-- the enable state of the high counter is not taken into account,
-- chain counters are not implemented along with SW_INCR type,
-- SW_INCR does not take into account the global enable state
+[ Upstream commit 86f3f4cd53707ceeec079b83205c8d3c756eca93 ]
 
-The last patch rather is an optimization that avoids manipulating
-non supported counters.
+Add missing endpoint sanity check to probe in order to prevent a
+NULL-pointer dereference (or slab out-of-bounds access) when retrieving
+the interrupt-endpoint bInterval on ndo_open() in case a device lacks
+the expected endpoints.
 
-Best Regards
+Fixes: 40a82917b1d3 ("net/usb/r8152: enable interrupt transfer")
+Cc: hayeswang <hayeswang@realtek.com>
+Signed-off-by: Johan Hovold <johan@kernel.org>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/net/usb/r8152.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-Eric
-
-This series can be found at:
-https://github.com/eauger/linux/tree/v5.5-rc7-pmu-fixes-v1
-
-Test:
-Tested with kvm-unit-tests [1]: all tests now pass,
-at the exception of one sub-test in pmu-chain-promotion
-but this is a bug in test.
-
-Other testing at higher level (perf) appreciated.
-
-references:
-[1] KVM: arm64: PMUv3 Event Counter Tests
-(https://lore.kernel.org/kvmarm/c1831b6c-dc75-1bd3-6657-0375682c30af@redh=
-at.com/T/)
-
-History:
-
-RFC -> v1:
-- remove  [RFC 3/3] KVM: arm64: pmu: Enforce PMEVTYPER evtCount size
-- add KVM: arm64: pmu: Only handle supported event counters
-- Take into account the enable state of the CHAIN high counter
-- revisit kvm_pmu_software_increment() implementation as suggested
-  by Marc
-
-
-Eric Auger (4):
-  KVM: arm64: pmu: Don't increment SW_INCR if PMCR.E is unset
-  KVM: arm64: pmu: Don't mark a counter as chained if the odd one is
-    disabled
-  KVM: arm64: pmu: Fix chained SW_INCR counters
-  KVM: arm64: pmu: Only handle supported event counters
-
- virt/kvm/arm/pmu.c | 114 +++++++++++++++++++++++++++------------------
- 1 file changed, 69 insertions(+), 45 deletions(-)
-
---=20
+diff --git a/drivers/net/usb/r8152.c b/drivers/net/usb/r8152.c
+index 6a86a03c5e95a..0083c60f5cdff 100644
+--- a/drivers/net/usb/r8152.c
++++ b/drivers/net/usb/r8152.c
+@@ -5158,6 +5158,9 @@ static int rtl8152_probe(struct usb_interface *intf,
+ 		return -ENODEV;
+ 	}
+ 
++	if (intf->cur_altsetting->desc.bNumEndpoints < 3)
++		return -ENODEV;
++
+ 	usb_reset_device(udev);
+ 	netdev = alloc_etherdev(sizeof(struct r8152));
+ 	if (!netdev) {
+-- 
 2.20.1
 
