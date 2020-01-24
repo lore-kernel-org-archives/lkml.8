@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E598C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 10:59:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B236C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 10:59:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 340F62087E
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 10:59:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D87342077C
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 10:59:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579863591;
-	bh=7Xy3n3xB1MfuD7b+IoXs8QZTAuOPh9hV3O2G65UpMrU=;
+	s=default; t=1579863596;
+	bh=3mmc3PDtfehLLwV237Gk+nHKseBFviRguBuXz9ea8HE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PIe3OqfNIgpjqCNkS4x8+YcFPAHZv8HAVAE/PiPYfYkjefvB4d9S+BdGbRT1mTErF
-	 MqeW3pPj0hORWmxKNVxholZqxutCI8mNcFdQFs24INOjXl86+rwjA9q7uvvtfKVRgm
-	 W62S6xWod2JLrqtr5e2JZ7Tuml//gc7zEpHassEk=
+	b=OjXBI1dXJ6SM25TQ20opTgH24ozDy1UJWEnFCtzEttwWFIik6fo7DHgJi5cAeKttI
+	 FgODfEb0wKWo1rZcyZ/WUByoqpRMKgHgSOQW4vDb8eakzcxRextNStoWVj8psHW9ye
+	 nWaJF5kihn4GIWD1qk3GVJkV/VVwbMgejT+LdWCM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732567AbgAXK7u (ORCPT
+        id S1732654AbgAXK7y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 05:59:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57970 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 05:59:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58098 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726294AbgAXK7s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 05:59:48 -0500
+        id S1726294AbgAXK7w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 05:59:52 -0500
 Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 99A3520838;
-        Fri, 24 Jan 2020 10:59:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3DAA02075D;
+        Fri, 24 Jan 2020 10:59:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579863587;
-        bh=7Xy3n3xB1MfuD7b+IoXs8QZTAuOPh9hV3O2G65UpMrU=;
+        s=default; t=1579863590;
+        bh=3mmc3PDtfehLLwV237Gk+nHKseBFviRguBuXz9ea8HE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aB/JRbZ40TyBsWEe81kAJME18f5NwEB0FC968wLe2xEzW1Au1jABZ27no+m45iMhQ
-         phvcjzKq1bCQ2iIvoQ1akxf9MOaO8+jHuC62vFx1halvMS/89CHR2qjdJzvxhKxoLc
-         fx5cJbWYq/+Q/MiPiyf4FMlSDVRHAcJHHJnnv9us=
+        b=2hMOWb3Fwv1UzmPNtN/Aw0ch9H+qmMZADIh8AbHRiCv/Kt1C4sD5HpKSZDOfAun6V
+         hUgSXBjqmnfRbIuzOhXQExW6Gj5brWDNu7qt8ZIyTIrjAbwj7nfaTol0e33WO9P/Yt
+         AZ4dAoFZ4i3GoDDaKLraSJlXpwpJV21254wKjOxE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tony Luck <tony.luck@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>, linux-ia64@vger.kernel.org,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
+        stable@vger.kernel.org, Shannon Nelson <shannon.nelson@oracle.com>,
+        Andrew Bowers <andrewx.bowers@intel.com>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 033/639] signal/ia64: Use the force_sig(SIGSEGV,...) in ia64_rt_sigreturn
-Date:   Fri, 24 Jan 2020 10:23:23 +0100
-Message-Id: <20200124093051.581418128@linuxfoundation.org>
+Subject: [PATCH 4.19 021/639] ixgbe: dont clear IPsec sa counters on HW clearing
+Date:   Fri, 24 Jan 2020 10:23:11 +0100
+Message-Id: <20200124093049.855617662@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
 References: <20200124093047.008739095@linuxfoundation.org>
@@ -61,62 +61,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric W. Biederman <ebiederm@xmission.com>
+From: Shannon Nelson <shannon.nelson@oracle.com>
 
-[ Upstream commit b92adb74adde62d9a9780ff2977d63dcb21aeaa6 ]
+[ Upstream commit 9e3f2f5ecee69b0f70003fb3e07639151e91de73 ]
 
-The ia64 handling of failure to return from a signal frame has been trying
-to set overlapping fields in struct siginfo since 2.3.43.  The si_code
-corresponds to the fields that were stomped (not the field that is
-actually written), so I can not imagine a piece of userspace code
-making sense of the signal frame if it looks closely.
+The software SA record counters should not be cleared when clearing
+the hardware tables.  This causes the counters to be out of sync
+after a driver reset.
 
-In practice failure to return from a signal frame is a rare event that
-almost never happens.  Someone using an alternate signal stack to
-recover and looking in detail is even more rare.  So I presume no one
-has ever noticed and reported this ia64 nonsense.
-
-Sort this out by causing ia64 to use force_sig(SIGSEGV) like other architectures.
-
-Fixes: 2.3.43
-Cc: Tony Luck <tony.luck@intel.com>
-Cc: Fenghua Yu <fenghua.yu@intel.com>
-Cc: linux-ia64@vger.kernel.org
-Acked-by: Tony Luck <tony.luck@intel.com>
-Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
+Fixes: 63a67fe229ea ("ixgbe: add ipsec offload add and remove SA")
+Signed-off-by: Shannon Nelson <shannon.nelson@oracle.com>
+Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
+Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/ia64/kernel/signal.c | 10 +---------
- 1 file changed, 1 insertion(+), 9 deletions(-)
+ drivers/net/ethernet/intel/ixgbe/ixgbe_ipsec.c | 4 ----
+ 1 file changed, 4 deletions(-)
 
-diff --git a/arch/ia64/kernel/signal.c b/arch/ia64/kernel/signal.c
-index 01fc133b2e4c8..9a960829a01d9 100644
---- a/arch/ia64/kernel/signal.c
-+++ b/arch/ia64/kernel/signal.c
-@@ -110,7 +110,6 @@ ia64_rt_sigreturn (struct sigscratch *scr)
+diff --git a/drivers/net/ethernet/intel/ixgbe/ixgbe_ipsec.c b/drivers/net/ethernet/intel/ixgbe/ixgbe_ipsec.c
+index b27f7a968820d..49e6d66ccf802 100644
+--- a/drivers/net/ethernet/intel/ixgbe/ixgbe_ipsec.c
++++ b/drivers/net/ethernet/intel/ixgbe/ixgbe_ipsec.c
+@@ -114,7 +114,6 @@ static void ixgbe_ipsec_set_rx_ip(struct ixgbe_hw *hw, u16 idx, __be32 addr[])
+  **/
+ static void ixgbe_ipsec_clear_hw_tables(struct ixgbe_adapter *adapter)
  {
- 	extern char ia64_strace_leave_kernel, ia64_leave_kernel;
- 	struct sigcontext __user *sc;
--	struct siginfo si;
- 	sigset_t set;
- 	long retval;
- 
-@@ -153,14 +152,7 @@ ia64_rt_sigreturn (struct sigscratch *scr)
- 	return retval;
- 
-   give_sigsegv:
--	clear_siginfo(&si);
--	si.si_signo = SIGSEGV;
--	si.si_errno = 0;
--	si.si_code = SI_KERNEL;
--	si.si_pid = task_pid_vnr(current);
--	si.si_uid = from_kuid_munged(current_user_ns(), current_uid());
--	si.si_addr = sc;
--	force_sig_info(SIGSEGV, &si, current);
-+	force_sig(SIGSEGV, current);
- 	return retval;
+-	struct ixgbe_ipsec *ipsec = adapter->ipsec;
+ 	struct ixgbe_hw *hw = &adapter->hw;
+ 	u32 buf[4] = {0, 0, 0, 0};
+ 	u16 idx;
+@@ -133,9 +132,6 @@ static void ixgbe_ipsec_clear_hw_tables(struct ixgbe_adapter *adapter)
+ 		ixgbe_ipsec_set_tx_sa(hw, idx, buf, 0);
+ 		ixgbe_ipsec_set_rx_sa(hw, idx, 0, buf, 0, 0, 0);
+ 	}
+-
+-	ipsec->num_rx_sa = 0;
+-	ipsec->num_tx_sa = 0;
  }
  
+ /**
 -- 
 2.20.1
 
