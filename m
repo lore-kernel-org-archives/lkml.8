@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 405B5C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:07:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15B7FC35242
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:07:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 141CD2071A
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:07:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEDB42071A
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:07:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579864067;
-	bh=UfEvCiiD+9cXzac4mtmgjfBHVuD/JxIuJFD2LzNidPA=;
+	s=default; t=1579864069;
+	bh=IKXJlVhxscBDhPtK+UmF1g/noAcbZm0eHNgcT5imv0Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1zQT2wqCYPXigG+B73T7qTYYSbJsR7Uq5NBg3SmN1cNqLi0vXtyW1ltAbPKngcDVq
-	 /AU3bZbrjV0ZvkSWznBHE9h4HxY5yinK+jtJdvwNvEsTTLEiYQNiyHxE5IAJheMJw2
-	 GBPPCpncQDBqBqDNuEwKFdxD7azB+9MB/kfC2O8Q=
+	b=ntYpxzKkqP9oisxdMlkXGNTU+6Q+WeD6SF5QwfmC+GGX56rD1S5sZ012pL2ntDTuy
+	 fBXziID4Gvu/XS3FON02Z25v9EKI3wQsP1brjSQB7RWs/rsJWbfBlCrluKShATOSPM
+	 LoEyGvUDcjOmtCVnpLHNLf1Jhiu+OCKWFYs1Lq8U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389591AbgAXLHq (ORCPT
+        id S2389597AbgAXLHt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:07:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43084 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 06:07:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43156 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729719AbgAXLHo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:07:44 -0500
+        id S1729719AbgAXLHs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:07:48 -0500
 Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6FD192071A;
-        Fri, 24 Jan 2020 11:07:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 39563214AF;
+        Fri, 24 Jan 2020 11:07:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579864064;
-        bh=UfEvCiiD+9cXzac4mtmgjfBHVuD/JxIuJFD2LzNidPA=;
+        s=default; t=1579864067;
+        bh=IKXJlVhxscBDhPtK+UmF1g/noAcbZm0eHNgcT5imv0Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wr4pQJW1aPA3S1gLr86f93ffK0iOBEo3bYf7JHsOGumAL+Uf3lDAmD2ikJ4H8AvPb
-         OMb3nLTT6IOjAYQLgrxtUizQKDoEfSK1i5/6AclmP77BTGRUOhcUpk8g3KGbFlAd5W
-         acipWIGO0iCNHhN22z8izhQDm7fvUEsj92UfuFjA=
+        b=YeWe4MEKUxxYZJHe/53V6RHQY0Wr/EdHWlPLc0aYeEQCtfxtWKoEmmi9gRUfD0GGi
+         IcjB67DDdT6cILxPIETCKyzX7jXP7OnzQz0KG2rCYZ4HAfsd8dlCGqL/yw6AoHQ8f/
+         MuAaAA6VlR2Gl7r94T24nboxnahbd0IQAhAe1CPY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Mordechay Goodstein <mordechay.goodstein@intel.com>,
-        Luca Coelho <luciano.coelho@intel.com>,
+        stable@vger.kernel.org, Israel Rukshin <israelr@mellanox.com>,
+        Max Gurtovoy <maxg@mellanox.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Jason Gunthorpe <jgg@mellanox.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 148/639] iwlwifi: mvm: avoid possible access out of array.
-Date:   Fri, 24 Jan 2020 10:25:18 +0100
-Message-Id: <20200124093105.760522533@linuxfoundation.org>
+Subject: [PATCH 4.19 139/639] IB/iser: Pass the correct number of entries for dma mapped SGL
+Date:   Fri, 24 Jan 2020 10:25:09 +0100
+Message-Id: <20200124093104.680401423@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
 References: <20200124093047.008739095@linuxfoundation.org>
@@ -61,64 +62,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mordechay Goodstein <mordechay.goodstein@intel.com>
+From: Israel Rukshin <israelr@mellanox.com>
 
-[ Upstream commit b0d795a9ae558209656b18930c2b4def5f8fdfb8 ]
+[ Upstream commit 57b26497fabe1b9379b59fbc7e35e608e114df16 ]
 
-The value in txq_id can be out of array scope,
-validate it before accessing the array.
+ib_dma_map_sg() augments the SGL into a 'dma mapped SGL'. This process may
+change the number of entries and the lengths of each entry.
 
-Signed-off-by: Mordechay Goodstein <mordechay.goodstein@intel.com>
-Fixes: cf961e16620f ("iwlwifi: mvm: support dqa-mode agg on non-shared queue")
-Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
+Code that touches dma_address is iterating over the 'dma mapped SGL' and
+must use dma_nents which returned from ib_dma_map_sg().
+
+ib_sg_to_pages() and ib_map_mr_sg() are using dma_address so they must use
+dma_nents.
+
+Fixes: 39405885005a ("IB/iser: Port to new fast registration API")
+Fixes: bfe066e256d5 ("IB/iser: Reuse ib_sg_to_pages")
+Signed-off-by: Israel Rukshin <israelr@mellanox.com>
+Reviewed-by: Max Gurtovoy <maxg@mellanox.com>
+Acked-by: Sagi Grimberg <sagi@grimberg.me>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/intel/iwlwifi/mvm/sta.c | 19 +++++++++++++------
- 1 file changed, 13 insertions(+), 6 deletions(-)
+ drivers/infiniband/ulp/iser/iser_memory.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/sta.c b/drivers/net/wireless/intel/iwlwifi/mvm/sta.c
-index e850aa504b608..69057701641e0 100644
---- a/drivers/net/wireless/intel/iwlwifi/mvm/sta.c
-+++ b/drivers/net/wireless/intel/iwlwifi/mvm/sta.c
-@@ -2462,7 +2462,7 @@ int iwl_mvm_sta_tx_agg_start(struct iwl_mvm *mvm, struct ieee80211_vif *vif,
- 	struct iwl_mvm_sta *mvmsta = iwl_mvm_sta_from_mac80211(sta);
- 	struct iwl_mvm_tid_data *tid_data;
- 	u16 normalized_ssn;
--	int txq_id;
-+	u16 txq_id;
- 	int ret;
+diff --git a/drivers/infiniband/ulp/iser/iser_memory.c b/drivers/infiniband/ulp/iser/iser_memory.c
+index 009be8889d71d..379bc0dfc3885 100644
+--- a/drivers/infiniband/ulp/iser/iser_memory.c
++++ b/drivers/infiniband/ulp/iser/iser_memory.c
+@@ -240,8 +240,8 @@ int iser_fast_reg_fmr(struct iscsi_iser_task *iser_task,
+ 	page_vec->npages = 0;
+ 	page_vec->fake_mr.page_size = SIZE_4K;
+ 	plen = ib_sg_to_pages(&page_vec->fake_mr, mem->sg,
+-			      mem->size, NULL, iser_set_page);
+-	if (unlikely(plen < mem->size)) {
++			      mem->dma_nents, NULL, iser_set_page);
++	if (unlikely(plen < mem->dma_nents)) {
+ 		iser_err("page vec too short to hold this SG\n");
+ 		iser_data_buf_dump(mem, device->ib_device);
+ 		iser_dump_page_vec(page_vec);
+@@ -451,10 +451,10 @@ static int iser_fast_reg_mr(struct iscsi_iser_task *iser_task,
  
- 	if (WARN_ON_ONCE(tid >= IWL_MAX_TID_COUNT))
-@@ -2506,17 +2506,24 @@ int iwl_mvm_sta_tx_agg_start(struct iwl_mvm *mvm, struct ieee80211_vif *vif,
- 	 */
- 	txq_id = mvmsta->tid_data[tid].txq_id;
- 	if (txq_id == IWL_MVM_INVALID_QUEUE) {
--		txq_id = iwl_mvm_find_free_queue(mvm, mvmsta->sta_id,
--						 IWL_MVM_DQA_MIN_DATA_QUEUE,
--						 IWL_MVM_DQA_MAX_DATA_QUEUE);
--		if (txq_id < 0) {
--			ret = txq_id;
-+		ret = iwl_mvm_find_free_queue(mvm, mvmsta->sta_id,
-+					      IWL_MVM_DQA_MIN_DATA_QUEUE,
-+					      IWL_MVM_DQA_MAX_DATA_QUEUE);
-+		if (ret < 0) {
- 			IWL_ERR(mvm, "Failed to allocate agg queue\n");
- 			goto release_locks;
- 		}
+ 	ib_update_fast_reg_key(mr, ib_inc_rkey(mr->rkey));
  
-+		txq_id = ret;
-+
- 		/* TXQ hasn't yet been enabled, so mark it only as reserved */
- 		mvm->queue_info[txq_id].status = IWL_MVM_QUEUE_RESERVED;
-+	} else if (WARN_ON(txq_id >= IWL_MAX_HW_QUEUES)) {
-+		ret = -ENXIO;
-+		IWL_ERR(mvm, "tid_id %d out of range (0, %d)!\n",
-+			tid, IWL_MAX_HW_QUEUES - 1);
-+		goto out;
-+
- 	} else if (unlikely(mvm->queue_info[txq_id].status ==
- 			    IWL_MVM_QUEUE_SHARED)) {
- 		ret = -ENXIO;
+-	n = ib_map_mr_sg(mr, mem->sg, mem->size, NULL, SIZE_4K);
+-	if (unlikely(n != mem->size)) {
++	n = ib_map_mr_sg(mr, mem->sg, mem->dma_nents, NULL, SIZE_4K);
++	if (unlikely(n != mem->dma_nents)) {
+ 		iser_err("failed to map sg (%d/%d)\n",
+-			 n, mem->size);
++			 n, mem->dma_nents);
+ 		return n < 0 ? n : -EINVAL;
+ 	}
+ 
 -- 
 2.20.1
 
