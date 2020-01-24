@@ -2,63 +2,181 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D034FC35242
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 16:55:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E06ABC35242
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 16:58:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B14B820709
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 16:55:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6CBD2072C
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 16:58:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="Fm5e4ZVK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390460AbgAXQzA (ORCPT
+        id S2389804AbgAXQ6E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 11:55:00 -0500
-Received: from ms.lwn.net ([45.79.88.28]:46198 "EHLO ms.lwn.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387674AbgAXQy7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 11:54:59 -0500
-Received: from lwn.net (localhost [127.0.0.1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ms.lwn.net (Postfix) with ESMTPSA id 188F32D6;
-        Fri, 24 Jan 2020 16:54:59 +0000 (UTC)
-Date:   Fri, 24 Jan 2020 09:54:57 -0700
-From:   Jonathan Corbet <corbet@lwn.net>
-To:     Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Cc:     Dan Williams <dan.j.williams@intel.com>, linux-doc@vger.kernel.org,
+        Fri, 24 Jan 2020 11:58:04 -0500
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:44473 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726454AbgAXQ6D (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 11:58:03 -0500
+Received: by mail-pl1-f195.google.com with SMTP id d9so1018460plo.11
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jan 2020 08:58:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=GwXFqvDSv0U+LxmDUU5sHju4TMmZEZGW+kXhJe7jcJM=;
+        b=Fm5e4ZVKDvM/voKueHczsL1nCVQpxWHLwo9cjV6HlHB2frlVdVdoriKCXXTzmV4rkG
+         0o3tZnyLDv1X/VrQl00k1LWd6o++FKLrm1twzoDKlSd0+KjH3OZkY7C62RKLE9bX0goa
+         jsjhfs2mrLzAAZFvdutkomFlCIqK0dwTEW0/lym5NFc80jou+PGk636Zpga2gkOt+tlo
+         Tm/33yA0e6NR03h4vZDbtzE/WUyh8RV5Vf76a24yU7e62obDt2Ek9eCUf0Xv5bNVwtJN
+         lRflUQ0Z8PJuWmgjGakuR8F0+IiOoHlVdZw1SHj96nwST6mKEpCdAL36wUYYf3ZvpHru
+         XGWQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=GwXFqvDSv0U+LxmDUU5sHju4TMmZEZGW+kXhJe7jcJM=;
+        b=RTOXr+5bCqyVAaM++Yv62chHi94vcy3yCI2JVNPNiz71UuR4V84Rs7lverYSNtY9lJ
+         42tvs3aV1kwb6zsH7pOigT4eQwNy3wetIlmIBs0NVe4AKK7MMUdUFT1Qz+fFacg9iGzN
+         fmAy9evJDhmQQbaC35JpqZxdhe+Z8Iv0GxcEMNsabVbe/SjpbZt3fvoCsURNmC0H6igL
+         8vANUKC+w5UWkJX9YZ8kJnF03BVa0j7PxbSVTocX2wI2VZiCSOn3BlEYrFSBIrOxKH1Q
+         e/dnIvLRVQBnp1Y20p5WRPQ9hPNTj9AhUz+JD8iji2U0vsSGyWwkDsg259p1B7tTeOzu
+         cx9g==
+X-Gm-Message-State: APjAAAWQVMkdjRlxdyRkA6f0HB774fttNtXZ+n2Tu9zxkvmslMJoVO2P
+        l2RbXseMLqxb29IIpg2tokxczQ==
+X-Google-Smtp-Source: APXvYqyQ8DKgQqt/vpZUzkPeqpmlLosrJN1PHR8nYPCIOHEi/uu6f97gME0PW9aYLL632IOCW6shBA==
+X-Received: by 2002:a17:902:8341:: with SMTP id z1mr4373355pln.178.1579885082557;
+        Fri, 24 Jan 2020 08:58:02 -0800 (PST)
+Received: from [10.47.243.41] ([156.39.10.47])
+        by smtp.gmail.com with ESMTPSA id e16sm2801374pff.82.2020.01.24.08.58.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 24 Jan 2020 08:58:02 -0800 (PST)
+Subject: Re: [PATCH 5.4 033/222] io_uring: only allow submit from owning task
+To:     Stefan Metzmacher <metze@samba.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] docs: nvdimm: use ReST notation for subsection
-Message-ID: <20200124095457.33cee77e@lwn.net>
-In-Reply-To: <20200118153620.8276-1-lukas.bulwahn@gmail.com>
-References: <20200118153620.8276-1-lukas.bulwahn@gmail.com>
-Organization: LWN.net
+Cc:     stable@vger.kernel.org, io-uring <io-uring@vger.kernel.org>
+References: <20200122092833.339495161@linuxfoundation.org>
+ <20200122092835.852416399@linuxfoundation.org>
+ <1b4a79c1-6cda-12a8-219b-0c1c146faeff@samba.org>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <b8fd1a53-8f75-e9cd-9df5-a79541b9fa14@kernel.dk>
+Date:   Fri, 24 Jan 2020 09:58:01 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <1b4a79c1-6cda-12a8-219b-0c1c146faeff@samba.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 18 Jan 2020 16:36:20 +0100
-Lukas Bulwahn <lukas.bulwahn@gmail.com> wrote:
-
-> The ACPI Device Specific Methods (_DSM) paragraph is intended to be a
-> subsection of the Submit Checklist Addendum section. Dan Williams however
-> used Markdown notation for this subsection, which does not parse as
-> intended in a ReST documentation.
+On 1/24/20 3:38 AM, Stefan Metzmacher wrote:
+> Am 22.01.20 um 10:26 schrieb Greg Kroah-Hartman:
+>> From: Jens Axboe <axboe@kernel.dk>
+>>
+>> commit 44d282796f81eb1debc1d7cb53245b4cb3214cb5 upstream.
+>>
+>> If the credentials or the mm doesn't match, don't allow the task to
+>> submit anything on behalf of this ring. The task that owns the ring can
+>> pass the file descriptor to another task, but we don't want to allow
+>> that task to submit an SQE that then assumes the ring mm and creds if
+>> it needs to go async.
+>>
+>> Cc: stable@vger.kernel.org
+>> Suggested-by: Stefan Metzmacher <metze@samba.org>
+>> Signed-off-by: Jens Axboe <axboe@kernel.dk>
+>> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+>>
+>>
+>> ---
+>>  fs/io_uring.c |    6 ++++++
+>>  1 file changed, 6 insertions(+)
+>>
+>> --- a/fs/io_uring.c
+>> +++ b/fs/io_uring.c
+>> @@ -3716,6 +3716,12 @@ SYSCALL_DEFINE6(io_uring_enter, unsigned
+>>  			wake_up(&ctx->sqo_wait);
+>>  		submitted = to_submit;
+>>  	} else if (to_submit) {
+>> +		if (current->mm != ctx->sqo_mm ||
+>> +		    current_cred() != ctx->creds) {
+>> +			ret = -EPERM;
+>> +			goto out;
+>> +		}
+>> +
 > 
-> Change the markup to ReST notation, as described in the Specific
-> guidelines for the kernel documentation section in
-> Documentation/doc-guide/sphinx.rst.
+> I thought about this a bit more.
 > 
-> Fixes: 47843401e3a0 ("libnvdimm, MAINTAINERS: Maintainer Entry Profile")
-> Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
-> ---
-> Jonathan, please pick this small doc fixup.
+> I'm not sure if this is actually to restrictive,
+> because it means applications like Samba won't
+> be able to use io-uring at all.
+> 
+> As even if current_cred() and ctx->creds describe the same
+> set of uid,gids the != won't ever match again and
+> makes the whole ring unuseable.
+> 
+> I'm not sure about what the best short term solution could be...
+> 
+> 1. May just doing the check for path based operations?
+>   and fail individual requests with EPERM.
+> 
+> 2. Or force REQ_F_FORCE_ASYNC for path based operations,
+>   so that they're always executed from within the workqueue
+>   with were ctx->creds is active.
+> 
+> 3. Or (as proposed earlier) do the override_creds/revert_creds dance
+>   (and similar for mm) if needed.
+> 
+> To summaries the problem again:
+> 
+> For path based operations like:
+> - IORING_OP_CONNECT (maybe also - IORING_OP_ACCEPT???)
+> - IORING_OP_SEND*, IORING_OP_RECV* on DGRAM sockets
+> - IORING_OP_OPENAT, IORING_OP_STATX, IORING_OP_OPENAT2
+> it's important under which current_cred they are called.
+> 
+> Are IORING_OP_MADVISE, IORING_OP_FADVISE and IORING_OP_FALLOCATE
+> are only bound to the credentials of the passed fd they operate on?
+> 
+> The current assumption is that the io_uring_setup() syscall captures
+> the current_cred() to ctx->cred and all operations on the ring
+> are executed under the context of ctx->cred.
+> Therefore all helper threads do the override_creds/revert_creds dance.
 
-Applied, thanks.
+But it doesn't - we're expecting them to match, and with this change,
+we assert that it's the case or return -EPERM.
 
-jon
+> But the possible non-blocking line execution of operations in
+> the io_uring_enter() syscall doesn't do the override_creds/revert_creds
+> dance and execute the operations under current_cred().
+> 
+> This means it's random depending on filled cached under what
+> credentials an operation is executed.
+> 
+> In order to prevent security problems the current patch is enough,
+> but as outlined above it will make io-uring complete unuseable
+> for applications using any syscall that changes current_cred().
+> 
+> Change 1. would be a little bit better, but still not really useful.
+> 
+> I'd actually prefer solution 3. as it's still possible to make
+> use of non-blocking operations, while the security is the
+> same as solution 2.
+
+For your situation, we need to extend it anyway, and provide a way
+to swap between personalities. So yeah it won't work as-is for your
+use case, but we can work on making that the case.
+
+-- 
+Jens Axboe
+
