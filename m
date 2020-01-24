@@ -6,33 +6,33 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6BF0C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 12:43:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50ED3C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 12:43:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70C1F2071A
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 12:43:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24B872070A
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 12:43:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388400AbgAXMnV (ORCPT
+        id S2387944AbgAXMnQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 07:43:21 -0500
-Received: from foss.arm.com ([217.140.110.172]:51284 "EHLO foss.arm.com"
+        Fri, 24 Jan 2020 07:43:16 -0500
+Received: from foss.arm.com ([217.140.110.172]:51252 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388011AbgAXMnR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 07:43:17 -0500
+        id S1729721AbgAXMnO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 07:43:14 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3C72E1063;
-        Fri, 24 Jan 2020 04:43:17 -0800 (PST)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 49F381007;
+        Fri, 24 Jan 2020 04:43:14 -0800 (PST)
 Received: from e113632-lin.cambridge.arm.com (e113632-lin.cambridge.arm.com [10.1.194.46])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id E8D7F3F68E;
-        Fri, 24 Jan 2020 04:43:15 -0800 (PST)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 1633A3F68E;
+        Fri, 24 Jan 2020 04:43:12 -0800 (PST)
 From:   Valentin Schneider <valentin.schneider@arm.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     mingo@redhat.com, peterz@infradead.org, vincent.guittot@linaro.org,
         dietmar.eggemann@arm.com, morten.rasmussen@arm.com,
         qperret@google.com, adharmap@codeaurora.org
-Subject: [PATCH 3/3] sched/fair: Kill wake_cap()
-Date:   Fri, 24 Jan 2020 12:42:55 +0000
-Message-Id: <20200124124255.1095-4-valentin.schneider@arm.com>
+Subject: [PATCH 1/3] sched/fair: Add asymmetric CPU capacity wakeup scan
+Date:   Fri, 24 Jan 2020 12:42:53 +0000
+Message-Id: <20200124124255.1095-2-valentin.schneider@arm.com>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20200124124255.1095-1-valentin.schneider@arm.com>
 References: <20200124124255.1095-1-valentin.schneider@arm.com>
@@ -45,67 +45,150 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Morten Rasmussen <morten.rasmussen@arm.com>
 
-Capacity-awareness in the wake-up path previously involved disabling
-wake_affine in certain scenarios. We have just made select_idle_sibling()
-capacity-aware, so this isn't needed anymore.
+On asymmetric CPU capacity topologies, we currently rely on wake_cap() to
+drive select_task_rq_fair() towards either
+- its slow-path (find_idlest_cpu()) if either the previous or
+  current (waking) CPU has too little capacity for the waking task
+- its fast-path (select_idle_sibling()) otherwise
 
-Remove wake_cap() entirely.
+Commit 3273163c6775 ("sched/fair: Let asymmetric CPU configurations balance
+at wake-up") points out that this relies on the assumption that "[...]the
+CPU capacities within an SD_SHARE_PKG_RESOURCES domain (sd_llc) are
+homogeneous".
 
+This assumption no longer holds on newer generations of big.LITTLE
+systems (DynamIQ), which can accommodate CPUs of different compute capacity
+within a single LLC domain. To hopefully paint a better picture, a regular
+big.LITTLE topology would look like this:
+
+  +---------+ +---------+
+  |   L2    | |   L2    |
+  +----+----+ +----+----+
+  |CPU0|CPU1| |CPU2|CPU3|
+  +----+----+ +----+----+
+      ^^^         ^^^
+    LITTLEs      bigs
+
+which would result in the following scheduler topology:
+
+  DIE [         ] <- sd_asym_cpucapacity
+  MC  [   ] [   ] <- sd_llc
+       0 1   2 3
+
+Conversely, a DynamIQ topology could look like:
+
+  +-------------------+
+  |        L3         |
+  +----+----+----+----+
+  | L2 | L2 | L2 | L2 |
+  +----+----+----+----+
+  |CPU0|CPU1|CPU2|CPU3|
+  +----+----+----+----+
+     ^^^^^     ^^^^^
+    LITTLEs    bigs
+
+which would result in the following scheduler topology:
+
+  MC [       ] <- sd_llc, sd_asym_cpucapacity
+      0 1 2 3
+
+What this means is that, on DynamIQ systems, we could pass the wake_cap()
+test (IOW presume the waking task fits on the CPU capacities of some LLC
+domain), thus go through select_idle_sibling().
+This function operates on an LLC domain, which here spans both bigs and
+LITTLEs, so it could very well pick a CPU of too small capacity for the
+task, despite there being fitting idle CPUs - it very much depends on the
+CPU iteration order, on which we have absolutely no guarantees
+capacity-wise.
+
+Introduce yet another select_idle_sibling() helper function that takes CPU
+capacity into account. The policy is basically to pick the first idle CPU
+which is big enough for the task (task_util * margin < cpu_capacity).
+
+Unlike other select_idle_sibling() helpers, this one operates on the
+sd_asym_cpucapacity sched_domain pointer, which is guaranteed to span all
+known CPU capacities in the system. As such, this will work for both
+"legacy" big.LITTLE (LITTLEs & bigs split at MC, joined at DIE) and for
+newer DynamIQ systems (e.g. LITTLEs and bigs in the same MC domain).
+
+Co-authored-by: Valentin Schneider <valentin.schneider@arm.com>
 Signed-off-by: Morten Rasmussen <morten.rasmussen@arm.com>
-[Changelog tweaks]
 Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
 ---
- kernel/sched/fair.c | 30 +-----------------------------
- 1 file changed, 1 insertion(+), 29 deletions(-)
+ kernel/sched/fair.c | 39 ++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 38 insertions(+), 1 deletion(-)
 
 diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 47a4f52d89b44..e21ce8f2186a4 100644
+index fe4e0d7753756..47a4f52d89b44 100644
 --- a/kernel/sched/fair.c
 +++ b/kernel/sched/fair.c
-@@ -6124,33 +6124,6 @@ static unsigned long cpu_util_without(int cpu, struct task_struct *p)
- 	return min_t(unsigned long, util, capacity_orig_of(cpu));
+@@ -5772,7 +5772,7 @@ void __update_idle_core(struct rq *rq)
+  */
+ static int select_idle_core(struct task_struct *p, struct sched_domain *sd, int target)
+ {
+-	struct cpumask *cpus = this_cpu_cpumask_var_ptr(select_idle_mask);
++	struct cpumask *cpus;
+ 	int core, cpu;
+ 
+ 	if (!static_branch_likely(&sched_smt_present))
+@@ -5781,6 +5781,7 @@ static int select_idle_core(struct task_struct *p, struct sched_domain *sd, int
+ 	if (!test_idle_cores(target, false))
+ 		return -1;
+ 
++	cpus = this_cpu_cpumask_var_ptr(select_idle_mask);
+ 	cpumask_and(cpus, sched_domain_span(sd), p->cpus_ptr);
+ 
+ 	for_each_cpu_wrap(core, cpus, target) {
+@@ -5894,6 +5895,37 @@ static int select_idle_cpu(struct task_struct *p, struct sched_domain *sd, int t
+ 	return cpu;
  }
  
--/*
-- * Disable WAKE_AFFINE in the case where task @p doesn't fit in the
-- * capacity of either the waking CPU @cpu or the previous CPU @prev_cpu.
-- *
-- * In that case WAKE_AFFINE doesn't make sense and we'll let
-- * BALANCE_WAKE sort things out.
-- */
--static int wake_cap(struct task_struct *p, int cpu, int prev_cpu)
--{
--	long min_cap, max_cap;
--
--	if (!static_branch_unlikely(&sched_asym_cpucapacity))
--		return 0;
--
--	min_cap = min(capacity_orig_of(prev_cpu), capacity_orig_of(cpu));
--	max_cap = cpu_rq(cpu)->rd->max_cpu_capacity;
--
--	/* Minimum capacity is close to max, no need to abort wake_affine */
--	if (max_cap - min_cap < max_cap >> 3)
--		return 0;
--
--	/* Bring task utilization in sync with prev_cpu */
--	sync_entity_load_avg(&p->se);
--
--	return !task_fits_capacity(p, min_cap);
--}
--
++/*
++ * Scan the asym_capacity domain for idle CPUs; pick the first idle one on which
++ * the task fits.
++ */
++static int select_idle_capacity(struct task_struct *p, int target)
++{
++	struct cpumask *cpus = this_cpu_cpumask_var_ptr(select_idle_mask);
++	struct sched_domain *sd;
++	int cpu;
++
++	if (!static_branch_unlikely(&sched_asym_cpucapacity))
++		return -1;
++
++	sd = rcu_dereference(per_cpu(sd_asym_cpucapacity, target));
++	if (!sd)
++		return -1;
++
++	cpumask_and(cpus, sched_domain_span(sd), p->cpus_ptr);
++
++	for_each_cpu_wrap(cpu, cpus, target) {
++		if (!available_idle_cpu(cpu))
++			continue;
++		if (!task_fits_capacity(p, capacity_of(cpu)))
++			continue;
++
++		return cpu;
++	}
++
++	return -1;
++}
++
  /*
-  * Predicts what cpu_util(@cpu) would return if @p was migrated (and enqueued)
-  * to @dst_cpu.
-@@ -6415,8 +6388,7 @@ select_task_rq_fair(struct task_struct *p, int prev_cpu, int sd_flag, int wake_f
- 			new_cpu = prev_cpu;
- 		}
+  * Try and locate an idle core/thread in the LLC cache domain.
+  */
+@@ -5902,6 +5934,11 @@ static int select_idle_sibling(struct task_struct *p, int prev, int target)
+ 	struct sched_domain *sd;
+ 	int i, recent_used_cpu;
  
--		want_affine = !wake_wide(p) && !wake_cap(p, cpu, prev_cpu) &&
--			      cpumask_test_cpu(cpu, p->cpus_ptr);
-+		want_affine = !wake_wide(p) && cpumask_test_cpu(cpu, p->cpus_ptr);
- 	}
++	/* For asymmetric capacities, try to be smart about the placement */
++	i = select_idle_capacity(p, target);
++	if ((unsigned)i < nr_cpumask_bits)
++		return i;
++
+ 	if (available_idle_cpu(target) || sched_idle_cpu(target))
+ 		return target;
  
- 	rcu_read_lock();
 -- 
 2.24.0
 
