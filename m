@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F4D5C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:41:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17E73C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:41:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10C28214DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:41:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D34CA20709
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:41:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579858876;
-	bh=p2LyabCqAEe7N8QDMp3GRGKwHKIFN3xrjSEQ+m4zd5g=;
+	s=default; t=1579858880;
+	bh=rUwxjvtbWwBnXS3uNzwhcjEps4KTjM+2fMu3o/FFLug=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BBmZGkV27Gwj3YXh6ijbvu9mB2HJq2f86OB2m2GnSxC3qW61Afqjrazl23zjQu2LO
-	 rxPKc8YU56JBT43ObL4Jedk65iQQoSoWH4SoPWH/e6uy0vkgCqKiE9V4eRUEIgVgyD
-	 Wkm46E5F1sidkjVkEbeEVycWZcSH+IT0ponVXsLU=
+	b=iuS7NrOuoDWGc6h55htFSrm1PI8Nz/qxvo1/fyGggnu1HWd9DW+Fr0CcGfafUL4BH
+	 iC02jVkWAiGSbBBvxC2zfh5wbiT/tYg4TX/sJJmdSF9AI3HTDx+K4XzWKl5OBPXTsO
+	 F5dD+zeC+Hf0JWU9cvrTBM00dP8JyQ4Ib4f8Ur9k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732834AbgAXJlP (ORCPT
+        id S1732848AbgAXJlT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 04:41:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38666 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 04:41:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38716 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732762AbgAXJlM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 04:41:12 -0500
+        id S1732762AbgAXJlQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 04:41:16 -0500
 Received: from localhost (unknown [145.15.244.15])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 00F45214AF;
-        Fri, 24 Jan 2020 09:41:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C557D2070A;
+        Fri, 24 Jan 2020 09:41:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579858871;
-        bh=p2LyabCqAEe7N8QDMp3GRGKwHKIFN3xrjSEQ+m4zd5g=;
+        s=default; t=1579858875;
+        bh=rUwxjvtbWwBnXS3uNzwhcjEps4KTjM+2fMu3o/FFLug=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WvF9Ven5d3yVR7ZOpVfR1+LNv107IjVLgHBN+eG5XbTQvDXpPGCeQmfSzBefXGyzd
-         ctkMg66XonJpt+CgAe7/i7d64KVeGjhc1PCqQ74eVPrrJRQO1dn366Ag7KJlBJ5PmC
-         fJ1gEyiwvv/K9e1itYf7TS6n3X3c+q7jLk8BCMSU=
+        b=p68scjIhsICdzcfiIgwOjwyG6v8QxR/YXI9ucCxvxFQn8BQR0l1GSkG0jWWZwzSVw
+         JReJbnTLd7r0SWA/wUGe995Muxbm8jF1bKFkNHXenyrzr4evKGxNr0YkiE4NvrMQxP
+         G/nuSgX097iKaLoMZ6SVHQnSfllhtsdYQ55ZE2+0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Madalin Bucur <madalin.bucur@nxp.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Daniel Baluta <daniel.baluta@nxp.com>,
+        Shawn Guo <shawnguo@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 070/102] dpaa_eth: avoid timestamp read on error paths
-Date:   Fri, 24 Jan 2020 10:31:11 +0100
-Message-Id: <20200124092817.165533506@linuxfoundation.org>
+Subject: [PATCH 5.4 066/102] firmware: imx: Remove call to devm_of_platform_populate
+Date:   Fri, 24 Jan 2020 10:31:07 +0100
+Message-Id: <20200124092816.370985666@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124092806.004582306@linuxfoundation.org>
 References: <20200124092806.004582306@linuxfoundation.org>
@@ -60,91 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Madalin Bucur <madalin.bucur@nxp.com>
+From: Daniel Baluta <daniel.baluta@nxp.com>
 
-[ Upstream commit 9a4f4f3a894ff4487f5597b7aabba9432b238292 ]
+[ Upstream commit 0e4e8cc30a2940c57448af1376e40d3c0996fb29 ]
 
-The dpaa_cleanup_tx_fd() function is called by the frame transmit
-confirmation callback but also on several error paths. This function
-is reading the transmit timestamp value. Avoid reading an invalid
-timestamp value on the error paths.
+IMX DSP device is created by SOF layer. The current call to
+devm_of_platform_populate is not needed and it doesn't produce
+any effects.
 
-Fixes: 4664856e9ca2 ("dpaa_eth: add support for hardware timestamping")
-Signed-off-by: Madalin Bucur <madalin.bucur@nxp.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: ffbf23d50353915d ("firmware: imx: Add DSP IPC protocol interface)
+Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/freescale/dpaa/dpaa_eth.c | 17 ++++++++++-------
- 1 file changed, 10 insertions(+), 7 deletions(-)
+ drivers/firmware/imx/imx-dsp.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c b/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c
-index 54ffc9d3b0a9b..fcbe01f61aa44 100644
---- a/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c
-+++ b/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c
-@@ -1600,13 +1600,15 @@ static int dpaa_eth_refill_bpools(struct dpaa_priv *priv)
-  * Skb freeing is not handled here.
-  *
-  * This function may be called on error paths in the Tx function, so guard
-- * against cases when not all fd relevant fields were filled in.
-+ * against cases when not all fd relevant fields were filled in. To avoid
-+ * reading the invalid transmission timestamp for the error paths set ts to
-+ * false.
-  *
-  * Return the skb backpointer, since for S/G frames the buffer containing it
-  * gets freed here.
-  */
- static struct sk_buff *dpaa_cleanup_tx_fd(const struct dpaa_priv *priv,
--					  const struct qm_fd *fd)
-+					  const struct qm_fd *fd, bool ts)
- {
- 	const enum dma_data_direction dma_dir = DMA_TO_DEVICE;
- 	struct device *dev = priv->net_dev->dev.parent;
-@@ -1648,7 +1650,8 @@ static struct sk_buff *dpaa_cleanup_tx_fd(const struct dpaa_priv *priv,
- 	}
+diff --git a/drivers/firmware/imx/imx-dsp.c b/drivers/firmware/imx/imx-dsp.c
+index a43d2db5cbdb4..4265e9dbed84f 100644
+--- a/drivers/firmware/imx/imx-dsp.c
++++ b/drivers/firmware/imx/imx-dsp.c
+@@ -114,7 +114,7 @@ static int imx_dsp_probe(struct platform_device *pdev)
  
- 	/* DMA unmapping is required before accessing the HW provided info */
--	if (priv->tx_tstamp && skb_shinfo(skb)->tx_flags & SKBTX_HW_TSTAMP) {
-+	if (ts && priv->tx_tstamp &&
-+	    skb_shinfo(skb)->tx_flags & SKBTX_HW_TSTAMP) {
- 		memset(&shhwtstamps, 0, sizeof(shhwtstamps));
+ 	dev_info(dev, "NXP i.MX DSP IPC initialized\n");
  
- 		if (!fman_port_get_tstamp(priv->mac_dev->port[TX], (void *)skbh,
-@@ -2116,7 +2119,7 @@ dpaa_start_xmit(struct sk_buff *skb, struct net_device *net_dev)
- 	if (likely(dpaa_xmit(priv, percpu_stats, queue_mapping, &fd) == 0))
- 		return NETDEV_TX_OK;
- 
--	dpaa_cleanup_tx_fd(priv, &fd);
-+	dpaa_cleanup_tx_fd(priv, &fd, false);
- skb_to_fd_failed:
- enomem:
- 	percpu_stats->tx_errors++;
-@@ -2162,7 +2165,7 @@ static void dpaa_tx_error(struct net_device *net_dev,
- 
- 	percpu_priv->stats.tx_errors++;
- 
--	skb = dpaa_cleanup_tx_fd(priv, fd);
-+	skb = dpaa_cleanup_tx_fd(priv, fd, false);
- 	dev_kfree_skb(skb);
- }
- 
-@@ -2202,7 +2205,7 @@ static void dpaa_tx_conf(struct net_device *net_dev,
- 
- 	percpu_priv->tx_confirm++;
- 
--	skb = dpaa_cleanup_tx_fd(priv, fd);
-+	skb = dpaa_cleanup_tx_fd(priv, fd, true);
- 
- 	consume_skb(skb);
- }
-@@ -2432,7 +2435,7 @@ static void egress_ern(struct qman_portal *portal,
- 	percpu_priv->stats.tx_fifo_errors++;
- 	count_ern(percpu_priv, msg);
- 
--	skb = dpaa_cleanup_tx_fd(priv, fd);
-+	skb = dpaa_cleanup_tx_fd(priv, fd, false);
- 	dev_kfree_skb_any(skb);
- }
- 
+-	return devm_of_platform_populate(dev);
++	return 0;
+ out:
+ 	kfree(chan_name);
+ 	for (j = 0; j < i; j++) {
 -- 
 2.20.1
 
