@@ -7,52 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6959C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:30:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD4BCC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:30:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E49922464
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:30:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77A6820718
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:30:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579865431;
-	bh=FqMITQzpPmnKmgUK//ibo6+YIPZyhuZ0wjCpj8u/7n4=;
+	s=default; t=1579865436;
+	bh=cF4ecgFVd8/JKvsem/rvegsEBqwsJLZW8Ycihbf89Q8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wYZIY9fg4nu4lTLRXxwyKJVIGEij3ANXrmwctUmzmXS6B2CeIE4vCgLDOXn2zkc+2
-	 qMsfVZUHMJKDCSchrUr9FdhfigGZ9FI9xHv+1/YTFH+hDiGvPicdfBnpxuAtGq4goM
-	 G93xLF5cj6SobbgZ2xveLpPSVmj6PHs4sicn226k=
+	b=OHKF+NrmgOXR71MB+1rpXNNEOhL966j43NTVtDDCwKnaGn/Opy4zVuwdS70CVOM7d
+	 ET5N6ryrEePWkQtWsZhnzlIEvjKTzmPF8LPq/nD1YR4/jqnD1HfxuIeVdqpg5x55/P
+	 u1mHq33Ur5bFX1+C65R/dyqjNHSFCWT01OHjXcl0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404246AbgAXLaa (ORCPT
+        id S2388647AbgAXLag (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:30:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48144 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 06:30:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48244 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404236AbgAXLa2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:30:28 -0500
+        id S2404008AbgAXLab (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:30:31 -0500
 Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7A4F62077C;
-        Fri, 24 Jan 2020 11:30:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 85BA32077C;
+        Fri, 24 Jan 2020 11:30:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579865427;
-        bh=FqMITQzpPmnKmgUK//ibo6+YIPZyhuZ0wjCpj8u/7n4=;
+        s=default; t=1579865431;
+        bh=cF4ecgFVd8/JKvsem/rvegsEBqwsJLZW8Ycihbf89Q8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eNGGTimWp3cn12NBK9kKBuOMex8YQNp/OHrf7oIMC3v26+p5ORnklCzPC+x2arDre
-         H+0VtxWwc3VGK2Nx6rZb2cfyqwfk92IERAAHsOy0LCDyPafBraT87UOM3yS2PC+SUQ
-         qTnszGg36JeVcmvVXhHwbz/W4UnpRSiQRPfoy/8g=
+        b=y1hm20FdWTbvKrv56LOl4jxcgd4S3X1CMgTcvO2L3DGUDHkyOdITN0dk5n6ULUMh1
+         pQ1iVDjdU/1Ve21dxfs4p+G48cd111MGEUStW0O0UqiUOxfIXbbxXkI9fbFWwcrNty
+         aXVMHxoAp8jG5w3SYQraky1mZyViemsJljIdLUK8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tri Vo <trong@android.com>,
-        Kalesh Singh <kaleshsingh@google.com>,
-        Ravi Chandra Sadineni <ravisadineni@chromium.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Sebastian Reichel <sebastian.reichel@collabora.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 530/639] power: supply: Init device wakeup after device_add()
-Date:   Fri, 24 Jan 2020 10:31:40 +0100
-Message-Id: <20200124093155.218055161@linuxfoundation.org>
+        stable@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 531/639] x86, perf: Fix the dependency of the x86 insn decoder selftest
+Date:   Fri, 24 Jan 2020 10:31:41 +0100
+Message-Id: <20200124093155.376294255@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
 References: <20200124093047.008739095@linuxfoundation.org>
@@ -65,67 +62,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stephen Boyd <swboyd@chromium.org>
+From: Masami Hiramatsu <mhiramat@kernel.org>
 
-[ Upstream commit 8288022284859acbcc3cf1a073a1e2692d6c2543 ]
+[ Upstream commit 7720804a2ae46c90265a32c81c45fb6f8d2f4e8b ]
 
-We may want to use the device pointer in device_init_wakeup() with
-functions that expect the device to already be added with device_add().
-For example, if we were to link the device initializing wakeup to
-something in sysfs such as a class for wakeups we'll run into an error.
-It looks like this code was written with the assumption that the device
-would be added before initializing wakeup due to the order of operations
-in power_supply_unregister().
+Since x86 instruction decoder is not only for kprobes,
+it should be tested when the insn.c is compiled.
+(e.g. perf is enabled but kprobes is disabled)
 
-Let's change the order of operations so we don't run into problems here.
-
-Fixes: 948dcf966228 ("power_supply: Prevent suspend until power supply events are processed")
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Tri Vo <trong@android.com>
-Cc: Kalesh Singh <kaleshsingh@google.com>
-Cc: Ravi Chandra Sadineni <ravisadineni@chromium.org>
-Cc: Viresh Kumar <viresh.kumar@linaro.org>
-Signed-off-by: Stephen Boyd <swboyd@chromium.org>
-Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Fixes: cbe5c34c8c1f ("x86: Compile insn.c and inat.c only for KPROBES")
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/power/supply/power_supply_core.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ arch/x86/Kconfig.debug | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/power/supply/power_supply_core.c b/drivers/power/supply/power_supply_core.c
-index e85361878450c..e43a7b3b570c4 100644
---- a/drivers/power/supply/power_supply_core.c
-+++ b/drivers/power/supply/power_supply_core.c
-@@ -902,14 +902,14 @@ __power_supply_register(struct device *parent,
- 	}
+diff --git a/arch/x86/Kconfig.debug b/arch/x86/Kconfig.debug
+index 7d68f0c7cfb1e..687cd1a213d50 100644
+--- a/arch/x86/Kconfig.debug
++++ b/arch/x86/Kconfig.debug
+@@ -181,7 +181,7 @@ config HAVE_MMIOTRACE_SUPPORT
  
- 	spin_lock_init(&psy->changed_lock);
--	rc = device_init_wakeup(dev, ws);
--	if (rc)
--		goto wakeup_init_failed;
--
- 	rc = device_add(dev);
- 	if (rc)
- 		goto device_add_failed;
- 
-+	rc = device_init_wakeup(dev, ws);
-+	if (rc)
-+		goto wakeup_init_failed;
-+
- 	rc = psy_register_thermal(psy);
- 	if (rc)
- 		goto register_thermal_failed;
-@@ -946,8 +946,8 @@ register_cooler_failed:
- 	psy_unregister_thermal(psy);
- register_thermal_failed:
- 	device_del(dev);
--device_add_failed:
- wakeup_init_failed:
-+device_add_failed:
- check_supplies_failed:
- dev_set_name_failed:
- 	put_device(dev);
+ config X86_DECODER_SELFTEST
+ 	bool "x86 instruction decoder selftest"
+-	depends on DEBUG_KERNEL && KPROBES
++	depends on DEBUG_KERNEL && INSTRUCTION_DECODER
+ 	depends on !COMPILE_TEST
+ 	---help---
+ 	 Perform x86 instruction decoder selftests at build time.
 -- 
 2.20.1
 
