@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69904C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 10:02:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49037C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 10:02:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 406B9206D5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 10:02:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16783208C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 10:02:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579860131;
-	bh=0oAE/C2OKKjtN5eLRKcmqSsDdWrBYGIFDPrROVGLNzs=;
+	s=default; t=1579860137;
+	bh=pZLIaRSl2RYAakpllL5jjs4i10QHzxG7zaKwfbWSW9E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0Arh+YuOlSguUBjgEi+vyALIkmdZnA8glmGC6QmDCjFtxB2V778RoRIDYBkbB2dQ2
-	 yqQwCMDt9BCVSalHqTFklN7uhC9QHnaDU2nKtbXhl96wIARdM+pmiNcBPl0sg9ENBR
-	 SkfopvAl506wRmFYKGJz/K0vCu2uJ4OXqtzFWq7I=
+	b=C80MTw2bkMnTekB4DTu0waZQzfWIqslIrrcDZWOgLJEVTr8kzkDa0aHvtm9xlrnbQ
+	 OKM0RzEELZgiY62ofoPiU9ITnuQLNIIsn4OPhiM7yLrxnWwlNkOOAoKfihFgQ87puh
+	 52XJ+tyyXC4ZTX7nyTxg3dJOCnc36VEENCuHfueQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388886AbgAXKCK (ORCPT
+        id S2388894AbgAXKCP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 05:02:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37468 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 05:02:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37662 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731227AbgAXKCH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 05:02:07 -0500
+        id S1731227AbgAXKCN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 05:02:13 -0500
 Received: from localhost (unknown [145.15.244.15])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6F69120709;
-        Fri, 24 Jan 2020 10:02:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 71C5021556;
+        Fri, 24 Jan 2020 10:02:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579860127;
-        bh=0oAE/C2OKKjtN5eLRKcmqSsDdWrBYGIFDPrROVGLNzs=;
+        s=default; t=1579860133;
+        bh=pZLIaRSl2RYAakpllL5jjs4i10QHzxG7zaKwfbWSW9E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CkN+Gz0JF2EvzPBBYES+iQn3OULwjb+dWjYl0w+QZV02PCZQDJtL0OY05sUt5FI1r
-         XkjB5h63AxwSC4ZcW19fPZ3ERPLTelsvaz4A37YmqIwTLt6+ScjYPnTZAL9PTSif3/
-         IdIA6hkNL4D9ik4BRu3ysu23npz4tiXSo0W/xBhE=
+        b=k9hE5UfpFRnxQqIahU5pJifK47VH4/S11EK8gGoKouJOCSiovjEiK3jw3INs8ksXX
+         EcTKbix1gaIgF6Mm8CusQu+DgxyatwOe5fCz4QzeprxIuy8vWTh4J2FweNb3ns6utw
+         2cm3+SyGe07m7QU+5QA8ByYzc3J89GbO5hnhhpZg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>,
         Alexandre Belloni <alexandre.belloni@bootlin.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 240/343] rtc: pcf8563: Fix interrupt trigger method
-Date:   Fri, 24 Jan 2020 10:30:58 +0100
-Message-Id: <20200124092951.700944883@linuxfoundation.org>
+Subject: [PATCH 4.14 241/343] rtc: pcf8563: Clear event flags and disable interrupts before requesting irq
+Date:   Fri, 24 Jan 2020 10:30:59 +0100
+Message-Id: <20200124092951.817463450@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124092919.490687572@linuxfoundation.org>
 References: <20200124092919.490687572@linuxfoundation.org>
@@ -62,34 +62,56 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Chen-Yu Tsai <wens@csie.org>
 
-[ Upstream commit 65f662cbf829834fa4d94190eb7691e5a9cb92d8 ]
+[ Upstream commit 3572e8aea3bf925dac1dbf86127657c39fe5c254 ]
 
-The PCF8563 datasheet says the interrupt line is active low and stays
-active until the events are cleared, i.e. a level trigger interrupt.
+Besides the alarm, the PCF8563 also has a timer triggered interrupt.
+In cases where the previous system left the timer and interrupts on,
+or somehow the bits got enabled, the interrupt would keep triggering
+as the kernel doesn't know about it.
 
-Fix the flags used to request the interrupt.
+Clear both the alarm and timer event flags, and disable the interrupts,
+before requesting the interrupt line.
 
 Fixes: ede3e9d47cca ("drivers/rtc/rtc-pcf8563.c: add alarm support")
+Fixes: a45d528aab8b ("rtc: pcf8563: clear expired alarm at boot time")
 Signed-off-by: Chen-Yu Tsai <wens@csie.org>
 Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/rtc/rtc-pcf8563.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/rtc/rtc-pcf8563.c | 11 +++++------
+ 1 file changed, 5 insertions(+), 6 deletions(-)
 
 diff --git a/drivers/rtc/rtc-pcf8563.c b/drivers/rtc/rtc-pcf8563.c
-index 8c836c51a508f..ef04472dde1d2 100644
+index ef04472dde1d2..4d0b81f9805f8 100644
 --- a/drivers/rtc/rtc-pcf8563.c
 +++ b/drivers/rtc/rtc-pcf8563.c
-@@ -605,7 +605,7 @@ static int pcf8563_probe(struct i2c_client *client,
- 	if (client->irq > 0) {
- 		err = devm_request_threaded_irq(&client->dev, client->irq,
- 				NULL, pcf8563_irq,
--				IRQF_SHARED|IRQF_ONESHOT|IRQF_TRIGGER_FALLING,
-+				IRQF_SHARED | IRQF_ONESHOT | IRQF_TRIGGER_LOW,
- 				pcf8563_driver.driver.name, client);
- 		if (err) {
- 			dev_err(&client->dev, "unable to request IRQ %d\n",
+@@ -563,7 +563,6 @@ static int pcf8563_probe(struct i2c_client *client,
+ 	struct pcf8563 *pcf8563;
+ 	int err;
+ 	unsigned char buf;
+-	unsigned char alm_pending;
+ 
+ 	dev_dbg(&client->dev, "%s\n", __func__);
+ 
+@@ -587,13 +586,13 @@ static int pcf8563_probe(struct i2c_client *client,
+ 		return err;
+ 	}
+ 
+-	err = pcf8563_get_alarm_mode(client, NULL, &alm_pending);
+-	if (err) {
+-		dev_err(&client->dev, "%s: read error\n", __func__);
++	/* Clear flags and disable interrupts */
++	buf = 0;
++	err = pcf8563_write_block_data(client, PCF8563_REG_ST2, 1, &buf);
++	if (err < 0) {
++		dev_err(&client->dev, "%s: write error\n", __func__);
+ 		return err;
+ 	}
+-	if (alm_pending)
+-		pcf8563_set_alarm_mode(client, 0);
+ 
+ 	pcf8563->rtc = devm_rtc_device_register(&client->dev,
+ 				pcf8563_driver.driver.name,
 -- 
 2.20.1
 
