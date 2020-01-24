@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AD16C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 10:09:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 930B7C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 10:09:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1754E20709
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 10:09:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64CBA21734
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 10:09:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579860548;
-	bh=A4VOQoF9dWI8S5tSrJ048hbisbbfIjDHmUMOCk3lkHE=;
+	s=default; t=1579860553;
+	bh=GMUtTIjylQCJKRf7RhyMRUlXYbmcZ9aghfJdTjF50i8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1fSofnn0+w+XgABdIpObXongGp/UdduBOr6FPux+7sp/Zzl3JxJXzAHEgQIQyWp1U
-	 K1a02VRV4AaVXbmpRzTaTyW6BRFgITMLbNfUjLAvZ2ohuYOITVNuxnTcP6/QjvYtLi
-	 XzY3CFlBvzS50ynI/CsxR1p9kiuP5QZFJa1FX9Gk=
+	b=1FOi6P53UK4tCZ++jB1XbB19KLLNYZGy1xatckHWkS74bPIFVzMRNE5Z5bDGpt7/J
+	 bCll20k3lAWiFUm5UhrVeG5dHO3u93lP/r1vr/1P0N7dJcfJr7k2Kp/JE6fh334OYb
+	 bSWxdGLT3DKG3EEnMNI86rC3wznTVVsN59e990cw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389579AbgAXKJG (ORCPT
+        id S2389587AbgAXKJM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 05:09:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45932 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 05:09:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46028 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733082AbgAXKJE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 05:09:04 -0500
+        id S1730613AbgAXKJK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 05:09:10 -0500
 Received: from localhost (unknown [145.15.244.15])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BFAD220709;
-        Fri, 24 Jan 2020 10:09:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 86A9B2077C;
+        Fri, 24 Jan 2020 10:09:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579860544;
-        bh=A4VOQoF9dWI8S5tSrJ048hbisbbfIjDHmUMOCk3lkHE=;
+        s=default; t=1579860549;
+        bh=GMUtTIjylQCJKRf7RhyMRUlXYbmcZ9aghfJdTjF50i8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rpz6Ue7OWJsVtDjEjy2bSApepN7ff1QaSHR8R/SjVYR5dgkWPW3pZqJLw2dj0Nh97
-         d0DXkI1YHpm+XAfjaN96TMCSY8bs/Mg1WtSQqsWKy3BzzXdBCfS8RYZ0gK7GfLY6yE
-         9KT/VPkdpzEE3B9Yu1sHdInZ/J2ASufYKpxmSPOg=
+        b=jJtoJA39V2my3DL7QnW8CvqR1axb79l3BdrXcIV5Ic+viN1Wvgtdglf73cOmJar5H
+         x9giDrdOaXVcEa7Gz6F0e+G17xADhsjOibQeH3rXxWw6d7ildLab9LsPnC1au6haq2
+         uO7ahnvc0qNLpobIFW0Hx+J3hmCsntwysAiMnSOU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jakub Kicinski <kubakici@wp.pl>,
-        Lorenzo Bianconi <lorenzo@kernel.org>,
-        Kalle Valo <kvalo@codeaurora.org>
-Subject: [PATCH 4.19 011/639] mt7601u: fix bbp version check in mt7601u_wait_bbp_ready
-Date:   Fri, 24 Jan 2020 10:23:01 +0100
-Message-Id: <20200124093048.500454749@linuxfoundation.org>
+        stable@vger.kernel.org, Corentin Labbe <clabbe.montjoie@gmail.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Subject: [PATCH 4.19 012/639] crypto: sun4i-ss - fix big endian issues
+Date:   Fri, 24 Jan 2020 10:23:02 +0100
+Message-Id: <20200124093048.629095657@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
 References: <20200124093047.008739095@linuxfoundation.org>
@@ -60,38 +59,88 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lorenzo Bianconi <lorenzo@kernel.org>
+From: Corentin Labbe <clabbe.montjoie@gmail.com>
 
-commit 15e14f76f85f4f0eab3b8146e1cd3c58ce272823 upstream.
+commit d1d787bcebfe122a5bd443ae565696661e2e9656 upstream.
 
-Fix bbp ready check in mt7601u_wait_bbp_ready. The issue is reported by
-coverity with the following error:
+When testing BigEndian kernel, the sun4i-ss was failling all crypto
+tests.
+This patch fix endian issues with it.
 
-Logical vs. bitwise operator
-The expression's value does not depend on the operands; inadvertent use
-of the wrong operator is a likely logic error.
-
-Addresses-Coverity-ID: 1309441 ("Logical vs. bitwise operator")
-Fixes: c869f77d6abb ("add mt7601u driver")
-Acked-by: Jakub Kicinski <kubakici@wp.pl>
-Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Fixes: 6298e948215f ("crypto: sunxi-ss - Add Allwinner Security System crypto accelerator")
+Signed-off-by: Corentin Labbe <clabbe.montjoie@gmail.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/wireless/mediatek/mt7601u/phy.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/crypto/sunxi-ss/sun4i-ss-hash.c |   21 +++++++++++----------
+ 1 file changed, 11 insertions(+), 10 deletions(-)
 
---- a/drivers/net/wireless/mediatek/mt7601u/phy.c
-+++ b/drivers/net/wireless/mediatek/mt7601u/phy.c
-@@ -221,7 +221,7 @@ int mt7601u_wait_bbp_ready(struct mt7601
+--- a/drivers/crypto/sunxi-ss/sun4i-ss-hash.c
++++ b/drivers/crypto/sunxi-ss/sun4i-ss-hash.c
+@@ -179,7 +179,7 @@ static int sun4i_hash(struct ahash_reque
+ 	 */
+ 	unsigned int i = 0, end, fill, min_fill, nwait, nbw = 0, j = 0, todo;
+ 	unsigned int in_i = 0;
+-	u32 spaces, rx_cnt = SS_RX_DEFAULT, bf[32] = {0}, wb = 0, v, ivmode = 0;
++	u32 spaces, rx_cnt = SS_RX_DEFAULT, bf[32] = {0}, v, ivmode = 0;
+ 	struct sun4i_req_ctx *op = ahash_request_ctx(areq);
+ 	struct crypto_ahash *tfm = crypto_ahash_reqtfm(areq);
+ 	struct sun4i_tfm_ctx *tfmctx = crypto_ahash_ctx(tfm);
+@@ -188,6 +188,7 @@ static int sun4i_hash(struct ahash_reque
+ 	struct sg_mapping_iter mi;
+ 	int in_r, err = 0;
+ 	size_t copied = 0;
++	__le32 wb = 0;
  
- 	do {
- 		val = mt7601u_bbp_rr(dev, MT_BBP_REG_VERSION);
--		if (val && ~val)
-+		if (val && val != 0xff)
- 			break;
- 	} while (--i);
+ 	dev_dbg(ss->dev, "%s %s bc=%llu len=%u mode=%x wl=%u h0=%0x",
+ 		__func__, crypto_tfm_alg_name(areq->base.tfm),
+@@ -399,7 +400,7 @@ hash_final:
  
+ 		nbw = op->len - 4 * nwait;
+ 		if (nbw) {
+-			wb = *(u32 *)(op->buf + nwait * 4);
++			wb = cpu_to_le32(*(u32 *)(op->buf + nwait * 4));
+ 			wb &= GENMASK((nbw * 8) - 1, 0);
+ 
+ 			op->byte_count += nbw;
+@@ -408,7 +409,7 @@ hash_final:
+ 
+ 	/* write the remaining bytes of the nbw buffer */
+ 	wb |= ((1 << 7) << (nbw * 8));
+-	bf[j++] = wb;
++	bf[j++] = le32_to_cpu(wb);
+ 
+ 	/*
+ 	 * number of space to pad to obtain 64o minus 8(size) minus 4 (final 1)
+@@ -427,13 +428,13 @@ hash_final:
+ 
+ 	/* write the length of data */
+ 	if (op->mode == SS_OP_SHA1) {
+-		__be64 bits = cpu_to_be64(op->byte_count << 3);
+-		bf[j++] = lower_32_bits(bits);
+-		bf[j++] = upper_32_bits(bits);
++		__be64 *bits = (__be64 *)&bf[j];
++		*bits = cpu_to_be64(op->byte_count << 3);
++		j += 2;
+ 	} else {
+-		__le64 bits = op->byte_count << 3;
+-		bf[j++] = lower_32_bits(bits);
+-		bf[j++] = upper_32_bits(bits);
++		__le64 *bits = (__le64 *)&bf[j];
++		*bits = cpu_to_le64(op->byte_count << 3);
++		j += 2;
+ 	}
+ 	writesl(ss->base + SS_RXFIFO, bf, j);
+ 
+@@ -475,7 +476,7 @@ hash_final:
+ 		}
+ 	} else {
+ 		for (i = 0; i < 4; i++) {
+-			v = readl(ss->base + SS_MD0 + i * 4);
++			v = cpu_to_le32(readl(ss->base + SS_MD0 + i * 4));
+ 			memcpy(areq->result + i * 4, &v, 4);
+ 		}
+ 	}
 
 
