@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 739BBC32771
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:21:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E432C35242
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:21:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 48A3721556
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:21:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D010F24685
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:21:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579875694;
-	bh=9xxOYi/YEdFwBEYSfI0Cp6t4PmZf83zOIdobzxHARN4=;
+	s=default; t=1579875698;
+	bh=nUx9RLcw0bI/L0Fq4IXz9rMSlZ0vwZY/V/QV0Bf5Qu0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SBJ7JwtcAyv9jyedOPh141Iiwfbx0bbSpJGUcVq/dnmrguLD7woTl72P/4NXKwbCQ
-	 CPa/LB2JZOib5zHd79whtBqksoWsKiNF+2H4hXaqBRinCr27aPTFJpcZn06BGEcPuR
-	 jx68D+N6YrOcCju516EG68WYObSO5wTSi5yZOXrg=
+	b=qgJcuPmiPr+wfeHtgwAipT9sVn/rlUwrL0MuLRcWm4J9Ef/0qZp3pOvhyrLcL6YJA
+	 HIh7cDbfOIiMs/uyXnNneV918aO67j6QrTsn2hxCNXJZx1v7joY7x1ZOoiAbzYU0mc
+	 6VOwARARs8Dl6Y3hCRubiHZbBzEnbICOoxHs2v/U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405311AbgAXOVd (ORCPT
+        id S2405349AbgAXOVh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 09:21:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43166 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 09:21:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43368 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392203AbgAXOV2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 09:21:28 -0500
+        id S2405320AbgAXOVd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 09:21:33 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0D93D2087E;
-        Fri, 24 Jan 2020 14:21:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C2BC524685;
+        Fri, 24 Jan 2020 14:21:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579875687;
-        bh=9xxOYi/YEdFwBEYSfI0Cp6t4PmZf83zOIdobzxHARN4=;
+        s=default; t=1579875693;
+        bh=nUx9RLcw0bI/L0Fq4IXz9rMSlZ0vwZY/V/QV0Bf5Qu0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZVtn35Z5qG6eg6mh5VHaYOWSkEIJQza5JaIMPT9Vk71sH2T+6s2Ur6iznuGNe0GQg
-         0o0Bpt9GxEFBjk1FgjSEVpHsCg0AhAAXuz1+YONi9isfIggXJlmMaidzMl+wFyFbQ3
-         n1Nnt9h1Ul1g/I2fVxKfOm4vvcmr/ABEmmoXJEiM=
+        b=FUmNhLcOQwZVVgofXXceIgNr9s2DVrrEP+kHECKo4oYcn9bBQwSSL15OOMl8e6nKr
+         CPPg1QkzzLRbLo+6WSGfuFHgbMeRuOlzMIn5fia1S9nHhvfN7V2f5QHf4Dqlq35+ZV
+         XKj1V+GGt1wQ9oylasmt9Mw/TSrGYmIUJCAVUSi0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Markus Theil <markus.theil@tu-ilmenau.de>,
-        Johannes Berg <johannes.berg@intel.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 07/32] mac80211: mesh: restrict airtime metric to peered established plinks
-Date:   Fri, 24 Jan 2020 09:20:54 -0500
-Message-Id: <20200124142119.30484-7-sashal@kernel.org>
+Cc:     Stephan Gerhold <stephan@gerhold.net>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
+Subject: [PATCH AUTOSEL 4.14 12/32] ASoC: msm8916-wcd-analog: Fix selected events for MIC BIAS External1
+Date:   Fri, 24 Jan 2020 09:20:59 -0500
+Message-Id: <20200124142119.30484-12-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200124142119.30484-1-sashal@kernel.org>
 References: <20200124142119.30484-1-sashal@kernel.org>
@@ -60,53 +60,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Markus Theil <markus.theil@tu-ilmenau.de>
+From: Stephan Gerhold <stephan@gerhold.net>
 
-[ Upstream commit 02a614499600af836137c3fbc4404cd96365fff2 ]
+[ Upstream commit e0beec88397b163c7c4ea6fcfb67e8e07a2671dc ]
 
-The following warning is triggered every time an unestablished mesh peer
-gets dumped. Checks if a peer link is established before retrieving the
-airtime link metric.
+MIC BIAS External1 sets pm8916_wcd_analog_enable_micbias_ext1()
+as event handler, which ends up in pm8916_wcd_analog_enable_micbias_ext().
 
-[ 9563.022567] WARNING: CPU: 0 PID: 6287 at net/mac80211/mesh_hwmp.c:345
-               airtime_link_metric_get+0xa2/0xb0 [mac80211]
-[ 9563.022697] Hardware name: PC Engines apu2/apu2, BIOS v4.10.0.3
-[ 9563.022756] RIP: 0010:airtime_link_metric_get+0xa2/0xb0 [mac80211]
-[ 9563.022838] Call Trace:
-[ 9563.022897]  sta_set_sinfo+0x936/0xa10 [mac80211]
-[ 9563.022964]  ieee80211_dump_station+0x6d/0x90 [mac80211]
-[ 9563.023062]  nl80211_dump_station+0x154/0x2a0 [cfg80211]
-[ 9563.023120]  netlink_dump+0x17b/0x370
-[ 9563.023130]  netlink_recvmsg+0x2a4/0x480
-[ 9563.023140]  ____sys_recvmsg+0xa6/0x160
-[ 9563.023154]  ___sys_recvmsg+0x93/0xe0
-[ 9563.023169]  __sys_recvmsg+0x7e/0xd0
-[ 9563.023210]  do_syscall_64+0x4e/0x140
-[ 9563.023217]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+But pm8916_wcd_analog_enable_micbias_ext() only handles the POST_PMU
+event, which is not specified in the event flags for MIC BIAS External1.
+This means that the code in the event handler is never actually run.
 
-Signed-off-by: Markus Theil <markus.theil@tu-ilmenau.de>
-Link: https://lore.kernel.org/r/20191203180644.70653-1-markus.theil@tu-ilmenau.de
-[rewrite commit message]
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Set SND_SOC_DAPM_POST_PMU as the only event for the handler to fix this.
+
+Fixes: 585e881e5b9e ("ASoC: codecs: Add msm8916-wcd analog codec")
+Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
+Link: https://lore.kernel.org/r/20200111164006.43074-2-stephan@gerhold.net
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/mac80211/mesh_hwmp.c | 3 +++
- 1 file changed, 3 insertions(+)
+ sound/soc/codecs/msm8916-wcd-analog.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/net/mac80211/mesh_hwmp.c b/net/mac80211/mesh_hwmp.c
-index fab0764c315fe..994dde6e5f9d9 100644
---- a/net/mac80211/mesh_hwmp.c
-+++ b/net/mac80211/mesh_hwmp.c
-@@ -326,6 +326,9 @@ static u32 airtime_link_metric_get(struct ieee80211_local *local,
- 	unsigned long fail_avg =
- 		ewma_mesh_fail_avg_read(&sta->mesh->fail_avg);
+diff --git a/sound/soc/codecs/msm8916-wcd-analog.c b/sound/soc/codecs/msm8916-wcd-analog.c
+index 969283737787f..3633eb30dd135 100644
+--- a/sound/soc/codecs/msm8916-wcd-analog.c
++++ b/sound/soc/codecs/msm8916-wcd-analog.c
+@@ -876,10 +876,10 @@ static const struct snd_soc_dapm_widget pm8916_wcd_analog_dapm_widgets[] = {
  
-+	if (sta->mesh->plink_state != NL80211_PLINK_ESTAB)
-+		return MAX_METRIC;
-+
- 	/* Try to get rate based on HW/SW RC algorithm.
- 	 * Rate is returned in units of Kbps, correct this
- 	 * to comply with airtime calculation units
+ 	SND_SOC_DAPM_SUPPLY("MIC BIAS External1", CDC_A_MICB_1_EN, 7, 0,
+ 			    pm8916_wcd_analog_enable_micbias_ext1,
+-			    SND_SOC_DAPM_PRE_PMU | SND_SOC_DAPM_POST_PMD),
++			    SND_SOC_DAPM_POST_PMU),
+ 	SND_SOC_DAPM_SUPPLY("MIC BIAS External2", CDC_A_MICB_2_EN, 7, 0,
+ 			    pm8916_wcd_analog_enable_micbias_ext2,
+-			    SND_SOC_DAPM_POST_PMU | SND_SOC_DAPM_POST_PMD),
++			    SND_SOC_DAPM_POST_PMU),
+ 
+ 	SND_SOC_DAPM_ADC_E("ADC1", NULL, CDC_A_TX_1_EN, 7, 0,
+ 			   pm8916_wcd_analog_enable_adc,
 -- 
 2.20.1
 
