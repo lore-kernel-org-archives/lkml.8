@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D273C35242
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:57:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 885B2C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:57:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E87022087E
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:57:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E703218AC
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:57:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579859835;
-	bh=i5ryHhIqP69ds1YLLd3p3nJfg8dLntwkO8HdZ8Z92fs=;
+	s=default; t=1579859840;
+	bh=7bw2nOfb9pp3DL6IT/E9v7cEYrhBwFKvdoBR3TwdHVE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0iTN+Bm6Q9Nn3YCqcff0aD1qDqc2bKSS/Dvu0qo0NzD/ei/LgtSf6212cou9cMA8J
-	 rRQoZHFpm6lKf/PdrdsdXhj+eTPhk/1XgdkgkSM0DHFdc3j79vwzs8ceKgLQbtaUjS
-	 Jku8WYUs3chF6FciezDLHfdg1aS9ut18jx/PjY7I=
+	b=zXdbcslY6YsC288YcXASYfYUVWeETb1ndT+MVepdImqiMl0JDLYvsW7cGbAI29ql+
+	 6ujBe1Qz6w8M6mxF6BWXGYSunV/OtFa7Tqcq0HRvArYgTHv5N5O/lQ6S+O/+kMvouu
+	 x70NaKqGTZvS2vQF8IWjFyD3AYYJ3OU31mfPRDm0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388599AbgAXJ5O (ORCPT
+        id S2388604AbgAXJ5T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 04:57:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60962 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 04:57:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:32816 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730166AbgAXJ5N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 04:57:13 -0500
+        id S1731035AbgAXJ5R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 04:57:17 -0500
 Received: from localhost (unknown [145.15.244.15])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3B11120709;
-        Fri, 24 Jan 2020 09:57:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0AB6F214AF;
+        Fri, 24 Jan 2020 09:57:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579859833;
-        bh=i5ryHhIqP69ds1YLLd3p3nJfg8dLntwkO8HdZ8Z92fs=;
+        s=default; t=1579859836;
+        bh=7bw2nOfb9pp3DL6IT/E9v7cEYrhBwFKvdoBR3TwdHVE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WJbyOVwhBDndEzu/QOG9TcY3jgjrvphMQ3y3Vsc8/C/r0rcbsMgz6PNjU6IHihGJm
-         vitWcMwrOndihi+XCLnRfMT50ukOoGH/dT2SJ5D9manqwpiAComjgHe3fLKGW1cJgY
-         pz5omaV7o6+GRXKLMZ1Ok3wFEBMCCCdcaWRjqhPw=
+        b=bWpXK+E2EJIb4NMYbTV2K8sZWsUEv84+PJ/z2BiKntKrTnar/90rcfVXKeqJvUCYF
+         XbemyNEPHBaxIJRaz9FP7hdpIC0su6gy6mvOXTHC576HtQoMTVoWjVwrhZnxe1pHez
+         yj4N+8EVIudw4GjRwZTno+m4Z0Rd/oiJOsag3YQI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Himanshu Madhani <hmadhani@marvell.com>,
-        Giridhar Malavali <gmalavali@marvell.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org, Maxim Levitsky <mlevitsk@redhat.com>,
+        Parav Pandit <parav@mellanox.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 181/343] scsi: qla2xxx: Avoid that qlt_send_resp_ctio() corrupts memory
-Date:   Fri, 24 Jan 2020 10:29:59 +0100
-Message-Id: <20200124092943.790163052@linuxfoundation.org>
+Subject: [PATCH 4.14 197/343] vfio/mdev: Fix aborting mdev child device removal if one fails
+Date:   Fri, 24 Jan 2020 10:30:15 +0100
+Message-Id: <20200124092945.891331671@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124092919.490687572@linuxfoundation.org>
 References: <20200124092919.490687572@linuxfoundation.org>
@@ -62,53 +61,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bart Van Assche <bvanassche@acm.org>
+From: Parav Pandit <parav@mellanox.com>
 
-[ Upstream commit a861b49273578e255426a499842cf7f465456351 ]
+[ Upstream commit 6093e348a5e2475c5bb2e571346460f939998670 ]
 
-The "(&ctio->u.status1.sense_data)[i]" where i >= 0 expressions in
-qlt_send_resp_ctio() are probably typos and should have been
-"(&ctio->u.status1.sense_data[4 * i])" instead. Instead of only fixing
-these typos, modify the code for storing sense data such that it becomes
-easy to read. This patch fixes a Coverity complaint about accessing an
-array outside its bounds.
+device_for_each_child() stops executing callback function for remaining
+child devices, if callback hits an error.
+Each child mdev device is independent of each other.
+While unregistering parent device, mdev core must remove all child mdev
+devices.
+Therefore, mdev_device_remove_cb() always returns success so that
+device_for_each_child doesn't abort if one child removal hits error.
 
-Cc: Himanshu Madhani <hmadhani@marvell.com>
-Cc: Giridhar Malavali <gmalavali@marvell.com>
-Fixes: be25152c0d9e ("qla2xxx: Improve T10-DIF/PI handling in driver.") # v4.11.
-Signed-off-by: Bart Van Assche <bvanassche@acm.org>
-Acked-by: Himanshu Madhani <hmadhani@marvell.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+While at it, improve remove and unregister functions for below simplicity.
+
+There isn't need to pass forced flag pointer during mdev parent
+removal which invokes mdev_device_remove(). So simplify the flow.
+
+mdev_device_remove() is called from two paths.
+1. mdev_unregister_driver()
+     mdev_device_remove_cb()
+       mdev_device_remove()
+2. remove_store()
+     mdev_device_remove()
+
+Fixes: 7b96953bc640 ("vfio: Mediated device Core driver")
+Reviewed-by: Maxim Levitsky <mlevitsk@redhat.com>
+Signed-off-by: Parav Pandit <parav@mellanox.com>
+Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/qla2xxx/qla_target.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ drivers/vfio/mdev/mdev_core.c | 10 ++++------
+ 1 file changed, 4 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/scsi/qla2xxx/qla_target.c b/drivers/scsi/qla2xxx/qla_target.c
-index 1000422ef4f8a..21011c5fddebe 100644
---- a/drivers/scsi/qla2xxx/qla_target.c
-+++ b/drivers/scsi/qla2xxx/qla_target.c
-@@ -2122,14 +2122,14 @@ void qlt_send_resp_ctio(struct qla_qpair *qpair, struct qla_tgt_cmd *cmd,
- 		ctio->u.status1.scsi_status |=
- 		    cpu_to_le16(SS_RESIDUAL_UNDER);
+diff --git a/drivers/vfio/mdev/mdev_core.c b/drivers/vfio/mdev/mdev_core.c
+index 8cfa712308773..e052f62fdea7e 100644
+--- a/drivers/vfio/mdev/mdev_core.c
++++ b/drivers/vfio/mdev/mdev_core.c
+@@ -150,10 +150,10 @@ static int mdev_device_remove_ops(struct mdev_device *mdev, bool force_remove)
  
--	/* Response code and sense key */
--	put_unaligned_le32(((0x70 << 24) | (sense_key << 8)),
--	    (&ctio->u.status1.sense_data)[0]);
-+	/* Fixed format sense data. */
-+	ctio->u.status1.sense_data[0] = 0x70;
-+	ctio->u.status1.sense_data[2] = sense_key;
- 	/* Additional sense length */
--	put_unaligned_le32(0x0a, (&ctio->u.status1.sense_data)[1]);
-+	ctio->u.status1.sense_data[7] = 0xa;
- 	/* ASC and ASCQ */
--	put_unaligned_le32(((asc << 24) | (ascq << 16)),
--	    (&ctio->u.status1.sense_data)[3]);
-+	ctio->u.status1.sense_data[12] = asc;
-+	ctio->u.status1.sense_data[13] = ascq;
+ static int mdev_device_remove_cb(struct device *dev, void *data)
+ {
+-	if (!dev_is_mdev(dev))
+-		return 0;
++	if (dev_is_mdev(dev))
++		mdev_device_remove(dev, true);
  
- 	/* Memory Barrier */
- 	wmb();
+-	return mdev_device_remove(dev, data ? *(bool *)data : true);
++	return 0;
+ }
+ 
+ /*
+@@ -241,7 +241,6 @@ EXPORT_SYMBOL(mdev_register_device);
+ void mdev_unregister_device(struct device *dev)
+ {
+ 	struct mdev_parent *parent;
+-	bool force_remove = true;
+ 
+ 	mutex_lock(&parent_list_lock);
+ 	parent = __find_parent_device(dev);
+@@ -255,8 +254,7 @@ void mdev_unregister_device(struct device *dev)
+ 	list_del(&parent->next);
+ 	class_compat_remove_link(mdev_bus_compat_class, dev, NULL);
+ 
+-	device_for_each_child(dev, (void *)&force_remove,
+-			      mdev_device_remove_cb);
++	device_for_each_child(dev, NULL, mdev_device_remove_cb);
+ 
+ 	parent_remove_sysfs_files(parent);
+ 
 -- 
 2.20.1
 
