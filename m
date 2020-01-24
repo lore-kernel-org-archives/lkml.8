@@ -2,195 +2,269 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA1EEC35242
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 23:21:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6692C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 23:21:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEF482072C
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 23:21:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D6282071A
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 23:21:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="eZcDQrVR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387659AbgAXXVM (ORCPT
+        id S2387673AbgAXXV3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 18:21:12 -0500
-Received: from mga07.intel.com ([134.134.136.100]:54072 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387576AbgAXXVL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 18:21:11 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Jan 2020 15:20:45 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,359,1574150400"; 
-   d="scan'208";a="428444178"
-Received: from richard.sh.intel.com (HELO localhost) ([10.239.159.54])
-  by fmsmga006.fm.intel.com with ESMTP; 24 Jan 2020 15:20:44 -0800
-Date:   Sat, 25 Jan 2020 07:20:55 +0800
-From:   Wei Yang <richardw.yang@linux.intel.com>
-To:     Yang Shi <yang.shi@linux.alibaba.com>
-Cc:     Wei Yang <richardw.yang@linux.intel.com>,
-        Michal Hocko <mhocko@kernel.org>, akpm@linux-foundation.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org
-Subject: Re: [v2 PATCH] mm: move_pages: report the number of non-attempted
- pages
-Message-ID: <20200124232055.GB16638@richard>
-Reply-To: Wei Yang <richardw.yang@linux.intel.com>
-References: <1579736331-85494-1-git-send-email-yang.shi@linux.alibaba.com>
- <20200123032736.GA22196@richard>
- <20200123085526.GH29276@dhcp22.suse.cz>
- <20200123225647.GB29851@richard>
- <20200124064649.GM29276@dhcp22.suse.cz>
- <20200124152642.GB12509@richard>
- <9aa3ff03-8397-4ca9-dc55-d893948f7ece@linux.alibaba.com>
+        Fri, 24 Jan 2020 18:21:29 -0500
+Received: from mail-vs1-f66.google.com ([209.85.217.66]:40230 "EHLO
+        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387576AbgAXXV3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 18:21:29 -0500
+Received: by mail-vs1-f66.google.com with SMTP id g23so2330967vsr.7
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jan 2020 15:21:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=SRJ461+G7MgpwUQU9s+T4wtNvR/tD3NyDdbo7eqA7AI=;
+        b=eZcDQrVRmmgUua8irA6uwUmZChO1NI87dboSLB2KeMzZ7JR5gsRbghI4LgN0exPQaG
+         wHHGvu0c0RiHR1HnL/WKGm1NRBd7MGYwLUPDYXttvh8VvVu0+YYWqCxhGxwiU7uPt9Jy
+         3VN3tqCAta+mZolHhOTXrqvhq69f6dnCWbGt0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=SRJ461+G7MgpwUQU9s+T4wtNvR/tD3NyDdbo7eqA7AI=;
+        b=hAV+Ed4QXxMWtVhellLEuRkWeUplFN/SeHsoUEkgMGFG89MhCPh/a5L2Cepebtbvt4
+         gNhxMSVaU/0UYPzqzphrw/FXceyDCRwY+a98Z1UrRH3c0ZX7lVB2+aBuP1EQtHio5aRf
+         2FhYmiL+Eb19PVMb9WE5bsQQNxxKmAC81viqzTIJVECFk94Gq+DLjdd9PvWcSMmCc6Kz
+         qGAmsBc877G6hwJFbXypq7RsOnuempn3zfZEACxgGPmz3rP3QB0KN2tYqCw8hk08KqaF
+         mV/35nDgyA2IhzzJmZJr98DzRcTe8Ied1pSio/e9+RDbTiHUFcDY+TbLrI5b3HhHwUDo
+         AFpA==
+X-Gm-Message-State: APjAAAWhlNBdfxFYaWl6hRTYEh1f20XvRa5QnIL7Q1CR336CDXZhlhuX
+        +BON2346C3rDDeyErAa+HiMTZvQL6/I=
+X-Google-Smtp-Source: APXvYqzXSwsfZ394+P4rMPRHWrc3S3RBaifqFW0RcOYqnRclN8TcuNYAJsH4cf77HuW4d8JPYHpQtQ==
+X-Received: by 2002:a67:8716:: with SMTP id j22mr4186639vsd.177.1579908087496;
+        Fri, 24 Jan 2020 15:21:27 -0800 (PST)
+Received: from mail-vs1-f46.google.com (mail-vs1-f46.google.com. [209.85.217.46])
+        by smtp.gmail.com with ESMTPSA id m10sm1717948vsr.19.2020.01.24.15.21.26
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 24 Jan 2020 15:21:26 -0800 (PST)
+Received: by mail-vs1-f46.google.com with SMTP id b4so2313752vsa.12
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jan 2020 15:21:26 -0800 (PST)
+X-Received: by 2002:a05:6102:2d8:: with SMTP id h24mr4063725vsh.169.1579908086214;
+ Fri, 24 Jan 2020 15:21:26 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <9aa3ff03-8397-4ca9-dc55-d893948f7ece@linux.alibaba.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <1579867572-17188-1-git-send-email-harigovi@codeaurora.org>
+In-Reply-To: <1579867572-17188-1-git-send-email-harigovi@codeaurora.org>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Fri, 24 Jan 2020 15:21:14 -0800
+X-Gmail-Original-Message-ID: <CAD=FV=WKVGq+x1XFvZQvBcKVPdcVxQWJJmsqpAxY3t4dorvMYg@mail.gmail.com>
+Message-ID: <CAD=FV=WKVGq+x1XFvZQvBcKVPdcVxQWJJmsqpAxY3t4dorvMYg@mail.gmail.com>
+Subject: Re: [v3] arm64: dts: sc7180: add display dt nodes
+To:     Harigovindan P <harigovi@codeaurora.org>
+Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        Rob Clark <robdclark@gmail.com>,
+        Sean Paul <seanpaul@chromium.org>,
+        "Kristian H. Kristensen" <hoegsberg@chromium.org>,
+        kalyan_t@codeaurora.org, nganji@codeaurora.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 24, 2020 at 09:48:30AM -0800, Yang Shi wrote:
->
->
->On 1/24/20 7:26 AM, Wei Yang wrote:
->> On Fri, Jan 24, 2020 at 07:46:49AM +0100, Michal Hocko wrote:
->> > On Fri 24-01-20 06:56:47, Wei Yang wrote:
->> > > On Thu, Jan 23, 2020 at 09:55:26AM +0100, Michal Hocko wrote:
->> > > > On Thu 23-01-20 11:27:36, Wei Yang wrote:
->> > > > > On Thu, Jan 23, 2020 at 07:38:51AM +0800, Yang Shi wrote:
->> > > > > > Since commit a49bd4d71637 ("mm, numa: rework do_pages_move"),
->> > > > > > the semantic of move_pages() was changed to return the number of
->> > > > > > non-migrated pages (failed to migration) and the call would be aborted
->> > > > > > immediately if migrate_pages() returns positive value.  But it didn't
->> > > > > > report the number of pages that we even haven't attempted to migrate.
->> > > > > > So, fix it by including non-attempted pages in the return value.
->> > > > > > 
->> > > > > First, we want to change the semantic of move_pages(2). The return value
->> > > > > indicates the number of pages we didn't managed to migrate?
->> > > > > 
->> > > > > Second, the return value from migrate_pages() doesn't mean the number of pages
->> > > > > we failed to migrate. For example, one -ENOMEM is returned on the first page,
->> > > > > migrate_pages() would return 1. But actually, no page successfully migrated.
->> > > > ENOMEM is considered a permanent failure and as such it is returned by
->> > > > migrate pages (see goto out).
->> > > > 
->> > > > > Third, even the migrate_pages() return the exact non-migrate page, we are not
->> > > > > sure those non-migrated pages are at the tail of the list. Because in the last
->> > > > > case in migrate_pages(), it just remove the page from list. It could be a page
->> > > > > in the middle of the list. Then, in userspace, how the return value be
->> > > > > leveraged to determine the valid status? Any page in the list could be the
->> > > > > victim.
->> > > > Yes, I was wrong when stating that the caller would know better which
->> > > > status to check. I misremembered the original patch as it was quite some
->> > > > time ago. While storing the error code would be possible after some
->> > > > massaging of migrate_pages is this really something we deeply care
->> > > > about. The caller can achieve the same by initializing the status array
->> > > > to a non-node number - e.g. -1 - and check based on that.
->> > > > 
->> > > So for a user, the best practice is to initialize the status array to -1 and
->> > > check each status to see whether the page is migrated successfully?
->> > Yes IMO. Just consider -errno return value. You have no way to find out
->> > which pages have been migrated until we reached that error. The
->> > possitive return value would fall into the same case.
->> > 
->> > > Then do we need to return the number of non-migrated page? What benefit could
->> > > user get from the number. How about just return an error code to indicate the
->> > > failure? I may miss some point, would you mind giving me a hint?
->> > This is certainly possible. We can return -EAGAIN if some pages couldn't
->> > be migrated because they are pinned. But please read my previous email
->> > to the very end for arguments why this might cause more problems than it
->> > actually solves.
->> > 
->> Let me put your comment here:
->> 
->>      Because new users could have started depending on it. It
->>      is not all that unlikely that the current implementation would just
->>      work for them because they are migrating a set of pages on to the same
->>      node so the batch would be a single list throughout the whole given
->>      page set.
->> 
->> Your idea is to preserve current semantic, return non-migrated pages number to
->> userspace.
->> 
->> And the reason is:
->> 
->>     1. Users have started depending on it.
->>     2. No real bug reported yet.
->>     3. User always migrate page to the same node. (If my understanding is
->>        correct)
->> 
->> I think this gets some reason, since we want to minimize the impact to
->> userland.
->> 
->> While let's see what user probably use this syscall. Since from the man page,
->> we never told the return value could be positive, the number of non-migrated
->> pages, user would think only 0 means a successful migration and all other
->> cases are failure. Then user probably handle negative and positive return
->> value the same way, like (!err).
->> 
->> If my guess is true, return a negative error value for this case could
->> minimize the impact to userland here.
->>     1. Preserve the semantic of move_pages(2): 0 means success, negative means
->>        some error and needs extra handling.
->>     2. Trivial change to the man page.
->>     3. Suppose no change to users.
->> 
->> Well, in case I missed your point, sorry about that.
->
->I think we should compare the new semantic with the old one. With the old
->semantic the move_pages() return 0 for both success *and* migration failure.
->So, I'm supposed (I don't have any real usecase) the user may do the below
->with the old semantic:
->    - Just check if it is failed (ignore migration failure), "!err" is good
->enough.  This usecase is fine as well with the new semantic since migration
->failure is also a kind of error cases.
->     - Care about migration failure, the user needs traverse all bits in the
->status array. With the new semantic they just need check if "err > 0", if
->they want to know what specific pages are failed to migrate, then traverse
->the status array (with initialized as -1 as Michal suggested in earlier
->email).
->
->So, with returning errno for migration failure if the userspace wants to see
->if migration is failed, they need do:
->    1. Check "!err"
->    2. Read errno if #1 returns false
->    3. Traverse status array to see how many pages are failed to migrate
->
+Hi,
 
-You are right. I misunderstand the mechanism of error handling on err and
-errno.
-
->But with the new semantic they just need check if "err > 0", one step is fine
->for the most cases. So I said this approach seems more straightforward to the
->userspace and makes more sense IMHO.
+On Fri, Jan 24, 2020 at 4:07 AM Harigovindan P <harigovi@codeaurora.org> wrote:
 >
->> > > > This system call has quite a complex semantic and I am not 100% sure
->> > > > what is the right thing to do here. Maybe we do want to continue and try
->> > > > to migrate as much as possible on non-fatal migration failures and
->> > > > accumulate the number of failed pages while doing so.
->> > > > 
->> > > > The main problem is that we can have an academic discussion but
->> > > > the primary question is what do actual users want. A lack of real
->> > > > bug reports suggests that nobody has actually noticed this. So I
->> > > > would rather keep returning the correct number of non-migrated
->> > > > pages. Why? Because new users could have started depending on it. It
->> > > > is not all that unlikely that the current implementation would just
->> > > > work for them because they are migrating a set of pages on to the same
->> > > > node so the batch would be a single list throughout the whole given
->> > > > page set.
->> > -- 
->> > Michal Hocko
->> > SUSE Labs
+> Add display, DSI hardware DT nodes for sc7180.
+>
+> Signed-off-by: Harigovindan P <harigovi@codeaurora.org>
+> ---
+>
+> Changes in v1:
+>         -Added display DT nodes for sc7180
+> Changes in v2:
+>         -Renamed node names
+>         -Corrected code alignments
+>         -Removed extra new line
+>         -Added DISP AHB clock for register access
+>         under display_subsystem node for global settings
+> Changes in v3:
+>         -Modified node names
+>         -Modified hard coded values
+>         -Removed mdss reg entry
+>
+>  arch/arm64/boot/dts/qcom/sc7180-idp.dts |  58 +++++++++++++++
+>  arch/arm64/boot/dts/qcom/sc7180.dtsi    | 124 ++++++++++++++++++++++++++++++++
+>  2 files changed, 182 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+> index 388f50a..c77aab7 100644
+> --- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+> +++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+> @@ -7,6 +7,7 @@
+>
+>  /dts-v1/;
+>
+> +#include <dt-bindings/gpio/gpio.h>
+>  #include <dt-bindings/regulator/qcom,rpmh-regulator.h>
+>  #include "sc7180.dtsi"
+>  #include "pm6150.dtsi"
+> @@ -232,6 +233,50 @@
+>         };
+>  };
+>
+> +&dsi_controller {
+> +       status = "okay";
+> +
+> +       vdda-supply = <&vreg_l3c_1p2>;
+> +
+> +       panel@0 {
+> +               compatible = "visionox,rm69299-1080p-display";
 
--- 
-Wei Yang
-Help you, Help me
+I don't think the bindings for this panel have landed anywhere, have
+they?  Maybe keep the IDP patch separate from the main sc7180 patch so
+that we can land the main sc7180 patch even if the idp patch isn't
+quite ready?  ...and maybe ping whoever is supposed to add support for
+this panel to tell them to get working on it.
+
+
+> +               reg = <0>;
+> +
+> +               vdda-supply = <&vreg_l8c_1p8>;
+> +               vdd3p3-supply = <&vreg_l18a_2p8>;
+> +
+> +               pinctrl-names = "default", "suspend";
+> +               pinctrl-0 = <&disp_pins_default>;
+> +               pinctrl-1 = <&disp_pins_default>;
+> +
+> +               reset-gpios = <&pm6150l_gpio 3 GPIO_ACTIVE_HIGH>;
+> +
+> +               ports {
+> +                       #address-cells = <1>;
+> +                       #size-cells = <0>;
+> +                       port@0 {
+> +                               reg = <0>;
+> +                               panel0_in: endpoint {
+> +                                       remote-endpoint = <&dsi0_out>;
+> +                               };
+> +                       };
+> +               };
+> +       };
+> +
+> +       ports {
+> +               port@1 {
+> +                       endpoint {
+> +                               remote-endpoint = <&panel0_in>;
+> +                               data-lanes = <0 1 2 3>;
+> +                       };
+> +               };
+> +       };
+> +};
+> +
+> +&dsi_phy {
+> +       status = "okay";
+
+The above doesn't do anything because the dsi_phy you add to
+sc7180.dtsi doesn't have a
+  status = "disabled";
+
+...but probably it (and most of the other components that you're
+adding) should.  The idea is that if it ever makes sense that a board
+might be built with this SoC but _not_ hook up a given component that
+it should start out "disabled" in the main SoC dtsi file.
+
+> +};
+> +
+>  &qspi {
+>         status = "okay";
+>         pinctrl-names = "default";
+> @@ -289,6 +334,19 @@
+>
+>  /* PINCTRL - additions to nodes defined in sc7180.dtsi */
+>
+> +&pm6150l_gpio {
+> +       disp_pins {
+> +               disp_pins_default: disp_pins_default{
+
+As Bjorn mentioned, node name should use "-" instead of "_".  Also add
+a space before your "{"
+
+
+> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> index 3bc3f64..3ebc45b 100644
+> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> @@ -1184,6 +1184,130 @@
+>                         #power-domain-cells = <1>;
+>                 };
+>
+> +               mdss: display_subsystem@ae00000 {
+> +                       compatible = "qcom,sc7180-mdss";
+> +                       reg = <0 0x0ae00000 0 0x1000>;
+> +                       reg-names = "mdss";
+> +
+> +                       power-domains = <&dispcc MDSS_GDSC>;
+
+You definitely can't land your patch until the "dispcc" node is added,
+but it's not.  You should be mentioning somewhere (after the cut?)
+that you depend on the series to add dispcc.
+
+...speaking of which, I just posted up a v2 of that.  See:
+
+https://lore.kernel.org/r/20200124144154.v2.10.I1a4b93fb005791e29a9dcf288fc8bd459a555a59@changeid
+
+...speaking of which, can you please change your patch to replace the
+bogus <0> in the dispcc for the DSI PHY, providing the clocks for
+"dsi_phy_pll_byte" and "dsi_phy_pll_pixel"?  See
+<https://crrev.com/c/2017974/3>
+
+
+> +
+> +                       clocks = <&gcc GCC_DISP_AHB_CLK>,
+> +                                <&gcc GCC_DISP_HF_AXI_CLK>,
+> +                                <&dispcc DISP_CC_MDSS_AHB_CLK>,
+> +                                <&dispcc DISP_CC_MDSS_MDP_CLK>;
+> +                       clock-names = "iface", "gcc_bus", "ahb", "core";
+> +
+> +                       assigned-clocks = <&dispcc DISP_CC_MDSS_MDP_CLK>;
+> +                       assigned-clock-rates = <300000000>;
+> +
+> +                       interrupts = <GIC_SPI 83 IRQ_TYPE_LEVEL_HIGH>;
+> +                       interrupt-controller;
+> +                       #interrupt-cells = <1>;
+> +
+> +                       iommus = <&apps_smmu 0x800 0x2>;
+> +
+> +                       #address-cells = <2>;
+> +                       #size-cells = <2>;
+> +                       ranges;
+> +
+> +                       mdp: display_controller@ae01000 {
+
+Did you test this?  As far I can tell this change between v2 and v3
+broke things because the node name "mdp" is magic.  In
+"drivers/gpu/drm/msm/msm_drv.c" you can find the function:
+
+static int compare_name_mdp(struct device *dev, void *data)
+{
+  return (strstr(dev_name(dev), "mdp") != NULL);
+}
+
+...so unless that function changes your device tree won't work.  Maybe
+Bjorn can comment since I think he's the one that suggested you change
+this, but IMO change it back to "mdp@ae01000" for now and then start a
+separate patch series about transitioning this if people still want
+it.  See <https://crrev.com/c/2020395/1>.
+
+-Doug
