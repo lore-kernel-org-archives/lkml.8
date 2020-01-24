@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B96DEC35242
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:43:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 641CCC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:43:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 901F220678
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:43:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30D2420678
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:43:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579866183;
-	bh=JIkjs8C9QE1u8UoMgAl79rNB1yLw+RBxDt3+1CJ6u1o=;
+	s=default; t=1579866187;
+	bh=LQYh9mpS6C1pxz8TTiF+44lSeHOO183tIPQyxYRyGrI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lukHPyKG4zqtWY2GXcrHmsgxiLCqA8hO7Ym8LufPauMJRZAQtvjixyrANkNfsDkJd
-	 WX9q8gBzm/BYshO3TH+a0yFT0ngWPPuul7Fgq7xKc/gjKEskIwmOrfGaxWwkKVC8h3
-	 fZu8ak3gJtDUdx+3bPwg7jPeG4IneeiUcdpK8isY=
+	b=2pQR4R9HecgnuVTqh8ucckacXU6mSkNlcFN4N0NrGIjIGO3AScYlPvVDQZcmjEBGn
+	 5K3Wm8//Bh2zP3P5owHQxTNe6GVpwffaw+8pi/pkXPphUjjs69cLq+h0nXfkOepPlG
+	 HnzXxS4BrYl0aM9aAFMSdkR1Ctf9T3u8WwQMNiVo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389824AbgAXLKJ (ORCPT
+        id S2392031AbgAXLnG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:10:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45830 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 06:43:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45894 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730170AbgAXLKG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:10:06 -0500
+        id S2389822AbgAXLKJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:10:09 -0500
 Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CD67720663;
-        Fri, 24 Jan 2020 11:10:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 15B1E20663;
+        Fri, 24 Jan 2020 11:10:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579864205;
-        bh=JIkjs8C9QE1u8UoMgAl79rNB1yLw+RBxDt3+1CJ6u1o=;
+        s=default; t=1579864208;
+        bh=LQYh9mpS6C1pxz8TTiF+44lSeHOO183tIPQyxYRyGrI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Sj0WcHDd95hQglwoH6z2mCJv4bC04e5tjh9Ex6bWobeDi7KIChm/0YinzwxPKHkPE
-         9h2dhy4KRT8wzWhYognhxyTCEJf8dbsSxJBOfWajNixGrQa/ru+lE2rjZis3EUnI38
-         WfYpNipdW+2CFqFKINsXYxeSPZnHEOMLzMg82duw=
+        b=aBarR6v8Uw+eFxTUqsJ3v799zPtoaxkRB0+xAXpzKfTXtNNH3ek0EdZMM64AByO/7
+         ArPSbbqA08buZ6yg4AZswLO7vNL1qUxMiL06E/qZVKgbx4AUi8JO3zS3Jd6No5g7VT
+         FZZxsuObot8417cfkMZMD8qqFjMQGabIqEWasN7g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 201/639] net: dsa: b53: Properly account for VLAN filtering
-Date:   Fri, 24 Jan 2020 10:26:11 +0100
-Message-Id: <20200124093112.222982098@linuxfoundation.org>
+Subject: [PATCH 4.19 202/639] net: dsa: b53: Do not program CPU ports PVID
+Date:   Fri, 24 Jan 2020 10:26:12 +0100
+Message-Id: <20200124093112.340694982@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
 References: <20200124093047.008739095@linuxfoundation.org>
@@ -62,148 +62,33 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Florian Fainelli <f.fainelli@gmail.com>
 
-[ Upstream commit dad8d7c6452b5b9f9828c9e2c7ca143205fd40c7 ]
+[ Upstream commit 10163aaee9671b01b2f4737922e1a4f43581047a ]
 
-VLAN filtering can be built into the kernel, and also dynamically turned
-on/off through the bridge master device. Allow re-configuring the switch
-appropriately to account for that by deciding whether VLAN table
-(v_table) misses should lead to a drop or forward.
+The CPU port is special and does not need to obey VLAN restrictions as
+far as untagged traffic goes, also, having the CPU port be part of a
+particular PVID is against the idea of keeping it tagged in all VLANs.
 
-Fixes: a2482d2ce349 ("net: dsa: b53: Plug in VLAN support")
+Fixes: ca8931948344 ("net: dsa: b53: Keep CPU port as tagged in all VLANs")
 Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/dsa/b53/b53_common.c | 59 +++++++++++++++++++++++++++++---
- drivers/net/dsa/b53/b53_priv.h   |  3 ++
- 2 files changed, 57 insertions(+), 5 deletions(-)
+ drivers/net/dsa/b53/b53_common.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/net/dsa/b53/b53_common.c b/drivers/net/dsa/b53/b53_common.c
-index bceda1e884426..426ec1c05799a 100644
+index 426ec1c05799a..9f21e710fc38b 100644
 --- a/drivers/net/dsa/b53/b53_common.c
 +++ b/drivers/net/dsa/b53/b53_common.c
-@@ -343,7 +343,8 @@ static void b53_set_forwarding(struct b53_device *dev, int enable)
- 	b53_write8(dev, B53_CTRL_PAGE, B53_SWITCH_CTRL, mgmt);
- }
- 
--static void b53_enable_vlan(struct b53_device *dev, bool enable)
-+static void b53_enable_vlan(struct b53_device *dev, bool enable,
-+			    bool enable_filtering)
- {
- 	u8 mgmt, vc0, vc1, vc4 = 0, vc5;
- 
-@@ -368,8 +369,13 @@ static void b53_enable_vlan(struct b53_device *dev, bool enable)
- 		vc0 |= VC0_VLAN_EN | VC0_VID_CHK_EN | VC0_VID_HASH_VID;
- 		vc1 |= VC1_RX_MCST_UNTAG_EN | VC1_RX_MCST_FWD_EN;
- 		vc4 &= ~VC4_ING_VID_CHECK_MASK;
--		vc4 |= VC4_ING_VID_VIO_DROP << VC4_ING_VID_CHECK_S;
--		vc5 |= VC5_DROP_VTABLE_MISS;
-+		if (enable_filtering) {
-+			vc4 |= VC4_ING_VID_VIO_DROP << VC4_ING_VID_CHECK_S;
-+			vc5 |= VC5_DROP_VTABLE_MISS;
-+		} else {
-+			vc4 |= VC4_ING_VID_VIO_FWD << VC4_ING_VID_CHECK_S;
-+			vc5 &= ~VC5_DROP_VTABLE_MISS;
-+		}
- 
- 		if (is5325(dev))
- 			vc0 &= ~VC0_RESERVED_1;
-@@ -419,6 +425,9 @@ static void b53_enable_vlan(struct b53_device *dev, bool enable)
+@@ -1175,7 +1175,7 @@ void b53_vlan_add(struct dsa_switch *ds, int port,
+ 		b53_fast_age_vlan(dev, vid);
  	}
  
- 	b53_write8(dev, B53_CTRL_PAGE, B53_SWITCH_MODE, mgmt);
-+
-+	dev->vlan_enabled = enable;
-+	dev->vlan_filtering_enabled = enable_filtering;
- }
- 
- static int b53_set_jumbo(struct b53_device *dev, bool enable, bool allow_10_100)
-@@ -646,7 +655,7 @@ int b53_configure_vlan(struct dsa_switch *ds)
- 		b53_do_vlan_op(dev, VTA_CMD_CLEAR);
- 	}
- 
--	b53_enable_vlan(dev, false);
-+	b53_enable_vlan(dev, false, dev->vlan_filtering_enabled);
- 
- 	b53_for_each_port(dev, i)
- 		b53_write16(dev, B53_VLAN_PAGE,
-@@ -1081,6 +1090,46 @@ static void b53_adjust_link(struct dsa_switch *ds, int port,
- 
- int b53_vlan_filtering(struct dsa_switch *ds, int port, bool vlan_filtering)
- {
-+	struct b53_device *dev = ds->priv;
-+	struct net_device *bridge_dev;
-+	unsigned int i;
-+	u16 pvid, new_pvid;
-+
-+	/* Handle the case were multiple bridges span the same switch device
-+	 * and one of them has a different setting than what is being requested
-+	 * which would be breaking filtering semantics for any of the other
-+	 * bridge devices.
-+	 */
-+	b53_for_each_port(dev, i) {
-+		bridge_dev = dsa_to_port(ds, i)->bridge_dev;
-+		if (bridge_dev &&
-+		    bridge_dev != dsa_to_port(ds, port)->bridge_dev &&
-+		    br_vlan_enabled(bridge_dev) != vlan_filtering) {
-+			netdev_err(bridge_dev,
-+				   "VLAN filtering is global to the switch!\n");
-+			return -EINVAL;
-+		}
-+	}
-+
-+	b53_read16(dev, B53_VLAN_PAGE, B53_VLAN_PORT_DEF_TAG(port), &pvid);
-+	new_pvid = pvid;
-+	if (dev->vlan_filtering_enabled && !vlan_filtering) {
-+		/* Filtering is currently enabled, use the default PVID since
-+		 * the bridge does not expect tagging anymore
-+		 */
-+		dev->ports[port].pvid = pvid;
-+		new_pvid = b53_default_pvid(dev);
-+	} else if (!dev->vlan_filtering_enabled && vlan_filtering) {
-+		/* Filtering is currently disabled, restore the previous PVID */
-+		new_pvid = dev->ports[port].pvid;
-+	}
-+
-+	if (pvid != new_pvid)
-+		b53_write16(dev, B53_VLAN_PAGE, B53_VLAN_PORT_DEF_TAG(port),
-+			    new_pvid);
-+
-+	b53_enable_vlan(dev, dev->vlan_enabled, vlan_filtering);
-+
- 	return 0;
- }
- EXPORT_SYMBOL(b53_vlan_filtering);
-@@ -1096,7 +1145,7 @@ int b53_vlan_prepare(struct dsa_switch *ds, int port,
- 	if (vlan->vid_end > dev->num_vlans)
- 		return -ERANGE;
- 
--	b53_enable_vlan(dev, true);
-+	b53_enable_vlan(dev, true, dev->vlan_filtering_enabled);
- 
- 	return 0;
- }
-diff --git a/drivers/net/dsa/b53/b53_priv.h b/drivers/net/dsa/b53/b53_priv.h
-index df149756c2820..e87af5db0d6d8 100644
---- a/drivers/net/dsa/b53/b53_priv.h
-+++ b/drivers/net/dsa/b53/b53_priv.h
-@@ -73,6 +73,7 @@ enum {
- struct b53_port {
- 	u16		vlan_ctl_mask;
- 	struct ethtool_eee eee;
-+	u16		pvid;
- };
- 
- struct b53_vlan {
-@@ -118,6 +119,8 @@ struct b53_device {
- 
- 	unsigned int num_vlans;
- 	struct b53_vlan *vlans;
-+	bool vlan_enabled;
-+	bool vlan_filtering_enabled;
- 	unsigned int num_ports;
- 	struct b53_port *ports;
- };
+-	if (pvid) {
++	if (pvid && !dsa_is_cpu_port(ds, port)) {
+ 		b53_write16(dev, B53_VLAN_PAGE, B53_VLAN_PORT_DEF_TAG(port),
+ 			    vlan->vid_end);
+ 		b53_fast_age_vlan(dev, vid);
 -- 
 2.20.1
 
