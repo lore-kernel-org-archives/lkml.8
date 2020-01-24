@@ -4,54 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95E9CC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 10:07:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17B3CC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 10:07:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61CDE21734
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 10:07:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB29C24684
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 10:07:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579860455;
-	bh=KClttDioJvnAoOtuIuBDqqbhxrpcN9FUlkJQTx0VV6k=;
+	s=default; t=1579860458;
+	bh=W+ghIg8vbK9+KDIfK1m37fdGIZBEAJCRl5MwjpWOGIM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=C/ZgB+QNeMlPnaCKi5Srf/7s9vWEB5kfjrOwlGb86tfx7c1rhOT/OHCN26RrYswVM
-	 UHjk/ahp+I6iYwAU3dbWwiaKu++8uiLutEY7+d4FeVaqDYjw8IeoGYWIeYD4kH8voB
-	 r/PoaZVeDQUyAwiFADhadj84RmUYdR1eJnaO+/4U=
+	b=fHRZjNSUcRlms8krMIf9oBv/aHLISGremZTsYabe1ql76uevYfPdACgzp5KnpqFos
+	 9Mh7hFEKlCXxhptHxJn9X8UGUhmlKQg/ePEPc0xFq2DcF7zSZl/rzY7nJCsvItFwFG
+	 TNwsIqB5O8p3yg5kGTV/BKx1v5vSs7UN2YRLmWXQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388820AbgAXKHe (ORCPT
+        id S2389412AbgAXKHh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 05:07:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44060 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 05:07:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44166 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389252AbgAXKHb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 05:07:31 -0500
+        id S2389270AbgAXKHe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 05:07:34 -0500
 Received: from localhost (unknown [145.15.244.15])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2FD55206F0;
-        Fri, 24 Jan 2020 10:07:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 58B2F2087E;
+        Fri, 24 Jan 2020 10:07:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579860450;
-        bh=KClttDioJvnAoOtuIuBDqqbhxrpcN9FUlkJQTx0VV6k=;
+        s=default; t=1579860453;
+        bh=W+ghIg8vbK9+KDIfK1m37fdGIZBEAJCRl5MwjpWOGIM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bm3+6sddnYD3shgPOa/7CZCXnuRbSlEgbhXbiWkRrPj/gr1MmDVplWKIuQ3YYkA9y
-         MB4LT7qDQI92Ya4O/qPsfIWWQggirWe7kCz7m7LFDFEmChzqzDrl69Vfp4k30XFcUN
-         u3gFJRHTf/pXAwTwCzUscJjMA1Rw/FyekUtcT3jo=
+        b=IdoOx3TCcWOcU2snvcEZbPgli67KVQliHbE8RkqKc7LwKzZdXrJJq+fn2ipEQGzsT
+         8f7xnBVk4NNggK7gR32P6ayO5rFar+0Ofx8oaflyRHR5wIYJshprYKtFeXwQeDnCQY
+         UHS7QhVCvf2/Hdzr6DproFGr0NPxRRFrQvtA45UY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tiezhu Yang <yangtiezhu@loongson.cn>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        James Hogan <jhogan@kernel.org>,
-        Huacai Chen <chenhc@lemote.com>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        linux-mips@vger.kernel.org, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 331/343] MIPS: Loongson: Fix return value of loongson_hwmon_init
-Date:   Fri, 24 Jan 2020 10:32:29 +0100
-Message-Id: <20200124093003.325075825@linuxfoundation.org>
+        stable@vger.kernel.org, Andre Przywara <andre.przywara@arm.com>,
+        Liviu Dudau <liviu.dudau@arm.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 340/343] arm64: dts: juno: Fix UART frequency
+Date:   Fri, 24 Jan 2020 10:32:38 +0100
+Message-Id: <20200124093004.492901541@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124092919.490687572@linuxfoundation.org>
 References: <20200124092919.490687572@linuxfoundation.org>
@@ -64,40 +61,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
+From: Andre Przywara <andre.przywara@arm.com>
 
-[ Upstream commit dece3c2a320b0a6d891da6ff774ab763969b6860 ]
+[ Upstream commit 39a1a8941b27c37f79508426e27a2ec29829d66c ]
 
-When call function hwmon_device_register failed, use the actual
-return value instead of always -ENOMEM.
+Older versions of the Juno *SoC* TRM [1] recommended that the UART clock
+source should be 7.2738 MHz, whereas the *system* TRM [2] stated a more
+correct value of 7.3728 MHz. Somehow the wrong value managed to end up in
+our DT.
 
-Fixes: 64f09aa967e1 ("MIPS: Loongson-3: Add CPU Hwmon platform driver")
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-Signed-off-by: Paul Burton <paulburton@kernel.org>
-Cc: Ralf Baechle <ralf@linux-mips.org>
-Cc: James Hogan <jhogan@kernel.org>
-Cc: Huacai Chen <chenhc@lemote.com>
-Cc: Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc: linux-mips@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
+Doing a prime factorisation, a modulo divide by 115200 and trying
+to buy a 7.2738 MHz crystal at your favourite electronics dealer suggest
+that the old value was actually a typo. The actual UART clock is driven
+by a PLL, configured via a parameter in some board.txt file in the
+firmware, which reads 7.37 MHz (sic!).
+
+Fix this to correct the baud rate divisor calculation on the Juno board.
+
+[1] http://infocenter.arm.com/help/topic/com.arm.doc.ddi0515b.b/DDI0515B_b_juno_arm_development_platform_soc_trm.pdf
+[2] http://infocenter.arm.com/help/topic/com.arm.doc.100113_0000_07_en/arm_versatile_express_juno_development_platform_(v2m_juno)_technical_reference_manual_100113_0000_07_en.pdf
+
+Fixes: 71f867ec130e ("arm64: Add Juno board device tree.")
+Signed-off-by: Andre Przywara <andre.przywara@arm.com>
+Acked-by: Liviu Dudau <liviu.dudau@arm.com>
+Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/mips/cpu_hwmon.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/boot/dts/arm/juno-clocks.dtsi | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/platform/mips/cpu_hwmon.c b/drivers/platform/mips/cpu_hwmon.c
-index 322de58eebaf5..02484ae9a1165 100644
---- a/drivers/platform/mips/cpu_hwmon.c
-+++ b/drivers/platform/mips/cpu_hwmon.c
-@@ -158,7 +158,7 @@ static int __init loongson_hwmon_init(void)
+diff --git a/arch/arm64/boot/dts/arm/juno-clocks.dtsi b/arch/arm64/boot/dts/arm/juno-clocks.dtsi
+index e5e265dfa9025..2870b5eeb1984 100644
+--- a/arch/arm64/boot/dts/arm/juno-clocks.dtsi
++++ b/arch/arm64/boot/dts/arm/juno-clocks.dtsi
+@@ -8,10 +8,10 @@
+  */
+ / {
+ 	/* SoC fixed clocks */
+-	soc_uartclk: refclk7273800hz {
++	soc_uartclk: refclk7372800hz {
+ 		compatible = "fixed-clock";
+ 		#clock-cells = <0>;
+-		clock-frequency = <7273800>;
++		clock-frequency = <7372800>;
+ 		clock-output-names = "juno:uartclk";
+ 	};
  
- 	cpu_hwmon_dev = hwmon_device_register(NULL);
- 	if (IS_ERR(cpu_hwmon_dev)) {
--		ret = -ENOMEM;
-+		ret = PTR_ERR(cpu_hwmon_dev);
- 		pr_err("hwmon_device_register fail!\n");
- 		goto fail_hwmon_device_register;
- 	}
 -- 
 2.20.1
 
