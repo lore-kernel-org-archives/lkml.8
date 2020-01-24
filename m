@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 593BDC32771
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:51:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3CA8C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:51:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2353B2070A
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:51:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C942F2070A
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:51:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579859484;
-	bh=uzTE8TbwK78FXSf2VUeORIQN1uub9Ihg/cHv5SiDxYM=;
+	s=default; t=1579859487;
+	bh=wnjRklRT9QO3ID0lhAhN+Slr5Q2opEtUMhO4dCwSItY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mDXjcwrkigS/uDv1W7Ls8pjDYVFsT463S2/6NX+YRCTniMLP9q6YFUY8K5BHER64G
-	 izGK8WbSsmerTvTiSw6PYChYxOY/mbsY7SpF5n/MWUEyEhZylRBVltQD6kRCgtyqEq
-	 LizlYCpLP9HkBZ0myVE63l46uYHVH6OGpnPXON5E=
+	b=TOKbH/4EdToDD6fuYF9jy03IdZGOuZZSlG9gHvBUZCeS9WDgq+pcZhrzL84cBx8Mv
+	 HPCszDZuNB+NXfPqFiWBjGWyyZE6vmSfbVIhbugW35wHqCh4YJFbnp/olImjqM+rZA
+	 0OHa5zPSpUWVMktZf63fDs0LKbgVJtCJjC1Dpiqg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388027AbgAXJvX (ORCPT
+        id S2387636AbgAXJv0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 04:51:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52578 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 04:51:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52660 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730738AbgAXJvV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 04:51:21 -0500
+        id S1730738AbgAXJvY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 04:51:24 -0500
 Received: from localhost (unknown [145.15.244.15])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B121E20718;
-        Fri, 24 Jan 2020 09:51:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AA85820709;
+        Fri, 24 Jan 2020 09:51:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579859481;
-        bh=uzTE8TbwK78FXSf2VUeORIQN1uub9Ihg/cHv5SiDxYM=;
+        s=default; t=1579859484;
+        bh=wnjRklRT9QO3ID0lhAhN+Slr5Q2opEtUMhO4dCwSItY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QcvBku/E8LoDnCYemuoWMt+/Gx8unY52bz5Zp0SEHvQrhgnbZIN8kh94Xoln8e4vP
-         63i5T1cQsmjndknARFxvqHjuQVhgxxBNwEi1c/Rhod4fxzPrqdeRRCqtYWyb1yXYcS
-         Il55jLlmYhT4HTjOnzZ7mqqff1exI8MMn8P1nI+0=
+        b=DWPgySCZ5TSWidFVwn5r1OTFfkIpDGSRP6SjtAeDhEP9//Zz3+WdsEi/vnUmforez
+         +8EW0kPyXAJfYqNr6Wm+65C/yN0Ns9c1/wWo6ynkrDBJ2mtbJRKuDf4842CdgN/Mf7
+         AAwJWSiOrgsewI151yRtImYJ4pgFjfe5wETNkRc0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        stable@vger.kernel.org, Mattias Jacobsson <2pi@mok.nu>,
+        "Darren Hart (VMware)" <dvhart@infradead.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 126/343] clocksource/drivers/exynos_mct: Fix error path in timer resources initialization
-Date:   Fri, 24 Jan 2020 10:29:04 +0100
-Message-Id: <20200124092936.563667109@linuxfoundation.org>
+Subject: [PATCH 4.14 127/343] platform/x86: wmi: fix potential null pointer dereference
+Date:   Fri, 24 Jan 2020 10:29:05 +0100
+Message-Id: <20200124092936.684051170@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124092919.490687572@linuxfoundation.org>
 References: <20200124092919.490687572@linuxfoundation.org>
@@ -62,49 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marek Szyprowski <m.szyprowski@samsung.com>
+From: Mattias Jacobsson <2pi@mok.nu>
 
-[ Upstream commit b9307420196009cdf18bad55e762ac49fb9a80f4 ]
+[ Upstream commit c355ec651a8941864549f2586f969d0eb7bf499a ]
 
-While freeing interrupt handlers in error path, don't assume that all
-requested interrupts are per-processor interrupts and properly release
-standard interrupts too.
+In the function wmi_dev_match() the variable id is dereferenced without
+first performing a NULL check. The variable can for example be NULL if
+a WMI driver is registered without specifying the id_table field in
+struct wmi_driver.
 
-Reported-by: Krzysztof Kozlowski <krzk@kernel.org>
-Fixes: 56a94f13919c ("clocksource: exynos_mct: Avoid blocking calls in the cpu hotplug notifier")
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
-Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
-Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+Add a NULL check and return that the driver can't handle the device if
+the variable is NULL.
+
+Fixes: 844af950da94 ("platform/x86: wmi: Turn WMI into a bus driver")
+Signed-off-by: Mattias Jacobsson <2pi@mok.nu>
+Signed-off-by: Darren Hart (VMware) <dvhart@infradead.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clocksource/exynos_mct.c | 14 +++++++++++++-
- 1 file changed, 13 insertions(+), 1 deletion(-)
+ drivers/platform/x86/wmi.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/clocksource/exynos_mct.c b/drivers/clocksource/exynos_mct.c
-index aaf5bfa9bd9c9..e3ae041ac30e1 100644
---- a/drivers/clocksource/exynos_mct.c
-+++ b/drivers/clocksource/exynos_mct.c
-@@ -563,7 +563,19 @@ static int __init exynos4_timer_resources(struct device_node *np, void __iomem *
- 	return 0;
+diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
+index 7f8fa42a10840..a56e997816b23 100644
+--- a/drivers/platform/x86/wmi.c
++++ b/drivers/platform/x86/wmi.c
+@@ -748,6 +748,9 @@ static int wmi_dev_match(struct device *dev, struct device_driver *driver)
+ 	struct wmi_block *wblock = dev_to_wblock(dev);
+ 	const struct wmi_device_id *id = wmi_driver->id_table;
  
- out_irq:
--	free_percpu_irq(mct_irqs[MCT_L0_IRQ], &percpu_mct_tick);
-+	if (mct_int_type == MCT_INT_PPI) {
-+		free_percpu_irq(mct_irqs[MCT_L0_IRQ], &percpu_mct_tick);
-+	} else {
-+		for_each_possible_cpu(cpu) {
-+			struct mct_clock_event_device *pcpu_mevt =
-+				per_cpu_ptr(&percpu_mct_tick, cpu);
++	if (id == NULL)
++		return 0;
 +
-+			if (pcpu_mevt->evt.irq != -1) {
-+				free_irq(pcpu_mevt->evt.irq, pcpu_mevt);
-+				pcpu_mevt->evt.irq = -1;
-+			}
-+		}
-+	}
- 	return err;
- }
+ 	while (id->guid_string) {
+ 		uuid_le driver_guid;
  
 -- 
 2.20.1
