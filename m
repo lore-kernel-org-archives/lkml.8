@@ -2,124 +2,140 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1149C32771
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 04:31:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14E38C32771
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 04:34:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DA422071A
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 04:31:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB2AF2071A
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 04:34:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k4C/N7dZ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZLeNoJj9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730656AbgAXEbS (ORCPT
+        id S1729934AbgAXEe3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 23:31:18 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:40117 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729017AbgAXEbS (ORCPT
+        Thu, 23 Jan 2020 23:34:29 -0500
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:39414 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728799AbgAXEe3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 23:31:18 -0500
-Received: by mail-pg1-f196.google.com with SMTP id k25so352638pgt.7;
-        Thu, 23 Jan 2020 20:31:18 -0800 (PST)
+        Thu, 23 Jan 2020 23:34:29 -0500
+Received: by mail-lf1-f66.google.com with SMTP id t23so300396lfk.6;
+        Thu, 23 Jan 2020 20:34:26 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=vAi/KPd03pktMu80W5NnBp6vIHB4ASH6MsDJKtQDurE=;
-        b=k4C/N7dZe/TMOaRdLeDTeD3N4gbKJp9jO141k9so9NNn2FFEp7NwMRw9tg0nHF2VI+
-         S33kGt1IYfl082YG0Db/7zTYSya3CFz8CZ4ja+UsPQPtZo4hE6YVVyegRV6yw2WlYceg
-         I6Ju++iLcb822zTTfrIiR4V9wVDGhvU1mjB83VwRkn4o0wzsLnLidr3kYjO8GlzSIG+r
-         0sDqBjV3kft3F4hzBXT6TbmU2AAZ5qeFCGTdNySs3fPQKMxTEU1KIVG90yNL1Dm5uPon
-         jxxvhF7bq7Lm9xEDT82sjh0lfzTJp56M+td9dnKCRDUVJ77k/hPtuOqV8PIucdqCE5wT
-         Ka/A==
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=iRMdTlWpB/i07RpBQjACVTfdEIqwZ2lTL+v769LcM3k=;
+        b=ZLeNoJj9lm0TqcCEmDTQPBhM4MiG15+CetdBuDpzpbSxShkmzI5SwGqj59jyQFvOlU
+         pRT57mMmEo1vymIWW78BJm0TDGiHlSEQp1SPfjt7isJp6VHa5PMa9hhr0IArUZPAiKnd
+         qrb/4pmjor6Nu/yDJ3YHmaD0gjH+Ch6PM/JoXoVhT0x4z2HP/dRluVtMESb5dTfNIU36
+         /BO/L6or0QUemYBYVDEHyq3S1+7G6BxcdiCRCNfl9SPcsqahMkXJjsiX+70vOKxIanYz
+         nf2Ntft1yg40iZ/6/QzgSmAE9vCRqwWQoUQsopiNXS5KQ3XqtMSzmg1Ghv1dW4cR/Sjk
+         hVJg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=vAi/KPd03pktMu80W5NnBp6vIHB4ASH6MsDJKtQDurE=;
-        b=p48qSPNV7wS11S/xsylP3R9VbRmgK13MC/kr+ITeQ+aYhQiHHA846onQhNwUzWk6zb
-         wBFuB8NqzdaV6is8n66mi5iBXjCdNo0gv2FdRU4bKF+TwbnZr/FN0Z6O45sMhJX1SrQW
-         D2dqEfSqmQ1Tuqb/kSIonwn80uesKGQOWu1bMzUmU3safff9zDlH0zvpjEY8+XV2oUFB
-         qnlo5UfIau31VL3XyxOmMnLFSTygfNZYt9YaObjtyMa3wfJaFgwDMg1qqzHev3G8r1l/
-         3x9XZ6NvYPsNQuLwlJFL7gvfxmsZS4wu3ayN2HaoIVwmshr6Qm0XCXx9Bk0nac2xeOgp
-         nqaA==
-X-Gm-Message-State: APjAAAVZNsWEAkR3/+/TymljxwBy/YQkXNBzRpS4MBE3GvHhLz4HdQ/R
-        FrlZwRI0wnNnmFIJhLHFhw==
-X-Google-Smtp-Source: APXvYqwIE6tTVfRLqcQR3euqy9sQFs/bkaoB4uaYCS+t/A3tlB9kn9l0qF1C84AXee8W9GbZZlfwLQ==
-X-Received: by 2002:a63:2fc4:: with SMTP id v187mr1929780pgv.55.1579840277621;
-        Thu, 23 Jan 2020 20:31:17 -0800 (PST)
-Received: from madhuparna-HP-Notebook ([2402:3a80:1ee5:e37b:72:f3a9:f673:9aea])
-        by smtp.gmail.com with ESMTPSA id h6sm4271929pfo.175.2020.01.23.20.31.14
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 23 Jan 2020 20:31:17 -0800 (PST)
-From:   Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
-X-Google-Original-From: Madhuparna Bhowmik <change_this_user_name@gmail.com>
-Date:   Fri, 24 Jan 2020 10:01:10 +0530
-To:     Jessica Yu <jeyu@kernel.org>
-Cc:     madhuparnabhowmik10@gmail.com, linux-kernel@vger.kernel.org,
-        joel@joelfernandes.org, frextrite@gmail.com, rcu@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org, paulmck@kernel.org
-Subject: Re: [PATCH] module.h: Annotate mod_kallsyms with __rcu
-Message-ID: <20200124043110.GD23699@madhuparna-HP-Notebook>
-References: <20200122170447.20539-1-madhuparnabhowmik10@gmail.com>
- <20200123172257.GA14784@linux-8ccs>
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=iRMdTlWpB/i07RpBQjACVTfdEIqwZ2lTL+v769LcM3k=;
+        b=Y1V4VFzudyDxd1L6da9QUfvWdsZhHvDbLaUrCi1+NxQ9C/u5DINQ1Xrmg0nDWUxv1D
+         UwgFeRE6rZ0+MsTAR75YTOFcFfMG71wQ1McSczG3rr1w8v6XWhlKktegGqTpLdEAjB6M
+         IGMcP/luoza1wh6rqYqQwAEkj22AYc2ywCW7YFw9Ao1O4MlQ8PCaOIcW19QYhMDRzGbN
+         0wSKnYKkXy6RiyY2UobanQ7jDVj8vbo8IpNziR+nno8j4krWKhWKUdHGrnIputh7FGIm
+         6KCbuhWNWRXidX7NaBwMlSKKWkxEX31ylBvmrSVXyixq60WN3R3PS4V9JM9dJHSNCw80
+         nwwQ==
+X-Gm-Message-State: APjAAAV7RnBimkRwwTZauEoqu4DwQ0CXwphnBGp5FYKi5jFtv/a8I5ru
+        Yqp1ScCDeWrlm3i6JGJoe3TX6jUr
+X-Google-Smtp-Source: APXvYqwj3uUlHz/aP9yCFgv4v7F5Xp4Uwp0yDO0OIk5+TdT9VBsVV6BI/tG2l19oYhPq/DM988vGGg==
+X-Received: by 2002:ac2:544f:: with SMTP id d15mr529764lfn.126.1579840465779;
+        Thu, 23 Jan 2020 20:34:25 -0800 (PST)
+Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
+        by smtp.googlemail.com with ESMTPSA id y5sm2069884lfl.6.2020.01.23.20.34.24
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 23 Jan 2020 20:34:25 -0800 (PST)
+Subject: Re: [PATCH v8 22/22] clk: tegra: Remove audio clocks configuration
+ from clock driver
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        thierry.reding@gmail.com, jonathanh@nvidia.com, broonie@kernel.org,
+        lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.com,
+        mperttunen@nvidia.com, gregkh@linuxfoundation.org,
+        sboyd@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc:     pdeschrijver@nvidia.com, pgaikwad@nvidia.com, spujar@nvidia.com,
+        josephl@nvidia.com, daniel.lezcano@linaro.org,
+        mmaddireddy@nvidia.com, markz@nvidia.com,
+        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1578986667-16041-1-git-send-email-skomatineni@nvidia.com>
+ <1578986667-16041-23-git-send-email-skomatineni@nvidia.com>
+ <d69fe7a8-71cc-c560-a567-f89b936753ad@gmail.com>
+ <9765b723-33af-9863-72c9-8094203c8cb8@nvidia.com>
+ <f2506b91-0199-f2a5-ea8c-ace7b651b443@gmail.com>
+Message-ID: <e6013c72-4ceb-aa3f-50bf-187794f85b66@gmail.com>
+Date:   Fri, 24 Jan 2020 07:34:24 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200123172257.GA14784@linux-8ccs>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <f2506b91-0199-f2a5-ea8c-ace7b651b443@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 23, 2020 at 06:22:58PM +0100, Jessica Yu wrote:
-> +++ madhuparnabhowmik10@gmail.com [22/01/20 22:34 +0530]:
-> > From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
-> > 
-> > This patch fixes the following sparse errors:
-> > 
-> > kernel/module.c:3623:9: error: incompatible types in comparison expression
-> > kernel/module.c:4060:41: error: incompatible types in comparison expression
-> > kernel/module.c:4203:28: error: incompatible types in comparison expression
-> > kernel/module.c:4225:41: error: incompatible types in comparison expression
-> > 
-> > Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+21.01.2020 19:57, Dmitry Osipenko пишет:
+> 21.01.2020 19:19, Sowjanya Komatineni пишет:
+>>
+>> On 1/19/20 7:04 AM, Dmitry Osipenko wrote:
+>>> External email: Use caution opening links or attachments
+>>>
+>>>
+>>> 14.01.2020 10:24, Sowjanya Komatineni пишет:
+>>>
+>>> [snip]
+>>>
+>>>> diff --git a/drivers/clk/tegra/clk-tegra30.c
+>>>> b/drivers/clk/tegra/clk-tegra30.c
+>>>> index 5732fdbe20db..53d1c48532ae 100644
+>>>> --- a/drivers/clk/tegra/clk-tegra30.c
+>>>> +++ b/drivers/clk/tegra/clk-tegra30.c
+>>>> @@ -1221,9 +1221,8 @@ static struct tegra_clk_init_table init_table[]
+>>>> __initdata = {
+>>>>        { TEGRA30_CLK_UARTC, TEGRA30_CLK_PLL_P, 408000000, 0 },
+>>>>        { TEGRA30_CLK_UARTD, TEGRA30_CLK_PLL_P, 408000000, 0 },
+>>>>        { TEGRA30_CLK_UARTE, TEGRA30_CLK_PLL_P, 408000000, 0 },
+>>>> -     { TEGRA30_CLK_PLL_A, TEGRA30_CLK_CLK_MAX, 564480000, 1 },
+>>>> -     { TEGRA30_CLK_PLL_A_OUT0, TEGRA30_CLK_CLK_MAX, 11289600, 1 },
+>>>> -     { TEGRA30_CLK_EXTERN1, TEGRA30_CLK_PLL_A_OUT0, 0, 1 },
+>>>> +     { TEGRA30_CLK_PLL_A, TEGRA30_CLK_CLK_MAX, 564480000, 0 },
+>>>> +     { TEGRA30_CLK_PLL_A_OUT0, TEGRA30_CLK_CLK_MAX, 11289600, 0 },
+>>>>        { TEGRA30_CLK_I2S0, TEGRA30_CLK_PLL_A_OUT0, 11289600, 0 },
+>>>>        { TEGRA30_CLK_I2S1, TEGRA30_CLK_PLL_A_OUT0, 11289600, 0 },
+>>>>        { TEGRA30_CLK_I2S2, TEGRA30_CLK_PLL_A_OUT0, 11289600, 0 },
+>>>>
+>>> What about to use the assigned-clock-rates in device-tree and thus to
+>>> remove those PLL_A entries?
+>>
+>> Yes clock rates can be used and also PLL rate is set based on sample
+>> rate during hw_params. So this can be removed.
+>>
+>> But PLLA clock rates are not related to this patch series and also
+>> changing this needs audio function testing across all platforms and
+>> currently we don't have audio functional tests in place for older
+>> platforms.
+>>
+>> All audio clocks proper fixes and cleanup b/w clock driver and audio
+>> driver will be done separately.
 > 
-> Hi Madhuparna,
-> 
-> Thanks, I can confirm this patch fixes the sparse warnings. I've
-> applied it to modules-next.
->
-Thank you Jessica.
+> If there are real plans to make sound driver to drive the PLLA rate,
+> then indeed should be fine to keep it as-is for now.
 
-Regards,
-Madhuparna
-
-> Jessica
-> 
-> > ---
-> > include/linux/module.h | 2 +-
-> > 1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/include/linux/module.h b/include/linux/module.h
-> > index bd165ba68617..dfdc8863e26a 100644
-> > --- a/include/linux/module.h
-> > +++ b/include/linux/module.h
-> > @@ -429,7 +429,7 @@ struct module {
-> > 
-> > #ifdef CONFIG_KALLSYMS
-> > 	/* Protected by RCU and/or module_mutex: use rcu_dereference() */
-> > -	struct mod_kallsyms *kallsyms;
-> > +	struct mod_kallsyms __rcu *kallsyms;
-> > 	struct mod_kallsyms core_kallsyms;
-> > 
-> > 	/* Section attributes */
-> > -- 
-> > 2.17.1
-> > 
+Looking at tegra_asoc_utils_set_rate(), it already sets the PLLA rate.
+Maybe those table entries are not needed already?
