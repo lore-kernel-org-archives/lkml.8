@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F05FEC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:33:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89448C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:33:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDFEC214DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:33:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C02E206D4
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:33:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579865617;
-	bh=ajMoI1rRS1dhfGS4GJMcyEeeC49VpvBGmLonN1/VUdA=;
+	s=default; t=1579865622;
+	bh=/jb/StiBkQnNp1GN92R6qCVPT5kDpfSTD9GsgwK4vug=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=x48uRA/qWKo62Eovf2mFMSC/yzwbWxZPkDZUwl7NnhJ1xQR4a3p4zad2av1wjKLka
-	 GfdlRjrYCYrLJAHe6jvGT8fnqWNfiNsrgFWy+NeGWCfU6UhtV9D/aIXmiwu7FRp/q7
-	 39lr4cr/s4HHelEqu5RZsaVZSuJ8nLQMnCPSbMHk=
+	b=A7GQO/KURZ+JrzUNiDdWTielHnc/9vHRUbTajIdbDUH7LO45qR46dLReEneKiiaDK
+	 lty0ZmzNJ/mxLrj3U1UCP82TZI7dum81wzBEGa0xcA35NuyMIRD9IqU63rlRmSlY+l
+	 HOnSAqrf8zmN7h2bYlnHDjbU8oazWaRvu89/EL1U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404614AbgAXLdg (ORCPT
+        id S2404423AbgAXLdl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:33:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53148 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 06:33:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53244 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404595AbgAXLde (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:33:34 -0500
+        id S2404615AbgAXLdh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:33:37 -0500
 Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 52020214AF;
-        Fri, 24 Jan 2020 11:33:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8BD46206D4;
+        Fri, 24 Jan 2020 11:33:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579865613;
-        bh=ajMoI1rRS1dhfGS4GJMcyEeeC49VpvBGmLonN1/VUdA=;
+        s=default; t=1579865617;
+        bh=/jb/StiBkQnNp1GN92R6qCVPT5kDpfSTD9GsgwK4vug=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MYBInmrxY/x0FTh5mhiaV5v8B/Kw2Lz81NMjmVZXzR0B7eGttFKujVu3IOjgtjFJw
-         +0yB7BuFpmopy29xG86ujYWZnPkSvqcZtq1h/YJqq31RvK6gHxIi6s6VlbJAUzj64N
-         qIPotRLBRYxEOKrqNZlL2umCrWjLcawyOUv8uRuc=
+        b=CzwlVZPKQGMszjmjz/k0gskyQvf2DtGSQPql+aojzJFLpojMutE6rU7LozesQxbDP
+         lAwqKFxHKNIqJyhWTv7PcDyu7IWt4aeY7pr2XVU9pOuyp3chQSJxyV8RW/4dCkH/VC
+         ko6X/lMIBDoyfcGyX1kQKE51v9im8+hjQayvpkyQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Antonio Borneo <antonio.borneo@st.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 576/639] net: hisilicon: Fix signedness bug in hix5hd2_dev_probe()
-Date:   Fri, 24 Jan 2020 10:32:26 +0100
-Message-Id: <20200124093201.604948176@linuxfoundation.org>
+Subject: [PATCH 4.19 594/639] net: stmmac: fix disabling flexible PPS output
+Date:   Fri, 24 Jan 2020 10:32:44 +0100
+Message-Id: <20200124093203.802759279@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
 References: <20200124093047.008739095@linuxfoundation.org>
@@ -60,34 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Antonio Borneo <antonio.borneo@st.com>
 
-[ Upstream commit 002dfe8085255b7bf1e0758c3d195c5412d35be9 ]
+[ Upstream commit 520cf6002147281d1e7b522bb338416b623dcb93 ]
 
-The "priv->phy_mode" variable is an enum and in this context GCC will
-treat it as unsigned to the error handling will never trigger.
+Accordingly to Synopsys documentation [1] and [2], when bit PPSEN0
+in register MAC_PPS_CONTROL is set it selects the functionality
+command in the same register, otherwise selects the functionality
+control.
+Command functionality is required to either enable (command 0x2)
+and disable (command 0x5) the flexible PPS output, but the bit
+PPSEN0 is currently set only for enabling.
 
-Fixes: 57c5bc9ad7d7 ("net: hisilicon: add hix5hd2 mac driver")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Set the bit PPSEN0 to properly disable flexible PPS output.
+
+Tested on STM32MP15x, based on dwmac 4.10a.
+
+[1] DWC Ethernet QoS Databook 4.10a October 2014
+[2] DWC Ethernet QoS Databook 5.00a September 2017
+
+Signed-off-by: Antonio Borneo <antonio.borneo@st.com>
+Fixes: 9a8a02c9d46d ("net: stmmac: Add Flexible PPS support")
+Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/hisilicon/hix5hd2_gmac.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/stmicro/stmmac/dwmac5.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/ethernet/hisilicon/hix5hd2_gmac.c b/drivers/net/ethernet/hisilicon/hix5hd2_gmac.c
-index 471805ea363b6..b63871ef8a403 100644
---- a/drivers/net/ethernet/hisilicon/hix5hd2_gmac.c
-+++ b/drivers/net/ethernet/hisilicon/hix5hd2_gmac.c
-@@ -1201,7 +1201,7 @@ static int hix5hd2_dev_probe(struct platform_device *pdev)
- 		goto err_free_mdio;
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac5.c b/drivers/net/ethernet/stmicro/stmmac/dwmac5.c
+index 3f4f3132e16b3..e436fa160c7d6 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac5.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac5.c
+@@ -515,6 +515,7 @@ int dwmac5_flex_pps_config(void __iomem *ioaddr, int index,
  
- 	priv->phy_mode = of_get_phy_mode(node);
--	if (priv->phy_mode < 0) {
-+	if ((int)priv->phy_mode < 0) {
- 		netdev_err(ndev, "not find phy-mode\n");
- 		ret = -EINVAL;
- 		goto err_mdiobus;
+ 	if (!enable) {
+ 		val |= PPSCMDx(index, 0x5);
++		val |= PPSEN0;
+ 		writel(val, ioaddr + MAC_PPS_CONTROL);
+ 		return 0;
+ 	}
 -- 
 2.20.1
 
