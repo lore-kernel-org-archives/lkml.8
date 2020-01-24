@@ -4,53 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25651C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:04:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FB68C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:04:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE6252075D
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:04:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A2912077C
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:04:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579863842;
-	bh=SdlvnvSTKjq9F67Dssl3iH+ACt71AD9/66iLmeoZHrc=;
+	s=default; t=1579863848;
+	bh=EEYnWDAz8s9VJB9YCO4bmiCPMQpP2fvkqQXYePHbQVE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tHT5ab6ygopHjgJ8XKjLzPVUYgqeneN84FIaNS0w33rdo0IrO6nJDSCLS9oibtltq
-	 JQaAL9xhM8Nut85pNNu5e5I0XT4mkd8bLDrFYy353g7J0lLFDynOB/hYDLpfukYebE
-	 h+pyxMfZa7Ul60Ufd9wij9h7OodwMfgDHRT6iE3k=
+	b=yHGMblJz9VrA5DaWvzzGVHzXvEFK+yuNp+N284XENBdKZ1XqeTrsW4Uc+lHkttWDt
+	 S8hPk53A2uv7M1zcD0+lJKcvbXKBZVCyagXHD3yFM9cXuRYYOeNP0Qtiueo8He8CV/
+	 6q4tfizX1gIyxxYAizb/Fj+ycPOBoR2jVsfNI49Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388478AbgAXLEB (ORCPT
+        id S2388513AbgAXLEH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:04:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37934 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 06:04:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38080 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388457AbgAXLD6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:03:58 -0500
+        id S2388484AbgAXLEF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:04:05 -0500
 Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CF0C12071A;
-        Fri, 24 Jan 2020 11:03:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5E6782077C;
+        Fri, 24 Jan 2020 11:04:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579863837;
-        bh=SdlvnvSTKjq9F67Dssl3iH+ACt71AD9/66iLmeoZHrc=;
+        s=default; t=1579863845;
+        bh=EEYnWDAz8s9VJB9YCO4bmiCPMQpP2fvkqQXYePHbQVE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=obi70wdKKUmwCLrtzEmMVEPAmlWNQ3pv1pWJi4BK2wpKWymBkkhWJFfAc2YFXlDfX
-         t4BUp4u6jsrDkXsy1grcNmfbxrEP4XzA5ByH2qEd+qJIBOPhQ+2jl2PVWAqLvZcF4v
-         CIs9R6txitu8GBCzlTLLVOLLWi3kmAXuDnAibhDU=
+        b=FThfmL74tz9dUe1Y1vugUQ2tO6xbUJmfSO6NTDfL95UgJzY6tSa4hNOn8MI5pwnDW
+         f+7PiL2vcMR7iJiIBBpZHd/1d9yI+5BxshOol0E+ydQCWfLH2uP55eVnYUCsuSqePI
+         abl0+VhnVK1hbYdIko30geqXPXp3RkDbjJKyXSiE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yuval Shaia <yuval.shaia@oracle.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Zhu Yanjun <yanjun.zhu@oracle.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
+        stable@vger.kernel.org, Yangtao Li <tiny.windzz@gmail.com>,
+        Stephen Boyd <sboyd@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 079/639] IB/rxe: Fix incorrect cache cleanup in error flow
-Date:   Fri, 24 Jan 2020 10:24:09 +0100
-Message-Id: <20200124093057.282374990@linuxfoundation.org>
+Subject: [PATCH 4.19 103/639] clk: ti: fix refcount leak in ti_dt_clocks_register()
+Date:   Fri, 24 Jan 2020 10:24:33 +0100
+Message-Id: <20200124093100.261680873@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
 References: <20200124093047.008739095@linuxfoundation.org>
@@ -63,73 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yuval Shaia <yuval.shaia@oracle.com>
+From: Yangtao Li <tiny.windzz@gmail.com>
 
-[ Upstream commit 6db21d8986e14e2e86573a3b055b05296188bd2c ]
+[ Upstream commit 2274d8001fbb5e1942fbcab5ad2eb15553b09ed2 ]
 
-Array iterator stays at the same slot, fix it.
+The of_find_compatible_node() returns a node pointer with refcount
+incremented, but there is the lack of use of the of_node_put() when
+done. Add the missing of_node_put() to release the refcount.
 
-Fixes: 8700e3e7c485 ("Soft RoCE driver")
-Signed-off-by: Yuval Shaia <yuval.shaia@oracle.com>
-Reviewed-by: Bart Van Assche <bvanassche@acm.org>
-Reviewed-by: Zhu Yanjun <yanjun.zhu@oracle.com>
-Reviewed-by: Leon Romanovsky <leonro@mellanox.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
+Fixes: 5b385a45e001 ("clk: ti: add support for clkctrl aliases")
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/sw/rxe/rxe_pool.c | 26 ++++++++++++++------------
- 1 file changed, 14 insertions(+), 12 deletions(-)
+ drivers/clk/ti/clk.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/infiniband/sw/rxe/rxe_pool.c b/drivers/infiniband/sw/rxe/rxe_pool.c
-index b4a8acc7bb7d6..0e2425f282335 100644
---- a/drivers/infiniband/sw/rxe/rxe_pool.c
-+++ b/drivers/infiniband/sw/rxe/rxe_pool.c
-@@ -112,6 +112,18 @@ static inline struct kmem_cache *pool_cache(struct rxe_pool *pool)
- 	return rxe_type_info[pool->type].cache;
- }
- 
-+static void rxe_cache_clean(size_t cnt)
-+{
-+	int i;
-+	struct rxe_type_info *type;
+diff --git a/drivers/clk/ti/clk.c b/drivers/clk/ti/clk.c
+index 27e0979b31586..0cc87c6ae91c9 100644
+--- a/drivers/clk/ti/clk.c
++++ b/drivers/clk/ti/clk.c
+@@ -188,9 +188,13 @@ void __init ti_dt_clocks_register(struct ti_dt_clk oclks[])
+ 			clkdev_add(&c->lk);
+ 		} else {
+ 			if (num_args && !has_clkctrl_data) {
+-				if (of_find_compatible_node(NULL, NULL,
+-							    "ti,clkctrl")) {
++				struct device_node *np;
 +
-+	for (i = 0; i < cnt; i++) {
-+		type = &rxe_type_info[i];
-+		kmem_cache_destroy(type->cache);
-+		type->cache = NULL;
-+	}
-+}
-+
- int rxe_cache_init(void)
- {
- 	int err;
-@@ -136,24 +148,14 @@ int rxe_cache_init(void)
- 	return 0;
++				np = of_find_compatible_node(NULL, NULL,
++							     "ti,clkctrl");
++				if (np) {
+ 					has_clkctrl_data = true;
++					of_node_put(np);
+ 				} else {
+ 					clkctrl_nodes_missing = true;
  
- err1:
--	while (--i >= 0) {
--		kmem_cache_destroy(type->cache);
--		type->cache = NULL;
--	}
-+	rxe_cache_clean(i);
- 
- 	return err;
- }
- 
- void rxe_cache_exit(void)
- {
--	int i;
--	struct rxe_type_info *type;
--
--	for (i = 0; i < RXE_NUM_TYPES; i++) {
--		type = &rxe_type_info[i];
--		kmem_cache_destroy(type->cache);
--		type->cache = NULL;
--	}
-+	rxe_cache_clean(RXE_NUM_TYPES);
- }
- 
- static int rxe_pool_init_index(struct rxe_pool *pool, u32 max, u32 min)
 -- 
 2.20.1
 
