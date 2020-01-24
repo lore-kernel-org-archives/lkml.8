@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FD84C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:20:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EA52C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:20:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D16082075D
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:20:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58B48206D4
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:20:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579864839;
-	bh=Bahj00EtHP8l6OKebt7WF0LuUHVdytY1H+LqkI8HKj4=;
+	s=default; t=1579864844;
+	bh=fdTxoD6A8QzLQAU1SYG/PDKLSI/6eMvXi0uH9uiAias=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cS3bELn2ZmQWrp1vcZKX4PrbrXVpvPeFrQIKYLmcPYBWF0lsl1hGbEnlx/i2amzWI
-	 H29ktSi/LNfUwFEgKt8aj2X1tl1mAH3st07/FXOo+yYwc4g9dW0U76pla0HRzUch3q
-	 67B9A5CsM3bnTRNTKJIY/OwgRF7tdQGwl3tiJO0Q=
+	b=f08nwNe1AYOKgKaO6+xLM6BVaVd5D91BY+SnKG8CeUqi7c/rsLKm4cM0mHFfn0VLL
+	 a4hd2e1tyD55RlIxKkjzzXfuCCx9UWVhMMHO8j7XZNs26rLJBqgnV6FsyltFPb6yoj
+	 RRbr+K4K0qO9YJNG26G0Yhi6EooYQsOyG2YIbLo8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390943AbgAXLUi (ORCPT
+        id S2390961AbgAXLUn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:20:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58322 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 06:20:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58508 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390727AbgAXLUd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:20:33 -0500
+        id S2390945AbgAXLUk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:20:40 -0500
 Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6154A2075D;
-        Fri, 24 Jan 2020 11:20:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7D08920704;
+        Fri, 24 Jan 2020 11:20:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579864833;
-        bh=Bahj00EtHP8l6OKebt7WF0LuUHVdytY1H+LqkI8HKj4=;
+        s=default; t=1579864840;
+        bh=fdTxoD6A8QzLQAU1SYG/PDKLSI/6eMvXi0uH9uiAias=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=euqW1X51Rkg4n4NRs3lxgyej/+B0yoxypigjBH1tAudnO3OeOmswqEqJKvOnuA36X
-         dMJLFZGTnx09a2/0g5/UKG5A13yjvnXFeYb6tPIsXH8a4C+Gq+QimHGFbW5B4ZlBGL
-         LGgQX6EQzv/4CbFISP4zwo4ft2VFZrK5BwEKeT8c=
+        b=SoKrf5gTzR87MjBwMh0eH/qY3YiAhXRQjc8I76eRgkq0wBwqu4NNQ6pwTcGzleLD5
+         xcrV00fd/jMyLWTWpG/F4QuGNFjPXrlpf/n342qI6kLuQ4GREYQ280oF4OPUFwcJe4
+         YUEerDV7IuF0E4tM67V0u6shrkl8sCz+bdpuIm90=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Howells <dhowells@redhat.com>,
+        stable@vger.kernel.org, Jerome Brunet <jbrunet@baylibre.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 378/639] afs: Fix double inc of vnode->cb_break
-Date:   Fri, 24 Jan 2020 10:29:08 +0100
-Message-Id: <20200124093134.349568391@linuxfoundation.org>
+Subject: [PATCH 4.19 380/639] clk: meson: gxbb: no spread spectrum on mpll0
+Date:   Fri, 24 Jan 2020 10:29:10 +0100
+Message-Id: <20200124093134.587416559@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
 References: <20200124093047.008739095@linuxfoundation.org>
@@ -59,44 +59,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Howells <dhowells@redhat.com>
+From: Jerome Brunet <jbrunet@baylibre.com>
 
-[ Upstream commit fd711586bb7d63f257da5eff234e68c446ac35ea ]
+[ Upstream commit 8925dbd03bb29b1b0de30ac4e02c18faf8ddc9db ]
 
-When __afs_break_callback() clears the CB_PROMISED flag, it increments
-vnode->cb_break to trigger a future refetch of the status and callback -
-however it also calls afs_clear_permits(), which also increments
-vnode->cb_break.
+The documentation says there is an SSEN bit on mpll0 but, after testing
+it, no spread spectrum function appears to be enabled by this bit on any
+of the MPLLs.
 
-Fix this by removing the increment from afs_clear_permits().
+Let's remove it until we know more
 
-Whilst we're at it, fix the conditional call to afs_put_permits() as the
-function checks to see if the argument is NULL, so the check is redundant.
-
-Fixes: be080a6f43c4 ("afs: Overhaul permit caching");
-Signed-off-by: David Howells <dhowells@redhat.com>
+Fixes: 1f737ffa13ef ("clk: meson: mpll: fix mpll0 fractional part ignored")
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/afs/security.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ drivers/clk/meson/gxbb.c | 5 -----
+ 1 file changed, 5 deletions(-)
 
-diff --git a/fs/afs/security.c b/fs/afs/security.c
-index 81dfedb7879ff..66042b432baa8 100644
---- a/fs/afs/security.c
-+++ b/fs/afs/security.c
-@@ -87,11 +87,9 @@ void afs_clear_permits(struct afs_vnode *vnode)
- 	permits = rcu_dereference_protected(vnode->permit_cache,
- 					    lockdep_is_held(&vnode->lock));
- 	RCU_INIT_POINTER(vnode->permit_cache, NULL);
--	vnode->cb_break++;
- 	spin_unlock(&vnode->lock);
- 
--	if (permits)
--		afs_put_permits(permits);
-+	afs_put_permits(permits);
- }
- 
- /*
+diff --git a/drivers/clk/meson/gxbb.c b/drivers/clk/meson/gxbb.c
+index b039909e03cf8..38ffa51a5bade 100644
+--- a/drivers/clk/meson/gxbb.c
++++ b/drivers/clk/meson/gxbb.c
+@@ -650,11 +650,6 @@ static struct clk_regmap gxbb_mpll0_div = {
+ 			.shift   = 16,
+ 			.width   = 9,
+ 		},
+-		.ssen = {
+-			.reg_off = HHI_MPLL_CNTL,
+-			.shift   = 25,
+-			.width	 = 1,
+-		},
+ 		.lock = &meson_clk_lock,
+ 	},
+ 	.hw.init = &(struct clk_init_data){
 -- 
 2.20.1
 
