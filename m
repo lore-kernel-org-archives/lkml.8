@@ -2,140 +2,108 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-6.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FSL_HELO_FAKE,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14E38C32771
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 04:34:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B5F2C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 04:34:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB2AF2071A
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 04:34:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 484D12075D
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 04:34:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZLeNoJj9"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VybEWHw4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729934AbgAXEe3 (ORCPT
+        id S1730390AbgAXEen (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 23:34:29 -0500
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:39414 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728799AbgAXEe3 (ORCPT
+        Thu, 23 Jan 2020 23:34:43 -0500
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:36824 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728799AbgAXEen (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 23:34:29 -0500
-Received: by mail-lf1-f66.google.com with SMTP id t23so300396lfk.6;
-        Thu, 23 Jan 2020 20:34:26 -0800 (PST)
+        Thu, 23 Jan 2020 23:34:43 -0500
+Received: by mail-pj1-f66.google.com with SMTP id gv17so242331pjb.1;
+        Thu, 23 Jan 2020 20:34:42 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=iRMdTlWpB/i07RpBQjACVTfdEIqwZ2lTL+v769LcM3k=;
-        b=ZLeNoJj9lm0TqcCEmDTQPBhM4MiG15+CetdBuDpzpbSxShkmzI5SwGqj59jyQFvOlU
-         pRT57mMmEo1vymIWW78BJm0TDGiHlSEQp1SPfjt7isJp6VHa5PMa9hhr0IArUZPAiKnd
-         qrb/4pmjor6Nu/yDJ3YHmaD0gjH+Ch6PM/JoXoVhT0x4z2HP/dRluVtMESb5dTfNIU36
-         /BO/L6or0QUemYBYVDEHyq3S1+7G6BxcdiCRCNfl9SPcsqahMkXJjsiX+70vOKxIanYz
-         nf2Ntft1yg40iZ/6/QzgSmAE9vCRqwWQoUQsopiNXS5KQ3XqtMSzmg1Ghv1dW4cR/Sjk
-         hVJg==
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=slaKvzH5vQEl55keAvrBKgGVpQ4RBWEB5cwMnx6Pme4=;
+        b=VybEWHw4xyxxvRIZISN0/Cxmn+9as/TDFmdhVj2TLkFlgOPIT3y4mZXrwFacxNd4ms
+         qEE1wNonid1KEcI18FWUbHfwUN9jd+s2vlK7JJC/0UFCKM5w5ofGjA9oyqqneJLjQVVw
+         G1QEBxLQkudxLrKqeQGRk2eih8w8UZ9wVO5CrdFwTDDLzaFotzNvk5f4EM7PVh0Nweqx
+         whMPyEDxACinCyJJTLyk9+v5v52h1dnW2ecHHt8KZ1g4SPoW7sYdDfVmLmoisiNkHs3R
+         j2LGLespV2gJ63aTGq8dDOCGR5cYwPgrLBl4ArcMOQn75Z6WaDBq7nfVOZY0gSNcGDB+
+         mEtg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=iRMdTlWpB/i07RpBQjACVTfdEIqwZ2lTL+v769LcM3k=;
-        b=Y1V4VFzudyDxd1L6da9QUfvWdsZhHvDbLaUrCi1+NxQ9C/u5DINQ1Xrmg0nDWUxv1D
-         UwgFeRE6rZ0+MsTAR75YTOFcFfMG71wQ1McSczG3rr1w8v6XWhlKktegGqTpLdEAjB6M
-         IGMcP/luoza1wh6rqYqQwAEkj22AYc2ywCW7YFw9Ao1O4MlQ8PCaOIcW19QYhMDRzGbN
-         0wSKnYKkXy6RiyY2UobanQ7jDVj8vbo8IpNziR+nno8j4krWKhWKUdHGrnIputh7FGIm
-         6KCbuhWNWRXidX7NaBwMlSKKWkxEX31ylBvmrSVXyixq60WN3R3PS4V9JM9dJHSNCw80
-         nwwQ==
-X-Gm-Message-State: APjAAAV7RnBimkRwwTZauEoqu4DwQ0CXwphnBGp5FYKi5jFtv/a8I5ru
-        Yqp1ScCDeWrlm3i6JGJoe3TX6jUr
-X-Google-Smtp-Source: APXvYqwj3uUlHz/aP9yCFgv4v7F5Xp4Uwp0yDO0OIk5+TdT9VBsVV6BI/tG2l19oYhPq/DM988vGGg==
-X-Received: by 2002:ac2:544f:: with SMTP id d15mr529764lfn.126.1579840465779;
-        Thu, 23 Jan 2020 20:34:25 -0800 (PST)
-Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id y5sm2069884lfl.6.2020.01.23.20.34.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 23 Jan 2020 20:34:25 -0800 (PST)
-Subject: Re: [PATCH v8 22/22] clk: tegra: Remove audio clocks configuration
- from clock driver
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, broonie@kernel.org,
-        lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.com,
-        mperttunen@nvidia.com, gregkh@linuxfoundation.org,
-        sboyd@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc:     pdeschrijver@nvidia.com, pgaikwad@nvidia.com, spujar@nvidia.com,
-        josephl@nvidia.com, daniel.lezcano@linaro.org,
-        mmaddireddy@nvidia.com, markz@nvidia.com,
-        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1578986667-16041-1-git-send-email-skomatineni@nvidia.com>
- <1578986667-16041-23-git-send-email-skomatineni@nvidia.com>
- <d69fe7a8-71cc-c560-a567-f89b936753ad@gmail.com>
- <9765b723-33af-9863-72c9-8094203c8cb8@nvidia.com>
- <f2506b91-0199-f2a5-ea8c-ace7b651b443@gmail.com>
-Message-ID: <e6013c72-4ceb-aa3f-50bf-187794f85b66@gmail.com>
-Date:   Fri, 24 Jan 2020 07:34:24 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=slaKvzH5vQEl55keAvrBKgGVpQ4RBWEB5cwMnx6Pme4=;
+        b=CPEARsSY/E+aJ76tLm8sXdACv4PzXAPn/GG8ZZSZAo0mN3dw4X0UoCGbPjtUAVTWXH
+         fXd0T5OQnj0K4i8B3toN4VyM3vpOaZB4C/mVNZQierLzgiNvCvtRu0DNPwawvYT3y4HH
+         slTqc9+ujhwRIZTEJXHYWNMEtm8Dl5S5VvqQRxxxXRvHu9OalvpD8Z8w5AjfaWcY0eCZ
+         oUhrBbQjBF/pQz8ogRJNlwdINlR68rsM92JAuCpdkXuqdm+HcAMQON3DULgTxIWaxNO0
+         3ertsX3mp/fZj5hUNfhDx/5lbvNPH9UwIwiFmJWhS9pDvQTpK8FtQTlKgmdXD3XJ35Wl
+         dQZQ==
+X-Gm-Message-State: APjAAAW19Za3H7uqTfOjHT3krvtWsetljvBvxULtDK2g+8oqLdpw/Zd6
+        RXpOVpSEgZXukKn+2aTlWvg=
+X-Google-Smtp-Source: APXvYqzQcZRkU0QraWfKb9QtgdwqU0GN0/ZJHa/SD87sHtzFuRJqNGn31wFmKx+UNcy33LBo7GEFbQ==
+X-Received: by 2002:a17:902:7b94:: with SMTP id w20mr1649872pll.257.1579840482165;
+        Thu, 23 Jan 2020 20:34:42 -0800 (PST)
+Received: from google.com ([123.201.77.6])
+        by smtp.gmail.com with ESMTPSA id z26sm4356895pfa.90.2020.01.23.20.34.39
+        (version=TLS1_2 cipher=AES128-SHA bits=128/128);
+        Thu, 23 Jan 2020 20:34:41 -0800 (PST)
+Date:   Fri, 24 Jan 2020 10:04:33 +0530
+From:   Saurav Girepunje <saurav.girepunje@gmail.com>
+To:     pkshih@realtek.com, kvalo@codeaurora.org, davem@davemloft.net,
+        Larry.Finger@lwfinger.net, saurav.girepunje@gmail.com,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     saurav.girepunje@hotmail.com
+Subject: [PATCH] net: wireless: realtek: rtlwifi: fix spelling mistake
+Message-ID: <20200124043433.GA3024@google.com>
 MIME-Version: 1.0
-In-Reply-To: <f2506b91-0199-f2a5-ea8c-ace7b651b443@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+User-Agent: Mutt/1.6.2-neo (NetBSD/sparc64)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-21.01.2020 19:57, Dmitry Osipenko пишет:
-> 21.01.2020 19:19, Sowjanya Komatineni пишет:
->>
->> On 1/19/20 7:04 AM, Dmitry Osipenko wrote:
->>> External email: Use caution opening links or attachments
->>>
->>>
->>> 14.01.2020 10:24, Sowjanya Komatineni пишет:
->>>
->>> [snip]
->>>
->>>> diff --git a/drivers/clk/tegra/clk-tegra30.c
->>>> b/drivers/clk/tegra/clk-tegra30.c
->>>> index 5732fdbe20db..53d1c48532ae 100644
->>>> --- a/drivers/clk/tegra/clk-tegra30.c
->>>> +++ b/drivers/clk/tegra/clk-tegra30.c
->>>> @@ -1221,9 +1221,8 @@ static struct tegra_clk_init_table init_table[]
->>>> __initdata = {
->>>>        { TEGRA30_CLK_UARTC, TEGRA30_CLK_PLL_P, 408000000, 0 },
->>>>        { TEGRA30_CLK_UARTD, TEGRA30_CLK_PLL_P, 408000000, 0 },
->>>>        { TEGRA30_CLK_UARTE, TEGRA30_CLK_PLL_P, 408000000, 0 },
->>>> -     { TEGRA30_CLK_PLL_A, TEGRA30_CLK_CLK_MAX, 564480000, 1 },
->>>> -     { TEGRA30_CLK_PLL_A_OUT0, TEGRA30_CLK_CLK_MAX, 11289600, 1 },
->>>> -     { TEGRA30_CLK_EXTERN1, TEGRA30_CLK_PLL_A_OUT0, 0, 1 },
->>>> +     { TEGRA30_CLK_PLL_A, TEGRA30_CLK_CLK_MAX, 564480000, 0 },
->>>> +     { TEGRA30_CLK_PLL_A_OUT0, TEGRA30_CLK_CLK_MAX, 11289600, 0 },
->>>>        { TEGRA30_CLK_I2S0, TEGRA30_CLK_PLL_A_OUT0, 11289600, 0 },
->>>>        { TEGRA30_CLK_I2S1, TEGRA30_CLK_PLL_A_OUT0, 11289600, 0 },
->>>>        { TEGRA30_CLK_I2S2, TEGRA30_CLK_PLL_A_OUT0, 11289600, 0 },
->>>>
->>> What about to use the assigned-clock-rates in device-tree and thus to
->>> remove those PLL_A entries?
->>
->> Yes clock rates can be used and also PLL rate is set based on sample
->> rate during hw_params. So this can be removed.
->>
->> But PLLA clock rates are not related to this patch series and also
->> changing this needs audio function testing across all platforms and
->> currently we don't have audio functional tests in place for older
->> platforms.
->>
->> All audio clocks proper fixes and cleanup b/w clock driver and audio
->> driver will be done separately.
-> 
-> If there are real plans to make sound driver to drive the PLLA rate,
-> then indeed should be fine to keep it as-is for now.
+fix spelling mistake reported by checkpatch in trx.c .
 
-Looking at tegra_asoc_utils_set_rate(), it already sets the PLLA rate.
-Maybe those table entries are not needed already?
+Signed-off-by: Saurav Girepunje <saurav.girepunje@gmail.com>
+---
+  drivers/net/wireless/realtek/rtlwifi/rtl8192se/trx.c | 4 ++--
+  1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/net/wireless/realtek/rtlwifi/rtl8192se/trx.c b/drivers/net/wireless/realtek/rtlwifi/rtl8192se/trx.c
+index 9eaa534..cad4c9f 100644
+--- a/drivers/net/wireless/realtek/rtlwifi/rtl8192se/trx.c
++++ b/drivers/net/wireless/realtek/rtlwifi/rtl8192se/trx.c
+@@ -276,7 +276,7 @@ bool rtl92se_rx_query_desc(struct ieee80211_hw *hw, struct rtl_stats *stats,
+  
+  	/* hw will set stats->decrypted true, if it finds the
+  	 * frame is open data frame or mgmt frame,
+-	 * hw will not decrypt robust managment frame
++	 * hw will not decrypt robust management frame
+  	 * for IEEE80211w but still set stats->decrypted
+  	 * true, so here we should set it back to undecrypted
+  	 * for IEEE80211w frame, and mac80211 sw will help
+@@ -466,7 +466,7 @@ void rtl92se_tx_fill_desc(struct ieee80211_hw *hw,
+  		/* Alwasy enable all rate fallback range */
+  		set_tx_desc_data_rate_fb_limit(pdesc, 0x1F);
+  
+-		/* Fix: I don't kown why hw use 6.5M to tx when set it */
++		/* Fix: I don't know why hw use 6.5M to tx when set it */
+  		set_tx_desc_user_rate(pdesc,
+  				      ptcb_desc->use_driver_rate ? 1 : 0);
+  
+-- 
+1.9.1
+
