@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81F36C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:31:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 153CFC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:31:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53A3820718
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:31:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6E4C20718
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:31:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579865460;
-	bh=ZS6jI65e74Mv6Xy/85nheZaEHl6XJF/PPFGmlmUx6S4=;
+	s=default; t=1579865463;
+	bh=KJGNqo10mAJdeZR1iC0ThmXuqdofLYgqTNzk8qDPVd4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fXH1YawtoYWOZhgREBrA6BY9YIi30KzmypTS9VGYBrxzmLBALyGvoGKlJRIsSrsyL
-	 nk/ASwTNo/2nbNRkI6jCU2jZOY8PCmWoX4XYQhjWLyz93I3Z/tsoYteAKyZEy0a/9B
-	 Fuon4rGDkF9KCKK+aq1+VgAIfu+Qyd9K8Fu4LoBo=
+	b=ehIsO78qdcc3vbfuZtq6H/TRWM8C7fYxaMNYuz1/48IDD2Dg5VolU78OXRggDG8+j
+	 F1W/3f4DwyW0D5ohdwjjr0jsx8VOF4UhOra3CUQjg5madqWZhwR7HfMU4gF1J7n/J7
+	 GTvCD8LtspihZXITcIKX1RGBqb6OgiwrS1xtyV54=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404339AbgAXLa7 (ORCPT
+        id S2404349AbgAXLbC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:30:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48980 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 06:31:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49150 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388654AbgAXLa5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:30:57 -0500
+        id S2388654AbgAXLbB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:31:01 -0500
 Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C0646206D4;
-        Fri, 24 Jan 2020 11:30:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3AD0C206D4;
+        Fri, 24 Jan 2020 11:30:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579865456;
-        bh=ZS6jI65e74Mv6Xy/85nheZaEHl6XJF/PPFGmlmUx6S4=;
+        s=default; t=1579865461;
+        bh=KJGNqo10mAJdeZR1iC0ThmXuqdofLYgqTNzk8qDPVd4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CbQCgiKNQn9tg+wuxwuC+x0HXN89iGO/e8NV7hTQobQZbseUfXKrJ6eYAl9LiqO/i
-         afWyvnzmpp3EUAq1xHVtkf+i9oIE2rJANbyae29DUT+omxMb8jelQh1op6o+q7ljln
-         /GT0aYmJMyWLkEM/rrXf/NKhnujtDoFwalL0rJxU=
+        b=ZXR0qoHWneShe2yKc5OyGUY9xNYyGWFQLIBLVYYkyurnst4YU956nDsSVCsXAozvx
+         Ct1s14IvwZoJf15wrfb2sx1Eu3x+crzLqAzdL4Z3sLP5prM0vfGFOOz0EUMhsJKIS6
+         A33siby544OOYuBbgd5irlMaPfPAYBy6MZ1zL08Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chao Yu <yuchao0@huawei.com>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
+        stable@vger.kernel.org,
+        Govindarajulu Varadarajan <gvaradar@cisco.com>,
+        Satish Kharat <satishkh@cisco.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 551/639] f2fs: fix error path of f2fs_convert_inline_page()
-Date:   Fri, 24 Jan 2020 10:32:01 +0100
-Message-Id: <20200124093158.210786925@linuxfoundation.org>
+Subject: [PATCH 4.19 552/639] scsi: fnic: fix msix interrupt allocation
+Date:   Fri, 24 Jan 2020 10:32:02 +0100
+Message-Id: <20200124093158.340295429@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
 References: <20200124093047.008739095@linuxfoundation.org>
@@ -60,33 +62,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chao Yu <yuchao0@huawei.com>
+From: Govindarajulu Varadarajan <gvaradar@cisco.com>
 
-[ Upstream commit e8c82c11c93d586d03d80305959527bcac383555 ]
+[ Upstream commit 3ec24fb4c035e9cbb2f02a48640a09aa913442a2 ]
 
-In error path of f2fs_convert_inline_page(), we missed to truncate newly
-reserved block in .i_addrs[0] once we failed in get_node_info(), fix it.
+pci_alloc_irq_vectors() returns number of vectors allocated.  Fix the check
+for error condition.
 
-Fixes: 7735730d39d7 ("f2fs: fix to propagate error from __get_meta_page()")
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+Fixes: cca678dfbad49 ("scsi: fnic: switch to pci_alloc_irq_vectors")
+Link: https://lore.kernel.org/r/20190827211340.1095-1-gvaradar@cisco.com
+Signed-off-by: Govindarajulu Varadarajan <gvaradar@cisco.com>
+Acked-by: Satish Kharat <satishkh@cisco.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/f2fs/inline.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/scsi/fnic/fnic_isr.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/fs/f2fs/inline.c b/fs/f2fs/inline.c
-index 6bbb5f6801e26..3fe0dd5313903 100644
---- a/fs/f2fs/inline.c
-+++ b/fs/f2fs/inline.c
-@@ -133,6 +133,7 @@ int f2fs_convert_inline_page(struct dnode_of_data *dn, struct page *page)
+diff --git a/drivers/scsi/fnic/fnic_isr.c b/drivers/scsi/fnic/fnic_isr.c
+index 4e3a50202e8c5..d28088218c364 100644
+--- a/drivers/scsi/fnic/fnic_isr.c
++++ b/drivers/scsi/fnic/fnic_isr.c
+@@ -254,7 +254,7 @@ int fnic_set_intr_mode(struct fnic *fnic)
+ 		int vecs = n + m + o + 1;
  
- 	err = f2fs_get_node_info(fio.sbi, dn->nid, &ni);
- 	if (err) {
-+		f2fs_truncate_data_blocks_range(dn, 1);
- 		f2fs_put_dnode(dn);
- 		return err;
- 	}
+ 		if (pci_alloc_irq_vectors(fnic->pdev, vecs, vecs,
+-				PCI_IRQ_MSIX) < 0) {
++				PCI_IRQ_MSIX) == vecs) {
+ 			fnic->rq_count = n;
+ 			fnic->raw_wq_count = m;
+ 			fnic->wq_copy_count = o;
+@@ -280,7 +280,7 @@ int fnic_set_intr_mode(struct fnic *fnic)
+ 	    fnic->wq_copy_count >= 1 &&
+ 	    fnic->cq_count >= 3 &&
+ 	    fnic->intr_count >= 1 &&
+-	    pci_alloc_irq_vectors(fnic->pdev, 1, 1, PCI_IRQ_MSI) < 0) {
++	    pci_alloc_irq_vectors(fnic->pdev, 1, 1, PCI_IRQ_MSI) == 1) {
+ 		fnic->rq_count = 1;
+ 		fnic->raw_wq_count = 1;
+ 		fnic->wq_copy_count = 1;
 -- 
 2.20.1
 
