@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9C85C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:53:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7274DC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:53:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D39B20718
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:53:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C56B20709
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:53:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579859586;
-	bh=aact3I6c+oZm65CsIWErj5LOzFRreHh98x1rQVOP7rs=;
+	s=default; t=1579859590;
+	bh=bxsM9wkTKbbaw5X9lfoDF/LZA8vY4wzEaVce2Y8TZNs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0L+U2QIXukQ/kXRl99TD/+jHAl4Rpkzau1LDZYIcYBUS4zdRKM1biUdp93n2pRx2v
-	 SmIjFYiwr9PWD6Fs4E5jD+VdlwyqXFL3q2wljA9ZncsFVAsFXtlZ4OOFfplz76OQ6S
-	 F583XECfCdAKtflSCdAUV/OPP9r/gz7WN6CU8n+8=
+	b=E9ob0SvLh260fznhQoDzY5yrMD7cg1M8QPu6x7aJ8vmTI6M8n5JoH6wXYX97mFMYN
+	 +5/N4lKrdjK1TXE7pVhIB+arFmk969pn457IVvGfDpp+1/z+D+Pt+FhK7zSx2ugr4f
+	 U1jsrMcj692/5d8gN0tL3xPi1hwHTLBiTQJkbhyA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388231AbgAXJxF (ORCPT
+        id S2387715AbgAXJxI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 04:53:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55320 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 04:53:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55434 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388220AbgAXJxD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 04:53:03 -0500
+        id S1731494AbgAXJxH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 04:53:07 -0500
 Received: from localhost (unknown [145.15.244.15])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E83B920718;
-        Fri, 24 Jan 2020 09:53:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8C450206D5;
+        Fri, 24 Jan 2020 09:53:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579859582;
-        bh=aact3I6c+oZm65CsIWErj5LOzFRreHh98x1rQVOP7rs=;
+        s=default; t=1579859586;
+        bh=bxsM9wkTKbbaw5X9lfoDF/LZA8vY4wzEaVce2Y8TZNs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DMMTbZJB0mHHMt4BuVlkjSceKUBtSKf/pJhE2AU8U+EuWnjo6Y3Wb6I9oDKW0hCNB
-         BW3O87BHy1ydOYiyBUFNjDLzvNtlnNZdQmnLBKG+W/yc5AuZbDUIV6hbAJScYVG/Jj
-         swmPnEeBaoiTE+waytE648ssun3EU4Vkxg3+QLpk=
+        b=VqhQM7UAgbgmhxP8gUQ4i67F2qizHcXMOhfBuqkThcCzpvr+Ar4guE3/gUy9v0Lli
+         RPM4mgelfDQuQuIPz0GfJIQsix+moS/ot6B459QDXtvC5hBaLayuBh/7pPrOys3zpQ
+         emRLRPOKYz2DeXGlJwJpgXb6mJPcxpcxsrph2atg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vladimir Murzin <vladimir.murzin@arm.com>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Dave Kleikamp <dave.kleikamp@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 131/343] ARM: 8848/1: virt: Align GIC version check with arm64 counterpart
-Date:   Fri, 24 Jan 2020 10:29:09 +0100
-Message-Id: <20200124092937.225636396@linuxfoundation.org>
+Subject: [PATCH 4.14 149/343] jfs: fix bogus variable self-initialization
+Date:   Fri, 24 Jan 2020 10:29:27 +0100
+Message-Id: <20200124092939.619729768@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124092919.490687572@linuxfoundation.org>
 References: <20200124092919.490687572@linuxfoundation.org>
@@ -61,38 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vladimir Murzin <vladimir.murzin@arm.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit 9db043d36bd379f4cc99054c079de0dabfc38d03 ]
+[ Upstream commit a5fdd713d256887b5f012608701149fa939e5645 ]
 
-arm64 has got relaxation on GIC version check at early boot stage due
-to update of the GIC architecture let's align ARM with that.
+A statement was originally added in 2006 to shut up a gcc warning,
+now but now clang warns about it:
 
-To help backports (even though the code was correct at the time of writing)
-Fixes: e59941b9b381 ("ARM: 8527/1: virt: enable GICv3 system registers")
-Signed-off-by: Vladimir Murzin <vladimir.murzin@arm.com>
-Reviewed-by: Marc Zyngier <marc.zyngier@arm.com>
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+fs/jfs/jfs_txnmgr.c:1932:15: error: variable 'pxd' is uninitialized when used within its own initialization
+      [-Werror,-Wuninitialized]
+                pxd_t pxd = pxd;        /* truncated extent of xad */
+                      ~~~   ^~~
+
+Modern versions of gcc are fine without the silly assignment, so just
+drop it. Tested with gcc-4.6 (released 2011), 4.7, 4.8, and 4.9.
+
+Fixes: c9e3ad6021e5 ("JFS: Get rid of "may be used uninitialized" warnings")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Dave Kleikamp <dave.kleikamp@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/kernel/hyp-stub.S | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ fs/jfs/jfs_txnmgr.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/arch/arm/kernel/hyp-stub.S b/arch/arm/kernel/hyp-stub.S
-index 60146e32619a5..82a942894fc04 100644
---- a/arch/arm/kernel/hyp-stub.S
-+++ b/arch/arm/kernel/hyp-stub.S
-@@ -180,8 +180,8 @@ ARM_BE8(orr	r7, r7, #(1 << 25))     @ HSCTLR.EE
- 	@ Check whether GICv3 system registers are available
- 	mrc	p15, 0, r7, c0, c1, 1	@ ID_PFR1
- 	ubfx	r7, r7, #28, #4
--	cmp	r7, #1
--	bne	2f
-+	teq	r7, #0
-+	beq	2f
+diff --git a/fs/jfs/jfs_txnmgr.c b/fs/jfs/jfs_txnmgr.c
+index 4d973524c8879..224ef034004b7 100644
+--- a/fs/jfs/jfs_txnmgr.c
++++ b/fs/jfs/jfs_txnmgr.c
+@@ -1928,8 +1928,7 @@ static void xtLog(struct jfs_log * log, struct tblock * tblk, struct lrd * lrd,
+ 	 * header ?
+ 	 */
+ 	if (tlck->type & tlckTRUNCATE) {
+-		/* This odd declaration suppresses a bogus gcc warning */
+-		pxd_t pxd = pxd;	/* truncated extent of xad */
++		pxd_t pxd;	/* truncated extent of xad */
+ 		int twm;
  
- 	@ Enable system register accesses
- 	mrc	p15, 4, r7, c12, c9, 5	@ ICC_HSRE
+ 		/*
 -- 
 2.20.1
 
