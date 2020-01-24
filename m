@@ -2,99 +2,72 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24F5CC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 17:37:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AC79C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 17:37:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5CA320709
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 17:37:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579887452;
-	bh=GTtLai2FYBRbD2P1+oK+BStkcQduJ3SaU+v1GaonPj4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=UiuwWxEvALd6vvZwJGOvX/AFh9HtfKzg4KnFixG1YICNFUz6TcP3XMQp/wLwDNip3
-	 0jXtozS+mZ9rJacgDvXtx3Utp/6fVu5DJq3D0at82TCZbHRtbtvlY5yGuv3CM4TZ03
-	 tKszp1Drj218wUlrLzrp9wPcZRiYqCpTiqfAYSzk=
+	by mail.kernel.org (Postfix) with ESMTP id D8DB3214DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 17:37:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="M5Y0a9Fl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390717AbgAXRhb (ORCPT
+        id S2390686AbgAXRh3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 12:37:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56630 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 12:37:29 -0500
+Received: from vps0.lunn.ch ([185.16.172.187]:53186 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390668AbgAXRh2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 12:37:28 -0500
-Received: from localhost (unknown [84.241.198.31])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1E0ED214AF;
-        Fri, 24 Jan 2020 17:37:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579887447;
-        bh=GTtLai2FYBRbD2P1+oK+BStkcQduJ3SaU+v1GaonPj4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=JZsuU6c0hoT/d7XEqT1QVXL2pyutslhMkgLb8vrDW7HsTf+baCK0pivRjm97Y84rI
-         bo9tufdpOlc0objj1SdHUWcZpOPGRS8a3Qw6IIewBGXh/QzNPnCc29xMjS134IFNEO
-         RUUTBuNBsFyR4KwJPVjHqAoqm86nD4bomCxlBhLw=
-Date:   Fri, 24 Jan 2020 18:36:59 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Jon Hunter <jonathanh@nvidia.com>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-        patches@kernelci.org, ben.hutchings@codethink.co.uk,
-        lkft-triage@lists.linaro.org, stable@vger.kernel.org,
-        linux-tegra <linux-tegra@vger.kernel.org>
-Subject: Re: [PATCH 4.19 000/639] 4.19.99-stable review
-Message-ID: <20200124173659.GD3166016@kroah.com>
-References: <20200124093047.008739095@linuxfoundation.org>
- <23f2a904-3351-4a75-aaaf-2623dc55d114@nvidia.com>
+        id S2390354AbgAXRhZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 12:37:25 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=G86FZTcHn/oMBBx6RFTrYjvwIujQU9r6hS03SoZfBwo=; b=M5Y0a9FlG3s9A65UDLSA37oMrU
+        5OSxplA+d5tB2I9cPTXxf/H2YGVTlo57j7O0zrEwh4TO895FvN0iap+f+SzG4//k6a5/ja0C+SOCp
+        bhIsBgBE/uEtql9FTUEgbedwsEv02gYoNPr/yYmt+GspdMF59mfpAmOKtLJijIPUq7tQ=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1iv2tS-0003SZ-5F; Fri, 24 Jan 2020 18:37:18 +0100
+Date:   Fri, 24 Jan 2020 18:37:18 +0100
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Horatiu Vultur <horatiu.vultur@microchip.com>
+Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        bridge@lists.linux-foundation.org, jiri@resnulli.us,
+        ivecera@redhat.com, davem@davemloft.net, roopa@cumulusnetworks.com,
+        nikolay@cumulusnetworks.com, anirudh.venkataramanan@intel.com,
+        olteanv@gmail.com, jeffrey.t.kirsher@intel.com,
+        UNGLinuxDriver@microchip.com
+Subject: Re: [RFC net-next v3 02/10] net: bridge: mrp: Expose function
+ br_mrp_port_open
+Message-ID: <20200124173718.GB13647@lunn.ch>
+References: <20200124161828.12206-1-horatiu.vultur@microchip.com>
+ <20200124161828.12206-3-horatiu.vultur@microchip.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <23f2a904-3351-4a75-aaaf-2623dc55d114@nvidia.com>
+In-Reply-To: <20200124161828.12206-3-horatiu.vultur@microchip.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 24, 2020 at 02:50:05PM +0000, Jon Hunter wrote:
-> Hi Greg,
+On Fri, Jan 24, 2020 at 05:18:20PM +0100, Horatiu Vultur wrote:
+> In case the HW is capable to detect when the MRP ring is open or closed. It is
+> expected that the network driver will notify the bridge that the ring is open or
+> closed.
 > 
-> On 24/01/2020 09:22, Greg Kroah-Hartman wrote:
-> > This is the start of the stable review cycle for the 4.19.99 release.
-> > There are 639 patches in this series, all will be posted as a response
-> > to this one.  If anyone has any issues with these being applied, please
-> > let me know.
-> > 
-> > Responses should be made by Sun, 26 Jan 2020 09:26:29 +0000.
-> > Anything received after that time might be too late.
-> > 
-> > The whole patch series can be found in one patch at:
-> > 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.99-rc1.gz
-> > or in the git tree and branch at:
-> > 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.19.y
-> > and the diffstat can be found below.
-> > 
-> > thanks,
-> > 
-> > greg k-h
-> > 
-> > -------------
-> > Pseudo-Shortlog of commits:
-> 
-> ...
-> 
-> > Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> >     PCI: PM: Skip devices in D0 for suspend-to-idle
-> 
-> The above commit is causing a suspend regression on Tegra124 Jetson-TK1.
-> Reverting this on top of v4.19.99-rc1 fixes the issue.
+> The function br_mrp_port_open is used to notify the kernel that one of the ports
+> stopped receiving MRP_Test frames. The argument 'loc' has a value of '1' when
+> the port stopped receiving MRP_Test and '0' when it started to receive MRP_Test.
 
-This is also in the 4.14 queue, so should I drop it there too?
+Hi Horatiu
 
-thanks,
+Given the name of the function, br_mrp_port_open(), how about replacing
+loc with a bool with the name open?
 
-greg k-h
+    Andrew
