@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF6D7C35242
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:24:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D50FC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:24:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC22C222C2
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:24:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61DF32072C
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:24:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579875857;
-	bh=l6cloJhamHOBRbigpyNLbKO8rrDSvstEKce5/7sOMOc=;
+	s=default; t=1579875861;
+	bh=KdHYxm0MIcwjyGcxRWpTfmdAGOIy7C8IEKehNg73PaQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AH5AU1YsxDrxLt8ljH4THgyaHDYakw2J8yznahAKBYjT4DjldfurQE3EEA5xJQdgB
-	 QI6LJmki8555MuaeaGQBnrmcEEcRjDBsrjCk/TByatmnWMLHkLngu6nbHDXIIiZ85P
-	 AZ2BbLlB/SYpcpQbDxg204FOk+HeV6Pt4tuJHbYo=
+	b=CVVvKtf6qPj08BbcT3q7y2xX/i4UlLnUI2N4Ld3grqkhw6F5Ap10qvIdvVutFaS/4
+	 +ZVWKUWm9YwOFlpKnWAvY7lUdZ0oKDAgMGMu2VVGKfCTQZ/O33o3KTOLaJC7oW8+gO
+	 fDNvTG50TNHKEzFTi4g15MqsHkz5TUuy+Y9AYkGA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392306AbgAXOWL (ORCPT
+        id S2392466AbgAXOYU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 09:22:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44116 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 09:24:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44248 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727295AbgAXOWE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 09:22:04 -0500
+        id S2388305AbgAXOWN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 09:22:13 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 01A7524673;
-        Fri, 24 Jan 2020 14:22:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 56E812072C;
+        Fri, 24 Jan 2020 14:22:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579875723;
-        bh=l6cloJhamHOBRbigpyNLbKO8rrDSvstEKce5/7sOMOc=;
+        s=default; t=1579875732;
+        bh=KdHYxm0MIcwjyGcxRWpTfmdAGOIy7C8IEKehNg73PaQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=z38zTaHl9FJtyGRSKUPiNElLf8FiWARhGO0XY4H2DrxTNS1NAuylGK49/3nMQ9DF9
-         K/1bWH0s7b8OrdK6YD5g6nlQH/kvknFE98cpC9E+Bxtl3xPeiSCDacHfRs1GH5+fsD
-         gBTw52PSXcvQ7U+Pi0IqG05sJ76I4N/dmSlzMdGQ=
+        b=acxYn1k2DjrA7b7s+BzWTmInfyXDXVg/+28kX9UWPTtXpMelK+oeZWsFv4JiMwBKN
+         BCO+Qf1OYPm7CmFdpe9Baymlp8Oa7MkuV7emPEbcMmrwi+Ptxy+L2PEOOyjapsUBag
+         D6gTsdJx1e9NHcYRSlEoeItx2ZGmvQP7fgb1e6wY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dave Gerlach <d-gerlach@ti.com>, Suman Anna <s-anna@ti.com>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        Tony Lindgren <tony@atomide.com>,
+Cc:     Florian Westphal <fw@strlen.de>,
+        syzbot+91bdd8eece0f6629ec8b@syzkaller.appspotmail.com,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
         Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.9 04/18] soc: ti: wkup_m3_ipc: Fix race condition with rproc_boot
-Date:   Fri, 24 Jan 2020 09:21:43 -0500
-Message-Id: <20200124142157.30931-4-sashal@kernel.org>
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 11/18] netfilter: arp_tables: init netns pointer in xt_tgdtor_param struct
+Date:   Fri, 24 Jan 2020 09:21:50 -0500
+Message-Id: <20200124142157.30931-11-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200124142157.30931-1-sashal@kernel.org>
 References: <20200124142157.30931-1-sashal@kernel.org>
@@ -61,53 +62,126 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dave Gerlach <d-gerlach@ti.com>
+From: Florian Westphal <fw@strlen.de>
 
-[ Upstream commit 03729cfa0d543bc996bf959e762ec999afc8f3d2 ]
+[ Upstream commit 212e7f56605ef9688d0846db60c6c6ec06544095 ]
 
-Any user of wkup_m3_ipc calls wkup_m3_ipc_get to get a handle and this
-checks the value of the static variable m3_ipc_state to see if the
-wkup_m3 is ready. Currently this is populated during probe before
-rproc_boot has been called, meaning there is a window of time that
-wkup_m3_ipc_get can return a valid handle but the wkup_m3 itself is not
-ready, leading to invalid IPC calls to the wkup_m3 and system
-instability.
+An earlier commit (1b789577f655060d98d20e,
+"netfilter: arp_tables: init netns pointer in xt_tgchk_param struct")
+fixed missing net initialization for arptables, but turns out it was
+incomplete.  We can get a very similar struct net NULL deref during
+error unwinding:
 
-To avoid this, move the population of the m3_ipc_state variable until
-after rproc_boot has succeeded to guarantee a valid and usable handle
-is always returned.
+general protection fault: 0000 [#1] PREEMPT SMP KASAN
+RIP: 0010:xt_rateest_put+0xa1/0x440 net/netfilter/xt_RATEEST.c:77
+ xt_rateest_tg_destroy+0x72/0xa0 net/netfilter/xt_RATEEST.c:175
+ cleanup_entry net/ipv4/netfilter/arp_tables.c:509 [inline]
+ translate_table+0x11f4/0x1d80 net/ipv4/netfilter/arp_tables.c:587
+ do_replace net/ipv4/netfilter/arp_tables.c:981 [inline]
+ do_arpt_set_ctl+0x317/0x650 net/ipv4/netfilter/arp_tables.c:1461
 
-Reported-by: Suman Anna <s-anna@ti.com>
-Signed-off-by: Dave Gerlach <d-gerlach@ti.com>
-Acked-by: Santosh Shilimkar <ssantosh@kernel.org>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+Also init the netns pointer in xt_tgdtor_param struct.
+
+Fixes: add67461240c1d ("netfilter: add struct net * to target parameters")
+Reported-by: syzbot+91bdd8eece0f6629ec8b@syzkaller.appspotmail.com
+Signed-off-by: Florian Westphal <fw@strlen.de>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/soc/ti/wkup_m3_ipc.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ net/ipv4/netfilter/arp_tables.c | 19 ++++++++++---------
+ 1 file changed, 10 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/soc/ti/wkup_m3_ipc.c b/drivers/soc/ti/wkup_m3_ipc.c
-index 5bb376009d98b..fc33bfdc957cc 100644
---- a/drivers/soc/ti/wkup_m3_ipc.c
-+++ b/drivers/soc/ti/wkup_m3_ipc.c
-@@ -377,6 +377,8 @@ static void wkup_m3_rproc_boot_thread(struct wkup_m3_ipc *m3_ipc)
- 	ret = rproc_boot(m3_ipc->rproc);
- 	if (ret)
- 		dev_err(dev, "rproc_boot failed\n");
-+	else
-+		m3_ipc_state = m3_ipc;
- 
- 	do_exit(0);
+diff --git a/net/ipv4/netfilter/arp_tables.c b/net/ipv4/netfilter/arp_tables.c
+index d819e91df90d6..e02b862651942 100644
+--- a/net/ipv4/netfilter/arp_tables.c
++++ b/net/ipv4/netfilter/arp_tables.c
+@@ -515,12 +515,13 @@ static inline int check_entry_size_and_hooks(struct arpt_entry *e,
+ 	return 0;
  }
-@@ -463,8 +465,6 @@ static int wkup_m3_ipc_probe(struct platform_device *pdev)
- 		goto err_put_rproc;
+ 
+-static inline void cleanup_entry(struct arpt_entry *e)
++static void cleanup_entry(struct arpt_entry *e, struct net *net)
+ {
+ 	struct xt_tgdtor_param par;
+ 	struct xt_entry_target *t;
+ 
+ 	t = arpt_get_target(e);
++	par.net      = net;
+ 	par.target   = t->u.kernel.target;
+ 	par.targinfo = t->data;
+ 	par.family   = NFPROTO_ARP;
+@@ -612,7 +613,7 @@ static int translate_table(struct net *net,
+ 		xt_entry_foreach(iter, entry0, newinfo->size) {
+ 			if (i-- == 0)
+ 				break;
+-			cleanup_entry(iter);
++			cleanup_entry(iter, net);
+ 		}
+ 		return ret;
+ 	}
+@@ -939,7 +940,7 @@ static int __do_replace(struct net *net, const char *name,
+ 	/* Decrease module usage counts and free resource */
+ 	loc_cpu_old_entry = oldinfo->entries;
+ 	xt_entry_foreach(iter, loc_cpu_old_entry, oldinfo->size)
+-		cleanup_entry(iter);
++		cleanup_entry(iter, net);
+ 
+ 	xt_free_table_info(oldinfo);
+ 	if (copy_to_user(counters_ptr, counters,
+@@ -1003,7 +1004,7 @@ static int do_replace(struct net *net, const void __user *user,
+ 
+  free_newinfo_untrans:
+ 	xt_entry_foreach(iter, loc_cpu_entry, newinfo->size)
+-		cleanup_entry(iter);
++		cleanup_entry(iter, net);
+  free_newinfo:
+ 	xt_free_table_info(newinfo);
+ 	return ret;
+@@ -1300,7 +1301,7 @@ static int compat_do_replace(struct net *net, void __user *user,
+ 
+  free_newinfo_untrans:
+ 	xt_entry_foreach(iter, loc_cpu_entry, newinfo->size)
+-		cleanup_entry(iter);
++		cleanup_entry(iter, net);
+  free_newinfo:
+ 	xt_free_table_info(newinfo);
+ 	return ret;
+@@ -1527,7 +1528,7 @@ static int do_arpt_get_ctl(struct sock *sk, int cmd, void __user *user, int *len
+ 	return ret;
+ }
+ 
+-static void __arpt_unregister_table(struct xt_table *table)
++static void __arpt_unregister_table(struct net *net, struct xt_table *table)
+ {
+ 	struct xt_table_info *private;
+ 	void *loc_cpu_entry;
+@@ -1539,7 +1540,7 @@ static void __arpt_unregister_table(struct xt_table *table)
+ 	/* Decrease module usage counts and free resources */
+ 	loc_cpu_entry = private->entries;
+ 	xt_entry_foreach(iter, loc_cpu_entry, private->size)
+-		cleanup_entry(iter);
++		cleanup_entry(iter, net);
+ 	if (private->number > private->initial_entries)
+ 		module_put(table_owner);
+ 	xt_free_table_info(private);
+@@ -1579,7 +1580,7 @@ int arpt_register_table(struct net *net,
+ 
+ 	ret = nf_register_net_hooks(net, ops, hweight32(table->valid_hooks));
+ 	if (ret != 0) {
+-		__arpt_unregister_table(new_table);
++		__arpt_unregister_table(net, new_table);
+ 		*res = NULL;
  	}
  
--	m3_ipc_state = m3_ipc;
--
- 	return 0;
+@@ -1594,7 +1595,7 @@ void arpt_unregister_table(struct net *net, struct xt_table *table,
+ 			   const struct nf_hook_ops *ops)
+ {
+ 	nf_unregister_net_hooks(net, ops, hweight32(table->valid_hooks));
+-	__arpt_unregister_table(table);
++	__arpt_unregister_table(net, table);
+ }
  
- err_put_rproc:
+ /* The built-in targets: standard (NULL) and error. */
 -- 
 2.20.1
 
