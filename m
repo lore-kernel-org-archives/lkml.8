@@ -7,47 +7,50 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB7B1C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:48:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D66FC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:48:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A944D218AC
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:48:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2767120718
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:48:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579859319;
-	bh=YdKsTFS68LQxZFkxrS04Ikwf1+NUsVils/UWY/KK9bI=;
+	s=default; t=1579859323;
+	bh=5q3qoVVuTy8YvTWJS56/FshoR2Qy/XfFf6H6ywclMsE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rvEuj+pJwUDK7Gtj2KXN3lfBVF9GuhnyoegHR4E05cvMKRKJmaYVdoGQrgC+XBBIu
-	 gpUN0doFtm4KQdVaP3rkHb7MfMdsWKpIt7ITQX9iA0dpVKgpGj0rgFklHDYBEt7TvI
-	 1M3DHSOF/D3fzQ55WnWkmtkdWN+IkL/vI8WruQF0=
+	b=Y3453wZj+fkG5NNqESfWs5QaciN6XgcNYVsYL6lJAcZ8d23GE6sFVFNVHR1iUu/CN
+	 sjdWxW18wrkXMpAz/hh7bSEpn8PeEStdBgW6R7i6O7U8V7Qg0JxdlN11DMAcOlogvB
+	 LKQFoHE5Ak7NzFCp/PcrkDcOfieqcAcKFqEWEoUY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387751AbgAXJsi (ORCPT
+        id S2387761AbgAXJsm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 04:48:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48722 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 04:48:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48814 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730051AbgAXJsg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 04:48:36 -0500
+        id S1730051AbgAXJsj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 04:48:39 -0500
 Received: from localhost (unknown [145.15.244.15])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3627B208C4;
-        Fri, 24 Jan 2020 09:48:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6D20D20718;
+        Fri, 24 Jan 2020 09:48:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579859315;
-        bh=YdKsTFS68LQxZFkxrS04Ikwf1+NUsVils/UWY/KK9bI=;
+        s=default; t=1579859319;
+        bh=5q3qoVVuTy8YvTWJS56/FshoR2Qy/XfFf6H6ywclMsE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oRnwQ+LSWDk1aj6RLFACebkauTr1T5SC56nBPaHsDZ2IIIOc3T8sv+wBfmpNtEiP/
-         yafC02HEF4uZGfmXSuXqn4gJwDuivG0Jjowl032KS3sbWt2KE4KDlfPHKAfR0LIpPG
-         GsBcFapAN8sfFXlQMcYzYzsAAiM+w1wqMNn5motM=
+        b=X/GQClWxpgdsZ4wDTTsPM4iNVu+1BT/lI7uh6KgGrCRAB3niY9w2V6atdzr3oef2U
+         0kK3ebyvOE7F/1PaOUmhd8tMJtQtB/eCzT+9J2jyr+C5RI4zFqH224DxZEKyCbRn8p
+         9/ViJDTL0JNoAcNI5XuFGNduF9+feUrgTdj0d+CE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Liu Jian <liujian56@huawei.com>,
-        Hamish Martin <hamish.martin@alliedtelesis.co.nz>,
+        stable@vger.kernel.org, Stefan Agner <stefan@agner.ch>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        Nicolin Chen <nicoleotsuka@gmail.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 078/343] driver: uio: fix possible memory leak in __uio_register_device
-Date:   Fri, 24 Jan 2020 10:28:16 +0100
-Message-Id: <20200124092930.137339954@linuxfoundation.org>
+Subject: [PATCH 4.14 069/343] ASoC: imx-sgtl5000: put of nodes if finding codec fails
+Date:   Fri, 24 Jan 2020 10:28:07 +0100
+Message-Id: <20200124092928.875648341@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124092919.490687572@linuxfoundation.org>
 References: <20200124092919.490687572@linuxfoundation.org>
@@ -60,39 +63,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Liu Jian <liujian56@huawei.com>
+From: Stefan Agner <stefan@agner.ch>
 
-[ Upstream commit 1a392b3de7c5747506b38fc14b2e79977d3c7770 ]
+[ Upstream commit d9866572486802bc598a3e8576a5231378d190de ]
 
-'idev' is malloced in __uio_register_device() and leak free it before
-leaving from the uio_get_minor() error handing case, it will cause
-memory leak.
+Make sure to properly put the of node in case finding the codec
+fails.
 
-Fixes: a93e7b331568 ("uio: Prevent device destruction while fds are open")
-Signed-off-by: Liu Jian <liujian56@huawei.com>
-Reviewed-by: Hamish Martin <hamish.martin@alliedtelesis.co.nz>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 81e8e4926167 ("ASoC: fsl: add sgtl5000 clock support for imx-sgtl5000")
+Signed-off-by: Stefan Agner <stefan@agner.ch>
+Reviewed-by: Daniel Baluta <daniel.baluta@nxp.com>
+Acked-by: Nicolin Chen <nicoleotsuka@gmail.com>
+Reviewed-by: Fabio Estevam <festevam@gmail.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/uio/uio.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ sound/soc/fsl/imx-sgtl5000.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/uio/uio.c b/drivers/uio/uio.c
-index fb5c9701b1fbd..4e9b0ff79b131 100644
---- a/drivers/uio/uio.c
-+++ b/drivers/uio/uio.c
-@@ -939,8 +939,10 @@ int __uio_register_device(struct module *owner,
- 	atomic_set(&idev->event, 0);
+diff --git a/sound/soc/fsl/imx-sgtl5000.c b/sound/soc/fsl/imx-sgtl5000.c
+index 8e525f7ac08d1..3d99a8579c99f 100644
+--- a/sound/soc/fsl/imx-sgtl5000.c
++++ b/sound/soc/fsl/imx-sgtl5000.c
+@@ -119,7 +119,8 @@ static int imx_sgtl5000_probe(struct platform_device *pdev)
+ 	codec_dev = of_find_i2c_device_by_node(codec_np);
+ 	if (!codec_dev) {
+ 		dev_err(&pdev->dev, "failed to find codec platform device\n");
+-		return -EPROBE_DEFER;
++		ret = -EPROBE_DEFER;
++		goto fail;
+ 	}
  
- 	ret = uio_get_minor(idev);
--	if (ret)
-+	if (ret) {
-+		kfree(idev);
- 		return ret;
-+	}
- 
- 	idev->dev.devt = MKDEV(uio_major, idev->minor);
- 	idev->dev.class = &uio_class;
+ 	data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
 -- 
 2.20.1
 
