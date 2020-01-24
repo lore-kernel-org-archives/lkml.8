@@ -2,135 +2,111 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27BA9C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 12:54:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 633FBC3F68F
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 12:55:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0406120708
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 12:54:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3AACF20708
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 12:55:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="aqxG94s1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388149AbgAXMyE (ORCPT
+        id S2388431AbgAXMzh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 07:54:04 -0500
-Received: from mail-io1-f70.google.com ([209.85.166.70]:36135 "EHLO
-        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387396AbgAXMyD (ORCPT
+        Fri, 24 Jan 2020 07:55:37 -0500
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:26578 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2387393AbgAXMzh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 07:54:03 -0500
-Received: by mail-io1-f70.google.com with SMTP id d4so1233879iom.3
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Jan 2020 04:54:03 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=37DnHe8ofxjxgHB//lHANRdEDN8gOWB1O7s+JZGwEiY=;
-        b=L2fopbyrRO8Z887fjzWIGgW2GpdkuXqcmI/kJkGVdQjphR/vxBdVioyrk1HNuwS+LI
-         WAEtPZXPLsKlz0CEF5BCPeMYEteURCoHikTtKIKCgygT7x0D0rStCs0JWpl4X/Ifg6Uf
-         U3rdbWI/z9qbk7+MKoAxerfGrAjDtBuIwS46CZmniFEHr9S8pF2PvhSBBoRRgmzaeh2T
-         flr9mYu6+g20uHEf3fR0sqHTQXVwjWK2EQTKXCekpUfWb4ky2UOdVYhhrPhLuQOHy4Is
-         nAl/63ehiur0NhghDfDrc/k/PSO8OadLoV8NpCe+1j5C+0nXr+eBHwjwFcVjpYkt0gjX
-         k3FQ==
-X-Gm-Message-State: APjAAAXbwp3NrCeg9N4iiJxECK2X+Xu+qeD1OHh2meAXownUu1lHSCbE
-        9pbyodCYjbIzfwc7QXHkt5Wn6ufvIH0wJKcT2QTN1fCyCwxD
-X-Google-Smtp-Source: APXvYqz/hMYvG1nydnnU7Hb3i/y0X5oIx63T3wtDOB6iSu/Hgch9G3vdKnVe/Gf7+Rb5GIs7sb178IxwEbe73EcJkLESuBieVF+H
+        Fri, 24 Jan 2020 07:55:37 -0500
+Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00OCsTCw012368;
+        Fri, 24 Jan 2020 13:55:24 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=HsT5XOh0k0Oip5e4q1QwfFV3XVw3YKpi81ECZxj8y6Q=;
+ b=aqxG94s1vaUPEi7oDUwgOsYy3ksvsgGOaWryEalFEw+6Zgdpn66PA45Wk9YnaG06YC0O
+ aBklNAsLyjk63X/6JayBKfFWnPoajK64SDY5dhXmGZ5SYJXnDEuGIwkrxaDGKW7Lqoxu
+ 5imLP6Ba6rd3VLxeGfE5eELqunxfwIp/TEo6qOT1oIRrHt8ADdzIe97YYl01EGefCZ68
+ 8tbO7EMpd0mYn/mc8D923WscSRyQv2abfuiZbik1+S7JawA9NuI1C8Ct9ZKLLcp5B7N1
+ ApvOKGuEbrfLmwvcTx3KpafV0loMaKPLNCmf9fnU1DQyWTdhTUdaAVSVhzPPor7hJXBG Cw== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2xkrc5g12e-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 24 Jan 2020 13:55:24 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id CE8E310002A;
+        Fri, 24 Jan 2020 13:55:23 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag6node1.st.com [10.75.127.16])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id B75A72A847D;
+        Fri, 24 Jan 2020 13:55:23 +0100 (CET)
+Received: from lmecxl0923.lme.st.com (10.75.127.48) by SFHDAG6NODE1.st.com
+ (10.75.127.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 24 Jan
+ 2020 13:55:23 +0100
+Subject: Re: [PATCH 0/9] mmc: mmci: sdmmc: add sdr104 support
+To:     Ulf Hansson <ulf.hansson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>
+CC:     <srinivas.kandagatla@linaro.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-mmc@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>
+References: <20200110134823.14882-1-ludovic.barre@st.com>
+From:   Ludovic BARRE <ludovic.barre@st.com>
+Message-ID: <6d859def-351e-abd7-0d5f-962ad935dff2@st.com>
+Date:   Fri, 24 Jan 2020 13:55:22 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.0
 MIME-Version: 1.0
-X-Received: by 2002:a92:8847:: with SMTP id h68mr1400708ild.212.1579870443103;
- Fri, 24 Jan 2020 04:54:03 -0800 (PST)
-Date:   Fri, 24 Jan 2020 04:54:03 -0800
-In-Reply-To: <CAAeHK+whRFCF9WzUr55MoMiFsn83Ykr9jGGUFE4CTKVbBsZu6Q@mail.gmail.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000008d6b69059ce24053@google.com>
-Subject: Re: KASAN: use-after-free Read in v4l2_release (3)
-From:   syzbot <syzbot+75287f75e2fedd69d680@syzkaller.appspotmail.com>
-To:     andreyknvl@google.com, bnvandana@gmail.com, hans.verkuil@cisco.com,
-        hdanton@sina.com, hverkuil-cisco@xs4all.nl,
-        laurent.pinchart@ideasonboard.com, linux-kernel@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-usb@vger.kernel.org,
-        mchehab@kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200110134823.14882-1-ludovic.barre@st.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.75.127.48]
+X-ClientProxiedBy: SFHDAG1NODE2.st.com (10.75.127.2) To SFHDAG6NODE1.st.com
+ (10.75.127.16)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-01-24_03:2020-01-24,2020-01-24 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+hi Ulf
 
-syzbot has tested the proposed patch but the reproducer still triggered crash:
-WARNING in kernfs_remove_by_name_ns
+Just a "gentleman ping" on this series
+https://lkml.org/lkml/2020/1/10/392
 
-------------[ cut here ]------------
-kernfs: can not remove 'version', no directory
-WARNING: CPU: 1 PID: 94 at fs/kernfs/dir.c:1507 kernfs_remove_by_name_ns+0x98/0xb0 fs/kernfs/dir.c:1507
-Kernel panic - not syncing: panic_on_warn set ...
-CPU: 1 PID: 94 Comm: kworker/1:2 Not tainted 5.5.0-rc3-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Workqueue: usb_hub_wq hub_event
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0xef/0x16e lib/dump_stack.c:118
- panic+0x2aa/0x6e1 kernel/panic.c:221
- __warn.cold+0x2f/0x30 kernel/panic.c:582
- report_bug+0x27b/0x2f0 lib/bug.c:195
- fixup_bug arch/x86/kernel/traps.c:174 [inline]
- fixup_bug arch/x86/kernel/traps.c:169 [inline]
- do_error_trap+0x12b/0x1e0 arch/x86/kernel/traps.c:267
- do_invalid_op+0x32/0x40 arch/x86/kernel/traps.c:286
- invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1027
-RIP: 0010:kernfs_remove_by_name_ns+0x98/0xb0 fs/kernfs/dir.c:1507
-Code: b1 ff 48 c7 c7 20 13 1d 87 41 bc fe ff ff ff e8 2e fe fe 03 eb d9 e8 47 4d b1 ff 4c 89 e6 48 c7 c7 c0 51 f1 85 e8 20 33 86 ff <0f> 0b 41 bc fe ff ff ff eb bb 0f 1f 40 00 66 2e 0f 1f 84 00 00 00
-RSP: 0018:ffff8881d5d47708 EFLAGS: 00010286
-RAX: 0000000000000000 RBX: ffff8881cba58390 RCX: 0000000000000000
-RDX: 0000000000000000 RSI: ffffffff812959ad RDI: ffffed103aba8ed3
-RBP: 0000000000000000 R08: ffff8881d6d2c980 R09: fffffbfff1269aae
-R10: fffffbfff1269aad R11: ffffffff8934d56f R12: ffffffff8671eb40
-R13: 0000000000000000 R14: 0000000000000000 R15: 000000000000000c
- sysfs_remove_file include/linux/sysfs.h:536 [inline]
- device_remove_file+0x25/0x30 drivers/base/core.c:1869
- usbvision_remove_sysfs drivers/media/usb/usbvision/usbvision-video.c:287 [inline]
- usbvision_release+0x88/0x1c0 drivers/media/usb/usbvision/usbvision-video.c:1360
- v4l2_device_release+0x29a/0x3e0 drivers/media/v4l2-core/v4l2-dev.c:225
- device_release+0x71/0x200 drivers/base/core.c:1358
- kobject_cleanup lib/kobject.c:693 [inline]
- kobject_release lib/kobject.c:722 [inline]
- kref_put include/linux/kref.h:65 [inline]
- kobject_put+0x256/0x550 lib/kobject.c:739
- put_device drivers/base/core.c:2586 [inline]
- device_unregister+0x34/0xc0 drivers/base/core.c:2697
- video_unregister_device+0xa2/0xc0 drivers/media/v4l2-core/v4l2-dev.c:1075
- usbvision_unregister_video drivers/media/usb/usbvision/usbvision-video.c:1255 [inline]
- usbvision_unregister_video+0xfb/0x120 drivers/media/usb/usbvision/usbvision-video.c:1242
- usbvision_release+0x10d/0x1c0 drivers/media/usb/usbvision/usbvision-video.c:1361
- usbvision_disconnect+0x171/0x1e0 drivers/media/usb/usbvision/usbvision-video.c:1593
- usb_unbind_interface+0x1bd/0x8a0 drivers/usb/core/driver.c:423
- __device_release_driver drivers/base/dd.c:1134 [inline]
- device_release_driver_internal+0x42f/0x500 drivers/base/dd.c:1165
- bus_remove_device+0x2eb/0x5a0 drivers/base/bus.c:532
- device_del+0x481/0xd30 drivers/base/core.c:2664
- usb_disable_device+0x23d/0x790 drivers/usb/core/message.c:1237
- usb_disconnect+0x293/0x900 drivers/usb/core/hub.c:2200
- hub_port_connect drivers/usb/core/hub.c:5035 [inline]
- hub_port_connect_change drivers/usb/core/hub.c:5324 [inline]
- port_event drivers/usb/core/hub.c:5470 [inline]
- hub_event+0x1a1d/0x4300 drivers/usb/core/hub.c:5552
- process_one_work+0x945/0x15c0 kernel/workqueue.c:2264
- worker_thread+0x96/0xe20 kernel/workqueue.c:2410
- kthread+0x318/0x420 kernel/kthread.c:255
- ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-Kernel Offset: disabled
-Rebooting in 86400 seconds..
+Regards
+Ludo
 
-
-Tested on:
-
-commit:         ae179410 usb: gadget: add raw-gadget interface
-git tree:       https://github.com/google/kasan.git
-console output: https://syzkaller.appspot.com/x/log.txt?x=133b3611e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=ad1d751a3a72ae57
-dashboard link: https://syzkaller.appspot.com/bug?extid=75287f75e2fedd69d680
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=15921b69e00000
-
+Le 1/10/20 à 2:48 PM, Ludovic Barre a écrit :
+> To support the sdr104 mode, sdmmc variant needs:
+> -Hardware delay block support for sdmmc variant
+>   with tuning procedure
+> -Voltage switch callbacks
+> -sdmmc revision 2.0
+> 
+> Ludovic Barre (9):
+>    mmc: mmci: sdmmc: replace sg_dma_xxx macros
+>    mmc: mmci: sdmmc: rename sdmmc_priv struct to sdmmc_idma
+>    mmc: mmci: add a reference at mmc_host_ops in mmci struct
+>    mmc: mmci: add private pointer for variant
+>    dt-bindings: mmc: mmci: add delay block base register for sdmmc
+>    mmc: mmci: sdmmc: add execute tuning with delay block
+>    mmc: mmci: add volt_switch callbacks
+>    mmc: mmci: sdmmc: add voltage switch functions
+>    mmc: mmci: add sdmmc variant revision 2.0
+> 
+>   .../devicetree/bindings/mmc/mmci.txt          |   2 +
+>   drivers/mmc/host/mmci.c                       |  39 ++++
+>   drivers/mmc/host/mmci.h                       |   8 +
+>   drivers/mmc/host/mmci_stm32_sdmmc.c           | 199 +++++++++++++++++-
+>   4 files changed, 241 insertions(+), 7 deletions(-)
+> 
