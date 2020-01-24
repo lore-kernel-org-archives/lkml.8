@@ -4,53 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C2CCC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:14:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F08E5C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:15:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1963F2075D
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:14:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE3D82071A
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:15:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579864498;
-	bh=fkh3FgWL0E1pUimUwrTS1dFv2ZIouiEsPk4F+mvnZao=;
+	s=default; t=1579864500;
+	bh=7zmx5lstEh3h7RXG3u58tR1w29WMv3ONXGIMt7CYEFY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=No3Hs0kFSg5vArFcjyNzd835VrpBcNuJUWjo6Q53X72nwgFPwGwHR1p/YeXhXYFFX
-	 06WT5c5qslesW5Ryr7rRkR/Ksm3sUqLeCz9RADA51zfSbmiRZVWIcP5PJMG4HZxuYd
-	 FHmEshHc7oK/Z2lRAfvZwxw3WJD1YWAFj8BKddok=
+	b=TQ1Qs09ZrKcC2dUdmRgoNEM95teuHklcj1mpQqrD8qGP8dysYQK1aZnzZIXIGIVji
+	 hZ3njWAmDP4iJlaxvAOeb+J5CbUH5ap6GGWM7qozoaJFa8OiaddbCGDhmAmf0zrT8R
+	 iJQwkRTZQNN6H7r6DUfhoYVkN273wjNOzxDGn/7s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390236AbgAXLOk (ORCPT
+        id S2389911AbgAXLPA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:14:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50990 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 06:15:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51330 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389867AbgAXLOg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:14:36 -0500
+        id S2389143AbgAXLOy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:14:54 -0500
 Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E21F22467B;
-        Fri, 24 Jan 2020 11:14:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 31CC324658;
+        Fri, 24 Jan 2020 11:14:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579864475;
-        bh=fkh3FgWL0E1pUimUwrTS1dFv2ZIouiEsPk4F+mvnZao=;
+        s=default; t=1579864493;
+        bh=7zmx5lstEh3h7RXG3u58tR1w29WMv3ONXGIMt7CYEFY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NG72FXYxFJfF2MiIjEW4jk0+obufLa6knM9TdtJ0wjO8YrGsZ3QQ8U1zx3KhVoZVJ
-         0FAvfdOATPLDkXLZCU/XEl7dkCru/yyWd7dwHcPA5GQwyS/nUSgdaSGNccuRmi49IL
-         Y+Ce+MhdMzE3uL5hXQi34FoXZnb5oS6xi09NBMVI=
+        b=Ay/YFw0KetXIah6GS++8Q9B0DhPSel5Ln+mcfDSIG+1VGVFu4xmHocMhm+MbGAq1W
+         f8vwajDUPAQFa1KIsSm3Wqm8INzt2JtRBqAIYvM8llj3j/k6c+tqQwOjfWh7zzPtim
+         3VJcpk1fjRO6+IxqSQZDsLvhHvG1H7GQqS9kxEUc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Phil Reid <preid@electromag.com.au>,
-        liweihang <liweihang@hisilicon.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Nicholas Mc Guire <hofrat@osadl.org>,
+        Sean Young <sean@mess.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 276/639] net: phy: dont clear BMCR in genphy_soft_reset
-Date:   Fri, 24 Jan 2020 10:27:26 +0100
-Message-Id: <20200124093121.384723051@linuxfoundation.org>
+Subject: [PATCH 4.19 267/639] media: cx23885: check allocation return
+Date:   Fri, 24 Jan 2020 10:27:17 +0100
+Message-Id: <20200124093120.157000436@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
 References: <20200124093047.008739095@linuxfoundation.org>
@@ -63,44 +61,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Heiner Kallweit <hkallweit1@gmail.com>
+From: Nicholas Mc Guire <hofrat@osadl.org>
 
-[ Upstream commit d29f5aa0bc0c321e1b9e4658a2a7e08e885da52a ]
+[ Upstream commit a3d7f22ef34ec4206b50ee121384d5c8bebd5591 ]
 
-So far we effectively clear the BMCR register. Some PHY's can deal
-with this (e.g. because they reset BMCR to a default as part of a
-soft-reset) whilst on others this causes issues because e.g. the
-autoneg bit is cleared. Marvell is an example, see also thread [0].
-So let's be a little bit more gentle and leave all bits we're not
-interested in as-is. This change is needed for PHY drivers to
-properly deal with the original patch.
+Checking of kmalloc() seems to have been committed - as
+cx23885_dvb_register() is checking for != 0 return, returning
+-ENOMEM should be fine here.  While at it address the coccicheck
+suggestion to move to kmemdup rather than using kmalloc+memcpy.
 
-[0] https://marc.info/?t=155264050700001&r=1&w=2
+Fixes: 46b21bbaa8a8 ("[media] Add support for DViCO FusionHDTV DVB-T Dual Express2")
 
-Fixes: 6e2d85ec0559 ("net: phy: Stop with excessive soft reset")
-Tested-by: Phil Reid <preid@electromag.com.au>
-Tested-by: liweihang <liweihang@hisilicon.com>
-Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Nicholas Mc Guire <hofrat@osadl.org>
+Signed-off-by: Sean Young <sean@mess.org>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/phy/phy_device.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/media/pci/cx23885/cx23885-dvb.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
-index 9c7e51443f6b6..ae40d8137fd20 100644
---- a/drivers/net/phy/phy_device.c
-+++ b/drivers/net/phy/phy_device.c
-@@ -1657,7 +1657,7 @@ int genphy_soft_reset(struct phy_device *phydev)
- {
- 	int ret;
+diff --git a/drivers/media/pci/cx23885/cx23885-dvb.c b/drivers/media/pci/cx23885/cx23885-dvb.c
+index 7d52173073d6e..bafcb39822747 100644
+--- a/drivers/media/pci/cx23885/cx23885-dvb.c
++++ b/drivers/media/pci/cx23885/cx23885-dvb.c
+@@ -1474,8 +1474,9 @@ static int dvb_register(struct cx23885_tsport *port)
+ 		if (fe0->dvb.frontend != NULL) {
+ 			struct i2c_adapter *tun_i2c;
  
--	ret = phy_write(phydev, MII_BMCR, BMCR_RESET);
-+	ret = phy_set_bits(phydev, MII_BMCR, BMCR_RESET);
- 	if (ret < 0)
- 		return ret;
- 
+-			fe0->dvb.frontend->sec_priv = kmalloc(sizeof(dib7000p_ops), GFP_KERNEL);
+-			memcpy(fe0->dvb.frontend->sec_priv, &dib7000p_ops, sizeof(dib7000p_ops));
++			fe0->dvb.frontend->sec_priv = kmemdup(&dib7000p_ops, sizeof(dib7000p_ops), GFP_KERNEL);
++			if (!fe0->dvb.frontend->sec_priv)
++				return -ENOMEM;
+ 			tun_i2c = dib7000p_ops.get_i2c_master(fe0->dvb.frontend, DIBX000_I2C_INTERFACE_TUNER, 1);
+ 			if (!dvb_attach(dib0070_attach, fe0->dvb.frontend, tun_i2c, &dib7070p_dib0070_config))
+ 				return -ENODEV;
 -- 
 2.20.1
 
