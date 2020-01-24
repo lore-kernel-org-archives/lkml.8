@@ -4,53 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5833AC32771
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:32:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7CB8C35243
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:32:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A30E20661
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:32:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DA8C20661
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:32:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579876337;
-	bh=qr7owESt+Vz2/tX7+VYaDm15p8ZqK9HnMkAvEEwOEdE=;
+	s=default; t=1579876345;
+	bh=AyQZ3DCIZe67RaeskNigaXupa+yKmrbdFSbdO1ig+so=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MQjYELgsxMJS0NbYwrppd7OG/1Iy9jUm16x+2+uJC/0gFpcMtwJhv3ZNaGgGuYSvg
-	 c2EdCtlqpFNSFnnYbBQuptfrT2PQVB+qHd9zfHyQtI5pjFhaSvDAMkYHlFnt5WA1OQ
-	 8T+Np+Tz/fInVuYAqeL2XFWkLwCo4JpcM+6t1GBU=
+	b=Ib3yzesWu1Rh1WJb1k9lbbCxKSEDz46aAlVSDQhJRNkJEl+Aj5aHmD6LWbmup8lHc
+	 RVqCoGRfjeSo4m3DXLKIjHsn7K3KiUiMg2m4SiDr9ddswOdyW8XoUutp+BCZBIEI8H
+	 ALsz9SxLwTBCORfxbQ7IpH9r3vh95rXsEtSdu54E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392675AbgAXOcQ (ORCPT
+        id S2404432AbgAXOUH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 09:32:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40970 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 09:20:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40354 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404519AbgAXOUJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 09:20:09 -0500
+        id S2392053AbgAXOTr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 09:19:47 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 89EA12087E;
-        Fri, 24 Jan 2020 14:20:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2B9C220838;
+        Fri, 24 Jan 2020 14:19:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579875608;
-        bh=qr7owESt+Vz2/tX7+VYaDm15p8ZqK9HnMkAvEEwOEdE=;
+        s=default; t=1579875587;
+        bh=AyQZ3DCIZe67RaeskNigaXupa+yKmrbdFSbdO1ig+so=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pFeesanWnc5onbTFnqKIqonB25WbRplYlpvBNSxXFmJ794842z26N5nX9w1pRdW1F
-         aNnYd/u0X/tn5T6U2lBVXTz8Qha2N+1jAQ5sd4zVyEMSF4mMJ+83DDeao2m27k9j3L
-         D4lsonkUPqL+9sEIhIgW4+87Yz+NqdEouZbDDjSI=
+        b=kwPSen6z9f3Lg6yO5K8ftTYkFgCgXNfG53P/reflJ51pnz3p2l0clV09zMBpGHWoq
+         P6Z/orZ+dgDQtuvUCxxgvCI7ZJaftEmk3uiVMz+UJ0hL5VjugLjLfakGozMOmv53+Z
+         8adjdLNIRwSli95DyO/2+vQq0duuyPKtZhPRUyvs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Eyal Birger <eyal.birger@gmail.com>,
-        Shmulik Ladkani <shmulik.ladkani@gmail.com>,
-        Florian Westphal <fw@strlen.de>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Sasha Levin <sashal@kernel.org>,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 095/107] netfilter: nat: fix ICMP header corruption on ICMP errors
-Date:   Fri, 24 Jan 2020 09:18:05 -0500
-Message-Id: <20200124141817.28793-95-sashal@kernel.org>
+Cc:     Petr Machata <petrm@mellanox.com>, Amit Cohen <amitc@mellanox.com>,
+        Ido Schimmel <idosch@mellanox.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, linux-api@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 077/107] selftests: mlxsw: qos_mc_aware: Fix mausezahn invocation
+Date:   Fri, 24 Jan 2020 09:17:47 -0500
+Message-Id: <20200124141817.28793-77-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200124141817.28793-1-sashal@kernel.org>
 References: <20200124141817.28793-1-sashal@kernel.org>
@@ -63,58 +60,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eyal Birger <eyal.birger@gmail.com>
+From: Petr Machata <petrm@mellanox.com>
 
-[ Upstream commit 61177e911dad660df86a4553eb01c95ece2f6a82 ]
+[ Upstream commit fef6d6704944c7be72fd2b77c021f1aed3d5df0d ]
 
-Commit 8303b7e8f018 ("netfilter: nat: fix spurious connection timeouts")
-made nf_nat_icmp_reply_translation() use icmp_manip_pkt() as the l4
-manipulation function for the outer packet on ICMP errors.
+Mausezahn does not recognize "own" as a keyword on source IP address. As a
+result, the MC stream is not running at all, and therefore no UC
+degradation can be observed even in principle.
 
-However, icmp_manip_pkt() assumes the packet has an 'id' field which
-is not correct for all types of ICMP messages.
+Fix the invocation, and tighten the test: due to the minimum shaper
+configured at the MC TCs, we always expect about 20% degradation. Fail the
+test if it is lower.
 
-This is not correct for ICMP error packets, and leads to bogus bytes
-being written the ICMP header, which can be wrongfully regarded as
-'length' bytes by RFC 4884 compliant receivers.
-
-Fix by assigning the 'id' field only for ICMP messages that have this
-semantic.
-
-Reported-by: Shmulik Ladkani <shmulik.ladkani@gmail.com>
-Fixes: 8303b7e8f018 ("netfilter: nat: fix spurious connection timeouts")
-Signed-off-by: Eyal Birger <eyal.birger@gmail.com>
-Acked-by: Florian Westphal <fw@strlen.de>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Fixes: 573363a68f27 ("selftests: mlxsw: Add qos_lib.sh")
+Signed-off-by: Petr Machata <petrm@mellanox.com>
+Reported-by: Amit Cohen <amitc@mellanox.com>
+Signed-off-by: Ido Schimmel <idosch@mellanox.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/nf_nat_proto.c | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ tools/testing/selftests/drivers/net/mlxsw/qos_mc_aware.sh | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/net/netfilter/nf_nat_proto.c b/net/netfilter/nf_nat_proto.c
-index 0a59c14b51776..64eedc17037ad 100644
---- a/net/netfilter/nf_nat_proto.c
-+++ b/net/netfilter/nf_nat_proto.c
-@@ -233,6 +233,19 @@ icmp_manip_pkt(struct sk_buff *skb,
- 		return false;
+diff --git a/tools/testing/selftests/drivers/net/mlxsw/qos_mc_aware.sh b/tools/testing/selftests/drivers/net/mlxsw/qos_mc_aware.sh
+index 47315fe48d5af..24dd8ed485802 100755
+--- a/tools/testing/selftests/drivers/net/mlxsw/qos_mc_aware.sh
++++ b/tools/testing/selftests/drivers/net/mlxsw/qos_mc_aware.sh
+@@ -232,7 +232,7 @@ test_mc_aware()
+ 	stop_traffic
+ 	local ucth1=${uc_rate[1]}
  
- 	hdr = (struct icmphdr *)(skb->data + hdroff);
-+	switch (hdr->type) {
-+	case ICMP_ECHO:
-+	case ICMP_ECHOREPLY:
-+	case ICMP_TIMESTAMP:
-+	case ICMP_TIMESTAMPREPLY:
-+	case ICMP_INFO_REQUEST:
-+	case ICMP_INFO_REPLY:
-+	case ICMP_ADDRESS:
-+	case ICMP_ADDRESSREPLY:
-+		break;
-+	default:
-+		return true;
-+	}
- 	inet_proto_csum_replace2(&hdr->checksum, skb,
- 				 hdr->un.echo.id, tuple->src.u.icmp.id, false);
- 	hdr->un.echo.id = tuple->src.u.icmp.id;
+-	start_traffic $h1 own bc bc
++	start_traffic $h1 192.0.2.65 bc bc
+ 
+ 	local d0=$(date +%s)
+ 	local t0=$(ethtool_stats_get $h3 rx_octets_prio_0)
+@@ -254,7 +254,11 @@ test_mc_aware()
+ 			ret = 100 * ($ucth1 - $ucth2) / $ucth1
+ 			if (ret > 0) { ret } else { 0 }
+ 		    ")
+-	check_err $(bc <<< "$deg > 25")
++
++	# Minimum shaper of 200Mbps on MC TCs should cause about 20% of
++	# degradation on 1Gbps link.
++	check_err $(bc <<< "$deg < 15") "Minimum shaper not in effect"
++	check_err $(bc <<< "$deg > 25") "MC traffic degrades UC performance too much"
+ 
+ 	local interval=$((d1 - d0))
+ 	local mc_ir=$(rate $u0 $u1 $interval)
 -- 
 2.20.1
 
