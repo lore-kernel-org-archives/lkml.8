@@ -2,109 +2,88 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64665C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 23:04:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22E9EC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 23:07:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DB2E20678
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 23:04:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="myq2gH5x"
+	by mail.kernel.org (Postfix) with ESMTP id E421B2075D
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 23:07:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729465AbgAXXEb (ORCPT
+        id S1729375AbgAXXHZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 18:04:31 -0500
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:37898 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729182AbgAXXEb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 18:04:31 -0500
-Received: by mail-qk1-f195.google.com with SMTP id k6so3775221qki.5;
-        Fri, 24 Jan 2020 15:04:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=ubrJtKrXAfrxvZ08H06Ea3Xp2Ekj7ZN05GOIFs9kJRI=;
-        b=myq2gH5xFk/8utUnTyRgrcte68aWmT6DcWDKlEX498UDnkZ+uM0/BjS1N+bf7BPLjw
-         QK/qlMmgIUnOiM78LNCnBdppMLe3F3ttUnKWYkDNIlC//2YU6SOn3dnSE2wVVAGnKXBd
-         GQ3SrcFsIjAPVs5C3BZtgNqiQoTz7pVvXzAiVbh/WFPswBgx3DVtJD1o5e9rgfoIWXUc
-         GZs+zfXoHA5tDWg2SdDRpFvTsfkO8FepN6cgR7XhPYChhxbpSQbn4PuFvbBtxuwnW8uo
-         sskngt+GjhzZKCGg7NCCBtM/xmzJKjis+BTFCsvFhPNUqoKQpcaNxeg/nwGG5ZPjp0Fy
-         3wrg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=ubrJtKrXAfrxvZ08H06Ea3Xp2Ekj7ZN05GOIFs9kJRI=;
-        b=P5lCVLhUN/s5RyxkPfEk0ADt+8gbCgkoF1eF/BdcxHOcf//CqO3DVh4pgpN51xu9uR
-         gXrRWAj1mcaQ2KPEowhCou+gKPSUSjMiFle1Oqy0n8pGsXLE2ntP3gUQM+w7r/emBkPn
-         ZGVc8vMinYfZTKtyajiPgGfd7L663ta1t8tPu3G9uY58x8kugwXSkw2vATLF38ctM/VM
-         5cSyKKf2FJtGRrOs3ZtfXExRaEq7AVVDR3HrfW0/RTOzFF8DX8QiVA/THfH3h5oVvMxt
-         Dn9K7OdkLkeCzkarvZcBUQf5HJzBSZPmt8k5nDHli58rEUG7MkFr5O5t/Nn9xN350P9j
-         B5tw==
-X-Gm-Message-State: APjAAAU6MvRblysl+RZIs4iiA7Nd5t3vJXopT7EAwbGlWEpFqvFm6932
-        ZN0aUvJXhTKLIUzsf6NJYwkM+XgWskI=
-X-Google-Smtp-Source: APXvYqyUuBzzM1L18dGYumE+q+z0NgxDBVjZzTrZKhSobhk72S9Tl9UH0zbYQMEUSK3ZDXK4LbyI/w==
-X-Received: by 2002:a37:905:: with SMTP id 5mr5038603qkj.404.1579907069533;
-        Fri, 24 Jan 2020 15:04:29 -0800 (PST)
-Received: from Bender ([216.197.220.143])
-        by smtp.gmail.com with ESMTPSA id s20sm4075191qkg.131.2020.01.24.15.04.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 Jan 2020 15:04:28 -0800 (PST)
-Date:   Fri, 24 Jan 2020 17:04:26 -0600
-From:   Jean-Baptiste Jouband <jj.jouband@gmail.com>
-To:     sakari.ailus@linux.intel.com, mchehab@kernel.org
-Cc:     gregkh@linuxfoundation.org, linux-media@vger.kernel.org,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] staging: media: ipu3: Change 'unsigned long int' to
- 'unsigned long'
-Message-ID: <20200124230426.GA4528@Bender>
+        Fri, 24 Jan 2020 18:07:25 -0500
+Received: from mga05.intel.com ([192.55.52.43]:25112 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729182AbgAXXHZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 18:07:25 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Jan 2020 15:07:24 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,359,1574150400"; 
+   d="scan'208";a="221171775"
+Received: from sjchrist-coffee.jf.intel.com ([10.54.74.202])
+  by orsmga008.jf.intel.com with ESMTP; 24 Jan 2020 15:07:23 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Krish Sadhukhan <krish.sadhukhan@oracle.com>,
+        Randy Dunlap <rdunlap@infradead.org>
+Subject: [PATCH] KVM: x86: Take a u64 when checking for a valid dr7 value
+Date:   Fri, 24 Jan 2020 15:07:22 -0800
+Message-Id: <20200124230722.8964-1-sean.j.christopherson@intel.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch fixes the checkpatch.pl warning:
+Take a u64 instead of an unsigned long in kvm_dr7_valid() to fix a build
+warning on i386 due to right-shifting a 32-bit value by 32 when checking
+for bits being set in dr7[63:32].
 
-WARNING: Prefer 'unsigned long' over 'unsigned long int' as the int is unnecessary
+Alternatively, the warning could be resolved by rewriting the check to
+use an i386-friendly method, but taking a u64 fixes another oddity on
+32-bit KVM.  Beause KVM implements natural width VMCS fields as u64s to
+avoid layout issues between 32-bit and 64-bit, a devious guest can stuff
+vmcs12->guest_dr7 with a 64-bit value even when both the guest and host
+are 32-bit kernels.  KVM eventually drops vmcs12->guest_dr7[63:32] when
+propagating vmcs12->guest_dr7 to vmcs02, but ideally KVM would not rely
+on that behavior for correctness.
 
-Signed-off-by: Jean-Baptiste Jouband <jj.jouband@gmail.com>
+Cc: Jim Mattson <jmattson@google.com>
+Cc: Krish Sadhukhan <krish.sadhukhan@oracle.com>
+Fixes: ecb697d10f70 ("KVM: nVMX: Check GUEST_DR7 on vmentry of nested guests")
+Reported-by: Randy Dunlap <rdunlap@infradead.org>
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- drivers/staging/media/ipu3/ipu3-mmu.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/x86/kvm/x86.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/staging/media/ipu3/ipu3-mmu.c b/drivers/staging/media/ipu3/ipu3-mmu.c
-index 3d969b0522ab..5f3ff964f3e7 100644
---- a/drivers/staging/media/ipu3/ipu3-mmu.c
-+++ b/drivers/staging/media/ipu3/ipu3-mmu.c
-@@ -130,7 +130,7 @@ static u32 *imgu_mmu_alloc_page_table(u32 pteval)
- 	for (pte = 0; pte < IPU3_PT_PTES; pte++)
- 		pt[pte] = pteval;
- 
--	set_memory_uc((unsigned long int)pt, IPU3_PT_ORDER);
-+	set_memory_uc((unsigned long)pt, IPU3_PT_ORDER);
- 
- 	return pt;
+diff --git a/arch/x86/kvm/x86.h b/arch/x86/kvm/x86.h
+index 2d2ff855773b..3624665acee4 100644
+--- a/arch/x86/kvm/x86.h
++++ b/arch/x86/kvm/x86.h
+@@ -357,7 +357,7 @@ static inline bool kvm_pat_valid(u64 data)
+ 	return (data | ((data & 0x0202020202020202ull) << 1)) == data;
  }
-@@ -141,7 +141,7 @@ static u32 *imgu_mmu_alloc_page_table(u32 pteval)
-  */
- static void imgu_mmu_free_page_table(u32 *pt)
+ 
+-static inline bool kvm_dr7_valid(unsigned long data)
++static inline bool kvm_dr7_valid(u64 data)
  {
--	set_memory_wb((unsigned long int)pt, IPU3_PT_ORDER);
-+	set_memory_wb((unsigned long)pt, IPU3_PT_ORDER);
- 	free_page((unsigned long)pt);
- }
- 
+ 	/* Bits [63:32] are reserved */
+ 	return !(data >> 32);
 -- 
-2.17.1
+2.24.1
 
