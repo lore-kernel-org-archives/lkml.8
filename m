@@ -6,20 +6,20 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5C60C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 16:19:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD472C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 16:20:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F2042070A
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 16:19:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9EBD52070A
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 16:20:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390181AbgAXQT4 (ORCPT
+        id S2389286AbgAXQT7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 11:19:56 -0500
-Received: from esa6.microchip.iphmx.com ([216.71.154.253]:25637 "EHLO
+        Fri, 24 Jan 2020 11:19:59 -0500
+Received: from esa6.microchip.iphmx.com ([216.71.154.253]:25661 "EHLO
         esa6.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389996AbgAXQTv (ORCPT
+        with ESMTP id S2387730AbgAXQT5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 11:19:51 -0500
+        Fri, 24 Jan 2020 11:19:57 -0500
 Received-SPF: Pass (esa6.microchip.iphmx.com: domain of
   Horatiu.Vultur@microchip.com designates 198.175.253.82 as
   permitted sender) identity=mailfrom;
@@ -39,22 +39,22 @@ Received-SPF: None (esa6.microchip.iphmx.com: no sender
   x-sender="postmaster@email.microchip.com";
   x-conformance=spf_only
 Authentication-Results: esa6.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Horatiu.Vultur@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: 1JPYT53oAV1jOip3/IPJRU/lPeFO1ilCVciS8MM2cVJPZKbYcatXw4bdtaUMxWCYkSrUvuzVT9
- LG+6TwxY1X924jkt++0GPZJ6X8uVmk8uUAVV8p3UzyPPXVyWxGpV28Q8il13L8/pjelx68R+Ym
- bgO17W7DVCDAR9U+zd+1hfVYx2FF52pXWrRlHCOTdb9BrQEvuUGzTVLzFYkONtJyATFk3ksR5E
- ho6geLUJbTWHcP21AqosEHT6LNGaOZAnGmoy9aByFMh2Mjf57k2VHL5Abi6TrwWDtVqi0nUg6s
- aD8=
+IronPort-SDR: VSPTccWq1rIi8LY78/CKRQ05upZrJVWLQTSfCVKiGQOOuUmSFvj1nl3obxhMrkAso2fIaY5lfG
+ /+bn8jtvlxEV102fwNQ5Uud2z4sj76kFXmYsmFEaVUARmmKZtpSJqBX8lA93zE0KpeSqlfJhnW
+ NEFWx4DmFqlo1LwxjnsIRYYt9Q67hE17eVo+hFLzA/L0ZkzaWFhIV4cRdQx5ed3ULffwE4/Aa1
+ QVZglerGLqHwFqadV1FliDNL9aGK3egCTkkxKXkzwYZJW8AP7uQxlnVHccDk51N39EbeBqBPvV
+ e2k=
 X-IronPort-AV: E=Sophos;i="5.70,358,1574146800"; 
-   d="scan'208";a="19416"
+   d="scan'208";a="19442"
 Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 24 Jan 2020 09:19:49 -0700
+  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 24 Jan 2020 09:19:56 -0700
 Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
  chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Fri, 24 Jan 2020 09:19:49 -0700
+ 15.1.1713.5; Fri, 24 Jan 2020 09:19:56 -0700
 Received: from soft-dev3.microsemi.net (10.10.85.251) by
  chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server id
- 15.1.1713.5 via Frontend Transport; Fri, 24 Jan 2020 09:19:46 -0700
+ 15.1.1713.5 via Frontend Transport; Fri, 24 Jan 2020 09:19:53 -0700
 From:   Horatiu Vultur <horatiu.vultur@microchip.com>
 To:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
         <bridge@lists.linux-foundation.org>, <jiri@resnulli.us>,
@@ -64,9 +64,9 @@ To:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
         <andrew@lunn.ch>, <jeffrey.t.kirsher@intel.com>,
         <UNGLinuxDriver@microchip.com>
 CC:     Horatiu Vultur <horatiu.vultur@microchip.com>
-Subject: [RFC net-next v3 07/10] net: bridge: mrp: switchdev: Implement MRP API for switchdev
-Date:   Fri, 24 Jan 2020 17:18:25 +0100
-Message-ID: <20200124161828.12206-8-horatiu.vultur@microchip.com>
+Subject: [RFC net-next v3 09/10] net: bridge: mrp: Integrate MRP into the bridge
+Date:   Fri, 24 Jan 2020 17:18:27 +0100
+Message-ID: <20200124161828.12206-10-horatiu.vultur@microchip.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200124161828.12206-1-horatiu.vultur@microchip.com>
 References: <20200124161828.12206-1-horatiu.vultur@microchip.com>
@@ -77,169 +77,159 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Implement the MRP api for switchdev.
-These functions will just eventually call the switchdev functions:
-switchdev_port_obj_add/del and switchdev_port_attr_set.
+To integrate MRP into the bridge, the bridge needs to do the following:
+- initialized and destroy the generic netlink used by MRP
+- detect if the MRP frame was received on a port that is part of a MRP ring. In
+  case it was not, then forward the frame as usual, otherwise redirect the frame
+  to the upper layer.
 
 Signed-off-by: Horatiu Vultur <horatiu.vultur@microchip.com>
 ---
- net/bridge/br_mrp_switchdev.c | 147 ++++++++++++++++++++++++++++++++++
- 1 file changed, 147 insertions(+)
- create mode 100644 net/bridge/br_mrp_switchdev.c
+ net/bridge/br.c         | 11 +++++++++++
+ net/bridge/br_device.c  |  3 +++
+ net/bridge/br_if.c      |  6 ++++++
+ net/bridge/br_input.c   | 14 ++++++++++++++
+ net/bridge/br_private.h | 14 ++++++++++++++
+ 5 files changed, 48 insertions(+)
 
-diff --git a/net/bridge/br_mrp_switchdev.c b/net/bridge/br_mrp_switchdev.c
-new file mode 100644
-index 000000000000..2226d98806de
---- /dev/null
-+++ b/net/bridge/br_mrp_switchdev.c
-@@ -0,0 +1,147 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
+diff --git a/net/bridge/br.c b/net/bridge/br.c
+index b6fe30e3768f..d5e556eed4ba 100644
+--- a/net/bridge/br.c
++++ b/net/bridge/br.c
+@@ -344,6 +344,12 @@ static int __init br_init(void)
+ 	if (err)
+ 		goto err_out5;
+ 
++#ifdef CONFIG_BRIDGE_MRP
++	err = br_mrp_netlink_init();
++	if (err)
++		goto err_out6;
++#endif
 +
-+#include <net/switchdev.h>
+ 	brioctl_set(br_ioctl_deviceless_stub);
+ 
+ #if IS_ENABLED(CONFIG_ATM_LANE)
+@@ -358,6 +364,11 @@ static int __init br_init(void)
+ 
+ 	return 0;
+ 
++#ifdef CONFIG_BRIDGE_MRP
++err_out6:
++	br_netlink_fini();
++#endif
 +
+ err_out5:
+ 	unregister_switchdev_notifier(&br_switchdev_notifier);
+ err_out4:
+diff --git a/net/bridge/br_device.c b/net/bridge/br_device.c
+index fb38add21b37..29966754d86a 100644
+--- a/net/bridge/br_device.c
++++ b/net/bridge/br_device.c
+@@ -464,6 +464,9 @@ void br_dev_setup(struct net_device *dev)
+ 	spin_lock_init(&br->lock);
+ 	INIT_LIST_HEAD(&br->port_list);
+ 	INIT_HLIST_HEAD(&br->fdb_list);
++#ifdef CONFIG_BRIDGE_MRP
++	INIT_LIST_HEAD(&br->mrp_list);
++#endif
+ 	spin_lock_init(&br->hash_lock);
+ 
+ 	br->bridge_id.prio[0] = 0x80;
+diff --git a/net/bridge/br_if.c b/net/bridge/br_if.c
+index 4fe30b182ee7..9b8bb41c0574 100644
+--- a/net/bridge/br_if.c
++++ b/net/bridge/br_if.c
+@@ -331,6 +331,9 @@ static void del_nbp(struct net_bridge_port *p)
+ 
+ 	spin_lock_bh(&br->lock);
+ 	br_stp_disable_port(p);
++#ifdef CONFIG_BRIDGE_MRP
++	p->mrp_aware = false;
++#endif
+ 	spin_unlock_bh(&br->lock);
+ 
+ 	br_ifinfo_notify(RTM_DELLINK, NULL, p);
+@@ -427,6 +430,9 @@ static struct net_bridge_port *new_nbp(struct net_bridge *br,
+ 	p->port_no = index;
+ 	p->flags = BR_LEARNING | BR_FLOOD | BR_MCAST_FLOOD | BR_BCAST_FLOOD;
+ 	br_init_port(p);
++#ifdef CONFIG_BRIDGE_MRP
++	p->mrp_aware = false;
++#endif
+ 	br_set_state(p, BR_STATE_DISABLED);
+ 	br_stp_port_timer_init(p);
+ 	err = br_multicast_add_port(p);
+diff --git a/net/bridge/br_input.c b/net/bridge/br_input.c
+index 8944ceb47fe9..de7066b077e2 100644
+--- a/net/bridge/br_input.c
++++ b/net/bridge/br_input.c
+@@ -21,6 +21,9 @@
+ #include <linux/rculist.h>
+ #include "br_private.h"
+ #include "br_private_tunnel.h"
++#ifdef CONFIG_BRIDGE_MRP
 +#include "br_private_mrp.h"
++#endif
+ 
+ static int
+ br_netif_receive_skb(struct net *net, struct sock *sk, struct sk_buff *skb)
+@@ -338,6 +341,17 @@ rx_handler_result_t br_handle_frame(struct sk_buff **pskb)
+ 			return RX_HANDLER_CONSUMED;
+ 		}
+ 	}
++#ifdef CONFIG_BRIDGE_MRP
++	/* If there is no MRP instance do normal forwarding */
++	if (!p->mrp_aware)
++		goto forward;
 +
-+int br_mrp_port_switchdev_add(struct net_bridge_port *p, u32 ring_nr)
-+{
-+	struct net_bridge *br = p->br;
-+	struct switchdev_obj_port_mrp mrp = {
-+		.obj.orig_dev = br->dev,
-+		.obj.id = SWITCHDEV_OBJ_ID_PORT_MRP,
-+		.port = p->dev,
-+		.ring_nr = ring_nr,
-+	};
-+	int err = 0;
++	if (skb->protocol == htons(ETH_P_MRP))
++		return RX_HANDLER_PASS;
 +
-+	err = switchdev_port_obj_add(br->dev, &mrp.obj, NULL);
++	if (p->state == BR_STATE_BLOCKING)
++		goto drop;
++#endif
+ 
+ forward:
+ 	switch (p->state) {
+diff --git a/net/bridge/br_private.h b/net/bridge/br_private.h
+index f540f3bdf294..a5d01a394f54 100644
+--- a/net/bridge/br_private.h
++++ b/net/bridge/br_private.h
+@@ -285,6 +285,10 @@ struct net_bridge_port {
+ 	u16				backup_redirected_cnt;
+ 
+ 	struct bridge_stp_xstats	stp_xstats;
 +
-+	if (err && err != -EOPNOTSUPP)
-+		return err;
++#ifdef CONFIG_BRIDGE_MRP
++	bool				mrp_aware;
++#endif
+ };
+ 
+ #define kobj_to_brport(obj)	container_of(obj, struct net_bridge_port, kobj)
+@@ -424,6 +428,10 @@ struct net_bridge {
+ 	int offload_fwd_mark;
+ #endif
+ 	struct hlist_head		fdb_list;
 +
-+	return 0;
-+}
++#ifdef CONFIG_BRIDGE_MRP
++	struct list_head		mrp_list;
++#endif
+ };
+ 
+ struct br_input_skb_cb {
+@@ -1165,6 +1173,12 @@ unsigned long br_timer_value(const struct timer_list *timer);
+ extern int (*br_fdb_test_addr_hook)(struct net_device *dev, unsigned char *addr);
+ #endif
+ 
++/* br_mrp.c */
++#ifdef CONFIG_BRIDGE_MRP
++int br_mrp_netlink_init(void);
++void br_mrp_netlink_uninit(void);
++#endif
 +
-+int br_mrp_switchdev_set_ring_role(struct br_mrp *mrp,
-+				   enum br_mrp_ring_role_type role)
-+{
-+	struct switchdev_obj_ring_role_mrp mrp_role = {
-+		.obj.orig_dev = mrp->br->dev,
-+		.obj.id = SWITCHDEV_OBJ_ID_RING_ROLE_MRP,
-+		.ring_role = role,
-+		.ring_nr = mrp->ring_nr,
-+	};
-+	int err = 0;
-+
-+	pr_info("%s role: %d\n", __func__, role);
-+
-+	if (role == BR_MRP_RING_ROLE_DISABLED)
-+		err = switchdev_port_obj_del(mrp->br->dev, &mrp_role.obj);
-+	else
-+		err = switchdev_port_obj_add(mrp->br->dev, &mrp_role.obj, NULL);
-+
-+	if (err && err != -EOPNOTSUPP)
-+		return err;
-+
-+	return 0;
-+}
-+
-+int br_mrp_switchdev_send_ring_test(struct br_mrp *mrp, u32 interval,
-+				    u8 max_miss)
-+{
-+	struct switchdev_obj_ring_test_mrp test = {
-+		.obj.orig_dev = mrp->br->dev,
-+		.obj.id = SWITCHDEV_OBJ_ID_RING_TEST_MRP,
-+		.interval = interval,
-+		.max_miss = max_miss,
-+		.ring_nr = mrp->ring_nr,
-+	};
-+	int err = 0;
-+
-+	if (interval == 0)
-+		err = switchdev_port_obj_del(mrp->br->dev, &test.obj);
-+	else
-+		err = switchdev_port_obj_add(mrp->br->dev, &test.obj, NULL);
-+
-+	return err;
-+}
-+
-+int br_mrp_port_switchdev_del(struct net_bridge_port *p, u32 ring_nr)
-+{
-+	struct net_bridge *br = p->br;
-+	struct switchdev_obj_port_mrp mrp = {
-+		.obj.orig_dev = br->dev,
-+		.obj.id = SWITCHDEV_OBJ_ID_PORT_MRP,
-+		.port = p->dev,
-+		.ring_nr = ring_nr,
-+	};
-+	int err = 0;
-+
-+	err = switchdev_port_obj_del(br->dev, &mrp.obj);
-+
-+	if (err && err != -EOPNOTSUPP)
-+		return err;
-+
-+	return 0;
-+}
-+
-+int br_mrp_port_switchdev_set_state(struct net_bridge_port *p,
-+				    enum br_mrp_port_state_type state)
-+{
-+	struct switchdev_attr attr = {
-+		.orig_dev = p->dev,
-+		.id = SWITCHDEV_ATTR_ID_MRP_PORT_STATE,
-+		.u.mrp_port_state = state,
-+	};
-+	int err = 0;
-+
-+	pr_info("%s port: %s, state: %d\n", __func__, p->dev->name, state);
-+
-+	err = switchdev_port_attr_set(p->dev, &attr);
-+	if (err && err != -EOPNOTSUPP)
-+		br_warn(p->br, "error setting offload MRP state on port %u(%s)\n",
-+			(unsigned int)p->port_no, p->dev->name);
-+
-+	return err;
-+}
-+
-+int br_mrp_port_switchdev_set_role(struct net_bridge_port *p,
-+				   enum br_mrp_port_role_type role)
-+{
-+	struct switchdev_attr attr = {
-+		.orig_dev = p->dev,
-+		.id = SWITCHDEV_ATTR_ID_MRP_PORT_ROLE,
-+		.u.mrp_port_role = role,
-+	};
-+	int err;
-+
-+	err = switchdev_port_attr_set(p->dev, &attr);
-+	if (err && err != -EOPNOTSUPP)
-+		return err;
-+
-+	return 0;
-+}
-+
-+int br_mrp_switchdev_set_ring_state(struct br_mrp *mrp,
-+				    enum br_mrp_ring_state_type state)
-+{
-+	struct switchdev_attr attr = {
-+		.id = SWITCHDEV_ATTR_ID_MRP_RING_STATE,
-+		.u.mrp_ring_state = state,
-+	};
-+	int err = 0;
-+
-+	attr.orig_dev = mrp->p_port->dev,
-+	err = switchdev_port_attr_set(mrp->p_port->dev, &attr);
-+	if (err && err != -EOPNOTSUPP)
-+		return err;
-+
-+	attr.orig_dev = mrp->s_port->dev;
-+	err = switchdev_port_attr_set(mrp->s_port->dev, &attr);
-+	if (err && err != -EOPNOTSUPP)
-+		return err;
-+
-+	return err;
-+}
-+
+ /* br_netlink.c */
+ extern struct rtnl_link_ops br_link_ops;
+ int br_netlink_init(void);
 -- 
 2.17.1
 
