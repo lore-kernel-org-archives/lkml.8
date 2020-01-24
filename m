@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5790CC35242
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 10:00:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB0E9C35242
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 10:00:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E2E320709
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 10:00:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B05120709
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 10:00:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579860007;
-	bh=gR2mCVIg8LUqUCCRe0JV1hxPd8JLFRY5IGg/TrfreXE=;
+	s=default; t=1579860011;
+	bh=Trvra8fzPXw71fe0p+Auqh4jvwlXhJEPQCkx26ADUt0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RUPaWK8sOzHiMreec5WbueHDkbJdx34W1LUe07tEdyCHyQMnU70pf4kf9D76C8b/r
-	 aRy5iVuyAqyG/kdpvYwmysZcRd5g1SNNNIJQyKuFl0tRvXX+UXk+QU6K2WJ/wxYHji
-	 Egb8423QfVBgnqwPj6CdSmVoDInk9Y1CKHTTzaCU=
+	b=2Hzr3EyvT3eAp0EbvZkstUX9O3iLg/5/LNkqBkdAOwY6F85G45ZDZ8qZ2biESDT/V
+	 dQan0ahke1n2OeJdbiH4kankj+yEfu7aOLv9GvASXt0QGazOJ987NrEQlLtSuIBKd3
+	 ODI6clQRa31BXYbEIVDmZQVFmrmiVwkKWoRXjunc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388714AbgAXKAG (ORCPT
+        id S2388738AbgAXKAK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 05:00:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35526 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 05:00:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35604 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730996AbgAXKAG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 05:00:06 -0500
+        id S1730996AbgAXKAJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 05:00:09 -0500
 Received: from localhost (unknown [145.15.244.15])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5ECC92075D;
-        Fri, 24 Jan 2020 10:00:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9036B20709;
+        Fri, 24 Jan 2020 10:00:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579860005;
-        bh=gR2mCVIg8LUqUCCRe0JV1hxPd8JLFRY5IGg/TrfreXE=;
+        s=default; t=1579860009;
+        bh=Trvra8fzPXw71fe0p+Auqh4jvwlXhJEPQCkx26ADUt0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mRW/vIQ4RYc+kEq4JkOjgz/lpvRinZqUC6A1h9n6qFZl04CCCJo79EJP3tpyTzqFk
-         O35DU8vELtGWpZdUNhDHgOiD/Qu/gHYNAOGy8kBLL96hhWIzyfjveJm/SSLK9cEv9Z
-         ZjYaocGFNgOqaAOp2QKX2sHR/MaXXwxDogKpXjOc=
+        b=M7Sn45l1t9UUQ1ZkEPrjCnBDDzqcbx1q0++6BU/+nVcaCOB5FLuKPHRd+Y9BELiaR
+         ffixjQduAN3zgnfIHlQgdnj4nD08jQktXHoOisigSZhamwsfOA0hfaKfDq5KzOvRoj
+         0LsDzxdaV58Mk8EnVj0AW2Rmubemqar/yqM9Zw+A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sagiv Ozeri <sagiv.ozeri@marvell.com>,
-        Michal Kalderon <michal.kalderon@marvell.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
+        stable@vger.kernel.org, Christophe Leroy <christophe.leroy@c-s.fr>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 214/343] RDMA/qedr: Fix incorrect device rate.
-Date:   Fri, 24 Jan 2020 10:30:32 +0100
-Message-Id: <20200124092948.217308154@linuxfoundation.org>
+Subject: [PATCH 4.14 215/343] spi: spi-fsl-spi: call spi_finalize_current_message() at the end
+Date:   Fri, 24 Jan 2020 10:30:33 +0100
+Message-Id: <20200124092948.335981499@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124092919.490687572@linuxfoundation.org>
 References: <20200124092919.490687572@linuxfoundation.org>
@@ -61,93 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sagiv Ozeri <sagiv.ozeri@marvell.com>
+From: Christophe Leroy <christophe.leroy@c-s.fr>
 
-[ Upstream commit 69054666df0a9b4e8331319f98b6b9a88bc3fcc4 ]
+[ Upstream commit 44a042182cb1e9f7916e015c836967bf638b33c4 ]
 
-Use the correct enum value introduced in commit 12113a35ada6 ("IB/core:
-Add HDR speed enum") Prior to this change a 50Gbps port would show 40Gbps.
+spi_finalize_current_message() shall be called once all
+actions are finished, otherwise the last actions might
+step over a newly started transfer.
 
-This patch also cleaned up the redundant redefiniton of ib speeds for
-qedr.
-
-Fixes: 12113a35ada6 ("IB/core: Add HDR speed enum")
-Signed-off-by: Sagiv Ozeri <sagiv.ozeri@marvell.com>
-Signed-off-by: Michal Kalderon <michal.kalderon@marvell.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Fixes: c592becbe704 ("spi: fsl-(e)spi: migrate to generic master queueing")
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/qedr/verbs.c | 25 +++++++++----------------
- 1 file changed, 9 insertions(+), 16 deletions(-)
+ drivers/spi/spi-fsl-spi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/infiniband/hw/qedr/verbs.c b/drivers/infiniband/hw/qedr/verbs.c
-index 8bfe9073da78c..6ae72accae3db 100644
---- a/drivers/infiniband/hw/qedr/verbs.c
-+++ b/drivers/infiniband/hw/qedr/verbs.c
-@@ -178,54 +178,47 @@ int qedr_query_device(struct ib_device *ibdev,
+diff --git a/drivers/spi/spi-fsl-spi.c b/drivers/spi/spi-fsl-spi.c
+index 8b79e36fab21c..cd784552de7f1 100644
+--- a/drivers/spi/spi-fsl-spi.c
++++ b/drivers/spi/spi-fsl-spi.c
+@@ -407,7 +407,6 @@ static int fsl_spi_do_one_msg(struct spi_master *master,
+ 	}
+ 
+ 	m->status = status;
+-	spi_finalize_current_message(master);
+ 
+ 	if (status || !cs_change) {
+ 		ndelay(nsecs);
+@@ -415,6 +414,7 @@ static int fsl_spi_do_one_msg(struct spi_master *master,
+ 	}
+ 
+ 	fsl_spi_setup_transfer(spi, NULL);
++	spi_finalize_current_message(master);
  	return 0;
  }
  
--#define QEDR_SPEED_SDR		(1)
--#define QEDR_SPEED_DDR		(2)
--#define QEDR_SPEED_QDR		(4)
--#define QEDR_SPEED_FDR10	(8)
--#define QEDR_SPEED_FDR		(16)
--#define QEDR_SPEED_EDR		(32)
--
- static inline void get_link_speed_and_width(int speed, u8 *ib_speed,
- 					    u8 *ib_width)
- {
- 	switch (speed) {
- 	case 1000:
--		*ib_speed = QEDR_SPEED_SDR;
-+		*ib_speed = IB_SPEED_SDR;
- 		*ib_width = IB_WIDTH_1X;
- 		break;
- 	case 10000:
--		*ib_speed = QEDR_SPEED_QDR;
-+		*ib_speed = IB_SPEED_QDR;
- 		*ib_width = IB_WIDTH_1X;
- 		break;
- 
- 	case 20000:
--		*ib_speed = QEDR_SPEED_DDR;
-+		*ib_speed = IB_SPEED_DDR;
- 		*ib_width = IB_WIDTH_4X;
- 		break;
- 
- 	case 25000:
--		*ib_speed = QEDR_SPEED_EDR;
-+		*ib_speed = IB_SPEED_EDR;
- 		*ib_width = IB_WIDTH_1X;
- 		break;
- 
- 	case 40000:
--		*ib_speed = QEDR_SPEED_QDR;
-+		*ib_speed = IB_SPEED_QDR;
- 		*ib_width = IB_WIDTH_4X;
- 		break;
- 
- 	case 50000:
--		*ib_speed = QEDR_SPEED_QDR;
--		*ib_width = IB_WIDTH_4X;
-+		*ib_speed = IB_SPEED_HDR;
-+		*ib_width = IB_WIDTH_1X;
- 		break;
- 
- 	case 100000:
--		*ib_speed = QEDR_SPEED_EDR;
-+		*ib_speed = IB_SPEED_EDR;
- 		*ib_width = IB_WIDTH_4X;
- 		break;
- 
- 	default:
- 		/* Unsupported */
--		*ib_speed = QEDR_SPEED_SDR;
-+		*ib_speed = IB_SPEED_SDR;
- 		*ib_width = IB_WIDTH_1X;
- 	}
- }
 -- 
 2.20.1
 
