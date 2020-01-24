@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A3EFC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:35:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42DE9C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:36:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B65E20704
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:35:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 100D120704
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:36:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579876559;
-	bh=fLVaVqI/k47RJMZ62O9vSB3wxuhMTT5z2izeJOJkHbc=;
+	s=default; t=1579876568;
+	bh=A/OInvNUnYl3sVuGtrPH4+JUTp1LNDxhwo2rpTolErQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=H9eGWbnB0Es3DcVK5eB2O7oiG9BhBEj9/VmEZFPWdn1mQb6BnTh7HelXC0ofwfzVt
-	 6qVxJXD2y8+Pl1DkMnTOU0exHdv0Em90uimMEh0JmIBPRyi3MK1EQqjyZKZIE/JYZb
-	 /Rh9QW9CHE7COUBAq9S/hWNmZRdyUe0x7Z6qWXn0=
+	b=OKetuYmwMsmPq2rUf6TgL7GPSsWmYCKIqwYQR431xs69occJbSig8YJtoQkPZ0UuW
+	 p22MPGkrQgI6rc0x13UeupM0dks1Z16aSqlaQNZtFEVg/AQaX1UTYbENlgF8u6nwGZ
+	 /QhoY9y5j+dSvqA4HaN3YcOahkfX7IBXnKH8nOM4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729774AbgAXOf6 (ORCPT
+        id S1730692AbgAXOgH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 09:35:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39772 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 09:36:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39498 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391640AbgAXOT2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 09:19:28 -0500
+        id S2391505AbgAXOTS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 09:19:18 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3D01C208C4;
-        Fri, 24 Jan 2020 14:19:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 392092087E;
+        Fri, 24 Jan 2020 14:19:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579875567;
-        bh=fLVaVqI/k47RJMZ62O9vSB3wxuhMTT5z2izeJOJkHbc=;
+        s=default; t=1579875557;
+        bh=A/OInvNUnYl3sVuGtrPH4+JUTp1LNDxhwo2rpTolErQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ePA6o7ws9rq99Za+P4N/MKDV12pBcGKISLiHnuN1uEr/97LuNjkK0r5uMRogz+GfJ
-         KhOlNRqHBA+0ea+PjwZE65bn1aJ+UO8odMvIUmL99lcS3BMgv5iEfKrfbIMuJVfaJs
-         XSHSQIuNEd+JgCsnTtWi6s0KM2bJWLSkbCZNSkuU=
+        b=Wlh2KL9MELg+xhQXq+MVKA7UjGoUkhuzsN7EmxbyKOFRKE0zQ5EmaYAFej4cvQ1EV
+         9nb10uEUT9vhsjordZLylgp+Z22NZZomZB8uc66cSvMuJLuS6v/WHh/PFAHVUOq/7d
+         iHBSg+6W+6CK5Ac453rkOJrVIITlOgAQC9miTbLM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Florian Westphal <fw@strlen.de>,
-        syzbot+91bdd8eece0f6629ec8b@syzkaller.appspotmail.com,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
+Cc:     Harry Pan <harry.pan@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Sasha Levin <sashal@kernel.org>,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 060/107] netfilter: arp_tables: init netns pointer in xt_tgdtor_param struct
-Date:   Fri, 24 Jan 2020 09:17:30 -0500
-Message-Id: <20200124141817.28793-60-sashal@kernel.org>
+        platform-driver-x86@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 052/107] platform/x86: intel_pmc_core: update Comet Lake platform driver
+Date:   Fri, 24 Jan 2020 09:17:22 -0500
+Message-Id: <20200124141817.28793-52-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200124141817.28793-1-sashal@kernel.org>
 References: <20200124141817.28793-1-sashal@kernel.org>
@@ -62,126 +60,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Westphal <fw@strlen.de>
+From: Harry Pan <harry.pan@intel.com>
 
-[ Upstream commit 212e7f56605ef9688d0846db60c6c6ec06544095 ]
+[ Upstream commit 515ff674bb9bf06186052e352c4587dab8defaf0 ]
 
-An earlier commit (1b789577f655060d98d20e,
-"netfilter: arp_tables: init netns pointer in xt_tgchk_param struct")
-fixed missing net initialization for arptables, but turns out it was
-incomplete.  We can get a very similar struct net NULL deref during
-error unwinding:
+Adding new CML CPU model ID into platform driver support list.
 
-general protection fault: 0000 [#1] PREEMPT SMP KASAN
-RIP: 0010:xt_rateest_put+0xa1/0x440 net/netfilter/xt_RATEEST.c:77
- xt_rateest_tg_destroy+0x72/0xa0 net/netfilter/xt_RATEEST.c:175
- cleanup_entry net/ipv4/netfilter/arp_tables.c:509 [inline]
- translate_table+0x11f4/0x1d80 net/ipv4/netfilter/arp_tables.c:587
- do_replace net/ipv4/netfilter/arp_tables.c:981 [inline]
- do_arpt_set_ctl+0x317/0x650 net/ipv4/netfilter/arp_tables.c:1461
-
-Also init the netns pointer in xt_tgdtor_param struct.
-
-Fixes: add67461240c1d ("netfilter: add struct net * to target parameters")
-Reported-by: syzbot+91bdd8eece0f6629ec8b@syzkaller.appspotmail.com
-Signed-off-by: Florian Westphal <fw@strlen.de>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Signed-off-by: Harry Pan <harry.pan@intel.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/ipv4/netfilter/arp_tables.c | 19 ++++++++++---------
- 1 file changed, 10 insertions(+), 9 deletions(-)
+ drivers/platform/x86/intel_pmc_core_pltdrv.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/net/ipv4/netfilter/arp_tables.c b/net/ipv4/netfilter/arp_tables.c
-index 069f72edb2640..f1f78a742b36a 100644
---- a/net/ipv4/netfilter/arp_tables.c
-+++ b/net/ipv4/netfilter/arp_tables.c
-@@ -496,12 +496,13 @@ static inline int check_entry_size_and_hooks(struct arpt_entry *e,
- 	return 0;
- }
- 
--static inline void cleanup_entry(struct arpt_entry *e)
-+static void cleanup_entry(struct arpt_entry *e, struct net *net)
- {
- 	struct xt_tgdtor_param par;
- 	struct xt_entry_target *t;
- 
- 	t = arpt_get_target(e);
-+	par.net      = net;
- 	par.target   = t->u.kernel.target;
- 	par.targinfo = t->data;
- 	par.family   = NFPROTO_ARP;
-@@ -584,7 +585,7 @@ static int translate_table(struct net *net,
- 		xt_entry_foreach(iter, entry0, newinfo->size) {
- 			if (i-- == 0)
- 				break;
--			cleanup_entry(iter);
-+			cleanup_entry(iter, net);
- 		}
- 		return ret;
- 	}
-@@ -927,7 +928,7 @@ static int __do_replace(struct net *net, const char *name,
- 	/* Decrease module usage counts and free resource */
- 	loc_cpu_old_entry = oldinfo->entries;
- 	xt_entry_foreach(iter, loc_cpu_old_entry, oldinfo->size)
--		cleanup_entry(iter);
-+		cleanup_entry(iter, net);
- 
- 	xt_free_table_info(oldinfo);
- 	if (copy_to_user(counters_ptr, counters,
-@@ -990,7 +991,7 @@ static int do_replace(struct net *net, const void __user *user,
- 
-  free_newinfo_untrans:
- 	xt_entry_foreach(iter, loc_cpu_entry, newinfo->size)
--		cleanup_entry(iter);
-+		cleanup_entry(iter, net);
-  free_newinfo:
- 	xt_free_table_info(newinfo);
- 	return ret;
-@@ -1287,7 +1288,7 @@ static int compat_do_replace(struct net *net, void __user *user,
- 
-  free_newinfo_untrans:
- 	xt_entry_foreach(iter, loc_cpu_entry, newinfo->size)
--		cleanup_entry(iter);
-+		cleanup_entry(iter, net);
-  free_newinfo:
- 	xt_free_table_info(newinfo);
- 	return ret;
-@@ -1514,7 +1515,7 @@ static int do_arpt_get_ctl(struct sock *sk, int cmd, void __user *user, int *len
- 	return ret;
- }
- 
--static void __arpt_unregister_table(struct xt_table *table)
-+static void __arpt_unregister_table(struct net *net, struct xt_table *table)
- {
- 	struct xt_table_info *private;
- 	void *loc_cpu_entry;
-@@ -1526,7 +1527,7 @@ static void __arpt_unregister_table(struct xt_table *table)
- 	/* Decrease module usage counts and free resources */
- 	loc_cpu_entry = private->entries;
- 	xt_entry_foreach(iter, loc_cpu_entry, private->size)
--		cleanup_entry(iter);
-+		cleanup_entry(iter, net);
- 	if (private->number > private->initial_entries)
- 		module_put(table_owner);
- 	xt_free_table_info(private);
-@@ -1566,7 +1567,7 @@ int arpt_register_table(struct net *net,
- 
- 	ret = nf_register_net_hooks(net, ops, hweight32(table->valid_hooks));
- 	if (ret != 0) {
--		__arpt_unregister_table(new_table);
-+		__arpt_unregister_table(net, new_table);
- 		*res = NULL;
- 	}
- 
-@@ -1581,7 +1582,7 @@ void arpt_unregister_table(struct net *net, struct xt_table *table,
- 			   const struct nf_hook_ops *ops)
- {
- 	nf_unregister_net_hooks(net, ops, hweight32(table->valid_hooks));
--	__arpt_unregister_table(table);
-+	__arpt_unregister_table(net, table);
- }
- 
- /* The built-in targets: standard (NULL) and error. */
+diff --git a/drivers/platform/x86/intel_pmc_core_pltdrv.c b/drivers/platform/x86/intel_pmc_core_pltdrv.c
+index 6fe829f30997d..e1266f5c63593 100644
+--- a/drivers/platform/x86/intel_pmc_core_pltdrv.c
++++ b/drivers/platform/x86/intel_pmc_core_pltdrv.c
+@@ -44,6 +44,8 @@ static const struct x86_cpu_id intel_pmc_core_platform_ids[] = {
+ 	INTEL_CPU_FAM6(KABYLAKE, pmc_core_device),
+ 	INTEL_CPU_FAM6(CANNONLAKE_L, pmc_core_device),
+ 	INTEL_CPU_FAM6(ICELAKE_L, pmc_core_device),
++	INTEL_CPU_FAM6(COMETLAKE, pmc_core_device),
++	INTEL_CPU_FAM6(COMETLAKE_L, pmc_core_device),
+ 	{}
+ };
+ MODULE_DEVICE_TABLE(x86cpu, intel_pmc_core_platform_ids);
 -- 
 2.20.1
 
