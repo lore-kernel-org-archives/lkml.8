@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13794C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 10:06:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8003C35242
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 10:06:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBE752077C
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 10:06:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C8B1206F0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 10:06:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579860392;
-	bh=umHWFYJzusd7HZcknXVUAHc3SH/nj0EXnjr3zi4b2nU=;
+	s=default; t=1579860396;
+	bh=NKMd2mTXX+ITE6414q9uYi6ObRfBC1DrRpQT84Fgbss=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kkVlgS1j+aVws4ZPzDRks6a1iuYSFObGXdXfDRkRV78q75BLgGFIhlY0mrpH7DI4f
-	 qMYAX2c3mj4VK4bcLiGf/VVUWH4N2RRwZvs9JU0YtylJ6gJYTYFKbuHNXNg/STgZ/C
-	 XEzjlUBYIdo6egwe1kY4arOTaeYEq3F9DGbQBZvw=
+	b=SrzvyU6jUKD6NMsiOL8hp+q7+MWBCLzAtiDo9ga/8mPsTmJJ15XBBCyO/euPGT9Sq
+	 +/MiRDW/CObqs7wcomSGZI4S3RXowOiSVTgIFytqaui2fO1IA9BrWkJM7hdfY5j8Vg
+	 PRd438Hk2ujkP1kAOCtlUCDBvPOfb5Ms++bxqptU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389304AbgAXKGc (ORCPT
+        id S2389314AbgAXKGf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 05:06:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43068 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 05:06:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43144 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388684AbgAXKGa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 05:06:30 -0500
+        id S2388684AbgAXKGd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 05:06:33 -0500
 Received: from localhost (unknown [145.15.244.15])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 757CC20709;
-        Fri, 24 Jan 2020 10:06:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 796EF20709;
+        Fri, 24 Jan 2020 10:06:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579860389;
-        bh=umHWFYJzusd7HZcknXVUAHc3SH/nj0EXnjr3zi4b2nU=;
+        s=default; t=1579860393;
+        bh=NKMd2mTXX+ITE6414q9uYi6ObRfBC1DrRpQT84Fgbss=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=C1sydOmPQROSjvBgSiMILVILoupZiKfOkNFhZeYdpix938HHJD9StJAN5KnfmThxL
-         5A6NUIDdvc01nKqFNt3qPX302xCGaa9sGtRGiKN7IgpmGJ8LLEa2+9JUqtr5gGzEzT
-         1Hrd8j1ZvumaF+E+m31+jIw0tzisoyxHqplPNXGI=
+        b=Xny3RMOn+ZCsbDtJPMzZbW2h1ohneP1S/XswtjJSztkN1z37Wg6RF1cp2vP/RI0NL
+         gIBJiwLKgiT+MS2HBks1GI0LBSO+gsUgHYqCNxsMY1dMuxnP6FIrff1PuE2lJnGeC0
+         kWPMI6Q9DBhfSzrq7tuBOOA1nwk2mJuULi034cYs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Igor Russkikh <igor.russkikh@aquantia.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 308/343] net: aquantia: Fix aq_vec_isr_legacy() return value
-Date:   Fri, 24 Jan 2020 10:32:06 +0100
-Message-Id: <20200124093000.388554139@linuxfoundation.org>
+        stable@vger.kernel.org, stable@vger.kernel,
+        Robin Gong <yibin.gong@nxp.com>,
+        Jurgen Lambrecht <J.Lambrecht@TELEVIC.com>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 326/343] dmaengine: imx-sdma: fix size check for sdma script_number
+Date:   Fri, 24 Jan 2020 10:32:24 +0100
+Message-Id: <20200124093002.651594899@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124092919.490687572@linuxfoundation.org>
 References: <20200124092919.490687572@linuxfoundation.org>
@@ -61,65 +61,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Robin Gong <yibin.gong@nxp.com>
 
-[ Upstream commit 31aefe14bc9f56566041303d733fda511d3a1c3e ]
+[ Upstream commit bd73dfabdda280fc5f05bdec79b6721b4b2f035f ]
 
-The irqreturn_t type is an enum or an unsigned int in GCC.  That
-creates to problems because it can't detect if the
-self->aq_hw_ops->hw_irq_read() call fails and at the end the function
-always returns IRQ_HANDLED.
+Illegal memory will be touch if SDMA_SCRIPT_ADDRS_ARRAY_SIZE_V3
+(41) exceed the size of structure sdma_script_start_addrs(40),
+thus cause memory corrupt such as slob block header so that kernel
+trap into while() loop forever in slob_free(). Please refer to below
+code piece in imx-sdma.c:
+for (i = 0; i < sdma->script_number; i++)
+	if (addr_arr[i] > 0)
+		saddr_arr[i] = addr_arr[i]; /* memory corrupt here */
+That issue was brought by commit a572460be9cf ("dmaengine: imx-sdma: Add
+support for version 3 firmware") because SDMA_SCRIPT_ADDRS_ARRAY_SIZE_V3
+(38->41 3 scripts added) not align with script number added in
+sdma_script_start_addrs(2 scripts).
 
-drivers/net/ethernet/aquantia/atlantic/aq_vec.c:316 aq_vec_isr_legacy() warn: unsigned 'err' is never less than zero.
-drivers/net/ethernet/aquantia/atlantic/aq_vec.c:329 aq_vec_isr_legacy() warn: always true condition '(err >= 0) => (0-u32max >= 0)'
-
-Fixes: 970a2e9864b0 ("net: ethernet: aquantia: Vector operations")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Reviewed-by: Igor Russkikh <igor.russkikh@aquantia.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: a572460be9cf ("dmaengine: imx-sdma: Add support for version 3 firmware")
+Cc: stable@vger.kernel
+Link: https://www.spinics.net/lists/arm-kernel/msg754895.html
+Signed-off-by: Robin Gong <yibin.gong@nxp.com>
+Reported-by: Jurgen Lambrecht <J.Lambrecht@TELEVIC.com>
+Link: https://lore.kernel.org/r/1569347584-3478-1-git-send-email-yibin.gong@nxp.com
+[vkoul: update the patch title]
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/aquantia/atlantic/aq_vec.c | 15 ++++++---------
- 1 file changed, 6 insertions(+), 9 deletions(-)
+ drivers/dma/imx-sdma.c                     | 8 ++++++++
+ include/linux/platform_data/dma-imx-sdma.h | 3 +++
+ 2 files changed, 11 insertions(+)
 
-diff --git a/drivers/net/ethernet/aquantia/atlantic/aq_vec.c b/drivers/net/ethernet/aquantia/atlantic/aq_vec.c
-index 5fecc9a099ef7..bb2894a333f20 100644
---- a/drivers/net/ethernet/aquantia/atlantic/aq_vec.c
-+++ b/drivers/net/ethernet/aquantia/atlantic/aq_vec.c
-@@ -310,15 +310,13 @@ irqreturn_t aq_vec_isr_legacy(int irq, void *private)
- {
- 	struct aq_vec_s *self = private;
- 	u64 irq_mask = 0U;
--	irqreturn_t err = 0;
-+	int err;
+diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c
+index 0fc12a8783e39..99f3f22ed6476 100644
+--- a/drivers/dma/imx-sdma.c
++++ b/drivers/dma/imx-sdma.c
+@@ -1441,6 +1441,14 @@ static void sdma_add_scripts(struct sdma_engine *sdma,
+ 	if (!sdma->script_number)
+ 		sdma->script_number = SDMA_SCRIPT_ADDRS_ARRAY_SIZE_V1;
  
--	if (!self) {
--		err = -EINVAL;
--		goto err_exit;
--	}
-+	if (!self)
-+		return IRQ_NONE;
- 	err = self->aq_hw_ops->hw_irq_read(self->aq_hw, &irq_mask);
- 	if (err < 0)
--		goto err_exit;
-+		return IRQ_NONE;
++	if (sdma->script_number > sizeof(struct sdma_script_start_addrs)
++				  / sizeof(s32)) {
++		dev_err(sdma->dev,
++			"SDMA script number %d not match with firmware.\n",
++			sdma->script_number);
++		return;
++	}
++
+ 	for (i = 0; i < sdma->script_number; i++)
+ 		if (addr_arr[i] > 0)
+ 			saddr_arr[i] = addr_arr[i];
+diff --git a/include/linux/platform_data/dma-imx-sdma.h b/include/linux/platform_data/dma-imx-sdma.h
+index 6eaa53cef0bd2..30e676b36b247 100644
+--- a/include/linux/platform_data/dma-imx-sdma.h
++++ b/include/linux/platform_data/dma-imx-sdma.h
+@@ -51,7 +51,10 @@ struct sdma_script_start_addrs {
+ 	/* End of v2 array */
+ 	s32 zcanfd_2_mcu_addr;
+ 	s32 zqspi_2_mcu_addr;
++	s32 mcu_2_ecspi_addr;
+ 	/* End of v3 array */
++	s32 mcu_2_zqspi_addr;
++	/* End of v4 array */
+ };
  
- 	if (irq_mask) {
- 		self->aq_hw_ops->hw_irq_disable(self->aq_hw,
-@@ -326,11 +324,10 @@ irqreturn_t aq_vec_isr_legacy(int irq, void *private)
- 		napi_schedule(&self->napi);
- 	} else {
- 		self->aq_hw_ops->hw_irq_enable(self->aq_hw, 1U);
--		err = IRQ_NONE;
-+		return IRQ_NONE;
- 	}
- 
--err_exit:
--	return err >= 0 ? IRQ_HANDLED : IRQ_NONE;
-+	return IRQ_HANDLED;
- }
- 
- cpumask_t *aq_vec_get_affinity_mask(struct aq_vec_s *self)
+ /**
 -- 
 2.20.1
 
