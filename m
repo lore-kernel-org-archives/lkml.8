@@ -2,56 +2,51 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1D48C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:40:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBA5FC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:41:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9BAAE2070A
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:40:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9AE9420718
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:41:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579858856;
-	bh=fpY12Lb8/uYEbyDI/+r1P0YaZpo/v1IHuJbuIh3KUMA=;
+	s=default; t=1579858861;
+	bh=yUnc2YeJOHkI3QdEe+20GyGweQc1ZTTNkFIkcuElrP4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LbgvkxHWRoqzhegl2/EFS7si5g7Fz1HkXL/qOYmdFjK2kT1G6M4FePZ/1K/7OUO5f
-	 l62HrfVEyU0cRXvJoWP6a1Y/gbtX1hPaOyAl9Bb9HGz2QPHNxKFnM4ud/yTPDUqrU4
-	 TI8OSBMu3jRsFktCaDLKYYKl3cJbQ2r/R/8Py93s=
+	b=DVJxsPg1oIcgjX6e1aGdG7cDWNv4yg4DRkrke63QJznaSswsrAqkaaS0f8YFbmeqB
+	 FaeNkeWTn+YiZrYNW9FGdiKIo8avGfAXwq0C3R8iUiNm8v5KyNnNS8qlUuWJ09QKge
+	 AHla/XCwHOrnHf4s/DeOQGiLaEsiTzKslsXPL3VY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732674AbgAXJkz (ORCPT
+        id S1732697AbgAXJlA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 04:40:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38312 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 04:41:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38368 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732654AbgAXJkx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 04:40:53 -0500
+        id S1732654AbgAXJk5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 04:40:57 -0500
 Received: from localhost (unknown [145.15.244.15])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 75F052070A;
-        Fri, 24 Jan 2020 09:40:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 863F920718;
+        Fri, 24 Jan 2020 09:40:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579858852;
-        bh=fpY12Lb8/uYEbyDI/+r1P0YaZpo/v1IHuJbuIh3KUMA=;
+        s=default; t=1579858856;
+        bh=yUnc2YeJOHkI3QdEe+20GyGweQc1ZTTNkFIkcuElrP4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kwy7YFqAheo1q9PKDyUailWyefmV1S6sbJ4jsaAxtTvPhUI2sAR00KscL354KLCrt
-         vHkKQLcB3GPMlja2XeeILYoDaj216/ULFvCA6CAPep2uB69EDYTJ6RgaNfDTbLShbI
-         mIU+PyC+w1JyMvtIWGmhdXwD6kM67ZilHd22wKAM=
+        b=gBR6qNTG/UBP8qhVTLjOdp8RHD9cMXlzyKvn72CcaEmc429VKQda0vuIXc1YM78/L
+         Rp7qwc9YXHIjuq1lFw4un9yaTs/eWnqktaa1+5+DpFQ1sP5sXBVmXoHOJ74V+Znlk4
+         Dft/+A4tA2WjtkFW6PBORQyLpvPeH9cZLK59mLvU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kefeng Wang <wangkefeng.wang@huawei.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        Hou Zhiqiang <Zhiqiang.Hou@nxp.com>,
-        Minghuan Lian <Minghuan.Lian@nxp.com>,
-        Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 058/102] PCI: mobiveil: Fix csr_read()/write() build issue
-Date:   Fri, 24 Jan 2020 10:30:59 +0100
-Message-Id: <20200124092815.102113818@linuxfoundation.org>
+        stable@vger.kernel.org, Yan-Hsuan Chuang <yhchuang@realtek.com>,
+        Kalle Valo <kvalo@codeaurora.org>
+Subject: [PATCH 5.4 049/102] rtw88: fix beaconing mode rsvd_page memory violation issue
+Date:   Fri, 24 Jan 2020 10:30:50 +0100
+Message-Id: <20200124092813.712359521@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124092806.004582306@linuxfoundation.org>
 References: <20200124092806.004582306@linuxfoundation.org>
@@ -64,311 +59,130 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kefeng Wang <wangkefeng.wang@huawei.com>
+From: Yan-Hsuan Chuang <yhchuang@realtek.com>
 
-[ Upstream commit 4906c05b87d44c19b225935e24d62e4480ca556d ]
+commit c3594559f49c601d410dee4b767c3536a5535bfd upstream.
 
-RISCV has csr_read()/write() macros in arch/riscv/include/asm/csr.h.
+When downloading the reserved page, the first page always contains
+a beacon for the firmware to reference. For non-beaconing modes such
+as station mode, also put a blank skb with length=1.
 
-The same function naming is used in the PCI mobiveil driver thus
-causing build error.
+And for the beaconing modes, driver will get a real beacon with a
+length approximate to the page size. But as the beacon is always put
+at the first page, it does not need a tx_desc, because the TX path
+will generate one when TXing the reserved page to the hardware. So we
+could allocate a buffer with a size smaller than the reserved page,
+when using memcpy() to copy the content of reserved page to the buffer,
+the over-sized reserved page will violate the kernel memory.
 
-Rename csr_[read,write][l,] to mobiveil_csr_read()/write() to fix it.
+To fix it, add the tx_desc before memcpy() the reserved packets to
+the buffer, then we can get SKBs with correct length when counting
+the pages in total. And for page 0, count the extra tx_desc_sz that
+the TX path will generate. This way, the first beacon that allocated
+without tx_desc can be counted with the extra tx_desc_sz to get
+actual pages it requires.
 
-drivers/pci/controller/pcie-mobiveil.c:238:69: error: macro "csr_read" passed 3 arguments, but takes just 1
- static u32 csr_read(struct mobiveil_pcie *pcie, u32 off, size_t size)
+Fixes: e3037485c68e ("rtw88: new Realtek 802.11ac driver")
+Signed-off-by: Yan-Hsuan Chuang <yhchuang@realtek.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-drivers/pci/controller/pcie-mobiveil.c:253:80: error: macro "csr_write" passed 4 arguments, but takes just 2
- static void csr_write(struct mobiveil_pcie *pcie, u32 val, u32 off, size_t size)
-
-Fixes: bcbe0d9a8d93 ("PCI: mobiveil: Unify register accessors")
-Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Reviewed-by: Andrew Murray <andrew.murray@arm.com>
-Cc: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: Minghuan Lian <Minghuan.Lian@nxp.com>
-Cc: Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>
-Cc: Andrew Murray <andrew.murray@arm.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/controller/pcie-mobiveil.c | 119 +++++++++++++------------
- 1 file changed, 62 insertions(+), 57 deletions(-)
+ drivers/net/wireless/realtek/rtw88/fw.c |   52 ++++++++++++++++++++++++++------
+ 1 file changed, 43 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/pci/controller/pcie-mobiveil.c b/drivers/pci/controller/pcie-mobiveil.c
-index a45a6447b01d9..32f37d08d5bc7 100644
---- a/drivers/pci/controller/pcie-mobiveil.c
-+++ b/drivers/pci/controller/pcie-mobiveil.c
-@@ -235,7 +235,7 @@ static int mobiveil_pcie_write(void __iomem *addr, int size, u32 val)
- 	return PCIBIOS_SUCCESSFUL;
- }
- 
--static u32 csr_read(struct mobiveil_pcie *pcie, u32 off, size_t size)
-+static u32 mobiveil_csr_read(struct mobiveil_pcie *pcie, u32 off, size_t size)
+--- a/drivers/net/wireless/realtek/rtw88/fw.c
++++ b/drivers/net/wireless/realtek/rtw88/fw.c
+@@ -498,9 +498,6 @@ static void rtw_rsvd_page_list_to_buf(st
  {
- 	void *addr;
- 	u32 val;
-@@ -250,7 +250,8 @@ static u32 csr_read(struct mobiveil_pcie *pcie, u32 off, size_t size)
- 	return val;
- }
+ 	struct sk_buff *skb = rsvd_pkt->skb;
  
--static void csr_write(struct mobiveil_pcie *pcie, u32 val, u32 off, size_t size)
-+static void mobiveil_csr_write(struct mobiveil_pcie *pcie, u32 val, u32 off,
-+			       size_t size)
- {
- 	void *addr;
- 	int ret;
-@@ -262,19 +263,19 @@ static void csr_write(struct mobiveil_pcie *pcie, u32 val, u32 off, size_t size)
- 		dev_err(&pcie->pdev->dev, "write CSR address failed\n");
- }
- 
--static u32 csr_readl(struct mobiveil_pcie *pcie, u32 off)
-+static u32 mobiveil_csr_readl(struct mobiveil_pcie *pcie, u32 off)
- {
--	return csr_read(pcie, off, 0x4);
-+	return mobiveil_csr_read(pcie, off, 0x4);
- }
- 
--static void csr_writel(struct mobiveil_pcie *pcie, u32 val, u32 off)
-+static void mobiveil_csr_writel(struct mobiveil_pcie *pcie, u32 val, u32 off)
- {
--	csr_write(pcie, val, off, 0x4);
-+	mobiveil_csr_write(pcie, val, off, 0x4);
- }
- 
- static bool mobiveil_pcie_link_up(struct mobiveil_pcie *pcie)
- {
--	return (csr_readl(pcie, LTSSM_STATUS) &
-+	return (mobiveil_csr_readl(pcie, LTSSM_STATUS) &
- 		LTSSM_STATUS_L0_MASK) == LTSSM_STATUS_L0;
- }
- 
-@@ -323,7 +324,7 @@ static void __iomem *mobiveil_pcie_map_bus(struct pci_bus *bus,
- 		PCI_SLOT(devfn) << PAB_DEVICE_SHIFT |
- 		PCI_FUNC(devfn) << PAB_FUNCTION_SHIFT;
- 
--	csr_writel(pcie, value, PAB_AXI_AMAP_PEX_WIN_L(WIN_NUM_0));
-+	mobiveil_csr_writel(pcie, value, PAB_AXI_AMAP_PEX_WIN_L(WIN_NUM_0));
- 
- 	return pcie->config_axi_slave_base + where;
- }
-@@ -353,13 +354,14 @@ static void mobiveil_pcie_isr(struct irq_desc *desc)
- 	chained_irq_enter(chip, desc);
- 
- 	/* read INTx status */
--	val = csr_readl(pcie, PAB_INTP_AMBA_MISC_STAT);
--	mask = csr_readl(pcie, PAB_INTP_AMBA_MISC_ENB);
-+	val = mobiveil_csr_readl(pcie, PAB_INTP_AMBA_MISC_STAT);
-+	mask = mobiveil_csr_readl(pcie, PAB_INTP_AMBA_MISC_ENB);
- 	intr_status = val & mask;
- 
- 	/* Handle INTx */
- 	if (intr_status & PAB_INTP_INTX_MASK) {
--		shifted_status = csr_readl(pcie, PAB_INTP_AMBA_MISC_STAT);
-+		shifted_status = mobiveil_csr_readl(pcie,
-+						    PAB_INTP_AMBA_MISC_STAT);
- 		shifted_status &= PAB_INTP_INTX_MASK;
- 		shifted_status >>= PAB_INTX_START;
- 		do {
-@@ -373,12 +375,13 @@ static void mobiveil_pcie_isr(struct irq_desc *desc)
- 							    bit);
- 
- 				/* clear interrupt handled */
--				csr_writel(pcie, 1 << (PAB_INTX_START + bit),
--					   PAB_INTP_AMBA_MISC_STAT);
-+				mobiveil_csr_writel(pcie,
-+						    1 << (PAB_INTX_START + bit),
-+						    PAB_INTP_AMBA_MISC_STAT);
- 			}
- 
--			shifted_status = csr_readl(pcie,
--						   PAB_INTP_AMBA_MISC_STAT);
-+			shifted_status = mobiveil_csr_readl(pcie,
-+							    PAB_INTP_AMBA_MISC_STAT);
- 			shifted_status &= PAB_INTP_INTX_MASK;
- 			shifted_status >>= PAB_INTX_START;
- 		} while (shifted_status != 0);
-@@ -413,7 +416,7 @@ static void mobiveil_pcie_isr(struct irq_desc *desc)
+-	if (rsvd_pkt->add_txdesc)
+-		rtw_fill_rsvd_page_desc(rtwdev, skb);
+-
+ 	if (page >= 1)
+ 		memcpy(buf + page_margin + page_size * (page - 1),
+ 		       skb->data, skb->len);
+@@ -625,16 +622,37 @@ static u8 *rtw_build_rsvd_page(struct rt
+ 	list_for_each_entry(rsvd_pkt, &rtwdev->rsvd_page_list, list) {
+ 		iter = rtw_get_rsvd_page_skb(hw, vif, rsvd_pkt->type);
+ 		if (!iter) {
+-			rtw_err(rtwdev, "fail to build rsvd packet\n");
++			rtw_err(rtwdev, "failed to build rsvd packet\n");
+ 			goto release_skb;
+ 		}
++
++		/* Fill the tx_desc for the rsvd pkt that requires one.
++		 * And iter->len will be added with size of tx_desc_sz.
++		 */
++		if (rsvd_pkt->add_txdesc)
++			rtw_fill_rsvd_page_desc(rtwdev, iter);
++
+ 		rsvd_pkt->skb = iter;
+ 		rsvd_pkt->page = total_page;
+-		if (rsvd_pkt->add_txdesc)
++
++		/* Reserved page is downloaded via TX path, and TX path will
++		 * generate a tx_desc at the header to describe length of
++		 * the buffer. If we are not counting page numbers with the
++		 * size of tx_desc added at the first rsvd_pkt (usually a
++		 * beacon, firmware default refer to the first page as the
++		 * content of beacon), we could generate a buffer which size
++		 * is smaller than the actual size of the whole rsvd_page
++		 */
++		if (total_page == 0) {
++			if (rsvd_pkt->type != RSVD_BEACON) {
++				rtw_err(rtwdev, "first page should be a beacon\n");
++				goto release_skb;
++			}
+ 			total_page += rtw_len_to_page(iter->len + tx_desc_sz,
+ 						      page_size);
+-		else
++		} else {
+ 			total_page += rtw_len_to_page(iter->len, page_size);
++		}
  	}
  
- 	/* Clear the interrupt status */
--	csr_writel(pcie, intr_status, PAB_INTP_AMBA_MISC_STAT);
-+	mobiveil_csr_writel(pcie, intr_status, PAB_INTP_AMBA_MISC_STAT);
- 	chained_irq_exit(chip, desc);
- }
+ 	if (total_page > rtwdev->fifo.rsvd_drv_pg_num) {
+@@ -647,13 +665,24 @@ static u8 *rtw_build_rsvd_page(struct rt
+ 	if (!buf)
+ 		goto release_skb;
  
-@@ -474,24 +477,24 @@ static void program_ib_windows(struct mobiveil_pcie *pcie, int win_num,
- 		return;
++	/* Copy the content of each rsvd_pkt to the buf, and they should
++	 * be aligned to the pages.
++	 *
++	 * Note that the first rsvd_pkt is a beacon no matter what vif->type.
++	 * And that rsvd_pkt does not require tx_desc because when it goes
++	 * through TX path, the TX path will generate one for it.
++	 */
+ 	list_for_each_entry(rsvd_pkt, &rtwdev->rsvd_page_list, list) {
+ 		rtw_rsvd_page_list_to_buf(rtwdev, page_size, page_margin,
+ 					  page, buf, rsvd_pkt);
+-		page += rtw_len_to_page(rsvd_pkt->skb->len, page_size);
+-	}
+-	list_for_each_entry(rsvd_pkt, &rtwdev->rsvd_page_list, list)
++		if (page == 0)
++			page += rtw_len_to_page(rsvd_pkt->skb->len +
++						tx_desc_sz, page_size);
++		else
++			page += rtw_len_to_page(rsvd_pkt->skb->len, page_size);
++
+ 		kfree_skb(rsvd_pkt->skb);
++	}
+ 
+ 	return buf;
+ 
+@@ -706,6 +735,11 @@ int rtw_fw_download_rsvd_page(struct rtw
+ 		goto free;
  	}
  
--	value = csr_readl(pcie, PAB_PEX_AMAP_CTRL(win_num));
-+	value = mobiveil_csr_readl(pcie, PAB_PEX_AMAP_CTRL(win_num));
- 	value &= ~(AMAP_CTRL_TYPE_MASK << AMAP_CTRL_TYPE_SHIFT | WIN_SIZE_MASK);
- 	value |= type << AMAP_CTRL_TYPE_SHIFT | 1 << AMAP_CTRL_EN_SHIFT |
- 		 (lower_32_bits(size64) & WIN_SIZE_MASK);
--	csr_writel(pcie, value, PAB_PEX_AMAP_CTRL(win_num));
-+	mobiveil_csr_writel(pcie, value, PAB_PEX_AMAP_CTRL(win_num));
- 
--	csr_writel(pcie, upper_32_bits(size64),
--		   PAB_EXT_PEX_AMAP_SIZEN(win_num));
-+	mobiveil_csr_writel(pcie, upper_32_bits(size64),
-+			    PAB_EXT_PEX_AMAP_SIZEN(win_num));
- 
--	csr_writel(pcie, lower_32_bits(cpu_addr),
--		   PAB_PEX_AMAP_AXI_WIN(win_num));
--	csr_writel(pcie, upper_32_bits(cpu_addr),
--		   PAB_EXT_PEX_AMAP_AXI_WIN(win_num));
-+	mobiveil_csr_writel(pcie, lower_32_bits(cpu_addr),
-+			    PAB_PEX_AMAP_AXI_WIN(win_num));
-+	mobiveil_csr_writel(pcie, upper_32_bits(cpu_addr),
-+			    PAB_EXT_PEX_AMAP_AXI_WIN(win_num));
- 
--	csr_writel(pcie, lower_32_bits(pci_addr),
--		   PAB_PEX_AMAP_PEX_WIN_L(win_num));
--	csr_writel(pcie, upper_32_bits(pci_addr),
--		   PAB_PEX_AMAP_PEX_WIN_H(win_num));
-+	mobiveil_csr_writel(pcie, lower_32_bits(pci_addr),
-+			    PAB_PEX_AMAP_PEX_WIN_L(win_num));
-+	mobiveil_csr_writel(pcie, upper_32_bits(pci_addr),
-+			    PAB_PEX_AMAP_PEX_WIN_H(win_num));
- 
- 	pcie->ib_wins_configured++;
- }
-@@ -515,27 +518,29 @@ static void program_ob_windows(struct mobiveil_pcie *pcie, int win_num,
- 	 * program Enable Bit to 1, Type Bit to (00) base 2, AXI Window Size Bit
- 	 * to 4 KB in PAB_AXI_AMAP_CTRL register
- 	 */
--	value = csr_readl(pcie, PAB_AXI_AMAP_CTRL(win_num));
-+	value = mobiveil_csr_readl(pcie, PAB_AXI_AMAP_CTRL(win_num));
- 	value &= ~(WIN_TYPE_MASK << WIN_TYPE_SHIFT | WIN_SIZE_MASK);
- 	value |= 1 << WIN_ENABLE_SHIFT | type << WIN_TYPE_SHIFT |
- 		 (lower_32_bits(size64) & WIN_SIZE_MASK);
--	csr_writel(pcie, value, PAB_AXI_AMAP_CTRL(win_num));
-+	mobiveil_csr_writel(pcie, value, PAB_AXI_AMAP_CTRL(win_num));
- 
--	csr_writel(pcie, upper_32_bits(size64), PAB_EXT_AXI_AMAP_SIZE(win_num));
-+	mobiveil_csr_writel(pcie, upper_32_bits(size64),
-+			    PAB_EXT_AXI_AMAP_SIZE(win_num));
- 
- 	/*
- 	 * program AXI window base with appropriate value in
- 	 * PAB_AXI_AMAP_AXI_WIN0 register
- 	 */
--	csr_writel(pcie, lower_32_bits(cpu_addr) & (~AXI_WINDOW_ALIGN_MASK),
--		   PAB_AXI_AMAP_AXI_WIN(win_num));
--	csr_writel(pcie, upper_32_bits(cpu_addr),
--		   PAB_EXT_AXI_AMAP_AXI_WIN(win_num));
-+	mobiveil_csr_writel(pcie,
-+			    lower_32_bits(cpu_addr) & (~AXI_WINDOW_ALIGN_MASK),
-+			    PAB_AXI_AMAP_AXI_WIN(win_num));
-+	mobiveil_csr_writel(pcie, upper_32_bits(cpu_addr),
-+			    PAB_EXT_AXI_AMAP_AXI_WIN(win_num));
- 
--	csr_writel(pcie, lower_32_bits(pci_addr),
--		   PAB_AXI_AMAP_PEX_WIN_L(win_num));
--	csr_writel(pcie, upper_32_bits(pci_addr),
--		   PAB_AXI_AMAP_PEX_WIN_H(win_num));
-+	mobiveil_csr_writel(pcie, lower_32_bits(pci_addr),
-+			    PAB_AXI_AMAP_PEX_WIN_L(win_num));
-+	mobiveil_csr_writel(pcie, upper_32_bits(pci_addr),
-+			    PAB_AXI_AMAP_PEX_WIN_H(win_num));
- 
- 	pcie->ob_wins_configured++;
- }
-@@ -579,42 +584,42 @@ static int mobiveil_host_init(struct mobiveil_pcie *pcie)
- 	struct resource_entry *win;
- 
- 	/* setup bus numbers */
--	value = csr_readl(pcie, PCI_PRIMARY_BUS);
-+	value = mobiveil_csr_readl(pcie, PCI_PRIMARY_BUS);
- 	value &= 0xff000000;
- 	value |= 0x00ff0100;
--	csr_writel(pcie, value, PCI_PRIMARY_BUS);
-+	mobiveil_csr_writel(pcie, value, PCI_PRIMARY_BUS);
- 
- 	/*
- 	 * program Bus Master Enable Bit in Command Register in PAB Config
- 	 * Space
- 	 */
--	value = csr_readl(pcie, PCI_COMMAND);
-+	value = mobiveil_csr_readl(pcie, PCI_COMMAND);
- 	value |= PCI_COMMAND_IO | PCI_COMMAND_MEMORY | PCI_COMMAND_MASTER;
--	csr_writel(pcie, value, PCI_COMMAND);
-+	mobiveil_csr_writel(pcie, value, PCI_COMMAND);
- 
- 	/*
- 	 * program PIO Enable Bit to 1 (and PEX PIO Enable to 1) in PAB_CTRL
- 	 * register
- 	 */
--	pab_ctrl = csr_readl(pcie, PAB_CTRL);
-+	pab_ctrl = mobiveil_csr_readl(pcie, PAB_CTRL);
- 	pab_ctrl |= (1 << AMBA_PIO_ENABLE_SHIFT) | (1 << PEX_PIO_ENABLE_SHIFT);
--	csr_writel(pcie, pab_ctrl, PAB_CTRL);
-+	mobiveil_csr_writel(pcie, pab_ctrl, PAB_CTRL);
- 
--	csr_writel(pcie, (PAB_INTP_INTX_MASK | PAB_INTP_MSI_MASK),
--		   PAB_INTP_AMBA_MISC_ENB);
-+	mobiveil_csr_writel(pcie, (PAB_INTP_INTX_MASK | PAB_INTP_MSI_MASK),
-+			    PAB_INTP_AMBA_MISC_ENB);
- 
- 	/*
- 	 * program PIO Enable Bit to 1 and Config Window Enable Bit to 1 in
- 	 * PAB_AXI_PIO_CTRL Register
- 	 */
--	value = csr_readl(pcie, PAB_AXI_PIO_CTRL);
-+	value = mobiveil_csr_readl(pcie, PAB_AXI_PIO_CTRL);
- 	value |= APIO_EN_MASK;
--	csr_writel(pcie, value, PAB_AXI_PIO_CTRL);
-+	mobiveil_csr_writel(pcie, value, PAB_AXI_PIO_CTRL);
- 
- 	/* Enable PCIe PIO master */
--	value = csr_readl(pcie, PAB_PEX_PIO_CTRL);
-+	value = mobiveil_csr_readl(pcie, PAB_PEX_PIO_CTRL);
- 	value |= 1 << PIO_ENABLE_SHIFT;
--	csr_writel(pcie, value, PAB_PEX_PIO_CTRL);
-+	mobiveil_csr_writel(pcie, value, PAB_PEX_PIO_CTRL);
- 
- 	/*
- 	 * we'll program one outbound window for config reads and
-@@ -647,10 +652,10 @@ static int mobiveil_host_init(struct mobiveil_pcie *pcie)
- 	}
- 
- 	/* fixup for PCIe class register */
--	value = csr_readl(pcie, PAB_INTP_AXI_PIO_CLASS);
-+	value = mobiveil_csr_readl(pcie, PAB_INTP_AXI_PIO_CLASS);
- 	value &= 0xff;
- 	value |= (PCI_CLASS_BRIDGE_PCI << 16);
--	csr_writel(pcie, value, PAB_INTP_AXI_PIO_CLASS);
-+	mobiveil_csr_writel(pcie, value, PAB_INTP_AXI_PIO_CLASS);
- 
- 	/* setup MSI hardware registers */
- 	mobiveil_pcie_enable_msi(pcie);
-@@ -668,9 +673,9 @@ static void mobiveil_mask_intx_irq(struct irq_data *data)
- 	pcie = irq_desc_get_chip_data(desc);
- 	mask = 1 << ((data->hwirq + PAB_INTX_START) - 1);
- 	raw_spin_lock_irqsave(&pcie->intx_mask_lock, flags);
--	shifted_val = csr_readl(pcie, PAB_INTP_AMBA_MISC_ENB);
-+	shifted_val = mobiveil_csr_readl(pcie, PAB_INTP_AMBA_MISC_ENB);
- 	shifted_val &= ~mask;
--	csr_writel(pcie, shifted_val, PAB_INTP_AMBA_MISC_ENB);
-+	mobiveil_csr_writel(pcie, shifted_val, PAB_INTP_AMBA_MISC_ENB);
- 	raw_spin_unlock_irqrestore(&pcie->intx_mask_lock, flags);
- }
- 
-@@ -684,9 +689,9 @@ static void mobiveil_unmask_intx_irq(struct irq_data *data)
- 	pcie = irq_desc_get_chip_data(desc);
- 	mask = 1 << ((data->hwirq + PAB_INTX_START) - 1);
- 	raw_spin_lock_irqsave(&pcie->intx_mask_lock, flags);
--	shifted_val = csr_readl(pcie, PAB_INTP_AMBA_MISC_ENB);
-+	shifted_val = mobiveil_csr_readl(pcie, PAB_INTP_AMBA_MISC_ENB);
- 	shifted_val |= mask;
--	csr_writel(pcie, shifted_val, PAB_INTP_AMBA_MISC_ENB);
-+	mobiveil_csr_writel(pcie, shifted_val, PAB_INTP_AMBA_MISC_ENB);
- 	raw_spin_unlock_irqrestore(&pcie->intx_mask_lock, flags);
- }
- 
--- 
-2.20.1
-
++	/* The last thing is to download the *ONLY* beacon again, because
++	 * the previous tx_desc is to describe the total rsvd page. Download
++	 * the beacon again to replace the TX desc header, and we will get
++	 * a correct tx_desc for the beacon in the rsvd page.
++	 */
+ 	ret = rtw_download_beacon(rtwdev, vif);
+ 	if (ret) {
+ 		rtw_err(rtwdev, "failed to download beacon\n");
 
 
