@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FAC3C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:15:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3CAEC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:15:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D25920663
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:15:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CA4120704
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:15:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579864541;
-	bh=cKzUfZ395xASYGLH4lTkD8MFhnYdN4Pw5e4VHBn88g8=;
+	s=default; t=1579864545;
+	bh=tUh6CLf0IpiGLRBcHFAphW+usAQVEqq6YxT2MviT4vw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bBJujmWzN7w4xxMAu5WFd8bjVDSXMoeabJPldlejQhwsbjFlBQ6SuYJYC+SsLdFU2
-	 BTtRtVGnUIl3KtcPb+y6+fC+DyexrflyTqYouL79nQ5zc3W0G8XztLd2H4xlq5renH
-	 YwU1ZKDF1cmjKpvYP8nKI8J1BqFaQpMWBGiTSiKM=
+	b=LoPsG7co9CTQqRK7DkQosxt3RKmzOOaisBW8HkMANjvO40/L7AsJ73QtF0tb5ZTRB
+	 IuxY4NgRGLlbB9n7vO3J5pL4S9aLO3Bl6FKupXtzGB5S8db3epyenibq0BOFzDzL4Q
+	 EDwDWncDHLysu6k/O9uaIBFrasVF/fxaOswkPKFI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390304AbgAXLPk (ORCPT
+        id S2390174AbgAXLPn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:15:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52160 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 06:15:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52286 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390289AbgAXLPd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:15:33 -0500
+        id S2390305AbgAXLPk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:15:40 -0500
 Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3EF5120708;
-        Fri, 24 Jan 2020 11:15:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7586520708;
+        Fri, 24 Jan 2020 11:15:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579864532;
-        bh=cKzUfZ395xASYGLH4lTkD8MFhnYdN4Pw5e4VHBn88g8=;
+        s=default; t=1579864540;
+        bh=tUh6CLf0IpiGLRBcHFAphW+usAQVEqq6YxT2MviT4vw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dJ8lKZWFOR62Fk79VmbDZelJDrXrhHnhVmI4YivaODLtKO2axQuvh3+QdN0rkTR/0
-         eto3VWk0v5BDpcKBPXS/dRbhA7ehsv4hZ8z1Ty9ffWCix+mnppYsFdAHEjhqlyB6tD
-         qWJG8oj/RLjfp5QCKE8Hy+nyK4YbsckNiywtMJrA=
+        b=FRVI9Gv8b7Aev3xPT5LSCo9JptQQZfdjxsfPS7IcYU5Aas31b1mbiyCy2syfK7cVf
+         M+7GyqUnR7GOvAP7ssBIIZblEki7xs1eIcuIeDul6yN/bIkyLjDphWZJYbF/mi2b0r
+         grdvbwa8sVCbDQhGmc6yWqCbxihLHyBdex5z8c4k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        stable@vger.kernel.org, YueHaibing <yuehaibing@huawei.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 292/639] rtc: Fix timestamp value for RTC_TIMESTAMP_BEGIN_1900
-Date:   Fri, 24 Jan 2020 10:27:42 +0100
-Message-Id: <20200124093123.464540019@linuxfoundation.org>
+Subject: [PATCH 4.19 281/639] media: tw5864: Fix possible NULL pointer dereference in tw5864_handle_frame
+Date:   Fri, 24 Jan 2020 10:27:31 +0100
+Message-Id: <20200124093122.017268600@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
 References: <20200124093047.008739095@linuxfoundation.org>
@@ -61,33 +61,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit d3062d1d7415cb5a37777220357aca51a491c3d7 ]
+[ Upstream commit 2e7682ebfc750177a4944eeb56e97a3f05734528 ]
 
-Printing "mktime64(1900, 1, 1, 0, 0, 0)" gives -2208988800.
+'vb' null check should be done before dereferencing it in
+tw5864_handle_frame, otherwise a NULL pointer dereference
+may occur.
 
-Fixes: 83bbc5ac63326433 ("rtc: Add useful timestamp definitions")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Fixes: 34d1324edd31 ("[media] pci: Add tw5864 driver")
+
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/rtc.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/media/pci/tw5864/tw5864-video.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/include/linux/rtc.h b/include/linux/rtc.h
-index 6aedc30003e73..5a34f59941fb7 100644
---- a/include/linux/rtc.h
-+++ b/include/linux/rtc.h
-@@ -163,7 +163,7 @@ struct rtc_device {
- #define to_rtc_device(d) container_of(d, struct rtc_device, dev)
+diff --git a/drivers/media/pci/tw5864/tw5864-video.c b/drivers/media/pci/tw5864/tw5864-video.c
+index ff2b7da90c088..6c40e60ac9939 100644
+--- a/drivers/media/pci/tw5864/tw5864-video.c
++++ b/drivers/media/pci/tw5864/tw5864-video.c
+@@ -1395,13 +1395,13 @@ static void tw5864_handle_frame(struct tw5864_h264_frame *frame)
+ 	input->vb = NULL;
+ 	spin_unlock_irqrestore(&input->slock, flags);
  
- /* useful timestamps */
--#define RTC_TIMESTAMP_BEGIN_1900	-2208989361LL /* 1900-01-01 00:00:00 */
-+#define RTC_TIMESTAMP_BEGIN_1900	-2208988800LL /* 1900-01-01 00:00:00 */
- #define RTC_TIMESTAMP_BEGIN_2000	946684800LL /* 2000-01-01 00:00:00 */
- #define RTC_TIMESTAMP_END_2099		4102444799LL /* 2099-12-31 23:59:59 */
+-	v4l2_buf = to_vb2_v4l2_buffer(&vb->vb.vb2_buf);
+-
+ 	if (!vb) { /* Gone because of disabling */
+ 		dev_dbg(&dev->pci->dev, "vb is empty, dropping frame\n");
+ 		return;
+ 	}
  
++	v4l2_buf = to_vb2_v4l2_buffer(&vb->vb.vb2_buf);
++
+ 	/*
+ 	 * Check for space.
+ 	 * Mind the overhead of startcode emulation prevention.
 -- 
 2.20.1
 
