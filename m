@@ -2,110 +2,91 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
-	USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA0B1C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:37:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 210E4C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:37:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF7B720704
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:37:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="G4PCXCZv"
+	by mail.kernel.org (Postfix) with ESMTP id E8CBB2071A
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:37:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579876639;
+	bh=yYkdvZfWRqRnTJkQxbICX9j233kcKaHvQHhe2M4H1gs=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=arPvCEVnMQgrPrI52q2T5tLjsXc8xh/k67pA1XlSHQRIYOv5e+CJ7dif88MuksMfr
+	 aPa3OdxnwBMQBtpw798kQhUClM2jph2WMJ3o6zYspm+ValnGGCYgpL0eF/0tfCbMhy
+	 4aYlykmdRltSUihqXsMwuDJ+3jFEysUSSCq+vETc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387755AbgAXOhP (ORCPT
+        id S2403903AbgAXOTH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 09:37:15 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:35988 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387676AbgAXOhK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 09:37:10 -0500
-Received: by mail-wm1-f68.google.com with SMTP id p17so1925289wma.1
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Jan 2020 06:37:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=dzsZn5YGBm3wUhQPoMDUJ14zEU+MEc78x4rzaBDLSP0=;
-        b=G4PCXCZvqK2HNyrqpe/9EKycb+jQXw97AZkRxWS9FasZLV3pYn+fkJ1xa1QmczUANh
-         PZQWXmEaQFOnW9EpzrRP/J7zOtCN7iy2MIdoGWSpUPdIoxynMQ3KWZh6W9fxM1w55urS
-         oCRqjJmrd9DrJRcfO1teS8g8zNr/5XJJycB8t40LS4sHy9sVgls/wyDfKwVPK8sq4PbD
-         Z/n+2MMHuoCSzBI6hRHHirCQyy33Axe6x/gM7tn+Q96IKsdn7lOSybmec5hqZ29PRzSt
-         J4J3bpoBYjTnNWrT9kMH6N08+3+irqZ547Dx1GLy99S0ZVBl7v4cdRzBAvCaZYbKTJC6
-         NasA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=dzsZn5YGBm3wUhQPoMDUJ14zEU+MEc78x4rzaBDLSP0=;
-        b=IQ/CRyflM3WGmsrPFn0+BDO6trCfyLAdWhXBEjZDn+QRebXreCpq2r4yeyMgFA30XE
-         t3EtSqmdl0DqUoeV7vZsMroeOyKlYW8P3qjKzXVWaExd4oqQveHakKhvYlxjc2xahBwl
-         AC1NIjca146wJcQA6/Y1Tjk1SQpz0SPonwxYTyyYELbVuhVlc3lanKwxv1PHcnYhsJE3
-         yHWxVqVORJg9kaQgKcSUdxX6y/8qWREtqEXrW42cKPJ3JRwOjJy5YCt7ixCYQ1//WzVr
-         Yt8uC6jFPipn0CcnvI6cSwRsLIpGh2/KHutntV0JJBuenXcTd4i2FgUrwPQtYCHa2yKZ
-         FHMg==
-X-Gm-Message-State: APjAAAUpCdWUYsbadK6HEubMl9cqD3QWbj2J4/PQfzlU11OlCVhwFLok
-        WGARNsvr1jF01Cu1mCyme3cPe7oV9UrwTQ==
-X-Google-Smtp-Source: APXvYqyMVfaMhToiGNn5b34BkYqDXlqLtMg4JBeFdVJpPM+zLlKRZ/0/+kA99MsGFZbIep1CF9uRPA==
-X-Received: by 2002:a1c:9602:: with SMTP id y2mr3569784wmd.23.1579876628063;
-        Fri, 24 Jan 2020 06:37:08 -0800 (PST)
-Received: from google.com ([2a00:79e0:d:110:d6cc:2030:37c1:9964])
-        by smtp.gmail.com with ESMTPSA id s19sm6831173wmj.33.2020.01.24.06.37.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 Jan 2020 06:37:07 -0800 (PST)
-Date:   Fri, 24 Jan 2020 14:37:04 +0000
-From:   Quentin Perret <qperret@google.com>
-To:     Douglas Raillard <douglas.raillard@arm.com>
-Cc:     linux-kernel@vger.kernel.org, rjw@rjwysocki.net,
-        viresh.kumar@linaro.org, peterz@infradead.org,
-        juri.lelli@redhat.com, vincent.guittot@linaro.org,
-        dietmar.eggemann@arm.com, linux-pm@vger.kernel.org
-Subject: Re: [RFC PATCH v4 3/6] sched/cpufreq: Hook em_pd_get_higher_power()
- into get_next_freq()
-Message-ID: <20200124143704.GA215244@google.com>
-References: <20200122173538.1142069-1-douglas.raillard@arm.com>
- <20200122173538.1142069-4-douglas.raillard@arm.com>
- <20200123161644.GA144523@google.com>
- <5a2af4e7-f9eb-4f23-908a-fab2c7395a99@arm.com>
+        Fri, 24 Jan 2020 09:19:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39006 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2391195AbgAXOS7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 09:18:59 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CD1F8222D9;
+        Fri, 24 Jan 2020 14:18:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579875538;
+        bh=yYkdvZfWRqRnTJkQxbICX9j233kcKaHvQHhe2M4H1gs=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=wkNPJTBIPDLH4FkG8gnc++0gO+PIcNecD9RbEvMZSO650CKpvbpAi1VhN00X0fQ7I
+         zpS+6Nc+rya0tvP50yC+TMrn7/OwXZv7+VehxxYncYvV7bsnPTE1TXL/BE4wxe0Ezx
+         degMhqu3iJoo4GMAwcVbl8Mh4yMo7nnK5C5je7sE=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 035/107] ARM: dts: imx7: Fix Toradex Colibri iMX7S 256MB NAND flash support
+Date:   Fri, 24 Jan 2020 09:17:05 -0500
+Message-Id: <20200124141817.28793-35-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200124141817.28793-1-sashal@kernel.org>
+References: <20200124141817.28793-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5a2af4e7-f9eb-4f23-908a-fab2c7395a99@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thursday 23 Jan 2020 at 17:52:53 (+0000), Douglas Raillard wrote:
-> We can't really move the call to em_pd_get_higher_freq() into
-> cpufreq_driver_resolve_freq() since that's a schedutil-specific feature,
-> and we would loose the !sg_policy->need_freq_update optimization.
+From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
 
-Depends how you do it. You could add a new method to cpufreq_policy that
-is defined only for sugov or something along those lines. And you'd call
-that instead of cpufreq_frequency_table_target() when that makes sense.
+[ Upstream commit 4b0b97e651ecf29f20248420b52b6864fbd40bc2 ]
 
-> Maybe we can add a flag to cpufreq_driver_resolve_freq() that promises
-> that the frequency is already a valid one. We have to be careful though,
-> since a number of things can make that untrue:
->  - em_pd_get_higher_freq() will return the passed freq verbatim if it's
-> higher than the max freq, so em_pd_get_higher_freq() will have to set
-> the flag itself in case that logic changes.
->  - policy limits can change the value
->  - future things could tinker with the freq and forget to reset the flag.
-> 
-> If you think it's worth it I can make these changes.
+Turns out when introducing the eMMC version the gpmi node required for
+NAND flash support got enabled exclusively on Colibri iMX7D 512MB.
 
-The thing is, not only with the current patch we end up iterating the
-frequencies twice for nothing, but also I think it'd be interesting to
-use the EM for consistency with EAS. It'd be nice to use the same data
-structure for the predictions we do in compute_energy() and for the
-actual request.
+Fixes: f928a4a377e4 ("ARM: dts: imx7: add Toradex Colibri iMX7D 1GB (eMMC) support")
+Signed-off-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/arm/boot/dts/imx7s-colibri.dtsi | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-Thoughts ?
+diff --git a/arch/arm/boot/dts/imx7s-colibri.dtsi b/arch/arm/boot/dts/imx7s-colibri.dtsi
+index 1fb1ec5d3d707..6d16e32aed899 100644
+--- a/arch/arm/boot/dts/imx7s-colibri.dtsi
++++ b/arch/arm/boot/dts/imx7s-colibri.dtsi
+@@ -49,3 +49,7 @@
+ 		reg = <0x80000000 0x10000000>;
+ 	};
+ };
++
++&gpmi {
++	status = "okay";
++};
+-- 
+2.20.1
 
-Quentin
