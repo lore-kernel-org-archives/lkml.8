@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B1BFC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:44:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF0F0C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:44:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F019321569
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:44:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B44D208C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:44:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579859054;
-	bh=3ZekyLEiDbonWWPcgHNrsp27oJ/CrwEW5ogsAHsGu9A=;
+	s=default; t=1579859057;
+	bh=UpDhn7zetNpr1R/Uf2QSny7yWTZclJ94UCeA/hBkOFM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PhsO6fdopKGFFrL0WHWVNGh2NtnETe7lYodSLb8TlFTu/bLI+4HKsaGrhEDosjB+L
-	 jADpMzZ7jOIFHemQ3em42TkoADWddRvchlv5iZQ3NtNG3fC/BAd4/QoE5mOA11Gwsd
-	 IcLjoIWt9qUX11rR5LcOcfSxvJ1OG7Rz59QcndgE=
+	b=ADzVMa8X6g9pAkSWkohxtPrT7qJ9rfR5S9N+nyYkoOsGwluLhnJ8NVM89JbUVDFmp
+	 Exh4lhdEeIOITLb2zIuRGnkD/Jb/HBMe8pUL9vkel0c7gxtNJdcWc+tUH5RgXbyxDE
+	 7IoJzxqSa7eKsc+8bzZzAc8ehg/u9B6AeCwlmXFw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733288AbgAXJoM (ORCPT
+        id S1733295AbgAXJoQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 04:44:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42482 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 04:44:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42566 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733276AbgAXJoJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 04:44:09 -0500
+        id S1733285AbgAXJoM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 04:44:12 -0500
 Received: from localhost (unknown [145.15.244.15])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 46549208C4;
-        Fri, 24 Jan 2020 09:44:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 50A67218AC;
+        Fri, 24 Jan 2020 09:44:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579859048;
-        bh=3ZekyLEiDbonWWPcgHNrsp27oJ/CrwEW5ogsAHsGu9A=;
+        s=default; t=1579859051;
+        bh=UpDhn7zetNpr1R/Uf2QSny7yWTZclJ94UCeA/hBkOFM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bToIAmUyK7S7JwIfY/41VlN+OehDCoJwZ9jlP6QMHcuTOWXnX9SbWcDRX3yuGDlVj
-         IEOrQrjDXiK3iTX5vOsNYsjA0YtpY7dhTxpqNOr+DCqf3Z7NG5ydBUVGo/gB2K8HcC
-         joFgQdPUhENZzl3xnWKxf7WfQA8jtWqIL+TuWXH8=
+        b=g/PC5ROe4K6zl1oe9/ICZSqowGvZNvR0IvWYVSi1yrXyLDH8EzhFU+gbyNxTEiPFi
+         SHP0PX3TLfXw4BBkf/FBAr8wTW1axv0HbnLv4XbVN8UxseSwiGmfZ7kHF6NQT7R/NY
+         KUyEXP5eUh4xm0wt8F81kQtXsT+c3xtvuKWdqmmA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "Spencer E. Olson" <olsonse@umich.edu>,
-        Ian Abbott <abbotti@mev.co.uk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 018/343] staging: comedi: ni_mio_common: protect register write overflow
-Date:   Fri, 24 Jan 2020 10:27:16 +0100
-Message-Id: <20200124092922.021461812@linuxfoundation.org>
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Gerd Hoffmann <kraxel@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 009/343] drm/virtio: fix bounds check in virtio_gpu_cmd_get_capset()
+Date:   Fri, 24 Jan 2020 10:27:07 +0100
+Message-Id: <20200124092920.863639090@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124092919.490687572@linuxfoundation.org>
 References: <20200124092919.490687572@linuxfoundation.org>
@@ -59,88 +60,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Spencer E. Olson <olsonse@umich.edu>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit 1cbca5852d6c16e85a21487a15d211195aacd4a1 ]
+[ Upstream commit 09c4b49457434fa74749ad6194ef28464d9f5df9 ]
 
-Fixes two problems introduced as early as
-commit 03aef4b6dc12  ("Staging: comedi: add ni_mio_common code"):
-(1) Ensures that the last four bits of NISTC_RTSI_TRIGB_OUT_REG register is
-    not unduly overwritten on e-series devices.  On e-series devices, the
-    first three of the last four bits are reserved.  The last bit defines
-    the output selection of the RGOUT0 pin, otherwise known as
-    RTSI_Sub_Selection.  For m-series devices, these last four bits are
-    indeed used as the output selection of the RTSI7 pin (and the
-    RTSI_Sub_Selection bit for the RGOUT0 pin is moved to the
-    RTSI_Trig_Direction register.
-(2) Allows all 4 RTSI_BRD lines to be treated as valid sources for RTSI
-    lines.
+This doesn't affect runtime because in the current code "idx" is always
+valid.
 
-This patch also cleans up the ni_get_rtsi_routing command for readability.
+First, we read from "vgdev->capsets[idx].max_size" before checking
+whether "idx" is within bounds.  And secondly the bounds check is off by
+one so we could end up reading one element beyond the end of the
+vgdev->capsets[] array.
 
-Fixes: 03aef4b6dc12  ("Staging: comedi: add ni_mio_common code")
-Signed-off-by: Spencer E. Olson <olsonse@umich.edu>
-Reviewed-by: Ian Abbott <abbotti@mev.co.uk>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 62fb7a5e1096 ("virtio-gpu: add 3d/virgl support")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Link: http://patchwork.freedesktop.org/patch/msgid/20180704094250.m7sgvvzg3dhcvv3h@kili.mountain
+Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../staging/comedi/drivers/ni_mio_common.c    | 24 +++++++++++++------
- 1 file changed, 17 insertions(+), 7 deletions(-)
+ drivers/gpu/drm/virtio/virtgpu_vq.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/staging/comedi/drivers/ni_mio_common.c b/drivers/staging/comedi/drivers/ni_mio_common.c
-index 36361bdf934ac..2f82dcb1fd062 100644
---- a/drivers/staging/comedi/drivers/ni_mio_common.c
-+++ b/drivers/staging/comedi/drivers/ni_mio_common.c
-@@ -4991,7 +4991,10 @@ static int ni_valid_rtsi_output_source(struct comedi_device *dev,
- 	case NI_RTSI_OUTPUT_G_SRC0:
- 	case NI_RTSI_OUTPUT_G_GATE0:
- 	case NI_RTSI_OUTPUT_RGOUT0:
--	case NI_RTSI_OUTPUT_RTSI_BRD_0:
-+	case NI_RTSI_OUTPUT_RTSI_BRD(0):
-+	case NI_RTSI_OUTPUT_RTSI_BRD(1):
-+	case NI_RTSI_OUTPUT_RTSI_BRD(2):
-+	case NI_RTSI_OUTPUT_RTSI_BRD(3):
- 		return 1;
- 	case NI_RTSI_OUTPUT_RTSI_OSC:
- 		return (devpriv->is_m_series) ? 1 : 0;
-@@ -5012,11 +5015,18 @@ static int ni_set_rtsi_routing(struct comedi_device *dev,
- 		devpriv->rtsi_trig_a_output_reg |= NISTC_RTSI_TRIG(chan, src);
- 		ni_stc_writew(dev, devpriv->rtsi_trig_a_output_reg,
- 			      NISTC_RTSI_TRIGA_OUT_REG);
--	} else if (chan < 8) {
-+	} else if (chan < NISTC_RTSI_TRIG_NUM_CHAN(devpriv->is_m_series)) {
- 		devpriv->rtsi_trig_b_output_reg &= ~NISTC_RTSI_TRIG_MASK(chan);
- 		devpriv->rtsi_trig_b_output_reg |= NISTC_RTSI_TRIG(chan, src);
- 		ni_stc_writew(dev, devpriv->rtsi_trig_b_output_reg,
- 			      NISTC_RTSI_TRIGB_OUT_REG);
-+	} else if (chan != NISTC_RTSI_TRIG_OLD_CLK_CHAN) {
-+		/* probably should never reach this, since the
-+		 * ni_valid_rtsi_output_source above errors out if chan is too
-+		 * high
-+		 */
-+		dev_err(dev->class_dev, "%s: unknown rtsi channel\n", __func__);
-+		return -EINVAL;
- 	}
- 	return 2;
- }
-@@ -5032,12 +5042,12 @@ static unsigned int ni_get_rtsi_routing(struct comedi_device *dev,
- 	} else if (chan < NISTC_RTSI_TRIG_NUM_CHAN(devpriv->is_m_series)) {
- 		return NISTC_RTSI_TRIG_TO_SRC(chan,
- 					      devpriv->rtsi_trig_b_output_reg);
--	} else {
--		if (chan == NISTC_RTSI_TRIG_OLD_CLK_CHAN)
--			return NI_RTSI_OUTPUT_RTSI_OSC;
--		dev_err(dev->class_dev, "bug! should never get here?\n");
--		return 0;
-+	} else if (chan == NISTC_RTSI_TRIG_OLD_CLK_CHAN) {
-+		return NI_RTSI_OUTPUT_RTSI_OSC;
- 	}
-+
-+	dev_err(dev->class_dev, "%s: unknown rtsi channel\n", __func__);
-+	return -EINVAL;
- }
+diff --git a/drivers/gpu/drm/virtio/virtgpu_vq.c b/drivers/gpu/drm/virtio/virtgpu_vq.c
+index 21c2de81f3e32..a3be65e689fd2 100644
+--- a/drivers/gpu/drm/virtio/virtgpu_vq.c
++++ b/drivers/gpu/drm/virtio/virtgpu_vq.c
+@@ -648,11 +648,11 @@ int virtio_gpu_cmd_get_capset(struct virtio_gpu_device *vgdev,
+ {
+ 	struct virtio_gpu_get_capset *cmd_p;
+ 	struct virtio_gpu_vbuffer *vbuf;
+-	int max_size = vgdev->capsets[idx].max_size;
++	int max_size;
+ 	struct virtio_gpu_drv_cap_cache *cache_ent;
+ 	void *resp_buf;
  
- static int ni_rtsi_insn_config(struct comedi_device *dev,
+-	if (idx > vgdev->num_capsets)
++	if (idx >= vgdev->num_capsets)
+ 		return -EINVAL;
+ 
+ 	if (version > vgdev->capsets[idx].max_version)
+@@ -662,6 +662,7 @@ int virtio_gpu_cmd_get_capset(struct virtio_gpu_device *vgdev,
+ 	if (!cache_ent)
+ 		return -ENOMEM;
+ 
++	max_size = vgdev->capsets[idx].max_size;
+ 	cache_ent->caps_cache = kmalloc(max_size, GFP_KERNEL);
+ 	if (!cache_ent->caps_cache) {
+ 		kfree(cache_ent);
 -- 
 2.20.1
 
