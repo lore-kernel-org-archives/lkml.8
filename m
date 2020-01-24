@@ -2,38 +2,39 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B634DC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:46:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42E52C32771
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:46:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9342B206F0
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:46:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E5AA206F0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:46:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388366AbgAXOqc (ORCPT
+        id S2388580AbgAXOqg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 09:46:32 -0500
-Received: from mx2.suse.de ([195.135.220.15]:43370 "EHLO mx2.suse.de"
+        Fri, 24 Jan 2020 09:46:36 -0500
+Received: from mx2.suse.de ([195.135.220.15]:43418 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387979AbgAXOqb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 09:46:31 -0500
+        id S2387996AbgAXOqd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 09:46:33 -0500
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id D7510AFA8;
-        Fri, 24 Jan 2020 14:46:29 +0000 (UTC)
+        by mx2.suse.de (Postfix) with ESMTP id 90665AFCB;
+        Fri, 24 Jan 2020 14:46:31 +0000 (UTC)
 From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     gregkh@linuxfoundation.org
+To:     gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org
 Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
         bcm-kernel-feedback-list@broadcom.com,
         linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 00/22] staging: vc04_services: suspend/resume cleanup
-Date:   Fri, 24 Jan 2020 15:45:54 +0100
-Message-Id: <20200124144617.2213-1-nsaenzjulienne@suse.de>
+        linux-arm-kernel@lists.infradead.org, devel@driverdev.osuosl.org
+Subject: [PATCH 03/22] staging: vc04_services: Get rid of resume_blocker completion in struct vchiq_arm_state
+Date:   Fri, 24 Jan 2020 15:45:57 +0100
+Message-Id: <20200124144617.2213-4-nsaenzjulienne@suse.de>
 X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200124144617.2213-1-nsaenzjulienne@suse.de>
+References: <20200124144617.2213-1-nsaenzjulienne@suse.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -41,62 +42,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-While in the process of preparing vchiq to support the Raspberry Pi 4, I
-stumbled upon a bunch of dead code in it. Which this series deletes.
+Nobody is waiting on it, so delete all relevant code.
 
-Ultimately the idea is to clean up vchiq_bcm2835_arm.c up to a point
-where it'll be easy to join it with vchiq_arm.c, which IIRC the TODO
-file states, should be the sole responsible for platform code.
-
-With this we'll be able to introduce RPi4's functionality in a cleaner
-way.
-
-Overall it's a 500 line clean up, I tried to keep the patches as small and
-manageable as possible, but I'd be happy to squash them if you prefer it
-that way.
-
-This was tested on a RPi3-B using the camera and HDMI audio and
-vchiq_test app.
-
+Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 ---
+ .../vc04_services/interface/vchiq_arm/vchiq_arm.c     | 11 -----------
+ .../vc04_services/interface/vchiq_arm/vchiq_arm.h     |  4 ----
+ 2 files changed, 15 deletions(-)
 
-Nicolas Saenz Julienne (22):
-  staging: vc04_services: Remove unused variables in struct
-    vchiq_arm_state
-  staging: vc04_services: Get rid of resume_blocked in struct
-    vchiq_arm_state
-  staging: vc04_services: Get rid of resume_blocker completion in struct
-    vchiq_arm_state
-  staging: vc04_services: get rid of blocked_blocker completion in
-    struct vchiq_arm_state
-  staging: vc04_services: Delete blocked_count in struct vchiq_arm_state
-  staging: vc04_services: get rid of vchiq_platform_use_suspend_timer()
-  staging: vc04_services: Get rid of vchiq_platform_paused/resumed()
-  staging: vc04_services: Get rid of vchiq_platform_suspend/resume()
-  staging: vc04_services: Get rid of vchiq_platform_videocore_wanted()
-  staging: vc04_services: Get rid of vchiq_platform_handle_timeout()
-  staging: vc04_services: Get rid of vchiq_on_remote_use_active()
-  staging: vc04_services: Get rid of vchiq_arm_vcsuspend()
-  staging: vc04_services: Get rid of vchiq_check_resume()
-  staging: vc04_services: Delete vc_suspend_complete completion
-  staging: vc04_services: Get rid of unused suspend/resume states
-  staging: vc04_services: Get rid of USE_TYPE_SERVICE_NO_RESUME
-  staging: vc04_services: Delete vchiq_platform_check_suspend()
-  staging: vc04_services: Get of even more suspend/resume states
-  staging: vc04_services: Get rid of vc_suspend_state in struct
-    vchiq_arm_state
-  staging: vc04_services: Get rid of vchiq_arm_vcresume()'s signature
-  staging: vc04_services: Get rid of the rest of suspend/resume state
-    handling
-  staging: vc04_services: vchiq_arm: Get rid of unused defines
-
- .../interface/vchiq_arm/vchiq_2835_arm.c      |  43 --
- .../interface/vchiq_arm/vchiq_arm.c           | 496 +-----------------
- .../interface/vchiq_arm/vchiq_arm.h           |  81 +--
- .../interface/vchiq_arm/vchiq_core.c          |  16 -
- .../interface/vchiq_arm/vchiq_core.h          |  15 -
- 5 files changed, 11 insertions(+), 640 deletions(-)
-
+diff --git a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_arm.c b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_arm.c
+index af4dc23f5510..311df3d85494 100644
+--- a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_arm.c
++++ b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_arm.c
+@@ -2386,11 +2386,6 @@ vchiq_arm_init_state(struct vchiq_state *state,
+ 		 * completion while videocore is suspended. */
+ 		set_resume_state(arm_state, VC_RESUME_RESUMED);
+ 
+-		init_completion(&arm_state->resume_blocker);
+-		/* Initialise to 'done' state.  We only want to block on this
+-		 * completion while resume is blocked */
+-		complete_all(&arm_state->resume_blocker);
+-
+ 		init_completion(&arm_state->blocked_blocker);
+ 		/* Initialise to 'done' state.  We only want to block on this
+ 		 * completion while things are waiting on the resume blocker */
+@@ -2560,12 +2555,6 @@ need_resume(struct vchiq_state *state)
+ 			vchiq_videocore_wanted(state);
+ }
+ 
+-static inline void
+-unblock_resume(struct vchiq_arm_state *arm_state)
+-{
+-	complete_all(&arm_state->resume_blocker);
+-}
+-
+ /* Initiate suspend via slot handler. Should be called with the write lock
+  * held */
+ enum vchiq_status
+diff --git a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_arm.h b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_arm.h
+index c904f7be9084..7d1316875343 100644
+--- a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_arm.h
++++ b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_arm.h
+@@ -70,10 +70,6 @@ struct vchiq_arm_state {
+ 	*/
+ 	int peer_use_count;
+ 
+-	/* Flag to indicate whether resume is blocked.  This happens when the
+-	** ARM is suspending
+-	*/
+-	struct completion resume_blocker;
+ 	struct completion blocked_blocker;
+ 	int blocked_count;
+ 
 -- 
 2.25.0
 
