@@ -2,239 +2,309 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65E35C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:51:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55795C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:54:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1BC06206F0
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:51:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D949206F0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:54:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nokia.onmicrosoft.com header.i=@nokia.onmicrosoft.com header.b="ju32UTug"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="V//h0p7U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731104AbgAXLvd (ORCPT
+        id S1732714AbgAXLym (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:51:33 -0500
-Received: from mail-eopbgr50117.outbound.protection.outlook.com ([40.107.5.117]:61503
-        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729308AbgAXLvc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:51:32 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ZKaUjMf4Ko+xpwaBgpFY8VEihL73yVqxm6vzZwG26GEWfNIAutlOQDih+PHPnr6ojOf3UJ7SXq7UEm5DY3C0WH500I3s8ULSCcE8wsrY7660BLALM4Od47fBfQFKtWJTllh5XL/WoUJn4pgJJ2dXPeu6eZS7r2c8GWbgE459SAYuB0dbYMVWQMXT1BeIJCELXQSxvnd9Lxcx7mOnLmcq4q/XUR5TT1sEert+BUqPTDXJEgy3ZqknNhllJEiV2NS7kppOBAWE5fB+0BWl/vHPBxOYmZn67Ol2O9NdovmJOLp/T684vG7Qh2f+At8YGU+gh61WKdw8V0Z4ctwpDJGl0g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=cVmann6b47NUVExFvtiBUjZ7vLLSY7TMdM9hJPja3u8=;
- b=bvkE28Uaw8O4iqcpRTqjLVtTugZgjF/EF3tVLm8Zd7Drd2nbefIdpNYbNzkfRF8spd64wbYKbKbbWcZ2DuzlBs1c8+p7Xa/l2f8vc0gglUJZNBEVDImo1lGnW0afMf5YJPsJREd3DxGUlV/KTSvM9BOTK4aWOcvMDxDwSokG+jbjEjL5QXGLVpCI10nZ+FeQCuWI1tOWnWmLpT2pvifIRR5i05bppzkUTJ7Z9Uyv3Tl1EVaV6rsVXIuD/2xX1WQkAwqjRs52Y7kJjwVO5WWuyNx1HciezUuJrXdL0IpKWIzSDPnxasLUCUNVPuXxFpadCMyFGdUuO3sAqz6wf2x8nQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nokia.com; dmarc=pass action=none header.from=nokia.com;
- dkim=pass header.d=nokia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nokia.onmicrosoft.com;
- s=selector1-nokia-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=cVmann6b47NUVExFvtiBUjZ7vLLSY7TMdM9hJPja3u8=;
- b=ju32UTugcSmuWmYjUVjvZ8nN0ToPPLKqj4fuQIkvX3YVLQpwyePv8YcO01vRs69qHYr0O8OqioEywVUFqdWlmJTOLpT+eJtT4bpx9nr4V20BvvUYe/oVTcqZgEQZno/8VyJs4AfjzZYMZTRYy/IDshinV9++jFwpGY7SqOouKIc=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=alexander.sverdlin@nokia.com; 
-Received: from VI1PR07MB5040.eurprd07.prod.outlook.com (20.177.203.20) by
- VI1PR07MB4237.eurprd07.prod.outlook.com (20.176.6.142) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2686.15; Fri, 24 Jan 2020 11:51:24 +0000
-Received: from VI1PR07MB5040.eurprd07.prod.outlook.com
- ([fe80::20c4:7ce8:f735:316e]) by VI1PR07MB5040.eurprd07.prod.outlook.com
- ([fe80::20c4:7ce8:f735:316e%2]) with mapi id 15.20.2665.017; Fri, 24 Jan 2020
- 11:51:24 +0000
-Subject: Re: [PATCH] cpu/hotplug: Wait for cpu_hotplug to be enabled in
- cpu_up/down
-To:     Matija Glavinic Pecotic <matija.glavinic-pecotic.ext@nokia.com>,
-        tglx@linutronix.de, linux-kernel@vger.kernel.org
-References: <9bf397db-0eb8-ac30-b0ff-f8970d8b21be@nokia.com>
-From:   Alexander Sverdlin <alexander.sverdlin@nokia.com>
-Message-ID: <18207c49-fa25-81e2-4ef3-df1b232809b8@nokia.com>
-Date:   Fri, 24 Jan 2020 12:51:09 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
-In-Reply-To: <9bf397db-0eb8-ac30-b0ff-f8970d8b21be@nokia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: HE1PR05CA0341.eurprd05.prod.outlook.com
- (2603:10a6:7:92::36) To VI1PR07MB5040.eurprd07.prod.outlook.com
- (2603:10a6:803:9c::20)
-MIME-Version: 1.0
-Received: from [0.0.0.0] (131.228.32.167) by HE1PR05CA0341.eurprd05.prod.outlook.com (2603:10a6:7:92::36) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2665.20 via Frontend Transport; Fri, 24 Jan 2020 11:51:19 +0000
-X-Originating-IP: [131.228.32.167]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 56ee1ea0-aa0d-48bc-8a6e-08d7a0c3bcb6
-X-MS-TrafficTypeDiagnostic: VI1PR07MB4237:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <VI1PR07MB42372F3FA24B97ECB6B91066880E0@VI1PR07MB4237.eurprd07.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
-X-Forefront-PRVS: 02929ECF07
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10019020)(4636009)(39860400002)(366004)(346002)(136003)(376002)(396003)(199004)(189003)(6486002)(2616005)(956004)(31696002)(8936002)(2906002)(16576012)(5660300002)(86362001)(316002)(186003)(26005)(16526019)(478600001)(36756003)(31686004)(53546011)(6706004)(44832011)(6666004)(52116002)(66476007)(81156014)(8676002)(81166006)(66556008)(66946007)(78286006);DIR:OUT;SFP:1102;SCL:1;SRVR:VI1PR07MB4237;H:VI1PR07MB5040.eurprd07.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-Received-SPF: None (protection.outlook.com: nokia.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: nlt5H5e+zZTSNHqm4gKoD+CpowZP+hivjC25ppMk4Cc/Ore+ifx51XSs2CVabiX9vxJzOMiXQ6cNd0RhE9TryLVNTUV4baKiLcoPuANd+h76EJo2hZRTscGgYhcoihRPxxu0gudh8j8y5xA3/6yPI/Poj9vd/7sallL08hM2hmJ20melcoLRDs3WJn28bgOeH6ymToa5ahAs31mMiVNXefrj5nLrzNcsY5IOHSmvTb7fYcnwbp3wEs/wBkdwagjrxhvu6/qBdTpYHiqdVd+UTDEjyZfF4fwhetVPUEE7waj8HGpP/H1vq6vfGSFEkU/YcjBRYUwPlFEuazOLMi7h0XNBySq70vNmz6w6ibGAZQ3xB1u92EOkQB2yg5yKVXZe9waK+TP9FGS3WD9t5nn5rhrRJKdY8XQee8+hkxE/KEO3mwSSNM2gaOtkbRm4RCskTr9VpEa4WUVm32abdhVnICBfEPHI7zZn3Bwo5yc+hCdWSDeT/1hQwWCG3GJYAG3q
-X-MS-Exchange-AntiSpam-MessageData: 5kxlMK7uER9iCJj9+Bv4vT6EvvXUZ0GXSTDKlsaP+t4nhlWCo7+MFnUHjSjFFtvlIkwztjehtvdRYLQein7C6mIfCVb0KYC2iuAv4SgUHlw/GRCwFYDOoSD/DYHS/XSak3iuFRcYgCaE1ZW2fnyhbg==
-X-OriginatorOrg: nokia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 56ee1ea0-aa0d-48bc-8a6e-08d7a0c3bcb6
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Jan 2020 11:51:24.3729
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 5d471751-9675-428d-917b-70f44f9630b0
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: VtNaRixlhDbLJ1Jsa6h92zNMWtcj/zlpUjcJvioMfaj8M7IVr2PVkXZTc4Xcy20f2789QEhG2XEO4RpOpYJiSmDiww1O48AobUHw7pxYtVw=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR07MB4237
+        Fri, 24 Jan 2020 06:54:42 -0500
+Received: from pegase1.c-s.fr ([93.17.236.30]:33588 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730713AbgAXLyl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:54:41 -0500
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 483yHL5Jhfz9tyMx;
+        Fri, 24 Jan 2020 12:54:38 +0100 (CET)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=V//h0p7U; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id hC0xabd_cC7B; Fri, 24 Jan 2020 12:54:38 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 483yHL49tRz9tyMv;
+        Fri, 24 Jan 2020 12:54:38 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1579866878; bh=fFxxBbDSiQ4kyaur0i36Y7pRI4nKyfmVPP5T0+RR+xU=;
+        h=From:Subject:To:Cc:Date:From;
+        b=V//h0p7UdpCJ5oKx89rwT4aC4Igd9sFhpaRglHuvYGEr3w5++06ZWAbgBlniipIzS
+         SxFNVUCWKyhEYKG5ypDhfmUGGf+N6tb9ZAVqiSRp7QXLeTD8qT31Sr8L2zzfgsxDzU
+         V8SjL9gy5fr4JSrLNGcwxixekydFV/fo09MNYqEk=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id CC3078B85D;
+        Fri, 24 Jan 2020 12:54:39 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id QZuQzUt0Vq3W; Fri, 24 Jan 2020 12:54:39 +0100 (CET)
+Received: from po14934vm.idsi0.si.c-s.fr (po15451.idsi0.si.c-s.fr [172.25.230.111])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 9EE558B84A;
+        Fri, 24 Jan 2020 12:54:39 +0100 (CET)
+Received: by po14934vm.idsi0.si.c-s.fr (Postfix, from userid 0)
+        id 5C061651F0; Fri, 24 Jan 2020 11:54:39 +0000 (UTC)
+Message-Id: <b6f97231868c43b90ae7abe7f68f84d176a8ebe1.1579866752.git.christophe.leroy@c-s.fr>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Subject: [PATCH v4 1/7] readdir: make user_access_begin() use the real access
+ range
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-mm@kvack.org
+Date:   Fri, 24 Jan 2020 11:54:39 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi!
+From: Linus Torvalds <torvalds@linux-foundation.org>
 
-On 24/01/2020 09:18, Matija Glavinic Pecotic wrote:
-> cpu hotplug may be disabled via cpu_hotplug_enable/cpu_hotplug_disable.
-> When disabled, cpu_down and cpu_up will fail with -EBUSY. Users of the
-> cpu_up/cpu_down should handle this situation as this is mostly temporal
-> disablement and exception should be made for EBUSY, assuming that EBUSY
-> always stands for this situation and is worth repeating execution. One
-> of the users of cpu_hotplug_enable/disable is pci_device_probe yielding
-> errors on bringing cpu cores up/down if pci devices are getting probed.
-> 
-> Problem was observed on x86 board by having partitioning of the system
-> to RT/NRT cpu sets failing (of which part is to bring cpus down/up via
-> sysfs) if pci devices would be getting probed at the same time. This is
-> confusing for userspace as dependency to pci devices is not clear.
-> 
-> Fix this behavior by waiting for cpu hotplug to be ready. Return -EBUSY
-> only after hotplugging was not enabled for about 10 seconds.
-> 
-> Fixes: 1ddd45f8d76f ("PCI: Use cpu_hotplug_disable() instead of get_online_cpus()")
-> Signed-off-by: Matija Glavinic Pecotic <matija.glavinic-pecotic.ext@nokia.com>
+In commit 9f79b78ef744 ("Convert filldir[64]() from __put_user() to
+unsafe_put_user()") I changed filldir to not do individual __put_user()
+accesses, but instead use unsafe_put_user() surrounded by the proper
+user_access_begin/end() pair.
 
-Reviewed-by: Alexander Sverdlin <alexander.sverdlin@nokia.com>
+That make them enormously faster on modern x86, where the STAC/CLAC
+games make individual user accesses fairly heavy-weight.
 
-> ---
->   kernel/cpu.c | 50 ++++++++++++++++++++++++++++++++++++++++----------
->   1 file changed, 40 insertions(+), 10 deletions(-)
-> 
-> diff --git a/kernel/cpu.c b/kernel/cpu.c
-> index 4dc279e..2e06ca9 100644
-> --- a/kernel/cpu.c
-> +++ b/kernel/cpu.c
-> @@ -31,6 +31,7 @@
->   #include <linux/relay.h>
->   #include <linux/slab.h>
->   #include <linux/percpu-rwsem.h>
-> +#include <linux/wait.h>
->   
->   #include <trace/events/power.h>
->   #define CREATE_TRACE_POINTS
-> @@ -278,11 +279,22 @@ void cpu_maps_update_done(void)
->   }
->   
->   /*
-> - * If set, cpu_up and cpu_down will return -EBUSY and do nothing.
-> + * If set, cpu_up and cpu_down will retry for cpu_hotplug_retries and
-> + * eventually return -EBUSY if unsuccessful.
->    * Should always be manipulated under cpu_add_remove_lock
->    */
->   static int cpu_hotplug_disabled;
->   
-> +/*
-> + * waitqueue for waiting on cpu_hotplug_disabled
-> + */
-> +static DECLARE_WAIT_QUEUE_HEAD(wait_cpu_hp_enabled);
-> +
-> +/*
-> + * Retries for cpu_hotplug to be enabled by cpu_up/cpu_down.
-> + */
-> +static int cpu_hotplug_retries = 10;
-> +
->   #ifdef CONFIG_HOTPLUG_CPU
->   
->   DEFINE_STATIC_PERCPU_RWSEM(cpu_hotplug_lock);
-> @@ -341,7 +353,7 @@ static void lockdep_release_cpus_lock(void)
->   
->   /*
->    * Wait for currently running CPU hotplug operations to complete (if any) and
-> - * disable future CPU hotplug (from sysfs). The 'cpu_add_remove_lock' protects
-> + * briefly disable CPU hotplug (from sysfs). The 'cpu_add_remove_lock' protects
->    * the 'cpu_hotplug_disabled' flag. The same lock is also acquired by the
->    * hotplug path before performing hotplug operations. So acquiring that lock
->    * guarantees mutual exclusion from any currently running hotplug operations.
-> @@ -366,6 +378,7 @@ void cpu_hotplug_enable(void)
->   	cpu_maps_update_begin();
->   	__cpu_hotplug_enable();
->   	cpu_maps_update_done();
-> +	wake_up(&wait_cpu_hp_enabled);
->   }
->   EXPORT_SYMBOL_GPL(cpu_hotplug_enable);
->   
-> @@ -1044,11 +1057,21 @@ static int cpu_down_maps_locked(unsigned int cpu, enum cpuhp_state target)
->   
->   static int do_cpu_down(unsigned int cpu, enum cpuhp_state target)
->   {
-> -	int err;
-> +	int err = -EBUSY, retries = cpu_hotplug_retries;
->   
-> -	cpu_maps_update_begin();
-> -	err = cpu_down_maps_locked(cpu, target);
-> -	cpu_maps_update_done();
-> +	while (retries--) {
-> +		wait_event_timeout(wait_cpu_hp_enabled,
-> +				!cpu_hotplug_disabled,
-> +				HZ);
-> +		cpu_maps_update_begin();
-> +		if (cpu_hotplug_disabled) {
-> +			cpu_maps_update_done();
-> +			continue;
-> +		}
-> +		err = _cpu_down(cpu, 0, target);
-> +		cpu_maps_update_done();
-> +		break;
-> +	}
->   	return err;
->   }
->   
-> @@ -1166,7 +1189,7 @@ static int _cpu_up(unsigned int cpu, int tasks_frozen, enum cpuhp_state target)
->   
->   static int do_cpu_up(unsigned int cpu, enum cpuhp_state target)
->   {
-> -	int err = 0;
-> +	int err = 0, retries = cpu_hotplug_retries;
->   
->   	if (!cpu_possible(cpu)) {
->   		pr_err("can't online cpu %d because it is not configured as may-hotadd at boot time\n",
-> @@ -1181,9 +1204,16 @@ static int do_cpu_up(unsigned int cpu, enum cpuhp_state target)
->   	if (err)
->   		return err;
->   
-> -	cpu_maps_update_begin();
-> -
-> -	if (cpu_hotplug_disabled) {
-> +	while (--retries) {
-> +		wait_event_timeout(wait_cpu_hp_enabled,
-> +				   !cpu_hotplug_disabled,
-> +				   HZ);
-> +		cpu_maps_update_begin();
-> +		if (!cpu_hotplug_disabled)
-> +			break;
-> +		cpu_maps_update_done();
-> +	}
-> +	if (!retries) {
->   		err = -EBUSY;
->   		goto out;
->   	}
-> 
+However, the user_access_begin() range was not really the exact right
+one, since filldir() has the unfortunate problem that it needs to not
+only fill out the new directory entry, it also needs to fix up the
+previous one to contain the proper file offset.
 
+It's unfortunate, but the "d_off" field in "struct dirent" is _not_ the
+file offset of the directory entry itself - it's the offset of the next
+one.  So we end up backfilling the offset in the previous entry as we
+walk along.
+
+But since x86 didn't really care about the exact range, and used to be
+the only architecture that did anything fancy in user_access_begin() to
+begin with, the filldir[64]() changes did something lazy, and even
+commented on it:
+
+	/*
+	 * Note! This range-checks 'previous' (which may be NULL).
+	 * The real range was checked in getdents
+	 */
+	if (!user_access_begin(dirent, sizeof(*dirent)))
+		goto efault;
+
+and it all worked fine.
+
+But now 32-bit ppc is starting to also implement user_access_begin(),
+and the fact that we faked the range to only be the (possibly not even
+valid) previous directory entry becomes a problem, because ppc32 will
+actually be using the range that is passed in for more than just "check
+that it's user space".
+
+This is a complete rewrite of Christophe's original patch.
+
+By saving off the record length of the previous entry instead of a
+pointer to it in the filldir data structures, we can simplify the range
+check and the writing of the previous entry d_off field.  No need for
+any conditionals in the user accesses themselves, although we retain the
+conditional EINTR checking for the "was this the first directory entry"
+signal handling latency logic.
+
+Fixes: 9f79b78ef744 ("Convert filldir[64]() from __put_user() to unsafe_put_user()")
+Link: https://lore.kernel.org/lkml/a02d3426f93f7eb04960a4d9140902d278cab0bb.1579697910.git.christophe.leroy@c-s.fr/
+Link: https://lore.kernel.org/lkml/408c90c4068b00ea8f1c41cca45b84ec23d4946b.1579783936.git.christophe.leroy@c-s.fr/
+Reported-and-tested-by: Christophe Leroy <christophe.leroy@c-s.fr>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+---
+v4: taken from Linus' tree
+---
+ fs/readdir.c | 73 +++++++++++++++++++++++++---------------------------
+ 1 file changed, 35 insertions(+), 38 deletions(-)
+
+diff --git a/fs/readdir.c b/fs/readdir.c
+index d26d5ea4de7b..d5ee72280c82 100644
+--- a/fs/readdir.c
++++ b/fs/readdir.c
+@@ -206,7 +206,7 @@ struct linux_dirent {
+ struct getdents_callback {
+ 	struct dir_context ctx;
+ 	struct linux_dirent __user * current_dir;
+-	struct linux_dirent __user * previous;
++	int prev_reclen;
+ 	int count;
+ 	int error;
+ };
+@@ -214,12 +214,13 @@ struct getdents_callback {
+ static int filldir(struct dir_context *ctx, const char *name, int namlen,
+ 		   loff_t offset, u64 ino, unsigned int d_type)
+ {
+-	struct linux_dirent __user * dirent;
++	struct linux_dirent __user *dirent, *prev;
+ 	struct getdents_callback *buf =
+ 		container_of(ctx, struct getdents_callback, ctx);
+ 	unsigned long d_ino;
+ 	int reclen = ALIGN(offsetof(struct linux_dirent, d_name) + namlen + 2,
+ 		sizeof(long));
++	int prev_reclen;
+ 
+ 	buf->error = verify_dirent_name(name, namlen);
+ 	if (unlikely(buf->error))
+@@ -232,28 +233,24 @@ static int filldir(struct dir_context *ctx, const char *name, int namlen,
+ 		buf->error = -EOVERFLOW;
+ 		return -EOVERFLOW;
+ 	}
+-	dirent = buf->previous;
+-	if (dirent && signal_pending(current))
++	prev_reclen = buf->prev_reclen;
++	if (prev_reclen && signal_pending(current))
+ 		return -EINTR;
+-
+-	/*
+-	 * Note! This range-checks 'previous' (which may be NULL).
+-	 * The real range was checked in getdents
+-	 */
+-	if (!user_access_begin(dirent, sizeof(*dirent)))
+-		goto efault;
+-	if (dirent)
+-		unsafe_put_user(offset, &dirent->d_off, efault_end);
+ 	dirent = buf->current_dir;
++	prev = (void __user *) dirent - prev_reclen;
++	if (!user_access_begin(prev, reclen + prev_reclen))
++		goto efault;
++
++	/* This might be 'dirent->d_off', but if so it will get overwritten */
++	unsafe_put_user(offset, &prev->d_off, efault_end);
+ 	unsafe_put_user(d_ino, &dirent->d_ino, efault_end);
+ 	unsafe_put_user(reclen, &dirent->d_reclen, efault_end);
+ 	unsafe_put_user(d_type, (char __user *) dirent + reclen - 1, efault_end);
+ 	unsafe_copy_dirent_name(dirent->d_name, name, namlen, efault_end);
+ 	user_access_end();
+ 
+-	buf->previous = dirent;
+-	dirent = (void __user *)dirent + reclen;
+-	buf->current_dir = dirent;
++	buf->current_dir = (void __user *)dirent + reclen;
++	buf->prev_reclen = reclen;
+ 	buf->count -= reclen;
+ 	return 0;
+ efault_end:
+@@ -267,7 +264,6 @@ SYSCALL_DEFINE3(getdents, unsigned int, fd,
+ 		struct linux_dirent __user *, dirent, unsigned int, count)
+ {
+ 	struct fd f;
+-	struct linux_dirent __user * lastdirent;
+ 	struct getdents_callback buf = {
+ 		.ctx.actor = filldir,
+ 		.count = count,
+@@ -285,8 +281,10 @@ SYSCALL_DEFINE3(getdents, unsigned int, fd,
+ 	error = iterate_dir(f.file, &buf.ctx);
+ 	if (error >= 0)
+ 		error = buf.error;
+-	lastdirent = buf.previous;
+-	if (lastdirent) {
++	if (buf.prev_reclen) {
++		struct linux_dirent __user * lastdirent;
++		lastdirent = (void __user *)buf.current_dir - buf.prev_reclen;
++
+ 		if (put_user(buf.ctx.pos, &lastdirent->d_off))
+ 			error = -EFAULT;
+ 		else
+@@ -299,7 +297,7 @@ SYSCALL_DEFINE3(getdents, unsigned int, fd,
+ struct getdents_callback64 {
+ 	struct dir_context ctx;
+ 	struct linux_dirent64 __user * current_dir;
+-	struct linux_dirent64 __user * previous;
++	int prev_reclen;
+ 	int count;
+ 	int error;
+ };
+@@ -307,11 +305,12 @@ struct getdents_callback64 {
+ static int filldir64(struct dir_context *ctx, const char *name, int namlen,
+ 		     loff_t offset, u64 ino, unsigned int d_type)
+ {
+-	struct linux_dirent64 __user *dirent;
++	struct linux_dirent64 __user *dirent, *prev;
+ 	struct getdents_callback64 *buf =
+ 		container_of(ctx, struct getdents_callback64, ctx);
+ 	int reclen = ALIGN(offsetof(struct linux_dirent64, d_name) + namlen + 1,
+ 		sizeof(u64));
++	int prev_reclen;
+ 
+ 	buf->error = verify_dirent_name(name, namlen);
+ 	if (unlikely(buf->error))
+@@ -319,30 +318,27 @@ static int filldir64(struct dir_context *ctx, const char *name, int namlen,
+ 	buf->error = -EINVAL;	/* only used if we fail.. */
+ 	if (reclen > buf->count)
+ 		return -EINVAL;
+-	dirent = buf->previous;
+-	if (dirent && signal_pending(current))
++	prev_reclen = buf->prev_reclen;
++	if (prev_reclen && signal_pending(current))
+ 		return -EINTR;
+-
+-	/*
+-	 * Note! This range-checks 'previous' (which may be NULL).
+-	 * The real range was checked in getdents
+-	 */
+-	if (!user_access_begin(dirent, sizeof(*dirent)))
+-		goto efault;
+-	if (dirent)
+-		unsafe_put_user(offset, &dirent->d_off, efault_end);
+ 	dirent = buf->current_dir;
++	prev = (void __user *)dirent - prev_reclen;
++	if (!user_access_begin(prev, reclen + prev_reclen))
++		goto efault;
++
++	/* This might be 'dirent->d_off', but if so it will get overwritten */
++	unsafe_put_user(offset, &prev->d_off, efault_end);
+ 	unsafe_put_user(ino, &dirent->d_ino, efault_end);
+ 	unsafe_put_user(reclen, &dirent->d_reclen, efault_end);
+ 	unsafe_put_user(d_type, &dirent->d_type, efault_end);
+ 	unsafe_copy_dirent_name(dirent->d_name, name, namlen, efault_end);
+ 	user_access_end();
+ 
+-	buf->previous = dirent;
+-	dirent = (void __user *)dirent + reclen;
+-	buf->current_dir = dirent;
++	buf->prev_reclen = reclen;
++	buf->current_dir = (void __user *)dirent + reclen;
+ 	buf->count -= reclen;
+ 	return 0;
++
+ efault_end:
+ 	user_access_end();
+ efault:
+@@ -354,7 +350,6 @@ int ksys_getdents64(unsigned int fd, struct linux_dirent64 __user *dirent,
+ 		    unsigned int count)
+ {
+ 	struct fd f;
+-	struct linux_dirent64 __user * lastdirent;
+ 	struct getdents_callback64 buf = {
+ 		.ctx.actor = filldir64,
+ 		.count = count,
+@@ -372,9 +367,11 @@ int ksys_getdents64(unsigned int fd, struct linux_dirent64 __user *dirent,
+ 	error = iterate_dir(f.file, &buf.ctx);
+ 	if (error >= 0)
+ 		error = buf.error;
+-	lastdirent = buf.previous;
+-	if (lastdirent) {
++	if (buf.prev_reclen) {
++		struct linux_dirent64 __user * lastdirent;
+ 		typeof(lastdirent->d_off) d_off = buf.ctx.pos;
++
++		lastdirent = (void __user *) buf.current_dir - buf.prev_reclen;
+ 		if (__put_user(d_off, &lastdirent->d_off))
+ 			error = -EFAULT;
+ 		else
 -- 
-Best regards,
-Alexander Sverdlin.
+2.25.0
+
