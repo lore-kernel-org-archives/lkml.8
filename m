@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E727EC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:29:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34FCFC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:29:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE1BB20704
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:29:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C84122522
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:29:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579865390;
-	bh=TSq3zEB7WHFu7lvifN1fBCHZjm7ttEDT0Y57Sg8gLvg=;
+	s=default; t=1579865393;
+	bh=h8UpbCSI7U696KqtZ7M6siVRoIRZJSzbxGDPRlX24pc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nknf7eL+gcqETsHieyaeB7vhaljfFVRlonqo/qf0K2blbDL3iGlXqK5Z7zTYlt3XA
-	 h2t2TUhNrKC7IElRHpOT13JqHe8wgbi1bjSTXQVccA06hwLlJQMvLzni6d8EZsAaNG
-	 8bdsxv/6fNK3M9Mpz/56i+nFjUnmfqRkmaKyxAyE=
+	b=vcxIpd4Q1D5JhoyCsMQ0yfJgFOwGgabjapO5XrKH8DseTk3Tiyo9PhmiP1mbwaRoi
+	 VeGna/Dom1dZELmgTnKCRbvzWlxwQfYmn891n8ZGepa+QWi1/PXYytQidg9Cp4ysfO
+	 o0fhGrM8h4z7mDo8rTjut1WHLyjrWBeGSt2x61Ko=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404102AbgAXL3t (ORCPT
+        id S2404114AbgAXL3w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:29:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46812 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 06:29:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46920 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404066AbgAXL3p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:29:45 -0500
+        id S2404094AbgAXL3s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:29:48 -0500
 Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 32D15206D4;
-        Fri, 24 Jan 2020 11:29:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C56782077C;
+        Fri, 24 Jan 2020 11:29:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579865383;
-        bh=TSq3zEB7WHFu7lvifN1fBCHZjm7ttEDT0Y57Sg8gLvg=;
+        s=default; t=1579865387;
+        bh=h8UpbCSI7U696KqtZ7M6siVRoIRZJSzbxGDPRlX24pc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KcThQKsNOgQUu+3i4k3Sqx5Nfl3TK/OXENvLyrTn3q3Q3z1AT6Oj5JIcPgIXvB0Kd
-         vhVkBhCGWWUmSoZaAbIZNWInaFuM3bXhOmTV/maHEZ8JDDSNa8ugUe2p6es1ztl/sm
-         IXidAzYbFOxLUlSOaLImsURSfRQhlMSws4jb9Dok=
+        b=bmDyDyKletNNTBCG/+YLDe3S0908M/mZC+eA946Hp/OE0izhT28MQ1t8bNy9R8nj4
+         AvJMNO1vQ+zCCydzXYwInu+jcYbmiv4COR2EiqdXP/Uyhs03FEBqeTVgFFNVb3M47r
+         QC23nAvEyAH9c6tVU1PI5OLoksjV+z7zW0arPVHw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Markus Elfring <elfring@users.sourceforge.net>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Rui Miguel Silva <rmfrfs@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 523/639] media: em28xx: Fix exception handling in em28xx_alloc_urbs()
-Date:   Fri, 24 Jan 2020 10:31:33 +0100
-Message-Id: <20200124093154.303190735@linuxfoundation.org>
+Subject: [PATCH 4.19 532/639] staging: greybus: light: fix a couple double frees
+Date:   Fri, 24 Jan 2020 10:31:42 +0100
+Message-Id: <20200124093155.533344333@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
 References: <20200124093047.008739095@linuxfoundation.org>
@@ -62,39 +60,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Markus Elfring <elfring@users.sourceforge.net>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit ecbce48f1ff2442371ebcd12ec0ecddb431fbd72 ]
+[ Upstream commit 329101244f214952606359d254ae883b7109e1a5 ]
 
-A null pointer would be passed to a call of the function "kfree" directly
-after a call of the function "kcalloc" failed at one place.
-Pass the data structure member "urb" instead for which memory
-was allocated before (so that this resource will be properly cleaned up).
+The problem is in gb_lights_request_handler().  If we get a request to
+change the config then we release the light with gb_lights_light_release()
+and re-allocated it.  However, if the allocation fails part way through
+then we call gb_lights_light_release() again.  This can lead to a couple
+different double frees where we haven't cleared out the original values:
 
-This issue was detected by using the Coccinelle software.
+	gb_lights_light_v4l2_unregister(light);
+	...
+	kfree(light->channels);
+	kfree(light->name);
 
-Fixes: d571b592c6206d33731f41aa710fa0f69ac8611b ("media: em28xx: don't use coherent buffer for DMA transfers")
-Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+I also made a small change to how we set "light->channels_count = 0;".
+The original code handled this part fine and did not cause a use after
+free but it was sort of complicated to read.
+
+Fixes: 2870b52bae4c ("greybus: lights: add lights implementation")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Acked-by: Rui Miguel Silva <rmfrfs@gmail.com>
+Link: https://lore.kernel.org/r/20190829122839.GA20116@mwanda
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/usb/em28xx/em28xx-core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/staging/greybus/light.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/media/usb/em28xx/em28xx-core.c b/drivers/media/usb/em28xx/em28xx-core.c
-index 5657f8710ca6b..69445c8e38e28 100644
---- a/drivers/media/usb/em28xx/em28xx-core.c
-+++ b/drivers/media/usb/em28xx/em28xx-core.c
-@@ -930,7 +930,7 @@ int em28xx_alloc_urbs(struct em28xx *dev, enum em28xx_mode mode, int xfer_bulk,
+diff --git a/drivers/staging/greybus/light.c b/drivers/staging/greybus/light.c
+index 010ae1e9c7fbf..40680eaf3974f 100644
+--- a/drivers/staging/greybus/light.c
++++ b/drivers/staging/greybus/light.c
+@@ -1098,21 +1098,21 @@ static void gb_lights_channel_release(struct gb_channel *channel)
+ static void gb_lights_light_release(struct gb_light *light)
+ {
+ 	int i;
+-	int count;
  
- 	usb_bufs->buf = kcalloc(num_bufs, sizeof(void *), GFP_KERNEL);
- 	if (!usb_bufs->buf) {
--		kfree(usb_bufs->buf);
-+		kfree(usb_bufs->urb);
- 		return -ENOMEM;
- 	}
+ 	light->ready = false;
  
+-	count = light->channels_count;
+-
+ 	if (light->has_flash)
+ 		gb_lights_light_v4l2_unregister(light);
++	light->has_flash = false;
+ 
+-	for (i = 0; i < count; i++) {
++	for (i = 0; i < light->channels_count; i++)
+ 		gb_lights_channel_release(&light->channels[i]);
+-		light->channels_count--;
+-	}
++	light->channels_count = 0;
++
+ 	kfree(light->channels);
++	light->channels = NULL;
+ 	kfree(light->name);
++	light->name = NULL;
+ }
+ 
+ static void gb_lights_release(struct gb_lights *glights)
 -- 
 2.20.1
 
