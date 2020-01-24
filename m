@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 846F2C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 10:03:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51B4EC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 10:03:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4EECF222C2
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 10:03:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1EB7F20709
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 10:03:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579860213;
-	bh=PPmiJew4ZvvOF6Bm7FQ3PW4vL2IOrlK99XR0eg3zSKU=;
+	s=default; t=1579860217;
+	bh=+x4BIgm+Rs6J0btz+KE1I3ThRuf5C+ViDg8xfrtN6jQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vTjQlLnUdbE9zvCJrdGCHNAU8HpCl9dfMMOHiyyZFkhp+HGZWBAvZJzkmBZgofDfL
-	 pTIRz9dMdYKdkeNnUas7J0a9H8WmcqfIb1bUtmc30SXQCHZ06gLLFPHGBiAZB3YPq1
-	 O+5MSXBtT8+/WbLVgbZokGDNKdT1L6xoRB+4YFog=
+	b=WwqWwZaxgaRG6NtYjhynGHl/HG/hWr13Q0n+jtuWh2z0jaIS1N8r3lx9+9iAW5uTK
+	 ynvi9G4ZRWQcXIg+SPQGhyG4i1LB19n5crPUUGWrTTD9GHs9ojhy4TIwhlb5SY6nOs
+	 vDSCVqq9eTfDxACaUb49EFJ9h+i61LsG6UrNfntU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389040AbgAXKDb (ORCPT
+        id S2389046AbgAXKDf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 05:03:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39248 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 05:03:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39342 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388615AbgAXKD3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 05:03:29 -0500
+        id S2388615AbgAXKDc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 05:03:32 -0500
 Received: from localhost (unknown [145.15.244.15])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B2272206D5;
-        Fri, 24 Jan 2020 10:03:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 73CCE214DB;
+        Fri, 24 Jan 2020 10:03:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579860208;
-        bh=PPmiJew4ZvvOF6Bm7FQ3PW4vL2IOrlK99XR0eg3zSKU=;
+        s=default; t=1579860212;
+        bh=+x4BIgm+Rs6J0btz+KE1I3ThRuf5C+ViDg8xfrtN6jQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QuTs6pNbFJ3h6o66DK4wy9pohWuR5Vq8Gu8TPAiHOjshVjJG8QXruHtjgXKW8nJUm
-         I62LfhxM9v9PMVs+8jVxsJkBYSvyOB9HKgWZ2OvAA6CG4bZyS8aoSSNYJLGsUdL7Tl
-         VjjUU/OCUy1FwPQUpyJqLQ1wTtOtt7eqZTqcx43M=
+        b=j7NiPxmjFfvnczKe/1pWVlX4wNCjgqr93c5QDV3NXm9RLrNVpyVcLCf+ZkC+vyOzJ
+         /pEbYZGcfmvutQOfQ1bE1lqoEKhEV1DfQgO+JsxjQs5yXLQUormtLNK46WFn+3tixz
+         YraRkswIQW4MceHSR3Z2dxX3XWnqlQM8tFT2naEw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Steve French <stfrench@microsoft.com>,
-        Ronnie Sahlberg <lsahlber@redhat.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
+        stable@vger.kernel.org, Iuliana Prodan <iuliana.prodan@nxp.com>,
+        Horia Geanta <horia.geanta@nxp.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 267/343] cifs: fix rmmod regression in cifs.ko caused by force_sig changes
-Date:   Fri, 24 Jan 2020 10:31:25 +0100
-Message-Id: <20200124092955.105191282@linuxfoundation.org>
+Subject: [PATCH 4.14 268/343] crypto: caam - free resources in case caam_rng registration failed
+Date:   Fri, 24 Jan 2020 10:31:26 +0100
+Message-Id: <20200124092955.219167873@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124092919.490687572@linuxfoundation.org>
 References: <20200124092919.490687572@linuxfoundation.org>
@@ -61,36 +61,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Steve French <stfrench@microsoft.com>
+From: Iuliana Prodan <iuliana.prodan@nxp.com>
 
-[ Upstream commit 247bc9470b1eeefc7b58cdf2c39f2866ba651509 ]
+[ Upstream commit c59a1d41672a89b5cac49db1a472ff889e35a2d2 ]
 
-Fixes: 72abe3bcf091 ("signal/cifs: Fix cifs_put_tcp_session to call send_sig instead of force_sig")
+Check the return value of the hardware registration for caam_rng and free
+resources in case of failure.
 
-The global change from force_sig caused module unloading of cifs.ko
-to fail (since the cifsd process could not be killed, "rmmod cifs"
-now would always fail)
-
-Signed-off-by: Steve French <stfrench@microsoft.com>
-Reviewed-by: Ronnie Sahlberg <lsahlber@redhat.com>
-CC: Eric W. Biederman <ebiederm@xmission.com>
+Fixes: e24f7c9e87d4 ("crypto: caam - hwrng support")
+Signed-off-by: Iuliana Prodan <iuliana.prodan@nxp.com>
+Reviewed-by: Horia Geanta <horia.geanta@nxp.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/cifs/connect.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/crypto/caam/caamrng.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/fs/cifs/connect.c b/fs/cifs/connect.c
-index 51bbb1c0b71ae..ed4a0352ea90e 100644
---- a/fs/cifs/connect.c
-+++ b/fs/cifs/connect.c
-@@ -921,6 +921,7 @@ cifs_demultiplex_thread(void *p)
- 		mempool_resize(cifs_req_poolp, length + cifs_min_rcv);
+diff --git a/drivers/crypto/caam/caamrng.c b/drivers/crypto/caam/caamrng.c
+index fde07d4ff0190..ff6718a11e9ec 100644
+--- a/drivers/crypto/caam/caamrng.c
++++ b/drivers/crypto/caam/caamrng.c
+@@ -353,7 +353,10 @@ static int __init caam_rng_init(void)
+ 		goto free_rng_ctx;
  
- 	set_freezable();
-+	allow_signal(SIGKILL);
- 	while (server->tcpStatus != CifsExiting) {
- 		if (try_to_freeze())
- 			continue;
+ 	dev_info(dev, "registering rng-caam\n");
+-	return hwrng_register(&caam_rng);
++
++	err = hwrng_register(&caam_rng);
++	if (!err)
++		return err;
+ 
+ free_rng_ctx:
+ 	kfree(rng_ctx);
 -- 
 2.20.1
 
