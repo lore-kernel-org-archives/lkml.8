@@ -2,95 +2,156 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B728C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:16:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0316BC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:16:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 507902071A
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:16:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2DF02075D
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:16:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ktJyqCX5"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=shipmail.org header.i=@shipmail.org header.b="lmfX8Jm+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730103AbgAXJQJ (ORCPT
+        id S1730215AbgAXJQu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 04:16:09 -0500
-Received: from merlin.infradead.org ([205.233.59.134]:39998 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729384AbgAXJQJ (ORCPT
+        Fri, 24 Jan 2020 04:16:50 -0500
+Received: from ste-pvt-msa2.bahnhof.se ([213.80.101.71]:35753 "EHLO
+        ste-pvt-msa2.bahnhof.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729384AbgAXJQt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 04:16:09 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=hmixrUXurqOegKNhzF9h4CdZ3dMfH0LOWEyJXzMjgjo=; b=ktJyqCX5GLB6FKAUL/9nirdsj
-        qztnJToZqMYplKB5b94b5BVmWplOxoxCW39NC8wNC+MeS6bmkzzQWQQ0RQZ5OTQcRxEHx1y0YZ4na
-        tgk5wsycMLzp0OwcB/JKd8vWOA62Axk2UBwOQZJk+hzyq/NsP65vYQFQWmcnvfjvzCrAl+iILNJ/F
-        ZJwzD3wf0/sc1SzRm0kgCgJFbKQC3iM8eKyN5CweoKY0eBQ20rczMvDoiGqjnoqvxj+Z12OcRWuzY
-        WGpr1iE2Ne45kfRE7FAkfq1R8ZE7OtXxHT/VcYWcxnwTmxHNz6Vl1iz6HcCfUoUcm7LKIbPQx02eu
-        s1EqYTmOw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iuv4G-0002ZI-Ah; Fri, 24 Jan 2020 09:15:56 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 63336300677;
-        Fri, 24 Jan 2020 10:14:12 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id D5C7B2B715B6B; Fri, 24 Jan 2020 10:15:52 +0100 (CET)
-Date:   Fri, 24 Jan 2020 10:15:52 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Song Liu <songliubraving@fb.com>
-Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com,
-        Andi Kleen <andi@firstfloor.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH v2] perf/core: install cgroup events to correct cpuctx
-Message-ID: <20200124091552.GB14914@hirez.programming.kicks-ass.net>
-References: <20200122195027.2112449-1-songliubraving@fb.com>
+        Fri, 24 Jan 2020 04:16:49 -0500
+X-Greylist: delayed 416 seconds by postgrey-1.27 at vger.kernel.org; Fri, 24 Jan 2020 04:16:49 EST
+Received: from localhost (localhost [127.0.0.1])
+        by ste-pvt-msa2.bahnhof.se (Postfix) with ESMTP id 681DF3F6EE;
+        Fri, 24 Jan 2020 10:09:51 +0100 (CET)
+Authentication-Results: ste-pvt-msa2.bahnhof.se;
+        dkim=pass (1024-bit key; unprotected) header.d=shipmail.org header.i=@shipmail.org header.b=lmfX8Jm+;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at bahnhof.se
+Authentication-Results: ste-ftg-msa2.bahnhof.se (amavisd-new);
+        dkim=pass (1024-bit key) header.d=shipmail.org
+Received: from ste-pvt-msa2.bahnhof.se ([127.0.0.1])
+        by localhost (ste-ftg-msa2.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id ja-EDtmmEIsb; Fri, 24 Jan 2020 10:09:50 +0100 (CET)
+Received: from mail1.shipmail.org (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
+        (Authenticated sender: mb878879)
+        by ste-pvt-msa2.bahnhof.se (Postfix) with ESMTPA id 524263F5D8;
+        Fri, 24 Jan 2020 10:09:48 +0100 (CET)
+Received: from localhost.localdomain.localdomain (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
+        by mail1.shipmail.org (Postfix) with ESMTPSA id E914F360653;
+        Fri, 24 Jan 2020 10:09:47 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=shipmail.org; s=mail;
+        t=1579856988; bh=3/LLclKt7+aCOVoEUoZ2rgY+/+paTMjeNbg1mLjGtXI=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=lmfX8Jm+eY3Ry7JJWrVaHib0VAmvysHOsKTd9EAgG/hvEs5eV4BZxhxGhZkhc3KUb
+         qjticevxCPxJ7uQTZL5bBAT/UuQbgXOtIDKWZyMumrDy3cVT4UDntUaK2AQro++6tB
+         l+ZCGTshLQUO4igVhjWCh145hJkc3nYcxQvdNfJY=
+From:   =?UTF-8?q?Thomas=20Hellstr=C3=B6m=20=28VMware=29?= 
+        <thomas_os@shipmail.org>
+To:     linux-mm@kvack.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+Cc:     pv-drivers@vmware.com, linux-graphics-maintainer@vmware.com,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        Dan Williams <dan.j.williams@intel.com>
+Subject: [PATCH 3/9] mm: Split huge pages on write-notify or COW
+Date:   Fri, 24 Jan 2020 10:09:34 +0100
+Message-Id: <20200124090940.26571-4-thomas_os@shipmail.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20200124090940.26571-1-thomas_os@shipmail.org>
+References: <20200124090940.26571-1-thomas_os@shipmail.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200122195027.2112449-1-songliubraving@fb.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 22, 2020 at 11:50:27AM -0800, Song Liu wrote:
-> cgroup events are always installed in the cpuctx. However, when it is not
-> installed via IPI, list_update_cgroup_event() adds it to cpuctx of current
-> CPU, which triggers the following with CONFIG_DEBUG_LIST:
-> 
+From: Thomas Hellstrom <thellstrom@vmware.com>
 
-> [   31.777570] list_add double add: new=ffff888ff7cf0db0, prev=ffff888ff7ce82f0, next=ffff888ff7cf0db0.
+We currently only do COW and write-notify on the PTE level, so if the
+huge_fault() handler returns VM_FAULT_FALLBACK on wp faults,
+split the huge pages and page-table entries. Also do this for huge PUDs
+if there is no huge_fault() handler and the vma is not anonymous, similar
+to how it's done for PMDs.
 
-> To reproduce this, we can simply run:
->   perf stat -e cs -a &
->   perf stat -e cs -G anycgroup
-> 
-> Fix this by installing it to cpuctx that contains event->ctx, and the
-> proper cgrp_cpuctx_list.
-> 
-> Fixes: db0503e4f675 ("perf/core: Optimize perf_install_in_event()")
-> Suggested-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> Cc: Andi Kleen <andi@firstfloor.org>
-> Cc: Peter Zijlstra (Intel) <peterz@infradead.org>
-> Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-> Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-> Cc: Jiri Olsa <jolsa@redhat.com>
-> Cc: Namhyung Kim <namhyung@kernel.org>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Signed-off-by: Song Liu <songliubraving@fb.com>
+Note that fs/dax.c does the splitting in the huge_fault() handler, but as
+huge_fault() is implemented by modules we need to consider whether to
+export the splitting functions for use in the modules or whether to try
+to keep calls in the core. Opt for the latter. A follow-up patch can
+remove the dax.c split_huge_pmd() if needed.
 
-Thanks!
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Cc: Ralph Campbell <rcampbell@nvidia.com>
+Cc: "Jérôme Glisse" <jglisse@redhat.com>
+Cc: "Christian König" <christian.koenig@amd.com>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Signed-off-by: Thomas Hellstrom <thellstrom@vmware.com>
+---
+ mm/memory.c | 27 +++++++++++++++++++--------
+ 1 file changed, 19 insertions(+), 8 deletions(-)
+
+diff --git a/mm/memory.c b/mm/memory.c
+index 17aadc751e5c..4c49fe963e5c 100644
+--- a/mm/memory.c
++++ b/mm/memory.c
+@@ -3880,11 +3880,14 @@ static inline vm_fault_t wp_huge_pmd(struct vm_fault *vmf, pmd_t orig_pmd)
+ {
+ 	if (vma_is_anonymous(vmf->vma))
+ 		return do_huge_pmd_wp_page(vmf, orig_pmd);
+-	if (vmf->vma->vm_ops->huge_fault)
+-		return vmf->vma->vm_ops->huge_fault(vmf, PE_SIZE_PMD);
++	if (vmf->vma->vm_ops->huge_fault) {
++		vm_fault_t ret = vmf->vma->vm_ops->huge_fault(vmf, PE_SIZE_PMD);
+ 
+-	/* COW handled on pte level: split pmd */
+-	VM_BUG_ON_VMA(vmf->vma->vm_flags & VM_SHARED, vmf->vma);
++		if (!(ret & VM_FAULT_FALLBACK))
++			return ret;
++	}
++
++	/* COW or write-notify handled on pte level: split pmd. */
+ 	__split_huge_pmd(vmf->vma, vmf->pmd, vmf->address, false, NULL);
+ 
+ 	return VM_FAULT_FALLBACK;
+@@ -3897,12 +3900,20 @@ static inline bool vma_is_accessible(struct vm_area_struct *vma)
+ 
+ static vm_fault_t create_huge_pud(struct vm_fault *vmf)
+ {
+-#ifdef CONFIG_TRANSPARENT_HUGEPAGE
++#if defined(CONFIG_TRANSPARENT_HUGEPAGE) &&			\
++	defined(CONFIG_HAVE_ARCH_TRANSPARENT_HUGEPAGE_PUD)
+ 	/* No support for anonymous transparent PUD pages yet */
+ 	if (vma_is_anonymous(vmf->vma))
+-		return VM_FAULT_FALLBACK;
+-	if (vmf->vma->vm_ops->huge_fault)
+-		return vmf->vma->vm_ops->huge_fault(vmf, PE_SIZE_PUD);
++		goto split;
++	if (vmf->vma->vm_ops->huge_fault) {
++		vm_fault_t ret = vmf->vma->vm_ops->huge_fault(vmf, PE_SIZE_PUD);
++
++		if (!(ret & VM_FAULT_FALLBACK))
++			return ret;
++	}
++split:
++	/* COW or write-notify not handled on PUD level: split pud.*/
++	__split_huge_pud(vmf->vma, vmf->pud, vmf->address);
+ #endif /* CONFIG_TRANSPARENT_HUGEPAGE */
+ 	return VM_FAULT_FALLBACK;
+ }
+-- 
+2.21.0
+
