@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7604C35242
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 10:07:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB2D1C32771
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 10:07:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4E7420709
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 10:07:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73931206F0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 10:07:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579860431;
-	bh=hK+nGvHcKmIsVY5DsWGt2bj6J52pSTH0xYz9n7o4Fgs=;
+	s=default; t=1579860435;
+	bh=vQ+uH/cOpmr1AdzpkBSN4ch2fbW/9SWdayHvKdMzYHI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iYGEbSAlWhUb5kr7/DdM2WqmYkA+BbFLmbay1/AnngB7K7L62rA4c2VW3W4k1QncD
-	 nRhrCsetOgxQSJkPZz0b5Cqp/4HobETfXBOHfNpLQWsTeJ2XA1108CP7LfxlF76v5A
-	 4/EJyW59cFYOK8xCvOxa5UWePZO7gueVV+fFsw6E=
+	b=X3WhHbU8uOGerbuWFubvaisOoZX5PGDtZjzV6Zb2BwffAFNVl79UUq0ms8EUBX5ZI
+	 8p5Wa8+zeosV5zB1ic3ZMq24HqdZSO1MdFEF8qpf9Fk0NE4UB4jLN/a51xSdauPpoa
+	 2cZaXnKm5KQ+ix8Fci0Zx+vxUmskGchkZjcZHR8w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389350AbgAXKHK (ORCPT
+        id S2389356AbgAXKHP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 05:07:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43662 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 05:07:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43730 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730766AbgAXKHK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 05:07:10 -0500
+        id S1730766AbgAXKHN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 05:07:13 -0500
 Received: from localhost (unknown [145.15.244.15])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C5FA7206F0;
-        Fri, 24 Jan 2020 10:07:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E4FBD20709;
+        Fri, 24 Jan 2020 10:07:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579860429;
-        bh=hK+nGvHcKmIsVY5DsWGt2bj6J52pSTH0xYz9n7o4Fgs=;
+        s=default; t=1579860433;
+        bh=vQ+uH/cOpmr1AdzpkBSN4ch2fbW/9SWdayHvKdMzYHI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=J97WIBCRYtKWFGGkVo8B7Ft34DchSBNrTKNSihg1Jf3Si+yWQ/ZX7lFGlx3LoLyUa
-         /jK35fzbZ6QTo1z7sZYxF5CfMpwKcuR1RT/wjdFBCNe6rlueNPuHg23QMmLtPjPIQ0
-         8vcPHYQLdS6GP5EpneC64EnCcMncG9R66TCWnHRw=
+        b=HpfYSksOJ5loFjfqxfdVndYQOb5cqWYsVTjFnYdiHQJAED5yKdwgq2MCs/s5En4L6
+         YLS0xrahGXRYkrz8Wg+7OQzQWaiFQP9oD6IL3NdkSJz89kc+jFbkNXFc3T4o/X4oRG
+         VvMK+PeZKTrKs9tRF9YnVx7GnNqkNTkSl+1rjQcU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 311/343] net: stmmac: dwmac-meson8b: Fix signedness bug in probe
-Date:   Fri, 24 Jan 2020 10:32:09 +0100
-Message-Id: <20200124093000.801235812@linuxfoundation.org>
+Subject: [PATCH 4.14 312/343] net: axienet: fix a signedness bug in probe
+Date:   Fri, 24 Jan 2020 10:32:10 +0100
+Message-Id: <20200124093000.921837913@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124092919.490687572@linuxfoundation.org>
 References: <20200124092919.490687572@linuxfoundation.org>
@@ -63,33 +63,33 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit f10210517a2f37feea2edf85eb34c98977265c16 ]
+[ Upstream commit 73e211e11be86715d66bd3c9d38b3c34b05fca9a ]
 
-The "dwmac->phy_mode" is an enum and in this context GCC treats it as
-an unsigned int so the error handling is never triggered.
+The "lp->phy_mode" is an enum but in this context GCC treats it as an
+unsigned int so the error handling is never triggered.
 
-Fixes: 566e82516253 ("net: stmmac: add a glue driver for the Amlogic Meson 8b / GXBB DWMAC")
+Fixes: ee06b1728b95 ("net: axienet: add support for standard phy-mode binding")
 Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Reviewed-by: Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/stmicro/stmmac/dwmac-meson8b.c | 2 +-
+ drivers/net/ethernet/xilinx/xilinx_axienet_main.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-meson8b.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-meson8b.c
-index 8be4b32544ef8..d71d3c1c85eed 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac-meson8b.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-meson8b.c
-@@ -285,7 +285,7 @@ static int meson8b_dwmac_probe(struct platform_device *pdev)
- 
- 	dwmac->pdev = pdev;
- 	dwmac->phy_mode = of_get_phy_mode(pdev->dev.of_node);
--	if (dwmac->phy_mode < 0) {
-+	if ((int)dwmac->phy_mode < 0) {
- 		dev_err(&pdev->dev, "missing phy-mode property\n");
- 		ret = -EINVAL;
- 		goto err_remove_config_dt;
+diff --git a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
+index 9ccd08a051f6a..1152d74433f6e 100644
+--- a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
++++ b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
+@@ -1574,7 +1574,7 @@ static int axienet_probe(struct platform_device *pdev)
+ 		}
+ 	} else {
+ 		lp->phy_mode = of_get_phy_mode(pdev->dev.of_node);
+-		if (lp->phy_mode < 0) {
++		if ((int)lp->phy_mode < 0) {
+ 			ret = -EINVAL;
+ 			goto free_netdev;
+ 		}
 -- 
 2.20.1
 
