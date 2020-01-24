@@ -2,100 +2,145 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1815FC35242
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 21:00:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45769C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 21:04:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA110208C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 21:00:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="SPRgKkxd"
+	by mail.kernel.org (Postfix) with ESMTP id 239302071E
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 21:04:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729603AbgAXVAF (ORCPT
+        id S2387444AbgAXVEk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 16:00:05 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:42578 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726454AbgAXVAE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 16:00:04 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:References:Cc:To:From:
-        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=EzpuHyEK+V1u82omKAA2mOHojjIIggmKMI2AKO+L34E=; b=SPRgKkxdTE1Omjgs2P49vaIjg
-        d9tCzwzPutBJIJ+QW5AJbJT76XyeXMhMnsdfZL9oDJ/6iNAQfSgeJrtQy88/twEdD9fnhx9hTaeaA
-        M87+j2dGsCi/d3ZpsOAeBHFlNLdDpaNH23MC8E18Hz+n7wskA5aPBZTh041N4QzIYW5mjTWS/MIOT
-        Xpl7mEPrD45TPzftYOJ2dXUU1ziFX53jFW/wqA784RWm37M3KOnoNPLsdKXZgeVtlrhg+BrVOA5zZ
-        VuyXSxkryEeykzcdRuaj7bTxyqF5dt9w9qtH9b8TGsCw1NJrCxUJPd7KDkdjzk0yhgynve0WdOHWP
-        fevgWJv6g==;
-Received: from [2601:1c0:6280:3f0::ed68]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iv63Z-0006Ug-Hb; Fri, 24 Jan 2020 20:59:57 +0000
-Subject: Re: linux-next: Tree for Jan 24 (kvm)
-From:   Randy Dunlap <rdunlap@infradead.org>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, KVM <kvm@vger.kernel.org>
-References: <20200124173302.2c3228b2@canb.auug.org.au>
- <38d53302-b700-b162-e766-2e2a461fc569@infradead.org>
-Message-ID: <8f6e1118-85ef-6e0d-b023-1277e7d42a1c@infradead.org>
-Date:   Fri, 24 Jan 2020 12:59:56 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Fri, 24 Jan 2020 16:04:40 -0500
+Received: from mga06.intel.com ([134.134.136.31]:16364 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387394AbgAXVEj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 16:04:39 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Jan 2020 13:04:34 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,358,1574150400"; 
+   d="scan'208";a="428408414"
+Received: from vcostago-desk1.jf.intel.com (HELO vcostago-desk1) ([10.54.70.26])
+  by fmsmga006.fm.intel.com with ESMTP; 24 Jan 2020 13:04:33 -0800
+From:   Vinicius Costa Gomes <vinicius.gomes@intel.com>
+To:     "Allan W. Nielsen" <allan.nielsen@microchip.com>,
+        Horatiu Vultur <horatiu.vultur@microchip.com>
+Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        bridge@lists.linux-foundation.org, jiri@resnulli.us,
+        ivecera@redhat.com, davem@davemloft.net, roopa@cumulusnetworks.com,
+        nikolay@cumulusnetworks.com, anirudh.venkataramanan@intel.com,
+        olteanv@gmail.com, andrew@lunn.ch, jeffrey.t.kirsher@intel.com,
+        UNGLinuxDriver@microchip.com
+Subject: Re: [RFC net-next v3 00/10]  net: bridge: mrp: Add support for Media Redundancy Protocol (MRP)
+In-Reply-To: <20200124203406.2ci7w3w6zzj6yibz@lx-anielsen.microsemi.net>
+References: <20200124161828.12206-1-horatiu.vultur@microchip.com> <20200124203406.2ci7w3w6zzj6yibz@lx-anielsen.microsemi.net>
+Date:   Fri, 24 Jan 2020 13:05:45 -0800
+Message-ID: <87zhecimza.fsf@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <38d53302-b700-b162-e766-2e2a461fc569@infradead.org>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/24/20 12:51 PM, Randy Dunlap wrote:
-> On 1/23/20 10:33 PM, Stephen Rothwell wrote:
->> Hi all,
+Hi,
+
+"Allan W. Nielsen" <allan.nielsen@microchip.com> writes:
+
+> On 24.01.2020 17:18, Horatiu Vultur wrote:
+>>Media Redundancy Protocol is a data network protocol standardized by
+>>International Electrotechnical Commission as IEC 62439-2. It allows rings of
+>>Ethernet switches to overcome any single failure with recovery time faster than
+>>STP. It is primarily used in Industrial Ethernet applications.
 >>
->> Changes since 20200123:
+>>Based on the previous RFC[1][2], the MRP state machine and all the
+>>timers were moved to userspace. A generic netlink interface is added to
+>>allow configuring the HW, and logic added to to implement the MRP
+>>specific forwarding rules.
 >>
->> The kvm tree gained a conflict against Linus' tree.
+>>The userspace application that is using the new netlink can be found here[3].
 >>
-> 
-> on i386:
-> 
-> ../arch/x86/kvm/x86.h:363:16: warning: right shift count >= width of type [-Wshift-count-overflow]
-> 
-> 
+>>The current implementation both in kernel and userspace supports only 2 roles:
+>>
+>>  MRM - this one is responsible to send MRP_Test and MRP_Topo frames on both
+>>  ring ports. It needs to process MRP_Test to know if the ring is open or
+>>  closed. This operation is desired to be offloaded to the HW because it
+>>  requires to generate and process up to 4000 frames per second. Whenever it
+>>  detects that the ring open it sends MRP_Topo frames to notify all MRC about
+>>  changes in the topology. MRM needs also to process MRP_LinkChange frames,
+>>  these frames are generated by the MRC. When the ring is open the the state
+>>  of both ports is to forward frames and when the ring is closed then the
+>>  secondary port is blocked.
+>>
+>>  MRC - this one is responsible to forward MRP frames between the ring ports.
+>>  In case one of the ring ports gets a link down or up, then MRC will generate
+>>  a MRP_LinkChange frames. This node should also process MRP_Topo frames and to
+>>  clear its FDB when it receives this frame.
+>>
+>> Userspace
+>>               Deamon +----------+ Client
+>>                +
+>>                |
+>> +--------------|-----------------------------------------+
+>>  Kernel        |
+>>                + Netlink
+>>
+>>                |                              + Interrupt
+>>                |                              |
+>> +--------------|------------------------------|----------+
+>>  HW            | Switchdev                    |
+>>                +                              |
+>>
+>>The user interacts using the client (called 'mrp'), the client talks to the
+>>deamon (called 'mrp_server'), which talks with the kernel using netlink. The
+>>kernel will try to offload the requests to the HW via switchdev API. For this a
+>>new generic netlink interface was added to the bridge.
+>>
+>>If the kernel cannot offload MRP to HW (maybe it does not have a switchdev
+>>driver, or it is just not supported), then all the netlink calls will return
+>>-EOPNOTSUPP. In this case the user-space deamon fallback to SW only
+>>implementation.
+> Horatiu and I have spend a bit of time discussing what you be best here.
+> An alternative to this would be to do the SW fallback in the kernel,
+> instead of user-land. This would mean that the user application does not
+> need to know if the function is offloaded (or partly offloaded) to HW.
+>
+> We went with this approch to make the kernel part as simple as possible.
+> The alternative would still be much simpler than the first version
+> posted - but it would require a bit more.
+>
+> Both options has pros and cons, and we looking forward to the
+> community's view on this.
 
-Sorry, I missed these 2 warnings:
+I have one idea and one question.
 
-../arch/x86/kvm/vmx/vmx.c: In function 'vmx_set_msr':
-../arch/x86/kvm/vmx/vmx.c:2001:14: warning: '~' on a boolean expression [-Wbool-operation]
-   if (data & ~kvm_spec_ctrl_valid_bits(vcpu))
-              ^
+The idea is:
+
+'net/hsr' already has a software implementation of the HSR replication
+tag (and some of the handling necessary). So what came to mind is to
+add the necessary switchdev functions to the master HSR device. If
+that's done, then it sounds that the rest will mostly work.
+
+For the user the flow would be something like:
+
+ - User takes two (or more interfaces) and set them as slaves of the HSR
+   master device, say 'hsr0';
+
+ - 'hsr0' implements some of the switchdev functionality so we can use
+   the MRP userspace components on it;
+
+Does it look like something that could work?
+
+The question that I have is: what's the relation of IEC 62439-2 to IEEE
+802.1CB? 
 
 
-../arch/x86/kvm/svm.c: In function 'svm_set_msr':
-../arch/x86/kvm/svm.c:4289:14: warning: '~' on a boolean expression [-Wbool-operation]
-   if (data & ~kvm_spec_ctrl_valid_bits(vcpu))
-              ^
-../arch/x86/kvm/svm.c:4289:14: note: did you mean to use logical not?
-   if (data & ~kvm_spec_ctrl_valid_bits(vcpu))
-              ^
-              !
-
--- 
-~Randy
-
+Cheers,
+--
+Vinicius
