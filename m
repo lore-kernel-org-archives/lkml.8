@@ -2,70 +2,173 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87459C35242
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 21:55:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78F7BC35242
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 21:58:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65F702072C
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 21:55:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45FF02072C
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 21:58:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VpCxTbGc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729199AbgAXVzf (ORCPT
+        id S1727590AbgAXV57 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 16:55:35 -0500
-Received: from namei.org ([65.99.196.166]:59698 "EHLO namei.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729152AbgAXVzc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 16:55:32 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by namei.org (8.14.4/8.14.4) with ESMTP id 00OLtNMn007070;
-        Fri, 24 Jan 2020 21:55:23 GMT
-Date:   Sat, 25 Jan 2020 08:55:23 +1100 (AEDT)
-From:   James Morris <jmorris@namei.org>
-To:     KP Singh <kpsingh@chromium.org>
-cc:     Casey Schaufler <casey@schaufler-ca.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux Security Module list 
-        <linux-security-module@vger.kernel.org>, bpf@vger.kernel.org
-Subject: Re: [PATCH bpf-next v3 04/10] bpf: lsm: Add mutable hooks list for
- the BPF LSM
-In-Reply-To: <20200124012501.GA8709@chromium.org>
-Message-ID: <alpine.LRH.2.21.2001250852070.6744@namei.org>
-References: <20200123152440.28956-1-kpsingh@chromium.org> <20200123152440.28956-5-kpsingh@chromium.org> <29157a88-7049-906e-fe92-b7a1e2183c6b@schaufler-ca.com> <20200123175942.GA131348@google.com> <5004b3f4-ca5b-a546-4e87-b852cc248079@schaufler-ca.com>
- <20200123222436.GA1598@chromium.org> <f571b719-e11f-416e-4232-f99036e38f15@schaufler-ca.com> <20200124012501.GA8709@chromium.org>
-User-Agent: Alpine 2.21 (LRH 202 2017-01-01)
+        Fri, 24 Jan 2020 16:57:59 -0500
+Received: from mail-yb1-f196.google.com ([209.85.219.196]:35644 "EHLO
+        mail-yb1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725821AbgAXV57 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 16:57:59 -0500
+Received: by mail-yb1-f196.google.com with SMTP id q190so1717441ybq.2;
+        Fri, 24 Jan 2020 13:57:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=FAgORkqjjQWplSt9zJQeczIU9aNbThp1xcMsMJfyq+Y=;
+        b=VpCxTbGcQ0V0/R3sS4OeSE6EGkbPL0lOUOIzs42gE48xq633Q1/8Tnf4c35lP/BQGK
+         pasXqcFCk7obZOD8f5MLzdSZ6GrKGkXJjSfNSxxi0DPwtXyIUXKDpz0nbq3xxL+/h7TV
+         59KHVYvQGAhY1u44szVqcpvsr/k43DABswn5ipfFXiWtRjnjBNneIosq3POD0l59rSWA
+         gDWMNI7byCHb5kGgvuvJgCXXkTXYpIWqP+JfHQ8StWJZzyLCRyqN8VBdXi3ow57w9m57
+         Q/Ne5VUTkno/kRIM7qeEgx0Wklq2KnsHUoypgkY249y+spvoMcOauYJPwn2HZHdHN2GN
+         Felg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=FAgORkqjjQWplSt9zJQeczIU9aNbThp1xcMsMJfyq+Y=;
+        b=N8kJm/t5PofOGQaU/wfM/ah2+4lhnjNBts5mNdgZs0P05eXffprOWAf3mImKTTcoZo
+         tXroWh8yUduOD/ycm9XMWE3iQ1oVtU3coYEJdBDz++dVGzp9ercZWrNeo2xkRZLpHKXd
+         C8ZYzwhkH+uZ2X/wBmexKh6epWv2AgIQn8+MGzhk2hIo8cM8UjoH7MNXOsMQ8dL9tbij
+         SzTw5JacvPMaEyno4p2O0kCoozS6KjevXjltXo9cDzBWahLcHCNcjT8l+uAg8DZhcnCD
+         GMyxvAzwcDTSkI0nf4ACPELmasSe7uEseCukO1i+LT+yTgWUx5wQVdxUilh+xXyWFVSe
+         JwAQ==
+X-Gm-Message-State: APjAAAUMixYV5xDQRTcTCmlI9KYLng70am1kq5IbC6C9eNdxHPI/E+zI
+        4IX5EqxRwMClZKHam2C9pLQ=
+X-Google-Smtp-Source: APXvYqzVbEeZtHr5DuKQ0VnGjzr5Ff6DvzTWn142G41ZVqDxUi8S4qU+GYb2P4b40NsfZ0LeXkx0kw==
+X-Received: by 2002:a25:e696:: with SMTP id d144mr4150569ybh.316.1579903077801;
+        Fri, 24 Jan 2020 13:57:57 -0800 (PST)
+Received: from [192.168.1.46] (c-73-88-245-53.hsd1.tn.comcast.net. [73.88.245.53])
+        by smtp.gmail.com with ESMTPSA id a12sm2935604ywa.95.2020.01.24.13.57.56
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 24 Jan 2020 13:57:57 -0800 (PST)
+Subject: Re: [PATCH/RFC 2/2] gpio: of: Add DT overlay support for GPIO hogs
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Pantelis Antoniou <pantelis.antoniou@konsulko.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Chris Brandt <chris.brandt@renesas.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20191230133852.5890-1-geert+renesas@glider.be>
+ <20191230133852.5890-3-geert+renesas@glider.be>
+ <41e1c51e-bc17-779e-8c68-bf2e652871eb@gmail.com>
+ <70d24070-4f6d-8fc8-1214-1bd800cb5246@gmail.com>
+ <CAMuHMdUQbRqyv1FK5JTbL-XL_YPZx8Sf9tQfU-eCozCNyDXYBA@mail.gmail.com>
+From:   Frank Rowand <frowand.list@gmail.com>
+Message-ID: <a58d8d75-00b3-dcbf-8cdf-0b774bbf5be0@gmail.com>
+Date:   Fri, 24 Jan 2020 15:57:56 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <CAMuHMdUQbRqyv1FK5JTbL-XL_YPZx8Sf9tQfU-eCozCNyDXYBA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 23 Jan 2020, KP Singh wrote:
+On 1/7/20 2:11 AM, Geert Uytterhoeven wrote:
+> Hi Frank,
+> 
+> On Tue, Jan 7, 2020 at 8:10 AM Frank Rowand <frowand.list@gmail.com> wrote:
+>> On 1/6/20 5:34 PM, Frank Rowand wrote:
+>>> On 12/30/19 7:38 AM, Geert Uytterhoeven wrote:
+>>>> As GPIO hogs are configured at GPIO controller initialization time,
+>>>> adding/removing GPIO hogs in DT overlays does not work.
+>>>>
+>>>> Add support for GPIO hogs described in DT overlays by registering an OF
+>>>> reconfiguration notifier, to handle the addition and removal of GPIO hog
+>>>> subnodes to/from a GPIO controller device node.
+>>>>
+>>>> Note that when a GPIO hog device node is being removed, its "gpios"
+>>>> properties is no longer available, so we have to keep track of which
+>>>> node a hog belongs to, which is done by adding a pointer to the hog's
+>>>> device node to struct gpio_desc.
+>>>
+>>> If I have read the patches and the existing overlay source correctly,
+>>> then some observations:
+>>>
+>>> - A gpio hog node added in an overlay will be properly processed.
+>>>
+>>> - A gpio hog node already existing in the live devicetree, but with a
+>>>   non-active status will be properly processed if the status of the
+>>>   gpio hog node is changed to "ok" in the overlay.
+
+Verified by testing.
+
+
+>>> - If a gpio hog node already exists in the live devicetree with an
+>>>   active status, then any updated or added properties in that gpio
+>>>   hog node in the overlay will have no effect.
+
+Should be documented.
+
+
+>>>   There is a scenario where the updated property would have an effect:
+>>>   apply a second overlay that sets the status to inactive, then apply
+>>>   a third overlay that sets the status back to active.  This is a
+>>>   rather contrived example and I think it should be documented as
+>>>   not supported and the result undefined.
+
+I was wrong in this case.
+
+of_reconfig_get_state_change() does not simply report whether a node
+is added or removed, which confused me because it returns
+OF_RECONFIG_CHANGE_ADD and OF_RECONFIG_CHANGE_REMOVE (as well as
+no change), which I was incorrectly translating to node added or
+node removed.   OF_RECONFIG_CHANGE_ADD and OF_RECONFIG_CHANGE_REMOVE
+properly report a node becoming available or available due to changes
+in the "status" property, as well as accounting for a node being
+added or removed.
+
+So the case that I was worried about is handled correctly.
+
+
+>> I went back and double checked the related code.  For gpio hog nodes
+>> that are in a non-overlay, the status property is checked because
+>> of_gpiochip_scan_gpios() uses for_each_available_child_of_node()
+>> to search for gpio hog nodes, and for_each_available_child_of_node()
+>> checks the status property.  But in the case of a gpio hog node
+>> added by an overlay, of_gpio_notify() does not check the status
+>> property in the gpio hog node.  The check for the status property
+>> should be added to of_gpio_notify().
+> 
+> Right.  of_device_is_available() should be called to check this.
+> Note that of_i2c_notify() and of_spi_notify() also lack such a check.
+> of_platform_notify() calls of_platform_device_create_pdata(), which does
+> have the check.
+
+And thus I was wrong about this also, so of_gpio_notify() does not need to
+check the status property, since of_reconfig_get_state_change() already
+implicitly incorporates this check.
 
 > 
-> > If you want to put mutable hook handling in the infrastructure
-> > you need to make it general mutable hook handling as opposed to
-> > BPF hook handling. I don't know if that would be acceptable for
-> > all the reasons called out about dynamic module loading.
+> Gr{oetje,eeting}s,
 > 
-> We can have generic mutable hook handling and if an LSM doesn't
---> provide a mutable security_hook_heads, it would not allow dynamic
-> hooks / dynamic module loading.
+>                         Geert
 > 
-> So, in practice it will just be the BPF LSM that allows mutable hooks
-> and the other existing LSMs won't. I guess it will be cleaner than
-> calling the BPF hooks directly from the LSM code (i.e in security.c)
-
-I'm inclined to only have mutable hooks for KRSI, not for all LSMs. This 
-is a special case and we don't need to provide this for anyone else.
-
-Btw, folks, PLEASE trim replies.
-
-
--- 
-James Morris
-<jmorris@namei.org>
 
