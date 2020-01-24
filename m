@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 968B4C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:13:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEC12C32771
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:13:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D3F62071A
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:13:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BFB220708
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:13:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579864405;
-	bh=uqr3kV4f44YrbbtVXEpfN1XuCVbICB6sCwdFeb0jBHg=;
+	s=default; t=1579864410;
+	bh=B2vmsTBKpvoAqNMkcTnWn3fggVW2VM0yv9v+TYBNCdA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZbdVi31VsxG1jMh3hhcFoXO1YL0BmdvTJWs9RXWHsMs7LbIcUk/VFPk457dVVpCZ3
-	 6Svuix8xsbrEX2i/kbpIf6CX/Q2tHH4/xCr431pve4xF3W7d/TBtr5I7/8ubrLC4Yo
-	 NiYKXYKr27XXSsXhEIM69c2T/+MsVUlR/M9qFHR8=
+	b=gDrg78otOSex162x+DnmvN6wK3JbCX2FHqgJp8UoOZtqpTmagTWEod1FM8A1uK/Pf
+	 UmCLtYGhsoI9P5RmRz6y468Qx0lkn1KrIPMlh8Kcc5JD7u5DWCgypeURV7P4aPGD5o
+	 hTjjDi5Ly6JG1U/FMz33VsRyWoOXDqW1/27COzrY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390049AbgAXLNY (ORCPT
+        id S2390054AbgAXLN3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:13:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49644 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 06:13:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49718 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388638AbgAXLNV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:13:21 -0500
+        id S2390047AbgAXLNY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:13:24 -0500
 Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D642C20708;
-        Fri, 24 Jan 2020 11:13:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9E53920708;
+        Fri, 24 Jan 2020 11:13:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579864400;
-        bh=uqr3kV4f44YrbbtVXEpfN1XuCVbICB6sCwdFeb0jBHg=;
+        s=default; t=1579864404;
+        bh=B2vmsTBKpvoAqNMkcTnWn3fggVW2VM0yv9v+TYBNCdA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vDqugwuKC2SKD08GyzYh4+XP9bdKViY+2kytCLgJabxy74iFPtOgO4VNs2uv4c5c9
-         NUfbnA5LThMd3Nmg5zgPfQvqCF3+AnG5wtAzUCZyiTJhHBccr9QHiI2dxCZFULe6aJ
-         mOdifYhmDubfCHgimH0IE92SKORX2LXy3H80TaT8=
+        b=JpSN+mohGPBELEQn/HkvDQqriKqlNu0ZxTJWWJblzP0u/n6AM9leRXYuq6zXvsPqp
+         KQYpVOcxkppsdnOs/S9NL9SJBSTSQ+j+FJsHx9YNue4tmQrqGN9q7EsTE+edi+SaFp
+         hLlxcwnERVC0Q5o2sE6t6QtU7u1WU4eHH269ShVM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Florian Westphal <fw@strlen.de>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
+        stable@vger.kernel.org, Mattias Jacobsson <2pi@mok.nu>,
+        "Darren Hart (VMware)" <dvhart@infradead.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 241/639] netfilter: nft_set_hash: fix lookups with fixed size hash on big endian
-Date:   Fri, 24 Jan 2020 10:26:51 +0100
-Message-Id: <20200124093117.002911952@linuxfoundation.org>
+Subject: [PATCH 4.19 232/639] platform/x86: wmi: fix potential null pointer dereference
+Date:   Fri, 24 Jan 2020 10:26:42 +0100
+Message-Id: <20200124093115.912225311@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
 References: <20200124093047.008739095@linuxfoundation.org>
@@ -60,70 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pablo Neira Ayuso <pablo@netfilter.org>
+From: Mattias Jacobsson <2pi@mok.nu>
 
-[ Upstream commit 3b02b0adc242a72b5e46019b6a9e4f84823592f6 ]
+[ Upstream commit c355ec651a8941864549f2586f969d0eb7bf499a ]
 
-Call jhash_1word() for the 4-bytes key case from the insertion and
-deactivation path, otherwise big endian arch set lookups fail.
+In the function wmi_dev_match() the variable id is dereferenced without
+first performing a NULL check. The variable can for example be NULL if
+a WMI driver is registered without specifying the id_table field in
+struct wmi_driver.
 
-Fixes: 446a8268b7f5 ("netfilter: nft_set_hash: add lookup variant for fixed size hashtable")
-Reported-by: Florian Westphal <fw@strlen.de>
-Tested-by: Florian Westphal <fw@strlen.de>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Add a NULL check and return that the driver can't handle the device if
+the variable is NULL.
+
+Fixes: 844af950da94 ("platform/x86: wmi: Turn WMI into a bus driver")
+Signed-off-by: Mattias Jacobsson <2pi@mok.nu>
+Signed-off-by: Darren Hart (VMware) <dvhart@infradead.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/nft_set_hash.c | 23 +++++++++++++++++++----
- 1 file changed, 19 insertions(+), 4 deletions(-)
+ drivers/platform/x86/wmi.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/net/netfilter/nft_set_hash.c b/net/netfilter/nft_set_hash.c
-index 015124e649cbd..8dde4bfe8b8a4 100644
---- a/net/netfilter/nft_set_hash.c
-+++ b/net/netfilter/nft_set_hash.c
-@@ -488,6 +488,23 @@ static bool nft_hash_lookup_fast(const struct net *net,
- 	return false;
- }
+diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
+index 04791ea5d97b6..35cdc3998eb59 100644
+--- a/drivers/platform/x86/wmi.c
++++ b/drivers/platform/x86/wmi.c
+@@ -768,6 +768,9 @@ static int wmi_dev_match(struct device *dev, struct device_driver *driver)
+ 	struct wmi_block *wblock = dev_to_wblock(dev);
+ 	const struct wmi_device_id *id = wmi_driver->id_table;
  
-+static u32 nft_jhash(const struct nft_set *set, const struct nft_hash *priv,
-+		     const struct nft_set_ext *ext)
-+{
-+	const struct nft_data *key = nft_set_ext_key(ext);
-+	u32 hash, k1;
++	if (id == NULL)
++		return 0;
 +
-+	if (set->klen == 4) {
-+		k1 = *(u32 *)key;
-+		hash = jhash_1word(k1, priv->seed);
-+	} else {
-+		hash = jhash(key, set->klen, priv->seed);
-+	}
-+	hash = reciprocal_scale(hash, priv->buckets);
-+
-+	return hash;
-+}
-+
- static int nft_hash_insert(const struct net *net, const struct nft_set *set,
- 			   const struct nft_set_elem *elem,
- 			   struct nft_set_ext **ext)
-@@ -497,8 +514,7 @@ static int nft_hash_insert(const struct net *net, const struct nft_set *set,
- 	u8 genmask = nft_genmask_next(net);
- 	u32 hash;
+ 	while (id->guid_string) {
+ 		uuid_le driver_guid;
  
--	hash = jhash(nft_set_ext_key(&this->ext), set->klen, priv->seed);
--	hash = reciprocal_scale(hash, priv->buckets);
-+	hash = nft_jhash(set, priv, &this->ext);
- 	hlist_for_each_entry(he, &priv->table[hash], node) {
- 		if (!memcmp(nft_set_ext_key(&this->ext),
- 			    nft_set_ext_key(&he->ext), set->klen) &&
-@@ -537,8 +553,7 @@ static void *nft_hash_deactivate(const struct net *net,
- 	u8 genmask = nft_genmask_next(net);
- 	u32 hash;
- 
--	hash = jhash(nft_set_ext_key(&this->ext), set->klen, priv->seed);
--	hash = reciprocal_scale(hash, priv->buckets);
-+	hash = nft_jhash(set, priv, &this->ext);
- 	hlist_for_each_entry(he, &priv->table[hash], node) {
- 		if (!memcmp(nft_set_ext_key(&this->ext), &elem->key.val,
- 			    set->klen) &&
 -- 
 2.20.1
 
