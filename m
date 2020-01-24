@@ -7,48 +7,52 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B395C35242
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 01:18:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96CADC35240
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 01:18:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C56A324676
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 01:18:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EF8222464
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 01:18:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579828693;
-	bh=Nk9jNBcw53r9L6+tLhH7YjGpWnkMDQa7jjKGCG4czck=;
+	s=default; t=1579828697;
+	bh=w9WNDehsM1lFSFmPeMSuZhv8mPkdVYroQ9F1lrDU4GQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WCiydNRNEYjLPSi0dsbsz8ifi4zjvXFsdSkrcdH3TB9VkBHJeVrMv1ztOJ3rbDfsg
-	 wH+SEKRKEJAaHTjCL51z1OZExqDuhBk88d+Zauc3+GTAyjLf3cRtTeoEM0IykLVWkN
-	 ++Kmp0Zk6I1DUXhVC2UFc1b5yIanplj/aBHVn4oY=
+	b=SSDivptmt7+g1c5ds2oco4m3VbNrQ6jbd9zQSrIxnGCad4wtwkWau+h9Ng3Kkry4Y
+	 ColdbGq2YkQn9GwJl/fWifuav5/uXi7gWMhywU+ZtK8gv0UsiTlB6wPN/8eZCIhl1O
+	 SkxdO5TM9Qk21Drz/JaS4dYdM3sEy2XHgkzFVong=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730297AbgAXBSM (ORCPT
+        id S1730261AbgAXBSP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 20:18:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33312 "EHLO mail.kernel.org"
+        Thu, 23 Jan 2020 20:18:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33372 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730988AbgAXBSI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 20:18:08 -0500
+        id S1729545AbgAXBSM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jan 2020 20:18:12 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 44DCA2253D;
-        Fri, 24 Jan 2020 01:18:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CFBC821D7E;
+        Fri, 24 Jan 2020 01:18:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579828687;
-        bh=Nk9jNBcw53r9L6+tLhH7YjGpWnkMDQa7jjKGCG4czck=;
+        s=default; t=1579828691;
+        bh=w9WNDehsM1lFSFmPeMSuZhv8mPkdVYroQ9F1lrDU4GQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UKUBc7oihc33JLW40fO2YBmsgnHVdNwGagZtYacq4LvLrz+0cVXcg/xHp8YT6d3wb
-         DOcYuylUiIuk058fQs+ATC8lOSAQMRcZLR7a5zgiPpuSAMglbFdK6G3Y9wkAJUMr/e
-         iOwTkTHzeC75gQ1N7tOeiOeGWjXn5NB0If1oti5A=
+        b=KMF6rzF0anuDYLq6YCAKfzzsZ6prsmPzYKEK5N4MBeQHi8Wv5VaHn8P1ubQjaIlPc
+         sFpJYkOWjNTTL0t7Yx9U5IbWX4oztaCR0bW+vMSniLtEDG7N/EOt6jFE9Yhno1iheY
+         hc0UKAxJ7SB/sBynSNv78Ue94x4O445WbYQNP600=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hans de Goede <hdegoede@redhat.com>, Jiri Kosina <jkosina@suse.cz>,
-        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 5/5] HID: ite: Add USB id match for Acer SW5-012 keyboard dock
-Date:   Thu, 23 Jan 2020 20:18:01 -0500
-Message-Id: <20200124011801.18712-5-sashal@kernel.org>
+Cc:     Laura Abbott <labbott@fedoraproject.org>,
+        Steven Ellis <sellis@redhat.com>,
+        Pacho Ramos <pachoramos@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org,
+        usb-storage@lists.one-eyed-alien.net
+Subject: [PATCH AUTOSEL 4.9 2/2] usb-storage: Disable UAS on JMicron SATA enclosure
+Date:   Thu, 23 Jan 2020 20:18:08 -0500
+Message-Id: <20200124011808.18801-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200124011801.18712-1-sashal@kernel.org>
-References: <20200124011801.18712-1-sashal@kernel.org>
+In-Reply-To: <20200124011808.18801-1-sashal@kernel.org>
+References: <20200124011808.18801-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -58,54 +62,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Laura Abbott <labbott@fedoraproject.org>
 
-[ Upstream commit 8f18eca9ebc57d6b150237033f6439242907e0ba ]
+[ Upstream commit bc3bdb12bbb3492067c8719011576370e959a2e6 ]
 
-The Acer SW5-012 2-in-1 keyboard dock uses a Synaptics S91028 touchpad
-which is connected to an ITE 8595 USB keyboard controller chip.
+Steve Ellis reported incorrect block sizes and alignement
+offsets with a SATA enclosure. Adding a quirk to disable
+UAS fixes the problems.
 
-This keyboard has the same quirk for its rfkill / airplane mode hotkey as
-other keyboards with the ITE 8595 chip, it only sends a single release
-event when pressed and released, it never sends a press event.
-
-This commit adds this keyboards USB id to the hid-ite id-table, fixing
-the rfkill key not working on this keyboard.
-
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+Reported-by: Steven Ellis <sellis@redhat.com>
+Cc: Pacho Ramos <pachoramos@gmail.com>
+Signed-off-by: Laura Abbott <labbott@fedoraproject.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hid/hid-ids.h | 1 +
- drivers/hid/hid-ite.c | 3 +++
- 2 files changed, 4 insertions(+)
+ drivers/usb/storage/unusual_uas.h | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/hid/hid-ids.h b/drivers/hid/hid-ids.h
-index 1e2e6e58256ad..9d372fa7c298c 100644
---- a/drivers/hid/hid-ids.h
-+++ b/drivers/hid/hid-ids.h
-@@ -1024,6 +1024,7 @@
- #define USB_DEVICE_ID_SYNAPTICS_LTS2	0x1d10
- #define USB_DEVICE_ID_SYNAPTICS_HD	0x0ac3
- #define USB_DEVICE_ID_SYNAPTICS_QUAD_HD	0x1ac3
-+#define USB_DEVICE_ID_SYNAPTICS_ACER_SWITCH5_012	0x2968
- #define USB_DEVICE_ID_SYNAPTICS_TP_V103	0x5710
+diff --git a/drivers/usb/storage/unusual_uas.h b/drivers/usb/storage/unusual_uas.h
+index f15aa47c54a9d..0eb8c67ee1382 100644
+--- a/drivers/usb/storage/unusual_uas.h
++++ b/drivers/usb/storage/unusual_uas.h
+@@ -163,12 +163,15 @@ UNUSUAL_DEV(0x2537, 0x1068, 0x0000, 0x9999,
+ 		USB_SC_DEVICE, USB_PR_DEVICE, NULL,
+ 		US_FL_IGNORE_UAS),
  
- #define USB_VENDOR_ID_TEXAS_INSTRUMENTS	0x2047
-diff --git a/drivers/hid/hid-ite.c b/drivers/hid/hid-ite.c
-index 98b059d79bc89..2ce1eb0c92125 100644
---- a/drivers/hid/hid-ite.c
-+++ b/drivers/hid/hid-ite.c
-@@ -43,6 +43,9 @@ static int ite_event(struct hid_device *hdev, struct hid_field *field,
- static const struct hid_device_id ite_devices[] = {
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_ITE, USB_DEVICE_ID_ITE8595) },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_258A, USB_DEVICE_ID_258A_6A88) },
-+	/* ITE8595 USB kbd ctlr, with Synaptics touchpad connected to it. */
-+	{ HID_USB_DEVICE(USB_VENDOR_ID_SYNAPTICS,
-+			 USB_DEVICE_ID_SYNAPTICS_ACER_SWITCH5_012) },
- 	{ }
- };
- MODULE_DEVICE_TABLE(hid, ite_devices);
+-/* Reported-by: Takeo Nakayama <javhera@gmx.com> */
++/*
++ * Initially Reported-by: Takeo Nakayama <javhera@gmx.com>
++ * UAS Ignore Reported by Steven Ellis <sellis@redhat.com>
++ */
+ UNUSUAL_DEV(0x357d, 0x7788, 0x0000, 0x9999,
+ 		"JMicron",
+ 		"JMS566",
+ 		USB_SC_DEVICE, USB_PR_DEVICE, NULL,
+-		US_FL_NO_REPORT_OPCODES),
++		US_FL_NO_REPORT_OPCODES | US_FL_IGNORE_UAS),
+ 
+ /* Reported-by: Hans de Goede <hdegoede@redhat.com> */
+ UNUSUAL_DEV(0x4971, 0x1012, 0x0000, 0x9999,
 -- 
 2.20.1
 
