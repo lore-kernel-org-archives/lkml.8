@@ -2,52 +2,54 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CBD6C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:40:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6320DC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:40:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30FCC208C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:40:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C3632070A
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:40:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579858801;
-	bh=g01oey4yaSdr4gHsShStOXO47xlC6uMGH7eH5eylq98=;
+	s=default; t=1579858807;
+	bh=MBmjJhk/s+760/iUrsthu7tkS/PC5QejrvAu9pQQfZI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SBvaSnew+axCSR18eQZjmMTll5khuBMBkS9JOpRwKuT55Qiww96xH42oU09jiSZNY
-	 4BjNdLeFmmV9IvixgMkTrUpQn5FrkGKgroL3qx9vIOQ/U7Vy0l/Or9s5ZdwDIZcuO0
-	 cu7JHaXukQFaWcQw829INeOv+I5rNzDPc2MRhSC8=
+	b=zhEZEvt1UZnhw66Fab4DxffkkX/GZYrIGNeMtFzCjFrRArDg49RLM7PvsozIS8QKx
+	 dlhfD56kth0nNjpEZ6XgawUrXJl8ZYir6wNqLLVWaDqHRkxtUXNvxBaSxkdq1afDgv
+	 3I7T96WLLzY8nSXSJZ2mpbvp+6T76zLgMORbpwlw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731988AbgAXJkA (ORCPT
+        id S1730639AbgAXJkG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 04:40:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37198 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 04:40:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37362 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729693AbgAXJj6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 04:39:58 -0500
+        id S1732126AbgAXJkE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 04:40:04 -0500
 Received: from localhost (unknown [145.15.244.15])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AB1E620709;
-        Fri, 24 Jan 2020 09:39:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C3E0020709;
+        Fri, 24 Jan 2020 09:40:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579858797;
-        bh=g01oey4yaSdr4gHsShStOXO47xlC6uMGH7eH5eylq98=;
+        s=default; t=1579858803;
+        bh=MBmjJhk/s+760/iUrsthu7tkS/PC5QejrvAu9pQQfZI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wce1qRt5piE1g86EWTrqql738Zd8DAoi44lKi+iA3s3mKkRAytF7bbmIpAevJQx5r
-         p2BwFtfGLrmHHikt3asxUgNGPMYGfrlsw/YkWyhJ6OxK76sw0lOGfpxH1dFi12DwHq
-         zcbVcD1eoKmpOfpkNn2K5Im9ANnixgu8RIp9o/mo=
+        b=bTLf/mlQfMHmLUmpTcsxKDPJIeorfsPqg6Y/0mOZsysoaWAlBv+wRFklTcwigMPjb
+         Wp/PedktULRfAb+dC/l3SxOcyJTm0AwsMtlPgI1QoqxLsw26Y2FFYNIt8/1zWFXqt2
+         AemRWjsTNDKcpKhTlVBsiMgPXkV7mQRoJ8s2gvo8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ping-Ke Shih <pkshih@realtek.com>,
-        Yan-Hsuan Chuang <yhchuang@realtek.com>,
-        Kalle Valo <kvalo@codeaurora.org>
-Subject: [PATCH 5.4 050/102] rtw88: fix error handling when setup efuse info
-Date:   Fri, 24 Jan 2020 10:30:51 +0100
-Message-Id: <20200124092813.864213226@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 060/102] net: netsec: Correct dma sync for XDP_TX frames
+Date:   Fri, 24 Jan 2020 10:31:01 +0100
+Message-Id: <20200124092815.386631955@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124092806.004582306@linuxfoundation.org>
 References: <20200124092806.004582306@linuxfoundation.org>
@@ -60,60 +62,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ping-Ke Shih <pkshih@realtek.com>
+From: Ilias Apalodimas <ilias.apalodimas@linaro.org>
 
-commit f4268729eb1eefe23f6746849c1b5626d9030532 upstream.
+[ Upstream commit d9496f3ecfe4823c1e12aecbcc29220147fa012c ]
 
-Disable efuse if the efuse is enabled when we failed to setup the efuse
-information, otherwise the hardware will not turn off.
+bpf_xdp_adjust_head() can change the frame boundaries. Account for the
+potential shift properly by calculating the new offset before
+syncing the buffer to the device for XDP_TX
 
-Fixes: e3037485c68e ("rtw88: new Realtek 802.11ac driver")
-Signed-off-by: Ping-Ke Shih <pkshih@realtek.com>
-Signed-off-by: Yan-Hsuan Chuang <yhchuang@realtek.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: ba2b232108d3 ("net: netsec: add XDP support")
+Signed-off-by: Ilias Apalodimas <ilias.apalodimas@linaro.org>
+Reviewed-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/realtek/rtw88/main.c |   11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
+ drivers/net/ethernet/socionext/netsec.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/net/wireless/realtek/rtw88/main.c
-+++ b/drivers/net/wireless/realtek/rtw88/main.c
-@@ -1048,19 +1048,19 @@ static int rtw_chip_efuse_info_setup(str
- 	/* power on mac to read efuse */
- 	ret = rtw_chip_efuse_enable(rtwdev);
- 	if (ret)
--		goto out;
-+		goto out_unlock;
+diff --git a/drivers/net/ethernet/socionext/netsec.c b/drivers/net/ethernet/socionext/netsec.c
+index f9e6744d8fd6e..41ddd8fff2a73 100644
+--- a/drivers/net/ethernet/socionext/netsec.c
++++ b/drivers/net/ethernet/socionext/netsec.c
+@@ -847,8 +847,8 @@ static u32 netsec_xdp_queue_one(struct netsec_priv *priv,
+ 		enum dma_data_direction dma_dir =
+ 			page_pool_get_dma_dir(rx_ring->page_pool);
  
- 	ret = rtw_parse_efuse_map(rtwdev);
- 	if (ret)
--		goto out;
-+		goto out_disable;
- 
- 	ret = rtw_dump_hw_feature(rtwdev);
- 	if (ret)
--		goto out;
-+		goto out_disable;
- 
- 	ret = rtw_check_supported_rfe(rtwdev);
- 	if (ret)
--		goto out;
-+		goto out_disable;
- 
- 	if (efuse->crystal_cap == 0xff)
- 		efuse->crystal_cap = 0;
-@@ -1087,9 +1087,10 @@ static int rtw_chip_efuse_info_setup(str
- 	efuse->ext_pa_5g = efuse->pa_type_5g & BIT(0) ? 1 : 0;
- 	efuse->ext_lna_2g = efuse->lna_type_5g & BIT(3) ? 1 : 0;
- 
-+out_disable:
- 	rtw_chip_efuse_disable(rtwdev);
- 
--out:
-+out_unlock:
- 	mutex_unlock(&rtwdev->mutex);
- 	return ret;
- }
+-		dma_handle = page_pool_get_dma_addr(page) +
+-			NETSEC_RXBUF_HEADROOM;
++		dma_handle = page_pool_get_dma_addr(page) + xdpf->headroom +
++			sizeof(*xdpf);
+ 		dma_sync_single_for_device(priv->dev, dma_handle, xdpf->len,
+ 					   dma_dir);
+ 		tx_desc.buf_type = TYPE_NETSEC_XDP_TX;
+-- 
+2.20.1
+
 
 
