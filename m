@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBA54C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:05:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB4CFC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:05:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95C83214DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:05:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 915212077C
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:05:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579863902;
-	bh=MZybGdJlM213r2t3wD1EpjiuBzvm690e2krq9nvSH0w=;
+	s=default; t=1579863911;
+	bh=Q/imQNWJc/u+kqaGrCdMn5Hb7bV/yzpvtxjtsY49jq8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KVx1AJ15cAp8QmTts2g2LrzRXqxcmHdz72II2fxwNP7rIit1gL+1VUChPNZ1/pHCU
-	 6ExMz1zW9cNN+4sH9Ia71ssm/mP5EQc9/FKVBpEMmQGm3ROxhn3pslWC8/Le7RhUFn
-	 V1biypgDhDX9QAYkP6SbHz8Ujx6tpL/eJC2EYHrU=
+	b=g8Z4lnGq/BhW5C0zfmU67nv/wuaUVyzRyeysviNq5YtCoHrEUBQPPqIom/g9Kmmux
+	 s7VsZh5lYk28DSSLhyiEYaZPG+PHs5co20FxbZAUQPTcR6t4n4oAYf4WPRPGcd+t3f
+	 z5yghh/Lzb6u8fa9/XKRbmo+nJ2oMpLIGbbnaO74=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388754AbgAXLFB (ORCPT
+        id S2388778AbgAXLFK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:05:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39224 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 06:05:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39368 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387981AbgAXLE7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:04:59 -0500
+        id S2388109AbgAXLFH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:05:07 -0500
 Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3BD8C2071A;
-        Fri, 24 Jan 2020 11:04:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 09F2D2071A;
+        Fri, 24 Jan 2020 11:05:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579863898;
-        bh=MZybGdJlM213r2t3wD1EpjiuBzvm690e2krq9nvSH0w=;
+        s=default; t=1579863906;
+        bh=Q/imQNWJc/u+kqaGrCdMn5Hb7bV/yzpvtxjtsY49jq8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=szQ2m0Uw+s+UsZYbvC0XtDa56RqRAj6keXfq+8S26VdoazcCIrO3yeNG4LYYOKxAz
-         iRQkIzsGfTn52376NNHZMXfe/gwLBo4aOI7Ej7VlUEnXYnXnJDXeEK+XEW0C/1xG7L
-         TB+Osq/AsgcwF0U1nrbWPm6AU0fpoXk/N2HNQmNY=
+        b=o2zM3Zkp/tN+OlhUBQ9atnoZadKU+o/e1Rhi1FT9YjQWJVVAZnEE37/DErBR/xdKt
+         p6mPAfMDl3c70R/xnw+z6Dka/tzKQ08taw/eolXGV8lzrDG4vmT9Z8WdV0R0AXi8S+
+         D6GRv7JWa1j12QDqyBWhd6b4ueV5rSXgw91j4RKs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yangtao Li <tiny.windzz@gmail.com>,
-        Stephen Boyd <sboyd@kernel.org>,
+        stable@vger.kernel.org, YueHaibing <yuehaibing@huawei.com>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 109/639] clk: vf610: fix refcount leak in vf610_clocks_init()
-Date:   Fri, 24 Jan 2020 10:24:39 +0100
-Message-Id: <20200124093101.002722045@linuxfoundation.org>
+Subject: [PATCH 4.19 119/639] drm: Fix error handling in drm_legacy_addctx
+Date:   Fri, 24 Jan 2020 10:24:49 +0100
+Message-Id: <20200124093102.211273878@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
 References: <20200124093047.008739095@linuxfoundation.org>
@@ -60,34 +60,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yangtao Li <tiny.windzz@gmail.com>
+From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit 567177024e0313e4f0dcba7ba10c0732e50e655d ]
+[ Upstream commit c39191feed4540fed98badeb484833dcf659bb96 ]
 
-The of_find_compatible_node() returns a node pointer with refcount
-incremented, but there is the lack of use of the of_node_put() when
-done. Add the missing of_node_put() to release the refcount.
+'ctx->handle' is unsigned, it never less than zero.
+This patch use int 'tmp_handle' to handle the err condition.
 
-Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
-Fixes: 1f2c5fd5f048 ("ARM: imx: add VF610 clock support")
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+Fixes: 62968144e673 ("drm: convert drm context code to use Linux idr")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+Link: https://patchwork.freedesktop.org/patch/msgid/20181229024907.12852-1-yuehaibing@huawei.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/imx/clk-vf610.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/gpu/drm/drm_context.c | 15 +++++++++------
+ 1 file changed, 9 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/clk/imx/clk-vf610.c b/drivers/clk/imx/clk-vf610.c
-index 6dae54325a91d..a334667c450a1 100644
---- a/drivers/clk/imx/clk-vf610.c
-+++ b/drivers/clk/imx/clk-vf610.c
-@@ -203,6 +203,7 @@ static void __init vf610_clocks_init(struct device_node *ccm_node)
- 	np = of_find_compatible_node(NULL, NULL, "fsl,vf610-anatop");
- 	anatop_base = of_iomap(np, 0);
- 	BUG_ON(!anatop_base);
-+	of_node_put(np);
+diff --git a/drivers/gpu/drm/drm_context.c b/drivers/gpu/drm/drm_context.c
+index f973d287696a6..da5abf24f59ff 100644
+--- a/drivers/gpu/drm/drm_context.c
++++ b/drivers/gpu/drm/drm_context.c
+@@ -361,23 +361,26 @@ int drm_legacy_addctx(struct drm_device *dev, void *data,
+ {
+ 	struct drm_ctx_list *ctx_entry;
+ 	struct drm_ctx *ctx = data;
++	int tmp_handle;
  
- 	np = ccm_node;
- 	ccm_base = of_iomap(np, 0);
+ 	if (!drm_core_check_feature(dev, DRIVER_KMS_LEGACY_CONTEXT) &&
+ 	    !drm_core_check_feature(dev, DRIVER_LEGACY))
+ 		return -EINVAL;
+ 
+-	ctx->handle = drm_legacy_ctxbitmap_next(dev);
+-	if (ctx->handle == DRM_KERNEL_CONTEXT) {
++	tmp_handle = drm_legacy_ctxbitmap_next(dev);
++	if (tmp_handle == DRM_KERNEL_CONTEXT) {
+ 		/* Skip kernel's context and get a new one. */
+-		ctx->handle = drm_legacy_ctxbitmap_next(dev);
++		tmp_handle = drm_legacy_ctxbitmap_next(dev);
+ 	}
+-	DRM_DEBUG("%d\n", ctx->handle);
+-	if (ctx->handle < 0) {
++	DRM_DEBUG("%d\n", tmp_handle);
++	if (tmp_handle < 0) {
+ 		DRM_DEBUG("Not enough free contexts.\n");
+ 		/* Should this return -EBUSY instead? */
+-		return -ENOMEM;
++		return tmp_handle;
+ 	}
+ 
++	ctx->handle = tmp_handle;
++
+ 	ctx_entry = kmalloc(sizeof(*ctx_entry), GFP_KERNEL);
+ 	if (!ctx_entry) {
+ 		DRM_DEBUG("out of memory\n");
 -- 
 2.20.1
 
