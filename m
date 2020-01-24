@@ -2,84 +2,94 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 388B1C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 22:21:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2118C35242
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 22:22:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A0B92071A
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 22:21:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 994B32075D
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 22:22:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729106AbgAXWVH (ORCPT
+        id S1729154AbgAXWWp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 17:21:07 -0500
-Received: from 4.mo179.mail-out.ovh.net ([46.105.36.149]:56851 "EHLO
-        4.mo179.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725821AbgAXWVG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 17:21:06 -0500
-Received: from player778.ha.ovh.net (unknown [10.108.42.75])
-        by mo179.mail-out.ovh.net (Postfix) with ESMTP id 7A474158438
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Jan 2020 23:21:05 +0100 (CET)
-Received: from sk2.org (unknown [77.240.182.90])
-        (Authenticated sender: steve@sk2.org)
-        by player778.ha.ovh.net (Postfix) with ESMTPSA id E8C14EA12AF8;
-        Fri, 24 Jan 2020 22:20:58 +0000 (UTC)
-From:   Stephen Kitt <steve@sk2.org>
-To:     Atul Gupta <atul.gupta@chelsio.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S . Miller" <davem@davemloft.net>
-Cc:     linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Stephen Kitt <steve@sk2.org>
-Subject: [PATCH] crypto: chelsio - remove extra allocation for chtls_dev
-Date:   Fri, 24 Jan 2020 23:20:51 +0100
-Message-Id: <20200124222051.1925415-1-steve@sk2.org>
-X-Mailer: git-send-email 2.24.1
+        Fri, 24 Jan 2020 17:22:45 -0500
+Received: from mga07.intel.com ([134.134.136.100]:50330 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727590AbgAXWWo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 17:22:44 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Jan 2020 14:22:13 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,359,1574150400"; 
+   d="scan'208";a="426755932"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by fmsmga005.fm.intel.com with ESMTP; 24 Jan 2020 14:22:12 -0800
+Date:   Fri, 24 Jan 2020 14:22:12 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Jim Mattson <jmattson@google.com>
+Cc:     Randy Dunlap <rdunlap@infradead.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Joerg Roedel <joro@8bytes.org>, KVM <kvm@vger.kernel.org>
+Subject: Re: linux-next: Tree for Jan 24 (kvm)
+Message-ID: <20200124222212.GS2109@linux.intel.com>
+References: <20200124173302.2c3228b2@canb.auug.org.au>
+ <38d53302-b700-b162-e766-2e2a461fc569@infradead.org>
+ <20200124213027.GP2109@linux.intel.com>
+ <CALMp9eRvoZZ=7P3uCg3oqXzvV1WZc9mkzTJh8+=vmEh7xs5BTw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Ovh-Tracer-Id: 7913106020267085241
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: -100
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedugedrvdehgddviecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfqggfjpdevjffgvefmvefgnecuuegrihhlohhuthemucehtddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvffufffkofgggfestdekredtredttdenucfhrhhomhepufhtvghphhgvnhcumfhithhtuceoshhtvghvvgesshhkvddrohhrgheqnecukfhppedtrddtrddtrddtpdejjedrvdegtddrudekvddrledtnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmohguvgepshhmthhpqdhouhhtpdhhvghlohepphhlrgihvghrjeejkedrhhgrrdhovhhhrdhnvghtpdhinhgvtheptddrtddrtddrtddpmhgrihhlfhhrohhmpehsthgvvhgvsehskhdvrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhg
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CALMp9eRvoZZ=7P3uCg3oqXzvV1WZc9mkzTJh8+=vmEh7xs5BTw@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-chtls_uld_add allocates room for info->nports net_device structs
-following the chtls_dev struct, presumably because it was originally
-intended that the ports array would be stored there. This is suggested
-by the assignment which was present in initial versions and removed by
-c4e848586cf1 ("crypto: chelsio - remove redundant assignment to
-cdev->ports"):
+On Fri, Jan 24, 2020 at 01:48:07PM -0800, Jim Mattson wrote:
+> On Fri, Jan 24, 2020 at 1:30 PM Sean Christopherson
+> <sean.j.christopherson@intel.com> wrote:
+> >
+> > On Fri, Jan 24, 2020 at 12:51:31PM -0800, Randy Dunlap wrote:
+> > > On 1/23/20 10:33 PM, Stephen Rothwell wrote:
+> > > > Hi all,
+> > > >
+> > > > Changes since 20200123:
+> > > >
+> > > > The kvm tree gained a conflict against Linus' tree.
+> > > >
+> > >
+> > > on i386:
+> > >
+> > > ../arch/x86/kvm/x86.h:363:16: warning: right shift count >= width of type [-Wshift-count-overflow]
+> >
+> > Jim,
+> >
+> > This is due to using "unsigned long data" for kvm_dr7_valid() along with
+> > "return !(data >> 32);" to check for bits being set in 63:32.  Any
+> > objection to fixing the issue by making @data a u64?  Part of me thinks
+> > that's the proper behavior anyways, i.e. the helper is purely a reflection
+> > of the architectural requirements, the caller is responsible for dropping
+> > bits appropriately based on the current mode.
+> 
+> Why not just change that bad return statement to one of the
+> alternatives you had suggested previously?
 
-	cdev->ports = (struct net_device **)(cdev + 1);
+Because it's not consistent with e.g. is_noncanonical_address() and I don't
+like dropping bits 63:32 of vmcs12->guest_dr7 when kvm_dr7_valid() is called
+from nested_vmx_check_guest_state().  KVM will eventually drop the bits
+anyways when propagating vmcs12->guest_dr7 to vmcs02, but I'd prefer the
+consistency check to not rely on that behavior.
 
-This assignment was never used, being overwritten by lldi->ports
-immediately afterwards, and I couldn't find any uses of the memory
-allocated past the end of the struct.
-
-Signed-off-by: Stephen Kitt <steve@sk2.org>
----
- drivers/crypto/chelsio/chtls/chtls_main.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
-
-diff --git a/drivers/crypto/chelsio/chtls/chtls_main.c b/drivers/crypto/chelsio/chtls/chtls_main.c
-index 18996935d8ba..1311488be37d 100644
---- a/drivers/crypto/chelsio/chtls/chtls_main.c
-+++ b/drivers/crypto/chelsio/chtls/chtls_main.c
-@@ -230,8 +230,7 @@ static void *chtls_uld_add(const struct cxgb4_lld_info *info)
- 	struct chtls_dev *cdev;
- 	int i, j;
- 
--	cdev = kzalloc(sizeof(*cdev) + info->nports *
--		      (sizeof(struct net_device *)), GFP_KERNEL);
-+	cdev = kzalloc(sizeof(*cdev), GFP_KERNEL);
- 	if (!cdev)
- 		goto out;
- 
--- 
-2.24.1
-
+> I think "return !(data >> 32)" was the only suggested alternative that
+> doesn't work. :-)
