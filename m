@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76389C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:28:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6AF4C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:28:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4BDA220718
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:28:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7322820718
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:28:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579865318;
-	bh=tI8kzxHMvf6+J4m912VloVg5T/1uTatzsQrLbDVcFTM=;
+	s=default; t=1579865326;
+	bh=zmOC4M/Wl5ibF14B6bnHfbXoKU5KEmJxJ6MwADDoRQM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mVMAckM3RDrgvOFaADUCmGkNwMsBjIvlU6K7p8njG9pDJzjv+JjUxFpxUHh1dg2PQ
-	 qUhgSHUGymIhFbRzDHeGE83I7FH71EERUsZdWe0ThV4DSqQiRjZXvb4IlJLTX2DIom
-	 qaG2erwGXJ4CmDVsPXJwJCNLq44KfAJn6wXVlaSw=
+	b=fOCiW8U9JtSxO8+iZZgoSprfg0Y5vIQ/nF8qpVAKg81O9xH6dQQrg2GCs+Di6VTSS
+	 L0WdeU6+CXWA7tyxMfGPpr7NHnH7c2L3rodzw8KpxmrHzncKuFiqze5MMNjuYwkQlg
+	 nns/OkYAJMmaEVdkHmW08qrbb1s3v/m22lVO+mI4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391700AbgAXL2h (ORCPT
+        id S2391720AbgAXL2p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:28:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44788 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 06:28:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44974 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391595AbgAXL2e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:28:34 -0500
+        id S2391703AbgAXL2l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:28:41 -0500
 Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CA4AE20704;
-        Fri, 24 Jan 2020 11:28:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 091C6206D4;
+        Fri, 24 Jan 2020 11:28:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579865313;
-        bh=tI8kzxHMvf6+J4m912VloVg5T/1uTatzsQrLbDVcFTM=;
+        s=default; t=1579865320;
+        bh=zmOC4M/Wl5ibF14B6bnHfbXoKU5KEmJxJ6MwADDoRQM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BZ++jvD+6h2LiG67KSUgoYZpEaJu6xTFAbhWWgwbkXLih84IuPAL7mIKsRWtoXmsu
-         cyZ3WqBDraRGpA/t4/EQDwsz4g64viAhAN6lTadf1zVNQd2n9/xgKjZJSj2FIhAoI1
-         fVqf16a8lEe/OsalhEd8UwB8e90hXeznY35eQyIg=
+        b=QckKBe3YBoLfYLEezR8QwPNnAnK1+arV68j8B48NZY8JrDixclQOvwbhZ25GXvHoe
+         uSQp4YUs8Fl4p2stUM0yh743sCW3Tc/3iOeiGWkTneH/uFy1AmoEtVfv85gF66fzS4
+         1q+JXvIYztL94WP0ifkB60U1mLfcz1i8O2KVdRAs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 499/639] cxgb4: smt: Add lock for atomic_dec_and_test
-Date:   Fri, 24 Jan 2020 10:31:09 +0100
-Message-Id: <20200124093151.278803235@linuxfoundation.org>
+        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
+        Theodore Tso <tytso@mit.edu>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 501/639] ext4: set error return correctly when ext4_htree_store_dirent fails
+Date:   Fri, 24 Jan 2020 10:31:11 +0100
+Message-Id: <20200124093151.547582834@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
 References: <20200124093047.008739095@linuxfoundation.org>
@@ -60,50 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chuhong Yuan <hslester96@gmail.com>
+From: Colin Ian King <colin.king@canonical.com>
 
-[ Upstream commit 4a8937b83892cb69524291cae6cdabad4a8be033 ]
+[ Upstream commit 7a14826ede1d714f0bb56de8167c0e519041eeda ]
 
-The atomic_dec_and_test() is not safe because it is
-outside of locks.
-Move the locks of t4_smte_free() to its caller,
-cxgb4_smt_release() to protect the atomic decrement.
+Currently when the call to ext4_htree_store_dirent fails the error return
+variable 'ret' is is not being set to the error code and variable count is
+instead, hence the error code is not being returned.  Fix this by assigning
+ret to the error return code.
 
-Fixes: 3bdb376e6944 ("cxgb4: introduce SMT ops to prepare for SMAC rewrite support")
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Addresses-Coverity: ("Unused value")
+Fixes: 8af0f0822797 ("ext4: fix readdir error in the case of inline_data+dir_index")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/chelsio/cxgb4/smt.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ fs/ext4/inline.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/chelsio/cxgb4/smt.c b/drivers/net/ethernet/chelsio/cxgb4/smt.c
-index 7b2207a2a130f..9b3f4205cb4d4 100644
---- a/drivers/net/ethernet/chelsio/cxgb4/smt.c
-+++ b/drivers/net/ethernet/chelsio/cxgb4/smt.c
-@@ -98,11 +98,9 @@ found_reuse:
- 
- static void t4_smte_free(struct smt_entry *e)
- {
--	spin_lock_bh(&e->lock);
- 	if (atomic_read(&e->refcnt) == 0) {  /* hasn't been recycled */
- 		e->state = SMT_STATE_UNUSED;
- 	}
--	spin_unlock_bh(&e->lock);
- }
- 
- /**
-@@ -112,8 +110,10 @@ static void t4_smte_free(struct smt_entry *e)
-  */
- void cxgb4_smt_release(struct smt_entry *e)
- {
-+	spin_lock_bh(&e->lock);
- 	if (atomic_dec_and_test(&e->refcnt))
- 		t4_smte_free(e);
-+	spin_unlock_bh(&e->lock);
- }
- EXPORT_SYMBOL(cxgb4_smt_release);
- 
+diff --git a/fs/ext4/inline.c b/fs/ext4/inline.c
+index 56f6e1782d5f7..4572cb0579518 100644
+--- a/fs/ext4/inline.c
++++ b/fs/ext4/inline.c
+@@ -1419,7 +1419,7 @@ int htree_inlinedir_to_tree(struct file *dir_file,
+ 		err = ext4_htree_store_dirent(dir_file, hinfo->hash,
+ 					      hinfo->minor_hash, de, &tmp_str);
+ 		if (err) {
+-			count = err;
++			ret = err;
+ 			goto out;
+ 		}
+ 		count++;
 -- 
 2.20.1
 
