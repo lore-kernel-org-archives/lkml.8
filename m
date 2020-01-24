@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F806C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:18:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6181C35242
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:18:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BE0B2075D
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:18:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9FCB20708
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:18:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579864694;
-	bh=yUGQT0hdXqNofaKXUEwZXH80Ej3LJIWMoag+7cI4x8E=;
+	s=default; t=1579864696;
+	bh=LQB4Zhi24o8/X+v34Z1NZFwGXcTPiXecARvgH7JrTaQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UDsKe0BZPhDbrDFHC9cvDiC7U/3kKR10PSTVRmQRpgy7/ZCGxfFuc/mKrDwagYmUY
-	 bGJnlCubJ4mhgPHg8pWLnshavg/CW82wCqPgjCpHYtQzvE2josnzWATp3YpEX8qqX3
-	 TR39O1cK/EyAcGl97f6U7fWmiD/t0GNxUhL0keHU=
+	b=YxLJ5HkSMNGZ5/ex8EMB5k7hL4hkVeKwbQzMYMhJPOykijtLKXyV/GgOisE5ZmvfE
+	 wISrA1gPdSumzE4TwVzHeePR5vmeadeAY5+Cw6RDHJZafJK6394cmUiDS2SP9zj0zf
+	 WZh3eHbe1CEwPsgQATzGU/LdEAtvwKfjHLc+JBLI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390608AbgAXLSN (ORCPT
+        id S2390617AbgAXLSP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:18:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55130 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 06:18:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55182 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390597AbgAXLSH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:18:07 -0500
+        id S1729351AbgAXLSL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:18:11 -0500
 Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2656B20708;
-        Fri, 24 Jan 2020 11:18:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6247020708;
+        Fri, 24 Jan 2020 11:18:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579864686;
-        bh=yUGQT0hdXqNofaKXUEwZXH80Ej3LJIWMoag+7cI4x8E=;
+        s=default; t=1579864690;
+        bh=LQB4Zhi24o8/X+v34Z1NZFwGXcTPiXecARvgH7JrTaQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=p6Tpr8lOemR+XCvZ/9jTEUg09kekUL0npnQZHVnalpooOWAnw6GF9T3aZUb0Qxe0X
-         pBPgH6ZGVAerTpBXXr1cvpg1A4pR/JogHgvQgbvm+diu0W+jiPhV1NkL5/2XXRuGTZ
-         J5zudKKSHaI8ctYw49YFcnNQ+JCOPx9/THwhX3s4=
+        b=J5LuMGnZ9wb1s1y8tfZ8QRA/7NhAWq9qlhR+AyrmZZKAX+WflVRoEGv8/xyqea0fG
+         WahHP4mHh7U580NSNiVik6AnwaMUEBkvpk6WuYY8g19h8JegktyH+x/fnsEq2PStua
+         Rxmdxkuqbd0NVSWLCFD8QM09n10IDha3UOG2CweU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Adam Ford <aford173@gmail.com>,
-        Tony Lindgren <tony@atomide.com>,
+        stable@vger.kernel.org,
+        Jonathan Billings <jsbillings@jsbillings.org>,
+        David Howells <dhowells@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 337/639] ARM: dts: logicpd-som-lv: Fix MMC1 card detect
-Date:   Fri, 24 Jan 2020 10:28:27 +0100
-Message-Id: <20200124093129.331241490@linuxfoundation.org>
+Subject: [PATCH 4.19 325/639] afs: Fix AFS file locking to allow fine grained locks
+Date:   Fri, 24 Jan 2020 10:28:15 +0100
+Message-Id: <20200124093127.839498079@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
 References: <20200124093047.008739095@linuxfoundation.org>
@@ -60,36 +61,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Adam Ford <aford173@gmail.com>
+From: David Howells <dhowells@redhat.com>
 
-[ Upstream commit 6a38df676a0a06bfc7ff8607ac62ccd6d95969ad ]
+[ Upstream commit 68ce801ffd82e72d5005ab5458e8b9e59f24d9cc ]
 
-The card detect pin was incorrectly using IRQ_TYPE_LEVEL_LOW
-instead of GPIO_ACTIVE_LOW when reading the state of the CD pin.
+Fix AFS file locking to allow fine grained locks as some applications, such
+as firefox, won't work if they can't take such locks on certain state files
+- thereby preventing the use of kAFS to distribute a home directory.
 
-This was previosly fixed on Torpedo, but missed on the SOM-LV
+Note that this cannot be made completely functional as the protocol only
+has provision for whole-file locks, so there exists the possibility of a
+process deadlocking itself by getting a partial read-lock on a file first
+and then trying to get a non-overlapping write-lock - but we got the
+server's read lock with the first lock, so we're now stuck.
 
-Fixes: 5cb8b0fa55a9 ("ARM: dts: Move most of logicpd-som-lv-37xx-devkit.dts to logicpd-som-lv-baseboard.dtsi")
-Signed-off-by: Adam Ford <aford173@gmail.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+OpenAFS solves this by just granting any partial-range lock directly
+without consulting the server - and hoping there's no remote collision.  I
+want to implement that in a separate patch and it requires a bit more
+thought.
+
+Fixes: 8d6c554126b8 ("AFS: implement file locking")
+Reported-by: Jonathan Billings <jsbillings@jsbillings.org>
+Signed-off-by: David Howells <dhowells@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/logicpd-som-lv-baseboard.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/afs/flock.c | 23 +++++++++--------------
+ 1 file changed, 9 insertions(+), 14 deletions(-)
 
-diff --git a/arch/arm/boot/dts/logicpd-som-lv-baseboard.dtsi b/arch/arm/boot/dts/logicpd-som-lv-baseboard.dtsi
-index 4990ed90dcea4..3e39b9a1f35d0 100644
---- a/arch/arm/boot/dts/logicpd-som-lv-baseboard.dtsi
-+++ b/arch/arm/boot/dts/logicpd-som-lv-baseboard.dtsi
-@@ -153,7 +153,7 @@
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&mmc1_pins>;
- 	wp-gpios = <&gpio4 30 GPIO_ACTIVE_HIGH>;		/* gpio_126 */
--	cd-gpios = <&gpio4 14 IRQ_TYPE_LEVEL_LOW>;		/* gpio_110 */
-+	cd-gpios = <&gpio4 14 GPIO_ACTIVE_LOW>;			/* gpio_110 */
- 	vmmc-supply = <&vmmc1>;
- 	bus-width = <4>;
- 	cap-power-off-card;
+diff --git a/fs/afs/flock.c b/fs/afs/flock.c
+index 1bb300ef362b0..dffbb456629c9 100644
+--- a/fs/afs/flock.c
++++ b/fs/afs/flock.c
+@@ -432,10 +432,6 @@ static int afs_do_setlk(struct file *file, struct file_lock *fl)
+ 
+ 	_enter("{%x:%u},%u", vnode->fid.vid, vnode->fid.vnode, fl->fl_type);
+ 
+-	/* only whole-file locks are supported */
+-	if (fl->fl_start != 0 || fl->fl_end != OFFSET_MAX)
+-		return -EINVAL;
+-
+ 	fl->fl_ops = &afs_lock_ops;
+ 	INIT_LIST_HEAD(&fl->fl_u.afs.link);
+ 	fl->fl_u.afs.state = AFS_LOCK_PENDING;
+@@ -587,10 +583,6 @@ static int afs_do_unlk(struct file *file, struct file_lock *fl)
+ 	/* Flush all pending writes before doing anything with locks. */
+ 	vfs_fsync(file, 0);
+ 
+-	/* only whole-file unlocks are supported */
+-	if (fl->fl_start != 0 || fl->fl_end != OFFSET_MAX)
+-		return -EINVAL;
+-
+ 	ret = posix_lock_file(file, fl, NULL);
+ 	_leave(" = %d [%u]", ret, vnode->lock_state);
+ 	return ret;
+@@ -618,12 +610,15 @@ static int afs_do_getlk(struct file *file, struct file_lock *fl)
+ 			goto error;
+ 
+ 		lock_count = READ_ONCE(vnode->status.lock_count);
+-		if (lock_count > 0)
+-			fl->fl_type = F_RDLCK;
+-		else
+-			fl->fl_type = F_WRLCK;
+-		fl->fl_start = 0;
+-		fl->fl_end = OFFSET_MAX;
++		if (lock_count != 0) {
++			if (lock_count > 0)
++				fl->fl_type = F_RDLCK;
++			else
++				fl->fl_type = F_WRLCK;
++			fl->fl_start = 0;
++			fl->fl_end = OFFSET_MAX;
++			fl->fl_pid = 0;
++		}
+ 	}
+ 
+ 	ret = 0;
 -- 
 2.20.1
 
