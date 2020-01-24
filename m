@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1083FC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:53:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A292CC32771
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:53:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF564206D5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:53:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7134B206D5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:53:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579859606;
-	bh=HWtDXZ3+dqRs3dDrGqX3euHlCduGl/P0Y+Y6lUpLJJA=;
+	s=default; t=1579859611;
+	bh=ruJhuPX5YT8xB86h9cdA6e549MQ5UbUT38xZLIPdo6c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zBDdQDivhsLnVpHtCFW1Rgd7SKSMGYXNj7ys7VSYu6xdsWf71hkKHLteRblK8Mspr
-	 gNLUvCH4IhvfAynEUVZ0gNKOCRad+El+maH5Ybp9G8FRYg0MkwrlgPj5jKUv+UKF94
-	 6baqw9v9h3BGmNH08qx1uUEWE3aGh6gs6y72N78I=
+	b=mRi8hrR/nkg1Ls7FQRx/B0xkt1tVK5VCTMJYqIzu3b4d7u91e0GncMe9KOdEAUHNu
+	 af3+dcN9fsJSrvRcYEmG4hy84DO+VXHpAlyngUlv61E6N3wZwT+u3ovphC5/oUEpm4
+	 xEPKSeIEsgrE8Bm6B/swnzsjOEdOqVOQtGmonXyw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388264AbgAXJx0 (ORCPT
+        id S2388272AbgAXJxa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 04:53:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55892 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 04:53:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56090 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388253AbgAXJxW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 04:53:22 -0500
+        id S1731526AbgAXJx3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 04:53:29 -0500
 Received: from localhost (unknown [145.15.244.15])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3A78020718;
-        Fri, 24 Jan 2020 09:53:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7A64B206D5;
+        Fri, 24 Jan 2020 09:53:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579859602;
-        bh=HWtDXZ3+dqRs3dDrGqX3euHlCduGl/P0Y+Y6lUpLJJA=;
+        s=default; t=1579859609;
+        bh=ruJhuPX5YT8xB86h9cdA6e549MQ5UbUT38xZLIPdo6c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2HYjvZ8PrE2YU8+pmkgz9xY3Jm/KVb9rIVDVRtzhq4T04ncAXiTXdqxuQi4qjnq4b
-         QtBxBsVACoz27obJ4Es0YFTTFF2uzQ95oIa7bHv5PfDGQMRtwSEkUt/8Z9R8CzwQD2
-         d+64T+2jZzZnIzxmCX+0NN6OyD+658oO8kRM+i2E=
+        b=P8g1iBu2XFyLmkn5XPLpNXdCZX5ofq/EpGBjAOP8qIpYWTy0QrhZvdEG6akFVa8Vm
+         Auu4bbH4W9g/c2QHbVpoZJPShoK9lJiKk/xMXslAtIIbec6i6HYxunBM17mDMFq4TX
+         dJsEkLEqYO56NDbqrvQkRkUI720ivyUyxH7A6qPg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Paul Walmsley <paul@pwsan.com>,
-        Tero Kristo <t-kristo@ti.com>,
-        Tony Lindgren <tony@atomide.com>,
+        stable@vger.kernel.org, Axel Lin <axel.lin@ingics.com>,
+        Charles Keepax <ckeepax@opensource.cirrus.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 153/343] ARM: OMAP2+: Fix potentially uninitialized return value for _setup_reset()
-Date:   Fri, 24 Jan 2020 10:29:31 +0100
-Message-Id: <20200124092940.108150453@linuxfoundation.org>
+Subject: [PATCH 4.14 132/343] regulator: wm831x-dcdc: Fix list of wm831x_dcdc_ilim from mA to uA
+Date:   Fri, 24 Jan 2020 10:29:10 +0100
+Message-Id: <20200124092937.351280689@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124092919.490687572@linuxfoundation.org>
 References: <20200124092919.490687572@linuxfoundation.org>
@@ -61,41 +61,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tony Lindgren <tony@atomide.com>
+From: Axel Lin <axel.lin@ingics.com>
 
-[ Upstream commit 7f0d078667a494466991aa7133f49594f32ff6a2 ]
+[ Upstream commit c25d47888f0fb3d836d68322d4aea2caf31a75a6 ]
 
-Commit 747834ab8347 ("ARM: OMAP2+: hwmod: revise hardreset behavior") made
-the call to _enable() conditional based on no oh->rst_lines_cnt. This
-caused the return value to be potentially uninitialized. Curiously we see
-no compiler warnings for this, probably as this gets inlined.
+The wm831x_dcdc_ilim entries needs to be uA because it is used to compare
+with min_uA and max_uA.
+While at it also make the array const and change to use unsigned int.
 
-We call _setup_reset() from _setup() and only _setup_postsetup() if the
-return value is zero. Currently the return value can be uninitialized for
-cases where oh->rst_lines_cnt is set and HWMOD_INIT_NO_RESET is not set.
-
-Fixes: 747834ab8347 ("ARM: OMAP2+: hwmod: revise hardreset behavior")
-Cc: Paul Walmsley <paul@pwsan.com>
-Cc: Tero Kristo <t-kristo@ti.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+Fixes: e4ee831f949a ("regulator: Add WM831x DC-DC buck convertor support")
+Signed-off-by: Axel Lin <axel.lin@ingics.com>
+Acked-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/mach-omap2/omap_hwmod.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/regulator/wm831x-dcdc.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/mach-omap2/omap_hwmod.c b/arch/arm/mach-omap2/omap_hwmod.c
-index 45c8f2ef4e23c..9274a484c6a39 100644
---- a/arch/arm/mach-omap2/omap_hwmod.c
-+++ b/arch/arm/mach-omap2/omap_hwmod.c
-@@ -2530,7 +2530,7 @@ static void _setup_iclk_autoidle(struct omap_hwmod *oh)
-  */
- static int _setup_reset(struct omap_hwmod *oh)
- {
--	int r;
-+	int r = 0;
+diff --git a/drivers/regulator/wm831x-dcdc.c b/drivers/regulator/wm831x-dcdc.c
+index 5a5bc4bb08d26..df591435d12a3 100644
+--- a/drivers/regulator/wm831x-dcdc.c
++++ b/drivers/regulator/wm831x-dcdc.c
+@@ -327,8 +327,8 @@ static int wm831x_buckv_get_voltage_sel(struct regulator_dev *rdev)
+ }
  
- 	if (oh->_state != _HWMOD_STATE_INITIALIZED)
- 		return -EINVAL;
+ /* Current limit options */
+-static u16 wm831x_dcdc_ilim[] = {
+-	125, 250, 375, 500, 625, 750, 875, 1000
++static const unsigned int wm831x_dcdc_ilim[] = {
++	125000, 250000, 375000, 500000, 625000, 750000, 875000, 1000000
+ };
+ 
+ static int wm831x_buckv_set_current_limit(struct regulator_dev *rdev,
 -- 
 2.20.1
 
