@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC957C32771
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:51:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C084C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:51:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A18EF20709
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:51:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 500FC20709
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:51:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579859490;
-	bh=WKzXeWT4Awu0s4uegOxYzvPw2p20sIzOy+n7A/irXZA=;
+	s=default; t=1579859496;
+	bh=pgAspw4gQqFIsz3ReeSBt3sWrh+/EvDKqN1LZo//qtE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LEBQp6CW56It4YpmBbELET7HmMjoLQPrWD74o8OrLt786tKBC7ulVgyvowVLO730q
-	 YhPRU5X7wGoRnYTB2rvErWKr/WSLQiIKoBzCKApJfS/X/mZ1Mg9LxgTPvLKNI2KyXu
-	 TCDY3jmz+nfUibTS5K3n8Xjg9JdjheWgO2xPzqPs=
+	b=noWlZrfVU5+vBitLutxFVI7n0YNMeujncmU/QF6NrOSV7u8k/sUCpMT4a3BJD6Jpe
+	 klT4FCLTw6fcuPZUnEX1TDESeK/Vb5clwX5pQC0TA+v2KsIrUcR9R916zMJ0UUBkuF
+	 nzzwOvmv+6bj38fWsLramV+7X6cBPUzR0NxndgT0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388045AbgAXJva (ORCPT
+        id S2388078AbgAXJvf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 04:51:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52742 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 04:51:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49936 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388018AbgAXJv2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 04:51:28 -0500
+        id S1731650AbgAXJtd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 04:49:33 -0500
 Received: from localhost (unknown [145.15.244.15])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 27EB2206D5;
-        Fri, 24 Jan 2020 09:51:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1227F208C4;
+        Fri, 24 Jan 2020 09:49:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579859487;
-        bh=WKzXeWT4Awu0s4uegOxYzvPw2p20sIzOy+n7A/irXZA=;
+        s=default; t=1579859372;
+        bh=pgAspw4gQqFIsz3ReeSBt3sWrh+/EvDKqN1LZo//qtE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=H33OXLq7+JChCaSptfhY8r9dYGe4Go/eubMwGYuamLphoVLWKJfPV6ej3u787hgs9
-         1p95MJTg+K0pXNIkSVc3FRF/Mo0f0VM9CYtDEOZEtrWYuA2y0IYKmGX2gra3z/RQks
-         g/QacIyQjD5NaDA2aCiFo6SFQ2AqMDXrNS7zXEDQ=
+        b=P76txpL0Qe1ZS5HNROBxgDvIAZajyg0NvOXVBqhsmu34mGH4ByITAfmq9phxvRh5a
+         dME5i8or5Leffp4s3+GGKkP1YIL4ejTaRMVOWHcWHVq671tXVOQ8i0LDFSGGcahtnG
+         CSA9eGmEGaU9A/RNZq18ZwM2LEr78Wg3jlpFwIxI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        stable@vger.kernel.org, Michael Kao <michael.kao@mediatek.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 128/343] NFS/pnfs: Bulk destroy of layouts needs to be safe w.r.t. umount
-Date:   Fri, 24 Jan 2020 10:29:06 +0100
-Message-Id: <20200124092936.802588959@linuxfoundation.org>
+Subject: [PATCH 4.14 090/343] thermal: mediatek: fix register index error
+Date:   Fri, 24 Jan 2020 10:28:28 +0100
+Message-Id: <20200124092931.881691253@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124092919.490687572@linuxfoundation.org>
 References: <20200124092919.490687572@linuxfoundation.org>
@@ -60,92 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Trond Myklebust <trond.myklebust@hammerspace.com>
+From: Michael Kao <michael.kao@mediatek.com>
 
-[ Upstream commit 5085607d209102b37b169bc94d0aa39566a9842a ]
+[ Upstream commit eb9aecd90d1a39601e91cd08b90d5fee51d321a6 ]
 
-If a bulk layout recall or a metadata server reboot coincides with a
-umount, then holding a reference to an inode is unsafe unless we
-also hold a reference to the super block.
+The index of msr and adcpnp should match the sensor
+which belongs to the selected bank in the for loop.
 
-Fixes: fd9a8d7160937 ("NFSv4.1: Fix bulk recall and destroy of layouts")
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+Fixes: b7cf0053738c ("thermal: Add Mediatek thermal driver for mt2701.")
+Signed-off-by: Michael Kao <michael.kao@mediatek.com>
+Signed-off-by: Eduardo Valentin <edubezval@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/pnfs.c | 33 +++++++++++++++++++++++----------
- fs/nfs/pnfs.h |  1 +
- 2 files changed, 24 insertions(+), 10 deletions(-)
+ drivers/thermal/mtk_thermal.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/fs/nfs/pnfs.c b/fs/nfs/pnfs.c
-index ec04cce31814b..83abf3dd73511 100644
---- a/fs/nfs/pnfs.c
-+++ b/fs/nfs/pnfs.c
-@@ -725,22 +725,35 @@ static int
- pnfs_layout_bulk_destroy_byserver_locked(struct nfs_client *clp,
- 		struct nfs_server *server,
- 		struct list_head *layout_list)
-+	__must_hold(&clp->cl_lock)
-+	__must_hold(RCU)
- {
- 	struct pnfs_layout_hdr *lo, *next;
- 	struct inode *inode;
+diff --git a/drivers/thermal/mtk_thermal.c b/drivers/thermal/mtk_thermal.c
+index 1e61c09153c9a..76b92083744c9 100644
+--- a/drivers/thermal/mtk_thermal.c
++++ b/drivers/thermal/mtk_thermal.c
+@@ -407,7 +407,8 @@ static int mtk_thermal_bank_temperature(struct mtk_thermal_bank *bank)
+ 	u32 raw;
  
- 	list_for_each_entry_safe(lo, next, &server->layouts, plh_layouts) {
--		if (test_bit(NFS_LAYOUT_INVALID_STID, &lo->plh_flags))
-+		if (test_bit(NFS_LAYOUT_INVALID_STID, &lo->plh_flags) ||
-+		    test_bit(NFS_LAYOUT_INODE_FREEING, &lo->plh_flags) ||
-+		    !list_empty(&lo->plh_bulk_destroy))
- 			continue;
-+		/* If the sb is being destroyed, just bail */
-+		if (!nfs_sb_active(server->super))
-+			break;
- 		inode = igrab(lo->plh_inode);
--		if (inode == NULL)
--			continue;
--		list_del_init(&lo->plh_layouts);
--		if (pnfs_layout_add_bulk_destroy_list(inode, layout_list))
--			continue;
--		rcu_read_unlock();
--		spin_unlock(&clp->cl_lock);
--		iput(inode);
-+		if (inode != NULL) {
-+			list_del_init(&lo->plh_layouts);
-+			if (pnfs_layout_add_bulk_destroy_list(inode,
-+						layout_list))
-+				continue;
-+			rcu_read_unlock();
-+			spin_unlock(&clp->cl_lock);
-+			iput(inode);
-+		} else {
-+			rcu_read_unlock();
-+			spin_unlock(&clp->cl_lock);
-+			set_bit(NFS_LAYOUT_INODE_FREEING, &lo->plh_flags);
-+		}
-+		nfs_sb_deactive(server->super);
- 		spin_lock(&clp->cl_lock);
- 		rcu_read_lock();
- 		return -EAGAIN;
-@@ -778,7 +791,7 @@ pnfs_layout_free_bulk_destroy_list(struct list_head *layout_list,
- 		/* Free all lsegs that are attached to commit buckets */
- 		nfs_commit_inode(inode, 0);
- 		pnfs_put_layout_hdr(lo);
--		iput(inode);
-+		nfs_iput_and_deactive(inode);
- 	}
- 	return ret;
- }
-diff --git a/fs/nfs/pnfs.h b/fs/nfs/pnfs.h
-index 87f144f14d1e0..965d657086c8b 100644
---- a/fs/nfs/pnfs.h
-+++ b/fs/nfs/pnfs.h
-@@ -99,6 +99,7 @@ enum {
- 	NFS_LAYOUT_RETURN_REQUESTED,	/* Return this layout ASAP */
- 	NFS_LAYOUT_INVALID_STID,	/* layout stateid id is invalid */
- 	NFS_LAYOUT_FIRST_LAYOUTGET,	/* Serialize first layoutget */
-+	NFS_LAYOUT_INODE_FREEING,	/* The inode is being freed */
- };
+ 	for (i = 0; i < conf->bank_data[bank->id].num_sensors; i++) {
+-		raw = readl(mt->thermal_base + conf->msr[i]);
++		raw = readl(mt->thermal_base +
++			    conf->msr[conf->bank_data[bank->id].sensors[i]]);
  
- enum layoutdriver_policy_flags {
+ 		temp = raw_to_mcelsius(mt,
+ 				       conf->bank_data[bank->id].sensors[i],
+@@ -544,7 +545,8 @@ static void mtk_thermal_init_bank(struct mtk_thermal *mt, int num,
+ 
+ 	for (i = 0; i < conf->bank_data[num].num_sensors; i++)
+ 		writel(conf->sensor_mux_values[conf->bank_data[num].sensors[i]],
+-		       mt->thermal_base + conf->adcpnp[i]);
++		       mt->thermal_base +
++		       conf->adcpnp[conf->bank_data[num].sensors[i]]);
+ 
+ 	writel((1 << conf->bank_data[num].num_sensors) - 1,
+ 	       mt->thermal_base + TEMP_MONCTL0);
 -- 
 2.20.1
 
