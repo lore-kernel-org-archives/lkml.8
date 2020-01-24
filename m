@@ -4,52 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A479C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:41:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63F36C32771
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:41:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C846720678
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:41:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C09320678
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:41:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579866100;
-	bh=6agRs+YRKKOS8R/DyaannaansL5ChLoutYtVdBZj7gk=;
+	s=default; t=1579866103;
+	bh=rO20ReY0D17Z08+D6hDKugrRpVERf/wymJFyg4vn6yo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MfEAR9aBoy67MBCeiwuIQNZ5vOyNf8QxYiVzs7/wWqIIy7xLW/yf0iw7YJaxszG4c
-	 x3mUzZROI01tWECFQKyTE32fvWLRflH1eE+5zVW10Tk50OH7ZOg/9bo1WgmpygH5mM
-	 z3cqaIwhE0Od0yAyXv+Mfw9H8TxMBJ0Cvlp8PEVs=
+	b=jt8UAsRV6ibwiJrMJ0LJ+a/g3JIpNWxlyT7uKMfAFvfW8YmvwKe2oWqjl5b3xNmx4
+	 x6y32o7F9X/WvWS1Kf4EqzZVr4rv29SAT8bnP2WLYLq+GcIKgvMX54lPFFJcLE8qjQ
+	 r7C2L+TcCeqfmNL/l0PvRUywUo/PPOB+6cpWVnd8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392102AbgAXLlj (ORCPT
+        id S2390543AbgAXLRo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:41:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54792 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 06:17:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54604 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390550AbgAXLRq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:17:46 -0500
+        id S2390522AbgAXLRg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:17:36 -0500
 Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A601322464;
-        Fri, 24 Jan 2020 11:17:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CF6F220704;
+        Fri, 24 Jan 2020 11:17:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579864666;
-        bh=6agRs+YRKKOS8R/DyaannaansL5ChLoutYtVdBZj7gk=;
+        s=default; t=1579864656;
+        bh=rO20ReY0D17Z08+D6hDKugrRpVERf/wymJFyg4vn6yo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AxjTktiit9vmvI5o6Nzc3xzmhXYjAwMI5o98jpou01yLd71GEfobcOGMcGZDiwtd2
-         BHHyQ7oluWiLk9TtrSUpP8+V6ocwnHuPMKGKcjzvHqjmIEdWStWvwV6m8hwPVs6NrQ
-         1FUKOhVJjkuKLXMDNSJbQz9K0PNDG7NFvGW+N9As=
+        b=HlhTOHoXxr8+w+qzHzT3mTm1MC8VCWCSo1/NX2VFCBwHzbgbZwRM9T1sRpYQn+7xE
+         4TqoBAficnU/RGPv1znjwYYrkPUDC5Op5RQfWWu/2j9bIX0qWtWK+RkXsaLn8z6Eac
+         Lu/JVoxxVCNG/G+GM1LzHb3G4aKiOzga3sDze8jM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Yunsheng Lin <linyunsheng@huawei.com>,
-        Huazhong Tan <tanhuazhong@huawei.com>,
+        stable@vger.kernel.org, Jie Liu <liujie165@huawei.com>,
+        Qiang Ning <ningqiang1@huawei.com>,
+        Zhiqiang Liu <liuzhiqiang26@huawei.com>,
+        Miaohe Lin <linmiaohe@huawei.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 308/639] net: hns3: fix for vport->bw_limit overflow problem
-Date:   Fri, 24 Jan 2020 10:27:58 +0100
-Message-Id: <20200124093125.517750014@linuxfoundation.org>
+Subject: [PATCH 4.19 315/639] tipc: set sysctl_tipc_rmem and named_timeout right range
+Date:   Fri, 24 Jan 2020 10:28:05 +0100
+Message-Id: <20200124093126.408794801@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
 References: <20200124093047.008739095@linuxfoundation.org>
@@ -62,39 +63,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yunsheng Lin <linyunsheng@huawei.com>
+From: Jie Liu <liujie165@huawei.com>
 
-[ Upstream commit 2566f10676ba996b745e138f54f3e2f974311692 ]
+[ Upstream commit 4bcd4ec1017205644a2697bccbc3b5143f522f5f ]
 
-When setting vport->bw_limit to hdev->tm_info.pg_info[0].bw_limit
-in hclge_tm_vport_tc_info_update, vport->bw_limit can be as big as
-HCLGE_ETHER_MAX_RATE (100000), which can not fit into u16 (65535).
+We find that sysctl_tipc_rmem and named_timeout do not have the right minimum
+setting. sysctl_tipc_rmem should be larger than zero, like sysctl_tcp_rmem.
+And named_timeout as a timeout setting should be not less than zero.
 
-So this patch fixes it by using u32 for vport->bw_limit.
-
-Fixes: 848440544b41 ("net: hns3: Add support of TX Scheduler & Shaper to HNS3 driver")
-Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
-Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
+Fixes: cc79dd1ba9c10 ("tipc: change socket buffer overflow control to respect sk_rcvbuf")
+Fixes: a5325ae5b8bff ("tipc: add name distributor resiliency queue")
+Signed-off-by: Jie Liu <liujie165@huawei.com>
+Reported-by: Qiang Ning <ningqiang1@huawei.com>
+Reviewed-by: Zhiqiang Liu <liuzhiqiang26@huawei.com>
+Reviewed-by: Miaohe Lin <linmiaohe@huawei.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/tipc/sysctl.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h
-index 260b1e7796908..d14b7018fdf34 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h
-@@ -600,7 +600,7 @@ struct hclge_vport {
- 	u16 alloc_rss_size;
+diff --git a/net/tipc/sysctl.c b/net/tipc/sysctl.c
+index 1a779b1e85100..40f6d82083d7b 100644
+--- a/net/tipc/sysctl.c
++++ b/net/tipc/sysctl.c
+@@ -37,6 +37,8 @@
  
- 	u16 qs_offset;
--	u16 bw_limit;		/* VSI BW Limit (0 = disabled) */
-+	u32 bw_limit;		/* VSI BW Limit (0 = disabled) */
- 	u8  dwrr;
+ #include <linux/sysctl.h>
  
- 	struct hclge_tx_vtag_cfg  txvlan_cfg;
++static int zero;
++static int one = 1;
+ static struct ctl_table_header *tipc_ctl_hdr;
+ 
+ static struct ctl_table tipc_table[] = {
+@@ -45,14 +47,16 @@ static struct ctl_table tipc_table[] = {
+ 		.data		= &sysctl_tipc_rmem,
+ 		.maxlen		= sizeof(sysctl_tipc_rmem),
+ 		.mode		= 0644,
+-		.proc_handler	= proc_dointvec,
++		.proc_handler	= proc_dointvec_minmax,
++		.extra1         = &one,
+ 	},
+ 	{
+ 		.procname	= "named_timeout",
+ 		.data		= &sysctl_tipc_named_timeout,
+ 		.maxlen		= sizeof(sysctl_tipc_named_timeout),
+ 		.mode		= 0644,
+-		.proc_handler	= proc_dointvec,
++		.proc_handler	= proc_dointvec_minmax,
++		.extra1         = &zero,
+ 	},
+ 	{}
+ };
 -- 
 2.20.1
 
