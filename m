@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB50BC35242
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:28:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9312CC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:28:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFDB7214AF
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:28:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69312214AF
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:28:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579865283;
-	bh=GiEP1PFnmkTJwrM55QZS/YPYJ481u6cUZfnoue7nGQ4=;
+	s=default; t=1579865290;
+	bh=9cOxf2mE9VQIyeIfaQGunaot7N1M4uX5K2mxFLK5bVo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=L2BTcplQkZu19tN4iCj6xXwZLlaDdzpG/MZShLDgDywOnuiskyi5+o/UMmxYEsVPv
-	 LnWsbjXlRIGLA5p+S4dqFAq3vwE+bvzqgl6HQ/E4HTd8ELVyDsDcIt8mnzlwluqgwm
-	 zzHBbCC7WuwHbv2izK1hMY7YEL2eK/hM1PbaB/Z4=
+	b=GSBecrZAU3GW2iAo7feDni1/NvxB7B2Dlc7ASK0xIcBv7m9zwVmAZ2XAhe9PM5Ahw
+	 Q4qgjrLZsEYlUrZrV8G//4ROAN4p+1CIIfEBfDTaWjEhlC/k0CgBho2FsDM0LLvagp
+	 kxZbNFx6OTjtlVTBOJHC0LyI9TAj2asKKVsC9Y3o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403999AbgAXL2C (ORCPT
+        id S2404022AbgAXL2J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:28:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43792 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 06:28:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43962 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391312AbgAXL1y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:27:54 -0500
+        id S2403988AbgAXL2C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:28:02 -0500
 Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 648282077C;
-        Fri, 24 Jan 2020 11:27:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 25BE620718;
+        Fri, 24 Jan 2020 11:27:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579865274;
-        bh=GiEP1PFnmkTJwrM55QZS/YPYJ481u6cUZfnoue7nGQ4=;
+        s=default; t=1579865280;
+        bh=9cOxf2mE9VQIyeIfaQGunaot7N1M4uX5K2mxFLK5bVo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eng3yL6j86lu+6Y05u5CqCoYzR6TBXIJNc7c4bA3TX+gxITcPtPSZFooMZlUgz/FY
-         1inb6FtqZVGOF1dtgM3HiQ9DOPC+xpjg4vOHmXb2uML95MwMMDL6lnuOxB8agyThZA
-         we2zZwKj5tNU8uS0RpErOF+q1VvUirLmxIcrq4ho=
+        b=RzXkQEU/sw0FKL+e06CgN2p8stXxl+xla3NCZd6Qza8APmVcldUSddo5eT30yTbi9
+         UrruH45d/NA6qDR22naGF5zpfRsVKPCUEak5RBPgb34H3WRo1AWdJs5Ul8ey0shmaW
+         QP5ydHWE63odS3AGuLms5lkoRu3fB8ZvAwtmtkPc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Fabrice Gasnier <fabrice.gasnier@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
+        stable@vger.kernel.org, Xi Wang <wangxi11@huawei.com>,
+        Doug Ledford <dledford@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 493/639] ARM: dts: stm32: add missing vdda-supply to adc on stm32h743i-eval
-Date:   Fri, 24 Jan 2020 10:31:03 +0100
-Message-Id: <20200124093150.521142396@linuxfoundation.org>
+Subject: [PATCH 4.19 503/639] RDMA/hns: bugfix for slab-out-of-bounds when loading hip08 driver
+Date:   Fri, 24 Jan 2020 10:31:13 +0100
+Message-Id: <20200124093151.815465127@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
 References: <20200124093047.008739095@linuxfoundation.org>
@@ -60,34 +60,124 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Fabrice Gasnier <fabrice.gasnier@st.com>
+From: Xi Wang <wangxi11@huawei.com>
 
-[ Upstream commit 493e84c5dc4d703d976b5875f5db22dae08a0782 ]
+[ Upstream commit bf8c02f961c89e5ccae5987b7ab28f5592a35101 ]
 
-Add missing vdda-supply required by STM32 ADC.
+kasan will report a BUG when run command 'insmod hns_roce_hw_v2.ko', the
+calltrace is as follows:
 
-Fixes: 090992a9ca54 ("ARM: dts: stm32: enable ADC on stm32h743i-eval
-board")
+==================================================================
+BUG: KASAN: slab-out-of-bounds in hns_roce_v2_init_eq_table+0x1324/0x1948
+[hns_roce_hw_v2]
+Read of size 8 at addr ffff8020e7a10608 by task insmod/256
 
-Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
-Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
+CPU: 0 PID: 256 Comm: insmod Tainted: G           O      5.2.0-rc4 #1
+Hardware name: Huawei D06 /D06, BIOS Hisilicon D06 UEFI RC0
+Call trace:
+dump_backtrace+0x0/0x1e8
+show_stack+0x14/0x20
+dump_stack+0xc4/0xfc
+print_address_description+0x60/0x270
+__kasan_report+0x164/0x1b8
+kasan_report+0xc/0x18
+__asan_load8+0x84/0xa8
+hns_roce_v2_init_eq_table+0x1324/0x1948 [hns_roce_hw_v2]
+hns_roce_init+0xf8/0xfe0 [hns_roce]
+__hns_roce_hw_v2_init_instance+0x284/0x330 [hns_roce_hw_v2]
+hns_roce_hw_v2_init_instance+0xd0/0x1b8 [hns_roce_hw_v2]
+hclge_init_roce_client_instance+0x180/0x310 [hclge]
+hclge_init_client_instance+0xcc/0x508 [hclge]
+hnae3_init_client_instance.part.3+0x3c/0x80 [hnae3]
+hnae3_register_client+0x134/0x1a8 [hnae3]
+hns_roce_hw_v2_init+0x14/0x10000 [hns_roce_hw_v2]
+do_one_initcall+0x9c/0x3e0
+do_init_module+0xd4/0x2d8
+load_module+0x3284/0x3690
+__se_sys_init_module+0x274/0x308
+__arm64_sys_init_module+0x40/0x50
+el0_svc_handler+0xbc/0x210
+el0_svc+0x8/0xc
+
+Allocated by task 256:
+__kasan_kmalloc.isra.0+0xd0/0x180
+kasan_kmalloc+0xc/0x18
+__kmalloc+0x16c/0x328
+hns_roce_v2_init_eq_table+0x764/0x1948 [hns_roce_hw_v2]
+hns_roce_init+0xf8/0xfe0 [hns_roce]
+__hns_roce_hw_v2_init_instance+0x284/0x330 [hns_roce_hw_v2]
+hns_roce_hw_v2_init_instance+0xd0/0x1b8 [hns_roce_hw_v2]
+hclge_init_roce_client_instance+0x180/0x310 [hclge]
+hclge_init_client_instance+0xcc/0x508 [hclge]
+hnae3_init_client_instance.part.3+0x3c/0x80 [hnae3]
+hnae3_register_client+0x134/0x1a8 [hnae3]
+hns_roce_hw_v2_init+0x14/0x10000 [hns_roce_hw_v2]
+do_one_initcall+0x9c/0x3e0
+do_init_module+0xd4/0x2d8
+load_module+0x3284/0x3690
+__se_sys_init_module+0x274/0x308
+__arm64_sys_init_module+0x40/0x50
+el0_svc_handler+0xbc/0x210
+el0_svc+0x8/0xc
+
+Freed by task 0:
+(stack is not available)
+
+The buggy address belongs to the object at ffff8020e7a10600
+which belongs to the cache kmalloc-128 of size 128
+The buggy address is located 8 bytes inside of
+128-byte region [ffff8020e7a10600, ffff8020e7a10680)
+The buggy address belongs to the page:
+page:ffff7fe00839e840 refcount:1 mapcount:0 mapping:ffff802340020200 index:0x0
+flags: 0x5fffe00000000200(slab)
+raw: 5fffe00000000200 dead000000000100 dead000000000200 ffff802340020200
+raw: 0000000000000000 0000000081000100 00000001ffffffff 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+ffff8020e7a10500: 00 00 00 00 00 00 00 00 fc fc fc fc fc fc fc fc
+ffff8020e7a10580: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+>ffff8020e7a10600: 00 fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+^
+ffff8020e7a10680: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+ffff8020e7a10700: 00 fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+==================================================================
+Disabling lock debugging due to kernel taint
+
+Fixes: a5073d6054f7 ("RDMA/hns: Add eq support of hip08")
+
+Signed-off-by: Xi Wang <wangxi11@huawei.com>
+Link: https://lore.kernel.org/r/1565343666-73193-7-git-send-email-oulijun@huawei.com
+Signed-off-by: Doug Ledford <dledford@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/stm32h743i-eval.dts | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/infiniband/hw/hns/hns_roce_hw_v2.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/stm32h743i-eval.dts b/arch/arm/boot/dts/stm32h743i-eval.dts
-index 3f8e0c4a998d0..5bf64e63cdf35 100644
---- a/arch/arm/boot/dts/stm32h743i-eval.dts
-+++ b/arch/arm/boot/dts/stm32h743i-eval.dts
-@@ -79,6 +79,7 @@
- };
+diff --git a/drivers/infiniband/hw/hns/hns_roce_hw_v2.c b/drivers/infiniband/hw/hns/hns_roce_hw_v2.c
+index 7021444f18b46..417de7ac0d5e2 100644
+--- a/drivers/infiniband/hw/hns/hns_roce_hw_v2.c
++++ b/drivers/infiniband/hw/hns/hns_roce_hw_v2.c
+@@ -4833,7 +4833,8 @@ static int hns_roce_mhop_alloc_eq(struct hns_roce_dev *hr_dev,
+ 				break;
+ 		}
+ 		eq->cur_eqe_ba = eq->buf_dma[0];
+-		eq->nxt_eqe_ba = eq->buf_dma[1];
++		if (ba_num > 1)
++			eq->nxt_eqe_ba = eq->buf_dma[1];
  
- &adc_12 {
-+	vdda-supply = <&vdda>;
- 	vref-supply = <&vdda>;
- 	status = "okay";
- 	adc1: adc@0 {
+ 	} else if (mhop_num == 2) {
+ 		/* alloc L1 BT and buf */
+@@ -4875,7 +4876,8 @@ static int hns_roce_mhop_alloc_eq(struct hns_roce_dev *hr_dev,
+ 				break;
+ 		}
+ 		eq->cur_eqe_ba = eq->buf_dma[0];
+-		eq->nxt_eqe_ba = eq->buf_dma[1];
++		if (ba_num > 1)
++			eq->nxt_eqe_ba = eq->buf_dma[1];
+ 	}
+ 
+ 	eq->l0_last_num = i + 1;
 -- 
 2.20.1
 
