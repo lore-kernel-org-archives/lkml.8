@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33095C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:26:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA351C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:26:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09016206D4
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:26:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B819020718
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:26:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579865200;
-	bh=WLedvEAo3d4TFywakfUeBYv6rMarcSdRIwMo3BJ8wT0=;
+	s=default; t=1579865207;
+	bh=imQCUxWTlN50yArlzbYOo3ccWef5ihN0fZ1u6cvl0m0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xa8lB3zoMXemLx5o7yw58ZbZRJbjxYQIupni3uZhQCYLBoAYuWHQkGhwbKLGSd47x
-	 Zo+2LurP9PsroHwSszYF3ztCncu3X5YnyX9k5tzpU3LtfiyCgEsHDe4X8y3H5f0CSz
-	 LZ457xE5OpfxHnw3QHAZT0N1fG0W7qsn806lCUQc=
+	b=hs3R2Z1HCainlHk7lDl6ja7FpUlG2lW+9UURV9ZXEzaW23LsyeXQ4qvn33jOzLIrT
+	 UZfDfPkTz1ctCnCWPLRma8ymC2iK6yzj3BfAHnT7BSS8/h5wLM/w3U9K0tuhCnQp8E
+	 nvEcNaUCFR8UDNSneYjVwuZDi6GKCkUIVzaiyvXU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391574AbgAXL0j (ORCPT
+        id S2391589AbgAXL0q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:26:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41472 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 06:26:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41740 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391565AbgAXL0f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:26:35 -0500
+        id S2391406AbgAXL0n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:26:43 -0500
 Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ED10522522;
-        Fri, 24 Jan 2020 11:26:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D141F206D4;
+        Fri, 24 Jan 2020 11:26:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579865194;
-        bh=WLedvEAo3d4TFywakfUeBYv6rMarcSdRIwMo3BJ8wT0=;
+        s=default; t=1579865202;
+        bh=imQCUxWTlN50yArlzbYOo3ccWef5ihN0fZ1u6cvl0m0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Vn8d9+kdsz6jo2tFNclwBCO6YsexiiBXfEURjk9eFOkdduuc2UxQXwz0qrU6Ud7Ut
-         tBCvCAtS3+kSIBGmfdEEDhRRMTDruBn3gCphhGR+iVomgSnKIcCVvKy7mUWFZ3vfyn
-         ooFFSYe1CVmFuQ6RK3RmtWfIeJ/6GmwdW40zfGkQ=
+        b=uyTamGYF3FdQFmPgl8fv+sHvkSAdLUQf99A+iGwVEq8YlXIrv4Yzl/sY/ieyhHpxc
+         2pYxU0BcxjyzuQh4/+sTef78S8D4WZTkkthg34OkEGUs1/RbMSDQA4OP9yYf/sML+w
+         4M6OxEi6GhkFz2CsZQK01145TaArwgsUdql6IHhA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Sasha Levin <sashal@kernel.org>,
-        Enrico Weigelt <info@metux.net>
-Subject: [PATCH 4.19 466/639] devres: allow const resource arguments
-Date:   Fri, 24 Jan 2020 10:30:36 +0100
-Message-Id: <20200124093145.663016156@linuxfoundation.org>
+        stable@vger.kernel.org, Xi Wang <wangxi11@huawei.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 468/639] RDMA/hns: Fixs hw access invalid dma memory error
+Date:   Fri, 24 Jan 2020 10:30:38 +0100
+Message-Id: <20200124093146.038453851@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
 References: <20200124093047.008739095@linuxfoundation.org>
@@ -61,61 +60,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Xi Wang <wangxi11@huawei.com>
 
-[ Upstream commit 9dea44c91469512d346e638694c22c30a5273992 ]
+[ Upstream commit ec5bc2cc69b4fc494e04d10fc5226f6f9cf67c56 ]
 
-devm_ioremap_resource() does not currently take 'const' arguments,
-which results in a warning from the first driver trying to do it
-anyway:
+When smmu is enable, if execute the perftest command and then use 'kill
+-9' to exit, follow this operation repeatedly, the kernel will have a high
+probability to print the following smmu event:
 
-drivers/gpio/gpio-amd-fch.c: In function 'amd_fch_gpio_probe':
-drivers/gpio/gpio-amd-fch.c:171:49: error: passing argument 2 of 'devm_ioremap_resource' discards 'const' qualifier from pointer target type [-Werror=discarded-qualifiers]
-  priv->base = devm_ioremap_resource(&pdev->dev, &amd_fch_gpio_iores);
-                                                 ^~~~~~~~~~~~~~~~~~~
+  arm-smmu-v3 arm-smmu-v3.1.auto: event 0x10 received:
+  arm-smmu-v3 arm-smmu-v3.1.auto:  0x00007d0000000010
+  arm-smmu-v3 arm-smmu-v3.1.auto:  0x0000020900000080
+  arm-smmu-v3 arm-smmu-v3.1.auto:  0x00000000f47cf000
+  arm-smmu-v3 arm-smmu-v3.1.auto:  0x00000000f47cf000
 
-Change the prototype to allow it, as there is no real reason not to.
+This is because the hw will periodically refresh the qpc cache until the
+next reset.
 
-Fixes: 9bb2e0452508 ("gpio: amd: Make resource struct const")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Link: https://lore.kernel.org/r/20190628150049.1108048-1-arnd@arndb.de
-Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Reviwed-By: Enrico Weigelt <info@metux.net>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+This patch fixed it by removing the action that release qpc memory in the
+'hns_roce_qp_free' function.
+
+Fixes: 9a4435375cd1 ("IB/hns: Add driver files for hns RoCE driver")
+Signed-off-by: Xi Wang <wangxi11@huawei.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/device.h | 3 ++-
- lib/devres.c           | 3 ++-
- 2 files changed, 4 insertions(+), 2 deletions(-)
+ drivers/infiniband/hw/hns/hns_roce_qp.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/include/linux/device.h b/include/linux/device.h
-index e9d1c768f972a..c74ce473589ae 100644
---- a/include/linux/device.h
-+++ b/include/linux/device.h
-@@ -701,7 +701,8 @@ extern unsigned long devm_get_free_pages(struct device *dev,
- 					 gfp_t gfp_mask, unsigned int order);
- extern void devm_free_pages(struct device *dev, unsigned long addr);
- 
--void __iomem *devm_ioremap_resource(struct device *dev, struct resource *res);
-+void __iomem *devm_ioremap_resource(struct device *dev,
-+				    const struct resource *res);
- 
- void __iomem *devm_of_iomap(struct device *dev,
- 			    struct device_node *node, int index,
-diff --git a/lib/devres.c b/lib/devres.c
-index faccf1a037d05..aa0f5308ac6be 100644
---- a/lib/devres.c
-+++ b/lib/devres.c
-@@ -131,7 +131,8 @@ EXPORT_SYMBOL(devm_iounmap);
-  *	if (IS_ERR(base))
-  *		return PTR_ERR(base);
-  */
--void __iomem *devm_ioremap_resource(struct device *dev, struct resource *res)
-+void __iomem *devm_ioremap_resource(struct device *dev,
-+				    const struct resource *res)
- {
- 	resource_size_t size;
- 	const char *name;
+diff --git a/drivers/infiniband/hw/hns/hns_roce_qp.c b/drivers/infiniband/hw/hns/hns_roce_qp.c
+index af24698ff2262..3012d7eb4ccb4 100644
+--- a/drivers/infiniband/hw/hns/hns_roce_qp.c
++++ b/drivers/infiniband/hw/hns/hns_roce_qp.c
+@@ -262,7 +262,6 @@ void hns_roce_qp_free(struct hns_roce_dev *hr_dev, struct hns_roce_qp *hr_qp)
+ 			hns_roce_table_put(hr_dev, &qp_table->trrl_table,
+ 					   hr_qp->qpn);
+ 		hns_roce_table_put(hr_dev, &qp_table->irrl_table, hr_qp->qpn);
+-		hns_roce_table_put(hr_dev, &qp_table->qp_table, hr_qp->qpn);
+ 	}
+ }
+ EXPORT_SYMBOL_GPL(hns_roce_qp_free);
 -- 
 2.20.1
 
