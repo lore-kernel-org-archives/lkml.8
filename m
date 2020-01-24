@@ -2,115 +2,107 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41BA1C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:41:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C661AC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:42:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1851B20678
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:41:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="UiiEOmI5"
+	by mail.kernel.org (Postfix) with ESMTP id 8F97A20678
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:42:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579866124;
+	bh=ZwIrqZIfE43VDYCJnXmaYOrV9R5+2aYh2pbSmU6hu08=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=2fde9xvCGSrgZ3hLJ1AXB0jFGeRiLSOoXMkGg+Tvhphl10FfOeZe6Zg0KiMg6IoBv
+	 d0764BVuUbO41R5u3MpFCpqEglipJjNvS/nHJYwJAn7H0O1RFhDVPOFbAi2IbvRQX2
+	 6Lz6nO2SdddDN3RIvpqMEQ0d4Mv0oDAHqZFOS7Y0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392104AbgAXLl4 (ORCPT
+        id S2392050AbgAXLmD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:41:56 -0500
-Received: from mail-lj1-f178.google.com ([209.85.208.178]:40855 "EHLO
-        mail-lj1-f178.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390001AbgAXLQW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:16:22 -0500
-Received: by mail-lj1-f178.google.com with SMTP id n18so2049245ljo.7
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Jan 2020 03:16:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rasmusvillemoes.dk; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=WPh74pEP+nQ76ELzYt+TrcyRCi7yaoOoadSkrfPnPw0=;
-        b=UiiEOmI5crrZFnXah+iBEOCV1kFA6HM7uH0AeaaVeCmEY0JQFlbkI5t8sr83qk61jO
-         ENI1Xm1UUUGXlAoQn+AgsSPXkmL1Hx34lQhSF7FiDCi+8GlB7JdN5aVzcdCM/RbQbz0T
-         gr+P+irrrT+iCw23HnU+FbiaxS5z0yDBgxLkk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=WPh74pEP+nQ76ELzYt+TrcyRCi7yaoOoadSkrfPnPw0=;
-        b=WvdgzlQ4b9zCkglQ3OhahnLeoLoeTAUvryWDkjuGve3rAFGVAgosCQBvi2Zvf8E9Pc
-         wOSJkIfy4tumY7cqiVsmeG4WOr4mwYLLJxgxmegu8E5Zf/hC5R1A3g0WzateUSMSMem8
-         vhj3ixtEbf/FxJFnMJzxCztZw0DRaYY2rLX7WfsCTnhW214JNFYxLFh9yW1tANGzmq7s
-         nxF9rNJbZMpUB1hDb3H1Z7RGueQVPzPsPnVvgksDGQvqaP1uk9TLv7379oPSUac5PlI+
-         fzVha6i5ZckWshLqnKBDMK2+61EewF36KTjabPqaROQjw7Tj7SCuuWe1EsH2TYNhLmz/
-         Ltyg==
-X-Gm-Message-State: APjAAAW1iee1OKR8wHCjYBKprggfwZ3zQrIQqBE4IdRJ54lotbagjaH1
-        LbaEZDgDg662DSVn4a6KgxTNHHe9J8MLik9O
-X-Google-Smtp-Source: APXvYqwhcWeDSkhp2yrEeOy7QBdhQdx7TS6ALPFnsE1YmPPh0m3SZYBK+yeJxbdM4du+1HhZ1HMVbQ==
-X-Received: by 2002:a2e:7a07:: with SMTP id v7mr1853505ljc.271.1579864580100;
-        Fri, 24 Jan 2020 03:16:20 -0800 (PST)
-Received: from [172.16.11.50] ([81.216.59.226])
-        by smtp.gmail.com with ESMTPSA id t1sm2947207lji.98.2020.01.24.03.16.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 24 Jan 2020 03:16:19 -0800 (PST)
-Subject: Re: vmlinux ELF header sometimes corrupt
-To:     Michael Ellerman <mpe@ellerman.id.au>,
-        LKML <linux-kernel@vger.kernel.org>
-Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
-References: <71aa76d0-a3b8-b4f3-a7c3-766cfb75412f@rasmusvillemoes.dk>
- <875zh1i0wj.fsf@mpe.ellerman.id.au>
-From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Message-ID: <b5f6ab1c-337e-c5e4-6449-0cf73413e1be@rasmusvillemoes.dk>
-Date:   Fri, 24 Jan 2020 12:16:17 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Fri, 24 Jan 2020 06:42:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51998 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389191AbgAXLP0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:15:26 -0500
+Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 69AD5214DB;
+        Fri, 24 Jan 2020 11:15:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579864526;
+        bh=ZwIrqZIfE43VDYCJnXmaYOrV9R5+2aYh2pbSmU6hu08=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=GZmogi+dyecE65lglEH2sPMUA7sel/hPgiTNHl7E1FX7NobMLcULDLzsjklC2J6ma
+         CszyGMFBsdxD0jc5SKOHarl8yDL/RucTYxO/0PqZ/tM6wEYpzi6EW6rjPUYrZDFeB/
+         LmRFj5WLlVvtGZP8FGK1yBa6CTtumcLypgUWsf2s=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Daniel Vetter <daniel.vetter@ffwll.ch>,
+        =?UTF-8?q?Noralf=20Tr=C3=B8nnes?= <noralf@tronnes.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 290/639] drm/fb-helper: generic: Call drm_client_add() after setup is done
+Date:   Fri, 24 Jan 2020 10:27:40 +0100
+Message-Id: <20200124093123.208643632@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
+References: <20200124093047.008739095@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-In-Reply-To: <875zh1i0wj.fsf@mpe.ellerman.id.au>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 24/01/2020 11.50, Michael Ellerman wrote:
-> Rasmus Villemoes <linux@rasmusvillemoes.dk> writes:
->> I'm building for a ppc32 (mpc8309) target using Yocto, and I'm hitting a
->> very hard to debug problem that maybe someone else has encountered. This
->> doesn't happen always, perhaps 1 in 8 times or something like that.
->>
->> The issue is that when the build gets to do "${CROSS}objcopy -O binary
->> ... vmlinux", vmlinux is not (no longer) a proper ELF file, so naturally
->> that fails with
->>
->>   powerpc-oe-linux-objcopy:vmlinux: file format not recognized
->>
->>
->> Any ideas?
-> 
-> Not really sorry. Haven't seen or heard of that before.
-> 
-> Are you doing a parallel make? If so does -j 1 fix it?
+From: Noralf Trønnes <noralf@tronnes.org>
 
-Hard to say, I'll have to try that a number of times to see if it can be
-reproduced with that setting.
+[ Upstream commit 6e3f17ee73f7e3c2ef0e2c8fd8624b2ece8ef2c9 ]
 
-> If it seems like sortextable is at fault then strace'ing it would be my
-> next step.
+Hotplug can happen while drm_fbdev_generic_setup() is running so move
+drm_client_add() call after setup is done to avoid
+drm_fbdev_client_hotplug() running in two threads at the same time.
 
-I don't think sortextable is at fault, that was just my first "I know
-that at least pokes around in the ELF file". I do "cp vmlinux
-vmlinux.before_sort" and "cp vmlinux vmlinux.after_sort", and both of
-those copies are proper ELF files - and the .after_sort is identical to
-the corrupt vmlinux apart from vmlinux ending up with its ELF header wiped.
+Fixes: 9060d7f49376 ("drm/fb-helper: Finish the generic fbdev emulation")
+Cc: stable@vger.kernel.org
+Reported-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+Signed-off-by: Noralf Trønnes <noralf@tronnes.org>
+Reviewed-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190401141358.25309-1-noralf@tronnes.org
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/gpu/drm/drm_fb_helper.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-So it's something that happens during some later build step (Yocto has a
-lot of steps), perhaps "make modules" or "make modules_install" or
-something ends up somehow deciding "hey, vmlinux isn't quite uptodate,
-let's nuke it". I'm not even sure it's a Kbuild problem, but I've seen
-the same thing happen using another meta-build system called oe-lite,
-which is why I'm not primarily suspecting the Yocto logic.
+diff --git a/drivers/gpu/drm/drm_fb_helper.c b/drivers/gpu/drm/drm_fb_helper.c
+index 1c87ad6667e73..da9a381d6b577 100644
+--- a/drivers/gpu/drm/drm_fb_helper.c
++++ b/drivers/gpu/drm/drm_fb_helper.c
+@@ -3257,8 +3257,6 @@ int drm_fbdev_generic_setup(struct drm_device *dev, unsigned int preferred_bpp)
+ 		return ret;
+ 	}
+ 
+-	drm_client_add(&fb_helper->client);
+-
+ 	if (!preferred_bpp)
+ 		preferred_bpp = dev->mode_config.preferred_depth;
+ 	if (!preferred_bpp)
+@@ -3267,6 +3265,8 @@ int drm_fbdev_generic_setup(struct drm_device *dev, unsigned int preferred_bpp)
+ 
+ 	drm_fbdev_client_hotplug(&fb_helper->client);
+ 
++	drm_client_add(&fb_helper->client);
++
+ 	return 0;
+ }
+ EXPORT_SYMBOL(drm_fbdev_generic_setup);
+-- 
+2.20.1
 
-Rasmus
+
+
