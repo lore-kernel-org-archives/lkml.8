@@ -4,56 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E82F4C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:39:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6B30C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:39:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEE5D2087E
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:39:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80BD72070A
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:39:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579858760;
-	bh=HdT58Yiqp0jmr/sDUj4BFGZyrgcM7XM5tIMrOuWTN1A=;
+	s=default; t=1579858764;
+	bh=vTyqrbemP4Yg1Gi05XM+3Cmz6XpD+zp810ADQ29hNCc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AzggUP42bnAA/17mWvyHEu0EShHECoUIJSIedZHp91JmKJxArZvgom68mzsimlHSm
-	 AQC4fbWZ5wWdDQjkJt4LY3tZZcp3355400coWjoHT75+oxK/MfRmkc+AzHzfH6Y3c7
-	 EOGVJgn3aWAqwNtbacCxyJtB0YNsMnn2KPObNd40=
+	b=Ek+ZiwdLQpN87LMr84NlBDmRJwLX5KY0UU6tx5IHxRhkos/DceUCw0+Z10XMaYrq9
+	 tfAq7WLaE27+ICvWaZ0oGqb/oNZtKACLBl8x1uhRU9OyGvR8zyS7HTxPCYwHT4XVNm
+	 FnwyQ7yuZ+83jfk01an+63nCjf7U486P+4VnGHk4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731584AbgAXJjO (ORCPT
+        id S1731640AbgAXJjX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 04:39:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36346 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 04:39:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36490 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729924AbgAXJjM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 04:39:12 -0500
+        id S1730923AbgAXJjT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 04:39:19 -0500
 Received: from localhost (unknown [145.15.244.15])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 748F920709;
-        Fri, 24 Jan 2020 09:39:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7493B20838;
+        Fri, 24 Jan 2020 09:39:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579858751;
-        bh=HdT58Yiqp0jmr/sDUj4BFGZyrgcM7XM5tIMrOuWTN1A=;
+        s=default; t=1579858759;
+        bh=vTyqrbemP4Yg1Gi05XM+3Cmz6XpD+zp810ADQ29hNCc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ABQgjvWt9UWEBfssCI/B24Za4PkOUZboMprP/QVtkTA0Zu/mKuEWVVPKMa4bCsbSm
-         kbQGVuUHCN+acpwLI1M29eLEAmZim6cYpGcNq/RGdMsUQ0YYzdToYoMNTiCII7N210
-         dPj6V9j4Tkw3QyfpHSdlfUiqrFriaV6qaVqeWpcE=
+        b=DAKbYtHdj02Unk8KSBCruB/QkrdS0c8E95ltXCAMLEuLHBzrdlk05wltyP3VF3aEp
+         bGqSe1DIfYQ+iDrUFXryp3FROy5ffoUxPYIGCpiNBuf6lx1sUcn56uTXCszRMl45Qw
+         /mJPmGOvEDbFhgmvOBtSvqDbKOALq0F0agVjPgC0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>, bsegall@google.com,
-        dietmar.eggemann@arm.com, juri.lelli@redhat.com,
-        ktkhai@virtuozzo.com, mgorman@suse.de, qais.yousef@arm.com,
-        qperret@google.com, rostedt@goodmis.org,
-        valentin.schneider@arm.com, vincent.guittot@linaro.org,
-        Ingo Molnar <mingo@kernel.org>
-Subject: [PATCH 5.4 047/102] sched/core: Further clarify sched_class::set_next_task()
-Date:   Fri, 24 Jan 2020 10:30:48 +0100
-Message-Id: <20200124092813.389202154@linuxfoundation.org>
+        stable@vger.kernel.org, Lorenzo Bianconi <lorenzo@kernel.org>,
+        Felix Fietkau <nbd@nbd.name>
+Subject: [PATCH 5.4 032/102] mt76: mt76u: fix endpoint definition order
+Date:   Fri, 24 Jan 2020 10:30:33 +0100
+Message-Id: <20200124092811.084952886@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124092806.004582306@linuxfoundation.org>
 References: <20200124092806.004582306@linuxfoundation.org>
@@ -66,170 +59,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Zijlstra <peterz@infradead.org>
+From: Lorenzo Bianconi <lorenzo@kernel.org>
 
-commit a0e813f26ebcb25c0b5e504498fbd796cca1a4ba upstream.
+commit 23cb16d2ccb5f819d7acff602e5a153157bf2884 upstream.
 
-It turns out there really is something special to the first
-set_next_task() invocation. In specific the 'change' pattern really
-should not cause balance callbacks.
+Even if they are not currently used fix BK/BE endpoint definition order.
 
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: bsegall@google.com
-Cc: dietmar.eggemann@arm.com
-Cc: juri.lelli@redhat.com
-Cc: ktkhai@virtuozzo.com
-Cc: mgorman@suse.de
-Cc: qais.yousef@arm.com
-Cc: qperret@google.com
-Cc: rostedt@goodmis.org
-Cc: valentin.schneider@arm.com
-Cc: vincent.guittot@linaro.org
-Fixes: f95d4eaee6d0 ("sched/{rt,deadline}: Fix set_next_task vs pick_next_task")
-Link: https://lkml.kernel.org/r/20191108131909.775434698@infradead.org
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Fixes: b40b15e1521f ("mt76: add usb support to mt76 layer")
+Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
+Signed-off-by: Felix Fietkau <nbd@nbd.name>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/sched/deadline.c  |    7 +++++--
- kernel/sched/fair.c      |    2 +-
- kernel/sched/idle.c      |    4 ++--
- kernel/sched/rt.c        |    7 +++++--
- kernel/sched/sched.h     |    4 ++--
- kernel/sched/stop_task.c |    4 ++--
- 6 files changed, 17 insertions(+), 11 deletions(-)
+ drivers/net/wireless/mediatek/mt76/mt76.h |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/kernel/sched/deadline.c
-+++ b/kernel/sched/deadline.c
-@@ -1743,13 +1743,16 @@ static void start_hrtick_dl(struct rq *r
- }
- #endif
+--- a/drivers/net/wireless/mediatek/mt76/mt76.h
++++ b/drivers/net/wireless/mediatek/mt76/mt76.h
+@@ -367,8 +367,8 @@ enum mt76u_in_ep {
  
--static void set_next_task_dl(struct rq *rq, struct task_struct *p)
-+static void set_next_task_dl(struct rq *rq, struct task_struct *p, bool first)
- {
- 	p->se.exec_start = rq_clock_task(rq);
- 
- 	/* You can't push away the running task */
- 	dequeue_pushable_dl_task(rq, p);
- 
-+	if (!first)
-+		return;
-+
- 	if (hrtick_enabled(rq))
- 		start_hrtick_dl(rq, p);
- 
-@@ -1785,7 +1788,7 @@ pick_next_task_dl(struct rq *rq, struct
- 	dl_se = pick_next_dl_entity(rq, dl_rq);
- 	BUG_ON(!dl_se);
- 	p = dl_task_of(dl_se);
--	set_next_task_dl(rq, p);
-+	set_next_task_dl(rq, p, true);
- 	return p;
- }
- 
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -10151,7 +10151,7 @@ static void switched_to_fair(struct rq *
-  * This routine is mostly called to set cfs_rq->curr field when a task
-  * migrates between groups/classes.
-  */
--static void set_next_task_fair(struct rq *rq, struct task_struct *p)
-+static void set_next_task_fair(struct rq *rq, struct task_struct *p, bool first)
- {
- 	struct sched_entity *se = &p->se;
- 
---- a/kernel/sched/idle.c
-+++ b/kernel/sched/idle.c
-@@ -385,7 +385,7 @@ static void put_prev_task_idle(struct rq
- {
- }
- 
--static void set_next_task_idle(struct rq *rq, struct task_struct *next)
-+static void set_next_task_idle(struct rq *rq, struct task_struct *next, bool first)
- {
- 	update_idle_core(rq);
- 	schedstat_inc(rq->sched_goidle);
-@@ -399,7 +399,7 @@ pick_next_task_idle(struct rq *rq, struc
- 	if (prev)
- 		put_prev_task(rq, prev);
- 
--	set_next_task_idle(rq, next);
-+	set_next_task_idle(rq, next, true);
- 
- 	return next;
- }
---- a/kernel/sched/rt.c
-+++ b/kernel/sched/rt.c
-@@ -1515,13 +1515,16 @@ static void check_preempt_curr_rt(struct
- #endif
- }
- 
--static inline void set_next_task_rt(struct rq *rq, struct task_struct *p)
-+static inline void set_next_task_rt(struct rq *rq, struct task_struct *p, bool first)
- {
- 	p->se.exec_start = rq_clock_task(rq);
- 
- 	/* The running task is never eligible for pushing */
- 	dequeue_pushable_task(rq, p);
- 
-+	if (!first)
-+		return;
-+
- 	/*
- 	 * If prev task was rt, put_prev_task() has already updated the
- 	 * utilization. We only care of the case where we start to schedule a
-@@ -1575,7 +1578,7 @@ pick_next_task_rt(struct rq *rq, struct
- 		return NULL;
- 
- 	p = _pick_next_task_rt(rq);
--	set_next_task_rt(rq, p);
-+	set_next_task_rt(rq, p, true);
- 	return p;
- }
- 
---- a/kernel/sched/sched.h
-+++ b/kernel/sched/sched.h
-@@ -1728,7 +1728,7 @@ struct sched_class {
- 					       struct task_struct *prev,
- 					       struct rq_flags *rf);
- 	void (*put_prev_task)(struct rq *rq, struct task_struct *p);
--	void (*set_next_task)(struct rq *rq, struct task_struct *p);
-+	void (*set_next_task)(struct rq *rq, struct task_struct *p, bool first);
- 
- #ifdef CONFIG_SMP
- 	int (*balance)(struct rq *rq, struct task_struct *prev, struct rq_flags *rf);
-@@ -1780,7 +1780,7 @@ static inline void put_prev_task(struct
- static inline void set_next_task(struct rq *rq, struct task_struct *next)
- {
- 	WARN_ON_ONCE(rq->curr != next);
--	next->sched_class->set_next_task(rq, next);
-+	next->sched_class->set_next_task(rq, next, false);
- }
- 
- #ifdef CONFIG_SMP
---- a/kernel/sched/stop_task.c
-+++ b/kernel/sched/stop_task.c
-@@ -29,7 +29,7 @@ check_preempt_curr_stop(struct rq *rq, s
- 	/* we're never preempted */
- }
- 
--static void set_next_task_stop(struct rq *rq, struct task_struct *stop)
-+static void set_next_task_stop(struct rq *rq, struct task_struct *stop, bool first)
- {
- 	stop->se.exec_start = rq_clock_task(rq);
- }
-@@ -42,7 +42,7 @@ pick_next_task_stop(struct rq *rq, struc
- 	if (!sched_stop_runnable(rq))
- 		return NULL;
- 
--	set_next_task_stop(rq, rq->stop);
-+	set_next_task_stop(rq, rq->stop, true);
- 	return rq->stop;
- }
- 
+ enum mt76u_out_ep {
+ 	MT_EP_OUT_INBAND_CMD,
+-	MT_EP_OUT_AC_BK,
+ 	MT_EP_OUT_AC_BE,
++	MT_EP_OUT_AC_BK,
+ 	MT_EP_OUT_AC_VI,
+ 	MT_EP_OUT_AC_VO,
+ 	MT_EP_OUT_HCCA,
 
 
