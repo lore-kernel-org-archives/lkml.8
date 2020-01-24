@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4D8FC35242
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:26:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22273C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:26:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C1C8208C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:26:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DCC80208C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:26:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579876006;
-	bh=QbtyRYuDdnoF3CdA9Du4Q2Xg3mhXCyDP5kEE0dKS9qs=;
+	s=default; t=1579876009;
+	bh=CslaSSQI+Lm9q11vj17D/LgMKJ+dG/2Gb2LaHCRJXVo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oQLmw7A6jhp1bMwimq+GVKYWOAh0UDzNWT1GBW5g3U8U/rn3rAP536J+nj85jRm29
-	 IgjgwAybqRIDJGN5p3k2DnakWNdwAZiQ/4TpLegN1Oo1Nx7CeaEgHdiRyGmNyRQ+eY
-	 FOQg4VqQUxI5+fHMM1gZVv3bBRJjt1S1gS9T1nzg=
+	b=hEhWr2t3ss83KgiIo7p1cne2bFNm0fesAbD4VzKylIf/J+hcjhcxwvx7PTj13s9hx
+	 yZDcknQf4oomdxKheomweUsdFg03YGY3IHHVrADbVHMYGHP3+fGFnixVLkW51gfgHr
+	 HDE7Vm80r5a4iG1MuTZLzf9FNk/YB0Kw1jorVxgI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405338AbgAXOVg (ORCPT
+        id S2405330AbgAXOVf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 09:21:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43344 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 09:21:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43190 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405308AbgAXOVd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 09:21:33 -0500
+        id S2387444AbgAXOV3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 09:21:29 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 938EE218AC;
-        Fri, 24 Jan 2020 14:21:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1F1102072C;
+        Fri, 24 Jan 2020 14:21:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579875692;
-        bh=QbtyRYuDdnoF3CdA9Du4Q2Xg3mhXCyDP5kEE0dKS9qs=;
+        s=default; t=1579875688;
+        bh=CslaSSQI+Lm9q11vj17D/LgMKJ+dG/2Gb2LaHCRJXVo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=s01OoJFJUKGbDPSzXWh1f/08okUI9eYg6CgENuiSPDtsENhqpjhBaeFHtcwikVp0u
-         IzpdmtRkn4vuZo/r9HYE9j378UiYaftr6irDl/tzef0K0c8AlJy43VhvoLCSCfWJeV
-         jBMjMa6VohKESKlW/0NuCNVFuv6OCm45BJHrF+k8=
+        b=hqvJjiQqPDcE+QL224a/tj/FanuOAX7p6rnKA5e5u29oAggGsnCkJGzptBhYsZonJ
+         +55H5u1uVbp7MUqY3UXkHoG0pt+RVVFnZWbxOSWaYEATwx1sIiqbq9uIe5Uk0bInTg
+         oKlEbCK1XA1xYOvS4LtXc0jaw8SrF1xyTL4lZhfA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Manfred Rudigier <manfred.rudigier@omicronenergy.com>,
-        Aaron Brown <aaron.f.brown@intel.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        Sasha Levin <sashal@kernel.org>,
-        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 11/32] igb: Fix SGMII SFP module discovery for 100FX/LX.
-Date:   Fri, 24 Jan 2020 09:20:58 -0500
-Message-Id: <20200124142119.30484-11-sashal@kernel.org>
+Cc:     Lubomir Rintel <lkundrak@v3.sk>, Stephen Boyd <sboyd@kernel.org>,
+        Olof Johansson <olof@lixom.net>,
+        Sasha Levin <sashal@kernel.org>, linux-clk@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 08/32] clk: mmp2: Fix the order of timer mux parents
+Date:   Fri, 24 Jan 2020 09:20:55 -0500
+Message-Id: <20200124142119.30484-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200124142119.30484-1-sashal@kernel.org>
 References: <20200124142119.30484-1-sashal@kernel.org>
@@ -61,71 +59,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Manfred Rudigier <manfred.rudigier@omicronenergy.com>
+From: Lubomir Rintel <lkundrak@v3.sk>
 
-[ Upstream commit 5365ec1aeff5b9f2962a9c9b31d63f9dad7e0e2d ]
+[ Upstream commit 8bea5ac0fbc5b2103f8779ddff216122e3c2e1ad ]
 
-Changing the link mode should also be done for 100BaseFX SGMII modules,
-otherwise they just don't work when the default link mode in CTRL_EXT
-coming from the EEPROM is SERDES.
+Determined empirically, no documentation is available.
 
-Additionally 100Base-LX SGMII SFP modules are also supported now, which
-was not the case before.
+The OLPC XO-1.75 laptop used parent 1, that one being VCTCXO/4 (65MHz), but
+thought it's a VCTCXO/2 (130MHz). The mmp2 timer driver, not knowing
+what is going on, ended up just dividing the rate as of
+commit f36797ee4380 ("ARM: mmp/mmp2: dt: enable the clock")'
 
-Tested with an i210 using Flexoptix S.1303.2M.G 100FX and
-S.1303.10.G 100LX SGMII SFP modules.
-
-Signed-off-by: Manfred Rudigier <manfred.rudigier@omicronenergy.com>
-Tested-by: Aaron Brown <aaron.f.brown@intel.com>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Link: https://lore.kernel.org/r/20191218190454.420358-3-lkundrak@v3.sk
+Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+Acked-by: Stephen Boyd <sboyd@kernel.org>
+Signed-off-by: Olof Johansson <olof@lixom.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/intel/igb/e1000_82575.c | 8 ++------
- drivers/net/ethernet/intel/igb/igb_ethtool.c | 2 +-
- 2 files changed, 3 insertions(+), 7 deletions(-)
+ drivers/clk/mmp/clk-of-mmp2.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/intel/igb/e1000_82575.c b/drivers/net/ethernet/intel/igb/e1000_82575.c
-index c37cc8bccf477..158c277ec3538 100644
---- a/drivers/net/ethernet/intel/igb/e1000_82575.c
-+++ b/drivers/net/ethernet/intel/igb/e1000_82575.c
-@@ -562,7 +562,7 @@ static s32 igb_set_sfp_media_type_82575(struct e1000_hw *hw)
- 		dev_spec->module_plugged = true;
- 		if (eth_flags->e1000_base_lx || eth_flags->e1000_base_sx) {
- 			hw->phy.media_type = e1000_media_type_internal_serdes;
--		} else if (eth_flags->e100_base_fx) {
-+		} else if (eth_flags->e100_base_fx || eth_flags->e100_base_lx) {
- 			dev_spec->sgmii_active = true;
- 			hw->phy.media_type = e1000_media_type_internal_serdes;
- 		} else if (eth_flags->e1000_base_t) {
-@@ -689,14 +689,10 @@ static s32 igb_get_invariants_82575(struct e1000_hw *hw)
- 			break;
- 		}
+diff --git a/drivers/clk/mmp/clk-of-mmp2.c b/drivers/clk/mmp/clk-of-mmp2.c
+index d083b860f0833..10689d8cd3867 100644
+--- a/drivers/clk/mmp/clk-of-mmp2.c
++++ b/drivers/clk/mmp/clk-of-mmp2.c
+@@ -134,7 +134,7 @@ static DEFINE_SPINLOCK(ssp3_lock);
+ static const char *ssp_parent_names[] = {"vctcxo_4", "vctcxo_2", "vctcxo", "pll1_16"};
  
--		/* do not change link mode for 100BaseFX */
--		if (dev_spec->eth_flags.e100_base_fx)
--			break;
--
- 		/* change current link mode setting */
- 		ctrl_ext &= ~E1000_CTRL_EXT_LINK_MODE_MASK;
+ static DEFINE_SPINLOCK(timer_lock);
+-static const char *timer_parent_names[] = {"clk32", "vctcxo_2", "vctcxo_4", "vctcxo"};
++static const char *timer_parent_names[] = {"clk32", "vctcxo_4", "vctcxo_2", "vctcxo"};
  
--		if (hw->phy.media_type == e1000_media_type_copper)
-+		if (dev_spec->sgmii_active)
- 			ctrl_ext |= E1000_CTRL_EXT_LINK_MODE_SGMII;
- 		else
- 			ctrl_ext |= E1000_CTRL_EXT_LINK_MODE_PCIE_SERDES;
-diff --git a/drivers/net/ethernet/intel/igb/igb_ethtool.c b/drivers/net/ethernet/intel/igb/igb_ethtool.c
-index d06a8db514d4a..82028ce355fb1 100644
---- a/drivers/net/ethernet/intel/igb/igb_ethtool.c
-+++ b/drivers/net/ethernet/intel/igb/igb_ethtool.c
-@@ -201,7 +201,7 @@ static int igb_get_link_ksettings(struct net_device *netdev,
- 				advertising &= ~ADVERTISED_1000baseKX_Full;
- 			}
- 		}
--		if (eth_flags->e100_base_fx) {
-+		if (eth_flags->e100_base_fx || eth_flags->e100_base_lx) {
- 			supported |= SUPPORTED_100baseT_Full;
- 			advertising |= ADVERTISED_100baseT_Full;
- 		}
+ static DEFINE_SPINLOCK(reset_lock);
+ 
 -- 
 2.20.1
 
