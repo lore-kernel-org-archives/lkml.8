@@ -7,50 +7,52 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA06AC35240
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 01:20:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01CD9C35240
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 01:20:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A25422464
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 01:20:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC96A22464
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 01:20:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579828815;
-	bh=YgsZRwJQo5NDjLt5Mz+9Gt6+Z3gsDcXgk385OZZSpSo=;
+	s=default; t=1579828820;
+	bh=WYPDK5cm9HmuZ3ULm+770FTcNMJYJDWL+36DjqaSXy4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cZSD3J6PGCxbcaB/FbHk1v7VG4nI9GJQb0teOrxrq9mHDprIXDchEvub2hfpqBos7
-	 jDpvUVfJFUx8zMnE18mlbbmF7wJ283XbgJDZdSycrGsF93+/MLp32A6IZieBYxGazh
-	 rhBa8Ae4NHqF41BluXQaHSOpVE0QfqWZdl7KdVqY=
+	b=wlw6qqe05VHiao4fgEo+9cEwrKCelTLic6YtQoNYKqwKjHVjjL0IYpVaRQR4miX20
+	 VP2GMGnqD70c9iXXzOh81kkue2KMwofCJre0fT8zCWfh1H7kKI8e8D8md5/lDMnKAG
+	 HkBpcs/qqW8TUo5QJ9nCJimo+08wDXBs6pNVEZeI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730499AbgAXBRa (ORCPT
+        id S1730221AbgAXBUT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 20:17:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60462 "EHLO mail.kernel.org"
+        Thu, 23 Jan 2020 20:20:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60550 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730427AbgAXBR1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 20:17:27 -0500
+        id S1730480AbgAXBRa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jan 2020 20:17:30 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9431E21D7D;
-        Fri, 24 Jan 2020 01:17:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D101E24125;
+        Fri, 24 Jan 2020 01:17:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579828646;
-        bh=YgsZRwJQo5NDjLt5Mz+9Gt6+Z3gsDcXgk385OZZSpSo=;
+        s=default; t=1579828649;
+        bh=WYPDK5cm9HmuZ3ULm+770FTcNMJYJDWL+36DjqaSXy4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gRKXkNMr90SG3qiom6HQ/MM7zJDYFVbpkmKVSwTaSYvUCUvIAQUpgGhZg9l1uLyLb
-         Jta+68oL4OekJXt4mHoJqs9GiQfPNCZmuJhQXMHjwDTKI91UXblPq8wgJ+WFWrNTbA
-         fWMhfaRMFLSWs1O82cKC9cYVrkJaQ/VupM6lpGOw=
+        b=zhcU0Lq2b6Lq04u8xPmu/OCi4JUwFfcwfdVxIUrFmBww9kEYB+GlZjfrTzEZ9omn5
+         bRQcpYLDyJHbO3XUnfD9HIBrlM7PFuwnDGnoofI+xSB0gnYlqoJaN9kVTU+S/YK3E4
+         2WDVHwKJaRMykj5ded8KrbMpUhPI9BiKQi+TTFkc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Joakim Zhang <qiangqing.zhang@nxp.com>,
-        Will Deacon <will@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.4 15/33] perf/imx_ddr: Add enhanced AXI ID filter support
-Date:   Thu, 23 Jan 2020 20:16:50 -0500
-Message-Id: <20200124011708.18232-15-sashal@kernel.org>
+Cc:     Joel Stanley <joel@jms.id.au>,
+        =?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg@kaod.org>,
+        Arnd Bergmann <arnd@arndb.de>, Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 5.4 18/33] ARM: config: aspeed-g5: Enable 8250_DW quirks
+Date:   Thu, 23 Jan 2020 20:16:53 -0500
+Message-Id: <20200124011708.18232-18-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200124011708.18232-1-sashal@kernel.org>
 References: <20200124011708.18232-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -59,115 +61,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joakim Zhang <qiangqing.zhang@nxp.com>
+From: Joel Stanley <joel@jms.id.au>
 
-[ Upstream commit 44f8bd014a94ed679ddb77d0b92350d4ac4f23a5 ]
+[ Upstream commit a5331a7a87ec81d5228b7421acf831b2d0c0de26 ]
 
-With DDR_CAP_AXI_ID_FILTER quirk, indicating HW supports AXI ID filter
-which only can get bursts from DDR transaction, i.e. DDR read/write
-requests.
+This driver option is used by the AST2600 A0 boards to work around a
+hardware issue.
 
-This patch add DDR_CAP_AXI_ID_ENHANCED_FILTER quirk, indicating HW
-supports AXI ID filter which can get bursts and bytes from DDR
-transaction at the same time. We hope PMU always return bytes in the
-driver due to it is more meaningful for users.
-
-Signed-off-by: Joakim Zhang <qiangqing.zhang@nxp.com>
-Signed-off-by: Will Deacon <will@kernel.org>
+Reviewed-by: Cédric Le Goater <clg@kaod.org>
+Acked-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Joel Stanley <joel@jms.id.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/perf/fsl_imx8_ddr_perf.c | 63 +++++++++++++++++++++-----------
- 1 file changed, 42 insertions(+), 21 deletions(-)
+ arch/arm/configs/aspeed_g5_defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/perf/fsl_imx8_ddr_perf.c b/drivers/perf/fsl_imx8_ddr_perf.c
-index ce7345745b42c..2a3966d059e70 100644
---- a/drivers/perf/fsl_imx8_ddr_perf.c
-+++ b/drivers/perf/fsl_imx8_ddr_perf.c
-@@ -45,7 +45,8 @@
- static DEFINE_IDA(ddr_ida);
- 
- /* DDR Perf hardware feature */
--#define DDR_CAP_AXI_ID_FILTER          0x1     /* support AXI ID filter */
-+#define DDR_CAP_AXI_ID_FILTER			0x1     /* support AXI ID filter */
-+#define DDR_CAP_AXI_ID_FILTER_ENHANCED		0x3     /* support enhanced AXI ID filter */
- 
- struct fsl_ddr_devtype_data {
- 	unsigned int quirks;    /* quirks needed for different DDR Perf core */
-@@ -178,6 +179,36 @@ static const struct attribute_group *attr_groups[] = {
- 	NULL,
- };
- 
-+static bool ddr_perf_is_filtered(struct perf_event *event)
-+{
-+	return event->attr.config == 0x41 || event->attr.config == 0x42;
-+}
-+
-+static u32 ddr_perf_filter_val(struct perf_event *event)
-+{
-+	return event->attr.config1;
-+}
-+
-+static bool ddr_perf_filters_compatible(struct perf_event *a,
-+					struct perf_event *b)
-+{
-+	if (!ddr_perf_is_filtered(a))
-+		return true;
-+	if (!ddr_perf_is_filtered(b))
-+		return true;
-+	return ddr_perf_filter_val(a) == ddr_perf_filter_val(b);
-+}
-+
-+static bool ddr_perf_is_enhanced_filtered(struct perf_event *event)
-+{
-+	unsigned int filt;
-+	struct ddr_pmu *pmu = to_ddr_pmu(event->pmu);
-+
-+	filt = pmu->devtype_data->quirks & DDR_CAP_AXI_ID_FILTER_ENHANCED;
-+	return (filt == DDR_CAP_AXI_ID_FILTER_ENHANCED) &&
-+		ddr_perf_is_filtered(event);
-+}
-+
- static u32 ddr_perf_alloc_counter(struct ddr_pmu *pmu, int event)
- {
- 	int i;
-@@ -209,27 +240,17 @@ static void ddr_perf_free_counter(struct ddr_pmu *pmu, int counter)
- 
- static u32 ddr_perf_read_counter(struct ddr_pmu *pmu, int counter)
- {
--	return readl_relaxed(pmu->base + COUNTER_READ + counter * 4);
--}
--
--static bool ddr_perf_is_filtered(struct perf_event *event)
--{
--	return event->attr.config == 0x41 || event->attr.config == 0x42;
--}
-+	struct perf_event *event = pmu->events[counter];
-+	void __iomem *base = pmu->base;
- 
--static u32 ddr_perf_filter_val(struct perf_event *event)
--{
--	return event->attr.config1;
--}
--
--static bool ddr_perf_filters_compatible(struct perf_event *a,
--					struct perf_event *b)
--{
--	if (!ddr_perf_is_filtered(a))
--		return true;
--	if (!ddr_perf_is_filtered(b))
--		return true;
--	return ddr_perf_filter_val(a) == ddr_perf_filter_val(b);
-+	/*
-+	 * return bytes instead of bursts from ddr transaction for
-+	 * axid-read and axid-write event if PMU core supports enhanced
-+	 * filter.
-+	 */
-+	base += ddr_perf_is_enhanced_filtered(event) ? COUNTER_DPCR1 :
-+						       COUNTER_READ;
-+	return readl_relaxed(base + counter * 4);
- }
- 
- static int ddr_perf_event_init(struct perf_event *event)
+diff --git a/arch/arm/configs/aspeed_g5_defconfig b/arch/arm/configs/aspeed_g5_defconfig
+index 597536cc9573d..b87508c7056c9 100644
+--- a/arch/arm/configs/aspeed_g5_defconfig
++++ b/arch/arm/configs/aspeed_g5_defconfig
+@@ -139,6 +139,7 @@ CONFIG_SERIAL_8250_RUNTIME_UARTS=6
+ CONFIG_SERIAL_8250_EXTENDED=y
+ CONFIG_SERIAL_8250_ASPEED_VUART=y
+ CONFIG_SERIAL_8250_SHARE_IRQ=y
++CONFIG_SERIAL_8250_DW=y
+ CONFIG_SERIAL_OF_PLATFORM=y
+ CONFIG_ASPEED_KCS_IPMI_BMC=y
+ CONFIG_ASPEED_BT_IPMI_BMC=y
 -- 
 2.20.1
 
