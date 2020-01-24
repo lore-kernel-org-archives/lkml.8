@@ -7,53 +7,51 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87105C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:30:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A27F4C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:30:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5571E214AF
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:30:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78CBC2087E
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:30:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579876209;
-	bh=12HEvJehZ/Jgk+eTbKkqViC4hFoUbZr3wcNHfpAyxPQ=;
+	s=default; t=1579876220;
+	bh=E6Fv9O+OegQ5OgqHUfaQME7FUO6QA7TWUMPDerY7pLQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0tz1FpPp9PVzAjRrH3CmOI7xCmeXySAzfaeW7u8OpoIyXUlYfkxZ+ObX/DbE2YLL4
-	 xC/cGebLe4s72hvWsGuZJXaqhXihefXNVm+iXNQStwZNncu8odtjG1ZTgODf7RrlZI
-	 scYMh/VaN3OofiSEumEiOc7tV5cCVmFEN7Q5u7ME=
+	b=Ycs6RnXcwE28+S/YgQE6I4G05ySDFbfxRfJt6WA/f+je1w23UNk5+yhw9xt4PM9BA
+	 bWvehwabH+SganrLCpvH9a4j85daAo4CCOrhpslsBBvZat/yhpo2KUVOwYqVYqICcl
+	 kTxzt0oBeu7hV4pPJ2eZYtzqfFBV8sfdDhMR36TM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392226AbgAXOaI (ORCPT
+        id S2391838AbgAXOaT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 09:30:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42188 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 09:30:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42074 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405061AbgAXOUt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 09:20:49 -0500
+        id S2405032AbgAXOUp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 09:20:45 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3032A20661;
-        Fri, 24 Jan 2020 14:20:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 73AC324676;
+        Fri, 24 Jan 2020 14:20:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579875649;
-        bh=12HEvJehZ/Jgk+eTbKkqViC4hFoUbZr3wcNHfpAyxPQ=;
+        s=default; t=1579875645;
+        bh=E6Fv9O+OegQ5OgqHUfaQME7FUO6QA7TWUMPDerY7pLQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Yw2kEGDb7qrq/XB/qSOqpJ2gJD09Kqq70dL8XjfvxEG3FEOn2Eyq3oq5JvY2KGm+J
-         3utRjviRfgIq4+4LKRkRyAOpPtTH3RSV1HT+gefCO8u0sqz6zC8R4q931RvGWj3cvz
-         OL0GDo4CrwhjvRlGM4U7l2py0gA8dxjy5O83klGU=
+        b=rNN/ICvjPLO354inOVoDOAx+Cm20TzM7vV9ckyfxYiwGPwvE6ET+UxPKusuLEqu+d
+         misNPT0PFUnVfGmlMf0x30usUyy+q/WEIslIE57LR56d5dRQWzy2oeiBY3lLABBjlj
+         esbdli3O91owtR1CTZo9vvuyk3C/VOP8hR6qpWrc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kristian Evensen <kristian.evensen@gmail.com>,
-        =?UTF-8?q?Bj=C3=B8rn=20Mork?= <bjorn@mork.no>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 31/56] qmi_wwan: Add support for Quectel RM500Q
-Date:   Fri, 24 Jan 2020 09:19:47 -0500
-Message-Id: <20200124142012.29752-31-sashal@kernel.org>
+Cc:     Stephan Gerhold <stephan@gerhold.net>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
+Subject: [PATCH AUTOSEL 4.19 28/56] ASoC: msm8916-wcd-digital: Reset RX interpolation path after use
+Date:   Fri, 24 Jan 2020 09:19:44 -0500
+Message-Id: <20200124142012.29752-28-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200124142012.29752-1-sashal@kernel.org>
 References: <20200124142012.29752-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -62,34 +60,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kristian Evensen <kristian.evensen@gmail.com>
+From: Stephan Gerhold <stephan@gerhold.net>
 
-[ Upstream commit a9ff44f0e61d074f29770413fef6a5452be7b83e ]
+[ Upstream commit 85578bbd642f65065039b1765ebe1a867d5435b0 ]
 
-RM500Q is a 5G module from Quectel, supporting both standalone and
-non-standalone modes. The normal Quectel quirks apply (DTR and dynamic
-interface numbers).
+For some reason, attempting to route audio through QDSP6 on MSM8916
+causes the RX interpolation path to get "stuck" after playing audio
+a few times. In this situation, the analog codec part is still working,
+but the RX path in the digital codec stops working, so you only hear
+the analog parts powering up. After a reboot everything works again.
 
-Signed-off-by: Kristian Evensen <kristian.evensen@gmail.com>
-Acked-by: Bjørn Mork <bjorn@mork.no>
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+So far I was not able to reproduce the problem when using lpass-cpu.
+
+The downstream kernel driver avoids this by resetting the RX
+interpolation path after use. In mainline we do something similar
+for the TX decimator (LPASS_CDC_CLK_TX_RESET_B1_CTL), but the
+interpolator reset (LPASS_CDC_CLK_RX_RESET_CTL) got lost when the
+msm8916-wcd driver was split into analog and digital.
+
+Fix this problem by adding the reset to
+msm8916_wcd_digital_enable_interpolator().
+
+Fixes: 150db8c5afa1 ("ASoC: codecs: Add msm8916-wcd digital codec")
+Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
+Link: https://lore.kernel.org/r/20200105102753.83108-1-stephan@gerhold.net
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/usb/qmi_wwan.c | 1 +
- 1 file changed, 1 insertion(+)
+ sound/soc/codecs/msm8916-wcd-digital.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/net/usb/qmi_wwan.c b/drivers/net/usb/qmi_wwan.c
-index b55fd76348f9f..13c8788e3b6b2 100644
---- a/drivers/net/usb/qmi_wwan.c
-+++ b/drivers/net/usb/qmi_wwan.c
-@@ -999,6 +999,7 @@ static const struct usb_device_id products[] = {
- 	{QMI_QUIRK_QUECTEL_DYNCFG(0x2c7c, 0x0125)},	/* Quectel EC25, EC20 R2.0  Mini PCIe */
- 	{QMI_QUIRK_QUECTEL_DYNCFG(0x2c7c, 0x0306)},	/* Quectel EP06/EG06/EM06 */
- 	{QMI_QUIRK_QUECTEL_DYNCFG(0x2c7c, 0x0512)},	/* Quectel EG12/EM12 */
-+	{QMI_QUIRK_QUECTEL_DYNCFG(0x2c7c, 0x0800)},	/* Quectel RM500Q-GL */
- 
- 	/* 3. Combined interface devices matching on interface number */
- 	{QMI_FIXED_INTF(0x0408, 0xea42, 4)},	/* Yota / Megafon M100-1 */
+diff --git a/sound/soc/codecs/msm8916-wcd-digital.c b/sound/soc/codecs/msm8916-wcd-digital.c
+index 3063dedd21cff..6de2ab6f97068 100644
+--- a/sound/soc/codecs/msm8916-wcd-digital.c
++++ b/sound/soc/codecs/msm8916-wcd-digital.c
+@@ -357,6 +357,12 @@ static int msm8916_wcd_digital_enable_interpolator(
+ 		snd_soc_component_write(component, rx_gain_reg[w->shift],
+ 			      snd_soc_component_read32(component, rx_gain_reg[w->shift]));
+ 		break;
++	case SND_SOC_DAPM_POST_PMD:
++		snd_soc_component_update_bits(component, LPASS_CDC_CLK_RX_RESET_CTL,
++					      1 << w->shift, 1 << w->shift);
++		snd_soc_component_update_bits(component, LPASS_CDC_CLK_RX_RESET_CTL,
++					      1 << w->shift, 0x0);
++		break;
+ 	}
+ 	return 0;
+ }
 -- 
 2.20.1
 
