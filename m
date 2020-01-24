@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86A37C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:16:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20909C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:16:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F746214AF
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:16:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E26F5214AF
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:16:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579864591;
-	bh=SEkrU5RrUmnxK+Y+4PKjzS91d5FOlBsKjvsiZhCDIu0=;
+	s=default; t=1579864593;
+	bh=fsE1GfhrSbKu3pQpLV0LKCFIRXEanynsbFs5sGymykw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cEceDDlR6Kl+j6g8OAMgllxEpZJNHnrIb9iZ0hCrHbR03OhtKQsG7sPSE5xMvw81J
-	 lf4fk6z3W+GsJ31NQdHxd+Gz02b6CayQWZGTInMrNylNPxOOps8GzNFNb0frh9rPMq
-	 e0eJiI5nNjMRkOYQ60eyEqM3QCAMPSqPbrTTmp+c=
+	b=fmiYBVQfn5bvj0ia7DACE78Iw/KgjQMbnoCSXQvmOp4kmQCqFyFPok4d/pCWG40o1
+	 8UBUhFd/r77DiVe0Y8Ir1vif6m9vBScRIf3UkHDQnapWYSryyLV+r5ROVbQuuchW8U
+	 1K38INdrQrVSqOqUjfL4YVAL5aza3LYzj0NDDgBg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390368AbgAXLQ3 (ORCPT
+        id S2390376AbgAXLQc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:16:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53176 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 06:16:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53250 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390351AbgAXLQX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:16:23 -0500
+        id S2390360AbgAXLQ1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:16:27 -0500
 Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4E3B0222C2;
-        Fri, 24 Jan 2020 11:16:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9A98C2077C;
+        Fri, 24 Jan 2020 11:16:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579864583;
-        bh=SEkrU5RrUmnxK+Y+4PKjzS91d5FOlBsKjvsiZhCDIu0=;
+        s=default; t=1579864586;
+        bh=fsE1GfhrSbKu3pQpLV0LKCFIRXEanynsbFs5sGymykw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YApEU2BSd0kS20aJ57DSQQ6+7MQkhJqLzMPYD39gUBnkHDNYbqpeujLeTNUhvGjP1
-         nhyYDkG5Q80Vui58b8ky22nk9SzxOFv2464kDiaOFGLo3PZWWNM71t+HZXGlCB0QuQ
-         HFe9fhYge6M9ZO8vBjs9m44k9z1R9M/c1lAiBF0Y=
+        b=lEnULglpP4XfmZFYDx05KOEa4lXqrwfRwzyfvxRXV3tgQWrubSASZfn0ESHnVZbCc
+         y8XaeS04oqJwix60nPM0Wxyonj+1lHpT26fLZVQ42IAQ+x69LrHlVwoRQMQN1XJfkf
+         0saC+eWETPDq96CDdiux4PASR0nu3DnWfOEPolN0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, YueHaibing <yuehaibing@huawei.com>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
+        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Mukesh Ojha <mojha@codeaurora.org>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 306/639] ARM: pxa: ssp: Fix "WARNING: invalid free of devm_ allocated data"
-Date:   Fri, 24 Jan 2020 10:27:56 +0100
-Message-Id: <20200124093125.268338306@linuxfoundation.org>
+Subject: [PATCH 4.19 307/639] PCI: rockchip: Fix rockchip_pcie_ep_assert_intx() bitwise operations
+Date:   Fri, 24 Jan 2020 10:27:57 +0100
+Message-Id: <20200124093125.386544917@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
 References: <20200124093047.008739095@linuxfoundation.org>
@@ -60,45 +62,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Colin Ian King <colin.king@canonical.com>
 
-[ Upstream commit 9ee8578d953023cc57e7e736ae48502c707c0210 ]
+[ Upstream commit c577f4a5a08bb9677e12ddafb62e2f3a901de87f ]
 
-Since commit 1c459de1e645 ("ARM: pxa: ssp: use devm_ functions")
-kfree, iounmap, clk_put etc are not needed anymore in remove path.
+Currently the bitwise operations on the u16 variable 'status' with
+the setting ROCKCHIP_PCIE_EP_CMD_STATUS_IS are incorrect because
+ROCKCHIP_PCIE_EP_CMD_STATUS_IS is 1UL<<19 which is wider than the
+u16 variable.
 
-Fixes: 1c459de1e645 ("ARM: pxa: ssp: use devm_ functions")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-[ commit message spelling fix ]
-Signed-off-by: Robert Jarzmik <robert.jarzmik@free.fr>
+Fix this by making status a u32.
+
+Fixes: cf590b078391 ("PCI: rockchip: Add EP driver for Rockchip PCIe controller")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
+Acked-by: Shawn Lin <shawn.lin@rock-chips.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/plat-pxa/ssp.c | 6 ------
- 1 file changed, 6 deletions(-)
+ drivers/pci/controller/pcie-rockchip-ep.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/plat-pxa/ssp.c b/arch/arm/plat-pxa/ssp.c
-index f519199741837..bf25f780c1c9e 100644
---- a/arch/arm/plat-pxa/ssp.c
-+++ b/arch/arm/plat-pxa/ssp.c
-@@ -183,18 +183,12 @@ static int pxa_ssp_probe(struct platform_device *pdev)
+diff --git a/drivers/pci/controller/pcie-rockchip-ep.c b/drivers/pci/controller/pcie-rockchip-ep.c
+index b8163c56a142d..caf34661d38d4 100644
+--- a/drivers/pci/controller/pcie-rockchip-ep.c
++++ b/drivers/pci/controller/pcie-rockchip-ep.c
+@@ -350,7 +350,7 @@ static void rockchip_pcie_ep_assert_intx(struct rockchip_pcie_ep *ep, u8 fn,
+ 	struct rockchip_pcie *rockchip = &ep->rockchip;
+ 	u32 r = ep->max_regions - 1;
+ 	u32 offset;
+-	u16 status;
++	u32 status;
+ 	u8 msg_code;
  
- static int pxa_ssp_remove(struct platform_device *pdev)
- {
--	struct resource *res;
- 	struct ssp_device *ssp;
- 
- 	ssp = platform_get_drvdata(pdev);
- 	if (ssp == NULL)
- 		return -ENODEV;
- 
--	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	release_mem_region(res->start, resource_size(res));
--
--	clk_put(ssp->clk);
--
- 	mutex_lock(&ssp_lock);
- 	list_del(&ssp->node);
- 	mutex_unlock(&ssp_lock);
+ 	if (unlikely(ep->irq_pci_addr != ROCKCHIP_PCIE_EP_PCI_LEGACY_IRQ_ADDR ||
 -- 
 2.20.1
 
