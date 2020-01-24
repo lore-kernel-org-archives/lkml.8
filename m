@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99592C32771
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C98ECC35243
 	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:37:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6FCBA214DB
+	by mail.kernel.org (Postfix) with ESMTP id 9A9AE24687
 	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:37:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=default; t=1579865849;
-	bh=ch7/w/VLG+E8svC6UFKcketWrqb0LzLOKZT9C7CYEFQ=;
+	bh=DNRBfJkOjtOXNEwpblMuae/A81BxwOgV5+t2yRtpzlI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zRzP+yLhHzHQ7FoIQY9bZ2glyXuDIdjP4fEBPmdWPCYXAi+myM4g5CBAPQW6uv+hd
-	 SAcTq4IBVkSkS5QW09DlfiP/HFHxbswvbclthjJsbvtoiz56EJucMpJqicAu1I5+iV
-	 txhyCusdcjMrQSgObQ1HmGHSwhNSzLgJl6CwW7BU=
+	b=t7LyblzeGm8TqErMQpNPy2dec11uglKP5p13DXyj7ZzWJbL5shRZRa+QpgPNUqW0B
+	 v5KQ9jL8Wa8/70rfu9RwVHcyLd5bTob88sDrPoi5MMCrAhgrg5BY7kpyj56t4MrVjy
+	 WXfqFLJEcWl97To84RSvxT0jP2W/0KoEEgHDYGMs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404944AbgAXLgw (ORCPT
+        id S2391952AbgAXLgj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:36:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56948 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 06:36:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56794 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390527AbgAXLgo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:36:44 -0500
+        id S2391938AbgAXLgc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:36:32 -0500
 Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0D758206D4;
-        Fri, 24 Jan 2020 11:36:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F2E48206D4;
+        Fri, 24 Jan 2020 11:36:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579865803;
-        bh=ch7/w/VLG+E8svC6UFKcketWrqb0LzLOKZT9C7CYEFQ=;
+        s=default; t=1579865791;
+        bh=DNRBfJkOjtOXNEwpblMuae/A81BxwOgV5+t2yRtpzlI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tlrfstm6SQyr3NNlHsb5w/Aj9CW7pmGDpXnkhlPuuKSbpmtNo6WbohdZPy6304pzT
-         ELr9RmYEY31xTi6fHNkxqsJJ2DxAZWOKib2UtRB2etbON1TvjpgNgTJSjPtElq6YFv
-         zmUHi2asrb0e2bCsIrIMCmC5OIRwhiq6YMwH0YPw=
+        b=dHVZPjX8CnGU6o/o+YmBhYNPhizbSfAaP8z2zEdKvJW+JT/QcQtX43hYTmCBzhJ39
+         r5FtxZyBl3i7IMxcMJ7xgVgJ6auXUiqMrPc0Dq/lXNDXNG4Sxt173sRB39zyDm+DxB
+         wcpenWYVeeCvbwbjmwFJlkw4UObQ/WQ3aNd6qz0s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
-        zhengbin <zhengbin13@huawei.com>,
-        David Howells <dhowells@redhat.com>,
+        stable@vger.kernel.org, Kal Cutter Conley <kal.conley@dectris.com>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Jonathan Lemon <jonathan.lemon@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 630/639] afs: Remove set but not used variables before, after
-Date:   Fri, 24 Jan 2020 10:33:20 +0100
-Message-Id: <20200124093208.569581887@linuxfoundation.org>
+Subject: [PATCH 4.19 611/639] xsk: Fix registration of Rx-only sockets
+Date:   Fri, 24 Jan 2020 10:33:01 +0100
+Message-Id: <20200124093206.006311967@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
 References: <20200124093047.008739095@linuxfoundation.org>
@@ -61,84 +62,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: zhengbin <zhengbin13@huawei.com>
+From: Magnus Karlsson <magnus.karlsson@intel.com>
 
-[ Upstream commit 51590df4f3306cb1f43dca54e3ccdd121ab89594 ]
+[ Upstream commit 2afd23f78f39da84937006ecd24aa664a4ab052b ]
 
-Fixes gcc '-Wunused-but-set-variable' warning:
+Having Rx-only AF_XDP sockets can potentially lead to a crash in the
+system by a NULL pointer dereference in xsk_umem_consume_tx(). This
+function iterates through a list of all sockets tied to a umem and
+checks if there are any packets to send on the Tx ring. Rx-only
+sockets do not have a Tx ring, so this will cause a NULL pointer
+dereference. This will happen if you have registered one or more
+Rx-only sockets to a umem and the driver is checking the Tx ring even
+on Rx, or if the XDP_SHARED_UMEM mode is used and there is a mix of
+Rx-only and other sockets tied to the same umem.
 
-fs/afs/dir_edit.c: In function afs_set_contig_bits:
-fs/afs/dir_edit.c:75:20: warning: variable after set but not used [-Wunused-but-set-variable]
-fs/afs/dir_edit.c: In function afs_set_contig_bits:
-fs/afs/dir_edit.c:75:12: warning: variable before set but not used [-Wunused-but-set-variable]
-fs/afs/dir_edit.c: In function afs_clear_contig_bits:
-fs/afs/dir_edit.c:100:20: warning: variable after set but not used [-Wunused-but-set-variable]
-fs/afs/dir_edit.c: In function afs_clear_contig_bits:
-fs/afs/dir_edit.c:100:12: warning: variable before set but not used [-Wunused-but-set-variable]
+Fixed by only putting sockets with a Tx component on the list that
+xsk_umem_consume_tx() iterates over.
 
-They are never used since commit 63a4681ff39c.
-
-Fixes: 63a4681ff39c ("afs: Locally edit directory data for mkdir/create/unlink/...")
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: zhengbin <zhengbin13@huawei.com>
-Signed-off-by: David Howells <dhowells@redhat.com>
+Fixes: ac98d8aab61b ("xsk: wire upp Tx zero-copy functions")
+Reported-by: Kal Cutter Conley <kal.conley@dectris.com>
+Signed-off-by: Magnus Karlsson <magnus.karlsson@intel.com>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Acked-by: Jonathan Lemon <jonathan.lemon@gmail.com>
+Link: https://lore.kernel.org/bpf/1571645818-16244-1-git-send-email-magnus.karlsson@intel.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/afs/dir_edit.c | 12 ++----------
- 1 file changed, 2 insertions(+), 10 deletions(-)
+ net/xdp/xdp_umem.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/fs/afs/dir_edit.c b/fs/afs/dir_edit.c
-index 8b400f5aead58..0e7162527db8c 100644
---- a/fs/afs/dir_edit.c
-+++ b/fs/afs/dir_edit.c
-@@ -72,13 +72,11 @@ static int afs_find_contig_bits(union afs_xdr_dir_block *block, unsigned int nr_
- static void afs_set_contig_bits(union afs_xdr_dir_block *block,
- 				int bit, unsigned int nr_slots)
+diff --git a/net/xdp/xdp_umem.c b/net/xdp/xdp_umem.c
+index d9117ab035f7c..556a649512b60 100644
+--- a/net/xdp/xdp_umem.c
++++ b/net/xdp/xdp_umem.c
+@@ -23,6 +23,9 @@ void xdp_add_sk_umem(struct xdp_umem *umem, struct xdp_sock *xs)
  {
--	u64 mask, before, after;
-+	u64 mask;
+ 	unsigned long flags;
  
- 	mask = (1 << nr_slots) - 1;
- 	mask <<= bit;
- 
--	before = *(u64 *)block->hdr.bitmap;
--
- 	block->hdr.bitmap[0] |= (u8)(mask >> 0 * 8);
- 	block->hdr.bitmap[1] |= (u8)(mask >> 1 * 8);
- 	block->hdr.bitmap[2] |= (u8)(mask >> 2 * 8);
-@@ -87,8 +85,6 @@ static void afs_set_contig_bits(union afs_xdr_dir_block *block,
- 	block->hdr.bitmap[5] |= (u8)(mask >> 5 * 8);
- 	block->hdr.bitmap[6] |= (u8)(mask >> 6 * 8);
- 	block->hdr.bitmap[7] |= (u8)(mask >> 7 * 8);
--
--	after = *(u64 *)block->hdr.bitmap;
- }
- 
- /*
-@@ -97,13 +93,11 @@ static void afs_set_contig_bits(union afs_xdr_dir_block *block,
- static void afs_clear_contig_bits(union afs_xdr_dir_block *block,
- 				  int bit, unsigned int nr_slots)
++	if (!xs->tx)
++		return;
++
+ 	spin_lock_irqsave(&umem->xsk_list_lock, flags);
+ 	list_add_rcu(&xs->list, &umem->xsk_list);
+ 	spin_unlock_irqrestore(&umem->xsk_list_lock, flags);
+@@ -32,6 +35,9 @@ void xdp_del_sk_umem(struct xdp_umem *umem, struct xdp_sock *xs)
  {
--	u64 mask, before, after;
-+	u64 mask;
+ 	unsigned long flags;
  
- 	mask = (1 << nr_slots) - 1;
- 	mask <<= bit;
- 
--	before = *(u64 *)block->hdr.bitmap;
--
- 	block->hdr.bitmap[0] &= ~(u8)(mask >> 0 * 8);
- 	block->hdr.bitmap[1] &= ~(u8)(mask >> 1 * 8);
- 	block->hdr.bitmap[2] &= ~(u8)(mask >> 2 * 8);
-@@ -112,8 +106,6 @@ static void afs_clear_contig_bits(union afs_xdr_dir_block *block,
- 	block->hdr.bitmap[5] &= ~(u8)(mask >> 5 * 8);
- 	block->hdr.bitmap[6] &= ~(u8)(mask >> 6 * 8);
- 	block->hdr.bitmap[7] &= ~(u8)(mask >> 7 * 8);
--
--	after = *(u64 *)block->hdr.bitmap;
- }
- 
- /*
++	if (!xs->tx)
++		return;
++
+ 	spin_lock_irqsave(&umem->xsk_list_lock, flags);
+ 	list_del_rcu(&xs->list);
+ 	spin_unlock_irqrestore(&umem->xsk_list_lock, flags);
 -- 
 2.20.1
 
