@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB60AC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 10:05:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B880C35242
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 10:05:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F72C208C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 10:05:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32B91218AC
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 10:05:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579860331;
-	bh=DmRJo0p4TExwlSUs+a2X+E6ya8Q/AADkX/YVkV2Pce4=;
+	s=default; t=1579860336;
+	bh=Q7xx4an71vgm8Q6EkjRqPJlrk6EEGeC4kkytaZEHXeQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gY29wOW0MLV93ityarzTqh7VvJiyHkqPOSuvXtfvP7BiZQFHnXjJWrXT0rKjWGYAO
-	 786DP+3rMusu8plLCkxpwqsNKL/cpBm5OVk17OW/yAl69ngVhCvd4D44As5XFJfcBO
-	 08bdnw1Q/eLqlQtQYMLYf69hEop3CTTFixyfJjRA=
+	b=pWghNyCWfWK4THOOrBBH/3olZV4fYk+NK+4BKWG/EMz0vnsbPbBfnPE6wu2O7Zeab
+	 o6nJuauKaV921/MH5VUqwRZZ42wHYp1lh/A439Zrxh3KKeyb/FXKVJ6yT/YiKjeB+9
+	 KVPyq+JgkTdCKP4rBFn8Z4u63p/Zs/lko/RZRY2s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389219AbgAXKF0 (ORCPT
+        id S2389234AbgAXKFf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 05:05:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41892 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 05:05:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42038 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730108AbgAXKFW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 05:05:22 -0500
+        id S1731030AbgAXKFa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 05:05:30 -0500
 Received: from localhost (unknown [145.15.244.15])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 036EC214DB;
-        Fri, 24 Jan 2020 10:05:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C1172214DB;
+        Fri, 24 Jan 2020 10:05:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579860321;
-        bh=DmRJo0p4TExwlSUs+a2X+E6ya8Q/AADkX/YVkV2Pce4=;
+        s=default; t=1579860329;
+        bh=Q7xx4an71vgm8Q6EkjRqPJlrk6EEGeC4kkytaZEHXeQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OQkMeEgwJuQ0QKHyKCnqJ/PSAmAQ5CsO3p5JejHIWXggvOoTaCx9noonpRhmfHXI9
-         FxWaP4U2kkzm0i5xznQwEsfCxAgIxSE01CYFWJ7+qet+7FnUU0WhSjunCd3CPYyjN4
-         kg8scUJWJ980gwTjE7HvKlYa2zmwaioCRNn4f8Pw=
+        b=rYg0baYu7AlvsLTxCyK7fmOkWTfRGGISnPpVNOq69G5GLxLaxa/4wJ4opFtrqvA10
+         MwcEw1/6oGJd5ztmU7K24OZqQBOgpGSceu4brtmv+bhk5t9WAAauJgkMKmuP1LPDae
+         3loNMWQNvG75eL1ddX5Nd8jN3nXEwxOrJAs3iqqE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 290/343] bcma: fix incorrect update of BCMA_CORE_PCI_MDIO_DATA
-Date:   Fri, 24 Jan 2020 10:31:48 +0100
-Message-Id: <20200124092958.158292456@linuxfoundation.org>
+        stable@vger.kernel.org, Yong Wu <yong.wu@mediatek.com>,
+        Joerg Roedel <jroedel@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 282/343] iommu/mediatek: Fix iova_to_phys PA start for 4GB mode
+Date:   Fri, 24 Jan 2020 10:31:40 +0100
+Message-Id: <20200124092957.142184323@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124092919.490687572@linuxfoundation.org>
 References: <20200124092919.490687572@linuxfoundation.org>
@@ -60,46 +59,94 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Yong Wu <yong.wu@mediatek.com>
 
-[ Upstream commit 420c20be08a4597404d272ae9793b642401146eb ]
+[ Upstream commit 76ce65464fcd2c21db84391572b7938b716aceb0 ]
 
-An earlier commit re-worked the setting of the bitmask and is now
-assigning v with some bit flags rather than bitwise or-ing them
-into v, consequently the earlier bit-settings of v are being lost.
-Fix this by replacing an assignment with the bitwise or instead.
+In M4U 4GB mode, the physical address is remapped as below:
 
-Addresses-Coverity: ("Unused value")
-Fixes: 2be25cac8402 ("bcma: add constants for PCI and use them")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+CPU Physical address:
+
+====================
+
+0      1G       2G     3G       4G     5G
+|---A---|---B---|---C---|---D---|---E---|
++--I/O--+------------Memory-------------+
+
+IOMMU output physical address:
+ =============================
+
+                                4G      5G     6G      7G      8G
+                                |---E---|---B---|---C---|---D---|
+                                +------------Memory-------------+
+
+The Region 'A'(I/O) can not be mapped by M4U; For Region 'B'/'C'/'D', the
+bit32 of the CPU physical address always is needed to set, and for Region
+'E', the CPU physical address keep as is. something looks like this:
+CPU PA         ->    M4U OUTPUT PA
+0x4000_0000          0x1_4000_0000 (Add bit32)
+0x8000_0000          0x1_8000_0000 ...
+0xc000_0000          0x1_c000_0000 ...
+0x1_0000_0000        0x1_0000_0000 (No change)
+
+Additionally, the iommu consumers always use the CPU phyiscal address.
+
+The PA in the iova_to_phys that is got from v7s always is u32, But
+from the CPU point of view, PA only need add BIT(32) when PA < 0x4000_0000.
+
+Fixes: 30e2fccf9512 ("iommu/mediatek: Enlarge the validate PA range
+for 4GB mode")
+Signed-off-by: Yong Wu <yong.wu@mediatek.com>
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/bcma/driver_pci.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/iommu/mtk_iommu.c | 26 +++++++++++++++++++++++++-
+ 1 file changed, 25 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/bcma/driver_pci.c b/drivers/bcma/driver_pci.c
-index f499a469e66d0..12b2cc9a3fbe8 100644
---- a/drivers/bcma/driver_pci.c
-+++ b/drivers/bcma/driver_pci.c
-@@ -78,7 +78,7 @@ static u16 bcma_pcie_mdio_read(struct bcma_drv_pci *pc, u16 device, u8 address)
- 		v |= (address << BCMA_CORE_PCI_MDIODATA_REGADDR_SHF_OLD);
- 	}
+diff --git a/drivers/iommu/mtk_iommu.c b/drivers/iommu/mtk_iommu.c
+index c30f627004315..0f99e95a1a739 100644
+--- a/drivers/iommu/mtk_iommu.c
++++ b/drivers/iommu/mtk_iommu.c
+@@ -115,6 +115,30 @@ struct mtk_iommu_domain {
  
--	v = BCMA_CORE_PCI_MDIODATA_START;
-+	v |= BCMA_CORE_PCI_MDIODATA_START;
- 	v |= BCMA_CORE_PCI_MDIODATA_READ;
- 	v |= BCMA_CORE_PCI_MDIODATA_TA;
+ static struct iommu_ops mtk_iommu_ops;
  
-@@ -121,7 +121,7 @@ static void bcma_pcie_mdio_write(struct bcma_drv_pci *pc, u16 device,
- 		v |= (address << BCMA_CORE_PCI_MDIODATA_REGADDR_SHF_OLD);
- 	}
++/*
++ * In M4U 4GB mode, the physical address is remapped as below:
++ *
++ * CPU Physical address:
++ * ====================
++ *
++ * 0      1G       2G     3G       4G     5G
++ * |---A---|---B---|---C---|---D---|---E---|
++ * +--I/O--+------------Memory-------------+
++ *
++ * IOMMU output physical address:
++ *  =============================
++ *
++ *                                 4G      5G     6G      7G      8G
++ *                                 |---E---|---B---|---C---|---D---|
++ *                                 +------------Memory-------------+
++ *
++ * The Region 'A'(I/O) can NOT be mapped by M4U; For Region 'B'/'C'/'D', the
++ * bit32 of the CPU physical address always is needed to set, and for Region
++ * 'E', the CPU physical address keep as is.
++ * Additionally, The iommu consumers always use the CPU phyiscal address.
++ */
++#define MTK_IOMMU_4GB_MODE_REMAP_BASE	 0x40000000
++
+ static LIST_HEAD(m4ulist);	/* List all the M4U HWs */
  
--	v = BCMA_CORE_PCI_MDIODATA_START;
-+	v |= BCMA_CORE_PCI_MDIODATA_START;
- 	v |= BCMA_CORE_PCI_MDIODATA_WRITE;
- 	v |= BCMA_CORE_PCI_MDIODATA_TA;
- 	v |= data;
+ #define for_each_m4u(data)	list_for_each_entry(data, &m4ulist, list)
+@@ -404,7 +428,7 @@ static phys_addr_t mtk_iommu_iova_to_phys(struct iommu_domain *domain,
+ 	pa = dom->iop->iova_to_phys(dom->iop, iova);
+ 	spin_unlock_irqrestore(&dom->pgtlock, flags);
+ 
+-	if (data->enable_4GB)
++	if (data->enable_4GB && pa < MTK_IOMMU_4GB_MODE_REMAP_BASE)
+ 		pa |= BIT_ULL(32);
+ 
+ 	return pa;
 -- 
 2.20.1
 
