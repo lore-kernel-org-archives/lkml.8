@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E93BC35244
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:25:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB4E3C35242
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:25:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55C5C2072C
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:25:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 822342072C
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:25:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579875914;
-	bh=t7xgp0eBt/9ZJZ3LBVQDnnhYCOpd/zyuwsptUk1VxEI=;
+	s=default; t=1579875922;
+	bh=WLHXPwq0EdaMgI+zF0ACG1Mj7qwQtreqZgVlFTlDgD0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=s0D2rVxwNxvOnaa4pkYgB87CORZ8fe91FH4FiNFRDSJbpXszfb4Z7P1XgPfb4RrHT
-	 dt9t2jdTSnx+b6QHxSCbiAMh+pHKIVW87dLIK5pdbuN7WACkRwPSaENrJrG/twX6Sg
-	 wbvipHRAlNtNnMian6TZ28a72cMyIIQDvP9ihx5Q=
+	b=Sugv/4tdt5BtgMl62x4psYlFEdaF/WRlXiUEzV/zG5bM9YtyoDnA/lje+OdZSfh4g
+	 9qH1IKz4sgYljodzQ1Ha6u75KUJzlXnyTXUhf2tFiPwmPbe6yRx9hISc7sbp34QCOz
+	 KJFJ+68AQkCzt1fGEPCci/0dZ+ssYaJ4rXTNs+P8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392496AbgAXOZN (ORCPT
+        id S2392251AbgAXOVx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 09:25:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43972 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 09:21:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43776 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392266AbgAXOVz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 09:21:55 -0500
+        id S2392230AbgAXOVs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 09:21:48 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5B16E218AC;
-        Fri, 24 Jan 2020 14:21:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8296F21556;
+        Fri, 24 Jan 2020 14:21:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579875715;
-        bh=t7xgp0eBt/9ZJZ3LBVQDnnhYCOpd/zyuwsptUk1VxEI=;
+        s=default; t=1579875708;
+        bh=WLHXPwq0EdaMgI+zF0ACG1Mj7qwQtreqZgVlFTlDgD0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hXJ4MBnfR7iVM3bbzKitUnOC6uZIyAUERbnBqJdTuOdYrNf5hoCw2/e5IxjSchF2e
-         cLDQpZAk+2K9Ng+0FaqazHgpqa/5gYTzdy527kqZCDpsVUBCUNZmB9pxb1w6SKRPRC
-         EBKjqeBeDOP89sVNZCcUUcDGCS+zMQxyWbO0JKEc=
+        b=y5ADQw3Y8OTk3HOFRgS3yNtIaDiCrzH+wZpI/fB+/q24N7lnyhA40KjJdzCZcQg3G
+         5BNvN/5zV6TNVFOxDsXgnaXUAuQEDzw/6iaIlWpd+bS5d8UvF+gXVAtkZ8WzKhfikK
+         bFp56RFpxWTYSdjVWq1QQN1wrkZkKEjtTc5OnaHs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Yonglong Liu <liuyonglong@huawei.com>,
-        "David S . Miller" <davem@davemloft.net>,
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Johannes Berg <johannes.berg@intel.com>,
         Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 30/32] net: hns: fix soft lockup when there is not enough memory
-Date:   Fri, 24 Jan 2020 09:21:17 -0500
-Message-Id: <20200124142119.30484-30-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 24/32] wireless: wext: avoid gcc -O3 warning
+Date:   Fri, 24 Jan 2020 09:21:11 -0500
+Message-Id: <20200124142119.30484-24-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200124142119.30484-1-sashal@kernel.org>
 References: <20200124142119.30484-1-sashal@kernel.org>
@@ -59,60 +59,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yonglong Liu <liuyonglong@huawei.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit 49edd6a2c456150870ddcef5b7ed11b21d849e13 ]
+[ Upstream commit e16119655c9e6c4aa5767cd971baa9c491f41b13 ]
 
-When there is not enough memory and napi_alloc_skb() return NULL,
-the HNS driver will print error message, and than try again, if
-the memory is not enough for a while, huge error message and the
-retry operation will cause soft lockup.
+After the introduction of CONFIG_CC_OPTIMIZE_FOR_PERFORMANCE_O3,
+the wext code produces a bogus warning:
 
-When napi_alloc_skb() return NULL because of no memory, we can
-get a warn_alloc() call trace, so this patch deletes the error
-message. We already use polling mode to handle irq, but the
-retry operation will render the polling weight inactive, this
-patch just return budget when the rx is not completed to avoid
-dead loop.
+In function 'iw_handler_get_iwstats',
+    inlined from 'ioctl_standard_call' at net/wireless/wext-core.c:1015:9,
+    inlined from 'wireless_process_ioctl' at net/wireless/wext-core.c:935:10,
+    inlined from 'wext_ioctl_dispatch.part.8' at net/wireless/wext-core.c:986:8,
+    inlined from 'wext_handle_ioctl':
+net/wireless/wext-core.c:671:3: error: argument 1 null where non-null expected [-Werror=nonnull]
+   memcpy(extra, stats, sizeof(struct iw_statistics));
+   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+In file included from arch/x86/include/asm/string.h:5,
+net/wireless/wext-core.c: In function 'wext_handle_ioctl':
+arch/x86/include/asm/string_64.h:14:14: note: in a call to function 'memcpy' declared here
 
-Fixes: 36eedfde1a36 ("net: hns: Optimize hns_nic_common_poll for better performance")
-Fixes: b5996f11ea54 ("net: add Hisilicon Network Subsystem basic ethernet support")
-Signed-off-by: Yonglong Liu <liuyonglong@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+The problem is that ioctl_standard_call() sometimes calls the handler
+with a NULL argument that would cause a problem for iw_handler_get_iwstats.
+However, iw_handler_get_iwstats never actually gets called that way.
+
+Marking that function as noinline avoids the warning and leads
+to slightly smaller object code as well.
+
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Link: https://lore.kernel.org/r/20200107200741.3588770-1-arnd@arndb.de
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/hisilicon/hns/hns_enet.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ net/wireless/wext-core.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns/hns_enet.c b/drivers/net/ethernet/hisilicon/hns/hns_enet.c
-index b681c07b33fb6..0733745f4be6c 100644
---- a/drivers/net/ethernet/hisilicon/hns/hns_enet.c
-+++ b/drivers/net/ethernet/hisilicon/hns/hns_enet.c
-@@ -669,7 +669,6 @@ static int hns_nic_poll_rx_skb(struct hns_nic_ring_data *ring_data,
- 	skb = *out_skb = napi_alloc_skb(&ring_data->napi,
- 					HNS_RX_HEAD_SIZE);
- 	if (unlikely(!skb)) {
--		netdev_err(ndev, "alloc rx skb fail\n");
- 		ring->stats.sw_err_cnt++;
- 		return -ENOMEM;
- 	}
-@@ -1180,7 +1179,6 @@ static int hns_nic_common_poll(struct napi_struct *napi, int budget)
- 		container_of(napi, struct hns_nic_ring_data, napi);
- 	struct hnae_ring *ring = ring_data->ring;
+diff --git a/net/wireless/wext-core.c b/net/wireless/wext-core.c
+index 6cdb054484d66..5236a3c2c0ccf 100644
+--- a/net/wireless/wext-core.c
++++ b/net/wireless/wext-core.c
+@@ -659,7 +659,8 @@ struct iw_statistics *get_wireless_stats(struct net_device *dev)
+ 	return NULL;
+ }
  
--try_again:
- 	clean_complete += ring_data->poll_one(
- 				ring_data, budget - clean_complete,
- 				ring_data->ex_process);
-@@ -1190,7 +1188,7 @@ try_again:
- 			napi_complete(napi);
- 			ring->q->handle->dev->ops->toggle_ring_irq(ring, 0);
- 		} else {
--			goto try_again;
-+			return budget;
- 		}
- 	}
- 
+-static int iw_handler_get_iwstats(struct net_device *		dev,
++/* noinline to avoid a bogus warning with -O3 */
++static noinline int iw_handler_get_iwstats(struct net_device *	dev,
+ 				  struct iw_request_info *	info,
+ 				  union iwreq_data *		wrqu,
+ 				  char *			extra)
 -- 
 2.20.1
 
