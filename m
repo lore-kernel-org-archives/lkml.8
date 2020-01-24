@@ -2,181 +2,87 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72FFBC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 18:51:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0ACFC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 18:53:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C1E52071E
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 18:51:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SZ0TiCZ4"
+	by mail.kernel.org (Postfix) with ESMTP id 8140B2075D
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 18:53:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391539AbgAXSvo (ORCPT
+        id S2391546AbgAXSxW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 13:51:44 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:52395 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2387486AbgAXSvo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 13:51:44 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579891903;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=XNYcGFHB8MpC+O12qo0g1indJArhKKcDwFGEXrECvxI=;
-        b=SZ0TiCZ4b3F3d3HXkFuDe9b/r97RPnmwGoe+nsUb6YV5XdapLKTkh6CJGjK2iT0KtXqaMz
-        QsRjK3smZMJcRsRU+s3g8mAVMQOD/WU9YsEnXc2ZVSndh/8HWa7x+Bwq6XQLAXJFBWrVNl
-        SEmMm4Pz8M6bA9A837IoxTbuuvEJIh8=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-330-iLqwZjl6P8afKnIINf2pVA-1; Fri, 24 Jan 2020 13:51:39 -0500
-X-MC-Unique: iLqwZjl6P8afKnIINf2pVA-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 94EBE10054E3;
-        Fri, 24 Jan 2020 18:51:36 +0000 (UTC)
-Received: from llong.remote.csb (ovpn-124-92.rdu2.redhat.com [10.10.124.92])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 4C3C58681F;
-        Fri, 24 Jan 2020 18:51:34 +0000 (UTC)
-Subject: Re: [PATCH v8 4/5] locking/qspinlock: Introduce starvation avoidance
- into CNA
-From:   Waiman Long <longman@redhat.com>
-To:     Alex Kogan <alex.kogan@oracle.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>, linux@armlinux.org.uk,
-        Ingo Molnar <mingo@redhat.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>, linux-arch@vger.kernel.org,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>, hpa@zytor.com, x86@kernel.org,
-        Hanjun Guo <guohanjun@huawei.com>,
-        Jan Glauber <jglauber@marvell.com>,
-        Steven Sistare <steven.sistare@oracle.com>,
-        Daniel Jordan <daniel.m.jordan@oracle.com>,
-        dave.dice@oracle.com
-References: <20191230194042.67789-1-alex.kogan@oracle.com>
- <20191230194042.67789-5-alex.kogan@oracle.com>
- <20200121132949.GL14914@hirez.programming.kicks-ass.net>
- <cfdf635d-be2e-9d4b-c4ca-6bcbddc6868f@redhat.com>
- <3862F8A1-FF9B-40AD-A88E-2C0BA7AF6F58@oracle.com>
- <20200124075235.GX14914@hirez.programming.kicks-ass.net>
- <2c6741c5-d89d-4b2c-cebe-a7c7f6eed884@redhat.com>
- <48ce49e5-98a7-23cd-09f4-8290a65abbb5@redhat.com>
- <8D3AFB47-B595-418C-9568-08780DDC58FF@oracle.com>
- <714892cd-d96f-4d41-ae8b-d7b7642a6e3c@redhat.com>
- <1669BFDE-A1A5-4ED8-B586-035460BBF68A@oracle.com>
- <45660873-731a-a810-8c57-1a5a19d266b4@redhat.com>
-Organization: Red Hat
-Message-ID: <b26837a9-d0cd-4413-95ec-1deaca184324@redhat.com>
-Date:   Fri, 24 Jan 2020 13:51:34 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
-MIME-Version: 1.0
-In-Reply-To: <45660873-731a-a810-8c57-1a5a19d266b4@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-Content-Transfer-Encoding: quoted-printable
+        Fri, 24 Jan 2020 13:53:22 -0500
+Received: from mga04.intel.com ([192.55.52.120]:59351 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387486AbgAXSxW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 13:53:22 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Jan 2020 10:53:21 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,358,1574150400"; 
+   d="scan'208";a="222692766"
+Received: from unknown (HELO gayuk-dev-mach.sc.intel.com) ([10.3.79.172])
+  by fmsmga008.fm.intel.com with ESMTP; 24 Jan 2020 10:53:21 -0800
+From:   Gayatri Kammela <gayatri.kammela@intel.com>
+To:     platform-driver-x86@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, vishwanath.somayaji@intel.com,
+        dvhart@infradead.org, mika.westerberg@intel.com,
+        peterz@infradead.org, charles.d.prestopine@intel.com,
+        Gayatri Kammela <gayatri.kammela@intel.com>,
+        Srinivas Pandruvada <srinivas.pandruvada@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        David Box <david.e.box@intel.com>
+Subject: [PATCH v1 0/7] platform/x86: intel_pmc_core: Add debugfs entries
+Date:   Fri, 24 Jan 2020 10:50:21 -0800
+Message-Id: <cover.1579890793.git.gayatri.kammela@intel.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/24/20 1:40 PM, Waiman Long wrote:
-> On 1/24/20 1:19 PM, Alex Kogan wrote:
->>
->>
->>> On Jan 24, 2020, at 11:46 AM, Waiman Long <longman@redhat.com
->>> <mailto:longman@redhat.com>> wrote:
->>>
->>> On 1/24/20 11:29 AM, Alex Kogan wrote:
->>>>
->>>>
->>>>> On Jan 24, 2020, at 10:19 AM, Waiman Long <longman@redhat.com
->>>>> <mailto:longman@redhat.com>> wrote:
->>>>>
->>>>> On 1/24/20 9:42 AM, Waiman Long wrote:
->>>>>> On 1/24/20 2:52 AM, Peter Zijlstra wrote:
->>>>>>> On Thu, Jan 23, 2020 at 04:33:54PM -0500, Alex Kogan wrote:
->>>>>>>> Let me put this question to you. What do you think the number
->>>>>>>> should be?
->>>>>>> I think it would be very good to keep the inter-node latency
->>>>>>> below 1ms.
->>>>>> It is hard to guarantee that given that lock hold times can vary
->>>>>> quite a
->>>>>> lot depending on the workload. What we can control is just how man=
-y
->>>>>> later lock waiters can jump ahead before a given waiter.
->>>> I totally agree. I do not think you can guarantee that latency even
->>>> today.
->>>> With the existing spinlock, you join the queue and wait for as long
->>>> as it takes
->>>> for each and every thread in front of you to execute its critical
->>>> section.
->>>>
->>>>>>> But to realize that we need data on the lock hold times.
->>>>>>> Specifically
->>>>>>> for the heavily contended locks that make CNA worth it in the fir=
-st
->>>>>>> place.
->>>>>>>
->>>>>>> I don't see that data, so I don't see how we can argue about
->>>>>>> this let
->>>>>>> alone call something reasonable.
->>>>>>>
->>>>>> In essence, CNA lock is for improving throughput on NUMA machines
->>>>>> at the
->>>>>> expense of increasing worst case latency. If low latency is
->>>>>> important,
->>>>>> it should be disabled. If CONFIG_PREEMPT_RT is on,
->>>>>> CONFIG_NUMA_AWARE_SPINLOCKS should be off.
->>>>>
->>>>> Actually, what we are worrying about is the additional latency
->>>>> that can
->>>>> be added to important tasks or execution contexts that are waiting
->>>>> for a
->>>>> lock. Maybe we can make CNA lock behaves somewhat like qrwlock is t=
-hat
->>>>> requests from interrupt context are giving priority. We could add a
->>>>> priority flag in the CNA node. If the flag is set, we will never
->>>>> put it
->>>>> into the secondary queue. In fact, we can transfer control next to =
-it
->>>>> even if it is not on the same node. We may also set the priority
->>>>> flag if
->>>>> it is a RT task that is trying to acquire the lock.
->>>> I think this is possible, and in fact, we have been thinking along
->>>> those lines
->>>> about ways to better support RT tasks with CNA. However, this will
->>>> _probably
->>>> require changes to API and will _certainly complicate the code
->>>> quite a bit.
->>>
->>> What you need to do is to modify cna_init_node() to check the
->>> current locking context and set the priority flag accordingly.
->>>
->> Is there a lightweight way to identify such a =E2=80=9Cprioritized=E2=80=
-=9D thread?
->
-> You can use the in_task() macro in include/linux/preempt.h. This is
-> just a percpu preempt_count read and test. If in_task() is false, it
-> is in a {soft|hard}irq or nmi context. If it is true, you can check
-> the rt_task() macro to see if it is an RT task. That will access to
-> the current task structure. So it may cost a little bit more if you
-> want to handle the RT task the same way.
->
-We may not need to do that for softIRQ context. If that is the case, you
-can use in_irq() which checks for hardirq and nmi only. Peter, what is
-your thought on that?
+Hi,
 
-Cheers,
-Longman
+Tiger Lake platform supports 8 sub-states/low power modes of S0ix. Add
+debugfs entries to pmc_core driver to access low power mode registers
+and residencies.
 
+Patch 1: Add debugfs entry to access sub-state residencies
+Patch 2: Add debugfs entry for low power mode status registers
+Patch 3: Refactor the driver by removing redundant code
+Patch 4: Remove slp_s0 attributes from tgl_reg_map
+Patch 5: Add an additional parameter to pmc_core_lpm_display_map()
+Patch 6: Dump low power status registers on an S0ix.y failure
+Patch 7: Add debugfs support to access live status registers
+
+Gayatri Kammela (7):
+  platform/x86: intel_pmc_core: Add debugfs entry to access sub-state
+    residencies
+  platform/x86: intel_pmc_core: Add debugfs entry for low power mode
+    status registers
+  platform/x86: intel_pmc_core: Refactor the driver by removing
+    redundant code
+  platform/x86: intel_pmc_core: Remove slp_s0 attributes from
+    tgl_reg_map
+  platform/x86: intel_pmc_core: Add an additional parameter to
+    pmc_core_lpm_display()
+  platform/x86: intel_pmc_core: Dump low power status registers on an
+    S0ix.y failure
+  platform/x86: intel_pmc_core: Add debugfs support to access live
+    status registers
+
+ drivers/platform/x86/intel_pmc_core.c | 301 +++++++++++++++++++++++---
+ drivers/platform/x86/intel_pmc_core.h |  28 +++
+ 2 files changed, 302 insertions(+), 27 deletions(-)
+
+Cc: Srinivas Pandruvada <srinivas.pandruvada@intel.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: David Box <david.e.box@intel.com>
+-- 
+2.17.1
 
