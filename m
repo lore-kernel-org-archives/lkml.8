@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEE00C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:38:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E3FAC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:38:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A8F9206F0
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:38:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 296712071A
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:38:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579876717;
-	bh=vQ+VRUWqZvHfu70GmDAAlI1wZqRONm9x3XytVHCr2A4=;
+	s=default; t=1579876722;
+	bh=+I5ykO5NXtCEJfLJit9LMgzYwZuR+pnoXVd6Iosr3M8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cL7CL/t9TfHcMqrwbhVR4A/L+41byXAdKbu/NT0TJUDK/cIrMogyD6vT/Vc9wJpf7
-	 h6YqJ8K0DHgfWic0Pr3V+1GYKIpcHMBSHBWNHJJqP9icaKLxbDsJU+T7gYF/bN1o99
-	 B/QT6HxhmCE+t1PeOoBC/B7eNduMuPdFs6y4EF80=
+	b=vXLd79SsGbzpX+VpLMaZogWTj61QGQUuKEb6GvF+cmpaen7tByMlCgN2MbbMgUqGp
+	 +tpXHopr7z30nquAVXmVS6S9afKmgCP6HmNQJIie7LLDyqxtEpS9ocDYt/wYo4l6YK
+	 Tpk/FTHWvlS2F46/H59lDFiKwcCXZkcNDVfrGanw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388688AbgAXOig (ORCPT
+        id S2390958AbgAXOSj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 09:38:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38494 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 09:18:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38118 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389267AbgAXOSo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 09:18:44 -0500
+        id S2390893AbgAXOSh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 09:18:37 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0413C208C4;
-        Fri, 24 Jan 2020 14:18:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6216020838;
+        Fri, 24 Jan 2020 14:18:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579875523;
-        bh=vQ+VRUWqZvHfu70GmDAAlI1wZqRONm9x3XytVHCr2A4=;
+        s=default; t=1579875516;
+        bh=+I5ykO5NXtCEJfLJit9LMgzYwZuR+pnoXVd6Iosr3M8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=m/C2jBPsTzKbWMqVEyktoIBy60KaO24eiClo8U/EE/RW7MKSzUP0j1LATGcWLss+w
-         D6sR+b4D35iNJ4Kz79/0X+jnrW9R+U3PyHNrYeP4gYSaGzPxpk2c0/3HtOuHHZox4+
-         hERPDqzKMs4dfqAAooeSttHRdwPUB5GmTx0uLBPU=
+        b=eAMCnbuVP71YhDIlg6xokDhb/rsL+0IMjUuLucYeCCxRqIhu5M+PLrpiK7E2RpoLM
+         i6IabTPT3hrj+1gXEmLNGV64RVS/6SFAma5x/iP4bKnfD/0WxS0knPqgnFq/NJgldL
+         ZwNsOM3FSamqK4bYwjdzFUylkjIk7t+Yz9f6J/Wc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Guenter Roeck <linux@roeck-us.net>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-clk@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 022/107] clk: Don't try to enable critical clocks if prepare failed
-Date:   Fri, 24 Jan 2020 09:16:52 -0500
-Message-Id: <20200124141817.28793-22-sashal@kernel.org>
+Cc:     Peng Fan <peng.fan@nxp.com>, Fabio Estevam <festevam@gmail.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 016/107] ARM: dts: imx7ulp: fix reg of cpu node
+Date:   Fri, 24 Jan 2020 09:16:46 -0500
+Message-Id: <20200124141817.28793-16-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200124141817.28793-1-sashal@kernel.org>
 References: <20200124141817.28793-1-sashal@kernel.org>
@@ -60,67 +60,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guenter Roeck <linux@roeck-us.net>
+From: Peng Fan <peng.fan@nxp.com>
 
-[ Upstream commit 12ead77432f2ce32dea797742316d15c5800cb32 ]
+[ Upstream commit b8ab62ff7199fac8ce27fa4a149929034fabe7f8 ]
 
-The following traceback is seen if a critical clock fails to prepare.
+According to arm cpus binding doc,
+"
+      On 32-bit ARM v7 or later systems this property is
+        required and matches the CPU MPIDR[23:0] register
+        bits.
 
-bcm2835-clk 3f101000.cprman: plld: couldn't lock PLL
-------------[ cut here ]------------
-Enabling unprepared plld_per
-WARNING: CPU: 1 PID: 1 at drivers/clk/clk.c:1014 clk_core_enable+0xcc/0x2c0
-...
-Call trace:
- clk_core_enable+0xcc/0x2c0
- __clk_register+0x5c4/0x788
- devm_clk_hw_register+0x4c/0xb0
- bcm2835_register_pll_divider+0xc0/0x150
- bcm2835_clk_probe+0x134/0x1e8
- platform_drv_probe+0x50/0xa0
- really_probe+0xd4/0x308
- driver_probe_device+0x54/0xe8
- device_driver_attach+0x6c/0x78
- __driver_attach+0x54/0xd8
-...
+        Bits [23:0] in the reg cell must be set to
+        bits [23:0] in MPIDR.
 
-Check return values from clk_core_prepare() and clk_core_enable() and
-bail out if any of those functions returns an error.
+        All other bits in the reg cell must be set to 0.
+"
 
-Cc: Jerome Brunet <jbrunet@baylibre.com>
-Fixes: 99652a469df1 ("clk: migrate the count of orphaned clocks at init")
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-Link: https://lkml.kernel.org/r/20191225163429.29694-1-linux@roeck-us.net
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+In i.MX7ULP, the MPIDR[23:0] is 0xf00, not 0, so fix it.
+Otherwise there will be warning:
+"DT missing boot CPU MPIDR[23:0], fall back to default cpu_logical_map"
+
+Fixes: 20434dc92c05 ("ARM: dts: imx: add common imx7ulp dtsi support")
+Signed-off-by: Peng Fan <peng.fan@nxp.com>
+Reviewed-by: Fabio Estevam <festevam@gmail.com>
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/clk.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/imx7ulp.dtsi | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
-index 4fc294c2f9e8f..67f592fa083ab 100644
---- a/drivers/clk/clk.c
-+++ b/drivers/clk/clk.c
-@@ -3408,11 +3408,17 @@ static int __clk_core_init(struct clk_core *core)
- 	if (core->flags & CLK_IS_CRITICAL) {
- 		unsigned long flags;
+diff --git a/arch/arm/boot/dts/imx7ulp.dtsi b/arch/arm/boot/dts/imx7ulp.dtsi
+index 6859a3a83750c..3dac6898cdc57 100644
+--- a/arch/arm/boot/dts/imx7ulp.dtsi
++++ b/arch/arm/boot/dts/imx7ulp.dtsi
+@@ -37,10 +37,10 @@
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
  
--		clk_core_prepare(core);
-+		ret = clk_core_prepare(core);
-+		if (ret)
-+			goto out;
+-		cpu0: cpu@0 {
++		cpu0: cpu@f00 {
+ 			compatible = "arm,cortex-a7";
+ 			device_type = "cpu";
+-			reg = <0>;
++			reg = <0xf00>;
+ 		};
+ 	};
  
- 		flags = clk_enable_lock();
--		clk_core_enable(core);
-+		ret = clk_core_enable(core);
- 		clk_enable_unlock(flags);
-+		if (ret) {
-+			clk_core_unprepare(core);
-+			goto out;
-+		}
- 	}
- 
- 	clk_core_reparent_orphans_nolock();
 -- 
 2.20.1
 
