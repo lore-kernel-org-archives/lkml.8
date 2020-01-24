@@ -4,48 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95AC4C35240
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 01:20:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1779DC35240
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 01:20:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67A0B206A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 01:20:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE0FF206A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 01:20:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579828842;
-	bh=Xur6KrKipTRqWWNla9uWgEdvtDZqeoxFAJREB2/ToTg=;
+	s=default; t=1579828848;
+	bh=211t5XzXWX/CIo9MpU3YiGbam3sw1bdHL6udOFgw1+E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yd//nQzIMqfJWfLKI+LrIozNzLM+E2H7PT767PYtQ3mdjj0xdHklvW0lexgyqoxxn
-	 KXeKwb8R4BfgXkpjOVCnwk4zjbIxHnodTSyPr+5FuTTcrNV2ZwUsTBtgYKV4Gh1ZjR
-	 IwGadIN6rTJnIufAadpf/NBVsf0Ck0inlXenMHvI=
+	b=BJsBp9/RcLK/YzOzJVHqNzv4b4sRqXemaq8ERhNdaQAhBg0MwOCN79w+SlDTWtWqq
+	 04JWlrUNo3Va6/ob2TOL+RHOhthM4coqX4ZWvtDAGaZDtFnPqn4yUNUkvEYGKdFsnj
+	 40SaLzCO9c2ZVQDFcjDg7/D8Mdr8JgoSDOB1mUvY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729641AbgAXBUl (ORCPT
+        id S1729770AbgAXBUq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 20:20:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60314 "EHLO mail.kernel.org"
+        Thu, 23 Jan 2020 20:20:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60226 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730336AbgAXBRV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 20:17:21 -0500
+        id S1730373AbgAXBRT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jan 2020 20:17:19 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3209924125;
-        Fri, 24 Jan 2020 01:17:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BEC9B2087E;
+        Fri, 24 Jan 2020 01:17:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579828640;
-        bh=Xur6KrKipTRqWWNla9uWgEdvtDZqeoxFAJREB2/ToTg=;
+        s=default; t=1579828638;
+        bh=211t5XzXWX/CIo9MpU3YiGbam3sw1bdHL6udOFgw1+E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CBKSYrom65fC0DdZYEG0hXYj+M3JHDl/Yoq0rX412KIUIyIb3lOxd8LHlgXH1PjVN
-         OkE6fP5NXdscUYamgE5queWWsIoOvx6wmEbfW81//E9mbUPwn7SB+kxECnRHC5YGWf
-         K1ljAY5NSIA9OHnL+Kdme5IcB9x7h7YAi8RjkdNE=
+        b=l3+oPbPvDDpkUxWJ5MN801KO0X+bEsnI9BACfh9GGoECGX5jUHp8aFgPb6zms8Dn3
+         vczg1vvkZIiCspdqmWM8o+M05VRMpioYfPp0F+W9AHAOkoaoF8aDUij84ClJrNpr7w
+         xpJKxQ9neSGlkRMyDwt2bbt/Ova53u0Sw+SyC2AE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tony Lindgren <tony@atomide.com>, Sasha Levin <sashal@kernel.org>,
-        linux-omap@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 10/33] bus: ti-sysc: Handle mstandby quirk and use it for musb
-Date:   Thu, 23 Jan 2020 20:16:45 -0500
-Message-Id: <20200124011708.18232-10-sashal@kernel.org>
+Cc:     Slawomir Pawlowski <slawomir.pawlowski@intel.com>,
+        Przemek Kitszel <przemyslawx.kitszel@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 08/33] PCI: Add DMA alias quirk for Intel VCA NTB
+Date:   Thu, 23 Jan 2020 20:16:43 -0500
+Message-Id: <20200124011708.18232-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200124011708.18232-1-sashal@kernel.org>
 References: <20200124011708.18232-1-sashal@kernel.org>
@@ -58,61 +60,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tony Lindgren <tony@atomide.com>
+From: Slawomir Pawlowski <slawomir.pawlowski@intel.com>
 
-[ Upstream commit 03856e928b0e1a1c274eece1dfe4330a362c37f3 ]
+[ Upstream commit 56b4cd4b7da9ee95778eb5c8abea49f641ebfd91 ]
 
-We need swsup quirks for sidle and mstandby for musb to work
-properly.
+Intel Visual Compute Accelerator (VCA) is a family of PCIe add-in devices
+exposing computational units via Non Transparent Bridges (NTB, PEX 87xx).
 
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+Similarly to MIC x200, we need to add DMA aliases to allow buffer access
+when IOMMU is enabled.
+
+Add aliases to allow computational unit access to host memory.  These
+aliases mark the whole VCA device as one IOMMU group.
+
+All possible slot numbers (0x20) are used, since we are unable to tell what
+slot is used on other side.  This quirk is intended for both host and
+computational unit sides.  The VCA devices have up to five functions: four
+for DMA channels and one additional.
+
+Link: https://lore.kernel.org/r/5683A335CC8BE1438C3C30C49DCC38DF637CED8E@IRSMSX102.ger.corp.intel.com
+Signed-off-by: Slawomir Pawlowski <slawomir.pawlowski@intel.com>
+Signed-off-by: Przemek Kitszel <przemyslawx.kitszel@intel.com>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/bus/ti-sysc.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ drivers/pci/quirks.c | 34 ++++++++++++++++++++++++++++++++++
+ 1 file changed, 34 insertions(+)
 
-diff --git a/drivers/bus/ti-sysc.c b/drivers/bus/ti-sysc.c
-index 34bd9bf4e68ab..087684e5e0941 100644
---- a/drivers/bus/ti-sysc.c
-+++ b/drivers/bus/ti-sysc.c
-@@ -917,6 +917,9 @@ set_midle:
- 		return -EINVAL;
- 	}
+diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+index 308f744393ebe..2544e210b9840 100644
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -4080,6 +4080,40 @@ static void quirk_mic_x200_dma_alias(struct pci_dev *pdev)
+ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x2260, quirk_mic_x200_dma_alias);
+ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x2264, quirk_mic_x200_dma_alias);
  
-+	if (ddata->cfg.quirks & SYSC_QUIRK_SWSUP_MSTANDBY)
-+		best_mode = SYSC_IDLE_NO;
++/*
++ * Intel Visual Compute Accelerator (VCA) is a family of PCIe add-in devices
++ * exposing computational units via Non Transparent Bridges (NTB, PEX 87xx).
++ *
++ * Similarly to MIC x200, we need to add DMA aliases to allow buffer access
++ * when IOMMU is enabled.  These aliases allow computational unit access to
++ * host memory.  These aliases mark the whole VCA device as one IOMMU
++ * group.
++ *
++ * All possible slot numbers (0x20) are used, since we are unable to tell
++ * what slot is used on other side.  This quirk is intended for both host
++ * and computational unit sides.  The VCA devices have up to five functions
++ * (four for DMA channels and one additional).
++ */
++static void quirk_pex_vca_alias(struct pci_dev *pdev)
++{
++	const unsigned int num_pci_slots = 0x20;
++	unsigned int slot;
 +
- 	reg &= ~(SYSC_IDLE_MASK << regbits->midle_shift);
- 	reg |= best_mode << regbits->midle_shift;
- 	sysc_write(ddata, ddata->offsets[SYSC_SYSCONFIG], reg);
-@@ -978,6 +981,9 @@ static int sysc_disable_module(struct device *dev)
- 		return ret;
- 	}
- 
-+	if (ddata->cfg.quirks & SYSC_QUIRK_SWSUP_MSTANDBY)
-+		best_mode = SYSC_IDLE_FORCE;
++	for (slot = 0; slot < num_pci_slots; slot++) {
++		pci_add_dma_alias(pdev, PCI_DEVFN(slot, 0x0));
++		pci_add_dma_alias(pdev, PCI_DEVFN(slot, 0x1));
++		pci_add_dma_alias(pdev, PCI_DEVFN(slot, 0x2));
++		pci_add_dma_alias(pdev, PCI_DEVFN(slot, 0x3));
++		pci_add_dma_alias(pdev, PCI_DEVFN(slot, 0x4));
++	}
++}
++DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x2954, quirk_pex_vca_alias);
++DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x2955, quirk_pex_vca_alias);
++DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x2956, quirk_pex_vca_alias);
++DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x2958, quirk_pex_vca_alias);
++DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x2959, quirk_pex_vca_alias);
++DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x295A, quirk_pex_vca_alias);
 +
- 	reg &= ~(SYSC_IDLE_MASK << regbits->midle_shift);
- 	reg |= best_mode << regbits->midle_shift;
- 	sysc_write(ddata, ddata->offsets[SYSC_SYSCONFIG], reg);
-@@ -1251,6 +1257,8 @@ static const struct sysc_revision_quirk sysc_revision_quirks[] = {
- 	SYSC_QUIRK("gpu", 0x50000000, 0x14, -1, -1, 0x00010201, 0xffffffff, 0),
- 	SYSC_QUIRK("gpu", 0x50000000, 0xfe00, 0xfe10, -1, 0x40000000 , 0xffffffff,
- 		   SYSC_MODULE_QUIRK_SGX),
-+	SYSC_QUIRK("usb_otg_hs", 0, 0x400, 0x404, 0x408, 0x00000050,
-+		   0xffffffff, SYSC_QUIRK_SWSUP_SIDLE | SYSC_QUIRK_SWSUP_MSTANDBY),
- 	SYSC_QUIRK("wdt", 0, 0, 0x10, 0x14, 0x502a0500, 0xfffff0f0,
- 		   SYSC_MODULE_QUIRK_WDT),
- 	/* Watchdog on am3 and am4 */
-@@ -1309,8 +1317,6 @@ static const struct sysc_revision_quirk sysc_revision_quirks[] = {
- 	SYSC_QUIRK("usbhstll", 0, 0, 0x10, 0x14, 0x00000008, 0xffffffff, 0),
- 	SYSC_QUIRK("usb_host_hs", 0, 0, 0x10, 0x14, 0x50700100, 0xffffffff, 0),
- 	SYSC_QUIRK("usb_host_hs", 0, 0, 0x10, -1, 0x50700101, 0xffffffff, 0),
--	SYSC_QUIRK("usb_otg_hs", 0, 0x400, 0x404, 0x408, 0x00000050,
--		   0xffffffff, 0),
- 	SYSC_QUIRK("vfpe", 0, 0, 0x104, -1, 0x4d001200, 0xffffffff, 0),
- #endif
- };
+ /*
+  * The IOMMU and interrupt controller on Broadcom Vulcan/Cavium ThunderX2 are
+  * associated not at the root bus, but at a bridge below. This quirk avoids
 -- 
 2.20.1
 
