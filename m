@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9CB2C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:01:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45851C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:01:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD6142071A
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:01:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12EE62071A
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:01:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579863677;
-	bh=KU8PfJUa6fdmlzZuEbVLvGlGX2RO86ME0LZgXXhZrqw=;
+	s=default; t=1579863681;
+	bh=KAzaguREQ3RaeAQy55+/Xuv+pFlbqm53eOVOgzlveEM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=escfzuISH6XHNL1jnywfGshbZMZcBKSHiHWev41WOZI1RWHdKxzjyDNORwm26Qu8W
-	 H4V5DeQtFNvD6a/XfbvvHniOR3sKrgkQhB/X+HFPF3ceIEPmIQs2aU7UxwzWqodSv3
-	 mv2NrcwoSbf3zT3Pw25mxX8N1Uvq4EvdAHIjjLCk=
+	b=U+YFRFJ09JIEenWIcP7eavY51F/xVSZ8cPfSeFdmv/QGZD/SuGVPA/NDRIr9746ra
+	 04p+cpvtByXyKgAud+8LTa1jC88o5xy6jtCTu/+GzvxaG61vJ5prEGObuM1LOPFRNx
+	 IdkzL2OfAvqVyIhsOQq7wSMTNguHjv2ApByOw168=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387614AbgAXLBQ (ORCPT
+        id S2387641AbgAXLBU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:01:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33888 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 06:01:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34024 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730614AbgAXLBP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:01:15 -0500
+        id S1730614AbgAXLBT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:01:19 -0500
 Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 89C562071A;
-        Fri, 24 Jan 2020 11:01:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EFC022077C;
+        Fri, 24 Jan 2020 11:01:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579863674;
-        bh=KU8PfJUa6fdmlzZuEbVLvGlGX2RO86ME0LZgXXhZrqw=;
+        s=default; t=1579863678;
+        bh=KAzaguREQ3RaeAQy55+/Xuv+pFlbqm53eOVOgzlveEM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2sRGgQHXQ0X5wa1fsHDWCjhcdqwC8vd1Qf4D3s3jeObf1YJOkHMkOnpkPvRlSEXcG
-         C33fRVSyEmTcDIuLnyd+czEaNUF7j9c8eT+xR4ka43BIySM31NtzK3xX2GbGvAyGT+
-         fcu6xXO2SQCH5o1NpvpAOzEfcQZPU2qRhJ1XQdk0=
+        b=JemysKp7I7qDj5/WS5bcY9fLzKZD1Z+QrsL+PwuTQfRlsO5HDU7dgf7D4iiFx68Kt
+         R72iescrdAv3kEr12CbtBonb7vL2LS+lBXmaNL2lFR1yLwKg/Us/UYinaRBeNvgT9T
+         w+G/1gw1ky4M9p33AZOFcn7G2u6BNUyeJCxgNaxM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Charles Keepax <ckeepax@opensource.cirrus.com>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 034/639] ASoC: wm9712: fix unused variable warning
-Date:   Fri, 24 Jan 2020 10:23:24 +0100
-Message-Id: <20200124093051.703049750@linuxfoundation.org>
+Subject: [PATCH 4.19 050/639] pwm: lpss: Release runtime-pm reference from the drivers remove callback
+Date:   Fri, 24 Jan 2020 10:23:40 +0100
+Message-Id: <20200124093053.680658951@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
 References: <20200124093047.008739095@linuxfoundation.org>
@@ -61,45 +62,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Hans de Goede <hdegoede@redhat.com>
 
-[ Upstream commit 18380dcc52cc8965e5144ce33fdfad7e168679a5 ]
+[ Upstream commit 42885551cedb45961879d2fc3dc3c4dc545cc23e ]
 
-The 'ret' variable is now only used in an #ifdef, and causes a
-warning if it is declared outside of that block:
+For each pwm output which gets enabled through pwm_lpss_apply(), we do a
+pm_runtime_get_sync().
 
-sound/soc/codecs/wm9712.c: In function 'wm9712_soc_probe':
-sound/soc/codecs/wm9712.c:641:6: error: unused variable 'ret' [-Werror=unused-variable]
+This commit adds pm_runtime_put() calls to pwm_lpss_remove() to balance
+these when the driver gets removed with some of the outputs still enabled.
 
-Fixes: 2ed1a8e0ce8d ("ASoC: wm9712: add ac97 new bus support")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Acked-by: Charles Keepax <ckeepax@opensource.cirrus.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fixes: f080be27d7d9 ("pwm: lpss: Add support for runtime PM")
+Acked-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/codecs/wm9712.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/pwm/pwm-lpss.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/sound/soc/codecs/wm9712.c b/sound/soc/codecs/wm9712.c
-index ade34c26ad2f3..e873baa9e7780 100644
---- a/sound/soc/codecs/wm9712.c
-+++ b/sound/soc/codecs/wm9712.c
-@@ -638,13 +638,14 @@ static int wm9712_soc_probe(struct snd_soc_component *component)
- {
- 	struct wm9712_priv *wm9712 = snd_soc_component_get_drvdata(component);
- 	struct regmap *regmap;
--	int ret;
+diff --git a/drivers/pwm/pwm-lpss.c b/drivers/pwm/pwm-lpss.c
+index 1e69c1c9ec096..7a4a6406cf69a 100644
+--- a/drivers/pwm/pwm-lpss.c
++++ b/drivers/pwm/pwm-lpss.c
+@@ -216,6 +216,12 @@ EXPORT_SYMBOL_GPL(pwm_lpss_probe);
  
- 	if (wm9712->mfd_pdata) {
- 		wm9712->ac97 = wm9712->mfd_pdata->ac97;
- 		regmap = wm9712->mfd_pdata->regmap;
- 	} else {
- #ifdef CONFIG_SND_SOC_AC97_BUS
-+		int ret;
+ int pwm_lpss_remove(struct pwm_lpss_chip *lpwm)
+ {
++	int i;
 +
- 		wm9712->ac97 = snd_soc_new_ac97_component(component, WM9712_VENDOR_ID,
- 						      WM9712_VENDOR_ID_MASK);
- 		if (IS_ERR(wm9712->ac97)) {
++	for (i = 0; i < lpwm->info->npwm; i++) {
++		if (pwm_is_enabled(&lpwm->chip.pwms[i]))
++			pm_runtime_put(lpwm->chip.dev);
++	}
+ 	return pwmchip_remove(&lpwm->chip);
+ }
+ EXPORT_SYMBOL_GPL(pwm_lpss_remove);
 -- 
 2.20.1
 
