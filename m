@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7728C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 10:05:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19FB5C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 10:05:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86C5420704
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 10:05:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DAA2120704
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 10:05:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579860345;
-	bh=ZQJcr8zWH7QXXD6C2PQS8x5HXi5pY5gTQTAD7NXS2S4=;
+	s=default; t=1579860353;
+	bh=fZ5b/0CjTl/y0q4mG/aNFlc0SydL+UI5brBMk+5wOI4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dietpk0hWicr0DItL+Ruyz4/VTsrLB/HnHSuUM5OpbqfCVa3gTH0QUDdC+qvuA0yw
-	 O+OL+5uQoTex8TK3SmQQ/EAxG5GBMEdKUz3B2+sbZ+a3OYytIXkJ4D7FqoZdPzXDKC
-	 bxDuddcWVRo5JMYiJbF8JxsfK3/jZwNoIlQXiyqc=
+	b=t4op5TosVGxr1OBCOQyUp3bm13LmVA7yL4yCEPdeVgj5q+CyXCgM/1VS7tlJW7rJJ
+	 nxTOQHUgq4ys+lNekhBEZvRv6wvY8HghehlVaLzjcfJQrWAVUDPRJQ1KAEOHxOBmTj
+	 3JBIy4iHSlJdb6V5GErsrLrhqR/fQsOtbMloGvp8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389240AbgAXKFi (ORCPT
+        id S1730991AbgAXKFv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 05:05:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42104 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 05:05:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42324 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389231AbgAXKFc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 05:05:32 -0500
+        id S1730740AbgAXKFs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 05:05:48 -0500
 Received: from localhost (unknown [145.15.244.15])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F09E1218AC;
-        Fri, 24 Jan 2020 10:05:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C8927206F0;
+        Fri, 24 Jan 2020 10:05:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579860332;
-        bh=ZQJcr8zWH7QXXD6C2PQS8x5HXi5pY5gTQTAD7NXS2S4=;
+        s=default; t=1579860347;
+        bh=fZ5b/0CjTl/y0q4mG/aNFlc0SydL+UI5brBMk+5wOI4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YbkvpPM+4FCkSPmQqgwlV9iGtdkNuzQUciyXWgenOiv1DRQzWQ1vRTxp7qTSh/gMO
-         Ucfi9xaf64jCExl3RBqgFrRjSM38BcZej+T8W2oxHTIjktNRisWmyJZDLCDBznSgFJ
-         sBqFwrwS3gV8gzGbiwUUkf8eyynKFiZpV2O8NhxE=
+        b=H9vAVe/mCKFiJBf0uX8lRUTdBIpg95gHETzyWXKAFa7aWNzNy7QFK/F0m8Y4FQVdL
+         odxzSMrsaVT2YwmdmbCC/0oebdIYHk1KZH1hJbo2LoiqILQfNO25Lxluh1Nr60FR/l
+         WgTya2lO96dDpmh2VKCWJ1+OzDqq2dlIuQNfgXio=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Filippo Sironi <sironi@amazon.de>,
-        Joerg Roedel <jroedel@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 307/343] iommu/amd: Wait for completion of IOTLB flush in attach_device
-Date:   Fri, 24 Jan 2020 10:32:05 +0100
-Message-Id: <20200124093000.246276106@linuxfoundation.org>
+        stable@vger.kernel.org, Johannes Berg <johannes.berg@intel.com>,
+        Luca Coelho <luciano.coelho@intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 317/343] mac80211: accept deauth frames in IBSS mode
+Date:   Fri, 24 Jan 2020 10:32:15 +0100
+Message-Id: <20200124093001.551047619@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124092919.490687572@linuxfoundation.org>
 References: <20200124092919.490687572@linuxfoundation.org>
@@ -59,35 +60,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Filippo Sironi <sironi@amazon.de>
+From: Johannes Berg <johannes.berg@intel.com>
 
-[ Upstream commit 0b15e02f0cc4fb34a9160de7ba6db3a4013dc1b7 ]
+[ Upstream commit 95697f9907bfe3eab0ef20265a766b22e27dde64 ]
 
-To make sure the domain tlb flush completes before the
-function returns, explicitly wait for its completion.
+We can process deauth frames and all, but we drop them very
+early in the RX path today - this could never have worked.
 
-Signed-off-by: Filippo Sironi <sironi@amazon.de>
-Fixes: 42a49f965a8d ("amd-iommu: flush domain tlb when attaching a new device")
-[joro: Added commit message and fixes tag]
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Fixes: 2cc59e784b54 ("mac80211: reply to AUTH with DEAUTH if sta allocation fails in IBSS")
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
+Link: https://lore.kernel.org/r/20191004123706.15768-2-luca@coelho.fi
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iommu/amd_iommu.c | 2 ++
- 1 file changed, 2 insertions(+)
+ net/mac80211/rx.c | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/iommu/amd_iommu.c b/drivers/iommu/amd_iommu.c
-index d09c24825734e..778f167be2d35 100644
---- a/drivers/iommu/amd_iommu.c
-+++ b/drivers/iommu/amd_iommu.c
-@@ -2160,6 +2160,8 @@ skip_ats_check:
- 	 */
- 	domain_flush_tlb_pde(domain);
- 
-+	domain_flush_complete(domain);
+diff --git a/net/mac80211/rx.c b/net/mac80211/rx.c
+index 4a6b3c7b35e37..31000622376df 100644
+--- a/net/mac80211/rx.c
++++ b/net/mac80211/rx.c
+@@ -3227,9 +3227,18 @@ ieee80211_rx_h_mgmt(struct ieee80211_rx_data *rx)
+ 	case cpu_to_le16(IEEE80211_STYPE_PROBE_RESP):
+ 		/* process for all: mesh, mlme, ibss */
+ 		break;
++	case cpu_to_le16(IEEE80211_STYPE_DEAUTH):
++		if (is_multicast_ether_addr(mgmt->da) &&
++		    !is_broadcast_ether_addr(mgmt->da))
++			return RX_DROP_MONITOR;
 +
- 	return ret;
- }
- 
++		/* process only for station/IBSS */
++		if (sdata->vif.type != NL80211_IFTYPE_STATION &&
++		    sdata->vif.type != NL80211_IFTYPE_ADHOC)
++			return RX_DROP_MONITOR;
++		break;
+ 	case cpu_to_le16(IEEE80211_STYPE_ASSOC_RESP):
+ 	case cpu_to_le16(IEEE80211_STYPE_REASSOC_RESP):
+-	case cpu_to_le16(IEEE80211_STYPE_DEAUTH):
+ 	case cpu_to_le16(IEEE80211_STYPE_DISASSOC):
+ 		if (is_multicast_ether_addr(mgmt->da) &&
+ 		    !is_broadcast_ether_addr(mgmt->da))
 -- 
 2.20.1
 
