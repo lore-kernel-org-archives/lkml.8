@@ -4,55 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43292C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:30:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0F06C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:30:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A47F20838
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:30:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86DD120718
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:30:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579865426;
-	bh=CSrVAb92O7NkKSIvRYu1HQ4EwpqAhXkYk2ZUtsyk3G8=;
+	s=default; t=1579865428;
+	bh=/pZQvLA4/iPOMhTij+JCylWOs2bxqGFEckmRrKqVCL8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IgX1jKiQQwtAx6XAQuhoi4yiYauS3o0WGZQBGPUUDiFt3bQPvok7nBSXQ+0aU3MQa
-	 lebGsL5LwPevWxxJbr+WEl5o9INesNy6A+WOrJsRxUFu8sGRQ4IoUMz2Nr0dOJZ2Fl
-	 2f0sBRbly80SZhhjJ7Zx+zR6Njeg51hIs36sKLAA=
+	b=llLEmQHwJpt2w35AM2noA/jhnExSSMqBqoXC2zHt6uN7VngRdpLImGTS3gy8x12mk
+	 Ugy9D1gP/UV9/Pbf/qQv4kYqvmKbbnEYtLzaAC2u/jB7ANMFOvNtnjHTCBAW0MzLjG
+	 Y2gxNHb2SpGDzdgnnaZUF4JrQ/ItFpMwWOa1ZoKo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404219AbgAXLaV (ORCPT
+        id S2404235AbgAXLa1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:30:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47870 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 06:30:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48060 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404198AbgAXLaR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:30:17 -0500
+        id S2388035AbgAXLaY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:30:24 -0500
 Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7F28D20718;
-        Fri, 24 Jan 2020 11:30:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 081B020838;
+        Fri, 24 Jan 2020 11:30:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579865416;
-        bh=CSrVAb92O7NkKSIvRYu1HQ4EwpqAhXkYk2ZUtsyk3G8=;
+        s=default; t=1579865423;
+        bh=/pZQvLA4/iPOMhTij+JCylWOs2bxqGFEckmRrKqVCL8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PVTrELsQO72wCKOBungOHz54A1akaDKgw6W6PmQsWLb5X+X948YDEdwB9ljqatD+W
-         +T37vQvv1uXTfyX/AaAnMN5NE3VZJTV0MgI/FqUtPUTMeNFYNZTHg2gf3wxkYygcZ4
-         mK/9Q6c8yvkhz9Eymj3AUdqkcwJetVl87qODap8c=
+        b=MFti8loGprFwJTifOxYelIubIfxkU+ak6s3nc86j80qT55cSnUg3Hnou7tnlGSPYI
+         YF3psqdlJAXbm52JauzG6ryiPYy5bQO6MgAzmYwSbbWzPS+GIQ5q/fEDcMH5OhOEYJ
+         qnnSNeT+cIKQ0y7GYXJuOMyMr9tcA5ADfNIu/xRE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, laokz <laokz@foxmail.com>,
-        Stefani Seibold <stefani@seibold.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Greg KH <greg@kroah.com>, Kees Cook <keescook@chromium.org>,
-        Will Deacon <will@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org,
+        Leandro Dorileo <leandro.maciel.dorileo@intel.com>,
+        Vinicius Costa Gomes <vinicius.gomes@intel.com>,
+        Vladimir Oltean <olteanv@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 527/639] Partially revert "kfifo: fix kfifo_alloc() and kfifo_init()"
-Date:   Fri, 24 Jan 2020 10:31:37 +0100
-Message-Id: <20200124093154.822644212@linuxfoundation.org>
+Subject: [PATCH 4.19 529/639] net/sched: cbs: Set default link speed to 10 Mbps in cbs_set_port_rate
+Date:   Fri, 24 Jan 2020 10:31:39 +0100
+Message-Id: <20200124093155.069832836@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
 References: <20200124093047.008739095@linuxfoundation.org>
@@ -65,60 +63,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Linus Torvalds <torvalds@linux-foundation.org>
+From: Vladimir Oltean <olteanv@gmail.com>
 
-[ Upstream commit ab9bb6318b0967671e0c9b6537c1537d51ca4f45 ]
+[ Upstream commit 1c6c09a0ae62fa3ea8f8ead2ac3920e6fff2de64 ]
 
-Commit dfe2a77fd243 ("kfifo: fix kfifo_alloc() and kfifo_init()") made
-the kfifo code round the number of elements up.  That was good for
-__kfifo_alloc(), but it's actually wrong for __kfifo_init().
+The discussion to be made is absolutely the same as in the case of
+previous patch ("taprio: Set default link speed to 10 Mbps in
+taprio_set_picos_per_byte"). Nothing is lost when setting a default.
 
-The difference? __kfifo_alloc() will allocate the rounded-up number of
-elements, but __kfifo_init() uses an allocation done by the caller.  We
-can't just say "use more elements than the caller allocated", and have
-to round down.
-
-The good news? All the normal cases will be using power-of-two arrays
-anyway, and most users of kfifo's don't use kfifo_init() at all, but one
-of the helper macros to declare a KFIFO that enforce the proper
-power-of-two behavior.  But it looks like at least ibmvscsis might be
-affected.
-
-The bad news? Will Deacon refers to an old thread and points points out
-that the memory ordering in kfifo's is questionable.  See
-
-  https://lore.kernel.org/lkml/20181211034032.32338-1-yuleixzhang@tencent.com/
-
-for more.
-
-Fixes: dfe2a77fd243 ("kfifo: fix kfifo_alloc() and kfifo_init()")
-Reported-by: laokz <laokz@foxmail.com>
-Cc: Stefani Seibold <stefani@seibold.net>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Dan Carpenter <dan.carpenter@oracle.com>
-Cc: Greg KH <greg@kroah.com>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Will Deacon <will@kernel.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Leandro Dorileo <leandro.maciel.dorileo@intel.com>
+Fixes: e0a7683d30e9 ("net/sched: cbs: fix port_rate miscalculation")
+Acked-by: Vinicius Costa Gomes <vinicius.gomes@intel.com>
+Signed-off-by: Vladimir Oltean <olteanv@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- lib/kfifo.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ net/sched/sch_cbs.c | 19 +++++++++++--------
+ 1 file changed, 11 insertions(+), 8 deletions(-)
 
-diff --git a/lib/kfifo.c b/lib/kfifo.c
-index 015656aa8182d..6320ab91e3431 100644
---- a/lib/kfifo.c
-+++ b/lib/kfifo.c
-@@ -82,7 +82,8 @@ int __kfifo_init(struct __kfifo *fifo, void *buffer,
+diff --git a/net/sched/sch_cbs.c b/net/sched/sch_cbs.c
+index b3c8d04929df2..289f66b9238d3 100644
+--- a/net/sched/sch_cbs.c
++++ b/net/sched/sch_cbs.c
+@@ -185,11 +185,6 @@ static struct sk_buff *cbs_dequeue_soft(struct Qdisc *sch)
+ 	s64 credits;
+ 	int len;
+ 
+-	if (atomic64_read(&q->port_rate) == -1) {
+-		WARN_ONCE(1, "cbs: dequeue() called with unknown port rate.");
+-		return NULL;
+-	}
+-
+ 	if (q->credits < 0) {
+ 		credits = timediff_to_credits(now - q->last, q->idleslope);
+ 
+@@ -307,11 +302,19 @@ static int cbs_enable_offload(struct net_device *dev, struct cbs_sched_data *q,
+ static void cbs_set_port_rate(struct net_device *dev, struct cbs_sched_data *q)
  {
- 	size /= esize;
+ 	struct ethtool_link_ksettings ecmd;
++	int speed = SPEED_10;
+ 	int port_rate = -1;
++	int err;
++
++	err = __ethtool_get_link_ksettings(dev, &ecmd);
++	if (err < 0)
++		goto skip;
++
++	if (ecmd.base.speed != SPEED_UNKNOWN)
++		speed = ecmd.base.speed;
  
--	size = roundup_pow_of_two(size);
-+	if (!is_power_of_2(size))
-+		size = rounddown_pow_of_two(size);
+-	if (!__ethtool_get_link_ksettings(dev, &ecmd) &&
+-	    ecmd.base.speed != SPEED_UNKNOWN)
+-		port_rate = ecmd.base.speed * 1000 * BYTES_PER_KBIT;
++skip:
++	port_rate = speed * 1000 * BYTES_PER_KBIT;
  
- 	fifo->in = 0;
- 	fifo->out = 0;
+ 	atomic64_set(&q->port_rate, port_rate);
+ 	netdev_dbg(dev, "cbs: set %s's port_rate to: %lld, linkspeed: %d\n",
 -- 
 2.20.1
 
