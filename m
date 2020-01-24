@@ -7,48 +7,52 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B561C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 10:05:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C204C35242
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 10:05:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6903020709
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 10:05:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D27921556
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 10:05:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579860305;
-	bh=xqLNtbNfc9jUGh3XZc/FX19RQ3JjbCStG0AEEYdUJAg=;
+	s=default; t=1579860311;
+	bh=J88DpXsY5dTvSGgrHakWDYrAuEHatQxgivfGff3+TXM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QmoSnmNngX1EEnLvYYNkTRzRa9AFO+r/LLnoj1D0WcaOxobAykagpKZRROYAcCERw
-	 7Kevxr6eS8+4wrYV/Vt0JQ75flxJD+h36L1smCSe9LPw0jsO6TNW02K0FH4y2uXCFM
-	 kKTl43BFZvB7qHu0jsweJk8mOk0qu8VPoSib7Unk=
+	b=tXlrTlzzwYvbvjKR+tihg3/VYXvFdkdE5oxfwYjbZubXMivo57RKnfpbEieyDFWcw
+	 Njtaj2QtI0YqlTLsf2fo6VjV8jmJnZ+QUCK6COJ+Q3AjtxcUuLhDuXrbnIyV0texXu
+	 QpcgPW7eBYIJTsh/3o5Svzq5ptytf2r+4LL5wMuQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389187AbgAXKFE (ORCPT
+        id S2389192AbgAXKFK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 05:05:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41394 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 05:05:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41656 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389167AbgAXKEz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 05:04:55 -0500
+        id S1730108AbgAXKFJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 05:05:09 -0500
 Received: from localhost (unknown [145.15.244.15])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0857B208C4;
-        Fri, 24 Jan 2020 10:04:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EBAE6214DB;
+        Fri, 24 Jan 2020 10:05:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579860294;
-        bh=xqLNtbNfc9jUGh3XZc/FX19RQ3JjbCStG0AEEYdUJAg=;
+        s=default; t=1579860307;
+        bh=J88DpXsY5dTvSGgrHakWDYrAuEHatQxgivfGff3+TXM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cZs4gl1aeWgCL4u75izHrdpEgil9Az2zJNzS2pmn6H56DnI8fkAZaQIsR1ETC2tRx
-         8z1HvN/mhy9h0SuaFoMDe/Ecmnl1j2uOxQDjlJm3i7OgQ8dFk/otfHjXgVURJRHKnW
-         0aSOhxh5s9F3ey2Td8irvxXS2dt8vwh/v596ZEUM=
+        b=USFP8vold2cDn8VQjFseP+TeUyDWbUq4+819sOBUsCEy4WH/eI8xKpnyuEQlVDwKe
+         OuYoHSau6K7unPul25ugadjIOR2df4It5gzbNEeTnT7zKN8AlH6+zTm5haAOMCMUfs
+         oBxIl9wURiUzMGmxjZmiuwljaZgoKhFiwgbIC4lY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?H=C3=A5kon=20Bugge?= <haakon.bugge@oracle.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
+        stable@vger.kernel.org, Tri Vo <trong@android.com>,
+        Kalesh Singh <kaleshsingh@google.com>,
+        Ravi Chandra Sadineni <ravisadineni@chromium.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Sebastian Reichel <sebastian.reichel@collabora.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 305/343] RDMA/cma: Fix false error message
-Date:   Fri, 24 Jan 2020 10:32:03 +0100
-Message-Id: <20200124092959.986136864@linuxfoundation.org>
+Subject: [PATCH 4.14 286/343] power: supply: Init device wakeup after device_add()
+Date:   Fri, 24 Jan 2020 10:31:44 +0100
+Message-Id: <20200124092957.663519803@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124092919.490687572@linuxfoundation.org>
 References: <20200124092919.490687572@linuxfoundation.org>
@@ -61,39 +65,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Håkon Bugge <haakon.bugge@oracle.com>
+From: Stephen Boyd <swboyd@chromium.org>
 
-[ Upstream commit a6e4d254c19b541a58caced322111084b27a7788 ]
+[ Upstream commit 8288022284859acbcc3cf1a073a1e2692d6c2543 ]
 
-In addr_handler(), assuming status == 0 and the device already has been
-acquired (id_priv->cma_dev != NULL), we get the following incorrect
-"error" message:
+We may want to use the device pointer in device_init_wakeup() with
+functions that expect the device to already be added with device_add().
+For example, if we were to link the device initializing wakeup to
+something in sysfs such as a class for wakeups we'll run into an error.
+It looks like this code was written with the assumption that the device
+would be added before initializing wakeup due to the order of operations
+in power_supply_unregister().
 
-RDMA CM: ADDR_ERROR: failed to resolve IP. status 0
+Let's change the order of operations so we don't run into problems here.
 
-Fixes: 498683c6a7ee ("IB/cma: Add debug messages to error flows")
-Link: https://lore.kernel.org/r/20190902092731.1055757-1-haakon.bugge@oracle.com
-Signed-off-by: Håkon Bugge <haakon.bugge@oracle.com>
-Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Fixes: 948dcf966228 ("power_supply: Prevent suspend until power supply events are processed")
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Tri Vo <trong@android.com>
+Cc: Kalesh Singh <kaleshsingh@google.com>
+Cc: Ravi Chandra Sadineni <ravisadineni@chromium.org>
+Cc: Viresh Kumar <viresh.kumar@linaro.org>
+Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/core/cma.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/power/supply/power_supply_core.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/infiniband/core/cma.c b/drivers/infiniband/core/cma.c
-index fc4630e4acdd6..1614f6f3677c0 100644
---- a/drivers/infiniband/core/cma.c
-+++ b/drivers/infiniband/core/cma.c
-@@ -2789,7 +2789,7 @@ static void addr_handler(int status, struct sockaddr *src_addr,
- 		if (status)
- 			pr_debug_ratelimited("RDMA CM: ADDR_ERROR: failed to acquire device. status %d\n",
- 					     status);
--	} else {
-+	} else if (status) {
- 		pr_debug_ratelimited("RDMA CM: ADDR_ERROR: failed to resolve IP. status %d\n", status);
+diff --git a/drivers/power/supply/power_supply_core.c b/drivers/power/supply/power_supply_core.c
+index 3226faebe0a08..0f1a0efd5926c 100644
+--- a/drivers/power/supply/power_supply_core.c
++++ b/drivers/power/supply/power_supply_core.c
+@@ -891,14 +891,14 @@ __power_supply_register(struct device *parent,
  	}
  
+ 	spin_lock_init(&psy->changed_lock);
+-	rc = device_init_wakeup(dev, ws);
+-	if (rc)
+-		goto wakeup_init_failed;
+-
+ 	rc = device_add(dev);
+ 	if (rc)
+ 		goto device_add_failed;
+ 
++	rc = device_init_wakeup(dev, ws);
++	if (rc)
++		goto wakeup_init_failed;
++
+ 	rc = psy_register_thermal(psy);
+ 	if (rc)
+ 		goto register_thermal_failed;
+@@ -935,8 +935,8 @@ register_cooler_failed:
+ 	psy_unregister_thermal(psy);
+ register_thermal_failed:
+ 	device_del(dev);
+-device_add_failed:
+ wakeup_init_failed:
++device_add_failed:
+ check_supplies_failed:
+ dev_set_name_failed:
+ 	put_device(dev);
 -- 
 2.20.1
 
