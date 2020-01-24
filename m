@@ -2,192 +2,202 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C196C35242
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 23:19:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B7FBC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 23:20:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 304002072C
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 23:19:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0145F22522
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 23:20:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729535AbgAXXTQ (ORCPT
+        id S2387424AbgAXXUa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 18:19:16 -0500
-Received: from mga05.intel.com ([192.55.52.43]:25812 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729147AbgAXXTQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 18:19:16 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Jan 2020 15:19:15 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,359,1574150400"; 
-   d="scan'208";a="426771863"
-Received: from richard.sh.intel.com (HELO localhost) ([10.239.159.54])
-  by fmsmga005.fm.intel.com with ESMTP; 24 Jan 2020 15:19:14 -0800
-Date:   Sat, 25 Jan 2020 07:19:26 +0800
-From:   Wei Yang <richardw.yang@linux.intel.com>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Wei Yang <richardw.yang@linux.intel.com>, g@richard.suse.de,
-        Yang Shi <yang.shi@linux.alibaba.com>,
-        akpm@linux-foundation.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [v2 PATCH] mm: move_pages: report the number of non-attempted
- pages
-Message-ID: <20200124231926.GA16638@richard>
-Reply-To: Wei Yang <richardw.yang@linux.intel.com>
-References: <1579736331-85494-1-git-send-email-yang.shi@linux.alibaba.com>
- <20200123032736.GA22196@richard>
- <20200123085526.GH29276@dhcp22.suse.cz>
- <20200123225647.GB29851@richard>
- <20200124064649.GM29276@dhcp22.suse.cz>
- <20200124152642.GB12509@richard>
- <20200124154015.GW29276@dhcp22.suse.cz>
+        Fri, 24 Jan 2020 18:20:30 -0500
+Received: from mailoutvs52.siol.net ([185.57.226.243]:37329 "EHLO
+        mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729147AbgAXXU3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 18:20:29 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by mail.siol.net (Zimbra) with ESMTP id D21A95227DD;
+        Sat, 25 Jan 2020 00:20:25 +0100 (CET)
+X-Virus-Scanned: amavisd-new at psrvmta12.zcs-production.pri
+Received: from mail.siol.net ([127.0.0.1])
+        by localhost (psrvmta12.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id 9kCMi8KzJ6Ui; Sat, 25 Jan 2020 00:20:25 +0100 (CET)
+Received: from mail.siol.net (localhost [127.0.0.1])
+        by mail.siol.net (Zimbra) with ESMTPS id 46B585227E3;
+        Sat, 25 Jan 2020 00:20:25 +0100 (CET)
+Received: from localhost.localdomain (cpe-194-152-20-232.static.triera.net [194.152.20.232])
+        (Authenticated sender: 031275009)
+        by mail.siol.net (Zimbra) with ESMTPSA id 15DBD5227DD;
+        Sat, 25 Jan 2020 00:20:21 +0100 (CET)
+From:   Jernej Skrabec <jernej.skrabec@siol.net>
+To:     mripard@kernel.org, wens@csie.org
+Cc:     mchehab@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        mturquette@baylibre.com, sboyd@kernel.org,
+        hverkuil-cisco@xs4all.nl, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-sunxi@googlegroups.com
+Subject: [PATCH 0/8] media: sunxi: Add DE2 rotate driver
+Date:   Sat, 25 Jan 2020 00:20:06 +0100
+Message-Id: <20200124232014.574989-1-jernej.skrabec@siol.net>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200124154015.GW29276@dhcp22.suse.cz>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 24, 2020 at 04:40:15PM +0100, Michal Hocko wrote:
->On Fri 24-01-20 23:26:42, Wei Yang wrote:
->> On Fri, Jan 24, 2020 at 07:46:49AM +0100, Michal Hocko wrote:
->> >On Fri 24-01-20 06:56:47, Wei Yang wrote:
->> >> On Thu, Jan 23, 2020 at 09:55:26AM +0100, Michal Hocko wrote:
->> >> >On Thu 23-01-20 11:27:36, Wei Yang wrote:
->> >> >> On Thu, Jan 23, 2020 at 07:38:51AM +0800, Yang Shi wrote:
->> >> >> >Since commit a49bd4d71637 ("mm, numa: rework do_pages_move"),
->> >> >> >the semantic of move_pages() was changed to return the number of
->> >> >> >non-migrated pages (failed to migration) and the call would be aborted
->> >> >> >immediately if migrate_pages() returns positive value.  But it didn't
->> >> >> >report the number of pages that we even haven't attempted to migrate.
->> >> >> >So, fix it by including non-attempted pages in the return value.
->> >> >> >
->> >> >> 
->> >> >> First, we want to change the semantic of move_pages(2). The return value
->> >> >> indicates the number of pages we didn't managed to migrate?
->> >> >> 
->> >> >> Second, the return value from migrate_pages() doesn't mean the number of pages
->> >> >> we failed to migrate. For example, one -ENOMEM is returned on the first page,
->> >> >> migrate_pages() would return 1. But actually, no page successfully migrated.
->> >> >
->> >> >ENOMEM is considered a permanent failure and as such it is returned by
->> >> >migrate pages (see goto out).
->> >> >
->> >> >> Third, even the migrate_pages() return the exact non-migrate page, we are not
->> >> >> sure those non-migrated pages are at the tail of the list. Because in the last
->> >> >> case in migrate_pages(), it just remove the page from list. It could be a page
->> >> >> in the middle of the list. Then, in userspace, how the return value be
->> >> >> leveraged to determine the valid status? Any page in the list could be the
->> >> >> victim.
->> >> >
->> >> >Yes, I was wrong when stating that the caller would know better which
->> >> >status to check. I misremembered the original patch as it was quite some
->> >> >time ago. While storing the error code would be possible after some
->> >> >massaging of migrate_pages is this really something we deeply care
->> >> >about. The caller can achieve the same by initializing the status array
->> >> >to a non-node number - e.g. -1 - and check based on that.
->> >> >
->> >> 
->> >> So for a user, the best practice is to initialize the status array to -1 and
->> >> check each status to see whether the page is migrated successfully?
->> >
->> >Yes IMO. Just consider -errno return value. You have no way to find out
->> >which pages have been migrated until we reached that error. The
->> >possitive return value would fall into the same case.
->> >
->> >> Then do we need to return the number of non-migrated page? What benefit could
->> >> user get from the number. How about just return an error code to indicate the
->> >> failure? I may miss some point, would you mind giving me a hint?
->> >
->> >This is certainly possible. We can return -EAGAIN if some pages couldn't
->> >be migrated because they are pinned. But please read my previous email
->> >to the very end for arguments why this might cause more problems than it
->> >actually solves.
->> >
->> 
->> Let me put your comment here:
->> 
->>     Because new users could have started depending on it. It
->>     is not all that unlikely that the current implementation would just
->>     work for them because they are migrating a set of pages on to the same
->>     node so the batch would be a single list throughout the whole given
->>     page set.
->> 
->> Your idea is to preserve current semantic, return non-migrated pages number to
->> userspace.
->> 
->> And the reason is:
->> 
->>    1. Users have started depending on it.
->>    2. No real bug reported yet.
->>    3. User always migrate page to the same node. (If my understanding is
->>       correct)
->> 
->> I think this gets some reason, since we want to minimize the impact to
->> userland.
->> 
->> While let's see what user probably use this syscall. Since from the man page,
->> we never told the return value could be positive, the number of non-migrated
->> pages, user would think only 0 means a successful migration and all other
->> cases are failure. Then user probably handle negative and positive return
->> value the same way, like (!err).
->> 
->> If my guess is true, return a negative error value for this case could
->> minimize the impact to userland here.
->>    1. Preserve the semantic of move_pages(2): 0 means success, negative means
->>       some error and needs extra handling.
->>    2. Trivial change to the man page.
->>    3. Suppose no change to users.
->
->Do you have any actual proposal we can discuss? I suspect we are going
->in circles here. Sure both ways are possible. The disucssion we are
->having here is which behavior makes more sense. The interface is and has
->been in the past very awkward. Some corner cases have been fixed some
->new created. While I am not happy about the later we should finally land
->with some decision.
+Some of Allwinner SoCs like A83T and A64 SoCs contain DE2 rotate core
+which can flip image horizontal and vertical and rotate it in 90 deg.
+steps. It support a lot of output formats, but a bit less capture
+formats. All YUV input formats get converted to yuv420p, while RGB
+formats are preserved.
 
-Ok, I found myself may miss some mechanism about the err reporting from kernel
-to userland.
+Patches 1-2 fix few issues with DE2 clocks.
 
-  If do_pages_move() returns a negative err, the value would be set into errno
-  and actually user just see a return value of -1?
+Patches 3-4 fix register range of DE2 clocks (it would overlap with
+rotate driver)
 
-So userland just see two types of return value if kernel comply with man page:
+Patches 5-8 provide binding, implement driver and add nodes.
 
-   0 : success
-   -1: failure, with reason set into errno
+v4l2-compliance SHA: ec55a961487b449bedbe07650674b4965814cf07, 32 bits, 3=
+2-bit time_t
 
-Is my understanding correct? I tried to read the syscall path, but not find
-how the negative value is set into errno.
+Compliance test for sun8i-rotate device /dev/video0:
 
-Since our kernel already return a positive value one migration failure, so the
-exact return value from move_pages() syscall is:
+Driver Info:
+        Driver name      : sun8i-rotate
+        Card type        : sun8i-rotate
+        Bus info         : platform:sun8i-rotate
+        Driver version   : 5.5.0
+        Capabilities     : 0x84208000
+                Video Memory-to-Memory
+                Streaming
+                Extended Pix Format
+                Device Capabilities
+        Device Caps      : 0x04208000
+                Video Memory-to-Memory
+                Streaming
+                Extended Pix Format
 
-  > 0: number of non-migrate pages
-  0  : success
-  -1 : failure, with reason set into errno
+Required ioctls:
+        test VIDIOC_QUERYCAP: OK
 
-Since everything looks good to userland now, we just extend the semantic of
-move_pages() to make positive return value an explicit error case.
+Allow for multiple opens:
+        test second /dev/video0 open: OK
+        test VIDIOC_QUERYCAP: OK
+        test VIDIOC_G/S_PRIORITY: OK
+        test for unlimited opens: OK
 
-Is my understanding correct here?
+        test invalid ioctls: OK
+Debug ioctls:
+        test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
+        test VIDIOC_LOG_STATUS: OK
 
-If this is the case, I agree with this fix. It looks the minimal change to
-current real world.
+Input ioctls:
+        test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
+        test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+        test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
+        test VIDIOC_ENUMAUDIO: OK (Not Supported)
+        test VIDIOC_G/S/ENUMINPUT: OK (Not Supported)
+        test VIDIOC_G/S_AUDIO: OK (Not Supported)
+        Inputs: 0 Audio Inputs: 0 Tuners: 0
 
->-- 
->Michal Hocko
->SUSE Labs
+Output ioctls:
+        test VIDIOC_G/S_MODULATOR: OK (Not Supported)
+        test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+        test VIDIOC_ENUMAUDOUT: OK (Not Supported)
+        test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
+        test VIDIOC_G/S_AUDOUT: OK (Not Supported)
+        Outputs: 0 Audio Outputs: 0 Modulators: 0
 
--- 
-Wei Yang
-Help you, Help me
+Input/Output configuration ioctls:
+        test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
+        test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
+        test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
+        test VIDIOC_G/S_EDID: OK (Not Supported)
+
+Control ioctls:
+        test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK
+        test VIDIOC_QUERYCTRL: OK
+        test VIDIOC_G/S_CTRL: OK
+        test VIDIOC_G/S/TRY_EXT_CTRLS: OK
+        test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK
+        test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
+        Standard Controls: 4 Private Controls: 0
+
+Format ioctls:
+        test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
+        test VIDIOC_G/S_PARM: OK (Not Supported)
+        test VIDIOC_G_FBUF: OK (Not Supported)
+        test VIDIOC_G_FMT: OK
+        test VIDIOC_TRY_FMT: OK
+        test VIDIOC_S_FMT: OK
+        test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
+        test Cropping: OK (Not Supported)
+        test Composing: OK (Not Supported)
+        test Scaling: OK (Not Supported)
+
+Codec ioctls:
+        test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
+        test VIDIOC_G_ENC_INDEX: OK (Not Supported)
+        test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
+
+Buffer ioctls:
+        test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK
+        test VIDIOC_EXPBUF: OK
+        test Requests: OK (Not Supported)
+
+Total for sun8i-rotate device /dev/video0: 45, Succeeded: 45, Failed: 0, =
+Warnings: 0
+
+Best regards,
+Jernej
+
+Jernej Skrabec (8):
+  clk: sunxi-ng: sun8i-de2: Swap A64 and H6 definitions
+  clk: sunxi-ng: sun8i-de2: Fix A83T clocks and reset
+  ARM: dts: sunxi: Fix DE2 clocks register range
+  arm64: dts: allwinner: a64: Fix display clock register range
+  media: dt-bindings: media: Add Allwinner A83T Rotate driver
+  media: sun8i: Add Allwinner A83T Rotate driver
+  ARM: dts: sun8i: a83t: Add device node for rotation core
+  arm64: dts: allwinner: a64: add node for rotation core
+
+ .../allwinner,sun8i-a83t-de2-rotate.yaml      |  70 ++
+ MAINTAINERS                                   |   8 +
+ arch/arm/boot/dts/sun8i-a83t.dtsi             |  13 +-
+ arch/arm/boot/dts/sun8i-r40.dtsi              |   2 +-
+ arch/arm/boot/dts/sun8i-v3s.dtsi              |   2 +-
+ arch/arm/boot/dts/sunxi-h3-h5.dtsi            |   2 +-
+ arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi |  14 +-
+ drivers/clk/sunxi-ng/ccu-sun8i-de2.c          |  49 +-
+ drivers/media/platform/Kconfig                |  12 +
+ drivers/media/platform/sunxi/Makefile         |   1 +
+ .../platform/sunxi/sun8i-rotate/Makefile      |   2 +
+ .../sunxi/sun8i-rotate/sun8i-formats.c        | 273 ++++++
+ .../sunxi/sun8i-rotate/sun8i-formats.h        |  25 +
+ .../sunxi/sun8i-rotate/sun8i-rotate.c         | 924 ++++++++++++++++++
+ .../sunxi/sun8i-rotate/sun8i-rotate.h         | 135 +++
+ 15 files changed, 1512 insertions(+), 20 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/media/allwinner,sun=
+8i-a83t-de2-rotate.yaml
+ create mode 100644 drivers/media/platform/sunxi/sun8i-rotate/Makefile
+ create mode 100644 drivers/media/platform/sunxi/sun8i-rotate/sun8i-forma=
+ts.c
+ create mode 100644 drivers/media/platform/sunxi/sun8i-rotate/sun8i-forma=
+ts.h
+ create mode 100644 drivers/media/platform/sunxi/sun8i-rotate/sun8i-rotat=
+e.c
+ create mode 100644 drivers/media/platform/sunxi/sun8i-rotate/sun8i-rotat=
+e.h
+
+--=20
+2.25.0
+
