@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAE64C32771
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 10:02:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BF57C32771
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 10:02:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A22B2214DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 10:02:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 473E2214DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 10:02:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579860160;
-	bh=03vxJpeyQt75CgTZoG1Wr9wuuaiFdoOiPQReOgQVZT8=;
+	s=default; t=1579860164;
+	bh=YBo4URw0WTkmn86vVl865SELQwwuNf/MkRaLaF5h8d4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CdAAdZ+6h4tzSWiPeCCpJlLosz9Jc54ylaShKn11umwiNvn0pZ6W9PEc3/Ius8Tf4
-	 4m77qCew+fdFJUtoKQjmJHJH+VjLVdJKmu4yGSpEte/Qg176ePh3H1CFkn7Kn+5vEl
-	 G1gFlBE+HfWwORtlfevNzwEie2o03i3eDqZn0fFE=
+	b=DAiqJRa/bIBSlfq6wTzAn2cUzLcWTzq0JZcHP4atARsjhNDDJyBB6/0cNOoL1Pe1V
+	 uBoohZF0L7/pbrCUeJbUcIzjWLpayvXpnr33ANL1ocMH1ZnwXHjmlPs4qHH3tC6eld
+	 hzEDZt021QHSjijIYj2ce88IKCpQ4snNShG7tBjc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388935AbgAXKCk (ORCPT
+        id S2388655AbgAXKCn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 05:02:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38138 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 05:02:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38228 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733301AbgAXKCi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 05:02:38 -0500
+        id S1731035AbgAXKCl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 05:02:41 -0500
 Received: from localhost (unknown [145.15.244.15])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 53A572075D;
-        Fri, 24 Jan 2020 10:02:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 833402075D;
+        Fri, 24 Jan 2020 10:02:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579860157;
-        bh=03vxJpeyQt75CgTZoG1Wr9wuuaiFdoOiPQReOgQVZT8=;
+        s=default; t=1579860161;
+        bh=YBo4URw0WTkmn86vVl865SELQwwuNf/MkRaLaF5h8d4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ewelbu33uXWAhuwn39/Hfl7D56e8HyOSlrmfCAHyitPgqfLWpk2r76OOs90bUCVPk
-         d5cZoliOoxV8MV+T7lQ57DZsDGolLH6lFweJYEMv4Yo7guJaQ8CeNHGQATGq6O1TOR
-         V4xlhqdzen2C/Os4k7KXHYpWf+Y8bUp+oOcyckN0=
+        b=UJi/D8mjIPw1AmnYIfcw0i7YRjMth0voWo/neSH02AanuxZK13olI69B8pUFtAVYJ
+         29dKc+TeZfZgFzzzW3289hj4jB/OEzIAQcpGJZBhDFdq0od2Qpy4CUss6J8ypC/ESb
+         5MNbdsZPjmmylVaYF74MO4s2S5mstHOyQoPY9jQg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stephen Rothwell <sfr@canb.auug.org.au>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 263/343] ALSA: aoa: onyx: always initialize register read value
-Date:   Fri, 24 Jan 2020 10:31:21 +0100
-Message-Id: <20200124092954.615720135@linuxfoundation.org>
+        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Charles Keepax <ckeepax@opensource.cirrus.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 272/343] ASoC: wm8737: Fix copy-paste error in wm8737_snd_controls
+Date:   Fri, 24 Jan 2020 10:31:30 +0100
+Message-Id: <20200124092955.701952166@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124092919.490687572@linuxfoundation.org>
 References: <20200124092919.490687572@linuxfoundation.org>
@@ -60,41 +62,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johannes Berg <johannes@sipsolutions.net>
+From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit f474808acb3c4b30552d9c59b181244e0300d218 ]
+[ Upstream commit 554b75bde64bcad9662530726d1483f7ef012069 ]
 
-A lot of places in the driver use onyx_read_register() without
-checking the return value, and it's been working OK for ~10 years
-or so, so probably never fails ... Rather than trying to check the
-return value everywhere, which would be relatively intrusive, at
-least make sure we don't use an uninitialized value.
+sound/soc/codecs/wm8737.c:112:29: warning:
+ high_3d defined but not used [-Wunused-const-variable=]
 
-Fixes: f3d9478b2ce4 ("[ALSA] snd-aoa: add snd-aoa")
-Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-Signed-off-by: Johannes Berg <johannes@sipsolutions.net>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+'high_3d' should be used for 3D High Cut-off.
+
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Fixes: 2a9ae13a2641 ("ASoC: Add initial WM8737 driver")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Acked-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+Link: https://lore.kernel.org/r/20190815091920.64480-1-yuehaibing@huawei.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/aoa/codecs/onyx.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ sound/soc/codecs/wm8737.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/aoa/codecs/onyx.c b/sound/aoa/codecs/onyx.c
-index d2d96ca082b71..6224fd3bbf7cc 100644
---- a/sound/aoa/codecs/onyx.c
-+++ b/sound/aoa/codecs/onyx.c
-@@ -74,8 +74,10 @@ static int onyx_read_register(struct onyx *onyx, u8 reg, u8 *value)
- 		return 0;
- 	}
- 	v = i2c_smbus_read_byte_data(onyx->i2c, reg);
--	if (v < 0)
-+	if (v < 0) {
-+		*value = 0;
- 		return -1;
-+	}
- 	*value = (u8)v;
- 	onyx->cache[ONYX_REG_CONTROL-FIRSTREGISTER] = *value;
- 	return 0;
+diff --git a/sound/soc/codecs/wm8737.c b/sound/soc/codecs/wm8737.c
+index f0cb1c4afe3ce..c5a8d758f58b8 100644
+--- a/sound/soc/codecs/wm8737.c
++++ b/sound/soc/codecs/wm8737.c
+@@ -170,7 +170,7 @@ SOC_DOUBLE("Polarity Invert Switch", WM8737_ADC_CONTROL, 5, 6, 1, 0),
+ SOC_SINGLE("3D Switch", WM8737_3D_ENHANCE, 0, 1, 0),
+ SOC_SINGLE("3D Depth", WM8737_3D_ENHANCE, 1, 15, 0),
+ SOC_ENUM("3D Low Cut-off", low_3d),
+-SOC_ENUM("3D High Cut-off", low_3d),
++SOC_ENUM("3D High Cut-off", high_3d),
+ SOC_SINGLE_TLV("3D ADC Volume", WM8737_3D_ENHANCE, 7, 1, 1, adc_tlv),
+ 
+ SOC_SINGLE("Noise Gate Switch", WM8737_NOISE_GATE, 0, 1, 0),
 -- 
 2.20.1
 
