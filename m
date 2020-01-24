@@ -2,83 +2,79 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B96DC3F68F
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 08:35:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2336C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 08:36:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1BB7D2071A
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 08:35:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6B7A2075D
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 08:36:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579854974;
+	bh=kY6uLDU53WJk7136qvLKPKYP/af1SJ9cRZV/kzzqJuM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=A4G4rXio/dOLJPPAQUY7XFgtbna17a/dh1L01DikFKw3fotdqO/PPpoKNZY1tCzKv
+	 Lfy6uwXuknUx4RYmnIWv7eIoHalZ/HvcJNLuSKNlKz0F6qXWDMSldrHVfsHSdCpjn+
+	 8XirDCKKZKg59YMwuz3FLoj//o8+ErWKy7tTaenI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729861AbgAXIfd (ORCPT
+        id S1729928AbgAXIgN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 03:35:33 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:41770 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725843AbgAXIfd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 03:35:33 -0500
-Received: from [5.158.153.53] (helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1iuuQq-0006yO-Sc; Fri, 24 Jan 2020 09:35:13 +0100
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 680F0103089; Fri, 24 Jan 2020 09:35:12 +0100 (CET)
-To:     Hans de Goede <hdegoede@redhat.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        vipul kumar <vipulk0511@gmail.com>
-Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        linux-kernel@vger.kernel.org, Stable <stable@vger.kernel.org>,
-        Srikanth Krishnakar <Srikanth_Krishnakar@mentor.com>,
-        Cedric Hombourger <Cedric_Hombourger@mentor.com>,
-        x86@kernel.org, Len Brown <len.brown@intel.com>,
-        Vipul Kumar <vipul_kumar@mentor.com>
-Subject: Re: [v3] x86/tsc: Unset TSC_KNOWN_FREQ and TSC_RELIABLE flags on Intel Bay Trail SoC
-In-Reply-To: <df04f43d-8c6d-7602-cb50-535b85cf2aaa@redhat.com>
-References: <1579617717-4098-1-git-send-email-vipulk0511@gmail.com> <87eevs7lfd.fsf@nanos.tec.linutronix.de> <CADdC98RJpsvu_zWehNGDDN=W11rD11NSPaodg-zuaXsHuOJYTQ@mail.gmail.com> <878slzeeim.fsf@nanos.tec.linutronix.de> <CADdC98TE4oNWZyEsqXzr+zJtfdTTOyeeuHqu1u04X_ktLHo-Hg@mail.gmail.com> <20200123144108.GU32742@smile.fi.intel.com> <df04f43d-8c6d-7602-cb50-535b85cf2aaa@redhat.com>
-From:   Thomas Gleixner <tglx@linutronix.de>
-Date:   Fri, 24 Jan 2020 09:35:12 +0100
-Message-ID: <87iml11ccf.fsf@nanos.tec.linutronix.de>
+        Fri, 24 Jan 2020 03:36:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57078 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725843AbgAXIgN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 03:36:13 -0500
+Received: from localhost (unknown [145.15.244.15])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 88FD52071A;
+        Fri, 24 Jan 2020 08:36:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579854972;
+        bh=kY6uLDU53WJk7136qvLKPKYP/af1SJ9cRZV/kzzqJuM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=arZCrcphoIKyZIzdqFweXTfxMxylrS+mWFhIj9c0O5vLHP7LOtxGGlFdCLBsRHaoO
+         9jr3YaokIfkg0nfx14YzhoLLFUxHTsPmdb5LrsWKSzxzF1rmY/UC4ICid9opeGU7N8
+         Eu4YDYyMov67wjrdHIYkcOFpBJwCvkTQj+h+JwEg=
+Date:   Fri, 24 Jan 2020 09:36:10 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Felipe Balbi <balbi@kernel.org>
+Cc:     Colin King <colin.king@canonical.com>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>,
+        Pawel Laszczak <pawell@cadence.com>, linux-usb@vger.kernel.org,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] usb: cdns3: fix spelling mistake and rework grammar in
+ text
+Message-ID: <20200124083610.GA2923791@kroah.com>
+References: <20200122234437.2829803-1-colin.king@canonical.com>
+ <87zhee4p7y.fsf@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87zhee4p7y.fsf@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hans,
+On Thu, Jan 23, 2020 at 09:16:33AM +0200, Felipe Balbi wrote:
+> Colin King <colin.king@canonical.com> writes:
+> 
+> > From: Colin Ian King <colin.king@canonical.com>
+> >
+> > The text contains a spelling mistake, "to" should be "too"
+> > so fix this and re-work the grammar to make it more readable.
+> >
+> > Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> 
+> Greg,
+> 
+> if you want to squeeze this in:
+> 
+> Acked-by: Felipe Balbi <balbi@kernel.org>
 
-Hans de Goede <hdegoede@redhat.com> writes:
+Thanks, will do.
 
-> Hi,
->
-> Sorry for top posting, but this is a long and almost unreadable thread ...
->
-> So it seems to me that a better fix would be to change the freq_desc_byt struct from:
->
-> static const struct freq_desc freq_desc_byt = {
->          1, { 83300, 100000, 133300, 116700, 80000, 0, 0, 0 }
-> };
->
-> to:
->
-> static const struct freq_desc freq_desc_byt = {
->          1, { 83333, 100000, 133300, 116700, 80000, 0, 0, 0 }
-> };
->
-> That should give us the right TSC frequency without needing to mess with
-> the TSC_KNOWN_FREQ and TSC_RELIABLE flags.
-
-Where does that number come from? Just math?
-
-Thanks,
-
-        tglx
-
-
+greg k-h
