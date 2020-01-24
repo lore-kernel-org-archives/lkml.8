@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11B6AC35242
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 10:00:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A55CC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 10:00:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD6DD21556
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 10:00:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F32322464
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 10:00:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579860033;
-	bh=g1qrFY3ekcjs5sQvbJJAerd/WSCf/PPBCR/XiUJPDjk=;
+	s=default; t=1579860037;
+	bh=Vfx3CNohv0rVezTes2BEVPjEJ+heEqzgPVsBaFx3Rvw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lRtqJdojAyqQe/0TZJIwlmmFOEioxm9eQKHNGemg0jH1vo2qpIo9oR+hQ6m7sGqTs
-	 uih/bjxCEpks4Z7I4FentOCKd5X+oqQpxD7S0v43sb0za3GLor+IZy3EOjsY8bExdB
-	 TZZrcucx7j/wzM9320pIuXA9ja3dFAKb2SBkqqhU=
+	b=rMxw6JpR/hzCnG7KmL6D3uS0kRsLCZ1BAdKNiy7lmeIwfSPraBkvZGUGU5odloj3E
+	 fFXNEwFkcPXkduxAHPYeCZJPXTUxKlJSTlzZ6im1ytSGunOllboPTF5aDzkuArWZ1h
+	 U4gK294TT5v+Gr7GYRVry9VzpDuPinpekKTXXb9M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388771AbgAXKAd (ORCPT
+        id S2388780AbgAXKAg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 05:00:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35942 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 05:00:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36012 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730996AbgAXKAc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 05:00:32 -0500
+        id S2388210AbgAXKAf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 05:00:35 -0500
 Received: from localhost (unknown [145.15.244.15])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9287920709;
-        Fri, 24 Jan 2020 10:00:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AA6B620709;
+        Fri, 24 Jan 2020 10:00:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579860031;
-        bh=g1qrFY3ekcjs5sQvbJJAerd/WSCf/PPBCR/XiUJPDjk=;
+        s=default; t=1579860035;
+        bh=Vfx3CNohv0rVezTes2BEVPjEJ+heEqzgPVsBaFx3Rvw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IE6EvftD+TK4vxfQJBaHglHTgsyBq6cCJpT1vzX+8aSHTbbjl7ljkf27vtikWipyS
-         Sy147OSbXls7NZEIAUrNg2qErhkUO2B/dfubMYVSErNwlM3B9HX0usZN7m3i66uHx2
-         HQAcT0rb25Gu8UqCA8Oif4prdwU81+9sVCxbNiSo=
+        b=EZ8JOZhcJ+ULUbFipKJsFj+0rY41MKHCX5Amos88VIg7TkBAtOStOebZBhpNFQd7y
+         BSVd+1Z6WtmFdoqD07s4vWIV1p7JCXDQm2R+Rzo6GdpAMb2ZNZOYrHb1+PA86NaCYq
+         /8sj90qoML+8zlPKZEPc8KcZNGPUefRrFXcTtg0M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Erwan Le Ray <erwan.leray@st.com>,
+        stable@vger.kernel.org, Jernej Skrabec <jernej.skrabec@siol.net>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 220/343] serial: stm32: Add support of TC bit status check
-Date:   Fri, 24 Jan 2020 10:30:38 +0100
-Message-Id: <20200124092948.965252625@linuxfoundation.org>
+Subject: [PATCH 4.14 211/343] ARM: dts: sun8i-h3: Fix wifi in Beelink X2 DT
+Date:   Fri, 24 Jan 2020 10:30:29 +0100
+Message-Id: <20200124092947.844394620@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124092919.490687572@linuxfoundation.org>
 References: <20200124092919.490687572@linuxfoundation.org>
@@ -59,95 +60,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Erwan Le Ray <erwan.leray@st.com>
+From: Jernej Skrabec <jernej.skrabec@siol.net>
 
-[ Upstream commit 64c32eab660386f9904bb295a104c9c425e9f8b2 ]
+[ Upstream commit ca0961011db57e39880df0b5708df8aa3339dc6f ]
 
-Adds a check on the Transmission Complete bit status before closing the
-com port. Prevents the port closure before the end of the transmission.
-TC poll loop is moved from stm32_tx_dma_complete to stm32_shutdown
-routine, in order to check TC before shutdown in both dma and
-PIO tx modes.
-TC clear is added in stm32_transmit_char routine, in order to be cleared
-before transmitting in both dma and PIO tx modes.
+mmc1 node where wifi module is connected doesn't have properly defined
+power supplies so wifi module is never powered up. Fix that by
+specifying additional power supplies.
 
-Fixes: 3489187204eb ("serial: stm32: adding dma support")
-Signed-off-by: Erwan Le Ray <erwan.leray@st.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Additionally, this STB may have either Realtek or Broadcom based wifi
+module. One based on Broadcom module also needs external clock to work
+properly. Fix that by adding clock property to wifi_pwrseq node.
+
+Fixes: e582b47a9252 ("ARM: dts: sun8i-h3: Add dts for the Beelink X2 STB")
+Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/serial/stm32-usart.c | 32 +++++++++++++++-----------------
- 1 file changed, 15 insertions(+), 17 deletions(-)
+ arch/arm/boot/dts/sun8i-h3-beelink-x2.dts | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/tty/serial/stm32-usart.c b/drivers/tty/serial/stm32-usart.c
-index a1e31913bcf9a..2384f786b76d1 100644
---- a/drivers/tty/serial/stm32-usart.c
-+++ b/drivers/tty/serial/stm32-usart.c
-@@ -180,21 +180,6 @@ static void stm32_tx_dma_complete(void *arg)
- 	struct uart_port *port = arg;
- 	struct stm32_port *stm32port = to_stm32_port(port);
- 	struct stm32_usart_offsets *ofs = &stm32port->info->ofs;
--	unsigned int isr;
--	int ret;
--
--	ret = readl_relaxed_poll_timeout_atomic(port->membase + ofs->isr,
--						isr,
--						(isr & USART_SR_TC),
--						10, 100000);
--
--	if (ret)
--		dev_err(port->dev, "terminal count not set\n");
--
--	if (ofs->icr == UNDEF_REG)
--		stm32_clr_bits(port, ofs->isr, USART_SR_TC);
--	else
--		stm32_set_bits(port, ofs->icr, USART_CR_TC);
+diff --git a/arch/arm/boot/dts/sun8i-h3-beelink-x2.dts b/arch/arm/boot/dts/sun8i-h3-beelink-x2.dts
+index 10da56e86ab80..21b38c386f1b3 100644
+--- a/arch/arm/boot/dts/sun8i-h3-beelink-x2.dts
++++ b/arch/arm/boot/dts/sun8i-h3-beelink-x2.dts
+@@ -79,6 +79,8 @@
+ 	wifi_pwrseq: wifi_pwrseq {
+ 		compatible = "mmc-pwrseq-simple";
+ 		reset-gpios = <&r_pio 0 7 GPIO_ACTIVE_LOW>; /* PL7 */
++		clocks = <&rtc 1>;
++		clock-names = "ext_clock";
+ 	};
  
- 	stm32_clr_bits(port, ofs->cr3, USART_CR3_DMAT);
- 	stm32port->tx_dma_busy = false;
-@@ -286,7 +271,6 @@ static void stm32_transmit_chars_dma(struct uart_port *port)
- 	/* Issue pending DMA TX requests */
- 	dma_async_issue_pending(stm32port->tx_ch);
- 
--	stm32_clr_bits(port, ofs->isr, USART_SR_TC);
- 	stm32_set_bits(port, ofs->cr3, USART_CR3_DMAT);
- 
- 	xmit->tail = (xmit->tail + count) & (UART_XMIT_SIZE - 1);
-@@ -315,6 +299,11 @@ static void stm32_transmit_chars(struct uart_port *port)
- 		return;
- 	}
- 
-+	if (ofs->icr == UNDEF_REG)
-+		stm32_clr_bits(port, ofs->isr, USART_SR_TC);
-+	else
-+		stm32_set_bits(port, ofs->icr, USART_ICR_TCCF);
-+
- 	if (stm32_port->tx_ch)
- 		stm32_transmit_chars_dma(port);
- 	else
-@@ -491,12 +480,21 @@ static void stm32_shutdown(struct uart_port *port)
- 	struct stm32_port *stm32_port = to_stm32_port(port);
- 	struct stm32_usart_offsets *ofs = &stm32_port->info->ofs;
- 	struct stm32_usart_config *cfg = &stm32_port->info->cfg;
--	u32 val;
-+	u32 val, isr;
-+	int ret;
- 
- 	val = USART_CR1_TXEIE | USART_CR1_RXNEIE | USART_CR1_TE | USART_CR1_RE;
- 	val |= BIT(cfg->uart_enable_bit);
- 	if (stm32_port->fifoen)
- 		val |= USART_CR1_FIFOEN;
-+
-+	ret = readl_relaxed_poll_timeout(port->membase + ofs->isr,
-+					 isr, (isr & USART_SR_TC),
-+					 10, 100000);
-+
-+	if (ret)
-+		dev_err(port->dev, "transmission complete not set\n");
-+
- 	stm32_clr_bits(port, ofs->cr1, val);
- 
- 	dev_pm_clear_wake_irq(port->dev);
+ 	sound_spdif {
+@@ -128,6 +130,8 @@
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&mmc1_pins_a>;
+ 	vmmc-supply = <&reg_vcc3v3>;
++	vqmmc-supply = <&reg_vcc3v3>;
++	mmc-pwrseq = <&wifi_pwrseq>;
+ 	bus-width = <4>;
+ 	non-removable;
+ 	status = "okay";
 -- 
 2.20.1
 
