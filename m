@@ -2,341 +2,184 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B2B1C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 22:57:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE832C32771
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 22:57:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4508D2071A
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 22:57:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579906623;
-	bh=8Hk1Y9F/Ls8DSUsm356nluzgCL5GFrLYnVVx09cd0ro=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
-	 References:List-ID:From;
-	b=C/6aNyh5iG4SfmTQHsMnG6364JW39KDcX/4IKRvS8efma/T4GrKIusdeHc+JgRMvA
-	 IFD9T4M9wpSr0uXh2vw6TMcXgHkPzZZcsj7ziIgTrtPZqOP2+bTFyCQsHHycPN3xDZ
-	 ZuyDsTk8q4timeM2TqIGao6YZ1GG8TeLY3ISe2d4=
+	by mail.kernel.org (Postfix) with ESMTP id 790B52071A
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 22:57:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="srTj1j2m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387480AbgAXW5C (ORCPT
+        id S2387500AbgAXW5G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 17:57:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39828 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729550AbgAXW4r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 17:56:47 -0500
-Received: from localhost.localdomain (c-98-220-238-81.hsd1.il.comcast.net [98.220.238.81])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E2AB1218AC;
-        Fri, 24 Jan 2020 22:56:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579906606;
-        bh=8Hk1Y9F/Ls8DSUsm356nluzgCL5GFrLYnVVx09cd0ro=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
-         References:From;
-        b=YD81Wn7rFLq1NxC9Wp4tFJWk6L+x5sO+vA2TT1SpDMOJPp2nzype/atkvZ1cSU8I5
-         8KGZb0pLi3gukcJ4WJAwpq+6li9g+MEElUBrGK/0a9v5//ss4fC8oF6fNSjY+uR37p
-         LYcALlLOV7U3OxCUhBJ0a3z67CzoEgloQDu3gEu0=
-From:   Tom Zanussi <zanussi@kernel.org>
-To:     rostedt@goodmis.org
-Cc:     artem.bityutskiy@linux.intel.com, mhiramat@kernel.org,
-        linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org,
-        ndesaulniers@google.com
-Subject: [PATCH v3 11/12] tracing: Add kprobe event command generation test module
-Date:   Fri, 24 Jan 2020 16:56:22 -0600
-Message-Id: <f687f8bd1bf87b96231b1e661aa8cfb64bb33b7b.1579904761.git.zanussi@kernel.org>
-X-Mailer: git-send-email 2.14.1
-In-Reply-To: <cover.1579904761.git.zanussi@kernel.org>
-References: <cover.1579904761.git.zanussi@kernel.org>
-In-Reply-To: <cover.1579904761.git.zanussi@kernel.org>
-References: <cover.1579904761.git.zanussi@kernel.org>
+        Fri, 24 Jan 2020 17:57:06 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:37559 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729521AbgAXW5F (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 17:57:05 -0500
+Received: by mail-wr1-f68.google.com with SMTP id w15so3952510wru.4
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jan 2020 14:57:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=fNqODm3MPzAsBSCY9n8l1wXAgR4AKgIMTb5pUp7NU0U=;
+        b=srTj1j2mPK8t2sakwkD7rQEbDNeFFM9BwDp93dCsDs1Q20oZf59EZmlmAzOPPdf+4y
+         YxcM9llvhHsbhRScaQhg5pfhZuQ5EK2Wiabt848H4kBft/yOeKD0KfLCT/l9W4a5Y1L4
+         Ws4qptwOggL7bhfng7gBhzPp9HhaA+aTg36WNq74YBut1qhS4L/ZTMqXR3HYzj9r7FGA
+         g3OhV0aJtCq6S5MwW9QcBqn3UQ760IxL5+/lie2pPtU7H3eL61wmjRFYGCWegua4o7px
+         G9xsghTqHOYLmfB+t0+5wgQJi9Xa2XH6e7g4cwoQw8CdIX7jxs00HjMp1GrSPYPF2HYQ
+         4/Jg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=fNqODm3MPzAsBSCY9n8l1wXAgR4AKgIMTb5pUp7NU0U=;
+        b=kHAzSoKYBcJYzBLnW37tSJOD4/R5KY+q8aIhMoBZtXE8MsnsyjMBfaoFc1UQh3A4sL
+         yn2DUNndsYMKIL0+/Gd9xOj85WUnJkDapJunP1BZFqY0fCmEb5lwieMcfMfJFulMn77M
+         8iMLnm1h5jpmR4SYCyobg4B9feg9buUNuK6q5eByq9Txa0wjyVB8FGaJM3x+dvtFY/dn
+         pQZiDqz53sGI6iuki7RaLSRrK5LiO+h8OdA0HGQJDvdiGQSaXGNHeHMrO4aB19ba+Wpo
+         J+TqeuoeqBXFlr6cZWR1UQY3oEnma4vC8NQC4bl+y781aQC5cHLbYl7iWISMITkrgrau
+         TltQ==
+X-Gm-Message-State: APjAAAVke+9Zn2A45Zu9PLUf09x9MmtNZcbX6GdQuxM3AVH6TNovLMwe
+        oXVsykjoK7u0yXC7bwmzd///jvpmrtArBXh9GWSCwA==
+X-Google-Smtp-Source: APXvYqzP4FnUZ8kt/z6sTrHwXtHilzjV/goyThoHUZqMef+SOku7Q5F6lD4mv864jnI2/qV48MsRq4J931iUvo8aLpk=
+X-Received: by 2002:adf:e887:: with SMTP id d7mr6634585wrm.162.1579906622211;
+ Fri, 24 Jan 2020 14:57:02 -0800 (PST)
+MIME-Version: 1.0
+References: <20200120145635.GA30904@blackbody.suse.cz> <20200124114017.8363-1-mkoutny@suse.com>
+ <20200124114017.8363-2-mkoutny@suse.com>
+In-Reply-To: <20200124114017.8363-2-mkoutny@suse.com>
+From:   Suren Baghdasaryan <surenb@google.com>
+Date:   Fri, 24 Jan 2020 14:56:51 -0800
+Message-ID: <CAJuCfpGjC=YwY=oNnYFNDp2nCuR9YhSU95=xbbeoDEheemte+Q@mail.gmail.com>
+Subject: Re: [PATCH v2 1/3] cgroup: Iterate tasks that did not finish do_exit()
+To:     =?UTF-8?Q?Michal_Koutn=C3=BD?= <mkoutny@suse.com>
+Cc:     cgroups mailinglist <cgroups@vger.kernel.org>,
+        alex.shi@linux.alibaba.com, Roman Gushchin <guro@fb.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        kernel-team <kernel-team@android.com>,
+        JeiFeng Lee <linger.lee@mediatek.com>,
+        linux-arm-kernel@lists.infradead.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-kselftest@vger.kernel.org,
+        linux-mediatek@lists.infradead.org, Li Zefan <lizefan@huawei.com>,
+        matthias.bgg@gmail.com, shuah@kernel.org,
+        Tejun Heo <tj@kernel.org>, Tom Cherry <tomcherry@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a test module that checks the basic functionality of the in-kernel
-kprobe event command generation API by creating kprobe events from a
-module.
+On Fri, Jan 24, 2020 at 3:40 AM Michal Koutn=C3=BD <mkoutny@suse.com> wrote=
+:
+>
+> PF_EXITING is set earlier than actual removal from css_set when a task
+> is exitting. This can confuse cgroup.procs readers who see no PF_EXITING
+> tasks, however, rmdir is checking against css_set membership so it can
+> transitionally fail with EBUSY.
+>
+> Fix this by listing tasks that weren't unlinked from css_set active
+> lists.
+> It may happen that other users of the task iterator (without
+> CSS_TASK_ITER_PROCS) spot a PF_EXITING task before cgroup_exit(). This
+> is equal to the state before commit c03cd7738a83 ("cgroup: Include dying
+> leaders with live threads in PROCS iterations") but it may be reviewed
+> later.
+>
+> Reported-by: Suren Baghdasaryan <surenb@google.com>
+> Fixes: c03cd7738a83 ("cgroup: Include dying leaders with live threads in =
+PROCS iterations")
+> Signed-off-by: Michal Koutn=C3=BD <mkoutny@suse.com>
+> ---
+>  include/linux/cgroup.h |  1 +
+>  kernel/cgroup/cgroup.c | 23 ++++++++++++++++-------
+>  2 files changed, 17 insertions(+), 7 deletions(-)
+>
+> diff --git a/include/linux/cgroup.h b/include/linux/cgroup.h
+> index d7ddebd0cdec..e75d2191226b 100644
+> --- a/include/linux/cgroup.h
+> +++ b/include/linux/cgroup.h
+> @@ -62,6 +62,7 @@ struct css_task_iter {
+>         struct list_head                *mg_tasks_head;
+>         struct list_head                *dying_tasks_head;
+>
+> +       struct list_head                *cur_tasks_head;
+>         struct css_set                  *cur_cset;
+>         struct css_set                  *cur_dcset;
+>         struct task_struct              *cur_task;
+> diff --git a/kernel/cgroup/cgroup.c b/kernel/cgroup/cgroup.c
+> index 735af8f15f95..a6e3619e013b 100644
+> --- a/kernel/cgroup/cgroup.c
+> +++ b/kernel/cgroup/cgroup.c
+> @@ -4404,12 +4404,16 @@ static void css_task_iter_advance_css_set(struct =
+css_task_iter *it)
+>                 }
+>         } while (!css_set_populated(cset) && list_empty(&cset->dying_task=
+s));
+>
+> -       if (!list_empty(&cset->tasks))
+> +       if (!list_empty(&cset->tasks)) {
+>                 it->task_pos =3D cset->tasks.next;
+> -       else if (!list_empty(&cset->mg_tasks))
+> +               it->cur_tasks_head =3D &cset->tasks;
+> +       } else if (!list_empty(&cset->mg_tasks)) {
+>                 it->task_pos =3D cset->mg_tasks.next;
+> -       else
+> +               it->cur_tasks_head =3D &cset->mg_tasks;
+> +       } else {
+>                 it->task_pos =3D cset->dying_tasks.next;
+> +               it->cur_tasks_head =3D &cset->dying_tasks;
+> +       }
+>
+>         it->tasks_head =3D &cset->tasks;
+>         it->mg_tasks_head =3D &cset->mg_tasks;
+> @@ -4467,10 +4471,14 @@ static void css_task_iter_advance(struct css_task=
+_iter *it)
+>                 else
+>                         it->task_pos =3D it->task_pos->next;
+>
+> -               if (it->task_pos =3D=3D it->tasks_head)
+> +               if (it->task_pos =3D=3D it->tasks_head) {
+>                         it->task_pos =3D it->mg_tasks_head->next;
+> -               if (it->task_pos =3D=3D it->mg_tasks_head)
+> +                       it->cur_tasks_head =3D it->mg_tasks_head;
+> +               }
+> +               if (it->task_pos =3D=3D it->mg_tasks_head) {
+>                         it->task_pos =3D it->dying_tasks_head->next;
+> +                       it->cur_tasks_head =3D it->dying_tasks_head;
+> +               }
+>                 if (it->task_pos =3D=3D it->dying_tasks_head)
+>                         css_task_iter_advance_css_set(it);
+>         } else {
+> @@ -4489,11 +4497,12 @@ static void css_task_iter_advance(struct css_task=
+_iter *it)
+>                         goto repeat;
+>
+>                 /* and dying leaders w/o live member threads */
+> -               if (!atomic_read(&task->signal->live))
+> +               if (it->cur_tasks_head =3D=3D it->dying_tasks_head &&
+> +                   !atomic_read(&task->signal->live))
+>                         goto repeat;
+>         } else {
+>                 /* skip all dying ones */
+> -               if (task->flags & PF_EXITING)
+> +               if (it->cur_tasks_head =3D=3D it->dying_tasks_head)
+>                         goto repeat;
+>         }
+>  }
+> --
+> 2.24.1
+>
 
-Signed-off-by: Tom Zanussi <zanussi@kernel.org>
----
- kernel/trace/Kconfig                 |  12 ++
- kernel/trace/Makefile                |   1 +
- kernel/trace/kprobe_event_gen_test.c | 225 +++++++++++++++++++++++++++++++++++
- 3 files changed, 238 insertions(+)
- create mode 100644 kernel/trace/kprobe_event_gen_test.c
+Tested-by: Suren Baghdasaryan <surenb@google.com>
 
-diff --git a/kernel/trace/Kconfig b/kernel/trace/Kconfig
-index 4f2041166a2f..4484e783f68d 100644
---- a/kernel/trace/Kconfig
-+++ b/kernel/trace/Kconfig
-@@ -787,6 +787,18 @@ config SYNTH_EVENT_GEN_TEST
- 
- 	  If unsure, say N.
- 
-+config KPROBE_EVENT_GEN_TEST
-+	tristate "Test module for in-kernel kprobe event generation"
-+	depends on KPROBE_EVENTS
-+	help
-+          This option creates a test module to check the base
-+          functionality of in-kernel kprobe event definition.
-+
-+          To test, insert the module, and then check the trace buffer
-+	  for the generated kprobe events.
-+
-+	  If unsure, say N.
-+
- config TRACE_EVAL_MAP_FILE
-        bool "Show eval mappings for trace events"
-        depends on TRACING
-diff --git a/kernel/trace/Makefile b/kernel/trace/Makefile
-index 32012f50fb79..f9dcd19165fa 100644
---- a/kernel/trace/Makefile
-+++ b/kernel/trace/Makefile
-@@ -45,6 +45,7 @@ obj-$(CONFIG_TRACING) += trace_printk.o
- obj-$(CONFIG_TRACING_MAP) += tracing_map.o
- obj-$(CONFIG_PREEMPTIRQ_DELAY_TEST) += preemptirq_delay_test.o
- obj-$(CONFIG_SYNTH_EVENT_GEN_TEST) += synth_event_gen_test.o
-+obj-$(CONFIG_KPROBE_EVENT_GEN_TEST) += kprobe_event_gen_test.o
- obj-$(CONFIG_CONTEXT_SWITCH_TRACER) += trace_sched_switch.o
- obj-$(CONFIG_FUNCTION_TRACER) += trace_functions.o
- obj-$(CONFIG_PREEMPTIRQ_TRACEPOINTS) += trace_preemptirq.o
-diff --git a/kernel/trace/kprobe_event_gen_test.c b/kernel/trace/kprobe_event_gen_test.c
-new file mode 100644
-index 000000000000..18b0f1cbb947
---- /dev/null
-+++ b/kernel/trace/kprobe_event_gen_test.c
-@@ -0,0 +1,225 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Test module for in-kernel kprobe event creation and generation.
-+ *
-+ * Copyright (C) 2019 Tom Zanussi <zanussi@kernel.org>
-+ */
-+
-+#include <linux/module.h>
-+#include <linux/trace_events.h>
-+
-+/*
-+ * This module is a simple test of basic functionality for in-kernel
-+ * kprobe/kretprobe event creation.  The first test uses
-+ * kprobe_event_gen_cmd_start(), kprobe_event_add_fields() and
-+ * kprobe_event_gen_cmd_end() to create a kprobe event, which is then
-+ * enabled in order to generate trace output.  The second creates a
-+ * kretprobe event using kretprobe_event_gen_cmd_start() and
-+ * kretprobe_event_gen_cmd_end(), and is also then enabled.
-+ *
-+ * To test, select CONFIG_KPROBE_EVENT_GEN_TEST and build the module.
-+ * Then:
-+ *
-+ * # insmod kernel/trace/kprobe_event_gen_test.ko
-+ * # cat /sys/kernel/debug/tracing/trace
-+ *
-+ * You should see many instances of the "gen_kprobe_test" and
-+ * "gen_kretprobe_test" events in the trace buffer.
-+ *
-+ * To remove the events, remove the module:
-+ *
-+ * # rmmod kprobe_event_gen_test
-+ *
-+ */
-+
-+static struct trace_event_file *gen_kprobe_test;
-+static struct trace_event_file *gen_kretprobe_test;
-+
-+/*
-+ * Test to make sure we can create a kprobe event, then add more
-+ * fields.
-+ */
-+static int __init test_gen_kprobe_cmd(void)
-+{
-+	struct dynevent_cmd cmd;
-+	char *buf;
-+	int ret;
-+
-+	/* Create a buffer to hold the generated command */
-+	buf = kzalloc(MAX_DYNEVENT_CMD_LEN, GFP_KERNEL);
-+	if (!buf)
-+		return -ENOMEM;
-+
-+	/* Before generating the command, initialize the cmd object */
-+	kprobe_event_cmd_init(&cmd, buf, MAX_DYNEVENT_CMD_LEN);
-+
-+	/*
-+	 * Define the gen_kprobe_test event with the first 2 kprobe
-+	 * fields.
-+	 */
-+	ret = kprobe_event_gen_cmd_start(&cmd, "gen_kprobe_test",
-+					 "do_sys_open",
-+					 "dfd=%ax", "filename=%dx");
-+	if (ret)
-+		goto free;
-+
-+	/* Use kprobe_event_add_fields to add the rest of the fields */
-+
-+	ret = kprobe_event_add_fields(&cmd, "flags=%cx", "mode=+4($stack)");
-+	if (ret)
-+		goto free;
-+
-+	/*
-+	 * This actually creates the event.
-+	 */
-+	ret = kprobe_event_gen_cmd_end(&cmd);
-+	if (ret)
-+		goto free;
-+
-+	/*
-+	 * Now get the gen_kprobe_test event file.  We need to prevent
-+	 * the instance and event from disappearing from underneath
-+	 * us, which trace_get_event_file() does (though in this case
-+	 * we're using the top-level instance which never goes away).
-+	 */
-+	gen_kprobe_test = trace_get_event_file(NULL, "kprobes",
-+					       "gen_kprobe_test");
-+	if (IS_ERR(gen_kprobe_test)) {
-+		ret = PTR_ERR(gen_kprobe_test);
-+		goto delete;
-+	}
-+
-+	/* Enable the event or you won't see anything */
-+	ret = trace_array_set_clr_event(gen_kprobe_test->tr,
-+					"kprobes", "gen_kprobe_test", true);
-+	if (ret) {
-+		trace_put_event_file(gen_kprobe_test);
-+		goto delete;
-+	}
-+ out:
-+	return ret;
-+ delete:
-+	/* We got an error after creating the event, delete it */
-+	ret = kprobe_event_delete("gen_kprobe_test");
-+ free:
-+	kfree(buf);
-+
-+	goto out;
-+}
-+
-+/*
-+ * Test to make sure we can create a kretprobe event.
-+ */
-+static int __init test_gen_kretprobe_cmd(void)
-+{
-+	struct dynevent_cmd cmd;
-+	char *buf;
-+	int ret;
-+
-+	/* Create a buffer to hold the generated command */
-+	buf = kzalloc(MAX_DYNEVENT_CMD_LEN, GFP_KERNEL);
-+	if (!buf)
-+		return -ENOMEM;
-+
-+	/* Before generating the command, initialize the cmd object */
-+	kprobe_event_cmd_init(&cmd, buf, MAX_DYNEVENT_CMD_LEN);
-+
-+	/*
-+	 * Define the kretprobe event.
-+	 */
-+	ret = kretprobe_event_gen_cmd_start(&cmd, "gen_kretprobe_test",
-+					    "do_sys_open",
-+					    "$retval");
-+	if (ret)
-+		goto free;
-+
-+	/*
-+	 * This actually creates the event.
-+	 */
-+	ret = kretprobe_event_gen_cmd_end(&cmd);
-+	if (ret)
-+		goto free;
-+
-+	/*
-+	 * Now get the gen_kretprobe_test event file.  We need to
-+	 * prevent the instance and event from disappearing from
-+	 * underneath us, which trace_get_event_file() does (though in
-+	 * this case we're using the top-level instance which never
-+	 * goes away).
-+	 */
-+	gen_kretprobe_test = trace_get_event_file(NULL, "kprobes",
-+						  "gen_kretprobe_test");
-+	if (IS_ERR(gen_kretprobe_test)) {
-+		ret = PTR_ERR(gen_kretprobe_test);
-+		goto delete;
-+	}
-+
-+	/* Enable the event or you won't see anything */
-+	ret = trace_array_set_clr_event(gen_kretprobe_test->tr,
-+					"kprobes", "gen_kretprobe_test", true);
-+	if (ret) {
-+		trace_put_event_file(gen_kretprobe_test);
-+		goto delete;
-+	}
-+ out:
-+	return ret;
-+ delete:
-+	/* We got an error after creating the event, delete it */
-+	ret = kprobe_event_delete("gen_kretprobe_test");
-+ free:
-+	kfree(buf);
-+
-+	goto out;
-+}
-+
-+static int __init kprobe_event_gen_test_init(void)
-+{
-+	int ret;
-+
-+	ret = test_gen_kprobe_cmd();
-+	if (ret)
-+		return ret;
-+
-+	ret = test_gen_kretprobe_cmd();
-+	if (ret) {
-+		WARN_ON(trace_array_set_clr_event(gen_kretprobe_test->tr,
-+						  "kprobes",
-+						  "gen_kretprobe_test", false));
-+		trace_put_event_file(gen_kretprobe_test);
-+		WARN_ON(kprobe_event_delete("gen_kretprobe_test"));
-+	}
-+
-+	return ret;
-+}
-+
-+static void __exit kprobe_event_gen_test_exit(void)
-+{
-+	/* Disable the event or you can't remove it */
-+	WARN_ON(trace_array_set_clr_event(gen_kprobe_test->tr,
-+					  "kprobes",
-+					  "gen_kprobe_test", false));
-+
-+	/* Now give the file and instance back */
-+	trace_put_event_file(gen_kprobe_test);
-+
-+	/* Now unregister and free the event */
-+	WARN_ON(kprobe_event_delete("gen_kprobe_test"));
-+
-+	/* Disable the event or you can't remove it */
-+	WARN_ON(trace_array_set_clr_event(gen_kprobe_test->tr,
-+					  "kprobes",
-+					  "gen_kretprobe_test", false));
-+
-+	/* Now give the file and instance back */
-+	trace_put_event_file(gen_kretprobe_test);
-+
-+	/* Now unregister and free the event */
-+	WARN_ON(kprobe_event_delete("gen_kretprobe_test"));
-+}
-+
-+module_init(kprobe_event_gen_test_init)
-+module_exit(kprobe_event_gen_test_exit)
-+
-+MODULE_AUTHOR("Tom Zanussi");
-+MODULE_DESCRIPTION("kprobe event generation test");
-+MODULE_LICENSE("GPL v2");
--- 
-2.14.1
-
+Thanks!
