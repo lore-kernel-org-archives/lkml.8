@@ -4,48 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98DD7C35240
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 01:19:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C588CC35240
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 01:19:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62F642087E
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 01:19:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88A872087E
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 01:19:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579828765;
-	bh=jSi2K8Cntbb9yx7Mu1bcUyqGvRImCI1x4WcFEMTeGhQ=;
+	s=default; t=1579828768;
+	bh=E0awQwTam+1n25uIcPvb3MI3juss7eRUO4EghGen+rs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XTGAmrVQX3cMBfQSdkoQUAktOJn0PjRu0L2AEGnzbQS6v48TjuG66+HMeG8BPjiSP
-	 MqYWvLYxjWyTWMRImqUWrVTcwl4vBMP8tCl8LhJ3XYRtNpKNPUUXa9yTjuG3F8Q3dw
-	 S7yTc5cCoEybngSvkkE4x9l0gNzfOFHjgBHOkDIg=
+	b=iqYuz/PCkUMjnybTaxLB/aHpHEnFWB1Iw6Qxem5XqCbLHpu1Mj6nT+CXbQ/okk9At
+	 IPTDJJPui2l+tR7l/QEzqCxd+bZ8hoo/MsaNTVjjcTAK1CmQRUAvp6D1FuyaRC6WMx
+	 +72Hrvb4vPo1wIpOwXYPXyNMehkvB1kQVPtpzMsY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731216AbgAXBTX (ORCPT
+        id S1730705AbgAXBRn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 20:19:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60924 "EHLO mail.kernel.org"
+        Thu, 23 Jan 2020 20:17:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60716 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730656AbgAXBRp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 20:17:45 -0500
+        id S1730540AbgAXBRg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jan 2020 20:17:36 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8D6AF2467E;
-        Fri, 24 Jan 2020 01:17:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A53022467E;
+        Fri, 24 Jan 2020 01:17:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579828664;
-        bh=jSi2K8Cntbb9yx7Mu1bcUyqGvRImCI1x4WcFEMTeGhQ=;
+        s=default; t=1579828656;
+        bh=E0awQwTam+1n25uIcPvb3MI3juss7eRUO4EghGen+rs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RVpaCtujGmvy3b5XwdSMnnR9AqAMeLpi45aD2hB3SLeSaKxQ/xZF0nVt8+s2pX8bC
-         oJA78Y+gJoRnjhVcn0ABu3AQTnlKpq8f1qFN5WKZQw8DvVKu/nct/B3YI1qG+YdozY
-         sEoEHqVy5dqMO4VdA9nl492YR1zoL34TW8pS2dRo=
+        b=znA0DuXbodEf0gBTFYekrABxloKNS/03GdIQ4uOpYXzqI6P9ow9CRxS8xrYMnPgQM
+         u/E2Y9kLVZ9mJPSOEXpHCLD+VToNR0A8rIg+UPo8yH7gZWs9YVgPBMkkhkj4L2vTXL
+         i9SOExu7IJp8cWFQU15f/nn2FGdgv0CgEh5tzSvY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hans de Goede <hdegoede@redhat.com>, Jiri Kosina <jkosina@suse.cz>,
-        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 31/33] HID: ite: Add USB id match for Acer SW5-012 keyboard dock
-Date:   Thu, 23 Jan 2020 20:17:06 -0500
-Message-Id: <20200124011708.18232-31-sashal@kernel.org>
+Cc:     "H. Nikolaus Schaller" <hns@goldelico.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-mmc@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 24/33] mmc: core: fix wl1251 sdio quirks
+Date:   Thu, 23 Jan 2020 20:16:59 -0500
+Message-Id: <20200124011708.18232-24-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200124011708.18232-1-sashal@kernel.org>
 References: <20200124011708.18232-1-sashal@kernel.org>
@@ -58,54 +59,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: "H. Nikolaus Schaller" <hns@goldelico.com>
 
-[ Upstream commit 8f18eca9ebc57d6b150237033f6439242907e0ba ]
+[ Upstream commit 16568b4a4f0c34bd35cfadac63303c7af7812764 ]
 
-The Acer SW5-012 2-in-1 keyboard dock uses a Synaptics S91028 touchpad
-which is connected to an ITE 8595 USB keyboard controller chip.
+wl1251 and wl1271 have different vendor id and device id.
+So we need to handle both with sdio quirks.
 
-This keyboard has the same quirk for its rfkill / airplane mode hotkey as
-other keyboards with the ITE 8595 chip, it only sends a single release
-event when pressed and released, it never sends a press event.
-
-This commit adds this keyboards USB id to the hid-ite id-table, fixing
-the rfkill key not working on this keyboard.
-
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+Fixes: 884f38607897 ("mmc: core: move some sdio IDs out of quirks file")
+Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+Cc: <stable@vger.kernel.org> # v4.11+
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hid/hid-ids.h | 1 +
- drivers/hid/hid-ite.c | 3 +++
- 2 files changed, 4 insertions(+)
+ drivers/mmc/core/quirks.h | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/drivers/hid/hid-ids.h b/drivers/hid/hid-ids.h
-index 6273e7178e785..c99d56308fbc9 100644
---- a/drivers/hid/hid-ids.h
-+++ b/drivers/hid/hid-ids.h
-@@ -1098,6 +1098,7 @@
- #define USB_DEVICE_ID_SYNAPTICS_LTS2	0x1d10
- #define USB_DEVICE_ID_SYNAPTICS_HD	0x0ac3
- #define USB_DEVICE_ID_SYNAPTICS_QUAD_HD	0x1ac3
-+#define USB_DEVICE_ID_SYNAPTICS_ACER_SWITCH5_012	0x2968
- #define USB_DEVICE_ID_SYNAPTICS_TP_V103	0x5710
- #define USB_DEVICE_ID_SYNAPTICS_ACER_SWITCH5	0x81a7
- 
-diff --git a/drivers/hid/hid-ite.c b/drivers/hid/hid-ite.c
-index a45f2352618d3..c436e12feb233 100644
---- a/drivers/hid/hid-ite.c
-+++ b/drivers/hid/hid-ite.c
-@@ -40,6 +40,9 @@ static int ite_event(struct hid_device *hdev, struct hid_field *field,
- static const struct hid_device_id ite_devices[] = {
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_ITE, USB_DEVICE_ID_ITE8595) },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_258A, USB_DEVICE_ID_258A_6A88) },
-+	/* ITE8595 USB kbd ctlr, with Synaptics touchpad connected to it. */
-+	{ HID_USB_DEVICE(USB_VENDOR_ID_SYNAPTICS,
-+			 USB_DEVICE_ID_SYNAPTICS_ACER_SWITCH5_012) },
- 	{ }
+diff --git a/drivers/mmc/core/quirks.h b/drivers/mmc/core/quirks.h
+index 2d2d9ea8be4f3..3dba15bccce25 100644
+--- a/drivers/mmc/core/quirks.h
++++ b/drivers/mmc/core/quirks.h
+@@ -119,7 +119,14 @@ static const struct mmc_fixup mmc_ext_csd_fixups[] = {
+ 	END_FIXUP
  };
- MODULE_DEVICE_TABLE(hid, ite_devices);
+ 
++
+ static const struct mmc_fixup sdio_fixup_methods[] = {
++	SDIO_FIXUP(SDIO_VENDOR_ID_TI_WL1251, SDIO_DEVICE_ID_TI_WL1251,
++		   add_quirk, MMC_QUIRK_NONSTD_FUNC_IF),
++
++	SDIO_FIXUP(SDIO_VENDOR_ID_TI_WL1251, SDIO_DEVICE_ID_TI_WL1251,
++		   add_quirk, MMC_QUIRK_DISABLE_CD),
++
+ 	SDIO_FIXUP(SDIO_VENDOR_ID_TI, SDIO_DEVICE_ID_TI_WL1271,
+ 		   add_quirk, MMC_QUIRK_NONSTD_FUNC_IF),
+ 
 -- 
 2.20.1
 
