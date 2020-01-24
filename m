@@ -2,286 +2,120 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F244FC32771
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 12:07:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A65FFC35242
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 12:07:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D17E520709
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 12:07:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85019206D4
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 12:07:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730778AbgAXMHR (ORCPT
+        id S1731155AbgAXMHk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 07:07:17 -0500
-Received: from alexa-out-blr-02.qualcomm.com ([103.229.18.198]:6146 "EHLO
-        alexa-out-blr-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729396AbgAXMHQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 07:07:16 -0500
-Received: from ironmsg02-blr.qualcomm.com ([10.86.208.131])
-  by alexa-out-blr-02.qualcomm.com with ESMTP/TLS/AES256-SHA; 24 Jan 2020 17:36:37 +0530
-Received: from harigovi-linux.qualcomm.com ([10.204.66.157])
-  by ironmsg02-blr.qualcomm.com with ESMTP; 24 Jan 2020 17:36:16 +0530
-Received: by harigovi-linux.qualcomm.com (Postfix, from userid 2332695)
-        id 512901E24; Fri, 24 Jan 2020 17:36:15 +0530 (IST)
-From:   Harigovindan P <harigovi@codeaurora.org>
-To:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
-        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org
-Cc:     Harigovindan P <harigovi@codeaurora.org>,
-        linux-kernel@vger.kernel.org, robdclark@gmail.com,
-        seanpaul@chromium.org, hoegsberg@chromium.org,
-        kalyan_t@codeaurora.org, nganji@codeaurora.org
-Subject: [v3] arm64: dts: sc7180: add display dt nodes
-Date:   Fri, 24 Jan 2020 17:36:12 +0530
-Message-Id: <1579867572-17188-1-git-send-email-harigovi@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
+        Fri, 24 Jan 2020 07:07:40 -0500
+Received: from foss.arm.com ([217.140.110.172]:51040 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729396AbgAXMHk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 07:07:40 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C46B71FB;
+        Fri, 24 Jan 2020 04:00:28 -0800 (PST)
+Received: from [10.1.194.46] (e113632-lin.cambridge.arm.com [10.1.194.46])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F00763F68E;
+        Fri, 24 Jan 2020 04:00:26 -0800 (PST)
+Subject: Re: [PATCH v2 1/6] arm64: add support for the AMU extension v1
+To:     Ionela Voinescu <ionela.voinescu@arm.com>
+Cc:     catalin.marinas@arm.com, will@kernel.org, mark.rutland@arm.com,
+        maz@kernel.org, suzuki.poulose@arm.com, sudeep.holla@arm.com,
+        dietmar.eggemann@arm.com, peterz@infradead.org, mingo@redhat.com,
+        ggherdovich@suse.cz, vincent.guittot@linaro.org,
+        linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20191218182607.21607-1-ionela.voinescu@arm.com>
+ <20191218182607.21607-2-ionela.voinescu@arm.com>
+ <05b1981b-cf4d-d990-5155-6ed3fadcca92@arm.com>
+ <20200123183207.GB20475@arm.com>
+From:   Valentin Schneider <valentin.schneider@arm.com>
+Message-ID: <00d852b0-d456-efc3-5bfa-31524168344b@arm.com>
+Date:   Fri, 24 Jan 2020 12:00:25 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+MIME-Version: 1.0
+In-Reply-To: <20200123183207.GB20475@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add display, DSI hardware DT nodes for sc7180.
+On 23/01/2020 18:32, Ionela Voinescu wrote:
+[...]
+> and later we can use information in
+> AMCGCR_EL0 to get the number of architected counters (n) and
+> AMEVTYPER0<n>_EL0 to find out the type. The same logic would apply to
+> the auxiliary counters.
+> 
 
-Signed-off-by: Harigovindan P <harigovi@codeaurora.org>
----
+Good, I think that's all we'll really need. I've not gone through the whole
+series (yet!) so I might've missed AMCGCR being used.
 
-Changes in v1:
-	-Added display DT nodes for sc7180
-Changes in v2:
-	-Renamed node names
-	-Corrected code alignments
-	-Removed extra new line
-	-Added DISP AHB clock for register access
-	under display_subsystem node for global settings
-Changes in v3:
-	-Modified node names
-	-Modified hard coded values
-	-Removed mdss reg entry
+>>> @@ -1150,6 +1152,59 @@ static bool has_hw_dbm(const struct arm64_cpu_capabilities *cap,
+>>>  
+>>>  #endif
+>>>  
+>>> +#ifdef CONFIG_ARM64_AMU_EXTN
+>>> +
+>>> +/*
+>>> + * This per cpu variable only signals that the CPU implementation supports
+>>> + * the Activity Monitors Unit (AMU) but does not provide information
+>>> + * regarding all the events that it supports.
+>>> + * When this amu_feat per CPU variable is true, the user of this feature
+>>> + * can only rely on the presence of the 4 fixed counters. But this does
+>>> + * not guarantee that the counters are enabled or access to these counters
+>>> + * is provided by code executed at higher exception levels.
+>>> + *
+>>> + * Also, to ensure the safe use of this per_cpu variable, the following
+>>> + * accessor is defined to allow a read of amu_feat for the current cpu only
+>>> + * from the current cpu.
+>>> + *  - cpu_has_amu_feat()
+>>> + */
+>>> +static DEFINE_PER_CPU_READ_MOSTLY(u8, amu_feat);
+>>> +
+>>
+>> Why not bool?
+>>
+> 
+> I've changed it from bool after a sparse warning about expression using
+> sizeof(bool) and found this is due to sizeof(bool) being compiler
+> dependent. It does not change anything but I thought it might be a good
+> idea to define it as 8-bit unsigned and rely on fixed size.
+> 
 
- arch/arm64/boot/dts/qcom/sc7180-idp.dts |  58 +++++++++++++++
- arch/arm64/boot/dts/qcom/sc7180.dtsi    | 124 ++++++++++++++++++++++++++++++++
- 2 files changed, 182 insertions(+)
+I believe conveying the intent (a truth value) is more important than the
+underlying storage size in this case. It mostly matters when dealing with
+aggregates, but here it's just a free-standing variable.
 
-diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-index 388f50a..c77aab7 100644
---- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-+++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-@@ -7,6 +7,7 @@
- 
- /dts-v1/;
- 
-+#include <dt-bindings/gpio/gpio.h>
- #include <dt-bindings/regulator/qcom,rpmh-regulator.h>
- #include "sc7180.dtsi"
- #include "pm6150.dtsi"
-@@ -232,6 +233,50 @@
- 	};
- };
- 
-+&dsi_controller {
-+	status = "okay";
-+
-+	vdda-supply = <&vreg_l3c_1p2>;
-+
-+	panel@0 {
-+		compatible = "visionox,rm69299-1080p-display";
-+		reg = <0>;
-+
-+		vdda-supply = <&vreg_l8c_1p8>;
-+		vdd3p3-supply = <&vreg_l18a_2p8>;
-+
-+		pinctrl-names = "default", "suspend";
-+		pinctrl-0 = <&disp_pins_default>;
-+		pinctrl-1 = <&disp_pins_default>;
-+
-+		reset-gpios = <&pm6150l_gpio 3 GPIO_ACTIVE_HIGH>;
-+
-+		ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			port@0 {
-+				reg = <0>;
-+				panel0_in: endpoint {
-+					remote-endpoint = <&dsi0_out>;
-+				};
-+			};
-+		};
-+	};
-+
-+	ports {
-+		port@1 {
-+			endpoint {
-+				remote-endpoint = <&panel0_in>;
-+				data-lanes = <0 1 2 3>;
-+			};
-+		};
-+	};
-+};
-+
-+&dsi_phy {
-+	status = "okay";
-+};
-+
- &qspi {
- 	status = "okay";
- 	pinctrl-names = "default";
-@@ -289,6 +334,19 @@
- 
- /* PINCTRL - additions to nodes defined in sc7180.dtsi */
- 
-+&pm6150l_gpio {
-+	disp_pins {
-+		disp_pins_default: disp_pins_default{
-+			pins = "gpio3";
-+			function = "func1";
-+			qcom,drive-strength = <2>;
-+			power-source = <0>;
-+			bias-disable;
-+			output-low;
-+		};
-+	};
-+};
-+
- &qspi_clk {
- 	pinconf {
- 		pins = "gpio63";
-diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-index 3bc3f64..3ebc45b 100644
---- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-@@ -1184,6 +1184,130 @@
- 			#power-domain-cells = <1>;
- 		};
- 
-+		mdss: display_subsystem@ae00000 {
-+			compatible = "qcom,sc7180-mdss";
-+			reg = <0 0x0ae00000 0 0x1000>;
-+			reg-names = "mdss";
-+
-+			power-domains = <&dispcc MDSS_GDSC>;
-+
-+			clocks = <&gcc GCC_DISP_AHB_CLK>,
-+				 <&gcc GCC_DISP_HF_AXI_CLK>,
-+				 <&dispcc DISP_CC_MDSS_AHB_CLK>,
-+				 <&dispcc DISP_CC_MDSS_MDP_CLK>;
-+			clock-names = "iface", "gcc_bus", "ahb", "core";
-+
-+			assigned-clocks = <&dispcc DISP_CC_MDSS_MDP_CLK>;
-+			assigned-clock-rates = <300000000>;
-+
-+			interrupts = <GIC_SPI 83 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-controller;
-+			#interrupt-cells = <1>;
-+
-+			iommus = <&apps_smmu 0x800 0x2>;
-+
-+			#address-cells = <2>;
-+			#size-cells = <2>;
-+			ranges;
-+
-+			mdp: display_controller@ae01000 {
-+				compatible = "qcom,sc7180-dpu";
-+				reg = <0 0x0ae01000 0 0x8f000>,
-+				      <0 0x0aeb0000 0 0x2008>,
-+				      <0 0x0af03000 0 0x16>;
-+				reg-names = "mdp", "vbif", "disp_cc";
-+
-+				clocks = <&dispcc DISP_CC_MDSS_AHB_CLK>,
-+					 <&dispcc DISP_CC_MDSS_ROT_CLK>,
-+					 <&dispcc DISP_CC_MDSS_MDP_LUT_CLK>,
-+					 <&dispcc DISP_CC_MDSS_MDP_CLK>,
-+					 <&dispcc DISP_CC_MDSS_VSYNC_CLK>;
-+				clock-names = "iface", "rot", "lut", "core",
-+					      "vsync";
-+				assigned-clocks = <&dispcc DISP_CC_MDSS_MDP_CLK>,
-+						  <&dispcc DISP_CC_MDSS_VSYNC_CLK>;
-+				assigned-clock-rates = <300000000>,
-+						       <19200000>;
-+
-+				interrupt-parent = <&mdss>;
-+				interrupts = <0 IRQ_TYPE_LEVEL_HIGH>;
-+
-+				ports {
-+					#address-cells = <1>;
-+					#size-cells = <0>;
-+
-+					port@0 {
-+						reg = <0>;
-+						dpu_intf1_out: endpoint {
-+							remote-endpoint = <&dsi0_in>;
-+						};
-+					};
-+				};
-+			};
-+
-+			dsi_controller: dsi_controller@ae94000 {
-+				compatible = "qcom,mdss-dsi-ctrl";
-+				reg = <0 0x0ae94000 0 0x400>;
-+				reg-names = "dsi_ctrl";
-+
-+				interrupt-parent = <&mdss>;
-+				interrupts = <4 IRQ_TYPE_LEVEL_HIGH>;
-+
-+				clocks = <&dispcc DISP_CC_MDSS_BYTE0_CLK>,
-+					 <&dispcc DISP_CC_MDSS_BYTE0_INTF_CLK>,
-+					 <&dispcc DISP_CC_MDSS_PCLK0_CLK>,
-+					 <&dispcc DISP_CC_MDSS_ESC0_CLK>,
-+					 <&dispcc DISP_CC_MDSS_AHB_CLK>,
-+					 <&gcc GCC_DISP_HF_AXI_CLK>;
-+				clock-names = "byte",
-+					      "byte_intf",
-+					      "pixel",
-+					      "core",
-+					      "iface",
-+					      "bus";
-+
-+				phys = <&dsi_phy>;
-+				phy-names = "dsi";
-+
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				ports {
-+					#address-cells = <1>;
-+					#size-cells = <0>;
-+
-+					port@0 {
-+						reg = <0>;
-+						dsi0_in: endpoint {
-+							remote-endpoint = <&dpu_intf1_out>;
-+						};
-+					};
-+
-+					port@1 {
-+						reg = <1>;
-+						dsi0_out: endpoint {
-+						};
-+					};
-+				};
-+			};
-+
-+			dsi_phy: dsi_phy@ae94400 {
-+				compatible = "qcom,dsi-phy-10nm";
-+				reg = <0 0x0ae94400 0 0x200>,
-+				      <0 0x0ae94600 0 0x280>,
-+				      <0 0x0ae94a00 0 0x1e0>;
-+				reg-names = "dsi_phy",
-+					    "dsi_phy_lane",
-+					    "dsi_pll";
-+
-+				#clock-cells = <1>;
-+				#phy-cells = <0>;
-+
-+				clocks = <&dispcc DISP_CC_MDSS_AHB_CLK>;
-+				clock-names = "iface";
-+			};
-+		};
-+
- 		pdc: interrupt-controller@b220000 {
- 			compatible = "qcom,sc7180-pdc", "qcom,pdc";
- 			reg = <0 0x0b220000 0 0x30000>;
--- 
-2.7.4
+We already have a few per-CPU boolean variables in arm64/kernel/fpsimd.c
+and the commits aren't even a year old, so I'd go for ignoring sparse this
+time around.
 
+> Thank you for the review,
+> Ionela.
+> 
+>>> +inline bool cpu_has_amu_feat(void)
+>>> +{
+>>> +	return !!this_cpu_read(amu_feat);
+>>> +}
+>>> +
+>>> +static void cpu_amu_enable(struct arm64_cpu_capabilities const *cap)
+>>> +{
+>>> +	if (has_cpuid_feature(cap, SCOPE_LOCAL_CPU)) {
+>>> +		pr_info("detected CPU%d: Activity Monitors Unit (AMU)\n",
+>>> +			smp_processor_id());
+>>> +		this_cpu_write(amu_feat, 1);
+>>> +	}
+>>> +}
