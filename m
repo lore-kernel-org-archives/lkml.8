@@ -2,240 +2,95 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24F45C35242
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:44:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4063EC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:44:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E640220718
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:44:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KhcGjU1o"
+	by mail.kernel.org (Postfix) with ESMTP id F29A821569
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:44:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579859080;
+	bh=dNwj+sBUVaTxx+jN2QQyS/HFIdxsqFI5f8nl3UH1G2g=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=iyr6k/sPMoczDNLk6Yi3cbGTj47EfJiKKnFBjmuQPjd20fiCgEmk9ijvXX0+fLIQx
+	 bDMfS+WnwAbIgUWu2ewPcOnjC0+w4IfyO8tdCIkyi9OAi0EQrodNVPGTANciQPiGJa
+	 9ZE7pfIig8sv02uW+jkpYsov1t4V6ksP3uudLBCk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387408AbgAXJoe (ORCPT
+        id S2387398AbgAXJoj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 04:44:34 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:53010 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2387395AbgAXJoa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 04:44:30 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579859069;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=fpZEOx03qkjAPC4DXp0y4ITh7+pvUeZvi/4/a4rEkrw=;
-        b=KhcGjU1okpKfMRadx0VTbIxKLfFamLCVdqI5j29WhBPF6Nt4D/14PNoGdIA1q3aYc0ZMOD
-        3713jbKc5FB2QP5pU2fzBjoB85watqT6N6ebQbkRnu33srm/TaLjZolVIKqiYaxXak21/z
-        I8KyBdG397UPpbjNwX9rUgv72N/JBm4=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-171-UtztBegiN6qvJuaw010yGw-1; Fri, 24 Jan 2020 04:44:27 -0500
-X-MC-Unique: UtztBegiN6qvJuaw010yGw-1
-Received: by mail-wr1-f72.google.com with SMTP id j13so884282wrr.20
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Jan 2020 01:44:27 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=fpZEOx03qkjAPC4DXp0y4ITh7+pvUeZvi/4/a4rEkrw=;
-        b=fzkVMaCoNmumgZ+fn8KkgDvHbwItiLEB1n5oNNjsUF1RtUa+xLRxnzXDOmFoV559z7
-         tpK4A/3XVV8T7Ublx/icgq6PZB3y3DrIVnqwER2HhcYXPhyAfvTVv0eEdOcdg/UtkpxQ
-         XWNUG6od31BNTOm4jLv3G4tT1bRwGjk9fB8rNNRC2CkzWcyUhzGS++GdRz2PjTtJZPeS
-         R90iFe6772iLUnogAPcv793TZjg/GDSO8lL46FouTMq1/UbMcDOf+VRzmzsqfe3HPD2x
-         QAtypV+HjNanLU6cwQjrA1j7OSp3NpVITKAmldOOY7XnkEXjaG5IWVeF8KEs90wWDq+m
-         6Ukw==
-X-Gm-Message-State: APjAAAWHUIHDADh6Tf8p74HB/5loa4DveGuO10bTNbzgG9vr4NVmMJ+z
-        0kYL+ndShL+5qEt7Sf5hSuSWIUl2bQbYQqhXiB7kRwUM4VqpRm/nNKa8jvMa2JS7g58qKbHB8DL
-        aXeFRglJFhVadYsy+k605T5Ct
-X-Received: by 2002:a05:600c:2383:: with SMTP id m3mr2606041wma.32.1579859066483;
-        Fri, 24 Jan 2020 01:44:26 -0800 (PST)
-X-Google-Smtp-Source: APXvYqwnRS6L4l/CFse2jZ4BHY9GuVJSgRDyRPOAzj4xk/v28DFFetlGaZsxMJx9TF/v+B2QKfxQ0w==
-X-Received: by 2002:a05:600c:2383:: with SMTP id m3mr2606008wma.32.1579859066079;
-        Fri, 24 Jan 2020 01:44:26 -0800 (PST)
-Received: from ?IPv6:2001:b07:6468:f312:b8fe:679e:87eb:c059? ([2001:b07:6468:f312:b8fe:679e:87eb:c059])
-        by smtp.gmail.com with ESMTPSA id d204sm1093442wmd.30.2020.01.24.01.44.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 24 Jan 2020 01:44:25 -0800 (PST)
-Subject: Re: [PATCH v4 06/10] KVM: selftests: Add support for vcpu_args_set to
- aarch64 and s390x
-To:     Andrew Jones <drjones@redhat.com>
-Cc:     Ben Gardon <bgardon@google.com>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        Cannon Matthews <cannonmatthews@google.com>,
-        Peter Xu <peterx@redhat.com>, Peter Shier <pshier@google.com>,
-        Oliver Upton <oupton@google.com>,
-        Marc Zyngier <Marc.Zyngier@arm.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>
-References: <20200123180436.99487-1-bgardon@google.com>
- <20200123180436.99487-7-bgardon@google.com>
- <4dbb6d1b-3162-d9b3-4ebb-5e4061776bb6@redhat.com>
- <20200124093543.m5oqo7fnjnc2scko@kamzik.brq.redhat.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <3fd470e0-2929-c3fc-151a-ef2d682354d9@redhat.com>
-Date:   Fri, 24 Jan 2020 10:44:24 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Fri, 24 Jan 2020 04:44:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43022 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732415AbgAXJoc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 04:44:32 -0500
+Received: from localhost (unknown [145.15.244.15])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1180720718;
+        Fri, 24 Jan 2020 09:44:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579859071;
+        bh=dNwj+sBUVaTxx+jN2QQyS/HFIdxsqFI5f8nl3UH1G2g=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=AUELcSGxmVj5suANOg6itl++QQM3K21I2ooj8/bssAXs5i65XihVBP3toR+H+BC3H
+         BHUOIlihMg9Ys3kSDBgOqFeugUt9fMur7xpKX3FXF0iIUASG2/nfsKs9I8lo3JOV2B
+         /xYnnyL5Y96JuG85ODTbr/7YNwxC9M8sNc88C7NQ=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Simon Horman <horms+renesas@verge.net.au>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 036/343] pinctrl: sh-pfc: r8a7794: Remove bogus IPSR9 field
+Date:   Fri, 24 Jan 2020 10:27:34 +0100
+Message-Id: <20200124092924.558739691@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200124092919.490687572@linuxfoundation.org>
+References: <20200124092919.490687572@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-In-Reply-To: <20200124093543.m5oqo7fnjnc2scko@kamzik.brq.redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 24/01/20 10:35, Andrew Jones wrote:
-> On Fri, Jan 24, 2020 at 10:03:08AM +0100, Paolo Bonzini wrote:
->> CCing Marc, Conny and Christian (plus Thomas and Drew who were already
->> in the list) for review.
->>
->> Thanks,
->>
->> Paolo
->>
->> On 23/01/20 19:04, Ben Gardon wrote:
->>> Currently vcpu_args_set is only implemented for x86. This makes writing
->>> tests with multiple vCPUs difficult as each guest vCPU must either a.)
->>> do the same thing or b.) derive some kind of unique token from it's
->>> registers or the architecture. To simplify the process of writing tests
->>> with multiple vCPUs for s390 and aarch64, add set args functions for
->>> those architectures.
-> 
-> It'd be nice to keep the separate architecture changes in separate
-> patches. Otherwise I can't really give an r-b.
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-You can say:
+[ Upstream commit 6a6c195d98a1a5e70faa87f594d7564af1dd1bed ]
 
-For ARM parts:
+The Peripheral Function Select Register 9 contains 12 fields, but the
+variable field descriptor contains a 13th bogus field of 3 bits.
 
-Reviewed-by: ...
+Fixes: 43c4436e2f1890a7 ("pinctrl: sh-pfc: add R8A7794 PFC support")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/pinctrl/sh-pfc/pfc-r8a7794.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Paolo
+diff --git a/drivers/pinctrl/sh-pfc/pfc-r8a7794.c b/drivers/pinctrl/sh-pfc/pfc-r8a7794.c
+index a0ed220071f5f..93bdd3e8fb670 100644
+--- a/drivers/pinctrl/sh-pfc/pfc-r8a7794.c
++++ b/drivers/pinctrl/sh-pfc/pfc-r8a7794.c
+@@ -4742,7 +4742,7 @@ static const struct pinmux_cfg_reg pinmux_config_regs[] = {
+ 		FN_AVB_MDC, FN_SSI_SDATA6_B, 0, 0, }
+ 	},
+ 	{ PINMUX_CFG_REG_VAR("IPSR9", 0xE6060044, 32,
+-			     1, 3, 3, 3, 3, 2, 2, 3, 3, 3, 3, 3, 3) {
++			     1, 3, 3, 3, 3, 2, 2, 3, 3, 3, 3, 3) {
+ 		/* IP9_31 [1] */
+ 		0, 0,
+ 		/* IP9_30_28 [3] */
+-- 
+2.20.1
 
->>>
->>> Signed-off-by: Ben Gardon <bgardon@google.com>
->>> ---
->>>  .../selftests/kvm/lib/aarch64/processor.c     | 33 +++++++++++++++++
->>>  .../selftests/kvm/lib/s390x/processor.c       | 35 +++++++++++++++++++
->>>  2 files changed, 68 insertions(+)
->>>
->>> diff --git a/tools/testing/selftests/kvm/lib/aarch64/processor.c b/tools/testing/selftests/kvm/lib/aarch64/processor.c
->>> index 86036a59a668e..a2ff90a75f326 100644
->>> --- a/tools/testing/selftests/kvm/lib/aarch64/processor.c
->>> +++ b/tools/testing/selftests/kvm/lib/aarch64/processor.c
->>> @@ -333,3 +333,36 @@ void vm_vcpu_add_default(struct kvm_vm *vm, uint32_t vcpuid, void *guest_code)
->>>  {
->>>  	aarch64_vcpu_add_default(vm, vcpuid, NULL, guest_code);
->>>  }
->>> +
->>> +/* VM VCPU Args Set
->>> + *
->>> + * Input Args:
->>> + *   vm - Virtual Machine
->>> + *   vcpuid - VCPU ID
->>> + *   num - number of arguments
->>> + *   ... - arguments, each of type uint64_t
->>> + *
->>> + * Output Args: None
->>> + *
->>> + * Return: None
->>> + *
->>> + * Sets the first num function input arguments to the values
->>> + * given as variable args.  Each of the variable args is expected to
->>> + * be of type uint64_t. The registers set by this function are r0-r7.
->>> + */
-> 
-> lib/aarch64/processor.c so far doesn't have big function headers like
-> this. Also, since this function is common for all architectures [now],
-> I feel like the documentation should be in common code - so in the header
-> file.
-> 
->>> +void vcpu_args_set(struct kvm_vm *vm, uint32_t vcpuid, unsigned int num, ...)
->>> +{
->>> +	va_list ap;
->>> +
->>> +	TEST_ASSERT(num >= 1 && num <= 8, "Unsupported number of args,\n"
->>> +		    "  num: %u\n",
->>> +		    num);
-> 
-> Weird line breaking. I see it came from the x86 implementation, but it's
-> weird there too... Personally I'd just put it all on one line, because
-> my vt100 died two decades ago.
-> 
->>> +
->>> +	va_start(ap, num);
->>> +
->>> +	for (i = 0; i < num; i++)
->>> +		set_reg(vm, vcpuid, ARM64_CORE_REG(regs.regs[num]),
->                                                              ^^ should be 'i'
-> 
->>> +			va_arg(ap, uint64_t));
-> 
-> nit: I'd use {} because of the line break. Or just not break the line and
-> bust the 80 char "limit" (RIP vt100).
-> 
-> Thanks,
-> drew
-> 
->>> +
->>> +	va_end(ap);
->>> +}
->>> diff --git a/tools/testing/selftests/kvm/lib/s390x/processor.c b/tools/testing/selftests/kvm/lib/s390x/processor.c
->>> index 32a02360b1eb0..680f37be9dbc9 100644
->>> --- a/tools/testing/selftests/kvm/lib/s390x/processor.c
->>> +++ b/tools/testing/selftests/kvm/lib/s390x/processor.c
->>> @@ -269,6 +269,41 @@ void vm_vcpu_add_default(struct kvm_vm *vm, uint32_t vcpuid, void *guest_code)
->>>  	run->psw_addr = (uintptr_t)guest_code;
->>>  }
->>>  
->>> +/* VM VCPU Args Set
->>> + *
->>> + * Input Args:
->>> + *   vm - Virtual Machine
->>> + *   vcpuid - VCPU ID
->>> + *   num - number of arguments
->>> + *   ... - arguments, each of type uint64_t
->>> + *
->>> + * Output Args: None
->>> + *
->>> + * Return: None
->>> + *
->>> + * Sets the first num function input arguments to the values
->>> + * given as variable args.  Each of the variable args is expected to
->>> + * be of type uint64_t. The registers set by this function are r2-r6.
->>> + */
->>> +void vcpu_args_set(struct kvm_vm *vm, uint32_t vcpuid, unsigned int num, ...)
->>> +{
->>> +	va_list ap;
->>> +	struct kvm_regs regs;
->>> +
->>> +	TEST_ASSERT(num >= 1 && num <= 5, "Unsupported number of args,\n"
->>> +		    "  num: %u\n",
->>> +		    num);
->>> +
->>> +	va_start(ap, num);
->>> +	vcpu_regs_get(vm, vcpuid, &regs);
->>> +
->>> +	for (i = 0; i < num; i++)
->>> +		regs.gprs[i + 2] = va_arg(ap, uint64_t);
->>> +
->>> +	vcpu_regs_set(vm, vcpuid, &regs);
->>> +	va_end(ap);
->>> +}
->>> +
->>>  void vcpu_dump(FILE *stream, struct kvm_vm *vm, uint32_t vcpuid, uint8_t indent)
->>>  {
->>>  	struct vcpu *vcpu = vm->vcpu_head;
->>>
->>
-> 
+
 
