@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27CB1C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:31:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00982C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:32:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E84B820718
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:31:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB29020704
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:32:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579865516;
-	bh=24popRI3QcZLlLylGKox5Nj2M/jDO7b/LC1mldGqC6o=;
+	s=default; t=1579865521;
+	bh=lEKbQLQERxUxyDx8Ftc7SQpwCy0JwDDShNHcgVPeGL0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XRLGOKkfpTVQzDr/PE+1JhjcHTDLnnRe53DY/OeBm5QPvLK2dkZCxhDFVmgEY3sGo
-	 RLW8rzm6UlQ8+aWFBJ5GREyASIipXLU+gQ+uO6MiWpcDiurJq7JukA6W8Mr5UdZwAn
-	 iIk5lThv1ndW1TlBlqiV+XMzzNNl4IVTzU+4bhmc=
+	b=epPus7WtHUU8cmiCWN4ThJ0Gc0qW+2+ppzqvHKSrRQT4uSTnqTBdd2VDajvw+dXVu
+	 mBe2SNBCj8qs63LzhMMp/zoVTTCYnUkHOdnW2hBWp2DLWbihUhZBPg4o5sHfhzNY6k
+	 QP+CdbadSP6SaJKwqiUPFxUsaeRkJwRbfjVz2wm0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404364AbgAXLbx (ORCPT
+        id S2404383AbgAXLb7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:31:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50234 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 06:31:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50314 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404146AbgAXLbn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:31:43 -0500
+        id S2404201AbgAXLbr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:31:47 -0500
 Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5A7E92077C;
-        Fri, 24 Jan 2020 11:31:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3CB6F206D4;
+        Fri, 24 Jan 2020 11:31:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579865503;
-        bh=24popRI3QcZLlLylGKox5Nj2M/jDO7b/LC1mldGqC6o=;
+        s=default; t=1579865506;
+        bh=lEKbQLQERxUxyDx8Ftc7SQpwCy0JwDDShNHcgVPeGL0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=c3dPKnBm2GJ1ZrnT9Ilj5G58VYED9LctLiSquUj1U43ngiwKXwV0I347ul/RxQdV5
-         hacJ3J2sblYVVzG40WASu2PXsNfUu6a5o9VJyRJw2e4PXYRU7t2LntJNwPZsTECRPt
-         QmpSH3or6VIvsmWl3L/QjREKLzIRO182QuNKctT4=
+        b=hoiluLICDiHQ01qEL4ZbSnQQlt/zKZ0rMfnrqHtK1WotoMhptvYu14ad1GwqnnKms
+         EnVQ6QM+Bhyq2pwwF94kgYtFWAVwhz56peU9UDpIzpgYc3N4IM5UCCPVFTMzMJsWQJ
+         RCX/AD7CBbGEnS5snj5o0b6K4EmDoWikt2TTeKDo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mao Wenan <maowenan@huawei.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 546/639] net: sonic: return NETDEV_TX_OK if failed to map buffer
-Date:   Fri, 24 Jan 2020 10:31:56 +0100
-Message-Id: <20200124093157.517749916@linuxfoundation.org>
+Subject: [PATCH 4.19 537/639] iio: dac: ad5380: fix incorrect assignment to val
+Date:   Fri, 24 Jan 2020 10:31:47 +0100
+Message-Id: <20200124093156.264085189@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
 References: <20200124093047.008739095@linuxfoundation.org>
@@ -60,40 +61,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mao Wenan <maowenan@huawei.com>
+From: Colin Ian King <colin.king@canonical.com>
 
-[ Upstream commit 6e1cdedcf0362fed3aedfe051d46bd7ee2a85fe1 ]
+[ Upstream commit b1e18768ef1214c0a8048327918a182cabe09f9d ]
 
-NETDEV_TX_BUSY really should only be used by drivers that call
-netif_tx_stop_queue() at the wrong moment. If dma_map_single() is
-failed to map tx DMA buffer, it might trigger an infinite loop.
-This patch use NETDEV_TX_OK instead of NETDEV_TX_BUSY, and change
-printk to pr_err_ratelimited.
+Currently the pointer val is being incorrectly incremented
+instead of the value pointed to by val. Fix this by adding
+in the missing * indirection operator.
 
-Fixes: d9fb9f384292 ("*sonic/natsemi/ns83829: Move the National Semi-conductor drivers")
-Signed-off-by: Mao Wenan <maowenan@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Addresses-Coverity: ("Unused value")
+Fixes: c03f2c536818 ("staging:iio:dac: Add AD5380 driver")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Reviewed-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/natsemi/sonic.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/iio/dac/ad5380.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/natsemi/sonic.c b/drivers/net/ethernet/natsemi/sonic.c
-index c805dcbebd027..be36f7117d484 100644
---- a/drivers/net/ethernet/natsemi/sonic.c
-+++ b/drivers/net/ethernet/natsemi/sonic.c
-@@ -231,9 +231,9 @@ static int sonic_send_packet(struct sk_buff *skb, struct net_device *dev)
- 
- 	laddr = dma_map_single(lp->device, skb->data, length, DMA_TO_DEVICE);
- 	if (!laddr) {
--		printk(KERN_ERR "%s: failed to map tx DMA buffer.\n", dev->name);
-+		pr_err_ratelimited("%s: failed to map tx DMA buffer.\n", dev->name);
- 		dev_kfree_skb(skb);
--		return NETDEV_TX_BUSY;
-+		return NETDEV_TX_OK;
- 	}
- 
- 	sonic_tda_put(dev, entry, SONIC_TD_STATUS, 0);       /* clear status */
+diff --git a/drivers/iio/dac/ad5380.c b/drivers/iio/dac/ad5380.c
+index 873c2bf637c0c..617c9f7fe59a1 100644
+--- a/drivers/iio/dac/ad5380.c
++++ b/drivers/iio/dac/ad5380.c
+@@ -221,7 +221,7 @@ static int ad5380_read_raw(struct iio_dev *indio_dev,
+ 		if (ret)
+ 			return ret;
+ 		*val >>= chan->scan_type.shift;
+-		val -= (1 << chan->scan_type.realbits) / 2;
++		*val -= (1 << chan->scan_type.realbits) / 2;
+ 		return IIO_VAL_INT;
+ 	case IIO_CHAN_INFO_SCALE:
+ 		*val = 2 * st->vref;
 -- 
 2.20.1
 
