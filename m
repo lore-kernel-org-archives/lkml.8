@@ -2,114 +2,115 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65460C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 03:44:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96636C35242
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 04:18:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B7F721D7D
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 03:44:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68A2B20709
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 04:18:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="nK61UGKb"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="fRK/VQQD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729641AbgAXDo3 (ORCPT
+        id S1730242AbgAXESA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 22:44:29 -0500
-Received: from conssluserg-04.nifty.com ([210.131.2.83]:16582 "EHLO
-        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728655AbgAXDo2 (ORCPT
+        Thu, 23 Jan 2020 23:18:00 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:35758 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729797AbgAXESA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 22:44:28 -0500
-Received: from mail-ua1-f50.google.com (mail-ua1-f50.google.com [209.85.222.50]) (authenticated)
-        by conssluserg-04.nifty.com with ESMTP id 00O3iBKA009753
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Jan 2020 12:44:11 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com 00O3iBKA009753
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1579837451;
-        bh=ZciN3pdou+Uxxprysqmu7s1MHJ/ph/kv6GDPRv1quYk=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=nK61UGKbxmxCm8NTN73uU+ntDikTe3yu3tbJTwcN3htJvnam6Xz3XOfF+OvfHmjxT
-         1F+dGEbbNZc/hV1+jq2PIuX6QDdfjq+wJh783MzOu9cp2TrtoGvMLolPT45Wh+WctO
-         e90bSlaeTqDigkGGPY6ABFPEhSr5Pheak4wTuTrdRXAVE0e94Kuk5bKUNjjtVfAUjN
-         sLDnoWcFK3ve8yK1wzzfuvYHvz7ZFwhAeHqPgGgnM2vGwMbfxnOY9qFDacCsWOufWR
-         a4njBgGTbVZAIGelZDz04PrdJTdDb1QJiZHrgmTMhMSzCLsKkUzFnF7OD4m5ootccL
-         UYjT8isEK4lAQ==
-X-Nifty-SrcIP: [209.85.222.50]
-Received: by mail-ua1-f50.google.com with SMTP id 73so322975uac.6
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jan 2020 19:44:11 -0800 (PST)
-X-Gm-Message-State: APjAAAVEFg6AiJhzK0+wvZy2UcrRUY3nsOt5yRhyU6+TAiUAY2pizqGx
-        Wv/9FBB8WFc24UGmGoiAiMrNwmaB4ZoEevHk+BY=
-X-Google-Smtp-Source: APXvYqyPABcHjkE7LphB8AFi82zW6lt8MeVEc6Mzrd111/JuQRIL1R1KIWXilIUSJZKLMiQpcGh2uuZp/WTYDvUMVUs=
-X-Received: by 2002:ab0:6509:: with SMTP id w9mr709242uam.121.1579837450310;
- Thu, 23 Jan 2020 19:44:10 -0800 (PST)
-MIME-Version: 1.0
-References: <CAK7LNASEaiFia8NKZN8++-9RfGXOPKSFuCkdukBk9Jy7+nHecQ@mail.gmail.com>
- <CAK7LNAT721bVwVQif--UY1dXMhq8NSRpkPOYTN-=nxyBSBOn2Q@mail.gmail.com> <CAOesGMgyh2NmR_AbEzC2jQe070e_u3zozWi=v7RjMXszXgetZg@mail.gmail.com>
-In-Reply-To: <CAOesGMgyh2NmR_AbEzC2jQe070e_u3zozWi=v7RjMXszXgetZg@mail.gmail.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Fri, 24 Jan 2020 12:43:34 +0900
-X-Gmail-Original-Message-ID: <CAK7LNATj8EP_vSDSbknQsYp5V=7EfdQzTQbobhNjXS5Y8YOjqg@mail.gmail.com>
-Message-ID: <CAK7LNATj8EP_vSDSbknQsYp5V=7EfdQzTQbobhNjXS5Y8YOjqg@mail.gmail.com>
-Subject: Re: [GIT PULL] arm64: dts: uniphier: UniPhier DT updates for v5.6
-To:     Olof Johansson <olof@lixom.net>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Thu, 23 Jan 2020 23:18:00 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00O4ELx6016590;
+        Fri, 24 Jan 2020 04:17:49 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=XLOdnbZIL76YVu/c7iAycSPzU7MVAwrF2SN9ST0y8ro=;
+ b=fRK/VQQDbRHpNuMoBoYPsKQ2aof4IYU514cMfSXnBvSOiCABgTyQvaIlDLeI8YS1KvfF
+ 5btrna0hWw6f92bD2Q37YCf7ngkuz9k+1VUC84Q7ZA5sirFsT1Qt4l8yBb5RwqQOH21q
+ sKgkNFOCcaBBOKjRAs5+BCSrXaShte8hunIk/PIAPuo+swASA9V+s+5S3Ke2aDbgNn9k
+ yfc+IF+cdFpaRYb2YkSJKe2MNnlmPKahkNmXh67QW6qwY9MTSFZDrETsxuN9vlUfbG4L
+ xCQuor5HbZqfwRNk58W5yBIl25oyNrOOn2z+1CcpdXgfEhb9UKINAEXbFlWFVmOobVVd mg== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2130.oracle.com with ESMTP id 2xkseuxvyh-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 24 Jan 2020 04:17:49 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00O4E9Nj180488;
+        Fri, 24 Jan 2020 04:17:48 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3030.oracle.com with ESMTP id 2xqmue194g-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 24 Jan 2020 04:17:48 +0000
+Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 00O4HkNT013236;
+        Fri, 24 Jan 2020 04:17:46 GMT
+Received: from localhost (/67.169.218.210)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 23 Jan 2020 20:17:46 -0800
+Date:   Thu, 23 Jan 2020 20:17:43 -0800
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     David Chinner <david@fromorbit.com>, linux-xfs@vger.kernel.org,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: linux-next: build warning after merge of the xfs tree
+Message-ID: <20200124041743.GU8257@magnolia>
+References: <20200116091242.087b425e@canb.auug.org.au>
+ <20200124134722.728032e6@canb.auug.org.au>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200124134722.728032e6@canb.auug.org.au>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9509 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=970
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-2001240032
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9509 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-2001240032
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Olof,
-
-
-On Fri, Jan 24, 2020 at 12:22 PM Olof Johansson <olof@lixom.net> wrote:
->
-> Hi,
->
-> On Thu, Jan 23, 2020 at 6:49 PM Masahiro Yamada
-> <yamada.masahiro@socionext.com> wrote:
+On Fri, Jan 24, 2020 at 01:47:22PM +1100, Stephen Rothwell wrote:
+> Hi all
+> 
+> On Thu, 16 Jan 2020 09:12:42 +1100 Stephen Rothwell <sfr@canb.auug.org.au> wrote:
 > >
-> > Hi Arnd and Olof,
-> >
-> > I know it is already -rc7, but
-> > it would be nice if you could pull this for the next MW.
-> >
-> > Thanks
-> >
-> > Masahiro
->
-> If you don't email us at soc@kernel.org, we're unlikely to see your
-> pull requests. :(
+> > After merging the xfs tree, today's linux-next build
+> > (powerpppc64_defconfig) produced this warning:
+> > 
+> > fs/xfs/xfs_inode.c: In function 'xfs_itruncate_extents_flags':
+> > fs/xfs/xfs_inode.c:1523:8: warning: unused variable 'done' [-Wunused-variable]
+> >  1523 |  int   done = 0;
+> >       |        ^~~~
+> > 
+> > Introduced by commit
+> > 
+> >   4bbb04abb4ee ("xfs: truncate should remove all blocks, not just to the end of the page cache")
+> 
+> I am still getting this warning.
 
-Oh, I just remembered this!
+Aha, I had though this was gone but it turns out that I accidentally
+merged the fix for this into an internal patch to grease my internal CI
+scripts.  Ah well.  Patch soon.
 
->
-> In this case that's what happened. Please do so -- that way it gets
-> caught in the patchtracker. I sort the patches to that alias in a
-> special folder to make sure I see them too, since I get too much in my
-> inbox and it easily gets lost.
->
-> Mind resending the two pull requests to that alias?
+--D
 
-Sure. Done.
-
-
-
-> That way you get
-> the notification email when it's merged -- if I bounce it here I don't
-> think you'll get it.
->
->
-> Thanks,
->
-> -Olof
+> 
+> -- 
+> Cheers,
+> Stephen Rothwell
 
 
-
--- 
-Best Regards
-Masahiro Yamada
