@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93786C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:18:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 550E1C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:18:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69F2D214DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:18:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2856A214DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:18:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579875511;
-	bh=HLGLxSrsXy20mO7PpmbyNdO1rFVVjTyzEN2g0d2ZYoA=;
+	s=default; t=1579875516;
+	bh=IO9VbcI3uUwDUmwFpNRvGb7+MdliZwybJcqPxKfZbI4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vXJ9+Hk1oW87RkVTDpMXD9LGmOrqlMeoViGN+1kJraFe0OVNWUZaUqUoo9D4XFcrr
-	 iHFYJCRan6WfSZl+jl3JyIUE2qeQYDWHDIs1B3GM9YN5/KktcieTeQ260cGHIo9Ih6
-	 xSoKktPyjHf8dLJwKhqIvhx2CZ21Zh/olVeawA9Y=
+	b=SbzrLRqHwPZsQHah1Cf9Ehe+bPqtezEgN6c/+87hB3ll572aH1zGUTOrXW4f9lyLM
+	 Zne0dwORzTX+iJNCJ00Fh9QJEUidcjG7xo/fy/9GmqDelB776wolysF+amd+hop2FA
+	 3Nhlxx82PQ1vahBemstG1y8oOlDSsIJmcJ0xbG1M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390779AbgAXOSa (ORCPT
+        id S2390858AbgAXOSf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 09:18:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37816 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 09:18:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37962 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390657AbgAXOS3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 09:18:29 -0500
+        id S2390808AbgAXOSc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 09:18:32 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 434C62087E;
-        Fri, 24 Jan 2020 14:18:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C800D2087E;
+        Fri, 24 Jan 2020 14:18:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579875508;
-        bh=HLGLxSrsXy20mO7PpmbyNdO1rFVVjTyzEN2g0d2ZYoA=;
+        s=default; t=1579875511;
+        bh=IO9VbcI3uUwDUmwFpNRvGb7+MdliZwybJcqPxKfZbI4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OpcpCvFmciq7INya800Y+JT9ucmfoZcvUyT362+B+TcwA+gwnlVFyIHV0ytdBZqpU
-         V09mvoXnkidSXeHti9tRKAle0OgZqvIWRON0ykwkCigJJ2j4s0OZzZKhwnEn/IF9JV
-         tvzPRik9UOkPrnyw6QfyVrH7O+cSsHW7oexgThp0=
+        b=qECIe04c6BIoNwMZ2vIwUWHWihi5bfxQY7NbfOzZoG/5bYNAxrYHCmZcGaqSmBH3E
+         EpY9UrRzs9NqSX0taS5hpQO0Om5Ompill7vzPZeMNBkk1nkItWH5zoBbNdpzUhuIoH
+         BULISW7shAtR/RC7l9Vo0Tt0Uf1moy93c5F25eGw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.4 009/107] ARM: dts: am57xx-beagle-x15/am57xx-idk: Remove "gpios" for  endpoint dt nodes
-Date:   Fri, 24 Jan 2020 09:16:39 -0500
-Message-Id: <20200124141817.28793-9-sashal@kernel.org>
+Cc:     Hewenliang <hewenliang4@huawei.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Feilong Lin <linfeilong@huawei.com>,
+        Tzvetomir Stoyanov <tstoyanov@vmware.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 012/107] tools lib traceevent: Fix memory leakage in filter_event
+Date:   Fri, 24 Jan 2020 09:16:42 -0500
+Message-Id: <20200124141817.28793-12-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200124141817.28793-1-sashal@kernel.org>
 References: <20200124141817.28793-1-sashal@kernel.org>
@@ -60,68 +62,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kishon Vijay Abraham I <kishon@ti.com>
+From: Hewenliang <hewenliang4@huawei.com>
 
-[ Upstream commit 81cc0877840f72210e809bbedd6346d686560fc1 ]
+[ Upstream commit f84ae29a6169318f9c929720c49d96323d2bbab9 ]
 
-PERST# line in the PCIE connector is driven by the host mode and not
-EP mode. The gpios property here is used for driving the PERST# line.
-Remove gpios property from all endpoint device tree nodes.
+It is necessary to call free_arg(arg) when add_filter_type() returns NULL
+in filter_event().
 
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Hewenliang <hewenliang4@huawei.com>
+Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Cc: Feilong Lin <linfeilong@huawei.com>
+Cc: Tzvetomir Stoyanov <tstoyanov@vmware.com>
+Link: http://lore.kernel.org/lkml/20191209063549.59941-1-hewenliang4@huawei.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/am571x-idk.dts                | 4 ----
- arch/arm/boot/dts/am572x-idk-common.dtsi        | 4 ----
- arch/arm/boot/dts/am57xx-beagle-x15-common.dtsi | 4 ----
- 3 files changed, 12 deletions(-)
+ tools/lib/traceevent/parse-filter.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/am571x-idk.dts b/arch/arm/boot/dts/am571x-idk.dts
-index 0aaacea1d887b..975a6b1d3fc80 100644
---- a/arch/arm/boot/dts/am571x-idk.dts
-+++ b/arch/arm/boot/dts/am571x-idk.dts
-@@ -170,10 +170,6 @@
- 	gpios = <&gpio3 23 GPIO_ACTIVE_HIGH>;
- };
+diff --git a/tools/lib/traceevent/parse-filter.c b/tools/lib/traceevent/parse-filter.c
+index f3cbf86e51acf..20eed719542e5 100644
+--- a/tools/lib/traceevent/parse-filter.c
++++ b/tools/lib/traceevent/parse-filter.c
+@@ -1228,8 +1228,10 @@ filter_event(struct tep_event_filter *filter, struct tep_event *event,
+ 	}
  
--&pcie1_ep {
--	gpios = <&gpio3 23 GPIO_ACTIVE_HIGH>;
--};
--
- &mmc1 {
- 	pinctrl-names = "default", "hs";
- 	pinctrl-0 = <&mmc1_pins_default_no_clk_pu>;
-diff --git a/arch/arm/boot/dts/am572x-idk-common.dtsi b/arch/arm/boot/dts/am572x-idk-common.dtsi
-index a064f13b38802..ddf123620e962 100644
---- a/arch/arm/boot/dts/am572x-idk-common.dtsi
-+++ b/arch/arm/boot/dts/am572x-idk-common.dtsi
-@@ -147,10 +147,6 @@
- 	gpios = <&gpio3 23 GPIO_ACTIVE_HIGH>;
- };
+ 	filter_type = add_filter_type(filter, event->id);
+-	if (filter_type == NULL)
++	if (filter_type == NULL) {
++		free_arg(arg);
+ 		return TEP_ERRNO__MEM_ALLOC_FAILED;
++	}
  
--&pcie1_ep {
--	gpios = <&gpio3 23 GPIO_ACTIVE_HIGH>;
--};
--
- &mailbox5 {
- 	status = "okay";
- 	mbox_ipu1_ipc3x: mbox_ipu1_ipc3x {
-diff --git a/arch/arm/boot/dts/am57xx-beagle-x15-common.dtsi b/arch/arm/boot/dts/am57xx-beagle-x15-common.dtsi
-index bc76f1705c0f6..9a94c96b0350e 100644
---- a/arch/arm/boot/dts/am57xx-beagle-x15-common.dtsi
-+++ b/arch/arm/boot/dts/am57xx-beagle-x15-common.dtsi
-@@ -547,10 +547,6 @@
- 	gpios = <&gpio2 8 GPIO_ACTIVE_LOW>;
- };
- 
--&pcie1_ep {
--	gpios = <&gpio2 8 GPIO_ACTIVE_LOW>;
--};
--
- &mcasp3 {
- 	#sound-dai-cells = <0>;
- 	assigned-clocks = <&l4per2_clkctrl DRA7_L4PER2_MCASP3_CLKCTRL 24>;
+ 	if (filter_type->filter)
+ 		free_arg(filter_type->filter);
 -- 
 2.20.1
 
