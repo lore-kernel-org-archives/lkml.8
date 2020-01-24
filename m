@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39E38C35242
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:39:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11758C3F68F
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:40:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 051E0206F0
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:39:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE0462071A
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:40:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579876797;
-	bh=WYbTuLuNxFsPNJfXjUbDq6+/+krcm/RTvzoJb9T8RR8=;
+	s=default; t=1579876800;
+	bh=KndByeN2uIX8Cxi149zR4DZ0hFI8P9TGSbIMN+1I9RM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AA8AMYDDFcAi8Ay7cMIMEiLUt9pzy9SPCSFJdHTicjPzSRIdMjZbd1rl9P3wWT4nz
-	 m9nGH/LhkCZzJNUaR3jI0uEyXEpD0SexZgRtUnTzTbXzLQ8XSAuSSY5vlZlggjoNZZ
-	 z8seoYc6VMtEO5iDaQuV8IMDD948uskL9oEHPxsM=
+	b=yWMNizQYA+1RNzdtwS6eH0kvGbV9RBdiEy7njFMLqIWcTqdkIuV+1WMIGE3KR0rHK
+	 gElKZXSWkvQqXE4qaqcRgFxJS7EfFyFriu5CKVb322V6CRUEak7kLLdu8n7/Idzgq1
+	 1zinLsduo6L396b+GNX4kbGOxIxFRncHBCk5GvsU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390502AbgAXOSX (ORCPT
+        id S2389556AbgAXOkA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 09:18:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37614 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 09:40:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37700 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390445AbgAXOSV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 09:18:21 -0500
+        id S2390492AbgAXOSX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 09:18:23 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BE18D20838;
-        Fri, 24 Jan 2020 14:18:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 00176208C4;
+        Fri, 24 Jan 2020 14:18:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579875500;
-        bh=WYbTuLuNxFsPNJfXjUbDq6+/+krcm/RTvzoJb9T8RR8=;
+        s=default; t=1579875502;
+        bh=KndByeN2uIX8Cxi149zR4DZ0hFI8P9TGSbIMN+1I9RM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=N+MTpcYjyZ16xcLCgHxE0xY/UKy5dwCMN1ZrQQyxUB1iE9/JdQldqCfLzNRbHbcDI
-         iV0XLMIjHD+wOC8XHt6M45dz3mHTjl1CTB42yQEcZHAaCS0F/rtHrMXp78ZtxrQj+f
-         ALDz/e0b6X4ay5pWqdo4Az22C5mG4S0QyCb44QFQ=
+        b=p0aXeZEwsvLnp00ZtTG3Taps7TYlkhDsSoB14lefRQV8g77l7OmRC2WB8XzodaYhj
+         YxN95AgLqc21TV/oTNgmU6s4CvdYOT4NHu7iqvdsDMMdR9M2nb3wtMe7+VeAKF3/D/
+         AnxlZSAcAa3nh3s2RSleVovgHXQBB1rERx8P71go=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Yunhao Tian <18373444@buaa.edu.cn>,
-        Maxime Ripard <maxime@cerno.tech>,
-        Sasha Levin <sashal@kernel.org>, linux-clk@vger.kernel.org,
+Cc:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.4 002/107] clk: sunxi-ng: v3s: Fix incorrect number of hw_clks.
-Date:   Fri, 24 Jan 2020 09:16:32 -0500
-Message-Id: <20200124141817.28793-2-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 004/107] dt-bindings: reset: meson8b: fix duplicate reset IDs
+Date:   Fri, 24 Jan 2020 09:16:34 -0500
+Message-Id: <20200124141817.28793-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200124141817.28793-1-sashal@kernel.org>
 References: <20200124141817.28793-1-sashal@kernel.org>
@@ -60,59 +60,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yunhao Tian <18373444@buaa.edu.cn>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 
-[ Upstream commit 4ff40d140e2a2060ef6051800a4a9eab07624f42 ]
+[ Upstream commit 4881873f4cc1460f63d85fa81363d56be328ccdc ]
 
-The hws field of sun8i_v3s_hw_clks has only 74
-members. However, the number specified by CLK_NUMBER
-is 77 (= CLK_I2S0 + 1). This leads to runtime segmentation
-fault that is not always reproducible.
+According to the public S805 datasheet the RESET2 register uses the
+following bits for the PIC_DC, PSC and NAND reset lines:
+- PIC_DC is at bit 3 (meaning: RESET_VD_RMEM + 3)
+- PSC is at bit 4 (meaning: RESET_VD_RMEM + 4)
+- NAND is at bit 5 (meaning: RESET_VD_RMEM + 4)
 
-This patch fixes the problem by specifying correct clock number.
+Update the reset IDs of these three reset lines so they don't conflict
+with PIC_DC and map to the actual hardware reset lines.
 
-Signed-off-by: Yunhao Tian <18373444@buaa.edu.cn>
-[Maxime: Also remove the CLK_NUMBER definition]
-Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+Fixes: 79795e20a184eb ("dt-bindings: reset: Add bindings for the Meson SoC Reset Controller")
+Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Signed-off-by: Kevin Hilman <khilman@baylibre.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/sunxi-ng/ccu-sun8i-v3s.c | 4 ++--
- drivers/clk/sunxi-ng/ccu-sun8i-v3s.h | 2 --
- 2 files changed, 2 insertions(+), 4 deletions(-)
+ include/dt-bindings/reset/amlogic,meson8b-reset.h | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/clk/sunxi-ng/ccu-sun8i-v3s.c b/drivers/clk/sunxi-ng/ccu-sun8i-v3s.c
-index 5c779eec454b6..0e36ca3bf3d52 100644
---- a/drivers/clk/sunxi-ng/ccu-sun8i-v3s.c
-+++ b/drivers/clk/sunxi-ng/ccu-sun8i-v3s.c
-@@ -618,7 +618,7 @@ static struct clk_hw_onecell_data sun8i_v3s_hw_clks = {
- 		[CLK_MBUS]		= &mbus_clk.common.hw,
- 		[CLK_MIPI_CSI]		= &mipi_csi_clk.common.hw,
- 	},
--	.num	= CLK_NUMBER,
-+	.num	= CLK_PLL_DDR1 + 1,
- };
- 
- static struct clk_hw_onecell_data sun8i_v3_hw_clks = {
-@@ -700,7 +700,7 @@ static struct clk_hw_onecell_data sun8i_v3_hw_clks = {
- 		[CLK_MBUS]		= &mbus_clk.common.hw,
- 		[CLK_MIPI_CSI]		= &mipi_csi_clk.common.hw,
- 	},
--	.num	= CLK_NUMBER,
-+	.num	= CLK_I2S0 + 1,
- };
- 
- static struct ccu_reset_map sun8i_v3s_ccu_resets[] = {
-diff --git a/drivers/clk/sunxi-ng/ccu-sun8i-v3s.h b/drivers/clk/sunxi-ng/ccu-sun8i-v3s.h
-index b0160d305a677..108eeeedcbf76 100644
---- a/drivers/clk/sunxi-ng/ccu-sun8i-v3s.h
-+++ b/drivers/clk/sunxi-ng/ccu-sun8i-v3s.h
-@@ -51,6 +51,4 @@
- 
- #define CLK_PLL_DDR1		74
- 
--#define CLK_NUMBER		(CLK_I2S0 + 1)
--
- #endif /* _CCU_SUN8I_H3_H_ */
+diff --git a/include/dt-bindings/reset/amlogic,meson8b-reset.h b/include/dt-bindings/reset/amlogic,meson8b-reset.h
+index c614438bcbdb8..fbc524a900da1 100644
+--- a/include/dt-bindings/reset/amlogic,meson8b-reset.h
++++ b/include/dt-bindings/reset/amlogic,meson8b-reset.h
+@@ -46,9 +46,9 @@
+ #define RESET_VD_RMEM			64
+ #define RESET_AUDIN			65
+ #define RESET_DBLK			66
+-#define RESET_PIC_DC			66
+-#define RESET_PSC			66
+-#define RESET_NAND			66
++#define RESET_PIC_DC			67
++#define RESET_PSC			68
++#define RESET_NAND			69
+ #define RESET_GE2D			70
+ #define RESET_PARSER_REG		71
+ #define RESET_PARSER_FETCH		72
 -- 
 2.20.1
 
