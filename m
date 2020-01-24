@@ -7,50 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 912E5C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:09:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC417C35242
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:09:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 684DC20708
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:09:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7887820663
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:09:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579864190;
-	bh=52tSDax7XG1hpvNIQYbBrqYzpYU5D45cDrSKdOefidI=;
+	s=default; t=1579864193;
+	bh=g6DtTui86QDoOiSCRW6b9DY3WT5JmW7gjkpObxavC5Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xRBJh7VPuWiBOaHQ2sEFEt0loHtZCB5wYJL+Zn+dj2b7J4xDMo+6TNjTsCNksQ8nV
-	 ZRZy2K2PfJBHWr6vZCBe9MnewRlx9BoJRfs5XtY2wwMEovZg3gYmtJGssigroKPowt
-	 z/9KvLu3Kr5p/sJv+5mY8USRVkbVgmPj9aoK/P+E=
+	b=WlmOMZZm/r8XRgSXjjf0uflS6tnLde+lvRy5DwTIooHCfrnZN/Cu9fvkslENOm4RR
+	 AxWHdCmDFKs/9F3X5TsYtUKQIXEeZbIeoDfnwxxL4KrlO+0hFbTFj+aw4aWt2olwMB
+	 AApwmEbGJm6QVZBCOReRxk1uePCSeT38q4VEktak=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389778AbgAXLJt (ORCPT
+        id S2389787AbgAXLJw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:09:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45384 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 06:09:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45428 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733090AbgAXLJp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:09:45 -0500
+        id S1733099AbgAXLJs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:09:48 -0500
 Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0CA8420708;
-        Fri, 24 Jan 2020 11:09:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3188520663;
+        Fri, 24 Jan 2020 11:09:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579864184;
-        bh=52tSDax7XG1hpvNIQYbBrqYzpYU5D45cDrSKdOefidI=;
+        s=default; t=1579864187;
+        bh=g6DtTui86QDoOiSCRW6b9DY3WT5JmW7gjkpObxavC5Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hlZpTmJFDynJ6MosxwnM6QTvtS80X4FVYSqYnn2o8ok/uHI0OCO3+WOg7FcRAmo1X
-         DhmcgHF5yBwcimfTHsF5nVj5FpCrRkx/m0QMv1csNgjj6rqSemdghqJpfs0EOD+G4l
-         frryTesFSvQmaaAtKyTy8+zCQCl+YivEz7+NpMTE=
+        b=g53ggLgA7ZD1mPCsk7dx8IN5zqKRokt62gew4SNajBKFCtZzadZEKTsjSGYAT5QaQ
+         FaZTKp1wpFkbEPWUgMbmYUND93tSyr2rBUGdysW8r+Y3YdRviT/ADlm9fP6OQNi7m7
+         9IeowZuJSUtrMlA+4wajof4v2tcQrrtIhQu9NDt0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, YueHaibing <yuehaibing@huawei.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        stable@vger.kernel.org, Michael Kao <michael.kao@mediatek.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 182/639] fbdev: chipsfb: remove set but not used variable size
-Date:   Fri, 24 Jan 2020 10:25:52 +0100
-Message-Id: <20200124093109.959120935@linuxfoundation.org>
+Subject: [PATCH 4.19 173/639] thermal: mediatek: fix register index error
+Date:   Fri, 24 Jan 2020 10:25:43 +0100
+Message-Id: <20200124093108.860102530@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
 References: <20200124093047.008739095@linuxfoundation.org>
@@ -63,49 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Michael Kao <michael.kao@mediatek.com>
 
-[ Upstream commit 8e71fa5e4d86bedfd26df85381d65d6b4c860020 ]
+[ Upstream commit eb9aecd90d1a39601e91cd08b90d5fee51d321a6 ]
 
-Fixes gcc '-Wunused-but-set-variable' warning:
+The index of msr and adcpnp should match the sensor
+which belongs to the selected bank in the for loop.
 
-drivers/video/fbdev/chipsfb.c: In function 'chipsfb_pci_init':
-drivers/video/fbdev/chipsfb.c:352:22: warning:
- variable 'size' set but not used [-Wunused-but-set-variable]
-
-Fixes: 8c8709334cec ("[PATCH] ppc32: Remove CONFIG_PMAC_PBOOK").
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Acked-by: Michael Ellerman <mpe@ellerman.id.au>
-Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
-Cc: Christophe Leroy <christophe.leroy@c-s.fr>
-[b.zolnierkie: minor commit summary and description fixups]
-Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Fixes: b7cf0053738c ("thermal: Add Mediatek thermal driver for mt2701.")
+Signed-off-by: Michael Kao <michael.kao@mediatek.com>
+Signed-off-by: Eduardo Valentin <edubezval@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/video/fbdev/chipsfb.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/thermal/mtk_thermal.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/video/fbdev/chipsfb.c b/drivers/video/fbdev/chipsfb.c
-index f103665cad431..f9b366d175875 100644
---- a/drivers/video/fbdev/chipsfb.c
-+++ b/drivers/video/fbdev/chipsfb.c
-@@ -350,7 +350,7 @@ static void init_chips(struct fb_info *p, unsigned long addr)
- static int chipsfb_pci_init(struct pci_dev *dp, const struct pci_device_id *ent)
- {
- 	struct fb_info *p;
--	unsigned long addr, size;
-+	unsigned long addr;
- 	unsigned short cmd;
- 	int rc = -ENODEV;
+diff --git a/drivers/thermal/mtk_thermal.c b/drivers/thermal/mtk_thermal.c
+index 0691f260f6eab..f64643629d8b5 100644
+--- a/drivers/thermal/mtk_thermal.c
++++ b/drivers/thermal/mtk_thermal.c
+@@ -431,7 +431,8 @@ static int mtk_thermal_bank_temperature(struct mtk_thermal_bank *bank)
+ 	u32 raw;
  
-@@ -362,7 +362,6 @@ static int chipsfb_pci_init(struct pci_dev *dp, const struct pci_device_id *ent)
- 	if ((dp->resource[0].flags & IORESOURCE_MEM) == 0)
- 		goto err_disable;
- 	addr = pci_resource_start(dp, 0);
--	size = pci_resource_len(dp, 0);
- 	if (addr == 0)
- 		goto err_disable;
+ 	for (i = 0; i < conf->bank_data[bank->id].num_sensors; i++) {
+-		raw = readl(mt->thermal_base + conf->msr[i]);
++		raw = readl(mt->thermal_base +
++			    conf->msr[conf->bank_data[bank->id].sensors[i]]);
  
+ 		temp = raw_to_mcelsius(mt,
+ 				       conf->bank_data[bank->id].sensors[i],
+@@ -568,7 +569,8 @@ static void mtk_thermal_init_bank(struct mtk_thermal *mt, int num,
+ 
+ 	for (i = 0; i < conf->bank_data[num].num_sensors; i++)
+ 		writel(conf->sensor_mux_values[conf->bank_data[num].sensors[i]],
+-		       mt->thermal_base + conf->adcpnp[i]);
++		       mt->thermal_base +
++		       conf->adcpnp[conf->bank_data[num].sensors[i]]);
+ 
+ 	writel((1 << conf->bank_data[num].num_sensors) - 1,
+ 	       mt->thermal_base + TEMP_MONCTL0);
 -- 
 2.20.1
 
