@@ -2,193 +2,99 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50ED3C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 12:43:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC1F8C32771
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 12:45:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24B872070A
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 12:43:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B27F42070A
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 12:45:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579869916;
+	bh=FvvLH9qER5DcnOnf1xVp/JzrsG2atF7HVEx+eP6psjg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=0VlJArWhuJAhgR073w4ZIiRVJIl0jOCoStmersvgsWY8drU19b9lqrOiIyijydEzL
+	 IT/Nrw12ZyYnPSkEmhF8BQo+ney9oAsKztg+UVZNX6LdSsPM+W9V6LIoyksG/9u5Ok
+	 FFfgUxvVZU+IqCmyRJjIvT5THLepnQA3n3CPG6SM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387944AbgAXMnQ (ORCPT
+        id S2388617AbgAXMpQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 07:43:16 -0500
-Received: from foss.arm.com ([217.140.110.172]:51252 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729721AbgAXMnO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 07:43:14 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 49F381007;
-        Fri, 24 Jan 2020 04:43:14 -0800 (PST)
-Received: from e113632-lin.cambridge.arm.com (e113632-lin.cambridge.arm.com [10.1.194.46])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 1633A3F68E;
-        Fri, 24 Jan 2020 04:43:12 -0800 (PST)
-From:   Valentin Schneider <valentin.schneider@arm.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     mingo@redhat.com, peterz@infradead.org, vincent.guittot@linaro.org,
-        dietmar.eggemann@arm.com, morten.rasmussen@arm.com,
-        qperret@google.com, adharmap@codeaurora.org
-Subject: [PATCH 1/3] sched/fair: Add asymmetric CPU capacity wakeup scan
-Date:   Fri, 24 Jan 2020 12:42:53 +0000
-Message-Id: <20200124124255.1095-2-valentin.schneider@arm.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20200124124255.1095-1-valentin.schneider@arm.com>
-References: <20200124124255.1095-1-valentin.schneider@arm.com>
+        Fri, 24 Jan 2020 07:45:16 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:35694 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387574AbgAXMpP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 07:45:15 -0500
+Received: by mail-wm1-f67.google.com with SMTP id p17so1599246wmb.0;
+        Fri, 24 Jan 2020 04:45:14 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=j+mBBTpQJ4wbg8K52L8M4km/ID9qCvpn337om+dHJcg=;
+        b=fdHlWwGYPjfw1Ny99VNqIHv7bDzqZDoVW4n0C8WSqvY63tYJ2HMLuDAMQwgCxjnBRv
+         8KEf0IQRR7pUczoEdpU70ftrD4wYXvZG/cnspnutGv+CfBNClBBfGiyy6Pm0Tqnsutc/
+         JPowucQAKQvfOuQa3GPqk8X4E0bkTEk+YRY5/gR61Fk+7oBviF/spObsda+0HDiJbnkZ
+         DsOlGjJR2MwlNXSjpt1CeL47jlZ/buX/2QErkoOw1oxAjg90ijW1p+y/ZiCk3qQXaki2
+         7eQG1OdaLuwSHVz5b+wDmh4YuzjUjwpsGC4F3nTRNzifeC2eSwFvk4KKMAnD65ltq1RH
+         RLCA==
+X-Gm-Message-State: APjAAAXRQUXIVFxj9It/7WgwhK1HmbmDY2npWkBvZcsTd4amJ4VhlaFk
+        vG23a35xXUPLhsxNRAKq0NE=
+X-Google-Smtp-Source: APXvYqw48IZitTegCDEqW/DRYA1NjgNNLdiLHQ9/3fjlhxhOgsQMrqFvY7FUdFcstQQHzviWIpDW8Q==
+X-Received: by 2002:a1c:bc08:: with SMTP id m8mr2654997wmf.189.1579869913658;
+        Fri, 24 Jan 2020 04:45:13 -0800 (PST)
+Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
+        by smtp.gmail.com with ESMTPSA id g25sm14465121wmh.3.2020.01.24.04.45.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 24 Jan 2020 04:45:12 -0800 (PST)
+Date:   Fri, 24 Jan 2020 13:45:12 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     David Hildenbrand <david@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        stable <stable@vger.kernel.org>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Linux MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] mm/memory_hotplug: Fix remove_memory() lockdep splat
+Message-ID: <20200124124512.GT29276@dhcp22.suse.cz>
+References: <e60e64f9-894b-4121-d97b-fb61459cbbe5@redhat.com>
+ <CAPcyv4jm=fmP=-5vbo2jxzMe2qXqZP=zDYF8G_rs3X6_Om0wPg@mail.gmail.com>
+ <4d0334e2-c4e7-6d3f-99ba-2ca0495e1549@redhat.com>
+ <CAPcyv4jixmv8fJ5FiYE=97Jud3Mc+6QzRX1txceSYU+WY_0rQA@mail.gmail.com>
+ <fc0cfb97-5a60-7e73-4f85-d8e6947c5e28@redhat.com>
+ <CAPcyv4jVpN26RGQLRn4BewYtzHDoQfvh37DEdEBq1dd4-BP0kw@mail.gmail.com>
+ <64902066-51dd-9693-53fc-4a5975c58409@redhat.com>
+ <CAPcyv4hcDNeQO3CfnqTRou+6R5gZwyi4pVUMxp1DadAOp7kJGQ@mail.gmail.com>
+ <516aa930-9b64-b377-557c-5413ed9fe336@redhat.com>
+ <CAPcyv4iiYtN6iGt=rVuNR=O=H9YcY1b1yWp+5TuDhu0QoVqT_A@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAPcyv4iiYtN6iGt=rVuNR=O=H9YcY1b1yWp+5TuDhu0QoVqT_A@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Morten Rasmussen <morten.rasmussen@arm.com>
+On Fri 10-01-20 13:27:24, Dan Williams wrote:
+> On Fri, Jan 10, 2020 at 9:42 AM David Hildenbrand <david@redhat.com> wrote:
+[...]
+> > For your reference (roughly 5 months ago, so not that old)
+> >
+> > https://lkml.kernel.org/r/20190724143017.12841-1-david@redhat.com
+> 
+> Oh, now I see the problem. You need to add that lock so far away from
+> the __add_memory() to avoid lock inversion problems with the
+> acpi_scan_lock. The organization I was envisioning would not work
+> without deeper refactoring.
 
-On asymmetric CPU capacity topologies, we currently rely on wake_cap() to
-drive select_task_rq_fair() towards either
-- its slow-path (find_idlest_cpu()) if either the previous or
-  current (waking) CPU has too little capacity for the waking task
-- its fast-path (select_idle_sibling()) otherwise
+Sorry to come back to this late. Has this been resolved?
 
-Commit 3273163c6775 ("sched/fair: Let asymmetric CPU configurations balance
-at wake-up") points out that this relies on the assumption that "[...]the
-CPU capacities within an SD_SHARE_PKG_RESOURCES domain (sd_llc) are
-homogeneous".
-
-This assumption no longer holds on newer generations of big.LITTLE
-systems (DynamIQ), which can accommodate CPUs of different compute capacity
-within a single LLC domain. To hopefully paint a better picture, a regular
-big.LITTLE topology would look like this:
-
-  +---------+ +---------+
-  |   L2    | |   L2    |
-  +----+----+ +----+----+
-  |CPU0|CPU1| |CPU2|CPU3|
-  +----+----+ +----+----+
-      ^^^         ^^^
-    LITTLEs      bigs
-
-which would result in the following scheduler topology:
-
-  DIE [         ] <- sd_asym_cpucapacity
-  MC  [   ] [   ] <- sd_llc
-       0 1   2 3
-
-Conversely, a DynamIQ topology could look like:
-
-  +-------------------+
-  |        L3         |
-  +----+----+----+----+
-  | L2 | L2 | L2 | L2 |
-  +----+----+----+----+
-  |CPU0|CPU1|CPU2|CPU3|
-  +----+----+----+----+
-     ^^^^^     ^^^^^
-    LITTLEs    bigs
-
-which would result in the following scheduler topology:
-
-  MC [       ] <- sd_llc, sd_asym_cpucapacity
-      0 1 2 3
-
-What this means is that, on DynamIQ systems, we could pass the wake_cap()
-test (IOW presume the waking task fits on the CPU capacities of some LLC
-domain), thus go through select_idle_sibling().
-This function operates on an LLC domain, which here spans both bigs and
-LITTLEs, so it could very well pick a CPU of too small capacity for the
-task, despite there being fitting idle CPUs - it very much depends on the
-CPU iteration order, on which we have absolutely no guarantees
-capacity-wise.
-
-Introduce yet another select_idle_sibling() helper function that takes CPU
-capacity into account. The policy is basically to pick the first idle CPU
-which is big enough for the task (task_util * margin < cpu_capacity).
-
-Unlike other select_idle_sibling() helpers, this one operates on the
-sd_asym_cpucapacity sched_domain pointer, which is guaranteed to span all
-known CPU capacities in the system. As such, this will work for both
-"legacy" big.LITTLE (LITTLEs & bigs split at MC, joined at DIE) and for
-newer DynamIQ systems (e.g. LITTLEs and bigs in the same MC domain).
-
-Co-authored-by: Valentin Schneider <valentin.schneider@arm.com>
-Signed-off-by: Morten Rasmussen <morten.rasmussen@arm.com>
-Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
----
- kernel/sched/fair.c | 39 ++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 38 insertions(+), 1 deletion(-)
-
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index fe4e0d7753756..47a4f52d89b44 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -5772,7 +5772,7 @@ void __update_idle_core(struct rq *rq)
-  */
- static int select_idle_core(struct task_struct *p, struct sched_domain *sd, int target)
- {
--	struct cpumask *cpus = this_cpu_cpumask_var_ptr(select_idle_mask);
-+	struct cpumask *cpus;
- 	int core, cpu;
- 
- 	if (!static_branch_likely(&sched_smt_present))
-@@ -5781,6 +5781,7 @@ static int select_idle_core(struct task_struct *p, struct sched_domain *sd, int
- 	if (!test_idle_cores(target, false))
- 		return -1;
- 
-+	cpus = this_cpu_cpumask_var_ptr(select_idle_mask);
- 	cpumask_and(cpus, sched_domain_span(sd), p->cpus_ptr);
- 
- 	for_each_cpu_wrap(core, cpus, target) {
-@@ -5894,6 +5895,37 @@ static int select_idle_cpu(struct task_struct *p, struct sched_domain *sd, int t
- 	return cpu;
- }
- 
-+/*
-+ * Scan the asym_capacity domain for idle CPUs; pick the first idle one on which
-+ * the task fits.
-+ */
-+static int select_idle_capacity(struct task_struct *p, int target)
-+{
-+	struct cpumask *cpus = this_cpu_cpumask_var_ptr(select_idle_mask);
-+	struct sched_domain *sd;
-+	int cpu;
-+
-+	if (!static_branch_unlikely(&sched_asym_cpucapacity))
-+		return -1;
-+
-+	sd = rcu_dereference(per_cpu(sd_asym_cpucapacity, target));
-+	if (!sd)
-+		return -1;
-+
-+	cpumask_and(cpus, sched_domain_span(sd), p->cpus_ptr);
-+
-+	for_each_cpu_wrap(cpu, cpus, target) {
-+		if (!available_idle_cpu(cpu))
-+			continue;
-+		if (!task_fits_capacity(p, capacity_of(cpu)))
-+			continue;
-+
-+		return cpu;
-+	}
-+
-+	return -1;
-+}
-+
- /*
-  * Try and locate an idle core/thread in the LLC cache domain.
-  */
-@@ -5902,6 +5934,11 @@ static int select_idle_sibling(struct task_struct *p, int prev, int target)
- 	struct sched_domain *sd;
- 	int i, recent_used_cpu;
- 
-+	/* For asymmetric capacities, try to be smart about the placement */
-+	i = select_idle_capacity(p, target);
-+	if ((unsigned)i < nr_cpumask_bits)
-+		return i;
-+
- 	if (available_idle_cpu(target) || sched_idle_cpu(target))
- 		return target;
- 
 -- 
-2.24.0
-
+Michal Hocko
+SUSE Labs
