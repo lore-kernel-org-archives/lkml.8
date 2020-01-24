@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7A40C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:29:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3F2EC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:29:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D9132077C
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:29:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B058A206F0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:29:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579876167;
-	bh=rOC8U+f1daTPhWJ4bxWs0HkmJ05pAb0NOy3PkAdNkRg=;
+	s=default; t=1579876174;
+	bh=EPmA2zirvc5Pz7HNThNXC1RSd9j2S88QrrFYdgTC6bA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Bu1qNzW/+iyeLvpDF0CucaUq76deoVWvI6I3BXWiFcu5CbsYaYSzdfLfwjvtbEIxP
-	 RzMPJSJuR7dHZovYJ5RBMxXDg15w16oADkYZRS97ZVwSqRoxYukyZKglNZKsRE8Agb
-	 GYS/3iKdDDyY5pIIHF1fsp9egYm3/ldJdxj4F6BI=
+	b=jVJjbKhmt+PZzS9ar7blpmnpzzYppFme2cydX+79WzkGPD4ZiuxgsOimp8OH8AwJF
+	 Fcm80+fWsfVIRBp2rjkSkMGjDrxZE7RUynlkcxXd0KVYIu79eeFHStFyTjT42mZLy0
+	 t7+a8o0/3JOy7kUWYmqkI3HJjL/sgIk/UDanAVKI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391243AbgAXO3Z (ORCPT
+        id S2405136AbgAXOU5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 09:29:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42384 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 09:20:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42200 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405143AbgAXOU7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 09:20:59 -0500
+        id S2405072AbgAXOUu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 09:20:50 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D07BD20661;
-        Fri, 24 Jan 2020 14:20:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5EA5E21734;
+        Fri, 24 Jan 2020 14:20:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579875658;
-        bh=rOC8U+f1daTPhWJ4bxWs0HkmJ05pAb0NOy3PkAdNkRg=;
+        s=default; t=1579875650;
+        bh=EPmA2zirvc5Pz7HNThNXC1RSd9j2S88QrrFYdgTC6bA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Oeh33EDKwFPowxcFShGOdKdqL4X0/JSJg7bifuH9S7+qH1gPHIEs6M6nDGUDkA3DR
-         bcQkIJ8H5PYcV41UwmibqS1t17CMbAa6JY7gZsE73qCR1Y8qSabrXi1uD49YP7wbEJ
-         Kf21FVROrT4klv2KkhDknJ8B+sWa22G5WgPD4YBQ=
+        b=PconBqYd2tIfEFMvjgYV66Lcf2VSYvBpDTDOZV+prmlGD97Z5bzQNxQNagN9qry+k
+         6yXfEvOjTdVKPuRALE3nePGc+ZKDESL49H2uo1hc3QQyNOftLQ9HtLpykteSP1mRMn
+         UUqoA2rQikLUtuXzXQXE8WpdQKvrtYDcj6yNxBkQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jouni Malinen <j@w1.fi>, Johannes Berg <johannes.berg@intel.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 39/56] mac80211: Fix TKIP replay protection immediately after key setup
-Date:   Fri, 24 Jan 2020 09:19:55 -0500
-Message-Id: <20200124142012.29752-39-sashal@kernel.org>
+Cc:     Johan Hovold <johan@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-wireless@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 32/56] NFC: pn533: fix bulk-message timeout
+Date:   Fri, 24 Jan 2020 09:19:48 -0500
+Message-Id: <20200124142012.29752-32-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200124142012.29752-1-sashal@kernel.org>
 References: <20200124142012.29752-1-sashal@kernel.org>
@@ -59,62 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jouni Malinen <j@w1.fi>
+From: Johan Hovold <johan@kernel.org>
 
-[ Upstream commit 6f601265215a421f425ba3a4850a35861d024643 ]
+[ Upstream commit a112adafcb47760feff959ee1ecd10b74d2c5467 ]
 
-TKIP replay protection was skipped for the very first frame received
-after a new key is configured. While this is potentially needed to avoid
-dropping a frame in some cases, this does leave a window for replay
-attacks with group-addressed frames at the station side. Any earlier
-frame sent by the AP using the same key would be accepted as a valid
-frame and the internal RSC would then be updated to the TSC from that
-frame. This would allow multiple previously transmitted group-addressed
-frames to be replayed until the next valid new group-addressed frame
-from the AP is received by the station.
+The driver was doing a synchronous uninterruptible bulk-transfer without
+using a timeout. This could lead to the driver hanging on probe due to a
+malfunctioning (or malicious) device until the device is physically
+disconnected. While sleeping in probe the driver prevents other devices
+connected to the same hub from being added to (or removed from) the bus.
 
-Fix this by limiting the no-replay-protection exception to apply only
-for the case where TSC=0, i.e., when this is for the very first frame
-protected using the new key, and the local RSC had not been set to a
-higher value when configuring the key (which may happen with GTK).
+An arbitrary limit of five seconds should be more than enough.
 
-Signed-off-by: Jouni Malinen <j@w1.fi>
-Link: https://lore.kernel.org/r/20200107153545.10934-1-j@w1.fi
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Fixes: dbafc28955fa ("NFC: pn533: don't send USB data off of the stack")
+Signed-off-by: Johan Hovold <johan@kernel.org>
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/mac80211/tkip.c | 18 +++++++++++++++---
- 1 file changed, 15 insertions(+), 3 deletions(-)
+ drivers/nfc/pn533/usb.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/mac80211/tkip.c b/net/mac80211/tkip.c
-index b3622823bad23..ebd66e8f46b3f 100644
---- a/net/mac80211/tkip.c
-+++ b/net/mac80211/tkip.c
-@@ -266,9 +266,21 @@ int ieee80211_tkip_decrypt_data(struct crypto_cipher *tfm,
- 	if ((keyid >> 6) != key->conf.keyidx)
- 		return TKIP_DECRYPT_INVALID_KEYIDX;
+diff --git a/drivers/nfc/pn533/usb.c b/drivers/nfc/pn533/usb.c
+index fcb57d64d97e6..a2c9b3f3bc232 100644
+--- a/drivers/nfc/pn533/usb.c
++++ b/drivers/nfc/pn533/usb.c
+@@ -403,7 +403,7 @@ static int pn533_acr122_poweron_rdr(struct pn533_usb_phy *phy)
+ 		       cmd, sizeof(cmd), false);
  
--	if (rx_ctx->ctx.state != TKIP_STATE_NOT_INIT &&
--	    (iv32 < rx_ctx->iv32 ||
--	     (iv32 == rx_ctx->iv32 && iv16 <= rx_ctx->iv16)))
-+	/* Reject replays if the received TSC is smaller than or equal to the
-+	 * last received value in a valid message, but with an exception for
-+	 * the case where a new key has been set and no valid frame using that
-+	 * key has yet received and the local RSC was initialized to 0. This
-+	 * exception allows the very first frame sent by the transmitter to be
-+	 * accepted even if that transmitter were to use TSC 0 (IEEE 802.11
-+	 * described TSC to be initialized to 1 whenever a new key is taken into
-+	 * use).
-+	 */
-+	if (iv32 < rx_ctx->iv32 ||
-+	    (iv32 == rx_ctx->iv32 &&
-+	     (iv16 < rx_ctx->iv16 ||
-+	      (iv16 == rx_ctx->iv16 &&
-+	       (rx_ctx->iv32 || rx_ctx->iv16 ||
-+		rx_ctx->ctx.state != TKIP_STATE_NOT_INIT)))))
- 		return TKIP_DECRYPT_REPLAY;
- 
- 	if (only_iv) {
+ 	rc = usb_bulk_msg(phy->udev, phy->out_urb->pipe, buffer, sizeof(cmd),
+-			  &transferred, 0);
++			  &transferred, 5000);
+ 	kfree(buffer);
+ 	if (rc || (transferred != sizeof(cmd))) {
+ 		nfc_err(&phy->udev->dev,
 -- 
 2.20.1
 
