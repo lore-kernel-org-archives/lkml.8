@@ -2,149 +2,98 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B483EC35242
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 04:29:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E1A0C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 04:29:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 823B72071A
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 04:29:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Sg5itA96"
+	by mail.kernel.org (Postfix) with ESMTP id F38AF2071A
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 04:29:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579840197;
+	bh=w7bUGOmBcf8WYfmLHNz1iZda5pKwrIDULz8xqJEmZmo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=xqZOlsDvEg0dy6X5mRvYcCp2OWzNd3VBykSdawWf83zcXjRQHiR5GPbABsLh1UWP4
+	 MYpSFQJbknfJkueOu6rfyY49B+SPyIZX4ymJ76EWFzaKGd0UE2wsbZWVqTVFpmucS3
+	 fMlQOAzH9kqBkehonr7im/MLgTld31MiOrz+fCP0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730518AbgAXE3G (ORCPT
+        id S1730555AbgAXE34 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 23:29:06 -0500
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:55805 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729760AbgAXE3G (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 23:29:06 -0500
-Received: by mail-pj1-f68.google.com with SMTP id d5so459938pjz.5;
-        Thu, 23 Jan 2020 20:29:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=W5pF9JS7OfQogiQ+v1H3GtBwMtau9/tHuDv1Q9h5buA=;
-        b=Sg5itA96fCucpWFLPztS45UrhdU//Yjb9e3vjuwavSuwIsEFNQVX2ZPToq0NWtjIIC
-         HkRfgfgyS11flHWhXXEFQvCg6EbCVYgR2fPisPweEkJA8vBD155pupXWLhqDx3FaxlTO
-         9ScXQuVU+BYXGdJENQyKT5QGGLQ+y6rDcOd1OzPbCpt6oEHAFBRn8VTl+mfUrqTLxiM/
-         kc1c8wcYMrNIM+own+kkA6QzBGRgNf5ljnLWAUbvPjX2ui0tWZqMORkoORYY0Eyooxrt
-         AbI4PxV5886ntusBBmpJyEsQy+HJaYyk9G8qHfEaqHXUUDnXmjGWc1gTQ0z5LW1uQniw
-         khHw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=W5pF9JS7OfQogiQ+v1H3GtBwMtau9/tHuDv1Q9h5buA=;
-        b=dRiwex23Va2pMGvGUUo+PLaOwyZ/FTzcwxa6p5E3FhqsP6yQxONeLdX+aBzH5qPsxY
-         r0FByZGy6yKtjTN1I6QvspyGZkQ+bonu1LsToRsKmMzzvnyN+MFVmqA6qlc+DFCgVNzR
-         kmqKsDKZlCqat/nNz4sOlWgTYudruk5jSGo1Nsdo84oSp07OfXDyAGQfD/yZiIupIJws
-         nkzK2ncxIad+Lqm2jImHJ9bPd+tzOTie2CV9RciJbE+24ziL8GPajz09nNi5B38Mh9Z0
-         6/DyUz9NHSNZihZ+kh0kQZuIvgUyasWed15v2F8ghDySNT5PeKEekyKpsrq5L9GL+uxE
-         8zLA==
-X-Gm-Message-State: APjAAAXAdtbij3LetUw7L+eRRUwULuH8XlnkHFUyjJAXRK8fuUYEZOzo
-        XKD5J/aWoO+jNdHPaa1QYg==
-X-Google-Smtp-Source: APXvYqz1nhFiSAUfCxrhC6VBjKlPGF/48fHdPP+Z2cbhtLQPGcYLYeWWuPogvT4DZKfQfmpTS2XuAg==
-X-Received: by 2002:a17:90a:fa88:: with SMTP id cu8mr1112275pjb.141.1579840145559;
-        Thu, 23 Jan 2020 20:29:05 -0800 (PST)
-Received: from madhuparna-HP-Notebook ([2402:3a80:1ee5:e37b:72:f3a9:f673:9aea])
-        by smtp.gmail.com with ESMTPSA id iq22sm4558521pjb.9.2020.01.23.20.28.57
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 23 Jan 2020 20:29:04 -0800 (PST)
-From:   Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
-X-Google-Original-From: Madhuparna Bhowmik <change_this_user_name@gmail.com>
-Date:   Fri, 24 Jan 2020 09:58:52 +0530
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     madhuparnabhowmik10@gmail.com, mingo@redhat.com,
-        peterz@infradead.org, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org, ebiederm@xmission.com,
-        christian.brauner@ubuntu.com, oleg@redhat.com,
-        joel@joelfernandes.org, linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        frextrite@gmail.com, rcu@vger.kernel.org
-Subject: Re: [PATCH] sched.h: Annotate sighand_struct with __rcu
-Message-ID: <20200124042852.GC23699@madhuparna-HP-Notebook>
-References: <20200123145305.10652-1-madhuparnabhowmik10@gmail.com>
- <20200123164108.GQ2935@paulmck-ThinkPad-P72>
+        Thu, 23 Jan 2020 23:29:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50666 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729316AbgAXE3z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jan 2020 23:29:55 -0500
+Received: from sol.localdomain (c-107-3-166-239.hsd1.ca.comcast.net [107.3.166.239])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CC6392072C;
+        Fri, 24 Jan 2020 04:29:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579840195;
+        bh=w7bUGOmBcf8WYfmLHNz1iZda5pKwrIDULz8xqJEmZmo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=RJRx1UroRpNjDxxEZ8+qL1gktnq773hIx31h2M0OdBjHhtDUVdOlVsijub/9qOrJC
+         l16OFpelVLUsiwddVu0rQyNDShAvyriuZEyJnfg6kkHmDYhN8CJDcx/BAP2oLrP6OW
+         tgAwolhEK7ImbCOQj5cJpnHZjDPPM3BpUgQxIjes=
+Date:   Thu, 23 Jan 2020 20:29:53 -0800
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>,
+        Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        "Theodore Y. Ts'o" <tytso@mit.edu>,
+        Namjae Jeon <linkinjeon@gmail.com>,
+        Gabriel Krisman Bertazi <krisman@collabora.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: oopsably broken case-insensitive support in ext4 and f2fs (Re:
+ vfat: Broken case-insensitive support for UTF-8)
+Message-ID: <20200124042953.GA832@sol.localdomain>
+References: <20200119221455.bac7dc55g56q2l4r@pali>
+ <87sgkan57p.fsf@mail.parknet.co.jp>
+ <20200120073040.GZ8904@ZenIV.linux.org.uk>
+ <20200120074558.GA8904@ZenIV.linux.org.uk>
+ <20200120080721.GB8904@ZenIV.linux.org.uk>
+ <20200120193558.GD8904@ZenIV.linux.org.uk>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200123164108.GQ2935@paulmck-ThinkPad-P72>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200120193558.GD8904@ZenIV.linux.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 23, 2020 at 08:41:08AM -0800, Paul E. McKenney wrote:
-> On Thu, Jan 23, 2020 at 08:23:05PM +0530, madhuparnabhowmik10@gmail.com wrote:
-> > From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
-> > 
-> > This patch fixes the following sparse errors by annotating the
-> > sighand_struct with __rcu
-> > 
-> > kernel/fork.c:1511:9: error: incompatible types in comparison expression
-> > kernel/exit.c:100:19: error: incompatible types in comparison expression
-> > kernel/signal.c:1370:27: error: incompatible types in comparison expression
-> > 
-> > This fix introduces the following sparse error in signal.c due to
-> > checking the sighand pointer without rcu primitives:
-> > 
-> > kernel/signal.c:1386:21: error: incompatible types in comparison expression
-> > 
-> > This new sparse error is also addressed in this patch.
-> > 
-> > Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
-> > ---
-> >  include/linux/sched.h | 2 +-
-> >  kernel/signal.c       | 3 ++-
-> >  2 files changed, 3 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/include/linux/sched.h b/include/linux/sched.h
-> > index b511e178a89f..7a351360ad54 100644
-> > --- a/include/linux/sched.h
-> > +++ b/include/linux/sched.h
-> > @@ -918,7 +918,7 @@ struct task_struct {
-> >  
-> >  	/* Signal handlers: */
-> >  	struct signal_struct		*signal;
-> > -	struct sighand_struct		*sighand;
-> > +	struct sighand_struct __rcu		*sighand;
-> >  	sigset_t			blocked;
-> >  	sigset_t			real_blocked;
-> >  	/* Restored if set_restore_sigmask() was used: */
-> > diff --git a/kernel/signal.c b/kernel/signal.c
-> > index bcd46f547db3..1272def37462 100644
-> > --- a/kernel/signal.c
-> > +++ b/kernel/signal.c
-> > @@ -1383,7 +1383,8 @@ struct sighand_struct *__lock_task_sighand(struct task_struct *tsk,
-> >  		 * must see ->sighand == NULL.
-> >  		 */
-> >  		spin_lock_irqsave(&sighand->siglock, *flags);
-> > -		if (likely(sighand == tsk->sighand))
-> > +		if (likely(sighand == rcu_dereference_protected(tsk->sighand,
-> > +						lockdep_is_held(&sighand->siglock))))
+On Mon, Jan 20, 2020 at 07:35:58PM +0000, Al Viro wrote:
+> On Mon, Jan 20, 2020 at 08:07:21AM +0000, Al Viro wrote:
 > 
-> Given that the return value is never dereferenced, you can use
-> rcu_access_pointer(), which may be used outside of an RCU read-side
-> critical section, and thus does not need the lockdep_is_held().  So this
-> change would save a line of code and would be a bit easier on the eyes.
->
-Okay got it! I will send the updated patch soon.
+> > > > I hadn't checked ->d_compare() instances for a while; somebody needs to
+> > > > do that again, by the look of it.  The above definitely is broken;
+> > > > no idea how many other instaces had grown such bugs...
+> > > 
+> > > f2fs one also has the same bug.  Anyway, I'm going down right now, will
+> > > check the rest tomorrow morning...
+> > 
+> > We _probably_ can get away with just checking that inode for NULL and
+> > buggering off if it is (->d_seq mismatch is guaranteed in that case),
+> > but I suspect that we might need READ_ONCE() on both dereferences.
+> > I hate memory barriers...
+> 
+> FWIW, other instances seem to be OK; HFS+ one might or might not be
+> OK in the face of concurrent rename (wrong result in that case is
+> no problem; oops would be), but it doesn't play silly buggers with
+> pointer-chasing.
+> 
+> ext4 and f2fs do, and ->d_compare() is broken in both of them.
 
-Thank you,
-Madhuparna
-> 							Thanx, Paul
-> 
-> >  			break;
-> >  		spin_unlock_irqrestore(&sighand->siglock, *flags);
-> >  	}
-> > -- 
-> > 2.17.1
-> > 
+Thanks Al.  I sent out fixes for this:
+
+ext4: https://lore.kernel.org/r/20200124041234.159740-1-ebiggers@kernel.org
+f2fs: https://lore.kernel.org/r/20200124041549.159983-1-ebiggers@kernel.org
+
+Note that ->d_hash() was broken too.  In fact, that was much easier to
+reproduce.
+
+- Eric
