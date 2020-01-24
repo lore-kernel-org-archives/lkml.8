@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CE65C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:28:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F66DC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:28:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55C98206D4
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:28:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0EE7620704
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:28:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579865293;
-	bh=Ovnh/M0kR2ZJNb33G0dNMIN7VgpoG5pmnEJ1VTQLBa8=;
+	s=default; t=1579865296;
+	bh=v0KaQj/4lCbT9772pLn9i1i8cmdQpagh76KDE2nXRJk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JUcMMjkBOtBw2bl3bFGIg0jkrgym4qt1z9R1E85wFjHudi2ciKyBx6HrBD1yZSsR0
-	 PGyZN9joTuCGP+xPbQzweKo4rnHyGZLFS8ZzeBeysD06fpw8H65u7gfgtxY8gxT0rT
-	 qe19oqT9SNLBthaZA7+yDjHWa8X51UuFfda42AnI=
+	b=lRG+KHIJxPAh9fuFOzd+aAwWgbtlcKJzbG5dmCBW1SlR6QcKxxFydkPwfdjMREbPv
+	 AOn4sJhSzAxOqnDgYWQS8bQAW3ntkqEJ3pVexE2upklrZXq8TSic77E+HDs7j8P6Rc
+	 nDHzOaciJMXkTJWUJGoBPfdh2nBvcLxrum9GGG8w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404033AbgAXL2M (ORCPT
+        id S2404017AbgAXL2P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:28:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44150 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 06:28:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44232 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404017AbgAXL2I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:28:08 -0500
+        id S2404024AbgAXL2L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:28:11 -0500
 Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CDBDB20704;
-        Fri, 24 Jan 2020 11:28:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3B9562075D;
+        Fri, 24 Jan 2020 11:28:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579865287;
-        bh=Ovnh/M0kR2ZJNb33G0dNMIN7VgpoG5pmnEJ1VTQLBa8=;
+        s=default; t=1579865291;
+        bh=v0KaQj/4lCbT9772pLn9i1i8cmdQpagh76KDE2nXRJk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MYhKn6XN9nJvDFMmJsnkA8nHBATRHZlz/i/Nyy/VE8ehByqOVQhR9x7LFyZOLBw+D
-         s5p/p/OQbLm5M97wQtg1VGhUjzpLq5WmUXOczpzYhJ6L4eSqKdxLJsJAQxooxzPuVa
-         gfRpz8BdaChF+UvOEc3OSbnPfSx3JrX5zAQGuTc4=
+        b=Ucuve+9+OCiXn9RiVhkQQSMl3SR9BGG/aiehoAqNbOLKSELG6i2XLSwZXhmN7rmUw
+         Q4Dm9+8elr+OTn6qhYQoVjnSkUaErko691ryxZAnXslHlqwPVJody4/gRGa8xs10Nq
+         Zo6/JN4i4jaJuxwKIkukdmllyFLVifd4Nrk8ss/0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
         YueHaibing <yuehaibing@huawei.com>,
+        Charles Keepax <ckeepax@opensource.cirrus.com>,
         Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 505/639] ASoC: cs4349: Use PM ops cs4349_runtime_pm
-Date:   Fri, 24 Jan 2020 10:31:15 +0100
-Message-Id: <20200124093152.056754919@linuxfoundation.org>
+Subject: [PATCH 4.19 506/639] ASoC: wm8737: Fix copy-paste error in wm8737_snd_controls
+Date:   Fri, 24 Jan 2020 10:31:16 +0100
+Message-Id: <20200124093152.190752874@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
 References: <20200124093047.008739095@linuxfoundation.org>
@@ -63,36 +64,37 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit 9b4275c415acca6264a3d7f1182589959c93d530 ]
+[ Upstream commit 554b75bde64bcad9662530726d1483f7ef012069 ]
 
-sound/soc/codecs/cs4349.c:358:32: warning:
- cs4349_runtime_pm defined but not used [-Wunused-const-variable=]
+sound/soc/codecs/wm8737.c:112:29: warning:
+ high_3d defined but not used [-Wunused-const-variable=]
 
-cs4349_runtime_pm ops already defined, it seems
-we should enable it.
+'high_3d' should be used for 3D High Cut-off.
 
 Reported-by: Hulk Robot <hulkci@huawei.com>
-Fixes: e40da86 ("ASoC: cs4349: Add support for Cirrus Logic CS4349")
+Fixes: 2a9ae13a2641 ("ASoC: Add initial WM8737 driver")
 Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Link: https://lore.kernel.org/r/20190815090157.70036-1-yuehaibing@huawei.com
+Acked-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+Link: https://lore.kernel.org/r/20190815091920.64480-1-yuehaibing@huawei.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/codecs/cs4349.c | 1 +
- 1 file changed, 1 insertion(+)
+ sound/soc/codecs/wm8737.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/soc/codecs/cs4349.c b/sound/soc/codecs/cs4349.c
-index bee0e343723fe..f08d7a296c0cc 100644
---- a/sound/soc/codecs/cs4349.c
-+++ b/sound/soc/codecs/cs4349.c
-@@ -381,6 +381,7 @@ static struct i2c_driver cs4349_i2c_driver = {
- 	.driver = {
- 		.name		= "cs4349",
- 		.of_match_table	= cs4349_of_match,
-+		.pm = &cs4349_runtime_pm,
- 	},
- 	.id_table	= cs4349_i2c_id,
- 	.probe		= cs4349_i2c_probe,
+diff --git a/sound/soc/codecs/wm8737.c b/sound/soc/codecs/wm8737.c
+index e9ae821e76098..568b77692f5f0 100644
+--- a/sound/soc/codecs/wm8737.c
++++ b/sound/soc/codecs/wm8737.c
+@@ -170,7 +170,7 @@ SOC_DOUBLE("Polarity Invert Switch", WM8737_ADC_CONTROL, 5, 6, 1, 0),
+ SOC_SINGLE("3D Switch", WM8737_3D_ENHANCE, 0, 1, 0),
+ SOC_SINGLE("3D Depth", WM8737_3D_ENHANCE, 1, 15, 0),
+ SOC_ENUM("3D Low Cut-off", low_3d),
+-SOC_ENUM("3D High Cut-off", low_3d),
++SOC_ENUM("3D High Cut-off", high_3d),
+ SOC_SINGLE_TLV("3D ADC Volume", WM8737_3D_ENHANCE, 7, 1, 1, adc_tlv),
+ 
+ SOC_SINGLE("Noise Gate Switch", WM8737_NOISE_GATE, 0, 1, 0),
 -- 
 2.20.1
 
