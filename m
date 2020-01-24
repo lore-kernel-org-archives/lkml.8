@@ -2,119 +2,128 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF9A8C32771
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 18:07:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8398AC3F68F
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 18:09:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 895752071A
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 18:07:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CD862075D
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 18:09:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="n3qnwZz0"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uyI37eJ5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403805AbgAXSH5 (ORCPT
+        id S2391300AbgAXSJi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 13:07:57 -0500
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:11334 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391024AbgAXSH4 (ORCPT
+        Fri, 24 Jan 2020 13:09:38 -0500
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:44162 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388558AbgAXSJi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 13:07:56 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e2b326d0000>; Fri, 24 Jan 2020 10:07:41 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Fri, 24 Jan 2020 10:07:55 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Fri, 24 Jan 2020 10:07:55 -0800
-Received: from [10.21.133.51] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 24 Jan
- 2020 18:07:53 +0000
-Subject: Re: [PATCH 4.19 000/639] 4.19.99-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-CC:     <linux-kernel@vger.kernel.org>, <torvalds@linux-foundation.org>,
-        <akpm@linux-foundation.org>, <linux@roeck-us.net>,
-        <shuah@kernel.org>, <patches@kernelci.org>,
-        <ben.hutchings@codethink.co.uk>, <lkft-triage@lists.linaro.org>,
-        <stable@vger.kernel.org>, linux-tegra <linux-tegra@vger.kernel.org>
-References: <20200124093047.008739095@linuxfoundation.org>
- <23f2a904-3351-4a75-aaaf-2623dc55d114@nvidia.com>
- <20200124173659.GD3166016@kroah.com>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <8a782263-aca3-3846-12a0-4eb21f015894@nvidia.com>
-Date:   Fri, 24 Jan 2020 18:07:51 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Fri, 24 Jan 2020 13:09:38 -0500
+Received: by mail-pl1-f196.google.com with SMTP id d9so1099043plo.11
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jan 2020 10:09:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=subject:date:message-id:mime-version:content-transfer-encoding:cc
+         :from:to;
+        bh=tl33NMB4xb0Oa3P5bsoXvWl9n72K/Immm4it2JBZlyA=;
+        b=uyI37eJ5+pWiKL95QrI8s9+IPlQe/iwpnUrs9427leFlv+jWAoJ/A+pPE5gtMAe3y1
+         ym2wBWUw/ug607NLZJ0Lx7Ngoosbnvra9u27cj4ek0Ax8nH3bdbRQ83CK+9G94vqYk2E
+         7UU3+XEIIloN0HYtFxIzDVeY7N+zdTpbxDdsX9uwuBWzl/eFgHFNAsxCVoZQw4WQgeVt
+         Kodi6q6q07iFIPmXnu93ZKTpauWeAiq5jd6P9OJ3AgtF3vB+wmy/IiBSrzp79WEGsJti
+         N/8XZ9rFn+VmpE4HLmAgZQaV/swEBjmtxugC9bDtGq8nXv/43f0R3UL+GE1P4ewQIsso
+         ajCQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:date:message-id:mime-version
+         :content-transfer-encoding:cc:from:to;
+        bh=tl33NMB4xb0Oa3P5bsoXvWl9n72K/Immm4it2JBZlyA=;
+        b=Fe3HhSyS2yBo13xuun3jCj5nKLJKpGJGHBrJ59WcSGx8QiKNzxBQ7VbnIHhvzeWcQv
+         +HpDXPGeUWKDb/dIMh14hqDar5xJKXtmVxCjcjgj3RoyG4lRfsr907uYnxAX/CVagOrP
+         3VXSwzrI5xpfvC36cDVpC3ynD8loHA2eeLpmhBCvSyospTpDkDmxQcwpV7j5Ygp7IFbA
+         nngssnmktrFHJgi1NyhCKCiEokQq2xucd9sAFhI0n0aAINWHsBgXfdHklOdsXYBdDYI4
+         fPQfa0wL+bI+x/jksRk3+S+6cTg1Upyz9jf+P5e71hARwY407AysM5xgGZBG/Aq/9sTh
+         AjLA==
+X-Gm-Message-State: APjAAAXbdu9PsOmsIRVbRo77LHS7j8T3dwrP2RcIXRFEi+Ld4oJnAzw1
+        9nVk7D+VjHtWCJ4b/a7Rq3H64g==
+X-Google-Smtp-Source: APXvYqzFmqNXDTGXhgjmflNvPd4/r6/ygwXhSF679LLu4iDHd+MEhRcrDuwurclHInHbqyWpKkOLEw==
+X-Received: by 2002:a17:90a:d205:: with SMTP id o5mr540430pju.46.1579889377253;
+        Fri, 24 Jan 2020 10:09:37 -0800 (PST)
+Received: from localhost ([2620:0:1000:2514:bf69:4011:cfff:c9e3])
+        by smtp.gmail.com with ESMTPSA id q10sm7192274pfn.5.2020.01.24.10.09.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 24 Jan 2020 10:09:36 -0800 (PST)
+Subject: [PATCH] selftests/bpf: Elide a check for LLVM versions that can't compile it
+Date:   Fri, 24 Jan 2020 10:08:39 -0800
+Message-Id: <20200124180839.185837-1-palmerdabbelt@google.com>
+X-Mailer: git-send-email 2.25.0.341.g760bfbb309-goog
 MIME-Version: 1.0
-In-Reply-To: <20200124173659.GD3166016@kroah.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1579889261; bh=v4oPTR2YZWxHlL+tTFjcNkmCCof+ja1sD/+qaxtlzAA=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=n3qnwZz0CZL/XmU/8R8VCRRVCRsOhZ88HDYYtAW9jlgbr9XmN5nngUFcSPzgZNBtx
-         OEeg5I+J/ZNNbaTMCnEEluRm2AnsFIa5ttlIrk3Q7WJ4n9rhUS+iBNMXj9QmFZ4nKd
-         vggSxpi7XFeFpMPHRM+Hc0iyA80zkEnn8MlMcO9h5lbFrTIwFvkFZPBEAx/GRf3+Cc
-         eX2vQLlJghbufGAWiXOFk5/4pgoLuuumFkpoyYp+MULaWLXC+qh3C8PQ8/Xi1pJZeZ
-         tJNrQKY61A9awhsZ8lgXaWvCVHQKc5tOlOyX7ZLYzjXZCJS/gWfUg4FI0PVBNKc9fg
-         t4/8wCnrvA+pg==
+Content-Transfer-Encoding: 8bit
+Cc:     shuah@kernel.org, ast@kernel.org, daniel@iogearbox.net,
+        kafai@fb.com, songliubraving@fb.com, yhs@fb.com, andriin@fb.com,
+        john.fastabend@gmail.com,
+        Palmer Dabbelt <palmerdabbelt@google.com>,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
+        kernel-team@android.com
+From:   Palmer Dabbelt <palmerdabbelt@google.com>
+To:     linux-kselftest@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The current stable LLVM BPF backend fails to compile the BPF selftests
+due to a compiler bug.  The bug has been fixed in trunk, but that fix
+hasn't landed in the binary packages I'm using yet (Fedora arm64).
+Without this workaround the tests don't compile for me.
 
-On 24/01/2020 17:36, Greg Kroah-Hartman wrote:
-> On Fri, Jan 24, 2020 at 02:50:05PM +0000, Jon Hunter wrote:
->> Hi Greg,
->>
->> On 24/01/2020 09:22, Greg Kroah-Hartman wrote:
->>> This is the start of the stable review cycle for the 4.19.99 release.
->>> There are 639 patches in this series, all will be posted as a response
->>> to this one.  If anyone has any issues with these being applied, please
->>> let me know.
->>>
->>> Responses should be made by Sun, 26 Jan 2020 09:26:29 +0000.
->>> Anything received after that time might be too late.
->>>
->>> The whole patch series can be found in one patch at:
->>> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.99-rc1.gz
->>> or in the git tree and branch at:
->>> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.19.y
->>> and the diffstat can be found below.
->>>
->>> thanks,
->>>
->>> greg k-h
->>>
->>> -------------
->>> Pseudo-Shortlog of commits:
->>
->> ...
->>
->>> Rafael J. Wysocki <rafael.j.wysocki@intel.com>
->>>     PCI: PM: Skip devices in D0 for suspend-to-idle
->>
->> The above commit is causing a suspend regression on Tegra124 Jetson-TK1.
->> Reverting this on top of v4.19.99-rc1 fixes the issue.
-> 
-> This is also in the 4.14 queue, so should I drop it there too?
+This patch triggers a preprocessor warning on LLVM versions that
+definitely have the bug.  The test may be conservative (ie, I'm not sure
+if 9.1 will have the fix), but it should at least make the current set
+of stable releases work together.
 
-I did not see any failures with the same board on that branch, so I
-would say no, but odd that it only fails here. It was failing for me
-100% so I would have expected to see if there too if it was a problem.
+See https://reviews.llvm.org/D69438 for more information on the fix.  I
+obtained the workaround from
+https://lore.kernel.org/linux-kselftest/aed8eda7-df20-069b-ea14-f06628984566@gmail.com/T/
 
-Jon
+Fixes: 20a9ad2e7136 ("selftests/bpf: add CO-RE relocs array tests")
+Signed-off-by: Palmer Dabbelt <palmerdabbelt@google.com>
+---
+ .../testing/selftests/bpf/progs/test_core_reloc_arrays.c  | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
+diff --git a/tools/testing/selftests/bpf/progs/test_core_reloc_arrays.c b/tools/testing/selftests/bpf/progs/test_core_reloc_arrays.c
+index 89951b684282..e5eafdab80a4 100644
+--- a/tools/testing/selftests/bpf/progs/test_core_reloc_arrays.c
++++ b/tools/testing/selftests/bpf/progs/test_core_reloc_arrays.c
+@@ -43,15 +43,23 @@ int test_core_arrays(void *ctx)
+ 	/* in->a[2] */
+ 	if (CORE_READ(&out->a2, &in->a[2]))
+ 		return 1;
++#if defined(__clang__) && (__clang_major__ < 10) && (__clang_minor__ < 1)
++# warning "clang 9.0 SEGVs on multidimensional arrays, see https://reviews.llvm.org/D69438"
++#else
+ 	/* in->b[1][2][3] */
+ 	if (CORE_READ(&out->b123, &in->b[1][2][3]))
+ 		return 1;
++#endif
+ 	/* in->c[1].c */
+ 	if (CORE_READ(&out->c1c, &in->c[1].c))
+ 		return 1;
++#if defined(__clang__) && (__clang_major__ < 10) && (__clang_minor__ < 1)
++# warning "clang 9.0 SEGVs on multidimensional arrays, see https://reviews.llvm.org/D69438"
++#else
+ 	/* in->d[0][0].d */
+ 	if (CORE_READ(&out->d00d, &in->d[0][0].d))
+ 		return 1;
++#endif
+ 
+ 	return 0;
+ }
 -- 
-nvpublic
+2.25.0.341.g760bfbb309-goog
+
