@@ -3,167 +3,90 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB4BCC35242
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 15:26:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF12EC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 15:28:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB1B32071A
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 15:26:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0C1E2077C
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 15:28:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387657AbgAXP0d (ORCPT
+        id S2387948AbgAXP2d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 10:26:33 -0500
-Received: from mga14.intel.com ([192.55.52.115]:8848 "EHLO mga14.intel.com"
+        Fri, 24 Jan 2020 10:28:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38762 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387438AbgAXP0c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 10:26:32 -0500
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Jan 2020 07:26:32 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,358,1574150400"; 
-   d="scan'208";a="428319423"
-Received: from richard.sh.intel.com (HELO localhost) ([10.239.159.54])
-  by fmsmga006.fm.intel.com with ESMTP; 24 Jan 2020 07:26:30 -0800
-Date:   Fri, 24 Jan 2020 23:26:42 +0800
-From:   Wei Yang <richardw.yang@linux.intel.com>
-To:     Michal Hocko <mhocko@kernel.org>, g@richard
-Cc:     Wei Yang <richardw.yang@linux.intel.com>,
-        Yang Shi <yang.shi@linux.alibaba.com>,
-        akpm@linux-foundation.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [v2 PATCH] mm: move_pages: report the number of non-attempted
- pages
-Message-ID: <20200124152642.GB12509@richard>
-Reply-To: Wei Yang <richardw.yang@linux.intel.com>
-References: <1579736331-85494-1-git-send-email-yang.shi@linux.alibaba.com>
- <20200123032736.GA22196@richard>
- <20200123085526.GH29276@dhcp22.suse.cz>
- <20200123225647.GB29851@richard>
- <20200124064649.GM29276@dhcp22.suse.cz>
+        id S2387398AbgAXP2d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 10:28:33 -0500
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4F60620702;
+        Fri, 24 Jan 2020 15:28:32 +0000 (UTC)
+Date:   Fri, 24 Jan 2020 10:28:30 -0500
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Dmitry Vyukov <dvyukov@google.com>
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+        syzbot <syzbot+0c147ca7bd4352547635@syzkaller.appspotmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        netdev <netdev@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Subject: Re: WARNING in tracing_func_proto
+Message-ID: <20200124102830.52911ff4@gandalf.local.home>
+In-Reply-To: <CACT4Y+ZP-7np20GVRu3p+eZys9GPtbu+JpfV+HtsufAzvTgJrg@mail.gmail.com>
+References: <0000000000001b2259059c654421@google.com>
+        <20200121180255.1c98b54c@gandalf.local.home>
+        <20200122055314.GD1847@kadam>
+        <CACT4Y+ZP-7np20GVRu3p+eZys9GPtbu+JpfV+HtsufAzvTgJrg@mail.gmail.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200124064649.GM29276@dhcp22.suse.cz>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 24, 2020 at 07:46:49AM +0100, Michal Hocko wrote:
->On Fri 24-01-20 06:56:47, Wei Yang wrote:
->> On Thu, Jan 23, 2020 at 09:55:26AM +0100, Michal Hocko wrote:
->> >On Thu 23-01-20 11:27:36, Wei Yang wrote:
->> >> On Thu, Jan 23, 2020 at 07:38:51AM +0800, Yang Shi wrote:
->> >> >Since commit a49bd4d71637 ("mm, numa: rework do_pages_move"),
->> >> >the semantic of move_pages() was changed to return the number of
->> >> >non-migrated pages (failed to migration) and the call would be aborted
->> >> >immediately if migrate_pages() returns positive value.  But it didn't
->> >> >report the number of pages that we even haven't attempted to migrate.
->> >> >So, fix it by including non-attempted pages in the return value.
->> >> >
->> >> 
->> >> First, we want to change the semantic of move_pages(2). The return value
->> >> indicates the number of pages we didn't managed to migrate?
->> >> 
->> >> Second, the return value from migrate_pages() doesn't mean the number of pages
->> >> we failed to migrate. For example, one -ENOMEM is returned on the first page,
->> >> migrate_pages() would return 1. But actually, no page successfully migrated.
->> >
->> >ENOMEM is considered a permanent failure and as such it is returned by
->> >migrate pages (see goto out).
->> >
->> >> Third, even the migrate_pages() return the exact non-migrate page, we are not
->> >> sure those non-migrated pages are at the tail of the list. Because in the last
->> >> case in migrate_pages(), it just remove the page from list. It could be a page
->> >> in the middle of the list. Then, in userspace, how the return value be
->> >> leveraged to determine the valid status? Any page in the list could be the
->> >> victim.
->> >
->> >Yes, I was wrong when stating that the caller would know better which
->> >status to check. I misremembered the original patch as it was quite some
->> >time ago. While storing the error code would be possible after some
->> >massaging of migrate_pages is this really something we deeply care
->> >about. The caller can achieve the same by initializing the status array
->> >to a non-node number - e.g. -1 - and check based on that.
->> >
->> 
->> So for a user, the best practice is to initialize the status array to -1 and
->> check each status to see whether the page is migrated successfully?
->
->Yes IMO. Just consider -errno return value. You have no way to find out
->which pages have been migrated until we reached that error. The
->possitive return value would fall into the same case.
->
->> Then do we need to return the number of non-migrated page? What benefit could
->> user get from the number. How about just return an error code to indicate the
->> failure? I may miss some point, would you mind giving me a hint?
->
->This is certainly possible. We can return -EAGAIN if some pages couldn't
->be migrated because they are pinned. But please read my previous email
->to the very end for arguments why this might cause more problems than it
->actually solves.
->
+On Fri, 24 Jan 2020 11:44:13 +0100
+Dmitry Vyukov <dvyukov@google.com> wrote:
 
-Let me put your comment here:
+> FWIW this is invalid use of WARN macros:
+> https://elixir.bootlin.com/linux/v5.5-rc7/source/include/asm-generic/bug.h#L72
+> This should be replaced with pr_err (if really necessary, kernel does
+> not generally spew stacks on every ENOMEM/EINVAL).
 
-    Because new users could have started depending on it. It
-    is not all that unlikely that the current implementation would just
-    work for them because they are migrating a set of pages on to the same
-    node so the batch would be a single list throughout the whole given
-    page set.
+That message was added in 2018. The WARN macro in question here, was
+added in 2011. Thus, this would be more of a clean up fix.
 
-Your idea is to preserve current semantic, return non-migrated pages number to
-userspace.
+> 
+> There are no _lots_ such wrong uses of WARN in the kernel. There were
+> some, all get fixed over time, we are still discovering long tail, but
+> it's like one per months at most. Note: syzbot reports each and every
+> WARNING. If there were lots, you would notice :)
 
-And the reason is:
+Hmm, I haven't looked, but are all these correct usage?
 
-   1. Users have started depending on it.
-   2. No real bug reported yet.
-   3. User always migrate page to the same node. (If my understanding is
-      correct)
+ $ git grep WARN_ON HEAD | wc -l
+15384
 
-I think this gets some reason, since we want to minimize the impact to
-userland.
+I also checked the number of WARN_ON when that WARN_ON was added:
 
-While let's see what user probably use this syscall. Since from the man page,
-we never told the return value could be positive, the number of non-migrated
-pages, user would think only 0 means a successful migration and all other
-cases are failure. Then user probably handle negative and positive return
-value the same way, like (!err).
+ $ git grep WARN_ON 07d777fe8c3985bc83428c2866713c2d1b3d4129 | wc -l
+4730
 
-If my guess is true, return a negative error value for this case could
-minimize the impact to userland here.
-   1. Preserve the semantic of move_pages(2): 0 means success, negative means
-      some error and needs extra handling.
-   2. Trivial change to the man page.
-   3. Suppose no change to users.
+A lot more were added since then!
 
-Well, in case I missed your point, sorry about that.
+> 
+> Sorting this out is critical for just any kernel testing. Otherwise no
+> testing system will be able to say if a test triggers something bad in
+> kernel or not.
+> 
+> FWIW there are no local trees for syzbot. It only tests public trees
+> as is. Doing otherwise would not work/scale as a process.
 
->> >This system call has quite a complex semantic and I am not 100% sure
->> >what is the right thing to do here. Maybe we do want to continue and try
->> >to migrate as much as possible on non-fatal migration failures and
->> >accumulate the number of failed pages while doing so.
->> >
->> >The main problem is that we can have an academic discussion but
->> >the primary question is what do actual users want. A lack of real
->> >bug reports suggests that nobody has actually noticed this. So I
->> >would rather keep returning the correct number of non-migrated
->> >pages. Why? Because new users could have started depending on it. It
->> >is not all that unlikely that the current implementation would just
->> >work for them because they are migrating a set of pages on to the same
->> >node so the batch would be a single list throughout the whole given
->> >page set.
->
->-- 
->Michal Hocko
->SUSE Labs
+Anyway, I'll happily take a patch converting that WARN_ON macro to a
+pr_err() print.
 
--- 
-Wei Yang
-Help you, Help me
+-- Steve
