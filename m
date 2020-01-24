@@ -4,52 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 340F8C35240
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 01:18:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B14FEC35241
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 01:18:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE2B9206A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 01:18:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77FD6206A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 01:18:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579828734;
-	bh=8Fe2iBeciYBwPKPi0FEOt8js/IBKrjykSDBPJL7NGm0=;
+	s=default; t=1579828737;
+	bh=hDLa+EScjpc6izey+ixt/yYayVbcvfq7CLKgz7Rijrg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=l3tlBPLfJkG40H2mQmAraBu9uS+fVBivyhCAhGgo2yD4PqcFlbftchVky15c09jER
-	 d31grfGgazWHKPG5Kek5qW+EM3dzcvce3cGk6+CKGEJRqld8dDx0zimx5KhRePtOuH
-	 Timy1oKgH8vchba6wHmDhwWKB+mbBOWXnkuc6zFQ=
+	b=kJcC0qey51aAdNGsPKjp04xIORB+QQSyND90pTDkE/fm/adVhN+FgS0d5yo46Hn/I
+	 XInT7AxSXp8XXh9fJkvatXlS5J1eYqX6fMn47UzcC4SclEnsrHByhFXE/s4JfhucYD
+	 94ZccWZ/QK0342EXqzFUZTTS5tyApMUos2goAQuY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731078AbgAXBSx (ORCPT
+        id S1730814AbgAXBR5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 20:18:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33040 "EHLO mail.kernel.org"
+        Thu, 23 Jan 2020 20:17:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:32948 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730816AbgAXBR6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 20:17:58 -0500
+        id S1730779AbgAXBRy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jan 2020 20:17:54 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A428021D7D;
-        Fri, 24 Jan 2020 01:17:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0B99E2253D;
+        Fri, 24 Jan 2020 01:17:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579828677;
-        bh=8Fe2iBeciYBwPKPi0FEOt8js/IBKrjykSDBPJL7NGm0=;
+        s=default; t=1579828673;
+        bh=hDLa+EScjpc6izey+ixt/yYayVbcvfq7CLKgz7Rijrg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Q4i0vFAwbCzRswYWIvt02R853RU3yI5PNYOSvSa7ALYzc5GaRJezqWVs3D1PTModo
-         zc9OPBOc1QL/8W8f0h463CKNVSh7tYEmcQo5aBdi7mb/BdqnZ/vXj6rUKd09CKJNqU
-         z+J99CDZLmiGSHaGk5QvFYNixdIj47+HkRRBH9IY=
+        b=tFCdWNUveq0TCMeMGncYF1h3tSnosRLkyV/S+jWPuXfy5p6sIdrkCiv4pzJojblCK
+         DcOtJupNbO5N0GdDYMXoku445CF7SetAtSUTPtkC7GVvz4Irt5i7ArXYhqHyKYaFx2
+         KMxSyhd47nbjqtZjA8cSc6FrhcW7UfwJx0+7dOi0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Priit Laes <plaes@plaes.org>, Jiri Kosina <jkosina@suse.cz>,
-        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 08/11] HID: Add quirk for Xin-Mo Dual Controller
-Date:   Thu, 23 Jan 2020 20:17:44 -0500
-Message-Id: <20200124011747.18575-8-sashal@kernel.org>
+Cc:     Joel Stanley <joel@jms.id.au>,
+        =?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg@kaod.org>,
+        Arnd Bergmann <arnd@arndb.de>, Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 4.19 05/11] ARM: config: aspeed-g5: Enable 8250_DW quirks
+Date:   Thu, 23 Jan 2020 20:17:41 -0500
+Message-Id: <20200124011747.18575-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200124011747.18575-1-sashal@kernel.org>
 References: <20200124011747.18575-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -58,32 +61,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Priit Laes <plaes@plaes.org>
+From: Joel Stanley <joel@jms.id.au>
 
-[ Upstream commit c62f7cd8ed066a93a243643ebf57ca99f754388e ]
+[ Upstream commit a5331a7a87ec81d5228b7421acf831b2d0c0de26 ]
 
-Without the quirk, joystick shows up as single controller
-for both first and second player pads/pins.
+This driver option is used by the AST2600 A0 boards to work around a
+hardware issue.
 
-Signed-off-by: Priit Laes <plaes@plaes.org>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+Reviewed-by: Cédric Le Goater <clg@kaod.org>
+Acked-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Joel Stanley <joel@jms.id.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hid/hid-quirks.c | 1 +
+ arch/arm/configs/aspeed_g5_defconfig | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/drivers/hid/hid-quirks.c b/drivers/hid/hid-quirks.c
-index 57d6fe9ed4163..b9529bed4d763 100644
---- a/drivers/hid/hid-quirks.c
-+++ b/drivers/hid/hid-quirks.c
-@@ -175,6 +175,7 @@ static const struct hid_device_id hid_quirks[] = {
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_WALTOP, USB_DEVICE_ID_WALTOP_SIRIUS_BATTERY_FREE_TABLET), HID_QUIRK_MULTI_INPUT },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_WISEGROUP_LTD2, USB_DEVICE_ID_SMARTJOY_DUAL_PLUS), HID_QUIRK_NOGET | HID_QUIRK_MULTI_INPUT },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_WISEGROUP, USB_DEVICE_ID_QUAD_USB_JOYPAD), HID_QUIRK_NOGET | HID_QUIRK_MULTI_INPUT },
-+	{ HID_USB_DEVICE(USB_VENDOR_ID_XIN_MO, USB_DEVICE_ID_XIN_MO_DUAL_ARCADE), HID_QUIRK_MULTI_INPUT },
- 
- 	{ 0 }
- };
+diff --git a/arch/arm/configs/aspeed_g5_defconfig b/arch/arm/configs/aspeed_g5_defconfig
+index 02fa3a41add5c..247be6c23d2c6 100644
+--- a/arch/arm/configs/aspeed_g5_defconfig
++++ b/arch/arm/configs/aspeed_g5_defconfig
+@@ -138,6 +138,7 @@ CONFIG_SERIAL_8250_RUNTIME_UARTS=6
+ CONFIG_SERIAL_8250_EXTENDED=y
+ CONFIG_SERIAL_8250_ASPEED_VUART=y
+ CONFIG_SERIAL_8250_SHARE_IRQ=y
++CONFIG_SERIAL_8250_DW=y
+ CONFIG_SERIAL_OF_PLATFORM=y
+ CONFIG_ASPEED_KCS_IPMI_BMC=y
+ CONFIG_ASPEED_BT_IPMI_BMC=y
 -- 
 2.20.1
 
