@@ -2,75 +2,129 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F4C7C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 13:14:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0E27C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 13:14:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0AB1206D5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 13:14:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6E7B206D5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 13:14:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="b2NNtPZd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389304AbgAXNOK (ORCPT
+        id S2389373AbgAXNON (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 08:14:10 -0500
-Received: from mail-out.m-online.net ([212.18.0.10]:60422 "EHLO
-        mail-out.m-online.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387445AbgAXNOJ (ORCPT
+        Fri, 24 Jan 2020 08:14:13 -0500
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:39950 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387445AbgAXNON (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 08:14:09 -0500
-Received: from frontend01.mail.m-online.net (unknown [192.168.8.182])
-        by mail-out.m-online.net (Postfix) with ESMTP id 4840334LS5z1rcCL;
-        Fri, 24 Jan 2020 14:14:07 +0100 (CET)
-Received: from localhost (dynscan1.mnet-online.de [192.168.6.70])
-        by mail.m-online.net (Postfix) with ESMTP id 4840333w79z1qtfj;
-        Fri, 24 Jan 2020 14:14:07 +0100 (CET)
-X-Virus-Scanned: amavisd-new at mnet-online.de
-Received: from mail.mnet-online.de ([192.168.8.182])
-        by localhost (dynscan1.mail.m-online.net [192.168.6.70]) (amavisd-new, port 10024)
-        with ESMTP id OTsYTgp8ntPR; Fri, 24 Jan 2020 14:14:06 +0100 (CET)
-X-Auth-Info: xmms9xcLKLS2+MW3eS4U+yowtELEEjqovyRjmONM1OFC0M9wZJ1K7vO9b17vJEyA
-Received: from igel.home (ppp-46-244-165-242.dynamic.mnet-online.de [46.244.165.242])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.mnet-online.de (Postfix) with ESMTPSA;
-        Fri, 24 Jan 2020 14:14:06 +0100 (CET)
-Received: by igel.home (Postfix, from userid 1000)
-        id 05AB72C008F; Fri, 24 Jan 2020 14:14:05 +0100 (CET)
-From:   Andreas Schwab <schwab@linux-m68k.org>
-To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        "linuxppc-dev\@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
-Subject: Re: vmlinux ELF header sometimes corrupt
-References: <71aa76d0-a3b8-b4f3-a7c3-766cfb75412f@rasmusvillemoes.dk>
-X-Yow:  TAILFINS!!  ...click...
-Date:   Fri, 24 Jan 2020 14:14:05 +0100
-In-Reply-To: <71aa76d0-a3b8-b4f3-a7c3-766cfb75412f@rasmusvillemoes.dk> (Rasmus
-        Villemoes's message of "Wed, 22 Jan 2020 18:52:21 +0100")
-Message-ID: <87sgk5m1ya.fsf@igel.home>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.3 (gnu/linux)
+        Fri, 24 Jan 2020 08:14:13 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00OC4hFK113955;
+        Fri, 24 Jan 2020 06:04:43 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1579867484;
+        bh=ZiaD4SnCdosS8nQj0oAGF73NcGkqbYROWitRkBVgCU4=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=b2NNtPZdhbz/8dI8KJE8mwbYPflq+53YLKNqNwKLejvpXl5CuIO9xUin33ng/zQIU
+         IOiNYbLMKRbk8RAJhx2jG+cB7ypZFiT5tyBZCj0gga5D4GcJMP0m3OWUVde3dbk3YC
+         14sCzXFRdKiE44Lzr+EaVBexwcMsuhI9JBngGOWo=
+Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00OC4hd2012138
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 24 Jan 2020 06:04:43 -0600
+Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 24
+ Jan 2020 06:04:43 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Fri, 24 Jan 2020 06:04:43 -0600
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00OC4fPg018694;
+        Fri, 24 Jan 2020 06:04:41 -0600
+Subject: Re: [PATCH for-next] arm64: defconfig: Set bcm2835-dma as built-in
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+CC:     <f.fainelli@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-rpi-kernel@lists.infradead.org>,
+        Will Deacon <will@kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+References: <C0400CAEQS8N.3P1J37PC0KU9F@linux-9qgx>
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+Message-ID: <86672a12-6b88-dba8-0945-b6321ccf28c3@ti.com>
+Date:   Fri, 24 Jan 2020 14:05:25 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <C0400CAEQS8N.3P1J37PC0KU9F@linux-9qgx>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Jan 22 2020, Rasmus Villemoes wrote:
 
-> So the inode number and mtime/ctime are exactly the same, but for some
-> reason Blocks: has changed? This is on an ext4 filesystem, but I don't
-> suspect the filesystem to be broken, because it's always just vmlinux
-> that ends up corrupt, and always in exactly this way with the first 52
-> bytes having been wiped.
 
-Note that the size of the ELF header (Elf32_Ehdr) is 52 bytes.
+On 24/01/2020 13.51, Nicolas Saenz Julienne wrote:
+> Hi Peter,
+> 
+> On Fri Jan 24, 2020 at 1:31 PM, Peter Ujfalusi wrote:
+>> Hi Nicolas,
+>>
+>> On 24/01/2020 13.17, Nicolas Saenz Julienne wrote:
+>>> With the introduction of 738987a1d6f1 ("mmc: bcm2835: Use
+>>> dma_request_chan() instead dma_request_slave_channel()") sdhost-bcm2835
+>>> now waits for its DMA channel to be available when defined in the
+>>> device-tree (it would previously default to PIO). Albeit the right
+>>> behaviour, the MMC host is needed for booting. So this makes sure the
+>>> DMA channel shows up in time.
+>>>
+>>> Fixes: 738987a1d6f1 ("mmc: bcm2835: Use dma_request_chan() instead dma_request_slave_channel()")
+>>
+>> it is not a bug, it is a feature ;)
+> 
+> Agree, I'm just afraid of your series being picked up by a stable
+> release without this patch. But maybe it's not necessary?
 
-Andreas.
+If you need MMC rootfs then the DMA needs to be built in or have initrd
+with the modules.
+The driver expects to have DMA channel and it is going to wait for it to
+appear unless the request fails.
 
--- 
-Andreas Schwab, schwab@linux-m68k.org
-GPG Key fingerprint = 7578 EB47 D4E5 4D69 2510  2552 DF73 E780 A9DA AEC1
-"And now for something completely different."
+Without moving the DMA as built in and removing the deferred probe
+handling form the MMC driver, one can just remove the DMA support from
+the mmc-bcm2835 as it is not used at all.
+
+I wonder why this is not signaled by automated boot testing, if any
+exists for bcm2835.
+
+>> Yes, if a driver have DMA binding and it is needed during boot then the
+>> DMA driver also needs to be built in.
+>> I believe it is desired to use DMA instead of PIO in any case for MMC
+>> and in the past bcm2835 did not used DMA if DMA was module and the MMC
+>> was built in.
+>>
+>> Sorry for the inconvenience this change has caused to bcm2835!
+> 
+> Not at all :)
+> 
+>> Reviewed-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+> 
+> Thanks,
+> Nicolas
+> 
+
+- Péter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
