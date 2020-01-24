@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F457C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:13:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C98BCC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:13:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3AA5F2075D
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:13:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95B6F20708
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:13:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579864394;
-	bh=5RiNq3ChLXcE2MqyxudXObIACzuPAqKPoCbvjSzOPl8=;
+	s=default; t=1579864397;
+	bh=ruJhuPX5YT8xB86h9cdA6e549MQ5UbUT38xZLIPdo6c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oGpF7MvSCSHG0z3Zfzpuo7nWlsBSomzzc79PBe/spYcNs2yZNf+xGqwFVvo8NCFJq
-	 B2WlklTYEVDQhelZoG96anJ53JHs/Rreae1Txxf0dwAwlooYGf7RZr5XuGzYxZTIu/
-	 3aZTFMNaICjTVvssUx/UzcwZWYhMrV4MqkyXFylE=
+	b=scHTq6paUb5b/50yEiCpM0wq+TTJ4hOckLJk6Srkm2jjm+15w9yfqF7cXEi1AiGrj
+	 ZkWNgxiVSdZrA6RlEz0Ly3kz72PSqM1stmyo2gDtb+ORS3MzBAgLtT2+tCuwEMU22V
+	 i4CYw68Y9fwONm5xmU3wcsLXTkp7MyVuXMb+2Wr4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390033AbgAXLNN (ORCPT
+        id S2390039AbgAXLNQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:13:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49458 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 06:13:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49512 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389259AbgAXLNJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:13:09 -0500
+        id S2390031AbgAXLNN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:13:13 -0500
 Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5593F20708;
-        Fri, 24 Jan 2020 11:13:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1FE842075D;
+        Fri, 24 Jan 2020 11:13:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579864389;
-        bh=5RiNq3ChLXcE2MqyxudXObIACzuPAqKPoCbvjSzOPl8=;
+        s=default; t=1579864392;
+        bh=ruJhuPX5YT8xB86h9cdA6e549MQ5UbUT38xZLIPdo6c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=p0duFemPRkzZU927IjsupFt57D2pnvvRB74lb2CrDw301rlcGU9hxMv0qk05WH4BI
-         Y5Xdk8jVlSMeYEoMCv2yHvoFAymk6A/17pTxwc9Kujz9AFGYDmsG+QRs0iG5YJRpfB
-         1/9FAAeowxVmnMPBrafKy3J+y3ZbApG+TuntM2Qs=
+        b=PAMz/MBKGos5BOtiVV3kDzpnkTWmKnGOzeo+i+RoR6amHL5KGxzBi1OaCTl4jAk+M
+         s4y7FzsvySxendJcWetMrygAfBEOz6Wq0U0brv3pSxan0DZogbrLGoPeGv5GAUsECk
+         kqs470qNmfC3c2rcy8dNh5q1+qJUUS2W3A7YN6Hw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vladimir Murzin <vladimir.murzin@arm.com>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
+        stable@vger.kernel.org, Axel Lin <axel.lin@ingics.com>,
+        Charles Keepax <ckeepax@opensource.cirrus.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 238/639] ARM: 8849/1: NOMMU: Fix encodings for PMSAv8s PRBAR4/PRLAR4
-Date:   Fri, 24 Jan 2020 10:26:48 +0100
-Message-Id: <20200124093116.635947062@linuxfoundation.org>
+Subject: [PATCH 4.19 239/639] regulator: wm831x-dcdc: Fix list of wm831x_dcdc_ilim from mA to uA
+Date:   Fri, 24 Jan 2020 10:26:49 +0100
+Message-Id: <20200124093116.767993908@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
 References: <20200124093047.008739095@linuxfoundation.org>
@@ -60,46 +61,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vladimir Murzin <vladimir.murzin@arm.com>
+From: Axel Lin <axel.lin@ingics.com>
 
-[ Upstream commit d410a8a49e3e00e07d43037e90f776d522b25a6a ]
+[ Upstream commit c25d47888f0fb3d836d68322d4aea2caf31a75a6 ]
 
-To access PRBARn, where n is referenced as a binary number:
+The wm831x_dcdc_ilim entries needs to be uA because it is used to compare
+with min_uA and max_uA.
+While at it also make the array const and change to use unsigned int.
 
-MRC p15, 0, <Rt>, c6, c8+n[3:1], 4*n[0] ; Read PRBARn into Rt
-MCR p15, 0, <Rt>, c6, c8+n[3:1], 4*n[0] ; Write Rt into PRBARn
-
-To access PRLARn, where n is referenced as a binary number:
-
-MRC p15, 0, <Rt>, c6, c8+n[3:1], 4*n[0]+1 ; Read PRLARn into Rt
-MCR p15, 0, <Rt>, c6, c8+n[3:1], 4*n[0]+1 ; Write Rt into PRLARn
-
-For PR{B,L}AR4, n is 4, n[0] is 0, n[3:1] is 2, while current encoding
-done with n[0] set to 1 which is wrong. Use proper encoding instead.
-
-Fixes: 046835b4aa22b9ab6aa0bb274e3b71047c4b887d ("ARM: 8757/1: NOMMU: Support PMSAv8 MPU")
-Signed-off-by: Vladimir Murzin <vladimir.murzin@arm.com>
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Fixes: e4ee831f949a ("regulator: Add WM831x DC-DC buck convertor support")
+Signed-off-by: Axel Lin <axel.lin@ingics.com>
+Acked-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/kernel/head-nommu.S | 4 ++--
+ drivers/regulator/wm831x-dcdc.c | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/kernel/head-nommu.S b/arch/arm/kernel/head-nommu.S
-index 326a97aa3ea0c..22efcf48604cd 100644
---- a/arch/arm/kernel/head-nommu.S
-+++ b/arch/arm/kernel/head-nommu.S
-@@ -441,8 +441,8 @@ M_CLASS(str	r6, [r12, #PMSAv8_RLAR_A(3)])
- 	str	r5, [r12, #PMSAv8_RBAR_A(0)]
- 	str	r6, [r12, #PMSAv8_RLAR_A(0)]
- #else
--	mcr	p15, 0, r5, c6, c10, 1			@ PRBAR4
--	mcr	p15, 0, r6, c6, c10, 2			@ PRLAR4
-+	mcr	p15, 0, r5, c6, c10, 0			@ PRBAR4
-+	mcr	p15, 0, r6, c6, c10, 1			@ PRLAR4
- #endif
- #endif
- 	ret	lr
+diff --git a/drivers/regulator/wm831x-dcdc.c b/drivers/regulator/wm831x-dcdc.c
+index 5a5bc4bb08d26..df591435d12a3 100644
+--- a/drivers/regulator/wm831x-dcdc.c
++++ b/drivers/regulator/wm831x-dcdc.c
+@@ -327,8 +327,8 @@ static int wm831x_buckv_get_voltage_sel(struct regulator_dev *rdev)
+ }
+ 
+ /* Current limit options */
+-static u16 wm831x_dcdc_ilim[] = {
+-	125, 250, 375, 500, 625, 750, 875, 1000
++static const unsigned int wm831x_dcdc_ilim[] = {
++	125000, 250000, 375000, 500000, 625000, 750000, 875000, 1000000
+ };
+ 
+ static int wm831x_buckv_set_current_limit(struct regulator_dev *rdev,
 -- 
 2.20.1
 
