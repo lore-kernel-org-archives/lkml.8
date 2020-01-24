@@ -4,56 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAB81C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:06:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FA67C32771
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:07:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A93F1214AF
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:06:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5632720663
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:07:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579864016;
-	bh=CMmrG1Krn981BFeYs8Nwv5F3gDnF8U99tH+6SAxUW8s=;
+	s=default; t=1579864021;
+	bh=c6U/JIrK3Ekc7vaXVoG/6dCJxmh0ToY57l/T0xPPbgA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qBOAmeWwUoXJVjpoaLxkxuhsftik1Fy5mDS/Kuu2nMW2FehzHe9UzFwwK93i0wFoE
-	 sbgHTC3RFVVg5BmBNrBNjysDmt0HZEQ6APXH+LItG4tjyjPHr30genTPeTCzxRYjV5
-	 5tL9hZCeb3KsDxQ+PKbmaapbXnj+Dfw04S4H7Src=
+	b=bDgYransNdavKJylOHpwGvIozTjGZlzcBU+yaDVLT4noxUPCfLaVFgQygIOSwGu2N
+	 6iwquQplYDhsQJcZwz1dsivwlsdjsjaL5oU6aLitjd8CKpNDt9Y9+iarfwRSa6bX8P
+	 EFG33CKeJ5OXLx2sEaGuTAr/8tk7y1AaQP/HVPOA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389355AbgAXLGz (ORCPT
+        id S2389380AbgAXLHA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:06:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41826 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 06:07:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41912 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387790AbgAXLGx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:06:53 -0500
+        id S2387790AbgAXLG4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:06:56 -0500
 Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 25E9020663;
-        Fri, 24 Jan 2020 11:06:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A274620663;
+        Fri, 24 Jan 2020 11:06:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579864012;
-        bh=CMmrG1Krn981BFeYs8Nwv5F3gDnF8U99tH+6SAxUW8s=;
+        s=default; t=1579864016;
+        bh=c6U/JIrK3Ekc7vaXVoG/6dCJxmh0ToY57l/T0xPPbgA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=E1LuUbbm4eqbCwwddjFepkyorM9bQd1xu1JhS6C6s61blb6dNzAjDdHykXpemKtCa
-         amBa5d4wOmtxes5MkCrm+VhzBgA7/iGROBaIyfxnnHavAXW60s7f65L9mB72lifJ+w
-         fl9pGXKP4JFtSaMVxmEOVHXXIgkRgpKdyvjz8ERA=
+        b=Q2pcgHUhe9E5H8hYumJn6Iph8pguJYtF5GzCMQD2gxet65icgmQrPj2LbOvAld+VE
+         B2gjZ3ZYeaq+w2vkhThmQWgKhuzaH5XzR6R8Mqe/lGAy32aIQWw4rVjvDv0pL7UJCk
+         tEWHxppT5QS32nbLhOF8KBqnyALa5Ih/ZxGFf8kU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Shakeel Butt <shakeelb@google.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Rik van Riel <riel@surriel.com>,
-        Roman Gushchin <guro@fb.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Tejun Heo <tj@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org, Huazhong Tan <tanhuazhong@huawei.com>,
+        Yunsheng Lin <linyunsheng@huawei.com>,
+        Peng Li <lipeng321@huawei.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 123/639] fork, memcg: fix cached_stacks case
-Date:   Fri, 24 Jan 2020 10:24:53 +0100
-Message-Id: <20200124093102.707201224@linuxfoundation.org>
+Subject: [PATCH 4.19 140/639] net: hns3: fix wrong combined count returned by ethtool -l
+Date:   Fri, 24 Jan 2020 10:25:10 +0100
+Message-Id: <20200124093104.801679637@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
 References: <20200124093047.008739095@linuxfoundation.org>
@@ -66,45 +62,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shakeel Butt <shakeelb@google.com>
+From: Huazhong Tan <tanhuazhong@huawei.com>
 
-[ Upstream commit ba4a45746c362b665e245c50b870615f02f34781 ]
+[ Upstream commit c3b9c50d1567aa12be4448fe85b09626eba2499c ]
 
-Commit 5eed6f1dff87 ("fork,memcg: fix crash in free_thread_stack on
-memcg charge fail") fixes a crash caused due to failed memcg charge of
-the kernel stack.  However the fix misses the cached_stacks case which
-this patch fixes.  So, the same crash can happen if the memcg charge of
-a cached stack is failed.
+The current code returns the number of all queues that can be used and
+the number of queues that have been allocated, which is incorrect.
+What should be returned is the number of queues allocated for each enabled
+TC and the number of queues that can be allocated.
 
-Link: http://lkml.kernel.org/r/20190102180145.57406-1-shakeelb@google.com
-Fixes: 5eed6f1dff87 ("fork,memcg: fix crash in free_thread_stack on memcg charge fail")
-Signed-off-by: Shakeel Butt <shakeelb@google.com>
-Acked-by: Michal Hocko <mhocko@suse.com>
-Acked-by: Rik van Riel <riel@surriel.com>
-Cc: Rik van Riel <riel@surriel.com>
-Cc: Roman Gushchin <guro@fb.com>
-Cc: Johannes Weiner <hannes@cmpxchg.org>
-Cc: Tejun Heo <tj@kernel.org>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+This patch fixes it.
+
+Fixes: 482d2e9c1cc7 ("net: hns3: add support to query tqps number")
+Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
+Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
+Signed-off-by: Peng Li <lipeng321@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/fork.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-diff --git a/kernel/fork.c b/kernel/fork.c
-index 5718c5decc55b..1bd119530a492 100644
---- a/kernel/fork.c
-+++ b/kernel/fork.c
-@@ -216,6 +216,7 @@ static unsigned long *alloc_thread_stack_node(struct task_struct *tsk, int node)
- 		memset(s->addr, 0, THREAD_SIZE);
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+index f8cc8d1f0b209..4b9f898a1620c 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+@@ -5922,18 +5922,17 @@ static u32 hclge_get_max_channels(struct hnae3_handle *handle)
+ 	struct hclge_vport *vport = hclge_get_vport(handle);
+ 	struct hclge_dev *hdev = vport->back;
  
- 		tsk->stack_vm_area = s;
-+		tsk->stack = s->addr;
- 		return s->addr;
- 	}
+-	return min_t(u32, hdev->rss_size_max * kinfo->num_tc, hdev->num_tqps);
++	return min_t(u32, hdev->rss_size_max,
++		     vport->alloc_tqps / kinfo->num_tc);
+ }
  
+ static void hclge_get_channels(struct hnae3_handle *handle,
+ 			       struct ethtool_channels *ch)
+ {
+-	struct hclge_vport *vport = hclge_get_vport(handle);
+-
+ 	ch->max_combined = hclge_get_max_channels(handle);
+ 	ch->other_count = 1;
+ 	ch->max_other = 1;
+-	ch->combined_count = vport->alloc_tqps;
++	ch->combined_count = handle->kinfo.rss_size;
+ }
+ 
+ static void hclge_get_tqps_and_rss_info(struct hnae3_handle *handle,
 -- 
 2.20.1
 
