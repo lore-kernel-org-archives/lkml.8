@@ -2,129 +2,108 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DA51C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 18:04:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C9FBC35242
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 18:05:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 187AE2072C
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 18:04:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA0362072C
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 18:05:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="KRmGVkri"
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="JPa2uVHT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391192AbgAXSEW (ORCPT
+        id S2391203AbgAXSFE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 13:04:22 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:38804 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2389886AbgAXSEW (ORCPT
+        Fri, 24 Jan 2020 13:05:04 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:40584 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389886AbgAXSFD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 13:04:22 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1579889061; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=416kvB4U9ycPEsCjzKp6t1KyF47gVJDFFssMCwP38sU=; b=KRmGVkriFOXJuy+EHaiKbA8uWw9Yz6gtD5Qk6v87X/LB1leUHzWN8u03CmVD1UX9IIrRdxC9
- SnCoWa41suCJPD0k4paN0Bz7UkYFk8t7eBPhOvVFdeZiYjwQuDhyVT8zRHn3KtbmAr3S9IZe
- FSNV9OALp2MCbwQ+QSWh0R33qQQ=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e2b319d.7f93eb3337a0-smtp-out-n03;
- Fri, 24 Jan 2020 18:04:13 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 39907C4479C; Fri, 24 Jan 2020 18:04:12 +0000 (UTC)
-Received: from [10.46.161.159] (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: asutoshd)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id D98B8C43383;
-        Fri, 24 Jan 2020 18:04:10 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org D98B8C43383
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=asutoshd@codeaurora.org
-Subject: Re: [PATCH v4 7/8] scsi: ufs-qcom: Delay specific time before gate
- ref clk
-To:     Can Guo <cang@codeaurora.org>, nguyenb@codeaurora.org,
-        hongwus@codeaurora.org, rnayak@codeaurora.org,
-        linux-scsi@vger.kernel.org, kernel-team@android.com,
-        saravanak@google.com, salyzyn@google.com
-Cc:     Andy Gross <agross@kernel.org>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        Pedro Sousa <pedrom.sousa@synopsys.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        "open list:ARM/QUALCOMM SUPPORT" <linux-arm-msm@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <1579764349-15578-1-git-send-email-cang@codeaurora.org>
- <1579764349-15578-8-git-send-email-cang@codeaurora.org>
-From:   "Asutosh Das (asd)" <asutoshd@codeaurora.org>
-Message-ID: <e95f2818-041f-2df9-e86c-f433e45fe2df@codeaurora.org>
-Date:   Fri, 24 Jan 2020 10:04:10 -0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Fri, 24 Jan 2020 13:05:03 -0500
+Received: by mail-ot1-f66.google.com with SMTP id w21so2458416otj.7
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jan 2020 10:05:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=jRTNXnXM7oz5Drw0JUEzLHf8Tl/lM2SK6ojzvbVm3Do=;
+        b=JPa2uVHTQnO/DXnNRVd8XmoPi8VpJuIDhI+MwREr6Mb8Ij5HVUDpA6TxomyZ+Lff6W
+         Y0DI9Cm0csX4gVNf0fT2szWUMfB8PaOM+JHgiQ6lHgp2HYGhZ1FLuEQr0mFTp/UHZGEJ
+         4+wmRzEAsVw/5tyikkUBaJSaYwn1dj9gvK9c5x/AxAQpvh0podrIffNwzqKp0EkArmJ1
+         oMwVvXtqQAlFZUlPokk+ed89Py3Hp2N12VOLnaJO0t5fYarr08YbsRzuILrxgeCojT/8
+         rcUiO4nPjlpm1y4ofxPB9A4MFUjfm6TIH4pRlXvUZhWjjbyJWGoW4+7jNw2e/p4KVf8Q
+         t5qw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=jRTNXnXM7oz5Drw0JUEzLHf8Tl/lM2SK6ojzvbVm3Do=;
+        b=hE7M51HD278fQ77kDjyEkaDXtll8ITd44Mku7rAJ90vDxQ4nm7OG2t60bh7MmErh5a
+         Ee3WODqKnUyXMlHjmsVpD5DF4SJpXeTQP+ugaYqknFQLv9WSAgMI1DLpbHu6Wo6Z7Tib
+         CKk8DKURFXnWJlzYFizGNsqA0zZ1H2AwlAeX5o40JjlCtPyVubTwDL1oD2h1aJPd7C5c
+         nhFhq5Wn/qggKe5jUM8UcKhu7tuS1bclBJ/BNJ6S3XpTcs+Q0n67KULNFiNq02QMXw8b
+         coslbNcnWilYMqirCyiHfOxIOS7FfwCEf5tTOFWvdJP3hJ1/q7mcc/DC3ZuFDSic1M66
+         wnVg==
+X-Gm-Message-State: APjAAAX3Yy/yBYOeNAPqatVImFNFDgH8ryVX/Oj3K3ibj1RqDejjBqr6
+        QRlsvLL8/RlHNDiHhfbxiUkPChf9/bCjvNkDg/YkGw==
+X-Google-Smtp-Source: APXvYqzFJoNGdvBkNazI2Gmjmm0Jg7CrgLUOGYJxHStstoF4GHQEZ08I0ffdQ1SOyeaigHkZmgGXPCfxHkNpYgjxS48=
+X-Received: by 2002:a9d:68d3:: with SMTP id i19mr3393231oto.71.1579889102817;
+ Fri, 24 Jan 2020 10:05:02 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <1579764349-15578-8-git-send-email-cang@codeaurora.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <e60e64f9-894b-4121-d97b-fb61459cbbe5@redhat.com>
+ <CAPcyv4jm=fmP=-5vbo2jxzMe2qXqZP=zDYF8G_rs3X6_Om0wPg@mail.gmail.com>
+ <4d0334e2-c4e7-6d3f-99ba-2ca0495e1549@redhat.com> <CAPcyv4jixmv8fJ5FiYE=97Jud3Mc+6QzRX1txceSYU+WY_0rQA@mail.gmail.com>
+ <fc0cfb97-5a60-7e73-4f85-d8e6947c5e28@redhat.com> <CAPcyv4jVpN26RGQLRn4BewYtzHDoQfvh37DEdEBq1dd4-BP0kw@mail.gmail.com>
+ <64902066-51dd-9693-53fc-4a5975c58409@redhat.com> <CAPcyv4hcDNeQO3CfnqTRou+6R5gZwyi4pVUMxp1DadAOp7kJGQ@mail.gmail.com>
+ <516aa930-9b64-b377-557c-5413ed9fe336@redhat.com> <CAPcyv4iiYtN6iGt=rVuNR=O=H9YcY1b1yWp+5TuDhu0QoVqT_A@mail.gmail.com>
+ <20200124124512.GT29276@dhcp22.suse.cz>
+In-Reply-To: <20200124124512.GT29276@dhcp22.suse.cz>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Fri, 24 Jan 2020 10:04:52 -0800
+Message-ID: <CAPcyv4jcCnfGy5HcYimxcyF6v_Anw4nMdaNHQt4tMrqUaN70Rg@mail.gmail.com>
+Subject: Re: [PATCH] mm/memory_hotplug: Fix remove_memory() lockdep splat
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     David Hildenbrand <david@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        stable <stable@vger.kernel.org>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Linux MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/22/2020 11:25 PM, Can Guo wrote:
-> After enter hibern8, as UFS JEDEC ver 3.0 requires, a specific gating wait
-> time is required before disable the device reference clock. If it is not
-> specified, use the old delay.
-> 
-> Signed-off-by: Can Guo <cang@codeaurora.org>
-> ---
+On Fri, Jan 24, 2020 at 4:56 AM Michal Hocko <mhocko@kernel.org> wrote:
+>
+> On Fri 10-01-20 13:27:24, Dan Williams wrote:
+> > On Fri, Jan 10, 2020 at 9:42 AM David Hildenbrand <david@redhat.com> wrote:
+> [...]
+> > > For your reference (roughly 5 months ago, so not that old)
+> > >
+> > > https://lkml.kernel.org/r/20190724143017.12841-1-david@redhat.com
+> >
+> > Oh, now I see the problem. You need to add that lock so far away from
+> > the __add_memory() to avoid lock inversion problems with the
+> > acpi_scan_lock. The organization I was envisioning would not work
+> > without deeper refactoring.
+>
+> Sorry to come back to this late. Has this been resolved?
 
-Reviewed-by: Asutosh Das <asutoshd@codeaurora.org>
+The mem_hotplug_lock lockdep splat fix in this patch has not landed.
+David and I have not quite come to consensus on how to resolve online
+racing removal. IIUC David wants that invalidation to be
+pages_correctly_probed(), I would prefer it to be directly tied to the
+object, struct memory_block, that remove_memory_block_devices() has
+modified, mem->section_count = 0.
 
->   drivers/scsi/ufs/ufs-qcom.c | 13 ++++++++++---
->   1 file changed, 10 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/scsi/ufs/ufs-qcom.c b/drivers/scsi/ufs/ufs-qcom.c
-> index 85d7c17..3b5b2d9 100644
-> --- a/drivers/scsi/ufs/ufs-qcom.c
-> +++ b/drivers/scsi/ufs/ufs-qcom.c
-> @@ -833,6 +833,8 @@ static int ufs_qcom_bus_register(struct ufs_qcom_host *host)
->   
->   static void ufs_qcom_dev_ref_clk_ctrl(struct ufs_qcom_host *host, bool enable)
->   {
-> +	unsigned long gating_wait;
-> +
->   	if (host->dev_ref_clk_ctrl_mmio &&
->   	    (enable ^ host->is_dev_ref_clk_enabled)) {
->   		u32 temp = readl_relaxed(host->dev_ref_clk_ctrl_mmio);
-> @@ -845,11 +847,16 @@ static void ufs_qcom_dev_ref_clk_ctrl(struct ufs_qcom_host *host, bool enable)
->   		/*
->   		 * If we are here to disable this clock it might be immediately
->   		 * after entering into hibern8 in which case we need to make
-> -		 * sure that device ref_clk is active at least 1us after the
-> +		 * sure that device ref_clk is active for specific time after
->   		 * hibern8 enter.
->   		 */
-> -		if (!enable)
-> -			udelay(1);
-> +		if (!enable) {
-> +			gating_wait = host->hba->dev_info.clk_gating_wait_us;
-> +			if (!gating_wait)
-> +				udelay(1);
-> +			else
-> +				usleep_range(gating_wait, gating_wait + 10);
-> +		}
->   
->   		writel_relaxed(temp, host->dev_ref_clk_ctrl_mmio);
->   
-> 
-
-
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-Linux Foundation Collaborative Project
+...or are you referring to the discussion about acpi_scan_lock()? I
+came around to agreeing with your position that documenting was better
+than adding superfluous locking especially because the
+acpi_scan_lock() is take so far away from where the device_hotplug
+lock is needed.
