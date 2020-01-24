@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEC12C32771
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:13:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D73EC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:13:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BFB220708
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:13:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 723332087E
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:13:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579864410;
-	bh=B2vmsTBKpvoAqNMkcTnWn3fggVW2VM0yv9v+TYBNCdA=;
+	s=default; t=1579864413;
+	bh=XY215XUO9c8E57PJyQfFKHKFTaPma3O7mFZV3Xb8Z9Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gDrg78otOSex162x+DnmvN6wK3JbCX2FHqgJp8UoOZtqpTmagTWEod1FM8A1uK/Pf
-	 UmCLtYGhsoI9P5RmRz6y468Qx0lkn1KrIPMlh8Kcc5JD7u5DWCgypeURV7P4aPGD5o
-	 hTjjDi5Ly6JG1U/FMz33VsRyWoOXDqW1/27COzrY=
+	b=kOKaczaF64B0bIZLwDrGVdXyldSe/BzHGFuyfNJxjMgyAB5XHw32njkSdyFSqjYyv
+	 0vPdZ+I5SN91ESDNFsyt0Z7YO7uCQ1X70sU5IOdw+ixh7h4p45w63MXIuoNQ3FJq0l
+	 /mrkVzZWgHBoQSGnCd5ILhpUNd27Sv9Fgjd1vOCs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390054AbgAXLN3 (ORCPT
+        id S2390059AbgAXLNc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:13:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49718 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 06:13:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49782 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390047AbgAXLNY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:13:24 -0500
+        id S2389042AbgAXLN2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:13:28 -0500
 Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9E53920708;
-        Fri, 24 Jan 2020 11:13:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D9ECF2071A;
+        Fri, 24 Jan 2020 11:13:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579864404;
-        bh=B2vmsTBKpvoAqNMkcTnWn3fggVW2VM0yv9v+TYBNCdA=;
+        s=default; t=1579864407;
+        bh=XY215XUO9c8E57PJyQfFKHKFTaPma3O7mFZV3Xb8Z9Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JpSN+mohGPBELEQn/HkvDQqriKqlNu0ZxTJWWJblzP0u/n6AM9leRXYuq6zXvsPqp
-         KQYpVOcxkppsdnOs/S9NL9SJBSTSQ+j+FJsHx9YNue4tmQrqGN9q7EsTE+edi+SaFp
-         hLlxcwnERVC0Q5o2sE6t6QtU7u1WU4eHH269ShVM=
+        b=fbXgazzjliWKFffF2D+PMuMMVRZjdLrgjLG+V5QBJdyxYxIAHv/X+EbVUYd5gqVb6
+         WXHzRtWso9wgy7TBeRhBMCCttLH3/8up9AJgysAFfNKPz8C7W46YuZbjYVhdDLapxm
+         4WaDk68wegYWiAqPEYNSM6mYLjZigINAL3cgU6NY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mattias Jacobsson <2pi@mok.nu>,
-        "Darren Hart (VMware)" <dvhart@infradead.org>,
+        stable@vger.kernel.org,
+        Nikita Danilov <nikita.danilov@aquantia.com>,
+        Igor Russkikh <igor.russkikh@aquantia.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 232/639] platform/x86: wmi: fix potential null pointer dereference
-Date:   Fri, 24 Jan 2020 10:26:42 +0100
-Message-Id: <20200124093115.912225311@linuxfoundation.org>
+Subject: [PATCH 4.19 248/639] net: aquantia: fixed instack structure overflow
+Date:   Fri, 24 Jan 2020 10:26:58 +0100
+Message-Id: <20200124093117.825342615@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
 References: <20200124093047.008739095@linuxfoundation.org>
@@ -60,39 +62,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mattias Jacobsson <2pi@mok.nu>
+From: Igor Russkikh <Igor.Russkikh@aquantia.com>
 
-[ Upstream commit c355ec651a8941864549f2586f969d0eb7bf499a ]
+[ Upstream commit 8006e3730b6e900319411e35cee85b4513d298df ]
 
-In the function wmi_dev_match() the variable id is dereferenced without
-first performing a NULL check. The variable can for example be NULL if
-a WMI driver is registered without specifying the id_table field in
-struct wmi_driver.
+This is a real stack undercorruption found by kasan build.
 
-Add a NULL check and return that the driver can't handle the device if
-the variable is NULL.
+The issue did no harm normally because it only overflowed
+2 bytes after `bitary` array which on most architectures
+were mapped into `err` local.
 
-Fixes: 844af950da94 ("platform/x86: wmi: Turn WMI into a bus driver")
-Signed-off-by: Mattias Jacobsson <2pi@mok.nu>
-Signed-off-by: Darren Hart (VMware) <dvhart@infradead.org>
+Fixes: bab6de8fd180 ("net: ethernet: aquantia: Atlantic A0 and B0 specific functions.")
+Signed-off-by: Nikita Danilov <nikita.danilov@aquantia.com>
+Signed-off-by: Igor Russkikh <igor.russkikh@aquantia.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/x86/wmi.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_a0.c | 4 ++--
+ drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_b0.c | 4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
-index 04791ea5d97b6..35cdc3998eb59 100644
---- a/drivers/platform/x86/wmi.c
-+++ b/drivers/platform/x86/wmi.c
-@@ -768,6 +768,9 @@ static int wmi_dev_match(struct device *dev, struct device_driver *driver)
- 	struct wmi_block *wblock = dev_to_wblock(dev);
- 	const struct wmi_device_id *id = wmi_driver->id_table;
+diff --git a/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_a0.c b/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_a0.c
+index 97addfa6f8956..dab5891b97145 100644
+--- a/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_a0.c
++++ b/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_a0.c
+@@ -207,8 +207,8 @@ static int hw_atl_a0_hw_rss_set(struct aq_hw_s *self,
+ 	u32 i = 0U;
+ 	u32 num_rss_queues = max(1U, self->aq_nic_cfg->num_rss_queues);
+ 	int err = 0;
+-	u16 bitary[(HW_ATL_A0_RSS_REDIRECTION_MAX *
+-					HW_ATL_A0_RSS_REDIRECTION_BITS / 16U)];
++	u16 bitary[1 + (HW_ATL_A0_RSS_REDIRECTION_MAX *
++		   HW_ATL_A0_RSS_REDIRECTION_BITS / 16U)];
  
-+	if (id == NULL)
-+		return 0;
-+
- 	while (id->guid_string) {
- 		uuid_le driver_guid;
+ 	memset(bitary, 0, sizeof(bitary));
+ 
+diff --git a/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_b0.c b/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_b0.c
+index 51cd1f98bcf07..c4f914a29c385 100644
+--- a/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_b0.c
++++ b/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_b0.c
+@@ -192,8 +192,8 @@ static int hw_atl_b0_hw_rss_set(struct aq_hw_s *self,
+ 	u32 i = 0U;
+ 	u32 num_rss_queues = max(1U, self->aq_nic_cfg->num_rss_queues);
+ 	int err = 0;
+-	u16 bitary[(HW_ATL_B0_RSS_REDIRECTION_MAX *
+-					HW_ATL_B0_RSS_REDIRECTION_BITS / 16U)];
++	u16 bitary[1 + (HW_ATL_B0_RSS_REDIRECTION_MAX *
++		   HW_ATL_B0_RSS_REDIRECTION_BITS / 16U)];
+ 
+ 	memset(bitary, 0, sizeof(bitary));
  
 -- 
 2.20.1
