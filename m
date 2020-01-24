@@ -2,97 +2,125 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E92F3C35242
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 12:11:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFDBDC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 12:13:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B59B720704
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 12:11:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 764B520704
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 12:13:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="QMhUnlNd"
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="kvsO7yi0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731337AbgAXMLE (ORCPT
+        id S1731622AbgAXMNf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 07:11:04 -0500
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:33772 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729396AbgAXMLD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 07:11:03 -0500
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00OCAviN115358;
-        Fri, 24 Jan 2020 06:10:57 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1579867857;
-        bh=u8GDMQWkvTPZQR05J917eZkNCR3bRNJDSQNATGVb7H4=;
-        h=From:To:CC:Subject:Date;
-        b=QMhUnlNdyr1XLJd4FcqdkWT3mVGKkHdmMyi0AHZMbk6SaD6AkHyxKwJiBfj/ShwFD
-         Hl5T13rlsXSQGv3MkIr9TTvS9A2z5onRPdlWFHX4YmhIQq4iMQCeilxCXMIeH1qdiz
-         41ky8C9h/yffjhBYSkG+Tt1F+xJGQzS/9/PN/f1o=
-Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00OCAvwP120718;
-        Fri, 24 Jan 2020 06:10:57 -0600
-Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 24
- Jan 2020 06:10:57 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Fri, 24 Jan 2020 06:10:57 -0600
-Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00OCAt7w065837;
-        Fri, 24 Jan 2020 06:10:55 -0600
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-To:     <bcousson@baylibre.com>, <tony@atomide.com>
-CC:     <robh+dt@kernel.org>, <linux-omap@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>
-Subject: [PATCH] ARM: dts: dra7-evm: Rename evm_3v3 regulator to vsys_3v3
-Date:   Fri, 24 Jan 2020 14:11:39 +0200
-Message-ID: <20200124121139.28657-1-peter.ujfalusi@ti.com>
-X-Mailer: git-send-email 2.25.0
+        Fri, 24 Jan 2020 07:13:35 -0500
+Received: from bilbo.ozlabs.org ([203.11.71.1]:50905 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729396AbgAXMNf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 07:13:35 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 483yj81rSxz9sSD;
+        Fri, 24 Jan 2020 23:13:32 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
+        s=201909; t=1579868012;
+        bh=mvUiJElIyk4EAjVnu52b+VpTHph+MbXwLjPi7+Mdbjg=;
+        h=From:To:Cc:Subject:Date:From;
+        b=kvsO7yi0Q3x6EVEmh9WFec5ltH7SPXt2mIlSO88aLu/sSU7wwigX7Rw6vjklBonDe
+         ZmFknE2WXZXYTqJSWlXKovnu7DnhNCd6Ev13xMte1EdRmVLdmqYCQVWW68qJ66G97V
+         DHirbvgEpbtS+hDcDgHbEHZSEVkX8N/zi0Q8dRAAszGtSPzt7jIlFUfUWC9px93Utv
+         nhQdvZt1A2676gIvtrYcxd8RFYTWbtZ97alrzmq/kbZltzLOVzmdk7bRXz5r6a6rVO
+         7EcuZhnivoOL3XHqonKoWx/nDyVSeOv75iYzCu2cIixzRWymOQFqWx0O74kWoNe6w2
+         ULZ1KtWWTcPqw==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     aneesh.kumar@linux.ibm.com, bharata@linux.ibm.com,
+        fbarrat@linux.ibm.com, linux-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org
+Subject: [GIT PULL] Please pull powerpc/linux.git powerpc-5.5-6 tag
+Date:   Fri, 24 Jan 2020 23:13:30 +1100
+Message-ID: <87zhedgihh.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On the new schematics it is renamed and the same name is used on other
-dra7 boards.
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA256
 
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
----
- arch/arm/boot/dts/dra7-evm.dts | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Hi Linus,
 
-diff --git a/arch/arm/boot/dts/dra7-evm.dts b/arch/arm/boot/dts/dra7-evm.dts
-index de7f85efaa51..af06a55d1c5c 100644
---- a/arch/arm/boot/dts/dra7-evm.dts
-+++ b/arch/arm/boot/dts/dra7-evm.dts
-@@ -61,10 +61,10 @@ aic_dvdd: fixedregulator-aic_dvdd {
- 		regulator-max-microvolt = <1800000>;
- 	};
- 
--	evm_3v3: fixedregulator-evm3v3 {
-+	vsys_3v3: fixedregulator-vsys3v3 {
- 		/* Output of Cntlr A of TPS43351-Q1 on dra7-evm */
- 		compatible = "regulator-fixed";
--		regulator-name = "evm_3v3";
-+		regulator-name = "vsys_3v3";
- 		regulator-min-microvolt = <3300000>;
- 		regulator-max-microvolt = <3300000>;
- 		vin-supply = <&evm_12v0>;
--- 
-Peter
+Please pull some more powerpc fixes for 5.5:
 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+The following changes since commit 6da3eced8c5f3b03340b0c395bacd552c4d52411:
 
+  powerpc/spinlocks: Include correct header for static key (2019-12-30 21:2=
+0:41 +1100)
+
+are available in the git repository at:
+
+  https://git.kernel.org/pub/scm/linux/kernel/git/powerpc/linux.git tags/po=
+werpc-5.5-6
+
+for you to fetch changes up to 5d2e5dd5849b4ef5e8ec35e812cdb732c13cd27e:
+
+  powerpc/mm/hash: Fix sharing context ids between kernel & userspace (2020=
+-01-23 21:26:20 +1100)
+
+- ------------------------------------------------------------------
+powerpc fixes for 5.5 #6
+
+Fix our hash MMU code to avoid having overlapping ids between user and kern=
+el,
+which isn't as bad as it sounds but led to crashes on some machines.
+
+A fix for the Power9 XIVE interrupt code, which could return the wrong inte=
+rrupt
+state in obscure error conditions.
+
+A minor Kconfig fix for the recently added CONFIG_PPC_UV code.
+
+Thanks to:
+  Aneesh Kumar K.V, Bharata B Rao, C=C3=A9dric Le Goater, Frederic Barrat.
+
+- ------------------------------------------------------------------
+Aneesh Kumar K.V (1):
+      powerpc/mm/hash: Fix sharing context ids between kernel & userspace
+
+Bharata B Rao (1):
+      powerpc: Ultravisor: Fix the dependencies for CONFIG_PPC_UV
+
+Frederic Barrat (1):
+      powerpc/xive: Discard ESB load value when interrupt is invalid
+
+
+ arch/powerpc/Kconfig                          |  6 +-----
+ arch/powerpc/include/asm/book3s/64/mmu-hash.h |  5 ++++-
+ arch/powerpc/include/asm/xive-regs.h          |  1 +
+ arch/powerpc/sysdev/xive/common.c             | 15 ++++++++++++---
+ 4 files changed, 18 insertions(+), 9 deletions(-)
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEJFGtCPCthwEv2Y/bUevqPMjhpYAFAl4q30AACgkQUevqPMjh
+pYCwSQ//Xbc8BofjbbiGambesHUG3Bkho8K38HSXfj9wdFdDS1f5PnUnTVNtNsch
+GAXYEnreN33I5MZnOQO3Zaa6Ub+DPyDIn5dq1alo2uv/sJY4zyC/lwCeLNOAbC93
+lj1s7laC7SQG6phf7hVT0xFMYA/j0GhQG8w4RIxiyJEXnm+Vb9SGUgbrArxmYRwF
+dI7wHxEHdixMBgdA1q00inv51UIqmNJS/nPyBJUxBbKp1Kkzy0fOTLhgFCj4um6g
+kX1AEzEkiNNpWDG30Hu6qrapa5181tet07ABgSxdyTB0pElbsigoFR5mRgeTWuAk
+mP14couPhOx3NkW90yvuI9AvLAQIlvMH4rGbB61rqNgiLnfTGiYxy1Hvq2ihbXQy
+TVdlLdjW2pa3vqz04vZa09NOjz9CHY1/llunpkJvUhd/ddXa+Cieu9fzDDC0fheF
+ftZD4o9LtloGbWpa+re81uuQ/V6MhEOPbP44PJI70bVG+OWY0GPTuvqgKS/yckTv
+Xxs5lTsU9qKDGsNOFzqwjTCLd3o4hPurfo6xrzyyMin2LRm4t8sTWLRm8SVoL+Wh
+KRydvI8oE9qXNNCwwDnMYtiDmisZPWpWWRyPG+e34TXjc0SSEoeZUoVV+B/u5pVu
+BIbzhRbbKY80E/m1virbaB+7Z92omfMnenIUdt3ZDTarh/INMdA=3D
+=3DcoVk
+-----END PGP SIGNATURE-----
