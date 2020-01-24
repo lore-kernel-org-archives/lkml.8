@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A155BC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:56:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE449C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:56:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DFC120718
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:56:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B566120718
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:56:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579859794;
-	bh=Wyt7kKObs3IeoCChhvP5yUkQWJnhvUrcliU7CHUkkbE=;
+	s=default; t=1579859801;
+	bh=AwD1W9Ge++vD1TBgPbiOKJHMrdglQf5gdZit915jsJ8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=k7aNaADlpBYxO751UWwrv80zkHoleeeGnE75Ej8uwAm34fqZgFYusVTPlIFVJxr+i
-	 LnKWC89/TF/IV6qSGnQB6MGuF2mJtk5Fr6SdjQ8axNJtKczej/JDAdV4r1Nq5mum5J
-	 H+OYXGEH22/z+tdYrw0NSqRt+Q1I7hKVsMBU+0J8=
+	b=ELqBoNt1u0iaKy69HUHSwwhMp07EOgqXF+2jC/yi/jxU8DXlLlOC6pZMp6j6mZkCf
+	 2LJfJ3VbfuI3hTOF7BHwcNBkmSNCj/ytdZv99lmbJQLiLQuLwfCQLVCig4DWYuixeT
+	 B6EN+XpEGYKrDjo7kX7NY+isyZutVlrn/rOBg6ak=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388551AbgAXJ4d (ORCPT
+        id S2388567AbgAXJ4l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 04:56:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60256 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 04:56:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60396 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731098AbgAXJ4c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 04:56:32 -0500
+        id S2388041AbgAXJ4k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 04:56:40 -0500
 Received: from localhost (unknown [145.15.244.15])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A6DD120718;
-        Fri, 24 Jan 2020 09:56:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C8F95214AF;
+        Fri, 24 Jan 2020 09:56:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579859791;
-        bh=Wyt7kKObs3IeoCChhvP5yUkQWJnhvUrcliU7CHUkkbE=;
+        s=default; t=1579859799;
+        bh=AwD1W9Ge++vD1TBgPbiOKJHMrdglQf5gdZit915jsJ8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qu45g/qzuvXUw5iA5UOXSv04OXU4s6Rs17Ph2yfXpt6c/jlaeH8jjz4LzhtGtPb9V
-         x/YGUa8tM171RF553bFdfj2LpmIDFUcqUiQNe3AVc0l5nrA6maaae6p2Tcgz7BueDM
-         jeRFCbgnj+tFbz+e84OUnapVI8g6XmHMj8p5L5ik=
+        b=gStCmNxRR59vSaCxOJMZAIioIRWcYY9l8rCrSoMhVzG0L+hGCUEbbl90U4+cW6ao5
+         Gusd7gMaYFjQsgZ6QueduKb82kp47S/prks5knwoxSQa6f387TD0RjaiE+NUD9A+rY
+         66+evfN8xFFUN64k5YoFT3kOD7uBGNPO0a0BLWSg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jerome Brunet <jbrunet@baylibre.com>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, Minas Harutyunyan <hminas@synopsys.com>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 183/343] ASoC: fix valid stream condition
-Date:   Fri, 24 Jan 2020 10:30:01 +0100
-Message-Id: <20200124092944.102585804@linuxfoundation.org>
+Subject: [PATCH 4.14 185/343] dwc2: gadget: Fix completed transfer size calculation in DDMA
+Date:   Fri, 24 Jan 2020 10:30:03 +0100
+Message-Id: <20200124092944.350824198@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124092919.490687572@linuxfoundation.org>
 References: <20200124092919.490687572@linuxfoundation.org>
@@ -60,38 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jerome Brunet <jbrunet@baylibre.com>
+From: Minas Harutyunyan <minas.harutyunyan@synopsys.com>
 
-[ Upstream commit 6a7c59c6d9f3b280e81d7a04bbe4e55e90152dce ]
+[ Upstream commit 5acb4b970184d189d901192d075997c933b82260 ]
 
-A stream may specify a rate range using 'rate_min' and 'rate_max', so a
-stream may be valid and not specify any rates. However, as stream cannot
-be valid and not have any channel. Let's use this condition instead to
-determine if a stream is valid or not.
+Fix calculation of transfer size on completion in function
+dwc2_gadget_get_xfersize_ddma().
 
-Fixes: cde79035c6cf ("ASoC: Handle multiple codecs with split playback / capture")
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Added increment of descriptor pointer to move to next descriptor in
+the loop.
+
+Fixes: aa3e8bc81311 ("usb: dwc2: gadget: DDMA transfer start and complete")
+
+Signed-off-by: Minas Harutyunyan <hminas@synopsys.com>
+Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/soc-pcm.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/usb/dwc2/gadget.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/sound/soc/soc-pcm.c b/sound/soc/soc-pcm.c
-index 24047375c2fbb..70e1a60a2e980 100644
---- a/sound/soc/soc-pcm.c
-+++ b/sound/soc/soc-pcm.c
-@@ -48,8 +48,8 @@ static bool snd_soc_dai_stream_valid(struct snd_soc_dai *dai, int stream)
- 	else
- 		codec_stream = &dai->driver->capture;
+diff --git a/drivers/usb/dwc2/gadget.c b/drivers/usb/dwc2/gadget.c
+index e164439b21542..4af9a1c652edb 100644
+--- a/drivers/usb/dwc2/gadget.c
++++ b/drivers/usb/dwc2/gadget.c
+@@ -2276,6 +2276,7 @@ static unsigned int dwc2_gadget_get_xfersize_ddma(struct dwc2_hsotg_ep *hs_ep)
+ 		if (status & DEV_DMA_STS_MASK)
+ 			dev_err(hsotg->dev, "descriptor %d closed with %x\n",
+ 				i, status & DEV_DMA_STS_MASK);
++		desc++;
+ 	}
  
--	/* If the codec specifies any rate at all, it supports the stream. */
--	return codec_stream->rates;
-+	/* If the codec specifies any channels at all, it supports the stream */
-+	return codec_stream->channels_min;
- }
- 
- /**
+ 	return bytes_rem;
 -- 
 2.20.1
 
