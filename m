@@ -2,72 +2,72 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D3D6C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 06:20:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 109EAC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 06:25:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D062B20718
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 06:20:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0F9D20838
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 06:25:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="B3tYO+IX"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="IXHw71jg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730468AbgAXGUA (ORCPT
+        id S1730487AbgAXGZy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 01:20:00 -0500
-Received: from pegase1.c-s.fr ([93.17.236.30]:44943 "EHLO pegase1.c-s.fr"
+        Fri, 24 Jan 2020 01:25:54 -0500
+Received: from pegase1.c-s.fr ([93.17.236.30]:15479 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726173AbgAXGT7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 01:19:59 -0500
+        id S1726173AbgAXGZx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 01:25:53 -0500
 Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 483ps90bGsz9tyN9;
-        Fri, 24 Jan 2020 07:19:57 +0100 (CET)
+        by localhost (Postfix) with ESMTP id 483pzz5cLxz9tyNG;
+        Fri, 24 Jan 2020 07:25:51 +0100 (CET)
 Authentication-Results: localhost; dkim=pass
         reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=B3tYO+IX; dkim-adsp=pass;
+        header.d=c-s.fr header.i=@c-s.fr header.b=IXHw71jg; dkim-adsp=pass;
         dkim-atps=neutral
 X-Virus-Scanned: Debian amavisd-new at c-s.fr
 Received: from pegase1.c-s.fr ([192.168.12.234])
         by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id 7SaMKq5HTQxC; Fri, 24 Jan 2020 07:19:57 +0100 (CET)
+        with ESMTP id yJpettp7HOEK; Fri, 24 Jan 2020 07:25:51 +0100 (CET)
 Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 483ps86TpLz9tyN8;
-        Fri, 24 Jan 2020 07:19:56 +0100 (CET)
+        by pegase1.c-s.fr (Postfix) with ESMTP id 483pzz41gtz9tyNF;
+        Fri, 24 Jan 2020 07:25:51 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1579846796; bh=YJFbIn49LUjyyL3eY69FHgX3OucyQp9C2UfhkfTmtGk=;
+        t=1579847151; bh=lJ1+jMnixtf3rj4GZ+pA1zFszDpc7oCJGloWFuxNhN4=;
         h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=B3tYO+IX1eaGa/tBM5MzdTzu2zt8MRpIpEtXSMGdWQSInxAYOQWO2r5q5jwAKlYEq
-         /9deN/rqdg0kfFOEOQFqyujuPtq3Qcesi2Cbx1dKZnYuj1PEzJBM++qSOF8j+78ezD
-         Kf0+NoQ4sJZ5XhDHwEcfySKha7HUOJ7xrGb45QEk=
+        b=IXHw71jg1Kvlg/eqqyrBnKWG+MaRC13Mt5rjRMQ3mQmCtHMJx3jAh4bGMaOQylu3A
+         WP2KFyB+HuW+7qYPUSjWsATH0jxRMraKrBsbJoz46gaRjQ2eAxuwQCLVa6LdtPTl6h
+         +UP2PeHULABqUHHnYUUFnFbXSIIKbBJilxOE0OXE=
 Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id A8EDA8B83B;
-        Fri, 24 Jan 2020 07:19:57 +0100 (CET)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 37B908B83D;
+        Fri, 24 Jan 2020 07:25:52 +0100 (CET)
 X-Virus-Scanned: amavisd-new at c-s.fr
 Received: from messagerie.si.c-s.fr ([127.0.0.1])
         by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id O_VMfi4oHwrT; Fri, 24 Jan 2020 07:19:57 +0100 (CET)
+        with ESMTP id YWp1fOtM3W3N; Fri, 24 Jan 2020 07:25:52 +0100 (CET)
 Received: from [172.25.230.111] (po15451.idsi0.si.c-s.fr [172.25.230.111])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 790B98B768;
-        Fri, 24 Jan 2020 07:19:57 +0100 (CET)
-Subject: Re: [PATCH 1/2] powerpc/irq: don't use current_stack_pointer() in
- check_stack_overflow()
-To:     Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        Segher Boessenkool <segher@kernel.crashing.org>
-References: <bae3e75a0c7f9037e4012ee547842c04cd527931.1575871613.git.christophe.leroy@c-s.fr>
- <87d0b9iez3.fsf@mpe.ellerman.id.au>
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id F08338B768;
+        Fri, 24 Jan 2020 07:25:51 +0100 (CET)
+Subject: Re: [PATCH] lib: Reduce user_access_begin() boundaries in
+ strncpy_from_user() and strnlen_user()
+To:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-arch <linux-arch@vger.kernel.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Linux-MM <linux-mm@kvack.org>
+References: <70f99f7474826883877e84f93224e937d9c974de.1579767339.git.christophe.leroy@c-s.fr>
+ <CAHk-=wgcm5JzyacekDGQ4Ocoe-F5it-7-sbgU8oPnhwnSH3KAA@mail.gmail.com>
 From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <f4196f83-82ac-4df0-8c15-267a2c6c07ba@c-s.fr>
-Date:   Fri, 24 Jan 2020 07:19:57 +0100
+Message-ID: <8de7ba48-7bf4-8d43-5dfc-dacf34f80537@c-s.fr>
+Date:   Fri, 24 Jan 2020 07:25:51 +0100
 User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
  Thunderbird/60.9.1
 MIME-Version: 1.0
-In-Reply-To: <87d0b9iez3.fsf@mpe.ellerman.id.au>
+In-Reply-To: <CAHk-=wgcm5JzyacekDGQ4Ocoe-F5it-7-sbgU8oPnhwnSH3KAA@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: fr
 Content-Transfer-Encoding: 8bit
@@ -78,68 +78,26 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-Le 24/01/2020 à 06:46, Michael Ellerman a écrit :
-> Christophe Leroy <christophe.leroy@c-s.fr> writes:
-> 
->> current_stack_pointer() doesn't return the stack pointer, but the
->> caller's stack frame. See commit bfe9a2cfe91a ("powerpc: Reimplement
->> __get_SP() as a function not a define") and commit acf620ecf56c
->> ("powerpc: Rename __get_SP() to current_stack_pointer()") for details.
+Le 23/01/2020 à 19:47, Linus Torvalds a écrit :
+> On Thu, Jan 23, 2020 at 12:34 AM Christophe Leroy
+> <christophe.leroy@c-s.fr> wrote:
 >>
->> The purpose of check_stack_overflow() is to verify that the stack has
->> not overflowed.
+>> The range passed to user_access_begin() by strncpy_from_user() and
+>> strnlen_user() starts at 'src' and goes up to the limit of userspace
+>> allthough reads will be limited by the 'count' param.
 >>
->> To really know whether the stack pointer is still within boundaries,
->> the check must be done directly on the value of r1.
+>> On 32 bits powerpc (book3s/32) access has to be granted for each 256Mbytes
+>> segment and the cost increases with the number of segments to unlock.
 >>
->> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
->> ---
->>   arch/powerpc/kernel/irq.c | 5 ++---
->>   1 file changed, 2 insertions(+), 3 deletions(-)
->>
->> diff --git a/arch/powerpc/kernel/irq.c b/arch/powerpc/kernel/irq.c
->> index bb34005ff9d2..4d468d835558 100644
->> --- a/arch/powerpc/kernel/irq.c
->> +++ b/arch/powerpc/kernel/irq.c
->> @@ -599,9 +599,8 @@ u64 arch_irq_stat_cpu(unsigned int cpu)
->>   static inline void check_stack_overflow(void)
->>   {
->>   #ifdef CONFIG_DEBUG_STACKOVERFLOW
->> -	long sp;
->> -
->> -	sp = current_stack_pointer() & (THREAD_SIZE-1);
->> +	register unsigned long r1 asm("r1");
->> +	long sp = r1 & (THREAD_SIZE - 1);
+>> Limit the range with 'count' param.
 > 
-> This appears to work but seems to be "unsupported" by GCC, and clang
-> actually complains about it:
-> 
->    /linux/arch/powerpc/kernel/irq.c:603:12: error: variable 'r1' is uninitialized when used here [-Werror,-Wuninitialized]
->            long sp = r1 & (THREAD_SIZE - 1);
->                      ^~
-> 
-> The GCC docs say:
-> 
->    The only supported use for this feature is to specify registers for
->    input and output operands when calling Extended asm (see Extended
->    Asm).
-> 
-> https://gcc.gnu.org/onlinedocs/gcc-9.1.0/gcc/Local-Register-Variables.html#Local-Register-Variables
-> 
-> 
-> If I do this it seems to work, but feels a little dicey:
-> 
-> 	asm ("" : "=r" (r1));
-> 	sp = r1 & (THREAD_SIZE - 1);
+> Ack. I'm tempted to take this for 5.5 too, just so that the
+> unquestionably trivial fixes are in that baseline, and the
+> infrastructure is ready for any architecture that has issues like
+> this.
 
+It would be nice, then the user_access_begin stuff for powerpc could go 
+for 5.6 without worring about.
 
-Or we could do add in asm/reg.h what we have in boot/reg.h:
-
-register void *__stack_pointer asm("r1");
-#define get_sp()	(__stack_pointer)
-
-And use get_sp()
-
-I'll try it.
-
+Thanks
 Christophe
