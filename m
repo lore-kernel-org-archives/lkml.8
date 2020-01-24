@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 210E4C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:37:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35DDCC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:37:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8CBB2071A
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:37:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C61820838
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:37:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579876639;
-	bh=yYkdvZfWRqRnTJkQxbICX9j233kcKaHvQHhe2M4H1gs=;
+	s=default; t=1579876647;
+	bh=TRkIAPgaqZ7uGRpl7w8gDUwEr9fKVYqbQyFe7pM8l3Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=arPvCEVnMQgrPrI52q2T5tLjsXc8xh/k67pA1XlSHQRIYOv5e+CJ7dif88MuksMfr
-	 aPa3OdxnwBMQBtpw798kQhUClM2jph2WMJ3o6zYspm+ValnGGCYgpL0eF/0tfCbMhy
-	 4aYlykmdRltSUihqXsMwuDJ+3jFEysUSSCq+vETc=
+	b=ARecbymmKnAa1c/vfXXbekKBLdsRbREO5mIIwin1saIx87awWHRCaFKxJNfBufnKQ
+	 1Lx/KFkcLXBErMR7QixUSLmRoycHr6iceZz2OzsL/d0yIJMUOfAyypkB1f6Kvb66zh
+	 UB7Odm1BcgXeAu6SP0ni41qtFAHW/rYR8qtgHJGE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403903AbgAXOTH (ORCPT
+        id S2387888AbgAXOhZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 09:19:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39006 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 09:37:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39158 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391195AbgAXOS7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 09:18:59 -0500
+        id S2391289AbgAXOTF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 09:19:05 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CD1F8222D9;
-        Fri, 24 Jan 2020 14:18:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A6CEA20838;
+        Fri, 24 Jan 2020 14:19:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579875538;
-        bh=yYkdvZfWRqRnTJkQxbICX9j233kcKaHvQHhe2M4H1gs=;
+        s=default; t=1579875544;
+        bh=TRkIAPgaqZ7uGRpl7w8gDUwEr9fKVYqbQyFe7pM8l3Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wkNPJTBIPDLH4FkG8gnc++0gO+PIcNecD9RbEvMZSO650CKpvbpAi1VhN00X0fQ7I
-         zpS+6Nc+rya0tvP50yC+TMrn7/OwXZv7+VehxxYncYvV7bsnPTE1TXL/BE4wxe0Ezx
-         degMhqu3iJoo4GMAwcVbl8Mh4yMo7nnK5C5je7sE=
+        b=mlGe3HJXRvP/CUcFtWpDRykKGYmPJPRHeM9DPvAHx+JQ64bIrBoxSzwYPmuUGsMdd
+         e6qp7i2biO3gub6hnOAxyuwlAn5u3cCmlAcmUVZmqzKHRKdwdzVg+RmBBZgoztCaUC
+         Deum/foXjWnuunJ70Z/DZM53nAXemGoAWZhFX0+M=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        Shawn Guo <shawnguo@kernel.org>,
+Cc:     Cambda Zhu <cambda@linux.alibaba.com>,
+        Andrew Bowers <andrewx.bowers@intel.com>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
         Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 035/107] ARM: dts: imx7: Fix Toradex Colibri iMX7S 256MB NAND flash support
-Date:   Fri, 24 Jan 2020 09:17:05 -0500
-Message-Id: <20200124141817.28793-35-sashal@kernel.org>
+        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 040/107] ixgbe: Fix calculation of queue with VFs and flow director on interface flap
+Date:   Fri, 24 Jan 2020 09:17:10 -0500
+Message-Id: <20200124141817.28793-40-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200124141817.28793-1-sashal@kernel.org>
 References: <20200124141817.28793-1-sashal@kernel.org>
@@ -60,33 +61,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+From: Cambda Zhu <cambda@linux.alibaba.com>
 
-[ Upstream commit 4b0b97e651ecf29f20248420b52b6864fbd40bc2 ]
+[ Upstream commit 4fad78ad6422d9bca62135bbed8b6abc4cbb85b8 ]
 
-Turns out when introducing the eMMC version the gpmi node required for
-NAND flash support got enabled exclusively on Colibri iMX7D 512MB.
+This patch fixes the calculation of queue when we restore flow director
+filters after resetting adapter. In ixgbe_fdir_filter_restore(), filter's
+vf may be zero which makes the queue outside of the rx_ring array.
 
-Fixes: f928a4a377e4 ("ARM: dts: imx7: add Toradex Colibri iMX7D 1GB (eMMC) support")
-Signed-off-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+The calculation is changed to the same as ixgbe_add_ethtool_fdir_entry().
+
+Signed-off-by: Cambda Zhu <cambda@linux.alibaba.com>
+Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
+Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/imx7s-colibri.dtsi | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/net/ethernet/intel/ixgbe/ixgbe_main.c | 37 ++++++++++++++-----
+ 1 file changed, 27 insertions(+), 10 deletions(-)
 
-diff --git a/arch/arm/boot/dts/imx7s-colibri.dtsi b/arch/arm/boot/dts/imx7s-colibri.dtsi
-index 1fb1ec5d3d707..6d16e32aed899 100644
---- a/arch/arm/boot/dts/imx7s-colibri.dtsi
-+++ b/arch/arm/boot/dts/imx7s-colibri.dtsi
-@@ -49,3 +49,7 @@
- 		reg = <0x80000000 0x10000000>;
- 	};
- };
+diff --git a/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c b/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
+index c6404abf2dd18..a26f9fb95ac0a 100644
+--- a/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
++++ b/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
+@@ -5239,7 +5239,7 @@ static void ixgbe_fdir_filter_restore(struct ixgbe_adapter *adapter)
+ 	struct ixgbe_hw *hw = &adapter->hw;
+ 	struct hlist_node *node2;
+ 	struct ixgbe_fdir_filter *filter;
+-	u64 action;
++	u8 queue;
+ 
+ 	spin_lock(&adapter->fdir_perfect_lock);
+ 
+@@ -5248,17 +5248,34 @@ static void ixgbe_fdir_filter_restore(struct ixgbe_adapter *adapter)
+ 
+ 	hlist_for_each_entry_safe(filter, node2,
+ 				  &adapter->fdir_filter_list, fdir_node) {
+-		action = filter->action;
+-		if (action != IXGBE_FDIR_DROP_QUEUE && action != 0)
+-			action =
+-			(action >> ETHTOOL_RX_FLOW_SPEC_RING_VF_OFF) - 1;
++		if (filter->action == IXGBE_FDIR_DROP_QUEUE) {
++			queue = IXGBE_FDIR_DROP_QUEUE;
++		} else {
++			u32 ring = ethtool_get_flow_spec_ring(filter->action);
++			u8 vf = ethtool_get_flow_spec_ring_vf(filter->action);
 +
-+&gpmi {
-+	status = "okay";
-+};
++			if (!vf && (ring >= adapter->num_rx_queues)) {
++				e_err(drv, "FDIR restore failed without VF, ring: %u\n",
++				      ring);
++				continue;
++			} else if (vf &&
++				   ((vf > adapter->num_vfs) ||
++				     ring >= adapter->num_rx_queues_per_pool)) {
++				e_err(drv, "FDIR restore failed with VF, vf: %hhu, ring: %u\n",
++				      vf, ring);
++				continue;
++			}
++
++			/* Map the ring onto the absolute queue index */
++			if (!vf)
++				queue = adapter->rx_ring[ring]->reg_idx;
++			else
++				queue = ((vf - 1) *
++					adapter->num_rx_queues_per_pool) + ring;
++		}
+ 
+ 		ixgbe_fdir_write_perfect_filter_82599(hw,
+-				&filter->filter,
+-				filter->sw_idx,
+-				(action == IXGBE_FDIR_DROP_QUEUE) ?
+-				IXGBE_FDIR_DROP_QUEUE :
+-				adapter->rx_ring[action]->reg_idx);
++				&filter->filter, filter->sw_idx, queue);
+ 	}
+ 
+ 	spin_unlock(&adapter->fdir_perfect_lock);
 -- 
 2.20.1
 
