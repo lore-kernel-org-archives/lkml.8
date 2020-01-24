@@ -2,128 +2,153 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8398AC3F68F
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 18:09:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32D60C35242
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 18:10:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5CD862075D
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 18:09:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C4EA2071A
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 18:10:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uyI37eJ5"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qBvuvV0l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391300AbgAXSJi (ORCPT
+        id S2391332AbgAXSKO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 13:09:38 -0500
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:44162 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388558AbgAXSJi (ORCPT
+        Fri, 24 Jan 2020 13:10:14 -0500
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:46459 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391005AbgAXSKO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 13:09:38 -0500
-Received: by mail-pl1-f196.google.com with SMTP id d9so1099043plo.11
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Jan 2020 10:09:37 -0800 (PST)
+        Fri, 24 Jan 2020 13:10:14 -0500
+Received: by mail-pg1-f195.google.com with SMTP id z124so1491789pgb.13
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jan 2020 10:10:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=subject:date:message-id:mime-version:content-transfer-encoding:cc
-         :from:to;
-        bh=tl33NMB4xb0Oa3P5bsoXvWl9n72K/Immm4it2JBZlyA=;
-        b=uyI37eJ5+pWiKL95QrI8s9+IPlQe/iwpnUrs9427leFlv+jWAoJ/A+pPE5gtMAe3y1
-         ym2wBWUw/ug607NLZJ0Lx7Ngoosbnvra9u27cj4ek0Ax8nH3bdbRQ83CK+9G94vqYk2E
-         7UU3+XEIIloN0HYtFxIzDVeY7N+zdTpbxDdsX9uwuBWzl/eFgHFNAsxCVoZQw4WQgeVt
-         Kodi6q6q07iFIPmXnu93ZKTpauWeAiq5jd6P9OJ3AgtF3vB+wmy/IiBSrzp79WEGsJti
-         N/8XZ9rFn+VmpE4HLmAgZQaV/swEBjmtxugC9bDtGq8nXv/43f0R3UL+GE1P4ewQIsso
-         ajCQ==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=XCBGGNYfBCH7BJ+03SsqW1OQE87yKFpYTbTUE1RoAwQ=;
+        b=qBvuvV0l6KIYyI1A4wNqaCpgeumrMByqCRhV6J+4MdDnjpyoQ7IJLIHe6eeTK10d7T
+         2t4vbG7FzFfJ/+xt0hz9hxOxK2UxQU/K6/E9K7sSCLIUAwsP1niK523onHH0MXCgwwjv
+         bPPLJPj+Gl+HOobYfJKl5vZXQ4ItmVuMG08rG70TbRuRxTSSdC/pj6NCjpDfmznCE786
+         cynelBzOuOv7atjjWYEOwAvk/RDjBrdUAuqR1weYJy5R1oNKU9UIY3OMHS/PaXkXNnah
+         qJWjfGzYkEm03h5we+bE2L6CcXgrURuBZm8lw3RYTR8g+cWeR1wu1Pu4N127Jd8uAxly
+         bXJg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:date:message-id:mime-version
-         :content-transfer-encoding:cc:from:to;
-        bh=tl33NMB4xb0Oa3P5bsoXvWl9n72K/Immm4it2JBZlyA=;
-        b=Fe3HhSyS2yBo13xuun3jCj5nKLJKpGJGHBrJ59WcSGx8QiKNzxBQ7VbnIHhvzeWcQv
-         +HpDXPGeUWKDb/dIMh14hqDar5xJKXtmVxCjcjgj3RoyG4lRfsr907uYnxAX/CVagOrP
-         3VXSwzrI5xpfvC36cDVpC3ynD8loHA2eeLpmhBCvSyospTpDkDmxQcwpV7j5Ygp7IFbA
-         nngssnmktrFHJgi1NyhCKCiEokQq2xucd9sAFhI0n0aAINWHsBgXfdHklOdsXYBdDYI4
-         fPQfa0wL+bI+x/jksRk3+S+6cTg1Upyz9jf+P5e71hARwY407AysM5xgGZBG/Aq/9sTh
-         AjLA==
-X-Gm-Message-State: APjAAAXbdu9PsOmsIRVbRo77LHS7j8T3dwrP2RcIXRFEi+Ld4oJnAzw1
-        9nVk7D+VjHtWCJ4b/a7Rq3H64g==
-X-Google-Smtp-Source: APXvYqzFmqNXDTGXhgjmflNvPd4/r6/ygwXhSF679LLu4iDHd+MEhRcrDuwurclHInHbqyWpKkOLEw==
-X-Received: by 2002:a17:90a:d205:: with SMTP id o5mr540430pju.46.1579889377253;
-        Fri, 24 Jan 2020 10:09:37 -0800 (PST)
-Received: from localhost ([2620:0:1000:2514:bf69:4011:cfff:c9e3])
-        by smtp.gmail.com with ESMTPSA id q10sm7192274pfn.5.2020.01.24.10.09.36
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=XCBGGNYfBCH7BJ+03SsqW1OQE87yKFpYTbTUE1RoAwQ=;
+        b=WAzj93HqkUXu9f4Y/3E3cS6kXUGH/BxRq3CEJmo5zKGtmLRwhcT5fk+D3TlnXq0hPi
+         zbqE1ZQMxqLS2K27S/OBNnAovcJ0TMw2suX0Q8X+cISZi5koLMiAtC/3fVFz19HT5oe8
+         ob+iyKAWt53AAtXBmoHa3DmGv1ri74H+WZ4vfxARrojI6YOCHbYAZb1J08l9x8+YxyAU
+         3Xi18oRb4e/pzzcPfnKt7oI/aymb6/CJ00P+bFEbsTX0WQt67RkurrF7NYH+sJHV9I4B
+         ASMRanCJ+rPIVngKHd9ziiltdhs0CqaQbiJR0HJ7iDabW7oVLOaG1PPbtKV0dKvkzQF4
+         CS6A==
+X-Gm-Message-State: APjAAAXJhzkTl07aQ9sht1itQv+SfyHiKwzmHfCvNQ94yVlBOr8Jg5IA
+        O58jqtSMxJ8Yy1t4u2UERiFT6w==
+X-Google-Smtp-Source: APXvYqz4ohlIdCY5C9kjnkjMMUsZo9niHNmEV3zB/P+OU+UI93BPAv/WHs/K5fHbMO+pbfSsb+7wIQ==
+X-Received: by 2002:a62:4e42:: with SMTP id c63mr2158181pfb.86.1579889413402;
+        Fri, 24 Jan 2020 10:10:13 -0800 (PST)
+Received: from ripper (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id m128sm7010476pfm.183.2020.01.24.10.10.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 Jan 2020 10:09:36 -0800 (PST)
-Subject: [PATCH] selftests/bpf: Elide a check for LLVM versions that can't compile it
-Date:   Fri, 24 Jan 2020 10:08:39 -0800
-Message-Id: <20200124180839.185837-1-palmerdabbelt@google.com>
-X-Mailer: git-send-email 2.25.0.341.g760bfbb309-goog
+        Fri, 24 Jan 2020 10:10:12 -0800 (PST)
+Date:   Fri, 24 Jan 2020 10:09:38 -0800
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>
+Cc:     agross@kernel.org, mturquette@baylibre.com, sboyd@kernel.org,
+        robh+dt@kernel.org, mark.rutland@arm.com, vinod.koul@linaro.org,
+        psodagud@codeaurora.org, tsoni@codeaurora.org,
+        jshriram@codeaurora.org, tdas@codeaurora.org,
+        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/7] clk: qcom: rpmh: Add support for RPMH clocks on
+ SM8250
+Message-ID: <20200124180938.GQ1908628@ripper>
+References: <1579217994-22219-1-git-send-email-vnkgutta@codeaurora.org>
+ <1579217994-22219-3-git-send-email-vnkgutta@codeaurora.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Cc:     shuah@kernel.org, ast@kernel.org, daniel@iogearbox.net,
-        kafai@fb.com, songliubraving@fb.com, yhs@fb.com, andriin@fb.com,
-        john.fastabend@gmail.com,
-        Palmer Dabbelt <palmerdabbelt@google.com>,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
-        kernel-team@android.com
-From:   Palmer Dabbelt <palmerdabbelt@google.com>
-To:     linux-kselftest@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1579217994-22219-3-git-send-email-vnkgutta@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The current stable LLVM BPF backend fails to compile the BPF selftests
-due to a compiler bug.  The bug has been fixed in trunk, but that fix
-hasn't landed in the binary packages I'm using yet (Fedora arm64).
-Without this workaround the tests don't compile for me.
+On Thu 16 Jan 15:39 PST 2020, Venkata Narendra Kumar Gutta wrote:
 
-This patch triggers a preprocessor warning on LLVM versions that
-definitely have the bug.  The test may be conservative (ie, I'm not sure
-if 9.1 will have the fix), but it should at least make the current set
-of stable releases work together.
+> From: Taniya Das <tdas@codeaurora.org>
+> 
+> Add support for RPMH clocks on SM8250.
+> 
+> Signed-off-by: Taniya Das <tdas@codeaurora.org>
+> Signed-off-by: Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>
+> ---
+>  drivers/clk/qcom/clk-rpmh.c | 25 ++++++++++++++++++++++++-
+>  1 file changed, 24 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/clk/qcom/clk-rpmh.c b/drivers/clk/qcom/clk-rpmh.c
+> index 593bfa4..0e45adf 100644
+> --- a/drivers/clk/qcom/clk-rpmh.c
+> +++ b/drivers/clk/qcom/clk-rpmh.c
+> @@ -1,6 +1,6 @@
+>  // SPDX-License-Identifier: GPL-2.0
+>  /*
+> - * Copyright (c) 2018-2019, The Linux Foundation. All rights reserved.
+> + * Copyright (c) 2018-2020, The Linux Foundation. All rights reserved.
+>   */
+>  
+>  #include <linux/clk-provider.h>
+> @@ -404,6 +404,28 @@ static unsigned long clk_rpmh_bcm_recalc_rate(struct clk_hw *hw,
+>  	.num_clks = ARRAY_SIZE(sc7180_rpmh_clocks),
+>  };
+>  
+> +DEFINE_CLK_RPMH_VRM(sm8250, ln_bb_clk1, ln_bb_clk1_ao, "lnbclka1", 2);
+> +
+> +static struct clk_hw *sm8250_rpmh_clocks[] = {
+> +	[RPMH_CXO_CLK]		= &sdm845_bi_tcxo.hw,
+> +	[RPMH_CXO_CLK_A]	= &sdm845_bi_tcxo_ao.hw,
+> +	[RPMH_LN_BB_CLK1]	= &sm8250_ln_bb_clk1.hw,
+> +	[RPMH_LN_BB_CLK1_A]	= &sm8250_ln_bb_clk1_ao.hw,
+> +	[RPMH_LN_BB_CLK2]	= &sdm845_ln_bb_clk2.hw,
+> +	[RPMH_LN_BB_CLK2_A]	= &sdm845_ln_bb_clk2_ao.hw,
+> +	[RPMH_LN_BB_CLK3]	= &sdm845_ln_bb_clk3.hw,
+> +	[RPMH_LN_BB_CLK3_A]	= &sdm845_ln_bb_clk3_ao.hw,
+> +	[RPMH_RF_CLK1]		= &sdm845_rf_clk1.hw,
+> +	[RPMH_RF_CLK1_A]	= &sdm845_rf_clk1_ao.hw,
+> +	[RPMH_RF_CLK3]		= &sdm845_rf_clk3.hw,
+> +	[RPMH_RF_CLK3_A]	= &sdm845_rf_clk3_ao.hw,
+> +};
+> +
+> +static const struct clk_rpmh_desc clk_rpmh_sm8250 = {
+> +	.clks = sm8250_rpmh_clocks,
+> +	.num_clks = ARRAY_SIZE(sm8250_rpmh_clocks),
+> +};
+> +
+>  static struct clk_hw *of_clk_rpmh_hw_get(struct of_phandle_args *clkspec,
+>  					 void *data)
+>  {
+> @@ -490,6 +512,7 @@ static int clk_rpmh_probe(struct platform_device *pdev)
+>  	{ .compatible = "qcom,sdm845-rpmh-clk", .data = &clk_rpmh_sdm845},
+>  	{ .compatible = "qcom,sm8150-rpmh-clk", .data = &clk_rpmh_sm8150},
+>  	{ .compatible = "qcom,sc7180-rpmh-clk", .data = &clk_rpmh_sc7180},
+> +	{ .compatible = "qcom,sm8250-rpmh-clk",  .data = &clk_rpmh_sm8250},
 
-See https://reviews.llvm.org/D69438 for more information on the fix.  I
-obtained the workaround from
-https://lore.kernel.org/linux-kselftest/aed8eda7-df20-069b-ea14-f06628984566@gmail.com/T/
+Double space before .data
 
-Fixes: 20a9ad2e7136 ("selftests/bpf: add CO-RE relocs array tests")
-Signed-off-by: Palmer Dabbelt <palmerdabbelt@google.com>
----
- .../testing/selftests/bpf/progs/test_core_reloc_arrays.c  | 8 ++++++++
- 1 file changed, 8 insertions(+)
+Apart from that
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-diff --git a/tools/testing/selftests/bpf/progs/test_core_reloc_arrays.c b/tools/testing/selftests/bpf/progs/test_core_reloc_arrays.c
-index 89951b684282..e5eafdab80a4 100644
---- a/tools/testing/selftests/bpf/progs/test_core_reloc_arrays.c
-+++ b/tools/testing/selftests/bpf/progs/test_core_reloc_arrays.c
-@@ -43,15 +43,23 @@ int test_core_arrays(void *ctx)
- 	/* in->a[2] */
- 	if (CORE_READ(&out->a2, &in->a[2]))
- 		return 1;
-+#if defined(__clang__) && (__clang_major__ < 10) && (__clang_minor__ < 1)
-+# warning "clang 9.0 SEGVs on multidimensional arrays, see https://reviews.llvm.org/D69438"
-+#else
- 	/* in->b[1][2][3] */
- 	if (CORE_READ(&out->b123, &in->b[1][2][3]))
- 		return 1;
-+#endif
- 	/* in->c[1].c */
- 	if (CORE_READ(&out->c1c, &in->c[1].c))
- 		return 1;
-+#if defined(__clang__) && (__clang_major__ < 10) && (__clang_minor__ < 1)
-+# warning "clang 9.0 SEGVs on multidimensional arrays, see https://reviews.llvm.org/D69438"
-+#else
- 	/* in->d[0][0].d */
- 	if (CORE_READ(&out->d00d, &in->d[0][0].d))
- 		return 1;
-+#endif
- 
- 	return 0;
- }
--- 
-2.25.0.341.g760bfbb309-goog
+Regards,
+Bjorn
 
+>  	{ }
+>  };
+>  MODULE_DEVICE_TABLE(of, clk_rpmh_match_table);
+> -- 
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> a Linux Foundation Collaborative Project
