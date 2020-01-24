@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4552CC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:34:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 268FFC32771
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:34:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07A37208C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:34:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E29DE208C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:34:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579858478;
-	bh=E8zl3wQ27lj6qHMZ9AnfPYhsYU8Q05LZfoYmPqrVuqQ=;
+	s=default; t=1579858482;
+	bh=76H+nVK9gRR9qwTprbz/gqeGaJDdXhDbDWAKVxsG7FY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NuuLX3R7R7jHECiRr++W8+9KackiIyDjws2+2FicSoAxU0CC+awvpcZeGcsTRMK3O
-	 awRBYX0Ay7FuvoE0pSjzaRu5qqvr1mUgFNhNEXu99b945YntC0rNNQCVWr/8yOaC6U
-	 g0xjeY2HTGxm/ZHxbwlFaCaXvAuwTaJxiOSf9A/Q=
+	b=kEoTeCBQa7DmwNv2O8HexCiiOGDcX8YmNCllnkksuo1bNZS4d0umUoSOXWLol9H15
+	 pRnLyj0/0sJaiDA5eVoFYkEFDqWUtqHmIEOwparoA72WBig8jzfZB5wOXljBW1C3wE
+	 k75T1ZTcwxqsk6xIeeGYF1GEfv+M8p+JmKtowwAI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730970AbgAXJeh (ORCPT
+        id S1730974AbgAXJel (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 04:34:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:32984 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 04:34:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33042 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730919AbgAXJed (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 04:34:33 -0500
+        id S1730166AbgAXJeg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 04:34:36 -0500
 Received: from localhost (unknown [145.15.244.15])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DC018208C4;
-        Fri, 24 Jan 2020 09:34:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A3DC721569;
+        Fri, 24 Jan 2020 09:34:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579858473;
-        bh=E8zl3wQ27lj6qHMZ9AnfPYhsYU8Q05LZfoYmPqrVuqQ=;
+        s=default; t=1579858476;
+        bh=76H+nVK9gRR9qwTprbz/gqeGaJDdXhDbDWAKVxsG7FY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VVZYw2pGUGBfAW4Vf1rMHYDz2oleg4Hvz/qp3m2Ivfx7eEURijNffrbm0RAWuhPKp
-         8EM9rg8CHyyVgBhUPhLMFGThS9sFC7fO1O0AP/KJZ4PimwbbVzQnnvwXXqkrlwdAcL
-         bf6HPgmIQtqHFJmLvcaffmcaL7fMKEDJ8yMDdqSc=
+        b=ucX+8J/z/RdjM6pcTfNY9hSyimnNqy9h67PAy7KwbBP3K8Mw4oijDSYysPupB9k6R
+         ZdjvxmdAffZy1LlfyJ8irQZ85ASI0HNLcjarLmd4K11ZiE2G8XZrhdTSYrkOEf8mF4
+         jVCaevq3X/B1icaXGQI1tsiVLjhPTPa1wvBNeot0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tung Nguyen <tung.q.nguyen@dektech.com.au>,
-        Jon Maloy <jon.maloy@ericsson.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 027/102] tipc: fix wrong timeout input for tipc_wait_for_cond()
-Date:   Fri, 24 Jan 2020 10:30:28 +0100
-Message-Id: <20200124092810.281268745@linuxfoundation.org>
+        stable@vger.kernel.org, Roi Dayan <roid@mellanox.com>,
+        Eli Britstein <elibr@mellanox.com>,
+        Saeed Mahameed <saeedm@mellanox.com>
+Subject: [PATCH 5.4 028/102] net/mlx5e: Fix free peer_flow when refcount is 0
+Date:   Fri, 24 Jan 2020 10:30:29 +0100
+Message-Id: <20200124092810.443854574@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124092806.004582306@linuxfoundation.org>
 References: <20200124092806.004582306@linuxfoundation.org>
@@ -60,36 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tung Nguyen <tung.q.nguyen@dektech.com.au>
+From: Roi Dayan <roid@mellanox.com>
 
-commit 12db3c8083fcab4270866a88191933f2d9f24f89 upstream.
+commit eb252c3a24fc5856fa62140c2f8269ddce6ce4e5 upstream.
 
-In function __tipc_shutdown(), the timeout value passed to
-tipc_wait_for_cond() is not jiffies.
+It could be neigh update flow took a refcount on peer flow so
+sometimes we cannot release peer flow even if parent flow is
+being freed now.
 
-This commit fixes it by converting that value from milliseconds
-to jiffies.
-
-Fixes: 365ad353c256 ("tipc: reduce risk of user starvation during link congestion")
-Signed-off-by: Tung Nguyen <tung.q.nguyen@dektech.com.au>
-Acked-by: Jon Maloy <jon.maloy@ericsson.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 5a7e5bcb663d ("net/mlx5e: Extend tc flow struct with reference counter")
+Signed-off-by: Roi Dayan <roid@mellanox.com>
+Reviewed-by: Eli Britstein <elibr@mellanox.com>
+Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/tipc/socket.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/mellanox/mlx5/core/en_tc.c |    7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
---- a/net/tipc/socket.c
-+++ b/net/tipc/socket.c
-@@ -504,7 +504,7 @@ static void __tipc_shutdown(struct socke
- 	struct sock *sk = sock->sk;
- 	struct tipc_sock *tsk = tipc_sk(sk);
- 	struct net *net = sock_net(sk);
--	long timeout = CONN_TIMEOUT_DEFAULT;
-+	long timeout = msecs_to_jiffies(CONN_TIMEOUT_DEFAULT);
- 	u32 dnode = tsk_peer_node(tsk);
- 	struct sk_buff *skb;
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en_tc.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en_tc.c
+@@ -1615,8 +1615,11 @@ static void __mlx5e_tc_del_fdb_peer_flow
+ 
+ 	flow_flag_clear(flow, DUP);
+ 
+-	mlx5e_tc_del_fdb_flow(flow->peer_flow->priv, flow->peer_flow);
+-	kfree(flow->peer_flow);
++	if (refcount_dec_and_test(&flow->peer_flow->refcnt)) {
++		mlx5e_tc_del_fdb_flow(flow->peer_flow->priv, flow->peer_flow);
++		kfree(flow->peer_flow);
++	}
++
+ 	flow->peer_flow = NULL;
+ }
  
 
 
