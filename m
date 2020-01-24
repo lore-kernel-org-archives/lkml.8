@@ -2,156 +2,75 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C4E9C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 13:13:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F4C7C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 13:14:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6FE6F206D5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 13:13:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="P6IMwHE8"
+	by mail.kernel.org (Postfix) with ESMTP id E0AB1206D5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 13:14:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389186AbgAXNNO (ORCPT
+        id S2389304AbgAXNOK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 08:13:14 -0500
-Received: from mail-vk1-f193.google.com ([209.85.221.193]:39305 "EHLO
-        mail-vk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387486AbgAXNNO (ORCPT
+        Fri, 24 Jan 2020 08:14:10 -0500
+Received: from mail-out.m-online.net ([212.18.0.10]:60422 "EHLO
+        mail-out.m-online.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387445AbgAXNOJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 08:13:14 -0500
-Received: by mail-vk1-f193.google.com with SMTP id t129so509722vkg.6
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Jan 2020 05:13:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=0pCJ51fgs/0G4N/AkTYuiiJRhKjkqBJy/ABL+0E/bFk=;
-        b=P6IMwHE8uT8RMdr1P8rDQpRrJ5PNR4L4H7E0i7DQXVdviFO6LD475vzz1mjKOK1iuK
-         aJERxWGDezcMiHDHs58NUqcgXYF2j4dEMNFJtigubdbAwW7CH95WNAXL9vXEb13GgBPs
-         00sCtxzu+hBjYlqlOLeDYcXG887pbfo1S0Nmjo47abdHXdfRBJQ/2HfQeO8R2jInTfPp
-         fARl9XjAr32zEKJOQtTZBpNlkVYlB+yb7xrkmvb0YRgdOKav0ImuGbK0XGBLOcZ9YXF/
-         2YtVULLz2da5RU43io9ze0nwFBk/FX2ubwO8cG0aRikoB5nDS5N0LxFQvbKWHNVJ+8xr
-         e31Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0pCJ51fgs/0G4N/AkTYuiiJRhKjkqBJy/ABL+0E/bFk=;
-        b=ZvAezFvZYnkZXdM3HGklkm4h2gw/kdgZFLosjQmKEw4f5vflT8kGqscyoa+XDpEJPn
-         glMklLoLBzM91Wm2hgUdQfeaTaWmuo5Kt6Te2P0kN/fVZd7UuoTlyD/NssGCWFj2azXN
-         dRJEPCgoZftKyqi2eEkVRP5X/t0g5Jh6RoCaae06GKOPpzhH9o7RVdjREkLtcsiIaJVq
-         C5BLnVOeycLIaZZEPwJN/rZ/X+bKXNbJMSwybjp+zl8B7tM5OrI8KsyRm8KPNDy9lN77
-         nSQRy5cFCnFySlluBvsf/po4F4Rtsk6dScKsbcBzK1MF6vs6GeQ/ZqNE+fcG3FsyTyOy
-         /8cQ==
-X-Gm-Message-State: APjAAAXgGvHdB6Bp6azjKw2Y+aE4ZvOGcmhWTLqA/c81AxhqB56vGTtw
-        uTGMkoS4yNo1IGHaXVfpMdeaNYgcABJzYeNLM2tfFQ==
-X-Google-Smtp-Source: APXvYqwvweHW+//fi2a64HFcGs84CB60rRh0VyQGFxeZ6xd6bTwXqvSw/Zs/SJ/+x6Yw0TF8Gdlx6/fNzadVplvj68g=
-X-Received: by 2002:a1f:914b:: with SMTP id t72mr1847120vkd.101.1579871593005;
- Fri, 24 Jan 2020 05:13:13 -0800 (PST)
+        Fri, 24 Jan 2020 08:14:09 -0500
+Received: from frontend01.mail.m-online.net (unknown [192.168.8.182])
+        by mail-out.m-online.net (Postfix) with ESMTP id 4840334LS5z1rcCL;
+        Fri, 24 Jan 2020 14:14:07 +0100 (CET)
+Received: from localhost (dynscan1.mnet-online.de [192.168.6.70])
+        by mail.m-online.net (Postfix) with ESMTP id 4840333w79z1qtfj;
+        Fri, 24 Jan 2020 14:14:07 +0100 (CET)
+X-Virus-Scanned: amavisd-new at mnet-online.de
+Received: from mail.mnet-online.de ([192.168.8.182])
+        by localhost (dynscan1.mail.m-online.net [192.168.6.70]) (amavisd-new, port 10024)
+        with ESMTP id OTsYTgp8ntPR; Fri, 24 Jan 2020 14:14:06 +0100 (CET)
+X-Auth-Info: xmms9xcLKLS2+MW3eS4U+yowtELEEjqovyRjmONM1OFC0M9wZJ1K7vO9b17vJEyA
+Received: from igel.home (ppp-46-244-165-242.dynamic.mnet-online.de [46.244.165.242])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.mnet-online.de (Postfix) with ESMTPSA;
+        Fri, 24 Jan 2020 14:14:06 +0100 (CET)
+Received: by igel.home (Postfix, from userid 1000)
+        id 05AB72C008F; Fri, 24 Jan 2020 14:14:05 +0100 (CET)
+From:   Andreas Schwab <schwab@linux-m68k.org>
+To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        "linuxppc-dev\@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
+Subject: Re: vmlinux ELF header sometimes corrupt
+References: <71aa76d0-a3b8-b4f3-a7c3-766cfb75412f@rasmusvillemoes.dk>
+X-Yow:  TAILFINS!!  ...click...
+Date:   Fri, 24 Jan 2020 14:14:05 +0100
+In-Reply-To: <71aa76d0-a3b8-b4f3-a7c3-766cfb75412f@rasmusvillemoes.dk> (Rasmus
+        Villemoes's message of "Wed, 22 Jan 2020 18:52:21 +0100")
+Message-ID: <87sgk5m1ya.fsf@igel.home>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.3 (gnu/linux)
 MIME-Version: 1.0
-References: <20200110134823.14882-1-ludovic.barre@st.com> <20200110134823.14882-8-ludovic.barre@st.com>
-In-Reply-To: <20200110134823.14882-8-ludovic.barre@st.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Fri, 24 Jan 2020 14:12:36 +0100
-Message-ID: <CAPDyKFqt6SuQh8V1_2-2HzBixR2HTKM+1FKgYuNA1zytc22W7g@mail.gmail.com>
-Subject: Re: [PATCH 7/9] mmc: mmci: add volt_switch callbacks
-To:     Ludovic Barre <ludovic.barre@st.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        linux-stm32@st-md-mailman.stormreply.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 10 Jan 2020 at 14:49, Ludovic Barre <ludovic.barre@st.com> wrote:
->
-> This patch adds 2 voltage switch callbacks in mmci_host_ops:
-> -prep_volt_switch allows to prepare voltage switch before to
->  sent the SD_SWITCH_VOLTAGE command (cmd11).
-> -volt_switch callback allows to define specific action after
->  regulator set voltage.
+On Jan 22 2020, Rasmus Villemoes wrote:
 
-I am fine with adding these callbacks, however I strongly suggest to
-have a reference to "signal voltage" in the name of the callbacks. As
-to avoid confusion for what there are used for.
+> So the inode number and mtime/ctime are exactly the same, but for some
+> reason Blocks: has changed? This is on an ext4 filesystem, but I don't
+> suspect the filesystem to be broken, because it's always just vmlinux
+> that ends up corrupt, and always in exactly this way with the first 52
+> bytes having been wiped.
 
-Perhaps ->post_sig_volt_switch() and ->pre_sig_volt_switch() can work?
+Note that the size of the ELF header (Elf32_Ehdr) is 52 bytes.
 
->
-> Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
-> ---
->  drivers/mmc/host/mmci.c | 8 ++++++++
->  drivers/mmc/host/mmci.h | 2 ++
->  2 files changed, 10 insertions(+)
->
-> diff --git a/drivers/mmc/host/mmci.c b/drivers/mmc/host/mmci.c
-> index 00b473f57047..d76a59c06cb0 100644
-> --- a/drivers/mmc/host/mmci.c
-> +++ b/drivers/mmc/host/mmci.c
-> @@ -22,6 +22,7 @@
->  #include <linux/mmc/pm.h>
->  #include <linux/mmc/host.h>
->  #include <linux/mmc/card.h>
-> +#include <linux/mmc/sd.h>
->  #include <linux/mmc/slot-gpio.h>
->  #include <linux/amba/bus.h>
->  #include <linux/clk.h>
-> @@ -1207,6 +1208,9 @@ mmci_start_command(struct mmci_host *host, struct mmc_command *cmd, u32 c)
->                 writel_relaxed(clks, host->base + MMCIDATATIMER);
->         }
->
-> +       if (host->ops->prep_volt_switch && cmd->opcode == SD_SWITCH_VOLTAGE)
-> +               host->ops->prep_volt_switch(host);
-> +
->         if (/*interrupt*/0)
->                 c |= MCI_CPSM_INTERRUPT;
->
-> @@ -1820,6 +1824,7 @@ static int mmci_get_cd(struct mmc_host *mmc)
->
->  static int mmci_sig_volt_switch(struct mmc_host *mmc, struct mmc_ios *ios)
->  {
-> +       struct mmci_host *host = mmc_priv(mmc);
->         int ret = 0;
->
->         if (!IS_ERR(mmc->supply.vqmmc)) {
-> @@ -1839,6 +1844,9 @@ static int mmci_sig_volt_switch(struct mmc_host *mmc, struct mmc_ios *ios)
->                         break;
->                 }
->
-> +               if (!ret && host->ops && host->ops->volt_switch)
-> +                       ret = host->ops->volt_switch(host, ios);
-> +
->                 if (ret)
->                         dev_warn(mmc_dev(mmc), "Voltage switch failed\n");
->         }
-> diff --git a/drivers/mmc/host/mmci.h b/drivers/mmc/host/mmci.h
-> index ddcdfb827996..c04a144259a2 100644
-> --- a/drivers/mmc/host/mmci.h
-> +++ b/drivers/mmc/host/mmci.h
-> @@ -377,6 +377,8 @@ struct mmci_host_ops {
->         void (*set_clkreg)(struct mmci_host *host, unsigned int desired);
->         void (*set_pwrreg)(struct mmci_host *host, unsigned int pwr);
->         bool (*busy_complete)(struct mmci_host *host, u32 status, u32 err_msk);
-> +       void (*prep_volt_switch)(struct mmci_host *host);
-> +       int (*volt_switch)(struct mmci_host *host, struct mmc_ios *ios);
->  };
->
->  struct mmci_host {
-> --
-> 2.17.1
->
+Andreas.
 
-Kind regards
-Uffe
+-- 
+Andreas Schwab, schwab@linux-m68k.org
+GPG Key fingerprint = 7578 EB47 D4E5 4D69 2510  2552 DF73 E780 A9DA AEC1
+"And now for something completely different."
