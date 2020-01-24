@@ -2,118 +2,103 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1033DC35240
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 01:28:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85F76C35240
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 01:28:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D463921835
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 01:28:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44953207FF
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 01:28:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="gVP6U6Q+"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IWhyOeQU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729921AbgAXB2K (ORCPT
+        id S1730055AbgAXB2c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 20:28:10 -0500
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:55700 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729318AbgAXB2J (ORCPT
+        Thu, 23 Jan 2020 20:28:32 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:45879 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728799AbgAXB2b (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 20:28:09 -0500
-Received: by mail-pj1-f67.google.com with SMTP id d5so298808pjz.5
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jan 2020 17:28:09 -0800 (PST)
+        Thu, 23 Jan 2020 20:28:31 -0500
+Received: by mail-lj1-f195.google.com with SMTP id j26so526308ljc.12;
+        Thu, 23 Jan 2020 17:28:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=3UtLf7+5DucsSWidbQFY9Ttw4iR1dzCtjU7T/DXapxA=;
-        b=gVP6U6Q+p98YXgmlCFAuFYsRrG2LhhCKcAevido9e2FXnwhgzhQaMBNzIcZnbZPgme
-         vMsV9dcOv+/XVfmge9n3XbCfPWsrNNvY5lxoQ37yHSs4zMSn5o3RFqKJV4Ws1eFc7nDC
-         dSd+YFogdIS74Xp1TMCIElLjf0t+sT91d0F478AknsxEjXLtCwxxZ4ti7orpg6BADF/f
-         lgWNOGUtqRRzQUXvRi/TIn08j8fcxszdGDLsfZLJ3S+V44+31NRSHEr98BLSE0B8EWbi
-         cGP+aJzOSus2vIBCEFejX63wsTfcVEmYaKA/7J0ir4nr/jUtj8vOhZ+ephw+aGFdOQ/v
-         dqdA==
+        bh=WI+Ptr4jWGvf9sG0CsP+d/rPdqVcRiXjBDng4X6qfAo=;
+        b=IWhyOeQUSmo3xu9H4u2oZLkCl+B28KSQ//kzmtueEdrjJiCkgUjc7xObfFUYgg/3Jt
+         WN6L5BVjS+aylpgwq+HKPF6cSQGg2SpcNPPqkpyNtIijZZWdxhJceRTrR0bGrlLxcPDk
+         ZQcuU4cVj9OwzCr0XvpZUQSIasa3gbZUYiBewpoDd+cDqe6z0Dl8/isN64cRDYqFaZX2
+         1I50PCGlrYq8sBgAMOJKGS+QhZPiC4lyjXWNtp+pw3giQ027CEr6U1bMUTkndSUP7cuK
+         bE4SsWAHFJ90iDLnniZGCZ3IfhKuWbiQQIwshPTNGUrrTjYFhFk7kSkAZm7ErxlcB6Mv
+         Hlqg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=3UtLf7+5DucsSWidbQFY9Ttw4iR1dzCtjU7T/DXapxA=;
-        b=BYfbgY10o+vZkSA+qwOQQzBw9Zw+9EQq+S8IHJanYVX1sDbTdyE45wiAvBcbeSgzgJ
-         FOHEr1vhb93tp2cqoJxjpF7yG5KAKXFOcTYfKPJGLueZjf/MXAtLsOD2iXXuKs8drO/Q
-         ST5evCKoq6dW4u9mzAp3bX8XrG/l2rmDQPPndpiLD4bO34lkRqQzFzThrLIuNPdMthxI
-         6qPEMvBQAWtov/RTto6wuUU/Ee/9pHzxOSZIVTZEmk1o63sIaXwcM2DVISMVwmWUgvZt
-         GGtgMdJA4zXm6vzjRgaWFo31vIlIdPhrKhjhcJ5WCny77rBtZVfHNECUZjne9tU/PDSk
-         h5zw==
-X-Gm-Message-State: APjAAAWWDkFGvRFdVycPIsSDLc53Wh/OXPgCsvnFMKwcR5E8Jn2CxxtY
-        uanuBTU5CUPfBSAn7Wrbvo6z80LvNaM=
-X-Google-Smtp-Source: APXvYqzx5MP5rjHYQq3kzzvu651bu9Kdur2mhOsrCqElHx/Qa+CIW2Rn8N1iwWP9tMyek247IQy+tQ==
-X-Received: by 2002:a17:90a:da04:: with SMTP id e4mr571675pjv.26.1579829288529;
-        Thu, 23 Jan 2020 17:28:08 -0800 (PST)
-Received: from [192.168.201.136] ([50.234.116.4])
-        by smtp.gmail.com with ESMTPSA id b8sm4091967pff.114.2020.01.23.17.28.07
+        bh=WI+Ptr4jWGvf9sG0CsP+d/rPdqVcRiXjBDng4X6qfAo=;
+        b=JmGaLPmBw0NTs9Qi4ZpLV8BNQSbayEM4XauM3Dm6L75IyExcbByPkSemAmFwLC7rao
+         IuCbekaI616cxTWaRtLMi9w6bB2FRlgCo6Y5zGNHd8iK3oq5P0axUAfWqWuu4myCsD/h
+         A0WpmupPylFJO04lCyJnmZHE46oXv2g5Q4LthtI4IXAMCLJXhX/hZh/nSX8Q0Yeyg5Sb
+         5GJjd7z058I+eg1N+3Q+p8oou+zLhr8CjuGqVyC264Vm8K7d4QR0aip43rce9n9nuRTV
+         bZfyDp6ioNTPhya7G0BtV2p5juq88zXxkTdBo/x4OCGMbSNjqN52LdivMIW5srUbG68E
+         XD6g==
+X-Gm-Message-State: APjAAAXuLtpRr1IdTLC2sMq6Q7Alld/NSICuTKz4zyBd4iJ5OantKuGN
+        WkC0e2sm4XZanUuXItpx7J4=
+X-Google-Smtp-Source: APXvYqwGOnXwDuyIxTBQaJTSzHJLm33JXg0GYndn6ydyGv3O+5zNh+qRhrfYF9Q5iyLM8WQFQtOLfQ==
+X-Received: by 2002:a2e:9592:: with SMTP id w18mr711637ljh.98.1579829309536;
+        Thu, 23 Jan 2020 17:28:29 -0800 (PST)
+Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
+        by smtp.googlemail.com with ESMTPSA id l28sm1886927lfk.21.2020.01.23.17.28.28
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 23 Jan 2020 17:28:08 -0800 (PST)
-Subject: Re: [PATCH] io_uring: wakeup threads waiting for EPOLLOUT events
-To:     Stefano Garzarella <sgarzare@redhat.com>
-Cc:     Alexander Viro <viro@zeniv.linux.org.uk>, io-uring@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-References: <20200116134946.184711-1-sgarzare@redhat.com>
- <2d2dda92-3c50-ee62-5ffe-0589d4c8fc0d@kernel.dk>
- <20200116155557.mwjc7vu33xespiag@steredhat>
- <5723453a-9326-e954-978e-910b8b495b38@kernel.dk>
- <20200116162630.6r3xc55kdyyq5tvz@steredhat>
- <a02a58dc-bf23-ed74-aec6-52c85360fe00@kernel.dk>
- <20200116170342.4jvkhbbw4x6z3txn@steredhat>
- <2d3d4932-8894-6969-4006-25141ca1286e@kernel.dk>
- <20200123214533.ikn4olf7k5dfbaq6@steredhat>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <3805d100-c687-e49e-9317-7cd9b387a3a7@kernel.dk>
-Date:   Thu, 23 Jan 2020 18:28:06 -0700
+        Thu, 23 Jan 2020 17:28:28 -0800 (PST)
+Subject: Re: [alsa-devel] [PATCH 7/9] ASoC: tegra: add Tegra210 based ADMAIF
+ driver
+To:     Sameer Pujar <spujar@nvidia.com>, perex@perex.cz, tiwai@suse.com,
+        robh+dt@kernel.org
+Cc:     devicetree@vger.kernel.org, alsa-devel@alsa-project.org,
+        atalambedu@nvidia.com, linux-kernel@vger.kernel.org,
+        lgirdwood@gmail.com, jonathanh@nvidia.com, viswanathl@nvidia.com,
+        sharadg@nvidia.com, broonie@kernel.org, thierry.reding@gmail.com,
+        linux-tegra@vger.kernel.org, rlokhande@nvidia.com,
+        mkumard@nvidia.com, dramesh@nvidia.com
+References: <1579530198-13431-1-git-send-email-spujar@nvidia.com>
+ <1579530198-13431-8-git-send-email-spujar@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <743d6d7d-f29c-191a-853b-414250ca38df@gmail.com>
+Date:   Fri, 24 Jan 2020 04:28:26 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-In-Reply-To: <20200123214533.ikn4olf7k5dfbaq6@steredhat>
+In-Reply-To: <1579530198-13431-8-git-send-email-spujar@nvidia.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/23/20 2:45 PM, Stefano Garzarella wrote:
-> On Thu, Jan 23, 2020 at 12:13:57PM -0700, Jens Axboe wrote:
->> On 1/16/20 10:03 AM, Stefano Garzarella wrote:
->>> On Thu, Jan 16, 2020 at 09:30:12AM -0700, Jens Axboe wrote:
->>>> On 1/16/20 9:26 AM, Stefano Garzarella wrote:
->>>>>> Since the use case is mostly single submitter, unless you're doing
->>>>>> something funky or unusual, you're not going to be needing POLLOUT ever.
->>>>>
->>>>> The case that I had in mind was with kernel side polling enabled and
->>>>> a single submitter that can use epoll() to wait free slots in the SQ
->>>>> ring. (I don't have a test, maybe I can write one...)
->>>>
->>>> Right, I think that's the only use case where it makes sense, because
->>>> you have someone else draining the sq side for you. A test case would
->>>> indeed be nice, liburing has a good arsenal of test cases and this would
->>>> be a good addition!
->>>
->>> Sure, I'll send a test to liburing for this case!
->>
->> Gentle ping on the test case :-)
->>
-> 
-> Yes, you are right :-)
-> 
-> I was a little busy this week to finish some works before DevConf.  I
-> hope to work on the test case these days, so by Monday I hope I have
-> it ;-)
+20.01.2020 17:23, Sameer Pujar пишет:
+[snip]
+> +static bool tegra_admaif_wr_reg(struct device *dev, unsigned int reg)
+> +{
+> +	struct tegra_admaif *admaif = dev_get_drvdata(dev);
+> +	unsigned int ch_stride = TEGRA_ADMAIF_CHANNEL_REG_STRIDE;
+> +	unsigned int num_ch = admaif->soc_data->num_ch;
+> +	unsigned int rx_base = admaif->soc_data->rx_base;
+> +	unsigned int tx_base = admaif->soc_data->tx_base;
+> +	unsigned int global_base = admaif->soc_data->global_base;
+> +	unsigned int reg_max = admaif->soc_data->regmap_conf->max_register;
+> +	unsigned int rx_max = rx_base + (num_ch * ch_stride);
+> +	unsigned int tx_max = tx_base + (num_ch * ch_stride);
+> +
+> +	if ((reg >= rx_base) && (reg < rx_max)) {
 
-Thanks, all good, just a gentle nudge ;-)
-
--- 
-Jens Axboe
-
+The braces are not needed around the comparisons because they precede
+the AND. Same for all other similar occurrences in the code.
