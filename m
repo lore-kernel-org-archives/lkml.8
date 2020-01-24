@@ -4,50 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 790FDC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:11:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B6ACC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:11:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49D9220708
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:11:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4FC520663
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:11:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579864302;
-	bh=wA66xn8xwT2YRuibEYOeBIITxq2WJ5SmlwKox+m4eYM=;
+	s=default; t=1579864306;
+	bh=/LQIiRt807IdlrK/+uzK5Lu6KwVwbZWcH+XbI2h1q48=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Dn2YoXwQapS1YSEG4CrN/kOg//pNF1eDm7EkZS0ft9GGkxraEkrHiTOpeXcensLVJ
-	 Cvho8OUfx8vg2q0IlFOTKmZ+8TqnocKrqO3M+bI7owNgdNc8okNqzIgu5dJGdgYv3d
-	 qFIRFmWdhgJUcLwSoFZKrz0IYyxagvdeTfjgXJ7E=
+	b=Yect9S1B/cTq5Lz3K8KmLxGnty1L/lwXR8GU/tI8tKQEl2/yz0xyE0tSjNOHSfFJ9
+	 7KdxZ4KFHQVJe/DUa1O8GwoBxj63yX6tkxJGOL2cSjAuuXNw8N3XU9j7VA9Xik1zUq
+	 GyEPfuwULhG7ZT+OIczNIMbvro0MSrtDuVBd2W84=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389902AbgAXLLl (ORCPT
+        id S2389910AbgAXLLo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:11:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47636 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 06:11:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47686 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389763AbgAXLLi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:11:38 -0500
+        id S2389900AbgAXLLl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:11:41 -0500
 Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DB80B20663;
-        Fri, 24 Jan 2020 11:11:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2676D20663;
+        Fri, 24 Jan 2020 11:11:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579864297;
-        bh=wA66xn8xwT2YRuibEYOeBIITxq2WJ5SmlwKox+m4eYM=;
+        s=default; t=1579864300;
+        bh=/LQIiRt807IdlrK/+uzK5Lu6KwVwbZWcH+XbI2h1q48=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=g7KgrpwuESRUuxR1JJTAjheCxnc3pg6MtRowy613nIqwvt7UTnMZOAO4KrJAfhjaz
-         qGNAWxSee+MUg5L2DkMt9kbXzE4DJvpON3CXNFvafqiyPS9QHRnVjzOIsAyKOuCIrX
-         BbClWGqJzd0ARgLZvvHzCoXln9QM93BJebnMCN0Q=
+        b=CKAJlo8BaG4XtzyXX+FZJDB5afQQ8WVPryCNmCQxjcfOU3JF3y1SIvFUQ3qNKu74c
+         5m0wR4L7jJDbjdrfnk72mdrYSLEy64jPQGR3CEjemzzqChW0QZqH9rXQnuXUbYcmrI
+         o3U/q5Mq1QoQOcIW6rFAhXa7ztwW4NJX6RHS5p5U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        stable@vger.kernel.org, Mansour Alharthi <malharthi9@gatech.edu>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 227/639] NFS: Fix a soft lockup in the delegation recovery code
-Date:   Fri, 24 Jan 2020 10:26:37 +0100
-Message-Id: <20200124093115.321822499@linuxfoundation.org>
+Subject: [PATCH 4.19 228/639] perf: Copy parents address filter offsets on clone
+Date:   Fri, 24 Jan 2020 10:26:38 +0100
+Message-Id: <20200124093115.438515303@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
 References: <20200124093047.008739095@linuxfoundation.org>
@@ -60,81 +64,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Trond Myklebust <trond.myklebust@hammerspace.com>
+From: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 
-[ Upstream commit 6f9449be53f3ce383caed797708b332ede8d952c ]
+[ Upstream commit 18736eef12137c59f60cc9f56dc5bea05c92e0eb ]
 
-Fix a soft lockup when NFS client delegation recovery is attempted
-but the inode is in the process of being freed. When the
-igrab(inode) call fails, and we have to restart the recovery process,
-we need to ensure that we won't attempt to recover the same delegation
-again.
+When a child event is allocated in the inherit_event() path, the VMA
+based filter offsets are not copied from the parent, even though the
+address space mapping of the new task remains the same, which leads to
+no trace for the new task until exec.
 
-Fixes: 45870d6909d5a ("NFSv4.1: Test delegation stateids when server...")
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+Reported-by: Mansour Alharthi <malharthi9@gatech.edu>
+Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Tested-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+Acked-by: Peter Zijlstra <peterz@infradead.org>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Fixes: 375637bc5249 ("perf/core: Introduce address range filtering")
+Link: http://lkml.kernel.org/r/20190215115655.63469-2-alexander.shishkin@linux.intel.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/delegation.c | 20 ++++++++++++--------
- fs/nfs/delegation.h |  1 +
- 2 files changed, 13 insertions(+), 8 deletions(-)
+ kernel/events/core.c | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
-diff --git a/fs/nfs/delegation.c b/fs/nfs/delegation.c
-index 74ff459b75efa..b0c0c2fc2fbac 100644
---- a/fs/nfs/delegation.c
-+++ b/fs/nfs/delegation.c
-@@ -240,6 +240,8 @@ static struct inode *nfs_delegation_grab_inode(struct nfs_delegation *delegation
- 	spin_lock(&delegation->lock);
- 	if (delegation->inode != NULL)
- 		inode = igrab(delegation->inode);
-+	if (!inode)
-+		set_bit(NFS_DELEGATION_INODE_FREEING, &delegation->flags);
- 	spin_unlock(&delegation->lock);
- 	return inode;
- }
-@@ -955,10 +957,11 @@ restart:
- 	list_for_each_entry_rcu(server, &clp->cl_superblocks, client_link) {
- 		list_for_each_entry_rcu(delegation, &server->delegations,
- 								super_list) {
--			if (test_bit(NFS_DELEGATION_RETURNING,
--						&delegation->flags))
--				continue;
--			if (test_bit(NFS_DELEGATION_NEED_RECLAIM,
-+			if (test_bit(NFS_DELEGATION_INODE_FREEING,
-+						&delegation->flags) ||
-+			    test_bit(NFS_DELEGATION_RETURNING,
-+						&delegation->flags) ||
-+			    test_bit(NFS_DELEGATION_NEED_RECLAIM,
- 						&delegation->flags) == 0)
- 				continue;
- 			if (!nfs_sb_active(server->super))
-@@ -1064,10 +1067,11 @@ restart:
- 	list_for_each_entry_rcu(server, &clp->cl_superblocks, client_link) {
- 		list_for_each_entry_rcu(delegation, &server->delegations,
- 								super_list) {
--			if (test_bit(NFS_DELEGATION_RETURNING,
--						&delegation->flags))
--				continue;
--			if (test_bit(NFS_DELEGATION_TEST_EXPIRED,
-+			if (test_bit(NFS_DELEGATION_INODE_FREEING,
-+						&delegation->flags) ||
-+			    test_bit(NFS_DELEGATION_RETURNING,
-+						&delegation->flags) ||
-+			    test_bit(NFS_DELEGATION_TEST_EXPIRED,
- 						&delegation->flags) == 0)
- 				continue;
- 			if (!nfs_sb_active(server->super))
-diff --git a/fs/nfs/delegation.h b/fs/nfs/delegation.h
-index dd0f3eed3890d..f09b153ac82ff 100644
---- a/fs/nfs/delegation.h
-+++ b/fs/nfs/delegation.h
-@@ -34,6 +34,7 @@ enum {
- 	NFS_DELEGATION_RETURNING,
- 	NFS_DELEGATION_REVOKED,
- 	NFS_DELEGATION_TEST_EXPIRED,
-+	NFS_DELEGATION_INODE_FREEING,
- };
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 460d5fd3ec4e4..9a5559f5938a5 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -1254,6 +1254,7 @@ static void put_ctx(struct perf_event_context *ctx)
+  *	      perf_event_context::lock
+  *	    perf_event::mmap_mutex
+  *	    mmap_sem
++ *	      perf_addr_filters_head::lock
+  *
+  *    cpu_hotplug_lock
+  *      pmus_lock
+@@ -10136,6 +10137,20 @@ perf_event_alloc(struct perf_event_attr *attr, int cpu,
+ 			goto err_per_task;
+ 		}
  
- int nfs_inode_set_delegation(struct inode *inode, struct rpc_cred *cred,
++		/*
++		 * Clone the parent's vma offsets: they are valid until exec()
++		 * even if the mm is not shared with the parent.
++		 */
++		if (event->parent) {
++			struct perf_addr_filters_head *ifh = perf_event_addr_filters(event);
++
++			raw_spin_lock_irq(&ifh->lock);
++			memcpy(event->addr_filters_offs,
++			       event->parent->addr_filters_offs,
++			       pmu->nr_addr_filters * sizeof(unsigned long));
++			raw_spin_unlock_irq(&ifh->lock);
++		}
++
+ 		/* force hw sync on the address filters */
+ 		event->addr_filters_gen = 1;
+ 	}
 -- 
 2.20.1
 
