@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3E2AC35241
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 01:19:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87A85C35240
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 01:19:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B3E321D7E
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 01:19:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55619206A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 01:19:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579828779;
-	bh=U9J6SAGCr4N06fDBextBl9dpxjurIa6c2Yu7jpChH4M=;
+	s=default; t=1579828784;
+	bh=vVzGl/1LrNLQUWSDodjDFOxHqfKPOheroeyONEUOIAo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IMAEAp3WkMmbSz40ZLLxSCfgkZvpJ1WW1qWfq0nLNXP/q3GQZqkslXBdfFT5Lnd3+
-	 XTkLSs4LYrIygu/6ZvxEPUFiPvKgAOHzyU0ChJglXJ6BwK58IwfD+16uQ9XQgAs+4T
-	 wpRmKVagSlxokaPB2QCpiZuXoY/dkmaMFQOPumRg=
+	b=0nwTMGCQ4vAvamwv9/Kz1RYfGLQiS+ZuL/MXHDKRqnTLDOVZ5mk8riUDhRxtbAZvq
+	 WzP94e8BrSv7RjCVoR/K64I+WEoUCNn2WpYMJNqfFmdph6riOd4iGNYOk8JI/QxMp5
+	 iNOYzopZoUgyIHs5IIrDlD9e+g64WUUIPFL0dlZE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730688AbgAXBRl (ORCPT
+        id S1730639AbgAXBTn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 20:17:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60676 "EHLO mail.kernel.org"
+        Thu, 23 Jan 2020 20:19:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60818 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730468AbgAXBRg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 20:17:36 -0500
+        id S1730676AbgAXBRl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jan 2020 20:17:41 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 96DFA21D7D;
-        Fri, 24 Jan 2020 01:17:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 20D122071E;
+        Fri, 24 Jan 2020 01:17:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579828655;
-        bh=U9J6SAGCr4N06fDBextBl9dpxjurIa6c2Yu7jpChH4M=;
+        s=default; t=1579828660;
+        bh=vVzGl/1LrNLQUWSDodjDFOxHqfKPOheroeyONEUOIAo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ax1GVpEny5Q4RDZac2Mn7FjdsPhdclS7mwlnajO6xt9+B+zIpe3UUKsO0IhGNxmV2
-         dl2t3SFpGdlPuFyNN7fdC1DAmC2bq3ZTimaULbXFE8eCFmDjlriUugGjshrZ17qDUE
-         ymx88mianXO78hDZ+SCi7LsxwdpUsFHzieUt6bxg=
+        b=e8EQcUWGSbyccxY7DXmqvaj1pE2kAvlhoUwCU3/UdBA2sxD9SlJTCXoFHH8xOmJ8d
+         bZGtNQ91o1uMfx6MPNiYjd5xij9xPiqG99vaKuJcZRHopmRL/EIEfSIlyxJfD3hXNI
+         rvPrDYR5DGMDCuf+i52+sdvoeTArA16so9gepLUQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "H. Nikolaus Schaller" <hns@goldelico.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-mmc@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 23/33] mmc: sdio: fix wl1251 vendor id
-Date:   Thu, 23 Jan 2020 20:16:58 -0500
-Message-Id: <20200124011708.18232-23-sashal@kernel.org>
+Cc:     Marcel Holtmann <marcel@holtmann.org>,
+        Andre Heider <a.heider@gmail.com>,
+        Johan Hedberg <johan.hedberg@intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 27/33] Bluetooth: Allow combination of BDADDR_PROPERTY and INVALID_BDADDR quirks
+Date:   Thu, 23 Jan 2020 20:17:02 -0500
+Message-Id: <20200124011708.18232-27-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200124011708.18232-1-sashal@kernel.org>
 References: <20200124011708.18232-1-sashal@kernel.org>
@@ -59,42 +61,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "H. Nikolaus Schaller" <hns@goldelico.com>
+From: Marcel Holtmann <marcel@holtmann.org>
 
-[ Upstream commit e5db673e7fe2f971ec82039a28dc0811c2100e87 ]
+[ Upstream commit 7fdf6c6a0d0e032aac2aa4537a23af1e04a397ce ]
 
-v4.11-rc1 did introduce a patch series that rearranged the
-sdio quirks into a header file. Unfortunately this did forget
-to handle SDIO_VENDOR_ID_TI differently between wl1251 and
-wl1271 with the result that although the wl1251 was found on
-the sdio bus, the firmware did not load any more and there was
-no interface registration.
+When utilizing BDADDR_PROPERTY and INVALID_BDADDR quirks together it
+results in an unconfigured controller even if the bootloader provides
+a valid address. Fix this by allowing a bootloader provided address
+to mark the controller as configured.
 
-This patch defines separate constants to be used by sdio quirks
-and drivers.
-
-Fixes: 884f38607897 ("mmc: core: move some sdio IDs out of quirks file")
-Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
-Cc: <stable@vger.kernel.org> # v4.11+
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+Tested-by: Andre Heider <a.heider@gmail.com>
+Signed-off-by: Johan Hedberg <johan.hedberg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/mmc/sdio_ids.h | 2 ++
- 1 file changed, 2 insertions(+)
+ net/bluetooth/hci_core.c | 26 ++++++++++++++++++++++++--
+ 1 file changed, 24 insertions(+), 2 deletions(-)
 
-diff --git a/include/linux/mmc/sdio_ids.h b/include/linux/mmc/sdio_ids.h
-index d1a5d5df02f57..08b25c02b5a11 100644
---- a/include/linux/mmc/sdio_ids.h
-+++ b/include/linux/mmc/sdio_ids.h
-@@ -71,6 +71,8 @@
+diff --git a/net/bluetooth/hci_core.c b/net/bluetooth/hci_core.c
+index 0cc9ce9172229..9e19d5a3aac87 100644
+--- a/net/bluetooth/hci_core.c
++++ b/net/bluetooth/hci_core.c
+@@ -1444,11 +1444,20 @@ static int hci_dev_do_open(struct hci_dev *hdev)
  
- #define SDIO_VENDOR_ID_TI			0x0097
- #define SDIO_DEVICE_ID_TI_WL1271		0x4076
-+#define SDIO_VENDOR_ID_TI_WL1251		0x104c
-+#define SDIO_DEVICE_ID_TI_WL1251		0x9066
+ 	if (hci_dev_test_flag(hdev, HCI_SETUP) ||
+ 	    test_bit(HCI_QUIRK_NON_PERSISTENT_SETUP, &hdev->quirks)) {
++		bool invalid_bdaddr;
++
+ 		hci_sock_dev_event(hdev, HCI_DEV_SETUP);
  
- #define SDIO_VENDOR_ID_STE			0x0020
- #define SDIO_DEVICE_ID_STE_CW1200		0x2280
+ 		if (hdev->setup)
+ 			ret = hdev->setup(hdev);
+ 
++		/* The transport driver can set the quirk to mark the
++		 * BD_ADDR invalid before creating the HCI device or in
++		 * its setup callback.
++		 */
++		invalid_bdaddr = test_bit(HCI_QUIRK_INVALID_BDADDR,
++					  &hdev->quirks);
++
+ 		if (ret)
+ 			goto setup_failed;
+ 
+@@ -1457,20 +1466,33 @@ static int hci_dev_do_open(struct hci_dev *hdev)
+ 				hci_dev_get_bd_addr_from_property(hdev);
+ 
+ 			if (bacmp(&hdev->public_addr, BDADDR_ANY) &&
+-			    hdev->set_bdaddr)
++			    hdev->set_bdaddr) {
+ 				ret = hdev->set_bdaddr(hdev,
+ 						       &hdev->public_addr);
++
++				/* If setting of the BD_ADDR from the device
++				 * property succeeds, then treat the address
++				 * as valid even if the invalid BD_ADDR
++				 * quirk indicates otherwise.
++				 */
++				if (!ret)
++					invalid_bdaddr = false;
++			}
+ 		}
+ 
+ setup_failed:
+ 		/* The transport driver can set these quirks before
+ 		 * creating the HCI device or in its setup callback.
+ 		 *
++		 * For the invalid BD_ADDR quirk it is possible that
++		 * it becomes a valid address if the bootloader does
++		 * provide it (see above).
++		 *
+ 		 * In case any of them is set, the controller has to
+ 		 * start up as unconfigured.
+ 		 */
+ 		if (test_bit(HCI_QUIRK_EXTERNAL_CONFIG, &hdev->quirks) ||
+-		    test_bit(HCI_QUIRK_INVALID_BDADDR, &hdev->quirks))
++		    invalid_bdaddr)
+ 			hci_dev_set_flag(hdev, HCI_UNCONFIGURED);
+ 
+ 		/* For an unconfigured controller it is required to
 -- 
 2.20.1
 
