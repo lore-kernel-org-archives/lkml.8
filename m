@@ -2,128 +2,140 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22778C35242
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:40:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A276DC3F68F
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:40:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ECFC92075D
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:40:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="iiu4nggJ"
+	by mail.kernel.org (Postfix) with ESMTP id 838E92468B
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:40:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392054AbgAXLkc (ORCPT
+        id S2392070AbgAXLkg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:40:32 -0500
-Received: from pegase1.c-s.fr ([93.17.236.30]:10076 "EHLO pegase1.c-s.fr"
+        Fri, 24 Jan 2020 06:40:36 -0500
+Received: from mx2.suse.de ([195.135.220.15]:50776 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403843AbgAXLk0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:40:26 -0500
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 483xyt3Jbyz9tyMg;
-        Fri, 24 Jan 2020 12:40:22 +0100 (CET)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=iiu4nggJ; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id A3I6opIEV_tl; Fri, 24 Jan 2020 12:40:22 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 483xyt27bmz9tyMf;
-        Fri, 24 Jan 2020 12:40:22 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1579866022; bh=FHdRJ1lym9x5LZH3JKxzccvEq6M9sGBs3OTmqNRLhTU=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=iiu4nggJtlejyS9CxTCWd166SJF9J7eVXuwRZ7M2gotO68hUK81m+MR2Tstk3ho8B
-         Rj9fXdhonGjq/7IdTo1GHGLsriWmDEEd0f4c2HcS4bPl+9p+eVKJ1QKA/pX/XYHPtq
-         QQIRjBIznCVLXgOan515E+eWZeriwxtYhT7tVKTQ=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 885948B858;
-        Fri, 24 Jan 2020 12:40:23 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id Rd4xOECJWD9L; Fri, 24 Jan 2020 12:40:23 +0100 (CET)
-Received: from [172.25.230.111] (po15451.idsi0.si.c-s.fr [172.25.230.111])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 514BB8B84A;
-        Fri, 24 Jan 2020 12:40:23 +0100 (CET)
-Subject: Re: [PATCH v2 6/6] powerpc: Implement user_access_begin and friends
-To:     Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org
-References: <12a4be679e43de1eca6e5e2173163f27e2f25236.1579715466.git.christophe.leroy@c-s.fr>
- <2a20d19776faba4d85dbe51ae00a5f6ac5ac0969.1579715466.git.christophe.leroy@c-s.fr>
- <87iml2idi9.fsf@mpe.ellerman.id.au> <87ftg6icc8.fsf@mpe.ellerman.id.au>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <0c2855c2-a6d6-6b35-7f69-f55add58dfb8@c-s.fr>
-Date:   Fri, 24 Jan 2020 12:40:23 +0100
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        id S2391200AbgAXLkd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:40:33 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 43407B149;
+        Fri, 24 Jan 2020 11:40:30 +0000 (UTC)
+From:   =?UTF-8?q?Michal=20Koutn=C3=BD?= <mkoutny@suse.com>
+To:     cgroups@vger.kernel.org
+Cc:     alex.shi@linux.alibaba.com, guro@fb.com, hannes@cmpxchg.org,
+        kernel-team@android.com, linger.lee@mediatek.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org,
+        linux-mediatek@lists.infradead.org, lizefan@huawei.com,
+        matthias.bgg@gmail.com, shuah@kernel.org, surenb@google.com,
+        tj@kernel.org, tomcherry@google.com
+Subject: [PATCH v2 1/3] cgroup: Iterate tasks that did not finish do_exit()
+Date:   Fri, 24 Jan 2020 12:40:15 +0100
+Message-Id: <20200124114017.8363-2-mkoutny@suse.com>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200124114017.8363-1-mkoutny@suse.com>
+References: <20200120145635.GA30904@blackbody.suse.cz>
+ <20200124114017.8363-1-mkoutny@suse.com>
 MIME-Version: 1.0
-In-Reply-To: <87ftg6icc8.fsf@mpe.ellerman.id.au>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+PF_EXITING is set earlier than actual removal from css_set when a task
+is exitting. This can confuse cgroup.procs readers who see no PF_EXITING
+tasks, however, rmdir is checking against css_set membership so it can
+transitionally fail with EBUSY.
 
+Fix this by listing tasks that weren't unlinked from css_set active
+lists.
+It may happen that other users of the task iterator (without
+CSS_TASK_ITER_PROCS) spot a PF_EXITING task before cgroup_exit(). This
+is equal to the state before commit c03cd7738a83 ("cgroup: Include dying
+leaders with live threads in PROCS iterations") but it may be reviewed
+later.
 
-Le 23/01/2020 à 13:31, Michael Ellerman a écrit :
-> Michael Ellerman <mpe@ellerman.id.au> writes:
->> Christophe Leroy <christophe.leroy@c-s.fr> writes:
->>> Today, when a function like strncpy_from_user() is called,
->>> the userspace access protection is de-activated and re-activated
->>> for every word read.
->>>
->>> By implementing user_access_begin and friends, the protection
->>> is de-activated at the beginning of the copy and re-activated at the
->>> end.
->>>
->>> Implement user_access_begin(), user_access_end() and
->>> unsafe_get_user(), unsafe_put_user() and unsafe_copy_to_user()
->>>
->>> For the time being, we keep user_access_save() and
->>> user_access_restore() as nops.
->>
->> That means we will run with user access enabled in a few more places, but
->> it's only used sparingly AFAICS:
->>
->>    kernel/trace/trace_branch.c:    unsigned long flags = user_access_save();
->>    lib/ubsan.c:    unsigned long flags = user_access_save();
->>    lib/ubsan.c:    unsigned long ua_flags = user_access_save();
->>    mm/kasan/common.c:      unsigned long flags = user_access_save();
->>
->> And we don't have objtool checking that user access enablement isn't
->> leaking in the first place, so I guess it's OK for us not to implement
->> these to begin with?
-> 
-> It looks like we can implement them on on all three KUAP
-> implementations.
-> 
-> For radix and 8xx we just return/set the relevant SPR.
-> 
-> For book3s/32/kup.h I think we'd just need to add a KUAP_CURRENT case to
-> allow_user_access()?
+Reported-by: Suren Baghdasaryan <surenb@google.com>
+Fixes: c03cd7738a83 ("cgroup: Include dying leaders with live threads in PROCS iterations")
+Signed-off-by: Michal Koutný <mkoutny@suse.com>
+---
+ include/linux/cgroup.h |  1 +
+ kernel/cgroup/cgroup.c | 23 ++++++++++++++++-------
+ 2 files changed, 17 insertions(+), 7 deletions(-)
 
-Can't do that, we don't want to keep the info in current->thread.kuap 
-after user_access_save(), otherwise we might unexpectedly re-open access 
-through an interrupt.
+diff --git a/include/linux/cgroup.h b/include/linux/cgroup.h
+index d7ddebd0cdec..e75d2191226b 100644
+--- a/include/linux/cgroup.h
++++ b/include/linux/cgroup.h
+@@ -62,6 +62,7 @@ struct css_task_iter {
+ 	struct list_head		*mg_tasks_head;
+ 	struct list_head		*dying_tasks_head;
+ 
++	struct list_head		*cur_tasks_head;
+ 	struct css_set			*cur_cset;
+ 	struct css_set			*cur_dcset;
+ 	struct task_struct		*cur_task;
+diff --git a/kernel/cgroup/cgroup.c b/kernel/cgroup/cgroup.c
+index 735af8f15f95..a6e3619e013b 100644
+--- a/kernel/cgroup/cgroup.c
++++ b/kernel/cgroup/cgroup.c
+@@ -4404,12 +4404,16 @@ static void css_task_iter_advance_css_set(struct css_task_iter *it)
+ 		}
+ 	} while (!css_set_populated(cset) && list_empty(&cset->dying_tasks));
+ 
+-	if (!list_empty(&cset->tasks))
++	if (!list_empty(&cset->tasks)) {
+ 		it->task_pos = cset->tasks.next;
+-	else if (!list_empty(&cset->mg_tasks))
++		it->cur_tasks_head = &cset->tasks;
++	} else if (!list_empty(&cset->mg_tasks)) {
+ 		it->task_pos = cset->mg_tasks.next;
+-	else
++		it->cur_tasks_head = &cset->mg_tasks;
++	} else {
+ 		it->task_pos = cset->dying_tasks.next;
++		it->cur_tasks_head = &cset->dying_tasks;
++	}
+ 
+ 	it->tasks_head = &cset->tasks;
+ 	it->mg_tasks_head = &cset->mg_tasks;
+@@ -4467,10 +4471,14 @@ static void css_task_iter_advance(struct css_task_iter *it)
+ 		else
+ 			it->task_pos = it->task_pos->next;
+ 
+-		if (it->task_pos == it->tasks_head)
++		if (it->task_pos == it->tasks_head) {
+ 			it->task_pos = it->mg_tasks_head->next;
+-		if (it->task_pos == it->mg_tasks_head)
++			it->cur_tasks_head = it->mg_tasks_head;
++		}
++		if (it->task_pos == it->mg_tasks_head) {
+ 			it->task_pos = it->dying_tasks_head->next;
++			it->cur_tasks_head = it->dying_tasks_head;
++		}
+ 		if (it->task_pos == it->dying_tasks_head)
+ 			css_task_iter_advance_css_set(it);
+ 	} else {
+@@ -4489,11 +4497,12 @@ static void css_task_iter_advance(struct css_task_iter *it)
+ 			goto repeat;
+ 
+ 		/* and dying leaders w/o live member threads */
+-		if (!atomic_read(&task->signal->live))
++		if (it->cur_tasks_head == it->dying_tasks_head &&
++		    !atomic_read(&task->signal->live))
+ 			goto repeat;
+ 	} else {
+ 		/* skip all dying ones */
+-		if (task->flags & PF_EXITING)
++		if (it->cur_tasks_head == it->dying_tasks_head)
+ 			goto repeat;
+ 	}
+ }
+-- 
+2.24.1
 
-And if we use KUAP_CURRENT case of prevent_user_access(), it means we'll 
-read current->thread.kuap twice.
-
-So, just regenerate addr and end from the flags, and use 
-allow_user_access() and prevent_user_access() as usual.
-
-I'll have it in v4
-
-Christophe
