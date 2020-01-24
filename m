@@ -7,46 +7,45 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE674C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:38:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C086C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:38:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B76ED2070A
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:38:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69684208C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:38:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579858720;
-	bh=rlajjikebCRDWVOwFb95SlsQIjaNNRrnpUO6V0/4mPg=;
+	s=default; t=1579858724;
+	bh=tdHS2uyHNpJxd74kC4TWYCvxQJtk1uXsCPH6CaJF740=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OzkhPy3YgyAnlLLP6eWmUT/XFL3bHmJYzA7uNETdCOy5V5+2sirfuCBc8dB7qTit4
-	 HSgklCzoiqq0qU79trP2j7j8UJOo3721uRZSKpcsH2IkhL/uGEky7A+M5shkfKNM9T
-	 EbrEIvCKYMSr6lPCrtMDLPRR0v+k+k6bzeO+yQJk=
+	b=KcbWxe4xJaLt4vXmBvvnPxYKFQdwCqJBiKTPMvU+0gFCsTLYRP8lN9XFhA6yXI7jS
+	 D5JcxPN3stUKZMPw3DGUbS4DZNHZyCn/5C5qhWJaYofwBAHbY6gjxge7cOea0B1uPK
+	 Q6iTbc7ZJIpqOS9JUZbVbT2e/nT9Es5huoiNOu1o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731326AbgAXJik (ORCPT
+        id S1731359AbgAXJin (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 04:38:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35832 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 04:38:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35904 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729721AbgAXJih (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 04:38:37 -0500
+        id S1731330AbgAXJik (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 04:38:40 -0500
 Received: from localhost (unknown [145.15.244.15])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4DA87208C4;
-        Fri, 24 Jan 2020 09:38:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8A7F120838;
+        Fri, 24 Jan 2020 09:38:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579858716;
-        bh=rlajjikebCRDWVOwFb95SlsQIjaNNRrnpUO6V0/4mPg=;
+        s=default; t=1579858720;
+        bh=tdHS2uyHNpJxd74kC4TWYCvxQJtk1uXsCPH6CaJF740=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=K0xJCANWoTa+l601qgvZN4bdMeQh+AwtHx79r1tvUanj2RRD7ZzVGpuTnUi4Z0Gep
-         PKQgjGWQo7bg6RwOnzfKGHsH+Kh54frCEtyVPcmMWnMHs4AsV2k6r9DK35cBJnCCvF
-         pJ04C3IXgpcOHOg7nSC0aoOCGlRS2oX9QNBpW/aI=
+        b=uEA8IUN6phQZe+0L75MNglLpEZpj+bTN0yXt2IwrzTOHwuDZfwNNpj/NKEJng7YZ7
+         YPZCCGnYpQu3fFo/+MBTIsk47JYJsROj9p/Y6wIAlx1KdKLhAqPLbc5onN3+glu4mm
+         H94RX7w5w00PSEZ5dY47+I7dZizcssM8Clw8sOVk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jean-Jacques Hiblot <jjhiblot@ti.com>,
-        Pavel Machek <pavel@ucw.cz>
-Subject: [PATCH 5.4 040/102] leds: tlc591xx: update the maximum brightness
-Date:   Fri, 24 Jan 2020 10:30:41 +0100
-Message-Id: <20200124092812.340606620@linuxfoundation.org>
+        stable@vger.kernel.org, Thierry Reding <treding@nvidia.com>
+Subject: [PATCH 5.4 041/102] soc/tegra: pmc: Fix crashes for hierarchical interrupts
+Date:   Fri, 24 Jan 2020 10:30:42 +0100
+Message-Id: <20200124092812.484915575@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124092806.004582306@linuxfoundation.org>
 References: <20200124092806.004582306@linuxfoundation.org>
@@ -59,56 +58,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jean-Jacques Hiblot <jjhiblot@ti.com>
+From: Thierry Reding <treding@nvidia.com>
 
-commit a2cafdfd8cf5ad8adda6c0ce44a59f46431edf02 upstream.
+commit c9e753767a9c75d2044fb7343950a6a992d34a16 upstream.
 
-The TLC chips actually offer 257 levels:
-- 0: led OFF
-- 1-255: Led dimmed is using a PWM. The duty cycle range from 0.4% to 99.6%
-- 256: led fully ON
+Interrupts that don't have an associated wake event or GPIO wake events
+end up with an associate IRQ chip that is NULL and which causes IRQ code
+to crash. This is because we don't implicitly set the parent IRQ chip by
+allocating the interrupt at the parent. However, there really isn't a
+corresponding interrupt at the parent, so we need to work around this by
+setting the special no_irq_chip as the IRQ chip for these interrupts.
 
-Fixes: e370d010a5fe ("leds: tlc591xx: Driver for the TI 8/16 Channel i2c LED driver")
-Signed-off-by: Jean-Jacques Hiblot <jjhiblot@ti.com>
-Signed-off-by: Pavel Machek <pavel@ucw.cz>
+Fixes: 19906e6b1667 ("soc/tegra: pmc: Add wake event support")
+Signed-off-by: Thierry Reding <treding@nvidia.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/leds/leds-tlc591xx.c |    7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ drivers/soc/tegra/pmc.c |   28 +++++++++++++++++++++++++++-
+ 1 file changed, 27 insertions(+), 1 deletion(-)
 
---- a/drivers/leds/leds-tlc591xx.c
-+++ b/drivers/leds/leds-tlc591xx.c
-@@ -13,6 +13,7 @@
- #include <linux/slab.h>
+--- a/drivers/soc/tegra/pmc.c
++++ b/drivers/soc/tegra/pmc.c
+@@ -1899,6 +1899,20 @@ static int tegra_pmc_irq_alloc(struct ir
+ 							    event->id,
+ 							    &pmc->irq, pmc);
  
- #define TLC591XX_MAX_LEDS	16
-+#define TLC591XX_MAX_BRIGHTNESS	256
++			/*
++			 * GPIOs don't have an equivalent interrupt in the
++			 * parent controller (GIC). However some code, such
++			 * as the one in irq_get_irqchip_state(), require a
++			 * valid IRQ chip to be set. Make sure that's the
++			 * case by passing NULL here, which will install a
++			 * dummy IRQ chip for the interrupt in the parent
++			 * domain.
++			 */
++			if (domain->parent)
++				irq_domain_set_hwirq_and_chip(domain->parent,
++							      virq, 0, NULL,
++							      NULL);
++
+ 			break;
+ 		}
+ 	}
+@@ -1908,10 +1922,22 @@ static int tegra_pmc_irq_alloc(struct ir
+ 	 * dummy hardware IRQ number. This is used in the ->irq_set_type()
+ 	 * and ->irq_set_wake() callbacks to return early for these IRQs.
+ 	 */
+-	if (i == soc->num_wake_events)
++	if (i == soc->num_wake_events) {
+ 		err = irq_domain_set_hwirq_and_chip(domain, virq, ULONG_MAX,
+ 						    &pmc->irq, pmc);
  
- #define TLC591XX_REG_MODE1	0x00
- #define MODE1_RESPON_ADDR_MASK	0xF0
-@@ -112,11 +113,11 @@ tlc591xx_brightness_set(struct led_class
- 	struct tlc591xx_priv *priv = led->priv;
- 	int err;
++		/*
++		 * Interrupts without a wake event don't have a corresponding
++		 * interrupt in the parent controller (GIC). Pass NULL for the
++		 * chip here, which causes a dummy IRQ chip to be installed
++		 * for the interrupt in the parent domain, to make this
++		 * explicit.
++		 */
++		if (domain->parent)
++			irq_domain_set_hwirq_and_chip(domain->parent, virq, 0,
++						      NULL, NULL);
++	}
++
+ 	return err;
+ }
  
--	switch (brightness) {
-+	switch ((int)brightness) {
- 	case 0:
- 		err = tlc591xx_set_ledout(priv, led, LEDOUT_OFF);
- 		break;
--	case LED_FULL:
-+	case TLC591XX_MAX_BRIGHTNESS:
- 		err = tlc591xx_set_ledout(priv, led, LEDOUT_ON);
- 		break;
- 	default:
-@@ -157,7 +158,7 @@ tlc591xx_configure(struct device *dev,
- 		led->priv = priv;
- 		led->led_no = i;
- 		led->ldev.brightness_set_blocking = tlc591xx_brightness_set;
--		led->ldev.max_brightness = LED_FULL;
-+		led->ldev.max_brightness = TLC591XX_MAX_BRIGHTNESS;
- 		err = led_classdev_register(dev, &led->ldev);
- 		if (err < 0) {
- 			dev_err(dev, "couldn't register LED %s\n",
 
 
