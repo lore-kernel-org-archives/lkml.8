@@ -4,51 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9447C32771
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:18:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51F57C35242
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:18:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75C9C2077C
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:18:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C8052077C
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:18:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579875501;
-	bh=AB1xvZl4mEWRoSuHzIzu9aEpPe2Jj7wwkyBuGd+AJD8=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=tavQLyPvbeqPJz3MLAoVKa1LoyjuYvKWbRsn3y8FkU41HF90M0xP3dYnsZaiP+qfp
-	 WVwPxLjQsn3Zj9rTagxWTvxsRbOM7Bedn+qqGDMaGuKPcYMa/9RROSHmnyOLaRh5q1
-	 yN3PZCi1XtJoQe4ZBdZeNLYH9JaKa4JPYRI0voss=
+	s=default; t=1579875508;
+	bh=57FOBy08qBEXlKgCxiaToUjk/k0ohn9GFat1iPhq1H0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=qNgGlyFhqKijoB0G4Ywrd7GUYr7ORvFwnPNuE3vOaLFpMG0R5YMyJG4BdrK0YRBl0
+	 s9MuxLGYBRFHPfP4wR6xOmOYL379bGxAAfmMQv3tnU+LMUah3XqwEpnibLXwcFFV+v
+	 w2eGG4/dCxmsSQQNhMs3y0W0tEVywByBIQV1xZAI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390455AbgAXOSU (ORCPT
+        id S2390641AbgAXOS1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 09:18:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37602 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 09:18:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37710 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388527AbgAXOSU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 09:18:20 -0500
+        id S2390511AbgAXOSY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 09:18:24 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 988E72075D;
-        Fri, 24 Jan 2020 14:18:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 197D021556;
+        Fri, 24 Jan 2020 14:18:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579875499;
-        bh=AB1xvZl4mEWRoSuHzIzu9aEpPe2Jj7wwkyBuGd+AJD8=;
-        h=From:To:Cc:Subject:Date:From;
-        b=WVynWYLHQvx9fOTdiIrOO+E8+1qemsPUGm3WaLsN/i8dFq6vf/rcaYQAZ0KkH2btt
-         ZqN4Pk2A5c10SxvM1WXOEzif3DlLQQLxTk++zY6gAwxB/V82J4wVkhnHjUiRrlDGu+
-         DV0Y/QGEDuUPc/g0Au+Opnx4VCmjv2PTh9guTdX0=
+        s=default; t=1579875503;
+        bh=57FOBy08qBEXlKgCxiaToUjk/k0ohn9GFat1iPhq1H0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=a1UmPzfAk4DFfv5pZgrb9tDHTQEOYPK9FVf9bvDDOLiH5AC7sSCXv2xIyNOMbv4Hm
+         CjW9r6ndUYdwtDEsA+IJzOxvAT1ql1pGC7JuK5o5AewL/7gp0im7h6O6KkzTO93+7L
+         bUj3PPl2A14cIAhcYwmun+jv0ln7BlVXIByLrPes=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sven Eckelmann <sven@narfation.org>,
-        Simon Wunderlich <sw@simonwunderlich.de>,
-        Sasha Levin <sashal@kernel.org>,
-        b.a.t.m.a.n@lists.open-mesh.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 001/107] batman-adv: Fix DAT candidate selection on little endian systems
-Date:   Fri, 24 Jan 2020 09:16:31 -0500
-Message-Id: <20200124141817.28793-1-sashal@kernel.org>
+Cc:     Guillaume La Roque <glaroque@baylibre.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.4 005/107] arm64: dts: meson-sm1-sei610: add gpio bluetooth interrupt
+Date:   Fri, 24 Jan 2020 09:16:35 -0500
+Message-Id: <20200124141817.28793-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200124141817.28793-1-sashal@kernel.org>
+References: <20200124141817.28793-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -58,51 +60,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sven Eckelmann <sven@narfation.org>
+From: Guillaume La Roque <glaroque@baylibre.com>
 
-[ Upstream commit 4cc4a1708903f404d2ca0dfde30e71e052c6cbc9 ]
+[ Upstream commit 30388cc075720aa0af4f2cb5933afa1f8f39d313 ]
 
-The distributed arp table is using a DHT to store and retrieve MAC address
-information for an IP address. This is done using unicast messages to
-selected peers. The potential peers are looked up using the IP address and
-the VID.
+add gpio irq to support interrupt trigger mode.
 
-While the IP address is always stored in big endian byte order, this is not
-the case of the VID. It can (depending on the host system) either be big
-endian or little endian. The host must therefore always convert it to big
-endian to ensure that all devices calculate the same peers for the same
-lookup data.
-
-Fixes: be1db4f6615b ("batman-adv: make the Distributed ARP Table vlan aware")
-Signed-off-by: Sven Eckelmann <sven@narfation.org>
-Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
+Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
+Signed-off-by: Kevin Hilman <khilman@baylibre.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/batman-adv/distributed-arp-table.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ arch/arm64/boot/dts/amlogic/meson-sm1-sei610.dts | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/net/batman-adv/distributed-arp-table.c b/net/batman-adv/distributed-arp-table.c
-index b0af3a11d4069..ec7bf5a4a9fc7 100644
---- a/net/batman-adv/distributed-arp-table.c
-+++ b/net/batman-adv/distributed-arp-table.c
-@@ -285,6 +285,7 @@ static u32 batadv_hash_dat(const void *data, u32 size)
- 	u32 hash = 0;
- 	const struct batadv_dat_entry *dat = data;
- 	const unsigned char *key;
-+	__be16 vid;
- 	u32 i;
+diff --git a/arch/arm64/boot/dts/amlogic/meson-sm1-sei610.dts b/arch/arm64/boot/dts/amlogic/meson-sm1-sei610.dts
+index 3435aaa4e8db5..5d6a8dafe8dc0 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-sm1-sei610.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-sm1-sei610.dts
+@@ -361,6 +361,8 @@
  
- 	key = (const unsigned char *)&dat->ip;
-@@ -294,7 +295,8 @@ static u32 batadv_hash_dat(const void *data, u32 size)
- 		hash ^= (hash >> 6);
- 	}
- 
--	key = (const unsigned char *)&dat->vid;
-+	vid = htons(dat->vid);
-+	key = (__force const unsigned char *)&vid;
- 	for (i = 0; i < sizeof(dat->vid); i++) {
- 		hash += key[i];
- 		hash += (hash << 10);
+ 	bluetooth {
+ 		compatible = "brcm,bcm43438-bt";
++		interrupt-parent = <&gpio_intc>;
++		interrupts = <95 IRQ_TYPE_LEVEL_HIGH>;
+ 		shutdown-gpios = <&gpio GPIOX_17 GPIO_ACTIVE_HIGH>;
+ 		max-speed = <2000000>;
+ 		clocks = <&wifi32k>;
 -- 
 2.20.1
 
