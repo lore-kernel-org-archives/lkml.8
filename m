@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95268C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:26:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3326EC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:26:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B9E4214AF
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:26:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0E0B214AF
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:26:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579865185;
-	bh=T0mzEV+4ZsVAtAF6AQldWRssemw0q4CFwKiOKgIDE0w=;
+	s=default; t=1579865192;
+	bh=4f4RpwB9h5gcsRe9rrdc/k8izgAmNBcHc4Ay2V5xdRI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=l1zYUb70fkoz2hm5xK7kHDhl3yTyyMimwjZT5yy9BmDELbCqS1UqF9Bl4AGXd3pT3
-	 2Tq2Uo040SL4Qtqy7ThnZdQnt+nRID+qHmrESGwwcgc3NRpIRjLNGqpdZjkm7U0lM4
-	 Y4fR2zJhIfcicX7i0vLdzKb4TcptYRxhjv3ae5TE=
+	b=gRwhCfWL2n5OFCEG0vPL0dYHWlPgivy/Mn1JmJN+DyY/weQMk1LX2hTNevJZ5SZWS
+	 1UUCpRPeRaMycuuD5vJ+EqETy9V77V+PzNcd+Se2C+r3XcCZ0kvlkRAFwFi2EzaE7h
+	 Xa/cHyWbptxmhiDFwVTGGa6Pj9iC4iOSw/f6qHQU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391110AbgAXL0Y (ORCPT
+        id S2391557AbgAXL0b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:26:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41020 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 06:26:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41242 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389067AbgAXL0V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:26:21 -0500
+        id S2391545AbgAXL02 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:26:28 -0500
 Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DA603214DB;
-        Fri, 24 Jan 2020 11:26:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 59123214AF;
+        Fri, 24 Jan 2020 11:26:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579865180;
-        bh=T0mzEV+4ZsVAtAF6AQldWRssemw0q4CFwKiOKgIDE0w=;
+        s=default; t=1579865187;
+        bh=4f4RpwB9h5gcsRe9rrdc/k8izgAmNBcHc4Ay2V5xdRI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NC5xsKLW0JKPMhL431uGgUYjEDPRqXzcj6qDIJYARTveFaoE0iZE3zCkvFtMBhLYB
-         NwMKZKdSXXpgtSFcmqn2g0c4jZ4HvdKEIPg7mW46Ffwm5Pac99Zvmnl4LquSMbPKV3
-         QyoHbhsv1DwtA9WCt36/J/dr6qZTDoKisVhL6wbk=
+        b=0l3WpJpg5x+BGvjkOsjN5AUFK62HhICwjR2YVcGlNf1juZNLGGWrjmpDo5Uk1x2GZ
+         IfoCjHYA+D4WUW/7cDYNAGWz0Y3gLa+OtmV5X4bPluLJksS/A9VFUxe85zHH4MxOgA
+         IbRkeShTfjithoh2sp+dDOuVLoobxPgybmpotRLk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
+        stable@vger.kernel.org,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Hans de Goede <hdegoede@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 475/639] x86/pgtable/32: Fix LOWMEM_PAGES constant
-Date:   Fri, 24 Jan 2020 10:30:45 +0100
-Message-Id: <20200124093147.503511029@linuxfoundation.org>
+Subject: [PATCH 4.19 464/639] ACPI: PM: Introduce "poweroff" callbacks for ACPI PM domain and LPSS
+Date:   Fri, 24 Jan 2020 10:30:34 +0100
+Message-Id: <20200124093145.347933550@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
 References: <20200124093047.008739095@linuxfoundation.org>
@@ -60,45 +62,204 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-[ Upstream commit 26515699863d68058e290e18e83f444925920be5 ]
+[ Upstream commit c95b7595f85c688d5c569ddbbd6ab6a4bdae2f36 ]
 
-clang points out that the computation of LOWMEM_PAGES causes a signed
-integer overflow on 32-bit x86:
+In general, it is not correct to call pm_generic_suspend(),
+pm_generic_suspend_late() and pm_generic_suspend_noirq() during the
+hibernation's "poweroff" transition, because device drivers may
+provide special callbacks to be invoked then and the wrappers in
+question cause system suspend callbacks to be run.  Unfortunately,
+that happens in the ACPI PM domain and ACPI LPSS.
 
-arch/x86/kernel/head32.c:83:20: error: signed shift result (0x100000000) requires 34 bits to represent, but 'int' only has 32 bits [-Werror,-Wshift-overflow]
-                (PAGE_TABLE_SIZE(LOWMEM_PAGES) << PAGE_SHIFT);
-                                 ^~~~~~~~~~~~
-arch/x86/include/asm/pgtable_32.h:109:27: note: expanded from macro 'LOWMEM_PAGES'
- #define LOWMEM_PAGES ((((2<<31) - __PAGE_OFFSET) >> PAGE_SHIFT))
-                         ~^ ~~
-arch/x86/include/asm/pgtable_32.h:98:34: note: expanded from macro 'PAGE_TABLE_SIZE'
- #define PAGE_TABLE_SIZE(pages) ((pages) / PTRS_PER_PGD)
+To address this potential issue, introduce "poweroff" callbacks
+for the ACPI PM and LPSS that will use pm_generic_poweroff(),
+pm_generic_poweroff_late() and pm_generic_poweroff_noirq() as
+appropriate.
 
-Use the _ULL() macro to make it a 64-bit constant.
-
-Fixes: 1e620f9b23e5 ("x86/boot/32: Convert the 32-bit pgtable setup code from assembly to C")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/20190710130522.1802800-1-arnd@arndb.de
+Fixes: 05087360fd7a (ACPI / PM: Take SMART_SUSPEND driver flag into account)
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/include/asm/pgtable_32.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/acpi/acpi_lpss.c | 50 +++++++++++++++++++++++++++++++---
+ drivers/acpi/device_pm.c | 58 +++++++++++++++++++++++++++++++++++++---
+ include/linux/acpi.h     |  2 ++
+ 3 files changed, 104 insertions(+), 6 deletions(-)
 
-diff --git a/arch/x86/include/asm/pgtable_32.h b/arch/x86/include/asm/pgtable_32.h
-index b3ec519e39827..71e1df8601765 100644
---- a/arch/x86/include/asm/pgtable_32.h
-+++ b/arch/x86/include/asm/pgtable_32.h
-@@ -106,6 +106,6 @@ do {						\
-  * with only a host target support using a 32-bit type for internal
-  * representation.
-  */
--#define LOWMEM_PAGES ((((2<<31) - __PAGE_OFFSET) >> PAGE_SHIFT))
-+#define LOWMEM_PAGES ((((_ULL(2)<<31) - __PAGE_OFFSET) >> PAGE_SHIFT))
+diff --git a/drivers/acpi/acpi_lpss.c b/drivers/acpi/acpi_lpss.c
+index 11c460ab9de9c..ded6c5c17fd73 100644
+--- a/drivers/acpi/acpi_lpss.c
++++ b/drivers/acpi/acpi_lpss.c
+@@ -1056,6 +1056,13 @@ static int acpi_lpss_suspend_noirq(struct device *dev)
+ 	int ret;
  
- #endif /* _ASM_X86_PGTABLE_32_H */
+ 	if (pdata->dev_desc->resume_from_noirq) {
++		/*
++		 * The driver's ->suspend_late callback will be invoked by
++		 * acpi_lpss_do_suspend_late(), with the assumption that the
++		 * driver really wanted to run that code in ->suspend_noirq, but
++		 * it could not run after acpi_dev_suspend() and the driver
++		 * expected the latter to be called in the "late" phase.
++		 */
+ 		ret = acpi_lpss_do_suspend_late(dev);
+ 		if (ret)
+ 			return ret;
+@@ -1142,6 +1149,43 @@ static int acpi_lpss_restore_noirq(struct device *dev)
+ 	/* This is analogous to what happens in acpi_lpss_resume_noirq(). */
+ 	return acpi_lpss_do_restore_early(dev);
+ }
++
++static int acpi_lpss_do_poweroff_late(struct device *dev)
++{
++	int ret = pm_generic_poweroff_late(dev);
++
++	return ret ? ret : acpi_lpss_suspend(dev, device_may_wakeup(dev));
++}
++
++static int acpi_lpss_poweroff_late(struct device *dev)
++{
++	struct lpss_private_data *pdata = acpi_driver_data(ACPI_COMPANION(dev));
++
++	if (dev_pm_smart_suspend_and_suspended(dev))
++		return 0;
++
++	if (pdata->dev_desc->resume_from_noirq)
++		return 0;
++
++	return acpi_lpss_do_poweroff_late(dev);
++}
++
++static int acpi_lpss_poweroff_noirq(struct device *dev)
++{
++	struct lpss_private_data *pdata = acpi_driver_data(ACPI_COMPANION(dev));
++
++	if (dev_pm_smart_suspend_and_suspended(dev))
++		return 0;
++
++	if (pdata->dev_desc->resume_from_noirq) {
++		/* This is analogous to the acpi_lpss_suspend_noirq() case. */
++		int ret = acpi_lpss_do_poweroff_late(dev);
++		if (ret)
++			return ret;
++	}
++
++	return pm_generic_poweroff_noirq(dev);
++}
+ #endif /* CONFIG_PM_SLEEP */
+ 
+ static int acpi_lpss_runtime_suspend(struct device *dev)
+@@ -1175,9 +1219,9 @@ static struct dev_pm_domain acpi_lpss_pm_domain = {
+ 		.resume_noirq = acpi_lpss_resume_noirq,
+ 		.resume_early = acpi_lpss_resume_early,
+ 		.freeze = acpi_subsys_freeze,
+-		.poweroff = acpi_subsys_suspend,
+-		.poweroff_late = acpi_lpss_suspend_late,
+-		.poweroff_noirq = acpi_lpss_suspend_noirq,
++		.poweroff = acpi_subsys_poweroff,
++		.poweroff_late = acpi_lpss_poweroff_late,
++		.poweroff_noirq = acpi_lpss_poweroff_noirq,
+ 		.restore_noirq = acpi_lpss_restore_noirq,
+ 		.restore_early = acpi_lpss_restore_early,
+ #endif
+diff --git a/drivers/acpi/device_pm.c b/drivers/acpi/device_pm.c
+index 5a88a63e902dd..54b6547d32b24 100644
+--- a/drivers/acpi/device_pm.c
++++ b/drivers/acpi/device_pm.c
+@@ -1137,6 +1137,58 @@ int acpi_subsys_restore_early(struct device *dev)
+ 	return ret ? ret : pm_generic_restore_early(dev);
+ }
+ EXPORT_SYMBOL_GPL(acpi_subsys_restore_early);
++
++/**
++ * acpi_subsys_poweroff - Run the device driver's poweroff callback.
++ * @dev: Device to handle.
++ *
++ * Follow PCI and resume devices from runtime suspend before running their
++ * system poweroff callbacks, unless the driver can cope with runtime-suspended
++ * devices during system suspend and there are no ACPI-specific reasons for
++ * resuming them.
++ */
++int acpi_subsys_poweroff(struct device *dev)
++{
++	if (!dev_pm_test_driver_flags(dev, DPM_FLAG_SMART_SUSPEND) ||
++	    acpi_dev_needs_resume(dev, ACPI_COMPANION(dev)))
++		pm_runtime_resume(dev);
++
++	return pm_generic_poweroff(dev);
++}
++EXPORT_SYMBOL_GPL(acpi_subsys_poweroff);
++
++/**
++ * acpi_subsys_poweroff_late - Run the device driver's poweroff callback.
++ * @dev: Device to handle.
++ *
++ * Carry out the generic late poweroff procedure for @dev and use ACPI to put
++ * it into a low-power state during system transition into a sleep state.
++ */
++static int acpi_subsys_poweroff_late(struct device *dev)
++{
++	int ret;
++
++	if (dev_pm_smart_suspend_and_suspended(dev))
++		return 0;
++
++	ret = pm_generic_poweroff_late(dev);
++	if (ret)
++		return ret;
++
++	return acpi_dev_suspend(dev, device_may_wakeup(dev));
++}
++
++/**
++ * acpi_subsys_poweroff_noirq - Run the driver's "noirq" poweroff callback.
++ * @dev: Device to suspend.
++ */
++static int acpi_subsys_poweroff_noirq(struct device *dev)
++{
++	if (dev_pm_smart_suspend_and_suspended(dev))
++		return 0;
++
++	return pm_generic_poweroff_noirq(dev);
++}
+ #endif /* CONFIG_PM_SLEEP */
+ 
+ static struct dev_pm_domain acpi_general_pm_domain = {
+@@ -1152,9 +1204,9 @@ static struct dev_pm_domain acpi_general_pm_domain = {
+ 		.resume_noirq = acpi_subsys_resume_noirq,
+ 		.resume_early = acpi_subsys_resume_early,
+ 		.freeze = acpi_subsys_freeze,
+-		.poweroff = acpi_subsys_suspend,
+-		.poweroff_late = acpi_subsys_suspend_late,
+-		.poweroff_noirq = acpi_subsys_suspend_noirq,
++		.poweroff = acpi_subsys_poweroff,
++		.poweroff_late = acpi_subsys_poweroff_late,
++		.poweroff_noirq = acpi_subsys_poweroff_noirq,
+ 		.restore_early = acpi_subsys_restore_early,
+ #endif
+ 	},
+diff --git a/include/linux/acpi.h b/include/linux/acpi.h
+index 32fabeeda5e30..cd412817654fa 100644
+--- a/include/linux/acpi.h
++++ b/include/linux/acpi.h
+@@ -919,6 +919,7 @@ int acpi_subsys_suspend_late(struct device *dev);
+ int acpi_subsys_suspend_noirq(struct device *dev);
+ int acpi_subsys_suspend(struct device *dev);
+ int acpi_subsys_freeze(struct device *dev);
++int acpi_subsys_poweroff(struct device *dev);
+ #else
+ static inline int acpi_dev_resume_early(struct device *dev) { return 0; }
+ static inline int acpi_subsys_prepare(struct device *dev) { return 0; }
+@@ -927,6 +928,7 @@ static inline int acpi_subsys_suspend_late(struct device *dev) { return 0; }
+ static inline int acpi_subsys_suspend_noirq(struct device *dev) { return 0; }
+ static inline int acpi_subsys_suspend(struct device *dev) { return 0; }
+ static inline int acpi_subsys_freeze(struct device *dev) { return 0; }
++static inline int acpi_subsys_poweroff(struct device *dev) { return 0; }
+ #endif
+ 
+ #ifdef CONFIG_ACPI
 -- 
 2.20.1
 
