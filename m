@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00E36C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:13:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C37EC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:13:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF4E220663
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:13:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8FE02077C
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:13:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579864435;
-	bh=KTP3KPkmh3b47+y7caXigZqoUifvCyiuK6/vP1+T3eg=;
+	s=default; t=1579864438;
+	bh=jd3CQLaNRQvA8L575dOIe2ioxcnv4Fuzj7MTweEBl84=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DM4bsOVxlsPgZwL3xZ/HxzygQHn9CfW+1LTkqJQfRhtRLV5sCsq7YzySywwc6pL0j
-	 0ZU7MqHgXBAPETFx8MgMFx590JoYtDfx3sLdfeXpHmWoCGiaSK3sp/zl62wXYxAgbW
-	 hEH0uV+q5OV3wsSm63+Y193Prv3V34dPN34+dU14=
+	b=ZWTpk5ThJCVkyqK0uQkEBVuBCXC6tiTHoIv07X0DKKD1P6T7n7lesviatkPzZ81sh
+	 DqvYB/wtwimXJwPIRI0oj6cRxLZvD4QSEV5rM/i7c6nhXt1heZEi+JcMrq+26W1diL
+	 HX1AMBFDxkr3ymuT5DN6tQjG3voORi3XmEHKEh4U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390092AbgAXLNy (ORCPT
+        id S1731227AbgAXLN5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:13:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50150 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 06:13:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50272 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732571AbgAXLNs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:13:48 -0500
+        id S2390093AbgAXLNy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:13:54 -0500
 Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4DA3F20663;
-        Fri, 24 Jan 2020 11:13:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C670620663;
+        Fri, 24 Jan 2020 11:13:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579864427;
-        bh=KTP3KPkmh3b47+y7caXigZqoUifvCyiuK6/vP1+T3eg=;
+        s=default; t=1579864434;
+        bh=jd3CQLaNRQvA8L575dOIe2ioxcnv4Fuzj7MTweEBl84=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MELZH6hJTxyaFvOfAFtHwlxqm//svHzYbd6j4R2TCnE/3mKYb8uy0TVdzEVwB66f7
-         cxsgbnFsTEII/1Ok9Gmeq1fDdZyqk05wt0k0fk7/lLgMYuEtStIB0LFrOvnTRSkg9a
-         fjk2MsG/A15kXmxiUQg3Jlgffz/ZI7PigBu/aPjY=
+        b=iKXXhJrueKJXXPo+jHvGEUB0m5T6cqXGSett1Pa85bitEPbxDHNQTe5VsNqHxBIOB
+         wktOvNmG3ncCSWWwtFGiMAQTDwV7wMVPq9fGCzrQJn9rl4fVXV1BkwccXsnGPVdYNs
+         C/MgrIex95IeefuZEUl6fb7rEbLMXKFb9uBLILjw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Rashmica Gupta <rashmica.g@gmail.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
+        stable@vger.kernel.org, Ilya Dryomov <idryomov@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 249/639] powerpc/mm: Check secondary hash page table
-Date:   Fri, 24 Jan 2020 10:26:59 +0100
-Message-Id: <20200124093117.943700335@linuxfoundation.org>
+Subject: [PATCH 4.19 251/639] rbd: clear ->xferred on error from rbd_obj_issue_copyup()
+Date:   Fri, 24 Jan 2020 10:27:01 +0100
+Message-Id: <20200124093118.177906479@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
 References: <20200124093047.008739095@linuxfoundation.org>
@@ -60,36 +59,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rashmica Gupta <rashmica.g@gmail.com>
+From: Ilya Dryomov <idryomov@gmail.com>
 
-[ Upstream commit 790845e2f12709d273d08ea7a2af7c2593689519 ]
+[ Upstream commit 356889c49d84f11f446ec235bd52ca1a7d581aa0 ]
 
-We were always calling base_hpte_find() with primary = true,
-even when we wanted to check the secondary table.
+Otherwise the assert in rbd_obj_end_request() is triggered.
 
-mpe: I broke this when refactoring Rashmica's original patch.
-
-Fixes: 1515ab932156 ("powerpc/mm: Dump hash table")
-Signed-off-by: Rashmica Gupta <rashmica.g@gmail.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Fixes: 3da691bf4366 ("rbd: new request handling code")
+Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/mm/dump_hashpagetable.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/block/rbd.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/powerpc/mm/dump_hashpagetable.c b/arch/powerpc/mm/dump_hashpagetable.c
-index 8692946950485..b430e4e08af69 100644
---- a/arch/powerpc/mm/dump_hashpagetable.c
-+++ b/arch/powerpc/mm/dump_hashpagetable.c
-@@ -342,7 +342,7 @@ static unsigned long hpte_find(struct pg_state *st, unsigned long ea, int psize)
- 
- 	/* Look in secondary table */
- 	if (slot == -1)
--		slot = base_hpte_find(ea, psize, true, &v, &r);
-+		slot = base_hpte_find(ea, psize, false, &v, &r);
- 
- 	/* No entry found */
- 	if (slot == -1)
+diff --git a/drivers/block/rbd.c b/drivers/block/rbd.c
+index 585378bc988cd..b942f4c8cea8c 100644
+--- a/drivers/block/rbd.c
++++ b/drivers/block/rbd.c
+@@ -2506,6 +2506,7 @@ again:
+ 		ret = rbd_obj_issue_copyup(obj_req, obj_req->xferred);
+ 		if (ret) {
+ 			obj_req->result = ret;
++			obj_req->xferred = 0;
+ 			return true;
+ 		}
+ 		return false;
 -- 
 2.20.1
 
