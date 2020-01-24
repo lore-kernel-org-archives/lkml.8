@@ -2,195 +2,146 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.1 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
+	USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 273CCC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:51:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD059C35242
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:51:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7F2C206D5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:51:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E7282075D
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:51:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Bk1vimbW"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VhEnEoJB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388059AbgAXJvc (ORCPT
+        id S2387845AbgAXJvq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 04:51:32 -0500
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:8038 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388038AbgAXJva (ORCPT
+        Fri, 24 Jan 2020 04:51:46 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:46153 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388018AbgAXJvc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 04:51:30 -0500
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e2abe130000>; Fri, 24 Jan 2020 01:51:15 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Fri, 24 Jan 2020 01:51:29 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Fri, 24 Jan 2020 01:51:29 -0800
-Received: from [10.21.133.51] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 24 Jan
- 2020 09:51:26 +0000
-Subject: Re: [alsa-devel] [PATCH 4/9] ASoC: tegra: add Tegra210 based I2S
- driver
-From:   Jon Hunter <jonathanh@nvidia.com>
-To:     Dmitry Osipenko <digetx@gmail.com>,
-        Sameer Pujar <spujar@nvidia.com>
-CC:     <devicetree@vger.kernel.org>, <alsa-devel@alsa-project.org>,
-        <lgirdwood@gmail.com>, <linux-kernel@vger.kernel.org>,
-        <broonie@kernel.org>, <atalambedu@nvidia.com>, <tiwai@suse.com>,
-        <viswanathl@nvidia.com>, <linux-tegra@vger.kernel.org>,
-        <robh+dt@kernel.org>, <thierry.reding@gmail.com>,
-        <sharadg@nvidia.com>, <rlokhande@nvidia.com>, <mkumard@nvidia.com>,
-        <dramesh@nvidia.com>
-References: <1579530198-13431-1-git-send-email-spujar@nvidia.com>
- <1579530198-13431-5-git-send-email-spujar@nvidia.com>
- <a440d105-8db9-ecf1-3718-e58804ce14b8@gmail.com>
- <0c571858-d72c-97c2-2d6a-ead6fdde06eb@nvidia.com>
- <444731da-c4cd-8578-a732-c803eef31ef0@gmail.com>
- <bdc749bc-b62c-a041-c17c-33fd49fe8e2e@nvidia.com>
- <598fe377-5b95-d30a-eb64-89a645166d42@gmail.com>
- <3f51939d-cf4b-f69b-728a-7eb99bbae458@nvidia.com>
- <34ac1fd3-ae0f-07f2-555f-a55087a2c9dc@nvidia.com>
- <1a84b393-938f-8bed-d08e-cc3bb6ed4844@gmail.com>
- <0fc814c2-0dc6-7741-b954-463381ff7fb9@nvidia.com>
- <b5c581b9-17af-d004-33fb-2cc782ab820a@gmail.com>
- <9f73afdf-1e9a-cdbd-f972-a022d503ef51@nvidia.com>
-Message-ID: <264d3354-8a2e-ee12-44ae-aff69213d551@nvidia.com>
-Date:   Fri, 24 Jan 2020 09:51:23 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Fri, 24 Jan 2020 04:51:32 -0500
+Received: by mail-wr1-f68.google.com with SMTP id z7so1166913wrl.13
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jan 2020 01:51:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=RzNBHiBM5DbXxFUCQ9dlJFviC6ZX759dmrnjTXv765A=;
+        b=VhEnEoJB5kqvQztDtZ1+sgqXwqrwEslLahHlElBF3lpg5qQvZfcZnM7vGeVvzMRaqx
+         sdx4UD1JsYKtnoJ3HCjp52IkgqyLeVeIwbSKpbt7DegjPfmfH14KbUGl2rbEF3uGtFpQ
+         IzYmaBW9kYrFVZnO88Bpp/6fVD4sKiQeC5j0gsWjIZQCuoxg6+Ay8mLsF9y4TZD8qYbk
+         Qd0Ud6omR3y4tooLG6NwEpfBS4R6utxM9TxLG/rfy0t0vKxH+SnxQmTeSK9urLTqu+KN
+         Zorhxq/SV+jJbAs9OODxdldv+TtTD0+ukPqqwUowCJlMnkyqHcPTIkgekKECsyGu6jyL
+         iUng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=RzNBHiBM5DbXxFUCQ9dlJFviC6ZX759dmrnjTXv765A=;
+        b=MAP5+Inn21ldyrAEo4u/0SfKDxnY11AQQv9ZuL1JWoQdMhP0gaEkSvHoQVD6BQh9FX
+         uO1AUZKRuziSJBEKLLVS/tIlINlKUeIPaVDcC+GVAXaqF5bL5X4Dysyc87rV3AAHMOXU
+         LHP4l+3n5XiO9/E5Pi/m3eVzl39v9UlJ7h2L1TMR7O2X/z6RgyIYE6Ztaog7olofLEZR
+         QS+JvsjEofoNxfnDRSxm7KBA+hbFoRqTc4xx+kxGDlwNWHtlv96SqB7p9jIaDL4oLkLx
+         CgOQpPkjsbfHBht0M21oXZuxPrAGUdS+hybQVhS8yUED646vRwQNbEXhyMg2j9biP38G
+         k3IQ==
+X-Gm-Message-State: APjAAAXWGTsQKInLZ7+dEJPqkdUinQcXIJa8AdKFQ4atOQvhYSy2JKTa
+        w/KndFw3Nqqdawwnpkfc+L7v+A==
+X-Google-Smtp-Source: APXvYqwqC9cGnHGiTVfZGEQ9XEABof4G9y74dllDLrLAebt1sPpbX2gB5tjK4zRY6rHIpUPi5FvR6g==
+X-Received: by 2002:adf:ca07:: with SMTP id o7mr3195324wrh.49.1579859489752;
+        Fri, 24 Jan 2020 01:51:29 -0800 (PST)
+Received: from google.com ([2a00:79e0:d:110:d6cc:2030:37c1:9964])
+        by smtp.gmail.com with ESMTPSA id n16sm6761700wro.88.2020.01.24.01.51.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 24 Jan 2020 01:51:29 -0800 (PST)
+Date:   Fri, 24 Jan 2020 09:51:25 +0000
+From:   Quentin Perret <qperret@google.com>
+To:     Qais Yousef <qais.yousef@arm.com>
+Cc:     Wei Wang <wvw@google.com>, wei.vince.wang@gmail.com,
+        dietmar.eggemann@arm.com, valentin.schneider@arm.com,
+        chris.redpath@arm.com, Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] [RFC] sched: restrict iowait boost for boosted task only
+Message-ID: <20200124095125.GA121494@google.com>
+References: <20200124002811.228334-1-wvw@google.com>
+ <20200124025238.jsf36n6w4rrn2ehc@e107158-lin>
 MIME-Version: 1.0
-In-Reply-To: <9f73afdf-1e9a-cdbd-f972-a022d503ef51@nvidia.com>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1579859475; bh=BhDleast9LuvQxUZx9yNqe9Bj3o/7udKwCoxfMF5oWM=;
-        h=X-PGP-Universal:Subject:From:To:CC:References:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=Bk1vimbW6xL2jVwyO3bsS9EMmPp9GMv3D0o09KKBs/88NO9R/NTNvb2y0qQVeobI5
-         nT9rCtDZgysjY5JjLfrce5yczLEqXQzXXLuYXTCdQN6s/Xa5/PpBE58P72HpZlBhHz
-         SpuYYN7iG1Uo6ftnK5RWM2ZZwyt47IJUj9ppG5mX3qV7ewtGuJlVqdGxkL+VScZ4En
-         y1J6NHo07k8AStlbILkvphRCSRhTp1hQz8OWz53WaFpQBiYCvR3i03yPGETTDrfr3/
-         4yPKm/H4MVIyVE3Biq7oTocZPOAO6SKojFfO3REoQt9HLy4ESP9OH19TJmEE/bI54J
-         Of8r+Dj7uOBHA==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200124025238.jsf36n6w4rrn2ehc@e107158-lin>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Friday 24 Jan 2020 at 02:52:39 (+0000), Qais Yousef wrote:
+> > diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> > index ba749f579714..221c0fbcea0e 100644
+> > --- a/kernel/sched/fair.c
+> > +++ b/kernel/sched/fair.c
+> > @@ -5220,8 +5220,10 @@ enqueue_task_fair(struct rq *rq, struct task_struct *p, int flags)
+> >  	 * If in_iowait is set, the code below may not trigger any cpufreq
+> >  	 * utilization updates, so do it here explicitly with the IOWAIT flag
+> >  	 * passed.
+> > +	 * If CONFIG_ENERGY_MODEL and CONFIG_UCLAMP_TASK are both configured,
+> > +	 * only boost for tasks set with non-null min-clamp.
+> >  	 */
+> > -	if (p->in_iowait)
+> > +	if (iowait_boosted(p))
+> >  		cpufreq_update_util(rq, SCHED_CPUFREQ_IOWAIT);
+> >  
+> >  	for_each_sched_entity(se) {
+> > diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+> > index 280a3c735935..a13d49d835ed 100644
+> > --- a/kernel/sched/sched.h
+> > +++ b/kernel/sched/sched.h
+> > @@ -2341,6 +2341,18 @@ static inline unsigned int uclamp_util(struct rq *rq, unsigned int util)
+> >  }
+> >  #endif /* CONFIG_UCLAMP_TASK */
+> >  
+> > +#if defined(CONFIG_ENERGY_MODEL) && defined(CONFIG_UCLAMP_TASK)
+> 
+> Why depend on CONFIG_ENERGY_MODEL? Laptops are battery powered and might not
+> have this option enabled. Do we really need energy model here?
 
-On 24/01/2020 09:07, Jon Hunter wrote:
->=20
-> On 23/01/2020 15:16, Dmitry Osipenko wrote:
->> 23.01.2020 12:22, Sameer Pujar =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>>
->>>
->>> On 1/22/2020 9:57 PM, Dmitry Osipenko wrote:
->>>> External email: Use caution opening links or attachments
->>>>
->>>>
->>>> 22.01.2020 14:52, Jon Hunter =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>>>> On 22/01/2020 07:16, Sameer Pujar wrote:
->>>>>
->>>>> ...
->>>>>
->>>>>>>>>>>> +static int tegra210_i2s_remove(struct platform_device *pdev)
->>>>>>>>>>>> +{
->>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0 pm_runtime_disable(&pdev->dev);
->>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0 if (!pm_runtime_status_suspended(&pd=
-ev->dev))
->>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 tegra210_i2s_runtime_suspend(&pdev->dev);
->>>>>>>>>>> This breaks device's RPM refcounting if it was disabled in the
->>>>>>>>>>> active
->>>>>>>>>>> state. This code should be removed. At most you could warn
->>>>>>>>>>> about the
->>>>>>>>>>> unxpected RPM state here, but it shouldn't be necessary.
->>>>>>>>>> I guess this was added for safety and explicit suspend keeps clo=
-ck
->>>>>>>>>> disabled.
->>>>>>>>>> Not sure if ref-counting of the device matters when runtime PM i=
-s
->>>>>>>>>> disabled and device is removed.
->>>>>>>>>> I see few drivers using this way.
->>>>>>>>> It should matter (if I'm not missing something) because RPM shoul=
-d
->>>>>>>>> be in
->>>>>>>>> a wrecked state once you'll try to re-load the driver's module.
->>>>>>>>> Likely
->>>>>>>>> that those few other drivers are wrong.
->>>>>>>>>
->>>>>>>>> [snip]
->>>>>>>> Once the driver is re-loaded and RPM is enabled, I don't think it
->>>>>>>> would use
->>>>>>>> the same 'dev' and the corresponding ref count. Doesn't it use the
->>>>>>>> new
->>>>>>>> counters?
->>>>>>>> If RPM is not working for some reason, most likely it would be the
->>>>>>>> case
->>>>>>>> for other
->>>>>>>> devices. What best driver can do is probably do a force suspend
->>>>>>>> during
->>>>>>>> removal if
->>>>>>>> already not done. I would prefer to keep, since multiple drivers
->>>>>>>> still
->>>>>>>> have it,
->>>>>>>> unless there is a real harm in doing so.
->>>>>>> I took a closer look and looks like the counter actually should be
->>>>>>> reset. Still I don't think that it's a good practice to make change=
-s
->>>>>>> underneath of RPM, it may strike back.
->>>>>> If RPM is broken, it probably would have been caught during device
->>>>>> usage.
->>>>>> I will remove explicit suspend here if no any concerns from other
->>>>>> folks.
->>>>>> Thanks.
->>>>> I recall that this was the preferred way of doing this from the RPM
->>>>> folks. Tegra30 I2S driver does the same and Stephen had pointed me to
->>>>> this as a reference.
->>>>> I believe that this is meant to ensure that the
->>>>> device is always powered-off regardless of it RPM is enabled or not a=
-nd
->>>>> what the current state is.
->>>> Yes, it was kinda actual for the case of unavailable RPM.
->>>
->>>> Anyways, /I think/ variant like this should have been more preferred:
->>>>
->>>> if (!pm_runtime_enabled(&pdev->dev))
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 tegra210_i2s_runtime_=
-suspend(&pdev->dev);
->>>> else
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pm_runtime_disable(&p=
-dev->dev);
->>>
->>> I think it looks to be similar to what is there already.
->>>
->>> pm_runtime_disable(&pdev->dev); // it would turn out to be a dummy call
->>> if !RPM
->>> if (!pm_runtime_status_suspended(&pdev->dev)) // it is true always if !=
-RPM
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 tegra210_i2s_runtime_suspend=
-(&pdev->dev);
->>
->> Maybe this is fine for !RPM, but not really fine in a case of enabled
->> RPM. Device could be in resumed state after pm_runtime_disable() if it
->> wasn't suspended before the disabling.
->=20
-> I don't see any problem with this for the !RPM case.
++1
 
-Sorry I meant the RPM case. In other words, I don't see a problem for
-neither the RPM case of the !RPM case.
+> > +static inline bool iowait_boosted(struct task_struct *p)
+> > +{
+> > +	return p->in_iowait && uclamp_eff_value(p, UCLAMP_MIN) > 0;
+> 
+> I think this is overloading the usage of util clamp. You're basically using
+> cpu.uclamp.min to temporarily switch iowait boost on/off.
+> 
+> Isn't it better to add a new cgroup attribute to toggle this feature?
+> 
+> The problem does seem generic enough and could benefit other battery-powered
+> devices outside of the Android world. I don't think the dependency on uclamp &&
+> energy model are necessary to solve this.
 
-Jon
+I think using uclamp is not a bad idea here, but perhaps we could do
+things differently. As of today the iowait boost escapes the clamping
+mechanism, so one option would be to change that. That would let us set
+a low max clamp in the 'background' cgroup, which in turns would limit
+the frequency request for those tasks even if they're IO-intensive.
 
---=20
-nvpublic
+That'll have to be done at the RQ level, but figuring out what's the
+current max clamp on the rq should be doable from sugov I think.
+
+Wei: would that work for your use case ?
+
+Also, the iowait boost really should be per-task and not per-cpu, so it
+can be taken into account during wake-up balance on big.LITTLE. That
+might also help on SMP if a task doing a lot of IO migrates, as the
+boost would migrate with it. But that's perhaps for later ...
+
+Thanks,
+Quentin
