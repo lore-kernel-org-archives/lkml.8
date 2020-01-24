@@ -4,55 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FF8BC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:35:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03E5DC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:35:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11FCF2077C
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:35:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9D0020704
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:35:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579876537;
-	bh=CwDH/HNXqT9/UsCdUOLdCqHjqNXYqggcWW09wtaEFS8=;
+	s=default; t=1579876545;
+	bh=QFIDya6ivalEWjHBowgAtT7ZFFosbE3XxUDc3fLxS0M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sS5/MAIm4g9YT51nxckx7BHi7g/1CpYg21xxMFrcIjJ6vaPnE9NhxXnt8GoXLiUn/
-	 DruCD0gO2uXdY8lF3PEUb2CsytF7j1xzgs0mH9iUBYu9ymGgZs/KhUGLAPeYMtGsKH
-	 i+UEIBAP6LALb3pUBx9IRnsYKeTZMHAldBW7ihas=
+	b=FsI8x3LfeHuxn3bCeWhmo5vW3AdIH5QQOlKjSQxFJYb/Q0yZmm+FX538Qw3yKv0hj
+	 nFRpXArLl9VDT3NMnHjHnxcKw8jcaRIsed7p5dnmcaIDL4ZSz/XwFXdrwojJa6Nfbv
+	 hRqQnuDkgsg0pf+as2LL7MIEIa25yDePtR1kJUX4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387829AbgAXOff (ORCPT
+        id S2392123AbgAXOfo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 09:35:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39900 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 09:35:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39856 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391754AbgAXOTc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 09:19:32 -0500
+        id S2391715AbgAXOTa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 09:19:30 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E3A3320838;
-        Fri, 24 Jan 2020 14:19:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BB9EB22522;
+        Fri, 24 Jan 2020 14:19:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579875571;
-        bh=CwDH/HNXqT9/UsCdUOLdCqHjqNXYqggcWW09wtaEFS8=;
+        s=default; t=1579875569;
+        bh=QFIDya6ivalEWjHBowgAtT7ZFFosbE3XxUDc3fLxS0M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YV3mVzHUQv8DabbMzubH9nmHbGnqemm8gg1idgXxgl6+0oR1MU9QZ1atRSt5MaKvO
-         oJhf6cy8sRVkqf8k6BF4LMPQV+9/yF/DiJ3rUdlwoRgbt+OMRKhU73USkite2i6O+U
-         +FE+vSyBb1mkPqaQaf5dUgE6Pwd4T566nMZrS5Ng=
+        b=gFlju4nnIDoFDyU9DrxA7yzDclo1/Tll8jCvY/8S++KHzfFHKBNPFfWtLubE7L4R4
+         n1+CvCn2IJAEWUkQiqdWpu2nucAchZdxWNdcD+kS6jc5GhkjcIPXfZaevlfYbKLvYT
+         D714tjoT2HH7uA7uvg0mNj912WIr3lDgontLyTVk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Brendan Higgins <brendanhiggins@google.com>,
-        Kees Cook <keescook@chromium.org>,
+Cc:     Johan Hovold <johan@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.4 064/107] lkdtm/bugs: fix build error in lkdtm_UNSET_SMEP
-Date:   Fri, 24 Jan 2020 09:17:34 -0500
-Message-Id: <20200124141817.28793-64-sashal@kernel.org>
+        Jakub Kicinski <kuba@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-wireless@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 062/107] NFC: pn533: fix bulk-message timeout
+Date:   Fri, 24 Jan 2020 09:17:32 -0500
+Message-Id: <20200124141817.28793-62-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200124141817.28793-1-sashal@kernel.org>
 References: <20200124141817.28793-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -61,52 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Brendan Higgins <brendanhiggins@google.com>
+From: Johan Hovold <johan@kernel.org>
 
-[ Upstream commit 0e31e3573f0cd94d7b821117db854187ffc85765 ]
+[ Upstream commit a112adafcb47760feff959ee1ecd10b74d2c5467 ]
 
-When building ARCH=um with CONFIG_UML_X86=y and CONFIG_64BIT=y we get
-the build errors:
+The driver was doing a synchronous uninterruptible bulk-transfer without
+using a timeout. This could lead to the driver hanging on probe due to a
+malfunctioning (or malicious) device until the device is physically
+disconnected. While sleeping in probe the driver prevents other devices
+connected to the same hub from being added to (or removed from) the bus.
 
-drivers/misc/lkdtm/bugs.c: In function ‘lkdtm_UNSET_SMEP’:
-drivers/misc/lkdtm/bugs.c:288:8: error: implicit declaration of function ‘native_read_cr4’ [-Werror=implicit-function-declaration]
-  cr4 = native_read_cr4();
-        ^~~~~~~~~~~~~~~
-drivers/misc/lkdtm/bugs.c:290:13: error: ‘X86_CR4_SMEP’ undeclared (first use in this function); did you mean ‘X86_FEATURE_SMEP’?
-  if ((cr4 & X86_CR4_SMEP) != X86_CR4_SMEP) {
-             ^~~~~~~~~~~~
-             X86_FEATURE_SMEP
-drivers/misc/lkdtm/bugs.c:290:13: note: each undeclared identifier is reported only once for each function it appears in
-drivers/misc/lkdtm/bugs.c:297:2: error: implicit declaration of function ‘native_write_cr4’; did you mean ‘direct_write_cr4’? [-Werror=implicit-function-declaration]
-  native_write_cr4(cr4);
-  ^~~~~~~~~~~~~~~~
-  direct_write_cr4
+An arbitrary limit of five seconds should be more than enough.
 
-So specify that this block of code should only build when
-CONFIG_X86_64=y *AND* CONFIG_UML is unset.
-
-Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
-Acked-by: Kees Cook <keescook@chromium.org>
-Link: https://lore.kernel.org/r/20191213003522.66450-1-brendanhiggins@google.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: dbafc28955fa ("NFC: pn533: don't send USB data off of the stack")
+Signed-off-by: Johan Hovold <johan@kernel.org>
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/misc/lkdtm/bugs.c | 2 +-
+ drivers/nfc/pn533/usb.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/misc/lkdtm/bugs.c b/drivers/misc/lkdtm/bugs.c
-index 7284a22b1a09e..4d5a512769e99 100644
---- a/drivers/misc/lkdtm/bugs.c
-+++ b/drivers/misc/lkdtm/bugs.c
-@@ -274,7 +274,7 @@ void lkdtm_STACK_GUARD_PAGE_TRAILING(void)
+diff --git a/drivers/nfc/pn533/usb.c b/drivers/nfc/pn533/usb.c
+index e897e4d768ef7..d7a355d053687 100644
+--- a/drivers/nfc/pn533/usb.c
++++ b/drivers/nfc/pn533/usb.c
+@@ -391,7 +391,7 @@ static int pn533_acr122_poweron_rdr(struct pn533_usb_phy *phy)
+ 		       cmd, sizeof(cmd), false);
  
- void lkdtm_UNSET_SMEP(void)
- {
--#ifdef CONFIG_X86_64
-+#if IS_ENABLED(CONFIG_X86_64) && !IS_ENABLED(CONFIG_UML)
- #define MOV_CR4_DEPTH	64
- 	void (*direct_write_cr4)(unsigned long val);
- 	unsigned char *insn;
+ 	rc = usb_bulk_msg(phy->udev, phy->out_urb->pipe, buffer, sizeof(cmd),
+-			  &transferred, 0);
++			  &transferred, 5000);
+ 	kfree(buffer);
+ 	if (rc || (transferred != sizeof(cmd))) {
+ 		nfc_err(&phy->udev->dev,
 -- 
 2.20.1
 
