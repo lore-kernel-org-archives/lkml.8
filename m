@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A76ADC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:03:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40CBCC32771
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:03:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CADA2075D
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:03:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B6BF2077C
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:03:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579863817;
-	bh=O0x8TH3TRSsWugHDFjUjzQpetWW9RhiLHPU8x6whfbk=;
+	s=default; t=1579863820;
+	bh=pNBv7kWq+pLurnZW8EL9znhXrwDX8rw/jyRdDSKzaGA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=umkP95cNU4NCibkCNioI5YYNbFBclaEZRxx1RtiVlEvC4MIh+1VY2uS8ayDDNmI/w
-	 C4DvYTe/ZLC7jkuxZftLx0kIG5ioJyhnkTzwGt9jK9VbWbYZvUNoveEkxcCyMAMIAN
-	 /v6DTmQ6+b9gqUOkJbzfOjbiwnqIVmnZupFfTNAc=
+	b=OAoaP+dnvoVMniVQLKnCCi+cKcuS/1UNXXzPQC2gIcgFV9QSCZ8sDlIpCR3BMagNo
+	 I98ZR8MweHXSmfnqeeVU2p0SEHqJex7hGn0K3+YU8NDNmr426zyn9eWK/6CT+GpZ6t
+	 1Yxt4+9qXhNfqWuYMUjJscboVjbMrxeDc4klrf0o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387638AbgAXLDc (ORCPT
+        id S2388372AbgAXLDj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:03:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36836 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 06:03:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37384 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729742AbgAXLDH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:03:07 -0500
+        id S2388331AbgAXLDc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:03:32 -0500
 Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AE6FF2077C;
-        Fri, 24 Jan 2020 11:03:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C41B42071A;
+        Fri, 24 Jan 2020 11:03:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579863786;
-        bh=O0x8TH3TRSsWugHDFjUjzQpetWW9RhiLHPU8x6whfbk=;
+        s=default; t=1579863812;
+        bh=pNBv7kWq+pLurnZW8EL9znhXrwDX8rw/jyRdDSKzaGA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AI75rv+LbTYJYxKj5yqWLdSH4q6x+/nozpfiTBSNZg6SFAGTerJyJ2yR7E/OdjKBp
-         6YufGFNdw5K6l174dsu/XY5k6MPBBfN7fa7uL6AnLVR93nE54gQRYEEsxCX3BgIMj/
-         sBdS5tvcySQ8Cyy3z5eyXRy3lAY/a4y3pwaNq9LE=
+        b=Yn749BLzdmcaJSZfHekZHJBITXoFPfuLSxxBQaxOD8kJvKAqw2cYDUEQxVmP1IpMw
+         zBiKhsnMAv9mQeB+SmuSklIGFPOT/QpaIaVlK2my3Xh/8kPa386O2BVikuUjVCrhtZ
+         LDI4yd7m1clf6TB59MwZ+fKgJTUmSCFv5m30P7es=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Nishanth Menon <nm@ti.com>,
-        Jassi Brar <jaswinder.singh@linaro.org>,
+        stable@vger.kernel.org, Stefan Wahren <stefan.wahren@i2se.com>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 080/639] mailbox: ti-msgmgr: Off by one in ti_msgmgr_of_xlate()
-Date:   Fri, 24 Jan 2020 10:24:10 +0100
-Message-Id: <20200124093057.408055662@linuxfoundation.org>
+Subject: [PATCH 4.19 082/639] staging: bcm2835-camera: fix module autoloading
+Date:   Fri, 24 Jan 2020 10:24:12 +0100
+Message-Id: <20200124093057.650123493@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
 References: <20200124093047.008739095@linuxfoundation.org>
@@ -61,38 +61,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Stefan Wahren <stefan.wahren@i2se.com>
 
-[ Upstream commit 78f3ff524fca63e7d2a57149a34ade23d2c12798 ]
+[ Upstream commit 3a2c20024a2b47adbf514e7f3ab79342739c3926 ]
 
-The > comparison should be >= or we access one element beyond the end
-of the array.
+In order to make the module bcm2835-camera load automatically, we need to
+add a module alias.
 
-(The inst->qinsts[] array is allocated in the ti_msgmgr_probe() function
-and it has ->num_valid_queues elements.)
-
-Fixes: a2b79838b891 ("mailbox: ti-msgmgr: Add support for Secure Proxy")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Acked-by: Nishanth Menon <nm@ti.com>
-Signed-off-by: Jassi Brar <jaswinder.singh@linaro.org>
+Fixes: 4bebb0312ea9 ("staging/bcm2835-camera: Set ourselves up as a platform driver.")
+Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
+Reviewed-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Reviewed-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mailbox/ti-msgmgr.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/staging/vc04_services/bcm2835-camera/bcm2835-camera.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/mailbox/ti-msgmgr.c b/drivers/mailbox/ti-msgmgr.c
-index 5bceafbf66993..01e9e462512b7 100644
---- a/drivers/mailbox/ti-msgmgr.c
-+++ b/drivers/mailbox/ti-msgmgr.c
-@@ -547,7 +547,7 @@ static struct mbox_chan *ti_msgmgr_of_xlate(struct mbox_controller *mbox,
- 	}
+diff --git a/drivers/staging/vc04_services/bcm2835-camera/bcm2835-camera.c b/drivers/staging/vc04_services/bcm2835-camera/bcm2835-camera.c
+index 068e5b9ab2323..edf25922b12d6 100644
+--- a/drivers/staging/vc04_services/bcm2835-camera/bcm2835-camera.c
++++ b/drivers/staging/vc04_services/bcm2835-camera/bcm2835-camera.c
+@@ -47,6 +47,7 @@ MODULE_DESCRIPTION("Broadcom 2835 MMAL video capture");
+ MODULE_AUTHOR("Vincent Sanders");
+ MODULE_LICENSE("GPL");
+ MODULE_VERSION(BM2835_MMAL_VERSION);
++MODULE_ALIAS("platform:bcm2835-camera");
  
- 	if (d->is_sproxy) {
--		if (req_pid > d->num_valid_queues)
-+		if (req_pid >= d->num_valid_queues)
- 			goto err;
- 		qinst = &inst->qinsts[req_pid];
- 		return qinst->chan;
+ int bcm2835_v4l2_debug;
+ module_param_named(debug, bcm2835_v4l2_debug, int, 0644);
 -- 
 2.20.1
 
