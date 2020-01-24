@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D16CC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:42:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66131C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:42:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63653206F0
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:42:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 333B920678
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:42:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579866165;
-	bh=/n7YcuZlOmzfYT8zxRWGW7Iz53ruotEq+5osQ/b2GX4=;
+	s=default; t=1579866167;
+	bh=G4tfkGkVxGfOb6rWktH3tl5zNrvKAE42h5/a4FwKegY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jToqkKY2JSnF/HipE2fZtbWEwbTbN0h0WdpL9BIpGzHqsp1+9FdzhkPYVOolrkp8k
-	 KgvaHnGU6TpBNJaU0HW77WJrHkjd3tcaJadtR8ril+GF2mUwRnFdvMfgmrZHAqgBbh
-	 Svr69NkfjDQyPCCFIDE8d92TtgKJlypJxhydDev8=
+	b=wqPcAS6yC0YEdoc/jP+wqrq/vo4+SozoGDLag3BOrkaDKMOi8y/iynUBHi1O9cIrY
+	 j0AHrZfvDz1JmozgZeV/k1ATNg+Btixe8MJDqDQgXYW4DJ29c5TP9VyEMGhgppFiXV
+	 V6NV0kgU4DhRjXDPs16viawXuXx6uv3rzoLzVa2o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389896AbgAXLLj (ORCPT
+        id S2387812AbgAXLLg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:11:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47588 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 06:11:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47452 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388283AbgAXLLe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:11:34 -0500
+        id S2388450AbgAXLLa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:11:30 -0500
 Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 232B82075D;
-        Fri, 24 Jan 2020 11:11:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8769920708;
+        Fri, 24 Jan 2020 11:11:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579864293;
-        bh=/n7YcuZlOmzfYT8zxRWGW7Iz53ruotEq+5osQ/b2GX4=;
+        s=default; t=1579864290;
+        bh=G4tfkGkVxGfOb6rWktH3tl5zNrvKAE42h5/a4FwKegY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=r2dTPYwEw5acbkJ1FsW8HjpTfA1jshwGQg0gWDJ8Bmbe+5bTsmL6nG94MQ9RhdEqV
-         XfmLKU/8vgz7dN4r31WnwhH7pCUds4QwwTBBpk7ix3zHbv2DyF+Mdog4aUxrqcuQq8
-         uGs43MeIk3OxcS360oS8pWRl2p4JvHdRaZ4Ao4iE=
+        b=UF5HxFZcTl6LR0IblEz/QCFl84thamBRZwjfpwQ2kip78pBlVetwBv4HpSecgLr1O
+         zAl1YCGqNn9HSc2XwK77SLjKoDxPOpyEPdI6jjPiCM6r+SOiRlk2EefWH4St887ZJx
+         6lTyL9zK/R/GTKB9yTbQ1H5pcUGlYkUkAo2ygi0E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 218/639] drm/nouveau/bios/ramcfg: fix missing parentheses when calculating RON
-Date:   Fri, 24 Jan 2020 10:26:28 +0100
-Message-Id: <20200124093114.264419728@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Lorenzo Bianconi <lorenzo.bianconi@redhat.com>,
+        Felix Fietkau <nbd@nbd.name>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 203/639] mt76: usb: fix possible memory leak in mt76u_buf_free
+Date:   Fri, 24 Jan 2020 10:26:13 +0100
+Message-Id: <20200124093112.459167813@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
 References: <20200124093047.008739095@linuxfoundation.org>
@@ -60,41 +60,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Lorenzo Bianconi <lorenzo.bianconi@redhat.com>
 
-[ Upstream commit 13649101a25c53c87f4ab98a076dfe61f3636ab1 ]
+[ Upstream commit cb83585e1121bd6d6c039cf09fa32380bf8b6258 ]
 
-Currently, the expression for calculating RON is always going to result
-in zero no matter the value of ram->mr[1] because the ! operator has
-higher precedence than the shift >> operator.  I believe the missing
-parentheses around the expression before appying the ! operator will
-result in the desired result.
+Move q->ndesc initialization before the for loop in mt76u_alloc_rx
+since otherwise allocated urbs will not be freed in mt76u_buf_free
+Double-check scatterlist pointer in mt76u_buf_free
 
-[ Note, not tested ]
-
-Detected by CoveritScan, CID#1324005 ("Operands don't affect result")
-
-Fixes: c25bf7b6155c ("drm/nouveau/bios/ramcfg: Separate out RON pull value")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
+Fixes: b40b15e1521f ("mt76: add usb support to mt76 layer")
+Signed-off-by: Lorenzo Bianconi <lorenzo.bianconi@redhat.com>
+Signed-off-by: Felix Fietkau <nbd@nbd.name>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/nouveau/nvkm/subdev/fb/gddr3.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/wireless/mediatek/mt76/usb.c | 14 ++++++++++----
+ 1 file changed, 10 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/gpu/drm/nouveau/nvkm/subdev/fb/gddr3.c b/drivers/gpu/drm/nouveau/nvkm/subdev/fb/gddr3.c
-index 60ece0a8a2e1b..1d2d6bae73cd1 100644
---- a/drivers/gpu/drm/nouveau/nvkm/subdev/fb/gddr3.c
-+++ b/drivers/gpu/drm/nouveau/nvkm/subdev/fb/gddr3.c
-@@ -87,7 +87,7 @@ nvkm_gddr3_calc(struct nvkm_ram *ram)
- 		WR  = (ram->next->bios.timing[2] & 0x007f0000) >> 16;
- 		/* XXX: Get these values from the VBIOS instead */
- 		DLL = !(ram->mr[1] & 0x1);
--		RON = !(ram->mr[1] & 0x300) >> 8;
-+		RON = !((ram->mr[1] & 0x300) >> 8);
- 		break;
- 	default:
- 		return -ENOSYS;
+diff --git a/drivers/net/wireless/mediatek/mt76/usb.c b/drivers/net/wireless/mediatek/mt76/usb.c
+index 8d40e92fb6f27..dcf927de65f39 100644
+--- a/drivers/net/wireless/mediatek/mt76/usb.c
++++ b/drivers/net/wireless/mediatek/mt76/usb.c
+@@ -273,10 +273,16 @@ EXPORT_SYMBOL_GPL(mt76u_buf_alloc);
+ void mt76u_buf_free(struct mt76u_buf *buf)
+ {
+ 	struct urb *urb = buf->urb;
++	struct scatterlist *sg;
+ 	int i;
+ 
+-	for (i = 0; i < urb->num_sgs; i++)
+-		skb_free_frag(sg_virt(&urb->sg[i]));
++	for (i = 0; i < urb->num_sgs; i++) {
++		sg = &urb->sg[i];
++		if (!sg)
++			continue;
++
++		skb_free_frag(sg_virt(sg));
++	}
+ 	usb_free_urb(buf->urb);
+ }
+ EXPORT_SYMBOL_GPL(mt76u_buf_free);
+@@ -478,7 +484,8 @@ static int mt76u_alloc_rx(struct mt76_dev *dev)
+ 		nsgs = 1;
+ 	}
+ 
+-	for (i = 0; i < MT_NUM_RX_ENTRIES; i++) {
++	q->ndesc = MT_NUM_RX_ENTRIES;
++	for (i = 0; i < q->ndesc; i++) {
+ 		err = mt76u_buf_alloc(dev, &q->entry[i].ubuf,
+ 				      nsgs, q->buf_size,
+ 				      SKB_WITH_OVERHEAD(q->buf_size),
+@@ -486,7 +493,6 @@ static int mt76u_alloc_rx(struct mt76_dev *dev)
+ 		if (err < 0)
+ 			return err;
+ 	}
+-	q->ndesc = MT_NUM_RX_ENTRIES;
+ 
+ 	return mt76u_submit_rx_buffers(dev);
+ }
 -- 
 2.20.1
 
