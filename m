@@ -2,87 +2,106 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04FF9C3F68F
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 08:57:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20372C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 08:58:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C353520838
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 08:57:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579856275;
-	bh=weQibhHhjm/I54HF6xbEAHDUB4eSKIfjTJHuSAScdLA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=PTzp6vxrAuCMUInqymy4q/sICDOriGfjASt5hKZxe3GPF2eMHzhZ5NL1wdMwwkygd
-	 PkEFi7/NBzgLQ68rIbbwH0PPhSTv8vJMq3EZG6PmeXs+Rh6C+DN4eRfjGst14mR3V/
-	 +Se19TmmfgXyKYFYNKfHHorV6QZ+I4p3/n7dy5mE=
+	by mail.kernel.org (Postfix) with ESMTP id E61CC20709
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 08:58:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="duDiNRBf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729816AbgAXI5z (ORCPT
+        id S1729887AbgAXI6e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 03:57:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43384 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725787AbgAXI5z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 03:57:55 -0500
-Received: from localhost (unknown [145.15.244.15])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6516920709;
-        Fri, 24 Jan 2020 08:57:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579856274;
-        bh=weQibhHhjm/I54HF6xbEAHDUB4eSKIfjTJHuSAScdLA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=1kxkQ2mlfN+heyJk8Zq4viteonJq1htABzVFFxtGZYoofCDM5p/YmwSf7s9p//j1+
-         pLjlJVycamMWseZI4uCPtUt4BaUZ8o2WZP/CR4FMMO8wFPI3QbVYpV1n9spKemoelz
-         pVryZUdQZqbQsZPigrYsQfDDri9qjJm5snkzfjq0=
-Date:   Fri, 24 Jan 2020 09:57:51 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Ard Biesheuvel <ardb@kernel.org>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Peter Jones <pjones@redhat.com>,
-        Dave Olsthoorn <dave@bewaar.me>, x86@kernel.org,
-        platform-driver-x86@vger.kernel.org, linux-efi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-input@vger.kernel.org
-Subject: Re: [PATCH v12 03/10] firmware: Rename FW_OPT_NOFALLBACK to
- FW_OPT_NOFALLBACK_SYSFS
-Message-ID: <20200124085751.GA2957916@kroah.com>
-References: <20200115163554.101315-1-hdegoede@redhat.com>
- <20200115163554.101315-4-hdegoede@redhat.com>
+        Fri, 24 Jan 2020 03:58:34 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:37024 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725787AbgAXI6d (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 03:58:33 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579856312;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=JWz6aqGdHx35tZOwvGlucXWByVJJ94BypUpYqdf0YTw=;
+        b=duDiNRBf3n8ySGaO3KOap+FBRXDv8N2Y1/Bmg+ZIjjaHeAYseb04wVvjv0YVbj2f6YO2QW
+        AA0vOefuRcopssDx6pVYuYHnLU8haOyxzgt9vE1sIhXXWlnO/8swux29JiDoJ213o1IlSs
+        oWaFJK0ShqrA6XXPOoSwMQh+eZ6My4g=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-359-2wB_VS0uMCqChjAWPffPlg-1; Fri, 24 Jan 2020 03:58:30 -0500
+X-MC-Unique: 2wB_VS0uMCqChjAWPffPlg-1
+Received: by mail-wr1-f69.google.com with SMTP id w6so834701wrm.16
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jan 2020 00:58:30 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=JWz6aqGdHx35tZOwvGlucXWByVJJ94BypUpYqdf0YTw=;
+        b=ht8cdYerVoQa48ngoRersoLWSGEADhkn7eppRXj+Q0j7Jt0duWO3MbFTfkTDcuA1aO
+         BL0kDxObkwz2YWKTUpsyJMD8oWY5lcEGDXbyJmyDkahj4oQFyCLVoyBRlbtbNF0mproD
+         rEGr+VjIa+QVjqL+/FEGGWiPfoFelfmL+q+hdHN6ojO4sm6hiL6YNmwl39Fv7yCsA+Zq
+         RN9+lbY01x/FumQQOdHcVgsiCm+Nu3vljnqShqgiPCOBv2wISUpqBuJxnnKtQL9o5iA3
+         Y4bVSPww7oHY3OfkdaEotRRpWxzZ/iQ9O89Cl3BP0N+kAJShcuifhiyWXxG/NadQumM6
+         MW4g==
+X-Gm-Message-State: APjAAAV5sXA8BbP07/vV5DnGQi3H5nbqg08K2o5XgoT+1gJyLfwoGA7T
+        mkax3akHoGbUpi0zZVMmR2u98i8FKIcjusMqMG0RAYxj+u4u9/n2N1zPSPS/j8Hm8Tw5kEFvv+r
+        ABvMmqTJIW5VnGjpies3Qq53/
+X-Received: by 2002:a05:600c:2215:: with SMTP id z21mr2280687wml.55.1579856309503;
+        Fri, 24 Jan 2020 00:58:29 -0800 (PST)
+X-Google-Smtp-Source: APXvYqwTG/Fx0cb6GxNxRaHqdTQSp/V/QSRYrq3Q3gtSptcEB3HrPrpH3UPGtIS+5Ympfmx+cp9+QA==
+X-Received: by 2002:a05:600c:2215:: with SMTP id z21mr2280663wml.55.1579856309137;
+        Fri, 24 Jan 2020 00:58:29 -0800 (PST)
+Received: from ?IPv6:2001:b07:6468:f312:b8fe:679e:87eb:c059? ([2001:b07:6468:f312:b8fe:679e:87eb:c059])
+        by smtp.gmail.com with ESMTPSA id c5sm6219331wmb.9.2020.01.24.00.58.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 24 Jan 2020 00:58:28 -0800 (PST)
+Subject: Re: [PATCH v4 09/10] KVM: selftests: Stop memslot creation in KVM
+ internal memslot region
+To:     Ben Gardon <bgardon@google.com>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, linux-kselftest@vger.kernel.org
+Cc:     Cannon Matthews <cannonmatthews@google.com>,
+        Peter Xu <peterx@redhat.com>,
+        Andrew Jones <drjones@redhat.com>,
+        Peter Shier <pshier@google.com>,
+        Oliver Upton <oupton@google.com>
+References: <20200123180436.99487-1-bgardon@google.com>
+ <20200123180436.99487-10-bgardon@google.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <92042648-e43a-d996-dc38-aded106b976b@redhat.com>
+Date:   Fri, 24 Jan 2020 09:58:27 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200115163554.101315-4-hdegoede@redhat.com>
+In-Reply-To: <20200123180436.99487-10-bgardon@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 15, 2020 at 05:35:47PM +0100, Hans de Goede wrote:
-> This is a preparation patch for adding a new platform fallback mechanism,
-> which will have its own enable/disable FW_OPT_xxx option.
+On 23/01/20 19:04, Ben Gardon wrote:
+> KVM creates internal memslots covering the region between 3G and 4G in
+> the guest physical address space, when the first vCPU is created.
+> Mapping this region before creation of the first vCPU causes vCPU
+> creation to fail. Prohibit tests from creating such a memslot and fail
+> with a helpful warning when they try to.
 > 
-> Note this also fixes a typo in one of the re-wordwrapped comments:
-> enfoce -> enforce.
-> 
-> Acked-by: Luis Chamberlain <mcgrof@kernel.org>
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> Signed-off-by: Ben Gardon <bgardon@google.com>
+> ---
 
-I've taken this in my tree for now in a quest to try to get others to
-pay attention to this series...
+The internal memslots are much higher than this (0xfffbc000 and
+0xfee00000).  I'm changing the patch to block 0xfe0000000 and above,
+otherwise it breaks vmx_dirty_log_test.
 
-thanks,
+Paolo
 
-greg k-h
