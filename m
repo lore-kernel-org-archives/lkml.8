@@ -7,52 +7,52 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7D0EC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 22:43:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67D47C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 22:43:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A0E02075D
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 22:43:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CF2D2071E
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 22:43:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="nJUnCZVZ"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jShQ2pX8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387539AbgAXWnl (ORCPT
+        id S2387548AbgAXWnq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 17:43:41 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:34850 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387475AbgAXWn0 (ORCPT
+        Fri, 24 Jan 2020 17:43:46 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:35919 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387446AbgAXWnX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 17:43:26 -0500
-Received: by mail-pg1-f196.google.com with SMTP id l24so1860986pgk.2
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Jan 2020 14:43:26 -0800 (PST)
+        Fri, 24 Jan 2020 17:43:23 -0500
+Received: by mail-pg1-f194.google.com with SMTP id k3so1860658pgc.3
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jan 2020 14:43:22 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=Bui28Vv12xUmXWYpC+BbDFYgTGPFUNN9TS7e8X83ptU=;
-        b=nJUnCZVZFNjMZvgzvmEPCuW8bMgT93sV0s2dZgIYVCytFK0KhhjowkK2AosMIsSyay
-         KmsdEYHy/oKz+S9r2Kkijver4P7gSJN8tLFftGYIKJ/WG2/GJaPtQiiz5n4FA8uhSKE1
-         yjW6QAW2ZhSfO7AVaFhdvXiXxzrTqDyFmvByI=
+        bh=9BRqMxL/+QF9fXGxsodaUnU1nURwqkQVRb7Veb8jqnw=;
+        b=jShQ2pX8IQIHGNrvrIOhAsqUK/C01VqaM9/g6/e7k6X2Xc4duWVu1GLO4DYADKLj8h
+         DB1G4XhIeSlzDcjW5h0qV2Ri0rmkCIl/+sDXQ/FYpddk2u405IOAnDMRnaomXKuXhIYv
+         rlfKquY9Gm+95wPB7AhitjDpdpTbpS0Fl/u1A=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=Bui28Vv12xUmXWYpC+BbDFYgTGPFUNN9TS7e8X83ptU=;
-        b=nfBpQO7/LLVIxxYJDex+KeWcFllPPooX6xB4Wp1Ae51soKb0bV3GWbO5yNObbqxNos
-         W8DaXSZmh44bSsbWCO6L7WqVvrVBRWS4IEnu7B4RXS0Xq+vpDpr5a+1SIYUzhFbvAT7n
-         sNGg2kj2b+v4O7bIc7kAle0ZnxOoR438j4xNWX0vDYrAhLePJI2AGo+1SV8VT31BRmhw
-         kkBSw5g3TgxrkCnRFGeo7cD06GiybFaTpc9nOlSZZSgdQvYnISjpl4wl6tKJT5Sokvod
-         dl3VS8mVDHC4kDnuCSYwPxazpbjFvL3rPDlU/P9d8W62lBwpWn8K3TSM+JqcdcChibLa
-         3Vrw==
-X-Gm-Message-State: APjAAAVxNgM0q3qtec1G7Kbja4DnfwPgu03CTmcewtRdMCht63TLPKcY
-        hU+Uma3ZlCLJDo6CCM8BdYsAUw==
-X-Google-Smtp-Source: APXvYqzS9tPcZFwCykAq9Smp2Jxt5RR3eG4xljjcnI1eH/vNH2TY407AdxHLUd4cuuKsTLeq6urYLw==
-X-Received: by 2002:a62:ddd0:: with SMTP id w199mr5272391pff.1.1579905805722;
-        Fri, 24 Jan 2020 14:43:25 -0800 (PST)
+        bh=9BRqMxL/+QF9fXGxsodaUnU1nURwqkQVRb7Veb8jqnw=;
+        b=oMELypkFdXFKXZIRHkJdELXmsm90u8HHC0OR245UEScO6dNamRMD4baHj5y7t5Qk27
+         awYTA3QNnN8L5XgDvD3nKRC07WGkgzStx6NbYHhIUaCD90k5mXqxxEnTbQxcEAUb76z5
+         g7k02JYVnPf/VyN02ppuvnpY2qafJ+N7LBzAxKKvFRY7tD9sS3Iu5+ulo7RpRMNkD8gY
+         wuypJ8Wnl0+T4HTL+LQfC9k5uU5s8xsuTFhOLjC1IYk2W4no60oVWkkE5+GFXb0WcX4x
+         CgMF0T66bivkmI0Dhaw2VvBb57ME/Z2L0DLwkPmzAUys7HF3BcuFu6q5Wne5brQH29HI
+         e0kQ==
+X-Gm-Message-State: APjAAAUG/fIma8cm3+SLF545OlKUHjltRTn/gDCSpSZnUl5aTuF/ImGm
+        sahsOztVL3U+OZW0NP8N1tORpw==
+X-Google-Smtp-Source: APXvYqwyIr9Hzf7MUy0r0DgFSN19tETtctZT8PEgdV9N562GI+cGiutgSkgp4ilXhVm9KOMG0sXfvw==
+X-Received: by 2002:aa7:928b:: with SMTP id j11mr5412125pfa.176.1579905802569;
+        Fri, 24 Jan 2020 14:43:22 -0800 (PST)
 Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
-        by smtp.gmail.com with ESMTPSA id o2sm7690948pjo.26.2020.01.24.14.43.24
+        by smtp.gmail.com with ESMTPSA id o2sm7690948pjo.26.2020.01.24.14.43.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 Jan 2020 14:43:25 -0800 (PST)
+        Fri, 24 Jan 2020 14:43:21 -0800 (PST)
 From:   Douglas Anderson <dianders@chromium.org>
 To:     Rob Herring <robh@kernel.org>, Andy Gross <agross@kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
@@ -64,9 +64,9 @@ Cc:     Jeffrey Hugo <jhugo@codeaurora.org>,
         Mark Rutland <mark.rutland@arm.com>, linux-clk@vger.kernel.org,
         hoegsberg@chromium.org, Douglas Anderson <dianders@chromium.org>,
         linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
-Subject: [PATCH v2 09/10] arm64: dts: qcom: sdm845: Add the missing clock on the videocc
-Date:   Fri, 24 Jan 2020 14:42:24 -0800
-Message-Id: <20200124144154.v2.9.Id0599319487f075808baba7cba02c4c3c486dc80@changeid>
+Subject: [PATCH v2 06/10] arm64: dts: qcom: sdm845: Add the missing clocks on the gpucc
+Date:   Fri, 24 Jan 2020 14:42:21 -0800
+Message-Id: <20200124144154.v2.6.If8596faf02408cef4bb9f52296b911eb9ba49287@changeid>
 X-Mailer: git-send-email 2.25.0.341.g760bfbb309-goog
 In-Reply-To: <20200124224225.22547-1-dianders@chromium.org>
 References: <20200124224225.22547-1-dianders@chromium.org>
@@ -77,36 +77,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We're transitioning over to requiring the Qualcomm Video Clock
-Controller to specify all the input clocks.  Let's add the one input
-clock for the videocc for sdm845.
+We're transitioning over to requiring the Qualcomm GPU Clock
+Controller to specify all the input clocks.  Let's add them for
+sdm845.
 
-NOTE: Until the Linux driver for sdm845's video is updated, this clock
-will not actually be used in Linux.  It will continue to use global
-clock names to match things up.
+NOTE: Until the Linux driver for sdm845's gpucc is updated, these
+clocks will not actually be used in Linux.  It will continue to use
+global clock names to match things up.  Of course, Linux didn't use
+the old "xo" clock anyway.
 
 Signed-off-by: Douglas Anderson <dianders@chromium.org>
 ---
 
 Changes in v2:
-- Patch ("arm64: dts: qcom: sdm845: Add...videocc") new for v2.
+- Patch ("arm64: dts: qcom: sdm845: Add...gpucc") new for v2.
 
- arch/arm64/boot/dts/qcom/sdm845.dtsi | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/arm64/boot/dts/qcom/sdm845.dtsi | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
 diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-index e624c91dbd6d..8c41e25bd4a8 100644
+index 01354533a61b..e624c91dbd6d 100644
 --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
 +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-@@ -2605,6 +2605,8 @@ video-core1 {
- 		videocc: clock-controller@ab00000 {
- 			compatible = "qcom,sdm845-videocc";
- 			reg = <0 0x0ab00000 0 0x10000>;
-+			clocks = <&rpmhcc RPMH_CXO_CLK>;
-+			clock-names = "xo";
+@@ -1903,8 +1903,10 @@ gpucc: clock-controller@5090000 {
  			#clock-cells = <1>;
- 			#power-domain-cells = <1>;
  			#reset-cells = <1>;
+ 			#power-domain-cells = <1>;
+-			clocks = <&rpmhcc RPMH_CXO_CLK>;
+-			clock-names = "xo";
++			clocks = <&rpmhcc RPMH_CXO_CLK>,
++				 <&gcc GCC_GPU_GPLL0_CLK_SRC>,
++				 <&gcc GCC_GPU_GPLL0_DIV_CLK_SRC>;
++			clock-names = "xo", "gpll0", "gpll0_div";
+ 		};
+ 
+ 		stm@6002000 {
 -- 
 2.25.0.341.g760bfbb309-goog
 
