@@ -2,276 +2,199 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89ADBC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 21:36:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66B04C35242
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 21:38:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E0032075D
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 21:36:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EA312075D
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 21:38:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZaLoFyM1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727163AbgAXVgX (ORCPT
+        id S1727264AbgAXVi1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 16:36:23 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:43682 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725821AbgAXVgX (ORCPT
+        Fri, 24 Jan 2020 16:38:27 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:41134 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725821AbgAXVi1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 16:36:23 -0500
-Received: from p5b06da22.dip0.t-ipconnect.de ([91.6.218.34] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1iv6cW-000218-Bi; Fri, 24 Jan 2020 22:36:04 +0100
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 1EBC010308A; Fri, 24 Jan 2020 22:36:03 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     "Luck\, Tony" <tony.luck@intel.com>,
-        Arvind Sankar <nivedita@alum.mit.edu>
-Cc:     "Christopherson\, Sean J" <sean.j.christopherson@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        "Yu\, Fenghua" <fenghua.yu@intel.com>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        H Peter Anvin <hpa@zytor.com>,
-        "Raj\, Ashok" <ashok.raj@intel.com>,
-        "Shankar\, Ravi V" <ravi.v.shankar@intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>, x86 <x86@kernel.org>
-Subject: Re: [PATCH v14] x86/split_lock: Enable split lock detection by kernel
-In-Reply-To: <20200123231652.GA4457@agluck-desk2.amr.corp.intel.com>
-References: <20200110192409.GA23315@agluck-desk2.amr.corp.intel.com> <20200114055521.GI14928@linux.intel.com> <20200115222754.GA13804@agluck-desk2.amr.corp.intel.com> <20200115225724.GA18268@linux.intel.com> <20200122185514.GA16010@agluck-desk2.amr.corp.intel.com> <20200122224245.GA2331824@rani.riverdale.lan> <3908561D78D1C84285E8C5FCA982C28F7F54887A@ORSMSX114.amr.corp.intel.com> <20200123004507.GA2403906@rani.riverdale.lan> <20200123035359.GA23659@agluck-desk2.amr.corp.intel.com> <20200123044514.GA2453000@rani.riverdale.lan> <20200123231652.GA4457@agluck-desk2.amr.corp.intel.com>
-Date:   Fri, 24 Jan 2020 22:36:03 +0100
-Message-ID: <87h80kmta4.fsf@nanos.tec.linutronix.de>
+        Fri, 24 Jan 2020 16:38:27 -0500
+Received: by mail-wr1-f68.google.com with SMTP id c9so3744576wrw.8;
+        Fri, 24 Jan 2020 13:38:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=JPUjZ35jiwDXQW49rwcMtsfq6BXn4MFG9FEiV5U41rE=;
+        b=ZaLoFyM1kPanZnCOnNPKAXSWQthVDcubhVQQFC7AiDABfafPmmH+RneRSfuqgIkqt+
+         XVso8jc6ybReoxy90PpCsQZ+/4FThRCiP27TlXS7fZgetK10FK67TRcZOokBLB9ti+jt
+         2yawyQMTq5cMJTJBqrtEwQjHplr6byjYyitomfLWwHB5aeHu4mviemP/b4sHOGW5+0V+
+         LmiwosOL2HWgvH/4OamcAxRIxbbqJa+O8vfYRCqLppaIEVuexaEX01TE4VrCWYKOYmVN
+         1R9bvOtk3lm0m7ocr8t9K5AO8T51liS3G0iJTZG1ho3SVB4JseLCKfkOdS1N6/9l4Xml
+         Inrg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=JPUjZ35jiwDXQW49rwcMtsfq6BXn4MFG9FEiV5U41rE=;
+        b=g9Q5f/V9QSTRizoqGPsKKuH3Nags0g6NCDKR94L8jmxHjm9EZ6wGRRRvElKa+99+pV
+         Ipm9hGO3Ks6j9EzumhuN3MFsGIF0gd9ctEwxRE7dewf/gBEMt1vHADBAQweIx+64fI2r
+         JtRfp46Q3madeO4d/+eYQBanNP3jXP1ZuGCMzYxuQDEbwUDy315z9r81qe7Wibhtpv11
+         oSgQJ2fhDaD4rV5R39dkRVsnKZpxLgMnjcGtRM4kWg/qFucH1LVFpK9/uT8Ys1RKcAXS
+         U8zmmCy2bZgXU8tTtZIRtXncRkTYPU/IObNVlmKpmyHmTZHdornMFAk4EudKp93JcS+e
+         iTGA==
+X-Gm-Message-State: APjAAAVdoc1VwcFLiYPg6otKs38tpZusEOrHNRIK57t/0G2lF1gxlxq1
+        WjYANf7T3Ym5ji4NlxRg4Qmgud3Q
+X-Google-Smtp-Source: APXvYqzBetlE4PI7hVXmwd69Hyjm8pHO5DtljMJmQ6DmTZU5Q2rsglnlOi5d1FdzdFmhB2Hffz/COg==
+X-Received: by 2002:a5d:50d2:: with SMTP id f18mr6448507wrt.366.1579901903966;
+        Fri, 24 Jan 2020 13:38:23 -0800 (PST)
+Received: from debian64.daheim (p4FD0967A.dip0.t-ipconnect.de. [79.208.150.122])
+        by smtp.gmail.com with ESMTPSA id n8sm9016719wrx.42.2020.01.24.13.38.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 24 Jan 2020 13:38:22 -0800 (PST)
+Received: from localhost.daheim ([127.0.0.1] helo=debian64.localnet)
+        by debian64.daheim with esmtp (Exim 4.93)
+        (envelope-from <chunkeey@gmail.com>)
+        id 1iv6ej-0024sy-TR; Fri, 24 Jan 2020 22:38:21 +0100
+From:   Christian Lamparter <chunkeey@gmail.com>
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     John Stultz <john.stultz@linaro.org>,
+        Mathias Nyman <mathias.nyman@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-arm-msm@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        USB list <linux-usb@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v6 0/5] usb: xhci: Add support for Renesas USB controllers
+Date:   Fri, 24 Jan 2020 22:38:21 +0100
+Message-ID: <5878067.luYmtVZgP3@debian64>
+In-Reply-To: <CAAd0S9Dd7Ygx7TgV3E_A6z29efG7jsE1-xy48_cHotroWuk_ZA@mail.gmail.com>
+References: <20200113084005.849071-1-vkoul@kernel.org> <20200121064608.GA2841@vkoul-mobl> <CAAd0S9Dd7Ygx7TgV3E_A6z29efG7jsE1-xy48_cHotroWuk_ZA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Tony,
+On Tuesday, 21 January 2020 21:26:34 CET Christian Lamparter wrote:
+> Hello,
+> 
+> On Tue, Jan 21, 2020 at 7:46 AM Vinod Koul <vkoul@kernel.org> wrote:
+> >
+> > hey Christian,
+> >
+> > On 13-01-20, 21:33, Christian Lamparter wrote:
+> > > On Mon, Jan 13, 2020 at 9:10 PM John Stultz <john.stultz@linaro.org> wrote:
+> > > >
+> > > > On Mon, Jan 13, 2020 at 12:42 AM Vinod Koul <vkoul@kernel.org> wrote:
+> > > > >
+> > > > > This series add support for Renesas USB controllers uPD720201 and uPD720202.
+> > > > > These require firmware to be loaded and in case devices have ROM those can
+> > > > > also be programmed if empty. If ROM is programmed, it runs from ROM as well.
+> > > > >
+> > > > > This includes two patches from Christian which supported these controllers
+> > > > > w/o ROM and later my patches for ROM support and multiple firmware versions,
+> > > > > debugfs hook for rom erase and export of xhci-pci functions.
+> > > > >
+> > > >
+> > > > Thanks so much for updating these! They are working ok for me in my
+> > > > testing on db845c.
+> > > >
+> > > > Tested-by: John Stultz <john.stultz@linaro.org>
+> > >
+> > > Nice! I'll definitely give this series another try on my WNDR4700 too
+> > > (PowerPC Arch)
+> > > this weekend.
+> > >
+> > > and from me: Thanks!
+> >
+> > Did you get around to test these?
+> 
+> Not yet, I was too optimistic that I could get current linux-usb with the
+> patches running on the WNDR4700 (due to APM82181) over the
+> weekend. Do you think that It still counts, if I'm going with 5.4.11 on
+> OpenWrt instead? Because then I just swap out the old patches from
+> my OpenWrt APM821XX branch:
+> <https://git.openwrt.org/?p=openwrt/staging/chunkeey.git;a=commit;h=4dd6f62a36a3724f0363d639cd9e29e04d7b62c0>
+> 
+> and don't have to figure out what broke with linux-usb on the APM821xx.
 
-"Luck, Tony" <tony.luck@intel.com> writes:
-> +	split_lock_detect=
-> +			[X86] Enable split lock detection
-> +
-> +			When enabled (and if hardware support is present), atomic
-> +			instructions that access data across cache line
-> +			boundaries will result in an alignment check exception.
-> +
-> +			off	- not enabled
-> +
-> +			warn	- the kernel will pr_alert about applications
+I could get 5.4.11 to boot on the Netgear WNDR4700 :-).
+(This has a APM82181 SoC (PowerPC 464))
 
-pr_alert is not a verb. And the implementation uses
-pr_warn_ratelimited(). So this should be something like:
+Here's faillog from the "plain xhci-pci" driver: 
 
-                       The kernel will emit rate limited warnings about
-                       applications ...
+[  375.481868] xhci_hcd 0000:45:00.0: xHCI Host Controller
+[  375.487149] xhci_hcd 0000:45:00.0: new USB bus registered, assigned bus number 1
+[  385.494590] xhci_hcd 0000:45:00.0: can't setup: -110
+[  385.499558] xhci_hcd 0000:45:00.0: USB bus 1 deregistered
+[  385.504963] xhci_hcd 0000:45:00.0: init 0000:45:00.0 fail, -110
+[  385.510889] xhci_hcd: probe of 0000:45:00.0 failed with error -110
 
-> +				  triggering the #AC exception
-> @@ -40,4 +40,21 @@ int mwait_usable(const struct cpuinfo_x86 *);
->  unsigned int x86_family(unsigned int sig);
->  unsigned int x86_model(unsigned int sig);
->  unsigned int x86_stepping(unsigned int sig);
-> +#ifdef CONFIG_CPU_SUP_INTEL
-> +extern void __init cpu_set_core_cap_bits(struct cpuinfo_x86 *c);
-> +extern bool split_lock_detect_enabled(void);
+(Notice how it gets stuck for 10 seconds there).
 
-That function is unused.
+And this is the successlog from the xhci-pci-renesas module
 
-> +extern bool handle_user_split_lock(struct pt_regs *regs, long error_code);
-> +extern void switch_sld(struct task_struct *);
-> +#else
-> +static inline void __init cpu_set_core_cap_bits(struct cpuinfo_x86 *c) {}
-> +static inline bool split_lock_detect_enabled(void)
-> +{
-> +	return false;
-> +}
-> +static inline bool handle_user_split_lock(struct pt_regs *regs, long error_code)
-> +{
-> +	return false;
-> +}
-> +static inline void switch_sld(struct task_struct *prev) {}
-> +#endif
-  
-> +enum split_lock_detect_state {
-> +	sld_off = 0,
-> +	sld_warn,
-> +	sld_fatal,
-> +};
-> +
-> +/*
-> + * Default to sld_off because most systems do not support
-> + * split lock detection. split_lock_setup() will switch this
+[  391.555559] renesas xhci 0000:45:00.0: xHCI Host Controller
+[  391.561171] renesas xhci 0000:45:00.0: new USB bus registered, assigned bus number 1
+[  391.575068] renesas xhci 0000:45:00.0: hcc params 0x014051cf hci version 0x100 quirks 0x0000000101000090
+[  391.586750] hub 1-0:1.0: USB hub found
+[  391.592601] hub 1-0:1.0: 2 ports detected
+[  391.597199] renesas xhci 0000:45:00.0: xHCI Host Controller
+[  391.602797] renesas xhci 0000:45:00.0: new USB bus registered, assigned bus number 2
+[  391.610537] renesas xhci 0000:45:00.0: Host supports USB 3.0 SuperSpeed
+[  391.617719] usb usb2: We don't know the algorithms for LPM for this host, disabling LPM.
+[  391.626495] hub 2-0:1.0: USB hub found
+[  391.630570] hub 2-0:1.0: 2 ports detected
 
-Can you please add: If supported, then ...
+this is when I added the usb 3.0-stick:
 
-> + * to sld_warn, and then check to see if there is a command
-> + * line override.
+[  775.403928] usb 2-2: new SuperSpeed Gen 1 USB device number 3 using renesas xhci
+[  775.432684] usb-storage 2-2:1.0: USB Mass Storage device detected
+[  775.439238] scsi host1: usb-storage 2-2:1.0
+[  776.482556] scsi 1:0:0:0: Direct-Access     SanDisk  Ultra            1.00 PQ: 0 ANSI: 6
+[  776.492181] sd 1:0:0:0: [sda] 60063744 512-byte logical blocks: (30.8 GB/28.6 GiB)
+[  776.501193] sd 1:0:0:0: [sda] Write Protect is off
+[  776.507047] sd 1:0:0:0: [sda] Write cache: disabled, read cache: enabled, doesn't support DPO or FUA
+[  776.524893]  sda: sda1 sda2
+[  776.531062] sd 1:0:0:0: [sda] Attached SCSI removable disk
 
-I had to read this 3 times and then stare at the code.
+root@(none):/dev# hdparm -t /dev/sda
 
-> + */
-> +static enum split_lock_detect_state sld_state = sld_off;
-> +
-> +static void __init split_lock_setup(void)
-> +{
-> +	enum split_lock_detect_state sld;
-> +	char arg[20];
-> +	int i, ret;
-> +
-> +	sld_state = sld = sld_warn;
+/dev/sda:
+ Timing buffered disk reads: 466 MB in  3.01 seconds = 154.98 MB/sec
 
-This intermediate variable is pointless.
+and this is the log from my usb 2.0-memorystick:
 
-> +	setup_force_cpu_cap(X86_FEATURE_SPLIT_LOCK_DETECT);
-> +
-> +	ret = cmdline_find_option(boot_command_line, "split_lock_detect",
-> +				  arg, sizeof(arg));
-> +	if (ret < 0)
-> +		goto print;
-> +
-> +	for (i = 0; i < ARRAY_SIZE(sld_options); i++) {
-> +		if (match_option(arg, ret, sld_options[i].option)) {
-> +			sld = sld_options[i].state;
-> +			break;
-> +		}
-> +	}
-> +
-> +	if (sld != sld_state)
-> +		sld_state = sld;
-> +
-> +print:
+[ 1187.113650] usb 2-2: USB disconnect, device number 3
+[ 1195.867397] usb 1-2: new high-speed USB device number 2 using renesas xhci
+[ 1195.895171] usb-storage 1-2:1.0: USB Mass Storage device detected
+[ 1195.901848] scsi host1: usb-storage 1-2:1.0
+[ 1196.962583] scsi 1:0:0:0: Direct-Access     SanDisk  Cruzer Blade     1.00 PQ: 0 ANSI: 6
+[ 1196.978772] sd 1:0:0:0: [sda] 30031872 512-byte logical blocks: (15.4 GB/14.3 GiB)
+[ 1196.988529] sd 1:0:0:0: [sda] Write Protect is off
+[ 1196.994498] sd 1:0:0:0: [sda] Write cache: disabled, read cache: enabled, doesn't support DPO or FUA
+[ 1197.020407]  sda: sda1
+[ 1197.030458] sd 1:0:0:0: [sda] Attached SCSI removable disk
 
-> +/*
-> + * The TEST_CTRL MSR is per core. So multiple threads can
-> + * read/write the MSR in parallel. But it's possible to
-> + * simplify the read/write without locking and without
-> + * worry about overwriting the MSR because only bit 29
-> + * is implemented in the MSR and the bit is set as 1 by all
-> + * threads. Locking may be needed in the future if situation
-> + * is changed e.g. other bits are implemented.
+root@(none):/dev# hdparm -t /dev/sda
 
-This sentence doesn't parse. Something like this perhaps:
+/dev/sda:
+ Timing buffered disk reads:  64 MB in  3.01 seconds =  21.28 MB/sec
 
-     Locking is not required at the moment because only bit 29 of this
-     MSR is implemented and locking would not prevent that the operation
-     of one thread is immediately undone by the sibling thread.
+These speeds for usb3 and usb2 are within what the device can do.
+So, everything is working fine with the v6.
 
-This implies that locking might become necessary when new bits are added.
+Tested-by: Christian Lamparter <chunkeey@gmail.com>
 
-> + */
-> +
-> +static bool __sld_msr_set(bool on)
-> +{
-> +	u64 test_ctrl_val;
-> +
-> +	if (rdmsrl_safe(MSR_TEST_CTRL, &test_ctrl_val))
-> +		return false;
-> +
-> +	if (on)
-> +		test_ctrl_val |= MSR_TEST_CTRL_SPLIT_LOCK_DETECT;
-> +	else
-> +		test_ctrl_val &= ~MSR_TEST_CTRL_SPLIT_LOCK_DETECT;
-> +
-> +	if (wrmsrl_safe(MSR_TEST_CTRL, test_ctrl_val))
-> +		return false;
-> +
-> +	return true;
+Cheers,
+Christian
 
-	return !wrmsrl_safe(MSR_TEST_CTRL, test_ctrl_val);
 
-> +}
-> +
-> +static void split_lock_init(void)
-> +{
-> +	if (sld_state == sld_off)
-> +		return;
-> +
-> +	if (__sld_msr_set(true))
-> +		return;
-> +
-> +	/*
-> +	 * If this is anything other than the boot-cpu, you've done
-> +	 * funny things and you get to keep whatever pieces.
-> +	 */
-> +	pr_warn("MSR fail -- disabled\n");
-> +	__sld_msr_set(sld_off);
-
-That should do:
-
-        sld_state = sld_off;
-
-for consistency sake.
-
-> +}
-> +
-> +bool split_lock_detect_enabled(void)
-> +{
-> +	return sld_state != sld_off;
-> +}
-> +
-> +bool handle_user_split_lock(struct pt_regs *regs, long error_code)
-> +{
-> +	if ((regs->flags & X86_EFLAGS_AC) || sld_state == sld_fatal)
-> +		return false;
-> +
-> +	pr_warn_ratelimited("#AC: %s/%d took a split_lock trap at address: 0x%lx\n",
-> +		 current->comm, current->pid, regs->ip);
-
-So with 10 prints per 5 seconds an intentional offender can still fill dmesg
-pretty good. A standard dmesg buffer should be full of this in
-~15min. Not a big issue, but it might be annoying. Let's start with this
-and deal with it when people complain.
-
-The magic below really lacks a comment. Something like:
-
-	/*
-         * Disable the split lock detection for this task so it can make
-         * progress and set TIF_SLD so the detection is reenabled via
-         * switch_to_sld() when the task is scheduled out.
-         */
-
-> +	__sld_msr_set(false);
-> +	set_tsk_thread_flag(current, TIF_SLD);
-> +	return true;
-> +}
-> +
-> +void switch_sld(struct task_struct *prev)
-
-switch_to_sld() perhaps?
-
-> +{
-> +	__sld_msr_set(true);
-> +	clear_tsk_thread_flag(prev, TIF_SLD);
-> +}
->  
-> +dotraplinkage void do_alignment_check(struct pt_regs *regs, long error_code)
-> +{
-> +	const char str[] = "alignment check";
-> +
-> +	RCU_LOCKDEP_WARN(!rcu_is_watching(), "entry code didn't wake RCU");
-> +
-> +	if (notify_die(DIE_TRAP, str, regs, error_code, X86_TRAP_AC, SIGBUS) == NOTIFY_STOP)
-> +		return;
-> +
-> +	if (!user_mode(regs))
-> +		die("Split lock detected\n", regs, error_code);
-> +
-> +	cond_local_irq_enable(regs);
-
-This cond is pointless. We recently removed the ability for user space
-to disable interrupts and even if that would still be allowed then
-keeping interrupts disabled here does not make sense.
-
-Other than those details, I really like this approach.
-
-Thanks,
-
-        tglx
