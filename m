@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF0F0C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:44:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47642C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:44:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B44D208C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:44:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F69F21569
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:44:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579859057;
-	bh=UpDhn7zetNpr1R/Uf2QSny7yWTZclJ94UCeA/hBkOFM=;
+	s=default; t=1579859062;
+	bh=V0J3YtmWRb3U0/bhv2WCKbwi0Zy9UPHyBfnYd7xOJZo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ADzVMa8X6g9pAkSWkohxtPrT7qJ9rfR5S9N+nyYkoOsGwluLhnJ8NVM89JbUVDFmp
-	 Exh4lhdEeIOITLb2zIuRGnkD/Jb/HBMe8pUL9vkel0c7gxtNJdcWc+tUH5RgXbyxDE
-	 7IoJzxqSa7eKsc+8bzZzAc8ehg/u9B6AeCwlmXFw=
+	b=s3hLWmu0JQxXA89G4aOAJl50esqLAT/REX5dA/68jSb5b9AqG6uhY0h/m4yMxGeDY
+	 R5G3ntQJTZeyybyBRFY8md3ebUbmw6msPDVOLlZ+IT7kV6TXl39eG+gGUdzfFWXUs1
+	 uKU9ytfPIyNWyaMVzkKRfPMVcrT+EdHhfifTzmFs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733295AbgAXJoQ (ORCPT
+        id S1733300AbgAXJoV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 04:44:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42566 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 04:44:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42716 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733285AbgAXJoM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 04:44:12 -0500
+        id S1730242AbgAXJoT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 04:44:19 -0500
 Received: from localhost (unknown [145.15.244.15])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 50A67218AC;
-        Fri, 24 Jan 2020 09:44:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3FCE720718;
+        Fri, 24 Jan 2020 09:44:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579859051;
-        bh=UpDhn7zetNpr1R/Uf2QSny7yWTZclJ94UCeA/hBkOFM=;
+        s=default; t=1579859058;
+        bh=V0J3YtmWRb3U0/bhv2WCKbwi0Zy9UPHyBfnYd7xOJZo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=g/PC5ROe4K6zl1oe9/ICZSqowGvZNvR0IvWYVSi1yrXyLDH8EzhFU+gbyNxTEiPFi
-         SHP0PX3TLfXw4BBkf/FBAr8wTW1axv0HbnLv4XbVN8UxseSwiGmfZ7kHF6NQT7R/NY
-         KUyEXP5eUh4xm0wt8F81kQtXsT+c3xtvuKWdqmmA=
+        b=g4FtXatjVT+ybrSQf98IcW6f9ZRkF/DnE3FTEEp0r4GMMKCUa8J8FJLnhMXd+bL2O
+         IkBwWvDsydtxBChVGzfgXe2rqeOS6sB2tI1khkiwm5bEXiNpJReiR0mUKnVjWadBSB
+         Fazg6h69iujbcoe/Esrl1X7fpbXtaS5J+ci49sc0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Gerd Hoffmann <kraxel@redhat.com>,
+        stable@vger.kernel.org, YueHaibing <yuehaibing@huawei.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 009/343] drm/virtio: fix bounds check in virtio_gpu_cmd_get_capset()
-Date:   Fri, 24 Jan 2020 10:27:07 +0100
-Message-Id: <20200124092920.863639090@linuxfoundation.org>
+Subject: [PATCH 4.14 025/343] exportfs: fix passing zero to ERR_PTR() warning
+Date:   Fri, 24 Jan 2020 10:27:23 +0100
+Message-Id: <20200124092922.899762739@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124092919.490687572@linuxfoundation.org>
 References: <20200124092919.490687572@linuxfoundation.org>
@@ -60,53 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit 09c4b49457434fa74749ad6194ef28464d9f5df9 ]
+[ Upstream commit 909e22e05353a783c526829427e9a8de122fba9c ]
 
-This doesn't affect runtime because in the current code "idx" is always
-valid.
+Fix a static code checker warning:
+  fs/exportfs/expfs.c:171 reconnect_one() warn: passing zero to 'ERR_PTR'
 
-First, we read from "vgdev->capsets[idx].max_size" before checking
-whether "idx" is within bounds.  And secondly the bounds check is off by
-one so we could end up reading one element beyond the end of the
-vgdev->capsets[] array.
+The error path for lookup_one_len_unlocked failure
+should set err to PTR_ERR.
 
-Fixes: 62fb7a5e1096 ("virtio-gpu: add 3d/virgl support")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Link: http://patchwork.freedesktop.org/patch/msgid/20180704094250.m7sgvvzg3dhcvv3h@kili.mountain
-Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
+Fixes: bbf7a8a3562f ("exportfs: move most of reconnect_path to helper function")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/virtio/virtgpu_vq.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ fs/exportfs/expfs.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/gpu/drm/virtio/virtgpu_vq.c b/drivers/gpu/drm/virtio/virtgpu_vq.c
-index 21c2de81f3e32..a3be65e689fd2 100644
---- a/drivers/gpu/drm/virtio/virtgpu_vq.c
-+++ b/drivers/gpu/drm/virtio/virtgpu_vq.c
-@@ -648,11 +648,11 @@ int virtio_gpu_cmd_get_capset(struct virtio_gpu_device *vgdev,
- {
- 	struct virtio_gpu_get_capset *cmd_p;
- 	struct virtio_gpu_vbuffer *vbuf;
--	int max_size = vgdev->capsets[idx].max_size;
-+	int max_size;
- 	struct virtio_gpu_drv_cap_cache *cache_ent;
- 	void *resp_buf;
- 
--	if (idx > vgdev->num_capsets)
-+	if (idx >= vgdev->num_capsets)
- 		return -EINVAL;
- 
- 	if (version > vgdev->capsets[idx].max_version)
-@@ -662,6 +662,7 @@ int virtio_gpu_cmd_get_capset(struct virtio_gpu_device *vgdev,
- 	if (!cache_ent)
- 		return -ENOMEM;
- 
-+	max_size = vgdev->capsets[idx].max_size;
- 	cache_ent->caps_cache = kmalloc(max_size, GFP_KERNEL);
- 	if (!cache_ent->caps_cache) {
- 		kfree(cache_ent);
+diff --git a/fs/exportfs/expfs.c b/fs/exportfs/expfs.c
+index a561ae17cf435..c08960040dd05 100644
+--- a/fs/exportfs/expfs.c
++++ b/fs/exportfs/expfs.c
+@@ -147,6 +147,7 @@ static struct dentry *reconnect_one(struct vfsmount *mnt,
+ 	tmp = lookup_one_len_unlocked(nbuf, parent, strlen(nbuf));
+ 	if (IS_ERR(tmp)) {
+ 		dprintk("%s: lookup failed: %d\n", __func__, PTR_ERR(tmp));
++		err = PTR_ERR(tmp);
+ 		goto out_err;
+ 	}
+ 	if (tmp != dentry) {
 -- 
 2.20.1
 
