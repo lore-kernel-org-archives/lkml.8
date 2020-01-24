@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03693C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:02:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B74AC32771
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:02:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C06DD20838
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:02:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2D082077C
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:02:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579863734;
-	bh=SJzxxMTqMPGD3zBxUOJbv6XUEQmgF34qgxz4zoDCeKI=;
+	s=default; t=1579863737;
+	bh=mMVHWPhGVr12UQgiIwOVH1+KWsDTW8eU+eNqwVQThDk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RqpSOoEWwAdmyGgWxXR4mzqyflSuXvku03kcM8L9Me7VlBHtx2a2JE0G6WISRZzWv
-	 Jk+wu8RaA7YLhhafLcbRu+CLWqv/4RbXjEVOGaI9r6kPhmS9iy6WO938tRWaKnXEUi
-	 FT0H+To9GAkYnUaSzfrEKIarUxgdNugr+tYZwiZE=
+	b=2NmV8lo6JfwBU0q/LQVKj75T57TQ1U37nfRJOucg7S9A/RToy/B/0QgTW/rLD3hnk
+	 mzBO0VZYSL+sjukDUYshJQPoQvsyr0lCGLoAp4ShQsgCcHeQ3RpXUv6fMAnGduTFpJ
+	 hmY/oyGFSCWk57x9oRlNa3kJfoeNEcunz0d4UI2E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387976AbgAXLCN (ORCPT
+        id S2387994AbgAXLCQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:02:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35452 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 06:02:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35562 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733088AbgAXLCJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:02:09 -0500
+        id S1732560AbgAXLCN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:02:13 -0500
 Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B662A20838;
-        Fri, 24 Jan 2020 11:02:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6BFDE2075D;
+        Fri, 24 Jan 2020 11:02:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579863728;
-        bh=SJzxxMTqMPGD3zBxUOJbv6XUEQmgF34qgxz4zoDCeKI=;
+        s=default; t=1579863732;
+        bh=mMVHWPhGVr12UQgiIwOVH1+KWsDTW8eU+eNqwVQThDk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=F1eUFNe7wk2sn6IxnuRhpkEpNWhNWCNR3rdLJucX9Da3dRKow5QBTFFEmUlWEAiXP
-         Sd+k7AwWmJfewC7nAZddFHRt6YbLkDN8w1Uq3Q91NooS/C7q3GmgXCJq7aMp70Pzsb
-         BY6cxBMLuLejw6bKYaxLiX67OZ+Y7+eFTuiCA69k=
+        b=a5GergCa9/w7WXznR5J0lG7xZCIY8NFAMMnhquhsDbUeY3SZqFr0Rdm1cNvAuFfv6
+         I8R/1g5P+BAsjhy7oIsFa2JHNfVeVOhatkpXss2Zf7YuPFKRpnZxO8qCzbqQLHwVdN
+         hg64asKFHLZRPY9r0fzxo4z6AlHYmMGz6hOXqSoA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Fernando Fernandez Mancera <ffmancera@riseup.net>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
+        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 049/639] netfilter: nft_osf: usage from output path is not valid
-Date:   Fri, 24 Jan 2020 10:23:39 +0100
-Message-Id: <20200124093053.554365367@linuxfoundation.org>
+Subject: [PATCH 4.19 065/639] pcrypt: use format specifier in kobject_add
+Date:   Fri, 24 Jan 2020 10:23:55 +0100
+Message-Id: <20200124093055.548235479@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
 References: <20200124093047.008739095@linuxfoundation.org>
@@ -61,49 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Fernando Fernandez Mancera <ffmancera@riseup.net>
+From: Colin Ian King <colin.king@canonical.com>
 
-[ Upstream commit 4a3e71b7b7dbaf3562be9d508260935aa13cb48b ]
+[ Upstream commit b1e3874c75ab15288f573b3532e507c37e8e7656 ]
 
-The nft_osf extension, like xt_osf, is not supported from the output
-path.
+Passing string 'name' as the format specifier is potentially hazardous
+because name could (although very unlikely to) have a format specifier
+embedded in it causing issues when parsing the non-existent arguments
+to these.  Follow best practice by using the "%s" format string for
+the string 'name'.
 
-Fixes: b96af92d6eaf ("netfilter: nf_tables: implement Passive OS fingerprint module in nft_osf")
-Signed-off-by: Fernando Fernandez Mancera <ffmancera@riseup.net>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Cleans up clang warning:
+crypto/pcrypt.c:397:40: warning: format string is not a string literal
+(potentially insecure) [-Wformat-security]
+
+Fixes: a3fb1e330dd2 ("pcrypt: Added sysfs interface to pcrypt")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/nft_osf.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ crypto/pcrypt.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/netfilter/nft_osf.c b/net/netfilter/nft_osf.c
-index a35fb59ace732..df4e3e0412ed3 100644
---- a/net/netfilter/nft_osf.c
-+++ b/net/netfilter/nft_osf.c
-@@ -69,6 +69,15 @@ nla_put_failure:
- 	return -1;
- }
+diff --git a/crypto/pcrypt.c b/crypto/pcrypt.c
+index f8ec3d4ba4a80..a5718c0a3dc4e 100644
+--- a/crypto/pcrypt.c
++++ b/crypto/pcrypt.c
+@@ -394,7 +394,7 @@ static int pcrypt_sysfs_add(struct padata_instance *pinst, const char *name)
+ 	int ret;
  
-+static int nft_osf_validate(const struct nft_ctx *ctx,
-+			    const struct nft_expr *expr,
-+			    const struct nft_data **data)
-+{
-+	return nft_chain_validate_hooks(ctx->chain, (1 << NF_INET_LOCAL_IN) |
-+						    (1 << NF_INET_PRE_ROUTING) |
-+						    (1 << NF_INET_FORWARD));
-+}
-+
- static struct nft_expr_type nft_osf_type;
- static const struct nft_expr_ops nft_osf_op = {
- 	.eval		= nft_osf_eval,
-@@ -76,6 +85,7 @@ static const struct nft_expr_ops nft_osf_op = {
- 	.init		= nft_osf_init,
- 	.dump		= nft_osf_dump,
- 	.type		= &nft_osf_type,
-+	.validate	= nft_osf_validate,
- };
+ 	pinst->kobj.kset = pcrypt_kset;
+-	ret = kobject_add(&pinst->kobj, NULL, name);
++	ret = kobject_add(&pinst->kobj, NULL, "%s", name);
+ 	if (!ret)
+ 		kobject_uevent(&pinst->kobj, KOBJ_ADD);
  
- static struct nft_expr_type nft_osf_type __read_mostly = {
 -- 
 2.20.1
 
