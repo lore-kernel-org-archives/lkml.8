@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37D5AC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:35:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0975BC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:36:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01DFB206F0
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:35:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6E73206F0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:36:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579865756;
-	bh=PYky6g+LD+ZorvkzmDMOwOA9+Te/d4CjtLHXdj/Msv0=;
+	s=default; t=1579865760;
+	bh=fvlAEjBEWR/oecRoP9PlSXWln1msywgc0bm9ei2Y2gw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GBzLOJDcWp+kiiawf3W8ZZwaEcjPsvLYaZltXpb3QPI/uwlnSmd9Tdd9AH6/vYRYf
-	 on+rVC3PxivRVa+Kmv3LQedyJ0MaYmOKPi12bLVfXf95+tUB8FXfe4kJkV7I7n7Jvi
-	 TW15PazE2rm1lTGXg1tZvNLPFJwHYI6tWmWWisIs=
+	b=XUtclSeZz0Vvx1e1DRvZR0hTDJTDUIRdN1c6NE+ZHbfMGsEzliNL2D5qZBvUWqeyJ
+	 M0JouUnsnF7eltU8E86yq65hOYDBZkvu845JPQVNlCq2FUNSqY4DU1cyvJKiv4pNrR
+	 ovGNpwnIoJJ1anQ4giELokVC/kDClcNy8CvTHXkU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404882AbgAXLfz (ORCPT
+        id S2391933AbgAXLf7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:35:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55992 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 06:35:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56044 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387523AbgAXLfw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:35:52 -0500
+        id S2387523AbgAXLf4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:35:56 -0500
 Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E8112206F0;
-        Fri, 24 Jan 2020 11:35:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CF01D22464;
+        Fri, 24 Jan 2020 11:35:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579865751;
-        bh=PYky6g+LD+ZorvkzmDMOwOA9+Te/d4CjtLHXdj/Msv0=;
+        s=default; t=1579865755;
+        bh=fvlAEjBEWR/oecRoP9PlSXWln1msywgc0bm9ei2Y2gw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KVqjhPfnyk4F1eib4FaI3eZRfHiRv3ky/xfIQpvCmTadp/YUCv8mCF9cXYVzGA3uI
-         wP860xOPHT3RrMjQ3Q6qNvT9GvgLgvH1Zn5CKOaPuHJ4kQQlYPS7aE/cIaE3VFSVHK
-         xdl0TVjwJfdFuspdx5fAakggy/VNheN5jntUGogQ=
+        b=LYeCNU6L/no465kAWp7hU3ZmM7FRGfDQ43P0mtnOY0vNZ9szK0EKxBS713hxUIJ4Q
+         cLAQeUH2BdlHtfmRKgja4GQBSQRypoKq9rOwYqYXkEKlPWbBAtpxMAT0pN6yg65GcE
+         +v8GzTtGbkmmN6OB2rNsNyzr5SGWeLQGWUuk0LkE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "H. Nikolaus Schaller" <hns@goldelico.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
+        stable@vger.kernel.org, David Howells <dhowells@redhat.com>,
+        Marc Dionne <marc.dionne@auristor.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 627/639] mmc: sdio: fix wl1251 vendor id
-Date:   Fri, 24 Jan 2020 10:33:17 +0100
-Message-Id: <20200124093208.143092778@linuxfoundation.org>
+Subject: [PATCH 4.19 613/639] afs: Fix missing timeout reset
+Date:   Fri, 24 Jan 2020 10:33:03 +0100
+Message-Id: <20200124093206.260681306@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
 References: <20200124093047.008739095@linuxfoundation.org>
@@ -60,42 +61,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: H. Nikolaus Schaller <hns@goldelico.com>
+From: David Howells <dhowells@redhat.com>
 
-[ Upstream commit e5db673e7fe2f971ec82039a28dc0811c2100e87 ]
+[ Upstream commit c74386d50fbaf4a54fd3fe560f1abc709c0cff4b ]
 
-v4.11-rc1 did introduce a patch series that rearranged the
-sdio quirks into a header file. Unfortunately this did forget
-to handle SDIO_VENDOR_ID_TI differently between wl1251 and
-wl1271 with the result that although the wl1251 was found on
-the sdio bus, the firmware did not load any more and there was
-no interface registration.
+In afs_wait_for_call_to_complete(), rather than immediately aborting an
+operation if a signal occurs, the code attempts to wait for it to
+complete, using a schedule timeout of 2*RTT (or min 2 jiffies) and a
+check that we're still receiving relevant packets from the server before
+we consider aborting the call.  We may even ping the server to check on
+the status of the call.
 
-This patch defines separate constants to be used by sdio quirks
-and drivers.
+However, there's a missing timeout reset in the event that we do
+actually get a packet to process, such that if we then get a couple of
+short stalls, we then time out when progress is actually being made.
 
-Fixes: 884f38607897 ("mmc: core: move some sdio IDs out of quirks file")
-Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
-Cc: <stable@vger.kernel.org> # v4.11+
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Fix this by resetting the timeout any time we get something to process.
+If it's the failure of the call then the call state will get changed and
+we'll exit the loop shortly thereafter.
+
+A symptom of this is data fetches and stores failing with EINTR when
+they really shouldn't.
+
+Fixes: bc5e3a546d55 ("rxrpc: Use MSG_WAITALL to tell sendmsg() to temporarily ignore signals")
+Signed-off-by: David Howells <dhowells@redhat.com>
+Reviewed-by: Marc Dionne <marc.dionne@auristor.com>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/mmc/sdio_ids.h | 2 ++
- 1 file changed, 2 insertions(+)
+ fs/afs/rxrpc.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/include/linux/mmc/sdio_ids.h b/include/linux/mmc/sdio_ids.h
-index 4224902a8e22a..358d6be357eda 100644
---- a/include/linux/mmc/sdio_ids.h
-+++ b/include/linux/mmc/sdio_ids.h
-@@ -68,6 +68,8 @@
+diff --git a/fs/afs/rxrpc.c b/fs/afs/rxrpc.c
+index 2543f24d23f8d..560dd5ff5a151 100644
+--- a/fs/afs/rxrpc.c
++++ b/fs/afs/rxrpc.c
+@@ -573,6 +573,7 @@ static long afs_wait_for_call_to_complete(struct afs_call *call,
+ 			call->need_attention = false;
+ 			__set_current_state(TASK_RUNNING);
+ 			afs_deliver_to_call(call);
++			timeout = rtt2;
+ 			continue;
+ 		}
  
- #define SDIO_VENDOR_ID_TI			0x0097
- #define SDIO_DEVICE_ID_TI_WL1271		0x4076
-+#define SDIO_VENDOR_ID_TI_WL1251		0x104c
-+#define SDIO_DEVICE_ID_TI_WL1251		0x9066
- 
- #define SDIO_VENDOR_ID_STE			0x0020
- #define SDIO_DEVICE_ID_STE_CW1200		0x2280
 -- 
 2.20.1
 
