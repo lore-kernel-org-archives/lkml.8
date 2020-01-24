@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AB7BC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:14:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0437AC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:14:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C81EF20663
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:14:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6E7620663
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:14:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579864474;
-	bh=LulBTmAi/2rxwJpwT9kpq/dyMu0maR6zY2C7ZSGsSbQ=;
+	s=default; t=1579864477;
+	bh=jxDIskhWmGSLBPmXNhnoajzCfCH+NOcmxyk1AIzm8QQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kRFZ1rOjFz2N93fJY7lGYi4DudnDQTde+dhPMw0x0o3GrdDUcOF/F0w5D2AazP/6p
-	 MuRbFZp6iQpK6wJDMX3zTckk+1TzXuQzOXxiteX6xq0w8zOAtoywJ2chCVoJIZKWMe
-	 sHXELAJ/smFtmBqE8bpfKdjCzKX4P4qyMEEjqL10=
+	b=JuR9DJ4MS2NbeuCXIeB0F7hCcLIkznNErQcKg6W0LowOi/lhrHqqQ6kVlIPiqpqLs
+	 guLmPVdS/w/Dl7CPa7NBturR0Rf1p+6vpVPZ1YQRiO+NqMsFHtGRiVfuir/eoJTwMF
+	 V6OaB0CWMtKPDgfVByfGK14uDJtA7r46CxBwXt7o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388003AbgAXLOa (ORCPT
+        id S2390225AbgAXLOh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:14:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50852 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 06:14:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50902 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390138AbgAXLO0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:14:26 -0500
+        id S2390141AbgAXLO3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:14:29 -0500
 Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 477EE2467F;
-        Fri, 24 Jan 2020 11:14:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9961820663;
+        Fri, 24 Jan 2020 11:14:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579864466;
-        bh=LulBTmAi/2rxwJpwT9kpq/dyMu0maR6zY2C7ZSGsSbQ=;
+        s=default; t=1579864469;
+        bh=jxDIskhWmGSLBPmXNhnoajzCfCH+NOcmxyk1AIzm8QQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kCBXMytqdigdHstd7PM4Bvcc2U2UxuTbGHYOurJ8q4lt0kkV12JFZnEJCxflhWfCC
-         pLsI4Mkyv0hTp87W/joLrr+fdmcWtHzO78iapmf9hqD95HMX7qhdlhtX03JD1sekbJ
-         Ks1A4tOIuoMLsoeKb8vFR5OBSjQlPy7QmQ+HlPWk=
+        b=mjQS7dUEhSYL8dTc3I7Udra6yQbg8fVQTLl37hb94AP4HZ6bm9NfGn8BqLDAcu9nw
+         SXf9oMg/E/NbFOF7pcSudngqddURj4YWU3ro+lKTv1sowm5yxfG1P76PuG9tT9XU7w
+         LxAsHGmFEWWS+AEBKh6won7FMStNr5Ka0+5BYt9Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>,
         Maxime Ripard <maxime.ripard@bootlin.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 273/639] ARM: dts: sun8i: a33: Reintroduce default pinctrl muxing
-Date:   Fri, 24 Jan 2020 10:27:23 +0100
-Message-Id: <20200124093120.930243702@linuxfoundation.org>
+Subject: [PATCH 4.19 274/639] arm64: dts: allwinner: a64: Add missing PIO clocks
+Date:   Fri, 24 Jan 2020 10:27:24 +0100
+Message-Id: <20200124093121.070004228@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
 References: <20200124093047.008739095@linuxfoundation.org>
@@ -62,35 +62,36 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Maxime Ripard <maxime.ripard@bootlin.com>
 
-[ Upstream commit fa44328f4eb0b762a1fcb148809068e9646e7156 ]
+[ Upstream commit 562bf19611c000cb7219431c3cc78aa60c2b371e ]
 
-Commit d02752149759 ("ARM: dts: sun8i-a23-a33: Move NAND controller device
-node to sort by address") moved the NAND controller node around, but
-dropped the default muxing in the process.
+The pinctrl binding mandates that we have the three clocks fed into the PIO
+described.
 
-Reintroduce it.
+Even though the old case is still supported for backward compatibility, we
+should update our DTs to fix this.
 
-Fixes: d02752149759 ("ARM: dts: sun8i-a23-a33: Move NAND controller device node to sort by address")
+Fixes: 6bc37fac30cf ("arm64: dts: add Allwinner A64 SoC .dtsi")
 Acked-by: Chen-Yu Tsai <wens@csie.org>
 Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/sun8i-a23-a33.dtsi | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/sun8i-a23-a33.dtsi b/arch/arm/boot/dts/sun8i-a23-a33.dtsi
-index a272a69519a26..1efad1a6bcfd9 100644
---- a/arch/arm/boot/dts/sun8i-a23-a33.dtsi
-+++ b/arch/arm/boot/dts/sun8i-a23-a33.dtsi
-@@ -163,6 +163,8 @@
- 			clock-names = "ahb", "mod";
- 			resets = <&ccu RST_BUS_NAND>;
- 			reset-names = "ahb";
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&nand_pins &nand_pins_cs0 &nand_pins_rb0>;
- 			status = "disabled";
- 			#address-cells = <1>;
- 			#size-cells = <0>;
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+index d3daf90a8715c..7abc4ea305410 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+@@ -366,7 +366,8 @@
+ 			interrupts = <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>,
+ 				     <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>,
+ 				     <GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH>;
+-			clocks = <&ccu 58>;
++			clocks = <&ccu 58>, <&osc24M>, <&rtc 0>;
++			clock-names = "apb", "hosc", "losc";
+ 			gpio-controller;
+ 			#gpio-cells = <3>;
+ 			interrupt-controller;
 -- 
 2.20.1
 
