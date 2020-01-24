@@ -2,89 +2,165 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1693FC35242
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 16:01:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BFD7C35242
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 16:09:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1904206F0
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 16:01:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 392B322522
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 16:09:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731526AbgAXQBN (ORCPT
+        id S2387918AbgAXQJl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 11:01:13 -0500
-Received: from mx2.suse.de ([195.135.220.15]:55554 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727306AbgAXQBN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 11:01:13 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 66FA0ACE3;
-        Fri, 24 Jan 2020 16:01:11 +0000 (UTC)
-Date:   Fri, 24 Jan 2020 17:01:10 +0100
-From:   Jean Delvare <jdelvare@suse.de>
-To:     Luca Ceresoli <luca@lucaceresoli.net>
-Cc:     linux-i2c@vger.kernel.org, linux-doc@vger.kernel.org,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Peter Rosin <peda@axentia.se>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 28/28] docs: i2c: writing-clients: properly name the
- stop condition
-Message-ID: <20200124170110.0a6110b2@endymion>
-In-Reply-To: <20200123145626.8102-15-luca@lucaceresoli.net>
-References: <20200123135103.20540-1-luca@lucaceresoli.net>
-        <20200123145626.8102-1-luca@lucaceresoli.net>
-        <20200123145626.8102-15-luca@lucaceresoli.net>
-Organization: SUSE Linux
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-suse-linux-gnu)
+        Fri, 24 Jan 2020 11:09:41 -0500
+Received: from smtp1.de.adit-jv.com ([93.241.18.167]:56970 "EHLO
+        smtp1.de.adit-jv.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387515AbgAXQJl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 11:09:41 -0500
+Received: from localhost (smtp1.de.adit-jv.com [127.0.0.1])
+        by smtp1.de.adit-jv.com (Postfix) with ESMTP id 590CD3C00C5;
+        Fri, 24 Jan 2020 17:09:37 +0100 (CET)
+Received: from smtp1.de.adit-jv.com ([127.0.0.1])
+        by localhost (smtp1.de.adit-jv.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id tJXrfdc7WK_a; Fri, 24 Jan 2020 17:09:32 +0100 (CET)
+Received: from HI2EXCH01.adit-jv.com (hi2exch01.adit-jv.com [10.72.92.24])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtp1.de.adit-jv.com (Postfix) with ESMTPS id 3EFD53C009E;
+        Fri, 24 Jan 2020 17:09:32 +0100 (CET)
+Received: from lxhi-065.adit-jv.com (10.72.93.66) by HI2EXCH01.adit-jv.com
+ (10.72.92.24) with Microsoft SMTP Server (TLS) id 14.3.468.0; Fri, 24 Jan
+ 2020 17:09:31 +0100
+Date:   Fri, 24 Jan 2020 17:09:29 +0100
+From:   Eugeniu Rosca <erosca@de.adit-jv.com>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+CC:     Eugeniu Rosca <erosca@de.adit-jv.com>,
+        John Ogness <john.ogness@linutronix.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        Andrew Gabbasov <andrew_gabbasov@mentor.com>,
+        Sanjeev Chugh <sanjeev_chugh@mentor.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Daniel Wang <wonderfly@google.com>,
+        Dean Jenkins <dean_jenkins@mentor.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Dirk Behme <dirk.behme@de.bosch.com>,
+        Alan Cox <gnomes@lxorguk.ukuu.org.uk>,
+        Jiri Slaby <jslaby@suse.com>,
+        Peter Feiner <pfeiner@google.com>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Eugeniu Rosca <roscaeugeniu@gmail.com>
+Subject: Re: [RFC PATCH v1 00/25] printk: new implementation
+Message-ID: <20200124160929.GA10863@lxhi-065.adit-jv.com>
+References: <20190212143003.48446-1-john.ogness@linutronix.de>
+ <20200120230522.GA23636@lxhi-065.adit-jv.com>
+ <87v9p4mkhr.fsf@linutronix.de>
+ <20200122023422.GA926@lxhi-065.adit-jv.com>
+ <CAMuHMdXT9USuHw15nA1mLXsh7RKK68eN0phevC_Jauaa7FnW0Q@mail.gmail.com>
+ <20200122165855.GA3485@lxhi-065.adit-jv.com>
+ <CAMuHMdWzapJ+5Jtf5fPQGP5edzCUfMeQA7v3GVWbKKvR=aXSsg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdWzapJ+5Jtf5fPQGP5edzCUfMeQA7v3GVWbKKvR=aXSsg@mail.gmail.com>
+X-Originating-IP: [10.72.93.66]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 23 Jan 2020 15:56:26 +0100, Luca Ceresoli wrote:
-> In I2C there is no such thing as a "stop bit". Use the proper naming: "stop
-> condition".
-> 
-> Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
-> Reported-by: Jean Delvare <jdelvare@suse.de>
-> 
-> ---
-> 
-> This patch is new in v2.
-> ---
->  Documentation/i2c/writing-clients.rst | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/Documentation/i2c/writing-clients.rst b/Documentation/i2c/writing-clients.rst
-> index 82aa33c964d3..978cc8210bf3 100644
-> --- a/Documentation/i2c/writing-clients.rst
-> +++ b/Documentation/i2c/writing-clients.rst
-> @@ -357,9 +357,9 @@ read/written.
->  
->  This sends a series of messages. Each message can be a read or write,
->  and they can be mixed in any way. The transactions are combined: no
-> -stop bit is sent between transaction. The i2c_msg structure contains
-> -for each message the client address, the number of bytes of the message
-> -and the message data itself.
-> +stop condition is issued between transaction. The i2c_msg structure
-> +contains for each message the client address, the number of bytes of the
-> +message and the message data itself.
->  
->  You can read the file ``i2c-protocol`` for more information about the
->  actual I2C protocol.
+Hi Geert,
 
-Reviewed-by: Jean Delvare <jdelvare@suse.de>
+On Wed, Jan 22, 2020 at 08:48:12PM +0100, Geert Uytterhoeven wrote:
+> On Wed, Jan 22, 2020 at 5:59 PM Eugeniu Rosca <erosca@de.adit-jv.com> wrote:
+> > On Wed, Jan 22, 2020 at 08:31:44AM +0100, Geert Uytterhoeven wrote:
+> > > On Wed, Jan 22, 2020 at 3:34 AM Eugeniu Rosca <erosca@de.adit-jv.com> wrote:
+> > > > So, what's specific to R-Car3, based on my testing, is that the issue
+> > > > can only be reproduced if the printk storm originates on CPU0
 
-I have reviewed the whole v2 series, so any patch to which I did not
-reply to retains my Reviewed-by tag.
+Slight amendment the above statement. Below results are got on R-Car
+H3ULCB running renesas-drivers-2020-01-14-v5.5-rc6 (cX stands for CPUx,
+whitespace stands for clean audio, '!' stands for distorted audio):
 
-Thanks Luca!
+                  printk @:
+                  c0 c1 c2 c3 c4 c5 c6 c7
+speaker-test @ c0 !
+               c1 !  !
+               c2 !     !
+               c3 !        !
+               c4 !           !
+               c5 !              !
+               c6 !                 !
+               c7 !                    !
+
+One can see two patterns in the chart. The audio has glitches whenever:
+ - printk and the audio application run on the same CPU, or:
+ - printk runs on CPU0
+
+> Yeah, cpu0 is always heavily loaded w.r.t. interrupts.
+> Can you reproduce the problem after forcing all interrupts to e.g. cpu1?
+
+With instrumentation shown in [1], the chart suffers below changes:
+
+                  printk @:
+                  c0 c1 c2 c3 c4 c5 c6 c7
+speaker+test @ c0 !  !
+               c1    !
+               c2    !  !
+               c3    !     !
+               c4    !        !
+               c5    !           !
+               c6    !              !
+               c7    !                 !
+
+Any comments on the above empirical results?
+
+[1] IRQ affinity set to CPU1
+
+diff --git a/drivers/dma/sh/rcar-dmac.c b/drivers/dma/sh/rcar-dmac.c
+index f06016d38a05..40003a3af4e0 100644
+--- a/drivers/dma/sh/rcar-dmac.c
++++ b/drivers/dma/sh/rcar-dmac.c
+@@ -1786,6 +1786,12 @@ static int rcar_dmac_chan_probe(struct rcar_dmac *dmac,
+ 		return ret;
+ 	}
+ 
++	ret = irq_set_affinity(rchan->irq, cpumask_of(1));
++	if (ret) {
++		dev_err(dmac->dev, "failed to set IRQ affinity %u (%d)\n", rchan->irq, ret);
++		return ret;
++	}
++
+ 	return 0;
+ }
+ 
+diff --git a/drivers/tty/serial/sh-sci.c b/drivers/tty/serial/sh-sci.c
+index 9b4ff872e297..c76b38626b6b 100644
+--- a/drivers/tty/serial/sh-sci.c
++++ b/drivers/tty/serial/sh-sci.c
+@@ -1926,6 +1926,11 @@ static int sci_request_irq(struct sci_port *port)
+ 			dev_err(up->dev, "Can't allocate %s IRQ\n", desc->desc);
+ 			goto out_noirq;
+ 		}
++		ret = irq_set_affinity(irq, cpumask_of(1));
++		if (ret) {
++			dev_err(up->dev, "failed to set IRQ affinity %u (%d)\n", irq, ret);
++			return ret;
++		}
+ 	}
+ 
+ 	return 0;
 
 -- 
-Jean Delvare
-SUSE L3 Support
+Best Regards
+Eugeniu Rosca
