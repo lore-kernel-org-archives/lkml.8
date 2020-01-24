@@ -4,53 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F22CC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:31:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF1AEC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:31:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4148D206F0
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:31:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A55BE20661
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:31:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579876271;
-	bh=OHbEb95UQ/uDxKtaT7TWCgF3ujdAcFfh7VMwS96ofwA=;
+	s=default; t=1579876276;
+	bh=G2VOsEbEc+dMho5fyhWCrtwPYAPYFgFjSpokoeq08uY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=H0JOgHl9yKwOcaJM17t+2mZVVe5k9lKol7IfxHw+2ca77a1BPrM7qXC0ghocGPs1o
-	 gz+GZzxiZDoF+wyNgKXxJ9WKJVmYV/spHolP9RGIVoGRX2bk4venDcHLNXaBPDDavd
-	 gk8Hl18SolRtHu/g66rg37mKsGNKVSrcEsAPdnFM=
+	b=GrNG9tFeyBrrgk0yPYdVAxSs9Yi5zG/KKgPlj/wAKUzwo6upAfu4DwlrGaBkzhLTN
+	 wyurFBGMLbdCrhAWwVZAjKByqXtwuEeRwqN2IYebJEN47UNAHsUn1OdqJXq3DxBl4Y
+	 3z83ps9zpjeEohfkhNErFnGrync6fu9hLLjNGSFc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403877AbgAXObK (ORCPT
+        id S1730988AbgAXOU2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 09:31:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41580 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 09:20:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40868 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731125AbgAXOUa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 09:20:30 -0500
+        id S2404401AbgAXOUG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 09:20:06 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B93932087E;
-        Fri, 24 Jan 2020 14:20:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0A58A22464;
+        Fri, 24 Jan 2020 14:20:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579875629;
-        bh=OHbEb95UQ/uDxKtaT7TWCgF3ujdAcFfh7VMwS96ofwA=;
+        s=default; t=1579875605;
+        bh=G2VOsEbEc+dMho5fyhWCrtwPYAPYFgFjSpokoeq08uY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rKXAwtcFg9OdFDhXzP9WZakOLJVTEj6lgRRpY24r46WPdAW9ZSnAUB0ZKf+Wp8Au3
-         Mb+nm8tFbEgVYf8prPx3UXycXx4PyjP0xGIqR5Nkc/rkp6CodwL7bLPAcKQnfqC+wD
-         F7zY71GQ3QidsRJpgXOqsmqmQB/rJ4pzdxjIxNsE=
+        b=htmTAk8WrPZ34R41qi4tJpOIrckGKVBCB04kNcFcfJ9l4UedDeCbJJrzW/VLB0lxL
+         tYQKFOj8E5TK+kBypst3KbZJ+TI9CEW3ZySm6MtYkomOToAaozPHjqAlDkpVvOVDQh
+         8QAByoyiqajZGmexj7aD9xW5H4HQsqxSNEVGvwVc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Markus Theil <markus.theil@tu-ilmenau.de>,
-        Johannes Berg <johannes.berg@intel.com>,
+Cc:     Florian Westphal <fw@strlen.de>,
+        syzbot+0e63ae76d117ae1c3a01@syzkaller.appspotmail.com,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
         Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 14/56] mac80211: mesh: restrict airtime metric to peered established plinks
-Date:   Fri, 24 Jan 2020 09:19:30 -0500
-Message-Id: <20200124142012.29752-14-sashal@kernel.org>
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 093/107] netfilter: nf_tables: remove WARN and add NLA_STRING upper limits
+Date:   Fri, 24 Jan 2020 09:18:03 -0500
+Message-Id: <20200124141817.28793-93-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200124142012.29752-1-sashal@kernel.org>
-References: <20200124142012.29752-1-sashal@kernel.org>
+In-Reply-To: <20200124141817.28793-1-sashal@kernel.org>
+References: <20200124141817.28793-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,53 +62,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Markus Theil <markus.theil@tu-ilmenau.de>
+From: Florian Westphal <fw@strlen.de>
 
-[ Upstream commit 02a614499600af836137c3fbc4404cd96365fff2 ]
+[ Upstream commit 9332d27d7918182add34e8043f6a754530fdd022 ]
 
-The following warning is triggered every time an unestablished mesh peer
-gets dumped. Checks if a peer link is established before retrieving the
-airtime link metric.
+This WARN can trigger because some of the names fed to the module
+autoload function can be of arbitrary length.
 
-[ 9563.022567] WARNING: CPU: 0 PID: 6287 at net/mac80211/mesh_hwmp.c:345
-               airtime_link_metric_get+0xa2/0xb0 [mac80211]
-[ 9563.022697] Hardware name: PC Engines apu2/apu2, BIOS v4.10.0.3
-[ 9563.022756] RIP: 0010:airtime_link_metric_get+0xa2/0xb0 [mac80211]
-[ 9563.022838] Call Trace:
-[ 9563.022897]  sta_set_sinfo+0x936/0xa10 [mac80211]
-[ 9563.022964]  ieee80211_dump_station+0x6d/0x90 [mac80211]
-[ 9563.023062]  nl80211_dump_station+0x154/0x2a0 [cfg80211]
-[ 9563.023120]  netlink_dump+0x17b/0x370
-[ 9563.023130]  netlink_recvmsg+0x2a4/0x480
-[ 9563.023140]  ____sys_recvmsg+0xa6/0x160
-[ 9563.023154]  ___sys_recvmsg+0x93/0xe0
-[ 9563.023169]  __sys_recvmsg+0x7e/0xd0
-[ 9563.023210]  do_syscall_64+0x4e/0x140
-[ 9563.023217]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+Remove the WARN and add limits for all NLA_STRING attributes.
 
-Signed-off-by: Markus Theil <markus.theil@tu-ilmenau.de>
-Link: https://lore.kernel.org/r/20191203180644.70653-1-markus.theil@tu-ilmenau.de
-[rewrite commit message]
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Reported-by: syzbot+0e63ae76d117ae1c3a01@syzkaller.appspotmail.com
+Fixes: 452238e8d5ffd8 ("netfilter: nf_tables: add and use helper for module autoload")
+Signed-off-by: Florian Westphal <fw@strlen.de>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/mac80211/mesh_hwmp.c | 3 +++
- 1 file changed, 3 insertions(+)
+ net/netfilter/nf_tables_api.c | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
 
-diff --git a/net/mac80211/mesh_hwmp.c b/net/mac80211/mesh_hwmp.c
-index 6950cd0bf5940..740dc9fa127cd 100644
---- a/net/mac80211/mesh_hwmp.c
-+++ b/net/mac80211/mesh_hwmp.c
-@@ -326,6 +326,9 @@ static u32 airtime_link_metric_get(struct ieee80211_local *local,
- 	unsigned long fail_avg =
- 		ewma_mesh_fail_avg_read(&sta->mesh->fail_avg);
+diff --git a/net/netfilter/nf_tables_api.c b/net/netfilter/nf_tables_api.c
+index b0cd1cee412b2..6fa315b73a66a 100644
+--- a/net/netfilter/nf_tables_api.c
++++ b/net/netfilter/nf_tables_api.c
+@@ -22,6 +22,8 @@
+ #include <net/net_namespace.h>
+ #include <net/sock.h>
  
-+	if (sta->mesh->plink_state != NL80211_PLINK_ESTAB)
-+		return MAX_METRIC;
++#define NFT_MODULE_AUTOLOAD_LIMIT (MODULE_NAME_LEN - sizeof("nft-expr-255-"))
 +
- 	/* Try to get rate based on HW/SW RC algorithm.
- 	 * Rate is returned in units of Kbps, correct this
- 	 * to comply with airtime calculation units
+ static LIST_HEAD(nf_tables_expressions);
+ static LIST_HEAD(nf_tables_objects);
+ static LIST_HEAD(nf_tables_flowtables);
+@@ -519,7 +521,7 @@ static void nft_request_module(struct net *net, const char *fmt, ...)
+ 	va_start(args, fmt);
+ 	ret = vsnprintf(module_name, MODULE_NAME_LEN, fmt, args);
+ 	va_end(args);
+-	if (WARN(ret >= MODULE_NAME_LEN, "truncated: '%s' (len %d)", module_name, ret))
++	if (ret >= MODULE_NAME_LEN)
+ 		return;
+ 
+ 	mutex_unlock(&net->nft.commit_mutex);
+@@ -1175,7 +1177,8 @@ static const struct nla_policy nft_chain_policy[NFTA_CHAIN_MAX + 1] = {
+ 				    .len = NFT_CHAIN_MAXNAMELEN - 1 },
+ 	[NFTA_CHAIN_HOOK]	= { .type = NLA_NESTED },
+ 	[NFTA_CHAIN_POLICY]	= { .type = NLA_U32 },
+-	[NFTA_CHAIN_TYPE]	= { .type = NLA_STRING },
++	[NFTA_CHAIN_TYPE]	= { .type = NLA_STRING,
++				    .len = NFT_MODULE_AUTOLOAD_LIMIT },
+ 	[NFTA_CHAIN_COUNTERS]	= { .type = NLA_NESTED },
+ 	[NFTA_CHAIN_FLAGS]	= { .type = NLA_U32 },
+ };
+@@ -2089,7 +2092,8 @@ static const struct nft_expr_type *nft_expr_type_get(struct net *net,
+ }
+ 
+ static const struct nla_policy nft_expr_policy[NFTA_EXPR_MAX + 1] = {
+-	[NFTA_EXPR_NAME]	= { .type = NLA_STRING },
++	[NFTA_EXPR_NAME]	= { .type = NLA_STRING,
++				    .len = NFT_MODULE_AUTOLOAD_LIMIT },
+ 	[NFTA_EXPR_DATA]	= { .type = NLA_NESTED },
+ };
+ 
+@@ -3932,7 +3936,8 @@ static const struct nla_policy nft_set_elem_policy[NFTA_SET_ELEM_MAX + 1] = {
+ 	[NFTA_SET_ELEM_USERDATA]	= { .type = NLA_BINARY,
+ 					    .len = NFT_USERDATA_MAXLEN },
+ 	[NFTA_SET_ELEM_EXPR]		= { .type = NLA_NESTED },
+-	[NFTA_SET_ELEM_OBJREF]		= { .type = NLA_STRING },
++	[NFTA_SET_ELEM_OBJREF]		= { .type = NLA_STRING,
++					    .len = NFT_OBJ_MAXNAMELEN - 1 },
+ };
+ 
+ static const struct nla_policy nft_set_elem_list_policy[NFTA_SET_ELEM_LIST_MAX + 1] = {
 -- 
 2.20.1
 
