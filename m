@@ -2,180 +2,273 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09B43C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:34:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 512EFC32771
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:34:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1741208C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:34:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579876491;
-	bh=uxaQhTJ3xY834h66j3b8LwsyQJSzuY/eeYAcdmcwrW8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=E4dwg+11XChyEnJGzF81CYMRIXCeG05uW21B5GNds+DpxGOKoWWpK0Hj6n2MB/Zjf
-	 mY1iBryOiEPjnCqYonw9+O0xQ7sWk7Kg/B42kfrpr8OLXSpSiykrqDhm95xYXEKIVI
-	 +wyBfI7bY9jZgHzppX1h0NTgU8pOal8Pc8pXnuD4=
+	by mail.kernel.org (Postfix) with ESMTP id 275E820661
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:34:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731391AbgAXOeu (ORCPT
+        id S1732397AbgAXOey (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 09:34:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40228 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391889AbgAXOTn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 09:19:43 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BCA6A214AF;
-        Fri, 24 Jan 2020 14:19:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579875582;
-        bh=uxaQhTJ3xY834h66j3b8LwsyQJSzuY/eeYAcdmcwrW8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=A3NU432OHbJ8IgJ3oE+Qnpnff73fakOsl0V2Q+bphDcDWPvStNnEFbQ73uT5a/15u
-         yVVBWyiMEtZTruJrD9Mbkj4PcglUMXqMbv5+1bHuewnPwCaSUMizoFqgEIqzWbSXUP
-         /ljVZugpg3zuPftsRLpokhbuFYsxjBCVRGhgsu+E=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Eric Dumazet <edumazet@google.com>,
-        syzbot <syzkaller@googlegroups.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.4 073/107] tick/sched: Annotate lockless access to last_jiffies_update
-Date:   Fri, 24 Jan 2020 09:17:43 -0500
-Message-Id: <20200124141817.28793-73-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200124141817.28793-1-sashal@kernel.org>
-References: <20200124141817.28793-1-sashal@kernel.org>
+        Fri, 24 Jan 2020 09:34:54 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:42565 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731074AbgAXOes (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 09:34:48 -0500
+Received: from [5.158.153.53] (helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1iv02l-0002eQ-Qz; Fri, 24 Jan 2020 15:34:43 +0100
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id 67F5E103089; Fri, 24 Jan 2020 15:34:43 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Evan Green <evgreen@chromium.org>
+Cc:     Rajat Jain <rajatja@google.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        x86@kernel.org
+Subject: Re: [PATCH v2] PCI/MSI: Avoid torn updates to MSI pairs
+In-Reply-To: <CAE=gft7MqQ3Mej5oCT=gw6ZLMSTHoSyMGOFz=-hae-eRZvXLxA@mail.gmail.com>
+References: <20200117162444.v2.1.I9c7e72144ef639cc135ea33ef332852a6b33730f@changeid> <CACK8Z6Ft95qj4e_fsA32r_bcz2SsHOW1xxqZJt3_DBAJw=NMGA@mail.gmail.com> <CAE=gft6fKQWExW-=xjZGzXs30XohfpA5SKggvL2WtYXAHmzMew@mail.gmail.com> <87y2tytv5i.fsf@nanos.tec.linutronix.de> <87eevqkpgn.fsf@nanos.tec.linutronix.de> <CAE=gft6YiM5S1A7iJYJTd5zmaAa8=nhLE3B94JtWa+XW-qVSqQ@mail.gmail.com> <CAE=gft5xta4XCJtctWe=R3w=kVr598JCbk9VSRue04nzKAk3CQ@mail.gmail.com> <CAE=gft7MqQ3Mej5oCT=gw6ZLMSTHoSyMGOFz=-hae-eRZvXLxA@mail.gmail.com>
+Date:   Fri, 24 Jan 2020 15:34:43 +0100
+Message-ID: <87d0b82a9o.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+Evan,
 
-[ Upstream commit de95a991bb72e009f47e0c4bbc90fc5f594588d5 ]
+Evan Green <evgreen@chromium.org> writes:
+> I did another experiment that I think lends credibility to my torn MSI
+> hypothesis. I have the following change:
+>
+> And indeed, I get a machine check, despite the fact that MSI_DATA is
+> overwritten just after address is updated.
 
-syzbot (KCSAN) reported a data-race in tick_do_update_jiffies64():
+I don't have to understand why a SoC released in 2019 still has
+unmaskable MSI especially as Inhell's own XHCI spec clearly documents
+and recommends MSI-X.
 
-BUG: KCSAN: data-race in tick_do_update_jiffies64 / tick_do_update_jiffies64
+While your workaround (disabling MSI) works in this particular case it's
+not really a good option:
 
-write to 0xffffffff8603d008 of 8 bytes by interrupt on cpu 1:
- tick_do_update_jiffies64+0x100/0x250 kernel/time/tick-sched.c:73
- tick_sched_do_timer+0xd4/0xe0 kernel/time/tick-sched.c:138
- tick_sched_timer+0x43/0xe0 kernel/time/tick-sched.c:1292
- __run_hrtimer kernel/time/hrtimer.c:1514 [inline]
- __hrtimer_run_queues+0x274/0x5f0 kernel/time/hrtimer.c:1576
- hrtimer_interrupt+0x22a/0x480 kernel/time/hrtimer.c:1638
- local_apic_timer_interrupt arch/x86/kernel/apic/apic.c:1110 [inline]
- smp_apic_timer_interrupt+0xdc/0x280 arch/x86/kernel/apic/apic.c:1135
- apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:830
- arch_local_irq_restore arch/x86/include/asm/paravirt.h:756 [inline]
- kcsan_setup_watchpoint+0x1d4/0x460 kernel/kcsan/core.c:436
- check_access kernel/kcsan/core.c:466 [inline]
- __tsan_read1 kernel/kcsan/core.c:593 [inline]
- __tsan_read1+0xc2/0x100 kernel/kcsan/core.c:593
- kallsyms_expand_symbol.constprop.0+0x70/0x160 kernel/kallsyms.c:79
- kallsyms_lookup_name+0x7f/0x120 kernel/kallsyms.c:170
- insert_report_filterlist kernel/kcsan/debugfs.c:155 [inline]
- debugfs_write+0x14b/0x2d0 kernel/kcsan/debugfs.c:256
- full_proxy_write+0xbd/0x100 fs/debugfs/file.c:225
- __vfs_write+0x67/0xc0 fs/read_write.c:494
- vfs_write fs/read_write.c:558 [inline]
- vfs_write+0x18a/0x390 fs/read_write.c:542
- ksys_write+0xd5/0x1b0 fs/read_write.c:611
- __do_sys_write fs/read_write.c:623 [inline]
- __se_sys_write fs/read_write.c:620 [inline]
- __x64_sys_write+0x4c/0x60 fs/read_write.c:620
- do_syscall_64+0xcc/0x370 arch/x86/entry/common.c:290
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
+ 1) Quite some devices have a bug where the legacy INTX disable does not
+    work reliably or is outright broken. That means MSI disable will
+    reroute to INTX.
 
-read to 0xffffffff8603d008 of 8 bytes by task 0 on cpu 0:
- tick_do_update_jiffies64+0x2b/0x250 kernel/time/tick-sched.c:62
- tick_nohz_update_jiffies kernel/time/tick-sched.c:505 [inline]
- tick_nohz_irq_enter kernel/time/tick-sched.c:1257 [inline]
- tick_irq_enter+0x139/0x1c0 kernel/time/tick-sched.c:1274
- irq_enter+0x4f/0x60 kernel/softirq.c:354
- entering_irq arch/x86/include/asm/apic.h:517 [inline]
- entering_ack_irq arch/x86/include/asm/apic.h:523 [inline]
- smp_apic_timer_interrupt+0x55/0x280 arch/x86/kernel/apic/apic.c:1133
- apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:830
- native_safe_halt+0xe/0x10 arch/x86/include/asm/irqflags.h:60
- arch_cpu_idle+0xa/0x10 arch/x86/kernel/process.c:571
- default_idle_call+0x1e/0x40 kernel/sched/idle.c:94
- cpuidle_idle_call kernel/sched/idle.c:154 [inline]
- do_idle+0x1af/0x280 kernel/sched/idle.c:263
- cpu_startup_entry+0x1b/0x20 kernel/sched/idle.c:355
- rest_init+0xec/0xf6 init/main.c:452
- arch_call_rest_init+0x17/0x37
- start_kernel+0x838/0x85e init/main.c:786
- x86_64_start_reservations+0x29/0x2b arch/x86/kernel/head64.c:490
- x86_64_start_kernel+0x72/0x76 arch/x86/kernel/head64.c:471
- secondary_startup_64+0xa4/0xb0 arch/x86/kernel/head_64.S:241
+ 2) I digged out old debug data which confirms that some silly devices
+    lose interrupts accross MSI disable/reenable if the INTX fallback is
+    disabled.
 
-Reported by Kernel Concurrency Sanitizer on:
-CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.4.0-rc7+ #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+    And no, it's not a random weird device, it's part of a chipset which
+    was pretty popular a few years ago. I leave it as an excercise for
+    the reader to guess the vendor.
 
-Use READ_ONCE() and WRITE_ONCE() to annotate this expected race.
+Can you please apply the patch below? It enforces an IPI to the new
+vector/target CPU when the interrupt is MSI w/o masking. It should
+cure the issue. It goes without saying that I'm not proud of it.
 
-Reported-by: syzbot <syzkaller@googlegroups.com>
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lore.kernel.org/r/20191205045619.204946-1-edumazet@google.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- kernel/time/tick-sched.c | 14 +++++++++-----
- 1 file changed, 9 insertions(+), 5 deletions(-)
+Thanks,
 
-diff --git a/kernel/time/tick-sched.c b/kernel/time/tick-sched.c
-index 955851748dc38..5c9fcc72460df 100644
---- a/kernel/time/tick-sched.c
-+++ b/kernel/time/tick-sched.c
-@@ -58,8 +58,9 @@ static void tick_do_update_jiffies64(ktime_t now)
+        tglx
+
+8<--------------
+
+--- a/arch/x86/include/asm/apic.h
++++ b/arch/x86/include/asm/apic.h
+@@ -498,6 +498,7 @@ extern bool default_check_apicid_used(ph
+ extern void default_ioapic_phys_id_map(physid_mask_t *phys_map, physid_mask_t *retmap);
+ extern int default_cpu_present_to_apicid(int mps_cpu);
+ extern int default_check_phys_apicid_present(int phys_apicid);
++extern bool apic_hotplug_force_retrigger(struct irq_data *irqd);
  
- 	/*
- 	 * Do a quick check without holding jiffies_lock:
-+	 * The READ_ONCE() pairs with two updates done later in this function.
- 	 */
--	delta = ktime_sub(now, last_jiffies_update);
-+	delta = ktime_sub(now, READ_ONCE(last_jiffies_update));
- 	if (delta < tick_period)
- 		return;
+ #endif /* CONFIG_X86_LOCAL_APIC */
  
-@@ -70,8 +71,9 @@ static void tick_do_update_jiffies64(ktime_t now)
- 	if (delta >= tick_period) {
+--- a/arch/x86/include/asm/irqdomain.h
++++ b/arch/x86/include/asm/irqdomain.h
+@@ -10,6 +10,7 @@ enum {
+ 	/* Allocate contiguous CPU vectors */
+ 	X86_IRQ_ALLOC_CONTIGUOUS_VECTORS		= 0x1,
+ 	X86_IRQ_ALLOC_LEGACY				= 0x2,
++	X86_IRQ_MSI_NOMASK_TRAINWRECK			= 0x4,
+ };
  
- 		delta = ktime_sub(delta, tick_period);
--		last_jiffies_update = ktime_add(last_jiffies_update,
--						tick_period);
-+		/* Pairs with the lockless read in this function. */
-+		WRITE_ONCE(last_jiffies_update,
-+			   ktime_add(last_jiffies_update, tick_period));
+ extern struct irq_domain *x86_vector_domain;
+--- a/arch/x86/kernel/apic/msi.c
++++ b/arch/x86/kernel/apic/msi.c
+@@ -103,6 +103,14 @@ int pci_msi_prepare(struct irq_domain *d
+ 	} else {
+ 		arg->type = X86_IRQ_ALLOC_TYPE_MSI;
+ 		arg->flags |= X86_IRQ_ALLOC_CONTIGUOUS_VECTORS;
++		/*
++		 * If the MSI implementation does not provide masking
++		 * enable the workaround for the CPU hotplug forced
++		 * migration problem which is caused by the torn write of
++		 * the address/data pair.
++		 */
++		if (!desc->msi_attrib.maskbit)
++			arg->flags |= X86_IRQ_MSI_NOMASK_TRAINWRECK;
+ 	}
  
- 		/* Slow path for long timeouts */
- 		if (unlikely(delta >= tick_period)) {
-@@ -79,8 +81,10 @@ static void tick_do_update_jiffies64(ktime_t now)
+ 	return 0;
+--- a/arch/x86/kernel/apic/vector.c
++++ b/arch/x86/kernel/apic/vector.c
+@@ -34,7 +34,8 @@ struct apic_chip_data {
+ 	unsigned int		move_in_progress	: 1,
+ 				is_managed		: 1,
+ 				can_reserve		: 1,
+-				has_reserved		: 1;
++				has_reserved		: 1,
++				force_retrigger		: 1;
+ };
  
- 			ticks = ktime_divns(delta, incr);
+ struct irq_domain *x86_vector_domain;
+@@ -99,6 +100,18 @@ struct irq_cfg *irq_cfg(unsigned int irq
+ 	return irqd_cfg(irq_get_irq_data(irq));
+ }
  
--			last_jiffies_update = ktime_add_ns(last_jiffies_update,
--							   incr * ticks);
-+			/* Pairs with the lockless read in this function. */
-+			WRITE_ONCE(last_jiffies_update,
-+				   ktime_add_ns(last_jiffies_update,
-+						incr * ticks));
++bool apic_hotplug_force_retrigger(struct irq_data *irqd)
++{
++	struct apic_chip_data *apicd;
++
++	irqd = __irq_domain_get_irq_data(x86_vector_domain, irqd);
++	if (!irqd)
++		return false;
++
++	apicd = apic_chip_data(irqd);
++	return apicd && apicd->force_retrigger;
++}
++
+ static struct apic_chip_data *alloc_apic_chip_data(int node)
+ {
+ 	struct apic_chip_data *apicd;
+@@ -552,6 +565,8 @@ static int x86_vector_alloc_irqs(struct
  		}
- 		do_timer(++ticks);
  
--- 
-2.20.1
-
+ 		apicd->irq = virq + i;
++		if (info->flags & X86_IRQ_MSI_NOMASK_TRAINWRECK)
++			apicd->force_retrigger = true;
+ 		irqd->chip = &lapic_controller;
+ 		irqd->chip_data = apicd;
+ 		irqd->hwirq = virq + i;
+@@ -624,6 +639,7 @@ static void x86_vector_debug_show(struct
+ 	seq_printf(m, "%*scan_reserve:      %u\n", ind, "", apicd.can_reserve ? 1 : 0);
+ 	seq_printf(m, "%*shas_reserved:     %u\n", ind, "", apicd.has_reserved ? 1 : 0);
+ 	seq_printf(m, "%*scleanup_pending:  %u\n", ind, "", !hlist_unhashed(&apicd.clist));
++	seq_printf(m, "%*sforce_retrigger:  %u\n", ind, "", apicd.force_retrigger ? 1 : 0);
+ }
+ #endif
+ 
+--- a/arch/x86/kernel/irq.c
++++ b/arch/x86/kernel/irq.c
+@@ -350,6 +350,7 @@ void fixup_irqs(void)
+ 	struct irq_desc *desc;
+ 	struct irq_data *data;
+ 	struct irq_chip *chip;
++	bool retrigger;
+ 
+ 	irq_migrate_all_off_this_cpu();
+ 
+@@ -370,24 +371,29 @@ void fixup_irqs(void)
+ 	 * nothing else will touch it.
+ 	 */
+ 	for (vector = FIRST_EXTERNAL_VECTOR; vector < NR_VECTORS; vector++) {
+-		if (IS_ERR_OR_NULL(__this_cpu_read(vector_irq[vector])))
++		desc = __this_cpu_read(vector_irq[vector]);
++		if (IS_ERR_OR_NULL(desc))
+ 			continue;
+ 
++		raw_spin_lock(&desc->lock);
++		data = irq_desc_get_irq_data(desc);
++		retrigger = apic_hotplug_force_retrigger(data);
++
+ 		irr = apic_read(APIC_IRR + (vector / 32 * 0x10));
+-		if (irr  & (1 << (vector % 32))) {
+-			desc = __this_cpu_read(vector_irq[vector]);
++		if (irr  & (1 << (vector % 32)))
++			retrigger = true;
+ 
+-			raw_spin_lock(&desc->lock);
+-			data = irq_desc_get_irq_data(desc);
++		if (!retrigger) {
++			__this_cpu_write(vector_irq[vector], VECTOR_UNUSED);
++		} else {
+ 			chip = irq_data_get_irq_chip(data);
+ 			if (chip->irq_retrigger) {
+ 				chip->irq_retrigger(data);
+-				__this_cpu_write(vector_irq[vector], VECTOR_RETRIGGERED);
++				__this_cpu_write(vector_irq[vector],
++						 VECTOR_RETRIGGERED);
+ 			}
+-			raw_spin_unlock(&desc->lock);
+ 		}
+-		if (__this_cpu_read(vector_irq[vector]) != VECTOR_RETRIGGERED)
+-			__this_cpu_write(vector_irq[vector], VECTOR_UNUSED);
++		raw_spin_unlock(&desc->lock);
+ 	}
+ }
+ #endif
+--- a/include/linux/irqdomain.h
++++ b/include/linux/irqdomain.h
+@@ -432,6 +432,8 @@ int irq_reserve_ipi(struct irq_domain *d
+ int irq_destroy_ipi(unsigned int irq, const struct cpumask *dest);
+ 
+ /* V2 interfaces to support hierarchy IRQ domains. */
++struct irq_data *__irq_domain_get_irq_data(struct irq_domain *domain,
++					   struct irq_data *irq_data);
+ extern struct irq_data *irq_domain_get_irq_data(struct irq_domain *domain,
+ 						unsigned int virq);
+ extern void irq_domain_set_info(struct irq_domain *domain, unsigned int virq,
+--- a/kernel/irq/irqdomain.c
++++ b/kernel/irq/irqdomain.c
+@@ -1165,6 +1165,21 @@ static int irq_domain_alloc_irq_data(str
+ }
+ 
+ /**
++ * __irq_domain_get_irq_data - Get irq_data associated with @domain for @data
++ * @domain:	domain to match
++ * @irq_data:	initial irq data to start hierarchy search
++ */
++struct irq_data *__irq_domain_get_irq_data(struct irq_domain *domain,
++					   struct irq_data *irq_data)
++{
++	for (; irq_data; irq_data = irq_data->parent_data) {
++		if (irq_data->domain == domain)
++			return irq_data;
++	}
++	return NULL;
++}
++
++/**
+  * irq_domain_get_irq_data - Get irq_data associated with @virq and @domain
+  * @domain:	domain to match
+  * @virq:	IRQ number to get irq_data
+@@ -1172,14 +1187,7 @@ static int irq_domain_alloc_irq_data(str
+ struct irq_data *irq_domain_get_irq_data(struct irq_domain *domain,
+ 					 unsigned int virq)
+ {
+-	struct irq_data *irq_data;
+-
+-	for (irq_data = irq_get_irq_data(virq); irq_data;
+-	     irq_data = irq_data->parent_data)
+-		if (irq_data->domain == domain)
+-			return irq_data;
+-
+-	return NULL;
++	return __irq_domain_get_irq_data(domain, irq_get_irq_data(virq));
+ }
+ EXPORT_SYMBOL_GPL(irq_domain_get_irq_data);
+ 
