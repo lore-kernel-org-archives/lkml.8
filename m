@@ -2,121 +2,256 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03F55C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 07:32:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8EE8C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 07:40:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C66B020709
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 07:32:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="XNlEkrtB"
+	by mail.kernel.org (Postfix) with ESMTP id 9060C2071A
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 07:40:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730390AbgAXHcy (ORCPT
+        id S1730499AbgAXHkE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 02:32:54 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:42848 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726050AbgAXHcx (ORCPT
+        Fri, 24 Jan 2020 02:40:04 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:54442 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725821AbgAXHkD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 02:32:53 -0500
-Received: by mail-pg1-f194.google.com with SMTP id s64so567355pgb.9
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jan 2020 23:32:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=XMan5I+mKArqobbqFNZ+gUF18xHrDU9k/d4NqHI6zu4=;
-        b=XNlEkrtB5WyC+6KEfcv9h47Qsg6EErvwdpfmokrUteEgzL60mkvaZxTq6BbI6ETlBX
-         XdjnC0mX6AeVz20ETbOKynfAkVrQyiIFqpPZoCPcSunnwy6rizJ0b6eKupQONUPo1Rkr
-         9Yi3IZ+BzIJwT7Bb5XadFn5dcRZGLuSB5NixY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=XMan5I+mKArqobbqFNZ+gUF18xHrDU9k/d4NqHI6zu4=;
-        b=kSNo2lncjGnduSl5nWjTqm7uTYkmYpIqzi4/JKuNbJd6ZGUUVt8IUn0TT+9LZnhyd1
-         Wr8HZrUDmK2dgFpkC5vVMG635za5L03qyw/eLa0HO/SQUqGRacX8OePBzBH+Y47qGM2r
-         LfO4FHQJFwxEMi8jceaNYxf57akp4FDObV+BrBQzJCPcRcdQpuZaBlgwFdLwAI282F36
-         XB7IRRtPpA5Wy6LOaJ41utGnt5a72A/cxLYFlk5OVa58hwbagm8zk5hOwyqNMLjbYuiA
-         acyf7akLpjB51qZoUh5nHBrWicUYMfZz86qHabdr1yiA/bLwxklP1ihJyxyGY6kJe8Ta
-         Y2Kw==
-X-Gm-Message-State: APjAAAVNhrBLxZ8t54MUzKKv9UiKK65OSfpqn2Zkh+RNp5x05X5L4Vqf
-        sc2HWwg6FOtfb6g4zrfkA+4eEw==
-X-Google-Smtp-Source: APXvYqxiUqWwFe+UJfx8sjkXD/VqNusZI+TARTuJH/GXSLaBL6MI+VbKjEv23KOYn+XOWzCHtYk1Pw==
-X-Received: by 2002:a63:b64a:: with SMTP id v10mr2701819pgt.145.1579851172840;
-        Thu, 23 Jan 2020 23:32:52 -0800 (PST)
-Received: from localhost ([2401:fa00:8f:203:5bbb:c872:f2b1:f53b])
-        by smtp.gmail.com with ESMTPSA id p5sm5517224pga.69.2020.01.23.23.32.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Jan 2020 23:32:52 -0800 (PST)
-Date:   Fri, 24 Jan 2020 16:32:50 +0900
-From:   Sergey Senozhatsky <senozhatsky@chromium.org>
-To:     Hans Verkuil <hverkuil@xs4all.nl>
-Cc:     Hans Verkuil <hans.verkuil@cisco.com>,
-        Tomasz Figa <tfiga@chromium.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Sakari Ailus <sakari.ailus@iki.fi>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Pawel Osciak <posciak@chromium.org>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Sergey Senozhatsky <senozhatsky@chromium.org>
-Subject: Re: [RFC][PATCH 13/15] videobuf2: do not sync buffers for DMABUF
- queues
-Message-ID: <20200124073250.GA100275@google.com>
-References: <20191217032034.54897-1-senozhatsky@chromium.org>
- <20191217032034.54897-14-senozhatsky@chromium.org>
- <2d0e1a9b-6c5e-ff70-9862-32c8b8aaf65f@xs4all.nl>
- <20200122050515.GB49953@google.com>
- <57f711a0-6183-74f6-ab24-ebe414cb6881@xs4all.nl>
- <20200124022544.GD158382@google.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200124022544.GD158382@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Fri, 24 Jan 2020 02:40:03 -0500
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00O7cqtM072454
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jan 2020 02:40:02 -0500
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2xqanfk9bh-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jan 2020 02:40:01 -0500
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <tmricht@linux.ibm.com>;
+        Fri, 24 Jan 2020 07:40:00 -0000
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 24 Jan 2020 07:39:57 -0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 00O7dto851576994
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 24 Jan 2020 07:39:55 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8C4065204F;
+        Fri, 24 Jan 2020 07:39:55 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 340A752052;
+        Fri, 24 Jan 2020 07:39:55 +0000 (GMT)
+From:   Thomas Richter <tmricht@linux.ibm.com>
+To:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        acme@kernel.org, rostedt@goodmis.org, mhiramat@kernel.org,
+        borntraeger@de.ibm.com
+Cc:     gor@linux.ibm.com, sumanthk@linux.ibm.com,
+        heiko.carstens@de.ibm.com, Thomas Richter <tmricht@linux.ibm.com>
+Subject: [PATCH] perf test: Test case 66 broken on s390 (lib/traceevent issue)
+Date:   Fri, 24 Jan 2020 08:39:41 +0100
+X-Mailer: git-send-email 2.17.1
+X-TM-AS-GCONF: 00
+x-cbid: 20012407-0008-0000-0000-0000034C3D1D
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20012407-0009-0000-0000-00004A6CABE2
+Message-Id: <20200124073941.39119-1-tmricht@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-01-24_01:2020-01-24,2020-01-24 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ bulkscore=0 mlxscore=0 impostorscore=0 adultscore=0 mlxlogscore=999
+ priorityscore=1501 malwarescore=0 spamscore=0 clxscore=1015 phishscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-2001240062
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On (20/01/24 11:25), Sergey Senozhatsky wrote:
-[..]
->
-> > Then, if q->allow_cache_hint is set, then default to a cache sync (cache clean)
-> > in the prepare for OUTPUT buffers and a cache sync (cache invalidate) in the
-> > finish for CAPTURE buffers.
->
-> We alter default cache sync behaviour based both on queue ->memory
-> type and queue ->dma_dir. Shall both of those cases depend on
-> ->allow_cache_hints, or q->memory can be independent?
->
-> static void set_buffer_cache_hints(struct vb2_queue *q,
-> 				   struct vb2_buffer *vb,
-> 				   struct v4l2_buffer *b)
-> {
-> 	if (!q->allow_cache_hints)
-> 		return;
->
-> 	/*
-> 	 * DMA exporter should take care of cache syncs, so we can avoid
-> 	 * explicit ->prepare()/->finish() syncs. For other ->memory types
-> 	 * we always need ->prepare() or/and ->finish() cache sync.
-> 	 */
-> 	if (q->memory == VB2_MEMORY_DMABUF) {
-> 		vb->need_cache_sync_on_finish = 0;
-> 		vb->need_cache_sync_on_prepare = 0;
-> 		return;
-> 	}
+Test case 66 'Use vfs_getname probe to get syscall args filenames'
+is broken on s390, but works on x86. The test case fails with:
 
-I personally would prefer this to be above ->allow_cache_hints check,
-IOW to be independent. Because we need to skip flush/invalidation for
-DMABUF anyway, that's what allocators do in ->prepare() and ->finish()
-currently.
+ [root@m35lp76 perf]# perf test -F 66
+ 66: Use vfs_getname probe to get syscall args filenames
+           :Recording open file:
+ [ perf record: Woken up 1 times to write data ]
+ [ perf record: Captured and wrote 0.004 MB /tmp/__perf_test.perf.data.TCdYj\
+	 (20 samples) ]
+ Looking at perf.data file for vfs_getname records for the file we touched:
+  FAILED!
+  [root@m35lp76 perf]#
 
-	-ss
+The root cause of this failure has to do with
+commit 88903c464321c ("tracing/probe: Add ustring type for user-space string")
+and these changes:
+   +         if (strcmp(parg->type->name, "string") == 0)
+   +                 fmt = ", __get_str(%s)";
+   +          else
+   +                 fmt = ", REC->%s";
+
+On x86 __get_str() function is used to print the file name. This is ok
+for x86 because kernel and user space are in the same adddress space,
+the high bit of the address determines kernel vs user space addresses.
+
+This approach does not work on s390. On s390 kernel und user space are
+in different address spaces, both start with address 0x0. Which address
+space is currently active is stored in the processor status word (PSW).
+
+Therefore s390 must use 'ustring' for lookup of filename in the user
+space address space.
+
+Setting up the kprobe event using perf command:
+
+ # ./perf probe "vfs_getname=getname_flags:72 pathname=filename:ustring"
+
+generates this format file:
+  [root@m35lp76 perf]# cat /sys/kernel/debug/tracing/events/probe/\
+	  vfs_getname/format
+  name: vfs_getname
+  ID: 1172
+  format:
+    field:unsigned short common_type; offset:0; size:2; signed:0;
+    field:unsigned char common_flags; offset:2; size:1; signed:0;
+    field:unsigned char common_preempt_count; offset:3; size:1; signed:0;
+    field:int common_pid; offset:4; size:4; signed:1;
+
+    field:unsigned long __probe_ip; offset:8; size:8; signed:0;
+    field:__data_loc char[] pathname; offset:16; size:4; signed:1;
+
+    print fmt: "(%lx) pathname=\"%s\"", REC->__probe_ip, REC->pathname
+ [root@m35lp76 perf]#
+
+The difference between 'ustring' and 'string' is the print fmt statement
+in the last line. Using 'string' generates
+
+  print fmt: "(%lx) pathname=\"%s\"", REC->__probe_ip, __get_str(pathname)
+
+This does not work on s390 because __get_str() function does not
+know the address space currently being used.
+
+This is the command to generate the perf.data file:
+
+ # ./perf record -e probe:vfs_getname -- touch /tmp/xxx
+
+This command creates the perf.data file which contains the contents
+for the kprobe event format file. The call chain is:
+
+  main
+  ....
+  perf_session__open
+  perf_header__process_sections (feature 1 tracing)
+  perf_file_section__process
+  trace_report
+  read_event_files
+  read_event_file
+  parse_event_file
+  tep_parse_event  --> now in lib/traceevent/event-parse.c
+  __parse_event
+  tep_parse_format
+  event_read_format
+  event_read_print
+  event_read_print_args
+  process_args
+  process_arg_token --> processes REC->xxx entry of event format file
+                        'print fmt' line
+  process_entry --> generates argument of type TEP_PRINT_FIELD entry
+                    with TEP_FIELD_IS_STRING set in arg->field.field->flags
+		    member
+
+Now the difference in the format file between
+   [x86] print fmt: "(%lx) pathname=\"%s\"", ...,  __get_str(pathname)
+and
+   [s390] print fmt: "(%lx) pathname=\"%s\"", ...,  REC->pathname
+comes into play.
+
+In the x86 case the function process_arg_token()
+handles in the case TEP_EVENT_ITEM the token "__get_str" and calls
+functions
+
+  process_function()
+  +--> process_str()
+
+and creates a print argument structure struct tep_print_arg with
+type TEP_PRINT_STRING.
+This is handled correctly when perf report later prints the argument using
+function print_str_arg() in file lib/traceevent/event-parse.c
+I omit the 35+ plus function call stack of the gdb where command.
+
+In the s390 case the function process_arg_token()
+handles in the case TEP_EVENT_ITEM the token "REC" and calls
+function
+  process_entry()
+
+This creates a print argument structure struct tep_print_arg with
+type TEP_PRINT_FIELD and bit TEP_FIELD_IS_STRING set in flags.
+
+This is handled ***incorrectly** when perf report later prints the
+argument using function print_str_arg() in file
+lib/traceevent/event-parse.c. There is no support to print a string
+when type is TEP_PRINT_FIELD and bit TEP_FIELD_IS_STRING inflags is set.
+Again I omit the 35+ plus function call stack of the gdb where command.
+
+Output before:
+  [root@m35lp76 perf]# perf report --stdio | egrep '^(# Samp| +[1-9.])+'
+  # Samples: 20  of event 'probe:vfs_getname'
+  100.00%  (4d2c32) pathname=""
+
+Output after:
+  [root@m35lp76 perf]# ./perf report --stdio | egrep '^(# Samp| +[1-9.])+'
+  # Samples: 20  of event 'probe:vfs_getname'
+  5.00%  (4d2c32) pathname="/etc/ld.so.cache"
+  5.00%  (4d2c32) pathname="/etc/ld.so.preload"
+  5.00%  (4d2c32) pathname="/lib64/libc.so.6"
+  5.00%  (4d2c32) pathname="/tmp/xxx"
+  5.00%  (4d2c32) pathname="/usr/lib/locale/en_US.utf8/LC_ADDRESS"
+  5.00%  (4d2c32) pathname="/usr/lib/locale/en_US.utf8/LC_COLLATE"
+  5.00%  (4d2c32) pathname="/usr/lib/locale/en_US.utf8/LC_CTYPE"
+  5.00%  (4d2c32) pathname="/usr/lib/locale/en_US.utf8/LC_IDENTIFICATION"
+  5.00%  (4d2c32) pathname="/usr/lib/locale/en_US.utf8/LC_MEASUREMENT"
+  5.00%  (4d2c32) pathname="/usr/lib/locale/en_US.utf8/LC_MESSAGES"
+  5.00%  (4d2c32) pathname="/usr/lib/locale/en_US.utf8/LC_MESSAGES/SYS_LC_MESSAGES"
+  5.00%  (4d2c32) pathname="/usr/lib/locale/en_US.utf8/LC_MONETARY"
+  5.00%  (4d2c32) pathname="/usr/lib/locale/en_US.utf8/LC_NAME"
+  5.00%  (4d2c32) pathname="/usr/lib/locale/en_US.utf8/LC_NUMERIC"
+  5.00%  (4d2c32) pathname="/usr/lib/locale/en_US.utf8/LC_PAPER"
+  5.00%  (4d2c32) pathname="/usr/lib/locale/en_US.utf8/LC_TELEPHONE"
+  5.00%  (4d2c32) pathname="/usr/lib/locale/en_US.utf8/LC_TIME"
+  5.00%  (4d2c32) pathname="/usr/lib/locale/locale-archive"
+  5.00%  (4d2c32) pathname="/usr/lib64/gconv/gconv-modules.cache"
+  5.00%  (4d2c32) pathname="/usr/share/locale/locale.alias"
+  [root@m35lp76 perf]#
+
+Fix this by adding print string support for TEP_FIELD_IS_STRING
+bit set in flags and case TEP_PRINT_FIELD.
+
+Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+---
+ tools/lib/traceevent/event-parse.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
+
+diff --git a/tools/lib/traceevent/event-parse.c b/tools/lib/traceevent/event-parse.c
+index beaa8b8c08ff..68334f860b27 100644
+--- a/tools/lib/traceevent/event-parse.c
++++ b/tools/lib/traceevent/event-parse.c
+@@ -4003,6 +4003,15 @@ static void print_str_arg(struct trace_seq *s, void *data, int size,
+ 				trace_seq_printf(s, "%llx", addr);
+ 			break;
+ 		}
++		if (field->flags & TEP_FIELD_IS_STRING) {
++			int str_offset;
++
++			str_offset = tep_data2host4(tep, *(unsigned int *)(data + arg->field.field->offset));
++			str_offset &= 0xffff;
++			print_str_to_seq(s, format, len_arg,
++					 ((char *)data) + str_offset);
++			break;
++		}
+ 		str = malloc(len + 1);
+ 		if (!str) {
+ 			do_warning_event(event, "%s: not enough memory!",
+-- 
+2.21.0
+
