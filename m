@@ -2,179 +2,101 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 064E7C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:01:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95165C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:01:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CCFF92075D
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:01:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579863709;
-	bh=b2gcdWP08K953ANq89598SNOcQgLnr9KVTe1AexgTLQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2h2GhX/b8ZyjIU6vsy3I7UVZ22jzplMysgEy2tWh/hS5RRepgkho529PUV3Ebk9Lp
-	 EZGBZVf0/Qu1dA2IEmqkQvB2Dy5Ia+4L4AVr5zpmpkSl3wqSrzLONbpgPEoEhoc0x2
-	 xM4pIOeEqn43xOrLd9NJ8GHcO2lBDgOwjsMOlrj4=
+	by mail.kernel.org (Postfix) with ESMTP id 70C9F2075D
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:01:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387794AbgAXLBt (ORCPT
+        id S2387816AbgAXLBu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:01:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34732 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 06:01:50 -0500
+Received: from foss.arm.com ([217.140.110.172]:49168 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731514AbgAXLBo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:01:44 -0500
-Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B1911214DB;
-        Fri, 24 Jan 2020 11:01:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579863703;
-        bh=b2gcdWP08K953ANq89598SNOcQgLnr9KVTe1AexgTLQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QybG26HKlxEOCR9ZitDsyE3TUiearI68HxX3Jeyu2cEQYFe1uh3hdY/R9M6Wj40l3
-         rw0+IxSbb7RcmKWZ7/1f//a9dRfcTcO6p2YWw/yye8dXdAAkIzG9dOVNzgkxaW1xgB
-         52L4TEi20HM0Q4xyQOCGoyLP+IgVcy8xTWBamoYw=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
-        Larry Finger <Larry.Finger@lwfinger.net>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 052/639] rtlwifi: rtl8821ae: replace _rtl8821ae_mrate_idx_to_arfr_id with generic version
-Date:   Fri, 24 Jan 2020 10:23:42 +0100
-Message-Id: <20200124093053.924695752@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
-References: <20200124093047.008739095@linuxfoundation.org>
-User-Agent: quilt/0.66
+        id S2387786AbgAXLBs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:01:48 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 303D3328;
+        Fri, 24 Jan 2020 03:01:48 -0800 (PST)
+Received: from [10.1.194.46] (e113632-lin.cambridge.arm.com [10.1.194.46])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5D9983F68E;
+        Fri, 24 Jan 2020 03:01:46 -0800 (PST)
+Subject: Re: [PATCH] [RFC] sched: restrict iowait boost for boosted task only
+To:     Quentin Perret <qperret@google.com>,
+        Qais Yousef <qais.yousef@arm.com>
+Cc:     Wei Wang <wvw@google.com>, wei.vince.wang@gmail.com,
+        dietmar.eggemann@arm.com, chris.redpath@arm.com,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        linux-kernel@vger.kernel.org
+References: <20200124002811.228334-1-wvw@google.com>
+ <20200124025238.jsf36n6w4rrn2ehc@e107158-lin>
+ <20200124095125.GA121494@google.com>
+From:   Valentin Schneider <valentin.schneider@arm.com>
+Message-ID: <849cc9f0-f4ae-f2b6-8449-f55697928cf5@arm.com>
+Date:   Fri, 24 Jan 2020 11:01:45 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200124095125.GA121494@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+On 24/01/2020 09:51, Quentin Perret wrote:
+>>> +static inline bool iowait_boosted(struct task_struct *p)
+>>> +{
+>>> +	return p->in_iowait && uclamp_eff_value(p, UCLAMP_MIN) > 0;
+>>
+>> I think this is overloading the usage of util clamp. You're basically using
+>> cpu.uclamp.min to temporarily switch iowait boost on/off.
+>>
+>> Isn't it better to add a new cgroup attribute to toggle this feature?
+>>
+>> The problem does seem generic enough and could benefit other battery-powered
+>> devices outside of the Android world. I don't think the dependency on uclamp &&
+>> energy model are necessary to solve this.
+> 
+> I think using uclamp is not a bad idea here, but perhaps we could do
+> things differently. As of today the iowait boost escapes the clamping
+> mechanism, so one option would be to change that. That would let us set
+> a low max clamp in the 'background' cgroup, which in turns would limit
+> the frequency request for those tasks even if they're IO-intensive.
+> 
 
-[ Upstream commit c894696188d5c2af1e636e458190e80c53fb893d ]
+So I'm pretty sure we *do* want tasks with the default clamps to get iowait
+boost'd. What we don't want are background tasks driving up the frequency,
+and that should be via uclamp.max (as Quentin is suggesting) rather than
+uclamp.min (as is suggested in the patch).
 
-Function _rtl8821ae_mrate_idx_to_arfr_id is functionally identical to
-the generic version rtl_mrate_idx_to_arfr_id, so remove
-_rtl8821ae_mrate_idx_to_arfr_id and use the generic one instead.
+Now, whether that is overloading the usage of uclamp... I'm not sure.
+One of the argument for uclamp was actually frequency selection, so if
+we just make iowait boost respect that, IOW not boost further than
+uclamp.max (which is a bit better than a simple on/off switch), that
+wouldn't be too crazy I think.
 
-This also fixes a missing break statement found by CoverityScan in
-_rtl8821ae_mrate_idx_to_arfr_id, namely: CID#1167237 ("Missing break
-in switch")
-
-Thanks to Joe Perches for spotting this when I submitted an earlier patch.
-
-Fixes: 3c05bedb5fef ("Staging: rtl8812ae: Add Realtek 8821 PCI WIFI driver")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-ACKed-by: Larry Finger <Larry.Finger@lwfinger.net>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- .../wireless/realtek/rtlwifi/rtl8821ae/hw.c   | 71 +------------------
- 1 file changed, 1 insertion(+), 70 deletions(-)
-
-diff --git a/drivers/net/wireless/realtek/rtlwifi/rtl8821ae/hw.c b/drivers/net/wireless/realtek/rtlwifi/rtl8821ae/hw.c
-index 317c1b3101dad..ba258318ee9f3 100644
---- a/drivers/net/wireless/realtek/rtlwifi/rtl8821ae/hw.c
-+++ b/drivers/net/wireless/realtek/rtlwifi/rtl8821ae/hw.c
-@@ -3404,75 +3404,6 @@ static void rtl8821ae_update_hal_rate_table(struct ieee80211_hw *hw,
- 		 "%x\n", rtl_read_dword(rtlpriv, REG_ARFR0));
- }
- 
--static u8 _rtl8821ae_mrate_idx_to_arfr_id(
--	struct ieee80211_hw *hw, u8 rate_index,
--	enum wireless_mode wirelessmode)
--{
--	struct rtl_priv *rtlpriv = rtl_priv(hw);
--	struct rtl_phy *rtlphy = &rtlpriv->phy;
--	u8 ret = 0;
--	switch (rate_index) {
--	case RATR_INX_WIRELESS_NGB:
--		if (rtlphy->rf_type == RF_1T1R)
--			ret = 1;
--		else
--			ret = 0;
--		; break;
--	case RATR_INX_WIRELESS_N:
--	case RATR_INX_WIRELESS_NG:
--		if (rtlphy->rf_type == RF_1T1R)
--			ret = 5;
--		else
--			ret = 4;
--		; break;
--	case RATR_INX_WIRELESS_NB:
--		if (rtlphy->rf_type == RF_1T1R)
--			ret = 3;
--		else
--			ret = 2;
--		; break;
--	case RATR_INX_WIRELESS_GB:
--		ret = 6;
--		break;
--	case RATR_INX_WIRELESS_G:
--		ret = 7;
--		break;
--	case RATR_INX_WIRELESS_B:
--		ret = 8;
--		break;
--	case RATR_INX_WIRELESS_MC:
--		if ((wirelessmode == WIRELESS_MODE_B)
--			|| (wirelessmode == WIRELESS_MODE_G)
--			|| (wirelessmode == WIRELESS_MODE_N_24G)
--			|| (wirelessmode == WIRELESS_MODE_AC_24G))
--			ret = 6;
--		else
--			ret = 7;
--	case RATR_INX_WIRELESS_AC_5N:
--		if (rtlphy->rf_type == RF_1T1R)
--			ret = 10;
--		else
--			ret = 9;
--		break;
--	case RATR_INX_WIRELESS_AC_24N:
--		if (rtlphy->current_chan_bw == HT_CHANNEL_WIDTH_80) {
--			if (rtlphy->rf_type == RF_1T1R)
--				ret = 10;
--			else
--				ret = 9;
--		} else {
--			if (rtlphy->rf_type == RF_1T1R)
--				ret = 11;
--			else
--				ret = 12;
--		}
--		break;
--	default:
--		ret = 0; break;
--	}
--	return ret;
--}
--
- static u32 _rtl8821ae_rate_to_bitmap_2ssvht(__le16 vht_rate)
- {
- 	u8 i, j, tmp_rate;
-@@ -3761,7 +3692,7 @@ static void rtl8821ae_update_hal_rate_mask(struct ieee80211_hw *hw,
- 		break;
- 	}
- 
--	ratr_index = _rtl8821ae_mrate_idx_to_arfr_id(hw, ratr_index, wirelessmode);
-+	ratr_index = rtl_mrate_idx_to_arfr_id(hw, ratr_index, wirelessmode);
- 	sta_entry->ratr_index = ratr_index;
- 	ratr_bitmap = _rtl8821ae_set_ra_vht_ratr_bitmap(hw, wirelessmode,
- 							ratr_bitmap);
--- 
-2.20.1
-
-
-
+> That'll have to be done at the RQ level, but figuring out what's the
+> current max clamp on the rq should be doable from sugov I think.
+> 
+> Wei: would that work for your use case ?
+> 
+> Also, the iowait boost really should be per-task and not per-cpu, so it
+> can be taken into account during wake-up balance on big.LITTLE. That
+> might also help on SMP if a task doing a lot of IO migrates, as the
+> boost would migrate with it. But that's perhaps for later ...
+> 
+> Thanks,
+> Quentin
+> 
