@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F1B6C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:26:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95268C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:26:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41724206D4
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:26:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B9E4214AF
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:26:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579865182;
-	bh=d6SmrSsZRvzU5AcjXbfQGmEHzMEihDgEyQkQRTpSdsQ=;
+	s=default; t=1579865185;
+	bh=T0mzEV+4ZsVAtAF6AQldWRssemw0q4CFwKiOKgIDE0w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WpT5Ray50Wp2Pnr9ph5HDWiS78LbJ4MkLin+MgBBya6sIrZvdofzUdscda9KxGUJo
-	 7hFnrRMQ7iJrQCffJyA1FdTl1iQTFKQ7q8iYhK6m6KvxJJfsy3DSDf+IEWVkoFN3Rt
-	 SFYa+H5XTf4u988N76x8hE7eaW57Uf+tCnY8yhNI=
+	b=l1zYUb70fkoz2hm5xK7kHDhl3yTyyMimwjZT5yy9BmDELbCqS1UqF9Bl4AGXd3pT3
+	 2Tq2Uo040SL4Qtqy7ThnZdQnt+nRID+qHmrESGwwcgc3NRpIRjLNGqpdZjkm7U0lM4
+	 Y4fR2zJhIfcicX7i0vLdzKb4TcptYRxhjv3ae5TE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731458AbgAXL0V (ORCPT
+        id S2391110AbgAXL0Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:26:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40874 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 06:26:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41020 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732638AbgAXL0R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:26:17 -0500
+        id S2389067AbgAXL0V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:26:21 -0500
 Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8CA9B214DB;
-        Fri, 24 Jan 2020 11:26:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DA603214DB;
+        Fri, 24 Jan 2020 11:26:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579865176;
-        bh=d6SmrSsZRvzU5AcjXbfQGmEHzMEihDgEyQkQRTpSdsQ=;
+        s=default; t=1579865180;
+        bh=T0mzEV+4ZsVAtAF6AQldWRssemw0q4CFwKiOKgIDE0w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nV08pYTDUODMMNQLHSnKZzK/gVwZd7Ee7wzmzyEd662ZMz7wl2XE3QBszg2/UDtEp
-         hQztbubBlxg4Rgge5uCDl10dXK3mRxPcOEn944ZXENej7IzLLBO4d6vNFOBJMH+FdL
-         pxCHm9FqvWXINNUE3yrjVTXYqyTmnpbMV+VYtp/c=
+        b=NC5xsKLW0JKPMhL431uGgUYjEDPRqXzcj6qDIJYARTveFaoE0iZE3zCkvFtMBhLYB
+         NwMKZKdSXXpgtSFcmqn2g0c4jZ4HvdKEIPg7mW46Ffwm5Pac99Zvmnl4LquSMbPKV3
+         QyoHbhsv1DwtA9WCt36/J/dr6qZTDoKisVhL6wbk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Dirk van der Merwe <dirk.vandermerwe@netronome.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 474/639] net/tls: fix socket wmem accounting on fallback with netem
-Date:   Fri, 24 Jan 2020 10:30:44 +0100
-Message-Id: <20200124093147.268555945@linuxfoundation.org>
+Subject: [PATCH 4.19 475/639] x86/pgtable/32: Fix LOWMEM_PAGES constant
+Date:   Fri, 24 Jan 2020 10:30:45 +0100
+Message-Id: <20200124093147.503511029@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
 References: <20200124093047.008739095@linuxfoundation.org>
@@ -62,38 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jakub Kicinski <jakub.kicinski@netronome.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit 5c4b4608fe100838c62591877101128467e56c00 ]
+[ Upstream commit 26515699863d68058e290e18e83f444925920be5 ]
 
-netem runs skb_orphan_partial() which "disconnects" the skb
-from normal TCP write memory accounting.  We should not adjust
-sk->sk_wmem_alloc on the fallback path for such skbs.
+clang points out that the computation of LOWMEM_PAGES causes a signed
+integer overflow on 32-bit x86:
 
-Fixes: e8f69799810c ("net/tls: Add generic NIC offload infrastructure")
-Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
-Reviewed-by: Dirk van der Merwe <dirk.vandermerwe@netronome.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+arch/x86/kernel/head32.c:83:20: error: signed shift result (0x100000000) requires 34 bits to represent, but 'int' only has 32 bits [-Werror,-Wshift-overflow]
+                (PAGE_TABLE_SIZE(LOWMEM_PAGES) << PAGE_SHIFT);
+                                 ^~~~~~~~~~~~
+arch/x86/include/asm/pgtable_32.h:109:27: note: expanded from macro 'LOWMEM_PAGES'
+ #define LOWMEM_PAGES ((((2<<31) - __PAGE_OFFSET) >> PAGE_SHIFT))
+                         ~^ ~~
+arch/x86/include/asm/pgtable_32.h:98:34: note: expanded from macro 'PAGE_TABLE_SIZE'
+ #define PAGE_TABLE_SIZE(pages) ((pages) / PTRS_PER_PGD)
+
+Use the _ULL() macro to make it a 64-bit constant.
+
+Fixes: 1e620f9b23e5 ("x86/boot/32: Convert the 32-bit pgtable setup code from assembly to C")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/20190710130522.1802800-1-arnd@arndb.de
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/tls/tls_device_fallback.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ arch/x86/include/asm/pgtable_32.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/tls/tls_device_fallback.c b/net/tls/tls_device_fallback.c
-index 426dd97725e4a..6cf832891b53e 100644
---- a/net/tls/tls_device_fallback.c
-+++ b/net/tls/tls_device_fallback.c
-@@ -208,6 +208,10 @@ static void complete_skb(struct sk_buff *nskb, struct sk_buff *skb, int headln)
+diff --git a/arch/x86/include/asm/pgtable_32.h b/arch/x86/include/asm/pgtable_32.h
+index b3ec519e39827..71e1df8601765 100644
+--- a/arch/x86/include/asm/pgtable_32.h
++++ b/arch/x86/include/asm/pgtable_32.h
+@@ -106,6 +106,6 @@ do {						\
+  * with only a host target support using a 32-bit type for internal
+  * representation.
+  */
+-#define LOWMEM_PAGES ((((2<<31) - __PAGE_OFFSET) >> PAGE_SHIFT))
++#define LOWMEM_PAGES ((((_ULL(2)<<31) - __PAGE_OFFSET) >> PAGE_SHIFT))
  
- 	update_chksum(nskb, headln);
- 
-+	/* sock_efree means skb must gone through skb_orphan_partial() */
-+	if (nskb->destructor == sock_efree)
-+		return;
-+
- 	delta = nskb->truesize - skb->truesize;
- 	if (likely(delta < 0))
- 		WARN_ON_ONCE(refcount_sub_and_test(-delta, &sk->sk_wmem_alloc));
+ #endif /* _ASM_X86_PGTABLE_32_H */
 -- 
 2.20.1
 
