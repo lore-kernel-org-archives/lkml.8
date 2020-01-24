@@ -7,50 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62D79C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:52:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF2BCC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:52:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36A6120709
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:52:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A764520709
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:52:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579859540;
-	bh=YZn4ZOhn+A/+B1YsvyPOa1X6jAWD61Xqw66Fm0wyBmY=;
+	s=default; t=1579859542;
+	bh=0zZV0dTPDUCb8HtAqdx6Q4qpJXTfSjiOOIf97eWgWmM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kO7Asxllu06XwPcDhGI9lAezWP7mkYDIjD9rwWR+ZmokNtSOZfRvmCoxwdIlhgTcO
-	 3SZGHWM/ZJzQXgoy/Yq8cB0scO6j/hCIpjWEHJDdc7BgTSOUWnT60M2tEnCNXbqrcX
-	 JE15ggvrur2vqlSRIZ2PxQJiLD2Fihy6Xc4cQDwc=
+	b=Fd8yF5jcwJFENd8Zr9lTss3/ymQF8rtLGxXXdqTxsjOUrwqxStnHNB5ZrUjgohBh/
+	 mqs7xflxdljc/VCcrNWMtIpyWv4wTXwxocMmcM8SoXjgS18kvYMvwps+yecN8tpFgS
+	 tV2WxLDHFBpisze9C0Q9f8+Knyf2DIxGeEb0/33M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388141AbgAXJwT (ORCPT
+        id S2388150AbgAXJwV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 04:52:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53900 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 04:52:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54010 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388130AbgAXJwM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 04:52:12 -0500
+        id S1733229AbgAXJwQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 04:52:16 -0500
 Received: from localhost (unknown [145.15.244.15])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F1B4D22522;
-        Fri, 24 Jan 2020 09:52:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 12258206D5;
+        Fri, 24 Jan 2020 09:52:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579859531;
-        bh=YZn4ZOhn+A/+B1YsvyPOa1X6jAWD61Xqw66Fm0wyBmY=;
+        s=default; t=1579859535;
+        bh=0zZV0dTPDUCb8HtAqdx6Q4qpJXTfSjiOOIf97eWgWmM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=x3OeXPgnxhpYpWmOKtl+0tWUJnM2r+EGReeijq6I8/OTHUu+olVxeCX67fyTcgcDG
-         vDdXS8OGtAYl0/8S3Ztj8s1VDn9/7N0PGsXbMpyfQiP4LVHkykaKWJ5EligRkpHTnh
-         T//kxvAKFW5+VFYZXwd1cFr0i6qaECALCgGyrpG8=
+        b=CPwDMvDsZoTx0XO5aHuooBrzKGUdqdkC0mDmuyXvqVhBvuWDDML9FTCIpVeDmVuMy
+         iwEMUC8s8UYF8CT6yWXyEudu1x44SWKBsmf9RGgLjFktilehqZjsVc2o4Jx38Xq2hj
+         jQhk+XCEzZbTSk1GK2OwKextHoywp91TgGjg7EUI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Nicolas Pitre <nico@linaro.org>,
-        Anand Moon <linux.amoon@gmail.com>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
+        stable@vger.kernel.org, Steve Sistare <steven.sistare@oracle.com>,
+        Sumit Saxena <sumit.saxena@broadcom.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 130/343] ARM: 8847/1: pm: fix HYP/SVC mode mismatch when MCPM is used
-Date:   Fri, 24 Jan 2020 10:29:08 +0100
-Message-Id: <20200124092937.112309114@linuxfoundation.org>
+Subject: [PATCH 4.14 139/343] scsi: megaraid_sas: reduce module load time
+Date:   Fri, 24 Jan 2020 10:29:17 +0100
+Message-Id: <20200124092938.265228060@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124092919.490687572@linuxfoundation.org>
 References: <20200124092919.490687572@linuxfoundation.org>
@@ -63,95 +61,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marek Szyprowski <m.szyprowski@samsung.com>
+From: Steve Sistare <steven.sistare@oracle.com>
 
-[ Upstream commit ca70ea43f80c98582f5ffbbd1e6f4da2742da0c4 ]
+[ Upstream commit 31b6a05f86e690e1818116fd23c3be915cc9d9ed ]
 
-MCPM does a soft reset of the CPUs and uses common cpu_resume() routine to
-perform low-level platform initialization. This results in a try to install
-HYP stubs for the second time for each CPU and results in false HYP/SVC
-mode mismatch detection. The HYP stubs are already installed at the
-beginning of the kernel initialization on the boot CPU (head.S) or in the
-secondary_startup() for other CPUs. To fix this issue MCPM code should use
-a cpu_resume() routine without HYP stubs installation.
+megaraid_sas takes 1+ seconds to load while waiting for firmware:
 
-This change fixes HYP/SVC mode mismatch on Samsung Exynos5422-based Odroid
-XU3/XU4/HC1 boards.
+[2.822603] megaraid_sas 0000:03:00.0: Waiting for FW to come to ready state
+[3.871003] megaraid_sas 0000:03:00.0: FW now in Ready state
 
-Fixes: 3721924c8154 ("ARM: 8081/1: MCPM: provide infrastructure to allow for MCPM loopback")
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Acked-by: Nicolas Pitre <nico@linaro.org>
-Tested-by: Anand Moon <linux.amoon@gmail.com>
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+This is due to the following loop in megasas_transition_to_ready(), which
+waits a minimum of 1 second, even though the FW becomes ready in tens of
+millisecs:
+
+        /*
+         * The cur_state should not last for more than max_wait secs
+         */
+        for (i = 0; i < max_wait; i++) {
+                ...
+                msleep(1000);
+        ...
+        dev_info(&instance->pdev->dev, "FW now in Ready state\n");
+
+This is a regression, caused by a change of the msleep granularity from 1
+to 1000 due to concern about waiting too long on systems with coarse
+jiffies.
+
+To fix, increase iterations and use msleep(20), which results in:
+
+[2.670627] megaraid_sas 0000:03:00.0: Waiting for FW to come to ready state
+[2.739386] megaraid_sas 0000:03:00.0: FW now in Ready state
+
+Fixes: fb2f3e96d80f ("scsi: megaraid_sas: Fix msleep granularity")
+Signed-off-by: Steve Sistare <steven.sistare@oracle.com>
+Acked-by: Sumit Saxena <sumit.saxena@broadcom.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/common/mcpm_entry.c   |  2 +-
- arch/arm/include/asm/suspend.h |  1 +
- arch/arm/kernel/sleep.S        | 12 ++++++++++++
- 3 files changed, 14 insertions(+), 1 deletion(-)
+ drivers/scsi/megaraid/megaraid_sas_base.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/common/mcpm_entry.c b/arch/arm/common/mcpm_entry.c
-index 2b913f17d50f5..c24a55b0deac7 100644
---- a/arch/arm/common/mcpm_entry.c
-+++ b/arch/arm/common/mcpm_entry.c
-@@ -379,7 +379,7 @@ static int __init nocache_trampoline(unsigned long _arg)
- 	unsigned int cluster = MPIDR_AFFINITY_LEVEL(mpidr, 1);
- 	phys_reset_t phys_reset;
+diff --git a/drivers/scsi/megaraid/megaraid_sas_base.c b/drivers/scsi/megaraid/megaraid_sas_base.c
+index 577513649afbe..6abad63b127af 100644
+--- a/drivers/scsi/megaraid/megaraid_sas_base.c
++++ b/drivers/scsi/megaraid/megaraid_sas_base.c
+@@ -3823,12 +3823,12 @@ megasas_transition_to_ready(struct megasas_instance *instance, int ocr)
+ 		/*
+ 		 * The cur_state should not last for more than max_wait secs
+ 		 */
+-		for (i = 0; i < max_wait; i++) {
++		for (i = 0; i < max_wait * 50; i++) {
+ 			curr_abs_state = instance->instancet->
+ 				read_fw_status_reg(instance->reg_set);
  
--	mcpm_set_entry_vector(cpu, cluster, cpu_resume);
-+	mcpm_set_entry_vector(cpu, cluster, cpu_resume_no_hyp);
- 	setup_mm_for_reboot();
- 
- 	__mcpm_cpu_going_down(cpu, cluster);
-diff --git a/arch/arm/include/asm/suspend.h b/arch/arm/include/asm/suspend.h
-index 452bbdcbcc835..506314265c6f1 100644
---- a/arch/arm/include/asm/suspend.h
-+++ b/arch/arm/include/asm/suspend.h
-@@ -10,6 +10,7 @@ struct sleep_save_sp {
- };
- 
- extern void cpu_resume(void);
-+extern void cpu_resume_no_hyp(void);
- extern void cpu_resume_arm(void);
- extern int cpu_suspend(unsigned long, int (*)(unsigned long));
- 
-diff --git a/arch/arm/kernel/sleep.S b/arch/arm/kernel/sleep.S
-index a8257fc9cf2a9..5dc8b80bb6938 100644
---- a/arch/arm/kernel/sleep.S
-+++ b/arch/arm/kernel/sleep.S
-@@ -120,6 +120,14 @@ ENDPROC(cpu_resume_after_mmu)
- 	.text
- 	.align
- 
-+#ifdef CONFIG_MCPM
-+	.arm
-+THUMB(	.thumb			)
-+ENTRY(cpu_resume_no_hyp)
-+ARM_BE8(setend be)			@ ensure we are in BE mode
-+	b	no_hyp
-+#endif
-+
- #ifdef CONFIG_MMU
- 	.arm
- ENTRY(cpu_resume_arm)
-@@ -135,6 +143,7 @@ ARM_BE8(setend be)			@ ensure we are in BE mode
- 	bl	__hyp_stub_install_secondary
- #endif
- 	safe_svcmode_maskall r1
-+no_hyp:
- 	mov	r1, #0
- 	ALT_SMP(mrc p15, 0, r0, c0, c0, 5)
- 	ALT_UP_B(1f)
-@@ -163,6 +172,9 @@ ENDPROC(cpu_resume)
- 
- #ifdef CONFIG_MMU
- ENDPROC(cpu_resume_arm)
-+#endif
-+#ifdef CONFIG_MCPM
-+ENDPROC(cpu_resume_no_hyp)
- #endif
- 
- 	.align 2
+ 			if (abs_state == curr_abs_state) {
+-				msleep(1000);
++				msleep(20);
+ 			} else
+ 				break;
+ 		}
 -- 
 2.20.1
 
