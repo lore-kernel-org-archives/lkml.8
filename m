@@ -7,46 +7,51 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69432C32771
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:48:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5910FC32771
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:48:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 370E8206D5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:48:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 244AA20718
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:48:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579859287;
-	bh=RfDVaG7l3+6LT9cIokurt5PnBACZdGjnavboXm5d3Js=;
+	s=default; t=1579859291;
+	bh=RsZ49+HuVXrU/JY3Ejeo3KXvJigAnXjCknahaYv5sjA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TCmKD6ybdKg/eyrDuP2OUb3S8gFXcQ/e1aF9k4Kcu6KR1yOrSWYkIXJxSM+D3r/q/
-	 PuVbYnL10pf+GFuINkd9TEw2UwnxOLFksamI/Pye+cGRW2zRwGlf41rQ20lAFIueEN
-	 ExgR+Am7WqDc+vmx9o8Yc+/GpRh4hSRtjuUpRjyQ=
+	b=jltOoaWvtxejPNC0XrtI8jPhRHxtAOC2KPLdPedJA811JVnOBDQDwQrjCtbrchacj
+	 xbmZ7DJ89M0MY09C8C4zZjBDAYMf7XqoCWtYc1Yt1I7ag2raedlGh0FRGO/3YTfnjD
+	 SdgyzJgbRQ76CBYG9vFwBMccyKbn+xHKqmvG5qn0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387694AbgAXJsG (ORCPT
+        id S2387702AbgAXJsK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 04:48:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48044 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 04:48:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48128 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730051AbgAXJsE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 04:48:04 -0500
+        id S1730051AbgAXJsJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 04:48:09 -0500
 Received: from localhost (unknown [145.15.244.15])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3737C206D5;
-        Fri, 24 Jan 2020 09:47:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 613412087E;
+        Fri, 24 Jan 2020 09:48:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579859284;
-        bh=RfDVaG7l3+6LT9cIokurt5PnBACZdGjnavboXm5d3Js=;
+        s=default; t=1579859288;
+        bh=RsZ49+HuVXrU/JY3Ejeo3KXvJigAnXjCknahaYv5sjA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qrSbL5WoQ8W1tgWOUAmeWVi6s42s9L23zrNgzK2VRsPvWkuQs8Qa0fTf88N3bHD8j
-         ov/Ojv5Pc0hHzpM1XJjOxTWtGczj6zbELZvT3UaiMhFfuqwvAGcUMA9zxXcG2EqLEH
-         f8Q3L0xyWVFk+1dPZKzxvDLuusiotRokOdR7b4To=
+        b=iwZv9b0AlOs6iMd/ezazixvxMXIYIphh74dYvkr5+gLSWyPqyN3IpCREidYlAlulL
+         NyKlgrxEYZfnjcshJNJTBciSBJxQjAQ1JbkjVEIBvsokNTCn+bdxphLklm+gLsZDfD
+         Kk/zPK1he8BVW2D3UHeN9IvAa1DQKHF31rBmexd4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vladimir Zapolskiy <vz@mleia.com>,
+        stable@vger.kernel.org,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Sylvain Chouleur <sylvain.chouleur@intel.com>,
+        Patrick McDermott <patrick.mcdermott@libiquity.com>,
+        linux-rtc@vger.kernel.org, Eric Wong <e@80x24.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 083/343] ARM: dts: lpc32xx: reparent keypad controller to SIC1
-Date:   Fri, 24 Jan 2020 10:28:21 +0100
-Message-Id: <20200124092930.900987104@linuxfoundation.org>
+Subject: [PATCH 4.14 071/343] rtc: cmos: ignore bogus century byte
+Date:   Fri, 24 Jan 2020 10:28:09 +0100
+Message-Id: <20200124092929.142447271@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124092919.490687572@linuxfoundation.org>
 References: <20200124092919.490687572@linuxfoundation.org>
@@ -59,41 +64,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vladimir Zapolskiy <vz@mleia.com>
+From: Eric Wong <e@80x24.org>
 
-[ Upstream commit 489261c45f0ebbc1c2813f337bbdf858267f5033 ]
+[ Upstream commit 2a4daadd4d3e507138f8937926e6a4df49c6bfdc ]
 
-After switching to a new interrupt controller scheme by separating SIC1
-and SIC2 from MIC interrupt controller just one SoC keypad controller
-was not taken into account, fix it now:
+Older versions of Libreboot and Coreboot had an invalid value
+(`3' in my case) in the century byte affecting the GM45 in
+the Thinkpad X200.  Not everybody's updated their firmwares,
+and Linux <= 4.2 was able to read the RTC without problems,
+so workaround this by ignoring invalid values.
 
-  WARNING: CPU: 0 PID: 1 at kernel/irq/irqdomain.c:524 irq_domain_associate+0x50/0x1b0
-  error: hwirq 0x36 is too large for interrupt-controller@40008000
-  ...
-  lpc32xx_keys 40050000.key: failed to get platform irq
-  lpc32xx_keys: probe of 40050000.key failed with error -22
+Fixes: 3c217e51d8a272b9 ("rtc: cmos: century support")
 
-Fixes: 9b8ad3fb81ae ("ARM: dts: lpc32xx: reparent SIC1 and SIC2 interrupts from MIC")
-Signed-off-by: Vladimir Zapolskiy <vz@mleia.com>
+Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc: Alessandro Zummo <a.zummo@towertech.it>
+Cc: Sylvain Chouleur <sylvain.chouleur@intel.com>
+Cc: Patrick McDermott <patrick.mcdermott@libiquity.com>
+Cc: linux-rtc@vger.kernel.org
+Signed-off-by: Eric Wong <e@80x24.org>
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/lpc32xx.dtsi | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/rtc/rtc-mc146818-lib.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/lpc32xx.dtsi b/arch/arm/boot/dts/lpc32xx.dtsi
-index 2ca881055ef0e..9f9386c926d1e 100644
---- a/arch/arm/boot/dts/lpc32xx.dtsi
-+++ b/arch/arm/boot/dts/lpc32xx.dtsi
-@@ -463,7 +463,8 @@
- 				compatible = "nxp,lpc3220-key";
- 				reg = <0x40050000 0x1000>;
- 				clocks = <&clk LPC32XX_CLK_KEY>;
--				interrupts = <54 IRQ_TYPE_LEVEL_HIGH>;
-+				interrupt-parent = <&sic1>;
-+				interrupts = <22 IRQ_TYPE_LEVEL_HIGH>;
- 				status = "disabled";
- 			};
+diff --git a/drivers/rtc/rtc-mc146818-lib.c b/drivers/rtc/rtc-mc146818-lib.c
+index 2f1772a358ca5..18a6f15e313d8 100644
+--- a/drivers/rtc/rtc-mc146818-lib.c
++++ b/drivers/rtc/rtc-mc146818-lib.c
+@@ -82,7 +82,7 @@ unsigned int mc146818_get_time(struct rtc_time *time)
+ 	time->tm_year += real_year - 72;
+ #endif
  
+-	if (century)
++	if (century > 20)
+ 		time->tm_year += (century - 19) * 100;
+ 
+ 	/*
 -- 
 2.20.1
 
