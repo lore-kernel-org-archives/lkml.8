@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9849FC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:46:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66BFAC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:46:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6696B20718
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:46:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 329C92087E
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:46:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579859168;
-	bh=swb8ylO3whG6oEYMtfBN6kOtQsnU8P5uHHFFwn02onw=;
+	s=default; t=1579859172;
+	bh=xyUGEFXpyzNFtWfdd8thjkylmfAJL4ZvM6xvi4QDHHo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zxrngqBNofKUKrPO+MQa8Dkp/DkHmXRbMn737An/Q7gb90Buw0VJ2I9IbtTWnzRwK
-	 h2wg/ABCvv4U//I0SnNMhEfwC2M01KNAlOaXaH9L2rSrNhLd9hkSQ8fV94inWDIjMm
-	 nir76bBy/fmQRY7sWxmqw3xX7kl2Rpq659i4dJQs=
+	b=a4WWWuGYY5pvutIZdNBYXrlmR3vRka9Jm98/x4bTGgYvgnClzy9pHxekdGUH+ysUH
+	 VHc2OzWsKjuvrqfsFVAkQlxZ/3GgcSA/C3z4TACExP48j0fpEF0jnpOvWa5Qmyi7Ty
+	 /ZOkOpZwU2kc07cdwqd9aL1H2A+dalKt3xHtZ89s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387553AbgAXJqH (ORCPT
+        id S2387498AbgAXJps (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 04:46:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45272 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 04:45:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44702 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730953AbgAXJqG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 04:46:06 -0500
+        id S1732804AbgAXJpm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 04:45:42 -0500
 Received: from localhost (unknown [145.15.244.15])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B875B20718;
-        Fri, 24 Jan 2020 09:46:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3BDDF21569;
+        Fri, 24 Jan 2020 09:45:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579859165;
-        bh=swb8ylO3whG6oEYMtfBN6kOtQsnU8P5uHHFFwn02onw=;
+        s=default; t=1579859141;
+        bh=xyUGEFXpyzNFtWfdd8thjkylmfAJL4ZvM6xvi4QDHHo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EHNzPEaQ/joOKP5UIBRpUhBlydPkzNvy8E3Mt38XV6AUvC287n6ZVFWKSwMPL1bFj
-         kizJrax0+TCVUBfPAIBpMCZ567KXIYeLl5mx4cms7meFxoiczYT0PpoLVSlxEk+R8Y
-         2BA60YP/xdKlhyEXmsiw9bgBw1Fjr8/lk1V9HUBE=
+        b=QpuQ0xUb4OSQ2sECvmF/FixdHzWBeHObZW/RCPGPA1xfMMLuMuXDxc+QoXyuK/tvF
+         pmvEOq8fsbxlXjbuqctgOZ1iNElQFh/SQxIWASQlXQFkU5nEY3D/4k29f/58XW8k1m
+         tY17oH48QCftHhm1IBlveONAu2botpNEYbWpwb7Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Yangtao Li <tiny.windzz@gmail.com>,
+        Gregory CLEMENT <gregory.clement@bootlin.com>,
         Stephen Boyd <sboyd@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 045/343] clk: socfpga: fix refcount leak
-Date:   Fri, 24 Jan 2020 10:27:43 +0100
-Message-Id: <20200124092925.686261978@linuxfoundation.org>
+Subject: [PATCH 4.14 051/343] clk: armada-370: fix refcount leak in a370_clk_init()
+Date:   Fri, 24 Jan 2020 10:27:49 +0100
+Message-Id: <20200124092926.418800840@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124092919.490687572@linuxfoundation.org>
 References: <20200124092919.490687572@linuxfoundation.org>
@@ -62,45 +63,36 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Yangtao Li <tiny.windzz@gmail.com>
 
-[ Upstream commit 7f9705beeb3759e69165e7aff588f6488ff6c1ac ]
+[ Upstream commit a3c24050bdf70c958a8d98c2823b66ea761e6a31 ]
 
 The of_find_compatible_node() returns a node pointer with refcount
 incremented, but there is the lack of use of the of_node_put() when
 done. Add the missing of_node_put() to release the refcount.
 
 Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
-Fixes: 5343325ff3dd ("clk: socfpga: add a clock driver for the Arria 10 platform")
-Fixes: a30d27ed739b ("clk: socfpga: fix clock driver for 3.15")
+Reviewed-by: Gregory CLEMENT <gregory.clement@bootlin.com>
+Fixes: 07ad6836fa21 ("clk: mvebu: armada-370: maintain clock init order")
 Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/socfpga/clk-pll-a10.c | 1 +
- drivers/clk/socfpga/clk-pll.c     | 1 +
- 2 files changed, 2 insertions(+)
+ drivers/clk/mvebu/armada-370.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/clk/socfpga/clk-pll-a10.c b/drivers/clk/socfpga/clk-pll-a10.c
-index 35fabe1a32c30..269467e8e07e1 100644
---- a/drivers/clk/socfpga/clk-pll-a10.c
-+++ b/drivers/clk/socfpga/clk-pll-a10.c
-@@ -95,6 +95,7 @@ static struct clk * __init __socfpga_pll_init(struct device_node *node,
+diff --git a/drivers/clk/mvebu/armada-370.c b/drivers/clk/mvebu/armada-370.c
+index 2c7c1085f8830..8fdfa97900cd8 100644
+--- a/drivers/clk/mvebu/armada-370.c
++++ b/drivers/clk/mvebu/armada-370.c
+@@ -177,8 +177,10 @@ static void __init a370_clk_init(struct device_node *np)
  
- 	clkmgr_np = of_find_compatible_node(NULL, NULL, "altr,clk-mgr");
- 	clk_mgr_a10_base_addr = of_iomap(clkmgr_np, 0);
-+	of_node_put(clkmgr_np);
- 	BUG_ON(!clk_mgr_a10_base_addr);
- 	pll_clk->hw.reg = clk_mgr_a10_base_addr + reg;
+ 	mvebu_coreclk_setup(np, &a370_coreclks);
  
-diff --git a/drivers/clk/socfpga/clk-pll.c b/drivers/clk/socfpga/clk-pll.c
-index c7f463172e4b9..b4b44e9b59011 100644
---- a/drivers/clk/socfpga/clk-pll.c
-+++ b/drivers/clk/socfpga/clk-pll.c
-@@ -100,6 +100,7 @@ static __init struct clk *__socfpga_pll_init(struct device_node *node,
- 
- 	clkmgr_np = of_find_compatible_node(NULL, NULL, "altr,clk-mgr");
- 	clk_mgr_base_addr = of_iomap(clkmgr_np, 0);
-+	of_node_put(clkmgr_np);
- 	BUG_ON(!clk_mgr_base_addr);
- 	pll_clk->hw.reg = clk_mgr_base_addr + reg;
+-	if (cgnp)
++	if (cgnp) {
+ 		mvebu_clk_gating_setup(cgnp, a370_gating_desc);
++		of_node_put(cgnp);
++	}
+ }
+ CLK_OF_DECLARE(a370_clk, "marvell,armada-370-core-clock", a370_clk_init);
  
 -- 
 2.20.1
