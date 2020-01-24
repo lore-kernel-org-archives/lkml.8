@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F5AEC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:01:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9CB2C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:01:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25BCB2075D
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:01:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD6142071A
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:01:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579863674;
-	bh=NTOKe81Ovll/ccnsc0uhvOn2So9NzBfexSU+EaXngzU=;
+	s=default; t=1579863677;
+	bh=KU8PfJUa6fdmlzZuEbVLvGlGX2RO86ME0LZgXXhZrqw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Tm0/xf5c9s8N15rIgMwkzcDb1A2UNXYVhuuEuelDL2y5n2F5jaOXlEL6nTDvJI3/0
-	 tMQOMf5m/LWqo5sOAwsjXUe0yLCz5VS+wiJIOYxFeGx+IUOwqVAI+py5uPXrBBawlG
-	 KZs8Yj6wGlxN157eGbHQVE723cYOw4wmbVniQwUE=
+	b=escfzuISH6XHNL1jnywfGshbZMZcBKSHiHWev41WOZI1RWHdKxzjyDNORwm26Qu8W
+	 H4V5DeQtFNvD6a/XfbvvHniOR3sKrgkQhB/X+HFPF3ceIEPmIQs2aU7UxwzWqodSv3
+	 mv2NrcwoSbf3zT3Pw25mxX8N1Uvq4EvdAHIjjLCk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387597AbgAXLBN (ORCPT
+        id S2387614AbgAXLBQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:01:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33752 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 06:01:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33888 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387563AbgAXLBL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:01:11 -0500
+        id S1730614AbgAXLBP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:01:15 -0500
 Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F0E512075D;
-        Fri, 24 Jan 2020 11:01:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 89C562071A;
+        Fri, 24 Jan 2020 11:01:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579863670;
-        bh=NTOKe81Ovll/ccnsc0uhvOn2So9NzBfexSU+EaXngzU=;
+        s=default; t=1579863674;
+        bh=KU8PfJUa6fdmlzZuEbVLvGlGX2RO86ME0LZgXXhZrqw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=whxnUImyZr1x5qmYcz+y4Djleo1f5V6dOM0HChtdtVJ1SfYbEbrfrx5y3FN4wFwPX
-         EwKSltqRKzAK9dzT7xHT4TGGlq1g9Ye7F6S/4ahtppJ8bYb/UfihLZQr+5ajjrf40d
-         vt8YfDlyt6v0YHw7mctZCjFuIg++QE6k/tS6jp1E=
+        b=2sRGgQHXQ0X5wa1fsHDWCjhcdqwC8vd1Qf4D3s3jeObf1YJOkHMkOnpkPvRlSEXcG
+         C33fRVSyEmTcDIuLnyd+czEaNUF7j9c8eT+xR4ka43BIySM31NtzK3xX2GbGvAyGT+
+         fcu6xXO2SQCH5o1NpvpAOzEfcQZPU2qRhJ1XQdk0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tomas Winkler <tomas.winkler@intel.com>,
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Charles Keepax <ckeepax@opensource.cirrus.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 043/639] mei: replace POLL* with EPOLL* for write queues.
-Date:   Fri, 24 Jan 2020 10:23:33 +0100
-Message-Id: <20200124093052.836161274@linuxfoundation.org>
+Subject: [PATCH 4.19 034/639] ASoC: wm9712: fix unused variable warning
+Date:   Fri, 24 Jan 2020 10:23:24 +0100
+Message-Id: <20200124093051.703049750@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
 References: <20200124093047.008739095@linuxfoundation.org>
@@ -59,45 +61,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tomas Winkler <tomas.winkler@intel.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit 03b2cbb6ea3c73e08fcf72d9ef8e286c4dcbd1fe ]
+[ Upstream commit 18380dcc52cc8965e5144ce33fdfad7e168679a5 ]
 
-Looks like during merging the bulk POLL* -> EPOLL* replacement
-missed the patch
-'commit af336cabe083 ("mei: limit the number of queued writes")'
+The 'ret' variable is now only used in an #ifdef, and causes a
+warning if it is declared outside of that block:
 
-Fix sparse warning:
-drivers/misc/mei/main.c:602:13: warning: restricted __poll_t degrades to integer
-drivers/misc/mei/main.c:605:30: warning: invalid assignment: |=
-drivers/misc/mei/main.c:605:30:    left side has type restricted __poll_t
-drivers/misc/mei/main.c:605:30:    right side has type int
+sound/soc/codecs/wm9712.c: In function 'wm9712_soc_probe':
+sound/soc/codecs/wm9712.c:641:6: error: unused variable 'ret' [-Werror=unused-variable]
 
-Fixes: af336cabe083 ("mei: limit the number of queued writes")
-Signed-off-by: Tomas Winkler <tomas.winkler@intel.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 2ed1a8e0ce8d ("ASoC: wm9712: add ac97 new bus support")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Acked-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/misc/mei/main.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ sound/soc/codecs/wm9712.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/misc/mei/main.c b/drivers/misc/mei/main.c
-index 4d77a6ae183a9..87281b3695e60 100644
---- a/drivers/misc/mei/main.c
-+++ b/drivers/misc/mei/main.c
-@@ -599,10 +599,10 @@ static __poll_t mei_poll(struct file *file, poll_table *wait)
- 			mei_cl_read_start(cl, mei_cl_mtu(cl), file);
- 	}
+diff --git a/sound/soc/codecs/wm9712.c b/sound/soc/codecs/wm9712.c
+index ade34c26ad2f3..e873baa9e7780 100644
+--- a/sound/soc/codecs/wm9712.c
++++ b/sound/soc/codecs/wm9712.c
+@@ -638,13 +638,14 @@ static int wm9712_soc_probe(struct snd_soc_component *component)
+ {
+ 	struct wm9712_priv *wm9712 = snd_soc_component_get_drvdata(component);
+ 	struct regmap *regmap;
+-	int ret;
  
--	if (req_events & (POLLOUT | POLLWRNORM)) {
-+	if (req_events & (EPOLLOUT | EPOLLWRNORM)) {
- 		poll_wait(file, &cl->tx_wait, wait);
- 		if (cl->tx_cb_queued < dev->tx_queue_limit)
--			mask |= POLLOUT | POLLWRNORM;
-+			mask |= EPOLLOUT | EPOLLWRNORM;
- 	}
- 
- out:
+ 	if (wm9712->mfd_pdata) {
+ 		wm9712->ac97 = wm9712->mfd_pdata->ac97;
+ 		regmap = wm9712->mfd_pdata->regmap;
+ 	} else {
+ #ifdef CONFIG_SND_SOC_AC97_BUS
++		int ret;
++
+ 		wm9712->ac97 = snd_soc_new_ac97_component(component, WM9712_VENDOR_ID,
+ 						      WM9712_VENDOR_ID_MASK);
+ 		if (IS_ERR(wm9712->ac97)) {
 -- 
 2.20.1
 
