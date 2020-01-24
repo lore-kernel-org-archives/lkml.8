@@ -7,49 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 580F7C35242
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:27:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 397C2C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:27:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24A892077C
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:27:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 085372077C
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:27:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579865224;
-	bh=lcD3OYL1oJj/v9xAdAAqjKr3WJXr5132M3qh7cKMe1c=;
+	s=default; t=1579865231;
+	bh=IwRh4MwwKbEAJczjkT6p7Y8EFA00nRALELVHg28Gjt8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=18dnZir/KAJyIy7iYo+wSCDIAboT8TgjMtxIAdCJnDnKrVM5RSYIf4kig362MzXx9
-	 tS8helaIznYwSMBqRyDmWuIwXgTCUwTJid00o95oD9xMPzvdih9wr5lGgP/VxYwtfm
-	 dOaeAOgwtNTvPLBYlQGaDz5RR/uHoacZGQd57m5k=
+	b=FXSq2lFtyeGYgPncBkJ+7qFWv0BfQXqS//DgH/H3oUO7GyFwXYzK0rFEf75pc1/a6
+	 qtmmTqqnLpaAruUoxOcJsftjelPBmFBUgY9DFphqsmpFP0brgkk17EdBpKqXXrvRn6
+	 doM9ofabWvsE/t2Vy1J4ir1G1I+JyqGtpFlx/2PA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388357AbgAXL1C (ORCPT
+        id S2403766AbgAXL1K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:27:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42158 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 06:27:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42320 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391203AbgAXL05 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:26:57 -0500
+        id S2388367AbgAXL1E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:27:04 -0500
 Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9A57520718;
-        Fri, 24 Jan 2020 11:26:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B84B920718;
+        Fri, 24 Jan 2020 11:27:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579865216;
-        bh=lcD3OYL1oJj/v9xAdAAqjKr3WJXr5132M3qh7cKMe1c=;
+        s=default; t=1579865223;
+        bh=IwRh4MwwKbEAJczjkT6p7Y8EFA00nRALELVHg28Gjt8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Pk/zVF9e30MNmt66UpApIbT9UHKKDmMUkSfefUDgPbqUJ6qV5YapdZZwnD6TKxEk1
-         JwfCnwkE+lmI6V8giuDp8yXK/dIWBJy5SJsbV3EF6JK9RONvwHHoX03/jA+/56KygI
-         CZj7Vw1UTddFi+RxWpTzGpfw2j1sGIiPSaNx3vZ4=
+        b=O+rhuEaaJHSugA+wgu+JzT+yAkVUho6aQe7EBUq2c32Gvlh614T0g9NP8ybDe/Tld
+         X+4usQlWmjU9yIZIKwQfZ0XzjGVmfEKN9NTIicnw9ENbYUSK+izjJACbiTnCjY9a0y
+         WuVlI5jyNR1r/obdG8eSI5BKKP91I0RKlf5GL9ko=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "Robert R. Howell" <RHowell@uwyo.edu>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Hans de Goede <hdegoede@redhat.com>,
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 462/639] PM: ACPI/PCI: Resume all devices during hibernation
-Date:   Fri, 24 Jan 2020 10:30:32 +0100
-Message-Id: <20200124093145.093330625@linuxfoundation.org>
+Subject: [PATCH 4.19 487/639] mic: avoid statically declaring a struct device.
+Date:   Fri, 24 Jan 2020 10:30:57 +0100
+Message-Id: <20200124093149.727225270@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
 References: <20200124093047.008739095@linuxfoundation.org>
@@ -62,87 +59,116 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit 501debd4aa5edc755037c39ea5a8fba23b41e580 ]
+[ Upstream commit bc83f79bd2119230888fb8574639d5a51b38f903 ]
 
-Both the PCI bus type and the ACPI PM domain avoid resuming
-runtime-suspended devices with DPM_FLAG_SMART_SUSPEND set during
-hibernation (before creating the snapshot image of system memory),
-but that turns out to be a mistake.  It leads to functional issues
-and adds complexity that's hard to justify.
+Generally, declaring a platform device as a static variable is
+a bad idea and can cause all kinds of problems, in particular
+with the DMA configuration and lifetime rules.
 
-For this reason, resume all runtime-suspended PCI devices and all
-devices in the ACPI PM domains before creating a snapshot image of
-system memory during hibernation.
+A specific problem we hit here is from a bug in clang that warns
+about certain (otherwise valid) macros when used in static variables:
 
-Fixes: 05087360fd7a (ACPI / PM: Take SMART_SUSPEND driver flag into account)
-Fixes: c4b65157aeef (PCI / PM: Take SMART_SUSPEND driver flag into account)
-Link: https://lore.kernel.org/linux-acpi/917d4399-2e22-67b1-9d54-808561f9083f@uwyo.edu/T/#maf065fe6e4974f2a9d79f332ab99dfaba635f64c
-Reported-by: Robert R. Howell <RHowell@uwyo.edu>
-Tested-by: Robert R. Howell <RHowell@uwyo.edu>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+drivers/misc/mic/card/mic_x100.c:285:27: warning: shift count >= width of type [-Wshift-count-overflow]
+static u64 mic_dma_mask = DMA_BIT_MASK(64);
+                          ^~~~~~~~~~~~~~~~
+include/linux/dma-mapping.h:141:54: note: expanded from macro 'DMA_BIT_MASK'
+ #define DMA_BIT_MASK(n) (((n) == 64) ? ~0ULL : ((1ULL<<(n))-1))
+                                                     ^ ~~~
+
+A slightly better way here is to create the platform device dynamically
+and set the dma mask in the probe function.
+This avoids the warning and some other problems, but is still not ideal
+because the device creation should really be separated from the driver,
+and the fact that the device has no parent means we have to force
+the dma mask rather than having it set up from the bus that the device
+is actually on.
+
+Fixes: dd8d8d44df64 ("misc: mic: MIC card driver specific changes to enable SCIF")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Link: https://lore.kernel.org/r/20190712092426.872625-1-arnd@arndb.de
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/acpi/device_pm.c | 13 +++++++------
- drivers/pci/pci-driver.c | 16 ++++++++--------
- 2 files changed, 15 insertions(+), 14 deletions(-)
+ drivers/misc/mic/card/mic_x100.c | 28 ++++++++++++----------------
+ 1 file changed, 12 insertions(+), 16 deletions(-)
 
-diff --git a/drivers/acpi/device_pm.c b/drivers/acpi/device_pm.c
-index e0927c5fd2821..11b7a1632e5aa 100644
---- a/drivers/acpi/device_pm.c
-+++ b/drivers/acpi/device_pm.c
-@@ -1116,13 +1116,14 @@ EXPORT_SYMBOL_GPL(acpi_subsys_resume_early);
- int acpi_subsys_freeze(struct device *dev)
- {
- 	/*
--	 * This used to be done in acpi_subsys_prepare() for all devices and
--	 * some drivers may depend on it, so do it here.  Ideally, however,
--	 * runtime-suspended devices should not be touched during freeze/thaw
--	 * transitions.
-+	 * Resume all runtime-suspended devices before creating a snapshot
-+	 * image of system memory, because the restore kernel generally cannot
-+	 * be expected to always handle them consistently and they need to be
-+	 * put into the runtime-active metastate during system resume anyway,
-+	 * so it is better to ensure that the state saved in the image will be
-+	 * always consistent with that.
- 	 */
--	if (!dev_pm_test_driver_flags(dev, DPM_FLAG_SMART_SUSPEND))
--		pm_runtime_resume(dev);
-+	pm_runtime_resume(dev);
+diff --git a/drivers/misc/mic/card/mic_x100.c b/drivers/misc/mic/card/mic_x100.c
+index b9f0710ffa6b0..4007adc666f37 100644
+--- a/drivers/misc/mic/card/mic_x100.c
++++ b/drivers/misc/mic/card/mic_x100.c
+@@ -249,6 +249,9 @@ static int __init mic_probe(struct platform_device *pdev)
+ 	mdrv->dev = &pdev->dev;
+ 	snprintf(mdrv->name, sizeof(mic_driver_name), mic_driver_name);
  
- 	return pm_generic_freeze(dev);
++	/* FIXME: use dma_set_mask_and_coherent() and check result */
++	dma_coerce_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(64));
++
+ 	mdev->mmio.pa = MIC_X100_MMIO_BASE;
+ 	mdev->mmio.len = MIC_X100_MMIO_LEN;
+ 	mdev->mmio.va = devm_ioremap(&pdev->dev, MIC_X100_MMIO_BASE,
+@@ -294,18 +297,6 @@ static void mic_platform_shutdown(struct platform_device *pdev)
+ 	mic_remove(pdev);
  }
-diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
-index e69af9b8361dc..5def4b74d54a0 100644
---- a/drivers/pci/pci-driver.c
-+++ b/drivers/pci/pci-driver.c
-@@ -996,15 +996,15 @@ static int pci_pm_freeze(struct device *dev)
+ 
+-static u64 mic_dma_mask = DMA_BIT_MASK(64);
+-
+-static struct platform_device mic_platform_dev = {
+-	.name = mic_driver_name,
+-	.id   = 0,
+-	.num_resources = 0,
+-	.dev = {
+-		.dma_mask = &mic_dma_mask,
+-		.coherent_dma_mask = DMA_BIT_MASK(64),
+-	},
+-};
+-
+ static struct platform_driver __refdata mic_platform_driver = {
+ 	.probe = mic_probe,
+ 	.remove = mic_remove,
+@@ -315,6 +306,8 @@ static struct platform_driver __refdata mic_platform_driver = {
+ 	},
+ };
+ 
++static struct platform_device *mic_platform_dev;
++
+ static int __init mic_init(void)
+ {
+ 	int ret;
+@@ -328,9 +321,12 @@ static int __init mic_init(void)
+ 
+ 	request_module("mic_x100_dma");
+ 	mic_init_card_debugfs();
+-	ret = platform_device_register(&mic_platform_dev);
++
++	mic_platform_dev = platform_device_register_simple(mic_driver_name,
++							   0, NULL, 0);
++	ret = PTR_ERR_OR_ZERO(mic_platform_dev);
+ 	if (ret) {
+-		pr_err("platform_device_register ret %d\n", ret);
++		pr_err("platform_device_register_full ret %d\n", ret);
+ 		goto cleanup_debugfs;
  	}
+ 	ret = platform_driver_register(&mic_platform_driver);
+@@ -341,7 +337,7 @@ static int __init mic_init(void)
+ 	return ret;
  
- 	/*
--	 * This used to be done in pci_pm_prepare() for all devices and some
--	 * drivers may depend on it, so do it here.  Ideally, runtime-suspended
--	 * devices should not be touched during freeze/thaw transitions,
--	 * however.
-+	 * Resume all runtime-suspended devices before creating a snapshot
-+	 * image of system memory, because the restore kernel generally cannot
-+	 * be expected to always handle them consistently and they need to be
-+	 * put into the runtime-active metastate during system resume anyway,
-+	 * so it is better to ensure that the state saved in the image will be
-+	 * always consistent with that.
- 	 */
--	if (!dev_pm_smart_suspend_and_suspended(dev)) {
--		pm_runtime_resume(dev);
--		pci_dev->state_saved = false;
--	}
-+	pm_runtime_resume(dev);
-+	pci_dev->state_saved = false;
+ device_unregister:
+-	platform_device_unregister(&mic_platform_dev);
++	platform_device_unregister(mic_platform_dev);
+ cleanup_debugfs:
+ 	mic_exit_card_debugfs();
+ done:
+@@ -351,7 +347,7 @@ done:
+ static void __exit mic_exit(void)
+ {
+ 	platform_driver_unregister(&mic_platform_driver);
+-	platform_device_unregister(&mic_platform_dev);
++	platform_device_unregister(mic_platform_dev);
+ 	mic_exit_card_debugfs();
+ }
  
- 	if (pm->freeze) {
- 		int error;
 -- 
 2.20.1
 
