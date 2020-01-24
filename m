@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88328C32771
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:57:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D273C35242
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:57:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 507BE2087E
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:57:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E87022087E
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:57:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579859831;
-	bh=KNbdDVH//FYyeq1DXiSLJvDAkt8qD/7KhBRbnt/ZQIw=;
+	s=default; t=1579859835;
+	bh=i5ryHhIqP69ds1YLLd3p3nJfg8dLntwkO8HdZ8Z92fs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sJ3/FRbCeezUX/izRVQXKqmNm4lNXTbiL1wmqs0q2B6RD7ToS9RtBE656WVe1xaT4
-	 kFHvZfeMV34Imhb/VrJ2Qv27DXzvmF0qc5lLe6036DfzQ5Ra4QUQOAaCvfEJPaNou9
-	 Wg1nK9WO9dadEUUVqLtoxI7YUKb3C9MoYUZ62X6E=
+	b=0iTN+Bm6Q9Nn3YCqcff0aD1qDqc2bKSS/Dvu0qo0NzD/ei/LgtSf6212cou9cMA8J
+	 rRQoZHFpm6lKf/PdrdsdXhj+eTPhk/1XgdkgkSM0DHFdc3j79vwzs8ceKgLQbtaUjS
+	 Jku8WYUs3chF6FciezDLHfdg1aS9ut18jx/PjY7I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388487AbgAXJ5K (ORCPT
+        id S2388599AbgAXJ5O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 04:57:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60874 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 04:57:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60962 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731076AbgAXJ5K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 04:57:10 -0500
+        id S1730166AbgAXJ5N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 04:57:13 -0500
 Received: from localhost (unknown [145.15.244.15])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8AE4820709;
-        Fri, 24 Jan 2020 09:57:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3B11120709;
+        Fri, 24 Jan 2020 09:57:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579859829;
-        bh=KNbdDVH//FYyeq1DXiSLJvDAkt8qD/7KhBRbnt/ZQIw=;
+        s=default; t=1579859833;
+        bh=i5ryHhIqP69ds1YLLd3p3nJfg8dLntwkO8HdZ8Z92fs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Z53vKUD8ympXIJF2+KAR5VchmVP5ajt3PfhyuqIfdC28EdyQQ0Q2KeB+g+RcTGz1J
-         X6iLiQK+GMlLZQ4Qow0t9VMP+1vXUbaUC/L5fPUmydOwLKChWh3TZdn4eR8qRjLzBe
-         MrAbFOe1SkLgS2wSi3oJR5XLnKzNykK8dNdxZeJ0=
+        b=WJbyOVwhBDndEzu/QOG9TcY3jgjrvphMQ3y3Vsc8/C/r0rcbsMgz6PNjU6IHihGJm
+         vitWcMwrOndihi+XCLnRfMT50ukOoGH/dT2SJ5D9manqwpiAComjgHe3fLKGW1cJgY
+         pz5omaV7o6+GRXKLMZ1Ok3wFEBMCCCdcaWRjqhPw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arthur Kiyanovski <akiyano@amazon.com>,
-        Sameeh Jubran <sameehj@amazon.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Himanshu Madhani <hmadhani@marvell.com>,
+        Giridhar Malavali <gmalavali@marvell.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 190/343] net: ena: fix incorrect test of supported hash function
-Date:   Fri, 24 Jan 2020 10:30:08 +0100
-Message-Id: <20200124092944.982774245@linuxfoundation.org>
+Subject: [PATCH 4.14 181/343] scsi: qla2xxx: Avoid that qlt_send_resp_ctio() corrupts memory
+Date:   Fri, 24 Jan 2020 10:29:59 +0100
+Message-Id: <20200124092943.790163052@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124092919.490687572@linuxfoundation.org>
 References: <20200124092919.490687572@linuxfoundation.org>
@@ -61,38 +62,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sameeh Jubran <sameehj@amazon.com>
+From: Bart Van Assche <bvanassche@acm.org>
 
-[ Upstream commit d3cfe7ddbc3dfbb9b201615b7fef8fd66d1b5fe8 ]
+[ Upstream commit a861b49273578e255426a499842cf7f465456351 ]
 
-ena_com_set_hash_function() tests if a hash function is supported
-by the device before setting it.
-The test returns the opposite result than needed.
-Reverse the condition to return the correct value.
-Also use the BIT macro instead of inline shift.
+The "(&ctio->u.status1.sense_data)[i]" where i >= 0 expressions in
+qlt_send_resp_ctio() are probably typos and should have been
+"(&ctio->u.status1.sense_data[4 * i])" instead. Instead of only fixing
+these typos, modify the code for storing sense data such that it becomes
+easy to read. This patch fixes a Coverity complaint about accessing an
+array outside its bounds.
 
-Fixes: 1738cd3ed342 ("net: ena: Add a driver for Amazon Elastic Network Adapters (ENA)")
-Signed-off-by: Arthur Kiyanovski <akiyano@amazon.com>
-Signed-off-by: Sameeh Jubran <sameehj@amazon.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Cc: Himanshu Madhani <hmadhani@marvell.com>
+Cc: Giridhar Malavali <gmalavali@marvell.com>
+Fixes: be25152c0d9e ("qla2xxx: Improve T10-DIF/PI handling in driver.") # v4.11.
+Signed-off-by: Bart Van Assche <bvanassche@acm.org>
+Acked-by: Himanshu Madhani <hmadhani@marvell.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/amazon/ena/ena_com.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/scsi/qla2xxx/qla_target.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/net/ethernet/amazon/ena/ena_com.c b/drivers/net/ethernet/amazon/ena/ena_com.c
-index 1a4ffc5d3da4e..011b54c541aae 100644
---- a/drivers/net/ethernet/amazon/ena/ena_com.c
-+++ b/drivers/net/ethernet/amazon/ena/ena_com.c
-@@ -2002,7 +2002,7 @@ int ena_com_set_hash_function(struct ena_com_dev *ena_dev)
- 	if (unlikely(ret))
- 		return ret;
+diff --git a/drivers/scsi/qla2xxx/qla_target.c b/drivers/scsi/qla2xxx/qla_target.c
+index 1000422ef4f8a..21011c5fddebe 100644
+--- a/drivers/scsi/qla2xxx/qla_target.c
++++ b/drivers/scsi/qla2xxx/qla_target.c
+@@ -2122,14 +2122,14 @@ void qlt_send_resp_ctio(struct qla_qpair *qpair, struct qla_tgt_cmd *cmd,
+ 		ctio->u.status1.scsi_status |=
+ 		    cpu_to_le16(SS_RESIDUAL_UNDER);
  
--	if (get_resp.u.flow_hash_func.supported_func & (1 << rss->hash_func)) {
-+	if (!(get_resp.u.flow_hash_func.supported_func & BIT(rss->hash_func))) {
- 		pr_err("Func hash %d isn't supported by device, abort\n",
- 		       rss->hash_func);
- 		return -EOPNOTSUPP;
+-	/* Response code and sense key */
+-	put_unaligned_le32(((0x70 << 24) | (sense_key << 8)),
+-	    (&ctio->u.status1.sense_data)[0]);
++	/* Fixed format sense data. */
++	ctio->u.status1.sense_data[0] = 0x70;
++	ctio->u.status1.sense_data[2] = sense_key;
+ 	/* Additional sense length */
+-	put_unaligned_le32(0x0a, (&ctio->u.status1.sense_data)[1]);
++	ctio->u.status1.sense_data[7] = 0xa;
+ 	/* ASC and ASCQ */
+-	put_unaligned_le32(((asc << 24) | (ascq << 16)),
+-	    (&ctio->u.status1.sense_data)[3]);
++	ctio->u.status1.sense_data[12] = asc;
++	ctio->u.status1.sense_data[13] = ascq;
+ 
+ 	/* Memory Barrier */
+ 	wmb();
 -- 
 2.20.1
 
