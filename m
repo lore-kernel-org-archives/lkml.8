@@ -2,277 +2,109 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AE7AC35242
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 20:23:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9024C32771
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 20:23:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ECE342072C
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 20:23:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB0CB2072C
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 20:23:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="THXVTwko"
+	dkim=pass (2048-bit key) header.d=lixom-net.20150623.gappssmtp.com header.i=@lixom-net.20150623.gappssmtp.com header.b="eqqiUcBN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388692AbgAXUXl (ORCPT
+        id S2392144AbgAXUXq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 15:23:41 -0500
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:32931 "EHLO
+        Fri, 24 Jan 2020 15:23:46 -0500
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:44601 "EHLO
         mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387480AbgAXUXk (ORCPT
+        with ESMTP id S2388724AbgAXUXo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 15:23:40 -0500
-Received: by mail-lf1-f67.google.com with SMTP id n25so2027007lfl.0
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Jan 2020 12:23:38 -0800 (PST)
+        Fri, 24 Jan 2020 15:23:44 -0500
+Received: by mail-lf1-f67.google.com with SMTP id v201so1998987lfa.11
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jan 2020 12:23:43 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=eibpFJ/dL/po7h/5lUN6b9t7vGqoq6edRosDwybFErA=;
-        b=THXVTwkodkl4NV0lthJq64T8BkB+kb+ffvrbOIIER8YxEvQBCT2o/7LDw2RGVsJRL2
-         uXOqDAz/tYlhLLwyQPSbMtBDwZfl9wCyed52H+MSR+Bhx3i7TtCEQ5VJU92oS91V0RFM
-         ZV5jHG9CroKc3T7vN4hYoBeavgcbdaIhntw1I43u67p8jWEleo+IoYekee0/fKj5k0q5
-         j7pVKy/aHd/X5lwcOmIBtCfUfiW1DfPSHtSfw5MX86ChFkP7YXD5BEfd29Jxxk9IAv24
-         S4NJIPiBbOExUxqQNGmNrCJhRl4iIoj27x5+BxRyuAPtp8XZPn0qsKyzOjcH1s/aC3Lz
-         SQow==
+        d=lixom-net.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=YNUNzci7Ki+kYYCPvb39XVTgjfk5mcI92JUtukf799o=;
+        b=eqqiUcBNVVH+UrA+DM3vLI5nS815gkneczHy+NGnuiq3u2HqT3jXnATb3eUDRR0GQO
+         4vhlHlDPiiL772CNPAMzt7U0uuZgh0C0WRdblM4zctdf4R4P5COJNKEnppD+cgWFjWuG
+         UhNX+3otnjoeMnIk8Eu5aV39oo0SUmgI6x4FHrQsttiGslEol8mXa5msrnfUOfthAt9F
+         2SWMdciNoyytzAofnwUOrpSyBSMD2gBICMpHgqW4xFKp1daMjuC7pJgBS3xGq+yh0SYx
+         1nzPpy9kkj4R/xCGmgN7cfKKIKqH2cDL/1L5gcnO5n9yN3WfJmDaqL02PD69OmM6KGNi
+         2P2g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=eibpFJ/dL/po7h/5lUN6b9t7vGqoq6edRosDwybFErA=;
-        b=TWQMKuRuxu8EjnHrpDiJA7ev/9JW7LH01yZFXb2xnMDM+MqSG2N9jYPVfuARw0Inpi
-         IcV8246CtPGu+ai57vU+5GTIfl+Vl25EK3SSdIVxHTpXitXTeoCmbAuxrufw0YN4mJYC
-         IjaO1HsoJekpBIirRIJP+cHsbIAYs26ado6zWGYvomzBeCYKp4n0j1ohPxhKFHD19dho
-         0ZzWvlWd5Ym479cACUnMpKjwG852U7YcRLi8Lc1Ssy+yQjWQkROIdNmDkfY3DMWORF3Q
-         W2fmVqIWC6yMCQI66gtP6rbYEfzMZKGunbtTKn1tJ2eNRof92jkc5y/tzMr7h2Y68849
-         1cwQ==
-X-Gm-Message-State: APjAAAUx+mtyXJGghUUgfJBbRQIPqrBPafkd6kMDz/2bsRFeEE3sprSI
-        JXGtm+LLVXMC+0v8whldcii+z9is9TPi1qF81kpThg==
-X-Google-Smtp-Source: APXvYqxuuu1/zxYUm5WDAcBoC5BQJSb6/tHB3M19FeY/I611GVLHEkCovpovRlvKoQIBXafdXuc2bwrDj8ePsYYTNKk=
-X-Received: by 2002:a19:4208:: with SMTP id p8mr2257984lfa.160.1579897417530;
- Fri, 24 Jan 2020 12:23:37 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=YNUNzci7Ki+kYYCPvb39XVTgjfk5mcI92JUtukf799o=;
+        b=bacCzcj6ZpwFnoYQDwns9SlS4yfWTgOE/3XhtI1EEjbYz+Z4nz9HbRdrYGR6Wv4KfH
+         KSReIZlzk42Zki7AhFSwp0mrnIuYKs2FJwogyptBs0h/gN2xPON7Vk1ijrMY/Uz41idB
+         mRQNP4vX9rTITt7cqzDY68n8BfrC3CrQxAD4SS2EIHsNoHWPM3S0YvRlXfPXErBB2lnJ
+         R58bJycGyQAnkmWKOQIMtaI+4BwkbAJF4+P8kT9HddxBxhxHOHQz9Qz0wuF+6ypy6vaq
+         SBnL7FmAh6FM4vcLyGGw7a3PRQVCHfTaLZkWaSGtk/gGAuH+85ybZMtD9YjcOVYua7JC
+         mhEQ==
+X-Gm-Message-State: APjAAAWYTYu/RZVKX8k9aQOo+vzIW3jcaXtGzCuuGMd30CF55XSGwA+m
+        IFYE2u1UfW5akk39QPMPOoT/Mw==
+X-Google-Smtp-Source: APXvYqwKZYJUPJeYgEpmrE/NTzuIH587Zpaxvsd190XRkzqqSgxGbHOlCFcDOcIq6d06uBMsG0OmNA==
+X-Received: by 2002:a19:3f16:: with SMTP id m22mr2266907lfa.116.1579897422600;
+        Fri, 24 Jan 2020 12:23:42 -0800 (PST)
+Received: from localhost (h85-30-9-151.cust.a3fiber.se. [85.30.9.151])
+        by smtp.gmail.com with ESMTPSA id d11sm3386928lfj.3.2020.01.24.12.23.41
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 24 Jan 2020 12:23:41 -0800 (PST)
+Date:   Fri, 24 Jan 2020 12:11:40 -0800
+From:   Olof Johansson <olof@lixom.net>
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     Dafna Hirschfeld <dafna.hirschfeld@collabora.com>, soc@kernel.org,
+        devicetree@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Helen Koike <helen.koike@collabora.com>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        Collabora Kernel ML <kernel@collabora.com>, dafna3@gmail.com
+Subject: Re: [PATCH] dt-bindings: fix compilation error of the example in
+ marvell,mmp3-hsic-phy.yaml
+Message-ID: <20200124201140.oczzqz2xplbq3abe@localhost>
+References: <20200124105753.15976-1-dafna.hirschfeld@collabora.com>
+ <CAL_Jsq+7E6B181hYn_6yNE53Mf+jiQ+o6pGDotwGX=m+GysW4A@mail.gmail.com>
 MIME-Version: 1.0
-References: <20191220200353.252399-1-rajatja@google.com> <20191220200353.252399-2-rajatja@google.com>
- <87v9p1gk4z.fsf@intel.com>
-In-Reply-To: <87v9p1gk4z.fsf@intel.com>
-From:   Rajat Jain <rajatja@google.com>
-Date:   Fri, 24 Jan 2020 12:23:00 -0800
-Message-ID: <CACK8Z6GN1tXj+a3HHgyVKzTcgYBB+v8gpLCqh+YgTU0tS5b-OA@mail.gmail.com>
-Subject: Re: [PATCH v5 2/3] drm/i915: Lookup and attach ACPI device node for connectors
-To:     Jani Nikula <jani.nikula@linux.intel.com>
-Cc:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        =?UTF-8?B?VmlsbGUgU3lyasOkbMOk?= <ville.syrjala@linux.intel.com>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        Imre Deak <imre.deak@intel.com>,
-        =?UTF-8?Q?Jos=C3=A9_Roberto_de_Souza?= <jose.souza@intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        intel-gfx@lists.freedesktop.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mat King <mathewk@google.com>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Jonathan Corbet <corbet@lwn.net>, Pavel Machek <pavel@denx.de>,
-        Sean Paul <seanpaul@google.com>,
-        Duncan Laurie <dlaurie@google.com>,
-        Jesse Barnes <jsbarnes@google.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Rajat Jain <rajatxjain@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAL_Jsq+7E6B181hYn_6yNE53Mf+jiQ+o6pGDotwGX=m+GysW4A@mail.gmail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jani,
-
-Thank you for the review. Please see inline.
-
-On Fri, Jan 24, 2020 at 3:37 AM Jani Nikula <jani.nikula@linux.intel.com> wrote:
->
-> On Fri, 20 Dec 2019, Rajat Jain <rajatja@google.com> wrote:
-> > Lookup and attach ACPI nodes for intel connectors. The lookup is done
-> > in compliance with ACPI Spec 6.3
-> > https://uefi.org/sites/default/files/resources/ACPI_6_3_final_Jan30.pdf
-> > (Ref: Pages 1119 - 1123).
+On Fri, Jan 24, 2020 at 08:08:58AM -0600, Rob Herring wrote:
+> On Fri, Jan 24, 2020 at 4:58 AM Dafna Hirschfeld
+> <dafna.hirschfeld@collabora.com> wrote:
 > >
-> > This can be useful for any connector specific platform properties. (This
-> > will be used for privacy screen in next patch).
+> > Running `make dt_binging_check`, gives the error:
 > >
-> > Signed-off-by: Rajat Jain <rajatja@google.com>
-> > ---
-> > v5: same as v4
-> > v4: Same as v3
-> > v3: fold the code into existing acpi_device_id_update() function
-> > v2: formed by splitting the original patch into ACPI lookup, and privacy
-> >     screen property. Also move it into i915 now that I found existing code
-> >     in i915 that can be re-used.
+> > DTC     Documentation/devicetree/bindings/phy/marvell,mmp3-hsic-phy.example.dt.yaml
+> > Error: Documentation/devicetree/bindings/phy/marvell,mmp3-hsic-phy.example.dts:20.41-42 syntax error
+> > FATAL ERROR: Unable to parse input tree
 > >
-> >  drivers/gpu/drm/i915/display/intel_acpi.c     | 24 +++++++++++++++++++
-> >  .../drm/i915/display/intel_display_types.h    |  3 +++
-> >  drivers/gpu/drm/i915/display/intel_dp.c       |  3 +++
-> >  3 files changed, 30 insertions(+)
+> > This is because the example uses the macro GPIO_ACTIVE_HIGH which
+> > is defined in gpio.h but the include of this header is missing.
+> > Add the include to fix the error.
 > >
-> > diff --git a/drivers/gpu/drm/i915/display/intel_acpi.c b/drivers/gpu/drm/i915/display/intel_acpi.c
-> > index e21fb14d5e07..101a56c08996 100644
-> > --- a/drivers/gpu/drm/i915/display/intel_acpi.c
-> > +++ b/drivers/gpu/drm/i915/display/intel_acpi.c
-> > @@ -222,11 +222,23 @@ static u32 acpi_display_type(struct intel_connector *connector)
-> >       return display_type;
-> >  }
-> >
-> > +/*
-> > + * Ref: ACPI Spec 6.3
-> > + * https://uefi.org/sites/default/files/resources/ACPI_6_3_final_Jan30.pdf
-> > + * Pages 1119 - 1123 describe, what I believe, a standard way of
-> > + * identifying / addressing "display panels" in the ACPI. It provides
-> > + * a way for the ACPI to define devices for the display panels attached
-> > + * to the system. It thus provides a way for the BIOS to export any panel
-> > + * specific properties to the system via ACPI (like device trees).
-> > + */
-> >  void intel_acpi_device_id_update(struct drm_i915_private *dev_priv)
-> >  {
-> >       struct drm_device *drm_dev = &dev_priv->drm;
-> >       struct intel_connector *connector;
-> >       struct drm_connector_list_iter conn_iter;
-> > +     struct device *dev = &drm_dev->pdev->dev;
->
-> Hmm, already pushed patch 1 with the unfortunate "drm_dev" local. We use
-> "dev" for struct drm_device * and almost never use struct device.
+> > Signed-off-by: Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
+> 
+> Fixes: f6f149604eef ("dt-bindings: phy: Add binding for marvell,mmp3-hsic-phy")
+> Acked-by: Rob Herring <robh@kernel.org>
+> 
+> Arnd, Olof, The above commit is in your tree. Please apply this.
 
-Sorry, I did not know. I'll send an independent fixup patch for patch
-1 on top of drm-intel-next-queued (or let me know if you want to
-handle it). I will also change this patch to rename the variable.
-
->
-> > +     struct acpi_device *conn_dev;
-> > +     u64 conn_addr;
-> >       u8 display_index[16] = {};
-> >
-> >       /* Populate the ACPI IDs for all connectors for a given drm_device */
-> > @@ -242,6 +254,18 @@ void intel_acpi_device_id_update(struct drm_i915_private *dev_priv)
-> >               device_id |= display_index[type]++ << ACPI_DISPLAY_INDEX_SHIFT;
-> >
-> >               connector->acpi_device_id = device_id;
-> > +
-> > +             /* Build the _ADR to look for */
-> > +             conn_addr = device_id | ACPI_DEVICE_ID_SCHEME |
-> > +                             ACPI_BIOS_CAN_DETECT;
-> > +
-> > +             DRM_DEV_INFO(dev, "Checking connector ACPI node at _ADR=%llX\n",
-> > +                          conn_addr);
->
-> This is more than a little verbose. One line of INFO level dmesg for
-> every connector at boot and at resume.
->
-> Please use the new drm_dbg_kms() macro for this.
-
-Will do.
-
->
-> > +
-> > +             /* Look up the connector device, under the PCI device */
-> > +             conn_dev = acpi_find_child_device(ACPI_COMPANION(dev),
-> > +                                               conn_addr, false);
-> > +             connector->acpi_handle = conn_dev ? conn_dev->handle : NULL;
->
-> acpi_device_handle(conn_dev)
->
-
-Will do.
+Applied.
 
 
-> >       }
-> >       drm_connector_list_iter_end(&conn_iter);
-> >  }
-> > diff --git a/drivers/gpu/drm/i915/display/intel_display_types.h b/drivers/gpu/drm/i915/display/intel_display_types.h
-> > index 1a7334dbe802..0a4a04116091 100644
-> > --- a/drivers/gpu/drm/i915/display/intel_display_types.h
-> > +++ b/drivers/gpu/drm/i915/display/intel_display_types.h
-> > @@ -407,6 +407,9 @@ struct intel_connector {
-> >       /* ACPI device id for ACPI and driver cooperation */
-> >       u32 acpi_device_id;
-> >
-> > +     /* ACPI handle corresponding to this connector display, if found */
-> > +     void *acpi_handle;
-> > +
->
-> The type is acpi_handle. It's none of our business to know what the
-> underlying type is.
+Thanks,
 
-Will do.
-
->
-> >       /* Reads out the current hw, returning true if the connector is enabled
-> >        * and active (i.e. dpms ON state). */
-> >       bool (*get_hw_state)(struct intel_connector *);
-> > diff --git a/drivers/gpu/drm/i915/display/intel_dp.c b/drivers/gpu/drm/i915/display/intel_dp.c
-> > index b05b2191b919..93cece8e2516 100644
-> > --- a/drivers/gpu/drm/i915/display/intel_dp.c
-> > +++ b/drivers/gpu/drm/i915/display/intel_dp.c
-> > @@ -45,6 +45,7 @@
-> >  #include "i915_debugfs.h"
-> >  #include "i915_drv.h"
-> >  #include "i915_trace.h"
-> > +#include "intel_acpi.h"
-> >  #include "intel_atomic.h"
-> >  #include "intel_audio.h"
-> >  #include "intel_connector.h"
-> > @@ -6623,6 +6624,8 @@ intel_dp_add_properties(struct intel_dp *intel_dp, struct drm_connector *connect
-> >
-> >               connector->state->scaling_mode = DRM_MODE_SCALE_ASPECT;
-> >
-> > +             /* Lookup the ACPI node corresponding to the connector */
-> > +             intel_acpi_device_id_update(dev_priv);
->
-> Auch, this is problematic. It iterates all connectors, for every DP
-> connector being added. In the middle of registering all connectors.
->
-> From the POV of this patch alone, this is also unnecessary. This gets
-> called via intel_opregion_register() after all connectors have been
-> registered.
->
-> I am aware it's not enough for your next patch, because it will need the
-> acpi handle right here.
->
-> I'm wondering if we need to maintain display_index[] in struct
-> drm_i915_private, and update that as connectors get added instead of all
-> at once in the end.
-
-Sure, I can do that.
-
-> connector->acpi_device_id never changes, does it,
-> even though we keep updating it?
-
-This is the part I am not so sure about - I hypothesized that theory
-because of the current behavior in code (i.e. it is getting updated in
-intel_opregion_resume() path). May be it does not change, I was not
-sure, so I did not want to create any regression in the intel_opregion
-code that I did not understand. I tried on my system and as far as I
-could experiment, I did not see it changing. Please let me know if you
-would like me to change my code to:
-
-1) Maintain drm_i915_private->display_index[] and update it as
-connectors are added.
-2) Remove the code to update it on every resume and while registering
-the connector.
-
-Thanks & Best Regards,
-
-Rajat
-
->
-> BR,
-> Jani.
->
->
-> >       }
-> >  }
->
-> --
-> Jani Nikula, Intel Open Source Graphics Center
+-Olof
