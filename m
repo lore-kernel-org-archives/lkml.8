@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C825C35242
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:39:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30E90C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:39:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29298206D4
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:39:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 034C020708
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:39:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579865944;
-	bh=gTCTS9YOo2/EycsK2DHyJOhnQ/fkQKKNu4+lHyMCmg0=;
+	s=default; t=1579865948;
+	bh=/nO3Ttx6srVgUV9YENUbndo2PQS8wsJTxorwB71OhYE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vUbTWn8m8SI9ayd9KYSF8A8OaPYJcpfgbqC8wNtBOG15w+6RGoPSaPHRkgCKQmegp
-	 aT2kRdWYF5X+h7Fu6PaEF6kUVh0O82WUOnd/91YzBOuVqHBnDjB6lJhH6dvqWO5SLL
-	 7nRM8vIYq+MRlKRX/QaOvYpaBXauY0VorKr4U/0Y=
+	b=GiEknqnqFecEW4dYVuuRPxwp+OTsEJdh5Li2brSyKsZe7cosOMj23Kz/D6PnUKOq2
+	 abwPAPli8VROm3KyByILkEs0wMwQYQJtFJD2epZzIJbuGF3hTHhHUrCjRgLj5rsF7L
+	 h8s9yz+2Rn4alJlVc793NvdxMEhrwDKX/lwaOxUA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391621AbgAXL1H (ORCPT
+        id S2391331AbgAXL03 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:27:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42268 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 06:26:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41130 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391616AbgAXL1A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:27:00 -0500
+        id S2388623AbgAXL0Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:26:25 -0500
 Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4E1DB20718;
-        Fri, 24 Jan 2020 11:26:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A8960206D4;
+        Fri, 24 Jan 2020 11:26:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579865220;
-        bh=gTCTS9YOo2/EycsK2DHyJOhnQ/fkQKKNu4+lHyMCmg0=;
+        s=default; t=1579865184;
+        bh=/nO3Ttx6srVgUV9YENUbndo2PQS8wsJTxorwB71OhYE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nXLxwFYy7h0SIQiTfKMlHxWKcQ9RwfFAOkW95ZrF8/ki+fduG+cPdTbA/OI3WyPwz
-         FQ0Ws0VihFUxkZ39IamTnyxQOI+uYUOkcFMaDlFwvQrXqwHHrjjw9nsa0XmIMnQkU7
-         j1xzvt4aN54Pc7DT2BN5fKyjpQc+FsocfZo/pu1U=
+        b=0tbC6gQpMYKpffFvGcGsyDbIzsHtCP8BQ1Q8oHIZoWRIYUTb8OAO9rShG14dF0yYb
+         Q0NvnjPDpebzPvm47pwvHYbgOzOEffpy8+PBu/mE0WCWbBZiE2S8+ZywdtK6AxszRD
+         L5PZStMj0FpHx7Isj6m7utMWNdxMEOug37Q8IAXk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
-        Hannes Reinecke <hare@suse.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org, Ilya Maximets <i.maximets@samsung.com>,
+        =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn.topel@intel.com>,
+        William Tu <u9012063@gmail.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 478/639] scsi: libfc: fix null pointer dereference on a null lport
-Date:   Fri, 24 Jan 2020 10:30:48 +0100
-Message-Id: <20200124093148.013849932@linuxfoundation.org>
+Subject: [PATCH 4.19 476/639] xdp: fix possible cq entry leak
+Date:   Fri, 24 Jan 2020 10:30:46 +0100
+Message-Id: <20200124093147.759308228@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
 References: <20200124093047.008739095@linuxfoundation.org>
@@ -61,37 +62,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Ilya Maximets <i.maximets@samsung.com>
 
-[ Upstream commit 41a6bf6529edd10a6def42e3b2c34a7474bcc2f5 ]
+[ Upstream commit 675716400da6f15b9d3db04ef74ee74ca9a00af3 ]
 
-Currently if lport is null then the null lport pointer is dereference when
-printing out debug via the FC_LPORT_DB macro. Fix this by using the more
-generic FC_LIBFC_DBG debug macro instead that does not use lport.
+Completion queue address reservation could not be undone.
+In case of bad 'queue_id' or skb allocation failure, reserved entry
+will be leaked reducing the total capacity of completion queue.
 
-Addresses-Coverity: ("Dereference after null check")
-Fixes: 7414705ea4ae ("libfc: Add runtime debugging with debug_logging module parameter")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Reviewed-by: Hannes Reinecke <hare@suse.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Fix that by moving reservation to the point where failure is not
+possible. Additionally, 'queue_id' checking moved out from the loop
+since there is no point to check it there.
+
+Fixes: 35fcde7f8deb ("xsk: support for Tx")
+Signed-off-by: Ilya Maximets <i.maximets@samsung.com>
+Acked-by: Björn Töpel <bjorn.topel@intel.com>
+Tested-by: William Tu <u9012063@gmail.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/libfc/fc_exch.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/xdp/xsk.c | 11 ++++-------
+ 1 file changed, 4 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/scsi/libfc/fc_exch.c b/drivers/scsi/libfc/fc_exch.c
-index 42bcf7f3a0f90..6ba257cbc6d94 100644
---- a/drivers/scsi/libfc/fc_exch.c
-+++ b/drivers/scsi/libfc/fc_exch.c
-@@ -2603,7 +2603,7 @@ void fc_exch_recv(struct fc_lport *lport, struct fc_frame *fp)
+diff --git a/net/xdp/xsk.c b/net/xdp/xsk.c
+index 547fc4554b22c..c90854bc3048e 100644
+--- a/net/xdp/xsk.c
++++ b/net/xdp/xsk.c
+@@ -218,6 +218,9 @@ static int xsk_generic_xmit(struct sock *sk, struct msghdr *m,
  
- 	/* lport lock ? */
- 	if (!lport || lport->state == LPORT_ST_DISABLED) {
--		FC_LPORT_DBG(lport, "Receiving frames for an lport that "
-+		FC_LIBFC_DBG("Receiving frames for an lport that "
- 			     "has not been initialized correctly\n");
- 		fc_frame_free(fp);
- 		return;
+ 	mutex_lock(&xs->mutex);
+ 
++	if (xs->queue_id >= xs->dev->real_num_tx_queues)
++		goto out;
++
+ 	while (xskq_peek_desc(xs->tx, &desc)) {
+ 		char *buffer;
+ 		u64 addr;
+@@ -228,12 +231,6 @@ static int xsk_generic_xmit(struct sock *sk, struct msghdr *m,
+ 			goto out;
+ 		}
+ 
+-		if (xskq_reserve_addr(xs->umem->cq))
+-			goto out;
+-
+-		if (xs->queue_id >= xs->dev->real_num_tx_queues)
+-			goto out;
+-
+ 		len = desc.len;
+ 		skb = sock_alloc_send_skb(sk, len, 1, &err);
+ 		if (unlikely(!skb)) {
+@@ -245,7 +242,7 @@ static int xsk_generic_xmit(struct sock *sk, struct msghdr *m,
+ 		addr = desc.addr;
+ 		buffer = xdp_umem_get_data(xs->umem, addr);
+ 		err = skb_store_bits(skb, 0, buffer, len);
+-		if (unlikely(err)) {
++		if (unlikely(err) || xskq_reserve_addr(xs->umem->cq)) {
+ 			kfree_skb(skb);
+ 			goto out;
+ 		}
 -- 
 2.20.1
 
