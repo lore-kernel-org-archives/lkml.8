@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A9F6C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:27:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0493C35242
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:27:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28D69206F0
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:27:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DCDD206F0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:27:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579876033;
-	bh=hIFidir/OMlQLPIctoU56uJRNFBmd+9oySQCz1aKty4=;
+	s=default; t=1579876039;
+	bh=v12CYClJrDn14XHZyzfkg2sk9lCjmDtjUyfsGmz6Wgw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0bJmQhAoWrZztUe55w8dcNV9q8hd7U3kGFmxyz+S+J465mE/FjNMyM3wG13Nsy4vk
-	 mq7Tq/0GmZ53p/YlnVxb1cdkg6Z5mtIeapRw39boRwCULXKdGhCC9i3d5wwKMA8vSx
-	 N9ozUkckleuoY9sY17onkWRxYsNNblSGpLD326Yc=
+	b=dGRxtguoyig60cx/W9K+m5bMDVs/s6Y2MdgpDOmhAB1A2WZ36BYYQ9r2tQWJj/LMt
+	 e1Iu8Sxe74KZ9Yb9Vt1lQKwPTmP+2IHTH9l/XxI270lFbyxbpSlvs2QB76pX9xyKUV
+	 JgRK3f1Zte2CASM4oG6Wc3mr984y9W4fn85OSmn8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390364AbgAXO1M (ORCPT
+        id S2390381AbgAXO1S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 09:27:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43252 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 09:27:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43106 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405293AbgAXOVa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 09:21:30 -0500
+        id S2387475AbgAXOV0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 09:21:26 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 32E6F2077C;
-        Fri, 24 Jan 2020 14:21:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B4FF622464;
+        Fri, 24 Jan 2020 14:21:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579875690;
-        bh=hIFidir/OMlQLPIctoU56uJRNFBmd+9oySQCz1aKty4=;
+        s=default; t=1579875685;
+        bh=v12CYClJrDn14XHZyzfkg2sk9lCjmDtjUyfsGmz6Wgw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RyJdSDyoIZtWGtAWLbzLliCTZ/Q0Lq6STg+C9REf46emSO7/Pw5wAxbq4Bc+Qv6wD
-         TAjdwLlHFIoKoCd2Og8bkyuvZtWHwdOwo5ZB6vJIpFFhICpm7brDeAVRd1kxCtgqhW
-         v5sPqMJ25S+nsOolMzx3+v2bycGRf3wyX/IANdAQ=
+        b=HW+bVt2hMZKBFT+rbwSrvDLMyOAoXSvpwtDnkgaMe6I5PifGLmJ8RGAgncp9iY8Ab
+         keUSUNMbstf29FH+AlkjrtLqQ91MYMFt6BK+4wmkmwERCuPXVuihAwdbQL8j7iU7Zg
+         zkOBcHcM2djSXoITvcBRbiJPk/HKtFLoMYiY6Bmw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Radoslaw Tyl <radoslawx.tyl@intel.com>,
-        Paul Menzel <pmenzel@molgen.mpg.de>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+Cc:     Dave Gerlach <d-gerlach@ti.com>, Suman Anna <s-anna@ti.com>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Tony Lindgren <tony@atomide.com>,
         Sasha Levin <sashal@kernel.org>,
-        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 09/32] ixgbevf: Remove limit of 10 entries for unicast filter list
-Date:   Fri, 24 Jan 2020 09:20:56 -0500
-Message-Id: <20200124142119.30484-9-sashal@kernel.org>
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.14 05/32] soc: ti: wkup_m3_ipc: Fix race condition with rproc_boot
+Date:   Fri, 24 Jan 2020 09:20:52 -0500
+Message-Id: <20200124142119.30484-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200124142119.30484-1-sashal@kernel.org>
 References: <20200124142119.30484-1-sashal@kernel.org>
@@ -61,40 +61,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Radoslaw Tyl <radoslawx.tyl@intel.com>
+From: Dave Gerlach <d-gerlach@ti.com>
 
-[ Upstream commit aa604651d523b1493988d0bf6710339f3ee60272 ]
+[ Upstream commit 03729cfa0d543bc996bf959e762ec999afc8f3d2 ]
 
-Currently, though the FDB entry is added to VF, it does not appear in
-RAR filters. VF driver only allows to add 10 entries. Attempting to add
-another causes an error. This patch removes limitation and allows use of
-all free RAR entries for the FDB if needed.
+Any user of wkup_m3_ipc calls wkup_m3_ipc_get to get a handle and this
+checks the value of the static variable m3_ipc_state to see if the
+wkup_m3 is ready. Currently this is populated during probe before
+rproc_boot has been called, meaning there is a window of time that
+wkup_m3_ipc_get can return a valid handle but the wkup_m3 itself is not
+ready, leading to invalid IPC calls to the wkup_m3 and system
+instability.
 
-Fixes: 46ec20ff7d ("ixgbevf: Add macvlan support in the set rx mode op")
-Signed-off-by: Radoslaw Tyl <radoslawx.tyl@intel.com>
-Acked-by: Paul Menzel <pmenzel@molgen.mpg.de>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+To avoid this, move the population of the m3_ipc_state variable until
+after rproc_boot has succeeded to guarantee a valid and usable handle
+is always returned.
+
+Reported-by: Suman Anna <s-anna@ti.com>
+Signed-off-by: Dave Gerlach <d-gerlach@ti.com>
+Acked-by: Santosh Shilimkar <ssantosh@kernel.org>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/intel/ixgbevf/ixgbevf_main.c | 5 -----
- 1 file changed, 5 deletions(-)
+ drivers/soc/ti/wkup_m3_ipc.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/intel/ixgbevf/ixgbevf_main.c b/drivers/net/ethernet/intel/ixgbevf/ixgbevf_main.c
-index e238f6e85ab66..a7708e14aa5ca 100644
---- a/drivers/net/ethernet/intel/ixgbevf/ixgbevf_main.c
-+++ b/drivers/net/ethernet/intel/ixgbevf/ixgbevf_main.c
-@@ -1858,11 +1858,6 @@ static int ixgbevf_write_uc_addr_list(struct net_device *netdev)
- 	struct ixgbe_hw *hw = &adapter->hw;
- 	int count = 0;
+diff --git a/drivers/soc/ti/wkup_m3_ipc.c b/drivers/soc/ti/wkup_m3_ipc.c
+index 369aef5e7228e..651827c6ee6f9 100644
+--- a/drivers/soc/ti/wkup_m3_ipc.c
++++ b/drivers/soc/ti/wkup_m3_ipc.c
+@@ -375,6 +375,8 @@ static void wkup_m3_rproc_boot_thread(struct wkup_m3_ipc *m3_ipc)
+ 	ret = rproc_boot(m3_ipc->rproc);
+ 	if (ret)
+ 		dev_err(dev, "rproc_boot failed\n");
++	else
++		m3_ipc_state = m3_ipc;
  
--	if ((netdev_uc_count(netdev)) > 10) {
--		pr_err("Too many unicast filters - No Space\n");
--		return -ENOSPC;
--	}
+ 	do_exit(0);
+ }
+@@ -461,8 +463,6 @@ static int wkup_m3_ipc_probe(struct platform_device *pdev)
+ 		goto err_put_rproc;
+ 	}
+ 
+-	m3_ipc_state = m3_ipc;
 -
- 	if (!netdev_uc_empty(netdev)) {
- 		struct netdev_hw_addr *ha;
+ 	return 0;
  
+ err_put_rproc:
 -- 
 2.20.1
 
