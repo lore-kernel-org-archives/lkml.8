@@ -2,204 +2,145 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7BB0C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:37:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99592C32771
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:37:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BAD5E20708
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:37:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FCBA214DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:37:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579865849;
+	bh=ch7/w/VLG+E8svC6UFKcketWrqb0LzLOKZT9C7CYEFQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=zRzP+yLhHzHQ7FoIQY9bZ2glyXuDIdjP4fEBPmdWPCYXAi+myM4g5CBAPQW6uv+hd
+	 SAcTq4IBVkSkS5QW09DlfiP/HFHxbswvbclthjJsbvtoiz56EJucMpJqicAu1I5+iV
+	 txhyCusdcjMrQSgObQ1HmGHSwhNSzLgJl6CwW7BU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391929AbgAXLh0 (ORCPT
+        id S2404944AbgAXLgw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:37:26 -0500
-Received: from mga18.intel.com ([134.134.136.126]:54239 "EHLO mga18.intel.com"
+        Fri, 24 Jan 2020 06:36:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56948 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404959AbgAXLg5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:36:57 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Jan 2020 03:36:56 -0800
-X-IronPort-AV: E=Sophos;i="5.70,357,1574150400"; 
-   d="scan'208";a="220996786"
-Received: from omarkovx-mobl.ger.corp.intel.com (HELO localhost) ([10.249.37.60])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Jan 2020 03:36:49 -0800
-From:   Jani Nikula <jani.nikula@linux.intel.com>
-To:     Rajat Jain <rajatja@google.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Ville =?utf-8?B?U3lyasOkbMOk?= <ville.syrjala@linux.intel.com>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        Imre Deak <imre.deak@intel.com>,
-        =?utf-8?Q?Jos=C3=A9?= Roberto de Souza <jose.souza@intel.com>,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        intel-gfx@lists.freedesktop.org, gregkh@linuxfoundation.org,
-        mathewk@google.com, Daniel Thompson <daniel.thompson@linaro.org>,
-        Jonathan Corbet <corbet@lwn.net>, Pavel Machek <pavel@denx.de>,
-        seanpaul@google.com, Duncan Laurie <dlaurie@google.com>,
-        jsbarnes@google.com, Thierry Reding <thierry.reding@gmail.com>
-Cc:     Rajat Jain <rajatja@google.com>, rajatxjain@gmail.com
-Subject: Re: [PATCH v5 2/3] drm/i915: Lookup and attach ACPI device node for connectors
-In-Reply-To: <20191220200353.252399-2-rajatja@google.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <20191220200353.252399-1-rajatja@google.com> <20191220200353.252399-2-rajatja@google.com>
-Date:   Fri, 24 Jan 2020 13:37:48 +0200
-Message-ID: <87v9p1gk4z.fsf@intel.com>
+        id S2390527AbgAXLgo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:36:44 -0500
+Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0D758206D4;
+        Fri, 24 Jan 2020 11:36:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579865803;
+        bh=ch7/w/VLG+E8svC6UFKcketWrqb0LzLOKZT9C7CYEFQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=tlrfstm6SQyr3NNlHsb5w/Aj9CW7pmGDpXnkhlPuuKSbpmtNo6WbohdZPy6304pzT
+         ELr9RmYEY31xTi6fHNkxqsJJ2DxAZWOKib2UtRB2etbON1TvjpgNgTJSjPtElq6YFv
+         zmUHi2asrb0e2bCsIrIMCmC5OIRwhiq6YMwH0YPw=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
+        zhengbin <zhengbin13@huawei.com>,
+        David Howells <dhowells@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 630/639] afs: Remove set but not used variables before, after
+Date:   Fri, 24 Jan 2020 10:33:20 +0100
+Message-Id: <20200124093208.569581887@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
+References: <20200124093047.008739095@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 20 Dec 2019, Rajat Jain <rajatja@google.com> wrote:
-> Lookup and attach ACPI nodes for intel connectors. The lookup is done
-> in compliance with ACPI Spec 6.3
-> https://uefi.org/sites/default/files/resources/ACPI_6_3_final_Jan30.pdf
-> (Ref: Pages 1119 - 1123).
->
-> This can be useful for any connector specific platform properties. (This
-> will be used for privacy screen in next patch).
->
-> Signed-off-by: Rajat Jain <rajatja@google.com>
-> ---
-> v5: same as v4
-> v4: Same as v3
-> v3: fold the code into existing acpi_device_id_update() function
-> v2: formed by splitting the original patch into ACPI lookup, and privacy
->     screen property. Also move it into i915 now that I found existing code
->     in i915 that can be re-used.
->
->  drivers/gpu/drm/i915/display/intel_acpi.c     | 24 +++++++++++++++++++
->  .../drm/i915/display/intel_display_types.h    |  3 +++
->  drivers/gpu/drm/i915/display/intel_dp.c       |  3 +++
->  3 files changed, 30 insertions(+)
->
-> diff --git a/drivers/gpu/drm/i915/display/intel_acpi.c b/drivers/gpu/drm/i915/display/intel_acpi.c
-> index e21fb14d5e07..101a56c08996 100644
-> --- a/drivers/gpu/drm/i915/display/intel_acpi.c
-> +++ b/drivers/gpu/drm/i915/display/intel_acpi.c
-> @@ -222,11 +222,23 @@ static u32 acpi_display_type(struct intel_connector *connector)
->  	return display_type;
->  }
->  
-> +/*
-> + * Ref: ACPI Spec 6.3
-> + * https://uefi.org/sites/default/files/resources/ACPI_6_3_final_Jan30.pdf
-> + * Pages 1119 - 1123 describe, what I believe, a standard way of
-> + * identifying / addressing "display panels" in the ACPI. It provides
-> + * a way for the ACPI to define devices for the display panels attached
-> + * to the system. It thus provides a way for the BIOS to export any panel
-> + * specific properties to the system via ACPI (like device trees).
-> + */
->  void intel_acpi_device_id_update(struct drm_i915_private *dev_priv)
->  {
->  	struct drm_device *drm_dev = &dev_priv->drm;
->  	struct intel_connector *connector;
->  	struct drm_connector_list_iter conn_iter;
-> +	struct device *dev = &drm_dev->pdev->dev;
+From: zhengbin <zhengbin13@huawei.com>
 
-Hmm, already pushed patch 1 with the unfortunate "drm_dev" local. We use
-"dev" for struct drm_device * and almost never use struct device.
+[ Upstream commit 51590df4f3306cb1f43dca54e3ccdd121ab89594 ]
 
-> +	struct acpi_device *conn_dev;
-> +	u64 conn_addr;
->  	u8 display_index[16] = {};
->  
->  	/* Populate the ACPI IDs for all connectors for a given drm_device */
-> @@ -242,6 +254,18 @@ void intel_acpi_device_id_update(struct drm_i915_private *dev_priv)
->  		device_id |= display_index[type]++ << ACPI_DISPLAY_INDEX_SHIFT;
->  
->  		connector->acpi_device_id = device_id;
-> +
-> +		/* Build the _ADR to look for */
-> +		conn_addr = device_id | ACPI_DEVICE_ID_SCHEME |
-> +				ACPI_BIOS_CAN_DETECT;
-> +
-> +		DRM_DEV_INFO(dev, "Checking connector ACPI node at _ADR=%llX\n",
-> +			     conn_addr);
+Fixes gcc '-Wunused-but-set-variable' warning:
 
-This is more than a little verbose. One line of INFO level dmesg for
-every connector at boot and at resume.
+fs/afs/dir_edit.c: In function afs_set_contig_bits:
+fs/afs/dir_edit.c:75:20: warning: variable after set but not used [-Wunused-but-set-variable]
+fs/afs/dir_edit.c: In function afs_set_contig_bits:
+fs/afs/dir_edit.c:75:12: warning: variable before set but not used [-Wunused-but-set-variable]
+fs/afs/dir_edit.c: In function afs_clear_contig_bits:
+fs/afs/dir_edit.c:100:20: warning: variable after set but not used [-Wunused-but-set-variable]
+fs/afs/dir_edit.c: In function afs_clear_contig_bits:
+fs/afs/dir_edit.c:100:12: warning: variable before set but not used [-Wunused-but-set-variable]
 
-Please use the new drm_dbg_kms() macro for this.
+They are never used since commit 63a4681ff39c.
 
-> +
-> +		/* Look up the connector device, under the PCI device */
-> +		conn_dev = acpi_find_child_device(ACPI_COMPANION(dev),
-> +						  conn_addr, false);
-> +		connector->acpi_handle = conn_dev ? conn_dev->handle : NULL;
+Fixes: 63a4681ff39c ("afs: Locally edit directory data for mkdir/create/unlink/...")
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: zhengbin <zhengbin13@huawei.com>
+Signed-off-by: David Howells <dhowells@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ fs/afs/dir_edit.c | 12 ++----------
+ 1 file changed, 2 insertions(+), 10 deletions(-)
 
-acpi_device_handle(conn_dev)
-
->  	}
->  	drm_connector_list_iter_end(&conn_iter);
->  }
-> diff --git a/drivers/gpu/drm/i915/display/intel_display_types.h b/drivers/gpu/drm/i915/display/intel_display_types.h
-> index 1a7334dbe802..0a4a04116091 100644
-> --- a/drivers/gpu/drm/i915/display/intel_display_types.h
-> +++ b/drivers/gpu/drm/i915/display/intel_display_types.h
-> @@ -407,6 +407,9 @@ struct intel_connector {
->  	/* ACPI device id for ACPI and driver cooperation */
->  	u32 acpi_device_id;
->  
-> +	/* ACPI handle corresponding to this connector display, if found */
-> +	void *acpi_handle;
-> +
-
-The type is acpi_handle. It's none of our business to know what the
-underlying type is.
-
->  	/* Reads out the current hw, returning true if the connector is enabled
->  	 * and active (i.e. dpms ON state). */
->  	bool (*get_hw_state)(struct intel_connector *);
-> diff --git a/drivers/gpu/drm/i915/display/intel_dp.c b/drivers/gpu/drm/i915/display/intel_dp.c
-> index b05b2191b919..93cece8e2516 100644
-> --- a/drivers/gpu/drm/i915/display/intel_dp.c
-> +++ b/drivers/gpu/drm/i915/display/intel_dp.c
-> @@ -45,6 +45,7 @@
->  #include "i915_debugfs.h"
->  #include "i915_drv.h"
->  #include "i915_trace.h"
-> +#include "intel_acpi.h"
->  #include "intel_atomic.h"
->  #include "intel_audio.h"
->  #include "intel_connector.h"
-> @@ -6623,6 +6624,8 @@ intel_dp_add_properties(struct intel_dp *intel_dp, struct drm_connector *connect
->  
->  		connector->state->scaling_mode = DRM_MODE_SCALE_ASPECT;
->  
-> +		/* Lookup the ACPI node corresponding to the connector */
-> +		intel_acpi_device_id_update(dev_priv);
-
-Auch, this is problematic. It iterates all connectors, for every DP
-connector being added. In the middle of registering all connectors.
-
-From the POV of this patch alone, this is also unnecessary. This gets
-called via intel_opregion_register() after all connectors have been
-registered.
-
-I am aware it's not enough for your next patch, because it will need the
-acpi handle right here.
-
-I'm wondering if we need to maintain display_index[] in struct
-drm_i915_private, and update that as connectors get added instead of all
-at once in the end. connector->acpi_device_id never changes, does it,
-even though we keep updating it?
-
-BR,
-Jani.
-
-
->  	}
->  }
-
+diff --git a/fs/afs/dir_edit.c b/fs/afs/dir_edit.c
+index 8b400f5aead58..0e7162527db8c 100644
+--- a/fs/afs/dir_edit.c
++++ b/fs/afs/dir_edit.c
+@@ -72,13 +72,11 @@ static int afs_find_contig_bits(union afs_xdr_dir_block *block, unsigned int nr_
+ static void afs_set_contig_bits(union afs_xdr_dir_block *block,
+ 				int bit, unsigned int nr_slots)
+ {
+-	u64 mask, before, after;
++	u64 mask;
+ 
+ 	mask = (1 << nr_slots) - 1;
+ 	mask <<= bit;
+ 
+-	before = *(u64 *)block->hdr.bitmap;
+-
+ 	block->hdr.bitmap[0] |= (u8)(mask >> 0 * 8);
+ 	block->hdr.bitmap[1] |= (u8)(mask >> 1 * 8);
+ 	block->hdr.bitmap[2] |= (u8)(mask >> 2 * 8);
+@@ -87,8 +85,6 @@ static void afs_set_contig_bits(union afs_xdr_dir_block *block,
+ 	block->hdr.bitmap[5] |= (u8)(mask >> 5 * 8);
+ 	block->hdr.bitmap[6] |= (u8)(mask >> 6 * 8);
+ 	block->hdr.bitmap[7] |= (u8)(mask >> 7 * 8);
+-
+-	after = *(u64 *)block->hdr.bitmap;
+ }
+ 
+ /*
+@@ -97,13 +93,11 @@ static void afs_set_contig_bits(union afs_xdr_dir_block *block,
+ static void afs_clear_contig_bits(union afs_xdr_dir_block *block,
+ 				  int bit, unsigned int nr_slots)
+ {
+-	u64 mask, before, after;
++	u64 mask;
+ 
+ 	mask = (1 << nr_slots) - 1;
+ 	mask <<= bit;
+ 
+-	before = *(u64 *)block->hdr.bitmap;
+-
+ 	block->hdr.bitmap[0] &= ~(u8)(mask >> 0 * 8);
+ 	block->hdr.bitmap[1] &= ~(u8)(mask >> 1 * 8);
+ 	block->hdr.bitmap[2] &= ~(u8)(mask >> 2 * 8);
+@@ -112,8 +106,6 @@ static void afs_clear_contig_bits(union afs_xdr_dir_block *block,
+ 	block->hdr.bitmap[5] &= ~(u8)(mask >> 5 * 8);
+ 	block->hdr.bitmap[6] &= ~(u8)(mask >> 6 * 8);
+ 	block->hdr.bitmap[7] &= ~(u8)(mask >> 7 * 8);
+-
+-	after = *(u64 *)block->hdr.bitmap;
+ }
+ 
+ /*
 -- 
-Jani Nikula, Intel Open Source Graphics Center
+2.20.1
+
+
+
