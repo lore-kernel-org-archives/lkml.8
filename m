@@ -2,98 +2,221 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D762C35240
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 00:02:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 461F5C35242
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 00:07:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63DB421835
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 00:02:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0CD8D2071E
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 00:07:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EbfhGiQc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730101AbgAXACp (ORCPT
+        id S1729794AbgAXAHR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 19:02:45 -0500
-Received: from 216-12-86-13.cv.mvl.ntelos.net ([216.12.86.13]:52738 "EHLO
-        brightrain.aerifal.cx" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729149AbgAXACp (ORCPT
+        Thu, 23 Jan 2020 19:07:17 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:32909 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729017AbgAXAHQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 19:02:45 -0500
-Received: from dalias by brightrain.aerifal.cx with local (Exim 3.15 #2)
-        id 1iumQt-00039n-00; Fri, 24 Jan 2020 00:02:43 +0000
-Date:   Thu, 23 Jan 2020 19:02:43 -0500
-From:   Rich Felker <dalias@libc.org>
-To:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-api@vger.kernel.org
-Cc:     Alexander Viro <viro@zeniv.linux.org.uk>
-Subject: Proposal to fix pwrite with O_APPEND via pwritev2 flag
-Message-ID: <20200124000243.GA12112@brightrain.aerifal.cx>
+        Thu, 23 Jan 2020 19:07:16 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579824434;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=6MlL98tE2HsGeMaYno7PPmn4gDFAOvEvYJ8JHfbl71o=;
+        b=EbfhGiQcUflI+NEvc3ehz6zYsBPmyXj+xra2PBgvzRxRjfHyvgGE42fUIbG6uinLE3S72W
+        7HQlYBTOvbUI5flmQVszdLDW2dlgC7AXSyyF3xF69tSL125VvVlfvj5CsU479uUQym1JJw
+        2tTfr++AjVjPEej3AmbdnKWQ5KZfkLQ=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-116-rYs5f4gzNyy736q3p4x9cQ-1; Thu, 23 Jan 2020 19:07:12 -0500
+X-MC-Unique: rYs5f4gzNyy736q3p4x9cQ-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 82886800D48;
+        Fri, 24 Jan 2020 00:07:09 +0000 (UTC)
+Received: from malachite.redhat.com (ovpn-124-168.rdu2.redhat.com [10.10.124.168])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 661AD60BF3;
+        Fri, 24 Jan 2020 00:07:03 +0000 (UTC)
+From:   Lyude Paul <lyude@redhat.com>
+To:     amd-gfx@lists.freedesktop.org
+Cc:     stable@vger.kernel.org, Harry Wentland <harry.wentland@amd.com>,
+        Leo Li <sunpeng.li@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
+        Mikita Lipski <mikita.lipski@amd.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        David Francis <David.Francis@amd.com>,
+        Martin Tsai <martin.tsai@amd.com>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Alvin Lee <alvin.lee2@amd.com>,
+        Jean Delvare <jdelvare@suse.de>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] drm/amd/dm/mst: Ignore payload update failures on disable
+Date:   Thu, 23 Jan 2020 19:06:42 -0500
+Message-Id: <20200124000643.99859-1-lyude@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.5.21 (2010-09-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There's a longstanding unfixable (due to API stability) bug in the
-pwrite syscall:
+Disabling a display on MST can potentially happen after the entire MST
+topology has been removed, which means that we can't communicate with
+the topology at all in this scenario. Likewise, this also means that we
+can't properly update payloads on the topology and as such, it's a good
+idea to ignore payload update failures when disabling displays.
+Currently, amdgpu makes the mistake of halting the payload update
+process when any payload update failures occur, resulting in leaving
+DC's local copies of the payload tables out of date.
 
-http://man7.org/linux/man-pages/man2/pwrite.2.html#BUGS
+This ends up causing problems with hotplugging MST topologies, and
+causes modesets on the second hotplug to fail like so:
 
-whereby it wrongly honors O_APPEND if set, ignoring the caller-passed
-offset. Now that there's a pwritev2 syscall that takes a flags
-argument, it's possible to fix this without breaking stability by
-adding a new RWF_NOAPPEND flag, which callers that want the fixed
-behavior can then pass.
+[drm] Failed to updateMST allocation table forpipe idx:1
+------------[ cut here ]------------
+WARNING: CPU: 5 PID: 1511 at
+drivers/gpu/drm/amd/amdgpu/../display/dc/core/dc_link.c:2677
+update_mst_stream_alloc_table+0x11e/0x130 [amdgpu]
+Modules linked in: cdc_ether usbnet fuse xt_conntrack nf_conntrack
+nf_defrag_ipv6 libcrc32c nf_defrag_ipv4 ipt_REJECT nf_reject_ipv4
+nft_counter nft_compat nf_tables nfnetlink tun bridge stp llc sunrpc
+vfat fat wmi_bmof uvcvideo snd_hda_codec_realtek snd_hda_codec_generic
+snd_hda_codec_hdmi videobuf2_vmalloc snd_hda_intel videobuf2_memops
+videobuf2_v4l2 snd_intel_dspcfg videobuf2_common crct10dif_pclmul
+snd_hda_codec videodev crc32_pclmul snd_hwdep snd_hda_core
+ghash_clmulni_intel snd_seq mc joydev pcspkr snd_seq_device snd_pcm
+sp5100_tco k10temp i2c_piix4 snd_timer thinkpad_acpi ledtrig_audio snd
+wmi soundcore video i2c_scmi acpi_cpufreq ip_tables amdgpu(O)
+rtsx_pci_sdmmc amd_iommu_v2 gpu_sched mmc_core i2c_algo_bit ttm
+drm_kms_helper syscopyarea sysfillrect sysimgblt fb_sys_fops cec drm
+crc32c_intel serio_raw hid_multitouch r8152 mii nvme r8169 nvme_core
+rtsx_pci pinctrl_amd
+CPU: 5 PID: 1511 Comm: gnome-shell Tainted: G           O      5.5.0-rc7L=
+yude-Test+ #4
+Hardware name: LENOVO FA495SIT26/FA495SIT26, BIOS R12ET22W(0.22 ) 01/31/2=
+019
+RIP: 0010:update_mst_stream_alloc_table+0x11e/0x130 [amdgpu]
+Code: 28 00 00 00 75 2b 48 8d 65 e0 5b 41 5c 41 5d 41 5e 5d c3 0f b6 06
+49 89 1c 24 41 88 44 24 08 0f b6 46 01 41 88 44 24 09 eb 93 <0f> 0b e9
+2f ff ff ff e8 a6 82 a3 c2 66 0f 1f 44 00 00 0f 1f 44 00
+RSP: 0018:ffffac428127f5b0 EFLAGS: 00010202
+RAX: 0000000000000002 RBX: ffff8d1e166eee80 RCX: 0000000000000000
+RDX: ffffac428127f668 RSI: ffff8d1e166eee80 RDI: ffffac428127f610
+RBP: ffffac428127f640 R08: ffffffffc03d94a8 R09: 0000000000000000
+R10: ffff8d1e24b02000 R11: ffffac428127f5b0 R12: ffff8d1e1b83d000
+R13: ffff8d1e1bea0b08 R14: 0000000000000002 R15: 0000000000000002
+FS:  00007fab23ffcd80(0000) GS:ffff8d1e28b40000(0000) knlGS:0000000000000=
+000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f151f1711e8 CR3: 00000005997c0000 CR4: 00000000003406e0
+Call Trace:
+ ? mutex_lock+0xe/0x30
+ dc_link_allocate_mst_payload+0x9a/0x210 [amdgpu]
+ ? dm_read_reg_func+0x39/0xb0 [amdgpu]
+ ? core_link_enable_stream+0x656/0x730 [amdgpu]
+ core_link_enable_stream+0x656/0x730 [amdgpu]
+ dce110_apply_ctx_to_hw+0x58e/0x5d0 [amdgpu]
+ ? dcn10_verify_allow_pstate_change_high+0x1d/0x280 [amdgpu]
+ ? dcn10_wait_for_mpcc_disconnect+0x3c/0x130 [amdgpu]
+ dc_commit_state+0x292/0x770 [amdgpu]
+ ? add_timer+0x101/0x1f0
+ ? ttm_bo_put+0x1a1/0x2f0 [ttm]
+ amdgpu_dm_atomic_commit_tail+0xb59/0x1ff0 [amdgpu]
+ ? amdgpu_move_blit.constprop.0+0xb8/0x1f0 [amdgpu]
+ ? amdgpu_bo_move+0x16d/0x2b0 [amdgpu]
+ ? ttm_bo_handle_move_mem+0x118/0x570 [ttm]
+ ? ttm_bo_validate+0x134/0x150 [ttm]
+ ? dm_plane_helper_prepare_fb+0x1b9/0x2a0 [amdgpu]
+ ? _cond_resched+0x15/0x30
+ ? wait_for_completion_timeout+0x38/0x160
+ ? _cond_resched+0x15/0x30
+ ? wait_for_completion_interruptible+0x33/0x190
+ commit_tail+0x94/0x130 [drm_kms_helper]
+ drm_atomic_helper_commit+0x113/0x140 [drm_kms_helper]
+ drm_atomic_helper_set_config+0x70/0xb0 [drm_kms_helper]
+ drm_mode_setcrtc+0x194/0x6a0 [drm]
+ ? _cond_resched+0x15/0x30
+ ? mutex_lock+0xe/0x30
+ ? drm_mode_getcrtc+0x180/0x180 [drm]
+ drm_ioctl_kernel+0xaa/0xf0 [drm]
+ drm_ioctl+0x208/0x390 [drm]
+ ? drm_mode_getcrtc+0x180/0x180 [drm]
+ amdgpu_drm_ioctl+0x49/0x80 [amdgpu]
+ do_vfs_ioctl+0x458/0x6d0
+ ksys_ioctl+0x5e/0x90
+ __x64_sys_ioctl+0x16/0x20
+ do_syscall_64+0x55/0x1b0
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+RIP: 0033:0x7fab2121f87b
+Code: 0f 1e fa 48 8b 05 0d 96 2c 00 64 c7 00 26 00 00 00 48 c7 c0 ff ff
+ff ff c3 66 0f 1f 44 00 00 f3 0f 1e fa b8 10 00 00 00 0f 05 <48> 3d 01
+f0 ff ff 73 01 c3 48 8b 0d dd 95 2c 00 f7 d8 64 89 01 48
+RSP: 002b:00007ffd045f9068 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+RAX: ffffffffffffffda RBX: 00007ffd045f90a0 RCX: 00007fab2121f87b
+RDX: 00007ffd045f90a0 RSI: 00000000c06864a2 RDI: 000000000000000b
+RBP: 00007ffd045f90a0 R08: 0000000000000000 R09: 000055dbd2985d10
+R10: 000055dbd2196280 R11: 0000000000000246 R12: 00000000c06864a2
+R13: 000000000000000b R14: 0000000000000000 R15: 000055dbd2196280
+---[ end trace 6ea888c24d2059cd ]---
 
-I have a completely untested patch to add such a flag, but would like
-to get a feel for whether the concept is acceptable before putting
-time into testing it. If so, I'll submit this as a proper patch with
-detailed commit message etc. Draft is below.
+Note as well, I have only been able to reproduce this on setups with 2
+MST displays.
 
-Rich
+Signed-off-by: Lyude Paul <lyude@redhat.com>
+Cc: stable@vger.kernel.org
+---
+ drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_helpers.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
+diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_helpers.c b/=
+drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_helpers.c
+index 069b7a6f5597..252fa60c6775 100644
+--- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_helpers.c
++++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_helpers.c
+@@ -216,6 +216,7 @@ bool dm_helpers_dp_mst_write_payload_allocation_table=
+(
+ 		drm_dp_mst_reset_vcpi_slots(mst_mgr, mst_port);
+ 	}
+=20
++	/* If disabling, it's OK for this to fail */
+ 	ret =3D drm_dp_update_payload_part1(mst_mgr);
+=20
+ 	/* mst_mgr->->payloads are VC payload notify MST branch using DPCD or
+@@ -225,7 +226,7 @@ bool dm_helpers_dp_mst_write_payload_allocation_table=
+(
+=20
+ 	get_payload_table(aconnector, proposed_table);
+=20
+-	if (ret)
++	if (ret && !enable)
+ 		return false;
+=20
+ 	return true;
+@@ -299,9 +300,9 @@ bool dm_helpers_dp_mst_send_payload_allocation(
+ 	if (!mst_mgr->mst_state)
+ 		return false;
+=20
++	/* If disabling, it's OK for this to fail */
+ 	ret =3D drm_dp_update_payload_part2(mst_mgr);
+-
+-	if (ret)
++	if (enable && ret)
+ 		return false;
+=20
+ 	if (!enable)
+--=20
+2.24.1
 
-
-diff --git a/include/linux/fs.h b/include/linux/fs.h
-index e0d909d35763..3a769a972f79 100644
---- a/include/linux/fs.h
-+++ b/include/linux/fs.h
-@@ -3397,6 +3397,8 @@ static inline int kiocb_set_rw_flags(struct kiocb *ki, rwf_t flags)
- {
- 	if (unlikely(flags & ~RWF_SUPPORTED))
- 		return -EOPNOTSUPP;
-+	if (unlikely((flags & RWF_APPEND) && (flags & RWF_NOAPPEND)))
-+		return -EINVAL;
- 
- 	if (flags & RWF_NOWAIT) {
- 		if (!(ki->ki_filp->f_mode & FMODE_NOWAIT))
-@@ -3411,6 +3413,8 @@ static inline int kiocb_set_rw_flags(struct kiocb *ki, rwf_t flags)
- 		ki->ki_flags |= (IOCB_DSYNC | IOCB_SYNC);
- 	if (flags & RWF_APPEND)
- 		ki->ki_flags |= IOCB_APPEND;
-+	if (flags & RWF_NOAPPEND)
-+		ki->ki_flags &= ~IOCB_APPEND;
- 	return 0;
- }
- 
-diff --git a/include/uapi/linux/fs.h b/include/uapi/linux/fs.h
-index 379a612f8f1d..591357d9b3c9 100644
---- a/include/uapi/linux/fs.h
-+++ b/include/uapi/linux/fs.h
-@@ -299,8 +299,11 @@ typedef int __bitwise __kernel_rwf_t;
- /* per-IO O_APPEND */
- #define RWF_APPEND	((__force __kernel_rwf_t)0x00000010)
- 
-+/* per-IO negation of O_APPEND */
-+#define RWF_NOAPPEND	((__force __kernel_rwf_t)0x00000020)
-+
- /* mask of flags supported by the kernel */
- #define RWF_SUPPORTED	(RWF_HIPRI | RWF_DSYNC | RWF_SYNC | RWF_NOWAIT |\
--			 RWF_APPEND)
-+			 RWF_APPEND | RWF_NOAPPEND)
- 
- #endif /* _UAPI_LINUX_FS_H */
