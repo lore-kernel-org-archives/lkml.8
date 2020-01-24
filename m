@@ -4,50 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A55CC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 10:00:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10984C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 10:00:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F32322464
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 10:00:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D965B20709
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 10:00:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579860037;
-	bh=Vfx3CNohv0rVezTes2BEVPjEJ+heEqzgPVsBaFx3Rvw=;
+	s=default; t=1579860041;
+	bh=hBIj/ENEPbPLis2iE9Mk5zEC30Jacme0nvEoZde/gHc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rMxw6JpR/hzCnG7KmL6D3uS0kRsLCZ1BAdKNiy7lmeIwfSPraBkvZGUGU5odloj3E
-	 fFXNEwFkcPXkduxAHPYeCZJPXTUxKlJSTlzZ6im1ytSGunOllboPTF5aDzkuArWZ1h
-	 U4gK294TT5v+Gr7GYRVry9VzpDuPinpekKTXXb9M=
+	b=FRjsM25OjQAqF4CisnAdn5wUkr/RmJXo/2JJr78G12tk+5w91PUEC41GW1fzNjZ9i
+	 WANGPnv5/ONU2Wv2DVsohEo6lxEf09pN5H6Jukim8gINgS41CXm18NZgQC3cgzIZQ9
+	 2JdsRnOepNos8rrL+ybKYtvEMTCTACxowlD3BD+g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388780AbgAXKAg (ORCPT
+        id S2388785AbgAXKAk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 05:00:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36012 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 05:00:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36068 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388210AbgAXKAf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 05:00:35 -0500
+        id S2388202AbgAXKAj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 05:00:39 -0500
 Received: from localhost (unknown [145.15.244.15])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AA6B620709;
-        Fri, 24 Jan 2020 10:00:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BBF3920709;
+        Fri, 24 Jan 2020 10:00:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579860035;
-        bh=Vfx3CNohv0rVezTes2BEVPjEJ+heEqzgPVsBaFx3Rvw=;
+        s=default; t=1579860039;
+        bh=hBIj/ENEPbPLis2iE9Mk5zEC30Jacme0nvEoZde/gHc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EZ8JOZhcJ+ULUbFipKJsFj+0rY41MKHCX5Amos88VIg7TkBAtOStOebZBhpNFQd7y
-         BSVd+1Z6WtmFdoqD07s4vWIV1p7JCXDQm2R+Rzo6GdpAMb2ZNZOYrHb1+PA86NaCYq
-         /8sj90qoML+8zlPKZEPc8KcZNGPUefRrFXcTtg0M=
+        b=kOV1LgCHdZjPXARUcH/4uC8B9vgLfGM2xHB2p4etAycWAP/kxNQiv8Gp3JNoNt+Wp
+         XNOl1HnC1KkfpJpuMmRGoJqhLK3OYumgnD7jlJijTGBFfDbNuPUJBlKPI7DoVf8qTD
+         kzB64p0sMpxdHtG4jZhOoCwM3R7iXwarpjCsJlCg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jernej Skrabec <jernej.skrabec@siol.net>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
+        stable@vger.kernel.org,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Dirk van der Merwe <dirk.vandermerwe@netronome.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 211/343] ARM: dts: sun8i-h3: Fix wifi in Beelink X2 DT
-Date:   Fri, 24 Jan 2020 10:30:29 +0100
-Message-Id: <20200124092947.844394620@linuxfoundation.org>
+Subject: [PATCH 4.14 237/343] net: netem: fix backlog accounting for corrupted GSO frames
+Date:   Fri, 24 Jan 2020 10:30:55 +0100
+Message-Id: <20200124092951.323856739@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124092919.490687572@linuxfoundation.org>
 References: <20200124092919.490687572@linuxfoundation.org>
@@ -60,48 +63,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jernej Skrabec <jernej.skrabec@siol.net>
+From: Jakub Kicinski <jakub.kicinski@netronome.com>
 
-[ Upstream commit ca0961011db57e39880df0b5708df8aa3339dc6f ]
+[ Upstream commit 177b8007463c4f36c9a2c7ce7aa9875a4cad9bd5 ]
 
-mmc1 node where wifi module is connected doesn't have properly defined
-power supplies so wifi module is never powered up. Fix that by
-specifying additional power supplies.
+When GSO frame has to be corrupted netem uses skb_gso_segment()
+to produce the list of frames, and re-enqueues the segments one
+by one.  The backlog length has to be adjusted to account for
+new frames.
 
-Additionally, this STB may have either Realtek or Broadcom based wifi
-module. One based on Broadcom module also needs external clock to work
-properly. Fix that by adding clock property to wifi_pwrseq node.
+The current calculation is incorrect, leading to wrong backlog
+lengths in the parent qdisc (both bytes and packets), and
+incorrect packet backlog count in netem itself.
 
-Fixes: e582b47a9252 ("ARM: dts: sun8i-h3: Add dts for the Beelink X2 STB")
-Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+Parent backlog goes negative, netem's packet backlog counts
+all non-first segments twice (thus remaining non-zero even
+after qdisc is emptied).
+
+Move the variables used to count the adjustment into local
+scope to make 100% sure they aren't used at any stage in
+backports.
+
+Fixes: 6071bd1aa13e ("netem: Segment GSO packets on enqueue")
+Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+Reviewed-by: Dirk van der Merwe <dirk.vandermerwe@netronome.com>
+Acked-by: Cong Wang <xiyou.wangcong@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/sun8i-h3-beelink-x2.dts | 4 ++++
- 1 file changed, 4 insertions(+)
+ net/sched/sch_netem.c | 13 ++++++++-----
+ 1 file changed, 8 insertions(+), 5 deletions(-)
 
-diff --git a/arch/arm/boot/dts/sun8i-h3-beelink-x2.dts b/arch/arm/boot/dts/sun8i-h3-beelink-x2.dts
-index 10da56e86ab80..21b38c386f1b3 100644
---- a/arch/arm/boot/dts/sun8i-h3-beelink-x2.dts
-+++ b/arch/arm/boot/dts/sun8i-h3-beelink-x2.dts
-@@ -79,6 +79,8 @@
- 	wifi_pwrseq: wifi_pwrseq {
- 		compatible = "mmc-pwrseq-simple";
- 		reset-gpios = <&r_pio 0 7 GPIO_ACTIVE_LOW>; /* PL7 */
-+		clocks = <&rtc 1>;
-+		clock-names = "ext_clock";
- 	};
+diff --git a/net/sched/sch_netem.c b/net/sched/sch_netem.c
+index 6266121a03f9a..ede0a24e67eb8 100644
+--- a/net/sched/sch_netem.c
++++ b/net/sched/sch_netem.c
+@@ -431,8 +431,7 @@ static int netem_enqueue(struct sk_buff *skb, struct Qdisc *sch,
+ 	struct netem_skb_cb *cb;
+ 	struct sk_buff *skb2;
+ 	struct sk_buff *segs = NULL;
+-	unsigned int len = 0, last_len, prev_len = qdisc_pkt_len(skb);
+-	int nb = 0;
++	unsigned int prev_len = qdisc_pkt_len(skb);
+ 	int count = 1;
+ 	int rc = NET_XMIT_SUCCESS;
+ 	int rc_drop = NET_XMIT_DROP;
+@@ -489,6 +488,7 @@ static int netem_enqueue(struct sk_buff *skb, struct Qdisc *sch,
+ 			segs = netem_segment(skb, sch, to_free);
+ 			if (!segs)
+ 				return rc_drop;
++			qdisc_skb_cb(segs)->pkt_len = segs->len;
+ 		} else {
+ 			segs = skb;
+ 		}
+@@ -579,6 +579,11 @@ static int netem_enqueue(struct sk_buff *skb, struct Qdisc *sch,
  
- 	sound_spdif {
-@@ -128,6 +130,8 @@
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&mmc1_pins_a>;
- 	vmmc-supply = <&reg_vcc3v3>;
-+	vqmmc-supply = <&reg_vcc3v3>;
-+	mmc-pwrseq = <&wifi_pwrseq>;
- 	bus-width = <4>;
- 	non-removable;
- 	status = "okay";
+ finish_segs:
+ 	if (segs) {
++		unsigned int len, last_len;
++		int nb = 0;
++
++		len = skb->len;
++
+ 		while (segs) {
+ 			skb2 = segs->next;
+ 			segs->next = NULL;
+@@ -594,9 +599,7 @@ finish_segs:
+ 			}
+ 			segs = skb2;
+ 		}
+-		sch->q.qlen += nb;
+-		if (nb > 1)
+-			qdisc_tree_reduce_backlog(sch, 1 - nb, prev_len - len);
++		qdisc_tree_reduce_backlog(sch, -nb, prev_len - len);
+ 	}
+ 	return NET_XMIT_SUCCESS;
+ }
 -- 
 2.20.1
 
