@@ -2,113 +2,193 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BA2EC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 18:06:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B899C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 18:07:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D99782072C
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 18:06:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A48B2071A
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 18:07:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Yqe3fCW4"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="LzeSwWFS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391019AbgAXSGA (ORCPT
+        id S2391263AbgAXSHO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 13:06:00 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:50582 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390710AbgAXSF7 (ORCPT
+        Fri, 24 Jan 2020 13:07:14 -0500
+Received: from mail25.static.mailgun.info ([104.130.122.25]:38582 "EHLO
+        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2389886AbgAXSHN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 13:05:59 -0500
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00OI5kqa057284;
-        Fri, 24 Jan 2020 12:05:46 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1579889146;
-        bh=OTh91vvqx5FkwJrVpzCRzAv6h7V2/gVJYW+HKZ6IZhk=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=Yqe3fCW4F0O3F0vumSdxgo2GnRdaUfq0AWbDcXGU+dqLjOP3xlCcCBhJ16Aca+MfL
-         E/gWOMP7bcC4dGea61P/6/F39CAi8K9HbX6fOPyFH5TvUw0Se9JHvDYgeqOaV9e16M
-         /I5Dwto69rOrxwTdIuOOXDUdv3BAdtg7tMD4dp9w=
-Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00OI5kiS098350;
-        Fri, 24 Jan 2020 12:05:46 -0600
-Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 24
- Jan 2020 12:05:45 -0600
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Fri, 24 Jan 2020 12:05:45 -0600
-Received: from [192.168.2.10] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00OI5gfU118628;
-        Fri, 24 Jan 2020 12:05:43 -0600
-Subject: Re: [PATCH for-next] arm64: defconfig: Set bcm2835-dma as built-in
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-CC:     <f.fainelli@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-rpi-kernel@lists.infradead.org>,
-        Will Deacon <will@kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>
-References: <C043QOCZ7SMB.2XXX2ESS1ZJ98@linux-9qgx>
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-Message-ID: <e29e23fd-cb60-56b9-e53d-ecbafc12bf8c@ti.com>
-Date:   Fri, 24 Jan 2020 20:07:51 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Fri, 24 Jan 2020 13:07:13 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1579889232; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=9+wXY3l9oUGzzH+9Q9rfM50WnovWwoUmCINjjGPM7L0=; b=LzeSwWFSJHR4JEGmOJIpod675H0yi4byh0IbF5+uDMc8gE6ieNELPRRW3nhXGN69w8GWa8xf
+ +/QPTzufaR60QmTdNiOjtUZmx9aaRII/Jpb+2QA8nRBMzlt3uCCWo1hFnyV7VhIsCZdgh7QZ
+ ZMNFjO9rwpb6GgA0PDOv3s6WGDE=
+X-Mailgun-Sending-Ip: 104.130.122.25
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e2b323f.7f0d81001a08-smtp-out-n02;
+ Fri, 24 Jan 2020 18:06:55 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id A3258C433CB; Fri, 24 Jan 2020 18:06:54 +0000 (UTC)
+Received: from [10.46.161.159] (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: asutoshd)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 76B8CC43383;
+        Fri, 24 Jan 2020 18:06:53 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 76B8CC43383
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=asutoshd@codeaurora.org
+Subject: Re: [PATCH v4 6/8] scsi: ufs: Add dev ref clock gating wait time
+ support
+To:     Can Guo <cang@codeaurora.org>, nguyenb@codeaurora.org,
+        hongwus@codeaurora.org, rnayak@codeaurora.org,
+        linux-scsi@vger.kernel.org, kernel-team@android.com,
+        saravanak@google.com, salyzyn@google.com
+Cc:     Alim Akhtar <alim.akhtar@samsung.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        Pedro Sousa <pedrom.sousa@synopsys.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Tomas Winkler <tomas.winkler@intel.com>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        Venkat Gopalakrishnan <venkatg@codeaurora.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <1579764349-15578-1-git-send-email-cang@codeaurora.org>
+ <1579764349-15578-7-git-send-email-cang@codeaurora.org>
+From:   "Asutosh Das (asd)" <asutoshd@codeaurora.org>
+Message-ID: <328f4768-e986-8566-4929-17420f9dbbce@codeaurora.org>
+Date:   Fri, 24 Jan 2020 10:06:52 -0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <C043QOCZ7SMB.2XXX2ESS1ZJ98@linux-9qgx>
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <1579764349-15578-7-git-send-email-cang@codeaurora.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Nicolas,
-
-On 1/24/20 4:47 PM, Nicolas Saenz Julienne wrote:
->> If you need MMC rootfs then the DMA needs to be built in or have initrd
->> with the modules.
->> The driver expects to have DMA channel and it is going to wait for it to
->> appear unless the request fails.
->>
->> Without moving the DMA as built in and removing the deferred probe
->> handling form the MMC driver, one can just remove the DMA support from
->> the mmc-bcm2835 as it is not used at all.
+On 1/22/2020 11:25 PM, Can Guo wrote:
+> In UFS version 3.0, a newly added attribute bRefClkGatingWaitTime defines
+> the minimum time for which the reference clock is required by device during
+> transition to LS-MODE or HIBERN8 state. Make this change to reflect the new
+> requirement by adding delays before turning off the clock.
 > 
-> Oh sorry, I meant to ask if the 'Fixes:' tag was really needed.
+> Signed-off-by: Can Guo <cang@codeaurora.org>
+> ---
 
-Complements: or Needed-for: would be better, but with the Fixed tag this
-patch would be picked in case the dma_request_chan() conversion patch
-gets backported for stable.
+Reviewed-by: Asutosh Das <asutoshd@codeaurora.org>
 
-> The
-> patch itself is very much needed since not everyone uses initrds in the
-> RPi world, and we want to keep being compatible as much as possible with
-> older device-trees.
+>   drivers/scsi/ufs/ufs.h    |  3 +++
+>   drivers/scsi/ufs/ufshcd.c | 41 +++++++++++++++++++++++++++++++++++++++++
+>   2 files changed, 44 insertions(+)
+> 
+> diff --git a/drivers/scsi/ufs/ufs.h b/drivers/scsi/ufs/ufs.h
+> index 3327981..385bac8 100644
+> --- a/drivers/scsi/ufs/ufs.h
+> +++ b/drivers/scsi/ufs/ufs.h
+> @@ -168,6 +168,7 @@ enum attr_idn {
+>   	QUERY_ATTR_IDN_FFU_STATUS		= 0x14,
+>   	QUERY_ATTR_IDN_PSA_STATE		= 0x15,
+>   	QUERY_ATTR_IDN_PSA_DATA_SIZE		= 0x16,
+> +	QUERY_ATTR_IDN_REF_CLK_GATING_WAIT_TIME	= 0x17,
+>   };
+>   
+>   /* Descriptor idn for Query requests */
+> @@ -530,6 +531,8 @@ struct ufs_dev_info {
+>   	bool f_power_on_wp_en;
+>   	/* Keeps information if any of the LU is power on write protected */
+>   	bool is_lu_power_on_wp;
+> +	u16 spec_version;
+> +	u32 clk_gating_wait_us;
+>   };
+>   
+>   #define MAX_MODEL_LEN 16
+> diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+> index c316a07..1ee2187 100644
+> --- a/drivers/scsi/ufs/ufshcd.c
+> +++ b/drivers/scsi/ufs/ufshcd.c
+> @@ -91,6 +91,9 @@
+>   /* default delay of autosuspend: 2000 ms */
+>   #define RPM_AUTOSUSPEND_DELAY_MS 2000
+>   
+> +/* Default value of wait time before gating device ref clock */
+> +#define UFSHCD_REF_CLK_GATING_WAIT_US 0xFF /* microsecs */
+> +
+>   #define ufshcd_toggle_vreg(_dev, _vreg, _on)				\
+>   	({                                                              \
+>   		int _ret;                                               \
+> @@ -3357,6 +3360,37 @@ static inline int ufshcd_read_unit_desc_param(struct ufs_hba *hba,
+>   				      param_offset, param_read_buf, param_size);
+>   }
+>   
+> +static int ufshcd_get_ref_clk_gating_wait(struct ufs_hba *hba)
+> +{
+> +	int err = 0;
+> +	u32 gating_wait = UFSHCD_REF_CLK_GATING_WAIT_US;
+> +
+> +	if (hba->dev_info.spec_version >= 0x300) {
+> +		err = ufshcd_query_attr_retry(hba, UPIU_QUERY_OPCODE_READ_ATTR,
+> +				QUERY_ATTR_IDN_REF_CLK_GATING_WAIT_TIME, 0, 0,
+> +				&gating_wait);
+> +		if (err)
+> +			dev_err(hba->dev, "Failed reading bRefClkGatingWait. err = %d, use default %uus\n",
+> +					 err, gating_wait);
+> +
+> +		if (gating_wait == 0) {
+> +			gating_wait = UFSHCD_REF_CLK_GATING_WAIT_US;
+> +			dev_err(hba->dev, "Undefined ref clk gating wait time, use default %uus\n",
+> +					 gating_wait);
+> +		}
+> +
+> +		/*
+> +		 * bRefClkGatingWaitTime defines the minimum time for which the
+> +		 * reference clock is required by device during transition from
+> +		 * HS-MODE to LS-MODE or HIBERN8 state. Give it more time to be
+> +		 * on the safe side.
+> +		 */
+> +		hba->dev_info.clk_gating_wait_us = gating_wait + 50;
+> +	}
+> +
+> +	return err;
+> +}
+> +
+>   /**
+>    * ufshcd_memory_alloc - allocate memory for host memory space data structures
+>    * @hba: per adapter instance
+> @@ -6628,6 +6662,10 @@ static int ufs_get_device_desc(struct ufs_hba *hba,
+>   	dev_desc->wmanufacturerid = desc_buf[DEVICE_DESC_PARAM_MANF_ID] << 8 |
+>   				     desc_buf[DEVICE_DESC_PARAM_MANF_ID + 1];
+>   
+> +	/* getting Specification Version in big endian format */
+> +	hba->dev_info.spec_version = desc_buf[DEVICE_DESC_PARAM_SPEC_VER] << 8 |
+> +				      desc_buf[DEVICE_DESC_PARAM_SPEC_VER + 1];
+> +
+>   	model_index = desc_buf[DEVICE_DESC_PARAM_PRDCT_NAME];
+>   	err = ufshcd_read_string_desc(hba, model_index,
+>   				      &dev_desc->model, SD_ASCII_STD);
+> @@ -7046,6 +7084,9 @@ static int ufshcd_probe_hba(struct ufs_hba *hba)
+>   
+>   		/* clear any previous UFS device information */
+>   		memset(&hba->dev_info, 0, sizeof(hba->dev_info));
+> +
+> +		ufshcd_get_ref_clk_gating_wait(hba);
+> +
+>   		if (!ufshcd_query_flag_retry(hba, UPIU_QUERY_OPCODE_READ_FLAG,
+>   				QUERY_FLAG_IDN_PWR_ON_WPE, &flag))
+>   			hba->dev_info.f_power_on_wp_en = flag;
+> 
 
-Sure. Just checked on my RPi with libreELEC that at least they have the
-DMA built in, I assume other distros do the same.
 
-It would be great if this patch would make it to linux-next as soon as
-it is possible for sure.
-
->> I wonder why this is not signaled by automated boot testing, if any
->> exists for bcm2835>
-> Actually now that you mention it, it's failing since today here:
-> https://kernelci.org/boot/bcm2837-rpi-3-b/
-
-Oh, so you can even have a bug report to back this patch ;)
-
-- Peter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+Linux Foundation Collaborative Project
