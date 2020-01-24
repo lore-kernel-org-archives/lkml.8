@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17FA2C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:28:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A2ADC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:28:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D95F620704
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:28:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D208820718
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:28:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579865333;
-	bh=3lgcFBKJKbVwE2Hfs1ASQbPTBkbI0WqglpVRsQiJUps=;
+	s=default; t=1579865335;
+	bh=ZJaRqJzYv8tsnPKHc+A1qzDDOHv1/2eppo6VQU2hfTQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZB77zG4WrpMhgpXPV6QqffOehkk4B9z57e5f8tkIJoEPjws90u/PCVoYvg3cT6A3b
-	 bPAcHKhtIpC7lGrHDmg6OuwdChM1vnWLyJWEe50n5QA9T+plsuFh76Sr0k/jvFR3fJ
-	 gLft3oUqWUXUJYnHHxP8RXip35Oq0Czz7NKzl0Ts=
+	b=hhjUdshpXazT1m1SVA0buYtN8n3DwEaxG9brDxZONjQjnnYIrYrkH6m7ipeDkFxBE
+	 eHMkQfxo5NMaz3nbJKVTfKlL72S1yGzk6ubJ5vp+dCdUe1VDL79CeoBb/IGz56RioX
+	 CPcwM5KdgHO29U+lKb4JqM4v7XJR9bPmlccvs7u8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391740AbgAXL2v (ORCPT
+        id S2391749AbgAXL2y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:28:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45186 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 06:28:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45270 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391727AbgAXL2t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:28:49 -0500
+        id S2391727AbgAXL2w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:28:52 -0500
 Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A59C720718;
-        Fri, 24 Jan 2020 11:28:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6E98B206D4;
+        Fri, 24 Jan 2020 11:28:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579865328;
-        bh=3lgcFBKJKbVwE2Hfs1ASQbPTBkbI0WqglpVRsQiJUps=;
+        s=default; t=1579865332;
+        bh=ZJaRqJzYv8tsnPKHc+A1qzDDOHv1/2eppo6VQU2hfTQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rlDYq/d9nu5zE2ZBNn+hs/asxMXSqTTRvt9qrhUl2jiNHWQCo00LDBW4wB5OTHcI0
-         vhLpHciCmsgHOLSJiP6Ud+Sk1kD91+vWxIaIPyr8tXpHT77Bbu+0QTFCuRwhJi1Yh/
-         p5UgONz45mUJwnPIxpnkMzT8By+Qs579PgP9DPis=
+        b=AfMNQdaggQbeLABirjaMm01Lg5aPMi3OU+lg0/u4x1UzME0KewEuxsg1iqEecooq+
+         Ccpau9VQ+45FhhYKRQvxEwXyxnssy1ZtqDvNRHHYUmTZxf79Qr4gsDeiYuriVqgqri
+         2d7UsWps2XkYR6o2oNUtlZ4q1OjbHQXJp3zSuo1Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Quentin Monnet <quentin.monnet@netronome.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Alexei Starovoitov <ast@kernel.org>,
+        stable@vger.kernel.org, Felix Fietkau <nbd@nbd.name>,
+        Johannes Berg <johannes.berg@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 508/639] tools: bpftool: fix arguments for p_err() in do_event_pipe()
-Date:   Fri, 24 Jan 2020 10:31:18 +0100
-Message-Id: <20200124093152.424163675@linuxfoundation.org>
+Subject: [PATCH 4.19 517/639] mac80211: minstrel_ht: fix per-group max throughput rate initialization
+Date:   Fri, 24 Jan 2020 10:31:27 +0100
+Message-Id: <20200124093153.554354323@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
 References: <20200124093047.008739095@linuxfoundation.org>
@@ -62,46 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Quentin Monnet <quentin.monnet@netronome.com>
+From: Felix Fietkau <nbd@nbd.name>
 
-[ Upstream commit 9def249dc8409ffc1f5a1d7195f1c462f2b49c07 ]
+[ Upstream commit 56dd918ff06e3ee24d8067e93ed12b2a39e71394 ]
 
-The last argument passed to some calls to the p_err() functions is not
-correct, it should be "*argv" instead of "**argv". This may lead to a
-segmentation fault error if CPU IDs or indices from the command line
-cannot be parsed correctly. Let's fix this.
+The group number needs to be multiplied by the number of rates per group
+to get the full rate index
 
-Fixes: f412eed9dfde ("tools: bpftool: add simple perf event output reader")
-Signed-off-by: Quentin Monnet <quentin.monnet@netronome.com>
-Reviewed-by: Jakub Kicinski <jakub.kicinski@netronome.com>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Fixes: 5935839ad735 ("mac80211: improve minstrel_ht rate sorting by throughput & probability")
+Signed-off-by: Felix Fietkau <nbd@nbd.name>
+Link: https://lore.kernel.org/r/20190820095449.45255-1-nbd@nbd.name
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/bpf/bpftool/map_perf_ring.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ net/mac80211/rc80211_minstrel_ht.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/bpf/bpftool/map_perf_ring.c b/tools/bpf/bpftool/map_perf_ring.c
-index 6d41323be291b..8ec0148d7426d 100644
---- a/tools/bpf/bpftool/map_perf_ring.c
-+++ b/tools/bpf/bpftool/map_perf_ring.c
-@@ -205,7 +205,7 @@ int do_event_pipe(int argc, char **argv)
- 			NEXT_ARG();
- 			cpu = strtoul(*argv, &endptr, 0);
- 			if (*endptr) {
--				p_err("can't parse %s as CPU ID", **argv);
-+				p_err("can't parse %s as CPU ID", *argv);
- 				goto err_close_map;
- 			}
+diff --git a/net/mac80211/rc80211_minstrel_ht.c b/net/mac80211/rc80211_minstrel_ht.c
+index 3d5520776655d..0b60e330c115b 100644
+--- a/net/mac80211/rc80211_minstrel_ht.c
++++ b/net/mac80211/rc80211_minstrel_ht.c
+@@ -529,7 +529,7 @@ minstrel_ht_update_stats(struct minstrel_priv *mp, struct minstrel_ht_sta *mi)
  
-@@ -216,7 +216,7 @@ int do_event_pipe(int argc, char **argv)
- 			NEXT_ARG();
- 			index = strtoul(*argv, &endptr, 0);
- 			if (*endptr) {
--				p_err("can't parse %s as index", **argv);
-+				p_err("can't parse %s as index", *argv);
- 				goto err_close_map;
- 			}
+ 		/* (re)Initialize group rate indexes */
+ 		for(j = 0; j < MAX_THR_RATES; j++)
+-			tmp_group_tp_rate[j] = group;
++			tmp_group_tp_rate[j] = MCS_GROUP_RATES * group;
  
+ 		for (i = 0; i < MCS_GROUP_RATES; i++) {
+ 			if (!(mi->supported[group] & BIT(i)))
 -- 
 2.20.1
 
