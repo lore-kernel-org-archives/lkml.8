@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76B4FC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:33:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB757C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:33:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43779206F0
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:33:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 749AF2077C
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:33:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579876381;
-	bh=peG90AS9ZDtmx9LNzgkZlVUVNKdIT4nncIOFQGFTU5A=;
+	s=default; t=1579876390;
+	bh=8AnTwY5ONooWX0+t+5YCGRCt2ET2oAdWrM/aRE2qLxM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SfpYAHv9hHgSzWPAwHHjJQXkveiZOcgmzdQj7xLpfDLTYv2ZOVHHxbvsFaBdB9oDM
-	 AGEuIs948u6ym/QwYAwP5HcC4oKbLLG4lp0EWL1Godv+MKFYk8KO/Ve7IhrxRWNgp/
-	 zyP5StGPWHcTVSoI9TW5ccRbZyhdHt5cI9dGalIE=
+	b=WjOrlYyFREqrVimZwETtPvXmmeT0eKa9gC7Etp/Z2WCqiV/orG7UqU6XKSj6ZFQbT
+	 GJo4GQb4dKj49l+i91PeD0+p6S9ujK4J8Zp55VchNpb8r+HiMdStgrkJsljTmYHwKr
+	 /evb8dwslrP0d6PP5KZRNcE+m4QPhMMbJa3B++2A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392142AbgAXOUA (ORCPT
+        id S2392757AbgAXOdI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 09:20:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40204 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 09:33:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40644 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389436AbgAXOTm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 09:19:42 -0500
+        id S2404223AbgAXOT4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 09:19:56 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8F46E2465B;
-        Fri, 24 Jan 2020 14:19:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 93BB420838;
+        Fri, 24 Jan 2020 14:19:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579875581;
-        bh=peG90AS9ZDtmx9LNzgkZlVUVNKdIT4nncIOFQGFTU5A=;
+        s=default; t=1579875596;
+        bh=8AnTwY5ONooWX0+t+5YCGRCt2ET2oAdWrM/aRE2qLxM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ktjOC5TF1FaDBfIgRLdC4QsWXRi0djbe8Y7a3MrTyP52A1t3epv3WpGMAQttOwspe
-         12gdUX1QLwwADgIYKTtgizNR3+oO8vDhu8lOFO+dYxNtHTtddVeej69Z4eNcaA14sH
-         dCt/xABghY6JO4ROirxrtxrI3iQzFTdQzXggTg5c=
+        b=zhMVyPr1hWRQ4WTZ6vbbz+vyBD50oMZqa+p6/APDi4005ZXYE7HDlwrfjjGGs5iC1
+         yYd6JjDmnwaqiXEs/reYO+YPANOCprdAYsi3BWXAmktPU46TAkMMMoNfh239i1jPck
+         f+uqWlWl40yp4y6DtW2BON7N/MuR+Kqxlscsv0fY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Johannes Berg <johannes.berg@intel.com>,
-        syzbot+e8a797964a4180eb57d5@syzkaller.appspotmail.com,
-        syzbot+34b582cf32c1db008f8e@syzkaller.appspotmail.com,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 072/107] cfg80211: check for set_wiphy_params
-Date:   Fri, 24 Jan 2020 09:17:42 -0500
-Message-Id: <20200124141817.28793-72-sashal@kernel.org>
+Cc:     Jose Abreu <Jose.Abreu@synopsys.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 085/107] net: stmmac: selftests: Mark as fail when received VLAN ID != expected
+Date:   Fri, 24 Jan 2020 09:17:55 -0500
+Message-Id: <20200124141817.28793-85-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200124141817.28793-1-sashal@kernel.org>
 References: <20200124141817.28793-1-sashal@kernel.org>
@@ -61,39 +59,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johannes Berg <johannes.berg@intel.com>
+From: Jose Abreu <Jose.Abreu@synopsys.com>
 
-[ Upstream commit 24953de0a5e31dcca7e82c8a3c79abc2dfe8fb6e ]
+[ Upstream commit d39b68e5a736afa67d2e9cfb158efdd237d99dbd ]
 
-Check if set_wiphy_params is assigned and return an error if not,
-some drivers (e.g. virt_wifi where syzbot reported it) don't have
-it.
+When the VLAN ID does not match the expected one it means filter failed
+in HW. Fix it.
 
-Reported-by: syzbot+e8a797964a4180eb57d5@syzkaller.appspotmail.com
-Reported-by: syzbot+34b582cf32c1db008f8e@syzkaller.appspotmail.com
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
-Link: https://lore.kernel.org/r/20200113125358.ac07f276efff.Ibd85ee1b12e47b9efb00a2adc5cd3fac50da791a@changeid
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Fixes: 94e18382003c ("net: stmmac: selftests: Add selftest for VLAN TX Offload")
+Signed-off-by: Jose Abreu <Jose.Abreu@synopsys.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/wireless/rdev-ops.h | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/net/wireless/rdev-ops.h b/net/wireless/rdev-ops.h
-index 663c0d3127a43..e0d34f796d0b3 100644
---- a/net/wireless/rdev-ops.h
-+++ b/net/wireless/rdev-ops.h
-@@ -538,6 +538,10 @@ static inline int
- rdev_set_wiphy_params(struct cfg80211_registered_device *rdev, u32 changed)
- {
- 	int ret;
-+
-+	if (!rdev->ops->set_wiphy_params)
-+		return -EOPNOTSUPP;
-+
- 	trace_rdev_set_wiphy_params(&rdev->wiphy, changed);
- 	ret = rdev->ops->set_wiphy_params(&rdev->wiphy, changed);
- 	trace_rdev_return_int(&rdev->wiphy, ret);
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c
+index 36ef8bee5fcfd..ba03a2d774344 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c
+@@ -853,8 +853,12 @@ static int stmmac_test_vlan_validate(struct sk_buff *skb,
+ 	if (tpriv->vlan_id) {
+ 		if (skb->vlan_proto != htons(proto))
+ 			goto out;
+-		if (skb->vlan_tci != tpriv->vlan_id)
++		if (skb->vlan_tci != tpriv->vlan_id) {
++			/* Means filter did not work. */
++			tpriv->ok = false;
++			complete(&tpriv->comp);
+ 			goto out;
++		}
+ 	}
+ 
+ 	ehdr = (struct ethhdr *)skb_mac_header(skb);
 -- 
 2.20.1
 
