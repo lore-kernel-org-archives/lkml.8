@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97935C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:30:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B00AC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:30:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BAC6222D9
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:30:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0181822522
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:30:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579876229;
-	bh=qZ/AK7qDtTJakLsjaUI3mUDTzYXOk3amPehL/OjaO/M=;
+	s=default; t=1579876233;
+	bh=3UhvI8O3+HQoLTBCTeoSba6nKdJFcCf8MRzo7M4mGKc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=E6iW+sES7Mt+CvbtSKn4dwBF9HduS6tMmkJuSiMqd6+vxl3tuZu2Ap63bd800hd9u
-	 AJ2uovBGPObBOSE0lsnSQTs9URYnKacw5i8C+sZay2CxjH8LqleWVuLt1dA88JesVd
-	 pUB+BvGI1dCuvxAbqSQ6K7DXSYDtzz7jFZrxK39c=
+	b=P6TZXuTVnBz3CvF6MKpE6UP7IHyR6rIe9rYFkOHm53jDmOsmEoEFBwmcBVhZ1Q/N8
+	 2bdC5c411c3oPQj9+67M3qrlBwbvogpdDPWzXRqtBYpFP9sbiUVlyYf4ta12ie7dFW
+	 Jaw5fdGdZ/u6mg2Ilaga4lR0RH0kMrPcOqAkJ7Lw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405016AbgAXOUo (ORCPT
+        id S2392530AbgAXOab (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 09:20:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41662 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 09:30:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42038 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404879AbgAXOUc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 09:20:32 -0500
+        id S2405003AbgAXOUn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 09:20:43 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 40F592077C;
-        Fri, 24 Jan 2020 14:20:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6292222522;
+        Fri, 24 Jan 2020 14:20:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579875632;
-        bh=qZ/AK7qDtTJakLsjaUI3mUDTzYXOk3amPehL/OjaO/M=;
+        s=default; t=1579875643;
+        bh=3UhvI8O3+HQoLTBCTeoSba6nKdJFcCf8MRzo7M4mGKc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PjOGT76wvXQbHp3rSUX+AgBe+jcQJKD9gGj5gmjIl0NPAF6ynZjuXUqMJC8CWQ8mr
-         qB5+k1Ps5nRDIyVFeBVy0YXicnEefPbPFBzs4CNsYsR9njTcl3xYRTwoJFB6lWIws8
-         yKUUryEOw4nlZ48cXOQjlNULTIXUjmwwazMjfXpM=
+        b=AtsjL3ylGjppy/K+j2cJ+ByfgISYvIV2mlU0511/C0HEeC83CWC5rUTbzcNwa68F1
+         JTZ9hbD3qFdyGSabazimEskQ/mozp1sm1O1SUsUg4GnRk4q1jfeM7W7bVH4awBvk7N
+         /8nn85LtwA8Jn/0s5BzWSwDwWU+5qO1P6S9ZyUxI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Georgi Djakov <georgi.djakov@linaro.org>,
-        Rob Clark <robdclark@gmail.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-clk@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 16/56] clk: qcom: gcc-sdm845: Add missing flag to votable GDSCs
-Date:   Fri, 24 Jan 2020 09:19:32 -0500
-Message-Id: <20200124142012.29752-16-sashal@kernel.org>
+Cc:     Arnaud Pouliquen <arnaud.pouliquen@st.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
+Subject: [PATCH AUTOSEL 4.19 26/56] ASoC: sti: fix possible sleep-in-atomic
+Date:   Fri, 24 Jan 2020 09:19:42 -0500
+Message-Id: <20200124142012.29752-26-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200124142012.29752-1-sashal@kernel.org>
 References: <20200124142012.29752-1-sashal@kernel.org>
@@ -60,98 +59,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Georgi Djakov <georgi.djakov@linaro.org>
+From: Arnaud Pouliquen <arnaud.pouliquen@st.com>
 
-[ Upstream commit 5e82548e26ef62e257dc2ff37c11acb5eb72728e ]
+[ Upstream commit ce780a47c3c01e1e179d0792df6b853a913928f1 ]
 
-On sdm845 devices, during boot we see the following warnings (unless we
-have added 'pd_ignore_unused' to the kernel command line):
-	hlos1_vote_mmnoc_mmu_tbu_sf_gdsc status stuck at 'on'
-	hlos1_vote_mmnoc_mmu_tbu_hf1_gdsc status stuck at 'on'
-	hlos1_vote_mmnoc_mmu_tbu_hf0_gdsc status stuck at 'on'
-	hlos1_vote_aggre_noc_mmu_tbu2_gdsc status stuck at 'on'
-	hlos1_vote_aggre_noc_mmu_tbu1_gdsc status stuck at 'on'
-	hlos1_vote_aggre_noc_mmu_pcie_tbu_gdsc status stuck at 'on'
-	hlos1_vote_aggre_noc_mmu_audio_tbu_gdsc status stuck at 'on'
+Change mutex and spinlock management to avoid sleep
+in atomic issue.
 
-As the name of these GDSCs suggests, they are "votable" and in downstream
-DT, they all have the property "qcom,no-status-check-on-disable", which
-means that we should not poll the status bit when we disable them.
-
-Luckily the VOTABLE flag already exists and it does exactly what we need,
-so let's make use of it to make the warnings disappear.
-
-Fixes: 06391eddb60a ("clk: qcom: Add Global Clock controller (GCC) driver for SDM845")
-Reported-by: Rob Clark <robdclark@gmail.com>
-Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
-Link: https://lkml.kernel.org/r/20191126153437.11808-1-georgi.djakov@linaro.org
-Tested-by: Rob Clark <robdclark@gmail.com>
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
+Link: https://lore.kernel.org/r/20200113100400.30472-1-arnaud.pouliquen@st.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/qcom/gcc-sdm845.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ sound/soc/sti/uniperif_player.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/clk/qcom/gcc-sdm845.c b/drivers/clk/qcom/gcc-sdm845.c
-index ada3e4aeb38f9..6bd96ddadbe31 100644
---- a/drivers/clk/qcom/gcc-sdm845.c
-+++ b/drivers/clk/qcom/gcc-sdm845.c
-@@ -3150,6 +3150,7 @@ static struct gdsc hlos1_vote_aggre_noc_mmu_audio_tbu_gdsc = {
- 		.name = "hlos1_vote_aggre_noc_mmu_audio_tbu_gdsc",
- 	},
- 	.pwrsts = PWRSTS_OFF_ON,
-+	.flags = VOTABLE,
- };
+diff --git a/sound/soc/sti/uniperif_player.c b/sound/soc/sti/uniperif_player.c
+index 313dab2857ef9..4b0beb372cd94 100644
+--- a/sound/soc/sti/uniperif_player.c
++++ b/sound/soc/sti/uniperif_player.c
+@@ -226,7 +226,6 @@ static void uni_player_set_channel_status(struct uniperif *player,
+ 	 * sampling frequency. If no sample rate is already specified, then
+ 	 * set one.
+ 	 */
+-	mutex_lock(&player->ctrl_lock);
+ 	if (runtime) {
+ 		switch (runtime->rate) {
+ 		case 22050:
+@@ -303,7 +302,6 @@ static void uni_player_set_channel_status(struct uniperif *player,
+ 		player->stream_settings.iec958.status[3 + (n * 4)] << 24;
+ 		SET_UNIPERIF_CHANNEL_STA_REGN(player, n, status);
+ 	}
+-	mutex_unlock(&player->ctrl_lock);
  
- static struct gdsc hlos1_vote_aggre_noc_mmu_pcie_tbu_gdsc = {
-@@ -3158,6 +3159,7 @@ static struct gdsc hlos1_vote_aggre_noc_mmu_pcie_tbu_gdsc = {
- 		.name = "hlos1_vote_aggre_noc_mmu_pcie_tbu_gdsc",
- 	},
- 	.pwrsts = PWRSTS_OFF_ON,
-+	.flags = VOTABLE,
- };
+ 	/* Update the channel status */
+ 	if (player->ver < SND_ST_UNIPERIF_VERSION_UNI_PLR_TOP_1_0)
+@@ -365,8 +363,10 @@ static int uni_player_prepare_iec958(struct uniperif *player,
  
- static struct gdsc hlos1_vote_aggre_noc_mmu_tbu1_gdsc = {
-@@ -3166,6 +3168,7 @@ static struct gdsc hlos1_vote_aggre_noc_mmu_tbu1_gdsc = {
- 		.name = "hlos1_vote_aggre_noc_mmu_tbu1_gdsc",
- 	},
- 	.pwrsts = PWRSTS_OFF_ON,
-+	.flags = VOTABLE,
- };
+ 	SET_UNIPERIF_CTRL_ZERO_STUFF_HW(player);
  
- static struct gdsc hlos1_vote_aggre_noc_mmu_tbu2_gdsc = {
-@@ -3174,6 +3177,7 @@ static struct gdsc hlos1_vote_aggre_noc_mmu_tbu2_gdsc = {
- 		.name = "hlos1_vote_aggre_noc_mmu_tbu2_gdsc",
- 	},
- 	.pwrsts = PWRSTS_OFF_ON,
-+	.flags = VOTABLE,
- };
++	mutex_lock(&player->ctrl_lock);
+ 	/* Update the channel status */
+ 	uni_player_set_channel_status(player, runtime);
++	mutex_unlock(&player->ctrl_lock);
  
- static struct gdsc hlos1_vote_mmnoc_mmu_tbu_hf0_gdsc = {
-@@ -3182,6 +3186,7 @@ static struct gdsc hlos1_vote_mmnoc_mmu_tbu_hf0_gdsc = {
- 		.name = "hlos1_vote_mmnoc_mmu_tbu_hf0_gdsc",
- 	},
- 	.pwrsts = PWRSTS_OFF_ON,
-+	.flags = VOTABLE,
- };
+ 	/* Clear the user validity user bits */
+ 	SET_UNIPERIF_USER_VALIDITY_VALIDITY_LR(player, 0);
+@@ -598,7 +598,6 @@ static int uni_player_ctl_iec958_put(struct snd_kcontrol *kcontrol,
+ 	iec958->status[1] = ucontrol->value.iec958.status[1];
+ 	iec958->status[2] = ucontrol->value.iec958.status[2];
+ 	iec958->status[3] = ucontrol->value.iec958.status[3];
+-	mutex_unlock(&player->ctrl_lock);
  
- static struct gdsc hlos1_vote_mmnoc_mmu_tbu_hf1_gdsc = {
-@@ -3190,6 +3195,7 @@ static struct gdsc hlos1_vote_mmnoc_mmu_tbu_hf1_gdsc = {
- 		.name = "hlos1_vote_mmnoc_mmu_tbu_hf1_gdsc",
- 	},
- 	.pwrsts = PWRSTS_OFF_ON,
-+	.flags = VOTABLE,
- };
+ 	spin_lock_irqsave(&player->irq_lock, flags);
+ 	if (player->substream && player->substream->runtime)
+@@ -608,6 +607,8 @@ static int uni_player_ctl_iec958_put(struct snd_kcontrol *kcontrol,
+ 		uni_player_set_channel_status(player, NULL);
  
- static struct gdsc hlos1_vote_mmnoc_mmu_tbu_sf_gdsc = {
-@@ -3198,6 +3204,7 @@ static struct gdsc hlos1_vote_mmnoc_mmu_tbu_sf_gdsc = {
- 		.name = "hlos1_vote_mmnoc_mmu_tbu_sf_gdsc",
- 	},
- 	.pwrsts = PWRSTS_OFF_ON,
-+	.flags = VOTABLE,
- };
+ 	spin_unlock_irqrestore(&player->irq_lock, flags);
++	mutex_unlock(&player->ctrl_lock);
++
+ 	return 0;
+ }
  
- static struct clk_regmap *gcc_sdm845_clocks[] = {
 -- 
 2.20.1
 
