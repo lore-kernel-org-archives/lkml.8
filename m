@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDE23C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:32:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 721D2C32771
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:32:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C174D2077C
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:32:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E2002077C
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:32:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579876370;
-	bh=tGCo++9ocfg6qxKLzz8rWF8r+kIwiD+ceOvC7Djypy0=;
+	s=default; t=1579876375;
+	bh=W1jirwlr7v13jTCfr7mNvWD5BBnGeEGhhW1PMP2SgVE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gdHLwX7Eg1wwOY/SNRzCMcxfmZFeFRueu1XrAw9kKvA4CHBQmnuIhD5KgMhXD1Juy
-	 GpluaYnHPN0u7XDuP5q4m6MNevvPbQBRvciF2V56iSG789b9DsioxMXcBUhmwGtG2o
-	 XbK+CBv6y3NW5A+Zhw6trWqZr5UUnuzuA/a9wjjk=
+	b=Cv2oIglv0MPOpz+XRnPvo7jwakdgtfsRmEDh++oe/wtSzQByG3+3zGBR60Fci5laL
+	 6DhtVS8tWvuWPU8T69FPILlzHU/xAAHsahvhKr/QHGUFoYazeDaUeQ3KSZahU+f2Xo
+	 U04cTEeKqhR3RIVta4OUCaHii6EcwXVB69tSDG4w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404343AbgAXOUB (ORCPT
+        id S2392739AbgAXOcx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 09:20:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40292 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 09:32:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40748 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391979AbgAXOTq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 09:19:46 -0500
+        id S2389436AbgAXOUA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 09:20:00 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C210622522;
-        Fri, 24 Jan 2020 14:19:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2E4D424676;
+        Fri, 24 Jan 2020 14:19:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579875584;
-        bh=tGCo++9ocfg6qxKLzz8rWF8r+kIwiD+ceOvC7Djypy0=;
+        s=default; t=1579875599;
+        bh=W1jirwlr7v13jTCfr7mNvWD5BBnGeEGhhW1PMP2SgVE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dVOMRYGjvIj2ooC8qVjUp6rv0lJWniEZViPBp/cf+Dx1xL0/AiwEQndBWH310E65x
-         L1pAIgbfkGfjenFJWTtb2uqH8ALuxSdLlr331hHtnuWDj2b0y+/xCiN3WUbU7x4df/
-         /Ms+b/TbMa1uYyr3paPTKhxjjyHSSUA5fvStocQw=
+        b=Rv+glKT5ASCt+RuILq7Xr44EhCIBtgUMl5U08o/f0+jDBBk7/JvZyxjRaa0wKgyRL
+         8kjRgasKiGN+mkslDQ92jK3u3QVs8X5+tDtZ9KqZQAQdpvFr1mH9qHMUomuMLnRx65
+         /FQLynTRh7HC7QY8VXD16wxnl5ist/p8XVFcdD4A=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ido Schimmel <idosch@mellanox.com>,
-        Shalom Toledo <shalomt@mellanox.com>,
-        Jiri Pirko <jiri@mellanox.com>,
+Cc:     Yunsheng Lin <linyunsheng@huawei.com>,
+        Huazhong Tan <tanhuazhong@huawei.com>,
         "David S . Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 075/107] mlxsw: spectrum: Do not modify cloned SKBs during xmit
-Date:   Fri, 24 Jan 2020 09:17:45 -0500
-Message-Id: <20200124141817.28793-75-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 088/107] net: hns3: pad the short frame before sending to the hardware
+Date:   Fri, 24 Jan 2020 09:17:58 -0500
+Message-Id: <20200124141817.28793-88-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200124141817.28793-1-sashal@kernel.org>
 References: <20200124141817.28793-1-sashal@kernel.org>
@@ -61,86 +60,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ido Schimmel <idosch@mellanox.com>
+From: Yunsheng Lin <linyunsheng@huawei.com>
 
-[ Upstream commit 2da51ce75d86ab1f7770ac1391a9a1697ddaa60c ]
+[ Upstream commit 36c67349a1a1c88b9cf11d7ca7762ababdb38867 ]
 
-The driver needs to prepend a Tx header to each packet it is
-transmitting. The header includes information such as the egress port
-and traffic class.
+The hardware can not handle short frames below or equal to 32
+bytes according to the hardware user manual, and it will trigger
+a RAS error when the frame's length is below 33 bytes.
 
-The addition of the header requires the driver to modify the SKB's
-header and therefore it must not be shared. Otherwise, we risk hitting
-various race conditions.
+This patch pads the SKB when skb->len is below 33 bytes before
+sending it to hardware.
 
-For example, when a packet is flooded (cloned) by the bridge driver to
-two switch ports swp1 and swp2:
-
-t0 - mlxsw_sp_port_xmit() is called for swp1. Tx header is prepended with
-     swp1's port number
-t1 - mlxsw_sp_port_xmit() is called for swp2. Tx header is prepended with
-     swp2's port number, overwriting swp1's port number
-t2 - The device processes data buffer from t0. Packet is transmitted via
-     swp2
-t3 - The device processes data buffer from t1. Packet is transmitted via
-     swp2
-
-Usually, the device is fast enough and transmits the packet before its
-Tx header is overwritten, but this is not the case in emulated
-environments.
-
-Fix this by making sure the SKB's header is writable by calling
-skb_cow_head(). Since the function ensures we have headroom to push the
-Tx header, the check further in the function can be removed.
-
-v2:
-* Use skb_cow_head() instead of skb_unshare() as suggested by Jakub
-* Remove unnecessary check regarding headroom
-
-Fixes: 56ade8fe3fe1 ("mlxsw: spectrum: Add initial support for Spectrum ASIC")
-Signed-off-by: Ido Schimmel <idosch@mellanox.com>
-Reported-by: Shalom Toledo <shalomt@mellanox.com>
-Acked-by: Jiri Pirko <jiri@mellanox.com>
+Fixes: 76ad4f0ee747 ("net: hns3: Add support of HNS3 Ethernet Driver for hip08 SoC")
+Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
+Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/mellanox/mlxsw/spectrum.c | 18 ++++++------------
- 1 file changed, 6 insertions(+), 12 deletions(-)
+ drivers/net/ethernet/hisilicon/hns3/hns3_enet.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/net/ethernet/mellanox/mlxsw/spectrum.c b/drivers/net/ethernet/mellanox/mlxsw/spectrum.c
-index 3ec18fb0d479c..45f6836fcc629 100644
---- a/drivers/net/ethernet/mellanox/mlxsw/spectrum.c
-+++ b/drivers/net/ethernet/mellanox/mlxsw/spectrum.c
-@@ -812,23 +812,17 @@ static netdev_tx_t mlxsw_sp_port_xmit(struct sk_buff *skb,
- 	u64 len;
- 	int err;
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
+index 84d8816c8681b..0c8d2269bc46e 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
+@@ -54,6 +54,8 @@ MODULE_PARM_DESC(debug, " Network interface message level setting");
+ #define HNS3_INNER_VLAN_TAG	1
+ #define HNS3_OUTER_VLAN_TAG	2
  
-+	if (skb_cow_head(skb, MLXSW_TXHDR_LEN)) {
-+		this_cpu_inc(mlxsw_sp_port->pcpu_stats->tx_dropped);
-+		dev_kfree_skb_any(skb);
-+		return NETDEV_TX_OK;
-+	}
++#define HNS3_MIN_TX_LEN		33U
 +
- 	memset(skb->cb, 0, sizeof(struct mlxsw_skb_cb));
+ /* hns3_pci_tbl - PCI Device ID Table
+  *
+  * Last entry must be all 0s
+@@ -1329,6 +1331,10 @@ netdev_tx_t hns3_nic_net_xmit(struct sk_buff *skb, struct net_device *netdev)
+ 	int ret;
+ 	int i;
  
- 	if (mlxsw_core_skb_transmit_busy(mlxsw_sp->core, &tx_info))
- 		return NETDEV_TX_BUSY;
++	/* Hardware can only handle short frames above 32 bytes */
++	if (skb_put_padto(skb, HNS3_MIN_TX_LEN))
++		return NETDEV_TX_OK;
++
+ 	/* Prefetch the data used later */
+ 	prefetch(skb->data);
  
--	if (unlikely(skb_headroom(skb) < MLXSW_TXHDR_LEN)) {
--		struct sk_buff *skb_orig = skb;
--
--		skb = skb_realloc_headroom(skb, MLXSW_TXHDR_LEN);
--		if (!skb) {
--			this_cpu_inc(mlxsw_sp_port->pcpu_stats->tx_dropped);
--			dev_kfree_skb_any(skb_orig);
--			return NETDEV_TX_OK;
--		}
--		dev_consume_skb_any(skb_orig);
--	}
--
- 	if (eth_skb_pad(skb)) {
- 		this_cpu_inc(mlxsw_sp_port->pcpu_stats->tx_dropped);
- 		return NETDEV_TX_OK;
 -- 
 2.20.1
 
