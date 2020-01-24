@@ -2,105 +2,149 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12D0FC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 04:28:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B483EC35242
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 04:29:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC3022075D
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 04:28:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 823B72071A
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 04:29:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b7VL69Al"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Sg5itA96"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730434AbgAXE25 (ORCPT
+        id S1730518AbgAXE3G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 23:28:57 -0500
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:37398 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729760AbgAXE25 (ORCPT
+        Thu, 23 Jan 2020 23:29:06 -0500
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:55805 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729760AbgAXE3G (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 23:28:57 -0500
-Received: by mail-lf1-f68.google.com with SMTP id b15so301339lfc.4;
-        Thu, 23 Jan 2020 20:28:55 -0800 (PST)
+        Thu, 23 Jan 2020 23:29:06 -0500
+Received: by mail-pj1-f68.google.com with SMTP id d5so459938pjz.5;
+        Thu, 23 Jan 2020 20:29:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=VLtJqd9n8iEGWWWwFYJk44IhKuekuFlbjkOOSjbK4Ug=;
-        b=b7VL69Al4Q3TfIx5Glo4Lk/mg/RMvnYyJKH/l2Yzy5Oex07mnDpixdToqeCBQaoAWK
-         B9nzH8IJcDmQd26XXA66TJkZfV7/u9aW1PcLZlg43tTjKlDt7O6av3JfuZa8oW+kOZbT
-         PiSjuNcQh+X8/rsAroz+7FMrjT+mrpQBUdUGUxR4QvetWX9Z5OW+6b0vIZoky9V0BvZh
-         14IHMkUS21cds/eS9GcYG3UndNtA+LoWyAnB9lw4IHvNJDW188GKTHaJ58/0Z8bY4J0L
-         7o1xo3iI45c56/LRLxwcXsTcoo1Ys0YXF9MmCgeQ7+KWP+9bvL8b0DK0NiUxUKPRubbG
-         5ONw==
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=W5pF9JS7OfQogiQ+v1H3GtBwMtau9/tHuDv1Q9h5buA=;
+        b=Sg5itA96fCucpWFLPztS45UrhdU//Yjb9e3vjuwavSuwIsEFNQVX2ZPToq0NWtjIIC
+         HkRfgfgyS11flHWhXXEFQvCg6EbCVYgR2fPisPweEkJA8vBD155pupXWLhqDx3FaxlTO
+         9ScXQuVU+BYXGdJENQyKT5QGGLQ+y6rDcOd1OzPbCpt6oEHAFBRn8VTl+mfUrqTLxiM/
+         kc1c8wcYMrNIM+own+kkA6QzBGRgNf5ljnLWAUbvPjX2ui0tWZqMORkoORYY0Eyooxrt
+         AbI4PxV5886ntusBBmpJyEsQy+HJaYyk9G8qHfEaqHXUUDnXmjGWc1gTQ0z5LW1uQniw
+         khHw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=VLtJqd9n8iEGWWWwFYJk44IhKuekuFlbjkOOSjbK4Ug=;
-        b=Q7B39cVfS0vwCx3Zntnn9BBFMyxR1B1juIpJ4xUzEfbZ563cPVsZVGPsBU2zhWIjAR
-         sXQ0yGC5fGKz+R1Q1wvpCQFOix7NqoGwUaJ2WQYzYx+zYuoJ4+Q8GTBGCjHzer3cJA22
-         Nk484F0dnOSnTYvdMLSid/CA/li+FYyXtxGad+9r21ev5Y5en6p7ivvm6lS+ZOeVd8Oy
-         +RdQc3ndutZVb3URswFPv+fziYtfwhCqTK1UG6zNmBG+5xUeZB4NqXaXSIzuj/9VfzMh
-         lTXEN32eplOKZ1efFIA7oXSK212Sp/Dl4m697HfSbzyLvA0FDCLpvkN8YNrEuB0JrAEj
-         ZbEw==
-X-Gm-Message-State: APjAAAVI2J4CO2RC+RXU+5Ci8wrvzKB9onVUVsdAmrlxpRn214QkFQZa
-        kbB+dWRpMKhw5nweZ8S/gkA=
-X-Google-Smtp-Source: APXvYqyRExhBqqvbAcTEoPhTfbxzuj7kgwI599mLqXvMCeAtJ/7luyFkKBpeGBOzIDDLGas1DcH8rw==
-X-Received: by 2002:a05:6512:3ac:: with SMTP id v12mr496446lfp.205.1579840134560;
-        Thu, 23 Jan 2020 20:28:54 -0800 (PST)
-Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id e20sm2302728ljl.59.2020.01.23.20.28.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 23 Jan 2020 20:28:54 -0800 (PST)
-Subject: Re: [alsa-devel] [PATCH 5/9] ASoC: tegra: add Tegra210 based AHUB
- driver
-To:     Sameer Pujar <spujar@nvidia.com>, perex@perex.cz, tiwai@suse.com,
-        robh+dt@kernel.org
-Cc:     devicetree@vger.kernel.org, alsa-devel@alsa-project.org,
-        atalambedu@nvidia.com, linux-kernel@vger.kernel.org,
-        lgirdwood@gmail.com, jonathanh@nvidia.com, viswanathl@nvidia.com,
-        sharadg@nvidia.com, broonie@kernel.org, thierry.reding@gmail.com,
-        linux-tegra@vger.kernel.org, rlokhande@nvidia.com,
-        mkumard@nvidia.com, dramesh@nvidia.com
-References: <1579530198-13431-1-git-send-email-spujar@nvidia.com>
- <1579530198-13431-6-git-send-email-spujar@nvidia.com>
- <5ed7482e-e874-9e11-c84e-7418e4b5162e@gmail.com>
- <d160fa01-27d0-6290-cb16-07d159d6fbb2@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <37669247-daaf-c6cb-0ef2-464e61db9838@gmail.com>
-Date:   Fri, 24 Jan 2020 07:28:52 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=W5pF9JS7OfQogiQ+v1H3GtBwMtau9/tHuDv1Q9h5buA=;
+        b=dRiwex23Va2pMGvGUUo+PLaOwyZ/FTzcwxa6p5E3FhqsP6yQxONeLdX+aBzH5qPsxY
+         r0FByZGy6yKtjTN1I6QvspyGZkQ+bonu1LsToRsKmMzzvnyN+MFVmqA6qlc+DFCgVNzR
+         kmqKsDKZlCqat/nNz4sOlWgTYudruk5jSGo1Nsdo84oSp07OfXDyAGQfD/yZiIupIJws
+         nkzK2ncxIad+Lqm2jImHJ9bPd+tzOTie2CV9RciJbE+24ziL8GPajz09nNi5B38Mh9Z0
+         6/DyUz9NHSNZihZ+kh0kQZuIvgUyasWed15v2F8ghDySNT5PeKEekyKpsrq5L9GL+uxE
+         8zLA==
+X-Gm-Message-State: APjAAAXAdtbij3LetUw7L+eRRUwULuH8XlnkHFUyjJAXRK8fuUYEZOzo
+        XKD5J/aWoO+jNdHPaa1QYg==
+X-Google-Smtp-Source: APXvYqz1nhFiSAUfCxrhC6VBjKlPGF/48fHdPP+Z2cbhtLQPGcYLYeWWuPogvT4DZKfQfmpTS2XuAg==
+X-Received: by 2002:a17:90a:fa88:: with SMTP id cu8mr1112275pjb.141.1579840145559;
+        Thu, 23 Jan 2020 20:29:05 -0800 (PST)
+Received: from madhuparna-HP-Notebook ([2402:3a80:1ee5:e37b:72:f3a9:f673:9aea])
+        by smtp.gmail.com with ESMTPSA id iq22sm4558521pjb.9.2020.01.23.20.28.57
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 23 Jan 2020 20:29:04 -0800 (PST)
+From:   Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+X-Google-Original-From: Madhuparna Bhowmik <change_this_user_name@gmail.com>
+Date:   Fri, 24 Jan 2020 09:58:52 +0530
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     madhuparnabhowmik10@gmail.com, mingo@redhat.com,
+        peterz@infradead.org, juri.lelli@redhat.com,
+        vincent.guittot@linaro.org, ebiederm@xmission.com,
+        christian.brauner@ubuntu.com, oleg@redhat.com,
+        joel@joelfernandes.org, linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        frextrite@gmail.com, rcu@vger.kernel.org
+Subject: Re: [PATCH] sched.h: Annotate sighand_struct with __rcu
+Message-ID: <20200124042852.GC23699@madhuparna-HP-Notebook>
+References: <20200123145305.10652-1-madhuparnabhowmik10@gmail.com>
+ <20200123164108.GQ2935@paulmck-ThinkPad-P72>
 MIME-Version: 1.0
-In-Reply-To: <d160fa01-27d0-6290-cb16-07d159d6fbb2@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200123164108.GQ2935@paulmck-ThinkPad-P72>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-24.01.2020 06:39, Sameer Pujar пишет:
->>> +static int tegra_ahub_put_value_enum(struct snd_kcontrol *kctl,
->>> +                                  struct snd_ctl_elem_value *uctl)
->>> +{
->>> +     struct snd_soc_component *cmpnt =
->>> snd_soc_dapm_kcontrol_component(kctl);
->>> +     struct tegra_ahub *ahub = snd_soc_component_get_drvdata(cmpnt);
->>> +     struct snd_soc_dapm_context *dapm =
->>> snd_soc_dapm_kcontrol_dapm(kctl);
->>> +     struct soc_enum *e = (struct soc_enum *)kctl->private_value;
->>> +     struct snd_soc_dapm_update update[TEGRA_XBAR_UPDATE_MAX_REG] =
->>> { };
->> Shouldn't this be {0} to make array zero'ed?
+On Thu, Jan 23, 2020 at 08:41:08AM -0800, Paul E. McKenney wrote:
+> On Thu, Jan 23, 2020 at 08:23:05PM +0530, madhuparnabhowmik10@gmail.com wrote:
+> > From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+> > 
+> > This patch fixes the following sparse errors by annotating the
+> > sighand_struct with __rcu
+> > 
+> > kernel/fork.c:1511:9: error: incompatible types in comparison expression
+> > kernel/exit.c:100:19: error: incompatible types in comparison expression
+> > kernel/signal.c:1370:27: error: incompatible types in comparison expression
+> > 
+> > This fix introduces the following sparse error in signal.c due to
+> > checking the sighand pointer without rcu primitives:
+> > 
+> > kernel/signal.c:1386:21: error: incompatible types in comparison expression
+> > 
+> > This new sparse error is also addressed in this patch.
+> > 
+> > Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+> > ---
+> >  include/linux/sched.h | 2 +-
+> >  kernel/signal.c       | 3 ++-
+> >  2 files changed, 3 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/include/linux/sched.h b/include/linux/sched.h
+> > index b511e178a89f..7a351360ad54 100644
+> > --- a/include/linux/sched.h
+> > +++ b/include/linux/sched.h
+> > @@ -918,7 +918,7 @@ struct task_struct {
+> >  
+> >  	/* Signal handlers: */
+> >  	struct signal_struct		*signal;
+> > -	struct sighand_struct		*sighand;
+> > +	struct sighand_struct __rcu		*sighand;
+> >  	sigset_t			blocked;
+> >  	sigset_t			real_blocked;
+> >  	/* Restored if set_restore_sigmask() was used: */
+> > diff --git a/kernel/signal.c b/kernel/signal.c
+> > index bcd46f547db3..1272def37462 100644
+> > --- a/kernel/signal.c
+> > +++ b/kernel/signal.c
+> > @@ -1383,7 +1383,8 @@ struct sighand_struct *__lock_task_sighand(struct task_struct *tsk,
+> >  		 * must see ->sighand == NULL.
+> >  		 */
+> >  		spin_lock_irqsave(&sighand->siglock, *flags);
+> > -		if (likely(sighand == tsk->sighand))
+> > +		if (likely(sighand == rcu_dereference_protected(tsk->sighand,
+> > +						lockdep_is_held(&sighand->siglock))))
 > 
-> Isn't it the same with empty braces?
+> Given that the return value is never dereferenced, you can use
+> rcu_access_pointer(), which may be used outside of an RCU read-side
+> critical section, and thus does not need the lockdep_is_held().  So this
+> change would save a line of code and would be a bit easier on the eyes.
+>
+Okay got it! I will send the updated patch soon.
 
-Looks like is should be the same because turns out GCC has an extension
-for that.
+Thank you,
+Madhuparna
+> 							Thanx, Paul
+> 
+> >  			break;
+> >  		spin_unlock_irqrestore(&sighand->siglock, *flags);
+> >  	}
+> > -- 
+> > 2.17.1
+> > 
