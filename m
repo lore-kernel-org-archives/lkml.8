@@ -2,208 +2,96 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DE9EC32771
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:35:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AF1DC35242
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:36:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31AEA2070A
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:35:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IBmc5q1w"
+	by mail.kernel.org (Postfix) with ESMTP id D420F20709
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:36:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579858595;
+	bh=N4bj3wWm2MzQ/QSbYY4EoGmJ+L24lq7RFP9c2ISdy7c=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=UDCPOSCofDITEla4317Pcw2GFAt5hUhDrHsF32Ogq1R8lqJmdCUbkMKSbC273klQP
+	 qrjC7xcQuYdvYWzsXwdfAg6LjjHOATz5IGkLACsf36EkNbXp7Z9x6uyFS5wD8GbUoe
+	 9oRiJyo1d4g6fZVi0R2YqAQ86jCHkBxAlU9FKb0g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729609AbgAXJf5 (ORCPT
+        id S1729880AbgAXJgf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 04:35:57 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:45466 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729180AbgAXJf5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 04:35:57 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579858556;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=KkR9XsyYszWewqqmOrVzZ1ik4TqqddD7Z9JTAAFoEcA=;
-        b=IBmc5q1wcP1F7aKhwG108GEyx/J3ix5QqeSus0dGe1VzSQ9lmiknffAu8PyEhMcXLo9VF+
-        CO5cQLsyJUetR6XRFfcHttpYnC/21kUdLMwL55wu85GFtNqt0WstnlRe8NcTmV75D60kds
-        YNQ6O6gVK0XFOrGsObg5a+l14lEIEvo=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-395-OIjQAVdYPbepnMZWON9ngw-1; Fri, 24 Jan 2020 04:35:52 -0500
-X-MC-Unique: OIjQAVdYPbepnMZWON9ngw-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Fri, 24 Jan 2020 04:36:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33858 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729122AbgAXJgf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 04:36:35 -0500
+Received: from localhost (unknown [145.15.244.15])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 84FB28C5C9B;
-        Fri, 24 Jan 2020 09:35:50 +0000 (UTC)
-Received: from kamzik.brq.redhat.com (unknown [10.43.2.160])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id EA1A6863BC;
-        Fri, 24 Jan 2020 09:35:45 +0000 (UTC)
-Date:   Fri, 24 Jan 2020 10:35:43 +0100
-From:   Andrew Jones <drjones@redhat.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Ben Gardon <bgardon@google.com>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        Cannon Matthews <cannonmatthews@google.com>,
-        Peter Xu <peterx@redhat.com>, Peter Shier <pshier@google.com>,
-        Oliver Upton <oupton@google.com>,
-        Marc Zyngier <Marc.Zyngier@arm.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>
-Subject: Re: [PATCH v4 06/10] KVM: selftests: Add support for vcpu_args_set
- to aarch64 and s390x
-Message-ID: <20200124093543.m5oqo7fnjnc2scko@kamzik.brq.redhat.com>
-References: <20200123180436.99487-1-bgardon@google.com>
- <20200123180436.99487-7-bgardon@google.com>
- <4dbb6d1b-3162-d9b3-4ebb-5e4061776bb6@redhat.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 040352070A;
+        Fri, 24 Jan 2020 09:36:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579858594;
+        bh=N4bj3wWm2MzQ/QSbYY4EoGmJ+L24lq7RFP9c2ISdy7c=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=q4VFQlhYCOE2ranDIlpBlyLpmJiVRFaMXBQmyx4L/jBPh+oBEVY5QRLJJq3qyUVBV
+         ZB6Sj1wwNRSXpaq9jWWmAYzRBMazQ5TBk1r1TFRPAaR5fhwQLpycpyGLIcjSChZaHk
+         XCw1CkfXeLhsNWwgl7+fDtm93B9Tm33FOVocYDf0=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Yang Xu <xuyang2018.jy@cn.fujitsu.com>,
+        Jan Kara <jack@suse.cz>, Eric Sandeen <sandeen@redhat.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>
+Subject: [PATCH 4.14 001/343] xfs: Sanity check flags of Q_XQUOTARM call
+Date:   Fri, 24 Jan 2020 10:26:59 +0100
+Message-Id: <20200124092919.688329843@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200124092919.490687572@linuxfoundation.org>
+References: <20200124092919.490687572@linuxfoundation.org>
+User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4dbb6d1b-3162-d9b3-4ebb-5e4061776bb6@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 24, 2020 at 10:03:08AM +0100, Paolo Bonzini wrote:
-> CCing Marc, Conny and Christian (plus Thomas and Drew who were already
-> in the list) for review.
-> 
-> Thanks,
-> 
-> Paolo
-> 
-> On 23/01/20 19:04, Ben Gardon wrote:
-> > Currently vcpu_args_set is only implemented for x86. This makes writing
-> > tests with multiple vCPUs difficult as each guest vCPU must either a.)
-> > do the same thing or b.) derive some kind of unique token from it's
-> > registers or the architecture. To simplify the process of writing tests
-> > with multiple vCPUs for s390 and aarch64, add set args functions for
-> > those architectures.
+From: Jan Kara <jack@suse.cz>
 
-It'd be nice to keep the separate architecture changes in separate
-patches. Otherwise I can't really give an r-b.
+commit 3dd4d40b420846dd35869ccc8f8627feef2cff32 upstream.
 
-> > 
-> > Signed-off-by: Ben Gardon <bgardon@google.com>
-> > ---
-> >  .../selftests/kvm/lib/aarch64/processor.c     | 33 +++++++++++++++++
-> >  .../selftests/kvm/lib/s390x/processor.c       | 35 +++++++++++++++++++
-> >  2 files changed, 68 insertions(+)
-> > 
-> > diff --git a/tools/testing/selftests/kvm/lib/aarch64/processor.c b/tools/testing/selftests/kvm/lib/aarch64/processor.c
-> > index 86036a59a668e..a2ff90a75f326 100644
-> > --- a/tools/testing/selftests/kvm/lib/aarch64/processor.c
-> > +++ b/tools/testing/selftests/kvm/lib/aarch64/processor.c
-> > @@ -333,3 +333,36 @@ void vm_vcpu_add_default(struct kvm_vm *vm, uint32_t vcpuid, void *guest_code)
-> >  {
-> >  	aarch64_vcpu_add_default(vm, vcpuid, NULL, guest_code);
-> >  }
-> > +
-> > +/* VM VCPU Args Set
-> > + *
-> > + * Input Args:
-> > + *   vm - Virtual Machine
-> > + *   vcpuid - VCPU ID
-> > + *   num - number of arguments
-> > + *   ... - arguments, each of type uint64_t
-> > + *
-> > + * Output Args: None
-> > + *
-> > + * Return: None
-> > + *
-> > + * Sets the first num function input arguments to the values
-> > + * given as variable args.  Each of the variable args is expected to
-> > + * be of type uint64_t. The registers set by this function are r0-r7.
-> > + */
+Flags passed to Q_XQUOTARM were not sanity checked for invalid values.
+Fix that.
 
-lib/aarch64/processor.c so far doesn't have big function headers like
-this. Also, since this function is common for all architectures [now],
-I feel like the documentation should be in common code - so in the header
-file.
+Fixes: 9da93f9b7cdf ("xfs: fix Q_XQUOTARM ioctl")
+Reported-by: Yang Xu <xuyang2018.jy@cn.fujitsu.com>
+Signed-off-by: Jan Kara <jack@suse.cz>
+Reviewed-by: Eric Sandeen <sandeen@redhat.com>
+Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-> > +void vcpu_args_set(struct kvm_vm *vm, uint32_t vcpuid, unsigned int num, ...)
-> > +{
-> > +	va_list ap;
-> > +
-> > +	TEST_ASSERT(num >= 1 && num <= 8, "Unsupported number of args,\n"
-> > +		    "  num: %u\n",
-> > +		    num);
+---
+ fs/xfs/xfs_quotaops.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
-Weird line breaking. I see it came from the x86 implementation, but it's
-weird there too... Personally I'd just put it all on one line, because
-my vt100 died two decades ago.
+--- a/fs/xfs/xfs_quotaops.c
++++ b/fs/xfs/xfs_quotaops.c
+@@ -214,6 +214,9 @@ xfs_fs_rm_xquota(
+ 	if (XFS_IS_QUOTA_ON(mp))
+ 		return -EINVAL;
+ 
++	if (uflags & ~(FS_USER_QUOTA | FS_GROUP_QUOTA | FS_PROJ_QUOTA))
++		return -EINVAL;
++
+ 	if (uflags & FS_USER_QUOTA)
+ 		flags |= XFS_DQ_USER;
+ 	if (uflags & FS_GROUP_QUOTA)
 
-> > +
-> > +	va_start(ap, num);
-> > +
-> > +	for (i = 0; i < num; i++)
-> > +		set_reg(vm, vcpuid, ARM64_CORE_REG(regs.regs[num]),
-                                                             ^^ should be 'i'
-
-> > +			va_arg(ap, uint64_t));
-
-nit: I'd use {} because of the line break. Or just not break the line and
-bust the 80 char "limit" (RIP vt100).
-
-Thanks,
-drew
-
-> > +
-> > +	va_end(ap);
-> > +}
-> > diff --git a/tools/testing/selftests/kvm/lib/s390x/processor.c b/tools/testing/selftests/kvm/lib/s390x/processor.c
-> > index 32a02360b1eb0..680f37be9dbc9 100644
-> > --- a/tools/testing/selftests/kvm/lib/s390x/processor.c
-> > +++ b/tools/testing/selftests/kvm/lib/s390x/processor.c
-> > @@ -269,6 +269,41 @@ void vm_vcpu_add_default(struct kvm_vm *vm, uint32_t vcpuid, void *guest_code)
-> >  	run->psw_addr = (uintptr_t)guest_code;
-> >  }
-> >  
-> > +/* VM VCPU Args Set
-> > + *
-> > + * Input Args:
-> > + *   vm - Virtual Machine
-> > + *   vcpuid - VCPU ID
-> > + *   num - number of arguments
-> > + *   ... - arguments, each of type uint64_t
-> > + *
-> > + * Output Args: None
-> > + *
-> > + * Return: None
-> > + *
-> > + * Sets the first num function input arguments to the values
-> > + * given as variable args.  Each of the variable args is expected to
-> > + * be of type uint64_t. The registers set by this function are r2-r6.
-> > + */
-> > +void vcpu_args_set(struct kvm_vm *vm, uint32_t vcpuid, unsigned int num, ...)
-> > +{
-> > +	va_list ap;
-> > +	struct kvm_regs regs;
-> > +
-> > +	TEST_ASSERT(num >= 1 && num <= 5, "Unsupported number of args,\n"
-> > +		    "  num: %u\n",
-> > +		    num);
-> > +
-> > +	va_start(ap, num);
-> > +	vcpu_regs_get(vm, vcpuid, &regs);
-> > +
-> > +	for (i = 0; i < num; i++)
-> > +		regs.gprs[i + 2] = va_arg(ap, uint64_t);
-> > +
-> > +	vcpu_regs_set(vm, vcpuid, &regs);
-> > +	va_end(ap);
-> > +}
-> > +
-> >  void vcpu_dump(FILE *stream, struct kvm_vm *vm, uint32_t vcpuid, uint8_t indent)
-> >  {
-> >  	struct vcpu *vcpu = vm->vcpu_head;
-> > 
-> 
 
