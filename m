@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA7C3C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:09:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4214C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:09:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2C1C222D9
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:09:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79C3D22464
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:09:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579864141;
-	bh=PFbsSZXlZx8BUpeeb4iYbhGgg1WAHLGn0S5otaYZcJs=;
+	s=default; t=1579864144;
+	bh=Im9lmjzn4yd291QgGzhaZu3rr4+A7e5Yl9ISoVapZ8w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Hqx89CLOIuNNlMtx4jRetYb6op1k+DAlJDfOVpwxMy1LWMH0zUbvkW7CwNgF8R9/L
-	 tIsb8PQhMiO9RYcGeuWP6L3pZ8ha2LeygZEWUgUhC7rQ3TZN10QbWLwsZx2tolyh/5
-	 idQU+2oFsNIMomYGTVDxgxCmT7eGwmCGnAhQrlbM=
+	b=a/5NA1awE7lFLvS0ZLd5pQvcF5MQ0bEw7LzPj/6d/OT5rYGYA1JkbaRKHXNAQ8gyE
+	 pKCkG6t14KDLkzmRdDHrgMn9rcluIAz47BBnShafTiLaDEubzqyM/s26TvDH4wMrNZ
+	 7mlA2bCz/KN05hQR0ehCUcRCiMrbuTNR7+aeFIRI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389731AbgAXLJA (ORCPT
+        id S1730656AbgAXLJD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:09:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44446 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 06:09:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44490 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732762AbgAXLI5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:08:57 -0500
+        id S1732762AbgAXLJB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:09:01 -0500
 Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AD07A2077C;
-        Fri, 24 Jan 2020 11:08:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3409520663;
+        Fri, 24 Jan 2020 11:09:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579864137;
-        bh=PFbsSZXlZx8BUpeeb4iYbhGgg1WAHLGn0S5otaYZcJs=;
+        s=default; t=1579864140;
+        bh=Im9lmjzn4yd291QgGzhaZu3rr4+A7e5Yl9ISoVapZ8w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=h8jIFbdR6xR3IGl4pEL3PRwbAkiX0bjHVsVSb7zjkLJeeH0J1VJeeXdwJ+sOLAk2j
-         mG5XtjqUi1aSQOqqEV449rfboqrrf8dqMg74U5YhrzcEawlQuw5cgnfUX75rORbFMd
-         O//O4ID+LN5tdtgJOxMqs3d+UJRuAo0wkAiIslqo=
+        b=x20OYa1lQJS/c3/lLbAQRkszTZOPGjb1ZOoZ02ugcLMiKYVIb8tATNokvW0X0da0a
+         umQC6ohqsvy0YEWE35uou7t2/6T2YQ1ZmOHK5LjxpmFtAdwC+iprzj5h3oU4zXoiOc
+         nVgYNPDzrPbQb1fQdLERmvTxcQ+gMB0GCWzevGnU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Niklas Cassel <niklas.cassel@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Amit Kucheria <amit.kucheria@linaro.org>,
-        Andy Gross <andy.gross@linaro.org>,
+        stable@vger.kernel.org, Steve Wise <swise@opengridcomputing.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 174/639] arm64: dts: msm8916: remove bogus argument to the cpu clock
-Date:   Fri, 24 Jan 2020 10:25:44 +0100
-Message-Id: <20200124093108.977466286@linuxfoundation.org>
+Subject: [PATCH 4.19 183/639] iw_cxgb4: use tos when importing the endpoint
+Date:   Fri, 24 Jan 2020 10:25:53 +0100
+Message-Id: <20200124093110.078298032@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
 References: <20200124093047.008739095@linuxfoundation.org>
@@ -62,66 +60,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Niklas Cassel <niklas.cassel@linaro.org>
+From: Steve Wise <swise@opengridcomputing.com>
 
-[ Upstream commit e4f045ef38e61ba37aa4afc916fce4fc1b37aa19 ]
+[ Upstream commit cb3ba0bde881f0cb7e3945d2a266901e2bd18c92 ]
 
-The apcs node has #clock-cells = <0>, which means that those who
-references it should specify 0 arguments.
+import_ep() is passed the correct tos, but doesn't use it correctly.
 
-The apcs reference in the cpu node incorrectly specifies an argument,
-remove this bogus argument.
-
-Fixes: 65afdf458360 ("arm64: dts: qcom: msm8916: Add CPU frequency scaling support")
-Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Reviewed-by: Amit Kucheria <amit.kucheria@linaro.org>
-Signed-off-by: Andy Gross <andy.gross@linaro.org>
+Fixes: ac8e4c69a021 ("cxgb4/iw_cxgb4: TOS support")
+Signed-off-by: Steve Wise <swise@opengridcomputing.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/qcom/msm8916.dtsi | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/infiniband/hw/cxgb4/cm.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/msm8916.dtsi b/arch/arm64/boot/dts/qcom/msm8916.dtsi
-index 7b32b8990d62f..8011e564a234b 100644
---- a/arch/arm64/boot/dts/qcom/msm8916.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8916.dtsi
-@@ -114,7 +114,7 @@
- 			next-level-cache = <&L2_0>;
- 			enable-method = "psci";
- 			cpu-idle-states = <&CPU_SPC>;
--			clocks = <&apcs 0>;
-+			clocks = <&apcs>;
- 			operating-points-v2 = <&cpu_opp_table>;
- 			#cooling-cells = <2>;
- 		};
-@@ -126,7 +126,7 @@
- 			next-level-cache = <&L2_0>;
- 			enable-method = "psci";
- 			cpu-idle-states = <&CPU_SPC>;
--			clocks = <&apcs 0>;
-+			clocks = <&apcs>;
- 			operating-points-v2 = <&cpu_opp_table>;
- 			#cooling-cells = <2>;
- 		};
-@@ -138,7 +138,7 @@
- 			next-level-cache = <&L2_0>;
- 			enable-method = "psci";
- 			cpu-idle-states = <&CPU_SPC>;
--			clocks = <&apcs 0>;
-+			clocks = <&apcs>;
- 			operating-points-v2 = <&cpu_opp_table>;
- 			#cooling-cells = <2>;
- 		};
-@@ -150,7 +150,7 @@
- 			next-level-cache = <&L2_0>;
- 			enable-method = "psci";
- 			cpu-idle-states = <&CPU_SPC>;
--			clocks = <&apcs 0>;
-+			clocks = <&apcs>;
- 			operating-points-v2 = <&cpu_opp_table>;
- 			#cooling-cells = <2>;
- 		};
+diff --git a/drivers/infiniband/hw/cxgb4/cm.c b/drivers/infiniband/hw/cxgb4/cm.c
+index 1b3d014fa1d6e..3c8b7eae918c5 100644
+--- a/drivers/infiniband/hw/cxgb4/cm.c
++++ b/drivers/infiniband/hw/cxgb4/cm.c
+@@ -2076,7 +2076,7 @@ static int import_ep(struct c4iw_ep *ep, int iptype, __u8 *peer_ip,
+ 	} else {
+ 		pdev = get_real_dev(n->dev);
+ 		ep->l2t = cxgb4_l2t_get(cdev->rdev.lldi.l2t,
+-					n, pdev, 0);
++					n, pdev, rt_tos2priority(tos));
+ 		if (!ep->l2t)
+ 			goto out;
+ 		ep->mtu = dst_mtu(dst);
 -- 
 2.20.1
 
