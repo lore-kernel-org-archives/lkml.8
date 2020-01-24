@@ -2,99 +2,787 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC1F8C32771
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 12:45:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95FFCC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 12:46:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B27F42070A
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 12:45:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579869916;
-	bh=FvvLH9qER5DcnOnf1xVp/JzrsG2atF7HVEx+eP6psjg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=0VlJArWhuJAhgR073w4ZIiRVJIl0jOCoStmersvgsWY8drU19b9lqrOiIyijydEzL
-	 IT/Nrw12ZyYnPSkEmhF8BQo+ney9oAsKztg+UVZNX6LdSsPM+W9V6LIoyksG/9u5Ok
-	 FFfgUxvVZU+IqCmyRJjIvT5THLepnQA3n3CPG6SM=
+	by mail.kernel.org (Postfix) with ESMTP id 5CB7D2075D
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 12:46:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ye4hi+rk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388617AbgAXMpQ (ORCPT
+        id S2388809AbgAXMqo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 07:45:16 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:35694 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387574AbgAXMpP (ORCPT
+        Fri, 24 Jan 2020 07:46:44 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:46813 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388690AbgAXMqo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 07:45:15 -0500
-Received: by mail-wm1-f67.google.com with SMTP id p17so1599246wmb.0;
-        Fri, 24 Jan 2020 04:45:14 -0800 (PST)
+        Fri, 24 Jan 2020 07:46:44 -0500
+Received: by mail-pg1-f193.google.com with SMTP id z124so966391pgb.13
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jan 2020 04:46:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:user-agent:in-reply-to:references:mime-version
+         :content-transfer-encoding:subject:to:cc:from:message-id;
+        bh=bO48eiH7w0Y2sZOOFKprs0ltyE2e6nrqdGsFGOFXj5I=;
+        b=ye4hi+rkXwPk9YJ1XFg/PX1X22xo1Gf5esAK3g+a3U9Yl70bIBvs04TEKukmmSSjC4
+         3SCqwnzwPvMp7yOJ4RpMJINjDwLI6pxgLEKtMgiagAHNFv0Cct+LWSmWDdLuGpyzGiUM
+         YQ7riz8KCjPdWySoLId5HrEjrkHQsNzHFtu0wPda1PLpEIJn+rR57+26SegF469MCs7i
+         Zh4FPhelPywCPteAalLUyt0ON8xRlAh7M7Uc2tPNzyedyaWZbSozGlWrNE48JNQ3xyot
+         rlVLMMkh4GMcopCKtFKFCibdd+oS66t96ySuH8lP51mNUhB+4rJvLplbclhVFo8lP9XX
+         KiXQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=j+mBBTpQJ4wbg8K52L8M4km/ID9qCvpn337om+dHJcg=;
-        b=fdHlWwGYPjfw1Ny99VNqIHv7bDzqZDoVW4n0C8WSqvY63tYJ2HMLuDAMQwgCxjnBRv
-         8KEf0IQRR7pUczoEdpU70ftrD4wYXvZG/cnspnutGv+CfBNClBBfGiyy6Pm0Tqnsutc/
-         JPowucQAKQvfOuQa3GPqk8X4E0bkTEk+YRY5/gR61Fk+7oBviF/spObsda+0HDiJbnkZ
-         DsOlGjJR2MwlNXSjpt1CeL47jlZ/buX/2QErkoOw1oxAjg90ijW1p+y/ZiCk3qQXaki2
-         7eQG1OdaLuwSHVz5b+wDmh4YuzjUjwpsGC4F3nTRNzifeC2eSwFvk4KKMAnD65ltq1RH
-         RLCA==
-X-Gm-Message-State: APjAAAXRQUXIVFxj9It/7WgwhK1HmbmDY2npWkBvZcsTd4amJ4VhlaFk
-        vG23a35xXUPLhsxNRAKq0NE=
-X-Google-Smtp-Source: APXvYqw48IZitTegCDEqW/DRYA1NjgNNLdiLHQ9/3fjlhxhOgsQMrqFvY7FUdFcstQQHzviWIpDW8Q==
-X-Received: by 2002:a1c:bc08:: with SMTP id m8mr2654997wmf.189.1579869913658;
-        Fri, 24 Jan 2020 04:45:13 -0800 (PST)
-Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
-        by smtp.gmail.com with ESMTPSA id g25sm14465121wmh.3.2020.01.24.04.45.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 Jan 2020 04:45:12 -0800 (PST)
-Date:   Fri, 24 Jan 2020 13:45:12 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     David Hildenbrand <david@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        stable <stable@vger.kernel.org>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Linux MM <linux-mm@kvack.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] mm/memory_hotplug: Fix remove_memory() lockdep splat
-Message-ID: <20200124124512.GT29276@dhcp22.suse.cz>
-References: <e60e64f9-894b-4121-d97b-fb61459cbbe5@redhat.com>
- <CAPcyv4jm=fmP=-5vbo2jxzMe2qXqZP=zDYF8G_rs3X6_Om0wPg@mail.gmail.com>
- <4d0334e2-c4e7-6d3f-99ba-2ca0495e1549@redhat.com>
- <CAPcyv4jixmv8fJ5FiYE=97Jud3Mc+6QzRX1txceSYU+WY_0rQA@mail.gmail.com>
- <fc0cfb97-5a60-7e73-4f85-d8e6947c5e28@redhat.com>
- <CAPcyv4jVpN26RGQLRn4BewYtzHDoQfvh37DEdEBq1dd4-BP0kw@mail.gmail.com>
- <64902066-51dd-9693-53fc-4a5975c58409@redhat.com>
- <CAPcyv4hcDNeQO3CfnqTRou+6R5gZwyi4pVUMxp1DadAOp7kJGQ@mail.gmail.com>
- <516aa930-9b64-b377-557c-5413ed9fe336@redhat.com>
- <CAPcyv4iiYtN6iGt=rVuNR=O=H9YcY1b1yWp+5TuDhu0QoVqT_A@mail.gmail.com>
+        h=x-gm-message-state:date:user-agent:in-reply-to:references
+         :mime-version:content-transfer-encoding:subject:to:cc:from
+         :message-id;
+        bh=bO48eiH7w0Y2sZOOFKprs0ltyE2e6nrqdGsFGOFXj5I=;
+        b=a2cjZhPs0Gscdpy2j8/rUW+AMdoo+FX5mWOIWdca3GVuuykW4YfUri55FFNywN15VO
+         RQ8MBIxuGNFJn78M64lUFlErGd/eP3cj8301KlHUidke3yFDNXPi+jyA70QtFu2FMBQm
+         tKldlR8OAQ2Ll5PDiVaMUtNPuxSQWsO/e+8r2vU2NFpqt+Wmt9vdQfNYlslao7FJhisx
+         DpLzQipLGDLyRjYOoF6mf+0EbBcC/ipshfPKO+WL+gUf+lcCF8LQh7XP12xb3E6WJSds
+         mxaLa5YWtWkHQjfBaRNs5TTXTiH8CKNa0HpesZ1qN5qiAaPtE0vurObK3dVCDA+tBzPM
+         7n6A==
+X-Gm-Message-State: APjAAAVo/QWqAEkEivZVCFSmO4EH/LxQ8Ft0OZ/4kn5vHSmGbv5caGFU
+        w0+emVElv4YY98F7qNJ9QPfC
+X-Google-Smtp-Source: APXvYqxvKHr2BJZ+0Lz1nXRHRTswPoI20Qc0waDRQOjeiUJ3hC1gi59XWnLjOKi5Ht9zfbA4J+W+WA==
+X-Received: by 2002:aa7:864a:: with SMTP id a10mr3246358pfo.233.1579870003097;
+        Fri, 24 Jan 2020 04:46:43 -0800 (PST)
+Received: from ?IPv6:2409:4072:18d:860f:a1d1:1fe2:8bbe:4ade? ([2409:4072:18d:860f:a1d1:1fe2:8bbe:4ade])
+        by smtp.gmail.com with ESMTPSA id o2sm6678718pjo.26.2020.01.24.04.46.41
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 24 Jan 2020 04:46:42 -0800 (PST)
+Date:   Fri, 24 Jan 2020 18:16:32 +0530
+User-Agent: K-9 Mail for Android
+In-Reply-To: <20200124031819.608217-1-matheus@castello.eng.br>
+References: <20200124031819.608217-1-matheus@castello.eng.br>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAPcyv4iiYtN6iGt=rVuNR=O=H9YcY1b1yWp+5TuDhu0QoVqT_A@mail.gmail.com>
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH] pinctrl actions: Fix functions groups names
+To:     Matheus Castello <matheus@castello.eng.br>, afaerber@suse.de,
+        linus.walleij@linaro.org
+CC:     linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, pn@denx.de
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Message-ID: <900334CE-3A85-443D-99EC-4DD169BBCB65@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 10-01-20 13:27:24, Dan Williams wrote:
-> On Fri, Jan 10, 2020 at 9:42 AM David Hildenbrand <david@redhat.com> wrote:
-[...]
-> > For your reference (roughly 5 months ago, so not that old)
-> >
-> > https://lkml.kernel.org/r/20190724143017.12841-1-david@redhat.com
-> 
-> Oh, now I see the problem. You need to add that lock so far away from
-> the __add_memory() to avoid lock inversion problems with the
-> acpi_scan_lock. The organization I was envisioning would not work
-> without deeper refactoring.
+Hey,
 
-Sorry to come back to this late. Has this been resolved?
++Parthi, who is the author of s700 driver=2E=20
 
--- 
-Michal Hocko
-SUSE Labs
+On 24 January 2020 8:48:19 AM IST, Matheus Castello <matheus@castello=2Een=
+g=2Ebr> wrote:
+>Group names by function do not match their respective structures and
+>documentation defined names=2E
+>
+>This fixes following errors observed on s500-based Labrador board when
+>groups names defined on documentation are used:
+>[    4=2E262778] pinctrl-s700 b01b0040=2Epinctrl: invalid group
+>"sd0_d1_mfp" for function "sd0"
+>[    4=2E271394] pinctrl-s700 b01b0040=2Epinctrl: invalid group
+>"sd0_d2_d3_mfp" for function "sd0"
+>[    4=2E280248] pinctrl-s700 b01b0040=2Epinctrl: invalid group
+>"sd1_d0_d3_mfp" for function "sd0"
+>[    4=2E289122] pinctrl-s700 b01b0040=2Epinctrl: invalid group
+>"sd0_cmd_mfp" for function "sd0"
+>
+
+Doh, I'm not sure how I missed this obvious mistake during review=2E Sorry=
+ for that=2E=20
+
+The change looks good but the commit message needs to be reworked a bit=2E=
+ It doesn't make sense to use s700 driver on s500 based board=2E Even thoug=
+h you could've modified it for s500, it should not be mentioned=2E So just =
+mention the issue=2E Also you're missing colon after pinctrl in subject=2E=
+=20
+
+Btw, are you planning to contribute s500 driver?=20
+
+Thanks,=20
+Mani
+
+>Fixes: 81c9d563cc74 (pinctrl: actions: Add Actions Semi S700 pinctrl
+>driver)
+>Signed-off-by: Matheus Castello <matheus@castello=2Eeng=2Ebr>
+>---
+> drivers/pinctrl/actions/pinctrl-s700=2Ec | 510 ++++++++++++-------------
+> 1 file changed, 255 insertions(+), 255 deletions(-)
+>
+>diff --git a/drivers/pinctrl/actions/pinctrl-s700=2Ec
+>b/drivers/pinctrl/actions/pinctrl-s700=2Ec
+>index 8b8121e35edb=2E=2E1182b38ff4dc 100644
+>--- a/drivers/pinctrl/actions/pinctrl-s700=2Ec
+>+++ b/drivers/pinctrl/actions/pinctrl-s700=2Ec
+>@@ -1125,317 +1125,317 @@ static const struct owl_pingroup
+>s700_groups[] =3D {
+> };
+>=20
+> static const char * const nor_groups[] =3D {
+>-	"lcd0_d18",
+>-	"i2s_d0",
+>-	"i2s0_pcm0",
+>-	"i2s1_pcm0",
+>-	"i2s_d1",
+>-	"ks_in2",
+>-	"ks_in1",
+>-	"ks_in0",
+>-	"ks_in3",
+>-	"ks_out0",
+>-	"ks_out1",
+>-	"ks_out2",
+>-	"lcd0_d2",
+>-	"lvds_ee_pn",
+>-	"uart2_rx_tx",
+>-	"spi0_i2c_pcm",
+>-	"lvds_e_pn",
+>-	"sd0_d0",
+>-	"sd0_d1",
+>-	"sd0_d2_d3",
+>-	"sd1_d0_d3",
+>-	"sd0_cmd",
+>-	"sd1_cmd",
+>-	"sens0_ckout",
+>-	"sen0_pclk",
+>+	"lcd0_d18_mfp",
+>+	"i2s_d0_mfp",
+>+	"i2s0_pcm0_mfp",
+>+	"i2s1_pcm0_mfp",
+>+	"i2s_d1_mfp",
+>+	"ks_in2_mfp",
+>+	"ks_in1_mfp",
+>+	"ks_in0_mfp",
+>+	"ks_in3_mfp",
+>+	"ks_out0_mfp",
+>+	"ks_out1_mfp",
+>+	"ks_out2_mfp",
+>+	"lcd0_d2_mfp",
+>+	"lvds_ee_pn_mfp",
+>+	"uart2_rx_tx_mfp",
+>+	"spi0_i2c_pcm_mfp",
+>+	"lvds_e_pn_mfp",
+>+	"sd0_d0_mfp",
+>+	"sd0_d1_mfp",
+>+	"sd0_d2_d3_mfp",
+>+	"sd1_d0_d3_mfp",
+>+	"sd0_cmd_mfp",
+>+	"sd1_cmd_mfp",
+>+	"sens0_ckout_mfp",
+>+	"sen0_pclk_mfp",
+> };
+>=20
+> static const char * const eth_rmii_groups[] =3D {
+>-	"rgmii_txd23",
+>-	"rgmii_rxd2",
+>-	"rgmii_rxd3",
+>-	"rgmii_txd01",
+>-	"rgmii_txd0",
+>-	"rgmii_txd1",
+>-	"rgmii_txen",
+>-	"rgmii_rxen",
+>-	"rgmii_rxd1",
+>-	"rgmii_rxd0",
+>-	"rgmii_ref_clk",
+>+	"rgmii_txd23_mfp",
+>+	"rgmii_rxd2_mfp",
+>+	"rgmii_rxd3_mfp",
+>+	"rgmii_txd01_mfp",
+>+	"rgmii_txd0_mfp",
+>+	"rgmii_txd1_mfp",
+>+	"rgmii_txen_mfp",
+>+	"rgmii_rxen_mfp",
+>+	"rgmii_rxd1_mfp",
+>+	"rgmii_rxd0_mfp",
+>+	"rgmii_ref_clk_mfp",
+> 	"eth_smi_dummy",
+> };
+>=20
+> static const char * const eth_smii_groups[] =3D {
+>-	"rgmii_txd0",
+>-	"rgmii_txd1",
+>-	"rgmii_rxd0",
+>-	"rgmii_rxd1",
+>-	"rgmii_ref_clk",
+>+	"rgmii_txd0_mfp",
+>+	"rgmii_txd1_mfp",
+>+	"rgmii_rxd0_mfp",
+>+	"rgmii_rxd1_mfp",
+>+	"rgmii_ref_clk_mfp",
+> 	"eth_smi_dummy",
+> };
+>=20
+> static const char * const spi0_groups[] =3D {
+>-	"dsi_dn0",
+>-	"dsi_dp2",
+>-	"dsi_dp0",
+>-	"uart2_rx_tx",
+>-	"spi0_i2c_pcm",
+>-	"dsi_dn2",
+>+	"dsi_dn0_mfp",
+>+	"dsi_dp2_mfp",
+>+	"dsi_dp0_mfp",
+>+	"uart2_rx_tx_mfp",
+>+	"spi0_i2c_pcm_mfp",
+>+	"dsi_dn2_mfp",
+> };
+>=20
+> static const char * const spi1_groups[] =3D {
+>-	"uart0_rx",
+>-	"uart0_tx",
+>+	"uart0_rx_mfp",
+>+	"uart0_tx_mfp",
+> 	"i2c0_mfp",
+> };
+>=20
+> static const char * const spi2_groups[] =3D {
+>-	"rgmii_txd01",
+>-	"rgmii_txd0",
+>-	"rgmii_txd1",
+>-	"rgmii_ref_clk",
+>-	"dnand_acle_ce0",
+>+	"rgmii_txd01_mfp",
+>+	"rgmii_txd0_mfp",
+>+	"rgmii_txd1_mfp",
+>+	"rgmii_ref_clk_mfp",
+>+	"dnand_acle_ce0_mfp",
+> };
+>=20
+> static const char * const spi3_groups[] =3D {
+>-	"rgmii_txen",
+>-	"rgmii_rxen",
+>-	"rgmii_rxd1",
+>-	"rgmii_rxd0",
+>+	"rgmii_txen_mfp",
+>+	"rgmii_rxen_mfp",
+>+	"rgmii_rxd1_mfp",
+>+	"rgmii_rxd0_mfp",
+> };
+>=20
+> static const char * const sens0_groups[] =3D {
+>-	"csi_cn_cp",
+>-	"sens0_ckout",
+>-	"csi_dn_dp",
+>-	"sen0_pclk",
+>+	"csi_cn_cp_mfp",
+>+	"sens0_ckout_mfp",
+>+	"csi_dn_dp_mfp",
+>+	"sen0_pclk_mfp",
+> };
+>=20
+> static const char * const sens1_groups[] =3D {
+>-	"lcd0_d18",
+>-	"ks_in2",
+>-	"ks_in1",
+>-	"ks_in0",
+>-	"ks_in3",
+>-	"ks_out0",
+>-	"ks_out1",
+>-	"ks_out2",
+>-	"sens0_ckout",
+>-	"pcm1_in",
+>-	"pcm1_clk",
+>-	"pcm1_sync",
+>-	"pcm1_out",
+>+	"lcd0_d18_mfp",
+>+	"ks_in2_mfp",
+>+	"ks_in1_mfp",
+>+	"ks_in0_mfp",
+>+	"ks_in3_mfp",
+>+	"ks_out0_mfp",
+>+	"ks_out1_mfp",
+>+	"ks_out2_mfp",
+>+	"sens0_ckout_mfp",
+>+	"pcm1_in_mfp",
+>+	"pcm1_clk_mfp",
+>+	"pcm1_sync_mfp",
+>+	"pcm1_out_mfp",
+> };
+>=20
+> static const char * const uart0_groups[] =3D {
+>-	"uart2_rtsb",
+>-	"uart2_ctsb",
+>-	"uart0_rx",
+>-	"uart0_tx",
+>+	"uart2_rtsb_mfp",
+>+	"uart2_ctsb_mfp",
+>+	"uart0_rx_mfp",
+>+	"uart0_tx_mfp",
+> };
+>=20
+> static const char * const uart1_groups[] =3D {
+>-	"sd0_d2_d3",
+>+	"sd0_d2_d3_mfp",
+> 	"i2c0_mfp",
+> };
+>=20
+> static const char * const uart2_groups[] =3D {
+>-	"rgmii_txen",
+>-	"rgmii_rxen",
+>-	"rgmii_rxd1",
+>-	"rgmii_rxd0",
+>-	"dsi_dn0",
+>-	"dsi_dp2",
+>-	"dsi_dp0",
+>-	"uart2_rx_tx",
+>-	"dsi_dn2",
+>-	"uart2_rtsb",
+>-	"uart2_ctsb",
+>-	"sd0_d0",
+>-	"sd0_d1",
+>-	"sd0_d2_d3",
+>-	"uart0_rx",
+>-	"uart0_tx",
+>+	"rgmii_txen_mfp",
+>+	"rgmii_rxen_mfp",
+>+	"rgmii_rxd1_mfp",
+>+	"rgmii_rxd0_mfp",
+>+	"dsi_dn0_mfp",
+>+	"dsi_dp2_mfp",
+>+	"dsi_dp0_mfp",
+>+	"uart2_rx_tx_mfp",
+>+	"dsi_dn2_mfp",
+>+	"uart2_rtsb_mfp",
+>+	"uart2_ctsb_mfp",
+>+	"sd0_d0_mfp",
+>+	"sd0_d1_mfp",
+>+	"sd0_d2_d3_mfp",
+>+	"uart0_rx_mfp",
+>+	"uart0_tx_mfp",
+> 	"i2c0_mfp",
+> 	"uart2_dummy"
+> };
+>=20
+> static const char * const uart3_groups[] =3D {
+>-	"rgmii_txd23",
+>-	"rgmii_rxd2",
+>-	"rgmii_rxd3",
+>-	"uart3_rtsb",
+>-	"uart3_ctsb",
+>+	"rgmii_txd23_mfp",
+>+	"rgmii_rxd2_mfp",
+>+	"rgmii_rxd3_mfp",
+>+	"uart3_rtsb_mfp",
+>+	"uart3_ctsb_mfp",
+> 	"uart3_dummy"
+> };
+>=20
+> static const char * const uart4_groups[] =3D {
+>-	"rgmii_txd01",
+>-	"rgmii_ref_clk",
+>-	"ks_out0",
+>-	"ks_out1",
+>+	"rgmii_txd01_mfp",
+>+	"rgmii_ref_clk_mfp",
+>+	"ks_out0_mfp",
+>+	"ks_out1_mfp",
+> };
+>=20
+> static const char * const uart5_groups[] =3D {
+>-	"rgmii_rxd1",
+>-	"rgmii_rxd0",
+>-	"ks_out0",
+>-	"ks_out2",
+>-	"uart3_rtsb",
+>-	"uart3_ctsb",
+>-	"sd0_d0",
+>-	"sd0_d1",
+>+	"rgmii_rxd1_mfp",
+>+	"rgmii_rxd0_mfp",
+>+	"ks_out0_mfp",
+>+	"ks_out2_mfp",
+>+	"uart3_rtsb_mfp",
+>+	"uart3_ctsb_mfp",
+>+	"sd0_d0_mfp",
+>+	"sd0_d1_mfp",
+> };
+>=20
+> static const char * const uart6_groups[] =3D {
+>-	"rgmii_txd0",
+>-	"rgmii_txd1",
+>+	"rgmii_txd0_mfp",
+>+	"rgmii_txd1_mfp",
+> };
+>=20
+> static const char * const i2s0_groups[] =3D {
+>-	"i2s_d0",
+>-	"i2s_pcm1",
+>-	"i2s0_pcm0",
+>+	"i2s_d0_mfp",
+>+	"i2s_pcm1_mfp",
+>+	"i2s0_pcm0_mfp",
+> };
+>=20
+> static const char * const i2s1_groups[] =3D {
+>-	"i2s1_pcm0",
+>-	"i2s_d1",
+>+	"i2s1_pcm0_mfp",
+>+	"i2s_d1_mfp",
+> 	"i2s1_dummy",
+>-	"spi0_i2c_pcm",
+>-	"uart0_rx",
+>-	"uart0_tx",
+>+	"spi0_i2c_pcm_mfp",
+>+	"uart0_rx_mfp",
+>+	"uart0_tx_mfp",
+> };
+>=20
+> static const char * const pcm1_groups[] =3D {
+>-	"i2s_pcm1",
+>-	"spi0_i2c_pcm",
+>-	"uart0_rx",
+>-	"uart0_tx",
+>-	"pcm1_in",
+>-	"pcm1_clk",
+>-	"pcm1_sync",
+>-	"pcm1_out",
+>+	"i2s_pcm1_mfp",
+>+	"spi0_i2c_pcm_mfp",
+>+	"uart0_rx_mfp",
+>+	"uart0_tx_mfp",
+>+	"pcm1_in_mfp",
+>+	"pcm1_clk_mfp",
+>+	"pcm1_sync_mfp",
+>+	"pcm1_out_mfp",
+> };
+>=20
+> static const char * const pcm0_groups[] =3D {
+>-	"i2s0_pcm0",
+>-	"i2s1_pcm0",
+>-	"uart2_rx_tx",
+>-	"spi0_i2c_pcm",
+>+	"i2s0_pcm0_mfp",
+>+	"i2s1_pcm0_mfp",
+>+	"uart2_rx_tx_mfp",
+>+	"spi0_i2c_pcm_mfp",
+> };
+>=20
+> static const char * const ks_groups[] =3D {
+>-	"ks_in2",
+>-	"ks_in1",
+>-	"ks_in0",
+>-	"ks_in3",
+>-	"ks_out0",
+>-	"ks_out1",
+>-	"ks_out2",
+>+	"ks_in2_mfp",
+>+	"ks_in1_mfp",
+>+	"ks_in0_mfp",
+>+	"ks_in3_mfp",
+>+	"ks_out0_mfp",
+>+	"ks_out1_mfp",
+>+	"ks_out2_mfp",
+> };
+>=20
+> static const char * const jtag_groups[] =3D {
+>-	"ks_in2",
+>-	"ks_in1",
+>-	"ks_in0",
+>-	"ks_in3",
+>-	"ks_out1",
+>-	"sd0_d0",
+>-	"sd0_d2_d3",
+>-	"sd0_cmd",
+>-	"sd0_clk",
+>+	"ks_in2_mfp",
+>+	"ks_in1_mfp",
+>+	"ks_in0_mfp",
+>+	"ks_in3_mfp",
+>+	"ks_out1_mfp",
+>+	"sd0_d0_mfp",
+>+	"sd0_d2_d3_mfp",
+>+	"sd0_cmd_mfp",
+>+	"sd0_clk_mfp",
+> };
+>=20
+> static const char * const pwm0_groups[] =3D {
+>-	"rgmii_rxd2",
+>-	"rgmii_txen",
+>-	"ks_in2",
+>-	"sen0_pclk",
+>+	"rgmii_rxd2_mfp",
+>+	"rgmii_txen_mfp",
+>+	"ks_in2_mfp",
+>+	"sen0_pclk_mfp",
+> };
+>=20
+> static const char * const pwm1_groups[] =3D {
+>-	"rgmii_rxen",
+>-	"ks_in1",
+>-	"ks_in3",
+>-	"sens0_ckout",
+>+	"rgmii_rxen_mfp",
+>+	"ks_in1_mfp",
+>+	"ks_in3_mfp",
+>+	"sens0_ckout_mfp",
+> };
+>=20
+> static const char * const pwm2_groups[] =3D {
+>-	"lcd0_d18",
+>-	"rgmii_rxd3",
+>-	"rgmii_rxd1",
+>-	"ks_out0",
+>-	"ks_out2",
+>+	"lcd0_d18_mfp",
+>+	"rgmii_rxd3_mfp",
+>+	"rgmii_rxd1_mfp",
+>+	"ks_out0_mfp",
+>+	"ks_out2_mfp",
+> };
+>=20
+> static const char * const pwm3_groups[] =3D {
+>-	"rgmii_rxd0",
+>-	"ks_out1",
+>-	"lcd0_d2",
+>+	"rgmii_rxd0_mfp",
+>+	"ks_out1_mfp",
+>+	"lcd0_d2_mfp",
+> };
+>=20
+> static const char * const pwm4_groups[] =3D {
+>-	"lcd0_d18",
+>-	"rgmii_txd01",
+>-	"rgmii_txd0",
+>-	"ks_in0",
+>-	"pcm1_in",
+>-	"nand_ceb3",
+>+	"lcd0_d18_mfp",
+>+	"rgmii_txd01_mfp",
+>+	"rgmii_txd0_mfp",
+>+	"ks_in0_mfp",
+>+	"pcm1_in_mfp",
+>+	"nand_ceb3_mfp",
+> };
+>=20
+> static const char * const pwm5_groups[] =3D {
+>-	"rgmii_txd1",
+>-	"ks_in1",
+>-	"pcm1_clk",
+>-	"nand_ceb2",
+>+	"rgmii_txd1_mfp",
+>+	"ks_in1_mfp",
+>+	"pcm1_clk_mfp",
+>+	"nand_ceb2_mfp",
+> };
+>=20
+> static const char * const p0_groups[] =3D {
+>-	"ks_in2",
+>-	"ks_in0",
+>+	"ks_in2_mfp",
+>+	"ks_in0_mfp",
+> };
+>=20
+> static const char * const sd0_groups[] =3D {
+>-	"ks_out0",
+>-	"ks_out1",
+>-	"ks_out2",
+>-	"lcd0_d2",
+>-	"dsi_dp3",
+>-	"dsi_dp0",
+>-	"sd0_d0",
+>-	"sd0_d1",
+>-	"sd0_d2_d3",
+>-	"sd1_d0_d3",
+>-	"sd0_cmd",
+>-	"sd0_clk",
+>+	"ks_out0_mfp",
+>+	"ks_out1_mfp",
+>+	"ks_out2_mfp",
+>+	"lcd0_d2_mfp",
+>+	"dsi_dp3_mfp",
+>+	"dsi_dp0_mfp",
+>+	"sd0_d0_mfp",
+>+	"sd0_d1_mfp",
+>+	"sd0_d2_d3_mfp",
+>+	"sd1_d0_d3_mfp",
+>+	"sd0_cmd_mfp",
+>+	"sd0_clk_mfp",
+> };
+>=20
+> static const char * const sd1_groups[] =3D {
+>-	"dsi_dp2",
+>-	"mfp1_16_14",
+>-	"lcd0_d2",
+>-	"mfp1_16_14_d17",
+>-	"dsi_dp3",
+>-	"dsi_dn3",
+>-	"dsi_dnp1_cp_d2",
+>-	"dsi_dnp1_cp_d17",
+>-	"dsi_dn2",
+>-	"sd1_d0_d3",
+>-	"sd1_cmd",
+>+	"dsi_dp2_mfp",
+>+	"mfp1_16_14_mfp",
+>+	"lcd0_d2_mfp",
+>+	"mfp1_16_14_d17_mfp",
+>+	"dsi_dp3_mfp",
+>+	"dsi_dn3_mfp",
+>+	"dsi_dnp1_cp_d2_mfp",
+>+	"dsi_dnp1_cp_d17_mfp",
+>+	"dsi_dn2_mfp",
+>+	"sd1_d0_d3_mfp",
+>+	"sd1_cmd_mfp",
+> 	"sd1_dummy",
+> };
+>=20
+> static const char * const sd2_groups[] =3D {
+>-	"dnand_data_wr",
+>+	"dnand_data_wr_mfp",
+> };
+>=20
+> static const char * const i2c0_groups[] =3D {
+>-	"uart0_rx",
+>-	"uart0_tx",
+>-	"i2c0_mfp",
+>+	"uart0_rx_mfp",
+>+	"uart0_tx_mfp",
+>+	"i2c0_mfp_mfp",
+> };
+>=20
+> static const char * const i2c1_groups[] =3D {
+>@@ -1448,85 +1448,85 @@ static const char * const i2c2_groups[] =3D {
+> };
+>=20
+> static const char * const i2c3_groups[] =3D {
+>-	"uart2_rx_tx",
+>-	"pcm1_sync",
+>-	"pcm1_out",
+>+	"uart2_rx_tx_mfp",
+>+	"pcm1_sync_mfp",
+>+	"pcm1_out_mfp",
+> };
+>=20
+> static const char * const lvds_groups[] =3D {
+>-	"lvds_o_pn",
+>-	"lvds_ee_pn",
+>-	"lvds_e_pn",
+>+	"lvds_o_pn_mfp",
+>+	"lvds_ee_pn_mfp",
+>+	"lvds_e_pn_mfp",
+> };
+>=20
+> static const char * const bt_groups[] =3D {
+>-	"i2s_pcm1",
+>-	"i2s0_pcm0",
+>-	"i2s1_pcm0",
+>-	"ks_in2",
+>-	"ks_in1",
+>-	"ks_in0",
+>-	"ks_in3",
+>-	"ks_out0",
+>-	"ks_out1",
+>-	"ks_out2",
+>-	"lvds_o_pn",
+>-	"lvds_ee_pn",
+>-	"pcm1_in",
+>-	"pcm1_clk",
+>-	"pcm1_sync",
+>-	"pcm1_out",
+>+	"i2s_pcm1_mfp",
+>+	"i2s0_pcm0_mfp",
+>+	"i2s1_pcm0_mfp",
+>+	"ks_in2_mfp",
+>+	"ks_in1_mfp",
+>+	"ks_in0_mfp",
+>+	"ks_in3_mfp",
+>+	"ks_out0_mfp",
+>+	"ks_out1_mfp",
+>+	"ks_out2_mfp",
+>+	"lvds_o_pn_mfp",
+>+	"lvds_ee_pn_mfp",
+>+	"pcm1_in_mfp",
+>+	"pcm1_clk_mfp",
+>+	"pcm1_sync_mfp",
+>+	"pcm1_out_mfp",
+> };
+>=20
+> static const char * const lcd0_groups[] =3D {
+>-	"lcd0_d18",
+>-	"lcd0_d2",
+>-	"mfp1_16_14_d17",
+>-	"lvds_o_pn",
+>-	"dsi_dp3",
+>-	"dsi_dn3",
+>-	"lvds_ee_pn",
+>-	"dsi_dnp1_cp_d2",
+>-	"dsi_dnp1_cp_d17",
+>-	"lvds_e_pn",
+>+	"lcd0_d18_mfp",
+>+	"lcd0_d2_mfp",
+>+	"mfp1_16_14_d17_mfp",
+>+	"lvds_o_pn_mfp",
+>+	"dsi_dp3_mfp",
+>+	"dsi_dn3_mfp",
+>+	"lvds_ee_pn_mfp",
+>+	"dsi_dnp1_cp_d2_mfp",
+>+	"dsi_dnp1_cp_d17_mfp",
+>+	"lvds_e_pn_mfp",
+> };
+>=20
+>=20
+> static const char * const usb30_groups[] =3D {
+>-	"ks_in1",
+>+	"ks_in1_mfp",
+> };
+>=20
+> static const char * const clko_25m_groups[] =3D {
+>-	"clko_25m",
+>+	"clko_25m_mfp",
+> };
+>=20
+> static const char * const mipi_csi_groups[] =3D {
+>-	"csi_cn_cp",
+>-	"csi_dn_dp",
+>+	"csi_cn_cp_mfp",
+>+	"csi_dn_dp_mfp",
+> };
+>=20
+> static const char * const dsi_groups[] =3D {
+>-	"dsi_dn0",
+>-	"dsi_dp2",
+>-	"dsi_dp3",
+>-	"dsi_dn3",
+>-	"dsi_dp0",
+>-	"dsi_dnp1_cp_d2",
+>-	"dsi_dnp1_cp_d17",
+>-	"dsi_dn2",
+>+	"dsi_dn0_mfp",
+>+	"dsi_dp2_mfp",
+>+	"dsi_dp3_mfp",
+>+	"dsi_dn3_mfp",
+>+	"dsi_dp0_mfp",
+>+	"dsi_dnp1_cp_d2_mfp",
+>+	"dsi_dnp1_cp_d17_mfp",
+>+	"dsi_dn2_mfp",
+> 	"dsi_dummy",
+> };
+>=20
+> static const char * const nand_groups[] =3D {
+>-	"dnand_data_wr",
+>-	"dnand_acle_ce0",
+>-	"nand_ceb2",
+>-	"nand_ceb3",
+>+	"dnand_data_wr_mfp",
+>+	"dnand_acle_ce0_mfp",
+>+	"nand_ceb2_mfp",
+>+	"nand_ceb3_mfp",
+> 	"nand_dummy",
+> };
+>=20
+> static const char * const spdif_groups[] =3D {
+>-	"uart0_tx",
+>+	"uart0_tx_mfp",
+> };
+>=20
+> static const char * const sirq0_groups[] =3D {
+
+--=20
+Sent from my Android device with K-9 Mail=2E Please excuse my brevity=2E
