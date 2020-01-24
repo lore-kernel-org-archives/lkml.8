@@ -2,77 +2,93 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6327C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:36:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ECE2C35242
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:36:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8006206F0
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:36:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA9D6206F0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:36:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579876618;
+	bh=KhVlt+qljKi5E9ciLNaFzqJlnZU1bRRfabfVh+WYVA0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=mfsAJuE7e/yWeKQhmI9ZIaB+m2QHsCXRu6bpSazkv73rUk1/Clfhwa9Lg0hroZEwq
+	 HnOXqpH1jfWs3CDVS5GF1ksr7/6iUI9ctr7Yd2kUERZ/nquRnj2+NeMacCKjltCwam
+	 dwRfEnY9j0xffm9g+SRkVDmJqTYuXmXbWSbirh9s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731652AbgAXOgw (ORCPT
+        id S2403979AbgAXOTJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 09:36:52 -0500
-Received: from 8bytes.org ([81.169.241.247]:60812 "EHLO theia.8bytes.org"
+        Fri, 24 Jan 2020 09:19:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39072 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731450AbgAXOgu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 09:36:50 -0500
-Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id 97D33A52; Fri, 24 Jan 2020 15:36:49 +0100 (CET)
-Date:   Fri, 24 Jan 2020 15:36:48 +0100
-From:   Joerg Roedel <joro@8bytes.org>
-To:     Lu Baolu <baolu.lu@linux.intel.com>
-Cc:     ashok.raj@intel.com, jacob.jun.pan@intel.com, kevin.tian@intel.com,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/1] iommu/vt-d: Remove unnecessary WARN_ON_ONCE()
-Message-ID: <20200124143648.GC27081@8bytes.org>
-References: <20200116015236.4458-1-baolu.lu@linux.intel.com>
- <20200117095953.GB15760@8bytes.org>
- <b56e8a8f-acd7-b318-5a1c-f32c5a07657f@linux.intel.com>
+        id S2403846AbgAXOTB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 09:19:01 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2AE1222527;
+        Fri, 24 Jan 2020 14:19:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579875540;
+        bh=KhVlt+qljKi5E9ciLNaFzqJlnZU1bRRfabfVh+WYVA0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=1bIThUOE17ixH+9TFK8+PaswlkjY3c3oY7Ktmi3ZP/R/kLdUiVptT5m6MZqm8XB0i
+         Sp1mEwITMNEM2yG1LoLonTta7R+XwVyLKHLEm7QiNW1X+ToyxwbomJ9a7+4KKowsCm
+         VOrMHJ1Bkw78KqDrkAtPRxm3BKUWPK+PpeaMHhk8=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Philipp Rudo <prudo@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 037/107] s390/setup: Fix secure ipl message
+Date:   Fri, 24 Jan 2020 09:17:07 -0500
+Message-Id: <20200124141817.28793-37-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200124141817.28793-1-sashal@kernel.org>
+References: <20200124141817.28793-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b56e8a8f-acd7-b318-5a1c-f32c5a07657f@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jan 18, 2020 at 10:14:11AM +0800, Lu Baolu wrote:
-> Hi Joerg,
-> 
-> On 1/17/20 5:59 PM, Joerg Roedel wrote:
-> > On Thu, Jan 16, 2020 at 09:52:36AM +0800, Lu Baolu wrote:
-> > > Address field in device TLB invalidation descriptor is qualified
-> > > by the S field. If S field is zero, a single page at page address
-> > > specified by address [63:12] is requested to be invalidated. If S
-> > > field is set, the least significant bit in the address field with
-> > > value 0b (say bit N) indicates the invalidation address range. The
-> > > spec doesn't require the address [N - 1, 0] to be cleared, hence
-> > > remove the unnecessary WARN_ON_ONCE().
-> > > 
-> > > Otherwise, the caller might set "mask = MAX_AGAW_PFN_WIDTH" in order
-> > > to invalidating all the cached mappings on an endpoint, and below
-> > > overflow error will be triggered.
-> > > 
-> > > [...]
-> > > UBSAN: Undefined behaviour in drivers/iommu/dmar.c:1354:3
-> > > shift exponent 64 is too large for 64-bit type 'long long unsigned int'
-> > > [...]
-> > > 
-> > > Reported-and-tested-by: Frank <fgndev@posteo.de>
-> > > Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
-> > 
-> > Does this need a Fixes and/or stable tag?
-> > 
-> 
-> This doesn't cause any errors, just an unnecessary checking of
-> 
-> 	"0 & ((1UL << 64) - 1)"
-> 
-> in some cases.
+From: Philipp Rudo <prudo@linux.ibm.com>
 
-Okay, applied for v5.6.
+[ Upstream commit 40260b01d029ba374637838213af500e03305326 ]
+
+The new machine loader on z15 always creates an IPL Report block and
+thus sets the IPL_PL_FLAG_IPLSR even when secure boot is disabled. This
+causes the wrong message being printed at boot. Fix this by checking for
+IPL_PL_FLAG_SIPL instead.
+
+Fixes: 9641b8cc733f ("s390/ipl: read IPL report at early boot")
+Signed-off-by: Philipp Rudo <prudo@linux.ibm.com>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/s390/kernel/setup.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/s390/kernel/setup.c b/arch/s390/kernel/setup.c
+index 3ff291bc63b7e..b95e6fa34cc8e 100644
+--- a/arch/s390/kernel/setup.c
++++ b/arch/s390/kernel/setup.c
+@@ -1059,7 +1059,7 @@ static void __init log_component_list(void)
+ 
+ 	if (!early_ipl_comp_list_addr)
+ 		return;
+-	if (ipl_block.hdr.flags & IPL_PL_FLAG_IPLSR)
++	if (ipl_block.hdr.flags & IPL_PL_FLAG_SIPL)
+ 		pr_info("Linux is running with Secure-IPL enabled\n");
+ 	else
+ 		pr_info("Linux is running with Secure-IPL disabled\n");
+-- 
+2.20.1
+
