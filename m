@@ -4,51 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C87DC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:00:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17CEEC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:00:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 307B222464
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:00:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E446F21569
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:00:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579863651;
-	bh=1NsGV94png0klvDL1K/LNL6Q3FdShQSloHuWw/2IpDg=;
+	s=default; t=1579863654;
+	bh=6HX389w+zaGxa+DOkr+u/dZGFBBCxrUEvz+08VDcb3w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=n28+nhOWjjg34dyqP/7UuDQ7STcV7im+ra8598uasd9mbYHzQ3B5mpN6QSdMBR63c
-	 0JVvH2Rz418Jut9LLjB1AIiFrIh948JvT+7nKgSYtImNyrZIXHmUehZnjBcVKuwjlQ
-	 fU0tfiCXROmZBnlMzuZSe4vsQig7xdG2sN+btdXU=
+	b=fgTSjPCgWbG9FHQC749Iax86XYWHYyvb73d31xVs+5mkyzl8RCmJrmbQJZXRNh001
+	 oonEGNsva6zW6TdhD5EgbgjorOsNu2BtMFMVdajP+rSo6XT5DdVT3Eh7Awa9wR0sXd
+	 jRhegKkyfV1M97IHtSDqECtMHeFdNGsqrOOuGltQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387419AbgAXLAu (ORCPT
+        id S2387442AbgAXLAx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:00:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60910 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 06:00:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:32854 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733286AbgAXLAq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:00:46 -0500
+        id S2387408AbgAXLAu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:00:50 -0500
 Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 799612071A;
-        Fri, 24 Jan 2020 11:00:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2A97E222C2;
+        Fri, 24 Jan 2020 11:00:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579863646;
-        bh=1NsGV94png0klvDL1K/LNL6Q3FdShQSloHuWw/2IpDg=;
+        s=default; t=1579863649;
+        bh=6HX389w+zaGxa+DOkr+u/dZGFBBCxrUEvz+08VDcb3w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=t94HsM/r2o7bPJ7uhNt5VQz69UXz58xEXVn+L7FYITCHil0l60CK8fu46n1sCq6MZ
-         DyW5PrGBdjR1QiYpJWIgpxz+p4HyXh9d1rUF+9c4d1e9p3EqBGEn/gPtB8w8x3ngCr
-         U74upd/ExZLtuYXo5lkXZFuoT5fn3Ve8xbqv/NHk=
+        b=Wzvg3cH0YQIM1uqgGOt+4SpI4bRdR8PvfHKefARYJqVDL2dOmjkZ4WPB7EJu6dfGs
+         N2WmNsUE1m4AqAAVYV6e+b/1unooVizgB1w3AdIihgMZ2V4c+xYX31+3kf5/aTScSP
+         WksPiUKs5eX5vqNuhYCiiIFRRu75h3925k7pXMX4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Leon Romanovsky <leonro@mellanox.com>,
-        Zhu Yanjun <yanjun.zhu@oracle.com>,
+        stable@vger.kernel.org,
+        Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        "Michael J. Ruhl" <michael.j.ruhl@intel.com>,
+        Alex Estrin <alex.estrin@intel.com>,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>,
         Jason Gunthorpe <jgg@mellanox.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 036/639] IB/rxe: replace kvfree with vfree
-Date:   Fri, 24 Jan 2020 10:23:26 +0100
-Message-Id: <20200124093051.966032768@linuxfoundation.org>
+Subject: [PATCH 4.19 037/639] IB/hfi1: Add mtu check for operational data VLs
+Date:   Fri, 24 Jan 2020 10:23:27 +0100
+Message-Id: <20200124093052.093027878@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
 References: <20200124093047.008739095@linuxfoundation.org>
@@ -61,74 +64,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhu Yanjun <yanjun.zhu@oracle.com>
+From: Alex Estrin <alex.estrin@intel.com>
 
-[ Upstream commit 721ad7e643f7002efa398838693f90284ea216d1 ]
+[ Upstream commit eb50130964e8c1379f37c3d3bab33a411ec62e98 ]
 
-The buf is allocated by vmalloc_user in the function rxe_queue_init.
-So it is better to free it by vfree.
+Since Virtual Lanes BCT credits and MTU are set through separate MADs, we
+have to ensure both are valid, and data VLs are ready for transmission
+before we allow port transition to Armed state.
 
-Fixes: 8700e3e7c485 ("Soft RoCE driver")
-Reviewed-by: Leon Romanovsky <leonro@mellanox.com>
-Signed-off-by: Zhu Yanjun <yanjun.zhu@oracle.com>
+Fixes: 5e2d6764a729 ("IB/hfi1: Verify port data VLs credits on transition to Armed")
+Reviewed-by: Mike Marciniszyn <mike.marciniszyn@intel.com>
+Reviewed-by: Michael J. Ruhl <michael.j.ruhl@intel.com>
+Signed-off-by: Alex Estrin <alex.estrin@intel.com>
+Signed-off-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
 Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/sw/rxe/rxe_cq.c | 4 ++--
- drivers/infiniband/sw/rxe/rxe_qp.c | 5 +++--
- 2 files changed, 5 insertions(+), 4 deletions(-)
+ drivers/infiniband/hw/hfi1/chip.c | 26 ++++++++++++++++++++++----
+ 1 file changed, 22 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/infiniband/sw/rxe/rxe_cq.c b/drivers/infiniband/sw/rxe/rxe_cq.c
-index 2ee4b08b00ea4..a57276f2cb849 100644
---- a/drivers/infiniband/sw/rxe/rxe_cq.c
-+++ b/drivers/infiniband/sw/rxe/rxe_cq.c
-@@ -30,7 +30,7 @@
-  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-  * SOFTWARE.
+diff --git a/drivers/infiniband/hw/hfi1/chip.c b/drivers/infiniband/hw/hfi1/chip.c
+index 6b89353611333..b09a4b1cf397b 100644
+--- a/drivers/infiniband/hw/hfi1/chip.c
++++ b/drivers/infiniband/hw/hfi1/chip.c
+@@ -10580,12 +10580,29 @@ void set_link_down_reason(struct hfi1_pportdata *ppd, u8 lcl_reason,
+ 	}
+ }
+ 
+-/*
+- * Verify if BCT for data VLs is non-zero.
++/**
++ * data_vls_operational() - Verify if data VL BCT credits and MTU
++ *			    are both set.
++ * @ppd: pointer to hfi1_pportdata structure
++ *
++ * Return: true - Ok, false -otherwise.
   */
--
-+#include <linux/vmalloc.h>
- #include "rxe.h"
- #include "rxe_loc.h"
- #include "rxe_queue.h"
-@@ -97,7 +97,7 @@ int rxe_cq_from_init(struct rxe_dev *rxe, struct rxe_cq *cq, int cqe,
- 	err = do_mmap_info(rxe, uresp ? &uresp->mi : NULL, context,
- 			   cq->queue->buf, cq->queue->buf_size, &cq->queue->ip);
- 	if (err) {
--		kvfree(cq->queue->buf);
-+		vfree(cq->queue->buf);
- 		kfree(cq->queue);
- 		return err;
- 	}
-diff --git a/drivers/infiniband/sw/rxe/rxe_qp.c b/drivers/infiniband/sw/rxe/rxe_qp.c
-index c58452daffc74..230697fa31fe3 100644
---- a/drivers/infiniband/sw/rxe/rxe_qp.c
-+++ b/drivers/infiniband/sw/rxe/rxe_qp.c
-@@ -34,6 +34,7 @@
- #include <linux/skbuff.h>
- #include <linux/delay.h>
- #include <linux/sched.h>
-+#include <linux/vmalloc.h>
+ static inline bool data_vls_operational(struct hfi1_pportdata *ppd)
+ {
+-	return !!ppd->actual_vls_operational;
++	int i;
++	u64 reg;
++
++	if (!ppd->actual_vls_operational)
++		return false;
++
++	for (i = 0; i < ppd->vls_supported; i++) {
++		reg = read_csr(ppd->dd, SEND_CM_CREDIT_VL + (8 * i));
++		if ((reg && !ppd->dd->vld[i].mtu) ||
++		    (!reg && ppd->dd->vld[i].mtu))
++			return false;
++	}
++
++	return true;
+ }
  
- #include "rxe.h"
- #include "rxe_loc.h"
-@@ -247,7 +248,7 @@ static int rxe_qp_init_req(struct rxe_dev *rxe, struct rxe_qp *qp,
- 			   &qp->sq.queue->ip);
+ /*
+@@ -10698,7 +10715,8 @@ int set_link_state(struct hfi1_pportdata *ppd, u32 state)
  
- 	if (err) {
--		kvfree(qp->sq.queue->buf);
-+		vfree(qp->sq.queue->buf);
- 		kfree(qp->sq.queue);
- 		return err;
- 	}
-@@ -300,7 +301,7 @@ static int rxe_qp_init_resp(struct rxe_dev *rxe, struct rxe_qp *qp,
- 				   qp->rq.queue->buf, qp->rq.queue->buf_size,
- 				   &qp->rq.queue->ip);
- 		if (err) {
--			kvfree(qp->rq.queue->buf);
-+			vfree(qp->rq.queue->buf);
- 			kfree(qp->rq.queue);
- 			return err;
+ 		if (!data_vls_operational(ppd)) {
+ 			dd_dev_err(dd,
+-				   "%s: data VLs not operational\n", __func__);
++				   "%s: Invalid data VL credits or mtu\n",
++				   __func__);
+ 			ret = -EINVAL;
+ 			break;
  		}
 -- 
 2.20.1
