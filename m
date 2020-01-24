@@ -7,50 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66E33C35243
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:57:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34503C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:57:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 368F620709
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:57:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 099C420718
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:57:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579859859;
-	bh=UcGNx/ribASwYB5bYwww9OPS0GEK816IiSrkyUveH4I=;
+	s=default; t=1579859865;
+	bh=FLsSmy8aj9kyOmnlK/xkvNKXJ/BILEAK1z+OCQnMgZg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Wn1Sm1M5RBDrRRl3ciaOmc45fPtz1/hhi9r+2UT06ZLLWzhJc99HNziO95vKcnEEU
-	 CJl8ytxOQoUEHyffYY2xlKk+HFwODEyxRaG8C+/zfTTpzL2/7hicGvy3Iyv9E2kop2
-	 hw2xRxqNAB0faXAVcTIIkFldOEp0l+KjkjS7kF/g=
+	b=RtVvQy0wHlJFGgSgn6m4wJybIQfen4l3APm8tKv53zb1sbj5oz4f2riWOd9lqouEZ
+	 0+uRxNMlYI8j/73Rs7OhkLPhBGvW/2eIyd1IdjuRoJw72ewJeDdDi4DsptUutK1oTF
+	 Yj3HoHvKlv6VYgt85A9FOOb14XVAT5TL+VF4PBXk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388619AbgAXJ5i (ORCPT
+        id S2388517AbgAXJ5n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 04:57:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33186 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 04:57:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33302 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729990AbgAXJ5h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 04:57:37 -0500
+        id S1729990AbgAXJ5l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 04:57:41 -0500
 Received: from localhost (unknown [145.15.244.15])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 06E4720709;
-        Fri, 24 Jan 2020 09:57:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8EA0920709;
+        Fri, 24 Jan 2020 09:57:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579859856;
-        bh=UcGNx/ribASwYB5bYwww9OPS0GEK816IiSrkyUveH4I=;
+        s=default; t=1579859860;
+        bh=FLsSmy8aj9kyOmnlK/xkvNKXJ/BILEAK1z+OCQnMgZg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=btjF0CPnrPlQ7/NwsAiphbo1YABFsYjAJLI6AVEKVTSS+YjqImOD7eOwXU1n8Cduy
-         nMAejxnXFnBvsS0m7WuR05FkLMDzDIPF8aK8qW7hvS3xWGqGw707tz+lUBWLPFt+d3
-         sLc5HEcbkG6PVNDYq8gOIqhwCxLJOY3U+wdxMy0Y=
+        b=B5Ptv9ujZwOCB1Ivy0QPbaTgrtPK92Nsll6LK7gyL6e7JYMblmR9DmWYJekVIKYQ5
+         IbMQFbof2PK9geZOhB9explzpd0EESrEmZlEsyOKfvdCI46bF82IoLwbaiZM07CxRd
+         0YXRV8wiBKMeKvPNq9ou0bkwVK+goC1Qyc3g5s10=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Robert Richter <rrichter@marvell.com>,
-        Borislav Petkov <bp@suse.de>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        James Morse <james.morse@arm.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        stable@vger.kernel.org, YueHaibing <yuehaibing@huawei.com>,
+        Guillaume Nault <gnault@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 210/343] EDAC/mc: Fix edac_mc_find() in case no device is found
-Date:   Fri, 24 Jan 2020 10:30:28 +0100
-Message-Id: <20200124092947.711378247@linuxfoundation.org>
+Subject: [PATCH 4.14 198/343] l2tp: Fix possible NULL pointer dereference
+Date:   Fri, 24 Jan 2020 10:30:16 +0100
+Message-Id: <20200124092946.026169208@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124092919.490687572@linuxfoundation.org>
 References: <20200124092919.490687572@linuxfoundation.org>
@@ -63,63 +61,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Robert Richter <rrichter@marvell.com>
+From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit 29a0c843973bc385918158c6976e4dbe891df969 ]
+[ Upstream commit 638a3a1e349ddf5b82f222ff5cb3b4f266e7c278 ]
 
-The function should return NULL in case no device is found, but it
-always returns the last checked mc device from the list even if the
-index did not match. Fix that.
+BUG: unable to handle kernel NULL pointer dereference at 0000000000000128
+PGD 0 P4D 0
+Oops: 0000 [#1
+CPU: 0 PID: 5697 Comm: modprobe Tainted: G        W         5.1.0-rc7+ #1
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.9.3-0-ge2fc41e-prebuilt.qemu-project.org 04/01/2014
+RIP: 0010:__lock_acquire+0x53/0x10b0
+Code: 8b 1c 25 40 5e 01 00 4c 8b 6d 10 45 85 e4 0f 84 bd 06 00 00 44 8b 1d 7c d2 09 02 49 89 fe 41 89 d2 45 85 db 0f 84 47 02 00 00 <48> 81 3f a0 05 70 83 b8 00 00 00 00 44 0f 44 c0 83 fe 01 0f 86 3a
+RSP: 0018:ffffc90001c07a28 EFLAGS: 00010002
+RAX: 0000000000000000 RBX: ffff88822f038440 RCX: 0000000000000000
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000128
+RBP: ffffc90001c07a88 R08: 0000000000000001 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000001 R12: 0000000000000001
+R13: 0000000000000000 R14: 0000000000000128 R15: 0000000000000000
+FS:  00007fead0811540(0000) GS:ffff888237a00000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000000000128 CR3: 00000002310da000 CR4: 00000000000006f0
+Call Trace:
+ ? __lock_acquire+0x24e/0x10b0
+ lock_acquire+0xdf/0x230
+ ? flush_workqueue+0x71/0x530
+ flush_workqueue+0x97/0x530
+ ? flush_workqueue+0x71/0x530
+ l2tp_exit_net+0x170/0x2b0 [l2tp_core
+ ? l2tp_exit_net+0x93/0x2b0 [l2tp_core
+ ops_exit_list.isra.6+0x36/0x60
+ unregister_pernet_operations+0xb8/0x110
+ unregister_pernet_device+0x25/0x40
+ l2tp_init+0x55/0x1000 [l2tp_core
+ ? 0xffffffffa018d000
+ do_one_initcall+0x6c/0x3cc
+ ? do_init_module+0x22/0x1f1
+ ? rcu_read_lock_sched_held+0x97/0xb0
+ ? kmem_cache_alloc_trace+0x325/0x3b0
+ do_init_module+0x5b/0x1f1
+ load_module+0x1db1/0x2690
+ ? m_show+0x1d0/0x1d0
+ __do_sys_finit_module+0xc5/0xd0
+ __x64_sys_finit_module+0x15/0x20
+ do_syscall_64+0x6b/0x1d0
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x7fead031a839
+Code: 00 f3 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d 1f f6 2c 00 f7 d8 64 89 01 48
+RSP: 002b:00007ffe8d9acca8 EFLAGS: 00000246 ORIG_RAX: 0000000000000139
+RAX: ffffffffffffffda RBX: 0000560078398b80 RCX: 00007fead031a839
+RDX: 0000000000000000 RSI: 000056007659dc2e RDI: 0000000000000003
+RBP: 000056007659dc2e R08: 0000000000000000 R09: 0000560078398b80
+R10: 0000000000000003 R11: 0000000000000246 R12: 0000000000000000
+R13: 00005600783a04a0 R14: 0000000000040000 R15: 0000560078398b80
+Modules linked in: l2tp_core(+) e1000 ip_tables ipv6 [last unloaded: l2tp_core
+CR2: 0000000000000128
+---[ end trace 8322b2b8bf83f8e1
 
-I did some analysis why this did not raise any issues for about 3 years
-and the reason is that edac_mc_find() is mostly used to search for
-existing devices. Thus, the bug is not triggered.
+If alloc_workqueue fails in l2tp_init, l2tp_net_ops
+is unregistered on failure path. Then l2tp_exit_net
+is called which will flush NULL workqueue, this patch
+add a NULL check to fix it.
 
- [ bp: Drop the if (mci->mc_idx > idx) test in favor of readability. ]
-
-Fixes: c73e8833bec5 ("EDAC, mc: Fix locking around mc_devices list")
-Signed-off-by: Robert Richter <rrichter@marvell.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>
-Cc: James Morse <james.morse@arm.com>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
-Link: https://lkml.kernel.org/r/20190514104838.15065-1-rrichter@marvell.com
+Fixes: 67e04c29ec0d ("l2tp: unregister l2tp_net_ops on failure path")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Acked-by: Guillaume Nault <gnault@redhat.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/edac/edac_mc.c | 12 ++++--------
- 1 file changed, 4 insertions(+), 8 deletions(-)
+ net/l2tp/l2tp_core.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/edac/edac_mc.c b/drivers/edac/edac_mc.c
-index f7fa05fee45a1..329021189c38b 100644
---- a/drivers/edac/edac_mc.c
-+++ b/drivers/edac/edac_mc.c
-@@ -680,22 +680,18 @@ static int del_mc_from_global_list(struct mem_ctl_info *mci)
- 
- struct mem_ctl_info *edac_mc_find(int idx)
- {
--	struct mem_ctl_info *mci = NULL;
-+	struct mem_ctl_info *mci;
- 	struct list_head *item;
- 
- 	mutex_lock(&mem_ctls_mutex);
- 
- 	list_for_each(item, &mc_devices) {
- 		mci = list_entry(item, struct mem_ctl_info, link);
--
--		if (mci->mc_idx >= idx) {
--			if (mci->mc_idx == idx) {
--				goto unlock;
--			}
--			break;
--		}
-+		if (mci->mc_idx == idx)
-+			goto unlock;
+diff --git a/net/l2tp/l2tp_core.c b/net/l2tp/l2tp_core.c
+index e494f04819e9c..b9be0360ab94b 100644
+--- a/net/l2tp/l2tp_core.c
++++ b/net/l2tp/l2tp_core.c
+@@ -1892,7 +1892,8 @@ static __net_exit void l2tp_exit_net(struct net *net)
  	}
+ 	rcu_read_unlock_bh();
  
-+	mci = NULL;
- unlock:
- 	mutex_unlock(&mem_ctls_mutex);
- 	return mci;
+-	flush_workqueue(l2tp_wq);
++	if (l2tp_wq)
++		flush_workqueue(l2tp_wq);
+ 	rcu_barrier();
+ }
+ 
 -- 
 2.20.1
 
