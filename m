@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA064C32771
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:34:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37B34C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:34:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A881624658
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:34:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C3B021734
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:34:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579865653;
-	bh=DDgwxmpgZHqtYN9cYku5TJUbMJs+80MNzlI7cbgWTS8=;
+	s=default; t=1579865658;
+	bh=vx3U5QbwduGQBLYprsebiLulcwS7MfYAnyCq0tDxRY0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=J0ea9yD9xWxS90Bla9+kQBqrA9TrpmAjKrFUGWJ80hVNPoILq/gOaLOj8pWZ2si1f
-	 B9L7EIxmTyU/220XCQIhEnSGuSVk3L7Z9K1ok7g5uS1pZJ3hrWk+z9NmMtrWMHtzY7
-	 YOTXoEmfEkwyfQgr1WdDxPKWQz+C655ONZdiYQ98=
+	b=BCS+6XuAcFtNjG88u6fVnPJKR8l4a3lor/xVtelvQPKv7WmUXlMStNHqxD8kHRWHQ
+	 LO+ZVvmUuMHGvr7ikr5bzvNp5nNb7cDI7kSUpxVT4+7UtykZ6ZN0e9cWE1i+A4kbix
+	 aeNr4YX/bJXwinpCK3yUEgTmyhgaSd6jUQLS3r8Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404211AbgAXLeN (ORCPT
+        id S2404483AbgAXLeQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:34:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53996 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 06:34:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54090 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404691AbgAXLeJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:34:09 -0500
+        id S2404691AbgAXLeN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:34:13 -0500
 Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A2C9E20704;
-        Fri, 24 Jan 2020 11:34:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 80A1D20838;
+        Fri, 24 Jan 2020 11:34:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579865649;
-        bh=DDgwxmpgZHqtYN9cYku5TJUbMJs+80MNzlI7cbgWTS8=;
+        s=default; t=1579865653;
+        bh=vx3U5QbwduGQBLYprsebiLulcwS7MfYAnyCq0tDxRY0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NqUcaO4uw17EcimLoDuPT7roEnXrT280GsI2m5mEiANM3gwdI62kD/KR2wqSQVEE2
-         LkR6p5WXAg8+ACTtSZ3PAoXTTERqkGbRJXgxbo8pqJs1DOO1iRDxEtZf8laxmpcOD2
-         f+JFuGFrYOWbG7c7uEozE0cn2bV8ADwwXf9R093M=
+        b=GYMG+z35G82t9qbp6Azv35F9c3wxjLxwQUfW4U8mYiUA2tB+TohMe6u4umm/3jSPR
+         WSYkhQ8gZlTyWGYJBEtx4kiEtN0sxX7qMQhnVQQa1O7jlb/TJ/NA9WJJJLyuCQ3FW9
+         Fpgm/tf7HV34fot01rHAp4Vl6g9k9gkwt8fs9Kvg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Igor Russkikh <igor.russkikh@aquantia.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 583/639] net: nixge: Fix a signedness bug in nixge_probe()
-Date:   Fri, 24 Jan 2020 10:32:33 +0100
-Message-Id: <20200124093202.505897670@linuxfoundation.org>
+Subject: [PATCH 4.19 574/639] net: aquantia: Fix aq_vec_isr_legacy() return value
+Date:   Fri, 24 Jan 2020 10:32:24 +0100
+Message-Id: <20200124093201.334609891@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
 References: <20200124093047.008739095@linuxfoundation.org>
@@ -62,32 +63,63 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit 1a4b62a0b8a3b81eca24366f63e214a7144b9f02 ]
+[ Upstream commit 31aefe14bc9f56566041303d733fda511d3a1c3e ]
 
-The "priv->phy_mode" is an enum and in this context GCC will treat it
-as an unsigned int so it can never be less than zero.
+The irqreturn_t type is an enum or an unsigned int in GCC.  That
+creates to problems because it can't detect if the
+self->aq_hw_ops->hw_irq_read() call fails and at the end the function
+always returns IRQ_HANDLED.
 
-Fixes: 492caffa8a1a ("net: ethernet: nixge: Add support for National Instruments XGE netdev")
+drivers/net/ethernet/aquantia/atlantic/aq_vec.c:316 aq_vec_isr_legacy() warn: unsigned 'err' is never less than zero.
+drivers/net/ethernet/aquantia/atlantic/aq_vec.c:329 aq_vec_isr_legacy() warn: always true condition '(err >= 0) => (0-u32max >= 0)'
+
+Fixes: 970a2e9864b0 ("net: ethernet: aquantia: Vector operations")
 Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Reviewed-by: Igor Russkikh <igor.russkikh@aquantia.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/ni/nixge.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/aquantia/atlantic/aq_vec.c | 15 ++++++---------
+ 1 file changed, 6 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/net/ethernet/ni/nixge.c b/drivers/net/ethernet/ni/nixge.c
-index 76efed058f334..a791d7932b0ef 100644
---- a/drivers/net/ethernet/ni/nixge.c
-+++ b/drivers/net/ethernet/ni/nixge.c
-@@ -1233,7 +1233,7 @@ static int nixge_probe(struct platform_device *pdev)
+diff --git a/drivers/net/ethernet/aquantia/atlantic/aq_vec.c b/drivers/net/ethernet/aquantia/atlantic/aq_vec.c
+index 82582fa54d5d2..72aa2a4c4d666 100644
+--- a/drivers/net/ethernet/aquantia/atlantic/aq_vec.c
++++ b/drivers/net/ethernet/aquantia/atlantic/aq_vec.c
+@@ -309,15 +309,13 @@ irqreturn_t aq_vec_isr_legacy(int irq, void *private)
+ {
+ 	struct aq_vec_s *self = private;
+ 	u64 irq_mask = 0U;
+-	irqreturn_t err = 0;
++	int err;
+ 
+-	if (!self) {
+-		err = -EINVAL;
+-		goto err_exit;
+-	}
++	if (!self)
++		return IRQ_NONE;
+ 	err = self->aq_hw_ops->hw_irq_read(self->aq_hw, &irq_mask);
+ 	if (err < 0)
+-		goto err_exit;
++		return IRQ_NONE;
+ 
+ 	if (irq_mask) {
+ 		self->aq_hw_ops->hw_irq_disable(self->aq_hw,
+@@ -325,11 +323,10 @@ irqreturn_t aq_vec_isr_legacy(int irq, void *private)
+ 		napi_schedule(&self->napi);
+ 	} else {
+ 		self->aq_hw_ops->hw_irq_enable(self->aq_hw, 1U);
+-		err = IRQ_NONE;
++		return IRQ_NONE;
  	}
  
- 	priv->phy_mode = of_get_phy_mode(pdev->dev.of_node);
--	if (priv->phy_mode < 0) {
-+	if ((int)priv->phy_mode < 0) {
- 		netdev_err(ndev, "not find \"phy-mode\" property\n");
- 		err = -EINVAL;
- 		goto unregister_mdio;
+-err_exit:
+-	return err >= 0 ? IRQ_HANDLED : IRQ_NONE;
++	return IRQ_HANDLED;
+ }
+ 
+ cpumask_t *aq_vec_get_affinity_mask(struct aq_vec_s *self)
 -- 
 2.20.1
 
