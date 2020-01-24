@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D797C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:36:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F43CC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:36:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E19362075D
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:36:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 713EE24673
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:36:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579865776;
-	bh=+PXbwDiudaVGICJcW9K7f8hU1Y36cPzlHj6uTliGLNE=;
+	s=default; t=1579865778;
+	bh=G7yiM4Mx4FQY3C0RGbZOxU31hHPfQB51XNmbhiDL2CQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tO++BmL3IOx5YxCcmf5cDJ9/MY9Wy4QDASeg5lspUVXWillNr8sxIlHh0KFpWUfN3
-	 nDW9hwUDrAusoHvXxM+sIMHFUcHPDETeZhJpntccQQ5nS5E4J3eLSOFleuARg1pZMu
-	 D8WDOdIExebKcwFIc4AEOeLHJ2PRGDEboIYjbu3g=
+	b=V/umjXqDe8D6Fs8EbYx+bVbGlwAt13EDe4lFX4ZwvI6HdB9tyLyeg9sA4cwMepO0j
+	 rk37w4YHEFi/7Ho/dzYUk+0VPAG2USbg1OhAF5yGvGOJf57yrMPpRHc9Vv9gn79pF1
+	 i6iBPLPFISrMQDSwFxIoaUOHZcXMPYLUaDH/Za6E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404905AbgAXLgP (ORCPT
+        id S2404757AbgAXLgR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:36:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56340 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 06:36:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51908 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404887AbgAXLgK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:36:10 -0500
+        id S2404494AbgAXLcs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:32:48 -0500
 Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0A917214AF;
-        Fri, 24 Jan 2020 11:36:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F01BA20718;
+        Fri, 24 Jan 2020 11:32:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579865769;
-        bh=+PXbwDiudaVGICJcW9K7f8hU1Y36cPzlHj6uTliGLNE=;
+        s=default; t=1579865567;
+        bh=G7yiM4Mx4FQY3C0RGbZOxU31hHPfQB51XNmbhiDL2CQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=O7ClZKTz9/gXQxXIvlTsO+oTp8Wc1DQGxPU1/iPz7ZgFady8vQG0Dktx3nPvTlbSB
-         Pyhh6UW+gwFkRM8odd5KSyDJY3hZc2qNf2qBJw5rmFVQ3CAE4ZyV1BldIP+ZYljmdK
-         wumHXzKnRbl8HofsfASOG2uAz1zW4OOdc2Nb6FjM=
+        b=BP7B99ffkboJcWATw2voNa1lNNAPnfPrrNlAb2ONc7OLd1jOtTMPeob2GhTIccRvF
+         0nlU5aYYFAppgbNZYTlc1KZFyXnAHfBQVUP8xDc2MJvTEaMwRZzmmL1msDQC+Mctgh
+         aNdJQIYdu/Cr+OT2XnqHRNN8AfpR0oPZgaVaSExs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Haiyang Zhang <haiyangz@microsoft.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org,
+        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+        Richard Weinberger <richard@nod.at>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 616/639] hv_netvsc: Fix send_table offset in case of a host bug
-Date:   Fri, 24 Jan 2020 10:33:06 +0100
-Message-Id: <20200124093206.751764426@linuxfoundation.org>
+Subject: [PATCH 4.19 565/639] um: Fix off by one error in IRQ enumeration
+Date:   Fri, 24 Jan 2020 10:32:15 +0100
+Message-Id: <20200124093200.123988574@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
 References: <20200124093047.008739095@linuxfoundation.org>
@@ -60,81 +61,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Haiyang Zhang <haiyangz@microsoft.com>
+From: Anton Ivanov <anton.ivanov@cambridgegreys.com>
 
-[ Upstream commit 171c1fd98df3d5948d9a9eb755274850fa5e59c6 ]
+[ Upstream commit 09ccf0364ca3e94aba4093707ef433ea8014e2a4 ]
 
-If negotiated NVSP version <= NVSP_PROTOCOL_VERSION_6, the offset may
-be wrong (too small) due to a host bug. This can cause missing the
-end of the send indirection table, and add multiple zero entries from
-leading zeros before the data region. This bug adds extra burden on
-channel 0.
+Fix an off-by-one in IRQ enumeration
 
-So fix the offset by computing it from the data structure sizes. This
-will ensure netvsc driver runs normally on unfixed hosts, and future
-fixed hosts.
-
-Fixes: 5b54dac856cb ("hyperv: Add support for virtual Receive Side Scaling (vRSS)")
-Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 49da7e64f33e ("High Performance UML Vector Network Driver")
+Reported by: Dana Johnson <djohns042@gmail.com>
+Signed-off-by: Anton Ivanov <anton.ivanov@cambridgegreys.com>
+Signed-off-by: Richard Weinberger <richard@nod.at>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/hyperv/netvsc.c | 16 ++++++++++++++--
- 1 file changed, 14 insertions(+), 2 deletions(-)
+ arch/um/include/asm/irq.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/hyperv/netvsc.c b/drivers/net/hyperv/netvsc.c
-index 68c23a64e565f..dbfd3a0c97d3b 100644
---- a/drivers/net/hyperv/netvsc.c
-+++ b/drivers/net/hyperv/netvsc.c
-@@ -1182,6 +1182,7 @@ static int netvsc_receive(struct net_device *ndev,
- }
+diff --git a/arch/um/include/asm/irq.h b/arch/um/include/asm/irq.h
+index 49ed3e35b35ad..ce7a78c3bcf21 100644
+--- a/arch/um/include/asm/irq.h
++++ b/arch/um/include/asm/irq.h
+@@ -23,7 +23,7 @@
+ #define VECTOR_BASE_IRQ		15
+ #define VECTOR_IRQ_SPACE	8
  
- static void netvsc_send_table(struct net_device *ndev,
-+			      struct netvsc_device *nvscdev,
- 			      const struct nvsp_message *nvmsg,
- 			      u32 msglen)
- {
-@@ -1197,6 +1198,16 @@ static void netvsc_send_table(struct net_device *ndev,
- 		return;
- 	}
+-#define LAST_IRQ (VECTOR_IRQ_SPACE + VECTOR_BASE_IRQ)
++#define LAST_IRQ (VECTOR_IRQ_SPACE + VECTOR_BASE_IRQ - 1)
  
-+	/* If negotiated version <= NVSP_PROTOCOL_VERSION_6, the offset may be
-+	 * wrong due to a host bug. So fix the offset here.
-+	 */
-+	if (nvscdev->nvsp_version <= NVSP_PROTOCOL_VERSION_6 &&
-+	    msglen >= sizeof(struct nvsp_message_header) +
-+	    sizeof(union nvsp_6_message_uber) + count * sizeof(u32))
-+		offset = sizeof(struct nvsp_message_header) +
-+			 sizeof(union nvsp_6_message_uber);
-+
-+	/* Boundary check for all versions */
- 	if (offset > msglen - count * sizeof(u32)) {
- 		netdev_err(ndev, "Received send-table offset too big:%u\n",
- 			   offset);
-@@ -1222,12 +1233,13 @@ static void netvsc_send_vf(struct net_device *ndev,
- }
+ #else
  
- static void netvsc_receive_inband(struct net_device *ndev,
-+				  struct netvsc_device *nvscdev,
- 				  const struct nvsp_message *nvmsg,
- 				  u32 msglen)
- {
- 	switch (nvmsg->hdr.msg_type) {
- 	case NVSP_MSG5_TYPE_SEND_INDIRECTION_TABLE:
--		netvsc_send_table(ndev, nvmsg, msglen);
-+		netvsc_send_table(ndev, nvscdev, nvmsg, msglen);
- 		break;
- 
- 	case NVSP_MSG4_TYPE_SEND_VF_ASSOCIATION:
-@@ -1260,7 +1272,7 @@ static int netvsc_process_raw_pkt(struct hv_device *device,
- 		break;
- 
- 	case VM_PKT_DATA_INBAND:
--		netvsc_receive_inband(ndev, nvmsg, msglen);
-+		netvsc_receive_inband(ndev, net_device, nvmsg, msglen);
- 		break;
- 
- 	default:
 -- 
 2.20.1
 
