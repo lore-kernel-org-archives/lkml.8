@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8A28C35242
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:37:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC818C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:37:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F667206D4
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:37:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC91C206D4
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:37:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579865862;
-	bh=e2hI6TDdl6NlCXYKgFLpcZeyOdP5byPgHqaf2nDS708=;
+	s=default; t=1579865865;
+	bh=vqhb0ybn2UXmVxsoONoc0XgFue24dWCp3CZJtDvflRM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=udnsgKV7X0J5Dnu7YqdG8ZYS2+doHUIbPauUNVidqyYbHv0NfqpDhu9pd1+jYOZBV
-	 1QHrO9hkh9aL1boJly0w/CWmwfrUBo3+BcLOMNwuTJKee13MzPwAoPIJDk3ZMZAmn+
-	 QcfervaPTdXss+Le+QMNwKpfqIkP2OIVs2TkKJco=
+	b=1nmAqBlkywg7vaadXDqYOP8zt8X8icw/imle30Fzpud0meYs6+w5M10gKlaMAIdfl
+	 WEu71uGf64YrRBXcZgILhJwi8PrA4ydi9FGawLjWT5a4dRBnsbcl1Ygj+IAh7AVLoc
+	 bDhPwwkzKc3tP8mgUm8MpmPT3Sh1LiOUKP/4CtzA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404393AbgAXLcD (ORCPT
+        id S2391969AbgAXLho (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:32:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50402 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 06:37:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50680 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404365AbgAXLbv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:31:51 -0500
+        id S2404386AbgAXLcB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:32:01 -0500
 Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 74803206D4;
-        Fri, 24 Jan 2020 11:31:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6F49120718;
+        Fri, 24 Jan 2020 11:32:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579865510;
-        bh=e2hI6TDdl6NlCXYKgFLpcZeyOdP5byPgHqaf2nDS708=;
+        s=default; t=1579865521;
+        bh=vqhb0ybn2UXmVxsoONoc0XgFue24dWCp3CZJtDvflRM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VqbYKtr5cnwSjfoP01IyhJLlUI2cliCqslBbplgkds0IQT8snasFj4rfSaaPr1np8
-         iryrRVuvPl7s29P6DIl/ZvHR9sa3SDvDjbTohy2JbcDudetC8IX2deJ58gEGHKtLiR
-         +cJS4bkQHeTp9cP8kIGbxWsW8+gJfvb0MSLUcVu0=
+        b=tz2TX0nj2eeAJ3GxGIDqv4hws/yGq+6j9AHfTHBGyfuUfkRsTvfjoAAh4FHK8CIvz
+         N6qGbE2vG9lIicK4EELwJgc9mZmMmZgUvKj5PsgsoexMP/s3+2L0n88v3f64A0W5y/
+         ylcsFBBNeYLcfho0M01Jfb4aq/uvoX2h3urdlXvc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Firo Yang <firo.yang@suse.com>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        Andrew Bowers <andrewx.bowers@intel.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        stable@vger.kernel.org,
+        Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>,
+        Jassi Brar <jaswinder.singh@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 557/639] ixgbe: sync the first fragment unconditionally
-Date:   Fri, 24 Jan 2020 10:32:07 +0100
-Message-Id: <20200124093159.070242339@linuxfoundation.org>
+Subject: [PATCH 4.19 568/639] mailbox: qcom-apcs: fix max_register value
+Date:   Fri, 24 Jan 2020 10:32:18 +0100
+Message-Id: <20200124093200.517407020@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
 References: <20200124093047.008739095@linuxfoundation.org>
@@ -62,76 +61,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Firo Yang <firo.yang@suse.com>
+From: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
 
-[ Upstream commit e7ba676c6188d394a0133fc4b9bcd7ee50d54b7f ]
+[ Upstream commit 556a0964e28c4441dcdd50fb07596fd042246bd5 ]
 
-In Xen environment, if Xen-swiotlb is enabled, ixgbe driver
-could possibly allocate a page, DMA memory buffer, for the first
-fragment which is not suitable for Xen-swiotlb to do DMA operations.
-Xen-swiotlb have to internally allocate another page for doing DMA
-operations. This mechanism requires syncing the data from the internal
-page to the page which ixgbe sends to upper network stack. However,
-since commit f3213d932173 ("ixgbe: Update driver to make use of DMA
-attributes in Rx path"), the unmap operation is performed with
-DMA_ATTR_SKIP_CPU_SYNC. As a result, the sync is not performed.
-Since the sync isn't performed, the upper network stack could receive
-a incomplete network packet. By incomplete, it means the linear data
-on the first fragment(between skb->head and skb->end) is invalid. So
-we have to copy the data from the internal xen-swiotlb page to the page
-which ixgbe sends to upper network stack through the sync operation.
+The mailbox length is 0x1000 hence the max_register value is 0xFFC.
 
-More details from Alexander Duyck:
-Specifically since we are mapping the frame with
-DMA_ATTR_SKIP_CPU_SYNC we have to unmap with that as well. As a result
-a sync is not performed on an unmap and must be done manually as we
-skipped it for the first frag. As such we need to always sync before
-possibly performing a page unmap operation.
-
-Fixes: f3213d932173 ("ixgbe: Update driver to make use of DMA attributes in Rx path")
-Signed-off-by: Firo Yang <firo.yang@suse.com>
-Reviewed-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
-Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Fixes: c6a8b171ca8e ("mailbox: qcom: Convert APCS IPC driver to use
+regmap")
+Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+Signed-off-by: Jassi Brar <jaswinder.singh@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/intel/ixgbe/ixgbe_main.c | 16 +++++++++-------
- 1 file changed, 9 insertions(+), 7 deletions(-)
+ drivers/mailbox/qcom-apcs-ipc-mailbox.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c b/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
-index de65ca1e65580..51cd58fbab695 100644
---- a/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
-+++ b/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
-@@ -1822,13 +1822,7 @@ static void ixgbe_pull_tail(struct ixgbe_ring *rx_ring,
- static void ixgbe_dma_sync_frag(struct ixgbe_ring *rx_ring,
- 				struct sk_buff *skb)
- {
--	/* if the page was released unmap it, else just sync our portion */
--	if (unlikely(IXGBE_CB(skb)->page_released)) {
--		dma_unmap_page_attrs(rx_ring->dev, IXGBE_CB(skb)->dma,
--				     ixgbe_rx_pg_size(rx_ring),
--				     DMA_FROM_DEVICE,
--				     IXGBE_RX_DMA_ATTR);
--	} else if (ring_uses_build_skb(rx_ring)) {
-+	if (ring_uses_build_skb(rx_ring)) {
- 		unsigned long offset = (unsigned long)(skb->data) & ~PAGE_MASK;
+diff --git a/drivers/mailbox/qcom-apcs-ipc-mailbox.c b/drivers/mailbox/qcom-apcs-ipc-mailbox.c
+index 5255dcb551a78..d8b4f08f613b2 100644
+--- a/drivers/mailbox/qcom-apcs-ipc-mailbox.c
++++ b/drivers/mailbox/qcom-apcs-ipc-mailbox.c
+@@ -36,7 +36,7 @@ static const struct regmap_config apcs_regmap_config = {
+ 	.reg_bits = 32,
+ 	.reg_stride = 4,
+ 	.val_bits = 32,
+-	.max_register = 0x1000,
++	.max_register = 0xFFC,
+ 	.fast_io = true,
+ };
  
- 		dma_sync_single_range_for_cpu(rx_ring->dev,
-@@ -1845,6 +1839,14 @@ static void ixgbe_dma_sync_frag(struct ixgbe_ring *rx_ring,
- 					      skb_frag_size(frag),
- 					      DMA_FROM_DEVICE);
- 	}
-+
-+	/* If the page was released, just unmap it. */
-+	if (unlikely(IXGBE_CB(skb)->page_released)) {
-+		dma_unmap_page_attrs(rx_ring->dev, IXGBE_CB(skb)->dma,
-+				     ixgbe_rx_pg_size(rx_ring),
-+				     DMA_FROM_DEVICE,
-+				     IXGBE_RX_DMA_ATTR);
-+	}
- }
- 
- /**
 -- 
 2.20.1
 
