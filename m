@@ -2,105 +2,80 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8B23C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 19:02:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 713CEC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 19:04:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F4B52071E
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 19:02:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 378202071E
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 19:04:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391794AbgAXTCr (ORCPT
+        id S2391806AbgAXTEh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 14:02:47 -0500
-Received: from mga02.intel.com ([134.134.136.20]:12053 "EHLO mga02.intel.com"
+        Fri, 24 Jan 2020 14:04:37 -0500
+Received: from correo.us.es ([193.147.175.20]:44614 "EHLO mail.us.es"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387918AbgAXTCr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 14:02:47 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Jan 2020 11:02:19 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,358,1574150400"; 
-   d="scan'208";a="228392465"
-Received: from unknown (HELO gayuk-dev-mach.sc.intel.com) ([10.3.79.172])
-  by orsmga003.jf.intel.com with ESMTP; 24 Jan 2020 11:02:18 -0800
-From:   Gayatri Kammela <gayatri.kammela@intel.com>
-To:     platform-driver-x86@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, vishwanath.somayaji@intel.com,
-        dvhart@infradead.org, mika.westerberg@intel.com,
-        peterz@infradead.org, charles.d.prestopine@intel.com,
-        Gayatri Kammela <gayatri.kammela@intel.com>,
-        Srinivas Pandruvada <srinivas.pandruvada@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        David Box <david.e.box@intel.com>
-Subject: [PATCH v1] platform/x86: Add Atom based Jasper Lake (JSL) platform support to intel_pmc_core driver
-Date:   Fri, 24 Jan 2020 10:59:28 -0800
-Message-Id: <325960f10edc2418d8c92b5176743472dfbcd486.1579892112.git.gayatri.kammela@intel.com>
-X-Mailer: git-send-email 2.17.1
+        id S2387973AbgAXTEh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 14:04:37 -0500
+Received: from antivirus1-rhel7.int (unknown [192.168.2.11])
+        by mail.us.es (Postfix) with ESMTP id 405D6BAEFE
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jan 2020 20:04:36 +0100 (CET)
+Received: from antivirus1-rhel7.int (localhost [127.0.0.1])
+        by antivirus1-rhel7.int (Postfix) with ESMTP id 2E317DA702
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jan 2020 20:04:36 +0100 (CET)
+Received: by antivirus1-rhel7.int (Postfix, from userid 99)
+        id 15BE2DA713; Fri, 24 Jan 2020 20:04:36 +0100 (CET)
+Received: from antivirus1-rhel7.int (localhost [127.0.0.1])
+        by antivirus1-rhel7.int (Postfix) with ESMTP id 159ABDA707;
+        Fri, 24 Jan 2020 20:04:34 +0100 (CET)
+Received: from 192.168.1.97 (192.168.1.97)
+ by antivirus1-rhel7.int (F-Secure/fsigk_smtp/550/antivirus1-rhel7.int);
+ Fri, 24 Jan 2020 20:04:34 +0100 (CET)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/550/antivirus1-rhel7.int)
+Received: from us.es (unknown [90.77.255.23])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: 1984lsi)
+        by entrada.int (Postfix) with ESMTPSA id E8D5342EE38E;
+        Fri, 24 Jan 2020 20:04:33 +0100 (CET)
+Date:   Fri, 24 Jan 2020 20:04:32 +0100
+X-SMTPAUTHUS: auth mail.us.es
+From:   Pablo Neira Ayuso <pablo@netfilter.org>
+To:     Praveen Chaudhary <praveen5582@gmail.com>
+Cc:     fw@strlen.de, davem@davemloft.net, kadlec@netfilter.org,
+        netfilter-devel@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Zhenggen Xu <zxu@linkedin.com>,
+        Andy Stracner <astracner@linkedin.com>
+Subject: Re: [PATCH v4] [net]: Fix skb->csum update in
+ inet_proto_csum_replace16().
+Message-ID: <20200124190432.vxcnnds3ypqa4hzh@salvia>
+References: <20200123142929.GV795@breakpoint.cc>
+ <1579811608-688-1-git-send-email-pchaudhary@linkedin.com>
+ <1579811608-688-2-git-send-email-pchaudhary@linkedin.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1579811608-688-2-git-send-email-pchaudhary@linkedin.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add Jasper Lake to the list of the platforms that intel_pmc_core
-driver supports for pmc_core device.
+On Thu, Jan 23, 2020 at 12:33:28PM -0800, Praveen Chaudhary wrote:
+> skb->csum is updated incorrectly, when manipulation for NF_NAT_MANIP_SRC\DST
+> is done on IPV6 packet.
+> 
+> Fix:
+> There is no need to update skb->csum in inet_proto_csum_replace16(), because
+> update in two fields a.) IPv6 src/dst address and b.) L4 header checksum
+> cancels each other for skb->csum calculation.
+> Whereas inet_proto_csum_replace4 function needs to update skb->csum,
+> because update in 3 fields a.) IPv4 src/dst address, b.) IPv4 Header checksum
+> and c.) L4 header checksum results in same diff as L4 Header checksum for
+> skb->csum calculation.
 
-Just like Ice Lake, Tiger Lake and Elkhart Lake, Jasper Lake can also
-reuse all the Cannon Lake PCH IPs. Also, it uses the same PCH IPs of
-Tiger Lake, no additional effort is needed to enable but to simply reuse
-them.
-
-Cc: Srinivas Pandruvada <srinivas.pandruvada@intel.com>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: David Box <david.e.box@intel.com>
-Signed-off-by: Gayatri Kammela <gayatri.kammela@intel.com>
----
- drivers/platform/x86/intel_pmc_core.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/platform/x86/intel_pmc_core.c b/drivers/platform/x86/intel_pmc_core.c
-index d583cd5adb31..73ee27c4b027 100644
---- a/drivers/platform/x86/intel_pmc_core.c
-+++ b/drivers/platform/x86/intel_pmc_core.c
-@@ -193,7 +193,7 @@ static const struct pmc_bit_map cnp_pfear_map[] = {
- 	{"Fuse",                BIT(6)},
- 	/*
- 	 * Reserved for Cannon Lake but valid for Ice Lake, Comet Lake,
--	 * Tiger Lake and Elkhart Lake.
-+	 * Tiger Lake, Elkhart Lake and Jasper Lake.
- 	 */
- 	{"SBR8",		BIT(7)},
- 
-@@ -240,7 +240,7 @@ static const struct pmc_bit_map cnp_pfear_map[] = {
- 	{"HDA_PGD6",            BIT(4)},
- 	/*
- 	 * Reserved for Cannon Lake but valid for Ice Lake, Comet Lake,
--	 * Tiger Lake and ELkhart Lake.
-+	 * Tiger Lake, ELkhart Lake and Jasper Lake.
- 	 */
- 	{"PSF6",		BIT(5)},
- 	{"PSF7",		BIT(6)},
-@@ -273,7 +273,7 @@ static const struct pmc_bit_map *ext_icl_pfear_map[] = {
- };
- 
- static const struct pmc_bit_map tgl_pfear_map[] = {
--	/* Tiger Lake and Elkhart Lake generation onwards only */
-+	/* Tiger Lake, Elkhart Lake and Jasper Lake generation onwards only */
- 	{"PSF9",		BIT(0)},
- 	{"RES_66",		BIT(1)},
- 	{"RES_67",		BIT(2)},
-@@ -1138,6 +1138,7 @@ static const struct x86_cpu_id intel_pmc_core_ids[] = {
- 	INTEL_CPU_FAM6(TIGERLAKE_L, tgl_reg_map),
- 	INTEL_CPU_FAM6(TIGERLAKE, tgl_reg_map),
- 	INTEL_CPU_FAM6(ATOM_TREMONT, tgl_reg_map),
-+	INTEL_CPU_FAM6(ATOM_TREMONT_L, tgl_reg_map),
- 	{}
- };
- 
--- 
-2.17.1
-
+Applied, thanks.
