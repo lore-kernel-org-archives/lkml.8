@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B43CC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:38:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6776FC35242
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:38:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6AF47208C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:38:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31ECC2087E
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:38:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579858707;
-	bh=QDKSUapnYTJV9YDZiQ2dSpHwPO9fJ6OQJzfqRcimlso=;
+	s=default; t=1579858710;
+	bh=SsqL4TC6CBnR4YGWS5myE+1yRoseKbefTptY2dvtYkU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aHSfek4rR0s65r8LNZypGDR1VIlxiBteG7ZYTjR4GdQN+rYLr6aPid7AyqFyRZ774
-	 r9aokot71stN2kxV/P0AqqfdCD2V6rmpiT8iZkLSsIeo2KBJhaTg7AQx/wgbqT5x7z
-	 Ito+IRudeQtzVV1OzufAcgEk99dYaBywqak/eYAw=
+	b=Tomda8xCguooDw6N4b7sj2Ojl2MoiKBiR8CAu3Y3sq28XqN0mgWprlSHYc9keqxrT
+	 WWlqJLKJG7dSl7mm6AXEAR+FNQz+hBHcBL0vRJ8HXYyiZ9A+YGi2i0GnPw+iQLXhxX
+	 yimK9m+b68Chq5qfduxkkTdKEuMkzNFZYKACUkyM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730321AbgAXJi0 (ORCPT
+        id S1730613AbgAXJi3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 04:38:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35544 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 04:38:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35604 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725821AbgAXJiZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 04:38:25 -0500
+        id S1725821AbgAXJi1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 04:38:27 -0500
 Received: from localhost (unknown [145.15.244.15])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A4EC120709;
-        Fri, 24 Jan 2020 09:38:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 96BAD2070A;
+        Fri, 24 Jan 2020 09:38:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579858704;
-        bh=QDKSUapnYTJV9YDZiQ2dSpHwPO9fJ6OQJzfqRcimlso=;
+        s=default; t=1579858707;
+        bh=SsqL4TC6CBnR4YGWS5myE+1yRoseKbefTptY2dvtYkU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=InsFftzaufCSfOTfyU5QaUkEMzqgCsHjAtL0IsCPEkIfyS/Tz4fXlapXqLI2HbqUA
-         9D3bDNhRzUl2eFdzPsRrZWAyq6Q1XHfKMp5qNyNv3EjxEvIndVV/eauI1vkda5WW5u
-         SDxhyZD5t7OEmnfo5WvFS+qtESKEESTLkyto63sE=
+        b=ynJcn/hHwqHMZjKmEv40e762H1vl1JD9vFNMLhOAsPd0iI3gc2vPGZ+Mhysji8AAY
+         dc5GJ0oMHXt+eAbZNkjuzJDazIGHLH62Q83CLWsSoetbLcuUsbctVYAO2+WrA7wf9D
+         cgc1VeYn5m31Vmq0Jnx1NG46lvdPuqNmv5uOa4hc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
+        stable@vger.kernel.org, Tyrel Datwyler <tyreld@linux.ibm.com>,
         Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 5.4 019/102] powerpc/security: Fix debugfs data leak on 32-bit
-Date:   Fri, 24 Jan 2020 10:30:20 +0100
-Message-Id: <20200124092809.069364174@linuxfoundation.org>
+Subject: [PATCH 5.4 020/102] powerpc/pseries: Enable support for ibm,drc-info property
+Date:   Fri, 24 Jan 2020 10:30:21 +0100
+Message-Id: <20200124092809.223064313@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124092806.004582306@linuxfoundation.org>
 References: <20200124092806.004582306@linuxfoundation.org>
@@ -60,83 +59,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+From: Tyrel Datwyler <tyreld@linux.ibm.com>
 
-commit 3b05a1e517e1a8cfda4866ec31d28b2bc4fee4c4 upstream.
+commit 0a87ccd3699983645f54cafd2258514a716b20b8 upstream.
 
-"powerpc_security_features" is "unsigned long", i.e. 32-bit or 64-bit,
-depending on the platform (PPC_FSL_BOOK3E or PPC_BOOK3S_64).  Hence
-casting its address to "u64 *", and calling debugfs_create_x64() is
-wrong, and leaks 32-bit of nearby data to userspace on 32-bit platforms.
+Advertise client support for the PAPR architected ibm,drc-info device
+tree property during CAS handshake.
 
-While all currently defined SEC_FTR_* security feature flags fit in
-32-bit, they all have "ULL" suffixes to make them 64-bit constants.
-Hence fix the leak by changing the type of "powerpc_security_features"
-(and the parameter types of its accessors) to "u64".  This also allows
-to drop the cast.
-
-Fixes: 398af571128fe75f ("powerpc/security: Show powerpc_security_features in debugfs")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Fixes: c7a3275e0f9e ("powerpc/pseries: Revert support for ibm,drc-info devtree property")
+Signed-off-by: Tyrel Datwyler <tyreld@linux.ibm.com>
 Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20191021142309.28105-1-geert+renesas@glider.be
+Link: https://lore.kernel.org/r/1573449697-5448-11-git-send-email-tyreld@linux.ibm.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/powerpc/include/asm/security_features.h |    8 ++++----
- arch/powerpc/kernel/security.c               |    4 ++--
- 2 files changed, 6 insertions(+), 6 deletions(-)
+ arch/powerpc/kernel/prom_init.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/powerpc/include/asm/security_features.h
-+++ b/arch/powerpc/include/asm/security_features.h
-@@ -9,7 +9,7 @@
- #define _ASM_POWERPC_SECURITY_FEATURES_H
- 
- 
--extern unsigned long powerpc_security_features;
-+extern u64 powerpc_security_features;
- extern bool rfi_flush;
- 
- /* These are bit flags */
-@@ -24,17 +24,17 @@ void setup_stf_barrier(void);
- void do_stf_barrier_fixups(enum stf_barrier_type types);
- void setup_count_cache_flush(void);
- 
--static inline void security_ftr_set(unsigned long feature)
-+static inline void security_ftr_set(u64 feature)
- {
- 	powerpc_security_features |= feature;
- }
- 
--static inline void security_ftr_clear(unsigned long feature)
-+static inline void security_ftr_clear(u64 feature)
- {
- 	powerpc_security_features &= ~feature;
- }
- 
--static inline bool security_ftr_enabled(unsigned long feature)
-+static inline bool security_ftr_enabled(u64 feature)
- {
- 	return !!(powerpc_security_features & feature);
- }
---- a/arch/powerpc/kernel/security.c
-+++ b/arch/powerpc/kernel/security.c
-@@ -16,7 +16,7 @@
- #include <asm/setup.h>
- 
- 
--unsigned long powerpc_security_features __read_mostly = SEC_FTR_DEFAULT;
-+u64 powerpc_security_features __read_mostly = SEC_FTR_DEFAULT;
- 
- enum count_cache_flush_type {
- 	COUNT_CACHE_FLUSH_NONE	= 0x1,
-@@ -109,7 +109,7 @@ device_initcall(barrier_nospec_debugfs_i
- static __init int security_feature_debugfs_init(void)
- {
- 	debugfs_create_x64("security_features", 0400, powerpc_debugfs_root,
--			   (u64 *)&powerpc_security_features);
-+			   &powerpc_security_features);
- 	return 0;
- }
- device_initcall(security_feature_debugfs_init);
+--- a/arch/powerpc/kernel/prom_init.c
++++ b/arch/powerpc/kernel/prom_init.c
+@@ -1053,7 +1053,7 @@ static const struct ibm_arch_vec ibm_arc
+ 		.reserved2 = 0,
+ 		.reserved3 = 0,
+ 		.subprocessors = 1,
+-		.byte22 = OV5_FEAT(OV5_DRMEM_V2),
++		.byte22 = OV5_FEAT(OV5_DRMEM_V2) | OV5_FEAT(OV5_DRC_INFO),
+ 		.intarch = 0,
+ 		.mmu = 0,
+ 		.hash_ext = 0,
 
 
