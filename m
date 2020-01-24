@@ -4,53 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80443C32771
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:38:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19191C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:38:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C024214DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:38:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF04E20708
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:38:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579865915;
-	bh=/IaTLdBbuG6dKIy+ihp0raSu/rsim54qUzxtpXP4YDw=;
+	s=default; t=1579865919;
+	bh=VdxanDx3tZ2T45WF9142dP2iIPEh6lF+y6oS2Qe0B/k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oIGVeKXerwILHpF39UxVSKn5W1Y96gYI1wvyELpcytYKYEn2DYCiJ8vkH4zTdker0
-	 qAnmIeceSVF6CpVW21EIqaMPX1wobA9fwM8zlrTaGCp9P5a5sm4peieG2oN6B3SFV7
-	 Jxus0WEdfdvvO9t2V/QGKq8WqSTkAWB0C6va7DFI=
+	b=oor70fJUvtXmjP9Fhc1ZArcgWg6JOsKaTgvtQqpdx4r/UQNcXDOQlzUyJF5M8uFBE
+	 aDN5VOWL89hKrGE0TKfvSvIF8raX3/PufOzIX9+hwjcZZE8kZQtqgQoXjTvWLEY4vy
+	 nvc7f5FDFXI8ph47DKOtnni/N4PidFI8+NP2oWjY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404011AbgAXL2G (ORCPT
+        id S2390203AbgAXLii (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:28:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44062 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 06:38:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58462 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404000AbgAXL2E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:28:04 -0500
+        id S1731011AbgAXLif (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:38:35 -0500
 Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 76E0020704;
-        Fri, 24 Jan 2020 11:28:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8D89B20708;
+        Fri, 24 Jan 2020 11:38:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579865284;
-        bh=/IaTLdBbuG6dKIy+ihp0raSu/rsim54qUzxtpXP4YDw=;
+        s=default; t=1579865914;
+        bh=VdxanDx3tZ2T45WF9142dP2iIPEh6lF+y6oS2Qe0B/k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kxL7BY8zYh3x4WhpzAb65W+bqlTvM7KguG6hNH5QwuOSflC8CDPkFyeRtN1SzLh7I
-         Vhod1sLb9edr1aZnR8Nisv1UdOXE+Db6JunjPnz6UP4aC+oclLQ8+OpDkxWXoEq0GC
-         nd7fWxL4OFAfN2CzpMr3cb48Yzcy5tVuGDb0vzz8=
+        b=MP7ZVRyAYf9ww+J4fY0Udis1rk+tkzg3hqznWtWpKp9sqsH1eOeXHwtoZwB6t35ss
+         JQj8F+Ror42J1psADXkaXJwHN8dAMPIscjP5GG7n7DqA9ZHxw0PILbMvsLLjvI+rxQ
+         W5NHcqkZkOtpig+xqflCvP+4rHYbKusToq14USyw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, YueHaibing <yuehaibing@huawei.com>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        "Lad, Prabhakar" <prabhakar.csengg@gmail.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 504/639] ASoC: es8328: Fix copy-paste error in es8328_right_line_controls
-Date:   Fri, 24 Jan 2020 10:31:14 +0100
-Message-Id: <20200124093151.933033496@linuxfoundation.org>
+Subject: [PATCH 4.14 154/343] media: davinci-isif: avoid uninitialized variable use
+Date:   Fri, 24 Jan 2020 10:29:32 +0100
+Message-Id: <20200124092940.236537682@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
-References: <20200124093047.008739095@linuxfoundation.org>
+In-Reply-To: <20200124092919.490687572@linuxfoundation.org>
+References: <20200124092919.490687572@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,35 +63,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit 630742c296341a8cfe00dfd941392025ba8dd4e8 ]
+[ Upstream commit 0e633f97162c1c74c68e2eb20bbd9259dce87cd9 ]
 
-It seems 'es8328_rline_enum' should be used
-in es8328_right_line_controls
+clang warns about a possible variable use that gcc never
+complained about:
 
-Fixes: 567e4f98922c ("ASoC: add es8328 codec driver")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Link: https://lore.kernel.org/r/20190815092300.68712-1-yuehaibing@huawei.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+drivers/media/platform/davinci/isif.c:982:32: error: variable 'frame_size' is uninitialized when used here
+      [-Werror,-Wuninitialized]
+                dm365_vpss_set_pg_frame_size(frame_size);
+                                             ^~~~~~~~~~
+drivers/media/platform/davinci/isif.c:887:2: note: variable 'frame_size' is declared here
+        struct vpss_pg_frame_size frame_size;
+        ^
+1 error generated.
+
+There is no initialization for this variable at all, and there
+has never been one in the mainline kernel, so we really should
+not put that stack data into an mmio register.
+
+On the other hand, I suspect that gcc checks the condition
+more closely and notices that the global
+isif_cfg.bayer.config_params.test_pat_gen flag is initialized
+to zero and never written to from any code path, so anything
+depending on it can be eliminated.
+
+To shut up the clang warning, just remove the dead code manually,
+it has probably never been used because any attempt to do so
+would have resulted in undefined behavior.
+
+Fixes: 63e3ab142fa3 ("V4L/DVB: V4L - vpfe capture - source for ISIF driver on DM365")
+
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+Acked-by: Lad, Prabhakar <prabhakar.csengg@gmail.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/codecs/es8328.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/media/platform/davinci/isif.c | 9 ---------
+ 1 file changed, 9 deletions(-)
 
-diff --git a/sound/soc/codecs/es8328.c b/sound/soc/codecs/es8328.c
-index e9fc2fd97d2f4..3afa163f7652d 100644
---- a/sound/soc/codecs/es8328.c
-+++ b/sound/soc/codecs/es8328.c
-@@ -231,7 +231,7 @@ static const struct soc_enum es8328_rline_enum =
- 			      ARRAY_SIZE(es8328_line_texts),
- 			      es8328_line_texts);
- static const struct snd_kcontrol_new es8328_right_line_controls =
--	SOC_DAPM_ENUM("Route", es8328_lline_enum);
-+	SOC_DAPM_ENUM("Route", es8328_rline_enum);
+diff --git a/drivers/media/platform/davinci/isif.c b/drivers/media/platform/davinci/isif.c
+index 90d0f13283ae9..12065ad1ac457 100644
+--- a/drivers/media/platform/davinci/isif.c
++++ b/drivers/media/platform/davinci/isif.c
+@@ -886,9 +886,7 @@ static int isif_set_hw_if_params(struct vpfe_hw_if_param *params)
+ static int isif_config_ycbcr(void)
+ {
+ 	struct isif_ycbcr_config *params = &isif_cfg.ycbcr;
+-	struct vpss_pg_frame_size frame_size;
+ 	u32 modeset = 0, ccdcfg = 0;
+-	struct vpss_sync_pol sync;
  
- /* Left Mixer */
- static const struct snd_kcontrol_new es8328_left_mixer_controls[] = {
+ 	dev_dbg(isif_cfg.dev, "\nStarting isif_config_ycbcr...");
+ 
+@@ -976,13 +974,6 @@ static int isif_config_ycbcr(void)
+ 		/* two fields are interleaved in memory */
+ 		regw(0x00000249, SDOFST);
+ 
+-	/* Setup test pattern if enabled */
+-	if (isif_cfg.bayer.config_params.test_pat_gen) {
+-		sync.ccdpg_hdpol = params->hd_pol;
+-		sync.ccdpg_vdpol = params->vd_pol;
+-		dm365_vpss_set_sync_pol(sync);
+-		dm365_vpss_set_pg_frame_size(frame_size);
+-	}
+ 	return 0;
+ }
+ 
 -- 
 2.20.1
 
