@@ -2,138 +2,200 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BCDCC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:15:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68154C35242
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:16:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 365E12075D
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:15:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3ABDD2075D
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:16:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="kmOyBuxl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390386AbgAXOPy (ORCPT
+        id S2390388AbgAXOQM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 09:15:54 -0500
-Received: from mga07.intel.com ([134.134.136.100]:15290 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388691AbgAXOPy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 09:15:54 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Jan 2020 06:15:28 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,357,1574150400"; 
-   d="scan'208";a="292642836"
-Received: from richard.sh.intel.com (HELO localhost) ([10.239.159.54])
-  by fmsmga001.fm.intel.com with ESMTP; 24 Jan 2020 06:15:26 -0800
-Date:   Fri, 24 Jan 2020 22:15:38 +0800
-From:   Wei Yang <richardw.yang@linux.intel.com>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Wei Yang <richardw.yang@linux.intel.com>,
-        akpm@linux-foundation.org, yang.shi@linux.alibaba.com,
-        jhubbard@nvidia.com, vbabka@suse.cz, cl@linux.com,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [Patch v2] mm/migrate.c: also overwrite error when it is bigger
- than zero
-Message-ID: <20200124141538.GA12509@richard>
-Reply-To: Wei Yang <richardw.yang@linux.intel.com>
-References: <20200119065753.21694-1-richardw.yang@linux.intel.com>
- <20200124072127.GO29276@dhcp22.suse.cz>
+        Fri, 24 Jan 2020 09:16:12 -0500
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:39065 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388691AbgAXOQM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 09:16:12 -0500
+Received: by mail-pj1-f65.google.com with SMTP id e11so1179500pjt.4
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jan 2020 06:16:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=ASOtb96BI6lTR6mu+ywHC0FfQOfd7+/ZeIlUMSQ1MgU=;
+        b=kmOyBuxl6PiajDWOBlWoRTw9yCno28+dJhqCOaiVgt6OckuzVAlVVZRw10RbyxwIBa
+         uzMgDELMRyNUlNoW+CptCJeZidIZIYqFTEpTEhkuNiGGPZE/WdP8i3rmgFINfGzlkZdo
+         sLYYApupXDdvLWAGmDrqQIwwialBjxVF2Ry8Q=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ASOtb96BI6lTR6mu+ywHC0FfQOfd7+/ZeIlUMSQ1MgU=;
+        b=hRsAmFIsUAZcuUUO8uYeGqUIoxePJiPmiFeGNTHnrZ8OzUJ/zHFW/SQxdGrO9zbKJR
+         VnkylwuJgBp+ynuSn8sVQl4JnI5NckpGS4DpShBtFdHf2fbXSCxTYdJLIPUzwDqEJQhs
+         4WXYCam4cy8awZJnNuRTsTC62wl0oNRvj4cwragKebZghCs8+Ae/q4hF2BZWc/yx062R
+         mCD7yOtFK+p+1rvp/0ALC71yscJlzOarVyUM6PuxIFAQbQILEDjK1kjEF2VRxthVUYrb
+         3rqxQ4eP46bcwAauKBiZ9eoetQZ0C29EED84N9/EzHETQ0uOvqQX10P9XKIiqrr2lpH1
+         7MoA==
+X-Gm-Message-State: APjAAAVtNFl5I6sbxBV5JkpUjiWzBiIUo5wvUyFsIi6GGkIvL+duBD+8
+        tO0Qew73VN9tiLN781K59M69yA==
+X-Google-Smtp-Source: APXvYqwNRhkmJ4mbSYJLO0PmKxo+8nA6r5QBn7/anONeoROTjVfQayIadlHpsoWWf7cq2t4MlfwYcQ==
+X-Received: by 2002:a17:90a:2203:: with SMTP id c3mr3394823pje.68.1579875371008;
+        Fri, 24 Jan 2020 06:16:11 -0800 (PST)
+Received: from chromium.org ([2601:647:4903:8020:88e3:d812:557:e2e5])
+        by smtp.gmail.com with ESMTPSA id v8sm6549623pff.151.2020.01.24.06.16.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 24 Jan 2020 06:16:10 -0800 (PST)
+From:   KP Singh <kpsingh@chromium.org>
+X-Google-Original-From: KP Singh <kpsingh>
+Date:   Fri, 24 Jan 2020 06:16:00 -0800
+To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        bpf <bpf@vger.kernel.org>, linux-security-module@vger.kernel.org,
+        Brendan Jackman <jackmanb@google.com>,
+        Florent Revest <revest@google.com>,
+        Thomas Garnier <thgarnie@google.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        James Morris <jmorris@namei.org>,
+        Kees Cook <keescook@chromium.org>,
+        Thomas Garnier <thgarnie@chromium.org>,
+        Michael Halcrow <mhalcrow@google.com>,
+        Paul Turner <pjt@google.com>,
+        Brendan Gregg <brendan.d.gregg@gmail.com>,
+        Jann Horn <jannh@google.com>,
+        Matthew Garrett <mjg59@google.com>,
+        Christian Brauner <christian@brauner.io>,
+        =?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>,
+        Florent Revest <revest@chromium.org>,
+        Brendan Jackman <jackmanb@chromium.org>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Stanislav Fomichev <sdf@google.com>,
+        Quentin Monnet <quentin.monnet@netronome.com>,
+        Andrey Ignatov <rdna@fb.com>, Joe Stringer <joe@wand.net.nz>
+Subject: Re: [PATCH bpf-next v3 08/10] tools/libbpf: Add support for
+ BPF_PROG_TYPE_LSM
+Message-ID: <20200124141600.GB21334@chromium.org>
+References: <20200123152440.28956-1-kpsingh@chromium.org>
+ <20200123152440.28956-9-kpsingh@chromium.org>
+ <CAEf4BzZ7gmCTzxw4f=fp=j2_buBQ3rV8m3qWH8s-ySY6sGVPzw@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200124072127.GO29276@dhcp22.suse.cz>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <CAEf4BzZ7gmCTzxw4f=fp=j2_buBQ3rV8m3qWH8s-ySY6sGVPzw@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 24, 2020 at 08:21:27AM +0100, Michal Hocko wrote:
->[Sorry I have missed this patch previously]
->
+> On Thu, Jan 23, 2020 at 7:25 AM KP Singh <kpsingh@chromium.org> wrote:
+> >
+> > From: KP Singh <kpsingh@google.com>
+> >
+> > * Add functionality in libbpf to attach eBPF program to LSM hooks
+> > * Lookup the index of the LSM hook in security_hook_heads and pass it in
+> >   attr->lsm_hook_idx
+> >
+> > Signed-off-by: KP Singh <kpsingh@google.com>
+> > Reviewed-by: Brendan Jackman <jackmanb@google.com>
+> > Reviewed-by: Florent Revest <revest@google.com>
+> > Reviewed-by: Thomas Garnier <thgarnie@google.com>
+> > ---
+> 
+> Looks good, but see few nits below.
+> 
+> Acked-by: Andrii Nakryiko <andriin@fb.com>
 
-No problem, thanks for your comment.
+Thanks!
 
->On Sun 19-01-20 14:57:53, Wei Yang wrote:
->> If we get here after successfully adding page to list, err would be
->> 1 to indicate the page is queued in the list.
->> 
->> Current code has two problems:
->> 
->>   * on success, 0 is not returned
->>   * on error, if add_page_for_migratioin() return 1, and the following err1
->>     from do_move_pages_to_node() is set, the err1 is not returned since err
->>     is 1
->
->This made my really scratch my head to grasp. So essentially err > 0
->will happen when we reach the end of the loop and rely on the
->out_flush flushing to migrate the batch. Then err contains the
->add_page_for_migratioin return value. And that would leak to the
->userspace.
->
->What would you say about the following wording instead?
->"
->out_flush part of do_pages_move is responsible for migrating the last
->batch that accumulated while processing the input in the loop.
->do_move_pages_to_node return value is supposed to override any
->preexisting error (e.g. when the user input is garbage) but the current
+> 
+> >  tools/lib/bpf/bpf.c      |   6 ++-
+> >  tools/lib/bpf/bpf.h      |   1 +
+> >  tools/lib/bpf/libbpf.c   | 104 +++++++++++++++++++++++++++++++++++++--
+> >  tools/lib/bpf/libbpf.h   |   4 ++
+> >  tools/lib/bpf/libbpf.map |   3 ++
+> >  5 files changed, 114 insertions(+), 4 deletions(-)
+> >
+> 
+> [...]
+> 
+> > @@ -5084,6 +5099,8 @@ __bpf_object__open(const char *path, const void *obj_buf, size_t obj_buf_sz,
+> >                 if (prog->type != BPF_PROG_TYPE_UNSPEC)
+> >                         continue;
+> >
+> > +
+> > +
+> 
+> why these extra lines?
 
-I am afraid I have a different understanding here.
+Ah this might have crept in my latest rebase. Will remove these.
 
-If we jump to out_flush on the test of node_isset(), err is -EACCESS. Current
-logic would return this instead of the error from do_move_pages_to_node().
-Seems we don't override -EACCESS.
+> 
+> >                 err = libbpf_prog_type_by_name(prog->section_name, &prog_type,
+> >                                                &attach_type);
+> >                 if (err == -ESRCH)
+> > @@ -6160,6 +6177,7 @@ bool bpf_program__is_##NAME(const struct bpf_program *prog)       \
+> >  }                                                              \
+> >
+> >  BPF_PROG_TYPE_FNS(socket_filter, BPF_PROG_TYPE_SOCKET_FILTER);
+> > +BPF_PROG_TYPE_FNS(lsm, BPF_PROG_TYPE_LSM);
+> >  BPF_PROG_TYPE_FNS(kprobe, BPF_PROG_TYPE_KPROBE);
+> >  BPF_PROG_TYPE_FNS(sched_cls, BPF_PROG_TYPE_SCHED_CLS);
+> >  BPF_PROG_TYPE_FNS(sched_act, BPF_PROG_TYPE_SCHED_ACT);
+> > @@ -6226,6 +6244,8 @@ static struct bpf_link *attach_raw_tp(const struct bpf_sec_def *sec,
+> >                                       struct bpf_program *prog);
+> >  static struct bpf_link *attach_trace(const struct bpf_sec_def *sec,
+> >                                      struct bpf_program *prog);
+> > +static struct bpf_link *attach_lsm(const struct bpf_sec_def *sec,
+> > +                                  struct bpf_program *prog);
+> >
+> >  struct bpf_sec_def {
+> >         const char *sec;
+> > @@ -6272,6 +6292,9 @@ static const struct bpf_sec_def section_defs[] = {
+> >         SEC_DEF("freplace/", EXT,
+> >                 .is_attach_btf = true,
+> >                 .attach_fn = attach_trace),
+> > +       SEC_DEF("lsm/", LSM,
+> > +               .expected_attach_type = BPF_LSM_MAC,
+> 
+> curious, will there be non-MAC LSM programs? if yes, how they are
+> going to be different and which prefix will we use then?
 
-Is my understanding correct?
+One can think BPF_LSM_AUDIT programs which will only be used to log
+information from the LSM hooks and not enforce a policy. Currently,
+one can sort of do that by disabling CONFIG_SECURITY_BPF_ENFORCE but
+that's an all or none hammer.
 
->logic is wrong because add_page_for_migration returns 1 when
->successfully adding a page into the batch and therefore this will be the
->last err value after the loop is processed without any actual error.
->We want to override that value of course because do_pages_move would
->return 1 to the userspace even without any errors.
->"
->
->> And these behaviors break the user interface.
->> 
->> Fixes: e0153fc2c760 ("mm: move_pages: return valid node id in status if the
->> page is already on the target node").
->> Signed-off-by: Wei Yang <richardw.yang@linux.intel.com>
->
->Acked-by: Michal Hocko <mhocko@suse.com>
->
->> 
->> ---
->> v2:
->>   * put more words to explain the error case
->> ---
->>  mm/migrate.c | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->> 
->> diff --git a/mm/migrate.c b/mm/migrate.c
->> index 86873b6f38a7..430fdccc733e 100644
->> --- a/mm/migrate.c
->> +++ b/mm/migrate.c
->> @@ -1676,7 +1676,7 @@ static int do_pages_move(struct mm_struct *mm, nodemask_t task_nodes,
->>  	err1 = do_move_pages_to_node(mm, &pagelist, current_node);
->>  	if (!err1)
->>  		err1 = store_status(status, start, current_node, i - start);
->> -	if (!err)
->> +	if (err >= 0)
->>  		err = err1;
->>  out:
->>  	return err;
->> -- 
->> 2.17.1
->> 
->
->-- 
->Michal Hocko
->SUSE Labs
+> 
+> > +               .attach_fn = attach_lsm),
+> >         BPF_PROG_SEC("xdp",                     BPF_PROG_TYPE_XDP),
+> >         BPF_PROG_SEC("perf_event",              BPF_PROG_TYPE_PERF_EVENT),
+> >         BPF_PROG_SEC("lwt_in",                  BPF_PROG_TYPE_LWT_IN),
+> > @@ -6533,6 +6556,44 @@ static int bpf_object__collect_struct_ops_map_reloc(struct bpf_object *obj,
+> >         return -EINVAL;
+> >  }
+> >
+> > +static __s32 find_lsm_hook_idx(struct bpf_program *prog)
+> 
+> nit: I'd stick to int for return result, we barely ever use __s32 in libbpf.c
 
--- 
-Wei Yang
-Help you, Help me
+Sure. Changed to int.
+
+- KP
+
+> 
+> [...]
