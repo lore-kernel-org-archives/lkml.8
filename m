@@ -6,32 +6,32 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C22E5C3F68F
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:46:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28270C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:46:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 992462075D
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:46:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 044B72075D
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:46:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389683AbgAXOqx (ORCPT
+        id S2389785AbgAXOq6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 09:46:53 -0500
-Received: from mx2.suse.de ([195.135.220.15]:43432 "EHLO mx2.suse.de"
+        Fri, 24 Jan 2020 09:46:58 -0500
+Received: from mx2.suse.de ([195.135.220.15]:43448 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389108AbgAXOqn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 09:46:43 -0500
+        id S2389578AbgAXOqr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 09:46:47 -0500
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 2B73EAFBB;
-        Fri, 24 Jan 2020 14:46:42 +0000 (UTC)
+        by mx2.suse.de (Postfix) with ESMTP id 71C8BAF32;
+        Fri, 24 Jan 2020 14:46:46 +0000 (UTC)
 From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 To:     gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org
 Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
         bcm-kernel-feedback-list@broadcom.com,
         linux-rpi-kernel@lists.infradead.org,
         linux-arm-kernel@lists.infradead.org, devel@driverdev.osuosl.org
-Subject: [PATCH 15/22] staging: vc04_services: Get rid of unused suspend/resume states
-Date:   Fri, 24 Jan 2020 15:46:09 +0100
-Message-Id: <20200124144617.2213-16-nsaenzjulienne@suse.de>
+Subject: [PATCH 21/22] staging: vc04_services: Get rid of the rest of suspend/resume state handling
+Date:   Fri, 24 Jan 2020 15:46:15 +0100
+Message-Id: <20200124144617.2213-22-nsaenzjulienne@suse.de>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124144617.2213-1-nsaenzjulienne@suse.de>
 References: <20200124144617.2213-1-nsaenzjulienne@suse.de>
@@ -42,164 +42,153 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It's impossible to get into them, so simply delete them.
+The only remaining state doesn't provide any information anymore nor the
+completion that depends on it, which is set to complete_all() before any
+user may wait on it.
 
 Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 ---
- .../interface/vchiq_arm/vchiq_arm.c           | 55 -------------------
- .../interface/vchiq_arm/vchiq_arm.h           |  7 ---
- 2 files changed, 62 deletions(-)
+ .../interface/vchiq_arm/vchiq_arm.c           | 49 -------------------
+ .../interface/vchiq_arm/vchiq_arm.h           | 11 -----
+ 2 files changed, 60 deletions(-)
 
 diff --git a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_arm.c b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_arm.c
-index da95bb1ec0eb..a0636385f0c8 100644
+index 049512589375..d81c2ed27ccc 100644
 --- a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_arm.c
 +++ b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_arm.c
-@@ -50,20 +50,13 @@ int vchiq_susp_log_level = VCHIQ_LOG_ERROR;
+@@ -48,10 +48,6 @@
+ int vchiq_arm_log_level = VCHIQ_LOG_DEFAULT;
+ int vchiq_susp_log_level = VCHIQ_LOG_ERROR;
  
- #define VC_SUSPEND_NUM_OFFSET 3 /* number of values before idle which are -ve */
- static const char *const suspend_state_names[] = {
--	"VC_SUSPEND_FORCE_CANCELED",
--	"VC_SUSPEND_REJECTED",
--	"VC_SUSPEND_FAILED",
- 	"VC_SUSPEND_IDLE",
--	"VC_SUSPEND_REQUESTED",
- 	"VC_SUSPEND_IN_PROGRESS",
--	"VC_SUSPEND_SUSPENDED"
- };
- #define VC_RESUME_NUM_OFFSET 1 /* number of values before idle which are -ve */
- static const char *const resume_state_names[] = {
--	"VC_RESUME_FAILED",
- 	"VC_RESUME_IDLE",
- 	"VC_RESUME_REQUESTED",
--	"VC_RESUME_IN_PROGRESS",
- 	"VC_RESUME_RESUMED"
- };
+-#define VC_RESUME_NUM_OFFSET 1 /* number of values before idle which are -ve */
+-static const char *const resume_state_names[] = {
+-	"VC_RESUME_RESUMED"
+-};
  /* The number of times we allow force suspend to timeout before actually
-@@ -2396,18 +2389,6 @@ vchiq_arm_init_state(struct vchiq_state *state,
- **			before resuming can occur.  We therefore also reset the
- **			resume state machine to VC_RESUME_IDLE in this state.
- **
--** VC_SUSPEND_SUSPENDED - Suspend has completed successfully. Also call
--**			complete_all on the suspend completion to notify
--**			anything waiting for suspend to happen.
--**
--** VC_SUSPEND_REJECTED - Videocore rejected suspend. Videocore will also
--**			initiate resume, so no need to alter resume state.
--**			We call complete_all on the suspend completion to notify
--**			of suspend rejection.
--**
--** VC_SUSPEND_FAILED - We failed to initiate videocore suspend.  We notify the
--**			suspend completion and reset the resume state machine.
--**
- ** VC_RESUME_IDLE - Initialise the resume completion at the same time.  The
- **			resume completion is in it's 'done' state whenever
- **			videcore is running.  Therefore, the VC_RESUME_IDLE
-@@ -2415,13 +2396,6 @@ vchiq_arm_init_state(struct vchiq_state *state,
- **			Hence, any thread which needs to wait until videocore is
- **			running can wait on this completion - it will only block
- **			if videocore is suspended.
--**
--** VC_RESUME_RESUMED - Resume has completed successfully.  Videocore is running.
--**			Call complete_all on the resume completion to unblock
--**			any threads waiting for resume.	 Also reset the suspend
--**			state machine to it's idle state.
--**
--** VC_RESUME_FAILED - Currently unused - no mechanism to fail resume exists.
- */
+ ** _forcing_ suspend.  This is to cater for SW which fails to release vchiq
+ ** correctly - we don't want to prevent ARM suspend indefinitely in this case.
+@@ -2342,11 +2338,6 @@ vchiq_arm_init_state(struct vchiq_state *state,
+ 		atomic_set(&arm_state->ka_use_ack_count, 0);
+ 		atomic_set(&arm_state->ka_release_count, 0);
  
- void
-@@ -2433,23 +2407,11 @@ set_suspend_state(struct vchiq_arm_state *arm_state,
+-		init_completion(&arm_state->vc_resume_complete);
+-		/* Initialise to 'done' state.  We only want to block on resume
+-		 * completion while videocore is suspended. */
+-		set_resume_state(arm_state, VC_RESUME_RESUMED);
+-
+ 		arm_state->state = state;
+ 		arm_state->first_connect = 0;
  
- 	/* state specific additional actions */
- 	switch (new_state) {
--	case VC_SUSPEND_FORCE_CANCELED:
--		break;
--	case VC_SUSPEND_REJECTED:
--		break;
--	case VC_SUSPEND_FAILED:
--		arm_state->vc_resume_state = VC_RESUME_RESUMED;
+@@ -2354,24 +2345,6 @@ vchiq_arm_init_state(struct vchiq_state *state,
+ 	return VCHIQ_SUCCESS;
+ }
+ 
+-void
+-set_resume_state(struct vchiq_arm_state *arm_state,
+-		 enum vc_resume_status new_state)
+-{
+-	/* set the state in all cases */
+-	arm_state->vc_resume_state = new_state;
+-
+-	/* state specific additional actions */
+-	switch (new_state) {
+-	case VC_RESUME_RESUMED:
 -		complete_all(&arm_state->vc_resume_complete);
 -		break;
- 	case VC_SUSPEND_IDLE:
- 		break;
--	case VC_SUSPEND_REQUESTED:
+-	default:
+-		BUG();
 -		break;
- 	case VC_SUSPEND_IN_PROGRESS:
- 		set_resume_state(arm_state, VC_RESUME_IDLE);
- 		break;
--	case VC_SUSPEND_SUSPENDED:
--		break;
- 	default:
- 		BUG();
- 		break;
-@@ -2465,15 +2427,11 @@ set_resume_state(struct vchiq_arm_state *arm_state,
- 
- 	/* state specific additional actions */
- 	switch (new_state) {
--	case VC_RESUME_FAILED:
--		break;
- 	case VC_RESUME_IDLE:
- 		reinit_completion(&arm_state->vc_resume_complete);
- 		break;
- 	case VC_RESUME_REQUESTED:
- 		break;
--	case VC_RESUME_IN_PROGRESS:
--		break;
- 	case VC_RESUME_RESUMED:
- 		complete_all(&arm_state->vc_resume_complete);
- 		set_suspend_state(arm_state, VC_SUSPEND_IDLE);
-@@ -2503,12 +2461,6 @@ vchiq_platform_check_suspend(struct vchiq_state *state)
- 
- 	vchiq_log_trace(vchiq_susp_log_level, "%s", __func__);
- 
--	write_lock_bh(&arm_state->susp_res_lock);
--	if (arm_state->vc_suspend_state == VC_SUSPEND_REQUESTED &&
--			arm_state->vc_resume_state == VC_RESUME_RESUMED)
--		set_suspend_state(arm_state, VC_SUSPEND_IN_PROGRESS);
--	write_unlock_bh(&arm_state->susp_res_lock);
+-	}
+-}
 -
- out:
- 	vchiq_log_trace(vchiq_susp_log_level, "%s exit", __func__);
- 	return;
-@@ -2548,13 +2500,6 @@ vchiq_use_internal(struct vchiq_state *state, struct vchiq_service *service,
- 	local_uc = ++arm_state->videocore_use_count;
- 	local_entity_uc = ++(*entity_uc);
+ enum vchiq_status
+ vchiq_use_internal(struct vchiq_state *state, struct vchiq_service *service,
+ 		   enum USE_TYPE_E use_type)
+@@ -2412,22 +2385,6 @@ vchiq_use_internal(struct vchiq_state *state, struct vchiq_service *service,
  
--	/* If there's a pending request which hasn't yet been serviced then
--	 * just clear it.  If we're past VC_SUSPEND_REQUESTED state then
--	 * vc_resume_complete will block until we either resume or fail to
--	 * suspend */
--	if (arm_state->vc_suspend_state <= VC_SUSPEND_REQUESTED)
--		set_suspend_state(arm_state, VC_SUSPEND_IDLE);
+ 	write_unlock_bh(&arm_state->susp_res_lock);
+ 
+-	/* Completion is in a done state when we're not suspended, so this won't
+-	 * block for the non-suspended case. */
+-	if (!try_wait_for_completion(&arm_state->vc_resume_complete)) {
+-		vchiq_log_info(vchiq_susp_log_level, "%s %s wait for resume",
+-			__func__, entity);
+-		if (wait_for_completion_killable(
+-				&arm_state->vc_resume_complete)) {
+-			vchiq_log_error(vchiq_susp_log_level, "%s %s wait for "
+-				"resume interrupted", __func__, entity);
+-			ret = VCHIQ_ERROR;
+-			goto out;
+-		}
+-		vchiq_log_info(vchiq_susp_log_level, "%s %s resumed", __func__,
+-			entity);
+-	}
 -
- 	if ((use_type != USE_TYPE_SERVICE_NO_RESUME) && need_resume(state)) {
- 		set_resume_state(arm_state, VC_RESUME_REQUESTED);
- 		vchiq_log_info(vchiq_susp_log_level,
+ 	if (ret == VCHIQ_SUCCESS) {
+ 		enum vchiq_status status = VCHIQ_SUCCESS;
+ 		long ack_cnt = atomic_xchg(&arm_state->ka_use_ack_count, 0);
+@@ -2619,7 +2576,6 @@ vchiq_dump_service_use_state(struct vchiq_state *state)
+ 	int only_nonzero = 0;
+ 	static const char *nz = "<-- preventing suspend";
+ 
+-	enum vc_resume_status  vc_resume_state;
+ 	int peer_count;
+ 	int vc_use_count;
+ 	int active_services;
+@@ -2633,7 +2589,6 @@ vchiq_dump_service_use_state(struct vchiq_state *state)
+ 		return;
+ 
+ 	read_lock_bh(&arm_state->susp_res_lock);
+-	vc_resume_state  = arm_state->vc_resume_state;
+ 	peer_count = arm_state->peer_use_count;
+ 	vc_use_count = arm_state->videocore_use_count;
+ 	active_services = state->unused_service;
+@@ -2662,10 +2617,6 @@ vchiq_dump_service_use_state(struct vchiq_state *state)
+ 
+ 	read_unlock_bh(&arm_state->susp_res_lock);
+ 
+-	vchiq_log_warning(vchiq_susp_log_level,
+-		"-- Videcore resume state: %s --",
+-		resume_state_names[vc_resume_state + VC_RESUME_NUM_OFFSET]);
+-
+ 	if (only_nonzero)
+ 		vchiq_log_warning(vchiq_susp_log_level, "Too many active "
+ 			"services (%d).  Only dumping up to first %d services "
 diff --git a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_arm.h b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_arm.h
-index ac065f284372..ba616ee4fc95 100644
+index 7f5daa9aaf3d..2d747af4457a 100644
 --- a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_arm.h
 +++ b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_arm.h
-@@ -15,20 +15,13 @@
+@@ -14,10 +14,6 @@
+ #include "vchiq_core.h"
  #include "vchiq_debugfs.h"
  
- enum vc_suspend_status {
--	VC_SUSPEND_FORCE_CANCELED = -3, /* Force suspend canceled, too busy */
--	VC_SUSPEND_REJECTED = -2,  /* Videocore rejected suspend request */
--	VC_SUSPEND_FAILED = -1,    /* Videocore suspend failed */
- 	VC_SUSPEND_IDLE = 0,       /* VC active, no suspend actions */
--	VC_SUSPEND_REQUESTED,      /* User has requested suspend */
- 	VC_SUSPEND_IN_PROGRESS,    /* Slot handler has recvd suspend request */
--	VC_SUSPEND_SUSPENDED       /* Videocore suspend succeeded */
- };
+-enum vc_resume_status {
+-	VC_RESUME_RESUMED      /* Videocore resumed successfully (active) */
+-};
+-
+ enum USE_TYPE_E {
+ 	USE_TYPE_SERVICE,
+ 	USE_TYPE_VCHIQ
+@@ -31,10 +27,7 @@ struct vchiq_arm_state {
+ 	atomic_t ka_use_ack_count;
+ 	atomic_t ka_release_count;
  
- enum vc_resume_status {
--	VC_RESUME_FAILED = -1, /* Videocore resume failed */
- 	VC_RESUME_IDLE = 0,    /* VC suspended, no resume actions */
- 	VC_RESUME_REQUESTED,   /* User has requested resume */
--	VC_RESUME_IN_PROGRESS, /* Slot handler has received resume request */
- 	VC_RESUME_RESUMED      /* Videocore resumed successfully (active) */
- };
+-	struct completion vc_resume_complete;
+-
+ 	rwlock_t susp_res_lock;
+-	enum vc_resume_status vc_resume_state;
  
+ 	struct vchiq_state *state;
+ 
+@@ -117,8 +110,4 @@ vchiq_instance_get_trace(struct vchiq_instance *instance);
+ extern void
+ vchiq_instance_set_trace(struct vchiq_instance *instance, int trace);
+ 
+-extern void
+-set_resume_state(struct vchiq_arm_state *arm_state,
+-		 enum vc_resume_status new_state);
+-
+ #endif /* VCHIQ_ARM_H */
 -- 
 2.25.0
 
