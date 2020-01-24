@@ -2,125 +2,109 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 237C4C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 20:11:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFEC0C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 20:12:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02DE02071E
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 20:11:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82AC42081E
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 20:12:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b6nEs34L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404120AbgAXULq (ORCPT
+        id S2404219AbgAXUMg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 15:11:46 -0500
-Received: from 9.mo179.mail-out.ovh.net ([46.105.76.148]:42077 "EHLO
-        9.mo179.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2403994AbgAXULq (ORCPT
+        Fri, 24 Jan 2020 15:12:36 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:33841 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387535AbgAXUMg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 15:11:46 -0500
-X-Greylist: delayed 477 seconds by postgrey-1.27 at vger.kernel.org; Fri, 24 Jan 2020 15:11:43 EST
-Received: from player746.ha.ovh.net (unknown [10.108.57.141])
-        by mo179.mail-out.ovh.net (Postfix) with ESMTP id EB39E157B18
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Jan 2020 21:03:44 +0100 (CET)
-Received: from sk2.org (unknown [77.240.182.90])
-        (Authenticated sender: steve@sk2.org)
-        by player746.ha.ovh.net (Postfix) with ESMTPSA id 2A304EB0DCF2;
-        Fri, 24 Jan 2020 20:03:38 +0000 (UTC)
-From:   Stephen Kitt <steve@sk2.org>
-To:     Philipp Reisner <philipp.reisner@linbit.com>,
-        Lars Ellenberg <lars.ellenberg@linbit.com>,
-        Jens Axboe <axboe@kernel.dk>, drbd-dev@lists.linbit.com
-Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Stephen Kitt <steve@sk2.org>
-Subject: [PATCH] drbd fifo_alloc: use struct_size
-Date:   Fri, 24 Jan 2020 21:03:07 +0100
-Message-Id: <20200124200307.1808593-1-steve@sk2.org>
+        Fri, 24 Jan 2020 15:12:36 -0500
+Received: by mail-wr1-f66.google.com with SMTP id t2so3519283wrr.1
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jan 2020 12:12:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=rwO60z18tzr7WQ1TP+fRraEsg7xwuQbgnqSnqaMw5hc=;
+        b=b6nEs34Lez22ZBBp+RU/DKcDzy+B2KZikc59VGSL95cIqqFk5U4LW92rw3xrF/nYXA
+         A5Ig334+JLGJ6V298+KsUZthCMGiVqFYAipxMuMjyKBg+xXRR96a7Hfussm6OO2TBwic
+         tLyxTsl3XfBym5roX2ilHicefHn21awM/CUH2JChGjVfE0jb1smZcc6ImkvJbtyo2g/h
+         mAxRJ4AZUpMrU1PjdNg0nnfWR4bjNXLnStv5pdmuyexwyV92kqnofx+fLWDDptJKpZZ3
+         e38F3Yd8QuGS8HtuNQK1pbm7OzqzA6JX0nC7uRfEOw3r01gHhSm4bb5y5hfAt/4txkJG
+         aabg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=rwO60z18tzr7WQ1TP+fRraEsg7xwuQbgnqSnqaMw5hc=;
+        b=LgAFQIYoIvuQpY1LKDZVr0toiul3oC9N6qhfTK6VULq9A7K+Kbkc0gsFFn9GcScs5P
+         cwcmDiWq45h2r3yniOXXclchGCNoFxiSh9raCS6SPV50N7r/pJ9vBKz3etwOWIFYC74i
+         qkESNk3QKgIUkeFcx9YDR2Zw2OTA6gUz2RWyF8AcJPnJ3qrf0TWmEJClRqC7Qnvqu3FW
+         cwgJFFLmQ+ZO4Ba1uqWh53ZyVyLHlqY8hM6GxiSbHuLYf/Tjz7T/Aj45aakkACGWerJD
+         d4ExQETk5DXOf0AMhiVY7pogOfAkve2qMBoRXg8GbQHrAOMj+7VWI29dPSAT6oLmiIdR
+         EoOA==
+X-Gm-Message-State: APjAAAXXvxxg9aP3rYeJ/rbjGG9O+O5OuLdnBVt44nLpYFZSWD+oeB9O
+        TergvluSvJcsHp/wb+Y0AH3DH82d7g==
+X-Google-Smtp-Source: APXvYqz1EKFYVnl5kf+N2sLKycLiAepUZcXUxPrVeHgff0oVBCNvs7vQ/jaV/lybZkvIfeEfeyE8eA==
+X-Received: by 2002:adf:f58a:: with SMTP id f10mr6573895wro.105.1579896754091;
+        Fri, 24 Jan 2020 12:12:34 -0800 (PST)
+Received: from ninjahub.lan (host-92-15-174-87.as43234.net. [92.15.174.87])
+        by smtp.googlemail.com with ESMTPSA id i204sm6897654wma.44.2020.01.24.12.12.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 24 Jan 2020 12:12:33 -0800 (PST)
+From:   Jules Irenge <jbi.octave@gmail.com>
+Cc:     boqun.feng@gmail.com, Jules Irenge <jbi.octave@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Darren Hart <dvhart@infradead.org>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 2/3] futex: Add missing annotation for wake_futex_pi()
+Date:   Fri, 24 Jan 2020 20:12:19 +0000
+Message-Id: <a3868cdf0328e5953d6c12fe1e94fb2d8932044b.1579893447.git.jbi.octave@gmail.com>
 X-Mailer: git-send-email 2.24.1
+In-Reply-To: <cover.1579893447.git.jbi.octave@gmail.com>
+References: <0/3> <cover.1579893447.git.jbi.octave@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Ovh-Tracer-Id: 5593470739511987563
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: -100
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedugedrvdeggddufedtucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuqfggjfdpvefjgfevmfevgfenuceurghilhhouhhtmecuhedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvufffkffoggfgsedtkeertdertddtnecuhfhrohhmpefuthgvphhhvghnucfmihhtthcuoehsthgvvhgvsehskhdvrdhorhhgqeenucfkpheptddrtddrtddrtddpjeejrddvgedtrddukedvrdeltdenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhhouggvpehsmhhtphdqohhuthdphhgvlhhopehplhgrhigvrhejgeeirdhhrgdrohhvhhdrnhgvthdpihhnvghtpedtrddtrddtrddtpdhmrghilhhfrhhomhepshhtvghvvgesshhkvddrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Switching to struct_size for the allocation in fifo_alloc avoids
-hard-coding the type of fifo_buffer.values in fifo_alloc. It also
-provides overflow protection; to avoid pessimistic code being
-generated by the compiler as a result, this patch also switches
-fifo_size to unsigned, propagating the change as appropriate.
+Sparse reports a warning at wake_futex_pi()
 
-Signed-off-by: Stephen Kitt <steve@sk2.org>
+|warning: context imbalance in wake_futex_pi() - unexpected unlock
+To fix this,
+a __releases(&pi_state->pi_mutex.wait_lock) annotation is added
+Given that wake_futex_pi() does actually call
+raw_spin_unlock_irq(&pi_state->pi_mutex.wait_lock)
+This not only fixes the warning
+but also improves on the readability of the code.
+
+Signed-off-by: Jules Irenge <jbi.octave@gmail.com>
 ---
- drivers/block/drbd/drbd_int.h      | 2 +-
- drivers/block/drbd/drbd_nl.c       | 3 ++-
- drivers/block/drbd/drbd_receiver.c | 2 +-
- drivers/block/drbd/drbd_worker.c   | 4 ++--
- 4 files changed, 6 insertions(+), 5 deletions(-)
+ kernel/futex.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/block/drbd/drbd_int.h b/drivers/block/drbd/drbd_int.h
-index ddbf56014c51..aae99a2d7bd4 100644
---- a/drivers/block/drbd/drbd_int.h
-+++ b/drivers/block/drbd/drbd_int.h
-@@ -622,7 +622,7 @@ struct fifo_buffer {
- 	int total; /* sum of all values */
- 	int values[0];
- };
--extern struct fifo_buffer *fifo_alloc(int fifo_size);
-+extern struct fifo_buffer *fifo_alloc(unsigned int fifo_size);
- 
- /* flag bits per connection */
- enum {
-diff --git a/drivers/block/drbd/drbd_nl.c b/drivers/block/drbd/drbd_nl.c
-index de2f94d0103a..da4a3ebe04ef 100644
---- a/drivers/block/drbd/drbd_nl.c
-+++ b/drivers/block/drbd/drbd_nl.c
-@@ -1575,7 +1575,8 @@ int drbd_adm_disk_opts(struct sk_buff *skb, struct genl_info *info)
- 	struct drbd_device *device;
- 	struct disk_conf *new_disk_conf, *old_disk_conf;
- 	struct fifo_buffer *old_plan = NULL, *new_plan = NULL;
--	int err, fifo_size;
-+	int err;
-+	unsigned int fifo_size;
- 
- 	retcode = drbd_adm_prepare(&adm_ctx, skb, info, DRBD_ADM_NEED_MINOR);
- 	if (!adm_ctx.reply_skb)
-diff --git a/drivers/block/drbd/drbd_receiver.c b/drivers/block/drbd/drbd_receiver.c
-index 2b3103c30857..79e216446030 100644
---- a/drivers/block/drbd/drbd_receiver.c
-+++ b/drivers/block/drbd/drbd_receiver.c
-@@ -3887,7 +3887,7 @@ static int receive_SyncParam(struct drbd_connection *connection, struct packet_i
- 	struct disk_conf *old_disk_conf = NULL, *new_disk_conf = NULL;
- 	const int apv = connection->agreed_pro_version;
- 	struct fifo_buffer *old_plan = NULL, *new_plan = NULL;
--	int fifo_size = 0;
-+	unsigned int fifo_size = 0;
- 	int err;
- 
- 	peer_device = conn_peer_device(connection, pi->vnr);
-diff --git a/drivers/block/drbd/drbd_worker.c b/drivers/block/drbd/drbd_worker.c
-index 5bdcc70ad589..b7f605c6e231 100644
---- a/drivers/block/drbd/drbd_worker.c
-+++ b/drivers/block/drbd/drbd_worker.c
-@@ -482,11 +482,11 @@ static void fifo_add_val(struct fifo_buffer *fb, int value)
- 		fb->values[i] += value;
- }
- 
--struct fifo_buffer *fifo_alloc(int fifo_size)
-+struct fifo_buffer *fifo_alloc(unsigned int fifo_size)
+diff --git a/kernel/futex.c b/kernel/futex.c
+index 03c518e9747e..8bc288a7187f 100644
+--- a/kernel/futex.c
++++ b/kernel/futex.c
+@@ -1549,6 +1549,7 @@ static void mark_wake_futex(struct wake_q_head *wake_q, struct futex_q *q)
+  * Caller must hold a reference on @pi_state.
+  */
+ static int wake_futex_pi(u32 __user *uaddr, u32 uval, struct futex_pi_state *pi_state)
++	__releases(&pi_state->pi_mutex.wait_lock)
  {
- 	struct fifo_buffer *fb;
- 
--	fb = kzalloc(sizeof(struct fifo_buffer) + sizeof(int) * fifo_size, GFP_NOIO);
-+	fb = kzalloc(struct_size(fb, values, fifo_size), GFP_NOIO);
- 	if (!fb)
- 		return NULL;
- 
+ 	u32 uninitialized_var(curval), newval;
+ 	struct task_struct *new_owner;
 -- 
 2.24.1
 
