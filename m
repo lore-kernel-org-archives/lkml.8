@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45088C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:20:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AA0CC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:20:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0DA4E2075D
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:20:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50B4A214AF
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:20:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579864807;
-	bh=qN6/tn9x5rqsc+6CMzv6hWs9jcJj25g4spa0oz31JU0=;
+	s=default; t=1579864809;
+	bh=7bw2nOfb9pp3DL6IT/E9v7cEYrhBwFKvdoBR3TwdHVE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OvHoP+pGIMzAheBNBqktJKenX3wpdHlbJSJIXg+/68u7SJSWqgXIHfFZq0wD1g+RT
-	 v5WRWZUk18eG8HGMvc2t27PhEZl9TW0XhggcG8oWhvddwKqfvTt1rl2/2HDxCkrW/V
-	 gP473k7vuRwPu18UTxcsHtANx2BdnqY+fc3EitAs=
+	b=Qp2DvAizYrqtLPZhgUmK+GmhDOtu8V5YVDMEx6IVI631meGhr1PyB3hVzJTga9Wjl
+	 JQvkhKfp4VO8P/L2PYWu18ITE2PxqBlcKc+i1deYkbXb7qwBE0CReFcKbSY6/7u0Xi
+	 O1mnS/muIg6nEaDXM/TPc9BIBR4D2gsWqCftjOZk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390662AbgAXLUE (ORCPT
+        id S2390878AbgAXLUI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:20:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57462 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 06:20:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57558 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390861AbgAXLUB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:20:01 -0500
+        id S2390861AbgAXLUF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:20:05 -0500
 Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2FA3C20708;
-        Fri, 24 Jan 2020 11:19:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 29C4520708;
+        Fri, 24 Jan 2020 11:20:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579864800;
-        bh=qN6/tn9x5rqsc+6CMzv6hWs9jcJj25g4spa0oz31JU0=;
+        s=default; t=1579864804;
+        bh=7bw2nOfb9pp3DL6IT/E9v7cEYrhBwFKvdoBR3TwdHVE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RV98Z3FBDrjXBuahc7gNlYBkxttuIZva5MIYWVRaip+8Fi23a65TRzXioIMFRBTer
-         Dhbf19anreZzaG6b/6A81yRHhtqFpOduGipXwREMyuZpq6HbYEiruTQG8/dKewpfOf
-         y/spXX/a1SbFToL7Hdv8vbHSxMjrtRJVbb57rYMQ=
+        b=YwVAg1ziALf0f2RKoNQ9I1Y+ohbVZqhrilEmuodmOI9boac3TXTR2MytzW+TxnBJ8
+         FG8wsoi3Kr1rLOvy9kiQE8jn80xE96iD5TdHItOFNJebNPWqebLTmgVT/oj9FwC7NF
+         5sAqAT4B7397mZWnHetUmYocM2B5TiYI4AMMo1mI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Cornelia Huck <cohuck@redhat.com>,
-        Maxim Levitsky <mlevitsk@redhat.com>,
+        stable@vger.kernel.org, Maxim Levitsky <mlevitsk@redhat.com>,
         Parav Pandit <parav@mellanox.com>,
         Alex Williamson <alex.williamson@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 356/639] vfio/mdev: Follow correct remove sequence
-Date:   Fri, 24 Jan 2020 10:28:46 +0100
-Message-Id: <20200124093131.697858508@linuxfoundation.org>
+Subject: [PATCH 4.19 357/639] vfio/mdev: Fix aborting mdev child device removal if one fails
+Date:   Fri, 24 Jan 2020 10:28:47 +0100
+Message-Id: <20200124093131.812540499@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
 References: <20200124093047.008739095@linuxfoundation.org>
@@ -64,35 +63,73 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Parav Pandit <parav@mellanox.com>
 
-[ Upstream commit a6d6f4f160f76d840e59affe664b8d3159e23056 ]
+[ Upstream commit 6093e348a5e2475c5bb2e571346460f939998670 ]
 
-mdev_remove_sysfs_files() should follow exact mirror sequence of a
-create, similar to what is followed in error unwinding path of
-mdev_create_sysfs_files().
+device_for_each_child() stops executing callback function for remaining
+child devices, if callback hits an error.
+Each child mdev device is independent of each other.
+While unregistering parent device, mdev core must remove all child mdev
+devices.
+Therefore, mdev_device_remove_cb() always returns success so that
+device_for_each_child doesn't abort if one child removal hits error.
 
-Fixes: 6a62c1dfb5c7 ("vfio/mdev: Re-order sysfs attribute creation")
-Reviewed-by: Cornelia Huck <cohuck@redhat.com>
+While at it, improve remove and unregister functions for below simplicity.
+
+There isn't need to pass forced flag pointer during mdev parent
+removal which invokes mdev_device_remove(). So simplify the flow.
+
+mdev_device_remove() is called from two paths.
+1. mdev_unregister_driver()
+     mdev_device_remove_cb()
+       mdev_device_remove()
+2. remove_store()
+     mdev_device_remove()
+
+Fixes: 7b96953bc640 ("vfio: Mediated device Core driver")
 Reviewed-by: Maxim Levitsky <mlevitsk@redhat.com>
 Signed-off-by: Parav Pandit <parav@mellanox.com>
 Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/vfio/mdev/mdev_sysfs.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/vfio/mdev/mdev_core.c | 10 ++++------
+ 1 file changed, 4 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/vfio/mdev/mdev_sysfs.c b/drivers/vfio/mdev/mdev_sysfs.c
-index 249472f055097..e7770b511d033 100644
---- a/drivers/vfio/mdev/mdev_sysfs.c
-+++ b/drivers/vfio/mdev/mdev_sysfs.c
-@@ -280,7 +280,7 @@ type_link_failed:
+diff --git a/drivers/vfio/mdev/mdev_core.c b/drivers/vfio/mdev/mdev_core.c
+index 8cfa712308773..e052f62fdea7e 100644
+--- a/drivers/vfio/mdev/mdev_core.c
++++ b/drivers/vfio/mdev/mdev_core.c
+@@ -150,10 +150,10 @@ static int mdev_device_remove_ops(struct mdev_device *mdev, bool force_remove)
  
- void mdev_remove_sysfs_files(struct device *dev, struct mdev_type *type)
+ static int mdev_device_remove_cb(struct device *dev, void *data)
  {
-+	sysfs_remove_files(&dev->kobj, mdev_device_attrs);
- 	sysfs_remove_link(&dev->kobj, "mdev_type");
- 	sysfs_remove_link(type->devices_kobj, dev_name(dev));
--	sysfs_remove_files(&dev->kobj, mdev_device_attrs);
+-	if (!dev_is_mdev(dev))
+-		return 0;
++	if (dev_is_mdev(dev))
++		mdev_device_remove(dev, true);
+ 
+-	return mdev_device_remove(dev, data ? *(bool *)data : true);
++	return 0;
  }
+ 
+ /*
+@@ -241,7 +241,6 @@ EXPORT_SYMBOL(mdev_register_device);
+ void mdev_unregister_device(struct device *dev)
+ {
+ 	struct mdev_parent *parent;
+-	bool force_remove = true;
+ 
+ 	mutex_lock(&parent_list_lock);
+ 	parent = __find_parent_device(dev);
+@@ -255,8 +254,7 @@ void mdev_unregister_device(struct device *dev)
+ 	list_del(&parent->next);
+ 	class_compat_remove_link(mdev_bus_compat_class, dev, NULL);
+ 
+-	device_for_each_child(dev, (void *)&force_remove,
+-			      mdev_device_remove_cb);
++	device_for_each_child(dev, NULL, mdev_device_remove_cb);
+ 
+ 	parent_remove_sysfs_files(parent);
+ 
 -- 
 2.20.1
 
