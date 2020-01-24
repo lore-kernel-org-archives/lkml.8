@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7CB8C35243
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:32:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A64A3C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:32:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DA8C20661
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:32:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C34220661
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:32:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579876345;
-	bh=AyQZ3DCIZe67RaeskNigaXupa+yKmrbdFSbdO1ig+so=;
+	s=default; t=1579876350;
+	bh=LomHC6BIaZehvuifzRWoiiOm8DVSs0Au8YgTYp3b71M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ib3yzesWu1Rh1WJb1k9lbbCxKSEDz46aAlVSDQhJRNkJEl+Aj5aHmD6LWbmup8lHc
-	 RVqCoGRfjeSo4m3DXLKIjHsn7K3KiUiMg2m4SiDr9ddswOdyW8XoUutp+BCZBIEI8H
-	 ALsz9SxLwTBCORfxbQ7IpH9r3vh95rXsEtSdu54E=
+	b=0XbIKayV2DdUP01jFZiT6zrczGNCQis6QROmbfq6m025f0PNnPNauTVJV6g8gMPl0
+	 CiKG5FiQe0cW22zSSr0WSLgNdbH+zxUwq4RQ2e7SMkqe3EMOyUSXm8HsWnkgbwGITz
+	 rnrxtanlF3VdziUpQ5oRhvSUPK5MzKXEVO6u+ato=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404432AbgAXOUH (ORCPT
+        id S2392693AbgAXOc2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 09:20:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40354 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 09:32:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40896 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392053AbgAXOTr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 09:19:47 -0500
+        id S2404411AbgAXOUH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 09:20:07 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2B9C220838;
-        Fri, 24 Jan 2020 14:19:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4A67E21569;
+        Fri, 24 Jan 2020 14:20:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579875587;
-        bh=AyQZ3DCIZe67RaeskNigaXupa+yKmrbdFSbdO1ig+so=;
+        s=default; t=1579875607;
+        bh=LomHC6BIaZehvuifzRWoiiOm8DVSs0Au8YgTYp3b71M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kwPSen6z9f3Lg6yO5K8ftTYkFgCgXNfG53P/reflJ51pnz3p2l0clV09zMBpGHWoq
-         P6Z/orZ+dgDQtuvUCxxgvCI7ZJaftEmk3uiVMz+UJ0hL5VjugLjLfakGozMOmv53+Z
-         8adjdLNIRwSli95DyO/2+vQq0duuyPKtZhPRUyvs=
+        b=WEE2DJcZ1of0SBq49KLyvzqNHVJrh4lVxLfhWrIdX+8wBEts4TqAPWLXSfk1AvWYT
+         2eIjOE4+sLTnQXKcnlSEtmoUuY5NOB0k4RdzoRJNAmRc2t6UsfPfQMAwiY9Mo38wj+
+         RxDNs97eBAhg8WhpOmqmqWOI2c3uEeKajtdu5cDg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Petr Machata <petrm@mellanox.com>, Amit Cohen <amitc@mellanox.com>,
-        Ido Schimmel <idosch@mellanox.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, linux-api@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 077/107] selftests: mlxsw: qos_mc_aware: Fix mausezahn invocation
-Date:   Fri, 24 Jan 2020 09:17:47 -0500
-Message-Id: <20200124141817.28793-77-sashal@kernel.org>
+Cc:     Florian Westphal <fw@strlen.de>,
+        syzbot+37a6804945a3a13b1572@syzkaller.appspotmail.com,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Sasha Levin <sashal@kernel.org>,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 094/107] netfilter: nf_tables: fix flowtable list del corruption
+Date:   Fri, 24 Jan 2020 09:18:04 -0500
+Message-Id: <20200124141817.28793-94-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200124141817.28793-1-sashal@kernel.org>
 References: <20200124141817.28793-1-sashal@kernel.org>
@@ -60,54 +62,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Petr Machata <petrm@mellanox.com>
+From: Florian Westphal <fw@strlen.de>
 
-[ Upstream commit fef6d6704944c7be72fd2b77c021f1aed3d5df0d ]
+[ Upstream commit 335178d5429c4cee61b58f4ac80688f556630818 ]
 
-Mausezahn does not recognize "own" as a keyword on source IP address. As a
-result, the MC stream is not running at all, and therefore no UC
-degradation can be observed even in principle.
+syzbot reported following crash:
 
-Fix the invocation, and tighten the test: due to the minimum shaper
-configured at the MC TCs, we always expect about 20% degradation. Fail the
-test if it is lower.
+  list_del corruption, ffff88808c9bb000->prev is LIST_POISON2 (dead000000000122)
+  [..]
+  Call Trace:
+   __list_del_entry include/linux/list.h:131 [inline]
+   list_del_rcu include/linux/rculist.h:148 [inline]
+   nf_tables_commit+0x1068/0x3b30 net/netfilter/nf_tables_api.c:7183
+   [..]
 
-Fixes: 573363a68f27 ("selftests: mlxsw: Add qos_lib.sh")
-Signed-off-by: Petr Machata <petrm@mellanox.com>
-Reported-by: Amit Cohen <amitc@mellanox.com>
-Signed-off-by: Ido Schimmel <idosch@mellanox.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+The commit transaction list has:
+
+NFT_MSG_NEWTABLE
+NFT_MSG_NEWFLOWTABLE
+NFT_MSG_DELFLOWTABLE
+NFT_MSG_DELTABLE
+
+A missing generation check during DELTABLE processing causes it to queue
+the DELFLOWTABLE operation a second time, so we corrupt the list here:
+
+  case NFT_MSG_DELFLOWTABLE:
+     list_del_rcu(&nft_trans_flowtable(trans)->list);
+     nf_tables_flowtable_notify(&trans->ctx,
+
+because we have two different DELFLOWTABLE transactions for the same
+flowtable.  We then call list_del_rcu() twice for the same flowtable->list.
+
+The object handling seems to suffer from the same bug so add a generation
+check too and only queue delete transactions for flowtables/objects that
+are still active in the next generation.
+
+Reported-by: syzbot+37a6804945a3a13b1572@syzkaller.appspotmail.com
+Fixes: 3b49e2e94e6eb ("netfilter: nf_tables: add flow table netlink frontend")
+Signed-off-by: Florian Westphal <fw@strlen.de>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/drivers/net/mlxsw/qos_mc_aware.sh | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ net/netfilter/nf_tables_api.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/tools/testing/selftests/drivers/net/mlxsw/qos_mc_aware.sh b/tools/testing/selftests/drivers/net/mlxsw/qos_mc_aware.sh
-index 47315fe48d5af..24dd8ed485802 100755
---- a/tools/testing/selftests/drivers/net/mlxsw/qos_mc_aware.sh
-+++ b/tools/testing/selftests/drivers/net/mlxsw/qos_mc_aware.sh
-@@ -232,7 +232,7 @@ test_mc_aware()
- 	stop_traffic
- 	local ucth1=${uc_rate[1]}
+diff --git a/net/netfilter/nf_tables_api.c b/net/netfilter/nf_tables_api.c
+index 6fa315b73a66a..9fefd01500918 100644
+--- a/net/netfilter/nf_tables_api.c
++++ b/net/netfilter/nf_tables_api.c
+@@ -981,12 +981,18 @@ static int nft_flush_table(struct nft_ctx *ctx)
+ 	}
  
--	start_traffic $h1 own bc bc
-+	start_traffic $h1 192.0.2.65 bc bc
- 
- 	local d0=$(date +%s)
- 	local t0=$(ethtool_stats_get $h3 rx_octets_prio_0)
-@@ -254,7 +254,11 @@ test_mc_aware()
- 			ret = 100 * ($ucth1 - $ucth2) / $ucth1
- 			if (ret > 0) { ret } else { 0 }
- 		    ")
--	check_err $(bc <<< "$deg > 25")
+ 	list_for_each_entry_safe(flowtable, nft, &ctx->table->flowtables, list) {
++		if (!nft_is_active_next(ctx->net, flowtable))
++			continue;
 +
-+	# Minimum shaper of 200Mbps on MC TCs should cause about 20% of
-+	# degradation on 1Gbps link.
-+	check_err $(bc <<< "$deg < 15") "Minimum shaper not in effect"
-+	check_err $(bc <<< "$deg > 25") "MC traffic degrades UC performance too much"
+ 		err = nft_delflowtable(ctx, flowtable);
+ 		if (err < 0)
+ 			goto out;
+ 	}
  
- 	local interval=$((d1 - d0))
- 	local mc_ir=$(rate $u0 $u1 $interval)
+ 	list_for_each_entry_safe(obj, ne, &ctx->table->objects, list) {
++		if (!nft_is_active_next(ctx->net, obj))
++			continue;
++
+ 		err = nft_delobj(ctx, obj);
+ 		if (err < 0)
+ 			goto out;
 -- 
 2.20.1
 
