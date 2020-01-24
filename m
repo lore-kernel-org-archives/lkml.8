@@ -2,77 +2,77 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 284BBC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:26:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD270C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:32:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 00FFD20838
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:26:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 949122070A
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:32:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730540AbgAXJZ7 (ORCPT
+        id S1729459AbgAXJce (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 04:25:59 -0500
-Received: from mga05.intel.com ([192.55.52.43]:14069 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729593AbgAXJZ7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 04:25:59 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Jan 2020 01:25:58 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,357,1574150400"; 
-   d="scan'208";a="260181466"
-Received: from um.fi.intel.com (HELO um) ([10.237.72.57])
-  by fmsmga002.fm.intel.com with ESMTP; 24 Jan 2020 01:25:56 -0800
-From:   Alexander Shishkin <alexander.shishkin@linux.intel.com>
-To:     Song Liu <songliubraving@fb.com>, linux-kernel@vger.kernel.org
-Cc:     kernel-team@fb.com, Song Liu <songliubraving@fb.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        alexander.shishkin@linux.intel.com
-Subject: Re: [PATCH v3] perf/core: fix mlock accounting in perf_mmap()
-In-Reply-To: <20200123181146.2238074-1-songliubraving@fb.com>
-References: <20200123181146.2238074-1-songliubraving@fb.com>
-Date:   Fri, 24 Jan 2020 11:25:55 +0200
-Message-ID: <87zhed9pek.fsf@ashishki-desk.ger.corp.intel.com>
+        Fri, 24 Jan 2020 04:32:34 -0500
+Received: from www62.your-server.de ([213.133.104.62]:45784 "EHLO
+        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725821AbgAXJcd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 04:32:33 -0500
+Received: from sslproxy03.your-server.de ([88.198.220.132])
+        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89_1)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1iuvKG-0006Dq-UV; Fri, 24 Jan 2020 10:32:29 +0100
+Received: from [2001:1620:665:0:5795:5b0a:e5d5:5944] (helo=linux-3.fritz.box)
+        by sslproxy03.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1iuvKG-000Bp8-I2; Fri, 24 Jan 2020 10:32:28 +0100
+Subject: Re: [PATCH bpf 2/4] selftests: bpf: ignore RST packets for reuseport
+ tests
+To:     Lorenz Bauer <lmb@cloudflare.com>, Martin Lau <kafai@fb.com>
+Cc:     Shuah Khan <shuah@kernel.org>, Alexei Starovoitov <ast@kernel.org>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20200123165934.9584-1-lmb@cloudflare.com>
+ <20200123165934.9584-3-lmb@cloudflare.com>
+ <20200123215348.zql3d5xpg2if7v6q@kafai-mbp.dhcp.thefacebook.com>
+ <CACAyw9_OGBbsXepTcp=1frEHB7Q2cD9BVXTbgt7Ci_eFyV2Egg@mail.gmail.com>
+From:   Daniel Borkmann <daniel@iogearbox.net>
+Message-ID: <d5d230bd-6d62-3bb4-f663-8cec751b38a4@iogearbox.net>
+Date:   Fri, 24 Jan 2020 10:32:27 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <CACAyw9_OGBbsXepTcp=1frEHB7Q2cD9BVXTbgt7Ci_eFyV2Egg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Authenticated-Sender: daniel@iogearbox.net
+X-Virus-Scanned: Clear (ClamAV 0.101.4/25704/Thu Jan 23 12:37:43 2020)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Song Liu <songliubraving@fb.com> writes:
+On 1/24/20 10:00 AM, Lorenz Bauer wrote:
+> On Thu, 23 Jan 2020 at 21:54, Martin Lau <kafai@fb.com> wrote:
+>>
+>> btw, it needs a Fixes tag.
+>>
+>> Patch 4 and Patch 1 also need a Fixes tag.
+> 
+> This makes me wonder, should these go via bpf or bpf-next? Do I have
+> to split the series then?
 
-> Eecreasing sysctl_perf_event_mlock between two consecutive perf_mmap()s of
-
-Typo: "Decreasing".
-
-> a perf ring buffer may lead to an integer underflow in locked memory
-> accounting. This may lead to the undesired behaviors, such as failures in
-> BPF map creation.
->
-> Address this by adjusting the accounting logic to take into account the
-> possibility that the amount of already locked memory may exceed the
-> current limit.
->
-> Fixes: c4b75479741c ("perf/core: Make the mlock accounting simple again")
-> Signed-off-by: Song Liu <songliubraving@fb.com>
-> Suggested-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-> Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-> Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-> Cc: Jiri Olsa <jolsa@kernel.org>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-
-Other than that,
-
-Acked-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Lets do all of these for bpf-next since timing is very close before v5.5 release.
+If needed, we can later have them picked up for 5.5 stable.
 
 Thanks,
---
-Alex
+Daniel
