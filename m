@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C421C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:28:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92FF4C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:28:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27806206F0
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:28:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 609102077C
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:28:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579876081;
-	bh=LhOqOE5Kws2Soqj4/HwGuQ0Mpx90Ny6cQYVhR9F1lZk=;
+	s=default; t=1579876088;
+	bh=HBA1Sa1kde/HIZp5KczSgbLs5nHBQhTe0PfASzgy8o4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Jz6BJXadN9sr8oHvY5bvO0yPi6D1fRLtfT2IvbFmOpQf5xxdwSq+OLU9IYZD8SzG1
-	 Su5krRzzvR2CZzA0yIQwCAfkYJ0QiYRoGdAQ9AQajvFxr7nGMRCkz4Gtp+JAR9yycA
-	 FMsJ88Ihczp2vpQZpMJYeV1YDzsI40wIetev24lg=
+	b=z2+q+azuTNScocThDDgMzNllyTISeanx0UupIz3PtbBULBJ8MJj2BqD1DysKvv6B2
+	 c3e8eEK7xnx0FY+FM557bbYBOp1EoC3lffEJ2Yrxcx20bCkDkQKCYdHKK32kgKLJh6
+	 BQ0AgtH+W91iCIJ5SUR5EBTBgXHeZluRumdvq8HY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390513AbgAXO2A (ORCPT
+        id S2390749AbgAXO2H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 09:28:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42872 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 09:28:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42844 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405258AbgAXOVQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 09:21:16 -0500
+        id S2405252AbgAXOVP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 09:21:15 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 600872087E;
-        Fri, 24 Jan 2020 14:21:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5FAD722527;
+        Fri, 24 Jan 2020 14:21:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579875676;
-        bh=LhOqOE5Kws2Soqj4/HwGuQ0Mpx90Ny6cQYVhR9F1lZk=;
+        s=default; t=1579875675;
+        bh=HBA1Sa1kde/HIZp5KczSgbLs5nHBQhTe0PfASzgy8o4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iSSQa0+S2iG+dCYigNwSF2cTtLwz49opCas3Vs1wE0ceGR/9U26zOA6aE912F8DCF
-         6w6/2/ABKdyqzpT2ymYF5vlnQaB0Izvsuy8uzeLkdGfE4NMJCE5+BepIaNcaRUuYP6
-         tR8PoZaki2sFLu+MjC2Xxj1AKmx7cVbj3DtBiR8M=
+        b=Udm9SezInktJBRBlRc2GLTsuwj4hmiu2SOpXLIqFPZ/dlXbcECeZwnlRRL+uBoMR7
+         A1C8cVJAnUgVuHuOuLWnTzdekIgsg4Aw+TS1tts82z0TcVJQLH1WkHs022l5gQRLZs
+         YKtVv+hbYJ9cvaDmp2CEgrH0oqu271HFQG4InnYs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+Cc:     Yonglong Liu <liuyonglong@huawei.com>,
         "David S . Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 54/56] net: dsa: bcm_sf2: Configure IMP port for 2Gb/sec
-Date:   Fri, 24 Jan 2020 09:20:10 -0500
-Message-Id: <20200124142012.29752-54-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 53/56] net: hns: fix soft lockup when there is not enough memory
+Date:   Fri, 24 Jan 2020 09:20:09 -0500
+Message-Id: <20200124142012.29752-53-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200124142012.29752-1-sashal@kernel.org>
 References: <20200124142012.29752-1-sashal@kernel.org>
@@ -59,37 +59,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Fainelli <f.fainelli@gmail.com>
+From: Yonglong Liu <liuyonglong@huawei.com>
 
-[ Upstream commit 8f1880cbe8d0d49ebb7e9ae409b3b96676e5aa97 ]
+[ Upstream commit 49edd6a2c456150870ddcef5b7ed11b21d849e13 ]
 
-With the implementation of the system reset controller we lost a setting
-that is currently applied by the bootloader and which configures the IMP
-port for 2Gb/sec, the default is 1Gb/sec. This is needed given the
-number of ports and applications we expect to run so bring back that
-setting.
+When there is not enough memory and napi_alloc_skb() return NULL,
+the HNS driver will print error message, and than try again, if
+the memory is not enough for a while, huge error message and the
+retry operation will cause soft lockup.
 
-Fixes: 01b0ac07589e ("net: dsa: bcm_sf2: Add support for optional reset controller line")
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+When napi_alloc_skb() return NULL because of no memory, we can
+get a warn_alloc() call trace, so this patch deletes the error
+message. We already use polling mode to handle irq, but the
+retry operation will render the polling weight inactive, this
+patch just return budget when the rx is not completed to avoid
+dead loop.
+
+Fixes: 36eedfde1a36 ("net: hns: Optimize hns_nic_common_poll for better performance")
+Fixes: b5996f11ea54 ("net: add Hisilicon Network Subsystem basic ethernet support")
+Signed-off-by: Yonglong Liu <liuyonglong@huawei.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/dsa/bcm_sf2.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/hisilicon/hns/hns_enet.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/drivers/net/dsa/bcm_sf2.c b/drivers/net/dsa/bcm_sf2.c
-index 02a4187d81bd0..c936090076706 100644
---- a/drivers/net/dsa/bcm_sf2.c
-+++ b/drivers/net/dsa/bcm_sf2.c
-@@ -72,7 +72,7 @@ static void bcm_sf2_imp_setup(struct dsa_switch *ds, int port)
+diff --git a/drivers/net/ethernet/hisilicon/hns/hns_enet.c b/drivers/net/ethernet/hisilicon/hns/hns_enet.c
+index 7f8cf809e02b5..024b08fafd3b2 100644
+--- a/drivers/net/ethernet/hisilicon/hns/hns_enet.c
++++ b/drivers/net/ethernet/hisilicon/hns/hns_enet.c
+@@ -569,7 +569,6 @@ static int hns_nic_poll_rx_skb(struct hns_nic_ring_data *ring_data,
+ 	skb = *out_skb = napi_alloc_skb(&ring_data->napi,
+ 					HNS_RX_HEAD_SIZE);
+ 	if (unlikely(!skb)) {
+-		netdev_err(ndev, "alloc rx skb fail\n");
+ 		ring->stats.sw_err_cnt++;
+ 		return -ENOMEM;
+ 	}
+@@ -1060,7 +1059,6 @@ static int hns_nic_common_poll(struct napi_struct *napi, int budget)
+ 		container_of(napi, struct hns_nic_ring_data, napi);
+ 	struct hnae_ring *ring = ring_data->ring;
  
- 		/* Force link status for IMP port */
- 		reg = core_readl(priv, offset);
--		reg |= (MII_SW_OR | LINK_STS);
-+		reg |= (MII_SW_OR | LINK_STS | GMII_SPEED_UP_2G);
- 		core_writel(priv, reg, offset);
+-try_again:
+ 	clean_complete += ring_data->poll_one(
+ 				ring_data, budget - clean_complete,
+ 				ring_data->ex_process);
+@@ -1070,7 +1068,7 @@ try_again:
+ 			napi_complete(napi);
+ 			ring->q->handle->dev->ops->toggle_ring_irq(ring, 0);
+ 		} else {
+-			goto try_again;
++			return budget;
+ 		}
+ 	}
  
- 		/* Enable Broadcast, Multicast, Unicast forwarding to IMP port */
 -- 
 2.20.1
 
