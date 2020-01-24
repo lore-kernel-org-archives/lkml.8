@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 514FEC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:09:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B674C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:09:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 231F52075D
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:09:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3981B20708
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:09:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579864169;
-	bh=7nPI0tt7j0JBxlx0n7ebAsqlu3UsN9J6K28FdVhwmn4=;
+	s=default; t=1579864177;
+	bh=WGMkkEwBEFh8uETLno4+HXpzwOrbp4/bVvc4bg1aMgs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gkf7Il6tRB83uWnLdBCkmgQBcozkmDPBdLsW2HSqfOn0Jvj3zgw2Z6Gv1HKNHzYT9
-	 +ve+DAUAKSfZAsEfHc9lTlkFox/Ahf1+Mm0SVIm4B3BKqXVjpyaQdXIjalfgGkAcH4
-	 1L4Sw1fXr+J/PxbvKkdNbmROdqAa/N2K/6F3PaD0=
+	b=AhwY7WGBkr8iBithPAQj1COVj5yhRcHkOPn5ND/ccITWI6KyW+bJx7mthWOsRef0f
+	 Yg2Xq8bAfNf6VkodnXwaV9vzUu2oIuQW04lyrNlRGv5UxSsXVvIai5qWjOUYkc1EaO
+	 I68r9Tpv09sNMGJZdmyIFUNOOcK2xC8DtFGEbsbo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731041AbgAXLJ1 (ORCPT
+        id S1732469AbgAXLJg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:09:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44994 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 06:09:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45128 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730771AbgAXLJX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:09:23 -0500
+        id S1731391AbgAXLJb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:09:31 -0500
 Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4313220708;
-        Fri, 24 Jan 2020 11:09:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 012FD20663;
+        Fri, 24 Jan 2020 11:09:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579864162;
-        bh=7nPI0tt7j0JBxlx0n7ebAsqlu3UsN9J6K28FdVhwmn4=;
+        s=default; t=1579864170;
+        bh=WGMkkEwBEFh8uETLno4+HXpzwOrbp4/bVvc4bg1aMgs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iRiryMJAVUlNKzcxh+YafyJStps+3lVb3uvrqhz7tuLHWux1hJMkGDXlF5S2Xx2T7
-         0mGbf+bTQm1GOJM3TQ6TgbImavXgDyArqVwa7JA928bUDb5Lfveck2cdL4fCOAniUZ
-         EMcri2ZmyTUSF05IkqOtvDCBC2wWXBSVg8KuBbog=
+        b=BFV0Gk7BviwF6yYHpSRlIUsTqGgoTm85F/kvnutVPLf5cGvDQ6cjsewAmVhoUHBSC
+         Ubg4NhPgUkVw9P1WPzXoKtiKmcac/Ty/qdhiECGlRwuVIRN3YboSHfzjNnOPb3dqdQ
+         nqcEMzAjllTcTcQ/Au2UgMMV/LXkOZWyGoUjlwQw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>,
-        Moritz Fischer <mdf@kernel.org>,
+        stable@vger.kernel.org, Eugene Syromiatnikov <esyr@redhat.com>,
+        Karsten Graul <kgraul@linux.ibm.com>,
+        Ursula Braun <ubraun@linux.ibm.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 176/639] net: phy: fixed_phy: Fix fixed_phy not checking GPIO
-Date:   Fri, 24 Jan 2020 10:25:46 +0100
-Message-Id: <20200124093109.232533274@linuxfoundation.org>
+Subject: [PATCH 4.19 178/639] net/smc: original socket family in inet_sock_diag
+Date:   Fri, 24 Jan 2020 10:25:48 +0100
+Message-Id: <20200124093109.468776492@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
 References: <20200124093047.008739095@linuxfoundation.org>
@@ -61,44 +62,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Moritz Fischer <mdf@kernel.org>
+From: Karsten Graul <kgraul@linux.ibm.com>
 
-[ Upstream commit 8f289805616e81f7c1690931aa8a586c76f4fa88 ]
+[ Upstream commit 232dc8ef647658a5352da807d9e994e0e03b43cd ]
 
-Fix fixed_phy not checking GPIO if no link_update callback
-is registered.
+Commit ed75986f4aae ("net/smc: ipv6 support for smc_diag.c") changed the
+value of the diag_family field. The idea was to indicate the family of
+the IP address in the inet_diag_sockid field. But the change makes it
+impossible to distinguish an inet_sock_diag response message from SMC
+sock_diag response. This patch restores the original behaviour and sends
+AF_SMC as value of the diag_family field.
 
-In the original version all users registered a link_update
-callback so the issue was masked.
-
-Fixes: a5597008dbc2 ("phy: fixed_phy: Add gpio to determine link up/down.")
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-Signed-off-by: Moritz Fischer <mdf@kernel.org>
+Fixes: ed75986f4aae ("net/smc: ipv6 support for smc_diag.c")
+Reported-by: Eugene Syromiatnikov <esyr@redhat.com>
+Signed-off-by: Karsten Graul <kgraul@linux.ibm.com>
+Signed-off-by: Ursula Braun <ubraun@linux.ibm.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/phy/fixed_phy.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ net/smc/smc_diag.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/net/phy/fixed_phy.c b/drivers/net/phy/fixed_phy.c
-index 67b260877f305..59820164502eb 100644
---- a/drivers/net/phy/fixed_phy.c
-+++ b/drivers/net/phy/fixed_phy.c
-@@ -67,11 +67,11 @@ static int fixed_mdio_read(struct mii_bus *bus, int phy_addr, int reg_num)
- 			do {
- 				s = read_seqcount_begin(&fp->seqcount);
- 				/* Issue callback if user registered it. */
--				if (fp->link_update) {
-+				if (fp->link_update)
- 					fp->link_update(fp->phydev->attached_dev,
- 							&fp->status);
--					fixed_phy_update(fp);
--				}
-+				/* Check the GPIO for change in status */
-+				fixed_phy_update(fp);
- 				state = fp->status;
- 			} while (read_seqcount_retry(&fp->seqcount, s));
+diff --git a/net/smc/smc_diag.c b/net/smc/smc_diag.c
+index dbf64a93d68ad..371b4cf31fcd2 100644
+--- a/net/smc/smc_diag.c
++++ b/net/smc/smc_diag.c
+@@ -38,6 +38,7 @@ static void smc_diag_msg_common_fill(struct smc_diag_msg *r, struct sock *sk)
+ {
+ 	struct smc_sock *smc = smc_sk(sk);
  
++	r->diag_family = sk->sk_family;
+ 	if (!smc->clcsock)
+ 		return;
+ 	r->id.idiag_sport = htons(smc->clcsock->sk->sk_num);
+@@ -45,14 +46,12 @@ static void smc_diag_msg_common_fill(struct smc_diag_msg *r, struct sock *sk)
+ 	r->id.idiag_if = smc->clcsock->sk->sk_bound_dev_if;
+ 	sock_diag_save_cookie(sk, r->id.idiag_cookie);
+ 	if (sk->sk_protocol == SMCPROTO_SMC) {
+-		r->diag_family = PF_INET;
+ 		memset(&r->id.idiag_src, 0, sizeof(r->id.idiag_src));
+ 		memset(&r->id.idiag_dst, 0, sizeof(r->id.idiag_dst));
+ 		r->id.idiag_src[0] = smc->clcsock->sk->sk_rcv_saddr;
+ 		r->id.idiag_dst[0] = smc->clcsock->sk->sk_daddr;
+ #if IS_ENABLED(CONFIG_IPV6)
+ 	} else if (sk->sk_protocol == SMCPROTO_SMC6) {
+-		r->diag_family = PF_INET6;
+ 		memcpy(&r->id.idiag_src, &smc->clcsock->sk->sk_v6_rcv_saddr,
+ 		       sizeof(smc->clcsock->sk->sk_v6_rcv_saddr));
+ 		memcpy(&r->id.idiag_dst, &smc->clcsock->sk->sk_v6_daddr,
 -- 
 2.20.1
 
