@@ -2,354 +2,102 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FA7FC35242
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 15:56:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D198C35242
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 15:56:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0477E2071E
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 15:56:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 749382071E
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 15:56:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="POqUkIjb"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="f5s52TMq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389546AbgAXP4G (ORCPT
+        id S2389603AbgAXP4f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 10:56:06 -0500
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:48946 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2389209AbgAXP4G (ORCPT
+        Fri, 24 Jan 2020 10:56:35 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:50696 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389209AbgAXP4f (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 10:56:06 -0500
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00OFsA3K021731;
-        Fri, 24 Jan 2020 16:55:48 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=STMicroelectronics;
- bh=RIPX9tQ6Lx1BfiUExNjFXUscs7twuO2vNYhbgRvSd8U=;
- b=POqUkIjbaAIZKnAXw27HwWxHmjXMk5M6Pg4DQW2WacPV7XVy9iUvsurAVVJLYALPIzcY
- RNBNcKF0ENVJsLh8UTQSn8zhk+5HiuNOshc3gBm++YicbOx//trDoFbNThtqrbFAvhQM
- lJ85TbLOd3MyCCXdursG097wN3wQ6wToLEaCpd6UQGZdx3OQpUP3JKQ/OXh/4quxpdVG
- Gd7dWWHx5CyUqitEnHrabQrIto/IeQhF0M07f/xS5Swsn1QHc98y1EGehOrZtrEztJWm
- q7NgNjgBtkltPwEWDHOEBNacHz9x1s7Nw2HlHDH3OW5pnTZqAnj9lonTz6On0q+rkwEH lw== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2xksspgksj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 24 Jan 2020 16:55:48 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 4936910002A;
-        Fri, 24 Jan 2020 16:55:45 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id E8D702B1867;
-        Fri, 24 Jan 2020 16:55:44 +0100 (CET)
-Received: from localhost (10.75.127.47) by SFHDAG3NODE3.st.com (10.75.127.9)
- with Microsoft SMTP Server (TLS) id 15.0.1347.2; Fri, 24 Jan 2020 16:55:44
- +0100
-From:   Benjamin Gaignard <benjamin.gaignard@st.com>
-To:     <wg@grandegger.com>, <mkl@pengutronix.de>, <davem@davemloft.net>,
-        <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <sriram.dash@samsung.com>
-CC:     <linux-can@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Benjamin Gaignard <benjamin.gaignard@st.com>
-Subject: [PATCH] dt-bindings: net: can: Convert M_CAN to json-schema
-Date:   Fri, 24 Jan 2020 16:55:42 +0100
-Message-ID: <20200124155542.2053-1-benjamin.gaignard@st.com>
-X-Mailer: git-send-email 2.15.0
+        Fri, 24 Jan 2020 10:56:35 -0500
+Received: by mail-wm1-f66.google.com with SMTP id a5so2117000wmb.0
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jan 2020 07:56:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=V49eDPK1RxI7emBI+6HyeraP6a4Pl1g4ihe19+WEXsY=;
+        b=f5s52TMqkN1hbJ3m5ijqyd1gugwRwZpdSNUp1MQSSmlD8acxtb8qMPMqY+YlkeZbRe
+         rqIiRm+1Ir+uDuyTpH03cKGdd0/IOmev1vdc8WzOY+NXUHUk64po6g7kBQM+P+/5jx5n
+         t9TJcXt/1N1buCmKdGcx3wDMxosIQbuobG7Qa94dLuaBLkCNRePhNzbt+QXiWlVvCE++
+         yIZib1d7pLRcX+LoRtLoqAEJyDTzK3mBLzUR6asIZ6NxZYwlqK51ANAYOlQnYoHD35s6
+         jVXqktOIgMSmu0UY4PfLbRjE7AfCZALcdJg+g0K8SbQgS7ikMPSUAXOPg7tBAqg1qrYv
+         /yfA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=V49eDPK1RxI7emBI+6HyeraP6a4Pl1g4ihe19+WEXsY=;
+        b=E1P6iBh7SZlraTQDzGqkPSVcsuQuEDtOW4ukDA4ggJYSzZ4QvSQTr3zbE5M4o1jtRg
+         +UPzsRTtrMdgI304dtYvzEgLUvhQN/Wam2YWflKpyq06UB9Ps1RcNOuyM/7u7uADq37h
+         dHXNJthMYJ39S4dprlGELriJZm3JHlf59kuHrrg7sZ4fyPac6znC7mWIartTZ8aapZzj
+         R20qJ7diSdwYHn7WocPjGK2NxJFpLXhJBCJpQnlBYVGYoexueIkwZz/pDDyRHxG9DpqS
+         7nfHW2Y26zvkXoxq4vBkH5BSZaxNw1pJYM0CmcNB3DjFy5ARJIVArVgYggeoSisgP+A/
+         Z2IQ==
+X-Gm-Message-State: APjAAAVbJx1OudruT5YGW7zsZJRd+y5FVRCS/sdg9Z2SuCbyJUtdRtC0
+        pJz7SprfNqwBWCArGMV+EE4G7A==
+X-Google-Smtp-Source: APXvYqx+CLEXqR1mcb4MPoapn3ds/D4SG19ISlv2DzH7K9vKhU+RbFsjo7t3xTGQRetT6MTAJtYeSA==
+X-Received: by 2002:a1c:a9c3:: with SMTP id s186mr1938216wme.64.1579881393333;
+        Fri, 24 Jan 2020 07:56:33 -0800 (PST)
+Received: from mjourdan-ThinkPad-T480.baylibre.local (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id i204sm6121979wma.44.2020.01.24.07.56.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 24 Jan 2020 07:56:32 -0800 (PST)
+From:   Maxime Jourdan <mjourdan@baylibre.com>
+To:     mchehab@kernel.org, hans.verkuil@cisco.com
+Cc:     Maxime Jourdan <mjourdan@baylibre.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        linux-media@vger.kernel.org, linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] media: meson: vdec: don't resume instantly if not streaming capture
+Date:   Fri, 24 Jan 2020 16:56:31 +0100
+Message-Id: <20200124155631.7063-1-mjourdan@baylibre.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.47]
-X-ClientProxiedBy: SFHDAG5NODE3.st.com (10.75.127.15) To SFHDAG3NODE3.st.com
- (10.75.127.9)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-01-24_05:2020-01-24,2020-01-24 signatures=0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert M_CAN bindings to json-schema
+In case userspace configured the capture queue before the source change
+event, do not resume decoding instantly if it wasn't streamed on yet.
 
-Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+Signed-off-by: Maxime Jourdan <mjourdan@baylibre.com>
 ---
- .../bindings/net/can/can-transceiver.txt           |  24 ----
- .../devicetree/bindings/net/can/m_can.txt          |  75 ----------
- .../devicetree/bindings/net/can/m_can.yaml         | 151 +++++++++++++++++++++
- 3 files changed, 151 insertions(+), 99 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/net/can/can-transceiver.txt
- delete mode 100644 Documentation/devicetree/bindings/net/can/m_can.txt
- create mode 100644 Documentation/devicetree/bindings/net/can/m_can.yaml
 
-diff --git a/Documentation/devicetree/bindings/net/can/can-transceiver.txt b/Documentation/devicetree/bindings/net/can/can-transceiver.txt
-deleted file mode 100644
-index 0011f53ff159..000000000000
---- a/Documentation/devicetree/bindings/net/can/can-transceiver.txt
-+++ /dev/null
-@@ -1,24 +0,0 @@
--Generic CAN transceiver Device Tree binding
--------------------------------
--
--CAN transceiver typically limits the max speed in standard CAN and CAN FD
--modes. Typically these limitations are static and the transceivers themselves
--provide no way to detect this limitation at runtime. For this situation,
--the "can-transceiver" node can be used.
--
--Required Properties:
-- max-bitrate:	a positive non 0 value that determines the max
--		speed that CAN/CAN-FD can run. Any other value
--		will be ignored.
--
--Examples:
--
--Based on Texas Instrument's TCAN1042HGV CAN Transceiver
--
--m_can0 {
--	....
--	can-transceiver {
--		max-bitrate = <5000000>;
--	};
--	...
--};
-diff --git a/Documentation/devicetree/bindings/net/can/m_can.txt b/Documentation/devicetree/bindings/net/can/m_can.txt
-deleted file mode 100644
-index ed614383af9c..000000000000
---- a/Documentation/devicetree/bindings/net/can/m_can.txt
-+++ /dev/null
-@@ -1,75 +0,0 @@
--Bosch MCAN controller Device Tree Bindings
---------------------------------------------------
--
--Required properties:
--- compatible		: Should be "bosch,m_can" for M_CAN controllers
--- reg			: physical base address and size of the M_CAN
--			  registers map and Message RAM
--- reg-names		: Should be "m_can" and "message_ram"
--- interrupts		: Should be the interrupt number of M_CAN interrupt
--			  line 0 and line 1, could be same if sharing
--			  the same interrupt.
--- interrupt-names	: Should contain "int0" and "int1"
--- clocks		: Clocks used by controller, should be host clock
--			  and CAN clock.
--- clock-names		: Should contain "hclk" and "cclk"
--- pinctrl-<n>		: Pinctrl states as described in bindings/pinctrl/pinctrl-bindings.txt
--- pinctrl-names 	: Names corresponding to the numbered pinctrl states
--- bosch,mram-cfg	: Message RAM configuration data.
--			  Multiple M_CAN instances can share the same Message
--			  RAM and each element(e.g Rx FIFO or Tx Buffer and etc)
--			  number in Message RAM is also configurable,
--			  so this property is telling driver how the shared or
--			  private Message RAM are used by this M_CAN controller.
--
--			  The format should be as follows:
--			  <offset sidf_elems xidf_elems rxf0_elems rxf1_elems
--			   rxb_elems txe_elems txb_elems>
--			  The 'offset' is an address offset of the Message RAM
--			  where the following elements start from. This is
--			  usually set to 0x0 if you're using a private Message
--			  RAM. The remain cells are used to specify how many
--			  elements are used for each FIFO/Buffer.
--
--			  M_CAN includes the following elements according to user manual:
--			  11-bit Filter	0-128 elements / 0-128 words
--			  29-bit Filter	0-64 elements / 0-128 words
--			  Rx FIFO 0	0-64 elements / 0-1152 words
--			  Rx FIFO 1	0-64 elements / 0-1152 words
--			  Rx Buffers	0-64 elements / 0-1152 words
--			  Tx Event FIFO	0-32 elements / 0-64 words
--			  Tx Buffers	0-32 elements / 0-576 words
--
--			  Please refer to 2.4.1 Message RAM Configuration in
--			  Bosch M_CAN user manual for details.
--
--Optional Subnode:
--- can-transceiver	: Can-transceiver subnode describing maximum speed
--			  that can be used for CAN/CAN-FD modes. See
--			  Documentation/devicetree/bindings/net/can/can-transceiver.txt
--			  for details.
--Example:
--SoC dtsi:
--m_can1: can@20e8000 {
--	compatible = "bosch,m_can";
--	reg = <0x020e8000 0x4000>, <0x02298000 0x4000>;
--	reg-names = "m_can", "message_ram";
--	interrupts = <0 114 0x04>,
--		     <0 114 0x04>;
--	interrupt-names = "int0", "int1";
--	clocks = <&clks IMX6SX_CLK_CANFD>,
--		 <&clks IMX6SX_CLK_CANFD>;
--	clock-names = "hclk", "cclk";
--	bosch,mram-cfg = <0x0 0 0 32 0 0 0 1>;
--};
--
--Board dts:
--&m_can1 {
--	pinctrl-names = "default";
--	pinctrl-0 = <&pinctrl_m_can1>;
--	status = "enabled";
--
--	can-transceiver {
--		max-bitrate = <5000000>;
--	};
--};
-diff --git a/Documentation/devicetree/bindings/net/can/m_can.yaml b/Documentation/devicetree/bindings/net/can/m_can.yaml
-new file mode 100644
-index 000000000000..efdbed81af29
---- /dev/null
-+++ b/Documentation/devicetree/bindings/net/can/m_can.yaml
-@@ -0,0 +1,151 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/net/can/m_can.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Bosch MCAN controller Bindings
-+
-+description: Bosch MCAN controller for CAN bus
-+
-+maintainers:
-+  -  Sriram Dash <sriram.dash@samsung.com>
-+
-+properties:
-+  compatible:
-+    const: bosch,m_can
-+
-+  reg:
-+    items:
-+      - description: M_CAN registers map
-+      - description: message RAM
-+
-+  reg-names:
-+    items:
-+      - const: m_can
-+      - const: message_ram
-+
-+  interrupts:
-+    items:
-+      - description: interrupt line0
-+      - description: interrupt line1
-+    minItems: 1
-+    maxItems: 2
-+
-+  interrupt-names:
-+    items:
-+      - const: int0
-+      - const: int1
-+    minItems: 1
-+    maxItems: 2
-+
-+  clocks:
-+    items:
-+      - description: peripheral clock
-+      - description: bus clock
-+
-+  clock-names:
-+    items:
-+      - const: hclk
-+      - const: cclk
-+
-+  bosch,mram-cfg:
-+    description: |
-+                 Message RAM configuration data.
-+                 Multiple M_CAN instances can share the same Message RAM
-+                 and each element(e.g Rx FIFO or Tx Buffer and etc) number
-+                 in Message RAM is also configurable, so this property is
-+                 telling driver how the shared or private Message RAM are
-+                 used by this M_CAN controller.
-+
-+                 The format should be as follows:
-+                 <offset sidf_elems xidf_elems rxf0_elems rxf1_elems rxb_elems txe_elems txb_elems>
-+                 The 'offset' is an address offset of the Message RAM where
-+                 the following elements start from. This is usually set to
-+                 0x0 if you're using a private Message RAM. The remain cells
-+                 are used to specify how many elements are used for each FIFO/Buffer.
-+
-+                 M_CAN includes the following elements according to user manual:
-+                 11-bit Filter	0-128 elements / 0-128 words
-+                 29-bit Filter	0-64 elements / 0-128 words
-+                 Rx FIFO 0	0-64 elements / 0-1152 words
-+                 Rx FIFO 1	0-64 elements / 0-1152 words
-+                 Rx Buffers	0-64 elements / 0-1152 words
-+                 Tx Event FIFO	0-32 elements / 0-64 words
-+                 Tx Buffers	0-32 elements / 0-576 words
-+
-+                 Please refer to 2.4.1 Message RAM Configuration in Bosch
-+                 M_CAN user manual for details.
-+    allOf:
-+      - $ref: /schemas/types.yaml#/definitions/int32-matrix
-+      - items:
-+         items:
-+           - description: The 'offset' is an address offset of the Message RAM
-+                          where the following elements start from. This is usually
-+                          set to 0x0 if you're using a private Message RAM.
-+             default: 0
-+           - description: 11-bit Filter 0-128 elements / 0-128 words
-+             minimum: 0
-+             maximum: 128
-+           - description: 29-bit Filter 0-64 elements / 0-128 words
-+             minimum: 0
-+             maximum: 64
-+           - description: Rx FIFO 0 0-64 elements / 0-1152 words
-+             minimum: 0
-+             maximum: 64
-+           - description: Rx FIFO 1 0-64 elements / 0-1152 words
-+             minimum: 0
-+             maximum: 64
-+           - description: Rx Buffers 0-64 elements / 0-1152 words
-+             minimum: 0
-+             maximum: 64
-+           - description: Tx Event FIFO 0-32 elements / 0-64 words
-+             minimum: 0
-+             maximum: 32
-+           - description: Tx Buffers 0-32 elements / 0-576 words
-+             minimum: 0
-+             maximum: 32
-+        maxItems: 1
-+
-+  can-transceiver:
-+    type: object
-+
-+    properties:
-+      max-bitrate:
-+        $ref: /schemas/types.yaml#/definitions/uint32
-+        description: a positive non 0 value that determines the max speed that
-+                     CAN/CAN-FD can run.
-+        minimum: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - reg-names
-+  - interrupts
-+  - interrupt-names
-+  - clocks
-+  - clock-names
-+  - bosch,mram-cfg
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/imx6sx-clock.h>
-+    can@20e8000 {
-+      compatible = "bosch,m_can";
-+      reg = <0x020e8000 0x4000>, <0x02298000 0x4000>;
-+      reg-names = "m_can", "message_ram";
-+      interrupts = <0 114 0x04>, <0 114 0x04>;
-+      interrupt-names = "int0", "int1";
-+      clocks = <&clks IMX6SX_CLK_CANFD>,
-+               <&clks IMX6SX_CLK_CANFD>;
-+      clock-names = "hclk", "cclk";
-+      bosch,mram-cfg = <0x0 0 0 32 0 0 0 1>;
-+
-+      can-transceiver {
-+        max-bitrate = <5000000>;
-+      };
-+    };
-+
-+...
--- 
-2.15.0
+Note: this patch is based off Neil's series:
+[v4,0/4] media: meson: vdec: Add compliant H264 support
 
+ drivers/staging/media/meson/vdec/vdec_helpers.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/staging/media/meson/vdec/vdec_helpers.c b/drivers/staging/media/meson/vdec/vdec_helpers.c
+index ff4333074197..a4970ec1bf2e 100644
+--- a/drivers/staging/media/meson/vdec/vdec_helpers.c
++++ b/drivers/staging/media/meson/vdec/vdec_helpers.c
+@@ -417,7 +417,8 @@ void amvdec_src_change(struct amvdec_session *sess, u32 width,
+ 	 * Check if the capture queue is already configured well for our
+ 	 * usecase. If so, keep decoding with it and do not send the event
+ 	 */
+-	if (sess->width == width &&
++	if (sess->streamon_cap &&
++	    sess->width == width &&
+ 	    sess->height == height &&
+ 	    dpb_size <= sess->num_dst_bufs) {
+ 		sess->fmt_out->codec_ops->resume(sess);
+--
+2.20.1
