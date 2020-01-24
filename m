@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8948FC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:11:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 790FDC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:11:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5803C214AF
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:11:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49D9220708
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:11:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579864293;
-	bh=kRjjym+Oi5oQ0A3Z3shLQZFUyj4Mjz1Bt6BEyaDWX+E=;
+	s=default; t=1579864302;
+	bh=wA66xn8xwT2YRuibEYOeBIITxq2WJ5SmlwKox+m4eYM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WCL9/mbbE/UDBuSqDPry8JGYE5K/Aa846YhXi74p3faEMVOUmaVpdJDhLaAKoi+H4
-	 BpDrZ4EvRdebQmmpVlst/YChfjrjqUPh7Ee4LJyzVyY99Y+QVWdM7wVO1Esjnm4aT9
-	 RRD+fa7wL49j1GgiXJS9tOEaoVW+V9k25vsUGY04=
+	b=Dn2YoXwQapS1YSEG4CrN/kOg//pNF1eDm7EkZS0ft9GGkxraEkrHiTOpeXcensLVJ
+	 Cvho8OUfx8vg2q0IlFOTKmZ+8TqnocKrqO3M+bI7owNgdNc8okNqzIgu5dJGdgYv3d
+	 qFIRFmWdhgJUcLwSoFZKrz0IYyxagvdeTfjgXJ7E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389894AbgAXLLc (ORCPT
+        id S2389902AbgAXLLl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:11:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47336 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 06:11:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47636 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388283AbgAXLLX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:11:23 -0500
+        id S2389763AbgAXLLi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:11:38 -0500
 Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7C2632071A;
-        Fri, 24 Jan 2020 11:11:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DB80B20663;
+        Fri, 24 Jan 2020 11:11:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579864283;
-        bh=kRjjym+Oi5oQ0A3Z3shLQZFUyj4Mjz1Bt6BEyaDWX+E=;
+        s=default; t=1579864297;
+        bh=wA66xn8xwT2YRuibEYOeBIITxq2WJ5SmlwKox+m4eYM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WSE4NmCKutzlx+T5HbWNpHxamAD6XL1zgh7MF+/O9y+ysc6K0+098/6laxXOijWei
-         0IrGws6P5wVGo70qGNlkD57vuGUQ1YTE9zMlkEZ8b7YyxQzgDTdtirFgPMNvFSxWL+
-         L9+NJEn7NJi1w72+7XBxlBTPcyt78LSYBvgEmXEk=
+        b=g7KgrpwuESRUuxR1JJTAjheCxnc3pg6MtRowy613nIqwvt7UTnMZOAO4KrJAfhjaz
+         qGNAWxSee+MUg5L2DkMt9kbXzE4DJvpON3CXNFvafqiyPS9QHRnVjzOIsAyKOuCIrX
+         BbClWGqJzd0ARgLZvvHzCoXln9QM93BJebnMCN0Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, YueHaibing <yuehaibing@huawei.com>,
+        stable@vger.kernel.org,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 211/639] cdc-wdm: pass return value of recover_from_urb_loss
-Date:   Fri, 24 Jan 2020 10:26:21 +0100
-Message-Id: <20200124093113.424612048@linuxfoundation.org>
+Subject: [PATCH 4.19 227/639] NFS: Fix a soft lockup in the delegation recovery code
+Date:   Fri, 24 Jan 2020 10:26:37 +0100
+Message-Id: <20200124093115.321822499@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
 References: <20200124093047.008739095@linuxfoundation.org>
@@ -59,33 +60,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-[ Upstream commit 0742a338f5b3446a26de551ad8273fb41b2787f2 ]
+[ Upstream commit 6f9449be53f3ce383caed797708b332ede8d952c ]
 
-'rv' is the correct return value, pass it upstream instead of 0
+Fix a soft lockup when NFS client delegation recovery is attempted
+but the inode is in the process of being freed. When the
+igrab(inode) call fails, and we have to restart the recovery process,
+we need to ensure that we won't attempt to recover the same delegation
+again.
 
-Fixes: 17d80d562fd7 ("USB: autosuspend for cdc-wdm")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 45870d6909d5a ("NFSv4.1: Test delegation stateids when server...")
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/class/cdc-wdm.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/nfs/delegation.c | 20 ++++++++++++--------
+ fs/nfs/delegation.h |  1 +
+ 2 files changed, 13 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/usb/class/cdc-wdm.c b/drivers/usb/class/cdc-wdm.c
-index b8a1fdefb5150..4929c58830688 100644
---- a/drivers/usb/class/cdc-wdm.c
-+++ b/drivers/usb/class/cdc-wdm.c
-@@ -1107,7 +1107,7 @@ static int wdm_post_reset(struct usb_interface *intf)
- 	rv = recover_from_urb_loss(desc);
- 	mutex_unlock(&desc->wlock);
- 	mutex_unlock(&desc->rlock);
--	return 0;
-+	return rv;
+diff --git a/fs/nfs/delegation.c b/fs/nfs/delegation.c
+index 74ff459b75efa..b0c0c2fc2fbac 100644
+--- a/fs/nfs/delegation.c
++++ b/fs/nfs/delegation.c
+@@ -240,6 +240,8 @@ static struct inode *nfs_delegation_grab_inode(struct nfs_delegation *delegation
+ 	spin_lock(&delegation->lock);
+ 	if (delegation->inode != NULL)
+ 		inode = igrab(delegation->inode);
++	if (!inode)
++		set_bit(NFS_DELEGATION_INODE_FREEING, &delegation->flags);
+ 	spin_unlock(&delegation->lock);
+ 	return inode;
  }
+@@ -955,10 +957,11 @@ restart:
+ 	list_for_each_entry_rcu(server, &clp->cl_superblocks, client_link) {
+ 		list_for_each_entry_rcu(delegation, &server->delegations,
+ 								super_list) {
+-			if (test_bit(NFS_DELEGATION_RETURNING,
+-						&delegation->flags))
+-				continue;
+-			if (test_bit(NFS_DELEGATION_NEED_RECLAIM,
++			if (test_bit(NFS_DELEGATION_INODE_FREEING,
++						&delegation->flags) ||
++			    test_bit(NFS_DELEGATION_RETURNING,
++						&delegation->flags) ||
++			    test_bit(NFS_DELEGATION_NEED_RECLAIM,
+ 						&delegation->flags) == 0)
+ 				continue;
+ 			if (!nfs_sb_active(server->super))
+@@ -1064,10 +1067,11 @@ restart:
+ 	list_for_each_entry_rcu(server, &clp->cl_superblocks, client_link) {
+ 		list_for_each_entry_rcu(delegation, &server->delegations,
+ 								super_list) {
+-			if (test_bit(NFS_DELEGATION_RETURNING,
+-						&delegation->flags))
+-				continue;
+-			if (test_bit(NFS_DELEGATION_TEST_EXPIRED,
++			if (test_bit(NFS_DELEGATION_INODE_FREEING,
++						&delegation->flags) ||
++			    test_bit(NFS_DELEGATION_RETURNING,
++						&delegation->flags) ||
++			    test_bit(NFS_DELEGATION_TEST_EXPIRED,
+ 						&delegation->flags) == 0)
+ 				continue;
+ 			if (!nfs_sb_active(server->super))
+diff --git a/fs/nfs/delegation.h b/fs/nfs/delegation.h
+index dd0f3eed3890d..f09b153ac82ff 100644
+--- a/fs/nfs/delegation.h
++++ b/fs/nfs/delegation.h
+@@ -34,6 +34,7 @@ enum {
+ 	NFS_DELEGATION_RETURNING,
+ 	NFS_DELEGATION_REVOKED,
+ 	NFS_DELEGATION_TEST_EXPIRED,
++	NFS_DELEGATION_INODE_FREEING,
+ };
  
- static struct usb_driver wdm_driver = {
+ int nfs_inode_set_delegation(struct inode *inode, struct rpc_cred *cred,
 -- 
 2.20.1
 
