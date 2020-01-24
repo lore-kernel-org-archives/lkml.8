@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDF09C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:39:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CBD6C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:40:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1DBE2070A
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:39:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30FCC208C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:40:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579858797;
-	bh=ejhYGlJz29qxxXkISQoQ1D5EU/HBA6lMprgq1m3Zw8k=;
+	s=default; t=1579858801;
+	bh=g01oey4yaSdr4gHsShStOXO47xlC6uMGH7eH5eylq98=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=n5aD++a6IFtjsCl30SGNeYlze9V7/xbOEB/hJiRXJsz153Z6TmhzYdCJEBx5SJ9w2
-	 91VSsCqeRx1VXex196jrsuB3IEGEznndac/ueNq30IYeCklwIpkYyw8RWSLifXjyVF
-	 52fKA4rpMcPZth7sdCQPK2+md7vvFneN+T3Vt/ho=
+	b=SBvaSnew+axCSR18eQZjmMTll5khuBMBkS9JOpRwKuT55Qiww96xH42oU09jiSZNY
+	 4BjNdLeFmmV9IvixgMkTrUpQn5FrkGKgroL3qx9vIOQ/U7Vy0l/Or9s5ZdwDIZcuO0
+	 cu7JHaXukQFaWcQw829INeOv+I5rNzDPc2MRhSC8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731618AbgAXJjW (ORCPT
+        id S1731988AbgAXJkA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 04:39:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36440 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 04:40:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37198 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731589AbgAXJjQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 04:39:16 -0500
+        id S1729693AbgAXJj6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 04:39:58 -0500
 Received: from localhost (unknown [145.15.244.15])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BF6F120838;
-        Fri, 24 Jan 2020 09:39:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AB1E620709;
+        Fri, 24 Jan 2020 09:39:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579858755;
-        bh=ejhYGlJz29qxxXkISQoQ1D5EU/HBA6lMprgq1m3Zw8k=;
+        s=default; t=1579858797;
+        bh=g01oey4yaSdr4gHsShStOXO47xlC6uMGH7eH5eylq98=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Exai8LaWVl5cCsTHlt8HlyGM1b4evtisH2b7KiH1DxCfDIh08D/wTeEPFhEN9hpOV
-         /uJOsiWUnZ4ONLyXKHmOsU57FtTycPX8Yhwq5ACSxjpwPUSOcwjuebGD/JYbjIQ7X5
-         dbujnhfBbA2xCU2urKkQWxyzq399eVzZMiY/SMIg=
+        b=wce1qRt5piE1g86EWTrqql738Zd8DAoi44lKi+iA3s3mKkRAytF7bbmIpAevJQx5r
+         p2BwFtfGLrmHHikt3asxUgNGPMYGfrlsw/YkWyhJ6OxK76sw0lOGfpxH1dFi12DwHq
+         zcbVcD1eoKmpOfpkNn2K5Im9ANnixgu8RIp9o/mo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH 5.4 048/102] gpiolib: No need to call gpiochip_remove_pin_ranges() twice
-Date:   Fri, 24 Jan 2020 10:30:49 +0100
-Message-Id: <20200124092813.549446778@linuxfoundation.org>
+        stable@vger.kernel.org, Ping-Ke Shih <pkshih@realtek.com>,
+        Yan-Hsuan Chuang <yhchuang@realtek.com>,
+        Kalle Valo <kvalo@codeaurora.org>
+Subject: [PATCH 5.4 050/102] rtw88: fix error handling when setup efuse info
+Date:   Fri, 24 Jan 2020 10:30:51 +0100
+Message-Id: <20200124092813.864213226@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124092806.004582306@linuxfoundation.org>
 References: <20200124092806.004582306@linuxfoundation.org>
@@ -61,84 +60,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+From: Ping-Ke Shih <pkshih@realtek.com>
 
-commit 2f4133bb5f14f49a99acf0cc55b84996dbfb4dff upstream.
+commit f4268729eb1eefe23f6746849c1b5626d9030532 upstream.
 
-of_gpiochip_add(), when fails, calls gpiochip_remove_pin_ranges().
+Disable efuse if the efuse is enabled when we failed to setup the efuse
+information, otherwise the hardware will not turn off.
 
-ADD:
-  gpiochip_add_data_with_key() ->
-    of_gpiochip_add() -> (ERROR path)
-      gpiochip_remove_pin_ranges()
-
-At the same time of_gpiochip_remove() calls exactly the above mentioned
-function unconditionally and so does gpiochip_remove().
-
-REMOVE:
-  gpiochip_remove() ->
-    gpiochip_remove_pin_ranges()
-    of_gpiochip_remove() ->
-      gpiochip_remove_pin_ranges()
-
-Since gpiochip_remove() calls gpiochip_remove_pin_ranges() unconditionally,
-we have duplicate call to the same function when it's not necessary.
-
-Move gpiochip_remove_pin_ranges() from of_gpiochip_add() to gpiochip_add()
-to avoid duplicate calls and be consistent with the explicit call in
-gpiochip_remove().
-
-Fixes: e93fa3f24353 ("gpiolib: remove duplicate pin range code")
-Depends-on: f7299d441a4d ("gpio: of: Fix of_gpiochip_add() error path")
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Fixes: e3037485c68e ("rtw88: new Realtek 802.11ac driver")
+Signed-off-by: Ping-Ke Shih <pkshih@realtek.com>
+Signed-off-by: Yan-Hsuan Chuang <yhchuang@realtek.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpio/gpiolib-of.c |    5 +----
- drivers/gpio/gpiolib.c    |    3 ++-
- 2 files changed, 3 insertions(+), 5 deletions(-)
+ drivers/net/wireless/realtek/rtw88/main.c |   11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
---- a/drivers/gpio/gpiolib-of.c
-+++ b/drivers/gpio/gpiolib-of.c
-@@ -909,16 +909,13 @@ int of_gpiochip_add(struct gpio_chip *ch
- 	of_node_get(chip->of_node);
+--- a/drivers/net/wireless/realtek/rtw88/main.c
++++ b/drivers/net/wireless/realtek/rtw88/main.c
+@@ -1048,19 +1048,19 @@ static int rtw_chip_efuse_info_setup(str
+ 	/* power on mac to read efuse */
+ 	ret = rtw_chip_efuse_enable(rtwdev);
+ 	if (ret)
+-		goto out;
++		goto out_unlock;
  
- 	ret = of_gpiochip_scan_gpios(chip);
--	if (ret) {
-+	if (ret)
- 		of_node_put(chip->of_node);
--		gpiochip_remove_pin_ranges(chip);
--	}
+ 	ret = rtw_parse_efuse_map(rtwdev);
+ 	if (ret)
+-		goto out;
++		goto out_disable;
  
+ 	ret = rtw_dump_hw_feature(rtwdev);
+ 	if (ret)
+-		goto out;
++		goto out_disable;
+ 
+ 	ret = rtw_check_supported_rfe(rtwdev);
+ 	if (ret)
+-		goto out;
++		goto out_disable;
+ 
+ 	if (efuse->crystal_cap == 0xff)
+ 		efuse->crystal_cap = 0;
+@@ -1087,9 +1087,10 @@ static int rtw_chip_efuse_info_setup(str
+ 	efuse->ext_pa_5g = efuse->pa_type_5g & BIT(0) ? 1 : 0;
+ 	efuse->ext_lna_2g = efuse->lna_type_5g & BIT(3) ? 1 : 0;
+ 
++out_disable:
+ 	rtw_chip_efuse_disable(rtwdev);
+ 
+-out:
++out_unlock:
+ 	mutex_unlock(&rtwdev->mutex);
  	return ret;
  }
- 
- void of_gpiochip_remove(struct gpio_chip *chip)
- {
--	gpiochip_remove_pin_ranges(chip);
- 	of_node_put(chip->of_node);
- }
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -1452,6 +1452,7 @@ err_remove_of_chip:
- 	gpiochip_free_hogs(chip);
- 	of_gpiochip_remove(chip);
- err_free_gpiochip_mask:
-+	gpiochip_remove_pin_ranges(chip);
- 	gpiochip_free_valid_mask(chip);
- err_remove_from_list:
- 	spin_lock_irqsave(&gpio_lock, flags);
-@@ -1507,8 +1508,8 @@ void gpiochip_remove(struct gpio_chip *c
- 	gdev->chip = NULL;
- 	gpiochip_irqchip_remove(chip);
- 	acpi_gpiochip_remove(chip);
--	gpiochip_remove_pin_ranges(chip);
- 	of_gpiochip_remove(chip);
-+	gpiochip_remove_pin_ranges(chip);
- 	gpiochip_free_valid_mask(chip);
- 	/*
- 	 * We accept no more calls into the driver from this point, so
 
 
