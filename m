@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC541C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:06:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87D66C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:06:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 999322075D
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:06:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51D83214AF
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:06:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579863963;
-	bh=pleHYfFuolpnnq+6nCW1//6E9yDhm2FdQf3zhWHjvc8=;
+	s=default; t=1579863968;
+	bh=FEz5wwYgE1K+I9svTO2hpZMPGr485rBFku3mYnXeNlk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1R/ALkUy3kJMfhIYxcJ1Z8YHeTR9SbIDG2TuVNtcMyCqMR3q3XEHqH/PmzzrtFoUv
-	 bo2/A4ZY2Ev80Qh6eZWKdQpr8XLpoUJFF+8gng4lvh0BT3T8YyA/UEDoltoOzHxRuy
-	 8tnlv+c62LNF+immkox9zbprBwp6KX/z9jnrimcY=
+	b=FhdMtXpyeht3jblBvWptv1w37wzxmZIZhU8ezk3+VoInWMumNd4yL+ozo0rQfjxvt
+	 E0AQfAfMzuP25yf0bk0DTF7kH1ggaWqzInGOdpe8JUi7jGhhoyEQR0WbGcfTp7L400
+	 2wGSwMmQRpGGxlBgf68KQCnfYBU3TMdt7hQeXdfs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389007AbgAXLGD (ORCPT
+        id S2387486AbgAXLGH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:06:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40602 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 06:06:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40668 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732644AbgAXLGA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:06:00 -0500
+        id S1732644AbgAXLGE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:06:04 -0500
 Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 79E4120663;
-        Fri, 24 Jan 2020 11:05:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1EEA120663;
+        Fri, 24 Jan 2020 11:06:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579863960;
-        bh=pleHYfFuolpnnq+6nCW1//6E9yDhm2FdQf3zhWHjvc8=;
+        s=default; t=1579863963;
+        bh=FEz5wwYgE1K+I9svTO2hpZMPGr485rBFku3mYnXeNlk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lJHWKjVyGXa+7etEqOUI4UCK+NBNZesprVUAJsdYu1qauZHLfMrakKUU+1lby+WfU
-         K5PSzz4YXgBkWGvVimCVhBPjg2U/FvKto2GUqyEPBuIId9gDyq+afvp+OptldzvJi9
-         Y0i9gol889VMqYYSPn8BAjHp/SwNTn9ChKGBE15Q=
+        b=gZDYGFHf567w7wldtP4LCVpZ12RwkefOXKP2MtpOcuILsqGPkk5FvLIv6/M81xHLf
+         /Q3TdLEO5P+XlBrMIsNWxIlWT/ctlCeS6vUnIjTSbIOZx7pOCwKY1V76brEYyn+ef4
+         FJ7fYoNTIfcJY1j6IgXiX9GmqTbrPuqar8XcLlJs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Gal Pressman <galpress@amazon.com>,
-        Parvi Kaustubhi <pkaustub@cisco.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 124/639] IB/usnic: Fix out of bounds index check in query pkey
-Date:   Fri, 24 Jan 2020 10:24:54 +0100
-Message-Id: <20200124093102.835711596@linuxfoundation.org>
+Subject: [PATCH 4.19 133/639] drm/etnaviv: NULL vs IS_ERR() buf in etnaviv_core_dump()
+Date:   Fri, 24 Jan 2020 10:25:03 +0100
+Message-Id: <20200124093103.939996199@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
 References: <20200124093047.008739095@linuxfoundation.org>
@@ -61,35 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gal Pressman <galpress@amazon.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit 4959d5da5737dd804255c75b8cea0a2929ce279a ]
+[ Upstream commit f8261c376e7f8cb9024af5a6c54be540c7f9108e ]
 
-The pkey table size is one element, index should be tested for > 0 instead
-of > 1.
+The etnaviv_gem_get_pages() never returns NULL.  It returns error
+pointers on error.
 
-Fixes: e3cf00d0a87f ("IB/usnic: Add Cisco VIC low-level hardware driver")
-Signed-off-by: Gal Pressman <galpress@amazon.com>
-Acked-by: Parvi Kaustubhi <pkaustub@cisco.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Fixes: a8c21a5451d8 ("drm/etnaviv: add initial etnaviv DRM driver")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/usnic/usnic_ib_verbs.c | 2 +-
+ drivers/gpu/drm/etnaviv/etnaviv_dump.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/infiniband/hw/usnic/usnic_ib_verbs.c b/drivers/infiniband/hw/usnic/usnic_ib_verbs.c
-index 3db232429630e..e611f133aa97b 100644
---- a/drivers/infiniband/hw/usnic/usnic_ib_verbs.c
-+++ b/drivers/infiniband/hw/usnic/usnic_ib_verbs.c
-@@ -447,7 +447,7 @@ struct net_device *usnic_get_netdev(struct ib_device *device, u8 port_num)
- int usnic_ib_query_pkey(struct ib_device *ibdev, u8 port, u16 index,
- 				u16 *pkey)
- {
--	if (index > 1)
-+	if (index > 0)
- 		return -EINVAL;
+diff --git a/drivers/gpu/drm/etnaviv/etnaviv_dump.c b/drivers/gpu/drm/etnaviv/etnaviv_dump.c
+index 468dff2f79040..9d839b4fd8f78 100644
+--- a/drivers/gpu/drm/etnaviv/etnaviv_dump.c
++++ b/drivers/gpu/drm/etnaviv/etnaviv_dump.c
+@@ -217,7 +217,7 @@ void etnaviv_core_dump(struct etnaviv_gpu *gpu)
+ 		mutex_lock(&obj->lock);
+ 		pages = etnaviv_gem_get_pages(obj);
+ 		mutex_unlock(&obj->lock);
+-		if (pages) {
++		if (!IS_ERR(pages)) {
+ 			int j;
  
- 	*pkey = 0xffff;
+ 			iter.hdr->data[0] = bomap - bomap_start;
 -- 
 2.20.1
 
