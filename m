@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AF3CC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:47:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2390C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:47:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3240B21556
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:47:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 793D120718
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:47:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579859262;
-	bh=nW5q5X5SB1KOertJq5L7KKl4VYwC6Wj8YHSJPj4xhRc=;
+	s=default; t=1579859266;
+	bh=izpdMhvOgGI4GeHV7uNz5XinlZnCFeTSYzErDPQisXI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=y8+sNt5dPo3dUxScE5seXtZYNyx4H4VjGAptmQ9qxL+ll6RjVqtQ8PTZtdAZ0zSAl
-	 hWfmy7MgKzSFP06qhRRilPRsxG5mhq5e9Ne5UBSz208LIVGqkyEjPmgz+FtngdIOPc
-	 AHxKeRomVARe5wc4eTyMef3Rf1M1tneMKyBJoMGY=
+	b=OVS+wj9ayswSH+cTKb5el4pE5JfDy//bFwwujPruKcLEv6FNCLVATwYUNbfnj1xrP
+	 +saQzDdXlCwdbvcT+BpLqiJQkfqwg+HbQ4cg222Yusy3sY69DJCecbz7nxrHhGhOEt
+	 MH1PeLg3Oih5vqvJ0GTCu++0GHHcO6kIXYAdQFq4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387659AbgAXJrl (ORCPT
+        id S2387669AbgAXJrp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 04:47:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47474 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 04:47:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47580 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387394AbgAXJrh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 04:47:37 -0500
+        id S2387657AbgAXJrl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 04:47:41 -0500
 Received: from localhost (unknown [145.15.244.15])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 84FEB20718;
-        Fri, 24 Jan 2020 09:47:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 76634208C4;
+        Fri, 24 Jan 2020 09:47:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579859257;
-        bh=nW5q5X5SB1KOertJq5L7KKl4VYwC6Wj8YHSJPj4xhRc=;
+        s=default; t=1579859261;
+        bh=izpdMhvOgGI4GeHV7uNz5XinlZnCFeTSYzErDPQisXI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jtXDD30lPVbaD8Drw+k8ETXKV6x+JfbApg/SobDRbVG9Amc8uwEy2n6DOix3IP60n
-         jJz+ejwno9TNwhsK2xs65D1R8XJD42JgF2H3ZHUVa3i2Nxzuw8ior0B3ie7LYset+9
-         W97leP2RMa1B5Mm0vlAtYgGZmE08DbE7pCmisqGE=
+        b=2actTctMDTUQ0iAhAqYIhGNPs+PybxllnhfaMgmt/nqTS0gPIbkOv8FZCWYyzsE2K
+         Yqy336/I63U/B2SafQ1UA/bhd++3uvwNrylGDnzjGa7JkRgw96CHUcK5hRevU2Ec7U
+         D5A86OXuCMixTSlyreZcCTAkh3irMVWDwGUjYcK4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Israel Rukshin <israelr@mellanox.com>,
-        Max Gurtovoy <maxg@mellanox.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Jason Gunthorpe <jgg@mellanox.com>,
+        stable@vger.kernel.org, Liu Jian <liujian56@huawei.com>,
+        Hamish Martin <hamish.martin@alliedtelesis.co.nz>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 070/343] IB/iser: Pass the correct number of entries for dma mapped SGL
-Date:   Fri, 24 Jan 2020 10:28:08 +0100
-Message-Id: <20200124092928.999430893@linuxfoundation.org>
+Subject: [PATCH 4.14 079/343] driver: uio: fix possible use-after-free in __uio_register_device
+Date:   Fri, 24 Jan 2020 10:28:17 +0100
+Message-Id: <20200124092930.296466829@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124092919.490687572@linuxfoundation.org>
 References: <20200124092919.490687572@linuxfoundation.org>
@@ -62,59 +60,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Israel Rukshin <israelr@mellanox.com>
+From: Liu Jian <liujian56@huawei.com>
 
-[ Upstream commit 57b26497fabe1b9379b59fbc7e35e608e114df16 ]
+[ Upstream commit 221a1f4ac12d2ab46246c160b2e00d1b1160d5d9 ]
 
-ib_dma_map_sg() augments the SGL into a 'dma mapped SGL'. This process may
-change the number of entries and the lengths of each entry.
+In uio_dev_add_attributes() error handing case, idev is used after
+device_unregister(), in which 'idev' has been released, touch idev cause
+use-after-free.
 
-Code that touches dma_address is iterating over the 'dma mapped SGL' and
-must use dma_nents which returned from ib_dma_map_sg().
-
-ib_sg_to_pages() and ib_map_mr_sg() are using dma_address so they must use
-dma_nents.
-
-Fixes: 39405885005a ("IB/iser: Port to new fast registration API")
-Fixes: bfe066e256d5 ("IB/iser: Reuse ib_sg_to_pages")
-Signed-off-by: Israel Rukshin <israelr@mellanox.com>
-Reviewed-by: Max Gurtovoy <maxg@mellanox.com>
-Acked-by: Sagi Grimberg <sagi@grimberg.me>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Fixes: a93e7b331568 ("uio: Prevent device destruction while fds are open")
+Signed-off-by: Liu Jian <liujian56@huawei.com>
+Reviewed-by: Hamish Martin <hamish.martin@alliedtelesis.co.nz>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/ulp/iser/iser_memory.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ drivers/uio/uio.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/infiniband/ulp/iser/iser_memory.c b/drivers/infiniband/ulp/iser/iser_memory.c
-index 322209d5ff582..19883169e7b76 100644
---- a/drivers/infiniband/ulp/iser/iser_memory.c
-+++ b/drivers/infiniband/ulp/iser/iser_memory.c
-@@ -240,8 +240,8 @@ int iser_fast_reg_fmr(struct iscsi_iser_task *iser_task,
- 	page_vec->npages = 0;
- 	page_vec->fake_mr.page_size = SIZE_4K;
- 	plen = ib_sg_to_pages(&page_vec->fake_mr, mem->sg,
--			      mem->size, NULL, iser_set_page);
--	if (unlikely(plen < mem->size)) {
-+			      mem->dma_nents, NULL, iser_set_page);
-+	if (unlikely(plen < mem->dma_nents)) {
- 		iser_err("page vec too short to hold this SG\n");
- 		iser_data_buf_dump(mem, device->ib_device);
- 		iser_dump_page_vec(page_vec);
-@@ -450,10 +450,10 @@ static int iser_fast_reg_mr(struct iscsi_iser_task *iser_task,
- 
- 	ib_update_fast_reg_key(mr, ib_inc_rkey(mr->rkey));
- 
--	n = ib_map_mr_sg(mr, mem->sg, mem->size, NULL, SIZE_4K);
--	if (unlikely(n != mem->size)) {
-+	n = ib_map_mr_sg(mr, mem->sg, mem->dma_nents, NULL, SIZE_4K);
-+	if (unlikely(n != mem->dma_nents)) {
- 		iser_err("failed to map sg (%d/%d)\n",
--			 n, mem->size);
-+			 n, mem->dma_nents);
- 		return n < 0 ? n : -EINVAL;
+diff --git a/drivers/uio/uio.c b/drivers/uio/uio.c
+index 4e9b0ff79b131..7c18536a3742a 100644
+--- a/drivers/uio/uio.c
++++ b/drivers/uio/uio.c
+@@ -944,6 +944,7 @@ int __uio_register_device(struct module *owner,
+ 		return ret;
  	}
  
++	device_initialize(&idev->dev);
+ 	idev->dev.devt = MKDEV(uio_major, idev->minor);
+ 	idev->dev.class = &uio_class;
+ 	idev->dev.parent = parent;
+@@ -954,7 +955,7 @@ int __uio_register_device(struct module *owner,
+ 	if (ret)
+ 		goto err_device_create;
+ 
+-	ret = device_register(&idev->dev);
++	ret = device_add(&idev->dev);
+ 	if (ret)
+ 		goto err_device_create;
+ 
+@@ -986,9 +987,10 @@ int __uio_register_device(struct module *owner,
+ err_request_irq:
+ 	uio_dev_del_attributes(idev);
+ err_uio_dev_add_attributes:
+-	device_unregister(&idev->dev);
++	device_del(&idev->dev);
+ err_device_create:
+ 	uio_free_minor(idev);
++	put_device(&idev->dev);
+ 	return ret;
+ }
+ EXPORT_SYMBOL_GPL(__uio_register_device);
 -- 
 2.20.1
 
