@@ -4,52 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2993C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:24:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A3B8C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:24:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 790F122527
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:24:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7C4B2072C
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:24:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579875878;
-	bh=Li8LrGSYb/x5zKMQjBqf/caqYNBfuICQvy7Z9Uro0Mo=;
+	s=default; t=1579875882;
+	bh=WUrTKc5YtLb/I/UsRE7CRsbIIlUWvDDl//CIg9ruU80=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IPOjR5/dqqHMVYwjdR7Z2M2pn1MRETxjEjJ9iRySB9Cxyh5rX9bW3Vb29F3MgzMHt
-	 SeSY+CQHBYKBDhZoLYfc02LoVhwA5DZjWaD/smaU1p58NbOEE0GJ6U1eJ0FJDM0XHL
-	 Nw7XK5boD0kI2XnfqYrxVDGFXKFoHRRfLC47WSdk=
+	b=Ffl1BuX8jW/a/Y+1Do8bDXQeR87d24aTSeu+ooMfVS2onoJ2TuBoIXPNVG4Fh/Qtz
+	 O7+cSu4vXawym53tNHd8z87ndtK4XoF9jB5ktz5oWAONTEP01F9lwZ3ZqezgqckQHp
+	 8WNe5jONlQBmsJbQNDOKwPPUGgNb342osrSkG5jM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405436AbgAXOWD (ORCPT
+        id S2392475AbgAXOYk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 09:22:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44002 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 09:24:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44106 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392281AbgAXOV5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 09:21:57 -0500
+        id S2405428AbgAXOWD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 09:22:03 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6149122464;
-        Fri, 24 Jan 2020 14:21:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CB5DC222C2;
+        Fri, 24 Jan 2020 14:22:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579875717;
-        bh=Li8LrGSYb/x5zKMQjBqf/caqYNBfuICQvy7Z9Uro0Mo=;
+        s=default; t=1579875722;
+        bh=WUrTKc5YtLb/I/UsRE7CRsbIIlUWvDDl//CIg9ruU80=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FZ9MrsbVv2p0YZCNe5sY5IexohERSHzp8vkHOWMDF7gSCLNb0GHbczsaAPBZb4RqZ
-         2v34HvcddgMhdeQUdEV9a6gh0jn/LcrTibwO/nHyUaYdWv7FLfAmC8/0TOeU8FcF3/
-         oOERPhzRoT8dfnR/0SAXOgLdtvZiDE6z7bdOBgEI=
+        b=KMqTTY51aVweL1deOBucWzGPTH4icAWlwcqhwqTSk7VpQCRJ7ziMkfYIWjh4WjwcP
+         KbnO0DM8ItwUSe4YdRSwmkym5dD/wCpf4yOpzEGgK6oFNFqSmEKX4eListyvIPTR8t
+         OrI9JJkx99TmPYYSOe5u3WEdD89bEQdDnXkyTDhY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Michael Chan <michael.chan@broadcom.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 32/32] bnxt_en: Fix ipv6 RFS filter matching logic.
-Date:   Fri, 24 Jan 2020 09:21:19 -0500
-Message-Id: <20200124142119.30484-32-sashal@kernel.org>
+Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.9 03/18] ARM: dts: beagle-x15-common: Model 5V0 regulator
+Date:   Fri, 24 Jan 2020 09:21:42 -0500
+Message-Id: <20200124142157.30931-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200124142119.30484-1-sashal@kernel.org>
-References: <20200124142119.30484-1-sashal@kernel.org>
+In-Reply-To: <20200124142157.30931-1-sashal@kernel.org>
+References: <20200124142157.30931-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,55 +60,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Chan <michael.chan@broadcom.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
 
-[ Upstream commit 6fc7caa84e713f7627e171ab1e7c4b5be0dc9b3d ]
+[ Upstream commit e17e7c498d4f734df93c300441e100818ed58168 ]
 
-Fix bnxt_fltr_match() to match ipv6 source and destination addresses.
-The function currently only checks ipv4 addresses and will not work
-corrently on ipv6 filters.
+On am57xx-beagle-x15, 5V0 is connected to P16, P17, P18 and P19
+connectors. On am57xx-evm, 5V0 regulator is used to get 3V6 regulator
+which is connected to the COMQ port. Model 5V0 regulator here in order
+for it to be used in am57xx-evm to model 3V6 regulator.
 
-Fixes: c0c050c58d84 ("bnxt_en: New Broadcom ethernet driver.")
-Signed-off-by: Michael Chan <michael.chan@broadcom.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/broadcom/bnxt/bnxt.c | 22 +++++++++++++++++-----
- 1 file changed, 17 insertions(+), 5 deletions(-)
+ .../boot/dts/am57xx-beagle-x15-common.dtsi    | 21 +++++++++++++++++++
+ 1 file changed, 21 insertions(+)
 
-diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt.c b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-index 38ee7692132c5..7461e7b9eaae5 100644
---- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-+++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-@@ -7402,11 +7402,23 @@ static bool bnxt_fltr_match(struct bnxt_ntuple_filter *f1,
- 	struct flow_keys *keys1 = &f1->fkeys;
- 	struct flow_keys *keys2 = &f2->fkeys;
+diff --git a/arch/arm/boot/dts/am57xx-beagle-x15-common.dtsi b/arch/arm/boot/dts/am57xx-beagle-x15-common.dtsi
+index 78bee26361f15..552de167f95fe 100644
+--- a/arch/arm/boot/dts/am57xx-beagle-x15-common.dtsi
++++ b/arch/arm/boot/dts/am57xx-beagle-x15-common.dtsi
+@@ -27,6 +27,27 @@
+ 		reg = <0x0 0x80000000 0x0 0x80000000>;
+ 	};
  
--	if (keys1->addrs.v4addrs.src == keys2->addrs.v4addrs.src &&
--	    keys1->addrs.v4addrs.dst == keys2->addrs.v4addrs.dst &&
--	    keys1->ports.ports == keys2->ports.ports &&
--	    keys1->basic.ip_proto == keys2->basic.ip_proto &&
--	    keys1->basic.n_proto == keys2->basic.n_proto &&
-+	if (keys1->basic.n_proto != keys2->basic.n_proto ||
-+	    keys1->basic.ip_proto != keys2->basic.ip_proto)
-+		return false;
++	main_12v0: fixedregulator-main_12v0 {
++		/* main supply */
++		compatible = "regulator-fixed";
++		regulator-name = "main_12v0";
++		regulator-min-microvolt = <12000000>;
++		regulator-max-microvolt = <12000000>;
++		regulator-always-on;
++		regulator-boot-on;
++	};
 +
-+	if (keys1->basic.n_proto == htons(ETH_P_IP)) {
-+		if (keys1->addrs.v4addrs.src != keys2->addrs.v4addrs.src ||
-+		    keys1->addrs.v4addrs.dst != keys2->addrs.v4addrs.dst)
-+			return false;
-+	} else {
-+		if (memcmp(&keys1->addrs.v6addrs.src, &keys2->addrs.v6addrs.src,
-+			   sizeof(keys1->addrs.v6addrs.src)) ||
-+		    memcmp(&keys1->addrs.v6addrs.dst, &keys2->addrs.v6addrs.dst,
-+			   sizeof(keys1->addrs.v6addrs.dst)))
-+			return false;
-+	}
++	evm_5v0: fixedregulator-evm_5v0 {
++		/* Output of TPS54531D */
++		compatible = "regulator-fixed";
++		regulator-name = "evm_5v0";
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++		vin-supply = <&main_12v0>;
++		regulator-always-on;
++		regulator-boot-on;
++	};
 +
-+	if (keys1->ports.ports == keys2->ports.ports &&
- 	    keys1->control.flags == keys2->control.flags &&
- 	    ether_addr_equal(f1->src_mac_addr, f2->src_mac_addr) &&
- 	    ether_addr_equal(f1->dst_mac_addr, f2->dst_mac_addr))
+ 	vdd_3v3: fixedregulator-vdd_3v3 {
+ 		compatible = "regulator-fixed";
+ 		regulator-name = "vdd_3v3";
 -- 
 2.20.1
 
