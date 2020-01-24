@@ -2,119 +2,141 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5866AC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 05:59:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1285DC35242
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 06:01:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26E402071A
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 05:59:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="NcxK8+6M"
+	by mail.kernel.org (Postfix) with ESMTP id D65962075D
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 06:01:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579845663;
+	bh=QVU0YtZFq9qwpNjnhfbaDo1XXyShtxPdOS3MfNHNDsI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=eWDMi40IxAMBe0+ur4buesdwla7ggbmkgtYUnoiJKMCfdgycwp6jUjTFEj8kRYLWO
+	 sdB2udhRxnL0//E/7IY/k/G90meI46KkEjVJNB9vnbwsKkD5khSmwsa9XHq+qlGQzY
+	 Tth/bwP4HXS1+rOBx8BA/drGUUZZD4vaYEcoQ/uI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730720AbgAXF64 (ORCPT
+        id S1730035AbgAXGBD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 00:58:56 -0500
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:37109 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730690AbgAXF6y (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 00:58:54 -0500
-Received: by mail-pj1-f65.google.com with SMTP id m13so586896pjb.2
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jan 2020 21:58:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=+wxR/qiYIDSom0PWV4vVrva6B084GXL6U/+zkJV3teo=;
-        b=NcxK8+6MN3cUfobCnIfktbFLrST/L2HoA8CsczR38Si2UE+KxI1uaZF6zL63otCNMq
-         S9+Sgl8hrkES2SQ3G0F17Yk6USOLnUzAmW7Ry1Uqxsv27c3ix8KBoIqJpQRmgJr98i0L
-         M/WdMzTqxmLNHcvXsIcY5SzNvWO5QzGp5V0G8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=+wxR/qiYIDSom0PWV4vVrva6B084GXL6U/+zkJV3teo=;
-        b=m+fsExm7Qs9Bb742PpF7WeetAa4jA4AnF1oDGVmo1Kod0zwUvEAGfQfCarWgB3cGIJ
-         9qU1rXNEFhag3RBRqKw2B/jT8d7H89YZrr5AxUPUKOLe7gq+lxGWhqScgfnTbBHIwsg0
-         N64rzXM9p+RwY+zOoGTYXIA4YI/BUFCFXFWXNlszEM/q9dgeEo7Hk8xR1gCBLKhann5B
-         /VO+/wfaSS7A+t5Y52YnX9LiH0FfNUu47THUU7R2I3F1FhsJcOb3FJPSV/v81HY4nmjI
-         HNr+avGKrHIWmslZitsp/tQFime1VEDb82IuhKBcPm26XYBywzRiT3pU6yX4Asw6gv2L
-         FQaQ==
-X-Gm-Message-State: APjAAAXKVRvfji3ezT/TctauYVwfCl73TEZqaX6io8nHRVt2hUzluzoy
-        Vo8WI1JnjlsnL8iQoMmOeBCbxQ==
-X-Google-Smtp-Source: APXvYqznbulUOlgTHl/k+m45LcnDQc4gMiFHZPXNQmftF+uKvdJ7nzByHvE/hEDgzKdiq3UhId/+Ag==
-X-Received: by 2002:a17:90b:8c6:: with SMTP id ds6mr1428654pjb.111.1579845533315;
-        Thu, 23 Jan 2020 21:58:53 -0800 (PST)
-Received: from smtp.gmail.com ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id c184sm4701457pfa.39.2020.01.23.21.58.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Jan 2020 21:58:52 -0800 (PST)
-From:   Stephen Boyd <swboyd@chromium.org>
-To:     John Stultz <john.stultz@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     linux-kernel@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>
-Subject: [PATCH v3 3/4] alarmtimer: Make alarmtimer_get_rtcdev() a stub when CONFIG_RTC_CLASS=n
-Date:   Thu, 23 Jan 2020 21:58:48 -0800
-Message-Id: <20200124055849.154411-4-swboyd@chromium.org>
-X-Mailer: git-send-email 2.25.0.341.g760bfbb309-goog
-In-Reply-To: <20200124055849.154411-1-swboyd@chromium.org>
-References: <20200124055849.154411-1-swboyd@chromium.org>
+        Fri, 24 Jan 2020 01:01:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57138 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725817AbgAXGBC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 01:01:02 -0500
+Received: from localhost (unknown [106.200.244.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 61A5E2071A;
+        Fri, 24 Jan 2020 06:01:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579845662;
+        bh=QVU0YtZFq9qwpNjnhfbaDo1XXyShtxPdOS3MfNHNDsI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=LlzbyQ3/qidsFG6tI1v/fn5URquGb39S/MLInSanwpkBI+RgRuCd6PH78uwEjEJnm
+         sJpv92J5W8Yznrv5GR0gi07LCvbs8y3RRecRdzTdlR5buUuaWWcwgzbu7aLSGjURlL
+         zdGCja9BdDOMaNUk5hAApLl7bma52fmBLqSnip/o=
+Date:   Fri, 24 Jan 2020 11:30:58 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Sanjay R Mehta <Sanju.Mehta@amd.com>
+Cc:     gregkh@linuxfoundation.org, dan.j.williams@intel.com,
+        Thomas.Lendacky@amd.com, Shyam-sundar.S-k@amd.com,
+        Nehal-bakulchandra.Shah@amd.com, robh@kernel.org,
+        mchehab+samsung@kernel.org, davem@davemloft.net,
+        Jonathan.Cameron@huawei.com, linux-kernel@vger.kernel.org,
+        dmaengine@vger.kernel.org, Gary R Hook <gary.hook@amd.com>
+Subject: Re: [PATCH v3 1/3] dmaengine: ptdma: Initial driver for the AMD
+ PassThru DMA engine
+Message-ID: <20200124060058.GC2841@vkoul-mobl>
+References: <1579597494-60348-1-git-send-email-Sanju.Mehta@amd.com>
+ <1579597494-60348-2-git-send-email-Sanju.Mehta@amd.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1579597494-60348-2-git-send-email-Sanju.Mehta@amd.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The export isn't there for the stubbed version of
-alarmtimer_get_rtcdev() so this won't work if someone tries to call this
-function when CONFIG_RTC_CLASS=n. Export a stub function in the header
-file so that callers don't have to worry about linking against this
-symbol. And rtcdev isn't used outside of this ifdef so we don't need to
-redefine it as NULL. Drop that because we're nearby.
+On 21-01-20, 03:04, Sanjay R Mehta wrote:
+> From: Sanjay R Mehta <sanju.mehta@amd.com>
+> 
+> This device performs high-bandwidth memory-to-memory
+> transfer operations.
 
-Signed-off-by: Stephen Boyd <swboyd@chromium.org>
----
- include/linux/alarmtimer.h | 4 ++++
- kernel/time/alarmtimer.c   | 5 -----
- 2 files changed, 4 insertions(+), 5 deletions(-)
+Why is it called PassThru DMA engine?
 
-diff --git a/include/linux/alarmtimer.h b/include/linux/alarmtimer.h
-index 74748e306f4b..05e758b8b894 100644
---- a/include/linux/alarmtimer.h
-+++ b/include/linux/alarmtimer.h
-@@ -60,7 +60,11 @@ u64 alarm_forward(struct alarm *alarm, ktime_t now, ktime_t interval);
- u64 alarm_forward_now(struct alarm *alarm, ktime_t interval);
- ktime_t alarm_expires_remaining(const struct alarm *alarm);
- 
-+#ifdef CONFIG_RTC_CLASS
- /* Provide way to access the rtc device being used by alarmtimers */
- struct rtc_device *alarmtimer_get_rtcdev(void);
-+#else
-+static inline struct rtc_device *alarmtimer_get_rtcdev(void) { return NULL; }
-+#endif
- 
- #endif
-diff --git a/kernel/time/alarmtimer.c b/kernel/time/alarmtimer.c
-index 395d4a6db1b2..36124aea8d6f 100644
---- a/kernel/time/alarmtimer.c
-+++ b/kernel/time/alarmtimer.c
-@@ -145,11 +145,6 @@ static void alarmtimer_rtc_interface_remove(void)
- 	class_interface_unregister(&alarmtimer_rtc_interface);
- }
- #else
--struct rtc_device *alarmtimer_get_rtcdev(void)
--{
--	return NULL;
--}
--#define rtcdev (NULL)
- static inline int alarmtimer_rtc_interface_setup(void) { return 0; }
- static inline void alarmtimer_rtc_interface_remove(void) { }
- static inline void alarmtimer_rtc_timer_init(void) { }
+>  obj-y += mediatek/
+>  obj-y += qcom/
+> diff --git a/drivers/dma/ptdma/Kconfig b/drivers/dma/ptdma/Kconfig
+> new file mode 100644
+> index 0000000..4ec259e
+> --- /dev/null
+> +++ b/drivers/dma/ptdma/Kconfig
+> @@ -0,0 +1,6 @@
+> +# SPDX-License-Identifier: GPL-2.0-only
+> +config AMD_PTDMA
+> +	tristate  "AMD PassThru DMA Engine"
+> +	depends on X86_64 && PCI
+
+not using DMA_VIRTUAL_CHANNELS?
+
+> +	help
+> +	  Provides the support for AMD PassThru DMA Engine.
+
+more help text please
+
+> +++ b/drivers/dma/ptdma/ptdma-dev.c
+> @@ -0,0 +1,387 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * AMD Passthru DMA device driver
+> + * -- Based on the CCP driver
+
+What is ccp driver?
+
+> + *
+> + * Copyright (C) 2016,2019 Advanced Micro Devices, Inc.
+
+2020..
+
+> +#ifdef CONFIG_PM
+> +static int pt_pci_suspend(struct pci_dev *pdev, pm_message_t state)
+> +{
+> +	return -ENOSYS;
+> +}
+> +
+> +static int pt_pci_resume(struct pci_dev *pdev)
+> +{
+> +	return -ENOSYS;
+> +}
+> +#endif
+
+please remove the dummy code, you can add these when you have support
+for it
+
+> +/* Bit masks */
+> +#define	CMD_DESC_DW0_VAL		0x500012
+> +#define	CMD_CONFIG_REQID		0x0
+> +#define	CMD_CONFIG_VHB_EN		0x00000001
+> +#define	CMD_QUEUE_PRIO			0x00000006
+> +#define	CMD_TIMEOUT_DISABLE		0x00000000
+> +#define	CMD_CLK_DYN_GATING_EN	0x1
+> +#define	CMD_CLK_DYN_GATING_DIS	0x0
+> +#define	CMD_CLK_HW_GATE_MODE	0x1
+> +#define	CMD_CLK_SW_GATE_MODE	0x0
+> +#define	CMD_CLK_GATE_ON_DELAY	0x1000
+> +#define	CMD_CLK_GATE_CTL	0x0
+> +#define	CMD_CLK_GATE_OFF_DELAY	0x1000
+
+BIT and GENMASK for these...
+
+All this adds handling of pt controller, I am not seeing dmaengine bits,
+so please word the changelog accordingly and mention this adds based
+bits and not dmaengine support (yet)
+
 -- 
-Sent by a computer, using git, on the internet
-
+~Vinod
