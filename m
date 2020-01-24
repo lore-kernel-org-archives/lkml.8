@@ -2,186 +2,118 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 181A2C35242
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 01:28:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1033DC35240
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 01:28:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE3C62071E
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 01:28:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D463921835
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 01:28:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Ry0C9MNd"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="gVP6U6Q+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729659AbgAXB2I (ORCPT
+        id S1729921AbgAXB2K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 20:28:08 -0500
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:42465 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729318AbgAXB2I (ORCPT
+        Thu, 23 Jan 2020 20:28:10 -0500
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:55700 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729318AbgAXB2J (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 20:28:08 -0500
-Received: by mail-pl1-f194.google.com with SMTP id p9so86443plk.9
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jan 2020 17:28:07 -0800 (PST)
+        Thu, 23 Jan 2020 20:28:09 -0500
+Received: by mail-pj1-f67.google.com with SMTP id d5so298808pjz.5
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jan 2020 17:28:09 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Nr61gQ1ppZdRJbeAMVu/qwhaTijctoY7d/X25Vrjrzs=;
-        b=Ry0C9MNdGGagS34hyLAGWtc/JBYepuUdGyw7jncF/rfcmeMXOvKNbxwZPQKVfauwC8
-         1w1lbCS8CGMePZqOBNWjGkncrcz3qw2EXU0p2TKCtRNwGq6nulwXA/G+tNQJio++Mm3Y
-         LMYUtqPac/lXcumGZiPBMv8nTCYtf13v8nIsw=
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=3UtLf7+5DucsSWidbQFY9Ttw4iR1dzCtjU7T/DXapxA=;
+        b=gVP6U6Q+p98YXgmlCFAuFYsRrG2LhhCKcAevido9e2FXnwhgzhQaMBNzIcZnbZPgme
+         vMsV9dcOv+/XVfmge9n3XbCfPWsrNNvY5lxoQ37yHSs4zMSn5o3RFqKJV4Ws1eFc7nDC
+         dSd+YFogdIS74Xp1TMCIElLjf0t+sT91d0F478AknsxEjXLtCwxxZ4ti7orpg6BADF/f
+         lgWNOGUtqRRzQUXvRi/TIn08j8fcxszdGDLsfZLJ3S+V44+31NRSHEr98BLSE0B8EWbi
+         cGP+aJzOSus2vIBCEFejX63wsTfcVEmYaKA/7J0ir4nr/jUtj8vOhZ+ephw+aGFdOQ/v
+         dqdA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Nr61gQ1ppZdRJbeAMVu/qwhaTijctoY7d/X25Vrjrzs=;
-        b=Q6942OFcDtPtNbZuAdT3e+kM+A84X9WEs6YoVpAF5/AEOf2SDAl5WLcsa5xj3NsP6i
-         JF89yn/YpuKvBw7vDZLubiMUW4GDX6DBGqOWzKbljkWLiZEst5zTTWRB+Y/j9WV9QU/v
-         LITzDH5T3qT7bC2JN/ByzXFd8+Ki+7lRdtqRqeCvu1j25F6v6weRYtfs6sAagr8PG+93
-         KBfE1RS5GnEj47v9NfQRyV0p0xYSYAwalbwQhoaqH0q8SxUAnZMsJSPY/dUluZgmrZRn
-         zwFhzRb/9AJo7J6EoxJl5EwE9W94wXCES5W/akxaldRMXNxUJ8ModjOOF3k69amltuu6
-         bSJA==
-X-Gm-Message-State: APjAAAV+0ircQ8xzbcnAgpp2mrSNBuiNkwHps1sej2MJ1o9aO5WnN67a
-        MpXBgejxzo4gPfLm0yehju6lMg==
-X-Google-Smtp-Source: APXvYqwtqnnUnsMKhgIE64PIOEKlIj/OuEAdslNerJOfsaaLgtPhdLjXMAtWtIcRXnyfqyTbWXRWwg==
-X-Received: by 2002:a17:902:8b88:: with SMTP id ay8mr1000791plb.202.1579829286931;
-        Thu, 23 Jan 2020 17:28:06 -0800 (PST)
-Received: from localhost ([2401:fa00:8f:203:5bbb:c872:f2b1:f53b])
-        by smtp.gmail.com with ESMTPSA id t30sm4147588pgl.75.2020.01.23.17.28.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Jan 2020 17:28:06 -0800 (PST)
-Date:   Fri, 24 Jan 2020 10:28:03 +0900
-From:   Sergey Senozhatsky <senozhatsky@chromium.org>
-To:     Hans Verkuil <hverkuil@xs4all.nl>
-Cc:     Sergey Senozhatsky <senozhatsky@chromium.org>,
-        Hans Verkuil <hans.verkuil@cisco.com>,
-        Tomasz Figa <tfiga@chromium.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Sakari Ailus <sakari.ailus@iki.fi>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Pawel Osciak <posciak@chromium.org>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC][PATCH 06/15] videobuf2: handle
- V4L2_FLAG_MEMORY_NON_CONSISTENT in CREATE_BUFS
-Message-ID: <20200124012803.GB158382@google.com>
-References: <20191217032034.54897-1-senozhatsky@chromium.org>
- <20191217032034.54897-7-senozhatsky@chromium.org>
- <1fedab8f-e9a1-36b1-3dd0-8f1ed782ec4d@xs4all.nl>
- <20200123034118.GA158382@google.com>
- <d9498772-d9f5-7b25-72af-04249619ce07@xs4all.nl>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=3UtLf7+5DucsSWidbQFY9Ttw4iR1dzCtjU7T/DXapxA=;
+        b=BYfbgY10o+vZkSA+qwOQQzBw9Zw+9EQq+S8IHJanYVX1sDbTdyE45wiAvBcbeSgzgJ
+         FOHEr1vhb93tp2cqoJxjpF7yG5KAKXFOcTYfKPJGLueZjf/MXAtLsOD2iXXuKs8drO/Q
+         ST5evCKoq6dW4u9mzAp3bX8XrG/l2rmDQPPndpiLD4bO34lkRqQzFzThrLIuNPdMthxI
+         6qPEMvBQAWtov/RTto6wuUU/Ee/9pHzxOSZIVTZEmk1o63sIaXwcM2DVISMVwmWUgvZt
+         GGtgMdJA4zXm6vzjRgaWFo31vIlIdPhrKhjhcJ5WCny77rBtZVfHNECUZjne9tU/PDSk
+         h5zw==
+X-Gm-Message-State: APjAAAWWDkFGvRFdVycPIsSDLc53Wh/OXPgCsvnFMKwcR5E8Jn2CxxtY
+        uanuBTU5CUPfBSAn7Wrbvo6z80LvNaM=
+X-Google-Smtp-Source: APXvYqzx5MP5rjHYQq3kzzvu651bu9Kdur2mhOsrCqElHx/Qa+CIW2Rn8N1iwWP9tMyek247IQy+tQ==
+X-Received: by 2002:a17:90a:da04:: with SMTP id e4mr571675pjv.26.1579829288529;
+        Thu, 23 Jan 2020 17:28:08 -0800 (PST)
+Received: from [192.168.201.136] ([50.234.116.4])
+        by smtp.gmail.com with ESMTPSA id b8sm4091967pff.114.2020.01.23.17.28.07
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 23 Jan 2020 17:28:08 -0800 (PST)
+Subject: Re: [PATCH] io_uring: wakeup threads waiting for EPOLLOUT events
+To:     Stefano Garzarella <sgarzare@redhat.com>
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>, io-uring@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
+References: <20200116134946.184711-1-sgarzare@redhat.com>
+ <2d2dda92-3c50-ee62-5ffe-0589d4c8fc0d@kernel.dk>
+ <20200116155557.mwjc7vu33xespiag@steredhat>
+ <5723453a-9326-e954-978e-910b8b495b38@kernel.dk>
+ <20200116162630.6r3xc55kdyyq5tvz@steredhat>
+ <a02a58dc-bf23-ed74-aec6-52c85360fe00@kernel.dk>
+ <20200116170342.4jvkhbbw4x6z3txn@steredhat>
+ <2d3d4932-8894-6969-4006-25141ca1286e@kernel.dk>
+ <20200123214533.ikn4olf7k5dfbaq6@steredhat>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <3805d100-c687-e49e-9317-7cd9b387a3a7@kernel.dk>
+Date:   Thu, 23 Jan 2020 18:28:06 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d9498772-d9f5-7b25-72af-04249619ce07@xs4all.nl>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200123214533.ikn4olf7k5dfbaq6@steredhat>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On (20/01/23 12:41), Hans Verkuil wrote:
-[..]
-> >>>  
-> >>>  	fill_buf_caps(q, &create->capabilities);
-> >>> @@ -775,7 +776,11 @@ int vb2_create_bufs(struct vb2_queue *q, struct v4l2_create_buffers *create)
-> >>>  	for (i = 0; i < requested_planes; i++)
-> >>>  		if (requested_sizes[i] == 0)
-> >>>  			return -EINVAL;
-> >>> -	return ret ? ret : vb2_core_create_bufs(q, create->memory,
-> >>> +
-> >>> +	if (create->flags & V4L2_FLAG_MEMORY_NON_CONSISTENT)
-> >>> +		consistent = false;
-> >>> +
-> >>> +	return ret ? ret : vb2_core_create_bufs(q, create->memory, consistent,
-> >>>  		&create->count, requested_planes, requested_sizes);
-> >>
-> >> As mentioned before: we need a V4L2_BUF_CAP capability.
-> > 
-> > I can add V4L2_BUF_CAP for memory consistency. Isn't it just q->memory
-> > property though? User space may request MMAP consistent memory or MMAP
-> > inconsistent memory.
+On 1/23/20 2:45 PM, Stefano Garzarella wrote:
+> On Thu, Jan 23, 2020 at 12:13:57PM -0700, Jens Axboe wrote:
+>> On 1/16/20 10:03 AM, Stefano Garzarella wrote:
+>>> On Thu, Jan 16, 2020 at 09:30:12AM -0700, Jens Axboe wrote:
+>>>> On 1/16/20 9:26 AM, Stefano Garzarella wrote:
+>>>>>> Since the use case is mostly single submitter, unless you're doing
+>>>>>> something funky or unusual, you're not going to be needing POLLOUT ever.
+>>>>>
+>>>>> The case that I had in mind was with kernel side polling enabled and
+>>>>> a single submitter that can use epoll() to wait free slots in the SQ
+>>>>> ring. (I don't have a test, maybe I can write one...)
+>>>>
+>>>> Right, I think that's the only use case where it makes sense, because
+>>>> you have someone else draining the sq side for you. A test case would
+>>>> indeed be nice, liburing has a good arsenal of test cases and this would
+>>>> be a good addition!
+>>>
+>>> Sure, I'll send a test to liburing for this case!
+>>
+>> Gentle ping on the test case :-)
+>>
 > 
-> So instead of adding a flag we add a V4L2_MEMORY_MMAP_NON_CONSISTENT memory
-> type and add a V4L2_BUF_CAP_SUPPORTS_MMAP_NON_CONSISTENT to signal support
-> for this?
+> Yes, you are right :-)
 > 
-> I like that better than a flag. It also automatically enforces that all
-> buffers must be of that type.
+> I was a little busy this week to finish some works before DevConf.  I
+> hope to work on the test case these days, so by Monday I hope I have
+> it ;-)
 
-Yes, we had this idea as well. The conclusion was it makes the patch
-set bigger and harder to verify and review. Passing memory consistency
-attribute via ->flags was the shortest path at the end. Namely due to all
-those numerous places that test q->memory:
+Thanks, all good, just a gentle nudge ;-)
 
- 455                 if (q->memory == VB2_MEMORY_MMAP)
- 456                         __vb2_buf_mem_free(vb);
- 457                 else if (q->memory == VB2_MEMORY_DMABUF)
- 458                         __vb2_buf_dmabuf_put(vb);
- 459                 else
- 460                         __vb2_buf_userptr_put(vb);
+-- 
+Jens Axboe
 
-[..]
-
- 737                 mutex_lock(&q->mmap_lock);
- 738                 if (debug && q->memory == VB2_MEMORY_MMAP &&
- 739                     __buffers_in_use(q))
- 740                         dprintk(1, "memory in use, orphaning buffers\n");
-
-[..]
-
-etc.
-
-As a workaround we looked at the idea that V4L2_MEMORY_MMAP_NON_CONSISTENT
-flag might make sense only on the very high level - when user space requests
-V4L2_MEMORY_MMAP_NON_CONSISTENT then we simply set DMA attribute and then
-"downgrade" requested V4L2_MEMORY_MMAP_NON_CONSISTENT memory type to
-V4L2_MEMORY_MMAP.
-
-
-Something like this.
-
----
-
-diff --git a/drivers/media/common/videobuf2/videobuf2-core.c b/drivers/media/common/videobuf2/videobuf2-core.c
-index 4489744fbbd9..60afbfcca995 100644
---- a/drivers/media/common/videobuf2/videobuf2-core.c
-+++ b/drivers/media/common/videobuf2/videobuf2-core.c
-@@ -803,6 +803,14 @@ int vb2_core_reqbufs(struct vb2_queue *q, enum vb2_memory memory,
- }
- EXPORT_SYMBOL_GPL(vb2_core_reqbufs);
- 
-+static void __set_queue_consistency(struct vb2_queue *q, bool consistent_mem)
-+{
-+	if (consistent_mem)
-+		q->dma_attrs &= ~DMA_ATTR_NON_CONSISTENT;
-+	else
-+		q->dma_attrs |= DMA_ATTR_NON_CONSISTENT;
-+}
-+
- int vb2_core_create_bufs(struct vb2_queue *q, enum vb2_memory memory,
- 		unsigned int *count, unsigned requested_planes,
- 		const unsigned requested_sizes[])
-@@ -810,6 +818,10 @@ int vb2_core_create_bufs(struct vb2_queue *q, enum vb2_memory memory,
- 	unsigned int num_planes = 0, num_buffers, allocated_buffers;
- 	unsigned plane_sizes[VB2_MAX_PLANES] = { };
- 	int ret;
-+	bool consistent_mem = (memory == V4L2_MEMORY_MMAP_NON_CONSISTENT);
-+
-+	if (consistent_mem)
-+		memory = V4L2_MEMORY_MMAP;
- 
- 	if (q->num_buffers == VB2_MAX_FRAME) {
- 		dprintk(1, "maximum number of buffers already allocated\n");
-@@ -822,6 +834,7 @@ int vb2_core_create_bufs(struct vb2_queue *q, enum vb2_memory memory,
- 			return -EBUSY;
- 		}
- 		memset(q->alloc_devs, 0, sizeof(q->alloc_devs));
-+		__set_queue_consistency(q, consistent_mem);
- 		q->memory = memory;
- 		q->waiting_for_buffers = !q->is_output;
- 	} else if (q->memory != memory) {
