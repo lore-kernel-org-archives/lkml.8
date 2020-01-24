@@ -2,88 +2,94 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDA0EC35242
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:09:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCC0DC35242
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:11:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9458E2075D
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:09:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579874952;
-	bh=QFpulhqs7BhwPzn6uhHuG/g25Qlt5GhN8GB8XRQmIbE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=aW7nJZRlaocawkMU596B9ayM/jVy16Vm+Qqgmo9J8U75fpaBHpVaPd6aMEWiPLftI
-	 ZPIsE21ZhJ7FzyjmzzFhPY3ri9zAjiPbwMPLegdMwkhCToQh1DAeQaqysTMYjagFtN
-	 TS/W9iwuWJ6SGo2GcJF1/WxIilOQRKhxAJdaleSc=
+	by mail.kernel.org (Postfix) with ESMTP id A2D082075D
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:11:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="OUxPmpHW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389796AbgAXOJL (ORCPT
+        id S2390158AbgAXOLg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 09:09:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34854 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387412AbgAXOJL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 09:09:11 -0500
-Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 906E92087E;
-        Fri, 24 Jan 2020 14:09:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579874950;
-        bh=QFpulhqs7BhwPzn6uhHuG/g25Qlt5GhN8GB8XRQmIbE=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=x+9GRFEDe/CZ5Egno7tT03tafQdhrpnnkDgdVXXLr4AA0itgSS5o+siUXhSdqU5t0
-         CD4NTq5Mi/LTDl00BpdEocKXMMX5Hgg+pIgt0zm9kE76O0w4h0omAJNwgqto1v3iJs
-         /PK289bU1BuH8u3OEHTzDhep/38Sub4qdQRG9VX8=
-Received: by mail-qt1-f178.google.com with SMTP id d9so1542189qte.12;
-        Fri, 24 Jan 2020 06:09:10 -0800 (PST)
-X-Gm-Message-State: APjAAAV4jCgCmINVmie57kE2BY4ce+LxhuI31EqO/VzvgynnO6UvmoOs
-        UDsNwiWiH/Fr8g7os3dhZq4NymtWadTMEip0Kg==
-X-Google-Smtp-Source: APXvYqw9emwqw3XGNWzol/n1tHMUux0BStqaxT8MOP10X+Z7I4obcUr5hYArd029o57NsAJ4M/xzBjV3YF57vgHToNM=
-X-Received: by 2002:ac8:59:: with SMTP id i25mr2279317qtg.110.1579874949719;
- Fri, 24 Jan 2020 06:09:09 -0800 (PST)
+        Fri, 24 Jan 2020 09:11:36 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:54850 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389118AbgAXOLf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 09:11:35 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00OE8RCK065931;
+        Fri, 24 Jan 2020 14:11:13 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=VfNjqg7FejUrmLZJcuFSOF82y9tdMchXxATYFjEy1q4=;
+ b=OUxPmpHW4++e/oZ8ICTiksfYm56LaT6jP9XajNEy3rgWIjLtwVyfBFVnCDm3fVSA6sTR
+ tbhAa1L2H1vKy1rlDiBoFhK8CYJElQQA/mCKjrHTYCrZjJR+GMeBfeZPQL/0ktFYtwid
+ MSBJLObZITMGk61zg5DSXzW0ixfjjBsBxYrPpS9x2kXii+kyD2VuzKT3e65QvmhL6PuC
+ A3bKJNbmqZgWM0aefaE6RuXj9qXF1xyVBbYg/S6tVcGQB0rzJlKR5HUbNcF8W5eVc6ZL
+ Zc6L7HyEXlZzF+ZT0TXBuN7x6V3bNYzh4BV2RrDSqlgzTz/6A37GFUqYnfd9t8QzWbQN lg== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2130.oracle.com with ESMTP id 2xksev1ady-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 24 Jan 2020 14:11:12 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00OE9ACV011506;
+        Fri, 24 Jan 2020 14:11:12 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3020.oracle.com with ESMTP id 2xqmwfbgrs-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 24 Jan 2020 14:11:11 +0000
+Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 00OEB72Z000365;
+        Fri, 24 Jan 2020 14:11:08 GMT
+Received: from kadam (/129.205.23.165)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 24 Jan 2020 06:11:07 -0800
+Date:   Fri, 24 Jan 2020 17:10:58 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Hillf Danton <hdanton@sina.com>
+Cc:     syzbot <syzbot+75287f75e2fedd69d680@syzkaller.appspotmail.com>,
+        andreyknvl@google.com, bnvandana@gmail.com,
+        hverkuil-cisco@xs4all.nl, laurent.pinchart@ideasonboard.com,
+        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-usb@vger.kernel.org, mchehab@kernel.org,
+        syzkaller-bugs@googlegroups.com
+Subject: Re: KASAN: use-after-free Read in v4l2_release (3)
+Message-ID: <20200124141058.GM1847@kadam>
+References: <000000000000de50d7059ba6acd5@google.com>
+ <20200123102707.2596-1-hdanton@sina.com>
 MIME-Version: 1.0
-References: <20200124105753.15976-1-dafna.hirschfeld@collabora.com>
-In-Reply-To: <20200124105753.15976-1-dafna.hirschfeld@collabora.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Fri, 24 Jan 2020 08:08:58 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+7E6B181hYn_6yNE53Mf+jiQ+o6pGDotwGX=m+GysW4A@mail.gmail.com>
-Message-ID: <CAL_Jsq+7E6B181hYn_6yNE53Mf+jiQ+o6pGDotwGX=m+GysW4A@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: fix compilation error of the example in marvell,mmp3-hsic-phy.yaml
-To:     Dafna Hirschfeld <dafna.hirschfeld@collabora.com>, soc@kernel.org
-Cc:     devicetree@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Helen Koike <helen.koike@collabora.com>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Collabora Kernel ML <kernel@collabora.com>, dafna3@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200123102707.2596-1-hdanton@sina.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9509 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=609
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-2001240118
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9509 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=687 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-2001240118
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 24, 2020 at 4:58 AM Dafna Hirschfeld
-<dafna.hirschfeld@collabora.com> wrote:
->
-> Running `make dt_binging_check`, gives the error:
->
-> DTC     Documentation/devicetree/bindings/phy/marvell,mmp3-hsic-phy.example.dt.yaml
-> Error: Documentation/devicetree/bindings/phy/marvell,mmp3-hsic-phy.example.dts:20.41-42 syntax error
-> FATAL ERROR: Unable to parse input tree
->
-> This is because the example uses the macro GPIO_ACTIVE_HIGH which
-> is defined in gpio.h but the include of this header is missing.
-> Add the include to fix the error.
->
-> Signed-off-by: Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
+This would work but another approach would be to to allocate "usbvision"
+with devm_kzalloc(&dev->dev,...  I believe that would postpone the free
+enough to solve the use after free but I hadn't tested it yet.  But
+other drivers do that so hopefully it works.
 
-Fixes: f6f149604eef ("dt-bindings: phy: Add binding for marvell,mmp3-hsic-phy")
-Acked-by: Rob Herring <robh@kernel.org>
-
-Arnd, Olof, The above commit is in your tree. Please apply this.
-
-Rob
+regards,
+dan carpenter
