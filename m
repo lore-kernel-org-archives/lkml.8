@@ -2,126 +2,99 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20AF2C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:32:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00559C32771
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:32:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F081A214DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:32:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBBAC2075D
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:32:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579865573;
+	bh=l4Ses8rqDTCAA4Ztph6uswTprIih94TV2bALSpRD3ZI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=wlp4A+WcWoV06nZZkMf6ZrkdqdQYSFTl1yFbMBsyn7xI5mzep/OPlpNor2UrZ5/uB
+	 x0Yx7SOe7TclGX7C3IGE/wjocsFpuyGtpS5Clx1GddNFAYBGnGvYJEl2gcCj+wJVka
+	 tFzIt8ynEvh0l1zG8CodlJClme+vLWh163Ru71Hc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404499AbgAXLct (ORCPT
+        id S2404509AbgAXLcw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:32:49 -0500
-Received: from foss.arm.com ([217.140.110.172]:50280 "EHLO foss.arm.com"
+        Fri, 24 Jan 2020 06:32:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51800 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404479AbgAXLcn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:32:43 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4DCCF31B;
-        Fri, 24 Jan 2020 03:32:43 -0800 (PST)
-Received: from bogus (e103737-lin.cambridge.arm.com [10.1.197.49])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BC53B3F68E;
-        Fri, 24 Jan 2020 03:32:41 -0800 (PST)
-Date:   Fri, 24 Jan 2020 11:32:39 +0000
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     Greg KH <gregkh@linuxfoundation.org>,
-        Jolly Shah <JOLLYS@xilinx.com>
-Cc:     "ard.biesheuvel@linaro.org" <ard.biesheuvel@linaro.org>,
-        "mingo@kernel.org" <mingo@kernel.org>,
-        "matt@codeblueprint.co.uk" <matt@codeblueprint.co.uk>,
-        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
-        "keescook@chromium.org" <keescook@chromium.org>,
-        "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>,
-        Michal Simek <michals@xilinx.com>,
-        Rajan Vaja <RAJANV@xilinx.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 1/4] firmware: xilinx: Add sysfs interface
-Message-ID: <20200124113239.GB40307@bogus>
-References: <1578527663-10243-1-git-send-email-jolly.shah@xilinx.com>
- <1578527663-10243-2-git-send-email-jolly.shah@xilinx.com>
- <20200114145257.GA1910108@kroah.com>
- <BYAPR02MB5992FC37E0D2AD9946414417B80F0@BYAPR02MB5992.namprd02.prod.outlook.com>
- <20200124060339.GB2906795@kroah.com>
+        id S2404457AbgAXLco (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:32:44 -0500
+Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4FC012077C;
+        Fri, 24 Jan 2020 11:32:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579865564;
+        bh=l4Ses8rqDTCAA4Ztph6uswTprIih94TV2bALSpRD3ZI=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=TtYT9pXMHrNqusDe/A/i9eyzqb81j9HkVpbyDdTXlobdFRHK2UzxMeJsOD6MvLxyh
+         tK+0AbVpRcwLZshuvCvxFwyJT6yd6+rT0afIrP1DixzoDwjVxYKHzhGJjz83UinuRa
+         HNI+ouAgZX5soFSrEVR0E3jkVyEKYYLseioFkEC8=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Gerd Rausch <gerd.rausch@oracle.com>,
+        Santosh Shilimkar <santosh.shilimkar@oracle.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 564/639] net/rds: Fix ib_evt_handler_call element in rds_ib_stat_names
+Date:   Fri, 24 Jan 2020 10:32:14 +0100
+Message-Id: <20200124093159.995153880@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
+References: <20200124093047.008739095@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200124060339.GB2906795@kroah.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Greg,
+From: Gerd Rausch <gerd.rausch@oracle.com>
 
-Thanks for raising various issues that I have repeatedly asked and
-constantly ignored.
+[ Upstream commit 05a82481a3024b94db00b8c816bb3d526b5209e0 ]
 
-On Fri, Jan 24, 2020 at 07:03:39AM +0100, Greg KH wrote:
-> On Thu, Jan 23, 2020 at 11:47:57PM +0000, Jolly Shah wrote:
-> > Hi Greg,
-> >
+All entries in 'rds_ib_stat_names' are stringified versions
+of the corresponding "struct rds_ib_statistics" element
+without the "s_"-prefix.
 
-[...]
+Fix entry 'ib_evt_handler_call' to do the same.
 
-> > Firmware driver was changed later to be platform driver but these
-> > interfaces were defined earlier and are in use.
->
-> Defined and in use where?  Not in the upstream kernel tree, right?  Or
-> am I missing them somewhere else?
->
+Fixes: f4f943c958a2 ("RDS: IB: ack more receive completions to improve performance")
+Signed-off-by: Gerd Rausch <gerd.rausch@oracle.com>
+Acked-by: Santosh Shilimkar <santosh.shilimkar@oracle.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ net/rds/ib_stats.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Exactly and they keep saying there partners are using these for 3-4 years
-and they want to retain that. I have told them to change several times.
-
-> > > > +	ret = kstrtol(tok, 16, &value);
-> > > > +	if (ret) {
-> > > > +		ret = -EFAULT;
-> > > > +		goto err;
-> > > > +	}
-> > > > +
-> > > > +	ret = eemi_ops->ioctl(0, read_ioctl, reg, 0, ret_payload);
-> > >
-> > > This feels "tricky", if you tie this to the device you have your driver
-> > > bound to, will this make it easier instead of having to go through the
-> > > ioctl callback?
-> > >
-> >
-> > GGS(general global storage) registers are in PMU space and linux doesn't have access to it
-> > Hence ioctl is used.
->
-> Why not just a "real" call to the driver to make this type of reading?
-> You don't have ioctls within the kernel for other drivers to call,
-> that's not needed at all.
->
-
-Oh yes, this is so broken in design. This firmware is designed to abstract
-the power and configuration management on their platform, but they decided
-to add direct register access to some registers anyway. Weird use case,
-don't even ask. But I strongly objected such interface in sysfs even if
-they moved under platform device. If they need this at any cost, I have
-suggested debugfs.
+diff --git a/net/rds/ib_stats.c b/net/rds/ib_stats.c
+index 9252ad1263359..ac46d8961b61a 100644
+--- a/net/rds/ib_stats.c
++++ b/net/rds/ib_stats.c
+@@ -42,7 +42,7 @@ DEFINE_PER_CPU_SHARED_ALIGNED(struct rds_ib_statistics, rds_ib_stats);
+ static const char *const rds_ib_stat_names[] = {
+ 	"ib_connect_raced",
+ 	"ib_listen_closed_stale",
+-	"s_ib_evt_handler_call",
++	"ib_evt_handler_call",
+ 	"ib_tasklet_call",
+ 	"ib_tx_cq_event",
+ 	"ib_tx_ring_full",
+-- 
+2.20.1
 
 
-[...]
 
-> >
-> > Agree it will be simpler but to as firmware driver was changed to be
-> > platform driver, to keep paths same, we used sysfs.
->
-> Keep them same from what?  Use the platform device as that is what it is
-> there for, do not go create new apis when they are not needed at all.
->
-
-+1, and please don't add any sysfs that can read/write those GGS registers
-directly from userspace. Move them to debugfs if you are desperate to have
-something.
-
---
-Regards,
-Sudeep
