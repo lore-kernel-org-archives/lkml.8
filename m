@@ -2,102 +2,106 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11758C3F68F
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:40:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D965C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:43:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE0462071A
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:40:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579876800;
-	bh=KndByeN2uIX8Cxi149zR4DZ0hFI8P9TGSbIMN+1I9RM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yWMNizQYA+1RNzdtwS6eH0kvGbV9RBdiEy7njFMLqIWcTqdkIuV+1WMIGE3KR0rHK
-	 gElKZXSWkvQqXE4qaqcRgFxJS7EfFyFriu5CKVb322V6CRUEak7kLLdu8n7/Idzgq1
-	 1zinLsduo6L396b+GNX4kbGOxIxFRncHBCk5GvsU=
+	by mail.kernel.org (Postfix) with ESMTP id E15B0206F0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:43:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BM65m3Ly"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389556AbgAXOkA (ORCPT
+        id S2387557AbgAXOnJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 09:40:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37700 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390492AbgAXOSX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 09:18:23 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Fri, 24 Jan 2020 09:43:09 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:27252 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729604AbgAXOnI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 09:43:08 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579876988;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=9l6POn3eu1T5wYGvqIrxXu86ud4cnXxoH7SZuURfrZw=;
+        b=BM65m3LyBYV97o3I8XEp4Zpt4hoEb/Fx0RssAf8yQFDdcWiFPVL6N7411M9X1Nqn4HQwAV
+        s3qrbEIJW3X90F0KPbLaPupjYmCCOh2PLq1bvVyqKVoT2E6EaH5ztn8HVniQ7z6FBR1rlD
+        EiL9oHE+Sl49gLC9vU88YwfwhAybtsE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-106-NZHuf-WlOACiaqvI3HcN3A-1; Fri, 24 Jan 2020 09:43:03 -0500
+X-MC-Unique: NZHuf-WlOACiaqvI3HcN3A-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 00176208C4;
-        Fri, 24 Jan 2020 14:18:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579875502;
-        bh=KndByeN2uIX8Cxi149zR4DZ0hFI8P9TGSbIMN+1I9RM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=p0aXeZEwsvLnp00ZtTG3Taps7TYlkhDsSoB14lefRQV8g77l7OmRC2WB8XzodaYhj
-         YxN95AgLqc21TV/oTNgmU6s4CvdYOT4NHu7iqvdsDMMdR9M2nb3wtMe7+VeAKF3/D/
-         AnxlZSAcAa3nh3s2RSleVovgHXQBB1rERx8P71go=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.4 004/107] dt-bindings: reset: meson8b: fix duplicate reset IDs
-Date:   Fri, 24 Jan 2020 09:16:34 -0500
-Message-Id: <20200124141817.28793-4-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200124141817.28793-1-sashal@kernel.org>
-References: <20200124141817.28793-1-sashal@kernel.org>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9DAB4800D5B;
+        Fri, 24 Jan 2020 14:42:48 +0000 (UTC)
+Received: from llong.remote.csb (ovpn-124-92.rdu2.redhat.com [10.10.124.92])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 445F919C69;
+        Fri, 24 Jan 2020 14:42:42 +0000 (UTC)
+Subject: Re: [PATCH v8 4/5] locking/qspinlock: Introduce starvation avoidance
+ into CNA
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Alex Kogan <alex.kogan@oracle.com>
+Cc:     linux@armlinux.org.uk, Ingo Molnar <mingo@redhat.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>, linux-arch@vger.kernel.org,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>, hpa@zytor.com, x86@kernel.org,
+        Hanjun Guo <guohanjun@huawei.com>,
+        Jan Glauber <jglauber@marvell.com>,
+        Steven Sistare <steven.sistare@oracle.com>,
+        Daniel Jordan <daniel.m.jordan@oracle.com>,
+        dave.dice@oracle.com
+References: <20191230194042.67789-1-alex.kogan@oracle.com>
+ <20191230194042.67789-5-alex.kogan@oracle.com>
+ <20200121132949.GL14914@hirez.programming.kicks-ass.net>
+ <cfdf635d-be2e-9d4b-c4ca-6bcbddc6868f@redhat.com>
+ <3862F8A1-FF9B-40AD-A88E-2C0BA7AF6F58@oracle.com>
+ <20200124075235.GX14914@hirez.programming.kicks-ass.net>
+From:   Waiman Long <longman@redhat.com>
+Organization: Red Hat
+Message-ID: <2c6741c5-d89d-4b2c-cebe-a7c7f6eed884@redhat.com>
+Date:   Fri, 24 Jan 2020 09:42:42 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200124075235.GX14914@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+On 1/24/20 2:52 AM, Peter Zijlstra wrote:
+> On Thu, Jan 23, 2020 at 04:33:54PM -0500, Alex Kogan wrote:
+>> Let me put this question to you. What do you think the number should be?
+> I think it would be very good to keep the inter-node latency below 1ms.
+It is hard to guarantee that given that lock hold times can vary quite a
+lot depending on the workload. What we can control is just how many
+later lock waiters can jump ahead before a given waiter.
+> But to realize that we need data on the lock hold times. Specifically
+> for the heavily contended locks that make CNA worth it in the first
+> place.
+>
+> I don't see that data, so I don't see how we can argue about this let
+> alone call something reasonable.
+>
+In essence, CNA lock is for improving throughput on NUMA machines at the
+expense of increasing worst case latency. If low latency is important,
+it should be disabled. If CONFIG_PREEMPT_RT is on,
+CONFIG_NUMA_AWARE_SPINLOCKS should be off.
 
-[ Upstream commit 4881873f4cc1460f63d85fa81363d56be328ccdc ]
-
-According to the public S805 datasheet the RESET2 register uses the
-following bits for the PIC_DC, PSC and NAND reset lines:
-- PIC_DC is at bit 3 (meaning: RESET_VD_RMEM + 3)
-- PSC is at bit 4 (meaning: RESET_VD_RMEM + 4)
-- NAND is at bit 5 (meaning: RESET_VD_RMEM + 4)
-
-Update the reset IDs of these three reset lines so they don't conflict
-with PIC_DC and map to the actual hardware reset lines.
-
-Fixes: 79795e20a184eb ("dt-bindings: reset: Add bindings for the Meson SoC Reset Controller")
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Signed-off-by: Kevin Hilman <khilman@baylibre.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- include/dt-bindings/reset/amlogic,meson8b-reset.h | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/include/dt-bindings/reset/amlogic,meson8b-reset.h b/include/dt-bindings/reset/amlogic,meson8b-reset.h
-index c614438bcbdb8..fbc524a900da1 100644
---- a/include/dt-bindings/reset/amlogic,meson8b-reset.h
-+++ b/include/dt-bindings/reset/amlogic,meson8b-reset.h
-@@ -46,9 +46,9 @@
- #define RESET_VD_RMEM			64
- #define RESET_AUDIN			65
- #define RESET_DBLK			66
--#define RESET_PIC_DC			66
--#define RESET_PSC			66
--#define RESET_NAND			66
-+#define RESET_PIC_DC			67
-+#define RESET_PSC			68
-+#define RESET_NAND			69
- #define RESET_GE2D			70
- #define RESET_PARSER_REG		71
- #define RESET_PARSER_FETCH		72
--- 
-2.20.1
+Cheers,
+Longman
 
