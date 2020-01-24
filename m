@@ -7,46 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE52BC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:07:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D13DAC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:07:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB82E20708
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:07:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A44372075D
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:07:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579864039;
-	bh=qABPxQ2/vxlZhPFh918x8elSwB+Eg1ojAlBRSJt9MUM=;
+	s=default; t=1579864043;
+	bh=0Vmmz/P/NKBqwv4ewIyT/SUF6hQ2OF6SKqx4rTyDV4k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PA73cAqpiJ0/L0Gw/ZDwrNn+WkkkXE1skQ0QhBgZtdPG353UDriy4+M3QvUNweOI+
-	 NlQH5p6YZvBRwrRvU9emUK21ONYMPN7M3HEU+WciN1cr9HOeIqRbht0NRukmbYuK9j
-	 yQJXg+OEfnYmyGfkSwoJjrMy0eywWHn/9Kf+DBks=
+	b=Rf7i6SUDjEctwbkl/YKeF29hp5gAaweAVussF75H4A1jHEAVETcnjzxO81DJMW+gn
+	 ZZFd/O2h/XnK7DE3V7zznL3AmRW006gjp20izk3/zg5K74EkZxa8k+W56ECqwjRMXY
+	 jiviMXkzK6T7afzdrfvrgIw1UmfjRawEfu2e4cyo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389475AbgAXLHS (ORCPT
+        id S2389492AbgAXLHW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:07:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42452 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 06:07:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42526 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389422AbgAXLHR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:07:17 -0500
+        id S2389382AbgAXLHU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:07:20 -0500
 Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2BA892075D;
-        Fri, 24 Jan 2020 11:07:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 93A5320663;
+        Fri, 24 Jan 2020 11:07:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579864036;
-        bh=qABPxQ2/vxlZhPFh918x8elSwB+Eg1ojAlBRSJt9MUM=;
+        s=default; t=1579864040;
+        bh=0Vmmz/P/NKBqwv4ewIyT/SUF6hQ2OF6SKqx4rTyDV4k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bW7jU+DJtHi2xyiTAhlW2dWP6yw/36x5YoH6yMDVOWDTHmRqjKR0pwlFgrVzUkQ+a
-         eWYEA2+UqFgL25jp0Hnutx/97LEWTxtnYoteiI0f3CVo7XEtkJFDwpnYZ0XOHBBaaY
-         CN0kTM1q7JGoZG3cRFWJUt8VifZ97fKFTejaNDVs=
+        b=b1dI26QkxbDfIDJikJvvlwz87UlAxDHnuYvka4af2nOXWO0ycsxJOnfz0AgUQwC37
+         oyNIR9tEbPm05ksnrSwOofserm0f2zoroaXJHmMc+tcXe6FmZWCIuVOms1RNa4GF8j
+         cofMtNNhQC3emPj5uKoHSNhUS0zyXp8z1fpD0ff4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, YueHaibing <yuehaibing@huawei.com>,
+        stable@vger.kernel.org, Jacopo Mondi <jacopo+renesas@jmondi.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 154/639] tty: ipwireless: Fix potential NULL pointer dereference
-Date:   Fri, 24 Jan 2020 10:25:24 +0100
-Message-Id: <20200124093106.503452802@linuxfoundation.org>
+Subject: [PATCH 4.19 141/639] media: tw9910: Unregister subdevice with v4l2-async
+Date:   Fri, 24 Jan 2020 10:25:11 +0100
+Message-Id: <20200124093104.921622772@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
 References: <20200124093047.008739095@linuxfoundation.org>
@@ -59,34 +62,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Jacopo Mondi <jacopo+renesas@jmondi.org>
 
-[ Upstream commit 7dd50e205b3348dc7784efbdf85723551de64a25 ]
+[ Upstream commit 341fe1d301f587c930509f6b9153436b957f649c ]
 
-There is a potential NULL pointer dereference in case
-alloc_ctrl_packet() fails and returns NULL.
+As the tw9910 subdevice is registered through the v4l2-async framework,
+use the v4l2-async provided function to register it.
 
-Fixes: 099dc4fb6265 ("ipwireless: driver for PC Card 3G/UMTS modem")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 7b20f325a566 ("media: i2c: tw9910: Remove soc_camera dependencies")
+
+Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/ipwireless/hardware.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/media/i2c/tw9910.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/tty/ipwireless/hardware.c b/drivers/tty/ipwireless/hardware.c
-index b0baa4ce10f98..6bbf35682d531 100644
---- a/drivers/tty/ipwireless/hardware.c
-+++ b/drivers/tty/ipwireless/hardware.c
-@@ -1516,6 +1516,8 @@ static void ipw_send_setup_packet(struct ipw_hardware *hw)
- 			sizeof(struct ipw_setup_get_version_query_packet),
- 			ADDR_SETUP_PROT, TL_PROTOCOLID_SETUP,
- 			TL_SETUP_SIGNO_GET_VERSION_QRY);
-+	if (!ver_packet)
-+		return;
- 	ver_packet->header.length = sizeof(struct tl_setup_get_version_qry);
+diff --git a/drivers/media/i2c/tw9910.c b/drivers/media/i2c/tw9910.c
+index a54548cc42857..c7321a70e3ed0 100644
+--- a/drivers/media/i2c/tw9910.c
++++ b/drivers/media/i2c/tw9910.c
+@@ -1000,7 +1000,7 @@ static int tw9910_remove(struct i2c_client *client)
+ 	if (priv->pdn_gpio)
+ 		gpiod_put(priv->pdn_gpio);
+ 	clk_put(priv->clk);
+-	v4l2_device_unregister_subdev(&priv->subdev);
++	v4l2_async_unregister_subdev(&priv->subdev);
  
- 	/*
+ 	return 0;
+ }
 -- 
 2.20.1
 
