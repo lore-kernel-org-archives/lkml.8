@@ -2,94 +2,88 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D168FC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:07:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDA0EC35242
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:09:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A40432087E
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:07:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9458E2075D
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:09:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579874952;
+	bh=QFpulhqs7BhwPzn6uhHuG/g25Qlt5GhN8GB8XRQmIbE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=aW7nJZRlaocawkMU596B9ayM/jVy16Vm+Qqgmo9J8U75fpaBHpVaPd6aMEWiPLftI
+	 ZPIsE21ZhJ7FzyjmzzFhPY3ri9zAjiPbwMPLegdMwkhCToQh1DAeQaqysTMYjagFtN
+	 TS/W9iwuWJ6SGo2GcJF1/WxIilOQRKhxAJdaleSc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389553AbgAXOHZ (ORCPT
+        id S2389796AbgAXOJL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 09:07:25 -0500
-Received: from 216-12-86-13.cv.mvl.ntelos.net ([216.12.86.13]:52890 "EHLO
-        brightrain.aerifal.cx" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387412AbgAXOHY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 09:07:24 -0500
-Received: from dalias by brightrain.aerifal.cx with local (Exim 3.15 #2)
-        id 1iuzcH-0001sV-00; Fri, 24 Jan 2020 14:07:21 +0000
-Date:   Fri, 24 Jan 2020 09:07:21 -0500
-From:   Rich Felker <dalias@libc.org>
-To:     Florian Weimer <fweimer@redhat.com>
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-api@vger.kernel.org, Alexander Viro <viro@zeniv.linux.org.uk>
-Subject: Re: Proposal to fix pwrite with O_APPEND via pwritev2 flag
-Message-ID: <20200124140721.GV30412@brightrain.aerifal.cx>
-References: <20200124000243.GA12112@brightrain.aerifal.cx>
- <87d0b942lp.fsf@oldenburg2.str.redhat.com>
+        Fri, 24 Jan 2020 09:09:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34854 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387412AbgAXOJL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 09:09:11 -0500
+Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 906E92087E;
+        Fri, 24 Jan 2020 14:09:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579874950;
+        bh=QFpulhqs7BhwPzn6uhHuG/g25Qlt5GhN8GB8XRQmIbE=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=x+9GRFEDe/CZ5Egno7tT03tafQdhrpnnkDgdVXXLr4AA0itgSS5o+siUXhSdqU5t0
+         CD4NTq5Mi/LTDl00BpdEocKXMMX5Hgg+pIgt0zm9kE76O0w4h0omAJNwgqto1v3iJs
+         /PK289bU1BuH8u3OEHTzDhep/38Sub4qdQRG9VX8=
+Received: by mail-qt1-f178.google.com with SMTP id d9so1542189qte.12;
+        Fri, 24 Jan 2020 06:09:10 -0800 (PST)
+X-Gm-Message-State: APjAAAV4jCgCmINVmie57kE2BY4ce+LxhuI31EqO/VzvgynnO6UvmoOs
+        UDsNwiWiH/Fr8g7os3dhZq4NymtWadTMEip0Kg==
+X-Google-Smtp-Source: APXvYqw9emwqw3XGNWzol/n1tHMUux0BStqaxT8MOP10X+Z7I4obcUr5hYArd029o57NsAJ4M/xzBjV3YF57vgHToNM=
+X-Received: by 2002:ac8:59:: with SMTP id i25mr2279317qtg.110.1579874949719;
+ Fri, 24 Jan 2020 06:09:09 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87d0b942lp.fsf@oldenburg2.str.redhat.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+References: <20200124105753.15976-1-dafna.hirschfeld@collabora.com>
+In-Reply-To: <20200124105753.15976-1-dafna.hirschfeld@collabora.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Fri, 24 Jan 2020 08:08:58 -0600
+X-Gmail-Original-Message-ID: <CAL_Jsq+7E6B181hYn_6yNE53Mf+jiQ+o6pGDotwGX=m+GysW4A@mail.gmail.com>
+Message-ID: <CAL_Jsq+7E6B181hYn_6yNE53Mf+jiQ+o6pGDotwGX=m+GysW4A@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: fix compilation error of the example in marvell,mmp3-hsic-phy.yaml
+To:     Dafna Hirschfeld <dafna.hirschfeld@collabora.com>, soc@kernel.org
+Cc:     devicetree@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Helen Koike <helen.koike@collabora.com>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        Collabora Kernel ML <kernel@collabora.com>, dafna3@gmail.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 24, 2020 at 10:37:22AM +0100, Florian Weimer wrote:
-> * Rich Felker:
-> 
-> > There's a longstanding unfixable (due to API stability) bug in the
-> > pwrite syscall:
-> >
-> > http://man7.org/linux/man-pages/man2/pwrite.2.html#BUGS
-> >
-> > whereby it wrongly honors O_APPEND if set, ignoring the caller-passed
-> > offset. Now that there's a pwritev2 syscall that takes a flags
-> > argument, it's possible to fix this without breaking stability by
-> > adding a new RWF_NOAPPEND flag, which callers that want the fixed
-> > behavior can then pass.
-> >
-> > I have a completely untested patch to add such a flag, but would like
-> > to get a feel for whether the concept is acceptable before putting
-> > time into testing it. If so, I'll submit this as a proper patch with
-> > detailed commit message etc. Draft is below.
-> 
-> Has this come up before?
+On Fri, Jan 24, 2020 at 4:58 AM Dafna Hirschfeld
+<dafna.hirschfeld@collabora.com> wrote:
+>
+> Running `make dt_binging_check`, gives the error:
+>
+> DTC     Documentation/devicetree/bindings/phy/marvell,mmp3-hsic-phy.example.dt.yaml
+> Error: Documentation/devicetree/bindings/phy/marvell,mmp3-hsic-phy.example.dts:20.41-42 syntax error
+> FATAL ERROR: Unable to parse input tree
+>
+> This is because the example uses the macro GPIO_ACTIVE_HIGH which
+> is defined in gpio.h but the include of this header is missing.
+> Add the include to fix the error.
+>
+> Signed-off-by: Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
 
-I'm not sure if there's an open glibc bug for it or not, but it's come
-up in musl community before that the kernel is non-conforming here for
-historical reasons (preserving the original bug in case any software
-is depending on it) and we've always wanted to have a fix, but
-couldn't find one short of just erroring out if O_APPEND is set when
-pwrite is called. That's what the fallback will do (rather than
-silently write data at the wrong place) if pwritev2+RWF_NOAPPEND is
-not supported on the system at runtime.
+Fixes: f6f149604eef ("dt-bindings: phy: Add binding for marvell,mmp3-hsic-phy")
+Acked-by: Rob Herring <robh@kernel.org>
 
-> I had already written a test case and it turns out that an O_APPEND
-> descriptor does not protect the previously written data in the file:
-> 
-> openat(AT_FDCWD, "/tmp/append-truncateuoRexJ", O_RDWR|O_CREAT|O_EXCL, 0600) = 3
-> write(3, "@", 1)                        = 1
-> close(3)                                = 0
-> openat(AT_FDCWD, "/tmp/append-truncateuoRexJ", O_WRONLY|O_APPEND) = 3
-> ftruncate(3, 0)                         = 0
-> 
-> So at least it looks like there is no security issue in adding a
-> RWF_NOAPPEND flag.
+Arnd, Olof, The above commit is in your tree. Please apply this.
 
-Indeed, if you have the file open you can just use fcntl to remove
-O_APPEND (but of course using that in an emulation would be racy), so
-it's not a security boundary. Someone could try to "make it into one"
-with seccomp, blocking fcntl that would remove O_APPEND and blocking
-ftruncate, mmap, and all other ways you could modify the existing part
-of the file, but that sounds fragile, and if they really want to do
-that they can block pwritev2 as well (or at least block it with
-RWF_NOAPPEND or future/unknown flags).
-
-Rich
+Rob
