@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BB68C32771
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:45:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E94BC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:45:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2025420718
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:45:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0967A208C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:45:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579859101;
-	bh=ypgp3PxSJtflknrnZM/yMRSldZn+Y5/zuv4400N799Q=;
+	s=default; t=1579859106;
+	bh=+eFq1Vi9Mp4gWPRSaTrPqaP333Ytd51PTucRNr71yOM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yYvT52nMhPgIJCkQGiKEJmE8AWpWS8sJONReiFpQz7WcK4/kG3rwD/Ggqr3zPSKWZ
-	 YpL3QS3ftqyfZy3rjg3n6hU1S4EBRSJF/n9mmsZe+4uHRA02Vmek5DOXagclkM1fEe
-	 k2+wOc6WyzgU8VwspzY1KxC0dfisK0xMwtIMlGWc=
+	b=RHLfniMl3xk/MKWbaXWQ8C14aWVG92kl2xCDaRM0/zDJyowVXc5d03TX5h+32kxp8
+	 LFH8tjpEpNWcIJ2GkEP+Qh+QYp37Vjt6T7M8QNsb7jhpV7zcnEYwz0NZrBJJUNA30I
+	 B+93ec9+8NxzmLfrMO6lTvPvA4FUjERBbK4kLZ1w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387435AbgAXJpA (ORCPT
+        id S2387440AbgAXJpF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 04:45:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43202 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 04:45:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43754 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732415AbgAXJok (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 04:44:40 -0500
+        id S1732257AbgAXJpD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 04:45:03 -0500
 Received: from localhost (unknown [145.15.244.15])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EA30120718;
-        Fri, 24 Jan 2020 09:44:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 814E420718;
+        Fri, 24 Jan 2020 09:45:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579859079;
-        bh=ypgp3PxSJtflknrnZM/yMRSldZn+Y5/zuv4400N799Q=;
+        s=default; t=1579859102;
+        bh=+eFq1Vi9Mp4gWPRSaTrPqaP333Ytd51PTucRNr71yOM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nOwsuf5vZZubrGj1zJktroQQyxDXRplEiEtOSHHvEtOMmnCUerRP0FGtvWc+lrEh2
-         CYZ7EFdib3gcjfZosHoWl0aEdvfeWOlYHfEONKwh/HyrsGma7045GHwzAq6W2jjLOK
-         Llz8vDn1j+Kkr9Pjf5M58zE/5RNldafjDkVRz/FU=
+        b=ntfVh2AxEUWw1so0YHOe1myeoBXSOEB0Qi9ILCUO4Pz+ytqMNIrhgHPZFX2CE3H6p
+         7+eDy1cPiocY9Ub9tMMN+BZbyrTKc3QXeNdNAmP+BO+gWbMutrkfwNcBzK7OZfiY72
+         lCT+oJDRfLaL1jil9pl9JnzChPlli9jaKINNfHWs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Simon Horman <horms+renesas@verge.net.au>,
+        stable@vger.kernel.org, Stefan Wahren <stefan.wahren@i2se.com>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 038/343] pinctrl: sh-pfc: r8a77995: Remove bogus SEL_PWM[0-3]_3 configurations
-Date:   Fri, 24 Jan 2020 10:27:36 +0100
-Message-Id: <20200124092924.798270341@linuxfoundation.org>
+Subject: [PATCH 4.14 029/343] staging: bcm2835-camera: Abort probe if there is no camera
+Date:   Fri, 24 Jan 2020 10:27:27 +0100
+Message-Id: <20200124092923.664049032@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124092919.490687572@linuxfoundation.org>
 References: <20200124092919.490687572@linuxfoundation.org>
@@ -61,43 +61,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+From: Stefan Wahren <stefan.wahren@i2se.com>
 
-[ Upstream commit e28dc3f09c9d2555a9bd982f0847988591052226 ]
+[ Upstream commit 7566f39dfdc11f8a97d5810c6e6295a88f97ef91 ]
 
-While the SEL_PWM[0-3] fields in the Module Select Register 0 support 4
-possible configurations per PWM pin, only the first 3 are valid.
+Abort the probing of the camera driver in case there isn't a camera
+actually connected to the Raspberry Pi. This solution also avoids a
+NULL ptr dereference of mmal instance on driver unload.
 
-Replace the invalid and unused configurations for SEL_PWM[0-3]_3 by
-dummies.
-
-Fixes: 794a6711764658a1 ("pinctrl: sh-pfc: Initial R8A77995 PFC support")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+Fixes: 7b3ad5abf027 ("staging: Import the BCM2835 MMAL-based V4L2 camera driver.")
+Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
+Reviewed-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Reviewed-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/sh-pfc/pfc-r8a77995.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ .../vc04_services/bcm2835-camera/bcm2835-camera.c        | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/drivers/pinctrl/sh-pfc/pfc-r8a77995.c b/drivers/pinctrl/sh-pfc/pfc-r8a77995.c
-index 4f5ee1d7317d3..36421df1b3260 100644
---- a/drivers/pinctrl/sh-pfc/pfc-r8a77995.c
-+++ b/drivers/pinctrl/sh-pfc/pfc-r8a77995.c
-@@ -391,10 +391,10 @@ FM(IP12_31_28)	IP12_31_28 \
- #define MOD_SEL0_27		FM(SEL_MSIOF3_0)	FM(SEL_MSIOF3_1)
- #define MOD_SEL0_26		FM(SEL_HSCIF3_0)	FM(SEL_HSCIF3_1)
- #define MOD_SEL0_25		FM(SEL_SCIF4_0)		FM(SEL_SCIF4_1)
--#define MOD_SEL0_24_23		FM(SEL_PWM0_0)		FM(SEL_PWM0_1)		FM(SEL_PWM0_2)		FM(SEL_PWM0_3)
--#define MOD_SEL0_22_21		FM(SEL_PWM1_0)		FM(SEL_PWM1_1)		FM(SEL_PWM1_2)		FM(SEL_PWM1_3)
--#define MOD_SEL0_20_19		FM(SEL_PWM2_0)		FM(SEL_PWM2_1)		FM(SEL_PWM2_2)		FM(SEL_PWM2_3)
--#define MOD_SEL0_18_17		FM(SEL_PWM3_0)		FM(SEL_PWM3_1)		FM(SEL_PWM3_2)		FM(SEL_PWM3_3)
-+#define MOD_SEL0_24_23		FM(SEL_PWM0_0)		FM(SEL_PWM0_1)		FM(SEL_PWM0_2)		F_(0, 0)
-+#define MOD_SEL0_22_21		FM(SEL_PWM1_0)		FM(SEL_PWM1_1)		FM(SEL_PWM1_2)		F_(0, 0)
-+#define MOD_SEL0_20_19		FM(SEL_PWM2_0)		FM(SEL_PWM2_1)		FM(SEL_PWM2_2)		F_(0, 0)
-+#define MOD_SEL0_18_17		FM(SEL_PWM3_0)		FM(SEL_PWM3_1)		FM(SEL_PWM3_2)		F_(0, 0)
- #define MOD_SEL0_15		FM(SEL_IRQ_0_0)		FM(SEL_IRQ_0_1)
- #define MOD_SEL0_14		FM(SEL_IRQ_1_0)		FM(SEL_IRQ_1_1)
- #define MOD_SEL0_13		FM(SEL_IRQ_2_0)		FM(SEL_IRQ_2_1)
+diff --git a/drivers/staging/vc04_services/bcm2835-camera/bcm2835-camera.c b/drivers/staging/vc04_services/bcm2835-camera/bcm2835-camera.c
+index 377da037f31c3..b521752d9aa01 100644
+--- a/drivers/staging/vc04_services/bcm2835-camera/bcm2835-camera.c
++++ b/drivers/staging/vc04_services/bcm2835-camera/bcm2835-camera.c
+@@ -1849,6 +1849,12 @@ static int __init bm2835_mmal_init(void)
+ 	num_cameras = get_num_cameras(instance,
+ 				      resolutions,
+ 				      MAX_BCM2835_CAMERAS);
++
++	if (num_cameras < 1) {
++		ret = -ENODEV;
++		goto cleanup_mmal;
++	}
++
+ 	if (num_cameras > MAX_BCM2835_CAMERAS)
+ 		num_cameras = MAX_BCM2835_CAMERAS;
+ 
+@@ -1948,6 +1954,9 @@ cleanup_gdev:
+ 	pr_info("%s: error %d while loading driver\n",
+ 		BM2835_MMAL_MODULE_NAME, ret);
+ 
++cleanup_mmal:
++	vchiq_mmal_finalise(instance);
++
+ 	return ret;
+ }
+ 
 -- 
 2.20.1
 
