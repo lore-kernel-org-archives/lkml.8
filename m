@@ -4,64 +4,64 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26A2EC3F68F
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:18:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F07E7C32771
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:18:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3BDD2075D
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:18:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFEEF2075D
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:18:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=sargun.me header.i=@sargun.me header.b="H7euZ/gk"
+	dkim=pass (1024-bit key) header.d=sargun.me header.i=@sargun.me header.b="kANUyGec"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730562AbgAXJSH (ORCPT
+        id S1730497AbgAXJSD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 04:18:07 -0500
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:39665 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730177AbgAXJSF (ORCPT
+        Fri, 24 Jan 2020 04:18:03 -0500
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:34141 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730408AbgAXJSA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 04:18:05 -0500
-Received: by mail-pl1-f195.google.com with SMTP id g6so519082plp.6
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Jan 2020 01:18:04 -0800 (PST)
+        Fri, 24 Jan 2020 04:18:00 -0500
+Received: by mail-pj1-f68.google.com with SMTP id f2so475412pjq.1
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jan 2020 01:18:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=sargun.me; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=dKte8R+6jYPAjIkNMBgQp/CzSAjiscHSDATdNHovQ48=;
-        b=H7euZ/gkkuwVuKg+dsorX0bYNsUNRmvEwZuR1NNQiDWUonfevEsNxyljAkXAMxtlmh
-         WNu8qGidyXQcH50xbcLnSq531fTg1rPkaWv5+A4EK8vAZqj4U80TLCk6H/u9bxJTmNRg
-         le8dBF7mBI7l7ceI3fVTDWBqu0aBjHU0ekzCY=
+        bh=4RcxGgdRV5d1ycPgKGQshU3Dx8E58q2RM4BSH6L50H0=;
+        b=kANUyGecpiYvb2WO2ikFMEFOaN9u2zq3XlV+Z5Nw/EA8/DlRMoPGwX73EyF2cCBkZt
+         pcSrQchshZZ/6y7WX2YPWRhg9sC6oKm+hohz1m9VbDg9ARdka/rVoRBDAPEiMwrgT4x7
+         0hvAnZKvMXI0h46+4EY5QHhcIhncztG0rzfcY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=dKte8R+6jYPAjIkNMBgQp/CzSAjiscHSDATdNHovQ48=;
-        b=Fbc9xT2z4ZA3wjkX6bq0DWaQQbIxuHsCHIKg2ZEcTUSsblpxptXdUX2y4FTMzj1NO4
-         wfWh+RwWrY+pPfVprBF450KueajCN6lhUh2uiz7zVjyqS5oY3edTiFSf5ynH2lUZwqTN
-         uqlb0a0NvnvFvu5LuZmec8T9kMWVSju9bvK8kvQtuSnfA62BvfMz64oH5cIz7iv2kpQI
-         4ho2UQyVetZvlBmvXM6YZZaqgOHzca10UXdiQVkAhMgYt7/EhaEzEQScTEXhPkVMGWDM
-         I0Ooi8ydLYfXHnpaz0Wlln06W5vXMTgaDS8KrnNacl/1faYKa4e6Hop1Tm1VlfBEuGOk
-         AgGw==
-X-Gm-Message-State: APjAAAVfTT1zwfUKZTx8PEYFVLH3TErRuPgr8VqWXyhkOK0p3wyed4y+
-        WdnR/YR5IGeGVvHSPyMOE2lD77Lh3vKk3Q==
-X-Google-Smtp-Source: APXvYqy8gyWaSyFO2wjCRQtChZ9YJXitoMb5tGlCKikS+MHIFmJvyGJL5sq+Gmmvyt+qf5E/U5g5hg==
-X-Received: by 2002:a17:90a:2729:: with SMTP id o38mr2297536pje.45.1579857483704;
-        Fri, 24 Jan 2020 01:18:03 -0800 (PST)
+        bh=4RcxGgdRV5d1ycPgKGQshU3Dx8E58q2RM4BSH6L50H0=;
+        b=m4DdaG61rIXERlrLyi/6Raairu6LxAlIEbGSYDGP/BJYrFjfPwc8JvmLwNEpZXIfsu
+         zqcvynm/JIkpUiTtgyG7GdaMvTAG4ECnPSB59/NDfLj75/3+41Xbts0lPY7zO/TARw4z
+         i0z5IwwVEWFDsk/uOA/vu/hWOKFGFv8othoOX9oj8hCXKH7qVLltdlmt+0w1Fh8okTs0
+         IahzPfHzxxW0S1GaDYaXlqDXFZyny5azv7nAU7KVEomnEc0dfr5dUkoNK9N0gIJWYBLa
+         /QyOQcmXMsV409YptTcOmjQA2Al8ZWhql+U89CgDCY2/+LlLkzGThTGqxKEmlKaWRyOe
+         QUCg==
+X-Gm-Message-State: APjAAAW2DFcxJEXZnWBIaDcQV24lSGoWzslOJiXq3gRmYSUEhivE15V6
+        ZQDQZsb32txBdlq2c12h6+tdjEbF+ayyow==
+X-Google-Smtp-Source: APXvYqx1b2xzIF8PeZ6R4Bhfq1a/HDT+lOtsd1FQcTEZpaUwRHyP1m1M56OAz1kKECc2oz1uyuHobQ==
+X-Received: by 2002:a17:902:8207:: with SMTP id x7mr2533438pln.185.1579857479183;
+        Fri, 24 Jan 2020 01:17:59 -0800 (PST)
 Received: from ubuntu.netflix.com (203.20.25.136.in-addr.arpa. [136.25.20.203])
-        by smtp.gmail.com with ESMTPSA id y14sm5459507pfe.147.2020.01.24.01.18.02
+        by smtp.gmail.com with ESMTPSA id y14sm5459507pfe.147.2020.01.24.01.17.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 Jan 2020 01:18:03 -0800 (PST)
+        Fri, 24 Jan 2020 01:17:58 -0800 (PST)
 From:   Sargun Dhillon <sargun@sargun.me>
 To:     linux-kernel@vger.kernel.org,
         containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
         linux-fsdevel@vger.kernel.org
 Cc:     Sargun Dhillon <sargun@sargun.me>, tycho@tycho.ws,
         christian.brauner@ubuntu.com
-Subject: [PATCH 4/4] selftests/seccomp: test SECCOMP_USER_NOTIF_FLAG_PIDFD
-Date:   Fri, 24 Jan 2020 01:17:43 -0800
-Message-Id: <20200124091743.3357-5-sargun@sargun.me>
+Subject: [PATCH 1/4] pid: Add pidfd_create_file helper
+Date:   Fri, 24 Jan 2020 01:17:40 -0800
+Message-Id: <20200124091743.3357-2-sargun@sargun.me>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200124091743.3357-1-sargun@sargun.me>
 References: <20200124091743.3357-1-sargun@sargun.me>
@@ -72,161 +72,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This adds a test which uses the SECCOMP_USER_NOTIF_FLAG_PIDFD flag. It
-does this by using sys_pidfd_send_signal to signal the process, and
-then relies on traditional waitpid to ensure that the specific
-signal was delivered.
-
-Additionally, it verifies the case where the copy of the notification
-to userspace fails, and the pidfd file is required to be freed.
+This helper allow for creation of pidfd files. The existing helper
+(pidfd_create) creates file descriptors directly, which cannot
+be used without race conditions when there is an intermediate
+step between creation, and informing userspace the fd has been
+created.
 
 Signed-off-by: Sargun Dhillon <sargun@sargun.me>
 ---
- tools/testing/selftests/seccomp/seccomp_bpf.c | 110 ++++++++++++++++++
- 1 file changed, 110 insertions(+)
+ include/linux/pid.h |  1 +
+ kernel/pid.c        | 22 ++++++++++++++++++++++
+ 2 files changed, 23 insertions(+)
 
-diff --git a/tools/testing/selftests/seccomp/seccomp_bpf.c b/tools/testing/selftests/seccomp/seccomp_bpf.c
-index ee1b727ede04..ae9167ffbda9 100644
---- a/tools/testing/selftests/seccomp/seccomp_bpf.c
-+++ b/tools/testing/selftests/seccomp/seccomp_bpf.c
-@@ -187,6 +187,7 @@ struct seccomp_notif {
- 	__u32 pid;
- 	__u32 flags;
- 	struct seccomp_data data;
-+	__u32 pidfd;
- };
+diff --git a/include/linux/pid.h b/include/linux/pid.h
+index 998ae7d24450..70d4725cf8da 100644
+--- a/include/linux/pid.h
++++ b/include/linux/pid.h
+@@ -75,6 +75,7 @@ extern const struct file_operations pidfd_fops;
+ struct file;
  
- struct seccomp_notif_resp {
-@@ -212,6 +213,10 @@ struct seccomp_notif_sizes {
- #define SECCOMP_USER_NOTIF_FLAG_CONTINUE 0x00000001
- #endif
+ extern struct pid *pidfd_pid(const struct file *file);
++extern struct file *pidfd_create_file(struct pid *pid);
  
-+#ifndef SECCOMP_USER_NOTIF_FLAG_PIDFD
-+#define SECCOMP_USER_NOTIF_FLAG_PIDFD	(1UL << 0)
-+#endif
-+
- #ifndef seccomp
- int seccomp(unsigned int op, unsigned int flags, void *args)
+ static inline struct pid *get_pid(struct pid *pid)
  {
-@@ -1871,6 +1876,7 @@ FIXTURE_TEARDOWN(TRACE_syscall)
- 		free(self->prog.filter);
+diff --git a/kernel/pid.c b/kernel/pid.c
+index 2278e249141d..2a34db290128 100644
+--- a/kernel/pid.c
++++ b/kernel/pid.c
+@@ -521,6 +521,28 @@ static int pidfd_create(struct pid *pid)
+ 	return fd;
  }
  
-+
- TEST_F(TRACE_syscall, ptrace_syscall_redirected)
- {
- 	/* Swap SECCOMP_RET_TRACE tracer for PTRACE_SYSCALL tracer. */
-@@ -3612,6 +3618,110 @@ TEST(user_notification_continue)
- 	}
- }
- 
-+static int sys_pidfd_send_signal(int pidfd, int sig, siginfo_t *info,
-+				 unsigned int flags)
++/**
++ * pidfd_create_file() - Create a new pidfd file.
++ *
++ * @pid:  struct pid that the pidfd will reference
++ *
++ * This creates a new pidfd file.
++ *
++ * Return: On success, a cloexec pidfd file is returned
++ *         On error, an err ptr will be returned.
++ */
++struct file *pidfd_create_file(struct pid *pid)
 +{
-+#ifdef __NR_pidfd_send_signal
-+	return syscall(__NR_pidfd_send_signal, pidfd, sig, info, flags);
-+#else
-+	errno = ENOSYS;
-+	return -1;
-+#endif
++	struct file *f;
++
++	f = anon_inode_getfile("[pidfd]", &pidfd_fops, get_pid(pid),
++			       O_RDWR | O_CLOEXEC);
++	if (IS_ERR(f))
++		put_pid(pid);
++
++	return f;
 +}
 +
-+TEST(user_notification_pidfd)
-+{
-+	struct seccomp_notif req = {
-+		.flags	= SECCOMP_USER_NOTIF_FLAG_PIDFD,
-+	};
-+	struct seccomp_notif_resp resp = {};
-+	int ret, listener, status;
-+	pid_t pid;
-+
-+
-+	ret = prctl(PR_SET_NO_NEW_PRIVS, 1, 0, 0, 0);
-+	ASSERT_EQ(0, ret) {
-+		TH_LOG("Kernel does not support PR_SET_NO_NEW_PRIVS!");
-+	}
-+
-+	listener = user_trap_syscall(__NR_getppid,
-+				     SECCOMP_FILTER_FLAG_NEW_LISTENER);
-+	ASSERT_GE(listener, 0);
-+
-+	pid = fork();
-+	ASSERT_GE(pid, 0);
-+
-+	if (pid == 0) {
-+		/* the process should be killed during this syscall */
-+		syscall(__NR_getppid);
-+		exit(0);
-+	}
-+
-+	EXPECT_EQ(ioctl(listener, SECCOMP_IOCTL_NOTIF_RECV, &req), 0);
-+	ASSERT_GE(req.pidfd, 0);
-+
-+	ASSERT_EQ(sys_pidfd_send_signal(req.pidfd, SIGKILL, NULL, 0), 0) {
-+		XFAIL(goto out,
-+		      "Kernel does not support pidfd_send_signal() syscall");
-+		goto out;
-+	}
-+	EXPECT_EQ(req.pid, pid);
-+
-+	EXPECT_EQ(waitpid(pid, &status, 0), pid);
-+	EXPECT_EQ(true, WIFSIGNALED(status));
-+	EXPECT_EQ(SIGKILL, WTERMSIG(status));
-+
-+out:
-+	close(req.pidfd);
-+	close(listener);
-+}
-+
-+TEST(user_notification_pidfd_fault)
-+{
-+	struct seccomp_notif req = {
-+		.flags	= SECCOMP_USER_NOTIF_FLAG_PIDFD,
-+	};
-+	struct seccomp_notif_resp resp = {};
-+	int ret, listener, status;
-+	pid_t pid;
-+
-+	ret = prctl(PR_SET_NO_NEW_PRIVS, 1, 0, 0, 0);
-+	ASSERT_EQ(0, ret) {
-+		TH_LOG("Kernel does not support PR_SET_NO_NEW_PRIVS!");
-+	}
-+
-+	listener = user_trap_syscall(__NR_getppid,
-+				     SECCOMP_FILTER_FLAG_NEW_LISTENER);
-+	ASSERT_GE(listener, 0);
-+
-+	pid = fork();
-+	ASSERT_GE(pid, 0);
-+
-+	if (pid == 0)
-+		exit(syscall(__NR_getppid) != USER_NOTIF_MAGIC);
-+
-+	/* trigger an EFAULT */
-+	EXPECT_EQ(ioctl(listener, SECCOMP_IOCTL_NOTIF_RECV, NULL), -1);
-+	EXPECT_EQ(errno, EFAULT);
-+
-+	/* Check that we can still fetch it. */
-+	EXPECT_EQ(ioctl(listener, SECCOMP_IOCTL_NOTIF_RECV, &req), 0);
-+	EXPECT_EQ(req.pid, pid);
-+
-+	resp.id = req.id;
-+	resp.error = 0;
-+	resp.val = USER_NOTIF_MAGIC;
-+
-+	EXPECT_EQ(ioctl(listener, SECCOMP_IOCTL_NOTIF_SEND, &resp), 0);
-+
-+	EXPECT_EQ(waitpid(pid, &status, 0), pid);
-+	EXPECT_EQ(true, WIFEXITED(status));
-+	EXPECT_EQ(0, WEXITSTATUS(status));
-+
-+	close(req.pidfd);
-+	close(listener);
-+}
-+
- /*
-  * TODO:
-  * - add microbenchmarks
+ /**
+  * pidfd_open() - Open new pid file descriptor.
+  *
 -- 
 2.20.1
 
