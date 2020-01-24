@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0D32C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:14:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D2D7C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:14:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B96E20708
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:14:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E58E20708
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:14:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579864456;
-	bh=JSYqf9UNdV7udgc9jrlSqdeo2E25WTgSVlEeMfRl1qI=;
+	s=default; t=1579864461;
+	bh=2xFYQxeoUMDOb42t4erRQhfq7gk3Vm3YhXN20mTPnyY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gPH0h/bjGAQ+MHt8tiOeZ4QdeGTr8W9E0ZQKRsuLriXYJcBWJW0dNNfyGylXeMh7H
-	 +I79Xh/6PZbubVeLobS0+MmaTXghTos6yPTZEdKuD4hH/2KNowV5AYgsSJ8LrCOBF/
-	 MysZYvawKzk4RzUUIJu/uZJStEgamoQr4diuq3X0=
+	b=L+0biqbFTH33v2A7e3hiB1/K6Vt9HZZ2gGO0XNqYcsHcBeXK4TijQxqiObs8L7ti0
+	 iAFhs+e3uADKMT0OYU+Y0WnLiIO2XISvOF+9ZVHU9QSA36a1mnUzaxEseH5dSwLwd5
+	 T+Z+NmyFoYUIVKD5QtoJi2wzprhYX4g7RZgdHFKE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390118AbgAXLOP (ORCPT
+        id S2390126AbgAXLOT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:14:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50592 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 06:14:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50668 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389526AbgAXLOM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:14:12 -0500
+        id S2390119AbgAXLOQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:14:16 -0500
 Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F202E20708;
-        Fri, 24 Jan 2020 11:14:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BB32620663;
+        Fri, 24 Jan 2020 11:14:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579864451;
-        bh=JSYqf9UNdV7udgc9jrlSqdeo2E25WTgSVlEeMfRl1qI=;
+        s=default; t=1579864455;
+        bh=2xFYQxeoUMDOb42t4erRQhfq7gk3Vm3YhXN20mTPnyY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ScT2KxNg5O/D7RbwR1bx1UMbLGe26rEc0jfn1gL3uXipkF1MjW2hHqlbo0YWS/6v3
-         U9urtDRqG2Udrk8v45E/Smw81hUAo0uU/+yz8miAF1ukAZO7AqCshicKbuxRuDUMGx
-         WSsT914YmflHtgVCn28+dIYAhhWXfGNu+dMR8ESA=
+        b=DTsJMc/r3a2i7eLB0G6UwOC8C8sYVqa85vrlNIGqS15mni+L8M0VfpVGEqeM8MRmy
+         FWXu0cv2BRzDvv8ElDwMbRZARbvzICG1j03yCRgPD6hOCyYLR/2TknIpNTsbGvE7P0
+         fmlPPajrbiA2VBiSYe7x6n1Ak3jmtvjA9YdM1om4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Dirk van der Merwe <dirk.vandermerwe@netronome.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 256/639] nfp: fix simple vNIC mailbox length
-Date:   Fri, 24 Jan 2020 10:27:06 +0100
-Message-Id: <20200124093118.771044665@linuxfoundation.org>
+Subject: [PATCH 4.19 247/639] NFSv4/flexfiles: Fix invalid deref in FF_LAYOUT_DEVID_NODE()
+Date:   Fri, 24 Jan 2020 10:26:57 +0100
+Message-Id: <20200124093117.707414697@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
 References: <20200124093047.008739095@linuxfoundation.org>
@@ -62,39 +60,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dirk van der Merwe <dirk.vandermerwe@netronome.com>
+From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-[ Upstream commit eaab2d2d0fe4393b040dbf3922e18cd2ab7d6b85 ]
+[ Upstream commit 108bb4afd351d65826648a47f11fa3104e250d9b ]
 
-The simple vNIC mailbox length should be 12 decimal and not 0x12.
-Using a decimal also makes it clear this is a length value and not
-another field within the simple mailbox defines.
+If the attempt to instantiate the mirror's layout DS pointer failed,
+then that pointer may hold a value of type ERR_PTR(), so we need
+to check that before we dereference it.
 
-Found by code inspection, there are no known firmware configurations
-where this would cause issues.
-
-Fixes: 527d7d1b9949 ("nfp: read mailbox address from TLV caps")
-Signed-off-by: Dirk van der Merwe <dirk.vandermerwe@netronome.com>
-Reviewed-by: Jakub Kicinski <jakub.kicinski@netronome.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 65990d1afbd2d ("pNFS/flexfiles: Fix a deadlock on LAYOUTGET")
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/netronome/nfp/nfp_net_ctrl.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/nfs/flexfilelayout/flexfilelayout.h | 32 +++++++++++++++-----------
+ 1 file changed, 19 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/net/ethernet/netronome/nfp/nfp_net_ctrl.h b/drivers/net/ethernet/netronome/nfp/nfp_net_ctrl.h
-index 44d3ea75d043a..ab602a79b084d 100644
---- a/drivers/net/ethernet/netronome/nfp/nfp_net_ctrl.h
-+++ b/drivers/net/ethernet/netronome/nfp/nfp_net_ctrl.h
-@@ -423,7 +423,7 @@
- #define NFP_NET_CFG_MBOX_SIMPLE_CMD	0x0
- #define NFP_NET_CFG_MBOX_SIMPLE_RET	0x4
- #define NFP_NET_CFG_MBOX_SIMPLE_VAL	0x8
--#define NFP_NET_CFG_MBOX_SIMPLE_LEN	0x12
-+#define NFP_NET_CFG_MBOX_SIMPLE_LEN	12
+diff --git a/fs/nfs/flexfilelayout/flexfilelayout.h b/fs/nfs/flexfilelayout/flexfilelayout.h
+index de50a342d5a50..2ac99124474cb 100644
+--- a/fs/nfs/flexfilelayout/flexfilelayout.h
++++ b/fs/nfs/flexfilelayout/flexfilelayout.h
+@@ -132,16 +132,6 @@ FF_LAYOUT_LSEG(struct pnfs_layout_segment *lseg)
+ 			    generic_hdr);
+ }
  
- #define NFP_NET_CFG_MBOX_CMD_CTAG_FILTER_ADD 1
- #define NFP_NET_CFG_MBOX_CMD_CTAG_FILTER_KILL 2
+-static inline struct nfs4_deviceid_node *
+-FF_LAYOUT_DEVID_NODE(struct pnfs_layout_segment *lseg, u32 idx)
+-{
+-	if (idx >= FF_LAYOUT_LSEG(lseg)->mirror_array_cnt ||
+-	    FF_LAYOUT_LSEG(lseg)->mirror_array[idx] == NULL ||
+-	    FF_LAYOUT_LSEG(lseg)->mirror_array[idx]->mirror_ds == NULL)
+-		return NULL;
+-	return &FF_LAYOUT_LSEG(lseg)->mirror_array[idx]->mirror_ds->id_node;
+-}
+-
+ static inline struct nfs4_ff_layout_ds *
+ FF_LAYOUT_MIRROR_DS(struct nfs4_deviceid_node *node)
+ {
+@@ -151,9 +141,25 @@ FF_LAYOUT_MIRROR_DS(struct nfs4_deviceid_node *node)
+ static inline struct nfs4_ff_layout_mirror *
+ FF_LAYOUT_COMP(struct pnfs_layout_segment *lseg, u32 idx)
+ {
+-	if (idx >= FF_LAYOUT_LSEG(lseg)->mirror_array_cnt)
+-		return NULL;
+-	return FF_LAYOUT_LSEG(lseg)->mirror_array[idx];
++	struct nfs4_ff_layout_segment *fls = FF_LAYOUT_LSEG(lseg);
++
++	if (idx < fls->mirror_array_cnt)
++		return fls->mirror_array[idx];
++	return NULL;
++}
++
++static inline struct nfs4_deviceid_node *
++FF_LAYOUT_DEVID_NODE(struct pnfs_layout_segment *lseg, u32 idx)
++{
++	struct nfs4_ff_layout_mirror *mirror = FF_LAYOUT_COMP(lseg, idx);
++
++	if (mirror != NULL) {
++		struct nfs4_ff_layout_ds *mirror_ds = mirror->mirror_ds;
++
++		if (!IS_ERR_OR_NULL(mirror_ds))
++			return &mirror_ds->id_node;
++	}
++	return NULL;
+ }
+ 
+ static inline u32
 -- 
 2.20.1
 
