@@ -2,170 +2,163 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41F0FC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 17:25:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4719DC35242
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 17:27:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D8DC2071A
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 17:25:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FAB12071A
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 17:27:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="dEaY3fuz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388924AbgAXRZO (ORCPT
+        id S2389871AbgAXR1S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 12:25:14 -0500
-Received: from mga12.intel.com ([192.55.52.136]:30597 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388028AbgAXRZO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 12:25:14 -0500
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Jan 2020 09:25:13 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,358,1574150400"; 
-   d="scan'208";a="308178111"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by orsmga001.jf.intel.com with ESMTP; 24 Jan 2020 09:25:12 -0800
-Date:   Fri, 24 Jan 2020 09:25:12 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
-        Jim Mattson <jmattson@google.com>,
-        linux-kernel@vger.kernel.org, Liran Alon <liran.alon@oracle.com>,
-        Roman Kagan <rkagan@virtuozzo.com>
-Subject: Re: [PATCH RFC 2/3] x86/kvm/hyper-v: move VMX controls sanitization
- out of nested_enable_evmcs()
-Message-ID: <20200124172512.GJ2109@linux.intel.com>
-References: <20200115171014.56405-3-vkuznets@redhat.com>
- <6c4bdb57-08fb-2c2d-9234-b7efffeb72ed@redhat.com>
- <20200122054724.GD18513@linux.intel.com>
- <9c126d75-225b-3b1b-d97a-bcec1f189e02@redhat.com>
- <87eevrsf3s.fsf@vitty.brq.redhat.com>
- <20200122155108.GA7201@linux.intel.com>
- <87blqvsbcy.fsf@vitty.brq.redhat.com>
- <f15d9e98-25e9-2031-2db5-6aaa6c78c0eb@redhat.com>
- <87zheer0si.fsf@vitty.brq.redhat.com>
- <87lfpyq9bk.fsf@vitty.brq.redhat.com>
+        Fri, 24 Jan 2020 12:27:18 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:40269 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388028AbgAXR1S (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 12:27:18 -0500
+Received: by mail-wr1-f65.google.com with SMTP id c14so2928146wrn.7
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jan 2020 09:27:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=vbia6IDYlH56gJUFZ5L/cJKg2RLQ/ATShKmM2t7DzWY=;
+        b=dEaY3fuzTabPsONlANzp1GSPYi/5/LjgDjk0AKSQS8FuLbbLrJW9ZdUQYklgP+NAvT
+         Pn46jOV81MMMja0Z56zBAa3VgM+5mCpaZvNxiyLdmmrNbCcBpJ7qOkYbjwrRrqYSnF+C
+         ctx921q0CS+MItQqe5ISOn+r8eOosIWIsEaUn/g+6yATNE3C6T/hk3bLQ2AbO7NdVsvh
+         nV4xrssPrgj0Vxcaz+kvS1N3oEPh3rEr+2J2HqnTSTLxqkzaL5lthW2+IC4Dzo7jj2EG
+         HXToiUXvcohZUCd7+mblCtoWtkUX1xTEjKoZb1ql18oWuROhyslphHPxjnxMX5DNzQjs
+         tNxA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=vbia6IDYlH56gJUFZ5L/cJKg2RLQ/ATShKmM2t7DzWY=;
+        b=PLMHhYVK87ORdChUMqgBvdMhbKI+xxChYc/ha+6ppP9Is2To9nT7O6qE+hiVPCwnFT
+         nQqO2Xrcfg9LTr6rgDmAG3XzyoFoUGnkhwcG+k1EfMJsmmmgr71kJ1LM4bDL5MrWNurG
+         PEwjU7F1ADcv1nC7VmkNBu24TZb+EUnU8wjEh1VitYuhkDasfOaH57WYtrrorLv2IH+H
+         GCcsEGFdPg2QdxxXb/arf8FUKgVDr3kRqCDq3H95w2QN+64lmqvi5NyxvVjEQJ4A2CrG
+         VWmNiMrv1gEFRnCmgfT/mmnk7M4O9u8n7716QjFZLVsZcAAuwaNIHMgXREnNH8ET9XKV
+         rk2w==
+X-Gm-Message-State: APjAAAWLqGAEX+LqxgHaLR5wlk9q0MbTEuaeSG/SRMJJeDs7quoWCW3c
+        oIpAQoY0Ac0vWFM4l7hGDhZ9Qw==
+X-Google-Smtp-Source: APXvYqxlK2FjSrFQUrgEAxbvtDmP5WCiYjgLtSMjI/AJ/6pZlt90Qwrg/dn9KroO+X2QPYT1QKgW8A==
+X-Received: by 2002:a5d:44ca:: with SMTP id z10mr5492587wrr.266.1579886836214;
+        Fri, 24 Jan 2020 09:27:16 -0800 (PST)
+Received: from debian-brgl.home ([2a01:cb1d:af:5b00:6d6c:8493:1ab5:dad7])
+        by smtp.gmail.com with ESMTPSA id t8sm8358585wrp.69.2020.01.24.09.27.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 24 Jan 2020 09:27:15 -0800 (PST)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Kent Gibson <warthog618@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: [PATCH v6 0/7] gpiolib: add an ioctl() for monitoring line status changes
+Date:   Fri, 24 Jan 2020 18:27:03 +0100
+Message-Id: <20200124172710.20776-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87lfpyq9bk.fsf@vitty.brq.redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 23, 2020 at 08:09:03PM +0100, Vitaly Kuznetsov wrote:
-> Vitaly Kuznetsov <vkuznets@redhat.com> writes:
-> 
-> > Paolo Bonzini <pbonzini@redhat.com> writes:
-> >
-> >> On 22/01/20 17:29, Vitaly Kuznetsov wrote:
-> >>> Yes, in case we're back to the idea to filter things out in QEMU we can
-> >>> do this. What I don't like is that every other userspace which decides
-> >>> to enable eVMCS will have to perform the exact same surgery as in case
-> >>> it sets allow_unsupported_controls=0 it'll have to know (hardcode) the
-> >>> filtering (or KVM_SET_MSRS will fail) and in case it opts for
-> >>> allow_unsupported_controls=1 Windows guests just won't boot without the
-> >>> filtering.
-> >>> 
-> >>> It seems to be 1:1, eVMCSv1 requires the filter.
-> >>
-> >> Yes, that's the point.  It *is* a hack in KVM, but it is generally
-> >> preferrable to have an easier API for userspace, if there's only one way
-> >> to do it.
-> >>
-> >> Though we could be a bit more "surgical" and only remove
-> >> SECONDARY_EXEC_VIRTUALIZE_APIC_ACCESSES---thus minimizing the impact on
-> >> non-eVMCS guests.  Vitaly, can you prepare a v2 that does that and adds
-> >> a huge "hack alert" comment that explains the discussion?
-> >
-> > Yes, sure. I'd like to do more testing to make sure filtering out
-> > SECONDARY_EXEC_VIRTUALIZE_APIC_ACCESSES is enough for other Hyper-V
-> > versions too (who knows how many bugs are there :-)
-> 
-> ... and the answer is -- more than one :-)
-> 
-> I've tested Hyper-V 2016/2019 BIOS and UEFI-booted and the minimal
-> viable set seems to be:
-> 
-> MSR_IA32_VMX_PROCBASED_CTLS2: 
-> 	~SECONDARY_EXEC_VIRTUALIZE_APIC_ACCESSES
-> 
-> MSR_IA32_VMX_ENTRY_CTLS/MSR_IA32_VMX_TRUE_ENTRY_CTLS:
-> 	~VM_ENTRY_LOAD_IA32_PERF_GLOBAL_CTRL
-> 
-> MSR_IA32_VMX_EXIT_CTLS/MSR_IA32_VMX_TRUE_EXIT_CTLS:
-> 	~VM_EXIT_LOAD_IA32_PERF_GLOBAL_CTRL
->  
-> with these filtered out all 4 versions are at least able to boot with >1
-> vCPU and run a nested guest (different from Windows management
-> partition).
-> 
-> This still feels a bit fragile as who knows under which circumstances
-> Hyper-V might want to enable additional (missing) controls.
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-No strong opinion, I'm good either way.
+I was about to queue those when I realised I'm using the wrong function
+for the timestamp value - we should be using monotonic time provided by
+ktime_get_ns(). I fixed this in this version.
 
-> If there are no objections and if we still think it would be beneficial
-> to minimize the list of controls we filter out (and not go with the full
-> set like my RFC suggests), I'll prepare v2. (v1, actually, this was RFC).
+===
 
-One last idea, can we keep the MSR filtering as is and add the hack in
-vmx_restore_control_msr()?  That way the (userspace) host and guest see
-the same values when reading the affected MSRs, and eVMCS wouldn't need
-it's own hook to do consistency checks.
+When discussing the recent user-space changes with Kent and while working
+on dbus API for libgpiod I noticed that we really don't have any way of
+keeping the line info synchronized between the kernel and user-space
+processes. We can of course periodically re-read the line information or
+even do it every time we want to read a property but this isn't optimal.
 
-@@ -1181,28 +1181,38 @@ static int
- vmx_restore_control_msr(struct vcpu_vmx *vmx, u32 msr_index, u64 data)
- {
-        u64 supported;
--       u32 *lowp, *highp;
-+       u32 *lowp, *highp, evmcs_unsupported;
+This series adds a new ioctl() that allows user-space to set up a watch on
+the GPIO chardev file-descriptor which can then be polled for events
+emitted by the kernel when the line is requested, released or its status
+changed. This of course doesn't require the line to be requested. Multiple
+user-space processes can watch the same lines.
 
-        switch (msr_index) {
-        case MSR_IA32_VMX_TRUE_PINBASED_CTLS:
-                lowp = &vmx->nested.msrs.pinbased_ctls_low;
-                highp = &vmx->nested.msrs.pinbased_ctls_high;
-+               if (vmx->nested.enlightened_vmcs_enabled)
-+                       evmcs_unsupported = EVMCS1_UNSUPPORTED_PINCTRL;
-                break;
-        case MSR_IA32_VMX_TRUE_PROCBASED_CTLS:
-                lowp = &vmx->nested.msrs.procbased_ctls_low;
-                highp = &vmx->nested.msrs.procbased_ctls_high;
-+               if (vmx->nested.enlightened_vmcs_enabled)
-+                       evmcs_unsupported = 0;
-                break;
-        case MSR_IA32_VMX_TRUE_EXIT_CTLS:
-                lowp = &vmx->nested.msrs.exit_ctls_low;
-                highp = &vmx->nested.msrs.exit_ctls_high;
-+               if (vmx->nested.enlightened_vmcs_enabled)
-+                       evmcs_unsupported = EVMCS1_UNSUPPORTED_VMEXIT_CTRL;
-                break;
-        case MSR_IA32_VMX_TRUE_ENTRY_CTLS:
-                lowp = &vmx->nested.msrs.entry_ctls_low;
-                highp = &vmx->nested.msrs.entry_ctls_high;
-+               if (vmx->nested.enlightened_vmcs_enabled)
-+                       evmcs_unsupported = EVMCS1_UNSUPPORTED_VMENTRY_CTRL;
-                break;
-        case MSR_IA32_VMX_PROCBASED_CTLS2:
-                lowp = &vmx->nested.msrs.secondary_ctls_low;
-                highp = &vmx->nested.msrs.secondary_ctls_high;
-+               if (vmx->nested.enlightened_vmcs_enabled)
-+                       evmcs_unsupported = EVMCS1_UNSUPPORTED_2NDEXEC;
-                break;
-        default:
-                BUG();
-@@ -1210,6 +1220,9 @@ vmx_restore_control_msr(struct vcpu_vmx *vmx, u32 msr_index, u64 data)
+This series also includes a variety of minor tweaks & fixes for problems
+discovered during development. For instance it addresses a race-condition
+in current line event fifo.
 
-        supported = vmx_control_msr(*lowp, *highp);
+First two patches add new helpers to kfifo, that are used in the later
+parts of the series.
 
-+       /* HACK! */
-+       data &= ~(u64)evmcs_unsupported << 32;
-+
-        /* Check must-be-1 bits are still 1. */
-        if (!is_bitwise_subset(data, supported, GENMASK_ULL(31, 0)))
+v1: https://lkml.org/lkml/2019/11/27/327
+
+v1 -> v2:
+- rework the main patch of the series: re-use the existing file-descriptor
+  associated with an open character device
+- add a patch adding a debug message when the line event kfifo is full and
+  we're discarding another event
+- rework the locking mechanism for lineevent kfifo: reuse the spinlock
+  from the waitqueue structure
+- other minor changes
+
+v2 -> v3:
+- added patches providing new implementation for some kfifo macros
+- fixed a regression in the patch reworking the line event fifo: reading
+  multiple events is now still possible
+- reworked the structure for new ioctl: it's now padded such that there
+  be no alignment issues if running a 64-bit kernel on 32-bit userspace
+- fixed a bug where one process could disable the status watch of another
+- use kstrtoul() instead of atoi() in gpio-watch for string validation
+
+v3 -> v4:
+- removed a binary file checked in by mistake
+- drop __func__ from debug messages
+- restructure the code in the notifier call
+- add comments about the alignment of the new uAPI structure
+- remove a stray new line that doesn't belong in this series
+- tested the series on 32-bit user-space with 64-bit kernel
+
+v4 -> v5:
+- dropped patches already merged upstream
+- collected review tags
+
+v5 -> v6:
+- coding style tweak as pointed out by Andy
+- fixed a wrong comment in the uapi header
+- switch to using ktime_get_ns() for the GPIO line change timestamps
+  as discussed with Arnd[1]
+
+[1] https://lore.kernel.org/linux-gpio/CAK8P3a1t3MquLPuZqgds4osrTNTOG494s4fk_nhdn+N=B3qdhg@mail.gmail.com/
+
+Bartosz Golaszewski (7):
+  kfifo: provide noirqsave variants of spinlocked in and out helpers
+  kfifo: provide kfifo_is_empty_spinlocked()
+  gpiolib: rework the locking mechanism for lineevent kfifo
+  gpiolib: emit a debug message when adding events to a full kfifo
+  gpiolib: provide a dedicated function for setting lineinfo
+  gpiolib: add new ioctl() for monitoring changes in line info
+  tools: gpio: implement gpio-watch
+
+ drivers/gpio/gpiolib.c    | 350 +++++++++++++++++++++++++++++---------
+ drivers/gpio/gpiolib.h    |   1 +
+ include/linux/kfifo.h     |  73 ++++++++
+ include/uapi/linux/gpio.h |  30 ++++
+ tools/gpio/.gitignore     |   1 +
+ tools/gpio/Build          |   1 +
+ tools/gpio/Makefile       |  11 +-
+ tools/gpio/gpio-watch.c   |  99 +++++++++++
+ 8 files changed, 485 insertions(+), 81 deletions(-)
+ create mode 100644 tools/gpio/gpio-watch.c
+
+-- 
+2.23.0
 
