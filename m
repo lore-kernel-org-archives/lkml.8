@@ -2,145 +2,114 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45769C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 21:04:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A63BEC35242
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 21:08:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 239302071E
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 21:04:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 868952072C
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 21:08:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387444AbgAXVEk (ORCPT
+        id S1729868AbgAXVIi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 16:04:40 -0500
-Received: from mga06.intel.com ([134.134.136.31]:16364 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387394AbgAXVEj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 16:04:39 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Jan 2020 13:04:34 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,358,1574150400"; 
-   d="scan'208";a="428408414"
-Received: from vcostago-desk1.jf.intel.com (HELO vcostago-desk1) ([10.54.70.26])
-  by fmsmga006.fm.intel.com with ESMTP; 24 Jan 2020 13:04:33 -0800
-From:   Vinicius Costa Gomes <vinicius.gomes@intel.com>
-To:     "Allan W. Nielsen" <allan.nielsen@microchip.com>,
-        Horatiu Vultur <horatiu.vultur@microchip.com>
-Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        bridge@lists.linux-foundation.org, jiri@resnulli.us,
-        ivecera@redhat.com, davem@davemloft.net, roopa@cumulusnetworks.com,
-        nikolay@cumulusnetworks.com, anirudh.venkataramanan@intel.com,
-        olteanv@gmail.com, andrew@lunn.ch, jeffrey.t.kirsher@intel.com,
-        UNGLinuxDriver@microchip.com
-Subject: Re: [RFC net-next v3 00/10]  net: bridge: mrp: Add support for Media Redundancy Protocol (MRP)
-In-Reply-To: <20200124203406.2ci7w3w6zzj6yibz@lx-anielsen.microsemi.net>
-References: <20200124161828.12206-1-horatiu.vultur@microchip.com> <20200124203406.2ci7w3w6zzj6yibz@lx-anielsen.microsemi.net>
-Date:   Fri, 24 Jan 2020 13:05:45 -0800
-Message-ID: <87zhecimza.fsf@linux.intel.com>
+        Fri, 24 Jan 2020 16:08:38 -0500
+Received: from [167.172.186.51] ([167.172.186.51]:57100 "EHLO shell.v3.sk"
+        rhost-flags-FAIL-FAIL-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725747AbgAXVIi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 16:08:38 -0500
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by zimbra.v3.sk (Postfix) with ESMTP id 3D8B6DFE17;
+        Fri, 24 Jan 2020 21:08:46 +0000 (UTC)
+Received: from shell.v3.sk ([127.0.0.1])
+        by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id nsCRUdqw7lCo; Fri, 24 Jan 2020 21:08:45 +0000 (UTC)
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by zimbra.v3.sk (Postfix) with ESMTP id 97A45DFEAD;
+        Fri, 24 Jan 2020 21:08:45 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at zimbra.v3.sk
+Received: from shell.v3.sk ([127.0.0.1])
+        by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id ELtJo5_L7sxB; Fri, 24 Jan 2020 21:08:45 +0000 (UTC)
+Received: from localhost (unknown [109.183.109.54])
+        by zimbra.v3.sk (Postfix) with ESMTPSA id 4F1C4DFE17;
+        Fri, 24 Jan 2020 21:08:45 +0000 (UTC)
+Date:   Fri, 24 Jan 2020 22:08:33 +0100
+From:   Lubomir Rintel <lkundrak@v3.sk>
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Stephen Boyd <sboyd@kernel.org>,
+        Olof Johansson <olof@lixom.net>, linux-clk@vger.kernel.org
+Subject: Re: [PATCH AUTOSEL 5.4 028/107] clk: mmp2: Fix the order of timer
+ mux parents
+Message-ID: <20200124210833.GA244505@furthur.local>
+References: <20200124141817.28793-1-sashal@kernel.org>
+ <20200124141817.28793-28-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200124141817.28793-28-sashal@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Jan 24, 2020 at 09:16:58AM -0500, Sasha Levin wrote:
+> From: Lubomir Rintel <lkundrak@v3.sk>
+> 
+> [ Upstream commit 8bea5ac0fbc5b2103f8779ddff216122e3c2e1ad ]
+> 
+> Determined empirically, no documentation is available.
+> 
+> The OLPC XO-1.75 laptop used parent 1, that one being VCTCXO/4 (65MHz), but
+> thought it's a VCTCXO/2 (130MHz). The mmp2 timer driver, not knowing
+> what is going on, ended up just dividing the rate as of
+> commit f36797ee4380 ("ARM: mmp/mmp2: dt: enable the clock")'
+
 Hi,
 
-"Allan W. Nielsen" <allan.nielsen@microchip.com> writes:
+this has to go together with this one (in other stable trees too):
 
-> On 24.01.2020 17:18, Horatiu Vultur wrote:
->>Media Redundancy Protocol is a data network protocol standardized by
->>International Electrotechnical Commission as IEC 62439-2. It allows rings of
->>Ethernet switches to overcome any single failure with recovery time faster than
->>STP. It is primarily used in Industrial Ethernet applications.
->>
->>Based on the previous RFC[1][2], the MRP state machine and all the
->>timers were moved to userspace. A generic netlink interface is added to
->>allow configuring the HW, and logic added to to implement the MRP
->>specific forwarding rules.
->>
->>The userspace application that is using the new netlink can be found here[3].
->>
->>The current implementation both in kernel and userspace supports only 2 roles:
->>
->>  MRM - this one is responsible to send MRP_Test and MRP_Topo frames on both
->>  ring ports. It needs to process MRP_Test to know if the ring is open or
->>  closed. This operation is desired to be offloaded to the HW because it
->>  requires to generate and process up to 4000 frames per second. Whenever it
->>  detects that the ring open it sends MRP_Topo frames to notify all MRC about
->>  changes in the topology. MRM needs also to process MRP_LinkChange frames,
->>  these frames are generated by the MRC. When the ring is open the the state
->>  of both ports is to forward frames and when the ring is closed then the
->>  secondary port is blocked.
->>
->>  MRC - this one is responsible to forward MRP frames between the ring ports.
->>  In case one of the ring ports gets a link down or up, then MRC will generate
->>  a MRP_LinkChange frames. This node should also process MRP_Topo frames and to
->>  clear its FDB when it receives this frame.
->>
->> Userspace
->>               Deamon +----------+ Client
->>                +
->>                |
->> +--------------|-----------------------------------------+
->>  Kernel        |
->>                + Netlink
->>
->>                |                              + Interrupt
->>                |                              |
->> +--------------|------------------------------|----------+
->>  HW            | Switchdev                    |
->>                +                              |
->>
->>The user interacts using the client (called 'mrp'), the client talks to the
->>deamon (called 'mrp_server'), which talks with the kernel using netlink. The
->>kernel will try to offload the requests to the HW via switchdev API. For this a
->>new generic netlink interface was added to the bridge.
->>
->>If the kernel cannot offload MRP to HW (maybe it does not have a switchdev
->>driver, or it is just not supported), then all the netlink calls will return
->>-EOPNOTSUPP. In this case the user-space deamon fallback to SW only
->>implementation.
-> Horatiu and I have spend a bit of time discussing what you be best here.
-> An alternative to this would be to do the SW fallback in the kernel,
-> instead of user-land. This would mean that the user application does not
-> need to know if the function is offloaded (or partly offloaded) to HW.
->
-> We went with this approch to make the kernel part as simple as possible.
-> The alternative would still be much simpler than the first version
-> posted - but it would require a bit more.
->
-> Both options has pros and cons, and we looking forward to the
-> community's view on this.
+  commit 0bd0f30bbf060891f58866a46083a9931f71787c
+  Author: Lubomir Rintel <lkundrak@v3.sk>
+  Date:   Wed Dec 18 20:04:53 2019 +0100
+  
+      ARM: mmp: do not divide the clock rate
+      
+      This was done because the clock driver returned the wrong rate, which is
+      fixed in "clk: mmp2: Fix the order of timer mux parents" patch.
 
-I have one idea and one question.
+It removes a workaround for the same issue from before it was
+understood what is going on. If it stays, the clock will run twice as
+fast.
 
-The idea is:
+Thanks
+Lubo
 
-'net/hsr' already has a software implementation of the HSR replication
-tag (and some of the handling necessary). So what came to mind is to
-add the necessary switchdev functions to the master HSR device. If
-that's done, then it sounds that the rest will mostly work.
-
-For the user the flow would be something like:
-
- - User takes two (or more interfaces) and set them as slaves of the HSR
-   master device, say 'hsr0';
-
- - 'hsr0' implements some of the switchdev functionality so we can use
-   the MRP userspace components on it;
-
-Does it look like something that could work?
-
-The question that I have is: what's the relation of IEC 62439-2 to IEEE
-802.1CB? 
-
-
-Cheers,
---
-Vinicius
+> 
+> Link: https://lore.kernel.org/r/20191218190454.420358-3-lkundrak@v3.sk
+> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+> Acked-by: Stephen Boyd <sboyd@kernel.org>
+> Signed-off-by: Olof Johansson <olof@lixom.net>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
+> ---
+>  drivers/clk/mmp/clk-of-mmp2.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/clk/mmp/clk-of-mmp2.c b/drivers/clk/mmp/clk-of-mmp2.c
+> index a60a1be937ad6..b4a95cbbda989 100644
+> --- a/drivers/clk/mmp/clk-of-mmp2.c
+> +++ b/drivers/clk/mmp/clk-of-mmp2.c
+> @@ -134,7 +134,7 @@ static DEFINE_SPINLOCK(ssp3_lock);
+>  static const char *ssp_parent_names[] = {"vctcxo_4", "vctcxo_2", "vctcxo", "pll1_16"};
+>  
+>  static DEFINE_SPINLOCK(timer_lock);
+> -static const char *timer_parent_names[] = {"clk32", "vctcxo_2", "vctcxo_4", "vctcxo"};
+> +static const char *timer_parent_names[] = {"clk32", "vctcxo_4", "vctcxo_2", "vctcxo"};
+>  
+>  static DEFINE_SPINLOCK(reset_lock);
+>  
+> -- 
+> 2.20.1
+> 
