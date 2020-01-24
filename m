@@ -2,208 +2,126 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
+	USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B044FC35242
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 12:58:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D60EC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 12:59:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91FB62077C
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 12:58:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E2A420708
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 12:59:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="E52FG35o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388723AbgAXM6j (ORCPT
+        id S2388785AbgAXM7M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 07:58:39 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:58532 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387393AbgAXM6i (ORCPT
+        Fri, 24 Jan 2020 07:59:12 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:36486 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387393AbgAXM7M (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 07:58:38 -0500
-Received: from [IPv6:2a00:5f00:102:0:8b5:67ff:fe5d:5a19] (unknown [IPv6:2a00:5f00:102:0:8b5:67ff:fe5d:5a19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: gtucker)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 570E8294B1B;
-        Fri, 24 Jan 2020 12:58:35 +0000 (GMT)
-Subject: Re: stable-rc/linux-4.19.y bisection: baseline.login on
- sun8i-h3-libretech-all-h3-cc
-To:     Linus Walleij <linus.walleij@linaro.org>
-References: <5e2ad951.1c69fb81.6d762.dd8e@mx.google.com>
-Cc:     khilman@baylibre.com, tomeu.vizoso@collabora.com,
-        mgalka@collabora.com, enric.balletbo@collabora.com,
-        broonie@kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        stable@vger.kernel.org, Sasha Levin <sashal@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-From:   Guillaume Tucker <guillaume.tucker@collabora.com>
-Message-ID: <0ed4668a-fb29-fca8-558e-385ef118d432@collabora.com>
-Date:   Fri, 24 Jan 2020 12:58:32 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Fri, 24 Jan 2020 07:59:12 -0500
+Received: by mail-wm1-f67.google.com with SMTP id p17so1634897wma.1
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jan 2020 04:59:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=SX6pF2MqSkPo4+6BXXVN1ZKKWknrqPrgEhzCKmi/Y7Y=;
+        b=E52FG35osGpByI8vWBvj9cyKwceZaiMZ3oE7UaUcMcLcCuRH7oGcWgffJcFB0/U4YX
+         MUBi2HiZkQU74y01qFsvqoDRLy0+yW1PDtQu1UmLW+iIIC1WWQvVLc8qSehTTeDLwri9
+         B01I4sqk1ZaYSDCszX2fhgYcyGPUPl5/U3bFLkqgwGliLCrCrT9CUg0dumJc+e0Bj/67
+         ra7WmsfVj1ro7myhzKaaS+Bw+dv8XHOCeo4kg868xBA06O7fp4S+dPa3gfOALiU8Qe7b
+         JKUW2W/u4k5Lh5cmlWs6tWUhv4cyjmJ3SnB+TfvnMpscY9JlD6zCQom4ngnvvGB8OWTM
+         oouA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=SX6pF2MqSkPo4+6BXXVN1ZKKWknrqPrgEhzCKmi/Y7Y=;
+        b=ChdQJnK8fq8kvkJY91CJJUjGMv0bXwcpD9axe6WZD6qxnjdEc78eqfV/V1r85APaZA
+         3uNNKBjQgDW7LJ9yd0nJMtEMAIfTqF/+OIIY3ISq6Aa+V2b4eGixYsnoNGIY6lG6Oq3H
+         JG4y1tp5k5rE0YIL98jEzffcMqlqrmIL+6bHB2GA0w7Lm72ufxj7fzXmlGhvHMJ5SN5Y
+         xTLT+BXN+y5fVpckK3V+MTY2LbdatQvzGMTDsRG0PMZER6TeusBofGF7LL8525Q5mItl
+         P4UhJEpVxVSxC/2ETTwn+DjdtFQg1gnUTok3HNDxbiOqHuh1mqD96JsGLLtjnlxJhmPM
+         uzww==
+X-Gm-Message-State: APjAAAXlJsb/e6lUCX4kZOubtaGnzSincKDDt4kfZ63roA4sklnVOpxI
+        4KwE3hozsthi6k3uoiSIYsnkKA==
+X-Google-Smtp-Source: APXvYqzXH8yGTn3Gz57GoQv/Bv7tQBrxRo+xsScrJ+ciDcfmPl2KlG1L7wWEGbFc+I2qHsoFuDLtbw==
+X-Received: by 2002:a1c:720a:: with SMTP id n10mr3300590wmc.74.1579870749770;
+        Fri, 24 Jan 2020 04:59:09 -0800 (PST)
+Received: from google.com ([2a00:79e0:d:110:d6cc:2030:37c1:9964])
+        by smtp.gmail.com with ESMTPSA id b68sm6811088wme.6.2020.01.24.04.59.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 24 Jan 2020 04:59:09 -0800 (PST)
+Date:   Fri, 24 Jan 2020 12:59:05 +0000
+From:   Quentin Perret <qperret@google.com>
+To:     Valentin Schneider <valentin.schneider@arm.com>
+Cc:     linux-kernel@vger.kernel.org, mingo@redhat.com,
+        peterz@infradead.org, vincent.guittot@linaro.org,
+        dietmar.eggemann@arm.com, morten.rasmussen@arm.com,
+        adharmap@codeaurora.org
+Subject: Re: [PATCH 1/3] sched/fair: Add asymmetric CPU capacity wakeup scan
+Message-ID: <20200124125905.GA173888@google.com>
+References: <20200124124255.1095-1-valentin.schneider@arm.com>
+ <20200124124255.1095-2-valentin.schneider@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <5e2ad951.1c69fb81.6d762.dd8e@mx.google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200124124255.1095-2-valentin.schneider@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+Hey Valentin,
 
-Please see the bisection report below about a boot failure, it
-looks legit as this commit was made today:
+On Friday 24 Jan 2020 at 12:42:53 (+0000), Valentin Schneider wrote:
+> +/*
+> + * Scan the asym_capacity domain for idle CPUs; pick the first idle one on which
+> + * the task fits.
+> + */
+> +static int select_idle_capacity(struct task_struct *p, int target)
+> +{
+> +	struct cpumask *cpus = this_cpu_cpumask_var_ptr(select_idle_mask);
+> +	struct sched_domain *sd;
+> +	int cpu;
+> +
+> +	if (!static_branch_unlikely(&sched_asym_cpucapacity))
+> +		return -1;
+> +
+> +	sd = rcu_dereference(per_cpu(sd_asym_cpucapacity, target));
+> +	if (!sd)
+> +		return -1;
+> +
+
+You might want 'sync_entity_load_avg(&p->se)' here no ?
+find_idlest_cpu() and wake_cap() need one, but since we're going to use
+them, you'll want to sync here too I think.
 
 
-commit 5f9277249f9b126f815e23c3078cff3b69ce2715
-Author:     Linus Walleij <linus.walleij@linaro.org>
-AuthorDate: Mon Oct 1 22:43:46 2018 +0200
-Commit:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-CommitDate: Fri Jan 24 10:27:24 2020 +0100
+> +	cpumask_and(cpus, sched_domain_span(sd), p->cpus_ptr);
+> +
+> +	for_each_cpu_wrap(cpu, cpus, target) {
+> +		if (!available_idle_cpu(cpu))
+> +			continue;
+> +		if (!task_fits_capacity(p, capacity_of(cpu)))
+> +			continue;
+> +
+> +		return cpu;
+> +	}
 
-    regulator: fixed: Default enable high on DT regulators
-    
-    [ Upstream commit 28be5f15df2ee6882b0a122693159c96a28203c7 ]
+If we found an idle CPU, but not one big enough, should we still go
+ahead and choose it ? Misfit / idle balance will fix that later when a
+big CPU does become available.
 
-
-KernelCI bisection reports are not publicly sent at the moment
-while we're trialing some new bisection features.
+> +
+> +	return -1;
+> +}
+> +
 
 Thanks,
-Guillaume
-
-On 24/01/2020 11:47, kernelci.org bot wrote:
-> * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-> * This automated bisection report was sent to you on the basis  *
-> * that you may be involved with the breaking commit it has      *
-> * found.  No manual investigation has been done to verify it,   *
-> * and the root cause of the problem may be somewhere else.      *
-> *                                                               *
-> * If you do send a fix, please include this trailer:            *
-> *   Reported-by: "kernelci.org bot" <bot@kernelci.org>          *
-> *                                                               *
-> * Hope this helps!                                              *
-> * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-> 
-> stable-rc/linux-4.19.y bisection: baseline.login on sun8i-h3-libretech-all-h3-cc
-> 
-> Summary:
->   Start:      be6fe2fc68d0 Linux 4.19.99-rc1
->   Plain log:  https://storage.kernelci.org//stable-rc/linux-4.19.y/v4.19.98-640-gbe6fe2fc68d0/arm/sunxi_defconfig/gcc-8/lab-baylibre/baseline-sun8i-h3-libretech-all-h3-cc.txt
->   HTML log:   https://storage.kernelci.org//stable-rc/linux-4.19.y/v4.19.98-640-gbe6fe2fc68d0/arm/sunxi_defconfig/gcc-8/lab-baylibre/baseline-sun8i-h3-libretech-all-h3-cc.html
->   Result:     250d67d6bc05 regulator: fixed: Default enable high on DT regulators
-> 
-> Checks:
->   revert:     PASS
->   verify:     PASS
-> 
-> Parameters:
->   Tree:       stable-rc
->   URL:        https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
->   Branch:     linux-4.19.y
->   Target:     sun8i-h3-libretech-all-h3-cc
->   CPU arch:   arm
->   Lab:        lab-baylibre
->   Compiler:   gcc-8
->   Config:     sunxi_defconfig
->   Test case:  baseline.login
-> 
-> Breaking commit found:
-> 
-> -------------------------------------------------------------------------------
-> commit 250d67d6bc0597c0c0de47b3ea32dc6d4e3f9322
-> Author: Linus Walleij <linus.walleij@linaro.org>
-> Date:   Mon Oct 1 22:43:46 2018 +0200
-> 
->     regulator: fixed: Default enable high on DT regulators
->     
->     [ Upstream commit 28be5f15df2ee6882b0a122693159c96a28203c7 ]
->     
->     commit efdfeb079cc3
->     ("regulator: fixed: Convert to use GPIO descriptor only")
->     switched to use gpiod_get() to look up the regulator from the
->     gpiolib core whether that is device tree or boardfile.
->     
->     This meant that we activate the code in
->     a603a2b8d86e ("gpio: of: Add special quirk to parse regulator flags")
->     which means the descriptors coming from the device tree already
->     have the right inversion and open drain semantics set up from
->     the gpiolib core.
->     
->     As the fixed regulator was inspected again we got the
->     inverted inversion and things broke.
->     
->     Fix it by ignoring the config in the device tree for now: the
->     later patches in the series will push all inversion handling
->     over to the gpiolib core and set it up properly in the
->     boardfiles for legacy devices, but I did not finish that
->     for this kernel cycle.
->     
->     Fixes: commit efdfeb079cc3 ("regulator: fixed: Convert to use GPIO descriptor only")
->     Reported-by: Leonard Crestez <leonard.crestez@nxp.com>
->     Reported-by: Fabio Estevam <festevam@gmail.com>
->     Reported-by: John Stultz <john.stultz@linaro.org>
->     Reported-by: Anders Roxell <anders.roxell@linaro.org>
->     Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
->     Tested-by: John Stultz <john.stultz@linaro.org>
->     Signed-off-by: Mark Brown <broonie@kernel.org>
->     Signed-off-by: Sasha Levin <sashal@kernel.org>
-> 
-> diff --git a/drivers/regulator/fixed.c b/drivers/regulator/fixed.c
-> index 988a7472c2ab..d68ff65a5adc 100644
-> --- a/drivers/regulator/fixed.c
-> +++ b/drivers/regulator/fixed.c
-> @@ -84,9 +84,14 @@ of_get_fixed_voltage_config(struct device *dev,
->  
->  	of_property_read_u32(np, "startup-delay-us", &config->startup_delay);
->  
-> -	config->enable_high = of_property_read_bool(np, "enable-active-high");
-> -	config->gpio_is_open_drain = of_property_read_bool(np,
-> -							   "gpio-open-drain");
-> +	/*
-> +	 * FIXME: we pulled active low/high and open drain handling into
-> +	 * gpiolib so it will be handled there. Delete this in the second
-> +	 * step when we also remove the custom inversion handling for all
-> +	 * legacy boardfiles.
-> +	 */
-> +	config->enable_high = 1;
-> +	config->gpio_is_open_drain = 0;
->  
->  	if (of_find_property(np, "vin-supply", NULL))
->  		config->input_supply = "vin";
-> -------------------------------------------------------------------------------
-> 
-> 
-> Git bisection log:
-> 
-> -------------------------------------------------------------------------------
-> git bisect start
-> # good: [d183c8e2647a7d45202c14a33631f6c09020f8ac] Linux 4.19.98
-> git bisect good d183c8e2647a7d45202c14a33631f6c09020f8ac
-> # bad: [be6fe2fc68d0d7571c06b5fc11d2282a6544ec0f] Linux 4.19.99-rc1
-> git bisect bad be6fe2fc68d0d7571c06b5fc11d2282a6544ec0f
-> # bad: [62715658388c5d59c35c4f7fdcffbc8e8772f39e] ARM: dts: ls1021: Fix SGMII PCS link remaining down after PHY disconnect
-> git bisect bad 62715658388c5d59c35c4f7fdcffbc8e8772f39e
-> # bad: [2d2f9b317958a34ebecf731ac7510c649a2ab33c] driver core: Do not resume suppliers under device_links_write_lock()
-> git bisect bad 2d2f9b317958a34ebecf731ac7510c649a2ab33c
-> # bad: [83ab4275fc5a25992200a394c692542ad8584276] mailbox: ti-msgmgr: Off by one in ti_msgmgr_of_xlate()
-> git bisect bad 83ab4275fc5a25992200a394c692542ad8584276
-> # good: [864d924463eb890af4ea92cbb4108ebcba42bd6c] usb: gadget: fsl_udc_core: check allocation return value and cleanup on failure
-> git bisect good 864d924463eb890af4ea92cbb4108ebcba42bd6c
-> # bad: [51ee3169bec81a0f48bdb0a7402bfa1d863d6006] mlxsw: reg: QEEC: Add minimum shaper fields
-> git bisect bad 51ee3169bec81a0f48bdb0a7402bfa1d863d6006
-> # bad: [bf4a2476e727c5a302c40a0e66e1702c2c135b7c] pwm: lpss: Release runtime-pm reference from the driver's remove callback
-> git bisect bad bf4a2476e727c5a302c40a0e66e1702c2c135b7c
-> # bad: [d54e7094b7bd73384d64cc328a0c979522e3cb67] of: Fix property name in of_node_get_device_type
-> git bisect bad d54e7094b7bd73384d64cc328a0c979522e3cb67
-> # bad: [250d67d6bc0597c0c0de47b3ea32dc6d4e3f9322] regulator: fixed: Default enable high on DT regulators
-> git bisect bad 250d67d6bc0597c0c0de47b3ea32dc6d4e3f9322
-> # good: [9b2060c15a1b2524fb4ac3f3cc2cf5dcbc293955] cfg80211: regulatory: make initialization more robust
-> git bisect good 9b2060c15a1b2524fb4ac3f3cc2cf5dcbc293955
-> # first bad commit: [250d67d6bc0597c0c0de47b3ea32dc6d4e3f9322] regulator: fixed: Default enable high on DT regulators
-> -------------------------------------------------------------------------------
-> 
-
+Quentin
