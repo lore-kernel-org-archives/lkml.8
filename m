@@ -2,78 +2,120 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65775C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 17:37:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F954C3F68F
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 17:38:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3242A20838
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 17:37:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579887456;
-	bh=vrdwfmKJ2vX5fqIQG0Y3KARRAq9BP/c6YUKg9aIfqTw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=C8th9s7hVp55ftYKqdT6USQwErxtt2tPrGPRZmAL8DDF39J/8W6FdJZQ6ZqbUgZeq
-	 zytNxz8mQlqZ6hEVE2aWodJ8eUMi1eQ+gQJNodTqLoJzffagzgL17Z3jHFSTsmxpX2
-	 q8EHdBBeELx4CmDmiJjUg228OVjbHjYiI4CJPrmM=
+	by mail.kernel.org (Postfix) with ESMTP id 498E52081E
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 17:38:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="kMv1Q6A1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390664AbgAXRh1 (ORCPT
+        id S2390186AbgAXRiB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 12:37:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56542 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 12:38:01 -0500
+Received: from mail.andi.de1.cc ([85.214.55.253]:50916 "EHLO mail.andi.de1.cc"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390106AbgAXRhZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 12:37:25 -0500
-Received: from localhost (unknown [84.241.198.31])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6920E20709;
-        Fri, 24 Jan 2020 17:37:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579887445;
-        bh=vrdwfmKJ2vX5fqIQG0Y3KARRAq9BP/c6YUKg9aIfqTw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=FczvMkuEuP7nQmcVd13gtxE8xghLrdhBR8p3GrjbhnPq/1pKfs/rhej6y4ihS5hmb
-         SWiBxTkr3VPG+t/YJ2iInwIRiPxAbBFY6zjZOnuIdkWi3X1f3g8TzUBghhU027Di0v
-         26Lcr0ZeVD9nJJGUCQUCePdmE80SXF2H4OIvfaDI=
-Date:   Fri, 24 Jan 2020 18:36:40 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        stable <stable@vger.kernel.org>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        John Stultz <john.stultz@linaro.org>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH 4.14 016/343] regulator: fixed: Default enable high on DT
- regulators
-Message-ID: <20200124173640.GC3166016@kroah.com>
-References: <20200124092919.490687572@linuxfoundation.org>
- <20200124092921.766134559@linuxfoundation.org>
- <CACRpkdYJZoQpTCdTikQTu62EuxbUG5A=h3CV2xfHfra=TbD+eQ@mail.gmail.com>
+        id S2389487AbgAXRiA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 12:38:00 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=kemnade.info; s=20180802; h=Content-Type:MIME-Version:References:
+        In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=kO2pTpMXTjirs1T9+Tqx7exh45U6cC4XVCnw+kz4z9E=; b=kMv1Q6A1EdayuI15tq9yAZ6k+
+        qa++o6aMBXi60PmCr+b+soC0XqQAisYB5fIds9C/ILLai0zmZq8Yyg0RIeWY2I0psyaAn6s69AHH7
+        xvyHg8q3olYxaA0+Mbe/yFnIlKHq0szjubS4hfJp0+XfZxVLvWVvGZ6lg8ipISRDkOYBo=;
+Received: from p200300ccff0b16007ee9d3fffe1fa246.dip0.t-ipconnect.de ([2003:cc:ff0b:1600:7ee9:d3ff:fe1f:a246] helo=eeepc.fritz.box)
+        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <andreas@kemnade.info>)
+        id 1iv2tv-0007T7-E8; Fri, 24 Jan 2020 18:37:49 +0100
+Received: from [::1] (helo=localhost)
+        by eeepc with esmtp (Exim 4.89)
+        (envelope-from <andreas@kemnade.info>)
+        id 1iv0sq-0006jm-2T; Fri, 24 Jan 2020 16:28:32 +0100
+Date:   Fri, 24 Jan 2020 16:28:18 +0100
+From:   Andreas Kemnade <andreas@kemnade.info>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de,
+        pmeerw@pmeerw.net, b.galvani@gmail.com, linus.walleij@linaro.org,
+        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
+        phh@phh.me, stefan@agner.ch, letux-kernel@openphoenux.org
+Subject: Re: [PATCH 2/5] mfd: rn5t618: add ADC subdevice for RC5T619
+Message-ID: <20200124162818.0697f551@kemnade.info>
+In-Reply-To: <20200120084934.GZ15507@dell>
+References: <20200117215926.15194-1-andreas@kemnade.info>
+        <20200117215926.15194-3-andreas@kemnade.info>
+        <20200120084934.GZ15507@dell>
+X-Mailer: Claws Mail 3.14.1 (GTK+ 2.24.31; i686-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CACRpkdYJZoQpTCdTikQTu62EuxbUG5A=h3CV2xfHfra=TbD+eQ@mail.gmail.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/IMwQ3EA3mlW=xf1Y4GDLMWA"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 24, 2020 at 02:46:45PM +0100, Linus Walleij wrote:
-> On Fri, Jan 24, 2020 at 10:44 AM Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
-> >
-> > From: Linus Walleij <linus.walleij@linaro.org>
-> >
-> > [ Upstream commit 28be5f15df2ee6882b0a122693159c96a28203c7 ]
-> 
-> This exploded on v4.19 so please drop this one.
+--Sig_/IMwQ3EA3mlW=xf1Y4GDLMWA
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Sasha dropped this, thanks.
+Hi,
 
-greg k-h
+hmm, I cannot find this in any branch/repo I know of and not in linux-next,
+just wondering...
+I guess the iio part is something to go towards 5.7 unless 5.5
+is delayed mucch.
+
+Regards,
+Andreas
+
+On Mon, 20 Jan 2020 08:49:34 +0000
+Lee Jones <lee.jones@linaro.org> wrote:
+
+> On Fri, 17 Jan 2020, Andreas Kemnade wrote:
+>=20
+> > This adds a subdevice for the ADC in the RC5T619.
+> >=20
+> > Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
+> > ---
+> >  drivers/mfd/rn5t618.c | 1 +
+> >  1 file changed, 1 insertion(+) =20
+>=20
+> Applied, thanks.
+>=20
+> --=20
+> Lee Jones [=E6=9D=8E=E7=90=BC=E6=96=AF]
+> Linaro Services Technical Lead
+> Linaro.org =E2=94=82 Open source software for ARM SoCs
+> Follow Linaro: Facebook | Twitter | Blog
+>=20
+
+--Sig_/IMwQ3EA3mlW=xf1Y4GDLMWA
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEPIWxmAFyOaBcwCpFl4jFM1s/ye8FAl4rDRMACgkQl4jFM1s/
+ye+L9hAAs+bo7p2SXf11Rn3tlAHcI94DNVUx7FnrebA36C1LXkMWC0RrclYtKkPS
+xLyxLiZLeUxUvOWjlRXcBU0FU7QVeM+FxB61ze9V50dBGFgj1PHAVPAgmyeM+Ch3
+d/TGMONsI2lfR5NFU/TSWyPan2Em6s5Yet4HAnpv2WIyAGT4qHfyoHo5gmU5GqD3
+wQCekCRwi5gs/yYIKG/AEpVo/MT6DOQ3bSPRmC6sxaqgfJVJXAXsStcNRNW07cq7
+onj/OU+aauVT6xJ2XvB7uiKaC8kzrVXK0t02nOhqDIct3GYOpm2bO0AtFafURKhe
+sGgq/SPFCBISOMqIGvU+0/Hd2abGA/r4win12xYWI9o/0LPMZs25LyFxXNBBaRtc
+9QFhE7DazpoLpPCFv7Za5+KmuZxcifN8DZgFl177V0U79vXPuS52g3vEIbzwZboc
++HCB2imqCOIhAOMhwGr7ADn0u/ryo8LG4HgozzoEztm7xoSMOyDPf9ct9wZS8Np5
+2ImzgpnYb70qIvSV9y6JCupLXeChZmyB6Kfc3sird2bwNIQNPHOLEQKoDlvkawNG
+7ePxvN0pqZUuS2DhLbbzKFoljnhiR4DEiIHmnQDUEEvEfz6dHDGM7fEzY5679Fuu
+3L0DmPqvHi28vobM2YscZ9VTHimw7N6lZozqVy2t12NNbl36D7E=
+=nb2+
+-----END PGP SIGNATURE-----
+
+--Sig_/IMwQ3EA3mlW=xf1Y4GDLMWA--
