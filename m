@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2ECEC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:38:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 960FFC35242
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:38:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7FBB2087E
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:38:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D891214AF
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:38:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579876732;
-	bh=7uUGsk4n0XXVgZsu9YNHGZEaSX4/OsqDtUdjcRoeTZY=;
+	s=default; t=1579876735;
+	bh=rFxetqqAGgGIApkXEQ4TCZBigV4FicIGqLM3MuDnDD8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ezB/fwiSoBSMEPmywc1rK0TIaNqeaDsbN4uteRcOhYcIftQLEEoFlcf8UlfizsZdz
-	 ZXmA6sCFBNcLDPWOjpaUb7aBzwbsuF42GWCjLj5a+zKBS1x/MwqvSNcfeIfCYb7e7x
-	 2XgTJBXT/hhoS+FilATlKaBIBuI6ccnPMWyxybWY=
+	b=aL5TKRcCWi++ufH7V+frhtHLrAbM/Vd4XORFudUIUR3Hju9u4DFhIq8W1FArVIyKs
+	 VUsuQDwXZVpLhDl1aVOX37PGn3spW3xQP+WoGtCJlnhhpIJ7Uk2ModFdlrVIc+zVSa
+	 hFzo9QGM1lCnb/HPfet8K1UfaxNydm8fhe1vdp04=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390825AbgAXOSc (ORCPT
+        id S2388820AbgAXOiy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 09:18:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37900 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 09:38:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38036 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390774AbgAXOSa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 09:18:30 -0500
+        id S2388946AbgAXOSe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 09:18:34 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9DB58208C4;
-        Fri, 24 Jan 2020 14:18:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 20BBB2077C;
+        Fri, 24 Jan 2020 14:18:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579875510;
-        bh=7uUGsk4n0XXVgZsu9YNHGZEaSX4/OsqDtUdjcRoeTZY=;
+        s=default; t=1579875514;
+        bh=rFxetqqAGgGIApkXEQ4TCZBigV4FicIGqLM3MuDnDD8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=etqrt8Nry6TimpWEieuEZL7LsqI8bmGnruxTCAw+gOHrKQz9c+QQkJmq9a6DNoohi
-         /FEkjziHDdhxH49QNjkUeEk5oV6ia6EwKmqFcEtUliogQtJReZAVnm3Bj+MuK8XKFl
-         lf6X6Z8dBBUp4PwWfp0rGSk5tnmfU87eLjIAMD+Y=
+        b=Cui+bZaybZZ/vVA6Zh+rG1xTrH4n5B2E819CVv3nhtga/WN7MeUzMMl76iXo7IHBX
+         tmjDQDVuYH2xkb+bquIhD5x057OmsktmK9m3Ib8yuMavvjFYuQXSUwIBvjs0qyCNfd
+         gCPYWAlZ/vyo0RKT6P2lip1/xS9inK+aDsecaung=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dave Gerlach <d-gerlach@ti.com>, Suman Anna <s-anna@ti.com>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        Tony Lindgren <tony@atomide.com>,
-        Sasha Levin <sashal@kernel.org>,
+Cc:     Yinbo Zhu <yinbo.zhu@nxp.com>, Yangbo Lu <yangbo.lu@nxp.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.4 011/107] soc: ti: wkup_m3_ipc: Fix race condition with rproc_boot
-Date:   Fri, 24 Jan 2020 09:16:41 -0500
-Message-Id: <20200124141817.28793-11-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 014/107] arm64: dts: ls1028a: fix endian setting for dcfg
+Date:   Fri, 24 Jan 2020 09:16:44 -0500
+Message-Id: <20200124141817.28793-14-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200124141817.28793-1-sashal@kernel.org>
 References: <20200124141817.28793-1-sashal@kernel.org>
@@ -61,53 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dave Gerlach <d-gerlach@ti.com>
+From: Yinbo Zhu <yinbo.zhu@nxp.com>
 
-[ Upstream commit 03729cfa0d543bc996bf959e762ec999afc8f3d2 ]
+[ Upstream commit 33eae7fb2e593fdbaac15d843e2558379c6d1149 ]
 
-Any user of wkup_m3_ipc calls wkup_m3_ipc_get to get a handle and this
-checks the value of the static variable m3_ipc_state to see if the
-wkup_m3 is ready. Currently this is populated during probe before
-rproc_boot has been called, meaning there is a window of time that
-wkup_m3_ipc_get can return a valid handle but the wkup_m3 itself is not
-ready, leading to invalid IPC calls to the wkup_m3 and system
-instability.
+DCFG block uses little endian.  Fix it so that register access becomes
+correct.
 
-To avoid this, move the population of the m3_ipc_state variable until
-after rproc_boot has succeeded to guarantee a valid and usable handle
-is always returned.
-
-Reported-by: Suman Anna <s-anna@ti.com>
-Signed-off-by: Dave Gerlach <d-gerlach@ti.com>
-Acked-by: Santosh Shilimkar <ssantosh@kernel.org>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Yinbo Zhu <yinbo.zhu@nxp.com>
+Acked-by: Yangbo Lu <yangbo.lu@nxp.com>
+Fixes: 8897f3255c9c ("arm64: dts: Add support for NXP LS1028A SoC")
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/soc/ti/wkup_m3_ipc.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/soc/ti/wkup_m3_ipc.c b/drivers/soc/ti/wkup_m3_ipc.c
-index 378369d9364ae..e9ece45d7a333 100644
---- a/drivers/soc/ti/wkup_m3_ipc.c
-+++ b/drivers/soc/ti/wkup_m3_ipc.c
-@@ -419,6 +419,8 @@ static void wkup_m3_rproc_boot_thread(struct wkup_m3_ipc *m3_ipc)
- 	ret = rproc_boot(m3_ipc->rproc);
- 	if (ret)
- 		dev_err(dev, "rproc_boot failed\n");
-+	else
-+		m3_ipc_state = m3_ipc;
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+index bb960fe2bb64c..9589b15693d6e 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+@@ -158,7 +158,7 @@
+ 		dcfg: syscon@1e00000 {
+ 			compatible = "fsl,ls1028a-dcfg", "syscon";
+ 			reg = <0x0 0x1e00000 0x0 0x10000>;
+-			big-endian;
++			little-endian;
+ 		};
  
- 	do_exit(0);
- }
-@@ -505,8 +507,6 @@ static int wkup_m3_ipc_probe(struct platform_device *pdev)
- 		goto err_put_rproc;
- 	}
- 
--	m3_ipc_state = m3_ipc;
--
- 	return 0;
- 
- err_put_rproc:
+ 		rst: syscon@1e60000 {
 -- 
 2.20.1
 
