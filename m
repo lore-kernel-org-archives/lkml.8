@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93625C32771
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:23:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59538C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:23:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E2C720718
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:23:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 277FD20718
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:23:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579865003;
-	bh=QQMrl2AYpw4eoy/KkYteriQnmbgh1dlGzHeJYhnkIA4=;
+	s=default; t=1579865006;
+	bh=tggZ1F8OoNTZfPK3ifMiW8r68RNcaE+R62ynHkmwNx8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zaWcDz+tWbQPGxl0HYILvTqm07VbO1V2YXLV1BxUBB4a7SbTybMTTlbG2OFVuvvvo
-	 x1d0kdoKMETOQLQ5jdylltDcg26/Y9QmOTtjUYRfjngoID6p5DuyZ8qCjEX8F2wTh2
-	 CohFhyyJoLhsyxdLaQRxAlZu2kKqR49q3U2eZnw0=
+	b=SPNjxSDK5E7eBNsxcD3mcFvB+CNENDo/hJn8WBP7Uq6X9G/RtRVpJ4YXWA6paYErm
+	 O0l4vnYk5CpE/3/b434K3uELKeS1qEYTK67kYA2/hPtt/gTO8ae1sX6nwLcrIvjmJp
+	 aCjHsf+l7NSgdqcHzs/JBDsUiJg+ApfdY0SPTkew=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391316AbgAXLXW (ORCPT
+        id S2391327AbgAXLXZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:23:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35500 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 06:23:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35772 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391288AbgAXLXL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:23:11 -0500
+        id S2391313AbgAXLXV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:23:21 -0500
 Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B08CD214DB;
-        Fri, 24 Jan 2020 11:23:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AC5072075D;
+        Fri, 24 Jan 2020 11:23:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579864990;
-        bh=QQMrl2AYpw4eoy/KkYteriQnmbgh1dlGzHeJYhnkIA4=;
+        s=default; t=1579865001;
+        bh=tggZ1F8OoNTZfPK3ifMiW8r68RNcaE+R62ynHkmwNx8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NtfzZGPtUym14uyTJqyY+hoopxRY2hay0mMUIQ2hrWrcaRsLla55iGAX5EvZ1P/qy
-         f7EztcGGWS8dCI3z4/NiKyTJ8kZpWp8vyXkZa2xVa97kzppRsUmBBc9j3atEUdfi+q
-         TKSh9vSkBZtszW0geidALrhlaIbOw1czNVsa0LhU=
+        b=fdvRqrhA+ErB7cQ3hrSztF1aA1+rcdxxlB3xjyzbv4IONISl8DN1gQTgPUyvIBafd
+         8dVLcLS1E5fpvs+tQ1JaMazX6l4gF6vdm1jcn7njFtHujzGCIMnqnf99072ky8VjSO
+         ENzjYbbkRirWmimB/AwXtG1JN5y2OUbXfTdrv91c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Antoine Tenart <antoine.tenart@bootlin.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
+        stable@vger.kernel.org, Jerome Brunet <jbrunet@baylibre.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 414/639] crypto: inside-secure - fix queued len computation
-Date:   Fri, 24 Jan 2020 10:29:44 +0100
-Message-Id: <20200124093138.883889624@linuxfoundation.org>
+Subject: [PATCH 4.19 425/639] ASoC: meson: axg-tdmin: right_j is not supported
+Date:   Fri, 24 Jan 2020 10:29:55 +0100
+Message-Id: <20200124093140.261231234@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
 References: <20200124093047.008739095@linuxfoundation.org>
@@ -61,42 +60,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Antoine Tenart <antoine.tenart@bootlin.com>
+From: Jerome Brunet <jbrunet@baylibre.com>
 
-[ Upstream commit ccd65a206a5025cf953a2e4f37e894921b131a5c ]
+[ Upstream commit 47c317b786b6c1efc2cb3cdb894fd323422fe5ea ]
 
-This patch fixes the queued len computation, which could theoretically
-be wrong if req->len[1] - req->processed[1] > 1. Be future-proof here,
-and fix it.
+Right justified format is actually not supported by the amlogic tdm input
+decoder.
 
-Fixes: b460edb6230a ("crypto: inside-secure - sha512 support")
-Signed-off-by: Antoine Tenart <antoine.tenart@bootlin.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Fixes: 13a22e6a98f8 ("ASoC: meson: add tdm input driver")
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/crypto/inside-secure/safexcel_hash.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ sound/soc/meson/axg-tdmin.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/drivers/crypto/inside-secure/safexcel_hash.c b/drivers/crypto/inside-secure/safexcel_hash.c
-index 9a02f64a45b96..f3b02c00b7846 100644
---- a/drivers/crypto/inside-secure/safexcel_hash.c
-+++ b/drivers/crypto/inside-secure/safexcel_hash.c
-@@ -50,10 +50,12 @@ struct safexcel_ahash_req {
+diff --git a/sound/soc/meson/axg-tdmin.c b/sound/soc/meson/axg-tdmin.c
+index bbac44c816886..37207bbebb2a4 100644
+--- a/sound/soc/meson/axg-tdmin.c
++++ b/sound/soc/meson/axg-tdmin.c
+@@ -119,7 +119,6 @@ static int axg_tdmin_prepare(struct regmap *map, struct axg_tdm_stream *ts)
+ 		break;
  
- static inline u64 safexcel_queued_len(struct safexcel_ahash_req *req)
- {
--	if (req->len[1] > req->processed[1])
--		return 0xffffffff - (req->len[0] - req->processed[0]);
-+	u64 len, processed;
- 
--	return req->len[0] - req->processed[0];
-+	len = (0xffffffff * req->len[1]) + req->len[0];
-+	processed = (0xffffffff * req->processed[1]) + req->processed[0];
-+
-+	return len - processed;
- }
- 
- static void safexcel_hash_token(struct safexcel_command_desc *cdesc,
+ 	case SND_SOC_DAIFMT_LEFT_J:
+-	case SND_SOC_DAIFMT_RIGHT_J:
+ 	case SND_SOC_DAIFMT_DSP_B:
+ 		val = TDMIN_CTRL_IN_BIT_SKEW(2);
+ 		break;
 -- 
 2.20.1
 
