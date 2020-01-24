@@ -7,49 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 550E1C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:18:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBEC2C32771
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:18:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2856A214DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:18:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 996B02077C
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:18:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579875516;
-	bh=IO9VbcI3uUwDUmwFpNRvGb7+MdliZwybJcqPxKfZbI4=;
+	s=default; t=1579875517;
+	bh=ZKDcLH6v9XtUKRk4ZP7IrAf1NjELi1VNKfJKnhwS1Z8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SbzrLRqHwPZsQHah1Cf9Ehe+bPqtezEgN6c/+87hB3ll572aH1zGUTOrXW4f9lyLM
-	 Zne0dwORzTX+iJNCJ00Fh9QJEUidcjG7xo/fy/9GmqDelB776wolysF+amd+hop2FA
-	 3Nhlxx82PQ1vahBemstG1y8oOlDSsIJmcJ0xbG1M=
+	b=axJKGYt4uOEe+GoqLPBf+B8MYwst0FY8VTvqWd0ndeXySguuGDP6NgKSwuCOJN1nx
+	 J6V78Z2uJsMJvtUiei1HjrqOpGnh/thjDZOedWOfpfLKoahfpvCkdaJB3kg2nRPia8
+	 9RnDnlQo3YrPHYpQhL8GrEkGnFT8lz7M85G3osQo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390858AbgAXOSf (ORCPT
+        id S2390906AbgAXOSg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 09:18:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37962 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 09:18:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38064 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390808AbgAXOSc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 09:18:32 -0500
+        id S2390844AbgAXOSf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 09:18:35 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C800D2087E;
-        Fri, 24 Jan 2020 14:18:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4D66021556;
+        Fri, 24 Jan 2020 14:18:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579875511;
-        bh=IO9VbcI3uUwDUmwFpNRvGb7+MdliZwybJcqPxKfZbI4=;
+        s=default; t=1579875515;
+        bh=ZKDcLH6v9XtUKRk4ZP7IrAf1NjELi1VNKfJKnhwS1Z8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qECIe04c6BIoNwMZ2vIwUWHWihi5bfxQY7NbfOzZoG/5bYNAxrYHCmZcGaqSmBH3E
-         EpY9UrRzs9NqSX0taS5hpQO0Om5Ompill7vzPZeMNBkk1nkItWH5zoBbNdpzUhuIoH
-         BULISW7shAtR/RC7l9Vo0Tt0Uf1moy93c5F25eGw=
+        b=OWnCHP0340044PUSHLAASJ9kFPR9ux7fLdbS7iQEmkdAKX4WDwT6ItFPLs62hsTdi
+         QnVhItZD22xPUYQeo9pypIt6haHPXW+4f6RnpHGP2gIMngio1Jd7F5Z7bXXrR5O64W
+         +qTU/d7HehhofDeT36qpmNXmxv+aevfx1YxM64gY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hewenliang <hewenliang4@huawei.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Feilong Lin <linfeilong@huawei.com>,
-        Tzvetomir Stoyanov <tstoyanov@vmware.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.4 012/107] tools lib traceevent: Fix memory leakage in filter_event
-Date:   Fri, 24 Jan 2020 09:16:42 -0500
-Message-Id: <20200124141817.28793-12-sashal@kernel.org>
+Cc:     Adam Ford <aford173@gmail.com>, Shawn Guo <shawnguo@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.4 015/107] arm64: dts: imx8mm: Change SDMA1 ahb clock for imx8mm
+Date:   Fri, 24 Jan 2020 09:16:45 -0500
+Message-Id: <20200124141817.28793-15-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200124141817.28793-1-sashal@kernel.org>
 References: <20200124141817.28793-1-sashal@kernel.org>
@@ -62,40 +59,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hewenliang <hewenliang4@huawei.com>
+From: Adam Ford <aford173@gmail.com>
 
-[ Upstream commit f84ae29a6169318f9c929720c49d96323d2bbab9 ]
+[ Upstream commit 24a572bf67994223e722cadfe663e15ba221882a ]
 
-It is necessary to call free_arg(arg) when add_filter_type() returns NULL
-in filter_event().
+Using SDMA1 with UART1 is causing a "Timeout waiting for CH0" error.
+This patch changes to ahb clock from SDMA1_ROOT to AHB which
+fixes the timeout error.
 
-Signed-off-by: Hewenliang <hewenliang4@huawei.com>
-Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Cc: Feilong Lin <linfeilong@huawei.com>
-Cc: Tzvetomir Stoyanov <tstoyanov@vmware.com>
-Link: http://lore.kernel.org/lkml/20191209063549.59941-1-hewenliang4@huawei.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Fixes:  a05ea40eb384 ("arm64: dts: imx: Add i.mx8mm dtsi support")
+Signed-off-by: Adam Ford <aford173@gmail.com>
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/lib/traceevent/parse-filter.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ arch/arm64/boot/dts/freescale/imx8mm.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/lib/traceevent/parse-filter.c b/tools/lib/traceevent/parse-filter.c
-index f3cbf86e51acf..20eed719542e5 100644
---- a/tools/lib/traceevent/parse-filter.c
-+++ b/tools/lib/traceevent/parse-filter.c
-@@ -1228,8 +1228,10 @@ filter_event(struct tep_event_filter *filter, struct tep_event *event,
- 	}
- 
- 	filter_type = add_filter_type(filter, event->id);
--	if (filter_type == NULL)
-+	if (filter_type == NULL) {
-+		free_arg(arg);
- 		return TEP_ERRNO__MEM_ALLOC_FAILED;
-+	}
- 
- 	if (filter_type->filter)
- 		free_arg(filter_type->filter);
+diff --git a/arch/arm64/boot/dts/freescale/imx8mm.dtsi b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
+index 23c8fad7932b1..b4ca3b7ef10d5 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mm.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
+@@ -741,7 +741,7 @@
+ 				reg = <0x30bd0000 0x10000>;
+ 				interrupts = <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>;
+ 				clocks = <&clk IMX8MM_CLK_SDMA1_ROOT>,
+-					 <&clk IMX8MM_CLK_SDMA1_ROOT>;
++					 <&clk IMX8MM_CLK_AHB>;
+ 				clock-names = "ipg", "ahb";
+ 				#dma-cells = <3>;
+ 				fsl,sdma-ram-script-name = "imx/sdma/sdma-imx7d.bin";
 -- 
 2.20.1
 
