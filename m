@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0737CC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 10:02:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAE64C32771
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 10:02:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8548214DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 10:02:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A22B2214DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 10:02:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579860156;
-	bh=S9JvEKSWbFGtFy5wvMsZfUycbazL3Z6A4O1HTYQj30A=;
+	s=default; t=1579860160;
+	bh=03vxJpeyQt75CgTZoG1Wr9wuuaiFdoOiPQReOgQVZT8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KtTGL4FWMBv0IAMK4ptE9bB0W5C/3TF66giYJAnEhs57kEmfVvgNaBtNPX+V993sa
-	 Rmiv+bioYn5Nn0XMSdPrvmXWIApcojX+NH4OcGyH0SileeiqS49umpSVHrPFDHp2OY
-	 mPgUwQXte+QYDUB7Zr3bNSc7hGufvylCPhlMNra8=
+	b=CdAAdZ+6h4tzSWiPeCCpJlLosz9Jc54ylaShKn11umwiNvn0pZ6W9PEc3/Ius8Tf4
+	 4m77qCew+fdFJUtoKQjmJHJH+VjLVdJKmu4yGSpEte/Qg176ePh3H1CFkn7Kn+5vEl
+	 G1gFlBE+HfWwORtlfevNzwEie2o03i3eDqZn0fFE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388925AbgAXKCf (ORCPT
+        id S2388935AbgAXKCk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 05:02:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38046 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 05:02:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38138 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733301AbgAXKCd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 05:02:33 -0500
+        id S1733301AbgAXKCi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 05:02:38 -0500
 Received: from localhost (unknown [145.15.244.15])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8077D2075D;
-        Fri, 24 Jan 2020 10:02:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 53A572075D;
+        Fri, 24 Jan 2020 10:02:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579860153;
-        bh=S9JvEKSWbFGtFy5wvMsZfUycbazL3Z6A4O1HTYQj30A=;
+        s=default; t=1579860157;
+        bh=03vxJpeyQt75CgTZoG1Wr9wuuaiFdoOiPQReOgQVZT8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=H/brlE04UK9NU85sFMDU67/6n54cNh0R09RR8AVLcOmBa6BpzmmzK4cZJlb7xGc9p
-         1x3uYB6fmnKXmylwon8IOeALt2H8SkAbX4A0I7Yjd6VOjqLPrGY+htoyH82LDjy0rC
-         EMfcRUKBK/T7JcimoQ+Xk05h4/0xEsLAiT5XfnZ0=
+        b=Ewelbu33uXWAhuwn39/Hfl7D56e8HyOSlrmfCAHyitPgqfLWpk2r76OOs90bUCVPk
+         d5cZoliOoxV8MV+T7lQ57DZsDGolLH6lFweJYEMv4Yo7guJaQ8CeNHGQATGq6O1TOR
+         V4xlhqdzen2C/Os4k7KXHYpWf+Y8bUp+oOcyckN0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Clark <robdclark@chromium.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 236/343] drm/msm/mdp5: Fix mdp5_cfg_init error return
-Date:   Fri, 24 Jan 2020 10:30:54 +0100
-Message-Id: <20200124092951.195605312@linuxfoundation.org>
+        stable@vger.kernel.org, Stephen Rothwell <sfr@canb.auug.org.au>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 263/343] ALSA: aoa: onyx: always initialize register read value
+Date:   Fri, 24 Jan 2020 10:31:21 +0100
+Message-Id: <20200124092954.615720135@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124092919.490687572@linuxfoundation.org>
 References: <20200124092919.490687572@linuxfoundation.org>
@@ -61,37 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+From: Johannes Berg <johannes@sipsolutions.net>
 
-[ Upstream commit fc19cbb785d7bbd1a1af26229b5240a3ab332744 ]
+[ Upstream commit f474808acb3c4b30552d9c59b181244e0300d218 ]
 
-If mdp5_cfg_init fails because of an unknown major version, a null pointer
-dereference occurs.  This is because the caller of init expects error
-pointers, but init returns NULL on error.  Fix this by returning the
-expected values on error.
+A lot of places in the driver use onyx_read_register() without
+checking the return value, and it's been working OK for ~10 years
+or so, so probably never fails ... Rather than trying to check the
+return value everywhere, which would be relatively intrusive, at
+least make sure we don't use an uninitialized value.
 
-Fixes: 2e362e1772b8 (drm/msm/mdp5: introduce mdp5_cfg module)
-Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Signed-off-by: Rob Clark <robdclark@chromium.org>
+Fixes: f3d9478b2ce4 ("[ALSA] snd-aoa: add snd-aoa")
+Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+Signed-off-by: Johannes Berg <johannes@sipsolutions.net>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/msm/mdp/mdp5/mdp5_cfg.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/aoa/codecs/onyx.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/msm/mdp/mdp5/mdp5_cfg.c b/drivers/gpu/drm/msm/mdp/mdp5/mdp5_cfg.c
-index 824067d2d4277..42f0ecb0cf35f 100644
---- a/drivers/gpu/drm/msm/mdp/mdp5/mdp5_cfg.c
-+++ b/drivers/gpu/drm/msm/mdp/mdp5/mdp5_cfg.c
-@@ -635,7 +635,7 @@ fail:
- 	if (cfg_handler)
- 		mdp5_cfg_destroy(cfg_handler);
- 
--	return NULL;
-+	return ERR_PTR(ret);
- }
- 
- static struct mdp5_cfg_platform *mdp5_get_config(struct platform_device *dev)
+diff --git a/sound/aoa/codecs/onyx.c b/sound/aoa/codecs/onyx.c
+index d2d96ca082b71..6224fd3bbf7cc 100644
+--- a/sound/aoa/codecs/onyx.c
++++ b/sound/aoa/codecs/onyx.c
+@@ -74,8 +74,10 @@ static int onyx_read_register(struct onyx *onyx, u8 reg, u8 *value)
+ 		return 0;
+ 	}
+ 	v = i2c_smbus_read_byte_data(onyx->i2c, reg);
+-	if (v < 0)
++	if (v < 0) {
++		*value = 0;
+ 		return -1;
++	}
+ 	*value = (u8)v;
+ 	onyx->cache[ONYX_REG_CONTROL-FIRSTREGISTER] = *value;
+ 	return 0;
 -- 
 2.20.1
 
