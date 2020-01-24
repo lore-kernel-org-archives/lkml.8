@@ -2,102 +2,83 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D5EDC35242
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 23:25:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E45EC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 23:26:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 521C121569
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 23:25:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6AAE2071A
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 23:26:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="H06xmx89"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="UIlxYZvd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387491AbgAXXZY (ORCPT
+        id S1729504AbgAXX0z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 18:25:24 -0500
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:46896 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387447AbgAXXZY (ORCPT
+        Fri, 24 Jan 2020 18:26:55 -0500
+Received: from merlin.infradead.org ([205.233.59.134]:48494 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729236AbgAXX0y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 18:25:24 -0500
-Received: by mail-pl1-f196.google.com with SMTP id y8so1388733pll.13
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Jan 2020 15:25:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=FARh9+NSyoh9cEVojaQ5yO/5qNpny8hvAgXD5nEC67I=;
-        b=H06xmx89YXaZ0rcfRMS2TzEW37mYI8VF98nq0ZMSaYi3lu8uAeqHa9gZSfOnFRnKYm
-         qoFdh8VmrW/jYfFXK8gbQ2XlEKnW0TJ3P54II9lv3xnVRSLXaGayP+I8D1beKJxMK8bs
-         oKHBzJRcMOmv12M0LXdfYDDpetCcuhWsZ6r5A=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=FARh9+NSyoh9cEVojaQ5yO/5qNpny8hvAgXD5nEC67I=;
-        b=VsCEgAhCEnXJyBGGnxyYZ821CIuLSTM93C/DyxTFO26qRiYvcJ+3qLoqUya7WO8OIB
-         yQwRS9JWrqVs1K2wPDHCt5RRKbof66+dsyKP2kMEbKoRY13VLTjfYG/5JIw9RWXtLjDK
-         pbU/tkAPayZ4mBu4w97csA15WzzhPVoSn1BWrOU6/C4G7bNQyGaI3B72D/ojAr900rk5
-         1v1XpGG4sht2hbsTuPlbQvHW3NYIkLU9cQNcj1Sb2zs7jwf4xS0270CR5+RyILORIKwU
-         RXw5HKBz81/7AdU7ccbj+eikx46hWJaFWuUafpseB15QlebzKPw7KAuDI+V/kwgR0T/S
-         rc+Q==
-X-Gm-Message-State: APjAAAVrGHi//MRbgYMPJPk85TUJZDYXKoYq9EakfGvjiO1FDHfZgS+U
-        mMRxtlI6pPUwj2i+F81K1aTs7w==
-X-Google-Smtp-Source: APXvYqyHd5FT8CvoOI9/vPxv4sxwo5PHmJDSN6SkVVSjaI1OtaJ7MDk1gnotjCGKLpyZEXEYrUGOcA==
-X-Received: by 2002:a17:90a:9c1:: with SMTP id 59mr1846965pjo.65.1579908323338;
-        Fri, 24 Jan 2020 15:25:23 -0800 (PST)
-Received: from pmalani2.mtv.corp.google.com ([2620:15c:202:201:172e:4646:c089:ce59])
-        by smtp.gmail.com with ESMTPSA id b12sm2823103pfr.26.2020.01.24.15.25.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 Jan 2020 15:25:22 -0800 (PST)
-From:   Prashant Malani <pmalani@chromium.org>
-To:     enric.balletbo@collabora.com, groeck@chromium.org,
-        bleung@chromium.org, lee.jones@linaro.org, sre@kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        Prashant Malani <pmalani@chromium.org>
-Subject: [PATCH v8 3/4] mfd: cros_ec: Check DT node for usbpd-notify add
-Date:   Fri, 24 Jan 2020 15:18:36 -0800
-Message-Id: <20200124231834.63628-3-pmalani@chromium.org>
-X-Mailer: git-send-email 2.25.0.341.g760bfbb309-goog
-In-Reply-To: <20200124231834.63628-1-pmalani@chromium.org>
-References: <20200124231834.63628-1-pmalani@chromium.org>
+        Fri, 24 Jan 2020 18:26:54 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=/KWIys5Er9MsfBx37atukpmP50mnDEiIhVNZ2UJB108=; b=UIlxYZvdhkJxP35S73XaGgdjv
+        /xzcLDV7acMj5fr8Z728D6rnxOhrU4/zFxlgiDpbTW5DTN5dsBc5OeU9JpbBm+3J25lUKEm2z4WhQ
+        WoUKjER6Mw1ahJv2iAeUsvt7a5c3IrlALR0Lp7BcRGdx+XRwQpGX7w9D7RYn5WPUX7BQQdmtUGED9
+        9S0zDHCSo1SC4TXDbuhzE1/IXiHJZNAbAM7b7kDIcpLxyQTCRJ1LiWTOA1YrLBLCGGEqpO3a4zLZG
+        tkU3a4Edy8TIV9gcU0wp9NvRHFIGnZQMbaQVCQjrnE1sE6K05WILUO8d27nBVpoNziWcsgTuU4g+7
+        8DpIKC0Eg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iv8Lc-0006BY-25; Fri, 24 Jan 2020 23:26:44 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id E347E302526;
+        Sat, 25 Jan 2020 00:24:59 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id A0BAC20A1561B; Sat, 25 Jan 2020 00:26:40 +0100 (CET)
+Date:   Sat, 25 Jan 2020 00:26:40 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Song Liu <songliubraving@fb.com>
+Cc:     Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Kernel Team <Kernel-team@fb.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Jiri Olsa <jolsa@kernel.org>
+Subject: Re: [PATCH v3] perf/core: fix mlock accounting in perf_mmap()
+Message-ID: <20200124232640.GC14914@hirez.programming.kicks-ass.net>
+References: <20200123181146.2238074-1-songliubraving@fb.com>
+ <87zhed9pek.fsf@ashishki-desk.ger.corp.intel.com>
+ <0E502E71-B1A8-493B-BD9F-24F15BEDA1D6@fb.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0E502E71-B1A8-493B-BD9F-24F15BEDA1D6@fb.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a check to ensure there is indeed an EC device tree entry before
-adding the cros-usbpd-notify device. This covers configs where both
-CONFIG_ACPI and CONFIG_OF are defined, but the EC device is defined
-using device tree and not in ACPI.
+On Fri, Jan 24, 2020 at 09:28:26PM +0000, Song Liu wrote:
+> Thanks Alex!
+> 
+> > On Jan 24, 2020, at 1:25 AM, Alexander Shishkin <alexander.shishkin@linux.intel.com> wrote:
+> > 
+> > Song Liu <songliubraving@fb.com> writes:
+> > 
+> >> Eecreasing sysctl_perf_event_mlock between two consecutive perf_mmap()s of
+> > 
+> > Typo: "Decreasing".
+> 
+> Peter, could you please fix this typo when you apply the patch? I guess
+> it is not necessary to spam the list with a v4 just for this typo. 
 
-Signed-off-by: Prashant Malani <pmalani@chromium.org>
----
-
-Changes in v8:
-- Patch first introduced in v8 of the series.
-
- drivers/mfd/cros_ec_dev.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/mfd/cros_ec_dev.c b/drivers/mfd/cros_ec_dev.c
-index d0c28a4c10ad0..411e80fc9a066 100644
---- a/drivers/mfd/cros_ec_dev.c
-+++ b/drivers/mfd/cros_ec_dev.c
-@@ -212,7 +212,7 @@ static int ec_device_probe(struct platform_device *pdev)
- 	 * explicitly added on platforms that don't have the PD notifier ACPI
- 	 * device entry defined.
- 	 */
--	if (IS_ENABLED(CONFIG_OF)) {
-+	if (IS_ENABLED(CONFIG_OF) && ec->ec_dev->dev->of_node) {
- 		if (cros_ec_check_features(ec, EC_FEATURE_USB_PD)) {
- 			retval = mfd_add_hotplug_devices(ec->dev,
- 					cros_usbpd_notify_cells,
--- 
-2.25.0.341.g760bfbb309-goog
-
+Done!
