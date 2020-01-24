@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E2E1C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:36:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28734C35242
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:36:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B4572075D
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:36:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA48C206D4
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:36:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579865803;
-	bh=blAYZbvm7nn6eXGXl1eTJiZIa7ZOATrrxs34OfeT0PY=;
+	s=default; t=1579865809;
+	bh=k+jTFQk3X8t0HDDXYfCH0ipj/Bck3QikThdhT2n3CZ8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LSBzvV+Ut/N5ClMReH59hDcTyosukawmIR75zR05u6A4Os/DXuprIbBzE4bNIv2YD
-	 /RJCaFehRjAZYlJkeSD7P4GcDkjCG9Mfgr9PG6JULeYsw/MouK+oQbbfHcleknrUk1
-	 T0EUY9tHCPu/xo05XLmnM1T4rCgUnd7cRk2iYaYQ=
+	b=V0BVpJuE40BpmITqFlpQsMSlQRlto3WsjLwuzKrslA4d054L4YPJEWkmmTNH1VHRi
+	 zmUYGnvwVoKH9zzF5dEuVbScL+VAqwo2fJEBrDtYt8QGaoPTZ/k59lKU0qR/W4hrie
+	 5y0GJop+KBggClrB6LuSuGllGu7oxHVHuBF6p2Ds=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404782AbgAXLgm (ORCPT
+        id S2391963AbgAXLgs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:36:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56834 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 06:36:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56886 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390172AbgAXLgg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:36:36 -0500
+        id S2391938AbgAXLgk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:36:40 -0500
 Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4D9E3206D4;
-        Fri, 24 Jan 2020 11:36:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2F6F0206D4;
+        Fri, 24 Jan 2020 11:36:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579865795;
-        bh=blAYZbvm7nn6eXGXl1eTJiZIa7ZOATrrxs34OfeT0PY=;
+        s=default; t=1579865800;
+        bh=k+jTFQk3X8t0HDDXYfCH0ipj/Bck3QikThdhT2n3CZ8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KdGKq1hwcnxN0JpQxDuSHITt6GmfAiQCrQw9hi+MydY2m115PdpZsVkg/93POkj9V
-         ZrrLIkvNoEM7nehLvPIK2/OIRt28OrINioYZ0TlcbhQFfxKWc7fwAcUmWGSL+Re+0G
-         LL0Sj07Gi8Dl22NWcdqf+iCHC9Y3MelDa6WS/6aU=
+        b=g1D3gGtSuBx91wxdfPxmZg8UXrUURcGLxq96D2YIVoRN8ElOks1Ej1rZlftkwOLjp
+         arJgJNHANmEMwS0smDLN57KWqwdq528JPcOHsd9CmIItk1ZTZw7zypE/8jDGsmqAuQ
+         4gv9tXWx/29dJ0LdRxLGHnjjA33wkaGFKoiZinh4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Navid Emamdoost <navid.emamdoost@gmail.com>,
-        David Sterba <dsterba@suse.com>,
+        Christian Hewitt <christianshewitt@gmail.com>,
+        Kevin Hilman <khilman@baylibre.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 629/639] affs: fix a memory leak in affs_remount
-Date:   Fri, 24 Jan 2020 10:33:19 +0100
-Message-Id: <20200124093208.423223207@linuxfoundation.org>
+Subject: [PATCH 4.19 638/639] arm64: dts: meson-gxm-khadas-vim2: fix uart_A bluetooth node
+Date:   Fri, 24 Jan 2020 10:33:28 +0100
+Message-Id: <20200124093209.538436193@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
 References: <20200124093047.008739095@linuxfoundation.org>
@@ -61,57 +61,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Navid Emamdoost <navid.emamdoost@gmail.com>
+From: Christian Hewitt <christianshewitt@gmail.com>
 
-[ Upstream commit 450c3d4166837c496ebce03650c08800991f2150 ]
+[ Upstream commit 388a2772979b625042524d8b91280616ab4ff5ee ]
 
-In affs_remount if data is provided it is duplicated into new_opts.  The
-allocated memory for new_opts is only released if parse_options fails.
-
-There's a bit of history behind new_options, originally there was
-save/replace options on the VFS layer so the 'data' passed must not
-change (thus strdup), this got cleaned up in later patches. But not
-completely.
-
-There's no reason to do the strdup in cases where the filesystem does
-not need to reuse the 'data' again, because strsep would modify it
-directly.
-
-Fixes: c8f33d0bec99 ("affs: kstrdup() memory handling")
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
-[ update changelog ]
-Signed-off-by: David Sterba <dsterba@suse.com>
+Fixes: 33344e2111a3 ("arm64: dts: meson-gxm-khadas-vim2: fix Bluetooth support")
+Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
+Reviewed-by: Kevin Hilman <khilman@baylibre.com>
+Signed-off-by: Kevin Hilman <khilman@baylibre.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/affs/super.c | 6 ------
- 1 file changed, 6 deletions(-)
+ arch/arm64/boot/dts/amlogic/meson-gxm-khadas-vim2.dts | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/fs/affs/super.c b/fs/affs/super.c
-index d1ad11a8a4a59..b6ce0c36029bd 100644
---- a/fs/affs/super.c
-+++ b/fs/affs/super.c
-@@ -561,14 +561,9 @@ affs_remount(struct super_block *sb, int *flags, char *data)
- 	int			 root_block;
- 	unsigned long		 mount_flags;
- 	int			 res = 0;
--	char			*new_opts;
- 	char			 volume[32];
- 	char			*prefix = NULL;
- 
--	new_opts = kstrdup(data, GFP_KERNEL);
--	if (data && !new_opts)
--		return -ENOMEM;
--
- 	pr_debug("%s(flags=0x%x,opts=\"%s\")\n", __func__, *flags, data);
- 
- 	sync_filesystem(sb);
-@@ -579,7 +574,6 @@ affs_remount(struct super_block *sb, int *flags, char *data)
- 			   &blocksize, &prefix, volume,
- 			   &mount_flags)) {
- 		kfree(prefix);
--		kfree(new_opts);
- 		return -EINVAL;
- 	}
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxm-khadas-vim2.dts b/arch/arm64/boot/dts/amlogic/meson-gxm-khadas-vim2.dts
+index 785240733d946..bdf7c6c5983ce 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxm-khadas-vim2.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-gxm-khadas-vim2.dts
+@@ -413,6 +413,9 @@
+ 	bluetooth {
+ 		compatible = "brcm,bcm43438-bt";
+ 		shutdown-gpios = <&gpio GPIOX_17 GPIO_ACTIVE_HIGH>;
++		max-speed = <2000000>;
++		clocks = <&wifi32k>;
++		clock-names = "lpo";
+ 	};
+ };
  
 -- 
 2.20.1
