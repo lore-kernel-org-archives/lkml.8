@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 304EAC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:02:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42DE6C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:02:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F04972077C
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:02:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1977B2077C
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:02:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579863744;
-	bh=1M6RGpSA1qMYlEsveMhi1c2vbkAkmrDwYHubL87kjsE=;
+	s=default; t=1579863747;
+	bh=dwWc+YA/NzjoWG3ST7dmjkFbGLgxkUbtwwN37lmLkg4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uUijFja9TgFRsypSHP8Pe//Chmp90PPIrQKQH5Sy0tNHK9idKEL6xy+I3I+vcXHUy
-	 8mYhQlnglV6DqlYIwdGzVUdGtRzkEXvWRZI0aJyPd5PR5xzupqhPHZlm6SmZR3R78e
-	 Yy/FcSuq3ak5uL0eecQFvDuDYntGKe0eMup01eFs=
+	b=cdcylazPyIwx+YB5aB++cHV0hT1jJOSJZ+VTYsm6DmFM68iP6Qi4VuulofLtIy+bv
+	 PVIAgkyfuHjLHXqbM1ppocBKxs/EQ5siYlLI7XFfjkgmdso6ocS3aOCXmlE5XNYq8S
+	 cQ2cd+5QINFW673DHsT0L/xtiMdx4tixFCyy95Yo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388015AbgAXLCW (ORCPT
+        id S2388038AbgAXLC0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:02:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35778 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 06:02:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35896 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733245AbgAXLCU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:02:20 -0500
+        id S1733245AbgAXLCX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:02:23 -0500
 Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C7C262075D;
-        Fri, 24 Jan 2020 11:02:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4FEDA2075D;
+        Fri, 24 Jan 2020 11:02:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579863739;
-        bh=1M6RGpSA1qMYlEsveMhi1c2vbkAkmrDwYHubL87kjsE=;
+        s=default; t=1579863743;
+        bh=dwWc+YA/NzjoWG3ST7dmjkFbGLgxkUbtwwN37lmLkg4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EotBbwM+8dfiy4PIF2VOSqnl1mfuenEvdEhskxsAI2f2ES+lxFFn4WYN8g6SPVJK1
-         xWur2k9o+0Labs567lTQPJPnhA4gqk98pw2T8PwgbmFfh1Bs+ES9kjAv+buEI+hcaB
-         Ya4qdhNR56h1vlf34WcTQyMsZY9FGLL5Yi7y8eI8=
+        b=wwdjqfRVLppZjuOfrBYJK5Fd6Zc4DI0tffS6CAG9Zok7HAbA5YzYyAAooKvCRWFRT
+         EzAfwC3fOc70cQALKEad67MMPUkM1YE6GZd3f7pvRk0LV2TDIQ1PgKa8tlwXgYPybZ
+         AnbJ+8Zcs0E0V8zXmoWM8i5jzvtr6zheBU7h+Vv4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Simon Horman <horms+renesas@verge.net.au>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 075/639] arm64: dts: renesas: r8a7795-es1: Add missing power domains to IPMMU nodes
-Date:   Fri, 24 Jan 2020 10:24:05 +0100
-Message-Id: <20200124093056.791308676@linuxfoundation.org>
+Subject: [PATCH 4.19 076/639] net: phy: Fix not to call phy_resume() if PHY is not attached
+Date:   Fri, 24 Jan 2020 10:24:06 +0100
+Message-Id: <20200124093056.914884857@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
 References: <20200124093047.008739095@linuxfoundation.org>
@@ -61,42 +61,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 
-[ Upstream commit 41e30b515a003a90e336b7a456c7c82d8c3aa6a7 ]
+[ Upstream commit ef1b5bf506b1f0ee3edc98533e1f3ecb105eb46a ]
 
-While commit 3b7e7848f0e88b36 ("arm64: dts: renesas: r8a7795: Add IPMMU
-device nodes") for R-Car H3 ES2.0 did include power-domains properties,
-they were forgotten in the counterpart for older R-Car H3 ES1.x SoCs.
+This patch fixes an issue that mdio_bus_phy_resume() doesn't call
+phy_resume() if the PHY is not attached.
 
-Fixes: e4b9a493df45075b ("arm64: dts: renesas: r8a7795-es1: Add IPMMU device nodes")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
+Fixes: 803dd9c77ac3 ("net: phy: avoid suspending twice a PHY")
+Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/renesas/r8a7795-es1.dtsi | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/net/phy/phy_device.c | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/renesas/r8a7795-es1.dtsi b/arch/arm64/boot/dts/renesas/r8a7795-es1.dtsi
-index 7b2fbaec9aef8..3dc61b7e1d08a 100644
---- a/arch/arm64/boot/dts/renesas/r8a7795-es1.dtsi
-+++ b/arch/arm64/boot/dts/renesas/r8a7795-es1.dtsi
-@@ -28,6 +28,7 @@
- 		compatible = "renesas,ipmmu-r8a7795";
- 		reg = <0 0xec680000 0 0x1000>;
- 		renesas,ipmmu-main = <&ipmmu_mm 5>;
-+		power-domains = <&sysc R8A7795_PD_ALWAYS_ON>;
- 		#iommu-cells = <1>;
- 	};
+diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
+index 43c4f358eeb8a..9c7e51443f6b6 100644
+--- a/drivers/net/phy/phy_device.c
++++ b/drivers/net/phy/phy_device.c
+@@ -76,7 +76,7 @@ static LIST_HEAD(phy_fixup_list);
+ static DEFINE_MUTEX(phy_fixup_lock);
  
-@@ -35,6 +36,7 @@
- 		compatible = "renesas,ipmmu-r8a7795";
- 		reg = <0 0xe7730000 0 0x1000>;
- 		renesas,ipmmu-main = <&ipmmu_mm 8>;
-+		power-domains = <&sysc R8A7795_PD_ALWAYS_ON>;
- 		#iommu-cells = <1>;
- 	};
+ #ifdef CONFIG_PM
+-static bool mdio_bus_phy_may_suspend(struct phy_device *phydev)
++static bool mdio_bus_phy_may_suspend(struct phy_device *phydev, bool suspend)
+ {
+ 	struct device_driver *drv = phydev->mdio.dev.driver;
+ 	struct phy_driver *phydrv = to_phy_driver(drv);
+@@ -88,10 +88,11 @@ static bool mdio_bus_phy_may_suspend(struct phy_device *phydev)
+ 	/* PHY not attached? May suspend if the PHY has not already been
+ 	 * suspended as part of a prior call to phy_disconnect() ->
+ 	 * phy_detach() -> phy_suspend() because the parent netdev might be the
+-	 * MDIO bus driver and clock gated at this point.
++	 * MDIO bus driver and clock gated at this point. Also may resume if
++	 * PHY is not attached.
+ 	 */
+ 	if (!netdev)
+-		return !phydev->suspended;
++		return suspend ? !phydev->suspended : phydev->suspended;
  
+ 	if (netdev->wol_enabled)
+ 		return false;
+@@ -126,7 +127,7 @@ static int mdio_bus_phy_suspend(struct device *dev)
+ 	if (phydev->attached_dev && phydev->adjust_link)
+ 		phy_stop_machine(phydev);
+ 
+-	if (!mdio_bus_phy_may_suspend(phydev))
++	if (!mdio_bus_phy_may_suspend(phydev, true))
+ 		return 0;
+ 
+ 	return phy_suspend(phydev);
+@@ -137,7 +138,7 @@ static int mdio_bus_phy_resume(struct device *dev)
+ 	struct phy_device *phydev = to_phy_device(dev);
+ 	int ret;
+ 
+-	if (!mdio_bus_phy_may_suspend(phydev))
++	if (!mdio_bus_phy_may_suspend(phydev, false))
+ 		goto no_resume;
+ 
+ 	ret = phy_resume(phydev);
 -- 
 2.20.1
 
