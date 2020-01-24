@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24245C35242
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:30:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C5A0C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:30:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED6652075D
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:30:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6D2D20661
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:30:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579876245;
-	bh=/IiXlaG9WEJyyLDQ4WYbK2Bc4QgiTbo8sl7iizV2S7Q=;
+	s=default; t=1579876252;
+	bh=3W4e0XKZhhaF9tAaPYZ+RQC+VzFFoSU+Mwv6uq38g9o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UMAO1PIF0oK8RDq4ja2pkKZKp8Sx1J1Hi1AB7//K7KcITqKvf99gn61RnXFVvJcgS
-	 sAE8K/9AGlDrWHTZhPwq1xYkVuylj4UnHRuGu604sxR91xYWmKEEtLBhGQxrDPcA7T
-	 P4ZYNl/rpozl7Bh68aYz5RJISA+tgNq8jZV3MVm8=
+	b=jStmgZMC2+TwXxca1ZTv0XI1y1ALFIG/560nhsfTPJbOVVHRHvTVNf/Ak0HgKHYHJ
+	 AHl4JUILUs/DDkJ4MMMjrAqSJYU1JIe89wbEXddahTO/796o6MxhNk+6it/PT7zPAl
+	 KOuhSin8/337D1FZbQL+s9lJZLf8TEIvOsHwnPCs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404962AbgAXOUl (ORCPT
+        id S2391772AbgAXOav (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 09:20:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41598 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 09:30:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41938 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404862AbgAXOUb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 09:20:31 -0500
+        id S1731597AbgAXOUk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 09:20:40 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CC8B522464;
-        Fri, 24 Jan 2020 14:20:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1D4212087E;
+        Fri, 24 Jan 2020 14:20:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579875630;
-        bh=/IiXlaG9WEJyyLDQ4WYbK2Bc4QgiTbo8sl7iizV2S7Q=;
+        s=default; t=1579875639;
+        bh=3W4e0XKZhhaF9tAaPYZ+RQC+VzFFoSU+Mwv6uq38g9o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rUFFBNAZ5fn5/12QoRQLcjbh6tdTKmq6DBo3jCapOgh4oas9Ijp1gWURrYY2HfZmz
-         MBInD6vnoL5n7wr7GLl3Dj4mGwb6xdYHozIZHN0t5rzGP4+uNlrhhz2jlwK5jRp8sw
-         vZC2loCcKCeHSVyKlEzHPOd/0mCSCrmeIHV8FsHg=
+        b=i22zTd5awPNs/YXFw2e07AQZ7J4sa/y0s4PMI1G4hwHpWAjgyGtGSjRWSPrtHW8dI
+         rRFhYJvAuay6V+tNqN/37w4j73OPXpc0Me14MOJhyH1rIbVsug0LnAnFLOP4eK4TJF
+         ZU3fMA4MGBdJuhtvLYX9ScU6/oP6oTXxm+2IiRx8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Shakeel Butt <shakeelb@google.com>, Borislav Petkov <bp@suse.de>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Reinette Chatre <reinette.chatre@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>, x86-ml <x86@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 15/56] x86/resctrl: Fix potential memory leak
-Date:   Fri, 24 Jan 2020 09:19:31 -0500
-Message-Id: <20200124142012.29752-15-sashal@kernel.org>
+Cc:     Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        linux-sh@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 23/56] sh_eth: check sh_eth_cpu_data::dual_port when dumping registers
+Date:   Fri, 24 Jan 2020 09:19:39 -0500
+Message-Id: <20200124142012.29752-23-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200124142012.29752-1-sashal@kernel.org>
 References: <20200124142012.29752-1-sashal@kernel.org>
@@ -62,56 +60,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shakeel Butt <shakeelb@google.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
-[ Upstream commit ab6a2114433a3b5b555983dcb9b752a85255f04b ]
+[ Upstream commit 3249b1e442a1be1a6b9f1026785b519d1443f807 ]
 
-set_cache_qos_cfg() is leaking memory when the given level is not
-RDT_RESOURCE_L3 or RDT_RESOURCE_L2. At the moment, this function is
-called with only valid levels but move the allocation after the valid
-level checks in order to make it more robust and future proof.
+When adding the sh_eth_cpu_data::dual_port flag I forgot to add the flag
+checks to __sh_eth_get_regs(), causing the non-existing TSU registers to
+be dumped by 'ethtool' on the single port Ether controllers having TSU...
 
- [ bp: Massage commit message. ]
-
-Fixes: 99adde9b370de ("x86/intel_rdt: Enable L2 CDP in MSR IA32_L2_QOS_CFG")
-Signed-off-by: Shakeel Butt <shakeelb@google.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: Fenghua Yu <fenghua.yu@intel.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Reinette Chatre <reinette.chatre@intel.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: x86-ml <x86@kernel.org>
-Link: https://lkml.kernel.org/r/20200102165844.133133-1-shakeelb@google.com
+Fixes: a94cf2a614f8 ("sh_eth: fix TSU init on SH7734/R8A7740")
+Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/cpu/intel_rdt_rdtgroup.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/renesas/sh_eth.c | 38 +++++++++++++++------------
+ 1 file changed, 21 insertions(+), 17 deletions(-)
 
-diff --git a/arch/x86/kernel/cpu/intel_rdt_rdtgroup.c b/arch/x86/kernel/cpu/intel_rdt_rdtgroup.c
-index a2d7e6646cce8..841a0246eb897 100644
---- a/arch/x86/kernel/cpu/intel_rdt_rdtgroup.c
-+++ b/arch/x86/kernel/cpu/intel_rdt_rdtgroup.c
-@@ -1749,9 +1749,6 @@ static int set_cache_qos_cfg(int level, bool enable)
- 	struct rdt_domain *d;
- 	int cpu;
- 
--	if (!zalloc_cpumask_var(&cpu_mask, GFP_KERNEL))
--		return -ENOMEM;
--
- 	if (level == RDT_RESOURCE_L3)
- 		update = l3_qos_cfg_update;
- 	else if (level == RDT_RESOURCE_L2)
-@@ -1759,6 +1756,9 @@ static int set_cache_qos_cfg(int level, bool enable)
- 	else
- 		return -EINVAL;
- 
-+	if (!zalloc_cpumask_var(&cpu_mask, GFP_KERNEL))
-+		return -ENOMEM;
-+
- 	r_l = &rdt_resources_all[level];
- 	list_for_each_entry(d, &r_l->domains, list) {
- 		/* Pick one CPU from each domain instance to update MSR */
+diff --git a/drivers/net/ethernet/renesas/sh_eth.c b/drivers/net/ethernet/renesas/sh_eth.c
+index 5e3e6e262ba37..6068e96f5ac1e 100644
+--- a/drivers/net/ethernet/renesas/sh_eth.c
++++ b/drivers/net/ethernet/renesas/sh_eth.c
+@@ -2184,24 +2184,28 @@ static size_t __sh_eth_get_regs(struct net_device *ndev, u32 *buf)
+ 	if (cd->tsu) {
+ 		add_tsu_reg(ARSTR);
+ 		add_tsu_reg(TSU_CTRST);
+-		add_tsu_reg(TSU_FWEN0);
+-		add_tsu_reg(TSU_FWEN1);
+-		add_tsu_reg(TSU_FCM);
+-		add_tsu_reg(TSU_BSYSL0);
+-		add_tsu_reg(TSU_BSYSL1);
+-		add_tsu_reg(TSU_PRISL0);
+-		add_tsu_reg(TSU_PRISL1);
+-		add_tsu_reg(TSU_FWSL0);
+-		add_tsu_reg(TSU_FWSL1);
++		if (cd->dual_port) {
++			add_tsu_reg(TSU_FWEN0);
++			add_tsu_reg(TSU_FWEN1);
++			add_tsu_reg(TSU_FCM);
++			add_tsu_reg(TSU_BSYSL0);
++			add_tsu_reg(TSU_BSYSL1);
++			add_tsu_reg(TSU_PRISL0);
++			add_tsu_reg(TSU_PRISL1);
++			add_tsu_reg(TSU_FWSL0);
++			add_tsu_reg(TSU_FWSL1);
++		}
+ 		add_tsu_reg(TSU_FWSLC);
+-		add_tsu_reg(TSU_QTAGM0);
+-		add_tsu_reg(TSU_QTAGM1);
+-		add_tsu_reg(TSU_FWSR);
+-		add_tsu_reg(TSU_FWINMK);
+-		add_tsu_reg(TSU_ADQT0);
+-		add_tsu_reg(TSU_ADQT1);
+-		add_tsu_reg(TSU_VTAG0);
+-		add_tsu_reg(TSU_VTAG1);
++		if (cd->dual_port) {
++			add_tsu_reg(TSU_QTAGM0);
++			add_tsu_reg(TSU_QTAGM1);
++			add_tsu_reg(TSU_FWSR);
++			add_tsu_reg(TSU_FWINMK);
++			add_tsu_reg(TSU_ADQT0);
++			add_tsu_reg(TSU_ADQT1);
++			add_tsu_reg(TSU_VTAG0);
++			add_tsu_reg(TSU_VTAG1);
++		}
+ 		add_tsu_reg(TSU_ADSBSY);
+ 		add_tsu_reg(TSU_TEN);
+ 		add_tsu_reg(TSU_POST1);
 -- 
 2.20.1
 
