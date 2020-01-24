@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D2D7C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:14:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC2D7C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:14:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E58E20708
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:14:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3DD620708
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:14:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579864461;
-	bh=2xFYQxeoUMDOb42t4erRQhfq7gk3Vm3YhXN20mTPnyY=;
+	s=default; t=1579864464;
+	bh=JOxZ0ziLXjL9ubJpAZJpStg/NXLDy1/ruPLAELkwuwk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=L+0biqbFTH33v2A7e3hiB1/K6Vt9HZZ2gGO0XNqYcsHcBeXK4TijQxqiObs8L7ti0
-	 iAFhs+e3uADKMT0OYU+Y0WnLiIO2XISvOF+9ZVHU9QSA36a1mnUzaxEseH5dSwLwd5
-	 T+Z+NmyFoYUIVKD5QtoJi2wzprhYX4g7RZgdHFKE=
+	b=1qLgEX6FR1z+RH37IMr2HjtQzQ37DmbsOAgHhg07fbBJ2+49lMKu77S2vrgOqP42k
+	 GU1x6yhG8CZncoZaUaxV2KTMSckvTVCSylndbu8VCIB0DFyzrxEr6Q/ZdQb5EkgpGM
+	 KSZj/vtnAG/2MsYv9JCDQIcP3OAakiSk9EhLrKEo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390126AbgAXLOT (ORCPT
+        id S1731672AbgAXLOX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:14:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50668 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 06:14:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50732 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390119AbgAXLOQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:14:16 -0500
+        id S2390125AbgAXLOU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:14:20 -0500
 Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BB32620663;
-        Fri, 24 Jan 2020 11:14:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5992920663;
+        Fri, 24 Jan 2020 11:14:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579864455;
-        bh=2xFYQxeoUMDOb42t4erRQhfq7gk3Vm3YhXN20mTPnyY=;
+        s=default; t=1579864459;
+        bh=JOxZ0ziLXjL9ubJpAZJpStg/NXLDy1/ruPLAELkwuwk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DTsJMc/r3a2i7eLB0G6UwOC8C8sYVqa85vrlNIGqS15mni+L8M0VfpVGEqeM8MRmy
-         FWXu0cv2BRzDvv8ElDwMbRZARbvzICG1j03yCRgPD6hOCyYLR/2TknIpNTsbGvE7P0
-         fmlPPajrbiA2VBiSYe7x6n1Ak3jmtvjA9YdM1om4=
+        b=FgBqaOtX+T5GF1tLgRrA6AsyOAhYYFCLjA/dN2b+31uPf9QVMvZptJOGKpt/8oZjm
+         3ZzYufDsDqYCWS6zk82IZNN0dZ7VLjmlTtsUfc3jiqeN0EEWswykJEAAE71SuIn5RT
+         TZq0y7bzN2V9NVIh3lDxyOs1qtC+QdX/4vbLvJ+4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        stable@vger.kernel.org, Neil Armstrong <narmstrong@baylibre.com>,
+        Kevin Hilman <khilman@baylibre.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 247/639] NFSv4/flexfiles: Fix invalid deref in FF_LAYOUT_DEVID_NODE()
-Date:   Fri, 24 Jan 2020 10:26:57 +0100
-Message-Id: <20200124093117.707414697@linuxfoundation.org>
+Subject: [PATCH 4.19 263/639] soc: amlogic: gx-socinfo: Add mask for each SoC packages
+Date:   Fri, 24 Jan 2020 10:27:13 +0100
+Message-Id: <20200124093119.683197544@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
 References: <20200124093047.008739095@linuxfoundation.org>
@@ -60,71 +60,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Trond Myklebust <trond.myklebust@hammerspace.com>
+From: Neil Armstrong <narmstrong@baylibre.com>
 
-[ Upstream commit 108bb4afd351d65826648a47f11fa3104e250d9b ]
+[ Upstream commit dce47aed20c7de3ee2011b7a63e67f08e9dcfb5e ]
 
-If the attempt to instantiate the mirror's layout DS pointer failed,
-then that pointer may hold a value of type ERR_PTR(), so we need
-to check that before we dereference it.
+When updated IDs on f842c41adc04 ("amlogic: meson-gx-socinfo: Update soc ids")
+we introduced packages ids using the full 8bit value, but in the function
+socinfo_to_package_id() the id was filtered with the 0xf0 mask.
 
-Fixes: 65990d1afbd2d ("pNFS/flexfiles: Fix a deadlock on LAYOUTGET")
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+While the 0xf0 mask is valid for most board, it filters out the lower
+4 bits which encodes some characteristics of the chip.
+
+This patch moves the mask into the meson_gx_package_id table to be applied
+on each package name independently and add the correct mask for some
+specific entries.
+
+An example is the S905, in the vendor code the S905 is package_id
+different from 0x20, and S905M is exactly 0x20.
+
+Another example are the The Wetek Hub & Play2 boards using a S905-H
+variant, which is the S905 SoC with some licence bits enabled.
+These licence bits are encoded in the lower 4bits, so to detect
+the -H variant, we must detect the id == 0x3 with the 0xf mask.
+
+Fixes: f842c41adc04 ("amlogic: meson-gx-socinfo: Update soc ids")
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+Signed-off-by: Kevin Hilman <khilman@baylibre.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/flexfilelayout/flexfilelayout.h | 32 +++++++++++++++-----------
- 1 file changed, 19 insertions(+), 13 deletions(-)
+ drivers/soc/amlogic/meson-gx-socinfo.c | 32 ++++++++++++++------------
+ 1 file changed, 17 insertions(+), 15 deletions(-)
 
-diff --git a/fs/nfs/flexfilelayout/flexfilelayout.h b/fs/nfs/flexfilelayout/flexfilelayout.h
-index de50a342d5a50..2ac99124474cb 100644
---- a/fs/nfs/flexfilelayout/flexfilelayout.h
-+++ b/fs/nfs/flexfilelayout/flexfilelayout.h
-@@ -132,16 +132,6 @@ FF_LAYOUT_LSEG(struct pnfs_layout_segment *lseg)
- 			    generic_hdr);
- }
+diff --git a/drivers/soc/amlogic/meson-gx-socinfo.c b/drivers/soc/amlogic/meson-gx-socinfo.c
+index 37ea0a1c24c82..1ae339f5eadbd 100644
+--- a/drivers/soc/amlogic/meson-gx-socinfo.c
++++ b/drivers/soc/amlogic/meson-gx-socinfo.c
+@@ -43,20 +43,21 @@ static const struct meson_gx_package_id {
+ 	const char *name;
+ 	unsigned int major_id;
+ 	unsigned int pack_id;
++	unsigned int pack_mask;
+ } soc_packages[] = {
+-	{ "S905", 0x1f, 0 },
+-	{ "S905H", 0x1f, 0x13 },
+-	{ "S905M", 0x1f, 0x20 },
+-	{ "S905D", 0x21, 0 },
+-	{ "S905X", 0x21, 0x80 },
+-	{ "S905W", 0x21, 0xa0 },
+-	{ "S905L", 0x21, 0xc0 },
+-	{ "S905M2", 0x21, 0xe0 },
+-	{ "S912", 0x22, 0 },
+-	{ "962X", 0x24, 0x10 },
+-	{ "962E", 0x24, 0x20 },
+-	{ "A113X", 0x25, 0x37 },
+-	{ "A113D", 0x25, 0x22 },
++	{ "S905", 0x1f, 0, 0x20 }, /* pack_id != 0x20 */
++	{ "S905H", 0x1f, 0x3, 0xf }, /* pack_id & 0xf == 0x3 */
++	{ "S905M", 0x1f, 0x20, 0xf0 }, /* pack_id == 0x20 */
++	{ "S905D", 0x21, 0, 0xf0 },
++	{ "S905X", 0x21, 0x80, 0xf0 },
++	{ "S905W", 0x21, 0xa0, 0xf0 },
++	{ "S905L", 0x21, 0xc0, 0xf0 },
++	{ "S905M2", 0x21, 0xe0, 0xf0 },
++	{ "S912", 0x22, 0, 0x0 }, /* Only S912 is known for GXM */
++	{ "962X", 0x24, 0x10, 0xf0 },
++	{ "962E", 0x24, 0x20, 0xf0 },
++	{ "A113X", 0x25, 0x37, 0xff },
++	{ "A113D", 0x25, 0x22, 0xff },
+ };
  
--static inline struct nfs4_deviceid_node *
--FF_LAYOUT_DEVID_NODE(struct pnfs_layout_segment *lseg, u32 idx)
--{
--	if (idx >= FF_LAYOUT_LSEG(lseg)->mirror_array_cnt ||
--	    FF_LAYOUT_LSEG(lseg)->mirror_array[idx] == NULL ||
--	    FF_LAYOUT_LSEG(lseg)->mirror_array[idx]->mirror_ds == NULL)
--		return NULL;
--	return &FF_LAYOUT_LSEG(lseg)->mirror_array[idx]->mirror_ds->id_node;
--}
--
- static inline struct nfs4_ff_layout_ds *
- FF_LAYOUT_MIRROR_DS(struct nfs4_deviceid_node *node)
- {
-@@ -151,9 +141,25 @@ FF_LAYOUT_MIRROR_DS(struct nfs4_deviceid_node *node)
- static inline struct nfs4_ff_layout_mirror *
- FF_LAYOUT_COMP(struct pnfs_layout_segment *lseg, u32 idx)
- {
--	if (idx >= FF_LAYOUT_LSEG(lseg)->mirror_array_cnt)
--		return NULL;
--	return FF_LAYOUT_LSEG(lseg)->mirror_array[idx];
-+	struct nfs4_ff_layout_segment *fls = FF_LAYOUT_LSEG(lseg);
-+
-+	if (idx < fls->mirror_array_cnt)
-+		return fls->mirror_array[idx];
-+	return NULL;
-+}
-+
-+static inline struct nfs4_deviceid_node *
-+FF_LAYOUT_DEVID_NODE(struct pnfs_layout_segment *lseg, u32 idx)
-+{
-+	struct nfs4_ff_layout_mirror *mirror = FF_LAYOUT_COMP(lseg, idx);
-+
-+	if (mirror != NULL) {
-+		struct nfs4_ff_layout_ds *mirror_ds = mirror->mirror_ds;
-+
-+		if (!IS_ERR_OR_NULL(mirror_ds))
-+			return &mirror_ds->id_node;
-+	}
-+	return NULL;
- }
+ static inline unsigned int socinfo_to_major(u32 socinfo)
+@@ -81,13 +82,14 @@ static inline unsigned int socinfo_to_misc(u32 socinfo)
  
- static inline u32
+ static const char *socinfo_to_package_id(u32 socinfo)
+ {
+-	unsigned int pack = socinfo_to_pack(socinfo) & 0xf0;
++	unsigned int pack = socinfo_to_pack(socinfo);
+ 	unsigned int major = socinfo_to_major(socinfo);
+ 	int i;
+ 
+ 	for (i = 0 ; i < ARRAY_SIZE(soc_packages) ; ++i) {
+ 		if (soc_packages[i].major_id == major &&
+-		    soc_packages[i].pack_id == pack)
++		    soc_packages[i].pack_id ==
++				(pack & soc_packages[i].pack_mask))
+ 			return soc_packages[i].name;
+ 	}
+ 
 -- 
 2.20.1
 
