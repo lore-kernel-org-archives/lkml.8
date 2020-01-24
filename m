@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49C56C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:24:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39ACFC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:25:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D55B20704
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:24:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 062762077C
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:25:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579865096;
-	bh=VEZtmNLFpHLvi2OvZjH/UwHC1YGmIQ7FMcF0L55FTGo=;
+	s=default; t=1579865100;
+	bh=3nooC2UunGL8B2T106tkeTkCAOGTWVThgtaw3AM+Pds=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=W/aYwu4zZ6sdi6d8i74/rV8H8Nv8j3oEY34DXnJo+QFTAcuFnaDjV0uPsPKqpCAvn
-	 n4PWUD3lvmBwN2pWjy4zHMf+8gHfvLSgqRWlrSt/SF345i02UtY5xJirdmRejcoiq9
-	 YVH4kTK7/helNYdfXDUM9K1FYq7HOzEimnEigmwI=
+	b=aGQj2gfNkmVgyewaxA0ILaEBHmVzbzJMvQbdRaoPA9Q3x6LoncZx7mT+LStwon8Ua
+	 mO+h50wA6dvjL4GclkbjgxLOwz26qGizPDhQ4uSHaFjLgHWbvbFtWOFurbr7FnAMq8
+	 KA5Ss562RCA4dnev5ZmGxJIBKYUCSz1bGVNmafq0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391434AbgAXLYy (ORCPT
+        id S2391447AbgAXLY7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:24:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38622 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 06:24:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38742 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403813AbgAXLYw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:24:52 -0500
+        id S2391123AbgAXLY4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:24:56 -0500
 Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DB7CE206D4;
-        Fri, 24 Jan 2020 11:24:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 66271206D4;
+        Fri, 24 Jan 2020 11:24:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579865092;
-        bh=VEZtmNLFpHLvi2OvZjH/UwHC1YGmIQ7FMcF0L55FTGo=;
+        s=default; t=1579865096;
+        bh=3nooC2UunGL8B2T106tkeTkCAOGTWVThgtaw3AM+Pds=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=im44tytSHBOX6PvVaveDl2/ADemigCwcI2csYQX/VqfF+fUzdUghpcwF8afZusJ1V
-         ZHWpVOzbhQFkpWfM4CgrY99I1jViFhnPLWYVEKlUNSjoAPzLWeysJ6B+8Lz05xvM0P
-         YDfjLOMZyUPdMLwQn7cw2gMOZovwvvmWaKXYfAws=
+        b=lEU7UplIkyJCQACHNXC3qUyqrc9AMwHJUq+oF6R5F2DeswdEwB+TpjDuUS1eUHRi4
+         eEl/g/6/8aFCAfG0JoP2oEyXON7SwRSDMk3xHzi7PJpqpJv1kbaB3/CMs/KtkG5sOg
+         Oq7WQy82YCfllCzf9+0DiRyAzvokiCF4YqFt+dpE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Julian Wiedmann <jwi@linux.ibm.com>,
-        Ursula Braun <ubraun@linux.ibm.com>,
+        stable@vger.kernel.org, Ariel Elior <ariel.elior@marvell.com>,
+        Michal Kalderon <michal.kalderon@marvell.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 438/639] net/af_iucv: always register net_device notifier
-Date:   Fri, 24 Jan 2020 10:30:08 +0100
-Message-Id: <20200124093141.885704259@linuxfoundation.org>
+Subject: [PATCH 4.19 429/639] qed: iWARP - fix uninitialized callback
+Date:   Fri, 24 Jan 2020 10:29:59 +0100
+Message-Id: <20200124093140.761410114@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
 References: <20200124093047.008739095@linuxfoundation.org>
@@ -61,82 +61,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Julian Wiedmann <jwi@linux.ibm.com>
+From: Michal Kalderon <michal.kalderon@marvell.com>
 
-[ Upstream commit 06996c1d4088a0d5f3e7789d7f96b4653cc947cc ]
+[ Upstream commit 43cf40d93fadbb0d3edf0942a4612f8ff67478a1 ]
 
-Even when running as VM guest (ie pr_iucv != NULL), af_iucv can still
-open HiperTransport-based connections. For robust operation these
-connections require the af_iucv_netdev_notifier, so register it
-unconditionally.
+Fix uninitialized variable warning by static checker.
 
-Also handle any error that register_netdevice_notifier() returns.
-
-Fixes: 9fbd87d41392 ("af_iucv: handle netdev events")
-Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
-Reviewed-by: Ursula Braun <ubraun@linux.ibm.com>
+Fixes: ae3488ff37dc ("qed: Add ll2 connection for processing unaligned MPA packets")
+Signed-off-by: Ariel Elior <ariel.elior@marvell.com>
+Signed-off-by: Michal Kalderon <michal.kalderon@marvell.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/iucv/af_iucv.c | 27 ++++++++++++++++++++-------
- 1 file changed, 20 insertions(+), 7 deletions(-)
+ drivers/net/ethernet/qlogic/qed/qed_iwarp.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/net/iucv/af_iucv.c b/net/iucv/af_iucv.c
-index e07daee1227c3..23a1002ed86dd 100644
---- a/net/iucv/af_iucv.c
-+++ b/net/iucv/af_iucv.c
-@@ -2465,6 +2465,13 @@ out:
- 	return err;
- }
+diff --git a/drivers/net/ethernet/qlogic/qed/qed_iwarp.c b/drivers/net/ethernet/qlogic/qed/qed_iwarp.c
+index c77babd0ef952..39787bb885c86 100644
+--- a/drivers/net/ethernet/qlogic/qed/qed_iwarp.c
++++ b/drivers/net/ethernet/qlogic/qed/qed_iwarp.c
+@@ -2641,6 +2641,7 @@ qed_iwarp_ll2_start(struct qed_hwfn *p_hwfn,
+ 	cbs.rx_release_cb = qed_iwarp_ll2_rel_rx_pkt;
+ 	cbs.tx_comp_cb = qed_iwarp_ll2_comp_tx_pkt;
+ 	cbs.tx_release_cb = qed_iwarp_ll2_rel_tx_pkt;
++	cbs.slowpath_cb = NULL;
+ 	cbs.cookie = p_hwfn;
  
-+static void afiucv_iucv_exit(void)
-+{
-+	device_unregister(af_iucv_dev);
-+	driver_unregister(&af_iucv_driver);
-+	pr_iucv->iucv_unregister(&af_iucv_handler, 0);
-+}
-+
- static int __init afiucv_init(void)
- {
- 	int err;
-@@ -2498,11 +2505,18 @@ static int __init afiucv_init(void)
- 		err = afiucv_iucv_init();
- 		if (err)
- 			goto out_sock;
--	} else
--		register_netdevice_notifier(&afiucv_netdev_notifier);
-+	}
-+
-+	err = register_netdevice_notifier(&afiucv_netdev_notifier);
-+	if (err)
-+		goto out_notifier;
-+
- 	dev_add_pack(&iucv_packet_type);
- 	return 0;
- 
-+out_notifier:
-+	if (pr_iucv)
-+		afiucv_iucv_exit();
- out_sock:
- 	sock_unregister(PF_IUCV);
- out_proto:
-@@ -2516,12 +2530,11 @@ out:
- static void __exit afiucv_exit(void)
- {
- 	if (pr_iucv) {
--		device_unregister(af_iucv_dev);
--		driver_unregister(&af_iucv_driver);
--		pr_iucv->iucv_unregister(&af_iucv_handler, 0);
-+		afiucv_iucv_exit();
- 		symbol_put(iucv_if);
--	} else
--		unregister_netdevice_notifier(&afiucv_netdev_notifier);
-+	}
-+
-+	unregister_netdevice_notifier(&afiucv_netdev_notifier);
- 	dev_remove_pack(&iucv_packet_type);
- 	sock_unregister(PF_IUCV);
- 	proto_unregister(&iucv_proto);
+ 	memset(&data, 0, sizeof(data));
 -- 
 2.20.1
 
