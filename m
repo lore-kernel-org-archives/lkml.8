@@ -2,307 +2,136 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04D30C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:10:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C20EC32771
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:11:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C48F12075D
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:10:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EB6E2071A
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:11:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=shipmail.org header.i=@shipmail.org header.b="i0diS+/H"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EaAOe95p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730350AbgAXJKJ (ORCPT
+        id S1730192AbgAXJLn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 04:10:09 -0500
-Received: from pio-pvt-msa1.bahnhof.se ([79.136.2.40]:48812 "EHLO
-        pio-pvt-msa1.bahnhof.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730260AbgAXJKE (ORCPT
+        Fri, 24 Jan 2020 04:11:43 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:34458 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729575AbgAXJLn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 04:10:04 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by pio-pvt-msa1.bahnhof.se (Postfix) with ESMTP id 4771B4036F;
-        Fri, 24 Jan 2020 10:10:03 +0100 (CET)
-Authentication-Results: pio-pvt-msa1.bahnhof.se;
-        dkim=pass (1024-bit key; unprotected) header.d=shipmail.org header.i=@shipmail.org header.b="i0diS+/H";
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at bahnhof.se
-Received: from pio-pvt-msa1.bahnhof.se ([127.0.0.1])
-        by localhost (pio-pvt-msa1.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id Jb2RghV_gdqP; Fri, 24 Jan 2020 10:09:50 +0100 (CET)
-Received: from mail1.shipmail.org (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
-        (Authenticated sender: mb878879)
-        by pio-pvt-msa1.bahnhof.se (Postfix) with ESMTPA id 8F3A6403BE;
-        Fri, 24 Jan 2020 10:09:50 +0100 (CET)
-Received: from localhost.localdomain.localdomain (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
-        by mail1.shipmail.org (Postfix) with ESMTPSA id ACDA9360715;
-        Fri, 24 Jan 2020 10:09:48 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=shipmail.org; s=mail;
-        t=1579856988; bh=8KLBR9TBrfiTxB+TxYQppBVTvQzBhVZII8lk7SbY+Ss=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=i0diS+/HJz33BQje/Kf/vWP167MrRTz6fnKAdRhZSxmDMdMK7scMbZFql/PyhZ74i
-         KZdk2iVXWVv9SJy06PMkvV2DJLkap+qvYqAZU2uFWhUQp3PvEvukY9c4mKMYdT8Zz1
-         l8o2TycQb6osxfL9pwjrSxm4YA3L3Ng33gyFu+Gw=
-From:   =?UTF-8?q?Thomas=20Hellstr=C3=B6m=20=28VMware=29?= 
-        <thomas_os@shipmail.org>
-To:     linux-mm@kvack.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-Cc:     pv-drivers@vmware.com, linux-graphics-maintainer@vmware.com,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Ralph Campbell <rcampbell@nvidia.com>,
-        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Roland Scheidegger <sroland@vmware.com>
-Subject: [PATCH 8/9] drm/vmwgfx: Introduce a huge page aligning TTM range manager
-Date:   Fri, 24 Jan 2020 10:09:39 +0100
-Message-Id: <20200124090940.26571-9-thomas_os@shipmail.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20200124090940.26571-1-thomas_os@shipmail.org>
-References: <20200124090940.26571-1-thomas_os@shipmail.org>
+        Fri, 24 Jan 2020 04:11:43 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579857101;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=4rW7myJJ2GuW+fTx8x7EBJbhNaqxnzwmpTqYDBQ5SZU=;
+        b=EaAOe95p3edOD5PbIwBI2TS/KwR7AuUqH40ElfmkMq04vj+NcudIYWqeGRiwHYVS1SoEtN
+        OtsOwceZ9vV7CacwExZ0hQcjqMoWnK0+IMRAvj4hnpOs4j0uwoGbt+e9kl4JEvfklWeIqx
+        Lu/fKR78Q8C9CVJ9JlgAHPex9ohu7J0=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-39-G_QB2jjzPBSHoBQsZVvXYw-1; Fri, 24 Jan 2020 04:11:39 -0500
+X-MC-Unique: G_QB2jjzPBSHoBQsZVvXYw-1
+Received: by mail-wm1-f69.google.com with SMTP id m21so422173wmg.6
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jan 2020 01:11:39 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=4rW7myJJ2GuW+fTx8x7EBJbhNaqxnzwmpTqYDBQ5SZU=;
+        b=iiLSW8zsTX2CG073OJ9AJDYbpKXVuiLA8jSrDoDx53gyiaXhk8DtwXsQHRoPDqd8aU
+         jtbL7cLLSfTQnOr216u57JleyUV01qh0t4eRLr70shqCEoQUyDDn2igD4rjGk8+DLoTe
+         /XHAgX4oPOz9MWNpXB+uyyksJHaXqOIT8qOIrXpaSm7apjSz+Nb8rS7GfDzbLQnJ67Q2
+         gus/TbKnUco8og2o8r3mcTzYqqV12LYq5t/OPk0g9aRZ1q0qSUq6GhwlgCLiOsR9gHnm
+         gHBxVyguGgXmoNbX0NAI2qc6pYt7mducyOBeJwPK9+9gn/kmh2ZMlbCLTnYMISdPswhV
+         4beQ==
+X-Gm-Message-State: APjAAAUiNzow+vAN6Hhu6NjjTXib6QNCNLL+FVjeoYPTS8j/hwaVo0t8
+        U3dBOmb4qKE2Q70ONW2RoUM8+cVNovO21lSaMFVP5WssutkwUJ43QCdG9d6r98wM8k1muKFBbQq
+        GnoFS/8bKOI+TYwoLWPSLnxk7
+X-Received: by 2002:adf:f885:: with SMTP id u5mr3083556wrp.359.1579857097051;
+        Fri, 24 Jan 2020 01:11:37 -0800 (PST)
+X-Google-Smtp-Source: APXvYqwHTA1utlLqgh3JNj/13z6suNbkceqhb5JYG+L0X3nT5kjvdpBpX5mJygE3kQEHccGMvWn7Cw==
+X-Received: by 2002:adf:f885:: with SMTP id u5mr3083521wrp.359.1579857096726;
+        Fri, 24 Jan 2020 01:11:36 -0800 (PST)
+Received: from localhost.localdomain ([109.38.141.136])
+        by smtp.gmail.com with ESMTPSA id g2sm6536988wrw.76.2020.01.24.01.11.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 24 Jan 2020 01:11:35 -0800 (PST)
+Subject: Re: [v3] x86/tsc: Unset TSC_KNOWN_FREQ and TSC_RELIABLE flags on
+ Intel Bay Trail SoC
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        vipul kumar <vipulk0511@gmail.com>
+Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        linux-kernel@vger.kernel.org, Stable <stable@vger.kernel.org>,
+        Srikanth Krishnakar <Srikanth_Krishnakar@mentor.com>,
+        Cedric Hombourger <Cedric_Hombourger@mentor.com>,
+        x86@kernel.org, Len Brown <len.brown@intel.com>,
+        Vipul Kumar <vipul_kumar@mentor.com>
+References: <1579617717-4098-1-git-send-email-vipulk0511@gmail.com>
+ <87eevs7lfd.fsf@nanos.tec.linutronix.de>
+ <CADdC98RJpsvu_zWehNGDDN=W11rD11NSPaodg-zuaXsHuOJYTQ@mail.gmail.com>
+ <878slzeeim.fsf@nanos.tec.linutronix.de>
+ <CADdC98TE4oNWZyEsqXzr+zJtfdTTOyeeuHqu1u04X_ktLHo-Hg@mail.gmail.com>
+ <20200123144108.GU32742@smile.fi.intel.com>
+ <df04f43d-8c6d-7602-cb50-535b85cf2aaa@redhat.com>
+ <87iml11ccf.fsf@nanos.tec.linutronix.de>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <c06260e3-bd19-bf3c-89f7-d36bdb9a5b20@redhat.com>
+Date:   Fri, 24 Jan 2020 10:11:34 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <87iml11ccf.fsf@nanos.tec.linutronix.de>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Hellstrom <thellstrom@vmware.com>
+Hi,
 
-Using huge page-table entries requires that the physical address of the
-start of a buffer object is huge page size aligned.
-Make a special version of the TTM range manager that accomplishes this,
-but falls back to a smaller page size alignment (PUD->PMD, PMD->NORMAL)
-to avoid eviction.
-If other drivers want to use it in the future, it can be made a
-TTM generic helper. Note that drivers can force eviction for a certain
-alignment by assigning the TTM GPU alignment correspondingly.
+On 1/24/20 9:35 AM, Thomas Gleixner wrote:
+> Hans,
+> 
+> Hans de Goede <hdegoede@redhat.com> writes:
+> 
+>> Hi,
+>>
+>> Sorry for top posting, but this is a long and almost unreadable thread ...
+>>
+>> So it seems to me that a better fix would be to change the freq_desc_byt struct from:
+>>
+>> static const struct freq_desc freq_desc_byt = {
+>>           1, { 83300, 100000, 133300, 116700, 80000, 0, 0, 0 }
+>> };
+>>
+>> to:
+>>
+>> static const struct freq_desc freq_desc_byt = {
+>>           1, { 83333, 100000, 133300, 116700, 80000, 0, 0, 0 }
+>> };
+>>
+>> That should give us the right TSC frequency without needing to mess with
+>> the TSC_KNOWN_FREQ and TSC_RELIABLE flags.
+> 
+> Where does that number come from? Just math?
 
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: "Matthew Wilcox (Oracle)" <willy@infradead.org>
-Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Cc: Ralph Campbell <rcampbell@nvidia.com>
-Cc: "Jérôme Glisse" <jglisse@redhat.com>
-Cc: "Christian König" <christian.koenig@amd.com>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Signed-off-by: Thomas Hellstrom <thellstrom@vmware.com>
-Reviewed-by: Roland Scheidegger <sroland@vmware.com>
----
- drivers/gpu/drm/vmwgfx/Makefile     |   1 +
- drivers/gpu/drm/vmwgfx/vmwgfx_drv.h |   7 ++
- drivers/gpu/drm/vmwgfx/vmwgfx_thp.c | 166 ++++++++++++++++++++++++++++
- 3 files changed, 174 insertions(+)
- create mode 100644 drivers/gpu/drm/vmwgfx/vmwgfx_thp.c
+Yes just math, but perhaps the Intel folks can see if they can find some
+datasheet to back this up ?
 
-diff --git a/drivers/gpu/drm/vmwgfx/Makefile b/drivers/gpu/drm/vmwgfx/Makefile
-index c877a21a0739..421dd2a497a5 100644
---- a/drivers/gpu/drm/vmwgfx/Makefile
-+++ b/drivers/gpu/drm/vmwgfx/Makefile
-@@ -11,4 +11,5 @@ vmwgfx-y := vmwgfx_execbuf.o vmwgfx_gmr.o vmwgfx_kms.o vmwgfx_drv.o \
- 	    vmwgfx_validation.o vmwgfx_page_dirty.o \
- 	    ttm_object.o ttm_lock.o
- 
-+vmwgfx-$(CONFIG_TRANSPARENT_HUGEPAGE) += vmwgfx_thp.o
- obj-$(CONFIG_DRM_VMWGFX) := vmwgfx.o
-diff --git a/drivers/gpu/drm/vmwgfx/vmwgfx_drv.h b/drivers/gpu/drm/vmwgfx/vmwgfx_drv.h
-index 82d86f2d2569..06267184aa0a 100644
---- a/drivers/gpu/drm/vmwgfx/vmwgfx_drv.h
-+++ b/drivers/gpu/drm/vmwgfx/vmwgfx_drv.h
-@@ -1433,6 +1433,13 @@ vm_fault_t vmw_bo_vm_huge_fault(struct vm_fault *vmf,
- 				enum page_entry_size pe_size);
- #endif
- 
-+/* Transparent hugepage support - vmwgfx_thp.c */
-+#ifdef CONFIG_TRANSPARENT_HUGEPAGE
-+extern const struct ttm_mem_type_manager_func vmw_thp_func;
-+#else
-+#define vmw_thp_func ttm_bo_manager_func
-+#endif
-+
- /**
-  * VMW_DEBUG_KMS - Debug output for kernel mode-setting
-  *
-diff --git a/drivers/gpu/drm/vmwgfx/vmwgfx_thp.c b/drivers/gpu/drm/vmwgfx/vmwgfx_thp.c
-new file mode 100644
-index 000000000000..b7c816ba7166
---- /dev/null
-+++ b/drivers/gpu/drm/vmwgfx/vmwgfx_thp.c
-@@ -0,0 +1,166 @@
-+// SPDX-License-Identifier: GPL-2.0 OR MIT
-+/*
-+ * Huge page-table-entry support for IO memory.
-+ *
-+ * Copyright (C) 2007-2019 Vmware, Inc. All rights reservedd.
-+ */
-+#include "vmwgfx_drv.h"
-+#include <drm/ttm/ttm_module.h>
-+#include <drm/ttm/ttm_bo_driver.h>
-+#include <drm/ttm/ttm_placement.h>
-+
-+/**
-+ * struct vmw_thp_manager - Range manager implementing huge page alignment
-+ *
-+ * @mm: The underlying range manager. Protected by @lock.
-+ * @lock: Manager lock.
-+ */
-+struct vmw_thp_manager {
-+	struct drm_mm mm;
-+	spinlock_t lock;
-+};
-+
-+static int vmw_thp_insert_aligned(struct drm_mm *mm, struct drm_mm_node *node,
-+				  unsigned long align_pages,
-+				  const struct ttm_place *place,
-+				  struct ttm_mem_reg *mem,
-+				  unsigned long lpfn,
-+				  enum drm_mm_insert_mode mode)
-+{
-+	if (align_pages >= mem->page_alignment &&
-+	    (!mem->page_alignment || align_pages % mem->page_alignment == 0)) {
-+		return drm_mm_insert_node_in_range(mm, node,
-+						   mem->num_pages,
-+						   align_pages, 0,
-+						   place->fpfn, lpfn, mode);
-+	}
-+
-+	return -ENOSPC;
-+}
-+
-+static int vmw_thp_get_node(struct ttm_mem_type_manager *man,
-+			    struct ttm_buffer_object *bo,
-+			    const struct ttm_place *place,
-+			    struct ttm_mem_reg *mem)
-+{
-+	struct vmw_thp_manager *rman = (struct vmw_thp_manager *) man->priv;
-+	struct drm_mm *mm = &rman->mm;
-+	struct drm_mm_node *node;
-+	unsigned long align_pages;
-+	unsigned long lpfn;
-+	enum drm_mm_insert_mode mode = DRM_MM_INSERT_BEST;
-+	int ret;
-+
-+	node = kzalloc(sizeof(*node), GFP_KERNEL);
-+	if (!node)
-+		return -ENOMEM;
-+
-+	lpfn = place->lpfn;
-+	if (!lpfn)
-+		lpfn = man->size;
-+
-+	mode = DRM_MM_INSERT_BEST;
-+	if (place->flags & TTM_PL_FLAG_TOPDOWN)
-+		mode = DRM_MM_INSERT_HIGH;
-+
-+	spin_lock(&rman->lock);
-+	if (IS_ENABLED(CONFIG_HAVE_ARCH_TRANSPARENT_HUGEPAGE_PUD)) {
-+		align_pages = (HPAGE_PUD_SIZE >> PAGE_SHIFT);
-+		if (mem->num_pages >= align_pages) {
-+			ret = vmw_thp_insert_aligned(mm, node, align_pages,
-+						     place, mem, lpfn, mode);
-+			if (!ret)
-+				goto found_unlock;
-+		}
-+	}
-+
-+	align_pages = (HPAGE_PMD_SIZE >> PAGE_SHIFT);
-+	if (mem->num_pages >= align_pages) {
-+		ret = vmw_thp_insert_aligned(mm, node, align_pages, place, mem,
-+					     lpfn, mode);
-+		if (!ret)
-+			goto found_unlock;
-+	}
-+
-+	ret = drm_mm_insert_node_in_range(mm, node, mem->num_pages,
-+					  mem->page_alignment, 0,
-+					  place->fpfn, lpfn, mode);
-+found_unlock:
-+	spin_unlock(&rman->lock);
-+
-+	if (unlikely(ret)) {
-+		kfree(node);
-+	} else {
-+		mem->mm_node = node;
-+		mem->start = node->start;
-+	}
-+
-+	return 0;
-+}
-+
-+
-+
-+static void vmw_thp_put_node(struct ttm_mem_type_manager *man,
-+			     struct ttm_mem_reg *mem)
-+{
-+	struct vmw_thp_manager *rman = (struct vmw_thp_manager *) man->priv;
-+
-+	if (mem->mm_node) {
-+		spin_lock(&rman->lock);
-+		drm_mm_remove_node(mem->mm_node);
-+		spin_unlock(&rman->lock);
-+
-+		kfree(mem->mm_node);
-+		mem->mm_node = NULL;
-+	}
-+}
-+
-+static int vmw_thp_init(struct ttm_mem_type_manager *man,
-+			unsigned long p_size)
-+{
-+	struct vmw_thp_manager *rman;
-+
-+	rman = kzalloc(sizeof(*rman), GFP_KERNEL);
-+	if (!rman)
-+		return -ENOMEM;
-+
-+	drm_mm_init(&rman->mm, 0, p_size);
-+	spin_lock_init(&rman->lock);
-+	man->priv = rman;
-+	return 0;
-+}
-+
-+static int vmw_thp_takedown(struct ttm_mem_type_manager *man)
-+{
-+	struct vmw_thp_manager *rman = (struct vmw_thp_manager *) man->priv;
-+	struct drm_mm *mm = &rman->mm;
-+
-+	spin_lock(&rman->lock);
-+	if (drm_mm_clean(mm)) {
-+		drm_mm_takedown(mm);
-+		spin_unlock(&rman->lock);
-+		kfree(rman);
-+		man->priv = NULL;
-+		return 0;
-+	}
-+	spin_unlock(&rman->lock);
-+	return -EBUSY;
-+}
-+
-+static void vmw_thp_debug(struct ttm_mem_type_manager *man,
-+			  struct drm_printer *printer)
-+{
-+	struct vmw_thp_manager *rman = (struct vmw_thp_manager *) man->priv;
-+
-+	spin_lock(&rman->lock);
-+	drm_mm_print(&rman->mm, printer);
-+	spin_unlock(&rman->lock);
-+}
-+
-+const struct ttm_mem_type_manager_func vmw_thp_func = {
-+	.init = vmw_thp_init,
-+	.takedown = vmw_thp_takedown,
-+	.get_node = vmw_thp_get_node,
-+	.put_node = vmw_thp_put_node,
-+	.debug = vmw_thp_debug
-+};
--- 
-2.21.0
+I mean if the calculated freq is off by that much, then chances are that
+my solution actuallly is not only "just math" but also correct :)
+
+Regards,
+
+Hans
 
