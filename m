@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4B35C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:29:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6745C35242
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:30:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1BAA2075D
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:29:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A85232075D
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:30:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579876198;
-	bh=0ef1BWJcFDjFGtlT09zlYGPAEVc9MTH5OEySSi1l4b4=;
+	s=default; t=1579876201;
+	bh=gzerEBnobQSk9HW2tP5Ss82Ye2lwxuasUMh0JmOVQeQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=O0klCwN9Q+nPG6OadqB1IHROCzsZOqbIELD/Af0WYhN8w9oTrwPTmGvGq7AQQ8XkR
-	 cZ2PFaKdWC/bYBryFn1ajp2u3xNhu7sH/bZIzdwmsvv5OTGLhxRDpT5crE95lLCD4r
-	 oqs7cMAB8veEWT1FDC0FFeA2V4Aw+Ls1X82zQQ5I=
+	b=PdSeODJzo7CSjycTHb6nqWQpgQNp1P/xPK0MfLOErBIwYwl2GbufShOxLM/272Zhi
+	 mv2EdNfIdYnPJ0FMYpFGJsQpKF+nvKnNi7WnmEUQRf0CDkSixhpHGB4alNCcsbegQO
+	 N0QR6IqQXLPx+cG8k8D+lcVDkvKNubBPly9BnCTM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391655AbgAXO35 (ORCPT
+        id S2392149AbgAXOUv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 09:29:57 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42214 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392053AbgAXOUv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 24 Jan 2020 09:20:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41862 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726080AbgAXOUj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 09:20:39 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7E313218AC;
-        Fri, 24 Jan 2020 14:20:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E8F092467F;
+        Fri, 24 Jan 2020 14:20:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579875651;
-        bh=0ef1BWJcFDjFGtlT09zlYGPAEVc9MTH5OEySSi1l4b4=;
+        s=default; t=1579875638;
+        bh=gzerEBnobQSk9HW2tP5Ss82Ye2lwxuasUMh0JmOVQeQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SljaRYiePPAcPd24+3dPjzViDiatPCugD3exhYfLcS5z6l3lSI9DrQD4qkvHdQ9xB
-         cDUwkVRZVcb2W+DO8FOgaSx3XOksdxN/AfwBmMVju332RBqJnDr1lJ+fBvGVv3oq5X
-         up/wzcj5vI/yB/rn9uekD26CqJkVQFIShxXOqnsU=
+        b=zcwlOFtgjtFZUZLJG7z84QvRy76q0D/6yAWFlCq64Yuja2GljrKG21hwsV5xupV1c
+         ZfTF0I3CX43xnY7T0z8xHrAUxuvp4XfaH+oEV/UuKVw01t4ic67veoK79jalMibiJG
+         izcvvH5mcqC1cWiglOfZuTbjEAbW+ygfO3rVp08M=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Helge Deller <deller@gmx.de>, Sasha Levin <sashal@kernel.org>,
-        linux-parisc@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 33/56] parisc: Use proper printk format for resource_size_t
-Date:   Fri, 24 Jan 2020 09:19:49 -0500
-Message-Id: <20200124142012.29752-33-sashal@kernel.org>
+Cc:     Manfred Rudigier <manfred.rudigier@omicronenergy.com>,
+        Aaron Brown <aaron.f.brown@intel.com>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 22/56] igb: Fix SGMII SFP module discovery for 100FX/LX.
+Date:   Fri, 24 Jan 2020 09:19:38 -0500
+Message-Id: <20200124142012.29752-22-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200124142012.29752-1-sashal@kernel.org>
 References: <20200124142012.29752-1-sashal@kernel.org>
@@ -59,41 +61,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Krzysztof Kozlowski <krzk@kernel.org>
+From: Manfred Rudigier <manfred.rudigier@omicronenergy.com>
 
-[ Upstream commit 4f80b70e1953cb846dbdd1ce72cb17333d4c8d11 ]
+[ Upstream commit 5365ec1aeff5b9f2962a9c9b31d63f9dad7e0e2d ]
 
-resource_size_t should be printed with its own size-independent format
-to fix warnings when compiling on 64-bit platform (e.g. with
-COMPILE_TEST):
+Changing the link mode should also be done for 100BaseFX SGMII modules,
+otherwise they just don't work when the default link mode in CTRL_EXT
+coming from the EEPROM is SERDES.
 
-    arch/parisc/kernel/drivers.c: In function 'print_parisc_device':
-    arch/parisc/kernel/drivers.c:892:9: warning:
-        format '%p' expects argument of type 'void *',
-        but argument 4 has type 'resource_size_t {aka unsigned int}' [-Wformat=]
+Additionally 100Base-LX SGMII SFP modules are also supported now, which
+was not the case before.
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-Signed-off-by: Helge Deller <deller@gmx.de>
+Tested with an i210 using Flexoptix S.1303.2M.G 100FX and
+S.1303.10.G 100LX SGMII SFP modules.
+
+Signed-off-by: Manfred Rudigier <manfred.rudigier@omicronenergy.com>
+Tested-by: Aaron Brown <aaron.f.brown@intel.com>
+Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/parisc/kernel/drivers.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/intel/igb/e1000_82575.c | 8 ++------
+ drivers/net/ethernet/intel/igb/igb_ethtool.c | 2 +-
+ 2 files changed, 3 insertions(+), 7 deletions(-)
 
-diff --git a/arch/parisc/kernel/drivers.c b/arch/parisc/kernel/drivers.c
-index a1a5e4c59e6b2..4d5ad9cb0f692 100644
---- a/arch/parisc/kernel/drivers.c
-+++ b/arch/parisc/kernel/drivers.c
-@@ -868,8 +868,8 @@ static void print_parisc_device(struct parisc_device *dev)
- 	static int count;
+diff --git a/drivers/net/ethernet/intel/igb/e1000_82575.c b/drivers/net/ethernet/intel/igb/e1000_82575.c
+index bafdcf70a353d..fdab974b245b7 100644
+--- a/drivers/net/ethernet/intel/igb/e1000_82575.c
++++ b/drivers/net/ethernet/intel/igb/e1000_82575.c
+@@ -530,7 +530,7 @@ static s32 igb_set_sfp_media_type_82575(struct e1000_hw *hw)
+ 		dev_spec->module_plugged = true;
+ 		if (eth_flags->e1000_base_lx || eth_flags->e1000_base_sx) {
+ 			hw->phy.media_type = e1000_media_type_internal_serdes;
+-		} else if (eth_flags->e100_base_fx) {
++		} else if (eth_flags->e100_base_fx || eth_flags->e100_base_lx) {
+ 			dev_spec->sgmii_active = true;
+ 			hw->phy.media_type = e1000_media_type_internal_serdes;
+ 		} else if (eth_flags->e1000_base_t) {
+@@ -657,14 +657,10 @@ static s32 igb_get_invariants_82575(struct e1000_hw *hw)
+ 			break;
+ 		}
  
- 	print_pa_hwpath(dev, hw_path);
--	pr_info("%d. %s at 0x%px [%s] { %d, 0x%x, 0x%.3x, 0x%.5x }",
--		++count, dev->name, (void*) dev->hpa.start, hw_path, dev->id.hw_type,
-+	pr_info("%d. %s at %pap [%s] { %d, 0x%x, 0x%.3x, 0x%.5x }",
-+		++count, dev->name, &(dev->hpa.start), hw_path, dev->id.hw_type,
- 		dev->id.hversion_rev, dev->id.hversion, dev->id.sversion);
+-		/* do not change link mode for 100BaseFX */
+-		if (dev_spec->eth_flags.e100_base_fx)
+-			break;
+-
+ 		/* change current link mode setting */
+ 		ctrl_ext &= ~E1000_CTRL_EXT_LINK_MODE_MASK;
  
- 	if (dev->num_addrs) {
+-		if (hw->phy.media_type == e1000_media_type_copper)
++		if (dev_spec->sgmii_active)
+ 			ctrl_ext |= E1000_CTRL_EXT_LINK_MODE_SGMII;
+ 		else
+ 			ctrl_ext |= E1000_CTRL_EXT_LINK_MODE_PCIE_SERDES;
+diff --git a/drivers/net/ethernet/intel/igb/igb_ethtool.c b/drivers/net/ethernet/intel/igb/igb_ethtool.c
+index 5acf3b743876a..50954e4449854 100644
+--- a/drivers/net/ethernet/intel/igb/igb_ethtool.c
++++ b/drivers/net/ethernet/intel/igb/igb_ethtool.c
+@@ -181,7 +181,7 @@ static int igb_get_link_ksettings(struct net_device *netdev,
+ 				advertising &= ~ADVERTISED_1000baseKX_Full;
+ 			}
+ 		}
+-		if (eth_flags->e100_base_fx) {
++		if (eth_flags->e100_base_fx || eth_flags->e100_base_lx) {
+ 			supported |= SUPPORTED_100baseT_Full;
+ 			advertising |= ADVERTISED_100baseT_Full;
+ 		}
 -- 
 2.20.1
 
