@@ -4,179 +4,128 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ED35C32771
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:54:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C92D0C35242
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:54:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0CC1420704
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:54:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0306206F0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:54:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="u4dq7nN/"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="bwZsiipU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733101AbgAXLyn (ORCPT
+        id S1733301AbgAXLyp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:54:43 -0500
-Received: from pegase1.c-s.fr ([93.17.236.30]:64229 "EHLO pegase1.c-s.fr"
+        Fri, 24 Jan 2020 06:54:45 -0500
+Received: from pegase1.c-s.fr ([93.17.236.30]:4143 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730785AbgAXLym (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:54:42 -0500
+        id S1730785AbgAXLyo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:54:44 -0500
 Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 483yHM4w5Lz9tyN4;
-        Fri, 24 Jan 2020 12:54:39 +0100 (CET)
+        by localhost (Postfix) with ESMTP id 483yHP4WVnz9tyN8;
+        Fri, 24 Jan 2020 12:54:41 +0100 (CET)
 Authentication-Results: localhost; dkim=pass
         reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=u4dq7nN/; dkim-adsp=pass;
+        header.d=c-s.fr header.i=@c-s.fr header.b=bwZsiipU; dkim-adsp=pass;
         dkim-atps=neutral
 X-Virus-Scanned: Debian amavisd-new at c-s.fr
 Received: from pegase1.c-s.fr ([192.168.12.234])
         by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id mpAHoSQTPA-9; Fri, 24 Jan 2020 12:54:39 +0100 (CET)
+        with ESMTP id SSrNdcuyBBuq; Fri, 24 Jan 2020 12:54:41 +0100 (CET)
 Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 483yHM3r3hz9tyMv;
-        Fri, 24 Jan 2020 12:54:39 +0100 (CET)
+        by pegase1.c-s.fr (Postfix) with ESMTP id 483yHP3MZ0z9tyMv;
+        Fri, 24 Jan 2020 12:54:41 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1579866879; bh=PgVWSLkpndDkoiY/pfxK85eypP96AoD6B7u5/2yKujM=;
+        t=1579866881; bh=VLx+Lz40VzpGWWhkdYBRnnJLZiSw4fD8aXzdGmSoxMc=;
         h=In-Reply-To:References:From:Subject:To:Cc:Date:From;
-        b=u4dq7nN/wBHq+COhwEF54pF7SIXD+HGGYkTNyAZ47BydbP3YFerpsRZ12HRXIqTjX
-         Y+EoMmzaGxdZYCowRQFF/LWd7C+y0fVOqtZKm0yEKVinfWLFel5vTuJCh/yTVElGZc
-         8c46zG62qEvZbv8+vrJvJ6eKT9KqovqkWY76dfKg=
+        b=bwZsiipUE7XPgOvT/fv2tqC+/BWEPK6x8YER7CmIw+j4b5yIyqSryoZtfG0J7w+Tf
+         ZzZL2Q/9A94nVbWguyBkIyRGVFggtzAk1vSu8pZ2wXAHAKGyNcdqOVhqKB0aIWTh5a
+         QQOzfPsEfaQ1xj33F6c7Av5mksgYB3EtZPDKDfIE=
 Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id BE5118B85C;
-        Fri, 24 Jan 2020 12:54:40 +0100 (CET)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 9A1C98B85C;
+        Fri, 24 Jan 2020 12:54:42 +0100 (CET)
 X-Virus-Scanned: amavisd-new at c-s.fr
 Received: from messagerie.si.c-s.fr ([127.0.0.1])
         by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id jlyalqb5we6K; Fri, 24 Jan 2020 12:54:40 +0100 (CET)
+        with ESMTP id rOBxj6ZDwIhG; Fri, 24 Jan 2020 12:54:42 +0100 (CET)
 Received: from po14934vm.idsi0.si.c-s.fr (po15451.idsi0.si.c-s.fr [172.25.230.111])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 7593E8B84A;
-        Fri, 24 Jan 2020 12:54:40 +0100 (CET)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 80CE08B84A;
+        Fri, 24 Jan 2020 12:54:42 +0100 (CET)
 Received: by po14934vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id 5686B651F0; Fri, 24 Jan 2020 11:54:40 +0000 (UTC)
-Message-Id: <f48244e9485ada0a304ed33ccbb8da271180c80d.1579866752.git.christophe.leroy@c-s.fr>
+        id 62D06651F0; Fri, 24 Jan 2020 11:54:42 +0000 (UTC)
+Message-Id: <85e971223dfe6ace734637db1841678939a76155.1579866752.git.christophe.leroy@c-s.fr>
 In-Reply-To: <b6f97231868c43b90ae7abe7f68f84d176a8ebe1.1579866752.git.christophe.leroy@c-s.fr>
 References: <b6f97231868c43b90ae7abe7f68f84d176a8ebe1.1579866752.git.christophe.leroy@c-s.fr>
 From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [PATCH v4 2/7] powerpc/32s: Fix bad_kuap_fault()
+Subject: [PATCH v4 4/7] powerpc/32s: Drop NULL addr verification
 To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Paul Mackerras <paulus@samba.org>,
         Michael Ellerman <mpe@ellerman.id.au>
 Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
         linux-mm@kvack.org
-Date:   Fri, 24 Jan 2020 11:54:40 +0000 (UTC)
+Date:   Fri, 24 Jan 2020 11:54:42 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-At the moment, bad_kuap_fault() reports a fault only if a bad access
-to userspace occurred while access to userspace was not granted.
+NULL addr is a user address. Don't waste time checking it. If
+someone tries to access it, it will SIGFAULT the same way as for
+address 1, so no need to make it special.
 
-But if a fault occurs for a write outside the allowed userspace
-segment(s) that have been unlocked, bad_kuap_fault() fails to
-detect it and the kernel loops forever in do_page_fault().
+The special case is when not doing a write, in that case we want
+to drop the entire function. This is now handled by 'dir' param
+and not by the nulity of 'to' anymore.
 
-Fix it by checking that the accessed address is within the allowed
-range.
+Also make beginning of prevent_user_access() similar
+to beginning of allow_user_access(), and tell the compiler
+that writing in kernel space or with a 0 length is unlikely
 
-Fixes: a68c31fc01ef ("powerpc/32s: Implement Kernel Userspace Access Protection")
-Cc: stable@vger.kernel.org # v5.2+
 Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
 Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/1e07c7de4ffdd9cda35d1ffe8258af75579d3e91.1579715466.git.christophe.leroy@c-s.fr
+Link: https://lore.kernel.org/r/d79cb9f680f4e971e05262303103a4b94baa91ce.1579715466.git.christophe.leroy@c-s.fr
 ---
-v4: taken from powerpc/next-test
+v4: taken from powerpc/merge-test
 ---
- arch/powerpc/include/asm/book3s/32/kup.h       | 9 +++++++--
- arch/powerpc/include/asm/book3s/64/kup-radix.h | 3 ++-
- arch/powerpc/include/asm/kup.h                 | 6 +++++-
- arch/powerpc/include/asm/nohash/32/kup-8xx.h   | 3 ++-
- arch/powerpc/mm/fault.c                        | 2 +-
- 5 files changed, 17 insertions(+), 6 deletions(-)
+ arch/powerpc/include/asm/book3s/32/kup.h | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
 diff --git a/arch/powerpc/include/asm/book3s/32/kup.h b/arch/powerpc/include/asm/book3s/32/kup.h
-index f9dc597b0b86..d88008c8eb85 100644
+index 91c8f1d9bcee..de29fb752cca 100644
 --- a/arch/powerpc/include/asm/book3s/32/kup.h
 +++ b/arch/powerpc/include/asm/book3s/32/kup.h
-@@ -131,12 +131,17 @@ static inline void prevent_user_access(void __user *to, const void __user *from,
+@@ -113,7 +113,7 @@ static __always_inline void allow_user_access(void __user *to, const void __user
+ 
+ 	addr = (__force u32)to;
+ 
+-	if (!addr || addr >= TASK_SIZE || !size)
++	if (unlikely(addr >= TASK_SIZE || !size))
+ 		return;
+ 
+ 	end = min(addr + size, TASK_SIZE);
+@@ -124,16 +124,18 @@ static __always_inline void allow_user_access(void __user *to, const void __user
+ static __always_inline void prevent_user_access(void __user *to, const void __user *from,
+ 						u32 size, unsigned long dir)
+ {
+-	u32 addr = (__force u32)to;
+-	u32 end = min(addr + size, TASK_SIZE);
++	u32 addr, end;
+ 
+ 	BUILD_BUG_ON(!__builtin_constant_p(dir));
+ 	if (!(dir & KUAP_WRITE))
+ 		return;
+ 
+-	if (!addr || addr >= TASK_SIZE || !size)
++	addr = (__force u32)to;
++
++	if (unlikely(addr >= TASK_SIZE || !size))
+ 		return;
+ 
++	end = min(addr + size, TASK_SIZE);
+ 	current->thread.kuap = 0;
  	kuap_update_sr(mfsrin(addr) | SR_KS, addr, end);	/* set Ks */
  }
- 
--static inline bool bad_kuap_fault(struct pt_regs *regs, bool is_write)
-+static inline bool
-+bad_kuap_fault(struct pt_regs *regs, unsigned long address, bool is_write)
- {
-+	unsigned long begin = regs->kuap & 0xf0000000;
-+	unsigned long end = regs->kuap << 28;
-+
- 	if (!is_write)
- 		return false;
- 
--	return WARN(!regs->kuap, "Bug: write fault blocked by segment registers !");
-+	return WARN(address < begin || address >= end,
-+		    "Bug: write fault blocked by segment registers !");
- }
- 
- #endif /* CONFIG_PPC_KUAP */
-diff --git a/arch/powerpc/include/asm/book3s/64/kup-radix.h b/arch/powerpc/include/asm/book3s/64/kup-radix.h
-index f254de956d6a..dbbd22cb80f5 100644
---- a/arch/powerpc/include/asm/book3s/64/kup-radix.h
-+++ b/arch/powerpc/include/asm/book3s/64/kup-radix.h
-@@ -95,7 +95,8 @@ static inline void prevent_user_access(void __user *to, const void __user *from,
- 	set_kuap(AMR_KUAP_BLOCKED);
- }
- 
--static inline bool bad_kuap_fault(struct pt_regs *regs, bool is_write)
-+static inline bool
-+bad_kuap_fault(struct pt_regs *regs, unsigned long address, bool is_write)
- {
- 	return WARN(mmu_has_feature(MMU_FTR_RADIX_KUAP) &&
- 		    (regs->kuap & (is_write ? AMR_KUAP_BLOCK_WRITE : AMR_KUAP_BLOCK_READ)),
-diff --git a/arch/powerpc/include/asm/kup.h b/arch/powerpc/include/asm/kup.h
-index 5b5e39643a27..812e66f31934 100644
---- a/arch/powerpc/include/asm/kup.h
-+++ b/arch/powerpc/include/asm/kup.h
-@@ -45,7 +45,11 @@ static inline void allow_user_access(void __user *to, const void __user *from,
- 				     unsigned long size) { }
- static inline void prevent_user_access(void __user *to, const void __user *from,
- 				       unsigned long size) { }
--static inline bool bad_kuap_fault(struct pt_regs *regs, bool is_write) { return false; }
-+static inline bool
-+bad_kuap_fault(struct pt_regs *regs, unsigned long address, bool is_write)
-+{
-+	return false;
-+}
- #endif /* CONFIG_PPC_KUAP */
- 
- static inline void allow_read_from_user(const void __user *from, unsigned long size)
-diff --git a/arch/powerpc/include/asm/nohash/32/kup-8xx.h b/arch/powerpc/include/asm/nohash/32/kup-8xx.h
-index 1006a427e99c..f2fea603b929 100644
---- a/arch/powerpc/include/asm/nohash/32/kup-8xx.h
-+++ b/arch/powerpc/include/asm/nohash/32/kup-8xx.h
-@@ -46,7 +46,8 @@ static inline void prevent_user_access(void __user *to, const void __user *from,
- 	mtspr(SPRN_MD_AP, MD_APG_KUAP);
- }
- 
--static inline bool bad_kuap_fault(struct pt_regs *regs, bool is_write)
-+static inline bool
-+bad_kuap_fault(struct pt_regs *regs, unsigned long address, bool is_write)
- {
- 	return WARN(!((regs->kuap ^ MD_APG_KUAP) & 0xf0000000),
- 		    "Bug: fault blocked by AP register !");
-diff --git a/arch/powerpc/mm/fault.c b/arch/powerpc/mm/fault.c
-index b5047f9b5dec..1baeb045f7f4 100644
---- a/arch/powerpc/mm/fault.c
-+++ b/arch/powerpc/mm/fault.c
-@@ -233,7 +233,7 @@ static bool bad_kernel_fault(struct pt_regs *regs, unsigned long error_code,
- 
- 	// Read/write fault in a valid region (the exception table search passed
- 	// above), but blocked by KUAP is bad, it can never succeed.
--	if (bad_kuap_fault(regs, is_write))
-+	if (bad_kuap_fault(regs, address, is_write))
- 		return true;
- 
- 	// What's left? Kernel fault on user in well defined regions (extable
 -- 
 2.25.0
 
