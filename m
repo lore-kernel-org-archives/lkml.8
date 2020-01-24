@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6FB3C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:18:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F806C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:18:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86038208C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:18:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BE0B2075D
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:18:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579864690;
-	bh=vqlUTF29PNCkBlV6NrwNudwhu47jBkRrhaDjag+RlZA=;
+	s=default; t=1579864694;
+	bh=yUGQT0hdXqNofaKXUEwZXH80Ej3LJIWMoag+7cI4x8E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tTtZ8EicECbNFWHOrRGpSfTrRTJHsFMvPohkLY4UK4Y3skWaMNDRbx7a01FQAGdsu
-	 E9mT3JpWtaZ+I4YOJHihN6T7nRP9eUEzrcqlEza+R4aQ9gqweXWquTsG/gc4KPd5iO
-	 fdUMas17r7yee58/9jYT8panugwWzhixHPS3ONv4=
+	b=UDsKe0BZPhDbrDFHC9cvDiC7U/3kKR10PSTVRmQRpgy7/ZCGxfFuc/mKrDwagYmUY
+	 bGJnlCubJ4mhgPHg8pWLnshavg/CW82wCqPgjCpHYtQzvE2josnzWATp3YpEX8qqX3
+	 TR39O1cK/EyAcGl97f6U7fWmiD/t0GNxUhL0keHU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390602AbgAXLSJ (ORCPT
+        id S2390608AbgAXLSN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:18:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55080 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 06:18:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55130 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390588AbgAXLSD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:18:03 -0500
+        id S2390597AbgAXLSH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:18:07 -0500
 Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9E38F20708;
-        Fri, 24 Jan 2020 11:18:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2656B20708;
+        Fri, 24 Jan 2020 11:18:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579864683;
-        bh=vqlUTF29PNCkBlV6NrwNudwhu47jBkRrhaDjag+RlZA=;
+        s=default; t=1579864686;
+        bh=yUGQT0hdXqNofaKXUEwZXH80Ej3LJIWMoag+7cI4x8E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BiZGylgmEGW5dHH/H8t1RBtJqlzTjR+8HfOYBeKvAKXG3u3EZAJL/J7lD03W9HA1k
-         x21V6IpxQF9HKGiKvruCb1HEH/2U8MYh430tFnRbfzCsgx+HQvmd8VmtxBmdLHET52
-         K+GJKF78UaOw8Z1gmcrXwLkdfDK31QgBZK/tEesY=
+        b=p6Tpr8lOemR+XCvZ/9jTEUg09kekUL0npnQZHVnalpooOWAnw6GF9T3aZUb0Qxe0X
+         pBPgH6ZGVAerTpBXXr1cvpg1A4pR/JogHgvQgbvm+diu0W+jiPhV1NkL5/2XXRuGTZ
+         J5zudKKSHaI8ctYw49YFcnNQ+JCOPx9/THwhX3s4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Srinath Mannam <srinath.mannam@broadcom.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Ray Jui <ray.jui@broadcom.com>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 336/639] PCI: iproc: Enable iProc config read for PAXBv2
-Date:   Fri, 24 Jan 2020 10:28:26 +0100
-Message-Id: <20200124093129.204094515@linuxfoundation.org>
+        stable@vger.kernel.org, Adam Ford <aford173@gmail.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 337/639] ARM: dts: logicpd-som-lv: Fix MMC1 card detect
+Date:   Fri, 24 Jan 2020 10:28:27 +0100
+Message-Id: <20200124093129.331241490@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
 References: <20200124093047.008739095@linuxfoundation.org>
@@ -61,41 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Srinath Mannam <srinath.mannam@broadcom.com>
+From: Adam Ford <aford173@gmail.com>
 
-[ Upstream commit 8cff995405eb0b563e7a0d2c49838611ea3f2692 ]
+[ Upstream commit 6a38df676a0a06bfc7ff8607ac62ccd6d95969ad ]
 
-iProc config read flag has to be enabled for PAXBv2 instead of PAXB.
+The card detect pin was incorrectly using IRQ_TYPE_LEVEL_LOW
+instead of GPIO_ACTIVE_LOW when reading the state of the CD pin.
 
-Fixes: f78e60a29d4f ("PCI: iproc: Reject unconfigured physical functions from PAXC")
-Signed-off-by: Srinath Mannam <srinath.mannam@broadcom.com>
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Reviewed-by: Ray Jui <ray.jui@broadcom.com>
+This was previosly fixed on Torpedo, but missed on the SOM-LV
+
+Fixes: 5cb8b0fa55a9 ("ARM: dts: Move most of logicpd-som-lv-37xx-devkit.dts to logicpd-som-lv-baseboard.dtsi")
+Signed-off-by: Adam Ford <aford173@gmail.com>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/controller/pcie-iproc.c | 2 +-
+ arch/arm/boot/dts/logicpd-som-lv-baseboard.dtsi | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/pci/controller/pcie-iproc.c b/drivers/pci/controller/pcie-iproc.c
-index c20fd6bd68fd8..9d5cbc75d5ae0 100644
---- a/drivers/pci/controller/pcie-iproc.c
-+++ b/drivers/pci/controller/pcie-iproc.c
-@@ -1347,7 +1347,6 @@ static int iproc_pcie_rev_init(struct iproc_pcie *pcie)
- 		break;
- 	case IPROC_PCIE_PAXB:
- 		regs = iproc_pcie_reg_paxb;
--		pcie->iproc_cfg_read = true;
- 		pcie->has_apb_err_disable = true;
- 		if (pcie->need_ob_cfg) {
- 			pcie->ob_map = paxb_ob_map;
-@@ -1356,6 +1355,7 @@ static int iproc_pcie_rev_init(struct iproc_pcie *pcie)
- 		break;
- 	case IPROC_PCIE_PAXB_V2:
- 		regs = iproc_pcie_reg_paxb_v2;
-+		pcie->iproc_cfg_read = true;
- 		pcie->has_apb_err_disable = true;
- 		if (pcie->need_ob_cfg) {
- 			pcie->ob_map = paxb_v2_ob_map;
+diff --git a/arch/arm/boot/dts/logicpd-som-lv-baseboard.dtsi b/arch/arm/boot/dts/logicpd-som-lv-baseboard.dtsi
+index 4990ed90dcea4..3e39b9a1f35d0 100644
+--- a/arch/arm/boot/dts/logicpd-som-lv-baseboard.dtsi
++++ b/arch/arm/boot/dts/logicpd-som-lv-baseboard.dtsi
+@@ -153,7 +153,7 @@
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&mmc1_pins>;
+ 	wp-gpios = <&gpio4 30 GPIO_ACTIVE_HIGH>;		/* gpio_126 */
+-	cd-gpios = <&gpio4 14 IRQ_TYPE_LEVEL_LOW>;		/* gpio_110 */
++	cd-gpios = <&gpio4 14 GPIO_ACTIVE_LOW>;			/* gpio_110 */
+ 	vmmc-supply = <&vmmc1>;
+ 	bus-width = <4>;
+ 	cap-power-off-card;
 -- 
 2.20.1
 
