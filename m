@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC417C35242
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:09:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C4C4C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:09:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7887820663
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:09:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE3B221569
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:09:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579864193;
-	bh=g6DtTui86QDoOiSCRW6b9DY3WT5JmW7gjkpObxavC5Y=;
+	s=default; t=1579864194;
+	bh=FP24LIk+CmFXKN0TcLClW14rFaaJcJ7idY9+i+nQ6sE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WlmOMZZm/r8XRgSXjjf0uflS6tnLde+lvRy5DwTIooHCfrnZN/Cu9fvkslENOm4RR
-	 AxWHdCmDFKs/9F3X5TsYtUKQIXEeZbIeoDfnwxxL4KrlO+0hFbTFj+aw4aWt2olwMB
-	 AApwmEbGJm6QVZBCOReRxk1uePCSeT38q4VEktak=
+	b=P6fxkvmjAtfJAifzJI3IjGsUnbx6arQ7ynbnNjzk2dDcPlE2+LyPKZLInLEGv7kDr
+	 /UEEVYL1NT+QQjZ9lREaqQbV5r/FCC5oQUzS1J9cODOj+yV1lddtNmC9ZpSRXIcL/v
+	 rTowmgB7Oi9UTtoH8yWt8isqIBo20RmlP2QknpCo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389787AbgAXLJw (ORCPT
+        id S2389796AbgAXLJx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:09:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45428 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 06:09:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45534 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733099AbgAXLJs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:09:48 -0500
+        id S1733090AbgAXLJv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:09:51 -0500
 Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3188520663;
-        Fri, 24 Jan 2020 11:09:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 821D220663;
+        Fri, 24 Jan 2020 11:09:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579864187;
-        bh=g6DtTui86QDoOiSCRW6b9DY3WT5JmW7gjkpObxavC5Y=;
+        s=default; t=1579864191;
+        bh=FP24LIk+CmFXKN0TcLClW14rFaaJcJ7idY9+i+nQ6sE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=g53ggLgA7ZD1mPCsk7dx8IN5zqKRokt62gew4SNajBKFCtZzadZEKTsjSGYAT5QaQ
-         FaZTKp1wpFkbEPWUgMbmYUND93tSyr2rBUGdysW8r+Y3YdRviT/ADlm9fP6OQNi7m7
-         9IeowZuJSUtrMlA+4wajof4v2tcQrrtIhQu9NDt0=
+        b=UEuzXWwpCGel8mkYg87eU6usMNER4ezrCog4UDcsWg1poewojKg+aGzL03gm1hwFM
+         BBkwEyLff7bWOwmIWEY9832VOF+zqfREIJO9H7roJWyB51hngVK424uVzkWxGEi8sX
+         JqLKHqg/P5ro69LUBjOj6o+DpK22dEZ+LiKlxX88=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michael Kao <michael.kao@mediatek.com>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 173/639] thermal: mediatek: fix register index error
-Date:   Fri, 24 Jan 2020 10:25:43 +0100
-Message-Id: <20200124093108.860102530@linuxfoundation.org>
+        stable@vger.kernel.org, Wesley Sheng <wesley.sheng@microchip.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Jon Mason <jdmason@kudzu.us>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 189/639] ntb_hw_switchtec: NT req id mapping table register entry number should be 512
+Date:   Fri, 24 Jan 2020 10:25:59 +0100
+Message-Id: <20200124093110.787659312@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
 References: <20200124093047.008739095@linuxfoundation.org>
@@ -60,45 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Kao <michael.kao@mediatek.com>
+From: Wesley Sheng <wesley.sheng@microchip.com>
 
-[ Upstream commit eb9aecd90d1a39601e91cd08b90d5fee51d321a6 ]
+[ Upstream commit d123fab71f63aae129aebe052664fda73131921a ]
 
-The index of msr and adcpnp should match the sensor
-which belongs to the selected bank in the for loop.
+The number of available NT req id mapping table entries per NTB control
+register is 512. The driver mistakenly limits the number to 256.
 
-Fixes: b7cf0053738c ("thermal: Add Mediatek thermal driver for mt2701.")
-Signed-off-by: Michael Kao <michael.kao@mediatek.com>
-Signed-off-by: Eduardo Valentin <edubezval@gmail.com>
+Fix the array size of NT req id mapping table.
+
+Fixes: c082b04c9d40 ("NTB: switchtec: Add NTB hardware register definitions")
+Signed-off-by: Wesley Sheng <wesley.sheng@microchip.com>
+Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
+Signed-off-by: Jon Mason <jdmason@kudzu.us>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/thermal/mtk_thermal.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ include/linux/switchtec.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/thermal/mtk_thermal.c b/drivers/thermal/mtk_thermal.c
-index 0691f260f6eab..f64643629d8b5 100644
---- a/drivers/thermal/mtk_thermal.c
-+++ b/drivers/thermal/mtk_thermal.c
-@@ -431,7 +431,8 @@ static int mtk_thermal_bank_temperature(struct mtk_thermal_bank *bank)
- 	u32 raw;
+diff --git a/include/linux/switchtec.h b/include/linux/switchtec.h
+index ab400af6f0ce3..623719c917061 100644
+--- a/include/linux/switchtec.h
++++ b/include/linux/switchtec.h
+@@ -244,8 +244,8 @@ struct ntb_ctrl_regs {
+ 		u64 xlate_addr;
+ 	} bar_entry[6];
+ 	u32 reserved2[216];
+-	u32 req_id_table[256];
+-	u32 reserved3[512];
++	u32 req_id_table[512];
++	u32 reserved3[256];
+ 	u64 lut_entry[512];
+ } __packed;
  
- 	for (i = 0; i < conf->bank_data[bank->id].num_sensors; i++) {
--		raw = readl(mt->thermal_base + conf->msr[i]);
-+		raw = readl(mt->thermal_base +
-+			    conf->msr[conf->bank_data[bank->id].sensors[i]]);
- 
- 		temp = raw_to_mcelsius(mt,
- 				       conf->bank_data[bank->id].sensors[i],
-@@ -568,7 +569,8 @@ static void mtk_thermal_init_bank(struct mtk_thermal *mt, int num,
- 
- 	for (i = 0; i < conf->bank_data[num].num_sensors; i++)
- 		writel(conf->sensor_mux_values[conf->bank_data[num].sensors[i]],
--		       mt->thermal_base + conf->adcpnp[i]);
-+		       mt->thermal_base +
-+		       conf->adcpnp[conf->bank_data[num].sensors[i]]);
- 
- 	writel((1 << conf->bank_data[num].num_sensors) - 1,
- 	       mt->thermal_base + TEMP_MONCTL0);
 -- 
 2.20.1
 
