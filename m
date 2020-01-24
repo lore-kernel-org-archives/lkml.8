@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F158C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:28:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F787C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:28:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D05122075D
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:28:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 361DE206F0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:28:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579876122;
-	bh=CNKg/pLuTau6fYvz5t/alsgoLgxLSHaevzjZhA0Lny8=;
+	s=default; t=1579876128;
+	bh=l5Xc3TJ/3mYgAjR+1h1leLM3rxkWYGszRujaPvWW0tI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=t5qiAeJ17658+g/iINEdBpJmHXm8F8jXcjlRkbbOhA/rduVNcGXH/4WOIau44OQ9d
-	 3wbZOYbejweCnRU+diHlOVQE96wSsFlNA0iQ9pegWU1KGpjLjOexVAUgXc8g0ENWkp
-	 D2BMJBHzDRXg5EyDQ2VcUcjeHGfvqy1UVqsGQot8=
+	b=TvivZtCZIa+rlKiq/ExInBl+mgUfkR5D2ZGk/tWn8MrEcb4Z05rzXQmwXE2l7vNit
+	 8RvnvftEpmzHdi0jSDXdpt2Z01UU+idqWH3QZMNmX28X9CzucbWY+S4kgiZABeVoHZ
+	 YuOh85Oh1mxkXT/6CPyiiarz0HcRx1qcRUtKa4no=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391018AbgAXO2l (ORCPT
+        id S2405183AbgAXOVF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 09:28:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42542 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 09:21:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42486 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405181AbgAXOVG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 09:21:06 -0500
+        id S2392168AbgAXOVC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 09:21:02 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7FF9720661;
-        Fri, 24 Jan 2020 14:21:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1554B218AC;
+        Fri, 24 Jan 2020 14:21:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579875665;
-        bh=CNKg/pLuTau6fYvz5t/alsgoLgxLSHaevzjZhA0Lny8=;
+        s=default; t=1579875661;
+        bh=l5Xc3TJ/3mYgAjR+1h1leLM3rxkWYGszRujaPvWW0tI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fASuUyN5RBvRAgSL8Yo9j/SyzIpz+w54RSp8tLnW3bzeyWytsdKSQYmskRzhikaNY
-         ooO2oNofzk1teB3OG+zY9UE83HQOSWtX+24XTgEaNAegMRSlk20EUz+YKuc9GxLRIf
-         H0Jjry2NDzvrAybNHqSMl9wsiDseGtmFSRcq4JO4=
+        b=wLQcUcZ8y6FU9LDmOy1OGkG3Khn3ntA0FGrgyBfj8Wl9GHVJwyg3KwB3zdKMAfTpn
+         3WY+3ih5dpchxcehLM7AkoOp0DAxHAJZCBfmN84sTgD2eRmKTwiZXngfShXvSTJkqW
+         BKVHrGJM0Ee8xMFHX1NJxpievPJwPILtCnZvrX5E=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Daniel Borkmann <daniel@iogearbox.net>,
-        Anatoly Trosinenko <anatoly.trosinenko@gmail.com>,
-        Yonghong Song <yhs@fb.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 45/56] bpf: Fix incorrect verifier simulation of ARSH under ALU32
-Date:   Fri, 24 Jan 2020 09:20:01 -0500
-Message-Id: <20200124142012.29752-45-sashal@kernel.org>
+Cc:     Eric Dumazet <edumazet@google.com>,
+        syzbot <syzkaller@googlegroups.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 42/56] tick/sched: Annotate lockless access to last_jiffies_update
+Date:   Fri, 24 Jan 2020 09:19:58 -0500
+Message-Id: <20200124142012.29752-42-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200124142012.29752-1-sashal@kernel.org>
 References: <20200124142012.29752-1-sashal@kernel.org>
@@ -61,194 +60,122 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Borkmann <daniel@iogearbox.net>
+From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit 0af2ffc93a4b50948f9dad2786b7f1bd253bf0b9 ]
+[ Upstream commit de95a991bb72e009f47e0c4bbc90fc5f594588d5 ]
 
-Anatoly has been fuzzing with kBdysch harness and reported a hang in one
-of the outcomes:
+syzbot (KCSAN) reported a data-race in tick_do_update_jiffies64():
 
-  0: R1=ctx(id=0,off=0,imm=0) R10=fp0
-  0: (85) call bpf_get_socket_cookie#46
-  1: R0_w=invP(id=0) R10=fp0
-  1: (57) r0 &= 808464432
-  2: R0_w=invP(id=0,umax_value=808464432,var_off=(0x0; 0x30303030)) R10=fp0
-  2: (14) w0 -= 810299440
-  3: R0_w=invP(id=0,umax_value=4294967295,var_off=(0xcf800000; 0x3077fff0)) R10=fp0
-  3: (c4) w0 s>>= 1
-  4: R0_w=invP(id=0,umin_value=1740636160,umax_value=2147221496,var_off=(0x67c00000; 0x183bfff8)) R10=fp0
-  4: (76) if w0 s>= 0x30303030 goto pc+216
-  221: R0_w=invP(id=0,umin_value=1740636160,umax_value=2147221496,var_off=(0x67c00000; 0x183bfff8)) R10=fp0
-  221: (95) exit
-  processed 6 insns (limit 1000000) [...]
+BUG: KCSAN: data-race in tick_do_update_jiffies64 / tick_do_update_jiffies64
 
-Taking a closer look, the program was xlated as follows:
+write to 0xffffffff8603d008 of 8 bytes by interrupt on cpu 1:
+ tick_do_update_jiffies64+0x100/0x250 kernel/time/tick-sched.c:73
+ tick_sched_do_timer+0xd4/0xe0 kernel/time/tick-sched.c:138
+ tick_sched_timer+0x43/0xe0 kernel/time/tick-sched.c:1292
+ __run_hrtimer kernel/time/hrtimer.c:1514 [inline]
+ __hrtimer_run_queues+0x274/0x5f0 kernel/time/hrtimer.c:1576
+ hrtimer_interrupt+0x22a/0x480 kernel/time/hrtimer.c:1638
+ local_apic_timer_interrupt arch/x86/kernel/apic/apic.c:1110 [inline]
+ smp_apic_timer_interrupt+0xdc/0x280 arch/x86/kernel/apic/apic.c:1135
+ apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:830
+ arch_local_irq_restore arch/x86/include/asm/paravirt.h:756 [inline]
+ kcsan_setup_watchpoint+0x1d4/0x460 kernel/kcsan/core.c:436
+ check_access kernel/kcsan/core.c:466 [inline]
+ __tsan_read1 kernel/kcsan/core.c:593 [inline]
+ __tsan_read1+0xc2/0x100 kernel/kcsan/core.c:593
+ kallsyms_expand_symbol.constprop.0+0x70/0x160 kernel/kallsyms.c:79
+ kallsyms_lookup_name+0x7f/0x120 kernel/kallsyms.c:170
+ insert_report_filterlist kernel/kcsan/debugfs.c:155 [inline]
+ debugfs_write+0x14b/0x2d0 kernel/kcsan/debugfs.c:256
+ full_proxy_write+0xbd/0x100 fs/debugfs/file.c:225
+ __vfs_write+0x67/0xc0 fs/read_write.c:494
+ vfs_write fs/read_write.c:558 [inline]
+ vfs_write+0x18a/0x390 fs/read_write.c:542
+ ksys_write+0xd5/0x1b0 fs/read_write.c:611
+ __do_sys_write fs/read_write.c:623 [inline]
+ __se_sys_write fs/read_write.c:620 [inline]
+ __x64_sys_write+0x4c/0x60 fs/read_write.c:620
+ do_syscall_64+0xcc/0x370 arch/x86/entry/common.c:290
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-  # ./bpftool p d x i 12
-  0: (85) call bpf_get_socket_cookie#7800896
-  1: (bf) r6 = r0
-  2: (57) r6 &= 808464432
-  3: (14) w6 -= 810299440
-  4: (c4) w6 s>>= 1
-  5: (76) if w6 s>= 0x30303030 goto pc+216
-  6: (05) goto pc-1
-  7: (05) goto pc-1
-  8: (05) goto pc-1
-  [...]
-  220: (05) goto pc-1
-  221: (05) goto pc-1
-  222: (95) exit
+read to 0xffffffff8603d008 of 8 bytes by task 0 on cpu 0:
+ tick_do_update_jiffies64+0x2b/0x250 kernel/time/tick-sched.c:62
+ tick_nohz_update_jiffies kernel/time/tick-sched.c:505 [inline]
+ tick_nohz_irq_enter kernel/time/tick-sched.c:1257 [inline]
+ tick_irq_enter+0x139/0x1c0 kernel/time/tick-sched.c:1274
+ irq_enter+0x4f/0x60 kernel/softirq.c:354
+ entering_irq arch/x86/include/asm/apic.h:517 [inline]
+ entering_ack_irq arch/x86/include/asm/apic.h:523 [inline]
+ smp_apic_timer_interrupt+0x55/0x280 arch/x86/kernel/apic/apic.c:1133
+ apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:830
+ native_safe_halt+0xe/0x10 arch/x86/include/asm/irqflags.h:60
+ arch_cpu_idle+0xa/0x10 arch/x86/kernel/process.c:571
+ default_idle_call+0x1e/0x40 kernel/sched/idle.c:94
+ cpuidle_idle_call kernel/sched/idle.c:154 [inline]
+ do_idle+0x1af/0x280 kernel/sched/idle.c:263
+ cpu_startup_entry+0x1b/0x20 kernel/sched/idle.c:355
+ rest_init+0xec/0xf6 init/main.c:452
+ arch_call_rest_init+0x17/0x37
+ start_kernel+0x838/0x85e init/main.c:786
+ x86_64_start_reservations+0x29/0x2b arch/x86/kernel/head64.c:490
+ x86_64_start_kernel+0x72/0x76 arch/x86/kernel/head64.c:471
+ secondary_startup_64+0xa4/0xb0 arch/x86/kernel/head_64.S:241
 
-Meaning, the visible effect is very similar to f54c7898ed1c ("bpf: Fix
-precision tracking for unbounded scalars"), that is, the fall-through
-branch in the instruction 5 is considered to be never taken given the
-conclusion from the min/max bounds tracking in w6, and therefore the
-dead-code sanitation rewrites it as goto pc-1. However, real-life input
-disagrees with verification analysis since a soft-lockup was observed.
+Reported by Kernel Concurrency Sanitizer on:
+CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.4.0-rc7+ #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
 
-The bug sits in the analysis of the ARSH. The definition is that we shift
-the target register value right by K bits through shifting in copies of
-its sign bit. In adjust_scalar_min_max_vals(), we do first coerce the
-register into 32 bit mode, same happens after simulating the operation.
-However, for the case of simulating the actual ARSH, we don't take the
-mode into account and act as if it's always 64 bit, but location of sign
-bit is different:
+Use READ_ONCE() and WRITE_ONCE() to annotate this expected race.
 
-  dst_reg->smin_value >>= umin_val;
-  dst_reg->smax_value >>= umin_val;
-  dst_reg->var_off = tnum_arshift(dst_reg->var_off, umin_val);
-
-Consider an unknown R0 where bpf_get_socket_cookie() (or others) would
-for example return 0xffff. With the above ARSH simulation, we'd see the
-following results:
-
-  [...]
-  1: R1=ctx(id=0,off=0,imm=0) R2_w=invP65535 R10=fp0
-  1: (85) call bpf_get_socket_cookie#46
-  2: R0_w=invP(id=0) R10=fp0
-  2: (57) r0 &= 808464432
-    -> R0_runtime = 0x3030
-  3: R0_w=invP(id=0,umax_value=808464432,var_off=(0x0; 0x30303030)) R10=fp0
-  3: (14) w0 -= 810299440
-    -> R0_runtime = 0xcfb40000
-  4: R0_w=invP(id=0,umax_value=4294967295,var_off=(0xcf800000; 0x3077fff0)) R10=fp0
-                              (0xffffffff)
-  4: (c4) w0 s>>= 1
-    -> R0_runtime = 0xe7da0000
-  5: R0_w=invP(id=0,umin_value=1740636160,umax_value=2147221496,var_off=(0x67c00000; 0x183bfff8)) R10=fp0
-                              (0x67c00000)           (0x7ffbfff8)
-  [...]
-
-In insn 3, we have a runtime value of 0xcfb40000, which is '1100 1111 1011
-0100 0000 0000 0000 0000', the result after the shift has 0xe7da0000 that
-is '1110 0111 1101 1010 0000 0000 0000 0000', where the sign bit is correctly
-retained in 32 bit mode. In insn4, the umax was 0xffffffff, and changed into
-0x7ffbfff8 after the shift, that is, '0111 1111 1111 1011 1111 1111 1111 1000'
-and means here that the simulation didn't retain the sign bit. With above
-logic, the updates happen on the 64 bit min/max bounds and given we coerced
-the register, the sign bits of the bounds are cleared as well, meaning, we
-need to force the simulation into s32 space for 32 bit alu mode.
-
-Verification after the fix below. We're first analyzing the fall-through branch
-on 32 bit signed >= test eventually leading to rejection of the program in this
-specific case:
-
-  0: R1=ctx(id=0,off=0,imm=0) R10=fp0
-  0: (b7) r2 = 808464432
-  1: R1=ctx(id=0,off=0,imm=0) R2_w=invP808464432 R10=fp0
-  1: (85) call bpf_get_socket_cookie#46
-  2: R0_w=invP(id=0) R10=fp0
-  2: (bf) r6 = r0
-  3: R0_w=invP(id=0) R6_w=invP(id=0) R10=fp0
-  3: (57) r6 &= 808464432
-  4: R0_w=invP(id=0) R6_w=invP(id=0,umax_value=808464432,var_off=(0x0; 0x30303030)) R10=fp0
-  4: (14) w6 -= 810299440
-  5: R0_w=invP(id=0) R6_w=invP(id=0,umax_value=4294967295,var_off=(0xcf800000; 0x3077fff0)) R10=fp0
-  5: (c4) w6 s>>= 1
-  6: R0_w=invP(id=0) R6_w=invP(id=0,umin_value=3888119808,umax_value=4294705144,var_off=(0xe7c00000; 0x183bfff8)) R10=fp0
-                                              (0x67c00000)          (0xfffbfff8)
-  6: (76) if w6 s>= 0x30303030 goto pc+216
-  7: R0_w=invP(id=0) R6_w=invP(id=0,umin_value=3888119808,umax_value=4294705144,var_off=(0xe7c00000; 0x183bfff8)) R10=fp0
-  7: (30) r0 = *(u8 *)skb[808464432]
-  BPF_LD_[ABS|IND] uses reserved fields
-  processed 8 insns (limit 1000000) [...]
-
-Fixes: 9cbe1f5a32dc ("bpf/verifier: improve register value range tracking with ARSH")
-Reported-by: Anatoly Trosinenko <anatoly.trosinenko@gmail.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Acked-by: Yonghong Song <yhs@fb.com>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
-Link: https://lore.kernel.org/bpf/20200115204733.16648-1-daniel@iogearbox.net
+Reported-by: syzbot <syzkaller@googlegroups.com>
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lore.kernel.org/r/20191205045619.204946-1-edumazet@google.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/tnum.h  |  2 +-
- kernel/bpf/tnum.c     |  9 +++++++--
- kernel/bpf/verifier.c | 13 ++++++++++---
- 3 files changed, 18 insertions(+), 6 deletions(-)
+ kernel/time/tick-sched.c | 14 +++++++++-----
+ 1 file changed, 9 insertions(+), 5 deletions(-)
 
-diff --git a/include/linux/tnum.h b/include/linux/tnum.h
-index c7dc2b5902c05..06b9c20cc77ee 100644
---- a/include/linux/tnum.h
-+++ b/include/linux/tnum.h
-@@ -26,7 +26,7 @@ struct tnum tnum_lshift(struct tnum a, u8 shift);
- /* Shift (rsh) a tnum right (by a fixed shift) */
- struct tnum tnum_rshift(struct tnum a, u8 shift);
- /* Shift (arsh) a tnum right (by a fixed min_shift) */
--struct tnum tnum_arshift(struct tnum a, u8 min_shift);
-+struct tnum tnum_arshift(struct tnum a, u8 min_shift, u8 insn_bitness);
- /* Add two tnums, return @a + @b */
- struct tnum tnum_add(struct tnum a, struct tnum b);
- /* Subtract two tnums, return @a - @b */
-diff --git a/kernel/bpf/tnum.c b/kernel/bpf/tnum.c
-index 938d41211be70..84984c0fc3d35 100644
---- a/kernel/bpf/tnum.c
-+++ b/kernel/bpf/tnum.c
-@@ -43,14 +43,19 @@ struct tnum tnum_rshift(struct tnum a, u8 shift)
- 	return TNUM(a.value >> shift, a.mask >> shift);
- }
+diff --git a/kernel/time/tick-sched.c b/kernel/time/tick-sched.c
+index 5b33e2f5c0ed3..48403fb653c2f 100644
+--- a/kernel/time/tick-sched.c
++++ b/kernel/time/tick-sched.c
+@@ -61,8 +61,9 @@ static void tick_do_update_jiffies64(ktime_t now)
  
--struct tnum tnum_arshift(struct tnum a, u8 min_shift)
-+struct tnum tnum_arshift(struct tnum a, u8 min_shift, u8 insn_bitness)
- {
- 	/* if a.value is negative, arithmetic shifting by minimum shift
- 	 * will have larger negative offset compared to more shifting.
- 	 * If a.value is nonnegative, arithmetic shifting by minimum shift
- 	 * will have larger positive offset compare to more shifting.
+ 	/*
+ 	 * Do a quick check without holding jiffies_lock:
++	 * The READ_ONCE() pairs with two updates done later in this function.
  	 */
--	return TNUM((s64)a.value >> min_shift, (s64)a.mask >> min_shift);
-+	if (insn_bitness == 32)
-+		return TNUM((u32)(((s32)a.value) >> min_shift),
-+			    (u32)(((s32)a.mask)  >> min_shift));
-+	else
-+		return TNUM((s64)a.value >> min_shift,
-+			    (s64)a.mask  >> min_shift);
- }
+-	delta = ktime_sub(now, last_jiffies_update);
++	delta = ktime_sub(now, READ_ONCE(last_jiffies_update));
+ 	if (delta < tick_period)
+ 		return;
  
- struct tnum tnum_add(struct tnum a, struct tnum b)
-diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
-index 9e72b2f8c3dd3..9bbfb1ff4ac94 100644
---- a/kernel/bpf/verifier.c
-+++ b/kernel/bpf/verifier.c
-@@ -3309,9 +3309,16 @@ static int adjust_scalar_min_max_vals(struct bpf_verifier_env *env,
- 		/* Upon reaching here, src_known is true and
- 		 * umax_val is equal to umin_val.
- 		 */
--		dst_reg->smin_value >>= umin_val;
--		dst_reg->smax_value >>= umin_val;
--		dst_reg->var_off = tnum_arshift(dst_reg->var_off, umin_val);
-+		if (insn_bitness == 32) {
-+			dst_reg->smin_value = (u32)(((s32)dst_reg->smin_value) >> umin_val);
-+			dst_reg->smax_value = (u32)(((s32)dst_reg->smax_value) >> umin_val);
-+		} else {
-+			dst_reg->smin_value >>= umin_val;
-+			dst_reg->smax_value >>= umin_val;
-+		}
-+
-+		dst_reg->var_off = tnum_arshift(dst_reg->var_off, umin_val,
-+						insn_bitness);
+@@ -73,8 +74,9 @@ static void tick_do_update_jiffies64(ktime_t now)
+ 	if (delta >= tick_period) {
  
- 		/* blow away the dst_reg umin_value/umax_value and rely on
- 		 * dst_reg var_off to refine the result.
+ 		delta = ktime_sub(delta, tick_period);
+-		last_jiffies_update = ktime_add(last_jiffies_update,
+-						tick_period);
++		/* Pairs with the lockless read in this function. */
++		WRITE_ONCE(last_jiffies_update,
++			   ktime_add(last_jiffies_update, tick_period));
+ 
+ 		/* Slow path for long timeouts */
+ 		if (unlikely(delta >= tick_period)) {
+@@ -82,8 +84,10 @@ static void tick_do_update_jiffies64(ktime_t now)
+ 
+ 			ticks = ktime_divns(delta, incr);
+ 
+-			last_jiffies_update = ktime_add_ns(last_jiffies_update,
+-							   incr * ticks);
++			/* Pairs with the lockless read in this function. */
++			WRITE_ONCE(last_jiffies_update,
++				   ktime_add_ns(last_jiffies_update,
++						incr * ticks));
+ 		}
+ 		do_timer(++ticks);
+ 
 -- 
 2.20.1
 
