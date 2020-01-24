@@ -2,101 +2,108 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F73FC32771
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 10:49:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDCA7C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 10:50:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2691720718
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 10:49:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C003C2070A
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 10:50:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dAE6J2Zm"
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="BxtlYqQM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731519AbgAXKtz (ORCPT
+        id S1732359AbgAXKuZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 05:49:55 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:53577 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729527AbgAXKty (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 05:49:54 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579862993;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=ewCrWzbjd/xfavGLkDFLJZm0rsCoA772YL+6ee+m1Y8=;
-        b=dAE6J2Zm8Wkm61ripTis5QyQfEDc/CHt5LzmlEutB79xi8edYLO23tppFh/zgNXcsWwfYo
-        uFYFv77+K/iZQ5wenOWcqBJXQO0M5iE8SSZaapP+9YhdQ9n0o9XS5IWRTaSYQ5tPlBJ7ai
-        ixffhUtUHb4XUc3fY9hIi6iBS4u3CNE=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-78-M3Hk-twYPbmA3PWUsqo1aQ-1; Fri, 24 Jan 2020 05:49:51 -0500
-X-MC-Unique: M3Hk-twYPbmA3PWUsqo1aQ-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Fri, 24 Jan 2020 05:50:25 -0500
+Received: from bilbo.ozlabs.org ([203.11.71.1]:33189 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730054AbgAXKuY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 05:50:24 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3A00010CE79E;
-        Fri, 24 Jan 2020 10:49:50 +0000 (UTC)
-Received: from kamzik.brq.redhat.com (unknown [10.43.2.160])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 2C07560BEC;
-        Fri, 24 Jan 2020 10:49:46 +0000 (UTC)
-Date:   Fri, 24 Jan 2020 11:49:43 +0100
-From:   Andrew Jones <drjones@redhat.com>
-To:     Ben Gardon <bgardon@google.com>
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        linux-kselftest@vger.kernel.org,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Cannon Matthews <cannonmatthews@google.com>,
-        Peter Xu <peterx@redhat.com>, Peter Shier <pshier@google.com>,
-        Oliver Upton <oupton@google.com>
-Subject: Re: [PATCH v4 07/10] KVM: selftests: Support multiple vCPUs in
- demand paging test
-Message-ID: <20200124104943.6abkjzegmewnoeiv@kamzik.brq.redhat.com>
-References: <20200123180436.99487-1-bgardon@google.com>
- <20200123180436.99487-8-bgardon@google.com>
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 483wsB4n3Wz9s1x;
+        Fri, 24 Jan 2020 21:50:21 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
+        s=201909; t=1579863022;
+        bh=FlLbOGsqSlCeC/50V2BI8ts1eiue9EfeRzHTZVTueQg=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=BxtlYqQM9H66VT2RNOtC7Bk7cxDqT6NgJxHqcVpfQK/c7arwiUOxIqc70ZZxD7sBj
+         cHpwvubEP3UZqTcTOrU2m+aJ8oXRSSNrCuk52dC15/+913/vwDQ+JUO2tBk20C1Fhk
+         XCNr84UBbCr2X423huWtIyPAn2tEXYZsnJJZxlcus0Yh/aMC1H3/1FY0fBL+0XW+Y7
+         6pyL6VjtmzVwttuczrqmNxPrizOPMVk0NEBU04K03/hEfTY+TVt/Olzf830r1AJfAD
+         S4sabn2a2pSO1+kOVq3ptKiwWixyF3/6UntCJhpYclLZ9/hLWZhmJ1iV17quIdSrSS
+         JtmedbTIa50yA==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        LKML <linux-kernel@vger.kernel.org>
+Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        "linuxppc-dev\@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
+Subject: Re: vmlinux ELF header sometimes corrupt
+In-Reply-To: <71aa76d0-a3b8-b4f3-a7c3-766cfb75412f@rasmusvillemoes.dk>
+References: <71aa76d0-a3b8-b4f3-a7c3-766cfb75412f@rasmusvillemoes.dk>
+Date:   Fri, 24 Jan 2020 21:50:20 +1100
+Message-ID: <875zh1i0wj.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200123180436.99487-8-bgardon@google.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 23, 2020 at 10:04:33AM -0800, Ben Gardon wrote:
-...
-> -static struct kvm_vm *create_vm(enum vm_guest_mode mode, uint32_t vcpuid,
-> -				uint64_t extra_mem_pages, void *guest_code)
-> +#define PAGE_SHIFT_4K  12
-> +#define PTES_PER_4K_PT 512
-> +
-> +static struct kvm_vm *create_vm(enum vm_guest_mode mode, int vcpus,
-> +				uint64_t vcpu_memory_bytes)
->  {
->  	struct kvm_vm *vm;
-> -	uint64_t extra_pg_pages = extra_mem_pages / 512 * 2;
-> +	uint64_t pages = DEFAULT_GUEST_PHY_PAGES;
-> +
-> +	/* Account for a few pages per-vCPU for stacks */
-> +	pages += DEFAULT_STACK_PGS * vcpus;
-> +
-> +	/*
-> +	 * Reserve twice the ammount of memory needed to map the test region and
-> +	 * the page table / stacks region, at 4k, for page tables. Do the
-> +	 * calculation with 4K page size: the smallest of all archs. (e.g., 64K
-> +	 * page size guest will need even less memory for page tables).
-> +	 */
-> +	pages += (2 * pages) / PTES_PER_4K_PT;
-> +	pages += ((2 * vcpus * vcpu_memory_bytes) >> PAGE_SHIFT_4K) /
-> +		 PTES_PER_4K_PT;
+Rasmus Villemoes <linux@rasmusvillemoes.dk> writes:
+> I'm building for a ppc32 (mpc8309) target using Yocto, and I'm hitting a
+> very hard to debug problem that maybe someone else has encountered. This
+> doesn't happen always, perhaps 1 in 8 times or something like that.
+>
+> The issue is that when the build gets to do "${CROSS}objcopy -O binary
+> ... vmlinux", vmlinux is not (no longer) a proper ELF file, so naturally
+> that fails with
+>
+>   powerpc-oe-linux-objcopy:vmlinux: file format not recognized
+>
+> So I hacked link-vmlinux.sh to stash copies of vmlinux before and after
+> sortextable vmlinux. Both of those are proper ELF files, and comparing
+> the corrupted vmlinux to vmlinux.after_sort they are identical after the
+> first 52 bytes; in vmlinux, those first 52 bytes are all 0.
+>
+> I also saved stat(1) info to see if vmlinux is being replaced or
+> modified in-place.
+>
+> $ cat vmlinux.stat.after_sort
+>   File: 'vmlinux'
+>   Size: 8608456     Blocks: 16696      IO Block: 4096   regular file
+> Device: 811h/2065d  Inode: 21919132    Links: 1
+> Access: (0755/-rwxr-xr-x)  Uid: ( 1000/    user)   Gid: ( 1001/    user)
+> Access: 2020-01-22 10:52:38.946703081 +0000
+> Modify: 2020-01-22 10:52:38.954703105 +0000
+> Change: 2020-01-22 10:52:38.954703105 +0000
+>
+> $ stat vmlinux
+>   File: 'vmlinux'
+>   Size: 8608456         Blocks: 16688      IO Block: 4096   regular file
+> Device: 811h/2065d      Inode: 21919132    Links: 1
+> Access: (0755/-rwxr-xr-x)  Uid: ( 1000/    user)   Gid: ( 1001/    user)
+> Access: 2020-01-22 17:20:00.650379057 +0000
+> Modify: 2020-01-22 10:52:38.954703105 +0000
+> Change: 2020-01-22 10:52:38.954703105 +0000
+>
+> So the inode number and mtime/ctime are exactly the same, but for some
+> reason Blocks: has changed? This is on an ext4 filesystem, but I don't
+> suspect the filesystem to be broken, because it's always just vmlinux
+> that ends up corrupt, and always in exactly this way with the first 52
+> bytes having been wiped.
+>
+> Any ideas?
 
-pages needs to be rounded up to the next multiple of 16 in order for this
-to work on aarch64 machines with 64k pages.
+Not really sorry. Haven't seen or heard of that before.
 
-Thanks,
-drew
+Are you doing a parallel make? If so does -j 1 fix it?
 
+If it seems like sortextable is at fault then strace'ing it would be my
+next step.
+
+cheers
