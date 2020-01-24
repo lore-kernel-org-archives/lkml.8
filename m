@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECDECC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:42:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22EA7C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:42:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B39D8208C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:42:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D38BF20718
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:42:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579858955;
-	bh=QY51Z+nIptKudmzQUdKzVVjuB+ekYFzz2SMEMulsYyk=;
+	s=default; t=1579858960;
+	bh=rrAKy3cS1B60JcnPfK6SJ/chFdKXbH5NNXxHVRx9OHY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rogyZd0h3DeZxP+rQ1chHam1oTRnQN1V2GYcRv6NkxJRBwVdVxPG/tE3uEf9zq5KR
-	 5rg5RMiYQMyStyCulS1uDSdwJn1lEf1Ps9x1fwbkQgae/jsllDFT+I2+7X6LZTOljt
-	 VqCxlPjC9WtYIW8AkFwOwVP2CbkloycCQceMVSD0=
+	b=GJywdyC876z3XO25sHgva81hZZ61FhaJumcfPfAMRAI57Qwx9Hto55fd2rcj8FEv4
+	 OB18zo1WWIUN3lvOhyrWKouuBJnnW+1kSi3dIQg/fjPwY2NNuzH2IwGwnBxGC9Pv5o
+	 WLOplD/tgHnMETac6mptf8X72Zb3wlI9EgXoRL0c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732280AbgAXJme (ORCPT
+        id S1733144AbgAXJmj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 04:42:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40220 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 04:42:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40270 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730677AbgAXJmb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 04:42:31 -0500
+        id S1730677AbgAXJmf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 04:42:35 -0500
 Received: from localhost (unknown [145.15.244.15])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 997A020718;
-        Fri, 24 Jan 2020 09:42:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 527E020718;
+        Fri, 24 Jan 2020 09:42:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579858950;
-        bh=QY51Z+nIptKudmzQUdKzVVjuB+ekYFzz2SMEMulsYyk=;
+        s=default; t=1579858954;
+        bh=rrAKy3cS1B60JcnPfK6SJ/chFdKXbH5NNXxHVRx9OHY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=p3GyfjHoQLpFA3T3+BVx4w9Y9pyZ4OM3m4zAazp85ZerzsZsO3azzCfV+0v/DT310
-         2URuGaMG5SoKTTFfzuVUylVku91Bx2925wgIqcp8gJ3eVXGqGmwoHGFj9JxmV+jGlL
-         lspacgdq4SBteI/nIDaLsZVM9hhBNTHsFvTdMxZs=
+        b=Kbt+Wrz7Yzs+n3pvIz32p36ndOnyD5SaE2HnE9sCLY+LbhlthDdcaUdKCtxLNMgt3
+         0usO2AHIGUQpMYboftfir5qVFY0KHoUOimLfoDQT1ke7Sv/iuRhnxBvMhRnvAd2wQf
+         EoeRjL+05rx89vIsLZM4hBx52M0p5XUmoeNZyFvk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kees Cook <keescook@chromium.org>,
-        Shuah Khan <skhan@linuxfoundation.org>,
+        stable@vger.kernel.org, Robin Murphy <robin.murphy@arm.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 077/102] selftests: gen_kselftest_tar.sh: Do not clobber kselftest/
-Date:   Fri, 24 Jan 2020 10:31:18 +0100
-Message-Id: <20200124092818.279058054@linuxfoundation.org>
+Subject: [PATCH 5.4 091/102] dma-direct: dont check swiotlb=force in dma_direct_map_resource
+Date:   Fri, 24 Jan 2020 10:31:32 +0100
+Message-Id: <20200124092820.420426594@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124092806.004582306@linuxfoundation.org>
 References: <20200124092806.004582306@linuxfoundation.org>
@@ -60,106 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kees Cook <keescook@chromium.org>
+From: Christoph Hellwig <hch@lst.de>
 
-[ Upstream commit ea1bf0bb18c0bd627d7b551196453ff2fff44225 ]
+[ Upstream commit 4268ac6ae5870af10a7417b22990d615f72f77e2 ]
 
-The default installation location for gen_kselftest_tar.sh was still
-"kselftest/" which collides with the existing directory. Instead, this
-moves the installation target into "kselftest_install/kselftest/" and
-adjusts the tar creation accordingly. This also adjusts indentation and
-logic to be consistent.
+When mapping resources we can't just use swiotlb ram for bounce
+buffering.  Switch to a direct dma_capable check instead.
 
-Fixes: 42d46e57ec97 ("selftests: Extract single-test shell logic from lib.mk")
-Signed-off-by: Kees Cook <keescook@chromium.org>
-Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
+Fixes: cfced786969c ("dma-mapping: remove the default map_resource implementation")
+Reported-by: Robin Murphy <robin.murphy@arm.com>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+Acked-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/gen_kselftest_tar.sh | 21 ++++++++++-------
- tools/testing/selftests/kselftest_install.sh | 24 ++++++++++----------
- 2 files changed, 25 insertions(+), 20 deletions(-)
+ kernel/dma/direct.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/testing/selftests/gen_kselftest_tar.sh b/tools/testing/selftests/gen_kselftest_tar.sh
-index a27e2eec35867..8b2b6088540d4 100755
---- a/tools/testing/selftests/gen_kselftest_tar.sh
-+++ b/tools/testing/selftests/gen_kselftest_tar.sh
-@@ -38,16 +38,21 @@ main()
- 	esac
- 	fi
- 
--	install_dir=./kselftest
-+	# Create working directory.
-+	dest=`pwd`
-+	install_work="$dest"/kselftest_install
-+	install_name=kselftest
-+	install_dir="$install_work"/"$install_name"
-+	mkdir -p "$install_dir"
- 
--# Run install using INSTALL_KSFT_PATH override to generate install
--# directory
--./kselftest_install.sh
--tar $copts kselftest${ext} $install_dir
--echo "Kselftest archive kselftest${ext} created!"
-+	# Run install using INSTALL_KSFT_PATH override to generate install
-+	# directory
-+	./kselftest_install.sh "$install_dir"
-+	(cd "$install_work"; tar $copts "$dest"/kselftest${ext} $install_name)
-+	echo "Kselftest archive kselftest${ext} created!"
- 
--# clean up install directory
--rm -rf kselftest
-+	# clean up top-level install work directory
-+	rm -rf "$install_work"
- }
- 
- main "$@"
-diff --git a/tools/testing/selftests/kselftest_install.sh b/tools/testing/selftests/kselftest_install.sh
-index e2e1911d62d50..407af7da70372 100755
---- a/tools/testing/selftests/kselftest_install.sh
-+++ b/tools/testing/selftests/kselftest_install.sh
-@@ -6,30 +6,30 @@
- # Author: Shuah Khan <shuahkh@osg.samsung.com>
- # Copyright (C) 2015 Samsung Electronics Co., Ltd.
- 
--install_loc=`pwd`
--
- main()
+diff --git a/kernel/dma/direct.c b/kernel/dma/direct.c
+index 8402b29c280f5..867fd72cb2605 100644
+--- a/kernel/dma/direct.c
++++ b/kernel/dma/direct.c
+@@ -375,7 +375,7 @@ dma_addr_t dma_direct_map_resource(struct device *dev, phys_addr_t paddr,
  {
--	if [ $(basename $install_loc) !=  "selftests" ]; then
-+	base_dir=`pwd`
-+	install_dir="$base_dir"/kselftest_install
-+
-+	# Make sure we're in the selftests top-level directory.
-+	if [ $(basename "$base_dir") !=  "selftests" ]; then
- 		echo "$0: Please run it in selftests directory ..."
- 		exit 1;
- 	fi
-+
-+	# Only allow installation into an existing location.
- 	if [ "$#" -eq 0 ]; then
--		echo "$0: Installing in default location - $install_loc ..."
-+		echo "$0: Installing in default location - $install_dir ..."
- 	elif [ ! -d "$1" ]; then
- 		echo "$0: $1 doesn't exist!!"
- 		exit 1;
- 	else
--		install_loc=$1
--		echo "$0: Installing in specified location - $install_loc ..."
-+		install_dir="$1"
-+		echo "$0: Installing in specified location - $install_dir ..."
- 	fi
+ 	dma_addr_t dma_addr = paddr;
  
--	install_dir=$install_loc/kselftest_install
--
--# Create install directory
--	mkdir -p $install_dir
--# Build tests
--	KSFT_INSTALL_PATH=$install_dir make install
-+	# Build tests
-+	KSFT_INSTALL_PATH="$install_dir" make install
- }
- 
- main "$@"
+-	if (unlikely(!dma_direct_possible(dev, dma_addr, size))) {
++	if (unlikely(!dma_capable(dev, dma_addr, size))) {
+ 		report_addr(dev, dma_addr, size);
+ 		return DMA_MAPPING_ERROR;
+ 	}
 -- 
 2.20.1
 
