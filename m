@@ -4,53 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71C16C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:13:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F457C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:13:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40C702087E
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:13:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3AA5F2075D
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:13:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579864389;
-	bh=rfAtS0wJtWOOaABkLkKp4LsyZFU2C66sqgJerb65tfg=;
+	s=default; t=1579864394;
+	bh=5RiNq3ChLXcE2MqyxudXObIACzuPAqKPoCbvjSzOPl8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=z5+fXpnzWx0w0CjemiHPSOQHeC+KUpj3Acw+o+t294HHPEPOfOk3Usf6K7XEWndMm
-	 c0ALf9CLYQlRVB9rwd7y60kmM8d/IlIo7Q0+6u3UHTpmXb5HfVN2JhWLOlaBYnyGDC
-	 UPQusyXxes58UFte7IuSHzWXOUSjR4BpEF0UJ8eA=
+	b=oGpF7MvSCSHG0z3Zfzpuo7nWlsBSomzzc79PBe/spYcNs2yZNf+xGqwFVvo8NCFJq
+	 B2WlklTYEVDQhelZoG96anJ53JHs/Rreae1Txxf0dwAwlooYGf7RZr5XuGzYxZTIu/
+	 3aZTFMNaICjTVvssUx/UzcwZWYhMrV4MqkyXFylE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390025AbgAXLNI (ORCPT
+        id S2390033AbgAXLNN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:13:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49286 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 06:13:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49458 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389259AbgAXLM5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:12:57 -0500
+        id S2389259AbgAXLNJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:13:09 -0500
 Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9649B20708;
-        Fri, 24 Jan 2020 11:12:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5593F20708;
+        Fri, 24 Jan 2020 11:13:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579864376;
-        bh=rfAtS0wJtWOOaABkLkKp4LsyZFU2C66sqgJerb65tfg=;
+        s=default; t=1579864389;
+        bh=5RiNq3ChLXcE2MqyxudXObIACzuPAqKPoCbvjSzOPl8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aBVhjOgSLZ4Md+Ws8hap0V54PRsmpFHU4u4XOVJ/8rhZ3rMv3DHUqXbSdJ9XKlfuU
-         CdJZfI2Tc5r/O7OXPDBbS0rcOE0uVeGLo5fB2qVH+4hUIibyKVHMoFEabZGJRuJECC
-         TUG7QkxPLLLCSwmdZ/u+l9eDekv3BinWdQuik5to=
+        b=p0duFemPRkzZU927IjsupFt57D2pnvvRB74lb2CrDw301rlcGU9hxMv0qk05WH4BI
+         Y5Xdk8jVlSMeYEoMCv2yHvoFAymk6A/17pTxwc9Kujz9AFGYDmsG+QRs0iG5YJRpfB
+         1/9FAAeowxVmnMPBrafKy3J+y3ZbApG+TuntM2Qs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Nicolas Pitre <nico@linaro.org>,
-        Anand Moon <linux.amoon@gmail.com>,
+        stable@vger.kernel.org, Vladimir Murzin <vladimir.murzin@arm.com>,
         Russell King <rmk+kernel@armlinux.org.uk>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 236/639] ARM: 8847/1: pm: fix HYP/SVC mode mismatch when MCPM is used
-Date:   Fri, 24 Jan 2020 10:26:46 +0100
-Message-Id: <20200124093116.385619902@linuxfoundation.org>
+Subject: [PATCH 4.19 238/639] ARM: 8849/1: NOMMU: Fix encodings for PMSAv8s PRBAR4/PRLAR4
+Date:   Fri, 24 Jan 2020 10:26:48 +0100
+Message-Id: <20200124093116.635947062@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
 References: <20200124093047.008739095@linuxfoundation.org>
@@ -63,95 +60,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marek Szyprowski <m.szyprowski@samsung.com>
+From: Vladimir Murzin <vladimir.murzin@arm.com>
 
-[ Upstream commit ca70ea43f80c98582f5ffbbd1e6f4da2742da0c4 ]
+[ Upstream commit d410a8a49e3e00e07d43037e90f776d522b25a6a ]
 
-MCPM does a soft reset of the CPUs and uses common cpu_resume() routine to
-perform low-level platform initialization. This results in a try to install
-HYP stubs for the second time for each CPU and results in false HYP/SVC
-mode mismatch detection. The HYP stubs are already installed at the
-beginning of the kernel initialization on the boot CPU (head.S) or in the
-secondary_startup() for other CPUs. To fix this issue MCPM code should use
-a cpu_resume() routine without HYP stubs installation.
+To access PRBARn, where n is referenced as a binary number:
 
-This change fixes HYP/SVC mode mismatch on Samsung Exynos5422-based Odroid
-XU3/XU4/HC1 boards.
+MRC p15, 0, <Rt>, c6, c8+n[3:1], 4*n[0] ; Read PRBARn into Rt
+MCR p15, 0, <Rt>, c6, c8+n[3:1], 4*n[0] ; Write Rt into PRBARn
 
-Fixes: 3721924c8154 ("ARM: 8081/1: MCPM: provide infrastructure to allow for MCPM loopback")
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Acked-by: Nicolas Pitre <nico@linaro.org>
-Tested-by: Anand Moon <linux.amoon@gmail.com>
+To access PRLARn, where n is referenced as a binary number:
+
+MRC p15, 0, <Rt>, c6, c8+n[3:1], 4*n[0]+1 ; Read PRLARn into Rt
+MCR p15, 0, <Rt>, c6, c8+n[3:1], 4*n[0]+1 ; Write Rt into PRLARn
+
+For PR{B,L}AR4, n is 4, n[0] is 0, n[3:1] is 2, while current encoding
+done with n[0] set to 1 which is wrong. Use proper encoding instead.
+
+Fixes: 046835b4aa22b9ab6aa0bb274e3b71047c4b887d ("ARM: 8757/1: NOMMU: Support PMSAv8 MPU")
+Signed-off-by: Vladimir Murzin <vladimir.murzin@arm.com>
 Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/common/mcpm_entry.c   |  2 +-
- arch/arm/include/asm/suspend.h |  1 +
- arch/arm/kernel/sleep.S        | 12 ++++++++++++
- 3 files changed, 14 insertions(+), 1 deletion(-)
+ arch/arm/kernel/head-nommu.S | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/common/mcpm_entry.c b/arch/arm/common/mcpm_entry.c
-index ad574d20415c2..1b1b82b37ce03 100644
---- a/arch/arm/common/mcpm_entry.c
-+++ b/arch/arm/common/mcpm_entry.c
-@@ -381,7 +381,7 @@ static int __init nocache_trampoline(unsigned long _arg)
- 	unsigned int cluster = MPIDR_AFFINITY_LEVEL(mpidr, 1);
- 	phys_reset_t phys_reset;
- 
--	mcpm_set_entry_vector(cpu, cluster, cpu_resume);
-+	mcpm_set_entry_vector(cpu, cluster, cpu_resume_no_hyp);
- 	setup_mm_for_reboot();
- 
- 	__mcpm_cpu_going_down(cpu, cluster);
-diff --git a/arch/arm/include/asm/suspend.h b/arch/arm/include/asm/suspend.h
-index 452bbdcbcc835..506314265c6f1 100644
---- a/arch/arm/include/asm/suspend.h
-+++ b/arch/arm/include/asm/suspend.h
-@@ -10,6 +10,7 @@ struct sleep_save_sp {
- };
- 
- extern void cpu_resume(void);
-+extern void cpu_resume_no_hyp(void);
- extern void cpu_resume_arm(void);
- extern int cpu_suspend(unsigned long, int (*)(unsigned long));
- 
-diff --git a/arch/arm/kernel/sleep.S b/arch/arm/kernel/sleep.S
-index a8257fc9cf2a9..5dc8b80bb6938 100644
---- a/arch/arm/kernel/sleep.S
-+++ b/arch/arm/kernel/sleep.S
-@@ -120,6 +120,14 @@ ENDPROC(cpu_resume_after_mmu)
- 	.text
- 	.align
- 
-+#ifdef CONFIG_MCPM
-+	.arm
-+THUMB(	.thumb			)
-+ENTRY(cpu_resume_no_hyp)
-+ARM_BE8(setend be)			@ ensure we are in BE mode
-+	b	no_hyp
-+#endif
-+
- #ifdef CONFIG_MMU
- 	.arm
- ENTRY(cpu_resume_arm)
-@@ -135,6 +143,7 @@ ARM_BE8(setend be)			@ ensure we are in BE mode
- 	bl	__hyp_stub_install_secondary
+diff --git a/arch/arm/kernel/head-nommu.S b/arch/arm/kernel/head-nommu.S
+index 326a97aa3ea0c..22efcf48604cd 100644
+--- a/arch/arm/kernel/head-nommu.S
++++ b/arch/arm/kernel/head-nommu.S
+@@ -441,8 +441,8 @@ M_CLASS(str	r6, [r12, #PMSAv8_RLAR_A(3)])
+ 	str	r5, [r12, #PMSAv8_RBAR_A(0)]
+ 	str	r6, [r12, #PMSAv8_RLAR_A(0)]
+ #else
+-	mcr	p15, 0, r5, c6, c10, 1			@ PRBAR4
+-	mcr	p15, 0, r6, c6, c10, 2			@ PRLAR4
++	mcr	p15, 0, r5, c6, c10, 0			@ PRBAR4
++	mcr	p15, 0, r6, c6, c10, 1			@ PRLAR4
  #endif
- 	safe_svcmode_maskall r1
-+no_hyp:
- 	mov	r1, #0
- 	ALT_SMP(mrc p15, 0, r0, c0, c0, 5)
- 	ALT_UP_B(1f)
-@@ -163,6 +172,9 @@ ENDPROC(cpu_resume)
- 
- #ifdef CONFIG_MMU
- ENDPROC(cpu_resume_arm)
-+#endif
-+#ifdef CONFIG_MCPM
-+ENDPROC(cpu_resume_no_hyp)
  #endif
- 
- 	.align 2
+ 	ret	lr
 -- 
 2.20.1
 
