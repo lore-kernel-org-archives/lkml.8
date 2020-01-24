@@ -2,158 +2,111 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E1BFC35242
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 20:08:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 120ECC35242
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 20:08:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E533D2077C
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 20:08:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDBB72081E
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 20:08:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j5++EJNQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392209AbgAXUIJ (ORCPT
+        id S2392444AbgAXUIc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 15:08:09 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:43603 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390416AbgAXUIJ (ORCPT
+        Fri, 24 Jan 2020 15:08:32 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:34865 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391798AbgAXUIc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 15:08:09 -0500
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1iv5FN-0000vm-12; Fri, 24 Jan 2020 21:08:05 +0100
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 495231C1A6C;
-        Fri, 24 Jan 2020 21:08:04 +0100 (CET)
-Date:   Fri, 24 Jan 2020 20:08:04 -0000
-From:   "tip-bot2 for Stephen Boyd" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: timers/core] alarmtimer: Make alarmtimer platform device child
- of RTC device
-Cc:     Douglas Anderson <dianders@chromium.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Thomas Gleixner <tglx@linutronix.de>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200124055849.154411-2-swboyd@chromium.org>
-References: <20200124055849.154411-2-swboyd@chromium.org>
-MIME-Version: 1.0
-Message-ID: <157989648407.396.9289380582610356719.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+        Fri, 24 Jan 2020 15:08:32 -0500
+Received: by mail-pf1-f194.google.com with SMTP id i23so1637942pfo.2;
+        Fri, 24 Jan 2020 12:08:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=6ErqDnPmvotTKNe1KfqwWHr2o3aJpwAhGPt+q+2RIGY=;
+        b=j5++EJNQx/pjiInQRmR1C7PmvfNsiq2RQhNl8BaqnCPdx4a+wAFMN8wLG7w7bb9Vnz
+         ZjnuJhqdGlB3TU/IZ6LRpAEbanmwIjkvON4qMIlxY93ay8RMdS3SXC+K9crIPyTc48x0
+         FHfk9xbI4rm9ZXqkp0/u7iGDyQvdrP/8MIbqWJ64ClmYb59cFFjuaIrKEcr2y7EDw4S2
+         V8m9by4tOdeJsC8pq+oNl/2B5FmbXTl+1zkjRpofaN7M1dVBK0T9k+jDy5hOKqAP6EPi
+         74O34mVEfi2AW+bEPmenVuKYw+KeHQkbVbqHMcIxi/rqLDdtQ2va5N/4NG7PIGcyNuNJ
+         q7qw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=6ErqDnPmvotTKNe1KfqwWHr2o3aJpwAhGPt+q+2RIGY=;
+        b=IenKAAmV6BA+dWWaCOUxG4xUbXK/bYxAZTHV/G7uR0NfqkaUTPpFiRDiPemX1gaiPv
+         HjUd1sSUmopfexiAhZJkiDkka9RnqtzsNRXcdt84DdM4RKtw5jkkxQ6LaV5dF3MpI9zY
+         oyXyuHWJIv3H6AdCLQ8+MXOMxskzlFSmylbaRifYrk/j+4iMDFZR95JrJNXQTUUFd3Oq
+         7c3OsnYmTazOGLxqVE7SZxGF+Cwp0wkNlK1EvzcvpBjJtPq3XGAJh3So4QsFUpjS8Jyg
+         P5fsudNglUNxRhbApcDzMFTzxSojTL/FpNmkEnwC/oukqtlBvw+QgztJlBf+aqp2hsP9
+         W68w==
+X-Gm-Message-State: APjAAAWauwOYL3Y7JjarMH7U1c9BZ+IL3HIDIgEqpGW0EkfwvCg/uxsU
+        VwZYonbNa1xyJwtpYEhlYis=
+X-Google-Smtp-Source: APXvYqyDX71JE8oPFq73PkIkrg9qSc6xt8FGKqhatmzDASLi9r0401eu++SsDf608mt+iTH/hcz4gg==
+X-Received: by 2002:a63:5a23:: with SMTP id o35mr5912160pgb.4.1579896511412;
+        Fri, 24 Jan 2020 12:08:31 -0800 (PST)
+Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id j38sm7363809pgj.27.2020.01.24.12.08.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 24 Jan 2020 12:08:29 -0800 (PST)
+From:   Florian Fainelli <f.fainelli@gmail.com>
+To:     linux-arm-kernel@lists.infradead.org
+Cc:     will@kernel.org, gregkh@linuxfoundation.org,
+        stable@vger.kernel.org, sashal@kernel.org,
+        Will Deacon <will.deacon@arm.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH stable 4.9] arm64: kpti: Whitelist Cortex-A CPUs that don't implement the CSV3 field
+Date:   Fri, 24 Jan 2020 12:08:20 -0800
+Message-Id: <20200124200820.18272-1-f.fainelli@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the timers/core branch of tip:
+From: Will Deacon <will.deacon@arm.com>
 
-Commit-ID:     c79108bd19a8490315847e0c95ac6526fcd8e770
-Gitweb:        https://git.kernel.org/tip/c79108bd19a8490315847e0c95ac6526fcd8e770
-Author:        Stephen Boyd <swboyd@chromium.org>
-AuthorDate:    Thu, 23 Jan 2020 21:58:46 -08:00
-Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Fri, 24 Jan 2020 21:00:20 +01:00
+commit 2a355ec25729053bb9a1a89b6c1d1cdd6c3b3fb1 upstream.
 
-alarmtimer: Make alarmtimer platform device child of RTC device
+While the CSV3 field of the ID_AA64_PFR0 CPU ID register can be checked
+to see if a CPU is susceptible to Meltdown and therefore requires kpti
+to be enabled, existing CPUs do not implement this field.
 
-The alarmtimer_suspend() function will fail if an RTC device is on a bus
-such as SPI or i2c and that RTC device registers and probes after
-alarmtimer_init() registers and probes the 'alarmtimer' platform device.
+We therefore whitelist all unaffected Cortex-A CPUs that do not implement
+the CSV3 field.
 
-This is because system wide suspend suspends devices in the reverse order
-of their probe. When alarmtimer_suspend() attempts to program the RTC for a
-wakeup it will try to program an RTC device on a bus that has already been
-suspended.
-
-Move the alarmtimer device registration to happen when the RTC which is
-used for wakeup is registered. Register the 'alarmtimer' platform device as
-a child of the RTC device too, so that it can be guaranteed that the RTC
-device won't be suspended when alarmtimer_suspend() is called.
-
-Reported-by: Douglas Anderson <dianders@chromium.org>
-Signed-off-by: Stephen Boyd <swboyd@chromium.org>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
-Link: https://lore.kernel.org/r/20200124055849.154411-2-swboyd@chromium.org
-
+Signed-off-by: Will Deacon <will.deacon@arm.com>
+[florian: adjust whilelist location and table to stable-4.9.y]
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 ---
- kernel/time/alarmtimer.c | 20 +++++++++-----------
- 1 file changed, 9 insertions(+), 11 deletions(-)
+ arch/arm64/kernel/cpufeature.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/kernel/time/alarmtimer.c b/kernel/time/alarmtimer.c
-index 564ff5d..f0469cc 100644
---- a/kernel/time/alarmtimer.c
-+++ b/kernel/time/alarmtimer.c
-@@ -89,6 +89,7 @@ static int alarmtimer_rtc_add_device(struct device *dev,
- 	unsigned long flags;
- 	struct rtc_device *rtc = to_rtc_device(dev);
- 	struct wakeup_source *__ws;
-+	struct platform_device *pdev;
- 	int ret = 0;
- 
- 	if (rtcdev)
-@@ -100,9 +101,11 @@ static int alarmtimer_rtc_add_device(struct device *dev,
- 		return -1;
- 
- 	__ws = wakeup_source_register(dev, "alarmtimer");
-+	pdev = platform_device_register_data(dev, "alarmtimer",
-+					     PLATFORM_DEVID_AUTO, NULL, 0);
- 
- 	spin_lock_irqsave(&rtcdev_lock, flags);
--	if (!rtcdev) {
-+	if (__ws && !IS_ERR(pdev) && !rtcdev) {
- 		if (!try_module_get(rtc->owner)) {
- 			ret = -1;
- 			goto unlock;
-@@ -113,10 +116,14 @@ static int alarmtimer_rtc_add_device(struct device *dev,
- 		get_device(dev);
- 		ws = __ws;
- 		__ws = NULL;
-+		pdev = NULL;
-+	} else {
-+		ret = -1;
+diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
+index 9a8e45dc36bd..8cf001baee21 100644
+--- a/arch/arm64/kernel/cpufeature.c
++++ b/arch/arm64/kernel/cpufeature.c
+@@ -789,6 +789,11 @@ static bool unmap_kernel_at_el0(const struct arm64_cpu_capabilities *entry,
+ 	switch (read_cpuid_id() & MIDR_CPU_MODEL_MASK) {
+ 	case MIDR_CAVIUM_THUNDERX2:
+ 	case MIDR_BRCM_VULCAN:
++	case MIDR_CORTEX_A53:
++	case MIDR_CORTEX_A55:
++	case MIDR_CORTEX_A57:
++	case MIDR_CORTEX_A72:
++	case MIDR_CORTEX_A73:
+ 		return false;
  	}
- unlock:
- 	spin_unlock_irqrestore(&rtcdev_lock, flags);
  
-+	platform_device_unregister(pdev);
- 	wakeup_source_unregister(__ws);
- 
- 	return ret;
-@@ -903,8 +910,7 @@ static void get_boottime_timespec(struct timespec64 *tp)
-  */
- static int __init alarmtimer_init(void)
- {
--	struct platform_device *pdev;
--	int error = 0;
-+	int error;
- 	int i;
- 
- 	alarmtimer_rtc_timer_init();
-@@ -929,15 +935,7 @@ static int __init alarmtimer_init(void)
- 	if (error)
- 		goto out_if;
- 
--	pdev = platform_device_register_simple("alarmtimer", -1, NULL, 0);
--	if (IS_ERR(pdev)) {
--		error = PTR_ERR(pdev);
--		goto out_drv;
--	}
- 	return 0;
--
--out_drv:
--	platform_driver_unregister(&alarmtimer_driver);
- out_if:
- 	alarmtimer_rtc_interface_remove();
- 	return error;
+-- 
+2.17.1
+
