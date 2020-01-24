@@ -2,301 +2,117 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E698C32771
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:39:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7849FC32771
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:39:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67297206D4
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:39:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="b6o5NV0p"
+	by mail.kernel.org (Postfix) with ESMTP id 4629A2465B
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:39:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579865967;
+	bh=y2dLlM8guqKpltZjCUwHNqmlcjAi5k+ZqR+8aA9UrbU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=X8ygUHEiLzuHpvXiofD/xkaXZ/81gGsadv7SGCPAPPnyrJZdFeDhjadFJmWo2rqQB
+	 A1D4C0RCGo80RhRqb8L4QItyLhHxMjJKSpe1eildmXZnUCEqQpuaaHybUodyBAzb7i
+	 ruIg4qX+7+38NfsmeyDDtaJi67urrgrmAsu4j1VA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391987AbgAXLjW (ORCPT
+        id S2403896AbgAXLZ6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:39:22 -0500
-Received: from mail-vk1-f193.google.com ([209.85.221.193]:36873 "EHLO
-        mail-vk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391539AbgAXL0E (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:26:04 -0500
-Received: by mail-vk1-f193.google.com with SMTP id b129so433143vka.4
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Jan 2020 03:26:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=yA+q0/tdz9pHwwQsFpujNL3r5hUZDki5Wt7XV+ptBKg=;
-        b=b6o5NV0ph6Q5glGwWKgOfj96/rl7OpNF7ROax+CxomyD2+2mjB8eOKk92zzzlJ6YeN
-         m6WZ1HBJjJtrPgxLvTAK0EHIQHE4gg/fAH3C6jVOCwyK2lHpsGzvwjrNw/RIzmOCxh2v
-         +xqEFOtn3154mXloQvuBC/YS6t8zWwfAGDcQRSVi398wv0mvGB9vdEaRPldzpUeAmbjB
-         9nLVp0UFICNnuTz/4JGrZUC85F58N9OYvxNwC0jY1gf71+W+JyTlwEfm+cpItbglH0IC
-         SbAVfwF5wlW5zfQM7k47puAe/fp9WqLf65EgRQuecEzLJHYQhQrj6qiORWAu5cM+mo3W
-         viyA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=yA+q0/tdz9pHwwQsFpujNL3r5hUZDki5Wt7XV+ptBKg=;
-        b=U/sErpveRj8G9vq5TD2Gxcsrrtlw6PMnz48ziTpihyBjx4XWITehKGhJjXTckZWicS
-         Gls1q/XkRAFsitxK/sLUsBLpg3TrUeIQRuE5J7cXF4qXMySomGMgwgYKJWYgtyUgXHId
-         bGU2cBLytTLdh/gUGRIJkhZDliXszT/hqmqhL4Mev6H0noSOk+aJp8/KeVo8l+j0ALFY
-         XtSoBOdnHpiLGG/cbul7aIL3uAcWCFoYJv652q9rrdl9cuxEP2Es8gdyOi6OopyyCdhv
-         EeKvX2I4Ob7kPzNZLOmbscNN0FUO7kAPAPSPmDqs9HuJ6TtHvL4a6Y3f7u9fxbGuBmJi
-         GLwQ==
-X-Gm-Message-State: APjAAAV62rnB2fKpsWSURHl9x8rprrVe+526f+nGaQbxxvne+oRg+laB
-        3HmPgkrrU0XFFAA/oPY8TDLyhVLlvqrRFrTJLtKSFQ==
-X-Google-Smtp-Source: APXvYqyJdUDT6GFcqq2yfAaUP/QP9wvF8DIKUg6lcbvTtc2pgywF0VGwYxowttRK1UdAtwMIFixCI2grpuBptG0UGQQ=
-X-Received: by 2002:a1f:94c1:: with SMTP id w184mr1709760vkd.43.1579865162655;
- Fri, 24 Jan 2020 03:26:02 -0800 (PST)
+        Fri, 24 Jan 2020 06:25:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40206 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2403866AbgAXLZy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:25:54 -0500
+Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 30D8220704;
+        Fri, 24 Jan 2020 11:25:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579865153;
+        bh=y2dLlM8guqKpltZjCUwHNqmlcjAi5k+ZqR+8aA9UrbU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=J362XDmZY4ClZZsmFH2WGXc+Ajfo8Qq8iQm/8XdNQWlclm0iD0asNJ7lXn94HuKXu
+         rvGsobnSMlrfIm3TcUWh0358Hh2a9vTq0e2W5m7o1RuRlgfYn3I0RLyYcBARdm9ZGn
+         uapehhEBFaGsFI54+CZpy+e623DgKJDmJWY3ba/s=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Quentin Monnet <quentin.monnet@netronome.com>,
+        Roman Gushchin <guro@fb.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 452/639] tools: bpftool: use correct argument in cgroup errors
+Date:   Fri, 24 Jan 2020 10:30:22 +0100
+Message-Id: <20200124093143.634353310@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
+References: <20200124093047.008739095@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-References: <20200116152230.29831-1-jbx6244@gmail.com> <20200116152230.29831-2-jbx6244@gmail.com>
-In-Reply-To: <20200116152230.29831-2-jbx6244@gmail.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Fri, 24 Jan 2020 12:25:26 +0100
-Message-ID: <CAPDyKFrgGTDK_4bv3ofs2ky6d5optfTh2H-99uBMjZzNpcOhUQ@mail.gmail.com>
-Subject: Re: [PATCH v2 2/3] dt-bindings: mmc: convert rockchip dw-mshc
- bindings to yaml
-To:     Johan Jonker <jbx6244@gmail.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 16 Jan 2020 at 16:22, Johan Jonker <jbx6244@gmail.com> wrote:
->
-> Current dts files with 'dwmmc' nodes are manually verified.
-> In order to automate this process rockchip-dw-mshc.txt
-> has to be converted to yaml. In the new setup
-> rockchip-dw-mshc.yaml will inherit properties from
-> mmc-controller.yaml and synopsys-dw-mshc-common.yaml.
-> 'dwmmc' will no longer be a valid name for a node and
-> should be changed to 'mmc'.
->
-> Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+From: Jakub Kicinski <jakub.kicinski@netronome.com>
 
-Applied for next, thanks!
+[ Upstream commit 6c6874f401e5a0caab3b6a0663169e1fb5e930bb ]
 
-Kind regards
-Uffe
+cgroup code tries to use argv[0] as the cgroup path,
+but if it fails uses argv[1] to report errors.
+
+Fixes: 5ccda64d38cc ("bpftool: implement cgroup bpf operations")
+Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+Reviewed-by: Quentin Monnet <quentin.monnet@netronome.com>
+Acked-by: Roman Gushchin <guro@fb.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ tools/bpf/bpftool/cgroup.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/tools/bpf/bpftool/cgroup.c b/tools/bpf/bpftool/cgroup.c
+index ee7a9765c6b32..adbcd84818f74 100644
+--- a/tools/bpf/bpftool/cgroup.c
++++ b/tools/bpf/bpftool/cgroup.c
+@@ -164,7 +164,7 @@ static int do_show(int argc, char **argv)
+ 
+ 	cgroup_fd = open(argv[0], O_RDONLY);
+ 	if (cgroup_fd < 0) {
+-		p_err("can't open cgroup %s", argv[1]);
++		p_err("can't open cgroup %s", argv[0]);
+ 		goto exit;
+ 	}
+ 
+@@ -345,7 +345,7 @@ static int do_attach(int argc, char **argv)
+ 
+ 	cgroup_fd = open(argv[0], O_RDONLY);
+ 	if (cgroup_fd < 0) {
+-		p_err("can't open cgroup %s", argv[1]);
++		p_err("can't open cgroup %s", argv[0]);
+ 		goto exit;
+ 	}
+ 
+@@ -403,7 +403,7 @@ static int do_detach(int argc, char **argv)
+ 
+ 	cgroup_fd = open(argv[0], O_RDONLY);
+ 	if (cgroup_fd < 0) {
+-		p_err("can't open cgroup %s", argv[1]);
++		p_err("can't open cgroup %s", argv[0]);
+ 		goto exit;
+ 	}
+ 
+-- 
+2.20.1
 
 
-> ---
->  .../devicetree/bindings/mmc/rockchip-dw-mshc.txt   |  49 --------
->  .../devicetree/bindings/mmc/rockchip-dw-mshc.yaml  | 123 +++++++++++++++++++++
->  MAINTAINERS                                        |   1 +
->  3 files changed, 124 insertions(+), 49 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.txt
->  create mode 100644 Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.yaml
->
-> diff --git a/Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.txt b/Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.txt
-> deleted file mode 100644
-> index 6f629b12b..000000000
-> --- a/Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.txt
-> +++ /dev/null
-> @@ -1,49 +0,0 @@
-> -* Rockchip specific extensions to the Synopsys Designware Mobile
-> -  Storage Host Controller
-> -
-> -The Synopsys designware mobile storage host controller is used to interface
-> -a SoC with storage medium such as eMMC or SD/MMC cards. This file documents
-> -differences between the core Synopsys dw mshc controller properties described
-> -by synopsys-dw-mshc.txt and the properties used by the Rockchip specific
-> -extensions to the Synopsys Designware Mobile Storage Host Controller.
-> -
-> -Required Properties:
-> -
-> -* compatible: should be
-> -       - "rockchip,rk2928-dw-mshc": for Rockchip RK2928 and following,
-> -                                                       before RK3288
-> -       - "rockchip,rk3288-dw-mshc": for Rockchip RK3288
-> -       - "rockchip,rv1108-dw-mshc", "rockchip,rk3288-dw-mshc": for Rockchip RV1108
-> -       - "rockchip,px30-dw-mshc", "rockchip,rk3288-dw-mshc": for Rockchip PX30
-> -       - "rockchip,rk3036-dw-mshc", "rockchip,rk3288-dw-mshc": for Rockchip RK3036
-> -       - "rockchip,rk3228-dw-mshc", "rockchip,rk3288-dw-mshc": for Rockchip RK322x
-> -       - "rockchip,rk3328-dw-mshc", "rockchip,rk3288-dw-mshc": for Rockchip RK3328
-> -       - "rockchip,rk3368-dw-mshc", "rockchip,rk3288-dw-mshc": for Rockchip RK3368
-> -       - "rockchip,rk3399-dw-mshc", "rockchip,rk3288-dw-mshc": for Rockchip RK3399
-> -
-> -Optional Properties:
-> -* clocks: from common clock binding: if ciu-drive and ciu-sample are
-> -  specified in clock-names, should contain handles to these clocks.
-> -
-> -* clock-names: Apart from the clock-names described in synopsys-dw-mshc.txt
-> -  two more clocks "ciu-drive" and "ciu-sample" are supported. They are used
-> -  to control the clock phases, "ciu-sample" is required for tuning high-
-> -  speed modes.
-> -
-> -* rockchip,default-sample-phase: The default phase to set ciu-sample at
-> -  probing, low speeds or in case where all phases work at tuning time.
-> -  If not specified 0 deg will be used.
-> -
-> -* rockchip,desired-num-phases: The desired number of times that the host
-> -  execute tuning when needed. If not specified, the host will do tuning
-> -  for 360 times, namely tuning for each degree.
-> -
-> -Example:
-> -
-> -       rkdwmmc0@12200000 {
-> -               compatible = "rockchip,rk3288-dw-mshc";
-> -               reg = <0x12200000 0x1000>;
-> -               interrupts = <0 75 0>;
-> -               #address-cells = <1>;
-> -               #size-cells = <0>;
-> -       };
-> diff --git a/Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.yaml b/Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.yaml
-> new file mode 100644
-> index 000000000..2f70f5ef0
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.yaml
-> @@ -0,0 +1,123 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/mmc/rockchip-dw-mshc.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Rockchip designware mobile storage host controller device tree bindings
-> +
-> +description:
-> +  Rockchip uses the Synopsys designware mobile storage host controller
-> +  to interface a SoC with storage medium such as eMMC or SD/MMC cards.
-> +  This file documents the combined properties for the core Synopsys dw mshc
-> +  controller that are not already included in the synopsys-dw-mshc-common.yaml
-> +  file and the Rockchip specific extensions.
-> +
-> +allOf:
-> +  - $ref: "synopsys-dw-mshc-common.yaml#"
-> +
-> +maintainers:
-> +  - Heiko Stuebner <heiko@sntech.de>
-> +
-> +# Everything else is described in the common file
-> +properties:
-> +  compatible:
-> +    oneOf:
-> +      # for Rockchip RK2928 and before RK3288
-> +      - const: rockchip,rk2928-dw-mshc
-> +      # for Rockchip RK3288
-> +      - const: rockchip,rk3288-dw-mshc
-> +      - items:
-> +          - enum:
-> +            # for Rockchip PX30
-> +            - rockchip,px30-dw-mshc
-> +            # for Rockchip RK3036
-> +            - rockchip,rk3036-dw-mshc
-> +            # for Rockchip RK322x
-> +            - rockchip,rk3228-dw-mshc
-> +            # for Rockchip RK3328
-> +            - rockchip,rk3328-dw-mshc
-> +            # for Rockchip RK3368
-> +            - rockchip,rk3368-dw-mshc
-> +            # for Rockchip RK3399
-> +            - rockchip,rk3399-dw-mshc
-> +            # for Rockchip RV1108
-> +            - rockchip,rv1108-dw-mshc
-> +          - const: rockchip,rk3288-dw-mshc
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    minItems: 2
-> +    maxItems: 4
-> +    description:
-> +      Handle to "biu" and "ciu" clocks for the bus interface unit clock and
-> +      the card interface unit clock. If "ciu-drive" and "ciu-sample" are
-> +      specified in clock-names, it should also contain
-> +      handles to these clocks.
-> +
-> +  clock-names:
-> +    minItems: 2
-> +    items:
-> +      - const: biu
-> +      - const: ciu
-> +      - const: ciu-drive
-> +      - const: ciu-sample
-> +    description:
-> +      Apart from the clock-names "biu" and "ciu" two more clocks
-> +      "ciu-drive" and "ciu-sample" are supported. They are used
-> +      to control the clock phases, "ciu-sample" is required for tuning
-> +      high speed modes.
-> +
-> +  rockchip,default-sample-phase:
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/uint32
-> +    minimum: 0
-> +    maximum: 360
-> +    default: 0
-> +    description:
-> +      The default phase to set "ciu-sample" at probing,
-> +      low speeds or in case where all phases work at tuning time.
-> +      If not specified 0 deg will be used.
-> +
-> +  rockchip,desired-num-phases:
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/uint32
-> +    minimum: 0
-> +    maximum: 360
-> +    default: 360
-> +    description:
-> +      The desired number of times that the host execute tuning when needed.
-> +      If not specified, the host will do tuning for 360 times,
-> +      namely tuning for each degree.
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - clocks
-> +  - clock-names
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/clock/rk3288-cru.h>
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +    #include <dt-bindings/interrupt-controller/irq.h>
-> +    sdmmc: mmc@ff0c0000 {
-> +      compatible = "rockchip,rk3288-dw-mshc";
-> +      reg = <0x0 0xff0c0000 0x0 0x4000>;
-> +      interrupts = <GIC_SPI 32 IRQ_TYPE_LEVEL_HIGH>;
-> +      clocks = <&cru HCLK_SDMMC>, <&cru SCLK_SDMMC>,
-> +               <&cru SCLK_SDMMC_DRV>, <&cru SCLK_SDMMC_SAMPLE>;
-> +      clock-names = "biu", "ciu", "ciu-drive", "ciu-sample";
-> +      resets = <&cru SRST_MMC0>;
-> +      reset-names = "reset";
-> +      fifo-depth = <0x100>;
-> +      max-frequency = <150000000>;
-> +    };
-> +
-> +...
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index d6ad01d71..1b16c0fdf 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -2240,6 +2240,7 @@ L:        linux-rockchip@lists.infradead.org
->  T:     git git://git.kernel.org/pub/scm/linux/kernel/git/mmind/linux-rockchip.git
->  S:     Maintained
->  F:     Documentation/devicetree/bindings/i2c/i2c-rk3x.txt
-> +F:     Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.yaml
->  F:     arch/arm/boot/dts/rk3*
->  F:     arch/arm/boot/dts/rv1108*
->  F:     arch/arm/mach-rockchip/
-> --
-> 2.11.0
->
+
