@@ -2,51 +2,54 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBA5FC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:41:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F4064C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:41:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9AE9420718
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:41:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C198F20718
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:41:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579858861;
-	bh=yUnc2YeJOHkI3QdEe+20GyGweQc1ZTTNkFIkcuElrP4=;
+	s=default; t=1579858864;
+	bh=BXctlGOcfWv4MWr3GFpCvdltF7/9dfdT7dPsRIp0+TY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DVJxsPg1oIcgjX6e1aGdG7cDWNv4yg4DRkrke63QJznaSswsrAqkaaS0f8YFbmeqB
-	 FaeNkeWTn+YiZrYNW9FGdiKIo8avGfAXwq0C3R8iUiNm8v5KyNnNS8qlUuWJ09QKge
-	 AHla/XCwHOrnHf4s/DeOQGiLaEsiTzKslsXPL3VY=
+	b=VAYk1q6+a4wxFzZmbvLC6zIhfqQsYWO+pWviIPIGhjkHRraJ+Q/SgH9mxQ7vSZ3XF
+	 XPXMyVKd7QRKWvdpiQVlejnZHwCMZ/gBGBTBCaJ/blexukoaoldp5asc5euF3OwM1B
+	 XbCoTTZ0f647EY1q9KSuR1W9ByRyuOuBZzuhOlhY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732697AbgAXJlA (ORCPT
+        id S1732750AbgAXJlD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 04:41:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38368 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 04:41:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38452 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732654AbgAXJk5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 04:40:57 -0500
+        id S1732698AbgAXJlA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 04:41:00 -0500
 Received: from localhost (unknown [145.15.244.15])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 863F920718;
-        Fri, 24 Jan 2020 09:40:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 81A672070A;
+        Fri, 24 Jan 2020 09:40:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579858856;
-        bh=yUnc2YeJOHkI3QdEe+20GyGweQc1ZTTNkFIkcuElrP4=;
+        s=default; t=1579858860;
+        bh=BXctlGOcfWv4MWr3GFpCvdltF7/9dfdT7dPsRIp0+TY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gBR6qNTG/UBP8qhVTLjOdp8RHD9cMXlzyKvn72CcaEmc429VKQda0vuIXc1YM78/L
-         Rp7qwc9YXHIjuq1lFw4un9yaTs/eWnqktaa1+5+DpFQ1sP5sXBVmXoHOJ74V+Znlk4
-         Dft/+A4tA2WjtkFW6PBORQyLpvPeH9cZLK59mLvU=
+        b=2GIlKOafw9E6LqUr/ASudcTj3NzK9fl2kIEYsEG7LKC2PdAljTyq66tcLyrMOi4jY
+         fsI76cD4Zi+hb0qdPEEeyjYu+Dq7gt6OXDXZ4taLucG/qODd8Bku3ebcl96oDXda5m
+         F2+EFjA8vH7S+IL5CzhrRAeUqktIUw2lDKM4Ck5A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yan-Hsuan Chuang <yhchuang@realtek.com>,
-        Kalle Valo <kvalo@codeaurora.org>
-Subject: [PATCH 5.4 049/102] rtw88: fix beaconing mode rsvd_page memory violation issue
-Date:   Fri, 24 Jan 2020 10:30:50 +0100
-Message-Id: <20200124092813.712359521@linuxfoundation.org>
+        stable@vger.kernel.org, Andrii Nakryiko <andriin@fb.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn.topel@intel.com>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 067/102] libbpf: Dont use kernel-side u32 type in xsk.c
+Date:   Fri, 24 Jan 2020 10:31:08 +0100
+Message-Id: <20200124092816.569936132@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124092806.004582306@linuxfoundation.org>
 References: <20200124092806.004582306@linuxfoundation.org>
@@ -59,130 +62,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yan-Hsuan Chuang <yhchuang@realtek.com>
+From: Andrii Nakryiko <andriin@fb.com>
 
-commit c3594559f49c601d410dee4b767c3536a5535bfd upstream.
+[ Upstream commit a566e35f1e8b4b3be1e96a804d1cca38b578167c ]
 
-When downloading the reserved page, the first page always contains
-a beacon for the firmware to reference. For non-beaconing modes such
-as station mode, also put a blank skb with length=1.
+u32 is a kernel-side typedef. User-space library is supposed to use __u32.
+This breaks Github's projection of libbpf. Do u32 -> __u32 fix.
 
-And for the beaconing modes, driver will get a real beacon with a
-length approximate to the page size. But as the beacon is always put
-at the first page, it does not need a tx_desc, because the TX path
-will generate one when TXing the reserved page to the hardware. So we
-could allocate a buffer with a size smaller than the reserved page,
-when using memcpy() to copy the content of reserved page to the buffer,
-the over-sized reserved page will violate the kernel memory.
-
-To fix it, add the tx_desc before memcpy() the reserved packets to
-the buffer, then we can get SKBs with correct length when counting
-the pages in total. And for page 0, count the extra tx_desc_sz that
-the TX path will generate. This way, the first beacon that allocated
-without tx_desc can be counted with the extra tx_desc_sz to get
-actual pages it requires.
-
-Fixes: e3037485c68e ("rtw88: new Realtek 802.11ac driver")
-Signed-off-by: Yan-Hsuan Chuang <yhchuang@realtek.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: 94ff9ebb49a5 ("libbpf: Fix compatibility for kernels without need_wakeup")
+Signed-off-by: Andrii Nakryiko <andriin@fb.com>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Acked-by: Björn Töpel <bjorn.topel@intel.com>
+Cc: Magnus Karlsson <magnus.karlsson@intel.com>
+Link: https://lore.kernel.org/bpf/20191029055953.2461336-1-andriin@fb.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/realtek/rtw88/fw.c |   52 ++++++++++++++++++++++++++------
- 1 file changed, 43 insertions(+), 9 deletions(-)
+ tools/lib/bpf/xsk.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
---- a/drivers/net/wireless/realtek/rtw88/fw.c
-+++ b/drivers/net/wireless/realtek/rtw88/fw.c
-@@ -498,9 +498,6 @@ static void rtw_rsvd_page_list_to_buf(st
- {
- 	struct sk_buff *skb = rsvd_pkt->skb;
+diff --git a/tools/lib/bpf/xsk.c b/tools/lib/bpf/xsk.c
+index b29d37fba2b0e..0c7386b0e42e4 100644
+--- a/tools/lib/bpf/xsk.c
++++ b/tools/lib/bpf/xsk.c
+@@ -161,22 +161,22 @@ static void xsk_mmap_offsets_v1(struct xdp_mmap_offsets *off)
+ 	off->rx.producer = off_v1.rx.producer;
+ 	off->rx.consumer = off_v1.rx.consumer;
+ 	off->rx.desc = off_v1.rx.desc;
+-	off->rx.flags = off_v1.rx.consumer + sizeof(u32);
++	off->rx.flags = off_v1.rx.consumer + sizeof(__u32);
  
--	if (rsvd_pkt->add_txdesc)
--		rtw_fill_rsvd_page_desc(rtwdev, skb);
--
- 	if (page >= 1)
- 		memcpy(buf + page_margin + page_size * (page - 1),
- 		       skb->data, skb->len);
-@@ -625,16 +622,37 @@ static u8 *rtw_build_rsvd_page(struct rt
- 	list_for_each_entry(rsvd_pkt, &rtwdev->rsvd_page_list, list) {
- 		iter = rtw_get_rsvd_page_skb(hw, vif, rsvd_pkt->type);
- 		if (!iter) {
--			rtw_err(rtwdev, "fail to build rsvd packet\n");
-+			rtw_err(rtwdev, "failed to build rsvd packet\n");
- 			goto release_skb;
- 		}
-+
-+		/* Fill the tx_desc for the rsvd pkt that requires one.
-+		 * And iter->len will be added with size of tx_desc_sz.
-+		 */
-+		if (rsvd_pkt->add_txdesc)
-+			rtw_fill_rsvd_page_desc(rtwdev, iter);
-+
- 		rsvd_pkt->skb = iter;
- 		rsvd_pkt->page = total_page;
--		if (rsvd_pkt->add_txdesc)
-+
-+		/* Reserved page is downloaded via TX path, and TX path will
-+		 * generate a tx_desc at the header to describe length of
-+		 * the buffer. If we are not counting page numbers with the
-+		 * size of tx_desc added at the first rsvd_pkt (usually a
-+		 * beacon, firmware default refer to the first page as the
-+		 * content of beacon), we could generate a buffer which size
-+		 * is smaller than the actual size of the whole rsvd_page
-+		 */
-+		if (total_page == 0) {
-+			if (rsvd_pkt->type != RSVD_BEACON) {
-+				rtw_err(rtwdev, "first page should be a beacon\n");
-+				goto release_skb;
-+			}
- 			total_page += rtw_len_to_page(iter->len + tx_desc_sz,
- 						      page_size);
--		else
-+		} else {
- 			total_page += rtw_len_to_page(iter->len, page_size);
-+		}
- 	}
+ 	off->tx.producer = off_v1.tx.producer;
+ 	off->tx.consumer = off_v1.tx.consumer;
+ 	off->tx.desc = off_v1.tx.desc;
+-	off->tx.flags = off_v1.tx.consumer + sizeof(u32);
++	off->tx.flags = off_v1.tx.consumer + sizeof(__u32);
  
- 	if (total_page > rtwdev->fifo.rsvd_drv_pg_num) {
-@@ -647,13 +665,24 @@ static u8 *rtw_build_rsvd_page(struct rt
- 	if (!buf)
- 		goto release_skb;
+ 	off->fr.producer = off_v1.fr.producer;
+ 	off->fr.consumer = off_v1.fr.consumer;
+ 	off->fr.desc = off_v1.fr.desc;
+-	off->fr.flags = off_v1.fr.consumer + sizeof(u32);
++	off->fr.flags = off_v1.fr.consumer + sizeof(__u32);
  
-+	/* Copy the content of each rsvd_pkt to the buf, and they should
-+	 * be aligned to the pages.
-+	 *
-+	 * Note that the first rsvd_pkt is a beacon no matter what vif->type.
-+	 * And that rsvd_pkt does not require tx_desc because when it goes
-+	 * through TX path, the TX path will generate one for it.
-+	 */
- 	list_for_each_entry(rsvd_pkt, &rtwdev->rsvd_page_list, list) {
- 		rtw_rsvd_page_list_to_buf(rtwdev, page_size, page_margin,
- 					  page, buf, rsvd_pkt);
--		page += rtw_len_to_page(rsvd_pkt->skb->len, page_size);
--	}
--	list_for_each_entry(rsvd_pkt, &rtwdev->rsvd_page_list, list)
-+		if (page == 0)
-+			page += rtw_len_to_page(rsvd_pkt->skb->len +
-+						tx_desc_sz, page_size);
-+		else
-+			page += rtw_len_to_page(rsvd_pkt->skb->len, page_size);
-+
- 		kfree_skb(rsvd_pkt->skb);
-+	}
+ 	off->cr.producer = off_v1.cr.producer;
+ 	off->cr.consumer = off_v1.cr.consumer;
+ 	off->cr.desc = off_v1.cr.desc;
+-	off->cr.flags = off_v1.cr.consumer + sizeof(u32);
++	off->cr.flags = off_v1.cr.consumer + sizeof(__u32);
+ }
  
- 	return buf;
- 
-@@ -706,6 +735,11 @@ int rtw_fw_download_rsvd_page(struct rtw
- 		goto free;
- 	}
- 
-+	/* The last thing is to download the *ONLY* beacon again, because
-+	 * the previous tx_desc is to describe the total rsvd page. Download
-+	 * the beacon again to replace the TX desc header, and we will get
-+	 * a correct tx_desc for the beacon in the rsvd page.
-+	 */
- 	ret = rtw_download_beacon(rtwdev, vif);
- 	if (ret) {
- 		rtw_err(rtwdev, "failed to download beacon\n");
+ static int xsk_get_mmap_offsets(int fd, struct xdp_mmap_offsets *off)
+-- 
+2.20.1
+
 
 
