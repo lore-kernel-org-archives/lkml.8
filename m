@@ -8,68 +8,75 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E829C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 18:18:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3DBAC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 18:18:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 332632071A
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 18:18:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8AC022071A
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 18:18:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fUE53ebr"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i+W6XxPn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390996AbgAXSSP (ORCPT
+        id S2403919AbgAXSSZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 13:18:15 -0500
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:35276 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387407AbgAXSSP (ORCPT
+        Fri, 24 Jan 2020 13:18:25 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:45323 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391038AbgAXSSZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 13:18:15 -0500
-Received: by mail-pj1-f65.google.com with SMTP id q39so193462pjc.0
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Jan 2020 10:18:14 -0800 (PST)
+        Fri, 24 Jan 2020 13:18:25 -0500
+Received: by mail-pg1-f193.google.com with SMTP id b9so1508120pgk.12
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jan 2020 10:18:24 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=VeYdzHBTXvWykrU+9dPvzQoIrSk/36JuoL4dl6ucfKw=;
-        b=fUE53ebrr8thaaisHxNd6ye4r1UTyIesGmw7CWE4nJB5glAzKUqHqhmPzZia8oZYz7
-         1A41t6GPozSzJuddkbiYVBl7yoi7QTn60s1Vaa7Hz06roL0d6YE1f0PE9Es88FOca2HP
-         IK4ai98U29vXovpGBzcD25Glq8Iz/U/KFJOuX7SHTMHQXGGeP6BfnRRvsZUBNM83ppFx
-         mNwgi5TFTA6Wt+rojcsz5dQt7PgjIoQ/9J37UilSy8C6KpDCYNTsMjALEseE1VgO94Q0
-         eJEcX9PcEJuK6bURK/4Nn4Y/5YPt9c4+XvwHqUuea1HwkwBznWKBolvQYFDvOySdRk3b
-         PwEg==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=7xMkbnPA4MrYjyLEKHxSVx8wqcOftv8ZwmhCz9kSnxU=;
+        b=i+W6XxPnH5LndDhCYBac50EwO149wBn/cF9EJOYRSaoKKMT4gK66GPLJr31fDEH9qJ
+         5xvSMs7ypkwqgUenf71xniNJCWFz8xwl7VKYFxikURW1UzoL0gH3zXjkB16BAJAlyPwR
+         Mo1KndwX6YsUulb2RiwlCDPEmJrLaq4aZPgv3POE92hijfhHO8Mqb808afyJrj0Q8AJO
+         9ppuErzsu61QRXcCaet2PCa48HH/jj9+ya661BaJw4D/l2Qc03MvfQQw0x4NXnnquFJO
+         s7HMLgdj5++7kpnfozuGxCGTfRm7ObluB6Y9Dm2mXOqWYI7g8XW91OB5Ti0JzHxZjHaO
+         HpBQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=VeYdzHBTXvWykrU+9dPvzQoIrSk/36JuoL4dl6ucfKw=;
-        b=eDZvIQ/qFuZMm/2m0GnyEMwuoCVCCzRMBdxCXDOMwLwzPonV2q86mzdpGj/dn5W9t9
-         rnkKqnK4pE0F2v/4sOzn2N/boeTffAWN8WAU9SVy/Gbi9sw3clDIiYuc4UPi+MUqxtW7
-         XJrf+7Amjl7Q60RX8UZCDAS4nnnrnqbZkJhUloxrTOCK3WHeEn58d2EGE7RKIVU1Ovfv
-         31cRqkf9yzHGLS9aiTkX4iVYM4XN8iFbv+B069Ukjp5qkJdI8g+V+x+GjQCGX4dITtWQ
-         M+6E4Fw5KGGpDk6AF95tI7OUVUxXt3LqTY5Vy5JUTxpGX57XCxTfF/D40Xys4DG7nPo8
-         LE1A==
-X-Gm-Message-State: APjAAAVcno3iPHYuDt8uwy3l3f60eRhK/NvJe0HtG/tjMnvABBQ4ycbf
-        L91bQPEd/AkmWbvsRY8qXrc=
-X-Google-Smtp-Source: APXvYqwZSxsjR4PmU6D0ZxtGxQ2OweOomT3ELNRoPNWdaqCM4/yDGhldSxGE3VY2Osoi/5CguomjhA==
-X-Received: by 2002:a17:902:848f:: with SMTP id c15mr4837693plo.182.1579889894356;
-        Fri, 24 Jan 2020 10:18:14 -0800 (PST)
-Received: from gnu-efi-2.localdomain ([172.58.35.93])
-        by smtp.gmail.com with ESMTPSA id c22sm6967400pfo.50.2020.01.24.10.18.13
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=7xMkbnPA4MrYjyLEKHxSVx8wqcOftv8ZwmhCz9kSnxU=;
+        b=Uo5GiHNZSffKXG2g5vvFjg2rcJuL6bS40y1Ut19EHizxUL/42BG7yu4uHhu88zo4pm
+         ZEKDVfTxUM0/TOGQwGj+Wro12UCDlYqH8DyWhigDi8c8iT0N/knXY7jDzX9K5+OwXCrN
+         6tTruzyKgZLNRqtpOuWuo0biXyBTY/NXO/SzfjymAP+vK1N9MdG49h5gMeWLu7ADV2Gx
+         NjAVcGX98tcedRfBksRRiv3iH+Y472hi+Ba4FLfahSiAkAFxkhySZ26+JsVSFEwbnQ9e
+         v9pLaTjZvwemGc/1qQZfFyB7Uro2Xxk5tCMjwvvFe1fL8NYR5CEZrOYD0wkGy+o97N12
+         +/8A==
+X-Gm-Message-State: APjAAAWGv2rjkAI7SA2pZVBmHHDSXKyzVDgPDUrqi5OQpPK0iHUQx/Lv
+        0kp2rK5G/DYpkVGV2CSlgB4=
+X-Google-Smtp-Source: APXvYqycMEpRCR4lrq81bb3eTel7biBnD2Q/9bf364rX2qDkU7t2IyPIuso7qd246MZl1oRrE3HmTw==
+X-Received: by 2002:a65:5242:: with SMTP id q2mr5314449pgp.74.1579889903647;
+        Fri, 24 Jan 2020 10:18:23 -0800 (PST)
+Received: from gnu-efi-2.localdomain ([2607:fb90:276d:92e7:da4f:90b0:c395:2435])
+        by smtp.gmail.com with ESMTPSA id e2sm6849178pfh.84.2020.01.24.10.18.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 Jan 2020 10:18:13 -0800 (PST)
+        Fri, 24 Jan 2020 10:18:22 -0800 (PST)
 Received: from gnu-efi-2.localdomain (localhost [IPv6:::1])
-        by gnu-efi-2.localdomain (Postfix) with ESMTP id 7E3FD100AB8;
-        Fri, 24 Jan 2020 10:18:11 -0800 (PST)
+        by gnu-efi-2.localdomain (Postfix) with ESMTP id B7712100B14;
+        Fri, 24 Jan 2020 10:18:21 -0800 (PST)
 From:   "H.J. Lu" <hjl.tools@gmail.com>
 To:     linux-kernel@vger.kernel.org
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Kees Cook <keescook@chromium.org>,
+        Thomas Lendacky <Thomas.Lendacky@amd.com>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
         Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
         "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
         Yu-cheng Yu <yu-cheng.yu@intel.com>
-Subject: [PATCH] x86: Don't clare __force_order in kaslr_64.c
-Date:   Fri, 24 Jan 2020 10:18:11 -0800
-Message-Id: <20200124181811.4780-1-hjl.tools@gmail.com>
+Subject: [PATCH 2/2] x86: Discard .note.gnu.property sections in vmlinux
+Date:   Fri, 24 Jan 2020 10:18:19 -0800
+Message-Id: <20200124181819.4840-3-hjl.tools@gmail.com>
 X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200124181819.4840-1-hjl.tools@gmail.com>
+References: <20200124181819.4840-1-hjl.tools@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -77,35 +84,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-GCC 10 changed the default to -fno-common, which leads to
+With the command-line option, -mx86-used-note=yes, the x86 assembler
+in binutils 2.32 and above generates a program property note in a note
+section, .note.gnu.property, to encode used x86 ISAs and features.
+But x86 kernel linker script only contains a signle NOTE segment:
 
-  LD      arch/x86/boot/compressed/vmlinux
-ld: arch/x86/boot/compressed/pgtable_64.o:(.bss+0x0): multiple definition of `__force_order'; arch/x86/boot/compressed/kaslr_64.o:(.bss+0x0): first defined here
-make[2]: *** [arch/x86/boot/compressed/Makefile:119: arch/x86/boot/compressed/vmlinux] Error 1
+PHDRS {
+ text PT_LOAD FLAGS(5);
+ data PT_LOAD FLAGS(6);
+ percpu PT_LOAD FLAGS(6);
+ init PT_LOAD FLAGS(7);
+ note PT_NOTE FLAGS(0);
+}
+SECTIONS
+{
+...
+ .notes : AT(ADDR(.notes) - 0xffffffff80000000) { __start_notes = .; KEEP(*(.not
+e.*)) __stop_notes = .; } :text :note
+...
+}
 
-Since __force_order is already provided in pgtable_64.c, there is no
-need to declare __force_order in kaslr_64.c.
+which may not be incompatible with note.gnu.property sections.  Since
+note.gnu.property section in kernel image is unused, this patch discards
+.note.gnu.property sections in kernel linker script by adding
+
+ /DISCARD/ : {
+  *(.note.gnu.property)
+ }
+
+before .notes sections.  Since .exit.text and .exit.data sections are
+discarded at runtime, it undefines EXIT_TEXT and EXIT_DATA to exclude
+.exit.text and .exit.data sections from default discarded sections.
 
 Signed-off-by: H.J. Lu <hjl.tools@gmail.com>
 Signed-off-by: Yu-cheng Yu <yu-cheng.yu@intel.com>
 ---
- arch/x86/boot/compressed/kaslr_64.c | 3 ---
- 1 file changed, 3 deletions(-)
+ arch/x86/kernel/vmlinux.lds.S | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-diff --git a/arch/x86/boot/compressed/kaslr_64.c b/arch/x86/boot/compressed/kaslr_64.c
-index 748456c365f4..9557c5a15b91 100644
---- a/arch/x86/boot/compressed/kaslr_64.c
-+++ b/arch/x86/boot/compressed/kaslr_64.c
-@@ -29,9 +29,6 @@
- #define __PAGE_OFFSET __PAGE_OFFSET_BASE
- #include "../../mm/ident_map.c"
+diff --git a/arch/x86/kernel/vmlinux.lds.S b/arch/x86/kernel/vmlinux.lds.S
+index 3a1a819da137..6c6cc26b0177 100644
+--- a/arch/x86/kernel/vmlinux.lds.S
++++ b/arch/x86/kernel/vmlinux.lds.S
+@@ -150,6 +150,11 @@ SECTIONS
+ 	_etext = .;
+ 	. = ALIGN(PAGE_SIZE);
  
--/* Used by pgtable.h asm code to force instruction serialization. */
--unsigned long __force_order;
--
- /* Used to track our page table allocation area. */
- struct alloc_pgt_data {
- 	unsigned char *pgt_buf;
++	/* .note.gnu.property sections should be discarded */
++	/DISCARD/ : {
++		*(.note.gnu.property)
++	}
++
+ 	X86_ALIGN_RODATA_BEGIN
+ 	RO_DATA(PAGE_SIZE)
+ 	X86_ALIGN_RODATA_END
+@@ -413,6 +418,12 @@ SECTIONS
+ 	STABS_DEBUG
+ 	DWARF_DEBUG
+ 
++	/* Sections to be discarded.  EXIT_TEXT and EXIT_DATA discard at runtime.
++	 * not link time.  */
++#undef EXIT_TEXT
++#define EXIT_TEXT
++#undef EXIT_DATA
++#define EXIT_DATA
+ 	DISCARDS
+ 	/DISCARD/ : {
+ 		*(.eh_frame)
 -- 
 2.24.1
 
