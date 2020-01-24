@@ -2,102 +2,128 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23582C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 07:30:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 738B9C35242
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 07:30:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA9932071E
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 07:30:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579851022;
-	bh=iKMnz5OrMK8n5ERd5b5EaFMDSygKaHPRw/dXXW8Ce3s=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ECS+FBMPByjsO31r/CuDW0qjF0XkreFDGBjPXou0Nq6YlkGE25X4zB94YrRGaO8o/
-	 YCycfljHn57HkEnvszSfmCmKAmHiU2jrX8pacc7O0PMUI5OMGdj6gXcQir7baJYUUo
-	 z/T84NhqDRo9/hLo6DibfNIlUayVZSJxYbFt2IaY=
+	by mail.kernel.org (Postfix) with ESMTP id 40E2820709
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 07:30:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="XJGwy4YI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730035AbgAXHaU (ORCPT
+        id S1730376AbgAXHat (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 02:30:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59224 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725817AbgAXHaU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 02:30:20 -0500
-Received: from localhost (unknown [145.15.244.29])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A17F720709;
-        Fri, 24 Jan 2020 07:30:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579851019;
-        bh=iKMnz5OrMK8n5ERd5b5EaFMDSygKaHPRw/dXXW8Ce3s=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=vUSS8IiIxtSgtNIFU/LKkzakvw+AAESAjOw97iML0vXo9GL0pQZk6+tv1mpzAsmt+
-         X9jsqop37UcuFlf7bCiVWPKtHbEA6J4zQyFZfgILF49pWlws5ctwXYtIeOuGvDAkO7
-         2DF7bGaMKu17ieySgggcr28q1Y8IQ4MO2Rx6RbB0=
-Date:   Fri, 24 Jan 2020 08:29:40 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     "Theodore Y. Ts'o" <tytso@mit.edu>
-Cc:     Jason Baron <jbaron@akamai.com>, Will Deacon <will@kernel.org>,
-        linux-kernel@vger.kernel.org, kernel-team@android.com
-Subject: Re: [PATCH v3] dynamic_debug: allow to work if debugfs is disabled
-Message-ID: <20200124072940.GA2909311@kroah.com>
-References: <20200122074343.GA2099098@kroah.com>
- <20200122080352.GA15354@willie-the-truck>
- <20200122081205.GA2227985@kroah.com>
- <20200122135352.GA9458@kroah.com>
- <8d68b75c-05b8-b403-0a10-d17b94a73ba7@akamai.com>
- <20200122192940.GA88549@kroah.com>
- <20200122193118.GA88722@kroah.com>
- <20200123155340.GD147870@mit.edu>
- <20200123175536.GA1796501@kroah.com>
- <20200124060200.GG147870@mit.edu>
+        Fri, 24 Jan 2020 02:30:49 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:53954 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725817AbgAXHat (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 02:30:49 -0500
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00O7UgH4116840;
+        Fri, 24 Jan 2020 01:30:42 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1579851042;
+        bh=fwxS2W+1ZFB+/kTUBBZJRc5qB3L808Q64mTzFJjeHn8=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=XJGwy4YIdXgSZk88O/d8FgdrO9f8V34sMnIWgUjqUYAl0K8aJBreAXyTR3TSBXm+S
+         gJ88SFhdSEj+aFTqP1QRtyL6zJZO21RqQ4lK/CgsVVzKU6UbxJE4gUtQWGkXKiOY5d
+         tkKMuPCkzdsMqZNJJFNsJKCnIr9/AOWXFg5IqHv8=
+Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00O7UgZv124740;
+        Fri, 24 Jan 2020 01:30:42 -0600
+Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 24
+ Jan 2020 01:30:41 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Fri, 24 Jan 2020 01:30:41 -0600
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00O7Ud4h086929;
+        Fri, 24 Jan 2020 01:30:39 -0600
+Subject: Re: [PATCH v2] dmaengine: Create symlinks between DMA channels and
+ slaves
+To:     Vinod Koul <vkoul@kernel.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>
+CC:     Dan Williams <dan.j.williams@intel.com>,
+        <dmaengine@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20200117153056.31363-1-geert+renesas@glider.be>
+ <d2b669e7-a5d4-20ec-5b54-103b71df7407@ti.com>
+ <CAMuHMdVzQCWvH-LJ9ME5dRyafudZBHQLaJQzkSCPnughv_q2aA@mail.gmail.com>
+ <1cdc4f71-f365-8c9e-4634-408c59e6a3f9@ti.com>
+ <CAMuHMdU=-Eo29=DQmq96OegdYAvW7Vw9PpgNWSTfjDWVF5jd-A@mail.gmail.com>
+ <f7bbb132-1278-7030-7f40-b89733bcbd83@ti.com>
+ <CAMuHMdXDiwTomiKp8Kaw0NvMNpg78-M88F0mNTWBOz5MLE4LtQ@mail.gmail.com>
+ <20200122094002.GS2841@vkoul-mobl> <20200124061359.GF2841@vkoul-mobl>
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+Message-ID: <876eb72f-db74-86b5-5f2c-7fc9a5252421@ti.com>
+Date:   Fri, 24 Jan 2020 09:31:23 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200124060200.GG147870@mit.edu>
+In-Reply-To: <20200124061359.GF2841@vkoul-mobl>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 24, 2020 at 01:02:00AM -0500, Theodore Y. Ts'o wrote:
-> On Thu, Jan 23, 2020 at 06:55:36PM +0100, Greg Kroah-Hartman wrote:
-> > > Instead of moving the control file IFF debugfs is enabled, what about
-> > > always making it available in /proc, and marking the control file for
-> > > dynamic_debug in debugfs as deprecated?  It would seem to me that this
-> > > would cause less confusion in the future....
-> > 
-> > Why deprecate it?  It's fine where it is, and most developer's have
-> > debugfs enabled so all is good.  I'd rather only use /proc as a
-> > last-resort.
+Vinod, Geert,
+
+On 24/01/2020 8.13, Vinod Koul wrote:
+> On 22-01-20, 15:10, Vinod Koul wrote:
 > 
-> This makes life difficult for scripts that manipulate the control
-> file, since they now need to check two different locations -- either
-> /sys/kernel/debug or /proc.
+>> I like the idea of adding this in debugfs and giving more info, I would
+>> actually love to add bytes_transferred and few more info (descriptors
+>> submitted etc) to it...
+>>
+>>>> This way we will have all the information in one place, easy to look up
+>>>> and you don't need to manage symlinks dynamically, just check all
+>>>> channels if they have slave_device/name when they are in_use (in_use w/o
+>>>> slave_device is 'non slave')
+>>>>
+>>>> Some drivers are requesting and releasing the DMA channel per transfer
+>>>> or when they are opened/closed or other variations.
+>>>>
+>>>>> What do other people think?
+>>>
+>>> Vinod: do you have some guidance for your minions? ;-)
+>>
+>>
+>> That said, I am not against merging this patch while we add more
+>> (debugfs)... So do my minions agree or they have better ideas :-)
+> 
+> So no new ideas, I am going to apply this and queue for 5.6, something
+> is better than nothing.
 
-That is literally 2 extra lines in a script file.  If you point me at
-any that actually used the existing control file, I will be glad to fix
-them up :)
+My only issue with the symlink is that it is created/removed on some
+setups quite frequently as they request/release channel per transfer or
+open/close.
+It might be a small hit in performance, but it is going to be for them.
 
-> It's likely that people who normally use
-> distribution kernels where debugfs is disabled will have scripts which
-> are hard-coded to look in /proc, and then when they build a kernel
-> with debugfs enabled, the /proc entry will go **poof**, and their
-> script will break.
+> And I am looking forward for debugfs to give better picture, volunteers?
 
-**poof** they didn't test it :)
+Well, I still feel that the debugfs can give better view in one place
+and in production it can be disabled to save few bytes per channel and
+code is not complied in.
 
-Seriously, I am doing this change to make it _easier_ for those people
-who want debugfs disabled, yet want this type of debugging.  This is
-much better than having no debugging at all.
+If we have the debugfs we can remove some of the sysfs devices files
+probably.
 
-Don't put extra complexity in the kernel for when it can be trivially
-handled in userspace, you know this :)
+gpiolib have a nice implementation for us to lift and adapt.
 
-thanks,
+- Péter
 
-greg k-h
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
