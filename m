@@ -2,460 +2,281 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96C14C35242
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 15:04:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B48BEC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 15:07:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 639D820704
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 15:04:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579878294;
-	bh=Wi7I7JKN46kMpMMyrfBotqJI7kOmWSOMLNFxvWd+2Q8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=PCM556jhNR2Vm1i7dEg0Jc8YiHpyJ4+KpCO6zMvfszNXKeSWgTMSZFOuQ4nd4FRb9
-	 c1dILmvs3WNwGyOMhwQoHzSR1rtPxAuD4UZNwhfBL3u8k9a1xKepYfx52urtCy9ElT
-	 7WG17JEnch/pLi21G6Zf2JDS8ZBpcPiHhMEsGZG8=
+	by mail.kernel.org (Postfix) with ESMTP id 8459F20709
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 15:07:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388064AbgAXPEx (ORCPT
+        id S2388599AbgAXPHq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 10:04:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53980 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 10:07:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55974 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387432AbgAXPEx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 10:04:53 -0500
-Received: from localhost (173-25-83-245.client.mchsi.com [173.25.83.245])
+        id S2387698AbgAXPHp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 10:07:45 -0500
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5E6C920704;
-        Fri, 24 Jan 2020 15:04:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579878291;
-        bh=Wi7I7JKN46kMpMMyrfBotqJI7kOmWSOMLNFxvWd+2Q8=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=givE0kBtW02/5fQl6b//chOekyscohCHQn6+DINgcY6V+OpEwOGqUQhciUJF0P6m6
-         5ZGzYxr+69Cp7s64tBWqOVbq5HQUChD3k/hLBvo4aJ4ao+SuO8wLqCrCWQvHbJIkC3
-         8KxJTupHkRf5C2yiUSOs7PSZXHz8q0yo98bj27cE=
-Date:   Fri, 24 Jan 2020 09:04:50 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     sathyanarayanan.kuppuswamy@linux.intel.com
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ashok.raj@intel.com, Keith Busch <keith.busch@intel.com>,
-        Huong Nguyen <huong.nguyen@dell.com>,
-        Austin Bolen <Austin.Bolen@dell.com>
-Subject: Re: [PATCH v13 4/8] PCI/DPC: Add Error Disconnect Recover (EDR)
- support
-Message-ID: <20200124150450.GA15183@google.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id EFBEB20709;
+        Fri, 24 Jan 2020 15:07:43 +0000 (UTC)
+Date:   Fri, 24 Jan 2020 10:07:42 -0500
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Thomas Richter <tmricht@linux.ibm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        acme@kernel.org, mhiramat@kernel.org, borntraeger@de.ibm.com,
+        gor@linux.ibm.com, sumanthk@linux.ibm.com,
+        heiko.carstens@de.ibm.com
+Subject: Re: [PATCH] perf test: Test case 66 broken on s390 (lib/traceevent
+ issue)
+Message-ID: <20200124100742.4050c15e@gandalf.local.home>
+In-Reply-To: <20200124073941.39119-1-tmricht@linux.ibm.com>
+References: <20200124073941.39119-1-tmricht@linux.ibm.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f9b8a3e79fd7f2e732ce2f712ad399734eadef84.1579406227.git.sathyanarayanan.kuppuswamy@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jan 18, 2020 at 08:00:33PM -0800, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
-> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+On Fri, 24 Jan 2020 08:39:41 +0100
+Thomas Richter <tmricht@linux.ibm.com> wrote:
+
+> Test case 66 'Use vfs_getname probe to get syscall args filenames'
+> is broken on s390, but works on x86. The test case fails with:
 > 
-> As per ACPI specification r6.3, sec 5.6.6, when firmware owns Downstream
-> Port Containment (DPC), its expected to use the "Error Disconnect
-> Recover" (EDR) notification to alert OSPM of a DPC event and if OS
-> supports EDR, its expected to handle the software state invalidation and
-> port recovery in OS, and also let firmware know the recovery status via
-> _OST ACPI call. Related _OST status codes can be found in ACPI
-> specification r6.3, sec 6.3.5.2.
+>  [root@m35lp76 perf]# perf test -F 66
+>  66: Use vfs_getname probe to get syscall args filenames
+>            :Recording open file:
+>  [ perf record: Woken up 1 times to write data ]
+>  [ perf record: Captured and wrote 0.004 MB /tmp/__perf_test.perf.data.TCdYj\
+> 	 (20 samples) ]
+>  Looking at perf.data file for vfs_getname records for the file we touched:
+>   FAILED!
+>   [root@m35lp76 perf]#
 > 
-> Also, as per PCI firmware specification r3.2 Downstream Port Containment
-> Related Enhancements ECN, sec 4.5.1, table 4-6, If DPC is controlled by
-> firmware (firmware first mode), firmware is responsible for
-> configuring the DPC and OS is responsible for error recovery. Also, OS
-> is allowed to modify DPC registers only during the EDR notification
-> window. So with EDR support, OS should provide DPC port services even in
-> firmware first mode.
+> The root cause of this failure has to do with
+> commit 88903c464321c ("tracing/probe: Add ustring type for user-space string")
+> and these changes:
+>    +         if (strcmp(parg->type->name, "string") == 0)
+>    +                 fmt = ", __get_str(%s)";
+>    +          else
+>    +                 fmt = ", REC->%s";
 > 
-> Cc: Keith Busch <keith.busch@intel.com>
-> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-> Acked-by: Keith Busch <keith.busch@intel.com>
-> Tested-by: Huong Nguyen <huong.nguyen@dell.com>
-> Tested-by: Austin Bolen <Austin.Bolen@dell.com>
+
+You confused me because those changes are not in commit 88903c464321c.
+They are in 40b53b771806b ("tracing: probeevent: Add array type
+support").
+
+But reading what you wrote a second time, I'm assuming you mean the
+user-space string changes and the above changes together make the
+problem.
+
+> On x86 __get_str() function is used to print the file name. This is ok
+> for x86 because kernel and user space are in the same adddress space,
+> the high bit of the address determines kernel vs user space addresses.
+> 
+> This approach does not work on s390. On s390 kernel und user space are
+> in different address spaces, both start with address 0x0. Which address
+> space is currently active is stored in the processor status word (PSW).
+> 
+> Therefore s390 must use 'ustring' for lookup of filename in the user
+> space address space.
+> 
+> Setting up the kprobe event using perf command:
+> 
+>  # ./perf probe "vfs_getname=getname_flags:72 pathname=filename:ustring"
+> 
+> generates this format file:
+>   [root@m35lp76 perf]# cat /sys/kernel/debug/tracing/events/probe/\
+> 	  vfs_getname/format
+>   name: vfs_getname
+>   ID: 1172
+>   format:
+>     field:unsigned short common_type; offset:0; size:2; signed:0;
+>     field:unsigned char common_flags; offset:2; size:1; signed:0;
+>     field:unsigned char common_preempt_count; offset:3; size:1; signed:0;
+>     field:int common_pid; offset:4; size:4; signed:1;
+> 
+>     field:unsigned long __probe_ip; offset:8; size:8; signed:0;
+>     field:__data_loc char[] pathname; offset:16; size:4; signed:1;
+> 
+>     print fmt: "(%lx) pathname=\"%s\"", REC->__probe_ip, REC->pathname
+
+Hmm, that format looks wrong.
+
+>  [root@m35lp76 perf]#
+> 
+> The difference between 'ustring' and 'string' is the print fmt statement
+> in the last line. Using 'string' generates
+> 
+>   print fmt: "(%lx) pathname=\"%s\"", REC->__probe_ip, __get_str(pathname)
+> 
+> This does not work on s390 because __get_str() function does not
+> know the address space currently being used.
+
+I don't think this is the issue, as __get_str() is just a way to handle
+dynamic sized strings in the ring buffer. It shouldn't care about
+kernel vs user space addresses at all.
+
+> 
+> This is the command to generate the perf.data file:
+> 
+>  # ./perf record -e probe:vfs_getname -- touch /tmp/xxx
+> 
+> This command creates the perf.data file which contains the contents
+> for the kprobe event format file. The call chain is:
+> 
+>   main
+>   ....
+>   perf_session__open
+>   perf_header__process_sections (feature 1 tracing)
+>   perf_file_section__process
+>   trace_report
+>   read_event_files
+>   read_event_file
+>   parse_event_file
+>   tep_parse_event  --> now in lib/traceevent/event-parse.c
+>   __parse_event
+>   tep_parse_format
+>   event_read_format
+>   event_read_print
+>   event_read_print_args
+>   process_args
+>   process_arg_token --> processes REC->xxx entry of event format file
+>                         'print fmt' line
+>   process_entry --> generates argument of type TEP_PRINT_FIELD entry
+>                     with TEP_FIELD_IS_STRING set in arg->field.field->flags
+> 		    member
+> 
+> Now the difference in the format file between
+>    [x86] print fmt: "(%lx) pathname=\"%s\"", ...,  __get_str(pathname)
+> and
+>    [s390] print fmt: "(%lx) pathname=\"%s\"", ...,  REC->pathname
+> comes into play.
+> 
+> In the x86 case the function process_arg_token()
+> handles in the case TEP_EVENT_ITEM the token "__get_str" and calls
+> functions
+> 
+>   process_function()
+>   +--> process_str()
+> 
+> and creates a print argument structure struct tep_print_arg with
+> type TEP_PRINT_STRING.
+> This is handled correctly when perf report later prints the argument using
+> function print_str_arg() in file lib/traceevent/event-parse.c
+> I omit the 35+ plus function call stack of the gdb where command.
+> 
+> In the s390 case the function process_arg_token()
+> handles in the case TEP_EVENT_ITEM the token "REC" and calls
+> function
+>   process_entry()
+> 
+> This creates a print argument structure struct tep_print_arg with
+> type TEP_PRINT_FIELD and bit TEP_FIELD_IS_STRING set in flags.
+> 
+> This is handled ***incorrectly** when perf report later prints the
+> argument using function print_str_arg() in file
+> lib/traceevent/event-parse.c. There is no support to print a string
+> when type is TEP_PRINT_FIELD and bit TEP_FIELD_IS_STRING inflags is set.
+> Again I omit the 35+ plus function call stack of the gdb where command.
+> 
+> Output before:
+>   [root@m35lp76 perf]# perf report --stdio | egrep '^(# Samp| +[1-9.])+'
+>   # Samples: 20  of event 'probe:vfs_getname'
+>   100.00%  (4d2c32) pathname=""
+> 
+> Output after:
+>   [root@m35lp76 perf]# ./perf report --stdio | egrep '^(# Samp| +[1-9.])+'
+>   # Samples: 20  of event 'probe:vfs_getname'
+>   5.00%  (4d2c32) pathname="/etc/ld.so.cache"
+>   5.00%  (4d2c32) pathname="/etc/ld.so.preload"
+>   5.00%  (4d2c32) pathname="/lib64/libc.so.6"
+>   5.00%  (4d2c32) pathname="/tmp/xxx"
+>   5.00%  (4d2c32) pathname="/usr/lib/locale/en_US.utf8/LC_ADDRESS"
+>   5.00%  (4d2c32) pathname="/usr/lib/locale/en_US.utf8/LC_COLLATE"
+>   5.00%  (4d2c32) pathname="/usr/lib/locale/en_US.utf8/LC_CTYPE"
+>   5.00%  (4d2c32) pathname="/usr/lib/locale/en_US.utf8/LC_IDENTIFICATION"
+>   5.00%  (4d2c32) pathname="/usr/lib/locale/en_US.utf8/LC_MEASUREMENT"
+>   5.00%  (4d2c32) pathname="/usr/lib/locale/en_US.utf8/LC_MESSAGES"
+>   5.00%  (4d2c32) pathname="/usr/lib/locale/en_US.utf8/LC_MESSAGES/SYS_LC_MESSAGES"
+>   5.00%  (4d2c32) pathname="/usr/lib/locale/en_US.utf8/LC_MONETARY"
+>   5.00%  (4d2c32) pathname="/usr/lib/locale/en_US.utf8/LC_NAME"
+>   5.00%  (4d2c32) pathname="/usr/lib/locale/en_US.utf8/LC_NUMERIC"
+>   5.00%  (4d2c32) pathname="/usr/lib/locale/en_US.utf8/LC_PAPER"
+>   5.00%  (4d2c32) pathname="/usr/lib/locale/en_US.utf8/LC_TELEPHONE"
+>   5.00%  (4d2c32) pathname="/usr/lib/locale/en_US.utf8/LC_TIME"
+>   5.00%  (4d2c32) pathname="/usr/lib/locale/locale-archive"
+>   5.00%  (4d2c32) pathname="/usr/lib64/gconv/gconv-modules.cache"
+>   5.00%  (4d2c32) pathname="/usr/share/locale/locale.alias"
+>   [root@m35lp76 perf]#
+> 
+> Fix this by adding print string support for TEP_FIELD_IS_STRING
+> bit set in flags and case TEP_PRINT_FIELD.
+> 
+> Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
 > ---
->  drivers/pci/pci-acpi.c   |  99 +++++++++++++++++++++++++++++++
->  drivers/pci/pcie/Kconfig |  10 ++++
->  drivers/pci/pcie/dpc.c   | 123 ++++++++++++++++++++++++++++++++++++++-
->  include/linux/pci-acpi.h |  13 +++++
->  4 files changed, 244 insertions(+), 1 deletion(-)
+>  tools/lib/traceevent/event-parse.c | 9 +++++++++
+>  1 file changed, 9 insertions(+)
 > 
-> diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
-> index 0c02d500158f..920928f0d55c 100644
-> --- a/drivers/pci/pci-acpi.c
-> +++ b/drivers/pci/pci-acpi.c
-> @@ -103,6 +103,105 @@ int acpi_get_rc_resources(struct device *dev, const char *hid, u16 segment,
->  }
->  #endif
->  
-> +#if defined(CONFIG_PCIE_DPC)
-> +
-> +/*
-> + * _DSM wrapper function to enable/disable DPC port.
-> + * @dpc   : DPC device structure
-> + * @enable: status of DPC port (0 or 1).
-> + *
-> + * returns 0 on success or errno on failure.
-> + */
-> +int acpi_enable_dpc_port(struct pci_dev *pdev, acpi_handle handle, bool enable)
-> +{
-> +	union acpi_object *obj, argv4, req;
-> +	int status = 0;
-> +
-> +	req.type = ACPI_TYPE_INTEGER;
-> +	req.integer.value = enable;
-> +
-> +	argv4.type = ACPI_TYPE_PACKAGE;
-> +	argv4.package.count = 1;
-> +	argv4.package.elements = &req;
-> +
-> +	/*
-> +	 * Per the Downstream Port Containment Related Enhancements ECN to
-> +	 * the PCI Firmware Specification r3.2, sec 4.6.12,
-> +	 * EDR_PORT_ENABLE_DSM is optional.  Return success if it's not
-> +	 * implemented.
-> +	 */
-> +	obj = acpi_evaluate_dsm(handle, &pci_acpi_dsm_guid, 5,
-> +				EDR_PORT_ENABLE_DSM, &argv4);
-> +	if (!obj)
-> +		return 0;
-> +
-> +	if (obj->type != ACPI_TYPE_INTEGER || obj->integer.value != enable)
-> +		status = -EIO;
-> +
-> +	ACPI_FREE(obj);
-> +
-> +	return status;
-> +}
-> +
-> +/*
-> + * _DSM wrapper function to locate DPC port.
-> + * @dpc   : DPC device structure
-> + *
-> + * returns pci_dev or NULL.
-> + */
-> +struct pci_dev *acpi_locate_dpc_port(struct pci_dev *pdev, acpi_handle handle)
-> +{
-> +	union acpi_object *obj;
-> +	u16 port;
-> +
-> +	obj = acpi_evaluate_dsm(handle, &pci_acpi_dsm_guid, 5,
-> +				EDR_PORT_LOCATE_DSM, NULL);
-> +	if (!obj)
-> +		return pci_dev_get(pdev);
-> +
-> +	if (obj->type != ACPI_TYPE_INTEGER) {
-> +		ACPI_FREE(obj);
-> +		return NULL;
-> +	}
-> +
-> +	/*
-> +	 * Firmware returns DPC port BDF details in following format:
-> +	 *	15:8 = bus
-> +	 *	 7:3 = device
-> +	 *	 2:0 = function
-> +	 */
-> +	port = obj->integer.value;
-> +
-> +	ACPI_FREE(obj);
-> +
-> +	return pci_get_domain_bus_and_slot(pci_domain_nr(pdev->bus),
-> +					   PCI_BUS_NUM(port), port & 0xff);
-> +}
-> +
-> +/*
-> + * _OST wrapper function to let firmware know the status of EDR event.
-> + * @dpc   : DPC device structure.
-> + * @status: Status of EDR event.
-> + */
-> +int acpi_send_edr_status(struct pci_dev *pdev, acpi_handle handle, u16 status)
-> +{
-> +	u32 ost_status;
-> +
-> +	pci_dbg(pdev, "Sending EDR status :%#x\n", status);
-> +
-> +	ost_status =  PCI_DEVID(pdev->bus->number, pdev->devfn);
-> +	ost_status = (ost_status << 16) | status;
-> +
-> +	status = acpi_evaluate_ost(handle,
-> +				   ACPI_NOTIFY_DISCONNECT_RECOVER,
-> +				   ost_status, NULL);
-> +	if (ACPI_FAILURE(status))
-> +		return -EINVAL;
-> +
-> +	return 0;
-> +}
-> +#endif /* CONFIG_PCIE_DPC */
-
-I think we should try collecting all this stuff into a new pcie/edr.c
-file.  It could contain all the above, plus edr_handle_event() and
-maybe something like a "pci_acpi_add_edr_notifier()" that could be
-called from pci_acpi_setup() to install the notify handler.
-
-I think the ACPI EDR stuff in dpc.c kind of clutters it up, especially
-for the non-ACPI systems that use dpc.c.
-
-Obviously this would require some sort of interface exported from
-dpc.c to do the guts of edr_handle_event(), i.e., reading
-PCI_EXP_DPC_STATUS and calling dpc_process_error().
-
->  phys_addr_t acpi_pci_root_get_mcfg_addr(acpi_handle handle)
->  {
->  	acpi_status status = AE_NOT_EXIST;
-> diff --git a/drivers/pci/pcie/Kconfig b/drivers/pci/pcie/Kconfig
-> index 6e3c04b46fb1..772b1f4cb19e 100644
-> --- a/drivers/pci/pcie/Kconfig
-> +++ b/drivers/pci/pcie/Kconfig
-> @@ -140,3 +140,13 @@ config PCIE_BW
->  	  This enables PCI Express Bandwidth Change Notification.  If
->  	  you know link width or rate changes occur only to correct
->  	  unreliable links, you may answer Y.
-> +
-> +config PCIE_EDR
-> +	bool "PCI Express Error Disconnect Recover support"
-> +	depends on PCIE_DPC && ACPI
-> +	help
-> +	  This option adds Error Disconnect Recover support as specified
-> +	  in the Downstream Port Containment Related Enhancements ECN to
-> +	  the PCI Firmware Specification r3.2.  Enable this if you want to
-> +	  support hybrid DPC model which uses both firmware and OS to
-> +	  implement DPC.
-> diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
-> index 9f58e91f8852..8a8ee374d9b1 100644
-> --- a/drivers/pci/pcie/dpc.c
-> +++ b/drivers/pci/pcie/dpc.c
-> @@ -13,6 +13,8 @@
->  #include <linux/interrupt.h>
->  #include <linux/init.h>
->  #include <linux/pci.h>
-> +#include <linux/acpi.h>
-> +#include <linux/pci-acpi.h>
->  
->  #include "portdrv.h"
->  #include "../pci.h"
-> @@ -23,6 +25,11 @@ struct dpc_dev {
->  	bool			rp_extensions;
->  	u8			rp_log_size;
->  	bool			edr_enabled; /* EDR mode is supported */
-> +	pci_ers_result_t	error_state;
-> +	struct mutex		edr_lock;
-> +#ifdef CONFIG_ACPI
-> +	struct acpi_device	*adev;
-> +#endif
->  };
->  
->  static const char * const rp_pio_error_string[] = {
-> @@ -161,6 +168,9 @@ static pci_ers_result_t dpc_reset_link(struct pci_dev *pdev)
->  	if (!pcie_wait_for_link(pdev, true))
->  		return PCI_ERS_RESULT_DISCONNECT;
->  
-> +	/* Since the device recovery is done just update the error state */
-> +	dpc->error_state = PCI_ERS_RESULT_RECOVERED;
-> +
->  	return PCI_ERS_RESULT_RECOVERED;
->  }
->  
-> @@ -305,14 +315,94 @@ static irqreturn_t dpc_irq(int irq, void *context)
->  	return IRQ_HANDLED;
->  }
->  
-> +static void dpc_error_resume(struct pci_dev *dev)
-> +{
-> +	struct dpc_dev *dpc = to_dpc_dev(dev);
-> +
-> +	dpc->error_state = PCI_ERS_RESULT_RECOVERED;
-> +}
-> +
-> +#ifdef CONFIG_ACPI
-> +
-> +static void edr_handle_event(acpi_handle handle, u32 event, void *data)
-> +{
-> +	struct dpc_dev *dpc = data;
-> +	struct pci_dev *pdev = dpc->dev->port;
-> +	u16 status;
-> +
-> +	pci_info(pdev, "ACPI event %#x received\n", event);
-> +
-> +	if (event != ACPI_NOTIFY_DISCONNECT_RECOVER)
-> +		return;
-> +
-> +	/*
-> +	 * Check if _DSM(0xD) is available, and if present locate the
-> +	 * port which issued EDR event.
-> +	 */
-> +	pdev = acpi_locate_dpc_port(pdev, dpc->adev->handle);
-> +	if (!pdev) {
-> +		pdev = dpc->dev->port;
-> +		pci_err(pdev, "No valid port found\n");
-
-This message should include the bus/device/function that we looked for.
-
-> +		return;
-> +	}
-> +
-> +	dpc = to_dpc_dev(pdev);
-> +	if (!dpc) {
-> +		pci_err(pdev, "DPC port is NULL\n");
-> +		goto done;
-> +	}
-> +
-> +	mutex_lock(&dpc->edr_lock);
-> +
-> +	dpc->error_state = PCI_ERS_RESULT_DISCONNECT;
-> +
-> +	/*
-> +	 * Check if the port supports DPC:
-> +	 *
-> +	 * If port supports DPC, then fall back to default error
-> +	 * recovery.
-> +	 */
-> +	if (dpc->cap_pos) {
-> +		/* Check if there is a valid DPC trigger */
-> +		pci_read_config_word(pdev, dpc->cap_pos + PCI_EXP_DPC_STATUS,
-> +				     &status);
-> +		if ((status & PCI_EXP_DPC_STATUS_TRIGGER))
-> +			dpc_process_error(dpc);
-> +		else
-> +			pci_err(pdev, "Invalid DPC trigger %#010x\n", status);
-> +	}
-> +
-> +	/*
-> +	 * If recovery is successful, send _OST(0xF, BDF << 16 | 0x80)
-> +	 * to firmware. If not successful, send _OST(0xF, BDF << 16 | 0x81).
-> +	 */
-> +	if (dpc->error_state == PCI_ERS_RESULT_RECOVERED)
-> +		status = EDR_OST_SUCCESS;
-> +	else
-> +		status = EDR_OST_FAILED;
-> +
-> +	/* Use ACPI handle of DPC event device for sending EDR status */
-> +	dpc = data;
-> +
-> +	acpi_send_edr_status(pdev, dpc->adev->handle, status);
-> +
-> +	mutex_unlock(&dpc->edr_lock);
-> +done:
-> +	pci_dev_put(pdev);
-> +}
-> +#endif
-> +
->  #define FLAG(x, y) (((x) & (y)) ? '+' : '-')
->  static int dpc_probe(struct pcie_device *dev)
->  {
->  	struct dpc_dev *dpc;
->  	struct pci_dev *pdev = dev->port;
->  	struct device *device = &dev->device;
-> -	int status;
-> +	int status = 0;
->  	u16 ctl, cap;
-> +#ifdef CONFIG_ACPI
-> +	struct acpi_device *adev = ACPI_COMPANION(&pdev->dev);
-> +#endif
->  
->  	dpc = devm_kzalloc(device, sizeof(*dpc), GFP_KERNEL);
->  	if (!dpc)
-> @@ -321,6 +411,9 @@ static int dpc_probe(struct pcie_device *dev)
->  	dpc->cap_pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_DPC);
->  	dpc->dev = dev;
->  
-> +	dpc->error_state = PCI_ERS_RESULT_NONE;
-> +	mutex_init(&dpc->edr_lock);
-> +
->  	/*
->  	 * As per PCIe r5.0, sec 6.2.10, implementation note titled
->  	 * "Determination of DPC Control", to avoid conflicts over whether
-> @@ -358,6 +451,33 @@ static int dpc_probe(struct pcie_device *dev)
+> diff --git a/tools/lib/traceevent/event-parse.c b/tools/lib/traceevent/event-parse.c
+> index beaa8b8c08ff..68334f860b27 100644
+> --- a/tools/lib/traceevent/event-parse.c
+> +++ b/tools/lib/traceevent/event-parse.c
+> @@ -4003,6 +4003,15 @@ static void print_str_arg(struct trace_seq *s, void *data, int size,
+>  				trace_seq_printf(s, "%llx", addr);
+>  			break;
 >  		}
->  	}
->  
-> +#ifdef CONFIG_ACPI
-> +	if (pcie_aer_get_firmware_first(pdev) && adev) {
-
-I'm not convinced about using pcie_aer_get_firmware_first() here yet.
-AFAICT the spec doesn't actually say anything like this (I'm looking
-at the ECN sec 4.5.1 description of "Error Disconnect Recover
-Supported".
-
-> +		acpi_status astatus;
+> +		if (field->flags & TEP_FIELD_IS_STRING) {
+> +			int str_offset;
 > +
-> +		dpc->adev = adev;
-> +
-> +		astatus = acpi_install_notify_handler(adev->handle,
-> +						      ACPI_SYSTEM_NOTIFY,
-> +						      edr_handle_event,
-> +						      dpc);
+> +			str_offset = tep_data2host4(tep, *(unsigned int *)(data + arg->field.field->offset));
+> +			str_offset &= 0xffff;
+> +			print_str_to_seq(s, format, len_arg,
+> +					 ((char *)data) + str_offset);
+> +			break;
 
-I think there are a couple issues with the ECN here:
+This will break static strings.
 
-  - The ECN allows EDR notifications on host bridges (sec 4.5.1, table
-    4-4), but it does not allow the "Locate" _DSM under host bridges
-    (sec 4.6.13).
+This looks like a kernel bug, not a libtraceevent parsing bug.
 
-  - The ECN allows EDR notifications on root ports or switch ports
-    that do not support DPC (sec 4.5.1), but it does not allow the
-    "Locate" _DSM on those ports (sec 4.6.13).
-
-> +		if (ACPI_FAILURE(astatus)) {
-> +			pci_err(pdev,
-> +				"Install ACPI_SYSTEM_NOTIFY handler failed\n");
-> +			return -EBUSY;
 > +		}
-> +
-> +		status = acpi_enable_dpc_port(pdev, adev->handle, true);
-> +		if (status) {
-> +			pci_warn(pdev, "Enable DPC port failed\n");
-> +			acpi_remove_notify_handler(adev->handle,
-> +						   ACPI_SYSTEM_NOTIFY,
-> +						   edr_handle_event);
-> +			return status;
-> +		}
-> +	}
-> +#endif
->  	pci_read_config_word(pdev, dpc->cap_pos + PCI_EXP_DPC_CAP, &cap);
->  	pci_read_config_word(pdev, dpc->cap_pos + PCI_EXP_DPC_CTL, &ctl);
->  
-> @@ -409,6 +529,7 @@ static struct pcie_port_service_driver dpcdriver = {
->  	.probe		= dpc_probe,
->  	.remove		= dpc_remove,
->  	.reset_link	= dpc_reset_link,
-> +	.error_resume   = dpc_error_resume,
->  };
->  
->  int __init pcie_dpc_init(void)
-> diff --git a/include/linux/pci-acpi.h b/include/linux/pci-acpi.h
-> index 62b7fdcc661c..f4e0d5d984b0 100644
-> --- a/include/linux/pci-acpi.h
-> +++ b/include/linux/pci-acpi.h
-> @@ -111,6 +111,19 @@ extern const guid_t pci_acpi_dsm_guid;
->  #define DEVICE_LABEL_DSM		0x07
->  #define RESET_DELAY_DSM			0x08
->  #define FUNCTION_DELAY_DSM		0x09
-> +#ifdef CONFIG_PCIE_DPC
-> +#define EDR_PORT_ENABLE_DSM		0x0C
-> +#define EDR_PORT_LOCATE_DSM		0x0D
-> +#define EDR_OST_SUCCESS			0x80
-> +#define EDR_OST_FAILED			0x81
-> +
-> +int acpi_enable_dpc_port(struct pci_dev *pdev, acpi_handle handle,
-> +			 bool enable);
-> +struct pci_dev *acpi_locate_dpc_port(struct pci_dev *pdev,
-> +				     acpi_handle handle);
-> +int acpi_send_edr_status(struct pci_dev *pdev,
-> +			 acpi_handle handle, u16 status);
-> +#endif /* CONFIG_PCIE_DPC */
->  
->  #else	/* CONFIG_ACPI */
->  static inline void acpi_pci_add_bus(struct pci_bus *bus) { }
-> -- 
-> 2.21.0
-> 
+>  		str = malloc(len + 1);
+>  		if (!str) {
+>  			do_warning_event(event, "%s: not enough memory!",
+
+Does this patch fix it for you?
+
+-- Steve
+
+diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
+index 905b10af5d5c..d3309fceb480 100644
+--- a/kernel/trace/trace_probe.c
++++ b/kernel/trace/trace_probe.c
+@@ -876,7 +876,8 @@ static int __set_print_fmt(struct trace_probe *tp, char *buf, int len,
+ 	for (i = 0; i < tp->nr_args; i++) {
+ 		parg = tp->args + i;
+ 		if (parg->count) {
+-			if (strcmp(parg->type->name, "string") == 0)
++			if ((strcmp(parg->type->name, "string") == 0) ||
++			    (strcmp(parg->type->name, "ustring") == 0))
+ 				fmt = ", __get_str(%s[%d])";
+ 			else
+ 				fmt = ", REC->%s[%d]";
+@@ -884,7 +885,8 @@ static int __set_print_fmt(struct trace_probe *tp, char *buf, int len,
+ 				pos += snprintf(buf + pos, LEN_OR_ZERO,
+ 						fmt, parg->name, j);
+ 		} else {
+-			if (strcmp(parg->type->name, "string") == 0)
++			if ((strcmp(parg->type->name, "string") == 0) ||
++			    (strcmp(parg->type->name, "ustring") == 0))
+ 				fmt = ", __get_str(%s)";
+ 			else
+ 				fmt = ", REC->%s";
