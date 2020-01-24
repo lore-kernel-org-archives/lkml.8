@@ -2,167 +2,254 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF1F3C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 06:03:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F350C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 06:03:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 892F72071A
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 06:03:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IRFfwyu1"
+	by mail.kernel.org (Postfix) with ESMTP id 21A932072C
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 06:03:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579845824;
+	bh=HAs60DRf5BSFHERMbxGfL8THT/7QSUVWC8FVp+r5kJ0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=VPLqOd+D93K1YqPWYOF6tF/TJgZWWL+hoPUA0denVzwbhZCuSnlHAcOSM8ilZLhTA
+	 E6Xe724S49mFx4uUPmvXJ82yLPR3Nuz68yJ302/CKkugq0j1qY9pXk/AVgRWfHsrt2
+	 9FrTpxVWvCf2jtTkp2+Uu1t3PuDDLgp5WPyyKwJg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730247AbgAXGDS (ORCPT
+        id S1730349AbgAXGDn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 01:03:18 -0500
-Received: from mail-lf1-f49.google.com ([209.85.167.49]:38630 "EHLO
-        mail-lf1-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725817AbgAXGDS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 01:03:18 -0500
-Received: by mail-lf1-f49.google.com with SMTP id r14so395343lfm.5
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jan 2020 22:03:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=zEdYPtIr5Rj3i3xej5EyjAn95dEVZ50fUuhaeqXUW1I=;
-        b=IRFfwyu1B895wr30zPmlPm8PYsbUOvEBdoHQUyQ/AeyYyVDH1aLRD6jEnxElOfNgFS
-         ckgnBnCu1jNWtjAZVH3rXv4qT9ryueQ8vtEbDBa+Q8KzFXsHeb7Ozj1LORiSrVhIED9t
-         YHzL7v3w3WY+95Pwg3+CTiTb93HzYt3ZQJMPgCLpCp3Iq+oyPSkOu7Nc16UFG10aAz3a
-         gAMyU6uj8hORY7spN1Ck9RkzBeV+PNjY+tVL4btqZDvwILGXkGaJoKQOUFEA1a5woJ7p
-         YaDlbpIK8wZ8n5lyAhSLqVvZCqcv1zoBOUt4OjAqlnt76l94xwGTFkqMM3rsf3ev8RV2
-         hgkg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=zEdYPtIr5Rj3i3xej5EyjAn95dEVZ50fUuhaeqXUW1I=;
-        b=WqGpzYVQECzeDcNbHE2rRCVaAeonOfP3qfdQPHW1lMQLwTs9KzkQS6n4tI0JlPAFmx
-         f0+KNJ6HSwYnqS/pxGkrz52MYzbVYkG5PqE6lqogaUP7ukS0Na04QYsPap5IYNxCfySG
-         ZcHqXJlQxFbqLX3/Ls/zbEEgNN7rAw1GKr+9KGJzz0PzlvkB6AUsQigQxaKhgKRcPjdX
-         3g4CPcQRZ9EBEJ1CY2eqI0ENib/94hpXnsI6CUFRi0NhcRRyJYrlHU5gZwIBu9sFOtVt
-         FoZ+BU/Vt/Qxxk9FzcCdib/1fkKh75QZe846ZY+EOKxF2ajCgFL7/gAH31yGitNxxNP2
-         af9Q==
-X-Gm-Message-State: APjAAAVOZ+Tg8C1Twc1OpOkcK1zfrP73bRiBudEs+PM+NLQJc92NIT4l
-        32ZejpgjjCpULQTlYjqWzR5ZaMwLvjbYwXgJ8MNcXSCv
-X-Google-Smtp-Source: APXvYqzo7XanGadzPh7lXKC+qfgcHEFVXzkKcERZu7mKj6XG4Vns2PGd9FGlG/WtO32iOgfdTpkQCPVkkoEvgk7yrrU=
-X-Received: by 2002:a19:9d0:: with SMTP id 199mr649062lfj.110.1579845796081;
- Thu, 23 Jan 2020 22:03:16 -0800 (PST)
+        Fri, 24 Jan 2020 01:03:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58342 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725817AbgAXGDm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 01:03:42 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 215952071A;
+        Fri, 24 Jan 2020 06:03:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579845821;
+        bh=HAs60DRf5BSFHERMbxGfL8THT/7QSUVWC8FVp+r5kJ0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=WTnayUFvm/P59mIIby5Mw0VHpLV+3UlZ4TGy7oj/xQ8AxjuBh1R/L5zGor66DNiDR
+         FH7hId5xi3GZ7L03i9ZMOrUIT/ualF3cNXjcjIrPQP5vl2SJI2QZo3wNOStNe2/QIV
+         jhratH4nic3QIarXZs2a1gaJZE45f1nKTydd8UGc=
+Date:   Fri, 24 Jan 2020 07:03:39 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Jolly Shah <JOLLYS@xilinx.com>
+Cc:     "ard.biesheuvel@linaro.org" <ard.biesheuvel@linaro.org>,
+        "mingo@kernel.org" <mingo@kernel.org>,
+        "matt@codeblueprint.co.uk" <matt@codeblueprint.co.uk>,
+        "sudeep.holla@arm.com" <sudeep.holla@arm.com>,
+        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
+        "keescook@chromium.org" <keescook@chromium.org>,
+        "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>,
+        Michal Simek <michals@xilinx.com>,
+        Rajan Vaja <RAJANV@xilinx.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 1/4] firmware: xilinx: Add sysfs interface
+Message-ID: <20200124060339.GB2906795@kroah.com>
+References: <1578527663-10243-1-git-send-email-jolly.shah@xilinx.com>
+ <1578527663-10243-2-git-send-email-jolly.shah@xilinx.com>
+ <20200114145257.GA1910108@kroah.com>
+ <BYAPR02MB5992FC37E0D2AD9946414417B80F0@BYAPR02MB5992.namprd02.prod.outlook.com>
 MIME-Version: 1.0
-From:   Dave Airlie <airlied@gmail.com>
-Date:   Fri, 24 Jan 2020 16:03:04 +1000
-Message-ID: <CAPM=9ty8zJzPMuvaO4=AuvviKjqMO-VXbZgs+f93wiPFFhg0kw@mail.gmail.com>
-Subject: [git pull] drm fixes for 5.5-rc8/final
-To:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>
-Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <BYAPR02MB5992FC37E0D2AD9946414417B80F0@BYAPR02MB5992.namprd02.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On Thu, Jan 23, 2020 at 11:47:57PM +0000, Jolly Shah wrote:
+> Hi Greg,
+> 
+> Thanks for the review.
+> 
+> > -----Original Message-----
+> > From: Greg KH <gregkh@linuxfoundation.org>
+> > Sent: Tuesday, January 14, 2020 6:53 AM
+> > To: Jolly Shah <JOLLYS@xilinx.com>
+> > Cc: ard.biesheuvel@linaro.org; mingo@kernel.org; matt@codeblueprint.co.uk;
+> > sudeep.holla@arm.com; hkallweit1@gmail.com; keescook@chromium.org;
+> > dmitry.torokhov@gmail.com; Michal Simek <michals@xilinx.com>; Rajan Vaja
+> > <RAJANV@xilinx.com>; linux-arm-kernel@lists.infradead.org; linux-
+> > kernel@vger.kernel.org; Rajan Vaja <RAJANV@xilinx.com>; Jolly Shah
+> > <JOLLYS@xilinx.com>
+> > Subject: Re: [PATCH v2 1/4] firmware: xilinx: Add sysfs interface
+> > 
+> > On Wed, Jan 08, 2020 at 03:54:20PM -0800, Jolly Shah wrote:
+> > > From: Rajan Vaja <rajan.vaja@xilinx.com>
+> > >
+> > > Add Firmware-ggs sysfs interface which provides read/write
+> > > interface to global storage registers.
+> > >
+> > > Signed-off-by: Rajan Vaja <rajan.vaja@xilinx.com>
+> > > Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+> > > Signed-off-by: Jolly Shah <jollys@xilinx.com>
+> > > ---
+> > > Changes in v2:
+> > >  - Updated Linux kernel version in documentation.
+> > >  - Used DEVICE_ATTR_* and ATTRIBUTE_GROUPS macros.
+> > >  - Free Kobject structure in case of error.
+> > >  - Resolved smatch errors.
+> > >  - Updated Signed-off-by sequence.
+> > > ---
+> > >  Documentation/ABI/stable/sysfs-firmware-zynqmp |  50 +++++
+> > >  drivers/firmware/xilinx/Makefile               |   2 +-
+> > >  drivers/firmware/xilinx/zynqmp-ggs.c           | 284
+> > +++++++++++++++++++++++++
+> > >  drivers/firmware/xilinx/zynqmp.c               |  32 +++
+> > >  include/linux/firmware/xlnx-zynqmp.h           |  10 +
+> > >  5 files changed, 377 insertions(+), 1 deletion(-)
+> > >  create mode 100644 Documentation/ABI/stable/sysfs-firmware-zynqmp
+> > >  create mode 100644 drivers/firmware/xilinx/zynqmp-ggs.c
+> > >
+> > > diff --git a/Documentation/ABI/stable/sysfs-firmware-zynqmp
+> > b/Documentation/ABI/stable/sysfs-firmware-zynqmp
+> > > new file mode 100644
+> > > index 0000000..cffa2fc
+> > > --- /dev/null
+> > > +++ b/Documentation/ABI/stable/sysfs-firmware-zynqmp
+> > > @@ -0,0 +1,50 @@
+> > > +What:		/sys/firmware/zynqmp/ggs*
+> > 
+> > Why are these attributes just not hanging off of the platform device for
+> > the firmware controller?  Why do you need a new subdir under "firmware"?
+> 
+> Firmware driver was changed later to be platform driver but these interfaces were defined 
+> earlier and are in use.
 
-This one has a core mst fix and two i915 fixes. amdgpu just enables
-some hw outside experimental.
+Defined and in use where?  Not in the upstream kernel tree, right?  Or
+am I missing them somewhere else?
 
-The panfrost fix is a little bigger than I'd like at this stage but it
-fixes a fairly fundamental problem with global shared buffers in that
-driver, and since it's confined to that driver and I've taken a look
-at it, I think it's fine to get into the tree now, so it can get
-stable propagated as well.
+> > > +	ret = kstrtol(tok, 16, &value);
+> > > +	if (ret) {
+> > > +		ret = -EFAULT;
+> > > +		goto err;
+> > > +	}
+> > > +
+> > > +	ret = eemi_ops->ioctl(0, read_ioctl, reg, 0, ret_payload);
+> > 
+> > This feels "tricky", if you tie this to the device you have your driver
+> > bound to, will this make it easier instead of having to go through the
+> > ioctl callback?
+> > 
+> 
+> GGS(general global storage) registers are in PMU space and linux doesn't have access to it 
+> Hence ioctl is used.
 
-Dave.
+Why not just a "real" call to the driver to make this type of reading?
+You don't have ioctls within the kernel for other drivers to call,
+that's not needed at all.
 
-drm-fixes-2020-01-24:
-drm fixes for 5.5-rc8
+> > > +int zynqmp_pm_ggs_init(struct kobject *parent_kobj)
+> > > +{
+> > > +	return sysfs_create_group(parent_kobj, zynqmp_ggs_groups[0]);
+> > 
+> > You might be racing userspace here and loosing :(
+> 
+> Prob is called before user space is notified about sysfs so racing shouldn't happen.
 
-core/mst:
-- Fix SST branch device handling
+"shouldn't"?  How do you know this?
 
-amdgpu:
-- enable renoir outside experimental
+> Or you are referring to some other race condition?
 
-i915:
-- Avoid overflow with huge userptr objects
-- uAPI fix to correctly handle negative values in
-  engine->uabi_class/instance (cc: stable)
+Your kobject was created, and notified userspace that it was present and
+then sometime after that you add more attributes which userspace has no
+idea are there.
 
-panfrost:
-- Fix mapping of globally visible BO's (Boris)
-The following changes since commit def9d2780727cec3313ed3522d0123158d87224d:
+If you use the proper device model interfaces, none of these problems
+would be there.
 
-  Linux 5.5-rc7 (2020-01-19 16:02:49 -0800)
+> 
+> > 
+> > > +}
+> > > diff --git a/drivers/firmware/xilinx/zynqmp.c
+> > b/drivers/firmware/xilinx/zynqmp.c
+> > > index 75bdfaa..4c1117d 100644
+> > > --- a/drivers/firmware/xilinx/zynqmp.c
+> > > +++ b/drivers/firmware/xilinx/zynqmp.c
+> > > @@ -473,6 +473,10 @@ static inline int zynqmp_is_valid_ioctl(u32 ioctl_id)
+> > >  	case IOCTL_GET_PLL_FRAC_MODE:
+> > >  	case IOCTL_SET_PLL_FRAC_DATA:
+> > >  	case IOCTL_GET_PLL_FRAC_DATA:
+> > > +	case IOCTL_WRITE_GGS:
+> > > +	case IOCTL_READ_GGS:
+> > > +	case IOCTL_WRITE_PGGS:
+> > > +	case IOCTL_READ_PGGS:
+> > 
+> > Huh???
+> 
+> Sorry not sure about your concern here. These registers are in PMU space and hence
+> Ioctl is needed to let linux access them.
 
-are available in the Git repository at:
+userspace or kernelspace?
 
-  git://anongit.freedesktop.org/drm/drm tags/drm-fixes-2020-01-24
+You seem to be mixing them both here.
 
-for you to fetch changes up to 49412f6636bab17dbdc25e36d6482013e4188c88:
+> 
+> > 
+> > >  		return 1;
+> > >  	default:
+> > >  		return 0;
+> > > @@ -704,6 +708,28 @@ const struct zynqmp_eemi_ops
+> > *zynqmp_pm_get_eemi_ops(void)
+> > >  }
+> > >  EXPORT_SYMBOL_GPL(zynqmp_pm_get_eemi_ops);
+> > >
+> > > +static int zynqmp_pm_sysfs_init(void)
+> > > +{
+> > > +	struct kobject *zynqmp_kobj;
+> > > +	int ret;
+> > > +
+> > > +	zynqmp_kobj = kobject_create_and_add("zynqmp", firmware_kobj);
+> > > +	if (!zynqmp_kobj) {
+> > > +		pr_err("zynqmp: Firmware kobj add failed.\n");
+> > > +		return -ENOMEM;
+> > > +	}
+> > > +
+> > > +	ret = zynqmp_pm_ggs_init(zynqmp_kobj);
+> > > +	if (ret) {
+> > > +		kobject_put(zynqmp_kobj);
+> > > +		pr_err("%s() GGS init fail with error %d\n",
+> > > +		       __func__, ret);
+> > > +		goto err;
+> > > +	}
+> > > +err:
+> > > +	return ret;
+> > > +}
+> > > +
+> > >  static int zynqmp_firmware_probe(struct platform_device *pdev)
+> > >  {
+> > >  	struct device *dev = &pdev->dev;
+> > > @@ -751,6 +777,12 @@ static int zynqmp_firmware_probe(struct
+> > platform_device *pdev)
+> > >  	/* Assign eemi_ops_table */
+> > >  	eemi_ops_tbl = &eemi_ops;
+> > >
+> > > +	ret = zynqmp_pm_sysfs_init();
+> > 
+> > See, you have a platform device, hang the attributes off of that instead
+> > of making a kobject and detatching yourself from the global device tree!
+> > 
+> > Please redo this, I think it will make it a lot simpler and more
+> > obvious.
+> 
+> Agree it will be simpler but to as firmware driver was changed to be platform driver,
+> to keep paths same, we used sysfs.
 
-  Merge tag 'amd-drm-fixes-5.5-2020-01-23' of
-git://people.freedesktop.org/~agd5f/linux into drm-fixes (2020-01-24
-08:58:12 +1000)
+Keep them same from what?  Use the platform device as that is what it is
+there for, do not go create new apis when they are not needed at all.
 
-----------------------------------------------------------------
-drm fixes for 5.5-rc8
+thanks,
 
-core/mst:
-- Fix SST branch device handling
-
-amdgpu:
-- enable renoir outside experimental
-
-i915:
-- Avoid overflow with huge userptr objects
-- uAPI fix to correctly handle negative values in
-  engine->uabi_class/instance (cc: stable)
-
-panfrost:
-- Fix mapping of globally visible BO's (Boris)
-
-----------------------------------------------------------------
-Alex Deucher (1):
-      drm/amdgpu: remove the experimental flag for renoir
-
-Boris Brezillon (1):
-      drm/panfrost: Add the panfrost_gem_mapping concept
-
-Dave Airlie (3):
-      Merge tag 'drm-misc-fixes-2020-01-22-1' of
-git://anongit.freedesktop.org/drm/drm-misc into drm-fixes
-      Merge tag 'drm-intel-fixes-2020-01-23' of
-git://anongit.freedesktop.org/drm/drm-intel into drm-fixes
-      Merge tag 'amd-drm-fixes-5.5-2020-01-23' of
-git://people.freedesktop.org/~agd5f/linux into drm-fixes
-
-Matthew Auld (1):
-      drm/i915/userptr: fix size calculation
-
-Tvrtko Ursulin (1):
-      drm/i915: Align engine->uabi_class/instance with i915_drm.h
-
-Wayne Lin (1):
-      drm/dp_mst: Handle SST-only branch device case
-
- drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c          |   2 +-
- drivers/gpu/drm/drm_dp_mst_topology.c            | 140 +++++++++++++----------
- drivers/gpu/drm/i915/gem/i915_gem_busy.c         |  12 +-
- drivers/gpu/drm/i915/gem/i915_gem_userptr.c      |   9 +-
- drivers/gpu/drm/i915/gt/intel_engine_types.h     |   4 +-
- drivers/gpu/drm/i915/i915_gem_gtt.c              |   2 +
- drivers/gpu/drm/panfrost/panfrost_drv.c          |  91 +++++++++++++--
- drivers/gpu/drm/panfrost/panfrost_gem.c          | 124 +++++++++++++++++---
- drivers/gpu/drm/panfrost/panfrost_gem.h          |  41 ++++++-
- drivers/gpu/drm/panfrost/panfrost_gem_shrinker.c |   3 +-
- drivers/gpu/drm/panfrost/panfrost_job.c          |  13 ++-
- drivers/gpu/drm/panfrost/panfrost_job.h          |   1 +
- drivers/gpu/drm/panfrost/panfrost_mmu.c          |  61 +++++-----
- drivers/gpu/drm/panfrost/panfrost_mmu.h          |   6 +-
- drivers/gpu/drm/panfrost/panfrost_perfcnt.c      |  34 ++++--
- 15 files changed, 396 insertions(+), 147 deletions(-)
+greg k-h
