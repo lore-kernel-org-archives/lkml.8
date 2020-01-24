@@ -2,56 +2,56 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34C58C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 10:08:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58352C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 10:08:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02F57214AF
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 10:08:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29F902077C
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 10:08:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579860504;
-	bh=XXPCI+Js3489VVSMt3F3iWQj9EBL1r7i9D023TuHid8=;
+	s=default; t=1579860510;
+	bh=yvxHHIRlDb5mbB44AQGsdZguzZnaCV68GIKe2VLl4I4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wfsMGtFu/Y7gm5LkQzm7rHCOJ5xfce84eLRcegpTkAvOuvO0C6OQNJ/SI/YW14OmK
-	 YJUPV/Syg7hW5jJ2yxjgQ20UE3lBTE0dS5xC4sTi9t/c1DL6oy0KvkzQaZB2nLIEOV
-	 VZqCLJa073JmdbdvzlhDrgsa2+X3oS5X03JYfqRA=
+	b=PvC22gMz5Q5mFrJ8q2ppU8FyK8G1dxA/yCy8ARkZIfIwIPvO62yxDx+WPkbFLVdVZ
+	 8+TJQx9pT0kAfpuKU+Zf+joWcpJvDY4tGQ7RXUmSulFqBOOGa5L2g6BA3ev5nu51xO
+	 HWVZ+4rMY2DiWairnFc3MeCEoYwy8b6MzRS+ZdfU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389497AbgAXKIX (ORCPT
+        id S2389510AbgAXKI3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 05:08:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45146 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 05:08:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45248 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388724AbgAXKIV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 05:08:21 -0500
+        id S2389338AbgAXKI1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 05:08:27 -0500
 Received: from localhost (unknown [145.15.244.15])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5350A2087E;
-        Fri, 24 Jan 2020 10:08:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E2B282077C;
+        Fri, 24 Jan 2020 10:08:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579860500;
-        bh=XXPCI+Js3489VVSMt3F3iWQj9EBL1r7i9D023TuHid8=;
+        s=default; t=1579860505;
+        bh=yvxHHIRlDb5mbB44AQGsdZguzZnaCV68GIKe2VLl4I4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0ORaG7pz2TW6dBoINUW3M8ilHm0PydgNx3AOKpbMvHn+qMvESH7psiI1W/ifXcvv6
-         Ncs5QnLU7CzfD2TjNmkM9/YOds7YJiGw9OSAqkqgON7quhSLqazU6GMrJSYCd+84+b
-         2gw2+opC+RbHrpdlDM3jPSA7fpkdd34Qul8x1xwY=
+        b=wPWMIEL3NRiyDisoUX0eZHviRaAPtFQXmWAZ3qgbfzrdveD9KNEGdqR9zVxPBa3kx
+         gvddgMTE3/4IYzgjHkUNCRR3CGQrcT2xt4pRvy7boCNiR6gqegqoO3LzTZ4Miy85w2
+         AJhIpmScSlt/IIwUhapK1WfeezQbG1vJzZwIpaNc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Marc Dionne <marc.dionne@auristor.com>,
-        David Howells <dhowells@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 330/343] afs: Fix large file support
-Date:   Fri, 24 Jan 2020 10:32:28 +0100
-Message-Id: <20200124093003.188619321@linuxfoundation.org>
+        stable@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>,
+        Bill Baker <bill.baker@oracle.com>,
+        Simo Sorce <simo@redhat.com>,
+        "J. Bruce Fields" <bfields@redhat.com>
+Subject: [PATCH 4.19 006/639] SUNRPC: Fix svcauth_gss_proxy_init()
+Date:   Fri, 24 Jan 2020 10:22:56 +0100
+Message-Id: <20200124093047.874390366@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200124092919.490687572@linuxfoundation.org>
-References: <20200124092919.490687572@linuxfoundation.org>
+In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
+References: <20200124093047.008739095@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -61,45 +61,167 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marc Dionne <marc.dionne@auristor.com>
+From: Chuck Lever <chuck.lever@oracle.com>
 
-[ Upstream commit b485275f1aca8a9da37fd35e4fad673935e827da ]
+commit 5866efa8cbfbadf3905072798e96652faf02dbe8 upstream.
 
-By default s_maxbytes is set to MAX_NON_LFS, which limits the usable
-file size to 2GB, enforced by the vfs.
+gss_read_proxy_verf() assumes things about the XDR buffer containing
+the RPC Call that are not true for buffers generated by
+svc_rdma_recv().
 
-Commit b9b1f8d5930a ("AFS: write support fixes") added support for the
-64-bit fetch and store server operations, but did not change this value.
-As a result, attempts to write past the 2G mark result in EFBIG errors:
+RDMA's buffers look more like what the upper layer generates for
+sending: head is a kmalloc'd buffer; it does not point to a page
+whose contents are contiguous with the first page in the buffers'
+page array. The result is that ACCEPT_SEC_CONTEXT via RPC/RDMA has
+stopped working on Linux NFS servers that use gssproxy.
 
- $ dd if=/dev/zero of=foo bs=1M count=1 seek=2048
- dd: error writing 'foo': File too large
+This does not affect clients that use only TCP to send their
+ACCEPT_SEC_CONTEXT operation (that's all Linux clients). Other
+clients, like Solaris NFS clients, send ACCEPT_SEC_CONTEXT on the
+same transport as they send all other NFS operations. Such clients
+can send ACCEPT_SEC_CONTEXT via RPC/RDMA.
 
-Set s_maxbytes to MAX_LFS_FILESIZE.
+I thought I had found every direct reference in the server RPC code
+to the rqstp->rq_pages field.
 
-Fixes: b9b1f8d5930a ("AFS: write support fixes")
-Signed-off-by: Marc Dionne <marc.dionne@auristor.com>
-Signed-off-by: David Howells <dhowells@redhat.com>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Bug found at the 2019 Westford NFS bake-a-thon.
+
+Fixes: 3316f0631139 ("svcrdma: Persistently allocate and DMA- ... ")
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+Tested-by: Bill Baker <bill.baker@oracle.com>
+Reviewed-by: Simo Sorce <simo@redhat.com>
+Signed-off-by: J. Bruce Fields <bfields@redhat.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- fs/afs/super.c | 1 +
- 1 file changed, 1 insertion(+)
+ net/sunrpc/auth_gss/svcauth_gss.c |   84 ++++++++++++++++++++++++++++----------
+ 1 file changed, 63 insertions(+), 21 deletions(-)
 
-diff --git a/fs/afs/super.c b/fs/afs/super.c
-index 689173c0a682f..f8529ddbd587f 100644
---- a/fs/afs/super.c
-+++ b/fs/afs/super.c
-@@ -359,6 +359,7 @@ static int afs_fill_super(struct super_block *sb,
- 	/* fill in the superblock */
- 	sb->s_blocksize		= PAGE_SIZE;
- 	sb->s_blocksize_bits	= PAGE_SHIFT;
-+	sb->s_maxbytes		= MAX_LFS_FILESIZE;
- 	sb->s_magic		= AFS_FS_MAGIC;
- 	sb->s_op		= &afs_super_ops;
- 	sb->s_xattr		= afs_xattr_handlers;
--- 
-2.20.1
-
+--- a/net/sunrpc/auth_gss/svcauth_gss.c
++++ b/net/sunrpc/auth_gss/svcauth_gss.c
+@@ -1054,24 +1054,32 @@ gss_read_verf(struct rpc_gss_wire_cred *
+ 	return 0;
+ }
+ 
+-/* Ok this is really heavily depending on a set of semantics in
+- * how rqstp is set up by svc_recv and pages laid down by the
+- * server when reading a request. We are basically guaranteed that
+- * the token lays all down linearly across a set of pages, starting
+- * at iov_base in rq_arg.head[0] which happens to be the first of a
+- * set of pages stored in rq_pages[].
+- * rq_arg.head[0].iov_base will provide us the page_base to pass
+- * to the upcall.
+- */
+-static inline int
+-gss_read_proxy_verf(struct svc_rqst *rqstp,
+-		    struct rpc_gss_wire_cred *gc, __be32 *authp,
+-		    struct xdr_netobj *in_handle,
+-		    struct gssp_in_token *in_token)
++static void gss_free_in_token_pages(struct gssp_in_token *in_token)
+ {
+-	struct kvec *argv = &rqstp->rq_arg.head[0];
+ 	u32 inlen;
+-	int res;
++	int i;
++
++	i = 0;
++	inlen = in_token->page_len;
++	while (inlen) {
++		if (in_token->pages[i])
++			put_page(in_token->pages[i]);
++		inlen -= inlen > PAGE_SIZE ? PAGE_SIZE : inlen;
++	}
++
++	kfree(in_token->pages);
++	in_token->pages = NULL;
++}
++
++static int gss_read_proxy_verf(struct svc_rqst *rqstp,
++			       struct rpc_gss_wire_cred *gc, __be32 *authp,
++			       struct xdr_netobj *in_handle,
++			       struct gssp_in_token *in_token)
++{
++	struct kvec *argv = &rqstp->rq_arg.head[0];
++	unsigned int page_base, length;
++	int pages, i, res;
++	size_t inlen;
+ 
+ 	res = gss_read_common_verf(gc, argv, authp, in_handle);
+ 	if (res)
+@@ -1081,10 +1089,36 @@ gss_read_proxy_verf(struct svc_rqst *rqs
+ 	if (inlen > (argv->iov_len + rqstp->rq_arg.page_len))
+ 		return SVC_DENIED;
+ 
+-	in_token->pages = rqstp->rq_pages;
+-	in_token->page_base = (ulong)argv->iov_base & ~PAGE_MASK;
++	pages = DIV_ROUND_UP(inlen, PAGE_SIZE);
++	in_token->pages = kcalloc(pages, sizeof(struct page *), GFP_KERNEL);
++	if (!in_token->pages)
++		return SVC_DENIED;
++	in_token->page_base = 0;
+ 	in_token->page_len = inlen;
++	for (i = 0; i < pages; i++) {
++		in_token->pages[i] = alloc_page(GFP_KERNEL);
++		if (!in_token->pages[i]) {
++			gss_free_in_token_pages(in_token);
++			return SVC_DENIED;
++		}
++	}
+ 
++	length = min_t(unsigned int, inlen, argv->iov_len);
++	memcpy(page_address(in_token->pages[0]), argv->iov_base, length);
++	inlen -= length;
++
++	i = 1;
++	page_base = rqstp->rq_arg.page_base;
++	while (inlen) {
++		length = min_t(unsigned int, inlen, PAGE_SIZE);
++		memcpy(page_address(in_token->pages[i]),
++		       page_address(rqstp->rq_arg.pages[i]) + page_base,
++		       length);
++
++		inlen -= length;
++		page_base = 0;
++		i++;
++	}
+ 	return 0;
+ }
+ 
+@@ -1259,8 +1293,11 @@ static int svcauth_gss_proxy_init(struct
+ 		break;
+ 	case GSS_S_COMPLETE:
+ 		status = gss_proxy_save_rsc(sn->rsc_cache, &ud, &handle);
+-		if (status)
++		if (status) {
++			pr_info("%s: gss_proxy_save_rsc failed (%d)\n",
++				__func__, status);
+ 			goto out;
++		}
+ 		cli_handle.data = (u8 *)&handle;
+ 		cli_handle.len = sizeof(handle);
+ 		break;
+@@ -1271,15 +1308,20 @@ static int svcauth_gss_proxy_init(struct
+ 
+ 	/* Got an answer to the upcall; use it: */
+ 	if (gss_write_init_verf(sn->rsc_cache, rqstp,
+-				&cli_handle, &ud.major_status))
++				&cli_handle, &ud.major_status)) {
++		pr_info("%s: gss_write_init_verf failed\n", __func__);
+ 		goto out;
++	}
+ 	if (gss_write_resv(resv, PAGE_SIZE,
+ 			   &cli_handle, &ud.out_token,
+-			   ud.major_status, ud.minor_status))
++			   ud.major_status, ud.minor_status)) {
++		pr_info("%s: gss_write_resv failed\n", __func__);
+ 		goto out;
++	}
+ 
+ 	ret = SVC_COMPLETE;
+ out:
++	gss_free_in_token_pages(&ud.in_token);
+ 	gssp_free_upcall_data(&ud);
+ 	return ret;
+ }
 
 
