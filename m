@@ -2,266 +2,105 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29B45C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 20:43:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20F91C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 20:48:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F27D92075D
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 20:43:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EAF5C20838
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 20:48:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eRu+xQmF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388092AbgAXUnE (ORCPT
+        id S1730187AbgAXUsA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 15:43:04 -0500
-Received: from alexa-out-sd-01.qualcomm.com ([199.106.114.38]:23203 "EHLO
-        alexa-out-sd-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2387833AbgAXUnD (ORCPT
+        Fri, 24 Jan 2020 15:48:00 -0500
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:35456 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725747AbgAXUr7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 15:43:03 -0500
-Received: from unknown (HELO ironmsg-SD-alpha.qualcomm.com) ([10.53.140.30])
-  by alexa-out-sd-01.qualcomm.com with ESMTP; 24 Jan 2020 12:43:03 -0800
-Received: from gurus-linux.qualcomm.com ([10.46.162.81])
-  by ironmsg-SD-alpha.qualcomm.com with ESMTP; 24 Jan 2020 12:43:02 -0800
-Received: by gurus-linux.qualcomm.com (Postfix, from userid 383780)
-        id EF9A448C4; Fri, 24 Jan 2020 12:43:02 -0800 (PST)
-From:   Guru Das Srinagesh <gurus@codeaurora.org>
-To:     linux-pwm@vger.kernel.org
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <uwe@kleine-koenig.org>,
-        Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
-        linux-kernel@vger.kernel.org,
-        Guru Das Srinagesh <gurus@codeaurora.org>
-Subject: [PATCH v5 1/2] pwm: Convert drivers to use 64-bit period and duty cycle
-Date:   Fri, 24 Jan 2020 12:42:59 -0800
-Message-Id: <28090aef9900ad483cbfbe77883e5ffcd8745907.1579896984.git.gurus@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <cover.1579896984.git.gurus@codeaurora.org>
-References: <cover.1579896984.git.gurus@codeaurora.org>
-In-Reply-To: <cover.1579896984.git.gurus@codeaurora.org>
-References: <cover.1579896984.git.gurus@codeaurora.org>
+        Fri, 24 Jan 2020 15:47:59 -0500
+Received: by mail-ed1-f65.google.com with SMTP id f8so3978257edv.2;
+        Fri, 24 Jan 2020 12:47:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=JU7gxEFwqK+Oxre///Ayp0+fP1f8xI82V+ZomELLvp4=;
+        b=eRu+xQmFlMp1p123ro0L8uEz6rLywSSxjfCP//d3n5T5sSVRI9vgFDwkWZaYhPDb01
+         AA1TJ+Cu5TAUm6Ts+9sl0p5o1u5fY4dXUzQmsa1PbeakWDjkncijtz3uljdd77xRBmHD
+         TbNTGMIu8npkRA0YNARxdeYcH3draPkudVWEBhsW6ngSiUi5oREnoj3bxO1xA7aNaV+i
+         QDTcwmKM5cu16LaK3KZvHqJYHhks70rumEqDcyfoAQIKvP3r/DvlmKikNKqsMS4j0Anl
+         dvbBuud/ZKUP2bTHB4YhlsE5mulb2xDVwXlp0U1S+CtRyKwgjzZXYE2OMC0M0UTYfH0L
+         KQcA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=JU7gxEFwqK+Oxre///Ayp0+fP1f8xI82V+ZomELLvp4=;
+        b=iYgzcyXwLXUYHziNksT0ckDvK0V2sDsSRmOF4lrxqgik2gfOvE3OEw+QhTUDzKjd/W
+         61To+EqDUKuG+TuyrDOwf3hQaUfTrLchejzIlrovdlxkJtldbto4N+p0hOo1g68Zrhu/
+         1FwJ5kjlQTm8Tnvy5JnyCPnltmueq36K9JwYQeckJTv5UGOSLFNbYqoy4b7mSYB53hkH
+         0QsWknG2iTNvX8LWnWJSwNbjaCADs9furjzkDtSJJl6JfwWf/xEbpYMZ/iRKOtKxgDJM
+         +CJE9PvnuQVMNC4f5BmQ3eXAHPrkaCIVUUEz4Q0WIJSzMZhfFTrERoE6ZFO1CqMXFocN
+         uQFA==
+X-Gm-Message-State: APjAAAWPbYb6vX1cVeTPIX7nCDnWZY55E2yWgfTsH8PpcSrQrjIdwMZy
+        8f+n4ofGg2ftuLC0UWSkUmL5h16i
+X-Google-Smtp-Source: APXvYqxnina41SA8+MgC1xi6wgEfub21FhhEpsBWu5i6V9WtJ/iIpEmyMw1/fN294AV9Djv5FKmk2g==
+X-Received: by 2002:a17:907:104e:: with SMTP id oy14mr3769362ejb.82.1579898877190;
+        Fri, 24 Jan 2020 12:47:57 -0800 (PST)
+Received: from jwang-Latitude-5491.fkb.profitbricks.net ([2001:16b8:4965:9a00:596f:3f84:9af0:9e48])
+        by smtp.gmail.com with ESMTPSA id b17sm53830edt.5.2020.01.24.12.47.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 24 Jan 2020 12:47:56 -0800 (PST)
+From:   Jack Wang <jinpuwang@gmail.com>
+To:     linux-block@vger.kernel.org, linux-rdma@vger.kernel.org
+Cc:     axboe@kernel.dk, hch@infradead.org, sagi@grimberg.me,
+        bvanassche@acm.org, leon@kernel.org, dledford@redhat.com,
+        jgg@ziepe.ca, danil.kipnis@cloud.ionos.com,
+        jinpu.wang@cloud.ionos.com, rpenyaev@suse.de,
+        Roman Pen <roman.penyaev@profitbricks.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v8 01/25] sysfs: export sysfs_remove_file_self()
+Date:   Fri, 24 Jan 2020 21:47:29 +0100
+Message-Id: <20200124204753.13154-2-jinpuwang@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200124204753.13154-1-jinpuwang@gmail.com>
+References: <20200124204753.13154-1-jinpuwang@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Because period and duty cycle are defined in the PWM framework structs
-as ints with units of nanoseconds, the maximum time duration that can be
-set is limited to ~2.147 seconds. Redefining them as u64 values will
-enable larger time durations to be set.
+From: Jack Wang <jinpu.wang@cloud.ionos.com>
 
-As a first step, prepare drivers to handle the switch to u64 period and
-duty_cycle by making the relevant fixes to those drivers that use the
-period and duty_cycle pwm struct members in division operations, viz.
-replacing the division operations with 64-bit division macros as
-appropriate. The actual switch to u64 period and duty_cycle follows as a
-separate patch.
+Function is going to be used in transport over RDMA module
+in subsequent patches, so export it to GPL modules.
 
-Where the dividend is 64-bit but the divisor is 32-bit, use *_ULL
-macros:
-- DIV_ROUND_UP_ULL
-- DIV_ROUND_CLOSEST_ULL
-- div_u64
-
-Where the divisor is 64-bit (dividend may be 32-bit or 64-bit), use
-DIV64_* macros:
-- DIV64_U64_ROUND_CLOSEST
-- div64_u64
-
-The kbuild test robot helped to improve this patch by catching a couple
-of code sites that had to be adapted.
-
-Signed-off-by: Guru Das Srinagesh <gurus@codeaurora.org>
+Signed-off-by: Roman Pen <roman.penyaev@profitbricks.com>
+Acked-by: Tejun Heo <tj@kernel.org>
+Cc: linux-kernel@vger.kernel.org
+[jwang: extend the commit message]
+Signed-off-by: Jack Wang <jinpu.wang@cloud.ionos.com>
 ---
- drivers/clk/clk-pwm.c                      | 2 +-
- drivers/gpu/drm/i915/display/intel_panel.c | 2 +-
- drivers/hwmon/pwm-fan.c                    | 2 +-
- drivers/media/rc/ir-rx51.c                 | 3 ++-
- drivers/pwm/pwm-clps711x.c                 | 2 +-
- drivers/pwm/pwm-imx-tpm.c                  | 2 +-
- drivers/pwm/pwm-imx27.c                    | 5 ++---
- drivers/pwm/pwm-sifive.c                   | 2 +-
- drivers/pwm/pwm-sti.c                      | 5 +++--
- drivers/pwm/pwm-stm32-lp.c                 | 2 +-
- drivers/pwm/pwm-sun4i.c                    | 2 +-
- drivers/video/backlight/pwm_bl.c           | 3 ++-
- 12 files changed, 17 insertions(+), 15 deletions(-)
+ fs/sysfs/file.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/clk/clk-pwm.c b/drivers/clk/clk-pwm.c
-index 87fe0b0e..7b1f7a0 100644
---- a/drivers/clk/clk-pwm.c
-+++ b/drivers/clk/clk-pwm.c
-@@ -89,7 +89,7 @@ static int clk_pwm_probe(struct platform_device *pdev)
- 	}
- 
- 	if (of_property_read_u32(node, "clock-frequency", &clk_pwm->fixed_rate))
--		clk_pwm->fixed_rate = NSEC_PER_SEC / pargs.period;
-+		clk_pwm->fixed_rate = div64_u64(NSEC_PER_SEC, pargs.period);
- 
- 	if (pargs.period != NSEC_PER_SEC / clk_pwm->fixed_rate &&
- 	    pargs.period != DIV_ROUND_UP(NSEC_PER_SEC, clk_pwm->fixed_rate)) {
-diff --git a/drivers/gpu/drm/i915/display/intel_panel.c b/drivers/gpu/drm/i915/display/intel_panel.c
-index bc14e9c..843cac1 100644
---- a/drivers/gpu/drm/i915/display/intel_panel.c
-+++ b/drivers/gpu/drm/i915/display/intel_panel.c
-@@ -1868,7 +1868,7 @@ static int pwm_setup_backlight(struct intel_connector *connector,
- 
- 	panel->backlight.min = 0; /* 0% */
- 	panel->backlight.max = 100; /* 100% */
--	panel->backlight.level = DIV_ROUND_UP(
-+	panel->backlight.level = DIV_ROUND_UP_ULL(
- 				 pwm_get_duty_cycle(panel->backlight.pwm) * 100,
- 				 CRC_PMIC_PWM_PERIOD_NS);
- 	panel->backlight.enabled = panel->backlight.level != 0;
-diff --git a/drivers/hwmon/pwm-fan.c b/drivers/hwmon/pwm-fan.c
-index 42ffd2e..283423a 100644
---- a/drivers/hwmon/pwm-fan.c
-+++ b/drivers/hwmon/pwm-fan.c
-@@ -437,7 +437,7 @@ static int pwm_fan_resume(struct device *dev)
- 		return 0;
- 
- 	pwm_get_args(ctx->pwm, &pargs);
--	duty = DIV_ROUND_UP(ctx->pwm_value * (pargs.period - 1), MAX_PWM);
-+	duty = DIV_ROUND_UP_ULL(ctx->pwm_value * (pargs.period - 1), MAX_PWM);
- 	ret = pwm_config(ctx->pwm, duty, pargs.period);
- 	if (ret)
- 		return ret;
-diff --git a/drivers/media/rc/ir-rx51.c b/drivers/media/rc/ir-rx51.c
-index 8574eda..9a5dfd7 100644
---- a/drivers/media/rc/ir-rx51.c
-+++ b/drivers/media/rc/ir-rx51.c
-@@ -241,7 +241,8 @@ static int ir_rx51_probe(struct platform_device *dev)
- 	}
- 
- 	/* Use default, in case userspace does not set the carrier */
--	ir_rx51.freq = DIV_ROUND_CLOSEST(pwm_get_period(pwm), NSEC_PER_SEC);
-+	ir_rx51.freq = DIV_ROUND_CLOSEST_ULL(pwm_get_period(pwm),
-+			NSEC_PER_SEC);
- 	pwm_put(pwm);
- 
- 	hrtimer_init(&ir_rx51.timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
-diff --git a/drivers/pwm/pwm-clps711x.c b/drivers/pwm/pwm-clps711x.c
-index 924d39a..ba9500a 100644
---- a/drivers/pwm/pwm-clps711x.c
-+++ b/drivers/pwm/pwm-clps711x.c
-@@ -43,7 +43,7 @@ static void clps711x_pwm_update_val(struct clps711x_chip *priv, u32 n, u32 v)
- static unsigned int clps711x_get_duty(struct pwm_device *pwm, unsigned int v)
- {
- 	/* Duty cycle 0..15 max */
--	return DIV_ROUND_CLOSEST(v * 0xf, pwm->args.period);
-+	return DIV64_U64_ROUND_CLOSEST(v * 0xf, pwm->args.period);
+diff --git a/fs/sysfs/file.c b/fs/sysfs/file.c
+index 130fc6fbcc03..1ff4672d7746 100644
+--- a/fs/sysfs/file.c
++++ b/fs/sysfs/file.c
+@@ -492,6 +492,7 @@ bool sysfs_remove_file_self(struct kobject *kobj, const struct attribute *attr)
+ 	kernfs_put(kn);
+ 	return ret;
  }
++EXPORT_SYMBOL_GPL(sysfs_remove_file_self);
  
- static int clps711x_pwm_request(struct pwm_chip *chip, struct pwm_device *pwm)
-diff --git a/drivers/pwm/pwm-imx-tpm.c b/drivers/pwm/pwm-imx-tpm.c
-index 9145f61..53bf364 100644
---- a/drivers/pwm/pwm-imx-tpm.c
-+++ b/drivers/pwm/pwm-imx-tpm.c
-@@ -126,7 +126,7 @@ static int pwm_imx_tpm_round_state(struct pwm_chip *chip,
- 		real_state->duty_cycle = state->duty_cycle;
- 
- 	tmp = (u64)p->mod * real_state->duty_cycle;
--	p->val = DIV_ROUND_CLOSEST_ULL(tmp, real_state->period);
-+	p->val = DIV64_U64_ROUND_CLOSEST(tmp, real_state->period);
- 
- 	real_state->polarity = state->polarity;
- 	real_state->enabled = state->enabled;
-diff --git a/drivers/pwm/pwm-imx27.c b/drivers/pwm/pwm-imx27.c
-index 35a7ac42..b7d38d0 100644
---- a/drivers/pwm/pwm-imx27.c
-+++ b/drivers/pwm/pwm-imx27.c
-@@ -208,7 +208,7 @@ static void pwm_imx27_wait_fifo_slot(struct pwm_chip *chip,
- 	sr = readl(imx->mmio_base + MX3_PWMSR);
- 	fifoav = FIELD_GET(MX3_PWMSR_FIFOAV, sr);
- 	if (fifoav == MX3_PWMSR_FIFOAV_4WORDS) {
--		period_ms = DIV_ROUND_UP(pwm_get_period(pwm),
-+		period_ms = DIV_ROUND_UP_ULL(pwm_get_period(pwm),
- 					 NSEC_PER_MSEC);
- 		msleep(period_ms);
- 
-@@ -240,8 +240,7 @@ static int pwm_imx27_apply(struct pwm_chip *chip, struct pwm_device *pwm,
- 
- 	period_cycles /= prescale;
- 	c = (unsigned long long)period_cycles * state->duty_cycle;
--	do_div(c, state->period);
--	duty_cycles = c;
-+	duty_cycles = div64_u64(c, state->period);
- 
- 	/*
- 	 * according to imx pwm RM, the real period value should be PERIOD
-diff --git a/drivers/pwm/pwm-sifive.c b/drivers/pwm/pwm-sifive.c
-index cc63f9b..62de0bb 100644
---- a/drivers/pwm/pwm-sifive.c
-+++ b/drivers/pwm/pwm-sifive.c
-@@ -181,7 +181,7 @@ static int pwm_sifive_apply(struct pwm_chip *chip, struct pwm_device *pwm,
- 	 * consecutively
- 	 */
- 	num = (u64)duty_cycle * (1U << PWM_SIFIVE_CMPWIDTH);
--	frac = DIV_ROUND_CLOSEST_ULL(num, state->period);
-+	frac = DIV64_U64_ROUND_CLOSEST(num, state->period);
- 	/* The hardware cannot generate a 100% duty cycle */
- 	frac = min(frac, (1U << PWM_SIFIVE_CMPWIDTH) - 1);
- 
-diff --git a/drivers/pwm/pwm-sti.c b/drivers/pwm/pwm-sti.c
-index 1508616..5a7f337 100644
---- a/drivers/pwm/pwm-sti.c
-+++ b/drivers/pwm/pwm-sti.c
-@@ -371,10 +371,11 @@ static int sti_pwm_capture(struct pwm_chip *chip, struct pwm_device *pwm,
- 		effective_ticks = clk_get_rate(pc->cpt_clk);
- 
- 		result->period = (high + low) * NSEC_PER_SEC;
--		result->period /= effective_ticks;
-+		result->period = div_u64(result->period, effective_ticks);
- 
- 		result->duty_cycle = high * NSEC_PER_SEC;
--		result->duty_cycle /= effective_ticks;
-+		result->duty_cycle = div_u64(result->duty_cycle,
-+				effective_ticks);
- 
- 		break;
- 
-diff --git a/drivers/pwm/pwm-stm32-lp.c b/drivers/pwm/pwm-stm32-lp.c
-index 67fca62..134c146 100644
---- a/drivers/pwm/pwm-stm32-lp.c
-+++ b/drivers/pwm/pwm-stm32-lp.c
-@@ -61,7 +61,7 @@ static int stm32_pwm_lp_apply(struct pwm_chip *chip, struct pwm_device *pwm,
- 	do_div(div, NSEC_PER_SEC);
- 	if (!div) {
- 		/* Clock is too slow to achieve requested period. */
--		dev_dbg(priv->chip.dev, "Can't reach %u ns\n",	state->period);
-+		dev_dbg(priv->chip.dev, "Can't reach %llu ns\n", state->period);
- 		return -EINVAL;
- 	}
- 
-diff --git a/drivers/pwm/pwm-sun4i.c b/drivers/pwm/pwm-sun4i.c
-index 3e3efa6..772fdf4 100644
---- a/drivers/pwm/pwm-sun4i.c
-+++ b/drivers/pwm/pwm-sun4i.c
-@@ -286,7 +286,7 @@ static int sun4i_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
- 	val = (duty & PWM_DTY_MASK) | PWM_PRD(period);
- 	sun4i_pwm_writel(sun4i_pwm, val, PWM_CH_PRD(pwm->hwpwm));
- 	sun4i_pwm->next_period[pwm->hwpwm] = jiffies +
--		usecs_to_jiffies(cstate.period / 1000 + 1);
-+		usecs_to_jiffies(div_u64(cstate.period, 1000) + 1);
- 	sun4i_pwm->needs_delay[pwm->hwpwm] = true;
- 
- 	if (state->polarity != PWM_POLARITY_NORMAL)
-diff --git a/drivers/video/backlight/pwm_bl.c b/drivers/video/backlight/pwm_bl.c
-index efb4efc..3e5dbcf 100644
---- a/drivers/video/backlight/pwm_bl.c
-+++ b/drivers/video/backlight/pwm_bl.c
-@@ -625,7 +625,8 @@ static int pwm_backlight_probe(struct platform_device *pdev)
- 		pb->scale = data->max_brightness;
- 	}
- 
--	pb->lth_brightness = data->lth_brightness * (state.period / pb->scale);
-+	pb->lth_brightness = data->lth_brightness * (div_u64(state.period,
-+				pb->scale));
- 
- 	props.type = BACKLIGHT_RAW;
- 	props.max_brightness = data->max_brightness;
+ void sysfs_remove_files(struct kobject *kobj, const struct attribute * const *ptr)
+ {
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+2.17.1
 
