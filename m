@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4A9EC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 10:01:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ABBFC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 10:01:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B59F321556
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 10:01:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7F3F208C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 10:01:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579860092;
-	bh=Ur9BbBpheYDLZUeTw8gvhibSRDGEq162UaxcoaP1g2g=;
+	s=default; t=1579860099;
+	bh=qys4PTBg21yuijVxAzhvDQXXNLAkLmDpV3GE4iGs2Dw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IOlWUZjbt6BGneU7kRY++K+PK1VaaDOv+h68VHx/uqm88e+rpC6UYJKQnVBrMDew2
-	 Cd2v/5WwpvcyQh7MYxDPQWNDUhYU52XVYGaWhqHTAfVzPQ1AEJBmLkCI8y1HO/EMCi
-	 7CzRj4clwYaKR20+QZSw028ePdcjIAnXLcn6ekY4=
+	b=WeCyzkhG9MZN56RrKbuZ0hT+FuLAW2hruu+Isn1iseCheMfhyPfk/Tr90t2e4bl/e
+	 UY6q0kXDwkdSOYVJtJ9eylaR0rMQy49ogWC4KsuRi5UQP/6o3L7g8VDQUU7y9xJdz2
+	 eDvCq4uzOfYcpbU1wVj0ecyFiWts0HXulhRGf6GQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388856AbgAXKBb (ORCPT
+        id S2388862AbgAXKBi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 05:01:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36888 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 05:01:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36942 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727215AbgAXKB2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 05:01:28 -0500
+        id S1727215AbgAXKBc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 05:01:32 -0500
 Received: from localhost (unknown [145.15.244.15])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 58E85206D5;
-        Fri, 24 Jan 2020 10:01:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4F635206D5;
+        Fri, 24 Jan 2020 10:01:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579860088;
-        bh=Ur9BbBpheYDLZUeTw8gvhibSRDGEq162UaxcoaP1g2g=;
+        s=default; t=1579860092;
+        bh=qys4PTBg21yuijVxAzhvDQXXNLAkLmDpV3GE4iGs2Dw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OnoSXbpyUjdG1cM5zKUiKxA8XWMDHtHrodi7VtwQ+OKo/sAF5Yyo4jKO+zDhokNKX
-         +qOcuo4T6SD3WV+yUipEsKi7GWU8Ax1rsZEmKEtqDcCoo1gJnh3aqgfWYsvQt1kMrx
-         8B5HRnE20qFQy9PR/FIkkBi4TOJHilkCIAhKQWVY=
+        b=pkQsarKb5IqHOZ3aw4um9MJj70sKM+ETlpVCxA2SoY3MHNwS7Pp3LWRgEkd7jEgbA
+         1FEbi270MADGWAbtScf2/SI+RuTC0rl8TWx84scG8YzaBBkvzELqrbVCGOKO8TSYdx
+         VYaa0O5ybvGqObMDhOHo6nufD8rea+V+73thcX/o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Julian Wiedmann <jwi@linux.ibm.com>,
-        Ursula Braun <ubraun@linux.ibm.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 238/343] net/af_iucv: always register net_device notifier
-Date:   Fri, 24 Jan 2020 10:30:56 +0100
-Message-Id: <20200124092951.440361039@linuxfoundation.org>
+Subject: [PATCH 4.14 256/343] PM: sleep: Fix possible overflow in pm_system_cancel_wakeup()
+Date:   Fri, 24 Jan 2020 10:31:14 +0100
+Message-Id: <20200124092953.735890345@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124092919.490687572@linuxfoundation.org>
 References: <20200124092919.490687572@linuxfoundation.org>
@@ -61,82 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Julian Wiedmann <jwi@linux.ibm.com>
+From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-[ Upstream commit 06996c1d4088a0d5f3e7789d7f96b4653cc947cc ]
+[ Upstream commit 2933954b71f10d392764f95eec0f0aa2d103054b ]
 
-Even when running as VM guest (ie pr_iucv != NULL), af_iucv can still
-open HiperTransport-based connections. For robust operation these
-connections require the af_iucv_netdev_notifier, so register it
-unconditionally.
+It is not actually guaranteed that pm_abort_suspend will be
+nonzero when pm_system_cancel_wakeup() is called which may lead to
+subtle issues, so make it use atomic_dec_if_positive() instead of
+atomic_dec() for the safety sake.
 
-Also handle any error that register_netdevice_notifier() returns.
-
-Fixes: 9fbd87d41392 ("af_iucv: handle netdev events")
-Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
-Reviewed-by: Ursula Braun <ubraun@linux.ibm.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 33e4f80ee69b ("ACPI / PM: Ignore spurious SCI wakeups from suspend-to-idle")
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Acked-by: Thomas Gleixner <tglx@linutronix.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/iucv/af_iucv.c | 27 ++++++++++++++++++++-------
- 1 file changed, 20 insertions(+), 7 deletions(-)
+ drivers/base/power/wakeup.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/iucv/af_iucv.c b/net/iucv/af_iucv.c
-index ca98276c27097..7a9cbc9502d9c 100644
---- a/net/iucv/af_iucv.c
-+++ b/net/iucv/af_iucv.c
-@@ -2446,6 +2446,13 @@ out:
- 	return err;
+diff --git a/drivers/base/power/wakeup.c b/drivers/base/power/wakeup.c
+index df53e2b3296b4..877b2a1767a5a 100644
+--- a/drivers/base/power/wakeup.c
++++ b/drivers/base/power/wakeup.c
+@@ -877,7 +877,7 @@ EXPORT_SYMBOL_GPL(pm_system_wakeup);
+ 
+ void pm_system_cancel_wakeup(void)
+ {
+-	atomic_dec(&pm_abort_suspend);
++	atomic_dec_if_positive(&pm_abort_suspend);
  }
  
-+static void afiucv_iucv_exit(void)
-+{
-+	device_unregister(af_iucv_dev);
-+	driver_unregister(&af_iucv_driver);
-+	pr_iucv->iucv_unregister(&af_iucv_handler, 0);
-+}
-+
- static int __init afiucv_init(void)
- {
- 	int err;
-@@ -2479,11 +2486,18 @@ static int __init afiucv_init(void)
- 		err = afiucv_iucv_init();
- 		if (err)
- 			goto out_sock;
--	} else
--		register_netdevice_notifier(&afiucv_netdev_notifier);
-+	}
-+
-+	err = register_netdevice_notifier(&afiucv_netdev_notifier);
-+	if (err)
-+		goto out_notifier;
-+
- 	dev_add_pack(&iucv_packet_type);
- 	return 0;
- 
-+out_notifier:
-+	if (pr_iucv)
-+		afiucv_iucv_exit();
- out_sock:
- 	sock_unregister(PF_IUCV);
- out_proto:
-@@ -2497,12 +2511,11 @@ out:
- static void __exit afiucv_exit(void)
- {
- 	if (pr_iucv) {
--		device_unregister(af_iucv_dev);
--		driver_unregister(&af_iucv_driver);
--		pr_iucv->iucv_unregister(&af_iucv_handler, 0);
-+		afiucv_iucv_exit();
- 		symbol_put(iucv_if);
--	} else
--		unregister_netdevice_notifier(&afiucv_netdev_notifier);
-+	}
-+
-+	unregister_netdevice_notifier(&afiucv_netdev_notifier);
- 	dev_remove_pack(&iucv_packet_type);
- 	sock_unregister(PF_IUCV);
- 	proto_unregister(&iucv_proto);
+ void pm_wakeup_clear(bool reset)
 -- 
 2.20.1
 
