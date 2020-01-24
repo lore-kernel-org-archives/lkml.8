@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED0D2C32771
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:11:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60A3DC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:12:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9CDB20708
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:11:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25DCF20708
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:12:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579864319;
-	bh=Ltsya09+w8x7dsyysFBQINaYsAo+nNg0ywQVgB0u/iQ=;
+	s=default; t=1579864323;
+	bh=ArkTOcEDEJzTLKU7OFO+/djQ9uXumhXoGANpfr55u00=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zIifHL4hACGL8iQvbAy83IxhjlXn9Xo37ScUwZWfVtfos6Fv1msQ9Rm4sPPKYikFi
-	 6o3ZCSTGEN7oJeJBG5/hhpwi+bB3lsX0r11f1iMZPbwdaaJHxdONYIF8crx0OL2Rew
-	 KWqGz5HoO90+byxyqlr6DjDSlubDvZpLxWyTX90Q=
+	b=JGulLjSfM5tOAOG+uU5rxj8bWnBppCzXnFXfE4jhWOPmq0Af/S2y9DFsgk8W7N3af
+	 y0eaYtlTWVXSLcUPVU7FrjHa58vpK7WWUOJb2Y1PxkGtFRyiJXNZsgzh8mYGriyTqN
+	 52t8dudjKXbktES86cTR9D5HMVeTB1+wIAuhfm6o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389943AbgAXLL6 (ORCPT
+        id S2388613AbgAXLMC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:11:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48082 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 06:12:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48156 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389930AbgAXLL4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:11:56 -0500
+        id S1733280AbgAXLL7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:11:59 -0500
 Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AFCF220663;
-        Fri, 24 Jan 2020 11:11:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0FC8D20663;
+        Fri, 24 Jan 2020 11:11:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579864315;
-        bh=Ltsya09+w8x7dsyysFBQINaYsAo+nNg0ywQVgB0u/iQ=;
+        s=default; t=1579864318;
+        bh=ArkTOcEDEJzTLKU7OFO+/djQ9uXumhXoGANpfr55u00=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VUy2CBatoIEhklQU4MjbBRB4SGxjpaFpQWIGW+pcp8ESML8IPNkVuQP42u2km539I
-         kCiZ/2U9g2+IGhBBp62O/HL/QhRCUW6f/LDjGuFxu18TJbJ6HKPjWMHf6n7de1Lklt
-         dtRubsCkHBpV4Ec9mu5fARc2JqX0RiKmLX1eRQ/4=
+        b=gSW9H1zDcfSBkxIbvvChAT82Qn71oxzz/LvKzSwOTUQVJfIagfpPPAR2e/Gfe2fYJ
+         AOfS74QLUtMHh0uGPkSx7+7Avrajq4NTnwaKv0aWaQjQ5twEFxYo7TlwXCu+pM6RFB
+         Y1rAxzpZH5+39OKm9XjIA/VFo876J3cdmf0lsQ5M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
         Ben Skeggs <bskeggs@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 219/639] drm/nouveau/pmu: dont print reply values if exec is false
-Date:   Fri, 24 Jan 2020 10:26:29 +0100
-Message-Id: <20200124093114.381458515@linuxfoundation.org>
+Subject: [PATCH 4.19 220/639] drm/nouveau: fix missing break in switch statement
+Date:   Fri, 24 Jan 2020 10:26:30 +0100
+Message-Id: <20200124093114.498731655@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
 References: <20200124093047.008739095@linuxfoundation.org>
@@ -62,40 +63,36 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Colin Ian King <colin.king@canonical.com>
 
-[ Upstream commit b1d03fc36ec9834465a08c275c8d563e07f6f6bf ]
+[ Upstream commit 785cf1eeafa23ec63f426d322401054d13abe2a3 ]
 
-Currently the uninitialized values in the array reply are printed out
-when exec is false and nvkm_pmu_send has not updated the array. Avoid
-confusion by only dumping out these values if they have been actually
-updated.
+The NOUVEAU_GETPARAM_PCI_DEVICE case is missing a break statement and falls
+through to the following NOUVEAU_GETPARAM_BUS_TYPE case and may end up
+re-assigning the getparam->value to an undesired value. Fix this by adding
+in the missing break.
 
-Detected by CoverityScan, CID#1271291 ("Uninitialized scaler variable")
-Fixes: ebb58dc2ef8c ("drm/nouveau/pmu: rename from pwr (no binary change)")
+Detected by CoverityScan, CID#1460507 ("Missing break in switch")
 
+Fixes: 359088d5b8ec ("drm/nouveau: remove trivial cases of nvxx_device() usage")
 Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Reviewed-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/nouveau/nvkm/subdev/pmu/memx.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/nouveau/nouveau_abi16.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/gpu/drm/nouveau/nvkm/subdev/pmu/memx.c b/drivers/gpu/drm/nouveau/nvkm/subdev/pmu/memx.c
-index 11b28b086a062..7b052879af728 100644
---- a/drivers/gpu/drm/nouveau/nvkm/subdev/pmu/memx.c
-+++ b/drivers/gpu/drm/nouveau/nvkm/subdev/pmu/memx.c
-@@ -88,10 +88,10 @@ nvkm_memx_fini(struct nvkm_memx **pmemx, bool exec)
- 	if (exec) {
- 		nvkm_pmu_send(pmu, reply, PROC_MEMX, MEMX_MSG_EXEC,
- 			      memx->base, finish);
-+		nvkm_debug(subdev, "Exec took %uns, PMU_IN %08x\n",
-+			   reply[0], reply[1]);
- 	}
- 
--	nvkm_debug(subdev, "Exec took %uns, PMU_IN %08x\n",
--		   reply[0], reply[1]);
- 	kfree(memx);
- 	return 0;
- }
+diff --git a/drivers/gpu/drm/nouveau/nouveau_abi16.c b/drivers/gpu/drm/nouveau/nouveau_abi16.c
+index e67a471331b51..6ec745873bc55 100644
+--- a/drivers/gpu/drm/nouveau/nouveau_abi16.c
++++ b/drivers/gpu/drm/nouveau/nouveau_abi16.c
+@@ -214,6 +214,7 @@ nouveau_abi16_ioctl_getparam(ABI16_IOCTL_ARGS)
+ 			WARN_ON(1);
+ 			break;
+ 		}
++		break;
+ 	case NOUVEAU_GETPARAM_FB_SIZE:
+ 		getparam->value = drm->gem.vram_available;
+ 		break;
 -- 
 2.20.1
 
