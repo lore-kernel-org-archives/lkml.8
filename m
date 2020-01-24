@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53F5FC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:25:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE889C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:25:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2244221556
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:25:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AEE02075D
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:25:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579865121;
-	bh=0ut83IMAFWRgF1J8gKhAbdbMOmIIspbxrmLqyEOsTrQ=;
+	s=default; t=1579865126;
+	bh=20onrFIatw2u1QnvgKhUMzvC6BHlxj7CDLetd9vH60w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nU0ImZMpZYxWqZvCKjbjF8NEi7FF8SrswSTHiMa8cC0MgpN4O70SkBy2AqddfkwCn
-	 XgQAZWnJRe0SzygPdeK/veTVI1/Osd/PHam8pvm5BwDpLIvs2YBz/nSt1qnRZ+VVi0
-	 gCiPXuwGK5GiGJh3RJE2rDxYplCirCIK0IdP9gAw=
+	b=B3lo7Y7eX0RQ2Cv6Kh9xwznyLSXg9w7uYnuwv4G36TcWavkb0GRJB6tNDemdIWsfe
+	 //byInn2pKsBgqPC54hKLlJTJZZDPNKBpoGRiiNfnBNKPwB6A2bvhLJmzhLcmg8KMw
+	 bjSvnn4q0Qc75FouqGRlFCwLIpCMAXsol/6d7dvI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391480AbgAXLZU (ORCPT
+        id S2391489AbgAXLZZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:25:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39282 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 06:25:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39372 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391471AbgAXLZR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:25:17 -0500
+        id S2391004AbgAXLZV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:25:21 -0500
 Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F3C3D2077C;
-        Fri, 24 Jan 2020 11:25:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0AE462077C;
+        Fri, 24 Jan 2020 11:25:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579865116;
-        bh=0ut83IMAFWRgF1J8gKhAbdbMOmIIspbxrmLqyEOsTrQ=;
+        s=default; t=1579865120;
+        bh=20onrFIatw2u1QnvgKhUMzvC6BHlxj7CDLetd9vH60w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=k1n1aCeuDv2Imq4Blg4JCTE1ic5Q/2YTdcGGsZlT4W7mSH2jdcx9ZvF8vWPvNIS9Q
-         CmPDVN84HMuJytMuOfJoOkK/hCQClWQzPCnmh5dur1zFMWDd3oHPc85FNrbSa3URlY
-         V6bO4jeN0CtNFqr6R4lMBbkOWEHTn9+QQ+EKgSvM=
+        b=GmbVVcInZEKRNIQTCTgk02VX2xorUVJ0zP7ci4tcT7WB7YnNk93sYCytgDdbT1lNx
+         ZO/tdR1+AMkhFXUYzk68mPpr0XsEoAl+cPHBZ5LYNFEb0i+zvDNdTWsiEKxOiFf07k
+         Auo70aE1H33lhVghM95gYiw89sntecIZFPIEGiWk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Lee Jones <lee.jones@linaro.org>,
+        stable@vger.kernel.org, Geert Uytterhoeven <geert@linux-m68k.org>,
+        David Howells <dhowells@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 458/639] mfd: intel-lpss: Release IDA resources
-Date:   Fri, 24 Jan 2020 10:30:28 +0100
-Message-Id: <20200124093144.552962123@linuxfoundation.org>
+Subject: [PATCH 4.19 459/639] rxrpc: Fix uninitialized error code in rxrpc_send_data_packet()
+Date:   Fri, 24 Jan 2020 10:30:29 +0100
+Message-Id: <20200124093144.722156396@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
 References: <20200124093047.008739095@linuxfoundation.org>
@@ -61,34 +61,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+From: David Howells <dhowells@redhat.com>
 
-[ Upstream commit 02f36911c1b41fcd8779fa0c135aab0554333fa5 ]
+[ Upstream commit 3427beb6375d04e9627c67343872e79341a684ea ]
 
-ida instances allocate some internal memory for ->free_bitmap
-in addition to the base 'struct ida'. Use ida_destroy() to release
-that memory at module_exit().
+With gcc 4.1:
 
-Fixes: 4b45efe85263 ("mfd: Add support for Intel Sunrisepoint LPSS devices")
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
+    net/rxrpc/output.c: In function ‘rxrpc_send_data_packet’:
+    net/rxrpc/output.c:338: warning: ‘ret’ may be used uninitialized in this function
+
+Indeed, if the first jump to the send_fragmentable label is made, and
+the address family is not handled in the switch() statement, ret will be
+used uninitialized.
+
+Fix this by BUG()'ing as is done in other places in rxrpc where internal
+support for future address families will need adding.  It should not be
+possible to reach this normally as the address families are checked
+up-front.
+
+Fixes: 5a924b8951f835b5 ("rxrpc: Don't store the rxrpc header in the Tx queue sk_buffs")
+Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
+Signed-off-by: David Howells <dhowells@redhat.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mfd/intel-lpss.c | 1 +
- 1 file changed, 1 insertion(+)
+ net/rxrpc/output.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/mfd/intel-lpss.c b/drivers/mfd/intel-lpss.c
-index ff3fba16e7359..95e217e6b6d75 100644
---- a/drivers/mfd/intel-lpss.c
-+++ b/drivers/mfd/intel-lpss.c
-@@ -545,6 +545,7 @@ module_init(intel_lpss_init);
+diff --git a/net/rxrpc/output.c b/net/rxrpc/output.c
+index 345dc1c5fe72f..31e47cfb3e68a 100644
+--- a/net/rxrpc/output.c
++++ b/net/rxrpc/output.c
+@@ -524,6 +524,9 @@ send_fragmentable:
+ 		}
+ 		break;
+ #endif
++
++	default:
++		BUG();
+ 	}
  
- static void __exit intel_lpss_exit(void)
- {
-+	ida_destroy(&intel_lpss_devid_ida);
- 	debugfs_remove(intel_lpss_debugfs);
- }
- module_exit(intel_lpss_exit);
+ 	if (ret < 0)
 -- 
 2.20.1
 
