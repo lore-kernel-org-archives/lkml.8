@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0437AC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:14:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08980C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:14:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6E7620663
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:14:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4B44214AF
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:14:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579864477;
-	bh=jxDIskhWmGSLBPmXNhnoajzCfCH+NOcmxyk1AIzm8QQ=;
+	s=default; t=1579864483;
+	bh=iWr5OHqBCttoB7ViCKE9ZXcze2xhoY5hmOmMJQgLN4M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JuR9DJ4MS2NbeuCXIeB0F7hCcLIkznNErQcKg6W0LowOi/lhrHqqQ6kVlIPiqpqLs
-	 guLmPVdS/w/Dl7CPa7NBturR0Rf1p+6vpVPZ1YQRiO+NqMsFHtGRiVfuir/eoJTwMF
-	 V6OaB0CWMtKPDgfVByfGK14uDJtA7r46CxBwXt7o=
+	b=JG2JPW/0RqQWxQinWz8BEsBhZERs1YM3U+tdrooUIyEh5Qn9APvBae05SdDI9hORl
+	 02YElx/rbBsER9jpsC9mdrRidBa+ZhpFAzvLU4OPWN8RduA94mWUAd1BKL9wuzs/De
+	 osnZ9hfi46+PSTaaFbhWD4vzr7VtW3+CuBw8kNb8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390225AbgAXLOh (ORCPT
+        id S2390244AbgAXLOm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:14:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50902 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 06:14:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51074 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390141AbgAXLO3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:14:29 -0500
+        id S2390228AbgAXLOj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:14:39 -0500
 Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9961820663;
-        Fri, 24 Jan 2020 11:14:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6A0542075D;
+        Fri, 24 Jan 2020 11:14:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579864469;
-        bh=jxDIskhWmGSLBPmXNhnoajzCfCH+NOcmxyk1AIzm8QQ=;
+        s=default; t=1579864479;
+        bh=iWr5OHqBCttoB7ViCKE9ZXcze2xhoY5hmOmMJQgLN4M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mjQS7dUEhSYL8dTc3I7Udra6yQbg8fVQTLl37hb94AP4HZ6bm9NfGn8BqLDAcu9nw
-         SXf9oMg/E/NbFOF7pcSudngqddURj4YWU3ro+lKTv1sowm5yxfG1P76PuG9tT9XU7w
-         LxAsHGmFEWWS+AEBKh6won7FMStNr5Ka0+5BYt9Y=
+        b=XO+jOHNGGLq0QMWS5TnMulJBbLHqhoX+s67wWgPnX0Rp5wOuBsZPWDM1enLFRewKD
+         7kM9g6VPYEGSSqo1IAImsK4XV0Aq/RhQ3IUZYOMfgDg0kWMuwfp62f+wDop8zmkjit
+         xbjmR2bhLbCNHfH/etGGuuV0Rt1PvLQmyGXQUano=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
+        stable@vger.kernel.org, Paul Walmsley <paul@pwsan.com>,
+        Tero Kristo <t-kristo@ti.com>,
+        Tony Lindgren <tony@atomide.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 274/639] arm64: dts: allwinner: a64: Add missing PIO clocks
-Date:   Fri, 24 Jan 2020 10:27:24 +0100
-Message-Id: <20200124093121.070004228@linuxfoundation.org>
+Subject: [PATCH 4.19 277/639] ARM: OMAP2+: Fix potentially uninitialized return value for _setup_reset()
+Date:   Fri, 24 Jan 2020 10:27:27 +0100
+Message-Id: <20200124093121.529725406@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
 References: <20200124093047.008739095@linuxfoundation.org>
@@ -60,38 +61,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Maxime Ripard <maxime.ripard@bootlin.com>
+From: Tony Lindgren <tony@atomide.com>
 
-[ Upstream commit 562bf19611c000cb7219431c3cc78aa60c2b371e ]
+[ Upstream commit 7f0d078667a494466991aa7133f49594f32ff6a2 ]
 
-The pinctrl binding mandates that we have the three clocks fed into the PIO
-described.
+Commit 747834ab8347 ("ARM: OMAP2+: hwmod: revise hardreset behavior") made
+the call to _enable() conditional based on no oh->rst_lines_cnt. This
+caused the return value to be potentially uninitialized. Curiously we see
+no compiler warnings for this, probably as this gets inlined.
 
-Even though the old case is still supported for backward compatibility, we
-should update our DTs to fix this.
+We call _setup_reset() from _setup() and only _setup_postsetup() if the
+return value is zero. Currently the return value can be uninitialized for
+cases where oh->rst_lines_cnt is set and HWMOD_INIT_NO_RESET is not set.
 
-Fixes: 6bc37fac30cf ("arm64: dts: add Allwinner A64 SoC .dtsi")
-Acked-by: Chen-Yu Tsai <wens@csie.org>
-Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+Fixes: 747834ab8347 ("ARM: OMAP2+: hwmod: revise hardreset behavior")
+Cc: Paul Walmsley <paul@pwsan.com>
+Cc: Tero Kristo <t-kristo@ti.com>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/arm/mach-omap2/omap_hwmod.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-index d3daf90a8715c..7abc4ea305410 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-@@ -366,7 +366,8 @@
- 			interrupts = <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>,
- 				     <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>,
- 				     <GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH>;
--			clocks = <&ccu 58>;
-+			clocks = <&ccu 58>, <&osc24M>, <&rtc 0>;
-+			clock-names = "apb", "hosc", "losc";
- 			gpio-controller;
- 			#gpio-cells = <3>;
- 			interrupt-controller;
+diff --git a/arch/arm/mach-omap2/omap_hwmod.c b/arch/arm/mach-omap2/omap_hwmod.c
+index ec3789ba17b8b..a8269f0a87ced 100644
+--- a/arch/arm/mach-omap2/omap_hwmod.c
++++ b/arch/arm/mach-omap2/omap_hwmod.c
+@@ -2430,7 +2430,7 @@ static void _setup_iclk_autoidle(struct omap_hwmod *oh)
+  */
+ static int _setup_reset(struct omap_hwmod *oh)
+ {
+-	int r;
++	int r = 0;
+ 
+ 	if (oh->_state != _HWMOD_STATE_INITIALIZED)
+ 		return -EINVAL;
 -- 
 2.20.1
 
