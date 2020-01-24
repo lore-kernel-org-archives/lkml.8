@@ -2,183 +2,136 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	HK_RANDOM_FROM,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3D2FC3F68F
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 08:02:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11990C35242
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 08:02:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90F772071E
+	by mail.kernel.org (Postfix) with ESMTP id B782C2071A
 	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 08:02:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="oD1NuICW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729693AbgAXIAV (ORCPT
+        id S1729863AbgAXIAW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 03:00:21 -0500
-Received: from mga14.intel.com ([192.55.52.115]:56308 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726173AbgAXIAU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 03:00:20 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Jan 2020 00:00:19 -0800
-X-IronPort-AV: E=Sophos;i="5.70,357,1574150400"; 
-   d="scan'208";a="220948305"
-Received: from xiaoyaol-mobl.ccr.corp.intel.com (HELO [10.249.171.129]) ([10.249.171.129])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-SHA; 24 Jan 2020 00:00:17 -0800
-Subject: Re: [PATCH] KVM: x86: avoid incorrect writes to host
- MSR_IA32_SPEC_CTRL
-To:     Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org
-Cc:     Jim Mattson <jmattson@redhat.com>
-References: <1579614487-44583-3-git-send-email-pbonzini@redhat.com>
-From:   Xiaoyao Li <xiaoyao.li@intel.com>
-Message-ID: <8b960dfe-620b-b649-d377-e5bb1556bb48@intel.com>
-Date:   Fri, 24 Jan 2020 16:00:15 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-MIME-Version: 1.0
-In-Reply-To: <1579614487-44583-3-git-send-email-pbonzini@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+        Fri, 24 Jan 2020 03:00:22 -0500
+Received: from mail-eopbgr60088.outbound.protection.outlook.com ([40.107.6.88]:52708
+        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727163AbgAXIAW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 03:00:22 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ZQC1ScTqWQ/4N1ooTrCIjZhPz9cLrjI87YPJTScDUInrLKwx5pYbvrDq0fRyQUkNPgln9iuPrqatrmAoiTeCLwAiGFEzoxOoQnpQtlOGgtmKnKdIBGwTyAnQ3zZk0OxPyx0xbWpsb9JTh8ysLYovlrI2ur9sgHrR9LN0lrMxSCXg0JfVaqXBkv1R1q8GANU4pvawQ48SI26BBwQwByfm/Pcl3AI+zx+zQQ0LjdpCDVbQn9UTGw0wsPShFGhN18makYnVRHAXbXA1j07h02LoJgjZpkMUIKdPJBHcQejrZCC4nFWm7bE8UOC1efiXu5YlrYmH7c6HAKK/2bjPBdSAGg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=b0aVPJBTZdS5S0ZtXKiO1FwMd5KxZ0WjhluC8SryCNc=;
+ b=XiN0zDFx9NzslBEOUI3NE/MZUIZb7HZfu+U9Bc4rRcLrCq/rvFcMSTHjw6zZ+qJ2k9u1Y6Ss6hVgnVVP81RNshG77Q+DMvGvjeOwiAo+68czh9sZuTKl7zFCCgBVhnPK1zXDw7M+9PkiKKkrPWeMpClTwBFLKEkfDuXxz+99M1PzIgubBBsrY+YPyrVq3gkeiHwcGz0SdK/PzWY5kyrL14fCMGV2l7kQ6I5mJ2v12qsxgKk7C0t1HPycJ4VwfZ7370QYzs9sEGK3R8e1cM4h3Z/UfxaHZpjCJaZU622EoLcfngUCcaOdESy2EmnsZq4+flDhamLspD8kd3GDaKPgiw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=b0aVPJBTZdS5S0ZtXKiO1FwMd5KxZ0WjhluC8SryCNc=;
+ b=oD1NuICWcFB4EfsAbzykDlcLS0xeikZuODI0ZaJvjl//JC3XXXfUaIHDloT57lWtE/g9SwpufcdN6IxgfNFGJcrVnzyjbgZPJuQoJavuVGJ0mHkwBpBMd2k31YnUWOuzrmUjDThoe/VrD/r9fTXdozoucvB5XKFDe7lNDOwspIE=
+Received: from AM0PR04MB5089.eurprd04.prod.outlook.com (52.134.89.85) by
+ AM0PR04MB4769.eurprd04.prod.outlook.com (20.177.41.209) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2644.24; Fri, 24 Jan 2020 08:00:17 +0000
+Received: from AM0PR04MB5089.eurprd04.prod.outlook.com
+ ([fe80::6105:a475:df04:bfb1]) by AM0PR04MB5089.eurprd04.prod.outlook.com
+ ([fe80::6105:a475:df04:bfb1%7]) with mapi id 15.20.2644.027; Fri, 24 Jan 2020
+ 08:00:17 +0000
+From:   Pankaj Gupta <pankaj.gupta@nxp.com>
+To:     Horia Geanta <horia.geanta@nxp.com>,
+        Aymen Sghaier <aymen.sghaier@nxp.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     Arun Pathak <arun.pathak@nxp.com>
+Subject: RE: [PATCH] add support for TLS1.2 algorithms offload
+Thread-Topic: [PATCH] add support for TLS1.2 algorithms offload
+Thread-Index: AQHV0d9fpUp9vdyUr0ua541zV8eJN6f5crpw
+Date:   Fri, 24 Jan 2020 08:00:17 +0000
+Message-ID: <AM0PR04MB5089CE1A958D7FF52BBD8D5F950E0@AM0PR04MB5089.eurprd04.prod.outlook.com>
+References: <20200123110413.23064-1-pankaj.gupta@nxp.com>
+ <VI1PR0402MB34855705F10BB498911FEF78980F0@VI1PR0402MB3485.eurprd04.prod.outlook.com>
+In-Reply-To: <VI1PR0402MB34855705F10BB498911FEF78980F0@VI1PR0402MB3485.eurprd04.prod.outlook.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=pankaj.gupta@nxp.com; 
+x-originating-ip: [92.120.1.67]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 5ea0b38d-e9bf-43a4-2d8c-08d7a0a37395
+x-ms-traffictypediagnostic: AM0PR04MB4769:|AM0PR04MB4769:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM0PR04MB476937C82E7F553966FF391B950E0@AM0PR04MB4769.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-forefront-prvs: 02929ECF07
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(396003)(376002)(136003)(366004)(39860400002)(199004)(189003)(76116006)(66946007)(64756008)(71200400001)(316002)(44832011)(66476007)(66446008)(8936002)(81166006)(66556008)(81156014)(9686003)(8676002)(55016002)(6506007)(86362001)(26005)(966005)(110136005)(53546011)(7696005)(5660300002)(186003)(33656002)(52536014)(2906002)(4326008)(478600001)(4744005);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB4769;H:AM0PR04MB5089.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: q9bqI6RcafyOtzY1wE9t+s/4R6NjQTEi6DJsfudm2xxfe0P5vhHmOinVLcQd2roeIXOGGZr/K+x5aPT90fCBpMhGu7bzTVt6htcQwX1WHdHCM8+RntgL7vsuzDiE0LIpqM1fJPjAToaNi1hu48Qr7oY5/jmZ914WaXkKkn+r8SR95M3H6pKn0rwZq5V38uyxJxMJxtbgx/bOkxNcaYPQuyDaIoOpSCJOINozDva1z304XlntffEmscyhBDJHJhYynLs/zZjxY4GBYle3gdgnIfYFj7mDTqjjQn8fWwDuNDtr9COytJ7PXgmAT90bAyNaxW05wQYRMzcKlh+6UKb+0tqLb8+E6GmXllMhV+7oBuEzBW62V1s11+YjftLKV0w9KGNwIANP/rR4M0NWnjsMqS6eNv0AF+xFWcicA9t2DySK1AYfnUz0ZCV6NUIIo+Bv/LY9aQ+QZuhGWFwTEjwCDOiHpC3HMuW4eZ/nyZ0W9F4=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5ea0b38d-e9bf-43a4-2d8c-08d7a0a37395
+X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Jan 2020 08:00:17.4604
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Q5WSB1JML8UsVnGD2u7hb55Hzm7p4XWJFRtPiBtnBvtUUsnnWPufEQSiy9DB2SWzx/G5A5dDkjdAjhl4rf78TA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB4769
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/21/2020 9:48 PM, Paolo Bonzini wrote:
-> If the guest is configured to have SPEC_CTRL but the host does not
-> (which is a nonsensical configuration but these are not explicitly
-> forbidden) then a host-initiated MSR write can write vmx->spec_ctrl
-> (respectively svm->spec_ctrl) and trigger a #GP when KVM tries to
-> restore the host value of the MSR.  Add a more comprehensive check
-> for valid bits of SPEC_CTRL, covering host CPUID flags and,
-> since we are at it and it is more correct that way, guest CPUID
-> flags too.
-> 
-> For AMD, remove the unnecessary is_guest_mode check around setting
-> the MSR interception bitmap, so that the code looks the same as
-> for Intel.
-> 
-> Cc: Jim Mattson <jmattson@redhat.com>
-> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-> ---
->   arch/x86/kvm/svm.c     |  9 +++------
->   arch/x86/kvm/vmx/vmx.c |  7 +++----
->   arch/x86/kvm/x86.c     | 22 ++++++++++++++++++++++
->   arch/x86/kvm/x86.h     |  1 +
->   4 files changed, 29 insertions(+), 10 deletions(-)
-> 
-> diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
-> index b7c5369c7998..235a7e51de96 100644
-> --- a/arch/x86/kvm/svm.c
-> +++ b/arch/x86/kvm/svm.c
-> @@ -4324,12 +4324,10 @@ static int svm_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr)
->   		    !guest_cpuid_has(vcpu, X86_FEATURE_AMD_SSBD))
->   			return 1;
->   
-> -		/* The STIBP bit doesn't fault even if it's not advertised */
-> -		if (data & ~(SPEC_CTRL_IBRS | SPEC_CTRL_STIBP | SPEC_CTRL_SSBD))
-> +		if (data & ~kvm_spec_ctrl_valid_bits(vcpu))
->   			return 1;
->   
->   		svm->spec_ctrl = data;
-> -
->   		if (!data)
->   			break;
->   
-> @@ -4353,13 +4351,12 @@ static int svm_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr)
->   
->   		if (data & ~PRED_CMD_IBPB)
->   			return 1;
-> -
-> +		if (!boot_cpu_has(X86_FEATURE_AMD_IBPB))
-> +			return 1;
->   		if (!data)
->   			break;
->   
->   		wrmsrl(MSR_IA32_PRED_CMD, PRED_CMD_IBPB);
-> -		if (is_guest_mode(vcpu))
-> -			break;
->   		set_msr_interception(svm->msrpm, MSR_IA32_PRED_CMD, 0, 1);
->   		break;
->   	case MSR_AMD64_VIRT_SPEC_CTRL:
-> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> index bdbf27e92851..112d2314231d 100644
-> --- a/arch/x86/kvm/vmx/vmx.c
-> +++ b/arch/x86/kvm/vmx/vmx.c
-> @@ -1998,12 +1998,10 @@ static int vmx_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
->   		    !guest_cpuid_has(vcpu, X86_FEATURE_SPEC_CTRL))
->   			return 1;
->   
-> -		/* The STIBP bit doesn't fault even if it's not advertised */
-> -		if (data & ~(SPEC_CTRL_IBRS | SPEC_CTRL_STIBP | SPEC_CTRL_SSBD))
-> +		if (data & ~kvm_spec_ctrl_valid_bits(vcpu))
->   			return 1;
->   
->   		vmx->spec_ctrl = data;
-> -
->   		if (!data)
->   			break;
->   
-> @@ -2037,7 +2035,8 @@ static int vmx_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
->   
->   		if (data & ~PRED_CMD_IBPB)
->   			return 1;
-> -
-> +		if (!boot_cpu_has(X86_FEATURE_SPEC_CTRL))
-> +			return 1;
->   		if (!data)
->   			break;
->   
-> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> index 9f24f5d16854..141fb129c6bf 100644
-> --- a/arch/x86/kvm/x86.c
-> +++ b/arch/x86/kvm/x86.c
-> @@ -10389,6 +10389,28 @@ bool kvm_arch_no_poll(struct kvm_vcpu *vcpu)
->   }
->   EXPORT_SYMBOL_GPL(kvm_arch_no_poll);
->   
-> +bool kvm_spec_ctrl_valid_bits(struct kvm_vcpu *vcpu)
+Hi Horia,
 
-The return type should be u64.
+Thanks for review comment.
+Yes, rightly said.
 
-> +{
-> +	uint64_t bits = SPEC_CTRL_IBRS | SPEC_CTRL_STIBP | SPEC_CTRL_SSBD;
-> +
-> +	/* The STIBP bit doesn't fault even if it's not advertised */
-> +	if (!guest_cpuid_has(vcpu, X86_FEATURE_SPEC_CTRL) &&
-> +	    !guest_cpuid_has(vcpu, X86_FEATURE_AMD_IBRS))
-> +		bits &= ~(SPEC_CTRL_IBRS | SPEC_CTRL_STIBP);
-> +	if (!boot_cpu_has(X86_FEATURE_SPEC_CTRL) &&
-> +	    !boot_cpu_has(X86_FEATURE_AMD_IBRS))
-> +		bits &= ~(SPEC_CTRL_IBRS | SPEC_CTRL_STIBP);
-> +
-> +	if (!guest_cpuid_has(vcpu, X86_FEATURE_SPEC_CTRL_SSBD) &&
-> +	    !guest_cpuid_has(vcpu, X86_FEATURE_AMD_SSBD))
-> +		bits &= ~SPEC_CTRL_SSBD;
-> +	if (!boot_cpu_has(X86_FEATURE_SPEC_CTRL_SSBD) &&
-> +	    !boot_cpu_has(X86_FEATURE_AMD_SSBD))
-> +		bits &= ~SPEC_CTRL_SSBD;
-> +
-> +	return bits;
-> +}
-> +EXPORT_SYMBOL_GPL(kvm_spec_ctrl_valid_bits);
->   
->   EXPORT_TRACEPOINT_SYMBOL_GPL(kvm_exit);
->   EXPORT_TRACEPOINT_SYMBOL_GPL(kvm_fast_mmio);
-> diff --git a/arch/x86/kvm/x86.h b/arch/x86/kvm/x86.h
-> index ab715cee3653..bc38ac695776 100644
-> --- a/arch/x86/kvm/x86.h
-> +++ b/arch/x86/kvm/x86.h
-> @@ -367,5 +367,6 @@ static inline bool kvm_pat_valid(u64 data)
->   
->   void kvm_load_guest_xsave_state(struct kvm_vcpu *vcpu);
->   void kvm_load_host_xsave_state(struct kvm_vcpu *vcpu);
-> +bool kvm_spec_ctrl_valid_bits(struct kvm_vcpu *vcpu);
->   
->   #endif
-> 
+I will re-work and update.
 
+Regards
+Pankaj
+
+-----Original Message-----
+From: Horia Geanta <horia.geanta@nxp.com>=20
+Sent: Thursday, January 23, 2020 8:18 PM
+To: Pankaj Gupta <pankaj.gupta@nxp.com>; Aymen Sghaier <aymen.sghaier@nxp.c=
+om>; Herbert Xu <herbert@gondor.apana.org.au>; David S. Miller <davem@davem=
+loft.net>; linux-crypto@vger.kernel.org; linux-kernel@vger.kernel.org
+Cc: Arun Pathak <arun.pathak@nxp.com>
+Subject: Re: [PATCH] add support for TLS1.2 algorithms offload
+
+On 1/23/2020 1:22 PM, Pankaj Gupta wrote:
+>         - aes-128-cbc-hmac-sha256
+>         - aes-256-cbc-hmac-sha256
+>=20
+> Enabled the support of TLS1.1 algorithms offload
+>=20
+>         - aes-128-cbc-hmac-sha1
+>         - aes-256-cbc-hmac-sha1
+>=20
+Patch does not apply, since there's no specific tls support in upstream caa=
+m drivers.
+
+caam drivers register crypto algorithms to the crypto API, and ktls uses wh=
+atever it pleases:
+https://www.kernel.org/doc/html/latest/networking/tls-offload.html
+https://www.kernel.org/doc/html/latest/networking/tls.html
+
+Horia
