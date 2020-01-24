@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6671DC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:12:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72C19C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:12:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E16220663
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:12:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 462C52077C
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:12:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579864351;
-	bh=jzdAnmJhqZAwFDofb0u3FOnieuJfpHmP2aP980ZkB9w=;
+	s=default; t=1579864357;
+	bh=PRre1CFoy2C0hUmy5x4Sjndj1tqnXyWuxtvvMwgByYo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IFZB/AVW98eL3kJPPfmL+wwm8jPSTYjEtJ0qegQG2j7GD2BgB7ms/LTDn2Sv5dRBk
-	 64350lJJUJa6dORZjr0nTfz2VI4tk0eQrfLjPzGAVRqZdojl6QhqAFpzQwtrvSOb2g
-	 CVWs8LOzTue7kXxsVIiqcPD9diz/Wd7DT07Rw/Uw=
+	b=P+0adAOTDyNuT7mGps50+0e82Vet94mjqzIdB+f4PBGcZ0fhxylC5qC6KjV2BxVrl
+	 +dEwS+IXv28xuAq6JsTU5OdS/vM7RVQn2M0oZcbnZcMRFylWcpzbnepKjUmppYfIEk
+	 QhdTM5L3LxaYjeZAWk4HAPIavLovEeawWWQCu020=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389039AbgAXLMa (ORCPT
+        id S2387482AbgAXLMg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:12:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48766 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 06:12:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48926 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389989AbgAXLM1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:12:27 -0500
+        id S2389108AbgAXLMe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:12:34 -0500
 Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0A6F620663;
-        Fri, 24 Jan 2020 11:12:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F040D20708;
+        Fri, 24 Jan 2020 11:12:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579864346;
-        bh=jzdAnmJhqZAwFDofb0u3FOnieuJfpHmP2aP980ZkB9w=;
+        s=default; t=1579864353;
+        bh=PRre1CFoy2C0hUmy5x4Sjndj1tqnXyWuxtvvMwgByYo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=G6t1+KT1LfOmpuxyurbEb9CRn0rFu0RoZILW5SuirzEs+JLisRT+Wev7GCq7/mZjj
-         9Y8JJ6MxArt/4pKZJKSyZtsfl6zUnFnekks1l/1AiHaWOKJ0TEDaHJe8BLsXDaiaGi
-         b8Iznsyfl0FTnPqT6vf5a5OW7FZj+mg9mnNUITXc=
+        b=etXvjxEDmUzRNM6x1ggK/GQa4kxBp1Cv8nmIx4pVEYc9Fr8UBNiPz8qQ6TVT7SJUs
+         15JCphCcqbRHO6V7JTbLZaKJJKDI4TH0I7L2jKOhJ4Xlzj2IchamfOMo1MPxGBCpB9
+         DCURR/8lTTIDBd+lKd7qSecaEASlWiYmfYmhVH60=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        stable@vger.kernel.org, Eli Britstein <elibr@mellanox.com>,
+        Jiri Pirko <jiri@mellanox.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 233/639] NFS/pnfs: Bulk destroy of layouts needs to be safe w.r.t. umount
-Date:   Fri, 24 Jan 2020 10:26:43 +0100
-Message-Id: <20200124093116.029927375@linuxfoundation.org>
+Subject: [PATCH 4.19 243/639] net: sched: act_csum: Fix csum calc for tagged packets
+Date:   Fri, 24 Jan 2020 10:26:53 +0100
+Message-Id: <20200124093117.237870764@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
 References: <20200124093047.008739095@linuxfoundation.org>
@@ -60,92 +61,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Trond Myklebust <trond.myklebust@hammerspace.com>
+From: Eli Britstein <elibr@mellanox.com>
 
-[ Upstream commit 5085607d209102b37b169bc94d0aa39566a9842a ]
+[ Upstream commit 2ecba2d1e45b24620a7c3df9531895cf68d5dec6 ]
 
-If a bulk layout recall or a metadata server reboot coincides with a
-umount, then holding a reference to an inode is unsafe unless we
-also hold a reference to the super block.
+The csum calculation is different for IPv4/6. For VLAN packets,
+tc_skb_protocol returns the VLAN protocol rather than the packet's one
+(e.g. IPv4/6), so csum is not calculated. Furthermore, VLAN may not be
+stripped so csum is not calculated in this case too. Calculate the
+csum for those cases.
 
-Fixes: fd9a8d7160937 ("NFSv4.1: Fix bulk recall and destroy of layouts")
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+Fixes: d8b9605d2697 ("net: sched: fix skb->protocol use in case of accelerated vlan path")
+Signed-off-by: Eli Britstein <elibr@mellanox.com>
+Signed-off-by: Jiri Pirko <jiri@mellanox.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/pnfs.c | 33 +++++++++++++++++++++++----------
- fs/nfs/pnfs.h |  1 +
- 2 files changed, 24 insertions(+), 10 deletions(-)
+ net/sched/act_csum.c | 31 +++++++++++++++++++++++++++++--
+ 1 file changed, 29 insertions(+), 2 deletions(-)
 
-diff --git a/fs/nfs/pnfs.c b/fs/nfs/pnfs.c
-index c818f9886f618..66f699e18755c 100644
---- a/fs/nfs/pnfs.c
-+++ b/fs/nfs/pnfs.c
-@@ -758,22 +758,35 @@ static int
- pnfs_layout_bulk_destroy_byserver_locked(struct nfs_client *clp,
- 		struct nfs_server *server,
- 		struct list_head *layout_list)
-+	__must_hold(&clp->cl_lock)
-+	__must_hold(RCU)
+diff --git a/net/sched/act_csum.c b/net/sched/act_csum.c
+index 1e269441065a6..9ecbf8edcf390 100644
+--- a/net/sched/act_csum.c
++++ b/net/sched/act_csum.c
+@@ -560,8 +560,11 @@ static int tcf_csum_act(struct sk_buff *skb, const struct tc_action *a,
+ 			struct tcf_result *res)
  {
- 	struct pnfs_layout_hdr *lo, *next;
- 	struct inode *inode;
+ 	struct tcf_csum *p = to_tcf_csum(a);
++	bool orig_vlan_tag_present = false;
++	unsigned int vlan_hdr_count = 0;
+ 	struct tcf_csum_params *params;
+ 	u32 update_flags;
++	__be16 protocol;
+ 	int action;
  
- 	list_for_each_entry_safe(lo, next, &server->layouts, plh_layouts) {
--		if (test_bit(NFS_LAYOUT_INVALID_STID, &lo->plh_flags))
-+		if (test_bit(NFS_LAYOUT_INVALID_STID, &lo->plh_flags) ||
-+		    test_bit(NFS_LAYOUT_INODE_FREEING, &lo->plh_flags) ||
-+		    !list_empty(&lo->plh_bulk_destroy))
- 			continue;
-+		/* If the sb is being destroyed, just bail */
-+		if (!nfs_sb_active(server->super))
-+			break;
- 		inode = igrab(lo->plh_inode);
--		if (inode == NULL)
--			continue;
--		list_del_init(&lo->plh_layouts);
--		if (pnfs_layout_add_bulk_destroy_list(inode, layout_list))
--			continue;
--		rcu_read_unlock();
--		spin_unlock(&clp->cl_lock);
--		iput(inode);
-+		if (inode != NULL) {
-+			list_del_init(&lo->plh_layouts);
-+			if (pnfs_layout_add_bulk_destroy_list(inode,
-+						layout_list))
-+				continue;
-+			rcu_read_unlock();
-+			spin_unlock(&clp->cl_lock);
-+			iput(inode);
+ 	params = rcu_dereference_bh(p->params);
+@@ -574,7 +577,9 @@ static int tcf_csum_act(struct sk_buff *skb, const struct tc_action *a,
+ 		goto drop;
+ 
+ 	update_flags = params->update_flags;
+-	switch (tc_skb_protocol(skb)) {
++	protocol = tc_skb_protocol(skb);
++again:
++	switch (protocol) {
+ 	case cpu_to_be16(ETH_P_IP):
+ 		if (!tcf_csum_ipv4(skb, update_flags))
+ 			goto drop;
+@@ -583,13 +588,35 @@ static int tcf_csum_act(struct sk_buff *skb, const struct tc_action *a,
+ 		if (!tcf_csum_ipv6(skb, update_flags))
+ 			goto drop;
+ 		break;
++	case cpu_to_be16(ETH_P_8021AD): /* fall through */
++	case cpu_to_be16(ETH_P_8021Q):
++		if (skb_vlan_tag_present(skb) && !orig_vlan_tag_present) {
++			protocol = skb->protocol;
++			orig_vlan_tag_present = true;
 +		} else {
-+			rcu_read_unlock();
-+			spin_unlock(&clp->cl_lock);
-+			set_bit(NFS_LAYOUT_INODE_FREEING, &lo->plh_flags);
++			struct vlan_hdr *vlan = (struct vlan_hdr *)skb->data;
++
++			protocol = vlan->h_vlan_encapsulated_proto;
++			skb_pull(skb, VLAN_HLEN);
++			skb_reset_network_header(skb);
++			vlan_hdr_count++;
 +		}
-+		nfs_sb_deactive(server->super);
- 		spin_lock(&clp->cl_lock);
- 		rcu_read_lock();
- 		return -EAGAIN;
-@@ -811,7 +824,7 @@ pnfs_layout_free_bulk_destroy_list(struct list_head *layout_list,
- 		/* Free all lsegs that are attached to commit buckets */
- 		nfs_commit_inode(inode, 0);
- 		pnfs_put_layout_hdr(lo);
--		iput(inode);
-+		nfs_iput_and_deactive(inode);
++		goto again;
++	}
++
++out:
++	/* Restore the skb for the pulled VLAN tags */
++	while (vlan_hdr_count--) {
++		skb_push(skb, VLAN_HLEN);
++		skb_reset_network_header(skb);
  	}
- 	return ret;
- }
-diff --git a/fs/nfs/pnfs.h b/fs/nfs/pnfs.h
-index ece367ebde692..3ba44819a88ae 100644
---- a/fs/nfs/pnfs.h
-+++ b/fs/nfs/pnfs.h
-@@ -104,6 +104,7 @@ enum {
- 	NFS_LAYOUT_RETURN_REQUESTED,	/* Return this layout ASAP */
- 	NFS_LAYOUT_INVALID_STID,	/* layout stateid id is invalid */
- 	NFS_LAYOUT_FIRST_LAYOUTGET,	/* Serialize first layoutget */
-+	NFS_LAYOUT_INODE_FREEING,	/* The inode is being freed */
- };
  
- enum layoutdriver_policy_flags {
+ 	return action;
+ 
+ drop:
+ 	qstats_drop_inc(this_cpu_ptr(p->common.cpu_qstats));
+-	return TC_ACT_SHOT;
++	action = TC_ACT_SHOT;
++	goto out;
+ }
+ 
+ static int tcf_csum_dump(struct sk_buff *skb, struct tc_action *a, int bind,
 -- 
 2.20.1
 
