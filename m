@@ -2,120 +2,87 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65C01C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:25:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80FF0C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:25:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C92820718
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:25:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579865138;
-	bh=q8FEEnP4A9fr6JDFaxyd6h/aYNGub3Ui9XeBx/s1D5E=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=L4h5iQP78Uz0AIo4jc4dkda+km6mYhsHl7/tF90c9DyVkQdvAbNtrI8aCvuf5fDYX
-	 ZmLOYjcC6/e2srJGQqZ+GF5l4VgdG6JHUNEaFF4pCQrujcfb8edjVhrs66kCxn2A2R
-	 rAKXgsE+wRN0ekUmg2N8UfXyywkYLRZRr2PUlzXI=
+	by mail.kernel.org (Postfix) with ESMTP id 5D0D02075D
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:25:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391511AbgAXLZh (ORCPT
+        id S2391522AbgAXLZk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:25:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39646 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391062AbgAXLZc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:25:32 -0500
-Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 93ACF2077C;
-        Fri, 24 Jan 2020 11:25:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579865132;
-        bh=q8FEEnP4A9fr6JDFaxyd6h/aYNGub3Ui9XeBx/s1D5E=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=z5lTQafKciN3QzLRZ8m1OtUuL+6/Ad+FsTeshmP3cvVsMZ2a4arEmh523wcheebhr
-         EOVAq1VboB40xYVd/Aeahr8e9Xbh/piOpLGKZP1MNaoMELWWytvQ0xwiqvvyIw2Kpp
-         CAxD4s3T0iBVjls+3NNYjhAFDxM8Odi/RInLwNN8=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stefano Brivio <sbrivio@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 446/639] ip6_fib: Dont discard nodes with valid routing information in fib6_locate_1()
-Date:   Fri, 24 Jan 2020 10:30:16 +0100
-Message-Id: <20200124093142.891105179@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
-References: <20200124093047.008739095@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Fri, 24 Jan 2020 06:25:40 -0500
+Received: from mail1.bemta25.messagelabs.com ([195.245.230.4]:41093 "EHLO
+        mail1.bemta25.messagelabs.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2391388AbgAXLZe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:25:34 -0500
+Received: from [46.226.52.108] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
+        by server-4.bemta.az-a.eu-west-1.aws.symcld.net id 92/0A-01118-C24DA2E5; Fri, 24 Jan 2020 11:25:32 +0000
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrAIsWRWlGSWpSXmKPExsVy8IPnUV2dK1p
+  xBs9uC1rc/3qU0eLyrjlsDkwed67tYfP4vEkugCmKNTMvKb8igTXj4sG1jAXnWCp+belib2C8
+  xdzFyMUhJLCeUeLg4aVADieQUyFx9upyJhCbV8BN4uXvY2wgNpuAhcTkEw/AbBYBVYnGnVtZQ
+  WxhgRCJi28WA8U5OEQEVCTOvTEHMZkFIiT+nGKGmCIocXLmExYQm1lAQuLgixdQmwwkTi9oBI
+  tLCNhLTH9/lRmkVUJAX6LxWCxE2FDi+6xvLBBhc4m167wmMPLPQjJ0FpKhCxiZVjFaJBVlpme
+  U5CZm5ugaGhjoGhoa6RpamugamhnoJVbpJuqlluqWpxaX6BrqJZYX6xVX5ibnpOjlpZZsYgQG
+  ZkrBoQU7GKd+eqt3iFGSg0lJlLdrrlacEF9SfkplRmJxRnxRaU5q8SFGGQ4OJQle+0tAOcGi1
+  PTUirTMHGCUwKQlOHiURHg9QdK8xQWJucWZ6RCpU4y6HDuPzlvELMSSl5+XKiXOOxukSACkKK
+  M0D24ELGIvMcpKCfMyMjAwCPEUpBblZpagyr9iFOdgVBLmTQOZwpOZVwK36RXQEUxAR7gogR1
+  RkoiQkmpgclOvVHvVpV/6YNM+vwiJSzZzNt5i1Y030rile76kiXnTLacs92nfrOv33lnmZBn1
+  MUe9o6f+HEtmzjqZ0MUBdw1Ppk26wNDOZPKkiHPvQa/6a+Vx+g9zud7oSe88z+yh9U3L1L4x4
+  spRo5u5u9U3PsnL3NFxJWPNolSBuTExmrbJNrySzU/VLySl1TzpcOmpfXksutZOzeTE3DMLr6
+  hYsDw7x3hNNZqnYI71n1/VB6LXH6rx/rmktv7opivPGp+s+C36oOVOusFippITmydrXY48qC2
+  beVu3t8c/ldGunM+WecO5TwKv3aauXp7sXhEiVO2waUIXz6ni5TpH/HiYFvzP1LmdPmH2iaWf
+  DpQrsRRnJBpqMRcVJwIAPmQ9olMDAAA=
+X-Env-Sender: Adam.Thomson.Opensource@diasemi.com
+X-Msg-Ref: server-28.tower-272.messagelabs.com!1579865131!1056631!1
+X-Originating-IP: [193.240.73.197]
+X-SYMC-ESS-Client-Auth: outbound-route-from=pass
+X-StarScan-Received: 
+X-StarScan-Version: 9.44.25; banners=-,-,-
+X-VirusChecked: Checked
+Received: (qmail 26580 invoked from network); 24 Jan 2020 11:25:32 -0000
+Received: from unknown (HELO sw-ex-cashub01.diasemi.com) (193.240.73.197)
+  by server-28.tower-272.messagelabs.com with ECDHE-RSA-AES256-SHA384 encrypted SMTP; 24 Jan 2020 11:25:32 -0000
+Received: from swsrvapps-01.diasemi.com (10.20.28.141) by
+ SW-EX-CASHUB01.diasemi.com (10.20.16.140) with Microsoft SMTP Server id
+ 14.3.468.0; Fri, 24 Jan 2020 11:25:30 +0000
+Received: by swsrvapps-01.diasemi.com (Postfix, from userid 22379)      id
+ 6AC183FB8D; Fri, 24 Jan 2020 11:25:30 +0000 (GMT)
+Message-ID: <cover.1579864546.git.Adam.Thomson.Opensource@diasemi.com>
+From:   Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
+Date:   Fri, 24 Jan 2020 11:25:30 +0000
+Subject: [RESEND PATCH 0/2] Resolve revision handling and add support for DA silicon
+To:     Lee Jones <lee.jones@linaro.org>
+CC:     <linux-kernel@vger.kernel.org>,
+        Support Opensource <support.opensource@diasemi.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-KSE-AttachmentFiltering-Interceptor-Info: protection disabled
+X-KSE-ServerInfo: sw-ex-cashub01.diasemi.com, 9
+X-KSE-Antivirus-Interceptor-Info: scan successful
+X-KSE-Antivirus-Info: Clean, bases: 24/01/2020 10:17:00
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stefano Brivio <sbrivio@redhat.com>
+This patch set fixes the currently broken revision handling in the driver's
+i2c_probe() function and then adds DA support to existing permitted revisions.
 
-[ Upstream commit 40cb35d5dc04e7f89cbc7b1fc9b4b48d9f1e5343 ]
+Adam Thomson (2):
+  mfd: da9063: Fix revision handling to correctly select reg tables
+  mfd: da9063: Add support for latest DA silicon revision
 
-When we perform an inexact match on FIB nodes via fib6_locate_1(), longer
-prefixes will be preferred to shorter ones. However, it might happen that
-a node, with higher fn_bit value than some other, has no valid routing
-information.
+ drivers/mfd/da9063-core.c            |  31 -----
+ drivers/mfd/da9063-i2c.c             | 254 +++++++++++++++++++++++++++++++----
+ include/linux/mfd/da9063/core.h      |   1 +
+ include/linux/mfd/da9063/registers.h |  15 ++-
+ 4 files changed, 240 insertions(+), 61 deletions(-)
 
-In this case, we'll pick that node, but it will be discarded by the check
-on RTN_RTINFO in fib6_locate(), and we might miss nodes with valid routing
-information but with lower fn_bit value.
-
-This is apparent when a routing exception is created for a default route:
- # ip -6 route list
- fc00:1::/64 dev veth_A-R1 proto kernel metric 256 pref medium
- fc00:2::/64 dev veth_A-R2 proto kernel metric 256 pref medium
- fc00:4::1 via fc00:2::2 dev veth_A-R2 metric 1024 pref medium
- fe80::/64 dev veth_A-R1 proto kernel metric 256 pref medium
- fe80::/64 dev veth_A-R2 proto kernel metric 256 pref medium
- default via fc00:1::2 dev veth_A-R1 metric 1024 pref medium
- # ip -6 route list cache
- fc00:4::1 via fc00:2::2 dev veth_A-R2 metric 1024 expires 593sec mtu 1500 pref medium
- fc00:3::1 via fc00:1::2 dev veth_A-R1 metric 1024 expires 593sec mtu 1500 pref medium
- # ip -6 route flush cache    # node for default route is discarded
- Failed to send flush request: No such process
- # ip -6 route list cache
- fc00:3::1 via fc00:1::2 dev veth_A-R1 metric 1024 expires 586sec mtu 1500 pref medium
-
-Check right away if the node has a RTN_RTINFO flag, before replacing the
-'prev' pointer, that indicates the longest matching prefix found so far.
-
-Fixes: 38fbeeeeccdb ("ipv6: prepare fib6_locate() for exception table")
-Signed-off-by: Stefano Brivio <sbrivio@redhat.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- net/ipv6/ip6_fib.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/net/ipv6/ip6_fib.c b/net/ipv6/ip6_fib.c
-index bbb5ffb3397d8..7091568b9f630 100644
---- a/net/ipv6/ip6_fib.c
-+++ b/net/ipv6/ip6_fib.c
-@@ -1529,7 +1529,8 @@ static struct fib6_node *fib6_locate_1(struct fib6_node *root,
- 		if (plen == fn->fn_bit)
- 			return fn;
- 
--		prev = fn;
-+		if (fn->fn_flags & RTN_RTINFO)
-+			prev = fn;
- 
- next:
- 		/*
 -- 
-2.20.1
-
-
+1.9.1
 
