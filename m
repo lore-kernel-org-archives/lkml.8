@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE1F8C35242
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:59:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E774CC35242
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:59:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB4382075D
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:59:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB61E20709
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:59:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579859970;
-	bh=Obif+UBlBSM9oYuWYrkmAST6OuNiL8o9oR3skCw6FHo=;
+	s=default; t=1579859974;
+	bh=I0OFd4I/rlHALpCaadJbiimDLkOWBju1Gp3pF4klCIc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kW7hDGxdCiz6XsYueYN9r8wMJDyFl4PpBtFg1/yTyfwxdnAIXrcTSryEvzaFPRDid
-	 i9rwBQ+8YjaP9jYQP2gkiZuf5qZ2d+Bt9q5lo+DS+D3wfbxHgwTd4YNssG8vWgBWf3
-	 6E4gSIvN+HyX/wl3NEUx7e+bdbbifjIgDQwcBiF4=
+	b=w6NCdr03YvPCBDP41GFT9MQfUmSQIf0IO+O9XVmbbMCE+qmzivbsmmb4zPTz91lof
+	 OYmH9/luSxJS2HpO3FceXBi11dOtMQbRryO7VOwxaJIGx+i5F8Unz8Oqp+AOyrQaNx
+	 OHie7jlX/u5aqyOQqdQDmTDICHrO3J5TYn5c7szc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388669AbgAXJ7a (ORCPT
+        id S2387830AbgAXJ7d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 04:59:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34970 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 04:59:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35042 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387655AbgAXJ73 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 04:59:29 -0500
+        id S1733077AbgAXJ7d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 04:59:33 -0500
 Received: from localhost (unknown [145.15.244.15])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B687420709;
-        Fri, 24 Jan 2020 09:59:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0440021556;
+        Fri, 24 Jan 2020 09:59:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579859968;
-        bh=Obif+UBlBSM9oYuWYrkmAST6OuNiL8o9oR3skCw6FHo=;
+        s=default; t=1579859972;
+        bh=I0OFd4I/rlHALpCaadJbiimDLkOWBju1Gp3pF4klCIc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bZ3N0KAao9CHGTj9CELGCwEAoeFT7D9n7eAWwJ8mKVjPIKCdxCqvIBIgOCGMRly9S
-         jySmnmFtOU8rKF3TMEBy8FJY1AVY2xihUqI+1QmBByp4BX9u992thl2SQltGwLRvuO
-         LHyYyTGepU1uqhZLNQ18IWv/xD7qHrBISD4CYYQI=
+        b=TuMefyJQD+Ior6TXoQZPkANEMa3OtHvGQ+faAUk2Su1ziw3jijEvfhZn40iLff7KH
+         0801dF//jDcSc1AvYAXxylfUoNY6AmUnexFTjDTOhupehEM6M1gE3dxV9+ol/cgOqt
+         ZKDViAtFvulCrpEL0Icq1h6vcVIVSFsR3axT4feI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        stable@vger.kernel.org, Jerome Brunet <jbrunet@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Kevin Hilman <khilman@baylibre.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 230/343] media: vivid: fix incorrect assignment operation when setting video mode
-Date:   Fri, 24 Jan 2020 10:30:48 +0100
-Message-Id: <20200124092950.406283595@linuxfoundation.org>
+Subject: [PATCH 4.14 213/343] arm64: dts: meson: libretech-cc: set eMMC as removable
+Date:   Fri, 24 Jan 2020 10:30:31 +0100
+Message-Id: <20200124092948.084390411@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124092919.490687572@linuxfoundation.org>
 References: <20200124092919.490687572@linuxfoundation.org>
@@ -61,39 +61,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Jerome Brunet <jbrunet@baylibre.com>
 
-[ Upstream commit d4ec9550e4b2d2e357a46fdc65d8ef3d4d15984c ]
+[ Upstream commit 9f72e321d5506fe3e162a6308a4a295d7f10bb5d ]
 
-The assigment of FB_VMODE_NONINTERLACE to var->vmode should be a
-bit-wise or of FB_VMODE_NONINTERLACE instead of an assignment,
-otherwise the previous clearing of the FB_VMODE_MASK bits of
-var->vmode makes no sense and is redundant.
+The eMMC on this board is add-on module which is not mandatory. Removing
+'non-removable' property should prevent some errors when booting a board
+w/o an eMMC module present.
 
-Addresses-Coverity: ("Unused value")
-Fixes: ad4e02d5081d ("[media] vivid: add a simple framebuffer device for overlay testing")
-
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Fixes: 72fb2c852188 ("ARM64: dts: meson-gxl-s905x-libretech-cc: fixup board definition")
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+Reviewed-by: Martin Blumenstingl<martin.blumenstingl@googlemail.com>
+Signed-off-by: Kevin Hilman <khilman@baylibre.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/vivid/vivid-osd.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/drivers/media/platform/vivid/vivid-osd.c b/drivers/media/platform/vivid/vivid-osd.c
-index bdc380b14e0c4..a95b7c56569e3 100644
---- a/drivers/media/platform/vivid/vivid-osd.c
-+++ b/drivers/media/platform/vivid/vivid-osd.c
-@@ -167,7 +167,7 @@ static int _vivid_fb_check_var(struct fb_var_screeninfo *var, struct vivid_dev *
- 	var->nonstd = 0;
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts
+index e2c71753e3278..407d32f4fe734 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts
+@@ -226,7 +226,6 @@
+ 	cap-mmc-highspeed;
+ 	mmc-ddr-3_3v;
+ 	max-frequency = <50000000>;
+-	non-removable;
+ 	disable-wp;
  
- 	var->vmode &= ~FB_VMODE_MASK;
--	var->vmode = FB_VMODE_NONINTERLACED;
-+	var->vmode |= FB_VMODE_NONINTERLACED;
- 
- 	/* Dummy values */
- 	var->hsync_len = 24;
+ 	mmc-pwrseq = <&emmc_pwrseq>;
 -- 
 2.20.1
 
