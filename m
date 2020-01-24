@@ -4,55 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B705C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:10:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D155C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:10:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0289620708
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:10:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2876620708
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:10:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579864238;
-	bh=cKJUaldp19Cl94RAqGRylCP48OpAtKBvhX1cqyV2YUQ=;
+	s=default; t=1579864242;
+	bh=n7t4sp4v2CHzDCSSFze4RGRUhIvQyibZc4fAQt0orW8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bUSDNmJvYyQfXT+aAHv2Z03S4GzQ7seroJ/FD1lJYy9Tx+hj3PVqDeF2Jku9GmtL4
-	 rKDzOYG78v6zSvXCXufv5K/io3K+eVAoUZwp7gvK3GL+B5fpTSdcn5o6chmO743V8s
-	 tXrJNo6l5WtxX72ufSY6YHiqdmftwwcAuNg+JpB4=
+	b=jN7wRjKBb+HJ5Hcve0Og0qO06vtTfLRawlQC8rpeCELFtmoXVetbv9G2hyvsAxzTO
+	 wZIN4YvU1/1jku+X/H9hrIx5gxCZqadv0sYoIVD7SjJe7H8Ufg6N2YsaMDJQvrImhh
+	 z7HS5T489CNv0B0lIjQSWrgfQsVmV3lKZoR0t6xw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387990AbgAXLKh (ORCPT
+        id S1733087AbgAXLKl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:10:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46360 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 06:10:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46426 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387889AbgAXLKd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:10:33 -0500
+        id S1732697AbgAXLKh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:10:37 -0500
 Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CBDC020708;
-        Fri, 24 Jan 2020 11:10:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 11DC92071A;
+        Fri, 24 Jan 2020 11:10:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579864233;
-        bh=cKJUaldp19Cl94RAqGRylCP48OpAtKBvhX1cqyV2YUQ=;
+        s=default; t=1579864236;
+        bh=n7t4sp4v2CHzDCSSFze4RGRUhIvQyibZc4fAQt0orW8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zHsC01G5sCJrcvdQ3YKKdFuLi7uR1sLc8xlO+RKdr76kf70Y1RRQ/vba4ZDSgW7E+
-         CX0Gicmco0X7YWHRzRQ6qVD4074EbSR7lkykWzapZ05F1w6KmnRGxsG0YHe9lNa2lU
-         8ayuPY7Vo5GSIWgnrpOAT9PWnywNXmn8fXggpWwk=
+        b=P7Bn96zbi1ROk0LKe0CbKbxbtfXPJnf04YHR0SSxJIoKzbtxe2Rd8EY3DeKPpRqYr
+         reCVK30fdYqMFRmuuITSPeMnQCI/VUyFq9TlCfrTsc5d0ZO9pyQ39sfq5BjoVqcI7j
+         GxOtBcDEidBIxjM/G8sU/2q1Bs1Djdgeo7oUeNvQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>,
-        Wen Yang <wen.yang99@zte.com.cn>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Niklas Cassel <niklas.cassel@axis.com>,
-        Cyrille Pitchen <cyrille.pitchen@free-electrons.com>,
-        linux-pci@vger.kernel.org, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 196/639] PCI: endpoint: functions: Use memcpy_fromio()/memcpy_toio()
-Date:   Fri, 24 Jan 2020 10:26:06 +0100
-Message-Id: <20200124093111.612954211@linuxfoundation.org>
+        stable@vger.kernel.org, Tony Lindgren <tony@atomide.com>,
+        Bin Liu <b-liu@ti.com>,
+        Sven Van Asbroeck <TheSven73@gmail.com>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 197/639] usb: phy: twl6030-usb: fix possible use-after-free on remove
+Date:   Fri, 24 Jan 2020 10:26:07 +0100
+Message-Id: <20200124093111.730620744@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
 References: <20200124093047.008739095@linuxfoundation.org>
@@ -65,56 +62,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wen Yang <wen.yang99@zte.com.cn>
+From: Sven Van Asbroeck <thesven73@gmail.com>
 
-[ Upstream commit 726dabfde6aa35a4f1508e235ae37edbbf9fbc65 ]
+[ Upstream commit 5895d311d28f2605e2f71c1a3e043ed38f3ac9d2 ]
 
-Functions copying from/to IO addresses should use the
-memcpy_fromio()/memcpy_toio() API rather than plain memcpy().
+In remove(), use cancel_delayed_work_sync() to cancel the
+delayed work. Otherwise there's a chance that this work
+will continue to run until after the device has been removed.
 
-Fix the issue detected through the sparse tool.
+This issue was detected with the help of Coccinelle.
 
-Fixes: 349e7a85b25f ("PCI: endpoint: functions: Add an EP function to test PCI")
-Suggested-by: Kishon Vijay Abraham I <kishon@ti.com>
-Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
-[lorenzo.pieralisi@arm.com: updated log]
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
-CC: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-CC: Bjorn Helgaas <bhelgaas@google.com>
-CC: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
-CC: Niklas Cassel <niklas.cassel@axis.com>
-CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-CC: Cyrille Pitchen <cyrille.pitchen@free-electrons.com>
-CC: linux-pci@vger.kernel.org
-CC: linux-kernel@vger.kernel.org
+Cc: Tony Lindgren <tony@atomide.com>
+Cc: Bin Liu <b-liu@ti.com>
+Fixes: b6a619a883c3 ("usb: phy: Check initial state for twl6030")
+Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
+Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/endpoint/functions/pci-epf-test.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/usb/phy/phy-twl6030-usb.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
-index 3e86fa3c7da32..4bbd26e8a9e2f 100644
---- a/drivers/pci/endpoint/functions/pci-epf-test.c
-+++ b/drivers/pci/endpoint/functions/pci-epf-test.c
-@@ -175,7 +175,7 @@ static int pci_epf_test_read(struct pci_epf_test *epf_test)
- 		goto err_map_addr;
- 	}
+diff --git a/drivers/usb/phy/phy-twl6030-usb.c b/drivers/usb/phy/phy-twl6030-usb.c
+index 183550b63faad..dade34d704198 100644
+--- a/drivers/usb/phy/phy-twl6030-usb.c
++++ b/drivers/usb/phy/phy-twl6030-usb.c
+@@ -400,7 +400,7 @@ static int twl6030_usb_remove(struct platform_device *pdev)
+ {
+ 	struct twl6030_usb *twl = platform_get_drvdata(pdev);
  
--	memcpy(buf, src_addr, reg->size);
-+	memcpy_fromio(buf, src_addr, reg->size);
- 
- 	crc32 = crc32_le(~0, buf, reg->size);
- 	if (crc32 != reg->checksum)
-@@ -230,7 +230,7 @@ static int pci_epf_test_write(struct pci_epf_test *epf_test)
- 	get_random_bytes(buf, reg->size);
- 	reg->checksum = crc32_le(~0, buf, reg->size);
- 
--	memcpy(dst_addr, buf, reg->size);
-+	memcpy_toio(dst_addr, buf, reg->size);
- 
- 	/*
- 	 * wait 1ms inorder for the write to complete. Without this delay L3
+-	cancel_delayed_work(&twl->get_status_work);
++	cancel_delayed_work_sync(&twl->get_status_work);
+ 	twl6030_interrupt_mask(TWL6030_USBOTG_INT_MASK,
+ 		REG_INT_MSK_LINE_C);
+ 	twl6030_interrupt_mask(TWL6030_USBOTG_INT_MASK,
 -- 
 2.20.1
 
