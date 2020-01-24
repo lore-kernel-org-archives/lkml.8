@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23325C35242
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:55:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB0D4C35244
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:55:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E57EF20709
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:55:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 926CC20709
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:55:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579859729;
-	bh=0nP3cWKO/WEmZ1SNhRfG5YujXVlnGbBS7WJQPo+lyw4=;
+	s=default; t=1579859732;
+	bh=gISvfdF3rq83FvdFZr/q1r1oTwT69/DCEI7zMbw+coc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lJrYTCyV6O0gBGcRtkrF7c24wOot7xkXkzyIByTXByCmG9VENFLXrJxhaBfwbsutO
-	 NQQEJVzxF7xKcTTnVoaH96z4AsQID50U5ulmG9tsbSipUY2pOdKvRTLm6EP6/5sZa6
-	 4C3vj/UkzDWr/B/taqBUW+2VPXhZJwexYE14C+hM=
+	b=iAA2rk75KtFvVKKD1TnKLBsxSfwjWIprx06EiL7GA3+oe/N/e1idFVSrDFvHXCC5I
+	 WWNM/5TK+78tO3/nssTizX5o4dT6f2ctQ3zkk4AJkQPvjdGmR9XnQr9jUWMelgkR74
+	 3KoRrGzlh1DxVsJRuIzxRJfRA6fQY6qwJ7C6Pxlg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388476AbgAXJz2 (ORCPT
+        id S2388480AbgAXJzc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 04:55:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58608 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 04:55:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58742 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388445AbgAXJz0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 04:55:26 -0500
+        id S1731598AbgAXJza (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 04:55:30 -0500
 Received: from localhost (unknown [145.15.244.15])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2EAA8206D5;
-        Fri, 24 Jan 2020 09:55:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2B4EF20709;
+        Fri, 24 Jan 2020 09:55:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579859725;
-        bh=0nP3cWKO/WEmZ1SNhRfG5YujXVlnGbBS7WJQPo+lyw4=;
+        s=default; t=1579859730;
+        bh=gISvfdF3rq83FvdFZr/q1r1oTwT69/DCEI7zMbw+coc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=j/8cd+IlGLnUFU0BL8qoH7h01oTerAiY4ADCIiwBoaGQqp/hk+Xuhh4rpOtliy0Qt
-         wtu5CyLQhu8FHGSHogCDgBnqKsl9uokOJVoabfm7TnBAhAVKmgdtVzS5lTQgXltKNP
-         iTACX1UAXJ3NqEt/vr03e2gguTVg3RXxCuMtPaxM=
+        b=Vysag40pjsStckJ1sbeW9XlxBd89DrirXxsfMNJ41ZhaklXqBERdUyYk5SVu4tZvC
+         cPrl21ZI7FAsX6utYQZ9i9cUVjETvrwVSo9oo7Ekg4S1sHVYoRELUGUnlowNoZWp8t
+         2/CDDygeLJXsUssTijHCGUPK2d9Yxa5aHyknSo9E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Himanshu Madhani <hmadhani@marvell.com>,
-        Giridhar Malavali <gmalavali@marvell.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org,
+        Sowjanya Komatineni <skomatineni@nvidia.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 180/343] scsi: qla2xxx: Fix a format specifier
-Date:   Fri, 24 Jan 2020 10:29:58 +0100
-Message-Id: <20200124092943.664950338@linuxfoundation.org>
+Subject: [PATCH 4.14 158/343] spi: tegra114: terminate dma and reset on transfer timeout
+Date:   Fri, 24 Jan 2020 10:29:36 +0100
+Message-Id: <20200124092940.748210843@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124092919.490687572@linuxfoundation.org>
 References: <20200124092919.490687572@linuxfoundation.org>
@@ -62,37 +61,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bart Van Assche <bvanassche@acm.org>
+From: Sowjanya Komatineni <skomatineni@nvidia.com>
 
-[ Upstream commit 19ce192cd718e02f880197c0983404ca48236807 ]
+[ Upstream commit 32bd1a9551cae34e6889afa235c7afdfede9aeac ]
 
-Since mcmd->sess->port_name is eight bytes long, use %8phC to format that
-port name instead of %phC.
+Fixes: terminate DMA and perform controller reset on transfer timeout
+to clear the FIFO's and errors.
 
-Cc: Himanshu Madhani <hmadhani@marvell.com>
-Cc: Giridhar Malavali <gmalavali@marvell.com>
-Fixes: 726b85487067 ("qla2xxx: Add framework for async fabric discovery") # v4.11.
-Signed-off-by: Bart Van Assche <bvanassche@acm.org>
-Acked-by: Himanshu Madhani <hmadhani@marvell.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/qla2xxx/qla_target.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/spi/spi-tegra114.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/drivers/scsi/qla2xxx/qla_target.c b/drivers/scsi/qla2xxx/qla_target.c
-index 55227d20496a0..1000422ef4f8a 100644
---- a/drivers/scsi/qla2xxx/qla_target.c
-+++ b/drivers/scsi/qla2xxx/qla_target.c
-@@ -2179,7 +2179,7 @@ void qlt_xmit_tm_rsp(struct qla_tgt_mgmt_cmd *mcmd)
- 		    mcmd->orig_iocb.imm_ntfy.u.isp24.status_subcode ==
- 		    ELS_TPRLO) {
- 			ql_dbg(ql_dbg_disc, vha, 0x2106,
--			    "TM response logo %phC status %#x state %#x",
-+			    "TM response logo %8phC status %#x state %#x",
- 			    mcmd->sess->port_name, mcmd->fc_tm_rsp,
- 			    mcmd->flags);
- 			qlt_schedule_sess_for_deletion_lock(mcmd->sess);
+diff --git a/drivers/spi/spi-tegra114.c b/drivers/spi/spi-tegra114.c
+index c6674b01e0fd6..4878d5e00c669 100644
+--- a/drivers/spi/spi-tegra114.c
++++ b/drivers/spi/spi-tegra114.c
+@@ -869,7 +869,16 @@ static int tegra_spi_transfer_one_message(struct spi_master *master,
+ 		if (WARN_ON(ret == 0)) {
+ 			dev_err(tspi->dev,
+ 				"spi transfer timeout, err %d\n", ret);
++			if (tspi->is_curr_dma_xfer &&
++			    (tspi->cur_direction & DATA_DIR_TX))
++				dmaengine_terminate_all(tspi->tx_dma_chan);
++			if (tspi->is_curr_dma_xfer &&
++			    (tspi->cur_direction & DATA_DIR_RX))
++				dmaengine_terminate_all(tspi->rx_dma_chan);
+ 			ret = -EIO;
++			reset_control_assert(tspi->rst);
++			udelay(2);
++			reset_control_deassert(tspi->rst);
+ 			goto complete_xfer;
+ 		}
+ 
 -- 
 2.20.1
 
