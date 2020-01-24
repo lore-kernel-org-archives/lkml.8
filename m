@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECFAEC3F68F
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:42:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17878C35242
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:42:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B63D6208C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:42:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6C3321556
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:42:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579858973;
-	bh=hi2dX1oVv8yZreDP+0pmyOaOSai6d6i0N6rpzahexjY=;
+	s=default; t=1579858977;
+	bh=EK33+j/Sg5rroUXTKOTmQOEULZcWGOzWW97+rl+g0ec=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KZDr1nDBWQzyh3cl+PT+xWrQY9+CtCX4VAotxXzXYA47jzflNRu9yWOtIcVP0M040
-	 kNU+/UHRudUDllr2nfHMw3+oS+kxSYfVtjnnQOMCScdQUw6UPqRxEqSu/Tu7LjMQSK
-	 gZJxZzmAAXiTC2fWHGwHkfNN74NwXcCHNdGSzNHs=
+	b=Vn1JGoeCihke4DzRb2d46ab2GClgH8Nw3fuBuWI4Uq7fh8XvHPiCL51MLcZwuRsnA
+	 n0wFY4HWq/u3uobLD7TAJWmXamEWrpXP/SS97jBIZdjEhtIqSut8TT02GemkNqSvn3
+	 rGH+WFNFaKrIwt53mDIhGjctzYbI7NV/s1YQkpHA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730627AbgAXJmw (ORCPT
+        id S1733161AbgAXJmz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 04:42:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40484 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 04:42:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40630 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733151AbgAXJmp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 04:42:45 -0500
+        id S1731108AbgAXJmv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 04:42:51 -0500
 Received: from localhost (unknown [145.15.244.15])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AAD2D20718;
-        Fri, 24 Jan 2020 09:42:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AFD37218AC;
+        Fri, 24 Jan 2020 09:42:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579858965;
-        bh=hi2dX1oVv8yZreDP+0pmyOaOSai6d6i0N6rpzahexjY=;
+        s=default; t=1579858971;
+        bh=EK33+j/Sg5rroUXTKOTmQOEULZcWGOzWW97+rl+g0ec=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DRsJfQUP9RnckdnCP4AFyR10OTnQGebc/rb0IybwmBwbt7eeIR/ZWTdbfcZh8lSeS
-         +1bwaz+LGFszyfbh9QwWtS6GQkQWv99ZJEMCqAqw3kLlTrap/NoyLXC0f1QGcjdMIn
-         /RTm+fN7bxKojAddggZb2gsd/NZJJeJazDkgq+1Q=
+        b=N8Zf/0rVBdHNspEQTFpK8PI5ADLly0jIq7puW8kcEuTu/g1vWK0GWku9g0JFWydvO
+         TCPiw7lStqCT0gI0qZbPPP4wmH+gsRUlDjJpXqaVXyu84ubU6Z/j6QzKrAdL79qjjs
+         baThGn765voNtUA3FoazdwQc26HCoeTBYuO7TS+M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vincent Cao <vincent.t.cao@intel.com>,
-        Sumit Garg <sumit.garg@linaro.org>,
-        Jens Wiklander <jens.wiklander@linaro.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 102/102] optee: Fix multi page dynamic shm pool alloc
-Date:   Fri, 24 Jan 2020 10:31:43 +0100
-Message-Id: <20200124092822.172144798@linuxfoundation.org>
+        stable@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 093/102] dmaengine: ti: edma: fix missed failure handling
+Date:   Fri, 24 Jan 2020 10:31:34 +0100
+Message-Id: <20200124092820.749523738@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124092806.004582306@linuxfoundation.org>
 References: <20200124092806.004582306@linuxfoundation.org>
@@ -61,52 +59,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sumit Garg <sumit.garg@linaro.org>
+From: Chuhong Yuan <hslester96@gmail.com>
 
-[ Upstream commit 5a769f6ff439cedc547395a6dc78faa26108f741 ]
+[ Upstream commit 340049d453682a9fe8d91fe794dd091730f4bb25 ]
 
-optee_shm_register() expected pages to be passed as an array of page
-pointers rather than as an array of contiguous pages. So fix that via
-correctly passing pages as per expectation.
+When devm_kcalloc fails, it forgets to call edma_free_slot.
+Replace direct return with failure handler to fix it.
 
-Fixes: a249dd200d03 ("tee: optee: Fix dynamic shm pool allocations")
-Reported-by: Vincent Cao <vincent.t.cao@intel.com>
-Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
-Tested-by: Vincent Cao <vincent.t.cao@intel.com>
-Signed-off-by: Jens Wiklander <jens.wiklander@linaro.org>
+Fixes: 1be5336bc7ba ("dmaengine: edma: New device tree binding")
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+Link: https://lore.kernel.org/r/20191118073802.28424-1-hslester96@gmail.com
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tee/optee/shm_pool.c | 15 ++++++++++++++-
- 1 file changed, 14 insertions(+), 1 deletion(-)
+ drivers/dma/ti/edma.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/tee/optee/shm_pool.c b/drivers/tee/optee/shm_pool.c
-index 0332a5301d613..d767eebf30bdd 100644
---- a/drivers/tee/optee/shm_pool.c
-+++ b/drivers/tee/optee/shm_pool.c
-@@ -28,9 +28,22 @@ static int pool_op_alloc(struct tee_shm_pool_mgr *poolm,
- 	shm->size = PAGE_SIZE << order;
+diff --git a/drivers/dma/ti/edma.c b/drivers/dma/ti/edma.c
+index ba7c4f07fcd6f..80b780e499711 100644
+--- a/drivers/dma/ti/edma.c
++++ b/drivers/dma/ti/edma.c
+@@ -2403,8 +2403,10 @@ static int edma_probe(struct platform_device *pdev)
  
- 	if (shm->flags & TEE_SHM_DMA_BUF) {
-+		unsigned int nr_pages = 1 << order, i;
-+		struct page **pages;
-+
-+		pages = kcalloc(nr_pages, sizeof(pages), GFP_KERNEL);
-+		if (!pages)
-+			return -ENOMEM;
-+
-+		for (i = 0; i < nr_pages; i++) {
-+			pages[i] = page;
-+			page++;
+ 		ecc->tc_list = devm_kcalloc(dev, ecc->num_tc,
+ 					    sizeof(*ecc->tc_list), GFP_KERNEL);
+-		if (!ecc->tc_list)
+-			return -ENOMEM;
++		if (!ecc->tc_list) {
++			ret = -ENOMEM;
++			goto err_reg1;
 +		}
-+
- 		shm->flags |= TEE_SHM_REGISTER;
--		rc = optee_shm_register(shm->ctx, shm, &page, 1 << order,
-+		rc = optee_shm_register(shm->ctx, shm, pages, nr_pages,
- 					(unsigned long)shm->kaddr);
-+		kfree(pages);
- 	}
  
- 	return rc;
+ 		for (i = 0;; i++) {
+ 			ret = of_parse_phandle_with_fixed_args(node, "ti,tptcs",
 -- 
 2.20.1
 
