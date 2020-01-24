@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C360EC32771
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:08:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFECAC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:08:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9BA1C2075D
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:08:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C47802075D
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:08:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579864128;
-	bh=eWRkYCS1XL9YkNnhsGLKtC1fiZMMAWnLCQqSNCv2kcA=;
+	s=default; t=1579864131;
+	bh=zZtmPqfF+D7Jz/0py0pIgVH7JR3UhY/oZUZOwab+zDg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rJuUTsaNKQ3vOOT8bGLrvF04g5Hq/aftESeGIKF3B+tgt3VlGuXtt8RYqjhOFXMNl
-	 iGuk/zclXixf4flhTX/sx/4jJujV9ym8uHsVKgQajxjENSSiHBpSQZUS4ab4H5Dgkm
-	 W0JbgBwgStl9prT9yH650rDgIIySQwOm4O47l3Gs=
+	b=HDcUDW8aaKlU0v7h/0a1VCtad9jAIcCaXIn8OljzMxjl+ubmU/s3qGUTCI8KRKU4R
+	 N4KlIf4qNCjOETIa5PfZ/v8aAoEuYQwEzcEClxdzc8Vzc2VjAPZd4/7FRPR/KcSHw3
+	 PB0PIb8EiSsTRAAzoFSdBlD2B9zcGohvTUWvYvtc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389696AbgAXLIr (ORCPT
+        id S2389707AbgAXLIu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:08:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44192 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 06:08:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44252 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389686AbgAXLIo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:08:44 -0500
+        id S2389697AbgAXLIr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:08:47 -0500
 Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0608F20663;
-        Fri, 24 Jan 2020 11:08:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9AFD520663;
+        Fri, 24 Jan 2020 11:08:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579864123;
-        bh=eWRkYCS1XL9YkNnhsGLKtC1fiZMMAWnLCQqSNCv2kcA=;
+        s=default; t=1579864127;
+        bh=zZtmPqfF+D7Jz/0py0pIgVH7JR3UhY/oZUZOwab+zDg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=07l+EvSt7rOxws7pgJVaQzqehROTpHPziuHqrNSk2SNsubNrwqa5O5neMerO7f5Aw
-         z3exCf4jX1ntxdSLaVLyzYH1xxN2cdsjv2cQi4psYpMufRDldmfvdqvKZqSRzlWcV2
-         QUHlqnMAnaDjxvMqN9S+G0Ez9u7O98UMu5zZnEvs=
+        b=fAJ80SPP6CRGnEVTv1MdrHUOcZ68CS9W4fj8Ymejx6tdr+39uoNZW6nE6yHRiV6Tz
+         H1cPuya6vRRkQUN2PuL0Z+NSzfwn+t9LduCbPeAsGnSeOMjlrct47VkmqEExhaNLyk
+         WMUC5Twbwd68VrhqYTS0vC4UUVTgTrj5OGOBWZQ8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        stable@vger.kernel.org, Vladimir Zapolskiy <vz@mleia.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 162/639] driver core: Do not call rpm_put_suppliers() in pm_runtime_drop_link()
-Date:   Fri, 24 Jan 2020 10:25:32 +0100
-Message-Id: <20200124093107.474491990@linuxfoundation.org>
+Subject: [PATCH 4.19 163/639] ARM: dts: lpc32xx: add required clocks property to keypad device node
+Date:   Fri, 24 Jan 2020 10:25:33 +0100
+Message-Id: <20200124093107.610504545@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
 References: <20200124093047.008739095@linuxfoundation.org>
@@ -60,58 +59,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+From: Vladimir Zapolskiy <vz@mleia.com>
 
-[ Upstream commit a1fdbfbb1da2063ba98a12eb6f1bdd07451c7145 ]
+[ Upstream commit 3e88bc38b9f6fe4b69cecf81badd3c19fde97f97 ]
 
-Calling rpm_put_suppliers() from pm_runtime_drop_link() is excessive
-as it affects all suppliers of the consumer device and not just the
-one pointed to by the device link being dropped.  Worst case it may
-cause the consumer device to stop working unexpectedly.  Moreover, in
-principle it is racy with respect to runtime PM of the consumer
-device.
+NXP LPC32xx keypad controller requires a clock property to be defined.
 
-To avoid these problems drop runtime PM references on the particular
-supplier pointed to by the link in question only and do that after
-the link has been dropped from the consumer device's list of links to
-suppliers, which is in device_link_free().
+The change fixes the driver initialization problem:
 
-Fixes: a0504aecba76 ("PM / runtime: Drop usage count for suppliers at device link removal")
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+  lpc32xx_keys 40050000.key: failed to get clock
+  lpc32xx_keys: probe of 40050000.key failed with error -2
+
+Fixes: 93898eb775e5 ("arm: dts: lpc32xx: add clock properties to device nodes")
+Signed-off-by: Vladimir Zapolskiy <vz@mleia.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/base/core.c          | 3 +++
- drivers/base/power/runtime.c | 2 --
- 2 files changed, 3 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/lpc32xx.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/base/core.c b/drivers/base/core.c
-index 20ae18f44dcdf..7599147d5f83c 100644
---- a/drivers/base/core.c
-+++ b/drivers/base/core.c
-@@ -357,6 +357,9 @@ EXPORT_SYMBOL_GPL(device_link_add);
- 
- static void device_link_free(struct device_link *link)
- {
-+	while (refcount_dec_not_one(&link->rpm_active))
-+		pm_runtime_put(link->supplier);
-+
- 	put_device(link->consumer);
- 	put_device(link->supplier);
- 	kfree(link);
-diff --git a/drivers/base/power/runtime.c b/drivers/base/power/runtime.c
-index b914932d3ca1a..ab454c4533ba1 100644
---- a/drivers/base/power/runtime.c
-+++ b/drivers/base/power/runtime.c
-@@ -1603,8 +1603,6 @@ void pm_runtime_new_link(struct device *dev)
- 
- void pm_runtime_drop_link(struct device *dev)
- {
--	rpm_put_suppliers(dev);
--
- 	spin_lock_irq(&dev->power.lock);
- 	WARN_ON(dev->power.links_count == 0);
- 	dev->power.links_count--;
+diff --git a/arch/arm/boot/dts/lpc32xx.dtsi b/arch/arm/boot/dts/lpc32xx.dtsi
+index ed0d6fb20122a..d4368eeff1b9a 100644
+--- a/arch/arm/boot/dts/lpc32xx.dtsi
++++ b/arch/arm/boot/dts/lpc32xx.dtsi
+@@ -462,6 +462,7 @@
+ 			key: key@40050000 {
+ 				compatible = "nxp,lpc3220-key";
+ 				reg = <0x40050000 0x1000>;
++				clocks = <&clk LPC32XX_CLK_KEY>;
+ 				interrupts = <54 IRQ_TYPE_LEVEL_HIGH>;
+ 				status = "disabled";
+ 			};
 -- 
 2.20.1
 
