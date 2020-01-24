@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A417CC32771
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:41:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38CDAC35242
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:41:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BB112075D
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:41:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 108B920678
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:41:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579866078;
-	bh=RsSscILTKOs8mlW0g1H+l53z9HZnW/+PEIyKsx4W3Ns=;
+	s=default; t=1579866084;
+	bh=Q02J/GZJFdeNELe5RyPHNSHC6s660rLzv3qwk8uItGg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wGhI4kMunjy6AZej9f/jSVtD+XH/B5cz+a6rbItu3fvcQnMKck8/a0WJtTNnIcnqE
-	 NTj+CbEU6wclRIFzdltQDI8wEQVq9Bbd8xhwk2QMs1qGvtpOV3NXqoWYBnnn3yHCjv
-	 9RQ6QI+mkWFQ67xtvaO8m+NtEJuhu6madtgzM6uo=
+	b=Zl03cW4nOLZeKVNvda9JAOFwDVbAIc/Oudc9Q9Zd8v8qhF5Df4Z2EGySCBd4xMD+y
+	 j10EAZcEDyDKDD/yKLw5ilUTYC0OA8IgJAiiYcsgeK/O7YIITalK1QGmO9SwunV9NM
+	 KVviWTNE88oGsYp22RksDZcJdTnCeMWN+DvW497k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391930AbgAXLlR (ORCPT
+        id S2390497AbgAXLS4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:41:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56928 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 06:18:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56090 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390797AbgAXLTc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:19:32 -0500
+        id S2390483AbgAXLSt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:18:49 -0500
 Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 619C320704;
-        Fri, 24 Jan 2020 11:19:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 098B820704;
+        Fri, 24 Jan 2020 11:18:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579864771;
-        bh=RsSscILTKOs8mlW0g1H+l53z9HZnW/+PEIyKsx4W3Ns=;
+        s=default; t=1579864728;
+        bh=Q02J/GZJFdeNELe5RyPHNSHC6s660rLzv3qwk8uItGg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qMcxSYPBnDMEIcUa5nU8aSAtVxAMTJOJIf/cx+HE6Wkjohyd4lhQWgXx3MhPxwRg6
-         XIZ3nb+Cei2v45+mYahOJJ++2SjtcWHYUvyyHEgJZyHWVfC9ymZdQZhBVTEAHsyngZ
-         nUK3egjsW9U9GcRCOYWC55vFYZpZQ0mGsKmDAYgc=
+        b=ClsK7e0SJR8p519ek2ni8Q0WSkAWxw/rM/JuXHBF6FoVOBSqtAozfEoHz9MpNik4m
+         OQtFPmV4CYN+k8QSNcH7Uolw43e/Q4SPUS+/BvX0wNCPoyf0yhWzZmEpT0Th89XgV1
+         ScwtnQaf62XCT3EpF9qZrz91cj1YC/6mRgdobucE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Laight <David.Laight@aculab.com>,
-        Willem de Bruijn <willemb@google.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 338/639] packet: in recvmsg msg_name return at least sizeof sockaddr_ll
-Date:   Fri, 24 Jan 2020 10:28:28 +0100
-Message-Id: <20200124093129.467118520@linuxfoundation.org>
+        stable@vger.kernel.org, Sameer Pujar <spujar@nvidia.com>,
+        Jon Hunter <jonathanh@nvidia.com>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 349/639] dmaengine: tegra210-adma: restore channel status
+Date:   Fri, 24 Jan 2020 10:28:39 +0100
+Message-Id: <20200124093130.839728067@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
 References: <20200124093047.008739095@linuxfoundation.org>
@@ -61,67 +60,122 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Willem de Bruijn <willemb@google.com>
+From: Sameer Pujar <spujar@nvidia.com>
 
-[ Upstream commit b2cf86e1563e33a14a1c69b3e508d15dc12f804c ]
+[ Upstream commit f33e7bb3eb922618612a90f0a828c790e8880773 ]
 
-Packet send checks that msg_name is at least sizeof sockaddr_ll.
-Packet recv must return at least this length, so that its output
-can be passed unmodified to packet send.
+Status of ADMA channel registers is not saved and restored during system
+suspend. During active playback if system enters suspend, this results in
+wrong state of channel registers during system resume and playback fails
+to resume properly. Fix this by saving following channel registers in
+runtime suspend and restore during runtime resume.
+ * ADMA_CH_LOWER_SRC_ADDR
+ * ADMA_CH_LOWER_TRG_ADDR
+ * ADMA_CH_FIFO_CTRL
+ * ADMA_CH_CONFIG
+ * ADMA_CH_CTRL
+ * ADMA_CH_CMD
+ * ADMA_CH_TC
+Runtime PM calls will be inovked during system resume path if a playback
+or capture needs to be resumed. Hence above changes work fine for system
+suspend case.
 
-This ceased to be true since adding support for lladdr longer than
-sll_addr. Since, the return value uses true address length.
-
-Always return at least sizeof sockaddr_ll, even if address length
-is shorter. Zero the padding bytes.
-
-Change v1->v2: do not overwrite zeroed padding again. use copy_len.
-
-Fixes: 0fb375fb9b93 ("[AF_PACKET]: Allow for > 8 byte hardware addresses.")
-Suggested-by: David Laight <David.Laight@aculab.com>
-Signed-off-by: Willem de Bruijn <willemb@google.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: f46b195799b5 ("dmaengine: tegra-adma: Add support for Tegra210 ADMA")
+Signed-off-by: Sameer Pujar <spujar@nvidia.com>
+Reviewed-by: Jon Hunter <jonathanh@nvidia.com>
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/packet/af_packet.c | 13 +++++++++++--
- 1 file changed, 11 insertions(+), 2 deletions(-)
+ drivers/dma/tegra210-adma.c | 46 ++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 45 insertions(+), 1 deletion(-)
 
-diff --git a/net/packet/af_packet.c b/net/packet/af_packet.c
-index ac65e66d1d727..60ba18a4bb0ff 100644
---- a/net/packet/af_packet.c
-+++ b/net/packet/af_packet.c
-@@ -3371,20 +3371,29 @@ static int packet_recvmsg(struct socket *sock, struct msghdr *msg, size_t len,
- 	sock_recv_ts_and_drops(msg, sk, skb);
+diff --git a/drivers/dma/tegra210-adma.c b/drivers/dma/tegra210-adma.c
+index 09b6756366c30..ac2a6b800db3e 100644
+--- a/drivers/dma/tegra210-adma.c
++++ b/drivers/dma/tegra210-adma.c
+@@ -98,6 +98,7 @@ struct tegra_adma_chan_regs {
+ 	unsigned int src_addr;
+ 	unsigned int trg_addr;
+ 	unsigned int fifo_ctrl;
++	unsigned int cmd;
+ 	unsigned int tc;
+ };
  
- 	if (msg->msg_name) {
-+		int copy_len;
+@@ -127,6 +128,7 @@ struct tegra_adma_chan {
+ 	enum dma_transfer_direction	sreq_dir;
+ 	unsigned int			sreq_index;
+ 	bool				sreq_reserved;
++	struct tegra_adma_chan_regs	ch_regs;
+ 
+ 	/* Transfer count and position info */
+ 	unsigned int			tx_buf_count;
+@@ -635,8 +637,30 @@ static struct dma_chan *tegra_dma_of_xlate(struct of_phandle_args *dma_spec,
+ static int tegra_adma_runtime_suspend(struct device *dev)
+ {
+ 	struct tegra_adma *tdma = dev_get_drvdata(dev);
++	struct tegra_adma_chan_regs *ch_reg;
++	struct tegra_adma_chan *tdc;
++	int i;
+ 
+ 	tdma->global_cmd = tdma_read(tdma, ADMA_GLOBAL_CMD);
++	if (!tdma->global_cmd)
++		goto clk_disable;
 +
- 		/* If the address length field is there to be filled
- 		 * in, we fill it in now.
- 		 */
- 		if (sock->type == SOCK_PACKET) {
- 			__sockaddr_check_size(sizeof(struct sockaddr_pkt));
- 			msg->msg_namelen = sizeof(struct sockaddr_pkt);
-+			copy_len = msg->msg_namelen;
- 		} else {
- 			struct sockaddr_ll *sll = &PACKET_SKB_CB(skb)->sa.ll;
++	for (i = 0; i < tdma->nr_channels; i++) {
++		tdc = &tdma->channels[i];
++		ch_reg = &tdc->ch_regs;
++		ch_reg->cmd = tdma_ch_read(tdc, ADMA_CH_CMD);
++		/* skip if channel is not active */
++		if (!ch_reg->cmd)
++			continue;
++		ch_reg->tc = tdma_ch_read(tdc, ADMA_CH_TC);
++		ch_reg->src_addr = tdma_ch_read(tdc, ADMA_CH_LOWER_SRC_ADDR);
++		ch_reg->trg_addr = tdma_ch_read(tdc, ADMA_CH_LOWER_TRG_ADDR);
++		ch_reg->ctrl = tdma_ch_read(tdc, ADMA_CH_CTRL);
++		ch_reg->fifo_ctrl = tdma_ch_read(tdc, ADMA_CH_FIFO_CTRL);
++		ch_reg->config = tdma_ch_read(tdc, ADMA_CH_CONFIG);
++	}
++
++clk_disable:
+ 	clk_disable_unprepare(tdma->ahub_clk);
  
- 			msg->msg_namelen = sll->sll_halen +
- 				offsetof(struct sockaddr_ll, sll_addr);
-+			copy_len = msg->msg_namelen;
-+			if (msg->msg_namelen < sizeof(struct sockaddr_ll)) {
-+				memset(msg->msg_name +
-+				       offsetof(struct sockaddr_ll, sll_addr),
-+				       0, sizeof(sll->sll_addr));
-+				msg->msg_namelen = sizeof(struct sockaddr_ll);
-+			}
- 		}
--		memcpy(msg->msg_name, &PACKET_SKB_CB(skb)->sa,
--		       msg->msg_namelen);
-+		memcpy(msg->msg_name, &PACKET_SKB_CB(skb)->sa, copy_len);
+ 	return 0;
+@@ -645,7 +669,9 @@ static int tegra_adma_runtime_suspend(struct device *dev)
+ static int tegra_adma_runtime_resume(struct device *dev)
+ {
+ 	struct tegra_adma *tdma = dev_get_drvdata(dev);
+-	int ret;
++	struct tegra_adma_chan_regs *ch_reg;
++	struct tegra_adma_chan *tdc;
++	int ret, i;
+ 
+ 	ret = clk_prepare_enable(tdma->ahub_clk);
+ 	if (ret) {
+@@ -654,6 +680,24 @@ static int tegra_adma_runtime_resume(struct device *dev)
  	}
+ 	tdma_write(tdma, ADMA_GLOBAL_CMD, tdma->global_cmd);
  
- 	if (pkt_sk(sk)->auxdata) {
++	if (!tdma->global_cmd)
++		return 0;
++
++	for (i = 0; i < tdma->nr_channels; i++) {
++		tdc = &tdma->channels[i];
++		ch_reg = &tdc->ch_regs;
++		/* skip if channel was not active earlier */
++		if (!ch_reg->cmd)
++			continue;
++		tdma_ch_write(tdc, ADMA_CH_TC, ch_reg->tc);
++		tdma_ch_write(tdc, ADMA_CH_LOWER_SRC_ADDR, ch_reg->src_addr);
++		tdma_ch_write(tdc, ADMA_CH_LOWER_TRG_ADDR, ch_reg->trg_addr);
++		tdma_ch_write(tdc, ADMA_CH_CTRL, ch_reg->ctrl);
++		tdma_ch_write(tdc, ADMA_CH_FIFO_CTRL, ch_reg->fifo_ctrl);
++		tdma_ch_write(tdc, ADMA_CH_CONFIG, ch_reg->config);
++		tdma_ch_write(tdc, ADMA_CH_CMD, ch_reg->cmd);
++	}
++
+ 	return 0;
+ }
+ 
 -- 
 2.20.1
 
