@@ -2,171 +2,135 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8446C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 08:56:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA8BBC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 08:56:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D30820709
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 08:56:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86A8B20709
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 08:56:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728767AbgAXI4W (ORCPT
+        id S1729203AbgAXI4c convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 03:56:22 -0500
-Received: from honk.sigxcpu.org ([24.134.29.49]:58882 "EHLO honk.sigxcpu.org"
+        Fri, 24 Jan 2020 03:56:32 -0500
+Received: from mga11.intel.com ([192.55.52.93]:5939 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725787AbgAXI4W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 03:56:22 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by honk.sigxcpu.org (Postfix) with ESMTP id 2FE9AFB03;
-        Fri, 24 Jan 2020 09:56:19 +0100 (CET)
-X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
-Received: from honk.sigxcpu.org ([127.0.0.1])
-        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id A1xqAaP3-9sk; Fri, 24 Jan 2020 09:56:17 +0100 (CET)
-Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
-        id CF798406B7; Fri, 24 Jan 2020 09:56:16 +0100 (CET)
-Date:   Fri, 24 Jan 2020 09:56:16 +0100
-From:   Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Christian Gmeiner <christian.gmeiner@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Sam Ravnborg <sam@ravnborg.org>, Rob Herring <robh@kernel.org>,
-        Emil Velikov <emil.velikov@collabora.com>,
-        The etnaviv authors <etnaviv@lists.freedesktop.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
+        id S1725787AbgAXI4c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 03:56:32 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Jan 2020 00:56:31 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,357,1574150400"; 
+   d="scan'208";a="260174149"
+Received: from pgsmsx101.gar.corp.intel.com ([10.221.44.78])
+  by fmsmga002.fm.intel.com with ESMTP; 24 Jan 2020 00:56:29 -0800
+Received: from pgsmsx114.gar.corp.intel.com ([169.254.4.192]) by
+ PGSMSX101.gar.corp.intel.com ([169.254.1.131]) with mapi id 14.03.0439.000;
+ Fri, 24 Jan 2020 16:56:28 +0800
+From:   "Ong, Boon Leong" <boon.leong.ong@intel.com>
+To:     Jose Abreu <Jose.Abreu@synopsys.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+CC:     "Tan, Tee Min" <tee.min.tan@intel.com>,
+        "Voon, Weifeng" <weifeng.voon@intel.com>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre TORGUE <alexandre.torgue@st.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        "Joao Pinto" <Joao.Pinto@synopsys.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "Alexandru Ardelean" <alexandru.ardelean@analog.com>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] drm/etnaviv: only reject timeouts with tv_nsec >= 2
- seconds
-Message-ID: <20200124085616.GA5680@bogon.m.sigxcpu.org>
-References: <20200121114553.2667556-1-arnd@arndb.de>
- <20200121125546.GA71415@bogon.m.sigxcpu.org>
- <1971902c68ff805ee0b4a66f558afe06e6edf0c5.camel@pengutronix.de>
- <CAK8P3a2E__zHPPEL37JwK=uHb_v-=C+-+zGaL3XoW5PZ+BUN5g@mail.gmail.com>
- <20200122103034.GA67385@bogon.m.sigxcpu.org>
- <20200122103553.GN25745@shell.armlinux.org.uk>
+Subject: RE: [PATCH net v3 1/5] net: stmmac: Fix incorrect location to set
+ real_num_rx|tx_queues
+Thread-Topic: [PATCH net v3 1/5] net: stmmac: Fix incorrect location to set
+ real_num_rx|tx_queues
+Thread-Index: AQHV0QPigSDsI0BxMUeg/pQlin0Cyqf17B8AgAOVJYA=
+Date:   Fri, 24 Jan 2020 08:56:28 +0000
+Message-ID: <AF233D1473C1364ABD51D28909A1B1B75C488EDC@pgsmsx114.gar.corp.intel.com>
+References: <20200122090936.28555-1-boon.leong.ong@intel.com>
+ <20200122090936.28555-2-boon.leong.ong@intel.com>
+ <BN8PR12MB3266F0534CE20CE906AA3C06D30C0@BN8PR12MB3266.namprd12.prod.outlook.com>
+In-Reply-To: <BN8PR12MB3266F0534CE20CE906AA3C06D30C0@BN8PR12MB3266.namprd12.prod.outlook.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-originating-ip: [172.30.20.205]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200122103553.GN25745@shell.armlinux.org.uk>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Russel,
-On Wed, Jan 22, 2020 at 10:35:53AM +0000, Russell King - ARM Linux admin wrote:
-> On Wed, Jan 22, 2020 at 11:30:34AM +0100, Guido Günther wrote:
-> > Hi,
-> > On Tue, Jan 21, 2020 at 08:05:27PM +0100, Arnd Bergmann wrote:
-> > > On Tue, Jan 21, 2020 at 5:10 PM Lucas Stach <l.stach@pengutronix.de> wrote:
-> > > >
-> > > > Hi Guido,
-> > > >
-> > > > On Di, 2020-01-21 at 13:55 +0100, Guido Günther wrote:
-> > > > > Hi,
-> > > > > On Tue, Jan 21, 2020 at 12:45:25PM +0100, Arnd Bergmann wrote:
-> > > > > > As Guido Günther reported, get_abs_timeout() in the etnaviv user space
-> > > > > > sometimes passes timeouts with nanosecond values larger than 1000000000,
-> > > > > > which gets rejected after my first patch.
-> > > > > >
-> > > > > > To avoid breaking this, while also not allowing completely arbitrary
-> > > > > > values, set the limit to 1999999999 and use set_normalized_timespec64()
-> > > > > > to get the correct format before comparing it.
-> > > > >
-> > > > > I'm seeing values up to 5 seconds so I need
-> > > > >
-> > > > >      if (args->timeout.tv_nsec > (5 * NSEC_PER_SEC))
-> > > > >
-> > > > > to unbreak rendering. Which seems to match what mesa's get_abs_timeout()
-> > > > > does and how it's invoked.
-> > > >
-> > > > I have not tested this myself yet, only looked at the code. From the
-> > > > code I quoted earlier, I don't see how we end up with 5 * NSEC_PER_SEC
-> > > > in the tv_nsec member, even if the timeout passed to get_abs_timeout()
-> > > > is 5 seconds.
-> > > 
-> > > I can think of two different ways you'd end up with around five seconds here:
-> > > 
-> > > a) you have a completely arbitrary 32-bit number through truncation,
-> > >     which is up to 4.2 seconds
-> > > b) you have the same kind of 32-bit number, but add up to another 999999999
-> > >     nanoseconds, so you get up to 5.2 seconds in the 64-bit field.
-> > 
-> > I've dumped out some values tv_nsec values with current mesa git on arm64:
-> > 
-> > [   33.699652] etnaviv_ioctl_gem_cpu_prep: 4990449401
-> > [   33.813081] etnaviv_ioctl_gem_cpu_prep: 5103872445
-> > [   33.822936] etnaviv_ioctl_gem_cpu_prep: 5113731286
-> > [   33.840963] etnaviv_ioctl_gem_cpu_prep: 5131762726
-> > [   33.854120] etnaviv_ioctl_gem_cpu_prep: 5144920127
-> > [   33.861426] etnaviv_ioctl_gem_cpu_prep: 5152227527
-> > [   33.872666] etnaviv_ioctl_gem_cpu_prep: 5163466968
-> > [   33.879485] etnaviv_ioctl_gem_cpu_prep: 5170286808
-> > 
-> > The problem is that in mesa/libdrm
-> > 
-> > static inline void get_abs_timeout(struct drm_etnaviv_timespec *tv, uint64_t ns)
-> > {
-> >         struct timespec t;
-> >         uint32_t s = ns / 1000000000;
-> >         clock_gettime(CLOCK_MONOTONIC, &t);
-> >         tv->tv_sec = t.tv_sec + s;
-> >         tv->tv_nsec = t.tv_nsec + ns - (s * 1000000000);
-> >                                         ^^^^^^^^^^^^^^^
-> >    this overflows (since `s` is `uint_32t` and hence we substract a way
-> >    too small value with ns = 5000000000 which mesa uses in
-> >    etna_bo_cpu_prep.
-> > }
-> > 
-> > So with current mesa/libdrm (which needs to be fixed) we'd have a maximum
-> > 
-> >       t.tv_nsec + ns         - (s_max * 1000000000)
-> > 
-> >       999999999 + 5000000000 - 705032704            = 5294967295
-> > 
-> > Does that make sense? If so that'd be the possible upper bound for the
-> > kernel. Note that this only applies to etnaviv_ioctl_gem_cpu_prep. While
-> > etnaviv_ioctl_wait_fence and etnaviv_ioctl_gem_wait are affected too
-> > i've not yet seen user space passing in larger values.
-> 
-> Except the fact that the calculation being done above is buggy.
-> Not only do we end up with tv_sec incremented by 5 seconds, but
-> we also end up with tv_nsec containing around 5 seconds in
-> nanoseconds, which means we end up with about a 10 second timeout.
 
-yes.
 
-> 
-> I think it would probably be better for the kernel to print a
-> warning once when noticing over-large nsec values, suggesting a
-> userspace upgrade is in order, but continue the existing behaviour.
+>-----Original Message-----
+>From: Jose Abreu <Jose.Abreu@synopsys.com>
+>Sent: Wednesday, January 22, 2020 5:56 PM
+>To: Ong, Boon Leong <boon.leong.ong@intel.com>; netdev@vger.kernel.org
+>Cc: Tan, Tee Min <tee.min.tan@intel.com>; Voon, Weifeng
+><weifeng.voon@intel.com>; Giuseppe Cavallaro <peppe.cavallaro@st.com>;
+>Alexandre TORGUE <alexandre.torgue@st.com>; David S . Miller
+><davem@davemloft.net>; Maxime Coquelin <mcoquelin.stm32@gmail.com>;
+>Joao Pinto <Joao.Pinto@synopsys.com>; Arnd Bergmann <arnd@arndb.de>;
+>Alexandru Ardelean <alexandru.ardelean@analog.com>; linux-stm32@st-md-
+>mailman.stormreply.com; linux-arm-kernel@lists.infradead.org; linux-
+>kernel@vger.kernel.org
+>Subject: RE: [PATCH net v3 1/5] net: stmmac: Fix incorrect location to set
+>real_num_rx|tx_queues
+>
+>From: Ong Boon Leong <boon.leong.ong@intel.com>
+>Date: Jan/22/2020, 09:09:32 (UTC+00:00)
+>
+>> For driver open(), rtnl_lock is acquired by network stack but not in the
+>> resume(). Therefore, we introduce lock_acquired boolean to control when
+>> to use rtnl_lock|unlock() within stmmac_hw_setup().
+>
+>Why not use rtnl_is_locked() instead of the boolean ?
 
-That makes sense to me. This also makes sure we don't break other (non
-mesa using) stuff accidentally. We have
+We know that stmmac_open() is called with rtnl_mutex locked by caller.
+And, stmmac_resume() is called without rtnl_mutex is locked by caller.
+If we replace the boolean with rtnl_is_locked(), then we will have the
+following logics in stmmac_hw_setup():-
 
-  https://gitlab.freedesktop.org/mesa/mesa/commit/d817f2c69615cf37b78f484a25b7831ebe9dbe6f
+     if (!rtnl_is_locked)   ---- (A)
+         rtnl_lock();
+     netif_set_real_num_rx_queues();
+     netif_set_real_num_tx_queues();
+     if (!rtnl_is_locked)   ---- (B)
+         rtnl_unlock();
 
-and
+For stmmac_open(), (A) is false but (B) is true. 
+So, the stmmac_open() exits with rtnl_mutex is released.
+Here, the above logic does not perserve the original rtnl_mutex
+is locked when stmmac_open() is called.
 
-  https://gitlab.freedesktop.org/mesa/mesa/merge_requests/3534
+For stmmac_resume(), (A) is true, and (B) is also true.
+So, the stmmac_resume() exits with rtnl_mutex is released.
+Here, the above logic works well as the original rtnl_mutex is released
+when stmmac_resume() is called.
+ 
+So, as far as I can see, the proposed boolean approach works fine for both
+stmmac_open() and stmmac_resume().
 
-to normalize nsec to [0..999999999] now.
+Do you agree? 
+ 
 
-Cheers,
- -- Guido
 
-> 
-> -- 
-> RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-> FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-> According to speedtest.net: 11.9Mbps down 500kbps up
-> 
+ 
+ 
+
+ 
