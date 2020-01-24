@@ -4,53 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9966AC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:33:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 711A4C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:33:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D771214DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:33:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D1A821556
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:33:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579865625;
-	bh=MK+0H2m0NwaFC2Z2/WNt1A4Nh/a09D9UD1TDwoJi0r8=;
+	s=default; t=1579865630;
+	bh=8qqQxDrZw419BxuS8vtAzVOtgZqvRsC1xgPlPaca5XQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jW80uBzviyKY+1HqCqE2SHy1Hut+ESNMfB2Re3S6J3tkq0Ke8l+4zeTCPsClmG4nT
-	 tCvDHtKuNQem0sbgRAMffzPCKuwlzn1V0GmU1m2brw0/T2uSLLJ7eUCeyn5+Z2w615
-	 R+UAC6ZdBloDPMqmHuqDEKer38+0/51TBZduWyGw=
+	b=jPOTcq7LQPHJpg8QuG6iWJHgq1Yq2WUGBz/nF7fC1JgIAXABvaB+BwithBGdYMWP+
+	 WstnesnS5GIN5+oiuYG/p/XyL2gMn2IccTSTiGierDP4SoJcGBkpLeHePSRpgila6r
+	 BBfoAPH1ez57PHzdxIHfTkZ4Ehk67AMZfiZCpqm4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404634AbgAXLdo (ORCPT
+        id S2404640AbgAXLds (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:33:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53316 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 06:33:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53398 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404620AbgAXLdl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:33:41 -0500
+        id S2404620AbgAXLdp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:33:45 -0500
 Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F35822075D;
-        Fri, 24 Jan 2020 11:33:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A699C206D4;
+        Fri, 24 Jan 2020 11:33:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579865620;
-        bh=MK+0H2m0NwaFC2Z2/WNt1A4Nh/a09D9UD1TDwoJi0r8=;
+        s=default; t=1579865624;
+        bh=8qqQxDrZw419BxuS8vtAzVOtgZqvRsC1xgPlPaca5XQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=I5TfdPVxbsB+FMNVNBclKXNMHZoVIW3oO2/zmbFOSmfKo/bv+Lxa+n7sh0JxdXVjk
-         y8BL8oMrMdTWdDpzY2OnEfQ8mKDHWhqTLNVd1jm1+rqmm1WIXjQ2iMd2FF7vccnxzT
-         FEdHQ6zAVz13oQEofjtY2laMzfTbfk5x8AcHytto=
+        b=E5T24KSfBwkodedjKd3H5y/ELh2UorLmoQiip76hedKmCnSUiBxRO4qjaxGxsxWe3
+         T9IOnZvvwTM6EZEVell3PGXRaiJkYDWdRtj9Vc5H+97xmG4yf+9ee3XK921JhvSOy2
+         zSgAVz19TBAFOWgZpV35YSLLIL7OisDeNp+6Bbz8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ying Xu <yinxu@redhat.com>,
-        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
-        Xin Long <lucien.xin@gmail.com>,
-        Neil Horman <nhorman@tuxdriver.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 595/639] sctp: add chunks to sk_backlog when the newsk sk_socket is not set
-Date:   Fri, 24 Jan 2020 10:32:45 +0100
-Message-Id: <20200124093203.915043986@linuxfoundation.org>
+Subject: [PATCH 4.19 577/639] net: broadcom/bcmsysport: Fix signedness in bcm_sysport_probe()
+Date:   Fri, 24 Jan 2020 10:32:27 +0100
+Message-Id: <20200124093201.743119776@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
 References: <20200124093047.008739095@linuxfoundation.org>
@@ -63,127 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xin Long <lucien.xin@gmail.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit 819be8108fded0b9e710bbbf81193e52f7bab2f7 ]
+[ Upstream commit 25a584955f020d6ec499c513923fb220f3112d2b ]
 
-This patch is to fix a NULL-ptr deref in selinux_socket_connect_helper:
+The "priv->phy_interface" variable is an enum and in this context GCC
+will treat it as unsigned so the error handling will never be
+triggered.
 
-  [...] kasan: GPF could be caused by NULL-ptr deref or user memory access
-  [...] RIP: 0010:selinux_socket_connect_helper+0x94/0x460
-  [...] Call Trace:
-  [...]  selinux_sctp_bind_connect+0x16a/0x1d0
-  [...]  security_sctp_bind_connect+0x58/0x90
-  [...]  sctp_process_asconf+0xa52/0xfd0 [sctp]
-  [...]  sctp_sf_do_asconf+0x785/0x980 [sctp]
-  [...]  sctp_do_sm+0x175/0x5a0 [sctp]
-  [...]  sctp_assoc_bh_rcv+0x285/0x5b0 [sctp]
-  [...]  sctp_backlog_rcv+0x482/0x910 [sctp]
-  [...]  __release_sock+0x11e/0x310
-  [...]  release_sock+0x4f/0x180
-  [...]  sctp_accept+0x3f9/0x5a0 [sctp]
-  [...]  inet_accept+0xe7/0x720
-
-It was caused by that the 'newsk' sk_socket was not set before going to
-security sctp hook when processing asconf chunk with SCTP_PARAM_ADD_IP
-or SCTP_PARAM_SET_PRIMARY:
-
-  inet_accept()->
-    sctp_accept():
-      lock_sock():
-          lock listening 'sk'
-                                          do_softirq():
-                                            sctp_rcv():  <-- [1]
-                                                asconf chunk arrives and
-                                                enqueued in 'sk' backlog
-      sctp_sock_migrate():
-          set asoc's sk to 'newsk'
-      release_sock():
-          sctp_backlog_rcv():
-            lock 'newsk'
-            sctp_process_asconf()  <-- [2]
-            unlock 'newsk'
-    sock_graft():
-        set sk_socket  <-- [3]
-
-As it shows, at [1] the asconf chunk would be put into the listening 'sk'
-backlog, as accept() was holding its sock lock. Then at [2] asconf would
-get processed with 'newsk' as asoc's sk had been set to 'newsk'. However,
-'newsk' sk_socket is not set until [3], while selinux_sctp_bind_connect()
-would deref it, then kernel crashed.
-
-Here to fix it by adding the chunk to sk_backlog until newsk sk_socket is
-set when .accept() is done.
-
-Note that sk->sk_socket can be NULL when the sock is closed, so SOCK_DEAD
-flag is also needed to check in sctp_newsk_ready().
-
-Thanks to Ondrej for reviewing the code.
-
-Fixes: d452930fd3b9 ("selinux: Add SCTP support")
-Reported-by: Ying Xu <yinxu@redhat.com>
-Suggested-by: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
-Signed-off-by: Xin Long <lucien.xin@gmail.com>
-Acked-by: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
-Acked-by: Neil Horman <nhorman@tuxdriver.com>
-Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+Fixes: 80105befdb4b ("net: systemport: add Broadcom SYSTEMPORT Ethernet MAC driver")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Acked-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/net/sctp/sctp.h |  5 +++++
- net/sctp/input.c        | 12 +++++++++---
- 2 files changed, 14 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/broadcom/bcmsysport.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/net/sctp/sctp.h b/include/net/sctp/sctp.h
-index 2abbc15824af9..2c6570e6fcfec 100644
---- a/include/net/sctp/sctp.h
-+++ b/include/net/sctp/sctp.h
-@@ -625,4 +625,9 @@ static inline __u32 sctp_min_frag_point(struct sctp_sock *sp, __u16 datasize)
- 	return sctp_mtu_payload(sp, SCTP_DEFAULT_MINSEGMENT, datasize);
- }
+diff --git a/drivers/net/ethernet/broadcom/bcmsysport.c b/drivers/net/ethernet/broadcom/bcmsysport.c
+index 0bdbc72605e1f..49aa3b5ea57cc 100644
+--- a/drivers/net/ethernet/broadcom/bcmsysport.c
++++ b/drivers/net/ethernet/broadcom/bcmsysport.c
+@@ -2470,7 +2470,7 @@ static int bcm_sysport_probe(struct platform_device *pdev)
  
-+static inline bool sctp_newsk_ready(const struct sock *sk)
-+{
-+	return sock_flag(sk, SOCK_DEAD) || sk->sk_socket;
-+}
-+
- #endif /* __net_sctp_h__ */
-diff --git a/net/sctp/input.c b/net/sctp/input.c
-index bfe29158afccb..f64d882c86985 100644
---- a/net/sctp/input.c
-+++ b/net/sctp/input.c
-@@ -255,7 +255,7 @@ int sctp_rcv(struct sk_buff *skb)
- 		bh_lock_sock(sk);
- 	}
+ 	priv->phy_interface = of_get_phy_mode(dn);
+ 	/* Default to GMII interface mode */
+-	if (priv->phy_interface < 0)
++	if ((int)priv->phy_interface < 0)
+ 		priv->phy_interface = PHY_INTERFACE_MODE_GMII;
  
--	if (sock_owned_by_user(sk)) {
-+	if (sock_owned_by_user(sk) || !sctp_newsk_ready(sk)) {
- 		if (sctp_add_backlog(sk, skb)) {
- 			bh_unlock_sock(sk);
- 			sctp_chunk_free(chunk);
-@@ -333,7 +333,7 @@ int sctp_backlog_rcv(struct sock *sk, struct sk_buff *skb)
- 		local_bh_disable();
- 		bh_lock_sock(sk);
- 
--		if (sock_owned_by_user(sk)) {
-+		if (sock_owned_by_user(sk) || !sctp_newsk_ready(sk)) {
- 			if (sk_add_backlog(sk, skb, sk->sk_rcvbuf))
- 				sctp_chunk_free(chunk);
- 			else
-@@ -348,7 +348,13 @@ int sctp_backlog_rcv(struct sock *sk, struct sk_buff *skb)
- 		if (backloged)
- 			return 0;
- 	} else {
--		sctp_inq_push(inqueue, chunk);
-+		if (!sctp_newsk_ready(sk)) {
-+			if (!sk_add_backlog(sk, skb, sk->sk_rcvbuf))
-+				return 0;
-+			sctp_chunk_free(chunk);
-+		} else {
-+			sctp_inq_push(inqueue, chunk);
-+		}
- 	}
- 
- done:
+ 	/* In the case of a fixed PHY, the DT node associated
 -- 
 2.20.1
 
