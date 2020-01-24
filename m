@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4949EC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:04:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB2ADC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:04:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 217DA2087E
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:04:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0C6B24125
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:04:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579863850;
-	bh=g8L/59oEa9RpuOU5xhbD+ey1YljTJTQwAFGs6VKpZWo=;
+	s=default; t=1579863852;
+	bh=swb8ylO3whG6oEYMtfBN6kOtQsnU8P5uHHFFwn02onw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PVbSPrxLh/ohQuRmMyQ4mqEoesRZoh2teNZhwIXBlu4KitREsPlmV14ylaiwNUKXZ
-	 IsZ/fnHz/kqYtsGJ2hqisJKo2BnjHMYrVL2k1XpYpI/I9oru3bWj1C/XlMqxeeSlQk
-	 +ThhvHC0fGbMOwJ9QNZMcAVYuBIzFmKg1ZPpAdOc=
+	b=ecYWmpyNBkSpw1ZZc9OQIeDqjmJEg55Dl7sc2p53KzswWpihpn0xOJrGLLioem+Q1
+	 RRI02FwcqOJ82KkTdcEBgYL78j8T8l5gJYWP4U8LoHcVGeLrY1MNwld8HZRl+906hf
+	 6Onl3IJTrnQcDM9FTDM/FAsvh12tiQK1fUvZaccE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388485AbgAXLEG (ORCPT
+        id S2387421AbgAXLEM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:04:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37994 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 06:04:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38148 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730688AbgAXLEB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:04:01 -0500
+        id S2388147AbgAXLEJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:04:09 -0500
 Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 547FF2087E;
-        Fri, 24 Jan 2020 11:04:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F15132075D;
+        Fri, 24 Jan 2020 11:04:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579863841;
-        bh=g8L/59oEa9RpuOU5xhbD+ey1YljTJTQwAFGs6VKpZWo=;
+        s=default; t=1579863848;
+        bh=swb8ylO3whG6oEYMtfBN6kOtQsnU8P5uHHFFwn02onw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iiJrQr303Ni/kEsfMtzCYQiLv1mjeWvFTHH9wWTsy+etBT+vauGBd+M92S1jQ0gGT
-         wfZXXkdae/xoWRsGWvPo06VKDocN/bwekgF87hgAj/EV0m1q5gOjHRMUNt8RKe3hbF
-         TKk+SZsYiVTibKbaMVGJvFX3mzUABJKzAq/6mUmE=
+        b=xmElMHZeKjkhH2Hd/Th/miTcWwD+7kV5RmYEHNgdyHQ+vE6vxKEcKnjF1DHvOI2Kb
+         X70y5jcI5GBxGMYNIpy5iIrNPthArJ+D+LUNVfCkDnEEHiHhjstG+FepZpky71iIXD
+         /Wgb3ko7PbBt5s9TQV0A1anXStT6CRzfuY30AAa0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Simon Horman <horms+renesas@verge.net.au>,
+        stable@vger.kernel.org, Yangtao Li <tiny.windzz@gmail.com>,
+        Stephen Boyd <sboyd@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 094/639] pinctrl: sh-pfc: r8a77995: Remove bogus SEL_PWM[0-3]_3 configurations
-Date:   Fri, 24 Jan 2020 10:24:24 +0100
-Message-Id: <20200124093059.098843683@linuxfoundation.org>
+Subject: [PATCH 4.19 104/639] clk: socfpga: fix refcount leak
+Date:   Fri, 24 Jan 2020 10:24:34 +0100
+Message-Id: <20200124093100.386257740@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
 References: <20200124093047.008739095@linuxfoundation.org>
@@ -61,43 +60,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+From: Yangtao Li <tiny.windzz@gmail.com>
 
-[ Upstream commit e28dc3f09c9d2555a9bd982f0847988591052226 ]
+[ Upstream commit 7f9705beeb3759e69165e7aff588f6488ff6c1ac ]
 
-While the SEL_PWM[0-3] fields in the Module Select Register 0 support 4
-possible configurations per PWM pin, only the first 3 are valid.
+The of_find_compatible_node() returns a node pointer with refcount
+incremented, but there is the lack of use of the of_node_put() when
+done. Add the missing of_node_put() to release the refcount.
 
-Replace the invalid and unused configurations for SEL_PWM[0-3]_3 by
-dummies.
-
-Fixes: 794a6711764658a1 ("pinctrl: sh-pfc: Initial R8A77995 PFC support")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
+Fixes: 5343325ff3dd ("clk: socfpga: add a clock driver for the Arria 10 platform")
+Fixes: a30d27ed739b ("clk: socfpga: fix clock driver for 3.15")
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/sh-pfc/pfc-r8a77995.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/clk/socfpga/clk-pll-a10.c | 1 +
+ drivers/clk/socfpga/clk-pll.c     | 1 +
+ 2 files changed, 2 insertions(+)
 
-diff --git a/drivers/pinctrl/sh-pfc/pfc-r8a77995.c b/drivers/pinctrl/sh-pfc/pfc-r8a77995.c
-index adade5b7ffbc2..337c80bde8f93 100644
---- a/drivers/pinctrl/sh-pfc/pfc-r8a77995.c
-+++ b/drivers/pinctrl/sh-pfc/pfc-r8a77995.c
-@@ -391,10 +391,10 @@ FM(IP12_31_28)	IP12_31_28 \
- #define MOD_SEL0_27		FM(SEL_MSIOF3_0)	FM(SEL_MSIOF3_1)
- #define MOD_SEL0_26		FM(SEL_HSCIF3_0)	FM(SEL_HSCIF3_1)
- #define MOD_SEL0_25		FM(SEL_SCIF4_0)		FM(SEL_SCIF4_1)
--#define MOD_SEL0_24_23		FM(SEL_PWM0_0)		FM(SEL_PWM0_1)		FM(SEL_PWM0_2)		FM(SEL_PWM0_3)
--#define MOD_SEL0_22_21		FM(SEL_PWM1_0)		FM(SEL_PWM1_1)		FM(SEL_PWM1_2)		FM(SEL_PWM1_3)
--#define MOD_SEL0_20_19		FM(SEL_PWM2_0)		FM(SEL_PWM2_1)		FM(SEL_PWM2_2)		FM(SEL_PWM2_3)
--#define MOD_SEL0_18_17		FM(SEL_PWM3_0)		FM(SEL_PWM3_1)		FM(SEL_PWM3_2)		FM(SEL_PWM3_3)
-+#define MOD_SEL0_24_23		FM(SEL_PWM0_0)		FM(SEL_PWM0_1)		FM(SEL_PWM0_2)		F_(0, 0)
-+#define MOD_SEL0_22_21		FM(SEL_PWM1_0)		FM(SEL_PWM1_1)		FM(SEL_PWM1_2)		F_(0, 0)
-+#define MOD_SEL0_20_19		FM(SEL_PWM2_0)		FM(SEL_PWM2_1)		FM(SEL_PWM2_2)		F_(0, 0)
-+#define MOD_SEL0_18_17		FM(SEL_PWM3_0)		FM(SEL_PWM3_1)		FM(SEL_PWM3_2)		F_(0, 0)
- #define MOD_SEL0_15		FM(SEL_IRQ_0_0)		FM(SEL_IRQ_0_1)
- #define MOD_SEL0_14		FM(SEL_IRQ_1_0)		FM(SEL_IRQ_1_1)
- #define MOD_SEL0_13		FM(SEL_IRQ_2_0)		FM(SEL_IRQ_2_1)
+diff --git a/drivers/clk/socfpga/clk-pll-a10.c b/drivers/clk/socfpga/clk-pll-a10.c
+index 35fabe1a32c30..269467e8e07e1 100644
+--- a/drivers/clk/socfpga/clk-pll-a10.c
++++ b/drivers/clk/socfpga/clk-pll-a10.c
+@@ -95,6 +95,7 @@ static struct clk * __init __socfpga_pll_init(struct device_node *node,
+ 
+ 	clkmgr_np = of_find_compatible_node(NULL, NULL, "altr,clk-mgr");
+ 	clk_mgr_a10_base_addr = of_iomap(clkmgr_np, 0);
++	of_node_put(clkmgr_np);
+ 	BUG_ON(!clk_mgr_a10_base_addr);
+ 	pll_clk->hw.reg = clk_mgr_a10_base_addr + reg;
+ 
+diff --git a/drivers/clk/socfpga/clk-pll.c b/drivers/clk/socfpga/clk-pll.c
+index c7f463172e4b9..b4b44e9b59011 100644
+--- a/drivers/clk/socfpga/clk-pll.c
++++ b/drivers/clk/socfpga/clk-pll.c
+@@ -100,6 +100,7 @@ static __init struct clk *__socfpga_pll_init(struct device_node *node,
+ 
+ 	clkmgr_np = of_find_compatible_node(NULL, NULL, "altr,clk-mgr");
+ 	clk_mgr_base_addr = of_iomap(clkmgr_np, 0);
++	of_node_put(clkmgr_np);
+ 	BUG_ON(!clk_mgr_base_addr);
+ 	pll_clk->hw.reg = clk_mgr_base_addr + reg;
+ 
 -- 
 2.20.1
 
