@@ -2,114 +2,149 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6554C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 17:05:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D00A4C32771
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 17:13:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B61102072C
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 17:05:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9785B2077C
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 17:13:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="McZaGI6v"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Ph9iIgBt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730380AbgAXRFj (ORCPT
+        id S1731076AbgAXRNN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 12:05:39 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:37164 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726454AbgAXRFj (ORCPT
+        Fri, 24 Jan 2020 12:13:13 -0500
+Received: from mail25.static.mailgun.info ([104.130.122.25]:40868 "EHLO
+        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730514AbgAXRNN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 12:05:39 -0500
-Received: by mail-pf1-f194.google.com with SMTP id p14so1415830pfn.4
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Jan 2020 09:05:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=OkgBXD4HoXPiY/eoWfExnajwU8sKoQVfDOiDrJRorLo=;
-        b=McZaGI6vyq1BWIQC6oi0i4XR1wu9ZgLauYAINexyUbPdvtYF5zHeiukPw0Vg6kpZj/
-         ZB1lFF+v2Y30ZdT3HV6KN8gYssTjoZRAHyEeFlmW8BZT0Y2x9j6HAU8a2sTQ945qFXym
-         SbVlXsD4jyKsMHc08K1Vi2b1qaxxC9njRxvSruGCLOTCYZvK32BkKYEN3Mv11i2Y1MO5
-         yOmC1V5bcTh/mHyn9W+qRzAReSaoJpZXWkEhxqaGNiBbiqMRJChcs7l+AQE0BR7xnKLd
-         J36Ol2u2ZqJth00o0Y1sOZHe3K7OsOD+2Fl5Lg9f4b0o4+okVVsUI2uxTtvkB+el7xQQ
-         555A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=OkgBXD4HoXPiY/eoWfExnajwU8sKoQVfDOiDrJRorLo=;
-        b=NfhVugyMWcLD+F6vKEChKcY/9Ua7g5mtRv2De56J5SIWfGQ5F82A18wbKX1cKNBjXp
-         X6W6V/NB+T1gBKN+a1SRKll6jAnBNvVBnbjsx9cqtE0nJgQdq4JPS2GZa8T59oJJ7UmJ
-         nSIstBmy4ymL1+z+VTYQ5JIagc1fssRSVRsqHqGKCZTN+2pCxc5CxN/6bAiBfYcpjK4l
-         f479+JFeF8nwNrRN16Yphvdck1MdQ9utXRQj5CS1z08shQJ7UXT0LsNybcWByrwYPr9m
-         awp2efKZQdDatKn33PFojpn33ZU8VFDcmCVaCUIl5oJRlhwaZJKitEwTLfkgEZibJY6d
-         5JvQ==
-X-Gm-Message-State: APjAAAW5Z+W41GfEAiA+QIpht7cPDsHsu/y5kUopZ58YpFLT1RVpMwEk
-        dGi0X7F1N5LCuF9M1oS3Bdu11lyXg8SS1l3cuUKvkw==
-X-Google-Smtp-Source: APXvYqzgkx6QXwnBzvxRHKvAZa1GjV9zApqlw7PX8mk9SON/0IorTfzK9SaNo/bIyx9KtPnlmJz/q3pUOkhUvFVoxx8=
-X-Received: by 2002:aa7:946a:: with SMTP id t10mr4146497pfq.165.1579885538456;
- Fri, 24 Jan 2020 09:05:38 -0800 (PST)
+        Fri, 24 Jan 2020 12:13:13 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1579885992; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=B2BoRn1ryER+fUQ1g+nNgthwJ2vmziLBlbBsrK0ABns=; b=Ph9iIgBtUgQSWsvLu3qWq5p2pDk2OonofbLFWEZxyiYKi8LJP2Eb2dMGWgo3Qon256gxaqif
+ +U/Y9BOVD3IUBlpvyw+E0+1QpTDCmNSAoBLEtoN75a61ozpwrPCDNdOcYVhjwLhDLVNCn6ZU
+ Bzvkl5lfym7gZaowyJ8HbVF+yv0=
+X-Mailgun-Sending-Ip: 104.130.122.25
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e2b25a7.7f93eb392d88-smtp-out-n03;
+ Fri, 24 Jan 2020 17:13:11 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 181FBC447AC; Fri, 24 Jan 2020 17:13:10 +0000 (UTC)
+Received: from [10.226.59.103] (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: rkumbako)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 33CF1C447A2;
+        Fri, 24 Jan 2020 17:13:08 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 33CF1C447A2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rkumbako@codeaurora.org
+Subject: Re: [PATCH] drivers: thermal: step_wise: add support for hysteresis
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@linaro.org>,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        bjorn.andersson@linaro.org, swboyd@chromium.org, j-keerthy@ti.com,
+        thara.gopinath@linaro.org, Zhang Rui <rui.zhang@intel.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Amit Kucheria <amit.kucheria@verdurent.com>
+Cc:     Lina Iyer <ilina@codeaurora.org>, linux-pm@vger.kernel.org
+References: <8e812065f4a76325097c5f9c17f3386736d8c1d4.1574315190.git.amit.kucheria@linaro.org>
+ <962d48d2-87fd-1236-0623-148352a98de6@linaro.org>
+ <4f75a862-4525-fe11-ed03-f53a13926c15@codeaurora.org>
+ <211a066d-f801-fb21-a14d-2b00765d2547@linaro.org>
+From:   Ram Chandrasekar <rkumbako@codeaurora.org>
+Message-ID: <79a9c316-ee21-4a8c-ce98-9bbc0ff1f537@codeaurora.org>
+Date:   Fri, 24 Jan 2020 10:13:07 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-References: <20200123153341.19947-1-will@kernel.org> <20200123153341.19947-10-will@kernel.org>
- <CAKwvOd=Bp+FWXHUKZnk+_dN=jTYZGdc_QVhErC3N-Frpk4mssQ@mail.gmail.com> <20200124082637.GZ14914@hirez.programming.kicks-ass.net>
-In-Reply-To: <20200124082637.GZ14914@hirez.programming.kicks-ass.net>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Fri, 24 Jan 2020 09:05:27 -0800
-Message-ID: <CAKwvOdmFMnCgr3rP5vNkj_H1SnBJ6drdBP1RSGxzfYzSiWGfLg@mail.gmail.com>
-Subject: Re: [PATCH v2 09/10] compiler/gcc: Raise minimum GCC version for
- kernel builds to 4.8
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Will Deacon <will@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        kernel-team <kernel-team@android.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Segher Boessenkool <segher@kernel.crashing.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Peter Oberparleiter <oberpar@linux.ibm.com>,
-        Masahiro Yamada <masahiroy@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <211a066d-f801-fb21-a14d-2b00765d2547@linaro.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 24, 2020 at 12:26 AM Peter Zijlstra <peterz@infradead.org> wrote:
->
-> On Thu, Jan 23, 2020 at 10:36:37AM -0800, Nick Desaulniers wrote:
-> > On Thu, Jan 23, 2020 at 7:34 AM Will Deacon <will@kernel.org> wrote:
-> > >
-> > > It is very rare to see versions of GCC prior to 4.8 being used to build
-> > > the mainline kernel. These old compilers are also know to have codegen
-> > > issues which can lead to silent miscompilation:
-> > >
-> > > https://gcc.gnu.org/bugzilla/show_bug.cgi?id=58145
-> > >
-> > > Raise the minimum GCC version for kernel build to 4.8 and remove some
-> > > tautological Kconfig dependencies as a consequence.
-> > >
-> > > Cc: Nick Desaulniers <ndesaulniers@google.com>
-> >
-> > Thanks for the patch.
-> > Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-> > I wouldn't mind if this patch preceded the earlier one in the series
-> > adding the warning, should the series require a v2 and if folks are
-> > generally ok with bumping the min version.
->
-> If I hadn't actually read your reply, I would have never spotted that
-> reviewed-by tag, hidden in a blob of text like that.
->
-> Adding some whitespace before and after, such that it stands out a
-> little more, might avoid such issues.
 
-Ack. Do maintainers have tools for fetching patch series and
-automating collecting Reviewed-by tags, or is it all extremely manual?
 
--- 
-Thanks,
-~Nick Desaulniers
+On 1/9/2020 3:46 PM, Daniel Lezcano wrote:
+> On 08/01/2020 01:31, Ram Chandrasekar wrote:
+>>
+>>
+>> On 12/11/2019 6:35 AM, Daniel Lezcano wrote:
+>>> On 21/11/2019 06:50, Amit Kucheria wrote:
+>>>> From: Ram Chandrasekar <rkumbako@codeaurora.org>
+>>>>
+>>>> Currently, step wise governor increases the mitigation when the
+>>>> temperature goes above a threshold and decreases the mitigation when the
+>>>> temperature goes below the threshold.
+>>>>
+>>>> If there is a case where the
+>>>> temperature is wavering around the threshold, the mitigation will be
+>>>> applied and removed every iteration, which is not very efficient.
+>>>>
+>>>> The use of hysteresis temperature could avoid this ping-pong of
+>>>> mitigation by relaxing the mitigation to happen only when the
+>>>> temperature goes below this lower hysteresis value.
+>>>
+>>> What I'm worried about is how the hysteresis is used in the current
+>>> code, where the destination of this data is to set the value in the
+>>> sensor hardware if it is supported.
+>>>
+>>> Using the hysteresis in the governor seems like abusing the initial
+>>> purpose of this information.
+>>>
+>>> Moreover, the hysteresis creates a gray area where the above algorithm
+>>> (DROPPING && !throttle) => state-- or (RAISING && throttle) => state++
+>>> may drop the performances because we will continue mitigating even below
+>>> the threshold.
+>>>
+>>> As the governor is an open-loop controller, I'm not sure if we can do
+>>> something except adding some kind of low pass filter to prevent
+>>> mitigation bounces.
+>>>
+>>
+>> We have two different use cases for the step wise algorithm, and the
+>> hysteresis makes sense only in one.
+>>
+>> For example, say we are controlling CPU junction temperature at 95C.
+>> When using step wise, mitigation is applied iteratively and there is a
+>> possibility that temperature can shoot up before the algorithm can reach
+>> an optimal mitigation level to keep the temperature near threshold.
+>>
+>> In order to help this state machine, we use a second back stop rule in
+>> the same thermal zone at a higher temperature (say 105C) with a
+>> hysteresis of 10C to mitigate CPU to a fixed value, by specifying
+>> upper/lower limit to be the same. The idea is that the second rule will
+>> place a hard hammer to bring the temperature down close to 95C and then
+>> it will remove the mitigation. Once mitigation is removed, the junction
+>> temperature rule state machine will re-adjust from that point to an
+>> optimal mitigation level. The junction temperature rule doesn’t use
+>> hysteresis.
+>>
+>> Another example is skin temperature mitigation for mobile devices, where
+>> the step wise algorithm with hysteresis just reduces the operating max
+>> frequency to a fixed value, when the threshold is reached. And the
+>> junction temperature rule starts mitigating from this operating max.
+>>
+>> That is the reason we have not generalized or mandated the hysteresis
+>> usage in this patch. The idea is to use it selectively based on use case.
+> 
+> Did you ever try the IPA governor?
+> 
+> 
+Yes. We understand IPA could bring down the power/frequency cap multiple 
+levels compared to step wise which is doing iteratively. With cooling 
+device weights this makes IPA good for skin temperature control. But 
+when we evaluated IPA, we found step wise is giving a better performance 
+compared to IPA for localized junction temperature rules. Additionally, 
+step wise for the junction temperature rule is easier to tune with fewer 
+parameters. With these additional enhancements, step wise turned out to 
+be a better choice for local junction temperature rules.
