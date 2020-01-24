@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80055C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 10:01:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4A9EC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 10:01:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5620021556
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 10:01:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B59F321556
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 10:01:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579860088;
-	bh=HFJ7BZem848oSa/jykeAVRQgQXt05YXCrmrc91jDKzU=;
+	s=default; t=1579860092;
+	bh=Ur9BbBpheYDLZUeTw8gvhibSRDGEq162UaxcoaP1g2g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eNMQ0ZG+sUK5R97kxzFLks6lNp3SJKDIZgOvsck2KdNZBdxcuGmmNFaYqNsOO0VTJ
-	 KVI1aTxFdBc0BiVxkX+OIkkvwbshGn/pqa8aXP0R9Ophg7jvSDh4+Vn17zLa+P5qUc
-	 JsJTqykyZ322uUu4rAsfAnAi47qiH41isRGN356s=
+	b=IOlWUZjbt6BGneU7kRY++K+PK1VaaDOv+h68VHx/uqm88e+rpC6UYJKQnVBrMDew2
+	 Cd2v/5WwpvcyQh7MYxDPQWNDUhYU52XVYGaWhqHTAfVzPQ1AEJBmLkCI8y1HO/EMCi
+	 7CzRj4clwYaKR20+QZSw028ePdcjIAnXLcn6ekY4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388847AbgAXKB1 (ORCPT
+        id S2388856AbgAXKBb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 05:01:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36804 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 05:01:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36888 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727215AbgAXKBZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 05:01:25 -0500
+        id S1727215AbgAXKB2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 05:01:28 -0500
 Received: from localhost (unknown [145.15.244.15])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6B5B421556;
-        Fri, 24 Jan 2020 10:01:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 58E85206D5;
+        Fri, 24 Jan 2020 10:01:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579860084;
-        bh=HFJ7BZem848oSa/jykeAVRQgQXt05YXCrmrc91jDKzU=;
+        s=default; t=1579860088;
+        bh=Ur9BbBpheYDLZUeTw8gvhibSRDGEq162UaxcoaP1g2g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=erHbC2hb/kMDqLaGQys1Wd012OjMicJKDvLSvt9fQ6/1izPoruMPHlJfR5gl0TX1y
-         1k6+Oe0qyuZLu4gn8I6D98F1XLKOiXGX6z+nrHaxKc081WcbE1AQHPemfb9spIvc0q
-         0bnyL2kjlD2/kO6MG/Q8Y0EBbiYJ1CmG6wsey8Y4=
+        b=OnoSXbpyUjdG1cM5zKUiKxA8XWMDHtHrodi7VtwQ+OKo/sAF5Yyo4jKO+zDhokNKX
+         +qOcuo4T6SD3WV+yUipEsKi7GWU8Ax1rsZEmKEtqDcCoo1gJnh3aqgfWYsvQt1kMrx
+         8B5HRnE20qFQy9PR/FIkkBi4TOJHilkCIAhKQWVY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Icenowy Zheng <icenowy@aosc.io>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
+        stable@vger.kernel.org, Julian Wiedmann <jwi@linux.ibm.com>,
+        Ursula Braun <ubraun@linux.ibm.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 255/343] clk: sunxi-ng: v3s: add the missing PLL_DDR1
-Date:   Fri, 24 Jan 2020 10:31:13 +0100
-Message-Id: <20200124092953.607636380@linuxfoundation.org>
+Subject: [PATCH 4.14 238/343] net/af_iucv: always register net_device notifier
+Date:   Fri, 24 Jan 2020 10:30:56 +0100
+Message-Id: <20200124092951.440361039@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124092919.490687572@linuxfoundation.org>
 References: <20200124092919.490687572@linuxfoundation.org>
@@ -60,112 +61,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Icenowy Zheng <icenowy@aosc.io>
+From: Julian Wiedmann <jwi@linux.ibm.com>
 
-[ Upstream commit c5ed9475c22c89d5409402055142372e35d26a3f ]
+[ Upstream commit 06996c1d4088a0d5f3e7789d7f96b4653cc947cc ]
 
-The user manual of V3/V3s/S3 declares a PLL_DDR1, however it's forgot
-when developing the V3s CCU driver.
+Even when running as VM guest (ie pr_iucv != NULL), af_iucv can still
+open HiperTransport-based connections. For robust operation these
+connections require the af_iucv_netdev_notifier, so register it
+unconditionally.
 
-Add back the missing PLL_DDR1.
+Also handle any error that register_netdevice_notifier() returns.
 
-Fixes: d0f11d14b0bc ("clk: sunxi-ng: add support for V3s CCU")
-Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
-Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+Fixes: 9fbd87d41392 ("af_iucv: handle netdev events")
+Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
+Reviewed-by: Ursula Braun <ubraun@linux.ibm.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/sunxi-ng/ccu-sun8i-v3s.c | 19 +++++++++++++++----
- drivers/clk/sunxi-ng/ccu-sun8i-v3s.h |  6 ++++--
- 2 files changed, 19 insertions(+), 6 deletions(-)
+ net/iucv/af_iucv.c | 27 ++++++++++++++++++++-------
+ 1 file changed, 20 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/clk/sunxi-ng/ccu-sun8i-v3s.c b/drivers/clk/sunxi-ng/ccu-sun8i-v3s.c
-index 9e3f4088724b4..c7f9d974b10d5 100644
---- a/drivers/clk/sunxi-ng/ccu-sun8i-v3s.c
-+++ b/drivers/clk/sunxi-ng/ccu-sun8i-v3s.c
-@@ -84,7 +84,7 @@ static SUNXI_CCU_NM_WITH_FRAC_GATE_LOCK(pll_ve_clk, "pll-ve",
- 					BIT(28),	/* lock */
- 					0);
+diff --git a/net/iucv/af_iucv.c b/net/iucv/af_iucv.c
+index ca98276c27097..7a9cbc9502d9c 100644
+--- a/net/iucv/af_iucv.c
++++ b/net/iucv/af_iucv.c
+@@ -2446,6 +2446,13 @@ out:
+ 	return err;
+ }
  
--static SUNXI_CCU_NKM_WITH_GATE_LOCK(pll_ddr_clk, "pll-ddr",
-+static SUNXI_CCU_NKM_WITH_GATE_LOCK(pll_ddr0_clk, "pll-ddr0",
- 				    "osc24M", 0x020,
- 				    8, 5,	/* N */
- 				    4, 2,	/* K */
-@@ -123,6 +123,14 @@ static SUNXI_CCU_NK_WITH_GATE_LOCK_POSTDIV(pll_periph1_clk, "pll-periph1",
- 					   2,		/* post-div */
- 					   0);
- 
-+static SUNXI_CCU_NM_WITH_GATE_LOCK(pll_ddr1_clk, "pll-ddr1",
-+				   "osc24M", 0x04c,
-+				   8, 7,	/* N */
-+				   0, 2,	/* M */
-+				   BIT(31),	/* gate */
-+				   BIT(28),	/* lock */
-+				   0);
++static void afiucv_iucv_exit(void)
++{
++	device_unregister(af_iucv_dev);
++	driver_unregister(&af_iucv_driver);
++	pr_iucv->iucv_unregister(&af_iucv_handler, 0);
++}
 +
- static const char * const cpu_parents[] = { "osc32k", "osc24M",
- 					     "pll-cpu", "pll-cpu" };
- static SUNXI_CCU_MUX(cpu_clk, "cpu", cpu_parents,
-@@ -310,7 +318,8 @@ static SUNXI_CCU_GATE(usb_phy0_clk,	"usb-phy0",	"osc24M",
- static SUNXI_CCU_GATE(usb_ohci0_clk,	"usb-ohci0",	"osc24M",
- 		      0x0cc, BIT(16), 0);
- 
--static const char * const dram_parents[] = { "pll-ddr", "pll-periph0-2x" };
-+static const char * const dram_parents[] = { "pll-ddr0", "pll-ddr1",
-+					     "pll-periph0-2x" };
- static SUNXI_CCU_M_WITH_MUX(dram_clk, "dram", dram_parents,
- 			    0x0f4, 0, 4, 20, 2, CLK_IS_CRITICAL);
- 
-@@ -369,10 +378,11 @@ static struct ccu_common *sun8i_v3s_ccu_clks[] = {
- 	&pll_audio_base_clk.common,
- 	&pll_video_clk.common,
- 	&pll_ve_clk.common,
--	&pll_ddr_clk.common,
-+	&pll_ddr0_clk.common,
- 	&pll_periph0_clk.common,
- 	&pll_isp_clk.common,
- 	&pll_periph1_clk.common,
-+	&pll_ddr1_clk.common,
- 	&cpu_clk.common,
- 	&axi_clk.common,
- 	&ahb1_clk.common,
-@@ -457,11 +467,12 @@ static struct clk_hw_onecell_data sun8i_v3s_hw_clks = {
- 		[CLK_PLL_AUDIO_8X]	= &pll_audio_8x_clk.hw,
- 		[CLK_PLL_VIDEO]		= &pll_video_clk.common.hw,
- 		[CLK_PLL_VE]		= &pll_ve_clk.common.hw,
--		[CLK_PLL_DDR]		= &pll_ddr_clk.common.hw,
-+		[CLK_PLL_DDR0]		= &pll_ddr0_clk.common.hw,
- 		[CLK_PLL_PERIPH0]	= &pll_periph0_clk.common.hw,
- 		[CLK_PLL_PERIPH0_2X]	= &pll_periph0_2x_clk.hw,
- 		[CLK_PLL_ISP]		= &pll_isp_clk.common.hw,
- 		[CLK_PLL_PERIPH1]	= &pll_periph1_clk.common.hw,
-+		[CLK_PLL_DDR1]		= &pll_ddr1_clk.common.hw,
- 		[CLK_CPU]		= &cpu_clk.common.hw,
- 		[CLK_AXI]		= &axi_clk.common.hw,
- 		[CLK_AHB1]		= &ahb1_clk.common.hw,
-diff --git a/drivers/clk/sunxi-ng/ccu-sun8i-v3s.h b/drivers/clk/sunxi-ng/ccu-sun8i-v3s.h
-index 4a4d36fdad960..a091b7217dfd5 100644
---- a/drivers/clk/sunxi-ng/ccu-sun8i-v3s.h
-+++ b/drivers/clk/sunxi-ng/ccu-sun8i-v3s.h
-@@ -29,7 +29,7 @@
- #define CLK_PLL_AUDIO_8X	5
- #define CLK_PLL_VIDEO		6
- #define CLK_PLL_VE		7
--#define CLK_PLL_DDR		8
-+#define CLK_PLL_DDR0		8
- #define CLK_PLL_PERIPH0		9
- #define CLK_PLL_PERIPH0_2X	10
- #define CLK_PLL_ISP		11
-@@ -58,6 +58,8 @@
- 
- /* And the GPU module clock is exported */
- 
--#define CLK_NUMBER		(CLK_MIPI_CSI + 1)
-+#define CLK_PLL_DDR1		74
+ static int __init afiucv_init(void)
+ {
+ 	int err;
+@@ -2479,11 +2486,18 @@ static int __init afiucv_init(void)
+ 		err = afiucv_iucv_init();
+ 		if (err)
+ 			goto out_sock;
+-	} else
+-		register_netdevice_notifier(&afiucv_netdev_notifier);
++	}
 +
-+#define CLK_NUMBER		(CLK_PLL_DDR1 + 1)
++	err = register_netdevice_notifier(&afiucv_netdev_notifier);
++	if (err)
++		goto out_notifier;
++
+ 	dev_add_pack(&iucv_packet_type);
+ 	return 0;
  
- #endif /* _CCU_SUN8I_H3_H_ */
++out_notifier:
++	if (pr_iucv)
++		afiucv_iucv_exit();
+ out_sock:
+ 	sock_unregister(PF_IUCV);
+ out_proto:
+@@ -2497,12 +2511,11 @@ out:
+ static void __exit afiucv_exit(void)
+ {
+ 	if (pr_iucv) {
+-		device_unregister(af_iucv_dev);
+-		driver_unregister(&af_iucv_driver);
+-		pr_iucv->iucv_unregister(&af_iucv_handler, 0);
++		afiucv_iucv_exit();
+ 		symbol_put(iucv_if);
+-	} else
+-		unregister_netdevice_notifier(&afiucv_netdev_notifier);
++	}
++
++	unregister_netdevice_notifier(&afiucv_netdev_notifier);
+ 	dev_remove_pack(&iucv_packet_type);
+ 	sock_unregister(PF_IUCV);
+ 	proto_unregister(&iucv_proto);
 -- 
 2.20.1
 
