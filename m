@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBCC6C32771
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:41:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A6E1C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:41:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96664214DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:41:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 398E421556
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:41:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579858904;
-	bh=o9cXkAO97d8ZXR7kjU7FXjf00XBiJlSxfYL4kf0wC4o=;
+	s=default; t=1579858908;
+	bh=sDI6lGzmww86chtQAgCBVr2HYzxBsS5wuFzI9E7yLr0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eIdfBmk45wtkurqbq3x8ucOmZ71NvdnxQBtBPSlOR0AOd3O9E5H2vKW4rGjCwxlnn
-	 W+n6ZNkIVHqbVy5O6RSUQJaEmiXv4d9/lzBlr8AgWhPBp+kbNn46o/vT2eI/sSh6En
-	 vZ4LEeatECx+nRJWviUgNmXm2NJk3c4KT5Oxuo+A=
+	b=DP2urjPx8upa+3LwoJtdTXoDuzFWSrw3M2X3y9eMlxdQE1ghdDBEYkKXAjxObIpW/
+	 v/sJFg5N6r2AHJyYGRHJ8xXHjgVCEHwl48aVh+6Izi4O2RAAO1FEamFuySIlVgB0R5
+	 zMZx2GsjH+/s5tzKB7QkI5zwt+bR3r6HY/19coK4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733066AbgAXJln (ORCPT
+        id S1733074AbgAXJlr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 04:41:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39220 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 04:41:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39296 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733013AbgAXJll (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 04:41:41 -0500
+        id S1731809AbgAXJlp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 04:41:45 -0500
 Received: from localhost (unknown [145.15.244.15])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C74FD20718;
-        Fri, 24 Jan 2020 09:41:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 49C3820718;
+        Fri, 24 Jan 2020 09:41:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579858901;
-        bh=o9cXkAO97d8ZXR7kjU7FXjf00XBiJlSxfYL4kf0wC4o=;
+        s=default; t=1579858905;
+        bh=sDI6lGzmww86chtQAgCBVr2HYzxBsS5wuFzI9E7yLr0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wZiPf3CJvu+VTYkY6SJfUhLtqDG0ajdZ0pAzMz96jyGXkBr18RhWUMYrbOi8D60aJ
-         Cv4No96Fjt9YUa158SZDOwIgN0j5pnxKHmh147OxPplIX0oCwEI7adKc70DU19fsxO
-         rOKrVOuGiS3MSR6FRkIKbdCqWuAWU06DtG6hTcVY=
+        b=R5yCG5lRNop9QGPcgkpRExKJ7WNaOaMzM8gcakZRVj0rqhFtKvY9oCmEE5fSrryP7
+         8p3mVCiwklwFuAv3WePZGtp+dApN7UcsOciBBBWaXAAWU/w+N9j7I1kJmFEmNzW1M7
+         3PfNIoNdrcVYI5f+XU8PzBygjXKN5eQ5uN5S3RSU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 078/102] rtc: bd70528: fix module alias to autoload module
-Date:   Fri, 24 Jan 2020 10:31:19 +0100
-Message-Id: <20200124092818.428041975@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Tejun Heo <tj@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 087/102] workqueue: Add RCU annotation for pwq list walk
+Date:   Fri, 24 Jan 2020 10:31:28 +0100
+Message-Id: <20200124092819.804917979@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124092806.004582306@linuxfoundation.org>
 References: <20200124092806.004582306@linuxfoundation.org>
@@ -60,31 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 
-[ Upstream commit afe19a7ae8b6b6032d04d3895ebd5bbac7fe9f30 ]
+[ Upstream commit 49e9d1a9faf2f71fdfd80a30697ee9a15070626d ]
 
-The module alias platform tag contains a spelling mistake. Fix it.
+An additional check has been recently added to ensure that a RCU related lock
+is held while the RCU list is iterated.
+The `pwqs' are sometimes iterated without a RCU lock but with the &wq->mutex
+acquired leading to a warning.
 
-Fixes: f33506abbcdd ("rtc: bd70528: Add MODULE ALIAS to autoload module")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Link: https://lore.kernel.org/r/20191106083418.159045-1-colin.king@canonical.com
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Teach list_for_each_entry_rcu() that the RCU usage is okay if &wq->mutex
+is acquired during the list traversal.
+
+Fixes: 28875945ba98d ("rcu: Add support for consolidated-RCU reader checking")
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Signed-off-by: Tejun Heo <tj@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/rtc/rtc-bd70528.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/workqueue.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/rtc/rtc-bd70528.c b/drivers/rtc/rtc-bd70528.c
-index ddfef4d43bab7..627037aa66a80 100644
---- a/drivers/rtc/rtc-bd70528.c
-+++ b/drivers/rtc/rtc-bd70528.c
-@@ -491,4 +491,4 @@ module_platform_driver(bd70528_rtc);
- MODULE_AUTHOR("Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>");
- MODULE_DESCRIPTION("BD70528 RTC driver");
- MODULE_LICENSE("GPL");
--MODULE_ALIAS("platofrm:bd70528-rtc");
-+MODULE_ALIAS("platform:bd70528-rtc");
+diff --git a/kernel/workqueue.c b/kernel/workqueue.c
+index 649687622654b..e9c63b79e03f4 100644
+--- a/kernel/workqueue.c
++++ b/kernel/workqueue.c
+@@ -425,7 +425,8 @@ static void workqueue_sysfs_unregister(struct workqueue_struct *wq);
+  * ignored.
+  */
+ #define for_each_pwq(pwq, wq)						\
+-	list_for_each_entry_rcu((pwq), &(wq)->pwqs, pwqs_node)		\
++	list_for_each_entry_rcu((pwq), &(wq)->pwqs, pwqs_node,		\
++				lockdep_is_held(&wq->mutex))		\
+ 		if (({ assert_rcu_or_wq_mutex(wq); false; })) { }	\
+ 		else
+ 
 -- 
 2.20.1
 
