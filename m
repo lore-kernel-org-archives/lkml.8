@@ -2,95 +2,155 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76855C3F68F
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:26:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9AD3C35243
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:26:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3FC3420838
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:26:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579865168;
-	bh=t0TkbMdPNGRv3x1UHEVHXyq9U3K/2LwmLJ1MDKfPh4U=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eUhUNFyhI+ojavM5l+UV4YA8GyqZdW9TK91Z28BFzg87hIT7cPhf1p2d5eY+FE0vf
-	 er8G5axdHQKF4SZ2eh3Uqd5gpFOeLmGyISqCqvpprjAZAnItstFP8pujoRYGad5Uhb
-	 LZTbZxiPbrv/0pAcRYv/cMe0c352RcdCaP9m6pjw=
+	by mail.kernel.org (Postfix) with ESMTP id A192220704
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:26:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NYKCSRmc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403763AbgAXL0H (ORCPT
+        id S2403912AbgAXL0K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Fri, 24 Jan 2020 06:26:10 -0500
+Received: from mail-vs1-f67.google.com ([209.85.217.67]:35366 "EHLO
+        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2403902AbgAXL0H (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 24 Jan 2020 06:26:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40360 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391531AbgAXL0C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:26:02 -0500
-Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DC6342075D;
-        Fri, 24 Jan 2020 11:26:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579865161;
-        bh=t0TkbMdPNGRv3x1UHEVHXyq9U3K/2LwmLJ1MDKfPh4U=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dxP9ANK6xvFekxFJx8yqsNYSaqAqKykX67VOP+tRVdZhV0fX1/swLYsRH3yuMXN6K
-         lJztt1VjApAsO9nUnyn2oVoyr6qCcDXr4ZkU0q8CwVUrdbJ0Nvfv7O9wrFHevijhhw
-         RCn161/54PdUufeiWJLnCZg0ScVUHsEd6GQizpYE=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 444/639] arm64: dts: allwinner: h6: Pine H64: Add interrupt line for RTC
-Date:   Fri, 24 Jan 2020 10:30:14 +0100
-Message-Id: <20200124093142.658446909@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
-References: <20200124093047.008739095@linuxfoundation.org>
-User-Agent: quilt/0.66
+Received: by mail-vs1-f67.google.com with SMTP id x123so996242vsc.2
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jan 2020 03:26:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=qOVhDHhFnWlF9FUDYt4fHzJxv54r3t+l/PCp99DTE8g=;
+        b=NYKCSRmcwL0rUYuSrq1VwqQIZNkH8SN4ZZ5A3TVgdm0R/hzjxs4JbX4+0Xo1fPtoEK
+         Boro/o30ULd+1byBxjrU4znPuo8TBltkqrjDBAyQPY5P64Cm6yEqQsW9rdt/FiIivoge
+         xNiLEFsa+a+xuUZKanzlEL9L4mq7FBszDsnVxA0NHy/bbQ1ledvMcfTbS7Cx1Ie8xYhd
+         xywqDQPVluykgE5NIUtBJ4PZuMAVVt8C3VEt1J/fpG3rHwplTsZigeaYJAjhnnJWXv/w
+         o5chQJC0l067hVa3y5r6STGGstb17hwZbqJqG4+NMJjxHrMzOWP03vf6irmD5Wh9H6PO
+         u5lw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=qOVhDHhFnWlF9FUDYt4fHzJxv54r3t+l/PCp99DTE8g=;
+        b=cUp71k5iZU+twUZA57gUOgtFo3jOhkVCVQayvdBu+qhzZHRusGWpfrhQpuBLKeBUs7
+         G52TbFEa/jeiTMNXTPiXXkHTRLfhibVzmIuU1ZAx0qoKGCuSEbQqO1TW1vNt6Sd55oVt
+         HipNxNYmk087jMDLrRRiNo5xObRwLAUJCmCZRbGolw9VlXgi0BEzFahiUJvhez4Zslyu
+         mqUFq1W6EUj1xW2sgsCWI0FeXiEkAUEr0ow9ct1ItH1QMpslzWVupSDj1UZyuXAGtfP4
+         xk6Kh0MEkk+BLVGEhCex+aM5+vBMvkEm07YPH7RyHLBniSJjj1O428muUTm5FtwJYLDi
+         UUpQ==
+X-Gm-Message-State: APjAAAWjlMswQOJIdwZB/XKm+fcGNpK5XCtjo0D3E8LiXsROBgvlVBR+
+        M5N/ekg71G323tfOH/RezLJcBN/nP63QSC+r/fnTQQ==
+X-Google-Smtp-Source: APXvYqy+M1uWEEV6pkXqgm2LjH+aSiRVIOkGsD38hn1CYw56gxSpzMyk8WBJG4wPxzVUnYw/JZBSj3WLKNpHRR+pQOk=
+X-Received: by 2002:a67:79cd:: with SMTP id u196mr1862322vsc.191.1579865166014;
+ Fri, 24 Jan 2020 03:26:06 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <1579519045-26467-1-git-send-email-vbadigan@codeaurora.org> <1579531122-28341-1-git-send-email-vbadigan@codeaurora.org>
+In-Reply-To: <1579531122-28341-1-git-send-email-vbadigan@codeaurora.org>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Fri, 24 Jan 2020 12:25:30 +0100
+Message-ID: <CAPDyKFpiMU5PdUOP-VZEXT_Rsot9LfHmWp4ZTBC5oboWXiWsDA@mail.gmail.com>
+Subject: Re: [PATCH V3] mmc: sdhci: Let a vendor driver supply and update ADMA
+ descriptor size
+To:     Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+Cc:     Adrian Hunter <adrian.hunter@intel.com>,
+        Asutosh Das <asutoshd@codeaurora.org>,
+        Sahitya Tummala <stummala@codeaurora.org>,
+        Sayali Lokhande <sayalil@codeaurora.org>, cang@codeaurora.org,
+        Ram Prakash Gupta <rampraka@codeaurora.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chen-Yu Tsai <wens@csie.org>
+On Mon, 20 Jan 2020 at 15:39, Veerabhadrarao Badiganti
+<vbadigan@codeaurora.org> wrote:
+>
+> Let a vendor driver supply the maximum descriptor size that it
+> can operate on. ADMA descriptor table would be allocated using this
+> supplied size.
+> If any SD Host controller is of version prior to v4.10 spec
+> but supports 16byte descriptor, this change allows them to supply
+> correct descriptor size for ADMA table allocation.
+>
+> Also let a vendor driver update the descriptor size by overriding
+> sdhc_host->desc_size if it has to operates on a different descriptor
+> sizes in different conditions.
+>
+> Suggested-by: Adrian Hunter <adrian.hunter@intel.com>
+> Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+> Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+> --
+> Thanks Adrian.
+>
+> Hi Ulf,
+> Can you pick this patch instead of earlier one? This is more clean
+> change, sorry for the multiple interations.
+> Otherwise let me know, I will make these changes as seperate patch.
 
-[ Upstream commit 0bb9d1876c0605815ea0452f68cb819a775a75f9 ]
+Alright, I have replaced the previous version with this one.
 
-The external PCF8563 RTC chip's interrupt line is connected to the NMI
-line on the SoC.
-
-Add the interrupt line to the device tree.
-
-Fixes: 17ebc33afc35 ("arm64: allwinner: h6: add PCF8563 RTC on Pine H64 board")
-Acked-by: Maxime Ripard <maxime.ripard@bootlin.com>
-Signed-off-by: Chen-Yu Tsai <wens@csie.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts
-index 48daec7f78ba7..6c3a47d90c793 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts
-@@ -176,6 +176,8 @@
- 	pcf8563: rtc@51 {
- 		compatible = "nxp,pcf8563";
- 		reg = <0x51>;
-+		interrupt-parent = <&r_intc>;
-+		interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
- 		#clock-cells = <0>;
- 	};
- };
--- 
-2.20.1
+Kind regards
+Uffe
 
 
-
+> ---
+>  drivers/mmc/host/sdhci.c | 16 +++++++---------
+>  drivers/mmc/host/sdhci.h |  3 ++-
+>  2 files changed, 9 insertions(+), 10 deletions(-)
+>
+> diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
+> index 3140fe2..7a7a18e 100644
+> --- a/drivers/mmc/host/sdhci.c
+> +++ b/drivers/mmc/host/sdhci.c
+> @@ -3821,15 +3821,13 @@ int sdhci_setup_host(struct sdhci_host *host)
+>                 dma_addr_t dma;
+>                 void *buf;
+>
+> -               if (host->flags & SDHCI_USE_64_BIT_DMA) {
+> -                       host->adma_table_sz = host->adma_table_cnt *
+> -                                             SDHCI_ADMA2_64_DESC_SZ(host);
+> -                       host->desc_sz = SDHCI_ADMA2_64_DESC_SZ(host);
+> -               } else {
+> -                       host->adma_table_sz = host->adma_table_cnt *
+> -                                             SDHCI_ADMA2_32_DESC_SZ;
+> -                       host->desc_sz = SDHCI_ADMA2_32_DESC_SZ;
+> -               }
+> +               if (!(host->flags & SDHCI_USE_64_BIT_DMA))
+> +                       host->alloc_desc_sz = SDHCI_ADMA2_32_DESC_SZ;
+> +               else if (!host->alloc_desc_sz)
+> +                       host->alloc_desc_sz = SDHCI_ADMA2_64_DESC_SZ(host);
+> +
+> +               host->desc_sz = host->alloc_desc_sz;
+> +               host->adma_table_sz = host->adma_table_cnt * host->desc_sz;
+>
+>                 host->align_buffer_sz = SDHCI_MAX_SEGS * SDHCI_ADMA2_ALIGN;
+>                 /*
+> diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h
+> index 0ed3e0e..10bda3a 100644
+> --- a/drivers/mmc/host/sdhci.h
+> +++ b/drivers/mmc/host/sdhci.h
+> @@ -554,7 +554,8 @@ struct sdhci_host {
+>         dma_addr_t adma_addr;   /* Mapped ADMA descr. table */
+>         dma_addr_t align_addr;  /* Mapped bounce buffer */
+>
+> -       unsigned int desc_sz;   /* ADMA descriptor size */
+> +       unsigned int desc_sz;   /* ADMA current descriptor size */
+> +       unsigned int alloc_desc_sz;     /* ADMA descr. max size host supports */
+>
+>         struct workqueue_struct *complete_wq;   /* Request completion wq */
+>         struct work_struct      complete_work;  /* Request completion work */
+> --
+> Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc., is a member of Code Aurora Forum, a Linux Foundation Collaborative Project
