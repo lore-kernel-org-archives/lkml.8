@@ -2,41 +2,41 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9067C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 15:45:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 097E4C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 15:46:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C56DE2071E
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 15:45:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCC752071E
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 15:46:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389063AbgAXPp7 convert rfc822-to-8bit (ORCPT
+        id S2389136AbgAXPqF convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 10:45:59 -0500
-Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:35555 "EHLO
+        Fri, 24 Jan 2020 10:46:05 -0500
+Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:36811 "EHLO
         eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2388035AbgAXPp6 (ORCPT
+        by vger.kernel.org with ESMTP id S2389093AbgAXPqE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 10:45:58 -0500
+        Fri, 24 Jan 2020 10:46:04 -0500
 Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
  TLS) by relay.mimecast.com with ESMTP id
- uk-mta-238-yQyDz7T5ML2swfnlsqBw5A-1; Fri, 24 Jan 2020 15:45:55 +0000
+ uk-mta-112-9-3BgZ-WNk6HIrS3qU3ecA-1; Fri, 24 Jan 2020 15:46:01 +0000
 Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
  AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Fri, 24 Jan 2020 15:45:55 +0000
+ Server (TLS) id 15.0.1347.2; Fri, 24 Jan 2020 15:46:00 +0000
 Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
  AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Fri, 24 Jan 2020 15:45:55 +0000
+ Fri, 24 Jan 2020 15:46:00 +0000
 From:   David Laight <David.Laight@ACULAB.COM>
 To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         netdev <netdev@vger.kernel.org>
-Subject: [PATCH 0/3] Optimisation to the 'iovec' copying code.
-Thread-Topic: [PATCH 0/3] Optimisation to the 'iovec' copying code.
-Thread-Index: AdXSzLdCIXddClTYRDaPG9z9um5Vvg==
-Date:   Fri, 24 Jan 2020 15:45:55 +0000
-Message-ID: <d7ebb566c0ea4936aac5af2cea89efe2@AcuMS.aculab.com>
+Subject: [PATCH 2/3] Use _copy_from_user() to read SG iovec array.
+Thread-Topic: [PATCH 2/3] Use _copy_from_user() to read SG iovec array.
+Thread-Index: AdXSzKSRXs42kspQS5CbFYOlJPFGSg==
+Date:   Fri, 24 Jan 2020 15:46:00 +0000
+Message-ID: <04fbf8632f83496d819f27bb353dbf39@AcuMS.aculab.com>
 Accept-Language: en-GB, en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
@@ -44,7 +44,7 @@ X-MS-TNEF-Correlator:
 x-ms-exchange-transport-fromentityheader: Hosted
 x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-X-MC-Unique: yQyDz7T5ML2swfnlsqBw5A-1
+X-MC-Unique: 9-3BgZ-WNk6HIrS3qU3ecA-1
 X-Mimecast-Spam-Score: 0
 X-Mimecast-Originator: aculab.com
 Content-Type: text/plain; charset=UTF-8
@@ -54,50 +54,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-While looking at the difference between the costs of recvfrom()
-and recvmsg() (which is more than one might hope) I noticed that
-the code that handles user-space SG requests can be optimised.
+The code has either just validated that the size fits in a caller supplied
+fixed size buffer or has used kmalloc() to allocate a buffer.
+So avoid the non-trivial cost of the HARDENED_USERCOPY checks by
+calling _copy_from_user() instead of copy_from_user().
 
-Patch 0001 changes the definition of the on-stack cache for short
-iovec[] from a variable sized array to a structure containing a
-fixed size array.
-This has a couple of advantages:
-- It is no longer necessary to pass the array size through.
-- The compiler (effectively) validates that the supplied buffer
-  is of the specified size.
-(Some of the existing code doesn't pass the size through all the
-layers of function call.)
+Signed-off-by: David Laight <david.laight@aculab.com>
+---
+ fs/read_write.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-This lets patch 0002 xhange the code safey use _copy_from_user()
-to read in the iovec[] array as the code has just verified it fits
-in the (now fixed size) on-stack buffer or in the just-kmalloc()ed one.
-
-Patch 0003 replaces the kfree(iov) in the callers of import_iovec()
-with 'if (unlikely(iov)) kfree(iov)' since it is very unusual
-for the iov to have actually been allocated and these are common paths.
-It is independent of the other patches and could be split in three.
-
-Additional improvements are possible:
-- Change the success return value of import_iovec() to be the address
-  of the iov[] to kfree() (not the total length).
-  The total length can be got from iter->count, most callers ignore it.
-- Inline rw_copy_check_uvector() into import_iovec.
-  The only other user is in mm/process_vm_access.c (copying to/from
-  another process) and the extra iov_iter_init() for the 'other'
-  process buffer would do no harm.
-- Replace a lot of the copy_to/from_user() in net/socket.c with the '_'
-  variants to avoid the overheads of HARDENED_USERCOPY.
-  Most of the copies are validated by the code, but are variable sized
-  so HARDENED_USERCOPY does extra checks.
-  These are definitely measurable.
-
-The problem with patch 0001 (and any other changes to the interface to
-import_iovec()) is I'm not sure who would take them?
-I can 'cook up' a patch to change the return value of import_iovec()
-to remove the 'pass pointer by reference' on top of path 0001
-- if someone will take it.
-
-	David
+diff --git a/fs/read_write.c b/fs/read_write.c
+index 441d9ca..0241d68 100644
+--- a/fs/read_write.c
++++ b/fs/read_write.c
+@@ -795,7 +795,7 @@ ssize_t rw_copy_check_uvector(int type, const struct iovec __user * uvector,
+ 			goto out;
+ 		}
+ 	}
+-	if (copy_from_user(iov, uvector, nr_segs*sizeof(*uvector))) {
++	if (_copy_from_user(iov, uvector, nr_segs*sizeof(*uvector))) {
+ 		ret = -EFAULT;
+ 		goto out;
+ 	}
+-- 
+1.8.1.2
 
 -
 Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
