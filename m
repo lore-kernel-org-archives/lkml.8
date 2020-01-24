@@ -4,49 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBEC2C32771
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:18:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 542DEC35242
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:18:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 996B02077C
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:18:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2196D20838
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:18:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579875517;
-	bh=ZKDcLH6v9XtUKRk4ZP7IrAf1NjELi1VNKfJKnhwS1Z8=;
+	s=default; t=1579875523;
+	bh=Rw6tVfC2c6QLdOPEUQ6KBAa5nQZ0ZZvMUWY3ziIiaFo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=axJKGYt4uOEe+GoqLPBf+B8MYwst0FY8VTvqWd0ndeXySguuGDP6NgKSwuCOJN1nx
-	 J6V78Z2uJsMJvtUiei1HjrqOpGnh/thjDZOedWOfpfLKoahfpvCkdaJB3kg2nRPia8
-	 9RnDnlQo3YrPHYpQhL8GrEkGnFT8lz7M85G3osQo=
+	b=roqh8OeiWzSoCPzWZXtlclaIqBbmkMP6ZZ593Z4QjGqZ31svftqx/YNK3nHDjkLGq
+	 W1FlgUX0NQeANFDuMMeZRvnDk8whGvcPaNKowXDVaf+fDgyk/XjlHHFmYNoZQ1pI5E
+	 TCA5bkzDnMJ5sahb9HaH4ADVEUzKUIMJPDkjon+g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390906AbgAXOSg (ORCPT
+        id S2390024AbgAXOSl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 09:18:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38064 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 09:18:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38178 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390844AbgAXOSf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 09:18:35 -0500
+        id S2390918AbgAXOSi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 09:18:38 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4D66021556;
-        Fri, 24 Jan 2020 14:18:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8CB32214DB;
+        Fri, 24 Jan 2020 14:18:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579875515;
-        bh=ZKDcLH6v9XtUKRk4ZP7IrAf1NjELi1VNKfJKnhwS1Z8=;
+        s=default; t=1579875517;
+        bh=Rw6tVfC2c6QLdOPEUQ6KBAa5nQZ0ZZvMUWY3ziIiaFo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OWnCHP0340044PUSHLAASJ9kFPR9ux7fLdbS7iQEmkdAKX4WDwT6ItFPLs62hsTdi
-         QnVhItZD22xPUYQeo9pypIt6haHPXW+4f6RnpHGP2gIMngio1Jd7F5Z7bXXrR5O64W
-         +qTU/d7HehhofDeT36qpmNXmxv+aevfx1YxM64gY=
+        b=VFEsRlAE8ivstaHVipUa0VT3IObPqddh7o4ixE/SDV0wALvKWKbUIw8tDOFoNczl1
+         cULqk5iPZ3HbnOTtXynxo0lxVivIV51FhdsvtYqDU8nLpPYWLehs0sdRwWi8unAkh0
+         o4tMVGn+SEXW58knwmGDN86jJqpxh+sXAabEUOy8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Adam Ford <aford173@gmail.com>, Shawn Guo <shawnguo@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.4 015/107] arm64: dts: imx8mm: Change SDMA1 ahb clock for imx8mm
-Date:   Fri, 24 Jan 2020 09:16:45 -0500
-Message-Id: <20200124141817.28793-15-sashal@kernel.org>
+Cc:     Marek Vasut <marex@denx.de>, Fabio Estevam <festevam@gmail.com>,
+        Ludwig Zenz <lzenz@dh-electronics.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 017/107] ARM: dts: imx6q-dhcom: Fix SGTL5000 VDDIO regulator connection
+Date:   Fri, 24 Jan 2020 09:16:47 -0500
+Message-Id: <20200124141817.28793-17-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200124141817.28793-1-sashal@kernel.org>
 References: <20200124141817.28793-1-sashal@kernel.org>
@@ -59,35 +62,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Adam Ford <aford173@gmail.com>
+From: Marek Vasut <marex@denx.de>
 
-[ Upstream commit 24a572bf67994223e722cadfe663e15ba221882a ]
+[ Upstream commit fe6a6689d1815b63528796886853890d8ee7f021 ]
 
-Using SDMA1 with UART1 is causing a "Timeout waiting for CH0" error.
-This patch changes to ahb clock from SDMA1_ROOT to AHB which
-fixes the timeout error.
+The SGTL5000 VDDIO is connected to the PMIC SW2 output, not to
+a fixed 3V3 rail. Describe this correctly in the DT.
 
-Fixes:  a05ea40eb384 ("arm64: dts: imx: Add i.mx8mm dtsi support")
-Signed-off-by: Adam Ford <aford173@gmail.com>
+Fixes: 52c7a088badd ("ARM: dts: imx6q: Add support for the DHCOM iMX6 SoM and PDK2")
+Signed-off-by: Marek Vasut <marex@denx.de>
+Cc: Fabio Estevam <festevam@gmail.com>
+Cc: Ludwig Zenz <lzenz@dh-electronics.com>
+Cc: NXP Linux Team <linux-imx@nxp.com>
+To: linux-arm-kernel@lists.infradead.org
 Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/freescale/imx8mm.dtsi | 2 +-
+ arch/arm/boot/dts/imx6q-dhcom-pdk2.dts | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mm.dtsi b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-index 23c8fad7932b1..b4ca3b7ef10d5 100644
---- a/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-@@ -741,7 +741,7 @@
- 				reg = <0x30bd0000 0x10000>;
- 				interrupts = <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>;
- 				clocks = <&clk IMX8MM_CLK_SDMA1_ROOT>,
--					 <&clk IMX8MM_CLK_SDMA1_ROOT>;
-+					 <&clk IMX8MM_CLK_AHB>;
- 				clock-names = "ipg", "ahb";
- 				#dma-cells = <3>;
- 				fsl,sdma-ram-script-name = "imx/sdma/sdma-imx7d.bin";
+diff --git a/arch/arm/boot/dts/imx6q-dhcom-pdk2.dts b/arch/arm/boot/dts/imx6q-dhcom-pdk2.dts
+index 9c61e3be2d9a3..1c46df6827f50 100644
+--- a/arch/arm/boot/dts/imx6q-dhcom-pdk2.dts
++++ b/arch/arm/boot/dts/imx6q-dhcom-pdk2.dts
+@@ -55,7 +55,7 @@
+ 		#sound-dai-cells = <0>;
+ 		clocks = <&clk_ext_audio_codec>;
+ 		VDDA-supply = <&reg_3p3v>;
+-		VDDIO-supply = <&reg_3p3v>;
++		VDDIO-supply = <&sw2_reg>;
+ 	};
+ };
+ 
 -- 
 2.20.1
 
