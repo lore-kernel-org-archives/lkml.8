@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25EECC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:16:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F1ECC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:16:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4C632075D
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:16:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A04120704
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:16:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579864610;
-	bh=dExcBcGAWKP7IlXaZlS37lYKI9YwuOlr4ID0inXC1ig=;
+	s=default; t=1579864615;
+	bh=iWOvmtPuQpPbp+4US4yRbuGCEWa4v0sdlhxeSTCZgLI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IMuCHiKle3l7HvSAtnWcjb4WcelVKjCWjQh34dee60rxT4iLogeeDF/PWxGacpkTy
-	 w6w0fjGT4UFkdgHLMuJjoiRLufrs5SIfcuvCIq0ZOQ5Mbk5hVyT7GpPotFH/nkCvNH
-	 AtHv5J89YpdDlWYzqNATNVhygvhfba4dqgTrGQnM=
+	b=JmrbLY9wSfdhN3+3z8j5O/Nvvh8ANNu2NMH8RiqoxOBUCHHK+QcZwgIHsp5m6RtEh
+	 x5z6yqK6wjtU85d8KgURdJEV7KPkAxbYcYtRwH1T8iUH0/6U3jQHNFecEpoVb/P0Dn
+	 buN41fWYL1FP135lqPpneVRRmhj2tQXRB9azP+D8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390427AbgAXLQt (ORCPT
+        id S2390264AbgAXLQy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:16:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53594 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 06:16:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53654 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390419AbgAXLQr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:16:47 -0500
+        id S2390419AbgAXLQu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:16:50 -0500
 Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F25B520704;
-        Fri, 24 Jan 2020 11:16:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 317A920704;
+        Fri, 24 Jan 2020 11:16:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579864606;
-        bh=dExcBcGAWKP7IlXaZlS37lYKI9YwuOlr4ID0inXC1ig=;
+        s=default; t=1579864609;
+        bh=iWOvmtPuQpPbp+4US4yRbuGCEWa4v0sdlhxeSTCZgLI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=l+VVXKNSQ7TfOHLHuSDxYCtS8Sbd1o/84ij1QaeHhTHIx+mbs7T/LcAx90y5Lo0pU
-         oUFG9JaEwxj4WxGjiuzMmOcYzjHZgJ06kqm6heW4X7as69nWBroWBcjnHl9WbMxmlo
-         tmsgmyVtFXdqDapHTfL/WeZFmJo/HuxPdJe/Io3k=
+        b=ypx0V8Y9N9HB5e6mY6tVa2LURYDAHLG57pbwWRSV3O3BiI2D/63sBrQ/gfHoKE/ez
+         yuTUfk3oTEJevP78mYRggsh3ArPNPD57fFa5OyF6RH9fqkzVqmCR+hpFV+jWsgBICy
+         +2VBMO5fCfefDYVnj2VOTNLz2/Lx3icpp4TMiVQs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Marc Gonzalez <marc.w.gonzalez@free.fr>,
-        Jeffrey Hugo <jhugo@codeaurora.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 300/639] clk: qcom: Skip halt checks on gcc_pcie_0_pipe_clk for 8998
-Date:   Fri, 24 Jan 2020 10:27:50 +0100
-Message-Id: <20200124093124.507613997@linuxfoundation.org>
+        stable@vger.kernel.org, Zhang Rui <rui.zhang@intel.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Zhao Lijian <lijian.zhao@intel.com>
+Subject: [PATCH 4.19 301/639] ACPI: button: reinitialize button state upon resume
+Date:   Fri, 24 Jan 2020 10:27:51 +0100
+Message-Id: <20200124093124.646463561@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
 References: <20200124093047.008739095@linuxfoundation.org>
@@ -61,40 +61,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marc Gonzalez <marc.w.gonzalez@free.fr>
+From: Zhang Rui <rui.zhang@intel.com>
 
-[ Upstream commit c0ee0e43c049a13d11e913edf875e4ee376dc84b ]
+[ Upstream commit 13e962140be671f31a011543f11477af67a6c33e ]
 
-See similar issue solved by commit 5f2420ed2189
-("clk: qcom: Skip halt checks on gcc_usb3_phy_pipe_clk for 8998")
+With commit dfa46c50f65b ("ACPI / button: Fix an issue in
+button.lid_init_state=ignore mode"), the lid device is considered to be
+not compliant to SW_LID if the Lid state is unchanged when updating it.
 
-Without this patch, PCIe PHY init fails:
+This is not wrong, but we overlooked the resume case, where Lid state is
+updated unconditionally in the button driver .resume() callback. And this
+results in warning message "ACPI: button: The lid device is not compliant
+to  SW_LID." after resume, if the machine is suspended with Lid opened and
+then resumed with Lid opened.
 
-qcom-qmp-phy 1c06000.phy: pipe_clk enable failed err=-16
-phy phy-1c06000.phy.0: phy init failed --> -16
+Fix this by flushing the cached lid state before updating the Lid device
+in .resume() callback.
 
-Signed-off-by: Marc Gonzalez <marc.w.gonzalez@free.fr>
-Reviewed-by: Jeffrey Hugo <jhugo@codeaurora.org>
-Fixes: b5f5f525c547 ("clk: qcom: Add MSM8998 Global Clock Control (GCC) driver")
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+Fixes: dfa46c50f65b ("ACPI / button: Fix an issue in button.lid_init_state=ignore mode")
+Reported-and-tested-by: Zhao Lijian <lijian.zhao@intel.com>
+Signed-off-by: Zhang Rui <rui.zhang@intel.com>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/qcom/gcc-msm8998.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/acpi/button.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/clk/qcom/gcc-msm8998.c b/drivers/clk/qcom/gcc-msm8998.c
-index 4e23973b6cd16..772a08101ddf2 100644
---- a/drivers/clk/qcom/gcc-msm8998.c
-+++ b/drivers/clk/qcom/gcc-msm8998.c
-@@ -2144,7 +2144,7 @@ static struct clk_branch gcc_pcie_0_mstr_axi_clk = {
+diff --git a/drivers/acpi/button.c b/drivers/acpi/button.c
+index 870eb5c7516a5..a25d77b3a16ad 100644
+--- a/drivers/acpi/button.c
++++ b/drivers/acpi/button.c
+@@ -467,8 +467,11 @@ static int acpi_button_resume(struct device *dev)
+ 	struct acpi_button *button = acpi_driver_data(device);
  
- static struct clk_branch gcc_pcie_0_pipe_clk = {
- 	.halt_reg = 0x6b018,
--	.halt_check = BRANCH_HALT,
-+	.halt_check = BRANCH_HALT_SKIP,
- 	.clkr = {
- 		.enable_reg = 0x6b018,
- 		.enable_mask = BIT(0),
+ 	button->suspended = false;
+-	if (button->type == ACPI_BUTTON_TYPE_LID && button->input->users)
++	if (button->type == ACPI_BUTTON_TYPE_LID && button->input->users) {
++		button->last_state = !!acpi_lid_evaluate_state(device);
++		button->last_time = ktime_get();
+ 		acpi_lid_initialize_state(device);
++	}
+ 	return 0;
+ }
+ #endif
 -- 
 2.20.1
 
