@@ -2,51 +2,54 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9EB5C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:21:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98943C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:21:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACA1F2075D
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:21:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65A1F20718
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:21:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579864891;
-	bh=sD/unQ5VtH3soFU+qFEFtW8QFjKO1BxoT8p4rKlWsmY=;
+	s=default; t=1579864896;
+	bh=vN0wL8WV2GOF2Tg3EeK58hD+HEX98saTY8nXW7ZJ8NU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=S4wRss/pyaKYd6IOMawr/gRofyIGjpoQNQw2aKQQeouVO1PDxRY33EtiNF/gbtEe0
-	 j9lJ5jniDvnI59FrU0IjVIsnLBwUQr+FUGQ4ZNwUpOTx/WGFV4XHj2Lm3a/n2fJu6M
-	 C97Wf1hwLqsY80gfVelnsXpRMFAXnwCFqK81YmSI=
+	b=zb0p3Brx6GKO/WKKPxlfgNOqEzKzjg4C0AMQXib6AETh9GN+8FMQFb7CxKRcx+weW
+	 57Tq7UhvqoxfNAbaYXPq3R3vHoFi2zwChCtJH97F0kjcmQywEltstEieAlAPnVI1le
+	 QcmrXIdT2kka5ge0+pI8sinDAUTGelgeoO107rVo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391080AbgAXLVa (ORCPT
+        id S2391089AbgAXLVf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:21:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59766 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 06:21:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59890 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390482AbgAXLV3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:21:29 -0500
+        id S2390482AbgAXLVc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:21:32 -0500
 Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B7C99206D5;
-        Fri, 24 Jan 2020 11:21:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6B6C7206D4;
+        Fri, 24 Jan 2020 11:21:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579864888;
-        bh=sD/unQ5VtH3soFU+qFEFtW8QFjKO1BxoT8p4rKlWsmY=;
+        s=default; t=1579864892;
+        bh=vN0wL8WV2GOF2Tg3EeK58hD+HEX98saTY8nXW7ZJ8NU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ljNn1z6s57HAtZoODaXMk3OfAxh1lXHv7oCTu7RIDdDUH2ZdrXUZHnGtKieNsH5vN
-         yCQxzfdjoSuWQtESmVDbVuYIWZr70raJAucvZ+9XueitqtRUsOGQIUBa3rl5VGa2lT
-         f/HsFhfYpqDhIqwjvY5MMaQDYGc0F1xBEBaZITKg=
+        b=mg+irMeIddNKKQzMOf6MztWm+YehfV6f3Q1r4eZP/HS2Wr6NQN1xSLgY4EtnPY+ZS
+         xGn++weMZiv4uaiYPKtjMAUxiFjhrxiqpObRb5vDbEf16TxZLxnqWaDBN7UdafDrjc
+         eDWlVfZN3EwiqQO/HepXU3feQ1j7uHk/SaPOdQyc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Erwan Le Ray <erwan.leray@st.com>,
+        stable@vger.kernel.org, Stephen Hines <srhines@google.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 393/639] serial: stm32: fix wakeup source initialization
-Date:   Fri, 24 Jan 2020 10:29:23 +0100
-Message-Id: <20200124093136.166513982@linuxfoundation.org>
+Subject: [PATCH 4.19 394/639] misc: sgi-xp: Properly initialize buf in xpc_get_rsvd_page_pa
+Date:   Fri, 24 Jan 2020 10:29:24 +0100
+Message-Id: <20200124093136.283768998@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
 References: <20200124093047.008739095@linuxfoundation.org>
@@ -59,100 +62,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Erwan Le Ray <erwan.leray@st.com>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-[ Upstream commit 5297f274e8b61ceb9676cba6649d3de9d03387ad ]
+[ Upstream commit b0576f9ecb5c51e9932531d23c447b2739261841 ]
 
-Fixes dedicated_irq_wakeup issue and deactivated uart as wakeup source by
-default.
+Clang warns:
 
-Fixes: 270e5a74fe4c ("serial: stm32: add wakeup mechanism")
-Signed-off-by: Erwan Le Ray <erwan.leray@st.com>
+drivers/misc/sgi-xp/xpc_partition.c:73:14: warning: variable 'buf' is
+uninitialized when used within its own initialization [-Wuninitialized]
+        void *buf = buf;
+              ~~~   ^~~
+1 warning generated.
+
+Arnd's explanation during review:
+
+  /*
+   * Returns the physical address of the partition's reserved page through
+   * an iterative number of calls.
+   *
+   * On first call, 'cookie' and 'len' should be set to 0, and 'addr'
+   * set to the nasid of the partition whose reserved page's address is
+   * being sought.
+   * On subsequent calls, pass the values, that were passed back on the
+   * previous call.
+   *
+   * While the return status equals SALRET_MORE_PASSES, keep calling
+   * this function after first copying 'len' bytes starting at 'addr'
+   * into 'buf'. Once the return status equals SALRET_OK, 'addr' will
+   * be the physical address of the partition's reserved page. If the
+   * return status equals neither of these, an error as occurred.
+   */
+  static inline s64
+  sn_partition_reserved_page_pa(u64 buf, u64 *cookie, u64 *addr, u64 *len)
+
+  so *len is set to zero on the first call and tells the bios how many
+  bytes are accessible at 'buf', and it does get updated by the BIOS to
+  tell us how many bytes it needs, and then we allocate that and try again.
+
+Fixes: 279290294662 ("[IA64-SGI] cleanup the way XPC locates the reserved page")
+Link: https://github.com/ClangBuiltLinux/linux/issues/466
+Suggested-by: Stephen Hines <srhines@google.com>
+Reviewed-by: Arnd Bergmann <arnd@arndb.de>
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/serial/stm32-usart.c | 28 +++++++++++++++-------------
- 1 file changed, 15 insertions(+), 13 deletions(-)
+ drivers/misc/sgi-xp/xpc_partition.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/tty/serial/stm32-usart.c b/drivers/tty/serial/stm32-usart.c
-index d603be9669a96..1334e42939776 100644
---- a/drivers/tty/serial/stm32-usart.c
-+++ b/drivers/tty/serial/stm32-usart.c
-@@ -557,7 +557,6 @@ static int stm32_startup(struct uart_port *port)
- {
- 	struct stm32_port *stm32_port = to_stm32_port(port);
- 	struct stm32_usart_offsets *ofs = &stm32_port->info->ofs;
--	struct stm32_usart_config *cfg = &stm32_port->info->cfg;
- 	const char *name = to_platform_device(port->dev)->name;
- 	u32 val;
- 	int ret;
-@@ -568,15 +567,6 @@ static int stm32_startup(struct uart_port *port)
- 	if (ret)
- 		return ret;
- 
--	if (cfg->has_wakeup && stm32_port->wakeirq >= 0) {
--		ret = dev_pm_set_dedicated_wake_irq(port->dev,
--						    stm32_port->wakeirq);
--		if (ret) {
--			free_irq(port->irq, port);
--			return ret;
--		}
--	}
--
- 	val = USART_CR1_RXNEIE | USART_CR1_TE | USART_CR1_RE;
- 	if (stm32_port->fifoen)
- 		val |= USART_CR1_FIFOEN;
-@@ -607,7 +597,6 @@ static void stm32_shutdown(struct uart_port *port)
- 
- 	stm32_clr_bits(port, ofs->cr1, val);
- 
--	dev_pm_clear_wake_irq(port->dev);
- 	free_irq(port->irq, port);
- }
- 
-@@ -1079,11 +1068,18 @@ static int stm32_serial_probe(struct platform_device *pdev)
- 		ret = device_init_wakeup(&pdev->dev, true);
- 		if (ret)
- 			goto err_uninit;
-+
-+		ret = dev_pm_set_dedicated_wake_irq(&pdev->dev,
-+						    stm32port->wakeirq);
-+		if (ret)
-+			goto err_nowup;
-+
-+		device_set_wakeup_enable(&pdev->dev, false);
- 	}
- 
- 	ret = uart_add_one_port(&stm32_usart_driver, &stm32port->port);
- 	if (ret)
--		goto err_nowup;
-+		goto err_wirq;
- 
- 	ret = stm32_of_dma_rx_probe(stm32port, pdev);
- 	if (ret)
-@@ -1097,6 +1093,10 @@ static int stm32_serial_probe(struct platform_device *pdev)
- 
- 	return 0;
- 
-+err_wirq:
-+	if (stm32port->info->cfg.has_wakeup && stm32port->wakeirq >= 0)
-+		dev_pm_clear_wake_irq(&pdev->dev);
-+
- err_nowup:
- 	if (stm32port->info->cfg.has_wakeup && stm32port->wakeirq >= 0)
- 		device_init_wakeup(&pdev->dev, false);
-@@ -1134,8 +1134,10 @@ static int stm32_serial_remove(struct platform_device *pdev)
- 				  TX_BUF_L, stm32_port->tx_buf,
- 				  stm32_port->tx_dma_buf);
- 
--	if (cfg->has_wakeup && stm32_port->wakeirq >= 0)
-+	if (cfg->has_wakeup && stm32_port->wakeirq >= 0) {
-+		dev_pm_clear_wake_irq(&pdev->dev);
- 		device_init_wakeup(&pdev->dev, false);
-+	}
- 
- 	clk_disable_unprepare(stm32_port->clk);
- 
+diff --git a/drivers/misc/sgi-xp/xpc_partition.c b/drivers/misc/sgi-xp/xpc_partition.c
+index 0c3ef6f1df546..519826ba13786 100644
+--- a/drivers/misc/sgi-xp/xpc_partition.c
++++ b/drivers/misc/sgi-xp/xpc_partition.c
+@@ -70,7 +70,7 @@ xpc_get_rsvd_page_pa(int nasid)
+ 	unsigned long rp_pa = nasid;	/* seed with nasid */
+ 	size_t len = 0;
+ 	size_t buf_len = 0;
+-	void *buf = buf;
++	void *buf = NULL;
+ 	void *buf_base = NULL;
+ 	enum xp_retval (*get_partition_rsvd_page_pa)
+ 		(void *, u64 *, unsigned long *, size_t *) =
 -- 
 2.20.1
 
