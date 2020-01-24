@@ -2,108 +2,139 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74E76C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 10:16:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B1D8C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 10:16:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2ECF7206F0
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 10:16:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CFCB206F0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 10:16:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="T+sXul6e"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HLE8unCo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733160AbgAXKQK (ORCPT
+        id S2387434AbgAXKQs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 05:16:10 -0500
-Received: from userp2120.oracle.com ([156.151.31.85]:44168 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731492AbgAXKQJ (ORCPT
+        Fri, 24 Jan 2020 05:16:48 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:50459 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729351AbgAXKQs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 05:16:09 -0500
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00OAE0Zr055558;
-        Fri, 24 Jan 2020 10:15:51 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : mime-version : content-type; s=corp-2019-08-05;
- bh=cVQtWFJTwo+bQ4fJ1+0B4WO3kZcnxRAQMDZGeSg5h08=;
- b=T+sXul6eg4ELRGH0KED6mFMjbOOFn79OfQ603e46p75OLvBJkb4hk0qQIE8ZqvHMbVCv
- 4GKyr8cLsIUba/rOZnGmAOnHCzLMSi3nyFTm1jSVJXeGHKr9wnskHJTv+9IOkjDhrbH7
- S4qJD76iICOePXwV2/3dGDsOvmGGeCzN5JJ+6XUCnBNbv+WMXFS01T1CKW9Xnb33pa/s
- eu0qrIN6cmPpvvSLpN+Cq8h48lJ4cNrqLlrqVnvfgbd8aVHX0fufrfsFkaxN78svvDYJ
- VKKI2e5AIM2qmK/Tg/vrfe+KjqV0Fna8m4y6My32H6G/t7r1jLUXeJBHFLbphS4yNHRW +g== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2120.oracle.com with ESMTP id 2xktnrqyh6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 24 Jan 2020 10:15:51 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00OAE17p013863;
-        Fri, 24 Jan 2020 10:15:50 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3030.oracle.com with ESMTP id 2xqmuyn5pu-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 24 Jan 2020 10:15:50 +0000
-Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 00OAFkd0006163;
-        Fri, 24 Jan 2020 10:15:48 GMT
-Received: from kili.mountain (/129.205.23.165)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 24 Jan 2020 02:15:45 -0800
-Date:   Fri, 24 Jan 2020 13:15:37 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Russell King <rmk+kernel@armlinux.org.uk>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Enrico Weigelt <info@metux.net>, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-Subject: [PATCH] fs/adfs: bigdir: Fix an error code in adfs_fplus_read()
-Message-ID: <20200124101537.z6n242eovocfbdha@kili.mountain>
+        Fri, 24 Jan 2020 05:16:48 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579861007;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=clkZ2gXXFwJDpQlIi06uV2IcUP7tHBHQsiUkFdhgpPs=;
+        b=HLE8unColsJ0wlLSkb7JcJDqTgYBaK+691xzC9I13+3QkoBnXcCRE7xHHgC1mT1B0RVFmx
+        eip8BOBzuvu0FKktbJE73Am3oc36P9vH/8xnf8rT7+Ttyha5iChQom7El7IisWcw08x+nC
+        sPBMEDeBEQJ913/tBS0logpZ+ufCoUA=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-223-T1d-EHoEPRSHUCmwZwUu_Q-1; Fri, 24 Jan 2020 05:16:45 -0500
+X-MC-Unique: T1d-EHoEPRSHUCmwZwUu_Q-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 13C41DBA3;
+        Fri, 24 Jan 2020 10:16:44 +0000 (UTC)
+Received: from kamzik.brq.redhat.com (unknown [10.43.2.160])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id E473D5DA60;
+        Fri, 24 Jan 2020 10:16:39 +0000 (UTC)
+Date:   Fri, 24 Jan 2020 11:16:37 +0100
+From:   Andrew Jones <drjones@redhat.com>
+To:     Ben Gardon <bgardon@google.com>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        linux-kselftest@vger.kernel.org,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Cannon Matthews <cannonmatthews@google.com>,
+        Peter Xu <peterx@redhat.com>, Peter Shier <pshier@google.com>,
+        Oliver Upton <oupton@google.com>
+Subject: Re: [PATCH v4 07/10] KVM: selftests: Support multiple vCPUs in
+ demand paging test
+Message-ID: <20200124101637.4ppqzq7fxrd4ospw@kamzik.brq.redhat.com>
+References: <20200123180436.99487-1-bgardon@google.com>
+ <20200123180436.99487-8-bgardon@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-X-Mailer: git-send-email haha only kidding
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9509 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=754
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-2001240084
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9509 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=809 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-2001240084
+In-Reply-To: <20200123180436.99487-8-bgardon@google.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This code accidentally returns success, but it should return the
--EIO error code from adfs_fplus_validate_header().
+On Thu, Jan 23, 2020 at 10:04:33AM -0800, Ben Gardon wrote:
+> Most VMs have multiple vCPUs, the concurrent execution of which has a
+> substantial impact on demand paging performance. Add an option to create
+> multiple vCPUs to each access disjoint regions of memory.
+> 
+> Signed-off-by: Ben Gardon <bgardon@google.com>
+> ---
+>  .../selftests/kvm/demand_paging_test.c        | 255 ++++++++++++------
+>  1 file changed, 172 insertions(+), 83 deletions(-)
+> 
+> diff --git a/tools/testing/selftests/kvm/demand_paging_test.c b/tools/testing/selftests/kvm/demand_paging_test.c
+> index 9e2a5f7dfa140..2002032df32cc 100644
+> --- a/tools/testing/selftests/kvm/demand_paging_test.c
+> +++ b/tools/testing/selftests/kvm/demand_paging_test.c
+> @@ -24,8 +24,6 @@
+>  #include "kvm_util.h"
+>  #include "processor.h"
+>  
+> -#define VCPU_ID				1
+> -
+>  /* The memory slot index demand page */
+>  #define TEST_MEM_SLOT_INDEX		1
+>  
+> @@ -34,6 +32,14 @@
+>  
+>  #define DEFAULT_GUEST_TEST_MEM_SIZE (1 << 30) /* 1G */
+>  
+> +#ifdef PRINT_PER_VCPU_UPDATES
+> +#define PER_VCPU_DEBUG(...) DEBUG(__VA_ARGS__)
+> +#else
+> +#define PER_VCPU_DEBUG(...)
+> +#endif
+> +
+> +#define MAX_VCPUS 512
+> +
+>  /*
+>   * Guest/Host shared variables. Ensure addr_gva2hva() and/or
+>   * sync_global_to/from_guest() are used when accessing from
+> @@ -67,18 +73,25 @@ struct vcpu_args {
+>  	struct kvm_vm *vm;
+>  };
+>  
+> -static struct vcpu_args vcpu_args;
+> +static struct vcpu_args vcpu_args[MAX_VCPUS];
+>  
+>  /*
+>   * Continuously write to the first 8 bytes of each page in the demand paging
+>   * memory region.
+>   */
+> -static void guest_code(void)
+> +static void guest_code(uint32_t vcpu_id)
+>  {
+> -	uint64_t gva = vcpu_args.gva;
+> -	uint64_t pages = vcpu_args.pages;
+> +	uint64_t gva;
+> +	uint64_t pages;
+>  	int i;
+>  
+> +	/* Return to signal error if vCPU args data structure is courrupt. */
+> +	if (vcpu_args[vcpu_id].vcpu_id != vcpu_id)
+> +		return;
 
-Fixes: d79288b4f61b ("fs/adfs: bigdir: calculate and validate directory checkbyte")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
----
- fs/adfs/dir_fplus.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+This should be GUEST_ASSERT(vcpu_args[vcpu_id].vcpu_id == vcpu_id), which
+will do a UCALL_ABORT when it fails. Otherwise we're returning to where?
+Likely we'll get an exception of some sort when we return to nothing,
+but that's not a very clean way to die.
 
-diff --git a/fs/adfs/dir_fplus.c b/fs/adfs/dir_fplus.c
-index 48ea299b6ece..4a15924014da 100644
---- a/fs/adfs/dir_fplus.c
-+++ b/fs/adfs/dir_fplus.c
-@@ -114,7 +114,8 @@ static int adfs_fplus_read(struct super_block *sb, u32 indaddr,
- 		return ret;
- 
- 	dir->bighead = h = (void *)dir->bhs[0]->b_data;
--	if (adfs_fplus_validate_header(h)) {
-+	ret = adfs_fplus_validate_header(h);
-+	if (ret) {
- 		adfs_error(sb, "dir %06x has malformed header", indaddr);
- 		goto out;
- 	}
--- 
-2.11.0
+Thanks,
+drew
 
