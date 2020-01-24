@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 279E9C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:24:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D768EC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:24:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1AAF222C2
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:24:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A51572072C
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:24:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579875843;
-	bh=mHQFP/vtoC7Zz+C7h04SYqUhhYKg5fKVuKYZAuh6FrA=;
+	s=default; t=1579875852;
+	bh=f8Y3gsxQZnhgO1BXqPFjWZjytFZRhsoxh24M/PN4kDA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hzfZLUwd0evr1i9h3Pe8mddl0O8gjFewB7g7cUdCEBrieI6fwDtowUpya34E38Oco
-	 A6bFsNug16TRPDF5imvWq873c8R49VP5V0cjR3o0ta+0fq6Vl5yE2htj7EG4qAyqEn
-	 Z83a2SxSIQhM8UAgUciz0muIcyskgYrYXAZfoxaA=
+	b=Esx8xZgrLLmM9vpNg1gMZy3i1vq0+TajNxLw/C+iepdrVCdLFCXkW85BZv0AwVzwV
+	 FNEFnq/vUbWGjQ5kuMAYsd9wfOaxG9lbse7C4cySwMEQxwjreI1XXsmIftsEO1CaWa
+	 YQcEDvW2OxAEcqjlL8BLcKT5V6IZjI7aahaqEZXk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392447AbgAXOYC (ORCPT
+        id S2392457AbgAXOYL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 09:24:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44300 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 09:24:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44276 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392315AbgAXOWP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 09:22:15 -0500
+        id S2387673AbgAXOWO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 09:22:14 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D385F21734;
-        Fri, 24 Jan 2020 14:22:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A672822464;
+        Fri, 24 Jan 2020 14:22:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579875734;
-        bh=mHQFP/vtoC7Zz+C7h04SYqUhhYKg5fKVuKYZAuh6FrA=;
+        s=default; t=1579875733;
+        bh=f8Y3gsxQZnhgO1BXqPFjWZjytFZRhsoxh24M/PN4kDA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qFV7JeKyrtU2z4HnwrMjO8aQNHACLJOh2IpEEiz2GK8WgbdNDRHfFXieRZe4vKyxm
-         pr6C/DpwXttR+C5v9zH3y0Ep2eX5ewRSQkIWFAAXIFuKL66wARTS2Sk6scrWHxRrx2
-         jz6IOMHmxQzBpXOcU+T8qR7tOxTmWqB66MtXhSb8=
+        b=xfsP/fD6YOg6XpqXMy1s5V/tOpWVPayiL06XF58PjaYX+c1pF+mSq6zugzmV4/3Az
+         LiriGPInO0IqEuwYnvldCSBtvj8/dRoBDEJqgQPhgMQ69pMDMasFjLxE2XCgHsBGGY
+         /8L/wotIBsKk93e8uYi2SkBkeYUOxe5VDaB7HjWg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ganapathi Bhat <ganapathi.bhat@nxp.com>,
-        Cathy Luo <xiaohua.luo@nxp.com>,
-        Johannes Berg <johannes.berg@intel.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 13/18] wireless: fix enabling channel 12 for custom regulatory domain
-Date:   Fri, 24 Jan 2020 09:21:52 -0500
-Message-Id: <20200124142157.30931-13-sashal@kernel.org>
+Cc:     Johan Hovold <johan@kernel.org>, hayeswang <hayeswang@realtek.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 12/18] r8152: add missing endpoint sanity check
+Date:   Fri, 24 Jan 2020 09:21:51 -0500
+Message-Id: <20200124142157.30931-12-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200124142157.30931-1-sashal@kernel.org>
 References: <20200124142157.30931-1-sashal@kernel.org>
@@ -61,63 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ganapathi Bhat <ganapathi.bhat@nxp.com>
+From: Johan Hovold <johan@kernel.org>
 
-[ Upstream commit c4b9d655e445a8be0bff624aedea190606b5ebbc ]
+[ Upstream commit 86f3f4cd53707ceeec079b83205c8d3c756eca93 ]
 
-Commit e33e2241e272 ("Revert "cfg80211: Use 5MHz bandwidth by
-default when checking usable channels"") fixed a broken
-regulatory (leaving channel 12 open for AP where not permitted).
-Apply a similar fix to custom regulatory domain processing.
+Add missing endpoint sanity check to probe in order to prevent a
+NULL-pointer dereference (or slab out-of-bounds access) when retrieving
+the interrupt-endpoint bInterval on ndo_open() in case a device lacks
+the expected endpoints.
 
-Signed-off-by: Cathy Luo <xiaohua.luo@nxp.com>
-Signed-off-by: Ganapathi Bhat <ganapathi.bhat@nxp.com>
-Link: https://lore.kernel.org/r/1576836859-8945-1-git-send-email-ganapathi.bhat@nxp.com
-[reword commit message, fix coding style, add a comment]
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Fixes: 40a82917b1d3 ("net/usb/r8152: enable interrupt transfer")
+Cc: hayeswang <hayeswang@realtek.com>
+Signed-off-by: Johan Hovold <johan@kernel.org>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/wireless/reg.c | 13 ++++++++++---
- 1 file changed, 10 insertions(+), 3 deletions(-)
+ drivers/net/usb/r8152.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/net/wireless/reg.c b/net/wireless/reg.c
-index dde741f298de7..0e66768427ba7 100644
---- a/net/wireless/reg.c
-+++ b/net/wireless/reg.c
-@@ -1715,14 +1715,15 @@ static void update_all_wiphy_regulatory(enum nl80211_reg_initiator initiator)
+diff --git a/drivers/net/usb/r8152.c b/drivers/net/usb/r8152.c
+index 15dc70c118579..3c037b76a0cc8 100644
+--- a/drivers/net/usb/r8152.c
++++ b/drivers/net/usb/r8152.c
+@@ -4365,6 +4365,9 @@ static int rtl8152_probe(struct usb_interface *intf,
+ 		return -ENODEV;
+ 	}
  
- static void handle_channel_custom(struct wiphy *wiphy,
- 				  struct ieee80211_channel *chan,
--				  const struct ieee80211_regdomain *regd)
-+				  const struct ieee80211_regdomain *regd,
-+				  u32 min_bw)
- {
- 	u32 bw_flags = 0;
- 	const struct ieee80211_reg_rule *reg_rule = NULL;
- 	const struct ieee80211_power_rule *power_rule = NULL;
- 	u32 bw;
- 
--	for (bw = MHZ_TO_KHZ(20); bw >= MHZ_TO_KHZ(5); bw = bw / 2) {
-+	for (bw = MHZ_TO_KHZ(20); bw >= min_bw; bw = bw / 2) {
- 		reg_rule = freq_reg_info_regd(MHZ_TO_KHZ(chan->center_freq),
- 					      regd, bw);
- 		if (!IS_ERR(reg_rule))
-@@ -1778,8 +1779,14 @@ static void handle_band_custom(struct wiphy *wiphy,
- 	if (!sband)
- 		return;
- 
-+	/*
-+	 * We currently assume that you always want at least 20 MHz,
-+	 * otherwise channel 12 might get enabled if this rule is
-+	 * compatible to US, which permits 2402 - 2472 MHz.
-+	 */
- 	for (i = 0; i < sband->n_channels; i++)
--		handle_channel_custom(wiphy, &sband->channels[i], regd);
-+		handle_channel_custom(wiphy, &sband->channels[i], regd,
-+				      MHZ_TO_KHZ(20));
- }
- 
- /* Used by drivers prior to wiphy registration */
++	if (intf->cur_altsetting->desc.bNumEndpoints < 3)
++		return -ENODEV;
++
+ 	usb_reset_device(udev);
+ 	netdev = alloc_etherdev(sizeof(struct r8152));
+ 	if (!netdev) {
 -- 
 2.20.1
 
