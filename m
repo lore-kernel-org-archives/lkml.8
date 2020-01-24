@@ -2,27 +2,27 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 135E0C35242
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:40:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DA70C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:40:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6F4520678
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:40:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70B6F20678
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:40:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392096AbgAXLkq (ORCPT
+        id S2404914AbgAXLk6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:40:46 -0500
-Received: from mx2.suse.de ([195.135.220.15]:50954 "EHLO mx2.suse.de"
+        Fri, 24 Jan 2020 06:40:58 -0500
+Received: from mx2.suse.de ([195.135.220.15]:50758 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392074AbgAXLkm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:40:42 -0500
+        id S2390760AbgAXLkc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:40:32 -0500
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 5475CABED;
-        Fri, 24 Jan 2020 11:40:39 +0000 (UTC)
+        by mx2.suse.de (Postfix) with ESMTP id 75869ACB1;
+        Fri, 24 Jan 2020 11:40:29 +0000 (UTC)
 From:   =?UTF-8?q?Michal=20Koutn=C3=BD?= <mkoutny@suse.com>
 To:     cgroups@vger.kernel.org
 Cc:     alex.shi@linux.alibaba.com, guro@fb.com, hannes@cmpxchg.org,
@@ -32,13 +32,12 @@ Cc:     alex.shi@linux.alibaba.com, guro@fb.com, hannes@cmpxchg.org,
         linux-mediatek@lists.infradead.org, lizefan@huawei.com,
         matthias.bgg@gmail.com, shuah@kernel.org, surenb@google.com,
         tj@kernel.org, tomcherry@google.com
-Subject: [PATCH v2 3/3] kselftest/cgroup: add cgroup destruction test
-Date:   Fri, 24 Jan 2020 12:40:17 +0100
-Message-Id: <20200124114017.8363-4-mkoutny@suse.com>
+Subject: [PATCH v2 0/3] cgroup: Iterate tasks that did not finish do_exit()
+Date:   Fri, 24 Jan 2020 12:40:14 +0100
+Message-Id: <20200124114017.8363-1-mkoutny@suse.com>
 X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200124114017.8363-1-mkoutny@suse.com>
+In-Reply-To: <20200120145635.GA30904@blackbody.suse.cz>
 References: <20200120145635.GA30904@blackbody.suse.cz>
- <20200124114017.8363-1-mkoutny@suse.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -47,160 +46,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Suren Baghdasaryan <surenb@google.com>
+Hi,
+thanks for your feedback. I'm sending updated solution that changes task
+iteration to be consistent with cgroup_is_populated() check and moving the
+responsibility to check PF_EXITING on the consumers of iterator API.
 
-Add new test to verify that a cgroup with dead processes can be destroyed.
-The test spawns a child process which allocates and touches 100MB of RAM
-to ensure prolonged exit. Subsequently it kills the child, waits until
-the cgroup containing the child is empty and destroys the cgroup.
+Changes from v1
+- v1: https://lore.kernel.org/lkml/20200117151533.12381-1-mkoutny@suse.com/
+- Swap the fixing and refactoring patch (in order to make the fix easier for
+  backport)
+- Don't introduce tasks lists array because of unnecessarily long access code
+- Fix comment in selftest
+- I leave the CC:stable on discretion of the maintainer
 
-Signed-off-by: Suren Baghdasaryan <surenb@google.com>
-[mkoutny@suse.com: Fix typo in test_cgcore_destroy comment]
-Acked-by: Michal Koutný <mkoutny@suse.com>
-Signed-off-by: Michal Koutný <mkoutny@suse.com>
----
+Michal Koutný (2):
+  cgroup: Iterate tasks that did not finish do_exit()
+  cgroup: Clean up css_set task traversal
+
+Suren Baghdasaryan (1):
+  kselftest/cgroup: add cgroup destruction test
+
+ include/linux/cgroup.h                     |   4 +-
+ kernel/cgroup/cgroup.c                     |  60 ++++++-----
  tools/testing/selftests/cgroup/test_core.c | 113 +++++++++++++++++++++
- 1 file changed, 113 insertions(+)
+ 3 files changed, 146 insertions(+), 31 deletions(-)
 
-diff --git a/tools/testing/selftests/cgroup/test_core.c b/tools/testing/selftests/cgroup/test_core.c
-index c5ca669feb2b..76c9dd578ba5 100644
---- a/tools/testing/selftests/cgroup/test_core.c
-+++ b/tools/testing/selftests/cgroup/test_core.c
-@@ -2,7 +2,10 @@
- 
- #include <linux/limits.h>
- #include <sys/types.h>
-+#include <sys/mman.h>
-+#include <sys/wait.h>
- #include <unistd.h>
-+#include <fcntl.h>
- #include <stdio.h>
- #include <errno.h>
- #include <signal.h>
-@@ -12,6 +15,115 @@
- #include "../kselftest.h"
- #include "cgroup_util.h"
- 
-+static int touch_anon(char *buf, size_t size)
-+{
-+	int fd;
-+	char *pos = buf;
-+
-+	fd = open("/dev/urandom", O_RDONLY);
-+	if (fd < 0)
-+		return -1;
-+
-+	while (size > 0) {
-+		ssize_t ret = read(fd, pos, size);
-+
-+		if (ret < 0) {
-+			if (errno != EINTR) {
-+				close(fd);
-+				return -1;
-+			}
-+		} else {
-+			pos += ret;
-+			size -= ret;
-+		}
-+	}
-+	close(fd);
-+
-+	return 0;
-+}
-+
-+static int alloc_and_touch_anon_noexit(const char *cgroup, void *arg)
-+{
-+	int ppid = getppid();
-+	size_t size = (size_t)arg;
-+	void *buf;
-+
-+	buf = mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANON,
-+		   0, 0);
-+	if (buf == MAP_FAILED)
-+		return -1;
-+
-+	if (touch_anon((char *)buf, size)) {
-+		munmap(buf, size);
-+		return -1;
-+	}
-+
-+	while (getppid() == ppid)
-+		sleep(1);
-+
-+	munmap(buf, size);
-+	return 0;
-+}
-+
-+/*
-+ * Create a child process that allocates and touches 100MB, then waits to be
-+ * killed. Wait until the child is attached to the cgroup, kill all processes
-+ * in that cgroup and wait until "cgroup.procs" is empty. At this point try to
-+ * destroy the empty cgroup. The test helps detect race conditions between
-+ * dying processes leaving the cgroup and cgroup destruction path.
-+ */
-+static int test_cgcore_destroy(const char *root)
-+{
-+	int ret = KSFT_FAIL;
-+	char *cg_test = NULL;
-+	int child_pid;
-+	char buf[PAGE_SIZE];
-+
-+	cg_test = cg_name(root, "cg_test");
-+
-+	if (!cg_test)
-+		goto cleanup;
-+
-+	for (int i = 0; i < 10; i++) {
-+		if (cg_create(cg_test))
-+			goto cleanup;
-+
-+		child_pid = cg_run_nowait(cg_test, alloc_and_touch_anon_noexit,
-+					  (void *) MB(100));
-+
-+		if (child_pid < 0)
-+			goto cleanup;
-+
-+		/* wait for the child to enter cgroup */
-+		if (cg_wait_for_proc_count(cg_test, 1))
-+			goto cleanup;
-+
-+		if (cg_killall(cg_test))
-+			goto cleanup;
-+
-+		/* wait for cgroup to be empty */
-+		while (1) {
-+			if (cg_read(cg_test, "cgroup.procs", buf, sizeof(buf)))
-+				goto cleanup;
-+			if (buf[0] == '\0')
-+				break;
-+			usleep(1000);
-+		}
-+
-+		if (rmdir(cg_test))
-+			goto cleanup;
-+
-+		if (waitpid(child_pid, NULL, 0) < 0)
-+			goto cleanup;
-+	}
-+	ret = KSFT_PASS;
-+cleanup:
-+	if (cg_test)
-+		cg_destroy(cg_test);
-+	free(cg_test);
-+	return ret;
-+}
-+
- /*
-  * A(0) - B(0) - C(1)
-  *        \ D(0)
-@@ -512,6 +624,7 @@ struct corecg_test {
- 	T(test_cgcore_populated),
- 	T(test_cgcore_proc_migration),
- 	T(test_cgcore_thread_migration),
-+	T(test_cgcore_destroy),
- };
- #undef T
- 
 -- 
 2.24.1
 
