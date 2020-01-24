@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ABBFC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 10:01:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9680C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 10:01:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7F3F208C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 10:01:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FE592075D
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 10:01:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579860099;
-	bh=qys4PTBg21yuijVxAzhvDQXXNLAkLmDpV3GE4iGs2Dw=;
+	s=default; t=1579860100;
+	bh=PpV52MBBkqaaQBnB7A/QBShT+Hi+PB9fQkUgRK78POo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WeCyzkhG9MZN56RrKbuZ0hT+FuLAW2hruu+Isn1iseCheMfhyPfk/Tr90t2e4bl/e
-	 UY6q0kXDwkdSOYVJtJ9eylaR0rMQy49ogWC4KsuRi5UQP/6o3L7g8VDQUU7y9xJdz2
-	 eDvCq4uzOfYcpbU1wVj0ecyFiWts0HXulhRGf6GQ=
+	b=uiGhKOZjQnQ19QKVD2uLw1LT6ArON354Y6+vfuqGkvet78DgbACAs6Ys+jdP3lXG8
+	 9gZYWH90yn9atsYHTV6QULfr7ePkto/DaB95+7QcJeO6kFgw6ADdUJAu8m5bX7kx19
+	 cd6pljP+AD8GS6MFf6ZB/oHSWbazaFmljS4kgKuY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388862AbgAXKBi (ORCPT
+        id S2388870AbgAXKBj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 05:01:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36942 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 05:01:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37008 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727215AbgAXKBc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 05:01:32 -0500
+        id S2388643AbgAXKBg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 05:01:36 -0500
 Received: from localhost (unknown [145.15.244.15])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4F635206D5;
-        Fri, 24 Jan 2020 10:01:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 34677214DB;
+        Fri, 24 Jan 2020 10:01:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579860092;
-        bh=qys4PTBg21yuijVxAzhvDQXXNLAkLmDpV3GE4iGs2Dw=;
+        s=default; t=1579860095;
+        bh=PpV52MBBkqaaQBnB7A/QBShT+Hi+PB9fQkUgRK78POo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pkQsarKb5IqHOZ3aw4um9MJj70sKM+ETlpVCxA2SoY3MHNwS7Pp3LWRgEkd7jEgbA
-         1FEbi270MADGWAbtScf2/SI+RuTC0rl8TWx84scG8YzaBBkvzELqrbVCGOKO8TSYdx
-         VYaa0O5ybvGqObMDhOHo6nufD8rea+V+73thcX/o=
+        b=MwcO3R+3q3lV5L7S7vozx1htAvHJTCclOJyRH57fSU+OcFhfJDkiQB0qzS//zciL7
+         nvNi/8k6kjHQQ6fRCLtBdWZJHoqGK6/PhWNoYPnRMCP0BAySyRZJYnbpQ2kgFKqp4v
+         GE7yzrbNRfMiIVPhKEbH3cSQo5SOvNTWjZRM7o98=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
+        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 256/343] PM: sleep: Fix possible overflow in pm_system_cancel_wakeup()
-Date:   Fri, 24 Jan 2020 10:31:14 +0100
-Message-Id: <20200124092953.735890345@linuxfoundation.org>
+Subject: [PATCH 4.14 257/343] libertas_tf: Use correct channel range in lbtf_geo_init
+Date:   Fri, 24 Jan 2020 10:31:15 +0100
+Message-Id: <20200124092953.866732217@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124092919.490687572@linuxfoundation.org>
 References: <20200124092919.490687572@linuxfoundation.org>
@@ -61,36 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit 2933954b71f10d392764f95eec0f0aa2d103054b ]
+[ Upstream commit 2ec4ad49b98e4a14147d04f914717135eca7c8b1 ]
 
-It is not actually guaranteed that pm_abort_suspend will be
-nonzero when pm_system_cancel_wakeup() is called which may lead to
-subtle issues, so make it use atomic_dec_if_positive() instead of
-atomic_dec() for the safety sake.
+It seems we should use 'range' instead of 'priv->range'
+in lbtf_geo_init(), because 'range' is the corret one
+related to current regioncode.
 
-Fixes: 33e4f80ee69b ("ACPI / PM: Ignore spurious SCI wakeups from suspend-to-idle")
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Acked-by: Thomas Gleixner <tglx@linutronix.de>
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Fixes: 691cdb49388b ("libertas_tf: command helper functions for libertas_tf")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/base/power/wakeup.c | 2 +-
+ drivers/net/wireless/marvell/libertas_tf/cmd.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/base/power/wakeup.c b/drivers/base/power/wakeup.c
-index df53e2b3296b4..877b2a1767a5a 100644
---- a/drivers/base/power/wakeup.c
-+++ b/drivers/base/power/wakeup.c
-@@ -877,7 +877,7 @@ EXPORT_SYMBOL_GPL(pm_system_wakeup);
+diff --git a/drivers/net/wireless/marvell/libertas_tf/cmd.c b/drivers/net/wireless/marvell/libertas_tf/cmd.c
+index 909ac3685010f..2b193f1257a5a 100644
+--- a/drivers/net/wireless/marvell/libertas_tf/cmd.c
++++ b/drivers/net/wireless/marvell/libertas_tf/cmd.c
+@@ -69,7 +69,7 @@ static void lbtf_geo_init(struct lbtf_private *priv)
+ 			break;
+ 		}
  
- void pm_system_cancel_wakeup(void)
- {
--	atomic_dec(&pm_abort_suspend);
-+	atomic_dec_if_positive(&pm_abort_suspend);
+-	for (ch = priv->range.start; ch < priv->range.end; ch++)
++	for (ch = range->start; ch < range->end; ch++)
+ 		priv->channels[CHAN_TO_IDX(ch)].flags = 0;
  }
  
- void pm_wakeup_clear(bool reset)
 -- 
 2.20.1
 
