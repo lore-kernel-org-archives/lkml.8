@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B45EC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:50:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8B62C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:50:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9641208C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:50:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 736DF22464
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:50:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579859406;
-	bh=OT71+5E1Ja8X2ipIEcrWpHYmjwcMy5GNtYtKWURAuiI=;
+	s=default; t=1579859413;
+	bh=+m/480iVfQQB6uESfmSRhvRXpJEL1zCGSoqTGmodM10=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LoRqh7Hktg+LCK72oZFFBtpEbAfM5ktLSQTsXgzwKIYa21n7M/LFIuOYJIHTmAAJw
-	 oLEhOol7736jm2MYqbjic8/ffk1icf7+0l2Mx2z3/zRM6bzaYQnpieys5zSebbNwS9
-	 QTIU7bs567wxuRjTHS7mLYzMV5IvJkc/zUSG734A=
+	b=AwK9QHxBIqhlG9G4ogekcg5yrqFUcwhkF8KBbNRN+qeAi0pxm+9lvVivmB0qLRaA3
+	 A4jmxwZS9YDMTYTfrECtCk/VsS2e4KGPt+9vRSo/R4MH1ITEeTsoivC6gmqmq02JxZ
+	 d5C116cmve0sV3kB+r1fKBMOjRRjAwNTK0wgqqM0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729375AbgAXJuE (ORCPT
+        id S2387919AbgAXJuM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 04:50:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50624 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 04:50:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50816 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730321AbgAXJuC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 04:50:02 -0500
+        id S2387908AbgAXJuK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 04:50:10 -0500
 Received: from localhost (unknown [145.15.244.15])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6B6D7206D5;
-        Fri, 24 Jan 2020 09:50:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C6BB7208C4;
+        Fri, 24 Jan 2020 09:50:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579859402;
-        bh=OT71+5E1Ja8X2ipIEcrWpHYmjwcMy5GNtYtKWURAuiI=;
+        s=default; t=1579859409;
+        bh=+m/480iVfQQB6uESfmSRhvRXpJEL1zCGSoqTGmodM10=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PmAB9FSUqXMCaYR7fLNUsyOoNNKAtxIeMwKR5OE+pVodQ4+aVCCMOXs7UWAoXdmeB
-         hzDgeJqQMmHbDtJozeGhPO1XbWC1Si5V+bWvOqgXZZDIsIqqjrh5ZoDnSDlCMl+vRe
-         pfQTt0wrd5VACFNrQHSX8NWNHLGJHYkm0uEKiVGI=
+        b=MMqMbY3hg1lWmPYt4LS3tg79yhkUWGnZnkDS7osiZK5Y83y/lVxYo/E9lYmKmtCMg
+         lQHUOKH1TgsYvlJYcNsZWxt6JQ71UgcwdiirzlJIn6UiOSHxv0VZ9+DEvG4Sb8oZ/p
+         n/N+ePMjdNf8uVLiMeJSSNnOMxF3qq3bCFMy+d7A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vadim Pasternak <vadimp@mellanox.com>,
-        Guenter Roeck <linux@roeck-us.net>,
+        stable@vger.kernel.org, Nicholas Mc Guire <hofrat@osadl.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 109/343] hwmon: (pmbus/tps53679) Fix driver info initialization in probe routine
-Date:   Fri, 24 Jan 2020 10:28:47 +0100
-Message-Id: <20200124092934.392432277@linuxfoundation.org>
+Subject: [PATCH 4.14 111/343] staging: r8822be: check kzalloc return or bail
+Date:   Fri, 24 Jan 2020 10:28:49 +0100
+Message-Id: <20200124092934.646861969@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124092919.490687572@linuxfoundation.org>
 References: <20200124092919.490687572@linuxfoundation.org>
@@ -60,45 +59,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vadim Pasternak <vadimp@mellanox.com>
+From: Nicholas Mc Guire <hofrat@osadl.org>
 
-[ Upstream commit ff066653aeed8ee2d4dadb1e35774dd91ecbb19f ]
+[ Upstream commit e4b08e16b7d9d030b6475ef48f94d734a39f3c81 ]
 
-Fix tps53679_probe() by using dynamically allocated "pmbus_driver_info"
-structure instead of static. Usage of static structures causes
-overwritten of the field "vrm_version", in case the system is equipped
-with several tps53679 devices with the different "vrm_version".
-In such case the last probed device overwrites this field for all
-others.
+The kzalloc() in halmac_parse_psd_data_88xx() can fail and return NULL
+so check the psd_set->data after allocation and if allocation failed
+return HALMAC_CMD_PROCESS_ERROR.
 
-Fixes: 610526527a13 ("hwmon: (pmbus) Add support for Texas Instruments tps53679 device")
-Signed-off-by: Vadim Pasternak <vadimp@mellanox.com>
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Nicholas Mc Guire <hofrat@osadl.org>
+Fixes: 938a0447f094 ("staging: r8822be: Add code for halmac sub-drive")
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hwmon/pmbus/tps53679.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ .../staging/rtlwifi/halmac/halmac_88xx/halmac_func_88xx.c    | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/hwmon/pmbus/tps53679.c b/drivers/hwmon/pmbus/tps53679.c
-index 85b515cd9df0e..2bc352c5357f4 100644
---- a/drivers/hwmon/pmbus/tps53679.c
-+++ b/drivers/hwmon/pmbus/tps53679.c
-@@ -80,7 +80,14 @@ static struct pmbus_driver_info tps53679_info = {
- static int tps53679_probe(struct i2c_client *client,
- 			  const struct i2c_device_id *id)
- {
--	return pmbus_do_probe(client, id, &tps53679_info);
-+	struct pmbus_driver_info *info;
-+
-+	info = devm_kmemdup(&client->dev, &tps53679_info, sizeof(*info),
-+			    GFP_KERNEL);
-+	if (!info)
-+		return -ENOMEM;
-+
-+	return pmbus_do_probe(client, id, info);
- }
+diff --git a/drivers/staging/rtlwifi/halmac/halmac_88xx/halmac_func_88xx.c b/drivers/staging/rtlwifi/halmac/halmac_88xx/halmac_func_88xx.c
+index 544f638ed3efb..15091ee587dbf 100644
+--- a/drivers/staging/rtlwifi/halmac/halmac_88xx/halmac_func_88xx.c
++++ b/drivers/staging/rtlwifi/halmac/halmac_88xx/halmac_func_88xx.c
+@@ -2492,8 +2492,11 @@ halmac_parse_psd_data_88xx(struct halmac_adapter *halmac_adapter, u8 *c2h_buf,
+ 	segment_size = (u8)PSD_DATA_GET_SEGMENT_SIZE(c2h_buf);
+ 	psd_set->data_size = total_size;
  
- static const struct i2c_device_id tps53679_id[] = {
+-	if (!psd_set->data)
++	if (!psd_set->data) {
+ 		psd_set->data = kzalloc(psd_set->data_size, GFP_KERNEL);
++		if (!psd_set->data)
++			return HALMAC_CMD_PROCESS_ERROR;
++	}
+ 
+ 	if (segment_id == 0)
+ 		psd_set->segment_size = segment_size;
 -- 
 2.20.1
 
